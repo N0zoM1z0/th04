@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import csv
+from datetime import datetime
 from pathlib import Path
+import shlex
 import sys
 import tomllib
 
@@ -17,7 +19,8 @@ UNIT_HEADER = [
     "evidence_ids", "replay_command", "notes",
 ]
 EVIDENCE_HEADER = [
-    "id", "claim_id", "oracle", "artifact", "location", "evidence_class",
+    "id", "claim_id", "oracle", "artifact", "unit_id", "extent_start",
+    "extent_size", "location", "evidence_class",
     "result", "tool", "command", "input_sha256", "output_sha256",
     "observed_utc", "notes",
 ]
@@ -51,14 +54,20 @@ KNOWLEDGE_KINDS = {
 }
 
 
-def read_csv(path: Path, expected: list[str]) -> list[dict[str, str]]:
+def read_csv(
+    path: Path, expected: list[str], *, repository_root: Path = ROOT
+) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         if reader.fieldnames != expected:
             raise ValueError(
-                f"{path.relative_to(ROOT)} header mismatch: {reader.fieldnames}"
+                f"{path.relative_to(repository_root)} header mismatch: {reader.fieldnames}"
             )
-        return list(reader)
+        rows = list(reader)
+        for line, row in enumerate(rows, start=2):
+            if None in row or any(value is None for value in row.values()):
+                raise ValueError(f"{path.relative_to(repository_root)}:{line}: column count mismatch")
+        return rows
 
 
 def integer(value: str, context: str, *, allow_empty: bool = False) -> int | None:
@@ -91,40 +100,119 @@ def accepted_oracle_passes(
     non_acceptance_classes: set[str],
     *,
     artifact: str | None = None,
+    unit_id: str | None = None,
+    extent_start: int | None = None,
+    extent_size: int | None = None,
     global_evidence_oracles: set[str] | None = None,
+    artifact_evidence_oracles: set[str] | None = None,
 ) -> set[str]:
-    """Return required-grade passes with provenance and artifact scoping."""
+    """Return replayable required-grade passes with explicit claim scoping."""
 
     passed: set[str] = set()
     globally_scoped = global_evidence_oracles or set()
+    artifact_scoped = artifact_evidence_oracles or set()
     for evidence_id in evidence_ids:
         row = evidence[evidence_id]
         oracle_id = row["oracle"]
         accepted_classes = oracle_by_id[oracle_id].get(
             "accepts_evidence_classes", []
         )
-        if (
+        base_pass = (
             row["result"] == "pass"
             and row["evidence_class"] not in non_acceptance_classes
             and row["evidence_class"] in accepted_classes
-            and (
-                artifact is None
-                or row.get("artifact") == artifact
-                or (
-                    not row.get("artifact")
-                    and oracle_id in globally_scoped
-                )
+        )
+        if not base_pass:
+            continue
+        if unit_id is None:
+            scoped = artifact is None or row.get("artifact") == artifact or (
+                not row.get("artifact") and oracle_id in globally_scoped
             )
-        ):
+        elif oracle_id in globally_scoped:
+            scoped = not any(
+                row.get(field)
+                for field in ("artifact", "unit_id", "extent_start", "extent_size")
+            )
+        elif oracle_id in artifact_scoped:
+            scoped = row.get("artifact") == artifact and not any(
+                row.get(field) for field in ("unit_id", "extent_start", "extent_size")
+            )
+        else:
+            try:
+                row_start = integer(
+                    row.get("extent_start", ""),
+                    f"evidence {evidence_id!r} extent_start",
+                )
+                row_size = integer(
+                    row.get("extent_size", ""),
+                    f"evidence {evidence_id!r} extent_size",
+                )
+            except ValueError:
+                scoped = False
+            else:
+                scoped = (
+                    row.get("artifact") == artifact
+                    and row.get("unit_id") == unit_id
+                    and row_start == extent_start
+                    and row_size == extent_size
+                )
+        replayable = all(
+            row.get(field)
+            for field in ("tool", "command", "input_sha256", "output_sha256", "observed_utc")
+        )
+        hashes_valid = all(
+            len(str(row.get(field, ""))) == 64
+            and all(character in "0123456789abcdef" for character in str(row[field]))
+            for field in ("input_sha256", "output_sha256")
+        )
+        timestamp_valid = False
+        observed_utc = row.get("observed_utc") or ""
+        if observed_utc.endswith("Z"):
+            try:
+                datetime.fromisoformat(observed_utc.removesuffix("Z") + "+00:00")
+                timestamp_valid = True
+            except ValueError:
+                pass
+        raw_equality_valid = (
+            oracle_id != "raw-bytes"
+            or row.get("input_sha256") == row.get("output_sha256")
+        )
+        if scoped and replayable and hashes_valid and timestamp_valid and raw_equality_valid:
             passed.add(oracle_id)
     return passed
 
 
-def main() -> int:
+def validate_replay_command(root: Path, value: str, context: str) -> None:
+    """Require an exact replay to name a checked-in, shell-free driver."""
+
     try:
-        targets = tomllib.loads((CONFIG / "targets.toml").read_text(encoding="utf-8"))
+        tokens = shlex.split(value)
+    except ValueError as error:
+        raise ValueError(f"{context}: invalid replay command: {error}") from error
+    shell_metacharacters = set("|&;<>()`$>\n")
+    if not tokens or any(shell_metacharacters & set(token) for token in tokens):
+        raise ValueError(f"{context}: replay command must be a shell-free argv")
+    candidates = []
+    if tokens[0] in {"python", "python3", "bash", "sh"} and len(tokens) > 1:
+        candidates.append(tokens[1])
+    else:
+        candidates.append(tokens[0])
+    script = Path(candidates[0])
+    if script.is_absolute() or ".." in script.parts or not script.parts:
+        raise ValueError(f"{context}: replay driver must be repository-relative")
+    if script.parts[0] in {".analysis", ".tools", "ghidra-project", "_reference"}:
+        raise ValueError(f"{context}: replay driver must be checked in")
+    resolved = root / script
+    if not resolved.is_file() or resolved.is_symlink():
+        raise ValueError(f"{context}: replay driver does not exist: {script}")
+
+
+def main(repository_root: Path = ROOT) -> int:
+    try:
+        config = repository_root / "config"
+        targets = tomllib.loads((config / "targets.toml").read_text(encoding="utf-8"))
         oracle_config = tomllib.loads(
-            (CONFIG / "oracles.toml").read_text(encoding="utf-8")
+            (config / "oracles.toml").read_text(encoding="utf-8")
         )
         artifacts = {item["id"]: item for item in targets["artifacts"]}
         oracle_ids = {item["id"] for item in oracle_config["oracles"]}
@@ -136,10 +224,17 @@ def main() -> int:
         global_evidence_oracles = set(
             oracle_config["policy"]["global_evidence_oracles"]
         )
+        artifact_evidence_oracles = set(
+            oracle_config["policy"]["artifact_evidence_oracles"]
+        )
         if not required_oracles <= oracle_ids:
             raise ValueError("oracles.toml exact_requires names an unknown Oracle")
         if not global_evidence_oracles <= required_oracles:
             raise ValueError("global evidence is allowed for a non-required Oracle")
+        if not artifact_evidence_oracles <= required_oracles:
+            raise ValueError("artifact evidence is allowed for a non-required Oracle")
+        if global_evidence_oracles & artifact_evidence_oracles:
+            raise ValueError("an Oracle cannot be both global and artifact-scoped")
         for oracle_id in required_oracles:
             accepted = set(oracle_by_id[oracle_id].get("accepts_evidence_classes", []))
             if not accepted or not accepted <= EVIDENCE_CLASSES:
@@ -147,10 +242,16 @@ def main() -> int:
                     f"required Oracle {oracle_id!r} lacks valid accepted evidence classes"
                 )
 
-        units = read_csv(CONFIG / "units.csv", UNIT_HEADER)
-        evidence_rows = read_csv(CONFIG / "evidence.csv", EVIDENCE_HEADER)
-        hypotheses = read_csv(CONFIG / "hypotheses.csv", HYPOTHESIS_HEADER)
-        knowledge_rows = read_csv(CONFIG / "knowledge.csv", KNOWLEDGE_HEADER)
+        units = read_csv(config / "units.csv", UNIT_HEADER, repository_root=repository_root)
+        evidence_rows = read_csv(
+            config / "evidence.csv", EVIDENCE_HEADER, repository_root=repository_root
+        )
+        hypotheses = read_csv(
+            config / "hypotheses.csv", HYPOTHESIS_HEADER, repository_root=repository_root
+        )
+        knowledge_rows = read_csv(
+            config / "knowledge.csv", KNOWLEDGE_HEADER, repository_root=repository_root
+        )
         units_by_id = unique(units, "config/units.csv")
         evidence = unique(evidence_rows, "config/evidence.csv")
         hypotheses_by_id = unique(hypotheses, "config/hypotheses.csv")
@@ -161,10 +262,20 @@ def main() -> int:
                 raise ValueError(f"evidence.csv:{line}: unknown Oracle {row['oracle']!r}")
             if row["artifact"] and row["artifact"] not in artifacts:
                 raise ValueError(f"evidence.csv:{line}: unknown artifact")
+            if row["unit_id"] and row["unit_id"] not in units_by_id:
+                raise ValueError(f"evidence.csv:{line}: unknown unit_id")
             if row["evidence_class"] not in EVIDENCE_CLASSES:
                 raise ValueError(f"evidence.csv:{line}: invalid evidence class")
             if row["result"] not in EVIDENCE_RESULTS:
                 raise ValueError(f"evidence.csv:{line}: invalid result")
+            for field in ("extent_start", "extent_size"):
+                value = integer(
+                    row[field], f"evidence.csv:{line} {field}", allow_empty=True
+                )
+                if value is not None and value < 0:
+                    raise ValueError(f"evidence.csv:{line}: negative {field}")
+            if bool(row["extent_start"]) != bool(row["extent_size"]):
+                raise ValueError(f"evidence.csv:{line}: incomplete extent binding")
 
         for line, row in enumerate(hypotheses, start=2):
             if row["status"] not in HYPOTHESIS_STATUS:
@@ -233,15 +344,38 @@ def main() -> int:
             if row["state"] == "exact":
                 if row["boundary_state"] not in {"reviewed", "shared"}:
                     raise ValueError(f"units.csv:{line}: exact boundary not reviewed")
-                if not row["source"] or not row["replay_command"]:
+                if not row["segment"] or not row["offset"] or file_offset is None:
+                    raise ValueError(f"units.csv:{line}: exact unit lacks address/extent")
+                unit_offset = integer(row["offset"], f"units.csv:{line} offset")
+                if unit_offset is None or unit_offset < 0:
+                    raise ValueError(f"units.csv:{line}: negative unit offset")
+                if file_offset + compare_size > int(artifacts[row["artifact"]]["size"]):
+                    raise ValueError(f"units.csv:{line}: exact extent exceeds artifact")
+                source = Path(row["source"])
+                if (
+                    not row["source"]
+                    or source.is_absolute()
+                    or ".." in source.parts
+                    or not (repository_root / source).is_file()
+                    or (repository_root / source).is_symlink()
+                ):
+                    raise ValueError(f"units.csv:{line}: exact unit lacks checked-in source")
+                if not row["replay_command"]:
                     raise ValueError(f"units.csv:{line}: exact unit lacks source/replay")
+                validate_replay_command(
+                    repository_root, row["replay_command"], f"units.csv:{line}"
+                )
                 passed = accepted_oracle_passes(
                     evidence_ids,
                     evidence,
                     oracle_by_id,
                     non_acceptance_classes,
                     artifact=row["artifact"],
+                    unit_id=row["id"],
+                    extent_start=file_offset,
+                    extent_size=compare_size,
                     global_evidence_oracles=global_evidence_oracles,
+                    artifact_evidence_oracles=artifact_evidence_oracles,
                 )
                 for required in required_oracles:
                     if required not in passed:

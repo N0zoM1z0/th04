@@ -101,6 +101,43 @@ def main() -> int:
                 )
             )
 
+            alias_case = copy_case(export_dir, temporary_root, "cross-category-alias")
+            alias_path = alias_case / "blocks.csv"
+            with alias_path.open(newline="", encoding="utf-8") as stream:
+                rows = list(csv.DictReader(stream))
+                fields = list(rows[0])
+            alias = dict(rows[0])
+            alias.update(
+                {
+                    "block": "UNEXPECTED_HEADER_ALIAS",
+                    "initialized": "true",
+                    "loaded": "true",
+                    "file_offset": "0",
+                    "length": "1",
+                    "min_address": "1000:0000",
+                    "max_address": "1000:0000",
+                    "address_space": properties["default_address_space"],
+                    "description": "negative-control alias",
+                }
+            )
+            rows.append(alias)
+            with alias_path.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=fields)
+                writer.writeheader()
+                writer.writerows(rows)
+            alias_properties = alias_case / "program.properties"
+            alias_properties.write_text(
+                alias_properties.read_text(encoding="utf-8").replace(
+                    f"source_range_count={len(rows) - 1}",
+                    f"source_range_count={len(rows)}",
+                ),
+                encoding="utf-8",
+            )
+            report = attest_mz_export(alias_case, target, artifact, config)
+            results["cross_category_alias"] = (
+                not report["ready"] and not report["checks"]["mapping_partition"]
+            )
+
         stale_nonce = "0" * 32 if nonce != "0" * 32 else "1" * 32
         stale = attest_mz_export(
             export_dir, target, artifact, config, expected_nonce=stale_nonce

@@ -31,7 +31,7 @@ def synthetic_mz() -> bytes:
         pages,
         1,
         header_size // 16,
-        0,
+        0x10,
         0xFFFF,
         0,
         0x100,
@@ -61,7 +61,7 @@ def synthetic_mz_with_relocations(
         pages,
         len(relocations),
         header_size // 16,
-        0,
+        0x10,
         0xFFFF,
         0,
         0x100,
@@ -83,6 +83,27 @@ class MZTests(unittest.TestCase):
         self.assertEqual(image.header.header_size, 32)
         self.assertEqual(image.relocations[0].linear, 2)
         self.assertTrue(compare_blobs(data, data)["verdict"]["raw_exact"])
+
+    def test_invalid_last_page_encoding_is_rejected(self) -> None:
+        changed = bytearray(synthetic_mz())
+        struct.pack_into("<H", changed, 2, 600)
+        image = parse_mz(bytes(changed))
+        self.assertFalse(image.valid)
+        self.assertTrue(any("last-page" in error for error in image.errors))
+
+    def test_inverted_allocation_bounds_are_rejected(self) -> None:
+        changed = bytearray(synthetic_mz())
+        struct.pack_into("<HH", changed, 10, 0x20, 0x10)
+        image = parse_mz(bytes(changed))
+        self.assertFalse(image.valid)
+        self.assertTrue(any("minimum allocation" in error for error in image.errors))
+
+    def test_stack_outside_minimum_allocation_is_rejected(self) -> None:
+        changed = bytearray(synthetic_mz())
+        struct.pack_into("<H", changed, 10, 0)
+        image = parse_mz(bytes(changed))
+        self.assertFalse(image.valid)
+        self.assertTrue(any("SS:SP" in error for error in image.errors))
 
     def test_relocated_word_normalization_is_diagnostic(self) -> None:
         data = synthetic_mz()
@@ -224,18 +245,28 @@ class ControlPlaneTests(unittest.TestCase):
             private_output(Path("README.md"))
 
     def test_upstream_and_wrong_class_cannot_satisfy_exact_oracle(self) -> None:
+        replay = {
+            "tool": "scripts/compare_artifacts.py",
+            "command": "python3 scripts/compare_artifacts.py left right",
+            "input_sha256": "1" * 64,
+            "output_sha256": "1" * 64,
+            "observed_utc": "2026-09-06T00:00:00Z",
+        }
         evidence = {
             "upstream": {
+                **replay,
                 "oracle": "raw-bytes",
                 "result": "pass",
                 "evidence_class": "upstream",
             },
             "wrong-class": {
+                **replay,
                 "oracle": "raw-bytes",
                 "result": "pass",
                 "evidence_class": "control-plane",
             },
             "local-binary": {
+                **replay,
                 "oracle": "raw-bytes",
                 "result": "pass",
                 "evidence_class": "binary",
@@ -264,20 +295,30 @@ class ControlPlaneTests(unittest.TestCase):
         )
 
     def test_exact_evidence_is_bound_to_the_unit_artifact(self) -> None:
+        replay = {
+            "tool": "scripts/compare_artifacts.py",
+            "command": "python3 scripts/compare_artifacts.py left right",
+            "input_sha256": "1" * 64,
+            "output_sha256": "1" * 64,
+            "observed_utc": "2026-09-06T00:00:00Z",
+        }
         evidence = {
             "other-binary": {
+                **replay,
                 "oracle": "raw-bytes",
                 "artifact": "th04-op",
                 "result": "pass",
                 "evidence_class": "binary",
             },
             "global-binary": {
+                **replay,
                 "oracle": "raw-bytes",
                 "artifact": "",
                 "result": "pass",
                 "evidence_class": "binary",
             },
             "global-toolchain": {
+                **replay,
                 "oracle": "toolchain-identity",
                 "artifact": "",
                 "result": "pass",

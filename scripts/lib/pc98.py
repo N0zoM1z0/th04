@@ -162,6 +162,15 @@ def parse_mz(data: bytes) -> MZImage:
         raise FormatError("input does not begin with an MZ signature")
 
     errors: list[str] = []
+    if header.bytes_on_last_page > 511:
+        errors.append(
+            "MZ bytes-on-last-page field exceeds the 0..511 encoding range"
+        )
+    if (
+        header.maximum_extra_allocation != 0xFFFF
+        and header.minimum_extra_allocation > header.maximum_extra_allocation
+    ):
+        errors.append("MZ minimum allocation exceeds maximum allocation")
     declared = header.declared_file_size
     header_size = header.header_size
     relocation_end = (
@@ -210,6 +219,17 @@ def parse_mz(data: bytes) -> MZImage:
     if invalid_sites:
         errors.append(
             f"{len(invalid_sites)} MZ relocation site(s) are outside the load module"
+        )
+    load_paragraphs = (len(program) + 15) // 16
+    minimum_allocation_end = (
+        load_paragraphs + header.minimum_extra_allocation
+    ) * 16
+    stack_pointer = header.initial_sp or 0x10000
+    stack_top = header.initial_relative_ss * 16 + stack_pointer
+    if stack_top > minimum_allocation_end:
+        errors.append(
+            f"MZ initial SS:SP requires 0x{stack_top:X} bytes but minimum "
+            f"allocation provides 0x{minimum_allocation_end:X}"
         )
 
     return MZImage(

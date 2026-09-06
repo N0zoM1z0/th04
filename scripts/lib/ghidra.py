@@ -66,6 +66,61 @@ def _coverage(
     return gaps == 0 and overlaps == 0, gaps, overlaps
 
 
+def _mapping_partition(
+    rows: list[dict[str, str]], image: MZImage, raw_size: int, *,
+    header_address_space: str, default_address_space: str,
+) -> list[dict[str, object]]:
+    """Reject every target-backed range outside the exact MZ mapping partition."""
+
+    errors: list[dict[str, object]] = []
+    for index, row in enumerate(rows):
+        block = row.get("block", f"row-{index}")
+        if row.get("initialized") not in {"true", "false"} or row.get("loaded") not in {
+            "true", "false"
+        }:
+            errors.append({"block": block, "error": "invalid boolean field"})
+            continue
+        try:
+            start = int(row["file_offset"])
+            length = int(row["length"])
+        except (KeyError, ValueError):
+            errors.append({"block": block, "error": "invalid source range integer"})
+            continue
+        end = start + length
+        if start < 0 or length <= 0 or end > raw_size:
+            errors.append(
+                {"block": block, "start": start, "length": length, "error": "range outside FileBytes"}
+            )
+            continue
+        if row["initialized"] != "true":
+            errors.append({"block": block, "error": "target-backed range is uninitialized"})
+            continue
+        header_range = 0 <= start < end <= image.header.header_size
+        load_range = image.header.header_size <= start < end <= image.header.declared_file_size
+        if header_range:
+            expected = row["loaded"] == "false" and row["address_space"] == header_address_space
+            category = "header"
+        elif load_range:
+            expected = row["loaded"] == "true" and row["address_space"] == default_address_space
+            category = "load-module"
+        else:
+            expected = False
+            category = "cross-boundary-or-overlay"
+        if not expected:
+            errors.append(
+                {
+                    "block": block,
+                    "start": start,
+                    "length": length,
+                    "category": category,
+                    "loaded": row["loaded"],
+                    "address_space": row["address_space"],
+                    "error": "unexpected target-backed mapping",
+                }
+            )
+    return errors
+
+
 def _expected_relocations(image: MZImage, load_segment: int) -> Counter[tuple[object, ...]]:
     expected: Counter[tuple[object, ...]] = Counter()
     for relocation in image.relocations:
@@ -210,6 +265,13 @@ def attest_mz_export(
         loaded=True,
         address_space=properties.get("default_address_space", ""),
     )
+    mapping_partition_errors = _mapping_partition(
+        blocks,
+        image,
+        len(target),
+        header_address_space=str(loader["header_address_space"]),
+        default_address_space=properties.get("default_address_space", ""),
+    )
     address_mapping_errors: list[dict[str, object]] = []
     for row in blocks:
         if row["initialized"] != "true" or row["loaded"] != "true":
@@ -242,6 +304,7 @@ def attest_mz_export(
         "load_memory": load_memory == relocated,
         "header_mapping_coverage": header_coverage,
         "load_mapping_coverage": program_coverage,
+        "mapping_partition": not mapping_partition_errors,
         "load_mapping_addresses": not address_mapping_errors,
         "relocation_table": actual_relocations == expected_relocations,
         "external_entry_point": entries == [expected_entry],
@@ -302,6 +365,7 @@ def attest_mz_export(
             "header_mapping_overlaps": header_overlaps,
             "load_mapping_gaps": program_gaps,
             "load_mapping_overlaps": program_overlaps,
+            "mapping_partition_errors": mapping_partition_errors,
             "load_mapping_address_errors": address_mapping_errors,
             "relocations_missing": sum((expected_relocations - actual_relocations).values()),
             "relocations_unexpected": sum((actual_relocations - expected_relocations).values()),

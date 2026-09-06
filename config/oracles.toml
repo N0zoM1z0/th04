@@ -41,6 +41,10 @@ global_evidence_oracles = [
   "toolchain-identity",
   "ledger-consistency",
 ]
+artifact_evidence_oracles = [
+  "target-identity",
+  "format-integrity",
+]
 rule = "No score or supporting Oracle can override a failed exact requirement."
 
 [[oracles]]
@@ -69,7 +73,7 @@ id = "ghidra-mz-database"
 class = "target-analysis"
 independent_of = ["decompiler-text"]
 verdict = "diagnostic"
-description = "An external parser checks the Ghidra MZ FileBytes, header overlay, segment mapping, relocation-applied load image, relocation records, entry point, timeout state, and sampled bytes against the pinned target. Function and block boundaries remain provisional."
+description = "An external parser checks the Ghidra MZ FileBytes, exact header/load mapping partition with no extra aliases, relocation-applied load image, relocation records, entry point, timeout state, and sampled bytes against the pinned target. Function and block boundaries remain provisional."
 
 [[oracles]]
 id = "cross-game-shared-blocks"
@@ -138,7 +142,7 @@ class = "compiler"
 independent_of = ["final-mz-parser"]
 verdict = "required"
 accepts_evidence_classes = ["compiler"]
-description = "Every generated Intel OMF object has valid framing and checksums, a THEADR-to-MODEND module boundary, and the expected embedded producer/dependency evidence."
+description = "Every generated Intel OMF object has valid framing and checksums, exactly one THEADR-to-MODEND module, and the expected embedded producer/dependency evidence."
 
 [[oracles]]
 id = "cold-build-determinism"
@@ -212,7 +216,7 @@ class = "control-plane"
 independent_of = []
 verdict = "required"
 accepts_evidence_classes = ["control-plane"]
-description = "Schema, state transitions, evidence references, target digests, ownership overlap, and generated status validation."
+description = "Schema, state transitions, replay metadata, global/artifact/unit-extent evidence scope, target bounds, source presence, ownership overlap, and generated status validation."
 
 [[oracles]]
 id = "cold-aggregate-replay"

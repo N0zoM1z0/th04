@@ -25,7 +25,7 @@ def synthetic_mz() -> bytes:
         1,
         1,
         2,
-        0,
+        0x1000,
         0xFFFF,
         0,
         0xFFFE,
@@ -135,6 +135,25 @@ class GhidraExportTests(unittest.TestCase):
             report = attest_mz_export(root, target, artifact, config)
             self.assertFalse(report["ready"])
             self.assertFalse(report["checks"]["load_memory"])
+
+    def test_extra_cross_category_mapping_is_rejected(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            target = synthetic_mz()
+            artifact, config = write_export(root, target)
+            blocks = root / "blocks.csv"
+            with blocks.open("a", encoding="utf-8") as stream:
+                stream.write("ALIAS,true,true,0,1,1000:0000,1000:0000,ram,\n")
+            properties = root / "program.properties"
+            properties.write_text(
+                properties.read_text(encoding="utf-8").replace(
+                    "source_range_count=2", "source_range_count=3"
+                ),
+                encoding="utf-8",
+            )
+            report = attest_mz_export(root, target, artifact, config)
+            self.assertFalse(report["ready"])
+            self.assertFalse(report["checks"]["mapping_partition"])
 
     def test_stale_export_nonce_is_rejected(self) -> None:
         with TemporaryDirectory() as temporary:

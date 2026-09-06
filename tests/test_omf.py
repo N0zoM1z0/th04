@@ -60,6 +60,10 @@ class OMFTests(unittest.TestCase):
         with self.assertRaisesRegex(OMFError, "MODEND"):
             parse_omf(record(0x80, b"\x01X") + record(0x88, b"\x00"))
 
+    def test_concatenated_modules_fail(self) -> None:
+        with self.assertRaisesRegex(OMFError, "THEADR records"):
+            parse_omf(synthetic_object() + synthetic_object())
+
     def test_dependency_timestamp_normalization_is_narrow(self) -> None:
         first = dependency_object(b"\x01\x02\x03\x04")
         second = dependency_object(b"\x05\x06\x07\x08")

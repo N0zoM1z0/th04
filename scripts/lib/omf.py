@@ -112,6 +112,17 @@ def parse_omf(data: bytes) -> tuple[OMFRecord, ...]:
         raise OMFError("object module does not begin with THEADR")
     if records[-1].record_type not in {0x8A, 0x8B}:
         raise OMFError("object module does not end with MODEND/MODEND32")
+    theadr_count = sum(record.record_type == 0x80 for record in records)
+    modend_count = sum(record.record_type in {0x8A, 0x8B} for record in records)
+    if theadr_count != 1:
+        raise OMFError(
+            f"object stream contains {theadr_count} THEADR records; expected exactly one"
+        )
+    if modend_count != 1:
+        raise OMFError(
+            "object stream contains "
+            f"{modend_count} MODEND/MODEND32 records; expected exactly one"
+        )
     return tuple(records)
 
 
