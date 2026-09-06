@@ -117,7 +117,7 @@ runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest pre-commit receipt
-  `gptweb-sndload-v8-precommit-001` passes all 63 current default-selected units across raw bytes,
+  `gptweb-producer-v9-precommit-001` passes all 63 current default-selected units across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
 - The current reviewed authored byte denominator is 12,708 bytes across 58
@@ -136,7 +136,7 @@ runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest cold replay `gptweb-sndload-v8-precommit-001`
+- The latest cold replay `gptweb-producer-v9-precommit-001`
   passed all 63 current default exact byte owners in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
@@ -198,8 +198,12 @@ is now narrowed to four blocked bytes after 37 middle bytes were recovered from
 maintained natural C++ and two-cold replay. Do not solve the remaining `PUSH DS`,
 `89 C3`, or `POP DS` with inline assembly or byte injection. C++
 reference/template/comma/conditional aliasing of `_BX` is now also falsified:
-the pseudo-register is not addressable and direct assignment remains `8B D8`. The
-`snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`
+the pseudo-register is not addressable and direct assignment remains `8B D8`.
+The same-media PC-98 `TC.EXE` Integrated Compiler 4.0 was also batch-replayed
+under the pinned DOSBox-X PC-98 profile; generated OMF still reports
+`TC86 Borland C++ 4.02`, and natural `_BX = _AX` still emits `8B D8`. Do not
+repeat IDE-versus-TCC producer switching as an explanation for target `89 C3`.
+The `snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`
 segment-pointer source shape. `bullets_update` is now boundary-reviewed but stays
 nonexact: natural C++ reproduces every argument push but emits `CALL FAR` instead
 of target `NOP; PUSH CS; CALL near`, and `#pragma samecodeseg` changes only the

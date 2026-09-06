@@ -217,6 +217,26 @@ A normal standalone TASM 4.1 `mov bx, ax` probe emits:
 so the newly discovered DOS assembler does not recover target `89 C3`. This
 agrees with the earlier TASM32 5.0 probes.
 
+### PC-98 IDE Integrated Compiler 4.0 also emits `8B D8`
+
+The original PC-98 `TC.EXE` in the same attested TC4J media is now a replayable
+producer control rather than an assumption. `scripts/probe_tc4j_pc98_ide.py`
+privately extracts `TCPC98.PAK` plus Borland's official `TCALC.PAK` sample and
+batch-builds it under the pinned DOSBox-X `machine=pc98` profile. The IDE banner
+says `Turbo C++ Version 4.0`, but generated OMF reports
+`TC86 Borland C++ 4.02`. A natural `_BX = _AX` probe emits exactly:
+
+```text
+55 8B EC 8B D8 5D CB
+```
+
+not target `89 C3`. Private run `gptweb-producer-v9-002` has receipt SHA-256
+`d917b6d0ecf26c75633d3ceb1b060372ffb5217b7ec16e3ab82fe21c3a0037d6`.
+As a corroborating release-media check, all 13 C++ members extracted from
+small-model `BIDSS.LIB` contain zero decoded register-register `89 /r` in CODE
+LEDATA. IDE-versus-command-line producer switching therefore does not explain
+the TH04 encoding and should not be repeated without materially new evidence.
+
 ### Scan only CODE SEGDEFs, not raw OMF bytes
 
 An earlier raw-object search for `89 /r` is methodologically unsafe: OMF data,

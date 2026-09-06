@@ -42,7 +42,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-sndload-v8-precommit-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-producer-v9-precommit-001/receipt.json`.
 It passes all 63 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function

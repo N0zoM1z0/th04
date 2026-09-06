@@ -66,7 +66,7 @@ included in the authored C/C++ byte percentage.
 The current accepted byte cohort is reproduced by
 `python3 scripts/replay_th04_main_exact_units.py`. Historical acceptance
 receipts remain useful, while the current pre-commit full-owner replay
-`gptweb-sndload-v8-precommit-001` independently repeated two isolated
+`gptweb-producer-v9-precommit-001` independently repeated two isolated
 `git archive` materializations of the pinned ReC98 revision, overlaid
 repository-maintained source, restored the checked-in dialog TU split through
 `Tupfile.lua`, and passed all 60 default-selected raw/map/ordered-relocation/

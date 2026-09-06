@@ -109,6 +109,11 @@ builds, compares, or avoids a known dead end.
 - TC4J BIN, INCLUDE, LIB, and startup source trees are independent attestation
   surfaces.  Pinning only `TCC.EXE` would miss ABI-affecting headers, startup
   objects, emulation libraries, and linker inputs.
+- The original PC-98 `TC.EXE` IDE is another same-media diagnostic surface.
+  Replay it only through `scripts/probe_tc4j_pc98_ide.py` under the pinned
+  DOSBox-X `machine=pc98` profile; the IBM-compatible MS-DOS Player cannot pass
+  its machine detection. Despite the IDE's 4.0 banner, generated OMF reports
+  `TC86 Borland C++ 4.02`, and `_BX = _AX` still emits `8B D8`, not `89 C3`.
 - Required downloaded/tool identities are checked before execution. Host Wine
   hashes are diagnostic because distro builds vary; exact cold output remains
   the portable gate.
