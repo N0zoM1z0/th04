@@ -9,9 +9,11 @@ it is not a legal endorsement or a claim that the host is authoritative.
 
 ## What is pinned
 
-`config/toolchain.toml` is the machine-readable authority.  It includes all 16
-required surfaces, expected tree/file hashes, file counts, exact banners,
-source URLs, and OMF producer strings.  Important acquisition identities are:
+`config/toolchain.toml` is the machine-readable authority. It includes 16
+configured surfaces: 14 required portable tool surfaces and two optional host
+Wine observations. It also records expected tree/file hashes, file counts,
+exact banners, source URLs, and OMF producer strings. Important acquisition
+identities are:
 
 | Surface | Identity |
 | --- | --- |
@@ -31,7 +33,8 @@ Sources used by the bootstrapper:
 - TASM product and digest page:
   `https://winworldpc.com/product/turbo-assembler/5x` and
   `https://winworldpc.com/download/30487b55-c392-c592-11c3-a6c2bb2a5254`.
-- TASM archive mirror URL is pinned in `config/toolchain.toml` and the script.
+- TASM archive mirror URL used by the script:
+  `https://winworldpc.com/download/30487b55-c392-c592-11c3-a6c2bb2a5254/from/c39ac2af-c381-c2bf-1b25-11c3a4e284a2`.
 - MS-DOS Player comes only from pinned ReC98 revision
   `b6ba5b0a529edbb31efdf8c0e939263804f8ee47`.
 
@@ -40,12 +43,15 @@ pass**.  Quarantine the new bytes and establish a new evidence chain first.
 
 ## Host prerequisites
 
-The tested host is Debian 12 x86-64 with Wine 8.0.  Install the small set of
-host tools (package names may differ on other distributions):
+The tested host is Debian 12 x86-64, Python 3.11.2, and Debian packages
+`wine`/`wine64` `8.0~repack-4`. Package names and host binary hashes may differ
+on another x86-64 distribution; Wine is recorded and probed rather than used
+as a cross-machine hard gate. Install:
 
 ```bash
 sudo apt update
-sudo apt install git python3 wine wine64 p7zip-full mtools curl wget
+sudo apt install git python3 unar wine wine64 p7zip-full mtools curl wget \
+  ca-certificates tar unzip
 ```
 
 Clone the pinned reference repositories with the one-line command in the main
@@ -74,14 +80,17 @@ fresh installation; keep it if it contains evidence you still need.
 The bootstrapper performs these reproducible steps:
 
 1. mirrors all TC4J installation files and validates the complete 61-file tree;
-2. downloads TASM 5.0 and validates the publisher-listed SHA-512 plus 7z
-   container integrity;
-3. creates an isolated project-local Wine prefix;
-4. expands TC4J `.PAK` files with the pinned MS-DOS Player into `C:\TC4`;
-5. extracts `TASM32.EXE` into `C:\TASM50\bin`;
-6. preserves canonical unpacked copies below `.analysis/toolchain/installed`;
-7. installs checked-in `TURBOC.CFG` and `TLINK.CFG` templates; and
-8. runs the complete attestation and execution probe.
+2. downloads TASM 5.0 and validates the publisher-listed SHA-512;
+3. before executing or extracting downloaded code, validates the TC4J tree,
+   TASM archive, and pinned MS-DOS Player and writes
+   `.analysis/toolchain/acquisition-attestation.json`;
+4. validates 7z container integrity and extracts the media;
+5. creates an isolated project-local Wine prefix;
+6. expands TC4J `.PAK` files with the pinned MS-DOS Player into `C:\TC4`;
+7. extracts `TASM32.EXE` into `C:\TASM50\bin`;
+8. preserves canonical unpacked copies below `.analysis/toolchain/installed`;
+9. installs checked-in `TURBOC.CFG` and `TLINK.CFG` templates; and
+10. runs the complete attestation and execution probe.
 
 No downloaded binary is staged by Git.  Verify this with `git status --short`
 after installation.
@@ -110,13 +119,25 @@ Using `TCC.CFG` allowed a cold build to start but made standard headers such as
 python3 scripts/attest_toolchain.py
 ```
 
-Success requires every configured surface to match, exact version banners,
+Success requires every required surface to match, exact version banners,
 two identical probe rounds, valid OMF checksums and module boundaries, expected
 embedded producers (`TC86 Borland C++ 4.02` and
 `Turbo Assembler  Version 5.0`), an observed dependency on the pinned `dos.h`,
 an MZ-valid linked probe, and successful probe execution.  It writes the
 private receipt `.analysis/toolchain/attestation.json` and returns nonzero on
 any mismatch.
+
+Required identity failure prevents Wine, MS-DOS Player, or any compiler probe
+from running. The two host Wine file hashes in the manifest are informational
+observations from the calibrated Debian machine; different hashes do not waive
+the execution, cold-build, or exact-byte Oracles. To replay only the portable
+pre-execution acquisition gate:
+
+```bash
+python3 scripts/attest_toolchain.py --identity-only \
+  --surface tc40j-media --surface tasm50-archive \
+  --surface msdos-player-p0281
+```
 
 For inspection of any additional object:
 
@@ -125,8 +146,9 @@ python3 scripts/inspect_omf.py path/to/module.obj
 ```
 
 The OMF parser is intentionally strict about record length, checksum,
-THEADR/MODEND placement, trailing bytes, producer comments, and dependency
-records.  OMF validity proves container integrity, not source correctness.
+exactly one THEADR and one MODEND/MODEND32, trailing bytes, producer comments,
+and dependency records. Concatenating two valid modules is rejected. OMF
+validity proves container integrity, not source correctness.
 
 ### OMF raw and dependency-normalized identities
 

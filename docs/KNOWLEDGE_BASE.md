@@ -48,10 +48,11 @@ builds, compares, or avoids a known dead end.
   load module, and overlay are separate dimensions.
 - The TH01-TH05 original corpus plus injected mutations validates parsing and
   failure routing over real artifact diversity.
-- The locally pinned build-chain candidate passes 16 identity surfaces and two
-  deterministic C-to-OMF-to-MZ plus ASM-to-OMF execution rounds.  This proves
-  what local bytes executed, not universal canonicality of the HTTP-only TC4J
-  source.
+- The locally pinned build-chain candidate passes 14 required portable
+  identity surfaces, and the calibrated host also matches two diagnostic Wine
+  surfaces. Two deterministic C-to-OMF-to-MZ plus ASM-to-OMF execution rounds
+  prove what local bytes executed, not universal canonicality of the HTTP-only
+  TC4J source.
 - OMF producer comments and dependency records provide cheap, high-signal
   contamination checks before final linking.  They supplement binary hashes;
   they do not prove semantics or source correctness.
@@ -71,9 +72,17 @@ builds, compares, or avoids a known dead end.
   dimension and candidate byte identity, yet the default command remains a
   strict raw gate.  TH02's 2/17/1-byte MZ differences are good narrow-probe
   controls; TH04 `OP`/`MAINE` require broader ownership/layout work.
-- Exact evidence is artifact-scoped unless the Oracle policy explicitly marks
-  it global.  A generic clean toolchain replay is valuable calibration but
-  cannot satisfy a TH04 unit's own compilation replay or raw-byte gate.
+- Exact evidence is explicitly global, artifact-scoped, or unit-and-extent
+  scoped. Same-artifact evidence cannot satisfy another unit's compilation,
+  layout, raw-byte, or cold-replay gate.
+- A synthetically forged exact row now fails on reused unit evidence, missing
+  metadata/source/address, unequal raw hashes, private replay drivers, and
+  out-of-artifact extents.
+- OMF validation requires one module rather than merely valid outer records;
+  concatenating two valid THEADR-to-MODEND streams is rejected.
+- MZ format validation includes the last-page encoding, allocation ordering,
+  and minimum-allocation stack envelope. All 20 private target controls still
+  pass the stricter parser.
 
 ## Current toolchain knowledge
 
@@ -86,6 +95,9 @@ builds, compares, or avoids a known dead end.
 - TC4J BIN, INCLUDE, LIB, and startup source trees are independent attestation
   surfaces.  Pinning only `TCC.EXE` would miss ABI-affecting headers, startup
   objects, emulation libraries, and linker inputs.
+- Required downloaded/tool identities are checked before execution. Host Wine
+  hashes are diagnostic because distro builds vary; exact cold output remains
+  the portable gate.
 - Detailed acquisition, automatic installation, focused invocation, cold-build
   usage, and recovery instructions are in `docs/TOOLCHAIN.md`.
 - Headless analysis uses Ghidra 12.1.3 and Temurin JDK 21.0.12.1+1. Downloads,
@@ -98,6 +110,9 @@ builds, compares, or avoids a known dead end.
 - The headless wrapper validates the target and analysis tools on every run.
   A fresh nonce plus an external Python MZ parser prevents a stale Java export
   from passing even if Ghidra reports a script failure with process status 0.
+- Ghidra project files are disposable local state rather than cross-machine
+  hash surfaces. The fresh export is strict: every target-backed mapping must
+  be exactly header or load-module, so an additional alias is rejected.
 - Ghidra's MZ loader applies relocation words for load segment `0x1000` and
   maps the header into a `HEADER` overlay. Full database bytes, relocation
   records, source mapping, entry point, and samples are attestable; inferred

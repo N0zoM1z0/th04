@@ -21,6 +21,9 @@ python3 scripts/ghidra.py th04-main check
 This verifies the pinned `.tools/` installation and the saved
 `ghidra-project/` database before exporting a nonce-bound private receipt.
 Ghidra auto-analysis results remain provisional even when this check passes.
+The project itself is disposable host-local state and is not tree-hashed;
+strictness is applied to the freshly exported target bytes, MZ mapping,
+relocations, and entry point.
 
 ## 2. Select one bounded problem
 
@@ -109,6 +112,11 @@ upstream `exact` or `finalized` state into `config/units.csv`.
 `structural` records strong non-byte evidence.  `exact` requires raw zero
 differences, replay metadata, required evidence, and cold affected-unit replay.
 Near matches remain non-exact regardless of their percentage.
+
+For exact promotion, only target/format evidence is reusable across one
+artifact and only the manifest's two global Oracles may omit it. Every other
+required row must carry the unit ID and exact file extent. The ledger validator
+also rejects missing source/address/replay data and unequal raw slice hashes.
 
 ## 9. Preserve durable memory
 

@@ -3,7 +3,8 @@
 ## Phase
 
 Control-plane, target-ingestion, build-chain calibration, and headless Ghidra
-bring-up. No TH04 source or unit has been accepted yet.
+bring-up are ready for handoff. No TH04 source or unit has been reconstructed
+or accepted yet.
 
 ## Verified locally
 
@@ -32,14 +33,23 @@ bring-up. No TH04 source or unit has been accepted yet.
   These are navigation anchors only, not boundary/source/exactness evidence.
 - Exact ledger promotion now requires every configured Oracle and rejects
   upstream, cross-game, external, or inference evidence as gate substitutes.
+  Target/format evidence binds to the artifact; compilation/layout/raw/cold
+  evidence binds to the unit and exact file extent. Forged exact-ledger
+  fixtures fail closed on reuse, missing metadata, bad extents, and unequal raw
+  hashes.
 - The local candidate build chain pins and validates TC4J media plus installed
   BIN/INCLUDE/LIB/startup trees, TCC 4.02, TLINK 6.10, TASM32 5.0,
-  configuration files, Wine 8.0, and ReC98's MS-DOS Player P0281 binary.
+  configuration files, and ReC98's MS-DOS Player P0281 binary. Wine 8.0 is the
+  observed host runner, not a portable binary-identity requirement.
+- Required acquisition identities are now checked before any downloaded code
+  is executed. Host Wine binary hashes are diagnostic for portability; probe,
+  cold-build, and exact output results remain mandatory.
 - Two execution-probe rounds produced identical C OMF, ASM OMF, map, and MZ
   outputs.  Embedded OMF producers and the compiler's `dos.h` dependency agree
   with the pinned installation; the linked DOS probe executes successfully.
 - An empty-clone bootstrap test independently downloaded and rebuilt the
-  complete private toolchain and passed all 16 identity/execution surfaces.
+  complete private toolchain, passed all 14 required identity surfaces and
+  execution probes, and also matched both calibrated-host Wine diagnostics.
 - Three isolated ReC98 cold builds produced the same 20 selected TH01-TH05
   outputs (aggregate identity `80127bc4…e3603e25d`).  All 416 generated OMF
   objects validate structurally and by checksum; each game-specific object set
@@ -77,8 +87,12 @@ bring-up. No TH04 source or unit has been accepted yet.
   deterministic samples.
 - Loader-only real-corpus controls also pass for TH01 `OP.EXE` with 625
   relocations and TH04 `OP.EXE` with zero relocations. Independent loaded-byte,
-  relocation, mapping, and stale-nonce mutations all fail the intended
-  database-Oracle dimension.
+  relocation, mapping, unexpected cross-category alias, and stale-nonce
+  mutations all fail the intended database-Oracle dimension.
+- The MZ parser now rejects invalid last-page encodings, inverted allocation
+  bounds, and a stack outside minimum allocation while all 20 pinned targets
+  continue to pass. The OMF parser rejects concatenated valid modules by
+  requiring exactly one THEADR and one MODEND/MODEND32.
 
 ## Open provenance issue
 
@@ -97,6 +111,9 @@ status alone is not independent provenance or acceptance evidence.
 - `ndisasm`, GNU `objdump`, Wine, `unar`, and mtools are available.
 
 ## Next bounded work
+
+Infrastructure work is complete for the current scope. When reconstruction is
+explicitly started:
 
 1. Extend the headless Ghidra private export with a bounded provisional
    function/xref inventory when the reconstruction phase begins.

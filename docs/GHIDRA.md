@@ -13,6 +13,10 @@ MZ targets rather than PE images.
 | [Ghidra](https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.1.3_build) | 12.1.3 (`Ghidra_12.1.3_build`) | `93a5d11a9ad510622acaaf908c556a7b9b764d338e78a7567f3689bf5081fd54` |
 | [Eclipse Temurin JDK](https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.12.1%2B1) | 21.0.12.1+1 | `ce79869e1307ed8ee1e2baa86a412b1eb5b75d10a01006d788a6f968bcfaee94` |
 
+The bootstrap downloads the exact asset URLs recorded in
+`config/analysis_toolchain.toml`; that manifest is the copy/paste source of
+truth on a new machine.
+
 The resulting local layout is deliberately explicit:
 
 ```text
@@ -49,8 +53,8 @@ repository.
 
 ## Install and attest
 
-On Debian/Ubuntu x86-64, install the small host prerequisites and run the
-bootstrapper:
+The calibrated host used Debian 12 x86-64 and Python 3.11.2. On a new
+Debian/Ubuntu x86-64 host, install the small prerequisites and run:
 
 ```bash
 sudo apt update
@@ -87,6 +91,11 @@ The expected Ghidra tree identity is
 A clean temporary checkout with an empty `.tools/` directory has replayed the
 complete extraction, link creation, and attestation path; this is not merely an
 in-place check of the first manual installation.
+
+Static archive/tree/file identity is checked before Java or Ghidra is
+executed. A failed identity produces a skipped execution result and a nonzero
+exit. These are portable tool-distribution hashes, not hashes of a local
+Ghidra project.
 
 `scripts/tool-env.sh` exposes the same stable links and isolated XDG
 directories for an unusual manual headless command:
@@ -139,7 +148,8 @@ whose provenance is unknown.
 
 ## Required read-only check
 
-Before using a database for target-dependent work, run:
+Before using a database for target-dependent work, run the lightweight fresh
+check:
 
 ```bash
 python3 scripts/ghidra.py th04-main check
@@ -155,13 +165,15 @@ The following dimensions must all pass:
 
 - target SHA-256 and original complete Ghidra `FileBytes`;
 - MZ loader display name, language, compiler specification, image base, and
-  absence of an analysis timeout;
+  timeout state of the current headless export;
 - complete MZ header bytes as read from the `HEADER` overlay;
 - complete load module bytes after applying every MZ relocation for Ghidra's
   fixed load segment `0x1000`;
 - modified `FileBytes`, with no changes except the independently predicted
   relocation words;
 - exact header and load-module file-offset coverage with no gaps or overlaps;
+- an exact partition of every target-backed range: unloaded `HEADER` bytes or
+  loaded module bytes only, with no cross-category or overlay aliases;
 - segment:offset-to-file-offset consistency for every loaded source range;
 - every relocation address, raw table segment/offset, status, type, original
   word, relocated word, and multiplicity;
@@ -181,9 +193,15 @@ Run fault injection against a fresh positive export:
 python3 scripts/smoke_ghidra_oracle.py th04-main
 ```
 
-The test changes one loaded byte, one relocation result, one file mapping, and
-the export nonce in isolated temporary copies. Each must fail its intended
-dimension. The test never changes the target or saved database.
+The test changes one loaded byte, one relocation result, one file mapping,
+adds an unexpected loaded alias for a header byte, and changes the export
+nonce in isolated temporary copies. Each must fail its intended dimension.
+The test never changes the target or saved database.
+
+When private targets, tools, and the default project exist,
+`python3 scripts/ci.py` performs this live nonce-bound check before running the
+mutation suite. On a fresh public checkout those private checks are skipped;
+there is no machine-specific project-tree hash to copy between hosts.
 
 Real-corpus calibration also covers both major branches:
 

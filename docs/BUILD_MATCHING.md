@@ -3,10 +3,11 @@
 ## Locally attested candidate
 
 The private build environment now contains Turbo C++ 4.0J command-line tools
-(`TCC.EXE` banner 4.02 and `TLINK.EXE` banner 6.10), TASM32 5.0, ReC98's
-pinned MS-DOS Player P0281 binary, and Wine 8.0.  The complete acquisition,
-installation, attestation, and operating instructions live in
-`docs/TOOLCHAIN.md`; immutable identities live in `config/toolchain.toml`.
+(`TCC.EXE` banner 4.02 and `TLINK.EXE` banner 6.10), TASM32 5.0, and ReC98's
+pinned MS-DOS Player P0281 binary, running through an observed Wine 8.0 host.
+The complete acquisition, installation, attestation, and operating
+instructions live in `docs/TOOLCHAIN.md`; portable tool identities and host
+diagnostics live in `config/toolchain.toml`.
 
 This is deliberately called a **locally attested candidate**, not a universally
 canonical toolchain.  The TC4J media came from an HTTP-only third-party mirror
@@ -101,5 +102,11 @@ Every exact comparison receipt must include:
 - whether the build was cold, isolated, deterministic, and serial;
 - accepted extent and every relocation/layout rule;
 - comparator version/commit and replay command.
+
+In `config/evidence.csv`, target/format rows bind to the artifact and the two
+explicit global Oracles omit it. All remaining exact-required rows must repeat
+the unit ID plus exact file start and comparison size; a same-artifact pass for
+a different extent is rejected. `config/units.csv` must name an existing
+repository source file and a shell-free repository replay driver.
 
 Incremental builds may diagnose.  They may not publish aggregate exact totals.

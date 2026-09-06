@@ -50,6 +50,10 @@ The repository stores four independent kinds of durable state:
 3. `hypotheses.csv` records falsifiable semantic/ABI claims.
 4. `evidence.csv` records Oracle observations and replay information.
 
+Exact-required evidence has an explicit scope: global, artifact, or
+unit-plus-file-extent as declared in `config/oracles.toml`. This keeps the
+ledger strict without tying disposable tool caches or databases to one host.
+
 This separation prevents common false equivalences:
 
 - a decompiler function is not a reviewed compiler unit;

@@ -32,7 +32,42 @@ identify the supplied Japanese image exactly, while independent pristine-dump
 confirmation remains open.  That qualification is kept separate from whether
 a candidate build exactly matches the pinned bytes.
 
-## Quick start
+## Fresh machine setup
+
+The calibrated host was Debian 12 x86-64 with Python 3.11 and Wine 8.0. The
+repository does not hard-gate a new machine on the distro's Wine binary hash;
+the portable gates are the pinned Borland/MS-DOS Player bytes, successful
+execution probes, cold determinism, and final exact comparison. Allow roughly
+6 GiB of free space if installing both tool stacks and retaining cold builds.
+
+```bash
+git clone https://github.com/N0zoM1z0/th04.git
+cd th04
+sudo apt update
+sudo apt install git python3 unar wine wine64 p7zip-full mtools curl wget \
+  ca-certificates tar unzip
+```
+
+Run the one-line reference clone command in the reference section below, then:
+
+```bash
+python3 scripts/import_targets.py /path/to/your/legal-copy.rar \
+  --include-all-games-smoke
+bash scripts/bootstrap_toolchain.sh
+bash scripts/bootstrap_analysis_toolchain.sh
+python3 scripts/ghidra.py th04-main import
+python3 scripts/preflight.py
+python3 scripts/ghidra.py th04-main check
+python3 scripts/ci.py
+```
+
+All downloaded tools are under ignored `.tools/`; targets, Borland media,
+builds, exports, and receipts are under ignored `.analysis/`; Ghidra databases
+are under ignored `ghidra-project/`. No GUI step is required. Each bootstrap
+refuses to overlay a partial installation, so move an incomplete private tree
+aside and rerun rather than editing hashes.
+
+## Daily quick start
 
 ```bash
 python3 scripts/check_environment.py
@@ -40,6 +75,7 @@ python3 scripts/import_targets.py \
   /path/to/your/legal-copy.rar \
   --include-all-games-smoke
 python3 scripts/preflight.py
+python3 scripts/ghidra.py th04-main check
 python3 scripts/smoke_oracles.py
 ```
 
@@ -79,12 +115,10 @@ does not promote upstream claims into local evidence.
 
 ## Download and install the build toolchain
 
-The tested environment is Debian 12 x86-64 with Wine 8.0.  Install host
-prerequisites, then run the fail-closed bootstrapper:
+The tested environment is Debian 12 x86-64 with Wine 8.0. Install the host
+prerequisites from the fresh-machine section, then run the bootstrapper:
 
 ```bash
-sudo apt update
-sudo apt install git python3 wine wine64 p7zip-full mtools curl wget
 bash scripts/bootstrap_toolchain.sh
 ```
 
@@ -99,11 +133,14 @@ requires the published SHA-512
 The local archive SHA-256 is
 `94723cc2c882525dd561e4d35a9251b8fb992a0352c075ca5f97fff12bbc872f`.
 
-Exact binaries, installed tree hashes, Wine binaries,
+Exact Borland/MS-DOS Player binaries, installed tree hashes,
 configuration files, banners, and OMF producer strings are all pinned in
 `config/toolchain.toml`.  The tools and media are proprietary and stay under
 ignored `.analysis/`; users must obtain and use them under applicable rights.
 The third-party URLs are provenance records, not legal or canonicality claims.
+Host Wine file hashes are retained only as diagnostics from the calibrated
+machine; a different host build is accepted only if the execution probes and
+cold output Oracles pass.
 
 The install uses an isolated Wine prefix and DOS-visible `C:\TC4` path because
 the Borland DPMI loader fails with `Loader error (0000)` from this repository's
@@ -115,10 +152,12 @@ deep `Z:` path.  The required compiler configuration is `TURBOC.CFG`, not
 python3 scripts/attest_toolchain.py
 ```
 
-This requires 16 acquisition/install/runtime surfaces, two identical
-C-to-OMF-to-MZ and ASM-to-OMF rounds, valid OMF framing/checksums, expected
-embedded producer and dependency records, and successful execution.  For an
-individual object, run `python3 scripts/inspect_omf.py path/to/module.obj`.
+This checks 16 configured acquisition/install/runtime surfaces: 14 portable
+tool surfaces are required and two host Wine hashes are diagnostic. It also
+requires two identical C-to-OMF-to-MZ and ASM-to-OMF rounds, valid OMF
+framing/checksums, expected embedded producer and dependency records, and
+successful execution. For an individual object, run
+`python3 scripts/inspect_omf.py path/to/module.obj`.
 
 Cold-build pinned ReC98 as an untrusted candidate, then run the strict and
 known-vector checks across all five PC-98 games:
@@ -178,7 +217,8 @@ provided.
 The TH04 database Oracle goes beyond the PE-oriented reference check. It
 independently verifies the complete imported `FileBytes`, MZ header overlay,
 Ghidra's relocation-applied load image at segment `0x1000`, every relocation,
-segment/file mapping, entry `CS:IP`, timeout state, and sampled bytes. Ghidra's
+the exact header/load mapping partition with no extra target-backed aliases,
+entry `CS:IP`, current-run timeout state, and sampled bytes. Ghidra's
 inferred blocks and functions remain provisional and cannot satisfy an exact
 gate. See [`docs/GHIDRA.md`](docs/GHIDRA.md) for exact URLs and hashes, the
 `.tools/`/`ghidra-project/` layout, clean rebuild procedure, all commands,

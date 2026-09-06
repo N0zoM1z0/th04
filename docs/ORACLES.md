@@ -10,11 +10,12 @@ verdict vector instead of hiding evidence behind one similarity percentage.
 increase semantic confidence or localize a mismatch, but it cannot override a
 failed exact requirement.
 
-Exact evidence is artifact-scoped by default.  A passing row for another
-artifact—or a generic row with no artifact—cannot satisfy a unit's required
-gate.  Only `toolchain-identity` and `ledger-consistency` are deliberately
-global; compilation replay, OMF, layout, raw bytes, and cold replay must be
-attached to the same artifact as the exact unit.
+Exact evidence has three explicit scopes. `toolchain-identity` and
+`ledger-consistency` are global; `target-identity` and `format-integrity` bind
+to the artifact; every other required Oracle binds to artifact, unit ID,
+`extent_start`, and `extent_size`. Required pass rows also need a tool,
+replayable command, two valid SHA-256 fields, and UTC observation time. A
+`raw-bytes` pass additionally requires equal input/output slice hashes.
 
 ## Layer 0: provenance and target identity
 
@@ -37,6 +38,9 @@ views independently from the pinned target with `scripts/lib/pc98.py`. It
 requires exact full digests and mapping/relocation equality plus deterministic
 samples. A per-run nonce prevents stale exports from passing when a Ghidra
 post-script fails but the outer headless process returns zero.
+Every target-backed source range must also belong wholly to the unloaded MZ
+header or loaded module category. Complete expected coverage therefore cannot
+hide an extra RAM alias or cross-category mapping.
 
 This is a database-consistency Oracle, not an independent semantics Oracle.
 It proves which target the database represents and how the pinned MZ loader
@@ -55,6 +59,8 @@ For MZ artifacts, parse and report:
 
 For flat COM files, record the complete byte extent and digest.  TH04's
 `ZUN.COM` is MZ and must not be treated as a flat COM solely by extension.
+MZ integrity rejects `e_cblp > 511`, minimum allocation above a finite maximum,
+and an initial stack top outside the load module plus minimum allocation.
 
 ## Layer 2: layout and relocation
 
@@ -154,6 +160,11 @@ A unit is exact only when all required conditions hold:
 8. Ledger validation passes.
 9. Every affected previously accepted unit replays from a cold build.
 
+The unit ledger therefore requires a real segment/offset/file extent, an
+existing repository source file, and a shell-free replay command naming a
+repository driver. Evidence for another unit cannot be reused even when both
+units belong to the same executable.
+
 Artifact-level exactness additionally requires the whole physical file,
 including header, relocation table, padding, library/runtime code, and overlay,
 to have the target SHA-256.  There is no rounded `99.99% exact` state.
@@ -170,11 +181,16 @@ Public CI also uses synthetic MZ/COM fixtures so regression tests need no game
 data.
 
 `scripts/smoke_ghidra_oracle.py` independently mutates a fresh private database
-export's loaded byte, relocation result, source mapping, and run nonce. Every
-case must fail its intended dimension. The real-corpus loader controls are TH04
+export's loaded byte, relocation result, source mapping, cross-category alias,
+and run nonce. Every case must fail its intended dimension. The real-corpus loader controls are TH04
 `OP.EXE` with zero relocations, TH01 `OP.EXE` with 625 relocations, and analyzed
 TH04 `MAIN.EXE` with 1,136 relocations. These controls validate the Oracle and
 loader contract without promoting any inferred boundary or reconstruction.
+
+Public synthetic controls additionally reject a forged exact ledger, an OMF
+stream made by concatenating two valid modules, invalid MZ last-page/allocation
+fields, and an out-of-minimum-allocation initial stack. The same stricter MZ
+parser continues to accept all 20 private TH01-TH05 target artifacts.
 
 The compiler/build calibration is now live.  Three cold source
 materializations of pinned ReC98 revision
