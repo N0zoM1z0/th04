@@ -186,3 +186,17 @@ rg 'ev-oracle-smoke-corpus' config/evidence.csv config/knowledge.csv
 Before handoff, update the index and this document only when the routing map or
 entry contract changes.  Detailed target discoveries should live in focused
 notes linked from `source_refs`, not in an ever-growing monolith.
+
+- A direct Borland pseudo-register load from a parameter can change register
+  allocation globally. In TH04 `snd_load`, `_AX = func` promotes `func` to DI;
+  reading through `*reinterpret_cast<snd_load_func_t near *>(&func)` keeps it
+  memory-resident and naturally recovers the target BP-relative `8B 46 06`.
+- For a small natural replacement inside a pinned upstream scaffold, use the
+  replay driver's fail-closed `source_mode=replace`: bind the complete scaffold
+  SHA-256, old-span offset/size, and old-span SHA-256 before replacement. Never
+  treat surrounding scaffold source as maintained exact source merely because
+  the linked slice matches.
+- `geninterrupt(i)` is just TC4J `__int__(i)` and carries no DS-clobber contract.
+  In the clean corpus, isolated mid-function `PUSH DS ... POP DS` has no natural
+  C/C++ compiler precedent outside full `__saveregs`/interrupt prologues; `__seg`
+  locals still lower to MOV-based segment saves/restores.

@@ -76,20 +76,20 @@ def materialize(revision: str, destination: Path) -> None:
     run_checked(["tar", "-xf", archive, "-C", destination], ROOT)
 
 
-def overlay_sources(source_root: Path, entries: list[dict[str, str]]) -> list[dict[str, str]]:
-    overlays = []
+def overlay_sources(source_root: Path, entries: list[dict[str, object]]) -> list[dict[str, object]]:
+    overlays: list[dict[str, object]] = []
     for entry in entries:
-        repo_source = ROOT / entry["repo_source"]
+        repo_source = ROOT / str(entry["repo_source"])
         if not repo_source.is_file():
             raise FileNotFoundError(repo_source)
-        mode = entry.get("source_mode", "overlay")
+        mode = str(entry.get("source_mode", "overlay"))
         if mode == "overlay":
-            destination = source_root / entry["overlay_path"]
+            destination = source_root / str(entry["overlay_path"])
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(repo_source, destination)
             overlays.append({"unit_id": entry["id"], "mode": mode, "repo_source": entry["repo_source"], "source_path": entry["overlay_path"], "sha256": digest_file(repo_source)})
         elif mode == "fragment":
-            destination = source_root / entry["patch_path"]
+            destination = source_root / str(entry["patch_path"])
             fragment = repo_source.read_bytes()
             original = destination.read_bytes()
             if original.count(fragment) != 1:
@@ -102,6 +102,42 @@ def overlay_sources(source_root: Path, entries: list[dict[str, str]]) -> list[di
             if patched != original:
                 raise RuntimeError(f"{entry['id']}: identity fragment unexpectedly changed scaffold bytes")
             overlays.append({"unit_id": entry["id"], "mode": mode, "repo_source": entry["repo_source"], "source_path": entry["patch_path"], "fragment_offset": offset, "fragment_size": len(fragment), "sha256": digest_file(repo_source), "scaffold_sha256": digest_bytes(original)})
+        elif mode == "replace":
+            destination = source_root / str(entry["patch_path"])
+            replacement = repo_source.read_bytes()
+            original = destination.read_bytes()
+            expected_scaffold = str(entry["scaffold_sha256"])
+            if digest_bytes(original) != expected_scaffold:
+                raise RuntimeError(
+                    f"{entry['id']}: scaffold SHA-256 drift in {entry['patch_path']}"
+                )
+            offset = int(entry["replace_offset"])
+            match_size = int(entry["replace_size"])
+            if offset < 0 or match_size <= 0 or offset + match_size > len(original):
+                raise RuntimeError(f"{entry['id']}: replacement extent escapes scaffold")
+            matched = original[offset:offset + match_size]
+            expected_match = str(entry["replace_sha256"])
+            if digest_bytes(matched) != expected_match:
+                raise RuntimeError(f"{entry['id']}: replacement source span SHA-256 mismatch")
+            stat = destination.stat()
+            patched = original[:offset] + replacement + original[offset + match_size:]
+            destination.write_bytes(patched)
+            os.utime(destination, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+            overlays.append(
+                {
+                    "unit_id": entry["id"],
+                    "mode": mode,
+                    "repo_source": entry["repo_source"],
+                    "source_path": entry["patch_path"],
+                    "replace_offset": offset,
+                    "replace_size": match_size,
+                    "replace_sha256": expected_match,
+                    "replacement_size": len(replacement),
+                    "replacement_sha256": digest_file(repo_source),
+                    "scaffold_sha256": expected_scaffold,
+                    "patched_scaffold_sha256": digest_bytes(patched),
+                }
+            )
         else:
             raise RuntimeError(f"{entry['id']}: unknown source_mode {mode!r}")
     return overlays

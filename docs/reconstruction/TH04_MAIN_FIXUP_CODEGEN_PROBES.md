@@ -201,8 +201,10 @@ this limitation.
 
 ## `snd_load`: stronger compiler/assembler negatives
 
-The 41-byte reviewed gap remains nonexact. Two newer observations strengthen
-rather than weaken the existing `89 C3` / DS-save conclusions.
+This section records the probe state when the reviewed middle gap was still
+41 bytes. Later v8 natural-source recovery below promotes 37 of those bytes and
+leaves only four blocked; the negative `89 C3` / DS-save observations here
+remain applicable to those residual bytes.
 
 ### DOS TASM 4.1 still emits `8B D8`
 
@@ -257,6 +259,55 @@ mid-function `PUSH DS ... POP DS` save across arbitrary statements; apparent
 raw-byte hits were largely non-code/data or interrupt-style full-register save
 patterns. Keep the current `snd_load` gap nonexact rather than manufacturing the
 sequence.
+
+
+## `snd_load` v8: 37 middle bytes recovered naturally
+
+The old 41-byte umbrella is now split into explicit non-overlapping byte owners.
+Fresh two-cold replay accepts three maintained natural-source regions totaling
+37 bytes, reducing the true `snd_load` residual to four bytes.
+
+### Preventing `func` parameter promotion
+
+Full-function TC4J probes explain the old inline `mov ax, func` comment.
+Direct `_AX = func`, an explicit cast, and an inline identity helper all make
+TC4J keep `func` in DI. The normal variants grow the function from 234 to 237
+bytes and emit `8B C7` (`MOV AX,DI`). Rewriting the high-byte condition does not
+help; it still promotes the parameter.
+
+Taking the parameter address at the load site changes the allocator decision:
+
+```cpp
+_AX = *reinterpret_cast<snd_load_func_t near *>(&func);
+```
+
+The full object returns to 234 bytes, keeps the target prologue, and emits
+`8B 46 06` exactly. `gptweb-sndload-func-load-001` verifies the three-byte slice
+through two isolated complete builds. `source_mode=replace` is deliberately
+fail-closed on the whole scaffold SHA plus old-span offset/size/SHA, so this
+natural replacement does not make adjacent upstream inline assembly maintained
+source.
+
+### DS save/restore: broader negative evidence
+
+A new segment-aware scan parses LNAMES/SEGDEF, restricts decoding to `CODE`
+LEDATA, and filters translation units whose C/C++ implementation dependencies
+contain `_asm`, `asm {}`, `#pragma codestring`, or `__emit__`. Among **239 clean
+C/C++ objects**, 16 apparent `PUSH DS ... POP DS` pairs were found. The genuine
+pairs are only full `__saveregs`/interrupt-style register-save prologues. The
+TH01 `main_01` appearances use `PUSH DS` as far-pointer argument setup and then
+hit compiler switch-table data when linearly decoded; they are not DS restore
+precedents.
+
+A focused type matrix also tests `unsigned`, `register unsigned`, `void __seg *`,
+and `unsigned __seg *` saved-DS variables. Stack-backed forms emit
+`MOV [BP-2],DS` / `MOV DS,[BP-2]`; the register form emits `MOV DX,DS` /
+`MOV DS,DX`. None produces the target isolated `PUSH DS` / `POP DS` pair.
+Finally, TC4J's own `DOS.H` defines `geninterrupt(i)` as `__int__(i)` with no
+segment clobber declaration. Do not repeat generic segment-local variants unless
+new compiler evidence surfaces.
+
+The remaining `snd_load` bytes are therefore exactly `1E`, `89 C3`, and `1F`.
 
 ## Official TC4J `TDUMP 4.1` confirms FIXUPP semantics
 
@@ -379,9 +430,10 @@ The remaining work should focus on information not already falsified here:
    considering relocation order;
 2. investigate whether another *legally available and independently attested*
    compiler producer is justified by target evidence before testing it;
-3. continue `snd_load` source archaeology around its DOS handle and segment
-   preservation rather than repeating `_BX = _AX`, TASM mode, `-B`, or generic
-   DS-save probes.
+3. treat the remaining four `snd_load` bytes as focused producer/source
+   archaeology: target `89 C3` plus isolated `PUSH DS` / `POP DS`. Do not repeat
+   `_BX = _AX`, parameter-promotion, TASM mode, `-B`, generic DS-save, or `__seg`
+   local probes without new evidence.
 
 Do not solve any of these with target-derived byte directives, `__emit__`,
 inline assembly, hand-edited compiler assembly, or patched OMF records.

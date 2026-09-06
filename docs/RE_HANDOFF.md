@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted: reviewed authored C/C++ bytes are 12,650 / 12,691 (99.676936%)
+accepted: reviewed authored C/C++ bytes are 12,687 / 12,708 (99.834750%)
 exact, and reviewed authored functions are 112 / 114 (98.245614%) exact. Nine
 standalone original-style ASM units totaling 1,489 bytes are separately exact
 and are not counted in the authored C/C++ percentage. No deterministic TH04
@@ -117,18 +117,27 @@ runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest pre-commit receipt
-  `gptweb-nonexact-review-precommit-001` passes all 60 current default-selected units across raw bytes,
+  `gptweb-sndload-v8-precommit-001` passes all 63 current default-selected units across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
-- The current reviewed authored byte denominator is 12,691 bytes across 52
-  authored units/regions; 12,650 bytes across 51 units/regions are exact. The
-  only reviewed byte gap is the 41-byte middle region in `snd_load`.
+- The current reviewed authored byte denominator is 12,708 bytes across 58
+  authored units/regions; 12,687 bytes across 54 units/regions are exact. The
+  21 blocked bytes are explicit: four in `snd_load` (`PUSH DS`, target `89 C3`,
+  `POP DS`) and the 17-byte reviewed `bullets_update` spark-call region.
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
   `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
   `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
   directive is involved.
-- The latest cold replay `gptweb-nonexact-review-precommit-001`
-  passed all 60 current default exact byte owners in two isolated
+- `snd_load` now has three additional exact natural-source subspans. Identity
+  fragments recover the DOS-open and driver-dispatch/read sequences. The
+  parameter reload uses `_AX = *reinterpret_cast<snd_load_func_t near *>(&func);`;
+  taking the address prevents TC4J from promoting `func` to DI and naturally
+  emits target `8B 46 06`. A fail-closed `source_mode=replace` gate verifies the
+  complete pinned scaffold SHA plus source-span offset/size/SHA before applying
+  that one maintained replacement, so surrounding upstream low-level source is
+  never claimed as maintained exact source.
+- The latest cold replay `gptweb-sndload-v8-precommit-001`
+  passed all 63 current default exact byte owners in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
@@ -183,10 +192,11 @@ option matrix, and the pinned-media TASM 4.1 `-B` behavior. The remaining work
 should target genuinely new source/IR or producer evidence, not previously
 falsified boundary/assembler modes.
 
-Preserve the >99% reviewed authored function/byte baseline with the default
-two-cold replay before changing shared source or toolchain surfaces. The
-smallest remaining reviewed exactness investigation is the 41-byte `snd_load`
-middle region; do not solve it with inline assembly or byte injection. C++
+Preserve the >98% reviewed authored function/byte baseline with the default
+two-cold replay before changing shared source or toolchain surfaces. `snd_load`
+is now narrowed to four blocked bytes after 37 middle bytes were recovered from
+maintained natural C++ and two-cold replay. Do not solve the remaining `PUSH DS`,
+`89 C3`, or `POP DS` with inline assembly or byte injection. C++
 reference/template/comma/conditional aliasing of `_BX` is now also falsified:
 the pseudo-register is not addressable and direct assignment remains `8B D8`. The
 `snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`

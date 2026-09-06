@@ -12,10 +12,10 @@ reviewed denominator until they are resolved.
 | --- | ---: |
 | Initial screened source-module contributions | 58 / 17,412 bytes |
 | Initial Ghidra function entries in those contributions | 151 |
-| Reviewed authored byte units/regions | 52 |
+| Reviewed authored byte units/regions | 58 |
 | Reviewed authored bytes | 12,691 |
-| Exact authored byte units/regions | 51 |
-| **Exact authored bytes** | **12,650 / 12,691 (99.676936%)** |
+| Exact authored byte units/regions | 54 |
+| **Exact authored bytes** | **12,687 / 12,708 (99.834750%)** |
 | Tracked authored function candidates | 114 |
 | Reviewed authored functions | 114 |
 | Exact authored functions | 112 |
@@ -23,13 +23,17 @@ reviewed denominator until they are resolved.
 | Provisional function candidates excluded from the denominator | 0 |
 | Exact original-style standalone ASM units | 9 / 1,489 bytes |
 
-The remaining reviewed authored byte mismatch is a single 41-byte middle
-region inside `snd_load`. Function accounting is stricter than byte accounting:
-`snd_load` and `bullets_update` are both reviewed but nonexact. The latter has a
-17-byte low-level spark-call region between exact pre/post slices. Neither gap is
-waived or filled with inline assembly. `snd_pmd_resident` is fully exact from
-maintained pure C after expressing the PMD IVT slot as a Borland `__es`
-segment-specific pointer. `dialog_init` is also exact after restoring its
+The current reviewed authored byte mismatch is only 21 bytes total. `snd_load`
+now has 230 / 234 bytes exact: maintained natural C++ independently recovers its
+8-byte DOS-open sequence, 26-byte driver-dispatch/read sequence, and 3-byte
+`MOV AX,[BP+6]` reload. Only `PUSH DS` (1 byte), target `89 C3` `MOV BX,AX`
+(2 bytes), and `POP DS` (1 byte) remain blocked there. `bullets_update` is also
+fully boundary-reviewed, so its known 17-byte spark-call gap is now honestly
+included in the byte denominator rather than excluded; natural C++ reproduces
+all argument setup but lowers the call as `CALL FAR` instead of target `NOP;
+PUSH CS; CALL near`. Neither gap is waived or filled with inline assembly.
+`snd_pmd_resident` is fully exact from maintained pure C after expressing the
+PMD IVT slot as a Borland `__es` segment-specific pointer. `dialog_init` is also exact after restoring its
 original second C++ translation unit: the linked code bytes stay identical while
 the Intel OMF FIXUPP batching and ordered MZ relocations return to target order.
 
@@ -62,7 +66,7 @@ included in the authored C/C++ byte percentage.
 The current accepted byte cohort is reproduced by
 `python3 scripts/replay_th04_main_exact_units.py`. Historical acceptance
 receipts remain useful, while the current pre-commit full-owner replay
-`gptweb-nonexact-review-precommit-001` independently repeated two isolated
+`gptweb-sndload-v8-precommit-001` independently repeated two isolated
 `git archive` materializations of the pinned ReC98 revision, overlaid
 repository-maintained source, restored the checked-in dialog TU split through
 `Tupfile.lua`, and passed all 60 default-selected raw/map/ordered-relocation/

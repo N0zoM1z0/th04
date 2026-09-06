@@ -66,5 +66,85 @@ class SourceSplitTests(unittest.TestCase):
                     replay.apply_source_splits(source, [split], {"unit-a"})
 
 
+class SourceReplacementTests(unittest.TestCase):
+    def test_source_replacement_is_hash_and_offset_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            source = root / "source"
+            repo.mkdir()
+            source.mkdir()
+            replacement = repo / "replacement.cpp"
+            replacement.write_text("natural();\n", encoding="utf-8")
+            scaffold = source / "impl.cpp"
+            original = b"head\nlowlevel();\ntail\n"
+            scaffold.write_bytes(original)
+            match = b"lowlevel();\n"
+            entry = {
+                "id": "unit-replace",
+                "repo_source": "replacement.cpp",
+                "source_mode": "replace",
+                "patch_path": "impl.cpp",
+                "scaffold_sha256": replay.digest_bytes(original),
+                "replace_offset": original.index(match),
+                "replace_size": len(match),
+                "replace_sha256": replay.digest_bytes(match),
+            }
+            with patch.object(replay, "ROOT", repo):
+                receipt = replay.overlay_sources(source, [entry])
+            self.assertEqual(scaffold.read_text(encoding="utf-8"), "head\nnatural();\ntail\n")
+            self.assertEqual(receipt[0]["mode"], "replace")
+            self.assertEqual(receipt[0]["replace_offset"], original.index(match))
+            self.assertEqual(receipt[0]["replacement_sha256"], replay.digest_file(replacement))
+
+    def test_source_replacement_rejects_span_hash_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            source = root / "source"
+            repo.mkdir()
+            source.mkdir()
+            (repo / "replacement.cpp").write_text("natural();\n", encoding="utf-8")
+            original = b"head\nlowlevel();\ntail\n"
+            (source / "impl.cpp").write_bytes(original)
+            match = b"lowlevel();\n"
+            entry = {
+                "id": "unit-replace",
+                "repo_source": "replacement.cpp",
+                "source_mode": "replace",
+                "patch_path": "impl.cpp",
+                "scaffold_sha256": replay.digest_bytes(original),
+                "replace_offset": original.index(match),
+                "replace_size": len(match),
+                "replace_sha256": replay.digest_bytes(b"different();\n"),
+            }
+            with patch.object(replay, "ROOT", repo):
+                with self.assertRaisesRegex(RuntimeError, "source span SHA-256 mismatch"):
+                    replay.overlay_sources(source, [entry])
+
+    def test_source_replacement_rejects_scaffold_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            source = root / "source"
+            repo.mkdir()
+            source.mkdir()
+            (repo / "replacement.cpp").write_text("natural();\n", encoding="utf-8")
+            (source / "impl.cpp").write_text("changed();\n", encoding="utf-8")
+            entry = {
+                "id": "unit-replace",
+                "repo_source": "replacement.cpp",
+                "source_mode": "replace",
+                "patch_path": "impl.cpp",
+                "scaffold_sha256": replay.digest_bytes(b"original();\n"),
+                "replace_offset": 0,
+                "replace_size": len(b"original();\n"),
+                "replace_sha256": replay.digest_bytes(b"original();\n"),
+            }
+            with patch.object(replay, "ROOT", repo):
+                with self.assertRaisesRegex(RuntimeError, "scaffold SHA-256 drift"):
+                    replay.overlay_sources(source, [entry])
+
+
 if __name__ == "__main__":
     unittest.main()

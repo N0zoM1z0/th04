@@ -493,3 +493,35 @@ patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
 map_mode = "contains"
 object_path = "obj/th04/snd_load.obj"
+
+
+[[units]]
+id = "th04-main-snd-load-open"
+repo_source = "src/th04/main/partials/snd_load_open.cpp"
+source_mode = "fragment"
+patch_path = "th04/snd/load.cpp"
+map_module = "th04/snd_load.cpp"
+map_mode = "contains"
+object_path = "obj/th04/snd_load.obj"
+
+[[units]]
+id = "th04-main-snd-load-dispatch-read"
+repo_source = "src/th04/main/partials/snd_load_dispatch_read.cpp"
+source_mode = "fragment"
+patch_path = "th04/snd/load.cpp"
+map_module = "th04/snd_load.cpp"
+map_mode = "contains"
+object_path = "obj/th04/snd_load.obj"
+
+[[units]]
+id = "th04-main-snd-load-func-load"
+repo_source = "src/th04/main/partials/snd_load_func_load.cpp"
+source_mode = "replace"
+patch_path = "th04/snd/load.cpp"
+scaffold_sha256 = "9777ebd973098395823bfcfbc53daa451d2c6db62500aa038873e72729c1a39a"
+replace_offset = 1278
+replace_size = 23
+replace_sha256 = "7106bb27b19a9b887ff48dbcab976f565bf8b5fe631ba9637aec82ff28cc5963"
+map_module = "th04/snd_load.cpp"
+map_mode = "contains"
+object_path = "obj/th04/snd_load.obj"

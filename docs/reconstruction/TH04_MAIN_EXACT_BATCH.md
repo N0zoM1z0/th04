@@ -10,7 +10,7 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,650 / 12,691 = 99.676936% exact**;
+- authored C/C++ bytes: **12,687 / 12,708 = 99.834750% exact**;
 - authored functions: **112 / 114 = 98.245614% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
@@ -24,10 +24,10 @@ run:
 1. attests the pinned TC4J/TASM/TLINK/MS-DOS Player toolchain;
 2. materializes two independent source trees with `git archive` from the pinned
    ReC98 revision;
-3. replaces complete translation units with maintained files from `src/`, or
-   uniquely substitutes a maintained natural-source fragment into the pinned
-   scaffold when the surrounding upstream function contains excluded inline
-   assembly;
+3. replaces complete translation units with maintained files from `src/`,
+   uniquely substitutes an identity-preserving natural-source fragment, or
+   applies a hash/offset-bound maintained source replacement inside the pinned
+   scaffold when adjacent upstream low-level source is deliberately excluded;
 4. preserves primary-source metadata because Turbo C++ records it in OMF
    COMENT class `E8`;
 5. builds the complete corpus serially;
@@ -42,8 +42,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-nonexact-review-precommit-001/receipt.json`.
-It passes all 60 current default-selected units in both isolated cold
+`.analysis/reconstruction/exact-unit-replay/gptweb-sndload-v8-precommit-001/receipt.json`.
+It passes all 63 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function
 accounting changes. `dialog_op` and `dialog_run` remain
@@ -62,6 +62,24 @@ assembly into `src/`.
 No accepted C/C++ source under `src/th04/main/exact/`,
 `src/th04/main/modules/`, or `src/th04/main/partials/` contains `_asm`, an
 `asm { ... }` block, `#pragma codestring`, or `__emit__`.
+
+### Pinned source replacement rule
+
+`source_mode = "replace"` is for the narrow case where the maintained natural
+source differs from a small low-level span inside a pinned scaffold file. It is
+not a textual search-and-replace shortcut. Before touching the source, the
+replay driver requires all of the following to match the manifest exactly:
+
+- SHA-256 of the complete pinned scaffold file;
+- byte offset and size of the old source span; and
+- SHA-256 of that exact old source span.
+
+Only then is the repository-maintained replacement inserted, while preserving
+the scaffold source timestamp. The receipt records old/new identities and the
+patched scaffold hash. Any upstream drift fails closed. Regression tests cover
+both the positive replacement and scaffold-drift rejection. This mechanism is
+used for the three-byte `snd_load` parameter reload so the repository can own
+pure C++ without copying adjacent ReC98 inline assembly into maintained source.
 
 ### Translation-unit split rule
 
@@ -117,63 +135,59 @@ express this `LES`; the `__es` pointer is the exact counterexample.
 
 ### `snd_load`
 
-The complete reviewed function is target file `0x14C96..0x14D7F` (234 bytes).
-The natural 184-byte prefix and 9-byte tail are exact. The 41-byte middle region
-at file `0x14D4E` remains nonexact. One localized compiler/source-shape
-mismatch is:
+The complete reviewed function is target file `0x14C96..0x14D7F` (234 bytes),
+and **230 / 234 bytes are now exact**. The original 184-byte prefix and 9-byte
+tail remain exact, and this batch recovers another 37 middle bytes from
+maintained natural C++:
 
-```text
-target:    89 C3    MOV BX, AX
-candidate: 8B D8    MOV BX, AX
+- `0x14D4F..0x14D56` (8 bytes): DOS open setup + `INT 21h`;
+- `0x14D59..0x14D5B` (3 bytes): `MOV AX,[BP+6]`; and
+- `0x14D5C..0x14D75` (26 bytes): driver dispatch and DOS read.
+
+The DOS-open and dispatch/read regions are identity fragments that occur exactly
+once in the pinned scaffold and pass independent two-cold replay. The parameter
+reload required a genuinely different natural source shape. Direct `_AX = func`,
+a cast, and an inline identity helper make TC4J promote `func` to DI, grow the
+function from 234 to 237 bytes, and emit `MOV AX,DI`. This maintained expression
+instead keeps the parameter memory-resident:
+
+```cpp
+_AX = *reinterpret_cast<snd_load_func_t near *>(&func);
 ```
 
-A standalone TASM 5.0 probe also naturally emits `8B D8` for `mov bx, ax`.
-Follow-up compiler/assembler probes narrow this further without weakening the
-claim:
+TC4J then preserves the 234-byte layout and naturally emits target `8B 46 06`.
+The checked-in replacement is applied only through the fail-closed pinned-source
+replacement rule above; the surrounding upstream low-level source is not
+imported or claimed as maintained source.
 
-- the target `MAIN.EXE` has only three `89 C3` encodings, at load offsets
-  `0xD058`, `0xEAA9`, and `0x13557`; they fall in `dialog`, `stages`, and
-  `snd_load`, respectively, while the cold ReC98 candidate has no `89 C3`;
-- the other differences in `dialog` and `stages`, plus the one-byte
-  `it_spl_u` difference, are the same register-register direction-bit family
-  (`01 /r` versus `03 /r`, `89 /r` versus `8B /r`, and `31 /r` versus
-  `33 /r`) rather than different arithmetic semantics;
-- TH02's 112-byte `snd_load` is raw-identical between the pinned target and the
-  same cold TC4J candidate and uses `8B D8`, so `89 C3` is not a general
-  requirement of the shared `_BX = _AX` source shape;
-- compiling the real TH04 `snd_load.cpp` with `-G`, `-O-`, `-k-`, 80186/286
-  CPU modes, and tested combinations still produced `8B D8`;
-- TASM 5.0 in MASM, IDEAL, 386, `MASM51`, `QUIRKS`, `SMART`/`NOSMART`, and
-  operand-qualified forms also produced `8B D8`; and
-- scanning the complete cold OMF corpus found one TC86 object containing
-  `89 C3` (`th02/player_b.obj`), but that occurrence routes to an upstream
-  inline-assembly `mov bx, ax`, which is specifically excluded from this
-  reconstruction strategy;
-- declaring the DOS handle as a pure-C `register int` does not recover the
-  target encoding. TC4J allocates it to DX in small probes, DI once the real
-  `_DX`/`_CX`/SI pressure is represented, and spills it when DI is also
-  unavailable. The resulting moves are `8B /r`, never target `89 C3`; and
-- pure-C DS preservation also fails to reproduce the middle block's
-  `PUSH DS ... POP DS`. A normal saved local emits `MOV [bp-2],DS` / `MOV
-  DS,[bp-2]`, a register local uses AX, and an ES temporary uses two `MOV`
-  pairs. `__saveregs` saves all registers rather than just DS, while
-  `__loadds` does not create the required mid-function pair.
+Only four authored bytes remain nonexact:
 
-Additional FIXUPP/code-generation work is recorded in
-`docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`. In particular, the
-pinned TASM media contains a DOS TASM 4.1 that TCC can invoke through `-B`; it
-still assembles ordinary `mov bx, ax` as `8B D8`. A corrected segment-aware OMF
-survey also finds no clean TC86 C/C++ CODE precedent for register-register
-`89 /r` in the current cold corpus. Pure-C++ reference/template/comma/conditional
-lvalue probes further show that `_BX` is not addressable and cannot be routed
-through a generic store-lvalue backend. Raw OMF byte searches are not accepted
-as instruction evidence.
+```text
+file 0x14D4E: 1E       PUSH DS
+file 0x14D57: 89 C3    MOV BX, AX
+file 0x14D76: 1F       POP DS
+```
 
-These observations do not prove what the original ZUN source looked like.
-They do rule out several cheap compiler-profile explanations and make future
-work focus on source/IR recovery rather than repeating the same flag or TASM
-mode experiments. The project does not use `db 89h, 0C3h`, `__emit__`, inline
-assembly, or any equivalent byte injection to manufacture equality.
+The `89 C3` blocker remains strongly constrained. Ordinary TC4J `_BX = _AX`
+and both pinned TASM 4.1/5.0 encode `MOV BX,AX` as `8B D8`; tested register
+allocation, pseudo-register alias/reference, flag, and assembler-mode variants
+do not produce `89 C3`. A segment-aware clean-C/C++ CODE survey found no
+register-register `89 /r` compiler precedent in the current corpus.
+
+The DS pair is independently constrained as well. `geninterrupt(i)` in the
+attested TC4J `DOS.H` is only `__int__(i)` and carries no segment-register
+clobber contract, so the compiler cannot infer that PMD/MMD returns the song
+buffer through `DS:DX`. Ordinary locals, register locals, ES temporaries, and
+new `void __seg *` / `unsigned __seg *` save probes lower to MOV-based saves and
+restores. A CODE-segment-aware scan of 239 clean C/C++ objects found no isolated
+mid-function compiler `PUSH DS ... POP DS`: genuine pairs are full
+`__saveregs`/interrupt-style prologues, while apparent TH01 hits were far-pointer
+argument pushes followed by switch-table data misdecoded as instructions.
+
+These negative results do not prove the original source language or producer.
+They do justify keeping the remaining four bytes blocked instead of manufacturing
+them with inline assembly, `__emit__`, byte directives, hand-edited compiler
+assembly, or patched OMF.
 
 ## Relocation-order blockers
 

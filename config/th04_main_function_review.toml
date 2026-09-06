@@ -8,8 +8,8 @@ address = "0x23496"
 file_offset = "0x14C96"
 size = "0xEA"
 name = "snd_load"
-evidence_id = "ev-th04-main-snd-load-reviewed-boundary-v2"
-reason = "The complete 234-byte function has a reviewed raw/TLINK/Ghidra boundary, but its 41-byte middle gap remains nonexact, including target 89 C3 versus compiler 8B D8 MOV BX,AX and excluded low-level DS/AX source context."
+evidence_id = "ev-th04-main-snd-load-reviewed-boundary-v3"
+reason = "The complete 234-byte function has a reviewed raw/TLINK/Ghidra boundary. Only four authored bytes remain nonexact: PUSH DS, target 89 C3 versus compiler/TASM 8B D8 for MOV BX,AX, and POP DS. The DOS-open, driver-dispatch/read, and BP-relative func reload subspans are independently cold-replayed exact from maintained natural C++."
 
 [[reviewed_nonexact]]
 id = "th04-main-fn-2c8c8"
