@@ -205,3 +205,11 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   In the clean corpus, isolated mid-function `PUSH DS ... POP DS` has no natural
   C/C++ compiler precedent outside full `__saveregs`/interrupt prologues; `__seg`
   locals still lower to MOV-based segment saves/restores.
+
+- For Borland far-call bridge recovery, distinguish three cases: an external or
+  different-logical-segment far callee stays `CALL FAR`; a definition already
+  visible in the same TU and logical segment can become `PUSH CS; CALL near`;
+  this natural lowering still does not add a leading `NOP`. `#pragma alloc_text`
+  does not change the external call opcode, and the current cold OMF corpus has
+  no `ALIAS` records. Do not use these mechanisms to claim TH04's full
+  `NOP; PUSH CS; CALL near` sequence exact.

@@ -10,7 +10,7 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,687 / 12,708 = 99.834750% exact**;
+- authored C/C++ bytes: **12,699 / 12,708 = 99.929178% exact**;
 - authored functions: **112 / 114 = 98.245614% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
@@ -42,8 +42,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-producer-v9-precommit-001/receipt.json`.
-It passes all 63 current default-selected units in both isolated cold
+`.analysis/reconstruction/exact-unit-replay/gptweb-bullet-v10-precommit-001/receipt.json`.
+It passes all 64 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function
 accounting changes. `dialog_op` and `dialog_run` remain
@@ -280,8 +280,8 @@ own trailing switch metadata/tables without claiming the bytes exact.
 through `RETF` at `0x2CC27`; byte `0x2CC28` is switch metadata; five words at
 `0x2CC29` target `0x2CB71`, `0x2CB78` (three entries), and `0x2CB7F`, all raw
 instruction starts; and the next TLINK public is exactly `0x2CC33`. The full
-function extent is therefore 0x36B bytes even though its 17-byte spark-call
-region remains nonexact.
+function extent is therefore 0x36B bytes even though its final five-byte
+spark-call form remains nonexact; the preceding 12 argument bytes are exact.
 
 The resulting denominator is 114 reviewed functions: 112 exact plus the two
 explicit nonexact functions `snd_load` and `bullets_update`. `dialog_init` is a

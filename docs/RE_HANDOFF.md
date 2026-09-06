@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted: reviewed authored C/C++ bytes are 12,687 / 12,708 (99.834750%)
+accepted: reviewed authored C/C++ bytes are 12,699 / 12,708 (99.929178%)
 exact, and reviewed authored functions are 112 / 114 (98.245614%) exact. Nine
 standalone original-style ASM units totaling 1,489 bytes are separately exact
 and are not counted in the authored C/C++ percentage. No deterministic TH04
@@ -117,13 +117,13 @@ runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest pre-commit receipt
-  `gptweb-producer-v9-precommit-001` passes all 63 current default-selected units across raw bytes,
+  `gptweb-bullet-v10-precommit-001` passes all 64 current default-selected units across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
-- The current reviewed authored byte denominator is 12,708 bytes across 58
-  authored units/regions; 12,687 bytes across 54 units/regions are exact. The
-  21 blocked bytes are explicit: four in `snd_load` (`PUSH DS`, target `89 C3`,
-  `POP DS`) and the 17-byte reviewed `bullets_update` spark-call region.
+- The current reviewed authored byte denominator is 12,708 bytes across 59
+  authored units/regions; 12,699 bytes across 55 units/regions are exact. The
+  9 blocked bytes are explicit: four in `snd_load` (`PUSH DS`, target `89 C3`,
+  `POP DS`) and only the five-byte reviewed `bullets_update` call form.
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
   `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
   `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
@@ -136,8 +136,8 @@ runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest cold replay `gptweb-producer-v9-precommit-001`
-  passed all 63 current default exact byte owners in two isolated
+- The latest cold replay `gptweb-bullet-v10-precommit-001`
+  passed all 64 current default exact byte owners in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
@@ -148,9 +148,10 @@ runtime scenario has been authored.
   `dialog_init` is admitted only through an explicit `[[new_exact]]` policy once
   its TU-split byte owner becomes exact. `snd_load` and `bullets_update` are both
   independently boundary-reviewed but nonexact, giving 112/114 exact. The
-  latter's code reaches `RETF` before validated compiler-owned switch data; its
-  17-byte spark-call gap remains blocked rather than being excluded from the
-  denominator. No current function candidate is provisional.
+  latter's code reaches `RETF` before validated compiler-owned switch data. Its
+  natural 12-byte spark argument setup is now exact; only the five-byte
+  `NOP; PUSH CS; CALL near` form remains blocked in the denominator. No current
+  function candidate is provisional.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain
@@ -204,10 +205,11 @@ under the pinned DOSBox-X PC-98 profile; generated OMF still reports
 `TC86 Borland C++ 4.02`, and natural `_BX = _AX` still emits `8B D8`. Do not
 repeat IDE-versus-TCC producer switching as an explanation for target `89 C3`.
 The `snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`
-segment-pointer source shape. `bullets_update` is now boundary-reviewed but stays
-nonexact: natural C++ reproduces every argument push but emits `CALL FAR` instead
-of target `NOP; PUSH CS; CALL near`, and `#pragma samecodeseg` changes only the
-OMF fixup frame. In parallel, investigate the two remaining `dialog_op`/
+segment-pointer source shape. `bullets_update` is boundary-reviewed and now has the natural 12-byte
+argument setup exact. The remaining five-byte call form stays nonexact: TC4J
+emits `CALL FAR`; `#pragma samecodeseg` and `#pragma alloc_text(f)` do not change
+that opcode, while even a same-TU/same-logical-segment definition lowers only to
+`PUSH CS; CALL near` and still does not emit the target leading `NOP`. In parallel, investigate the two remaining `dialog_op`/
 `dialog_run` relocation-order blockers at the OMF FIXUPP/source-emission level;
 the original lower-TU split and historical pre-decomp ASM producer are already
 falsified for target ordering. Runtime work can stay deferred until a

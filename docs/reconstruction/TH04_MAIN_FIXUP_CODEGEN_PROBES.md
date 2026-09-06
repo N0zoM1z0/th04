@@ -414,6 +414,23 @@ Near/far function-pointer casts and constant pointer variants were also tested.
 Near indirect calls do not acquire the required return-segment push, while far
 pointer calls remain far. None yields the target bridge without low-level code.
 
+
+### `alloc_text` and the closest natural bridge still miss target `NOP`
+
+TC4J accepts `#pragma alloc_text(f)` for an external far function, but a minimal
+control retains the same `CALL FAR` LEDATA/Pointer16 call shape as the baseline.
+The current cold object corpus also contains no OMF `ALIAS` records, and TCC's
+pragma keyword table exposes neither `alias` nor `weak`, so there is no observed
+linkage alias path hiding behind this pragma.
+
+A separate minimal control makes the far callee definition visible earlier in
+the same translation unit and same logical code segment. That is the strongest
+normal C++ condition found for Borland's bridge lowering, and TC4J emits
+`PUSH CS; CALL near` naturally. It still emits **no leading `NOP`**. Therefore
+the TH04 target's full five-byte `NOP; PUSH CS; CALL near` form remains outside
+the observed natural-C++ codegen surface; do not synthesize the missing byte or
+call with inline assembly/codestring/byte directives.
+
 ## `bullets_update`: natural source narrows the gap to call form
 
 The target 17-byte region is:
@@ -439,7 +456,7 @@ Its *boundary*, however, is now independently reviewed. Raw code decodes from
 five near offsets at `0x2CC29` resolve to decoded instructions at `0x2CB71`,
 `0x2CB78` (three entries), and `0x2CB7F`. The next TLINK public is `0x2CC33`, so
 the complete reviewed extent is 0x36B bytes. Boundary review does not waive the
-17-byte nonexact call region.
+five-byte nonexact call form; the preceding 12 argument bytes are now cold-exact from maintained natural C++.
 
 ## Next useful experiments
 

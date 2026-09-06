@@ -12,10 +12,10 @@ reviewed denominator until they are resolved.
 | --- | ---: |
 | Initial screened source-module contributions | 58 / 17,412 bytes |
 | Initial Ghidra function entries in those contributions | 151 |
-| Reviewed authored byte units/regions | 58 |
-| Reviewed authored bytes | 12,691 |
-| Exact authored byte units/regions | 54 |
-| **Exact authored bytes** | **12,687 / 12,708 (99.834750%)** |
+| Reviewed authored byte units/regions | 59 |
+| Reviewed authored bytes | 12,708 |
+| Exact authored byte units/regions | 55 |
+| **Exact authored bytes** | **12,699 / 12,708 (99.929178%)** |
 | Tracked authored function candidates | 114 |
 | Reviewed authored functions | 114 |
 | Exact authored functions | 112 |
@@ -23,15 +23,15 @@ reviewed denominator until they are resolved.
 | Provisional function candidates excluded from the denominator | 0 |
 | Exact original-style standalone ASM units | 9 / 1,489 bytes |
 
-The current reviewed authored byte mismatch is only 21 bytes total. `snd_load`
+The current reviewed authored byte mismatch is only 9 bytes total. `snd_load`
 now has 230 / 234 bytes exact: maintained natural C++ independently recovers its
 8-byte DOS-open sequence, 26-byte driver-dispatch/read sequence, and 3-byte
 `MOV AX,[BP+6]` reload. Only `PUSH DS` (1 byte), target `89 C3` `MOV BX,AX`
 (2 bytes), and `POP DS` (1 byte) remain blocked there. `bullets_update` is also
-fully boundary-reviewed, so its known 17-byte spark-call gap is now honestly
-included in the byte denominator rather than excluded; natural C++ reproduces
-all argument setup but lowers the call as `CALL FAR` instead of target `NOP;
-PUSH CS; CALL near`. Neither gap is waived or filled with inline assembly.
+fully boundary-reviewed. Its natural C++ `sparks_add_random(...)` call now owns
+the 12-byte argument setup exactly; only the following 5-byte target `NOP;
+PUSH CS; CALL near` form remains blocked because TC4J emits `CALL FAR`. Neither
+gap is waived or filled with inline assembly.
 `snd_pmd_resident` is fully exact from maintained pure C after expressing the
 PMD IVT slot as a Borland `__es` segment-specific pointer. `dialog_init` is also exact after restoring its
 original second C++ translation unit: the linked code bytes stay identical while
@@ -66,10 +66,10 @@ included in the authored C/C++ byte percentage.
 The current accepted byte cohort is reproduced by
 `python3 scripts/replay_th04_main_exact_units.py`. Historical acceptance
 receipts remain useful, while the current pre-commit full-owner replay
-`gptweb-producer-v9-precommit-001` independently repeated two isolated
+`gptweb-bullet-v10-precommit-001` independently repeated two isolated
 `git archive` materializations of the pinned ReC98 revision, overlaid
 repository-maintained source, restored the checked-in dialog TU split through
-`Tupfile.lua`, and passed all 60 default-selected raw/map/ordered-relocation/
+`Tupfile.lua`, and passed all 64 default-selected raw/map/ordered-relocation/
 OMF/determinism checks.
 
 Function accounting is independently conservative. The checked-in

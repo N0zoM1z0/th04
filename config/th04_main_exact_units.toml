@@ -525,3 +525,16 @@ replace_sha256 = "7106bb27b19a9b887ff48dbcab976f565bf8b5fe631ba9637aec82ff28cc59
 map_module = "th04/snd_load.cpp"
 map_mode = "contains"
 object_path = "obj/th04/snd_load.obj"
+
+[[units]]
+id = "th04-main-bullets-update-spark-args"
+repo_source = "src/th04/main/partials/bullets_update_spark_args.cpp"
+source_mode = "replace"
+patch_path = "th04/main/bullet/update.cpp"
+scaffold_sha256 = "fde98d13d82a0e3dfc0fdbac5cafc080a18ec28d856666aad8fca6f483394de7"
+replace_offset = 9708
+replace_size = 198
+replace_sha256 = "ddd4287a7f04e6244c460f81a325303b85318e1a40e99e5d30b046c72eb9f88b"
+map_module = "th04/bullet_u.cpp"
+map_mode = "contains"
+object_path = "obj/th04/bullet_u.obj"
