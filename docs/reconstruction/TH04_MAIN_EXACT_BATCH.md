@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,448 / 12,494 = 99.631823% exact**;
-- authored functions: **110 / 112 = 98.214286% exact**;
+- authored C/C++ bytes: **12,453 / 12,494 = 99.671842% exact**;
+- authored functions: **111 / 112 = 99.107143% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -40,13 +40,13 @@ run:
    normalized identity to repeat across both cold builds; and
 10. fails the aggregate cohort if any selected unit fails any dimension.
 
-The checked-in acceptance evidence was produced from the private
-`.analysis/reconstruction/exact-unit-replay/gptweb-accept60-002/receipt.json`.
-A later pre-commit replay at
-`.analysis/reconstruction/exact-unit-replay/gptweb-functionreview-001/receipt.json`
-again passed the same 60 default-selected units in both cold materializations
-after the manual function-review tooling changes. Three known `dialog`
-relocation-order investigations are marked
+Historical checked-in acceptance evidence remains replayable. The current
+full-owner pre-commit replay is private at
+`.analysis/reconstruction/exact-unit-replay/gptweb-pmd-aggregate-001/receipt.json`.
+It passes all 59 current default-selected units in both isolated cold
+materializations after consolidating the old PMD prefix/suffix slices into one
+complete exact 46-byte pure-C owner. Three known `dialog` relocation-order
+investigations are marked
 `default_enabled = false`; they remain individually replayable with `--unit`
 and are never silently accepted by the default aggregate.
 
@@ -65,22 +65,39 @@ No accepted C/C++ source under `src/th04/main/exact/`,
 
 ## Explicit nonexact byte gaps
 
-### `snd_pmd_resident`
+### `snd_pmd_resident` — solved in pure C
 
 The complete reviewed function is target file `0x14B7E..0x14BAB` (46 bytes).
-The natural prefix (18 bytes) and suffix (23 bytes) are exact. The five bytes at
-file `0x14B90` remain nonexact:
+Earlier generic far-pointer probes failed to reproduce the five-byte IVT load
+without repeated loads or spills. The missing source shape is Borland's
+segment-specific pointer type:
+
+```c
+_ES = _AX; // _AX is 0 here
+if(kaja_isr_magic_matches(
+    *(void far * __es *)(PMD * 4), 'P', 'M', 'D'
+)) {
+    _AX++;
+}
+```
+
+TC4J naturally compiles the IVT dereference to the exact target instruction:
 
 ```text
 26 C4 1E 80 01    LES BX, ES:[0180h]
 ```
 
-Pure C89 probes established useful negative results. A direct IVT dereference
-can make TC4J emit `LES`, but repeated macro use reloads the pointer. Typed and
-`register` far pointers spill, and assigning `_BX`/`_ES` separately emits two
-loads rather than the target single instruction. No TC4J header intrinsic for
-`LES` was found. The project therefore leaves these five bytes nonexact rather
-than importing ReC98's inline assembly.
+No inline assembly, `__emit__`, codestring, or target-derived byte directive is
+used. `gptweb-pmd-full-001` verifies the unit independently, and
+`gptweb-pmd-aggregate-001` verifies it together with the complete default exact
+cohort. Both isolated builds produce the same valid TC86 OMF, exact TLINK
+contribution, identical empty overlapping-relocation list, and zero differing
+bytes across all 46 bytes.
+
+The older generic-pointer negative probes remain useful: `MK_FP`, typed or
+`register` far locals, and separate `_BX`/`_ES` assignments are still known
+wrong source shapes. They must not be generalized into a claim that TC4J cannot
+express this `LES`; the `__es` pointer is the exact counterexample.
 
 ### `snd_load`
 
@@ -115,7 +132,16 @@ claim:
 - scanning the complete cold OMF corpus found one TC86 object containing
   `89 C3` (`th02/player_b.obj`), but that occurrence routes to an upstream
   inline-assembly `mov bx, ax`, which is specifically excluded from this
-  reconstruction strategy.
+  reconstruction strategy;
+- declaring the DOS handle as a pure-C `register int` does not recover the
+  target encoding. TC4J allocates it to DX in small probes, DI once the real
+  `_DX`/`_CX`/SI pressure is represented, and spills it when DI is also
+  unavailable. The resulting moves are `8B /r`, never target `89 C3`; and
+- pure-C DS preservation also fails to reproduce the middle block's
+  `PUSH DS ... POP DS`. A normal saved local emits `MOV [bp-2],DS` / `MOV
+  DS,[bp-2]`, a register local uses AX, and an ES temporary uses two `MOV`
+  pairs. `__saveregs` saves all registers rather than just DS, while
+  `__loadds` does not create the required mid-function pair.
 
 These observations do not prove what the original ZUN source looked like.
 They do rule out several cheap compiler-profile explanations and make future
@@ -149,7 +175,8 @@ claim.
 - one exact authored byte owner from `config/units.csv`.
 
 Automatic promotion still requires Ghidra's complete body to be contiguous
-and wholly contained inside that exact byte owner; this accepts 99 functions.
+and wholly contained inside that exact byte owner; this now accepts 100 functions,
+including the newly exact 46-byte `snd_pmd_resident`.
 A second, explicit manual-review path handles analysis false negatives without
 trusting Ghidra's body set. Each `[[reviewed_exact]]` entry in
 `config/th04_main_function_review.toml` must agree with the same TLINK public and
@@ -168,12 +195,16 @@ tables sit immediately after their bodies. `bullets_update` remains provisional
 because it crosses the excluded 17-byte handwritten-call gap; an exact owner on
 both sides cannot prove the missing middle.
 
-The resulting denominator is therefore 112 reviewed functions: 110 exact plus
-the two explicit nonexact sound functions. One additional candidate,
+The resulting denominator is therefore 112 reviewed functions: 111 exact plus
+the single explicit nonexact `snd_load`. One additional candidate,
 `bullets_update`, remains provisional and outside the denominator.
 
 ## Reusable Borland lessons
 
+- Borland segment-specific pointers are code-generation relevant. When `_ES`
+  already contains the IVT segment, dereferencing `void far * __es *` can emit a
+  single `LES` with an ES override; generic far pointers or `MK_FP` are not
+  interchangeable source shapes for exact reconstruction.
 - Turbo C++ records the primary source timestamp in OMF COMENT class `E8`.
   Copying maintained source with `copyfile()` manufactured per-cold-run object
   differences. Preserve identical source metadata (`copy2`) instead of

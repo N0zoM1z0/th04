@@ -283,7 +283,11 @@ def review(items: list[dict[str, object]], metadata: dict[int, dict[str, str]]) 
 
 
 
-def write_reviewed_ledger(path: Path, manual_exact: list[dict[str, object]]) -> None:
+def write_reviewed_ledger(
+    path: Path,
+    automatic_exact: list[dict[str, object]],
+    manual_exact: list[dict[str, object]],
+) -> None:
     ledger = ROOT / "config" / "th04_main_authored_functions.csv"
     with ledger.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
@@ -291,40 +295,83 @@ def write_reviewed_ledger(path: Path, manual_exact: list[dict[str, object]]) -> 
             raise ValueError("authored function ledger lacks header")
         fieldnames = reader.fieldnames
         rows = list(reader)
-    by_id = {str(item["id"]): item for item in manual_exact}
-    seen: set[str] = set()
+
+    automatic_by_address = {int(item["address"]): item for item in automatic_exact}
+    manual_by_id = {str(item["id"]): item for item in manual_exact}
+    seen_automatic: set[int] = set()
+    seen_manual: set[str] = set()
+
     for row in rows:
-        item = by_id.get(row["id"])
-        if item is None:
+        address = int(row["address"], 0)
+        automatic = automatic_by_address.get(address)
+        if automatic is not None:
+            seen_automatic.add(address)
+            if row["state"] == "exact":
+                if (
+                    row["owner_unit"] != str(automatic["owner_unit"])
+                    or row["source"] != str(automatic["source"])
+                ):
+                    raise ValueError(
+                        f"automatic exact owner/source drift for {row['id']}"
+                    )
+                continue
+            if row["state"] not in {"candidate", "blocked"}:
+                raise ValueError(
+                    f"automatic ledger refuses state {row['state']!r} for {row['id']}"
+                )
+            if not row["file_offset"] or not row["size"]:
+                raise ValueError(f"automatic ledger lacks extent for {row['id']}")
+            row["boundary_state"] = "reviewed"
+            row["state"] = "exact"
+            row["owner_unit"] = str(automatic["owner_unit"])
+            row["source"] = str(automatic["source"])
+            row["notes"] = (
+                "Strict target boundary review: contiguous Ghidra body starts at the "
+                "same local TLINK public and lies wholly inside exact authored owner "
+                + str(automatic["owner_unit"]) + "."
+            )
             continue
-        seen.add(row["id"])
-        if int(row["address"], 0) != int(item["address"]):
+
+        manual = manual_by_id.get(row["id"])
+        if manual is None:
+            continue
+        seen_manual.add(row["id"])
+        if address != int(manual["address"]):
             raise ValueError(f"manual ledger address mismatch for {row['id']}")
         if row["state"] not in {"candidate", "exact"}:
             raise ValueError(f"manual ledger refuses state {row['state']!r} for {row['id']}")
-        row["file_offset"] = f"0x{int(item['file_offset']):X}"
-        row["size"] = f"0x{int(item['size']):X}"
+        row["file_offset"] = f"0x{int(manual['file_offset']):X}"
+        row["size"] = f"0x{int(manual['size']):X}"
         row["boundary_state"] = "reviewed"
         row["state"] = "exact"
-        row["owner_unit"] = str(item["owner_unit"])
-        row["source"] = str(item["source"])
+        row["owner_unit"] = str(manual["owner_unit"])
+        row["source"] = str(manual["source"])
         evidence = [value for value in row["evidence_ids"].split(";") if value]
-        evidence_id = str(item["evidence_id"])
+        evidence_id = str(manual["evidence_id"])
         if evidence_id not in evidence:
             evidence.append(evidence_id)
         row["evidence_ids"] = ";".join(evidence)
-        switch = item.get("switch_review")
+        switch = manual.get("switch_review")
         mode = (
             f"validated {switch['jump_table_count']}-entry switch table; "
             if isinstance(switch, dict) else "validated linear raw decode; "
         )
         row["notes"] = (
             "Manual target boundary review overrides a Ghidra body-construction false negative: "
-            + mode + str(item["reason"])
+            + mode + str(manual["reason"])
         )
-    missing = sorted(set(by_id) - seen)
-    if missing:
-        raise ValueError("manual exact rows missing from function ledger: " + ", ".join(missing))
+
+    missing_automatic = sorted(set(automatic_by_address) - seen_automatic)
+    if missing_automatic:
+        raise ValueError(
+            "automatic exact addresses missing from function ledger: "
+            + ", ".join(f"0x{address:X}" for address in missing_automatic)
+        )
+    missing_manual = sorted(set(manual_by_id) - seen_manual)
+    if missing_manual:
+        raise ValueError(
+            "manual exact rows missing from function ledger: " + ", ".join(missing_manual)
+        )
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fieldnames, lineterminator="\n")
@@ -384,7 +431,7 @@ def main() -> int:
         )
         print(f"provisional strict rejections: {len(rejected)}")
         if args.ledger_out:
-            write_reviewed_ledger(args.ledger_out, manual_exact)
+            write_reviewed_ledger(args.ledger_out, accepted, manual_exact)
             print(f"reviewed ledger: {args.ledger_out}")
     else:
         print(f"candidate starts: {len(items)}")

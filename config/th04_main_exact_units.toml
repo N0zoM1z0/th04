@@ -457,21 +457,10 @@ map_mode = "contains"
 object_path = "obj/th04/grcg_3.obj"
 
 [[units]]
-id = "th04-main-snd-pmd-prefix"
-repo_source = "src/th04/main/partials/snd_pmd_prefix.c"
-source_mode = "fragment"
-patch_path = "th04/snd/pmd_res.c"
+id = "th04-main-snd-pmd-resident"
+repo_source = "src/th04/main/exact/snd_pmd_resident.c"
+overlay_path = "th04/snd/pmd_res.c"
 map_module = "th04/snd_pmdr.c"
-map_mode = "contains"
-object_path = "obj/th04/snd_pmdr.obj"
-
-[[units]]
-id = "th04-main-snd-pmd-suffix"
-repo_source = "src/th04/main/partials/snd_pmd_suffix.c"
-source_mode = "fragment"
-patch_path = "th04/snd/pmd_res.c"
-map_module = "th04/snd_pmdr.c"
-map_mode = "contains"
 object_path = "obj/th04/snd_pmdr.obj"
 
 [[units]]

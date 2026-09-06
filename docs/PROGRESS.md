@@ -12,21 +12,22 @@ reviewed denominator until they are resolved.
 | --- | ---: |
 | Initial screened source-module contributions | 58 / 17,412 bytes |
 | Initial Ghidra function entries in those contributions | 151 |
-| Reviewed authored byte units/regions | 53 |
+| Reviewed authored byte units/regions | 51 |
 | Reviewed authored bytes | 12,494 |
-| Exact authored byte units/regions | 51 |
-| **Exact authored bytes** | **12,448 / 12,494 (99.631823%)** |
+| Exact authored byte units/regions | 50 |
+| **Exact authored bytes** | **12,453 / 12,494 (99.671842%)** |
 | Tracked authored function candidates | 113 |
 | Reviewed authored functions | 112 |
-| Exact authored functions | 110 |
-| **Exact authored functions** | **110 / 112 (98.214286%)** |
+| Exact authored functions | 111 |
+| **Exact authored functions** | **111 / 112 (99.107143%)** |
 | Provisional function candidates excluded from the denominator | 1 |
 | Exact original-style standalone ASM units | 9 / 1,489 bytes |
 
-The remaining reviewed authored byte mismatch is deliberately small and
-explicit: a 5-byte `LES` region inside `snd_pmd_resident` and a 41-byte middle
-region inside `snd_load`. Both complete functions remain reviewed but nonexact,
-which is why the function denominator is 112 rather than 110.
+The remaining reviewed authored byte mismatch is now a single 41-byte middle
+region inside `snd_load`; it is also the only reviewed nonexact function.
+`snd_pmd_resident` is fully exact from maintained pure C after expressing the
+PMD IVT slot as a Borland `__es` segment-specific pointer, which makes TC4J
+naturally emit the target `LES BX, ES:[0180h]` without inline assembly.
 
 Eleven former Ghidra non-contiguous-body candidates are now manually reviewed
 exact. The replayable manual gate requires the same TLINK public and exact byte
@@ -49,12 +50,13 @@ included in the authored C/C++ byte percentage.
 ## Replay basis
 
 The current accepted byte cohort is reproduced by
-`python3 scripts/replay_th04_main_exact_units.py`. The checked-in acceptance
-evidence originates from `gptweb-accept60-002`; the latest pre-commit replay
-`gptweb-functionreview-001` independently repeated two isolated `git archive`
+`python3 scripts/replay_th04_main_exact_units.py`. Historical acceptance
+receipts remain useful, while the current full-owner replay
+`gptweb-pmd-aggregate-001` independently repeated two isolated `git archive`
 materializations of the pinned ReC98 revision, overlaid repository-maintained
-source, and again passed all 60 selected raw/map/ordered-relocation/OMF/
-determinism checks.
+source, and passed all 59 default-selected raw/map/ordered-relocation/OMF/
+determinism checks after replacing the two PMD partial owners with one exact
+46-byte function owner.
 
 Function accounting is independently conservative. The checked-in
 `scripts/review_th04_main_functions.py` intersects target Ghidra entries,

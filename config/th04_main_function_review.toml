@@ -1,19 +1,11 @@
 schema_version = 1
 artifact = "th04-main"
-policy = "Exact functions require a target Ghidra entry, a local TLINK public at the same start, a contiguous Ghidra body wholly contained in one exact authored byte owner, and a checked-in maintained source. Provisional functions never enter the reviewed denominator."
+policy = "Exact functions require a target Ghidra entry and local TLINK public inside one exact authored byte owner. Automatic promotion requires a contiguous Ghidra body; configured reviewed_exact overrides must instead pass gap-free raw decoding and any declared switch-table target validation. Provisional functions never enter the reviewed denominator."
 
 [[provisional]]
 address = "0x2C8C8"
 name = "bullets_update"
 reason = "The function crosses a deliberately nonexact 17-byte handwritten-call gap; exact pre/post byte slices do not prove complete function ownership."
-
-[[reviewed_nonexact]]
-id = "th04-main-fn-2337e"
-address = "0x2337E"
-file_offset = "0x14B7E"
-size = "0x2E"
-name = "snd_pmd_resident"
-reason = "Five-byte LES IVT-load gap remains nonexact; pure C89 TC4J probes did not reproduce the target single LES without inline assembly."
 
 [[reviewed_nonexact]]
 id = "th04-main-fn-23496"

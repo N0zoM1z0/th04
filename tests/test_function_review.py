@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
@@ -92,6 +93,49 @@ cs_base = "0x10000"
             ):
                 with self.assertRaisesRegex(ValueError, "non-instruction starts"):
                     review.manual_reviews(items, metadata, target)
+
+    def test_automatic_review_promotes_blocked_row(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = [
+                "id", "artifact", "address", "file_offset", "size",
+                "boundary_state", "state", "name", "owner_unit", "source",
+                "evidence_ids", "notes",
+            ]
+            row = {key: "" for key in header}
+            row.update({
+                "id": "fn-100", "artifact": "th04-main", "address": "0x100",
+                "file_offset": "0x200", "size": "0x4",
+                "boundary_state": "reviewed", "state": "blocked",
+                "name": "fixture", "evidence_ids": "ev-boundary",
+            })
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=header)
+                writer.writeheader()
+                writer.writerow(row)
+            out = root / "out.csv"
+            old_root = review.ROOT
+            review.ROOT = root
+            try:
+                review.write_reviewed_ledger(
+                    out,
+                    [{
+                        "address": 0x100,
+                        "owner_unit": "owner-exact",
+                        "source": "src/unit.c",
+                    }],
+                    [],
+                )
+            finally:
+                review.ROOT = old_root
+            with out.open(newline="", encoding="utf-8") as stream:
+                promoted = next(csv.DictReader(stream))
+            self.assertEqual(promoted["state"], "exact")
+            self.assertEqual(promoted["owner_unit"], "owner-exact")
+            self.assertEqual(promoted["source"], "src/unit.c")
 
 
 if __name__ == "__main__":

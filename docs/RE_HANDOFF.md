@@ -5,8 +5,8 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted: reviewed authored C/C++ bytes are 12,448 / 12,494 (99.631823%)
-exact, and reviewed authored functions are 110 / 112 (98.214286%) exact. Nine
+accepted: reviewed authored C/C++ bytes are 12,453 / 12,494 (99.671842%)
+exact, and reviewed authored functions are 111 / 112 (99.107143%) exact. Nine
 standalone original-style ASM units totaling 1,489 bytes are separately exact
 and are not counted in the authored C/C++ percentage. No deterministic TH04
 runtime scenario has been authored.
@@ -117,22 +117,25 @@ runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Development receipt
-  `gptweb-accept60-002` passes all 60 default-selected units across raw bytes,
+  `gptweb-pmd-aggregate-001` passes all 59 current default-selected units across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
-- The current reviewed authored byte denominator is 12,494 bytes across 53
-  authored units/regions; 12,448 bytes across 51 units/regions are exact. The
-  only reviewed byte gaps are the five-byte `LES` in `snd_pmd_resident` and a
-  41-byte middle region in `snd_load`.
-- The latest function-review pre-commit cold replay `gptweb-functionreview-001`
-  passed all 60 default exact byte owners in two isolated materializations;
-  manual function-boundary promotion did not alter source/code generation.
+- The current reviewed authored byte denominator is 12,494 bytes across 51
+  authored units/regions; 12,453 bytes across 50 units/regions are exact. The
+  only reviewed byte gap is the 41-byte middle region in `snd_load`.
+- `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
+  `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
+  `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
+  directive is involved.
+- The latest PMD full-owner cold replay `gptweb-pmd-aggregate-001` passed all 59
+  current default exact byte owners in two isolated materializations, including
+  the new full 46-byte pure-C PMD owner.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
-  from byte ownership. A strict target-Ghidra + local-TLINK-public + exact-owner
-  screen accepts 99 contiguous complete functions. The two original sound
-  functions above remain reviewed/nonexact, giving 99/101 exact functions.
-  Twelve additional candidates remain provisional and do not enter the
-  reviewed denominator.
+  from byte ownership. The current review accepts 100 contiguous functions
+  automatically plus 11 replayable manual Ghidra-body false-negative reviews.
+  `snd_load` is the sole reviewed nonexact function, giving 111/112 exact;
+  `bullets_update` is the sole policy-provisional function outside the
+  denominator because it crosses a nonexact handwritten-call gap.
 - `dialog_op`, `dialog_run`, and `dialog_init` reproduce raw bytes and
   relocation sets, but their overlapping MZ relocation entries occur in a
   different order. They remain blocked/provisional; raw equality does not waive
@@ -164,11 +167,12 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Next bounded work
 
-Preserve the >98% authored function/byte baseline with the default two-cold
-replay before changing shared source or toolchain surfaces. The smallest
-remaining exactness investigations are the five-byte `snd_pmd_resident` `LES`
-and the 41-byte `snd_load` middle region; do not solve either with inline
-assembly or byte injection. Eleven former Ghidra non-contiguous-body candidates
+Preserve the >99% reviewed authored function/byte baseline with the default
+two-cold replay before changing shared source or toolchain surfaces. The
+smallest remaining reviewed exactness investigation is the 41-byte `snd_load`
+middle region; do not solve it with inline assembly or byte injection. The
+`snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`
+segment-pointer source shape. Eleven Ghidra body-construction false negatives
 now pass replayable manual raw/switch-table boundary review; only
 `bullets_update` remains provisional because it crosses a nonexact handwritten-
 call gap. In parallel, investigate the three `dialog` relocation-order blockers
