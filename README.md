@@ -262,6 +262,8 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
   HDI boot smoke, and deterministic Runtime Oracle requirements.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
 - `docs/PROGRESS.md` — conservative source-present and exact-byte totals.
+- `docs/reconstruction/TH04_MAIN_AUTHORED_SCREEN.md` — initial `MAIN.EXE`
+  source-module and authored-function routing inventory.
 - `docs/REFERENCE_ANALYSIS.md` — findings from TH08/TH095/TH105 and ReC98.
 - `docs/KNOWLEDGE_BASE.md` — scoped durable facts, hazards, and negative results.
 - `.agents/skills/` — task routers for RE, Oracle work, matching, and runtime.
@@ -272,10 +274,12 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 The control plane, target ingestion, locally attested Borland build chain, OMF
 integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
 attestation, repeated ReC98 TH01-TH05 cold-build calibration, and optional
-headless PC-98 startup/HDI boot smoke are operational. Reconstruction has
-started with one reviewed, source-present 26-byte `MAIN.EXE` function. It is
-not promoted to `exact`; no deterministic TH04 runtime scenario exists yet.
-Run:
+headless PC-98 startup/HDI boot smoke are operational. The first `MAIN.EXE`
+screen covers 58 source-module contributions and 151 Ghidra function entries:
+16 small authored units (1,446 bytes) have reviewed boundaries, while 42
+module candidates remain provisional. One 26-byte unit has maintained source;
+none is promoted to `exact`. No deterministic TH04 runtime scenario exists
+yet. Run:
 
 ```bash
 python3 scripts/status.py

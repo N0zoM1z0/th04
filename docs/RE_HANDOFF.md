@@ -4,9 +4,11 @@
 
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff.
-Reconstruction has started with one reviewed source-present `MAIN.EXE` unit.
-No unit is promoted to exact and no deterministic TH04 runtime scenario has
-been authored.
+The first reconstruction screen covers 58 `MAIN.EXE` source-module
+contributions and 151 Ghidra function entries. Sixteen small authored units
+have reviewed boundaries; 42 larger or ambiguous module candidates remain
+provisional. No unit is promoted to exact and no deterministic TH04 runtime
+scenario has been authored.
 
 ## Verified locally
 
@@ -110,6 +112,16 @@ been authored.
   now exists at `src/th04/main/slowdown.cpp`, but the ledger remains
   `source-present` until a complete checked-in unit replay satisfies every
   exact Oracle.
+- The initial `MAIN.EXE` authored screen accounts for 58 nonzero source-module
+  contributions totaling 17,412 bytes in the pinned cold-build map. Fifty-four
+  contributions totaling 14,123 bytes are raw-identical at the same target
+  load offsets; the remaining four contain 25 byte differences in total.
+  Read-only Ghidra finds 151 function entries in these spans.
+- Fifteen additional one-function module contributions have target boundaries
+  that agree with both Ghidra bodies and linker-map extents. Together with
+  `slowdown_frame_delay`, the current reviewed authored denominator is 16
+  units and 1,446 bytes. The other 42 module candidates retain provisional
+  ownership and do not enter progress totals.
 
 ## Open provenance issue
 
@@ -133,8 +145,10 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Next bounded work
 
-Continue one small `MAIN.EXE` unit at a time. Prefer functions already isolated
-by both target control flow and the cold linker map; keep imported source at
-`source-present` until the existing exact requirements can be replayed without
-special-case evidence. Do not broaden runtime work until a reconstruction
-claim actually needs it.
+Continue with the 15 reviewed units in
+`docs/reconstruction/TH04_MAIN_AUTHORED_SCREEN.md`; `tile_ring_set_vo`,
+`frame_delay`, `mpn_free`, and the short sound-mode helpers are the smallest
+source-recovery targets. Then split the raw-aligned multi-function candidates
+using target control flow. Keep the four mismatch modules (`dialog`, `stages`,
+`snd_load`, and `it_spl_u`) as focused compiler/source-shape investigations.
+Do not broaden runtime work until a reconstruction claim actually needs it.
