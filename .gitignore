@@ -1,6 +1,8 @@
 /_reference/
 /game_exe/
 /.analysis/
+/.tools/
+/ghidra-project/
 /build/
 /dist/
 /out/

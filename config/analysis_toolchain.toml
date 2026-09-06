@@ -1,0 +1,56 @@
+schema_version = 1
+
+[ghidra]
+version = "12.1.3"
+release_tag = "Ghidra_12.1.3_build"
+asset = "ghidra_12.1.3_PUBLIC_20260817.zip"
+url = "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.3_build/ghidra_12.1.3_PUBLIC_20260817.zip"
+archive_path = ".tools/downloads/ghidra_12.1.3_PUBLIC_20260817.zip"
+archive_size = 569445154
+archive_sha256 = "93a5d11a9ad510622acaaf908c556a7b9b764d338e78a7567f3689bf5081fd54"
+install_path = ".tools/ghidra_12.1.3_PUBLIC"
+stable_path = ".tools/ghidra"
+tree_file_count = 5218
+tree_total_size = 905553502
+tree_sha256 = "e0010fa34fd19c0f5da778f3bf693db56082378367034dafd2e6c58a12b75c39"
+application_properties_sha256 = "fb9b6292c801e4a18b7c20829437d3b18b2241b273aea9b1cbdebdf3e5d0dc15"
+analyze_headless_sha256 = "302880328a0024ee24cfe0326d4d9a61c2237116d95f2e0e0df090f747f95e30"
+base_sources_sha256 = "a18a8650132670230cd12fdcfaa3e20605a1e1d24c07d033d20986fea2cff2d2"
+mz_loader_source_sha256 = "dbec4eb13a9ec7d0941f3e4eb7466b65efa863ba0e52475e4ccdbeb5128bed2f"
+
+[temurin_jdk]
+version = "21.0.12.1+1"
+release_tag = "jdk-21.0.12.1+1"
+asset = "OpenJDK21U-jdk_x64_linux_hotspot_21.0.12.1_1.tar.gz"
+url = "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jdk_x64_linux_hotspot_21.0.12.1_1.tar.gz"
+archive_path = ".tools/downloads/OpenJDK21U-jdk_x64_linux_hotspot_21.0.12.1_1.tar.gz"
+archive_size = 207473347
+archive_sha256 = "ce79869e1307ed8ee1e2baa86a412b1eb5b75d10a01006d788a6f968bcfaee94"
+install_path = ".tools/jdk-21.0.12.1+1"
+stable_path = ".tools/jdk"
+tree_file_count = 249
+tree_symlink_count = 205
+tree_total_size = 361147248
+tree_sha256 = "7e6c40c7cf17adde3f1351aa7acfd6cc53ea2351881e62986ce141bb77189c5f"
+java_sha256 = "2a207f5e7d075afa01d97f8048389a64432a44c4a5af0f5e77d6e286ec5f401d"
+modules_sha256 = "70c5465dabf8e1bec2860631ea3ffd342f0ec23a5e2efd3a389d2abe32448f98"
+release_sha256 = "ebbd70bf00bab6d39addf51969c5ff244030b86b29de400b9fb10612ebd3ceec"
+banner_substring = "openjdk version \"21.0.12.1\" 2026-08-18 LTS"
+
+[mz_loader]
+name = "Old-style DOS Executable (MZ)"
+class = "MzLoader"
+language_id = "x86:LE:16:Real Mode"
+load_spec = "x86:LE:16:Real Mode:default"
+compiler_spec_id = "default"
+load_segment = 0x1000
+header_address_space = "HEADER"
+source_member = "ghidra/app/util/opinion/MzLoader.java"
+source_url = "https://github.com/NationalSecurityAgency/ghidra/blob/Ghidra_12.1.3_build/Ghidra/Features/Base/src/main/java/ghidra/app/util/opinion/MzLoader.java"
+note = "Ghidra's pinned MZ loader chooses segment 0x1000, applies MZ fixups to program memory, maps the header in OTHER space, and heuristically adjusts block boundaries. Database block/function boundaries remain provisional."
+
+[private_paths]
+receipt = ".analysis/ghidra/toolchain-attestation.json"
+xdg_root = ".analysis/ghidra"
+project_root = "ghidra-project"
+database_receipts = ".analysis/ghidra/database-attestations"

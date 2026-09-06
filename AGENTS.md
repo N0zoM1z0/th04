@@ -72,8 +72,10 @@ Use these claim words precisely:
 
 - Never patch target bytes or use a disassembler write as evidence until it is
   read back and mirrored into a checked-in ledger or note.
-- Keep IDA/Ghidra projects, exports, executable dumps, disk images, compiler
-  installations, and generated reports below `.analysis/` or outside the repo.
+- Keep Ghidra projects below the ignored `ghidra-project/` directory. Keep IDA
+  projects, exports, executable dumps, disk images, compiler installations, and
+  generated reports below `.analysis/` or outside the repo. Ghidra rejects a
+  project path containing the dot-prefixed `.analysis` component.
 - Never commit original executables, game assets, archives, credentials, or
   private keys.
 
