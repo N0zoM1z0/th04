@@ -7,10 +7,10 @@ reference_revision = "b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
 id = "th04-dialog-init-exit-tu-split"
 trigger_units = ["th04-main-dialog-init", "th04-main-dialog-exit"]
 scaffold_path = "th04/main/dialog/dialog.cpp"
-repo_fragment = "src/th04/main/partials/dialog_init_exit.cpp"
+repo_fragment = "src/main/dialog/init_exit.inl"
 remove_mode = "suffix"
-fragment_overlay_path = "th04/main/dialog/init_exit.cpp"
-repo_wrapper = "src/th04/main/modules/th04_dialog_init_exit.cpp"
+fragment_overlay_path = "th04/main/dialog/init_exit.inl"
+repo_wrapper = "src/main/dialog/init_exit.cpp"
 wrapper_overlay_path = "th04/dialog_i.cpp"
 build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/dialog.cpp\",\n"
@@ -18,287 +18,287 @@ build_insert = "\t\"th04/dialog_i.cpp\",\n"
 
 [[units]]
 id = "th04-main-slowdown-frame-delay"
-repo_source = "src/th04/main/slowdown.cpp"
+repo_source = "src/main/slowdown.cpp"
 overlay_path = "th04/main/slowdown.cpp"
 map_module = "th04/slowdown.cpp"
 object_path = "obj/th04/slowdown.obj"
 
 [[units]]
 id = "th04-main-tile-ring-set-vo"
-repo_source = "src/th04/main/exact/tile_ring_set_vo.cpp"
+repo_source = "src/main/tile/set.cpp"
 overlay_path = "th04/main/tile/set.cpp"
 map_module = "th04/tile_set.cpp"
 object_path = "obj/th04/tile_set.obj"
 
 [[units]]
 id = "th04-main-playfield-shake-update-and-render"
-repo_source = "src/th04/main/exact/playfield_shake_update_and_render.cpp"
+repo_source = "src/main/playfield.cpp"
 overlay_path = "th04/main/playfld.cpp"
 map_module = "th04/playfld.cpp"
 object_path = "obj/th04/playfld.obj"
 
 [[units]]
 id = "th04-main-midboss4-render"
-repo_source = "src/th04/main/exact/midboss4_render.cpp"
+repo_source = "src/main/midboss/m4.cpp"
 overlay_path = "th04/main/midboss/m4.cpp"
 map_module = "th04/midboss4.cpp"
 object_path = "obj/th04/midboss4.obj"
 
 [[units]]
 id = "th04-main-cfg-load-resident-ptr"
-repo_source = "src/th04/main/exact/cfg_load_resident_ptr.cpp"
+repo_source = "src/main/config/load_resident_ptr.cpp"
 overlay_path = "th03/formats/cfg_lres.cpp"
 map_module = "th04/cfg_lres.cpp"
 object_path = "obj/th04/cfg_lres.obj"
 
 [[units]]
 id = "th04-main-vram-planes-set"
-repo_source = "src/th04/main/exact/vram_planes_set.cpp"
+repo_source = "src/main/hardware/vram_planes.cpp"
 overlay_path = "th01/hardware/vplanset.cpp"
 map_module = "th01/vplanset.cpp"
 object_path = "obj/th01/vplanset.obj"
 
 [[units]]
 id = "th04-main-frame-delay"
-repo_source = "src/th04/main/exact/frame_delay.cpp"
+repo_source = "src/main/hardware/frame_delay.cpp"
 overlay_path = "th02/hardware/frmdely1.cpp"
 map_module = "th02/frmdely1.cpp"
 object_path = "obj/th02/frmdely1.obj"
 
 [[units]]
 id = "th04-main-mpn-free"
-repo_source = "src/th04/main/exact/mpn_free.cpp"
+repo_source = "src/main/formats/mpn_free.cpp"
 overlay_path = "th04/formats/mpn_free.cpp"
 map_module = "th04/mpn_free.cpp"
 object_path = "obj/th04/mpn_free.obj"
 
 [[units]]
 id = "th04-main-input-wait-for-change"
-repo_source = "src/th04/main/exact/input_wait_for_change.cpp"
+repo_source = "src/main/hardware/input_wait.cpp"
 overlay_path = "th04/hardware/input_w.cpp"
 map_module = "th04/input_w.cpp"
 object_path = "obj/th04/input_w.obj"
 
 [[units]]
 id = "th04-main-snd-kaja-interrupt"
-repo_source = "src/th04/main/exact/snd_kaja_interrupt.cpp"
+repo_source = "src/main/sound/kaja_interrupt.cpp"
 overlay_path = "th02/snd/kajaint.cpp"
 map_module = "th04/snd_kaja.cpp"
 object_path = "obj/th04/snd_kaja.obj"
 
 [[units]]
 id = "th04-main-snd-determine-modes"
-repo_source = "src/th04/main/exact/snd_determine_modes.cpp"
+repo_source = "src/main/sound/determine_modes.cpp"
 overlay_path = "th04/snd/detmodes.cpp"
 map_module = "th04/snd_mode.cpp"
 object_path = "obj/th04/snd_mode.obj"
 
 [[units]]
 id = "th04-main-game-exit"
-repo_source = "src/th04/main/exact/game_exit.cpp"
+repo_source = "src/main/core/exit.cpp"
 overlay_path = "th02/core/exit.cpp"
 map_module = "th04/exit.cpp"
 object_path = "obj/th04/exit.obj"
 
 [[units]]
 id = "th04-main-marisa-flystep-pointreflected"
-repo_source = "src/th04/main/exact/marisa_flystep_pointreflected.cpp"
+repo_source = "src/main/boss/marisa.cpp"
 overlay_path = "th04/main/boss/b4m.cpp"
 map_module = "th04/boss_4m.cpp"
 object_path = "obj/th04/boss_4m.obj"
 
 [[units]]
 id = "th04-main-hud-hp-update-and-render"
-repo_source = "src/th04/main/exact/hud_hp_update_and_render.cpp"
+repo_source = "src/main/hud/hp.cpp"
 overlay_path = "th04/main/hud/hp.cpp"
 map_module = "th04/hud_hp.cpp"
 object_path = "obj/th04/hud_hp.obj"
 
 [[units]]
 id = "th04-main-module-th04-demo-cpp-b3ee"
-repo_source = "src/th04/main/modules/th04_demo.cpp"
+repo_source = "src/main/demo.cpp"
 overlay_path = "th04/demo.cpp"
 map_module = "th04/demo.cpp"
 object_path = "obj/th04/demo.obj"
 
 [[units]]
 id = "th04-main-module-th04-ems-cpp-b488"
-repo_source = "src/th04/main/modules/th04_ems.cpp"
+repo_source = "src/main/ems.cpp"
 overlay_path = "th04/ems.cpp"
 map_module = "th04/ems.cpp"
 object_path = "obj/th04/ems.obj"
 
 [[units]]
 id = "th04-main-module-th04-std-cpp-b6d1"
-repo_source = "src/th04/main/modules/th04_std.cpp"
+repo_source = "src/main/stage/std.cpp"
 overlay_path = "th04/std.cpp"
 map_module = "th04/std.cpp"
 object_path = "obj/th04/std.obj"
 
 [[units]]
 id = "th04-main-module-th04-circle-cpp-c64a"
-repo_source = "src/th04/main/modules/th04_circle.cpp"
+repo_source = "src/main/circle.cpp"
 overlay_path = "th04/circle.cpp"
 map_module = "th04/circle.cpp"
 object_path = "obj/th04/circle.obj"
 
 [[units]]
 id = "th04-main-module-th04-f-dialog-cpp-ce93"
-repo_source = "src/th04/main/modules/th04_f_dialog.cpp"
+repo_source = "src/main/dialog/file.cpp"
 overlay_path = "th04/f_dialog.cpp"
 map_module = "th04/f_dialog.cpp"
 object_path = "obj/th04/f_dialog.obj"
 
 [[units]]
 id = "th04-main-module-th04-boss-exp-cpp-d88c"
-repo_source = "src/th04/main/modules/th04_boss_exp.cpp"
+repo_source = "src/main/boss/explode.cpp"
 overlay_path = "th04/boss_exp.cpp"
 map_module = "th04/boss_exp.cpp"
 object_path = "obj/th04/boss_exp.obj"
 
 [[units]]
 id = "th04-main-module-th04-player-m-cpp-10898"
-repo_source = "src/th04/main/modules/th04_player_m.cpp"
+repo_source = "src/main/player/move.cpp"
 overlay_path = "th04/player_m.cpp"
 map_module = "th04/player_m.cpp"
 object_path = "obj/th04/player_m.obj"
 
 [[units]]
 id = "th04-main-module-th04-player-p-cpp-10950"
-repo_source = "src/th04/main/modules/th04_player_p.cpp"
+repo_source = "src/main/player/player.cpp"
 overlay_path = "th04/player_p.cpp"
 map_module = "th04/player_p.cpp"
 object_path = "obj/th04/player_p.obj"
 
 [[units]]
 id = "th04-main-module-th04-hud-ovrl-cpp-10d4b"
-repo_source = "src/th04/main/modules/th04_hud_ovrl.cpp"
+repo_source = "src/main/hud/overlay.cpp"
 overlay_path = "th04/hud_ovrl.cpp"
 map_module = "th04/hud_ovrl.cpp"
 object_path = "obj/th04/hud_ovrl.obj"
 
 [[units]]
 id = "th04-main-module-th04-scoreupd-asm-11692"
-repo_source = "src/th04/main/modules/th04_scoreupd.asm"
+repo_source = "src/main/score/update.asm"
 overlay_path = "th04/scoreupd.asm"
 map_module = "th04\\scoreupd.asm"
 object_path = "obj/th04/scoreupd.obj"
 
 [[units]]
 id = "th04-main-module-th04-mb-inv-cpp-12124"
-repo_source = "src/th04/main/modules/th04_mb_inv.cpp"
+repo_source = "src/main/midboss/invalidate.cpp"
 overlay_path = "th04/mb_inv.cpp"
 map_module = "th04/mb_inv.cpp"
 object_path = "obj/th04/mb_inv.obj"
 
 [[units]]
 id = "th04-main-module-th04-boss-bd-cpp-12157"
-repo_source = "src/th04/main/modules/th04_boss_bd.cpp"
+repo_source = "src/main/boss/backdrop.cpp"
 overlay_path = "th04/boss_bd.cpp"
 map_module = "th04/boss_bd.cpp"
 object_path = "obj/th04/boss_bd.obj"
 
 [[units]]
 id = "th04-main-module-th04-score-rm-cpp-12a0a"
-repo_source = "src/th04/main/modules/th04_score_rm.cpp"
+repo_source = "src/main/score/ranking.cpp"
 overlay_path = "th04/score_rm.cpp"
 map_module = "th04/score_rm.cpp"
 object_path = "obj/th04/score_rm.obj"
 
 [[units]]
 id = "th04-main-module-th03-hfliplut-asm-131cc"
-repo_source = "src/th04/main/modules/th03_hfliplut.asm"
+repo_source = "src/main/hardware/hflip_lut.asm"
 overlay_path = "th03/hfliplut.asm"
 map_module = "th03\\hfliplut.asm"
 object_path = "obj/th03/hfliplut.obj"
 
 [[units]]
 id = "th04-main-module-th04-mpn-l-i-cpp-13269"
-repo_source = "src/th04/main/modules/th04_mpn_l_i.cpp"
+repo_source = "src/main/formats/mpn_load.cpp"
 overlay_path = "th04/mpn_l_i.cpp"
 map_module = "th04/mpn_l_i.cpp"
 object_path = "obj/th04/mpn_l_i.obj"
 
 [[units]]
 id = "th04-main-module-th04-vector-cpp-13320"
-repo_source = "src/th04/main/modules/th04_vector.cpp"
+repo_source = "src/main/math/vector.cpp"
 overlay_path = "th04/vector.cpp"
 map_module = "th04/vector.cpp"
 object_path = "obj/th04/vector.obj"
 
 [[units]]
 id = "th04-main-module-th04-cdg-put-asm-13580"
-repo_source = "src/th04/main/modules/th04_cdg_put.asm"
+repo_source = "src/main/formats/cdg_put.asm"
 overlay_path = "th04/cdg_put.asm"
 map_module = "th04\\cdg_put.asm"
 object_path = "obj/th04/cdg_put.obj"
 
 [[units]]
 id = "th04-main-module-th04-cdg-p-pr-asm-1371a"
-repo_source = "src/th04/main/modules/th04_cdg_p_pr.asm"
+repo_source = "src/main/formats/cdg_put_plane_roll.asm"
 overlay_path = "th04/cdg_p_pr.asm"
 map_module = "th04\\cdg_p_pr.asm"
 object_path = "obj/th04/cdg_p_pr.obj"
 
 [[units]]
 id = "th04-main-module-th04-input-s-asm-1379c"
-repo_source = "src/th04/main/modules/th04_input_s.asm"
+repo_source = "src/main/hardware/input.asm"
 overlay_path = "th04/input_s.asm"
 map_module = "th04\\input_s.asm"
 object_path = "obj/th04/input_s.obj"
 
 [[units]]
 id = "th04-main-module-th04-cdg-load-asm-13938"
-repo_source = "src/th04/main/modules/th04_cdg_load.asm"
+repo_source = "src/main/formats/cdg_load.asm"
 overlay_path = "th04/cdg_load.asm"
 map_module = "th04\\cdg_load.asm"
 object_path = "obj/th04/cdg_load.obj"
 
 [[units]]
 id = "th04-main-module-th04-gather-cpp-13a9c"
-repo_source = "src/th04/main/modules/th04_gather.cpp"
+repo_source = "src/main/gather.cpp"
 overlay_path = "th04/gather.cpp"
 map_module = "th04/gather.cpp"
 object_path = "obj/th04/gather.obj"
 
 [[units]]
 id = "th04-main-module-th04-motion-3-asm-13d32"
-repo_source = "src/th04/main/modules/th04_motion_3.asm"
+repo_source = "src/main/math/motion.asm"
 overlay_path = "th04/motion_3.asm"
 map_module = "th04\\motion_3.asm"
 object_path = "obj/th04/motion_3.obj"
 
 [[units]]
 id = "th04-main-module-th04-vector2n-asm-13df2"
-repo_source = "src/th04/main/modules/th04_vector2n.asm"
+repo_source = "src/main/math/vector2.asm"
 overlay_path = "th04/vector2n.asm"
 map_module = "th04\\vector2n.asm"
 object_path = "obj/th04/vector2n.obj"
 
 [[units]]
 id = "th04-main-module-th04-spark-a-asm-13e2a"
-repo_source = "src/th04/main/modules/th04_spark_a.asm"
+repo_source = "src/main/spark.asm"
 overlay_path = "th04/spark_a.asm"
 map_module = "th04\\spark_a.asm"
 object_path = "obj/th04/spark_a.obj"
 
 [[units]]
 id = "th04-main-module-th04-midboss-cpp-19ebc"
-repo_source = "src/th04/main/modules/th04_midboss.cpp"
+repo_source = "src/main/midboss/update.cpp"
 overlay_path = "th04/midboss.cpp"
 map_module = "th04/midboss.cpp"
 object_path = "obj/th04/midboss.obj"
 
 [[units]]
 id = "th04-main-module-th04-bullet-a-cpp-1cc33"
-repo_source = "src/th04/main/modules/th04_bullet_a.cpp"
+repo_source = "src/main/bullet/add.cpp"
 overlay_path = "th04/bullet_a.cpp"
 map_module = "th04/bullet_a.cpp"
 object_path = "obj/th04/bullet_a.obj"
 
 [[units]]
 id = "th04-main-dialog-std-prefix"
-repo_source = "src/th04/main/partials/dialog_std_prefix.cpp"
+repo_source = "src/main/dialog/stage_transition.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/shared.cpp"
 map_module = "th04/dialog.cpp"
@@ -307,7 +307,7 @@ object_path = "obj/th04/dialog.obj"
 
 [[units]]
 id = "th04-main-dialog-fade-in"
-repo_source = "src/th04/main/partials/dialog_fade_in.cpp"
+repo_source = "src/main/dialog/fade_in.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/shared.cpp"
 map_module = "th04/dialog.cpp"
@@ -317,7 +317,7 @@ object_path = "obj/th04/dialog.obj"
 [[units]]
 id = "th04-main-dialog-op"
 default_enabled = false
-repo_source = "src/th04/main/partials/dialog_op.cpp"
+repo_source = "src/main/dialog/op.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
 map_module = "th04/dialog.cpp"
@@ -327,7 +327,7 @@ object_path = "obj/th04/dialog.obj"
 [[units]]
 id = "th04-main-dialog-run"
 default_enabled = false
-repo_source = "src/th04/main/partials/dialog_run.cpp"
+repo_source = "src/main/dialog/run.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
 map_module = "th04/dialog.cpp"
@@ -336,7 +336,7 @@ object_path = "obj/th04/dialog.obj"
 
 [[units]]
 id = "th04-main-dialog-init"
-repo_source = "src/th04/main/partials/dialog_init.cpp"
+repo_source = "src/main/dialog/init.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
 map_module = "th04/dialog_i.cpp"
@@ -345,7 +345,7 @@ object_path = "obj/th04/dialog_i.obj"
 
 [[units]]
 id = "th04-main-dialog-exit"
-repo_source = "src/th04/main/partials/dialog_exit.cpp"
+repo_source = "src/main/dialog/exit.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
 map_module = "th04/dialog_i.cpp"
@@ -354,7 +354,7 @@ object_path = "obj/th04/dialog_i.obj"
 
 [[units]]
 id = "th04-main-stages-render-suffix"
-repo_source = "src/th04/main/partials/stages_render_suffix.cpp"
+repo_source = "src/main/stage/render.inl"
 source_mode = "fragment"
 patch_path = "th04/main/stage/stages.cpp"
 map_module = "th04/stages.cpp"
@@ -363,7 +363,7 @@ object_path = "obj/th04/stages.obj"
 
 [[units]]
 id = "th04-main-item-splashes-suffix"
-repo_source = "src/th04/main/partials/item_splashes_suffix.cpp"
+repo_source = "src/main/item/splashes.inl"
 source_mode = "fragment"
 patch_path = "th04/main/item/splash_u.cpp"
 map_module = "th04/it_spl_u.cpp"
@@ -372,7 +372,7 @@ object_path = "obj/th04/it_spl_u.obj"
 
 [[units]]
 id = "th04-main-bullet-u-prefix"
-repo_source = "src/th04/main/partials/bullet_u_prefix.cpp"
+repo_source = "src/main/bullet/update_prefix.inl"
 source_mode = "fragment"
 patch_path = "th04/main/bullet/update.cpp"
 map_module = "th04/bullet_u.cpp"
@@ -382,7 +382,7 @@ object_path = "obj/th04/bullet_u.obj"
 [[units]]
 id = "th04-main-bullets-update-pre-inline"
 default_enabled = false
-repo_source = "src/th04/main/partials/bullets_update_pre.cpp"
+repo_source = "src/main/bullet/update_pre.inl"
 source_mode = "fragment"
 patch_path = "th04/main/bullet/update.cpp"
 map_module = "th04/bullet_u.cpp"
@@ -392,7 +392,7 @@ object_path = "obj/th04/bullet_u.obj"
 [[units]]
 id = "th04-main-bullets-update-post-inline"
 default_enabled = false
-repo_source = "src/th04/main/partials/bullets_update_post.cpp"
+repo_source = "src/main/bullet/update_post.inl"
 source_mode = "fragment"
 patch_path = "th04/main/bullet/update.cpp"
 map_module = "th04/bullet_u.cpp"
@@ -401,7 +401,7 @@ object_path = "obj/th04/bullet_u.obj"
 
 [[units]]
 id = "th04-main-boss-prefix"
-repo_source = "src/th04/main/partials/boss_prefix.cpp"
+repo_source = "src/main/boss/boss_prefix.inl"
 source_mode = "fragment"
 patch_path = "th04/main/boss/boss.cpp"
 map_module = "th04/boss.cpp"
@@ -410,7 +410,7 @@ object_path = "obj/th04/boss.obj"
 
 [[units]]
 id = "th04-main-tiles-invalidate-reset"
-repo_source = "src/th04/main/partials/tiles_invalidate_reset.cpp"
+repo_source = "src/main/tile/invalidate_reset.inl"
 source_mode = "fragment"
 patch_path = "th04/main/tile/tile.cpp"
 map_module = "th04/tile.cpp"
@@ -419,7 +419,7 @@ object_path = "obj/th04/tile.obj"
 
 [[units]]
 id = "th04-main-tile-after-padding"
-repo_source = "src/th04/main/partials/tile_after_padding.cpp"
+repo_source = "src/main/tile/render.inl"
 source_mode = "fragment"
 patch_path = "th04/main/tile/tile.cpp"
 map_module = "th04/tile.cpp"
@@ -428,7 +428,7 @@ object_path = "obj/th04/tile.obj"
 
 [[units]]
 id = "th04-main-snd-se-play"
-repo_source = "src/th04/main/partials/snd_se_play.cpp"
+repo_source = "src/main/sound/se_play.inl"
 source_mode = "fragment"
 patch_path = "th02/snd/se.cpp"
 map_module = "th04/snd_se.cpp"
@@ -437,7 +437,7 @@ object_path = "obj/th04/snd_se.obj"
 
 [[units]]
 id = "th04-main-snd-se-update"
-repo_source = "src/th04/main/partials/snd_se_update.cpp"
+repo_source = "src/main/sound/se_update.inl"
 source_mode = "fragment"
 patch_path = "th02/snd/se.cpp"
 map_module = "th04/snd_se.cpp"
@@ -446,7 +446,7 @@ object_path = "obj/th04/snd_se.obj"
 
 [[units]]
 id = "th04-main-scrolly-functions"
-repo_source = "src/th04/main/partials/scrolly_functions.cpp"
+repo_source = "src/main/scroll_y.inl"
 source_mode = "fragment"
 patch_path = "th04/main/scrolly3.cpp"
 map_module = "th04/scrolly3.cpp"
@@ -455,7 +455,7 @@ object_path = "obj/th04/scrolly3.obj"
 
 [[units]]
 id = "th04-main-initmain-function"
-repo_source = "src/th04/main/partials/initmain.cpp"
+repo_source = "src/main/core/init.cpp"
 source_mode = "fragment"
 patch_path = "th03/core/initmain.cpp"
 map_module = "th04/initmain.cpp"
@@ -464,7 +464,7 @@ object_path = "obj/th04/initmain.obj"
 
 [[units]]
 id = "th04-main-grcg3-functions"
-repo_source = "src/th04/main/partials/grcg3_functions.cpp"
+repo_source = "src/main/hardware/grcg3.cpp"
 source_mode = "fragment"
 patch_path = "th04/hardware/grcg_3.cpp"
 map_module = "th04/grcg_3.cpp"
@@ -473,14 +473,14 @@ object_path = "obj/th04/grcg_3.obj"
 
 [[units]]
 id = "th04-main-snd-pmd-resident"
-repo_source = "src/th04/main/exact/snd_pmd_resident.c"
+repo_source = "src/main/sound/pmd_resident.c"
 overlay_path = "th04/snd/pmd_res.c"
 map_module = "th04/snd_pmdr.c"
 object_path = "obj/th04/snd_pmdr.obj"
 
 [[units]]
 id = "th04-main-snd-load-prefix"
-repo_source = "src/th04/main/partials/snd_load_prefix.cpp"
+repo_source = "src/main/sound/load_prefix.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -489,7 +489,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-tail"
-repo_source = "src/th04/main/partials/snd_load_tail.cpp"
+repo_source = "src/main/sound/load_tail.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -499,7 +499,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-open"
-repo_source = "src/th04/main/partials/snd_load_open.cpp"
+repo_source = "src/main/sound/load_open.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -508,7 +508,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-dispatch-read"
-repo_source = "src/th04/main/partials/snd_load_dispatch_read.cpp"
+repo_source = "src/main/sound/load_dispatch_read.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -517,7 +517,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-func-load"
-repo_source = "src/th04/main/partials/snd_load_func_load.cpp"
+repo_source = "src/main/sound/load_func.inl"
 source_mode = "replace"
 patch_path = "th04/snd/load.cpp"
 scaffold_sha256 = "9777ebd973098395823bfcfbc53daa451d2c6db62500aa038873e72729c1a39a"
@@ -531,7 +531,7 @@ object_path = "obj/th04/snd_load.obj"
 [[units]]
 id = "th04-main-bullets-update-spark-args"
 default_enabled = false
-repo_source = "src/th04/main/partials/bullets_update_spark_args.cpp"
+repo_source = "src/main/bullet/update_spark_args.inl"
 source_mode = "replace"
 patch_path = "th04/main/bullet/update.cpp"
 scaffold_sha256 = "fde98d13d82a0e3dfc0fdbac5cafc080a18ec28d856666aad8fca6f483394de7"
@@ -543,7 +543,7 @@ map_mode = "contains"
 object_path = "obj/th04/bullet_u.obj"
 [[units]]
 id = "th04-main-bullets-update"
-repo_source = "src/th04/main/exact/bullets_update.cpp"
+repo_source = "src/main/bullet/update_body.inl"
 source_mode = "replace"
 patch_path = "th04/main/bullet/update.cpp"
 scaffold_sha256 = "fde98d13d82a0e3dfc0fdbac5cafc080a18ec28d856666aad8fca6f483394de7"

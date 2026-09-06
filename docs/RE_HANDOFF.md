@@ -120,8 +120,8 @@ runtime scenario has been authored.
   current denominator.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
-  two isolated cold materializations. Latest pre-commit receipt
-  `gptweb-sndload-z-v12-precommit-001` passes all 62 current default-selected units across raw bytes,
+  two isolated cold materializations. Latest source-layout receipt
+  `source-layout-default-001` passes all 62 current default-selected units across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
 - The current reviewed authored byte denominator is 12,708 bytes across 56
@@ -140,7 +140,7 @@ runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest cold replay `gptweb-sndload-z-v12-precommit-001`
+- The latest cold replay `source-layout-default-001`
   passed all 62 current default exact byte owners in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
@@ -164,6 +164,13 @@ runtime scenario has been authored.
   `#pragma codestring`, and `__emit__`. Genuine standalone TASM translation
   units are classified `original-asm` rather than `authored` and contribute no
   bytes to the authored C/C++ percentage.
+- The source tree now follows the TH08 product rule: reconstructed MAIN code is
+  under `src/main/<subsystem>/`, with no `exact/`, `partials/`, or `modules/`
+  directories. Complete translation units keep `.cpp`/`.c`/`.asm`; bounded
+  included bodies use `.inl`. Acceptance state remains exclusively in the
+  ledgers. Replay manifests and historical map evidence may still name ReC98
+  `th01`/`th02`/`th03` paths because they describe the pinned scaffold, not the
+  product source layout.
 
 ## Open provenance issue
 
@@ -184,6 +191,17 @@ status alone is not independent provenance or acceptance evidence.
   `.tools/ghidra` and `scripts/ghidra.py`; it intentionally need not be on the
   host `PATH`.
 - `ndisasm`, GNU `objdump`, Wine, `unar`, and mtools are available.
+
+## Remaining source/build gap
+
+- The repository does not yet contain every TH04 translation unit or the local
+  ABI/header surface needed for an independent full build. Several recovered
+  MAIN units still include ReC98 cross-game headers when cold-replayed. Do not
+  add TH01/TH02/TH03/TH05 source trees or wrapper dependencies to hide this.
+  The next source-architecture work is bounded declaration/header recovery into
+  the owning TH04 subsystem (or proved `src/shared/`) followed by a clean local
+  compile. Exact replay through pinned ReC98 remains a separate Oracle during
+  that migration.
 
 ## Next bounded work
 

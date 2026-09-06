@@ -57,6 +57,8 @@ CONFIDENCE = {
 KNOWLEDGE_KINDS = {
     "fact", "recipe", "pattern", "hazard", "negative-result", "open-question",
 }
+SOURCE_ROOTS = {"main", "op", "maine", "zun", "shared"}
+SOURCE_STATE_DIRECTORIES = {"exact", "partial", "partials", "module", "modules"}
 
 
 def read_csv(
@@ -212,8 +214,33 @@ def validate_replay_command(root: Path, value: str, context: str) -> None:
         raise ValueError(f"{context}: replay driver does not exist: {script}")
 
 
+def validate_source_tree(root: Path) -> None:
+    """Keep product source organized by artifact/subsystem, never claim state."""
+
+    source_root = root / "src"
+    if not source_root.is_dir():
+        return
+    for path in source_root.rglob("*"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(source_root)
+        if not relative.parts or relative.parts[0] not in SOURCE_ROOTS:
+            raise ValueError(
+                f"{path.relative_to(root)}: source must belong to a TH04 artifact "
+                "or proved shared code"
+            )
+        state_parts = SOURCE_STATE_DIRECTORIES.intersection(relative.parts)
+        if state_parts:
+            state = sorted(state_parts)[0]
+            raise ValueError(
+                f"{path.relative_to(root)}: reconstruction state directory "
+                f"{state!r} is forbidden"
+            )
+
+
 def main(repository_root: Path = ROOT) -> int:
     try:
+        validate_source_tree(repository_root)
         config = repository_root / "config"
         targets = tomllib.loads((config / "targets.toml").read_text(encoding="utf-8"))
         oracle_config = tomllib.loads(

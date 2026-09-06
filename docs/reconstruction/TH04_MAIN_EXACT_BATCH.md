@@ -42,7 +42,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-sndload-z-v12-precommit-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/source-layout-default-001/receipt.json`.
 It passes all 62 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function
@@ -59,9 +59,10 @@ original source timestamp, and then compiles normally. This lets a natural
 C/C++ region be independently owned without copying adjacent ReC98 inline
 assembly into `src/`.
 
-No accepted C/C++ source under `src/th04/main/exact/`,
-`src/th04/main/modules/`, or `src/th04/main/partials/` contains `_asm`, an
-`asm { ... }` block, `#pragma codestring`, or `__emit__`.
+No accepted C/C++ source under `src/main/` contains `_asm`, an `asm { ... }`
+block, `#pragma codestring`, or `__emit__`. The semantic source layout is
+independent of this acceptance classification; exact state remains in the
+ledgers.
 
 ### Pinned source replacement rule
 
@@ -268,7 +269,7 @@ The resulting full 875-byte target/candidate slice has SHA-256
 `862908f44a5ade53c3148393f09bc0f76c02aac61488594e250aa8b91826673f`
 and the ordered overlapping relocation list agrees. Two isolated cold builds in
 `gptweb-bullets-full-v11-001` verify the full unit; the later default cohort
-`gptweb-sndload-z-v12-precommit-001` verifies it together with all other current
+`source-layout-default-001` verifies it together with all other current
 exact owners. No inline assembly, codestring, `__emit__`, raw byte directive, or
 patched object/link output is used.
 

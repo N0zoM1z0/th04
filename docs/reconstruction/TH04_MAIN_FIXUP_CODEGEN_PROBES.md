@@ -459,7 +459,7 @@ The former 17-byte low-level region is no longer a blocker. The maintained
 natural call reproduces the first 12 argument bytes directly, and the
 `samecodeseg`/TLINK mechanism above reproduces the final five-byte call form at
 link time. The complete 0x36B reviewed extent is raw exact, including trailing
-switch metadata/table, and is now owned by `src/th04/main/exact/bullets_update.cpp`.
+switch metadata/table, and is now owned by `src/main/bullet/update_body.inl`.
 
 The full exact function is deliberately accepted only at the final-linked
 artifact layer as well as OMF/layout layers. Object LEDATA alone would still show

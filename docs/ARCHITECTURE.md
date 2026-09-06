@@ -83,10 +83,46 @@ claim.  Exact is deliberately brittle.
 
 ## Source architecture
 
-The `src/` tree starts empty.  Do not bulk-import ReC98.  Recover bounded TH04
-units from the verified target, using ReC98 and adjacent games as corroboration.
-When shared code is proved, keep target-specific build/link ownership explicit
-rather than erasing it behind a modern abstraction.
+The `src/` tree is the TH04 product source tree. Like TH08, it is organized by
+executable and engine responsibility, never by reconstruction status:
+
+```text
+src/
+  main/       MAIN.EXE gameplay, hardware, formats, and UI subsystems
+  op/         OP.EXE source when reconstructed
+  maine/      MAINE.EXE source when reconstructed
+  zun/        ZUN.COM source when reconstructed
+  shared/     declarations or implementations proved shared by TH04 artifacts
+```
+
+Subdirectories below an artifact are semantic (`boss/`, `bullet/`, `sound/`,
+and so on). Do not create `exact/`, `partial/`, `partials/`, `module/`, or
+`modules/` source directories. Exactness, origin, reviewed boundaries, and
+source presence belong only in `config/units.csv`, the authored-function
+ledger, and their evidence rows.
+
+A `.cpp`, `.c`, or `.asm` file represents a buildable translation unit or a
+standalone source owner. A `.inl` file is a bounded body that is included by a
+semantic translation unit; the extension records source composition, not a
+weaker acceptance state. Replay-only overlay and fragment mechanics belong in
+`config/th04_main_exact_units.toml` and must not determine the product layout.
+
+The intended end state is a clean checkout whose TH04 source builds with the
+pinned compiler, assembler, linker, and documented external libraries without
+using `_reference/ReC98` as a source or header search path. Product source must
+not include `th01/`, `th02/`, `th03/`, or `th05/` headers. Recover the required
+declarations into the appropriate TH04 artifact or `src/shared/` ownership
+surface and attest them before use. Historical ReC98 paths may remain in replay
+manifests, linker-map evidence, and focused notes because those fields describe
+the pinned calibration scaffold; they are not the TH04 source architecture.
+
+The current tree is not yet a complete standalone game build: only bounded
+`MAIN.EXE` source owners have been reconstructed, and several still compile in
+the exact Oracle through pinned ReC98 scaffolding. Do not conceal that gap with
+wrapper headers or a bulk import. Recover bounded TH04 units from the verified
+target, using ReC98 and adjacent games as corroboration. When shared code is
+proved, keep target-specific build/link ownership explicit rather than erasing
+it behind a modern abstraction.
 
 Exact reconstruction and a future portable runtime are separate products.  A
 portable branch may replace segmentation and hardware access only after the

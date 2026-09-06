@@ -30,8 +30,10 @@ class ExactTrackingTests(unittest.TestCase):
         config.mkdir()
         shutil.copyfile(repository / "config" / "targets.toml", config / "targets.toml")
         shutil.copyfile(repository / "config" / "oracles.toml", config / "oracles.toml")
-        (root / "src").mkdir()
-        (root / "src" / "unit.c").write_text("int unit(void) { return 0; }\n", encoding="utf-8")
+        (root / "src" / "main").mkdir(parents=True)
+        (root / "src" / "main" / "unit.c").write_text(
+            "int unit(void) { return 0; }\n", encoding="utf-8"
+        )
         (root / "scripts").mkdir()
         (root / "scripts" / "replay.py").write_text("# replay fixture\n", encoding="utf-8")
 
@@ -48,7 +50,7 @@ class ExactTrackingTests(unittest.TestCase):
             "origin": "authored",
             "state": "exact",
             "name": "unit",
-            "source": "src/unit.c",
+            "source": "src/main/unit.c",
             "evidence_ids": "",
             "replay_command": "python3 scripts/replay.py --unit unit-main-100",
             "notes": "synthetic exact-promotion fixture",
@@ -137,6 +139,15 @@ class ExactTrackingTests(unittest.TestCase):
             units, evidence = self.make_fixture(root)
             self.assertEqual(self.run_fixture(root, units, evidence), 0)
 
+    def test_source_state_directory_is_rejected(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            units, evidence = self.make_fixture(root)
+            forbidden = root / "src" / "main" / "exact"
+            forbidden.mkdir()
+            (forbidden / "unit.c").write_text("int forbidden;\n", encoding="utf-8")
+            self.assertEqual(self.run_fixture(root, units, evidence), 1)
+
     def test_adversarial_exact_claims_fail_closed(self) -> None:
         mutations = {
             "evidence reused by another unit": lambda units, evidence: next(
@@ -182,7 +193,7 @@ class ExactTrackingTests(unittest.TestCase):
                     "state": "exact",
                     "name": "fixture_function",
                     "owner_unit": "unit-main-100",
-                    "source": "src/unit.c",
+                    "source": "src/main/unit.c",
                     "evidence_ids": "ev-boundary-ownership",
                     "notes": "synthetic reviewed function",
                 }
@@ -212,7 +223,7 @@ class ExactTrackingTests(unittest.TestCase):
                         "state": "exact",
                         "name": "fixture_function",
                         "owner_unit": "unit-main-100",
-                        "source": "src/unit.c",
+                        "source": "src/main/unit.c",
                         "evidence_ids": "ev-boundary-ownership",
                         "notes": "synthetic reviewed function",
                     }

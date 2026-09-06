@@ -43,6 +43,22 @@ identify the supplied Japanese image exactly, while independent pristine-dump
 confirmation remains open.  That qualification is kept separate from whether
 a candidate build exactly matches the pinned bytes.
 
+## Source layout
+
+As in the TH08 reconstruction, `src/` is organized as product code rather than
+as a progress report. Current reconstructed code is under `src/main/` and its
+engine subsystems. Future artifact-owned code belongs under `src/op/`,
+`src/maine/`, or `src/zun/`; code proved shared between TH04 artifacts belongs
+under `src/shared/`. Exact, structural, and source-present state is tracked in
+the CSV ledgers, never with `exact/`, `partials/`, or `modules/` directories.
+
+The intended build consumes checked-in TH04 source and headers plus the pinned
+Borland/TASM/TLINK environment and documented libraries. TH01/TH02/TH03/TH05
+source trees are evidence, not dependencies. The current reconstruction is not
+yet a complete standalone build: the strict exact replay still uses pinned
+ReC98 as clean build scaffolding for bounded recovered units. See
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the ownership rules.
+
 ## Fresh machine setup
 
 The calibrated host was Debian 12 x86-64 with Python 3.11 and Wine 8.0. The

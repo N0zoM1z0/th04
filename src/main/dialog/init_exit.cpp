@@ -8,4 +8,4 @@
 #include "th04/main/stage/stage.hpp"
 #include "th04/shiftjis/fns.hpp"
 
-#include "th04/main/dialog/init_exit.cpp"
+#include "th04/main/dialog/init_exit.inl"

@@ -68,6 +68,19 @@ Do not mechanically translate pseudocode.  Keep unknown meaning neutral.
 Promote to `source-present` only when the body and its material side effects are
 implemented, not when a stub compiles.
 
+Place the result under the owning TH04 artifact and subsystem in `src/`.
+Build/acceptance state never appears in a directory name: do not add
+`exact/`, `partial(s)/`, or `module(s)/`. Use `.inl` only when a bounded body is
+genuinely included by a semantic translation unit. New product source must not
+include another game's source tree or headers. If a declaration is currently
+known only from TH01/TH02/TH03/TH05 or ReC98, recover and attest a TH04-local or
+proved `src/shared/` declaration before making it a product dependency.
+
+The independent-build target is the checked-in TH04 source plus the pinned
+toolchain and documented libraries. A successful replay that overlays source
+into `_reference/ReC98` is an exactness Oracle, not proof that the repository
+already has a standalone product build.
+
 ## 6. Probe and compare smallest-first
 
 Compile the smallest truthful unit with explicit flags and immutable tool/input

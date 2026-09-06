@@ -6,7 +6,7 @@
 - Ledger state: `source-present`
 - Origin: authored
 - Boundary: reviewed
-- Maintained source: `src/th04/main/slowdown.cpp`
+- Maintained source: `src/main/slowdown.cpp`
 - Exact promotion: not claimed
 
 The source candidate is identical to the bounded implementation at pinned

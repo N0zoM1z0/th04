@@ -68,6 +68,22 @@ Use these claim words precisely:
 - Do not modernize undefined behavior or PC-98 hardware timing in the exact
   branch.  Record it, test it, and isolate portable work from reconstruction.
 
+## Source tree discipline
+
+- Follow the TH08-style product layout: `src/main/`, `src/op/`, `src/maine/`,
+  `src/zun/`, and proved `src/shared/` code, with subsystem directories below
+  each artifact.
+- Never classify source by directory. Do not create `exact/`, `partial(s)/`,
+  or `module(s)/`; exactness and source presence live in the ledgers.
+- Treat `.cpp`, `.c`, and `.asm` as translation units. Use `.inl` only for a
+  bounded body that a semantic translation unit includes.
+- TH04 product source must not include or require `th01/`, `th02/`, `th03/`,
+  or `th05/` source/header trees. Cross-game material is evidence only. Recover
+  required declarations under the owning TH04 artifact or `src/shared/`.
+- The product build must ultimately use checked-in TH04 source and headers.
+  Overlaying maintained source into pinned ReC98 is an Oracle, not a standalone
+  build and not permission to bulk-import its source tree.
+
 ## Database and target safety
 
 - Never patch target bytes or use a disassembler write as evidence until it is
