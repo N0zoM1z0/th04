@@ -48,16 +48,23 @@ sudo apt install git python3 unar wine wine64 p7zip-full mtools curl wget \
   ca-certificates tar unzip
 ```
 
+PC-98 execution is optional for static reconstruction. To provision the
+headless runtime smoke baseline as well, install `dosbox-x`; see
+[`docs/RUNTIME.md`](docs/RUNTIME.md) for the pinned host identity, retained-HDI
+flow, and the boundary between a startup smoke and runtime evidence.
+
 Run the one-line reference clone command in the reference section below, then:
 
 ```bash
 python3 scripts/import_targets.py /path/to/your/legal-copy.rar \
-  --include-all-games-smoke
+  --include-all-games-smoke \
+  --retain-runtime-image
 bash scripts/bootstrap_toolchain.sh
 bash scripts/bootstrap_analysis_toolchain.sh
 python3 scripts/ghidra.py th04-main import
 python3 scripts/preflight.py
 python3 scripts/ghidra.py th04-main check
+python3 scripts/smoke_runtime.py --boot-image
 python3 scripts/ci.py
 ```
 
@@ -240,6 +247,8 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
   use, and troubleshooting.
 - `docs/GHIDRA.md` — pinned headless analysis installation, private project
   layout, MZ database attestation, calibration, and use.
+- `docs/RUNTIME.md` — optional headless DOSBox-X install, attestation, private
+  HDI boot smoke, and deterministic Runtime Oracle requirements.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
 - `docs/REFERENCE_ANALYSIS.md` — findings from TH08/TH095/TH105 and ReC98.
 - `docs/KNOWLEDGE_BASE.md` — scoped durable facts, hazards, and negative results.
@@ -250,8 +259,9 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 
 The control plane, target ingestion, locally attested Borland build chain, OMF
 integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
-attestation, and repeated ReC98 TH01-TH05 cold-build calibration are
-operational. No authored TH04 function is claimed as reconstructed or exact
+attestation, repeated ReC98 TH01-TH05 cold-build calibration, and optional
+headless PC-98 startup/HDI boot smoke are operational. No deterministic TH04
+runtime scenario and no authored TH04 function is claimed as accepted or exact
 yet. Run:
 
 ```bash

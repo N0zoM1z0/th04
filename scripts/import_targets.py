@@ -120,6 +120,11 @@ def main() -> int:
         action="store_true",
         help="import the complete TH01-TH05 private executable calibration corpus",
     )
+    parser.add_argument(
+        "--retain-runtime-image",
+        action="store_true",
+        help="retain the hash-attested Japanese HDI below .analysis/runtime",
+    )
     args = parser.parse_args()
     manifest = tomllib.loads(MANIFEST.read_text(encoding="utf-8"))
     source = manifest["source"]
@@ -140,6 +145,12 @@ def main() -> int:
         if digest_file(hdi) != source["hdi_sha256"]:
             fail("HDI digest changed after selection")
         hdi_info = verify_hdi(hdi, source)
+        staged_runtime_image: Path | None = None
+        if args.retain_runtime_image:
+            staged_runtime_image = temporary / "zun.hdi"
+            shutil.copyfile(hdi, staged_runtime_image)
+            if digest_file(staged_runtime_image) != source["hdi_sha256"]:
+                fail("retained runtime HDI changed while staging")
         fat_offset = int(source["fat_partition_offset"])
         stage = temporary / "stage"
         stage.mkdir()
@@ -201,11 +212,22 @@ def main() -> int:
             destination.parent.mkdir(parents=True, exist_ok=True)
             os.replace(stage / artifact["id"], destination)
 
+        runtime_image_path: str | None = None
+        if staged_runtime_image is not None:
+            runtime_image = analysis / "runtime" / "images" / "zun.hdi"
+            runtime_image.parent.mkdir(parents=True, exist_ok=True)
+            os.replace(staged_runtime_image, runtime_image)
+            runtime_image_path = str(runtime_image.relative_to(ROOT))
+
         receipt = {
             "schema_version": 1,
             "imported_utc": datetime.now(timezone.utc).isoformat(),
             "archive": {"path": str(archive), "sha256": archive_sha256},
-            "hdi": {"sha256": source["hdi_sha256"], **hdi_info},
+            "hdi": {
+                "sha256": source["hdi_sha256"],
+                "private_runtime_path": runtime_image_path,
+                **hdi_info,
+            },
             "canonicality": source["canonicality"],
             "artifacts": receipts,
         }

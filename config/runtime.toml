@@ -1,0 +1,46 @@
+schema_version = 1
+
+[policy]
+status = "headless-host-smoke-defined"
+scope = "PC-98 startup, pinned-image mount, and boot-path availability only"
+not_proven = "deterministic TH04 behavior, hardware timing fidelity, or cross-emulator agreement"
+
+[primary]
+id = "dosbox-x-ubuntu-noble-amd64"
+emulator = "DOSBox-X"
+command = "dosbox-x"
+host = "Ubuntu 24.04 x86_64"
+package = "dosbox-x"
+package_version = "2024.03.01+dfsg-1build2"
+banner = "DOSBox-X version 2024.03.01 SDL2"
+binary_sha256 = "30a5fdf8fa95abaf7bae1a9e624ccfc9e26e5357a19cc567bf3a2ac659699258"
+config = "config/runtime/dosbox-x-headless.conf"
+config_sha256 = "ca2f1680180677fef4dd48708e725bb541049ed56a095bf34487321e8057760d"
+
+[primary.execution]
+machine = "pc98"
+video_driver = "dummy"
+audio_driver = "dummy"
+time_limit_seconds = 8
+required_log_markers = [
+  "Video dummy, Audio dummy",
+  "PC-98 PIT master clock rate 2457600Hz",
+  "PC-98: GDC is running at 2.5MHz.",
+]
+boot_required_log_markers = [
+  "Image file has .HDI extension, assuming HDI image",
+  "HDI: Geometry is C/H/S 615/4/17",
+  "IMGMOUNT: HDD image mounted to drive no. 2",
+  "Booting guest OS",
+]
+
+[image]
+path = ".analysis/runtime/images/zun.hdi"
+sha256 = "0d5ea773a9e4f3e28f473b6deeedb6a7cdaccbb5b940a97983c4e3597dd4ebfd"
+size = 21415936
+canonicality = "candidate-local-attested"
+
+[secondary]
+emulator = "Neko Project II debug build"
+status = "deferred-until-cross-emulator-oracle"
+reason = "requires a separately pinned source/build/config and is unnecessary for static exact reconstruction"

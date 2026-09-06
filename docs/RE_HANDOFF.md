@@ -2,9 +2,10 @@
 
 ## Phase
 
-Control-plane, target-ingestion, build-chain calibration, and headless Ghidra
-bring-up are ready for handoff. No TH04 source or unit has been reconstructed
-or accepted yet.
+Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
+the optional DOSBox-X headless host smoke are ready for handoff. No
+deterministic TH04 runtime scenario has been authored, and no TH04 source or
+unit has been reconstructed or accepted yet.
 
 ## Verified locally
 
@@ -93,6 +94,14 @@ or accepted yet.
   bounds, and a stack outside minimum allocation while all 20 pinned targets
   continue to pass. The OMF parser rejects concatenated valid modules by
   requiring exactly one THEADR and one MODEND/MODEND32.
+- Ubuntu's DOSBox-X 2024.03.01 package is installed and pinned by package
+  version plus `/usr/bin/dosbox-x` SHA-256. The checked-in no-GUI profile passes
+  PC-98 startup and uses dummy SDL video/audio, isolated XDG state, fixed CPU
+  cycles, explicit PIT/GDC settings, and disabled host MIDI.
+- The same `candidate-local-attested` Japanese HDI used for target import is
+  retained privately below `.analysis/runtime/`, revalidated by SHA-256, and
+  enters the DOSBox-X PC-98 image boot path under a hard time limit. This is an
+  infrastructure smoke only, not a deterministic TH04 behavior observation.
 
 ## Open provenance issue
 
@@ -104,7 +113,11 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Remaining tool gaps
 
-- No DOSBox-X or Neko Project II debug runtime is installed yet.
+- A Neko Project II debug build is not installed. Add and attest it when the
+  first bounded runtime claim needs independent cross-emulator replay; it is
+  not required for static exact reconstruction.
+- No deterministic TH04 input/checkpoint/state-capture runtime scenario exists
+  yet. `scripts/smoke_runtime.py` deliberately does not claim that role.
 - No IDA backend is installed. Pinned Ghidra is operational through
   `.tools/ghidra` and `scripts/ghidra.py`; it intentionally need not be on the
   host `PATH`.

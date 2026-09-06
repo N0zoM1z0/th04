@@ -178,4 +178,7 @@ requirements = [
 [runtime]
 primary = "DOSBox-X with PC-98 support"
 secondary = "Neko Project II debug build"
-status = "not-installed"
+status = "optional-headless-host-smoke-defined"
+manifest = "config/runtime.toml"
+workflow = "scripts/smoke_runtime.py"
+note = "The primary smoke only proves pinned emulator/config/image startup availability. Deterministic target behavior and cross-emulator agreement require claim-scoped scenarios and a separately pinned Neko Project II debug build."
