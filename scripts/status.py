@@ -24,6 +24,12 @@ def main() -> int:
     )
     with (ROOT / "config" / "units.csv").open(newline="", encoding="utf-8") as stream:
         units = list(csv.DictReader(stream))
+    function_path = ROOT / "config" / "th04_main_authored_functions.csv"
+    if function_path.is_file():
+        with function_path.open(newline="", encoding="utf-8") as stream:
+            functions = list(csv.DictReader(stream))
+    else:
+        functions = []
 
     per_artifact: dict[str, dict[str, object]] = {}
     for artifact in (item for item in manifest["artifacts"] if item["game"] == "th04"):
@@ -32,14 +38,25 @@ def main() -> int:
         state_bytes: dict[str, int] = defaultdict(int)
         for row in rows:
             state_bytes[row["state"]] += int(row["size"], 0)
-        known_authored = sum(
-            int(row["size"], 0) for row in rows if row["origin"] == "authored"
-        )
+        reviewed_authored = [
+            row
+            for row in rows
+            if row["origin"] == "authored"
+            and row["boundary_state"] in {"reviewed", "shared"}
+        ]
+        known_authored = sum(int(row["size"], 0) for row in reviewed_authored)
         exact_authored = sum(
             int(row["size"], 0)
-            for row in rows
-            if row["origin"] == "authored" and row["state"] == "exact"
+            for row in reviewed_authored
+            if row["state"] == "exact"
         )
+        reviewed_functions = [
+            row
+            for row in functions
+            if row["artifact"] == artifact["id"]
+            and row["boundary_state"] in {"reviewed", "shared"}
+        ]
+        exact_functions = [row for row in reviewed_functions if row["state"] == "exact"]
         per_artifact[artifact["id"]] = {
             "target_size": artifact["size"],
             "unit_count": len(rows),
@@ -50,6 +67,13 @@ def main() -> int:
             "exact_authored_percent": (
                 round(exact_authored * 100 / known_authored, 6)
                 if known_authored
+                else None
+            ),
+            "reviewed_authored_functions": len(reviewed_functions),
+            "exact_authored_functions": len(exact_functions),
+            "exact_authored_function_percent": (
+                round(len(exact_functions) * 100 / len(reviewed_functions), 6)
+                if reviewed_functions
                 else None
             ),
         }
@@ -66,10 +90,16 @@ def main() -> int:
         for artifact_id, report in per_artifact.items():
             percent = report["exact_authored_percent"]
             percent_text = "n/a" if percent is None else f"{percent:.6f}%"
+            function_percent = report["exact_authored_function_percent"]
+            function_percent_text = (
+                "n/a" if function_percent is None else f"{function_percent:.6f}%"
+            )
             print(
                 f"{artifact_id:12} units={report['unit_count']:4} "
                 f"known-authored={report['known_authored_bytes']:7} "
-                f"exact={report['exact_authored_bytes']:7} ({percent_text})"
+                f"exact={report['exact_authored_bytes']:7} ({percent_text}) "
+                f"functions={report['exact_authored_functions']}/"
+                f"{report['reviewed_authored_functions']} ({function_percent_text})"
             )
         print(output["warning"])
     return 0

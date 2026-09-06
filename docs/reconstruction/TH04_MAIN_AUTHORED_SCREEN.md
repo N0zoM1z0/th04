@@ -1,5 +1,13 @@
 # TH04 `MAIN.EXE` initial authored screen
 
+> **Historical routing snapshot.** This document records the initial screen that
+> established the first 16 reviewed single-function extents. It is intentionally
+> not rewritten as current progress. The later cold-replayed exact batch is
+> documented in `TH04_MAIN_EXACT_BATCH.md`, while `../PROGRESS.md` and
+> `config/th04_main_authored_functions.csv` contain the current reviewed
+> denominators.
+
+
 ## Scope and method
 
 This is a routing inventory, not a bulk source import or exactness claim. The

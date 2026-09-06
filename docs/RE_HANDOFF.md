@@ -3,12 +3,13 @@
 ## Phase
 
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
-the optional DOSBox-X headless host smoke are ready for handoff.
-The first reconstruction screen covers 58 `MAIN.EXE` source-module
-contributions and 151 Ghidra function entries. Sixteen small authored units
-have reviewed boundaries; 42 larger or ambiguous module candidates remain
-provisional. No unit is promoted to exact and no deterministic TH04 runtime
-scenario has been authored.
+the optional DOSBox-X headless host smoke are ready for handoff. The first
+large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
+accepted: reviewed authored C/C++ bytes are 12,448 / 12,494 (99.631823%)
+exact, and reviewed authored functions are 99 / 101 (98.019802%) exact. Nine
+standalone original-style ASM units totaling 1,489 bytes are separately exact
+and are not counted in the authored C/C++ percentage. No deterministic TH04
+runtime scenario has been authored.
 
 ## Verified locally
 
@@ -105,23 +106,38 @@ scenario has been authored.
   retained privately below `.analysis/runtime/`, revalidated by SHA-256, and
   enters the DOSBox-X PC-98 image boot path under a hard time limit. This is an
   infrastructure smoke only, not a deterministic TH04 behavior observation.
-- `slowdown_frame_delay` is reviewed at target file `0xC2F2`, load-module
-  `0xAAF2`, link/Ghidra `1AAF:0002`, with a complete 26-byte function extent
-  and no overlapping MZ relocation. The pinned TC4J candidate output is 26/26
-  bytes identical to the target and its OMF/map checks pass. Maintained source
-  now exists at `src/th04/main/slowdown.cpp`, but the ledger remains
-  `source-present` until a complete checked-in unit replay satisfies every
-  exact Oracle.
-- The initial `MAIN.EXE` authored screen accounts for 58 nonzero source-module
-  contributions totaling 17,412 bytes in the pinned cold-build map. Fifty-four
-  contributions totaling 14,123 bytes are raw-identical at the same target
-  load offsets; the remaining four contain 25 byte differences in total.
-  Read-only Ghidra finds 151 function entries in these spans.
-- Fifteen additional one-function module contributions have target boundaries
-  that agree with both Ghidra bodies and linker-map extents. Together with
-  `slowdown_frame_delay`, the current reviewed authored denominator is 16
-  units and 1,446 bytes. The other 42 module candidates retain provisional
-  ownership and do not enter progress totals.
+- `slowdown_frame_delay` is now exact from maintained source. It remains the
+  smallest reviewed example at target file `0xC2F2`, load-module `0xAAF2`,
+  link/Ghidra `1AAF:0002`, and is replayed by the same checked-in batch driver
+  used for the larger authored cohort.
+- The initial `MAIN.EXE` screen still accounts for 58 nonzero source-module
+  contributions totaling 17,412 bytes and 151 provisional Ghidra entries. It
+  is retained as a historical routing snapshot rather than rewritten as the
+  current denominator.
+- `scripts/replay_th04_main_exact_units.py` now replays complete maintained
+  translation units and identity-preserving natural-source fragments through
+  two isolated cold materializations. Development receipt
+  `gptweb-accept60-002` passes all 60 default-selected units across raw bytes,
+  containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
+  validity, and deterministic output.
+- The current reviewed authored byte denominator is 12,494 bytes across 53
+  authored units/regions; 12,448 bytes across 51 units/regions are exact. The
+  only reviewed byte gaps are the five-byte `LES` in `snd_pmd_resident` and a
+  41-byte middle region in `snd_load`.
+- `config/th04_main_authored_functions.csv` tracks function progress separately
+  from byte ownership. A strict target-Ghidra + local-TLINK-public + exact-owner
+  screen accepts 99 contiguous complete functions. The two original sound
+  functions above remain reviewed/nonexact, giving 99/101 exact functions.
+  Twelve additional candidates remain provisional and do not enter the
+  reviewed denominator.
+- `dialog_op`, `dialog_run`, and `dialog_init` reproduce raw bytes and
+  relocation sets, but their overlapping MZ relocation entries occur in a
+  different order. They remain blocked/provisional; raw equality does not waive
+  the ordered-relocation Oracle.
+- Maintained C/C++ exact source intentionally excludes `_asm`, `asm {}`,
+  `#pragma codestring`, and `__emit__`. Genuine standalone TASM translation
+  units are classified `original-asm` rather than `authored` and contribute no
+  bytes to the authored C/C++ percentage.
 
 ## Open provenance issue
 
@@ -145,10 +161,11 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Next bounded work
 
-Continue with the 15 reviewed units in
-`docs/reconstruction/TH04_MAIN_AUTHORED_SCREEN.md`; `tile_ring_set_vo`,
-`frame_delay`, `mpn_free`, and the short sound-mode helpers are the smallest
-source-recovery targets. Then split the raw-aligned multi-function candidates
-using target control flow. Keep the four mismatch modules (`dialog`, `stages`,
-`snd_load`, and `it_spl_u`) as focused compiler/source-shape investigations.
-Do not broaden runtime work until a reconstruction claim actually needs it.
+Preserve the >98% authored function/byte baseline with the default two-cold
+replay before changing shared source or toolchain surfaces. The smallest
+remaining exactness investigations are the five-byte `snd_pmd_resident` `LES`
+and the 41-byte `snd_load` middle region; do not solve either with inline
+assembly or byte injection. In parallel, investigate the three `dialog`
+relocation-order blockers at the OMF FIXUPP/source-emission level and review the
+12 non-contiguous/provisional function bodies one at a time. Runtime work can
+stay deferred until a reconstruction claim actually needs behavioral evidence.

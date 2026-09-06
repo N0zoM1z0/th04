@@ -32,6 +32,11 @@ KNOWLEDGE_HEADER = [
     "id", "kind", "scope", "subject", "confidence", "evidence_ids",
     "source_refs", "summary", "last_verified_utc",
 ]
+FUNCTION_HEADER = [
+    "id", "artifact", "address", "file_offset", "size", "boundary_state",
+    "state", "name", "owner_unit", "source", "evidence_ids", "notes",
+]
+FUNCTION_STATES = {"candidate", "boundary-reviewed", "exact", "blocked", "excluded"}
 UNIT_STATES = {
     "candidate", "boundary-reviewed", "source-present", "structural", "exact",
     "blocked", "excluded",
@@ -252,10 +257,17 @@ def main(repository_root: Path = ROOT) -> int:
         knowledge_rows = read_csv(
             config / "knowledge.csv", KNOWLEDGE_HEADER, repository_root=repository_root
         )
+        function_path = config / "th04_main_authored_functions.csv"
+        function_rows = (
+            read_csv(function_path, FUNCTION_HEADER, repository_root=repository_root)
+            if function_path.is_file()
+            else []
+        )
         units_by_id = unique(units, "config/units.csv")
         evidence = unique(evidence_rows, "config/evidence.csv")
         hypotheses_by_id = unique(hypotheses, "config/hypotheses.csv")
         knowledge = unique(knowledge_rows, "config/knowledge.csv")
+        functions_by_id = unique(function_rows, "config/th04_main_authored_functions.csv")
 
         for line, row in enumerate(evidence_rows, start=2):
             if row["oracle"] not in oracle_ids:
@@ -383,11 +395,77 @@ def main(repository_root: Path = ROOT) -> int:
                             f"units.csv:{line}: exact unit lacks passing {required} evidence"
                         )
 
+        reviewed_function_spans: dict[str, list[tuple[int, int, str]]] = {}
+        seen_function_addresses: dict[str, set[int]] = {}
+        for line, row in enumerate(function_rows, start=2):
+            context = f"th04_main_authored_functions.csv:{line}"
+            if row["artifact"] not in artifacts:
+                raise ValueError(f"{context}: unknown artifact")
+            if row["boundary_state"] not in BOUNDARY_STATES:
+                raise ValueError(f"{context}: invalid boundary state")
+            if row["state"] not in FUNCTION_STATES:
+                raise ValueError(f"{context}: invalid function state")
+            if not row["name"]:
+                raise ValueError(f"{context}: missing function name")
+            address = integer(row["address"], f"{context} address")
+            if address is None or address < 0:
+                raise ValueError(f"{context}: invalid function address")
+            addresses = seen_function_addresses.setdefault(row["artifact"], set())
+            if address in addresses:
+                raise ValueError(f"{context}: duplicate function address")
+            addresses.add(address)
+            file_offset = integer(row["file_offset"], f"{context} file_offset", allow_empty=True)
+            size = integer(row["size"], f"{context} size", allow_empty=True)
+            if file_offset is not None and file_offset < 0:
+                raise ValueError(f"{context}: negative file offset")
+            if size is not None and size <= 0:
+                raise ValueError(f"{context}: invalid function size")
+            for evidence_id in split_ids(row["evidence_ids"]):
+                if evidence_id not in evidence:
+                    raise ValueError(f"{context}: unknown evidence {evidence_id!r}")
+            if row["owner_unit"] and row["owner_unit"] not in units_by_id:
+                raise ValueError(f"{context}: unknown owner unit")
+            if row["boundary_state"] in {"reviewed", "shared"}:
+                if file_offset is None or size is None:
+                    raise ValueError(f"{context}: reviewed function lacks complete extent")
+                span = (file_offset, file_offset + size, row["id"])
+                for start, end, other in reviewed_function_spans.setdefault(row["artifact"], []):
+                    if span[0] < end and start < span[1]:
+                        raise ValueError(f"{context}: reviewed function overlaps {other!r}")
+                reviewed_function_spans[row["artifact"]].append(span)
+            if row["state"] == "exact":
+                if row["boundary_state"] not in {"reviewed", "shared"}:
+                    raise ValueError(f"{context}: exact function boundary not reviewed")
+                if not row["owner_unit"]:
+                    raise ValueError(f"{context}: exact function lacks exact byte owner")
+                owner = units_by_id[row["owner_unit"]]
+                if owner["artifact"] != row["artifact"] or owner["origin"] != "authored" or owner["state"] != "exact":
+                    raise ValueError(f"{context}: function owner is not exact authored bytes")
+                owner_start = integer(owner["file_offset"], f"{context} owner file_offset")
+                owner_size = integer(owner["compare_size"], f"{context} owner compare_size")
+                assert file_offset is not None and size is not None and owner_start is not None and owner_size is not None
+                if not (owner_start <= file_offset and file_offset + size <= owner_start + owner_size):
+                    raise ValueError(f"{context}: exact function body escapes exact byte owner")
+                if row["source"] != owner["source"]:
+                    raise ValueError(f"{context}: exact function source must equal owner source")
+                source = Path(row["source"]); source_path = repository_root / source
+                if not row["source"] or source.is_absolute() or ".." in source.parts or not source_path.is_file() or source_path.is_symlink():
+                    raise ValueError(f"{context}: exact function lacks checked-in source")
+                boundary_pass = any(
+                    evidence[evidence_id]["oracle"] == "boundary-ownership"
+                    and evidence[evidence_id]["artifact"] == row["artifact"]
+                    and evidence[evidence_id]["evidence_class"] == "target-analysis"
+                    and evidence[evidence_id]["result"] == "pass"
+                    for evidence_id in split_ids(row["evidence_ids"])
+                )
+                if not boundary_pass:
+                    raise ValueError(f"{context}: exact function lacks target-analysis boundary evidence")
+
         print(
             "tracking OK: "
             f"{len(units_by_id)} units, {len(evidence)} evidence rows, "
             f"{len(hypotheses_by_id)} hypotheses, {len(knowledge)} knowledge rows, "
-            f"{len(artifacts)} targets"
+            f"{len(functions_by_id)} authored-function rows, {len(artifacts)} targets"
         )
         return 0
     except (OSError, KeyError, ValueError, tomllib.TOMLDecodeError) as error:

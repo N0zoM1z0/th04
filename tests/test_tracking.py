@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from validate_tracking import (
     EVIDENCE_HEADER,
+    FUNCTION_HEADER,
     HYPOTHESIS_HEADER,
     KNOWLEDGE_HEADER,
     UNIT_HEADER,
@@ -111,12 +112,22 @@ class ExactTrackingTests(unittest.TestCase):
             writer.writeheader()
             writer.writerows(rows)
 
-    def run_fixture(self, root: Path, units: list[dict[str, str]], evidence: list[dict[str, str]]) -> int:
+    def run_fixture(
+        self,
+        root: Path,
+        units: list[dict[str, str]],
+        evidence: list[dict[str, str]],
+        functions: list[dict[str, str]] | None = None,
+    ) -> int:
         config = root / "config"
         self.write_csv(config / "units.csv", UNIT_HEADER, units)
         self.write_csv(config / "evidence.csv", EVIDENCE_HEADER, evidence)
         self.write_csv(config / "hypotheses.csv", HYPOTHESIS_HEADER, [])
         self.write_csv(config / "knowledge.csv", KNOWLEDGE_HEADER, [])
+        if functions is not None:
+            self.write_csv(
+                config / "th04_main_authored_functions.csv", FUNCTION_HEADER, functions
+            )
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
             return validate_tracking(root)
 
@@ -154,6 +165,60 @@ class ExactTrackingTests(unittest.TestCase):
                 units, evidence = self.make_fixture(root)
                 mutate(units, evidence)
                 self.assertEqual(self.run_fixture(root, units, evidence), 1)
+
+    def test_exact_function_requires_exact_authored_owner(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            units, evidence = self.make_fixture(root)
+            function = {field: "" for field in FUNCTION_HEADER}
+            function.update(
+                {
+                    "id": "fn-main-104",
+                    "artifact": "th04-main",
+                    "address": "0x10104",
+                    "file_offset": "0x104",
+                    "size": "4",
+                    "boundary_state": "reviewed",
+                    "state": "exact",
+                    "name": "fixture_function",
+                    "owner_unit": "unit-main-100",
+                    "source": "src/unit.c",
+                    "evidence_ids": "ev-boundary-ownership",
+                    "notes": "synthetic reviewed function",
+                }
+            )
+            self.assertEqual(self.run_fixture(root, units, evidence, [function]), 0)
+
+            function["owner_unit"] = "unit-main-200"
+            self.assertEqual(self.run_fixture(root, units, evidence, [function]), 1)
+
+    def test_exact_function_cannot_escape_owner_or_use_provisional_boundary(self) -> None:
+        for name, mutation in (
+            ("escape owner", {"file_offset": "0x10F", "size": "4"}),
+            ("provisional boundary", {"boundary_state": "provisional"}),
+        ):
+            with self.subTest(name=name), TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                units, evidence = self.make_fixture(root)
+                function = {field: "" for field in FUNCTION_HEADER}
+                function.update(
+                    {
+                        "id": "fn-main-104",
+                        "artifact": "th04-main",
+                        "address": "0x10104",
+                        "file_offset": "0x104",
+                        "size": "4",
+                        "boundary_state": "reviewed",
+                        "state": "exact",
+                        "name": "fixture_function",
+                        "owner_unit": "unit-main-100",
+                        "source": "src/unit.c",
+                        "evidence_ids": "ev-boundary-ownership",
+                        "notes": "synthetic reviewed function",
+                    }
+                )
+                function.update(mutation)
+                self.assertEqual(self.run_fixture(root, units, evidence, [function]), 1)
 
 
 if __name__ == "__main__":
