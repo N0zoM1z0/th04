@@ -163,8 +163,10 @@ Additional FIXUPP/code-generation work is recorded in
 pinned TASM media contains a DOS TASM 4.1 that TCC can invoke through `-B`; it
 still assembles ordinary `mov bx, ax` as `8B D8`. A corrected segment-aware OMF
 survey also finds no clean TC86 C/C++ CODE precedent for register-register
-`89 /r` in the current cold corpus. Raw OMF byte searches are not accepted as
-instruction evidence.
+`89 /r` in the current cold corpus. Pure-C++ reference/template/comma/conditional
+lvalue probes further show that `_BX` is not addressable and cannot be routed
+through a generic store-lvalue backend. Raw OMF byte searches are not accepted
+as instruction evidence.
 
 These observations do not prove what the original ZUN source looked like.
 They do rule out several cheap compiler-profile explanations and make future

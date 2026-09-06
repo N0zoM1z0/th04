@@ -83,7 +83,38 @@ code drift outside `dialog_op`, so it is diagnostic only. The important result
 is the rotation itself: object/TU boundaries affect FIXUPP emission, but the
 obvious natural boundaries tried so far do not solve `dialog_op`.
 
-Do not repeat these four boundary placements as proposed fixes.
+A follow-up sweep closes the remaining natural `shared.cpp` function boundaries
+without splitting any function body. Each diagnostic relink keeps the final
+`dialog_op` and `dialog_run` program-image bytes exact. The `dialog_op`
+relocation column below is the cyclic rotation index relative to target order
+(`0` would be exact):
+
+| Split after natural source function | `dialog_op` object-local start | `dialog_op` rotation | `dialog_run` rotation |
+| --- | ---: | ---: | ---: |
+| current / no split | `0x27F` | 20 | 2 |
+| `std_update_done` | `0x278` | 20 | 2 |
+| `std_update_frames_then_animate_dialog_and_activate_boss_if_done` | `0x1FE` | 17 | 2 |
+| `dialog_box_put` | `0x1A6` | 14 | 2 |
+| `playfield_copy_front_to_back` | `0x16E` | 14 | 2 |
+| `dialog_face_unput_8` | `0x124` | 9 | 2 |
+| `dialog_box_fade_in_animate` / all shared definitions moved | `0x0F2` | 8 | 2 |
+| first script-number helper also moved | `0x0029` | 5 | 2 |
+| both script-number helpers also moved | `0x0000` | 5 | 2 |
+
+This covers every current natural function boundary immediately preceding
+`dialog_op`, including the two compiler-emitted script-number helpers. None
+produces target rotation 0, and `dialog_run` never leaves rotation 2. Do not
+repeat these boundaries as proposed fixes; a future solution needs materially
+different source/IR or producer evidence.
+
+### Compare MZ program images, not borrowed file offsets
+
+The five new diagnostic relinks have a `0x1600` MZ header while the target has a
+`0x1800` header. Their `dialog_op` / `dialog_run` load-module bytes and public
+addresses are nevertheless exact. An initial diagnostic that cut candidate
+bytes at the target's file offsets therefore produced a false mismatch. Always
+parse each candidate's own `e_cparhdr` and compare program-image offsets. The
+formal replay driver already does this correctly.
 
 ## `dialog_run`: ending the object at RET is not enough
 
@@ -197,6 +228,29 @@ Across the current cold TC86 corpus, that corrected **clean C/C++ CODE** survey
 finds **zero decoded register-register `MOV` instructions using opcode `89 /r`**.
 In particular there is no clean compiler precedent for destination BX. This is
 a corpus observation, not a theorem about every possible Turbo C++ source.
+
+### `_BX` cannot be routed through an addressable C++ lvalue
+
+A focused pure-C++ matrix tested whether Borland's pseudo-register could be
+forced through a generic store-lvalue backend rather than the normal
+register-destination path. The legal baseline remains:
+
+```text
+_BX = _AX;  ->  8B D8
+```
+
+Binding `_BX` to a local reference, passing it by reference (directly or through
+a template), and using comma- or conditional-lvalue expressions are all rejected
+by TC4J with `Must take address of a memory location` (plus the expected
+reference type mismatch where applicable). Pseudo-registers are compiler
+lvalues, but they are not addressable C++ objects. This closes the
+reference/alias route to a hypothetical `89 /r` store encoding without using
+inline assembly or byte emission.
+
+The embedded TCC option help also describes `-O` specifically as `Optimize
+jumps` and `-Z` as `Suppress register reloads`; no separate documented
+register-MOV direction optimizer switch surfaced. Do not invent an `-O*`
+peephole matrix without new tool evidence.
 
 A similarly decoded survey found no clean TH04 C/C++ precedent for an isolated
 mid-function `PUSH DS ... POP DS` save across arbitrary statements; apparent

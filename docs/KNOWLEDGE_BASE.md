@@ -83,6 +83,11 @@ builds, compares, or avoids a known dead end.
 - MZ format validation includes the last-page encoding, allocation ordering,
   and minimum-allocation stack envelope. All 20 private target controls still
   pass the stricter parser.
+- Never borrow a target file offset when comparing a structurally relinked MZ
+  candidate. Parse each file's own `e_cparhdr` and compare load-module/program
+  offsets. A TH04 dialog split produced exact code at the same program address
+  with a `0x1600` candidate header versus the target's `0x1800`; target-file-
+  offset slicing falsely reported hundreds of code differences.
 
 ## Current toolchain knowledge
 

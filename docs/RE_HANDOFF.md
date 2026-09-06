@@ -176,15 +176,18 @@ status alone is not independent provenance or acceptance evidence.
 
 Before repeating compiler/TU experiments, read
 `docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`. It records the tested
-`dialog_op` TU rotation matrix, the negative `dialog_run` RET split and source
-shapes, the TC86 option matrix, and the pinned-media TASM 4.1 `-B` behavior.
-The remaining work should target genuinely new source/IR or producer evidence,
-not previously falsified boundary/assembler modes.
+`dialog_op` TU rotation matrix (including every current natural shared-function
+boundary), the negative `dialog_run` RET split and source shapes, the TC86
+option matrix, and the pinned-media TASM 4.1 `-B` behavior. The remaining work
+should target genuinely new source/IR or producer evidence, not previously
+falsified boundary/assembler modes.
 
 Preserve the >99% reviewed authored function/byte baseline with the default
 two-cold replay before changing shared source or toolchain surfaces. The
 smallest remaining reviewed exactness investigation is the 41-byte `snd_load`
-middle region; do not solve it with inline assembly or byte injection. The
+middle region; do not solve it with inline assembly or byte injection. C++
+reference/template/comma/conditional aliasing of `_BX` is now also falsified:
+the pseudo-register is not addressable and direct assignment remains `8B D8`. The
 `snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`
 segment-pointer source shape. Eleven Ghidra body-construction false negatives
 now pass replayable manual raw/switch-table boundary review; only
