@@ -1,0 +1,4 @@
+interface:
+  display_name: "TH04 Oracle Lab"
+  short_description: "Falsify TH04 claims with independent Oracles"
+  default_prompt: "Use $th04-oracle to design and run a bounded independent Oracle experiment for a TH04 claim."

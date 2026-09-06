@@ -1,0 +1,4 @@
+interface:
+  display_name: "TH04 Knowledge Base"
+  short_description: "Reuse and preserve scoped reconstruction knowledge"
+  default_prompt: "Use $th04-kb to retrieve or record a verified TH04 fact, recipe, hazard, negative result, or open question."

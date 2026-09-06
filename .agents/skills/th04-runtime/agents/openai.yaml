@@ -1,0 +1,4 @@
+interface:
+  display_name: "TH04 Runtime Oracle"
+  short_description: "Run deterministic PC-98 differential scenarios"
+  default_prompt: "Use $th04-runtime to validate one TH04 behavior with deterministic multi-emulator checkpoints."

@@ -1,0 +1,168 @@
+schema_version = 1
+
+[policy]
+exact_requires = [
+  "target-identity",
+  "format-integrity",
+  "boundary-ownership",
+  "toolchain-replay",
+  "layout-relocations",
+  "raw-bytes",
+  "ledger-consistency",
+  "cold-aggregate-replay",
+]
+semantic_support = [
+  "oracle-self-test",
+  "instruction-cfg",
+  "abi-probe",
+  "runtime-trace",
+  "vram-palette",
+  "cross-emulator",
+  "metamorphic-invariants",
+]
+diagnostic_only = [
+  "analysis-bundle",
+  "cross-game-shared-blocks",
+  "upstream-intake",
+]
+non_acceptance_evidence_classes = [
+  "upstream",
+  "cross-game",
+  "external",
+  "inference",
+]
+rule = "No score or supporting Oracle can override a failed exact requirement."
+
+[[oracles]]
+id = "oracle-self-test"
+class = "control-plane"
+independent_of = []
+verdict = "supporting"
+description = "Synthetic and real-format positive/negative controls prove each comparator dimension fails as intended."
+
+[[oracles]]
+id = "analysis-bundle"
+class = "target-analysis"
+independent_of = []
+verdict = "diagnostic"
+description = "Hash-verified MZ load module, address metadata, relocation sites, normalized view, and deterministic hypothetical-load image for analysis tools."
+
+[[oracles]]
+id = "cross-game-shared-blocks"
+class = "cross-game"
+independent_of = []
+verdict = "diagnostic"
+description = "Verified shared normalized byte runs route library/compiler/game-family investigation but prove neither source identity nor exactness."
+
+[[oracles]]
+id = "upstream-intake"
+class = "upstream"
+independent_of = []
+verdict = "diagnostic"
+description = "Records upstream source or claims as candidates pending independent local target and build revalidation."
+
+[[oracles]]
+id = "target-identity"
+class = "target"
+independent_of = []
+verdict = "required"
+accepts_evidence_classes = ["target"]
+description = "Archive, HDI, partition, artifact size, digest, and format attestation."
+
+[[oracles]]
+id = "format-integrity"
+class = "target"
+independent_of = ["raw-bytes"]
+verdict = "required"
+accepts_evidence_classes = ["target"]
+description = "MZ declared size, header bounds, entry point, stack, relocation table, and overlay validity; COM size/code identity."
+
+[[oracles]]
+id = "boundary-ownership"
+class = "target-analysis"
+independent_of = ["decompiler-text"]
+verdict = "required"
+accepts_evidence_classes = ["target-analysis"]
+description = "Reviewed code/data/shared-tail/jump-table/ASM-slice ownership over the complete accepted extent."
+
+[[oracles]]
+id = "toolchain-replay"
+class = "compiler"
+independent_of = ["target-analysis"]
+verdict = "required"
+accepts_evidence_classes = ["compiler"]
+description = "Pinned compiler, assembler, linker, flags, TU order, link order, environment, and input digests."
+
+[[oracles]]
+id = "layout-relocations"
+class = "linker"
+independent_of = ["source-semantics"]
+verdict = "required"
+accepts_evidence_classes = ["linker"]
+description = "Segment/group order and sizes, map ownership, alignment, MZ relocation entries/sites/values, and overlays."
+
+[[oracles]]
+id = "raw-bytes"
+class = "binary"
+independent_of = []
+verdict = "required"
+accepts_evidence_classes = ["binary"]
+description = "Zero differing bytes across the complete configured artifact or unit extent."
+
+[[oracles]]
+id = "instruction-cfg"
+class = "static-semantic"
+independent_of = ["source-text"]
+verdict = "supporting"
+description = "16-bit decode, near/far edges, CFG, calls, stack/register/segment effects, constants, and x87 shape."
+
+[[oracles]]
+id = "abi-probe"
+class = "compiler"
+independent_of = ["target-analysis"]
+verdict = "supporting"
+description = "Minimal source hypotheses compiled with the pinned Borland toolchain; records inputs and disassembly."
+
+[[oracles]]
+id = "runtime-trace"
+class = "runtime"
+independent_of = ["static-analysis"]
+verdict = "supporting"
+description = "Deterministic input, memory/event/file-I/O trace and checkpoint comparison."
+
+[[oracles]]
+id = "vram-palette"
+class = "runtime"
+independent_of = ["screen-capture"]
+verdict = "supporting"
+description = "Plane-aware VRAM, palette, GRCG/EGC state and frame checkpoints; raw state precedes rendered screenshots."
+
+[[oracles]]
+id = "cross-emulator"
+class = "runtime-diversity"
+independent_of = ["single-emulator"]
+verdict = "supporting"
+description = "Replay on DOSBox-X and debug Neko Project II, later real hardware where practical."
+
+[[oracles]]
+id = "metamorphic-invariants"
+class = "semantic"
+independent_of = ["exact-codegen"]
+verdict = "supporting"
+description = "Load-segment, EMS, CPU timing, sound mode, and deterministic-state variations with explicit invariants."
+
+[[oracles]]
+id = "ledger-consistency"
+class = "control-plane"
+independent_of = []
+verdict = "required"
+accepts_evidence_classes = ["control-plane"]
+description = "Schema, state transitions, evidence references, target digests, ownership overlap, and generated status validation."
+
+[[oracles]]
+id = "cold-aggregate-replay"
+class = "reproducibility"
+independent_of = ["incremental-build"]
+verdict = "required"
+accepts_evidence_classes = ["reproducibility"]
+description = "Clean serial rebuild and replay of every affected accepted unit; cached objects cannot publish totals."

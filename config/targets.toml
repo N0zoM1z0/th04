@@ -1,0 +1,254 @@
+schema_version = 1
+
+[source]
+kind = "rar-containing-anex86-hdi"
+hdi_basename = "zun.hdi"
+hdi_sha256 = "0d5ea773a9e4f3e28f473b6deeedb6a7cdaccbb5b940a97983c4e3597dd4ebfd"
+hdi_header_size = 4096
+fat_partition_offset = 38912
+fat_volume_label = "TOUHOU"
+canonicality = "candidate-local-attested"
+canonicality_note = "Hashes pin the user's legal Japanese disk image and extracted artifacts. Independent pristine-dump or exact-build confirmation is still required before calling them externally canonical. The outer archive is intentionally not part of public target identity."
+
+[[artifacts]]
+id = "th04-op"
+game = "th04"
+role = "menu"
+dos_path = "GENSO/OP.EXE"
+private_path = ".analysis/targets/th04/op.exe"
+format = "mz"
+size = 42290
+sha256 = "8fc3b67fa8470de15b4f2844d5623d0a93d7922fac16d82a25a90a378b516b0f"
+md5 = "4bab61804e74b649c0f84d31ec77945d"
+required = true
+
+[[artifacts]]
+id = "th04-main"
+game = "th04"
+role = "gameplay"
+dos_path = "GENSO/MAIN.EXE"
+private_path = ".analysis/targets/th04/main.exe"
+format = "mz"
+size = 156258
+sha256 = "077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b"
+md5 = "06d74719b6f72b11014a392fd34d5f57"
+required = true
+
+[[artifacts]]
+id = "th04-maine"
+game = "th04"
+role = "ending"
+dos_path = "GENSO/MAINE.EXE"
+private_path = ".analysis/targets/th04/maine.exe"
+format = "mz"
+size = 38035
+sha256 = "670de6ba907a2edbc1592de810acd92e5b89541d3dc35b70210171166d1713f8"
+md5 = "8494cd30af9bd78298786cc635e3c715"
+required = true
+
+[[artifacts]]
+id = "th04-zun"
+game = "th04"
+role = "launcher"
+dos_path = "GENSO/ZUN.COM"
+private_path = ".analysis/targets/th04/zun.com"
+format = "mz"
+size = 7754
+sha256 = "0a12e9a489d3b704a77cf04ca3062ee48f298a9df6d237dc7dad46986e2d116e"
+md5 = "63f435dccb1a821f227d060d04894968"
+required = true
+
+# TH01 is private Oracle-validation material because ReC98 reports all three
+# MZ executables as 100% reconstructed/finalized. It is never counted as TH04
+# progress and is imported only with --include-th01-smoke.
+[[artifacts]]
+id = "th01-op-smoke"
+game = "th01"
+role = "oracle-smoke"
+dos_path = "REIIDEN/OP.EXE"
+private_path = ".analysis/targets/th01/op.exe"
+format = "mz"
+size = 82968
+sha256 = "6e8b8a55ccfc12a8017af15e401850103c63af2606785bf3aafec4be55baed89"
+md5 = "ad4e53e1f1a042fbda82f86b9bd6728c"
+required = false
+
+[[artifacts]]
+id = "th01-reiiden-smoke"
+game = "th01"
+role = "oracle-smoke"
+dos_path = "REIIDEN/REIIDEN.EXE"
+private_path = ".analysis/targets/th01/reiiden.exe"
+format = "mz"
+size = 238612
+sha256 = "76a5d241dead706e768bd1516d6aa539b589445e5941877073e8cb9e9ae8f62a"
+md5 = "f39fd5a146426cf261f207d7fc878675"
+required = false
+
+[[artifacts]]
+id = "th01-fuuin-smoke"
+game = "th01"
+role = "oracle-smoke"
+dos_path = "REIIDEN/FUUIN.EXE"
+private_path = ".analysis/targets/th01/fuuin.exe"
+format = "mz"
+size = 84728
+sha256 = "fb8617aa1207804c15e3265479bd5ff391c63a6563d5d2a2fe2bc2f3681e64d3"
+md5 = "2caad6f798e32b912a08da327a97ddb4"
+required = false
+
+[[artifacts]]
+id = "th01-zunsoft-smoke"
+game = "th01"
+role = "oracle-smoke"
+dos_path = "REIIDEN/ZUNSOFT.COM"
+private_path = ".analysis/targets/th01/zunsoft.com"
+format = "com"
+size = 10096
+sha256 = "beeb86dc055c585a32f4500c9eabb2e6cb1e0537bcdbc5f3763ebefa4308e297"
+md5 = "de5454973591ebd937b11452a8b4882d"
+required = false
+
+[[artifacts]]
+id = "th02-op-smoke"
+game = "th02"
+role = "oracle-smoke"
+dos_path = "HUMAROKU/OP.EXE"
+private_path = ".analysis/targets/th02/op.exe"
+format = "mz"
+size = 63736
+sha256 = "818cfab502b961ced95959f5addbfad8a7331919eed044da032f35ce8339b4ae"
+md5 = "9fb2839db50f38119d0b98d4fb70cd0e"
+required = false
+
+[[artifacts]]
+id = "th02-main-smoke"
+game = "th02"
+role = "oracle-smoke"
+dos_path = "HUMAROKU/MAIN.EXE"
+private_path = ".analysis/targets/th02/main.exe"
+format = "mz"
+size = 134758
+sha256 = "9e9a323781e793738c8e3a5b575d99c0cb6a71bac8c3d581178976b4977f0a92"
+md5 = "96cee07713a8e6460ae72276f3a9f909"
+required = false
+
+[[artifacts]]
+id = "th02-maine-smoke"
+game = "th02"
+role = "oracle-smoke"
+dos_path = "HUMAROKU/MAINE.EXE"
+private_path = ".analysis/targets/th02/maine.exe"
+format = "mz"
+size = 59106
+sha256 = "73aa0511e641ebe354d27968e6ab2a3ab84016efae68298c981ef2eda4a7169f"
+md5 = "e6f971b37336c0f9fce53f895780031e"
+required = false
+
+[[artifacts]]
+id = "th02-zun-smoke"
+game = "th02"
+role = "oracle-smoke"
+dos_path = "HUMAROKU/ZUN.COM"
+private_path = ".analysis/targets/th02/zun.com"
+format = "com"
+size = 19984
+sha256 = "907390e0ab094d157027d09156c02b5a503dbb343480da2881c0752e5c55ae4b"
+md5 = "84d9ddd32ebec8c64b703bbac4ec9cdf"
+required = false
+
+[[artifacts]]
+id = "th03-op-smoke"
+game = "th03"
+role = "oracle-smoke"
+dos_path = "YUMEZIKU/OP.EXE"
+private_path = ".analysis/targets/th03/op.exe"
+format = "mz"
+size = 36041
+sha256 = "d7bfa7f1f8afe0943763ce76437d12ed412b8452716dd64f937c94796eba57ab"
+md5 = "e893546a452ecf56d1ba34339cba54fa"
+required = false
+
+[[artifacts]]
+id = "th03-main-smoke"
+game = "th03"
+role = "oracle-smoke"
+dos_path = "YUMEZIKU/MAIN.EXE"
+private_path = ".analysis/targets/th03/main.exe"
+format = "mz"
+size = 130882
+sha256 = "f41fde47ea36bf4d985ff9127b67fe93d5ecb58cc36e7cffab86959db7f2ce6b"
+md5 = "43ee91a800f1f0fe35a87149c90b037d"
+required = false
+
+[[artifacts]]
+id = "th03-mainl-smoke"
+game = "th03"
+role = "oracle-smoke"
+dos_path = "YUMEZIKU/MAINL.EXE"
+private_path = ".analysis/targets/th03/mainl.exe"
+format = "mz"
+size = 37975
+sha256 = "5b613023b4ae021794ff778871a732e7af0d0457ccdb3613e3458f2a609e466c"
+md5 = "0da304556e804dfcc849da98790e9d7d"
+required = false
+
+[[artifacts]]
+id = "th03-zun-smoke"
+game = "th03"
+role = "oracle-smoke"
+dos_path = "YUMEZIKU/ZUN.COM"
+private_path = ".analysis/targets/th03/zun.com"
+format = "mz"
+size = 16242
+sha256 = "5896bbd673aeb10f0df9c1e34716c64fda83655a788ae1ac0fcf58e3616add27"
+md5 = "338cd23a9bb7a3de7b4faf034601fc5c"
+required = false
+
+[[artifacts]]
+id = "th05-op-smoke"
+game = "th05"
+role = "oracle-smoke"
+dos_path = "KAIKI/OP.EXE"
+private_path = ".analysis/targets/th05/op.exe"
+format = "mz"
+size = 44450
+sha256 = "c94efc071a4b1adf8ce6e2c5a7eefb9eb47c26f8bab61b2e58e736dda8130abb"
+md5 = "50eac6e4a1e1fecf0c2afe8872519a84"
+required = false
+
+[[artifacts]]
+id = "th05-main-smoke"
+game = "th05"
+role = "oracle-smoke"
+dos_path = "KAIKI/MAIN.EXE"
+private_path = ".analysis/targets/th05/main.exe"
+format = "mz"
+size = 149990
+sha256 = "c41f6e6b9a97b2433acc576ceaee800707c8d4ea7e498150a259663c8fa7d4f0"
+md5 = "952585e02435c3b3b111975a78b05983"
+required = false
+
+[[artifacts]]
+id = "th05-maine-smoke"
+game = "th05"
+role = "oracle-smoke"
+dos_path = "KAIKI/MAINE.EXE"
+private_path = ".analysis/targets/th05/maine.exe"
+format = "mz"
+size = 44321
+sha256 = "8308c416e756a07766f9f66dbf5575fa12c09189059226931a9562e7272b6997"
+md5 = "2c539d61f4dd8c864df0b7885181b8db"
+required = false
+
+[[artifacts]]
+id = "th05-zun-smoke"
+game = "th05"
+role = "oracle-smoke"
+dos_path = "KAIKI/ZUN.COM"
+private_path = ".analysis/targets/th05/zun.com"
+format = "com"
+size = 18116
+sha256 = "5044ae03f7c0333f37d88ef34e244502f90d7314287f6f387c07569e4e0b120e"
+md5 = "0005e6571252bed38d416799c0053c0b"
+required = false

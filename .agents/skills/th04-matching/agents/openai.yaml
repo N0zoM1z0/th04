@@ -1,0 +1,4 @@
+interface:
+  display_name: "TH04 Exact Matching"
+  short_description: "Cold-build and byte-match PC-98 units"
+  default_prompt: "Use $th04-matching to diagnose and close one attested TH04 code, relocation, or layout mismatch."

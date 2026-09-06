@@ -1,0 +1,27 @@
+schema_version = 1
+
+[exact]
+family = "Borland Turbo C++ 4.0J"
+compiler = "TCC.EXE"
+assembler = "TASM32.EXE 5.x"
+linker = "TLINK.EXE"
+runner = "Wine plus MS-DOS Player, or supported Windows"
+availability = "user-supplied"
+status = "not-attested"
+note = "ReC98 documents this family for the PC-98 games. Treat it as an upstream hypothesis until exact tool binaries, flags, clean local builds, and outputs are independently attested here."
+
+[analysis]
+disassembler = "unselected"
+status = "bring-up"
+requirements = [
+  "headless reproducible import",
+  "8086/80386 16-bit and x87 decode",
+  "MZ relocations preserved",
+  "segment:offset addresses",
+  "machine-readable functions, xrefs, CFG, and bytes",
+]
+
+[runtime]
+primary = "DOSBox-X with PC-98 support"
+secondary = "Neko Project II debug build"
+status = "not-installed"

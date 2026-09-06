@@ -1,0 +1,4 @@
+interface:
+  display_name: "TH04 Reconstruction"
+  short_description: "Recover bounded segment-aware TH04 code"
+  default_prompt: "Use $th04-re to reconstruct one bounded unit from an attested Japanese TH04 PC-98 target."
