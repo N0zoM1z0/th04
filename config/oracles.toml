@@ -5,7 +5,10 @@ exact_requires = [
   "target-identity",
   "format-integrity",
   "boundary-ownership",
+  "toolchain-identity",
   "toolchain-replay",
+  "object-format-integrity",
+  "cold-build-determinism",
   "layout-relocations",
   "raw-bytes",
   "ledger-consistency",
@@ -24,12 +27,17 @@ diagnostic_only = [
   "analysis-bundle",
   "cross-game-shared-blocks",
   "upstream-intake",
+  "upstream-policy-differential",
 ]
 non_acceptance_evidence_classes = [
   "upstream",
   "cross-game",
   "external",
   "inference",
+]
+global_evidence_oracles = [
+  "toolchain-identity",
+  "ledger-consistency",
 ]
 rule = "No score or supporting Oracle can override a failed exact requirement."
 
@@ -62,6 +70,13 @@ verdict = "diagnostic"
 description = "Records upstream source or claims as candidates pending independent local target and build revalidation."
 
 [[oracles]]
+id = "upstream-policy-differential"
+class = "control-plane"
+independent_of = ["upstream-intake"]
+verdict = "diagnostic"
+description = "Runs a candidate through both the upstream acceptance policy and this repository's stricter vector, exposing dimensions that upstream intentionally ignores without weakening local gates."
+
+[[oracles]]
 id = "target-identity"
 class = "target"
 independent_of = []
@@ -92,6 +107,30 @@ independent_of = ["target-analysis"]
 verdict = "required"
 accepts_evidence_classes = ["compiler"]
 description = "Pinned compiler, assembler, linker, flags, TU order, link order, environment, and input digests."
+
+[[oracles]]
+id = "toolchain-identity"
+class = "compiler"
+independent_of = ["toolchain-replay"]
+verdict = "required"
+accepts_evidence_classes = ["compiler"]
+description = "Every compiler, assembler, linker, runtime, configuration, include, library, startup, and packaging surface agrees with the pinned digest and observed version before execution."
+
+[[oracles]]
+id = "object-format-integrity"
+class = "compiler"
+independent_of = ["final-mz-parser"]
+verdict = "required"
+accepts_evidence_classes = ["compiler"]
+description = "Every generated Intel OMF object has valid framing and checksums, a THEADR-to-MODEND module boundary, and the expected embedded producer/dependency evidence."
+
+[[oracles]]
+id = "cold-build-determinism"
+class = "reproducibility"
+independent_of = ["incremental-build"]
+verdict = "required"
+accepts_evidence_classes = ["reproducibility"]
+description = "Two isolated source materializations produce the same configured output vector before any candidate is used for reconstruction evidence."
 
 [[oracles]]
 id = "layout-relocations"

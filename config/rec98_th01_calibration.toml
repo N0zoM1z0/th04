@@ -1,0 +1,75 @@
+schema_version = 1
+source_revision = "b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
+policy = "This is a pinned regression vector, not an exactness waiver. Calibration passes only when the same candidate bytes and the same strict failures recur."
+
+[omf]
+all_object_count = 416
+th01_object_count = 65
+th01_dependency_timestamp_normalized_sha256 = "0ae28223b44f4bf295eaaafd713a99bf2c1e538515f3e5e49e6052a0c0159188"
+
+[[artifacts]]
+id = "th01-op-smoke"
+filename = "op.exe"
+candidate_sha256 = "c75d85fb2a73b077f73a4145efab283c73f8a976e9e1c2560cea1731b9f1d2f7"
+candidate_size = 82968
+raw_exact = false
+rec98_rule1_core_dimensions_pass = true
+format_same = true
+routing_hints = ["relocation-table-order-or-header-padding-difference"]
+format_integrity = true
+header_fields_exact = true
+header_bytes_exact = false
+relocations_ordered_exact = false
+relocations_multiset_exact = true
+relocation_site_values_exact = true
+program_image_exact = true
+normalized_program_exact = true
+overlay_exact = true
+
+[[artifacts]]
+id = "th01-reiiden-smoke"
+filename = "reiiden.exe"
+candidate_sha256 = "581dab847e8ec05f219c0eec5bea046b8f6201809f604e46ffc7b0304a48b128"
+candidate_size = 238612
+raw_exact = false
+rec98_rule1_core_dimensions_pass = true
+format_same = true
+routing_hints = ["relocation-table-order-or-header-padding-difference"]
+format_integrity = true
+header_fields_exact = true
+header_bytes_exact = false
+relocations_ordered_exact = false
+relocations_multiset_exact = true
+relocation_site_values_exact = true
+program_image_exact = true
+normalized_program_exact = true
+overlay_exact = true
+
+[[artifacts]]
+id = "th01-fuuin-smoke"
+filename = "fuuin.exe"
+candidate_sha256 = "2d230be820a9ccfa097f26fc079ccb6f8fcb8c56f687ee59202e384760f1f3d9"
+candidate_size = 86232
+raw_exact = false
+rec98_rule1_core_dimensions_pass = true
+format_same = true
+routing_hints = ["header-only-difference"]
+format_integrity = true
+header_fields_exact = false
+header_bytes_exact = false
+relocations_ordered_exact = true
+relocations_multiset_exact = true
+relocation_site_values_exact = true
+program_image_exact = true
+normalized_program_exact = true
+overlay_exact = true
+
+[[artifacts]]
+id = "th01-zunsoft-smoke"
+filename = "zunsoft.com"
+candidate_sha256 = "beeb86dc055c585a32f4500c9eabb2e6cb1e0537bcdbc5f3763ebefa4308e297"
+candidate_size = 10096
+raw_exact = true
+rec98_rule1_core_dimensions_pass = true
+format_same = true
+routing_hints = ["exact"]

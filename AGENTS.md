@@ -32,6 +32,8 @@ Before target-dependent work:
   cross-game evidence cannot satisfy an exact requirement by itself.
 - `config/units.csv` tracks boundary, origin, source presence, and accepted
   state separately.  `config/evidence.csv` records replayable observations.
+- Exact-required evidence must name the same artifact as the unit unless
+  `config/oracles.toml` explicitly permits that Oracle to be global.
 - Only a cold build plus raw zero-difference comparison of the complete
   accepted extent may set a unit or artifact to `exact`.
 - Never manufacture equality with copied target byte arrays, fake returns,
@@ -79,8 +81,9 @@ Use these claim words precisely:
 
 Choose the smallest independent Oracle set that can falsify the claim, then
 run the stronger gates before promotion.  Exact promotion requires target
-identity, format integrity, boundary review, toolchain replay, relocation and
-layout agreement, raw bytes, ledger validation, and cold aggregate replay.
+identity, format integrity, boundary review, current toolchain identity,
+toolchain replay, OMF integrity, cold-build determinism, relocation/layout
+agreement, raw bytes, ledger validation, and cold aggregate replay.
 Runtime, cross-emulator, trace, VRAM/palette, and invariant Oracles strengthen
 semantic confidence but cannot waive a byte mismatch.
 

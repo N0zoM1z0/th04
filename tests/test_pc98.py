@@ -244,6 +244,43 @@ class ControlPlaneTests(unittest.TestCase):
             {"raw-bytes"},
         )
 
+    def test_exact_evidence_is_bound_to_the_unit_artifact(self) -> None:
+        evidence = {
+            "other-binary": {
+                "oracle": "raw-bytes",
+                "artifact": "th04-op",
+                "result": "pass",
+                "evidence_class": "binary",
+            },
+            "global-binary": {
+                "oracle": "raw-bytes",
+                "artifact": "",
+                "result": "pass",
+                "evidence_class": "binary",
+            },
+            "global-toolchain": {
+                "oracle": "toolchain-identity",
+                "artifact": "",
+                "result": "pass",
+                "evidence_class": "compiler",
+            },
+        }
+        oracles = {
+            "raw-bytes": {"accepts_evidence_classes": ["binary"]},
+            "toolchain-identity": {"accepts_evidence_classes": ["compiler"]},
+        }
+        self.assertEqual(
+            accepted_oracle_passes(
+                list(evidence),
+                evidence,
+                oracles,
+                set(),
+                artifact="th04-main",
+                global_evidence_oracles={"toolchain-identity"},
+            ),
+            {"toolchain-identity"},
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

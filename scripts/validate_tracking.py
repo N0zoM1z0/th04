@@ -89,10 +89,14 @@ def accepted_oracle_passes(
     evidence: dict[str, dict[str, str]],
     oracle_by_id: dict[str, dict[str, object]],
     non_acceptance_classes: set[str],
+    *,
+    artifact: str | None = None,
+    global_evidence_oracles: set[str] | None = None,
 ) -> set[str]:
-    """Return required-grade passes; diagnostic provenance cannot be promoted."""
+    """Return required-grade passes with provenance and artifact scoping."""
 
     passed: set[str] = set()
+    globally_scoped = global_evidence_oracles or set()
     for evidence_id in evidence_ids:
         row = evidence[evidence_id]
         oracle_id = row["oracle"]
@@ -103,6 +107,14 @@ def accepted_oracle_passes(
             row["result"] == "pass"
             and row["evidence_class"] not in non_acceptance_classes
             and row["evidence_class"] in accepted_classes
+            and (
+                artifact is None
+                or row.get("artifact") == artifact
+                or (
+                    not row.get("artifact")
+                    and oracle_id in globally_scoped
+                )
+            )
         ):
             passed.add(oracle_id)
     return passed
@@ -121,8 +133,13 @@ def main() -> int:
         non_acceptance_classes = set(
             oracle_config["policy"]["non_acceptance_evidence_classes"]
         )
+        global_evidence_oracles = set(
+            oracle_config["policy"]["global_evidence_oracles"]
+        )
         if not required_oracles <= oracle_ids:
             raise ValueError("oracles.toml exact_requires names an unknown Oracle")
+        if not global_evidence_oracles <= required_oracles:
+            raise ValueError("global evidence is allowed for a non-required Oracle")
         for oracle_id in required_oracles:
             accepted = set(oracle_by_id[oracle_id].get("accepts_evidence_classes", []))
             if not accepted or not accepted <= EVIDENCE_CLASSES:
@@ -223,6 +240,8 @@ def main() -> int:
                     evidence,
                     oracle_by_id,
                     non_acceptance_classes,
+                    artifact=row["artifact"],
+                    global_evidence_oracles=global_evidence_oracles,
                 )
                 for required in required_oracles:
                     if required not in passed:
