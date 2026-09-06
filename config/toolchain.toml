@@ -1,14 +1,166 @@
-schema_version = 1
+schema_version = 2
 
 [exact]
-family = "Borland Turbo C++ 4.0J"
-compiler = "TCC.EXE"
-assembler = "TASM32.EXE 5.x"
-linker = "TLINK.EXE"
-runner = "Wine plus MS-DOS Player, or supported Windows"
-availability = "user-supplied"
-status = "not-attested"
-note = "ReC98 documents this family for the PC-98 games. Treat it as an upstream hypothesis until exact tool binaries, flags, clean local builds, and outputs are independently attested here."
+family = "Borland Turbo C++ 4.0J for DOS + TASM32 5.0"
+compiler = "TCC.EXE (banner version 4.02)"
+assembler = "TASM32.EXE (banner version 5.0)"
+linker = "TLINK.EXE (banner version 6.10)"
+runner = "Wine 8.0 + ReC98 MS-DOS Player P0281"
+status = "candidate-local-attested"
+note = "Hashes identify the locally tested installation. The TC4J mirror is an untrusted acquisition source and the ReC98 checkout is an untrusted calibration fixture. Exact suitability is claim-scoped and must be established by the execution probes and cold output comparisons; no upstream status waives raw-byte failure."
+
+[paths]
+wine_prefix = ".analysis/toolchain/wineprefix"
+msdos_player = "_reference/ReC98/bin/msdos.exe"
+tc40j_install = ".analysis/toolchain/installed/tc40j"
+tasm50_install = ".analysis/toolchain/installed/tasm50"
+
+[banners]
+tcc = "Turbo C++ Version 4.02 Copyright (c) 1994 Borland International"
+tlink = "Turbo Link  Version 6.10 Copyright (c) 1992, 1993, 1994 Borland International"
+tasm32 = "Turbo Assembler  Version 5.0  Copyright (c) 1988, 1996 Borland International"
+
+[omf_producers]
+tcc = "TC86 Borland C++ 4.02"
+tasm32 = "Turbo Assembler  Version 5.0"
+
+[source.tc40j]
+url = "http://pc98.shiz.me/software/borland-4.0j/"
+retrieved_utc = "2026-09-06T00:00:00Z"
+transport = "HTTP-only third-party mirror"
+provenance = "untrusted-candidate"
+note = "The complete flat installation-media inventory is pinned as one tree. Japanese README/INSTALL text, PC98-specific packages, binary banners, deterministic probes, and cold-build output jointly constrain identity; the URL alone proves nothing."
+
+[source.tasm50]
+product_url = "https://winworldpc.com/product/turbo-assembler/5x"
+download_page = "https://winworldpc.com/download/30487b55-c392-c592-11c3-a6c2bb2a5254"
+mirror_url = "https://winworldpc.com/download/30487b55-c392-c592-11c3-a6c2bb2a5254/from/c39ac2af-c381-c2bf-1b25-11c3a4e284a2"
+archive_sha512 = "0580f14adbb785e43ee3b057a5ec0417b3206b26fba4bda034140e7d6aa4947634dcbe167f337de2942fb4a3e3515e9eb829d6b666d31a64afe442111a070061"
+retrieved_utc = "2026-09-06T00:00:00Z"
+provenance = "published-digest-matched-candidate"
+
+[source.msdos_player]
+repository = "https://github.com/nmlgc/msdos-player"
+tag = "P0281"
+bundled_by = "nmlgc/ReC98@b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
+provenance = "pinned-upstream-binary"
+
+[[surfaces]]
+id = "tc40j-media"
+kind = "tree"
+path = ".analysis/toolchain/media/tc40j/software/borland-4.0j"
+sha256 = "6e7e3c2734044bc799c9bd4ad9645654bfd3a4f17ed29e3e2988c9dba1af350a"
+file_count = 61
+required = true
+
+[[surfaces]]
+id = "tc40j-bin"
+kind = "tree"
+path = ".analysis/toolchain/installed/tc40j/BIN"
+sha256 = "fa6da144b2268fa93f65d8f32d1735a5d7dbd54a66a4641631ffa85a677636f0"
+file_count = 18
+required = true
+
+[[surfaces]]
+id = "tc40j-include"
+kind = "tree"
+path = ".analysis/toolchain/installed/tc40j/INCLUDE"
+sha256 = "3315c8974d0c51e7bf4580153357056edbe3543f7395802839486a1c26293408"
+file_count = 64
+required = true
+
+[[surfaces]]
+id = "tc40j-lib"
+kind = "tree"
+path = ".analysis/toolchain/installed/tc40j/LIB"
+sha256 = "3fccb05d8dcfad6417ac4171482515fa0608f8e82b3cc81665a72f76621d8033"
+file_count = 41
+required = true
+
+[[surfaces]]
+id = "tc40j-startup-source"
+kind = "tree"
+path = ".analysis/toolchain/installed/tc40j/SOURCE/STARTUP"
+sha256 = "0a95675cd2c146d3a9bee54f0faaa42645a2c4ffa4badb17288abaf789c68fa4"
+file_count = 3
+required = true
+
+[[surfaces]]
+id = "active-tcc"
+kind = "file"
+path = ".analysis/toolchain/wineprefix/drive_c/TC4/BIN/TCC.EXE"
+sha256 = "0c6a3a364ffd235e0c4b268d6925f29be3f20adafc6d1410c057a411e6634ff0"
+required = true
+
+[[surfaces]]
+id = "active-tlink"
+kind = "file"
+path = ".analysis/toolchain/wineprefix/drive_c/TC4/BIN/TLINK.EXE"
+sha256 = "e54f517766a3982dff404ff639b0f94e43c16e688dffb7e14b92df87a8580ad0"
+required = true
+
+[[surfaces]]
+id = "active-dpmi16bi"
+kind = "file"
+path = ".analysis/toolchain/wineprefix/drive_c/TC4/BIN/DPMI16BI.OVL"
+sha256 = "8cbd449979801b74771c8f651450f0b029b311410d0fd7703e7c7c2a295830c8"
+required = true
+
+[[surfaces]]
+id = "active-rtm"
+kind = "file"
+path = ".analysis/toolchain/wineprefix/drive_c/TC4/BIN/RTM.EXE"
+sha256 = "11ea23bebfdbe1eefb4faced127d07000089c89954da4a2fa597b4ac98fd9488"
+required = true
+
+[[surfaces]]
+id = "turboc-cfg"
+kind = "file"
+path = ".analysis/toolchain/wineprefix/drive_c/TC4/BIN/TURBOC.CFG"
+sha256 = "34196b4452717826fb01b770d86e3b1f47a079daa727002e566c21f4663f4138"
+required = true
+
+[[surfaces]]
+id = "tlink-cfg"
+kind = "file"
+path = ".analysis/toolchain/wineprefix/drive_c/TC4/BIN/TLINK.CFG"
+sha256 = "677ca5df17c5e42911889d311b745ea1d78aa0a7f243d1b3aec52805de9cde6b"
+required = true
+
+[[surfaces]]
+id = "tasm50-archive"
+kind = "file"
+path = ".analysis/toolchain/downloads/borland-tasm-5.0-3.5-144mb-candidate.7z"
+sha256 = "94723cc2c882525dd561e4d35a9251b8fb992a0352c075ca5f97fff12bbc872f"
+required = true
+
+[[surfaces]]
+id = "active-tasm32"
+kind = "file"
+path = ".analysis/toolchain/wineprefix/drive_c/TASM50/bin/TASM32.EXE"
+sha256 = "ba50fe547863b96242d98cff54cdf95ab268a8682395afad172eedbfc46c5b26"
+required = true
+
+[[surfaces]]
+id = "msdos-player-p0281"
+kind = "file"
+path = "_reference/ReC98/bin/msdos.exe"
+sha256 = "f7f6cb0a3e816c5edb13112d327c1bddbf7463fe7bf9a005ca1eb5317751bd02"
+required = true
+
+[[surfaces]]
+id = "wine-launcher"
+kind = "file"
+path = "/usr/bin/wine-stable"
+sha256 = "96d2e3a50f09760fd38ad083d57fbe3d07f7fe92308b81db2335b57bb36d98f9"
+required = true
+
+[[surfaces]]
+id = "wine64"
+kind = "file"
+path = "/usr/lib/wine/wine64"
+sha256 = "ab0d45027e812a1a3c24f79a7ecde772e430b739a66d5fb0e5561056df1a02a0"
+required = true
 
 [analysis]
 disassembler = "unselected"

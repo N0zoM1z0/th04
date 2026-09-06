@@ -8,6 +8,15 @@ import json
 from pathlib import Path
 import shutil
 import sys
+import tomllib
+
+from lib.pc98 import digest_file
+from lib.toolchain import attest_surface
+
+
+ROOT = Path(__file__).resolve().parents[1]
+TOOLCHAIN_CONFIG = ROOT / "config" / "toolchain.toml"
+TOOLCHAIN_RECEIPT = ROOT / ".analysis" / "toolchain" / "attestation.json"
 
 
 TOOLS = {
@@ -26,6 +35,27 @@ def main() -> int:
         group: {tool: shutil.which(tool) for tool in tools}
         for group, tools in TOOLS.items()
     }
+    toolchain_config = tomllib.loads(TOOLCHAIN_CONFIG.read_text(encoding="utf-8"))
+    surface_reports = [
+        attest_surface(ROOT, surface) for surface in toolchain_config["surfaces"]
+    ]
+    receipt: dict[str, object] = {}
+    try:
+        receipt = json.loads(TOOLCHAIN_RECEIPT.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        pass
+    toolchain_candidate = {
+        "receipt": str(TOOLCHAIN_RECEIPT.relative_to(ROOT)),
+        "receipt_ready": receipt.get("ready") is True,
+        "manifest_current": receipt.get("manifest_sha256")
+        == digest_file(TOOLCHAIN_CONFIG),
+        "identity_current": all(item["pass"] for item in surface_reports),
+        "failed_surfaces": [item["id"] for item in surface_reports if not item["pass"]],
+    }
+    toolchain_candidate["ready"] = all(
+        toolchain_candidate[key]
+        for key in ("receipt_ready", "manifest_current", "identity_current")
+    )
     capabilities = {
         "target_import": all(report["ingestion"][tool] for tool in ("unar", "mcopy")),
         "basic_disassembly": bool(
@@ -36,13 +66,15 @@ def main() -> int:
             or report["static"]["idat"]
             or report["static"]["idat64"]
         ),
-        "exact_toolchain": all(
-            report["build"][tool]
-            for tool in ("TCC.EXE", "TASM32.EXE", "TLINK.EXE")
-        ),
+        "attested_toolchain_candidate": toolchain_candidate["ready"],
         "pc98_runtime": bool(report["runtime"]["dosbox-x"] or report["runtime"]["np21w"]),
     }
-    output = {"schema_version": 1, "tools": report, "capabilities": capabilities}
+    output = {
+        "schema_version": 2,
+        "tools": report,
+        "toolchain_candidate": toolchain_candidate,
+        "capabilities": capabilities,
+    }
     if args.json:
         print(json.dumps(output, indent=2, sort_keys=True))
     else:
@@ -54,7 +86,7 @@ def main() -> int:
             for tool, path in group.items()
             if path is None
         ]
-        print("missing/undiscovered: " + ", ".join(missing))
+        print("missing/undiscovered on host PATH: " + ", ".join(missing))
     return 0
 
 
