@@ -56,8 +56,19 @@ def main() -> int:
         "receipt_ready": receipt.get("ready") is True,
         "manifest_current": receipt.get("manifest_sha256")
         == digest_file(TOOLCHAIN_CONFIG),
-        "identity_current": all(item["pass"] for item in surface_reports),
-        "failed_surfaces": [item["id"] for item in surface_reports if not item["pass"]],
+        "identity_current": all(
+            item["pass"] or not item["required"] for item in surface_reports
+        ),
+        "failed_required_surfaces": [
+            item["id"]
+            for item in surface_reports
+            if item["required"] and not item["pass"]
+        ],
+        "different_optional_surfaces": [
+            item["id"]
+            for item in surface_reports
+            if not item["required"] and not item["pass"]
+        ],
     }
     toolchain_candidate["ready"] = all(
         toolchain_candidate[key]

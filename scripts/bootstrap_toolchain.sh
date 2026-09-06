@@ -21,6 +21,10 @@ for command in curl wget 7z mcopy wine wineboot sha512sum python3; do
 		exit 1
 	}
 done
+test "$(uname -m)" = x86_64 || {
+	echo "the automatic toolchain bootstrap currently supports only x86_64 hosts" >&2
+	exit 1
+}
 test -f "$msdos" || {
 	echo "missing pinned ReC98 clone; run the README reference-clone command" >&2
 	exit 1
@@ -52,6 +56,16 @@ test "$actual_tasm_sha512" = "$expected_tasm_sha512" || {
 	echo "TASM archive SHA-512 mismatch" >&2
 	exit 1
 }
+
+# Before invoking UNPAK.EXE, MS-DOS Player, Wine, or archive extraction, require
+# every acquisition/runner surface already present at this phase to match the
+# checked-in manifest. A download URL or successful transfer is not identity.
+python3 "$repo_root/scripts/attest_toolchain.py" --identity-only \
+	--surface tc40j-media \
+	--surface tasm50-archive \
+	--surface msdos-player-p0281 \
+	--output "$private_root/acquisition-attestation.json"
+
 7z t "$tasm_archive"
 mkdir -p "$tasm_media"
 7z x -y "$tasm_archive" "-o$tasm_media"

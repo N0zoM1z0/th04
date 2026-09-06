@@ -5,12 +5,14 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import tomllib
 import unittest
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from lib.analysis import (
     AnalysisError,
+    attest_analysis_install,
     default_project_root,
     link_aware_tree_identity,
     validate_project_root,
@@ -57,6 +59,15 @@ class AnalysisPathTests(unittest.TestCase):
             with self.assertRaisesRegex(AnalysisError, "dot-prefixed"):
                 validate_project_root(root, root / ".analysis" / "ghidra")
 
+    def test_failed_static_identity_prevents_execution(self) -> None:
+        repository = Path(__file__).resolve().parents[1]
+        with (repository / "config" / "analysis_toolchain.toml").open("rb") as stream:
+            config = tomllib.load(stream)
+        with TemporaryDirectory() as temporary, patch("lib.analysis.subprocess.run") as run:
+            report = attest_analysis_install(Path(temporary), config)
+        run.assert_not_called()
+        self.assertFalse(report["ready"])
+        self.assertTrue(report["executions"]["identity_gate"]["skipped"])
 
 class LinkAwareTreeTests(unittest.TestCase):
     def test_internal_symlink_topology_is_stable_and_sensitive(self) -> None:

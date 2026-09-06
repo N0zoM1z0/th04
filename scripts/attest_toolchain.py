@@ -210,27 +210,65 @@ def run_execution_probes(config: dict[str, object]) -> dict[str, object]:
     return probes
 
 
+def gated_execution(
+    config: dict[str, object], *, identity_pass: bool, identity_only: bool
+) -> tuple[dict[str, object] | None, bool]:
+    """Never execute a candidate runner or tool before required identities pass."""
+
+    if identity_only:
+        return None, True
+    if not identity_pass:
+        return {
+            "pass": False,
+            "skipped": True,
+            "reason": "identity attestation failed; candidate execution is forbidden",
+        }, False
+    execution = run_execution_probes(config)
+    return execution, bool(execution.get("pass"))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--identity-only", action="store_true")
+    parser.add_argument(
+        "--surface",
+        action="append",
+        default=[],
+        help="attest only this named surface (repeatable; requires --identity-only)",
+    )
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    if args.surface and not args.identity_only:
+        parser.error("--surface requires --identity-only")
     output = args.output or (
         DEFAULT_RECEIPT.with_name("identity-attestation.json")
         if args.identity_only
         else DEFAULT_RECEIPT
     )
     config = tomllib.loads(CONFIG.read_text(encoding="utf-8"))
-    surfaces = [attest_surface(ROOT, item) for item in config["surfaces"]]
+    surface_config = {str(item["id"]): item for item in config["surfaces"]}
+    if len(surface_config) != len(config["surfaces"]):
+        parser.error("toolchain manifest contains duplicate surface IDs")
+    unknown = sorted(set(args.surface) - set(surface_config))
+    if unknown:
+        parser.error("unknown --surface ID(s): " + ", ".join(unknown))
+    selected = (
+        [surface_config[surface_id] for surface_id in args.surface]
+        if args.surface
+        else list(config["surfaces"])
+    )
+    surfaces = [attest_surface(ROOT, item) for item in selected]
     identity_pass = all(item["pass"] or not item["required"] for item in surfaces)
-    execution = None if args.identity_only else run_execution_probes(config)
-    execution_pass = True if args.identity_only else bool(execution and execution["pass"])
+    execution, execution_pass = gated_execution(
+        config, identity_pass=identity_pass, identity_only=args.identity_only
+    )
     report = {
         "schema_version": 1,
         "observed_utc": datetime.now(timezone.utc).isoformat(),
         "manifest": str(CONFIG.relative_to(ROOT)),
         "manifest_sha256": digest_file(CONFIG),
+        "selected_surface_ids": [str(item["id"]) for item in selected],
         "identity_pass": identity_pass,
         "execution_pass": execution_pass,
         "ready": identity_pass and execution_pass and not args.identity_only,
@@ -245,11 +283,21 @@ def main() -> int:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:
         for surface in surfaces:
-            print(f"{'PASS' if surface['pass'] else 'FAIL'} identity {surface['id']}")
+            label = (
+                "PASS"
+                if surface["pass"]
+                else "FAIL"
+                if surface["required"]
+                else "INFO"
+            )
+            print(f"{label} identity {surface['id']}")
             if not surface["pass"]:
                 print(f"  {surface.get('error')}")
         if execution is not None:
-            print(f"{'PASS' if execution_pass else 'FAIL'} execution probes")
+            label = "SKIP" if execution.get("skipped") else "PASS" if execution_pass else "FAIL"
+            print(f"{label} execution probes")
+            if execution.get("reason"):
+                print(f"  {execution['reason']}")
         if args.identity_only:
             print(f"toolchain identity: {'READY' if identity_pass else 'NOT READY'}")
         else:

@@ -51,29 +51,22 @@ def main() -> int:
             )
         else:
             print("\n[Private Ghidra/JDK identity]\nSKIP (.tools is not a public CI input)")
-        ghidra_export = ROOT / ".analysis" / "ghidra" / "exports" / "th04-main"
-        required_export_files = [
-            ghidra_export / name
-            for name in (
-                "program.properties",
-                "blocks.csv",
-                "relocations.csv",
-                "entrypoints.txt",
-                "filebytes-original.bin",
-                "filebytes-modified.bin",
-                "header-memory.bin",
-                "load-memory.bin",
-            )
-        ]
         private_main = ROOT / ".analysis" / "targets" / "th04" / "main.exe"
-        if all(path.is_file() for path in required_export_files) and private_main.is_file():
+        project_file = ROOT / "ghidra-project" / "TH04-th04-main.gpr"
+        project_store = ROOT / "ghidra-project" / "TH04-th04-main.rep"
+        if (
+            analyzer.is_file()
+            and private_main.is_file()
+            and project_file.is_file()
+            and project_store.is_dir()
+        ):
             run(
-                "Private Ghidra database export",
+                "Private live Ghidra database replay",
                 [
                     python,
-                    "scripts/attest_ghidra_database.py",
+                    "scripts/ghidra.py",
                     "th04-main",
-                    str(ghidra_export),
+                    "check",
                 ],
             )
             run(
@@ -81,7 +74,10 @@ def main() -> int:
                 [python, "scripts/smoke_ghidra_oracle.py", "th04-main"],
             )
         else:
-            print("\n[Private Ghidra database export]\nSKIP (private export is absent)")
+            print(
+                "\n[Private live Ghidra database replay]\n"
+                "SKIP (target, analyzer, or private project is absent)"
+            )
         print("\nCI: PASS")
         return 0
     except (OSError, subprocess.CalledProcessError, tomllib.TOMLDecodeError) as error:

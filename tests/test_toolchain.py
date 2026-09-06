@@ -5,14 +5,25 @@ import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from lib.toolchain import ToolchainError, file_set_identity, tree_identity
+from attest_toolchain import gated_execution
 
 
 class ToolchainIdentityTests(unittest.TestCase):
+    def test_failed_identity_prevents_execution_probes(self) -> None:
+        with patch("attest_toolchain.run_execution_probes") as probes:
+            execution, passed = gated_execution(
+                {}, identity_pass=False, identity_only=False
+            )
+        probes.assert_not_called()
+        self.assertFalse(passed)
+        self.assertTrue(execution["skipped"])
+
     def test_tree_identity_is_path_and_content_sensitive(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

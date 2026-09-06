@@ -246,8 +246,7 @@ def attest_analysis_install(root: Path, config: dict[str, object]) -> dict[str, 
     except (KeyError, OSError, zipfile.BadZipFile) as error:
         checks["mz_loader_source"] = {"pass": False, "error": str(error)}
 
-    environment = os.environ.copy()
-    environment["JAVA_HOME"] = str(jdk_home)
+    identity_pass = all(bool(item.get("pass")) for item in checks.values())
     executions: dict[str, object] = {}
     commands = {
         "java_banner": [str(jdk_home / "bin" / "java"), "-version"],
@@ -257,31 +256,38 @@ def attest_analysis_install(root: Path, config: dict[str, object]) -> dict[str, 
         "java_banner": str(jdk["banner_substring"]),
         "headless_usage": "Headless Analyzer Usage",
     }
-    for name, command in commands.items():
-        try:
-            completed = subprocess.run(
-                command,
-                cwd=root,
-                env=environment,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                errors="replace",
-                timeout=60,
-            )
-            output = completed.stdout.replace("\r", "")
-            executions[name] = {
-                "pass": expectations[name] in output,
-                "command": command,
-                "returncode": completed.returncode,
-                "expected_substring": expectations[name],
-                "output": output,
-            }
-        except (OSError, subprocess.SubprocessError) as error:
-            executions[name] = {"pass": False, "error": str(error), "command": command}
-    ready = all(bool(item.get("pass")) for item in checks.values()) and all(
-        bool(item.get("pass")) for item in executions.values()
-    )
+    if not identity_pass:
+        executions["identity_gate"] = {
+            "pass": False,
+            "skipped": True,
+            "reason": "static identity attestation failed; Java and Ghidra execution is forbidden",
+        }
+    else:
+        environment = os.environ.copy()
+        environment["JAVA_HOME"] = str(jdk_home)
+        for name, command in commands.items():
+            try:
+                completed = subprocess.run(
+                    command,
+                    cwd=root,
+                    env=environment,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    errors="replace",
+                    timeout=60,
+                )
+                output = completed.stdout.replace("\r", "")
+                executions[name] = {
+                    "pass": expectations[name] in output,
+                    "command": command,
+                    "returncode": completed.returncode,
+                    "expected_substring": expectations[name],
+                    "output": output,
+                }
+            except (OSError, subprocess.SubprocessError) as error:
+                executions[name] = {"pass": False, "error": str(error), "command": command}
+    ready = identity_pass and all(bool(item.get("pass")) for item in executions.values())
     return {
         "ready": ready,
         "checks": checks,

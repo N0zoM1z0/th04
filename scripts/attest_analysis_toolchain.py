@@ -47,7 +47,10 @@ def main() -> int:
                 if not check["pass"] and "error" in check:
                     print(f"  {check['error']}")
             for name, check in report["executions"].items():
-                print(f"{'PASS' if check['pass'] else 'FAIL'} execution {name}")
+                label = "SKIP" if check.get("skipped") else "PASS" if check["pass"] else "FAIL"
+                print(f"{label} execution {name}")
+                if check.get("reason"):
+                    print(f"  {check['reason']}")
             print(f"analysis toolchain: {'READY' if report['ready'] else 'NOT READY'}")
             print(f"receipt: {output}")
         return 0 if report["ready"] else 1
