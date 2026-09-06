@@ -206,10 +206,10 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   C/C++ compiler precedent outside full `__saveregs`/interrupt prologues; `__seg`
   locals still lower to MOV-based segment saves/restores.
 
-- For Borland far-call bridge recovery, distinguish three cases: an external or
-  different-logical-segment far callee stays `CALL FAR`; a definition already
-  visible in the same TU and logical segment can become `PUSH CS; CALL near`;
-  this natural lowering still does not add a leading `NOP`. `#pragma alloc_text`
-  does not change the external call opcode, and the current cold OMF corpus has
-  no `ALIAS` records. Do not use these mechanisms to claim TH04's full
-  `NOP; PUSH CS; CALL near` sequence exact.
+- For Borland far-call bridge recovery, separate compiler OMF from final linker
+  output. TC86 may leave an external call as five-byte `CALL FAR`; `#pragma
+  samecodeseg` can change only the Pointer16 frame. TLINK 6.10 defaults to
+  far-to-near optimization unless `/f` is supplied and can then preserve the
+  five-byte footprint as `NOP; PUSH CS; CALL near`, removing the segment
+  relocation. TH04 `bullets_update` is the accepted control for this exact
+  mechanism. `#pragma alloc_text` and `/P` packing alone do not produce it.

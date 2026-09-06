@@ -12,41 +12,40 @@ reviewed denominator until they are resolved.
 | --- | ---: |
 | Initial screened source-module contributions | 58 / 17,412 bytes |
 | Initial Ghidra function entries in those contributions | 151 |
-| Reviewed authored byte units/regions | 59 |
+| Reviewed authored byte units/regions | 56 |
 | Reviewed authored bytes | 12,708 |
-| Exact authored byte units/regions | 55 |
-| **Exact authored bytes** | **12,699 / 12,708 (99.929178%)** |
+| Exact authored byte units/regions | 53 |
+| **Exact authored bytes** | **12,704 / 12,708 (99.968524%)** |
 | Tracked authored function candidates | 114 |
 | Reviewed authored functions | 114 |
-| Exact authored functions | 112 |
-| **Exact authored functions** | **112 / 114 (98.245614%)** |
+| Exact authored functions | 113 |
+| **Exact authored functions** | **113 / 114 (99.122807%)** |
 | Provisional function candidates excluded from the denominator | 0 |
 | Exact original-style standalone ASM units | 9 / 1,489 bytes |
 
-The current reviewed authored byte mismatch is only 9 bytes total. `snd_load`
-now has 230 / 234 bytes exact: maintained natural C++ independently recovers its
-8-byte DOS-open sequence, 26-byte driver-dispatch/read sequence, and 3-byte
-`MOV AX,[BP+6]` reload. Only `PUSH DS` (1 byte), target `89 C3` `MOV BX,AX`
-(2 bytes), and `POP DS` (1 byte) remain blocked there. `bullets_update` is also
-fully boundary-reviewed. Its natural C++ `sparks_add_random(...)` call now owns
-the 12-byte argument setup exactly; only the following 5-byte target `NOP;
-PUSH CS; CALL near` form remains blocked because TC4J emits `CALL FAR`. Neither
-gap is waived or filled with inline assembly.
-`snd_pmd_resident` is fully exact from maintained pure C after expressing the
-PMD IVT slot as a Borland `__es` segment-specific pointer. `dialog_init` is also exact after restoring its
-original second C++ translation unit: the linked code bytes stay identical while
-the Intel OMF FIXUPP batching and ordered MZ relocations return to target order.
+The current reviewed authored byte mismatch is only **4 bytes total**, all inside
+`snd_load`. That 234-byte function now has 230 exact bytes; only `PUSH DS`
+(1 byte), target `89 C3` `MOV BX,AX` (2 bytes), and `POP DS` (1 byte) remain
+blocked. `bullets_update` is fully exact across its complete 0x36B reviewed
+extent. Its maintained natural C++ uses `#pragma samecodeseg sparks_add_random`;
+TC86 still emits a five-byte far call in the object, but the group-frame FIXUPP
+lets normal TLINK 6.10 far-call optimization produce the target `NOP; PUSH CS;
+CALL near` in the final MZ and remove the segment relocation. No inline assembly,
+codestring, `__emit__`, or byte injection is used. `snd_pmd_resident` remains
+fully exact from maintained pure C through Borland `__es` pointer semantics, and
+`dialog_init` remains exact after restoring its natural second C++ translation
+unit.
 
 Eleven former Ghidra non-contiguous-body candidates are manually reviewed exact.
-The replayable exact-manual gate requires the same TLINK public and exact byte
-owner, a configured Ghidra min/max span, gap-free raw `ndisasm` coverage through
-a terminal return, and—for indirect switches—every table target to land on a
-raw instruction boundary inside the function. A separate reviewed-nonexact gate
-now proves complete boundaries without implying byte equality. `bullets_update`
-is the first nonexact switch-data case: its code decodes through `RETF` at
-`0x2CC27`, byte `0x2CC28` is switch metadata, the five words at `0x2CC29` all
-target decoded instructions, and the next TLINK public begins exactly at
-`0x2CC33`. No function candidate remains provisional in the current screen.
+A twelfth exact manual case, `bullets_update`, uses the stricter exact-extent
+path because Ghidra's body ranges are unusable. The gate requires the same TLINK
+public and one exact authored byte owner, gap-free raw decoding through `RETF`,
+the exact next-public boundary, and—for its trailing compiler switch data—every
+jump-table target to be a decoded instruction start. Thus the complete 0x36B
+extent (0x360 bytes of code plus 11 bytes of switch metadata/table) is independently
+reviewed exact without trusting Ghidra's body construction. `snd_load` is now the
+sole reviewed nonexact function. No function candidate remains provisional in
+the current screen.
 
 Two `dialog` byte regions (`dialog_op` and `dialog_run`) remain provisional.
 Their raw bytes and relocation-site sets reproduce, but the ordered relocation
@@ -66,10 +65,10 @@ included in the authored C/C++ byte percentage.
 The current accepted byte cohort is reproduced by
 `python3 scripts/replay_th04_main_exact_units.py`. Historical acceptance
 receipts remain useful, while the current pre-commit full-owner replay
-`gptweb-bullet-v10-precommit-001` independently repeated two isolated
+`gptweb-bullets-v11-precommit-001` independently repeated two isolated
 `git archive` materializations of the pinned ReC98 revision, overlaid
 repository-maintained source, restored the checked-in dialog TU split through
-`Tupfile.lua`, and passed all 64 default-selected raw/map/ordered-relocation/
+`Tupfile.lua`, and passed all 62 default-selected raw/map/ordered-relocation/
 OMF/determinism checks.
 
 Function accounting is independently conservative. The checked-in

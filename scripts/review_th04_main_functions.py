@@ -271,13 +271,18 @@ def reviewed_nonexact_reviews(
     metadata: dict[int, dict[str, str]],
     publics: dict[int, list[str]],
     target: Path,
+    *,
+    policy_key: str = "reviewed_nonexact",
+    require_exact_extent: bool = False,
 ) -> list[dict[str, object]]:
-    """Validate reviewed function boundaries without claiming byte exactness.
+    """Validate complete reviewed extents independent of Ghidra body construction.
 
-    Nonexact reviews require an exact-owner/public entry candidate, target Ghidra
-    metadata, a gap-free raw decode through RET/RETF for the configured code span,
-    and any declared trailing switch targets to land on decoded instruction starts.
-    The complete reviewed extent may extend beyond the exact entry owner.
+    The default nonexact mode requires an exact-entry/public candidate, target
+    Ghidra entry metadata, a gap-free raw decode through RET/RETF for the configured
+    code span, and any declared trailing switch targets to land on decoded
+    instruction starts. The complete reviewed extent may extend beyond the entry
+    owner. Exact-extent mode reuses those gates but additionally requires the
+    configured full extent to stay inside the named exact authored byte owner.
     """
 
     policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
@@ -291,7 +296,7 @@ def reviewed_nonexact_reviews(
             raise ValueError(f"switch table address 0x{linear:X} escapes target")
         return int.from_bytes(raw_target[offset:offset + 2], "little")
 
-    for override in policy.get("reviewed_nonexact", []):
+    for override in policy.get(policy_key, []):
         address = int(str(override["address"]), 0)
         file_offset = int(str(override["file_offset"]), 0)
         size = int(str(override["size"]), 0)
@@ -303,6 +308,19 @@ def reviewed_nonexact_reviews(
             raise ValueError(
                 f"reviewed nonexact address 0x{address:X} lacks exact-entry/public candidate"
             )
+        if require_exact_extent:
+            owner_unit = str(override.get("owner_unit", ""))
+            if not owner_unit or owner_unit != str(item["owner_unit"]):
+                raise ValueError(
+                    f"reviewed exact extent address 0x{address:X} owner mismatch"
+                )
+            if not (
+                int(item["owner_start"]) <= address
+                and address + size <= int(item["owner_end"])
+            ):
+                raise ValueError(
+                    f"reviewed exact extent address 0x{address:X} escapes exact owner"
+                )
         expected_file = address - 0x10000 + 0x1800
         if file_offset != expected_file:
             raise ValueError(f"reviewed nonexact address 0x{address:X} file offset mismatch")
@@ -518,7 +536,7 @@ def write_reviewed_ledger(
         seen_manual.add(row["id"])
         if address != int(manual["address"]):
             raise ValueError(f"manual ledger address mismatch for {row['id']}")
-        if row["state"] not in {"candidate", "exact"}:
+        if row["state"] not in {"candidate", "blocked", "exact"}:
             raise ValueError(f"manual ledger refuses state {row['state']!r} for {row['id']}")
         row["file_offset"] = f"0x{int(manual['file_offset']):X}"
         row["size"] = f"0x{int(manual['size']):X}"
@@ -618,37 +636,55 @@ def main() -> int:
         accepted, rejected = review(items, parsed_metadata)
         policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
         manual_exact: list[dict[str, object]] = []
+        manual_exact_extent: list[dict[str, object]] = []
         reviewed_nonexact: list[dict[str, object]] = []
-        if policy.get("reviewed_exact", []) or policy.get("reviewed_nonexact", []):
+        if (
+            policy.get("reviewed_exact", [])
+            or policy.get("reviewed_exact_extent", [])
+            or policy.get("reviewed_nonexact", [])
+        ):
             if args.target is None:
                 parser.error("--target is required for manual/reviewed nonexact policy")
         if policy.get("reviewed_exact", []):
             assert args.target is not None
             manual_exact = manual_reviews(items, parsed_metadata, args.target)
+        if policy.get("reviewed_exact_extent", []):
+            assert args.target is not None
+            manual_exact_extent = reviewed_nonexact_reviews(
+                items,
+                parsed_metadata,
+                publics,
+                args.target,
+                policy_key="reviewed_exact_extent",
+                require_exact_extent=True,
+            )
         if policy.get("reviewed_nonexact", []):
             assert args.target is not None
             reviewed_nonexact = reviewed_nonexact_reviews(
                 items, parsed_metadata, publics, args.target
             )
+        manual_exact_all = [*manual_exact, *manual_exact_extent]
         reviewed_addresses = {
-            int(item["address"]) for item in [*manual_exact, *reviewed_nonexact]
+            int(item["address"]) for item in [*manual_exact_all, *reviewed_nonexact]
         }
         rejected = [
             item for item in rejected if int(item["address"]) not in reviewed_addresses
         ]
-        exact_count = len(accepted) + len(manual_exact)
+        exact_count = len(accepted) + len(manual_exact_all)
         denominator = exact_count + len(reviewed_nonexact)
         report.update(
             {
                 "strict_exact_count": len(accepted),
-                "manual_exact_count": len(manual_exact),
+                "manual_exact_count": len(manual_exact_all),
+                "manual_exact_extent_count": len(manual_exact_extent),
                 "exact_function_count": exact_count,
                 "strict_rejected_count": len(rejected),
                 "reviewed_nonexact_count": len(reviewed_nonexact),
                 "reviewed_function_count": denominator,
                 "exact_function_percent": (exact_count * 100 / denominator if denominator else None),
                 "accepted": accepted,
-                "manual_exact": manual_exact,
+                "manual_exact": manual_exact_all,
+                "manual_exact_extent": manual_exact_extent,
                 "rejected": rejected,
                 "reviewed_nonexact": reviewed_nonexact,
             }
@@ -656,12 +692,12 @@ def main() -> int:
         print(
             f"exact functions: {exact_count}/{denominator} "
             f"({exact_count * 100 / denominator:.6f}%); "
-            f"automatic={len(accepted)} manual={len(manual_exact)}"
+            f"automatic={len(accepted)} manual={len(manual_exact_all)}"
         )
         print(f"provisional strict rejections: {len(rejected)}")
         if args.ledger_out:
             write_reviewed_ledger(
-                args.ledger_out, accepted, manual_exact, reviewed_nonexact
+                args.ledger_out, accepted, manual_exact_all, reviewed_nonexact
             )
             print(f"reviewed ledger: {args.ledger_out}")
     else:

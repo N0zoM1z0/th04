@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,699 / 12,708 = 99.929178% exact**;
-- authored functions: **112 / 114 = 98.245614% exact**;
+- authored C/C++ bytes: **12,704 / 12,708 = 99.968524% exact**;
+- authored functions: **113 / 114 = 99.122807% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -42,8 +42,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-bullet-v10-precommit-001/receipt.json`.
-It passes all 64 current default-selected units in both isolated cold
+`.analysis/reconstruction/exact-unit-replay/gptweb-bullets-v11-precommit-001/receipt.json`.
+It passes all 62 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function
 accounting changes. `dialog_op` and `dialog_run` remain
@@ -77,9 +77,11 @@ replay driver requires all of the following to match the manifest exactly:
 Only then is the repository-maintained replacement inserted, while preserving
 the scaffold source timestamp. The receipt records old/new identities and the
 patched scaffold hash. Any upstream drift fails closed. Regression tests cover
-both the positive replacement and scaffold-drift rejection. This mechanism is
-used for the three-byte `snd_load` parameter reload so the repository can own
-pure C++ without copying adjacent ReC98 inline assembly into maintained source.
+both the positive replacement and scaffold-drift rejection. This mechanism is used for both the three-byte `snd_load` parameter reload and
+the complete maintained `bullets_update` function. In the latter case, the
+entire pinned low-level function source span is hash/offset-bound before being
+replaced by natural C++ with one `#pragma samecodeseg`; adjacent upstream source
+is not claimed as maintained source.
 
 ### Translation-unit split rule
 
@@ -223,23 +225,42 @@ boundary, source-shape, TC86-option, and TCC-via-TASM probes are tabulated in
 `TH04_MAIN_FIXUP_CODEGEN_PROBES.md`; none repairs `dialog_op` or `dialog_run`
 without changing another required dimension.
 
-### `bullets_update` call-form blocker
+### `bullets_update` — solved in natural C++ + normal TLINK
 
-The complete reviewed function is target file `0x1E0C8..0x1E432` (0x36B bytes).
-Exact natural-source slices cover the code on both sides of a 17-byte low-level
-call region. Replacing only that region with the natural C++ call
-`sparks_add_random(...)` reproduces every argument push and surrounding byte but
-TC4J emits a five-byte `CALL FAR`; target instead has `NOP; PUSH CS; CALL near`.
+The complete reviewed extent is target file `0x1E0C8..0x1E432` (0x36B = 875
+bytes): 0x360 bytes of code through `RETF`, followed by one metadata byte and a
+five-entry compiler near-jump table. It is now one exact authored byte owner.
 
-Focused compiler controls explain the boundary. TC4J naturally emits the
-`PUSH CS; CALL near` far-call bridge only when the far callee definition is
-already visible earlier in the same translation unit and the same logical code
-segment. An extern declaration, a definition in another code segment of the
-same group, first-declaration segment ownership, near/far function-pointer
-casts, constant function pointers, and `#pragma samecodeseg` do not recover the
-target form. `samecodeseg` is still meaningful: TDUMP shows that it changes the
-Pointer16 FIXUPP frame from TARGET to the current group while leaving `CALL FAR`
-LEDATA unchanged. No assembly stitching is used to close the gap.
+The maintained source uses the ordinary call plus one Borland pragma:
+
+```cpp
+#pragma samecodeseg sparks_add_random
+sparks_add_random(
+    bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2
+);
+```
+
+The important distinction is **object code versus final linked code**. TC86
+still emits a five-byte `CALL FAR` in `bullet_u.obj`; `samecodeseg` changes the
+Pointer16 FIXUPP frame to `MAIN_03`. TLINK 6.10 documents `/f` as *inhibiting*
+far-to-near call optimization, and TH04's normal response file does not specify
+`/f`. Once the linker resolves `SPARK_A_TEXT` and `BULLET_U_TEXT` in the same
+`MAIN_03` group, it replaces the five-byte far call with the same-length target
+sequence:
+
+```text
+90 0E E8 85 73    NOP; PUSH CS; CALL near sparks_add_random
+```
+
+The segment relocation disappears at the same time. A `/P` code-packing relink
+without `samecodeseg` leaves `CALL FAR`, so packing alone is not the mechanism.
+The resulting full 875-byte target/candidate slice has SHA-256
+`862908f44a5ade53c3148393f09bc0f76c02aac61488594e250aa8b91826673f`
+and the ordered overlapping relocation list agrees. Two isolated cold builds in
+`gptweb-bullets-full-v11-001` verify the full unit; the later default cohort
+`gptweb-bullets-v11-precommit-001` verifies it together with all other current
+exact owners. No inline assembly, codestring, `__emit__`, raw byte directive, or
+patched object/link output is used.
 
 ## Function accounting
 
@@ -267,26 +288,22 @@ be a decoded instruction start inside the function span. Two regression tests
 force this switch gate to fail closed on a target that lands between
 instructions.
 
-This manual gate promotes 11 Ghidra body-construction false negatives: four
-straight-line/overlap cases (`player_pos_update_and_clamp`, both large title/BGM
-overlay functions, and `overlay_popup_update_and_render`), `boss_items_drop`,
-`bullet_velocity_and_angle_set`, and five compiler-switch functions whose jump
-tables sit immediately after their bodies.
+The original manual gate promotes 11 Ghidra body-construction false negatives:
+four straight-line/overlap cases, `boss_items_drop`,
+`bullet_velocity_and_angle_set`, and five compiler-switch functions. A separate
+`[[reviewed_exact_extent]]` path handles `bullets_update`, whose Ghidra body
+ranges are unusable. It reuses the complete-boundary checks from reviewed
+nonexact accounting but additionally requires the entire configured extent to
+stay inside one named exact authored owner. The gate validates the 0x360-byte
+raw code through `RETF`, byte `0x2CC28` metadata, five near-jump words at
+`0x2CC29`, all five decoded instruction targets, and exact next public
+`0x2CC33`.
 
-Reviewed nonexact functions use a separate fail-closed path: they need the same
-entry/public observations plus a complete raw code decode, and may explicitly
-own trailing switch metadata/tables without claiming the bytes exact.
-`bullets_update` is now reviewed this way. Its 0x360-byte code span decodes
-through `RETF` at `0x2CC27`; byte `0x2CC28` is switch metadata; five words at
-`0x2CC29` target `0x2CB71`, `0x2CB78` (three entries), and `0x2CB7F`, all raw
-instruction starts; and the next TLINK public is exactly `0x2CC33`. The full
-function extent is therefore 0x36B bytes even though its final five-byte
-spark-call form remains nonexact; the preceding 12 argument bytes are exact.
+Reviewed nonexact functions still use the same fail-closed boundary path without
+requiring exact bytes. `snd_load` is now the only such function.
 
-The resulting denominator is 114 reviewed functions: 112 exact plus the two
-explicit nonexact functions `snd_load` and `bullets_update`. `dialog_init` is a
-newly tracked function admitted only by explicit `[[new_exact]]` policy after
-its exact byte owner appeared. No current function candidate remains
+The resulting denominator is 114 reviewed functions: **113 exact plus one
+explicit nonexact `snd_load`**. No current function candidate remains
 provisional.
 
 ## Reusable Borland lessons

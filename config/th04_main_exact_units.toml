@@ -381,6 +381,7 @@ object_path = "obj/th04/bullet_u.obj"
 
 [[units]]
 id = "th04-main-bullets-update-pre-inline"
+default_enabled = false
 repo_source = "src/th04/main/partials/bullets_update_pre.cpp"
 source_mode = "fragment"
 patch_path = "th04/main/bullet/update.cpp"
@@ -390,6 +391,7 @@ object_path = "obj/th04/bullet_u.obj"
 
 [[units]]
 id = "th04-main-bullets-update-post-inline"
+default_enabled = false
 repo_source = "src/th04/main/partials/bullets_update_post.cpp"
 source_mode = "fragment"
 patch_path = "th04/main/bullet/update.cpp"
@@ -528,6 +530,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-bullets-update-spark-args"
+default_enabled = false
 repo_source = "src/th04/main/partials/bullets_update_spark_args.cpp"
 source_mode = "replace"
 patch_path = "th04/main/bullet/update.cpp"
@@ -535,6 +538,18 @@ scaffold_sha256 = "fde98d13d82a0e3dfc0fdbac5cafc080a18ec28d856666aad8fca6f483394
 replace_offset = 9708
 replace_size = 198
 replace_sha256 = "ddd4287a7f04e6244c460f81a325303b85318e1a40e99e5d30b046c72eb9f88b"
+map_module = "th04/bullet_u.cpp"
+map_mode = "contains"
+object_path = "obj/th04/bullet_u.obj"
+[[units]]
+id = "th04-main-bullets-update"
+repo_source = "src/th04/main/exact/bullets_update.cpp"
+source_mode = "replace"
+patch_path = "th04/main/bullet/update.cpp"
+scaffold_sha256 = "fde98d13d82a0e3dfc0fdbac5cafc080a18ec28d856666aad8fca6f483394de7"
+replace_offset = 5659
+replace_size = 7890
+replace_sha256 = "a1dcc5cc018e5cc4aa5ed7a5d08f059fc1f5ddeb1f92e8773c09ea8bad31ce76"
 map_module = "th04/bullet_u.cpp"
 map_mode = "contains"
 object_path = "obj/th04/bullet_u.obj"

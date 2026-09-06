@@ -379,21 +379,27 @@ required:  0x0D4 0x0A9 0x171 0x152
 So adding an inline helper boundary does not alter TC86's two high-level fixup
 groups when code is held exact.
 
-## `#pragma samecodeseg`: frame hint, not call lowering
+## `#pragma samecodeseg`: object frame hint, final-link bridge enabler
 
-`samecodeseg` appears in TCC's own pragma keyword table. Minimal syntax probes
-show that bare and identifier-list forms are accepted. TDUMP reveals the actual
-binary effect for an external far call: the LEDATA remains a five-byte `CALL
-FAR`, while the Pointer16 FIXUPP **frame** changes from `TARGET` to the current
-group (`GI[...]`). The pragma tells the linker which segment frame to use; it
-does not rewrite a far call to `PUSH CS; CALL near`.
+`samecodeseg` appears in TCC's own pragma keyword table. At the **TC86 object
+layer**, the earlier observation remains correct: an external far call stays a
+five-byte `CALL FAR` in LEDATA while the Pointer16 FIXUPP frame changes from
+`TARGET` to the current group (`GI[...]`). This is why object-only probes looked
+negative.
 
-A TH04-specific probe with `#pragma samecodeseg sparks_add_random` behaves the
-same way: the fixup frame becomes `MAIN_03`, but `bullets_update` still contains
-`CALL FAR`. This pragma must therefore not be proposed again as a call-bridge
-solution. It is also invalid as a `dialog_run` fix, because the four relevant
-callees live in SHARED/master.lib selectors rather than `MAIN_01`.
+The missing layer is TLINK. Turbo Link 6.10's own help says `/f` means
+`Inhibit optimizing far calls to near`; TH04's normal `main.@l` does not contain
+`/f`. In a formal full TH04 rebuild with the normal `th04/bullet_u.cpp` wrapper,
+natural `sparks_add_random(...)`, and local
+`#pragma samecodeseg sparks_add_random`, TLINK resolves the callee in `MAIN_03`
+and translates the five-byte far call to the same-length target sequence
+`90 0E E8 85 73` (`NOP; PUSH CS; CALL near`). The segment relocation is removed.
+The `BULLET_U_TEXT` contribution remains 0x565 bytes at its target location.
 
+A `/P` code-segment packing relink without `samecodeseg` leaves the call as
+`CALL FAR` with its relocation, so packing alone is not the answer. This is a
+reusable warning: for Borland far-call reconstruction, inspect both OMF FIXUPP
+and final MZ bytes before rejecting a source-level frame hint.
 ## Natural TC4J far-call bridge rule
 
 Segment-aware CODE-corpus mining found genuine compiler-generated `PUSH CS;
@@ -415,49 +421,32 @@ Near indirect calls do not acquire the required return-segment push, while far
 pointer calls remain far. None yields the target bridge without low-level code.
 
 
-### `alloc_text` and the closest natural bridge still miss target `NOP`
+### `alloc_text` and compiler-only controls
 
 TC4J accepts `#pragma alloc_text(f)` for an external far function, but a minimal
 control retains the same `CALL FAR` LEDATA/Pointer16 call shape as the baseline.
 The current cold object corpus also contains no OMF `ALIAS` records, and TCC's
-pragma keyword table exposes neither `alias` nor `weak`, so there is no observed
-linkage alias path hiding behind this pragma.
+pragma keyword table exposes neither `alias` nor `weak`.
 
-A separate minimal control makes the far callee definition visible earlier in
-the same translation unit and same logical code segment. That is the strongest
-normal C++ condition found for Borland's bridge lowering, and TC4J emits
-`PUSH CS; CALL near` naturally. It still emits **no leading `NOP`**. Therefore
-the TH04 target's full five-byte `NOP; PUSH CS; CALL near` form remains outside
-the observed natural-C++ codegen surface; do not synthesize the missing byte or
-call with inline assembly/codestring/byte directives.
+A separate compiler-only control with the far callee definition already visible
+in the same TU and logical code segment naturally emits `PUSH CS; CALL near`
+without a leading `NOP`. That observation remains useful for understanding TC86
+codegen, but it does **not** describe the final TH04 solution: the target leading
+`NOP` comes from TLINK preserving the original five-byte CALLF footprint during
+far-to-near translation after `samecodeseg` changes the frame.
 
-## `bullets_update`: natural source narrows the gap to call form
+## `bullets_update`: full natural reconstruction
 
-The target 17-byte region is:
+The former 17-byte low-level region is no longer a blocker. The maintained
+natural call reproduces the first 12 argument bytes directly, and the
+`samecodeseg`/TLINK mechanism above reproduces the final five-byte call form at
+link time. The complete 0x36B reviewed extent is raw exact, including trailing
+switch metadata/table, and is now owned by `src/th04/main/exact/bullets_update.cpp`.
 
-```text
-FF 74 02             PUSH [SI+2]
-FF 74 04             PUSH [SI+4]
-66 68 02 00 20 00    PUSH dword 00200002h
-90                   NOP
-0E                   PUSH CS
-E8 ...               CALL near sparks_add_random
-```
-
-Replacing only the old low-level block with natural
-`sparks_add_random(bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2)` keeps
-the parameter setup and surrounding code but produces `CALL FAR`. A
-first-declaration `SPARK_A_TEXT/MAIN_03` probe, `samecodeseg`, near/far pointer
-casts, and constant function pointers do not change that conclusion. The
-function stays nonexact; assembly stitching or target byte emission is not used.
-
-Its *boundary*, however, is now independently reviewed. Raw code decodes from
-`0x2C8C8` through `RETF` at `0x2CC27`; byte `0x2CC28` is switch metadata and the
-five near offsets at `0x2CC29` resolve to decoded instructions at `0x2CB71`,
-`0x2CB78` (three entries), and `0x2CB7F`. The next TLINK public is `0x2CC33`, so
-the complete reviewed extent is 0x36B bytes. Boundary review does not waive the
-five-byte nonexact call form; the preceding 12 argument bytes are now cold-exact from maintained natural C++.
-
+The full exact function is deliberately accepted only at the final-linked
+artifact layer as well as OMF/layout layers. Object LEDATA alone would still show
+`CALL FAR`, so treating that intermediate representation as the exact-binary
+verdict would be a category error.
 ## Next useful experiments
 
 The remaining work should focus on information not already falsified here:

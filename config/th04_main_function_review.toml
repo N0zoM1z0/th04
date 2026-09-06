@@ -1,6 +1,6 @@
 schema_version = 1
 artifact = "th04-main"
-policy = "Exact functions require a target Ghidra entry and local TLINK public inside one exact authored byte owner. Automatic promotion requires a contiguous Ghidra body; configured reviewed_exact overrides must instead pass gap-free raw decoding and any declared switch-table target validation. Reviewed nonexact functions enter the denominator only after their independently configured full target boundary, code decode, and any trailing switch data validate; exactness is not implied."
+policy = "Exact functions require a target Ghidra entry and local TLINK public inside one exact authored byte owner. Automatic promotion requires a contiguous Ghidra body. configured reviewed_exact handles reviewed Ghidra body-construction false negatives inside exact owners, while reviewed_exact_extent additionally validates a complete exact owner extent through raw decode, next-public, and trailing switch metadata/table checks when Ghidra body ranges are unusable. Reviewed nonexact functions enter the denominator only after the same complete boundary checks; exactness is not implied."
 
 [[reviewed_nonexact]]
 id = "th04-main-fn-23496"
@@ -11,15 +11,16 @@ name = "snd_load"
 evidence_id = "ev-th04-main-snd-load-reviewed-boundary-v3"
 reason = "The complete 234-byte function has a reviewed raw/TLINK/Ghidra boundary. Only four authored bytes remain nonexact: PUSH DS, target 89 C3 versus compiler/TASM 8B D8 for MOV BX,AX, and POP DS. The DOS-open, driver-dispatch/read, and BP-relative func reload subspans are independently cold-replayed exact from maintained natural C++."
 
-[[reviewed_nonexact]]
+[[reviewed_exact_extent]]
 id = "th04-main-fn-2c8c8"
 address = "0x2C8C8"
 file_offset = "0x1E0C8"
 size = "0x36B"
 decode_size = "0x360"
 name = "bullets_update"
-evidence_id = "ev-th04-main-bullets-update-reviewed-boundary-v2"
-reason = "The complete 875-byte function extent is reviewed independently of byte exactness: raw code decodes through RETF at 0x2CC27, one metadata byte plus a five-entry near-jump table occupy the trailing 11 bytes, and the next TLINK public begins at 0x2CC33. The natural C++ argument setup is now cold-exact; only the five-byte NOP/PUSH CS/near-CALL form remains nonexact."
+owner_unit = "th04-main-bullets-update"
+evidence_id = "ev-th04-main-bullets-update-full-boundary-v1"
+reason = "The complete 875-byte extent is owned by one exact maintained natural-C++ unit. Raw code decodes through RETF at 0x2CC27; one metadata byte plus a five-entry near-jump table occupy the trailing 11 bytes; all table targets are instruction starts; the next TLINK public begins at 0x2CC33."
 table_metadata_address = "0x2CC28"
 table_metadata_value = "0x00"
 jump_table_address = "0x2CC29"
