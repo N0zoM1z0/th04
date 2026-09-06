@@ -155,15 +155,18 @@ comparator behavior over the originals, not compiler/build reproduction.
 Public CI also uses synthetic MZ/COM fixtures so regression tests need no game
 data.
 
-The compiler/build calibration is now live.  Two cold source materializations
-of pinned ReC98 revision `b6ba5b0a529edbb31efdf8c0e939263804f8ee47`
-produced the same four TH01 outputs, and all 416 generated OMF objects passed
-strict framing and checksum validation.  Against the private original TH01
-targets, `ZUNSOFT.COM` is raw-exact while `OP.EXE`, `REIIDEN.EXE`, and
-`FUUIN.EXE` are rejected by stricter header and/or ordered-relocation checks.
-`config/rec98_th01_calibration.toml` pins this diagnostic vector so comparator
-changes must continue to produce it.  It cannot turn any rejection into an
-exact pass.
+The compiler/build calibration is now live.  Three cold source
+materializations of pinned ReC98 revision
+`b6ba5b0a529edbb31efdf8c0e939263804f8ee47` produced the same 20 selected
+TH01-TH05 outputs, and all 416 generated OMF objects passed strict framing and
+checksum validation.  Only three candidates are raw-exact.  All four TH04
+outputs are rejected, with measured format, size, header, relocation, program,
+and overlay dimensions retained for routing.  The five game-specific OMF sets
+also agree after normalizing only Borland dependency timestamps; build-time
+strings in the separate Research/Pipeline objects remain visible differences.
+`config/rec98_pc98_calibration.toml` pins this all-game vector, while
+`config/rec98_th01_calibration.toml` retains the focused policy differential.
+Neither can turn a known rejection into an exact pass.
 
 ## Upstream quarantine and revalidation
 

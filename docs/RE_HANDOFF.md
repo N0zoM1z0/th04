@@ -40,12 +40,24 @@ source or unit has been accepted yet.
   with the pinned installation; the linked DOS probe executes successfully.
 - An empty-clone bootstrap test independently downloaded and rebuilt the
   complete private toolchain and passed all 16 identity/execution surfaces.
-- Two isolated ReC98 TH01 cold builds produced the same four final outputs.
-  All 416 generated OMF objects validate structurally and by checksum.
+- Three isolated ReC98 cold builds produced the same 20 selected TH01-TH05
+  outputs (aggregate identity `80127bc4…e3603e25d`).  All 416 generated OMF
+  objects validate structurally and by checksum; each game-specific object set
+  reproduces after narrowly normalizing only dependency timestamps.
 - Strict target comparison accepts `ZUNSOFT.COM` exactly and rejects
   `OP.EXE`, `REIIDEN.EXE`, and `FUUIN.EXE`: their program images match, but
   header and/or ordered-relocation dimensions do not.  This is a pinned known
   calibration vector, not an exactness waiver.
+- The all-game strict survey accepts only TH01 `ZUNSOFT.COM`, TH02 `ZUN.COM`,
+  and TH05 `ZUN.COM` (3/20).  Every TH04 candidate is rejected.  TH04 `MAIN`
+  retains the target's 1,136 relocation count but has 3,326 program-byte
+  differences outside relocation sites; TH04 `OP`/`MAINE` differ broadly in
+  content and relocation topology, and the candidate `ZUN.COM` is flat COM
+  while the target is MZ.
+- The all-game calibration pins source/archive provenance, the cold receipt,
+  every candidate hash and compact multi-dimensional vector, the 20-output
+  identity, OMF validity, and five per-game normalized OMF identities.  A
+  deliberate one-byte candidate mutation makes the gate fail closed.
 
 ## Open provenance issue
 
@@ -63,11 +75,11 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Next bounded work
 
-1. Repeat the attested cold-build/strict-comparison calibration across ReC98's
-   TH02-TH05 outputs, beginning with its partial TH04 candidate.
-2. Select a headless 16-bit MZ analysis backend and build a reproducible TH04
+1. Select a headless 16-bit MZ analysis backend and build a reproducible TH04
    database/export with segment:offset and relocation awareness.
-3. Generate the initial artifact/segment/function inventory without making
+2. Generate the initial artifact/segment/function inventory without making
    source or exactness claims.
-4. Use bounded compiler/ABI probes and map/OMF evidence to separate
+3. Use bounded compiler/ABI probes and map/OMF evidence to separate
    compiler-library ownership from game-authored units.
+4. Reconcile the cold-built ReC98 TH04 maps/link responses against the pinned
+   target topology before selecting a first bounded reconstruction unit.

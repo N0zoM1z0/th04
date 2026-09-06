@@ -1,8 +1,8 @@
 # Borland toolchain acquisition, installation, and use
 
-This document reproduces the exact **local candidate** that was used for the
-TH01 calibration on 2026-09-06.  The proprietary binaries and downloaded media
-stay below ignored `.analysis/`; they are never committed or redistributed.
+This document reproduces the exact **local candidate** used for TH01-TH05
+calibration on 2026-09-06.  The proprietary binaries and downloaded media stay
+below ignored `.analysis/`; they are never committed or redistributed.
 You are responsible for obtaining and using every third-party component under
 rights that apply to you.  A URL here records provenance and reproducibility;
 it is not a legal endorsement or a claim that the host is authoritative.
@@ -144,12 +144,15 @@ producers, record order, fixups, data, code, or source-level `__DATE__` and
 `__TIME__` strings in LEDATA.  In the two local builds, the 65 TH01 objects
 have different raw set hashes but the same dependency-normalized set SHA-256:
 `0ae28223b44f4bf295eaaafd713a99bf2c1e538515f3e5e49e6052a0c0159188`.
+Across three local cold builds, each of the TH01-TH05 game object sets has a
+stable dependency-normalized identity; the aggregate of those five identities
+is `65b5c13ff471e6ef7c4f0cf6c62984197feb129cefc8617835a7991fad808152`.
 The full 416-object normalized sets still differ because ReC98 research probes
 deliberately embed build date/time strings.  That remaining difference is real
 and is not hidden.  This two-digest design provides a fast routing signal while
 keeping the raw evidence intact.
 
-## Cold-build and compare the ReC98 TH01 control
+## Cold-build and compare all ReC98 PC-98 controls
 
 Create a fresh immutable-source build directory (the run ID must be new):
 
@@ -159,33 +162,48 @@ python3 scripts/cold_build_rec98.py --run-id cold-local-001
 
 The script first reruns full toolchain attestation, materializes the pinned
 ReC98 commit with `git archive`, invokes its bundled Tup build through Wine,
-and writes a private receipt containing source, command, environment, map,
-response-file, output, and tree identities.  It does not trust the checkout's
-working tree and does not call the result exact.
+and writes a private receipt containing source, command, environment, all 20
+selected output hashes, their aggregate identity, and all five games' map and
+response-file inventories.  It does not trust the checkout's working tree and
+does not call the result exact.
 
 Run the strict gate against the emitted `source` path:
 
 ```bash
-python3 scripts/compare_rec98_th01.py \
+python3 scripts/survey_rec98_outputs.py \
   .analysis/builds/rec98-b6ba5b0a52/cold-local-001/source
 ```
 
 For the pinned current ReC98 commit, this command is expected to return 1:
-three MZ files fail this project's whole-file policy and one COM file is exact.
-The JSON still provides useful per-dimension diagnostics.
+17 files fail this project's whole-file policy and three COM files are exact.
+The JSON includes sizes, formats, header fields, relocation counts/sets/site
+values, program and overlay difference counts, raw/common extents, full
+comparisons, and agent-routing hints.
+
+Add `--compact` for routine agent triage.  It keeps all candidate identities,
+numeric comparison dimensions, vector hashes, OMF checks, and gate behavior
+while omitting the verbose bounded per-byte difference runs.  Omit it when a
+full private comparison receipt is required.
 
 To verify that a new machine reproduces the **known diagnostic vector** rather
 than accidentally changing it:
 
 ```bash
-python3 scripts/compare_rec98_th01.py \
+python3 scripts/survey_rec98_outputs.py \
   .analysis/builds/rec98-b6ba5b0a52/cold-local-001/source \
   --gate calibration
 ```
 
-Calibration mode should return 0 only when all four candidate hashes, selected
-dimension verdicts, and all generated OMF objects reproduce the pinned vector.
-It never changes or bypasses the strict exact gate.
+Calibration mode returns 0 only when the source archive and cold receipt, all
+20 candidate hashes and aggregate identity, complete compact comparison-vector
+digests, all 416 valid OMF objects, and every per-game dependency-normalized
+OMF identity reproduce `config/rec98_pc98_calibration.toml`.  A one-byte
+candidate mutation was tested to fail both its artifact vector and aggregate
+identity.  Calibration never changes or bypasses the strict exact gate.
+
+For a smaller display of the TH01 upstream-policy differential, use
+`scripts/compare_rec98_th01.py SOURCE`; its default raw gate also intentionally
+returns 1, while `--gate calibration` checks the pinned TH01-only vector.
 
 ## Direct tool invocation for focused probes
 
@@ -222,8 +240,8 @@ not a toolchain or exactness verdict.
   do not bless a changed mirror automatically.
 - An existing installation blocks bootstrap: this is intentional.  Move it to
   a specific archival path, then make a new installation.
-- The strict TH01 comparison returns 1: expected for the pinned calibration
-  vector.  Use `--gate calibration` only to test vector reproducibility.
+- The strict all-game or TH01 comparison returns 1: expected for the pinned
+  calibration vectors.  Use `--gate calibration` only to test reproducibility.
 - Wine, runner, or distribution version differs: it is a new environment.
   Update evidence only after repeated deterministic probes and cold builds;
   never silently edit the existing attestation.

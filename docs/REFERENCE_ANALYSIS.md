@@ -57,8 +57,9 @@ lists, launcher subprograms, large ASM slices, shared earlier-game source,
 `master.lib`, generated sprite data, and Borland runtime libraries.  Its
 project documentation states that the master branch is kept buildable to
 artifacts indistinguishable from the originals.  This repository has not yet
-accepted that broader claim: it has now rebuilt the pinned commit locally and
-found a concrete policy differential in the TH01 outputs.
+accepted that broader claim: it rebuilt the pinned commit three times and ran
+all 20 selected TH01-TH05 outputs through the local Oracle vector.  Only three
+flat COM candidates are raw-exact, and none of the four TH04 candidates pass.
 
 ## ReC98 Oracle assessment
 
@@ -79,6 +80,15 @@ image and ordered relocations but a 1,504-byte larger header.  Our gate rejects
 all three.  `ZUNSOFT.COM` is raw-exact.  Repeating the cold build produced the
 same candidate vector, so these are stable comparator-policy observations
 rather than a transient build failure.
+
+The all-game survey provides a second kind of calibration.  All three cold
+builds produce the same 20-file candidate identity, and the five game-specific
+OMF sets reproduce after narrowly normalizing Borland dependency timestamps.
+However, strict TH04 comparison reports broad program/relocation differences
+for `OP.EXE` and `MAINE.EXE`, 3,326 outside-relocation-site program-byte
+differences for `MAIN.EXE`, and an MZ-versus-flat-COM format mismatch for
+`ZUN.COM`.  These measurements are useful routing evidence and directly reject
+any interpretation of ReC98's editorial progress figures as local exactness.
 
 The gaps for an autonomous agent are control-plane gaps, not a criticism of
 the reconstruction result:

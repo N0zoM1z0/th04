@@ -59,11 +59,18 @@ builds, compares, or avoids a known dead end.
   digest and compare a second digest that normalizes only those four bytes.
   Never normalize LEDATA: ReC98 research probes intentionally compile
   `__DATE__`/`__TIME__` into data, and that is a real build difference.
-- Two isolated ReC98 TH01 cold builds agree on every final TH01 output.  All
-  416 generated OMF objects validate.  Strict comparison finds one raw-exact
-  COM and three rejected MZ files whose program images nevertheless match.
+- Three isolated ReC98 cold builds agree on all 20 selected TH01-TH05 outputs.
+  All 416 generated OMF objects validate.  Strict comparison finds three
+  raw-exact COM files and rejects all four TH04 candidates.
+- Per-game dependency-timestamp-normalized OMF identities are stable across
+  all three builds.  The combined Research/Pipeline-inclusive identity is not,
+  because those probes retain real source-level build-date strings in LEDATA.
 - The pinned known TH01 vector is a regression Oracle for build/comparator
   stability.  It must never be interpreted as three waived exact failures.
+- The all-game vector is a fast routing Oracle: it pins every compact numeric
+  dimension and candidate byte identity, yet the default command remains a
+  strict raw gate.  TH02's 2/17/1-byte MZ differences are good narrow-probe
+  controls; TH04 `OP`/`MAINE` require broader ownership/layout work.
 - Exact evidence is artifact-scoped unless the Oracle policy explicitly marks
   it global.  A generic clean toolchain replay is valuable calibration but
   cannot satisfy a TH04 unit's own compilation replay or raw-byte gate.

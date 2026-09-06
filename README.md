@@ -120,31 +120,38 @@ C-to-OMF-to-MZ and ASM-to-OMF rounds, valid OMF framing/checksums, expected
 embedded producer and dependency records, and successful execution.  For an
 individual object, run `python3 scripts/inspect_omf.py path/to/module.obj`.
 
-Cold-build pinned ReC98 as an untrusted candidate, then run both strict and
-known-vector checks:
+Cold-build pinned ReC98 as an untrusted candidate, then run the strict and
+known-vector checks across all five PC-98 games:
 
 ```bash
 python3 scripts/cold_build_rec98.py --run-id cold-local-001
-python3 scripts/compare_rec98_th01.py \
+python3 scripts/survey_rec98_outputs.py \
   .analysis/builds/rec98-b6ba5b0a52/cold-local-001/source
-python3 scripts/compare_rec98_th01.py \
+python3 scripts/survey_rec98_outputs.py \
   .analysis/builds/rec98-b6ba5b0a52/cold-local-001/source \
   --gate calibration
 ```
 
-For the pinned revision, the strict command intentionally exits 1: `OP.EXE`,
-`REIIDEN.EXE`, and `FUUIN.EXE` fail whole-file exactness even though their
-program images match; only `ZUNSOFT.COM` is raw-exact.  Calibration mode exits
-0 only for that exact known failure vector and valid generated OMF objects.  It
-never waives the strict gate.  See [`docs/TOOLCHAIN.md`](docs/TOOLCHAIN.md) for
-the complete download/install process, direct focused-probe commands, receipt
-contents, failure recovery, and all full digests.
+For the pinned revision, the strict command intentionally exits 1: only TH01
+`ZUNSOFT.COM`, TH02 `ZUN.COM`, and TH05 `ZUN.COM` are raw-exact (3/20).
+ReC98's four TH04 candidates are all rejected by whole-file policy.
+Calibration exits 0 only when the source archive, cold-build receipt, all 20
+candidate bytes, every compact comparison dimension, all 416 valid OMF
+objects, and the five narrowly normalized per-game object-set identities match
+the checked-in baseline.  It never waives the strict gate.  Use
+`scripts/compare_rec98_th01.py` for the focused TH01 policy differential.  See
+[`docs/TOOLCHAIN.md`](docs/TOOLCHAIN.md) for the complete download/install
+process, direct focused-probe commands, receipt contents, failure recovery, and
+all full digests.  Add `--compact` to the survey for a roughly 47 KiB
+agent-triage report instead of the roughly 1.5 MiB full difference receipt.
 
 ## Project map
 
 - `AGENTS.md` — mandatory target, evidence, safety, and session rules.
 - `config/targets.toml` — legally supplied target identity and provenance.
 - `config/oracles.toml` — Oracle definitions and exact-acceptance policy.
+- `config/rec98_pc98_calibration.toml` — pinned untrusted all-game regression
+  vector; never an exactness waiver.
 - `config/units.csv` — bounded code/data ownership and reconstruction state.
 - `config/evidence.csv` — replayable observations, commands, and digests.
 - `config/hypotheses.csv` — falsifiable claims and their current disposition.
@@ -161,8 +168,9 @@ contents, failure recovery, and all full digests.
 ## Status
 
 The control plane, target ingestion, locally attested Borland build chain, OMF
-integrity Oracle, and ReC98 TH01 cold-build calibration are operational.  No
-authored TH04 function is claimed as reconstructed or exact yet.  Run:
+integrity Oracle, and repeated ReC98 TH01-TH05 cold-build calibration are
+operational.  No authored TH04 function is claimed as reconstructed or exact
+yet.  Run:
 
 ```bash
 python3 scripts/status.py

@@ -67,6 +67,15 @@ Use:
 python3 scripts/compare_artifacts.py TARGET CANDIDATE --json
 ```
 
+For a locally cold-built pinned ReC98 control, run
+`scripts/survey_rec98_outputs.py SOURCE` first.  Its default exact gate rejects
+any raw mismatch; `--gate calibration` only proves that the known 20-output
+failure/pass vector, per-game OMF identities, and source/build receipts were
+reproduced.  The compact vector exposes objective size, header, relocation,
+program, and overlay counts so the next experiment can be routed without
+mistaking similarity for acceptance.  Add `--compact` for the normal agent
+view; omit it only when the verbose per-byte comparison receipt is needed.
+
 The current comparator covers whole MZ/COM artifacts; the OMF adapter validates
 record integrity and exposes producer/dependency metadata plus raw and narrowly
 timestamp-normalized identities.  Unit-level code/data/fixup adapters still
