@@ -1,5 +1,16 @@
 # 東方幻想郷 ～ Lotus Land Story
 
+<p align="center">
+  <img
+    src="resources/title-screen.png"
+    width="640"
+    alt="Original Japanese TH04 title screen">
+</p>
+
+<p align="center">
+  <img src="resources/progress.svg" alt="TH04 exact reconstruction progress">
+</p>
+
 This repository is an agent-first reconstruction of the original Japanese
 PC-98 release of **Touhou 4: Lotus Land Story (TH04)**.  The immediate goal is a
 reproducible, evidence-backed source reconstruction of `OP.EXE`, `MAIN.EXE`,
@@ -250,6 +261,7 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 - `docs/RUNTIME.md` — optional headless DOSBox-X install, attestation, private
   HDI boot smoke, and deterministic Runtime Oracle requirements.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
+- `docs/PROGRESS.md` — conservative source-present and exact-byte totals.
 - `docs/REFERENCE_ANALYSIS.md` — findings from TH08/TH095/TH105 and ReC98.
 - `docs/KNOWLEDGE_BASE.md` — scoped durable facts, hazards, and negative results.
 - `.agents/skills/` — task routers for RE, Oracle work, matching, and runtime.
@@ -260,9 +272,10 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 The control plane, target ingestion, locally attested Borland build chain, OMF
 integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
 attestation, repeated ReC98 TH01-TH05 cold-build calibration, and optional
-headless PC-98 startup/HDI boot smoke are operational. No deterministic TH04
-runtime scenario and no authored TH04 function is claimed as accepted or exact
-yet. Run:
+headless PC-98 startup/HDI boot smoke are operational. Reconstruction has
+started with one reviewed, source-present 26-byte `MAIN.EXE` function. It is
+not promoted to `exact`; no deterministic TH04 runtime scenario exists yet.
+Run:
 
 ```bash
 python3 scripts/status.py

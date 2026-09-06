@@ -3,9 +3,10 @@
 ## Phase
 
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
-the optional DOSBox-X headless host smoke are ready for handoff. No
-deterministic TH04 runtime scenario has been authored, and no TH04 source or
-unit has been reconstructed or accepted yet.
+the optional DOSBox-X headless host smoke are ready for handoff.
+Reconstruction has started with one reviewed source-present `MAIN.EXE` unit.
+No unit is promoted to exact and no deterministic TH04 runtime scenario has
+been authored.
 
 ## Verified locally
 
@@ -102,6 +103,13 @@ unit has been reconstructed or accepted yet.
   retained privately below `.analysis/runtime/`, revalidated by SHA-256, and
   enters the DOSBox-X PC-98 image boot path under a hard time limit. This is an
   infrastructure smoke only, not a deterministic TH04 behavior observation.
+- `slowdown_frame_delay` is reviewed at target file `0xC2F2`, load-module
+  `0xAAF2`, link/Ghidra `1AAF:0002`, with a complete 26-byte function extent
+  and no overlapping MZ relocation. The pinned TC4J candidate output is 26/26
+  bytes identical to the target and its OMF/map checks pass. Maintained source
+  now exists at `src/th04/main/slowdown.cpp`, but the ledger remains
+  `source-present` until a complete checked-in unit replay satisfies every
+  exact Oracle.
 
 ## Open provenance issue
 
@@ -125,14 +133,8 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Next bounded work
 
-Infrastructure work is complete for the current scope. When reconstruction is
-explicitly started:
-
-1. Extend the headless Ghidra private export with a bounded provisional
-   function/xref inventory when the reconstruction phase begins.
-2. Generate the initial artifact/segment/function inventory without making
-   source or exactness claims.
-3. Use bounded compiler/ABI probes and map/OMF evidence to separate
-   compiler-library ownership from game-authored units.
-4. Reconcile the cold-built ReC98 TH04 maps/link responses against the pinned
-   target topology before selecting a first bounded reconstruction unit.
+Continue one small `MAIN.EXE` unit at a time. Prefer functions already isolated
+by both target control flow and the cold linker map; keep imported source at
+`source-present` until the existing exact requirements can be replayed without
+special-case evidence. Do not broaden runtime work until a reconstruction
+claim actually needs it.
