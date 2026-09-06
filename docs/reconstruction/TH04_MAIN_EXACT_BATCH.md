@@ -11,7 +11,7 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 The current reviewed results are:
 
 - authored C/C++ bytes: **12,448 / 12,494 = 99.631823% exact**;
-- authored functions: **99 / 101 = 98.019802% exact**;
+- authored functions: **110 / 112 = 98.214286% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -40,10 +40,13 @@ run:
    normalized identity to repeat across both cold builds; and
 10. fails the aggregate cohort if any selected unit fails any dimension.
 
-The development acceptance receipt is private at
+The checked-in acceptance evidence was produced from the private
 `.analysis/reconstruction/exact-unit-replay/gptweb-accept60-002/receipt.json`.
-It contains 60 default-selected units and passes in both cold materializations.
-Three known `dialog` relocation-order investigations are marked
+A later pre-commit replay at
+`.analysis/reconstruction/exact-unit-replay/gptweb-functionreview-001/receipt.json`
+again passed the same 60 default-selected units in both cold materializations
+after the manual function-review tooling changes. Three known `dialog`
+relocation-order investigations are marked
 `default_enabled = false`; they remain individually replayable with `--unit`
 and are never silently accepted by the default aggregate.
 
@@ -145,18 +148,29 @@ claim.
 - a public symbol at the same start in the locally rebuilt TLINK map; and
 - one exact authored byte owner from `config/units.csv`.
 
-Promotion additionally requires Ghidra's complete body to be contiguous and
-wholly contained inside that exact byte owner. This strict rule accepts 99
-functions and rejects 13 candidate starts in the current screen; two of those
-13 are the already reviewed nonexact `snd_pmd_resident` and `snd_load`.
-`bullets_update` is kept provisional before the strict screen because it crosses
-the excluded 17-byte handwritten-call gap. Eleven other non-contiguous target
-bodies remain provisional rather than being inferred from next-function
-addresses.
+Automatic promotion still requires Ghidra's complete body to be contiguous
+and wholly contained inside that exact byte owner; this accepts 99 functions.
+A second, explicit manual-review path handles analysis false negatives without
+trusting Ghidra's body set. Each `[[reviewed_exact]]` entry in
+`config/th04_main_function_review.toml` must agree with the same TLINK public and
+exact owner, Ghidra's body min/max span, and a raw `ndisasm -b16` pass that tiles
+every byte through the terminal RET/RETF. For indirect switches the checked-in
+reviewer additionally parses the target jump table and requires every target to
+be a decoded instruction start inside the function span. Two regression tests
+force this switch gate to fail closed on a target that lands between
+instructions.
 
-The resulting denominator is therefore 101 reviewed functions: 99 exact plus
-the two explicit nonexact sound functions. Twelve additional candidates remain
-visible in the ledger but do not enter the reviewed denominator.
+This manual gate promotes 11 Ghidra body-construction false negatives: four
+straight-line/overlap cases (`player_pos_update_and_clamp`, both large title/BGM
+overlay functions, and `overlay_popup_update_and_render`), `boss_items_drop`,
+`bullet_velocity_and_angle_set`, and five compiler-switch functions whose jump
+tables sit immediately after their bodies. `bullets_update` remains provisional
+because it crosses the excluded 17-byte handwritten-call gap; an exact owner on
+both sides cannot prove the missing middle.
+
+The resulting denominator is therefore 112 reviewed functions: 110 exact plus
+the two explicit nonexact sound functions. One additional candidate,
+`bullets_update`, remains provisional and outside the denominator.
 
 ## Reusable Borland lessons
 
@@ -172,6 +186,9 @@ visible in the ledger but do not enter the reviewed denominator.
   segment call still naturally becomes a 5-byte `CALLF` rather than the
   target's `PUSH CS` plus near `CALL`. Do not replace that negative result with
   byte-oriented assembly.
-- Exact module bytes do not prove Ghidra's internal function bodies. Keep
-  switch tables, shared tails, and non-contiguous bodies provisional until
-  independently reviewed.
+- Exact module bytes do not prove Ghidra's internal function bodies. Ghidra can
+  create overlapping decodes or stop at an indirect switch even when the raw
+  target has a complete function. Override such cases only with the checked-in
+  manual gate: exact owner + TLINK public + matching min/max + gap-free raw
+  decode; switch tables additionally require every target to be an instruction
+  start inside the span. Shared tails and nonexact gaps remain provisional.

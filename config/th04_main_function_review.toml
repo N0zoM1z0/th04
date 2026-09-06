@@ -22,3 +22,131 @@ file_offset = "0x14C96"
 size = "0xEA"
 name = "snd_load"
 reason = "Forty-one-byte middle gap remains nonexact, including the target 89 C3 versus compiler 8B D8 MOV BX,AX encoding and upstream inline-assembly context."
+
+[[reviewed_exact]]
+id = "th04-main-fn-20950"
+address = "0x20950"
+file_offset = "0x12150"
+size = "0x38"
+name = "player_pos_update_and_clamp()"
+owner_unit = "th04-main-module-th04-player-p-cpp-10950"
+evidence_id = "ev-th04-main-player-pos-manual-boundary-v1"
+reason = "Ghidra created an overlapping decode at 0x20975 and reported 55/56 body bytes. Raw 16-bit decoding tiles all 56 bytes from the TLINK public through RET at 0x20987; the entire span is the exact player_p.cpp contribution."
+
+[[reviewed_exact]]
+id = "th04-main-fn-212d8"
+address = "0x212D8"
+file_offset = "0x12AD8"
+size = "0x1ED"
+name = "overlay_popup_update_and_render()"
+owner_unit = "th04-main-module-th04-hud-ovrl-cpp-10d4b"
+evidence_id = "ev-th04-main-overlay-popup-manual-boundary-v1"
+reason = "Ghidra omitted seven bytes around a relocation-backed far call/jump and reported 486/493 body bytes. Raw 16-bit decoding tiles the full public span through RET at 0x214C4 inside the exact hud_ovrl.cpp owner."
+
+[[reviewed_exact]]
+id = "th04-main-fn-2cfc8"
+address = "0x2CFC8"
+file_offset = "0x1E7C8"
+size = "0x205"
+name = "bullet_velocity_and_angle_set(int)"
+owner_unit = "th04-main-module-th04-bullet-a-cpp-1cc33"
+evidence_id = "ev-th04-main-bullet-velocity-manual-boundary-v1"
+reason = "Ghidra omitted fourteen ordinary instructions bytes in one switch case and reported 503/517 body bytes. Raw 16-bit decoding tiles the complete public span through RET 2 at 0x2D1CA inside exact bullet_a.cpp bytes."
+
+[[reviewed_exact]]
+id = "th04-main-fn-2e692"
+address = "0x2E692"
+file_offset = "0x1FE92"
+size = "0x61"
+name = "boss_items_drop()"
+owner_unit = "th04-main-boss-prefix"
+evidence_id = "ev-th04-main-boss-items-drop-manual-boundary-v1"
+reason = "Ghidra omitted the middle of the five-iteration item-drop loop and reported 69/97 body bytes. Raw 16-bit decoding tiles the complete 97-byte public span through RET at 0x2E6F2 inside exact maintained boss-prefix bytes."
+
+[[reviewed_exact]]
+id = "th04-main-fn-20f36"
+address = "0x20F36"
+file_offset = "0x12736"
+size = "0x25F"
+name = "overlay_titles_update_and_render()"
+owner_unit = "th04-main-module-th04-hud-ovrl-cpp-10d4b"
+evidence_id = "ev-th04-main-overlay-titles-manual-boundary-v1"
+reason = "Ghidra omitted an 80-byte straight-line block containing ordinary pushes, calls, and arithmetic after 0x210B6. Raw 16-bit decoding tiles the complete 607-byte public span through RET at 0x21194 inside exact hud_ovrl.cpp bytes."
+
+[[reviewed_exact]]
+id = "th04-main-fn-21195"
+address = "0x21195"
+file_offset = "0x12995"
+size = "0x143"
+name = "overlay_boss_bgm_update_and_rend()"
+owner_unit = "th04-main-module-th04-hud-ovrl-cpp-10d4b"
+evidence_id = "ev-th04-main-overlay-boss-bgm-manual-boundary-v1"
+reason = "Ghidra omitted a 41-byte straight-line block containing ordinary calls and rendering setup. Raw 16-bit decoding tiles the complete 323-byte public span through RET at 0x212D7 inside exact hud_ovrl.cpp bytes."
+
+[[reviewed_exact]]
+id = "th04-main-fn-20898"
+address = "0x20898"
+file_offset = "0x12098"
+size = "0x83"
+name = "player_move(unsigned int)"
+owner_unit = "th04-main-module-th04-player-m-cpp-10898"
+evidence_id = "ev-th04-main-player-move-switch-boundary-v1"
+reason = "Ghidra stopped at the indirect switch dispatcher and omitted the case blocks. The 13-entry compiler compare/near-jump tables follow the body in the same exact player_m.cpp owner; every decoded jump target is an instruction start inside the 131-byte function span."
+compare_table_address = "0x2091C"
+jump_table_address = "0x20936"
+jump_table_count = 13
+cs_base = "0x1AAF0"
+
+[[reviewed_exact]]
+id = "th04-main-fn-2c736"
+address = "0x2C736"
+file_offset = "0x1DF36"
+size = "0x180"
+name = "bullet_update_special(bullet_t near&)"
+owner_unit = "th04-main-bullet-u-prefix"
+evidence_id = "ev-th04-main-bullet-update-special-switch-boundary-v1"
+reason = "Ghidra stopped at the indirect switch dispatcher and omitted nine case blocks. The 9-entry near-jump table begins immediately after the function span, and every target is a raw instruction start inside exact bullet_u prefix bytes."
+jump_table_address = "0x2C8B6"
+jump_table_count = 9
+cs_base = "0x23A90"
+
+[[reviewed_exact]]
+id = "th04-main-fn-2ccb8"
+address = "0x2CCB8"
+file_offset = "0x1E4B8"
+size = "0x8D"
+name = "tune_for_hard()"
+owner_unit = "th04-main-module-th04-bullet-a-cpp-1cc33"
+evidence_id = "ev-th04-main-tune-hard-switch-boundary-v1"
+reason = "Ghidra omitted switch case blocks. The 10-entry compare and near-jump tables follow the function in exact bullet_a.cpp bytes; all jump targets are instruction starts within the 141-byte span."
+compare_table_address = "0x2CD46"
+jump_table_address = "0x2CD5A"
+jump_table_count = 10
+cs_base = "0x23A90"
+
+[[reviewed_exact]]
+id = "th04-main-fn-2cd6e"
+address = "0x2CD6E"
+file_offset = "0x1E56E"
+size = "0x7B"
+name = "tune_for_lunatic()"
+owner_unit = "th04-main-module-th04-bullet-a-cpp-1cc33"
+evidence_id = "ev-th04-main-tune-lunatic-switch-boundary-v1"
+reason = "Ghidra omitted switch case blocks. The 10-entry compare and near-jump tables follow the function in exact bullet_a.cpp bytes; all jump targets are instruction starts within the 123-byte span."
+compare_table_address = "0x2CDEA"
+jump_table_address = "0x2CDFE"
+jump_table_count = 10
+cs_base = "0x23A90"
+
+[[reviewed_exact]]
+id = "th04-main-fn-2ce12"
+address = "0x2CE12"
+file_offset = "0x1E612"
+size = "0x9D"
+name = "tune_for_playperf()"
+owner_unit = "th04-main-module-th04-bullet-a-cpp-1cc33"
+evidence_id = "ev-th04-main-tune-playperf-switch-boundary-v1"
+reason = "Ghidra omitted direct switch case blocks. The 11-entry near-jump table starts immediately after the function span in exact bullet_a.cpp bytes; every target is a raw instruction start within the 157-byte function."
+jump_table_address = "0x2CEAF"
+jump_table_count = 11
+cs_base = "0x23A90"

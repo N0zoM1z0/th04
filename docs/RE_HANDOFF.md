@@ -6,7 +6,7 @@ Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
 accepted: reviewed authored C/C++ bytes are 12,448 / 12,494 (99.631823%)
-exact, and reviewed authored functions are 99 / 101 (98.019802%) exact. Nine
+exact, and reviewed authored functions are 110 / 112 (98.214286%) exact. Nine
 standalone original-style ASM units totaling 1,489 bytes are separately exact
 and are not counted in the authored C/C++ percentage. No deterministic TH04
 runtime scenario has been authored.
@@ -124,6 +124,9 @@ runtime scenario has been authored.
   authored units/regions; 12,448 bytes across 51 units/regions are exact. The
   only reviewed byte gaps are the five-byte `LES` in `snd_pmd_resident` and a
   41-byte middle region in `snd_load`.
+- The latest function-review pre-commit cold replay `gptweb-functionreview-001`
+  passed all 60 default exact byte owners in two isolated materializations;
+  manual function-boundary promotion did not alter source/code generation.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
   from byte ownership. A strict target-Ghidra + local-TLINK-public + exact-owner
   screen accepts 99 contiguous complete functions. The two original sound
@@ -165,7 +168,9 @@ Preserve the >98% authored function/byte baseline with the default two-cold
 replay before changing shared source or toolchain surfaces. The smallest
 remaining exactness investigations are the five-byte `snd_pmd_resident` `LES`
 and the 41-byte `snd_load` middle region; do not solve either with inline
-assembly or byte injection. In parallel, investigate the three `dialog`
-relocation-order blockers at the OMF FIXUPP/source-emission level and review the
-12 non-contiguous/provisional function bodies one at a time. Runtime work can
-stay deferred until a reconstruction claim actually needs behavioral evidence.
+assembly or byte injection. Eleven former Ghidra non-contiguous-body candidates
+now pass replayable manual raw/switch-table boundary review; only
+`bullets_update` remains provisional because it crosses a nonexact handwritten-
+call gap. In parallel, investigate the three `dialog` relocation-order blockers
+at the OMF FIXUPP/source-emission level. Runtime work can stay deferred until a
+reconstruction claim actually needs behavioral evidence.
