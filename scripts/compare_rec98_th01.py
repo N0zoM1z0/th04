@@ -5,16 +5,16 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
-import hashlib
 import json
 from pathlib import Path
 import sys
 import tomllib
 
-from lib.omf import OMFError, normalize_dependency_timestamps, parse_omf
+from lib.omf import OMFError, parse_omf
 from lib.pc98 import compare_blobs, digest_file
+from lib.reconstruction import comparison_vector, omf_identities
 from lib.targets import find_artifact, load_target_manifest, read_verified_artifact
-from lib.toolchain import ToolchainError, file_set_identity
+from lib.toolchain import ToolchainError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,53 +26,6 @@ MAPPING = (
     ("th01-fuuin-smoke", "fuuin.exe"),
     ("th01-zunsoft-smoke", "zunsoft.com"),
 )
-
-
-def vector(comparison: dict[str, object]) -> dict[str, object]:
-    result: dict[str, object] = {
-        "raw_exact": comparison["verdict"]["raw_exact"],
-        "format_same": comparison["formats"]["same"],
-        "routing_hints": comparison.get("routing_hints", []),
-    }
-    if comparison["formats"]["left"] == "mz" and comparison["formats"]["same"]:
-        mz = comparison["mz"]
-        result.update(
-            {
-                "format_integrity": comparison["format_integrity"]["both_valid"],
-                "header_fields_exact": mz["header_fields"]["exact"],
-                "header_bytes_exact": mz["header_bytes"]["exact"],
-                "relocations_ordered_exact": mz["relocations"]["ordered_exact"],
-                "relocations_multiset_exact": mz["relocations"]["multiset_exact"],
-                "relocation_site_values_exact": mz["relocations"]["site_values"]["exact"],
-                "program_image_exact": mz["program_image"]["exact"],
-                "normalized_program_exact": mz["relocation_normalized_program"]["exact"],
-                "overlay_exact": mz["overlay"]["exact"],
-            }
-        )
-        result["rec98_rule1_core_dimensions_pass"] = bool(
-            result["program_image_exact"]
-            and result["relocations_multiset_exact"]
-        )
-    else:
-        result["rec98_rule1_core_dimensions_pass"] = bool(result["raw_exact"])
-    return result
-
-
-def omf_identities(root: Path, paths: list[Path]) -> dict[str, object]:
-    raw = file_set_identity(root, paths)
-    normalized = file_set_identity(
-        root,
-        paths,
-        digest_function=lambda path: hashlib.sha256(
-            normalize_dependency_timestamps(path.read_bytes())
-        ).hexdigest(),
-    )
-    return {
-        "count": raw.file_count,
-        "total_size": raw.total_size,
-        "raw_sha256": raw.sha256,
-        "dependency_timestamp_normalized_sha256": normalized.sha256,
-    }
 
 
 def main() -> int:
@@ -105,7 +58,7 @@ def main() -> int:
             return 1
         candidate = candidate_path.read_bytes()
         comparison = compare_blobs(target, candidate)
-        observed = vector(comparison)
+        observed = comparison_vector(comparison)
         entry = {
             "id": artifact_id,
             "filename": filename,

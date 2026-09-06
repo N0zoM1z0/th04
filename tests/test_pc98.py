@@ -9,6 +9,7 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from lib.pc98 import compare_blobs, parse_fat_boot_sector, parse_mz
+from lib.reconstruction import comparison_vector
 from lib.targets import TargetError
 from export_analysis_bundle import private_output
 from mine_shared_blocks import find_shared_blocks
@@ -147,6 +148,24 @@ class MZTests(unittest.TestCase):
         self.assertTrue(overlay_result["mz"]["program_image"]["exact"])
         self.assertFalse(overlay_result["mz"]["overlay"]["exact"])
         self.assertIn("overlay-only-difference", overlay_result["routing_hints"])
+
+    def test_upstream_policy_view_cannot_promote_a_header_mismatch(self) -> None:
+        data = synthetic_mz()
+        changed_header = bytearray(data)
+        changed_header[0x0A] ^= 1
+        vector = comparison_vector(compare_blobs(data, bytes(changed_header)))
+        self.assertTrue(vector["rec98_rule1_core_dimensions_pass"])
+        self.assertFalse(vector["header_fields_exact"])
+        self.assertFalse(vector["raw_exact"])
+        self.assertEqual(vector["program_differing_bytes"], 0)
+        self.assertEqual(vector["raw_size_delta"], 0)
+
+    def test_truncated_mz_candidate_is_a_rejection_vector(self) -> None:
+        vector = comparison_vector(compare_blobs(synthetic_mz(), b"MZ"))
+        self.assertFalse(vector["raw_exact"])
+        self.assertFalse(vector["format_integrity"])
+        self.assertFalse(vector["rec98_rule1_core_dimensions_pass"])
+        self.assertEqual(vector["routing_hints"], ["invalid-mz-structure"])
 
     def test_com_comparison(self) -> None:
         left = b"\x90\xCD\x20"

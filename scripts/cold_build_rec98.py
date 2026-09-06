@@ -14,12 +14,15 @@ import subprocess
 import sys
 
 from lib.pc98 import digest_file
-from lib.toolchain import tree_identity
+from lib.reconstruction import identity_record
+from lib.targets import load_target_manifest
+from lib.toolchain import file_set_identity, tree_identity
 
 
 ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = ROOT / "_reference" / "ReC98"
 REVISION = "b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
+TARGETS = ROOT / "config" / "targets.toml"
 
 
 def command_output(command: list[str], cwd: Path) -> str:
@@ -35,6 +38,19 @@ def inventory(root: Path, pattern: str) -> list[dict[str, object]]:
         }
         for path in sorted(root.glob(pattern))
         if path.is_file()
+    ]
+
+
+def pc98_output_paths(source: Path) -> list[Path]:
+    """Map every private calibration artifact to its ReC98 output path."""
+
+    manifest = load_target_manifest(TARGETS)
+    return [
+        source
+        / "bin"
+        / str(artifact["game"])
+        / Path(str(artifact["private_path"])).name
+        for artifact in manifest["artifacts"]
     ]
 
 
@@ -106,7 +122,7 @@ def main() -> int:
     finished = datetime.now(timezone.utc)
 
     receipt = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "untrusted-rec98-cold-build-candidate",
         "cold": True,
         "source_materialization": "git-archive",
@@ -138,6 +154,8 @@ def main() -> int:
         "th01_outputs": inventory(source, "bin/th01/*"),
         "th01_maps": inventory(source, "obj/th01/*.map"),
         "th01_link_responses": inventory(source, "obj/th01/*.@l"),
+        "pc98_maps": inventory(source, "obj/th0[1-5]/*.map"),
+        "pc98_link_responses": inventory(source, "obj/th0[1-5]/*.@l"),
     }
     if (source / "bin" / "th01").is_dir():
         identity = tree_identity(source / "bin" / "th01")
@@ -146,6 +164,19 @@ def main() -> int:
             "file_count": identity.file_count,
             "total_size": identity.total_size,
         }
+    candidate_paths = pc98_output_paths(source)
+    if all(path.is_file() for path in candidate_paths):
+        receipt["pc98_outputs"] = [
+            {
+                "path": path.relative_to(source).as_posix(),
+                "size": path.stat().st_size,
+                "sha256": digest_file(path),
+            }
+            for path in sorted(candidate_paths)
+        ]
+        receipt["pc98_output_identity"] = identity_record(
+            file_set_identity(source / "bin", candidate_paths)
+        )
     receipt_path = run_root / "build-receipt.json"
     receipt_path.write_text(
         json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -155,10 +186,13 @@ def main() -> int:
         return completed.returncode
     print(f"ReC98 cold build PASS (candidate only): {run_root}")
     print(f"receipt: {receipt_path}")
-    print("next: python3 scripts/compare_rec98_th01.py " + str(source))
+    print(
+        "next: python3 scripts/survey_rec98_outputs.py "
+        + str(source)
+        + " --gate calibration"
+    )
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
-

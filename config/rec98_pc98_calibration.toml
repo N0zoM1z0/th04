@@ -1,0 +1,214 @@
+schema_version = 1
+source_revision = "b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
+source_archive_size = 11079680
+source_archive_sha256 = "9f7a4eb17f24ae2d99adaba4320f6c46f4fc8d659f9b784f6d8e5f3af99bf705"
+policy = "Pinned regression data for the untrusted ReC98 candidate. Matching this file proves repeatability of the known comparison vector, never target exactness."
+
+[candidate_outputs]
+count = 20
+total_size = 1609520
+sha256 = "80127bc4e3fdee85cbd29e8f3f34822f6f8b5c3adc9fed883f88e96e3603e25d"
+
+[omf]
+all_object_count = 416
+games_sha256 = "65b5c13ff471e6ef7c4f0cf6c62984197feb129cefc8617835a7991fad808152"
+
+[omf.games.th01]
+count = 65
+dependency_timestamp_normalized_sha256 = "0ae28223b44f4bf295eaaafd713a99bf2c1e538515f3e5e49e6052a0c0159188"
+
+[omf.games.th02]
+count = 57
+dependency_timestamp_normalized_sha256 = "e9e135a1dcb1a853dcfcc5f3649fc88c9c59e7f7367eaed08326066a77c3f9b7"
+
+[omf.games.th03]
+count = 54
+dependency_timestamp_normalized_sha256 = "10fe0d24e480a0aa6748966e514e9ed6ebbf711a3f42ae8fc285eedb7fefa496"
+
+[omf.games.th04]
+count = 85
+dependency_timestamp_normalized_sha256 = "0de0cff5b38f81f8bdb1521c979aa31c5f4148c0ed8b05bf4077c18fadad59ab"
+
+[omf.games.th05]
+count = 89
+dependency_timestamp_normalized_sha256 = "91aa01109f4360e35aa9141a41cfe944119d32329e01a5b03f457f6d596c70bf"
+
+[[artifacts]]
+id = "th04-op"
+candidate_size = 73636
+candidate_sha256 = "cb9b1c6cbd6b2c7bad6763fabd106c3cf451b1c20efef0f1fcfd3e3a47c0cdaa"
+vector_sha256 = "eae0a8ad73bec9f05a8b771488a0206c7e63d62282b7c96f33be2890aaf5fc8a"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference", "relocation-site-set-difference"]
+
+[[artifacts]]
+id = "th04-main"
+candidate_size = 152462
+candidate_sha256 = "046af078bf111057feb96989f0d06930cb4baffe311a667bb2feed251b218862"
+vector_sha256 = "e32af6bb295de79807dabd0840c422a88ec2c2b7ffcd7867a0b4c5b3cb7b7ed7"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference"]
+
+[[artifacts]]
+id = "th04-maine"
+candidate_size = 65998
+candidate_sha256 = "7e6b78861613cdd06d72e2f8584268444642b31abcc35d686c0ed1f4cc668f70"
+vector_sha256 = "dc53270edc30c22f479e5c19e6d94e786b09b4d2b7e00a186d3ec48d724859c3"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference", "relocation-site-set-difference"]
+
+[[artifacts]]
+id = "th04-zun"
+candidate_size = 13422
+candidate_sha256 = "baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e"
+vector_sha256 = "76ce5172eb687a1a4455a47c47e18d18c8e7a555edb686ec31e49a54965683a0"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["format-or-target-mismatch"]
+
+[[artifacts]]
+id = "th01-op-smoke"
+candidate_size = 82968
+candidate_sha256 = "c75d85fb2a73b077f73a4145efab283c73f8a976e9e1c2560cea1731b9f1d2f7"
+vector_sha256 = "4ab2161d23f9f36f37990d3fb0918d6413368f19ca9580eaa5477b5b0aa5f8d9"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = true
+routing_hints = ["relocation-table-order-or-header-padding-difference"]
+
+[[artifacts]]
+id = "th01-reiiden-smoke"
+candidate_size = 238612
+candidate_sha256 = "581dab847e8ec05f219c0eec5bea046b8f6201809f604e46ffc7b0304a48b128"
+vector_sha256 = "141e0cb57592e60e9e345908fec48db4958dffd082019edb66fb6ae45680dfac"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = true
+routing_hints = ["relocation-table-order-or-header-padding-difference"]
+
+[[artifacts]]
+id = "th01-fuuin-smoke"
+candidate_size = 86232
+candidate_sha256 = "2d230be820a9ccfa097f26fc079ccb6f8fcb8c56f687ee59202e384760f1f3d9"
+vector_sha256 = "4b8519885933fca632d8c5c2b2423b0f844971c7ae281b52098a48674fd59d6c"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = true
+routing_hints = ["header-only-difference"]
+
+[[artifacts]]
+id = "th01-zunsoft-smoke"
+candidate_size = 10096
+candidate_sha256 = "beeb86dc055c585a32f4500c9eabb2e6cb1e0537bcdbc5f3763ebefa4308e297"
+vector_sha256 = "d137a62dc8031c4659b17ff71382bd14e02e7df9aa9df4bb302f3fd50cae0083"
+raw_exact = true
+rec98_rule1_core_dimensions_pass = true
+routing_hints = ["exact"]
+
+[[artifacts]]
+id = "th02-op-smoke"
+candidate_size = 63224
+candidate_sha256 = "5e31c6af94fb56e543ee5964e0013efefdb217a38f8e1168ea8ed5d21975ef0f"
+vector_sha256 = "5659c71d7dce1aaee74ac3300e730b6a5f992b2269d1569118d55f53e8a84880"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference"]
+
+[[artifacts]]
+id = "th02-main-smoke"
+candidate_size = 134246
+candidate_sha256 = "c59ad4b430a3af4dd954495f531f5c0d0a8f05c0607e26fb5d2f1b6c9653386c"
+vector_sha256 = "dcc42101e9c3eb8571136c146d3e89f9e107306f72efd35a1d453902b526eab2"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference"]
+
+[[artifacts]]
+id = "th02-maine-smoke"
+candidate_size = 60466
+candidate_sha256 = "cead42e433a031dc813b0366da127f857060789abde223ddee24a433044fa05f"
+vector_sha256 = "9194af4dbc8f14099492ecd0d80a02d08750ba45ea6eefed6c8dbfe7801926d5"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference"]
+
+[[artifacts]]
+id = "th02-zun-smoke"
+candidate_size = 19984
+candidate_sha256 = "907390e0ab094d157027d09156c02b5a503dbb343480da2881c0752e5c55ae4b"
+vector_sha256 = "0abf8175c391cdec5de810e1272d8a667a0595821faacb5a782f1555fc7f74d3"
+raw_exact = true
+rec98_rule1_core_dimensions_pass = true
+routing_hints = ["exact"]
+
+[[artifacts]]
+id = "th03-op-smoke"
+candidate_size = 63354
+candidate_sha256 = "9f2e2af591645963d802489b45f9355a1e9f9b4da4b49ab0767f5be069ec204d"
+vector_sha256 = "12345d21d69a9f09f5d611665a56ab9060eb46355c1163f3e89a1c2cdfc12396"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference", "relocation-site-set-difference"]
+
+[[artifacts]]
+id = "th03-main-smoke"
+candidate_size = 132322
+candidate_sha256 = "7d611be6b3ca6bf02225656dcdb7238d9b55a63ff1afdb3f8853dfdf73ffb269"
+vector_sha256 = "536c0062c634406cf548be1fdfcdb27ab99075ba5707147c74b57d6c7dd060e4"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference"]
+
+[[artifacts]]
+id = "th03-mainl-smoke"
+candidate_size = 67372
+candidate_sha256 = "4a5969e3be052fd8f82905936cadab3e2c0bec7761287c1765f3b7fe3df9dcd7"
+vector_sha256 = "66cc5665298519c4bcce06cd6f2e6310fff9095655adccb35a036b5e208e2579"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference", "relocation-site-set-difference"]
+
+[[artifacts]]
+id = "th03-zun-smoke"
+candidate_size = 22812
+candidate_sha256 = "c036f2df54f81ff9e9950d2a397576a4c6c08314ed601c8f972fc83e5bf384b8"
+vector_sha256 = "5074eb3ecdafa9ead58427aef1fb4d7a72b2617b0e0c614c3bd78b2c71525782"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["format-or-target-mismatch"]
+
+[[artifacts]]
+id = "th05-op-smoke"
+candidate_size = 78284
+candidate_sha256 = "732f9659e987c1837a6def7b3d83b3b150b39c991928bba14eadec09272b4eb6"
+vector_sha256 = "a2d8dec89c9aeadcf81381d3fe817fcdd0a68b8b15f5e5a14606523c8da6deac"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference", "relocation-site-set-difference"]
+
+[[artifacts]]
+id = "th05-main-smoke"
+candidate_size = 148492
+candidate_sha256 = "630b909739501bab6a9ef2c2b65e517332277c8ea66895af2ee4ba9d3e04d380"
+vector_sha256 = "31beaab6b0ff79cb000d6ed31a9bdc49d7d37866e9d48e4af6fee175b21714d1"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference", "relocation-site-set-difference"]
+
+[[artifacts]]
+id = "th05-maine-smoke"
+candidate_size = 77422
+candidate_sha256 = "60352c7ebb454be48da8516d5647df6d757e0f2d5a6262dbb678167cb925f1a4"
+vector_sha256 = "4e78a81b9135ed426d8f42e045959d895ee0aea9b7ddaf1bc2060053db13914c"
+raw_exact = false
+rec98_rule1_core_dimensions_pass = false
+routing_hints = ["non-relocation-program-content-difference", "relocation-site-set-difference"]
+
+[[artifacts]]
+id = "th05-zun-smoke"
+candidate_size = 18116
+candidate_sha256 = "5044ae03f7c0333f37d88ef34e244502f90d7314287f6f387c07569e4e0b120e"
+vector_sha256 = "4c7b9475255e8065c0b207ee7bead60865f60e9d23acacf75ba82aa48cd2883e"
+raw_exact = true
+rec98_rule1_core_dimensions_pass = true
+routing_hints = ["exact"]

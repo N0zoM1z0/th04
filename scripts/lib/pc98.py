@@ -389,6 +389,7 @@ def compare_blobs(left: bytes, right: bytes) -> dict[str, Any]:
             "both_valid": False,
             "parse_error": str(error),
         }
+        result["routing_hints"] = ["invalid-mz-structure"]
         return result
 
     left_header = asdict(left_mz.header)
