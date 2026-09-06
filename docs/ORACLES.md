@@ -10,6 +10,12 @@ verdict vector instead of hiding evidence behind one similarity percentage.
 increase semantic confidence or localize a mismatch, but it cannot override a
 failed exact requirement.
 
+Exact evidence is artifact-scoped by default.  A passing row for another
+artifact—or a generic row with no artifact—cannot satisfy a unit's required
+gate.  Only `toolchain-identity` and `ledger-consistency` are deliberately
+global; compilation replay, OMF, layout, raw bytes, and cold replay must be
+attached to the same artifact as the exact unit.
+
 ## Layer 0: provenance and target identity
 
 Record the outer archive only in a private import receipt.  Public identity
@@ -81,6 +87,21 @@ and map digests, and observed output.
 A probe is independent only when it tests a hypothesis; target bytes pasted
 into source or assembly are circular evidence.
 
+Compiler output is checked one layer earlier than final MZ comparison.  The
+strict Intel OMF parser validates every record length and checksum, requires a
+single THEADR-to-MODEND module boundary with no trailing bytes, and extracts
+COMENT producer and dependency records.  The attestation probe must observe
+`TC86 Borland C++ 4.02`, `Turbo Assembler  Version 5.0`, and the pinned
+`dos.h` path.  These facts catch wrong-tool and wrong-include contamination;
+they do not prove that a source reconstruction or ABI hypothesis is correct.
+
+OMF reports keep raw and Borland-dependency-timestamp-normalized identities.
+Only the two 16-bit DOS time/date words in COMENT class `E9` are normalized,
+then the record checksum is recomputed and the stream reparsed.  Code, data,
+fixups, paths, producers, record order, and build-time strings remain exact.
+This lets an agent distinguish harmless file-metadata churn from genuine
+object changes without discarding either observation.
+
 ## Layer 5: runtime differential
 
 Once a deterministic harness exists, compare original and candidate with the
@@ -132,8 +153,17 @@ mutations into one representative of each available format/game.  Each
 mutation must fail raw exactness and trip its intended dimension.  This proves
 comparator behavior over the originals, not compiler/build reproduction.
 Public CI also uses synthetic MZ/COM fixtures so regression tests need no game
-data.  ReC98 build validation remains blocked until the exact toolchain is
-attested.
+data.
+
+The compiler/build calibration is now live.  Two cold source materializations
+of pinned ReC98 revision `b6ba5b0a529edbb31efdf8c0e939263804f8ee47`
+produced the same four TH01 outputs, and all 416 generated OMF objects passed
+strict framing and checksum validation.  Against the private original TH01
+targets, `ZUNSOFT.COM` is raw-exact while `OP.EXE`, `REIIDEN.EXE`, and
+`FUUIN.EXE` are rejected by stricter header and/or ordered-relocation checks.
+`config/rec98_th01_calibration.toml` pins this diagnostic vector so comparator
+changes must continue to produce it.  It cannot turn any rejection into an
+exact pass.
 
 ## Upstream quarantine and revalidation
 
@@ -147,6 +177,14 @@ TH04 target.  Then rebuild it locally from a clean tree with attested tools and
 inputs, compare the full configured extent and relocation/layout surfaces, and
 replay every affected accepted unit.  A local exact result is our evidence; the
 upstream claim is only provenance for where the candidate came from.
+
+The `upstream-policy-differential` Oracle explicitly records cases where an
+upstream comparator and this repository answer different questions.  ReC98's
+documented MZ rule accepts equal decompressed program images and unordered
+relocation sets; our full-file gate additionally preserves header bytes,
+ordered relocation entries, padding, overlays, and every raw byte.  A policy
+differential explains a result and guides tooling.  It is diagnostic-only and
+can never lower a required gate.
 
 ## Analysis accelerators are not acceptance Oracles
 

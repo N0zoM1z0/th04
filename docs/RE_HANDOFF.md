@@ -32,6 +32,20 @@ source or unit has been accepted yet.
   These are navigation anchors only, not boundary/source/exactness evidence.
 - Exact ledger promotion now requires every configured Oracle and rejects
   upstream, cross-game, external, or inference evidence as gate substitutes.
+- The local candidate build chain pins and validates TC4J media plus installed
+  BIN/INCLUDE/LIB/startup trees, TCC 4.02, TLINK 6.10, TASM32 5.0,
+  configuration files, Wine 8.0, and ReC98's MS-DOS Player P0281 binary.
+- Two execution-probe rounds produced identical C OMF, ASM OMF, map, and MZ
+  outputs.  Embedded OMF producers and the compiler's `dos.h` dependency agree
+  with the pinned installation; the linked DOS probe executes successfully.
+- An empty-clone bootstrap test independently downloaded and rebuilt the
+  complete private toolchain and passed all 16 identity/execution surfaces.
+- Two isolated ReC98 TH01 cold builds produced the same four final outputs.
+  All 416 generated OMF objects validate structurally and by checksum.
+- Strict target comparison accepts `ZUNSOFT.COM` exactly and rejects
+  `OP.EXE`, `REIIDEN.EXE`, and `FUUIN.EXE`: their program images match, but
+  header and/or ordered-relocation dimensions do not.  This is a pinned known
+  calibration vector, not an exactness waiver.
 
 ## Open provenance issue
 
@@ -41,20 +55,19 @@ confirmed against an independently sourced pristine dump.  Keep
 passes.  A ReC98 rebuild is useful toolchain/output calibration, but upstream
 status alone is not independent provenance or acceptance evidence.
 
-## Tool blockers
+## Remaining tool gaps
 
-- Turbo C++ 4.0J/TASM/TLINK are not installed or attested.
 - No DOSBox-X, Neko Project II debug build, IDA, or Ghidra headless backend is
   currently available on `PATH`.
 - `ndisasm`, GNU `objdump`, Wine, `unar`, and mtools are available.
 
 ## Next bounded work
 
-1. Attest/install the exact Borland toolchain and independently reproduce the
-   ReC98 TH01 outputs as untrusted positive-control candidates.
-2. Pass those locally built outputs through this repository's complete target,
-   MZ, relocation, layout, and raw-byte comparison stack.
-3. Select a headless 16-bit MZ analysis backend and build a reproducible TH04
+1. Repeat the attested cold-build/strict-comparison calibration across ReC98's
+   TH02-TH05 outputs, beginning with its partial TH04 candidate.
+2. Select a headless 16-bit MZ analysis backend and build a reproducible TH04
    database/export with segment:offset and relocation awareness.
-4. Generate the initial artifact/segment/function inventory without making
+3. Generate the initial artifact/segment/function inventory without making
    source or exactness claims.
+4. Use bounded compiler/ABI probes and map/OMF evidence to separate
+   compiler-library ownership from game-authored units.

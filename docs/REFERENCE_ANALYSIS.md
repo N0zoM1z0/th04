@@ -8,7 +8,7 @@ historical observations from current upstream state.
 | N0zoM1z0/th08 | `bd54d865ebbc9f7291b355d152b16cc4b7f5be59` | mature agent memory, exact ledgers, cold aggregate replay |
 | N0zoM1z0/th095 | `8adeea57830d63ad320a6c85be51f9069506ec34` | conservative in-progress workflow and independent Oracle policy |
 | N0zoM1z0/th105 | `fa8a4149eeba27e9a1c78ab3bb03d970ef4f8266` | origin/boundary uncertainty and non-contiguous ownership |
-| nmlgc/ReC98 | `b6ba5b0a529edbb31efdf8c0e939263804f8ee47` | PC-98/Turbo C++ knowledge and exact whole-image reference |
+| nmlgc/ReC98 | `b6ba5b0a529edbb31efdf8c0e939263804f8ee47` | PC-98/Turbo C++ knowledge and untrusted build candidate |
 | nmlgc/mzdiff | `02603e1b070a1cfe5f9c580d49b9eb28617aeb4a` | ReC98-linked MZ comparison implementation |
 | tsdko/98imgtools | `6c7a82a68addc5be2d4291a4bc98046a647b6235` | HDI geometry and PC-98 FAT-partition corroboration |
 
@@ -57,18 +57,28 @@ lists, launcher subprograms, large ASM slices, shared earlier-game source,
 `master.lib`, generated sprite data, and Borland runtime libraries.  Its
 project documentation states that the master branch is kept buildable to
 artifacts indistinguishable from the originals.  This repository has not yet
-reproduced that claim locally because the exact proprietary toolchain is not
-installed.
+accepted that broader claim: it has now rebuilt the pinned commit locally and
+found a concrete policy differential in the TH01 outputs.
 
 ## ReC98 Oracle assessment
 
-ReC98's reported strongest Oracle is the final linked artifact.  Its workflow
-reproduces the documented toolchain and ordering, then uses MZ comparison.  The
-linked `mzdiff` tool separately reports MZ header fields, bytes around the
-relocation table, relocation entries, and the program image; a clean result
-means no differences.  COM/container outputs require complete byte equality.
-Its long-lived repository and TH01 completion are exceptionally valuable
-candidate positive controls once independently cold-built here.
+ReC98's reported strongest Oracle is the final linked artifact under its
+documented
+[`Rule #1`](https://github.com/nmlgc/ReC98/blob/b6ba5b0a529edbb31efdf8c0e939263804f8ee47/CONTRIBUTING.md#rule-1):
+the decompressed program image and unordered set of
+relocations must not change.  It explicitly permits alternate encodings of
+identical x86 instructions and trailing zero padding.  The linked `mzdiff`
+tool reports several MZ dimensions but intentionally follows that policy; it
+is not equivalent to this repository's raw whole-file verdict.  COM/container
+outputs use complete byte equality.
+
+The local attested cold build demonstrates the distinction.  ReC98's
+`OP.EXE` and `REIIDEN.EXE` have exact program images and relocation multisets
+but different relocation order/header bytes; `FUUIN.EXE` has an exact program
+image and ordered relocations but a 1,504-byte larger header.  Our gate rejects
+all three.  `ZUNSOFT.COM` is raw-exact.  Repeating the cold build produced the
+same candidate vector, so these are stable comparator-policy observations
+rather than a transient build failure.
 
 The gaps for an autonomous agent are control-plane gaps, not a criticism of
 the reconstruction result:
@@ -78,7 +88,8 @@ the reconstruction result:
   claim to a target/tool/output digest;
 - progress dimensions (RE/finalized/PI) are editorial metrics, not raw exact
   unit states;
-- mzdiff is a helpful display tool but has no JSON schema, mismatch taxonomy,
+- mzdiff is a helpful policy-specific display tool but has no JSON schema,
+  strict ordered-relocation/full-header gate, mismatch taxonomy,
   unit ownership, instruction/CFG/ABI analysis, or runtime differential layer;
 - build success and whole-image equality do not independently test semantic
   hypotheses, undefined behavior, or emulator/hardware variance.

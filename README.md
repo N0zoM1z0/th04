@@ -64,6 +64,82 @@ Exit status is zero only for raw byte identity.  Structural or
 relocation-normalized similarities are diagnostic evidence, never a substitute
 for exact acceptance.
 
+## Reproduce the pinned reference checkouts
+
+The six repositories inspected during framework bring-up are ignored local
+references.  Clone and detach all of them at the analyzed revisions with this
+single command:
+
+```bash
+mkdir -p _reference && git clone https://github.com/N0zoM1z0/th08.git _reference/th08 && git -C _reference/th08 checkout --detach bd54d865ebbc9f7291b355d152b16cc4b7f5be59 && git clone https://github.com/N0zoM1z0/th095.git _reference/th095 && git -C _reference/th095 checkout --detach 8adeea57830d63ad320a6c85be51f9069506ec34 && git clone https://github.com/N0zoM1z0/th105.git _reference/th105 && git -C _reference/th105 checkout --detach fa8a4149eeba27e9a1c78ab3bb03d970ef4f8266 && git clone https://github.com/nmlgc/ReC98.git _reference/ReC98 && git -C _reference/ReC98 checkout --detach b6ba5b0a529edbb31efdf8c0e939263804f8ee47 && git clone https://github.com/nmlgc/mzdiff.git _reference/mzdiff && git -C _reference/mzdiff checkout --detach 02603e1b070a1cfe5f9c580d49b9eb28617aeb4a && git clone https://github.com/tsdko/98imgtools.git _reference/98imgtools && git -C _reference/98imgtools checkout --detach 6c7a82a68addc5be2d4291a4bc98046a647b6235
+```
+
+Every checkout remains untrusted input.  Pinning makes analysis repeatable; it
+does not promote upstream claims into local evidence.
+
+## Download and install the build toolchain
+
+The tested environment is Debian 12 x86-64 with Wine 8.0.  Install host
+prerequisites, then run the fail-closed bootstrapper:
+
+```bash
+sudo apt update
+sudo apt install git python3 wine wine64 p7zip-full mtools curl wget
+bash scripts/bootstrap_toolchain.sh
+```
+
+The script downloads Turbo C++ 4.0J installation media from the HTTP-only,
+untrusted `http://pc98.shiz.me/software/borland-4.0j/` mirror and requires its
+complete 61-file tree SHA-256 to be
+`6e7e3c2734044bc799cbd4ad9645654bfd3a4f17ed29e3e2988c9dba1af350a`.
+It downloads the Turbo Assembler 5.0 archive through WinWorld's
+[`5.x` product page](https://winworldpc.com/product/turbo-assembler/5x) and
+requires the published SHA-512
+`0580f14adbb785e43ee3b057a5ec0417b3206b26fba4bda034140e7d6aa4947634dcbe167f337de2942fb4a3e3515e9eb829d6b666d31a64afe442111a070061`.
+The local archive SHA-256 is
+`94723cc2c882525dd561e4d35a9251b8fb992a0352c075ca5f97fff12bbc872f`.
+
+Exact binaries, installed tree hashes, Wine binaries,
+configuration files, banners, and OMF producer strings are all pinned in
+`config/toolchain.toml`.  The tools and media are proprietary and stay under
+ignored `.analysis/`; users must obtain and use them under applicable rights.
+The third-party URLs are provenance records, not legal or canonicality claims.
+
+The install uses an isolated Wine prefix and DOS-visible `C:\TC4` path because
+the Borland DPMI loader fails with `Loader error (0000)` from this repository's
+deep `Z:` path.  The required compiler configuration is `TURBOC.CFG`, not
+`TCC.CFG`; its checked-in template supplies `C:\TC4\INCLUDE` and
+`C:\TC4\LIB`.  Re-run the full identity and execution attestation at any time:
+
+```bash
+python3 scripts/attest_toolchain.py
+```
+
+This requires 16 acquisition/install/runtime surfaces, two identical
+C-to-OMF-to-MZ and ASM-to-OMF rounds, valid OMF framing/checksums, expected
+embedded producer and dependency records, and successful execution.  For an
+individual object, run `python3 scripts/inspect_omf.py path/to/module.obj`.
+
+Cold-build pinned ReC98 as an untrusted candidate, then run both strict and
+known-vector checks:
+
+```bash
+python3 scripts/cold_build_rec98.py --run-id cold-local-001
+python3 scripts/compare_rec98_th01.py \
+  .analysis/builds/rec98-b6ba5b0a52/cold-local-001/source
+python3 scripts/compare_rec98_th01.py \
+  .analysis/builds/rec98-b6ba5b0a52/cold-local-001/source \
+  --gate calibration
+```
+
+For the pinned revision, the strict command intentionally exits 1: `OP.EXE`,
+`REIIDEN.EXE`, and `FUUIN.EXE` fail whole-file exactness even though their
+program images match; only `ZUNSOFT.COM` is raw-exact.  Calibration mode exits
+0 only for that exact known failure vector and valid generated OMF objects.  It
+never waives the strict gate.  See [`docs/TOOLCHAIN.md`](docs/TOOLCHAIN.md) for
+the complete download/install process, direct focused-probe commands, receipt
+contents, failure recovery, and all full digests.
+
 ## Project map
 
 - `AGENTS.md` — mandatory target, evidence, safety, and session rules.
@@ -74,6 +150,8 @@ for exact acceptance.
 - `config/hypotheses.csv` — falsifiable claims and their current disposition.
 - `docs/ARCHITECTURE.md` — PC-98-specific architecture and address model.
 - `docs/ORACLES.md` — independent Oracle stack and acceptance matrix.
+- `docs/TOOLCHAIN.md` — build-chain acquisition, installation, attestation,
+  use, and troubleshooting.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
 - `docs/REFERENCE_ANALYSIS.md` — findings from TH08/TH095/TH105 and ReC98.
 - `docs/KNOWLEDGE_BASE.md` — scoped durable facts, hazards, and negative results.
@@ -82,8 +160,9 @@ for exact acceptance.
 
 ## Status
 
-The control plane and target-ingestion layer are bootstrapped.  No authored
-TH04 function is claimed as reconstructed or exact yet.  Run:
+The control plane, target ingestion, locally attested Borland build chain, OMF
+integrity Oracle, and ReC98 TH01 cold-build calibration are operational.  No
+authored TH04 function is claimed as reconstructed or exact yet.  Run:
 
 ```bash
 python3 scripts/status.py

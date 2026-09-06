@@ -67,9 +67,10 @@ Use:
 python3 scripts/compare_artifacts.py TARGET CANDIDATE --json
 ```
 
-The current comparator covers whole MZ/COM artifacts.  Function/object adapters
-will be added only after the exact Borland toolchain and a reviewed map/address
-model are attested.
+The current comparator covers whole MZ/COM artifacts; the OMF adapter validates
+record integrity and exposes producer/dependency metadata plus raw and narrowly
+timestamp-normalized identities.  Unit-level code/data/fixup adapters still
+require a reviewed TH04 map/address and ownership model.
 
 ## 7. Validate semantics independently
 
