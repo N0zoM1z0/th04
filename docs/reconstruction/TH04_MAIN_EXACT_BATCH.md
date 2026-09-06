@@ -11,7 +11,7 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 The current reviewed results are:
 
 - authored C/C++ bytes: **12,650 / 12,691 = 99.676936% exact**;
-- authored functions: **112 / 113 = 99.115044% exact**;
+- authored functions: **112 / 114 = 98.245614% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -42,10 +42,11 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-dialog-split-aggregate-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-nonexact-review-precommit-001/receipt.json`.
 It passes all 60 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
-C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
+C++ dialog init/exit TU split after the stricter reviewed-nonexact function
+accounting changes. `dialog_op` and `dialog_run` remain
 `default_enabled = false`; they stay individually replayable with `--unit` and
 are never silently accepted by the default aggregate.
 
@@ -208,6 +209,24 @@ boundary, source-shape, TC86-option, and TCC-via-TASM probes are tabulated in
 `TH04_MAIN_FIXUP_CODEGEN_PROBES.md`; none repairs `dialog_op` or `dialog_run`
 without changing another required dimension.
 
+### `bullets_update` call-form blocker
+
+The complete reviewed function is target file `0x1E0C8..0x1E432` (0x36B bytes).
+Exact natural-source slices cover the code on both sides of a 17-byte low-level
+call region. Replacing only that region with the natural C++ call
+`sparks_add_random(...)` reproduces every argument push and surrounding byte but
+TC4J emits a five-byte `CALL FAR`; target instead has `NOP; PUSH CS; CALL near`.
+
+Focused compiler controls explain the boundary. TC4J naturally emits the
+`PUSH CS; CALL near` far-call bridge only when the far callee definition is
+already visible earlier in the same translation unit and the same logical code
+segment. An extern declaration, a definition in another code segment of the
+same group, first-declaration segment ownership, near/far function-pointer
+casts, constant function pointers, and `#pragma samecodeseg` do not recover the
+target form. `samecodeseg` is still meaningful: TDUMP shows that it changes the
+Pointer16 FIXUPP frame from TARGET to the current group while leaving `CALL FAR`
+LEDATA unchanged. No assembly stitching is used to close the gap.
+
 ## Function accounting
 
 `config/th04_main_authored_functions.csv` is a separate function ledger. It
@@ -238,15 +257,23 @@ This manual gate promotes 11 Ghidra body-construction false negatives: four
 straight-line/overlap cases (`player_pos_update_and_clamp`, both large title/BGM
 overlay functions, and `overlay_popup_update_and_render`), `boss_items_drop`,
 `bullet_velocity_and_angle_set`, and five compiler-switch functions whose jump
-tables sit immediately after their bodies. `bullets_update` remains provisional
-because it crosses the excluded 17-byte handwritten-call gap; an exact owner on
-both sides cannot prove the missing middle.
+tables sit immediately after their bodies.
 
-The resulting denominator is therefore 113 reviewed functions: 112 exact plus
-the single explicit nonexact `snd_load`. `dialog_init` is a newly tracked
-function admitted only by explicit `[[new_exact]]` policy after its exact byte
-owner appeared. One additional candidate, `bullets_update`, remains
-provisional and outside the denominator.
+Reviewed nonexact functions use a separate fail-closed path: they need the same
+entry/public observations plus a complete raw code decode, and may explicitly
+own trailing switch metadata/tables without claiming the bytes exact.
+`bullets_update` is now reviewed this way. Its 0x360-byte code span decodes
+through `RETF` at `0x2CC27`; byte `0x2CC28` is switch metadata; five words at
+`0x2CC29` target `0x2CB71`, `0x2CB78` (three entries), and `0x2CB7F`, all raw
+instruction starts; and the next TLINK public is exactly `0x2CC33`. The full
+function extent is therefore 0x36B bytes even though its 17-byte spark-call
+region remains nonexact.
+
+The resulting denominator is 114 reviewed functions: 112 exact plus the two
+explicit nonexact functions `snd_load` and `bullets_update`. `dialog_init` is a
+newly tracked function admitted only by explicit `[[new_exact]]` policy after
+its exact byte owner appeared. No current function candidate remains
+provisional.
 
 ## Reusable Borland lessons
 

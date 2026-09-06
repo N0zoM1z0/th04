@@ -258,6 +258,118 @@ raw-byte hits were largely non-code/data or interrupt-style full-register save
 patterns. Keep the current `snd_load` gap nonexact rather than manufacturing the
 sequence.
 
+## Official TC4J `TDUMP 4.1` confirms FIXUPP semantics
+
+The already-attested TC4J media contains `TDUTIL.PAK` with Borland's own
+`TDUMP.EXE` (`Turbo Dump Version 4.1`). It is extracted only below ignored
+`.analysis/` with the same-media `UNPAK.EXE`; the proprietary executable is not
+checked into this repository. Private identities from this machine are:
+
+```text
+TDUTIL.PAK  e6bef8e7389fc0089273afc7e182fef4b62d55877ce9878ff3a0bd0d827d9fe3
+TDUMP.EXE   d255173de8de3dbf77967bbc0fbda3603c199ba71022c0265d71053f7991b480
+```
+
+TDUMP exposes LNAMES/SEGDEF/GRPDEF, LEDATA, and FIXUPP in the compiler's native
+terms. For the Pointer16 fixups relevant here, the DOS MZ segment relocation is
+the *segment word* of the far pointer, i.e. LEDATA base + FIXUPP location + 2.
+This mapping was first calibrated against the current `dialog.obj` and its known
+linked relocation list before being used on historical objects.
+
+### Pre-decomp ReC98 ASM is not the target producer oracle
+
+ReC98 parent `e8a0b3ef4315dc82998b45ae384c85d0ddb44dd3` still contains `dialog_op`
+and `dialog_run` in the monolithic `th04_main.asm`. The source was assembled in
+ignored analysis space with the pinned TASM32 5.0. The resulting object preserves
+the relevant target relocation *sets*, but TDUMP shows different FIXUPP order:
+
+```text
+dialog_run target:     d642 d617 d6df d6c0
+historical TASM object: d642 d617 d6c0 d6df
+```
+
+`dialog_op` is likewise a different permutation of the same 26 sites. Therefore
+the historical ReC98 ASM is useful archaeology, not evidence that the original
+game used that producer/order. Do not substitute it for the ordered-relocation
+Oracle.
+
+### Exact-code wrappers do not reorder `dialog_run`
+
+Three pure-C++ run-only variants wrap only `input_reset_sense`, only
+`frame_delay`, or both in inline helpers. All three retain the exact same
+383-byte LEDATA as the direct source. TDUMP nevertheless reports the same four
+Pointer16 locations in all variants:
+
+```text
+candidate: 0x171 0x152 0x0D4 0x0A9
+required:  0x0D4 0x0A9 0x171 0x152
+```
+
+So adding an inline helper boundary does not alter TC86's two high-level fixup
+groups when code is held exact.
+
+## `#pragma samecodeseg`: frame hint, not call lowering
+
+`samecodeseg` appears in TCC's own pragma keyword table. Minimal syntax probes
+show that bare and identifier-list forms are accepted. TDUMP reveals the actual
+binary effect for an external far call: the LEDATA remains a five-byte `CALL
+FAR`, while the Pointer16 FIXUPP **frame** changes from `TARGET` to the current
+group (`GI[...]`). The pragma tells the linker which segment frame to use; it
+does not rewrite a far call to `PUSH CS; CALL near`.
+
+A TH04-specific probe with `#pragma samecodeseg sparks_add_random` behaves the
+same way: the fixup frame becomes `MAIN_03`, but `bullets_update` still contains
+`CALL FAR`. This pragma must therefore not be proposed again as a call-bridge
+solution. It is also invalid as a `dialog_run` fix, because the four relevant
+callees live in SHARED/master.lib selectors rather than `MAIN_01`.
+
+## Natural TC4J far-call bridge rule
+
+Segment-aware CODE-corpus mining found genuine compiler-generated `PUSH CS;
+CALL near` examples. Minimal controls isolate the required condition:
+
+1. external far declaration only, even in the caller's code segment -> `CALL FAR`;
+2. far callee **definition already visible earlier in the same TU and same
+   logical code segment** -> `PUSH CS; CALL near`;
+3. callee definition in another logical code segment of the same group ->
+   `CALL FAR`.
+
+This matches clean examples such as TH02 `key_delay()` calling the earlier
+same-TU/same-SHARED `key_delay_sense()` definition, and the analogous TH05
+`dialog_load()` overload pair. Same final TLINK selector is not sufficient;
+compiler-time logical-segment knowledge matters.
+
+Near/far function-pointer casts and constant pointer variants were also tested.
+Near indirect calls do not acquire the required return-segment push, while far
+pointer calls remain far. None yields the target bridge without low-level code.
+
+## `bullets_update`: natural source narrows the gap to call form
+
+The target 17-byte region is:
+
+```text
+FF 74 02             PUSH [SI+2]
+FF 74 04             PUSH [SI+4]
+66 68 02 00 20 00    PUSH dword 00200002h
+90                   NOP
+0E                   PUSH CS
+E8 ...               CALL near sparks_add_random
+```
+
+Replacing only the old low-level block with natural
+`sparks_add_random(bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2)` keeps
+the parameter setup and surrounding code but produces `CALL FAR`. A
+first-declaration `SPARK_A_TEXT/MAIN_03` probe, `samecodeseg`, near/far pointer
+casts, and constant function pointers do not change that conclusion. The
+function stays nonexact; assembly stitching or target byte emission is not used.
+
+Its *boundary*, however, is now independently reviewed. Raw code decodes from
+`0x2C8C8` through `RETF` at `0x2CC27`; byte `0x2CC28` is switch metadata and the
+five near offsets at `0x2CC29` resolve to decoded instructions at `0x2CB71`,
+`0x2CB78` (three entries), and `0x2CB7F`. The next TLINK public is `0x2CC33`, so
+the complete reviewed extent is 0x36B bytes. Boundary review does not waive the
+17-byte nonexact call region.
+
 ## Next useful experiments
 
 The remaining work should focus on information not already falsified here:

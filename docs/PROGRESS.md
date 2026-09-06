@@ -17,27 +17,32 @@ reviewed denominator until they are resolved.
 | Exact authored byte units/regions | 51 |
 | **Exact authored bytes** | **12,650 / 12,691 (99.676936%)** |
 | Tracked authored function candidates | 114 |
-| Reviewed authored functions | 113 |
+| Reviewed authored functions | 114 |
 | Exact authored functions | 112 |
-| **Exact authored functions** | **112 / 113 (99.115044%)** |
-| Provisional function candidates excluded from the denominator | 1 |
+| **Exact authored functions** | **112 / 114 (98.245614%)** |
+| Provisional function candidates excluded from the denominator | 0 |
 | Exact original-style standalone ASM units | 9 / 1,489 bytes |
 
 The remaining reviewed authored byte mismatch is a single 41-byte middle
-region inside `snd_load`; it is also the only reviewed nonexact function.
-`snd_pmd_resident` is fully exact from maintained pure C after expressing the
-PMD IVT slot as a Borland `__es` segment-specific pointer. `dialog_init` is now
-also exact after restoring its original second C++ translation unit: the linked
-code bytes stay identical while the Intel OMF FIXUPP batching and ordered MZ
-relocations return to the target order.
+region inside `snd_load`. Function accounting is stricter than byte accounting:
+`snd_load` and `bullets_update` are both reviewed but nonexact. The latter has a
+17-byte low-level spark-call region between exact pre/post slices. Neither gap is
+waived or filled with inline assembly. `snd_pmd_resident` is fully exact from
+maintained pure C after expressing the PMD IVT slot as a Borland `__es`
+segment-specific pointer. `dialog_init` is also exact after restoring its
+original second C++ translation unit: the linked code bytes stay identical while
+the Intel OMF FIXUPP batching and ordered MZ relocations return to target order.
 
-Eleven former Ghidra non-contiguous-body candidates are now manually reviewed
-exact. The replayable manual gate requires the same TLINK public and exact byte
+Eleven former Ghidra non-contiguous-body candidates are manually reviewed exact.
+The replayable exact-manual gate requires the same TLINK public and exact byte
 owner, a configured Ghidra min/max span, gap-free raw `ndisasm` coverage through
 a terminal return, and—for indirect switches—every table target to land on a
-raw instruction boundary inside the function. `bullets_update` remains the one
-provisional candidate because it crosses a deliberately excluded handwritten-
-call region. Exact enclosing bytes never waive that nonexact gap.
+raw instruction boundary inside the function. A separate reviewed-nonexact gate
+now proves complete boundaries without implying byte equality. `bullets_update`
+is the first nonexact switch-data case: its code decodes through `RETF` at
+`0x2CC27`, byte `0x2CC28` is switch metadata, the five words at `0x2CC29` all
+target decoded instructions, and the next TLINK public begins exactly at
+`0x2CC33`. No function candidate remains provisional in the current screen.
 
 Two `dialog` byte regions (`dialog_op` and `dialog_run`) remain provisional.
 Their raw bytes and relocation-site sets reproduce, but the ordered relocation
@@ -56,8 +61,8 @@ included in the authored C/C++ byte percentage.
 
 The current accepted byte cohort is reproduced by
 `python3 scripts/replay_th04_main_exact_units.py`. Historical acceptance
-receipts remain useful, while the current full-owner replay
-`gptweb-dialog-split-aggregate-001` independently repeated two isolated
+receipts remain useful, while the current pre-commit full-owner replay
+`gptweb-nonexact-review-precommit-001` independently repeated two isolated
 `git archive` materializations of the pinned ReC98 revision, overlaid
 repository-maintained source, restored the checked-in dialog TU split through
 `Tupfile.lua`, and passed all 60 default-selected raw/map/ordered-relocation/
@@ -66,6 +71,8 @@ OMF/determinism checks.
 Function accounting is independently conservative. The checked-in
 `scripts/review_th04_main_functions.py` intersects target Ghidra entries,
 locally rebuilt TLINK publics, and exact authored byte owners. It automatically
-accepts contiguous Ghidra bodies and separately replays explicitly configured
-manual raw/switch-table reviews for body-construction false negatives. See
+accepts contiguous Ghidra bodies, separately replays explicitly configured
+manual raw/switch-table reviews for body-construction false negatives, and
+validates complete reviewed-nonexact boundaries before placing them in the
+denominator. See
 `docs/reconstruction/TH04_MAIN_EXACT_BATCH.md` for the evidence and exclusions.

@@ -94,6 +94,146 @@ cs_base = "0x10000"
                 with self.assertRaisesRegex(ValueError, "non-instruction starts"):
                     review.manual_reviews(items, metadata, target)
 
+
+    def test_linear_decode_handles_ndisasm_raw_byte_continuation(self) -> None:
+        with TemporaryDirectory() as temporary:
+            target = Path(temporary) / "target.bin"
+            target.write_bytes(bytes.fromhex("66 c7 06 a2 46 00 00 00 00 cb"))
+            stdout = (
+                "00001000  66C706A246000000  mov dword [0x46a2],0x0\n"
+                "         -00\n"
+                "00001009  CB                retf\n"
+            )
+            completed = __import__("subprocess").CompletedProcess(
+                ["ndisasm"], 0, stdout=stdout
+            )
+            with patch.object(review.subprocess, "run", return_value=completed):
+                decoded = review.linear_decode(target, 0x1000, 0, 10)
+            self.assertEqual(decoded["instruction_count"], 2)
+            self.assertEqual(decoded["instruction_addresses"], [0x1000, 0x1009])
+            self.assertEqual(decoded["terminal"], "retf")
+            self.assertEqual(decoded["end_address_exclusive"], "0x100A")
+
+    def test_reviewed_nonexact_validates_trailing_switch_data(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text(
+                """schema_version = 1
+
+[[reviewed_nonexact]]
+id = "fn-blocked"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x5"
+decode_size = "0x2"
+name = "blocked_fixture"
+evidence_id = "ev-blocked"
+reason = "synthetic reviewed nonexact boundary"
+table_metadata_address = "0x10002"
+table_metadata_value = "0x00"
+jump_table_address = "0x10003"
+jump_table_count = 1
+cs_base = "0x10000"
+next_public_address = "0x10005"
+""",
+                encoding="utf-8",
+            )
+            target = root / "target.bin"
+            data = bytearray(0x1805)
+            data[0x1800:0x1805] = b"\x90\xC3\x00\x00\x00"
+            target.write_bytes(data)
+            items = [{
+                "address": 0x10000,
+                "address_hex": "0x10000",
+                "ghidra_name": "FUN_10000",
+                "public": "blocked_fixture",
+                "owner_unit": "entry-owner",
+                "owner_start": 0x10000,
+                "owner_end": 0x10002,
+                "file_offset": 0x1800,
+                "source": "src/entry.cpp",
+                "owner_name": "entry.cpp",
+            }]
+            metadata = {0x10000: {
+                "address": "0x10000",
+                "body_min": "0x10000",
+                "body_max": "0x10001",
+                "body_addresses": "2",
+                "is_thunk": "false",
+                "is_external": "false",
+            }}
+            publics = {0x10000: ["blocked_fixture"], 0x10005: ["next_fixture"]}
+            decoded = {
+                "instruction_count": 2,
+                "instruction_addresses": [0x10000, 0x10001],
+                "terminal": "ret",
+                "first_address": "0x10000",
+                "end_address_exclusive": "0x10002",
+            }
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "linear_decode", return_value=decoded
+            ):
+                accepted = review.reviewed_nonexact_reviews(
+                    items, metadata, publics, target
+                )
+            self.assertEqual(len(accepted), 1)
+            self.assertEqual(accepted[0]["size"], 5)
+            switch = accepted[0]["switch_review"]
+            self.assertIsInstance(switch, dict)
+            assert isinstance(switch, dict)
+            self.assertEqual(switch["jump_targets"], ["0x10000"])
+            self.assertEqual(switch["table_metadata_value"], "0x00")
+
+    def test_reviewed_nonexact_ledger_sets_blocked_extent_and_evidence(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = [
+                "id", "artifact", "address", "file_offset", "size",
+                "boundary_state", "state", "name", "owner_unit", "source",
+                "evidence_ids", "notes",
+            ]
+            row = {key: "" for key in header}
+            row.update({
+                "id": "fn-blocked", "artifact": "th04-main",
+                "address": "0x100", "boundary_state": "provisional",
+                "state": "candidate", "name": "fixture",
+                "owner_unit": "stale-owner", "source": "src/stale.cpp",
+                "evidence_ids": "ev-old",
+            })
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=header)
+                writer.writeheader()
+                writer.writerow(row)
+            out = root / "out.csv"
+            old_root = review.ROOT
+            review.ROOT = root
+            try:
+                review.write_reviewed_ledger(
+                    out,
+                    [],
+                    [],
+                    [{
+                        "id": "fn-blocked", "address": 0x100,
+                        "file_offset": 0x200, "size": 0x20,
+                        "evidence_id": "ev-new", "reason": "reviewed boundary",
+                    }],
+                )
+            finally:
+                review.ROOT = old_root
+            with out.open(newline="", encoding="utf-8") as stream:
+                updated = next(csv.DictReader(stream))
+            self.assertEqual(updated["boundary_state"], "reviewed")
+            self.assertEqual(updated["state"], "blocked")
+            self.assertEqual(updated["file_offset"], "0x200")
+            self.assertEqual(updated["size"], "0x20")
+            self.assertEqual(updated["owner_unit"], "")
+            self.assertEqual(updated["source"], "")
+            self.assertEqual(updated["evidence_ids"], "ev-old;ev-new")
+
     def test_automatic_review_promotes_blocked_row(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

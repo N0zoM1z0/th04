@@ -80,6 +80,11 @@ builds, compares, or avoids a known dead end.
   out-of-artifact extents.
 - OMF validation requires one module rather than merely valid outer records;
   concatenating two valid THEADR-to-MODEND streams is rejected.
+- For difficult Borland FIXUPP ordering, the already-attested TC4J `TDUTIL.PAK`
+  contains Turbo Dump 4.1. Extract `TDUMP.EXE` only into ignored analysis space
+  with the same-media unpacker; never commit the proprietary tool. TDUMP's
+  Pointer16 fixup location refers to the offset word, so the linked MZ segment
+  relocation is LEDATA base + fixup location + 2.
 - MZ format validation includes the last-page encoding, allocation ordering,
   and minimum-allocation stack envelope. All 20 private target controls still
   pass the stricter parser.
@@ -88,6 +93,10 @@ builds, compares, or avoids a known dead end.
   offsets. A TH04 dialog split produced exact code at the same program address
   with a `0x1600` candidate header versus the target's `0x1800`; target-file-
   offset slicing falsely reported hundreds of code differences.
+- `ndisasm` can wrap the raw bytes of an instruction longer than eight bytes
+  onto a continuation line such as `-00`. Never infer instruction length from
+  only the first displayed hex field. Use adjacent decoded addresses (x86 max
+  length 15 bytes) and separately require complete extent coverage.
 
 ## Current toolchain knowledge
 

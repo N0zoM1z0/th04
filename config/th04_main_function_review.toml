@@ -1,11 +1,6 @@
 schema_version = 1
 artifact = "th04-main"
-policy = "Exact functions require a target Ghidra entry and local TLINK public inside one exact authored byte owner. Automatic promotion requires a contiguous Ghidra body; configured reviewed_exact overrides must instead pass gap-free raw decoding and any declared switch-table target validation. Provisional functions never enter the reviewed denominator."
-
-[[provisional]]
-address = "0x2C8C8"
-name = "bullets_update"
-reason = "The function crosses a deliberately nonexact 17-byte handwritten-call gap; exact pre/post byte slices do not prove complete function ownership."
+policy = "Exact functions require a target Ghidra entry and local TLINK public inside one exact authored byte owner. Automatic promotion requires a contiguous Ghidra body; configured reviewed_exact overrides must instead pass gap-free raw decoding and any declared switch-table target validation. Reviewed nonexact functions enter the denominator only after their independently configured full target boundary, code decode, and any trailing switch data validate; exactness is not implied."
 
 [[reviewed_nonexact]]
 id = "th04-main-fn-23496"
@@ -13,7 +8,24 @@ address = "0x23496"
 file_offset = "0x14C96"
 size = "0xEA"
 name = "snd_load"
-reason = "Forty-one-byte middle gap remains nonexact, including the target 89 C3 versus compiler 8B D8 MOV BX,AX encoding and upstream inline-assembly context."
+evidence_id = "ev-th04-main-snd-load-reviewed-boundary-v2"
+reason = "The complete 234-byte function has a reviewed raw/TLINK/Ghidra boundary, but its 41-byte middle gap remains nonexact, including target 89 C3 versus compiler 8B D8 MOV BX,AX and excluded low-level DS/AX source context."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-2c8c8"
+address = "0x2C8C8"
+file_offset = "0x1E0C8"
+size = "0x36B"
+decode_size = "0x360"
+name = "bullets_update"
+evidence_id = "ev-th04-main-bullets-update-reviewed-boundary-v1"
+reason = "The complete 875-byte function extent is reviewed independently of byte exactness: raw code decodes through RETF at 0x2CC27, one metadata byte plus a five-entry near-jump table occupy the trailing 11 bytes, and the next TLINK public begins at 0x2CC33. The 17-byte spark-call gap remains nonexact."
+table_metadata_address = "0x2CC28"
+table_metadata_value = "0x00"
+jump_table_address = "0x2CC29"
+jump_table_count = 5
+cs_base = "0x23A90"
+next_public_address = "0x2CC33"
 
 [[reviewed_exact]]
 id = "th04-main-fn-20950"

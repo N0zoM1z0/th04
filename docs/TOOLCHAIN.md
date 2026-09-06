@@ -150,6 +150,21 @@ exactly one THEADR and one MODEND/MODEND32, trailing bytes, producer comments,
 and dependency records. Concatenating two valid modules is rejected. OMF
 validity proves container integrity, not source correctness.
 
+### Optional Borland `TDUMP 4.1` diagnostics
+
+The pinned TC4J media already contains `TDUTIL.PAK` (SHA-256
+`e6bef8e7389fc0089273afc7e182fef4b62d55877ce9878ff3a0bd0d827d9fe3`), which
+contains Borland `TDUMP.EXE` (`Turbo Dump Version 4.1`). It is not a required
+build surface and the executable must not be checked into the repository. When
+FIXUPP record order needs inspection, extract it only below ignored `.analysis/`
+using the same TC4J-media `UNPAK.EXE` and the already-pinned MS-DOS Player. The
+locally extracted executable observed in the 2026-09-06 probe had SHA-256
+`d255173de8de3dbf77967bbc0fbda3603c199ba71022c0265d71053f7991b480`.
+
+Use TDUMP only as a diagnostic decoder after the normal media/toolchain identity
+checks. `scripts/lib/omf.py` remains the checked-in integrity/parser authority;
+no proprietary dump utility is needed for CI or cold exact replay.
+
 ### OMF raw and dependency-normalized identities
 
 Borland COMENT class `E9` dependency records contain 16-bit DOS time and date

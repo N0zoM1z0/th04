@@ -6,7 +6,7 @@ Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
 accepted: reviewed authored C/C++ bytes are 12,650 / 12,691 (99.676936%)
-exact, and reviewed authored functions are 112 / 113 (99.115044%) exact. Nine
+exact, and reviewed authored functions are 112 / 114 (98.245614%) exact. Nine
 standalone original-style ASM units totaling 1,489 bytes are separately exact
 and are not counted in the authored C/C++ percentage. No deterministic TH04
 runtime scenario has been authored.
@@ -116,8 +116,8 @@ runtime scenario has been authored.
   current denominator.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
-  two isolated cold materializations. Development receipt
-  `gptweb-dialog-split-aggregate-001` passes all 60 current default-selected units across raw bytes,
+  two isolated cold materializations. Latest pre-commit receipt
+  `gptweb-nonexact-review-precommit-001` passes all 60 current default-selected units across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
 - The current reviewed authored byte denominator is 12,691 bytes across 52
@@ -127,7 +127,7 @@ runtime scenario has been authored.
   `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
   `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
   directive is involved.
-- The latest dialog-split cold replay `gptweb-dialog-split-aggregate-001`
+- The latest cold replay `gptweb-nonexact-review-precommit-001`
   passed all 60 current default exact byte owners in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
@@ -137,10 +137,11 @@ runtime scenario has been authored.
   from byte ownership. The current review accepts 101 contiguous functions
   automatically plus 11 replayable manual Ghidra-body false-negative reviews.
   `dialog_init` is admitted only through an explicit `[[new_exact]]` policy once
-  its TU-split byte owner becomes exact. `snd_load` is the sole reviewed
-  nonexact function, giving 112/113 exact; `bullets_update` is the sole
-  policy-provisional function outside the denominator because it crosses a
-  nonexact handwritten-call gap.
+  its TU-split byte owner becomes exact. `snd_load` and `bullets_update` are both
+  independently boundary-reviewed but nonexact, giving 112/114 exact. The
+  latter's code reaches `RETF` before validated compiler-owned switch data; its
+  17-byte spark-call gap remains blocked rather than being excluded from the
+  denominator. No current function candidate is provisional.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain
@@ -189,10 +190,11 @@ middle region; do not solve it with inline assembly or byte injection. C++
 reference/template/comma/conditional aliasing of `_BX` is now also falsified:
 the pseudo-register is not addressable and direct assignment remains `8B D8`. The
 `snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`
-segment-pointer source shape. Eleven Ghidra body-construction false negatives
-now pass replayable manual raw/switch-table boundary review; only
-`bullets_update` remains provisional because it crosses a nonexact handwritten-
-call gap. In parallel, investigate the two remaining `dialog_op`/`dialog_run`
-relocation-order blockers at the OMF FIXUPP/source-emission level; the original
-lower-TU split is already falsified for those two. Runtime work can stay deferred until a
+segment-pointer source shape. `bullets_update` is now boundary-reviewed but stays
+nonexact: natural C++ reproduces every argument push but emits `CALL FAR` instead
+of target `NOP; PUSH CS; CALL near`, and `#pragma samecodeseg` changes only the
+OMF fixup frame. In parallel, investigate the two remaining `dialog_op`/
+`dialog_run` relocation-order blockers at the OMF FIXUPP/source-emission level;
+the original lower-TU split and historical pre-decomp ASM producer are already
+falsified for target ordering. Runtime work can stay deferred until a
 reconstruction claim actually needs behavioral evidence.
