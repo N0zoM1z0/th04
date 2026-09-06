@@ -145,6 +145,45 @@ process, direct focused-probe commands, receipt contents, failure recovery, and
 all full digests.  Add `--compact` to the survey for a roughly 47 KiB
 agent-triage report instead of the roughly 1.5 MiB full difference receipt.
 
+## Install and use headless Ghidra
+
+Static analysis is pinned to **Ghidra 12.1.3** and **Eclipse Temurin JDK
+21.0.12.1+1**. As in TH095, downloads and versioned installations live under
+ignored `.tools/`, with stable `.tools/ghidra` and `.tools/jdk` symlinks;
+private databases live under ignored `ghidra-project/`. Generated caches,
+exports, and receipts live below `.analysis/ghidra/`.
+
+```bash
+sudo apt install ca-certificates curl python3 tar unzip
+bash scripts/bootstrap_analysis_toolchain.sh
+
+# Clean headless import plus independent PC-98 MZ database attestation.
+python3 scripts/ghidra.py th04-main import
+
+# Required read-only replay before target-dependent database work.
+python3 scripts/ghidra.py th04-main check
+
+# Positive and negative database-Oracle calibration.
+python3 scripts/smoke_ghidra_oracle.py th04-main
+```
+
+The bootstrapper downloads the official Ghidra
+`ghidra_12.1.3_PUBLIC_20260817.zip` and Temurin
+`OpenJDK21U-jdk_x64_linux_hotspot_21.0.12.1_1.tar.gz`, verifies their pinned
+sizes and SHA-256 digests, extracts the versioned trees, creates the stable
+links, and checks the complete installed identities plus actual headless
+execution. The workflow is intentionally headless-only; no GUI path is
+provided.
+
+The TH04 database Oracle goes beyond the PE-oriented reference check. It
+independently verifies the complete imported `FileBytes`, MZ header overlay,
+Ghidra's relocation-applied load image at segment `0x1000`, every relocation,
+segment/file mapping, entry `CS:IP`, timeout state, and sampled bytes. Ghidra's
+inferred blocks and functions remain provisional and cannot satisfy an exact
+gate. See [`docs/GHIDRA.md`](docs/GHIDRA.md) for exact URLs and hashes, the
+`.tools/`/`ghidra-project/` layout, clean rebuild procedure, all commands,
+failure recovery, loader limitations, and the TH01/TH04 calibration results.
+
 ## Project map
 
 - `AGENTS.md` — mandatory target, evidence, safety, and session rules.
@@ -159,6 +198,8 @@ agent-triage report instead of the roughly 1.5 MiB full difference receipt.
 - `docs/ORACLES.md` — independent Oracle stack and acceptance matrix.
 - `docs/TOOLCHAIN.md` — build-chain acquisition, installation, attestation,
   use, and troubleshooting.
+- `docs/GHIDRA.md` — pinned headless analysis installation, private project
+  layout, MZ database attestation, calibration, and use.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
 - `docs/REFERENCE_ANALYSIS.md` — findings from TH08/TH095/TH105 and ReC98.
 - `docs/KNOWLEDGE_BASE.md` — scoped durable facts, hazards, and negative results.
@@ -168,9 +209,10 @@ agent-triage report instead of the roughly 1.5 MiB full difference receipt.
 ## Status
 
 The control plane, target ingestion, locally attested Borland build chain, OMF
-integrity Oracle, and repeated ReC98 TH01-TH05 cold-build calibration are
-operational.  No authored TH04 function is claimed as reconstructed or exact
-yet.  Run:
+integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
+attestation, and repeated ReC98 TH01-TH05 cold-build calibration are
+operational. No authored TH04 function is claimed as reconstructed or exact
+yet. Run:
 
 ```bash
 python3 scripts/status.py

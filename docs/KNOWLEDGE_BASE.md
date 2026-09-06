@@ -88,6 +88,26 @@ builds, compares, or avoids a known dead end.
   objects, emulation libraries, and linker inputs.
 - Detailed acquisition, automatic installation, focused invocation, cold-build
   usage, and recovery instructions are in `docs/TOOLCHAIN.md`.
+- Headless analysis uses Ghidra 12.1.3 and Temurin JDK 21.0.12.1+1. Downloads,
+  versioned trees, and stable `ghidra`/`jdk` symlinks belong under ignored
+  `.tools/`; private databases belong under ignored `ghidra-project/`; only
+  generated cache/export/receipt state belongs under `.analysis/ghidra/`.
+- Ghidra refuses a project path with the dot-prefixed `.analysis` component.
+  This negative result is why `ghidra-project/` is an explicit repository
+  safety exception rather than an arbitrary second private-state convention.
+- The headless wrapper validates the target and analysis tools on every run.
+  A fresh nonce plus an external Python MZ parser prevents a stale Java export
+  from passing even if Ghidra reports a script failure with process status 0.
+- Ghidra's MZ loader applies relocation words for load segment `0x1000` and
+  maps the header into a `HEADER` overlay. Full database bytes, relocation
+  records, source mapping, entry point, and samples are attestable; inferred
+  block/function topology is not.
+- The database Oracle has real-corpus controls for both 0-relocation TH04 OP
+  and 625-relocation TH01 OP, plus a 1,136-relocation analyzed TH04 MAIN. The
+  loaded-byte, relocation, mapping, and nonce negative mutations all fail.
+- Complete headless installation, import, read-only check, calibration, path
+  layout, failure recovery, and limitation instructions are in
+  `docs/GHIDRA.md`.
 
 ## Reference knowledge boundary
 

@@ -91,8 +91,18 @@ guard the change.
 
 ## Private and generated state
 
-`.analysis/` contains targets, disk images, compiler installations,
-disassembler databases, emulator images, probes, traces, and reports.  It is
-never committed.  A durable conclusion moves into source, a checked-in ledger,
-a focused evidence note, or an executable test; private tool state never
-becomes the only copy of project knowledge.
+`.tools/` contains the ignored pinned Ghidra/JDK downloads and versioned
+installations. `ghidra-project/` contains ignored private headless databases,
+following TH095's non-dot-prefixed project layout. `.analysis/` contains
+targets, disk images, compiler installations, Ghidra XDG state and exports,
+emulator images, probes, traces, and reports. None is committed. A durable
+conclusion moves into source, a checked-in ledger, a focused evidence note, or
+an executable test; private tool state never becomes the only copy of project
+knowledge.
+
+Ghidra 12.1.3's pinned `MzLoader` loads the program at segment `0x1000`,
+applies the MZ relocation words, exposes the header through a `HEADER` overlay,
+and creates entry `(0x1000 + CS):IP`. Its relocation-derived blocks and `RETF`
+boundary adjustment are heuristic. `scripts/ghidra.py ARTIFACT check` therefore
+attests full bytes, mappings, relocations, and entry while keeping every block
+and auto-analysis function provisional. See `docs/GHIDRA.md`.

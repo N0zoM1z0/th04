@@ -25,6 +25,8 @@ semantic_support = [
 ]
 diagnostic_only = [
   "analysis-bundle",
+  "analysis-toolchain-identity",
+  "ghidra-mz-database",
   "cross-game-shared-blocks",
   "upstream-intake",
   "upstream-policy-differential",
@@ -54,6 +56,20 @@ class = "target-analysis"
 independent_of = []
 verdict = "diagnostic"
 description = "Hash-verified MZ load module, address metadata, relocation sites, normalized view, and deterministic hypothetical-load image for analysis tools."
+
+[[oracles]]
+id = "analysis-toolchain-identity"
+class = "target-analysis"
+independent_of = []
+verdict = "diagnostic"
+description = "Pinned Ghidra/JDK archives, extracted trees, stable links, loader source, banners, and headless execution agree before a database is used."
+
+[[oracles]]
+id = "ghidra-mz-database"
+class = "target-analysis"
+independent_of = ["decompiler-text"]
+verdict = "diagnostic"
+description = "An external parser checks the Ghidra MZ FileBytes, header overlay, segment mapping, relocation-applied load image, relocation records, entry point, timeout state, and sampled bytes against the pinned target. Function and block boundaries remain provisional."
 
 [[oracles]]
 id = "cross-game-shared-blocks"

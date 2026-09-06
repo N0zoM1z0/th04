@@ -11,6 +11,17 @@ If target verification or database attestation fails, target-dependent RE is
 blocked.  Public tooling/documentation work may continue without inventing
 target claims.
 
+When a Ghidra database will be used, also run its fresh headless read-only
+attestation in the same session:
+
+```bash
+python3 scripts/ghidra.py th04-main check
+```
+
+This verifies the pinned `.tools/` installation and the saved
+`ghidra-project/` database before exporting a nonce-bound private receipt.
+Ghidra auto-analysis results remain provisional even when this check passes.
+
 ## 2. Select one bounded problem
 
 Run `python3 scripts/status.py --json` and select one artifact plus one bounded

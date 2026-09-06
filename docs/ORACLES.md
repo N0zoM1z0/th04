@@ -29,6 +29,20 @@ supplied legal copy.  External canonicality remains a separate claim until an
 independently sourced pristine dump agrees.  A local ReC98 rebuild is useful
 toolchain calibration, but its upstream status is not independent provenance.
 
+The operational Ghidra check is deliberately two-sided. A headless Java script
+exports the database's original and modified `FileBytes`, header and load
+memory snapshots, source mappings, relocation records, entry points, and
+analysis state. `scripts/attest_ghidra_database.py` then derives the expected
+views independently from the pinned target with `scripts/lib/pc98.py`. It
+requires exact full digests and mapping/relocation equality plus deterministic
+samples. A per-run nonce prevents stale exports from passing when a Ghidra
+post-script fails but the outer headless process returns zero.
+
+This is a database-consistency Oracle, not an independent semantics Oracle.
+It proves which target the database represents and how the pinned MZ loader
+mapped it; it does not validate Ghidra's inferred functions or decompiler.
+Installation, commands, and calibrated dimensions are in `docs/GHIDRA.md`.
+
 ## Layer 1: container and format integrity
 
 For MZ artifacts, parse and report:
@@ -154,6 +168,13 @@ mutation must fail raw exactness and trip its intended dimension.  This proves
 comparator behavior over the originals, not compiler/build reproduction.
 Public CI also uses synthetic MZ/COM fixtures so regression tests need no game
 data.
+
+`scripts/smoke_ghidra_oracle.py` independently mutates a fresh private database
+export's loaded byte, relocation result, source mapping, and run nonce. Every
+case must fail its intended dimension. The real-corpus loader controls are TH04
+`OP.EXE` with zero relocations, TH01 `OP.EXE` with 625 relocations, and analyzed
+TH04 `MAIN.EXE` with 1,136 relocations. These controls validate the Oracle and
+loader contract without promoting any inferred boundary or reconstruction.
 
 The compiler/build calibration is now live.  Three cold source
 materializations of pinned ReC98 revision

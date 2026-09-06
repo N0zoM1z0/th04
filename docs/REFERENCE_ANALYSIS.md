@@ -27,6 +27,14 @@ The clones live under ignored `_reference/` and are not project source.
 - local task skills that route an agent to the right rules and commands;
 - target-independent public CI separated from private target checks.
 
+TH095's current Ghidra layout was also checked directly: official downloads
+and versioned installations stay under ignored `.tools/`, stable
+`.tools/ghidra` and `.tools/jdk` links hide versioned paths from wrappers, and
+the private project stays in ignored root `ghidra-project/`. TH04 adopts that
+layout and headless wrapper pattern. It does not copy TH095's PE attestation:
+TH04 independently validates MZ header/load views, segment mappings,
+relocations, and `CS:IP` as documented in `docs/GHIDRA.md`.
+
 ## What does not transfer
 
 - flat PE virtual addresses and section/RVA assumptions;

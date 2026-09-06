@@ -2,8 +2,8 @@
 
 ## Phase
 
-Control-plane, target-ingestion, and Oracle-calibration bring-up.  No TH04
-source or unit has been accepted yet.
+Control-plane, target-ingestion, build-chain calibration, and headless Ghidra
+bring-up. No TH04 source or unit has been accepted yet.
 
 ## Verified locally
 
@@ -58,6 +58,27 @@ source or unit has been accepted yet.
   every candidate hash and compact multi-dimensional vector, the 20-output
   identity, OMF validity, and five per-game normalized OMF identities.  A
   deliberate one-byte candidate mutation makes the gate fail closed.
+- Ghidra 12.1.3 and Temurin JDK 21.0.12.1+1 are pinned below `.tools/` with
+  exact official archives, complete extracted-tree identities, stable
+  `.tools/ghidra` and `.tools/jdk` links, loader source, banners, and headless
+  execution attested by `scripts/attest_analysis_toolchain.py`.
+- A separate empty temporary fixture replayed archive extraction and stable
+  link creation from scratch and passed every identity/execution check twice.
+- Private headless databases live under ignored `ghidra-project/`, matching
+  TH095's working layout. An attempted `.analysis/` project root was rejected
+  by Ghidra because a path element starts with a dot; exports and receipts
+  still belong below `.analysis/ghidra/`.
+- A clean analyzed TH04 `MAIN.EXE` project and subsequent read-only replay pass
+  the independent MZ database Oracle. The checked state has 920 provisional
+  auto-analysis functions and 38,666 instructions; these counts are
+  navigation state only. The exact checks cover the 156,258-byte target,
+  6,144-byte header, 150,114-byte relocated load image, 1,136 relocation
+  records, seven source mappings, entry `1000:0000`, timeout state, and eight
+  deterministic samples.
+- Loader-only real-corpus controls also pass for TH01 `OP.EXE` with 625
+  relocations and TH04 `OP.EXE` with zero relocations. Independent loaded-byte,
+  relocation, mapping, and stale-nonce mutations all fail the intended
+  database-Oracle dimension.
 
 ## Open provenance issue
 
@@ -69,14 +90,16 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Remaining tool gaps
 
-- No DOSBox-X, Neko Project II debug build, IDA, or Ghidra headless backend is
-  currently available on `PATH`.
+- No DOSBox-X or Neko Project II debug runtime is installed yet.
+- No IDA backend is installed. Pinned Ghidra is operational through
+  `.tools/ghidra` and `scripts/ghidra.py`; it intentionally need not be on the
+  host `PATH`.
 - `ndisasm`, GNU `objdump`, Wine, `unar`, and mtools are available.
 
 ## Next bounded work
 
-1. Select a headless 16-bit MZ analysis backend and build a reproducible TH04
-   database/export with segment:offset and relocation awareness.
+1. Extend the headless Ghidra private export with a bounded provisional
+   function/xref inventory when the reconstruction phase begins.
 2. Generate the initial artifact/segment/function inventory without making
    source or exactness claims.
 3. Use bounded compiler/ABI probes and map/OMF evidence to separate
