@@ -1,15 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="560" height="176" role="img" aria-label="TH04 reconstruction progress: 0.00 percent of currently confirmed authored bytes are exact; 1.80 percent have source">
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="176" role="img" aria-label="TH04 reconstruction progress: 99.97% of the confirmed authored-byte set is exact, origin review 100.00%">
   <rect width="560" height="176" rx="8" fill="#1f2335"/>
   <text x="24" y="28" fill="#f4f4f5" font-family="sans-serif" font-size="16" font-weight="600">TH04 reconstruction progress</text>
 
-  <text x="24" y="52" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Exact / confirmed authored bytes</text>
-  <text x="536" y="52" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">0.00%</text>
+  <text x="24" y="52" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Confirmed authored-byte coverage</text>
+  <text x="536" y="52" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">99.97%</text>
   <rect x="24" y="60" width="512" height="12" rx="6" fill="#3b4058"/>
-  <text x="24" y="89" fill="#c8cad2" font-family="sans-serif" font-size="12">0 / 1,446 bytes · denominator provisional</text>
+  <rect x="24" y="60" width="511.84" height="12" rx="6" fill="#9b6de3"/>
+  <text x="24" y="89" fill="#c8cad2" font-family="sans-serif" font-size="12">12,704 exact / 12,708 confirmed authored bytes</text>
 
-  <text x="24" y="116" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Source-present / confirmed authored bytes</text>
-  <text x="536" y="116" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">1.80%</text>
+  <text x="24" y="116" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Origin/boundary reviewed</text>
+  <text x="536" y="116" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">100.00%</text>
   <rect x="24" y="124" width="512" height="12" rx="6" fill="#3b4058"/>
-  <rect x="24" y="124" width="9.21" height="12" rx="6" fill="#9b6de3"/>
-  <text x="24" y="153" fill="#c8cad2" font-family="sans-serif" font-size="12">1 / 16 units · 26 / 1,446 bytes</text>
+  <rect x="24" y="124" width="512.00" height="12" rx="6" fill="#9b6de3"/>
+  <text x="24" y="153" fill="#c8cad2" font-family="sans-serif" font-size="12">114 / 114 candidates · 0 pending</text>
 </svg>

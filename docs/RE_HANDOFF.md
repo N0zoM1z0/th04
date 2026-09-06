@@ -42,6 +42,10 @@ runtime scenario has been authored.
   evidence binds to the unit and exact file extent. Forged exact-ledger
   fixtures fail closed on reuse, missing metadata, bad extents, and unequal raw
   hashes.
+- `scripts/progress.py` now generates both `docs/PROGRESS.md` and
+  `resources/progress.svg` from the ledgers using the established TH095 layout.
+  Its check mode detects stale output, and CI rejects generated progress that
+  was not committed.
 - The local candidate build chain pins and validates TC4J media plus installed
   BIN/INCLUDE/LIB/startup trees, TCC 4.02, TLINK 6.10, TASM32 5.0,
   configuration files, and ReC98's MS-DOS Player P0281 binary. Wine 8.0 is the

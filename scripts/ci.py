@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -23,6 +24,20 @@ def main() -> int:
         run("Python unit tests", [python, "-m", "unittest", "discover", "-s", "tests", "-v"])
         run("Tracking ledgers", [python, "scripts/validate_tracking.py"])
         run("Python syntax", [python, "-m", "compileall", "-q", "scripts", "tests"])
+        run("Regenerate progress artifacts", [python, "scripts/progress.py"])
+        run("Check generated progress", [python, "scripts/progress.py", "--check"])
+        if os.environ.get("CI"):
+            run(
+                "Check generated progress is committed",
+                [
+                    "git",
+                    "diff",
+                    "--exit-code",
+                    "--",
+                    "docs/PROGRESS.md",
+                    "resources/progress.svg",
+                ],
+            )
         manifest = tomllib.loads(
             (ROOT / "config" / "targets.toml").read_text(encoding="utf-8")
         )
