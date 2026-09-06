@@ -42,7 +42,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-bullets-v11-precommit-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-sndload-z-v12-precommit-001/receipt.json`.
 It passes all 62 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function
@@ -176,6 +176,16 @@ allocation, pseudo-register alias/reference, flag, and assembler-mode variants
 do not produce `89 C3`. A segment-aware clean-C/C++ CODE survey found no
 register-register `89 /r` compiler precedent in the current corpus.
 
+The remaining historical source pragma is not an escape hatch. TC4J documents
+`-Z` as “Suppress register reloads”, while `snd_load.cpp` has carried `-Z-`
+since its first C++ decompilation. Minimal `_BX=_AX` and block-scope DS-save
+controls have identical instruction LEDATA under `-Z` and `-Z-`: `MOV BX,AX`
+stays `8B D8`, and DS saves stay MOV-based. Flipping only the real function to
+`-Z` also keeps `8B D8` and makes things worse by replacing two target-exact
+`LES BX,[BX+8F8h]` reloads at function offsets `+0x96` and `+0xAC` with plain
+`MOV BX,[BX+8F8h]`. Target differences grow from 2 to 4; do not repeat this
+profile.
+
 The DS pair is independently constrained as well. `geninterrupt(i)` in the
 attested TC4J `DOS.H` is only `__int__(i)` and carries no segment-register
 clobber contract, so the compiler cannot infer that PMD/MMD returns the song
@@ -258,7 +268,7 @@ The resulting full 875-byte target/candidate slice has SHA-256
 `862908f44a5ade53c3148393f09bc0f76c02aac61488594e250aa8b91826673f`
 and the ordered overlapping relocation list agrees. Two isolated cold builds in
 `gptweb-bullets-full-v11-001` verify the full unit; the later default cohort
-`gptweb-bullets-v11-precommit-001` verifies it together with all other current
+`gptweb-sndload-z-v12-precommit-001` verifies it together with all other current
 exact owners. No inline assembly, codestring, `__emit__`, raw byte directive, or
 patched object/link output is used.
 

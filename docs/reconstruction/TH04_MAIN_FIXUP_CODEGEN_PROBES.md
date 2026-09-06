@@ -274,6 +274,24 @@ jumps` and `-Z` as `Suppress register reloads`; no separate documented
 register-MOV direction optimizer switch surfaced. Do not invent an `-O*`
 peephole matrix without new tool evidence.
 
+### `-Z` versus `-Z-` does not recover the final bytes
+
+A dedicated v12 control closes the remaining register-reload option gap. In a
+minimal official-TC4J probe, `#pragma option -Z` and `#pragma option -Z-` produce
+identical instruction LEDATA: `_BX = _AX` is `8B D8` in both, while a
+block-scoped `unsigned saved_ds = _DS` still lowers to
+`MOV [BP-2],DS ... MOV DS,[BP-2]` rather than `PUSH DS ... POP DS`.
+
+The real-function control is stricter. Starting from the latest isolated cold
+source (including the accepted natural `MOV AX,[BP+6]` replacement), changing
+only the first pragma from `-Z-` to `-Z` leaves the middle `MOV BX,AX` as
+`8B D8`. It additionally changes two previously exact instructions at function
+relative `+0x96` and `+0xAC` from `LES BX,[BX+8F8h]` to
+`MOV BX,[BX+8F8h]`, so the target mismatch count rises from two bytes to four.
+The private probe receipt is
+`.analysis/reconstruction/probes/snd-load-zreload-v12/receipt.json`.
+
+
 A similarly decoded survey found no clean TH04 C/C++ precedent for an isolated
 mid-function `PUSH DS ... POP DS` save across arbitrary statements; apparent
 raw-byte hits were largely non-code/data or interrupt-style full-register save

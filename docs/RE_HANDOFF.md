@@ -117,7 +117,7 @@ runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest pre-commit receipt
-  `gptweb-bullets-v11-precommit-001` passes all 62 current default-selected units across raw bytes,
+  `gptweb-sndload-z-v12-precommit-001` passes all 62 current default-selected units across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
 - The current reviewed authored byte denominator is 12,708 bytes across 56
@@ -136,7 +136,7 @@ runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest cold replay `gptweb-bullets-v11-precommit-001`
+- The latest cold replay `gptweb-sndload-z-v12-precommit-001`
   passed all 62 current default exact byte owners in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
