@@ -2,6 +2,20 @@ schema_version = 1
 artifact = "th04-main"
 reference_revision = "b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
 
+
+[[splits]]
+id = "th04-dialog-init-exit-tu-split"
+trigger_units = ["th04-main-dialog-init", "th04-main-dialog-exit"]
+scaffold_path = "th04/main/dialog/dialog.cpp"
+repo_fragment = "src/th04/main/partials/dialog_init_exit.cpp"
+remove_mode = "suffix"
+fragment_overlay_path = "th04/main/dialog/init_exit.cpp"
+repo_wrapper = "src/th04/main/modules/th04_dialog_init_exit.cpp"
+wrapper_overlay_path = "th04/dialog_i.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/dialog.cpp\",\n"
+build_insert = "\t\"th04/dialog_i.cpp\",\n"
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/th04/main/slowdown.cpp"
@@ -322,22 +336,21 @@ object_path = "obj/th04/dialog.obj"
 
 [[units]]
 id = "th04-main-dialog-init"
-default_enabled = false
 repo_source = "src/th04/main/partials/dialog_init.cpp"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
-map_module = "th04/dialog.cpp"
+map_module = "th04/dialog_i.cpp"
 map_mode = "contains"
-object_path = "obj/th04/dialog.obj"
+object_path = "obj/th04/dialog_i.obj"
 
 [[units]]
 id = "th04-main-dialog-exit"
 repo_source = "src/th04/main/partials/dialog_exit.cpp"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
-map_module = "th04/dialog.cpp"
+map_module = "th04/dialog_i.cpp"
 map_mode = "contains"
-object_path = "obj/th04/dialog.obj"
+object_path = "obj/th04/dialog_i.obj"
 
 [[units]]
 id = "th04-main-stages-render-suffix"

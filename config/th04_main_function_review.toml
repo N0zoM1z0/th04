@@ -142,3 +142,9 @@ reason = "Ghidra omitted direct switch case blocks. The 11-entry near-jump table
 jump_table_address = "0x2CEAF"
 jump_table_count = 11
 cs_base = "0x23A90"
+
+[[new_exact]]
+id = "th04-main-fn-1d729"
+address = "0x1D729"
+evidence_id = "ev-th04-main-dialog-init-boundary-split-v1"
+reason = "dialog_init became reviewable only after restoring its original exact C++ translation-unit ownership; Ghidra and TLINK both bind the full 197-byte function at the new exact owner start."

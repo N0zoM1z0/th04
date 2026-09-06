@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,453 / 12,494 = 99.671842% exact**;
-- authored functions: **111 / 112 = 99.107143% exact**;
+- authored C/C++ bytes: **12,650 / 12,691 = 99.676936% exact**;
+- authored functions: **112 / 113 = 99.115044% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -42,13 +42,12 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-pmd-aggregate-001/receipt.json`.
-It passes all 59 current default-selected units in both isolated cold
-materializations after consolidating the old PMD prefix/suffix slices into one
-complete exact 46-byte pure-C owner. Three known `dialog` relocation-order
-investigations are marked
-`default_enabled = false`; they remain individually replayable with `--unit`
-and are never silently accepted by the default aggregate.
+`.analysis/reconstruction/exact-unit-replay/gptweb-dialog-split-aggregate-001/receipt.json`.
+It passes all 60 current default-selected units in both isolated cold
+materializations, including the full pure-C PMD owner and the restored natural
+C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
+`default_enabled = false`; they stay individually replayable with `--unit` and
+are never silently accepted by the default aggregate.
 
 ### Fragment rule
 
@@ -62,6 +61,22 @@ assembly into `src/`.
 No accepted C/C++ source under `src/th04/main/exact/`,
 `src/th04/main/modules/`, or `src/th04/main/partials/` contains `_asm`, an
 `asm { ... }` block, `#pragma codestring`, or `__emit__`.
+
+### Translation-unit split rule
+
+`[[splits]]` entries in the exact-unit manifest can restore an original C/C++
+TU boundary without importing old objects. A split is activated only by named
+units and must remove one checked-in fragment that occurs exactly once in the
+pinned scaffold; `suffix` mode additionally requires that fragment to reach
+EOF. The same maintained bytes and a checked-in current-header wrapper are then
+materialized as a second TU, and one unique build-graph anchor is patched so
+normal `build.bat`/Tup/TC4J/TLINK compile and link it in the declared order.
+The receipt records all scaffold, fragment, wrapper, and build-graph hashes.
+
+The TH04 dialog split is the first use: `dialog_init` + `dialog_exit` are the
+unique 2,063-byte suffix of the pinned merged implementation. Moving that
+suffix to `th04/dialog_i.cpp` preserves every linked code byte but changes OMF
+FIXUPP batching back to the target order.
 
 ## Explicit nonexact byte gaps
 
@@ -151,16 +166,34 @@ assembly, or any equivalent byte injection to manufacture equality.
 
 ## Relocation-order blockers
 
-`dialog_op`, `dialog_run`, and `dialog_init` were replayed in two isolated
-builds. Each has exact raw bytes, exact containing TLINK placement, valid and
-deterministic OMF, and the same set of overlapping relocation sites as the
-target. The **ordered** relocation site list is a cyclically different order.
-Because ordered MZ relocations are a required Oracle, all three byte regions are
-`blocked` with provisional ownership and are excluded from the reviewed byte
-denominator.
+`dialog_op`, `dialog_run`, and `dialog_init` initially reproduced raw bytes,
+map placement, deterministic OMF, and relocation *sets* while failing the
+required ordered-relocation Oracle. Decoding `dialog.obj` showed why ordering is
+sensitive: MZ segment relocations are emitted in Intel OMF FIXUPP subrecord
+order, and linked code equality does not force identical LEDATA/FIXUPP record
+partitioning.
 
-This distinction is important: raw equality and relocation-set equality are
-not enough for this repository's exact policy.
+`dialog_init` is now solved. ReC98 history identified a later maintenance merge
+of two lower dialog translation units. At the parent revision, `dialog_f.cpp`
+contains shared/op/run/animate while a separate `dialog.cpp` contains
+init/exit. Recompiling that historical natural C++ split with the same pinned
+TC4J showed that the 355-byte init/exit code payload is byte-identical to the
+current merged suffix, but its single-object FIXUPP sequence yields exactly the
+six target `dialog_init` relocations. A diagnostic relink confirmed:
+
+- `dialog_init`: raw exact and ordered relocations exact after the split;
+- `dialog_exit`: remains raw/relocation exact;
+- `dialog_op` and `dialog_run`: remain raw exact but relocation-order mismatched.
+
+The checked-in solution does **not** use the historical object. A minimal
+current-header pure-C++ second TU compiles to the same 355-byte code payload and
+FIXUPP shape. The cold replay driver restores this split through the build graph
+and `gptweb-dialog-split-aggregate-001` passes all 60 default units twice.
+
+This also falsifies the obvious next guess for the remaining blockers: the
+historical pre-merge `dialog_f.obj` already has the same `dialog_op` and
+`dialog_run` pointer-fixup order as the current candidate. Their relocation
+order needs a different source/OMF-emission explanation.
 
 ## Function accounting
 
@@ -175,8 +208,9 @@ claim.
 - one exact authored byte owner from `config/units.csv`.
 
 Automatic promotion still requires Ghidra's complete body to be contiguous
-and wholly contained inside that exact byte owner; this now accepts 100 functions,
-including the newly exact 46-byte `snd_pmd_resident`.
+and wholly contained inside that exact byte owner; this now accepts 101
+functions, including the exact `snd_pmd_resident` and newly owned 197-byte
+`dialog_init`.
 A second, explicit manual-review path handles analysis false negatives without
 trusting Ghidra's body set. Each `[[reviewed_exact]]` entry in
 `config/th04_main_function_review.toml` must agree with the same TLINK public and
@@ -195,12 +229,19 @@ tables sit immediately after their bodies. `bullets_update` remains provisional
 because it crosses the excluded 17-byte handwritten-call gap; an exact owner on
 both sides cannot prove the missing middle.
 
-The resulting denominator is therefore 112 reviewed functions: 111 exact plus
-the single explicit nonexact `snd_load`. One additional candidate,
-`bullets_update`, remains provisional and outside the denominator.
+The resulting denominator is therefore 113 reviewed functions: 112 exact plus
+the single explicit nonexact `snd_load`. `dialog_init` is a newly tracked
+function admitted only by explicit `[[new_exact]]` policy after its exact byte
+owner appeared. One additional candidate, `bullets_update`, remains
+provisional and outside the denominator.
 
 ## Reusable Borland lessons
 
+- Translation-unit boundaries are binary inputs even when linked code bytes are
+  unchanged. They can alter Borland LEDATA/FIXUPP batching and therefore the
+  ordered DOS MZ relocation table. Restore natural C/C++ TU ownership before
+  trying source-semantic changes when raw bytes and relocation sets already
+  match but relocation order does not.
 - Borland segment-specific pointers are code-generation relevant. When `_ES`
   already contains the IVT segment, dereferencing `void far * __es *` can emit a
   single `LES` with an ES override; generic far pointers or `MK_FP` are not

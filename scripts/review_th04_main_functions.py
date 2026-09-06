@@ -68,6 +68,7 @@ def exact_authored_owners() -> list[dict[str, object]]:
                 {
                     "start": start,
                     "end": start + int(row["size"], 0),
+                    "file_start": int(row["file_offset"], 0),
                     "unit_id": row["id"],
                     "source": row["source"],
                     "owner_name": row["name"],
@@ -94,6 +95,7 @@ def candidates(functions: dict[int, str], publics: dict[int, list[str]]) -> list
                 "owner_unit": owner["unit_id"],
                 "owner_start": owner["start"],
                 "owner_end": owner["end"],
+                "file_offset": int(owner["file_start"]) + (address - int(owner["start"])),
                 "source": owner["source"],
                 "owner_name": owner["owner_name"],
             }
@@ -362,11 +364,41 @@ def write_reviewed_ledger(
         )
 
     missing_automatic = sorted(set(automatic_by_address) - seen_automatic)
-    if missing_automatic:
-        raise ValueError(
-            "automatic exact addresses missing from function ledger: "
-            + ", ".join(f"0x{address:X}" for address in missing_automatic)
+    policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
+    new_exact = {
+        int(item["address"], 0): item for item in policy.get("new_exact", [])
+    }
+    for address in missing_automatic:
+        item = automatic_by_address[address]
+        declaration = new_exact.get(address)
+        if declaration is None:
+            raise ValueError(
+                f"automatic exact address 0x{address:X} is missing from the "
+                "function ledger and lacks an explicit [[new_exact]] policy"
+            )
+        row = {field: "" for field in fieldnames}
+        row.update(
+            {
+                "id": str(declaration["id"]),
+                "artifact": "th04-main",
+                "address": f"0x{address:X}",
+                "file_offset": f"0x{int(item['file_offset']):X}",
+                "size": f"0x{int(item['size']):X}",
+                "boundary_state": "reviewed",
+                "state": "exact",
+                "name": str(item["public"]),
+                "owner_unit": str(item["owner_unit"]),
+                "source": str(item["source"]),
+                "evidence_ids": str(declaration["evidence_id"]),
+                "notes": (
+                    "New exact-owner function admitted by explicit policy: "
+                    + str(declaration["reason"])
+                ),
+            }
         )
+        rows.append(row)
+        seen_automatic.add(address)
+    rows.sort(key=lambda row: int(row["address"], 0))
     missing_manual = sorted(set(manual_by_id) - seen_manual)
     if missing_manual:
         raise ValueError(

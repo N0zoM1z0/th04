@@ -137,6 +137,79 @@ cs_base = "0x10000"
             self.assertEqual(promoted["owner_unit"], "owner-exact")
             self.assertEqual(promoted["source"], "src/unit.c")
 
+    def test_automatic_review_adds_explicit_new_exact_row(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = [
+                "id", "artifact", "address", "file_offset", "size",
+                "boundary_state", "state", "name", "owner_unit", "source",
+                "evidence_ids", "notes",
+            ]
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=header)
+                writer.writeheader()
+            policy = root / "policy.toml"
+            policy.write_text(
+                '[[new_exact]]\nid = "fn-new"\naddress = "0x100"\n'
+                'evidence_id = "ev-new"\nreason = "explicit fixture"\n',
+                encoding="utf-8",
+            )
+            out = root / "out.csv"
+            old_root, old_policy = review.ROOT, review.POLICY
+            review.ROOT, review.POLICY = root, policy
+            try:
+                review.write_reviewed_ledger(
+                    out,
+                    [{
+                        "address": 0x100, "file_offset": 0x200, "size": 4,
+                        "public": "fixture()", "owner_unit": "owner-exact",
+                        "source": "src/unit.c",
+                    }],
+                    [],
+                )
+            finally:
+                review.ROOT, review.POLICY = old_root, old_policy
+            with out.open(newline="", encoding="utf-8") as stream:
+                row = next(csv.DictReader(stream))
+            self.assertEqual(row["id"], "fn-new")
+            self.assertEqual(row["state"], "exact")
+            self.assertEqual(row["evidence_ids"], "ev-new")
+
+    def test_automatic_review_rejects_unlisted_new_exact_row(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = [
+                "id", "artifact", "address", "file_offset", "size",
+                "boundary_state", "state", "name", "owner_unit", "source",
+                "evidence_ids", "notes",
+            ]
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                csv.DictWriter(stream, fieldnames=header).writeheader()
+            policy = root / "policy.toml"
+            policy.write_text("schema_version = 1\n", encoding="utf-8")
+            out = root / "out.csv"
+            old_root, old_policy = review.ROOT, review.POLICY
+            review.ROOT, review.POLICY = root, policy
+            try:
+                with self.assertRaisesRegex(ValueError, "lacks an explicit"):
+                    review.write_reviewed_ledger(
+                        out,
+                        [{
+                            "address": 0x100, "file_offset": 0x200, "size": 4,
+                            "public": "fixture()", "owner_unit": "owner-exact",
+                            "source": "src/unit.c",
+                        }],
+                        [],
+                    )
+            finally:
+                review.ROOT, review.POLICY = old_root, old_policy
+
 
 if __name__ == "__main__":
     unittest.main()

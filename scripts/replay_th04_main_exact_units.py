@@ -107,6 +107,97 @@ def overlay_sources(source_root: Path, entries: list[dict[str, str]]) -> list[di
     return overlays
 
 
+def apply_source_splits(
+    source_root: Path,
+    splits: list[dict[str, object]],
+    selected_ids: set[str],
+) -> list[dict[str, object]]:
+    """Apply exact source/TU splits that are triggered by selected units.
+
+    Every split removes one checked-in fragment from one pinned scaffold source,
+    materializes that exact fragment as an extra translation-unit dependency,
+    copies a checked-in wrapper, and inserts the wrapper immediately after a
+    unique build-graph anchor.  The source removal must be unique; `suffix`
+    mode additionally requires the fragment to end the scaffold file.
+    """
+
+    receipts: list[dict[str, object]] = []
+    for split in splits:
+        triggers = {str(value) for value in split.get("trigger_units", [])}
+        if not (triggers & selected_ids):
+            continue
+        split_id = str(split["id"])
+        fragment_path = ROOT / str(split["repo_fragment"])
+        wrapper_path = ROOT / str(split["repo_wrapper"])
+        if not fragment_path.is_file() or not wrapper_path.is_file():
+            raise FileNotFoundError(
+                fragment_path if not fragment_path.is_file() else wrapper_path
+            )
+
+        scaffold = source_root / str(split["scaffold_path"])
+        original = scaffold.read_bytes()
+        fragment = fragment_path.read_bytes()
+        if original.count(fragment) != 1:
+            raise RuntimeError(
+                f"{split_id}: split fragment must occur exactly once in "
+                f"{split['scaffold_path']}"
+            )
+        offset = original.index(fragment)
+        remove_mode = str(split.get("remove_mode", "unique"))
+        if remove_mode == "suffix":
+            if offset + len(fragment) != len(original):
+                raise RuntimeError(f"{split_id}: split fragment is not the scaffold suffix")
+        elif remove_mode != "unique":
+            raise RuntimeError(f"{split_id}: unknown remove_mode {remove_mode!r}")
+        stat = scaffold.stat()
+        truncated = original[:offset] + original[offset + len(fragment):]
+        scaffold.write_bytes(truncated)
+        os.utime(scaffold, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+
+        fragment_overlay = source_root / str(split["fragment_overlay_path"])
+        fragment_overlay.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(fragment_path, fragment_overlay)
+        wrapper_overlay = source_root / str(split["wrapper_overlay_path"])
+        wrapper_overlay.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(wrapper_path, wrapper_overlay)
+
+        build_file = source_root / str(split["build_file"])
+        build_text = build_file.read_text(encoding="utf-8")
+        build_anchor = str(split["build_anchor"])
+        build_insert = str(split["build_insert"])
+        if build_text.count(build_anchor) != 1:
+            raise RuntimeError(
+                f"{split_id}: expected one build anchor in {split['build_file']}, "
+                f"got {build_text.count(build_anchor)}"
+            )
+        patched_build = build_text.replace(
+            build_anchor, build_anchor + build_insert, 1
+        )
+        build_file.write_text(patched_build, encoding="utf-8")
+        receipts.append(
+            {
+                "id": split_id,
+                "trigger_units": sorted(triggers & selected_ids),
+                "scaffold_path": str(split["scaffold_path"]),
+                "scaffold_original_sha256": digest_bytes(original),
+                "scaffold_truncated_sha256": digest_bytes(truncated),
+                "fragment_offset": offset,
+                "fragment_size": len(fragment),
+                "repo_fragment": str(split["repo_fragment"]),
+                "fragment_sha256": digest_file(fragment_path),
+                "fragment_overlay_path": str(split["fragment_overlay_path"]),
+                "repo_wrapper": str(split["repo_wrapper"]),
+                "wrapper_sha256": digest_file(wrapper_path),
+                "wrapper_overlay_path": str(split["wrapper_overlay_path"]),
+                "build_file": str(split["build_file"]),
+                "build_anchor": build_anchor,
+                "build_insert": build_insert,
+                "build_file_sha256": digest_file(build_file),
+            }
+        )
+    return receipts
+
+
 def build(source: Path, log: Path) -> None:
     prefix = ROOT / ".analysis" / "toolchain" / "wineprefix"
     environment = os.environ.copy()
@@ -200,6 +291,7 @@ def main() -> int:
     config = tomllib.loads(MANIFEST.read_text(encoding="utf-8"))
     revision = config["reference_revision"]
     entries = list(config["units"])
+    splits = list(config.get("splits", []))
     if args.unit:
         wanted = set(args.unit)
         entries = [entry for entry in entries if entry["id"] in wanted]
@@ -242,6 +334,9 @@ def main() -> int:
         source = run_root / "source"
         materialize(revision, source)
         overlays = overlay_sources(source, entries)
+        split_receipts = apply_source_splits(
+            source, splits, {entry["id"] for entry in entries}
+        )
         log = run_root / "build.log"
         build(source, log)
         candidate_path, units = inspect_build(source, entries, ledger, target_mz)
@@ -250,6 +345,7 @@ def main() -> int:
                 "label": label,
                 "source": str(source.relative_to(ROOT)),
                 "overlays": overlays,
+                "source_splits": split_receipts,
                 "build_log_sha256": digest_file(log),
                 "candidate_main_sha256": digest_file(candidate_path),
                 "units": units,
