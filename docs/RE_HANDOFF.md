@@ -174,6 +174,13 @@ status alone is not independent provenance or acceptance evidence.
 
 ## Next bounded work
 
+Before repeating compiler/TU experiments, read
+`docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`. It records the tested
+`dialog_op` TU rotation matrix, the negative `dialog_run` RET split and source
+shapes, the TC86 option matrix, and the pinned-media TASM 4.1 `-B` behavior.
+The remaining work should target genuinely new source/IR or producer evidence,
+not previously falsified boundary/assembler modes.
+
 Preserve the >99% reviewed authored function/byte baseline with the default
 two-cold replay before changing shared source or toolchain surfaces. The
 smallest remaining reviewed exactness investigation is the 41-byte `snd_load`

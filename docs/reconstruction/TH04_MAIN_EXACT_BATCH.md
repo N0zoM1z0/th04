@@ -158,6 +158,14 @@ claim:
   pairs. `__saveregs` saves all registers rather than just DS, while
   `__loadds` does not create the required mid-function pair.
 
+Additional FIXUPP/code-generation work is recorded in
+`docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`. In particular, the
+pinned TASM media contains a DOS TASM 4.1 that TCC can invoke through `-B`; it
+still assembles ordinary `mov bx, ax` as `8B D8`. A corrected segment-aware OMF
+survey also finds no clean TC86 C/C++ CODE precedent for register-register
+`89 /r` in the current cold corpus. Raw OMF byte searches are not accepted as
+instruction evidence.
+
 These observations do not prove what the original ZUN source looked like.
 They do rule out several cheap compiler-profile explanations and make future
 work focus on source/IR recovery rather than repeating the same flag or TASM
@@ -193,7 +201,10 @@ and `gptweb-dialog-split-aggregate-001` passes all 60 default units twice.
 This also falsifies the obvious next guess for the remaining blockers: the
 historical pre-merge `dialog_f.obj` already has the same `dialog_op` and
 `dialog_run` pointer-fixup order as the current candidate. Their relocation
-order needs a different source/OMF-emission explanation.
+order needs a different source/OMF-emission explanation. Follow-up natural TU
+boundary, source-shape, TC86-option, and TCC-via-TASM probes are tabulated in
+`TH04_MAIN_FIXUP_CODEGEN_PROBES.md`; none repairs `dialog_op` or `dialog_run`
+without changing another required dimension.
 
 ## Function accounting
 
