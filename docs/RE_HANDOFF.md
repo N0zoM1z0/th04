@@ -5,10 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After expanding the reviewed authored boundary into `MB_DFT_TEXT`,
-`snd_mmd_resident`, and the pure-C body of `snd_se_reset`, reviewed authored
-C/C++ bytes are 12,932 / 12,983 (99.607179%) exact, and reviewed authored
-functions are 115 / 116 (99.137931%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra TLINK-public audit and natural `dialog_animate` reconstruction, reviewed authored C/C++ bytes are 12,994 / 13,045 (99.609046%) exact, and reviewed authored functions are 124 / 125 (99.2%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -118,11 +115,11 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-authored-expand-default-004` passes all 64 current default-selected
+  `gptweb-dialog-animate-default-001` passes all 65 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 12,983 bytes across 59
-  authored units/regions; 12,932 bytes across 55 units/regions are exact. The
+- The current reviewed authored byte denominator is 13,045 bytes across 60
+  reviewed authored units/regions; 12,994 bytes across 56 units/regions are exact. The
   reviewed nonexact byte remainder is deliberately visible: 47 bytes belong to
   the source-present `snd_mmd_resident` candidate, and four blocked bytes remain
   in `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
@@ -136,7 +133,7 @@ deterministic TH04 runtime scenario has been authored.
   plus 111-byte `boss_score_bonus`. The next public, `midboss_defeat_update`,
   starts at `0x2A047` and its upstream candidate contains inline assembly, so it
   remains outside this authored owner. The 217-byte prefix is exact in focused
-  two-cold replay and the 64-unit aggregate.
+  two-cold replay and the 65-unit aggregate.
 - `snd_mmd_resident` is now a reviewed 47-byte authored source-present candidate
   rather than an unclassified whole-module candidate. The TH04-wrapper natural
   C source recovers the target `LES`, all three magic checks, and both global
@@ -153,9 +150,9 @@ deterministic TH04 runtime scenario has been authored.
   `0x238B1` NOP is upstream `#pragma codestring` padding and is deliberately
   outside authored C/C++ accounting. The maintained source uses
   `compat/rec98` one-line adapters plus `source_mode=forwarded-fragment`, and
-  focused replay plus the 64-unit aggregate are exact. Ghidra has no function
-  at `0x238A6`, so this expands byte ownership only; no function-ledger row is
-  fabricated.
+  focused replay plus the 65-unit aggregate are exact. Ghidra has no function
+  at `0x238A6`; the checked-in no-Ghidra TLINK/raw boundary gate now promotes
+  `_snd_se_reset` as a reviewed exact function without fabricating Ghidra data.
 - Re-screening the remaining 0x5A-byte `stages.cpp` prefix shows that it is the
   single `carpet_lighting_put_new()` function and that the candidate relies on
   inline ASM for DS/ES setup, `MUL`, `LODSB`, `SHL`, and `LOOP`. The following
@@ -167,14 +164,29 @@ deterministic TH04 runtime scenario has been authored.
   `snd_se_r`, `snd_se`, `scrolly3`, and `grcg_3`), now represented explicitly
   as excluded `origin=padding` owners; pinned ReC98 only corroborates the
   matching codestring values. `bullet_u` is fully covered by two exact authored
-  owners. The live candidate-module queue therefore falls from 16 to 9 without
-  changing the 12,932/12,983 authored byte or 115/116 function metrics.
+  owners. The live candidate-module queue therefore falls from 16 to 9; later no-Ghidra review and `dialog_animate` recovery raise the live metrics without reopening those retired umbrellas.
 - `item_splashes_init()` is a real remaining 26-byte mixed-code gap at target
   `0x23F16`: target Ghidra and TLINK agree on the full function, and the current
   candidate matches 25/26 bytes. The only difference is target `31 C0` versus
   TC4J `33 C0`; standard `memset`, Borland `__memset__`, and `_AX ^= _AX`
   natural-source probes do not recover the target layout. Keep it nonexact and
   do not replace the mismatch with inline ASM or byte emission.
+- A TLINK-public-versus-ledger audit inside exact authored owners exposed eight
+  function-boundary false negatives hidden by Ghidra: `midboss_invalidate_func`,
+  `boss_backdrop_render`, `snd_se_reset`, `grcg_setmode_rmw_seg3`, both bullet
+  turn functions, `tune_for_easy`, and `BULLET_TEMPLATE_TUNE_EASY`. Seven have
+  no target Ghidra entry; `bullet_turn_y` was swallowed into a bogus oversized
+  body. The checked-in no-Ghidra gate reconstructs these boundaries from target
+  raw decode plus TLINK and exact-owner evidence instead of fabricating Ghidra
+  metadata. `tune_for_easy` additionally validates its metadata byte and all 22
+  jump-table targets. The exact-owner TLINK-public audit now reports zero
+  omissions.
+- `dialog_animate` is now a 62-byte exact natural-C++ owner and automatic exact
+  function. The maintained source replaces the upstream hand-written
+  `NOP; PUSH CS; CALL near` bridge with an ordinary call plus `#pragma
+  samecodeseg`. TC86/TLINK reproduce the target bridge and ordered relocation
+  sites naturally; focused `gptweb-dialog-animate-001` and the 65-unit aggregate
+  `gptweb-dialog-animate-default-001` both pass.
 - `snd_load` now has three additional exact natural-source subspans. Identity
   fragments recover the DOS-open and driver-dispatch/read sequences. The
   parameter reload uses `_AX = *reinterpret_cast<snd_load_func_t near *>(&func);`;
@@ -183,23 +195,26 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-authored-expand-default-004`
-  passed all 64 current default exact-replay units in two isolated
+- The latest aggregate cold replay `gptweb-dialog-animate-default-001`
+  passed all 65 current default exact-replay units in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
-  from byte ownership. The current review accepts 101 contiguous functions
-  automatically plus 14 replayable manual exact reviews. `bullets_update` is
-  the exact-extent case: one 0x36B exact owner is bound to its TLINK public,
-  0x360-byte raw code decode through `RETF`, trailing switch metadata/table, and
-  next-public boundary despite unusable Ghidra body ranges. The two new
-  `MB_DFT_TEXT` score-bonus functions also use the manual gate because Ghidra's
-  min/max spans are correct but its body sets are noncontiguous; TLINK + exact
-  owner + gap-free raw decode validate their complete 0x6A and 0x6F extents.
-  `snd_load` remains the sole reviewed nonexact function, giving 115/116 exact.
-  No current function candidate is provisional.
+  from byte ownership. The current review accepts 102 contiguous Ghidra/TLINK
+  functions automatically plus 22 replayable manual exact reviews. A fresh
+  TLINK-public audit found eight real exact-owner functions that the target
+  Ghidra inventory had missed or misgrouped. `reviewed_exact_no_ghidra` admits
+  them only with exact authored ownership, a matching TLINK public, gap-free raw
+  decode through `RET`/`RETF`, and an exact next-public or owner-end boundary;
+  `tune_for_easy` additionally requires its metadata byte and complete 22-entry
+  jump table to fill the trailing extent and target decoded instruction starts.
+  Re-running the audit now finds zero uncovered TLINK publics inside exact
+  authored owners. `bullets_update` remains the separate exact-extent/table
+  case, and the two `MB_DFT_TEXT` score-bonus functions remain Ghidra-min/max
+  manual cases. `snd_load` is the sole reviewed nonexact function, giving
+  124/125 exact.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain

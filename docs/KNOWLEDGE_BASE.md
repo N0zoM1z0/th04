@@ -260,3 +260,19 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   compiler intrinsic but changes register-setup order and still uses `33 C0`;
   `_AX ^= _AX` also canonicalizes to `33 C0`. Do not use inline assembly or
   `__emit__` to manufacture the target encoding.
+
+- Do not use Ghidra's function inventory as the authored-function universe.
+  Cross-check every TLINK public that falls inside an exact authored byte owner
+  against the function ledger. TH04 recovered eight omitted functions this way;
+  one (`bullet_turn_y`) was even hidden inside an unrelated oversized Ghidra
+  body. `reviewed_exact_no_ghidra` requires a matching exact owner/public,
+  gap-free raw decode through `RET`/`RETF`, and an exact next-public or owner-end
+  boundary. Switch metadata/tables must completely fill any trailing extent and
+  target decoded instruction starts. The current exact-owner public audit has
+  zero remaining omissions.
+- `dialog_animate` is a second accepted control for Borland `#pragma
+  samecodeseg` plus normal TLINK far-call optimization. A natural external C++
+  call reproduces the target five-byte `NOP; PUSH CS; CALL near` bridge and
+  ordered relocations in both focused and 65-unit cold replay. This mechanism
+  does not explain four-byte `PUSH CS; CALL near` targets; those require a
+  different TU/segment producer explanation rather than byte injection.

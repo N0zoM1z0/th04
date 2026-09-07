@@ -476,6 +476,109 @@ next_public_address = "0x10005"
             finally:
                 review.ROOT, review.POLICY = old_root, old_policy
 
+    def test_no_ghidra_exact_requires_public_owner_and_boundary(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text('''[[reviewed_exact_no_ghidra]]
+id = "fn-new"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x2"
+name = "fixture"
+owner_unit = "owner"
+evidence_id = "ev-new"
+reason = "missing Ghidra fixture"
+next_public_address = "0x10002"
+''', encoding="utf-8")
+            target = root / "target.bin"
+            target.write_bytes(bytearray(0x1800) + b"\x90\xC3")
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            publics = {0x10000: ["fixture"], 0x10002: ["next"]}
+            decoded = {"instruction_count": 2, "instruction_addresses": [0x10000, 0x10001],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10002"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=decoded):
+                accepted = review.reviewed_exact_no_ghidra_reviews({}, publics, target)
+                self.assertEqual(len(accepted), 1)
+                with self.assertRaisesRegex(ValueError, "has a Ghidra function entry"):
+                    review.reviewed_exact_no_ghidra_reviews({0x10000: "FUN_10000"}, publics, target)
+            policy.write_text(policy.read_text().replace('size = "0x2"', 'size = "0x1"'), encoding="utf-8")
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=decoded):
+                with self.assertRaisesRegex(ValueError, "next-public boundary mismatch"):
+                    review.reviewed_exact_no_ghidra_reviews({}, publics, target)
+
+    def test_new_manual_exact_row_can_be_declared_explicitly(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"; config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = ["id", "artifact", "address", "file_offset", "size", "boundary_state", "state",
+                      "name", "owner_unit", "source", "evidence_ids", "notes"]
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                csv.DictWriter(stream, fieldnames=header).writeheader()
+            policy = root / "policy.toml"
+            policy.write_text('[[new_exact]]\nid = "fn-new"\naddress = "0x100"\nevidence_id = "ev-new"\nreason = "fixture"\n', encoding="utf-8")
+            item = {"id": "fn-new", "address": 0x100, "file_offset": 0x200, "size": 4,
+                    "public": "fixture()", "owner_unit": "owner", "source": "src/exact.cpp",
+                    "evidence_id": "ev-new", "reason": "validated boundary", "switch_review": None}
+            out = root / "out.csv"
+            old_root, old_policy = review.ROOT, review.POLICY
+            review.ROOT, review.POLICY = root, policy
+            try:
+                review.write_reviewed_ledger(out, [], [item])
+            finally:
+                review.ROOT, review.POLICY = old_root, old_policy
+            with out.open(newline="", encoding="utf-8") as stream:
+                row = next(csv.DictReader(stream))
+            self.assertEqual(row["id"], "fn-new")
+            self.assertEqual(row["state"], "exact")
+
+    def test_no_ghidra_switch_extent_requires_aligned_targets_and_full_trailing_data(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text('''[[reviewed_exact_no_ghidra]]
+id = "fn-switch"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x5"
+decode_size = "0x2"
+name = "fixture"
+owner_unit = "owner"
+evidence_id = "ev-switch"
+reason = "switch fixture"
+table_metadata_address = "0x10002"
+table_metadata_value = "0x00"
+jump_table_address = "0x10003"
+jump_table_count = 1
+cs_base = "0x10000"
+next_public_address = "0x10005"
+''', encoding="utf-8")
+            target = root / "target.bin"
+            target.write_bytes(bytearray(0x1800) + b"\x90\xC3\x00\x00\x00")
+            owners = [{"start": 0x10000, "end": 0x10005, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            publics = {0x10000: ["fixture"], 0x10005: ["next"]}
+            decoded = {"instruction_count": 2, "instruction_addresses": [0x10000, 0x10001],
+                       "terminal": "ret", "first_address": "0x10000", "end_address_exclusive": "0x10002"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", side_effect=lambda *args: dict(decoded)):
+                accepted = review.reviewed_exact_no_ghidra_reviews({}, publics, target)
+                self.assertTrue(accepted[0]["switch_review"]["trailing_extent_fully_accounted"])
+            bad = bytearray(target.read_bytes()); bad[0x1803:0x1805] = b"\x05\x00"; target.write_bytes(bad)
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", side_effect=lambda *args: dict(decoded)):
+                with self.assertRaisesRegex(ValueError, "non-instruction starts"):
+                    review.reviewed_exact_no_ghidra_reviews({}, publics, target)
+
 
 if __name__ == "__main__":
     unittest.main()

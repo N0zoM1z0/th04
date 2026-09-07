@@ -1,6 +1,6 @@
 schema_version = 1
 artifact = "th04-main"
-policy = "Exact functions require a target Ghidra entry and local TLINK public inside one exact authored byte owner. Automatic promotion requires a contiguous Ghidra body. configured reviewed_exact handles reviewed Ghidra body-construction false negatives inside exact owners, while reviewed_exact_extent additionally validates a complete exact owner extent through raw decode, next-public, and trailing switch metadata/table checks when Ghidra body ranges are unusable. Reviewed nonexact functions enter the denominator only after the same complete boundary checks; exactness is not implied."
+policy = "Exact functions normally require a target Ghidra entry and local TLINK public inside one exact authored byte owner. reviewed_exact_no_ghidra handles Ghidra entry-construction false negatives with stricter exact-owner, TLINK-public, raw-decode, and next-public/owner-end gates. Automatic promotion requires a contiguous Ghidra body. configured reviewed_exact handles reviewed Ghidra body-construction false negatives inside exact owners, while reviewed_exact_extent additionally validates a complete exact owner extent through raw decode, next-public, and trailing switch metadata/table checks when Ghidra body ranges are unusable. Reviewed nonexact functions enter the denominator only after the same complete boundary checks; exactness is not implied."
 
 [[reviewed_nonexact]]
 id = "th04-main-fn-23496"
@@ -181,3 +181,147 @@ name = "boss_score_bonus(unsigned int)"
 owner_unit = "th04-main-midboss-score-bonuses"
 evidence_id = "ev-th04-main-boss-score-bonus-manual-boundary-v1"
 reason = "Ghidra min/max cover the complete 111-byte public span but body construction reports only 71/111 bytes. Raw 16-bit decoding tiles the entire TLINK-public span through RET 2 at 0x2A044; the next TLINK public midboss_defeat_update starts exactly at 0x2A047 outside the exact owner."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-22124"
+address = "0x22124"
+file_offset = "0x13924"
+size = "0x33"
+name = "midboss_invalidate_func()"
+owner_unit = "th04-main-module-th04-mb-inv-cpp-12124"
+evidence_id = "ev-th04-main-midboss-invalidate-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public; exact authored ownership plus gap-free raw decode through RET ends at the exact-owner boundary."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-22157"
+address = "0x22157"
+file_offset = "0x13957"
+size = "0x27"
+name = "boss_backdrop_render(int,int,unsigned char)"
+owner_unit = "th04-main-module-th04-boss-bd-cpp-12157"
+evidence_id = "ev-th04-main-boss-backdrop-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public; exact authored ownership plus gap-free raw decode through RET 6 ends at the exact-owner boundary."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-238a6"
+address = "0x238A6"
+file_offset = "0x150A6"
+size = "0x0B"
+name = "_snd_se_reset"
+owner_unit = "th04-main-snd-se-reset"
+evidence_id = "ev-th04-main-snd-se-reset-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public; exact authored ownership plus gap-free raw decode through RETF ends at the exact-owner boundary before codestring padding."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-23f10"
+address = "0x23F10"
+file_offset = "0x15710"
+size = "0x05"
+name = "grcg_setmode_rmw_seg3()"
+owner_unit = "th04-main-grcg3-functions"
+evidence_id = "ev-th04-main-grcg-rmw-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public; exact authored ownership plus gap-free raw decode through RET ends at the exact-owner boundary."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2c6ce"
+address = "0x2C6CE"
+file_offset = "0x1DECE"
+size = "0x34"
+name = "bullet_turn_x(bullet_t near&)"
+owner_unit = "th04-main-bullet-u-prefix"
+evidence_id = "ev-th04-main-bullet-turn-x-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public; exact authored ownership plus gap-free raw decode through RET 2 ends exactly at the next TLINK public."
+next_public_address = "0x2C702"
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2c702"
+address = "0x2C702"
+file_offset = "0x1DF02"
+size = "0x34"
+name = "bullet_turn_y(bullet_t near&)"
+owner_unit = "th04-main-bullet-u-prefix"
+evidence_id = "ev-th04-main-bullet-turn-y-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public and instead absorbs the address into an unrelated oversized body; exact authored ownership plus gap-free raw decode through RET 2 ends exactly at the next TLINK public."
+next_public_address = "0x2C736"
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2cec5"
+address = "0x2CEC5"
+file_offset = "0x1E6C5"
+size = "0x0B"
+name = "BULLET_TEMPLATE_TUNE_EASY"
+owner_unit = "th04-main-module-th04-bullet-a-cpp-1cc33"
+evidence_id = "ev-th04-main-template-tune-easy-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public; exact authored ownership plus gap-free raw decode through RET ends exactly at the next TLINK public."
+next_public_address = "0x2CED0"
+
+[[new_exact]]
+id = "th04-main-fn-22124"
+address = "0x22124"
+evidence_id = "ev-th04-main-midboss-invalidate-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed function that target Ghidra failed to create."
+
+[[new_exact]]
+id = "th04-main-fn-22157"
+address = "0x22157"
+evidence_id = "ev-th04-main-boss-backdrop-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed function that target Ghidra failed to create."
+
+[[new_exact]]
+id = "th04-main-fn-238a6"
+address = "0x238A6"
+evidence_id = "ev-th04-main-snd-se-reset-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed function that target Ghidra failed to create."
+
+[[new_exact]]
+id = "th04-main-fn-23f10"
+address = "0x23F10"
+evidence_id = "ev-th04-main-grcg-rmw-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed function that target Ghidra failed to create."
+
+[[new_exact]]
+id = "th04-main-fn-2c6ce"
+address = "0x2C6CE"
+evidence_id = "ev-th04-main-bullet-turn-x-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed function that target Ghidra failed to create."
+
+[[new_exact]]
+id = "th04-main-fn-2c702"
+address = "0x2C702"
+evidence_id = "ev-th04-main-bullet-turn-y-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed function that target Ghidra failed to create."
+
+[[new_exact]]
+id = "th04-main-fn-2cec5"
+address = "0x2CEC5"
+evidence_id = "ev-th04-main-template-tune-easy-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed function that target Ghidra failed to create."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2cc33"
+address = "0x2CC33"
+file_offset = "0x1E433"
+size = "0x85"
+decode_size = "0x58"
+name = "tune_for_easy()"
+owner_unit = "th04-main-module-th04-bullet-a-cpp-1cc33"
+evidence_id = "ev-th04-main-tune-easy-no-ghidra-boundary-v1"
+reason = "Target Ghidra has no function entry at this TLINK public; raw code ends in RET at 0x2CC8A and the remaining extent is exactly one metadata byte plus the compiler switch jump table through the next TLINK public."
+table_metadata_address = "0x2CC8B"
+table_metadata_value = "0x00"
+jump_table_address = "0x2CC8C"
+jump_table_count = 22
+cs_base = "0x23A90"
+next_public_address = "0x2CCB8"
+
+[[new_exact]]
+id = "th04-main-fn-2cc33"
+address = "0x2CC33"
+evidence_id = "ev-th04-main-tune-easy-no-ghidra-boundary-v1"
+reason = "Explicitly admit the TLINK/raw/exact-owner reviewed switch function that target Ghidra failed to create."
+
+[[new_exact]]
+id = "th04-main-fn-1d6eb"
+address = "0x1D6EB"
+evidence_id = "ev-th04-main-dialog-animate-boundary-v1"
+reason = "dialog_animate is a contiguous target Ghidra body at the matching TLINK public inside the newly exact natural-C++ owner."

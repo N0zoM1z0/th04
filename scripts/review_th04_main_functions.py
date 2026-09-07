@@ -6,7 +6,9 @@ three independently replayed views to agree on the start and Ghidra's entire
 *contiguous* body to be contained in one exact authored byte owner. Explicit manual
 reviews may override a non-contiguous Ghidra body only when the configured span agrees
 with Ghidra's min/max, a local TLINK public and exact owner, and an independent raw
-16-bit ndisasm pass tiles the complete target span through a terminal RET/RETF.
+16-bit ndisasm pass tiles the complete target span through a terminal RET/RETF. A
+separate no-Ghidra path requires exact ownership, a TLINK public, raw terminal decode,
+and an exact next-public or owner-end boundary without synthesizing Ghidra metadata.
 """
 
 from __future__ import annotations
@@ -100,6 +102,126 @@ def candidates(functions: dict[int, str], publics: dict[int, list[str]]) -> list
                 "owner_name": owner["owner_name"],
             }
     return [result[key] for key in sorted(result)]
+
+
+def public_owner_candidates(publics: dict[int, list[str]]) -> list[dict[str, object]]:
+    """Return TLINK public starts that fall inside exact authored byte owners."""
+    result: dict[int, dict[str, object]] = {}
+    for owner in exact_authored_owners():
+        for address, names in publics.items():
+            if int(owner["start"]) <= address < int(owner["end"]):
+                result[address] = {
+                    "address": address, "address_hex": f"0x{address:X}",
+                    "ghidra_name": "", "public": names[0],
+                    "owner_unit": owner["unit_id"], "owner_start": owner["start"],
+                    "owner_end": owner["end"],
+                    "file_offset": int(owner["file_start"]) + (address - int(owner["start"])),
+                    "source": owner["source"], "owner_name": owner["owner_name"],
+                }
+    return [result[key] for key in sorted(result)]
+
+
+def reviewed_exact_no_ghidra_reviews(functions, publics, target):
+    policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
+    by_address = {int(item["address"]): item for item in public_owner_candidates(publics)}
+    raw_target = target.read_bytes()
+    accepted = []
+
+    def read_word(linear: int) -> int:
+        offset = linear - 0x10000 + 0x1800
+        if offset < 0 or offset + 2 > len(raw_target):
+            raise ValueError(f"no-Ghidra switch table address 0x{linear:X} escapes target")
+        return int.from_bytes(raw_target[offset:offset + 2], "little")
+
+    for override in policy.get("reviewed_exact_no_ghidra", []):
+        address = int(str(override["address"]), 0)
+        file_offset = int(str(override["file_offset"]), 0)
+        size = int(str(override["size"]), 0)
+        decode_size = int(str(override.get("decode_size", override["size"])), 0)
+        if not (0 < decode_size <= size):
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} has invalid decode_size")
+        item = by_address.get(address)
+        if item is None:
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} lacks exact-owner/TLINK-public candidate")
+        if address in functions:
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} has a Ghidra function entry")
+        if str(override["owner_unit"]) != str(item["owner_unit"]):
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} owner mismatch")
+        if file_offset != address - 0x10000 + 0x1800:
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} file offset mismatch")
+        if address + size > int(item["owner_end"]):
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} escapes exact owner")
+        next_public = override.get("next_public_address")
+        if next_public is not None:
+            boundary = int(str(next_public), 0)
+            if address + size != boundary or boundary not in publics:
+                raise ValueError(f"no-Ghidra exact address 0x{address:X} next-public boundary mismatch")
+            boundary_mode = f"next TLINK public 0x{boundary:X}"
+        else:
+            if address + size != int(item["owner_end"]):
+                raise ValueError(f"no-Ghidra exact address 0x{address:X} must end at exact owner boundary")
+            boundary_mode = f"exact owner end 0x{int(item['owner_end']):X}"
+
+        decoded = linear_decode(target, address, file_offset, decode_size)
+        instruction_addresses = set(int(value) for value in decoded["instruction_addresses"])
+        switch_review = None
+        if "jump_table_address" in override:
+            code_end = address + decode_size
+            extent_end = address + size
+            jump_table_address = int(str(override["jump_table_address"]), 0)
+            jump_table_count = int(override["jump_table_count"])
+            cs_base = int(str(override["cs_base"]), 0)
+            metadata_address = override.get("table_metadata_address")
+            metadata_value = None
+            expected_table_start = code_end
+            if metadata_address is not None:
+                metadata_linear = int(str(metadata_address), 0)
+                if metadata_linear != code_end:
+                    raise ValueError(f"no-Ghidra switch metadata for 0x{address:X} must start after code")
+                metadata_offset = metadata_linear - 0x10000 + 0x1800
+                metadata_value = raw_target[metadata_offset]
+                if "table_metadata_value" in override and metadata_value != int(str(override["table_metadata_value"]), 0):
+                    raise ValueError(f"no-Ghidra switch metadata for 0x{address:X} mismatches target")
+                expected_table_start += 1
+            if jump_table_address != expected_table_start:
+                raise ValueError(f"no-Ghidra switch table for 0x{address:X} does not immediately follow code/metadata")
+            table_end = jump_table_address + (jump_table_count * 2)
+            if table_end != extent_end:
+                raise ValueError(f"no-Ghidra switch table for 0x{address:X} does not fill trailing extent")
+            jump_words = [read_word(jump_table_address + (index * 2)) for index in range(jump_table_count)]
+            jump_targets = [cs_base + word for word in jump_words]
+            bad_targets = [value for value in jump_targets if value not in instruction_addresses]
+            if bad_targets:
+                rendered = ", ".join(f"0x{value:X}" for value in bad_targets)
+                raise ValueError(f"no-Ghidra switch table for 0x{address:X} targets non-instruction starts: {rendered}")
+            switch_review = {
+                "cs_base": f"0x{cs_base:X}",
+                "jump_table_address": f"0x{jump_table_address:X}",
+                "jump_table_count": jump_table_count,
+                "jump_words": [f"0x{value:04X}" for value in jump_words],
+                "jump_targets": [f"0x{value:X}" for value in jump_targets],
+                "all_targets_are_instruction_starts": True,
+                "table_metadata_address": (f"0x{int(str(metadata_address), 0):X}" if metadata_address is not None else None),
+                "table_metadata_value": (f"0x{metadata_value:02X}" if metadata_value is not None else None),
+                "trailing_extent_fully_accounted": True,
+            }
+        elif decode_size != size:
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} has unexplained trailing bytes")
+
+        decoded.pop("instruction_addresses", None)
+        accepted.append({
+            **item,
+            "id": str(override["id"]),
+            "file_offset": file_offset,
+            "size": size,
+            "decode_size": decode_size,
+            "evidence_id": str(override["evidence_id"]),
+            "reason": str(override["reason"]),
+            "decode": decoded,
+            "switch_review": switch_review,
+            "boundary_mode": boundary_mode,
+        })
+    return accepted
 
 
 def parse_metadata(path: Path) -> dict[int, dict[str, str]]:
@@ -596,6 +718,31 @@ def write_reviewed_ledger(
         seen_automatic.add(address)
     rows.sort(key=lambda row: int(row["address"], 0))
     missing_manual = sorted(set(manual_by_id) - seen_manual)
+    for manual_id in list(missing_manual):
+        item = manual_by_id[manual_id]
+        address = int(item["address"])
+        declaration = new_exact.get(address)
+        if declaration is None or str(declaration["id"]) != manual_id:
+            continue
+        row = {field: "" for field in fieldnames}
+        row.update({
+            "id": manual_id,
+            "artifact": "th04-main",
+            "address": f"0x{address:X}",
+            "file_offset": f"0x{int(item['file_offset']):X}",
+            "size": f"0x{int(item['size']):X}",
+            "boundary_state": "reviewed",
+            "state": "exact",
+            "name": str(item["public"]),
+            "owner_unit": str(item["owner_unit"]),
+            "source": str(item["source"]),
+            "evidence_ids": str(item["evidence_id"]),
+            "notes": "New manual exact function admitted by explicit policy: " + str(item["reason"]),
+        })
+        rows.append(row)
+        seen_manual.add(manual_id)
+    rows.sort(key=lambda row: int(row["address"], 0))
+    missing_manual = sorted(set(manual_by_id) - seen_manual)
     if missing_manual:
         raise ValueError(
             "manual exact rows missing from function ledger: " + ", ".join(missing_manual)
@@ -636,10 +783,12 @@ def main() -> int:
         accepted, rejected = review(items, parsed_metadata)
         policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
         manual_exact: list[dict[str, object]] = []
+        manual_exact_no_ghidra: list[dict[str, object]] = []
         manual_exact_extent: list[dict[str, object]] = []
         reviewed_nonexact: list[dict[str, object]] = []
         if (
             policy.get("reviewed_exact", [])
+            or policy.get("reviewed_exact_no_ghidra", [])
             or policy.get("reviewed_exact_extent", [])
             or policy.get("reviewed_nonexact", [])
         ):
@@ -648,6 +797,9 @@ def main() -> int:
         if policy.get("reviewed_exact", []):
             assert args.target is not None
             manual_exact = manual_reviews(items, parsed_metadata, args.target)
+        if policy.get("reviewed_exact_no_ghidra", []):
+            assert args.target is not None
+            manual_exact_no_ghidra = reviewed_exact_no_ghidra_reviews(functions, publics, args.target)
         if policy.get("reviewed_exact_extent", []):
             assert args.target is not None
             manual_exact_extent = reviewed_nonexact_reviews(
@@ -663,7 +815,7 @@ def main() -> int:
             reviewed_nonexact = reviewed_nonexact_reviews(
                 items, parsed_metadata, publics, args.target
             )
-        manual_exact_all = [*manual_exact, *manual_exact_extent]
+        manual_exact_all = [*manual_exact, *manual_exact_no_ghidra, *manual_exact_extent]
         reviewed_addresses = {
             int(item["address"]) for item in [*manual_exact_all, *reviewed_nonexact]
         }
@@ -676,6 +828,7 @@ def main() -> int:
             {
                 "strict_exact_count": len(accepted),
                 "manual_exact_count": len(manual_exact_all),
+                "manual_exact_no_ghidra_count": len(manual_exact_no_ghidra),
                 "manual_exact_extent_count": len(manual_exact_extent),
                 "exact_function_count": exact_count,
                 "strict_rejected_count": len(rejected),

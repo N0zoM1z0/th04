@@ -580,3 +580,17 @@ patch_path = "th02/snd/se_reset.cpp"
 map_module = "th02/snd_se_r.cpp"
 map_mode = "contains"
 object_path = "obj/th02/snd_se_r.obj"
+
+[[units]]
+id = "th04-main-dialog-animate"
+default_enabled = true
+repo_source = "src/main/dialog/animate.inl"
+source_mode = "replace"
+patch_path = "th04/main/dialog/dialog.cpp"
+scaffold_sha256 = "ffe03aa3176642961bda1a7628e686b45e6434311012e13a8beb589778451db0"
+replace_offset = 5778
+replace_size = 388
+replace_sha256 = "169aaea7b307d2525d024b732caff5ffdae32bb290c7d609a5dcd8d68477c418"
+map_module = "th04/dialog.cpp"
+map_mode = "contains"
+object_path = "obj/th04/dialog.obj"
