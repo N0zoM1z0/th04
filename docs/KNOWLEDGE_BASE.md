@@ -433,3 +433,13 @@ notes linked from `source_refs`, not in an ever-growing monolith.
 - Ghidra xrefs can still be absent even when raw target code contains an obvious
   near call. Resolve the actual `E8 rel16` bytes from the target and use that
   address as the call anchor rather than requiring a decompiler caller list.
+
+
+### TH04 v27: packed Pascal arguments reveal source semantics
+
+- When TC86 already matches function size, instruction shape, and relocation
+  topology but a packed `PUSH DWORD` contains two swapped 16-bit immediates,
+  inspect the natural Pascal argument order before changing code generation.
+  `yuuka6_horizontal_wave()` became completely exact by correcting
+  `polar(center,radius,...)` from `(48px,80px)` to the target semantics
+  `(80px,48px)`; no low-level source change was needed.

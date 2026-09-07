@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **16,527 / 16,531 = 99.975803% exact**;
-- authored functions: **145 / 146 = 99.315068% exact**;
+- authored C/C++ bytes: **16,618 / 16,622 = 99.975936% exact**;
+- authored functions: **146 / 147 = 99.319728% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,7 +44,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-move-v26-precommit-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-wave-v27-precommit-001/receipt.json`.
 It passes all 66 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
@@ -829,3 +829,23 @@ ordered MZ relocation entries. The reviewed baseline is now **16,527 / 16,531
 authored C/C++ bytes exact (99.975803%)** and **145 / 146 reviewed functions exact
 (99.315068%)**; `snd_load` remains the sole reviewed nonexact function with four
 blocked bytes.
+
+
+## v27: recover the 91-byte Yuuka6 horizontal-wave helper
+
+The next target/TASM function at `0x2A4A8` is a complete 0x5B-byte Ghidra body
+ending in `RET`; the next true entry is `0x2A503`, and raw target call `0x2B659`
+resolves exactly to the helper. Natural C++ reproduces the target motion logic: X
+velocity initialization/bounce, sine-driven Y motion through the existing exact
+`polar()` API, and `boss.angle += 2`.
+
+The first full-link prototype differed at only two non-relocation bytes while
+function size and all relocations already matched. Those bytes were the two
+packed Pascal argument words for `polar()`: writing `center=48px,radius=80px`
+produced the reversed packed immediate. The target encodes `center=80px,
+radius=48px`; correcting only that natural source semantics removes both bytes.
+Focused `gptweb-yuuka6-wave-v27-001` and aggregate
+`gptweb-yuuka6-wave-v27-default-001` reproduce the complete **0x47C-byte**
+`MAIN_034_TEXT` prefix and all eight ordered relocations exactly. The reviewed
+baseline is **16,618 / 16,622 bytes exact (99.975936%)** and **146 / 147 functions
+exact (99.319728%)**.

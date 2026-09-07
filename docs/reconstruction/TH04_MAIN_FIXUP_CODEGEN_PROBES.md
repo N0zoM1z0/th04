@@ -629,3 +629,15 @@ adding or moving storage. Likewise, Ghidra reports no callers even though target
 `E8 86 EE` at `0x2B5B0` resolves exactly to this function; raw call arithmetic is
 the authoritative call anchor. The function-review gate now treats `RET imm16`
 and `RETF imm16` as valid terminals, with a regression that still rejects a JMP.
+
+
+## v27: packed Pascal argument-order control
+
+The 91-byte helper after v26 matched TC86 size and mnemonic sequence immediately.
+The first full link had only two raw differences and already matched all ordered
+relocations. Both differences were within one packed `PUSH DWORD` for the first
+two `polar()` arguments. Swapping the natural center/radius source arguments to
+`80px,48px` changes only those immediate words and yields a zero-difference
+0x47C MAIN_034 prefix. This is a useful diagnostic: exact relocation topology
+plus a two-word packed-immediate swap points to source argument semantics, not an
+OMF/linker or instruction-selection problem.

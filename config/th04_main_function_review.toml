@@ -651,3 +651,26 @@ id = "th04-main-fn-2a439"
 address = "0x2A439"
 evidence_id = "ev-th04-main-yuuka6-move-boundary-v26"
 reason = "Explicitly admit target-called Yuuka6 move helper after exact-owner, complete-Ghidra-body, raw-RET4, next-entry, target near-call, and generated-public-plumbing review."
+
+[[provisional]]
+address = "0x2A4A8"
+reason = "Reconstruction-generated TLINK public only; original target boundary is reviewed through Ghidra/raw/TASM/target-call anchors."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-2a4a8"
+address = "0x2A4A8"
+file_offset = "0x1BCA8"
+size = "0x5B"
+name = "yuuka6_horizontal_wave()"
+owner_unit = "th04-main-chasecrosses-add"
+evidence_id = "ev-th04-main-yuuka6-wave-boundary-v27"
+reason = "Fresh target Ghidra reports a complete 91-byte body at 0x2A4A8. Raw decode ends in RET at 0x2A502; the next complete Ghidra/TASM entry is 0x2A503; and the unique target near CALL at 0x2B659 resolves exactly to this entry."
+next_internal_address = "0x2A503"
+call_site_address = "0x2B659"
+generated_public = "yuuka6_horizontal_wave()"
+
+[[new_exact]]
+id = "th04-main-fn-2a4a8"
+address = "0x2A4A8"
+evidence_id = "ev-th04-main-yuuka6-wave-boundary-v27"
+reason = "Explicitly admit target-called Yuuka6 horizontal-wave helper after exact-owner, complete-Ghidra-body, raw-RET, next-entry, target near-call, and generated-public-plumbing review."

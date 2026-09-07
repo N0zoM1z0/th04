@@ -3,6 +3,7 @@
 #include "th04/snd/snd.h"
 #include "th04/sprites/main_pat.h"
 #include "th04/math/vector.hpp"
+#include "compat/rec98/th03/math/polar.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/score.hpp"
 #include "th04/main/spark.hpp"
@@ -326,4 +327,19 @@ bool pascal near yuuka6_move_towards(
         return true;
     }
     return false;
+}
+
+
+void near yuuka6_horizontal_wave(void)
+{
+    if(boss.phase_frame == 1) {
+        boss.pos.velocity.x.v = TO_SP(2);
+        boss.angle = 0;
+    }
+    boss.pos.cur.x.v += boss.pos.velocity.x.v;
+    if((boss.pos.cur.x.v <= TO_SP(48)) || (boss.pos.cur.x.v >= TO_SP(336))) {
+        boss.pos.velocity.x.v *= -1;
+    }
+    boss.pos.cur.y.v = polar(TO_SP(80), TO_SP(48), SinTable8[boss.angle]);
+    boss.angle += 2;
 }
