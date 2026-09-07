@@ -347,6 +347,50 @@ def apply_build_inserts(
     return receipts
 
 
+def apply_build_replacements(
+    source_root: Path,
+    replacements: list[dict[str, object]],
+    selected_ids: set[str],
+) -> list[dict[str, object]]:
+    """Replace one exact build-graph fragment at a fail-closed unique anchor."""
+
+    receipts: list[dict[str, object]] = []
+    for entry in replacements:
+        triggers = {str(value) for value in entry.get("trigger_units", [])}
+        if not (triggers & selected_ids):
+            continue
+        replacement_id = str(entry["id"])
+        build_file = source_root / str(entry["build_file"])
+        original = build_file.read_text(encoding="utf-8")
+        anchor = str(entry["build_anchor"])
+        replacement = str(entry["build_replacement"])
+        count = original.count(anchor)
+        if count != 1:
+            raise RuntimeError(
+                f"{replacement_id}: expected one build anchor in "
+                f"{entry['build_file']}, got {count}"
+            )
+        if replacement == anchor:
+            raise RuntimeError(f"{replacement_id}: replacement must differ from anchor")
+        outside_anchor = original.replace(anchor, "", 1)
+        if replacement in outside_anchor:
+            raise RuntimeError(
+                f"{replacement_id}: build replacement already exists outside anchor"
+            )
+        patched = original.replace(anchor, replacement, 1)
+        build_file.write_text(patched, encoding="utf-8")
+        receipts.append({
+            "id": replacement_id,
+            "trigger_units": sorted(triggers & selected_ids),
+            "build_file": str(entry["build_file"]),
+            "build_file_original_sha256": digest_bytes(original.encode("utf-8")),
+            "build_file_patched_sha256": digest_file(build_file),
+            "build_anchor": anchor,
+            "build_replacement": replacement,
+        })
+    return receipts
+
+
 def build(source: Path, log: Path) -> None:
     prefix = ROOT / ".analysis" / "toolchain" / "wineprefix"
     environment = os.environ.copy()
@@ -442,6 +486,7 @@ def main() -> int:
     entries = list(config["units"])
     splits = list(config.get("splits", []))
     build_inserts = list(config.get("build_inserts", []))
+    build_replacements = list(config.get("build_replacements", []))
     if args.unit:
         wanted = set(args.unit)
         entries = [entry for entry in entries if entry["id"] in wanted]
@@ -490,6 +535,9 @@ def main() -> int:
         build_insert_receipts = apply_build_inserts(
             source, build_inserts, selected_ids
         )
+        build_replacement_receipts = apply_build_replacements(
+            source, build_replacements, selected_ids
+        )
         log = run_root / "build.log"
         build(source, log)
         candidate_path, units = inspect_build(source, entries, ledger, target_mz)
@@ -501,6 +549,7 @@ def main() -> int:
                 "overlays": overlays,
                 "source_splits": split_receipts,
                 "build_inserts": build_insert_receipts,
+                "build_replacements": build_replacement_receipts,
                 "build_log_sha256": digest_file(log),
                 "candidate_main_sha256": digest_file(candidate_path),
                 "units": units,

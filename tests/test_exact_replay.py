@@ -141,6 +141,43 @@ class BuildInsertTests(unittest.TestCase):
                     replay.apply_build_inserts(source, [entry], {"unit-a"})
 
 
+class BuildReplacementTests(unittest.TestCase):
+    def fixture(self, root: Path, *, duplicate_anchor: bool = False):
+        source = root / "source"
+        source.mkdir()
+        anchor = '"a.cpp",\n"b.cpp",\n"c.cpp",\n'
+        text = anchor + ('"middle.cpp",\n' + anchor if duplicate_anchor else '') + '"after.cpp",\n'
+        (source / "Tupfile.lua").write_text(text, encoding="utf-8")
+        entry = {
+            "id": "fixture-replacement",
+            "trigger_units": ["unit-a"],
+            "build_file": "Tupfile.lua",
+            "build_anchor": anchor,
+            "build_replacement": '"a.cpp",\n',
+        }
+        return source, entry
+
+    def test_build_replacement_is_anchor_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source, entry = self.fixture(Path(temporary))
+            receipts = replay.apply_build_replacements(source, [entry], {"unit-a"})
+            self.assertEqual(
+                (source / "Tupfile.lua").read_text(encoding="utf-8"),
+                '"a.cpp",\n"after.cpp",\n',
+            )
+            self.assertEqual(receipts[0]["trigger_units"], ["unit-a"])
+            self.assertNotEqual(
+                receipts[0]["build_file_original_sha256"],
+                receipts[0]["build_file_patched_sha256"],
+            )
+
+    def test_build_replacement_rejects_ambiguous_anchor(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source, entry = self.fixture(Path(temporary), duplicate_anchor=True)
+            with self.assertRaisesRegex(RuntimeError, "expected one build anchor"):
+                replay.apply_build_replacements(source, [entry], {"unit-a"})
+
+
 class SourceReplacementTests(unittest.TestCase):
     def test_source_replacement_is_hash_and_offset_bound(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

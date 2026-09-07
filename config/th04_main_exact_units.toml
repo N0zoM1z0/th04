@@ -25,6 +25,15 @@ build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/mpn_l_i.cpp\",\n\t\"th04/vector.cpp\",\n\t\"th04/snd_pmdr.c\",\n\t\"th04/snd_mmdr.c\",\n"
 build_insert = "\t\"th04/mmdaln.c\",\n"
 
+
+
+[[build_replacements]]
+id = "th04-midboss-contiguous-tu"
+trigger_units = ["th04-main-midboss-hud-defeat-tu"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/midboss.cpp\",\n\t\"th04/hud_hp.cpp\",\n\t\"th04/mb_dft.cpp\",\n"
+build_replacement = "\t\"th04/midboss.cpp\",\n"
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"
@@ -115,13 +124,6 @@ repo_source = "src/main/boss/marisa.cpp"
 overlay_path = "th04/main/boss/b4m.cpp"
 map_module = "th04/boss_4m.cpp"
 object_path = "obj/th04/boss_4m.obj"
-
-[[units]]
-id = "th04-main-hud-hp-update-and-render"
-repo_source = "src/main/hud/hp.cpp"
-overlay_path = "th04/main/hud/hp.cpp"
-map_module = "th04/hud_hp.cpp"
-object_path = "obj/th04/hud_hp.obj"
 
 [[units]]
 id = "th04-main-module-th04-demo-cpp-b3ee"
@@ -290,13 +292,6 @@ repo_source = "src/main/spark.asm"
 overlay_path = "th04/spark_a.asm"
 map_module = "th04\\spark_a.asm"
 object_path = "obj/th04/spark_a.obj"
-
-[[units]]
-id = "th04-main-module-th04-midboss-cpp-19ebc"
-repo_source = "src/main/midboss/update.cpp"
-overlay_path = "th04/midboss.cpp"
-map_module = "th04/midboss.cpp"
-object_path = "obj/th04/midboss.obj"
 
 [[units]]
 id = "th04-main-module-th04-bullet-a-cpp-1cc33"
@@ -572,15 +567,6 @@ map_mode = "contains"
 object_path = "obj/th04/snd_mmdr.obj"
 
 [[units]]
-id = "th04-main-midboss-score-bonuses"
-repo_source = "src/main/midboss/score_bonus.inl"
-source_mode = "fragment"
-patch_path = "th04/main/midboss/defeat.cpp"
-map_module = "th04/mb_dft.cpp"
-map_mode = "contains"
-object_path = "obj/th04/mb_dft.obj"
-
-[[units]]
 id = "th04-main-snd-se-reset"
 repo_source = "src/main/sound/se_reset.inl"
 source_mode = "forwarded-fragment"
@@ -612,3 +598,11 @@ patch_path = "th03/formats/script.hpp"
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+
+
+[[units]]
+id = "th04-main-midboss-hud-defeat-tu"
+repo_source = "src/main/midboss/midboss.cpp"
+overlay_path = "th04/midboss.cpp"
+map_module = "th04/midboss.cpp"
+object_path = "obj/th04/midboss.obj"

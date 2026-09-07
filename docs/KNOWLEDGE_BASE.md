@@ -214,24 +214,24 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   relocation. TH04 `bullets_update` is the accepted control for this exact
   mechanism. `#pragma alloc_text` and `/P` packing alone do not produce it.
 
-- Raw-identical module contributions are not automatically authored-C/C++
-  boundaries. TH04 `mb_dft.cpp` is the concrete control: only its first 0xD9
-  bytes are currently reviewed authored C/C++, because target Ghidra + TLINK
-  bind two pure score-bonus functions there and the next public begins the
-  upstream inline-assembly-containing `midboss_defeat_update`. When Ghidra
-  min/max spans agree but its body set is noncontiguous, keep the automatic
-  function gate strict and use the configured manual exact path with exact
-  owner + TLINK public + matching min/max + gap-free `ndisasm` through RET.
+- Raw-identical reconstructed module contributions are not automatically true
+  original TU/segment boundaries. TH04 midboss is the key control: the former
+  `MIDBOSS_TEXT`, `HUD_HP_TEXT`, and `MB_DFT_TEXT` ranges are target-contiguous,
+  and a four-byte near call crosses the reconstructed boundary. Re-emitting all
+  six functions in flat target order as one natural-C++ TU makes the complete
+  0x1CB range exact. Before manufacturing a cross-segment call form, test whether
+  the reconstructed boundary itself is false. The two score-bonus functions
+  still retain the strict manual min/max + TLINK + gap-free raw-decode function
+  gate because their Ghidra body sets are noncontiguous.
 - Exact-replay overlays must respect cross-game source ownership. A TH04 wrapper
   can include a lower-game source that is also independently compiled for
   TH02/TH03; replacing that shared path with TH04-only source can break the
   full corpus even if the TH04 object is the intended target. For
   `snd_mmd_resident`, overlay `th04/snd_mmdr.c`, not shared
-  `th02/snd/mmd_res.c`. The `__es` pointer form recovers the natural LES, but
-  TC4J C-mode early-return tail merging remains a separate byte-exactness
-  blocker; ordinary return, explicit-goto, `_AX` self-assignment, and `-O-`
-  variants are recorded negative results rather than reasons to reintroduce
-  inline `RETF` assembly.
+  `th02/snd/mmd_res.c`. The `__es` pointer form recovers the natural LES; v18
+  additionally proved that removing `-WX` restores the target's distinct RETF
+  paths. Preserve the zero-code SHARED alignment input separately from padding
+  ownership rather than reintroducing inline `RETF` assembly.
 
 - For a raw-identical contribution ending in `#pragma codestring`, split the
   maintained authored-C/C++ owner at an independently decoded function return.
@@ -293,3 +293,9 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   hard failure; Ghidra-only internal entries are never sufficient.
 - TH04 `snd_mmd_resident` is a concrete warning against trusting upstream compiler-option commentary. The old candidate used `-WX` and therefore tail-merged the true return; removing `-WX` makes the maintained pure-C `__es` source emit the target's two distinct `RETF` paths and all 47 function bytes exactly. Treat option hypotheses as compiler experiments, not documentation facts.
 - A zero-code TC4J translation unit can be a legitimate **layout** input without being a byte reconstruction. `src/main/sound/mmd_align.c` uses `-WX -zCSHARED -k-`, emits a word-aligned `SHARED` SEGDEF and no LEDATA, and restores following sound-module starts after the exact no-`-WX` MMD function. `build_inserts` binds the checked-in source to one unique build-graph anchor and records hashes; it patches neither objects nor target bytes. The target 0x90 gap remains a separate excluded padding owner.
+
+- `#pragma samecodeseg` can be dangerous across genuinely different logical
+  segments. A TC4J control emits the desired four-byte `PUSH CS; CALL near`, but
+  the pragma can also alter symbol/frame binding. In the separated midboss probe
+  the final call resolved to the wrong function. Always verify final TLINK public
+  address and displacement; opcode shape alone is not acceptance evidence.

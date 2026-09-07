@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **13,283 / 13,287 = 99.969895% exact**;
-- authored functions: **128 / 129 = 99.224806% exact**;
+- authored C/C++ bytes: **13,347 / 13,351 = 99.970039% exact**;
+- authored functions: **129 / 130 = 99.230769% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,9 +44,9 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-snd-mmd-v18-precommit-001/receipt.json`.
-It passes all 67 current default-selected exact-replay units in both isolated
-cold materializations, including the 0xD9-byte MB_DFT score-bonus prefix, the 11-byte pure-C
+`.analysis/reconstruction/exact-unit-replay/gptweb-midboss-v20-precommit-001/receipt.json`.
+It passes all 65 current default-selected exact-replay owners in both isolated
+cold materializations, including the 0x1CB-byte contiguous midboss/HUD/defeat TU, the 11-byte pure-C
 `snd_se_reset` owner,
 the full pure-C PMD owner, and the restored natural C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
 `default_enabled = false`; they stay individually replayable with `--unit` and
@@ -284,39 +284,48 @@ and the ordered overlapping relocation list agrees. Two isolated cold builds in
 exact owners. No inline assembly, codestring, `__emit__`, raw byte directive, or
 patched object/link output is used.
 
-## Authored-boundary expansion: `MB_DFT_TEXT`, `snd_mmd_resident`, and `snd_se_reset`
+## Authored-boundary expansion: contiguous midboss TU, `snd_mmd_resident`, and `snd_se_reset`
 
-The earlier module-routing ledger left the raw-identical 0x119-byte
-`th04/mb_dft.cpp` contribution as `origin=unknown`. Raw identity was not enough
-to classify the whole contribution as authored C/C++ because the candidate's
-third function, `midboss_defeat_update`, contains inline assembly.
+The earlier ledger treated `MIDBOSS_TEXT` (0x5A), `HUD_HP_TEXT` (0x58), and
+`MB_DFT_TEXT` (0x119) as separate authored/codegen boundaries and therefore
+stopped at the 0xD9 score-bonus prefix before `midboss_defeat_update`. That was
+a useful conservative intermediate result, but v20 target/producer review
+shows that the split itself was wrong.
 
-Fresh target review narrows a safe authored prefix instead of promoting the
-whole module:
+The three ranges are perfectly contiguous in the target, totaling 0x1CB bytes.
+Their six publics are `midboss_reset`, the activation helper,
+`hud_hp_update_and_render`, the two score-bonus functions, and the final
+64-byte `midboss_defeat_update`. Fresh nonce-attested Ghidra reports
+`midboss_defeat_update` as one contiguous `0x2A047..0x2A086` body. Its target
+tail calls `midboss_reset` with the four-byte `0E E8` form.
 
-- TLINK public `13A9:64DE` / target linear `0x29F6E` starts
-  `midboss_score_bonus`; Ghidra min/max end at `0x29FD7` (0x6A bytes).
-- TLINK public `13A9:6548` / target linear `0x29FD8` starts
-  `boss_score_bonus`; Ghidra min/max end at `0x2A046` (0x6F bytes).
-- the next TLINK public `13A9:65B7`, `midboss_defeat_update`, starts exactly at
-  `0x2A047`, immediately after the accepted 0xD9-byte prefix.
+A private producer control first proved that TC4J can emit this four-byte form
+when the callee definition is visible in the same logical segment. Applying
+`#pragma samecodeseg` while preserving the reconstructed segment split was
+**not** acceptable: it rebound the symbol/frame and linked the call to the wrong
+flat target. The successful reconstruction instead removes the false split.
+`src/main/midboss/midboss.cpp` emits all six functions in target flat order as
+one natural-C++ TU. The ordinary `midboss_reset();` call then naturally becomes
+the target `PUSH CS; CALL near` without inline assembly, codestrings, `__emit__`,
+or object patching.
 
-The maintained `src/main/midboss/score_bonus.inl` contains only the two natural
-C/C++ functions and their required declarations/macros; it contains no inline
-assembly or byte-emission escape hatch. Focused two-cold replay
-`gptweb-mbscore-exact-002` reproduces all 217 accepted bytes, and
-`gptweb-script-params-internal-precommit-002` repeats the result inside the 66-unit
-aggregate with matching TLINK placement, ordered overlapping relocations, and
-normalized OMF identity.
+Focused two-cold replay `gptweb-midboss-tu-v20-002` reproduces all 0x1CB bytes
+with target SHA-256 `a108783b4f393a9e1a35bdcf1730b9063442bf249a34567f5623c53b57ff903a`.
+The fail-closed `[[build_replacements]]` gate changes only the unique TH04 MAIN
+source-list triple from `midboss.cpp + hud_hp.cpp + mb_dft.cpp` to the combined
+`midboss.cpp`; other games keep their original source graph. TLINK reports one
+0x1CB `MIDBOSS_TEXT` contribution, zero-length historical `HUD_HP_TEXT` /
+`MB_DFT_TEXT` labels, and an unchanged following `MAIN_034_TEXT` start. The
+65-unit aggregate `gptweb-midboss-tu-v20-default-001` passes every raw/map/
+ordered-relocation/OMF/determinism check.
 
-Function review remains stricter than byte review. For both score-bonus
-functions Ghidra's min/max spans are correct, but its body sets are
-noncontiguous (66/106 and 71/111 bytes). The automatic gate therefore rejects
-both. Two configured `[[reviewed_exact]]` entries use the existing fail-closed
-manual path instead: same target Ghidra min/max, same local TLINK public, exact
-owner containment, and independent `ndisasm -b16` coverage through terminal
-`RET 2`. This adds two reviewed exact functions without weakening the automatic
-contiguous-body rule.
+Function review remains strict. The two score-bonus Ghidra body sets are still
+noncontiguous and continue through the existing manual raw-decode gate. Three
+previous automatic rows migrate from their historical owners only through
+explicit address/from-owner/to-owner policy, and `midboss_defeat_update` is a
+new automatic exact function after fresh Ghidra/TLINK review. The resulting
+function baseline is 129/130 exact; `snd_load` remains the sole reviewed
+nonexact function.
 
 `snd_mmd_resident` is now exact. Fresh target Ghidra/raw/TLINK review binds a
 47-byte far function at file `0x14BAC` / linear `0x233AC`, ending in `RETF` at
@@ -569,11 +578,11 @@ provisional.
 - `#pragma option -zC...` is a translation-unit-start option, while
   `#pragma codeseg` can switch later code. More importantly, a function's first
   declaration influences Borland segment/group fixups.
-- Combining `midboss_reset` and `midboss_defeat_update` into one C++ source
-  without inline assembly can reproduce most bytes, but a direct cross-code
-  segment call still naturally becomes a 5-byte `CALLF` rather than the
-  target's `PUSH CS` plus near `CALL`. Do not replace that negative result with
-  byte-oriented assembly.
+- The old “combined midboss source still CALLF” result only held while preserving
+  the reconstructed logical segment split. v20 proves the stronger rule: when
+  contiguous target code and a four-byte near bridge contradict reconstructed
+  segment ownership, test whether the **segment/TU boundary itself is false**.
+  One logical TU/segment recovers the complete 0x1CB region naturally.
 - Exact module bytes do not prove Ghidra's internal function bodies. Ghidra can
   create overlapping decodes or stop at an indirect switch even when the raw
   target has a complete function. Override such cases only with the checked-in

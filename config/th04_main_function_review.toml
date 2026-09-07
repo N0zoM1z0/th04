@@ -168,9 +168,9 @@ address = "0x29F6E"
 file_offset = "0x1B76E"
 size = "0x6A"
 name = "midboss_score_bonus(unsigned int)"
-owner_unit = "th04-main-midboss-score-bonuses"
+owner_unit = "th04-main-midboss-hud-defeat-tu"
 evidence_id = "ev-th04-main-midboss-score-bonus-manual-boundary-v1"
-reason = "Ghidra min/max cover the complete 106-byte public span but body construction reports only 66/106 bytes. Raw 16-bit decoding tiles the entire TLINK-public span through RET 2 at 0x29FD5 inside the exact 0xD9 MB_DFT_TEXT pure-C/C++ owner."
+reason = "Ghidra min/max cover the complete 106-byte public span but body construction reports only 66/106 bytes. Raw 16-bit decoding tiles the entire TLINK-public span through RET 2 at 0x29FD5 inside the exact contiguous 0x1CB MIDBOSS/HUD_HP/MB_DFT natural-C++ owner."
 
 [[reviewed_exact]]
 id = "th04-main-fn-29fd8"
@@ -178,9 +178,9 @@ address = "0x29FD8"
 file_offset = "0x1B7D8"
 size = "0x6F"
 name = "boss_score_bonus(unsigned int)"
-owner_unit = "th04-main-midboss-score-bonuses"
+owner_unit = "th04-main-midboss-hud-defeat-tu"
 evidence_id = "ev-th04-main-boss-score-bonus-manual-boundary-v1"
-reason = "Ghidra min/max cover the complete 111-byte public span but body construction reports only 71/111 bytes. Raw 16-bit decoding tiles the entire TLINK-public span through RET 2 at 0x2A044; the next TLINK public midboss_defeat_update starts exactly at 0x2A047 outside the exact owner."
+reason = "Ghidra min/max cover the complete 111-byte public span but body construction reports only 71/111 bytes. Raw 16-bit decoding tiles the entire TLINK-public span through RET 2 at 0x2A044; the next TLINK public midboss_defeat_update starts exactly at 0x2A047 inside the same exact contiguous owner."
 
 [[reviewed_exact_no_ghidra]]
 id = "th04-main-fn-22124"
@@ -362,3 +362,36 @@ id = "th04-main-fn-233ac"
 address = "0x233AC"
 evidence_id = "ev-th04-main-snd-mmd-resident-boundary-v2"
 reason = "Fresh target Ghidra/TLINK/raw review binds the complete 47-byte far function inside the exact natural-C owner after removing -WX; trailing 0x90 is separate padding."
+
+[[new_exact]]
+id = "th04-main-fn-2a047"
+address = "0x2A047"
+evidence_id = "ev-th04-main-midboss-hud-defeat-boundary-v20"
+reason = "Fresh target Ghidra reports a contiguous 64-byte body at the matching TLINK public. The natural-C++ combined MIDBOSS/HUD_HP/MB_DFT owner is exact and ends exactly at this function's RET."
+
+[[owner_migration]]
+address = "0x29EBC"
+from_owner = "th04-main-module-th04-midboss-cpp-19ebc"
+from_source = "src/main/midboss/update.cpp"
+to_owner = "th04-main-midboss-hud-defeat-tu"
+to_source = "src/main/midboss/midboss.cpp"
+evidence_id = "ev-th04-main-midboss-hud-defeat-boundary-v20"
+reason = "Fresh target/function review and two-cold replay show the historical MIDBOSS/HUD_HP/MB_DFT sub-boundaries were reconstruction artifacts; midboss_reset is owned by the exact contiguous TU."
+
+[[owner_migration]]
+address = "0x29EE4"
+from_owner = "th04-main-module-th04-midboss-cpp-19ebc"
+from_source = "src/main/midboss/update.cpp"
+to_owner = "th04-main-midboss-hud-defeat-tu"
+to_source = "src/main/midboss/midboss.cpp"
+evidence_id = "ev-th04-main-midboss-hud-defeat-boundary-v20"
+reason = "Fresh target/function review and two-cold replay show the historical MIDBOSS/HUD_HP/MB_DFT sub-boundaries were reconstruction artifacts; the activation function is owned by the exact contiguous TU."
+
+[[owner_migration]]
+address = "0x29F16"
+from_owner = "th04-main-hud-hp-update-and-render"
+from_source = "src/main/hud/hp.cpp"
+to_owner = "th04-main-midboss-hud-defeat-tu"
+to_source = "src/main/midboss/midboss.cpp"
+evidence_id = "ev-th04-main-midboss-hud-defeat-boundary-v20"
+reason = "Fresh target/function review and two-cold replay show HUD_HP_TEXT is not an independent authored TU boundary; hud_hp_update_and_render is owned by the exact contiguous TU."

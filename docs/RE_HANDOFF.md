@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, and recovery of the shared script-parameter helpers, reviewed authored C/C++ bytes are 13,283 / 13,287 (99.969895%) exact, and reviewed authored functions are 128 / 129 (99.224806%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, and the contiguous midboss/HUD/defeat TU recovery, reviewed authored C/C++ bytes are 13,347 / 13,351 (99.970039%) exact, and reviewed authored functions are 129 / 130 (99.230769%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,24 +115,27 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-snd-mmd-no-wx-align-default-001` passes all 67 current default-selected
+  `gptweb-midboss-v20-precommit-001` passes all 65 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 13,287 bytes across 61
-  reviewed authored units/regions; 13,283 bytes across 58 units/regions are exact.
+- The current reviewed authored byte denominator is 13,351 bytes across 59
+  reviewed authored units/regions; 13,347 bytes across 56 units/regions are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
   `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
   `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
   directive is involved.
-- The raw-identical 0x119-byte `th04/mb_dft.cpp` contribution is **not**
-  blanket-classified as authored C/C++. Fresh target Ghidra + TLINK review
-  admits only its 0xD9-byte pure-C/C++ prefix: 106-byte `midboss_score_bonus`
-  plus 111-byte `boss_score_bonus`. The next public, `midboss_defeat_update`,
-  starts at `0x2A047` and its upstream candidate contains inline assembly, so it
-  remains outside this authored owner. The 217-byte prefix is exact in focused
-  two-cold replay and the 67-unit aggregate.
+- The old `MIDBOSS_TEXT` / `HUD_HP_TEXT` / `MB_DFT_TEXT` split is now reviewed
+  as a **false reconstruction boundary**. Their target bytes are contiguous
+  (`0x5A + 0x58 + 0x119 = 0x1CB`), and target `midboss_defeat_update` uses a
+  four-byte `PUSH CS; CALL near` back to `midboss_reset`. Rebuilding all six
+  functions in target flat order as one maintained natural-C++ TU makes the
+  complete 459-byte range exact; the ordinary `midboss_reset()` call naturally
+  emits the target bridge. Focused `gptweb-midboss-tu-v20-002` and 65-unit
+  aggregate `gptweb-midboss-tu-v20-default-001` pass raw/map/ordered-relocation/
+  OMF/determinism replay. The historical HUD_HP/MB_DFT segment labels become
+  zero-length while the following `MAIN_034_TEXT` start remains unchanged.
 - `snd_mmd_resident` is now a full **47-byte exact pure-C function** at
   target `0x233AC..0x233DA` / TLINK `130E:02CC`. Removing `-WX` from the
   maintained TH04 wrapper is the decisive codegen fix: the same natural `__es`
@@ -220,9 +223,9 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-script-params-internal-precommit-002`
-  passed all 66 current default exact-replay units in two isolated
-  materializations. The replay driver removes the exact checked-in init+exit
+- The latest aggregate cold replay `gptweb-midboss-v20-precommit-001`
+  passed all 65 current default exact-replay owners in two isolated
+  materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
@@ -242,7 +245,7 @@ deterministic TH04 runtime scenario has been authored.
   mutates the pointer word and requires rejection. `bullets_update` remains the
   separate exact-extent/table case, and the two `MB_DFT_TEXT` score-bonus
   functions remain Ghidra-min/max manual cases. `snd_load` is the sole reviewed
-  nonexact function, giving 128/129 exact.
+  nonexact function, giving 129/130 exact.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain

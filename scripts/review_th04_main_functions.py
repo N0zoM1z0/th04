@@ -691,6 +691,13 @@ def write_reviewed_ledger(
     seen_automatic: set[int] = set()
     seen_manual: set[str] = set()
     seen_nonexact: set[str] = set()
+    policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
+    owner_migrations: dict[int, dict[str, object]] = {}
+    for migration in policy.get("owner_migration", []):
+        address = int(str(migration["address"]), 0)
+        if address in owner_migrations:
+            raise ValueError(f"duplicate owner migration address 0x{address:X}")
+        owner_migrations[address] = migration
 
     for row in rows:
         address = int(row["address"], 0)
@@ -720,12 +727,34 @@ def write_reviewed_ledger(
         if automatic is not None:
             seen_automatic.add(address)
             if row["state"] == "exact":
-                if (
-                    row["owner_unit"] != str(automatic["owner_unit"])
-                    or row["source"] != str(automatic["source"])
-                ):
-                    raise ValueError(
-                        f"automatic exact owner/source drift for {row['id']}"
+                owner_drift = row["owner_unit"] != str(automatic["owner_unit"])
+                source_drift = row["source"] != str(automatic["source"])
+                if owner_drift or source_drift:
+                    migration = owner_migrations.get(address)
+                    if migration is None:
+                        raise ValueError(
+                            f"automatic exact owner/source drift for {row['id']}"
+                        )
+                    expected = {
+                        "from_owner": row["owner_unit"],
+                        "from_source": row["source"],
+                        "to_owner": str(automatic["owner_unit"]),
+                        "to_source": str(automatic["source"]),
+                    }
+                    for key, actual in expected.items():
+                        if str(migration.get(key, "")) != actual:
+                            raise ValueError(
+                                f"owner migration {key} mismatch for {row['id']}"
+                            )
+                    row["owner_unit"] = expected["to_owner"]
+                    row["source"] = expected["to_source"]
+                    evidence = [value for value in row["evidence_ids"].split(";") if value]
+                    evidence_id = str(migration.get("evidence_id", ""))
+                    if evidence_id and evidence_id not in evidence:
+                        evidence.append(evidence_id)
+                    row["evidence_ids"] = ";".join(evidence)
+                    row["notes"] = (
+                        "Reviewed exact owner migration: " + str(migration["reason"])
                     )
                 continue
             if row["state"] not in {"candidate", "blocked"}:
@@ -775,7 +804,6 @@ def write_reviewed_ledger(
         )
 
     missing_automatic = sorted(set(automatic_by_address) - seen_automatic)
-    policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
     new_exact = {
         int(item["address"], 0): item for item in policy.get("new_exact", [])
     }

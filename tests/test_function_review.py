@@ -403,6 +403,54 @@ next_public_address = "0x10005"
             self.assertEqual(promoted["owner_unit"], "owner-exact")
             self.assertEqual(promoted["source"], "src/unit.c")
 
+    def test_automatic_exact_owner_migration_requires_explicit_policy(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = ["id", "artifact", "address", "file_offset", "size", "boundary_state", "state", "name", "owner_unit", "source", "evidence_ids", "notes"]
+            row = {key: "" for key in header}
+            row.update({"id": "fn-100", "artifact": "th04-main", "address": "0x100", "file_offset": "0x200", "size": "0x4", "boundary_state": "reviewed", "state": "exact", "name": "fixture", "owner_unit": "old-owner", "source": "src/old.cpp", "evidence_ids": "ev-old"})
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=header); writer.writeheader(); writer.writerow(row)
+            policy = root / "policy.toml"
+            policy.write_text("schema_version = 1\n\n[[owner_migration]]\naddress = \"0x100\"\nfrom_owner = \"old-owner\"\nfrom_source = \"src/old.cpp\"\nto_owner = \"new-owner\"\nto_source = \"src/new.cpp\"\nevidence_id = \"ev-migrate\"\nreason = \"reviewed merged TU\"\n", encoding="utf-8")
+            out = root / "out.csv"
+            old_root, old_policy = review.ROOT, review.POLICY
+            review.ROOT, review.POLICY = root, policy
+            try:
+                review.write_reviewed_ledger(out, [{"address": 0x100, "owner_unit": "new-owner", "source": "src/new.cpp"}], [])
+            finally:
+                review.ROOT, review.POLICY = old_root, old_policy
+            with out.open(newline="", encoding="utf-8") as stream:
+                migrated = next(csv.DictReader(stream))
+            self.assertEqual(migrated["owner_unit"], "new-owner")
+            self.assertEqual(migrated["source"], "src/new.cpp")
+            self.assertEqual(migrated["evidence_ids"], "ev-old;ev-migrate")
+
+    def test_automatic_exact_owner_migration_rejects_wrong_from_owner(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = ["id", "artifact", "address", "file_offset", "size", "boundary_state", "state", "name", "owner_unit", "source", "evidence_ids", "notes"]
+            row = {key: "" for key in header}
+            row.update({"id": "fn-100", "artifact": "th04-main", "address": "0x100", "file_offset": "0x200", "size": "0x4", "boundary_state": "reviewed", "state": "exact", "name": "fixture", "owner_unit": "actual-old", "source": "src/old.cpp"})
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=header); writer.writeheader(); writer.writerow(row)
+            policy = root / "policy.toml"
+            policy.write_text("schema_version = 1\n\n[[owner_migration]]\naddress = \"0x100\"\nfrom_owner = \"wrong-old\"\nfrom_source = \"src/old.cpp\"\nto_owner = \"new-owner\"\nto_source = \"src/new.cpp\"\nreason = \"must fail\"\n", encoding="utf-8")
+            out = root / "out.csv"
+            old_root, old_policy = review.ROOT, review.POLICY
+            review.ROOT, review.POLICY = root, policy
+            try:
+                with self.assertRaisesRegex(ValueError, "from_owner mismatch"):
+                    review.write_reviewed_ledger(out, [{"address": 0x100, "owner_unit": "new-owner", "source": "src/new.cpp"}], [])
+            finally:
+                review.ROOT, review.POLICY = old_root, old_policy
+
     def test_automatic_review_adds_explicit_new_exact_row(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

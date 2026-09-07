@@ -481,3 +481,44 @@ The remaining work should focus on information not already falsified here:
 
 Do not solve any of these with target-derived byte directives, `__emit__`,
 inline assembly, hand-edited compiler assembly, or patched OMF records.
+
+## v19: `dialog_run` producer and metadata-batching negatives
+
+The pinned target MZ relocation table was re-read directly. Inside
+`dialog_run`, target segment-relocation words occur at function-local
+`0xD6, 0xAB, 0x173, 0x154`, corresponding to Pointer16 fixup starts
+`0xD4, 0xA9, 0x171, 0x152`. Direct TC86 instead emits the same four sites in
+`0x171, 0x152, 0xD4, 0xA9` order.
+
+A same-media PC-98 `TC.EXE` integrated-compiler nodebug object keeps the exact
+same 0x17F `DIALOG_TEXT` LEDATA as direct TCC, but Borland TDUMP still reports
+Pointer16 order `171,152,D4,A9`. Thus PC-98 IDE producer switching preserves the
+wrong cyclic rotation even when machine code is exact.
+
+Additional exact-code batching probes are also negative: inserting `#line`
+between the early and late call groups leaves both LEDATA and the complete
+FIXUPP payload byte-identical; local `-y` or `-v` still produce one LEDATA and
+one FIXUPP record while changing tail machine code. Reversing only the first
+declaration order of four external far functions keeps call LEDATA identical and
+FIXUPP locations `13,0E,09,04`; only EXTDEF target indices change.
+
+Do not retry PC-98 IDE producer switching, `#line`, local debug/line-info
+pragmas, or external declaration ordering for this relocation-order blocker
+without materially new compiler evidence.
+
+## v20: midboss bridge exposes a false reconstructed segment boundary
+
+A TC4J control with a callee definition in `SEG_A`, caller in `SEG_B`, and
+`#pragma samecodeseg callee` naturally emits `PUSH CS; CALL near`, but applying
+that shape to the real separated MIDBOSS/MB_DFT reconstruction changes symbol
+frame binding and links the call to the wrong flat function. Opcode shape alone
+is therefore not sufficient.
+
+The accepted explanation comes from target ownership instead: reconstructed
+`MIDBOSS_TEXT` (0x5A), `HUD_HP_TEXT` (0x58), and `MB_DFT_TEXT` (0x119) are
+perfectly contiguous, and `midboss_defeat_update` calls the earlier
+`midboss_reset` with the four-byte near form. Emitting all six functions in flat
+target order as one natural-C++ TU/segment makes the complete 0x1CB region exact
+with an ordinary `midboss_reset()` call and leaves the following segment start
+unchanged. Similar cross-boundary near calls should trigger a false-boundary
+check before any attempt to coerce the instruction encoding.
