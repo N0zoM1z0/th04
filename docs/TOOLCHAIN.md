@@ -286,3 +286,14 @@ not a toolchain or exactness verdict.
 - Wine, runner, or distribution version differs: it is a new environment.
   Update evidence only after repeated deterministic probes and cold builds;
   never silently edit the existing attestation.
+
+### Concurrent attestation workspaces
+
+`attest_toolchain.py` uses a process-unique 8.3-safe directory below the pinned
+Wine prefix for compiler/assembler/linker execution probes. A shared
+`C:\TH04PROBE` directory is unsafe when multiple agents run CI concurrently:
+one process can delete or overwrite another process's probe OBJ between rounds,
+creating a false replay-nondeterminism failure. The unique workspace changes no
+compiler flags or probe inputs; it only isolates temporary outputs. Optional
+host `wine64` identity remains diagnostic, while required tool surfaces and the
+pinned `/usr/bin/wine-stable` launcher remain hard-attested.

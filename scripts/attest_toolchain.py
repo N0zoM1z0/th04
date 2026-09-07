@@ -56,14 +56,23 @@ def clean_probe_outputs(work: Path) -> None:
             path.unlink()
 
 
-def write_probe_inputs(work: Path) -> None:
+def probe_workspace_name(pid: int | None = None) -> str:
+    """Return a per-process 8.3-safe DOS directory for execution probes."""
+
+    value = os.getpid() if pid is None else pid
+    return f"T4{value & 0xFFFFFF:06X}"
+
+
+def write_probe_inputs(work: Path, dos_work: str) -> None:
     work.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / "probes" / "toolchain" / "compiler_probe.c", work / "CPROBE.C")
     shutil.copyfile(ROOT / "probes" / "toolchain" / "assembler_probe.asm", work / "APROBE.ASM")
     (work / "LINK.RSP").write_bytes(
-        b"-c -s c0l.obj C:\\TH04PROBE\\cprobe.obj, "
-        b"C:\\TH04PROBE\\cprobe.exe, C:\\TH04PROBE\\cprobe.map, "
-        b"emu.lib mathl.lib cl.lib\r\n"
+        (
+            f"-c -s c0l.obj {dos_work}\\cprobe.obj, "
+            f"{dos_work}\\cprobe.exe, {dos_work}\\cprobe.map, "
+            "emu.lib mathl.lib cl.lib\r\n"
+        ).encode("ascii")
     )
 
 
@@ -71,7 +80,9 @@ def run_execution_probes(config: dict[str, object]) -> dict[str, object]:
     paths = config["paths"]
     prefix = ROOT / str(paths["wine_prefix"])
     drive_c = prefix / "drive_c"
-    work = drive_c / "TH04PROBE"
+    work_name = probe_workspace_name()
+    work = drive_c / work_name
+    dos_work = rf"C:\{work_name}"
     wine = shutil.which("wine")
     if not wine:
         return {"pass": False, "error": "wine is not on PATH"}
@@ -89,7 +100,7 @@ def run_execution_probes(config: dict[str, object]) -> dict[str, object]:
     producer_expectations = config["omf_producers"]
     probes: dict[str, object] = {}
     try:
-        write_probe_inputs(work)
+        write_probe_inputs(work, dos_work)
         banner_commands = {
             "tcc": dos + ["tcc"],
             "tlink": dos + ["tlink"],
@@ -116,8 +127,8 @@ def run_execution_probes(config: dict[str, object]) -> dict[str, object]:
                     "-3",
                     "-O",
                     "-Z",
-                    "-nC:\\TH04PROBE\\",
-                    r"C:\TH04PROBE\CPROBE.C",
+                    f"-n{dos_work}\\",
+                    rf"{dos_work}\CPROBE.C",
                 ],
                 cwd=work,
                 environment=environment,
@@ -130,19 +141,19 @@ def run_execution_probes(config: dict[str, object]) -> dict[str, object]:
                     "/mx",
                     "/kh32768",
                     "/t",
-                    r"C:\TH04PROBE\APROBE.ASM",
-                    r"C:\TH04PROBE\APROBE.OBJ",
+                    rf"{dos_work}\APROBE.ASM",
+                    rf"{dos_work}\APROBE.OBJ",
                 ],
                 cwd=work,
                 environment=environment,
             )
             linker = run(
-                dos + ["tlink", r"@C:\TH04PROBE\LINK.RSP"],
+                dos + ["tlink", f"@{dos_work}\\LINK.RSP"],
                 cwd=work,
                 environment=environment,
             )
             executable = run(
-                dos + [r"C:\TH04PROBE\cprobe.exe"],
+                dos + [rf"{dos_work}\cprobe.exe"],
                 cwd=work,
                 environment=environment,
             )

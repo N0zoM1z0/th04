@@ -11,7 +11,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from lib.toolchain import ToolchainError, file_set_identity, tree_identity
-from attest_toolchain import gated_execution
+from attest_toolchain import gated_execution, probe_workspace_name, write_probe_inputs
 
 
 class ToolchainIdentityTests(unittest.TestCase):
@@ -23,6 +23,22 @@ class ToolchainIdentityTests(unittest.TestCase):
         probes.assert_not_called()
         self.assertFalse(passed)
         self.assertTrue(execution["skipped"])
+
+
+    def test_probe_workspace_name_is_process_unique_and_83_safe(self) -> None:
+        first = probe_workspace_name(0x12345)
+        second = probe_workspace_name(0x12346)
+        self.assertEqual(len(first), 8)
+        self.assertRegex(first, r"^[A-Z0-9]{8}$")
+        self.assertNotEqual(first, second)
+
+    def test_probe_link_response_uses_unique_dos_workspace(self) -> None:
+        with TemporaryDirectory() as temporary:
+            work = Path(temporary) / "T4ABCDEF"
+            write_probe_inputs(work, r"C:\T4ABCDEF")
+            response = (work / "LINK.RSP").read_text(encoding="ascii")
+            self.assertIn(r"C:\T4ABCDEF\cprobe.obj", response)
+            self.assertNotIn("TH04PROBE", response)
 
     def test_tree_identity_is_path_and_content_sensitive(self) -> None:
         with TemporaryDirectory() as temporary:
