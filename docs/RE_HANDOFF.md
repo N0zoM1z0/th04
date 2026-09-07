@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, and recovery of the shared script-parameter helpers, reviewed authored C/C++ bytes are 13,236 / 13,287 (99.616166%) exact, and reviewed authored functions are 127 / 128 (99.218750%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, and recovery of the shared script-parameter helpers, reviewed authored C/C++ bytes are 13,283 / 13,287 (99.969895%) exact, and reviewed authored functions are 128 / 129 (99.224806%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,14 +115,13 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-script-params-internal-precommit-002` passes all 66 current default-selected
+  `gptweb-snd-mmd-no-wx-align-default-001` passes all 67 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
 - The current reviewed authored byte denominator is 13,287 bytes across 61
-  reviewed authored units/regions; 13,236 bytes across 57 units/regions are exact. The
-  reviewed nonexact byte remainder is deliberately visible: 47 bytes belong to
-  the source-present `snd_mmd_resident` candidate, and four blocked bytes remain
-  in `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
+  reviewed authored units/regions; 13,283 bytes across 58 units/regions are exact.
+  The only reviewed nonexact authored bytes are the four blocked bytes in
+  `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
   `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
   `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
@@ -133,24 +132,26 @@ deterministic TH04 runtime scenario has been authored.
   plus 111-byte `boss_score_bonus`. The next public, `midboss_defeat_update`,
   starts at `0x2A047` and its upstream candidate contains inline assembly, so it
   remains outside this authored owner. The 217-byte prefix is exact in focused
-  two-cold replay and the 66-unit aggregate.
-- `snd_mmd_resident` is now a reviewed 47-byte authored source-present candidate
-  rather than an unclassified whole-module candidate. The TH04-wrapper natural
-  C source recovers the target `LES`, all three magic checks, and both global
-  stores. Ordinary C returns still make TC4J tail-merge the true path into a
-  `JMP` plus shared `RETF`, leaving seven raw-byte differences. Explicit `goto`,
-  `_AX` self-assignment, and `-O-` probes did not fix it. A first replay attempt
-  also proved that overlaying the shared `th02/snd/mmd_res.c` is wrong ownership:
-  it changes the GAME=2 build and causes five header/type errors. Keep the
-  maintained candidate on the TH04 wrapper `th04/snd_mmdr.c` and do not restore
-  the upstream inline `RETF` assembly.
+  two-cold replay and the 67-unit aggregate.
+- `snd_mmd_resident` is now a full **47-byte exact pure-C function** at
+  target `0x233AC..0x233DA` / TLINK `130E:02CC`. Removing `-WX` from the
+  maintained TH04 wrapper is the decisive codegen fix: the same natural `__es`
+  pointer form keeps the target `LES`/magic checks while TC4J emits the target's
+  distinct true/false `RETF` paths. Focused `gptweb-snd-mmd-no-wx-align-002`
+  and 67-unit aggregate `gptweb-snd-mmd-no-wx-align-default-001` pass all
+  raw/map/ordered-relocation/OMF/determinism gates. A checked-in zero-code C TU
+  (`src/main/sound/mmd_align.c`) emits a word-aligned `SHARED` SEGDEF and no
+  LEDATA, restoring the following KAJA/MODE/LOAD starts without patching an
+  object or emitting a target byte. Target `0x233DB = 0x90` is a separate
+  excluded padding owner. This independently falsifies the older candidate
+  comment that `-WX` was required for the early `RETF` codegen.
 - `snd_se_reset` adds a separately reviewed **11-byte exact pure-C owner** at
   target `0x238A6..0x238B0`. TLINK places `_snd_se_reset` at the first byte and
   raw 16-bit decode reaches `RETF` after exactly 11 bytes; the following
   `0x238B1` NOP is upstream `#pragma codestring` padding and is deliberately
   outside authored C/C++ accounting. The maintained source uses
   `compat/rec98` one-line adapters plus `source_mode=forwarded-fragment`, and
-  focused replay plus the 66-unit aggregate are exact. Ghidra has no function
+  focused replay plus the 67-unit aggregate are exact. Ghidra has no function
   at `0x238A6`; the checked-in no-Ghidra TLINK/raw boundary gate now promotes
   `_snd_se_reset` as a reviewed exact function without fabricating Ghidra data.
 - Re-screening the remaining 0x5A-byte `stages.cpp` prefix shows that it is the
@@ -241,7 +242,7 @@ deterministic TH04 runtime scenario has been authored.
   mutates the pointer word and requires rejection. `bullets_update` remains the
   separate exact-extent/table case, and the two `MB_DFT_TEXT` score-bonus
   functions remain Ghidra-min/max manual cases. `snd_load` is the sole reviewed
-  nonexact function, giving 127/128 exact.
+  nonexact function, giving 128/129 exact.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain

@@ -16,6 +16,15 @@ build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/dialog.cpp\",\n"
 build_insert = "\t\"th04/dialog_i.cpp\",\n"
 
+[[build_inserts]]
+id = "th04-snd-mmd-shared-align"
+trigger_units = ["th04-main-snd-mmd-resident"]
+repo_source = "src/main/sound/mmd_align.c"
+overlay_path = "th04/mmdaln.c"
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/mpn_l_i.cpp\",\n\t\"th04/vector.cpp\",\n\t\"th04/snd_pmdr.c\",\n\t\"th04/snd_mmdr.c\",\n"
+build_insert = "\t\"th04/mmdaln.c\",\n"
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"
@@ -556,7 +565,6 @@ object_path = "obj/th04/bullet_u.obj"
 
 [[units]]
 id = "th04-main-snd-mmd-resident"
-default_enabled = false
 repo_source = "src/main/sound/mmd_resident.c"
 overlay_path = "th04/snd_mmdr.c"
 map_module = "th04/snd_mmdr.c"

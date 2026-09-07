@@ -356,3 +356,9 @@ id = "th04-main-fn-1cb80"
 address = "0x1CB80"
 evidence_id = "ev-th04-main-tiles-render-all-timed-internal-boundary-v1"
 reason = "Explicitly admit the internal static function after Ghidra/raw/next-public/pointer-anchor review inside an exact authored owner."
+
+[[new_exact]]
+id = "th04-main-fn-233ac"
+address = "0x233AC"
+evidence_id = "ev-th04-main-snd-mmd-resident-boundary-v2"
+reason = "Fresh target Ghidra/TLINK/raw review binds the complete 47-byte far function inside the exact natural-C owner after removing -WX; trailing 0x90 is separate padding."

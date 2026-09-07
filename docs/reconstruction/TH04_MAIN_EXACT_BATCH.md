@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **13,236 / 13,287 = 99.616166% exact**;
-- authored functions: **127 / 128 = 99.218750% exact**;
+- authored C/C++ bytes: **13,283 / 13,287 = 99.969895% exact**;
+- authored functions: **128 / 129 = 99.224806% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,8 +44,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-script-params-internal-precommit-002/receipt.json`.
-It passes all 66 current default-selected exact-replay units in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-snd-mmd-v18-precommit-001/receipt.json`.
+It passes all 67 current default-selected exact-replay units in both isolated
 cold materializations, including the 0xD9-byte MB_DFT score-bonus prefix, the 11-byte pure-C
 `snd_se_reset` owner,
 the full pure-C PMD owner, and the restored natural C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
@@ -318,24 +318,27 @@ owner containment, and independent `ndisasm -b16` coverage through terminal
 `RET 2`. This adds two reviewed exact functions without weakening the automatic
 contiguous-body rule.
 
-`snd_mmd_resident` is also no longer left as an unreviewed whole-module
-candidate. Target Ghidra and TLINK bind a 47-byte function at file `0x14BAC`;
-the 48th module byte is trailing padding. A TH04-wrapper natural-C candidate
-using `void far * __es *` reproduces the target `LES`, all three `MMD` magic
-comparisons, and both global stores. It is intentionally **not** exact yet:
-ordinary C `return true` / `return false` makes TC4J tail-merge the true return
-into `JMP` plus one shared `RETF`, adding one byte and shifting three conditional
-branch displacements. The two-cold candidate is deterministic but differs at
-seven byte positions. Explicit `goto`, `_AX = _AX`, and whole-function `-O-`
-probes did not restore the target early `RETF`.
+`snd_mmd_resident` is now exact. Fresh target Ghidra/raw/TLINK review binds a
+47-byte far function at file `0x14BAC` / linear `0x233AC`, ending in `RETF` at
+`0x233DA`. The decisive source correction is removing `-WX`: the same pure-C
+`__es` pointer expression still emits the target `LES` and magic checks, while
+TC4J now keeps the target's distinct true/false `RETF` paths. This directly
+falsifies the older candidate comment that `-WX` was required for the early
+return; the extensive return-shape/barrier probes under `-WX` were solving the
+wrong problem.
 
-A separate failed full-corpus probe established an ownership rule worth
-preserving: replacing shared `th02/snd/mmd_res.c` with TH04-only source makes
-the GAME=2 compilation consume TH04 declarations and fail with five
-redeclaration/type errors. The replay manifest therefore overlays only the TH04
-wrapper `th04/snd_mmdr.c` and keeps this candidate `default_enabled = false`.
-Do not solve the remaining early-return mismatch by restoring the upstream
-inline `RETF` assembly.
+Dropping `-WX` changes the MMD contribution from 0x30/ACBP=48 to the exact
+47-byte 0x2F/ACBP=28 function, which would shift the following KAJA/MODE/LOAD
+contributions by one byte. `src/main/sound/mmd_align.c` solves **layout only**:
+it is a zero-code C translation unit compiled with `-WX -zCSHARED -k-`, so TC4J
+emits a word-aligned `SHARED` SEGDEF and no LEDATA. The fail-closed
+`[[build_inserts]]` replay gate copies this checked-in source to 8.3-safe
+`th04/mmdaln.c` and inserts it at one unique TH04 MAIN Tupfile context; anchor
+drift is unit-tested and rejected. This restores the next contribution to
+`130E:02FC` without object/byte patching. Target `0x233DB = 0x90` remains a
+separate excluded padding owner and is neither emitted nor claimed by the layout
+TU. Focused `gptweb-snd-mmd-no-wx-align-002` and 67-unit aggregate
+`gptweb-snd-mmd-no-wx-align-default-001` both pass all required exactness gates.
 
 The 12-byte `th02/snd_se_r.cpp` umbrella candidate has a different boundary
 shape. TLINK puts `_snd_se_reset` at the contribution start (`130E:07C6`), and
@@ -530,11 +533,13 @@ raw code through `RETF`, byte `0x2CC28` metadata, five near-jump words at
 Reviewed nonexact functions still use the same fail-closed boundary path without
 requiring exact bytes. `snd_load` is now the only such function.
 
-The resulting denominator is 128 reviewed functions: **127 exact plus one
+The resulting denominator is 129 reviewed functions: **128 exact plus one
 explicit nonexact `snd_load`**. No current function candidate remains
 provisional.
 
 ## Reusable Borland lessons
+
+- `-WX` affects both control-flow codegen and SEGDEF alignment. `snd_mmd_resident` needs no `-WX` for exact code; when only the following word boundary must be restored, a zero-code C translation unit can contribute only a word-aligned SEGDEF with no LEDATA. Keep that layout input separate from target padding ownership.
 
 - Linker publics are not a complete function universe. After exhausting public
   starts, scan target Ghidra entries inside exact authored owners for credible

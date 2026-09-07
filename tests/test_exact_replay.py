@@ -96,6 +96,51 @@ class SourceSplitTests(unittest.TestCase):
                     replay.apply_source_splits(source, [split], {"unit-a"})
 
 
+class BuildInsertTests(unittest.TestCase):
+    def fixture(self, root: Path, *, duplicate_anchor: bool = False):
+        repo = root / "repo"
+        source = root / "source"
+        repo.mkdir()
+        source.mkdir()
+        (repo / "align.c").write_text("#pragma option -WX -zCSHARED -k-\n", encoding="utf-8")
+        anchor = '"before.cpp",\n"anchor.c",\n'
+        text = anchor + ('"middle.cpp",\n' + anchor if duplicate_anchor else '') + '"after.cpp",\n'
+        (source / "Tupfile.lua").write_text(text, encoding="utf-8")
+        entry = {
+            "id": "fixture-insert",
+            "trigger_units": ["unit-a"],
+            "repo_source": "align.c",
+            "overlay_path": "extra/align.c",
+            "build_file": "Tupfile.lua",
+            "build_anchor": anchor,
+            "build_insert": '"extra/align.c",\n',
+        }
+        return repo, source, entry
+
+    def test_build_insert_is_source_and_anchor_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo, source, entry = self.fixture(Path(temporary))
+            with patch.object(replay, "ROOT", repo):
+                receipts = replay.apply_build_inserts(source, [entry], {"unit-a"})
+            self.assertEqual(
+                (source / "extra" / "align.c").read_bytes(),
+                (repo / "align.c").read_bytes(),
+            )
+            self.assertEqual(
+                (source / "Tupfile.lua").read_text(encoding="utf-8"),
+                '"before.cpp",\n"anchor.c",\n"extra/align.c",\n"after.cpp",\n',
+            )
+            self.assertEqual(receipts[0]["source_sha256"], replay.digest_file(repo / "align.c"))
+            self.assertEqual(receipts[0]["trigger_units"], ["unit-a"])
+
+    def test_build_insert_rejects_ambiguous_anchor(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo, source, entry = self.fixture(Path(temporary), duplicate_anchor=True)
+            with patch.object(replay, "ROOT", repo):
+                with self.assertRaisesRegex(RuntimeError, "expected one build anchor"):
+                    replay.apply_build_inserts(source, [entry], {"unit-a"})
+
+
 class SourceReplacementTests(unittest.TestCase):
     def test_source_replacement_is_hash_and_offset_bound(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

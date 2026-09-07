@@ -300,6 +300,53 @@ def apply_source_splits(
     return receipts
 
 
+def apply_build_inserts(
+    source_root: Path,
+    inserts: list[dict[str, object]],
+    selected_ids: set[str],
+) -> list[dict[str, object]]:
+    """Materialize checked-in build inputs at one fail-closed build anchor."""
+
+    receipts: list[dict[str, object]] = []
+    for entry in inserts:
+        triggers = {str(value) for value in entry.get("trigger_units", [])}
+        if not (triggers & selected_ids):
+            continue
+        insert_id = str(entry["id"])
+        repo_source = ROOT / str(entry["repo_source"])
+        if not repo_source.is_file() or repo_source.is_symlink():
+            raise FileNotFoundError(repo_source)
+        overlay = source_root / str(entry["overlay_path"])
+        overlay.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(repo_source, overlay)
+        build_file = source_root / str(entry["build_file"])
+        original = build_file.read_text(encoding="utf-8")
+        anchor = str(entry["build_anchor"])
+        insertion = str(entry["build_insert"])
+        count = original.count(anchor)
+        if count != 1:
+            raise RuntimeError(
+                f"{insert_id}: expected one build anchor in {entry['build_file']}, got {count}"
+            )
+        if insertion in original:
+            raise RuntimeError(f"{insert_id}: build insertion already exists in scaffold")
+        patched = original.replace(anchor, anchor + insertion, 1)
+        build_file.write_text(patched, encoding="utf-8")
+        receipts.append({
+            "id": insert_id,
+            "trigger_units": sorted(triggers & selected_ids),
+            "repo_source": str(entry["repo_source"]),
+            "source_sha256": digest_file(repo_source),
+            "overlay_path": str(entry["overlay_path"]),
+            "build_file": str(entry["build_file"]),
+            "build_file_original_sha256": digest_bytes(original.encode("utf-8")),
+            "build_file_patched_sha256": digest_file(build_file),
+            "build_anchor": anchor,
+            "build_insert": insertion,
+        })
+    return receipts
+
+
 def build(source: Path, log: Path) -> None:
     prefix = ROOT / ".analysis" / "toolchain" / "wineprefix"
     environment = os.environ.copy()
@@ -394,6 +441,7 @@ def main() -> int:
     revision = config["reference_revision"]
     entries = list(config["units"])
     splits = list(config.get("splits", []))
+    build_inserts = list(config.get("build_inserts", []))
     if args.unit:
         wanted = set(args.unit)
         entries = [entry for entry in entries if entry["id"] in wanted]
@@ -437,8 +485,10 @@ def main() -> int:
         materialize(revision, source)
         compat_headers = materialize_rec98_compat(source)
         overlays = overlay_sources(source, entries)
-        split_receipts = apply_source_splits(
-            source, splits, {entry["id"] for entry in entries}
+        selected_ids = {entry["id"] for entry in entries}
+        split_receipts = apply_source_splits(source, splits, selected_ids)
+        build_insert_receipts = apply_build_inserts(
+            source, build_inserts, selected_ids
         )
         log = run_root / "build.log"
         build(source, log)
@@ -450,6 +500,7 @@ def main() -> int:
                 "rec98_compat": compat_headers,
                 "overlays": overlays,
                 "source_splits": split_receipts,
+                "build_inserts": build_insert_receipts,
                 "build_log_sha256": digest_file(log),
                 "candidate_main_sha256": digest_file(candidate_path),
                 "units": units,
