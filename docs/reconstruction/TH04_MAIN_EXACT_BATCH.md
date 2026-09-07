@@ -46,7 +46,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-anims-v29-default-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-anims-v29-final-web-001/receipt.json`.
 It passes all 67 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
@@ -880,7 +880,7 @@ The next target range `0x2A53D..0x2A906` contains eight adjacent sprite-animatio
 helpers totaling **0x3CA = 970 bytes**. ReC98 still keeps these implementations in
 `b6_anim.asm`; natural C++ `switch` statements reproduce the entire family in a
 dedicated `MAIN_034_TEXT` TU. Focused `gptweb-yuuka6-anims-v29-004` and the
-67-unit aggregate `gptweb-yuuka6-anims-v29-default-001` are raw/map/ordered-
+67-unit aggregate `gptweb-yuuka6-anims-v29-final-web-001` are raw/map/ordered-
 relocation/OMF/determinism exact in both cold materializations.
 
 Function boundary accounting must include compiler-owned trailing data. Ghidra

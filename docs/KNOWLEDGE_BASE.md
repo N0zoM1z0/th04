@@ -478,6 +478,7 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   the compiler's truncated public name with a hash/count-bound source transform;
   never patch the OMF or inject bytes.
 - The compiler alignment matrix is diagnostic: default / `-a1` emits a `0x3C6` block, while file-start `-a` / `-a2` emits the exact `0x3CA`. The four added zero bytes land before the open, spin-back, appear, and shield switch tables; treat them as compiler-owned alignment, not hand-authored padding.
+- On a shared worktree, cold A/B must not read maintained inputs independently. Freeze all repo-owned overlay/split/build inputs once, hash the bytes actually written to the snapshot, immediately reject live-source drift during capture, feed both builds from that snapshot, and verify the live repo again before emitting the receipt.
 
 
 ### TH04 v29: freeze live replay inputs before cold A/B

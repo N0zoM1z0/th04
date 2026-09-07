@@ -115,7 +115,7 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-yuuka6-anims-v29-default-001` passes all 67 current default-selected
+  `gptweb-yuuka6-anims-v29-final-web-001` passes all 67 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
 - The current reviewed authored byte denominator is 17,650 bytes; 17,646 bytes are exact.
@@ -253,7 +253,7 @@ deterministic TH04 runtime scenario has been authored.
   `reviewed_exact_extent` now validates `code -> optional alignment byte ->
   optional compare table -> jump table` with every jump target required to be
   a decoded instruction start. Focused `gptweb-yuuka6-anims-v29-004` and
-  67-unit aggregate `gptweb-yuuka6-anims-v29-default-001` pass both cold
+  67-unit aggregate `gptweb-yuuka6-anims-v29-final-web-001` pass both cold
   materializations. The reviewed baseline becomes **17,646 / 17,650 bytes**
   and **155 / 156 functions exact**.
 
@@ -344,7 +344,7 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-yuuka6-anims-v29-default-001`
+- The latest aggregate cold replay `gptweb-yuuka6-anims-v29-final-web-001`
   passed all 67 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
@@ -507,6 +507,6 @@ shield switch tables, matching the target's only four `db 0` sites. Maintained
 `src/main/boss/yuuka6_animations.cpp` uses file-start `#pragma option -a`; it
 contains no inline ASM, codestring, `__emit__`, object patch, or target-byte
 injection. Focused `gptweb-yuuka6-anims-v29-004` and 67-unit aggregate
-`gptweb-yuuka6-anims-v29-default-001` reproduce all 970 bytes, exact map
+`gptweb-yuuka6-anims-v29-final-web-001` reproduce all 970 bytes, exact map
 placement, relocation overlap, and deterministic valid OMF. Eight functions are
 newly reviewed exact; `snd_load` remains the sole reviewed nonexact function.
