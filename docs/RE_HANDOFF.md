@@ -5,11 +5,12 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted: reviewed authored C/C++ bytes are 12,704 / 12,708 (99.968524%)
-exact, and reviewed authored functions are 113 / 114 (99.122807%) exact. Nine
-standalone original-style ASM units totaling 1,489 bytes are separately exact
-and are not counted in the authored C/C++ percentage. No deterministic TH04
-runtime scenario has been authored.
+accepted. After expanding the reviewed authored boundary into `MB_DFT_TEXT` and
+`snd_mmd_resident`, reviewed authored C/C++ bytes are 12,921 / 12,972
+(99.606846%) exact, and reviewed authored functions are 115 / 116 (99.137931%)
+exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+separately exact and are not counted in the authored C/C++ percentage. No
+deterministic TH04 runtime scenario has been authored.
 
 ## Verified locally
 
@@ -116,19 +117,36 @@ runtime scenario has been authored.
   used for the larger authored cohort.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
-  two isolated cold materializations. Latest source-layout receipt
-  `layout-cleanup-default-001` passes all 62 current default-selected units
-  across raw bytes,
-  containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
-  validity, and deterministic output.
-- The current reviewed authored byte denominator is 12,708 bytes across 56
-  authored units/regions; 12,704 bytes across 53 units/regions are exact. The
-  only four blocked bytes are in `snd_load`: `PUSH DS`, target `89 C3`
-  `MOV BX,AX`, and `POP DS`.
+  two isolated cold materializations. Latest aggregate receipt
+  `gptweb-authored-expand-default-002` passes all 63 current default-selected
+  exact-replay units across raw bytes, containing/exact TLINK placement,
+  ordered overlapping MZ relocations, OMF validity, and deterministic output.
+- The current reviewed authored byte denominator is 12,972 bytes across 58
+  authored units/regions; 12,921 bytes across 54 units/regions are exact. The
+  reviewed nonexact byte remainder is deliberately visible: 47 bytes belong to
+  the source-present `snd_mmd_resident` candidate, and four blocked bytes remain
+  in `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
   `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
   `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
   directive is involved.
+- The raw-identical 0x119-byte `th04/mb_dft.cpp` contribution is **not**
+  blanket-classified as authored C/C++. Fresh target Ghidra + TLINK review
+  admits only its 0xD9-byte pure-C/C++ prefix: 106-byte `midboss_score_bonus`
+  plus 111-byte `boss_score_bonus`. The next public, `midboss_defeat_update`,
+  starts at `0x2A047` and its upstream candidate contains inline assembly, so it
+  remains outside this authored owner. The 217-byte prefix is exact in focused
+  two-cold replay and the 63-unit aggregate.
+- `snd_mmd_resident` is now a reviewed 47-byte authored source-present candidate
+  rather than an unclassified whole-module candidate. The TH04-wrapper natural
+  C source recovers the target `LES`, all three magic checks, and both global
+  stores. Ordinary C returns still make TC4J tail-merge the true path into a
+  `JMP` plus shared `RETF`, leaving seven raw-byte differences. Explicit `goto`,
+  `_AX` self-assignment, and `-O-` probes did not fix it. A first replay attempt
+  also proved that overlaying the shared `th02/snd/mmd_res.c` is wrong ownership:
+  it changes the GAME=2 build and causes five header/type errors. Keep the
+  maintained candidate on the TH04 wrapper `th04/snd_mmdr.c` and do not restore
+  the upstream inline `RETF` assembly.
 - `snd_load` now has three additional exact natural-source subspans. Identity
   fragments recover the DOS-open and driver-dispatch/read sequences. The
   parameter reload uses `_AX = *reinterpret_cast<snd_load_func_t near *>(&func);`;
@@ -137,20 +155,23 @@ runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest cold replay `layout-cleanup-default-001`
-  passed all 62 current default exact byte owners in two isolated
+- The latest aggregate cold replay `gptweb-authored-expand-default-002`
+  passed all 63 current default exact-replay units in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
   from byte ownership. The current review accepts 101 contiguous functions
-  automatically plus 12 replayable manual exact reviews. `bullets_update` is
+  automatically plus 14 replayable manual exact reviews. `bullets_update` is
   the exact-extent case: one 0x36B exact owner is bound to its TLINK public,
   0x360-byte raw code decode through `RETF`, trailing switch metadata/table, and
-  next-public boundary despite unusable Ghidra body ranges. `snd_load` is now
-  the sole reviewed nonexact function, giving 113/114 exact. No current function
-  candidate is provisional.
+  next-public boundary despite unusable Ghidra body ranges. The two new
+  `MB_DFT_TEXT` score-bonus functions also use the manual gate because Ghidra's
+  min/max spans are correct but its body sets are noncontiguous; TLINK + exact
+  owner + gap-free raw decode validate their complete 0x6A and 0x6F extents.
+  `snd_load` remains the sole reviewed nonexact function, giving 115/116 exact.
+  No current function candidate is provisional.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain
@@ -216,7 +237,7 @@ option matrix, and the pinned-media TASM 4.1 `-B` behavior. The remaining work
 should target genuinely new source/IR or producer evidence, not previously
 falsified boundary/assembler modes.
 
-Preserve the >98% reviewed authored function/byte baseline with the default
+Preserve the >99% reviewed authored function/byte baseline with the default
 two-cold replay before changing shared source or toolchain surfaces. `snd_load`
 is now narrowed to four blocked bytes after 37 middle bytes were recovered from
 maintained natural C++ and two-cold replay. Do not solve the remaining `PUSH DS`,
@@ -228,7 +249,10 @@ under the pinned DOSBox-X PC-98 profile; generated OMF still reports
 `TC86 Borland C++ 4.02`, and natural `_BX = _AX` still emits `8B D8`. Do not
 repeat IDE-versus-TCC producer switching as an explanation for target `89 C3`.
 The `snd_pmd_resident` `LES` blocker is solved by the reusable Borland `__es`
-segment-pointer source shape. `bullets_update` is now fully exact from maintained
+segment-pointer source shape. `snd_mmd_resident` confirms the same `__es` LES
+shape but remains source-present because C-mode return tail merging does not yet
+reproduce the target's early `RETF`; do not repeat the tested ordinary-return,
+explicit-goto, `_AX` self-assignment, or whole-function `-O-` variants. `bullets_update` is now fully exact from maintained
 natural C++: `#pragma samecodeseg sparks_add_random` changes the TC86 Pointer16
 frame, then default TLINK 6.10 far-call optimization (enabled because `/f` is not
 specified) turns the five-byte `CALL FAR` into target `NOP; PUSH CS; CALL near`

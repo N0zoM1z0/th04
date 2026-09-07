@@ -553,3 +553,21 @@ replace_sha256 = "a1dcc5cc018e5cc4aa5ed7a5d08f059fc1f5ddeb1f92e8773c09ea8bad31ce
 map_module = "th04/bullet_u.cpp"
 map_mode = "contains"
 object_path = "obj/th04/bullet_u.obj"
+
+[[units]]
+id = "th04-main-snd-mmd-resident"
+default_enabled = false
+repo_source = "src/main/sound/mmd_resident.c"
+overlay_path = "th04/snd_mmdr.c"
+map_module = "th04/snd_mmdr.c"
+map_mode = "contains"
+object_path = "obj/th04/snd_mmdr.obj"
+
+[[units]]
+id = "th04-main-midboss-score-bonuses"
+repo_source = "src/main/midboss/score_bonus.inl"
+source_mode = "fragment"
+patch_path = "th04/main/midboss/defeat.cpp"
+map_module = "th04/mb_dft.cpp"
+map_mode = "contains"
+object_path = "obj/th04/mb_dft.obj"

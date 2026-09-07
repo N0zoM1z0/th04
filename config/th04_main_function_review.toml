@@ -161,3 +161,23 @@ id = "th04-main-fn-1d729"
 address = "0x1D729"
 evidence_id = "ev-th04-main-dialog-init-boundary-split-v1"
 reason = "dialog_init became reviewable only after restoring its original exact C++ translation-unit ownership; Ghidra and TLINK both bind the full 197-byte function at the new exact owner start."
+
+[[reviewed_exact]]
+id = "th04-main-fn-29f6e"
+address = "0x29F6E"
+file_offset = "0x1B76E"
+size = "0x6A"
+name = "midboss_score_bonus(unsigned int)"
+owner_unit = "th04-main-midboss-score-bonuses"
+evidence_id = "ev-th04-main-midboss-score-bonus-manual-boundary-v1"
+reason = "Ghidra min/max cover the complete 106-byte public span but body construction reports only 66/106 bytes. Raw 16-bit decoding tiles the entire TLINK-public span through RET 2 at 0x29FD5 inside the exact 0xD9 MB_DFT_TEXT pure-C/C++ owner."
+
+[[reviewed_exact]]
+id = "th04-main-fn-29fd8"
+address = "0x29FD8"
+file_offset = "0x1B7D8"
+size = "0x6F"
+name = "boss_score_bonus(unsigned int)"
+owner_unit = "th04-main-midboss-score-bonuses"
+evidence_id = "ev-th04-main-boss-score-bonus-manual-boundary-v1"
+reason = "Ghidra min/max cover the complete 111-byte public span but body construction reports only 71/111 bytes. Raw 16-bit decoding tiles the entire TLINK-public span through RET 2 at 0x2A044; the next TLINK public midboss_defeat_update starts exactly at 0x2A047 outside the exact owner."

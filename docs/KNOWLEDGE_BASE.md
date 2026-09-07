@@ -213,3 +213,22 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   five-byte footprint as `NOP; PUSH CS; CALL near`, removing the segment
   relocation. TH04 `bullets_update` is the accepted control for this exact
   mechanism. `#pragma alloc_text` and `/P` packing alone do not produce it.
+
+- Raw-identical module contributions are not automatically authored-C/C++
+  boundaries. TH04 `mb_dft.cpp` is the concrete control: only its first 0xD9
+  bytes are currently reviewed authored C/C++, because target Ghidra + TLINK
+  bind two pure score-bonus functions there and the next public begins the
+  upstream inline-assembly-containing `midboss_defeat_update`. When Ghidra
+  min/max spans agree but its body set is noncontiguous, keep the automatic
+  function gate strict and use the configured manual exact path with exact
+  owner + TLINK public + matching min/max + gap-free `ndisasm` through RET.
+- Exact-replay overlays must respect cross-game source ownership. A TH04 wrapper
+  can include a lower-game source that is also independently compiled for
+  TH02/TH03; replacing that shared path with TH04-only source can break the
+  full corpus even if the TH04 object is the intended target. For
+  `snd_mmd_resident`, overlay `th04/snd_mmdr.c`, not shared
+  `th02/snd/mmd_res.c`. The `__es` pointer form recovers the natural LES, but
+  TC4J C-mode early-return tail merging remains a separate byte-exactness
+  blocker; ordinary return, explicit-goto, `_AX` self-assignment, and `-O-`
+  variants are recorded negative results rather than reasons to reintroduce
+  inline `RETF` assembly.

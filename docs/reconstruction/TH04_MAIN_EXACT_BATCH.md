@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,704 / 12,708 = 99.968524% exact**;
-- authored functions: **113 / 114 = 99.122807% exact**;
+- authored C/C++ bytes: **12,921 / 12,972 = 99.606846% exact**;
+- authored functions: **115 / 116 = 99.137931% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,11 +44,10 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/layout-cleanup-default-001/receipt.json`.
-It passes all 62 current default-selected units in both isolated cold
-materializations, including the full pure-C PMD owner and the restored natural
-C++ dialog init/exit TU split after the stricter reviewed-nonexact function
-accounting changes. `dialog_op` and `dialog_run` remain
+`.analysis/reconstruction/exact-unit-replay/gptweb-authored-expand-default-002/receipt.json`.
+It passes all 63 current default-selected exact-replay units in both isolated
+cold materializations, including the new 0xD9-byte MB_DFT score-bonus prefix,
+the full pure-C PMD owner, and the restored natural C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
 `default_enabled = false`; they stay individually replayable with `--unit` and
 are never silently accepted by the default aggregate.
 
@@ -284,6 +283,59 @@ and the ordered overlapping relocation list agrees. Two isolated cold builds in
 exact owners. No inline assembly, codestring, `__emit__`, raw byte directive, or
 patched object/link output is used.
 
+## Authored-boundary expansion: `MB_DFT_TEXT` and `snd_mmd_resident`
+
+The earlier module-routing ledger left the raw-identical 0x119-byte
+`th04/mb_dft.cpp` contribution as `origin=unknown`. Raw identity was not enough
+to classify the whole contribution as authored C/C++ because the candidate's
+third function, `midboss_defeat_update`, contains inline assembly.
+
+Fresh target review narrows a safe authored prefix instead of promoting the
+whole module:
+
+- TLINK public `13A9:64DE` / target linear `0x29F6E` starts
+  `midboss_score_bonus`; Ghidra min/max end at `0x29FD7` (0x6A bytes).
+- TLINK public `13A9:6548` / target linear `0x29FD8` starts
+  `boss_score_bonus`; Ghidra min/max end at `0x2A046` (0x6F bytes).
+- the next TLINK public `13A9:65B7`, `midboss_defeat_update`, starts exactly at
+  `0x2A047`, immediately after the accepted 0xD9-byte prefix.
+
+The maintained `src/main/midboss/score_bonus.inl` contains only the two natural
+C/C++ functions and their required declarations/macros; it contains no inline
+assembly or byte-emission escape hatch. Focused two-cold replay
+`gptweb-mbscore-exact-002` reproduces all 217 accepted bytes, and
+`gptweb-authored-expand-default-002` repeats the result inside the 63-unit
+aggregate with matching TLINK placement, ordered overlapping relocations, and
+normalized OMF identity.
+
+Function review remains stricter than byte review. For both score-bonus
+functions Ghidra's min/max spans are correct, but its body sets are
+noncontiguous (66/106 and 71/111 bytes). The automatic gate therefore rejects
+both. Two configured `[[reviewed_exact]]` entries use the existing fail-closed
+manual path instead: same target Ghidra min/max, same local TLINK public, exact
+owner containment, and independent `ndisasm -b16` coverage through terminal
+`RET 2`. This adds two reviewed exact functions without weakening the automatic
+contiguous-body rule.
+
+`snd_mmd_resident` is also no longer left as an unreviewed whole-module
+candidate. Target Ghidra and TLINK bind a 47-byte function at file `0x14BAC`;
+the 48th module byte is trailing padding. A TH04-wrapper natural-C candidate
+using `void far * __es *` reproduces the target `LES`, all three `MMD` magic
+comparisons, and both global stores. It is intentionally **not** exact yet:
+ordinary C `return true` / `return false` makes TC4J tail-merge the true return
+into `JMP` plus one shared `RETF`, adding one byte and shifting three conditional
+branch displacements. The two-cold candidate is deterministic but differs at
+seven byte positions. Explicit `goto`, `_AX = _AX`, and whole-function `-O-`
+probes did not restore the target early `RETF`.
+
+A separate failed full-corpus probe established an ownership rule worth
+preserving: replacing shared `th02/snd/mmd_res.c` with TH04-only source makes
+the GAME=2 compilation consume TH04 declarations and fail with five
+redeclaration/type errors. The replay manifest therefore overlays only the TH04
+wrapper `th04/snd_mmdr.c` and keeps this candidate `default_enabled = false`.
+Do not solve the remaining early-return mismatch by restoring the upstream
+inline `RETF` assembly.
+
 ## Function accounting
 
 `config/th04_main_authored_functions.csv` is a separate function ledger. It
@@ -310,9 +362,10 @@ be a decoded instruction start inside the function span. Two regression tests
 force this switch gate to fail closed on a target that lands between
 instructions.
 
-The original manual gate promotes 11 Ghidra body-construction false negatives:
-four straight-line/overlap cases, `boss_items_drop`,
-`bullet_velocity_and_angle_set`, and five compiler-switch functions. A separate
+The regular manual gate now promotes 13 Ghidra body-construction false negatives:
+the original four straight-line/overlap cases, `boss_items_drop`,
+`bullet_velocity_and_angle_set`, five compiler-switch functions, and the two
+new MB_DFT score-bonus functions. A separate
 `[[reviewed_exact_extent]]` path handles `bullets_update`, whose Ghidra body
 ranges are unusable. It reuses the complete-boundary checks from reviewed
 nonexact accounting but additionally requires the entire configured extent to
@@ -324,7 +377,7 @@ raw code through `RETF`, byte `0x2CC28` metadata, five near-jump words at
 Reviewed nonexact functions still use the same fail-closed boundary path without
 requiring exact bytes. `snd_load` is now the only such function.
 
-The resulting denominator is 114 reviewed functions: **113 exact plus one
+The resulting denominator is 116 reviewed functions: **115 exact plus one
 explicit nonexact `snd_load`**. No current function candidate remains
 provisional.
 
@@ -357,3 +410,14 @@ provisional.
   manual gate: exact owner + TLINK public + matching min/max + gap-free raw
   decode; switch tables additionally require every target to be an instruction
   start inside the span. Shared tails and nonexact gaps remain provisional.
+- Cross-game include ownership is part of exact replay. If a TH04 wrapper
+  includes a lower-game source also built by TH02/TH03, overlaying TH04-only
+  code onto that shared lower-game path can corrupt other corpus builds even
+  when the TH04 object would compile. Prefer a TH04 wrapper overlay when the
+  accepted object/module identity belongs to that wrapper.
+- `__es` pointer syntax can solve Borland segment-load codegen without inline
+  assembly, but it does not imply the rest of a function is naturally exact.
+  In `snd_mmd_resident`, the `LES` and dataflow match while C-mode return
+  tail-merging still changes final control-flow bytes. Treat compiler-control
+  flow as a separate exactness dimension and keep negative source shapes in the
+  knowledge ledger.
