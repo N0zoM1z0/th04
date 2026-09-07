@@ -831,7 +831,7 @@ generated_public = "_generated"
                           "is_thunk": "false", "is_external": "false"},
             }
             decoded = {"instruction_count": 3, "instruction_addresses": [0x10000,0x10001,0x10002],
-                       "terminal": "ret", "first_address": "0x10000",
+                       "terminal": "ret 0x4", "first_address": "0x10000",
                        "end_address_exclusive": "0x10003"}
             with patch.object(review, "POLICY", policy), patch.object(
                 review, "exact_authored_owners", return_value=owners
@@ -843,6 +843,15 @@ generated_public = "_generated"
                 with self.assertRaisesRegex(ValueError, "lacks configured generated public"):
                     review.reviewed_exact_internal_call_reviews(
                         functions, metadata, {0x10000: ["_wrong"]}, target
+                    )
+            bad_decoded = dict(decoded)
+            bad_decoded["terminal"] = "jmp 0x10003"
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=bad_decoded):
+                with self.assertRaisesRegex(ValueError, "lacks terminal RET/RETF"):
+                    review.reviewed_exact_internal_call_reviews(
+                        functions, metadata, {0x10000: ["_generated"]}, target
                     )
 
 

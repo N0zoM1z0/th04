@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **16,416 / 16,420 = 99.975639% exact**;
-- authored functions: **144 / 145 = 99.310345% exact**;
+- authored C/C++ bytes: **16,527 / 16,531 = 99.975803% exact**;
+- authored functions: **145 / 146 = 99.315068% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,7 +44,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-v24-precommit-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-move-v26-precommit-001/receipt.json`.
 It passes all 66 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
@@ -802,3 +802,30 @@ Focused `gptweb-yuuka6-phase2-v25-001` and 66-unit aggregate
 relocations, deterministic TC86 OMF, and the zero-LEDATA code-order anchor.
 The v25 reviewed baseline is **16,416 / 16,420 authored C/C++ bytes exact
 (99.975639%)** and **144 / 145 reviewed functions exact (99.310345%)**.
+
+
+## v26: recover the 111-byte Yuuka6 move helper
+
+Pinned TASM places `yuuka6_1A439` immediately after the v25 prefix at target
+`0x2A439`, with the next true entry at `0x2A4A8`; the resulting extent is exactly
+0x6F bytes. Fresh nonce-attested Ghidra independently reports a contiguous
+111/111-byte function at the same entry and a complete next function. Target raw
+near call `E8 86 EE` at `0x2B5B0` resolves exactly to `0x2A439`, so the boundary
+does not depend on the reconstruction-generated TLINK public.
+
+The source is ordinary C++. TC86 naturally assigns the two arguments to SI/DI,
+loads `boss.phase_frame` once into AX for the 64/128 sparse cases, emits the target
+animation-call branches, and ends with the target Pascal-style `RET 4`. Two
+private monolithic-ASM data labels are needed by the function; replay exposes them
+with zero-byte `PUBLIC`/`LABEL` aliases at their existing storage instead of
+copying or re-emitting the data. The old 111-byte ASM PROC is hash-bound and
+removed, exactly three residual ASM calls are retargeted, and all transforms fail
+closed on count/hash drift.
+
+Focused `gptweb-yuuka6-move-v26-001` and aggregate
+`gptweb-yuuka6-move-v26-default-001` reproduce the complete **0x421-byte**
+`MAIN_034_TEXT` natural-C++ prefix with zero raw differences and identical seven
+ordered MZ relocation entries. The reviewed baseline is now **16,527 / 16,531
+authored C/C++ bytes exact (99.975803%)** and **145 / 146 reviewed functions exact
+(99.315068%)**; `snd_load` remains the sole reviewed nonexact function with four
+blocked bytes.

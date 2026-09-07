@@ -300,6 +300,33 @@ old = "yuuka6_1A439\tproc near"
 new = "public YUUKA6_MOVE_TOWARDS\r\nYUUKA6_MOVE_TOWARDS label near\r\nyuuka6_1A439\tproc near"
 expected_count = 1
 
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-move-towards-v26"
+kind = "remove_between"
+removed_sha256 = "47d470191fc9cf2ac18e65e70b7fb40d20d87b3ea015c3b5bc7cf1d20ade5068"
+start = "public YUUKA6_MOVE_TOWARDS\r\nYUUKA6_MOVE_TOWARDS label near\r\nyuuka6_1A439\tproc near"
+end = "yuuka6_1A439\tendp\r\n"
+replacement = "extrn YUUKA6_MOVE_TOWARDS:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-yuuka6-move-towards-calls-v26"
+kind = "replace"
+old = "call\tyuuka6_1A439"
+new = "call\tYUUKA6_MOVE_TOWARDS"
+expected_count = 3
+
+[[source_transforms.ops]]
+id = "alias-main034-yuuka6-aux-pos-v26"
+kind = "insert_before"
+anchor = "point_25A0C\tPoint <?>\r\n"
+text = "public _yuuka6_aux_pos\r\n_yuuka6_aux_pos label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main034-yuuka6-aux-state-v26"
+kind = "insert_before"
+anchor = "byte_25A1B\tdb ?\r\n"
+text = "public _yuuka6_aux_state\r\n_yuuka6_aux_state label byte\r\n"
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"

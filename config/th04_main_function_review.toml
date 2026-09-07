@@ -628,3 +628,26 @@ id = "th04-main-fn-2a3c3"
 address = "0x2A3C3"
 evidence_id = "ev-th04-main-yuuka6-phase2-boundary-v25"
 reason = "Explicitly admit the target-called no-Ghidra Yuuka6 phase-2 fly function after exact-owner, raw-RET, next-Ghidra-entry, target near-call, and generated-public-plumbing review."
+
+[[provisional]]
+address = "0x2A439"
+reason = "Reconstruction-generated TLINK public only; original target boundary is reviewed through Ghidra/raw/TASM/target-call anchors, not the generated C++ symbol."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-2a439"
+address = "0x2A439"
+file_offset = "0x1BC39"
+size = "0x6F"
+name = "yuuka6_move_towards(subpixel_t,subpixel_t)"
+owner_unit = "th04-main-chasecrosses-add"
+evidence_id = "ev-th04-main-yuuka6-move-boundary-v26"
+reason = "Fresh target Ghidra reports a complete 111-byte function at 0x2A439. Raw decode tiles through RET 4 at 0x2A4A5; the next complete target Ghidra/TASM entry starts at 0x2A4A8; and target near CALL at 0x2B5B0 resolves exactly to 0x2A439. The full function lies inside the exact 0x421 natural-C++ MAIN_034 owner."
+next_internal_address = "0x2A4A8"
+call_site_address = "0x2B5B0"
+generated_public = "YUUKA6_MOVE_TOWARDS"
+
+[[new_exact]]
+id = "th04-main-fn-2a439"
+address = "0x2A439"
+evidence_id = "ev-th04-main-yuuka6-move-boundary-v26"
+reason = "Explicitly admit target-called Yuuka6 move helper after exact-owner, complete-Ghidra-body, raw-RET4, next-entry, target near-call, and generated-public-plumbing review."

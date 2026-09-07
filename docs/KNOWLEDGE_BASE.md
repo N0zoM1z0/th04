@@ -415,3 +415,21 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   with independent anchors: exact owner, pinned TASM local `PROC`, full raw terminal,
   target call to the entry, and a complete next Ghidra entry. The corresponding
   reconstruction-generated public is explicitly excluded from target evidence.
+
+
+### TH04 v26: private-data aliases and callee-cleanup returns
+
+- A target-only natural C++ helper may need state that is still private inside a
+  monolithic ASM data section. Do not duplicate or relocate that state. Expose the
+  existing storage with zero-byte `PUBLIC`/`LABEL` aliases and require final
+  raw/map/relocation equality. `yuuka6_move_towards()` uses this pattern for one
+  point and one state byte while extending the exact `MAIN_034_TEXT` prefix from
+  0x3B2 to 0x421 bytes.
+- Internal-function boundary gates must recognize valid callee-cleanup returns.
+  The terminal instruction predicate is `ret*` / `retf*`, accepting `RET imm16`
+  and `RETF imm16` while still rejecting jumps or fallthrough. Keep the separate
+  exact-owner, raw extent, next-boundary and target-call anchors; the relaxed
+  spelling is not a boundary waiver.
+- Ghidra xrefs can still be absent even when raw target code contains an obvious
+  near call. Resolve the actual `E8 rel16` bytes from the target and use that
+  address as the call anchor rather than requiring a decompiler caller list.

@@ -611,3 +611,21 @@ jump. Rewriting the same semantics as `switch(frame)` produces exactly that
 49-instruction target sequence and exact function size. This is a useful source-
 shape control whenever target code visibly shares one loaded scalar across sparse
 constant comparisons.
+
+
+## v26: Yuuka6 move helper and `RET 4`
+
+The next target-only helper after `yuuka6_phase2_fly` starts at `0x2A439`. A
+pure-C++ compiler probe places it at `MAIN_034_TEXT+0x3B2` and emits exactly 111
+bytes; requesting byte 112 runs past LEDATA. The instruction skeleton matches the
+target directly: arguments enter SI/DI, one AX load drives the sparse 64/128
+comparisons, and the function returns with `RET 4`. Full linking extends the
+natural C++ contribution to 0x421 bytes with zero raw differences and the same
+seven ordered relocations.
+
+The function references two private data labels that previously existed only in
+`th04_main.asm`. Zero-byte public aliases expose those addresses to TC86 without
+adding or moving storage. Likewise, Ghidra reports no callers even though target
+`E8 86 EE` at `0x2B5B0` resolves exactly to this function; raw call arithmetic is
+the authoritative call anchor. The function-review gate now treats `RET imm16`
+and `RETF imm16` as valid terminals, with a regression that still rejects a JMP.

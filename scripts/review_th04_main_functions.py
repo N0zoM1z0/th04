@@ -430,7 +430,8 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
         instruction_addresses = decoded.pop("instruction_addresses", None)
         if decoded.get("end_address_exclusive") != f"0x{address + size:X}":
             raise ValueError(f"internal-call exact address 0x{address:X} raw decode extent mismatch")
-        if str(decoded.get("terminal", "")).lower() not in {"ret", "retf"}:
+        terminal = str(decoded.get("terminal", "")).lower()
+        if not terminal.startswith(("ret", "retf")):
             raise ValueError(f"internal-call exact address 0x{address:X} lacks terminal RET/RETF")
         accepted.append({
             "id": str(override["id"]),

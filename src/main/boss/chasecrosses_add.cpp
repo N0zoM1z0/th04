@@ -282,3 +282,48 @@ bool near yuuka6_phase2_fly(void)
     }
     return yuuka6_move_towards(TO_SP(PLAYFIELD_W / 2), TO_SP(80));
 }
+
+
+// Target-local auxiliary state used while moving Yuuka in phase 2. The
+// original ASM kept these labels private; exact replay exposes zero-byte
+// aliases without changing their storage or layout.
+extern unsigned char yuuka6_aux_state;
+extern SPPoint yuuka6_aux_pos;
+extern unsigned char yuuka6_sprite_flag;
+extern "C" bool near yuuka6_anim_vanish(void);
+extern "C" bool near yuuka6_anim_appear(void);
+
+enum yuuka6_sprite_flag_move_t {
+    Y6SF_MOVE_VANISHED = 0,
+};
+
+bool pascal near yuuka6_move_towards(
+    subpixel_t x, subpixel_t y
+)
+{
+    if(boss.phase_frame < 64) {
+        if(yuuka6_sprite_flag != Y6SF_MOVE_VANISHED) {
+            yuuka6_anim_vanish();
+        }
+    } else if(yuuka6_sprite_flag == Y6SF_MOVE_VANISHED) {
+        yuuka6_anim_appear();
+    }
+
+    switch(boss.phase_frame) {
+    case 64:
+        boss.pos.cur.x.v = x;
+        boss.pos.cur.y.v = y;
+        if(yuuka6_aux_state != 0) {
+            yuuka6_aux_state = 2;
+            yuuka6_aux_pos.x.v = (TO_SP(PLAYFIELD_W) - x);
+            yuuka6_aux_pos.y.v = y;
+        }
+        break;
+
+    case 128:
+        boss.phase_frame = 0;
+        boss.phase_state.patterns_seen++;
+        return true;
+    }
+    return false;
+}
