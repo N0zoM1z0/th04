@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, and the v21 contiguous `MAIN_035`/boss TU recovery, reviewed authored C/C++ bytes are 15,470 / 15,474 (99.974150%) exact, and reviewed authored functions are 140 / 141 (99.290780%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 15,544 / 15,548 (99.974273%) exact, and reviewed authored functions are 141 / 142 (99.295775%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,11 +115,11 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-boss-v21-precommit-002` passes all 65 current default-selected
+  `gptweb-chasecross-v22-precommit-003` passes all 66 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 15,474 bytes across 59
-  reviewed authored units/regions; 15,470 bytes across 56 units/regions are exact.
+- The current reviewed authored byte denominator is 15,548 bytes across 60
+  reviewed authored units/regions; 15,544 bytes across 57 units/regions are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -152,6 +152,21 @@ deterministic TH04 runtime scenario has been authored.
   inside the 468-byte `boss_defeat_update`; no inline ASM or byte emission is
   used. ReC98's TH04 stage2/stage3 semantics were materially wrong and were
   replaced from target raw/decompile evidence rather than copied.
+- `chasecrosses_add(unsigned char,unsigned char)` is the first reviewed exact
+  function recovered directly from the previously unowned `MAIN_034_TEXT`
+  prefix rather than from a ReC98 implementation. Fresh target Ghidra reports a
+  contiguous 74-byte body at `0x2A087`; TLINK places the matching public at
+  `13A9:65F7`. `src/main/boss/chasecrosses_add.cpp` was derived from target raw
+  behavior plus the independently checked structure layout and cold-replays
+  74/74 bytes exact. ReC98 supplied only the structure/prototype and was not
+  treated as source truth. Because moving a prefix out of monolithic
+  `th04_main.asm` changes TLINK's first-segment ordering, replay materializes
+  `src/main/layout/main_code_order_anchor.asm`: a zero-code OMF with 50 SEGDEF,
+  2 GRPDEF, and **zero LEDATA**. It owns no authored bytes; its only purpose is
+  to establish the original global code-segment order before `chase.obj` and
+  residual `main.obj`. Focused `gptweb-chasecross-v22-001` and 66-unit aggregate
+  `gptweb-chasecross-v22-precommit-003` pass raw/map/ordered-relocation/OMF and
+  zero-code-anchor gates.
 - `snd_mmd_resident` is now a full **47-byte exact pure-C function** at
   target `0x233AC..0x233DA` / TLINK `130E:02CC`. Removing `-WX` from the
   maintained TH04 wrapper is the decisive codegen fix: the same natural `__es`
@@ -239,14 +254,14 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-boss-v21-precommit-002`
-  passed all 65 current default exact-replay owners in two isolated
+- The latest aggregate cold replay `gptweb-chasecross-v22-precommit-003`
+  passed all 66 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
-  from byte ownership. The current review accepts 113 strict automatic functions
+  from byte ownership. The current review accepts 114 strict automatic functions
   plus 27 replayable manual exact reviews. A fresh
   TLINK-public audit found eight real exact-owner functions that the target
   Ghidra inventory had missed or misgrouped. `reviewed_exact_no_ghidra` admits
@@ -378,6 +393,6 @@ overlapping relocations. `boss_defeat_update` is 468/468 exact with an ordinary
 `bb_boss_free()` call; no inline ASM, codestring, emit, or object patch is used.
 
 This expands the confirmed authored denominator by 2,123 bytes and eleven true
-functions over v20. The current baseline is 15,470/15,474 bytes and 140/141
-functions exact; the only reviewed nonexact authored function remains
+functions over v20. The historical v21 baseline was 15,470/15,474 bytes and 140/141
+functions exact; v22 supersedes it at 15,544/15,548 bytes and 141/142 functions exact; the only reviewed nonexact authored function remains
 `snd_load`, with four blocked bytes.

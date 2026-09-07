@@ -408,8 +408,15 @@ def apply_source_transforms(
         transform_id = str(entry["id"])
         path = source_root / str(entry["patch_path"])
         original = path.read_bytes()
-        expected_scaffold = str(entry["scaffold_sha256"])
-        if digest_bytes(original) != expected_scaffold:
+        actual_scaffold = digest_bytes(original)
+        allowed_scaffolds_raw = entry.get("scaffold_sha256_any")
+        if allowed_scaffolds_raw is None:
+            allowed_scaffolds = [str(entry["scaffold_sha256"])]
+        else:
+            allowed_scaffolds = [str(value) for value in allowed_scaffolds_raw]
+            if not allowed_scaffolds:
+                raise RuntimeError(f"{transform_id}: scaffold SHA-256 allowlist is empty")
+        if actual_scaffold not in allowed_scaffolds:
             raise RuntimeError(f"{transform_id}: scaffold SHA-256 drift in {entry['patch_path']}")
         encoding = str(entry.get("encoding", "utf-8"))
         text = original.decode(encoding)
@@ -479,7 +486,8 @@ def apply_source_transforms(
             "trigger_units": active,
             "patch_path": str(entry["patch_path"]),
             "encoding": encoding,
-            "scaffold_sha256": expected_scaffold,
+            "scaffold_sha256": actual_scaffold,
+            "allowed_scaffold_sha256": allowed_scaffolds,
             "patched_sha256": digest_bytes(patched),
             "ops": op_receipts,
         })
@@ -512,6 +520,28 @@ def build(source: Path, log: Path) -> None:
         )
 
 
+def inspect_zero_code_objects(source: Path, paths: list[str]) -> list[dict[str, object]]:
+    """Validate auxiliary OMF layout objects that must emit no data/code bytes."""
+
+    results: list[dict[str, object]] = []
+    for relative in paths:
+        path = source / relative
+        omf = describe_omf(path.read_bytes())
+        counts = dict(omf.get("record_counts", {}))
+        ledata_count = int(counts.get("LEDATA", 0)) + int(counts.get("LEDATA32", 0))
+        segdef_count = int(counts.get("SEGDEF", 0)) + int(counts.get("SEGDEF32", 0))
+        results.append({
+            "path": relative,
+            "valid": bool(omf["valid"]),
+            "sha256": omf["sha256"],
+            "normalized_sha256": omf["dependency_timestamp_normalized_sha256"],
+            "ledata_count": ledata_count,
+            "segdef_count": segdef_count,
+            "zero_code": bool(omf["valid"]) and ledata_count == 0 and segdef_count > 0,
+        })
+    return results
+
+
 def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str, dict[str, str]], target_mz):
     candidate_path = source / "bin" / "th04" / "main.exe"
     candidate_mz = parse_mz(candidate_path.read_bytes())
@@ -540,6 +570,9 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             raise RuntimeError(f"{entry['id']}: unknown map_mode {map_mode!r}")
         obj_path = source / entry["object_path"]
         omf = describe_omf(obj_path.read_bytes())
+        zero_code_objects = inspect_zero_code_objects(
+            source, [str(value) for value in entry.get("zero_code_objects", [])]
+        )
         target_relocs = overlapping_relocations(target_mz, program_start, size)
         candidate_relocs = overlapping_relocations(candidate_mz, program_start, size)
         results[entry["id"]] = {
@@ -564,6 +597,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             "object_module_name": omf["module_name"],
             "object_translators": omf["translator_comments"],
             "object_dependencies": omf["dependency_paths"],
+            "zero_code_objects": zero_code_objects,
         }
     return candidate_path, results
 
@@ -671,6 +705,12 @@ def main() -> int:
             "object_valid_b": b["object_valid"],
             "slice_deterministic": a["candidate_slice_sha256"] == b["candidate_slice_sha256"],
             "object_normalized_deterministic": a["object_normalized_sha256"] == b["object_normalized_sha256"],
+            "zero_code_objects_a": all(item["zero_code"] for item in a["zero_code_objects"]),
+            "zero_code_objects_b": all(item["zero_code"] for item in b["zero_code_objects"]),
+            "zero_code_objects_deterministic": (
+                [item["normalized_sha256"] for item in a["zero_code_objects"]]
+                == [item["normalized_sha256"] for item in b["zero_code_objects"]]
+            ),
         }
         if not all(checks.values()):
             failures.append({"unit_id": unit_id, "checks": checks})

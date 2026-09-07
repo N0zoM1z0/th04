@@ -288,6 +288,27 @@ class SourceTransformTests(unittest.TestCase):
             self.assertEqual(receipts[0]["patched_sha256"], replay.digest_bytes(expected))
             self.assertEqual(len(receipts[0]["ops"]), 3)
 
+    def test_source_transform_accepts_explicit_scaffold_allowlist(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source, entry, original = self.fixture(Path(temporary))
+            entry.pop("scaffold_sha256")
+            other = replay.digest_bytes(b"other scaffold")
+            entry["scaffold_sha256_any"] = [other, replay.digest_bytes(original)]
+            receipts = replay.apply_source_transforms(source, [entry], {"unit-a"})
+            self.assertEqual(receipts[0]["scaffold_sha256"], replay.digest_bytes(original))
+            self.assertEqual(
+                receipts[0]["allowed_scaffold_sha256"],
+                [other, replay.digest_bytes(original)],
+            )
+
+    def test_source_transform_rejects_hash_outside_allowlist(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source, entry, _ = self.fixture(Path(temporary))
+            entry.pop("scaffold_sha256")
+            entry["scaffold_sha256_any"] = [replay.digest_bytes(b"other scaffold")]
+            with self.assertRaisesRegex(RuntimeError, "scaffold SHA-256 drift"):
+                replay.apply_source_transforms(source, [entry], {"unit-a"})
+
     def test_source_transform_rejects_scaffold_drift(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             source, entry, _ = self.fixture(Path(temporary))
@@ -304,6 +325,39 @@ class SourceTransformTests(unittest.TestCase):
             entry["scaffold_sha256"] = replay.digest_bytes(original)
             with self.assertRaisesRegex(RuntimeError, "expected one insertion anchor"):
                 replay.apply_source_transforms(source, [entry], {"unit-a"})
+
+
+class ZeroCodeObjectTests(unittest.TestCase):
+    def omf_description(self, *, ledata: int) -> dict[str, object]:
+        return {
+            "valid": True,
+            "sha256": "raw",
+            "dependency_timestamp_normalized_sha256": "normalized",
+            "record_counts": {"SEGDEF": 2, "GRPDEF": 1, "LEDATA": ledata},
+        }
+
+    def test_zero_code_object_requires_segdefs_and_no_ledata(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            (source / "anchor.obj").write_bytes(b"fixture")
+            with patch.object(
+                replay, "describe_omf", return_value=self.omf_description(ledata=0)
+            ):
+                result = replay.inspect_zero_code_objects(source, ["anchor.obj"])[0]
+            self.assertTrue(result["zero_code"])
+            self.assertEqual(result["ledata_count"], 0)
+            self.assertEqual(result["segdef_count"], 2)
+
+    def test_zero_code_object_rejects_ledata(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            (source / "anchor.obj").write_bytes(b"fixture")
+            with patch.object(
+                replay, "describe_omf", return_value=self.omf_description(ledata=1)
+            ):
+                result = replay.inspect_zero_code_objects(source, ["anchor.obj"])[0]
+            self.assertFalse(result["zero_code"])
+            self.assertEqual(result["ledata_count"], 1)
 
 
 if __name__ == "__main__":

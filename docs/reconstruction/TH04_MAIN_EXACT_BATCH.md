@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **15,470 / 15,474 = 99.974150% exact**;
-- authored functions: **140 / 141 = 99.290780% exact**;
+- authored C/C++ bytes: **15,544 / 15,548 = 99.974273% exact**;
+- authored functions: **141 / 142 = 99.295775% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,8 +44,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-boss-v21-precommit-002/receipt.json`.
-It passes all 65 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-chasecross-v22-precommit-003/receipt.json`.
+It passes all 66 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -663,3 +663,40 @@ provisional.
   with replay `source_mode=forwarded-fragment`. Do not weaken the include policy
   merely because the direct ReC98 fragment is byte-identical; the replay layer
   can attest the one-line adapters and resolve them back to the pinned scaffold.
+
+
+## v22: target-driven `MAIN_034` prefix recovery
+
+The old ReC98 module-routing screen was not the complete authored-C++ candidate
+universe. `MAIN_034_TEXT` begins with target public
+`chasecrosses_add(unsigned char,unsigned char)` at `13A9:65F7` / linear
+`0x2A087`, yet the function had no authored byte owner and ReC98 only retained
+its structure/prototype. Fresh target Ghidra reports one contiguous 74-byte body,
+and raw 16-bit decode gives a simple structure scan/store loop ending in
+`RET 4`. Reconstructing that behavior from the target plus the independently
+checked `chasecross_t` layout yields `src/main/boss/chasecrosses_add.cpp`; TC86
+emits an exact 0x4A-byte `MAIN_034_TEXT` contribution. Focused
+`gptweb-chasecross-v22-001` and 66-unit aggregate
+`gptweb-chasecross-v22-precommit-003` reproduce all 74 bytes, map placement,
+ordered overlapping relocations, and deterministic OMF identity.
+
+Incrementally migrating a **prefix** out of monolithic `th04_main.asm` exposed a
+separate TLINK layout problem. Simply placing `chase.obj` before `main.obj`
+causes `MAIN_03` ordering/size failure, and a MAIN_03-only zero-byte anchor moves
+that group ahead of MAIN_01. The accepted replay therefore materializes
+`src/main/layout/main_code_order_anchor.asm`, which declares the original
+MAIN_01 code segments, `SHARED`, and MAIN_03 code segments/groups in target
+order. Its OMF has 50 SEGDEF, 2 GRPDEF, and **zero LEDATA**; the replay driver
+hard-checks that property and deterministic normalized identity. The anchor
+owns no authored bytes and emits no target program/data bytes. With the anchor,
+TLINK places a zero-byte metadata contribution at `13A9:65F7`, the natural
+`th04/chase.cpp` contribution at `13A9:65F7` size `0x4A`, and residual
+`th04_main.asm` at `13A9:6641` size `0x25FD`, while all program CODE segment
+start/length tuples stay unchanged.
+
+This raises the reviewed baseline to **15,544 / 15,548 authored bytes exact
+(99.974273%)** and **141 / 142 reviewed functions exact (99.295775%)**. It also
+provides a reusable, fail-closed route for continuing into the large still
+unowned compiler-like regions embedded in `MAIN_033_TEXT`, `MAIN_034_TEXT`, and
+`MAIN_036_TEXT` without treating ReC98's reconstructed files as the boundary of
+the search space. `snd_load` remains the sole reviewed nonexact function.

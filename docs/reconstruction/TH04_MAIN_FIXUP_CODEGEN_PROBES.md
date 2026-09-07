@@ -545,3 +545,33 @@ explosions_small_reset` is safe here because the callee's true definition/public
 address remains fixed in its real segment and TLINK performs the already-accepted
 far-to-near bridge optimization; final public addresses and displacements are
 still mandatory acceptance evidence.
+
+## v22: incremental `MAIN_034` prefix migration without byte-emitting scaffolds
+
+`chasecrosses_add(unsigned char,unsigned char)` at `13A9:65F7` provides a
+positive target-driven control for code that ReC98 had not reconstructed. A
+minimal C++ implementation based on target raw behavior and the checked
+`chasecross_t` layout produces exactly 74 TC86 code bytes and links to the
+complete target slice.
+
+The hard part was preserving global code-segment order while replacing the
+prefix of `MAIN_034_TEXT`:
+
+1. simply linking `chase.obj` before `main.obj` failed with TLINK
+   `Group MAIN_03 exceeds 64K`;
+2. a zero-code anchor declaring MAIN_03 alone linked, but moved MAIN_03 before
+   MAIN_01 and therefore changed the program layout;
+3. a zero-code anchor declaring the original MAIN_01 code segments, `SHARED`,
+   and MAIN_03 code segments/groups in target order succeeded. Its OMF has 50
+   SEGDEF, 2 GRPDEF, and zero LEDATA. With link order `anchor -> chase -> main`,
+   all 54 program CODE segment `(name,start,length)` tuples match the baseline,
+   `chase.cpp` occupies exactly `13A9:65F7 + 0x4A`, and residual `main.asm`
+   begins at `13A9:6641`.
+
+This anchor is layout metadata, not authored source and not a byte-reproduction
+shortcut. The replay driver checks that every configured zero-code object has
+at least one SEGDEF, no LEDATA/LEDATA32, valid OMF framing, and deterministic
+normalized identity across both cold materializations. The same mechanism can
+support incremental recovery of other functions still embedded in large
+`MAIN_033_TEXT`, `MAIN_034_TEXT`, and `MAIN_036_TEXT` regions without forcing an
+all-at-once decompilation of those segments.

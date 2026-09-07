@@ -349,3 +349,25 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   Otherwise TC86 can frame the fixup against the current group and TLINK reports
   overflow even though the runtime selector would ultimately be compatible.
   This is declaration metadata, not emitted target bytes.
+
+### TH04 v22: target-driven `MAIN_034` recovery and zero-code order anchors
+
+- Do not treat ReC98's reconstructed C/C++ files as the complete authored
+  candidate universe. `chasecrosses_add()` was still embedded in
+  `th04_main.asm`; ReC98 retained its structure/prototype but no implementation.
+  Fresh target Ghidra + TLINK + raw decode established a 74-byte function, and a
+  target-derived natural C++ loop reproduces all 74 bytes. Systematically mine
+  linker/TASM function inventories and currently unowned target code as well as
+  familiar ReC98 modules.
+- Moving the **prefix** of a large ASM code segment into a separate Borland C++
+  object can change TLINK's first-segment order even when the function itself is
+  exact. A zero-byte object can safely establish layout metadata first:
+  `src/main/layout/main_code_order_anchor.asm` contains the original MAIN_01 and
+  MAIN_03 code-segment/group order, compiles to 50 SEGDEF + 2 GRPDEF and **zero
+  LEDATA**, and therefore owns no authored bytes. Replay must hard-check zero
+  LEDATA and deterministic OMF identity; do not use a layout anchor that emits
+  program/data bytes.
+- Source transforms that compose on the same pinned scaffold must remain
+  fail-closed. The chase transform accepts only the original `th04_main.asm`
+  SHA or the independently verified v21 boss-transform SHA. This permits focused
+  and aggregate replay without turning a scaffold-hash mismatch into a waiver.

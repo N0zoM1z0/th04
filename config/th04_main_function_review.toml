@@ -551,3 +551,9 @@ name = "boss_defeat_update()"
 owner_unit = "th04-main-main035-boss-tu"
 evidence_id = "ev-th04-main-main035-boss-boundary-v21"
 reason = "Target Ghidra entry starts and ends on the reviewed function extent but constructs only 306/468 body bytes. Final natural-C++ TLINK emits the matching public; raw 16-bit decode tiles all 468 bytes through RET at the exact 0x9B6 owner end, and two-cold replay is byte/relocation exact."
+
+[[new_exact]]
+id = "th04-main-fn-2a087"
+address = "0x2A087"
+evidence_id = "ev-th04-main-chasecrosses-boundary-v22"
+reason = "Fresh target Ghidra reports one contiguous 74-byte function at the matching TLINK public inside the exact target-derived natural-C++ MAIN_034 prefix owner."
