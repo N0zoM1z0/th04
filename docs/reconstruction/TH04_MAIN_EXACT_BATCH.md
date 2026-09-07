@@ -361,6 +361,36 @@ for DS→ES setup, `MUL`, `LODSB`, `SHL`, and `LOOP`, so the prefix is not a
 maintained authored-C/C++ denominator candidate under the current rules. The
 following 0x1AA-byte pure-C/C++ render suffix remains exact.
 
+### Candidate umbrella retirement and `item_splashes_init` probe
+
+A fresh coverage pass also reconciled several historical module-routing rows
+against the current exact owners. Six modules had exactly one target byte left
+outside maintained authored source: `tile.cpp` (`0xE341 = 90`), `initmain.cpp`
+(`0x14EB3 = 00`), `snd_se_r.cpp` (`0x150B1 = 90`), `snd_se.cpp`
+(`0x150EB = 90`), `scrolly3.cpp` (`0x15531 = 90`), and `grcg_3.cpp`
+(`0x15715 = 90`). Each byte sits between or immediately after reviewed exact
+owners. The pinned ReC98 candidate independently contains a matching
+`#pragma codestring` at each location, so these are now explicit
+`origin=padding` excluded owners rather than unresolved authored bytes.
+
+The historical `bullet_u.cpp` module umbrella is also retired: its entire
+0x565-byte contribution is covered by the exact 0x1FA-byte natural prefix plus
+the exact 0x36B-byte `bullets_update`. Together these boundary decisions reduce
+the live generic candidate-module queue from 16 rows to 9 without changing
+either authored denominator or exact numerator. The remaining rows still have
+real unresolved mixed/low-level or relocation-order work and are not excluded.
+
+`item_splashes_init()` remains one such real gap. TLINK and target Ghidra bind
+a complete 26-byte function at target `0x23F16` / file `0x15716`. The current
+candidate matches 25/26 bytes; the sole difference is target `31 C0` versus
+TC4J `33 C0` for `XOR AX,AX`, while the following `REP STOSW` and all other
+bytes already match. Natural-source probes deliberately avoided inline ASM and
+byte emission: regular `memset()` emits a runtime far call, Borland's official
+`__memset__()` compiler intrinsic reorders ES/DI/AX/CX setup and still emits
+`33 C0`, and `_AX ^= _AX` canonicalizes to the same `33 C0`. No natural exact
+source is accepted yet; the negative receipt is retained under
+`.analysis/reconstruction/probes/it-spl-u-natural/receipt.json`.
+
 ## Function accounting
 
 `config/th04_main_authored_functions.csv` is a separate function ledger. It

@@ -162,6 +162,19 @@ deterministic TH04 runtime scenario has been authored.
   0x1AA-byte render suffix is already exact. Keep the mixed-ASM prefix outside
   maintained authored-C/C++ ownership unless those operations are naturally
   recovered first.
+- A fresh coverage pass retired seven stale generic module umbrellas. Six had
+  only a single target-observed padding byte left (`tile`, `initmain`,
+  `snd_se_r`, `snd_se`, `scrolly3`, and `grcg_3`), now represented explicitly
+  as excluded `origin=padding` owners; pinned ReC98 only corroborates the
+  matching codestring values. `bullet_u` is fully covered by two exact authored
+  owners. The live candidate-module queue therefore falls from 16 to 9 without
+  changing the 12,932/12,983 authored byte or 115/116 function metrics.
+- `item_splashes_init()` is a real remaining 26-byte mixed-code gap at target
+  `0x23F16`: target Ghidra and TLINK agree on the full function, and the current
+  candidate matches 25/26 bytes. The only difference is target `31 C0` versus
+  TC4J `33 C0`; standard `memset`, Borland `__memset__`, and `_AX ^= _AX`
+  natural-source probes do not recover the target layout. Keep it nonexact and
+  do not replace the mismatch with inline ASM or byte emission.
 - `snd_load` now has three additional exact natural-source subspans. Identity
   fragments recover the DOS-open and driver-dispatch/read sequences. The
   parameter reload uses `_AX = *reinterpret_cast<snd_load_func_t near *>(&func);`;

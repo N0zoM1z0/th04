@@ -247,3 +247,16 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   and LOOP. The following 0x1AA bytes are already exact pure C/C++; leave the
   mixed-ASM prefix outside authored-C/C++ ownership unless those operations are
   first recovered naturally and revalidated.
+
+- Treat one-byte module gaps as explicit ownership surfaces rather than leaving
+  a whole raw-identical module provisional. TH04 now has six target-observed
+  padding owners at file `0xE341`, `0x14EB3`, `0x150B1`, `0x150EB`, `0x15531`,
+  and `0x15715`; reference-source `#pragma codestring` values corroborate but do
+  not establish these target bytes. Retire a routing umbrella only when exact
+  owners plus reviewed padding cover its complete contribution.
+- `item_splashes_init` is a useful TC4J zeroing negative control. Its 26-byte
+  target body differs from the current candidate only by `31 C0` versus
+  `33 C0`. Regular `memset` calls the runtime; Borland `__memset__` is a true
+  compiler intrinsic but changes register-setup order and still uses `33 C0`;
+  `_AX ^= _AX` also canonicalizes to `33 C0`. Do not use inline assembly or
+  `__emit__` to manufacture the target encoding.
