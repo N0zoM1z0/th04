@@ -44,7 +44,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/compat-default-002/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/layout-cleanup-default-001/receipt.json`.
 It passes all 62 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function

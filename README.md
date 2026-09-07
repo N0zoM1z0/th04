@@ -280,8 +280,12 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
   HDI boot smoke, and deterministic Runtime Oracle requirements.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
 - `docs/PROGRESS.md` — conservative source-present and exact-byte totals.
-- `docs/reconstruction/TH04_MAIN_AUTHORED_SCREEN.md` — initial `MAIN.EXE`
-  source-module and authored-function routing inventory.
+- `docs/reconstruction/TH04_MAIN_EXACT_BATCH.md` — current `MAIN.EXE` exact
+  owner set, cold-replay contract, and remaining blockers.
+- `docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md` — reusable negative
+  compiler/TU/FIXUPP results for the remaining difficult units.
+- `compat/rec98/README.md` — temporary, reusable boundary around unlocalized
+  ReC98 declarations; never reconstructed-source progress.
 - `docs/REFERENCE_ANALYSIS.md` — findings from TH08/TH095/TH105 and ReC98.
 - `docs/KNOWLEDGE_BASE.md` — scoped durable facts, hazards, and negative results.
 - `.agents/skills/` — task routers for RE, Oracle work, matching, and runtime.
@@ -292,12 +296,19 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 The control plane, target ingestion, locally attested Borland build chain, OMF
 integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
 attestation, repeated ReC98 TH01-TH05 cold-build calibration, and optional
-headless PC-98 startup/HDI boot smoke are operational. The first `MAIN.EXE`
-screen covers 58 source-module contributions and 151 Ghidra function entries:
-16 small authored units (1,446 bytes) have reviewed boundaries, while 42
-module candidates remain provisional. One 26-byte unit has maintained source;
-none is promoted to `exact`. No deterministic TH04 runtime scenario exists
-yet. Run:
+headless PC-98 startup/HDI boot smoke are operational. For `MAIN.EXE`, 12,704
+of 12,708 reviewed authored C/C++ bytes and 113 of 114 reviewed functions are
+exact. Nine standalone original-style ASM units add 1,489 exact bytes outside
+that C/C++ denominator. The only reviewed nonexact function is `snd_load`,
+with four blocked bytes. `dialog_op` and `dialog_run` also have maintained
+source and exact code bytes, but remain outside the reviewed denominator
+because their ordered MZ relocations do not match.
+
+This is not yet a standalone game build. The 62 default exact owners compile
+and raw-match through the pinned ReC98 cold-replay scaffold, but the repository
+does not yet contain all TH04 translation units, local headers, or a complete
+TH04-owned link graph. `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` have no reviewed
+reconstruction units yet. No deterministic TH04 runtime scenario exists. Run:
 
 ```bash
 python3 scripts/status.py

@@ -114,14 +114,11 @@ runtime scenario has been authored.
   smallest reviewed example at target file `0xC2F2`, load-module `0xAAF2`,
   link/Ghidra `1AAF:0002`, and is replayed by the same checked-in batch driver
   used for the larger authored cohort.
-- The initial `MAIN.EXE` screen still accounts for 58 nonzero source-module
-  contributions totaling 17,412 bytes and 151 provisional Ghidra entries. It
-  is retained as a historical routing snapshot rather than rewritten as the
-  current denominator.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
-  two isolated cold materializations. Latest compatibility-layer receipt
-  `compat-default-002` passes all 62 current default-selected units across raw bytes,
+  two isolated cold materializations. Latest source-layout receipt
+  `layout-cleanup-default-001` passes all 62 current default-selected units
+  across raw bytes,
   containing/exact TLINK placement, ordered overlapping MZ relocations, OMF
   validity, and deterministic output.
 - The current reviewed authored byte denominator is 12,708 bytes across 56
@@ -140,7 +137,7 @@ runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest cold replay `compat-default-002`
+- The latest cold replay `layout-cleanup-default-001`
   passed all 62 current default exact byte owners in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
@@ -168,9 +165,11 @@ runtime scenario has been authored.
   under `src/main/<subsystem>/`, with no `exact/`, `partials/`, or `modules/`
   directories. Complete translation units keep `.cpp`/`.c`/`.asm`; bounded
   included bodies use `.inl`. Acceptance state remains exclusively in the
-  ledgers. Replay manifests and historical map evidence may still name ReC98
-  `th01`/`th02`/`th03` paths because they describe the pinned scaffold, not the
-  product source layout.
+  ledgers. Historical evidence and stable unit IDs may retain old `module` or
+  `partial` wording only to keep receipts addressable; they are not a current
+  work queue or source-layout model. Replay manifests and historical map
+  evidence may still name ReC98 `th01`/`th02`/`th03` paths because they
+  describe the pinned scaffold, not the product source layout.
 - All 71 direct ReC98 include sites (31 unique headers, including the 47
   cross-game sites) now route through `compat/rec98/<upstream-path>`. That
   reusable directory contains one-line forwarders only; exact replay copies and

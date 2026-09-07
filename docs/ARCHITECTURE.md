@@ -101,6 +101,12 @@ and so on). Do not create `exact/`, `partial/`, `partials/`, `module/`, or
 source presence belong only in `config/units.csv`, the authored-function
 ledger, and their evidence rows.
 
+Some stable ledger and evidence IDs still contain historical `module` or
+`partial` wording. They remain unchanged so old receipts stay addressable and
+must not be interpreted as source paths, current work-queue priority, or a
+template for new identifiers. Live state comes from the ledgers and generated
+progress, while product ownership comes from the semantic `src/` tree.
+
 A `.cpp`, `.c`, or `.asm` file represents a buildable translation unit or a
 standalone source owner. A `.inl` file is a bounded body that is included by a
 semantic translation unit; the extension records source composition, not a
@@ -129,10 +135,10 @@ calibration scaffold rather than the TH04 product layout. See
 The current tree is not yet a complete standalone game build: only bounded
 `MAIN.EXE` source owners have been reconstructed, and several still compile in
 the exact Oracle through pinned ReC98 scaffolding. Do not conceal that gap with
-copied declarations or a bulk import. Recover bounded TH04 units from the verified
-target, using ReC98 and adjacent games as corroboration. When shared code is
-proved, keep target-specific build/link ownership explicit rather than erasing
-it behind a modern abstraction.
+copied declarations or a bulk import. Recover bounded TH04 units from the
+verified target, using ReC98 and adjacent games as corroboration. When shared
+code is proved, keep target-specific build/link ownership explicit rather than
+erasing it behind a modern abstraction.
 
 Exact reconstruction and a future portable runtime are separate products.  A
 portable branch may replace segmentation and hardware access only after the

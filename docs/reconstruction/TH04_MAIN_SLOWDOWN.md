@@ -3,11 +3,11 @@
 ## Current state
 
 - Unit: `th04-main-slowdown-frame-delay`
-- Ledger state: `source-present`
+- Ledger state: `exact`
 - Origin: authored
 - Boundary: reviewed
 - Maintained source: `src/main/slowdown.cpp`
-- Exact promotion: not claimed
+- Exact promotion: accepted by the checked-in two-cold-build replay
 
 The source candidate is identical to the bounded implementation at pinned
 ReC98 revision `b6ba5b0a529edbb31efdf8c0e939263804f8ee47`. Upstream identity is only
@@ -65,7 +65,10 @@ one `MODEND`. The linker map assigns the complete 26-byte module to
 `SLOWDOWN_TEXT` at `1AAF:0002`; the resulting candidate load-module slice has
 the same SHA-256 as the target slice and zero differing bytes.
 
-This does not promote the unit to `exact`: the aggregate ReC98 build is still
-an untrusted candidate, and this repository does not yet have a checked-in
-unit adapter that cold-replays the maintained source through every required
-unit-bound Oracle. The ledger deliberately stops at `source-present`.
+That initial compiler observation did not by itself promote the unit. The
+checked-in replay now overlays the maintained source into two isolated pinned
+scaffolds and requires target identity, toolchain identity, valid deterministic
+OMF, exact TLINK placement, relocation agreement, and raw zero difference over
+the complete extent. Both cold builds pass, so the current ledger state is
+`exact`. This bounded result does not make the whole executable exact or the
+repository independently buildable.

@@ -85,6 +85,11 @@ Use these claim words precisely:
   source or authored progress. Do not copy declarations into it. Recover and
   attest required common declarations under the owning artifact or
   `src/shared/`, then remove the corresponding forwarder.
+- Derive the current work queue and progress from `config/units.csv`,
+  `config/th04_main_authored_functions.csv`, `docs/PROGRESS.md`, and
+  `python3 scripts/status.py`. Historical evidence and stable unit IDs may
+  retain words such as `module` or `partial`; they are replay provenance, not
+  source-layout examples. Never recreate their former directory structure.
 - The product build must ultimately use checked-in TH04 source and headers.
   Overlaying maintained source into pinned ReC98 is an Oracle, not a standalone
   build and not permission to bulk-import its source tree.

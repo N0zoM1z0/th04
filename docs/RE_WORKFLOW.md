@@ -32,6 +32,11 @@ unit.  Prefer a unit whose entry, exits, callers, and adjacent ownership can be
 reviewed in one session.  Large dispatchers and shared segment changes need an
 explicit sub-plan.
 
+Use `docs/PROGRESS.md`, `docs/RE_HANDOFF.md`, and the live ledgers as the
+current queue. Historical evidence rows and stable IDs with `module` or
+`partial` wording preserve old receipts only; never reconstruct their former
+directory layout or treat an old routing snapshot as current progress.
+
 Create the `candidate` row in `config/units.csv` only after recording how the
 candidate was found.  Use artifact plus segment:offset; never rely on a naked
 linear address.
