@@ -24,25 +24,27 @@ run:
 1. attests the pinned TC4J/TASM/TLINK/MS-DOS Player toolchain;
 2. materializes two independent source trees with `git archive` from the pinned
    ReC98 revision;
-3. replaces complete translation units with maintained files from `src/`,
+3. copies `compat/rec98/` into each tree and records every forwarding file's
+   path, size, and SHA-256;
+4. replaces complete translation units with maintained files from `src/`,
    uniquely substitutes an identity-preserving natural-source fragment, or
    applies a hash/offset-bound maintained source replacement inside the pinned
    scaffold when adjacent upstream low-level source is deliberately excluded;
-4. preserves primary-source metadata because Turbo C++ records it in OMF
+5. preserves primary-source metadata because Turbo C++ records it in OMF
    COMENT class `E8`;
-5. builds the complete corpus serially;
-6. requires the accepted target slice to have zero raw differences in both
+6. builds the complete corpus serially;
+7. requires the accepted target slice to have zero raw differences in both
    cold builds;
-7. checks that the TLINK contribution contains or exactly equals the accepted
+8. checks that the TLINK contribution contains or exactly equals the accepted
    extent, as configured;
-8. compares the ordered overlapping MZ relocation sites;
-9. validates the generated Intel OMF module and requires its narrowly
+9. compares the ordered overlapping MZ relocation sites;
+10. validates the generated Intel OMF module and requires its narrowly
    normalized identity to repeat across both cold builds; and
-10. fails the aggregate cohort if any selected unit fails any dimension.
+11. fails the aggregate cohort if any selected unit fails any dimension.
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/source-layout-default-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/compat-default-002/receipt.json`.
 It passes all 62 current default-selected units in both isolated cold
 materializations, including the full pure-C PMD owner and the restored natural
 C++ dialog init/exit TU split after the stricter reviewed-nonexact function
@@ -58,6 +60,15 @@ that occurrence with the same repository-maintained bytes, restores the
 original source timestamp, and then compiles normally. This lets a natural
 C/C++ region be independently owned without copying adjacent ReC98 inline
 assembly into `src/`.
+
+`source_mode = "forwarded-fragment"` is the same identity gate for fragments
+whose include spelling now passes through `compat/rec98/`. Before comparison,
+the driver resolves only include lines backed by an existing one-line
+forwarder, verifies that the forwarder contains exactly the corresponding
+upstream include, and requires the resolved fragment to occur exactly once in
+the pinned scaffold. No declaration or executable source token is normalized.
+The receipt retains the maintained and resolved sizes/digests plus the exact
+forwarder list.
 
 No accepted C/C++ source under `src/main/` contains `_asm`, an `asm { ... }`
 block, `#pragma codestring`, or `__emit__`. The semantic source layout is

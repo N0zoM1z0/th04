@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = ROOT / "_reference" / "ReC98"
 MANIFEST = ROOT / "config" / "th04_main_exact_units.toml"
 TARGET = ROOT / ".analysis" / "targets" / "th04" / "main.exe"
+REC98_COMPAT = ROOT / "compat" / "rec98"
 
 
 def run_checked(command: list[str], cwd: Path, env: dict[str, str] | None = None) -> None:
@@ -76,6 +77,64 @@ def materialize(revision: str, destination: Path) -> None:
     run_checked(["tar", "-xf", archive, "-C", destination], ROOT)
 
 
+def materialize_rec98_compat(source_root: Path) -> list[dict[str, object]]:
+    """Copy and attest the repository-owned ReC98 forwarding layer."""
+
+    if not REC98_COMPAT.is_dir():
+        raise FileNotFoundError(REC98_COMPAT)
+    destination_root = source_root / "compat" / "rec98"
+    receipt: list[dict[str, object]] = []
+    for path in sorted(REC98_COMPAT.rglob("*")):
+        if path.is_symlink():
+            raise RuntimeError(f"ReC98 compatibility layer contains a symlink: {path}")
+        if not path.is_file():
+            continue
+        relative = path.relative_to(REC98_COMPAT)
+        destination = destination_root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, destination)
+        receipt.append(
+            {
+                "path": str(relative),
+                "size": path.stat().st_size,
+                "sha256": digest_file(path),
+            }
+        )
+    if not receipt:
+        raise RuntimeError("ReC98 compatibility layer is empty")
+    return receipt
+
+
+def resolve_rec98_forwarders(source: bytes) -> tuple[bytes, list[str]]:
+    """Resolve only attested one-line compat/rec98 includes for scaffold matching."""
+
+    used: list[str] = []
+    pattern = re.compile(
+        rb'(^\s*#include\s+")compat/rec98/([^"\r\n]+)(")', re.MULTILINE
+    )
+
+    def replace(match: re.Match[bytes]) -> bytes:
+        relative_text = match.group(2).decode("ascii")
+        relative = Path(relative_text)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise RuntimeError(f"invalid ReC98 forwarding path: {relative_text}")
+        forwarder = REC98_COMPAT / relative
+        expected = f'#include "{relative.as_posix()}"\n'.encode("ascii")
+        if (
+            not forwarder.is_file()
+            or forwarder.is_symlink()
+            or forwarder.read_bytes() != expected
+        ):
+            raise RuntimeError(f"invalid ReC98 forwarding header: {forwarder}")
+        used.append(relative.as_posix())
+        return match.group(1) + match.group(2) + match.group(3)
+
+    resolved = pattern.sub(replace, source)
+    if not used:
+        raise RuntimeError("forwarded fragment does not include compat/rec98")
+    return resolved, sorted(set(used))
+
+
 def overlay_sources(source_root: Path, entries: list[dict[str, object]]) -> list[dict[str, object]]:
     overlays: list[dict[str, object]] = []
     for entry in entries:
@@ -88,9 +147,16 @@ def overlay_sources(source_root: Path, entries: list[dict[str, object]]) -> list
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(repo_source, destination)
             overlays.append({"unit_id": entry["id"], "mode": mode, "repo_source": entry["repo_source"], "source_path": entry["overlay_path"], "sha256": digest_file(repo_source)})
-        elif mode == "fragment":
+        elif mode in {"fragment", "forwarded-fragment"}:
             destination = source_root / str(entry["patch_path"])
-            fragment = repo_source.read_bytes()
+            maintained_fragment = repo_source.read_bytes()
+            forwarded_headers: list[str] = []
+            if mode == "forwarded-fragment":
+                fragment, forwarded_headers = resolve_rec98_forwarders(
+                    maintained_fragment
+                )
+            else:
+                fragment = maintained_fragment
             original = destination.read_bytes()
             if original.count(fragment) != 1:
                 raise RuntimeError(f"{entry['id']}: maintained fragment must occur exactly once in {entry['patch_path']}")
@@ -101,7 +167,7 @@ def overlay_sources(source_root: Path, entries: list[dict[str, object]]) -> list
             os.utime(destination, ns=(stat.st_atime_ns, stat.st_mtime_ns))
             if patched != original:
                 raise RuntimeError(f"{entry['id']}: identity fragment unexpectedly changed scaffold bytes")
-            overlays.append({"unit_id": entry["id"], "mode": mode, "repo_source": entry["repo_source"], "source_path": entry["patch_path"], "fragment_offset": offset, "fragment_size": len(fragment), "sha256": digest_file(repo_source), "scaffold_sha256": digest_bytes(original)})
+            overlays.append({"unit_id": entry["id"], "mode": mode, "repo_source": entry["repo_source"], "source_path": entry["patch_path"], "fragment_offset": offset, "fragment_size": len(fragment), "maintained_fragment_size": len(maintained_fragment), "sha256": digest_file(repo_source), "resolved_fragment_sha256": digest_bytes(fragment), "forwarded_headers": forwarded_headers, "scaffold_sha256": digest_bytes(original)})
         elif mode == "replace":
             destination = source_root / str(entry["patch_path"])
             replacement = repo_source.read_bytes()
@@ -369,6 +435,7 @@ def main() -> int:
         run_root = root / label
         source = run_root / "source"
         materialize(revision, source)
+        compat_headers = materialize_rec98_compat(source)
         overlays = overlay_sources(source, entries)
         split_receipts = apply_source_splits(
             source, splits, {entry["id"] for entry in entries}
@@ -380,6 +447,7 @@ def main() -> int:
             {
                 "label": label,
                 "source": str(source.relative_to(ROOT)),
+                "rec98_compat": compat_headers,
                 "overlays": overlays,
                 "source_splits": split_receipts,
                 "build_log_sha256": digest_file(log),

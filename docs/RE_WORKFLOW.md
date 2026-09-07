@@ -71,10 +71,12 @@ implemented, not when a stub compiles.
 Place the result under the owning TH04 artifact and subsystem in `src/`.
 Build/acceptance state never appears in a directory name: do not add
 `exact/`, `partial(s)/`, or `module(s)/`. Use `.inl` only when a bounded body is
-genuinely included by a semantic translation unit. New product source must not
-include another game's source tree or headers. If a declaration is currently
-known only from TH01/TH02/TH03/TH05 or ReC98, recover and attest a TH04-local or
-proved `src/shared/` declaration before making it a product dependency.
+genuinely included by a semantic translation unit. Product source must not
+directly include another game's source tree, `libs/`, or `platform/`. If a
+required declaration has not yet been localized, route it through the matching
+one-line `compat/rec98/<upstream-path>` forwarder and include that directory in
+the build receipt. Then recover and attest a TH04-local or proved
+`src/shared/` declaration before removing the compatibility dependency.
 
 The independent-build target is the checked-in TH04 source plus the pinned
 toolchain and documented libraries. A successful replay that overlays source

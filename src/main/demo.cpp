@@ -1,11 +1,11 @@
-#include "libs/master.lib/master.hpp"
-#include "libs/master.lib/pc98_gfx.hpp"
-#include "th02/main/execl.hpp"
+#include "compat/rec98/libs/master.lib/master.hpp"
+#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "compat/rec98/th02/main/execl.hpp"
 #include "th04/hardware/inputvar.h"
 #include "th04/main/frames.h"
 #include "th04/main/demo.hpp"
 #if (GAME == 5)
-#include "th05/resident.hpp"
+#include "compat/rec98/th05/resident.hpp"
 #else
 #include "th04/resident.hpp"
 #endif

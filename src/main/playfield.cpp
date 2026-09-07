@@ -1,9 +1,9 @@
-#include "libs/master.lib/pc98_gfx.hpp"
+#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"
 #if (GAME == 5)
-#include "th02/main/scroll.hpp"
+#include "compat/rec98/th02/main/scroll.hpp"
 #endif
 
 extern int8_t playfield_shake_redraw_time;

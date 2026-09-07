@@ -148,6 +148,24 @@ class ExactTrackingTests(unittest.TestCase):
             (forbidden / "unit.c").write_text("int forbidden;\n", encoding="utf-8")
             self.assertEqual(self.run_fixture(root, units, evidence), 1)
 
+    def test_direct_cross_game_include_is_rejected(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            units, evidence = self.make_fixture(root)
+            (root / "src" / "main" / "unit.c").write_text(
+                '#include "th03/core/initexit.h"\n', encoding="utf-8"
+            )
+            self.assertEqual(self.run_fixture(root, units, evidence), 1)
+
+    def test_rec98_forwarder_cannot_hide_copied_declarations(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            units, evidence = self.make_fixture(root)
+            forwarder = root / "compat" / "rec98" / "th02" / "core" / "initexit.h"
+            forwarder.parent.mkdir(parents=True)
+            forwarder.write_text("int copied_declaration;\n", encoding="utf-8")
+            self.assertEqual(self.run_fixture(root, units, evidence), 1)
+
     def test_adversarial_exact_claims_fail_closed(self) -> None:
         mutations = {
             "evidence reused by another unit": lambda units, evidence: next(

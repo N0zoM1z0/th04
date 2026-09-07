@@ -1,14 +1,14 @@
-#include "libs/master.lib/master.hpp"
-#include "libs/master.lib/pc98_gfx.hpp"
-#include "th01/hardware/grcg.hpp"
-#include "th02/main/hud/hud.hpp"
-#include "th03/math/polar.hpp"
-#include "th03/hardware/palette.hpp"
+#include "compat/rec98/libs/master.lib/master.hpp"
+#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "compat/rec98/th01/hardware/grcg.hpp"
+#include "compat/rec98/th02/main/hud/hud.hpp"
+#include "compat/rec98/th03/math/polar.hpp"
+#include "compat/rec98/th03/hardware/palette.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/formats/super.h"
 #include "th04/main/boss/boss.hpp"
 #if (GAME == 5)
-#include "th05/sprites/main_pat.h"
+#include "compat/rec98/th05/sprites/main_pat.h"
 #else
 #include "th04/sprites/main_pat.h"
 #endif

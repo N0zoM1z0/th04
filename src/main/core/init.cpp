@@ -1,9 +1,9 @@
 #pragma option -zCSHARED -3
 
-#include "libs/master.lib/master.hpp"
-#include "libs/master.lib/pc98_gfx.hpp"
-#include "th01/hardware/vplanset.h"
-#include "th03/core/initexit.h"
+#include "compat/rec98/libs/master.lib/master.hpp"
+#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "compat/rec98/th01/hardware/vplanset.h"
+#include "compat/rec98/th03/core/initexit.h"
 
 #if (GAME <= 3)
 #define mem_assign_paras (288000 >> 4)

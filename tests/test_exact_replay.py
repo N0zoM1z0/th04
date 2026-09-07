@@ -11,6 +11,36 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import replay_th04_main_exact_units as replay
 
 
+class Rec98CompatTests(unittest.TestCase):
+    def test_forwarding_layer_is_materialized_and_attested(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            compat = root / "compat" / "rec98"
+            source = root / "source"
+            header = compat / "th02" / "hardware" / "frmdelay.h"
+            header.parent.mkdir(parents=True)
+            header.write_text('#include "th02/hardware/frmdelay.h"\n', encoding="utf-8")
+            source.mkdir()
+            with patch.object(replay, "REC98_COMPAT", compat):
+                receipt = replay.materialize_rec98_compat(source)
+            copied = source / "compat" / "rec98" / "th02" / "hardware" / "frmdelay.h"
+            self.assertEqual(copied.read_bytes(), header.read_bytes())
+            self.assertEqual(receipt[0]["path"], "th02/hardware/frmdelay.h")
+            self.assertEqual(receipt[0]["sha256"], replay.digest_file(header))
+
+    def test_forwarded_fragment_resolves_only_one_line_adapter(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            compat = Path(temporary) / "compat"
+            header = compat / "th02" / "hardware" / "frmdelay.h"
+            header.parent.mkdir(parents=True)
+            header.write_text('#include "th02/hardware/frmdelay.h"\n', encoding="utf-8")
+            source = b'#include "compat/rec98/th02/hardware/frmdelay.h"\nbody\n'
+            with patch.object(replay, "REC98_COMPAT", compat):
+                resolved, used = replay.resolve_rec98_forwarders(source)
+            self.assertEqual(resolved, b'#include "th02/hardware/frmdelay.h"\nbody\n')
+            self.assertEqual(used, ["th02/hardware/frmdelay.h"])
+
+
 class SourceSplitTests(unittest.TestCase):
     def fixture(self, root: Path, *, suffix: bool = True) -> tuple[Path, dict[str, object]]:
         repo = root / "repo"

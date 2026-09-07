@@ -4,7 +4,7 @@
 #pragma option -zPmain_01
 
 #include "x86real.h"
-#include "libs/master.lib/master.hpp"
+#include "compat/rec98/libs/master.lib/master.hpp"
 #include "th04/resident.hpp"
 #include "th04/formats/std.hpp"
 #include "th04/main/playfld.hpp"

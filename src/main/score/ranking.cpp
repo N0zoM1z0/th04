@@ -1,10 +1,10 @@
 #pragma option -zCSCORE_TEXT
 
 #include "th04/formats/scoredat/scoredat.hpp"
-#include "libs/master.lib/master.hpp"
-#include "th01/rank.h"
+#include "compat/rec98/libs/master.lib/master.hpp"
+#include "compat/rec98/th01/rank.h"
 #if (GAME == 5)
-#include "th05/playchar.h"
+#include "compat/rec98/th05/playchar.h"
 #else
 #include "th04/playchar.h"
 #endif
@@ -99,7 +99,7 @@ void near scoredat_recreate(void)
 // `debloated` or `anniversary` branches instead.
 
 #if (GAME == 5)
-#include "th05/playchar.h"
+#include "compat/rec98/th05/playchar.h"
 typedef int playchar2;
 #else
 #if ((GAME == 4) && (BINARY == 'M'))

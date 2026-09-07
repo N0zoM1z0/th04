@@ -43,6 +43,13 @@ ReC98 source remains an untrusted calibration fixture and is never copied into
 `src/` wholesale.  Only outputs built locally from an attested environment can
 become local evidence, and every required Oracle must still pass.
 
+Repository source reaches unlocalized ReC98 compile-time declarations only
+through `compat/rec98/`. Exact replay copies that forwarding directory into
+each isolated source materialization and records every forwarding file's path,
+size, and SHA-256. The forwarders copy no declarations and grant no acceptance
+credit; they expose a dependency that must eventually be replaced by attested
+local ABI/platform headers.
+
 ## TH01 cold-build calibration result
 
 Two independently scripted local build materializations produced identical

@@ -1,7 +1,7 @@
 #pragma option -zPmain_03
 
-#include "libs/master.lib/master.hpp"
-#include "th01/math/overlap.hpp"
+#include "compat/rec98/libs/master.lib/master.hpp"
+#include "compat/rec98/th01/math/overlap.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/sprites/main_pat.h"
@@ -11,8 +11,8 @@
 #include "th04/main/gather.hpp"
 
 #pragma option -a2
-#include "th02/main/bullet/impl.hpp"
-#include "th02/sprites/bullet16.h"
+#include "compat/rec98/th02/main/bullet/impl.hpp"
+#include "compat/rec98/th02/sprites/bullet16.h"
 
 void pascal near bullets_add_regular_raw(void);
 void pascal near bullets_add_special_raw(void);

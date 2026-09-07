@@ -77,9 +77,14 @@ Use these claim words precisely:
   or `module(s)/`; exactness and source presence live in the ledgers.
 - Treat `.cpp`, `.c`, and `.asm` as translation units. Use `.inl` only for a
   bounded body that a semantic translation unit includes.
-- TH04 product source must not include or require `th01/`, `th02/`, `th03/`,
-  or `th05/` source/header trees. Cross-game material is evidence only. Recover
-  required declarations under the owning TH04 artifact or `src/shared/`.
+- TH04 product source must not directly include `libs/`, `platform/`, `th01/`,
+  `th02/`, `th03/`, or `th05/` paths. Existing unlocalized dependencies go
+  through checked-in `compat/rec98/<upstream-path>` forwarding headers. Only
+  that compatibility directory may name direct ReC98 paths.
+- `compat/rec98/` is a reusable, attested migration boundary, not product
+  source or authored progress. Do not copy declarations into it. Recover and
+  attest required common declarations under the owning artifact or
+  `src/shared/`, then remove the corresponding forwarder.
 - The product build must ultimately use checked-in TH04 source and headers.
   Overlaying maintained source into pinned ReC98 is an Oracle, not a standalone
   build and not permission to bulk-import its source tree.

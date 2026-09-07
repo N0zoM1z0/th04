@@ -6,6 +6,7 @@ from __future__ import annotations
 import csv
 from datetime import datetime
 from pathlib import Path
+import re
 import shlex
 import sys
 import tomllib
@@ -59,6 +60,8 @@ KNOWLEDGE_KINDS = {
 }
 SOURCE_ROOTS = {"main", "op", "maine", "zun", "shared"}
 SOURCE_STATE_DIRECTORIES = {"exact", "partial", "partials", "module", "modules"}
+REC98_INCLUDE_PREFIXES = ("libs/", "platform/", "th01/", "th02/", "th03/", "th05/")
+INCLUDE_PATTERN = re.compile(r'^\s*#include\s+["<]([^">]+)[">]')
 
 
 def read_csv(
@@ -235,6 +238,45 @@ def validate_source_tree(root: Path) -> None:
             raise ValueError(
                 f"{path.relative_to(root)}: reconstruction state directory "
                 f"{state!r} is forbidden"
+            )
+        if path.suffix.lower() not in {".c", ".cpp", ".h", ".hpp", ".inl"}:
+            continue
+        for line_number, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(), start=1
+        ):
+            match = INCLUDE_PATTERN.match(line)
+            if not match:
+                continue
+            include = match.group(1)
+            if include.startswith(REC98_INCLUDE_PREFIXES):
+                raise ValueError(
+                    f"{path.relative_to(root)}:{line_number}: direct ReC98 include "
+                    f"{include!r} must go through compat/rec98"
+                )
+            if include.startswith("compat/rec98/"):
+                forwarding_header = root / include
+                if not forwarding_header.is_file() or forwarding_header.is_symlink():
+                    raise ValueError(
+                        f"{path.relative_to(root)}:{line_number}: missing checked-in "
+                        f"ReC98 forwarding header {include!r}"
+                    )
+
+    compat_root = root / "compat" / "rec98"
+    if not compat_root.is_dir():
+        return
+    for path in compat_root.rglob("*"):
+        if path.is_symlink():
+            raise ValueError(
+                f"{path.relative_to(root)}: ReC98 forwarding layer forbids symlinks"
+            )
+        if not path.is_file() or path.name == "README.md":
+            continue
+        relative = path.relative_to(compat_root).as_posix()
+        expected = f'#include "{relative}"\n'
+        if path.read_text(encoding="utf-8") != expected:
+            raise ValueError(
+                f"{path.relative_to(root)}: forwarding header must contain only "
+                f"{expected.strip()!r}"
             )
 
 

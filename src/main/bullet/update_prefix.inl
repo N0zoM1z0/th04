@@ -1,7 +1,7 @@
 #pragma option -G
 
-#include "libs/master.lib/master.hpp"
-#include "th01/math/overlap.hpp"
+#include "compat/rec98/libs/master.lib/master.hpp"
+#include "compat/rec98/th01/math/overlap.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"
@@ -16,12 +16,12 @@
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
-#include "th01/sprites/pellet.h"
-#include "th02/sprites/bullet16.h"
+#include "compat/rec98/th01/sprites/pellet.h"
+#include "compat/rec98/th02/sprites/bullet16.h"
 
 #if (GAME == 5)
 #include "th04/main/item/item.hpp"
-#include "th05/sprites/main_pat.h"
+#include "compat/rec98/th05/sprites/main_pat.h"
 
 static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 32;
 

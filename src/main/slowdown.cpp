@@ -1,4 +1,4 @@
-#include "libs/master.lib/master.hpp"
+#include "compat/rec98/libs/master.lib/master.hpp"
 #include "th04/main/slowdown.hpp"
 
 void near slowdown_frame_delay(void)

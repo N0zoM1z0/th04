@@ -1,8 +1,8 @@
 #pragma option -zCSHARED
 
 #include <mem.h>
-#include "libs/master.lib/master.hpp"
-#include "th02/formats/tile.hpp"
+#include "compat/rec98/libs/master.lib/master.hpp"
+#include "compat/rec98/th02/formats/tile.hpp"
 #include "th04/formats/mpn.hpp"
 
 // Basically just a copy of the TH02 one, adjusted to work with multiple slots.

@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
-#include "th01/math/polar.hpp"
-#include "th03/math/polar.hpp"
+#include "compat/rec98/th01/math/polar.hpp"
+#include "compat/rec98/th03/math/polar.hpp"
 #include "th04/math/vector.hpp"
 
 int pascal polar(int center, int radius, int ratio)

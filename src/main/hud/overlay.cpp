@@ -2,9 +2,9 @@
 
 #include <string.h>
 #include "shiftjis.hpp"
-#include "libs/master.lib/pc98_gfx.hpp"
-#include "th01/hardware/grcg.hpp"
-#include "th02/v_colors.hpp"
+#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "compat/rec98/th01/hardware/grcg.hpp"
+#include "compat/rec98/th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/formats/bb.h"
 #include "th04/main/null.hpp"
@@ -16,7 +16,7 @@
 #include "th04/main/stage/stage.hpp"
 
 #if (GAME == 5)
-#include "th05/resident.hpp"
+#include "compat/rec98/th05/resident.hpp"
 #else
 #include "th04/playchar.h"
 #include "th04/resident.hpp"

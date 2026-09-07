@@ -3,14 +3,14 @@
 
 #pragma option -zPmain_01
 
-#include "libs/master.lib/pc98_gfx.hpp"
+#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
 #include "th04/common.h"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
 #if (GAME == 5)
-#include "th05/resident.hpp"
-#include "th05/playchar.h"
-#include "th05/shiftjis/fns.hpp"
+#include "compat/rec98/th05/resident.hpp"
+#include "compat/rec98/th05/playchar.h"
+#include "compat/rec98/th05/shiftjis/fns.hpp"
 #else
 #include "th04/resident.hpp"
 #include "th04/playchar.h"

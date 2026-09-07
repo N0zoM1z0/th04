@@ -53,11 +53,13 @@ under `src/shared/`. Exact, structural, and source-present state is tracked in
 the CSV ledgers, never with `exact/`, `partials/`, or `modules/` directories.
 
 The intended build consumes checked-in TH04 source and headers plus the pinned
-Borland/TASM/TLINK environment and documented libraries. TH01/TH02/TH03/TH05
-source trees are evidence, not dependencies. The current reconstruction is not
-yet a complete standalone build: the strict exact replay still uses pinned
-ReC98 as clean build scaffolding for bounded recovered units. See
-[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the ownership rules.
+Borland/TASM/TLINK environment and documented libraries. Direct ReC98 and
+TH01/TH02/TH03/TH05 includes are quarantined behind the reusable
+[`compat/rec98/`](compat/rec98/) forwarding layer and are never authored
+progress. The current reconstruction is not yet a complete standalone build:
+the strict exact replay still uses pinned ReC98 as clean build scaffolding for
+bounded recovered units. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for
+the ownership and migration rules.
 
 ## Fresh machine setup
 
