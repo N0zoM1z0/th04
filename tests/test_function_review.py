@@ -893,6 +893,50 @@ call_site_address = "0x10010"
                     review.reviewed_exact_internal_call_reviews(functions, metadata, {}, target)
 
 
+
+    def test_no_ghidra_internal_call_requires_next_ghidra_and_call_anchor(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_no_ghidra_internal_call]]
+id = "fn-no-ghidra-call"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x3"
+name = "fixture()"
+owner_unit = "owner"
+evidence_id = "ev-fixture"
+reason = "synthetic no-Ghidra internal call"
+next_internal_address = "0x10003"
+call_site_address = "0x10008"
+generated_public = "fixture_generated()"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1803] = b"\x90\x90\xC3"
+            data[0x1808:0x180B] = b"\xE8\xF5\xFF"
+            target.write_bytes(data)
+            owners = [{"start":0x10000,"end":0x10010,"file_start":0x1800,
+                       "unit_id":"owner","source":"src/exact.cpp","owner_name":"exact"}]
+            functions = {0x10003:"FUN_10003"}
+            metadata = {0x10003:{"body_min":"0x10003","body_max":"0x10005",
+                                  "body_addresses":"3","is_thunk":"false","is_external":"false"}}
+            decoded = {"instruction_count":3,"instruction_addresses":[0x10000,0x10001,0x10002],
+                       "terminal":"ret","first_address":"0x10000","end_address_exclusive":"0x10003"}
+            with patch.object(review,"POLICY",policy), patch.object(
+                review,"exact_authored_owners",return_value=owners
+            ), patch.object(review,"linear_decode",return_value=dict(decoded)):
+                accepted=review.reviewed_exact_no_ghidra_internal_call_reviews(
+                    functions,metadata,{0x10000:["fixture_generated()"]},target
+                )
+                self.assertEqual(len(accepted),1)
+                self.assertEqual(accepted[0]["resolved_call_target"],"0x10000")
+                with self.assertRaisesRegex(ValueError,"lacks configured generated public"):
+                    review.reviewed_exact_no_ghidra_internal_call_reviews(
+                        functions,metadata,{0x10000:["wrong"]},target
+                    )
+
+
 class AutomaticManualOverlapTests(unittest.TestCase):
     def test_writer_rejects_automatic_manual_same_address(self) -> None:
         with TemporaryDirectory() as temporary:

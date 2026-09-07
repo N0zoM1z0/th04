@@ -404,3 +404,14 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   containment, full raw terminal decode, a target call to the current entry, a pinned
   TASM local `PROC` boundary, and a SHA-attested prefix of target bytes at the next
   address. Reconstruction-generated TLINK publics remain plumbing, not target evidence.
+
+### TH04 v25: sparse switch and completely missing Ghidra entries
+
+- Semantically equivalent control flow is not binary-equivalent source shape. A
+  sparse two-case `switch` can make TC86 keep one expression in AX and emit the
+  target compare/default layout where `if/else if` instead performs direct memory
+  compares and shortens the function.
+- A target function can be reviewed even when Ghidra has no current entry, but only
+  with independent anchors: exact owner, pinned TASM local `PROC`, full raw terminal,
+  target call to the entry, and a complete next Ghidra entry. The corresponding
+  reconstruction-generated public is explicitly excluded from target evidence.

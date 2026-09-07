@@ -252,3 +252,33 @@ extern "C" void near yuuka6_entities_update(void)
     sc.shrink_frame++;
     #undef sc
 }
+
+static const int YUUKA6_PHASE2_FLY_NODES = 5;
+extern uint8_t yuuka6_phase2_fly_path;
+extern const unsigned char YUUKA6_PHASE2_FLY_ANGLES[2][YUUKA6_PHASE2_FLY_NODES];
+extern "C" bool pascal near yuuka6_move_towards(subpixel_t x, subpixel_t y);
+
+bool near yuuka6_phase2_fly(void)
+{
+    if((boss.phase_state.patterns_seen % (YUUKA6_PHASE2_FLY_NODES + 1)) < YUUKA6_PHASE2_FLY_NODES) {
+        switch(boss.phase_frame) {
+        case 1:
+            vector2_near(
+                boss.pos.velocity,
+                YUUKA6_PHASE2_FLY_ANGLES[yuuka6_phase2_fly_path][
+                    boss.phase_state.patterns_seen % (YUUKA6_PHASE2_FLY_NODES + 1)
+                ],
+                8
+            );
+            break;
+        case 112:
+            boss.phase_frame = 0;
+            boss.phase_state.patterns_seen++;
+            return true;
+        }
+        boss.pos.cur.x.v += boss.pos.velocity.x.v;
+        boss.pos.cur.y.v += boss.pos.velocity.y.v;
+        return false;
+    }
+    return yuuka6_move_towards(TO_SP(PLAYFIELD_W / 2), TO_SP(80));
+}

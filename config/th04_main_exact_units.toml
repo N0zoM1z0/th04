@@ -285,6 +285,21 @@ old = "call\tyuuka6_1A110"
 new = "call\t_yuuka6_entities_update"
 expected_count = 1
 
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-phase2-fly"
+kind = "remove_between"
+removed_sha256 = "6d18feee4d68e0fa3347b6e217aaca46f853d959ab08ccdf2f15e348c814aec3"
+start = "@yuuka6_phase2_fly$qv\tproc near"
+end = "@yuuka6_phase2_fly$qv\tendp\r\n"
+replacement = "extrn @yuuka6_phase2_fly$qv:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main034-yuuka6-move-towards"
+kind = "replace"
+old = "yuuka6_1A439\tproc near"
+new = "public YUUKA6_MOVE_TOWARDS\r\nYUUKA6_MOVE_TOWARDS label near\r\nyuuka6_1A439\tproc near"
+expected_count = 1
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"

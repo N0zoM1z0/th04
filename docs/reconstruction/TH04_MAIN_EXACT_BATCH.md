@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **16,298 / 16,302 = 99.975463% exact**;
-- authored functions: **143 / 144 = 99.305556% exact**;
+- authored C/C++ bytes: **16,416 / 16,420 = 99.975639% exact**;
+- authored functions: **144 / 145 = 99.310345% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -775,3 +775,30 @@ provisional and excluded from automatic public-based review.
 The v24 reviewed baseline is **16,298 / 16,302 authored C/C++ bytes exact
 (99.975463%)** and **143 / 144 reviewed functions exact (99.305556%)**.
 `snd_load` remains the sole reviewed nonexact function with four blocked bytes.
+
+## v25: recover the no-Ghidra 118-byte Yuuka6 phase-2 fly helper
+
+Pinned TASM local symbols place `@yuuka6_phase2_fly$qv` at target `0x2A3C3`
+and the next true helper at `0x2A439`, giving exactly 0x76 bytes. Target Ghidra
+contains no current function at all, while the next helper is a complete 111-byte
+Ghidra body. Target near call `0x2B563` resolves to `0x2A3C3`, and raw decode
+ends in `RET` at `0x2A438`. The function is therefore admitted only through the
+new fail-closed `reviewed_exact_no_ghidra_internal_call` path; the v25 TLINK
+public is generated reconstruction plumbing and is excluded from automatic
+public-based review.
+
+The source is ordinary C++ integer/control-flow code. An initial equivalent
+`if/else if` form compiled to 0x72 bytes. The target loads `boss.phase_frame`
+into AX once, compares against 1 and 112, and uses a shared default path. Writing
+that source as `switch(boss.phase_frame)` makes TC86 emit exactly that sequence,
+restores the missing four bytes, and produces an exact 0x76 function with the
+same 49 instruction mnemonics as the target. The final case returns the result
+of the still-ASM `yuuka6_1A439` helper through a zero-code public alias at its
+unchanged target address; no byte payload is inserted.
+
+Focused `gptweb-yuuka6-phase2-v25-001` and 66-unit aggregate
+`gptweb-yuuka6-phase2-v25-precommit-001` reproduce the entire **0x3B2-byte**
+`MAIN_034_TEXT` prefix, exact map placement, all seven ordered overlapping MZ
+relocations, deterministic TC86 OMF, and the zero-LEDATA code-order anchor.
+The v25 reviewed baseline is **16,416 / 16,420 authored C/C++ bytes exact
+(99.975639%)** and **144 / 145 reviewed functions exact (99.310345%)**.

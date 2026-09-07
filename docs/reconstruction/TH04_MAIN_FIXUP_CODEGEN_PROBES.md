@@ -601,3 +601,13 @@ The only remaining object-level mnemonic difference was `CALL FAR` to
 `sparks_add_random`. The existing `samecodeseg`/TLINK control applies unchanged:
 TLINK preserves the five-byte footprint as `NOP; PUSH CS; CALL near`, yielding an
 exact linked 0x33C MAIN_034 prefix.
+
+## v25: sparse `switch` versus `if/else if`
+
+For `yuuka6_phase2_fly`, natural `if (frame == 1) ... else if (frame == 112)`
+compiled to 0x72 bytes because TC86 compared memory twice. The target is 0x76
+bytes and performs `MOV AX,[frame]`, `CMP AX,1`, `CMP AX,112`, then a default
+jump. Rewriting the same semantics as `switch(frame)` produces exactly that
+49-instruction target sequence and exact function size. This is a useful source-
+shape control whenever target code visibly shares one loaded scalar across sparse
+constant comparisons.

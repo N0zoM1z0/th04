@@ -605,3 +605,26 @@ id = "th04-main-fn-2a110"
 address = "0x2A110"
 evidence_id = "ev-th04-main-yuuka6-entities-boundary-v24"
 reason = "Explicitly admit the target-called internal Yuuka6 entity/safety-circle update after exact-owner, bounded-Ghidra-entry, raw-RET, target-attested next-entry prefix, and near-call-anchor review."
+
+[[provisional]]
+address = "0x2A3C3"
+reason = "Reconstruction-generated TLINK public only; original target has no public/Ghidra entry here. Review through raw/TASM/target-call anchors."
+
+[[reviewed_exact_no_ghidra_internal_call]]
+id = "th04-main-fn-2a3c3"
+address = "0x2A3C3"
+file_offset = "0x1BBC3"
+size = "0x76"
+name = "yuuka6_phase2_fly()"
+owner_unit = "th04-main-chasecrosses-add"
+evidence_id = "ev-th04-main-yuuka6-phase2-boundary-v25"
+reason = "Target Ghidra has no function entry at 0x2A3C3. Pinned TASM local PROC inventory and target raw establish the 0x76-byte extent through RET at 0x2A438; the next true target function at 0x2A439 is a complete 111-byte Ghidra entry. Target near CALL at 0x2B563 resolves exactly to 0x2A3C3, and the full extent lies inside the exact 0x3B2 natural-C++ MAIN_034 owner."
+next_internal_address = "0x2A439"
+call_site_address = "0x2B563"
+generated_public = "yuuka6_phase2_fly()"
+
+[[new_exact]]
+id = "th04-main-fn-2a3c3"
+address = "0x2A3C3"
+evidence_id = "ev-th04-main-yuuka6-phase2-boundary-v25"
+reason = "Explicitly admit the target-called no-Ghidra Yuuka6 phase-2 fly function after exact-owner, raw-RET, next-Ghidra-entry, target near-call, and generated-public-plumbing review."
