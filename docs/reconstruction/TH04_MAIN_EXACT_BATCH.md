@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **16,618 / 16,622 = 99.975936% exact**;
-- authored functions: **146 / 147 = 99.319728% exact**;
+- authored C/C++ bytes: **16,676 / 16,680 = 99.976019% exact**;
+- authored functions: **147 / 148 = 99.324324% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,7 +44,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-wave-v27-precommit-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-center-v28-precommit-001/receipt.json`.
 It passes all 66 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
@@ -849,3 +849,24 @@ Focused `gptweb-yuuka6-wave-v27-001` and aggregate
 `MAIN_034_TEXT` prefix and all eight ordered relocations exactly. The reviewed
 baseline is **16,618 / 16,622 bytes exact (99.975936%)** and **146 / 147 functions
 exact (99.319728%)**.
+
+
+## v28: recover the 58-byte Yuuka6 move-to-center helper
+
+The next target helper begins at `0x2A503` and ends at `0x2A53C`. Fresh Ghidra
+constructs all 58 body bytes, raw decode terminates in `RET`, and the next target
+Ghidra entry begins exactly at `0x2A53D`. A direct scan of the target MZ finds two
+near calls resolving to the helper (`0x2B697` and `0x2B791`), so the boundary does
+not depend on the reconstruction-generated TLINK public.
+
+Target semantics are simple but source-shape-sensitive: when the sprite state is
+vanished the helper calls the existing appear animation; otherwise it clears the
+private auxiliary flag and adjusts `boss.pos.cur.x` by one pixel until it lies in
+the target's 192px/193px center window. The natural C++ implementation extends
+`MAIN_034_TEXT` from 0x47C to **0x4B6 bytes**. Focused
+`gptweb-yuuka6-center-v28-001` and final aggregate
+`gptweb-yuuka6-center-v28-precommit-001` both pass two-cold raw bytes, map extent,
+ordered relocation overlap, deterministic valid OMF, and zero-code layout-anchor
+checks. The reviewed baseline is now **16,676 / 16,680 bytes exact
+(99.976019%)** and **147 / 148 functions exact (99.324324%)**; the same four
+`snd_load` bytes remain the sole reviewed authored mismatch.

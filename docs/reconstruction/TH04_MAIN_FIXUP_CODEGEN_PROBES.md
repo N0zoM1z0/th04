@@ -641,3 +641,14 @@ two `polar()` arguments. Swapping the natural center/radius source arguments to
 0x47C MAIN_034 prefix. This is a useful diagnostic: exact relocation topology
 plus a two-word packed-immediate swap points to source argument semantics, not an
 OMF/linker or instruction-selection problem.
+
+
+## v28: move-to-center branch-shape control
+
+`yuuka6_move_to_center` is a 58-byte positive control at `0x2A503`. Natural C++
+with an `if (sprite_flag == VANISHED) appear(); else { clear aux flag; adjust X; }`
+shape compiles to the exact target branch layout, including distinct 192px `<` and
+193px `>=` thresholds and the early true return. Full linking extends the exact
+MAIN_034 prefix to 0x4B6 without changing ordered relocations. Two raw target near
+calls resolve to the entry even though Ghidra's caller view is empty, reinforcing
+that target call arithmetic is a stronger acceptance anchor than decompiler xrefs.

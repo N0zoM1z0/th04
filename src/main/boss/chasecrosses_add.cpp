@@ -289,6 +289,7 @@ bool near yuuka6_phase2_fly(void)
 // original ASM kept these labels private; exact replay exposes zero-byte
 // aliases without changing their storage or layout.
 extern unsigned char yuuka6_aux_state;
+extern unsigned char yuuka6_aux_flag;
 extern SPPoint yuuka6_aux_pos;
 extern unsigned char yuuka6_sprite_flag;
 extern "C" bool near yuuka6_anim_vanish(void);
@@ -342,4 +343,22 @@ void near yuuka6_horizontal_wave(void)
     }
     boss.pos.cur.y.v = polar(TO_SP(80), TO_SP(48), SinTable8[boss.angle]);
     boss.angle += 2;
+}
+
+
+bool near yuuka6_move_to_center(void)
+{
+    if(yuuka6_sprite_flag == Y6SF_MOVE_VANISHED) {
+        yuuka6_anim_appear();
+    } else {
+        yuuka6_aux_flag = 0;
+        if(boss.pos.cur.x.v < TO_SP(192)) {
+            boss.pos.cur.x.v += TO_SP(1);
+        } else if(boss.pos.cur.x.v >= TO_SP(193)) {
+            boss.pos.cur.x.v -= TO_SP(1);
+        } else {
+            return true;
+        }
+    }
+    return false;
 }

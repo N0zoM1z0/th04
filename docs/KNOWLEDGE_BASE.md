@@ -443,3 +443,18 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   `yuuka6_horizontal_wave()` became completely exact by correcting
   `polar(center,radius,...)` from `(48px,80px)` to the target semantics
   `(80px,48px)`; no low-level source change was needed.
+
+
+### TH04 v28: raw-call scanning can replace missing decompiler callers
+
+- A complete Ghidra function with zero reported callers is not necessarily
+  unreferenced. For `yuuka6_move_to_center()` Ghidra reports no useful caller
+  relationship, while direct target-MZ `E8 rel16` scanning finds two independent
+  calls resolving to `0x2A503`. Use raw call arithmetic as a boundary anchor when
+  xrefs are absent; do not manufacture a target claim from the generated TLINK
+  public.
+- Tiny target-only helpers can still expose source semantics precisely. The target
+  compares sprite state, clears an existing private flag, and uses adjacent 192px
+  and 193px thresholds so only the exact center returns true. Expressing that logic
+  naturally in C++ gives the exact 58-byte TC86 body and preserves the full linked
+  relocation order.

@@ -674,3 +674,26 @@ id = "th04-main-fn-2a4a8"
 address = "0x2A4A8"
 evidence_id = "ev-th04-main-yuuka6-wave-boundary-v27"
 reason = "Explicitly admit target-called Yuuka6 horizontal-wave helper after exact-owner, complete-Ghidra-body, raw-RET, next-entry, target near-call, and generated-public-plumbing review."
+
+[[provisional]]
+address = "0x2A503"
+reason = "Reconstruction-generated TLINK public only; original target boundary is reviewed through Ghidra/raw/target-call anchors."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-2a503"
+address = "0x2A503"
+file_offset = "0x1BD03"
+size = "0x3A"
+name = "yuuka6_move_to_center()"
+owner_unit = "th04-main-chasecrosses-add"
+evidence_id = "ev-th04-main-yuuka6-center-boundary-v28"
+reason = "Fresh target Ghidra reports a complete 58-byte body at 0x2A503. Raw decode ends in RET at 0x2A53C; the next target Ghidra entry starts exactly at 0x2A53D; and target near CALL at 0x2B697 resolves exactly to this entry."
+next_internal_address = "0x2A53D"
+call_site_address = "0x2B697"
+generated_public = "yuuka6_move_to_center()"
+
+[[new_exact]]
+id = "th04-main-fn-2a503"
+address = "0x2A503"
+evidence_id = "ev-th04-main-yuuka6-center-boundary-v28"
+reason = "Explicitly admit target-called Yuuka6 move-to-center helper after exact-owner, complete-Ghidra-body, raw-RET, next-entry, target near-call, and generated-public-plumbing review."

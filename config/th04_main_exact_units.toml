@@ -342,6 +342,27 @@ old = "call\tyuuka6_1A4A8"
 new = "call\t@yuuka6_horizontal_wave$qv"
 expected_count = 1
 
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-move-to-center-v28"
+kind = "remove_between"
+removed_sha256 = "2444183fd0c6cd680d967b518537e736072cdb92d038767eb86bf2d5799cda76"
+start = "yuuka6_1A503\tproc near"
+end = "yuuka6_1A503\tendp\r\n"
+replacement = "extrn @yuuka6_move_to_center$qv:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-yuuka6-move-to-center-v28"
+kind = "replace"
+old = "call\tyuuka6_1A503"
+new = "call\t@yuuka6_move_to_center$qv"
+expected_count = 2
+
+[[source_transforms.ops]]
+id = "alias-main034-yuuka6-aux-flag-v28"
+kind = "insert_before"
+anchor = "byte_25A08\tdb ?\r\n"
+text = "public _yuuka6_aux_flag\r\n_yuuka6_aux_flag label byte\r\n"
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"
