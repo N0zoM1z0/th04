@@ -522,3 +522,26 @@ target order as one natural-C++ TU/segment makes the complete 0x1CB region exact
 with an ordinary `midboss_reset()` call and leaves the following segment start
 unchanged. Similar cross-boundary near calls should trigger a false-boundary
 check before any attempt to coerce the instruction encoding.
+
+
+## v21: `MAIN_035` / `BOSS_TEXT` producer-boundary recovery
+
+`boss_defeat_update` initially looked like a second four-byte near-call blocker:
+target `PUSH CS; CALL near` reached `bb_boss_free` in reconstructed
+`MAIN_035_TEXT`, while the caller lived in `BOSS_TEXT`. Samecodeseg-only controls
+again proved unsafe: they can emit the desired opcode shape while rebinding the
+callee symbol to the caller segment.
+
+Target-flat continuity instead exposes another false boundary. The 0x677 suffix
+starting at `boss_reset` and the following 0x33F BOSS code compile naturally as
+one TC4J TU of exactly 0x9B6 bytes. Ordinary `bb_boss_free()` then emits the
+target four-byte bridge. The final link reproduces the complete 2,486-byte slice
+and 60 ordered relocation entries exactly while old `BOSS_TEXT` becomes empty.
+
+Two codegen details are reusable. First, MAIN_01 near callback declarations must
+first be seen while `MAI_TEXT/main_01` is active or TC86 emits near-pointer fixups
+framed to MAIN_03 and TLINK overflows. Second, `#pragma samecodeseg
+explosions_small_reset` is safe here because the callee's true definition/public
+address remains fixed in its real segment and TLINK performs the already-accepted
+far-to-near bridge optimization; final public addresses and displacements are
+still mandatory acceptance evidence.

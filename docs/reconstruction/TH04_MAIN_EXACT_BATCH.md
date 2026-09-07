@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **13,347 / 13,351 = 99.970039% exact**;
-- authored functions: **129 / 130 = 99.230769% exact**;
+- authored C/C++ bytes: **15,470 / 15,474 = 99.974150% exact**;
+- authored functions: **140 / 141 = 99.290780% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,9 +44,10 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-midboss-v20-precommit-001/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-boss-v21-precommit-002/receipt.json`.
 It passes all 65 current default-selected exact-replay owners in both isolated
-cold materializations, including the 0x1CB-byte contiguous midboss/HUD/defeat TU, the 11-byte pure-C
+cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
+the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
 the full pure-C PMD owner, and the restored natural C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
 `default_enabled = false`; they stay individually replayable with `--unit` and
@@ -284,6 +285,58 @@ and the ordered overlapping relocation list agrees. Two isolated cold builds in
 exact owners. No inline assembly, codestring, `__emit__`, raw byte directive, or
 patched object/link output is used.
 
+## v21 authored-boundary expansion: contiguous `MAIN_035` / boss TU
+
+A whole-target rescreen found an unowned `0x2DF61..0x2E5D7` suffix at the end
+of reconstructed `MAIN_035_TEXT`. This was not a Ghidra-only discovery. The
+target raw bytes, final TLINK map, and a pinned TASM listing of the already
+raw-exact scaffold identify ten true functions that tile the full 0x677 bytes:
+`boss_reset`, `bb_boss_load`, `bb_boss_free`, and `stage1_setup` through
+`stagex_setup`. Ghidra finds many starts but under-sizes `stage3_setup` and
+`stagex_setup` and creates an internal false split inside `stage4_setup`.
+Therefore target Ghidra body size is not used as the sole boundary oracle.
+
+The next historical `BOSS_TEXT` contribution is 0x33F bytes and is flat-adjacent
+to this suffix. Target `boss_defeat_update` contains a four-byte `PUSH CS; CALL
+near` back to `bb_boss_free`, even though the reconstruction placed the callee
+in `MAIN_035_TEXT` and the caller in `BOSS_TEXT`. Rebuilding the 0x677 suffix
+plus the 0x33F boss contribution in target order as one maintained natural-C++
+TU resolves this exactly. `src/main/boss/boss.cpp` emits one 0x9B6
+`MAIN_035_TEXT` contribution; historical `BOSS_TEXT` becomes zero-length and the
+following `MAIN_036_TEXT` start is unchanged. Ordinary `bb_boss_free();`
+naturally compiles to target `0E E8 54 F7` inside the 468-byte defeat function.
+
+Focused two-cold replay `gptweb-boss-tu-v21-003` reproduces all 2,486 bytes with
+target SHA-256 `14ac3390b67ec8ee06b25669e9f8a62b9da07a9a82d96e100864a9fbe24cad1f`.
+All 60 MZ relocation entries overlapping this extent match the target in their
+original order. The 65-unit aggregate `gptweb-boss-tu-v21-default-001` also
+passes raw/map/ordered-relocation/OMF/determinism for every selected owner.
+
+The replay does not patch object bytes. A fail-closed `source_transforms` gate
+is bound to the pinned `th04_main.asm` scaffold SHA, each unique text anchor,
+the removed source-span SHA, and final patched scaffold SHA. It removes only
+the now-maintained old ASM definitions, redirects stage-setup references to the
+C++ publics, and exposes existing callback/string labels as cross-object symbols
+without emitting data or instructions. This is build/source ownership metadata,
+not target-byte injection.
+
+ReC98 was explicitly not treated as the semantic oracle. Its TH04 stage2/stage3
+candidate values and control flow are materially wrong. Target raw/decompile
+shows stage2 with one `select_for_rank(255, 128, 32, 8)`, `frames_until=2600`,
+HP 750, boss Y=81, and sprite 0; the maintained source follows the target and
+TC4J codegen rather than copying the reference candidate.
+
+Function review adds eleven exact functions over v20. Strict review can accept
+`boss_reset`, `bb_boss_load/free`, stage1, stage2, stage5 and stage6 directly.
+`stage3`, `stage4`, `stagex`, and `boss_defeat_update` use configured manual
+exact-extent review because Ghidra's constructed bodies are incomplete. The
+manual extent requires exact-owner containment, final TLINK public placement,
+gap-free target raw decode through terminal `RET`/`RETF`, and the next public or
+owner end. Same-address manual reviews shadow automatic Ghidra claims before
+counting, and the ledger writer separately rejects any residual overlap. The
+result is **140/141 exact functions** with 141 unique addresses; `snd_load`
+remains the sole reviewed nonexact function.
+
 ## Authored-boundary expansion: contiguous midboss TU, `snd_mmd_resident`, and `snd_se_reset`
 
 The earlier ledger treated `MIDBOSS_TEXT` (0x5A), `HUD_HP_TEXT` (0x58), and
@@ -324,7 +377,7 @@ noncontiguous and continue through the existing manual raw-decode gate. Three
 previous automatic rows migrate from their historical owners only through
 explicit address/from-owner/to-owner policy, and `midboss_defeat_update` is a
 new automatic exact function after fresh Ghidra/TLINK review. The resulting
-function baseline is 129/130 exact; `snd_load` remains the sole reviewed
+v20 function baseline was 129/130 exact; v21 supersedes it below. `snd_load` remains the sole reviewed
 nonexact function.
 
 `snd_mmd_resident` is now exact. Fresh target Ghidra/raw/TLINK review binds a

@@ -64,9 +64,9 @@ address = "0x2E692"
 file_offset = "0x1FE92"
 size = "0x61"
 name = "boss_items_drop()"
-owner_unit = "th04-main-boss-prefix"
+owner_unit = "th04-main-main035-boss-tu"
 evidence_id = "ev-th04-main-boss-items-drop-manual-boundary-v1"
-reason = "Ghidra omitted the middle of the five-iteration item-drop loop and reported 69/97 body bytes. Raw 16-bit decoding tiles the complete 97-byte public span through RET at 0x2E6F2 inside exact maintained boss-prefix bytes."
+reason = "Ghidra omitted the middle of the five-iteration item-drop loop and reported 69/97 body bytes. Raw 16-bit decoding tiles the complete 97-byte public span through RET at 0x2E6F2 inside the exact contiguous MAIN_035/BOSS natural-C++ owner."
 
 [[reviewed_exact]]
 id = "th04-main-fn-20f36"
@@ -395,3 +395,159 @@ to_owner = "th04-main-midboss-hud-defeat-tu"
 to_source = "src/main/midboss/midboss.cpp"
 evidence_id = "ev-th04-main-midboss-hud-defeat-boundary-v20"
 reason = "Fresh target/function review and two-cold replay show HUD_HP_TEXT is not an independent authored TU boundary; hud_hp_update_and_render is owned by the exact contiguous TU."
+
+# v21: exact MAIN_035/BOSS natural-C++ TU boundary expansion.
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2e186"
+address = "0x2E186"
+file_offset = "0x1F986"
+size = "0xBF"
+name = "stage3_setup()"
+owner_unit = "th04-main-main035-boss-tu"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Target Ghidra has the correct entry but incomplete body construction inside this stage setup. Final natural-C++ TLINK emits a public at the target entry; raw 16-bit decode tiles the complete target span through RETF to the next reviewed public inside the exact 0x9B6 owner."
+next_public_address = "0x2E245"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2e245"
+address = "0x2E245"
+file_offset = "0x1FA45"
+size = "0x17D"
+name = "stage4_setup()"
+owner_unit = "th04-main-main035-boss-tu"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Target Ghidra has the correct entry but incomplete body construction inside this stage setup. Final natural-C++ TLINK emits a public at the target entry; raw 16-bit decode tiles the complete target span through RETF to the next reviewed public inside the exact 0x9B6 owner."
+next_public_address = "0x2E3C2"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2e518"
+address = "0x2E518"
+file_offset = "0x1FD18"
+size = "0xC0"
+name = "stagex_setup()"
+owner_unit = "th04-main-main035-boss-tu"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Target Ghidra has the correct entry but incomplete body construction inside this stage setup. Final natural-C++ TLINK emits a public at the target entry; raw 16-bit decode tiles the complete target span through RETF to the next reviewed public inside the exact 0x9B6 owner."
+next_public_address = "0x2E5D8"
+
+[[new_exact]]
+id = "th04-main-fn-2df61"
+address = "0x2DF61"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit boss_reset() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2dfa8"
+address = "0x2DFA8"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit bb_boss_load(const char far*) after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2dfd4"
+address = "0x2DFD4"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit bb_boss_free() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2dfef"
+address = "0x2DFEF"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit stage1_setup() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2e0b3"
+address = "0x2E0B3"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit stage2_setup() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2e186"
+address = "0x2E186"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit stage3_setup() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2e245"
+address = "0x2E245"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit stage4_setup() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2e3c2"
+address = "0x2E3C2"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit stage5_setup() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2e47c"
+address = "0x2E47C"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit stage6_setup() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2e518"
+address = "0x2E518"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit stagex_setup() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[new_exact]]
+id = "th04-main-fn-2e743"
+address = "0x2E743"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Explicitly admit boss_defeat_update() after final exact-owner, target-entry, TLINK-public, raw-boundary, and two-cold review of the contiguous MAIN_035/BOSS natural-C++ TU."
+
+[[owner_migration]]
+address = "0x2E5D8"
+from_owner = "th04-main-boss-prefix"
+from_source = "src/main/boss/boss_prefix.inl"
+to_owner = "th04-main-main035-boss-tu"
+to_source = "src/main/boss/boss.cpp"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "The old BOSS_TEXT-only owner is a reconstruction sub-boundary; full-link exact replay proves this function belongs to the contiguous 0x9B6 MAIN_035/BOSS natural-C++ TU."
+
+[[owner_migration]]
+address = "0x2E618"
+from_owner = "th04-main-boss-prefix"
+from_source = "src/main/boss/boss_prefix.inl"
+to_owner = "th04-main-main035-boss-tu"
+to_source = "src/main/boss/boss.cpp"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "The old BOSS_TEXT-only owner is a reconstruction sub-boundary; full-link exact replay proves this function belongs to the contiguous 0x9B6 MAIN_035/BOSS natural-C++ TU."
+
+[[owner_migration]]
+address = "0x2E64E"
+from_owner = "th04-main-boss-prefix"
+from_source = "src/main/boss/boss_prefix.inl"
+to_owner = "th04-main-main035-boss-tu"
+to_source = "src/main/boss/boss.cpp"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "The old BOSS_TEXT-only owner is a reconstruction sub-boundary; full-link exact replay proves this function belongs to the contiguous 0x9B6 MAIN_035/BOSS natural-C++ TU."
+
+[[owner_migration]]
+address = "0x2E67C"
+from_owner = "th04-main-boss-prefix"
+from_source = "src/main/boss/boss_prefix.inl"
+to_owner = "th04-main-main035-boss-tu"
+to_source = "src/main/boss/boss.cpp"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "The old BOSS_TEXT-only owner is a reconstruction sub-boundary; full-link exact replay proves this function belongs to the contiguous 0x9B6 MAIN_035/BOSS natural-C++ TU."
+
+[[owner_migration]]
+address = "0x2E6F3"
+from_owner = "th04-main-boss-prefix"
+from_source = "src/main/boss/boss_prefix.inl"
+to_owner = "th04-main-main035-boss-tu"
+to_source = "src/main/boss/boss.cpp"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "The old BOSS_TEXT-only owner is a reconstruction sub-boundary; full-link exact replay proves this function belongs to the contiguous 0x9B6 MAIN_035/BOSS natural-C++ TU."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2e743"
+address = "0x2E743"
+file_offset = "0x1FF43"
+size = "0x1D4"
+name = "boss_defeat_update()"
+owner_unit = "th04-main-main035-boss-tu"
+evidence_id = "ev-th04-main-main035-boss-boundary-v21"
+reason = "Target Ghidra entry starts and ends on the reviewed function extent but constructs only 306/468 body bytes. Final natural-C++ TLINK emits the matching public; raw 16-bit decode tiles all 468 bytes through RET at the exact 0x9B6 owner end, and two-cold replay is byte/relocation exact."

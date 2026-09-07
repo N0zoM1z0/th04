@@ -687,6 +687,11 @@ def write_reviewed_ledger(
 
     automatic_by_address = {int(item["address"]): item for item in automatic_exact}
     manual_by_id = {str(item["id"]): item for item in manual_exact}
+    manual_addresses = {int(item["address"]) for item in manual_exact}
+    overlap = sorted(set(automatic_by_address) & manual_addresses)
+    if overlap:
+        rendered = ", ".join(f"0x{address:X}" for address in overlap)
+        raise ValueError("automatic/manual exact address overlap: " + rendered)
     nonexact_by_id = {str(item["id"]): item for item in (reviewed_nonexact or [])}
     seen_automatic: set[int] = set()
     seen_manual: set[str] = set()
@@ -945,6 +950,9 @@ def main() -> int:
         reviewed_addresses = {
             int(item["address"]) for item in [*manual_exact_all, *reviewed_nonexact]
         }
+        accepted = [
+            item for item in accepted if int(item["address"]) not in reviewed_addresses
+        ]
         rejected = [
             item for item in rejected if int(item["address"]) not in reviewed_addresses
         ]

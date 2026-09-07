@@ -299,3 +299,53 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   the pragma can also alter symbol/frame binding. In the separated midboss probe
   the final call resolved to the wrong function. Always verify final TLINK public
   address and displacement; opcode shape alone is not acceptance evidence.
+
+- A zero-gap flat target range can reveal a much larger false reconstructed
+  segment boundary than the linker map suggests. TH04 `0x2DF61..0x2E916`
+  was reconstructed as a `MAIN_035_TEXT` suffix followed by `BOSS_TEXT`, but
+  natural TC4J C++ emits the full 0x9B6 range as one contribution with all
+  2,486 bytes and all 60 ordered overlapping relocations exact. Historical
+  `BOSS_TEXT` becomes zero-length and the next segment start stays fixed.
+  Ordinary `bb_boss_free();` then produces the target four-byte near bridge.
+  Test boundary ownership before encoding a suspicious call form manually.
+- Ghidra function bodies are provisional even when their starts are useful.
+  In the v21 boss recovery it under-sized `stage3_setup` and `stagex_setup`
+  and created an internal false split inside `stage4_setup`. A pinned TASM
+  listing of an already raw-exact scaffold can provide independent local-label
+  offsets, but accept those offsets only when target raw terminal decoding,
+  final natural-C++ TLINK publics, and exact-owner containment agree. A
+  configured manual reviewed extent shadows the same-address automatic Ghidra
+  claim; the ledger writer rejects any residual automatic/manual overlap.
+- ReC98 semantic source is never an Oracle. Its TH04 stage2/stage3 setup
+  candidate is materially different from the target. Target raw/decompile and
+  TC4J producer experiments instead recover stage2 with one
+  `select_for_rank(255, 128, 32, 8)`, `frames_until=2600`, HP 750, boss Y=81,
+  and sprite 0. Use reference code for names and hypotheses, then re-derive
+  constants/control flow from the target before exact promotion.
+- Cross-object symbol exposure can be a zero-byte source/build ownership
+  change rather than code injection. The v21 `source_transforms` gate binds the
+  complete `th04_main.asm` scaffold SHA, unique anchors, removed-span SHA and
+  final patched SHA while exposing existing callback/data labels to the new C++
+  TU. The transform emits no instruction/data bytes; all resulting raw bytes,
+  map placement and relocation order still come from normal TASM/TC4J/TLINK.
+
+
+- **MAIN_035/BOSS false-boundary recovery:** A zero-gap flat target region plus
+  a near call crossing reconstructed segment ownership is evidence to test the
+  boundary itself. TH04's `boss_reset`/stage-setup suffix and `BOSS_TEXT` form
+  one 0x9B6 natural TC4J C++ TU. Merging the producer boundary makes ordinary
+  `bb_boss_free()` reproduce the target call and keeps `MAIN_036_TEXT` fixed.
+
+- **Hidden function boundaries under monolithic ASM need independent anchors.**
+  In the 0x677 MAIN_035 suffix, Ghidra truncates some bodies and creates internal
+  false starts. Pinned TASM local-label offsets on an already raw-exact scaffold,
+  target raw RET/RETF tiling, final C++ PUBDEF offsets, and exact-owner
+  containment jointly recover the ten true functions. A configured manual extent
+  must shadow a same-address shorter automatic Ghidra claim.
+
+- **Borland first declarations control pointer-fixup frames.** When natural C++
+  takes near function addresses from another logical code group, declare those
+  callbacks while their real codeseg/group is active before the owning TU.
+  Otherwise TC86 can frame the fixup against the current group and TLINK reports
+  overflow even though the runtime selector would ultimately be compatible.
+  This is declaration metadata, not emitted target bytes.

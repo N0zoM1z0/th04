@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, and the contiguous midboss/HUD/defeat TU recovery, reviewed authored C/C++ bytes are 13,347 / 13,351 (99.970039%) exact, and reviewed authored functions are 129 / 130 (99.230769%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, and the v21 contiguous `MAIN_035`/boss TU recovery, reviewed authored C/C++ bytes are 15,470 / 15,474 (99.974150%) exact, and reviewed authored functions are 140 / 141 (99.290780%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,11 +115,11 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-midboss-v20-precommit-001` passes all 65 current default-selected
+  `gptweb-boss-v21-precommit-002` passes all 65 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 13,351 bytes across 59
-  reviewed authored units/regions; 13,347 bytes across 56 units/regions are exact.
+- The current reviewed authored byte denominator is 15,474 bytes across 59
+  reviewed authored units/regions; 15,470 bytes across 56 units/regions are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -136,6 +136,22 @@ deterministic TH04 runtime scenario has been authored.
   aggregate `gptweb-midboss-tu-v20-default-001` pass raw/map/ordered-relocation/
   OMF/determinism replay. The historical HUD_HP/MB_DFT segment labels become
   zero-length while the following `MAIN_034_TEXT` start remains unchanged.
+- The old `MAIN_035_TEXT` / `BOSS_TEXT` split is also a **false reconstruction
+  boundary**. Target `0x2DF61..0x2E916` is one contiguous 0x9B6-byte natural-C++
+  producer region. The first 0x677 bytes were previously unowned because
+  `th04_main.asm` hid `boss_reset`, `bb_boss_load/free`, and `stage1..stagex`;
+  pinned TASM local-label offsets plus target raw RET/RETF tiling establish ten
+  true function extents and reject Ghidra internal false splits. The following
+  historical 0x33F `BOSS_TEXT` is part of the same TU. `src/main/boss/boss.cpp`
+  compiles to one 0x9B6 `MAIN_035_TEXT` contribution, leaves `BOSS_TEXT`
+  zero-length, and preserves the next `MAIN_036_TEXT` start. Focused
+  `gptweb-boss-tu-v21-003` and 65-unit aggregate
+  `gptweb-boss-tu-v21-default-001` reproduce all 2,486 bytes and all 60
+  overlapping MZ relocation entries in target order. Ordinary
+  `bb_boss_free();` naturally emits the target four-byte `PUSH CS; CALL near`
+  inside the 468-byte `boss_defeat_update`; no inline ASM or byte emission is
+  used. ReC98's TH04 stage2/stage3 semantics were materially wrong and were
+  replaced from target raw/decompile evidence rather than copied.
 - `snd_mmd_resident` is now a full **47-byte exact pure-C function** at
   target `0x233AC..0x233DA` / TLINK `130E:02CC`. Removing `-WX` from the
   maintained TH04 wrapper is the decisive codegen fix: the same natural `__es`
@@ -223,15 +239,15 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-midboss-v20-precommit-001`
+- The latest aggregate cold replay `gptweb-boss-v21-precommit-002`
   passed all 65 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
-  from byte ownership. The current review accepts 104 contiguous Ghidra/TLINK
-  functions automatically plus 23 replayable manual exact reviews. A fresh
+  from byte ownership. The current review accepts 113 strict automatic functions
+  plus 27 replayable manual exact reviews. A fresh
   TLINK-public audit found eight real exact-owner functions that the target
   Ghidra inventory had missed or misgrouped. `reviewed_exact_no_ghidra` admits
   them only with exact authored ownership, a matching TLINK public, gap-free raw
@@ -244,8 +260,11 @@ deterministic TH04 runtime scenario has been authored.
   agree. This admits `tiles_render_all_timed` at `0x1CB80`; a regression test
   mutates the pointer word and requires rejection. `bullets_update` remains the
   separate exact-extent/table case, and the two `MB_DFT_TEXT` score-bonus
-  functions remain Ghidra-min/max manual cases. `snd_load` is the sole reviewed
-  nonexact function, giving 129/130 exact.
+  functions remain Ghidra-min/max manual cases. The v21 stage3/stage4/stagex and
+  `boss_defeat_update` extents additionally demonstrate that a configured manual
+  reviewed extent must shadow any shorter same-address Ghidra automatic claim;
+  the writer rejects residual automatic/manual overlap. `snd_load` is the sole
+  reviewed nonexact function, giving 140/141 exact.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain
@@ -336,3 +355,29 @@ relocation-order blockers at the OMF FIXUPP/source-emission level;
 the original lower-TU split and historical pre-decomp ASM producer are already
 falsified for target ordering. Runtime work can stay deferred until a
 reconstruction claim actually needs behavioral evidence.
+
+
+### Contiguous `MAIN_035` / `BOSS_TEXT` recovery (v21)
+
+A target-first audit found a previously unowned 0x677-byte suffix of
+`MAIN_035_TEXT` immediately before the reconstructed `BOSS_TEXT`. Pinned TASM
+local labels, target raw RET/RETF boundaries, and final natural-C++ PUBDEF
+offsets identify ten true functions there: `boss_reset`, `bb_boss_load`,
+`bb_boss_free`, and `stage1_setup` through `stagex_setup`. Ghidra truncates
+`stage3_setup` and `stagex_setup` and false-splits `stage4_setup`, so those
+entries use the exact-extent manual gate rather than weakening automatic body
+review.
+
+The apparent segment boundary was false. `src/main/boss/boss.cpp` emits one
+0x9B6-byte natural TC4J C++ contribution beginning at target `0x2DF61`,
+containing the recovered 0x677 suffix plus the former 0x33F `BOSS_TEXT`. The
+old `BOSS_TEXT` becomes zero-length and `MAIN_036_TEXT` starts at the unchanged
+address. Focused `gptweb-boss-tu-v21-003` and 65-unit aggregate
+`gptweb-boss-tu-v21-default-001` reproduce all 2,486 bytes and all 60 ordered
+overlapping relocations. `boss_defeat_update` is 468/468 exact with an ordinary
+`bb_boss_free()` call; no inline ASM, codestring, emit, or object patch is used.
+
+This expands the confirmed authored denominator by 2,123 bytes and eleven true
+functions over v20. The current baseline is 15,470/15,474 bytes and 140/141
+functions exact; the only reviewed nonexact authored function remains
+`snd_load`, with four blocked bytes.

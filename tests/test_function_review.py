@@ -709,5 +709,30 @@ cs_base = "0xF000"
                     )
 
 
+class AutomaticManualOverlapTests(unittest.TestCase):
+    def test_writer_rejects_automatic_manual_same_address(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = ["id", "artifact", "address", "file_offset", "size", "boundary_state", "state", "name", "owner_unit", "source", "evidence_ids", "notes"]
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=header)
+                writer.writeheader()
+            out = root / "out.csv"
+            old_root = review.ROOT
+            review.ROOT = root
+            try:
+                with self.assertRaisesRegex(ValueError, "automatic/manual exact address overlap"):
+                    review.write_reviewed_ledger(
+                        out,
+                        [{"address": 0x100, "owner_unit": "owner", "source": "src.cpp"}],
+                        [{"id": "fn-100", "address": 0x100}],
+                    )
+            finally:
+                review.ROOT = old_root
+
+
 if __name__ == "__main__":
     unittest.main()

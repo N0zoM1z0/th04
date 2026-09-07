@@ -34,6 +34,193 @@ build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/midboss.cpp\",\n\t\"th04/hud_hp.cpp\",\n\t\"th04/mb_dft.cpp\",\n"
 build_replacement = "\t\"th04/midboss.cpp\",\n"
 
+[[source_transforms]]
+id = "th04-main035-boss-natural-tu"
+trigger_units = ["th04-main-main035-boss-tu"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+patched_sha256 = "9c5f4ee40a0d82772302152405f5f72ea9d243e5f94ddf9ddd815a4bd42e9ce3"
+
+[[source_transforms.ops]]
+id = "truncate-mugetsu-backdrop-symbol"
+kind = "replace"
+old = "@mugetsu_gengetsu_backdrop_colorfill$qv"
+new = "@MUGETSU_GENGETSU_BACKDROP_COLORF$QV"
+expected_count = 4
+
+[[source_transforms.ops]]
+id = "truncate-mugetsu-backdrop-public"
+kind = "replace"
+old = "public @MUGETSU_GENGETSU_BACKDROP_COLORFILL$QV"
+new = "public @MUGETSU_GENGETSU_BACKDROP_COLORF$QV"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-stage1-setup-call"
+kind = "replace"
+old = "call\tstage1_setup"
+new = "call\t@stage1_setup$qv"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-stage2-setup-call"
+kind = "replace"
+old = "call\tstage2_setup"
+new = "call\t@stage2_setup$qv"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-stage3-setup-call"
+kind = "replace"
+old = "call\tstage3_setup"
+new = "call\t@stage3_setup$qv"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-stage4-setup-call"
+kind = "replace"
+old = "call\tstage4_setup"
+new = "call\t@stage4_setup$qv"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-stage5-setup-call"
+kind = "replace"
+old = "call\tstage5_setup"
+new = "call\t@stage5_setup$qv"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-stage6-setup-call"
+kind = "replace"
+old = "call\tstage6_setup"
+new = "call\t@stage6_setup$qv"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-stagex-setup-call"
+kind = "replace"
+old = "call\tstagex_setup"
+new = "call\t@stagex_setup$qv"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "export-stage-callbacks"
+kind = "insert_before"
+anchor = "main_01 group SLOWDOWN_TEXT"
+text = "; natural C++ stage/boss callback exports\r\npublic @ORANGE_BG_RENDER$QV\r\npublic @ORANGE_FG_RENDER$QV\r\npublic @KURUMI_BG_RENDER$QV\r\npublic @KURUMI_FG_RENDER$QV\r\npublic @ELLY_BG_RENDER$QV\r\npublic @ELLY_FG_RENDER$QV\r\npublic @REIMU_MARISA_BG_RENDER$QV\r\npublic @REIMU_FG_RENDER$QV\r\npublic @MARISA_FG_RENDER$QV\r\npublic @YUUKA5_BG_RENDER$QV\r\npublic @YUUKA5_FG_RENDER$QV\r\npublic @YUUKA6_BG_RENDER$QV\r\npublic @YUUKA6_FG_RENDER$QV\r\npublic @MUGETSU_FG_RENDER$QV\r\npublic @MUGETSU_UPDATE$QV\r\npublic @ORANGE_UPDATE$QV\r\npublic @KURUMI_UPDATE$QV\r\npublic @ELLY_UPDATE$QV\r\npublic @REIMU_UPDATE$QV\r\npublic @MARISA_UPDATE$QV\r\npublic @YUUKA5_UPDATE$QV\r\npublic @YUUKA6_UPDATE$QV\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt00_bmt"
+kind = "insert_before"
+anchor = "aSt00_bmt\tdb "
+text = "public _aSt00_bmt\r\n_aSt00_bmt label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt00bk_cdg"
+kind = "insert_before"
+anchor = "aSt00bk_cdg\tdb "
+text = "public _aSt00bk_cdg\r\n_aSt00bk_cdg label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt00_bb"
+kind = "insert_before"
+anchor = "aSt00_bb\tdb "
+text = "public _aSt00_bb\r\n_aSt00_bb label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt01_bmt"
+kind = "insert_before"
+anchor = "aSt01_bmt\tdb "
+text = "public _aSt01_bmt\r\n_aSt01_bmt label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt01bk_cdg"
+kind = "insert_before"
+anchor = "aSt01bk_cdg\tdb "
+text = "public _aSt01bk_cdg\r\n_aSt01bk_cdg label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt01_bb"
+kind = "insert_before"
+anchor = "aSt01_bb\tdb "
+text = "public _aSt01_bb\r\n_aSt01_bb label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt02_bmt"
+kind = "insert_before"
+anchor = "aSt02_bmt\tdb "
+text = "public _aSt02_bmt\r\n_aSt02_bmt label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt02bk_cdg"
+kind = "insert_before"
+anchor = "aSt02bk_cdg\tdb "
+text = "public _aSt02bk_cdg\r\n_aSt02bk_cdg label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt02_bb"
+kind = "insert_before"
+anchor = "aSt02_bb\tdb "
+text = "public _aSt02_bb\r\n_aSt02_bb label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt03_bmt"
+kind = "insert_before"
+anchor = "aSt03_bmt\tdb "
+text = "public _aSt03_bmt\r\n_aSt03_bmt label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt03bk_cdg"
+kind = "insert_before"
+anchor = "aSt03bk_cdg\tdb "
+text = "public _aSt03bk_cdg\r\n_aSt03bk_cdg label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt03bk2_cdg"
+kind = "insert_before"
+anchor = "aSt03bk2_cdg\tdb "
+text = "public _aSt03bk2_cdg\r\n_aSt03bk2_cdg label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt03_bb"
+kind = "insert_before"
+anchor = "aSt03_bb\tdb "
+text = "public _aSt03_bb\r\n_aSt03_bb label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt04bk_cdg"
+kind = "insert_before"
+anchor = "aSt04bk_cdg\tdb "
+text = "public _aSt04bk_cdg\r\n_aSt04bk_cdg label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt04_bb"
+kind = "insert_before"
+anchor = "aSt04_bb\tdb "
+text = "public _aSt04_bb\r\n_aSt04_bb label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt04_cdg"
+kind = "insert_before"
+anchor = "aSt04_cdg\tdb "
+text = "public _aSt04_cdg\r\n_aSt04_cdg label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-aSt05_bb"
+kind = "insert_before"
+anchor = "aSt05_bb\tdb "
+text = "public _aSt05_bb\r\n_aSt05_bb label byte\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main035-boss-suffix"
+kind = "remove_between"
+removed_sha256 = "bd456ab80e4b69ff0866ca572cb3bdd300afe7f4737e34e00e3020d5c5a66e18"
+start = "public @boss_reset$qv\r\n@boss_reset$qv\tproc near"
+end = "stagex_setup\tendp\r\n"
+replacement = "; natural C++ MAIN_035/BOSS suffix\r\nextrn @boss_reset$qv:near\r\nextrn @BB_BOSS_LOAD$QNXC:near\r\nextrn @bb_boss_free$qv:far\r\nextrn @stage1_setup$qv:far\r\nextrn @stage2_setup$qv:far\r\nextrn @stage3_setup$qv:far\r\nextrn @stage4_setup$qv:far\r\nextrn @stage5_setup$qv:far\r\nextrn @stage6_setup$qv:far\r\nextrn @stagex_setup$qv:far\r\n\r\n"
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"
@@ -405,6 +592,7 @@ object_path = "obj/th04/bullet_u.obj"
 
 [[units]]
 id = "th04-main-boss-prefix"
+default_enabled = false
 repo_source = "src/main/boss/boss_prefix.inl"
 source_mode = "forwarded-fragment"
 patch_path = "th04/main/boss/boss.cpp"
@@ -606,3 +794,10 @@ repo_source = "src/main/midboss/midboss.cpp"
 overlay_path = "th04/midboss.cpp"
 map_module = "th04/midboss.cpp"
 object_path = "obj/th04/midboss.obj"
+
+[[units]]
+id = "th04-main-main035-boss-tu"
+repo_source = "src/main/boss/boss.cpp"
+overlay_path = "th04/boss.cpp"
+map_module = "th04/boss.cpp"
+object_path = "obj/th04/boss.obj"

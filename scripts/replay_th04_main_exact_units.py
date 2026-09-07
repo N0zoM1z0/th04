@@ -391,6 +391,100 @@ def apply_build_replacements(
     return receipts
 
 
+
+def apply_source_transforms(
+    source_root: Path,
+    transforms: list[dict[str, object]],
+    selected_ids: set[str],
+) -> list[dict[str, object]]:
+    """Apply fail-closed text transforms to one pinned scaffold source."""
+
+    receipts: list[dict[str, object]] = []
+    for entry in transforms:
+        triggers = {str(value) for value in entry.get("trigger_units", [])}
+        active = sorted(triggers & selected_ids)
+        if not active:
+            continue
+        transform_id = str(entry["id"])
+        path = source_root / str(entry["patch_path"])
+        original = path.read_bytes()
+        expected_scaffold = str(entry["scaffold_sha256"])
+        if digest_bytes(original) != expected_scaffold:
+            raise RuntimeError(f"{transform_id}: scaffold SHA-256 drift in {entry['patch_path']}")
+        encoding = str(entry.get("encoding", "utf-8"))
+        text = original.decode(encoding)
+        op_receipts: list[dict[str, object]] = []
+        for index, op in enumerate(entry.get("ops", [])):
+            kind = str(op["kind"])
+            op_id = str(op.get("id", f"op-{index}"))
+            if kind == "replace":
+                old = str(op["old"])
+                new = str(op["new"])
+                expected_count = int(op.get("expected_count", 1))
+                count = text.count(old)
+                if count != expected_count:
+                    raise RuntimeError(
+                        f"{transform_id}/{op_id}: expected {expected_count} replacement match(es), got {count}"
+                    )
+                text = text.replace(old, new)
+                op_receipts.append({
+                    "id": op_id, "kind": kind, "count": count,
+                    "old_sha256": digest_bytes(old.encode(encoding)),
+                    "new_sha256": digest_bytes(new.encode(encoding)),
+                })
+            elif kind == "insert_before":
+                anchor_text = str(op["anchor"])
+                insertion = str(op["text"])
+                count = text.count(anchor_text)
+                if count != 1:
+                    raise RuntimeError(
+                        f"{transform_id}/{op_id}: expected one insertion anchor, got {count}"
+                    )
+                text = text.replace(anchor_text, insertion + anchor_text, 1)
+                op_receipts.append({
+                    "id": op_id, "kind": kind,
+                    "anchor_sha256": digest_bytes(anchor_text.encode(encoding)),
+                    "text_sha256": digest_bytes(insertion.encode(encoding)),
+                })
+            elif kind == "remove_between":
+                start_anchor = str(op["start"])
+                end_anchor = str(op["end"])
+                if text.count(start_anchor) != 1 or text.count(end_anchor) != 1:
+                    raise RuntimeError(f"{transform_id}/{op_id}: source-span anchors are not unique")
+                start = text.index(start_anchor)
+                end = text.index(end_anchor, start) + len(end_anchor)
+                removed = text[start:end]
+                expected_removed = op.get("removed_sha256")
+                if expected_removed is not None and digest_bytes(removed.encode(encoding)) != str(expected_removed):
+                    raise RuntimeError(f"{transform_id}/{op_id}: removed source-span SHA-256 mismatch")
+                replacement = str(op.get("replacement", ""))
+                text = text[:start] + replacement + text[end:]
+                op_receipts.append({
+                    "id": op_id, "kind": kind,
+                    "removed_size": len(removed.encode(encoding)),
+                    "removed_sha256": digest_bytes(removed.encode(encoding)),
+                    "replacement_sha256": digest_bytes(replacement.encode(encoding)),
+                })
+            else:
+                raise RuntimeError(f"{transform_id}/{op_id}: unknown source transform kind {kind!r}")
+        patched = text.encode(encoding)
+        expected_patched = entry.get("patched_sha256")
+        if expected_patched is not None and digest_bytes(patched) != str(expected_patched):
+            raise RuntimeError(f"{transform_id}: patched scaffold SHA-256 mismatch")
+        stat = path.stat()
+        path.write_bytes(patched)
+        os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        receipts.append({
+            "id": transform_id,
+            "trigger_units": active,
+            "patch_path": str(entry["patch_path"]),
+            "encoding": encoding,
+            "scaffold_sha256": expected_scaffold,
+            "patched_sha256": digest_bytes(patched),
+            "ops": op_receipts,
+        })
+    return receipts
+
 def build(source: Path, log: Path) -> None:
     prefix = ROOT / ".analysis" / "toolchain" / "wineprefix"
     environment = os.environ.copy()
@@ -487,6 +581,7 @@ def main() -> int:
     splits = list(config.get("splits", []))
     build_inserts = list(config.get("build_inserts", []))
     build_replacements = list(config.get("build_replacements", []))
+    source_transforms = list(config.get("source_transforms", []))
     if args.unit:
         wanted = set(args.unit)
         entries = [entry for entry in entries if entry["id"] in wanted]
@@ -538,6 +633,9 @@ def main() -> int:
         build_replacement_receipts = apply_build_replacements(
             source, build_replacements, selected_ids
         )
+        source_transform_receipts = apply_source_transforms(
+            source, source_transforms, selected_ids
+        )
         log = run_root / "build.log"
         build(source, log)
         candidate_path, units = inspect_build(source, entries, ledger, target_mz)
@@ -550,6 +648,7 @@ def main() -> int:
                 "source_splits": split_receipts,
                 "build_inserts": build_insert_receipts,
                 "build_replacements": build_replacement_receipts,
+                "source_transforms": source_transform_receipts,
                 "build_log_sha256": digest_file(log),
                 "candidate_main_sha256": digest_file(candidate_path),
                 "units": units,

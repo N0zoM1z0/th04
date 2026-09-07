@@ -258,5 +258,53 @@ class SourceReplacementTests(unittest.TestCase):
                     replay.overlay_sources(source, [entry])
 
 
+class SourceTransformTests(unittest.TestCase):
+    def fixture(self, root: Path) -> tuple[Path, dict[str, object], bytes]:
+        source = root / "source"
+        source.mkdir()
+        original = b"head\ncall old\nbegin\nraw\x93line\nend\ndata db 1\n"
+        (source / "impl.asm").write_bytes(original)
+        entry: dict[str, object] = {
+            "id": "fixture-transform",
+            "trigger_units": ["unit-a"],
+            "patch_path": "impl.asm",
+            "encoding": "latin-1",
+            "scaffold_sha256": replay.digest_bytes(original),
+            "ops": [
+                {"id": "rename", "kind": "replace", "old": "call old", "new": "call new"},
+                {"id": "export", "kind": "insert_before", "anchor": "data db 1\n", "text": "public _data\n_data label byte\n"},
+                {"id": "remove", "kind": "remove_between", "start": "begin\n", "end": "end\n", "replacement": "extrn natural:near\n"},
+            ],
+        }
+        return source, entry, original
+
+    def test_source_transform_is_scaffold_and_anchor_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source, entry, original = self.fixture(Path(temporary))
+            receipts = replay.apply_source_transforms(source, [entry], {"unit-a"})
+            expected = b"head\ncall new\nextrn natural:near\npublic _data\n_data label byte\ndata db 1\n"
+            self.assertEqual((source / "impl.asm").read_bytes(), expected)
+            self.assertEqual(receipts[0]["scaffold_sha256"], replay.digest_bytes(original))
+            self.assertEqual(receipts[0]["patched_sha256"], replay.digest_bytes(expected))
+            self.assertEqual(len(receipts[0]["ops"]), 3)
+
+    def test_source_transform_rejects_scaffold_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source, entry, _ = self.fixture(Path(temporary))
+            (source / "impl.asm").write_bytes(b"changed\n")
+            with self.assertRaisesRegex(RuntimeError, "scaffold SHA-256 drift"):
+                replay.apply_source_transforms(source, [entry], {"unit-a"})
+
+    def test_source_transform_rejects_ambiguous_anchor(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source, entry, _ = self.fixture(Path(temporary))
+            path = source / "impl.asm"
+            original = path.read_bytes() + b"data db 1\n"
+            path.write_bytes(original)
+            entry["scaffold_sha256"] = replay.digest_bytes(original)
+            with self.assertRaisesRegex(RuntimeError, "expected one insertion anchor"):
+                replay.apply_source_transforms(source, [entry], {"unit-a"})
+
+
 if __name__ == "__main__":
     unittest.main()
