@@ -576,3 +576,32 @@ id = "th04-main-fn-2a0d1"
 address = "0x2A0D1"
 evidence_id = "ev-th04-main-safetycircle-boundary-v23"
 reason = "Explicitly admit the target-called no-public internal safety-circle initializer after exact-owner, truncated-Ghidra-entry, raw-RET, next-internal-entry, and near-call-anchor review."
+
+[[provisional]]
+address = "0x2A0D1"
+reason = "Reconstruction-generated TLINK public only; original target boundary remains reviewed through internal target anchors, not the generated symbol."
+
+[[provisional]]
+address = "0x2A110"
+reason = "Reconstruction-generated TLINK public only; exclude from automatic public-based review and use target call/raw/TASM boundary evidence."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-2a110"
+address = "0x2A110"
+file_offset = "0x1B910"
+size = "0x2B3"
+name = "yuuka6_entities_update()"
+owner_unit = "th04-main-chasecrosses-add"
+evidence_id = "ev-th04-main-yuuka6-entities-boundary-v24"
+reason = "Target Ghidra starts the 0x2A110 function but stops at 0x2A3C0, two bytes before the raw RET at 0x2A3C2. Pinned TASM local PROC inventory places the next true function at 0x2A3C3; the first eight target bytes there are independently SHA-attested. Target near CALL at 0x2B8F9 resolves exactly to 0x2A110, and the complete 0x2B3 extent lies inside the exact 0x33C natural-C++ MAIN_034 owner."
+next_target_address = "0x2A3C3"
+next_target_prefix_size = "0x8"
+next_target_prefix_sha256 = "7af4982ddb7dc5c08917fc2803af22307e3636817c8928ce01e98600167366b8"
+call_site_address = "0x2B8F9"
+generated_public = "_yuuka6_entities_update"
+
+[[new_exact]]
+id = "th04-main-fn-2a110"
+address = "0x2A110"
+evidence_id = "ev-th04-main-yuuka6-entities-boundary-v24"
+reason = "Explicitly admit the target-called internal Yuuka6 entity/safety-circle update after exact-owner, bounded-Ghidra-entry, raw-RET, target-attested next-entry prefix, and near-call-anchor review."

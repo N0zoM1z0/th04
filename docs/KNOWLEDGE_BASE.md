@@ -386,3 +386,21 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   writes +0x18. Reducing that candidate field to `unused_3[4]` is both structurally
   required by the target and the source shape that makes TC4J emit the exact
   63-byte function.
+
+### TH04 v24: large target-only C++ and target-attested next boundaries
+
+- Do not require a ReC98 decompilation candidate before attempting authored C++.
+  `yuuka6_entities_update()` was still ASM-only, yet its 691-byte raw code had a
+  normal compiler fingerprint. Target semantics plus existing typed APIs were
+  enough for TC86 to reproduce the complete instruction sequence and final linked
+  bytes.
+- Borland local declaration order is a binary input. If every instruction already
+  matches and only BP-relative local displacements differ, reorder natural C/C++
+  declarations before considering any lower-level workaround. v24 removed 16 linked
+  byte differences solely by moving `length, top, angle, angle_delta` into the target
+  allocation order.
+- If Ghidra has the current function entry but completely misses the next true
+  function, an internal boundary can still be reviewed fail-closed using exact-owner
+  containment, full raw terminal decode, a target call to the current entry, a pinned
+  TASM local `PROC` boundary, and a SHA-attested prefix of target bytes at the next
+  address. Reconstruction-generated TLINK publics remain plumbing, not target evidence.

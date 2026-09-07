@@ -270,6 +270,21 @@ old = "call\tyuuka6_1A0D1"
 new = "call\t_yuuka6_safetycircle_add"
 expected_count = 1
 
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-entities-update"
+kind = "remove_between"
+removed_sha256 = "50c0e35077e011a0da825d3e46250f9c1e7d7c12b7c9d5e4bb95fd6d6f75d495"
+start = "yuuka6_1A110\tproc near"
+end = "yuuka6_1A110\tendp\r\n"
+replacement = "extrn _yuuka6_entities_update:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-yuuka6-entities-call"
+kind = "replace"
+old = "call\tyuuka6_1A110"
+new = "call\t_yuuka6_entities_update"
+expected_count = 1
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"

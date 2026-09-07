@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -372,14 +373,44 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
         if data.get("is_thunk") != "false" or data.get("is_external") != "false":
             raise ValueError(f"internal-call exact address 0x{address:X} is thunk/external")
 
-        next_internal = int(str(override["next_internal_address"]), 0)
-        if address + size != next_internal or next_internal not in functions:
-            raise ValueError(f"internal-call exact address 0x{address:X} next-internal boundary mismatch")
-        next_data = metadata.get(next_internal)
-        if next_data is None or int(next_data["body_min"], 16) != next_internal:
-            raise ValueError(f"internal-call exact address 0x{address:X} next internal entry lacks Ghidra metadata")
-        if next_data.get("is_thunk") != "false" or next_data.get("is_external") != "false":
-            raise ValueError(f"internal-call exact address 0x{address:X} next internal entry is thunk/external")
+        next_internal_raw = override.get("next_internal_address")
+        next_target_raw = override.get("next_target_address")
+        if (next_internal_raw is None) == (next_target_raw is None):
+            raise ValueError(
+                f"internal-call exact address 0x{address:X} requires exactly one next-boundary mode"
+            )
+        if next_internal_raw is not None:
+            next_boundary = int(str(next_internal_raw), 0)
+            if address + size != next_boundary or next_boundary not in functions:
+                raise ValueError(f"internal-call exact address 0x{address:X} next-internal boundary mismatch")
+            next_data = metadata.get(next_boundary)
+            if next_data is None or int(next_data["body_min"], 16) != next_boundary:
+                raise ValueError(f"internal-call exact address 0x{address:X} next internal entry lacks Ghidra metadata")
+            if next_data.get("is_thunk") != "false" or next_data.get("is_external") != "false":
+                raise ValueError(f"internal-call exact address 0x{address:X} next internal entry is thunk/external")
+            boundary_mode = f"next internal Ghidra entry 0x{next_boundary:X}"
+        else:
+            next_boundary = int(str(next_target_raw), 0)
+            if address + size != next_boundary:
+                raise ValueError(f"internal-call exact address 0x{address:X} next-target boundary mismatch")
+            prefix_size = int(str(override.get("next_target_prefix_size", "0")), 0)
+            expected_prefix_sha = str(override.get("next_target_prefix_sha256", ""))
+            next_offset = file_offset_for(next_boundary)
+            if prefix_size <= 0 or not expected_prefix_sha:
+                raise ValueError(f"internal-call exact address 0x{address:X} lacks next-target prefix attestation")
+            if next_offset < 0 or next_offset + prefix_size > len(raw_target):
+                raise ValueError(f"internal-call exact address 0x{address:X} next-target prefix escapes target")
+            observed_prefix_sha = hashlib.sha256(
+                raw_target[next_offset:next_offset + prefix_size]
+            ).hexdigest()
+            if observed_prefix_sha != expected_prefix_sha:
+                raise ValueError(
+                    f"internal-call exact address 0x{address:X} next-target prefix mismatch"
+                )
+            boundary_mode = (
+                f"target-attested next entry 0x{next_boundary:X} "
+                f"({prefix_size}-byte prefix SHA-256)"
+            )
 
         call_site = int(str(override["call_site_address"]), 0)
         call_offset = file_offset_for(call_site)
@@ -421,7 +452,7 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
             "reason": str(override["reason"]),
             "decode": decoded,
             "switch_review": None,
-            "boundary_mode": f"next internal Ghidra entry 0x{next_internal:X}",
+            "boundary_mode": boundary_mode,
             "call_site_address": f"0x{call_site:X}",
             "resolved_call_target": f"0x{resolved_call:X}",
         })

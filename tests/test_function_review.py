@@ -846,6 +846,53 @@ generated_public = "_generated"
                     )
 
 
+
+    def test_internal_call_exact_accepts_target_attested_next_entry(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            data = bytearray(0x1820)
+            data[0x1800:0x1803] = b"\x90\x90\xC3"
+            data[0x1803:0x180B] = b"\x55\x8B\xEC\x90\x90\x90\x90\x90"
+            data[0x1810:0x1813] = b"\xE8\xED\xFF"
+            import hashlib
+            prefix_sha = hashlib.sha256(bytes(data[0x1803:0x180B])).hexdigest()
+            policy.write_text(f"""[[reviewed_exact_internal_call]]
+id = "fn-internal-call-target"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x3"
+name = "internal_call_target_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-internal-call-target"
+reason = "synthetic target-attested next boundary"
+next_target_address = "0x10003"
+next_target_prefix_size = "0x8"
+next_target_prefix_sha256 = "{prefix_sha}"
+call_site_address = "0x10010"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10020, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            functions = {0x10000: "FUN_10000"}
+            metadata = {0x10000: {"address": "0x10000", "body_min": "0x10000",
+                                  "body_max": "0x10000", "body_addresses": "1",
+                                  "is_thunk": "false", "is_external": "false"}}
+            decoded = {"instruction_count": 3, "instruction_addresses": [0x10000,0x10001,0x10002],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10003"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=dict(decoded)):
+                accepted = review.reviewed_exact_internal_call_reviews(functions, metadata, {}, target)
+                self.assertEqual(len(accepted), 1)
+                self.assertIn("target-attested next entry 0x10003", accepted[0]["boundary_mode"])
+                policy.write_text(policy.read_text().replace(prefix_sha, "0" * 64), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "next-target prefix mismatch"):
+                    review.reviewed_exact_internal_call_reviews(functions, metadata, {}, target)
+
+
 class AutomaticManualOverlapTests(unittest.TestCase):
     def test_writer_rejects_automatic_manual_same_address(self) -> None:
         with TemporaryDirectory() as temporary:

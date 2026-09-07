@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 15,607 / 15,611 (99.974377%) exact, and reviewed authored functions are 142 / 143 (99.300699%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 16,298 / 16,302 (99.975463%) exact, and reviewed authored functions are 143 / 144 (99.305556%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,11 +115,11 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-safetycircle-v23-precommit-004` passes all 66 current default-selected
+  `gptweb-yuuka6-v24-precommit-001` passes all 66 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 15,611 bytes across 60
-  reviewed authored units/regions; 15,607 bytes across 57 units/regions are exact.
+- The current reviewed authored byte denominator is 16,302 bytes across 60
+  reviewed authored units/regions; 16,298 bytes across 57 units/regions are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -180,6 +180,25 @@ deterministic TH04 runtime scenario has been authored.
   `gptweb-safetycircle-v23-002` and 66-unit aggregate
   `gptweb-safetycircle-v23-precommit-004` reproduce the complete 137-byte prefix
   and its ordered relocation overlap exactly.
+
+- v24 extends that same `MAIN_034_TEXT` natural-C++ prefix from 0x89 to
+  **0x33C bytes** by recovering the adjacent 691-byte internal
+  `yuuka6_entities_update()` at target `0x2A110..0x2A3C2`. ReC98 has no
+  decompiled implementation. Target raw/TASM semantics plus existing typed
+  vector, shot, spark, item, and bullet APIs reproduce the entire gameplay
+  routine naturally. TC86 emitted the exact 0x2B3 function size and instruction
+  sequence; its only object-layer difference was the expected far call to
+  `sparks_add_random`, and `#pragma samecodeseg` plus normal TLINK optimization
+  produces the target five-byte `NOP; PUSH CS; CALL near` bridge. The last 16
+  linked byte differences came solely from BP-relative local-slot offsets and
+  disappeared by reordering four C++ local declarations. Ghidra starts the
+  function but reports only 372 body addresses and stops at `0x2A3C0`; it also
+  misses the next true TASM function at `0x2A3C3`. The extended
+  `reviewed_exact_internal_call` gate therefore attests that next target entry
+  by an 8-byte target prefix SHA, while still requiring the current Ghidra
+  entry, full raw `RET`, exact owner, and target near-call `0x2B8F9 -> 0x2A110`.
+  Final-source focused `gptweb-yuuka6-update-v24-002` and 66-unit aggregate
+  `gptweb-yuuka6-v24-precommit-001` pass all exactness gates.
 - `snd_mmd_resident` is now a full **47-byte exact pure-C function** at
   target `0x233AC..0x233DA` / TLINK `130E:02CC`. Removing `-WX` from the
   maintained TH04 wrapper is the decisive codegen fix: the same natural `__es`
@@ -267,7 +286,7 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-safetycircle-v23-precommit-004`
+- The latest aggregate cold replay `gptweb-yuuka6-v24-precommit-001`
   passed all 66 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
@@ -407,5 +426,5 @@ overlapping relocations. `boss_defeat_update` is 468/468 exact with an ordinary
 
 This expands the confirmed authored denominator by 2,123 bytes and eleven true
 functions over v20. The historical v21 baseline was 15,470/15,474 bytes and 140/141
-functions exact; v22 superseded it at 15,544/15,548 bytes and 141/142 functions exact; v23 now reaches 15,607/15,611 bytes and 142/143 functions exact; the only reviewed nonexact authored function remains
+functions exact; v22 superseded it at 15,544/15,548 bytes and 141/142 functions exact; v23 reached 15,607/15,611 bytes and 142/143 functions exact; v24 now reaches 16,298/16,302 bytes and 143/144 functions exact; the only reviewed nonexact authored function remains
 `snd_load`, with four blocked bytes.

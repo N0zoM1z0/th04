@@ -586,3 +586,18 @@ to the target offset while preserving the entire code skeleton. Full linking the
 reproduces all 63 bytes. This is a reminder that matching high-level semantics or
 function size does not validate a candidate structure: verify every target member
 offset that affects code generation.
+
+## v24: BP-local declaration order and a large target-only C++ positive control
+
+`yuuka6_entities_update` is a 0x2B3-byte positive control derived from target raw
+semantics rather than a ReC98 C++ implementation. After natural C++ reached the
+correct function size and mnemonic sequence, final linking still differed at 16
+bytes. Every difference was the displacement of one of four BP-relative locals.
+TC86 had allocated declarations in source order as BP-1/-2/-4/-6; reversing the
+type/order to `length, top, angle, angle_delta` produced target BP-2/-4/-5/-6 and
+removed all 16 differences. No instruction-selection change was involved.
+
+The only remaining object-level mnemonic difference was `CALL FAR` to
+`sparks_add_random`. The existing `samecodeseg`/TLINK control applies unchanged:
+TLINK preserves the five-byte footprint as `NOP; PUSH CS; CALL near`, yielding an
+exact linked 0x33C MAIN_034 prefix.

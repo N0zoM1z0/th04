@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **15,607 / 15,611 = 99.974377% exact**;
-- authored functions: **142 / 143 = 99.300699% exact**;
+- authored C/C++ bytes: **16,298 / 16,302 = 99.975463% exact**;
+- authored functions: **143 / 144 = 99.305556% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,7 +44,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-safetycircle-v23-precommit-004/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-v24-precommit-001/receipt.json`.
 It passes all 66 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
@@ -731,3 +731,47 @@ treated as target boundary evidence.
 The v23 reviewed baseline is **15,607 / 15,611 authored C/C++ bytes exact
 (99.974377%)** and **142 / 143 reviewed functions exact (99.300699%)**.
 `snd_load` remains the sole reviewed nonexact function, with four blocked bytes.
+
+## v24: recover the 691-byte target-only Yuuka6 update
+
+The next true TASM `PROC` after the v23 safety-circle initializer starts at
+`0x2A110` / file `0x1B910`. Pinned TASM local offsets put the following true
+function at `0x2A3C3`, so this routine occupies exactly **0x2B3 = 691 bytes**.
+ReC98 does not contain a decompiled implementation. Raw target code has no
+`REP`/`LOOP`/segment-register/port-I/O fingerprint: it is ordinary gameplay
+logic over chase crosses, the safety circle, shots, sparks, items, score, and
+bullet templates. Existing typed APIs plus target-observed constants are
+sufficient to express it as natural C++.
+
+Compiler archaeology converged tightly. TC86 immediately emitted the exact
+0x2B3 size and full instruction sequence apart from two source-shape details.
+First, `sparks_add_random` remained `CALL FAR` in OMF; adding the already-proven
+`samecodeseg` frame hint lets normal TLINK rewrite that five-byte call to the
+target `NOP; PUSH CS; CALL near`. Second, the linked artifact differed at only
+16 bytes, all BP-relative local displacements. TC86 allocates these locals in
+declaration order. Reordering the four declarations to `length, top, angle,
+angle_delta` produced target BP-2/-4/-5/-6 slots and removed every remaining
+byte difference without low-level code.
+
+With the v24 source transform removing the old `yuuka6_1A110` ASM `PROC` and
+retargeting its single residual caller, `src/main/boss/chasecrosses_add.cpp` now
+contributes exactly **0x33C bytes** at `13A9:65F7`; residual `th04_main.asm`
+resumes at `13A9:6933`. Final-source focused replay
+`gptweb-yuuka6-update-v24-002` and 66-unit aggregate
+`gptweb-yuuka6-v24-precommit-001` reproduce the full prefix, seven ordered
+overlapping relocations, deterministic TC86 OMF, and the unchanged zero-code
+layout anchor. The maintained master.lib dependency goes through the checked-in
+`compat/rec98` forwarding layer.
+
+Function review remains independent of generated symbols. Ghidra creates the
+entry at `0x2A110` but reports only 372 body addresses and stops at `0x2A3C0`,
+two bytes before the target `RET`. Ghidra also has no entry at the true next
+TASM function `0x2A3C3`. Target near call `0x2B8F9` resolves to `0x2A110`, raw
+decode tiles through `RET@0x2A3C2`, and the first eight target bytes at the next
+entry hash to `7af4982d...`. `reviewed_exact_internal_call` now supports this
+fail-closed target-attested next-boundary mode. Generated publics are marked
+provisional and excluded from automatic public-based review.
+
+The v24 reviewed baseline is **16,298 / 16,302 authored C/C++ bytes exact
+(99.975463%)** and **143 / 144 reviewed functions exact (99.305556%)**.
+`snd_load` remains the sole reviewed nonexact function with four blocked bytes.
