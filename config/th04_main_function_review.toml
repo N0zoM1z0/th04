@@ -903,3 +903,127 @@ address = "0x2A8A7"
 name = "yuuka6_anim_parasol_shield()"
 evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
 reason = "New exact target-driven animation function admitted through exact owner end with fully-accounted trailing switch data."
+
+# v30: target-driven Yuuka6 gather-pattern helper family. Four functions have
+# Ghidra entries but own trailing compiler switch tables; the shared two-gather
+# helper at 0x2A9B5 is entirely missed by Ghidra and has no target/TLINK public.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a907"
+address = "0x2A907"
+file_offset = "0x1C107"
+size = "0xAE"
+decode_size = "0x9E"
+name = "y6_gather_side()"
+owner_unit = "th04-main-yuuka6-gather-patterns"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "Pinned TASM starts this function at 0x2A907 and the next true PROC at 0x2A9B5. Raw code ends in RET at 0x2A9A4; compare values [0x10,0x12,0x14,0x20] and four near jump targets fill all remaining bytes through the exact target/TASM end."
+compare_table_address = "0x2A9A5"
+compare_table_count = 4
+compare_table_values = [16, 18, 20, 32]
+jump_table_address = "0x2A9AD"
+jump_table_count = 4
+cs_base = "0x23A90"
+
+[[reviewed_exact_no_ghidra_internal_call]]
+id = "th04-main-fn-2a9b5"
+address = "0x2A9B5"
+file_offset = "0x1C1B5"
+size = "0x15"
+name = "y6_gather_pair()"
+owner_unit = "th04-main-yuuka6-gather-patterns"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "Ghidra has no entry at 0x2A9B5. Pinned TASM and target raw give a complete 0x15-byte helper through RET at 0x2A9C9; the next true Ghidra/TASM entry starts at 0x2A9CA, and target near CALL at 0x2AA14 resolves exactly to 0x2A9B5. The helper lies wholly inside the exact 0x256 natural-C++ owner."
+next_internal_address = "0x2A9CA"
+call_site_address = "0x2AA14"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a9ca"
+address = "0x2A9CA"
+file_offset = "0x1C1CA"
+size = "0x7B"
+decode_size = "0x6A"
+name = "y6_gather_center()"
+owner_unit = "th04-main-yuuka6-gather-patterns"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "Raw code ends in RET at 0x2AA33; one zero alignment byte, compare values [0x30,0x32,0x34,0x40], and four near jump targets exactly fill the function-owned compiler extent through target/TASM entry 0x2AA45."
+table_metadata_address = "0x2AA34"
+table_metadata_value = "0x00"
+compare_table_address = "0x2AA35"
+compare_table_count = 4
+compare_table_values = [48, 50, 52, 64]
+jump_table_address = "0x2AA3D"
+jump_table_count = 4
+cs_base = "0x23A90"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2aa45"
+address = "0x2AA45"
+file_offset = "0x1C245"
+size = "0xA0"
+decode_size = "0x8F"
+name = "y6_gather_dual()"
+owner_unit = "th04-main-yuuka6-gather-patterns"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "Raw code ends in RET at 0x2AAD3; one zero alignment byte, compare values [0x20,0x22,0x24,0x30], and four near jump targets account for every trailing byte through target/TASM entry 0x2AAE5."
+table_metadata_address = "0x2AAD4"
+table_metadata_value = "0x00"
+compare_table_address = "0x2AAD5"
+compare_table_count = 4
+compare_table_values = [32, 34, 36, 48]
+jump_table_address = "0x2AADD"
+jump_table_count = 4
+cs_base = "0x23A90"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2aae5"
+address = "0x2AAE5"
+file_offset = "0x1C2E5"
+size = "0x78"
+decode_size = "0x67"
+name = "y6_gather_self()"
+owner_unit = "th04-main-yuuka6-gather-patterns"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "Raw code ends in RET at 0x2AB4B; one zero alignment byte, compare values [0x10,0x12,0x14,0x20], and four near jump targets exactly fill the function-owned extent through the next target/TASM function at 0x2AB5D."
+table_metadata_address = "0x2AB4C"
+table_metadata_value = "0x00"
+compare_table_address = "0x2AB4D"
+compare_table_count = 4
+compare_table_values = [16, 18, 20, 32]
+jump_table_address = "0x2AB55"
+jump_table_count = 4
+cs_base = "0x23A90"
+
+[[new_exact]]
+id = "th04-main-fn-2a907"
+address = "0x2A907"
+name = "y6_gather_side()"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "New target-driven exact function admitted with complete compare/jump-table extent."
+
+[[new_exact]]
+id = "th04-main-fn-2a9b5"
+address = "0x2A9B5"
+name = "y6_gather_pair()"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "Explicitly admit the target-called no-Ghidra shared gather helper after exact-owner, raw-RET, next-Ghidra-entry, and target near-call review."
+
+[[new_exact]]
+id = "th04-main-fn-2a9ca"
+address = "0x2A9CA"
+name = "y6_gather_center()"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "New target-driven exact function admitted with alignment plus complete compare/jump-table extent."
+
+[[new_exact]]
+id = "th04-main-fn-2aa45"
+address = "0x2AA45"
+name = "y6_gather_dual()"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "New target-driven exact function admitted with alignment plus complete compare/jump-table extent."
+
+[[new_exact]]
+id = "th04-main-fn-2aae5"
+address = "0x2AAE5"
+name = "y6_gather_self()"
+evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
+reason = "New target-driven exact function admitted with alignment plus complete compare/jump-table extent."

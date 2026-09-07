@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 17,646 / 17,650 (99.977337%) exact, and reviewed authored functions are 155 / 156 (99.358974%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 18,244 / 18,248 (99.978080%) exact, and reviewed authored functions are 160 / 161 (99.378882%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,10 +115,10 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-yuuka6-anims-v29-final-web-001` passes all 67 current default-selected
+  `gptweb-yuuka6-gather5-v30-precommit-web-001` passes all 68 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 17,650 bytes; 17,646 bytes are exact.
+- The current reviewed authored byte denominator is 18,248 bytes; 18,244 bytes are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -256,6 +256,17 @@ deterministic TH04 runtime scenario has been authored.
   67-unit aggregate `gptweb-yuuka6-anims-v29-final-web-001` pass both cold
   materializations. The reviewed baseline becomes **17,646 / 17,650 bytes**
   and **155 / 156 functions exact**.
+- v30 extends the reviewed `MAIN_034_TEXT` frontier by another **0x256 = 598
+  bytes** at target `0x2A907..0x2AB5C` as five natural-C++ Yuuka6 gather
+  helpers. This range was not exposed by the old linker-public-only queue:
+  pinned TASM contains five local `PROC` starts, Ghidra recognizes only four,
+  and it omits all four trailing TC86 switch tables. The fifth helper at
+  `0x2A9B5` has no Ghidra entry or TLINK public; target near call `0x2AA14 ->
+  0x2A9B5`, raw `RET`, and next Ghidra/TASM entry `0x2A9CA` close it
+  independently. Focused `gptweb-yuuka6-gather5-v30-web-001` and 68-unit
+  aggregate `gptweb-yuuka6-gather5-v30-precommit-web-001` are raw/map/ordered-
+  relocation/OMF/determinism exact twice. The reviewed baseline is now
+  **18,244 / 18,248 bytes** and **160 / 161 functions exact**.
 
 - `snd_mmd_resident` is now a full **47-byte exact pure-C function** at
   target `0x233AC..0x233DA` / TLINK `130E:02CC`. Removing `-WX` from the
@@ -328,14 +339,13 @@ deterministic TH04 runtime scenario has been authored.
   stores near-function offset `0x2090`; under `MAIN_01` CS base `0x1AAF0` that
   resolves exactly to `0x1CB80`. The checked-in internal-function gate requires
   all of those surfaces before denominator admission.
-- Exhaustively comparing every remaining C/C++ TLINK public interval against the
-  function ledger leaves 14 real routing candidates. Ten are raw-identical in
-  the current candidate but still rely on low-level/inline-ASM source shapes or
-  a failed required Oracle (notably `dialog_op`/`dialog_run` relocation order);
-  four retain raw differences. The exact-owner internal Ghidra audit has only
-  four leftovers, all switch/basic-block false splits inside already-reviewed
-  functions. This 14-interval list, not the historical ReC98 module list, is the
-  current function-boundary work queue.
+- The earlier linker-public-only sweep left 14 routing candidates, but v30 proves
+  that list is **not an exhaustive authored-function queue**. Immediately after
+  the former exact frontier at `0x2A907`, pinned TASM local `PROC` inventory
+  exposes a long Yuuka6/Elly family that is invisible to a public-only sweep;
+  Ghidra also misses some entries entirely. Keep the 14 intervals only as a
+  public-symbol worklist. Candidate expansion must additionally scan target raw
+  control flow and local TASM boundaries beyond every exact frontier.
 - `snd_load` now has three additional exact natural-source subspans. Identity
   fragments recover the DOS-open and driver-dispatch/read sequences. The
   parameter reload uses `_AX = *reinterpret_cast<snd_load_func_t near *>(&func);`;
@@ -344,15 +354,15 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-yuuka6-anims-v29-final-web-001`
-  passed all 67 current default exact-replay owners in two isolated
+- The latest aggregate cold replay `gptweb-yuuka6-gather5-v30-precommit-web-001`
+  passed all 68 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
   from byte ownership. The current review accepts 114 strict automatic functions
-  plus 41 replayable manual exact reviews. A fresh
+  plus 46 replayable manual exact reviews. A fresh
   TLINK-public audit found eight real exact-owner functions that the target
   Ghidra inventory had missed or misgrouped. `reviewed_exact_no_ghidra` admits
   them only with exact authored ownership, a matching TLINK public, gap-free raw
@@ -369,7 +379,7 @@ deterministic TH04 runtime scenario has been authored.
   `boss_defeat_update` extents additionally demonstrate that a configured manual
   reviewed extent must shadow any shorter same-address Ghidra automatic claim;
   the writer rejects residual automatic/manual overlap. `snd_load` is the sole
-  reviewed nonexact function, giving 140/141 exact.
+  reviewed nonexact function, giving 160/161 exact.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain
@@ -484,7 +494,7 @@ overlapping relocations. `boss_defeat_update` is 468/468 exact with an ordinary
 
 This expands the confirmed authored denominator by 2,123 bytes and eleven true
 functions over v20. The historical v21 baseline was 15,470/15,474 bytes and 140/141
-functions exact; v22 superseded it at 15,544/15,548 bytes and 141/142 functions exact; v23 reached 15,607/15,611 bytes and 142/143 functions exact; v24 reached 16,298/16,302 bytes and 143/144 functions exact; v25 reached 16,416/16,420 bytes and 144/145 functions exact; v26 reached 16,527/16,531 bytes and 145/146 functions exact; v27 reached 16,618/16,622 bytes and 146/147 functions exact; v28 reached 16,676/16,680 bytes and 147/148 functions exact; v29 now reaches 17,646/17,650 bytes and 155/156 functions exact; the only reviewed nonexact authored function remains
+functions exact; v22 superseded it at 15,544/15,548 bytes and 141/142 functions exact; v23 reached 15,607/15,611 bytes and 142/143 functions exact; v24 reached 16,298/16,302 bytes and 143/144 functions exact; v25 reached 16,416/16,420 bytes and 144/145 functions exact; v26 reached 16,527/16,531 bytes and 145/146 functions exact; v27 reached 16,618/16,622 bytes and 146/147 functions exact; v28 reached 16,676/16,680 bytes and 147/148 functions exact; v29 reached 17,646/17,650 bytes and 155/156 functions exact; v30 reaches 18,244/18,248 bytes and 160/161 functions exact; the only reviewed nonexact authored function remains
 `snd_load`, with four blocked bytes.
 
 
@@ -510,3 +520,35 @@ injection. Focused `gptweb-yuuka6-anims-v29-004` and 67-unit aggregate
 `gptweb-yuuka6-anims-v29-final-web-001` reproduce all 970 bytes, exact map
 placement, relocation overlap, and deterministic valid OMF. Eight functions are
 newly reviewed exact; `snd_load` remains the sole reviewed nonexact function.
+
+
+### Yuuka6 gather-pattern/local-PROC recovery (v30)
+
+The first post-v29 target-first rescreen invalidated the assumption that linker
+publics or Ghidra entries enumerate authored functions. Pinned `MAIN_034_TEXT`
+TASM starts five consecutive local procedures at `0x2A907`, `0x2A9B5`,
+`0x2A9CA`, `0x2AA45`, and `0x2AAE5`. Their target extents are respectively
+`0xAE`, `0x15`, `0x7B`, `0xA0`, and `0x78`, tiling `0x2A907..0x2AB5C` with no
+gap. Four are sparse TC86 switches whose compare/jump tables live after the
+final `RET`; Ghidra owns only the CFG code. The `0x15` shared gather helper is
+missed by Ghidra entirely and has no TLINK public, but raw call `0x2AA14` resolves
+to it and the next complete Ghidra/TASM entry is exactly `0x2A9CA`.
+
+`src/main/boss/yuuka6_gather_patterns.cpp` is ordinary C++ with file-start
+`#pragma option -a`; it uses the typed gather/circle APIs and source-level shared
+control-flow labels only. No inline ASM, codestring, `__emit__`, object patch or
+target-byte array is present. TC86 contributes exactly `0x256` bytes at
+`13A9:6E77`, followed by residual ASM at `13A9:70CD`. Two independent focused
+cold builds and the 68-unit aggregate reproduce the target slice SHA
+`0735b992...f82ac`, all ten ordered overlapping MZ relocations, and normalized
+OMF SHA `dde9097f...39c88`. Function review admits all five, raising the reviewed
+baseline to **18,244 / 18,248 authored bytes exact (99.978080%)** and **160 /
+161 functions exact (99.378882%)**.
+
+Candidate expansion must continue from target `0x2AB5D`, not from the stale
+14-public list. The same pinned TASM residual already exposes further local
+Yuuka6 procedure starts at `0x2AB5D`, `0x2ABE5`, `0x2ACCC`, `0x2AD6F`,
+`0x2ADDB`, `0x2AE8F`, `0x2AFA8`, `0x2B099`, `0x2B1B1`, `0x2B22B`, `0x2B282`,
+`0x2B313`, and `0x2B3E2` before `yuuka6_update()`, followed by a similar Elly
+local-procedure family. Treat these as target-first candidates and re-establish
+each boundary from raw/TASM/Ghidra evidence before source reconstruction.

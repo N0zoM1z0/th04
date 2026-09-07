@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **17,646 / 17,650 = 99.977337% exact**;
-- authored functions: **155 / 156 = 99.358974% exact**;
+- authored C/C++ bytes: **18,244 / 18,248 = 99.978080% exact**;
+- authored functions: **160 / 161 = 99.378882% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-anims-v29-final-web-001/receipt.json`.
-It passes all 67 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-gather5-v30-precommit-web-001/receipt.json`.
+It passes all 68 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -901,3 +901,43 @@ ASM references to those exact truncated names without emitting or patching code
 bytes. The reviewed baseline is now **17,646 / 17,650 bytes exact (99.977337%)**
 and **155 / 156 functions exact (99.358974%)**. `snd_load` remains the sole
 reviewed nonexact function, with four blocked bytes.
+
+## v30: recover five Yuuka6 gather-pattern helpers
+
+The next target/TASM range `0x2A907..0x2AB5C` contains five adjacent helpers
+with exact extents `0xAE`, `0x15`, `0x7B`, `0xA0`, and `0x78`, totaling
+**0x256 = 598 bytes**. ReC98 still keeps the implementations inside
+`th04_main.asm`; the maintained reconstruction was derived from target raw
+semantics and existing typed `gather_template`, `gather_add_only()`, and
+`circles_add_shrinking()` APIs rather than from a high-level upstream source.
+
+The compiler source shape is observable. The first 0xAE-byte sparse switch
+matched total size and compare/jump-table shape before it matched control flow:
+placing the shared gather tail after case `0x12` made TC86 emit a forward short
+jump, while the target jumps backward. Moving the common label before that case
+and using a natural `goto` changes only the shared-tail layout and reproduces the
+target branch direction and jump-table words. The final TU emits publics at the
+target offsets `0x000/0x0C3/0x13E/0x1DE`; the 0x15 shared helper remains static
+between the first and second public.
+
+Ghidra demonstrates two different failure modes in the same authored owner. It
+creates entries at `0x2A907`, `0x2A9CA`, `0x2AA45`, and `0x2AAE5` but reports
+only their code/CFG addresses, excluding trailing alignment/compare/jump data.
+It creates no function at `0x2A9B5`. The exact-extent reviewer accounts for the
+four compiler switch representations byte-for-byte, while the missing helper is
+reviewed with exact-owner containment, raw `RET`, the next Ghidra/TASM entry,
+and target near call `0x2AA14 -> 0x2A9B5`.
+
+Focused replay `gptweb-yuuka6-gather5-v30-web-001` and 68-unit aggregate
+`gptweb-yuuka6-gather5-v30-precommit-web-001` reproduce all 598 bytes, exact map
+placement (`13A9:6E77 0256`), all ten ordered overlapping MZ relocations, and a
+deterministic normalized TC86 OMF in both cold materializations. The reviewed
+baseline is now **18,244 / 18,248 authored C/C++ bytes exact (99.978080%)** and
+**160 / 161 reviewed functions exact (99.378882%)**. `snd_load` remains the sole
+reviewed nonexact function with four blocked bytes.
+
+The v30 rescreen also invalidates the old linker-public-only queue as an exhaustive
+candidate universe. The next live target-first frontier is `0x2AB5D`; pinned TASM
+already exposes further local Yuuka6 procedures before `yuuka6_update()` and then
+an Elly local-procedure family, so future boundary screening must continue from
+raw/TASM evidence beyond public symbols.

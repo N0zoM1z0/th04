@@ -57,6 +57,13 @@ build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 build_replacement = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 
+[[build_replacements]]
+id = "th04-main034-yuuka6-gather-patterns"
+trigger_units = ["th04-main-yuuka6-gather-patterns"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t\"th04/y6gath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
 [[source_transforms]]
 id = "th04-main035-boss-natural-tu"
 trigger_units = ["th04-main-main035-boss-tu"]
@@ -400,6 +407,52 @@ kind = "replace"
 old = "_yuuka6_anim_parasol_left_spin_back"
 new = "_yuuka6_anim_parasol_left_spin_ba"
 expected_count = 5
+
+[[source_transforms]]
+id = "th04-main034-yuuka6-gather-patterns-natural-v30"
+trigger_units = ["th04-main-yuuka6-gather-patterns"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "9f87f12903431812738fc5a73180c2f2500abee4e4774491a3020dd8169ad2a8",
+  "9388c74af7e8963891ba4ac9e77e3f9ff74e9acb76bb0f968fda564ed5dab0b7",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-gather-patterns-v30"
+kind = "remove_between"
+removed_sha256 = "2dbb4ac96284a3a2263e7fd11d710549fdccde29b4a3dace4c5d56b74e1c5541"
+start = "yuuka6_1A907\tproc near\r\n"
+end = "\t\tdw offset loc_1AB38\r\n"
+replacement = "; natural C++ Yuuka6 gather-pattern helpers\r\nextrn _y6_gather_side:near\r\nextrn _y6_gather_center:near\r\nextrn _y6_gather_dual:near\r\nextrn _y6_gather_self:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-gather-side-v30"
+kind = "replace"
+old = "call\tyuuka6_1A907"
+new = "call\t_y6_gather_side"
+expected_count = 2
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-gather-center-v30"
+kind = "replace"
+old = "call\tyuuka6_1A9CA"
+new = "call\t_y6_gather_center"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-gather-dual-v30"
+kind = "replace"
+old = "call\tyuuka6_1AA45"
+new = "call\t_y6_gather_dual"
+expected_count = 3
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-gather-self-v30"
+kind = "replace"
+old = "call\tyuuka6_1AAE5"
+new = "call\t_y6_gather_self"
+expected_count = 2
 
 [[source_transforms]]
 id = "th04-main034-yuuka6-animations-natural-v29"
@@ -1006,6 +1059,15 @@ repo_source = "src/main/boss/yuuka6_animations.cpp"
 overlay_path = "th04/anims.cpp"
 map_module = "th04/anims.cpp"
 object_path = "obj/th04/anims.obj"
+
+[[units]]
+id = "th04-main-yuuka6-gather-patterns"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-animations"]
+repo_source = "src/main/boss/yuuka6_gather_patterns.cpp"
+overlay_path = "th04/y6gath.cpp"
+map_module = "th04/y6gath.cpp"
+object_path = "obj/th04/y6gath.obj"
 
 [[units]]
 id = "th04-main-chasecrosses-add"

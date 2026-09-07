@@ -490,3 +490,42 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   start; feed both materializations from that frozen byte set, record path/size/SHA
   in the receipt, and fail if the live repo mutates before the run finishes. This
   preserves dirty-tree visibility rather than hiding it.
+
+### TH04 v30: shared switch tails and mixed Ghidra failure modes
+
+- A correct function size and correct switch table do not prove correct TC86
+  control-flow layout. For the 0xAE Yuuka6 gather helper, moving a natural common
+  tail before case `0x12` changes a forward short jump into the target backward
+  jump while preserving semantics and total size. Prefer source label/goto
+  placement over low-level source when only shared-tail branch direction differs.
+- One exact owner can require different boundary proofs per function. In the
+  0x256 gather family Ghidra starts four functions but omits their compiler-owned
+  trailing tables, while the 0x15 shared helper has no Ghidra entry at all. Use
+  fully-accounted exact switch extents for the former and raw `RET` + next-entry
+  + target-call evidence for the latter; do not apply one blanket Ghidra rule.
+- Target-first helper-family recovery scales beyond ReC98's decompiled corpus.
+  Five contiguous functions recovered from TASM local boundaries and target raw
+  semantics compile naturally to one 598-byte TU with exact map placement and
+  ten ordered relocations under focused and aggregate two-cold replay.
+
+
+### TH04 v30: public-only candidate queues are incomplete
+
+- Do not treat a TLINK-public-versus-ledger sweep as the authored-function
+  universe. Immediately after the v29 exact frontier, pinned TASM local `PROC`
+  boundaries expose five adjacent functions; one (`0x2A9B5`) has neither a
+  Ghidra entry nor a TLINK public. Continue candidate mining from target raw and
+  local TASM boundaries past every exact frontier.
+- A single natural-C++ family can mix decompiler failure modes. Four gather
+  switches have valid Ghidra starts but compiler-owned trailing tables outside
+  the CFG body; the shared helper is completely absent. Use exact-extent table
+  accounting for the former and target-call + raw-RET + next-entry review for
+  the latter. Do not apply one global Ghidra trust rule to the region.
+- `0x2AA14 -> 0x2A9B5` is the reusable no-Ghidra boundary pattern: exact owner
+  containment, a raw near-call that resolves to the missing entry, complete raw
+  decode through `RET`, and a real next Ghidra/TASM entry. A generated public is
+  neither necessary nor admissible as target evidence.
+- The next target-first frontier is `0x2AB5D`. The pinned residual TASM contains
+  many more local Yuuka6 procedures before `yuuka6_update()` and then an Elly
+  local-procedure family; these remain candidates even though the old public-only
+  queue did not list them.

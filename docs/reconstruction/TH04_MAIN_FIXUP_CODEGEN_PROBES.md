@@ -693,3 +693,20 @@ source while another agent was editing it. The exact replay driver now freezes a
 repo-owned build inputs once before either materialization and records the snapshot
 in the receipt. Both cold builds consume those bytes, and a live-repo mutation before
 completion fails the run. Do not diagnose moving source inputs as TC86 nondeterminism.
+
+## v30: shared-tail switch layout in the Yuuka6 gather family
+
+A target-driven probe of the five helpers at `0x2A907..0x2AB5C` gives public
+extents `0xAE/0x15/0x7B/0xA0/0x78` and total segment length `0x256`. The first
+sparse switch was initially a useful near miss: TC86 emitted exactly 0xAE bytes
+and the correct compare/jump-table structure, but a semantically equivalent
+source placed the common gather tail after case `0x12`, producing a forward
+short jump. Moving the common label before that case and using `goto` from the
+case produces the target backward branch and target table words without any
+assembly or emitted bytes.
+
+The linked five-function prototype then matches all 598 target bytes and the ten
+ordered relocation entries, with residual `th04_main.asm` resuming at the next
+byte. This is a strong diagnostic rule: when switch size/table contents already
+match and only a short branch direction differs, search natural source block and
+common-tail order before changing compiler options or introducing low-level code.
