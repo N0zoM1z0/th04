@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 22,794 / 22,798 (99.982455%) exact, and reviewed authored functions are 178 / 179 (99.441341%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 25,269 / 25,273 (99.984173%) exact, and reviewed authored functions are 191 / 192 (99.479167%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,10 +115,10 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-elly-v36-precommit-web-002` passes all 74 current default-selected
+  `gptweb-elly-update-v49-precommit-web-003` passes all 87 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 22,798 bytes; 22,794 bytes are exact.
+- The current reviewed authored byte denominator is 25,273 bytes; 25,269 bytes are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -354,15 +354,15 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-yuuka6-gather5-v30-precommit-web-001`
-  passed all 68 current default exact-replay owners in two isolated
+- The latest aggregate cold replay `gptweb-elly-update-v49-precommit-web-003`
+  passed all 87 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
   from byte ownership. The current review accepts 114 strict automatic functions
-  plus 46 replayable manual exact reviews. A fresh
+  plus 77 replayable manual exact reviews. A fresh
   TLINK-public audit found eight real exact-owner functions that the target
   Ghidra inventory had missed or misgrouped. `reviewed_exact_no_ghidra` admits
   them only with exact authored ownership, a matching TLINK public, gap-free raw
@@ -379,7 +379,7 @@ deterministic TH04 runtime scenario has been authored.
   `boss_defeat_update` extents additionally demonstrate that a configured manual
   reviewed extent must shadow any shorter same-address Ghidra automatic claim;
   the writer rejects residual automatic/manual overlap. `snd_load` is the sole
-  reviewed nonexact function, giving 160/161 exact.
+  reviewed nonexact function, giving 190/191 exact.
 - `dialog_init` is no longer a relocation-order blocker. Restoring its original
   second C++ translation unit keeps all linked code bytes unchanged and restores
   the exact six-entry MZ relocation order. `dialog_op` and `dialog_run` remain
@@ -564,3 +564,80 @@ each boundary from raw/TASM/Ghidra evidence before source reconstruction.
 - v36 recovers the 176-byte `elly_orbit_update()` at `0x2BC73`; Ghidra constructs only 19/176 bytes. Target `JL/JGE` opcodes prove the private frame word is signed `int`, and an otherwise redundant `if(frame >= 768)` is required for the exact eight-byte CMP/JL sequence.
 - Focused v34/v35/v36 replays and final aggregate `gptweb-elly-v36-precommit-web-002` pass raw bytes, map placement, ordered relocations, OMF validity, and A/B determinism for all 74 default owners. The reviewed baseline is now **22,794 / 22,798 authored bytes exact (99.982455%)** and **178 / 179 functions exact (99.441341%)**. `snd_load` remains the sole reviewed nonexact function with four blocked bytes.
 - The target-first candidate universe is still not exhausted. Pinned local TASM continues at `0x2BD23`, `0x2BD4B`, `0x2BDB4`, `0x2BE43`, `0x2BE78`, `0x2BF52`, `0x2BFAB`, `0x2C044`, `0x2C0BF`, `0x2C164`, `0x2C1CF`, and `0x2C251` before public `elly_update()`. Resume at `0x2BD23`; do not fall back to the obsolete public-only queue.
+
+
+### Elly local-PROC family completion (v37-v48)
+
+The target-first scan after v36 was continued through every remaining local Elly
+procedure before the public update routine. Twelve consecutive maintained C++
+owners now cover runtime `0x2BD23..0x2C2E4`, adding **0x5C2 = 1,474 bytes** and
+12 exact reviewed functions. Focused two-cold replays for v37 through v48 and
+final aggregate `gptweb-elly-local-family-v48-precommit-web-002` reproduce all
+86 default owners twice with exact raw bytes, TLINK placement, ordered MZ
+relocations, valid deterministic OMF, and no regression of earlier Yuuka6/Elly
+owners.
+
+The boundary audit deliberately does not treat Ghidra entries as authoritative.
+`0x2BD23`, `0x2BD4B`, `0x2BE43`, `0x2C1CF`, and `0x2C251` are complete Ghidra
+bodies; `0x2BDB4` owns compiler switch data after its raw `RET`; and the other
+helpers range from sparse bodies to internal false splits. In particular,
+`0x2C044` has only 13 Ghidra body bytes despite a true 0x7B-byte PROC, while
+`0x2BE78`, `0x2BF52`, `0x2BFAB`, `0x2C0BF`, and `0x2C164` require TASM/raw
+next-PROC closure. The v39 `elly_gather_update()` extent additionally includes
+one zero alignment byte, four compare words `[1,8,16,32]`, and four near jump
+words before the next local entry.
+
+Three compiler rules from this sequence are reusable. First, ABI-bearing headers
+such as `bullet.hpp` must be parsed before enabling `#pragma option -a`; enabling
+alignment before the header changes `BulletTemplate` member offsets even when
+code size and relocations otherwise match. Second, DOS-facing overlay basenames
+must remain 8.3-safe (`ellybrst.cpp` rather than `ellyburst.cpp`) or TC86 emits a
+tilde-shortened object name that Tup cannot match. Third, when the target tests a
+callee return value directly in AX, introducing a source local can make TC86
+allocate SI and change the prologue; `switch(elly_gather_update())` preserves the
+target AX lowering.
+
+The reviewed baseline is now **24,268 / 24,272 authored C/C++ bytes exact
+(99.983520%)** and **190 / 191 reviewed functions exact (99.476440%)**. The only
+reviewed nonexact function remains `snd_load`, with four blocked bytes. The next
+live target-first frontier is the public **`elly_update()` at runtime `0x2C2E5`**;
+its Ghidra body is cross-linked far beyond the local Elly region, so re-establish
+its complete target boundary from raw/TASM/public/switch data before attempting
+source reconstruction.
+
+
+### Elly public dispatcher and MAIN_034 completion (v49)
+
+The target-first frontier continued through public `elly_update()` at runtime
+`0x2C2E5`. Raw 16-bit decoding reaches the common-tail `RETF` at `0x2C691`;
+compiler-owned data then occupies every remaining byte through `0x2C6CD`: a
+5-entry jump table at `0x2C692`, a 10-value/10-jump sparse switch at
+`0x2C69C/0x2C6B0`, and a final 5-entry phase table at `0x2C6C4`. Ghidra
+cross-links the entry far outside this region, so it is retained only as
+provisional entry evidence. The next byte, runtime `0x2C6CE`, is the already
+reviewed exact `bullet_turn_x` public in `BULLET_U_TEXT`.
+
+Maintained natural C++ in `src/main/boss/elly_update.cpp` reproduces all
+**0x3E9 = 1,001 bytes** plus both ordered relocation sites. The complete Elly
+physical TC86 producer is `13A9:7ECC 0D72`. Aggregate integration exposed one
+ABI detail that focused byte matching alone could not: the separately exact
+`boss.cpp` declares the callback `pascal far`, so the definition must use that
+ABI and the residual TASM must bind the OMF external as `@ELLY_UPDATE$QV`.
+With that correction, focused `gptweb-elly-update-v49-focused-final-web-004`
+and 87-owner aggregate `gptweb-elly-update-v49-precommit-web-003` both pass two
+independent cold materializations across raw bytes, map placement, ordered
+relocations, OMF validity, and determinism.
+
+Two independent rescreens close this particular candidate frontier. The target
+map says `MAIN_034_TEXT` is exactly `0x2647` bytes from `13A9:65F7` through
+`13A9:8C3D`; the 22 reviewed exact authored owners in that segment sum to the
+same `0x2647` and tile it with no gap or overlap, while residual `th04_main.asm`
+contributes zero bytes at `8C3E`. Separately, pinned TASM contains 38 numeric
+local `PROC` starts in `MAIN_034_TEXT`, and all 38 addresses are already exact
+function-ledger entries. Thus the former Yuuka6/Elly local-PROC frontier is
+exhausted rather than merely hidden by the >99% ratio.
+
+The reviewed baseline is now **25,269 / 25,273 authored C/C++ bytes exact
+(99.984173%)** and **191 / 192 reviewed functions exact (99.479167%)**. The
+sole reviewed nonexact function remains `snd_load`, with the same four blocked
+bytes.

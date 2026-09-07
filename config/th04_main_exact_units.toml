@@ -1449,6 +1449,11 @@ overlay_path = "th04/ellyscy.cpp"
 map_module = "th04/ellyscy.cpp"
 object_path = "obj/th04/ellyscy.obj"
 
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
 [[build_replacements]]
 id = "th04-main034-elly-scythe-init-v35"
 trigger_units = ["th04-main-elly-scythe-init-v35"]
@@ -1489,6 +1494,11 @@ repo_source = "src/main/boss/elly_scythe_init.cpp"
 overlay_path = "th04/ellyini.cpp"
 map_module = "th04/ellyini.cpp"
 object_path = "obj/th04/ellyini.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
 
 [[build_replacements]]
 id = "th04-main034-elly-orbit-v36"
@@ -1536,3 +1546,619 @@ repo_source = "src/main/boss/elly_orbit.cpp"
 overlay_path = "th04/ellyorb.cpp"
 map_module = "th04/ellyorb.cpp"
 object_path = "obj/th04/ellyorb.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-scythe-v37"
+trigger_units = ["th04-main-elly-phase-scythe-v37"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-scythe-natural-v37"
+trigger_units = ["th04-main-elly-phase-scythe-v37"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "8040bdbbd144ce981f765f10203680d80154e416f12bff0f773fb1474c9be715",
+  "884edb3b2549287882148ebc7b6cd924eda1d7bfa4f0423a9045abf3c857e7a6",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-scythe-v37"
+kind = "remove_between"
+removed_sha256 = "79f9a65f87cb92a09baa9c663906b1c4f2b4c8b6226330c483cd978e60645878"
+start = "elly_1BD23\tproc near\r\n"
+end = "elly_1BD23\tendp\r\n"
+replacement = "; natural C++ Elly scythe phase helper\r\nextrn _elly_phase_scythe:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-scythe-call-v37"
+kind = "replace"
+old = "call\telly_1BD23"
+new = "call\t_elly_phase_scythe"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-scythe-v37"
+default_enabled = true
+requires_units = ["th04-main-elly-orbit-v36"]
+repo_source = "src/main/boss/elly_phase_scythe.cpp"
+overlay_path = "th04/ellyph1.cpp"
+map_module = "th04/ellyph1.cpp"
+object_path = "obj/th04/ellyph1.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-orbit-v38"
+trigger_units = ["th04-main-elly-phase-orbit-v38"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-orbit-natural-v38"
+trigger_units = ["th04-main-elly-phase-orbit-v38"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "d9e9e6289a152f18e9631ea9bdd5ec961634169c91ee994dbf30a57359fdafb6",
+  "f4550f12e94f04653fac85c77c9791b4b0e1024e654512cff4b85387adb4ce4e",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-orbit-v38"
+kind = "remove_between"
+removed_sha256 = "87c9a0504c7155e3978723f37528b081579c317f5bd97f230eaa792103e4c96e"
+start = "elly_1BD4B\tproc near\r\n"
+end = "elly_1BD4B\tendp\r\n"
+replacement = "; natural C++ Elly orbit phase helper\r\nextrn _elly_phase_orbit:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-orbit-call-v38"
+kind = "replace"
+old = "call\telly_1BD4B"
+new = "call\t_elly_phase_orbit"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-orbit-v38"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-scythe-v37"]
+repo_source = "src/main/boss/elly_phase_orbit.cpp"
+overlay_path = "th04/ellyph2.cpp"
+map_module = "th04/ellyph2.cpp"
+object_path = "obj/th04/ellyph2.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-gather-v39"
+trigger_units = ["th04-main-elly-gather-v39"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-gather-natural-v39"
+trigger_units = ["th04-main-elly-gather-v39"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "2b4e85259edf0c31ac36c4fafef590d48c0e989f3f14842558982f484e935010",
+  "6bd0c908f736f806ba73e672b3ac4f5d99d5cd845f68e1275972f7e5a31c7310",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-gather-v39"
+kind = "remove_between"
+removed_sha256 = "cc0fd55d00745e36e58a0eb9d1595cc4e57d4e70e86039ed257f02c8b077b1e6"
+start = "elly_1BDB4\tproc near\r\n"
+end = "\t\tdw offset loc_1BE2A\r\n"
+replacement = "; natural C++ Elly gather helper\r\nextrn _elly_gather_update:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-gather-calls-v39"
+kind = "replace"
+old = "call\telly_1BDB4"
+new = "call\t_elly_gather_update"
+expected_count = 4
+
+[[units]]
+id = "th04-main-elly-gather-v39"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-orbit-v38"]
+repo_source = "src/main/boss/elly_gather.cpp"
+overlay_path = "th04/ellygath.cpp"
+map_module = "th04/ellygath.cpp"
+object_path = "obj/th04/ellygath.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-burst-v40"
+trigger_units = ["th04-main-elly-phase-burst-v40"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-burst-natural-v40"
+trigger_units = ["th04-main-elly-phase-burst-v40"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "99d435574bf8eb28359857389eb64be0696bd016cbb56d93353934c44bf5ca06",
+  "73ba28c9bc9e045f97862b3c3b450206cd66a1c72a8a8dda05e0d9c7b44628ac",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-burst-v40"
+kind = "remove_between"
+removed_sha256 = "77bd35c8e4f10d59ba99557880879678e3443e4210f099bcec7e489fc4195e2d"
+start = "elly_1BE43\tproc near\r\n"
+end = "elly_1BE43\tendp\r\n"
+replacement = "; natural C++ Elly burst helper\r\nextrn _elly_phase_burst:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-burst-calls-v40"
+kind = "replace"
+old = "call\telly_1BE43"
+new = "call\t_elly_phase_burst"
+expected_count = 4
+
+[[units]]
+id = "th04-main-elly-phase-burst-v40"
+default_enabled = true
+requires_units = ["th04-main-elly-gather-v39"]
+repo_source = "src/main/boss/elly_phase_burst.cpp"
+overlay_path = "th04/ellybrst.cpp"
+map_module = "th04/ellybrst.cpp"
+object_path = "obj/th04/ellybrst.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-sweep-v41"
+trigger_units = ["th04-main-elly-phase-sweep-v41"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-sweep-natural-v41"
+trigger_units = ["th04-main-elly-phase-sweep-v41"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "6ba979ddf0c43cb66d33dfcdbfa14f89d9b3c311ae6c5470304b505f27d9b196",
+  "b9f955d0c08e2132bae566b4036362f86b1446818d6ac5332a0af5fafc579d43",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-sweep-v41"
+kind = "remove_between"
+removed_sha256 = "b29a83062adcac7ac6136ec912500537fc9549b519568e4b46b9bccee0d31509"
+start = "elly_1BE78\tproc near\r\n"
+end = "elly_1BE78\tendp\r\n"
+replacement = "; natural C++ Elly sweep helper\r\nextrn _elly_phase_sweep:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-sweep-call-v41"
+kind = "replace"
+old = "call\telly_1BE78"
+new = "call\t_elly_phase_sweep"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-sweep-v41"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-burst-v40"]
+repo_source = "src/main/boss/elly_phase_sweep.cpp"
+overlay_path = "th04/ellyswp.cpp"
+map_module = "th04/ellyswp.cpp"
+object_path = "obj/th04/ellyswp.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-ring-v42"
+trigger_units = ["th04-main-elly-phase-ring-v42"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-ring-natural-v42"
+trigger_units = ["th04-main-elly-phase-ring-v42"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "e91bbc4caf3ce8f47ee88587b73e2cfcab50e8eff374da4b06d804a353b8fa9f",
+  "8a51b2b818cc4925844a25d85ca300ce84ec53aa3db8649d933488b07d0ead49",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-ring-v42"
+kind = "remove_between"
+removed_sha256 = "fb9f3a67b538667c4ae721042eb30a19ef1bf4f27eecffed3ba0906243e45f21"
+start = "elly_1BF52\tproc near\r\n"
+end = "elly_1BF52\tendp\r\n"
+replacement = "; natural C++ Elly ring helper\r\nextrn _elly_phase_ring:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-ring-call-v42"
+kind = "replace"
+old = "call\telly_1BF52"
+new = "call\t_elly_phase_ring"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-ring-v42"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-sweep-v41"]
+repo_source = "src/main/boss/elly_phase_ring.cpp"
+overlay_path = "th04/ellyring.cpp"
+map_module = "th04/ellyring.cpp"
+object_path = "obj/th04/ellyring.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-cloud-v43"
+trigger_units = ["th04-main-elly-phase-cloud-v43"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-cloud-natural-v43"
+trigger_units = ["th04-main-elly-phase-cloud-v43"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "4a6f1cbd60639680c7955d4be32868815ce10109f2a2326ebe893bdad9061e59",
+  "339d8e51c9b693927df243fe6d46146ab3256cf39e522500b746f442c9a8eabf",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-cloud-v43"
+kind = "remove_between"
+removed_sha256 = "a22fc0be269f31b5bf6c551bc537aee7d4624724bc39b839fd7f6fd53f20749f"
+start = "elly_1BFAB\tproc near\r\n"
+end = "elly_1BFAB\tendp\r\n"
+replacement = "; natural C++ Elly cloud helper\r\nextrn _elly_phase_cloud:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-cloud-call-v43"
+kind = "replace"
+old = "call\telly_1BFAB"
+new = "call\t_elly_phase_cloud"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-cloud-v43"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-ring-v42"]
+repo_source = "src/main/boss/elly_phase_cloud.cpp"
+overlay_path = "th04/ellycld.cpp"
+map_module = "th04/ellycld.cpp"
+object_path = "obj/th04/ellycld.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-dual-v44"
+trigger_units = ["th04-main-elly-phase-dual-v44"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-dual-natural-v44"
+trigger_units = ["th04-main-elly-phase-dual-v44"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "695ff0922b79eb6840fb7e12f7451e4e3c9030eee400ee09c3eba4b614c526d6",
+  "e80b9170eba614c2074197dae503da04c3dca26cf6820a55f22ac461a6727baa",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-dual-v44"
+kind = "remove_between"
+removed_sha256 = "3345d7c3e1400f9fad614ef6874236b55542f2bee6fd6d9fb6aaf082ed173a23"
+start = "elly_1C044\tproc near\r\n"
+end = "elly_1C044\tendp\r\n"
+replacement = "; natural C++ Elly dual-orbit helper\r\nextrn _elly_phase_dual:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-dual-call-v44"
+kind = "replace"
+old = "call\telly_1C044"
+new = "call\t_elly_phase_dual"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-dual-v44"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-cloud-v43"]
+repo_source = "src/main/boss/elly_phase_dual.cpp"
+overlay_path = "th04/ellydual.cpp"
+map_module = "th04/ellydual.cpp"
+object_path = "obj/th04/ellydual.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-cloud-reverse-v45"
+trigger_units = ["th04-main-elly-phase-cloud-reverse-v45"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-cloud-reverse-natural-v45"
+trigger_units = ["th04-main-elly-phase-cloud-reverse-v45"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "fb3309bea7aa1740ac5b9d8ae60a4aae5519d8d3b23b8d82c840d5374bde6a35",
+  "530a5a5e3cc6795e2907943b5a4cce8b403dab18305d4a4e727f1fcca9f1b404",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-cloud-reverse-v45"
+kind = "remove_between"
+removed_sha256 = "a52d1f861cffaef3cb198d33611d5cb2519bb1f44513a8c95f601f74428fc784"
+start = "elly_1C0BF\tproc near\r\n"
+end = "elly_1C0BF\tendp\r\n"
+replacement = "; natural C++ Elly reverse cloud helper\r\nextrn _elly_phase_cloud_reverse:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-cloud-reverse-call-v45"
+kind = "replace"
+old = "call\telly_1C0BF"
+new = "call\t_elly_phase_cloud_reverse"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-cloud-reverse-v45"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-dual-v44"]
+repo_source = "src/main/boss/elly_phase_cloud_reverse.cpp"
+overlay_path = "th04/ellycl2.cpp"
+map_module = "th04/ellycl2.cpp"
+object_path = "obj/th04/ellycl2.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-ring16-v46"
+trigger_units = ["th04-main-elly-phase-ring16-v46"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t\"th04/ellyr16.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-ring16-natural-v46"
+trigger_units = ["th04-main-elly-phase-ring16-v46"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "2a59d3f35efc8047584dc14c19da96f357f8b086cb29268cae9a74d7773f3782",
+  "a266b6092b5349db9ff874d872ae4451c2900099635b09c459a4de694b1d6f14",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-ring16-v46"
+kind = "remove_between"
+removed_sha256 = "4bc38ac097a91df37ef915e80f131ebd34076368790d4af83dc1563294e5d5a0"
+start = "elly_1C164\tproc near\r\n"
+end = "elly_1C164\tendp\r\n"
+replacement = "; natural C++ Elly 16-way ring helper\r\nextrn _elly_phase_ring16:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-ring16-call-v46"
+kind = "replace"
+old = "call\telly_1C164"
+new = "call\t_elly_phase_ring16"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-ring16-v46"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-cloud-reverse-v45"]
+repo_source = "src/main/boss/elly_phase_ring16.cpp"
+overlay_path = "th04/ellyr16.cpp"
+map_module = "th04/ellyr16.cpp"
+object_path = "obj/th04/ellyr16.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-four-rings-v47"
+trigger_units = ["th04-main-elly-phase-four-rings-v47"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t\"th04/ellyr16.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t\"th04/ellyr16.cpp\",\n\t\"th04/elly4rng.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-four-rings-natural-v47"
+trigger_units = ["th04-main-elly-phase-four-rings-v47"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "4df77a31965df8d56870b456b88cc869478da1a0b73a1413809cbd0e083648db",
+  "9bb367a66435d70569b972793d63cea0d9db05f5c3ade4686ab6f11b066c9ef4",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-four-rings-v47"
+kind = "remove_between"
+removed_sha256 = "d19bc404a96580641827ac895528a2fb2850b91d05af07e661a21fde7ba7f562"
+start = "elly_1C1CF\tproc near\r\n"
+end = "elly_1C1CF\tendp\r\n"
+replacement = "; natural C++ Elly four-ring helper\r\nextrn _elly_phase_four_rings:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-four-rings-call-v47"
+kind = "replace"
+old = "call\telly_1C1CF"
+new = "call\t_elly_phase_four_rings"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-four-rings-v47"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-ring16-v46"]
+repo_source = "src/main/boss/elly_phase_four_rings.cpp"
+overlay_path = "th04/elly4rng.cpp"
+map_module = "th04/elly4rng.cpp"
+object_path = "obj/th04/elly4rng.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-phase-final-v48"
+trigger_units = ["th04-main-elly-phase-final-v48"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t\"th04/ellyr16.cpp\",\n\t\"th04/elly4rng.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t\"th04/ellyr16.cpp\",\n\t\"th04/elly4rng.cpp\",\n\t\"th04/ellyfin.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-phase-final-natural-v48"
+trigger_units = ["th04-main-elly-phase-final-v48"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "c04e716e6fe9d74c6111e3962efb471a7f2a031d9831188ebe3897e94717d035",
+  "84e48a9fe17a87e0a04eaa5bb576a12d1eb7e9a090ce00fc2b1bc726470a8cf8",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-phase-final-v48"
+kind = "remove_between"
+removed_sha256 = "634eb689b22eeefec80c95badf500b920b10c020fa93de75b50366f146cfa017"
+start = "elly_1C251\tproc near\r\n"
+end = "elly_1C251\tendp\r\n"
+replacement = "; natural C++ Elly final local helper\r\nextrn _elly_phase_final:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-phase-final-call-v48"
+kind = "replace"
+old = "call\telly_1C251"
+new = "call\t_elly_phase_final"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-phase-final-v48"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-four-rings-v47"]
+repo_source = "src/main/boss/elly_phase_final.cpp"
+overlay_path = "th04/ellyfin.cpp"
+map_module = "th04/ellyfin.cpp"
+object_path = "obj/th04/ellyfin.obj"
+
+producer_override_when_unit = "th04-main-elly-update-v49"
+producer_map_module = "th04/ellyall.cpp"
+producer_object_path = "obj/th04/ellyall.obj"
+producer_map_mode = "contains"
+
+[[build_replacements]]
+id = "th04-main034-elly-update-v49"
+trigger_units = ["th04-main-elly-update-v49"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t\"th04/ellyph1.cpp\",\n\t\"th04/ellyph2.cpp\",\n\t\"th04/ellygath.cpp\",\n\t\"th04/ellybrst.cpp\",\n\t\"th04/ellyswp.cpp\",\n\t\"th04/ellyring.cpp\",\n\t\"th04/ellycld.cpp\",\n\t\"th04/ellydual.cpp\",\n\t\"th04/ellycl2.cpp\",\n\t\"th04/ellyr16.cpp\",\n\t\"th04/elly4rng.cpp\",\n\t\"th04/ellyfin.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyall.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-update-natural-v49"
+trigger_units = ["th04-main-elly-update-v49"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "93c7a599f22a0809239acad3cacb722ac71154e3619fae5ca0618d0183056f8f",
+  "a8c520f7bb89433c802f61a69b1838aef7a20b8eb92504d45e4197ac35c78ab5",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-update-v49"
+kind = "remove_between"
+removed_sha256 = "784ff1e3197d2ac6310930b588af2df85e04ab3e27631923ec05a763cb6cd649"
+start = "@elly_update$qv\tproc far\r\n"
+end = "\t\tdw offset loc_1C61F\r\n"
+replacement = "; natural C++ Elly update dispatcher\r\nextrn @ELLY_UPDATE$QV:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "drop-preexisting-elly-update-public-v49"
+kind = "replace_optional"
+old = "public @ELLY_UPDATE$QV\r\n"
+new = ""
+
+[[source_transforms.ops]]
+id = "drop-preexisting-elly-bg-render-public-v49"
+kind = "replace_optional"
+old = "public @ELLY_BG_RENDER$QV\r\n"
+new = ""
+
+[[source_transforms.ops]]
+id = "alias-elly-bg-render-pascal-v49"
+kind = "insert_before"
+anchor = "@elly_bg_render$qv\tproc near\r\n"
+text = "public @ELLY_BG_RENDER$QV\r\n@ELLY_BG_RENDER$QV label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-elly-pattern-group-v49"
+kind = "insert_before"
+anchor = "byte_25A24\tdb ?\r\n"
+text = "public _elly_pattern_group\r\n_elly_pattern_group label byte\r\n"
+
+[[units]]
+id = "th04-main-elly-update-v49"
+default_enabled = true
+requires_units = ["th04-main-elly-phase-final-v48"]
+repo_source = "src/main/boss/elly_update.cpp"
+overlay_path = "th04/ellyall.cpp"
+map_module = "th04/ellyall.cpp"
+map_mode = "contains"
+object_path = "obj/th04/ellyall.obj"

@@ -1364,3 +1364,235 @@ address = "0x2BC73"
 name = "elly_orbit_update()"
 evidence_id = "ev-th04-main-elly-orbit-boundary-v36"
 reason = "New exact target-local Elly orbit helper admitted after raw/TASM/next-PROC review closes Ghidra's 19-byte body to the complete 176-byte exact owner."
+
+# v37-v48: finish the target-only Elly local-PROC family up to the public
+# elly_update() entry. Ghidra behavior varies per helper: some bodies are
+# complete, while others are sparse or internally false-split. Every extent is
+# therefore closed independently by target raw decode plus pinned TASM next-PROC
+# boundaries, with v39 additionally accounting for all compiler switch data.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2bd23"
+address = "0x2BD23"
+file_offset = "0x1D523"
+size = "0x28"
+name = "elly_phase_scythe()"
+owner_unit = "th04-main-elly-phase-scythe-v37"
+evidence_id = "ev-th04-main-elly-phase-scythe-boundary-v37"
+reason = "Target raw, pinned TASM, and fresh Ghidra all agree on the complete 40-byte body through RET at 0x2BD4A; the next local PROC starts at 0x2BD4B."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2bd4b"
+address = "0x2BD4B"
+file_offset = "0x1D54B"
+size = "0x69"
+name = "elly_phase_orbit()"
+owner_unit = "th04-main-elly-phase-orbit-v38"
+evidence_id = "ev-th04-main-elly-phase-orbit-boundary-v38"
+reason = "Target raw, pinned TASM, and fresh Ghidra all agree on the complete 105-byte body through RET at 0x2BDB3; the next local PROC starts at 0x2BDB4."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2bdb4"
+address = "0x2BDB4"
+file_offset = "0x1D5B4"
+size = "0x8F"
+decode_size = "0x7E"
+name = "elly_gather_update()"
+owner_unit = "th04-main-elly-gather-v39"
+evidence_id = "ev-th04-main-elly-gather-boundary-v39"
+reason = "Raw code decodes gap-free through RET at 0x2BE31. One zero alignment byte at 0x2BE32, compare values [1,8,16,32], and four near jump targets then exactly fill the compiler-owned extent through 0x2BE42; the next true local PROC starts at 0x2BE43."
+table_metadata_address = "0x2BE32"
+table_metadata_value = "0x00"
+compare_table_address = "0x2BE33"
+compare_table_count = 4
+compare_table_values = [1, 8, 16, 32]
+jump_table_address = "0x2BE3B"
+jump_table_count = 4
+cs_base = "0x23A90"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2be43"
+address = "0x2BE43"
+file_offset = "0x1D643"
+size = "0x35"
+name = "elly_phase_burst()"
+owner_unit = "th04-main-elly-phase-burst-v40"
+evidence_id = "ev-th04-main-elly-phase-burst-boundary-v40"
+reason = "Target raw, pinned TASM, and fresh Ghidra all agree on the complete 53-byte body through RET at 0x2BE77; the next local PROC starts at 0x2BE78."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2be78"
+address = "0x2BE78"
+file_offset = "0x1D678"
+size = "0xDA"
+name = "elly_phase_sweep()"
+owner_unit = "th04-main-elly-phase-sweep-v41"
+evidence_id = "ev-th04-main-elly-phase-sweep-boundary-v41"
+reason = "Pinned TASM and gap-free raw decode tile all 218 bytes through RET at 0x2BF51. Ghidra is sparse and creates false internal entries at 0x2BEDA and 0x2BF16; the next true local PROC starts at 0x2BF52."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2bf52"
+address = "0x2BF52"
+file_offset = "0x1D752"
+size = "0x59"
+name = "elly_phase_ring()"
+owner_unit = "th04-main-elly-phase-ring-v42"
+evidence_id = "ev-th04-main-elly-phase-ring-boundary-v42"
+reason = "Pinned TASM and raw decode tile the complete 89-byte function through RET at 0x2BFAA. Ghidra stops at 0x2BF92 and creates a false internal entry at 0x2BF94; the next true PROC is 0x2BFAB."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2bfab"
+address = "0x2BFAB"
+file_offset = "0x1D7AB"
+size = "0x99"
+name = "elly_phase_cloud()"
+owner_unit = "th04-main-elly-phase-cloud-v43"
+evidence_id = "ev-th04-main-elly-phase-cloud-boundary-v43"
+reason = "Pinned TASM/raw define one 153-byte function through RET at 0x2C043. Ghidra constructs a sparse body and false internal entries at 0x2BFF8 and 0x2C01A; the next true local PROC is 0x2C044."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2c044"
+address = "0x2C044"
+file_offset = "0x1D844"
+size = "0x7B"
+name = "elly_phase_dual()"
+owner_unit = "th04-main-elly-phase-dual-v44"
+evidence_id = "ev-th04-main-elly-phase-dual-boundary-v44"
+reason = "Fresh Ghidra constructs only 13 bytes at the true 0x2C044 entry. Pinned TASM and raw decode tile the full 123-byte PROC through RET at 0x2C0BE; the next true local PROC is 0x2C0BF."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2c0bf"
+address = "0x2C0BF"
+file_offset = "0x1D8BF"
+size = "0xA5"
+name = "elly_phase_cloud_reverse()"
+owner_unit = "th04-main-elly-phase-cloud-reverse-v45"
+evidence_id = "ev-th04-main-elly-phase-cloud-reverse-boundary-v45"
+reason = "Pinned TASM/raw define one 165-byte function through RET at 0x2C163. Ghidra stops at 0x2C155 and creates false internal entries at 0x2C156/0x2C15C/0x2C162; the next true local PROC is 0x2C164."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2c164"
+address = "0x2C164"
+file_offset = "0x1D964"
+size = "0x6B"
+name = "elly_phase_ring16()"
+owner_unit = "th04-main-elly-phase-ring16-v46"
+evidence_id = "ev-th04-main-elly-phase-ring16-boundary-v46"
+reason = "Fresh Ghidra constructs only 24 bytes at 0x2C164. Pinned TASM/raw tile all 107 bytes through RET at 0x2C1CE; the next true local PROC starts at 0x2C1CF."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2c1cf"
+address = "0x2C1CF"
+file_offset = "0x1D9CF"
+size = "0x82"
+name = "elly_phase_four_rings()"
+owner_unit = "th04-main-elly-phase-four-rings-v47"
+evidence_id = "ev-th04-main-elly-phase-four-rings-boundary-v47"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 130-byte body through RET at 0x2C250; the next local PROC starts at 0x2C251."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2c251"
+address = "0x2C251"
+file_offset = "0x1DA51"
+size = "0x94"
+name = "elly_phase_final()"
+owner_unit = "th04-main-elly-phase-final-v48"
+evidence_id = "ev-th04-main-elly-phase-final-boundary-v48"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 148-byte body through RET at 0x2C2E4. The next true entry is public elly_update() at 0x2C2E5."
+
+[[new_exact]]
+id = "th04-main-fn-2bd23"
+address = "0x2BD23"
+name = "elly_phase_scythe()"
+evidence_id = "ev-th04-main-elly-phase-scythe-boundary-v37"
+reason = "New exact target-local Elly helper admitted after raw/TASM/Ghidra and two-cold replay agree on its complete extent."
+[[new_exact]]
+id = "th04-main-fn-2bd4b"
+address = "0x2BD4B"
+name = "elly_phase_orbit()"
+evidence_id = "ev-th04-main-elly-phase-orbit-boundary-v38"
+reason = "New exact target-local Elly helper admitted after raw/TASM/Ghidra and two-cold replay agree on its complete extent."
+[[new_exact]]
+id = "th04-main-fn-2bdb4"
+address = "0x2BDB4"
+name = "elly_gather_update()"
+evidence_id = "ev-th04-main-elly-gather-boundary-v39"
+reason = "New exact target-local Elly switch helper admitted only after code, alignment, compare table, and jump table fully account for the exact owner."
+[[new_exact]]
+id = "th04-main-fn-2be43"
+address = "0x2BE43"
+name = "elly_phase_burst()"
+evidence_id = "ev-th04-main-elly-phase-burst-boundary-v40"
+reason = "New exact target-local Elly helper admitted after complete raw/TASM/Ghidra review."
+[[new_exact]]
+id = "th04-main-fn-2be78"
+address = "0x2BE78"
+name = "elly_phase_sweep()"
+evidence_id = "ev-th04-main-elly-phase-sweep-boundary-v41"
+reason = "New exact target-local Elly helper admitted after raw/TASM next-PROC review rejects Ghidra internal false splits."
+[[new_exact]]
+id = "th04-main-fn-2bf52"
+address = "0x2BF52"
+name = "elly_phase_ring()"
+evidence_id = "ev-th04-main-elly-phase-ring-boundary-v42"
+reason = "New exact target-local Elly helper admitted after raw/TASM next-PROC review closes Ghidra's sparse body."
+[[new_exact]]
+id = "th04-main-fn-2bfab"
+address = "0x2BFAB"
+name = "elly_phase_cloud()"
+evidence_id = "ev-th04-main-elly-phase-cloud-boundary-v43"
+reason = "New exact target-local Elly helper admitted after raw/TASM next-PROC review rejects two Ghidra internal false splits."
+[[new_exact]]
+id = "th04-main-fn-2c044"
+address = "0x2C044"
+name = "elly_phase_dual()"
+evidence_id = "ev-th04-main-elly-phase-dual-boundary-v44"
+reason = "New exact target-local Elly helper admitted after raw/TASM review expands Ghidra's 13-byte body to the complete exact owner."
+[[new_exact]]
+id = "th04-main-fn-2c0bf"
+address = "0x2C0BF"
+name = "elly_phase_cloud_reverse()"
+evidence_id = "ev-th04-main-elly-phase-cloud-reverse-boundary-v45"
+reason = "New exact target-local Elly helper admitted after raw/TASM review rejects Ghidra tail false splits."
+[[new_exact]]
+id = "th04-main-fn-2c164"
+address = "0x2C164"
+name = "elly_phase_ring16()"
+evidence_id = "ev-th04-main-elly-phase-ring16-boundary-v46"
+reason = "New exact target-local Elly helper admitted after raw/TASM review expands Ghidra's 24-byte body to the full 107-byte exact owner."
+[[new_exact]]
+id = "th04-main-fn-2c1cf"
+address = "0x2C1CF"
+name = "elly_phase_four_rings()"
+evidence_id = "ev-th04-main-elly-phase-four-rings-boundary-v47"
+reason = "New exact target-local Elly helper admitted after complete raw/TASM/Ghidra review."
+[[new_exact]]
+id = "th04-main-fn-2c251"
+address = "0x2C251"
+name = "elly_phase_final()"
+evidence_id = "ev-th04-main-elly-phase-final-boundary-v48"
+reason = "Final local Elly helper before public elly_update() admitted after complete raw/TASM/Ghidra and two-cold review."
+
+# v49: public Elly FAR dispatcher after the complete local-PROC family.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2c2e5"
+address = "0x2C2E5"
+file_offset = "0x1DAE5"
+size = "0x3E9"
+decode_size = "0x3AD"
+name = "elly_update()"
+owner_unit = "th04-main-elly-update-v49"
+evidence_id = "ev-th04-main-elly-update-boundary-v49"
+reason = "Target raw decodes through RETF at 0x2C691. Three contiguous compiler switch regions fill the extent through 0x2C6CD, immediately before exact TLINK public bullet_turn_x at 0x2C6CE. Ghidra cross-links this entry to unrelated later code and is not used as the extent oracle."
+next_public_address = "0x2C6CE"
+trailing_switch_tables = [
+  { jump_table_address = "0x2C692", jump_table_count = 5, cs_base = "0x23A90" },
+  { compare_table_address = "0x2C69C", compare_table_count = 10, compare_table_values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 255], jump_table_address = "0x2C6B0", jump_table_count = 10, cs_base = "0x23A90" },
+  { jump_table_address = "0x2C6C4", jump_table_count = 5, cs_base = "0x23A90" },
+]
+
+[[new_exact]]
+id = "th04-main-fn-2c2e5"
+address = "0x2C2E5"
+name = "elly_update()"
+evidence_id = "ev-th04-main-elly-update-boundary-v49"
+reason = "New target-driven exact FAR dispatcher admitted after raw/TASM/TLINK review accounts for the code and all three trailing compiler switch regions through the next exact public."

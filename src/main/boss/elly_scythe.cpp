@@ -1,3 +1,4 @@
+#ifndef TH04_ELLY_MAIN034_COMBINED
 #pragma option -a
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
@@ -7,6 +8,8 @@
 #include "th04/math/vector.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/player/player.hpp"
+
+#endif
 
 extern unsigned char elly_scythe_mode;
 extern unsigned char elly_scythe_flag;

@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **22,794 / 22,798 = 99.982455% exact**;
-- authored functions: **178 / 179 = 99.441341% exact**;
+- authored C/C++ bytes: **25,269 / 25,273 = 99.984173% exact**;
+- authored functions: **191 / 192 = 99.479167% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-elly-v36-precommit-web-002/receipt.json`.
-It passes all 74 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-elly-update-v49-precommit-web-003/receipt.json`.
+It passes all 87 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -957,3 +957,69 @@ The v30 local-PROC scan was deliberately continued rather than treating the >99%
 Final aggregate `gptweb-elly-v36-precommit-web-002` cold-builds **74 default owners twice** and reports zero raw/map/ordered-relocation/OMF/determinism failures. The reviewed denominator is **22,794 / 22,798 authored bytes exact (99.982455%)** and **178 / 179 reviewed functions exact (99.441341%)**; only four `snd_load` bytes remain nonexact.
 
 The next target-first frontier is **`0x2BD23`**, not a linker-public queue. Further local starts before public `elly_update()` are `0x2BD4B`, `0x2BDB4`, `0x2BE43`, `0x2BE78`, `0x2BF52`, `0x2BFAB`, `0x2C044`, `0x2C0BF`, `0x2C164`, `0x2C1CF`, and `0x2C251`. Re-establish every extent from target raw/TASM/control flow and treat Ghidra bodies as provisional.
+
+
+## v37-v48: finish the Elly local-PROC family
+
+Continuing the target-local TASM screen from `0x2BD23` recovers every remaining
+local Elly procedure before public `elly_update()`. The twelve exact extents are
+`0x28`, `0x69`, `0x8F`, `0x35`, `0xDA`, `0x59`, `0x99`, `0x7B`, `0xA5`,
+`0x6B`, `0x82`, and `0x94` bytes, totaling **0x5C2 = 1,474 bytes** and tiling
+`0x2BD23..0x2C2E4` without overlap. Each has a maintained natural-C++ source and
+focused A/B cold replay; the 86-owner aggregate
+`gptweb-elly-local-family-v48-precommit-web-002` passes raw/map/ordered-
+relocation/OMF/determinism for the complete default cohort twice.
+
+This family is another strong negative control against Ghidra-only boundary
+classification. Some entries are complete, but `0x2BE78`, `0x2BF52`,
+`0x2BFAB`, `0x2C044`, `0x2C0BF`, and `0x2C164` are sparse or internally
+false-split. `elly_gather_update()` at `0x2BDB4` ends raw code at `0x2BE31` yet
+owns compiler data through `0x2BE42`: `00` alignment, four compare words
+`1/8/16/32`, and four near-jump words. The exact-extent reviewer validates every
+trailing byte and jump target before admitting the function.
+
+Exact source work also exposed three reusable TC86 constraints. Struct ABI is
+sensitive to the compiler alignment state at header parse time, so `-a` must be
+enabled after ABI headers when the target packed layout requires it. DOS 8.3
+output naming applies to overlay basenames and can silently change object names.
+And direct consumption of a call result in AX can be required to avoid a
+compiler-selected SI temporary. None of these fixes uses inline assembly,
+codestrings, `__emit__`, object patching, or target-byte injection.
+
+The reviewed result after v48 is **24,268 / 24,272 authored bytes exact
+(99.983520%)** and **190 / 191 functions exact (99.476440%)**. `snd_load` is
+still the sole reviewed nonexact function with four blocked bytes. Candidate
+expansion now resumes at public **`elly_update()` `0x2C2E5`**, whose current
+Ghidra body is cross-linked and cannot define the target extent by itself.
+
+
+## v49: recover `elly_update()` and close `MAIN_034_TEXT`
+
+The next public target entry after the v37-v48 local family is `elly_update()`
+at runtime `0x2C2E5`. Ghidra creates the correct entry but cross-links its body
+to unrelated later code, so the accepted `0x3E9` extent is derived independently:
+`0x3AD` bytes of gap-free raw code through `RETF 0x2C691`, followed by three
+contiguous TC86 switch regions ending at `0x2C6CD`. All decoded switch targets
+land on instruction starts. The next exact TLINK public, `bullet_turn_x`, begins
+at `0x2C6CE`.
+
+`src/main/boss/elly_update.cpp` is ordinary maintained C++. The final aggregate
+integration fixes are ABI/linkage facts rather than byte emission: the callback
+is `pascal far`, matching the already-exact boss setup TU, and residual TASM
+uses the corresponding `@ELLY_UPDATE$QV` OMF external spelling. Focused
+`gptweb-elly-update-v49-focused-final-web-004` and 87-owner aggregate
+`gptweb-elly-update-v49-precommit-web-003` reproduce the target slice SHA
+`33eec33c...b7cce`, both ordered relocation sites, containing TLINK placement,
+and deterministic normalized `ellyall.obj` OMF in both cold builds.
+
+A segment-level re-audit then verifies that `MAIN_034_TEXT` is no longer an open
+candidate frontier. Its target span is exactly `0x2647` bytes; 22 exact authored
+owners tile the complete `13A9:65F7..8C3D` range with no gaps or overlaps, and
+residual ASM contributes zero bytes at the segment end. A separate local-PROC
+scan finds 38 numeric TASM procedure starts and zero omissions from the exact
+function ledger. Candidate discovery can therefore move away from this segment
+without relying on Ghidra completeness.
+
+After v49, the reviewed result is **25,269 / 25,273 authored bytes exact
+(99.984173%)** and **191 / 192 functions exact (99.479167%)**. `snd_load`
+remains the only reviewed nonexact function, with four blocked bytes.

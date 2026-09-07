@@ -1,9 +1,12 @@
+#ifndef TH04_ELLY_MAIN034_COMBINED
 #pragma option -a
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/th03/math/polar.hpp"
 #include "th04/main/boss/boss.hpp"
+
+#endif
 
 extern int elly_orbit_frame;
 
