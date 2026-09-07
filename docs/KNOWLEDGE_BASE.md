@@ -458,3 +458,34 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   and 193px thresholds so only the exact center returns true. Expressing that logic
   naturally in C++ gives the exact 58-byte TC86 body and preserves the full linked
   relocation order.
+
+### TH04 v29: compiler switch tables are authored function bytes
+
+- Do not end an authored function at Ghidra `body_max` when TC86 places switch
+  data after the final `RET`. For the eight Yuuka6 animation helpers, pinned
+  TASM boundaries and raw target bytes prove the trailing compare/jump tables
+  belong to the function extent even though Ghidra omits them from the body.
+- Review switch extents fail-closed as `code -> optional alignment byte ->
+  optional compare table -> jump table -> exact next boundary`. Validate compare
+  constants and require every jump word to resolve through the CS base to an
+  actual decoded instruction start.
+- Translation-unit placement is a codegen input for switch data. Keeping the
+  animation family in its own TU with file-start `#pragma option -a` reproduces
+  target table alignment; embedding probe copies in an existing TU changes the
+  padding/layout even when the high-level switches are identical.
+- TC86 truncates long external C source identifiers to 32 characters. When a
+  still-ASM caller references a newly reconstructed long-name C function, match
+  the compiler's truncated public name with a hash/count-bound source transform;
+  never patch the OMF or inject bytes.
+- The compiler alignment matrix is diagnostic: default / `-a1` emits a `0x3C6` block, while file-start `-a` / `-a2` emits the exact `0x3CA`. The four added zero bytes land before the open, spin-back, appear, and shield switch tables; treat them as compiler-owned alignment, not hand-authored padding.
+
+
+### TH04 v29: freeze live replay inputs before cold A/B
+
+- On a shared worktree, a long two-cold replay must not reread maintained source
+  independently for build A and build B. A concurrent edit can otherwise create a
+  false nondeterminism failure even when both compiler runs are individually stable.
+- Snapshot all repo-owned overlays, split sources, and build inputs once at replay
+  start; feed both materializations from that frozen byte set, record path/size/SHA
+  in the receipt, and fail if the live repo mutates before the run finishes. This
+  preserves dirty-tree visibility rather than hiding it.

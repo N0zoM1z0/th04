@@ -796,6 +796,7 @@ def reviewed_nonexact_reviews(
                 )
             metadata_address = override.get("table_metadata_address")
             metadata_value = None
+            meta_linear = None
             if metadata_address is not None:
                 meta_linear = int(str(metadata_address), 0)
                 if not (code_end <= meta_linear < extent_end):
@@ -810,6 +811,56 @@ def reviewed_nonexact_reviews(
                     raise ValueError(
                         f"reviewed nonexact table metadata for 0x{address:X} mismatches target"
                     )
+            compare_table_address = override.get("compare_table_address")
+            compare_values = None
+            compare_linear = None
+            compare_count = None
+            if compare_table_address is not None:
+                compare_linear = int(str(compare_table_address), 0)
+                compare_count = int(override.get("compare_table_count", jump_table_count))
+                if compare_count <= 0:
+                    raise ValueError(
+                        f"reviewed nonexact compare table for 0x{address:X} has invalid count"
+                    )
+                compare_end = compare_linear + (compare_count * 2)
+                if not (code_end <= compare_linear < extent_end) or compare_end > extent_end:
+                    raise ValueError(
+                        f"reviewed nonexact compare table for 0x{address:X} escapes trailing data"
+                    )
+                compare_values = [
+                    read_word(compare_linear + (index * 2))
+                    for index in range(compare_count)
+                ]
+                expected_compare = override.get("compare_table_values")
+                if expected_compare is not None:
+                    expected_values = [int(value) for value in expected_compare]
+                    if compare_values != expected_values:
+                        raise ValueError(
+                            f"reviewed nonexact compare table for 0x{address:X} mismatches target"
+                        )
+            if require_exact_extent:
+                trailing_cursor = code_end
+                if meta_linear is not None:
+                    if meta_linear != trailing_cursor:
+                        raise ValueError(
+                            f"reviewed exact extent switch metadata for 0x{address:X} is not contiguous"
+                        )
+                    trailing_cursor += 1
+                if compare_linear is not None:
+                    compare_end = compare_linear + (int(compare_count) * 2)
+                    if compare_linear != trailing_cursor:
+                        raise ValueError(
+                            f"reviewed exact extent compare table for 0x{address:X} is not contiguous"
+                        )
+                    trailing_cursor = compare_end
+                if jump_table_address != trailing_cursor:
+                    raise ValueError(
+                        f"reviewed exact extent switch table for 0x{address:X} is not contiguous"
+                    )
+                if table_end != extent_end:
+                    raise ValueError(
+                        f"reviewed exact extent switch table for 0x{address:X} does not fill extent"
+                    )
             switch_review = {
                 "cs_base": f"0x{cs_base:X}",
                 "jump_table_address": f"0x{jump_table_address:X}",
@@ -823,6 +874,15 @@ def reviewed_nonexact_reviews(
                 "table_metadata_value": (
                     f"0x{metadata_value:02X}" if metadata_value is not None else None
                 ),
+                "compare_table_address": (
+                    f"0x{compare_linear:X}" if compare_linear is not None else None
+                ),
+                "compare_table_count": compare_count,
+                "compare_values": (
+                    [f"0x{value:04X}" for value in compare_values]
+                    if compare_values is not None else None
+                ),
+                "trailing_extent_fully_accounted": bool(require_exact_extent),
             }
         decoded.pop("instruction_addresses", None)
         accepted.append(

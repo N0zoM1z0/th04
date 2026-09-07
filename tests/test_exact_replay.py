@@ -11,6 +11,91 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import replay_th04_main_exact_units as replay
 
 
+class UnitDependencyTests(unittest.TestCase):
+    def test_dependency_closure_preserves_manifest_order(self) -> None:
+        entries = [
+            {"id": "base"},
+            {"id": "middle", "requires_units": ["base"]},
+            {"id": "leaf", "requires_units": ["middle"]},
+        ]
+        resolved = replay.resolve_unit_dependencies(entries, {"leaf"})
+        self.assertEqual([entry["id"] for entry in resolved], ["base", "middle", "leaf"])
+
+    def test_dependency_closure_rejects_unknown_required_unit(self) -> None:
+        entries = [{"id": "leaf", "requires_units": ["missing"]}]
+        with self.assertRaisesRegex(RuntimeError, "unknown required unit missing"):
+            replay.resolve_unit_dependencies(entries, {"leaf"})
+
+
+class RepoInputSnapshotTests(unittest.TestCase):
+    def test_snapshot_freezes_overlay_and_detects_live_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            snapshot = root / "snapshot"
+            source = root / "source"
+            repo.mkdir()
+            source.mkdir()
+            maintained = repo / "unit.cpp"
+            maintained.write_bytes(b"first\n")
+            entry = {
+                "id": "unit-a",
+                "repo_source": "unit.cpp",
+                "source_mode": "overlay",
+                "overlay_path": "unit.cpp",
+            }
+            with patch.object(replay, "ROOT", repo), patch.object(
+                replay, "REC98_COMPAT", repo / "compat" / "rec98"
+            ):
+                paths = replay.repo_input_paths([entry], [], [])
+                receipt = replay.materialize_repo_snapshot(snapshot, paths)
+                maintained.write_bytes(b"second\n")
+                overlays = replay.overlay_sources(
+                    source, [entry], repo_root=snapshot
+                )
+                self.assertEqual((source / "unit.cpp").read_bytes(), b"first\n")
+                self.assertEqual(overlays[0]["sha256"], replay.digest_bytes(b"first\n"))
+                with self.assertRaisesRegex(RuntimeError, "repository input changed"):
+                    replay.verify_repo_snapshot(receipt)
+
+    def test_snapshot_rejects_drift_during_capture(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            snapshot = root / "snapshot"
+            repo.mkdir()
+            maintained = repo / "unit.cpp"
+            maintained.write_bytes(b"first\n")
+            real_digest_file = replay.digest_file
+            mutated = False
+
+            def mutate_before_verify(path: Path) -> str:
+                nonlocal mutated
+                if path == maintained and not mutated:
+                    mutated = True
+                    maintained.write_bytes(b"second\n")
+                return real_digest_file(path)
+
+            with patch.object(replay, "ROOT", repo), patch.object(
+                replay, "digest_file", side_effect=mutate_before_verify
+            ):
+                with self.assertRaisesRegex(RuntimeError, "changed while snapshotting"):
+                    replay.materialize_repo_snapshot(snapshot, [Path("unit.cpp")])
+
+    def test_snapshot_rejects_symlinked_live_input(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            snapshot = root / "snapshot"
+            repo.mkdir()
+            target = repo / "real.cpp"
+            target.write_bytes(b"body\n")
+            (repo / "unit.cpp").symlink_to(target.name)
+            with patch.object(replay, "ROOT", repo):
+                with self.assertRaises(FileNotFoundError):
+                    replay.materialize_repo_snapshot(snapshot, [Path("unit.cpp")])
+
+
 class Rec98CompatTests(unittest.TestCase):
     def test_forwarding_layer_is_materialized_and_attested(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

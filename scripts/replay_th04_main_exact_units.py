@@ -70,6 +70,81 @@ def overlapping_relocations(image, start: int, size: int) -> list[int]:
     return [r.linear for r in image.relocations if r.linear < end and r.linear + 2 > start]
 
 
+def repo_input_paths(
+    entries: list[dict[str, object]],
+    splits: list[dict[str, object]],
+    build_inserts: list[dict[str, object]],
+) -> list[Path]:
+    """Return all live repository inputs that cold replay must freeze once."""
+
+    paths: set[Path] = set()
+    for entry in entries:
+        if entry.get("repo_source"):
+            paths.add(Path(str(entry["repo_source"])))
+    for split in splits:
+        for key in ("repo_fragment", "repo_wrapper"):
+            if split.get(key):
+                paths.add(Path(str(split[key])))
+    for entry in build_inserts:
+        if entry.get("repo_source"):
+            paths.add(Path(str(entry["repo_source"])))
+    if REC98_COMPAT.is_dir():
+        for path in REC98_COMPAT.rglob("*"):
+            if path.is_file():
+                paths.add(path.relative_to(ROOT))
+    return sorted(paths, key=lambda value: value.as_posix())
+
+
+def materialize_repo_snapshot(destination: Path, relative_paths: list[Path]) -> list[dict[str, object]]:
+    """Freeze repo-owned build inputs once so both cold builds see identical bytes."""
+
+    receipt: list[dict[str, object]] = []
+    for relative in relative_paths:
+        if relative.is_absolute() or ".." in relative.parts:
+            raise RuntimeError(f"invalid repository snapshot path: {relative}")
+        source = ROOT / relative
+        if not source.is_file() or source.is_symlink():
+            raise FileNotFoundError(source)
+        target = destination / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        frozen = source.read_bytes()
+        frozen_sha256 = digest_bytes(frozen)
+        target.write_bytes(frozen)
+        shutil.copystat(source, target, follow_symlinks=False)
+        if (
+            not source.is_file()
+            or source.is_symlink()
+            or source.stat().st_size != len(frozen)
+            or digest_file(source) != frozen_sha256
+        ):
+            raise RuntimeError(f"repository input changed while snapshotting: {relative}")
+        receipt.append({
+            "path": relative.as_posix(),
+            "size": len(frozen),
+            "sha256": frozen_sha256,
+        })
+    return receipt
+
+
+def verify_repo_snapshot(receipt: list[dict[str, object]]) -> None:
+    """Fail if any frozen repository input changed while the replay was running."""
+
+    drift: list[str] = []
+    for item in receipt:
+        path = ROOT / str(item["path"])
+        if (
+            not path.is_file()
+            or path.is_symlink()
+            or path.stat().st_size != int(item["size"])
+            or digest_file(path) != str(item["sha256"])
+        ):
+            drift.append(str(item["path"]))
+    if drift:
+        raise RuntimeError(
+            "repository input changed during cold replay: " + ", ".join(drift)
+        )
+
+
 def materialize(revision: str, destination: Path) -> None:
     destination.mkdir(parents=True)
     archive = destination.parent / "source.tar"
@@ -77,19 +152,22 @@ def materialize(revision: str, destination: Path) -> None:
     run_checked(["tar", "-xf", archive, "-C", destination], ROOT)
 
 
-def materialize_rec98_compat(source_root: Path) -> list[dict[str, object]]:
+def materialize_rec98_compat(
+    source_root: Path, compat_root: Path | None = None
+) -> list[dict[str, object]]:
     """Copy and attest the repository-owned ReC98 forwarding layer."""
 
-    if not REC98_COMPAT.is_dir():
-        raise FileNotFoundError(REC98_COMPAT)
+    compat_root = REC98_COMPAT if compat_root is None else compat_root
+    if not compat_root.is_dir():
+        raise FileNotFoundError(compat_root)
     destination_root = source_root / "compat" / "rec98"
     receipt: list[dict[str, object]] = []
-    for path in sorted(REC98_COMPAT.rglob("*")):
+    for path in sorted(compat_root.rglob("*")):
         if path.is_symlink():
             raise RuntimeError(f"ReC98 compatibility layer contains a symlink: {path}")
         if not path.is_file():
             continue
-        relative = path.relative_to(REC98_COMPAT)
+        relative = path.relative_to(compat_root)
         destination = destination_root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, destination)
@@ -105,9 +183,12 @@ def materialize_rec98_compat(source_root: Path) -> list[dict[str, object]]:
     return receipt
 
 
-def resolve_rec98_forwarders(source: bytes) -> tuple[bytes, list[str]]:
+def resolve_rec98_forwarders(
+    source: bytes, compat_root: Path | None = None
+) -> tuple[bytes, list[str]]:
     """Resolve only attested one-line compat/rec98 includes for scaffold matching."""
 
+    compat_root = REC98_COMPAT if compat_root is None else compat_root
     used: list[str] = []
     pattern = re.compile(
         rb'(^\s*#include\s+")compat/rec98/([^"\r\n]+)(")', re.MULTILINE
@@ -118,7 +199,7 @@ def resolve_rec98_forwarders(source: bytes) -> tuple[bytes, list[str]]:
         relative = Path(relative_text)
         if relative.is_absolute() or ".." in relative.parts:
             raise RuntimeError(f"invalid ReC98 forwarding path: {relative_text}")
-        forwarder = REC98_COMPAT / relative
+        forwarder = compat_root / relative
         expected = f'#include "{relative.as_posix()}"\n'.encode("ascii")
         if (
             not forwarder.is_file()
@@ -135,10 +216,14 @@ def resolve_rec98_forwarders(source: bytes) -> tuple[bytes, list[str]]:
     return resolved, sorted(set(used))
 
 
-def overlay_sources(source_root: Path, entries: list[dict[str, object]]) -> list[dict[str, object]]:
+def overlay_sources(
+    source_root: Path, entries: list[dict[str, object]],
+    repo_root: Path | None = None, compat_root: Path | None = None,
+) -> list[dict[str, object]]:
+    repo_root = ROOT if repo_root is None else repo_root
     overlays: list[dict[str, object]] = []
     for entry in entries:
-        repo_source = ROOT / str(entry["repo_source"])
+        repo_source = repo_root / str(entry["repo_source"])
         if not repo_source.is_file():
             raise FileNotFoundError(repo_source)
         mode = str(entry.get("source_mode", "overlay"))
@@ -153,7 +238,7 @@ def overlay_sources(source_root: Path, entries: list[dict[str, object]]) -> list
             forwarded_headers: list[str] = []
             if mode == "forwarded-fragment":
                 fragment, forwarded_headers = resolve_rec98_forwarders(
-                    maintained_fragment
+                    maintained_fragment, compat_root=compat_root
                 )
             else:
                 fragment = maintained_fragment
@@ -213,6 +298,7 @@ def apply_source_splits(
     source_root: Path,
     splits: list[dict[str, object]],
     selected_ids: set[str],
+    repo_root: Path | None = None,
 ) -> list[dict[str, object]]:
     """Apply exact source/TU splits that are triggered by selected units.
 
@@ -223,14 +309,15 @@ def apply_source_splits(
     mode additionally requires the fragment to end the scaffold file.
     """
 
+    repo_root = ROOT if repo_root is None else repo_root
     receipts: list[dict[str, object]] = []
     for split in splits:
         triggers = {str(value) for value in split.get("trigger_units", [])}
         if not (triggers & selected_ids):
             continue
         split_id = str(split["id"])
-        fragment_path = ROOT / str(split["repo_fragment"])
-        wrapper_path = ROOT / str(split["repo_wrapper"])
+        fragment_path = repo_root / str(split["repo_fragment"])
+        wrapper_path = repo_root / str(split["repo_wrapper"])
         if not fragment_path.is_file() or not wrapper_path.is_file():
             raise FileNotFoundError(
                 fragment_path if not fragment_path.is_file() else wrapper_path
@@ -304,16 +391,18 @@ def apply_build_inserts(
     source_root: Path,
     inserts: list[dict[str, object]],
     selected_ids: set[str],
+    repo_root: Path | None = None,
 ) -> list[dict[str, object]]:
     """Materialize checked-in build inputs at one fail-closed build anchor."""
 
+    repo_root = ROOT if repo_root is None else repo_root
     receipts: list[dict[str, object]] = []
     for entry in inserts:
         triggers = {str(value) for value in entry.get("trigger_units", [])}
         if not (triggers & selected_ids):
             continue
         insert_id = str(entry["id"])
-        repo_source = ROOT / str(entry["repo_source"])
+        repo_source = repo_root / str(entry["repo_source"])
         if not repo_source.is_file() or repo_source.is_symlink():
             raise FileNotFoundError(repo_source)
         overlay = source_root / str(entry["overlay_path"])
@@ -602,6 +691,29 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
     return candidate_path, results
 
 
+def resolve_unit_dependencies(
+    all_entries: list[dict[str, object]], selected_ids: set[str]
+) -> list[dict[str, object]]:
+    """Return manifest-order unit closure and fail closed on unknown dependencies."""
+
+    by_id = {str(entry["id"]): entry for entry in all_entries}
+    missing_selected = selected_ids - set(by_id)
+    if missing_selected:
+        raise ValueError(f"unknown manifest unit(s): {', '.join(sorted(missing_selected))}")
+    resolved = set(selected_ids)
+    pending = list(selected_ids)
+    while pending:
+        unit_id = pending.pop()
+        for dependency in by_id[unit_id].get("requires_units", []):
+            dependency_id = str(dependency)
+            if dependency_id not in by_id:
+                raise RuntimeError(f"{unit_id}: unknown required unit {dependency_id}")
+            if dependency_id not in resolved:
+                resolved.add(dependency_id)
+                pending.append(dependency_id)
+    return [entry for entry in all_entries if str(entry["id"]) in resolved]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--unit", action="append", default=[], help="unit id; repeatable")
@@ -611,19 +723,21 @@ def main() -> int:
 
     config = tomllib.loads(MANIFEST.read_text(encoding="utf-8"))
     revision = config["reference_revision"]
-    entries = list(config["units"])
+    all_entries = list(config["units"])
+    entries = list(all_entries)
     splits = list(config.get("splits", []))
     build_inserts = list(config.get("build_inserts", []))
     build_replacements = list(config.get("build_replacements", []))
     source_transforms = list(config.get("source_transforms", []))
     if args.unit:
         wanted = set(args.unit)
-        entries = [entry for entry in entries if entry["id"] in wanted]
-        missing = wanted - {entry["id"] for entry in entries}
-        if missing:
-            parser.error(f"unknown manifest unit(s): {', '.join(sorted(missing))}")
+        try:
+            entries = resolve_unit_dependencies(all_entries, wanted)
+        except ValueError as exc:
+            parser.error(str(exc))
     else:
-        entries = [entry for entry in entries if entry.get("default_enabled", True)]
+        wanted = {str(entry["id"]) for entry in all_entries if entry.get("default_enabled", True)}
+        entries = resolve_unit_dependencies(all_entries, wanted)
     if not entries:
         parser.error("no units selected")
     if args.list_selected:
@@ -648,6 +762,11 @@ def main() -> int:
     root = ROOT / ".analysis" / "reconstruction" / "exact-unit-replay" / run_id
     if root.exists():
         raise RuntimeError(f"refusing to overwrite replay: {root}")
+    snapshot_root = root / "repo-inputs"
+    snapshot_receipt = materialize_repo_snapshot(
+        snapshot_root, repo_input_paths(entries, splits, build_inserts)
+    )
+    snapshot_compat = snapshot_root / "compat" / "rec98"
     target_mz = parse_mz(TARGET.read_bytes())
     if not target_mz.valid:
         raise RuntimeError("pinned target failed MZ integrity")
@@ -657,12 +776,16 @@ def main() -> int:
         run_root = root / label
         source = run_root / "source"
         materialize(revision, source)
-        compat_headers = materialize_rec98_compat(source)
-        overlays = overlay_sources(source, entries)
+        compat_headers = materialize_rec98_compat(source, compat_root=snapshot_compat)
+        overlays = overlay_sources(
+            source, entries, repo_root=snapshot_root, compat_root=snapshot_compat
+        )
         selected_ids = {entry["id"] for entry in entries}
-        split_receipts = apply_source_splits(source, splits, selected_ids)
+        split_receipts = apply_source_splits(
+            source, splits, selected_ids, repo_root=snapshot_root
+        )
         build_insert_receipts = apply_build_inserts(
-            source, build_inserts, selected_ids
+            source, build_inserts, selected_ids, repo_root=snapshot_root
         )
         build_replacement_receipts = apply_build_replacements(
             source, build_replacements, selected_ids
@@ -688,6 +811,8 @@ def main() -> int:
                 "units": units,
             }
         )
+
+    verify_repo_snapshot(snapshot_receipt)
 
     failures = []
     for entry in entries:
@@ -725,6 +850,7 @@ def main() -> int:
         "target_header_size": target_mz.header.header_size,
         "toolchain_attestation_sha256": digest_file(toolchain_receipt),
         "manifest_sha256": digest_file(MANIFEST),
+        "repo_input_snapshot": snapshot_receipt,
         "selected_units": [entry["id"] for entry in entries],
         "builds": build_results,
         "failures": failures,

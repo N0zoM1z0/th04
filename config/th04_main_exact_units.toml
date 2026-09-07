@@ -50,6 +50,13 @@ build_file = "Tupfile.lua"
 build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 build_replacement = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 
+[[build_replacements]]
+id = "th04-main034-yuuka6-animations"
+trigger_units = ["th04-main-yuuka6-animations"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
 [[source_transforms]]
 id = "th04-main035-boss-natural-tu"
 trigger_units = ["th04-main-main035-boss-tu"]
@@ -356,12 +363,59 @@ kind = "replace"
 old = "call\tyuuka6_1A503"
 new = "call\t@yuuka6_move_to_center$qv"
 expected_count = 2
-
 [[source_transforms.ops]]
 id = "alias-main034-yuuka6-aux-flag-v28"
 kind = "insert_before"
 anchor = "byte_25A08\tdb ?\r\n"
 text = "public _yuuka6_aux_flag\r\n_yuuka6_aux_flag label byte\r\n"
+
+
+[[source_transforms]]
+id = "th04-main034-yuuka6-animation-symbols-v29"
+trigger_units = ["th04-main-yuuka6-animations"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "13872e0ecee523a04170204dddcc9b888794103e3dcff65978066e616da7aa3d",
+  "f1a38273605a1b72f93664c9e85e4b1cada49561f37e6726bbb47ac3db074506",
+]
+
+[[source_transforms.ops]]
+id = "truncate-yuuka6-pull-forward-v29"
+kind = "replace"
+old = "_yuuka6_anim_parasol_back_pull_forward"
+new = "_yuuka6_anim_parasol_back_pull_fo"
+expected_count = 4
+
+[[source_transforms.ops]]
+id = "truncate-yuuka6-pull-left-v29"
+kind = "replace"
+old = "_yuuka6_anim_parasol_back_pull_left"
+new = "_yuuka6_anim_parasol_back_pull_le"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "truncate-yuuka6-spin-back-v29"
+kind = "replace"
+old = "_yuuka6_anim_parasol_left_spin_back"
+new = "_yuuka6_anim_parasol_left_spin_ba"
+expected_count = 5
+
+[[source_transforms]]
+id = "th04-main034-yuuka6-animations-natural-v29"
+trigger_units = ["th04-main-yuuka6-animations"]
+patch_path = "th04/main/boss/b6_anim.asm"
+encoding = "latin-1"
+scaffold_sha256 = "217b0b09081ad3c9e600254ac6a21776f8bec9ee1a6bbaa9bbaf5b1a86f2a7d6"
+patched_sha256 = "1b15b2687cec7410f798458bb608f9e0b445c6a31422d3f47ce966f27e187e21"
+
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-animation-procs-v29"
+kind = "remove_between"
+removed_sha256 = "41be34ceaa3d50f3ad7cb0631d6788737a241e2d0d3bfd1b471cba874ab1446e"
+start = "public _yuuka6_anim_parasol_back_close\r\n_yuuka6_anim_parasol_back_close\tproc near"
+end = "_yuuka6_anim_parasol_shield\tendp\r\n"
+replacement = "extrn _yuuka6_anim_parasol_back_close:near\r\nextrn _yuuka6_anim_parasol_back_open:near\r\nextrn _yuuka6_anim_parasol_back_pull_fo:near\r\nextrn _yuuka6_anim_parasol_back_pull_le:near\r\nextrn _yuuka6_anim_parasol_left_spin_ba:near\r\nextrn _yuuka6_anim_vanish:near\r\nextrn _yuuka6_anim_appear:near\r\nextrn _yuuka6_anim_parasol_shield:near\r\n\r\n"
 
 [[units]]
 id = "th04-main-slowdown-frame-delay"
@@ -943,6 +997,15 @@ repo_source = "src/main/boss/boss.cpp"
 overlay_path = "th04/boss.cpp"
 map_module = "th04/boss.cpp"
 object_path = "obj/th04/boss.obj"
+
+[[units]]
+id = "th04-main-yuuka6-animations"
+default_enabled = true
+requires_units = ["th04-main-chasecrosses-add"]
+repo_source = "src/main/boss/yuuka6_animations.cpp"
+overlay_path = "th04/anims.cpp"
+map_module = "th04/anims.cpp"
+object_path = "obj/th04/anims.obj"
 
 [[units]]
 id = "th04-main-chasecrosses-add"

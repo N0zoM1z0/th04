@@ -652,3 +652,44 @@ shape compiles to the exact target branch layout, including distinct 192px `<` a
 MAIN_034 prefix to 0x4B6 without changing ordered relocations. Two raw target near
 calls resolve to the entry even though Ghidra's caller view is empty, reinforcing
 that target call arithmetic is a stronger acceptance anchor than decompiler xrefs.
+
+## v29: switch-data extent, alignment, and identifier-length controls
+
+Eight adjacent Yuuka6 animation functions show that the final `RET` is not the
+end of TC86's authored function extent. Sparse switches append compare-word and
+near-jump-word tables; selected functions have a zero alignment byte before those
+tables, while the dense 40-frame spin switch appends one zero byte followed by a
+40-entry jump table. Ghidra creates the correct entries but excludes this trailing
+compiler data. The exact-extent reviewer therefore validates the complete ordered
+trailing layout and every resolved jump target.
+
+A dedicated `anims.cpp` TU with file-start `#pragma option -a` emits the exact
+0x3CA target contribution. An earlier probe copy inside the existing chase TU was
+not the accepted producer; once the independent TU was linked it also caused
+obvious duplicate publics, so the probe copy was removed. Three animation C
+identifiers exceed TC86's 32-character source identifier limit and are truncated
+in OMF/TLINK. Residual ASM references are changed only through hash/count-bound
+source transforms to those compiler-generated names; no object patch or byte
+emission is involved.
+
+
+## v29: `-a2` switch-table alignment
+
+A natural-C++ probe of all eight Yuuka6 animation helpers isolated the four
+post-`RET` zero bytes in the target. Default, `-a-`, and `-a1` all produce a
+`0x3C6` block. `-a` and `-a2` produce **0x3CA**, with public offsets exactly
+`0,6F,DF,149,1A8,27F,2F4,36A`. The four added bytes are the target zeros before
+the open, spin-back, appear, and shield switch tables. File-start
+`#pragma option -a` reproduces the same object under the ordinary TC4J build
+command. Mid-TU `#pragma option -a` was separately rejected because it changes
+subsequent linkage/segment behavior; use the dedicated animation TU instead.
+
+
+### v29 replay-input snapshot control
+
+The early animation experiments exposed a control-plane race rather than a codegen
+problem: build A and build B could read different revisions of a maintained dirty
+source while another agent was editing it. The exact replay driver now freezes all
+repo-owned build inputs once before either materialization and records the snapshot
+in the receipt. Both cold builds consume those bytes, and a live-repo mutation before
+completion fails the run. Do not diagnose moving source inputs as TC86 nondeterminism.

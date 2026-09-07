@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 16,676 / 16,680 (99.976019%) exact, and reviewed authored functions are 147 / 148 (99.324324%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 17,646 / 17,650 (99.977337%) exact, and reviewed authored functions are 155 / 156 (99.358974%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,11 +115,10 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-yuuka6-center-v28-precommit-001` passes all 66 current default-selected
+  `gptweb-yuuka6-anims-v29-default-001` passes all 67 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 16,622 bytes across 60
-  reviewed authored units/regions; 16,618 bytes across 57 units/regions are exact.
+- The current reviewed authored byte denominator is 17,650 bytes; 17,646 bytes are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -246,6 +245,17 @@ deterministic TH04 runtime scenario has been authored.
   `gptweb-yuuka6-center-v28-001` and final 66-unit aggregate
   `gptweb-yuuka6-center-v28-precommit-001` pass raw/map/ordered-relocation/OMF/
   determinism in both cold materializations.
+- v29 recovers the next **0x3CA = 970 bytes** as eight Yuuka6 sprite-animation
+  helpers in a dedicated natural-C++ TU at target `0x2A53D..0x2A906`. Fresh
+  Ghidra identifies all eight entries but omits the compiler-owned trailing
+  switch tables from its function bodies. Pinned TASM local symbols, raw RET
+  boundaries and the next target entry at `0x2A907` tile the complete range.
+  `reviewed_exact_extent` now validates `code -> optional alignment byte ->
+  optional compare table -> jump table` with every jump target required to be
+  a decoded instruction start. Focused `gptweb-yuuka6-anims-v29-004` and
+  67-unit aggregate `gptweb-yuuka6-anims-v29-default-001` pass both cold
+  materializations. The reviewed baseline becomes **17,646 / 17,650 bytes**
+  and **155 / 156 functions exact**.
 
 - `snd_mmd_resident` is now a full **47-byte exact pure-C function** at
   target `0x233AC..0x233DA` / TLINK `130E:02CC`. Removing `-WX` from the
@@ -334,15 +344,15 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-yuuka6-center-v28-precommit-001`
-  passed all 66 current default exact-replay owners in two isolated
+- The latest aggregate cold replay `gptweb-yuuka6-anims-v29-default-001`
+  passed all 67 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
   from byte ownership. The current review accepts 114 strict automatic functions
-  plus 33 replayable manual exact reviews. A fresh
+  plus 41 replayable manual exact reviews. A fresh
   TLINK-public audit found eight real exact-owner functions that the target
   Ghidra inventory had missed or misgrouped. `reviewed_exact_no_ghidra` admits
   them only with exact authored ownership, a matching TLINK public, gap-free raw
@@ -474,5 +484,29 @@ overlapping relocations. `boss_defeat_update` is 468/468 exact with an ordinary
 
 This expands the confirmed authored denominator by 2,123 bytes and eleven true
 functions over v20. The historical v21 baseline was 15,470/15,474 bytes and 140/141
-functions exact; v22 superseded it at 15,544/15,548 bytes and 141/142 functions exact; v23 reached 15,607/15,611 bytes and 142/143 functions exact; v24 reached 16,298/16,302 bytes and 143/144 functions exact; v25 reached 16,416/16,420 bytes and 144/145 functions exact; v26 reached 16,527/16,531 bytes and 145/146 functions exact; v27 reached 16,618/16,622 bytes and 146/147 functions exact; v28 now reaches 16,676/16,680 bytes and 147/148 functions exact; the only reviewed nonexact authored function remains
+functions exact; v22 superseded it at 15,544/15,548 bytes and 141/142 functions exact; v23 reached 15,607/15,611 bytes and 142/143 functions exact; v24 reached 16,298/16,302 bytes and 143/144 functions exact; v25 reached 16,416/16,420 bytes and 144/145 functions exact; v26 reached 16,527/16,531 bytes and 145/146 functions exact; v27 reached 16,618/16,622 bytes and 146/147 functions exact; v28 reached 16,676/16,680 bytes and 147/148 functions exact; v29 now reaches 17,646/17,650 bytes and 155/156 functions exact; the only reviewed nonexact authored function remains
 `snd_load`, with four blocked bytes.
+
+
+### Yuuka6 animation switch extent recovery (v29)
+
+The next eight `MAIN_034_TEXT` target helpers span `0x2A53D..0x2A906` /
+`13A9:6AAD..6E76`, for a total **0x3CA = 970 bytes**. Fresh Ghidra recognizes
+all eight entry addresses but truncates several bodies and never owns the
+compiler compare/jump tables following each `RET`. Target TLINK publics, pinned
+TASM local boundaries, raw terminal decoding, and exact switch-table contents
+therefore define the reviewed function extents. `reviewed_exact_extent` now
+requires any metadata byte plus compare/jump tables to be contiguous and to fill
+the complete public extent; every jump target must decode at an instruction
+start.
+
+The decisive compiler result is alignment, not handwritten padding. Default
+TC86 / `-a1` emits an animation block four bytes short. `-a` / `-a2` naturally
+emits exactly four `00` alignment bytes before the open, spin-back, appear, and
+shield switch tables, matching the target's only four `db 0` sites. Maintained
+`src/main/boss/yuuka6_animations.cpp` uses file-start `#pragma option -a`; it
+contains no inline ASM, codestring, `__emit__`, object patch, or target-byte
+injection. Focused `gptweb-yuuka6-anims-v29-004` and 67-unit aggregate
+`gptweb-yuuka6-anims-v29-default-001` reproduce all 970 bytes, exact map
+placement, relocation overlap, and deterministic valid OMF. Eight functions are
+newly reviewed exact; `snd_load` remains the sole reviewed nonexact function.

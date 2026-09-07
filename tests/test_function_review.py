@@ -311,6 +311,151 @@ next_public_address = "0x10005"
                         require_exact_extent=True,
                     )
 
+    def test_reviewed_exact_extent_validates_compare_and_jump_tables(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text(
+                """schema_version = 1
+
+[[reviewed_exact_extent]]
+id = "fn-switch-exact"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0xA"
+decode_size = "0x2"
+name = "switch_exact_fixture"
+owner_unit = "owner"
+evidence_id = "ev-switch-exact"
+reason = "synthetic compare plus jump switch extent"
+compare_table_address = "0x10002"
+compare_table_count = 2
+compare_table_values = [1, 7]
+jump_table_address = "0x10006"
+jump_table_count = 2
+cs_base = "0x10000"
+next_public_address = "0x1000A"
+""",
+                encoding="utf-8",
+            )
+            target = root / "target.bin"
+            data = bytearray(0x180A)
+            data[0x1800:0x1802] = b"\x90\xC3"
+            data[0x1802:0x1806] = b"\x01\x00\x07\x00"
+            data[0x1806:0x180A] = b"\x00\x00\x01\x00"
+            target.write_bytes(data)
+            item = {
+                "address": 0x10000, "address_hex": "0x10000",
+                "ghidra_name": "FUN_10000", "public": "switch_exact_fixture",
+                "owner_unit": "owner", "owner_start": 0x10000,
+                "owner_end": 0x1000A, "file_offset": 0x1800,
+                "source": "src/exact.cpp", "owner_name": "exact.cpp",
+            }
+            metadata = {0x10000: {
+                "address": "0x10000", "body_min": "0x10000",
+                "body_max": "0x10001", "body_addresses": "2",
+                "is_thunk": "false", "is_external": "false",
+            }}
+            publics = {0x10000: ["switch_exact_fixture"], 0x1000A: ["next_fixture"]}
+            decoded = {
+                "instruction_count": 2,
+                "instruction_addresses": [0x10000, 0x10001],
+                "terminal": "ret", "first_address": "0x10000",
+                "end_address_exclusive": "0x10002",
+            }
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "linear_decode", side_effect=lambda *args, **kwargs: dict(decoded)
+            ):
+                accepted = review.reviewed_nonexact_reviews(
+                    [item], metadata, publics, target,
+                    policy_key="reviewed_exact_extent",
+                    require_exact_extent=True,
+                )
+                switch = accepted[0]["switch_review"]
+                self.assertEqual(switch["compare_values"], ["0x0001", "0x0007"])
+                self.assertTrue(switch["trailing_extent_fully_accounted"])
+                policy.write_text(
+                    policy.read_text().replace(
+                        "compare_table_values = [1, 7]",
+                        "compare_table_values = [1, 8]",
+                    ),
+                    encoding="utf-8",
+                )
+                with self.assertRaisesRegex(ValueError, "compare table.*mismatches target"):
+                    review.reviewed_nonexact_reviews(
+                        [item], metadata, publics, target,
+                        policy_key="reviewed_exact_extent",
+                        require_exact_extent=True,
+                    )
+
+    def test_reviewed_exact_extent_validates_metadata_compare_and_jump_tables(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text(
+                """schema_version = 1
+
+[[reviewed_exact_extent]]
+id = "fn-switch-meta-compare"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0xB"
+decode_size = "0x2"
+name = "switch_meta_compare_fixture"
+owner_unit = "owner"
+evidence_id = "ev-switch-meta-compare"
+reason = "synthetic metadata plus compare plus jump switch extent"
+table_metadata_address = "0x10002"
+table_metadata_value = "0x00"
+compare_table_address = "0x10003"
+compare_table_count = 2
+compare_table_values = [1, 7]
+jump_table_address = "0x10007"
+jump_table_count = 2
+cs_base = "0x10000"
+next_public_address = "0x1000B"
+""",
+                encoding="utf-8",
+            )
+            target = root / "target.bin"
+            data = bytearray(0x180B)
+            data[0x1800:0x1802] = b"\x90\xC3"
+            data[0x1802] = 0
+            data[0x1803:0x1807] = b"\x01\x00\x07\x00"
+            data[0x1807:0x180B] = b"\x00\x00\x01\x00"
+            target.write_bytes(data)
+            item = {
+                "address": 0x10000, "address_hex": "0x10000",
+                "ghidra_name": "FUN_10000", "public": "switch_meta_compare_fixture",
+                "owner_unit": "owner", "owner_start": 0x10000,
+                "owner_end": 0x1000B, "file_offset": 0x1800,
+                "source": "src/exact.cpp", "owner_name": "exact.cpp",
+            }
+            metadata = {0x10000: {
+                "address": "0x10000", "body_min": "0x10000",
+                "body_max": "0x10001", "body_addresses": "2",
+                "is_thunk": "false", "is_external": "false",
+            }}
+            publics = {0x10000: ["switch_meta_compare_fixture"], 0x1000B: ["next_fixture"]}
+            decoded = {
+                "instruction_count": 2,
+                "instruction_addresses": [0x10000, 0x10001],
+                "terminal": "ret", "first_address": "0x10000",
+                "end_address_exclusive": "0x10002",
+            }
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "linear_decode", side_effect=lambda *args, **kwargs: dict(decoded)
+            ):
+                accepted = review.reviewed_nonexact_reviews(
+                    [item], metadata, publics, target,
+                    policy_key="reviewed_exact_extent",
+                    require_exact_extent=True,
+                )
+                switch = accepted[0]["switch_review"]
+                self.assertEqual(switch["table_metadata_value"], "0x00")
+                self.assertEqual(switch["compare_values"], ["0x0001", "0x0007"])
+                self.assertTrue(switch["trailing_extent_fully_accounted"])
+
     def test_manual_exact_extent_promotes_blocked_ledger_row(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -697,3 +697,209 @@ id = "th04-main-fn-2a503"
 address = "0x2A503"
 evidence_id = "ev-th04-main-yuuka6-center-boundary-v28"
 reason = "Explicitly admit target-called Yuuka6 move-to-center helper after exact-owner, complete-Ghidra-body, raw-RET, next-entry, target near-call, and generated-public-plumbing review."
+
+# v29: target-driven Yuuka6 animation helpers. Ghidra finds all entries but
+# truncates every switch body before compiler-owned compare/jump tables.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a53d"
+address = "0x2A53D"
+file_offset = "0x1BD3D"
+size = "0x6F"
+decode_size = "0x5B"
+name = "yuuka6_anim_parasol_back_close()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "Target Ghidra begins the correct function but omits the compiler switch tables. Raw code ends in RET at 0x2A597; compare values [1,7,13,19,25] and the five-entry near jump table fill the extent exactly through the next TLINK public at 0x2A5AC."
+compare_table_address = "0x2A598"
+compare_table_count = 5
+compare_table_values = [1, 7, 13, 19, 25]
+jump_table_address = "0x2A5A2"
+jump_table_count = 5
+cs_base = "0x23A90"
+next_public_address = "0x2A5AC"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a5ac"
+address = "0x2A5AC"
+file_offset = "0x1BDAC"
+size = "0x70"
+decode_size = "0x5B"
+name = "yuuka6_anim_parasol_back_open()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "Raw code ends in RET at 0x2A606; one zero alignment byte, compare values [1,7,13,19,25], and the five-entry near jump table exactly fill the remaining compiler extent through public 0x2A61C."
+table_metadata_address = "0x2A607"
+table_metadata_value = "0x00"
+compare_table_address = "0x2A608"
+compare_table_count = 5
+compare_table_values = [1, 7, 13, 19, 25]
+jump_table_address = "0x2A612"
+jump_table_count = 5
+cs_base = "0x23A90"
+next_public_address = "0x2A61C"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a61c"
+address = "0x2A61C"
+file_offset = "0x1BE1C"
+size = "0x6A"
+decode_size = "0x56"
+name = "yuuka6_anim_parasol_back_pull_forward()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "Raw code ends in RET at 0x2A671; compare values [1,7,13,19,25] and the five-entry near jump table account for every trailing byte through public 0x2A686."
+compare_table_address = "0x2A672"
+compare_table_count = 5
+compare_table_values = [1, 7, 13, 19, 25]
+jump_table_address = "0x2A67C"
+jump_table_count = 5
+cs_base = "0x23A90"
+next_public_address = "0x2A686"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a686"
+address = "0x2A686"
+file_offset = "0x1BE86"
+size = "0x5F"
+decode_size = "0x4F"
+name = "yuuka6_anim_parasol_back_pull_left()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "Raw code ends in RET at 0x2A6D4; compare values [1,7,13,19] and four jump targets fill the exact extent through public 0x2A6E5."
+compare_table_address = "0x2A6D5"
+compare_table_count = 4
+compare_table_values = [1, 7, 13, 19]
+jump_table_address = "0x2A6DD"
+jump_table_count = 4
+cs_base = "0x23A90"
+next_public_address = "0x2A6E5"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a6e5"
+address = "0x2A6E5"
+file_offset = "0x1BEE5"
+size = "0xD7"
+decode_size = "0x86"
+name = "yuuka6_anim_parasol_left_spin_back()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "TC86 lowers this dense frame switch differently: raw code ends in RET at 0x2A76A, one zero alignment byte follows, and a 40-entry near jump table fills the extent exactly through public 0x2A7BC."
+table_metadata_address = "0x2A76B"
+table_metadata_value = "0x00"
+jump_table_address = "0x2A76C"
+jump_table_count = 40
+cs_base = "0x23A90"
+next_public_address = "0x2A7BC"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a7bc"
+address = "0x2A7BC"
+file_offset = "0x1BFBC"
+size = "0x75"
+decode_size = "0x5D"
+name = "yuuka6_anim_vanish()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "Raw code ends in RET at 0x2A818; compare values [1,8,15,22,29,36] plus six near jump targets fill the exact extent through public 0x2A831."
+compare_table_address = "0x2A819"
+compare_table_count = 6
+compare_table_values = [1, 8, 15, 22, 29, 36]
+jump_table_address = "0x2A825"
+jump_table_count = 6
+cs_base = "0x23A90"
+next_public_address = "0x2A831"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a831"
+address = "0x2A831"
+file_offset = "0x1C031"
+size = "0x76"
+decode_size = "0x5D"
+name = "yuuka6_anim_appear()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "Raw code ends in RET at 0x2A88D; one zero alignment byte, compare values [1,8,15,22,29,36], and six near jump targets fill the compiler extent through public 0x2A8A7."
+table_metadata_address = "0x2A88E"
+table_metadata_value = "0x00"
+compare_table_address = "0x2A88F"
+compare_table_count = 6
+compare_table_values = [1, 8, 15, 22, 29, 36]
+jump_table_address = "0x2A89B"
+jump_table_count = 6
+cs_base = "0x23A90"
+next_public_address = "0x2A8A7"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2a8a7"
+address = "0x2A8A7"
+file_offset = "0x1C0A7"
+size = "0x60"
+decode_size = "0x4F"
+name = "yuuka6_anim_parasol_shield()"
+owner_unit = "th04-main-yuuka6-animations"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "Raw code ends in RET at 0x2A8F5; one zero alignment byte, compare values [1,7,13,19], and four jump targets fill the exact authored owner through its target/TASM end at 0x2A907."
+table_metadata_address = "0x2A8F6"
+table_metadata_value = "0x00"
+compare_table_address = "0x2A8F7"
+compare_table_count = 4
+compare_table_values = [1, 7, 13, 19]
+jump_table_address = "0x2A8FF"
+jump_table_count = 4
+cs_base = "0x23A90"
+
+[[new_exact]]
+id = "th04-main-fn-2a53d"
+address = "0x2A53D"
+name = "yuuka6_anim_parasol_back_close()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven animation function admitted with complete compiler compare/jump-table extent."
+
+[[new_exact]]
+id = "th04-main-fn-2a5ac"
+address = "0x2A5AC"
+name = "yuuka6_anim_parasol_back_open()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven animation function admitted with alignment plus compare/jump-table extent."
+
+[[new_exact]]
+id = "th04-main-fn-2a61c"
+address = "0x2A61C"
+name = "yuuka6_anim_parasol_back_pull_forward()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven animation function admitted with complete compiler switch extent."
+
+[[new_exact]]
+id = "th04-main-fn-2a686"
+address = "0x2A686"
+name = "yuuka6_anim_parasol_back_pull_left()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven animation function admitted with complete compiler switch extent."
+
+[[new_exact]]
+id = "th04-main-fn-2a6e5"
+address = "0x2A6E5"
+name = "yuuka6_anim_parasol_left_spin_back()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven dense-switch animation function admitted with full 40-entry jump table."
+
+[[new_exact]]
+id = "th04-main-fn-2a7bc"
+address = "0x2A7BC"
+name = "yuuka6_anim_vanish()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven animation function admitted with complete compiler switch extent."
+
+[[new_exact]]
+id = "th04-main-fn-2a831"
+address = "0x2A831"
+name = "yuuka6_anim_appear()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven animation function admitted with alignment plus compare/jump-table extent."
+
+[[new_exact]]
+id = "th04-main-fn-2a8a7"
+address = "0x2A8A7"
+name = "yuuka6_anim_parasol_shield()"
+evidence_id = "ev-th04-main-yuuka6-animations-boundary-v29"
+reason = "New exact target-driven animation function admitted through exact owner end with fully-accounted trailing switch data."

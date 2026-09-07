@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **16,676 / 16,680 = 99.976019% exact**;
-- authored functions: **147 / 148 = 99.324324% exact**;
+- authored C/C++ bytes: **17,646 / 17,650 = 99.977337% exact**;
+- authored functions: **155 / 156 = 99.358974% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -23,7 +23,9 @@ run:
 
 1. attests the pinned TC4J/TASM/TLINK/MS-DOS Player toolchain;
 2. materializes two independent source trees with `git archive` from the pinned
-   ReC98 revision;
+   ReC98 revision, after first freezing every live repo-owned replay input to one
+   path/size/SHA snapshot shared by both cold builds; the run fails if those live
+   inputs mutate before completion;
 3. copies `compat/rec98/` into each tree and records every forwarding file's
    path, size, and SHA-256;
 4. replaces complete translation units with maintained files from `src/`,
@@ -44,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-center-v28-precommit-001/receipt.json`.
-It passes all 66 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-anims-v29-default-001/receipt.json`.
+It passes all 67 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -870,3 +872,32 @@ ordered relocation overlap, deterministic valid OMF, and zero-code layout-anchor
 checks. The reviewed baseline is now **16,676 / 16,680 bytes exact
 (99.976019%)** and **147 / 148 functions exact (99.324324%)**; the same four
 `snd_load` bytes remain the sole reviewed authored mismatch.
+
+
+## v29: recover the eight Yuuka6 compiler-switch animation helpers
+
+The next target range `0x2A53D..0x2A906` contains eight adjacent sprite-animation
+helpers totaling **0x3CA = 970 bytes**. ReC98 still keeps these implementations in
+`b6_anim.asm`; natural C++ `switch` statements reproduce the entire family in a
+dedicated `MAIN_034_TEXT` TU. Focused `gptweb-yuuka6-anims-v29-004` and the
+67-unit aggregate `gptweb-yuuka6-anims-v29-default-001` are raw/map/ordered-
+relocation/OMF/determinism exact in both cold materializations.
+
+Function boundary accounting must include compiler-owned trailing data. Ghidra
+starts all eight functions correctly but stops at their final `RET`, omitting the
+TC86 switch representation. Depending on the function, the remaining bytes are
+`compare-word table + near-jump table`, `zero alignment byte + compare table +
+jump table`, or for the dense 40-frame switch `zero alignment byte + 40-entry
+jump table`. The fail-closed exact-extent reviewer validates this entire sequence,
+checks sparse compare constants, resolves each jump word via CS base `0x23A90`
+to a decoded instruction start, and requires the final table byte to be exactly
+the next target/TASM function boundary.
+
+The independent TU is also a compiler-layout control: file-start `#pragma option
+-a` reproduces the target's selective switch-table alignment bytes. Three long
+`extern "C"` animation identifiers exceed TC86's 32-character source-name
+limit and therefore appear in OMF/TLINK truncated; replay hash-binds the residual
+ASM references to those exact truncated names without emitting or patching code
+bytes. The reviewed baseline is now **17,646 / 17,650 bytes exact (99.977337%)**
+and **155 / 156 functions exact (99.358974%)**. `snd_load` remains the sole
+reviewed nonexact function, with four blocked bytes.
