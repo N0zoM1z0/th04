@@ -255,6 +255,21 @@ start = "public @CHASECROSSES_ADD$QUCUC\r\n@chasecrosses_add$qucuc\tproc near"
 end = "@chasecrosses_add$qucuc\tendp\r\n"
 replacement = "; natural C++ MAIN_034 prefix\r\nextrn @CHASECROSSES_ADD$QUCUC:near\r\n\r\n"
 
+[[source_transforms.ops]]
+id = "remove-main034-safetycircle-add"
+kind = "remove_between"
+removed_sha256 = "401a57249eb980f2ef49a89a1fab8623d783fa03ccced6844771baa9a245f471"
+start = "yuuka6_1A0D1\tproc near"
+end = "yuuka6_1A0D1\tendp\r\n"
+replacement = "extrn _yuuka6_safetycircle_add:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-safetycircle-call"
+kind = "replace"
+old = "call\tyuuka6_1A0D1"
+new = "call\t_yuuka6_safetycircle_add"
+expected_count = 1
+
 [[units]]
 id = "th04-main-slowdown-frame-delay"
 repo_source = "src/main/slowdown.cpp"

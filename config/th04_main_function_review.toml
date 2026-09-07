@@ -557,3 +557,22 @@ id = "th04-main-fn-2a087"
 address = "0x2A087"
 evidence_id = "ev-th04-main-chasecrosses-boundary-v22"
 reason = "Fresh target Ghidra reports one contiguous 74-byte function at the matching TLINK public inside the exact target-derived natural-C++ MAIN_034 prefix owner."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-2a0d1"
+address = "0x2A0D1"
+file_offset = "0x1B8D1"
+size = "0x3F"
+name = "yuuka6_safetycircle_add()"
+owner_unit = "th04-main-chasecrosses-add"
+evidence_id = "ev-th04-main-safetycircle-boundary-v23"
+reason = "Target Ghidra starts a function at 0x2A0D1 but truncates its body to 25/63 bytes. Raw 16-bit decode tiles the full 63-byte extent through RET at 0x2A10F; the next true target/TASM function entry starts exactly at 0x2A110; and target near CALL at 0x2ADD6 resolves exactly to 0x2A0D1. The full extent lies inside the exact 0x89 natural-C++ MAIN_034 prefix owner."
+next_internal_address = "0x2A110"
+call_site_address = "0x2ADD6"
+generated_public = "_yuuka6_safetycircle_add"
+
+[[new_exact]]
+id = "th04-main-fn-2a0d1"
+address = "0x2A0D1"
+evidence_id = "ev-th04-main-safetycircle-boundary-v23"
+reason = "Explicitly admit the target-called no-public internal safety-circle initializer after exact-owner, truncated-Ghidra-entry, raw-RET, next-internal-entry, and near-call-anchor review."

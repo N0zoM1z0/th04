@@ -317,6 +317,116 @@ def reviewed_exact_internal_reviews(functions, metadata, publics, target):
     return accepted
 
 
+
+def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
+    """Validate internal functions with a target call anchor despite truncated Ghidra bodies.
+
+    This gate is intentionally stricter than ordinary manual review: the entry must
+    start a target Ghidra function, the configured extent must decode gap-free through
+    RET/RETF, another Ghidra function must begin exactly at the next byte, and a
+    target near CALL must resolve exactly to the internal entry. The function must
+    lie wholly inside one exact authored byte owner and have no TLINK public.
+    """
+    policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
+    owners = {str(owner["unit_id"]): owner for owner in exact_authored_owners()}
+    raw_target = target.read_bytes()
+    accepted = []
+
+    def file_offset_for(linear: int) -> int:
+        return linear - 0x10000 + 0x1800
+
+    for override in policy.get("reviewed_exact_internal_call", []):
+        address = int(str(override["address"]), 0)
+        file_offset = int(str(override["file_offset"]), 0)
+        size = int(str(override["size"]), 0)
+        owner_unit = str(override["owner_unit"])
+        owner = owners.get(owner_unit)
+        if owner is None:
+            raise ValueError(f"internal-call exact address 0x{address:X} lacks named exact owner")
+        if address not in functions:
+            raise ValueError(f"internal-call exact address 0x{address:X} lacks Ghidra function entry")
+        generated_public = override.get("generated_public")
+        if generated_public is None:
+            if address in publics:
+                raise ValueError(f"internal-call exact address 0x{address:X} unexpectedly has a TLINK public")
+        else:
+            names = publics.get(address, [])
+            if str(generated_public) not in names:
+                raise ValueError(
+                    f"internal-call exact address 0x{address:X} lacks configured generated public "
+                    f"{generated_public!r}"
+                )
+        if file_offset != file_offset_for(address):
+            raise ValueError(f"internal-call exact address 0x{address:X} file offset mismatch")
+        if not (int(owner["start"]) <= address and address + size <= int(owner["end"])):
+            raise ValueError(f"internal-call exact address 0x{address:X} escapes exact owner")
+
+        data = metadata.get(address)
+        if data is None:
+            raise ValueError(f"internal-call exact address 0x{address:X} lacks Ghidra metadata")
+        body_min = int(data["body_min"], 16)
+        body_max = int(data["body_max"], 16)
+        body_addresses = int(data["body_addresses"])
+        if body_min != address or not (address <= body_max < address + size) or not (0 < body_addresses <= size):
+            raise ValueError(f"internal-call exact address 0x{address:X} lacks a bounded Ghidra entry body")
+        if data.get("is_thunk") != "false" or data.get("is_external") != "false":
+            raise ValueError(f"internal-call exact address 0x{address:X} is thunk/external")
+
+        next_internal = int(str(override["next_internal_address"]), 0)
+        if address + size != next_internal or next_internal not in functions:
+            raise ValueError(f"internal-call exact address 0x{address:X} next-internal boundary mismatch")
+        next_data = metadata.get(next_internal)
+        if next_data is None or int(next_data["body_min"], 16) != next_internal:
+            raise ValueError(f"internal-call exact address 0x{address:X} next internal entry lacks Ghidra metadata")
+        if next_data.get("is_thunk") != "false" or next_data.get("is_external") != "false":
+            raise ValueError(f"internal-call exact address 0x{address:X} next internal entry is thunk/external")
+
+        call_site = int(str(override["call_site_address"]), 0)
+        call_offset = file_offset_for(call_site)
+        if call_offset < 0 or call_offset + 3 > len(raw_target):
+            raise ValueError(f"internal-call exact address 0x{address:X} call anchor escapes target")
+        if raw_target[call_offset] != 0xE8:
+            raise ValueError(f"internal-call exact address 0x{address:X} call anchor is not near CALL")
+        displacement = int.from_bytes(raw_target[call_offset + 1:call_offset + 3], "little", signed=True)
+        resolved_call = call_site + 3 + displacement
+        if resolved_call != address:
+            raise ValueError(
+                f"internal-call exact address 0x{address:X} call target mismatch: "
+                f"0x{resolved_call:X} != 0x{address:X}"
+            )
+
+        decoded = linear_decode(target, address, file_offset, size)
+        instruction_addresses = decoded.pop("instruction_addresses", None)
+        if decoded.get("end_address_exclusive") != f"0x{address + size:X}":
+            raise ValueError(f"internal-call exact address 0x{address:X} raw decode extent mismatch")
+        if str(decoded.get("terminal", "")).lower() not in {"ret", "retf"}:
+            raise ValueError(f"internal-call exact address 0x{address:X} lacks terminal RET/RETF")
+        accepted.append({
+            "id": str(override["id"]),
+            "address": address,
+            "address_hex": f"0x{address:X}",
+            "ghidra_name": functions[address],
+            "public": str(override["name"]),
+            "owner_unit": owner_unit,
+            "owner_start": owner["start"],
+            "owner_end": owner["end"],
+            "file_offset": file_offset,
+            "source": owner["source"],
+            "owner_name": owner["owner_name"],
+            "size": size,
+            "body_min": body_min,
+            "body_max": body_max,
+            "body_addresses": body_addresses,
+            "evidence_id": str(override["evidence_id"]),
+            "reason": str(override["reason"]),
+            "decode": decoded,
+            "switch_review": None,
+            "boundary_mode": f"next internal Ghidra entry 0x{next_internal:X}",
+            "call_site_address": f"0x{call_site:X}",
+            "resolved_call_target": f"0x{resolved_call:X}",
+        })
+    return accepted
+
 def parse_metadata(path: Path) -> dict[int, dict[str, str]]:
     result: dict[int, dict[str, str]] = {}
     for block in path.read_text(encoding="utf-8").strip().split("\n\n"):
@@ -911,12 +1021,14 @@ def main() -> int:
         manual_exact: list[dict[str, object]] = []
         manual_exact_no_ghidra: list[dict[str, object]] = []
         manual_exact_internal: list[dict[str, object]] = []
+        manual_exact_internal_call: list[dict[str, object]] = []
         manual_exact_extent: list[dict[str, object]] = []
         reviewed_nonexact: list[dict[str, object]] = []
         if (
             policy.get("reviewed_exact", [])
             or policy.get("reviewed_exact_no_ghidra", [])
             or policy.get("reviewed_exact_internal", [])
+            or policy.get("reviewed_exact_internal_call", [])
             or policy.get("reviewed_exact_extent", [])
             or policy.get("reviewed_nonexact", [])
         ):
@@ -931,6 +1043,11 @@ def main() -> int:
         if policy.get("reviewed_exact_internal", []):
             assert args.target is not None
             manual_exact_internal = reviewed_exact_internal_reviews(functions, parsed_metadata, publics, args.target)
+        if policy.get("reviewed_exact_internal_call", []):
+            assert args.target is not None
+            manual_exact_internal_call = reviewed_exact_internal_call_reviews(
+                functions, parsed_metadata, publics, args.target
+            )
         if policy.get("reviewed_exact_extent", []):
             assert args.target is not None
             manual_exact_extent = reviewed_nonexact_reviews(
@@ -946,7 +1063,10 @@ def main() -> int:
             reviewed_nonexact = reviewed_nonexact_reviews(
                 items, parsed_metadata, publics, args.target
             )
-        manual_exact_all = [*manual_exact, *manual_exact_no_ghidra, *manual_exact_internal, *manual_exact_extent]
+        manual_exact_all = [
+            *manual_exact, *manual_exact_no_ghidra, *manual_exact_internal,
+            *manual_exact_internal_call, *manual_exact_extent
+        ]
         reviewed_addresses = {
             int(item["address"]) for item in [*manual_exact_all, *reviewed_nonexact]
         }
@@ -964,6 +1084,7 @@ def main() -> int:
                 "manual_exact_count": len(manual_exact_all),
                 "manual_exact_no_ghidra_count": len(manual_exact_no_ghidra),
                 "manual_exact_internal_count": len(manual_exact_internal),
+                "manual_exact_internal_call_count": len(manual_exact_internal_call),
                 "manual_exact_extent_count": len(manual_exact_extent),
                 "exact_function_count": exact_count,
                 "strict_rejected_count": len(rejected),

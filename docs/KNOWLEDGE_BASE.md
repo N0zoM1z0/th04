@@ -371,3 +371,18 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   fail-closed. The chase transform accepts only the original `th04_main.asm`
   SHA or the independently verified v21 boss-transform SHA. This permits focused
   and aggregate replay without turning a scaffold-hash mismatch into a waiver.
+
+### TH04 v23: truncated-Ghidra internal functions and target-checked layouts
+
+- A Ghidra function entry can be real even when its body construction is much too
+  short. For the internal function at `0x2A0D1`, Ghidra reports only 25/63 bytes.
+  Review the full extent only when exact-owner containment, gap-free raw decode
+  through `RET/RETF`, a second true entry at the next byte, and a target near-call
+  resolving to the entry all agree. `reviewed_exact_internal_call` encodes this
+  fail-closed rule. A public symbol introduced by the reconstruction is not target
+  evidence and must be explicitly marked as generated.
+- ReC98 data layouts require the same target verification as source logic. Its
+  TH04 `safetycircle_t` places `col_ring` at +0x1C via `unused_3[8]`; target code
+  writes +0x18. Reducing that candidate field to `unused_3[4]` is both structurally
+  required by the target and the source shape that makes TC4J emit the exact
+  63-byte function.

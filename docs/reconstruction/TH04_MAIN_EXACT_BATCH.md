@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **15,544 / 15,548 = 99.974273% exact**;
-- authored functions: **141 / 142 = 99.295775% exact**;
+- authored C/C++ bytes: **15,607 / 15,611 = 99.974377% exact**;
+- authored functions: **142 / 143 = 99.300699% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,7 +44,7 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-chasecross-v22-precommit-003/receipt.json`.
+`.analysis/reconstruction/exact-unit-replay/gptweb-safetycircle-v23-precommit-004/receipt.json`.
 It passes all 66 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
@@ -694,9 +694,40 @@ TLINK places a zero-byte metadata contribution at `13A9:65F7`, the natural
 `th04_main.asm` at `13A9:6641` size `0x25FD`, while all program CODE segment
 start/length tuples stay unchanged.
 
-This raises the reviewed baseline to **15,544 / 15,548 authored bytes exact
+This established the historical v22 baseline at **15,544 / 15,548 authored bytes exact
 (99.974273%)** and **141 / 142 reviewed functions exact (99.295775%)**. It also
 provides a reusable, fail-closed route for continuing into the large still
 unowned compiler-like regions embedded in `MAIN_033_TEXT`, `MAIN_034_TEXT`, and
 `MAIN_036_TEXT` without treating ReC98's reconstructed files as the boundary of
 the search space. `snd_load` remains the sole reviewed nonexact function.
+
+## v23: extend `MAIN_034` through the internal safety-circle initializer
+
+The next true TASM `PROC` after `chasecrosses_add` starts at target `0x2A0D1`
+and ends immediately before the next true entry at `0x2A110`, giving a 0x3F-byte
+function. This function has no original TLINK public. Fresh Ghidra correctly
+creates an entry at `0x2A0D1` but constructs only 25 of its 63 bytes, so Ghidra
+body size is not used as the extent oracle. Instead, target raw decode tiles all
+63 bytes through `RET`, target near call `0x2ADD6` resolves exactly to the entry,
+and pinned TASM plus fresh Ghidra both place the next true entry at `0x2A110`.
+
+Target field accesses also falsify the ReC98 structure layout. ReC98's
+`safetycircle_t` uses `unused_3[8]`, placing `col_ring` at +0x1C. The target
+instruction is `C6 44 18 08`, so `col_ring` is at +0x18; natural TC4J source
+with `unused_3[4]` emits the exact 63-byte instruction skeleton. With this
+correction, `src/main/boss/chasecrosses_add.cpp` emits one 0x89-byte
+`MAIN_034_TEXT` prefix containing the 0x4A chase function followed by the 0x3F
+safety-circle initializer. Residual `th04_main.asm` resumes at `13A9:6680`.
+
+Focused replay `gptweb-safetycircle-v23-002` and aggregate
+`gptweb-safetycircle-v23-precommit-004` reproduce all 137 bytes, exact map extent,
+ordered overlapping relocation list, deterministic TC86 OMF, and the unchanged
+zero-LEDATA code-order anchor. The function ledger uses the fail-closed
+`reviewed_exact_internal_call` path: exact owner + target Ghidra entry + raw
+terminal + next internal entry + target near-call anchor. A generated TLINK
+public used only for cross-object reconstruction is explicitly named but is not
+treated as target boundary evidence.
+
+The v23 reviewed baseline is **15,607 / 15,611 authored C/C++ bytes exact
+(99.974377%)** and **142 / 143 reviewed functions exact (99.300699%)**.
+`snd_load` remains the sole reviewed nonexact function, with four blocked bytes.

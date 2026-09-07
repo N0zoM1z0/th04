@@ -709,6 +709,143 @@ cs_base = "0xF000"
                     )
 
 
+
+    def test_internal_call_exact_accepts_truncated_ghidra_with_call_anchor(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_internal_call]]
+id = "fn-internal-call"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x3"
+name = "internal_call_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-internal-call"
+reason = "synthetic truncated-Ghidra internal boundary"
+next_internal_address = "0x10003"
+call_site_address = "0x10008"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1803] = b"\x90\x90\xC3"
+            data[0x1808:0x180B] = b"\xE8\xF5\xFF"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            functions = {0x10000: "FUN_10000", 0x10003: "FUN_10003"}
+            metadata = {
+                0x10000: {"address": "0x10000", "body_min": "0x10000",
+                          "body_max": "0x10000", "body_addresses": "1",
+                          "is_thunk": "false", "is_external": "false"},
+                0x10003: {"address": "0x10003", "body_min": "0x10003",
+                          "body_max": "0x10005", "body_addresses": "3",
+                          "is_thunk": "false", "is_external": "false"},
+            }
+            decoded = {"instruction_count": 3, "instruction_addresses": [0x10000,0x10001,0x10002],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10003"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=dict(decoded)):
+                accepted = review.reviewed_exact_internal_call_reviews(
+                    functions, metadata, {}, target
+                )
+            self.assertEqual(len(accepted), 1)
+            self.assertEqual(accepted[0]["resolved_call_target"], "0x10000")
+            self.assertEqual(accepted[0]["boundary_mode"], "next internal Ghidra entry 0x10003")
+
+    def test_internal_call_exact_rejects_wrong_call_target(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_internal_call]]
+id = "fn-internal-call"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x3"
+name = "internal_call_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-internal-call"
+reason = "synthetic truncated-Ghidra internal boundary"
+next_internal_address = "0x10003"
+call_site_address = "0x10008"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1803] = b"\x90\x90\xC3"
+            data[0x1808:0x180B] = b"\xE8\xF6\xFF"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            functions = {0x10000: "FUN_10000", 0x10003: "FUN_10003"}
+            metadata = {
+                0x10000: {"address": "0x10000", "body_min": "0x10000",
+                          "body_max": "0x10000", "body_addresses": "1",
+                          "is_thunk": "false", "is_external": "false"},
+                0x10003: {"address": "0x10003", "body_min": "0x10003",
+                          "body_max": "0x10005", "body_addresses": "3",
+                          "is_thunk": "false", "is_external": "false"},
+            }
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ):
+                with self.assertRaisesRegex(ValueError, "call target mismatch"):
+                    review.reviewed_exact_internal_call_reviews(
+                        functions, metadata, {}, target
+                    )
+
+
+
+    def test_internal_call_exact_requires_configured_generated_public(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_internal_call]]
+id = "fn-internal-call"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x3"
+name = "internal_call_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-internal-call"
+reason = "synthetic generated-public review"
+next_internal_address = "0x10003"
+call_site_address = "0x10008"
+generated_public = "_generated"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1803] = b"\x90\x90\xC3"
+            data[0x1808:0x180B] = b"\xE8\xF5\xFF"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            functions = {0x10000: "FUN_10000", 0x10003: "FUN_10003"}
+            metadata = {
+                0x10000: {"address": "0x10000", "body_min": "0x10000",
+                          "body_max": "0x10000", "body_addresses": "1",
+                          "is_thunk": "false", "is_external": "false"},
+                0x10003: {"address": "0x10003", "body_min": "0x10003",
+                          "body_max": "0x10005", "body_addresses": "3",
+                          "is_thunk": "false", "is_external": "false"},
+            }
+            decoded = {"instruction_count": 3, "instruction_addresses": [0x10000,0x10001,0x10002],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10003"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=dict(decoded)):
+                accepted = review.reviewed_exact_internal_call_reviews(
+                    functions, metadata, {0x10000: ["_generated"]}, target
+                )
+                self.assertEqual(len(accepted), 1)
+                with self.assertRaisesRegex(ValueError, "lacks configured generated public"):
+                    review.reviewed_exact_internal_call_reviews(
+                        functions, metadata, {0x10000: ["_wrong"]}, target
+                    )
+
+
 class AutomaticManualOverlapTests(unittest.TestCase):
     def test_writer_rejects_automatic_manual_same_address(self) -> None:
         with TemporaryDirectory() as temporary:

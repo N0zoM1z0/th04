@@ -575,3 +575,14 @@ normalized identity across both cold materializations. The same mechanism can
 support incremental recovery of other functions still embedded in large
 `MAIN_033_TEXT`, `MAIN_034_TEXT`, and `MAIN_036_TEXT` regions without forcing an
 all-at-once decompilation of those segments.
+
+## v23: target member offsets can invalidate an otherwise plausible ReC98 struct
+
+The adjacent `MAIN_034_TEXT` safety-circle initializer is a useful compiler/layout
+control. With the ReC98 candidate `unused_3[8]`, TC4J naturally emits a 63-byte
+function but writes `col_ring` at `[SI+1Ch]`; target writes `[SI+18h]`. Changing
+only the target-derived structure tail to `unused_3[4]` changes that instruction
+to the target offset while preserving the entire code skeleton. Full linking then
+reproduces all 63 bytes. This is a reminder that matching high-level semantics or
+function size does not validate a candidate structure: verify every target member
+offset that affects code generation.
