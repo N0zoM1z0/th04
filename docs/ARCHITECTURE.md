@@ -75,11 +75,13 @@ candidate
   -> exact
 ```
 
-`blocked` and `excluded` are side states.  `blocked` keeps a documented missing
-dependency; `excluded` requires an origin such as third-party library,
-compiler-generated code, immutable asset, or proven undecompilable assembly.
-Moving backward is allowed whenever stronger evidence invalidates an earlier
-claim.  Exact is deliberately brittle.
+`blocked` and `excluded` are side states. `blocked` keeps a documented missing
+dependency. `excluded` requires an explicit reason such as third-party
+ownership, compiler-generated code, an immutable asset, proven undecompilable
+assembly, or a superseded overlapping bookkeeping owner retained only to keep
+old evidence addressable. Excluded rows are not current work. Moving backward
+is allowed whenever stronger evidence invalidates an earlier claim. Exact is
+deliberately brittle.
 
 ## Source architecture
 
