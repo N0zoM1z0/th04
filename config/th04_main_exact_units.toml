@@ -64,13 +64,20 @@ build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 build_replacement = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t\"th04/y6gath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 
+[[build_replacements]]
+id = "th04-main034-yuuka6-attack-patterns"
+trigger_units = ["th04-main-yuuka6-attack-patterns"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t\"th04/y6gath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/coanch.asm\",\n\t\"th04/y6all.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
 [[source_transforms]]
 id = "th04-main035-boss-natural-tu"
 trigger_units = ["th04-main-main035-boss-tu"]
 patch_path = "th04_main.asm"
 encoding = "latin-1"
 scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
-patched_sha256 = "9c5f4ee40a0d82772302152405f5f72ea9d243e5f94ddf9ddd815a4bd42e9ce3"
+patched_sha256 = "90b3c6598f7d0aa4b5cad5b1b8724ed8c6caf1bc059c755737f73aaa12d6f714"
 
 [[source_transforms.ops]]
 id = "truncate-mugetsu-backdrop-symbol"
@@ -139,7 +146,7 @@ expected_count = 1
 id = "export-stage-callbacks"
 kind = "insert_before"
 anchor = "main_01 group SLOWDOWN_TEXT"
-text = "; natural C++ stage/boss callback exports\r\npublic @ORANGE_BG_RENDER$QV\r\npublic @ORANGE_FG_RENDER$QV\r\npublic @KURUMI_BG_RENDER$QV\r\npublic @KURUMI_FG_RENDER$QV\r\npublic @ELLY_BG_RENDER$QV\r\npublic @ELLY_FG_RENDER$QV\r\npublic @REIMU_MARISA_BG_RENDER$QV\r\npublic @REIMU_FG_RENDER$QV\r\npublic @MARISA_FG_RENDER$QV\r\npublic @YUUKA5_BG_RENDER$QV\r\npublic @YUUKA5_FG_RENDER$QV\r\npublic @YUUKA6_BG_RENDER$QV\r\npublic @YUUKA6_FG_RENDER$QV\r\npublic @MUGETSU_FG_RENDER$QV\r\npublic @MUGETSU_UPDATE$QV\r\npublic @ORANGE_UPDATE$QV\r\npublic @KURUMI_UPDATE$QV\r\npublic @ELLY_UPDATE$QV\r\npublic @REIMU_UPDATE$QV\r\npublic @MARISA_UPDATE$QV\r\npublic @YUUKA5_UPDATE$QV\r\npublic @YUUKA6_UPDATE$QV\r\n\r\n"
+text = "; natural C++ stage/boss callback exports\r\npublic @ORANGE_BG_RENDER$QV\r\npublic @ORANGE_FG_RENDER$QV\r\npublic @KURUMI_BG_RENDER$QV\r\npublic @KURUMI_FG_RENDER$QV\r\npublic @ELLY_BG_RENDER$QV\r\npublic @ELLY_FG_RENDER$QV\r\npublic @REIMU_MARISA_BG_RENDER$QV\r\npublic @REIMU_FG_RENDER$QV\r\npublic @MARISA_FG_RENDER$QV\r\npublic @YUUKA5_BG_RENDER$QV\r\npublic @YUUKA5_FG_RENDER$QV\r\npublic @YUUKA6_BG_RENDER$QV\r\npublic @YUUKA6_FG_RENDER$QV\r\npublic @MUGETSU_FG_RENDER$QV\r\npublic @MUGETSU_UPDATE$QV\r\npublic @ORANGE_UPDATE$QV\r\npublic @KURUMI_UPDATE$QV\r\npublic @ELLY_UPDATE$QV\r\npublic @REIMU_UPDATE$QV\r\npublic @MARISA_UPDATE$QV\r\npublic @YUUKA5_UPDATE$QV\r\npublic @yuuka6_update$qv\r\n\r\n"
 
 [[source_transforms.ops]]
 id = "alias-aSt00_bmt"
@@ -258,7 +265,7 @@ patch_path = "th04_main.asm"
 encoding = "latin-1"
 scaffold_sha256_any = [
   "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b",
-  "9c5f4ee40a0d82772302152405f5f72ea9d243e5f94ddf9ddd815a4bd42e9ce3",
+  "90b3c6598f7d0aa4b5cad5b1b8724ed8c6caf1bc059c755737f73aaa12d6f714",
 ]
 
 [[source_transforms.ops]]
@@ -384,7 +391,7 @@ patch_path = "th04_main.asm"
 encoding = "latin-1"
 scaffold_sha256_any = [
   "13872e0ecee523a04170204dddcc9b888794103e3dcff65978066e616da7aa3d",
-  "f1a38273605a1b72f93664c9e85e4b1cada49561f37e6726bbb47ac3db074506",
+  "e6ffec06ef21b8255f4bcfdc7942dc38f5c5251323ebf8999b1eac1323f72e24",
 ]
 
 [[source_transforms.ops]]
@@ -415,7 +422,7 @@ patch_path = "th04_main.asm"
 encoding = "latin-1"
 scaffold_sha256_any = [
   "9f87f12903431812738fc5a73180c2f2500abee4e4774491a3020dd8169ad2a8",
-  "9388c74af7e8963891ba4ac9e77e3f9ff74e9acb76bb0f968fda564ed5dab0b7",
+  "c7ad237b9506671638d95c79d91e67734673efec8480e7b8e12f747a666870e8",
 ]
 
 [[source_transforms.ops]]
@@ -453,6 +460,60 @@ kind = "replace"
 old = "call\tyuuka6_1AAE5"
 new = "call\t_y6_gather_self"
 expected_count = 2
+
+[[source_transforms]]
+id = "th04-main034-yuuka6-attack-patterns-natural-v31"
+trigger_units = ["th04-main-yuuka6-attack-patterns"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "331671b2cf6db4e9db0ece1d5d6eda079891497d1c5da6f836712089dc0e7058",
+  "c5e1b4c6ee855962826a50f92062fae03eb0043b9fcb740a3ee22d33fab458a0",
+  "4f33a8e7ec16f54dfae2fe593b0c21a840a819185001626173e0ed898f067a36",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-attack-patterns-v31"
+kind = "remove_between"
+removed_sha256 = "5e25b5516d72fc7041e87c75e02aee3214f747d1fbb3714c59779b504ad12cf9"
+start = "yuuka6_1AB5D\tproc near\r\n"
+end = "yuuka6_1ADDB\tendp\r\n"
+replacement = "; natural C++ Yuuka6 attack-pattern helpers\r\nextrn _y6_attack_ring_turn:near\r\nextrn _y6_attack_spin_rings:near\r\nextrn _y6_attack_gravity:near\r\nextrn _y6_attack_safetycircle:near\r\nextrn _y6_attack_bullets:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-attack-ring-turn-v31"
+kind = "replace"
+old = "call\tyuuka6_1AB5D"
+new = "call\t_y6_attack_ring_turn"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-attack-spin-rings-v31"
+kind = "replace"
+old = "call\tyuuka6_1ABE5"
+new = "call\t_y6_attack_spin_rings"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-attack-gravity-v31"
+kind = "replace"
+old = "call\tyuuka6_1ACCC"
+new = "call\t_y6_attack_gravity"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-attack-safetycircle-v31"
+kind = "replace"
+old = "call\tyuuka6_1AD6F"
+new = "call\t_y6_attack_safetycircle"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main034-y6-attack-bullets-v31"
+kind = "replace"
+old = "call\tyuuka6_1ADDB"
+new = "call\t_y6_attack_bullets"
+expected_count = 1
 
 [[source_transforms]]
 id = "th04-main034-yuuka6-animations-natural-v29"
@@ -1059,6 +1120,10 @@ repo_source = "src/main/boss/yuuka6_animations.cpp"
 overlay_path = "th04/anims.cpp"
 map_module = "th04/anims.cpp"
 object_path = "obj/th04/anims.obj"
+producer_override_when_unit = "th04-main-yuuka6-attack-patterns"
+producer_map_module = "th04/y6all.cpp"
+producer_object_path = "obj/th04/y6all.obj"
+producer_map_mode = "contains"
 
 [[units]]
 id = "th04-main-yuuka6-gather-patterns"
@@ -1068,6 +1133,20 @@ repo_source = "src/main/boss/yuuka6_gather_patterns.cpp"
 overlay_path = "th04/y6gath.cpp"
 map_module = "th04/y6gath.cpp"
 object_path = "obj/th04/y6gath.obj"
+producer_override_when_unit = "th04-main-yuuka6-attack-patterns"
+producer_map_module = "th04/y6all.cpp"
+producer_object_path = "obj/th04/y6all.obj"
+producer_map_mode = "contains"
+
+[[units]]
+id = "th04-main-yuuka6-attack-patterns"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-gather-patterns"]
+repo_source = "src/main/boss/yuuka6_main034.cpp"
+overlay_path = "th04/y6all.cpp"
+map_module = "th04/y6all.cpp"
+map_mode = "contains"
+object_path = "obj/th04/y6all.obj"
 
 [[units]]
 id = "th04-main-chasecrosses-add"
@@ -1077,3 +1156,383 @@ overlay_path = "th04/chase.cpp"
 map_module = "th04/chase.cpp"
 object_path = "obj/th04/chase.obj"
 zero_code_objects = ["obj/th04/coanch.obj"]
+producer_override_when_unit = "th04-main-yuuka6-attack-patterns"
+producer_map_module = "th04/y6all.cpp"
+producer_object_path = "obj/th04/y6all.obj"
+producer_map_mode = "contains"
+
+[[source_transforms]]
+id = "th04-main034-yuuka6-late-phase-patterns-natural-v32"
+trigger_units = ["th04-main-yuuka6-late-phase-patterns"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "713478bb1398865162e160fb712d03434beb494ac995ac82902c647c58ad56d7",
+  "4ceff300580fdce8fe3f64d6f23b9ac8107aacde5c6b84f5987d12c41b839536",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-late-phase-patterns-v32"
+kind = "remove_between"
+removed_sha256 = "5e3e0caf9dcebc42a12219b7446c0ea13fdf3d4cc70853d8379e33d984079b58"
+start = "yuuka6_1AE8F\tproc near\r\n"
+end = "yuuka6_1B3E2\tendp\r\n"
+replacement = "; natural C++ Yuuka6 late-phase helpers\r\nextrn _y6_phase_dual_lasers:near\r\nextrn _y6_phase_dual_spreads:near\r\nextrn _y6_phase_rotating_ring:near\r\nextrn _y6_phase_growing_ring:near\r\nextrn _y6_phase_chasecrosses:near\r\nextrn _y6_phase_alternating_rings:near\r\nextrn _y6_phase_dual_aimed_spreads:near\r\nextrn _y6_mirror_hittest:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-dual-lasers-v32"
+kind = "replace"
+old = "call\tyuuka6_1AE8F"
+new = "call\t_y6_phase_dual_lasers"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-dual-spreads-v32"
+kind = "replace"
+old = "call\tyuuka6_1AFA8"
+new = "call\t_y6_phase_dual_spreads"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-rotating-ring-v32"
+kind = "replace"
+old = "call\tyuuka6_1B099"
+new = "call\t_y6_phase_rotating_ring"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-growing-ring-v32"
+kind = "replace"
+old = "call\tyuuka6_1B1B1"
+new = "call\t_y6_phase_growing_ring"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-chasecrosses-v32"
+kind = "replace"
+old = "call\tyuuka6_1B22B"
+new = "call\t_y6_phase_chasecrosses"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-alternating-rings-v32"
+kind = "replace"
+old = "call\tyuuka6_1B282"
+new = "call\t_y6_phase_alternating_rings"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-dual-aimed-v32"
+kind = "replace"
+old = "call\tyuuka6_1B313"
+new = "call\t_y6_phase_dual_aimed_spreads"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-y6-late-mirror-hittest-v32"
+kind = "replace"
+old = "call\tyuuka6_1B3E2"
+new = "call\t_y6_mirror_hittest"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "rename-y6-mirror-pos-v32"
+kind = "replace"
+old = "point_25A0C"
+new = "_yuuka6_mirror_pos"
+expected_count = 3
+
+[[source_transforms.ops]]
+id = "rename-y6-mirror-state-v32"
+kind = "replace"
+old = "byte_25A1B"
+new = "_yuuka6_mirror_state"
+expected_count = 6
+
+[[source_transforms.ops]]
+id = "rename-y6-mirror-damage-v32"
+kind = "replace"
+old = "byte_25A1E"
+new = "_yuuka6_mirror_damage"
+expected_count = 4
+
+[[source_transforms.ops]]
+id = "publish-y6-mirror-globals-v32"
+kind = "insert_before"
+anchor = "_yuuka6_mirror_pos\tPoint <?>\r\n"
+text = "public _yuuka6_mirror_pos, _yuuka6_mirror_state, _yuuka6_mirror_damage\r\n"
+
+[[source_transforms.ops]]
+id = "rename-thicklaser-add-v32"
+kind = "replace"
+old = "sub_15DBD"
+new = "_thicklaser_add"
+expected_count = 4
+
+[[source_transforms.ops]]
+id = "publish-thicklaser-add-v32"
+kind = "insert_before"
+anchor = "_thicklaser_add\tproc near\r\n"
+text = "public _thicklaser_add\r\n"
+
+[[units]]
+id = "th04-main-yuuka6-late-phase-patterns"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-attack-patterns"]
+repo_source = "src/main/boss/yuuka6_main034.cpp"
+overlay_path = "th04/y6all.cpp"
+map_module = "th04/y6all.cpp"
+map_mode = "contains"
+object_path = "obj/th04/y6all.obj"
+
+[[source_transforms]]
+id = "th04-thicklaser-layout-target-abi-v32"
+trigger_units = ["th04-main-yuuka6-late-phase-patterns"]
+patch_path = "th04/main/bullet/laser_t.hpp"
+encoding = "utf-8"
+scaffold_sha256 = "0b0e99017a42f46a66e5157f8b9094ac77495eac82e5b3d65bdb8a6253563522"
+
+[[source_transforms.ops]]
+id = "restore-target-unused2-padding-v32"
+kind = "replace"
+old = "\t/* ------------------------- */ int8_t unused_2;\n"
+new = "\t/* target-verified padding */ int8_t unused_2[4];\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main034-yuuka6-phase-next-natural-v33"
+trigger_units = ["th04-main-yuuka6-update-v33"]
+patch_path = "th04/main/boss/b6.asm"
+encoding = "latin-1"
+scaffold_sha256 = "a8d5d999a5ed0582d2272e3bf4f9a6b62836117b09f1f48c3ebe5cc38c2036ff"
+
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-phase-next-v33"
+kind = "remove_between"
+removed_sha256 = "a8d5d999a5ed0582d2272e3bf4f9a6b62836117b09f1f48c3ebe5cc38c2036ff"
+start = "public YUUKA6_PHASE_NEXT\r\nyuuka6_phase_next proc near\r\n"
+end = "yuuka6_phase_next endp\r\n"
+replacement = "; natural C++ Yuuka6 phase transition helper\r\nextrn YUUKA6_PHASE_NEXT:near\r\n"
+
+[[source_transforms]]
+id = "th04-main034-yuuka6-update-natural-v33"
+trigger_units = ["th04-main-yuuka6-update-v33"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "04a4fcc4561963d0c54ec42c398cd0442a6f076fe4d5c9e1fdebccce7eb39af1",
+  "9a2db1f7c384080d630d52173ae13285d7d438b091d7b81ae63484a949a63441",
+]
+
+[[source_transforms.ops]]
+id = "drop-old-main035-yuuka6-update-public-v33"
+kind = "replace_optional"
+old = "public @yuuka6_update$qv\r\n"
+new = ""
+
+[[source_transforms.ops]]
+id = "remove-main034-yuuka6-update-v33"
+kind = "remove_between"
+removed_sha256 = "38caf84ef55e257a2a27365d22c4e0a375fdc347aa98dbbc851470f66ebc0404"
+start = "@yuuka6_update$qv\tproc far\r\n"
+end = "\t\tdw offset loc_1B894\r\n"
+replacement = "; natural C++ Yuuka6 update dispatcher\r\nextrn @yuuka6_update$qv:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "publish-yuuka6-pattern-prev-v33"
+kind = "insert_before"
+anchor = "byte_25A02\tdb ?\r\n"
+text = "public _yuuka6_pattern_prev\r\n_yuuka6_pattern_prev label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-yuuka6-bg-render-pascal-v33"
+kind = "insert_before"
+anchor = "@yuuka6_bg_render$qv\tproc near\r\n"
+text = "public @YUUKA6_BG_RENDER$QV\r\n@YUUKA6_BG_RENDER$QV label near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-thicklasers-update-v33"
+kind = "insert_before"
+anchor = "sub_15DE8\tproc near\r\n"
+text = "public _thicklasers_update\r\n_thicklasers_update label near\r\n"
+
+[[units]]
+id = "th04-main-yuuka6-update-v33"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-late-phase-patterns"]
+repo_source = "src/main/boss/yuuka6_main034.cpp"
+overlay_path = "th04/y6all.cpp"
+map_module = "th04/y6all.cpp"
+map_mode = "contains"
+object_path = "obj/th04/y6all.obj"
+
+[[build_replacements]]
+id = "th04-main034-elly-scythe-v34"
+trigger_units = ["th04-main-elly-scythe-v34"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-scythe-natural-v34"
+trigger_units = ["th04-main-elly-scythe-v34"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "674d164f61986009f0071b5990c23568fe667f28373abe8d4e7b2546274416a9",
+  "4bed0444e21025a2293b5b5e07ee50e8b096e2bc63f11c1c94dacf361f7336f2",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-scythe-v34"
+kind = "remove_between"
+removed_sha256 = "7e34960c8d27202c917bd41f1adf5a5e6aa5a3b1491e8256836647db04e61347"
+start = "elly_1B95C\tproc near\r\n"
+end = "\t\tdw offset loc_1BB76\r\n"
+replacement = "; natural C++ Elly scythe helper\r\nextrn _elly_scythe_update:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-scythe-call-v34"
+kind = "replace"
+old = "call\telly_1B95C"
+new = "call\t_elly_scythe_update"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-elly-scythe-mode-v34"
+kind = "insert_before"
+anchor = "byte_25A26\tdb ?\r\n"
+text = "public _elly_scythe_mode\r\n_elly_scythe_mode label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-elly-scythe-flag-v34"
+kind = "insert_before"
+anchor = "byte_25A27\tdb ?\r\n"
+text = "public _elly_scythe_flag\r\n_elly_scythe_flag label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-elly-scythe-motion-v34"
+kind = "insert_before"
+anchor = "motion_25A28\tmotion_t <?>\r\n"
+text = "public _elly_scythe_motion\r\n_elly_scythe_motion label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-elly-scythe-frame-v34"
+kind = "insert_before"
+anchor = "word_25A34\tdw ?\r\n"
+text = "public _elly_scythe_frame\r\n_elly_scythe_frame label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-elly-scythe-angle-v34"
+kind = "insert_before"
+anchor = "angle_25A36\tdb ?\r\n"
+text = "public _elly_scythe_angle\r\n_elly_scythe_angle label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-elly-scythe-speed-v34"
+kind = "insert_before"
+anchor = "byte_25A37\tdb ?\r\n"
+text = "public _elly_scythe_speed\r\n_elly_scythe_speed label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-elly-scythe-turn-v34"
+kind = "insert_before"
+anchor = "byte_25A38\tdb ?\r\n"
+text = "public _elly_scythe_turn\r\n_elly_scythe_turn label byte\r\n"
+
+[[units]]
+id = "th04-main-elly-scythe-v34"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-update-v33"]
+repo_source = "src/main/boss/elly_scythe.cpp"
+overlay_path = "th04/ellyscy.cpp"
+map_module = "th04/ellyscy.cpp"
+object_path = "obj/th04/ellyscy.obj"
+
+[[build_replacements]]
+id = "th04-main034-elly-scythe-init-v35"
+trigger_units = ["th04-main-elly-scythe-init-v35"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-scythe-init-natural-v35"
+trigger_units = ["th04-main-elly-scythe-init-v35"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "03024fd5208a2190b90812a57a0248ffb95cd2046b68d76ad5d4ad1f9e9770bd",
+  "aba9872737550060e493e7d9066c74faf88f8addbfd856463e20125401c5a178",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-scythe-init-v35"
+kind = "remove_between"
+removed_sha256 = "edd7c7a81aab329f709b77c0e9e7e74e6916fc744ac78271e1e0d67011944b09"
+start = "elly_1BC3C\tproc near\r\n"
+end = "elly_1BC3C\tendp\r\n"
+replacement = "; natural C++ Elly scythe initializer\r\nextrn _elly_scythe_init:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-scythe-init-calls-v35"
+kind = "replace"
+old = "call\telly_1BC3C"
+new = "call\t_elly_scythe_init"
+expected_count = 6
+
+[[units]]
+id = "th04-main-elly-scythe-init-v35"
+default_enabled = true
+requires_units = ["th04-main-elly-scythe-v34"]
+repo_source = "src/main/boss/elly_scythe_init.cpp"
+overlay_path = "th04/ellyini.cpp"
+map_module = "th04/ellyini.cpp"
+object_path = "obj/th04/ellyini.obj"
+
+[[build_replacements]]
+id = "th04-main034-elly-orbit-v36"
+trigger_units = ["th04-main-elly-orbit-v36"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyscy.cpp\",\n\t\"th04/ellyini.cpp\",\n\t\"th04/ellyorb.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main034-elly-orbit-natural-v36"
+trigger_units = ["th04-main-elly-orbit-v36"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "9497c74f5bb3f44363f3f6083311572e2d80ae87f8dae30bb8964df1daf86f7c",
+  "ebd8df1dfe2487a37244331f539d1bbdd90bfd5f111417f0398ff758a55a2e28",
+]
+
+[[source_transforms.ops]]
+id = "remove-main034-elly-orbit-v36"
+kind = "remove_between"
+removed_sha256 = "6fb00653fb6c71210878afae1b2e4a6db2d7f44b36aa94e4cad31779b6f41035"
+start = "elly_1BC73\tproc near\r\n"
+end = "elly_1BC73\tendp\r\n"
+replacement = "; natural C++ Elly orbit helper\r\nextrn _elly_orbit_update:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main034-elly-orbit-calls-v36"
+kind = "replace"
+old = "call\telly_1BC73"
+new = "call\t_elly_orbit_update"
+expected_count = 9
+
+[[source_transforms.ops]]
+id = "alias-elly-orbit-frame-v36"
+kind = "insert_before"
+anchor = "word_25A3A\tdw ?\r\n"
+text = "public _elly_orbit_frame\r\n_elly_orbit_frame label word\r\n"
+
+[[units]]
+id = "th04-main-elly-orbit-v36"
+default_enabled = true
+requires_units = ["th04-main-elly-scythe-init-v35"]
+repo_source = "src/main/boss/elly_orbit.cpp"
+overlay_path = "th04/ellyorb.cpp"
+map_module = "th04/ellyorb.cpp"
+object_path = "obj/th04/ellyorb.obj"

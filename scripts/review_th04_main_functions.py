@@ -105,6 +105,35 @@ def candidates(functions: dict[int, str], publics: dict[int, list[str]]) -> list
     return [result[key] for key in sorted(result)]
 
 
+def reviewed_public_candidates(
+    functions: dict[int, str], publics: dict[int, list[str]]
+) -> list[dict[str, object]]:
+    """Return target TLINK publics that also have a Ghidra entry.
+
+    This candidate universe is intentionally independent of exact byte owners.
+    It exists for reviewed *nonexact* denominator expansion: a large authored
+    public must be reviewable before its bytes have been reconstructed exactly.
+    Boundary admission still goes through reviewed_nonexact_reviews(), which
+    requires target metadata, raw terminal decode, TLINK public identity, and
+    any configured switch-table target checks.
+    """
+    result = []
+    for address in sorted(set(functions) & set(publics)):
+        result.append({
+            "address": address,
+            "address_hex": f"0x{address:X}",
+            "ghidra_name": functions[address],
+            "public": publics[address][0],
+            "owner_unit": "",
+            "owner_start": 0,
+            "owner_end": 0,
+            "file_offset": address - 0x10000 + 0x1800,
+            "source": "",
+            "owner_name": "",
+        })
+    return result
+
+
 def public_owner_candidates(publics: dict[int, list[str]]) -> list[dict[str, object]]:
     """Return TLINK public starts that fall inside exact authored byte owners."""
     result: dict[int, dict[str, object]] = {}
@@ -705,8 +734,8 @@ def reviewed_nonexact_reviews(
 ) -> list[dict[str, object]]:
     """Validate complete reviewed extents independent of Ghidra body construction.
 
-    The default nonexact mode requires an exact-entry/public candidate, target
-    Ghidra entry metadata, a gap-free raw decode through RET/RETF for the configured
+    The default nonexact mode requires a target TLINK public plus Ghidra entry,
+    target Ghidra metadata, and a gap-free raw decode through RET/RETF for the configured
     code span, and any declared trailing switch targets to land on decoded
     instruction starts. The complete reviewed extent may extend beyond the entry
     owner. Exact-extent mode reuses those gates but additionally requires the
@@ -734,7 +763,7 @@ def reviewed_nonexact_reviews(
         item = by_address.get(address)
         if item is None:
             raise ValueError(
-                f"reviewed nonexact address 0x{address:X} lacks exact-entry/public candidate"
+                f"reviewed nonexact address 0x{address:X} lacks TLINK-public/Ghidra candidate"
             )
         if require_exact_extent:
             owner_unit = str(override.get("owner_unit", ""))
@@ -769,7 +798,119 @@ def reviewed_nonexact_reviews(
         decoded = linear_decode(target, address, file_offset, decode_size)
         instruction_addresses = set(int(value) for value in decoded["instruction_addresses"])
         switch_review = None
-        if "jump_table_address" in override:
+        trailing_switch_tables = override.get("trailing_switch_tables")
+        if trailing_switch_tables is not None:
+            if "jump_table_address" in override:
+                raise ValueError(
+                    f"reviewed extent 0x{address:X} mixes legacy and multi-table switch policy"
+                )
+            if not isinstance(trailing_switch_tables, list) or not trailing_switch_tables:
+                raise ValueError(
+                    f"reviewed extent 0x{address:X} has empty trailing_switch_tables"
+                )
+            code_end = address + decode_size
+            extent_end = address + size
+            trailing_cursor = code_end
+            table_reviews: list[dict[str, object]] = []
+            total_jump_entries = 0
+            for table_index, table in enumerate(trailing_switch_tables):
+                if not isinstance(table, dict):
+                    raise ValueError(
+                        f"reviewed extent 0x{address:X} switch table {table_index} is not a table"
+                    )
+                jump_table_address = int(str(table["jump_table_address"]), 0)
+                jump_table_count = int(table["jump_table_count"])
+                cs_base = int(str(table["cs_base"]), 0)
+                if jump_table_count <= 0:
+                    raise ValueError(
+                        f"reviewed extent 0x{address:X} switch table {table_index} has invalid count"
+                    )
+                compare_linear = None
+                compare_count = None
+                compare_values = None
+                compare_table_address = table.get("compare_table_address")
+                if compare_table_address is not None:
+                    compare_linear = int(str(compare_table_address), 0)
+                    compare_count = int(table.get("compare_table_count", jump_table_count))
+                    if compare_count <= 0:
+                        raise ValueError(
+                            f"reviewed extent 0x{address:X} switch table {table_index} has invalid compare count"
+                        )
+                    compare_end = compare_linear + (compare_count * 2)
+                    if not (code_end <= compare_linear < extent_end) or compare_end > extent_end:
+                        raise ValueError(
+                            f"reviewed extent 0x{address:X} switch table {table_index} compare data escapes extent"
+                        )
+                    compare_values = [
+                        read_word(compare_linear + (index * 2))
+                        for index in range(compare_count)
+                    ]
+                    expected_compare = table.get("compare_table_values")
+                    if expected_compare is not None:
+                        expected_values = [int(value) for value in expected_compare]
+                        if compare_values != expected_values:
+                            raise ValueError(
+                                f"reviewed extent 0x{address:X} switch table {table_index} compare data mismatches target"
+                            )
+                table_end = jump_table_address + (jump_table_count * 2)
+                if not (code_end <= jump_table_address < extent_end) or table_end > extent_end:
+                    raise ValueError(
+                        f"reviewed extent 0x{address:X} switch table {table_index} jump data escapes extent"
+                    )
+                jump_words = [
+                    read_word(jump_table_address + (index * 2))
+                    for index in range(jump_table_count)
+                ]
+                jump_targets = [cs_base + word for word in jump_words]
+                bad_targets = [
+                    value for value in jump_targets if value not in instruction_addresses
+                ]
+                if bad_targets:
+                    rendered = ", ".join(f"0x{value:X}" for value in bad_targets)
+                    raise ValueError(
+                        f"reviewed extent 0x{address:X} switch table {table_index} targets "
+                        f"non-instruction starts: {rendered}"
+                    )
+                if require_exact_extent:
+                    if compare_linear is not None:
+                        if compare_linear != trailing_cursor:
+                            raise ValueError(
+                                f"reviewed exact extent switch table {table_index} for 0x{address:X} compare data is not contiguous"
+                            )
+                        trailing_cursor = compare_linear + (int(compare_count) * 2)
+                    if jump_table_address != trailing_cursor:
+                        raise ValueError(
+                            f"reviewed exact extent switch table {table_index} for 0x{address:X} jump data is not contiguous"
+                        )
+                    trailing_cursor = table_end
+                total_jump_entries += jump_table_count
+                table_reviews.append({
+                    "cs_base": f"0x{cs_base:X}",
+                    "compare_table_address": (
+                        f"0x{compare_linear:X}" if compare_linear is not None else None
+                    ),
+                    "compare_values": (
+                        [f"0x{value:04X}" for value in compare_values]
+                        if compare_values is not None else None
+                    ),
+                    "jump_table_address": f"0x{jump_table_address:X}",
+                    "jump_table_count": jump_table_count,
+                    "jump_words": [f"0x{value:04X}" for value in jump_words],
+                    "jump_targets": [f"0x{value:X}" for value in jump_targets],
+                    "all_targets_are_instruction_starts": True,
+                })
+            if require_exact_extent and trailing_cursor != extent_end:
+                raise ValueError(
+                    f"reviewed exact extent switch tables for 0x{address:X} do not fill extent"
+                )
+            switch_review = {
+                "tables": table_reviews,
+                "table_count": len(table_reviews),
+                "jump_table_count": total_jump_entries,
+                "all_targets_are_instruction_starts": True,
+                "trailing_extent_fully_accounted": bool(require_exact_extent),
+            }
+        elif "jump_table_address" in override:
             jump_table_address = int(str(override["jump_table_address"]), 0)
             jump_table_count = int(override["jump_table_count"])
             cs_base = int(str(override["cs_base"]), 0)
@@ -892,8 +1033,10 @@ def reviewed_nonexact_reviews(
                 "file_offset": file_offset,
                 "size": size,
                 "decode_size": decode_size,
+                "name": str(override.get("name", item.get("public") or item.get("ghidra_name", ""))),
                 "reason": str(override["reason"]),
                 "evidence_id": str(override.get("evidence_id", "")),
+                "replace_evidence_ids": bool(override.get("replace_evidence_ids", False)),
                 "decode": decoded,
                 "switch_review": switch_review,
                 "next_public_address": (
@@ -1064,18 +1207,27 @@ def write_reviewed_ledger(
         row["size"] = f"0x{int(manual['size']):X}"
         row["boundary_state"] = "reviewed"
         row["state"] = "exact"
+        row["name"] = str(manual.get("name", row["name"]))
         row["owner_unit"] = str(manual["owner_unit"])
         row["source"] = str(manual["source"])
-        evidence = [value for value in row["evidence_ids"].split(";") if value]
+        evidence = (
+            [] if manual.get("replace_evidence_ids")
+            else [value for value in row["evidence_ids"].split(";") if value]
+        )
         evidence_id = str(manual["evidence_id"])
         if evidence_id not in evidence:
             evidence.append(evidence_id)
         row["evidence_ids"] = ";".join(evidence)
         switch = manual.get("switch_review")
-        mode = (
-            f"validated {switch['jump_table_count']}-entry switch table; "
-            if isinstance(switch, dict) else "validated linear raw decode; "
-        )
+        if isinstance(switch, dict) and "tables" in switch:
+            mode = (
+                f"validated {switch['table_count']} trailing compiler switch tables "
+                f"({switch['jump_table_count']} jump entries total); "
+            )
+        elif isinstance(switch, dict):
+            mode = f"validated {switch['jump_table_count']}-entry switch table; "
+        else:
+            mode = "validated linear raw decode; "
         row["notes"] = (
             "Manual target boundary review overrides a Ghidra body-construction false negative: "
             + mode + str(manual["reason"])
@@ -1231,7 +1383,10 @@ def main() -> int:
         if policy.get("reviewed_nonexact", []):
             assert args.target is not None
             reviewed_nonexact = reviewed_nonexact_reviews(
-                items, parsed_metadata, publics, args.target
+                reviewed_public_candidates(functions, publics),
+                parsed_metadata,
+                publics,
+                args.target,
             )
         manual_exact_all = [
             *manual_exact, *manual_exact_no_ghidra, *manual_exact_no_ghidra_internal_call,

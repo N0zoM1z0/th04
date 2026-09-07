@@ -1027,3 +1027,340 @@ address = "0x2AAE5"
 name = "y6_gather_self()"
 evidence_id = "ev-th04-main-yuuka6-gather-patterns-boundary-v30"
 reason = "New target-driven exact function admitted with alignment plus complete compare/jump-table extent."
+
+# v31: target-driven Yuuka6 attack-pattern family. The first helper at 0x2AB5D
+# is entirely missed by Ghidra despite a direct target near CALL. The remaining
+# four starts are present in Ghidra, but two have sparse bodies; raw 16-bit
+# decode and exact next-entry boundaries account for the complete code extents.
+[[reviewed_exact_no_ghidra_internal_call]]
+id = "th04-main-fn-2ab5d"
+address = "0x2AB5D"
+file_offset = "0x1C35D"
+size = "0x88"
+name = "y6_attack_ring_turn()"
+owner_unit = "th04-main-yuuka6-attack-patterns"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "Ghidra has no function containing 0x2AB5D. Target raw decodes the complete 0x88-byte extent through RET at 0x2ABE4; the next true Ghidra/TASM entry starts at 0x2ABE5, and target near CALL at 0x2B554 resolves exactly to 0x2AB5D. The generated C++ public is independently placed at the same address inside the exact 0x332 attack owner."
+generated_public = "_y6_attack_ring_turn"
+next_internal_address = "0x2ABE5"
+call_site_address = "0x2B554"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2abe5"
+address = "0x2ABE5"
+file_offset = "0x1C3E5"
+size = "0xE7"
+name = "y6_attack_spin_rings()"
+owner_unit = "th04-main-yuuka6-attack-patterns"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "Target Ghidra starts at 0x2ABE5 and covers all 0xE7 bytes; pinned TASM starts the next PROC at 0x2ACCC. Independent raw 16-bit decode is contiguous through terminal RET at 0x2ACCB inside the exact attack owner."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2accc"
+address = "0x2ACCC"
+file_offset = "0x1C4CC"
+size = "0xA3"
+name = "y6_attack_gravity()"
+owner_unit = "th04-main-yuuka6-attack-patterns"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "Ghidra starts at 0x2ACCC but marks only 107 of the 0xA3-byte min/max extent as body. Pinned TASM places the next PROC at 0x2AD6F, and independent raw 16-bit decode tiles every byte through terminal RET at 0x2AD6E inside the exact attack owner."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ad6f"
+address = "0x2AD6F"
+file_offset = "0x1C56F"
+size = "0x6C"
+name = "y6_attack_safetycircle()"
+owner_unit = "th04-main-yuuka6-attack-patterns"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "Ghidra starts at 0x2AD6F but marks 102 of 108 bytes as body. Pinned TASM places the next PROC at 0x2ADDB, and independent raw 16-bit decode tiles every byte through terminal RET at 0x2ADDA inside the exact attack owner."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2addb"
+address = "0x2ADDB"
+file_offset = "0x1C5DB"
+size = "0xB4"
+name = "y6_attack_bullets()"
+owner_unit = "th04-main-yuuka6-attack-patterns"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "Target Ghidra starts at 0x2ADDB and covers the complete 0xB4-byte body. Pinned TASM and the next independent Ghidra entry both place the following function at 0x2AE8F; raw 16-bit decode ends in RET at 0x2AE8E."
+
+[[new_exact]]
+id = "th04-main-fn-2ab5d"
+address = "0x2AB5D"
+name = "y6_attack_ring_turn()"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "Explicitly admit the target-called no-Ghidra attack helper after exact-owner, raw-RET, next-Ghidra-entry, generated-public, and target near-call review."
+
+[[new_exact]]
+id = "th04-main-fn-2abe5"
+address = "0x2ABE5"
+name = "y6_attack_spin_rings()"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "New target-driven exact attack function admitted through complete raw/TASM/Ghidra extent review."
+
+[[new_exact]]
+id = "th04-main-fn-2accc"
+address = "0x2ACCC"
+name = "y6_attack_gravity()"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "New target-driven exact attack function admitted after raw decode closes Ghidra's sparse body to the next true entry."
+
+[[new_exact]]
+id = "th04-main-fn-2ad6f"
+address = "0x2AD6F"
+name = "y6_attack_safetycircle()"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "New target-driven exact attack function admitted after raw decode closes Ghidra's sparse body to the next true entry."
+
+[[new_exact]]
+id = "th04-main-fn-2addb"
+address = "0x2ADDB"
+name = "y6_attack_bullets()"
+evidence_id = "ev-th04-main-yuuka6-attack-patterns-boundary-v31"
+reason = "New target-driven exact attack function admitted through complete raw/TASM/Ghidra extent review."
+
+# v32: eight target-driven late Yuuka6 phase helpers immediately before the
+# public yuuka6_update() entry. Ghidra has all eight starts, but the first
+# three bodies are sparse. Raw 16-bit decode and pinned local-PROC boundaries
+# tile the complete exact 0x5A0 owner without gaps.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ae8f"
+address = "0x2AE8F"
+file_offset = "0x1C68F"
+size = "0x119"
+name = "y6_phase_dual_lasers()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Ghidra starts at 0x2AE8F and spans through 0x2AFA7 but marks only 255 of 281 bytes as body. Pinned TASM starts the next PROC at 0x2AFA8; independent raw 16-bit decode tiles the full extent through terminal RET at 0x2AFA7 inside the exact owner."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2afa8"
+address = "0x2AFA8"
+file_offset = "0x1C7A8"
+size = "0xF1"
+name = "y6_phase_dual_spreads()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Ghidra starts at 0x2AFA8 and spans through 0x2B098 but marks only 130 of 241 bytes as body. Pinned TASM starts the next PROC at 0x2B099; raw decode reaches terminal RET at 0x2B098 and accounts for every byte inside the exact owner."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b099"
+address = "0x2B099"
+file_offset = "0x1C899"
+size = "0x118"
+name = "y6_phase_rotating_ring()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Ghidra starts at 0x2B099 and spans through 0x2B1B0 but marks only 239 of 280 bytes as body because of multiple early-return paths. Pinned TASM starts the next PROC at 0x2B1B1; raw decode tiles the whole extent and terminal RET is at 0x2B1B0."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b1b1"
+address = "0x2B1B1"
+file_offset = "0x1C9B1"
+size = "0x7A"
+name = "y6_phase_growing_ring()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Target Ghidra covers all 0x7A bytes from 0x2B1B1 through 0x2B22A. Pinned TASM starts the next PROC at 0x2B22B and independent raw decode ends in RET at 0x2B22A."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b22b"
+address = "0x2B22B"
+file_offset = "0x1CA2B"
+size = "0x57"
+name = "y6_phase_chasecrosses()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Target Ghidra covers all 0x57 bytes from 0x2B22B through 0x2B281. Pinned TASM starts the next PROC at 0x2B282 and raw decode ends in RET at 0x2B281."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b282"
+address = "0x2B282"
+file_offset = "0x1CA82"
+size = "0x91"
+name = "y6_phase_alternating_rings()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Target Ghidra covers all 0x91 bytes from 0x2B282 through 0x2B312. Pinned TASM starts the next PROC at 0x2B313 and raw decode ends in LEAVE/RET at 0x2B311..0x2B312."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b313"
+address = "0x2B313"
+file_offset = "0x1CB13"
+size = "0xCF"
+name = "y6_phase_dual_aimed_spreads()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Target Ghidra covers all 0xCF bytes from 0x2B313 through 0x2B3E1. Pinned TASM starts the next PROC at 0x2B3E2 and raw decode ends in RET at 0x2B3E1."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b3e2"
+address = "0x2B3E2"
+file_offset = "0x1CBE2"
+size = "0x4D"
+name = "y6_mirror_hittest()"
+owner_unit = "th04-main-yuuka6-late-phase-patterns"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "Target Ghidra covers all 0x4D bytes from 0x2B3E2 through 0x2B42E. Raw decode has the expected two return paths ending at 0x2B42A and 0x2B42E; the next public/Ghidra entry YUUKA6_PHASE_NEXT starts at 0x2B42F."
+
+[[new_exact]]
+id = "th04-main-fn-2ae8f"
+address = "0x2AE8F"
+name = "y6_phase_dual_lasers()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted through exact owner, local-PROC, raw terminal, next-entry, and generated-public review."
+
+[[new_exact]]
+id = "th04-main-fn-2afa8"
+address = "0x2AFA8"
+name = "y6_phase_dual_spreads()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted after raw decode closes Ghidra's sparse body to the next true entry."
+
+[[new_exact]]
+id = "th04-main-fn-2b099"
+address = "0x2B099"
+name = "y6_phase_rotating_ring()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted after raw decode closes Ghidra's sparse body to the next true entry."
+
+[[new_exact]]
+id = "th04-main-fn-2b1b1"
+address = "0x2B1B1"
+name = "y6_phase_growing_ring()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted through complete raw/TASM/Ghidra extent review."
+
+[[new_exact]]
+id = "th04-main-fn-2b22b"
+address = "0x2B22B"
+name = "y6_phase_chasecrosses()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted through complete raw/TASM/Ghidra extent review."
+
+[[new_exact]]
+id = "th04-main-fn-2b282"
+address = "0x2B282"
+name = "y6_phase_alternating_rings()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted through complete raw/TASM/Ghidra extent review."
+
+[[new_exact]]
+id = "th04-main-fn-2b313"
+address = "0x2B313"
+name = "y6_phase_dual_aimed_spreads()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted through complete raw/TASM/Ghidra extent review."
+
+[[new_exact]]
+id = "th04-main-fn-2b3e2"
+address = "0x2B3E2"
+name = "y6_mirror_hittest()"
+evidence_id = "ev-th04-main-yuuka6-late-phase-patterns-boundary-v32"
+reason = "New target-driven exact function admitted through complete raw/TASM/Ghidra extent review; next public YUUKA6_PHASE_NEXT provides an independent boundary."
+
+# v33: target/public/raw review corrects the old false boundary at 0x2B42F.
+# The first 0x4F bytes are the separate compiler-shaped Pascal helper
+# YUUKA6_PHASE_NEXT; yuuka6_update() begins at the next public 0x2B47E and owns
+# 0x48A bytes of FAR code plus four contiguous compiler switch-table regions.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b42f"
+address = "0x2B42F"
+file_offset = "0x1CC2F"
+size = "0x4F"
+decode_size = "0x4F"
+name = "YUUKA6_PHASE_NEXT"
+replace_evidence_ids = true
+owner_unit = "th04-main-yuuka6-update-v33"
+evidence_id = "ev-th04-main-yuuka6-phase-dispatch-boundary-v33"
+reason = "Fresh target map proves YUUKA6_PHASE_NEXT at 13A9:799F and yuuka6_update() at 13A9:79EE. Ghidra truncates this helper to three bytes, but gap-free target raw decode reaches RET 4 at 0x2B47D and the next TLINK public starts exactly at 0x2B47E. Natural C++ reproduces all 0x4F bytes."
+next_public_address = "0x2B47E"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b47e"
+address = "0x2B47E"
+file_offset = "0x1CC7E"
+size = "0x4DE"
+decode_size = "0x48A"
+name = "yuuka6_update()"
+owner_unit = "th04-main-yuuka6-update-v33"
+evidence_id = "ev-th04-main-yuuka6-phase-dispatch-boundary-v33"
+reason = "Target TLINK/TASM public starts at 0x2B47E. Ghidra body construction is badly cross-linked and cannot define the extent; target raw decode reaches the common-tail RETF at 0x2B907. Three sparse {0,1,2,255} compare/jump pairs and the 18-entry phase table then fill every byte through 0x2B95B, immediately before local Elly PROC 0x2B95C."
+trailing_switch_tables = [
+  { compare_table_address = "0x2B908", compare_table_count = 4, compare_table_values = [0, 1, 2, 255], jump_table_address = "0x2B910", jump_table_count = 4, cs_base = "0x23A90" },
+  { compare_table_address = "0x2B918", compare_table_count = 4, compare_table_values = [0, 1, 2, 255], jump_table_address = "0x2B920", jump_table_count = 4, cs_base = "0x23A90" },
+  { compare_table_address = "0x2B928", compare_table_count = 4, compare_table_values = [0, 1, 2, 255], jump_table_address = "0x2B930", jump_table_count = 4, cs_base = "0x23A90" },
+  { jump_table_address = "0x2B938", jump_table_count = 18, cs_base = "0x23A90" },
+]
+
+[[new_exact]]
+id = "th04-main-fn-2b47e"
+address = "0x2B47E"
+name = "yuuka6_update()"
+evidence_id = "ev-th04-main-yuuka6-phase-dispatch-boundary-v33"
+reason = "New target-driven exact FAR dispatcher admitted only after correcting the preceding phase-next false boundary and validating all four trailing compiler switch-table regions."
+
+
+# v34: first target-only Elly local helper after the Yuuka6 exact frontier.
+# Ghidra starts at the true entry but truncates it to 38 bytes and invents
+# several internal functions. Raw code reaches RET at 0x2BC2B; the dense
+# compiler jump table occupies the remaining 16 bytes through the next TASM
+# local PROC at 0x2BC3C.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2b95c"
+address = "0x2B95C"
+file_offset = "0x1D15C"
+size = "0x2E0"
+decode_size = "0x2D0"
+name = "elly_scythe_update()"
+owner_unit = "th04-main-elly-scythe-v34"
+evidence_id = "ev-th04-main-elly-scythe-boundary-v34"
+reason = "Target Ghidra recognizes only 0x2B95C..0x2B981 and then creates false internal entries. Pinned TASM and independent raw decode tile one 0x2D0-byte function through RET at 0x2BC2B; the eight-entry compiler near-jump table immediately follows and fills the exact owner through the next true local PROC at 0x2BC3C."
+trailing_switch_tables = [
+  { jump_table_address = "0x2BC2C", jump_table_count = 8, cs_base = "0x23A90" },
+]
+
+[[new_exact]]
+id = "th04-main-fn-2b95c"
+address = "0x2B95C"
+name = "elly_scythe_update()"
+evidence_id = "ev-th04-main-elly-scythe-boundary-v34"
+reason = "New target-driven exact Elly helper admitted only after raw/TASM extent closure rejects four Ghidra internal false splits and accounts for the complete trailing jump table."
+
+# v35/v36: two adjacent target-only Elly helpers. The initializer is a rare
+# case where Ghidra gets the complete local body; the orbit helper immediately
+# demonstrates the opposite, with only 19/176 bytes in its constructed body.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2bc3c"
+address = "0x2BC3C"
+file_offset = "0x1D43C"
+size = "0x37"
+name = "elly_scythe_init()"
+owner_unit = "th04-main-elly-scythe-init-v35"
+evidence_id = "ev-th04-main-elly-scythe-init-boundary-v35"
+reason = "Target raw, pinned TASM, and Ghidra all agree on one 55-byte body through RET at 0x2BC72; the next local PROC starts at 0x2BC73 and natural C++ owns the exact span."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2bc73"
+address = "0x2BC73"
+file_offset = "0x1D473"
+size = "0xB0"
+name = "elly_orbit_update()"
+owner_unit = "th04-main-elly-orbit-v36"
+evidence_id = "ev-th04-main-elly-orbit-boundary-v36"
+reason = "Ghidra starts at the true 0x2BC73 entry but constructs only 19 body bytes. Pinned TASM and gap-free raw decode tile all 0xB0 bytes through RET at 0x2BD22; the next true local PROC starts at 0x2BD23 inside the unchanged residual ASM."
+
+[[new_exact]]
+id = "th04-main-fn-2bc3c"
+address = "0x2BC3C"
+name = "elly_scythe_init()"
+evidence_id = "ev-th04-main-elly-scythe-init-boundary-v35"
+reason = "New exact target-local Elly initializer admitted after raw/TASM/Ghidra and two-cold replay agree on the complete 55-byte extent."
+
+[[new_exact]]
+id = "th04-main-fn-2bc73"
+address = "0x2BC73"
+name = "elly_orbit_update()"
+evidence_id = "ev-th04-main-elly-orbit-boundary-v36"
+reason = "New exact target-local Elly orbit helper admitted after raw/TASM/next-PROC review closes Ghidra's 19-byte body to the complete 176-byte exact owner."

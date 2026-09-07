@@ -27,6 +27,49 @@ class UnitDependencyTests(unittest.TestCase):
             replay.resolve_unit_dependencies(entries, {"leaf"})
 
 
+class ProducerOverrideTests(unittest.TestCase):
+    def test_logical_unit_uses_standalone_producer_without_trigger(self) -> None:
+        entry = {
+            "id": "prefix",
+            "map_module": "prefix.cpp",
+            "object_path": "prefix.obj",
+            "producer_override_when_unit": "tail",
+            "producer_map_module": "combined.cpp",
+            "producer_object_path": "combined.obj",
+            "producer_map_mode": "contains",
+        }
+        self.assertEqual(
+            replay.resolved_producer_outputs(entry, {"prefix"}),
+            ("prefix.cpp", "prefix.obj", "exact"),
+        )
+
+    def test_logical_unit_uses_fused_producer_when_trigger_selected(self) -> None:
+        entry = {
+            "id": "prefix",
+            "map_module": "prefix.cpp",
+            "object_path": "prefix.obj",
+            "producer_override_when_unit": "tail",
+            "producer_map_module": "combined.cpp",
+            "producer_object_path": "combined.obj",
+            "producer_map_mode": "contains",
+        }
+        self.assertEqual(
+            replay.resolved_producer_outputs(entry, {"prefix", "tail"}),
+            ("combined.cpp", "combined.obj", "contains"),
+        )
+
+    def test_active_override_fails_closed_when_output_is_incomplete(self) -> None:
+        entry = {
+            "id": "prefix",
+            "map_module": "prefix.cpp",
+            "object_path": "prefix.obj",
+            "producer_override_when_unit": "tail",
+            "producer_map_module": "combined.cpp",
+        }
+        with self.assertRaisesRegex(RuntimeError, "producer override lacks"):
+            replay.resolved_producer_outputs(entry, {"prefix", "tail"})
+
+
 class RepoInputSnapshotTests(unittest.TestCase):
     def test_snapshot_freezes_overlay_and_detects_live_drift(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -400,6 +443,59 @@ class SourceTransformTests(unittest.TestCase):
             (source / "impl.asm").write_bytes(b"changed\n")
             with self.assertRaisesRegex(RuntimeError, "scaffold SHA-256 drift"):
                 replay.apply_source_transforms(source, [entry], {"unit-a"})
+
+    def test_source_transform_optional_replace_accepts_zero_or_one_match(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "source"
+            source.mkdir()
+            patch = source / "sample.asm"
+            for original, expected_count, expected_text in (
+                ("head\r\npublic OLD\r\ntail\r\n", 1, "head\r\ntail\r\n"),
+                ("head\r\ntail\r\n", 0, "head\r\ntail\r\n"),
+            ):
+                patch.write_text(original, encoding="latin-1", newline="")
+                transform = [{
+                    "id": "optional-public-handoff",
+                    "trigger_units": ["unit"],
+                    "patch_path": "sample.asm",
+                    "encoding": "latin-1",
+                    "scaffold_sha256": replay.digest_bytes(original.encode("latin-1")),
+                    "ops": [{
+                        "id": "drop-old-public",
+                        "kind": "replace_optional",
+                        "old": "public OLD\r\n",
+                        "new": "",
+                    }],
+                }]
+                receipts = replay.apply_source_transforms(source, transform, {"unit"})
+                self.assertEqual(receipts[0]["ops"][0]["count"], expected_count)
+                with patch.open("r", encoding="latin-1", newline="") as stream:
+                    self.assertEqual(stream.read(), expected_text)
+
+    def test_source_transform_optional_replace_rejects_multiple_matches(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "source"
+            source.mkdir()
+            patch = source / "sample.asm"
+            original = "public OLD\r\npublic OLD\r\n"
+            patch.write_text(original, encoding="latin-1", newline="")
+            transform = [{
+                "id": "optional-public-handoff",
+                "trigger_units": ["unit"],
+                "patch_path": "sample.asm",
+                "encoding": "latin-1",
+                "scaffold_sha256": replay.digest_bytes(original.encode("latin-1")),
+                "ops": [{
+                    "id": "drop-old-public",
+                    "kind": "replace_optional",
+                    "old": "public OLD\r\n",
+                    "new": "",
+                }],
+            }]
+            with self.assertRaisesRegex(RuntimeError, "zero or one match"):
+                replay.apply_source_transforms(source, transform, {"unit"})
 
     def test_source_transform_rejects_ambiguous_anchor(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

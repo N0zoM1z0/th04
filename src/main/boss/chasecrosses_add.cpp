@@ -1,3 +1,4 @@
+#ifndef TH04_YUUKA6_MAIN034_COMBINED
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "th04/snd/snd.h"
@@ -12,6 +13,7 @@
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/custom.hpp"
 #include "th04/main/player/player.hpp"
+#endif
 #pragma samecodeseg sparks_add_random
 extern SPPoint shot_hitbox_center;
 extern SPPoint shot_hitbox_radius;

@@ -528,6 +528,21 @@ def apply_source_transforms(
                     "old_sha256": digest_bytes(old.encode(encoding)),
                     "new_sha256": digest_bytes(new.encode(encoding)),
                 })
+            elif kind == "replace_optional":
+                old = str(op["old"])
+                new = str(op["new"])
+                count = text.count(old)
+                if count not in {0, 1}:
+                    raise RuntimeError(
+                        f"{transform_id}/{op_id}: optional replacement expected zero or one match, got {count}"
+                    )
+                if count:
+                    text = text.replace(old, new, 1)
+                op_receipts.append({
+                    "id": op_id, "kind": kind, "count": count,
+                    "old_sha256": digest_bytes(old.encode(encoding)),
+                    "new_sha256": digest_bytes(new.encode(encoding)),
+                })
             elif kind == "insert_before":
                 anchor_text = str(op["anchor"])
                 insertion = str(op["text"])
@@ -631,6 +646,30 @@ def inspect_zero_code_objects(source: Path, paths: list[str]) -> list[dict[str, 
     return results
 
 
+def resolved_producer_outputs(
+    entry: dict[str, object], selected_ids: set[str]
+) -> tuple[str, str, str]:
+    """Resolve the physical producer without weakening logical-unit checks."""
+
+    map_module = str(entry["map_module"])
+    object_path = str(entry["object_path"])
+    map_mode = str(entry.get("map_mode", "exact"))
+    trigger = entry.get("producer_override_when_unit")
+    if trigger is None or str(trigger) not in selected_ids:
+        return map_module, object_path, map_mode
+    required = ("producer_map_module", "producer_object_path")
+    missing = [key for key in required if not entry.get(key)]
+    if missing:
+        raise RuntimeError(
+            f"{entry['id']}: producer override lacks {', '.join(missing)}"
+        )
+    return (
+        str(entry["producer_map_module"]),
+        str(entry["producer_object_path"]),
+        str(entry.get("producer_map_mode", map_mode)),
+    )
+
+
 def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str, dict[str, str]], target_mz):
     candidate_path = source / "bin" / "th04" / "main.exe"
     candidate_mz = parse_mz(candidate_path.read_bytes())
@@ -638,6 +677,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
         raise RuntimeError("candidate MAIN.EXE failed MZ integrity")
     map_path = source / "obj" / "th04" / "main.map"
     results = {}
+    selected_ids = {str(entry["id"]) for entry in entries}
     for entry in entries:
         row = ledger[entry["id"]]
         file_start = integer(row["file_offset"])
@@ -649,15 +689,17 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
         candidate_slice = candidate_mz.program_image[program_start : program_start + size]
         if len(target_slice) != size or len(candidate_slice) != size:
             raise RuntimeError(f"{entry['id']}: candidate/target slice is truncated")
-        map_start, map_size, map_line = map_contribution(map_path, entry["map_module"])
-        map_mode = entry.get("map_mode", "exact")
+        map_module, object_path, map_mode = resolved_producer_outputs(
+            entry, selected_ids
+        )
+        map_start, map_size, map_line = map_contribution(map_path, map_module)
         if map_mode == "exact":
             map_exact = map_start == program_start and map_size == size
         elif map_mode == "contains":
             map_exact = map_start <= program_start and (program_start + size) <= (map_start + map_size)
         else:
             raise RuntimeError(f"{entry['id']}: unknown map_mode {map_mode!r}")
-        obj_path = source / entry["object_path"]
+        obj_path = source / object_path
         omf = describe_omf(obj_path.read_bytes())
         zero_code_objects = inspect_zero_code_objects(
             source, [str(value) for value in entry.get("zero_code_objects", [])]
@@ -676,10 +718,11 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             "map_mode": map_mode,
             "map_exact": map_exact,
             "map_line": map_line,
+            "map_module": map_module,
             "target_overlapping_relocations": target_relocs,
             "candidate_overlapping_relocations": candidate_relocs,
             "relocations_exact": target_relocs == candidate_relocs,
-            "object_path": entry["object_path"],
+            "object_path": object_path,
             "object_sha256": omf["sha256"],
             "object_normalized_sha256": omf["dependency_timestamp_normalized_sha256"],
             "object_valid": bool(omf["valid"]),

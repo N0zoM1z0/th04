@@ -388,6 +388,86 @@ next_public_address = "0x1000A"
                         require_exact_extent=True,
                     )
 
+    def test_reviewed_exact_extent_validates_multiple_trailing_switch_tables(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text(
+                """schema_version = 1
+
+[[reviewed_exact_extent]]
+id = "fn-multi-switch-exact"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x12"
+decode_size = "0x2"
+name = "multi_switch_exact_fixture"
+owner_unit = "owner"
+evidence_id = "ev-multi-switch-exact"
+reason = "synthetic two-switch trailing extent"
+trailing_switch_tables = [
+  { compare_table_address = "0x10002", compare_table_count = 2, compare_table_values = [0, 1], jump_table_address = "0x10006", jump_table_count = 2, cs_base = "0x10000" },
+  { compare_table_address = "0x1000A", compare_table_count = 2, compare_table_values = [2, 3], jump_table_address = "0x1000E", jump_table_count = 2, cs_base = "0x10000" },
+]
+""",
+                encoding="utf-8",
+            )
+            target = root / "target.bin"
+            data = bytearray(0x1812)
+            data[0x1800:0x1802] = b"\x90\xC3"
+            data[0x1802:0x1806] = b"\x00\x00\x01\x00"
+            data[0x1806:0x180A] = b"\x00\x00\x01\x00"
+            data[0x180A:0x180E] = b"\x02\x00\x03\x00"
+            data[0x180E:0x1812] = b"\x00\x00\x01\x00"
+            target.write_bytes(data)
+            item = {
+                "address": 0x10000, "address_hex": "0x10000",
+                "ghidra_name": "FUN_10000", "public": "multi_switch_exact_fixture",
+                "owner_unit": "owner", "owner_start": 0x10000,
+                "owner_end": 0x10012, "file_offset": 0x1800,
+                "source": "src/exact.cpp", "owner_name": "exact.cpp",
+            }
+            metadata = {0x10000: {
+                "address": "0x10000", "body_min": "0x10000",
+                "body_max": "0x10001", "body_addresses": "2",
+                "is_thunk": "false", "is_external": "false",
+            }}
+            publics = {0x10000: ["multi_switch_exact_fixture"]}
+            decoded = {
+                "instruction_count": 2,
+                "instruction_addresses": [0x10000, 0x10001],
+                "terminal": "ret", "first_address": "0x10000",
+                "end_address_exclusive": "0x10002",
+            }
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "linear_decode", side_effect=lambda *args, **kwargs: dict(decoded)
+            ):
+                accepted = review.reviewed_nonexact_reviews(
+                    [item], metadata, publics, target,
+                    policy_key="reviewed_exact_extent",
+                    require_exact_extent=True,
+                )
+                switch = accepted[0]["switch_review"]
+                self.assertEqual(switch["table_count"], 2)
+                self.assertEqual(switch["jump_table_count"], 4)
+                self.assertTrue(switch["trailing_extent_fully_accounted"])
+                self.assertEqual(
+                    switch["tables"][1]["compare_values"], ["0x0002", "0x0003"]
+                )
+                policy.write_text(
+                    policy.read_text().replace(
+                        'jump_table_address = "0x1000E"',
+                        'jump_table_address = "0x10010"',
+                    ),
+                    encoding="utf-8",
+                )
+                with self.assertRaisesRegex(ValueError, "not contiguous|escapes extent"):
+                    review.reviewed_nonexact_reviews(
+                        [item], metadata, publics, target,
+                        policy_key="reviewed_exact_extent",
+                        require_exact_extent=True,
+                    )
+
     def test_reviewed_exact_extent_validates_metadata_compare_and_jump_tables(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

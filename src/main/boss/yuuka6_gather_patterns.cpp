@@ -1,3 +1,4 @@
+#ifndef TH04_YUUKA6_MAIN034_COMBINED
 #pragma option -a
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
@@ -7,6 +8,7 @@
 #include "th04/main/gather.hpp"
 #include "th04/main/circle.hpp"
 #include "th04/main/boss/boss.hpp"
+#endif
 
 extern SPPoint yuuka6_aux_pos;
 

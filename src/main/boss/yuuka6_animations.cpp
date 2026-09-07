@@ -1,8 +1,10 @@
+#ifndef TH04_YUUKA6_MAIN034_COMBINED
 #pragma option -a
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
 #include "th04/sprites/main_pat.h"
 #include "th04/main/boss/boss.hpp"
+#endif
 
 extern unsigned char yuuka6_sprite_flag;
 extern int yuuka6_anim_frame;

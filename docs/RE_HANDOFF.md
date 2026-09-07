@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 18,244 / 18,248 (99.978080%) exact, and reviewed authored functions are 160 / 161 (99.378882%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 22,794 / 22,798 (99.982455%) exact, and reviewed authored functions are 178 / 179 (99.441341%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,10 +115,10 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-yuuka6-gather5-v30-precommit-web-001` passes all 68 current default-selected
+  `gptweb-elly-v36-precommit-web-002` passes all 74 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 18,248 bytes; 18,244 bytes are exact.
+- The current reviewed authored byte denominator is 22,798 bytes; 22,794 bytes are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -552,3 +552,15 @@ Yuuka6 procedure starts at `0x2AB5D`, `0x2ABE5`, `0x2ACCC`, `0x2AD6F`,
 `0x2B313`, and `0x2B3E2` before `yuuka6_update()`, followed by a similar Elly
 local-procedure family. Treat these as target-first candidates and re-establish
 each boundary from raw/TASM/Ghidra evidence before source reconstruction.
+
+
+### v31-v36 target-first expansion beyond the Yuuka6 gather frontier
+
+- v31 recovers five Yuuka6 attack helpers at `0x2AB5D..0x2AE8E` (0x332 bytes). A standalone natural TU matched every byte but not ordered MZ relocations; fusing chase + animations + gather + attack into the target physical TC86 producer restores the exact relocation order without low-level code.
+- v32 continues through eight target-only Yuuka6 local helpers at `0x2AE8F..0x2B42E` (0x5A0 bytes). The last mismatch exposed a stale ReC98 `thicklaser_t` layout; target TASM proves four unknown bytes after `origin`, and a SHA-locked ABI transform removes the mismatch.
+- v33 corrects a false boundary at `0x2B42F`: `YUUKA6_PHASE_NEXT` is a separate 0x4F function, followed by `yuuka6_update()` at `0x2B47E` with 0x48A code bytes and 0x54 bytes of compiler switch tables. The complete 0x52D owner is natural-C++ exact.
+- v34 resumes local-PROC screening at `0x2B95C` and recovers the 0x2E0 Elly scythe state machine. Ghidra truncates the true entry to 38 bytes and invents four internal functions, while target raw/TASM show 0x2D0 code bytes plus an eight-entry compiler jump table through `0x2BC3B`. Natural source exactness depends on target-driven block placement, a read/modify/write speed expression, a volatile signed turn byte, and `<= 4` branch direction; no padding or inline ASM is used.
+- v35 recovers the adjacent 55-byte `elly_scythe_init()` at `0x2BC3C`; here Ghidra happens to agree with raw/TASM completely.
+- v36 recovers the 176-byte `elly_orbit_update()` at `0x2BC73`; Ghidra constructs only 19/176 bytes. Target `JL/JGE` opcodes prove the private frame word is signed `int`, and an otherwise redundant `if(frame >= 768)` is required for the exact eight-byte CMP/JL sequence.
+- Focused v34/v35/v36 replays and final aggregate `gptweb-elly-v36-precommit-web-002` pass raw bytes, map placement, ordered relocations, OMF validity, and A/B determinism for all 74 default owners. The reviewed baseline is now **22,794 / 22,798 authored bytes exact (99.982455%)** and **178 / 179 functions exact (99.441341%)**. `snd_load` remains the sole reviewed nonexact function with four blocked bytes.
+- The target-first candidate universe is still not exhausted. Pinned local TASM continues at `0x2BD23`, `0x2BD4B`, `0x2BDB4`, `0x2BE43`, `0x2BE78`, `0x2BF52`, `0x2BFAB`, `0x2C044`, `0x2C0BF`, `0x2C164`, `0x2C1CF`, and `0x2C251` before public `elly_update()`. Resume at `0x2BD23`; do not fall back to the obsolete public-only queue.

@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **18,244 / 18,248 = 99.978080% exact**;
-- authored functions: **160 / 161 = 99.378882% exact**;
+- authored C/C++ bytes: **22,794 / 22,798 = 99.982455% exact**;
+- authored functions: **178 / 179 = 99.441341% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-yuuka6-gather5-v30-precommit-web-001/receipt.json`.
-It passes all 68 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-elly-v36-precommit-web-002/receipt.json`.
+It passes all 74 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -941,3 +941,19 @@ candidate universe. The next live target-first frontier is `0x2AB5D`; pinned TAS
 already exposes further local Yuuka6 procedures before `yuuka6_update()` and then
 an Elly local-procedure family, so future boundary screening must continue from
 raw/TASM evidence beyond public symbols.
+
+
+## v31-v36: continue target-first through Yuuka6 attack/update and the first Elly locals
+
+The v30 local-PROC scan was deliberately continued rather than treating the >99% baseline as complete. The next exact sequence is:
+
+- **v31:** five Yuuka6 attack helpers, `0x2AB5D..0x2AE8E`, 0x332 bytes. Raw-exact standalone C++ exposed a different MZ relocation order; one fused TC86 producer with the prior chase/animation/gather source matches both bytes and ordered relocations.
+- **v32:** eight late Yuuka6 helpers, `0x2AE8F..0x2B42E`, 0x5A0 bytes. Target TASM falsifies ReC98's one-byte `thicklaser_t::unused_2`; the target needs four bytes.
+- **v33:** corrected 0x52D ownership at `0x2B42F..0x2B95B`: separate 0x4F `YUUKA6_PHASE_NEXT`, then `yuuka6_update()` plus four compiler switch-table regions. Ghidra cannot define either complete boundary.
+- **v34:** `elly_scythe_update()`, `0x2B95C..0x2BC3B`, 0x2E0 bytes. Raw code ends at `0x2BC2B`, then an eight-entry jump table fills the owner. Ghidra false-splits the target into several functions. Natural TC86 source recovers exact bytes through source-level block placement and reload/branch semantics rather than emitted bytes.
+- **v35:** `elly_scythe_init()`, `0x2BC3C..0x2BC72`, 0x37 bytes, exact on the first natural C++ form.
+- **v36:** `elly_orbit_update()`, `0x2BC73..0x2BD22`, 0xB0 bytes. Signed target branches recover the hidden `int` type, and retaining a redundant `>=768` condition reproduces the final eight target bytes.
+
+Final aggregate `gptweb-elly-v36-precommit-web-002` cold-builds **74 default owners twice** and reports zero raw/map/ordered-relocation/OMF/determinism failures. The reviewed denominator is **22,794 / 22,798 authored bytes exact (99.982455%)** and **178 / 179 reviewed functions exact (99.441341%)**; only four `snd_load` bytes remain nonexact.
+
+The next target-first frontier is **`0x2BD23`**, not a linker-public queue. Further local starts before public `elly_update()` are `0x2BD4B`, `0x2BDB4`, `0x2BE43`, `0x2BE78`, `0x2BF52`, `0x2BFAB`, `0x2C044`, `0x2C0BF`, `0x2C164`, `0x2C1CF`, and `0x2C251`. Re-establish every extent from target raw/TASM/control flow and treat Ghidra bodies as provisional.

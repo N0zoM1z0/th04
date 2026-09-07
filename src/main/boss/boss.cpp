@@ -322,7 +322,7 @@ void far stage5_setup(void)
 }
 
 void pascal near yuuka6_bg_render(void);
-void pascal  far yuuka6_update(void);
+void far yuuka6_update(void);
 void pascal near yuuka6_fg_render(void);
 
 void far stage6_setup(void)
@@ -336,7 +336,7 @@ void far stage6_setup(void)
 	boss.pos.cur.y.v = (80 << 4);
 	boss.pos.prev.y.v = (80 << 4);
 	boss_bg_render_func = yuuka6_bg_render;
-	boss_update_func = yuuka6_update;
+	boss_update_func = reinterpret_cast<func_t_near>(yuuka6_update);
 	boss_fg_render_func = yuuka6_fg_render;
 	boss.sprite = 128;
 	boss_hitbox_radius.x.v = (24 << 4);
