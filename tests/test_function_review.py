@@ -580,5 +580,86 @@ next_public_address = "0x10005"
                     review.reviewed_exact_no_ghidra_reviews({}, publics, target)
 
 
+    def test_internal_exact_requires_pointer_anchor_and_next_public(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_internal]]
+id = "fn-internal"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x2"
+name = "static_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-internal"
+reason = "synthetic internal boundary"
+next_public_address = "0x10002"
+pointer_word_address = "0x10008"
+cs_base = "0xF000"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1802] = b"\x90\xC3"
+            data[0x1808:0x180A] = b"\x00\x10"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            metadata = {0x10000: {"address": "0x10000", "body_min": "0x10000",
+                                  "body_max": "0x10001", "body_addresses": "2",
+                                  "is_thunk": "false", "is_external": "false"}}
+            publics = {0x10002: ["next"]}
+            decoded = {"instruction_count": 2, "instruction_addresses": [0x10000, 0x10001],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10002"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=decoded):
+                accepted = review.reviewed_exact_internal_reviews(
+                    {0x10000: "FUN_10000"}, metadata, publics, target
+                )
+            self.assertEqual(len(accepted), 1)
+            self.assertEqual(accepted[0]["pointer_word"], "0x1000")
+            self.assertEqual(accepted[0]["boundary_mode"], "next TLINK public 0x10002")
+
+    def test_internal_exact_rejects_wrong_pointer_anchor(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_internal]]
+id = "fn-internal"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x2"
+name = "static_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-internal"
+reason = "synthetic internal boundary"
+next_public_address = "0x10002"
+pointer_word_address = "0x10008"
+cs_base = "0xF000"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1802] = b"\x90\xC3"
+            data[0x1808:0x180A] = b"\x01\x10"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            metadata = {0x10000: {"address": "0x10000", "body_min": "0x10000",
+                                  "body_max": "0x10001", "body_addresses": "2",
+                                  "is_thunk": "false", "is_external": "false"}}
+            publics = {0x10002: ["next"]}
+            decoded = {"instruction_count": 2, "instruction_addresses": [0x10000, 0x10001],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10002"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=decoded):
+                with self.assertRaisesRegex(ValueError, "pointer word mismatch"):
+                    review.reviewed_exact_internal_reviews(
+                        {0x10000: "FUN_10000"}, metadata, publics, target
+                    )
+
+
 if __name__ == "__main__":
     unittest.main()

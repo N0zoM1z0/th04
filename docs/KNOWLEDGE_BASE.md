@@ -273,6 +273,21 @@ notes linked from `source_refs`, not in an ever-growing monolith.
 - `dialog_animate` is a second accepted control for Borland `#pragma
   samecodeseg` plus normal TLINK far-call optimization. A natural external C++
   call reproduces the target five-byte `NOP; PUSH CS; CALL near` bridge and
-  ordered relocations in both focused and 65-unit cold replay. This mechanism
+  ordered relocations in both focused and 66-unit cold replay. This mechanism
   does not explain four-byte `PUSH CS; CALL near` targets; those require a
   different TU/segment producer explanation rather than byte injection.
+
+- A final linker-public sweep is broader than a module-candidate queue. Iterate every
+  C/C++ TLINK contribution, split it at every public, and compare each public-to-next-
+  public interval against both the target and the function ledger. TH04 found two
+  previously unowned pure-C++ script-parameter helpers this way even though they live
+  in shared `th03/formats/script.hpp`, not a TH04-named source file. The current sweep
+  leaves 14 real public intervals outside the reviewed function ledger; use that list
+  as the routing queue instead of restarting from ReC98 filenames.
+- Linker publics still do not enumerate static functions. After public coverage is
+  exhausted, inspect Ghidra entries inside exact authored owners, but require an
+  independent target-local anchor before denominator admission.
+  `reviewed_exact_internal` binds `tiles_render_all_timed` using a contiguous 25-byte
+  Ghidra body, gap-free raw `RET`, exact next public, and a separate function-pointer
+  word whose near offset resolves to the same entry. A wrong pointer word is a tested
+  hard failure; Ghidra-only internal entries are never sufficient.

@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,994 / 13,045 = 99.609046% exact**;
-- authored functions: **124 / 125 = 99.2% exact**;
+- authored C/C++ bytes: **13,236 / 13,287 = 99.616166% exact**;
+- authored functions: **127 / 128 = 99.218750% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -44,8 +44,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-dialog-animate-default-001/receipt.json`.
-It passes all 65 current default-selected exact-replay units in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-script-params-internal-precommit-002/receipt.json`.
+It passes all 66 current default-selected exact-replay units in both isolated
 cold materializations, including the 0xD9-byte MB_DFT score-bonus prefix, the 11-byte pure-C
 `snd_se_reset` owner,
 the full pure-C PMD owner, and the restored natural C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
@@ -305,7 +305,7 @@ The maintained `src/main/midboss/score_bonus.inl` contains only the two natural
 C/C++ functions and their required declarations/macros; it contains no inline
 assembly or byte-emission escape hatch. Focused two-cold replay
 `gptweb-mbscore-exact-002` reproduces all 217 accepted bytes, and
-`gptweb-dialog-animate-default-001` repeats the result inside the 65-unit
+`gptweb-script-params-internal-precommit-002` repeats the result inside the 66-unit
 aggregate with matching TLINK placement, ordered overlapping relocations, and
 normalized OMF identity.
 
@@ -347,7 +347,7 @@ maintained `src/main/sound/se_reset.inl` contains no codestring or inline ASM,
 uses checked-in `compat/rec98` one-line adapters for the two TH02 headers, and
 replays through `source_mode = "forwarded-fragment"`. Focused receipt
 `gptweb-snd-se-reset-003` and aggregate receipt
-`gptweb-dialog-animate-default-001` both reproduce all 11 bytes with stable
+`gptweb-script-params-internal-precommit-002` both reproduce all 11 bytes with stable
 map placement, zero overlapping relocations, and deterministic normalized OMF.
 Ghidra reports no function at target `0x238A6`; the later no-Ghidra
 TLINK-public/raw-boundary gate now promotes `_snd_se_reset` in the function
@@ -426,8 +426,63 @@ bridge `90 0E E8 ...` after pushing `PAGE_COUNT`. The maintained
 with `#pragma samecodeseg`; normal TLINK 6.10 far-call optimization reproduces
 the target `NOP; PUSH CS; CALL near` and ordered relocation sites. No inline
 assembly, codestring, byte emission, or patched object is used. Focused receipt
-`gptweb-dialog-animate-001` and 65-unit aggregate
-`gptweb-dialog-animate-default-001` both pass.
+`gptweb-dialog-animate-001` and later 66-unit aggregate
+`gptweb-script-params-internal-precommit-002` both pass.
+
+
+## Shared script helpers and internal/static function audit
+
+The next expansion deliberately ignored the historical module queue and scanned
+**every C/C++ TLINK public interval** in the current 66-unit candidate. Two pure
+C++ helpers from shared `th03/formats/script.hpp` had never been assigned an
+authored owner even though they sit inside `th04/dialog.cpp`'s linked
+`DIALOG_TEXT` contribution:
+
+- `script_param_read_number_first(int far&)`: target `0x1D0CA..0x1D192`,
+  201 bytes, TLINK public `0AAF:25DA`;
+- `script_param_read_number_second(int far&)`: target `0x1D193..0x1D1BB`,
+  41 bytes, TLINK public `0AAF:26A3`.
+
+The next public, `dialog_op`, begins exactly at `0x1D1BC` / `0AAF:26CC`.
+Fresh nonce-attested Ghidra reports contiguous 201/201 and 41/41 bodies, and raw
+16-bit decoding tiles both functions through `RET 4`. Maintained
+`src/main/dialog/script_params.inl` is a pure-C++ identity fragment of the
+shared header and contains no inline ASM, codestring, `__emit__`, or byte
+patching. Focused replay `gptweb-dialog-script-params-002` and 66-unit aggregate
+`gptweb-script-params-internal-precommit-002` reproduce all 242 bytes with matching
+map placement, ordered relocation surfaces, and deterministic normalized OMF.
+Both functions therefore enter through the normal automatic Ghidra+TLINK+exact
+owner gate.
+
+A second audit searched **all Ghidra entries inside exact authored byte owners**
+without requiring a linker public. Most leftovers were analysis noise: one
+switch case label and three basic-block false splits inside the already-reviewed
+`bullets_update`. One entry was a real static function:
+`tiles_render_all_timed()` at `0x1CB80..0x1CB98` (25 bytes). Since Borland does
+not emit a TLINK public for it, the new `[[reviewed_exact_internal]]` gate is
+stricter than automatic review. It requires:
+
+1. a contiguous, non-thunk/non-external target Ghidra body inside one exact
+   authored owner;
+2. gap-free raw decode through terminal `RET`/`RETF`;
+3. the configured function end to equal an existing next TLINK public; and
+4. an independent target word inside the same exact owner to encode the near
+   function offset under a configured CS base.
+
+For `tiles_render_all_timed`, the next public is `tiles_activate` at `0x1CB99`.
+A later exact-owner instruction in
+`tiles_activate_and_render_all_for_next_N_frames` stores near offset `0x2090` at
+target word `0x1CBB1`; `0x1AAF0 + 0x2090 = 0x1CB80`. A regression test mutates
+this pointer word and requires the internal gate to fail closed.
+
+After these promotions, an exhaustive linker-public screen leaves 14 C/C++
+public intervals outside the reviewed function ledger. Ten are raw-identical in
+the current candidate, but they remain unpromoted because their available source
+shape is low-level/inline-ASM or a required Oracle still fails (for example,
+`dialog_op` and `dialog_run` remain blocked on ordered MZ relocation order).
+Four retain raw differences. The exact-owner internal Ghidra audit has no
+remaining credible independent function entries. These 14 intervals are the
+current boundary/exactness work queue rather than the older ReC98 module list.
 
 ## Function accounting
 
@@ -442,7 +497,7 @@ claim.
 - one exact authored byte owner from `config/units.csv`.
 
 Automatic promotion still requires Ghidra's complete body to be contiguous
-and wholly contained inside that exact byte owner; this now accepts 102
+and wholly contained inside that exact byte owner; this now accepts 104
 functions, including the exact `snd_pmd_resident` and newly owned 197-byte
 `dialog_init`.
 A second, explicit manual-review path handles analysis false negatives without
@@ -459,8 +514,12 @@ The regular Ghidra-min/max manual gate promotes 13 body-construction false
 negatives: the original four straight-line/overlap cases, `boss_items_drop`,
 `bullet_velocity_and_angle_set`, five compiler-switch functions, and the two
 MB_DFT score-bonus functions. Eight further exact functions use the stricter
-no-Ghidra public/raw-boundary path described above. A separate
-`[[reviewed_exact_extent]]` path handles `bullets_update`, whose Ghidra body
+no-Ghidra public/raw-boundary path described above. One internal static function
+uses `[[reviewed_exact_internal]]`: it has no TLINK public, so the gate requires
+a contiguous target Ghidra body, exact authored owner, gap-free raw terminal
+decode, exact next-public boundary, and an independent target function-pointer
+word that resolves to the same entry. A separate `[[reviewed_exact_extent]]`
+path handles `bullets_update`, whose Ghidra body
 ranges are unusable. It reuses the complete-boundary checks from reviewed
 nonexact accounting but additionally requires the entire configured extent to
 stay inside one named exact authored owner. The gate validates the 0x360-byte
@@ -471,11 +530,23 @@ raw code through `RETF`, byte `0x2CC28` metadata, five near-jump words at
 Reviewed nonexact functions still use the same fail-closed boundary path without
 requiring exact bytes. `snd_load` is now the only such function.
 
-The resulting denominator is 125 reviewed functions: **124 exact plus one
+The resulting denominator is 128 reviewed functions: **127 exact plus one
 explicit nonexact `snd_load`**. No current function candidate remains
 provisional.
 
 ## Reusable Borland lessons
+
+- Linker publics are not a complete function universe. After exhausting public
+  starts, scan target Ghidra entries inside exact authored owners for credible
+  internal/static functions, but do not promote an unlabelled entry on Ghidra
+  alone. `reviewed_exact_internal` requires a raw terminal boundary, exact next
+  public, and an independent target function-pointer word; `tiles_render_all_timed`
+  is the accepted control.
+- Shared source headers can contribute authored game code even when the wrapper
+  module is already familiar. A whole-linker-public sweep found the 242-byte
+  script-parameter pair in `th03/formats/script.hpp`; boundary discovery should
+  therefore index the final TLINK map rather than only ReC98 translation-unit
+  filenames or previously reconstructed modules.
 
 - Translation-unit boundaries are binary inputs even when linked code bytes are
   unchanged. They can alter Borland LEDATA/FIXUPP batching and therefore the

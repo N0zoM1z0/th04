@@ -594,3 +594,13 @@ replace_sha256 = "169aaea7b307d2525d024b732caff5ffdae32bb290c7d609a5dcd8d68477c4
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+
+[[units]]
+id = "th04-main-dialog-script-params"
+default_enabled = true
+repo_source = "src/main/dialog/script_params.inl"
+source_mode = "fragment"
+patch_path = "th03/formats/script.hpp"
+map_module = "th04/dialog.cpp"
+map_mode = "contains"
+object_path = "obj/th04/dialog.obj"

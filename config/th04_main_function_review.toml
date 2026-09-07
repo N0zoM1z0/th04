@@ -325,3 +325,34 @@ id = "th04-main-fn-1d6eb"
 address = "0x1D6EB"
 evidence_id = "ev-th04-main-dialog-animate-boundary-v1"
 reason = "dialog_animate is a contiguous target Ghidra body at the matching TLINK public inside the newly exact natural-C++ owner."
+
+[[new_exact]]
+id = "th04-main-fn-1d0ca"
+address = "0x1D0CA"
+evidence_id = "ev-th04-main-dialog-script-param-first-boundary-v1"
+reason = "Fresh target Ghidra reports a contiguous 201-byte body at the matching TLINK public inside the newly exact pure-C++ script-parameter owner."
+
+[[new_exact]]
+id = "th04-main-fn-1d193"
+address = "0x1D193"
+evidence_id = "ev-th04-main-dialog-script-param-second-boundary-v1"
+reason = "Fresh target Ghidra reports a contiguous 41-byte body at the matching TLINK public inside the newly exact pure-C++ script-parameter owner; dialog_op begins immediately after it."
+
+[[reviewed_exact_internal]]
+id = "th04-main-fn-1cb80"
+address = "0x1CB80"
+file_offset = "0xE380"
+size = "0x19"
+name = "tiles_render_all_timed()"
+owner_unit = "th04-main-tile-after-padding"
+evidence_id = "ev-th04-main-tiles-render-all-timed-internal-boundary-v1"
+reason = "Static function has no TLINK public. Target Ghidra reports one contiguous 25-byte body; raw decode ends in RET at 0x1CB98; the next TLINK public starts at 0x1CB99; and a later exact-owner instruction stores near-function offset 0x2090, which resolves under MAIN_01 CS base 0x1AAF0 to this exact entry."
+next_public_address = "0x1CB99"
+pointer_word_address = "0x1CBB1"
+cs_base = "0x1AAF0"
+
+[[new_exact]]
+id = "th04-main-fn-1cb80"
+address = "0x1CB80"
+evidence_id = "ev-th04-main-tiles-render-all-timed-internal-boundary-v1"
+reason = "Explicitly admit the internal static function after Ghidra/raw/next-public/pointer-anchor review inside an exact authored owner."
