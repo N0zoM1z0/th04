@@ -10,7 +10,7 @@ provisional until each boundary is reconciled with exact target control flow.
 | Confirmed authored functions | 116 |
 | Source-present authored mappings | 115 |
 | Accepted exact functions | 115 |
-| Accepted exact authored bytes | 12,921 |
+| Accepted exact authored bytes | 12,932 |
 | Exact / currently confirmed authored bytes | 99.61% |
 | Exact original-style ASM units | 9 / 1,489 bytes |
 

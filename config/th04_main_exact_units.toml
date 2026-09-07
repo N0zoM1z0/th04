@@ -571,3 +571,12 @@ patch_path = "th04/main/midboss/defeat.cpp"
 map_module = "th04/mb_dft.cpp"
 map_mode = "contains"
 object_path = "obj/th04/mb_dft.obj"
+
+[[units]]
+id = "th04-main-snd-se-reset"
+repo_source = "src/main/sound/se_reset.inl"
+source_mode = "forwarded-fragment"
+patch_path = "th02/snd/se_reset.cpp"
+map_module = "th02/snd_se_r.cpp"
+map_mode = "contains"
+object_path = "obj/th02/snd_se_r.obj"

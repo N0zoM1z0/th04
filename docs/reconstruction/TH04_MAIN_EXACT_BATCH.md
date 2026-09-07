@@ -10,7 +10,7 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **12,921 / 12,972 = 99.606846% exact**;
+- authored C/C++ bytes: **12,932 / 12,983 = 99.607179% exact**;
 - authored functions: **115 / 116 = 99.137931% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
@@ -44,9 +44,10 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-authored-expand-default-002/receipt.json`.
-It passes all 63 current default-selected exact-replay units in both isolated
-cold materializations, including the new 0xD9-byte MB_DFT score-bonus prefix,
+`.analysis/reconstruction/exact-unit-replay/gptweb-authored-expand-default-004/receipt.json`.
+It passes all 64 current default-selected exact-replay units in both isolated
+cold materializations, including the 0xD9-byte MB_DFT score-bonus prefix, the 11-byte pure-C
+`snd_se_reset` owner,
 the full pure-C PMD owner, and the restored natural C++ dialog init/exit TU split. `dialog_op` and `dialog_run` remain
 `default_enabled = false`; they stay individually replayable with `--unit` and
 are never silently accepted by the default aggregate.
@@ -283,7 +284,7 @@ and the ordered overlapping relocation list agrees. Two isolated cold builds in
 exact owners. No inline assembly, codestring, `__emit__`, raw byte directive, or
 patched object/link output is used.
 
-## Authored-boundary expansion: `MB_DFT_TEXT` and `snd_mmd_resident`
+## Authored-boundary expansion: `MB_DFT_TEXT`, `snd_mmd_resident`, and `snd_se_reset`
 
 The earlier module-routing ledger left the raw-identical 0x119-byte
 `th04/mb_dft.cpp` contribution as `origin=unknown`. Raw identity was not enough
@@ -304,7 +305,7 @@ The maintained `src/main/midboss/score_bonus.inl` contains only the two natural
 C/C++ functions and their required declarations/macros; it contains no inline
 assembly or byte-emission escape hatch. Focused two-cold replay
 `gptweb-mbscore-exact-002` reproduces all 217 accepted bytes, and
-`gptweb-authored-expand-default-002` repeats the result inside the 63-unit
+`gptweb-authored-expand-default-004` repeats the result inside the 64-unit
 aggregate with matching TLINK placement, ordered overlapping relocations, and
 normalized OMF identity.
 
@@ -335,6 +336,30 @@ redeclaration/type errors. The replay manifest therefore overlays only the TH04
 wrapper `th04/snd_mmdr.c` and keeps this candidate `default_enabled = false`.
 Do not solve the remaining early-return mismatch by restoring the upstream
 inline `RETF` assembly.
+
+The 12-byte `th02/snd_se_r.cpp` umbrella candidate has a different boundary
+shape. TLINK puts `_snd_se_reset` at the contribution start (`130E:07C6`), and
+raw 16-bit target decode gives exactly two byte stores followed by `RETF` in
+0x0B bytes. The twelfth byte is a standalone `NOP`, matching the candidate's
+trailing `#pragma codestring "\x90"`. Therefore only the 11-byte function body
+is reviewed as authored C/C++; the NOP stays outside the denominator. The
+maintained `src/main/sound/se_reset.inl` contains no codestring or inline ASM,
+uses checked-in `compat/rec98` one-line adapters for the two TH02 headers, and
+replays through `source_mode = "forwarded-fragment"`. Focused receipt
+`gptweb-snd-se-reset-003` and aggregate receipt
+`gptweb-authored-expand-default-004` both reproduce all 11 bytes with stable
+map placement, zero overlapping relocations, and deterministic normalized OMF.
+Ghidra currently reports no function at target `0x238A6`; that blocks a
+function-ledger promotion but does not invalidate the independently bounded
+byte owner.
+
+The remaining nonexact 0x5A-byte prefix of `th04/stages.cpp` was also screened
+rather than blindly promoted. TLINK shows that the whole prefix is
+`carpet_lighting_put_new()` from `0x3F9A` up to the already-exact
+`stage4_render()` public at `0x3FF4`. Its candidate source depends on inline ASM
+for DS→ES setup, `MUL`, `LODSB`, `SHL`, and `LOOP`, so the prefix is not a
+maintained authored-C/C++ denominator candidate under the current rules. The
+following 0x1AA-byte pure-C/C++ render suffix remains exact.
 
 ## Function accounting
 
@@ -421,3 +446,13 @@ provisional.
   tail-merging still changes final control-flow bytes. Treat compiler-control
   flow as a separate exactness dimension and keep negative source shapes in the
   knowledge ledger.
+- A raw-identical module ending in a candidate `#pragma codestring` should be
+  split at an independently decoded function return rather than promoted
+  wholesale. `snd_se_reset` is the control: 11 pure-C bytes end at `RETF`, then
+  one NOP padding byte remains excluded. A missing Ghidra function can block
+  function accounting while byte ownership still proceeds from TLINK + raw
+  decode + cold replay; keep those two denominators separate.
+- Maintained cross-game fragments should use `compat/rec98` headers together
+  with replay `source_mode=forwarded-fragment`. Do not weaken the include policy
+  merely because the direct ReC98 fragment is byte-identical; the replay layer
+  can attest the one-line adapters and resolve them back to the pinned scaffold.

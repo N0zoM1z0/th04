@@ -5,10 +5,10 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After expanding the reviewed authored boundary into `MB_DFT_TEXT` and
-`snd_mmd_resident`, reviewed authored C/C++ bytes are 12,921 / 12,972
-(99.606846%) exact, and reviewed authored functions are 115 / 116 (99.137931%)
-exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After expanding the reviewed authored boundary into `MB_DFT_TEXT`,
+`snd_mmd_resident`, and the pure-C body of `snd_se_reset`, reviewed authored
+C/C++ bytes are 12,932 / 12,983 (99.607179%) exact, and reviewed authored
+functions are 115 / 116 (99.137931%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -118,11 +118,11 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-authored-expand-default-002` passes all 63 current default-selected
+  `gptweb-authored-expand-default-004` passes all 64 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 12,972 bytes across 58
-  authored units/regions; 12,921 bytes across 54 units/regions are exact. The
+- The current reviewed authored byte denominator is 12,983 bytes across 59
+  authored units/regions; 12,932 bytes across 55 units/regions are exact. The
   reviewed nonexact byte remainder is deliberately visible: 47 bytes belong to
   the source-present `snd_mmd_resident` candidate, and four blocked bytes remain
   in `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
@@ -136,7 +136,7 @@ deterministic TH04 runtime scenario has been authored.
   plus 111-byte `boss_score_bonus`. The next public, `midboss_defeat_update`,
   starts at `0x2A047` and its upstream candidate contains inline assembly, so it
   remains outside this authored owner. The 217-byte prefix is exact in focused
-  two-cold replay and the 63-unit aggregate.
+  two-cold replay and the 64-unit aggregate.
 - `snd_mmd_resident` is now a reviewed 47-byte authored source-present candidate
   rather than an unclassified whole-module candidate. The TH04-wrapper natural
   C source recovers the target `LES`, all three magic checks, and both global
@@ -147,6 +147,21 @@ deterministic TH04 runtime scenario has been authored.
   it changes the GAME=2 build and causes five header/type errors. Keep the
   maintained candidate on the TH04 wrapper `th04/snd_mmdr.c` and do not restore
   the upstream inline `RETF` assembly.
+- `snd_se_reset` adds a separately reviewed **11-byte exact pure-C owner** at
+  target `0x238A6..0x238B0`. TLINK places `_snd_se_reset` at the first byte and
+  raw 16-bit decode reaches `RETF` after exactly 11 bytes; the following
+  `0x238B1` NOP is upstream `#pragma codestring` padding and is deliberately
+  outside authored C/C++ accounting. The maintained source uses
+  `compat/rec98` one-line adapters plus `source_mode=forwarded-fragment`, and
+  focused replay plus the 64-unit aggregate are exact. Ghidra has no function
+  at `0x238A6`, so this expands byte ownership only; no function-ledger row is
+  fabricated.
+- Re-screening the remaining 0x5A-byte `stages.cpp` prefix shows that it is the
+  single `carpet_lighting_put_new()` function and that the candidate relies on
+  inline ASM for DS/ES setup, `MUL`, `LODSB`, `SHL`, and `LOOP`. The following
+  0x1AA-byte render suffix is already exact. Keep the mixed-ASM prefix outside
+  maintained authored-C/C++ ownership unless those operations are naturally
+  recovered first.
 - `snd_load` now has three additional exact natural-source subspans. Identity
   fragments recover the DOS-open and driver-dispatch/read sequences. The
   parameter reload uses `_AX = *reinterpret_cast<snd_load_func_t near *>(&func);`;
@@ -155,8 +170,8 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-authored-expand-default-002`
-  passed all 63 current default exact-replay units in two isolated
+- The latest aggregate cold replay `gptweb-authored-expand-default-004`
+  passed all 64 current default exact-replay units in two isolated
   materializations. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the

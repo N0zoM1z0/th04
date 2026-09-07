@@ -232,3 +232,18 @@ notes linked from `source_refs`, not in an ever-growing monolith.
   blocker; ordinary return, explicit-goto, `_AX` self-assignment, and `-O-`
   variants are recorded negative results rather than reasons to reintroduce
   inline `RETF` assembly.
+
+- For a raw-identical contribution ending in `#pragma codestring`, split the
+  maintained authored-C/C++ owner at an independently decoded function return.
+  TH04 `snd_se_reset` is the concrete control: TLINK starts the public at
+  `0x238A6`, raw decode reaches `RETF` after 11 bytes, and the twelfth byte is a
+  standalone NOP from the codestring. The 11-byte function can be exact byte
+  ownership even though Ghidra has no function there; do not fabricate a
+  function-ledger row. Cross-game maintained includes use `compat/rec98` plus
+  replay `forwarded-fragment`, preserving both policy and scaffold identity.
+- Re-screen candidate residuals before treating them as denominator growth.
+  The 0x5A-byte `stages.cpp` gap is exactly `carpet_lighting_put_new()` by TLINK
+  publics, and its candidate source uses inline ASM for DS/ES, MUL, LODSB, SHL,
+  and LOOP. The following 0x1AA bytes are already exact pure C/C++; leave the
+  mixed-ASM prefix outside authored-C/C++ ownership unless those operations are
+  first recovered naturally and revalidated.
