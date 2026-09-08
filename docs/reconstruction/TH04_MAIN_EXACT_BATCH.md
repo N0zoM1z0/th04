@@ -11,7 +11,7 @@ python3 scripts/status.py
 `config/units.csv` owns byte state,
 `config/th04_main_authored_functions.csv` owns reviewed function state, and
 `config/th04_function_boundaries.csv` owns all-artifact routing. Git history,
-`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v98
+`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v99
 batch detail without presenting old frontiers as current instructions.
 
 ## Scope and current meaning
@@ -124,6 +124,9 @@ evidence IDs are indexed in `config/knowledge.csv`.
 - `#pragma samecodeseg` changes fixup framing; TLINK's normal far-to-near
   optimization can produce `NOP; PUSH CS; CALL near`. It is not a universal
   substitute for correct producer ownership.
+  v99 gives a concrete positive case: `#pragma samecodeseg GameExecl` removes
+  one segment relocation per END_TEXT caller and reproduces the target
+  optimized call sequence without inline byte emission.
 - The first declaration of a symbol can affect Borland segment/group fixups.
 - Local declaration order can control BP-relative stack-slot allocation.
 - `-WX` affects both control-flow code generation and SEGDEF alignment. A
@@ -151,6 +154,15 @@ evidence IDs are indexed in `config/knowledge.csv`.
   constants, and control flow have disproved multiple plausible candidates.
 - Turbo C++ OMF COMENT metadata is real build output. Normalize only the
   explicitly attested dependency timestamp fields, never code/data/fixups.
+
+## Latest boundary expansion
+
+v99 expands the reviewed denominator outside the completed MAIN_036 frontier.
+Three contiguous END_TEXT FAR functions (`end_game_good`, `end_game_bad`, and
+`end_extra`) are exact from one maintained pure-C++ 0x7C-byte producer. Focused
+and 137-owner aggregate cold replays preserve raw bytes, exact map contribution,
+ordered relocation overlap, and deterministic TC86 OMF. Candidate-C++ paths
+that require inline ASM/codestring remain explicitly unaccepted.
 
 ## Historical detail
 

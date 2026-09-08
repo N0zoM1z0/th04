@@ -2658,3 +2658,25 @@ address = "0x3026A"
 name = "gengetsu_update()"
 evidence_id = "ev-th04-main-gengetsu-update-boundary-v98"
 reason = "Public Gengetsu FAR dispatcher admitted only after raw/TASM review accounts for the full body and trailing ten-entry compiler table and natural-C++ two-cold replay is exact."
+
+# v99: target-corroborated END_TEXT FAR functions from one pure-C++ producer.
+[[new_exact]]
+id = "th04-main-fn-1b7b9"
+address = "0x1B7B9"
+name = "end_game_good()"
+evidence_id = "ev-th04-main-end-family-boundary-v99"
+reason = "END_TEXT function admitted after Ghidra/TASM/TLINK/raw agreement and focused plus 137-owner exact replay."
+
+[[new_exact]]
+id = "th04-main-fn-1b7e4"
+address = "0x1B7E4"
+name = "end_game_bad()"
+evidence_id = "ev-th04-main-end-family-boundary-v99"
+reason = "END_TEXT function admitted after Ghidra/TASM/TLINK/raw agreement and focused plus 137-owner exact replay."
+
+[[new_exact]]
+id = "th04-main-fn-1b80f"
+address = "0x1B80F"
+name = "end_extra()"
+evidence_id = "ev-th04-main-end-family-boundary-v99"
+reason = "END_TEXT function admitted after Ghidra/TASM/TLINK/raw agreement and focused plus 137-owner exact replay."

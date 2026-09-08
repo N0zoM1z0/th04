@@ -4221,3 +4221,57 @@ overlay_path = "th04/g6upd.cpp"
 map_module = "th04/g6upd.cpp"
 map_mode = "exact"
 object_path = "obj/th04/g6upd.obj"
+
+
+[[build_replacements]]
+id = "th04-end-family-v99-build"
+trigger_units = ["th04-main-end-family-v99"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6upd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/g6upd.cpp\",\n\t\"th04/endmain.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-end-family-v99-natural"
+trigger_units = ["th04-main-end-family-v99"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "ce1364a5534ed089b4da32c45b7a37dc1aca1495a824a57765c65888cedfaa9e",
+  "b1ea063e82bbcc8802a6a480454c28fa4908fbf7e5ee4930517ea3365a4c4bff",
+]
+
+[[source_transforms.ops]]
+id = "remove-end-family-v99"
+kind = "remove_between"
+removed_sha256 = "4597714bf329f4d48a67d8f9a5cb318e5233339dcbb931faf5e9538574b9c1f9"
+start = "public @end_game_good$qv\r\n"
+end = "@end_extra$qv\tendp\r\n"
+replacement = "; natural C++ END_TEXT ending family\r\nextrn @end_game_good$qv:far\r\nextrn @end_game_bad$qv:far\r\nextrn @end_extra$qv:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "publish-end-good-binary-v99"
+kind = "insert_before"
+anchor = "aMaine\t\tdb 'maine',0\r\n"
+text = "public _end_game_good_binary\r\n_end_game_good_binary label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-end-bad-binary-v99"
+kind = "insert_before"
+anchor = "aMaine_0\tdb 'maine',0\r\n"
+text = "public _end_game_bad_binary\r\n_end_game_bad_binary label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-end-extra-binary-v99"
+kind = "insert_before"
+anchor = "aMaine_1\tdb 'maine',0\r\n"
+text = "public _end_extra_binary\r\n_end_extra_binary label byte\r\n"
+
+[[units]]
+id = "th04-main-end-family-v99"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-update-v98"]
+repo_source = "src/main/end/ending.cpp"
+overlay_path = "th04/endmain.cpp"
+map_module = "th04/endmain.cpp"
+map_mode = "exact"
+object_path = "obj/th04/endmain.obj"

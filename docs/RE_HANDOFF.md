@@ -10,15 +10,15 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 248 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 482 authored candidates otherwise unreviewed;
+- 251 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 479 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Within the accepted 136-owner MAIN cohort, the live reviewed totals are:
+Within the accepted 137-owner MAIN cohort, the live reviewed totals are:
 
-- authored C/C++ bytes: **38,041 / 38,072 exact (99.918575%)**;
-- authored functions: **248 / 250 exact (99.200000%)**;
+- authored C/C++ bytes: **38,165 / 38,196 exact (99.918840%)**;
+- authored functions: **251 / 253 exact (99.209486%)**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - reviewed nonexact authored bytes: **31 bytes** in two functions.
 
@@ -92,17 +92,18 @@ natural-C++ owners and seven exact functions. Important boundaries are:
   `0x306D7` and owns the following ten-word phase jump table through `0x306EB`.
   Fresh Ghidra stops early; raw/TASM/table-target review defines the exact end.
 
-The maintained sources are under `src/main/boss/` and contain no target-byte
-emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
+v99 expands the reviewed authored universe in `END_TEXT`: `end_game_good()`, `end_game_bad()`, and `end_extra()` at `0x1B7B9..0x1B834` are three contiguous FAR bodies (0x2B, 0x2B, 0x26) agreed by target Ghidra, pinned TASM, TLINK publics, and raw decode. One pure-C++ producer reproduces all 0x7C bytes; `#pragma samecodeseg GameExecl` selects the target TLINK `NOP; PUSH CS; CALL near` optimization and exact relocation order without byte emission.
+
+The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
 
 ## Latest replay receipts
 
-The current end-of-segment owners each pass focused two-cold replay, culminating
-in `.analysis/reconstruction/exact-unit-replay/gptweb-v98-probe-003/receipt.json`.
+The latest END_TEXT owner passes focused two-cold replay at
+`.analysis/reconstruction/exact-unit-replay/gptweb-v99-probe-003/receipt.json`.
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-main036-complete-aggregate-004/receipt.json`
-  — all 136 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-end-v99-aggregate-001/receipt.json`
+  — all 137 default owners, two isolated cold materializations.
 
 The aggregate is the retained current private acceptance baseline. Superseded
 replay materializations and raw probe matrices may be pruned after their
@@ -117,17 +118,17 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-For every v89-v98 owner, the retained current replays report zero raw differences, exact map
+For every v89-v99 owner, the retained current replays report zero raw differences, exact map
 placement, identical ordered overlapping MZ relocations, valid deterministic
 TC86 OMF, and stable source snapshots. The aggregate candidate executable is
 deterministic across A/B with SHA-256
-`7e4759add3f7358898081805fc1eaba0eab2b5d3122607ecf0f8b24ccfeaaaa9`.
+`03ebb1ee9384d2f208ae81ffd7572015988269ab38973ef0fb950b7d75132c43`.
 
 The current function review uses the same aggregate map, fresh attested Ghidra
-metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 248/250
-exact functions, 114 automatic acceptances, 134 manual reviewed acceptances,
+metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 251/253
+exact functions, 117 automatic acceptances, 134 manual reviewed acceptances,
 and zero provisional strict rejections. The private report is
-`.analysis/reconstruction/functions/function-review-v98-current.json`.
+`.analysis/reconstruction/functions/function-review-v99-current.json`.
 
 ## Remaining reviewed nonexact work
 
@@ -151,15 +152,17 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 482 such rows. Prefer `boundary_state=corroborated`; the 105
+There are 479 such rows. Prefer `boundary_state=corroborated`; the 105
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 289 MAIN entries currently represented by
+The largest remaining class is 286 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
+
+Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
 Do not return to retired `exact/`, `partial/`, or `modules/` source layouts.
 Product source follows `src/main/`, `src/op/`, `src/maine/`, `src/zun/`, and
@@ -167,7 +170,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The accepted 136-owner cohort compiles and links reproducibly through the
+The accepted 137-owner cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 
