@@ -11,7 +11,7 @@ python3 scripts/status.py
 `config/units.csv` owns byte state,
 `config/th04_main_authored_functions.csv` owns reviewed function state, and
 `config/th04_function_boundaries.csv` owns all-artifact routing. Git history,
-`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v94
+`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v98
 batch detail without presenting old frontiers as current instructions.
 
 ## Scope and current meaning
@@ -132,6 +132,15 @@ evidence IDs are indexed in `config/knowledge.csv`.
   forms that generic far pointers and `MK_FP` do not.
 - Sparse `switch` syntax can reproduce one-load/shared-compare lowering that a
   semantically equivalent `if` chain cannot.
+- TC4J expression grouping is codegen-significant: parenthesizing an inner
+  constant-index term before adding a random term can change the exact AX/DX
+  accumulation order without changing semantics.
+- Equivalent early-return and `if/else` forms can differ by a near-vs-short
+  conditional branch and therefore by whole-function size. Preserve the target
+  control-flow shape instead of optimizing source aesthetics during matching.
+- A `static inline` helper with an early return may duplicate extra branch bytes
+  at every inline site. The Gengetsu dispatcher matched only after four such
+  blocks were expressed as direct nested `if` statements, with no byte emission.
 - Compiler switch tables can belong to the authored function extent even when
   Ghidra stops at the return; every table target must decode to an instruction
   boundary inside the reviewed function.

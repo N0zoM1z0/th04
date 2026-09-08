@@ -10,20 +10,20 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 241 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 489 authored candidates otherwise unreviewed;
+- 248 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 482 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Within the accepted 132-owner MAIN cohort, the live reviewed totals remain:
+Within the accepted 136-owner MAIN cohort, the live reviewed totals are:
 
-- authored C/C++ bytes: **35,980 / 36,011 exact (99.913915%)**;
-- authored functions: **241 / 243 exact (99.176955%)**;
+- authored C/C++ bytes: **38,041 / 38,072 exact (99.918575%)**;
+- authored functions: **248 / 250 exact (99.200000%)**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - reviewed nonexact authored bytes: **31 bytes** in two functions.
 
 These percentages use only accepted reviewed MAIN ledger denominators. They
-are not a claim that 99.91% of an executable or the game has been
+are not a claim that 99.92% of an executable or the game has been
 reconstructed. Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -74,54 +74,60 @@ raw decoding, switch-target validation, and exact map ownership define the
 accepted extent.
 
 v89-v94 recover the first Gengetsu family at `0x2F8EE..0x2FEDE`: 1,521 bytes,
-seven exact C++ owners, and twelve exact functions. Important boundaries are:
+seven exact C++ owners, and twelve exact functions. v95-v98 then close the rest
+of `MAIN_036_TEXT` from `0x2FEDF..0x306EB`: another 2,061 exact bytes in four
+natural-C++ owners and seven exact functions. Important boundaries are:
 
 - `0x2F8EE`, `0x2F903`, and `0x2F97A` are three functions in one physical
   TC86 producer. Splitting the producer loses the alignment byte before the
   middle function's sparse switch tables.
-- Ghidra has no entry at `0x2F8EE` or `0x2F97A`, and sparsely constructs
-  several later bodies. The function ledger uses raw/TASM/next-PROC evidence.
+- Ghidra has no entry at `0x2F8EE`, `0x2F97A`, **or `0x30050`**. The last one
+  is admitted only through the no-Ghidra reviewer after pinned TASM, raw RET,
+  generated-public, and next-PROC validation.
+- `gengetsu_columns_phase()` at `0x2FEDF` owns code through `RET` at `0x30047`
+  plus a four-word compiler jump table through `0x3004F`.
 - `gengetsu_cycle_phase()` at `0x2FD30` owns 0xC4 code bytes through `RET` plus
   a five-word jump table, for a complete 0xCE-byte extent through `0x2FDFD`.
+- public FAR `gengetsu_update()` at `0x3026A` continues through `RETF` at
+  `0x306D7` and owns the following ten-word phase jump table through `0x306EB`.
+  Fresh Ghidra stops early; raw/TASM/table-target review defines the exact end.
 
 The maintained sources are under `src/main/boss/` and contain no target-byte
 emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
 
 ## Latest replay receipts
 
-Two independent current-tree runs pass:
+The current end-of-segment owners each pass focused two-cold replay, culminating
+in `.analysis/reconstruction/exact-unit-replay/gptweb-v98-probe-003/receipt.json`.
+The complete default cohort then passes at:
 
-- focused dependency closure:
-  `.analysis/reconstruction/exact-unit-replay/codex-final-v94-focused-001/receipt.json`
-  — 67 selected owners, two isolated cold materializations;
-- complete default cohort:
-  `.analysis/reconstruction/exact-unit-replay/codex-final-v94-aggregate-001/receipt.json`
-  — all 132 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-main036-complete-aggregate-004/receipt.json`
+  — all 136 default owners, two isolated cold materializations.
 
-These two complete runs are the retained current private baseline. Superseded
+The aggregate is the retained current private acceptance baseline. Superseded
 replay materializations and raw probe matrices may be pruned after their
 commands, outcomes, and digests enter the checked-in ledgers; historical
 `.analysis` paths are provenance rather than a cache-retention guarantee.
 
 The 2026-09-08 retention pass kept all 275 replay `receipt.json` files,
 compacted 273 superseded receipt-bearing runs, removed 88 receiptless run
-directories, and retained the two current full trees above. Obsolete probe,
+directories, and retained the then-current full trees. Obsolete probe,
 warm-build, one-off function-review, and isolated DOS-workspace caches were
 also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-For every v89-v94 owner, both runs report zero raw differences, exact map
+For every v89-v98 owner, the retained current replays report zero raw differences, exact map
 placement, identical ordered overlapping MZ relocations, valid deterministic
 TC86 OMF, and stable source snapshots. The aggregate candidate executable is
 deterministic across A/B with SHA-256
-`99e7f9c100a8ff42bef1c97412d30c135f7aaff45fdc8ab3b63bfaea1a017b40`.
+`7e4759add3f7358898081805fc1eaba0eab2b5d3122607ecf0f8b24ccfeaaaa9`.
 
 The current function review uses the same aggregate map, fresh attested Ghidra
-metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 241/243
-exact functions, 114 automatic acceptances, 127 manual reviewed acceptances,
+metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 248/250
+exact functions, 114 automatic acceptances, 134 manual reviewed acceptances,
 and zero provisional strict rejections. The private report is
-`.analysis/reconstruction/functions/function-review-v94-current.json`.
+`.analysis/reconstruction/functions/function-review-v98-current.json`.
 
 ## Remaining reviewed nonexact work
 
@@ -145,11 +151,11 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 489 such rows. Prefer `boundary_state=corroborated`; the 108
+There are 482 such rows. Prefer `boundary_state=corroborated`; the 105
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 296 MAIN entries currently represented by
+The largest remaining class is 289 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
@@ -161,7 +167,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The accepted 132-owner cohort compiles and links reproducibly through the
+The accepted 136-owner cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

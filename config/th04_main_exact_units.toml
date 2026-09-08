@@ -4022,3 +4022,202 @@ overlay_path = "th04/g6pat3.cpp"
 map_module = "th04/g6pat3.cpp"
 map_mode = "exact"
 object_path = "obj/th04/g6pat3.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-columns-v95-build"
+trigger_units = ["th04-main-gengetsu-columns-v95"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6pat3.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/g6pat3.cpp\",\n\t\"th04/g6cols.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-columns-v95-natural"
+trigger_units = ["th04-main-gengetsu-columns-v95"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "efedcdcb0d6aacc391ca3240f72da1ed661e04566dee27816dbf4c6b6e63fbf0",
+  "273df07538b67c83f4a34280703d57a05046614f72f535fb5f1eaef5ab905f43",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-columns-v95"
+kind = "remove_between"
+removed_sha256 = "32793f6f3404176ad3312a61ad3f290f5561cf4d7ec8309b678eb1a70b4d7f3a"
+start = "gengetsu_1FEDF\tproc near\r\n"
+end = "\t\tdw offset loc_20039\r\n"
+replacement = "; natural C++ Gengetsu spawn-column phase\r\nextrn _gengetsu_columns_phase:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-columns-v95-call"
+kind = "replace"
+old = "call\tgengetsu_1FEDF"
+new = "call\t_gengetsu_columns_phase"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-columns-v95"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-patterns3-v94"]
+repo_source = "src/main/boss/gengetsu6_columns.cpp"
+overlay_path = "th04/g6cols.cpp"
+map_module = "th04/g6cols.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6cols.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-random-ring-v96-build"
+trigger_units = ["th04-main-gengetsu-random-ring-v96"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6pat3.cpp\",\n\t\"th04/g6cols.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/g6pat3.cpp\",\n\t\"th04/g6cols.cpp\",\n\t\"th04/g6ring.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-random-ring-v96-natural"
+trigger_units = ["th04-main-gengetsu-random-ring-v96"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "e62bea05925511dea0a33756ddbed065bb80ebdc9a9e242e17e542d402cf35d3",
+  "d641d2d218e763def72d1f5aaca56421cb2238408398adc9a049b89402b9fdb2",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-random-ring-v96"
+kind = "remove_between"
+removed_sha256 = "5fc0ae788955ac07c4d3653439fe9d2e7033c8af37670b24de50be8403a8c56d"
+start = "gengetsu_20050\tproc near\r\n"
+end = "gengetsu_20050\tendp\r\n"
+replacement = "; natural C++ Gengetsu random ring\r\nextrn _gengetsu_random_ring:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-random-ring-v96-call"
+kind = "replace"
+old = "call\tgengetsu_20050"
+new = "call\t_gengetsu_random_ring"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-random-ring-v96"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-columns-v95"]
+repo_source = "src/main/boss/gengetsu6_random_ring.cpp"
+overlay_path = "th04/g6ring.cpp"
+map_module = "th04/g6ring.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6ring.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-helpers-v97-build"
+trigger_units = ["th04-main-gengetsu-helpers-v97"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6pat3.cpp\",\n\t\"th04/g6cols.cpp\",\n\t\"th04/g6ring.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/g6pat3.cpp\",\n\t\"th04/g6cols.cpp\",\n\t\"th04/g6ring.cpp\",\n\t\"th04/g6help.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-helpers-v97-natural"
+trigger_units = ["th04-main-gengetsu-helpers-v97"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "dcbf8b1c6eac4ea315b22205a5c2cb51ade83c4e97b2a41046dbd4ea01642507",
+  "45fef558a588973419f5a59c30241e463f7079462c6ef6dd7a3a6201f495ba9c",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-helpers-v97"
+kind = "remove_between"
+removed_sha256 = "6aaee790b2ac9c33f7236f6d6bf1ae8c9dd009268bee07f47869b05973f21d7d"
+start = "gengetsu_200B6\tproc near\r\n"
+end = "gengetsu_2023B\tendp\r\n"
+replacement = "; natural C++ Gengetsu late helper producer\r\nextrn _gengetsu_dual_clusters:near\r\nextrn _gengetsu_random_cloud_ring:near\r\nextrn _gengetsu_hittest:near\r\nextrn _gengetsu_blue_ring:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-helper-v97-call-1"
+kind = "replace"
+old = "call\tgengetsu_200B6"
+new = "call\t_gengetsu_dual_clusters"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-helper-v97-call-2"
+kind = "replace"
+old = "call\tgengetsu_20195"
+new = "call\t_gengetsu_random_cloud_ring"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-helper-v97-call-3"
+kind = "replace"
+old = "call\tgengetsu_20202"
+new = "call\t_gengetsu_hittest"
+expected_count = 9
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-helper-v97-call-4"
+kind = "replace"
+old = "call\tgengetsu_2023B"
+new = "call\t_gengetsu_blue_ring"
+expected_count = 4
+
+[[source_transforms.ops]]
+id = "name-main036-boss-bomb-invincibility-v97"
+kind = "replace"
+old = "byte_259EF"
+new = "_boss_bomb_invincibility_frames"
+expected_count = 12
+
+[[source_transforms.ops]]
+id = "publish-main036-boss-bomb-invincibility-v97"
+kind = "insert_before"
+anchor = "_boss_bomb_invincibility_frames\tdb ?\r\n"
+text = "public _boss_bomb_invincibility_frames\r\n"
+
+[[units]]
+id = "th04-main-gengetsu-helpers-v97"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-random-ring-v96"]
+repo_source = "src/main/boss/gengetsu6_helpers.cpp"
+overlay_path = "th04/g6help.cpp"
+map_module = "th04/g6help.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6help.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-update-v98-build"
+trigger_units = ["th04-main-gengetsu-update-v98"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6pat3.cpp\",\n\t\"th04/g6cols.cpp\",\n\t\"th04/g6ring.cpp\",\n\t\"th04/g6help.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/g6pat3.cpp\",\n\t\"th04/g6cols.cpp\",\n\t\"th04/g6ring.cpp\",\n\t\"th04/g6help.cpp\",\n\t\"th04/g6upd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-update-v98-natural"
+trigger_units = ["th04-main-gengetsu-update-v98"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "ac9888ac92b8ddb0b4b9e3a9df820e85906374b2c5b0fe8105bebaf6c009a9a7",
+  "ee5b6ed92624e9fd957c8d2b2edabdb0a611259dbe356e702cfaccb565a4145e",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-update-v98"
+kind = "remove_between"
+removed_sha256 = "f6449a4cc4370328cdf34686e5ebc759274e9c66ed011dfd9e9c5124b96cedb0"
+start = "public @GENGETSU_UPDATE$QV\r\n"
+end = "\t\tdw offset loc_2065F\r\n"
+replacement = "; natural C++ Gengetsu FAR dispatcher and switch table\r\nextrn @GENGETSU_UPDATE$QV:far\r\n\r\n"
+
+[[units]]
+id = "th04-main-gengetsu-update-v98"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-helpers-v97"]
+repo_source = "src/main/boss/gengetsu6_update.cpp"
+overlay_path = "th04/g6upd.cpp"
+map_module = "th04/g6upd.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6upd.obj"

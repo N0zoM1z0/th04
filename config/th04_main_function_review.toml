@@ -2524,3 +2524,137 @@ address = "0x2FE6A"
 name = "gengetsu_mirror_spread_phase()"
 evidence_id = "ev-th04-main-gengetsu-patterns3-boundary-v94"
 reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+# v95-v98: complete the remaining MAIN_036 Gengetsu frontier through segment end.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2fedf"
+address = "0x2FEDF"
+file_offset = "0x216DF"
+size = "0x171"
+decode_size = "0x169"
+name = "gengetsu_columns_phase()"
+owner_unit = "th04-main-gengetsu-columns-v95"
+evidence_id = "ev-th04-main-gengetsu-columns-boundary-v95"
+reason = "Pinned TASM and gap-free raw decode close code through RET at 0x30047; the following four TC86 jump words at 0x30048..0x3004F exactly fill the owner before the next local function. Fresh Ghidra constructs only a sparse subset."
+next_public_address = "0x30050"
+trailing_switch_tables = [
+  { jump_table_address = "0x30048", jump_table_count = 4, cs_base = "0x23A90" },
+]
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-30050"
+address = "0x30050"
+file_offset = "0x21850"
+size = "0x66"
+name = "gengetsu_random_ring()"
+owner_unit = "th04-main-gengetsu-random-ring-v96"
+evidence_id = "ev-th04-main-gengetsu-random-ring-boundary-v96"
+reason = "Fresh attested Ghidra has no function entry at 0x30050. Pinned TASM defines a near PROC there, gap-free raw decode reaches RET at 0x300B5, the aggregate map has the exact generated public, and the next local public starts at 0x300B6."
+next_public_address = "0x300B6"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-300b6"
+address = "0x300B6"
+file_offset = "0x218B6"
+size = "0xDF"
+name = "gengetsu_dual_clusters()"
+owner_unit = "th04-main-gengetsu-helpers-v97"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 223-byte helper through the next local function at 0x30195."
+next_public_address = "0x30195"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-30195"
+address = "0x30195"
+file_offset = "0x21995"
+size = "0x6D"
+name = "gengetsu_random_cloud_ring()"
+owner_unit = "th04-main-gengetsu-helpers-v97"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 109-byte helper through the next local function at 0x30202."
+next_public_address = "0x30202"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-30202"
+address = "0x30202"
+file_offset = "0x21A02"
+size = "0x39"
+name = "gengetsu_hittest()"
+owner_unit = "th04-main-gengetsu-helpers-v97"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 57-byte helper through the next local function at 0x3023B."
+next_public_address = "0x3023B"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-3023b"
+address = "0x3023B"
+file_offset = "0x21A3B"
+size = "0x2F"
+name = "gengetsu_blue_ring()"
+owner_unit = "th04-main-gengetsu-helpers-v97"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 47-byte helper through public FAR gengetsu_update at 0x3026A."
+next_public_address = "0x3026A"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-3026a"
+address = "0x3026A"
+file_offset = "0x21A6A"
+size = "0x482"
+decode_size = "0x46E"
+name = "gengetsu_update()"
+owner_unit = "th04-main-gengetsu-update-v98"
+evidence_id = "ev-th04-main-gengetsu-update-boundary-v98"
+reason = "Pinned TASM and gap-free raw decode define FAR code through RETF at 0x306D7, followed immediately by the ten-entry TC86 top-level phase jump table at 0x306D8..0x306EB. Fresh Ghidra truncates the real epilogue and table; the exact 0x482 owner closes MAIN_036_TEXT."
+trailing_switch_tables = [
+  { jump_table_address = "0x306D8", jump_table_count = 10, cs_base = "0x23A90" },
+]
+
+[[new_exact]]
+id = "th04-main-fn-2fedf"
+address = "0x2FEDF"
+name = "gengetsu_columns_phase()"
+evidence_id = "ev-th04-main-gengetsu-columns-boundary-v95"
+reason = "Target-first Gengetsu column phase admitted only after its complete code-plus-switch-table extent is accounted and natural-C++ two-cold replay is exact."
+
+[[new_exact]]
+id = "th04-main-fn-30050"
+address = "0x30050"
+name = "gengetsu_random_ring()"
+evidence_id = "ev-th04-main-gengetsu-random-ring-boundary-v96"
+reason = "Target-first Gengetsu helper admitted through the no-Ghidra path after TASM/raw/next-public proof and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-300b6"
+address = "0x300B6"
+name = "gengetsu_dual_clusters()"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Target-first Gengetsu helper admitted after exact-owner raw/TASM/Ghidra extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-30195"
+address = "0x30195"
+name = "gengetsu_random_cloud_ring()"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Target-first Gengetsu helper admitted after exact-owner raw/TASM/Ghidra extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-30202"
+address = "0x30202"
+name = "gengetsu_hittest()"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Target-first Gengetsu helper admitted after exact-owner raw/TASM/Ghidra extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-3023b"
+address = "0x3023B"
+name = "gengetsu_blue_ring()"
+evidence_id = "ev-th04-main-gengetsu-helpers-boundary-v97"
+reason = "Target-first Gengetsu helper admitted after exact-owner raw/TASM/Ghidra extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-3026a"
+address = "0x3026A"
+name = "gengetsu_update()"
+evidence_id = "ev-th04-main-gengetsu-update-boundary-v98"
+reason = "Public Gengetsu FAR dispatcher admitted only after raw/TASM review accounts for the full body and trailing ten-entry compiler table and natural-C++ two-cold replay is exact."
