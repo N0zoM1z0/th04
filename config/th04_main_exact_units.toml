@@ -4427,3 +4427,35 @@ overlay_path = "th04/mgbg.cpp"
 map_module = "th04/mgbg.cpp"
 map_mode = "exact"
 object_path = "obj/th04/mgbg.obj"
+
+
+[[build_replacements]]
+id = "th04-main-enemies-invalidate-v103-build"
+trigger_units = ["th04-main-enemies-invalidate-v103"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/endmain.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/endmain.cpp\",\n\t\"th04/eninv.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[source_transforms]]
+id = "th04-main-enemies-invalidate-v103-natural"
+trigger_units = ["th04-main-enemies-invalidate-v103"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "3c085138d3c902ccd16d9c4f04e8652eb9b9b4be9ccf48ab838c82dc8c923a25"
+
+[[source_transforms.ops]]
+id = "replace-main-enemies-invalidate-include-v103"
+kind = "replace"
+old = "include th04/main/enemy/inv.asm\r\n"
+new = "; natural C++ enemy invalidation\r\nextrn @enemies_invalidate$qv:near\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-enemies-invalidate-v103"
+default_enabled = true
+requires_units = ["th04-main-mugetsu-gengetsu-bg-v102"]
+repo_source = "src/main/enemy/enemies_invalidate.cpp"
+overlay_path = "th04/eninv.cpp"
+map_module = "th04/eninv.cpp"
+map_mode = "exact"
+object_path = "obj/th04/eninv.obj"

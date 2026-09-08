@@ -2724,3 +2724,12 @@ address = "0x22979"
 name = "mugetsu_gengetsu_bg_render()"
 evidence_id = "ev-th04-main-mugetsu-gengetsu-bg-boundary-v102"
 reason = "Fresh Ghidra, pinned TASM, target raw decode, and BOSS_BG_TEXT segment-end tiling agree on the full 0x91-byte function; focused plus 140-owner exact cold replay prove natural-C++ ownership."
+
+# v103: TILE_TEXT enemy invalidation prefix. Ghidra/TASM/raw agree on the
+# complete 0x2B body; the following 0x90 is alignment padding, not authored.
+[[new_exact]]
+id = "th04-main-fn-1c74c"
+address = "0x1C74C"
+name = "enemies_invalidate()"
+evidence_id = "ev-th04-main-enemies-invalidate-boundary-v103"
+reason = "Fresh Ghidra, pinned TASM, target raw decode, and exact TILE_TEXT ownership agree on the full 0x2B function; focused plus 141-owner cold replay prove pure-C++ exactness while preserving the following alignment byte outside authored ownership."
