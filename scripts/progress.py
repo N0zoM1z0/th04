@@ -31,6 +31,15 @@ def measures() -> dict[str, int]:
     reviewed_functions = [
         row for row in functions if row["boundary_state"] in {"reviewed", "shared"}
     ]
+    boundaries = csv_rows("th04_function_boundaries.csv")
+    authored_boundaries = [
+        row for row in boundaries if row["work_queue"] == "reconstruct"
+    ]
+    corroborated_boundaries = [
+        row
+        for row in authored_boundaries
+        if row["boundary_state"] in {"reviewed", "corroborated"}
+    ]
     authored_units = [
         row
         for row in units
@@ -45,9 +54,9 @@ def measures() -> dict[str, int]:
         and row["state"] == "exact"
     ]
     return {
-        "functions": len(functions),
-        "review": len(functions) - len(reviewed_functions),
-        "authored": len(reviewed_functions),
+        "functions": len(authored_boundaries),
+        "review": len(authored_boundaries) - len(corroborated_boundaries),
+        "authored": len(corroborated_boundaries),
         "implemented": sum(bool(row["source"]) for row in reviewed_functions),
         "matches": sum(row["state"] == "exact" for row in reviewed_functions),
         "exact_bytes": sum(
@@ -56,7 +65,7 @@ def measures() -> dict[str, int]:
             if row["state"] == "exact"
         ),
         "authored_bytes": sum(int(row["size"], 0) for row in authored_units),
-        "reviewed": len(reviewed_functions),
+        "reviewed": len(corroborated_boundaries),
         "original_asm": len(original_asm),
         "original_asm_bytes": sum(int(row["size"], 0) for row in original_asm),
     }
@@ -76,11 +85,11 @@ provisional until each boundary is reconciled with exact target control flow.
 
 | Measure | Count |
 | --- | ---: |
-| Tracked `MAIN.EXE` authored function candidates | {values['functions']:,} |
-| Origin/boundary review pending | {values['review']:,} |
-| Confirmed authored functions | {values['authored']:,} |
-| Source-present authored mappings | {values['implemented']:,} |
-| Accepted exact functions | {values['matches']:,} |
+| Tracked all-artifact authored function candidates | {values['functions']:,} |
+| Provisional boundaries remaining | {values['review']:,} |
+| Reviewed/corroborated authored boundaries | {values['authored']:,} |
+| Source-present accepted `MAIN.EXE` mappings | {values['implemented']:,} |
+| Accepted exact `MAIN.EXE` functions | {values['matches']:,} |
 | Accepted exact authored bytes | {values['exact_bytes']:,} |
 | Exact / currently confirmed authored bytes | {exact_pct:.2f}% |
 | Exact original-style ASM units | {values['original_asm']:,} / {values['original_asm_bytes']:,} bytes |
@@ -88,7 +97,9 @@ provisional until each boundary is reconciled with exact target control flow.
 Exact totals count only reviewed authored C/C++ ownership ranges whose
 maintained source passes the complete configured cold replay and raw
 zero-difference checks. Original-style ASM is shown separately and excluded
-from the authored percentage.
+from the authored percentage. The all-artifact function inventory is a
+classification/work queue and does not create a global authored-byte
+denominator.
 """
 
 
@@ -111,7 +122,7 @@ def render_svg() -> str:
     if review_pending:
         authored_detail += " · denominator provisional"
     aria_authored = f"{exact_pct:.2f}% of the confirmed authored-byte set is exact"
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="560" height="176" role="img" aria-label="TH04 reconstruction progress: {aria_authored}, origin review {review_pct:.2f}%">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="560" height="176" role="img" aria-label="TH04 reconstruction progress: {aria_authored}, boundary reviewed or corroborated {review_pct:.2f}%">
   <rect width="560" height="176" rx="8" fill="#1f2335"/>
   <text x="24" y="28" fill="#f4f4f5" font-family="sans-serif" font-size="16" font-weight="600">TH04 reconstruction progress</text>
 
@@ -121,7 +132,7 @@ def render_svg() -> str:
   <rect x="24" y="60" width="{authored_filled:.2f}" height="12" rx="6" fill="#9b6de3"/>
   <text x="24" y="89" fill="#c8cad2" font-family="sans-serif" font-size="12">{authored_detail}</text>
 
-  <text x="24" y="116" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Origin/boundary reviewed</text>
+  <text x="24" y="116" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Boundary reviewed or corroborated</text>
   <text x="536" y="116" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">{review_pct:.2f}%</text>
   <rect x="24" y="124" width="{bar_width}" height="12" rx="6" fill="#3b4058"/>
   <rect x="24" y="124" width="{review_filled:.2f}" height="12" rx="6" fill="#9b6de3"/>

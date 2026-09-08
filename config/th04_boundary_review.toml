@@ -1,0 +1,246 @@
+schema_version = 1
+
+# Private inputs used to build config/th04_function_boundaries.csv.  The MAP
+# files come from the pinned cold ReC98 candidate and therefore corroborate
+# ownership; they do not replace target control-flow evidence.  Runtime bases
+# are the linear addresses used by the corresponding Ghidra imports.
+
+[[map_artifacts]]
+artifact = "th04-main"
+map = "obj/th04/main.map"
+inventory = ".analysis/ghidra/boundary-exports/th04-main/functions.csv"
+runtime_base = 0x10000
+evidence_basis = "target-ghidra+candidate-map"
+
+[[map_artifacts]]
+artifact = "th04-op"
+map = "obj/th04/op.map"
+inventory = ".analysis/ghidra/boundary-exports/th04-op/functions.csv"
+runtime_base = 0x10000
+evidence_basis = "target-unpacked-ghidra+candidate-map"
+
+[[map_artifacts]]
+artifact = "th04-maine"
+map = "obj/th04/maine.map"
+inventory = ".analysis/ghidra/boundary-exports/th04-maine/functions.csv"
+runtime_base = 0x10000
+evidence_basis = "target-unpacked-ghidra+candidate-map"
+
+# The monolithic assembly inputs below contain predominantly MASTER.LIB code in
+# their _TEXT contributions.  Narrow game-owned exceptions are declared as
+# exact-entry function overrides below.  Their other non-empty code
+# contributions are target-derived game-code candidates and must not be
+# mislabeled as original handwritten assembly.
+
+[[module_overrides]]
+artifact = "th04-main"
+module = "th04_main.asm"
+segment = "_TEXT"
+origin = "library"
+source_form = "master-library-aggregate"
+
+[[module_overrides]]
+artifact = "th04-op"
+module = "th04_op.asm"
+segment = "_TEXT"
+origin = "library"
+source_form = "master-library-aggregate"
+
+[[module_overrides]]
+artifact = "th04-maine"
+module = "th04_maine_master.asm"
+origin = "library"
+source_form = "master-library-aggregate"
+
+# th04_main.asm places this game-owned MPN renderer between MASTER.LIB
+# includes.  The expanded TASM listing closes the FAR PROC at 0x3680..0x36f4,
+# and the target Ghidra body independently agrees with that contiguous span.
+
+[[function_overrides]]
+artifact = "th04-main"
+payload_offset = 0x3680
+expected_body_span = 0x75
+expected_tasm_proc = "sub_3680"
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_main.asm"
+notes = "Game-owned MPN renderer embedded between MASTER.LIB includes; TASM PROC and target Ghidra close the same 0x75-byte extent."
+
+# Target-derived monolithic assembly candidates need TASM listings because
+# local PROC symbols are not all exported by TLINK and are sometimes missed by
+# Ghidra. listing_address_bias accounts only for an explicit COM `org 100h`.
+
+[[assembly_boundary_sources]]
+artifact = "th04-main"
+source = "th04_main.asm"
+module = "th04_main.asm"
+map = "obj/th04/main.map"
+default_segment = "_TEXT"
+
+[[assembly_boundary_sources]]
+artifact = "th04-op"
+source = "th04_op.asm"
+module = "th04_op.asm"
+map = "obj/th04/op.map"
+default_segment = "_TEXT"
+
+[[assembly_boundary_sources]]
+artifact = "th04-maine"
+source = "th04_maine.asm"
+module = "th04_maine.asm"
+map = "obj/th04/maine.map"
+default_segment = "_TEXT"
+
+[[assembly_boundary_sources]]
+artifact = "th04-zun"
+source = "th04_zuninit.asm"
+module = "th04_zuninit.asm"
+map = "obj/th04/zuninit.map"
+default_segment = "_TEXT"
+artifact_start = 0x06f3
+map_address_bias = 0x100
+listing_address_bias = 0x100
+
+[[assembly_boundary_sources]]
+artifact = "th04-zun"
+source = "th04_memchk.asm"
+module = "th04_memchk.asm"
+map = "obj/th04/memchk.map"
+default_segment = "_TEXT"
+artifact_start = 0x2440
+map_address_bias = 0x100
+
+# DIET preserves the compressed program's original entry and relocation stream,
+# but not a complete independently usable MZ header.  The payload extents below
+# are pinned topology observations from the cold ReC98 b6ba5b0a52 candidate.
+# scripts/boundary_review/unpack_diet.py independently rejects them unless two
+# executions of the hash-attested target, at distinct DOS load segments, produce the same
+# unrelocated bytes and the expected target-observed transfer/relocation state.
+
+[[diet_artifacts]]
+artifact = "th04-op"
+original_format = "mz"
+payload_size = 69028
+header_paragraphs = 288
+entry_cs = 0
+entry_ip = 0
+initial_ss = 4918
+initial_sp = 128
+relocation_count = 804
+
+[[diet_artifacts]]
+artifact = "th04-maine"
+original_format = "mz"
+payload_size = 62414
+header_paragraphs = 224
+entry_cs = 0
+entry_ip = 0
+initial_ss = 4709
+initial_sp = 128
+relocation_count = 559
+
+[[diet_artifacts]]
+artifact = "th04-zun"
+original_format = "com"
+payload_size = 13422
+header_paragraphs = 0
+entry_ip = 256
+relocation_count = 0
+
+# Target payload regions reproduced exactly by the cold candidate's documented
+# COM composition pipeline.  Starts and sizes are payload offsets, before the
+# DOS 0x100 COM load bias.  Maps use normal runtime addresses and therefore set
+# map_address_bias = 0x100.
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "comcstm-header"
+start = 0x0000
+size = 0x0027
+kind = "data"
+origin = "asset"
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "usage-text"
+start = 0x0027
+size = 0x0108
+kind = "data"
+origin = "asset"
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "zun-selector-stub"
+start = 0x012f
+size = 0x00df
+kind = "code"
+origin = "original-asm"
+entry_offsets = [0]
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "selector-metadata"
+start = 0x020e
+size = 0x0147
+kind = "data"
+origin = "asset"
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "ongchk.com"
+start = 0x0355
+size = 0x039e
+kind = "embedded-com"
+origin = "library"
+entry_offsets = [0]
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "zuninit.com"
+start = 0x06f3
+size = 0x0475
+kind = "embedded-com"
+origin = "map"
+map = "obj/th04/zuninit.map"
+map_address_bias = 0x100
+entry_offsets = [0]
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "res_huma.com"
+start = 0x0b68
+size = 0x18d8
+kind = "embedded-com"
+origin = "map"
+map = "obj/th04/res_huma.map"
+map_address_bias = 0x100
+entry_offsets = [0]
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "memchk.com"
+start = 0x2440
+size = 0x0fe2
+kind = "embedded-com"
+origin = "map"
+map = "obj/th04/memchk.map"
+map_address_bias = 0x100
+entry_offsets = [0]
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "selector-moveup"
+start = 0x3422
+size = 0x0008
+kind = "code"
+origin = "original-asm"
+entry_offsets = [0]
+
+[[com_regions]]
+artifact = "th04-zun"
+name = "comcstm-stub"
+start = 0x342a
+size = 0x0044
+kind = "code"
+origin = "original-asm"
+entry_offsets = [0]

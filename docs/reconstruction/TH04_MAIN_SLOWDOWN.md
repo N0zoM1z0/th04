@@ -1,5 +1,9 @@
 # TH04 `MAIN.EXE`: `slowdown_frame_delay`
 
+This focused evidence note is retained because historical ledger rows cite it.
+It is not a current queue or progress source; use `python3 scripts/status.py`
+and the CSV ledgers for live state.
+
 ## Current state
 
 - Unit: `th04-main-slowdown-frame-delay`

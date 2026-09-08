@@ -43,12 +43,15 @@ Emulator linear addresses are observations that also record the load segment.
 
 ## Control plane
 
-The repository stores four independent kinds of durable state:
+The repository stores five independent kinds of durable state:
 
 1. `targets.toml` pins private inputs and provenance.
 2. `units.csv` records boundaries, ownership, source presence, and acceptance.
 3. `hypotheses.csv` records falsifiable semantic/ABI claims.
 4. `evidence.csv` records Oracle observations and replay information.
+5. `th04_function_boundaries.csv` records all-artifact function-like
+   observations, origin classification, boundary confidence, and work routing;
+   it is not an exactness ledger.
 
 Exact-required evidence has an explicit scope: global, artifact, or
 unit-plus-file-extent as declared in `config/oracles.toml`. This keeps the
@@ -101,7 +104,9 @@ Subdirectories below an artifact are semantic (`boss/`, `bullet/`, `sound/`,
 and so on). Do not create `exact/`, `partial/`, `partials/`, `module/`, or
 `modules/` source directories. Exactness, origin, reviewed boundaries, and
 source presence belong only in `config/units.csv`, the authored-function
-ledger, and their evidence rows.
+ledgers, and their evidence rows. The all-artifact inventory and its generation
+policy are documented in `docs/BOUNDARY_REVIEW.md` and
+`config/th04_boundary_review.toml`.
 
 Some stable ledger and evidence IDs still contain historical `module` or
 `partial` wording. They remain unchanged so old receipts stay addressable and
@@ -153,10 +158,18 @@ guard the change.
 installations. `ghidra-project/` contains ignored private headless databases,
 following TH095's non-dot-prefixed project layout. `.analysis/` contains
 targets, disk images, compiler installations, Ghidra XDG state and exports,
-emulator images, probes, traces, and reports. None is committed. A durable
-conclusion moves into source, a checked-in ledger, a focused evidence note, or
-an executable test; private tool state never becomes the only copy of project
-knowledge.
+emulator images, DIET payload observations, TASM listings, probes, traces, and
+reports. None is committed. It is a working cache, not an archive: keep pinned
+inputs/toolchains, active databases, current boundary-review inputs, and the
+latest focused/aggregate replay receipts; prune superseded A/B source trees,
+old probe matrices, and stale disassemblies after their commands, outcomes, and
+digests are durable. A historical `.analysis` path in `config/evidence.csv` is
+provenance, not a promise that the cache still exists.
+
+Reusable boundary tooling is grouped under `scripts/boundary_review/`; only
+its private outputs stay ignored. A durable conclusion moves into source, a
+checked-in ledger, a focused evidence note, or an executable test; private tool
+state never becomes the only copy of project knowledge.
 
 Ghidra 12.1.3's pinned `MzLoader` loads the program at segment `0x1000`,
 applies the MZ relocation words, exposes the header through a `HEADER` overlay,

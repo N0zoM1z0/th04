@@ -32,8 +32,12 @@ unit.  Prefer a unit whose entry, exits, callers, and adjacent ownership can be
 reviewed in one session.  Large dispatchers and shared segment changes need an
 explicit sub-plan.
 
-Use `docs/PROGRESS.md`, `docs/RE_HANDOFF.md`, and the live ledgers as the
-current queue. Historical evidence rows and stable IDs with `module` or
+Use `docs/PROGRESS.md`, `docs/BOUNDARY_REVIEW.md`, `docs/RE_HANDOFF.md`, and the
+live ledgers as the current queue. `config/th04_function_boundaries.csv` is the
+all-artifact inventory: select only `work_queue=reconstruct`; runtime/library/
+data exclusions must not re-enter authored progress. Prefer a corroborated
+entry. A provisional entry first needs a focused return/tail/table and adjacent
+ownership review. Historical evidence rows and stable IDs with `module` or
 `partial` wording preserve old receipts only; never reconstruct their former
 directory layout or treat an old routing snapshot as current progress.
 
@@ -50,6 +54,15 @@ ownership.  A disassembler's function extent is only a proposal.
 
 Promote to `boundary-reviewed` when the compared extent is complete and does
 not steal or omit bytes.
+
+For a full inventory refresh, use the scripts under
+`scripts/boundary_review/` in the order documented by
+`docs/BOUNDARY_REVIEW.md`. In particular, the pinned TASM expanded-listing
+export recovers local `PROC` entries omitted by TLINK MAP files and sometimes
+missed by Ghidra. These candidate listings are compiler observations, not an
+exactness Oracle and not proof of original handwritten assembly.
+The target-stub DIET Oracle requires and checks Python `unicorn==1.0.2`; its
+installation command is in `scripts/boundary_review/README.md`.
 
 ## 4. State a falsifiable hypothesis
 
@@ -140,13 +153,19 @@ also rejects missing source/address/replay data and unequal raw slice hashes.
 
 ## 9. Preserve durable memory
 
-Update source, ledgers, focused notes, reusable probes, and the handoff.  Put
+Update source, ledgers, focused notes, reusable probes, and the handoff. Put
 failed experiments in a concise durable note when they eliminate a plausible
-path.  Delete or retain bulky raw output only below `.analysis/`.
+path. Keep bulky raw output only temporarily below `.analysis/`; after the
+checked-in evidence/knowledge row and required digests validate, prune old
+cold-build trees, probe matrices, logs, and disassemblies. Preserve pinned
+inputs, active databases, current boundary-review inputs, and the latest
+focused/aggregate receipts.
 
 Finish with:
 
 ```bash
+python3 scripts/boundary_review/validate_function_boundary_ledger.py
+python3 scripts/boundary_review/report_function_boundaries.py --check
 python3 scripts/ci.py
 git diff --check
 ```

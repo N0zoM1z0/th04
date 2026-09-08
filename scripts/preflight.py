@@ -25,6 +25,10 @@ def main() -> int:
     checks = [
         run("Environment", [python, "scripts/check_environment.py"], required=False),
         run("Tracking", [python, "scripts/validate_tracking.py"]),
+        run(
+            "Function boundaries",
+            [python, "scripts/boundary_review/validate_function_boundary_ledger.py"],
+        ),
         run("TH04 targets", [python, "scripts/verify_targets.py", "--game", "th04"]),
         run("Status", [python, "scripts/status.py"]),
     ]

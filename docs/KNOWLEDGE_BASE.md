@@ -1,179 +1,45 @@
 # Knowledge base
 
-The knowledge base is durable project memory for future agents.  It records
-facts, recipes, reusable patterns, hazards, negative results, and open
-questions without converting uncertainty into folklore.
+This file explains how to use TH04's durable knowledge. It is intentionally
+short: individual discoveries live in `config/knowledge.csv`, observations in
+`config/evidence.csv`, and current reconstruction state in the ledgers. Do not
+append batch diaries or duplicate the current work queue here.
 
-`config/knowledge.csv` is the canonical index.  This document explains how to
-use it and expands only the entries that need context.  Evidence remains in
-`config/evidence.csv`; falsifiable unsettled claims remain in
-`config/hypotheses.csv`.
+## Authority and routing
+
+Use these sources in order:
+
+1. `config/targets.toml` for artifact identity and provenance;
+2. `config/units.csv` for accepted byte-owner state;
+3. `config/th04_main_authored_functions.csv` for reviewed MAIN functions;
+4. `config/th04_function_boundaries.csv` for the all-artifact candidate queue;
+5. `config/evidence.csv` for replayable observations;
+6. `config/knowledge.csv` for reusable facts, hazards, recipes, and negative
+   results;
+7. `docs/PROGRESS.md` and `docs/BOUNDARY_REVIEW.md` for generated summaries;
+8. `docs/RE_HANDOFF.md` for the current phase and blockers.
+
+Historical evidence IDs, paths, and batch numbers preserve provenance. They
+are not a current queue and must not override the ledgers. In particular,
+`module`, `partial`, or an old `vNN` frontier in an ID does not authorize a
+source directory or determine what to reconstruct next.
 
 ## Entry contract
 
-Every knowledge row has:
+Every `config/knowledge.csv` row has:
 
 - a stable ID and one kind: `fact`, `recipe`, `pattern`, `hazard`,
   `negative-result`, or `open-question`;
 - the narrowest portability scope (`th04-main`, `th04`, `pc98-borland`,
   `control-plane`, and so on);
-- one of the controlled confidence terms from `AGENTS.md`;
-- evidence IDs when the fact was established locally;
+- one controlled confidence term from `AGENTS.md`;
+- evidence IDs when the result was established locally;
 - source references for reproducibility;
-- a concise statement and verification date.
+- one concise routing statement and a verification date.
 
-Do not create an entry merely because a decompiler emitted a plausible name.
-Do create one when a result will change how the next agent searches, probes,
-builds, compares, or avoids a known dead end.
-
-## Current target knowledge
-
-- The public manifest pins the extracted Japanese HDI and executable hashes,
-  not the private outer archive.  Canonicality is
-  `candidate-local-attested` until independent confirmation.
-- The Anex86 HDI header is 4096 bytes.  The `TOUHOU` FAT12 boot sector begins
-  at file offset 38912 and uses 1024-byte logical FAT sectors even though the
-  HDI geometry reports 512-byte physical sectors.
-- TH04 `OP.EXE`, `MAIN.EXE`, and `MAINE.EXE` are MZ.  `ZUN.COM` is also MZ;
-  extensions are not reliable format evidence across the five games.
-- TH02 and TH05 `ZUN.COM` are flat COM in the local corpus, while TH03 and TH04
-  launcher containers begin with MZ.  Parser routing must inspect bytes.
-
-## Current Oracle knowledge
-
-- Raw equality is the only exact verdict.
-- Relocation-normalized equality is useful for isolating changed linked
-  segment words, but it is explicitly diagnostic.
-- Header, ordered relocation table, relocation set, load module, normalized
-  load module, and overlay are separate dimensions.
-- The TH01-TH05 original corpus plus injected mutations validates parsing and
-  failure routing over real artifact diversity.
-- The locally pinned build-chain candidate passes 14 required portable
-  identity surfaces, and the calibrated host also matches two diagnostic Wine
-  surfaces. Two deterministic C-to-OMF-to-MZ plus ASM-to-OMF execution rounds
-  prove what local bytes executed, not universal canonicality of the HTTP-only
-  TC4J source.
-- OMF producer comments and dependency records provide cheap, high-signal
-  contamination checks before final linking.  They supplement binary hashes;
-  they do not prove semantics or source correctness.
-- Borland COMENT `E9` records carry DOS time/date metadata.  Retain the raw OMF
-  digest and compare a second digest that normalizes only those four bytes.
-  Never normalize LEDATA: ReC98 research probes intentionally compile
-  `__DATE__`/`__TIME__` into data, and that is a real build difference.
-- Three isolated ReC98 cold builds agree on all 20 selected TH01-TH05 outputs.
-  All 416 generated OMF objects validate.  Strict comparison finds three
-  raw-exact COM files and rejects all four TH04 candidates.
-- Per-game dependency-timestamp-normalized OMF identities are stable across
-  all three builds.  The combined Research/Pipeline-inclusive identity is not,
-  because those probes retain real source-level build-date strings in LEDATA.
-- The pinned known TH01 vector is a regression Oracle for build/comparator
-  stability.  It must never be interpreted as three waived exact failures.
-- The all-game vector is a fast routing Oracle: it pins every compact numeric
-  dimension and candidate byte identity, yet the default command remains a
-  strict raw gate.  TH02's 2/17/1-byte MZ differences are good narrow-probe
-  controls; TH04 `OP`/`MAINE` require broader ownership/layout work.
-- Exact evidence is explicitly global, artifact-scoped, or unit-and-extent
-  scoped. Same-artifact evidence cannot satisfy another unit's compilation,
-  layout, raw-byte, or cold-replay gate.
-- A synthetically forged exact row now fails on reused unit evidence, missing
-  metadata/source/address, unequal raw hashes, private replay drivers, and
-  out-of-artifact extents.
-- OMF validation requires one module rather than merely valid outer records;
-  concatenating two valid THEADR-to-MODEND streams is rejected.
-- For difficult Borland FIXUPP ordering, the already-attested TC4J `TDUTIL.PAK`
-  contains Turbo Dump 4.1. Extract `TDUMP.EXE` only into ignored analysis space
-  with the same-media unpacker; never commit the proprietary tool. TDUMP's
-  Pointer16 fixup location refers to the offset word, so the linked MZ segment
-  relocation is LEDATA base + fixup location + 2.
-- MZ format validation includes the last-page encoding, allocation ordering,
-  and minimum-allocation stack envelope. All 20 private target controls still
-  pass the stricter parser.
-- Never borrow a target file offset when comparing a structurally relinked MZ
-  candidate. Parse each file's own `e_cparhdr` and compare load-module/program
-  offsets. A TH04 dialog split produced exact code at the same program address
-  with a `0x1600` candidate header versus the target's `0x1800`; target-file-
-  offset slicing falsely reported hundreds of code differences.
-- `ndisasm` can wrap the raw bytes of an instruction longer than eight bytes
-  onto a continuation line such as `-00`. Never infer instruction length from
-  only the first displayed hex field. Use adjacent decoded addresses (x86 max
-  length 15 bytes) and separately require complete extent coverage.
-
-## Current toolchain knowledge
-
-- The Borland DPMI loader fails with `Loader error (0000)` from the deep Wine
-  `Z:` repository path.  A project-local prefix and short `C:\TC4` path are
-  part of the reproducible environment.
-- Turbo C++ 4.02 reads `TURBOC.CFG` for the include/library configuration used
-  here.  The plausible `TCC.CFG` filename does not supply `dos.h` and caused a
-  failed first cold build.
-- TC4J BIN, INCLUDE, LIB, and startup source trees are independent attestation
-  surfaces.  Pinning only `TCC.EXE` would miss ABI-affecting headers, startup
-  objects, emulation libraries, and linker inputs.
-- The original PC-98 `TC.EXE` IDE is another same-media diagnostic surface.
-  Replay it only through `scripts/probe_tc4j_pc98_ide.py` under the pinned
-  DOSBox-X `machine=pc98` profile; the IBM-compatible MS-DOS Player cannot pass
-  its machine detection. Despite the IDE's 4.0 banner, generated OMF reports
-  `TC86 Borland C++ 4.02`, and `_BX = _AX` still emits `8B D8`, not `89 C3`.
-- Required downloaded/tool identities are checked before execution. Host Wine
-  hashes are diagnostic because distro builds vary; exact cold output remains
-  the portable gate.
-- Detailed acquisition, automatic installation, focused invocation, cold-build
-  usage, and recovery instructions are in `docs/TOOLCHAIN.md`.
-- Headless analysis uses Ghidra 12.1.3 and Temurin JDK 21.0.12.1+1. Downloads,
-  versioned trees, and stable `ghidra`/`jdk` symlinks belong under ignored
-  `.tools/`; private databases belong under ignored `ghidra-project/`; only
-  generated cache/export/receipt state belongs under `.analysis/ghidra/`.
-- Ghidra refuses a project path with the dot-prefixed `.analysis` component.
-  This negative result is why `ghidra-project/` is an explicit repository
-  safety exception rather than an arbitrary second private-state convention.
-- The headless wrapper validates the target and analysis tools on every run.
-  A fresh nonce plus an external Python MZ parser prevents a stale Java export
-  from passing even if Ghidra reports a script failure with process status 0.
-- Ghidra project files are disposable local state rather than cross-machine
-  hash surfaces. The fresh export is strict: every target-backed mapping must
-  be exactly header or load-module, so an additional alias is rejected.
-- Ghidra's MZ loader applies relocation words for load segment `0x1000` and
-  maps the header into a `HEADER` overlay. Full database bytes, relocation
-  records, source mapping, entry point, and samples are attestable; inferred
-  block/function topology is not.
-- The database Oracle has real-corpus controls for both 0-relocation TH04 OP
-  and 625-relocation TH01 OP, plus a 1,136-relocation analyzed TH04 MAIN. The
-  loaded-byte, relocation, mapping, and nonce negative mutations all fail.
-- Complete headless installation, import, read-only check, calibration, path
-  layout, failure recovery, and limitation instructions are in
-  `docs/GHIDRA.md`.
-
-## Reference knowledge boundary
-
-ReC98 is strong evidence for PC-98 hardware behavior, target-specific
-semantics, compiler patterns, source partition candidates, and the known
-toolchain family.  Its names and source are corroboration until checked against
-the selected TH04 target.  Its public reverse-engineered/finalized/position-
-independent metrics are not per-unit byte-match states.
-
-Upstream work is always quarantined as candidate material.  Even a ReC98 unit
-described as finalized or matching must pass local boundary review, an attested
-cold rebuild, the full required Oracle vector, and affected-unit replay before
-this repository can call it exact.
-
-TH08/TH095/TH105 provide control-plane patterns and examples of strict
-promotion, but PE/COFF/MSVC assumptions do not transfer to 16-bit MZ code.
-
-## Negative-result discipline
-
-When a plausible experiment fails:
-
-1. keep bulky raw output below `.analysis/`;
-2. record the exact target/tool/input and what observation rejected the idea;
-3. add an evidence row with `fail` or `inconclusive`;
-4. add a `negative-result` knowledge row only when it rules out a reusable
-   search path;
-5. state the narrow scope so another artifact, memory model, or TU is not
-   incorrectly constrained.
-
-This is the highest-leverage form of agent memory: it prevents future sessions
-from repeating source-shape guesses that the target or compiler already
-falsified.
+Do not add a row merely because a decompiler emitted a plausible name. Add one
+when a verified result changes how a later agent should search, test, build,
+compare, or avoid a disproved approach.
 
 ## Query recipes
 
@@ -181,351 +47,65 @@ falsified.
 # Live reconstruction state
 python3 scripts/status.py --json
 
-# All durable knowledge (CSV remains deliberately grep-friendly)
-column -s, -t < config/knowledge.csv
+# Remaining authored candidates
+python3 - <<'PY'
+import csv
+with open("config/th04_function_boundaries.csv", newline="", encoding="utf-8") as f:
+    for row in csv.DictReader(f):
+        if row["work_queue"] == "reconstruct" and row["accepted_state"] != "exact":
+            print(row["artifact"], row["segment_identity"], row["segment_offset"],
+                  row["boundary_state"], row["name"])
+PY
 
-# Evidence for one knowledge entry
-rg 'ev-oracle-smoke-corpus' config/evidence.csv config/knowledge.csv
+# Scoped durable knowledge and linked evidence
+rg 'snd_load|enemy_bullet_template_push|dialog_run' \
+  config/knowledge.csv config/evidence.csv
 ```
 
-Before handoff, update the index and this document only when the routing map or
-entry contract changes.  Detailed target discoveries should live in focused
-notes linked from `source_refs`, not in an ever-growing monolith.
+Prefer `boundary_state=reviewed` or `corroborated`. A provisional entry needs
+focused raw control-flow, return/shared-tail, table, alignment, and adjacent
+ownership review before source work.
 
-- A direct Borland pseudo-register load from a parameter can change register
-  allocation globally. In TH04 `snd_load`, `_AX = func` promotes `func` to DI;
-  reading through `*reinterpret_cast<snd_load_func_t near *>(&func)` keeps it
-  memory-resident and naturally recovers the target BP-relative `8B 46 06`.
-- For a small natural replacement inside a pinned upstream scaffold, use the
-  replay driver's fail-closed `source_mode=replace`: bind the complete scaffold
-  SHA-256, old-span offset/size, and old-span SHA-256 before replacement. Never
-  treat surrounding scaffold source as maintained exact source merely because
-  the linked slice matches.
-- `geninterrupt(i)` is just TC4J `__int__(i)` and carries no DS-clobber contract.
-  In the clean corpus, isolated mid-function `PUSH DS ... POP DS` has no natural
-  C/C++ compiler precedent outside full `__saveregs`/interrupt prologues; `__seg`
-  locals still lower to MOV-based segment saves/restores.
+## Current global guardrails
 
-- For Borland far-call bridge recovery, separate compiler OMF from final linker
-  output. TC86 may leave an external call as five-byte `CALL FAR`; `#pragma
-  samecodeseg` can change only the Pointer16 frame. TLINK 6.10 defaults to
-  far-to-near optimization unless `/f` is supplied and can then preserve the
-  five-byte footprint as `NOP; PUSH CS; CALL near`, removing the segment
-  relocation. TH04 `bullets_update` is the accepted control for this exact
-  mechanism. `#pragma alloc_text` and `/P` packing alone do not produce it.
+- Target canonicality is `candidate-local-attested` until independently
+  confirmed; a local legal image is not proof of an official pristine dump.
+- `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` are DIET-packed MZ containers. Their
+  target stubs expose load-invariant payloads, but OP/MAINE analysis images use
+  candidate-derived header/relocation topology and remain diagnostic views.
+- Raw zero difference over the complete accepted extent is the only exact byte
+  verdict. Normalized equality, source presence, a successful build, a Ghidra
+  function, or upstream ReC98 status cannot promote a unit.
+- Exact evidence is global, artifact-scoped, or unit-and-extent scoped as
+  declared by `config/oracles.toml`; evidence for one unit cannot be borrowed
+  by another.
+- Turbo C++ memory model, near/far ABI, segment/group ownership, TASM/TLINK
+  order, OMF FIXUPP order, and MZ relocation order are binary inputs.
+- Whole-artifact function counts come from
+  `config/th04_function_boundaries.csv`, never raw Ghidra totals or a linker
+  public count.
+- ReC98 and adjacent games are candidate/corroborating material. Product source
+  belongs under `src/main/`, `src/op/`, `src/maine/`, `src/zun/`, or proved
+  `src/shared/`; temporary declarations cross only `compat/rec98/`.
 
-- Raw-identical reconstructed module contributions are not automatically true
-  original TU/segment boundaries. TH04 midboss is the key control: the former
-  `MIDBOSS_TEXT`, `HUD_HP_TEXT`, and `MB_DFT_TEXT` ranges are target-contiguous,
-  and a four-byte near call crosses the reconstructed boundary. Re-emitting all
-  six functions in flat target order as one natural-C++ TU makes the complete
-  0x1CB range exact. Before manufacturing a cross-segment call form, test whether
-  the reconstructed boundary itself is false. The two score-bonus functions
-  still retain the strict manual min/max + TLINK + gap-free raw-decode function
-  gate because their Ghidra body sets are noncontiguous.
-- Exact-replay overlays must respect cross-game source ownership. A TH04 wrapper
-  can include a lower-game source that is also independently compiled for
-  TH02/TH03; replacing that shared path with TH04-only source can break the
-  full corpus even if the TH04 object is the intended target. For
-  `snd_mmd_resident`, overlay `th04/snd_mmdr.c`, not shared
-  `th02/snd/mmd_res.c`. The `__es` pointer form recovers the natural LES; v18
-  additionally proved that removing `-WX` restores the target's distinct RETF
-  paths. Preserve the zero-code SHARED alignment input separately from padding
-  ownership rather than reintroducing inline `RETF` assembly.
+## Negative-result discipline
 
-- For a raw-identical contribution ending in `#pragma codestring`, split the
-  maintained authored-C/C++ owner at an independently decoded function return.
-  TH04 `snd_se_reset` is the concrete control: TLINK starts the public at
-  `0x238A6`, raw decode reaches `RETF` after 11 bytes, and the twelfth byte is a
-  standalone NOP from the codestring. The 11-byte function can be exact byte
-  ownership even though Ghidra has no function there; do not fabricate a
-  function-ledger row. Cross-game maintained includes use `compat/rec98` plus
-  replay `forwarded-fragment`, preserving both policy and scaffold identity.
-- Re-screen candidate residuals before treating them as denominator growth.
-  The 0x5A-byte `stages.cpp` gap is exactly `carpet_lighting_put_new()` by TLINK
-  publics, and its candidate source uses inline ASM for DS/ES, MUL, LODSB, SHL,
-  and LOOP. The following 0x1AA bytes are already exact pure C/C++; leave the
-  mixed-ASM prefix outside authored-C/C++ ownership unless those operations are
-  first recovered naturally and revalidated.
+When a plausible experiment fails:
 
-- Treat one-byte module gaps as explicit ownership surfaces rather than leaving
-  a whole raw-identical module provisional. TH04 now has six target-observed
-  padding owners at file `0xE341`, `0x14EB3`, `0x150B1`, `0x150EB`, `0x15531`,
-  and `0x15715`; reference-source `#pragma codestring` values corroborate but do
-  not establish these target bytes. Retire a routing umbrella only when exact
-  owners plus reviewed padding cover its complete contribution.
-- `item_splashes_init` is a useful TC4J zeroing negative control. Its 26-byte
-  target body differs from the current candidate only by `31 C0` versus
-  `33 C0`. Regular `memset` calls the runtime; Borland `__memset__` is a true
-  compiler intrinsic but changes register-setup order and still uses `33 C0`;
-  `_AX ^= _AX` also canonicalizes to `33 C0`. Do not use inline assembly or
-  `__emit__` to manufacture the target encoding.
+1. record the exact target, tool, input, and rejecting observation;
+2. add an evidence row with `fail` or `inconclusive`;
+3. add a scoped `negative-result` knowledge row only when it rules out a
+   reusable search path;
+4. update the focused blocker note if the result changes next-step routing;
+5. delete bulky private build trees after the durable row and necessary digest
+   have been validated.
 
-- Do not use Ghidra's function inventory as the authored-function universe.
-  Cross-check every TLINK public that falls inside an exact authored byte owner
-  against the function ledger. TH04 recovered eight omitted functions this way;
-  one (`bullet_turn_y`) was even hidden inside an unrelated oversized Ghidra
-  body. `reviewed_exact_no_ghidra` requires a matching exact owner/public,
-  gap-free raw decode through `RET`/`RETF`, and an exact next-public or owner-end
-  boundary. Switch metadata/tables must completely fill any trailing extent and
-  target decoded instruction starts. The current exact-owner public audit has
-  zero remaining omissions.
-- `dialog_animate` is a second accepted control for Borland `#pragma
-  samecodeseg` plus normal TLINK far-call optimization. A natural external C++
-  call reproduces the target five-byte `NOP; PUSH CS; CALL near` bridge and
-  ordered relocations in both focused and 66-unit cold replay. This mechanism
-  does not explain four-byte `PUSH CS; CALL near` targets; those require a
-  different TU/segment producer explanation rather than byte injection.
+Private `.analysis` paths in old evidence rows are historical receipt
+locations, not a retention promise. The checked-in command, hashes, ledger
+state, and current aggregate replay are the durable record; an old private
+materialization may be regenerated when deeper archaeology is actually needed.
 
-- A final linker-public sweep is broader than a module-candidate queue. Iterate every
-  C/C++ TLINK contribution, split it at every public, and compare each public-to-next-
-  public interval against both the target and the function ledger. TH04 found two
-  previously unowned pure-C++ script-parameter helpers this way even though they live
-  in shared `th03/formats/script.hpp`, not a TH04-named source file. The current sweep
-  leaves 14 real public intervals outside the reviewed function ledger; use that list
-  as the routing queue instead of restarting from ReC98 filenames.
-- Linker publics still do not enumerate static functions. After public coverage is
-  exhausted, inspect Ghidra entries inside exact authored owners, but require an
-  independent target-local anchor before denominator admission.
-  `reviewed_exact_internal` binds `tiles_render_all_timed` using a contiguous 25-byte
-  Ghidra body, gap-free raw `RET`, exact next public, and a separate function-pointer
-  word whose near offset resolves to the same entry. A wrong pointer word is a tested
-  hard failure; Ghidra-only internal entries are never sufficient.
-- TH04 `snd_mmd_resident` is a concrete warning against trusting upstream compiler-option commentary. The old candidate used `-WX` and therefore tail-merged the true return; removing `-WX` makes the maintained pure-C `__es` source emit the target's two distinct `RETF` paths and all 47 function bytes exactly. Treat option hypotheses as compiler experiments, not documentation facts.
-- A zero-code TC4J translation unit can be a legitimate **layout** input without being a byte reconstruction. `src/main/sound/mmd_align.c` uses `-WX -zCSHARED -k-`, emits a word-aligned `SHARED` SEGDEF and no LEDATA, and restores following sound-module starts after the exact no-`-WX` MMD function. `build_inserts` binds the checked-in source to one unique build-graph anchor and records hashes; it patches neither objects nor target bytes. The target 0x90 gap remains a separate excluded padding owner.
-
-- `#pragma samecodeseg` can be dangerous across genuinely different logical
-  segments. A TC4J control emits the desired four-byte `PUSH CS; CALL near`, but
-  the pragma can also alter symbol/frame binding. In the separated midboss probe
-  the final call resolved to the wrong function. Always verify final TLINK public
-  address and displacement; opcode shape alone is not acceptance evidence.
-
-- A zero-gap flat target range can reveal a much larger false reconstructed
-  segment boundary than the linker map suggests. TH04 `0x2DF61..0x2E916`
-  was reconstructed as a `MAIN_035_TEXT` suffix followed by `BOSS_TEXT`, but
-  natural TC4J C++ emits the full 0x9B6 range as one contribution with all
-  2,486 bytes and all 60 ordered overlapping relocations exact. Historical
-  `BOSS_TEXT` becomes zero-length and the next segment start stays fixed.
-  Ordinary `bb_boss_free();` then produces the target four-byte near bridge.
-  Test boundary ownership before encoding a suspicious call form manually.
-- Ghidra function bodies are provisional even when their starts are useful.
-  In the v21 boss recovery it under-sized `stage3_setup` and `stagex_setup`
-  and created an internal false split inside `stage4_setup`. A pinned TASM
-  listing of an already raw-exact scaffold can provide independent local-label
-  offsets, but accept those offsets only when target raw terminal decoding,
-  final natural-C++ TLINK publics, and exact-owner containment agree. A
-  configured manual reviewed extent shadows the same-address automatic Ghidra
-  claim; the ledger writer rejects any residual automatic/manual overlap.
-- ReC98 semantic source is never an Oracle. Its TH04 stage2/stage3 setup
-  candidate is materially different from the target. Target raw/decompile and
-  TC4J producer experiments instead recover stage2 with one
-  `select_for_rank(255, 128, 32, 8)`, `frames_until=2600`, HP 750, boss Y=81,
-  and sprite 0. Use reference code for names and hypotheses, then re-derive
-  constants/control flow from the target before exact promotion.
-- Cross-object symbol exposure can be a zero-byte source/build ownership
-  change rather than code injection. The v21 `source_transforms` gate binds the
-  complete `th04_main.asm` scaffold SHA, unique anchors, removed-span SHA and
-  final patched SHA while exposing existing callback/data labels to the new C++
-  TU. The transform emits no instruction/data bytes; all resulting raw bytes,
-  map placement and relocation order still come from normal TASM/TC4J/TLINK.
-
-
-- **MAIN_035/BOSS false-boundary recovery:** A zero-gap flat target region plus
-  a near call crossing reconstructed segment ownership is evidence to test the
-  boundary itself. TH04's `boss_reset`/stage-setup suffix and `BOSS_TEXT` form
-  one 0x9B6 natural TC4J C++ TU. Merging the producer boundary makes ordinary
-  `bb_boss_free()` reproduce the target call and keeps `MAIN_036_TEXT` fixed.
-
-- **Hidden function boundaries under monolithic ASM need independent anchors.**
-  In the 0x677 MAIN_035 suffix, Ghidra truncates some bodies and creates internal
-  false starts. Pinned TASM local-label offsets on an already raw-exact scaffold,
-  target raw RET/RETF tiling, final C++ PUBDEF offsets, and exact-owner
-  containment jointly recover the ten true functions. A configured manual extent
-  must shadow a same-address shorter automatic Ghidra claim.
-
-- **Borland first declarations control pointer-fixup frames.** When natural C++
-  takes near function addresses from another logical code group, declare those
-  callbacks while their real codeseg/group is active before the owning TU.
-  Otherwise TC86 can frame the fixup against the current group and TLINK reports
-  overflow even though the runtime selector would ultimately be compatible.
-  This is declaration metadata, not emitted target bytes.
-
-### TH04 v22: target-driven `MAIN_034` recovery and zero-code order anchors
-
-- Do not treat ReC98's reconstructed C/C++ files as the complete authored
-  candidate universe. `chasecrosses_add()` was still embedded in
-  `th04_main.asm`; ReC98 retained its structure/prototype but no implementation.
-  Fresh target Ghidra + TLINK + raw decode established a 74-byte function, and a
-  target-derived natural C++ loop reproduces all 74 bytes. Systematically mine
-  linker/TASM function inventories and currently unowned target code as well as
-  familiar ReC98 modules.
-- Moving the **prefix** of a large ASM code segment into a separate Borland C++
-  object can change TLINK's first-segment order even when the function itself is
-  exact. A zero-byte object can safely establish layout metadata first:
-  `src/main/layout/main_code_order_anchor.asm` contains the original MAIN_01 and
-  MAIN_03 code-segment/group order, compiles to 50 SEGDEF + 2 GRPDEF and **zero
-  LEDATA**, and therefore owns no authored bytes. Replay must hard-check zero
-  LEDATA and deterministic OMF identity; do not use a layout anchor that emits
-  program/data bytes.
-- Source transforms that compose on the same pinned scaffold must remain
-  fail-closed. The chase transform accepts only the original `th04_main.asm`
-  SHA or the independently verified v21 boss-transform SHA. This permits focused
-  and aggregate replay without turning a scaffold-hash mismatch into a waiver.
-
-### TH04 v23: truncated-Ghidra internal functions and target-checked layouts
-
-- A Ghidra function entry can be real even when its body construction is much too
-  short. For the internal function at `0x2A0D1`, Ghidra reports only 25/63 bytes.
-  Review the full extent only when exact-owner containment, gap-free raw decode
-  through `RET/RETF`, a second true entry at the next byte, and a target near-call
-  resolving to the entry all agree. `reviewed_exact_internal_call` encodes this
-  fail-closed rule. A public symbol introduced by the reconstruction is not target
-  evidence and must be explicitly marked as generated.
-- ReC98 data layouts require the same target verification as source logic. Its
-  TH04 `safetycircle_t` places `col_ring` at +0x1C via `unused_3[8]`; target code
-  writes +0x18. Reducing that candidate field to `unused_3[4]` is both structurally
-  required by the target and the source shape that makes TC4J emit the exact
-  63-byte function.
-
-### TH04 v24: large target-only C++ and target-attested next boundaries
-
-- Do not require a ReC98 decompilation candidate before attempting authored C++.
-  `yuuka6_entities_update()` was still ASM-only, yet its 691-byte raw code had a
-  normal compiler fingerprint. Target semantics plus existing typed APIs were
-  enough for TC86 to reproduce the complete instruction sequence and final linked
-  bytes.
-- Borland local declaration order is a binary input. If every instruction already
-  matches and only BP-relative local displacements differ, reorder natural C/C++
-  declarations before considering any lower-level workaround. v24 removed 16 linked
-  byte differences solely by moving `length, top, angle, angle_delta` into the target
-  allocation order.
-- If Ghidra has the current function entry but completely misses the next true
-  function, an internal boundary can still be reviewed fail-closed using exact-owner
-  containment, full raw terminal decode, a target call to the current entry, a pinned
-  TASM local `PROC` boundary, and a SHA-attested prefix of target bytes at the next
-  address. Reconstruction-generated TLINK publics remain plumbing, not target evidence.
-
-### TH04 v25: sparse switch and completely missing Ghidra entries
-
-- Semantically equivalent control flow is not binary-equivalent source shape. A
-  sparse two-case `switch` can make TC86 keep one expression in AX and emit the
-  target compare/default layout where `if/else if` instead performs direct memory
-  compares and shortens the function.
-- A target function can be reviewed even when Ghidra has no current entry, but only
-  with independent anchors: exact owner, pinned TASM local `PROC`, full raw terminal,
-  target call to the entry, and a complete next Ghidra entry. The corresponding
-  reconstruction-generated public is explicitly excluded from target evidence.
-
-
-### TH04 v26: private-data aliases and callee-cleanup returns
-
-- A target-only natural C++ helper may need state that is still private inside a
-  monolithic ASM data section. Do not duplicate or relocate that state. Expose the
-  existing storage with zero-byte `PUBLIC`/`LABEL` aliases and require final
-  raw/map/relocation equality. `yuuka6_move_towards()` uses this pattern for one
-  point and one state byte while extending the exact `MAIN_034_TEXT` prefix from
-  0x3B2 to 0x421 bytes.
-- Internal-function boundary gates must recognize valid callee-cleanup returns.
-  The terminal instruction predicate is `ret*` / `retf*`, accepting `RET imm16`
-  and `RETF imm16` while still rejecting jumps or fallthrough. Keep the separate
-  exact-owner, raw extent, next-boundary and target-call anchors; the relaxed
-  spelling is not a boundary waiver.
-- Ghidra xrefs can still be absent even when raw target code contains an obvious
-  near call. Resolve the actual `E8 rel16` bytes from the target and use that
-  address as the call anchor rather than requiring a decompiler caller list.
-
-
-### TH04 v27: packed Pascal arguments reveal source semantics
-
-- When TC86 already matches function size, instruction shape, and relocation
-  topology but a packed `PUSH DWORD` contains two swapped 16-bit immediates,
-  inspect the natural Pascal argument order before changing code generation.
-  `yuuka6_horizontal_wave()` became completely exact by correcting
-  `polar(center,radius,...)` from `(48px,80px)` to the target semantics
-  `(80px,48px)`; no low-level source change was needed.
-
-
-### TH04 v28: raw-call scanning can replace missing decompiler callers
-
-- A complete Ghidra function with zero reported callers is not necessarily
-  unreferenced. For `yuuka6_move_to_center()` Ghidra reports no useful caller
-  relationship, while direct target-MZ `E8 rel16` scanning finds two independent
-  calls resolving to `0x2A503`. Use raw call arithmetic as a boundary anchor when
-  xrefs are absent; do not manufacture a target claim from the generated TLINK
-  public.
-- Tiny target-only helpers can still expose source semantics precisely. The target
-  compares sprite state, clears an existing private flag, and uses adjacent 192px
-  and 193px thresholds so only the exact center returns true. Expressing that logic
-  naturally in C++ gives the exact 58-byte TC86 body and preserves the full linked
-  relocation order.
-
-### TH04 v29: compiler switch tables are authored function bytes
-
-- Do not end an authored function at Ghidra `body_max` when TC86 places switch
-  data after the final `RET`. For the eight Yuuka6 animation helpers, pinned
-  TASM boundaries and raw target bytes prove the trailing compare/jump tables
-  belong to the function extent even though Ghidra omits them from the body.
-- Review switch extents fail-closed as `code -> optional alignment byte ->
-  optional compare table -> jump table -> exact next boundary`. Validate compare
-  constants and require every jump word to resolve through the CS base to an
-  actual decoded instruction start.
-- Translation-unit placement is a codegen input for switch data. Keeping the
-  animation family in its own TU with file-start `#pragma option -a` reproduces
-  target table alignment; embedding probe copies in an existing TU changes the
-  padding/layout even when the high-level switches are identical.
-- TC86 truncates long external C source identifiers to 32 characters. When a
-  still-ASM caller references a newly reconstructed long-name C function, match
-  the compiler's truncated public name with a hash/count-bound source transform;
-  never patch the OMF or inject bytes.
-- The compiler alignment matrix is diagnostic: default / `-a1` emits a `0x3C6` block, while file-start `-a` / `-a2` emits the exact `0x3CA`. The four added zero bytes land before the open, spin-back, appear, and shield switch tables; treat them as compiler-owned alignment, not hand-authored padding.
-- On a shared worktree, cold A/B must not read maintained inputs independently. Freeze all repo-owned overlay/split/build inputs once, hash the bytes actually written to the snapshot, immediately reject live-source drift during capture, feed both builds from that snapshot, and verify the live repo again before emitting the receipt.
-
-
-### TH04 v29: freeze live replay inputs before cold A/B
-
-- On a shared worktree, a long two-cold replay must not reread maintained source
-  independently for build A and build B. A concurrent edit can otherwise create a
-  false nondeterminism failure even when both compiler runs are individually stable.
-- Snapshot all repo-owned overlays, split sources, and build inputs once at replay
-  start; feed both materializations from that frozen byte set, record path/size/SHA
-  in the receipt, and fail if the live repo mutates before the run finishes. This
-  preserves dirty-tree visibility rather than hiding it.
-
-### TH04 v30: shared switch tails and mixed Ghidra failure modes
-
-- A correct function size and correct switch table do not prove correct TC86
-  control-flow layout. For the 0xAE Yuuka6 gather helper, moving a natural common
-  tail before case `0x12` changes a forward short jump into the target backward
-  jump while preserving semantics and total size. Prefer source label/goto
-  placement over low-level source when only shared-tail branch direction differs.
-- One exact owner can require different boundary proofs per function. In the
-  0x256 gather family Ghidra starts four functions but omits their compiler-owned
-  trailing tables, while the 0x15 shared helper has no Ghidra entry at all. Use
-  fully-accounted exact switch extents for the former and raw `RET` + next-entry
-  + target-call evidence for the latter; do not apply one blanket Ghidra rule.
-- Target-first helper-family recovery scales beyond ReC98's decompiled corpus.
-  Five contiguous functions recovered from TASM local boundaries and target raw
-  semantics compile naturally to one 598-byte TU with exact map placement and
-  ten ordered relocations under focused and aggregate two-cold replay.
-
-
-### TH04 v30: public-only candidate queues are incomplete
-
-- Do not treat a TLINK-public-versus-ledger sweep as the authored-function
-  universe. Immediately after the v29 exact frontier, pinned TASM local `PROC`
-  boundaries expose five adjacent functions; one (`0x2A9B5`) has neither a
-  Ghidra entry nor a TLINK public. Continue candidate mining from target raw and
-  local TASM boundaries past every exact frontier.
-- A single natural-C++ family can mix decompiler failure modes. Four gather
-  switches have valid Ghidra starts but compiler-owned trailing tables outside
-  the CFG body; the shared helper is completely absent. Use exact-extent table
-  accounting for the former and target-call + raw-RET + next-entry review for
-  the latter. Do not apply one global Ghidra trust rule to the region.
-- `0x2AA14 -> 0x2A9B5` is the reusable no-Ghidra boundary pattern: exact owner
-  containment, a raw near-call that resolves to the missing entry, complete raw
-  decode through `RET`, and a real next Ghidra/TASM entry. A generated public is
-  neither necessary nor admissible as target evidence.
-- The next target-first frontier is `0x2AB5D`. The pinned residual TASM contains
-  many more local Yuuka6 procedures before `yuuka6_update()` and then an Elly
-  local-procedure family; these remain candidates even though the old public-only
-  queue did not list them.
+Current unresolved producer/code-generation negatives are summarized in
+`docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`. Resolved exact owners
+and the replay contract are summarized in
+`docs/reconstruction/TH04_MAIN_EXACT_BATCH.md`.

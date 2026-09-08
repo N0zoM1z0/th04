@@ -2,21 +2,33 @@
 
 ## Current phase
 
-The headless reconstruction environment is operational and the current work is
-target-first `MAIN.EXE` recovery. The accepted exact cohort now contains 132
-default owners. The live reviewed totals are:
+The headless reconstruction environment is operational. A whole-artifact
+boundary/origin review has now been completed without starting another source
+reconstruction batch. `config/th04_function_boundaries.csv` is the current
+routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
+
+The inventory contains 2,120 distinct function-like observations:
+
+- 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
+- 241 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 489 authored candidates otherwise unreviewed;
+- 52 original-style ASM observations in a separate attestation queue;
+- 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
+
+Within the accepted 132-owner MAIN cohort, the live reviewed totals remain:
 
 - authored C/C++ bytes: **35,980 / 36,011 exact (99.913915%)**;
 - authored functions: **241 / 243 exact (99.176955%)**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - reviewed nonexact authored bytes: **31 bytes** in two functions.
 
-These percentages use only reviewed ledger denominators. They are not a claim
-that 99.91% of the executable or game has been reconstructed. Derive current
-numbers with `python3 scripts/status.py`; `config/units.csv` and
-`config/th04_main_authored_functions.csv` override prose.
+These percentages use only accepted reviewed MAIN ledger denominators. They
+are not a claim that 99.91% of an executable or the game has been
+reconstructed. Derive current numbers with `python3 scripts/status.py`;
+`config/units.csv`, `config/th04_main_authored_functions.csv`, and
+`config/th04_function_boundaries.csv` override prose.
 
-`OP.EXE`, `MAINE.EXE`, and `ZUN.COM` still have no reviewed reconstruction
+`OP.EXE`, `MAINE.EXE`, and `ZUN.COM` still have no accepted reconstruction
 units. No deterministic TH04 runtime-differential scenario has been authored.
 
 ## Target and analysis identity
@@ -35,6 +47,23 @@ The target and read-only Ghidra database pass the configured MZ, entry-point,
 relocation, mapping, and sampled-byte attestations. Target canonicality remains
 `candidate-local-attested`; this is a known provenance gap, not proof of a
 pristine official dump.
+
+The other three on-disk targets are DIET-packed MZ containers. Their own
+attested decompressor stubs were run at load segments `0x1000` and `0x2000`;
+both runs produced identical unrelocated payloads and relocation streams:
+
+- OP: 69,028 bytes, 804 relocations, SHA-256
+  `13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`;
+- MAINE: 62,414 bytes, 559 relocations, SHA-256
+  `7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`;
+- ZUN: 13,422 bytes, no relocations, SHA-256
+  `baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+
+OP and MAINE Ghidra projects use private diagnostic hybrid MZ images: the load
+module is target-observed, while the checked header and relocation table come
+from the cold candidate. They are not original-unpacked-EXE claims. The flat
+ZUN payload is raw exact to the cold candidate composition pipeline and is
+split into configured selector/data/embedded-COM/stub regions.
 
 ## Latest accepted batch
 
@@ -69,6 +98,19 @@ Two independent current-tree runs pass:
   `.analysis/reconstruction/exact-unit-replay/codex-final-v94-aggregate-001/receipt.json`
   — all 132 default owners, two isolated cold materializations.
 
+These two complete runs are the retained current private baseline. Superseded
+replay materializations and raw probe matrices may be pruned after their
+commands, outcomes, and digests enter the checked-in ledgers; historical
+`.analysis` paths are provenance rather than a cache-retention guarantee.
+
+The 2026-09-08 retention pass kept all 275 replay `receipt.json` files,
+compacted 273 superseded receipt-bearing runs, removed 88 receiptless run
+directories, and retained the two current full trees above. Obsolete probe,
+warm-build, one-off function-review, and isolated DOS-workspace caches were
+also removed. This reduced the private `.analysis` tree from about 27 GiB to
+1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
+state, current boundary inputs, or the cold reconstruction seed.
+
 For every v89-v94 owner, both runs report zero raw differences, exact map
 placement, identical ordered overlapping MZ relocations, valid deterministic
 TC86 OMF, and stable source snapshots. The aggregate candidate executable is
@@ -100,11 +142,18 @@ already tested and does not solve those two functions.
 
 ## Next target-first queue
 
-Continue `MAIN_036_TEXT` at local Gengetsu procedure `0x2FEDF`. Pinned TASM
-shows subsequent procedure starts at `0x30050`, `0x300B6`, `0x30195`,
-`0x30202`, and `0x3023B`, followed by public FAR `gengetsu_update()` at
-`0x3026A`. Keep Ghidra boundaries provisional and account for trailing compiler
-tables before setting any extent.
+Do not resume from the old prose-only MAIN frontier. Query
+`config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
+`accepted_state=unreviewed`, then select one coherent artifact-local unit.
+There are 489 such rows. Prefer `boundary_state=corroborated`; the 108
+provisional rows need focused target control-flow, return/shared-tail,
+jump-table, alignment, and adjacent ownership review before source work.
+
+The largest remaining class is 296 MAIN entries currently represented by
+target-derived assembly. That label means “likely authored game code awaiting
+natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
+candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
+corroboration only and must become TH04-local or proved `src/shared/` source.
 
 Do not return to retired `exact/`, `partial/`, or `modules/` source layouts.
 Product source follows `src/main/`, `src/op/`, `src/maine/`, `src/zun/`, and
@@ -116,7 +165,7 @@ The accepted 132-owner cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 
-The repository still lacks every TH04 translation unit, a fully localized
+The repository still lacks many TH04 translation units, a fully localized
 ABI/header surface, and a complete TH04-owned link graph. Unlocalized
 declarations are explicitly quarantined behind one-line
 `compat/rec98/<upstream-path>` forwarders. Do not bulk-copy ReC98 or other game
@@ -131,7 +180,13 @@ Run before target-dependent work:
 ```bash
 python3 scripts/preflight.py
 python3 scripts/status.py
+python3 scripts/boundary_review/validate_function_boundary_ledger.py
 ```
+
+The complete private inventory refresh order and its DIET/Ghidra/MAP/TASM
+limitations are in `docs/BOUNDARY_REVIEW.md`. Reusable scripts are grouped
+under `scripts/boundary_review/`; generated payloads, listings, Ghidra exports,
+and databases remain ignored.
 
 Replay one owner or the complete accepted cohort:
 
@@ -148,7 +203,8 @@ python3 scripts/ci.py
 git diff --check
 ```
 
-Detailed historical acceptance and compiler-probe notes remain in
+The compact acceptance contract and unresolved producer constraints remain in
 `docs/reconstruction/TH04_MAIN_EXACT_BATCH.md`,
 `docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`, and
-`config/knowledge.csv`.
+`config/knowledge.csv`. Whole-artifact boundary results are in
+`docs/BOUNDARY_REVIEW.md` and `config/th04_function_boundaries.csv`.

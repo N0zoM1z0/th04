@@ -23,9 +23,21 @@ def main() -> int:
     try:
         run("Python unit tests", [python, "-m", "unittest", "discover", "-s", "tests", "-v"])
         run("Tracking ledgers", [python, "scripts/validate_tracking.py"])
+        run(
+            "Function boundary ledger",
+            [python, "scripts/boundary_review/validate_function_boundary_ledger.py"],
+        )
         run("Python syntax", [python, "-m", "compileall", "-q", "scripts", "tests"])
         run("Regenerate progress artifacts", [python, "scripts/progress.py"])
         run("Check generated progress", [python, "scripts/progress.py", "--check"])
+        run(
+            "Regenerate boundary review",
+            [python, "scripts/boundary_review/report_function_boundaries.py"],
+        )
+        run(
+            "Check generated boundary review",
+            [python, "scripts/boundary_review/report_function_boundaries.py", "--check"],
+        )
         if os.environ.get("CI"):
             run(
                 "Check generated progress is committed",
@@ -35,6 +47,7 @@ def main() -> int:
                     "--exit-code",
                     "--",
                     "docs/PROGRESS.md",
+                    "docs/BOUNDARY_REVIEW.md",
                     "resources/progress.svg",
                 ],
             )

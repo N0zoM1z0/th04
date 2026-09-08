@@ -30,6 +30,12 @@ def main() -> int:
             functions = list(csv.DictReader(stream))
     else:
         functions = []
+    boundary_path = ROOT / "config" / "th04_function_boundaries.csv"
+    if boundary_path.is_file():
+        with boundary_path.open(newline="", encoding="utf-8") as stream:
+            boundaries = list(csv.DictReader(stream))
+    else:
+        boundaries = []
 
     per_artifact: dict[str, dict[str, object]] = {}
     for artifact in (item for item in manifest["artifacts"] if item["game"] == "th04"):
@@ -57,6 +63,15 @@ def main() -> int:
             and row["boundary_state"] in {"reviewed", "shared"}
         ]
         exact_functions = [row for row in reviewed_functions if row["state"] == "exact"]
+        artifact_boundaries = [
+            row for row in boundaries if row["artifact"] == artifact["id"]
+        ]
+        reconstruction_candidates = [
+            row for row in artifact_boundaries if row["work_queue"] == "reconstruct"
+        ]
+        candidate_states = Counter(
+            row["accepted_state"] for row in reconstruction_candidates
+        )
         per_artifact[artifact["id"]] = {
             "target_size": artifact["size"],
             "unit_count": len(rows),
@@ -75,6 +90,15 @@ def main() -> int:
                 round(len(exact_functions) * 100 / len(reviewed_functions), 6)
                 if reviewed_functions
                 else None
+            ),
+            "boundary_observations": len(artifact_boundaries),
+            "authored_function_candidates": len(reconstruction_candidates),
+            "authored_candidate_states": dict(sorted(candidate_states.items())),
+            "original_asm_attestation_candidates": sum(
+                row["work_queue"] == "attest-asm" for row in artifact_boundaries
+            ),
+            "excluded_boundary_observations": sum(
+                row["work_queue"] == "exclude" for row in artifact_boundaries
             ),
         }
     output = {
@@ -100,6 +124,15 @@ def main() -> int:
                 f"exact={report['exact_authored_bytes']:7} ({percent_text}) "
                 f"functions={report['exact_authored_functions']}/"
                 f"{report['reviewed_authored_functions']} ({function_percent_text})"
+            )
+            candidate_states = report["authored_candidate_states"]
+            print(
+                f"{'':12} boundary-observations={report['boundary_observations']:4} "
+                f"authored-candidates={report['authored_function_candidates']:4} "
+                f"exact={candidate_states.get('exact', 0):3} "
+                f"blocked={candidate_states.get('blocked', 0):2} "
+                f"unreviewed={candidate_states.get('unreviewed', 0):3} "
+                f"asm-attest={report['original_asm_attestation_candidates']:2}"
             )
         print(output["warning"])
     return 0

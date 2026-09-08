@@ -268,6 +268,8 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 - `config/rec98_pc98_calibration.toml` — pinned untrusted all-game regression
   vector; never an exactness waiver.
 - `config/units.csv` — bounded code/data ownership and reconstruction state.
+- `config/th04_function_boundaries.csv` — all-artifact function observations,
+  origin classification, confidence, and reconstruction routing.
 - `config/evidence.csv` — replayable observations, commands, and digests.
 - `config/hypotheses.csv` — falsifiable claims and their current disposition.
 - `docs/ARCHITECTURE.md` — PC-98-specific architecture and address model.
@@ -280,8 +282,10 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
   HDI boot smoke, and deterministic Runtime Oracle requirements.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
 - `docs/PROGRESS.md` — conservative source-present and exact-byte totals.
-- `docs/reconstruction/TH04_MAIN_EXACT_BATCH.md` — current `MAIN.EXE` exact
-  owner set, cold-replay contract, and remaining blockers.
+- `docs/BOUNDARY_REVIEW.md` — reviewed OP/MAIN/MAINE/ZUN boundary inventory and
+  the reproducible DIET/Ghidra/MAP/TASM workflow.
+- `docs/reconstruction/TH04_MAIN_EXACT_BATCH.md` — compact `MAIN.EXE`
+  acceptance and cold-replay contract; live state remains ledger-derived.
 - `docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md` — reusable negative
   compiler/TU/FIXUPP results for the remaining difficult units.
 - `compat/rec98/README.md` — temporary, reusable boundary around unlocalized
@@ -290,6 +294,8 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 - `docs/KNOWLEDGE_BASE.md` — scoped durable facts, hazards, and negative results.
 - `.agents/skills/` — task routers for RE, Oracle work, matching, and runtime.
 - `scripts/` — target import, verification, comparison, status, and CI tools.
+  Reusable whole-artifact boundary tools are grouped in
+  `scripts/boundary_review/`.
 
 ## Status
 
@@ -308,8 +314,11 @@ because their ordered MZ relocations do not match.
 This is not yet a standalone game build. The 132 default exact owners compile
 and raw-match through the pinned ReC98 cold-replay scaffold, but the repository
 does not yet contain all TH04 translation units, local headers, or a complete
-TH04-owned link graph. `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` have no reviewed
-reconstruction units yet. No deterministic TH04 runtime scenario exists. Run:
+TH04-owned link graph. The completed classification inventory currently routes
+94 OP, 553 MAIN, 72 MAINE, and 13 ZUN authored function candidates; 241 MAIN
+functions are accepted exact, two are blocked, and 489 candidates remain
+unreviewed. `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` still have no accepted
+reconstruction units. No deterministic TH04 runtime scenario exists. Run:
 
 ```bash
 python3 scripts/status.py
