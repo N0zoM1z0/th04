@@ -4385,3 +4385,45 @@ overlay_path = "th04/g6fg.cpp"
 map_module = "th04/g6fg.cpp"
 map_mode = "exact"
 object_path = "obj/th04/g6fg.obj"
+
+
+[[build_replacements]]
+id = "th04-main-mugetsu-gengetsu-bg-v102-build"
+trigger_units = ["th04-main-mugetsu-gengetsu-bg-v102"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6fg.cpp\",\n\t\"th04/slowdown.cpp\",\n"
+build_replacement = "\t\"th04/g6fg.cpp\",\n\t\"th04/mgbg.cpp\",\n\t\"th04/slowdown.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-mugetsu-gengetsu-bg-v102-natural"
+trigger_units = ["th04-main-mugetsu-gengetsu-bg-v102"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "da93692ac1df5fb12c8759c8ec3cc779495012eb6f5507268ad5a2dff867248c",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-boss-bg-mugetsu-gengetsu-v102"
+kind = "remove_between"
+removed_sha256 = "24c4f6e4e157f1fb2c578b6699092a027502aab156aedbf13ac1b9dbdf1bb49a"
+start = "public @MUGETSU_GENGETSU_BG_RENDER$QV\r\n"
+end = "@mugetsu_gengetsu_bg_render$qv\tendp\r\n"
+replacement = "; natural C++ Mugetsu/Gengetsu background renderer\r\nextrn @MUGETSU_GENGETSU_BG_RENDER$QV:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main-boss-bg-mugetsu-gengetsu-v102"
+kind = "replace"
+old = "@mugetsu_gengetsu_bg_render$qv"
+new = "@MUGETSU_GENGETSU_BG_RENDER$QV"
+expected_count = 1
+
+[[units]]
+id = "th04-main-mugetsu-gengetsu-bg-v102"
+default_enabled = true
+requires_units = ["th04-main-main035-boss-tu", "th04-main-gengetsu-fg-v101"]
+repo_source = "src/main/boss/mugetsu_gengetsu_bg_render.cpp"
+overlay_path = "th04/mgbg.cpp"
+map_module = "th04/mgbg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mgbg.obj"

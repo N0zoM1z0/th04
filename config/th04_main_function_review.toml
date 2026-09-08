@@ -2715,3 +2715,12 @@ address = "0x22F5F"
 name = "gengetsu_fg_render()"
 evidence_id = "ev-th04-main-gengetsu-fg-boundary-v101"
 reason = "Target-first renderer admitted only after Ghidra truncation was overridden by TASM/raw/segment-end proof and focused plus 139-owner exact cold replay."
+
+# v102: BOSS_BG_TEXT Mugetsu/Gengetsu renderer. Fresh Ghidra/TASM/raw all agree
+# on a complete contiguous 0x91-byte body, so standard automatic admission applies.
+[[new_exact]]
+id = "th04-main-fn-22979"
+address = "0x22979"
+name = "mugetsu_gengetsu_bg_render()"
+evidence_id = "ev-th04-main-mugetsu-gengetsu-bg-boundary-v102"
+reason = "Fresh Ghidra, pinned TASM, target raw decode, and BOSS_BG_TEXT segment-end tiling agree on the full 0x91-byte function; focused plus 140-owner exact cold replay prove natural-C++ ownership."
