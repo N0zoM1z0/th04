@@ -1910,7 +1910,7 @@ id = "th04-main-fn-27cf3"
 address = "0x27CF3"
 file_offset = "0x194F3"
 size = "0xDE"
-name = "enemies_add(int,int,int,item_type_t)"
+name = "enemies_add(int,int,int,unsigned char)"
 owner_unit = "th04-main-enemies-add-v67"
 evidence_id = "ev-th04-main-enemies-add-boundary-v67"
 reason = "Ghidra starts at the true 0x27CF3 entry but constructs only 12/222 body bytes. Pinned TASM and gap-free raw decode tile the complete function through RET 8 at 0x27DD0; TLINK public std_run starts at the next byte 0x27DD1."
@@ -1919,6 +1919,36 @@ next_public_address = "0x27DD1"
 [[new_exact]]
 id = "th04-main-fn-27cf3"
 address = "0x27CF3"
-name = "enemies_add(int,int,int,item_type_t)"
+name = "enemies_add(int,int,int,unsigned char)"
 evidence_id = "ev-th04-main-enemies-add-boundary-v67"
 reason = "New target-first MAIN_033 exact public admitted after raw/TASM/TLINK review overrides Ghidra's 12-byte truncated body and two-cold natural-C++ replay proves the full 0xDE owner."
+
+# v68: exact public stage-script VM immediately after ENEMIES_ADD.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27dd1"
+address = "0x27DD1"
+file_offset = "0x195D1"
+size = "0x6D"
+name = "std_run()"
+owner_unit = "th04-main-std-run-v68"
+evidence_id = "ev-th04-main-std-run-boundary-v68"
+reason = "Target raw, pinned TASM, TLINK, and fresh Ghidra all close the complete 109-byte FAR function through RETF at 0x27E3D; ENEMY_BULLET_TEMPLATE_PUSH begins at the next byte 0x27E3E."
+next_public_address = "0x27E3E"
+
+[[new_exact]]
+id = "th04-main-fn-27dd1"
+address = "0x27DD1"
+name = "std_run()"
+evidence_id = "ev-th04-main-std-run-boundary-v68"
+reason = "New target-first MAIN_033 exact public admitted after complete raw/TASM/TLINK/Ghidra boundary review and two-cold natural-C++ replay."
+
+# v69: reviewed authored boundary is complete, but natural C++ codegen remains blocked.
+[[reviewed_nonexact]]
+id = "th04-main-fn-27e3e"
+address = "0x27E3E"
+file_offset = "0x1963E"
+size = "0x1B"
+name = "enemy_bullet_template_push(enemy_t&)"
+evidence_id = "ev-th04-main-enemy-bullet-template-push-boundary-v69"
+reason = "Target raw, TASM, TLINK, and fresh Ghidra agree on the full 27-byte Pascal near function through RET 2 at 0x27E58, immediately before ENEMIES_UPDATE at 0x27E59. Exactness remains blocked because all tested natural C++ copy forms reorder the target REP MOVSW setup; inline ASM is intentionally not used."
+next_public_address = "0x27E59"

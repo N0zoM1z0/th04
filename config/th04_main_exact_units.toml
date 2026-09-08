@@ -2790,3 +2790,87 @@ overlay_path = "th04/enadd.cpp"
 map_module = "th04/enadd.cpp"
 map_mode = "exact"
 object_path = "obj/th04/enadd.obj"
+
+
+[[build_replacements]]
+id = "th04-main033-std-run-v68"
+trigger_units = ["th04-main-std-run-v68"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m4tail.cpp\",\n\t\"th04/enadd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/m4tail.cpp\",\n\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main033-std-run-natural-v68"
+trigger_units = ["th04-main-std-run-v68"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "091a5a2919c3847bf69e1bc3f32116aadfcf44fb35e3030d23361f090e38c003",
+  "92acc1da0e1625f574584fd3131355bb6666cc482622506b10ce10013d3a758c",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-std-run-v68"
+kind = "remove_between"
+removed_sha256 = "5da6e3f0e3fbdef06b072ecdd04036822d6f4ac063787271e221fa7b14e591db"
+start = "@std_run$qv proc far\r\n"
+end = "@std_run$qv endp\r\n"
+replacement = "; natural C++ std_run\r\nextrn @STD_RUN$QV:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "drop-preexisting-std-run-public-v68"
+kind = "replace_optional"
+old = "public @STD_RUN$QV\r\n"
+new = ""
+
+[[units]]
+id = "th04-main-std-run-v68"
+default_enabled = true
+requires_units = ["th04-main-enemies-add-v67"]
+repo_source = "src/main/stage/std_run.cpp"
+overlay_path = "th04/stdrun.cpp"
+map_module = "th04/stdrun.cpp"
+map_mode = "exact"
+object_path = "obj/th04/stdrun.obj"
+
+
+[[build_replacements]]
+id = "th04-main033-enemy-bullet-template-push-v69"
+trigger_units = ["th04-main-enemy-bullet-template-push-v69"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enbtpush.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main033-enemy-bullet-template-push-natural-v69"
+trigger_units = ["th04-main-enemy-bullet-template-push-v69"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "340a8705908fda034761822b12f23641d40204806bd32ed51a6dd3b0d3c8906a",
+  "6fffa29824a8a612805a2040b2611c5158224bde59d8bedfb73b97783626bcd9",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-enemy-bullet-template-push-v69"
+kind = "remove_between"
+removed_sha256 = "82b55023ee1aa769ab3e9ed2d62b4fbe3fac66eec64e72ca59e6d91b6f9388e5"
+start = "enemy_bullet_template_push\tproc near\r\n"
+end = "enemy_bullet_template_push\tendp\r\n"
+replacement = "; natural C++ enemy_bullet_template_push\r\nextrn ENEMY_BULLET_TEMPLATE_PUSH:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "drop-preexisting-enemy-bullet-template-push-public-v69"
+kind = "replace_optional"
+old = "public ENEMY_BULLET_TEMPLATE_PUSH\r\n"
+new = ""
+
+[[units]]
+id = "th04-main-enemy-bullet-template-push-v69"
+default_enabled = false
+requires_units = ["th04-main-std-run-v68"]
+repo_source = "src/main/enemy/bullet_template_push.cpp"
+overlay_path = "th04/enbtpush.cpp"
+map_module = "th04/enbtpush.cpp"
+map_mode = "exact"
+object_path = "obj/th04/enbtpush.obj"

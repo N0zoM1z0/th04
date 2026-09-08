@@ -9,7 +9,7 @@ extern "C" void pascal near enemies_add(
     int script,
     subpixel_t center_x,
     subpixel_t center_y,
-    item_type_t item
+    unsigned char item
 )
 {
     register subpixel_t x = center_x;
@@ -39,7 +39,7 @@ extern "C" void pascal near enemies_add(
 
         enemy->pos.cur.x.v = x;
         enemy->pos.cur.y.v = center_y;
-        enemy->item = item;
+        enemy->item = static_cast<item_type_t>(item);
         enemy->damaged_this_frame = false;
         enemy->autofire = (rank == RANK_LUNATIC);
         enemy->clip_x = false;

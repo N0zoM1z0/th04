@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 29,825 / 29,829 (99.986590%) exact, and reviewed authored functions are 209 / 210 (99.523810%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 29,934 / 29,965 (99.896546%) exact, and reviewed authored functions are 210 / 212 (99.056604%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,12 +115,13 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-enemies-add-v67-precommit-web-001` passes all 105 current default-selected
+  `gptweb-std-run-v68-final-precommit-web-001` passes all 106 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 29,829 bytes; 29,825 bytes are exact.
-  The only reviewed nonexact authored bytes are the four blocked bytes in
-  `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
+- The current reviewed authored byte denominator is 29,965 bytes; 29,934 bytes are exact.
+  The reviewed nonexact bytes are four blocked bytes in `snd_load` plus all 27
+  bytes of `ENEMY_BULLET_TEMPLATE_PUSH`, whose boundary is complete but whose
+  tested natural C++ copy forms do not reproduce the target REP MOVSW setup order.
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
   `*(void far * __es *)(PMD * 4)` makes TC4J naturally generate the target
   `LES BX, ES:[0180h]`; no inline assembly, `__emit__`, codestring, or raw-byte
@@ -354,15 +355,15 @@ deterministic TH04 runtime scenario has been authored.
   complete pinned scaffold SHA plus source-span offset/size/SHA before applying
   that one maintained replacement, so surrounding upstream low-level source is
   never claimed as maintained exact source.
-- The latest aggregate cold replay `gptweb-enemies-add-v67-precommit-web-001`
-  passed all 105 current default exact-replay owners in two isolated
+- The latest aggregate cold replay `gptweb-std-run-v68-final-precommit-web-001`
+  passed all 106 current default exact-replay owners in two isolated
   materializations, including the contiguous 0x1CB midboss TU. The replay driver removes the exact checked-in init+exit
   suffix from the pinned scaffold, materializes it as a second current-header
   C++ TU, and inserts that source immediately after `th04/dialog.cpp` in the
   cold `Tupfile.lua`; normal `build.bat`/Tup/TC4J/TLINK then perform the build.
 - `config/th04_main_authored_functions.csv` tracks function progress separately
   from byte ownership. The current review accepts 114 strict automatic functions
-  plus 77 replayable manual exact reviews. A fresh
+  plus 96 replayable manual exact reviews. A fresh
   TLINK-public audit found eight real exact-owner functions that the target
   Ghidra inventory had missed or misgrouped. `reviewed_exact_no_ghidra` admits
   them only with exact authored ownership, a matching TLINK public, gap-free raw
@@ -714,3 +715,37 @@ The reviewed baseline is now **29,825 / 29,829 authored C/C++ bytes exact
 is not exhausted: resume at **`std_run()` `0x27DD1`**, a 0x6D-byte function
 ending immediately before `ENEMY_BULLET_TEMPLATE_PUSH` at `0x27E3E`;
 `ENEMIES_UPDATE` follows at `0x27E59`.
+
+
+### MAIN_033 stage VM and copy boundary: `std_run` exact, template push blocked (v68-v69)
+
+Target-first screening continues immediately after `ENEMIES_ADD`. `std_run()`
+occupies runtime `0x27DD1..0x27E3D` (0x6D = 109 bytes); TLINK, pinned TASM,
+raw decode, and fresh Ghidra all agree that `ENEMY_BULLET_TEMPLATE_PUSH` starts
+at the next byte `0x27E3E`. Maintained `src/main/stage/std_run.cpp` is exact.
+The key TC4 source-shape detail is a tiny inline byte-to-word helper around the
+item field: direct source lets TC4 reuse AH=0 and drops a target-redundant
+`MOV AH,0`, while the inline semantic boundary emits no call and naturally
+restores exactly that instruction. Focused
+`gptweb-std-run-v68-focused-final-web-001` and 106-owner aggregate
+`gptweb-std-run-v68-final-precommit-web-001` pass raw/map/ordered-relocation/
+OMF/determinism in two cold materializations.
+
+The next public `ENEMY_BULLET_TEMPLATE_PUSH` is a separately reviewed 27-byte
+authored function at `0x27E3E..0x27E58`. Its target boundary is unambiguous,
+but exact source is intentionally **blocked** rather than forged. A plain
+assignment emits `SCOPY@`; `#pragma option -G` gives an inline 27-byte
+`REP MOVSW` with exact relocations but setup order SI/DI/ES/CX instead of the
+target CX/SI/DI/ES; `__memcpy__` gives SI/ES/DI/CX; and an inline assignment
+helper grows to 36 bytes. ReC98 uses an inline-ASM decomp macro for analogous
+reordered copies, but that shortcut is prohibited here. The best natural
+negative receipt is `gptweb-enemy-btpush-v69-negative-final-web-001`.
+
+The current reviewed baseline is **29,934 / 29,965 authored bytes exact
+(99.896546%)** and **210 / 212 reviewed functions exact (99.056604%)**. The two
+reviewed nonexact functions are `snd_load` and `ENEMY_BULLET_TEMPLATE_PUSH`.
+MAIN_033 is still not exhausted: `ENEMIES_UPDATE` begins at **`0x27E59`** and
+fresh Ghidra/raw extend it 470 bytes through `0x2802E`, immediately before the
+Mugetsu local frontier at `0x2802F`. Preserve the 27-byte physical ordering
+blocker when recovering later code; do not silently move a later C++ producer
+ahead of it.

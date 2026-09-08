@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **29,825 / 29,829 = 99.986590% exact**;
-- authored functions: **209 / 210 = 99.523810% exact**;
+- authored C/C++ bytes: **29,934 / 29,965 = 99.896546% exact**;
+- authored functions: **210 / 212 = 99.056604% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-enemies-add-v67-precommit-web-001/receipt.json`.
-It passes all 105 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-std-run-v68-final-precommit-web-001/receipt.json`.
+It passes all 106 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -1095,3 +1095,37 @@ The only reviewed nonexact function remains `snd_load` with four blocked bytes.
 The next target-first `MAIN_033` frontier is `std_run()` at `0x27DD1` (0x6D
 bytes to `ENEMY_BULLET_TEMPLATE_PUSH` at `0x27E3E`), followed by
 `ENEMIES_UPDATE` at `0x27E59`.
+
+
+## v68-v69: exact `std_run`, reviewed REP-copy codegen blocker
+
+`std_run()` is the next public after v67 and spans target runtime
+`0x27DD1..0x27E3D` (109 bytes), ending immediately before
+`ENEMY_BULLET_TEMPLATE_PUSH` at `0x27E3E`. Direct far-pointer source must update
+only the low offset word of `std_ip`, matching the target's `ADD/INC word ptr`
+operations without changing the segment. The final two-byte mismatch came from
+TC4 reusing AH=0 across two byte arguments. A tiny inline unsigned-byte-to-word
+helper creates a high-level semantic boundary; it is fully inlined and naturally
+preserves the second target `MOV AH,0`. No inline assembly or byte emission is
+used. Focused `gptweb-std-run-v68-focused-final-web-001` and aggregate
+`gptweb-std-run-v68-final-precommit-web-001` pass all exactness surfaces; the
+default aggregate now covers **106 exact owners**.
+
+The following `ENEMY_BULLET_TEMPLATE_PUSH` target function is only 27 bytes and
+has a complete raw/TASM/TLINK/Ghidra boundary, so it is now included in the
+authored denominator. Exactness is deliberately blocked. Target code performs
+CX/SI/DI/ES setup followed by `REP MOVSW`. Natural-source probes show: plain
+assignment calls `SCOPY@`; `#pragma option -G` produces exact size and empty
+relocation overlap but orders setup SI/DI/ES/CX; `__memcpy__` orders it
+SI/ES/DI/CX; and an inline assignment helper expands to 36 bytes. The existing
+ReC98 decomp helper solves analogous ordering with inline ASM, which is not
+allowed for this reconstruction. The negative receipt is
+`gptweb-enemy-btpush-v69-negative-final-web-001`.
+
+After honest blocked admission, the reviewed result is **29,934 / 29,965
+authored bytes exact (99.896546%)** and **210 / 212 reviewed functions exact
+(99.056604%)**. `snd_load` and `ENEMY_BULLET_TEMPLATE_PUSH` are the two reviewed
+nonexact functions. The next semantic frontier is `ENEMIES_UPDATE` at
+`0x27E59..0x2802E` (470 bytes), followed immediately by Mugetsu local
+`0x2802F`; physical producer work must account for the blocked 27-byte function
+rather than moving later source ahead of it.
