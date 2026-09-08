@@ -1952,3 +1952,118 @@ name = "enemy_bullet_template_push(enemy_t&)"
 evidence_id = "ev-th04-main-enemy-bullet-template-push-boundary-v69"
 reason = "Target raw, TASM, TLINK, and fresh Ghidra agree on the full 27-byte Pascal near function through RET 2 at 0x27E58, immediately before ENEMIES_UPDATE at 0x27E59. Exactness remains blocked because all tested natural C++ copy forms reorder the target REP MOVSW setup; inline ASM is intentionally not used."
 next_public_address = "0x27E59"
+
+# v70: complete public ENEMIES_UPDATE body after the blocked v69 copy helper.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27e59"
+address = "0x27E59"
+file_offset = "0x19659"
+size = "0x1D6"
+name = "enemies_update()"
+owner_unit = "th04-main-enemies-update-v70"
+evidence_id = "ev-th04-main-enemies-update-boundary-v70"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 470-byte FAR body through RETF at 0x2802E. The exact logical owner is validated independently from the separately blocked 27-byte copy prefix carried by its physical C++ producer."
+
+[[new_exact]]
+id = "th04-main-fn-27e59"
+address = "0x27E59"
+name = "enemies_update()"
+evidence_id = "ev-th04-main-enemies-update-boundary-v70"
+reason = "New target-first MAIN_033 exact public admitted after natural-C++ two-cold replay proves all 470 body bytes while keeping the adjacent v69 helper nonexact."
+
+# v71-v73: first target-first MAIN_036 Reimu family.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2e917"
+address = "0x2E917"
+file_offset = "0x20117"
+size = "0x9A"
+name = "reimu_phase_move_a()"
+owner_unit = "th04-main-reimu-phase-move-a-v71"
+evidence_id = "ev-th04-main-reimu-phase-move-a-boundary-v71"
+reason = "Fresh Ghidra, pinned TASM, and raw decode agree on the complete 154-byte helper through RET at 0x2E9B0; the next local PROC starts at 0x2E9B1."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2e9b1"
+address = "0x2E9B1"
+file_offset = "0x201B1"
+size = "0x9A"
+name = "reimu_phase_move_b()"
+owner_unit = "th04-main-reimu-phase-move-b-v72"
+evidence_id = "ev-th04-main-reimu-phase-move-b-boundary-v72"
+reason = "Fresh Ghidra, pinned TASM, and raw decode agree on the complete 154-byte helper through RET at 0x2EA4A; the next local PROC starts at 0x2EA4B."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ea4b"
+address = "0x2EA4B"
+file_offset = "0x2024B"
+size = "0xE6"
+decode_size = "0xBD"
+name = "reimu_gather_intro()"
+owner_unit = "th04-main-reimu-gather-intro-v73"
+evidence_id = "ev-th04-main-reimu-gather-intro-boundary-v73"
+reason = "Raw code decodes through RET at 0x2EB07. One compiler-owned zero metadata/alignment byte at 0x2EB08, ten compare words at 0x2EB09, and ten near-jump words at 0x2EB1D exactly fill the owner through 0x2EB30. Ghidra omits this trailing compiler data."
+table_metadata_address = "0x2EB08"
+table_metadata_value = "0x00"
+compare_table_address = "0x2EB09"
+compare_table_count = 10
+compare_table_values = [14, 16, 18, 22, 26, 30, 34, 38, 42, 46]
+jump_table_address = "0x2EB1D"
+jump_table_count = 10
+cs_base = "0x23A90"
+
+[[new_exact]]
+id = "th04-main-fn-2e917"
+address = "0x2E917"
+name = "reimu_phase_move_a()"
+evidence_id = "ev-th04-main-reimu-phase-move-a-boundary-v71"
+reason = "New target-first MAIN_036 exact local helper admitted after complete raw/TASM/Ghidra and two-cold review."
+
+[[new_exact]]
+id = "th04-main-fn-2e9b1"
+address = "0x2E9B1"
+name = "reimu_phase_move_b()"
+evidence_id = "ev-th04-main-reimu-phase-move-b-boundary-v72"
+reason = "New target-first MAIN_036 exact local helper admitted after complete raw/TASM/Ghidra and two-cold review."
+
+[[new_exact]]
+id = "th04-main-fn-2ea4b"
+address = "0x2EA4B"
+name = "reimu_gather_intro()"
+evidence_id = "ev-th04-main-reimu-gather-intro-boundary-v73"
+reason = "New target-first MAIN_036 exact switch helper admitted only after raw code plus metadata/alignment, compare table, and jump table account for the complete 0xE6 owner."
+
+# v74: TLINK public moving-orb allocator completely missed by target Ghidra.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2eb31"
+address = "0x2EB31"
+file_offset = "0x20331"
+size = "0x5B"
+name = "orbs_add_moving()"
+owner_unit = "th04-main-reimu-orbs-add-moving-v74"
+evidence_id = "ev-th04-main-reimu-orbs-add-moving-boundary-v74"
+reason = "Target Ghidra has no function entry at this TLINK public. Pinned TASM and gap-free raw decode tile all 91 bytes through RET at 0x2EB8B; exact natural-C++ ownership ends immediately before the next TLINK public."
+next_public_address = "0x2EB8C"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2eb8c"
+address = "0x2EB8C"
+file_offset = "0x2038C"
+size = "0x67"
+name = "orbs_add_spinning(unsigned char,int)"
+owner_unit = "th04-main-reimu-orbs-add-spinning-v75"
+evidence_id = "ev-th04-main-reimu-orbs-add-spinning-boundary-v75"
+reason = "Fresh Ghidra, pinned TASM, TLINK, and raw decode agree on the complete 103-byte Pascal near function through RET 4 at 0x2EBF2; the next local Reimu helper begins at 0x2EBF3."
+
+[[new_exact]]
+id = "th04-main-fn-2eb31"
+address = "0x2EB31"
+name = "orbs_add_moving()"
+evidence_id = "ev-th04-main-reimu-orbs-add-moving-boundary-v74"
+reason = "New target-first MAIN_036 exact TLINK public admitted only after no-Ghidra raw/TASM/next-public review plus natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2eb8c"
+address = "0x2EB8C"
+name = "orbs_add_spinning(unsigned char,int)"
+evidence_id = "ev-th04-main-reimu-orbs-add-spinning-boundary-v75"
+reason = "New target-first MAIN_036 exact public admitted after complete raw/TASM/Ghidra boundary review and natural-C++ two-cold replay."

@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **29,934 / 29,965 = 99.896546% exact**;
-- authored functions: **210 / 212 = 99.056604% exact**;
+- authored C/C++ bytes: **31,136 / 31,167 = 99.900536% exact**;
+- authored functions: **216 / 218 = 99.082569% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-std-run-v68-final-precommit-web-001/receipt.json`.
-It passes all 106 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-reimu-orbs-v75-precommit-web-003/receipt.json`.
+It passes all 112 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -1129,3 +1129,37 @@ nonexact functions. The next semantic frontier is `ENEMIES_UPDATE` at
 `0x27E59..0x2802E` (470 bytes), followed immediately by Mugetsu local
 `0x2802F`; physical producer work must account for the blocked 27-byte function
 rather than moving later source ahead of it.
+
+
+## v70-v75: exact enemy update and first MAIN_036 Reimu/orb family
+
+`ENEMIES_UPDATE` adds 470 exact authored bytes after the deliberately blocked
+27-byte template-copy helper. The physical `enupd.cpp` contribution preserves
+that prefix at target length without promoting it. Exact v70 code requires the
+shared `kill_enemy` label to remain lexically inside the HP comparison `else`
+branch; this source shape is what makes TC4 preserve both the live AL result and
+the target two-byte jump to the post-kill damaged tail.
+
+The next target-first scan moved to `MAIN_036_TEXT`, not ReC98's existing high-
+level coverage. v71/v72 recover two 154-byte Reimu movement helpers. v73 recovers
+a 230-byte sparse-switch extent: 189 code bytes, a one-byte compiler metadata/
+alignment slot, ten compare words, and ten jump words. `#pragma option -a` placed
+after type-bearing headers naturally emits the missing alignment byte; a fused
+producer experiment was negative, so no artificial padding is used. v74
+`orbs_add_moving` is 91 bytes and is absent from Ghidra despite being a TLINK
+public. v75 `orbs_add_spinning` is 103 bytes; an isolated register-allocation
+search showed that a `register` spawned counter plus separated declaration/
+initialization is sufficient for TC4 to choose target CX/SI/DI.
+
+The final focused receipts are `gptweb-v70-v73-current-web-006` and
+`gptweb-reimu-orbs-v75-focused-web-004`. Aggregate
+`gptweb-reimu-orbs-v75-precommit-web-003` passes **112 default exact owners**
+twice. The current reviewed result is **31,136 / 31,167 authored bytes exact
+(99.900536%)** and **216 / 218 reviewed functions exact (99.082569%)**. The
+31-byte reviewed gap consists only of v69 (27 bytes) and `snd_load` (4 bytes).
+
+The next reviewed discovery queue must start from the single TASM PROC
+`reimu_1EBF3` at `0x2EBF3..0x2ED14` (0x122 bytes). Ghidra falsely divides it
+into two functions. Continue through the subsequent Reimu locals up to public
+`reimu_update()` at `0x2F3AB`; do not treat the current v75 boundary as
+`MAIN_036_TEXT` exhaustion.

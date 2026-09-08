@@ -2874,3 +2874,256 @@ overlay_path = "th04/enbtpush.cpp"
 map_module = "th04/enbtpush.cpp"
 map_mode = "exact"
 object_path = "obj/th04/enbtpush.obj"
+
+[[build_replacements]]
+id = "th04-main033-enemies-update-v70"
+trigger_units = ["th04-main-enemies-update-v70"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main033-enemies-update-natural-v70"
+trigger_units = ["th04-main-enemies-update-v70"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "340a8705908fda034761822b12f23641d40204806bd32ed51a6dd3b0d3c8906a",
+  "6fffa29824a8a612805a2040b2611c5158224bde59d8bedfb73b97783626bcd9",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-enemy-copy-and-update-v70"
+kind = "remove_between"
+removed_sha256 = "8ea90a4b47a8770b1299dc583d2aba125e7113140a5d671f3aa5f5893fc49ba4"
+start = "public ENEMY_BULLET_TEMPLATE_PUSH\r\nenemy_bullet_template_push\tproc near\r\n"
+end = "enemies_update\tendp\r\n"
+replacement = "; natural C++ enemy copy layout prefix + enemies_update\r\nextrn ENEMIES_UPDATE:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main033-enemy-script-update-v70"
+kind = "insert_before"
+anchor = "sub_155DD\tproc near\r\n"
+text = "public _enemy_script_update\r\n_enemy_script_update label near\r\n"
+
+[[source_transforms.ops]]
+id = "export-main033-enemy-counters-v70"
+kind = "insert_before"
+anchor = "_enemies_gone\tdw 0\r\n"
+text = "public _enemies_gone, _enemies_killed\r\n"
+
+[[units]]
+id = "th04-main-enemies-update-v70"
+default_enabled = true
+requires_units = ["th04-main-std-run-v68"]
+repo_source = "src/main/enemy/enemies_update.cpp"
+overlay_path = "th04/enupd.cpp"
+map_module = "th04/enupd.cpp"
+map_mode = "contains"
+object_path = "obj/th04/enupd.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-phase-move-a-v71"
+trigger_units = ["th04-main-reimu-phase-move-a-v71"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-phase-move-a-natural-v71"
+trigger_units = ["th04-main-reimu-phase-move-a-v71"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "340a8705908fda034761822b12f23641d40204806bd32ed51a6dd3b0d3c8906a",
+  "6fffa29824a8a612805a2040b2611c5158224bde59d8bedfb73b97783626bcd9",
+  "11c37f91378542c0024c52b3c802aec7540c6af9378fd8c086d549a74a47be42",
+  "5899a63028a1205d8612fd359cf459da6ea7e1d1e589ab1bb07e6823ca561407",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-phase-move-a-v71"
+kind = "remove_between"
+removed_sha256 = "cb4a9da212323a47c0082b27a975cf018c3154796509fe37128d6c74996ecb52"
+start = "reimu_1E917\tproc near\r\n"
+end = "reimu_1E917\tendp\r\n"
+replacement = "; natural C++ Reimu phase movement A\r\nextrn _reimu_phase_move_a:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-phase-move-a-calls-v71"
+kind = "replace"
+old = "call\treimu_1E917"
+new = "call\t_reimu_phase_move_a"
+expected_count = 2
+
+[[source_transforms.ops]]
+id = "alias-main036-reimu-trail-visible-v71"
+kind = "insert_before"
+anchor = "byte_2D03C\tdb ?\r\n"
+text = "public _reimu_trail_visible\r\n_reimu_trail_visible label byte\r\n"
+
+[[units]]
+id = "th04-main-reimu-phase-move-a-v71"
+default_enabled = true
+requires_units = ["th04-main-enemies-update-v70"]
+repo_source = "src/main/boss/reimu4_main036.cpp"
+overlay_path = "th04/r4movea.cpp"
+map_module = "th04/r4movea.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4movea.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-phase-move-b-v72"
+trigger_units = ["th04-main-reimu-phase-move-b-v72"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-phase-move-b-natural-v72"
+trigger_units = ["th04-main-reimu-phase-move-b-v72"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "115231476ecd0d1b902f1f34e977f0946c5a6ff4d246f0d0bb5c103b99f8d95f",
+  "521ec033c5011add19ad506e25d17445c356f6a8a3d82a3a6d21eed8a74e14f4",
+  "f02ee0ff2091f537161cda837ee45e56f13ca56673e7c9fce65361f5490d8b13",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-phase-move-b-v72"
+kind = "remove_between"
+removed_sha256 = "37740e91e187c9226da06cb9a4ca203b80f816eacd64a0048aef6a8826764ac1"
+start = "reimu_1E9B1\tproc near\r\n"
+end = "reimu_1E9B1\tendp\r\n"
+replacement = "; natural C++ Reimu phase movement B\r\nextrn _reimu_phase_move_b:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-phase-move-b-call-v72"
+kind = "replace"
+old = "call\treimu_1E9B1"
+new = "call\t_reimu_phase_move_b"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-phase-move-b-v72"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-move-a-v71"]
+repo_source = "src/main/boss/reimu4_main036_b.cpp"
+overlay_path = "th04/r4moveb.cpp"
+map_module = "th04/r4moveb.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4moveb.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-gather-intro-v73"
+trigger_units = ["th04-main-reimu-gather-intro-v73"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-gather-intro-natural-v73"
+trigger_units = ["th04-main-reimu-gather-intro-v73"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "8e41080bd5747c08bbc5c967429e455ad2c0a7050612b2bcf7ec4ed67f12dfe1",
+  "4265ecd2bd360614d942e1ac5480d1df81dabaf88e7e0cfd29685c8237e477c3",
+  "62584c2a5a7c71d6b59ec1c6ee909efdd54e154888a4253c100517fbd43abe83",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-gather-intro-v73"
+kind = "remove_between"
+removed_sha256 = "59a22b61c0f928837ab41be1ab1b656b08cf6f00a82766bc2ed0afcf522b8940"
+start = "reimu_1EA4B\tproc near\r\n"
+end = "\t\tdw offset loc_1EAE9\r\n"
+replacement = "; natural C++ Reimu gather intro and compiler switch tables\r\nextrn _reimu_gather_intro:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-gather-intro-calls-v73"
+kind = "replace"
+old = "call\treimu_1EA4B"
+new = "call\t_reimu_gather_intro"
+expected_count = 7
+
+[[units]]
+id = "th04-main-reimu-gather-intro-v73"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-move-b-v72"]
+repo_source = "src/main/boss/reimu4_gather_intro.cpp"
+overlay_path = "th04/r4gath.cpp"
+map_module = "th04/r4gath.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4gath.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-orbs-add-moving-v74"
+trigger_units = ["th04-main-reimu-orbs-add-moving-v74"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-orbs-add-moving-natural-v74"
+trigger_units = ["th04-main-reimu-orbs-add-moving-v74"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "044f3e1c07105a6941a8c1eaa9d41a94a130855c2a4a029c3e10cc7f9a204fd0",
+  "5db30df989a7eeb571ca4e16abe988ba7e4beb1fa3bbc2d24e0cb0589e2c4206",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-orbs-add-moving-v74"
+kind = "remove_between"
+removed_sha256 = "f8b538cb7e559acd7d9b5ab573ab5f3dfd250ed006013df2a61cb4899d84189f"
+start = "public @ORBS_ADD_MOVING$QV\r\n@orbs_add_moving$qv\tproc near\r\n"
+end = "@orbs_add_moving$qv\tendp\r\n"
+replacement = "; natural C++ Reimu moving-orb allocator\r\nextrn @ORBS_ADD_MOVING$QV:near\r\n\r\n"
+
+[[units]]
+id = "th04-main-reimu-orbs-add-moving-v74"
+default_enabled = true
+requires_units = ["th04-main-reimu-gather-intro-v73"]
+repo_source = "src/main/boss/reimu4_orb_add.cpp"
+overlay_path = "th04/r4orb.cpp"
+map_module = "th04/r4orb.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4orb.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-orbs-add-spinning-v75"
+trigger_units = ["th04-main-reimu-orbs-add-spinning-v75"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-orbs-add-spinning-natural-v75"
+trigger_units = ["th04-main-reimu-orbs-add-spinning-v75"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "530bcc6b9ce19a1e4994c7aad4d0ac6d09845c812caec8399dcaeb9338309321",
+  "26b08cb13ca9f6038b0e9a4884c658b5cf24b212f6e74d87e839272b67866f19",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-orbs-add-spinning-v75"
+kind = "remove_between"
+removed_sha256 = "86bbedb520e0234a017463da82a9ff58e4f27fe0fdd9ed5171ada1307f6393d6"
+start = "public @ORBS_ADD_SPINNING$QUCI\r\n@orbs_add_spinning$quci\tproc near\r\n"
+end = "@orbs_add_spinning$quci\tendp\r\n"
+replacement = "; natural C++ Reimu spinning-orb allocator\r\nextrn @ORBS_ADD_SPINNING$QUCI:near\r\n\r\n"
+
+[[units]]
+id = "th04-main-reimu-orbs-add-spinning-v75"
+default_enabled = true
+requires_units = ["th04-main-reimu-orbs-add-moving-v74"]
+repo_source = "src/main/boss/reimu4_orb_spin.cpp"
+overlay_path = "th04/r4spin.cpp"
+map_module = "th04/r4spin.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4spin.obj"
