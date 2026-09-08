@@ -2680,3 +2680,19 @@ address = "0x1B80F"
 name = "end_extra()"
 evidence_id = "ev-th04-main-end-family-boundary-v99"
 reason = "END_TEXT function admitted after Ghidra/TASM/TLINK/raw agreement and focused plus 137-owner exact replay."
+
+
+# v100: END_TEXT map loader/free suffix.
+[[new_exact]]
+id = "th04-main-fn-1b971"
+address = "0x1B971"
+name = "map_load()"
+evidence_id = "ev-th04-main-end-map-boundary-v100"
+reason = "END_TEXT map_load admitted after Ghidra/TASM/TLINK/raw agreement and exact replay."
+
+[[new_exact]]
+id = "th04-main-fn-1b9bb"
+address = "0x1B9BB"
+name = "map_free()"
+evidence_id = "ev-th04-main-end-map-boundary-v100"
+reason = "END_TEXT map_free admitted after Ghidra/TASM/TLINK/raw agreement and exact replay."

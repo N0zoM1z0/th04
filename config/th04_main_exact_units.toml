@@ -4275,3 +4275,52 @@ overlay_path = "th04/endmain.cpp"
 map_module = "th04/endmain.cpp"
 map_mode = "exact"
 object_path = "obj/th04/endmain.obj"
+
+
+[[build_replacements]]
+id = "th04-end-map-v100-build"
+trigger_units = ["th04-main-end-map-v100"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/slowdown.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/mapend.cpp\",\n\t\"th04/slowdown.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-end-map-v100-natural"
+trigger_units = ["th04-main-end-map-v100"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "8fbd2f27691de0de7bbf2512256715455983a6aef76cc070b7e9c90694aff878",
+  "1f81ab6b67578a4d7393bbe58a86e80e115c865ebe10df653624a48edbc1395c",
+]
+
+[[source_transforms.ops]]
+id = "remove-end-map-v100"
+kind = "remove_between"
+removed_sha256 = "0734a77ddbf8418065e470dd69aa6a9b257f34a8a9ede35d35e57c887f08a4b8"
+start = "public @map_load$qv\r\n"
+end = "@map_free$qv\tendp\r\n"
+replacement = "; natural C++ END_TEXT map suffix\r\nextrn @map_load$qv:near\r\nextrn @map_free$qv:near\r\n"
+
+[[source_transforms.ops]]
+id = "name-end-map-filename-v100"
+kind = "replace"
+old = "off_21CBA"
+new = "_map_fn"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-end-map-filename-v100"
+kind = "insert_before"
+anchor = "_map_fn\tdd aSt00_map\r\n"
+text = "public _map_fn\r\n"
+
+[[units]]
+id = "th04-main-end-map-v100"
+default_enabled = true
+requires_units = ["th04-main-end-family-v99"]
+repo_source = "src/main/formats/map.cpp"
+overlay_path = "th04/mapend.cpp"
+map_module = "th04/mapend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mapend.obj"
