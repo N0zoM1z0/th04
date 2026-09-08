@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **31,136 / 31,167 = 99.900536% exact**;
-- authored functions: **216 / 218 = 99.082569% exact**;
+- authored C/C++ bytes: **33,112 / 33,143 = 99.906466% exact**;
+- authored functions: **228 / 230 = 99.130435% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-reimu-orbs-v75-precommit-web-003/receipt.json`.
-It passes all 112 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-reimu-v87-precommit-web-001/receipt.json`.
+It passes all 124 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -1163,3 +1163,29 @@ The next reviewed discovery queue must start from the single TASM PROC
 into two functions. Continue through the subsequent Reimu locals up to public
 `reimu_update()` at `0x2F3AB`; do not treat the current v75 boundary as
 `MAIN_036_TEXT` exhaustion.
+
+
+## v76-v87: clear the Reimu local-helper frontier before `reimu_update()`
+
+Pinned TASM, not Ghidra function construction, defines this batch. `reimu_1EBF3`
+is one 290-byte PROC from `0x2EBF3` through `0x2ED14`; Ghidra creates a false
+internal function at `0x2EC40`. Exact natural C++ and manual extent review reject
+that split. Eleven further locals through `reimu_1F378` are exact as well, for a
+total of 1,976 newly exact bytes and 12 functions.
+
+The batch captures several Borland source-layout rules: `orb->flag++` emits the
+target two-byte memory `INC`; target-visible repeated random-angle assignments
+must remain even when later overwritten; `+(-0x44)` selects the target ADD spelling;
+an inverse-condition ternary can flip Jcc direction without losing TC4's common
+store; and multiple `for` increment expressions preserve target execution order.
+These are all normal C++ source constraints.
+
+Focused `gptweb-reimu-v87-focused-web-001` passes the dependency closure and
+`gptweb-reimu-v87-precommit-web-001` passes **124 default exact owners** twice.
+The reviewed result is **33,112 / 33,143 authored bytes exact (99.906466%)** and
+**228 / 230 reviewed functions exact (99.130435%)**. Only v69's 27-byte copy
+helper and four `snd_load` bytes remain nonexact.
+
+The next candidate is public FAR `reimu_update()` at `0x2F3AB..0x2F8ED`, total
+0x543 bytes. Raw/TASM show 0x515 bytes of code plus a 0x2E compiler table tail;
+Ghidra's decompiled body is cross-linked and cannot define the authored extent.

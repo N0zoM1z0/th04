@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 31,136 / 31,167 (99.900536%) exact, and reviewed authored functions are 216 / 218 (99.082569%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 33,112 / 33,143 (99.906466%) exact, and reviewed authored functions are 228 / 230 (99.130435%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,10 +115,10 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-reimu-orbs-v75-precommit-web-003` passes all 112 current default-selected
+  `gptweb-reimu-v87-precommit-web-001` passes all 124 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 31,167 bytes; 31,136 bytes are exact.
+- The current reviewed authored byte denominator is 33,143 bytes; 33,112 bytes are exact.
   The reviewed nonexact bytes are four blocked bytes in `snd_load` plus all 27
   bytes of `ENEMY_BULLET_TEMPLATE_PUSH`, whose boundary is complete but whose
   tested natural C++ copy forms do not reproduce the target REP MOVSW setup order.
@@ -793,3 +793,46 @@ incorrectly splits this single authored PROC into bodies `0x2EBF3..0x2EC3F` and
 `0x2EE21`, `0x2EE73`, `0x2EF87`, `0x2F04E`, `0x2F111`, `0x2F17C`,
 `0x2F22A`, `0x2F2F3`, and `0x2F378`, followed by public `reimu_update()` at
 `0x2F3AB`. Resume from raw/TASM PROC boundaries, not Ghidra split bodies.
+
+
+### MAIN_036 Reimu local frontier cleared through `reimu_bg_pulse` (v76-v87)
+
+Target-first review continued from the v75 boundary instead of trusting Ghidra's
+function graph. The TASM PROC `reimu_1EBF3` is one 0x122-byte function at
+`0x2EBF3..0x2ED14`; Ghidra incorrectly divides it into a 77-byte function at
+`0x2EBF3` and a 213-byte function at `0x2EC40`. Maintained
+`reimu4_orbs_update.cpp` reproduces all 290 bytes exactly, and the function
+reviewer promotes only the true TASM entry.
+
+The remaining Reimu locals before the public dispatcher are now also exact:
+`0x2ED15` (167), `0x2EDBC` (101), `0x2EE21` (82), `0x2EE73` (276),
+`0x2EF87` (199), `0x2F04E` (195), `0x2F111` (107), `0x2F17C` (174),
+`0x2F22A` (201), `0x2F2F3` (133), and `0x2F378` (51). v76-v87 therefore add
+1,976 exact authored bytes and 12 exact functions. Several Ghidra bodies are
+severely sparse (8/276 at v80, 25/199 at v81, 75/174 at v84, 128/201 at v85),
+so raw/TASM extent review remains mandatory.
+
+Useful TC4 source-shape findings from this batch are checked into `knowledge.csv`:
+keep enum state transitions as natural `flag++` when target uses `INC`; preserve
+redundant random-angle assignments visible in target; use `+(-0x44)` rather than
+`-0x44` when target spells the operation as `ADD AL,0xBC`; use the inverse-condition
+ternary to select branch direction while retaining a shared store; and place both
+loop increments in the `for` increment expression when target executes the index
+increment before the angle update. None of these use inline assembly or emitted
+bytes.
+
+Focused `gptweb-reimu-v87-focused-web-001` and 124-owner aggregate
+`gptweb-reimu-v87-precommit-web-001` pass two cold materializations across raw
+bytes, exact TLINK placement, ordered relocations, valid deterministic OMF, and
+all previously accepted owners. The reviewed baseline is now **33,112 / 33,143
+authored bytes exact (99.906466%)** and **228 / 230 reviewed functions exact
+(99.130435%)**. The only reviewed nonexact functions remain `snd_load` and the
+27-byte `ENEMY_BULLET_TEMPLATE_PUSH`.
+
+The next target-first candidate is public FAR `reimu_update()` at
+**`0x2F3AB..0x2F8ED` (0x543 = 1,347 bytes)**. Its code occupies 0x515 bytes
+through `RETF`, followed by 0x2E bytes of compiler-owned switch data: a five-value/
+five-jump mode table and a 13-entry top-level phase jump table. The next true
+PROC is `gengetsu_1F8EE` at `0x2F8EE`. Fresh Ghidra's body for `reimu_update` is
+cross-linked far outside this extent, so reconstruct it from pinned TASM/raw/table
+layout rather than the decompiler body range.

@@ -3127,3 +3127,525 @@ overlay_path = "th04/r4spin.cpp"
 map_module = "th04/r4spin.cpp"
 map_mode = "exact"
 object_path = "obj/th04/r4spin.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-orbs-update-v76"
+trigger_units = ["th04-main-reimu-orbs-update-v76"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-orbs-update-natural-v76"
+trigger_units = ["th04-main-reimu-orbs-update-v76"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "e0d73b485d9eeadbcb764f2247d99e39df6c5ebf17d48fdd6fac5d7ca2f25c64",
+  "cfdfe19e36b5ba265bd57d48f069b958dde23b0a286b92765e8803a71a918f6e",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-orbs-update-v76"
+kind = "remove_between"
+removed_sha256 = "089a903a44e8ed026dd81bb7ec64e56b1343b3cc8325abd5cf3e0c3e1843d3d7"
+start = "reimu_1EBF3\tproc near\r\n"
+end = "reimu_1EBF3\tendp\r\n"
+replacement = "; natural C++ Reimu orb updater\r\nextrn _reimu_orbs_update:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-orbs-update-call-v76"
+kind = "replace"
+old = "call\treimu_1EBF3"
+new = "call\t_reimu_orbs_update"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-orbs-update-v76"
+default_enabled = true
+requires_units = ["th04-main-reimu-orbs-add-spinning-v75"]
+repo_source = "src/main/boss/reimu4_orbs_update.cpp"
+overlay_path = "th04/r4upd.cpp"
+map_module = "th04/r4upd.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4upd.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-phase-spread-yellow-v77"
+trigger_units = ["th04-main-reimu-phase-spread-yellow-v77"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-phase-spread-yellow-natural-v77"
+trigger_units = ["th04-main-reimu-phase-spread-yellow-v77"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "6a248231be3ca58ba10ff0a7a6482faf1328bcbd811a75b89f25184c374c4511",
+  "afaa99aef73fa1efbdce5384220da714065c6a4f42444cc6a4e7adacecd25073",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-phase-spread-yellow-v77"
+kind = "remove_between"
+removed_sha256 = "4f3c05203332d5e02925154e0e3d65bd2731c40a2f67bd4cebc9cbeab2df1f27"
+start = "reimu_1ED15\tproc near\r\n"
+end = "reimu_1ED15\tendp\r\n"
+replacement = "; natural C++ Reimu yellow spread phase\r\nextrn _reimu_phase_spread_yellow:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-phase-spread-yellow-call-v77"
+kind = "replace"
+old = "call\treimu_1ED15"
+new = "call\t_reimu_phase_spread_yellow"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main036-reimu-pattern-angle-delta-v77"
+kind = "insert_before"
+anchor = "byte_2D03A\tdb ?\r\n"
+text = "public _reimu_pattern_angle_delta\r\n_reimu_pattern_angle_delta label byte\r\n"
+
+[[units]]
+id = "th04-main-reimu-phase-spread-yellow-v77"
+default_enabled = true
+requires_units = ["th04-main-reimu-orbs-update-v76"]
+repo_source = "src/main/boss/reimu4_phase_spread_yellow.cpp"
+overlay_path = "th04/r4p1.cpp"
+map_module = "th04/r4p1.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p1.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-phase-special-blue-v78"
+trigger_units = ["th04-main-reimu-phase-special-blue-v78"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-phase-special-blue-natural-v78"
+trigger_units = ["th04-main-reimu-phase-special-blue-v78"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "8a4df04b8c4abcea98d0fba409f9d16a0d9824efcd74912358ed8b3ec48eacf5",
+  "ec0b19b6f58eac20a685ccd68eb505cc17a233b274ec791fc02e875274348c2c",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-phase-special-blue-v78"
+kind = "remove_between"
+removed_sha256 = "6ab8a0dd989cefd6aa62332c3d147a83c20b2c4b8317862a0ace08eeea9a3d3b"
+start = "reimu_1EDBC\tproc near\r\n"
+end = "reimu_1EDBC\tendp\r\n"
+replacement = "; natural C++ Reimu special-blue phase\r\nextrn _reimu_phase_special_blue:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-phase-special-blue-call-v78"
+kind = "replace"
+old = "call\treimu_1EDBC"
+new = "call\t_reimu_phase_special_blue"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "export-bullet-special-turns-max-v78"
+kind = "insert_before"
+anchor = "include th04/main/bullet/update[bss].asm\r\n"
+text = "public _bullet_special_turns_max\r\n"
+
+[[units]]
+id = "th04-main-reimu-phase-special-blue-v78"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-spread-yellow-v77"]
+repo_source = "src/main/boss/reimu4_phase_special_blue.cpp"
+overlay_path = "th04/r4p2.cpp"
+map_module = "th04/r4p2.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p2.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-phase-orb-spawn-v79"
+trigger_units = ["th04-main-reimu-phase-orb-spawn-v79"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-phase-orb-spawn-natural-v79"
+trigger_units = ["th04-main-reimu-phase-orb-spawn-v79"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "fa66f55be1761456728fd9b3ca8014de43e18a3af92775a7bc079bc2d8b8b5b4",
+  "81f176f9eddc7404af37f836c5986f5c3af3828a4c00544513f9a5f8ebe207e6",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-phase-orb-spawn-v79"
+kind = "remove_between"
+removed_sha256 = "49373d1d32d07dea6c662a912f69e5aa032c33dc21f9933a9ba66e82f7307002"
+start = "reimu_1EE21\tproc near\r\n"
+end = "reimu_1EE21\tendp\r\n"
+replacement = "; natural C++ Reimu orb-spawn phase\r\nextrn _reimu_phase_orb_spawn:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-phase-orb-spawn-call-v79"
+kind = "replace"
+old = "call\treimu_1EE21"
+new = "call\t_reimu_phase_orb_spawn"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-phase-orb-spawn-v79"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-special-blue-v78"]
+repo_source = "src/main/boss/reimu4_phase_orb_spawn.cpp"
+overlay_path = "th04/r4p3.cpp"
+map_module = "th04/r4p3.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p3.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v80-build"
+trigger_units = ["th04-main-reimu-phase-cloud-ring-stack-v80"]
+build_file = "Tupfile.lua"
+build_anchor = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+build_replacement = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v80-natural"
+trigger_units = ["th04-main-reimu-phase-cloud-ring-stack-v80"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "2ab232a53aeb732ec8b8d37fd072d6dcbca2790a2062add75a133f782d011933",
+  "dcb8877531a554631f676101e3ce0e134fdb4409b392ce6fdbe92e3a968a552b",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v80"
+kind = "remove_between"
+removed_sha256 = "e48376de204bf6abe6b16679377be5ae2fa0bfdb389c0e0a2d0c26f5b691ed3c"
+start = "reimu_1EE73	proc near\r\n"
+end = "reimu_1EE73	endp\r\n"
+replacement = "; natural C++ Reimu cloud-ring/stack phase\r\nextrn _reimu_phase_cloud_ring_stack:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v80-calls"
+kind = "replace"
+old = "call	reimu_1EE73"
+new = "call\t_reimu_phase_cloud_ring_stack"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "export-bullet-special-speed-delta-v80"
+kind = "insert_before"
+anchor = "include th04/main/bullet/update[bss].asm\r\n"
+text = "public _bullet_special_speed_delta\r\n"
+
+[[units]]
+id = "th04-main-reimu-phase-cloud-ring-stack-v80"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-orb-spawn-v79"]
+repo_source = "src/main/boss/reimu4_phase_cloud_ring_stack.cpp"
+overlay_path = "th04/r4p4.cpp"
+map_module = "th04/r4p4.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p4.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v81-build"
+trigger_units = ["th04-main-reimu-phase-pellet-cloud-v81"]
+build_file = "Tupfile.lua"
+build_anchor = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+build_replacement = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v81-natural"
+trigger_units = ["th04-main-reimu-phase-pellet-cloud-v81"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "52ece0a32723387d53d111a3b1acbf9c2bad103f69c1ab34cb5e44493625ce2a",
+  "1342a62eb330ee9d41a576a01c2aa8e911dee66f251c89e3df000db17f2cba62",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v81"
+kind = "remove_between"
+removed_sha256 = "198ea4ddbe2d16fc7b6d181c8bc31d97ac77e9074a3ed5fed5b8cbffd0f1d215"
+start = "reimu_1EF87	proc near\r\n"
+end = "reimu_1EF87	endp\r\n"
+replacement = "; natural C++ Reimu pellet/cloud phase\r\nextrn _reimu_phase_pellet_and_cloud:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v81-calls"
+kind = "replace"
+old = "call	reimu_1EF87"
+new = "call\t_reimu_phase_pellet_and_cloud"
+expected_count = 2
+
+[[units]]
+id = "th04-main-reimu-phase-pellet-cloud-v81"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-cloud-ring-stack-v80"]
+repo_source = "src/main/boss/reimu4_phase_pellet_cloud.cpp"
+overlay_path = "th04/r4p5.cpp"
+map_module = "th04/r4p5.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p5.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v82-build"
+trigger_units = ["th04-main-reimu-phase-random-aimed-v82"]
+build_file = "Tupfile.lua"
+build_anchor = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+build_replacement = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	\"th04/r4p6.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v82-natural"
+trigger_units = ["th04-main-reimu-phase-random-aimed-v82"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "f20b36017bd3c4d436209b4d8c5ab5dad82762d3a9b3d595ce4403db82085ce8",
+  "49cc7d336d4ffad6f8c6b0a5b5c367e6ff998c702dbbb90be47508601ecf7023",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v82"
+kind = "remove_between"
+removed_sha256 = "5ce1d82d0ae1cbe2b5ad3acadb1daad97691bdb565ec4df3ac641e4d7bd784d9"
+start = "reimu_1F04E	proc near\r\n"
+end = "reimu_1F04E	endp\r\n"
+replacement = "; natural C++ Reimu random/aimed phase\r\nextrn _reimu_phase_random_aimed:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v82-calls"
+kind = "replace"
+old = "call	reimu_1F04E"
+new = "call\t_reimu_phase_random_aimed"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-phase-random-aimed-v82"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-pellet-cloud-v81"]
+repo_source = "src/main/boss/reimu4_phase_random_aimed.cpp"
+overlay_path = "th04/r4p6.cpp"
+map_module = "th04/r4p6.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p6.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v83-build"
+trigger_units = ["th04-main-reimu-phase-orb-stream-v83"]
+build_file = "Tupfile.lua"
+build_anchor = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	\"th04/r4p6.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+build_replacement = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	\"th04/r4p6.cpp\",\n	\"th04/r4p7.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v83-natural"
+trigger_units = ["th04-main-reimu-phase-orb-stream-v83"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "4dfb4864c1a2e1e567099a520bd028417d6fd3bea12cc4fa480856d51d9bcb4f",
+  "45444a32b773fab1e4163a99c09e505b42c990c1a928847a440ee560605b4cce",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v83"
+kind = "remove_between"
+removed_sha256 = "b785e9024122b03b80d8554ed94cee7141117f1fb9089eb459f46b3798f46cfc"
+start = "reimu_1F111	proc near\r\n"
+end = "reimu_1F111	endp\r\n"
+replacement = "; natural C++ Reimu orb-stream phase\r\nextrn _reimu_phase_orb_stream:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v83-calls"
+kind = "replace"
+old = "call	reimu_1F111"
+new = "call\t_reimu_phase_orb_stream"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-phase-orb-stream-v83"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-random-aimed-v82"]
+repo_source = "src/main/boss/reimu4_phase_orb_stream.cpp"
+overlay_path = "th04/r4p7.cpp"
+map_module = "th04/r4p7.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p7.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v84-build"
+trigger_units = ["th04-main-reimu-phase-stack-octet-v84"]
+build_file = "Tupfile.lua"
+build_anchor = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	\"th04/r4p6.cpp\",\n	\"th04/r4p7.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+build_replacement = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	\"th04/r4p6.cpp\",\n	\"th04/r4p7.cpp\",\n	\"th04/r4p8.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v84-natural"
+trigger_units = ["th04-main-reimu-phase-stack-octet-v84"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "ce4a436cb8a9b6c03171626bb47989cfea0c19c084cf277a010ce1808195e78e",
+  "ccd47a6198303d2bdc30d848c29af00437ecbe19a0d804a1c946e944518141d0",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v84"
+kind = "remove_between"
+removed_sha256 = "05cf638c9b676a6c78c84e39d5a3adbb6a14e05b842737039596714ab095bd4a"
+start = "reimu_1F17C	proc near\r\n"
+end = "reimu_1F17C	endp\r\n"
+replacement = "; natural C++ Reimu stack-octet phase\r\nextrn _reimu_phase_stack_octet:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v84-calls"
+kind = "replace"
+old = "call	reimu_1F17C"
+new = "call\t_reimu_phase_stack_octet"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-phase-stack-octet-v84"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-orb-stream-v83"]
+repo_source = "src/main/boss/reimu4_phase_stack_octet.cpp"
+overlay_path = "th04/r4p8.cpp"
+map_module = "th04/r4p8.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p8.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v85-build"
+trigger_units = ["th04-main-reimu-phase-dual-special-v85"]
+build_file = "Tupfile.lua"
+build_anchor = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	\"th04/r4p6.cpp\",\n	\"th04/r4p7.cpp\",\n	\"th04/r4p8.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+build_replacement = "	\"th04/enadd.cpp\",\n	\"th04/stdrun.cpp\",\n	\"th04/enupd.cpp\",\n	\"th04/r4movea.cpp\",\n	\"th04/r4moveb.cpp\",\n	\"th04/r4gath.cpp\",\n	\"th04/r4orb.cpp\",\n	\"th04/r4spin.cpp\",\n	\"th04/r4upd.cpp\",\n	\"th04/r4p1.cpp\",\n	\"th04/r4p2.cpp\",\n	\"th04/r4p3.cpp\",\n	\"th04/r4p4.cpp\",\n	\"th04/r4p5.cpp\",\n	\"th04/r4p6.cpp\",\n	\"th04/r4p7.cpp\",\n	\"th04/r4p8.cpp\",\n	\"th04/r4p9.cpp\",\n	{ \"th04_main.asm\", extra_inputs = {\n		th02_sprites[\"pellet\"],\n		th02_sprites[\"sparks\"],\n		th04_sprites[\"pelletbt\"],\n		th04_sprites[\"pointnum\"],\n	} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v85-natural"
+trigger_units = ["th04-main-reimu-phase-dual-special-v85"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "7fc12656642edc97a7e9450c1623143985d9b1ba5c2a3fc247740536d42f972a",
+  "ada9c4cb8c3de2cb6bba1b1afe4cbc5f017042457907caef5d2f60f7111b65ef",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v85"
+kind = "remove_between"
+removed_sha256 = "22aa7294f728fc8dd672eb3d2b302cb01c533b7da33c345ce1db52afb64011aa"
+start = "reimu_1F22A	proc near\r\n"
+end = "reimu_1F22A	endp\r\n"
+replacement = "; natural C++ Reimu dual-special phase\r\nextrn _reimu_phase_dual_special:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v85-calls"
+kind = "replace"
+old = "call	reimu_1F22A"
+new = "call\t_reimu_phase_dual_special"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-phase-dual-special-v85"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-stack-octet-v84"]
+repo_source = "src/main/boss/reimu4_phase_dual_special.cpp"
+overlay_path = "th04/r4p9.cpp"
+map_module = "th04/r4p9.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p9.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v86-build"
+trigger_units = ["th04-main-reimu-phase-stack-fan-v86"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v86-natural"
+trigger_units = ["th04-main-reimu-phase-stack-fan-v86"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "70fbd499aa569ae8b7ff8f539d4414a45b8b9f4e7d76ceabd6f5fe07974e1d29",
+  "3ddb2adbcd05e7d7fb5f3d447f21f211be6bd78f02853deec372cd3da6be2300",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v86"
+kind = "remove_between"
+removed_sha256 = "9e58084d63a44a56affc04a77109779895542f13d7c0e3885b50793b5d643c6f"
+start = "reimu_1F2F3\tproc near\r\n"
+end = "reimu_1F2F3\tendp\r\n"
+replacement = "; natural C++ Reimu stack-fan phase\r\nextrn _reimu_phase_stack_fan:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v86-calls"
+kind = "replace"
+old = "call\treimu_1F2F3"
+new = "call\t_reimu_phase_stack_fan"
+expected_count = 1
+
+[[units]]
+id = "th04-main-reimu-phase-stack-fan-v86"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-dual-special-v85"]
+repo_source = "src/main/boss/reimu4_phase_stack_fan.cpp"
+overlay_path = "th04/r4p10.cpp"
+map_module = "th04/r4p10.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p10.obj"
+
+[[build_replacements]]
+id = "th04-main036-reimu-v87-build"
+trigger_units = ["th04-main-reimu-bg-pulse-v87"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-v87-natural"
+trigger_units = ["th04-main-reimu-bg-pulse-v87"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "b794c062306587e67b860de83065e3a09ad41234c63f56045482f757aa2bb0e0",
+  "f52cf4078f77b9865afdc751d96931981b984ba84ddda3784a96135ac0f925e0",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-v87"
+kind = "remove_between"
+removed_sha256 = "2c401b1473c84c2e6b8aa2509ff37c05c7352ec230ad0d134ebea96293f8cf2c"
+start = "reimu_1F378\tproc near\r\n"
+end = "reimu_1F378\tendp\r\n"
+replacement = "; natural C++ Reimu background palette pulse\r\nextrn _reimu_bg_pulse:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-reimu-v87-calls"
+kind = "replace"
+old = "call\treimu_1F378"
+new = "call\t_reimu_bg_pulse"
+expected_count = 9
+
+[[units]]
+id = "th04-main-reimu-bg-pulse-v87"
+default_enabled = true
+requires_units = ["th04-main-reimu-phase-stack-fan-v86"]
+repo_source = "src/main/boss/reimu4_bg_pulse.cpp"
+overlay_path = "th04/r4p11.cpp"
+map_module = "th04/r4p11.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4p11.obj"

@@ -2067,3 +2067,208 @@ address = "0x2EB8C"
 name = "orbs_add_spinning(unsigned char,int)"
 evidence_id = "ev-th04-main-reimu-orbs-add-spinning-boundary-v75"
 reason = "New target-first MAIN_036 exact public admitted after complete raw/TASM/Ghidra boundary review and natural-C++ two-cold replay."
+
+# v76-v87: target-first MAIN_036 Reimu local-helper frontier before public reimu_update.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ebf3"
+address = "0x2EBF3"
+file_offset = "0x203F3"
+size = "0x122"
+name = "reimu_orbs_update()"
+owner_unit = "th04-main-reimu-orbs-update-v76"
+evidence_id = "ev-th04-main-reimu-orbs-update-boundary-v76"
+reason = "Pinned TASM defines one 290-byte PROC through 0x2ED14. Fresh Ghidra falsely splits it into 77-byte 0x2EBF3 and 213-byte 0x2EC40 functions; raw decode and exact owner reject the internal split."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ed15"
+address = "0x2ED15"
+file_offset = "0x20515"
+size = "0xA7"
+name = "reimu_phase_spread_yellow()"
+owner_unit = "th04-main-reimu-phase-spread-yellow-v77"
+evidence_id = "ev-th04-main-reimu-phase-spread-yellow-boundary-v77"
+reason = "Raw/TASM and fresh Ghidra close the complete 167-byte helper."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2edbc"
+address = "0x2EDBC"
+file_offset = "0x205BC"
+size = "0x65"
+name = "reimu_phase_special_blue()"
+owner_unit = "th04-main-reimu-phase-special-blue-v78"
+evidence_id = "ev-th04-main-reimu-phase-special-blue-boundary-v78"
+reason = "Raw/TASM and fresh Ghidra close the complete 101-byte helper."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ee21"
+address = "0x2EE21"
+file_offset = "0x20621"
+size = "0x52"
+name = "reimu_phase_orb_spawn()"
+owner_unit = "th04-main-reimu-phase-orb-spawn-v79"
+evidence_id = "ev-th04-main-reimu-phase-orb-spawn-boundary-v79"
+reason = "Raw/TASM and fresh Ghidra close the complete 82-byte helper."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ee73"
+address = "0x2EE73"
+file_offset = "0x20673"
+size = "0x114"
+name = "reimu_phase_cloud_ring_stack()"
+owner_unit = "th04-main-reimu-phase-cloud-ring-stack-v80"
+evidence_id = "ev-th04-main-reimu-phase-cloud-ring-stack-boundary-v80"
+reason = "Pinned TASM/raw define one 276-byte helper while fresh Ghidra constructs only 8 body bytes."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2ef87"
+address = "0x2EF87"
+file_offset = "0x20787"
+size = "0xC7"
+name = "reimu_phase_pellet_and_cloud()"
+owner_unit = "th04-main-reimu-phase-pellet-cloud-v81"
+evidence_id = "ev-th04-main-reimu-phase-pellet-cloud-boundary-v81"
+reason = "Pinned TASM/raw define one 199-byte helper while fresh Ghidra constructs only 25 body bytes."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f04e"
+address = "0x2F04E"
+file_offset = "0x2084E"
+size = "0xC3"
+name = "reimu_phase_random_aimed()"
+owner_unit = "th04-main-reimu-phase-random-aimed-v82"
+evidence_id = "ev-th04-main-reimu-phase-random-aimed-boundary-v82"
+reason = "Pinned TASM/raw tile the full 195-byte helper; Ghidra body construction is incomplete."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f111"
+address = "0x2F111"
+file_offset = "0x20911"
+size = "0x6B"
+name = "reimu_phase_orb_stream()"
+owner_unit = "th04-main-reimu-phase-orb-stream-v83"
+evidence_id = "ev-th04-main-reimu-phase-orb-stream-boundary-v83"
+reason = "Raw/TASM and fresh Ghidra close the complete 107-byte helper."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f17c"
+address = "0x2F17C"
+file_offset = "0x2097C"
+size = "0xAE"
+name = "reimu_phase_stack_octet()"
+owner_unit = "th04-main-reimu-phase-stack-octet-v84"
+evidence_id = "ev-th04-main-reimu-phase-stack-octet-boundary-v84"
+reason = "Pinned TASM/raw define one 174-byte helper while fresh Ghidra constructs only 75 body bytes."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f22a"
+address = "0x2F22A"
+file_offset = "0x20A2A"
+size = "0xC9"
+name = "reimu_phase_dual_special()"
+owner_unit = "th04-main-reimu-phase-dual-special-v85"
+evidence_id = "ev-th04-main-reimu-phase-dual-special-boundary-v85"
+reason = "Pinned TASM/raw define one 201-byte helper while fresh Ghidra constructs only 128 body bytes."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f2f3"
+address = "0x2F2F3"
+file_offset = "0x20AF3"
+size = "0x85"
+name = "reimu_phase_stack_fan()"
+owner_unit = "th04-main-reimu-phase-stack-fan-v86"
+evidence_id = "ev-th04-main-reimu-phase-stack-fan-boundary-v86"
+reason = "Raw/TASM and fresh Ghidra close the complete 133-byte helper."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f378"
+address = "0x2F378"
+file_offset = "0x20B78"
+size = "0x33"
+name = "reimu_bg_pulse()"
+owner_unit = "th04-main-reimu-bg-pulse-v87"
+evidence_id = "ev-th04-main-reimu-bg-pulse-boundary-v87"
+reason = "Raw/TASM and fresh Ghidra close the complete 51-byte helper through 0x2F3AA; public reimu_update starts at 0x2F3AB."
+
+[[new_exact]]
+id = "th04-main-fn-2ebf3"
+address = "0x2EBF3"
+name = "reimu_orbs_update()"
+evidence_id = "ev-th04-main-reimu-orbs-update-boundary-v76"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2ed15"
+address = "0x2ED15"
+name = "reimu_phase_spread_yellow()"
+evidence_id = "ev-th04-main-reimu-phase-spread-yellow-boundary-v77"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2edbc"
+address = "0x2EDBC"
+name = "reimu_phase_special_blue()"
+evidence_id = "ev-th04-main-reimu-phase-special-blue-boundary-v78"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2ee21"
+address = "0x2EE21"
+name = "reimu_phase_orb_spawn()"
+evidence_id = "ev-th04-main-reimu-phase-orb-spawn-boundary-v79"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2ee73"
+address = "0x2EE73"
+name = "reimu_phase_cloud_ring_stack()"
+evidence_id = "ev-th04-main-reimu-phase-cloud-ring-stack-boundary-v80"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2ef87"
+address = "0x2EF87"
+name = "reimu_phase_pellet_and_cloud()"
+evidence_id = "ev-th04-main-reimu-phase-pellet-cloud-boundary-v81"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2f04e"
+address = "0x2F04E"
+name = "reimu_phase_random_aimed()"
+evidence_id = "ev-th04-main-reimu-phase-random-aimed-boundary-v82"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2f111"
+address = "0x2F111"
+name = "reimu_phase_orb_stream()"
+evidence_id = "ev-th04-main-reimu-phase-orb-stream-boundary-v83"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2f17c"
+address = "0x2F17C"
+name = "reimu_phase_stack_octet()"
+evidence_id = "ev-th04-main-reimu-phase-stack-octet-boundary-v84"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2f22a"
+address = "0x2F22A"
+name = "reimu_phase_dual_special()"
+evidence_id = "ev-th04-main-reimu-phase-dual-special-boundary-v85"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2f2f3"
+address = "0x2F2F3"
+name = "reimu_phase_stack_fan()"
+evidence_id = "ev-th04-main-reimu-phase-stack-fan-boundary-v86"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+[[new_exact]]
+id = "th04-main-fn-2f378"
+address = "0x2F378"
+name = "reimu_bg_pulse()"
+evidence_id = "ev-th04-main-reimu-bg-pulse-boundary-v87"
+reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."

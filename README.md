@@ -296,8 +296,8 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 The control plane, target ingestion, locally attested Borland build chain, OMF
 integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
 attestation, repeated ReC98 TH01-TH05 cold-build calibration, and optional
-headless PC-98 startup/HDI boot smoke are operational. For `MAIN.EXE`, 31,136
-of 31,167 reviewed authored C/C++ bytes and 216 of 218 reviewed functions are
+headless PC-98 startup/HDI boot smoke are operational. For `MAIN.EXE`, 33,112
+of 33,143 reviewed authored C/C++ bytes and 228 of 230 reviewed functions are
 exact. Nine standalone original-style ASM units add 1,489 exact bytes outside
 that C/C++ denominator. The reviewed nonexact functions are `snd_load` (four blocked bytes) and the
 27-byte `enemy_bullet_template_push`, whose natural TC4 REP-copy setup order
@@ -305,7 +305,7 @@ still differs from target. `dialog_op` and `dialog_run` also have maintained
 source and exact code bytes, but remain outside the reviewed denominator
 because their ordered MZ relocations do not match.
 
-This is not yet a standalone game build. The 112 default exact owners compile
+This is not yet a standalone game build. The 124 default exact owners compile
 and raw-match through the pinned ReC98 cold-replay scaffold, but the repository
 does not yet contain all TH04 translation units, local headers, or a complete
 TH04-owned link graph. `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` have no reviewed
