@@ -1903,3 +1903,22 @@ address = "0x279F4"
 name = "marisa_update()"
 evidence_id = "ev-th04-main-marisa-update-boundary"
 reason = "Public FAR dispatcher admitted only after raw code and both trailing compiler switch regions account for every byte through the next public."
+
+# v67: first target-first MAIN_033 function after the completed Marisa family.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27cf3"
+address = "0x27CF3"
+file_offset = "0x194F3"
+size = "0xDE"
+name = "enemies_add(int,int,int,item_type_t)"
+owner_unit = "th04-main-enemies-add-v67"
+evidence_id = "ev-th04-main-enemies-add-boundary-v67"
+reason = "Ghidra starts at the true 0x27CF3 entry but constructs only 12/222 body bytes. Pinned TASM and gap-free raw decode tile the complete function through RET 8 at 0x27DD0; TLINK public std_run starts at the next byte 0x27DD1."
+next_public_address = "0x27DD1"
+
+[[new_exact]]
+id = "th04-main-fn-27cf3"
+address = "0x27CF3"
+name = "enemies_add(int,int,int,item_type_t)"
+evidence_id = "ev-th04-main-enemies-add-boundary-v67"
+reason = "New target-first MAIN_033 exact public admitted after raw/TASM/TLINK review overrides Ghidra's 12-byte truncated body and two-cold natural-C++ replay proves the full 0xDE owner."

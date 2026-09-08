@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **29,603 / 29,607 = 99.986490% exact**;
-- authored functions: **208 / 209 = 99.521531% exact**;
+- authored C/C++ bytes: **29,825 / 29,829 = 99.986590% exact**;
+- authored functions: **209 / 210 = 99.523810% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-marisa-main033-v66-precommit-web-009/receipt.json`.
-It passes all 104 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-enemies-add-v67-precommit-web-001/receipt.json`.
+It passes all 105 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -1070,3 +1070,28 @@ bytes exact (99.986490%)** and **208 / 209 reviewed functions exact
 (99.521531%)**. The only reviewed nonexact function remains `snd_load`, with
 four blocked bytes. Candidate expansion continues in the same MAIN_033 segment
 at the Mugetsu local family beginning at `0x2802F`.
+
+
+## v67: continue `MAIN_033` with `ENEMIES_ADD`
+
+The post-Marisa rescreen does not stop at public `marisa_update()`. `ENEMIES_ADD`
+starts at runtime `0x27CF3`; the next TLINK public `std_run()` begins at
+`0x27DD1`, so its complete target extent is 0xDE bytes. Ghidra constructs only
+12 bytes at the true entry. Pinned TASM and gap-free raw decode instead reach
+`RET 8` at `0x27DD0`, exactly one byte before the next public.
+
+Maintained `src/main/enemy/enemies_add.cpp` reproduces all 222 bytes naturally.
+The final one-byte source-shape mismatch was a TC4 type-width issue: a generic
+boolean condition produced AX-valued `1/0`, while explicitly byte-valued ternary
+branches keep the result in AL and reproduce the target common byte store.
+Focused `gptweb-enemies-add-v67-focused-web-006` and aggregate
+`gptweb-enemies-add-v67-precommit-web-001` pass two isolated materializations
+across raw/map/ordered-relocation/OMF/determinism surfaces. The aggregate now
+covers **105 default exact owners**.
+
+After v67, the reviewed result is **29,825 / 29,829 authored bytes exact
+(99.986590%)** and **209 / 210 reviewed functions exact (99.523810%)**.
+The only reviewed nonexact function remains `snd_load` with four blocked bytes.
+The next target-first `MAIN_033` frontier is `std_run()` at `0x27DD1` (0x6D
+bytes to `ENEMY_BULLET_TEMPLATE_PUSH` at `0x27E3E`), followed by
+`ENEMIES_UPDATE` at `0x27E59`.

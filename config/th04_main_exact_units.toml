@@ -2755,3 +2755,38 @@ overlay_path = "th04/m4tail.inl"
 build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/demo.cpp\",\n\t\"th04/ems.cpp\",\n"
 build_insert = "\t-- maintained Marisa MAIN_033 support overlay\n"
+
+[[build_replacements]]
+id = "th04-main033-enemies-add-v67"
+trigger_units = ["th04-main-enemies-add-v67"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m4tail.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/m4tail.cpp\",\n\t\"th04/enadd.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main033-enemies-add-natural-v67"
+trigger_units = ["th04-main-enemies-add-v67"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "daff2b81758fb58aa6b374319b96011f89a67a0d0da36f955316c78f1fbbe63a",
+  "2c851516c62ee5673b36e1f6e8ca08b7cf3f54d8baa5cd12fbfcc0840a3c1ece",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-enemies-add-v67"
+kind = "remove_between"
+removed_sha256 = "cf6961141daccb837bda6548f68a3c729566977628ba40b3a1727b42592bbab1"
+start = "public ENEMIES_ADD\r\nenemies_add\tproc near\r\n"
+end = "enemies_add\tendp\r\n"
+replacement = "; natural C++ enemies_add\r\nextrn ENEMIES_ADD:near\r\n\r\n"
+
+[[units]]
+id = "th04-main-enemies-add-v67"
+default_enabled = true
+requires_units = ["th04-main-marisa-update-v66"]
+repo_source = "src/main/enemy/enemies_add.cpp"
+overlay_path = "th04/enadd.cpp"
+map_module = "th04/enadd.cpp"
+map_mode = "exact"
+object_path = "obj/th04/enadd.obj"
