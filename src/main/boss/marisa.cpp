@@ -43,7 +43,7 @@ struct bit_t {
 	int hp;
 	int damage_this_frame;
 	/* ------------------------- */ int8_t unused_2;
-	char angle_speed;	// ACTUAL TYPE: unsigned char
+	signed char angle_speed;	// Target MAIN_033 signed comparisons require this exact type
 };
 
 #define bits (reinterpret_cast<bit_t *>(custom_entities))

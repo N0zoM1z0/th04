@@ -1596,3 +1596,310 @@ address = "0x2C2E5"
 name = "elly_update()"
 evidence_id = "ev-th04-main-elly-update-boundary-v49"
 reason = "New target-driven exact FAR dispatcher admitted after raw/TASM/TLINK review accounts for the code and all three trailing compiler switch regions through the next exact public."
+
+
+# v50-v58: target-first MAIN_033 Marisa bit/phase prefix.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-26c05"
+address = "0x26C05"
+file_offset = "0x18405"
+size = "0x65"
+name = "marisa_bits_init()"
+owner_unit = "th04-main-marisa-bits-init-v50"
+evidence_id = "ev-th04-main-marisa-bits-init-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 101-byte helper through RET at 0x26C69; the next local PROC starts at 0x26C6A."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-26c6a"
+address = "0x26C6A"
+file_offset = "0x1846A"
+size = "0x16D"
+name = "marisa_bits_update()"
+owner_unit = "th04-main-marisa-bits-update-v51"
+evidence_id = "ev-th04-main-marisa-bits-update-boundary"
+reason = "Pinned TASM and gap-free raw decode tile the complete 365-byte helper through RET at 0x26DD6. Ghidra has the true entry/end but sparse body construction; the next local PROC is 0x26DD7."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-26dd7"
+address = "0x26DD7"
+file_offset = "0x185D7"
+size = "0x28"
+name = "marisa_bits_fire()"
+owner_unit = "th04-main-marisa-bits-fire-v52"
+evidence_id = "ev-th04-main-marisa-bits-fire-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 40-byte helper through RET at 0x26DFE; seven target call sites use this local helper."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-26dff"
+address = "0x26DFF"
+file_offset = "0x185FF"
+size = "0x9E"
+name = "marisa_phase_cloud_pair()"
+owner_unit = "th04-main-marisa-cloud-pair-v53"
+evidence_id = "ev-th04-main-marisa-cloud-pair-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 158-byte helper through RET at 0x26E9C; the next local PROC starts at 0x26E9D."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-26e9d"
+address = "0x26E9D"
+file_offset = "0x1869D"
+size = "0x87"
+decode_size = "0x73"
+name = "marisa_phase_gather_bits()"
+owner_unit = "th04-main-marisa-gather-bits-v54"
+evidence_id = "ev-th04-main-marisa-gather-bits-boundary"
+reason = "Raw code decodes through RET at 0x26F0F. Five compare words and five near-jump words then exactly fill the compiler-owned extent through 0x26F23; Ghidra omits these trailing switch tables."
+compare_table_address = "0x26F10"
+compare_table_count = 5
+compare_table_values = [32, 34, 36, 64, 96]
+jump_table_address = "0x26F1A"
+jump_table_count = 5
+cs_base = "0x23A90"
+
+[[reviewed_exact_no_ghidra_internal_pointer]]
+id = "th04-main-fn-26f24"
+address = "0x26F24"
+file_offset = "0x18724"
+size = "0x3D"
+name = "MARISA_BIT_FIRE_SPREAD"
+owner_unit = "th04-main-marisa-bit-fire-v55"
+evidence_id = "ev-th04-main-marisa-bit-fire-boundary"
+reason = "Ghidra has no entry at the target callback. Raw decode tiles 61 bytes through RET 2 at 0x26F60, the next true Ghidra entry is 0x26F61, and the exact v56 owner contains a target function-pointer immediate resolving MAIN_03 offset 0x3494 back to 0x26F24."
+next_internal_address = "0x26F61"
+pointer_owner_unit = "th04-main-marisa-spread-bits-v56"
+pointer_word_address = "0x26F94"
+cs_base = "0x23A90"
+generated_public = "MARISA_BIT_FIRE_SPREAD"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-26f61"
+address = "0x26F61"
+file_offset = "0x18761"
+size = "0x100"
+name = "marisa_phase_spread_bits()"
+owner_unit = "th04-main-marisa-spread-bits-v56"
+evidence_id = "ev-th04-main-marisa-spread-bits-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 256-byte helper through RET at 0x27060; it also contains the target pointer anchor for the no-Ghidra spread callback."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27061"
+address = "0x27061"
+file_offset = "0x18861"
+size = "0x18"
+name = "MARISA_BIT_FIRE_SINGLE"
+owner_unit = "th04-main-marisa-bit-fire-single-v57"
+evidence_id = "ev-th04-main-marisa-bit-fire-single-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 24-byte Pascal callback through RET 2 at 0x27078; the next local PROC starts at 0x27079."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27079"
+address = "0x27079"
+file_offset = "0x18879"
+size = "0x104"
+name = "marisa_phase_star_bits()"
+owner_unit = "th04-main-marisa-star-bits-v58"
+evidence_id = "ev-th04-main-marisa-star-bits-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 260-byte helper through RET at 0x2717C; the next local PROC starts at 0x2717D."
+
+[[new_exact]]
+id = "th04-main-fn-26c05"
+address = "0x26C05"
+name = "marisa_bits_init()"
+evidence_id = "ev-th04-main-marisa-bits-init-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-26c6a"
+address = "0x26C6A"
+name = "marisa_bits_update()"
+evidence_id = "ev-th04-main-marisa-bits-update-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-26dd7"
+address = "0x26DD7"
+name = "marisa_bits_fire()"
+evidence_id = "ev-th04-main-marisa-bits-fire-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-26dff"
+address = "0x26DFF"
+name = "marisa_phase_cloud_pair()"
+evidence_id = "ev-th04-main-marisa-cloud-pair-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-26e9d"
+address = "0x26E9D"
+name = "marisa_phase_gather_bits()"
+evidence_id = "ev-th04-main-marisa-gather-bits-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-26f24"
+address = "0x26F24"
+name = "MARISA_BIT_FIRE_SPREAD"
+evidence_id = "ev-th04-main-marisa-bit-fire-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-26f61"
+address = "0x26F61"
+name = "marisa_phase_spread_bits()"
+evidence_id = "ev-th04-main-marisa-spread-bits-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-27061"
+address = "0x27061"
+name = "MARISA_BIT_FIRE_SINGLE"
+evidence_id = "ev-th04-main-marisa-bit-fire-single-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+[[new_exact]]
+id = "th04-main-fn-27079"
+address = "0x27079"
+name = "marisa_phase_star_bits()"
+evidence_id = "ev-th04-main-marisa-star-bits-boundary"
+reason = "New target-first MAIN_033 exact helper admitted after maintained natural-C++ two-cold replay and explicit raw/TASM/Ghidra-or-pointer boundary review."
+
+
+# v59-v66: continue target-first Stage 4 Marisa recovery through public update.
+# Ghidra is complete only for some local functions; every boundary is closed by
+# pinned TASM next-PROC/public structure and gap-free raw decode inside an exact
+# authored owner. v66 additionally owns all trailing compiler switch data.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2717d"
+address = "0x2717D"
+file_offset = "0x1897D"
+size = "0x1B8"
+name = "marisa_phase_orbit_cloud()"
+owner_unit = "th04-main-marisa-orbit-cloud-v59"
+evidence_id = "ev-th04-main-marisa-orbit-cloud-boundary"
+reason = "Target raw/TASM define one 440-byte helper through RET at 0x27334; fresh Ghidra agrees on the complete entry/end and the next local PROC is 0x27335."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27335"
+address = "0x27335"
+file_offset = "0x18B35"
+size = "0x15C"
+name = "marisa_phase_random_burst()"
+owner_unit = "th04-main-marisa-random-burst-v60"
+evidence_id = "ev-th04-main-marisa-random-burst-boundary"
+reason = "Pinned TASM and gap-free raw decode tile the full 348-byte helper through RET at 0x27490. Fresh Ghidra has the true start/end but sparse body construction; the next local PROC is 0x27491."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27491"
+address = "0x27491"
+file_offset = "0x18C91"
+size = "0x20D"
+name = "marisa_phase_special_angles()"
+owner_unit = "th04-main-marisa-special-angles-v61"
+evidence_id = "ev-th04-main-marisa-special-angles-boundary"
+reason = "Pinned TASM/raw tile the complete 525-byte helper through RET at 0x2769D. Ghidra has the correct min/max but severely sparse body construction; the next local PROC is 0x2769E."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2769e"
+address = "0x2769E"
+file_offset = "0x18E9E"
+size = "0x175"
+name = "marisa_phase_edge_stars()"
+owner_unit = "th04-main-marisa-edge-stars-v62"
+evidence_id = "ev-th04-main-marisa-edge-stars-boundary"
+reason = "Pinned TASM/raw tile the full 373-byte helper through RET at 0x27812. Fresh Ghidra is sparse but reaches the true end; the next local PROC is 0x27813."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-27813"
+address = "0x27813"
+file_offset = "0x19013"
+size = "0x7B"
+name = "marisa_phase_ring_cycle()"
+owner_unit = "th04-main-marisa-ring-cycle-v63"
+evidence_id = "ev-th04-main-marisa-ring-cycle-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 123-byte helper through RET at 0x2788D; the next local PROC starts at 0x2788E."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2788e"
+address = "0x2788E"
+file_offset = "0x1908E"
+size = "0x12E"
+name = "marisa_phase_spread_mirror()"
+owner_unit = "th04-main-marisa-spread-mirror-v64"
+evidence_id = "ev-th04-main-marisa-spread-mirror-boundary"
+reason = "Target raw/TLINK/TASM next-entry evidence closes 302 bytes through RET at 0x279BB. The residual TASM proc-far annotation is stale: target callers use a near call and fresh Ghidra classifies the actual entry as cdecl16near; raw bytes own the boundary."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-279bc"
+address = "0x279BC"
+file_offset = "0x191BC"
+size = "0x38"
+name = "marisa_hittest_phase()"
+owner_unit = "th04-main-marisa-hittest-v65"
+evidence_id = "ev-th04-main-marisa-hittest-boundary"
+reason = "Target raw, pinned TASM, and fresh Ghidra agree on the complete 56-byte helper through RET at 0x279F3; public marisa_update begins at 0x279F4."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-279f4"
+address = "0x279F4"
+file_offset = "0x191F4"
+size = "0x2FF"
+decode_size = "0x2CB"
+name = "marisa_update()"
+owner_unit = "th04-main-marisa-update-v66"
+evidence_id = "ev-th04-main-marisa-update-boundary"
+reason = "Raw code decodes through RETF at 0x27CBE. An 11-value/11-jump mode switch table and a four-entry top-level phase jump table then exactly fill the authored extent through 0x27CF2, immediately before public enemies_add at 0x27CF3. Ghidra cross-links this entry far outside the true function."
+next_public_address = "0x27CF3"
+trailing_switch_tables = [
+  { compare_table_address = "0x27CBF", compare_table_count = 11, compare_table_values = [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 255], jump_table_address = "0x27CD5", jump_table_count = 11, cs_base = "0x23A90" },
+  { jump_table_address = "0x27CEB", jump_table_count = 4, cs_base = "0x23A90" },
+]
+
+[[new_exact]]
+id = "th04-main-fn-2717d"
+address = "0x2717D"
+name = "marisa_phase_orbit_cloud()"
+evidence_id = "ev-th04-main-marisa-orbit-cloud-boundary"
+reason = "New target-local exact Marisa phase admitted after raw/TASM/Ghidra and two-cold exact-owner review."
+[[new_exact]]
+id = "th04-main-fn-27335"
+address = "0x27335"
+name = "marisa_phase_random_burst()"
+evidence_id = "ev-th04-main-marisa-random-burst-boundary"
+reason = "New target-local exact Marisa phase admitted after raw/TASM next-PROC review closes sparse Ghidra coverage."
+[[new_exact]]
+id = "th04-main-fn-27491"
+address = "0x27491"
+name = "marisa_phase_special_angles()"
+evidence_id = "ev-th04-main-marisa-special-angles-boundary"
+reason = "New target-local exact Marisa phase admitted after raw/TASM next-PROC review closes sparse Ghidra coverage."
+[[new_exact]]
+id = "th04-main-fn-2769e"
+address = "0x2769E"
+name = "marisa_phase_edge_stars()"
+evidence_id = "ev-th04-main-marisa-edge-stars-boundary"
+reason = "New target-local exact Marisa phase admitted after complete raw/TASM boundary review."
+[[new_exact]]
+id = "th04-main-fn-27813"
+address = "0x27813"
+name = "marisa_phase_ring_cycle()"
+evidence_id = "ev-th04-main-marisa-ring-cycle-boundary"
+reason = "New target-local exact Marisa phase admitted after complete raw/TASM/Ghidra review."
+[[new_exact]]
+id = "th04-main-fn-2788e"
+address = "0x2788E"
+name = "marisa_phase_spread_mirror()"
+evidence_id = "ev-th04-main-marisa-spread-mirror-boundary"
+reason = "New target-local exact Marisa phase admitted after target near-call/raw evidence overrides a stale residual proc-far annotation."
+[[new_exact]]
+id = "th04-main-fn-279bc"
+address = "0x279BC"
+name = "marisa_hittest_phase()"
+evidence_id = "ev-th04-main-marisa-hittest-boundary"
+reason = "Final local Marisa helper admitted after complete raw/TASM/Ghidra review before public marisa_update."
+[[new_exact]]
+id = "th04-main-fn-279f4"
+address = "0x279F4"
+name = "marisa_update()"
+evidence_id = "ev-th04-main-marisa-update-boundary"
+reason = "Public FAR dispatcher admitted only after raw code and both trailing compiler switch regions account for every byte through the next public."

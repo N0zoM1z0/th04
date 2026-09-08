@@ -5,7 +5,7 @@
 Control-plane, target-ingestion, build-chain calibration, headless Ghidra, and
 the optional DOSBox-X headless host smoke are ready for handoff. The first
 large `MAIN.EXE` authored reconstruction batch is also cold-replayed and
-accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 25,269 / 25,273 (99.984173%) exact, and reviewed authored functions are 191 / 192 (99.479167%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
+accepted. After the no-Ghidra/public/internal audits, natural `dialog_animate`, shared script-parameter recovery, exact `snd_mmd_resident`, the contiguous midboss/HUD/defeat TU recovery, the v21 contiguous `MAIN_035`/boss TU recovery, and target-driven recovery of `chasecrosses_add` from the formerly unowned `MAIN_034` prefix, reviewed authored C/C++ bytes are 29,603 / 29,607 (99.986490%) exact, and reviewed authored functions are 208 / 209 (99.521531%) exact. Nine standalone original-style ASM units totaling 1,489 bytes are
 separately exact and are not counted in the authored C/C++ percentage. No
 deterministic TH04 runtime scenario has been authored.
 
@@ -115,10 +115,10 @@ deterministic TH04 runtime scenario has been authored.
 - `scripts/replay_th04_main_exact_units.py` now replays complete maintained
   translation units and identity-preserving natural-source fragments through
   two isolated cold materializations. Latest aggregate receipt
-  `gptweb-elly-update-v49-precommit-web-003` passes all 87 current default-selected
+  `gptweb-marisa-main033-v66-precommit-web-009` passes all 104 current default-selected
   exact-replay units across raw bytes, containing/exact TLINK placement,
   ordered overlapping MZ relocations, OMF validity, and deterministic output.
-- The current reviewed authored byte denominator is 25,273 bytes; 25,269 bytes are exact.
+- The current reviewed authored byte denominator is 29,607 bytes; 29,603 bytes are exact.
   The only reviewed nonexact authored bytes are the four blocked bytes in
   `snd_load` (`PUSH DS`, target `89 C3` `MOV BX,AX`, and `POP DS`).
 - `snd_pmd_resident` is fully exact from maintained pure C. After `_ES = 0`,
@@ -641,3 +641,49 @@ The reviewed baseline is now **25,269 / 25,273 authored C/C++ bytes exact
 (99.984173%)** and **191 / 192 reviewed functions exact (99.479167%)**. The
 sole reviewed nonexact function remains `snd_load`, with the same four blocked
 bytes.
+
+### MAIN_033 Stage 4 Marisa target-first recovery (v50-v66)
+
+Whole-artifact rescreening after MAIN_034 completion proved that the authored
+candidate universe was still large: target `MAIN_033_TEXT` is a 0x32B7-byte
+compiler-like segment that had no authored owner at the v49 baseline. Target
+TASM begins that region with the Stage 4 Marisa local family at runtime
+`0x26C05`. ReC98 only contains a high-level reconstruction of the earlier
+`marisa_flystep_pointreflected()` helper; the v50-v66 functions were therefore
+recovered target-first from raw code, TASM control flow, exact data layout, and
+TC4.02 code-generation probes rather than copied from an upstream solution.
+
+Seventeen maintained natural-C++ logical owners now cover Marisa from
+`0x26C05..0x27CF2`, adding **4,334 reviewed authored bytes and 17 exact
+functions**. v66 `marisa_update()` has 0x2CB bytes of code through RETF at
+`0x27CBE`, followed by an 11-value / 11-jump mode switch and a four-entry
+phase jump table through `0x27CF2`; public `enemies_add` starts at `0x27CF3`.
+
+Ordered MZ relocations exposed two physical TC86 producer boundaries invisible
+in raw code. Borland TDUMP showed that FIXUPP entries are listed high-to-low
+inside one LEDATA/FIXUPP record, while successive records retain record order.
+The accepted physical layout is:
+
+- v50-v58: `0x26C05..0x2717C`, `th04/m4bits.cpp`, 0x578 bytes;
+- v59-v63: `0x2717D..0x2788D`, `th04/m4late.cpp`, 0x711 bytes;
+- v64-v66: `0x2788E..0x27CF2`, `th04/m4tail.cpp`, 0x465 bytes.
+
+A competing B4M+MAIN_033 fused-object hypothesis was rejected. Putting one
+fused object in the `boss_4m.cpp` slot preserved B4M placement but moved
+MAIN_033 from target `13A9:3175` to `13A9:563D`; TDUMP also showed that this
+fusion did not change MAIN_033 LEDATA chunking. The already exact B4M producer
+therefore remains independent.
+
+Focused replay `gptweb-marisa-main033-v66-focused-final-web-001` and 104-owner
+aggregate `gptweb-marisa-main033-v66-precommit-web-009` pass two independent
+cold materializations across raw bytes, map ownership, ordered MZ relocations,
+OMF validity, and deterministic normalized objects. Function review reports
+**208 / 209 exact (99.521531%)** with zero strict rejections. The reviewed byte
+baseline is **29,603 / 29,607 = 99.986490% exact**; `snd_load` accounts for the
+only four nonexact authored bytes.
+
+MAIN_033 is not exhausted. After the public enemy helpers, pinned TASM exposes
+Mugetsu local procedures beginning at **`0x2802F`** (0x15 bytes), followed by
+`0x28044`, `0x280BB`, `0x2812A`, `0x2821E`, `0x28314`, `0x2838A`, `0x2845E`,
+`0x284AC`, `0x28556`, `0x285E4`, and `0x28655` before `mugetsu_update()`.
+Resume target-first there.

@@ -622,6 +622,7 @@ overlay_path = "th04/main/boss/b4m.cpp"
 map_module = "th04/boss_4m.cpp"
 object_path = "obj/th04/boss_4m.obj"
 
+
 [[units]]
 id = "th04-main-module-th04-demo-cpp-b3ee"
 repo_source = "src/main/demo.cpp"
@@ -2162,3 +2163,595 @@ overlay_path = "th04/ellyall.cpp"
 map_module = "th04/ellyall.cpp"
 map_mode = "contains"
 object_path = "obj/th04/ellyall.obj"
+
+
+[[build_replacements]]
+id = "th04-main033-marisa-bits-init-v50"
+trigger_units = ["th04-main-marisa-bits-init-v50"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyall.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/y6all.cpp\",\n\t\"th04/ellyall.cpp\",\n\t\"th04/m4bits.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main033-marisa-bits-init-natural-v50"
+trigger_units = ["th04-main-marisa-bits-init-v50"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "9694992c3fe5c03ec7fcdae642dc4e7cf2868255ae4cf72f2eb9303ae8a212bc",
+  "e5b61586bab4c34cb691dc219225d65ebd81c5cf5fd4eb776d3c6adec6c4d177",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-bits-init-v50"
+kind = "remove_between"
+removed_sha256 = "0a0a4bde4ab3d776b438094e4d1231297875c74285c821e4bac7ec2ba822539c"
+start = "marisa_16C05\tproc near\r\n"
+end = "marisa_16C05\tendp\r\n"
+replacement = "; natural C++ Marisa bit initializer\r\nextrn _marisa_bits_init:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-bits-init-call-v50"
+kind = "replace"
+old = "call\tmarisa_16C05"
+new = "call\t_marisa_bits_init"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-bits-update-v51"
+kind = "remove_between"
+removed_sha256 = "701036e0135a0a105d1432d5840c6eba45c318f4900f3eb3282ce04957d51cd1"
+start = "marisa_16C6A\tproc near\r\n"
+end = "marisa_16C6A\tendp\r\n"
+replacement = "; natural C++ Marisa bit updater\r\nextrn _marisa_bits_update:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-bits-update-call-v51"
+kind = "replace"
+old = "call\tmarisa_16C6A"
+new = "call\t_marisa_bits_update"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-bits-fire-v52"
+kind = "remove_between"
+removed_sha256 = "de00c53e4462ea01cf2da410bd154e0cb81aacb86993c3e573b43e4ffce6fda3"
+start = "marisa_16DD7\tproc near\r\n"
+end = "marisa_16DD7\tendp\r\n"
+replacement = "; natural C++ Marisa bits fire helper\r\nextrn _marisa_bits_fire:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-bits-fire-calls-v52"
+kind = "replace"
+old = "call\tmarisa_16DD7"
+new = "call\t_marisa_bits_fire"
+expected_count = 7
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-phase-entry-v53"
+kind = "insert_before"
+anchor = "marisa_16A1A\tproc near\r\n"
+text = "public _marisa_phase_entry\r\n_marisa_phase_entry label near\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-cloud-pair-v53"
+kind = "remove_between"
+removed_sha256 = "914f6aecb24de7380b7c64a9cff9e5b94e688926236e775d657be5bdca87165b"
+start = "marisa_16DFF\tproc near\r\n"
+end = "marisa_16DFF\tendp\r\n"
+replacement = "; natural C++ Marisa cloud-pair phase\r\nextrn _marisa_phase_cloud_pair:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-cloud-pair-call-v53"
+kind = "replace"
+old = "call\tmarisa_16DFF"
+new = "call\t_marisa_phase_cloud_pair"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-gather-bits-v54"
+kind = "remove_between"
+removed_sha256 = "4c2bd888b94ef74cf556a627f9750e6cb40221ca8424bf110cabf1d7d5aa5e2a"
+start = "marisa_16E9D\tproc near\r\n"
+end = "\t\tdw offset loc_16EFE\r\n"
+replacement = "; natural C++ Marisa gather/bits phase\r\nextrn _marisa_phase_gather_bits:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-gather-bits-call-v54"
+kind = "replace"
+old = "call\tmarisa_16E9D"
+new = "call\t_marisa_phase_gather_bits"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-bit-fire-v55"
+kind = "remove_between"
+removed_sha256 = "18dc2a1f9d7626c840b617212777b5a1571b54e5c19321d02e49a29a3e836b41"
+start = "marisa_bit_fire_16F24\tproc near\r\n"
+end = "marisa_bit_fire_16F24\tendp\r\n"
+replacement = "; natural C++ Marisa bit-fire callback\r\nextrn MARISA_BIT_FIRE_SPREAD:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-bit-fire-offsets-v55"
+kind = "replace"
+old = "offset marisa_bit_fire_16F24"
+new = "offset MARISA_BIT_FIRE_SPREAD"
+expected_count = 3
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-spread-bits-v56"
+kind = "remove_between"
+removed_sha256 = "2f007e242656cb4d1a96ce436eb0dfce49efd9adaea8b8d142b234dc8f6f7de5"
+start = "marisa_16F61\tproc near\r\n"
+end = "marisa_16F61\tendp\r\n"
+replacement = "; natural C++ Marisa spread-bits phase\r\nextrn _marisa_phase_spread_bits:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-spread-bits-call-v56"
+kind = "replace"
+old = "call\tmarisa_16F61"
+new = "call\t_marisa_phase_spread_bits"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-bit-fire-single-v57"
+kind = "remove_between"
+removed_sha256 = "72b6bf7e70de2f356ebc843c898a83bc7a138d919fd5d7fa11ce09dfd5906810"
+start = "marisa_bit_fire_17061\tproc near\r\n"
+end = "marisa_bit_fire_17061\tendp\r\n"
+replacement = "; natural C++ Marisa single bit-fire callback\r\nextrn MARISA_BIT_FIRE_SINGLE:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-bit-fire-single-offsets-v57"
+kind = "replace"
+old = "offset marisa_bit_fire_17061"
+new = "offset MARISA_BIT_FIRE_SINGLE"
+expected_count = 5
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-star-bits-v58"
+kind = "remove_between"
+removed_sha256 = "3addc894076d9284b7b3a4f00f35c2616fc5cc0d9a31b75ae5bfb4658fbcd108"
+start = "marisa_17079\tproc near\r\n"
+end = "marisa_17079\tendp\r\n"
+replacement = "; natural C++ Marisa star-bits phase\r\nextrn _marisa_phase_star_bits:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-star-bits-call-v58"
+kind = "replace"
+old = "call\tmarisa_17079"
+new = "call\t_marisa_phase_star_bits"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-bit-angle-speed-v50"
+kind = "insert_before"
+anchor = "byte_25671\tdb ?\r\n"
+text = "public _marisa_bit_angle_speed\r\n_marisa_bit_angle_speed label byte\r\n"
+
+[[units]]
+id = "th04-main-marisa-bits-init-v50"
+default_enabled = true
+requires_units = ["th04-main-elly-update-v49"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-bits-update-v51"
+default_enabled = true
+requires_units = ["th04-main-marisa-bits-init-v50"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-bits-fire-v52"
+default_enabled = true
+requires_units = ["th04-main-marisa-bits-update-v51"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-cloud-pair-v53"
+default_enabled = true
+requires_units = ["th04-main-marisa-bits-fire-v52"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-gather-bits-v54"
+default_enabled = true
+requires_units = ["th04-main-marisa-cloud-pair-v53"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-bit-fire-v55"
+default_enabled = true
+requires_units = ["th04-main-marisa-gather-bits-v54"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-spread-bits-v56"
+default_enabled = true
+requires_units = ["th04-main-marisa-bit-fire-v55"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-bit-fire-single-v57"
+default_enabled = true
+requires_units = ["th04-main-marisa-spread-bits-v56"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+
+[[units]]
+id = "th04-main-marisa-star-bits-v58"
+default_enabled = true
+requires_units = ["th04-main-marisa-bit-fire-single-v57"]
+repo_source = "src/main/boss/marisa4_bits_init.cpp"
+overlay_path = "th04/m4bits.cpp"
+map_module = "th04/m4bits.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4bits.obj"
+
+[[build_replacements]]
+id = "th04-main033-marisa-late-producer-v59"
+trigger_units = ["th04-main-marisa-orbit-cloud-v59"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m4bits.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/m4bits.cpp\",\n\t\"th04/m4late.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main033-marisa-orbit-cloud-natural-v59"
+trigger_units = ["th04-main-marisa-orbit-cloud-v59"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "99f00b49d00545563630541b324c2ec3980707be6bc1e2fa1cd43ffca6f7287e",
+  "c96d43914e30676b21fdfb6828805058b1c5d210c3680ad884fee5d74fc2e45a",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-orbit-cloud-v59"
+kind = "remove_between"
+removed_sha256 = "6e61f99cd196e0f4bf47cee425bf1a9eedc1ed52139ff76588899e03f7dba6f5"
+start = "marisa_1717D\tproc near\r\n"
+end = "marisa_1717D\tendp\r\n"
+replacement = "; natural C++ Marisa orbit/cloud phase\r\nextrn _marisa_phase_orbit_cloud:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-orbit-cloud-call-v59"
+kind = "replace"
+old = "call\tmarisa_1717D"
+new = "call\t_marisa_phase_orbit_cloud"
+expected_count = 1
+
+[[units]]
+id = "th04-main-marisa-orbit-cloud-v59"
+default_enabled = true
+requires_units = ["th04-main-marisa-star-bits-v58"]
+repo_source = "src/main/boss/marisa4_late.cpp"
+overlay_path = "th04/m4late.cpp"
+map_module = "th04/m4late.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4late.obj"
+
+[[source_transforms]]
+id = "th04-main033-marisa-random-burst-natural-v60"
+trigger_units = ["th04-main-marisa-random-burst-v60"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "814d962874901bd604905458dc3c912380691365f385fd5b5dbd828f57767fed",
+  "45c6b837c3f42713e3bcb93afded72fb9a758f86731468edbbe9b3e803905268",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-random-burst-v60"
+kind = "remove_between"
+removed_sha256 = "2e48ff1e68f5aa872cda031fd6e139404149c093be0c1883959849252e1873ab"
+start = "marisa_17335\tproc near\r\n"
+end = "marisa_17335\tendp\r\n"
+replacement = "; natural C++ Marisa random burst phase\r\nextrn _marisa_phase_random_burst:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-random-burst-call-v60"
+kind = "replace"
+old = "call\tmarisa_17335"
+new = "call\t_marisa_phase_random_burst"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-pattern-variant-v60"
+kind = "insert_before"
+anchor = "byte_25674\tdb ?\r\n"
+text = "public _marisa_pattern_variant\r\n_marisa_pattern_variant label byte\r\n"
+
+[[units]]
+id = "th04-main-marisa-random-burst-v60"
+default_enabled = true
+requires_units = ["th04-main-marisa-orbit-cloud-v59"]
+repo_source = "src/main/boss/marisa4_late.cpp"
+overlay_path = "th04/m4late.cpp"
+map_module = "th04/m4late.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4late.obj"
+
+[[source_transforms]]
+id = "th04-main033-marisa-special-angles-natural-v61"
+trigger_units = ["th04-main-marisa-special-angles-v61"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "4eee00e438c5cc2a83fa0618364ce4dbb902581ab07c557f66ac659c2eb0c80f",
+  "6569e1c9f3df4ce56b62230c0297364d11626d6874a0a3f9d633d8865ff253c7",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-special-angles-v61"
+kind = "remove_between"
+removed_sha256 = "ffa898055842cd093924db854136ed49302b6269f7e40981d106226bd6d2e318"
+start = "marisa_17491\tproc near\r\n"
+end = "marisa_17491\tendp\r\n"
+replacement = "; natural C++ Marisa special-angle phase\r\nextrn _marisa_phase_special_angles:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-special-angles-call-v61"
+kind = "replace"
+old = "call\tmarisa_17491"
+new = "call\t_marisa_phase_special_angles"
+expected_count = 1
+
+[[units]]
+id = "th04-main-marisa-special-angles-v61"
+default_enabled = true
+requires_units = ["th04-main-marisa-random-burst-v60"]
+repo_source = "src/main/boss/marisa4_late.cpp"
+overlay_path = "th04/m4late.cpp"
+map_module = "th04/m4late.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4late.obj"
+
+[[source_transforms]]
+id = "th04-main033-marisa-edge-stars-natural-v62"
+trigger_units = ["th04-main-marisa-edge-stars-v62"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "9117b987e21cf5b45d3b7a63b424e471751343486d770c6737b22d3a73e3319e",
+  "8939a81ab10cc326d6cd869818264df9620acac82e0ac629d59748e36f39625d",
+]
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-edge-stars-v62"
+kind = "remove_between"
+removed_sha256 = "7580f79d0ab449dd5e563aa357311905fca76cbabb3ce6433bd6702d38544822"
+start = "marisa_1769E\tproc near\r\n"
+end = "marisa_1769E\tendp\r\n"
+replacement = "; natural C++ Marisa edge-star phase\r\nextrn _marisa_phase_edge_stars:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-edge-stars-call-v62"
+kind = "replace"
+old = "call\tmarisa_1769E"
+new = "call\t_marisa_phase_edge_stars"
+expected_count = 1
+
+[[units]]
+id = "th04-main-marisa-edge-stars-v62"
+default_enabled = true
+requires_units = ["th04-main-marisa-special-angles-v61"]
+repo_source = "src/main/boss/marisa4_late.cpp"
+overlay_path = "th04/m4late.cpp"
+map_module = "th04/m4late.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4late.obj"
+
+[[source_transforms]]
+id = "th04-main033-marisa-ring-cycle-natural-v63"
+trigger_units = ["th04-main-marisa-ring-cycle-v63"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = ["9cd787281527733a92ce67a2de35f70a74db144b704daa86461cf6410a73d66e", "0a48dde011ca9ab95ae57cd996abb2900cc99f270e3e4f6e5140490dc2e83a14"]
+[[source_transforms.ops]]
+id = "remove-main033-marisa-ring-cycle-v63"
+kind = "remove_between"
+removed_sha256 = "3ec729817adb5419dfc58338d595f659674c2b73abe77dc517366c026b858143"
+start = "marisa_17813\tproc near\r\n"
+end = "marisa_17813\tendp\r\n"
+replacement = "; natural C++ Marisa ring-cycle phase\r\nextrn _marisa_phase_ring_cycle:near\r\n\r\n"
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-ring-cycle-call-v63"
+kind = "replace"
+old = "call\tmarisa_17813"
+new = "call\t_marisa_phase_ring_cycle"
+expected_count = 1
+[[units]]
+id = "th04-main-marisa-ring-cycle-v63"
+default_enabled = true
+requires_units = ["th04-main-marisa-edge-stars-v62"]
+repo_source = "src/main/boss/marisa4_late.cpp"
+overlay_path = "th04/m4late.cpp"
+map_module = "th04/m4late.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4late.obj"
+
+[[build_replacements]]
+id = "th04-main033-marisa-tail-producer-v64"
+trigger_units = ["th04-main-marisa-spread-mirror-v64"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m4late.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/m4late.cpp\",\n\t\"th04/m4tail.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main033-marisa-spread-mirror-natural-v64"
+trigger_units = ["th04-main-marisa-spread-mirror-v64"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = ["4ed6dca56e164c91c7916e88f1d72ccea0410f281b1395be15118322cc741d07", "c7347920e88da20ee4e74847823180d6c87f5a019c0d6ee3169e90918f04caf0"]
+[[source_transforms.ops]]
+id = "remove-main033-marisa-spread-mirror-v64"
+kind = "remove_between"
+removed_sha256 = "d6001c6ba7266c205352e4410ea12a7d3655375900699f2d9286851f2eba2c22"
+start = "marisa_1788E\tproc far\r\n"
+end = "marisa_1788E\tendp\r\n"
+replacement = "; natural C++ Marisa spread-mirror phase\r\nextrn _marisa_phase_spread_mirror:near\r\n\r\n"
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-spread-mirror-call-v64"
+kind = "replace"
+old = "call\tnear ptr marisa_1788E"
+new = "call\t_marisa_phase_spread_mirror"
+expected_count = 1
+[[units]]
+id = "th04-main-marisa-spread-mirror-v64"
+default_enabled = true
+requires_units = ["th04-main-marisa-ring-cycle-v63"]
+repo_source = "src/main/boss/marisa4_tail.cpp"
+overlay_path = "th04/m4tail.cpp"
+map_module = "th04/m4tail.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4tail.obj"
+
+[[source_transforms]]
+id = "th04-main033-marisa-hittest-natural-v65"
+trigger_units = ["th04-main-marisa-hittest-v65"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = ["73ec35cdd0e58863f8d2492211d033600ddb73d42bd4ebe8dc4acbad3247994b", "aaf747810b79947adf7266bebec2d039a7a73986102fae8506b47ed40564d300"]
+[[source_transforms.ops]]
+id = "remove-main033-marisa-hittest-v65"
+kind = "remove_between"
+removed_sha256 = "30c08278b0bb27339c68a0d5b04f25be6043f1fe49b13e28a84d1dbd4174820f"
+start = "marisa_179BC\tproc near\r\n"
+end = "marisa_179BC\tendp\r\n"
+replacement = "; natural C++ Marisa hit-test phase helper\r\nextrn _marisa_hittest_phase:near\r\n\r\n"
+[[source_transforms.ops]]
+id = "retarget-main033-marisa-hittest-call-v65"
+kind = "replace"
+old = "call\tmarisa_179BC"
+new = "call\t_marisa_hittest_phase"
+expected_count = 1
+[[units]]
+id = "th04-main-marisa-hittest-v65"
+default_enabled = true
+requires_units = ["th04-main-marisa-spread-mirror-v64"]
+repo_source = "src/main/boss/marisa4_tail.cpp"
+overlay_path = "th04/m4tail.cpp"
+map_module = "th04/m4tail.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4tail.obj"
+
+[[source_transforms]]
+id = "th04-main033-marisa-update-natural-v66"
+trigger_units = ["th04-main-marisa-update-v66"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = ["fc89d041b6d78d04c3441c1426a302474cb6ee020c6aac90474ac5967d885501", "4b9c247b818122c3bea3601fa15830aac9366c67dc874b4afa816edcfd22b84b"]
+
+[[source_transforms.ops]]
+id = "remove-main033-marisa-update-v66"
+kind = "remove_between"
+removed_sha256 = "aefcc24f8d4273ae753394c94e6e5e220ec3ce230219031fd0f6603adba6aef4"
+start = "@marisa_update$qv\tproc far\r\n"
+end = "\t\tdw offset loc_17C44\r\n"
+replacement = "; natural C++ Marisa update dispatcher\r\nextrn @MARISA_UPDATE$QV:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "drop-preexisting-marisa-update-public-v66"
+kind = "replace_optional"
+old = "public @MARISA_UPDATE$QV\r\n"
+new = ""
+
+[[source_transforms.ops]]
+id = "drop-preexisting-reimu-marisa-bg-public-v66"
+kind = "replace_optional"
+old = "public @REIMU_MARISA_BG_RENDER$QV\r\n"
+new = ""
+
+[[source_transforms.ops]]
+id = "alias-reimu-marisa-bg-pascal-v66"
+kind = "insert_before"
+anchor = "@reimu_marisa_bg_render$qv\tproc near\r\n"
+text = "public @REIMU_MARISA_BG_RENDER$QV\r\n@REIMU_MARISA_BG_RENDER$QV label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-phase-move-v66"
+kind = "insert_before"
+anchor = "marisa_16AE9\tproc near\r\n"
+text = "public _marisa_phase_move\r\n_marisa_phase_move label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-prev-mode-v66"
+kind = "insert_before"
+anchor = "byte_2566E\tdb ?\r\n"
+text = "public _marisa_prev_mode\r\n_marisa_prev_mode label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-prev-bits-v66"
+kind = "insert_before"
+anchor = "byte_2566F\tdb ?\r\n"
+text = "public _marisa_prev_bits_alive\r\n_marisa_prev_bits_alive label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-palette-dir-v66"
+kind = "insert_before"
+anchor = "byte_25670\tdb ?\r\n"
+text = "public _marisa_palette_direction\r\n_marisa_palette_direction label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main033-marisa-bitless-cycle-v66"
+kind = "insert_before"
+anchor = "byte_25673\tdb ?\r\n"
+text = "public _marisa_bitless_cycle\r\n_marisa_bitless_cycle label byte\r\n"
+
+[[units]]
+id = "th04-main-marisa-update-v66"
+default_enabled = true
+requires_units = ["th04-main-marisa-hittest-v65"]
+repo_source = "src/main/boss/marisa4_main033.cpp"
+overlay_path = "th04/m4tail.cpp"
+map_module = "th04/m4tail.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4tail.obj"
+
+[[build_inserts]]
+id = "th04-main033-marisa-main033-source-v66"
+trigger_units = ["th04-main-marisa-update-v66"]
+repo_source = "src/main/boss/marisa4_tail.cpp"
+overlay_path = "th04/m4tail.inl"
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/demo.cpp\",\n\t\"th04/ems.cpp\",\n"
+build_insert = "\t-- maintained Marisa MAIN_033 support overlay\n"

@@ -559,6 +559,95 @@ def reviewed_exact_no_ghidra_internal_call_reviews(functions, metadata, publics,
         })
     return accepted
 
+
+def reviewed_exact_no_ghidra_internal_pointer_reviews(functions, metadata, publics, target):
+    """Review an internal callback missed by Ghidra using a target pointer anchor."""
+    policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
+    owners = {str(owner["unit_id"]): owner for owner in exact_authored_owners()}
+    raw_target = target.read_bytes()
+    accepted = []
+
+    def file_offset_for(linear: int) -> int:
+        return linear - 0x10000 + 0x1800
+
+    def read_word(linear: int) -> int:
+        offset = file_offset_for(linear)
+        if offset < 0 or offset + 2 > len(raw_target):
+            raise ValueError(f"no-Ghidra internal-pointer word address 0x{linear:X} escapes target")
+        return int.from_bytes(raw_target[offset:offset + 2], "little")
+
+    for override in policy.get("reviewed_exact_no_ghidra_internal_pointer", []):
+        address = int(str(override["address"]), 0)
+        file_offset = int(str(override["file_offset"]), 0)
+        size = int(str(override["size"]), 0)
+        owner_unit = str(override["owner_unit"])
+        owner = owners.get(owner_unit)
+        if owner is None:
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} lacks named exact owner")
+        if address in functions:
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} unexpectedly has Ghidra entry")
+        if file_offset != file_offset_for(address):
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} file offset mismatch")
+        if not (int(owner["start"]) <= address and address + size <= int(owner["end"])):
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} escapes exact owner")
+
+        generated_public = override.get("generated_public")
+        if generated_public is None:
+            if address in publics:
+                raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} unexpectedly has TLINK public")
+        elif str(generated_public) not in publics.get(address, []):
+            raise ValueError(
+                f"no-Ghidra internal-pointer address 0x{address:X} lacks configured generated public {generated_public!r}"
+            )
+
+        next_internal = int(str(override["next_internal_address"]), 0)
+        if address + size != next_internal or next_internal not in functions:
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} next-internal boundary mismatch")
+        next_data = metadata.get(next_internal)
+        if next_data is None or int(next_data["body_min"], 16) != next_internal:
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} next internal lacks Ghidra metadata")
+        if next_data.get("is_thunk") != "false" or next_data.get("is_external") != "false":
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} next internal is thunk/external")
+
+        pointer_owner_unit = str(override["pointer_owner_unit"])
+        pointer_owner = owners.get(pointer_owner_unit)
+        if pointer_owner is None:
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} lacks pointer owner")
+        pointer_word_address = int(str(override["pointer_word_address"]), 0)
+        if not (
+            int(pointer_owner["start"]) <= pointer_word_address
+            and pointer_word_address + 2 <= int(pointer_owner["end"])
+        ):
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} pointer word escapes named exact owner")
+        cs_base = int(str(override["cs_base"]), 0)
+        expected_word = address - cs_base
+        if not (0 <= expected_word <= 0xFFFF):
+            raise ValueError(f"no-Ghidra internal-pointer address 0x{address:X} cannot be represented by configured CS base")
+        pointer_word = read_word(pointer_word_address)
+        if pointer_word != expected_word:
+            raise ValueError(
+                f"no-Ghidra internal-pointer address 0x{address:X} pointer word mismatch: "
+                f"0x{pointer_word:04X} != 0x{expected_word:04X}"
+            )
+
+        decoded = linear_decode(target, address, file_offset, size)
+        decoded.pop("instruction_addresses", None)
+        accepted.append({
+            "id": str(override["id"]), "address": address, "address_hex": f"0x{address:X}",
+            "ghidra_name": "", "public": str(override["name"]), "owner_unit": owner_unit,
+            "owner_start": owner["start"], "owner_end": owner["end"], "file_offset": file_offset,
+            "source": owner["source"], "owner_name": owner["owner_name"], "size": size,
+            "body_min": None, "body_max": None, "body_addresses": 0,
+            "evidence_id": str(override["evidence_id"]), "reason": str(override["reason"]),
+            "decode": decoded, "switch_review": None,
+            "boundary_mode": f"no-Ghidra current entry; next Ghidra entry 0x{next_internal:X}",
+            "pointer_owner_unit": pointer_owner_unit,
+            "pointer_word_address": f"0x{pointer_word_address:X}",
+            "pointer_word": f"0x{pointer_word:04X}",
+            "resolved_pointer_target": f"0x{cs_base + pointer_word:X}",
+        })
+    return accepted
+
 def parse_metadata(path: Path) -> dict[int, dict[str, str]]:
     result: dict[int, dict[str, str]] = {}
     for block in path.read_text(encoding="utf-8").strip().split("\n\n"):
@@ -1336,6 +1425,7 @@ def main() -> int:
         manual_exact: list[dict[str, object]] = []
         manual_exact_no_ghidra: list[dict[str, object]] = []
         manual_exact_no_ghidra_internal_call: list[dict[str, object]] = []
+        manual_exact_no_ghidra_internal_pointer: list[dict[str, object]] = []
         manual_exact_internal: list[dict[str, object]] = []
         manual_exact_internal_call: list[dict[str, object]] = []
         manual_exact_extent: list[dict[str, object]] = []
@@ -1344,6 +1434,7 @@ def main() -> int:
             policy.get("reviewed_exact", [])
             or policy.get("reviewed_exact_no_ghidra", [])
             or policy.get("reviewed_exact_no_ghidra_internal_call", [])
+            or policy.get("reviewed_exact_no_ghidra_internal_pointer", [])
             or policy.get("reviewed_exact_internal", [])
             or policy.get("reviewed_exact_internal_call", [])
             or policy.get("reviewed_exact_extent", [])
@@ -1360,6 +1451,11 @@ def main() -> int:
         if policy.get("reviewed_exact_no_ghidra_internal_call", []):
             assert args.target is not None
             manual_exact_no_ghidra_internal_call = reviewed_exact_no_ghidra_internal_call_reviews(
+                functions, parsed_metadata, publics, args.target
+            )
+        if policy.get("reviewed_exact_no_ghidra_internal_pointer", []):
+            assert args.target is not None
+            manual_exact_no_ghidra_internal_pointer = reviewed_exact_no_ghidra_internal_pointer_reviews(
                 functions, parsed_metadata, publics, args.target
             )
         if policy.get("reviewed_exact_internal", []):
@@ -1390,7 +1486,7 @@ def main() -> int:
             )
         manual_exact_all = [
             *manual_exact, *manual_exact_no_ghidra, *manual_exact_no_ghidra_internal_call,
-            *manual_exact_internal, *manual_exact_internal_call, *manual_exact_extent
+            *manual_exact_no_ghidra_internal_pointer, *manual_exact_internal, *manual_exact_internal_call, *manual_exact_extent
         ]
         reviewed_addresses = {
             int(item["address"]) for item in [*manual_exact_all, *reviewed_nonexact]
@@ -1409,6 +1505,7 @@ def main() -> int:
                 "manual_exact_count": len(manual_exact_all),
                 "manual_exact_no_ghidra_count": len(manual_exact_no_ghidra),
                 "manual_exact_no_ghidra_internal_call_count": len(manual_exact_no_ghidra_internal_call),
+                "manual_exact_no_ghidra_internal_pointer_count": len(manual_exact_no_ghidra_internal_pointer),
                 "manual_exact_internal_count": len(manual_exact_internal),
                 "manual_exact_internal_call_count": len(manual_exact_internal_call),
                 "manual_exact_extent_count": len(manual_exact_extent),

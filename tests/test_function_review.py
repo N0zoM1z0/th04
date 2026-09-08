@@ -1171,6 +1171,69 @@ generated_public = "fixture_generated()"
                     )
 
 
+
+    def test_no_ghidra_internal_pointer_requires_target_pointer_anchor(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text(
+                """schema_version = 1
+[[reviewed_exact_no_ghidra_internal_pointer]]
+id = "fn"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x2"
+name = "callback"
+owner_unit = "callback-owner"
+evidence_id = "ev-fixture"
+reason = "synthetic no-Ghidra pointer review"
+next_internal_address = "0x10002"
+pointer_owner_unit = "pointer-owner"
+pointer_word_address = "0x10010"
+cs_base = "0x10000"
+generated_public = "CALLBACK"
+""",
+                encoding="utf-8",
+            )
+            target = root / "target.bin"
+            data = bytearray(0x1820)
+            data[0x1800:0x1802] = b"\x90\xC3"
+            data[0x1810:0x1812] = (0).to_bytes(2, "little")
+            target.write_bytes(data)
+            owners = [
+                {"unit_id": "callback-owner", "start": 0x10000, "end": 0x10002,
+                 "file_start": 0x1800, "source": "src/callback.cpp", "owner_name": "callback"},
+                {"unit_id": "pointer-owner", "start": 0x10010, "end": 0x10020,
+                 "file_start": 0x1810, "source": "src/pointer.cpp", "owner_name": "pointer"},
+            ]
+            functions = {0x10002: "FUN_10002"}
+            metadata = {0x10002: {"address": "0x10002", "body_min": "0x10002",
+                                  "body_max": "0x10003", "body_addresses": "2",
+                                  "is_thunk": "false", "is_external": "false"}}
+            publics = {0x10000: ["CALLBACK"]}
+            decoded = {"instruction_count": 2, "instruction_addresses": [0x10000, 0x10001],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10002"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=decoded):
+                accepted = review.reviewed_exact_no_ghidra_internal_pointer_reviews(
+                    functions, metadata, publics, target
+                )
+            self.assertEqual(len(accepted), 1)
+            self.assertEqual(accepted[0]["resolved_pointer_target"], "0x10000")
+
+            data[0x1810:0x1812] = (1).to_bytes(2, "little")
+            target.write_bytes(data)
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=decoded):
+                with self.assertRaisesRegex(ValueError, "pointer word mismatch"):
+                    review.reviewed_exact_no_ghidra_internal_pointer_reviews(
+                        functions, metadata, publics, target
+                    )
+
+
 class AutomaticManualOverlapTests(unittest.TestCase):
     def test_writer_rejects_automatic_manual_same_address(self) -> None:
         with TemporaryDirectory() as temporary:

@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **25,269 / 25,273 = 99.984173% exact**;
-- authored functions: **191 / 192 = 99.479167% exact**;
+- authored C/C++ bytes: **29,603 / 29,607 = 99.986490% exact**;
+- authored functions: **208 / 209 = 99.521531% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -46,8 +46,8 @@ run:
 
 Historical checked-in acceptance evidence remains replayable. The current
 full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-elly-update-v49-precommit-web-003/receipt.json`.
-It passes all 87 current default-selected exact-replay owners in both isolated
+`.analysis/reconstruction/exact-unit-replay/gptweb-marisa-main033-v66-precommit-web-009/receipt.json`.
+It passes all 104 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -1023,3 +1023,50 @@ without relying on Ghidra completeness.
 After v49, the reviewed result is **25,269 / 25,273 authored bytes exact
 (99.984173%)** and **191 / 192 functions exact (99.479167%)**. `snd_load`
 remains the only reviewed nonexact function, with four blocked bytes.
+
+## v50-v66: Stage 4 Marisa and TC86 producer-boundary recovery
+
+A whole-artifact coverage audit after v49 deliberately ignored the fact that
+MAIN_034 itself was exhausted. It found that `MAIN_033_TEXT` remained a large
+0x32B7-byte residual compiler segment. Target TASM identifies its prefix as the
+Stage 4 Marisa boss implementation, beginning with local `marisa_16C05` at
+runtime `0x26C05`. ReC98 does not provide high-level implementations for these
+local phases, so all accepted source here was reconstructed from target
+instructions/control flow and verified with the pinned TC4.02 toolchain.
+
+v50-v66 recover **4,334 bytes / 17 functions** through public `marisa_update()`.
+The code-generation work yielded several reusable natural-C++ rules: declaration
+order controls BP-local placement independently of execution order; `volatile`
+can prevent loop-index promotion; `register` declaration order selects SI/DI;
+function-scope register lifetime can force target callee-saved prologues; and
+explicit `signed char` is required where target signed byte comparisons are
+observable. None of these sources uses inline assembly, codestrings, `__emit__`,
+object patching, or target-byte injection.
+
+Raw-byte equality alone was insufficient to recover physical TU boundaries.
+With v50-v65 in one object, v60/v61 had identical relocation sites but the wrong
+ordered MZ relocation list. TC4-only object probes plus Borland TDUMP showed
+that one FIXUPP record lists higher offsets first, while distinct LEDATA/FIXUPP
+records preserve record order. Starting a new producer at v59 `0x2717D` makes
+both v60 sound-call relocations share the first record and splits the two v61
+relocations across the 0x400 boundary. A second producer start at v64 `0x2788E`
+puts both v64 sound-call relocations in one record. The accepted split is
+0x578-byte `m4bits.cpp`, 0x711-byte `m4late.cpp`, and 0x465-byte `m4tail.cpp`.
+A tested B4M+MAIN_033 fusion was rejected because it necessarily misplaces one
+of the two target segments and does not change MAIN_033 LEDATA chunking.
+
+`marisa_update()` is a 0x2FF-byte reviewed owner: 0x2CB code bytes through RETF
+plus 0x34 compiler switch data. The trailing region is exactly an 11-value
+compare table `[0,1,2,3,4,5,6,7,10,11,255]`, its 11 near jump targets, and a
+four-entry phase jump table, ending immediately before `enemies_add` at
+`0x27CF3`. The function reviewer validates every table target instead of using
+Ghidra's cross-linked body.
+
+Focused `gptweb-marisa-main033-v66-focused-final-web-001` and aggregate
+`gptweb-marisa-main033-v66-precommit-web-009` are current-manifest two-cold
+PASS receipts. The aggregate covers **104 default exact owners** with no prior
+owner regression. The reviewed result after v66 is **29,603 / 29,607 authored
+bytes exact (99.986490%)** and **208 / 209 reviewed functions exact
+(99.521531%)**. The only reviewed nonexact function remains `snd_load`, with
+four blocked bytes. Candidate expansion continues in the same MAIN_033 segment
+at the Mugetsu local family beginning at `0x2802F`.
