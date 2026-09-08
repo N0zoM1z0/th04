@@ -2696,3 +2696,22 @@ address = "0x1B9BB"
 name = "map_free()"
 evidence_id = "ev-th04-main-end-map-boundary-v100"
 reason = "END_TEXT map_free admitted after Ghidra/TASM/TLINK/raw agreement and exact replay."
+
+# v101: BOSS_FG_TEXT Gengetsu renderer. Fresh Ghidra stops after ENTER/PUSH SI;
+# pinned TASM + raw RET + exact segment-suffix ownership prove the complete body.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-22f5f"
+address = "0x22F5F"
+file_offset = "0x1475F"
+size = "0x18E"
+name = "gengetsu_fg_render()"
+owner_unit = "th04-main-gengetsu-fg-v101"
+evidence_id = "ev-th04-main-gengetsu-fg-boundary-v101"
+reason = "Fresh Ghidra constructs only the first 5 bytes (ENTER 2; PUSH SI). Pinned TASM keeps the PROC open through BOSS_FG_TEXT end, and gap-free target decode closes at RET 0x230EC; exact natural-C++ ownership proves the full 0x18E extent."
+
+[[new_exact]]
+id = "th04-main-fn-22f5f"
+address = "0x22F5F"
+name = "gengetsu_fg_render()"
+evidence_id = "ev-th04-main-gengetsu-fg-boundary-v101"
+reason = "Target-first renderer admitted only after Ghidra truncation was overridden by TASM/raw/segment-end proof and focused plus 139-owner exact cold replay."

@@ -11,7 +11,7 @@ python3 scripts/status.py
 `config/units.csv` owns byte state,
 `config/th04_main_authored_functions.csv` owns reviewed function state, and
 `config/th04_function_boundaries.csv` owns all-artifact routing. Git history,
-`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v100
+`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v101
 batch detail without presenting old frontiers as current instructions.
 
 ## Scope and current meaning
@@ -157,16 +157,17 @@ evidence IDs are indexed in `config/knowledge.csv`.
 
 ## Latest boundary expansion
 
-v99-v100 expand the reviewed denominator outside the completed MAIN_036 frontier.
+v99-v101 expand the reviewed denominator outside the completed MAIN_036 frontier.
 Three contiguous END_TEXT FAR functions (`end_game_good`, `end_game_bad`, and
 `end_extra`) are exact from one maintained pure-C++ 0x7C-byte producer. v100
 then recovers the final 0x65 bytes of END_TEXT (`map_load` + `map_free`) from
-target-first natural C++ despite ReC98 having no C++ body. Focused and 138-owner
-aggregate cold replays preserve raw bytes, exact map contribution, ordered
-relocation overlap, and deterministic TC86 OMF. The segment is deliberately
-tiled as C++ prefix + unchanged target-derived ASM middle + C++ suffix.
-Candidate-C++ paths that require inline ASM/codestring remain explicitly
-unaccepted.
+target-first natural C++ despite ReC98 having no C++ body. v101 then corrects
+`gengetsu_fg_render` from Ghidra's sparse 0x5-byte body to the TASM/raw/segment-
+end-proved 0x18E-byte BOSS_FG_TEXT suffix. Focused and 139-owner aggregate cold
+replays preserve raw bytes, exact map contribution, ordered relocation overlap,
+and deterministic TC86 OMF. Segment suffixes remain natural C++ without
+manufactured padding. Candidate-C++ paths that require inline ASM/codestring
+remain explicitly unaccepted.
 
 ## Historical detail
 

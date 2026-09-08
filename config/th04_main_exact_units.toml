@@ -4324,3 +4324,64 @@ overlay_path = "th04/mapend.cpp"
 map_module = "th04/mapend.cpp"
 map_mode = "exact"
 object_path = "obj/th04/mapend.obj"
+
+
+[[build_replacements]]
+id = "th04-main-gengetsu-fg-v101-build"
+trigger_units = ["th04-main-gengetsu-fg-v101"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/mapend.cpp\",\n\t\"th04/slowdown.cpp\",\n"
+build_replacement = "\t\"th04/mapend.cpp\",\n\t\"th04/g6fg.cpp\",\n\t\"th04/slowdown.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-gengetsu-fg-v101-natural"
+trigger_units = ["th04-main-gengetsu-fg-v101"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "2447d0fd65d56bb223f05973119794256f41476e2a9e63799ecafaa9dc13deb6",
+  "21274d1333d0ea83e299d2807a3de668b4a568e3fb096a5741e44fc7213ecfc6",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-boss-fg-gengetsu-v101"
+kind = "remove_between"
+removed_sha256 = "05533335048682246d2a61727ec15ef5e5f1a897e913f92117ae3e1bf8ea16db"
+start = "public @GENGETSU_FG_RENDER$QV\r\n"
+end = "@gengetsu_fg_render$qv\tendp\r\n"
+replacement = "; natural C++ Gengetsu foreground renderer\r\nextrn @gengetsu_fg_render$qv:near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-gengetsu-bomb-inv-render-v101"
+kind = "insert_before"
+anchor = "sub_11647\tproc near\r\n"
+text = "public _gengetsu_bomb_inv_render\r\n_gengetsu_bomb_inv_render label near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-thicklasers-render-v101"
+kind = "insert_before"
+anchor = "sub_E2C3\tproc near\r\n"
+text = "public _thicklasers_render\r\n_thicklasers_render label near\r\n"
+
+[[source_transforms.ops]]
+id = "name-main-gengetsu-damage-flash-cycle-v101"
+kind = "replace"
+old = "byte_2D058"
+new = "_gengetsu_damage_flash_cycle"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main-gengetsu-damage-flash-cycle-v101"
+kind = "insert_before"
+anchor = "_gengetsu_damage_flash_cycle\tdb ?\r\n"
+text = "public _gengetsu_damage_flash_cycle\r\n"
+
+[[units]]
+id = "th04-main-gengetsu-fg-v101"
+default_enabled = true
+requires_units = ["th04-main-end-map-v100"]
+repo_source = "src/main/boss/gengetsu6_fg_render.cpp"
+overlay_path = "th04/g6fg.cpp"
+map_module = "th04/g6fg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6fg.obj"
