@@ -5,12 +5,12 @@ provisional until each boundary is reconciled with exact target control flow.
 
 | Measure | Count |
 | --- | ---: |
-| Tracked `MAIN.EXE` authored function candidates | 230 |
+| Tracked `MAIN.EXE` authored function candidates | 243 |
 | Origin/boundary review pending | 0 |
-| Confirmed authored functions | 230 |
-| Source-present authored mappings | 228 |
-| Accepted exact functions | 228 |
-| Accepted exact authored bytes | 33,112 |
+| Confirmed authored functions | 243 |
+| Source-present authored mappings | 241 |
+| Accepted exact functions | 241 |
+| Accepted exact authored bytes | 35,980 |
 | Exact / currently confirmed authored bytes | 99.91% |
 | Exact original-style ASM units | 9 / 1,489 bytes |
 

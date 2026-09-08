@@ -10,8 +10,8 @@ repository source and is re-attested against the pinned Japanese TH04 target.
 
 The current reviewed results are:
 
-- authored C/C++ bytes: **33,112 / 33,143 = 99.906466% exact**;
-- authored functions: **228 / 230 = 99.130435% exact**;
+- authored C/C++ bytes: **35,980 / 36,011 = 99.913915% exact**;
+- authored functions: **241 / 243 = 99.176955% exact**;
 - exact standalone original-style ASM: 9 units / 1,489 bytes, tracked
   separately and excluded from the authored C/C++ percentage.
 
@@ -45,9 +45,9 @@ run:
 11. fails the aggregate cohort if any selected unit fails any dimension.
 
 Historical checked-in acceptance evidence remains replayable. The current
-full-owner pre-commit replay is private at
-`.analysis/reconstruction/exact-unit-replay/gptweb-reimu-v87-precommit-web-001/receipt.json`.
-It passes all 124 current default-selected exact-replay owners in both isolated
+full-owner intake replay is private at
+`.analysis/reconstruction/exact-unit-replay/codex-final-v94-aggregate-001/receipt.json`.
+It passes all 132 current default-selected exact-replay owners in both isolated
 cold materializations, including the 0x9B6-byte contiguous MAIN_035/BOSS TU,
 the 0x1CB-byte contiguous midboss/HUD/defeat TU, and the 11-byte pure-C
 `snd_se_reset` owner,
@@ -1182,10 +1182,40 @@ These are all normal C++ source constraints.
 
 Focused `gptweb-reimu-v87-focused-web-001` passes the dependency closure and
 `gptweb-reimu-v87-precommit-web-001` passes **124 default exact owners** twice.
-The reviewed result is **33,112 / 33,143 authored bytes exact (99.906466%)** and
-**228 / 230 reviewed functions exact (99.130435%)**. Only v69's 27-byte copy
-helper and four `snd_load` bytes remain nonexact.
+At this historical checkpoint, the reviewed result was **33,112 / 33,143
+authored bytes exact (99.906466%)** and **228 / 230 reviewed functions exact
+(99.130435%)**. Only v69's 27-byte copy helper and four `snd_load` bytes were
+nonexact.
 
 The next candidate is public FAR `reimu_update()` at `0x2F3AB..0x2F8ED`, total
 0x543 bytes. Raw/TASM show 0x515 bytes of code plus a 0x2E compiler table tail;
 Ghidra's decompiled body is cross-linked and cannot define the authored extent.
+
+## v88-v94: Reimu dispatcher and first Gengetsu family
+
+v88 recovers public FAR `reimu_update()` at `0x2F3AB..0x2F8ED`. The accepted
+0x543-byte owner consists of 0x515 code bytes through `RETF` plus a 0x2E tail
+containing one sparse mode table and one phase jump table. Fresh Ghidra
+cross-links the function body outside the true owner, so pinned TASM, raw
+decoding, table-target validation, and exact map ownership define the extent.
+
+v89-v94 recover twelve Gengetsu procedures across seven natural C++ owners,
+`0x2F8EE..0x2FEDE`, totaling 1,521 bytes. Ghidra has no function entry at
+`0x2F8EE` or `0x2F97A` and sparsely constructs several other bodies. Two
+compiler-owned layout details are explicit in the ledgers:
+
+- the three-function v89 prefix must remain one physical TC86 producer to keep
+  the alignment byte before the middle function's sparse switch tables; and
+- `gengetsu_cycle_phase()` owns 0xC4 code bytes plus a contiguous five-word
+  jump table, for a complete 0xCE-byte exact extent.
+
+Focused receipt `codex-final-v94-focused-001` passes the 67-owner dependency
+closure twice. Aggregate receipt `codex-final-v94-aggregate-001` passes all
+**132 default exact owners** twice. The current reviewed result is **35,980 /
+36,011 authored bytes exact (99.913915%)** and **241 / 243 reviewed functions
+exact (99.176955%)**. The only reviewed nonexact bytes remain the 27-byte
+`enemy_bullet_template_push` and four bytes in `snd_load`.
+
+Resume target-first recovery at local Gengetsu procedure `0x2FEDF`, followed by
+`0x30050`, `0x300B6`, `0x30195`, `0x30202`, `0x3023B`, and public FAR
+`gengetsu_update()` at `0x3026A`.

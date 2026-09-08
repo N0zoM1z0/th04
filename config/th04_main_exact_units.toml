@@ -3649,3 +3649,376 @@ overlay_path = "th04/r4p11.cpp"
 map_module = "th04/r4p11.cpp"
 map_mode = "exact"
 object_path = "obj/th04/r4p11.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-reimu-update-v88-build"
+trigger_units = ["th04-main-reimu-update-v88"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-reimu-update-natural-v88"
+trigger_units = ["th04-main-reimu-update-v88"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "ad291a558f791671a9bb7bd9995b55085fbe9776863de8c5bedaf0a861b0268c",
+  "ad20208e1cf7a98c2dab2cfe57dd904e3dfc0f9343b4039884bd63e145eabdf7",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-reimu-update-v88"
+kind = "remove_between"
+removed_sha256 = "9bb3948ab2425d8c88956ea087819ddf80ee228eaa81216482c4e6c5b348bfe2"
+start = "@reimu_update$qv\tproc far\r\n"
+end = "\t\tdw offset loc_1F845\r\n"
+replacement = "; natural C++ Reimu update dispatcher\r\nextrn @REIMU_UPDATE$QV:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "drop-preexisting-reimu-update-public-v88"
+kind = "replace_optional"
+old = "public @REIMU_UPDATE$QV\r\n"
+new = ""
+
+[[source_transforms.ops]]
+id = "alias-reimu-orbs-visible-v88"
+kind = "insert_before"
+anchor = "byte_2D03C\tdb ?\r\n"
+text = "public _reimu_orbs_visible\r\n_reimu_orbs_visible label byte\r\n"
+
+[[units]]
+id = "th04-main-reimu-update-v88"
+default_enabled = true
+requires_units = ["th04-main-reimu-bg-pulse-v87"]
+repo_source = "src/main/boss/reimu4_update.cpp"
+overlay_path = "th04/r4update.cpp"
+map_module = "th04/r4update.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4update.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-prefix-v89-build"
+trigger_units = ["th04-main-gengetsu-prefix-v89"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-prefix-natural-v89"
+trigger_units = ["th04-main-gengetsu-prefix-v89"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "ce788fdd574e297d01069349fd8e89d8133fda8605e407cc34d51c39c36192ca",
+  "ce7057ec6d676a1750a50f80c6f1b79dd1b23ecee86c4acfebccda6f216c23aa",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-prefix-v89"
+kind = "remove_between"
+removed_sha256 = "44ca91f792983f2c69f5586e2906cb6334900711ff9233ff9d550a3c8e13bc88"
+start = "gengetsu_1F8EE\tproc near\r\n"
+end = "gengetsu_1F97A\tendp\r\n"
+replacement = "; natural C++ Gengetsu prefix producer\r\nextrn _gengetsu_gathers_add_dual:near\r\nextrn _gengetsu_gather_intro:near\r\nextrn _gengetsu_wave_step:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-gather-intro-v89"
+kind = "replace"
+old = "call\tgengetsu_1F903"
+new = "call\t_gengetsu_gather_intro"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-wave-step-v89"
+kind = "replace"
+old = "call\tgengetsu_1F97A"
+new = "call\t_gengetsu_wave_step"
+expected_count = 4
+
+[[units]]
+id = "th04-main-gengetsu-prefix-v89"
+default_enabled = true
+requires_units = ["th04-main-reimu-update-v88"]
+repo_source = "src/main/boss/gengetsu6_prefix.cpp"
+overlay_path = "th04/g6pre.cpp"
+map_module = "th04/g6pre.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6pre.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-wave-bounce-v90-build"
+trigger_units = ["th04-main-gengetsu-wave-bounce-v90"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-v90-natural"
+trigger_units = ["th04-main-gengetsu-wave-bounce-v90"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "c418dbf573413631c3e0a463d7b1f2f034f37cade7555146bbd7c28df47acc81",
+  "7b6e2f271a17e872cb95e43b04ac130695271830022ae362c2e7a742c264e7df",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-v90"
+kind = "remove_between"
+removed_sha256 = "efc1cc50fe0980011d160aab9729f54c94ea9127e7c32c34f10686b87bd403bf"
+start = "gengetsu_1F9C5\tproc near\r\n"
+end = "gengetsu_1F9C5\tendp\r\n"
+replacement = "; natural C++ Gengetsu wave bounce\r\nextrn _gengetsu_wave_bounce:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-v90-call-1"
+kind = "replace"
+old = "call\tgengetsu_1F9C5"
+new = "call\t_gengetsu_wave_bounce"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-wave-bounce-v90"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-prefix-v89"]
+repo_source = "src/main/boss/gengetsu6_wave_bounce.cpp"
+overlay_path = "th04/g6wave2.cpp"
+map_module = "th04/g6wave2.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6wave2.obj"
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-anim-ring-v91-build"
+trigger_units = ["th04-main-gengetsu-anim-ring-v91"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-v91-natural"
+trigger_units = ["th04-main-gengetsu-anim-ring-v91"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "b4d3f58cf7c2618fcf383dfec6f223e91cf720c7d2d0178c33ad06e50112ad34",
+  "70e5d4d6103bdbd85da5d90cbc5a601318d4145a5df4645037efc1c259c72091",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-v91"
+kind = "remove_between"
+removed_sha256 = "0d5c75df9c569bbb01fbaed21830f01213a71924cf670342c60a4a5ecdc10001"
+start = "gengetsu_1FA33\tproc near\r\n"
+end = "gengetsu_1FAAA\tendp\r\n"
+replacement = "; natural C++ Gengetsu animation/ring pair\r\nextrn _gengetsu_phase_state:near\r\nextrn _gengetsu_ring_phase:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-v91-call-1"
+kind = "replace"
+old = "call\tgengetsu_1FA33"
+new = "call\t_gengetsu_phase_state"
+expected_count = 7
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-v91-call-2"
+kind = "replace"
+old = "call\tgengetsu_1FAAA"
+new = "call\t_gengetsu_ring_phase"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-anim-ring-v91"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-wave-bounce-v90"]
+repo_source = "src/main/boss/gengetsu6_anim_ring.cpp"
+overlay_path = "th04/g6anim.cpp"
+map_module = "th04/g6anim.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6anim.obj"
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-patterns1-v92-build"
+trigger_units = ["th04-main-gengetsu-patterns1-v92"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t\"th04/g6pat1.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-v92-natural"
+trigger_units = ["th04-main-gengetsu-patterns1-v92"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "41a09a46898c3d8b9e9ae924e66889825f19cb24369b878f1135f9bfaedb27b2",
+  "9f89a5695815db2f99cb089e3e7bbb323cc55e82751d066623c846e765ee491d",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-v92"
+kind = "remove_between"
+removed_sha256 = "8842f1c64a691a5c449973018ec6cb629ef9e92ee9f48f233288fad7bd2d9e12"
+start = "gengetsu_1FAF7\tproc near\r\n"
+end = "gengetsu_1FB86\tendp\r\n"
+replacement = "; natural C++ Gengetsu pattern pair 1\r\nextrn _gengetsu_spread_pair_phase:near\r\nextrn _gengetsu_bounce_phase:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-v92-call-1"
+kind = "replace"
+old = "call\tgengetsu_1FAF7"
+new = "call\t_gengetsu_spread_pair_phase"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-v92-call-2"
+kind = "replace"
+old = "call\tgengetsu_1FB86"
+new = "call\t_gengetsu_bounce_phase"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-patterns1-v92"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-anim-ring-v91"]
+repo_source = "src/main/boss/gengetsu6_patterns1.cpp"
+overlay_path = "th04/g6pat1.cpp"
+map_module = "th04/g6pat1.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6pat1.obj"
+
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-turn-gather-v93-build"
+trigger_units = ["th04-main-gengetsu-turn-gather-v93"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t\"th04/g6pat1.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t\"th04/g6pat1.cpp\",\n\t\"th04/g6turn.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-turn-gather-v93-natural"
+trigger_units = ["th04-main-gengetsu-turn-gather-v93"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "1807b2a4d7897bae911d058f744bf5f39de826ca653566c131aa33c132536981",
+  "6f247900bb48e1e47b9616c3a10f583488079096f677aa98268e55e562bf0a27",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-turn-gather-v93"
+kind = "remove_between"
+removed_sha256 = "cb866210c14a5e19e14ce618805ad115afb8d0f2e535a488bca3bb9ad18acdbb"
+start = "gengetsu_1FC46\tproc near\r\n"
+end = "gengetsu_1FC46\tendp\r\n"
+replacement = "; natural C++ Gengetsu turn/gather phase\r\nextrn _gengetsu_turn_gather_phase:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-turn-gather-v93-call"
+kind = "replace"
+old = "call\tgengetsu_1FC46"
+new = "call\t_gengetsu_turn_gather_phase"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-turn-gather-v93"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-patterns1-v92"]
+repo_source = "src/main/boss/gengetsu6_turn_gather.cpp"
+overlay_path = "th04/g6turn.cpp"
+map_module = "th04/g6turn.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6turn.obj"
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-cycle-v93b-build"
+trigger_units = ["th04-main-gengetsu-cycle-v93b"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t\"th04/g6pat1.cpp\",\n\t\"th04/g6turn.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t\"th04/g6pat1.cpp\",\n\t\"th04/g6turn.cpp\",\n\t\"th04/g6cycle.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-cycle-v93b-natural"
+trigger_units = ["th04-main-gengetsu-cycle-v93b"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "3533d3476414c3a9e1c9fecf66bc3244a8f0800884bac5fcf2e031319fedcedc",
+  "164c8c5c5750a73bb82abb9c2fe87b430706e57ce4d4659f8e13353923640771",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-cycle-v93b"
+kind = "remove_between"
+removed_sha256 = "24b9a042faf8bc19b6b64d04f6887f871b701fbb363e435a3351eb40b109d1c4"
+start = "gengetsu_1FD30\tproc near\r\n"
+end = "\t\tdw offset loc_1FDE6\r\n"
+replacement = "; natural C++ Gengetsu cycle phase\r\nextrn _gengetsu_cycle_phase:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-cycle-v93b-call"
+kind = "replace"
+old = "call\tgengetsu_1FD30"
+new = "call\t_gengetsu_cycle_phase"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-cycle-v93b"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-turn-gather-v93"]
+repo_source = "src/main/boss/gengetsu6_cycle.cpp"
+overlay_path = "th04/g6cycle.cpp"
+map_module = "th04/g6cycle.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6cycle.obj"
+
+[[build_replacements]]
+id = "th04-main036-gengetsu-patterns3-v94-build"
+trigger_units = ["th04-main-gengetsu-patterns3-v94"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t\"th04/g6pat1.cpp\",\n\t\"th04/g6turn.cpp\",\n\t\"th04/g6cycle.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/enadd.cpp\",\n\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n\t\"th04/r4movea.cpp\",\n\t\"th04/r4moveb.cpp\",\n\t\"th04/r4gath.cpp\",\n\t\"th04/r4orb.cpp\",\n\t\"th04/r4spin.cpp\",\n\t\"th04/r4upd.cpp\",\n\t\"th04/r4p1.cpp\",\n\t\"th04/r4p2.cpp\",\n\t\"th04/r4p3.cpp\",\n\t\"th04/r4p4.cpp\",\n\t\"th04/r4p5.cpp\",\n\t\"th04/r4p6.cpp\",\n\t\"th04/r4p7.cpp\",\n\t\"th04/r4p8.cpp\",\n\t\"th04/r4p9.cpp\",\n\t\"th04/r4p10.cpp\",\n\t\"th04/r4p11.cpp\",\n\t\"th04/r4update.cpp\",\n\t\"th04/g6pre.cpp\",\n\t\"th04/g6wave2.cpp\",\n\t\"th04/g6anim.cpp\",\n\t\"th04/g6pat1.cpp\",\n\t\"th04/g6turn.cpp\",\n\t\"th04/g6cycle.cpp\",\n\t\"th04/g6pat3.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main036-gengetsu-v94-natural"
+trigger_units = ["th04-main-gengetsu-patterns3-v94"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "4a1eb6ab568b76a3ab0a11ee6235c9fe78adc7aa38b8d7cbcde838b06c14fbc4",
+  "61a757b73a020b4020a1431bdc2aeb27f9246d5c1201127582d6a8e94bf71ab8",
+]
+
+[[source_transforms.ops]]
+id = "remove-main036-gengetsu-v94"
+kind = "remove_between"
+removed_sha256 = "f186d9a7353632e2a9fcc553b74654dbe90cfd3928cbedc6d1cca2c8953115de"
+start = "gengetsu_1FDFE\tproc near\r\n"
+end = "gengetsu_1FE6A\tendp\r\n"
+replacement = "; natural C++ Gengetsu pattern pair 3\r\nextrn _gengetsu_aimed_spread_phase:near\r\nextrn _gengetsu_mirror_spread_phase:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-v94-call-1"
+kind = "replace"
+old = "call\tgengetsu_1FDFE"
+new = "call\t_gengetsu_aimed_spread_phase"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main036-gengetsu-v94-call-2"
+kind = "replace"
+old = "call\tgengetsu_1FE6A"
+new = "call\t_gengetsu_mirror_spread_phase"
+expected_count = 1
+
+[[units]]
+id = "th04-main-gengetsu-patterns3-v94"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-cycle-v93b"]
+repo_source = "src/main/boss/gengetsu6_patterns3.cpp"
+overlay_path = "th04/g6pat3.cpp"
+map_module = "th04/g6pat3.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6pat3.obj"

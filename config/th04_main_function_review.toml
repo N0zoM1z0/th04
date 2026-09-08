@@ -2272,3 +2272,255 @@ address = "0x2F378"
 name = "reimu_bg_pulse()"
 evidence_id = "ev-th04-main-reimu-bg-pulse-boundary-v87"
 reason = "New target-first MAIN_036 exact helper admitted only after exact-owner raw/TASM extent review; Ghidra is provisional and false internal splits are not promoted."
+
+# v88: public Reimu FAR dispatcher; Ghidra cross-links this entry outside the true owner.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f3ab"
+address = "0x2F3AB"
+file_offset = "0x20BAB"
+size = "0x543"
+decode_size = "0x515"
+name = "reimu_update()"
+owner_unit = "th04-main-reimu-update-v88"
+evidence_id = "ev-th04-main-reimu-update-boundary-v88"
+reason = "Pinned TASM and gap-free raw decode define 0x515 code bytes through RETF, followed by a contiguous 5-value/5-jump sparse mode switch and a 13-entry top-level phase jump table that exactly fill the 0x543 exact owner through 0x2F8ED. Fresh Ghidra cross-links the true 0x2F3AB entry to unrelated earlier code and truncates the tail, so its body range is not used as the extent oracle."
+trailing_switch_tables = [
+  { compare_table_address = "0x2F8C0", compare_table_count = 5, compare_table_values = [0, 1, 2, 3, 255], jump_table_address = "0x2F8CA", jump_table_count = 5, cs_base = "0x23A90" },
+  { jump_table_address = "0x2F8D4", jump_table_count = 13, cs_base = "0x23A90" },
+]
+
+[[new_exact]]
+id = "th04-main-fn-2f3ab"
+address = "0x2F3AB"
+name = "reimu_update()"
+evidence_id = "ev-th04-main-reimu-update-boundary-v88"
+reason = "Public Reimu FAR dispatcher admitted only after natural-C++ two-cold replay and raw/TASM review account for every code and compiler-table byte in the complete 0x543 owner."
+
+# v89-v94: target-first Gengetsu local procedures through 0x2FEDE.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2f8ee"
+address = "0x2F8EE"
+file_offset = "0x210EE"
+size = "0x15"
+name = "gengetsu_gathers_add_dual()"
+owner_unit = "th04-main-gengetsu-prefix-v89"
+evidence_id = "ev-th04-main-gengetsu-prefix-boundary-v89"
+reason = "Target Ghidra has no entry at this pinned-TASM procedure. Gap-free raw decode closes the 21-byte function at RET immediately before the next exact C++ public."
+next_public_address = "0x2F903"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f903"
+address = "0x2F903"
+file_offset = "0x21103"
+size = "0x77"
+decode_size = "0x66"
+name = "gengetsu_gather_intro()"
+owner_unit = "th04-main-gengetsu-prefix-v89"
+evidence_id = "ev-th04-main-gengetsu-prefix-boundary-v89"
+reason = "Pinned TASM and gap-free raw decode close 0x66 code bytes through RET; one alignment byte, four compare words, and four jump words exactly fill the physical producer extent before the next local procedure."
+next_public_address = "0x2F97A"
+table_metadata_address = "0x2F969"
+table_metadata_value = "0x00"
+compare_table_address = "0x2F96A"
+compare_table_count = 4
+compare_table_values = [48, 50, 52, 64]
+jump_table_address = "0x2F972"
+jump_table_count = 4
+cs_base = "0x23A90"
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2f97a"
+address = "0x2F97A"
+file_offset = "0x2117A"
+size = "0x4B"
+name = "gengetsu_wave_step()"
+owner_unit = "th04-main-gengetsu-prefix-v89"
+evidence_id = "ev-th04-main-gengetsu-prefix-boundary-v89"
+reason = "Target Ghidra has no entry at this pinned-TASM procedure. Gap-free raw decode closes the 75-byte function at RET immediately before the next exact C++ public."
+next_public_address = "0x2F9C5"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2f9c5"
+address = "0x2F9C5"
+file_offset = "0x211C5"
+size = "0x6E"
+name = "gengetsu_wave_bounce()"
+owner_unit = "th04-main-gengetsu-wave-bounce-v90"
+evidence_id = "ev-th04-main-gengetsu-wave-bounce-boundary-v90"
+reason = "Pinned TASM and gap-free raw decode close the complete 110-byte function at the next local procedure; fresh Ghidra omits four terminal body bytes."
+next_public_address = "0x2FA33"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2fa33"
+address = "0x2FA33"
+file_offset = "0x21233"
+size = "0x77"
+name = "gengetsu_phase_state()"
+owner_unit = "th04-main-gengetsu-anim-ring-v91"
+evidence_id = "ev-th04-main-gengetsu-anim-ring-boundary-v91"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 119-byte function through RET at the next local procedure."
+next_public_address = "0x2FAAA"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2faaa"
+address = "0x2FAAA"
+file_offset = "0x212AA"
+size = "0x4D"
+name = "gengetsu_ring_phase()"
+owner_unit = "th04-main-gengetsu-anim-ring-v91"
+evidence_id = "ev-th04-main-gengetsu-anim-ring-boundary-v91"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 77-byte function through RET at the next local procedure."
+next_public_address = "0x2FAF7"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2faf7"
+address = "0x2FAF7"
+file_offset = "0x212F7"
+size = "0x8F"
+name = "gengetsu_spread_pair_phase()"
+owner_unit = "th04-main-gengetsu-patterns1-v92"
+evidence_id = "ev-th04-main-gengetsu-patterns1-boundary-v92"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 143-byte function through RET at the next local procedure."
+next_public_address = "0x2FB86"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2fb86"
+address = "0x2FB86"
+file_offset = "0x21386"
+size = "0xC0"
+name = "gengetsu_bounce_phase()"
+owner_unit = "th04-main-gengetsu-patterns1-v92"
+evidence_id = "ev-th04-main-gengetsu-patterns1-boundary-v92"
+reason = "Pinned TASM and gap-free raw decode close the complete 192-byte function at the next local procedure; fresh Ghidra has the correct min/max but a sparse body."
+next_public_address = "0x2FC46"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2fc46"
+address = "0x2FC46"
+file_offset = "0x21446"
+size = "0xEA"
+name = "gengetsu_turn_gather_phase()"
+owner_unit = "th04-main-gengetsu-turn-gather-v93"
+evidence_id = "ev-th04-main-gengetsu-turn-gather-boundary-v93"
+reason = "Pinned TASM and gap-free raw decode close the complete 234-byte function at the next local procedure; fresh Ghidra has the correct entry but a sparse body."
+next_public_address = "0x2FD30"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2fd30"
+address = "0x2FD30"
+file_offset = "0x21530"
+size = "0xCE"
+decode_size = "0xC4"
+name = "gengetsu_cycle_phase()"
+owner_unit = "th04-main-gengetsu-cycle-v93b"
+evidence_id = "ev-th04-main-gengetsu-cycle-boundary-v93b"
+reason = "Pinned TASM and gap-free raw decode close 0xC4 code bytes through RET; the contiguous five-entry compiler jump table exactly fills the owner through the next local procedure."
+next_public_address = "0x2FDFE"
+jump_table_address = "0x2FDF4"
+jump_table_count = 5
+cs_base = "0x23A90"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2fdfe"
+address = "0x2FDFE"
+file_offset = "0x215FE"
+size = "0x6C"
+name = "gengetsu_aimed_spread_phase()"
+owner_unit = "th04-main-gengetsu-patterns3-v94"
+evidence_id = "ev-th04-main-gengetsu-patterns3-boundary-v94"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 108-byte function through RET at the next local procedure."
+next_public_address = "0x2FE6A"
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2fe6a"
+address = "0x2FE6A"
+file_offset = "0x2166A"
+size = "0x75"
+name = "gengetsu_mirror_spread_phase()"
+owner_unit = "th04-main-gengetsu-patterns3-v94"
+evidence_id = "ev-th04-main-gengetsu-patterns3-boundary-v94"
+reason = "Fresh Ghidra, pinned TASM, and gap-free raw decode agree on the complete 117-byte function through RET at the exact owner end."
+
+[[new_exact]]
+id = "th04-main-fn-2f8ee"
+address = "0x2F8EE"
+name = "gengetsu_gathers_add_dual()"
+evidence_id = "ev-th04-main-gengetsu-prefix-boundary-v89"
+reason = "Target-first Gengetsu helper admitted only after no-Ghidra raw/TASM/next-public review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2f903"
+address = "0x2F903"
+name = "gengetsu_gather_intro()"
+evidence_id = "ev-th04-main-gengetsu-prefix-boundary-v89"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2f97a"
+address = "0x2F97A"
+name = "gengetsu_wave_step()"
+evidence_id = "ev-th04-main-gengetsu-prefix-boundary-v89"
+reason = "Target-first Gengetsu helper admitted only after no-Ghidra raw/TASM/next-public review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2f9c5"
+address = "0x2F9C5"
+name = "gengetsu_wave_bounce()"
+evidence_id = "ev-th04-main-gengetsu-wave-bounce-boundary-v90"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2fa33"
+address = "0x2FA33"
+name = "gengetsu_phase_state()"
+evidence_id = "ev-th04-main-gengetsu-anim-ring-boundary-v91"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2faaa"
+address = "0x2FAAA"
+name = "gengetsu_ring_phase()"
+evidence_id = "ev-th04-main-gengetsu-anim-ring-boundary-v91"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2faf7"
+address = "0x2FAF7"
+name = "gengetsu_spread_pair_phase()"
+evidence_id = "ev-th04-main-gengetsu-patterns1-boundary-v92"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2fb86"
+address = "0x2FB86"
+name = "gengetsu_bounce_phase()"
+evidence_id = "ev-th04-main-gengetsu-patterns1-boundary-v92"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2fc46"
+address = "0x2FC46"
+name = "gengetsu_turn_gather_phase()"
+evidence_id = "ev-th04-main-gengetsu-turn-gather-boundary-v93"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2fd30"
+address = "0x2FD30"
+name = "gengetsu_cycle_phase()"
+evidence_id = "ev-th04-main-gengetsu-cycle-boundary-v93b"
+reason = "Target-first Gengetsu helper admitted after code and trailing compiler table are fully accounted and natural-C++ two-cold replay passes."
+
+[[new_exact]]
+id = "th04-main-fn-2fdfe"
+address = "0x2FDFE"
+name = "gengetsu_aimed_spread_phase()"
+evidence_id = "ev-th04-main-gengetsu-patterns3-boundary-v94"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
+
+[[new_exact]]
+id = "th04-main-fn-2fe6a"
+address = "0x2FE6A"
+name = "gengetsu_mirror_spread_phase()"
+evidence_id = "ev-th04-main-gengetsu-patterns3-boundary-v94"
+reason = "Target-first Gengetsu helper admitted after complete exact-owner extent review and natural-C++ two-cold replay."
