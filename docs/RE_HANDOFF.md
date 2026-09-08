@@ -10,15 +10,15 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 256 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 474 authored candidates otherwise unreviewed;
+- 258 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 472 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Within the accepted 141-owner MAIN cohort, the live reviewed totals are:
+Within the accepted 142-owner MAIN cohort, the live reviewed totals are:
 
-- authored C/C++ bytes: **38,852 / 38,883 exact (99.920274%)**;
-- authored functions: **256 / 258 exact (99.224806%)**;
+- authored C/C++ bytes: **38,953 / 38,984 exact (99.920480%)**;
+- authored functions: **258 / 260 exact (99.230769%)**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - reviewed nonexact authored bytes: **31 bytes** in two functions.
 
@@ -100,18 +100,22 @@ v101 corrects a material authored-boundary error in `BOSS_FG_TEXT`: fresh Ghidra
 
 v102 recovers the `BOSS_BG_TEXT` suffix `mugetsu_gengetsu_bg_render()` at `0x22979..0x22A09` as a full **0x91 / 145-byte** natural-C++ owner. Fresh Ghidra, pinned TASM, MAP ownership, and raw decoding agree on the boundary; focused and 140-owner aggregate cold replay are raw/map/ordered-relocation exact. Target packed Pascal arguments also disprove the initial `(16,32)` backdrop-coordinate hypothesis: both target calls require source arguments `(32,16)`.
 
-v103 recovers the `TILE_TEXT` prefix `enemies_invalidate()` at `0x1C74C..0x1C776` as a **0x2B / 43-byte** pure-C++ owner. Fresh Ghidra, pinned TASM, MAP ownership, and raw decoding agree on the complete body. The following target byte `0x1C777 = 0x90` is the original `EVEN` alignment gap, not authored function code; linking the odd-sized C++ object before the remaining ACBP=48 assembler contribution naturally preserves that byte while the 141-owner aggregate remains exact.
+v103 recovers the `TILE_TEXT` prefix `enemies_invalidate()` at `0x1C74C..0x1C776` as a **0x2B / 43-byte** pure-C++ owner. Fresh Ghidra, pinned TASM, MAP ownership, and raw decoding agree on the complete body. The following target byte `0x1C777 = 0x90` is the original `EVEN` alignment gap, not authored function code; linking the odd-sized C++ object before the remaining ACBP=48 assembler contribution naturally preserves that byte; focused and aggregate cold replay remain exact.
 
-The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`, v100 adds `src/main/formats/map.cpp`, v101 adds `src/main/boss/gengetsu6_fg_render.cpp`, v102 adds `src/main/boss/mugetsu_gengetsu_bg_render.cpp`, and v103 adds `src/main/enemy/enemies_invalidate.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
+v104 recovers the `MAIN_01_TEXT` prefix `BB_TXT_LOAD` at `0x21551..0x2159A` (0x4A) and `BB_TXT_FREE` at `0x2159B..0x215B5` (0x1B) as one **0x65 / 101-byte** pure-C++ owner. The first focused source is raw/map/ordered-relocation exact, including the target Pascal far-buffer encoding for loading `TXT2.BB` at offset 0x800. Existing `txt.bb`/`txt2.bb` data is referenced through byte-preserving aliases rather than copied. The 142-owner aggregate remains exact.
+
+The same v104 boundary pass also downgrades `pointnums_add_yellow()` at `0x23D90` from corroborated to provisional: its Ghidra body stops after the 0x1A entry stub, but target `JMP 0x23DBE` enters a shared tail also reached by `pointnums_add_white()` at `0x23DAA`, continuing through `RET` at `0x23DF0`. Do not treat the 0x1A Ghidra body as a closed authored function extent.
+
+The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`, v100 adds `src/main/formats/map.cpp`, v101 adds `src/main/boss/gengetsu6_fg_render.cpp`, v102 adds `src/main/boss/mugetsu_gengetsu_bg_render.cpp`, v103 adds `src/main/enemy/enemies_invalidate.cpp`, and v104 adds `src/main/formats/bb_txt.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
 
 ## Latest replay receipts
 
-The latest BOSS_BG_TEXT owner passes focused two-cold replay at
-`.analysis/reconstruction/exact-unit-replay/gptweb-v103-probe-001/receipt.json`.
+The latest MAIN_01_TEXT owner passes focused two-cold replay at
+`.analysis/reconstruction/exact-unit-replay/gptweb-v104-probe-001/receipt.json`.
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v103-aggregate-001/receipt.json`
-  — all 141 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v104-aggregate-001/receipt.json`
+  — all 142 default owners, two isolated cold materializations.
 
 The aggregate is the retained current private acceptance baseline. Superseded
 replay materializations and raw probe matrices may be pruned after their
@@ -126,17 +130,17 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-For every v89-v103 owner, the retained current replays report zero raw differences, exact map
+For every v89-v104 owner, the retained current replays report zero raw differences, exact map
 placement, identical ordered overlapping MZ relocations, valid deterministic
 TC86 OMF, and stable source snapshots. The aggregate candidate executable is
 deterministic across A/B with SHA-256
-`eb11d0e22f428a4b6f62b1b76a267038386cd60fffa26d8dfa7570761a03d532`.
+`aa2a173070258587a4fb94c5f70de3b8958887936de5922dfa575fe6d79c0dc0`.
 
 The current function review uses the same aggregate map, fresh attested Ghidra
-metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 256/258
-exact functions, 121 automatic acceptances, 135 manual reviewed acceptances,
+metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 258/260
+exact functions, 123 automatic acceptances, 135 manual reviewed acceptances,
 and zero provisional strict rejections. The private report is
-`.analysis/reconstruction/functions/function-review-v103-current.json`.
+`.analysis/reconstruction/functions/function-review-v104-current.json`.
 
 ## Remaining reviewed nonexact work
 
@@ -160,11 +164,11 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 474 such rows. Prefer `boundary_state=corroborated`; the 105
+There are 472 such rows. Prefer `boundary_state=corroborated`; the 106
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 281 MAIN entries currently represented by
+The largest remaining class is 279 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
@@ -178,7 +182,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The accepted 141-owner cohort compiles and links reproducibly through the
+The accepted 142-owner cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

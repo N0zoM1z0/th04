@@ -11,7 +11,7 @@ python3 scripts/status.py
 `config/units.csv` owns byte state,
 `config/th04_main_authored_functions.csv` owns reviewed function state, and
 `config/th04_function_boundaries.csv` owns all-artifact routing. Git history,
-`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v103
+`config/evidence.csv`, and `config/knowledge.csv` retain the former v1-v104
 batch detail without presenting old frontiers as current instructions.
 
 ## Scope and current meaning
@@ -157,7 +157,7 @@ evidence IDs are indexed in `config/knowledge.csv`.
 
 ## Latest boundary expansion
 
-v99-v103 expand the reviewed denominator outside the completed MAIN_036 frontier.
+v99-v104 expand the reviewed denominator outside the completed MAIN_036 frontier.
 Three contiguous END_TEXT FAR functions (`end_game_good`, `end_game_bad`, and
 `end_extra`) are exact from one maintained pure-C++ 0x7C-byte producer. v100
 then recovers the final 0x65 bytes of END_TEXT (`map_load` + `map_free`) from
@@ -168,7 +168,7 @@ BOSS_BG_TEXT Mugetsu/Gengetsu renderer and target-verifies backdrop coordinates
 (32,16), disproving the initial reversed hypothesis. v103 then recovers the
 0x2B TILE_TEXT `enemies_invalidate` prefix from pure C++; the following 0x90
 remains excluded alignment padding and is reproduced naturally by TLINK before
-the remaining word-aligned assembler contribution. Focused and 141-owner
+the remaining word-aligned assembler contribution. v104 then recovers the 0x65 MAIN_01_TEXT `BB_TXT_LOAD`/`BB_TXT_FREE` prefix from pure C++, including the target far-pointer offset for the second file read. The same review returns `pointnums_add_yellow` to provisional because its 0x1A Ghidra body jumps into a shared tail at 0x23DBE that is also reached by `pointnums_add_white`. Focused and 142-owner
 aggregate cold replays preserve raw bytes, exact map contribution, ordered
 relocation overlap, and deterministic TC86 OMF. Segment-edge owners remain
 natural C++ without manufactured padding. Candidate-C++ paths that require inline

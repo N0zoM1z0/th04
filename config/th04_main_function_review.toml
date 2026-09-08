@@ -2733,3 +2733,19 @@ address = "0x1C74C"
 name = "enemies_invalidate()"
 evidence_id = "ev-th04-main-enemies-invalidate-boundary-v103"
 reason = "Fresh Ghidra, pinned TASM, target raw decode, and exact TILE_TEXT ownership agree on the full 0x2B function; focused plus 141-owner cold replay prove pure-C++ exactness while preserving the following alignment byte outside authored ownership."
+
+# v104: MAIN_01_TEXT BB text loader/free prefix. Ghidra/TASM/raw all agree on
+# two full contiguous functions; standard automatic admission applies.
+[[new_exact]]
+id = "th04-main-fn-21551"
+address = "0x21551"
+name = "BB_TXT_LOAD"
+evidence_id = "ev-th04-main-bb-txt-boundary-v104"
+reason = "Fresh Ghidra, pinned TASM, TLINK public, target raw decode, and exact MAIN_01_TEXT ownership agree on the full 0x4A loader; focused plus 142-owner cold replay prove pure-C++ exactness."
+
+[[new_exact]]
+id = "th04-main-fn-2159b"
+address = "0x2159B"
+name = "BB_TXT_FREE"
+evidence_id = "ev-th04-main-bb-txt-boundary-v104"
+reason = "Fresh Ghidra, pinned TASM, TLINK public, target raw decode, and exact MAIN_01_TEXT ownership agree on the full 0x1B free function; focused plus 142-owner cold replay prove pure-C++ exactness."
