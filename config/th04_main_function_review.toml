@@ -2871,3 +2871,23 @@ address = "0x228B9"
 name = "yuuka6_bg_render()"
 evidence_id = "ev-th04-main-yuuka6-bg-boundary-v113"
 reason = "Explicitly admit the Ghidra-missed Yuuka6 background renderer after exact-owner generated-public, raw/TASM, and exact-next-public review."
+
+# v115: MAIN_012_TEXT stage-state initializer. Ghidra stops after the scalar
+# resets, but target TASM/raw and exact suffix ownership prove the full 0xCB.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-21ecb"
+address = "0x21ECB"
+file_offset = "0x136CB"
+size = "0xCB"
+name = "stage_state_init()"
+owner_unit = "th04-main-stage-state-init-v115"
+evidence_id = "ev-th04-main-stage-state-init-boundary-v115"
+reason = "Fresh Ghidra constructs only the first 0x2C bytes. Pinned TASM keeps the PROC open through MAIN_012_TEXT end; raw 16-bit decode tiles all 0xCB bytes through RET at 0x21F95, the exact TC4J owner fills that suffix, and the next exact TLINK public begins at 0x21F96."
+next_public_address = "0x21F96"
+
+[[new_exact]]
+id = "th04-main-fn-21ecb"
+address = "0x21ECB"
+name = "stage_state_init()"
+evidence_id = "ev-th04-main-stage-state-init-boundary-v115"
+reason = "Explicitly admit the target-proved 0xCB stage-state initializer after truncated-Ghidra-entry, exact-owner, raw-RET, segment-end, and exact-next-public review."

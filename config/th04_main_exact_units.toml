@@ -4916,3 +4916,55 @@ map_start = "0x7DC9"
 map_size = "0xC0"
 target_file_offset = "0x140B9"
 size = "0xC0"
+
+
+[[build_replacements]]
+id = "th04-main-stage-state-init-v115-build"
+trigger_units = ["th04-main-stage-state-init-v115"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/bulrend.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/stinit.cpp\",\n\t\"th04/bulrend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-stage-state-init-v115-natural"
+trigger_units = ["th04-main-stage-state-init-v115"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "04314aafa7ff062b382dc3ec26ecfaa65247717757abfd8125d3d07c7ce646df"
+
+[[source_transforms.ops]]
+id = "remove-main-stage-state-init-v115"
+kind = "remove_between"
+removed_sha256 = "e3004675746678251cac5612c61b0cb8ad352650c0a89855ea5b7af59ac09047"
+start = "sub_11ECB\tproc near\r\n"
+end = "sub_11ECB\tendp\r\n"
+replacement = "; natural C++ stage state initialization\r\nextrn _stage_state_init:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main-stage-state-init-call-v115"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_11ECB\r\n"
+new = "\t\tcall\tmain_01:_stage_state_init\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main-clear-dwords-v115"
+kind = "replace"
+old = "sub_C34E\tproc near\r\n"
+new = "public CLEAR_DWORDS\r\nCLEAR_DWORDS label near\r\nsub_C34E\tproc near\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-stage-state-init-v115"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-bg-v113"]
+repo_source = "src/main/stage_state_init.cpp"
+overlay_path = "th04/stinit.cpp"
+map_module = "th04/stinit.cpp"
+map_mode = "exact"
+object_path = "obj/th04/stinit.obj"
+map_segment = "MAIN_012_TEXT"
+map_start = "0x73DB"
+map_size = "0xCB"
+target_file_offset = "0x136CB"
+size = "0xCB"
