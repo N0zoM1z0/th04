@@ -2799,3 +2799,22 @@ address = "0x28044"
 name = "mugetsu_gather_intro()"
 evidence_id = "ev-th04-main-mugetsu-gather-prefix-boundary-v107"
 reason = "Target-first Mugetsu sparse-switch helper admitted only after its complete code-plus-compare/jump-table extent is accounted and natural-C++ two-cold replay is exact."
+
+# v108: MAIN_033_TEXT Mugetsu phase-state callback. Fresh Ghidra has no entry;
+# generated public + exact owner + raw/TASM extent close the function.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-280bb"
+address = "0x280BB"
+file_offset = "0x198BB"
+size = "0x6F"
+name = "mugetsu_180BB()"
+owner_unit = "th04-main-mugetsu-transition-a-v108"
+evidence_id = "ev-th04-main-mugetsu-transition-a-boundary-v108"
+reason = "Fresh Ghidra has no function entry at 0x280BB. The exact TC4J owner creates the generated public there and ends exactly at 0x2812A; pinned TASM/raw decode reach RET at 0x28129, and target function-pointer stores at 0x28748 and 0x2880C independently encode near offset 0x462B."
+
+[[new_exact]]
+id = "th04-main-fn-280bb"
+address = "0x280BB"
+name = "mugetsu_180BB()"
+evidence_id = "ev-th04-main-mugetsu-transition-a-boundary-v108"
+reason = "Explicitly admit the Ghidra-missed Mugetsu phase-state callback after exact-owner generated-public, raw/TASM, and independent target pointer-anchor review."

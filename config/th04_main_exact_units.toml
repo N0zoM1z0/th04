@@ -4660,3 +4660,42 @@ overlay_path = "th04/m5pre.cpp"
 map_module = "th04/m5pre.cpp"
 map_mode = "exact"
 object_path = "obj/th04/m5pre.obj"
+
+[[build_replacements]]
+id = "th04-main-mugetsu-transition-a-v108-build"
+trigger_units = ["th04-main-mugetsu-transition-a-v108"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m5pre.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/m5pre.cpp\",\n\t\"th04/m5tr0.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[source_transforms]]
+id = "th04-main-mugetsu-transition-a-v108-natural"
+trigger_units = ["th04-main-mugetsu-transition-a-v108"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "51602e09755a792117d99d067a553213774e906b1cd083c4d16b5687463fc56d"
+
+[[source_transforms.ops]]
+id = "remove-main-mugetsu-transition-a-v108"
+kind = "remove_between"
+removed_sha256 = "60fce489b3258ebe7eab4a07739972e7e57dc9e6a15ce47584f8535687af0cc9"
+start = "mugetsu_180BB\tproc near\r\n"
+end = "mugetsu_180BB\tendp\r\n"
+replacement = "; natural C++ Mugetsu phase-state callback\r\nextrn _mugetsu_180BB:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main-mugetsu-transition-a-v108"
+kind = "replace"
+old = "offset mugetsu_180BB"
+new = "offset _mugetsu_180BB"
+expected_count = 2
+
+[[units]]
+id = "th04-main-mugetsu-transition-a-v108"
+default_enabled = true
+requires_units = ["th04-main-mugetsu-gather-prefix-v107"]
+repo_source = "src/main/boss/mugetsu_180bb.cpp"
+overlay_path = "th04/m5tr0.cpp"
+map_module = "th04/m5tr0.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m5tr0.obj"
