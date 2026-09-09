@@ -4510,3 +4510,55 @@ overlay_path = "th04/bbtxt.cpp"
 map_module = "th04/bbtxt.cpp"
 map_mode = "exact"
 object_path = "obj/th04/bbtxt.obj"
+
+[[build_replacements]]
+id = "th04-main-mugetsu-fg-v105-build"
+trigger_units = ["th04-main-mugetsu-fg-v105"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/bbtxt.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/bbtxt.cpp\",\n\t\"th04/m5fg.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[source_transforms]]
+id = "th04-main-mugetsu-fg-v105-natural"
+trigger_units = ["th04-main-mugetsu-fg-v105"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "6bdca0fb3ea53eee842293c4c70d982d67ecaccf338f04c6909f5022c57dd3f3"
+
+[[source_transforms.ops]]
+id = "remove-main-mugetsu-fg-v105"
+kind = "remove_between"
+removed_sha256 = "0f3674e5fac6197684506ff5d7b8ef5839fd80bd212e82c4314c7d63773b0e94"
+start = "@mugetsu_fg_render$qv\tproc near\r\n"
+end = "@mugetsu_fg_render$qv\tendp\r\n"
+replacement = "; natural C++ Mugetsu foreground renderer\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main-mugetsu-fg-v105"
+kind = "replace"
+old = "public @MUGETSU_FG_RENDER$QV\r\n"
+new = "extrn @MUGETSU_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "name-main-mugetsu-damage-flash-cycle-v105"
+kind = "replace"
+old = "byte_259E6"
+new = "_mugetsu_damage_flash_cycle"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main-mugetsu-damage-flash-cycle-v105"
+kind = "insert_before"
+anchor = "_mugetsu_damage_flash_cycle\tdb ?\r\n"
+text = "public _mugetsu_damage_flash_cycle\r\n"
+
+[[units]]
+id = "th04-main-mugetsu-fg-v105"
+default_enabled = true
+requires_units = ["th04-main-bb-txt-v104", "th04-main-gengetsu-fg-v101"]
+repo_source = "src/main/boss/mugetsu_fg_render.cpp"
+overlay_path = "th04/m5fg.cpp"
+map_module = "th04/m5fg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m5fg.obj"

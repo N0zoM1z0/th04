@@ -2749,3 +2749,12 @@ address = "0x2159B"
 name = "BB_TXT_FREE"
 evidence_id = "ev-th04-main-bb-txt-boundary-v104"
 reason = "Fresh Ghidra, pinned TASM, TLINK public, target raw decode, and exact MAIN_01_TEXT ownership agree on the full 0x1B free function; focused plus 142-owner cold replay prove pure-C++ exactness."
+
+# v105: MAIN_01_TEXT Mugetsu foreground renderer. Ghidra/TASM/raw agree on
+# one complete contiguous 0x91-byte body; standard automatic admission applies.
+[[new_exact]]
+id = "th04-main-fn-215b6"
+address = "0x215B6"
+name = "mugetsu_fg_render()"
+evidence_id = "ev-th04-main-mugetsu-fg-boundary-v105"
+reason = "Fresh Ghidra, pinned TASM, target raw decode, and exact MAIN_01_TEXT ownership agree on the full 0x91-byte renderer; focused plus 143-owner cold replay prove pure-C++ exactness."
