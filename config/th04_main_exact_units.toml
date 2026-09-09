@@ -4699,3 +4699,49 @@ overlay_path = "th04/m5tr0.cpp"
 map_module = "th04/m5tr0.cpp"
 map_mode = "exact"
 object_path = "obj/th04/m5tr0.obj"
+
+
+[[build_replacements]]
+id = "th04-main-reimu-fg-v109-build"
+trigger_units = ["th04-main-reimu-fg-v109"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/mapend.cpp\",\n\t\"th04/g6fg.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/r4fg.cpp\",\n\t\"th04/mapend.cpp\",\n\t\"th04/g6fg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-reimu-fg-v109-natural"
+trigger_units = ["th04-main-reimu-fg-v109"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "548c8533322b65f2897e6482f4fe876e4dab1774d7461fd1ba2d3779183878b0"
+
+[[source_transforms.ops]]
+id = "remove-main-reimu-fg-v109"
+kind = "remove_between"
+removed_sha256 = "3811779b978560bc50283901aad3d6f5ace51965124cfe7f77fa10d6733072c0"
+start = "@reimu_fg_render$qv\tproc near\r\n"
+end = "@reimu_fg_render$qv\tendp\r\n"
+replacement = "; natural C++ Reimu foreground renderer\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main-reimu-fg-v109"
+kind = "replace"
+old = "public @REIMU_FG_RENDER$QV\r\n"
+new = "extrn @REIMU_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main-reimu-orbs-render-v109"
+kind = "insert_before"
+anchor = "sub_12E37\tproc near\r\n"
+text = "public _reimu_orbs_render\r\n_reimu_orbs_render label near\r\n"
+
+[[units]]
+id = "th04-main-reimu-fg-v109"
+default_enabled = true
+requires_units = ["th04-main-mugetsu-transition-a-v108", "th04-main-gengetsu-fg-v101"]
+repo_source = "src/main/boss/reimu_fg_render.cpp"
+overlay_path = "th04/r4fg.cpp"
+map_module = "th04/r4fg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4fg.obj"

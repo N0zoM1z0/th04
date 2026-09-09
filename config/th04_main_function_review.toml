@@ -2818,3 +2818,12 @@ address = "0x280BB"
 name = "mugetsu_180BB()"
 evidence_id = "ev-th04-main-mugetsu-transition-a-boundary-v108"
 reason = "Explicitly admit the Ghidra-missed Mugetsu phase-state callback after exact-owner generated-public, raw/TASM, and independent target pointer-anchor review."
+
+# v109: BOSS_FG_TEXT Reimu foreground renderer. Fresh Ghidra/TASM/raw agree on
+# the complete contiguous 0xCC body; standard automatic admission applies.
+[[new_exact]]
+id = "th04-main-fn-22e93"
+address = "0x22E93"
+name = "reimu_fg_render()"
+evidence_id = "ev-th04-main-reimu-fg-boundary-v109"
+reason = "Fresh Ghidra, pinned TASM, target raw decode, and BOSS_FG_TEXT suffix tiling agree on the full 0xCC function; focused plus 147-owner cold replay prove pure-C++ exactness."
