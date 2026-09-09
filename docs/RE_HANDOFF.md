@@ -10,15 +10,15 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 260 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 470 authored candidates otherwise unreviewed;
+- 262 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 468 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Within the accepted 144-owner MAIN cohort, the live reviewed totals are:
+Within the accepted 145-owner MAIN cohort, the live reviewed totals are:
 
-- authored C/C++ bytes: **39,173 / 39,204 exact (99.920926%)**;
-- authored functions: **260 / 262 exact (99.236641%)**;
+- authored C/C++ bytes: **39,313 / 39,344 exact (99.921208%)**;
+- authored functions: **262 / 264 exact (99.242424%)**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - reviewed nonexact authored bytes: **31 bytes** in two functions.
 
@@ -108,18 +108,20 @@ The same v104 boundary pass also downgrades `pointnums_add_yellow()` at `0x23D90
 
 v105 continues the `MAIN_01_TEXT` prefix with `mugetsu_fg_render()` at `0x215B6..0x21646`, a complete **0x91 / 145-byte** renderer. Fresh Ghidra, pinned TASM, raw decoding, focused cold replay, and its then-current aggregate all agree. The first v105 build also exposed a reusable symbol-ownership rule: because this TASM symbol had a top-level `PUBLIC` far from its PROC body, moving the producer to TC4J required changing that assembler declaration to `EXTRN`; adding a second `EXTRN` at the former body site leaves TASM trying to export an external symbol. The exact source remains ordinary C++ and publishes the former `byte_259E6` as the Mugetsu damage-flash parity counter.
 
-v106 closes the remaining target-derived C/C++ code contribution in `MAIN_01_TEXT` by recovering the former `sub_11647` at `0x21647..0x21691` as `gengetsu_bomb_inv_render()`, a complete **0x4B / 75-byte** pure-C++ helper. The first focused probe was only two bytes too long because fixing X directly to `_SI` made TC4J emit `MOV AX,SI; ADD AX,48`; switching X to a compiler-managed register local while fixing Y to `_DI` produces the target `LEA AX,[SI+48]`. Focused and 144-owner aggregate replay are raw/map/ordered-relocation exact. The final segment tiling is `bbtxt.cpp` 0x65 + `m5fg.cpp` 0x91 + `g6binv.cpp` 0x4B + zero bytes from target-derived `th04_main.asm`, followed by the independent 0x101-byte `scoreupd.asm` original-style ASM owner.
+v106 closes the remaining target-derived C/C++ code contribution in `MAIN_01_TEXT` by recovering the former `sub_11647` at `0x21647..0x21691` as `gengetsu_bomb_inv_render()`, a complete **0x4B / 75-byte** pure-C++ helper. The first focused probe was only two bytes too long because fixing X directly to `_SI` made TC4J emit `MOV AX,SI; ADD AX,48`; switching X to a compiler-managed register local while fixing Y to `_DI` produces the target `LEA AX,[SI+48]`. Focused and aggregate replay are raw/map/ordered-relocation exact. The final segment tiling is `bbtxt.cpp` 0x65 + `m5fg.cpp` 0x91 + `g6binv.cpp` 0x4B + zero bytes from target-derived `th04_main.asm`, followed by the independent 0x101-byte `scoreupd.asm` original-style ASM owner.
 
-The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`, v100 adds `src/main/formats/map.cpp`, v101 adds `src/main/boss/gengetsu6_fg_render.cpp`, v102 adds `src/main/boss/mugetsu_gengetsu_bg_render.cpp`, v103 adds `src/main/enemy/enemies_invalidate.cpp`, v104 adds `src/main/formats/bb_txt.cpp`, v105 adds `src/main/boss/mugetsu_fg_render.cpp`, and v106 adds `src/main/boss/gengetsu_bomb_inv_render.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
+v107 opens the `MAIN_033_TEXT` Mugetsu frontier with one exact 0x8C-byte natural-C++ producer: `mugetsu_gathers_add_dual()` at `0x2802F` is a complete 0x15-byte body, while `mugetsu_gather_intro()` at `0x28044` is corrected from Ghidra's truncated 0x11 body to a reviewed **0x77-byte** authored extent. Raw/TASM decode closes code at `RET 0x280AA`; the following 4-word compare table (`0x20,0x22,0x24,0x30`) and 4-word jump table fill `0x280AB..0x280BA`. The reviewer verifies all four jump targets are instruction starts and the trailing extent is fully accounted. Focused and 145-owner aggregate replay are raw/map/ordered-relocation/OMF exact.
+
+The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`, v100 adds `src/main/formats/map.cpp`, v101 adds `src/main/boss/gengetsu6_fg_render.cpp`, v102 adds `src/main/boss/mugetsu_gengetsu_bg_render.cpp`, v103 adds `src/main/enemy/enemies_invalidate.cpp`, v104 adds `src/main/formats/bb_txt.cpp`, v105 adds `src/main/boss/mugetsu_fg_render.cpp`, v106 adds `src/main/boss/gengetsu_bomb_inv_render.cpp`, and v107 adds `src/main/boss/mugetsu_prefix.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
 
 ## Latest replay receipts
 
-The latest MAIN_01_TEXT owner passes focused two-cold replay at
-`.analysis/reconstruction/exact-unit-replay/gptweb-v106-probe-002/receipt.json`.
+The latest MAIN_033_TEXT owner passes focused two-cold replay at
+`.analysis/reconstruction/exact-unit-replay/gptweb-v107m-probe-001/receipt.json`.
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v106-aggregate-001/receipt.json`
-  — all 144 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v107m-aggregate-001/receipt.json`
+  — all 145 default owners, two isolated cold materializations.
 
 The aggregate is the retained current private acceptance baseline. Superseded
 replay materializations and raw probe matrices may be pruned after their
@@ -134,17 +136,17 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-For every v89-v106 owner, the retained current replays report zero raw differences, exact map
+For every v89-v107 owner, the retained current replays report zero raw differences, exact map
 placement, identical ordered overlapping MZ relocations, valid deterministic
 TC86 OMF, and stable source snapshots. The aggregate candidate executable is
 deterministic across A/B with SHA-256
-`7ea7d358e74e86a9ee665d266ed4873340f8f076526bcbac722359c17e8b391a`.
+`99bf3edf29c0c7f9ae61bf307d3b8ae00b2e967eb9f514b170a48e1d90544c7d`.
 
 The current function review uses the same aggregate map, fresh attested Ghidra
-metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 260/262
-exact functions, 125 automatic acceptances, 135 manual reviewed acceptances,
+metadata, pinned TASM boundaries, and raw 16-bit decoding. It reports 262/264
+exact functions, 126 automatic acceptances, 136 manual reviewed acceptances,
 and zero provisional strict rejections. The private report is
-`.analysis/reconstruction/functions/function-review-v106-current.json`.
+`.analysis/reconstruction/functions/function-review-v107-current.json`.
 
 ## Remaining reviewed nonexact work
 
@@ -168,11 +170,11 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 470 such rows. Prefer `boundary_state=corroborated`; the 106
+There are 468 such rows. Prefer `boundary_state=corroborated`; the 106
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 277 MAIN entries currently represented by
+The largest remaining class is 275 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
@@ -186,7 +188,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The accepted 144-owner cohort compiles and links reproducibly through the
+The accepted 145-owner cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

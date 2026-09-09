@@ -4595,3 +4595,68 @@ overlay_path = "th04/g6binv.cpp"
 map_module = "th04/g6binv.cpp"
 map_mode = "exact"
 object_path = "obj/th04/g6binv.obj"
+
+[[build_replacements]]
+id = "th04-main-mugetsu-gather-prefix-v107-build"
+trigger_units = ["th04-main-mugetsu-gather-prefix-v107"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6binv.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/g6binv.cpp\",\n\t\"th04/m5pre.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[source_transforms]]
+id = "th04-main-mugetsu-gather-prefix-v107-natural"
+trigger_units = ["th04-main-mugetsu-gather-prefix-v107"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1944c02a2f7387cb1299b792f5430f684a4c595b2d3216f91daaa08c9c6d93de"
+
+[[source_transforms.ops]]
+id = "remove-main-mugetsu-gather-prefix-v107"
+kind = "remove_between"
+removed_sha256 = "3f10cb2bf7233bb150716e4b252459d04596369bf418277c2967570e93e04d0f"
+start = "mugetsu_1802F\tproc near\r\n"
+end = "\t\tdw offset loc_18097\r\n"
+replacement = "; natural C++ Mugetsu gather prefix\r\nextrn _mugetsu_gather_intro:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main-mugetsu-gather-intro-v107"
+kind = "replace"
+old = "mugetsu_18044"
+new = "_mugetsu_gather_intro"
+expected_count = 3
+
+[[source_transforms.ops]]
+id = "name-main-mugetsu-gather-frame-offset-v107"
+kind = "replace"
+old = "word_231F2"
+new = "_mugetsu_gather_frame_offset"
+expected_count = 4
+
+[[source_transforms.ops]]
+id = "publish-main-mugetsu-gather-frame-offset-v107"
+kind = "insert_before"
+anchor = "_mugetsu_gather_frame_offset\tdw 10h\r\n"
+text = "public _mugetsu_gather_frame_offset\r\n"
+
+[[source_transforms.ops]]
+id = "name-main-mugetsu-anchor-v107"
+kind = "replace"
+old = "point_259EA"
+new = "_mugetsu_anchor"
+expected_count = 10
+
+[[source_transforms.ops]]
+id = "publish-main-mugetsu-anchor-v107"
+kind = "insert_before"
+anchor = "_mugetsu_anchor\tPoint <?>\r\n"
+text = "public _mugetsu_anchor\r\n"
+
+[[units]]
+id = "th04-main-mugetsu-gather-prefix-v107"
+default_enabled = true
+requires_units = ["th04-main-gengetsu-bomb-inv-render-v106"]
+repo_source = "src/main/boss/mugetsu_prefix.cpp"
+overlay_path = "th04/m5pre.cpp"
+map_module = "th04/m5pre.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m5pre.obj"
