@@ -2827,3 +2827,19 @@ address = "0x22E93"
 name = "reimu_fg_render()"
 evidence_id = "ev-th04-main-reimu-fg-boundary-v109"
 reason = "Fresh Ghidra, pinned TASM, target raw decode, and BOSS_FG_TEXT suffix tiling agree on the full 0xCC function; focused plus 147-owner cold replay prove pure-C++ exactness."
+
+# v110-v111: consecutive BOSS_FG_TEXT suffix helpers. Fresh Ghidra/TASM/raw
+# agree on both complete contiguous bodies; standard automatic admission applies.
+[[new_exact]]
+id = "th04-main-fn-22df0"
+address = "0x22DF0"
+name = "items_render()"
+evidence_id = "ev-th04-main-items-render-boundary-v111"
+reason = "Fresh Ghidra, pinned TASM, target raw decode, and BOSS_FG_TEXT suffix tiling agree on the full 0x47 function; focused plus 149-owner cold replay prove pure-C++ exactness."
+
+[[new_exact]]
+id = "th04-main-fn-22e37"
+address = "0x22E37"
+name = "reimu_orbs_render()"
+evidence_id = "ev-th04-main-reimu-orbs-render-boundary-v110"
+reason = "Fresh Ghidra, pinned TASM, target raw decode, and BOSS_FG_TEXT suffix tiling agree on the full 0x5C function; focused plus 149-owner cold replay prove pure-C++ exactness."

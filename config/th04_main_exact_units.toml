@@ -4745,3 +4745,68 @@ overlay_path = "th04/r4fg.cpp"
 map_module = "th04/r4fg.cpp"
 map_mode = "exact"
 object_path = "obj/th04/r4fg.obj"
+
+
+[[build_replacements]]
+id = "th04-main-reimu-orbs-render-v110-build"
+trigger_units = ["th04-main-reimu-orbs-render-v110"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/r4fg.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/r4orbf.cpp\",\n\t\"th04/r4fg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-reimu-orbs-render-v110-natural"
+trigger_units = ["th04-main-reimu-orbs-render-v110"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "376860c7900afb60de303db09e8092998d6564f1729444d6d87251015cd1b1c4"
+
+[[source_transforms.ops]]
+id = "remove-main-reimu-orbs-render-v110"
+kind = "remove_between"
+removed_sha256 = "7a7966d812f72f163ad002acd526830465af0841ceeec7b6a460988b71a06fc1"
+start = "public _reimu_orbs_render\r\n"
+end = "sub_12E37\tendp\r\n"
+replacement = "; natural C++ Reimu orb renderer\r\nextrn _reimu_orbs_render:near\r\n"
+
+[[units]]
+id = "th04-main-reimu-orbs-render-v110"
+default_enabled = true
+requires_units = ["th04-main-reimu-fg-v109"]
+repo_source = "src/main/boss/reimu_orbs_render.cpp"
+overlay_path = "th04/r4orbf.cpp"
+map_module = "th04/r4orbf.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r4orbf.obj"
+
+
+[[build_replacements]]
+id = "th04-main-items-render-v111-build"
+trigger_units = ["th04-main-items-render-v111"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/r4orbf.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/items.cpp\",\n\t\"th04/r4orbf.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-items-render-v111-natural"
+trigger_units = ["th04-main-items-render-v111"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "bedc6bd7c4eb602e4f5cae1480ec73159ffd69a7826af25d54f53cfb75447969"
+
+[[source_transforms.ops]]
+id = "replace-main-items-render-include-v111"
+kind = "replace"
+old = "include th04/main/item/render.asm\r\n"
+new = "; natural C++ item renderer\r\nextrn ITEMS_RENDER:near\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-items-render-v111"
+default_enabled = true
+requires_units = ["th04-main-reimu-orbs-render-v110"]
+repo_source = "src/main/item/items_render.cpp"
+overlay_path = "th04/items.cpp"
+map_module = "th04/items.cpp"
+map_mode = "exact"
+object_path = "obj/th04/items.obj"
