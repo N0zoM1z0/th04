@@ -2891,3 +2891,22 @@ address = "0x21ECB"
 name = "stage_state_init()"
 evidence_id = "ev-th04-main-stage-state-init-boundary-v115"
 reason = "Explicitly admit the target-proved 0xCB stage-state initializer after truncated-Ghidra-entry, exact-owner, raw-RET, segment-end, and exact-next-public review."
+
+# v116: Ghidra-missed MAIN_012_TEXT Elly foreground renderer. Generated
+# public + exact owner + raw/TASM extent and exact next public close it.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-21e12"
+address = "0x21E12"
+file_offset = "0x13612"
+size = "0xB9"
+name = "elly_fg_render()"
+owner_unit = "th04-main-elly-fg-v116"
+evidence_id = "ev-th04-main-elly-fg-boundary-v116"
+reason = "Fresh Ghidra has no function entry at 0x21E12. The exact TC4J owner creates generated public elly_fg_render() at 0AAF:7322 and ends exactly at 0x21ECB; pinned TASM/raw decode reach RET at 0x21ECA and the next exact public _stage_state_init begins at 0x21ECB."
+
+[[new_exact]]
+id = "th04-main-fn-21e12"
+address = "0x21E12"
+name = "elly_fg_render()"
+evidence_id = "ev-th04-main-elly-fg-boundary-v116"
+reason = "Explicitly admit the Ghidra-missed Elly foreground renderer after exact-owner generated-public, raw/TASM, and exact-next-public review."

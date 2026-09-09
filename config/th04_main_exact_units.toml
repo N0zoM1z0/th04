@@ -4968,3 +4968,48 @@ map_start = "0x73DB"
 map_size = "0xCB"
 target_file_offset = "0x136CB"
 size = "0xCB"
+
+
+[[build_replacements]]
+id = "th04-main-elly-fg-v116-build"
+trigger_units = ["th04-main-elly-fg-v116"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/stinit.cpp\",\n\t\"th04/bulrend.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/ellyfg.cpp\",\n\t\"th04/stinit.cpp\",\n\t\"th04/bulrend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-elly-fg-v116-natural"
+trigger_units = ["th04-main-elly-fg-v116"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "6f50ef7386359690d96ceceb2d1cdf3c33e437b7edaa776c31afd08eb760234d"
+
+[[source_transforms.ops]]
+id = "remove-main-elly-fg-v116"
+kind = "remove_between"
+removed_sha256 = "47d0290d657917ca89acc671cfcc468b3abcbc9fcc2822b9fc71a56c7160e672"
+start = "@elly_fg_render$qv\tproc near\r\n"
+end = "@elly_fg_render$qv\tendp\r\n"
+replacement = "; natural C++ Elly foreground renderer\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main-elly-fg-v116"
+kind = "replace"
+old = "public @ELLY_FG_RENDER$QV\r\n"
+new = "extrn @ELLY_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-elly-fg-v116"
+default_enabled = true
+requires_units = ["th04-main-stage-state-init-v115", "th04-main-elly-scythe-v34"]
+repo_source = "src/main/boss/elly_fg_render.cpp"
+overlay_path = "th04/ellyfg.cpp"
+map_module = "th04/ellyfg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/ellyfg.obj"
+map_segment = "MAIN_012_TEXT"
+map_start = "0x7322"
+map_size = "0xB9"
+target_file_offset = "0x13612"
+size = "0xB9"
