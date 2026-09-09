@@ -2852,3 +2852,22 @@ address = "0x22CE5"
 name = "BULLETS_RENDER"
 evidence_id = "ev-th04-main-bullets-render-boundary-v112"
 reason = "Fresh Ghidra, pinned TASM, target raw decode, and complete BOSS_FG_TEXT tiling agree on the full 0x10B function; focused plus 150-owner cold replay prove pure-C++ exactness."
+
+# v113: Ghidra-missed BOSS_BG_TEXT Yuuka6 background renderer. Generated
+# public + exact owner + raw/TASM extent and exact next public close it.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-228b9"
+address = "0x228B9"
+file_offset = "0x140B9"
+size = "0xC0"
+name = "yuuka6_bg_render()"
+owner_unit = "th04-main-yuuka6-bg-v113"
+evidence_id = "ev-th04-main-yuuka6-bg-boundary-v113"
+reason = "Fresh Ghidra has no function entry at 0x228B9. The exact TC4J owner creates generated public yuuka6_bg_render() at 0AAF:7DC9 and ends exactly at 0x22979; pinned TASM/raw decode reach RET at 0x22978 and the next exact public begins at 0AAF:7E89."
+
+[[new_exact]]
+id = "th04-main-fn-228b9"
+address = "0x228B9"
+name = "yuuka6_bg_render()"
+evidence_id = "ev-th04-main-yuuka6-bg-boundary-v113"
+reason = "Explicitly admit the Ghidra-missed Yuuka6 background renderer after exact-owner generated-public, raw/TASM, and exact-next-public review."

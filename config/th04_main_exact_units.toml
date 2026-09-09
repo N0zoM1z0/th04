@@ -4848,3 +4848,71 @@ map_start = "0x81F5"
 map_size = "0x10B"
 target_file_offset = "0x144E5"
 size = "0x10B"
+
+[[build_replacements]]
+id = "th04-main-yuuka6-bg-v113-build"
+trigger_units = ["th04-main-yuuka6-bg-v113"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6fg.cpp\",\n\t\"th04/mgbg.cpp\",\n"
+build_replacement = "\t\"th04/g6fg.cpp\",\n\t\"th04/y6bg.cpp\",\n\t\"th04/mgbg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-yuuka6-bg-v113-natural"
+trigger_units = ["th04-main-yuuka6-bg-v113"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "af45f11543e2615eeb400163fc37ce7d30d5ed7980ab9da191cf85bcb757c226"
+
+[[source_transforms.ops]]
+id = "remove-main-yuuka6-bg-v113"
+kind = "remove_between"
+removed_sha256 = "b61490f87784a540d335f376eb0ff537132332195e3e8d5ce02fb7364c01bc3f"
+start = "public @YUUKA6_BG_RENDER$QV\r\n@YUUKA6_BG_RENDER$QV label near\r\n@yuuka6_bg_render$qv\tproc near\r\n"
+end = "@yuuka6_bg_render$qv\tendp\r\n"
+replacement = "; natural C++ Yuuka6 background renderer\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main-yuuka6-bg-v113"
+kind = "replace"
+old = "public @YUUKA6_BG_RENDER$QV\r\n"
+new = "extrn @YUUKA6_BG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main-yuuka6-bg-update-v113"
+kind = "insert_before"
+anchor = "sub_12461\tproc near\r\n"
+text = "public _yuuka6_bg_update_render\r\n_yuuka6_bg_update_render label near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-playfield-fill-v113"
+kind = "insert_before"
+anchor = "playfield_fill\tproc near\r\n"
+text = "public _playfield_fill\r\n_playfield_fill label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-yuuka6-bg-state-v113"
+kind = "insert_before"
+anchor = "byte_2CDD0\tdb ?\r\n"
+text = "public _yuuka6_bg_state, _yuuka6_bg_fade\r\n_yuuka6_bg_state label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-yuuka6-bg-fade-v113"
+kind = "insert_before"
+anchor = "byte_2CDD1\tdb ?\r\n"
+text = "_yuuka6_bg_fade label byte\r\n"
+
+[[units]]
+id = "th04-main-yuuka6-bg-v113"
+default_enabled = true
+requires_units = ["th04-main-bullets-render-v112", "th04-main-mugetsu-gengetsu-bg-v102"]
+repo_source = "src/main/boss/yuuka6_bg_render.cpp"
+overlay_path = "th04/y6bg.cpp"
+map_module = "th04/y6bg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/y6bg.obj"
+map_segment = "BOSS_BG_TEXT"
+map_start = "0x7DC9"
+map_size = "0xC0"
+target_file_offset = "0x140B9"
+size = "0xC0"
