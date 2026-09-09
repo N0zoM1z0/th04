@@ -4810,3 +4810,41 @@ overlay_path = "th04/items.cpp"
 map_module = "th04/items.cpp"
 map_mode = "exact"
 object_path = "obj/th04/items.obj"
+
+
+[[build_replacements]]
+id = "th04-main-bullets-render-v112-build"
+trigger_units = ["th04-main-bullets-render-v112"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/items.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/bulrend.cpp\",\n\t\"th04/items.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-bullets-render-v112-natural"
+trigger_units = ["th04-main-bullets-render-v112"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "e638d5824d6f55800dd866353c431b8a832f7a4dce8465011f54415b9504e1e6"
+
+[[source_transforms.ops]]
+id = "remove-main-bullets-render-v112"
+kind = "remove_between"
+removed_sha256 = "4770796482fd7ec13dc8110b67162423bc9597a18420e127d103d3fe394a92e1"
+start = "public BULLETS_RENDER\r\n"
+end = "bullets_render\tendp\r\n"
+replacement = "; natural C++ bullet renderer\r\nextrn BULLETS_RENDER:near\r\n"
+
+[[units]]
+id = "th04-main-bullets-render-v112"
+default_enabled = true
+requires_units = ["th04-main-items-render-v111", "th04-main-reimu-orbs-render-v110"]
+repo_source = "src/main/bullet/render.cpp"
+overlay_path = "th04/bulrend.cpp"
+map_module = "th04/bulrend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/bulrend.obj"
+map_segment = "BOSS_FG_TEXT"
+map_start = "0x81F5"
+map_size = "0x10B"
+target_file_offset = "0x144E5"
+size = "0x10B"
