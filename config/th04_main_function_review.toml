@@ -2758,3 +2758,12 @@ address = "0x215B6"
 name = "mugetsu_fg_render()"
 evidence_id = "ev-th04-main-mugetsu-fg-boundary-v105"
 reason = "Fresh Ghidra, pinned TASM, target raw decode, and exact MAIN_01_TEXT ownership agree on the full 0x91-byte renderer; focused plus 143-owner cold replay prove pure-C++ exactness."
+
+
+# v106: MAIN_01_TEXT bombing-invincibility renderer. Fresh Ghidra/TASM/raw agree on the complete contiguous 0x4B body.
+[[new_exact]]
+id = "th04-main-fn-21647"
+address = "0x21647"
+name = "gengetsu_bomb_inv_render()"
+evidence_id = "ev-th04-main-gengetsu-bomb-inv-render-boundary-v106"
+reason = "Fresh Ghidra, pinned TASM, target raw decode, and exact MAIN_01_TEXT ownership agree on the full 0x4B helper; focused plus 144-owner cold replay prove pure-C++ exactness."

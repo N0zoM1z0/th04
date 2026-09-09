@@ -4562,3 +4562,36 @@ overlay_path = "th04/m5fg.cpp"
 map_module = "th04/m5fg.cpp"
 map_mode = "exact"
 object_path = "obj/th04/m5fg.obj"
+
+
+[[build_replacements]]
+id = "th04-main-gengetsu-bomb-inv-render-v106-build"
+trigger_units = ["th04-main-gengetsu-bomb-inv-render-v106"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m5fg.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/m5fg.cpp\",\n\t\"th04/g6binv.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[source_transforms]]
+id = "th04-main-gengetsu-bomb-inv-render-v106-natural"
+trigger_units = ["th04-main-gengetsu-bomb-inv-render-v106"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "a0e8b13d825f2e77f5fa641ff0e8c9bf2f35cc25612025125931cda104960897"
+
+[[source_transforms.ops]]
+id = "remove-main-gengetsu-bomb-inv-render-v106"
+kind = "remove_between"
+removed_sha256 = "e882d42150513a4901c4747565319a0d08418ff65e8c39941434a5711089ab26"
+start = "public _gengetsu_bomb_inv_render\r\n"
+end = "sub_11647\tendp\r\n"
+replacement = "; natural C++ Gengetsu bombing-invincibility renderer\r\nextrn _gengetsu_bomb_inv_render:near\r\n"
+
+[[units]]
+id = "th04-main-gengetsu-bomb-inv-render-v106"
+default_enabled = true
+requires_units = ["th04-main-mugetsu-fg-v105"]
+repo_source = "src/main/boss/gengetsu_bomb_inv_render.cpp"
+overlay_path = "th04/g6binv.cpp"
+map_module = "th04/g6binv.cpp"
+map_mode = "exact"
+object_path = "obj/th04/g6binv.obj"
