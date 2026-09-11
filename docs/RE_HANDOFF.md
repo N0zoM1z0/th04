@@ -10,18 +10,18 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 298 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 432 authored candidates otherwise unreviewed;
+- 298 accepted exact MAIN functions and five reviewed blocked MAIN functions;
+- 429 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- authored C/C++ bytes: **47,530 / 47,561 exact (99.934821%)**;
-- accepted authored functions: **298 / 300 exact (99.333333%)**;
+- authored C/C++ bytes: **47,530 / 47,737 exact (99.566374%)**;
+- accepted authored functions: **298 / 303 exact (98.349835%)**;
 - accepted exact C/C++ owners: **170**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
-- currently confirmed nonexact authored bytes: **31 bytes** in the two accepted
+- currently confirmed nonexact authored bytes: **207 bytes** in five reviewed
   blocked functions.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
@@ -54,7 +54,7 @@ dispatcher compile as one exact 0xBD0-byte TC4J producer. Final focused plus a
 165-owner aggregate close every declared slice, the shared map contribution, and
 all 28 ordered MZ relocations. The unresolved shot residual still receives no
 reconstruction or function exactness credit. These percentages are not a claim
-about 99.934821% of an executable or the game. Derive current
+about 99.566374% of an executable or the game. Derive current
 numbers with `python3 scripts/status.py`; `config/units.csv`,
 `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -335,6 +335,60 @@ origin classification. No maintained source, focused replay, aggregate replay,
 or Factory claim is created by v135. Full evidence is in
 `docs/reconstruction/TH04_MAIN_032_POINTNUMS_SHARED_TAIL_V135.md`.
 
+v136 reviews the adjacent `CIRCLE_TEXT` point-number lifecycle/render cohort and
+expands the reviewed denominator rather than forcing an exact promotion. Target
+raw bytes, the current cold MAP, pinned TASM, fresh attested Ghidra observations,
+and MZ relocation parsing close five nonoverlapping near boundaries at
+`th04-main / CIRCLE_TEXT / 0AAF:11C2`, `11CE`, `1204`, `1274`, and `130E`
+(load `0xBCB2`, `0xBCBE`, `0xBCF4`, `0xBD64`, and `0xBDFE`). Their bodies are
+0xB, 0x35, 0x70, 0x9A, and 0x6A bytes. The complete physical window is
+`0xBCB2..0xBE67` (0x1B6 bytes), but one-byte NOPs at `0xBCBD` and `0xBCF3`
+are alignment outside function ownership; the five function bodies therefore
+total 0x1B4 bytes. No MZ relocation overlaps the window.
+
+Maintained natural source `src/main/pointnum/lifecycle.cpp` covers the first
+three functions only. It compiles without warnings through pinned TC86 Borland
+C++ 4.02 with the production `-O -b- -3 -Z -d -DGAME=4 -ml` profile to a valid
+1,961-byte OMF object and 179 CODE bytes. The source SHA-256 is
+`0f02652f0579601b7ead446752d29ac32e82ef60e2d8ad99ae5650aa1a1b8981` and the
+CODE SHA-256 is
+`ef72078470abf6a76966e1b5cb05f0b32e138050a132e8ac9881ce416e227464`.
+TC4J naturally reproduces the main SI/DI/BX/AX/CL register dataflow and DI
+preservation, but the target invalidate/update loops use bare `DEC DI; JNZ`.
+Six bounded source-level loop idioms all add an intermediate zero-test, and the
+compiler also merges two update `F_REMOVE` stores that are distinct in the
+target. These are durable negative compiler/source-shape results, not evidence
+for byte injection or proof of original assembly.
+
+The first three functions now enter the formal reviewed exactness denominator as
+blocked: +0xB0 / 176 known-authored bytes and +3 reviewed functions, with no
+change to the exact numerator. This moves the live accounting to 47,530 / 47,737
+exact bytes (99.566374%) and 298 / 303 exact functions (98.349835%). The lower
+function percentage is a denominator correction, not an exact-owner regression.
+`POINTNUMS_RENDER` and `@pointnum_put` are boundary-reviewed only and remain
+source/origin unreviewed: their internal AX/DX/CX register ABI, VRAM writes, and
+the renderer's code-modified width immediate require a new source/origin
+hypothesis. ReC98 assembly remains reconstruction evidence only.
+
+No v136 focused replay or aggregate replay was run because there is no exact
+promotion candidate; the latest repository exact replay remains the v134
+170-owner aggregate. No v136 Factory claim was created. Live Factory accepted-
+snapshot refresh was attempted twice during v136 but was unavailable because a
+separate Factory operation held the operator-path lock; this is neither a replay
+rejection nor fresh acceptance evidence. Standalone product closure,
+runtime-storage identity, and runtime scenario validation remain unestablished.
+Full evidence is in
+`docs/reconstruction/TH04_CIRCLE_POINTNUM_LIFECYCLE_V136.md`.
+
+v136 began from clean `main` commit
+`06ccb68a641e0922de0f5f5b7f5a4eb4b5c123cd`, ahead 11 / behind 0 versus
+`origin/main`; no unrelated tracked, staged, untracked, or conflicted work was
+present. Final pre-checkpoint validation passes `scripts/validate_tracking.py`,
+`validate_function_boundary_ledger.py`, generated progress/boundary checks,
+`preflight.py`, `status.py`, the complete `scripts/ci.py` suite including live
+Ghidra/MZ mutation Oracles, and `git diff --check`. No v136 replay command is
+listed because none was run.
+
 ## Latest replay receipts
 
 The latest exact owner passes repository focused two-cold replay at:
@@ -369,11 +423,13 @@ deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
 `c807ba0d2320d744d20f18c711a7409b5af13c7b6bd8d8eab69e05055f4ef51a`.
 
-The current private function-review artifact uses the v134 170-owner aggregate
-map, retained target-bound metadata plus the fresh complete Ghidra observation at
-`0x23D52`, pinned target bytes, and the configured reviewed-boundary policy. It
-reports **298/300 exact functions (99.333333%)**, 149 automatic acceptances, 149
-manual reviewed acceptances, and zero strict rejections. `randring2_next16()` is
+The retained v134 private function-review artifact uses the v134 170-owner
+aggregate map, retained target-bound metadata plus the fresh complete Ghidra
+observation at `0x23D52`, pinned target bytes, and the configured reviewed-
+boundary policy. It reports the historical v134 screen of **298/300 exact
+functions (99.333333%)**, 149 automatic acceptances, 149 manual reviewed
+acceptances, and zero strict rejections; it predates the three v136 blocked
+lifecycle admissions and therefore is not the current 303-function denominator. `randring2_next16()` is
 an ordinary automatic exact admission: Ghidra covers all 13 bytes through RET,
 the TLINK public begins at `13A9:02C2`, and the exact owner has the identical
 0xD extent. The following target NOP remains outside function and owner credit.
@@ -418,15 +474,15 @@ job `job:15a7abdc3af84873a06cb232cfd42a37` completed with receipt
 `receipt_verdict=pass`, `acceptance_decision=accepted`, and registry identity
 `registry:765e85ac5302a6a58cb4398601719735ef20633c88ed8dd95f9bbda2c76886f4`.
 Both acceptances are scoped to their imported `owned_extent_exact` claims only.
-The current accepted snapshot is **not** a project-wide Factory pass:
-`global_pass=false`, 170 imported exact-owner candidates, 6 `fresh_pass`, and
-164 `missing_receipt`. Those missing Factory receipts do not revoke the
+The last successfully retained accepted snapshot recorded before v136 is **not**
+a project-wide Factory pass: `global_pass=false`, 170 imported exact-owner
+candidates, 6 `fresh_pass`, and 164 `missing_receipt`. Those missing Factory receipts do not revoke the
 repository-native exact evidence, but they prohibit claiming independent Factory
 acceptance for the entire 170-owner set.
 
 ## Remaining reviewed nonexact work
 
-Two reviewed authored functions are nonexact:
+Five reviewed authored functions are nonexact:
 
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
@@ -435,6 +491,12 @@ Two reviewed authored functions are nonexact:
 2. `enemy_bullet_template_push`: all 27 bytes remain blocked because natural
    TC4 struct-copy forms emit a different `REP MOVSW` setup order. ReC98's
    inline-assembly shortcut is not acceptable evidence.
+3. `POINTNUMS_INIT`: 0xB bytes are boundary-reviewed and source-present but
+   remain blocked pending an exact legal CIRCLE_TEXT producer/replay.
+4. `pointnums_invalidate()`: 0x35 bytes are source-present; tested natural TC4J
+   countdown forms do not emit the target bare `DEC DI; JNZ` tail.
+5. `POINTNUMS_UPDATE`: 0x70 bytes are source-present; the same countdown mismatch
+   remains and TC4J merges two target-distinct `F_REMOVE` stores.
 
 `dialog_op` and `dialog_run` have maintained source and exact code bytes, but
 remain outside the reviewed exact denominator because their ordered MZ
@@ -446,7 +508,7 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 432 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 429 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
@@ -456,21 +518,26 @@ natural source,” not “original handwritten ASM.” OP has 94 unreviewed auth
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 168 are exact, 238 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 253 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 168 are exact, 235 remain unreviewed, four are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 250 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-The first concrete continuation is the contiguous `CIRCLE_TEXT` point-number
-lifecycle/render cohort. Five corroborated target-derived entries tile load
-`0xBCB2..0xBE67` without gaps: `POINTNUMS_INIT` (`0xB` bytes),
-`pointnums_invalidate()` (`0x35`), `POINTNUMS_UPDATE` (`0x70`),
-`POINTNUMS_RENDER` (`0x9A`), and `@pointnum_put` (`0x6A`). Together they form a
-`0x1B6`-byte semantic cohort. Re-establish the target relocations, ABI,
-callers/callees, physical producer ownership, and natural TC4J source shape as
-one packet before promotion. This cohort is preferred over another blind
-pointnums-add flag search because it may expose the original point-number
-register/layout idioms needed to falsify or support a later revisit of the
-reviewed yellow/white shared-tail origin question.
+The first concrete continuation is now the immediately preceding `CIRCLE_TEXT`
+RNG/null-function boundary packet at load `0xBC70..0xBCB1`. Raw target decoding
+closes `randring1_next16()` at `0xBC70..0xBC7C` (0xD), the already corroborated
+`randring1_next16_and(unsigned int)` at `0xBC7E..0xBC92` (0x15),
+`randring1_next16_mod(unsigned int)` at `0xBC94..0xBCAC` (0x19), `NULLFUNC_NEAR`
+at `0xBCAE` (one-byte `RET`), and `NULLFUNC_FAR` at `0xBCB0` (one-byte `RETF`),
+with independent NOP alignment at `0xBC7D`, `0xBC93`, `0xBCAD`, `0xBCAF`, and
+`0xBCB1`. The 0x42-byte window has SHA-256
+`eb326c526a757c6e522136a394bd540bda42c24e9c124d362f97be3e774b2256`.
+Fresh Ghidra constructs only the `randring1_next16_and` body; it reports no
+function containing the other four entries even though MAP/TASM keep their
+public/PROC boundaries visible. Review these four missing boundaries as one
+packet, reconcile their callers and any relocation ownership, and test a
+natural RNG source shape using the adjacent exact `randring2_next16()` idiom
+before promotion. This is a boundary-audit packet first, not permission to count
+one-byte null functions as easy exact wins in isolation.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
