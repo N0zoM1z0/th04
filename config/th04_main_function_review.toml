@@ -3199,3 +3199,50 @@ address = "0x29878"
 name = "orange_phase_bounce_random()"
 evidence_id = "ev-th04-main-orange-bounce-random-boundary-v132"
 reason = "Explicitly admit the sparse-Ghidra Orange bounce/random function after target/TASM/raw full-extent review and exact focused plus 168-owner aggregate replay."
+
+# v133: The final MAIN_033 Orange tail. The near helper is a static/internal
+# function whose Ghidra body is cross-linked backward into unrelated code. Its
+# exact boundary is independently anchored by the exact physical owner, raw RET,
+# a target near CALL from orange_update(), and a target-attested next entry.
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-2998b"
+address = "0x2998B"
+file_offset = "0x1B18B"
+size = "0x118"
+name = "orange_phase_multi_burst()"
+owner_unit = "th04-main-orange-tail-v133"
+evidence_id = "ev-th04-main-orange-tail-boundary-v133"
+reason = "Fresh Ghidra creates the entry but cross-links its body backward to 0x2272E. Pinned TASM and gap-free raw decode prove the 0x118 near function through RET at 0x29AA2; the exact natural owner contains it, target CALL at 0x29D9B resolves to 0x2998B, and the next target entry is FAR orange_update() at 0x29AA3."
+allow_crosslinked_body = true
+next_target_address = "0x29AA3"
+next_target_prefix_size = "0x10"
+next_target_prefix_sha256 = "de49320e52ac24d3f983ef54dc5d87cb1175c97e1c55e4200b1613c895d06fe1"
+call_site_address = "0x29D9B"
+
+[[new_exact]]
+id = "th04-main-fn-2998b"
+address = "0x2998B"
+name = "orange_phase_multi_burst()"
+evidence_id = "ev-th04-main-orange-tail-boundary-v133"
+reason = "Explicitly admit the cross-linked internal Orange helper only after exact-owner replay, gap-free terminal RET decoding, the target near-CALL anchor, and the independently attested next target entry."
+
+# orange_update() is a public FAR function whose Ghidra body is severely
+# cross-linked. Count only its 0x403 executable bytes through RETF; the following
+# 0x16 bytes of compiler switch tables remain exact physical-owner data.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-29aa3"
+address = "0x29AA3"
+file_offset = "0x1B2A3"
+size = "0x403"
+decode_size = "0x403"
+name = "orange_update()"
+owner_unit = "th04-main-orange-tail-v133"
+evidence_id = "ev-th04-main-orange-tail-boundary-v133"
+reason = "Fresh Ghidra starts at the correct entry but incorrectly labels it near and cross-links its body from 0x22042 through 0x2C735. Pinned TASM and gap-free raw target decode prove a 0x403 FAR executable body through RETF at 0x29EA5; exact replay proves the enclosing owner, including the separate trailing compiler switch tables through 0x29EBB."
+
+[[new_exact]]
+id = "th04-main-fn-29aa3"
+address = "0x29AA3"
+name = "orange_update()"
+evidence_id = "ev-th04-main-orange-tail-boundary-v133"
+reason = "Explicitly admit the target-proved 0x403 FAR Orange dispatcher after exact-owner map placement, raw terminal-RETF review, rejection of the cross-linked Ghidra body, and separate switch-table ownership review."

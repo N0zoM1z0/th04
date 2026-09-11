@@ -980,6 +980,87 @@ call_site_address = "0x10008"
             self.assertEqual(accepted[0]["resolved_call_target"], "0x10000")
             self.assertEqual(accepted[0]["boundary_mode"], "next internal Ghidra entry 0x10003")
 
+    def test_internal_call_exact_accepts_explicit_crosslinked_body_with_target_boundary(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_internal_call]]
+id = "fn-crosslinked-internal-call"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x3"
+name = "crosslinked_internal_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-crosslinked-internal-call"
+reason = "synthetic cross-linked internal boundary"
+allow_crosslinked_body = true
+next_target_address = "0x10003"
+next_target_prefix_size = "0x4"
+next_target_prefix_sha256 = "9f64a747e1b97f131fabb6b447296c9b6f0201e79fb3c5356e6c77e89b6a806a"
+call_site_address = "0x10008"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1803] = b"\x90\x90\xC3"
+            data[0x1803:0x1807] = b"\x01\x02\x03\x04"
+            data[0x1808:0x180B] = b"\xE8\xF5\xFF"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            functions = {0x10000: "FUN_10000"}
+            metadata = {0x10000: {"address": "0x10000", "body_min": "0x0FFF0",
+                                  "body_max": "0x10002", "body_addresses": "9",
+                                  "is_thunk": "false", "is_external": "false"}}
+            decoded = {"instruction_count": 3, "instruction_addresses": [0x10000,0x10001,0x10002],
+                       "terminal": "ret", "first_address": "0x10000",
+                       "end_address_exclusive": "0x10003"}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ), patch.object(review, "linear_decode", return_value=dict(decoded)):
+                accepted = review.reviewed_exact_internal_call_reviews(
+                    functions, metadata, {}, target
+                )
+            self.assertEqual(len(accepted), 1)
+            self.assertEqual(accepted[0]["resolved_call_target"], "0x10000")
+            self.assertIn("target-attested next entry", accepted[0]["boundary_mode"])
+
+    def test_internal_call_exact_rejects_crosslinked_body_without_opt_in(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_exact_internal_call]]
+id = "fn-crosslinked-internal-call"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x3"
+name = "crosslinked_internal_fixture()"
+owner_unit = "owner"
+evidence_id = "ev-crosslinked-internal-call"
+reason = "synthetic cross-linked internal boundary"
+next_target_address = "0x10003"
+next_target_prefix_size = "0x4"
+next_target_prefix_sha256 = "9f64a747e1b97f131fabb6b447296c9b6f0201e79fb3c5356e6c77e89b6a806a"
+call_site_address = "0x10008"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1810)
+            data[0x1800:0x1803] = b"\x90\x90\xC3"
+            data[0x1803:0x1807] = b"\x01\x02\x03\x04"
+            data[0x1808:0x180B] = b"\xE8\xF5\xFF"
+            target.write_bytes(data)
+            owners = [{"start": 0x10000, "end": 0x10010, "file_start": 0x1800,
+                       "unit_id": "owner", "source": "src/exact.cpp", "owner_name": "exact"}]
+            metadata = {0x10000: {"address": "0x10000", "body_min": "0x0FFF0",
+                                  "body_max": "0x10002", "body_addresses": "9",
+                                  "is_thunk": "false", "is_external": "false"}}
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "exact_authored_owners", return_value=owners
+            ):
+                with self.assertRaisesRegex(ValueError, "bounded Ghidra entry body"):
+                    review.reviewed_exact_internal_call_reviews(
+                        {0x10000: "FUN_10000"}, metadata, {}, target
+                    )
+
     def test_internal_call_exact_rejects_wrong_call_target(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -6015,3 +6015,53 @@ map_start = "0x5DE8"
 map_size = "0x113"
 target_file_offset = "0x1B078"
 size = "0x113"
+
+# v133 MAIN_033_TEXT Orange tail. Natural TC86 source replaces the complete
+# remaining 0x531-byte residual: one near helper, FAR orange_update(), and the
+# two compiler-generated switch tables after RETF. The residual ASM remains as
+# a zero-code layout object so earlier exact-unit auxiliary-object contracts stay valid.
+[[build_replacements]]
+id = "th04-main-orange-tail-v133-build"
+trigger_units = ["th04-main-orange-tail-v133"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/orentry.cpp\",\n\t\"th04/orangeph.cpp\",\n\t\"th04/orbounce.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/orentry.cpp\",\n\t\"th04/orangeph.cpp\",\n\t\"th04/orbounce.cpp\",\n\t\"th04/orangeup.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-orange-tail-v133"
+trigger_units = ["th04-main-orange-tail-v133"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "cc276ac7e3c91043b54c3dfa042db26509b487f9d2b0b4da1a6b59c51201e199"
+patched_sha256 = "8eb959ffdbe2c468ec59e14f879cf229b47e0857fc7d092305ced1aed5b2a9cc"
+
+[[source_transforms.ops]]
+id = "move-main033-orange-update-public-v133"
+kind = "replace"
+old = "public @ORANGE_UPDATE$QV\r\n"
+new = "extrn @ORANGE_UPDATE$QV:far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main033-orange-tail-v133"
+kind = "remove_between"
+removed_sha256 = "a85ccdca09d3469ba156934d76c9b8d32b5883a93ff9fb90faac66821b24c443"
+start = "orange_1998B\tproc near\r\n"
+end = "\t\tdw offset loc_19DEB\r\n"
+replacement = ""
+
+[[units]]
+id = "th04-main-orange-tail-v133"
+default_enabled = true
+requires_units = ["th04-main-orange-bounce-random-v132"]
+repo_source = "src/main/boss/orange_update.cpp"
+overlay_path = "th04/orangeup.cpp"
+map_module = "th04/orangeup.cpp"
+map_mode = "exact"
+object_path = "obj/th04/orangeup.obj"
+zero_code_objects = ["obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x5EFB"
+map_size = "0x531"
+target_file_offset = "0x1B18B"
+size = "0x531"

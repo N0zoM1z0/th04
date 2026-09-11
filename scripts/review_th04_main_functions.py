@@ -353,9 +353,12 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
 
     This gate is intentionally stricter than ordinary manual review: the entry must
     start a target Ghidra function, the configured extent must decode gap-free through
-    RET/RETF, another Ghidra function must begin exactly at the next byte, and a
-    target near CALL must resolve exactly to the internal entry. The function must
-    lie wholly inside one exact authored byte owner and have no TLINK public.
+    RET/RETF, an independently attested next boundary must begin exactly at the next
+    byte, and a target near CALL must resolve exactly to the internal entry. The
+    function must lie wholly inside one exact authored byte owner and have no TLINK
+    public. An explicit allow_crosslinked_body=true may reject Ghidra's body extent,
+    but never its target-attested entry; the exact boundary then comes from the owner,
+    raw terminal decode, next-boundary attestation, and target CALL anchor.
     """
     policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
     owners = {str(owner["unit_id"]): owner for owner in exact_authored_owners()}
@@ -397,7 +400,22 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
         body_min = int(data["body_min"], 16)
         body_max = int(data["body_max"], 16)
         body_addresses = int(data["body_addresses"])
-        if body_min != address or not (address <= body_max < address + size) or not (0 < body_addresses <= size):
+        allow_crosslinked_body = override.get("allow_crosslinked_body") is True
+        bounded_body = (
+            body_min == address
+            and address <= body_max < address + size
+            and 0 < body_addresses <= size
+        )
+        if allow_crosslinked_body:
+            if not (body_min <= address <= body_max):
+                raise ValueError(
+                    f"internal-call exact address 0x{address:X} cross-linked Ghidra body misses entry"
+                )
+            if bounded_body:
+                raise ValueError(
+                    f"internal-call exact address 0x{address:X} does not require cross-linked override"
+                )
+        elif not bounded_body:
             raise ValueError(f"internal-call exact address 0x{address:X} lacks a bounded Ghidra entry body")
         if data.get("is_thunk") != "false" or data.get("is_external") != "false":
             raise ValueError(f"internal-call exact address 0x{address:X} is thunk/external")
