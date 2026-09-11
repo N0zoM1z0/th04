@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 276 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 454 authored candidates otherwise unreviewed;
+- 278 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 452 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- authored C/C++ bytes: **42,229 / 42,260 exact (99.926645%)**;
-- accepted authored functions: **276 / 278 exact (99.280576%)**;
-- accepted exact C/C++ owners: **159**;
+- authored C/C++ bytes: **42,569 / 42,600 exact (99.927230%)**;
+- accepted authored functions: **278 / 280 exact (99.285714%)**;
+- accepted exact C/C++ owners: **160**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **31 bytes** in the two accepted
   blocked functions.
@@ -36,9 +36,13 @@ with focused plus 158-owner aggregate replay. The same packet target-reviews the
 preceding no-Ghidra Kurumi physical extent without granting source/exact credit.
 v123 then recovers that complete 0x1D8 Kurumi foreground owner as natural C++
 and closes it with focused plus 159-owner aggregate replay and the explicit
-no-Ghidra function-review gate. The unresolved shot residual still receives no
-reconstruction or function exactness credit. These percentages are not a claim
-about 99.926645% of an executable or the game. Derive current
+no-Ghidra function-review gate. v124 then recovers the connected 0x154 Kurumi
+spawn-ray allocator/updater cohort in `MAIN_033_TEXT`; hash-bound replay-only
+suffix extraction preserves the original internal producer order while the
+untouched residual suffix receives zero reconstruction credit. Focused and
+160-owner aggregate replay close the natural owner. The unresolved shot residual
+still receives no reconstruction or function exactness credit. These percentages
+are not a claim about 99.927230% of an executable or the game. Derive current
 numbers with `python3 scripts/status.py`; `config/units.csv`,
 `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -170,6 +174,8 @@ v122 recovers the immediately preceding `orange_fg_render()` at `0x2196B..0x21A9
 
 v123 converts that target-proved Kurumi extent into maintained `src/main/boss/kurumi_fg_render.cpp`, a complete **0x1D8 / 472-byte** exact natural-C++ owner. The first source was three bytes short because `if(flag != FREE)` let TC4J keep BX live across the branch; ordinary `if(flag == FREE) continue` reproduces the target reload and exact 472-byte skeleton. Focused `gptweb-v123-kurumi-fg-focused-001` and 159-owner aggregate `gptweb-v123-kurumi-fg-aggregate-001` pass raw/map/eight-relocation/OMF/determinism. The function reviewer admits `0x21793` only through the explicit no-Ghidra path; the mid-instruction `0x218B2` pseudo-function remains excluded. Full evidence is in `docs/reconstruction/TH04_MAIN_012_KURUMI_FG_V123.md`.
 
+v124 follows the state consumed by that renderer into `MAIN_033_TEXT`: `kurumi_spawnrays_add(int,unsigned char)` at `0x28A14..0x28A78` and `kurumi_spawnrays_update()` at `0x28A79..0x28B67` form one exact **0x154 / 340-byte** natural-C++ producer. Because the target position lies inside the original monolithic assembler contribution, replay hash-extracts only the untouched `0x18B68..MAIN_033_TEXT end` suffix into an auxiliary TASM object. Focused `gptweb-v124-kurumi-spawnrays-focused-004` and 160-owner aggregate `gptweb-v124-kurumi-spawnrays-aggregate-001` close raw/map/four-relocation/OMF/determinism without granting the residual suffix reconstruction credit. Full evidence is in `docs/reconstruction/TH04_MAIN_033_KURUMI_SPAWNRAYS_V124.md`.
+
 
 The immediately preceding v114 experiment on the 0x60-byte `MAI_TEXT` scroll-update suffix was deliberately rolled back. Its best allowed natural-C++ shape made the first half and relocation order exact but remained seven bytes long because TC4 inserted an extra byte-to-word zero extension and a separate post-subtraction compare instead of preserving AX plus the `SUB` flags. Combining the compound subtraction with its condition clobbered AX through lvalue evaluation, while `SubpixelLength8::to_pixel()` moved the value through BL and was worse. This negative result is checked into evidence/knowledge; do not retry it without a new falsifiable compiler/source hypothesis.
 
@@ -177,22 +183,22 @@ Before accepting the Reimu batch, a target-first probe attempted the adjacent Mu
 
 The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`, v100 adds `src/main/formats/map.cpp`, v101 adds `src/main/boss/gengetsu6_fg_render.cpp`, v102 adds `src/main/boss/mugetsu_gengetsu_bg_render.cpp`, v103 adds `src/main/enemy/enemies_invalidate.cpp`, v104 adds `src/main/formats/bb_txt.cpp`, v105 adds `src/main/boss/mugetsu_fg_render.cpp`, v106 adds `src/main/boss/gengetsu_bomb_inv_render.cpp`, v107 adds `src/main/boss/mugetsu_prefix.cpp`, v108 adds `src/main/boss/mugetsu_180bb.cpp`, v109 adds `src/main/boss/reimu_fg_render.cpp`, v110 adds `src/main/boss/reimu_orbs_render.cpp`, v111 adds `src/main/item/items_render.cpp`, v112 adds `src/main/bullet/render.cpp`, v113 adds `src/main/boss/yuuka6_bg_render.cpp`, v115 adds `src/main/stage_state_init.cpp`, and v116 adds `src/main/boss/elly_fg_render.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
 
-The v117/v118 source-present states remain useful historical evidence of the compiler-shape and layout blocker, but both maintained owners are superseded by v119 exact acceptance: `src/main/player/shots_add.cpp` owns 0x34 exact bytes and `src/main/boss/yuuka6_fg_render.cpp` owns 0x17C exact bytes. The replay-only residual that made legal interleaving possible is not product source and receives no reconstruction credit. v120 additionally makes `src/main/boss/yuuka6_entities_render.cpp` the exact owner of the preceding 0xD6 bytes. v121 adds `src/main/midboss/defeat_render.cpp` as the exact owner of the preceding 0xAA bytes while leaving the angle byte in its original data owner. v122 adds `src/main/boss/orange_fg_render.cpp` as the exact owner of the preceding 0x12F bytes. v123 adds `src/main/boss/kurumi_fg_render.cpp` as the exact owner of the preceding 0x1D8 bytes despite Ghidra missing its true entry.
+The v117/v118 source-present states remain useful historical evidence of the compiler-shape and layout blocker, but both maintained owners are superseded by v119 exact acceptance: `src/main/player/shots_add.cpp` owns 0x34 exact bytes and `src/main/boss/yuuka6_fg_render.cpp` owns 0x17C exact bytes. The replay-only residual that made legal interleaving possible is not product source and receives no reconstruction credit. v120 additionally makes `src/main/boss/yuuka6_entities_render.cpp` the exact owner of the preceding 0xD6 bytes. v121 adds `src/main/midboss/defeat_render.cpp` as the exact owner of the preceding 0xAA bytes while leaving the angle byte in its original data owner. v122 adds `src/main/boss/orange_fg_render.cpp` as the exact owner of the preceding 0x12F bytes. v123 adds `src/main/boss/kurumi_fg_render.cpp` as the exact owner of the preceding 0x1D8 bytes despite Ghidra missing its true entry. v124 adds `src/main/boss/kurumi_spawnrays.cpp` as one exact 0x154-byte owner containing the adjacent allocator and updater; the extracted `MAIN_033_TEXT` suffix remains replay plumbing only.
 
 ## Latest replay receipts
 
-The latest MAIN_012 owner passes focused two-cold replay at:
+The latest accepted owner passes focused two-cold replay at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v123-kurumi-fg-focused-001/receipt.json`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v124-kurumi-spawnrays-focused-004/receipt.json`.
 
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v123-kurumi-fg-aggregate-001/receipt.json`
-  — all 159 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v124-kurumi-spawnrays-aggregate-001/receipt.json`
+  — all 160 default owners, two isolated cold materializations.
 
 The v119 shots/Yuuka foreground, v120 Yuuka entity-render, v121 midboss
-defeat, and v122 Orange focused receipts remain valid historical acceptance
-receipts for their respective owners.
+defeat, v122 Orange, and v123 Kurumi foreground focused receipts remain valid
+historical acceptance receipts for their respective owners.
 
 The aggregate is the retained current private acceptance baseline. Superseded
 replay materializations and raw probe matrices may be pruned after their
@@ -207,17 +213,17 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 159-owner aggregate reports zero raw differences for every declared
+The current 160-owner aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
-`99e38fa3783442c59c466cc2fed8cf2481e8be3e9caa3b9d0318d2943bd7ec1b`.
+`1ccab550d98514aa0f6c0b3315fa775bb2885e7d92e9d6fab71dff0b826e92c8`.
 
-The current function review uses the v123 aggregate map, target-bound Ghidra
-inventory, pinned target bytes, and the explicit manual/no-Ghidra boundary
-gates. It reports 276/278 exact functions, 134 automatic acceptances, 142 manual
+The current function review uses the v124 aggregate map, fresh target-bound
+Ghidra metadata, pinned target bytes, and the explicit manual/no-Ghidra boundary
+gates. It reports 278/280 exact functions, 136 automatic acceptances, 142 manual
 reviewed acceptances (17 no-Ghidra), and zero provisional strict rejections. The
-private report is `.analysis/reconstruction/functions/function-review-v123-current.json`.
+private report is `.analysis/reconstruction/functions/function-review-v124-current.json`.
 
 ## Remaining reviewed nonexact work
 
@@ -241,21 +247,21 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 454 such rows. Prefer `boundary_state=corroborated`; the 101
+There are 452 such rows. Prefer `boundary_state=corroborated`; the 101
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 261 MAIN entries currently represented by
+The largest remaining class is 259 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 146 are exact, 260 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 275 unreviewed authored candidates, including **79 provisional/high-risk** rows, 41 with no Ghidra observation and 35 with sparse/cross-linked spans. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 148 are exact, 258 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 273 unreviewed authored candidates, including **79 provisional/high-risk** rows, 41 with no Ghidra observation and 35 with sparse/cross-linked spans. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-The first concrete structurally connected source candidate is now the `MAIN_033_TEXT` Kurumi spawn-ray producer/updater cohort. `kurumi_spawnrays_add(int,unsigned char)` is the complete contiguous near body at load `0x18A14..0x18A78`, file `0x1A214..0x1A278` (**0x65 / 101 bytes**, SHA-256 `59f51c6db0ef89946794e5eb04d0620f049c0e77830f326d3a7b043316adb9a6`), and `kurumi_18A79` immediately follows at load `0x18A79..0x18B67`, file `0x1A279..0x1A367` (**0xEF / 239 bytes**, SHA-256 `61b1c06f95299c7fa544a664b3126d84e65fab5b1cf9d15da247285875fcad27`). Fresh attested Ghidra constructs both bodies contiguously; both have the same six Kurumi phase callers and operate on the six 0x1A-byte records consumed by exact `kurumi_fg_render`. Review and reconstruct them as one source/data-owner cohort before branching into the six callers.
+The first concrete target-first continuation is now the first shared Kurumi phase caller, `kurumi_18BE6` in `MAIN_033_TEXT`. Pinned TASM defines one near PROC over load `0x18BE6..0x18C75`, file `0x1A3E6..0x1A475` (**0x90 / 144 bytes**, SHA-256 `6e66a95d2a225303b10deaebcf1760ba774e99daa8864d592137594fab85341a`) with two MZ relocations at `0x18C0F` and `0x18C1B`; the next PROC begins exactly at `0x18C76`. Fresh attested Ghidra has the same min/max span but only 0x6F / 111 body addresses, so the existing provisional/noncontiguous ledger state is correct. Reconcile the missing 33 target bytes and all exits against TASM/raw before attempting natural source; do not promote the sparse Ghidra body as a closed extent.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
@@ -265,7 +271,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The accepted 159-owner cohort compiles and links reproducibly through the
+The accepted 160-owner cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

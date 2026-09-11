@@ -2985,3 +2985,20 @@ address = "0x21793"
 name = "kurumi_fg_render()"
 evidence_id = "ev-th04-main-kurumi-fg-boundary-v123"
 reason = "Explicitly admit the Ghidra-missed Kurumi foreground renderer after exact-owner generated-public, raw/TASM terminal RET, mid-instruction false-entry rejection, and exact owner-end review."
+
+
+# v124: two complete contiguous MAIN_033_TEXT Kurumi spawn-ray functions share
+# one exact natural-C++ producer at target 13A9:4F84..50D7.
+[[new_exact]]
+id = "th04-main-fn-28a14"
+address = "0x28A14"
+name = "kurumi_spawnrays_add(int,unsigned char)"
+evidence_id = "ev-th04-main-kurumi-spawnrays-boundary-v124"
+reason = "Fresh attested Ghidra, pinned TASM/raw, generated public 13A9:4F84, and focused plus 160-owner aggregate cold replay agree on the complete 0x65 Pascal-near allocator through RET 4 at 0x28A78."
+
+[[new_exact]]
+id = "th04-main-fn-28a79"
+address = "0x28A79"
+name = "kurumi_spawnrays_update()"
+evidence_id = "ev-th04-main-kurumi-spawnrays-boundary-v124"
+reason = "Fresh attested Ghidra, pinned TASM/raw, exact natural-C++ owner offset 0x65, and focused plus 160-owner aggregate cold replay agree on the complete 0xEF near updater through RET at 0x28B67."

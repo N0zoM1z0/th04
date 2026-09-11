@@ -1,0 +1,162 @@
+.386
+.model use16 large _TEXT
+include ReC98.inc
+include th04/th04.inc
+include th01/math/subpixel.inc
+include th02/main/sparks.inc
+include th04/sprites/main_pat.inc
+include th04/sprites/main_cdg.inc
+include th04/sprites/blit.inc
+include th04/main/phase.inc
+include th04/main/tile/tile.inc
+
+bullet_template_delta_t union
+    spread_angle db ?
+    stack_speed  db ?
+bullet_template_delta_t ends
+
+BG_SINGLE = 000h
+BG_RING = 026h
+BG_RING_AIMED = 02Ch
+BG_SPREAD_AIMED = 02Eh
+BG_SPREAD = 02Dh
+BG_RANDOM_ANGLE = 01Bh
+BST_PELLET = 1
+BST_BULLET16 = 2
+BST_BULLET16_CLOUD_FORWARDS = 4
+ET_NONE = -1
+ET_CIRCLE = 0
+ET_NW_SE = 1
+ET_SW_NE = 2
+ET_HORIZONTAL = 3
+ET_VERTICAL = 4
+KURUMI_SPAWNRAY_COUNT = 6
+B2SF_FREE = 0
+B2SF_GROW = 1
+B2SF_SHRINK = 2
+kurumi_spawnray_t struc
+    B2S_flag db ?
+        db ?
+    B2S_target Point <?>
+    B2S_origin Point <?>
+    B2S_velocity Point <?>
+        db 12 dup(?)
+kurumi_spawnray_t ends
+BSB_pattern_num_prev = 0
+BSB_patterns_done = 0
+BSB_spread_interval = 0
+BSB_stack_left_angle = 0
+BSB_stack_right_angle = 0
+BSB_stacks_fired = 0
+include th04/main/bullet/bullet.inc
+include th04/main/gather.inc
+include th04/main/enemy/enemy.inc
+
+GATHER_TEXT segment byte public 'CODE' use16
+GATHER_TEXT ends
+SCROLLY3_TEXT segment byte public 'CODE' use16
+SCROLLY3_TEXT ends
+MOTION_3_TEXT segment byte public 'CODE' use16
+MOTION_3_TEXT ends
+main_032_TEXT segment byte public 'CODE' use16
+main_032_TEXT ends
+VECTOR2N_TEXT segment byte public 'CODE' use16
+VECTOR2N_TEXT ends
+SPARK_A_TEXT segment byte public 'CODE' use16
+SPARK_A_TEXT ends
+GRCG_3_TEXT segment byte public 'CODE' use16
+GRCG_3_TEXT ends
+IT_SPL_U_TEXT segment byte public 'CODE' use16
+IT_SPL_U_TEXT ends
+B4M_UPDATE_TEXT segment byte public 'CODE' use16
+B4M_UPDATE_TEXT ends
+main_033_TEXT segment byte public 'CODE' use16
+main_033_TEXT ends
+MIDBOSS_TEXT segment byte public 'CODE' use16
+MIDBOSS_TEXT ends
+HUD_HP_TEXT segment byte public 'CODE' use16
+HUD_HP_TEXT ends
+MB_DFT_TEXT segment byte public 'CODE' use16
+MB_DFT_TEXT ends
+main_034_TEXT segment byte public 'CODE' use16
+main_034_TEXT ends
+BULLET_U_TEXT segment byte public 'CODE' use16
+BULLET_U_TEXT ends
+BULLET_A_TEXT segment byte public 'CODE' use16
+BULLET_A_TEXT ends
+main_035_TEXT segment byte public 'CODE' use16
+main_035_TEXT ends
+BOSS_TEXT segment byte public 'CODE' use16
+BOSS_TEXT ends
+main_036_TEXT segment byte public 'CODE' use16
+main_036_TEXT ends
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
+
+extrn @KURUMI_SPAWNRAYS_ADD$QIUC:near
+extrn @kurumi_spawnrays_update$qv:near
+extrn _boss_angle:byte
+extrn _boss_mode:byte
+extrn _boss_phase_frame:word
+extrn _boss_pos:motion_t
+extrn _boss_sprite:byte
+extrn _CosTable8:word
+extrn _SinTable8:word
+extrn @POLAR$QIII:far
+extrn @CIRCLES_ADD_SHRINKING$QII:far
+extrn _circles_color:byte
+extrn SND_SE_PLAY:far
+extrn @RANDRING2_NEXT16_AND$QUI:near
+extrn @randring2_next16$qv:near
+extrn _bullet_template:bullet_template_t
+extrn _bullet_template_tune:word
+extrn _bullets_add_special:word
+extrn _bullet_special_turns_max:byte
+extrn _bullet_template_special_angle:bullet_special_angle_t
+extrn _stage_frame:word
+extrn byte_259F0:byte
+extrn byte_259F1:byte
+extrn _boss_statebyte:byte
+extrn _boss_phase:byte
+extrn _boss_hp:word
+extrn _boss_phase_end_hp:word
+extrn _boss_phase_state:byte
+extrn Palettes:rgb_t
+extrn _palette_changed:byte
+extrn _custom_entities:byte
+extrn _gather_template:gather_t
+extrn @gather_add_only$qv:near
+extrn _bg_render_bombing_func:word
+extrn _tiles_bb_col:byte
+extrn _bullets_add_regular_fixedspeed:near
+extrn @boss_hittest_shots_invincible$qv:near
+extrn @BOSS_PHASE_NEXT$Q16EXPLOSION_TYPE_TI:near
+extrn @boss_hittest_shots$qv:near
+extrn @BOSS_SCORE_BONUS$QUI:near
+extrn @RANDRING2_NEXT16_MOD$QUI:near
+extrn @PlayfieldMotion@update_seg3$qv:near
+extrn @SPARKS_ADD_CIRCLE$Q20%SUBPIXELBASE$TI$TI%T1II:near
+extrn @BOSS_EXPLODE_SMALL$Q16EXPLOSION_TYPE_T:near
+extrn @BOSS_EXPLODE_BIG$QUI:near
+extrn @KURUMI_BG_RENDER$QV:near
+extrn _bullet_zap:byte
+extrn _player_invincibility_time:byte
+extrn @boss_defeat_update$qv:near
+extrn _homing_target:Point
+extrn @HUD_HP_UPDATE_AND_RENDER$QII:near
+extrn @GATHER_ADD_ONLY_3STACK$QIUIUI:near
+extrn _stage_frame_mod2:byte
+extrn _stage_frame_mod4:byte
+extrn _stage_frame_mod8:byte
+extrn _bullets_add_regular:word
+extrn _player_pos:motion_t
+extrn IATAN2:far
+extrn _rank:byte
+extrn @ORANGE_BG_RENDER$QV:near
+extrn @BOSS_HITTEST_SHOTS_DAMAGE$QIII:near
+
+public @ORANGE_UPDATE$QV, @KURUMI_UPDATE$QV
+main_033_TEXT segment byte public 'CODE' use16
+assume cs:main_03
+kurumi_spawnrays equ <_custom_entities>
+{{EXTRACTED_SPAN}}
+end

@@ -5356,3 +5356,84 @@ map_start = "0x6CA3"
 map_size = "0x1D8"
 target_file_offset = "0x12F93"
 size = "0x1D8"
+
+
+# v124 MAIN_033_TEXT Kurumi spawn-ray allocator/updater cohort. The v123
+# frontier is selected by dependency. The remaining MAIN_033_TEXT suffix is
+# extracted only inside cold replay from the hash-bound scaffold and receives
+# zero reconstruction credit.
+[[scaffold_extractions]]
+id = "th04-main-main033-kurumi-suffix-v124"
+trigger_units = ["th04-main-kurumi-spawnrays-v124"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "kurumi_18B68\tproc near\r\n"
+end = "main_033_TEXT\tends\r\n"
+span_sha256 = "fbbcf785413222822a65eae4397a0700d803371e6446a7b4bf3130dca76ad4f5"
+template_source = "config/replay/th04_main033_kurumi_suffix.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m33kseam.asm"
+
+[[scaffold_extractions.replacements]]
+old = "kurumi_18A79"
+new = "@kurumi_spawnrays_update$qv"
+expected_count = 9
+
+[[scaffold_extractions.replacements]]
+old = "_bullet_zap_active"
+new = "_bullet_zap"
+expected_count = 2
+
+[[build_replacements]]
+id = "th04-main-kurumi-spawnrays-v124-build"
+trigger_units = ["th04-main-kurumi-spawnrays-v124"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/kurumifg.cpp\",\n\t\"th04/orangefg.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/kurrays.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n\t\"th04/orangefg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-kurumi-spawnrays-v124-layout"
+trigger_units = ["th04-main-kurumi-spawnrays-v124"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "989a82a4da82441d54a3e3f03ac5bf327539b6db192896887d792e15c04a9647"
+patched_sha256 = "a71fcc828a6e1e6113cd768acb30a03ebf32f8feb563fae734f8accc0d56c0ec"
+
+[[source_transforms.ops]]
+id = "remove-main033-kurumi-cohort-and-suffix-v124"
+kind = "remove_between"
+removed_sha256 = "897b092bef89b5518b4f4947f7dec438cebf7ea1a92ac733c68c303b5db15363"
+start = "public @KURUMI_SPAWNRAYS_ADD$QIUC\r\n"
+end = "main_033_TEXT\tends\r\n"
+replacement = "main_033_TEXT\tends\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main033-kurumi-private-bytes-v124"
+kind = "replace"
+old = "byte_259F0\tdb ?\r\nbyte_259F1\tdb ?\r\n"
+new = "public byte_259F0, byte_259F1\r\nbyte_259F0\tdb ?\r\nbyte_259F1\tdb ?\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-main033-kurumi-orange-updates-v124"
+kind = "replace"
+old = "public @ORANGE_UPDATE$QV\r\npublic @KURUMI_UPDATE$QV\r\n"
+new = "extrn @ORANGE_UPDATE$QV:far\r\nextrn @KURUMI_UPDATE$QV:far\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-kurumi-spawnrays-v124"
+default_enabled = true
+requires_units = ["th04-main-kurumi-fg-v123"]
+repo_source = "src/main/boss/kurumi_spawnrays.cpp"
+overlay_path = "th04/kurrays.cpp"
+map_module = "th04/kurrays.cpp"
+map_mode = "exact"
+object_path = "obj/th04/kurrays.obj"
+auxiliary_objects = ["obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x4F84"
+map_size = "0x154"
+target_file_offset = "0x1A214"
+size = "0x154"
