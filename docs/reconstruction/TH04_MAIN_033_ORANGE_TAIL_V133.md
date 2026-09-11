@@ -183,16 +183,25 @@ This packet establishes repository exact-unit evidence for the declared
 `0x531` physical owner and independently reviews the two executable function
 extents. It does not establish standalone TH04 production closure, runtime
 storage identity, a runtime scenario, or whole-image exactness. Factory
-Truth-Kernel acceptance is a separate post-commit plane. Commit
-`b213ad641163d5a919ca01d22b4dc82fea2e68d2` imports
-`claim:unit:th04-main-orange-tail-v133:owned-extent-exact`, but Factory
-acceptance is **not established** in this packet. Two controlled replay attempts
-(`job:fef5c79669dd42b4b5978df02a57c8b2` and
-`job:3d0a5e9191164c5792bcbe72dfea8c53`) both terminated before producing an
-Oracle receipt because another Factory operation owned the TH095 registered
-worktree. Both failures have `outcome=null`; neither is a TH04 replay verdict,
-rejection, or acceptance. A later session should retry the committed claim only
-after that external Factory lock is clear.
+Truth-Kernel acceptance is a separate post-commit plane. The first two
+controlled replay attempts (`job:fef5c79669dd42b4b5978df02a57c8b2` and
+`job:3d0a5e9191164c5792bcbe72dfea8c53`) terminated before producing an Oracle
+receipt because another Factory operation owned the TH095 registered worktree.
+Both failures have `outcome=null`; neither is a TH04 replay verdict or rejection.
+
+After that external lock cleared, the same committed claim
+`claim:unit:th04-main-orange-tail-v133:owned-extent-exact` was independently
+replayed from clean source commit
+`239d2e16446edc4d9c2687ecc8425ebbcc412b35`. Controlled job
+`job:ae0a488b4b434e3cb605fd6366d118c5` completed with Factory receipt
+`receipt:c39c7d03dc07b85bcb83677594067870ed2a452ee0b38cca42284455d7b18071`,
+`receipt_verdict=pass`, and `acceptance_decision=accepted`. The registry identity
+reported by that job is
+`registry:652d5b31639388a4aba9fc5f088b490d39af85c8ac835cb0e6abd12ef0049c16`.
+This establishes Factory acceptance only for the v133 `owned_extent_exact`
+claim; it does not establish standalone product closure, runtime-storage
+identity, a runtime scenario, whole-image exactness, or project-wide Factory
+acceptance.
 
 The next useful target-first packet is the `MAIN_032_TEXT` dual-entry
 `pointnums_add_yellow()` / `pointnums_add_white()` shared-tail seam. Fresh Ghidra

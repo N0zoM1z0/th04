@@ -378,21 +378,31 @@ Factory receipt `receipt:6db3097e1b081a55569cadbfda0f143c0e2bb013cdb157fb18c4835
 `acceptance_decision=accepted`. The accepted registry identity reported by that
 job is `registry:e136ea293207da22f0a7286eee362765d399f9f587ac32369a9459c7619b7d29`. This acceptance is scoped to the imported v132
 `owned_extent_exact` claim and does not establish standalone product closure,
-runtime-storage identity, or a runtime scenario. The v133 Orange-tail repository exact claim has passed focused and aggregate
-repository Oracles and is committed at
-`b213ad641163d5a919ca01d22b4dc82fea2e68d2`, but Factory acceptance is **not
-established**. Factory imported
-`claim:unit:th04-main-orange-tail-v133:owned-extent-exact`; controlled replay
-jobs `job:fef5c79669dd42b4b5978df02a57c8b2` and
-`job:3d0a5e9191164c5792bcbe72dfea8c53` both failed before any Oracle receipt was
-produced because another Factory operation owned the TH095 registered
-worktree. Both have `outcome=null`, so this is an external infrastructure lock,
-not a TH04 replay rejection. Acceptance-registry/snapshot queries were blocked
-by the same external lock. Retry the committed v133 claim after the Factory
-lock clears; do not alter source or exact ledgers merely to work around it. The
-v134 randring2 owner has repository focused/aggregate and independent function
-review evidence but is not yet committed as a Factory-importable claim, so its
-Factory acceptance is also **not established** at this pre-checkpoint stage.
+runtime-storage identity, or a runtime scenario. The two earlier v133 Factory
+replay attempts (`job:fef5c79669dd42b4b5978df02a57c8b2` and
+`job:3d0a5e9191164c5792bcbe72dfea8c53`) remain useful infrastructure history:
+both ended with `outcome=null` before any Oracle receipt because another Factory
+operation owned the TH095 registered worktree. They were not TH04 replay
+rejections. After that lock cleared, the committed v133 claim
+`claim:unit:th04-main-orange-tail-v133:owned-extent-exact` was replayed from
+clean source commit `239d2e16446edc4d9c2687ecc8425ebbcc412b35`. Job
+`job:ae0a488b4b434e3cb605fd6366d118c5` completed with Factory receipt
+`receipt:c39c7d03dc07b85bcb83677594067870ed2a452ee0b38cca42284455d7b18071`,
+`receipt_verdict=pass`, `acceptance_decision=accepted`, and registry identity
+`registry:652d5b31639388a4aba9fc5f088b490d39af85c8ac835cb0e6abd12ef0049c16`.
+
+Factory acceptance is independently closed for v134 as well. The same clean
+commit imports `claim:unit:th04-main-randring2-next16-v134:owned-extent-exact`;
+job `job:15a7abdc3af84873a06cb232cfd42a37` completed with receipt
+`receipt:062edd0f681d2f6091a5a0ad36742103dfadb995552cd782d6c7cdfc6ac10ec2`,
+`receipt_verdict=pass`, `acceptance_decision=accepted`, and registry identity
+`registry:765e85ac5302a6a58cb4398601719735ef20633c88ed8dd95f9bbda2c76886f4`.
+Both acceptances are scoped to their imported `owned_extent_exact` claims only.
+The current accepted snapshot is **not** a project-wide Factory pass:
+`global_pass=false`, 170 imported exact-owner candidates, 6 `fresh_pass`, and
+164 `missing_receipt`. Those missing Factory receipts do not revoke the
+repository-native exact evidence, but they prohibit claiming independent Factory
+acceptance for the entire 170-owner set.
 
 ## Remaining reviewed nonexact work
 

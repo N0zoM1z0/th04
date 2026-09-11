@@ -122,4 +122,20 @@ This packet establishes repository exact-unit evidence for the 13-byte
 `randring2_next16()` owner and independent function exactness for that function.
 It does not establish standalone TH04 product closure, runtime-storage identity,
 a runtime scenario, whole-image exactness, or pristine-release provenance.
-Factory Truth-Kernel acceptance remains a separate post-commit plane.
+
+Factory Truth-Kernel acceptance is independently closed for this owner. Clean
+source commit `239d2e16446edc4d9c2687ecc8425ebbcc412b35` imports
+`claim:unit:th04-main-randring2-next16-v134:owned-extent-exact`. Controlled
+`isolated-double-build` job `job:15a7abdc3af84873a06cb232cfd42a37` completed
+with Factory receipt
+`receipt:062edd0f681d2f6091a5a0ad36742103dfadb995552cd782d6c7cdfc6ac10ec2`,
+`receipt_verdict=pass`, and `acceptance_decision=accepted`. The registry identity
+reported by that job is
+`registry:765e85ac5302a6a58cb4398601719735ef20633c88ed8dd95f9bbda2c76886f4`.
+This acceptance is scoped to the v134 `owned_extent_exact` claim only.
+
+The live accepted snapshot at that registry is intentionally not a repository-wide
+completion claim: `global_pass=false`, with 170 imported exact-owner candidates,
+6 `fresh_pass`, and 164 `missing_receipt`. The missing Factory receipts do not
+undo repository-native exact-unit evidence for those owners, but they prevent any
+claim that all 170 imported owners have independent Factory acceptance.
