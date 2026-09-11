@@ -1,3 +1,4 @@
+#if !defined(TH04_KURUMI_MAIN033_COMBINED)
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 
 #include "th04/sprites/main_pat.h"
@@ -6,6 +7,8 @@
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
+
+#endif
 
 extern "C" void near kurumi_bullet_stacks_phase(void)
 {

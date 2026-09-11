@@ -5431,6 +5431,10 @@ overlay_path = "th04/kurrays.cpp"
 map_module = "th04/kurrays.cpp"
 map_mode = "exact"
 object_path = "obj/th04/kurrays.obj"
+producer_override_when_unit = "th04-main-kurumi-update-v128"
+producer_map_module = "th04/kupdate.cpp"
+producer_object_path = "obj/th04/kupdate.obj"
+producer_map_mode = "contains"
 auxiliary_objects = ["obj/th04/m33kseam.obj"]
 map_segment = "MAIN_033_TEXT"
 map_start = "0x4F84"
@@ -5536,6 +5540,10 @@ overlay_path = "th04/kphase.cpp"
 map_module = "th04/kphase.cpp"
 map_mode = "exact"
 object_path = "obj/th04/kphase.obj"
+producer_override_when_unit = "th04-main-kurumi-update-v128"
+producer_map_module = "th04/kupdate.cpp"
+producer_object_path = "obj/th04/kupdate.obj"
+producer_map_mode = "contains"
 auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
 map_segment = "MAIN_033_TEXT"
 map_start = "0x5156"
@@ -5644,6 +5652,10 @@ overlay_path = "th04/kphase2.cpp"
 map_module = "th04/kphase2.cpp"
 map_mode = "exact"
 object_path = "obj/th04/kphase2.obj"
+producer_override_when_unit = "th04-main-kurumi-update-v128"
+producer_map_module = "th04/kupdate.cpp"
+producer_object_path = "obj/th04/kupdate.obj"
+producer_map_mode = "contains"
 auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
 map_segment = "MAIN_033_TEXT"
 map_start = "0x5326"
@@ -5700,9 +5712,113 @@ overlay_path = "th04/kstack.cpp"
 map_module = "th04/kstack.cpp"
 map_mode = "exact"
 object_path = "obj/th04/kstack.obj"
+producer_override_when_unit = "th04-main-kurumi-update-v128"
+producer_map_module = "th04/kupdate.cpp"
+producer_object_path = "obj/th04/kupdate.obj"
+producer_map_mode = "contains"
 auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
 map_segment = "MAIN_033_TEXT"
 map_start = "0x55CA"
 map_size = "0x103"
 target_file_offset = "0x1A85A"
 size = "0x103"
+
+
+# v128 MAIN_033_TEXT Kurumi update dispatcher. The original TC4J physical
+# producer places the already-exact 0x103-byte bullet-stack function directly
+# before this far dispatcher. Keeping both in one C++ object restores the
+# compiler's word-aligned post-return switch tables without synthetic padding.
+[[build_replacements]]
+id = "th04-main-kurumi-update-v128-build"
+trigger_units = ["th04-main-kurumi-update-v128"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/kurrays.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/kphase.cpp\",\n\t\"th04/kphase2.cpp\",\n\t\"th04/kstack.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/kupdate.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-update-v128-seam"
+trigger_units = ["th04-main-kurumi-update-v128"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1155fe0dd0cecf2f2af0bc7013b9186538eb87703376130bd6d0aed8d1bbcaca"
+patched_sha256 = "fd5b9638abba66dd8be52cd636f7cbdfe6f0ca266610d3a8b4dbaefacecbf64b"
+
+[[source_transforms.ops]]
+id = "remove-main033-kurumi-update-v128"
+kind = "remove_between"
+removed_sha256 = "5cab6cb7afa02122f9aa1be1cf8fb5289c5f4d76c8d40f8dd96201a9c9312b44"
+start = "@kurumi_update$qv\tproc far\r\n"
+end = "\t\tdw offset loc_19509\r\n"
+replacement = "; natural C++ Kurumi MAIN_033 physical producer\r\n"
+
+[[source_transforms.ops]]
+id = "drop-main033-kurumi-update-residual-public-v128"
+kind = "replace"
+old = "extrn _kurumi_bullet_stacks_phase:near\r\npublic @ORANGE_UPDATE$QV, @KURUMI_UPDATE$QV\r\n"
+new = "public @ORANGE_UPDATE$QV\r\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-update-v128-pre"
+trigger_units = ["th04-main-kurumi-update-v128"]
+patch_path = "th04/m33kpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "3a30cf25d4bd52c0ff11d9757f7a4d2d54b93b35330ac70002ba732b3d0fb03f"
+patched_sha256 = "af7d4d59179fe005acef65bb6620d59965b13c51ba16d7386a2c44ea572da603"
+
+[[source_transforms.ops]]
+id = "zero-main033-kurumi-orbit-residual-v128"
+kind = "remove_between"
+removed_sha256 = "7434ec764fc48c0e1dee2ea3761503d8e5646d5b37447c8a5ba87c0821f43ea7"
+start = "public kurumi_18B68, kurumi_18BA7\r\n"
+end = "main_033_TEXT\tends\r\n"
+replacement = "main_033_TEXT segment byte public 'CODE' use16\r\nassume cs:main_03\r\nmain_033_TEXT\tends\r\n"
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-update-v128-state"
+trigger_units = ["th04-main-kurumi-update-v128"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "3a3e9009e41fe8cfbc94698d15d4947d3337195c1e27258f293ea820d18e0c64"
+patched_sha256 = "5f8a07afb84f0bbea7036dc826bc54c3bb096228f5af19eecf5f6f9e745ab6b8"
+
+[[source_transforms.ops]]
+id = "alias-main033-kurumi-unknown-state-v128"
+kind = "insert_before"
+anchor = "byte_259F1\tdb ?\r\n"
+text = "public _kurumi_unknown_state\r\n_kurumi_unknown_state label byte\r\n"
+
+[[units]]
+id = "th04-main-kurumi-update-v128"
+default_enabled = true
+requires_units = ["th04-main-kurumi-bullet-stacks-v127"]
+repo_source = "src/main/boss/kurumi_update.cpp"
+overlay_path = "th04/kupdate.cpp"
+map_module = "th04/kupdate.cpp"
+map_mode = "contains"
+object_path = "obj/th04/kupdate.obj"
+auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x56CD"
+map_size = "0x487"
+target_file_offset = "0x1A95D"
+size = "0x487"
+
+
+# v128 natural Kurumi orbit helpers. They are part of the same original TC4J
+# physical producer as the spawn-ray phases and far update dispatcher.
+[[units]]
+id = "th04-main-kurumi-orbit-v128"
+default_enabled = true
+requires_units = ["th04-main-kurumi-update-v128"]
+repo_source = "src/main/boss/kurumi_update.cpp"
+overlay_path = "th04/kupdate.cpp"
+map_module = "th04/kupdate.cpp"
+map_mode = "contains"
+object_path = "obj/th04/kupdate.obj"
+auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x50D8"
+map_size = "0x7E"
+target_file_offset = "0x1A368"
+size = "0x7E"

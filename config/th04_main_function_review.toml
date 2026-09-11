@@ -3087,3 +3087,42 @@ address = "0x2905A"
 name = "kurumi_bullet_stacks_phase()"
 evidence_id = "ev-th04-main-kurumi-bullet-stacks-boundary-v127"
 reason = "Fresh attested Ghidra constructs the complete 0x103 body, generated public 13A9:55CA and pinned TASM/raw agree through RET at 0x2915C, and final-manifest focused plus 163-owner aggregate cold replay prove exact natural-C++ ownership before far kurumi_update() at 0x2915D."
+
+
+# v128: two contiguous Kurumi orbit helpers are complete 0x3F Ghidra bodies
+# inside the exact 0x7E natural-C++ orbit owner.
+[[new_exact]]
+id = "th04-main-fn-28b68"
+address = "0x28B68"
+name = "kurumi_orbit_step_forward()"
+evidence_id = "ev-th04-main-kurumi-orbit-boundary-v128"
+reason = "Fresh attested Ghidra constructs the complete 0x3F near body, target/TASM/raw agree through RET at 0x28BA6, and final focused plus 165-owner aggregate cold replay prove exact natural-C++ ownership inside the recovered Kurumi MAIN_033 physical producer."
+
+[[new_exact]]
+id = "th04-main-fn-28ba7"
+address = "0x28BA7"
+name = "kurumi_orbit_step_reverse()"
+evidence_id = "ev-th04-main-kurumi-orbit-boundary-v128"
+reason = "Fresh attested Ghidra constructs the complete 0x3F near body, target/TASM/raw agree through RET at 0x28BE5, and final focused plus 165-owner aggregate cold replay prove exact natural-C++ ownership inside the recovered Kurumi MAIN_033 physical producer."
+
+# v128: Ghidra cross-links the far Kurumi dispatcher far beyond its real body.
+# Review only the 0x466 executable function through RETF. The following 0x21
+# alignment/jump-table bytes remain exact compiler-owned data in the 0x487 unit
+# and are intentionally not counted as function-body bytes.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-2915d"
+address = "0x2915D"
+file_offset = "0x1A95D"
+size = "0x466"
+decode_size = "0x466"
+name = "kurumi_update()"
+owner_unit = "th04-main-kurumi-update-v128"
+evidence_id = "ev-th04-main-kurumi-update-boundary-v128"
+reason = "Fresh Ghidra starts at the correct far entry but cross-links to 0x2A71F with only 41 body addresses. Pinned TASM and gap-free raw target decode prove the executable function is exactly 0x2915D..0x295C2 through RETF; the exact natural-C++ owner contains this code plus 0x21 bytes of post-return compiler alignment and three near switch tables through 0x295E3."
+
+[[new_exact]]
+id = "th04-main-fn-2915d"
+address = "0x2915D"
+name = "kurumi_update()"
+evidence_id = "ev-th04-main-kurumi-update-boundary-v128"
+reason = "Explicitly admit the target-proved 0x466 Kurumi far dispatcher function after exact-owner, TLINK-public, raw terminal-RETF, cross-linked-Ghidra rejection, and separate trailing compiler-table ownership review."

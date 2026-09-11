@@ -1,3 +1,4 @@
+#if !defined(TH04_KURUMI_MAIN033_COMBINED)
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 
 #include "compat/rec98/libs/master.lib/master.hpp"
@@ -9,6 +10,8 @@
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/circle.hpp"
 #include "th04/snd/snd.h"
+
+#endif
 
 void pascal near kurumi_spawnrays_add(
     subpixel_t distance_from_center_x, unsigned char angle

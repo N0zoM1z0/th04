@@ -1,3 +1,4 @@
+#if !defined(TH04_KURUMI_MAIN033_COMBINED)
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 
 #include "th04/main/boss/boss.hpp"
@@ -6,6 +7,8 @@
 #include "th04/main/custom.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
+
+#endif
 
 static const int KURUMI_SPAWNRAY_COUNT = 6;
 
