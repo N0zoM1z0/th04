@@ -71,6 +71,10 @@ accepted owner regresses. The aggregate receipt SHA-256 is
 `8208a6e4c9c97b4646f2f58e1917b3b5b344301f3b905c56b8c903be39522998`.
 
 These repository Oracles establish exact ownership of this reviewed extent.
-They do not establish standalone TH04 product closure, runtime-storage identity,
-or runtime-scenario validation. Factory Truth-Kernel acceptance remains a
-separate post-commit plane.
+After committing the claim at `37d3cb0c6e1a6e16764d4fb1fd320b8c358c2dee`, Factory Truth-Kernel job `job:e64738fc545a4434bc6cae63d69ff2b5`
+independently replayed `claim:unit:th04-main-orange-bounce-random-v132:owned-extent-exact` under `isolated-double-build`. Factory receipt
+`receipt:6db3097e1b081a55569cadbfda0f143c0e2bb013cdb157fb18c48353b49814a5` returned `receipt_verdict=pass` and
+`acceptance_decision=accepted`; the accepted registry identity reported by that
+job is `registry:e136ea293207da22f0a7286eee362765d399f9f587ac32369a9459c7619b7d29`. This Factory acceptance is scoped to the v132
+`owned_extent_exact` claim. It does not establish standalone TH04 product
+closure, runtime-storage identity, or runtime-scenario validation.

@@ -336,10 +336,14 @@ identity reported by that job is
 `registry:5dfdbfbb97c92c5f553d5032ab463da6181219a52196931522dcecb52b950088`.
 This acceptance is scoped to the imported v131 `owned_extent_exact` claim; it
 does not establish standalone product closure, runtime-storage identity, or a
-runtime scenario. The repository v132 exact claim has passed its own focused and
-aggregate Oracles but is not yet Factory-accepted in this checkpoint state; it
-must first be committed, re-imported, independently replayed, and accepted by
-the Factory registry.
+runtime scenario. Factory Truth-Kernel acceptance is now independently closed
+for the v132 Orange bounce/random owner as well. Commit `37d3cb0c6e1a6e16764d4fb1fd320b8c358c2dee` imported
+claim `claim:unit:th04-main-orange-bounce-random-v132:owned-extent-exact`; controlled `isolated-double-build` job `job:e64738fc545a4434bc6cae63d69ff2b5` completed with
+Factory receipt `receipt:6db3097e1b081a55569cadbfda0f143c0e2bb013cdb157fb18c48353b49814a5`, `receipt_verdict=pass`, and
+`acceptance_decision=accepted`. The accepted registry identity reported by that
+job is `registry:e136ea293207da22f0a7286eee362765d399f9f587ac32369a9459c7619b7d29`. This acceptance is scoped to the imported v132
+`owned_extent_exact` claim and does not establish standalone product closure,
+runtime-storage identity, or a runtime scenario.
 
 ## Remaining reviewed nonexact work
 
