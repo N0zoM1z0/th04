@@ -306,11 +306,18 @@ body contiguously; `orange_phase_entry()` remains the separate manual sparse-bod
 acceptance from v130. The retained session report is
 `.analysis/gpt-web/th04-main-20260912-v130/function-review-v131-current.json`.
 
-Factory Truth-Kernel acceptance remains independently scoped. Repository
-focused/aggregate Oracle acceptance includes the v131 Orange cohort, but the new
-exact claim is not Factory-accepted until a committed checkpoint is imported,
-independently replayed, and accepted through the Factory claim registry. A local
-checkpoint alone is not Factory acceptance.
+Factory Truth-Kernel acceptance is independently closed for the v131 Orange
+cohort. Commit `e818be5ad0bcfd81dd35db08d619f9448d75eeae` imported claim
+`claim:unit:th04-main-orange-mode-phases-v131:owned-extent-exact`; controlled
+`isolated-double-build` job `job:f977704d7e344484910a95498cd1bd1c` completed
+with Factory receipt
+`receipt:2d71f9eb7dcc6c2120e58ff30549417ce715daa0fb3978a29b2d802e6ee710c7`,
+`receipt_verdict=pass`, and `acceptance_decision=accepted`. The accepted registry
+identity reported by that job is
+`registry:5dfdbfbb97c92c5f553d5032ab463da6181219a52196931522dcecb52b950088`.
+This acceptance is scoped to the imported v131 `owned_extent_exact` claim; it
+does not establish standalone product closure, runtime-storage identity, or a
+runtime scenario.
 
 ## Remaining reviewed nonexact work
 

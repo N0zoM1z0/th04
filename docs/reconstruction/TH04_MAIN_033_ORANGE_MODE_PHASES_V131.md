@@ -119,10 +119,16 @@ ledger; they are not manual boundary overrides.
 ## Scope limits and continuation
 
 The repository exact-unit Oracle proves this reviewed physical owner and its
-four function extents. It does not establish a standalone TH04 product build,
-original runtime-storage identity, or runtime-scenario validation. Factory
-Truth-Kernel acceptance is a separate plane and requires the exact claim to be
-imported from a committed checkpoint and independently replayed.
+four function extents. After committing the exact claim at
+`e818be5ad0bcfd81dd35db08d619f9448d75eeae`, Factory Truth-Kernel replay job
+`job:f977704d7e344484910a95498cd1bd1c` independently replayed the imported
+`owned_extent_exact` claim under `isolated-double-build`. Factory receipt
+`receipt:2d71f9eb7dcc6c2120e58ff30549417ce715daa0fb3978a29b2d802e6ee710c7`
+returned `receipt_verdict=pass` and `acceptance_decision=accepted`, with registry
+`registry:5dfdbfbb97c92c5f553d5032ab463da6181219a52196931522dcecb52b950088`.
+This Factory acceptance is scoped to that exact-owner claim. It does not
+establish a standalone TH04 product build, original runtime-storage identity,
+or runtime-scenario validation.
 
 The first connected continuation candidate is the next pinned PROC at load
 `0x19878` / Ghidra image `0x29878`. Its extent, dispatcher role, callers,
