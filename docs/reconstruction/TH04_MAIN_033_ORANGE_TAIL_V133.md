@@ -183,8 +183,16 @@ This packet establishes repository exact-unit evidence for the declared
 `0x531` physical owner and independently reviews the two executable function
 extents. It does not establish standalone TH04 production closure, runtime
 storage identity, a runtime scenario, or whole-image exactness. Factory
-Truth-Kernel acceptance is a separate post-commit plane and remains pending
-until the committed `owned_extent_exact` claim is independently replayed.
+Truth-Kernel acceptance is a separate post-commit plane. Commit
+`b213ad641163d5a919ca01d22b4dc82fea2e68d2` imports
+`claim:unit:th04-main-orange-tail-v133:owned-extent-exact`, but Factory
+acceptance is **not established** in this packet. Two controlled replay attempts
+(`job:fef5c79669dd42b4b5978df02a57c8b2` and
+`job:3d0a5e9191164c5792bcbe72dfea8c53`) both terminated before producing an
+Oracle receipt because another Factory operation owned the TH095 registered
+worktree. Both failures have `outcome=null`; neither is a TH04 replay verdict,
+rejection, or acceptance. A later session should retry the committed claim only
+after that external Factory lock is clear.
 
 The next useful target-first packet is the `MAIN_032_TEXT` dual-entry
 `pointnums_add_yellow()` / `pointnums_add_white()` shared-tail seam. Fresh Ghidra

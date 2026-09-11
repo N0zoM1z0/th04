@@ -364,10 +364,18 @@ Factory receipt `receipt:6db3097e1b081a55569cadbfda0f143c0e2bb013cdb157fb18c4835
 `acceptance_decision=accepted`. The accepted registry identity reported by that
 job is `registry:e136ea293207da22f0a7286eee362765d399f9f587ac32369a9459c7619b7d29`. This acceptance is scoped to the imported v132
 `owned_extent_exact` claim and does not establish standalone product closure,
-runtime-storage identity, or a runtime scenario. The v133 Orange-tail repository
-exact claim has passed focused and aggregate repository Oracles but has not yet
-been submitted from a committed checkpoint to Factory Truth-Kernel replay; its
-Factory-acceptance state is therefore still pending at this handoff stage.
+runtime-storage identity, or a runtime scenario. The v133 Orange-tail repository exact claim has passed focused and aggregate
+repository Oracles and is committed at
+`b213ad641163d5a919ca01d22b4dc82fea2e68d2`, but Factory acceptance is **not
+established**. Factory imported
+`claim:unit:th04-main-orange-tail-v133:owned-extent-exact`; controlled replay
+jobs `job:fef5c79669dd42b4b5978df02a57c8b2` and
+`job:3d0a5e9191164c5792bcbe72dfea8c53` both failed before any Oracle receipt was
+produced because another Factory operation owned the TH095 registered
+worktree. Both have `outcome=null`, so this is an external infrastructure lock,
+not a TH04 replay rejection. Acceptance-registry/snapshot queries were blocked
+by the same external lock. Retry the committed v133 claim after the Factory
+lock clears; do not alter source or exact ledgers merely to work around it.
 
 ## Remaining reviewed nonexact work
 
