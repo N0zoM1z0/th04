@@ -5822,3 +5822,53 @@ map_start = "0x50D8"
 map_size = "0x7E"
 target_file_offset = "0x1A368"
 size = "0x7E"
+
+# v129 MAIN_033_TEXT Orange phase-entry helper. Fresh target/TASM review proves
+# that Ghidra's 0x67-byte sparse body omits a normal 59-byte frame==16 branch;
+# the physical near function is the full contiguous 0xA2-byte PROC. The
+# remaining Orange handlers stay in hash-bound replay-only assembler.
+[[build_replacements]]
+id = "th04-main-orange-phase-entry-v129-build"
+trigger_units = ["th04-main-orange-phase-entry-v129"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/kupdate.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/kupdate.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/orentry.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-orange-phase-entry-v129"
+trigger_units = ["th04-main-orange-phase-entry-v129"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "fd5b9638abba66dd8be52cd636f7cbdfe6f0ca266610d3a8b4dbaefacecbf64b"
+patched_sha256 = "a1aaf20a7abbfb01dafc256231969ae7e960308f1f6813ea2208e89473218c53"
+
+[[source_transforms.ops]]
+id = "remove-main033-orange-phase-entry-v129"
+kind = "remove_between"
+removed_sha256 = "21073ce1691a8f66d21addafdd55fa277ecf41cd2f91366cc464613869d7f7fe"
+start = "orange_195E4\tproc near\r\n"
+end = "orange_195E4\tendp\r\n"
+replacement = "extrn _orange_phase_entry:near\r\n"
+
+[[source_transforms.ops]]
+id = "bind-main033-orange-phase-entry-v129"
+kind = "replace"
+old = "\t\tcall\torange_195E4\r\n"
+new = "\t\tcall\t_orange_phase_entry\r\n"
+expected_count = 4
+
+[[units]]
+id = "th04-main-orange-phase-entry-v129"
+default_enabled = true
+requires_units = ["th04-main-kurumi-orbit-v128"]
+repo_source = "src/main/boss/orange_phase_entry.cpp"
+overlay_path = "th04/orentry.cpp"
+map_module = "th04/orentry.cpp"
+map_mode = "exact"
+object_path = "obj/th04/orentry.obj"
+auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x5B54"
+map_size = "0xA2"
+target_file_offset = "0x1ADE4"
+size = "0xA2"

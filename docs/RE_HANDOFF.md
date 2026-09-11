@@ -227,6 +227,30 @@ The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/en
 
 The v117/v118 source-present states remain useful historical evidence of the compiler-shape and layout blocker, but both maintained owners are superseded by v119 exact acceptance: `src/main/player/shots_add.cpp` owns 0x34 exact bytes and `src/main/boss/yuuka6_fg_render.cpp` owns 0x17C exact bytes. The replay-only residual that made legal interleaving possible is not product source and receives no reconstruction credit. v120 additionally makes `src/main/boss/yuuka6_entities_render.cpp` the exact owner of the preceding 0xD6 bytes. v121 adds `src/main/midboss/defeat_render.cpp` as the exact owner of the preceding 0xAA bytes while leaving the angle byte in its original data owner. v122 adds `src/main/boss/orange_fg_render.cpp` as the exact owner of the preceding 0x12F bytes. v123 adds `src/main/boss/kurumi_fg_render.cpp` as the exact owner of the preceding 0x1D8 bytes despite Ghidra missing its true entry. v124 adds `src/main/boss/kurumi_spawnrays.cpp` as one exact 0x154-byte owner containing the adjacent allocator and updater; the extracted `MAIN_033_TEXT` suffix remains replay plumbing only. v125 adds `src/main/boss/kurumi_spawnray_phases.cpp` as one exact 0x1D0-byte owner containing the first three adjacent spawn-ray phase handlers; replay now splits the untouched residual into pre/post seam objects around that natural owner, and both residuals remain zero-credit plumbing. v126 adds `src/main/boss/kurumi_late_phases.cpp` as the next exact 0x2A4-byte owner containing four adjacent late phase handlers; the remaining residual starts at `kurumi_1905A` and remains zero-credit plumbing. v127 adds `src/main/boss/kurumi_bullet_stacks.cpp` as the exact 0x103-byte owner at that former residual start. v128 adds the two 0x3F orbit helpers and `src/main/boss/kurumi_update.cpp`, then recovers the original physical translation-unit ownership by emitting the entire contiguous `0x18A14..0x195E3` Kurumi range from one natural `th04/kupdate.cpp` object; the remaining replay-only seams contain zero Kurumi function bytes and receive zero reconstruction credit.
 
+
+v129 reviews the immediately following Orange phase-entry helper without falsely
+promoting it. Fresh Ghidra has the correct `0x295E4..0x29685` min/max but only
+103/162 body bytes; pinned TASM and gap-free raw decode prove the omitted
+59-byte `phase_frame == 16` block is ordinary reachable code in the same near
+PROC. The reviewed authored extent is therefore load `0x195E4..0x19685`, file
+`0x1ADE4..0x1AE85`, **0xA2 / 162 bytes**, with one MZ relocation at `0x19668`.
+`src/main/boss/orange_phase_entry.cpp` is maintained natural C++. A first TC4J
+probe was 160 bytes because direct zero returns changed the shared-return layout;
+ordinary `goto ret0` restores the target terminal sink. Pascal ABI evidence also
+requires source color arguments `(7, 6)` to emit the target packed immediate.
+The final compiler probe emits the full 162-byte instruction/control-flow shape.
+A bounded non-Oracle diagnostic TLINK then places `th04/orentry.cpp` exactly at
+`13A9:5B54` size `0xA2`, reproduces all 162 target bytes and the ordered
+relocation `[0x19668]`, and leaves the v128 whole-overlay SHA-256 unchanged at
+`a43129b502291d37518347a554ffc8eada80ee073b9e5fc737a8740ed927cbb1`.
+The unit remains `candidate` and the reviewed function remains `blocked` because
+formal focused and aggregate cold replay did not run in this conversation. The
+direct focused invocation was rejected before script execution by the available
+execution surface; the TH04 Factory adapter exposes committed exact-unit claims,
+not candidate/source-present claims, so no false native exact row was created to
+obtain a Factory job. Full evidence is in
+`docs/reconstruction/TH04_MAIN_033_ORANGE_PHASE_ENTRY_V129.md`.
+
 ## Latest replay receipts
 
 The latest exact owner passes repository focused two-cold replay at:
@@ -261,14 +285,18 @@ deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
 `a43129b502291d37518347a554ffc8eada80ee073b9e5fc737a8740ed927cbb1`.
 
-The current function review uses the v128 aggregate map, fresh target-bound
-Ghidra metadata, pinned target bytes, and the explicit manual boundary gates. It
-reports 289/291 exact functions, 144 automatic acceptances, 145 manual reviewed
-acceptances, and zero provisional strict rejections. The two 0x3F orbit helpers use
-the ordinary contiguous Ghidra/TLINK/exact-owner gate. FAR `kurumi_update()` uses
-`reviewed_exact_extent` over its target-proved 0x466 executable body through RETF;
-the following 0x21 alignment/jump-table bytes remain exact compiler-owned data and
-are not counted as function body. The private report is
+The last accepted function-review artifact still uses the v128 aggregate map,
+fresh target-bound Ghidra metadata, pinned target bytes, and the explicit manual
+boundary gates. It reports 289/291 exact functions, 144 automatic acceptances,
+145 manual reviewed acceptances, and zero provisional strict rejections. The live
+v129 machine ledger intentionally expands that denominator to **289/292** by
+admitting `orange_phase_entry()` as reviewed `blocked`/non-exact; no replacement
+exact function-review artifact is claimed before formal replay. The two 0x3F
+orbit helpers use the ordinary contiguous Ghidra/TLINK/exact-owner gate. FAR
+`kurumi_update()` uses `reviewed_exact_extent` over its target-proved 0x466
+executable body through RETF; the following 0x21 alignment/jump-table bytes remain
+exact compiler-owned data and are not counted as function body. The retained
+private v128 report is
 `.analysis/reconstruction/functions/function-review-v128-current.json`.
 
 Factory Truth-Kernel acceptance remains independently scoped. The v124 340-byte
@@ -279,7 +307,7 @@ Factory-acceptance claim for v128.
 
 ## Remaining reviewed nonexact work
 
-Only two reviewed authored functions are nonexact:
+Three reviewed authored functions are nonexact:
 
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
@@ -288,6 +316,10 @@ Only two reviewed authored functions are nonexact:
 2. `enemy_bullet_template_push`: all 27 bytes remain blocked because natural
    TC4 struct-copy forms emit a different `REP MOVSW` setup order. ReC98's
    inline-assembly shortcut is not acceptable evidence.
+3. `orange_phase_entry()`: the reviewed 162-byte target boundary, natural TC4J
+   source shape, diagnostic TLINK map extent, raw owner bytes, and relocation
+   are all closed, but exact acceptance is withheld until the configured
+   focused and aggregate two-cold replay can actually run.
 
 `dialog_op` and `dialog_run` have maintained source and exact code bytes, but
 remain outside the reviewed exact denominator because their ordered MZ
@@ -313,16 +345,19 @@ The current MAIN ledger still represents all 434 target-derived TASM `PROC` star
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-The first concrete target-first continuation is now adjacent `orange_195E4` in
-`MAIN_033_TEXT`. Pinned TASM/raw close the complete near PROC at load
-`0x195E4..0x19685`, file `0x1ADE4..0x1AE85`, **0xA2 / 162 bytes**, target SHA-256
-`28ec524c11fbf14f6dec94f4a24c5fa16b21461952a75ecadfc93b6f8e450b1a`, with one
-MZ relocation at `0x19668`. Fresh Ghidra has the correct min/max span
-`0x295E4..0x29685` but only 103 body addresses; its four direct callers are the
-next Orange handlers at `0x29686`, `0x29720`, `0x297BB`, and `0x29814`, and it
-reports four callees. Reconcile the missing 59 bytes against TASM/raw control flow
-before writing source; do not treat the sparse Ghidra body as a complete function
-solely because its min/max happen to match the physical PROC.
+The first concrete continuation is the v129 formal replay gate, not another
+source-shape search. Run focused cold replay for
+`th04-main-orange-phase-entry-v129`; if both isolated builds pass, run the full
+default aggregate with no `--unit`, then promote the candidate only from those
+receipts. All pre-replay evidence is already closed: the complete target near
+PROC is load `0x195E4..0x19685`, file `0x1ADE4..0x1AE85`, **0xA2 / 162 bytes**,
+with target SHA-256
+`28ec524c11fbf14f6dec94f4a24c5fa16b21461952a75ecadfc93b6f8e450b1a` and one
+MZ relocation at `0x19668`; natural `orange_phase_entry()` diagnostically links
+at `13A9:5B54` with the same 162 owner bytes and relocation. If promotion passes,
+review the immediately following handler at load `0x19686` / Ghidra `0x29686`
+together with the three sibling Orange callers at `0x29720`, `0x297BB`, and
+`0x29814` as the next structurally connected cohort.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
