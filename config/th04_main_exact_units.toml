@@ -6065,3 +6065,43 @@ map_start = "0x5EFB"
 map_size = "0x531"
 target_file_offset = "0x1B18B"
 size = "0x531"
+
+# v134 MAIN_032_TEXT randring2_next16. The natural TC86 function takes over
+# exactly the first 0xD bytes. The following alignment byte and all later
+# randring2/pointnums code stay in the target-derived residual with zero credit.
+[[build_replacements]]
+id = "th04-main-randring2-next16-v134-build"
+trigger_units = ["th04-main-randring2-next16-v134"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/rr2next.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main-randring2-next16-residual-v134"
+trigger_units = ["th04-main-randring2-next16-v134"]
+patch_path = "th04/math/randring.inc"
+encoding = "latin-1"
+scaffold_sha256 = "6f36c64ef467bb30255becc4f888e3b6f9a292c67f804eb5e447cac7fc39b4f5"
+patched_sha256 = "fb40b549a732c164b6899af73535b5e1639505c33bb75333e8a1083dc6b4d026"
+
+[[source_transforms.ops]]
+id = "move-randring2-next16-v134"
+kind = "replace"
+old = "\tpublic @randring&instance&_next16$qv\n\t@randring&instance&_next16$qv proc near\n\t\tmov\tbx, _randring_p\n\t\tmov\tax, word ptr _randring[bx]\n\t\tinc\tbyte ptr _randring_p\n\t\tret\n\t@randring&instance&_next16$qv endp\n\t\tnop\n"
+new = "\tif GAME eq 4\n\t\tif instance eq 2\n\t\t\textrn @randring&instance&_next16$qv:near\n\t\telse\n\tpublic @randring&instance&_next16$qv\n\t@randring&instance&_next16$qv proc near\n\t\tmov\tbx, _randring_p\n\t\tmov\tax, word ptr _randring[bx]\n\t\tinc\tbyte ptr _randring_p\n\t\tret\n\t@randring&instance&_next16$qv endp\n\t\tnop\n\t\tendif\n\telse\n\tpublic @randring&instance&_next16$qv\n\t@randring&instance&_next16$qv proc near\n\t\tmov\tbx, _randring_p\n\t\tmov\tax, word ptr _randring[bx]\n\t\tinc\tbyte ptr _randring_p\n\t\tret\n\t@randring&instance&_next16$qv endp\n\t\tnop\n\tendif\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-randring2-next16-v134"
+default_enabled = true
+requires_units = ["th04-main-orange-tail-v133"]
+repo_source = "src/main/math/randring2_next16.cpp"
+overlay_path = "th04/rr2next.cpp"
+map_module = "th04/rr2next.cpp"
+map_mode = "exact"
+object_path = "obj/th04/rr2next.obj"
+map_segment = "MAIN_032_TEXT"
+map_start = "0x02C2"
+map_size = "0xD"
+target_file_offset = "0x15552"
+size = "0xD"

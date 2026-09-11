@@ -3246,3 +3246,14 @@ address = "0x29AA3"
 name = "orange_update()"
 evidence_id = "ev-th04-main-orange-tail-boundary-v133"
 reason = "Explicitly admit the target-proved 0x403 FAR Orange dispatcher after exact-owner map placement, raw terminal-RETF review, rejection of the cross-linked Ghidra body, and separate switch-table ownership review."
+
+
+# v134: Fresh Ghidra, TLINK, raw target decoding, and exact owner replay agree
+# on the complete 0xD-byte randring2_next16() near function. The following NOP
+# is separate residual layout and is not part of this function or owner.
+[[new_exact]]
+id = "th04-main-fn-23d52"
+address = "0x23D52"
+name = "randring2_next16()"
+evidence_id = "ev-th04-main-randring2-next16-boundary-v134"
+reason = "Fresh Ghidra constructs exactly 0x23D52..0x23D5E through terminal RET; pinned TASM/map and raw bytes agree, and focused 106-owner plus aggregate 170-owner cold replay prove the 0xD natural-C++ owner at MAIN_032_TEXT 13A9:02C2. The following target NOP at 0x23D5F remains residual layout outside function and owner credit."
