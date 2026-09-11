@@ -74,6 +74,7 @@ def repo_input_paths(
     entries: list[dict[str, object]],
     splits: list[dict[str, object]],
     build_inserts: list[dict[str, object]],
+    scaffold_extractions: list[dict[str, object]] | None = None,
 ) -> list[Path]:
     """Return all live repository inputs that cold replay must freeze once."""
 
@@ -88,6 +89,9 @@ def repo_input_paths(
     for entry in build_inserts:
         if entry.get("repo_source"):
             paths.add(Path(str(entry["repo_source"])))
+    for entry in scaffold_extractions or []:
+        if entry.get("template_source"):
+            paths.add(Path(str(entry["template_source"])))
     if REC98_COMPAT.is_dir():
         for path in REC98_COMPAT.rglob("*"):
             if path.is_file():
@@ -292,6 +296,119 @@ def overlay_sources(
         else:
             raise RuntimeError(f"{entry['id']}: unknown source_mode {mode!r}")
     return overlays
+
+
+def apply_scaffold_extractions(
+    source_root: Path,
+    extractions: list[dict[str, object]],
+    selected_ids: set[str],
+    repo_root: Path | None = None,
+) -> list[dict[str, object]]:
+    """Materialize hash-bound Oracle-only source spans from the pinned scaffold.
+
+    The generated file remains replay plumbing: it is derived from the pinned
+    reference source, is never accepted as repository product source, and owns
+    no reconstruction credit by itself.  Each extraction binds the complete
+    scaffold, the extracted span, a checked-in wrapper template, and any
+    symbol-only text adaptations needed after separating OMF producers.
+    """
+
+    repo_root = ROOT if repo_root is None else repo_root
+    receipts: list[dict[str, object]] = []
+    for entry in extractions:
+        triggers = {str(value) for value in entry.get("trigger_units", [])}
+        active = sorted(triggers & selected_ids)
+        if not active:
+            continue
+        extraction_id = str(entry["id"])
+        scaffold = source_root / str(entry["scaffold_path"])
+        original = scaffold.read_bytes()
+        actual_scaffold = digest_bytes(original)
+        allowed_raw = entry.get("scaffold_sha256_any")
+        allowed = (
+            [str(value) for value in allowed_raw]
+            if allowed_raw is not None
+            else [str(entry["scaffold_sha256"])]
+        )
+        if not allowed or actual_scaffold not in allowed:
+            raise RuntimeError(
+                f"{extraction_id}: scaffold SHA-256 drift in {entry['scaffold_path']}"
+            )
+        encoding = str(entry.get("encoding", "utf-8"))
+        text = original.decode(encoding)
+        start_anchor = str(entry["start"])
+        end_anchor = str(entry["end"])
+        if text.count(start_anchor) != 1 or text.count(end_anchor) != 1:
+            raise RuntimeError(
+                f"{extraction_id}: extraction anchors are not unique"
+            )
+        start = text.index(start_anchor)
+        end = text.index(end_anchor, start) + len(end_anchor)
+        extracted = text[start:end]
+        extracted_bytes = extracted.encode(encoding)
+        expected_span = str(entry["span_sha256"])
+        if digest_bytes(extracted_bytes) != expected_span:
+            raise RuntimeError(f"{extraction_id}: extracted span SHA-256 mismatch")
+
+        replacement_receipts: list[dict[str, object]] = []
+        adapted = extracted
+        for index, replacement in enumerate(entry.get("replacements", [])):
+            old = str(replacement["old"])
+            new = str(replacement["new"])
+            expected_count = int(replacement.get("expected_count", 1))
+            count = adapted.count(old)
+            if count != expected_count:
+                raise RuntimeError(
+                    f"{extraction_id}/replacement-{index}: expected "
+                    f"{expected_count} match(es), got {count}"
+                )
+            adapted = adapted.replace(old, new)
+            replacement_receipts.append({
+                "index": index,
+                "count": count,
+                "old_sha256": digest_bytes(old.encode(encoding)),
+                "new_sha256": digest_bytes(new.encode(encoding)),
+            })
+
+        template_path = repo_root / str(entry["template_source"])
+        if not template_path.is_file() or template_path.is_symlink():
+            raise FileNotFoundError(template_path)
+        template = template_path.read_text(encoding=encoding)
+        line_endings = str(entry.get("template_line_endings", "preserve"))
+        if line_endings == "crlf":
+            template = template.replace("\r\n", "\n").replace("\r", "\n").replace("\n", "\r\n")
+        elif line_endings != "preserve":
+            raise RuntimeError(
+                f"{extraction_id}: unsupported template_line_endings {line_endings!r}"
+            )
+        placeholder = str(entry.get("placeholder", "{{EXTRACTED_SPAN}}"))
+        if template.count(placeholder) != 1:
+            raise RuntimeError(
+                f"{extraction_id}: template must contain one extraction placeholder"
+            )
+        generated = template.replace(placeholder, adapted, 1).encode(encoding)
+        output = source_root / str(entry["output_path"])
+        if output.exists():
+            raise RuntimeError(f"{extraction_id}: output already exists: {output}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(generated)
+        receipts.append({
+            "id": extraction_id,
+            "trigger_units": active,
+            "scaffold_path": str(entry["scaffold_path"]),
+            "scaffold_sha256": actual_scaffold,
+            "allowed_scaffold_sha256": allowed,
+            "span_offset": start,
+            "span_size": len(extracted_bytes),
+            "span_sha256": expected_span,
+            "adapted_span_sha256": digest_bytes(adapted.encode(encoding)),
+            "replacements": replacement_receipts,
+            "template_source": str(entry["template_source"]),
+            "template_sha256": digest_file(template_path),
+            "output_path": str(entry["output_path"]),
+            "output_sha256": digest_bytes(generated),
+        })
+    return receipts
 
 
 def apply_source_splits(
@@ -646,6 +763,25 @@ def inspect_zero_code_objects(source: Path, paths: list[str]) -> list[dict[str, 
     return results
 
 
+def inspect_auxiliary_objects(source: Path, paths: list[str]) -> list[dict[str, object]]:
+    """Validate replay-only OMF producers that contribute real program bytes."""
+
+    results: list[dict[str, object]] = []
+    for relative in paths:
+        path = source / relative
+        omf = describe_omf(path.read_bytes())
+        results.append({
+            "path": relative,
+            "valid": bool(omf["valid"]),
+            "sha256": omf["sha256"],
+            "normalized_sha256": omf["dependency_timestamp_normalized_sha256"],
+            "module_name": omf["module_name"],
+            "translator_comments": omf["translator_comments"],
+            "dependency_paths": omf["dependency_paths"],
+        })
+    return results
+
+
 def resolved_producer_outputs(
     entry: dict[str, object], selected_ids: set[str]
 ) -> tuple[str, str, str]:
@@ -704,6 +840,9 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
         zero_code_objects = inspect_zero_code_objects(
             source, [str(value) for value in entry.get("zero_code_objects", [])]
         )
+        auxiliary_objects = inspect_auxiliary_objects(
+            source, [str(value) for value in entry.get("auxiliary_objects", [])]
+        )
         target_relocs = overlapping_relocations(target_mz, program_start, size)
         candidate_relocs = overlapping_relocations(candidate_mz, program_start, size)
         results[entry["id"]] = {
@@ -730,6 +869,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             "object_translators": omf["translator_comments"],
             "object_dependencies": omf["dependency_paths"],
             "zero_code_objects": zero_code_objects,
+            "auxiliary_objects": auxiliary_objects,
         }
     return candidate_path, results
 
@@ -769,6 +909,7 @@ def main() -> int:
     all_entries = list(config["units"])
     entries = list(all_entries)
     splits = list(config.get("splits", []))
+    scaffold_extractions = list(config.get("scaffold_extractions", []))
     build_inserts = list(config.get("build_inserts", []))
     build_replacements = list(config.get("build_replacements", []))
     source_transforms = list(config.get("source_transforms", []))
@@ -807,7 +948,8 @@ def main() -> int:
         raise RuntimeError(f"refusing to overwrite replay: {root}")
     snapshot_root = root / "repo-inputs"
     snapshot_receipt = materialize_repo_snapshot(
-        snapshot_root, repo_input_paths(entries, splits, build_inserts)
+        snapshot_root,
+        repo_input_paths(entries, splits, build_inserts, scaffold_extractions),
     )
     snapshot_compat = snapshot_root / "compat" / "rec98"
     target_mz = parse_mz(TARGET.read_bytes())
@@ -824,6 +966,9 @@ def main() -> int:
             source, entries, repo_root=snapshot_root, compat_root=snapshot_compat
         )
         selected_ids = {entry["id"] for entry in entries}
+        scaffold_extraction_receipts = apply_scaffold_extractions(
+            source, scaffold_extractions, selected_ids, repo_root=snapshot_root
+        )
         split_receipts = apply_source_splits(
             source, splits, selected_ids, repo_root=snapshot_root
         )
@@ -845,6 +990,7 @@ def main() -> int:
                 "source": str(source.relative_to(ROOT)),
                 "rec98_compat": compat_headers,
                 "overlays": overlays,
+                "scaffold_extractions": scaffold_extraction_receipts,
                 "source_splits": split_receipts,
                 "build_inserts": build_insert_receipts,
                 "build_replacements": build_replacement_receipts,
@@ -878,6 +1024,12 @@ def main() -> int:
             "zero_code_objects_deterministic": (
                 [item["normalized_sha256"] for item in a["zero_code_objects"]]
                 == [item["normalized_sha256"] for item in b["zero_code_objects"]]
+            ),
+            "auxiliary_objects_a": all(item["valid"] for item in a["auxiliary_objects"]),
+            "auxiliary_objects_b": all(item["valid"] for item in b["auxiliary_objects"]),
+            "auxiliary_objects_deterministic": (
+                [item["normalized_sha256"] for item in a["auxiliary_objects"]]
+                == [item["normalized_sha256"] for item in b["auxiliary_objects"]]
             ),
         }
         if not all(checks.values()):

@@ -5013,3 +5013,151 @@ map_start = "0x7322"
 map_size = "0xB9"
 target_file_offset = "0x13612"
 size = "0xB9"
+
+
+# v119 MAIN_012_TEXT frontier split. The residual is generated only inside
+# cold replay from the pinned scaffold and receives no reconstruction credit.
+[[scaffold_extractions]]
+id = "th04-main-main012-shot-residual-v119"
+trigger_units = ["th04-main-shots-add-v117"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "sub_11DE6\tproc far\r\n"
+end = "sub_11DE6\tendp\r\n"
+span_sha256 = "c7e8ffaa8ea1ce95941dcdd9035070cf39eb633a42dd80b5c9e5ccfd174cc70a"
+template_source = "config/replay/th04_main012_frontier_residual.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m12seam.asm"
+
+[[scaffold_extractions.replacements]]
+old = "main_01:hud_power_put"
+new = "main_01:HUD_POWER_PUT"
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-shots-add-v119-build"
+trigger_units = ["th04-main-shots-add-v117"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/ellyfg.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/shots.cpp\",\n\t\"th04/m12seam.asm\",\n\t\"th04/ellyfg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-shots-add-v119-layout"
+trigger_units = ["th04-main-shots-add-v117"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "b1aed730d150915e2e794e1ca714f4b15cf088d85acbf6d4b92b892a56d0f852"
+patched_sha256 = "1bac8bdb2c8b8c1b142f7fcd911763e004ed3b1e2f826a19976e6a2b44e784ed"
+
+[[source_transforms.ops]]
+id = "externalize-main-shots-add-v119"
+kind = "replace"
+old = "include th04/main/player/shots_add.asm\r\n"
+new = "extrn @shots_add$qv:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-main-shot-velocity-v119"
+kind = "replace"
+old = "include th04/main/player/shot_velocity.asm\r\n"
+new = "extrn @SHOT_VELOCITY_SET$QP7SPPOINTUC:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-main-sub-11de6-v119"
+kind = "remove_between"
+removed_sha256 = "c7e8ffaa8ea1ce95941dcdd9035070cf39eb633a42dd80b5c9e5ccfd174cc70a"
+start = "sub_11DE6\tproc far\r\n"
+end = "sub_11DE6\tendp\r\n"
+replacement = "extrn sub_11DE6:far\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-shot-callback-storage-v119"
+kind = "replace"
+old = "playchar_shot_func\tdw ?\r\nplaychar_shot_funcs\tdw ?\r\n"
+new = "public playchar_shot_func, playchar_shot_funcs\r\nplaychar_shot_func\tdw ?\r\nplaychar_shot_funcs\tdw ?\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-shots-add-v117"
+default_enabled = true
+requires_units = ["th04-main-elly-fg-v116"]
+repo_source = "src/main/player/shots_add.cpp"
+overlay_path = "th04/shots.cpp"
+map_module = "th04/shots.cpp"
+map_mode = "exact"
+object_path = "obj/th04/shots.obj"
+auxiliary_objects = ["obj/th04/m12seam.obj"]
+map_segment = "MAIN_012_TEXT"
+map_start = "0x72A6"
+map_size = "0x34"
+target_file_offset = "0x13596"
+size = "0x34"
+
+[[build_replacements]]
+id = "th04-main-yuuka6-fg-v119-build"
+trigger_units = ["th04-main-yuuka6-fg-v118"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/shots.cpp\",\n\t\"th04/m12seam.asm\",\n\t\"th04/ellyfg.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/y6fg.cpp\",\n\t\"th04/shots.cpp\",\n\t\"th04/m12seam.asm\",\n\t\"th04/ellyfg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-yuuka6-fg-v119-natural"
+trigger_units = ["th04-main-yuuka6-fg-v118"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1bac8bdb2c8b8c1b142f7fcd911763e004ed3b1e2f826a19976e6a2b44e784ed"
+patched_sha256 = "aca6a0dae22a67b57ee3409e1572f109928c0326530650618b451a88a1ea7a9a"
+
+[[source_transforms.ops]]
+id = "externalize-main-yuuka6-fg-public-v119"
+kind = "replace"
+old = "public @YUUKA6_FG_RENDER$QV\r\n"
+new = "extrn @YUUKA6_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main-yuuka6-fg-v119"
+kind = "remove_between"
+removed_sha256 = "71162bb7afea3ff5899aaaf29b5ac5f3a55a9943b3eea6015c3f0180f24f6bb9"
+start = "@yuuka6_fg_render$qv\tproc near\r\n"
+end = "@yuuka6_fg_render$qv\tendp\r\n"
+replacement = "; natural C++ Yuuka6 foreground renderer\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-yuuka6-entities-render-v119"
+kind = "replace"
+old = "sub_11B44\tproc near\r\n"
+new = "public _yuuka6_entities_render\r\n_yuuka6_entities_render label near\r\nsub_11B44\tproc near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main-yuuka6-damage-cycle-v119"
+kind = "replace"
+old = "byte_25A03\tdb ?\r\n"
+new = "public _yuuka6_damage_flash_cycle, _yuuka6_mirror_damage_flash_cycle\r\n_yuuka6_damage_flash_cycle label byte\r\nbyte_25A03\tdb ?\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main-yuuka6-mirror-cycle-v119"
+kind = "replace"
+old = "byte_25A04\tdb ?\r\n"
+new = "_yuuka6_mirror_damage_flash_cycle label byte\r\nbyte_25A04\tdb ?\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-yuuka6-fg-v118"
+default_enabled = true
+requires_units = ["th04-main-shots-add-v117"]
+repo_source = "src/main/boss/yuuka6_fg_render.cpp"
+overlay_path = "th04/y6fg.cpp"
+map_module = "th04/y6fg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/y6fg.obj"
+auxiliary_objects = ["obj/th04/m12seam.obj"]
+map_segment = "MAIN_012_TEXT"
+map_start = "0x712A"
+map_size = "0x17C"
+target_file_offset = "0x1341A"
+size = "0x17C"

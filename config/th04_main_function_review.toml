@@ -2910,3 +2910,31 @@ address = "0x21E12"
 name = "elly_fg_render()"
 evidence_id = "ev-th04-main-elly-fg-boundary-v116"
 reason = "Explicitly admit the Ghidra-missed Elly foreground renderer after exact-owner generated-public, raw/TASM, and exact-next-public review."
+
+# v119: Ghidra-missed MAIN_012_TEXT shots allocator. Exact natural-C++ owner
+# ends exactly at the next unresolved residual producer; no residual bytes are
+# admitted by this review.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-21d96"
+address = "0x21D96"
+file_offset = "0x13596"
+size = "0x34"
+name = "shots_add()"
+owner_unit = "th04-main-shots-add-v117"
+evidence_id = "ev-th04-main-shots-add-boundary-v119"
+reason = "Fresh attested Ghidra has no function entry at 0x21D96. Pinned TASM and gap-free raw decode close all 0x34 bytes through RET at 0x21DC9, the exact natural-C++ owner begins at generated public 0AAF:72A6 and ends exactly at 0x21DCA, and the following replay-only unresolved residual receives no function or exactness credit."
+
+[[new_exact]]
+id = "th04-main-fn-21d96"
+address = "0x21D96"
+name = "shots_add()"
+evidence_id = "ev-th04-main-shots-add-boundary-v119"
+reason = "Explicitly admit the Ghidra-missed shots allocator after exact natural-C++ owner, generated public, raw/TASM terminal RET, and exact owner-end review."
+
+# v119: complete contiguous Ghidra body plus exact natural-C++ owner.
+[[new_exact]]
+id = "th04-main-fn-21c1a"
+address = "0x21C1A"
+name = "yuuka6_fg_render()"
+evidence_id = "ev-th04-main-yuuka6-fg-boundary-v118"
+reason = "Fresh attested Ghidra constructs the complete 0x17C body, pinned TASM/raw agree through RET at 0x21D95, and focused plus 155-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:712A."

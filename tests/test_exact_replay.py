@@ -224,6 +224,69 @@ class SourceSplitTests(unittest.TestCase):
                     replay.apply_source_splits(source, [split], {"unit-a"})
 
 
+class ScaffoldExtractionTests(unittest.TestCase):
+    def fixture(self, root: Path) -> tuple[Path, Path, dict[str, object]]:
+        repo = root / "repo"
+        source = root / "source"
+        repo.mkdir()
+        source.mkdir()
+        scaffold = source / "scaffold.asm"
+        scaffold.write_text("head\nBEGIN\nbody old\nEND\ntail\n", encoding="utf-8")
+        template = repo / "wrapper.asm.in"
+        template.write_text("prefix\n{{EXTRACTED_SPAN}}\nsuffix\n", encoding="utf-8")
+        span = "BEGIN\nbody old\nEND\n".encode("utf-8")
+        extraction: dict[str, object] = {
+            "id": "fixture-extraction",
+            "trigger_units": ["unit-a"],
+            "scaffold_path": "scaffold.asm",
+            "scaffold_sha256": replay.digest_file(scaffold),
+            "encoding": "utf-8",
+            "start": "BEGIN\n",
+            "end": "END\n",
+            "span_sha256": replay.digest_bytes(span),
+            "template_source": "wrapper.asm.in",
+            "output_path": "generated.asm",
+            "replacements": [
+                {"old": "old", "new": "new", "expected_count": 1},
+            ],
+        }
+        return source, repo, extraction
+
+    def test_scaffold_extraction_is_hash_bound_and_adapted(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, repo, extraction = self.fixture(root)
+            receipts = replay.apply_scaffold_extractions(
+                source, [extraction], {"unit-a"}, repo_root=repo
+            )
+            self.assertEqual(
+                (source / "generated.asm").read_text(encoding="utf-8"),
+                "prefix\nBEGIN\nbody new\nEND\n\nsuffix\n",
+            )
+            self.assertEqual(len(receipts), 1)
+            self.assertEqual(receipts[0]["span_size"], len(b"BEGIN\nbody old\nEND\n"))
+            self.assertEqual(receipts[0]["replacements"][0]["count"], 1)
+            self.assertEqual(
+                (source / "scaffold.asm").read_text(encoding="utf-8"),
+                "head\nBEGIN\nbody old\nEND\ntail\n",
+            )
+
+    def test_scaffold_extraction_rejects_span_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, repo, extraction = self.fixture(root)
+            extraction["span_sha256"] = "00" * 32
+            with self.assertRaisesRegex(RuntimeError, "span SHA-256 mismatch"):
+                replay.apply_scaffold_extractions(
+                    source, [extraction], {"unit-a"}, repo_root=repo
+                )
+
+    def test_repo_input_paths_include_extraction_template(self) -> None:
+        extraction = {"template_source": "wrapper.asm.in"}
+        paths = replay.repo_input_paths([], [], [], [extraction])
+        self.assertIn(Path("wrapper.asm.in"), paths)
+
+
 class BuildInsertTests(unittest.TestCase):
     def fixture(self, root: Path, *, duplicate_anchor: bool = False):
         repo = root / "repo"
@@ -506,6 +569,28 @@ class SourceTransformTests(unittest.TestCase):
             entry["scaffold_sha256"] = replay.digest_bytes(original)
             with self.assertRaisesRegex(RuntimeError, "expected one insertion anchor"):
                 replay.apply_source_transforms(source, [entry], {"unit-a"})
+
+
+class AuxiliaryObjectTests(unittest.TestCase):
+    def test_auxiliary_object_requires_valid_omf_and_records_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            (source / "residual.obj").write_bytes(b"fixture")
+            description = {
+                "valid": True,
+                "sha256": "raw",
+                "dependency_timestamp_normalized_sha256": "normalized",
+                "module_name": "residual.asm",
+                "translator_comments": ["TASM"],
+                "dependency_paths": ["residual.asm"],
+            }
+            with patch.object(replay, "describe_omf", return_value=description):
+                result = replay.inspect_auxiliary_objects(
+                    source, ["residual.obj"]
+                )[0]
+            self.assertTrue(result["valid"])
+            self.assertEqual(result["normalized_sha256"], "normalized")
+            self.assertEqual(result["module_name"], "residual.asm")
 
 
 class ZeroCodeObjectTests(unittest.TestCase):
