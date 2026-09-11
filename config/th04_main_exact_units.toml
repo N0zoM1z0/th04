@@ -5542,3 +5542,111 @@ map_start = "0x5156"
 map_size = "0x1D0"
 target_file_offset = "0x1A3E6"
 size = "0x1D0"
+
+# v126 MAIN_033_TEXT Kurumi late phase-handler cohort. The v125 replay-only
+# suffix is peeled again so the four adjacent natural C++ functions can occupy
+# their original producer position. Residual assembler remains hash-bound cold
+# replay plumbing and receives zero reconstruction credit.
+[[build_replacements]]
+id = "th04-main-kurumi-late-phases-v126-build"
+trigger_units = ["th04-main-kurumi-late-phases-v126"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/kurrays.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/kphase.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/kurrays.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/kphase.cpp\",\n\t\"th04/kphase2.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-late-storage-v126"
+trigger_units = ["th04-main-kurumi-late-phases-v126"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "a71fcc828a6e1e6113cd768acb30a03ebf32f8feb563fae734f8accc0d56c0ec"
+patched_sha256 = "3a3e9009e41fe8cfbc94698d15d4947d3337195c1e27258f293ea820d18e0c64"
+
+[[source_transforms.ops]]
+id = "publish-main033-kurumi-special-turn-toggle-v126"
+kind = "replace"
+old = "public byte_259F0, byte_259F1\r\nbyte_259F0\tdb ?\r\nbyte_259F1\tdb ?\r\n"
+new = "public byte_259F0, byte_259F1, _kurumi_special_turn_toggle\r\n_kurumi_special_turn_toggle label byte\r\nbyte_259F0\tdb ?\r\nbyte_259F1\tdb ?\r\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-prephase-alias-v126"
+trigger_units = ["th04-main-kurumi-late-phases-v126"]
+patch_path = "th04/m33kpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "d763c687b53509a44503baef38b38bbb324e4a823672210b0848e99ab90bd6b3"
+patched_sha256 = "3a30cf25d4bd52c0ff11d9757f7a4d2d54b93b35330ac70002ba732b3d0fb03f"
+
+[[source_transforms.ops]]
+id = "publish-main033-kurumi-orbit-reverse-v126"
+kind = "replace"
+old = "kurumi_18BA7\tproc near\r\n"
+new = "public _kurumi_orbit_step_reverse\r\n_kurumi_orbit_step_reverse label near\r\nkurumi_18BA7\tproc near\r\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-late-suffix-v126"
+trigger_units = ["th04-main-kurumi-late-phases-v126"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "b7e278aaecd81f8f22b71a7f8245294d5ee4cdaa72a4162368768c316b351edd"
+patched_sha256 = "5d60d84d16ef9eb7fac753f825fefdebe5be80387bc0e8ec46339a5f1f36de23"
+
+[[source_transforms.ops]]
+id = "remove-main033-kurumi-late-phases-v126"
+kind = "remove_between"
+removed_sha256 = "b468d572074d46b31cd54a12231f243c1ae38a3f54e1597557954ebd72327afc"
+start = "kurumi_18DB6\tproc near\r\n"
+end = "kurumi_18F8B\tendp\r\n"
+replacement = "; natural C++ Kurumi late phase handlers\r\n"
+
+[[source_transforms.ops]]
+id = "declare-main033-kurumi-late-functions-v126"
+kind = "replace"
+old = "extrn _kurumi_spawnray_phase_dual:near\r\n"
+new = "extrn _kurumi_spawnray_phase_dual:near\r\nextrn _kurumi_turning_bullets_phase:near\r\nextrn _kurumi_spawnray_pattern_left:near\r\nextrn _kurumi_spawnray_pattern_right:near\r\nextrn _kurumi_spawnray_pattern_dual:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-turning-bullets-v126"
+kind = "replace"
+old = "kurumi_18DB6"
+new = "_kurumi_turning_bullets_phase"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-late-left-v126"
+kind = "replace"
+old = "kurumi_18E43"
+new = "_kurumi_spawnray_pattern_left"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-late-right-v126"
+kind = "replace"
+old = "kurumi_18EE7"
+new = "_kurumi_spawnray_pattern_right"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-late-dual-v126"
+kind = "replace"
+old = "kurumi_18F8B"
+new = "_kurumi_spawnray_pattern_dual"
+expected_count = 1
+
+[[units]]
+id = "th04-main-kurumi-late-phases-v126"
+default_enabled = true
+requires_units = ["th04-main-kurumi-spawnray-phases-v125"]
+repo_source = "src/main/boss/kurumi_late_phases.cpp"
+overlay_path = "th04/kphase2.cpp"
+map_module = "th04/kphase2.cpp"
+map_mode = "exact"
+object_path = "obj/th04/kphase2.obj"
+auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x5326"
+map_size = "0x2A4"
+target_file_offset = "0x1A5B6"
+size = "0x2A4"

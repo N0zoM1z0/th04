@@ -3037,3 +3037,45 @@ address = "0x28D04"
 name = "kurumi_spawnray_phase_dual()"
 evidence_id = "ev-th04-main-kurumi-spawnray-phases-boundary-v125"
 reason = "Fresh attested Ghidra constructs the complete 0xB2 body, generated public 13A9:5274 and pinned TASM/raw agree through RET at 0x28DB5, and focused plus 161-owner aggregate cold replay prove exact natural-C++ ownership."
+
+# v126: four contiguous MAIN_033_TEXT Kurumi late phase handlers share one
+# exact natural-C++ producer. The first function has the correct Ghidra min/max
+# span but a sparse body: 0x28E26..0x28E40 is omitted even though pinned TASM
+# and gap-free raw decode prove ordinary second-special-bullet code inside it.
+[[reviewed_exact]]
+id = "th04-main-fn-28db6"
+address = "0x28DB6"
+file_offset = "0x1A5B6"
+size = "0x8D"
+name = "kurumi_turning_bullets_phase()"
+owner_unit = "th04-main-kurumi-late-phases-v126"
+evidence_id = "ev-th04-main-kurumi-late-phases-boundary-v126"
+reason = "Fresh Ghidra has the correct 0x28DB6..0x28E42 min/max span but reports only 114/141 body bytes, omitting 0x28E26..0x28E40. Pinned TASM and gap-free raw decode prove that 27-byte region emits the second special bullet, increments the persistent turn toggle, and rejoins the terminal RET; the complete exact natural-C++ owner reaches RET at 0x28E42 before the next generated public 0x28E43."
+
+[[new_exact]]
+id = "th04-main-fn-28db6"
+address = "0x28DB6"
+name = "kurumi_turning_bullets_phase()"
+evidence_id = "ev-th04-main-kurumi-late-phases-boundary-v126"
+reason = "Explicitly admit the sparse-Ghidra Kurumi turning-bullets phase after exact-owner generated-public, pinned TASM/raw full-extent, missing-block, and next-public review."
+
+[[new_exact]]
+id = "th04-main-fn-28e43"
+address = "0x28E43"
+name = "kurumi_spawnray_pattern_left()"
+evidence_id = "ev-th04-main-kurumi-late-phases-boundary-v126"
+reason = "Fresh attested Ghidra constructs the complete 0xA4 body, generated public 13A9:53B3 and pinned TASM/raw agree through RET at 0x28EE6, and focused plus 162-owner aggregate cold replay prove exact natural-C++ ownership."
+
+[[new_exact]]
+id = "th04-main-fn-28ee7"
+address = "0x28EE7"
+name = "kurumi_spawnray_pattern_right()"
+evidence_id = "ev-th04-main-kurumi-late-phases-boundary-v126"
+reason = "Fresh attested Ghidra constructs the complete 0xA4 body, generated public 13A9:5457 and pinned TASM/raw agree through RET at 0x28F8A, and focused plus 162-owner aggregate cold replay prove exact natural-C++ ownership."
+
+[[new_exact]]
+id = "th04-main-fn-28f8b"
+address = "0x28F8B"
+name = "kurumi_spawnray_pattern_dual()"
+evidence_id = "ev-th04-main-kurumi-late-phases-boundary-v126"
+reason = "Fresh attested Ghidra constructs the complete 0xCF body, generated public 13A9:54FB and pinned TASM/raw agree through RET at 0x29059, and focused plus 162-owner aggregate cold replay prove exact natural-C++ ownership before the next residual PROC at 0x2905A."
