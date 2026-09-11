@@ -3079,3 +3079,11 @@ address = "0x28F8B"
 name = "kurumi_spawnray_pattern_dual()"
 evidence_id = "ev-th04-main-kurumi-late-phases-boundary-v126"
 reason = "Fresh attested Ghidra constructs the complete 0xCF body, generated public 13A9:54FB and pinned TASM/raw agree through RET at 0x29059, and focused plus 162-owner aggregate cold replay prove exact natural-C++ ownership before the next residual PROC at 0x2905A."
+
+# v127: complete contiguous MAIN_033_TEXT Kurumi bullet-stack phase.
+[[new_exact]]
+id = "th04-main-fn-2905a"
+address = "0x2905A"
+name = "kurumi_bullet_stacks_phase()"
+evidence_id = "ev-th04-main-kurumi-bullet-stacks-boundary-v127"
+reason = "Fresh attested Ghidra constructs the complete 0x103 body, generated public 13A9:55CA and pinned TASM/raw agree through RET at 0x2915C, and final-manifest focused plus 163-owner aggregate cold replay prove exact natural-C++ ownership before far kurumi_update() at 0x2915D."

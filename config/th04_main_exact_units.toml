@@ -5650,3 +5650,59 @@ map_start = "0x5326"
 map_size = "0x2A4"
 target_file_offset = "0x1A5B6"
 size = "0x2A4"
+
+# v127 MAIN_033_TEXT Kurumi bullet-stack phase. The function is the first
+# physical owner in the v126 replay-only suffix, so cold replay peels only this
+# PROC and keeps the remaining residual assembler hash-bound and zero-credit.
+[[build_replacements]]
+id = "th04-main-kurumi-bullet-stacks-v127-build"
+trigger_units = ["th04-main-kurumi-bullet-stacks-v127"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/kphase2.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/kphase2.cpp\",\n\t\"th04/kstack.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-bullet-stacks-v127"
+trigger_units = ["th04-main-kurumi-bullet-stacks-v127"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "5d60d84d16ef9eb7fac753f825fefdebe5be80387bc0e8ec46339a5f1f36de23"
+patched_sha256 = "1155fe0dd0cecf2f2af0bc7013b9186538eb87703376130bd6d0aed8d1bbcaca"
+
+[[source_transforms.ops]]
+id = "remove-main033-kurumi-bullet-stacks-v127"
+kind = "remove_between"
+removed_sha256 = "03abe04488342cb67cc61676473fdbee83e967dc64f474c515c50cef6c765c5f"
+start = "kurumi_1905A\tproc near\r\n"
+end = "kurumi_1905A\tendp\r\n"
+replacement = "; natural C++ Kurumi bullet-stack phase\r\n"
+
+[[source_transforms.ops]]
+id = "declare-main033-kurumi-bullet-stacks-v127"
+kind = "replace"
+old = "public @ORANGE_UPDATE$QV, @KURUMI_UPDATE$QV\r\n"
+new = "extrn _kurumi_bullet_stacks_phase:near\r\npublic @ORANGE_UPDATE$QV, @KURUMI_UPDATE$QV\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-bullet-stacks-v127"
+kind = "replace"
+old = "\t\tcall\tkurumi_1905A\r\n"
+new = "\t\tcall\t_kurumi_bullet_stacks_phase\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-kurumi-bullet-stacks-v127"
+default_enabled = true
+requires_units = ["th04-main-kurumi-late-phases-v126"]
+repo_source = "src/main/boss/kurumi_bullet_stacks.cpp"
+overlay_path = "th04/kstack.cpp"
+map_module = "th04/kstack.cpp"
+map_mode = "exact"
+object_path = "obj/th04/kstack.obj"
+auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x55CA"
+map_size = "0x103"
+target_file_offset = "0x1A85A"
+size = "0x103"
