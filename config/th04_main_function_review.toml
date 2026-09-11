@@ -2965,3 +2965,23 @@ address = "0x2196B"
 name = "orange_fg_render()"
 evidence_id = "ev-th04-main-orange-fg-boundary-v122"
 reason = "Fresh attested Ghidra constructs the complete 0x12F body, pinned TASM/raw agree through RET at 0x21A99, and focused plus 158-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:6E7B."
+
+
+# v123: Ghidra-missed MAIN_012_TEXT Kurumi foreground renderer. Pinned
+# TASM/raw plus exact generated public and owner-end boundary close all 0x1D8 bytes.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-21793"
+address = "0x21793"
+file_offset = "0x12F93"
+size = "0x1D8"
+name = "kurumi_fg_render()"
+owner_unit = "th04-main-kurumi-fg-v123"
+evidence_id = "ev-th04-main-kurumi-fg-boundary-v123"
+reason = "Fresh attested Ghidra has no function entry at 0x21793 and its pseudo-function at 0x218B2 starts on the displacement byte of the real PUSH instruction at 0x218B0. Pinned TASM and gap-free raw decode close all 0x1D8 bytes through RET at 0x2196A; exact natural-C++ ownership begins at generated public 0AAF:6CA3 and ends exactly at the exact Orange owner boundary 0x2196B."
+
+[[new_exact]]
+id = "th04-main-fn-21793"
+address = "0x21793"
+name = "kurumi_fg_render()"
+evidence_id = "ev-th04-main-kurumi-fg-boundary-v123"
+reason = "Explicitly admit the Ghidra-missed Kurumi foreground renderer after exact-owner generated-public, raw/TASM terminal RET, mid-instruction false-entry rejection, and exact owner-end review."

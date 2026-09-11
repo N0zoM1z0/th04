@@ -5307,3 +5307,52 @@ map_start = "0x6E7B"
 map_size = "0x12F"
 target_file_offset = "0x1316B"
 size = "0x12F"
+
+
+# v123 MAIN_012_TEXT Kurumi foreground renderer. The v122 frontier is selected
+# by dependency; this natural producer is inserted immediately before the exact
+# Orange foreground renderer.
+[[build_replacements]]
+id = "th04-main-kurumi-fg-v123-build"
+trigger_units = ["th04-main-kurumi-fg-v123"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/orangefg.cpp\",\n\t\"th04/mbdrend.cpp\",\n\t\"th04/y6rend.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/kurumifg.cpp\",\n\t\"th04/orangefg.cpp\",\n\t\"th04/mbdrend.cpp\",\n\t\"th04/y6rend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-kurumi-fg-v123-natural"
+trigger_units = ["th04-main-kurumi-fg-v123"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "e37c600ce4aefd698d0979a4d20cb84fec4c10b2461cf0d82b2a7bb5b2b069ce"
+patched_sha256 = "989a82a4da82441d54a3e3f03ac5bf327539b6db192896887d792e15c04a9647"
+
+[[source_transforms.ops]]
+id = "externalize-main-kurumi-fg-v123"
+kind = "replace"
+old = "public @KURUMI_FG_RENDER$QV\r\n"
+new = "extrn @KURUMI_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main-kurumi-fg-v123"
+kind = "remove_between"
+removed_sha256 = "2b6ef32d0f3e1b463fb5af6b94795c3d2da61cf38572daac4f48de53baf5b1c7"
+start = "@kurumi_fg_render$qv\tproc near\r\n"
+end = "@kurumi_fg_render$qv\tendp\r\n"
+replacement = "; natural C++ Kurumi foreground renderer\r\n"
+
+[[units]]
+id = "th04-main-kurumi-fg-v123"
+default_enabled = true
+requires_units = ["th04-main-orange-fg-v122"]
+repo_source = "src/main/boss/kurumi_fg_render.cpp"
+overlay_path = "th04/kurumifg.cpp"
+map_module = "th04/kurumifg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/kurumifg.obj"
+map_segment = "MAIN_012_TEXT"
+map_start = "0x6CA3"
+map_size = "0x1D8"
+target_file_offset = "0x12F93"
+size = "0x1D8"
