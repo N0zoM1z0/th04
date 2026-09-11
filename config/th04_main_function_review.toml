@@ -2947,3 +2947,12 @@ address = "0x21B44"
 name = "yuuka6_entities_render()"
 evidence_id = "ev-th04-main-yuuka6-entities-boundary-v120"
 reason = "Fresh attested Ghidra constructs the complete 0xD6 body, pinned TASM/raw agree through RET at 0x21C19, and focused plus 156-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:7054."
+
+
+# v121: complete contiguous MAIN_012_TEXT default midboss defeat renderer.
+[[new_exact]]
+id = "th04-main-fn-21a9a"
+address = "0x21A9A"
+name = "midboss_defeat_render()"
+evidence_id = "ev-th04-main-midboss-defeat-boundary-v121"
+reason = "Fresh attested Ghidra constructs the complete 0xAA body, pinned TASM/raw agree through RET at 0x21B43, and focused plus 157-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:6FAA."

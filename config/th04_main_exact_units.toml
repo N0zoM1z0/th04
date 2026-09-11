@@ -5202,3 +5202,59 @@ map_start = "0x7054"
 map_size = "0xD6"
 target_file_offset = "0x13344"
 size = "0xD6"
+
+
+# v121 MAIN_012_TEXT default midboss defeat renderer. The v120 frontier is
+# selected by dependency; this natural producer is inserted immediately before
+# the exact Yuuka6 entity renderer while retaining the original angle byte.
+[[build_replacements]]
+id = "th04-main-midboss-defeat-render-v121-build"
+trigger_units = ["th04-main-midboss-defeat-render-v121"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/y6rend.cpp\",\n\t\"th04/y6fg.cpp\",\n\t\"th04/shots.cpp\",\n\t\"th04/m12seam.asm\",\n\t\"th04/ellyfg.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/mbdrend.cpp\",\n\t\"th04/y6rend.cpp\",\n\t\"th04/y6fg.cpp\",\n\t\"th04/shots.cpp\",\n\t\"th04/m12seam.asm\",\n\t\"th04/ellyfg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-midboss-defeat-render-v121-natural"
+trigger_units = ["th04-main-midboss-defeat-render-v121"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "137fef08ca99c78a30af0bd9e78872b53b21ebb062f031513b3ea7c3057e7b83"
+patched_sha256 = "6d8d48624dac2693a32962fee8790f32a72d81260f113da2cb745a0ddcd4c0a9"
+
+[[source_transforms.ops]]
+id = "externalize-main-midboss-defeat-render-v121"
+kind = "replace"
+old = "public @midboss_defeat_render$qv\r\n"
+new = "extrn @midboss_defeat_render$qv:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main-midboss-defeat-render-v121"
+kind = "remove_between"
+removed_sha256 = "6d6ac6ed4014be974a9b714c65b5604dd4de1551811a244260fb36049743cc5d"
+start = "@midboss_defeat_render$qv\tproc near\r\n"
+end = "@midboss_defeat_render$qv\tendp\r\n"
+replacement = "; natural C++ midboss defeat renderer\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-midboss-defeat-angle-v121"
+kind = "replace"
+old = "angle_23212\tdb 0\r\n"
+new = "public _midboss_defeat_angle\r\n_midboss_defeat_angle label byte\r\nangle_23212\tdb 0\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-midboss-defeat-render-v121"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-entities-render-v120"]
+repo_source = "src/main/midboss/defeat_render.cpp"
+overlay_path = "th04/mbdrend.cpp"
+map_module = "th04/mbdrend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mbdrend.obj"
+map_segment = "MAIN_012_TEXT"
+map_start = "0x6FAA"
+map_size = "0xAA"
+target_file_offset = "0x1329A"
+size = "0xAA"
