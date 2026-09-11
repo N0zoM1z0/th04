@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 294 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 436 authored candidates otherwise unreviewed;
+- 295 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 435 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- authored C/C++ bytes: **45,913 / 45,944 exact (99.932527%)**;
-- accepted authored functions: **294 / 296 exact (99.324324%)**;
-- accepted exact C/C++ owners: **167**;
+- authored C/C++ bytes: **46,188 / 46,219 exact (99.932928%)**;
+- accepted authored functions: **295 / 297 exact (99.326599%)**;
+- accepted exact C/C++ owners: **168**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **31 bytes** in the two accepted
   blocked functions.
@@ -262,16 +262,34 @@ through `boss.angle`. Focused two-cold replay
 OMF, and no accepted-owner regression. Full evidence is in
 `docs/reconstruction/TH04_MAIN_033_ORANGE_MODE_PHASES_V131.md`.
 
+v132 audits the immediately following historical `orange_19878` boundary rather
+than trusting Ghidra's 8-byte `0x29878..0x2987F` body. Pinned TASM, a gap-free
+raw decode, the residual `boss.mode` dispatcher, terminal `RET` at `0x2998A`,
+and the next PROC at `0x2998B` prove one near function at load
+`0x19878..0x1998A`, file `0x1B078..0x1B18A`, size `0x113 / 275`. Natural
+`src/main/boss/orange_phase_bounce_random.cpp` preserves the historical
+`PlayfieldMotion::update_seg3()` AX-return idiom documented by the original
+header; this removes the otherwise introduced local structure spill and yields
+the exact TC4J instruction shape. Focused 104-owner replay
+`gptweb-v132-orange-bounce-random-focused-002` and the required 168-owner
+aggregate `gptweb-v132-orange-bounce-random-aggregate-002` both pass A/B cold
+builds at `MAIN_033_TEXT 13A9:5DE8`, all 275 raw bytes, the sole ordered
+overlapping MZ relocation at load `0x198AD`, valid deterministic TC86 OMF, and
+no accepted-owner regression. Fresh function review admits this function only
+through `reviewed_exact_extent`; the truncated Ghidra body receives no boundary
+authority. Full evidence is in
+`docs/reconstruction/TH04_MAIN_033_ORANGE_BOUNCE_RANDOM_V132.md`.
+
 ## Latest replay receipts
 
 The latest exact owner passes repository focused two-cold replay at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v131-orange-mode-phases-focused-001/receipt.json`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v132-orange-bounce-random-focused-002/receipt.json`.
 
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v131-orange-mode-phases-aggregate-001/receipt.json`
-  — all 167 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v132-orange-bounce-random-aggregate-002/receipt.json`
+  — all 168 default owners, two isolated cold materializations.
 
 The v119 shots/Yuuka foreground, v120 Yuuka entity-render, v121 midboss
 defeat, v122 Orange, and v123 Kurumi foreground focused receipts remain valid
@@ -290,21 +308,22 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 167-owner aggregate reports zero raw differences for every declared
+The current 168-owner aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
 `b75b810982f384bdd2cfca76d64e8401e818712facaa3c6c9f3e705374e83b6a`.
 
-The current private function-review artifact uses the v131 167-owner aggregate
-map, retained target-bound metadata, fresh attested Ghidra observations for the
-four Orange entries, pinned target bytes, and the configured reviewed-boundary
-policy. It reports **294/296 exact functions (99.324324%)**, 148 automatic
-acceptances, 146 manual reviewed acceptances, and zero strict rejections. The
-four v131 handlers are automatic exact functions because Ghidra covers each full
-body contiguously; `orange_phase_entry()` remains the separate manual sparse-body
-acceptance from v130. The retained session report is
-`.analysis/gpt-web/th04-main-20260912-v130/function-review-v131-current.json`.
+The current private function-review artifact uses the v132 168-owner aggregate
+map, retained target-bound metadata plus the fresh attested truncated Ghidra
+observation at `0x29878`, pinned target bytes, and the configured reviewed-boundary
+policy. It reports **295/297 exact functions (99.326599%)**, 148 automatic
+acceptances, 147 manual reviewed acceptances, and zero strict rejections.
+`orange_phase_bounce_random()` is a `reviewed_exact_extent` manual acceptance:
+Ghidra contributes only its 8-byte provisional entry observation, while the exact
+owner/TLINK public plus gap-free raw decode prove all 0x113 bytes through terminal
+RET. The retained session report is
+`.analysis/gpt-web/th04-main-20260912-v132/function-review-v132-current.json`.
 
 Factory Truth-Kernel acceptance is independently closed for the v131 Orange
 cohort. Commit `e818be5ad0bcfd81dd35db08d619f9448d75eeae` imported claim
@@ -317,7 +336,10 @@ identity reported by that job is
 `registry:5dfdbfbb97c92c5f553d5032ab463da6181219a52196931522dcecb52b950088`.
 This acceptance is scoped to the imported v131 `owned_extent_exact` claim; it
 does not establish standalone product closure, runtime-storage identity, or a
-runtime scenario.
+runtime scenario. The repository v132 exact claim has passed its own focused and
+aggregate Oracles but is not yet Factory-accepted in this checkpoint state; it
+must first be committed, re-imported, independently replayed, and accepted by
+the Factory registry.
 
 ## Remaining reviewed nonexact work
 
@@ -341,32 +363,32 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 436 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 435 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 243 MAIN entries currently represented by
+The largest remaining class is 242 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 164 are exact, 242 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 257 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 165 are exact, 241 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 256 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-The first concrete continuation is the next Orange control-flow seam at load
-`0x19878` / file `0x1B078` / Ghidra image `0x29878`. Fresh Ghidra constructs
-only the first 8 bytes (`0x29878..0x2987F`), but pinned TASM keeps historical
-`orange_19878 PROC near` open until its own `ENDP` before the next Orange PROC at
-load `0x1998B`; the residual `boss.mode` dispatcher directly calls
-`orange_19878`. Treat the 8-byte Ghidra body as a sparse/truncated proposal, not
-as a closed function. Reconcile the complete raw/TASM control flow, returns,
-tables or shared tails, relocation ownership, and the adjacent provisional
-`orange_1998B` plus FAR `@orange_update$qv` at load `0x19AA3` as one structural
-cohort before source promotion. This is the preferred next packet because it
-continues the same physical producer seam while auditing a real tool-boundary
-failure rather than collecting another easy small function.
+The first concrete continuation is now historical `orange_1998B` at load
+`0x1998B` / file `0x1B18B` / Ghidra image `0x2998B`, immediately after the v132
+owner. Preliminary target/TASM review bounds the next historical PROC at
+`0x1998B..0x19AA2` (`0x118 / 280` bytes) before FAR `@orange_update$qv` at load
+`0x19AA3`, with an overlapping MZ relocation at load `0x199E6`. Fresh Ghidra is
+not trustworthy here: its function entry is cross-linked/sparse far outside the
+historical extent. Re-establish the complete 0x118 raw control flow, return and
+shared-tail/data ownership, callers/callees, relocation ownership, and its
+physical relationship to FAR `orange_update()` before writing source. Treat
+`orange_1998B` plus the FAR dispatcher as one structural cohort until evidence
+proves the seam; this continues the same MAIN_033 producer boundary campaign
+rather than returning to easy isolated helpers.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
@@ -376,7 +398,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The current repository 167-owner exact-unit cohort compiles and links reproducibly through the
+The current repository 168-owner exact-unit cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

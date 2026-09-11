@@ -5966,3 +5966,52 @@ map_start = "0x5BF6"
 map_size = "0x1F2"
 target_file_offset = "0x1AE86"
 size = "0x1F2"
+
+# v132 MAIN_033_TEXT Orange bouncing random-shot phase. Ghidra truncates this
+# near function to its first 8 bytes; pinned TASM and gap-free raw decode close
+# the real 0x113-byte extent at the next PROC boundary.
+[[build_replacements]]
+id = "th04-main-orange-bounce-random-v132-build"
+trigger_units = ["th04-main-orange-bounce-random-v132"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/orentry.cpp\",\n\t\"th04/orangeph.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/orentry.cpp\",\n\t\"th04/orangeph.cpp\",\n\t\"th04/orbounce.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-orange-bounce-random-v132"
+trigger_units = ["th04-main-orange-bounce-random-v132"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "0cff728830e0f497f80bc847d0ad3acb179c8e0ea4d125e5509f38e8e97a82b7"
+patched_sha256 = "cc276ac7e3c91043b54c3dfa042db26509b487f9d2b0b4da1a6b59c51201e199"
+
+[[source_transforms.ops]]
+id = "remove-main033-orange-bounce-random-v132"
+kind = "remove_between"
+removed_sha256 = "7c682d920079cffc5ef67878928f9325b19c78c1ce04263db49deafd6cd6b0cd"
+start = "orange_19878\tproc near\r\n"
+end = "orange_19878\tendp\r\n"
+replacement = "extrn _orange_phase_bounce_random:near\r\n"
+
+[[source_transforms.ops]]
+id = "bind-main033-orange-bounce-random-v132"
+kind = "replace"
+old = "\t\tcall\torange_19878\r\n"
+new = "\t\tcall\t_orange_phase_bounce_random\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-orange-bounce-random-v132"
+default_enabled = true
+requires_units = ["th04-main-orange-mode-phases-v131"]
+repo_source = "src/main/boss/orange_phase_bounce_random.cpp"
+overlay_path = "th04/orbounce.cpp"
+map_module = "th04/orbounce.cpp"
+map_mode = "exact"
+object_path = "obj/th04/orbounce.obj"
+auxiliary_objects = ["obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x5DE8"
+map_size = "0x113"
+target_file_offset = "0x1B078"
+size = "0x113"

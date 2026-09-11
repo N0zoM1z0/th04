@@ -3177,3 +3177,25 @@ address = "0x29814"
 name = "orange_phase_side_rings()"
 evidence_id = "ev-th04-main-orange-mode-phases-boundary-v131"
 reason = "Fresh Ghidra covers all bytes in 0x29814..0x29877; pinned TASM/raw review and the boss.mode dispatcher confirm the next PROC at 0x29878, and focused plus 167-owner aggregate cold replay prove the exact natural-C++ owner."
+
+
+# v132: Fresh Ghidra truncates orange_19878 after 8 bytes. Admit only the
+# target/TASM/raw-proved contiguous 0x113 extent after focused and aggregate
+# cold replay prove the maintained natural-C++ owner.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-29878"
+address = "0x29878"
+file_offset = "0x1B078"
+size = "0x113"
+decode_size = "0x113"
+name = "orange_phase_bounce_random()"
+owner_unit = "th04-main-orange-bounce-random-v132"
+evidence_id = "ev-th04-main-orange-bounce-random-boundary-v132"
+reason = "Fresh Ghidra reports only 0x29878..0x2987F, while pinned TASM plus gap-free raw decode prove one contiguous 0x113-byte near PROC through RET at 0x2998A before the next PROC at 0x2998B. Focused 104-owner and aggregate 168-owner two-cold replay prove exact natural-C++ ownership, map placement, the sole ordered relocation at load 0x198AD, valid deterministic OMF, and all 275 raw bytes."
+
+[[new_exact]]
+id = "th04-main-fn-29878"
+address = "0x29878"
+name = "orange_phase_bounce_random()"
+evidence_id = "ev-th04-main-orange-bounce-random-boundary-v132"
+reason = "Explicitly admit the sparse-Ghidra Orange bounce/random function after target/TASM/raw full-extent review and exact focused plus 168-owner aggregate replay."
