@@ -10,25 +10,26 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 272 accepted exact MAIN functions and two reviewed blocked MAIN functions;
-- 458 authored candidates otherwise unreviewed;
+- 273 accepted exact MAIN functions and two reviewed blocked MAIN functions;
+- 457 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- authored C/C++ bytes: **41,070 / 41,101 exact (99.924576%)**;
-- accepted authored functions: **272 / 274 exact (99.270073%)**;
-- accepted exact C/C++ owners: **155**;
+- authored C/C++ bytes: **41,284 / 41,315 exact (99.924967%)**;
+- accepted authored functions: **273 / 275 exact (99.272727%)**;
+- accepted exact C/C++ owners: **156**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **31 bytes** in the two accepted
   blocked functions.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
-and 155-owner aggregate cold replay closes their map, raw-byte, relocation,
-OMF, and determinism gates. The unresolved residual between them and
-`elly_fg_render()` receives no reconstruction or function exactness credit.
-These percentages are not a claim about 99.924576% of an executable or the game. Derive current
+and aggregate cold replay. v120 then closes the structurally adjacent 0xD6
+Yuuka6 chase-cross/safety-circle renderer through natural C++, focused replay,
+and a 156-owner aggregate. The unresolved shot residual still receives no
+reconstruction or function exactness credit. These percentages are not a claim
+about 99.924967% of an executable or the game. Derive current
 numbers with `python3 scripts/status.py`; `config/units.csv`,
 `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -152,6 +153,8 @@ v118 also corrects an overbroad intermediate interpretation of the v117 `sub_11D
 
 v119 resolves the v118 physical link-order blocker without laundering the unresolved residual into source recovery. `scripts/replay_th04_main_exact_units.py` now supports hash-bound replay-only scaffold extraction: the complete pinned scaffold, extracted `sub_11DE6` source span, checked-in wrapper template, symbol-only adaptations, generated source, and auxiliary TASM OMF are all receipted. `shot_velocity_set()` plus `sub_11DE6` remain unresolved and receive no accepted source/function credit. This plumbing allows natural `shots_add()` at `0AAF:72A6` and natural `yuuka6_fg_render()` at `0AAF:712A` to occupy their real target positions. Focused two-cold replays `gptweb-v119-shots-focused-001` and `gptweb-v119-yuuka-focused-001` pass, followed by the 155-owner aggregate `gptweb-v119-aggregate-001`; all declared raw slices, map extents, ordered relocations, OMF identities, and determinism gates pass. Full recovery and design evidence is in `docs/reconstruction/TH04_MAIN_012_FRONTIER_V119.md`.
 
+v120 recovers the immediately preceding `sub_11B44` as maintained `yuuka6_entities_render()` at `0x21B44..0x21C19`, a complete **0xD6 / 214-byte** natural-C++ owner. Fresh Ghidra, pinned TASM, raw decode, and adjacency to exact `yuuka6_fg_render()` agree on the boundary. The function traverses 31 maintained 0x1A-byte chase-cross records and then interprets the final custom slot as the corrected 0x1A-byte safety-circle layout. A first natural candidate was two bytes short only at GRCG shutdown because `_outportb_` uses prohibited `__emit__`; ordinary `_DX = 0x7C; _AL = 0; outportb(_DX, _AL)` emits the target register-port sequence. Focused `gptweb-v120-yuuka-entities-focused-001` and 156-owner aggregate `gptweb-v120-yuuka-entities-aggregate-001` pass raw/map/ordered-relocation/OMF/determinism. Full evidence is in `docs/reconstruction/TH04_MAIN_012_YUUKA6_ENTITIES_V120.md`.
+
 
 The immediately preceding v114 experiment on the 0x60-byte `MAI_TEXT` scroll-update suffix was deliberately rolled back. Its best allowed natural-C++ shape made the first half and relocation order exact but remained seven bytes long because TC4 inserted an extra byte-to-word zero extension and a separate post-subtraction compare instead of preserving AX plus the `SUB` flags. Combining the compound subtraction with its condition clobbered AX through lvalue evaluation, while `SubpixelLength8::to_pixel()` moved the value through BL and was worse. This negative result is checked into evidence/knowledge; do not retry it without a new falsifiable compiler/source hypothesis.
 
@@ -159,19 +162,21 @@ Before accepting the Reimu batch, a target-first probe attempted the adjacent Mu
 
 The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`, v100 adds `src/main/formats/map.cpp`, v101 adds `src/main/boss/gengetsu6_fg_render.cpp`, v102 adds `src/main/boss/mugetsu_gengetsu_bg_render.cpp`, v103 adds `src/main/enemy/enemies_invalidate.cpp`, v104 adds `src/main/formats/bb_txt.cpp`, v105 adds `src/main/boss/mugetsu_fg_render.cpp`, v106 adds `src/main/boss/gengetsu_bomb_inv_render.cpp`, v107 adds `src/main/boss/mugetsu_prefix.cpp`, v108 adds `src/main/boss/mugetsu_180bb.cpp`, v109 adds `src/main/boss/reimu_fg_render.cpp`, v110 adds `src/main/boss/reimu_orbs_render.cpp`, v111 adds `src/main/item/items_render.cpp`, v112 adds `src/main/bullet/render.cpp`, v113 adds `src/main/boss/yuuka6_bg_render.cpp`, v115 adds `src/main/stage_state_init.cpp`, and v116 adds `src/main/boss/elly_fg_render.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
 
-The v117/v118 source-present states remain useful historical evidence of the compiler-shape and layout blocker, but both maintained owners are superseded by v119 exact acceptance: `src/main/player/shots_add.cpp` owns 0x34 exact bytes and `src/main/boss/yuuka6_fg_render.cpp` owns 0x17C exact bytes. The replay-only residual that made legal interleaving possible is not product source and receives no reconstruction credit.
+The v117/v118 source-present states remain useful historical evidence of the compiler-shape and layout blocker, but both maintained owners are superseded by v119 exact acceptance: `src/main/player/shots_add.cpp` owns 0x34 exact bytes and `src/main/boss/yuuka6_fg_render.cpp` owns 0x17C exact bytes. The replay-only residual that made legal interleaving possible is not product source and receives no reconstruction credit. v120 additionally makes `src/main/boss/yuuka6_entities_render.cpp` the exact owner of the preceding 0xD6 bytes.
 
 ## Latest replay receipts
 
-The current MAIN_012 frontier owners pass focused two-cold replay at:
+The latest MAIN_012 owner passes focused two-cold replay at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v119-shots-focused-001/receipt.json`;
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v119-yuuka-focused-001/receipt.json`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v120-yuuka-entities-focused-001/receipt.json`.
 
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v119-aggregate-001/receipt.json`
-  — all 155 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v120-yuuka-entities-aggregate-001/receipt.json`
+  — all 156 default owners, two isolated cold materializations.
+
+The v119 shots/Yuuka foreground focused receipts remain valid historical
+acceptance receipts for their respective owners.
 
 The aggregate is the retained current private acceptance baseline. Superseded
 replay materializations and raw probe matrices may be pruned after their
@@ -186,17 +191,17 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 155-owner aggregate reports zero raw differences for every declared
+The current 156-owner aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
-`a4a0f6637e5d7401bf3fd5ed3e92301558d018834cc0b0bc7e376b0b67637c3b`.
+`db01824ab61ea9070b4b960e6a37781e4eea8ffcf77863acbf08c4d754633d99`.
 
-The current function review uses the v119 aggregate map, fresh attested Ghidra
+The current function review uses the v120 aggregate map, target-bound Ghidra
 metadata, pinned target bytes, and the explicit manual boundary gates. It
-reports 272/274 exact functions, 131 automatic acceptances, 141 manual reviewed
+reports 273/275 exact functions, 132 automatic acceptances, 141 manual reviewed
 acceptances, and zero provisional strict rejections. The private report is
-`.analysis/reconstruction/functions/function-review-v119-current.json`.
+`.analysis/reconstruction/functions/function-review-v120-current.json`.
 
 ## Remaining reviewed nonexact work
 
@@ -220,21 +225,21 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 458 such rows. Prefer `boundary_state=corroborated`; the 102
+There are 457 such rows. Prefer `boundary_state=corroborated`; the 102
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 265 MAIN entries currently represented by
+The largest remaining class is 264 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 142 are exact, 264 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 279 unreviewed authored candidates, including **80 provisional/high-risk** rows, 42 with no Ghidra observation and 35 with sparse/cross-linked spans. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 143 are exact, 263 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 278 unreviewed authored candidates, including **80 provisional/high-risk** rows, 42 with no Ghidra observation and 35 with sparse/cross-linked spans. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-If the seam remains unresolved, the first concrete structurally connected source candidate is the immediately preceding `sub_11B44` / Yuuka6 entity renderer at load `0x11B44..0x11C19`, file `0x13344..0x13419` (**0xD6 / 214 bytes**). It is tail-called by `yuuka6_fg_render()` and renders the chase-cross/safety-circle entities. Review its callers, callee ownership, relocations, and boundary locally before source work; ReC98 names/assembly are hypotheses only.
+The first concrete structurally connected source candidate is now the immediately preceding `midboss_defeat_render()` at load `0x11A9A..0x11B43`, file `0x1329A..0x13343` (**0xAA / 170 bytes**). Its boundary is corroborated/authored/unreviewed, and fresh Ghidra constructs the complete near body `0x21A9A..0x21B43`, ending exactly at the v120 owner. Review its callers, three callees, relocations, and semantic/data ownership before testing natural source.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
@@ -244,7 +249,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The accepted 155-owner cohort compiles and links reproducibly through the
+The accepted 156-owner cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

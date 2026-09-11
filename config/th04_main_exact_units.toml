@@ -5161,3 +5161,44 @@ map_start = "0x712A"
 map_size = "0x17C"
 target_file_offset = "0x1341A"
 size = "0x17C"
+
+
+# v120 MAIN_012_TEXT Yuuka6 entity renderer. The v119 frontier is selected by
+# dependency; this natural producer is inserted immediately before y6fg.
+[[build_replacements]]
+id = "th04-main-yuuka6-entities-render-v120-build"
+trigger_units = ["th04-main-yuuka6-entities-render-v120"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/y6fg.cpp\",\n\t\"th04/shots.cpp\",\n\t\"th04/m12seam.asm\",\n\t\"th04/ellyfg.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/y6rend.cpp\",\n\t\"th04/y6fg.cpp\",\n\t\"th04/shots.cpp\",\n\t\"th04/m12seam.asm\",\n\t\"th04/ellyfg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-yuuka6-entities-render-v120-natural"
+trigger_units = ["th04-main-yuuka6-entities-render-v120"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "aca6a0dae22a67b57ee3409e1572f109928c0326530650618b451a88a1ea7a9a"
+patched_sha256 = "137fef08ca99c78a30af0bd9e78872b53b21ebb062f031513b3ea7c3057e7b83"
+
+[[source_transforms.ops]]
+id = "remove-main-yuuka6-entities-render-v120"
+kind = "remove_between"
+removed_sha256 = "c61b61710c74be926618008bff173bab514d1a1f74a157fb2697a02278a932cc"
+start = "public _yuuka6_entities_render\r\n_yuuka6_entities_render label near\r\nsub_11B44\tproc near\r\n"
+end = "sub_11B44\tendp\r\n"
+replacement = "extrn _yuuka6_entities_render:near\r\n"
+
+[[units]]
+id = "th04-main-yuuka6-entities-render-v120"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-fg-v118"]
+repo_source = "src/main/boss/yuuka6_entities_render.cpp"
+overlay_path = "th04/y6rend.cpp"
+map_module = "th04/y6rend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/y6rend.obj"
+map_segment = "MAIN_012_TEXT"
+map_start = "0x7054"
+map_size = "0xD6"
+target_file_offset = "0x13344"
+size = "0xD6"

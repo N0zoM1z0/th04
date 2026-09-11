@@ -2938,3 +2938,12 @@ address = "0x21C1A"
 name = "yuuka6_fg_render()"
 evidence_id = "ev-th04-main-yuuka6-fg-boundary-v118"
 reason = "Fresh attested Ghidra constructs the complete 0x17C body, pinned TASM/raw agree through RET at 0x21D95, and focused plus 155-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:712A."
+
+
+# v120: complete contiguous MAIN_012_TEXT Yuuka6 entity renderer.
+[[new_exact]]
+id = "th04-main-fn-21b44"
+address = "0x21B44"
+name = "yuuka6_entities_render()"
+evidence_id = "ev-th04-main-yuuka6-entities-boundary-v120"
+reason = "Fresh attested Ghidra constructs the complete 0xD6 body, pinned TASM/raw agree through RET at 0x21C19, and focused plus 156-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:7054."
