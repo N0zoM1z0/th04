@@ -3002,3 +3002,38 @@ address = "0x28A79"
 name = "kurumi_spawnrays_update()"
 evidence_id = "ev-th04-main-kurumi-spawnrays-boundary-v124"
 reason = "Fresh attested Ghidra, pinned TASM/raw, exact natural-C++ owner offset 0x65, and focused plus 160-owner aggregate cold replay agree on the complete 0xEF near updater through RET at 0x28B67."
+
+# v125: three contiguous MAIN_033_TEXT Kurumi spawn-ray phase handlers share
+# one exact natural-C++ producer. The first function has the correct Ghidra
+# min/max span but a sparse body: 0x28BFE..0x28C1E is omitted even though raw
+# decode and pinned TASM prove the ordinary phase_frame==48 branch inside it.
+[[reviewed_exact]]
+id = "th04-main-fn-28be6"
+address = "0x28BE6"
+file_offset = "0x1A3E6"
+size = "0x90"
+name = "kurumi_spawnray_phase_left()"
+owner_unit = "th04-main-kurumi-spawnray-phases-v125"
+evidence_id = "ev-th04-main-kurumi-spawnray-phases-boundary-v125"
+reason = "Fresh Ghidra has the correct 0x28BE6..0x28C75 min/max span but reports only 111/144 body bytes, omitting 0x28BFE..0x28C1E. Pinned TASM and gap-free raw decode prove that 33-byte region is the phase_frame==48 shrinking-circle branch, contains both MZ relocations in the physical PROC, rejoins normal function control flow, and the complete exact natural-C++ owner reaches RET at 0x28C75 before the next generated public 0x28C76."
+
+[[new_exact]]
+id = "th04-main-fn-28be6"
+address = "0x28BE6"
+name = "kurumi_spawnray_phase_left()"
+evidence_id = "ev-th04-main-kurumi-spawnray-phases-boundary-v125"
+reason = "Explicitly admit the sparse-Ghidra Kurumi left spawn-ray phase after exact-owner generated-public, pinned TASM/raw full-extent, missing-branch, relocation, and next-public review."
+
+[[new_exact]]
+id = "th04-main-fn-28c76"
+address = "0x28C76"
+name = "kurumi_spawnray_phase_right()"
+evidence_id = "ev-th04-main-kurumi-spawnray-phases-boundary-v125"
+reason = "Fresh attested Ghidra constructs the complete 0x8E body, generated public 13A9:51E6 and pinned TASM/raw agree through RET at 0x28D03, and focused plus 161-owner aggregate cold replay prove exact natural-C++ ownership."
+
+[[new_exact]]
+id = "th04-main-fn-28d04"
+address = "0x28D04"
+name = "kurumi_spawnray_phase_dual()"
+evidence_id = "ev-th04-main-kurumi-spawnray-phases-boundary-v125"
+reason = "Fresh attested Ghidra constructs the complete 0xB2 body, generated public 13A9:5274 and pinned TASM/raw agree through RET at 0x28DB5, and focused plus 161-owner aggregate cold replay prove exact natural-C++ ownership."

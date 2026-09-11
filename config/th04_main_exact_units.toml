@@ -5437,3 +5437,108 @@ map_start = "0x4F84"
 map_size = "0x154"
 target_file_offset = "0x1A214"
 size = "0x154"
+
+# v125 MAIN_033_TEXT Kurumi spawn-ray phase-handler cohort. The v124 residual
+# seam is split again only inside cold replay. Both replay-only TASM pieces are
+# hash-bound plumbing and receive zero reconstruction credit.
+[[scaffold_extractions]]
+id = "th04-main-main033-kurumi-prephases-v125"
+trigger_units = ["th04-main-kurumi-spawnray-phases-v125"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "kurumi_18B68\tproc near\r\n"
+end = "kurumi_18BA7\tendp\r\n"
+span_sha256 = "63a8315348a0c6c499bf04a77c42ef0115859dfb92e39a8be171fe4a38d2b8dd"
+template_source = "config/replay/th04_main033_kurumi_suffix.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m33kpre.asm"
+
+[[build_replacements]]
+id = "th04-main-kurumi-spawnray-phases-v125-build"
+trigger_units = ["th04-main-kurumi-spawnray-phases-v125"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/kurrays.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/kurrays.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/kphase.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-prephases-v125-layout"
+trigger_units = ["th04-main-kurumi-spawnray-phases-v125"]
+patch_path = "th04/m33kpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1c981e4b667f44a409de1dcba2367ecbe38a7b3364f3bea77b1c0036e8bf06a5"
+patched_sha256 = "d763c687b53509a44503baef38b38bbb324e4a823672210b0848e99ab90bd6b3"
+
+[[source_transforms.ops]]
+id = "publish-main033-kurumi-prephase-functions-v125"
+kind = "replace"
+old = "public @ORANGE_UPDATE$QV, @KURUMI_UPDATE$QV\r\n"
+new = "public kurumi_18B68, kurumi_18BA7\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "close-main033-kurumi-prephase-segment-v125"
+kind = "replace"
+old = "kurumi_18BA7\tendp\r\n"
+new = "kurumi_18BA7\tendp\r\nmain_033_TEXT\tends\r\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-main033-kurumi-postphases-v125-layout"
+trigger_units = ["th04-main-kurumi-spawnray-phases-v125"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "26869d8279967a46471a36d4ce202cafcce1a2bfec8081dd7b3d8857446d84c6"
+patched_sha256 = "b7e278aaecd81f8f22b71a7f8245294d5ee4cdaa72a4162368768c316b351edd"
+
+[[source_transforms.ops]]
+id = "remove-main033-kurumi-pre-and-phase-cohort-v125"
+kind = "remove_between"
+removed_sha256 = "a973d522efe3cf1b073568ab816a4d913bda5e1cbe52a2084d7e07df62e2ff7f"
+start = "kurumi_18B68\tproc near\r\n"
+end = "kurumi_18D04\tendp\r\n"
+replacement = "; natural C++ Kurumi spawn-ray phase handlers\r\n"
+
+[[source_transforms.ops]]
+id = "declare-main033-kurumi-split-functions-v125"
+kind = "replace"
+old = "extrn @kurumi_spawnrays_update$qv:near\r\n"
+new = "extrn @kurumi_spawnrays_update$qv:near\r\nextrn kurumi_18B68:near\r\nextrn kurumi_18BA7:near\r\nextrn _kurumi_spawnray_phase_left:near\r\nextrn _kurumi_spawnray_phase_right:near\r\nextrn _kurumi_spawnray_phase_dual:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-left-phase-v125"
+kind = "replace"
+old = "kurumi_18BE6"
+new = "_kurumi_spawnray_phase_left"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-right-phase-v125"
+kind = "replace"
+old = "kurumi_18C76"
+new = "_kurumi_spawnray_phase_right"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-kurumi-dual-phase-v125"
+kind = "replace"
+old = "kurumi_18D04"
+new = "_kurumi_spawnray_phase_dual"
+expected_count = 1
+
+[[units]]
+id = "th04-main-kurumi-spawnray-phases-v125"
+default_enabled = true
+requires_units = ["th04-main-kurumi-spawnrays-v124"]
+repo_source = "src/main/boss/kurumi_spawnray_phases.cpp"
+overlay_path = "th04/kphase.cpp"
+map_module = "th04/kphase.cpp"
+map_mode = "exact"
+object_path = "obj/th04/kphase.obj"
+auxiliary_objects = ["obj/th04/m33kpre.obj", "obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x5156"
+map_size = "0x1D0"
+target_file_offset = "0x1A3E6"
+size = "0x1D0"
