@@ -1,4 +1,4 @@
-# TH04 MAIN_033 Orange phase-entry boundary and natural-source candidate (v129)
+# TH04 MAIN_033 Orange phase-entry boundary and natural-source recovery (v129-v130)
 
 ## Scope and status
 
@@ -21,9 +21,7 @@ Artifact binding:
 - target-slice SHA-256:
   `28ec524c11fbf14f6dec94f4a24c5fa16b21461952a75ecadfc93b6f8e450b1a`.
 
-The boundary is reviewed authored C/C++, but exact acceptance is deliberately
-**blocked/non-exact** in the live ledger. Formal focused and aggregate cold
-replay have not completed in this checkpoint.
+v129 established the reviewed authored boundary and maintained natural C++ but deliberately left the function blocked/non-exact. v130 completes the required focused and aggregate cold replay and promotes the same 0xA2 extent to exact without changing the source or replay seam.
 
 ## Boundary correction
 
@@ -101,19 +99,58 @@ The last point is layout-preservation evidence only. The overlay contains many
 other replay scaffold owners and is not a standalone TH04 product build or a
 whole-image exactness claim.
 
-## Formal replay limitation in this conversation
+## v130 formal exact replay and promotion
 
-The required focused command was requested but the execution surface rejected
-it before the repository script started, so there is no focused Oracle result
-from that attempt. The TH04 Factory adapter imports native exact-unit rows as
-replayable claims but does not import candidate/source-present rows. Marking
-this unit exact merely to obtain a Factory replay claim would invert the truth
-boundary and was therefore not done. No Factory replay job was submitted for
-v129.
+The v130 session reran repository and analysis identity gates before promotion.
+The private target remains the 156,258-byte `candidate-local-attested` MZ with
+SHA-256 `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+The registered `th04-ghidra` provider exposes no `get_metadata` operation, so
+only discovered read-only operations were used. Its `check` result and the
+repository-native `python3 scripts/ghidra.py th04-main check` independently
+reconfirm the same target mapping and 1,136 relocation sequence.
 
-Consequently, there is also no new aggregate cold-replay result. The retained
-accepted aggregate baseline remains `gptweb-v128-kurumi-full-aggregate-001`
-with 165 accepted owners.
+Focused two-cold replay actually ran and passed:
+
+`python3 scripts/replay_th04_main_exact_units.py --unit th04-main-orange-phase-entry-v129 --run-id gptweb-v130-orange-phase-entry-focused-001`
+
+Receipt: `.analysis/reconstruction/exact-unit-replay/gptweb-v130-orange-phase-entry-focused-001/receipt.json`.
+Both isolated builds report exact raw bytes, exact map placement, and exact
+ordered relocation overlap for all 162 bytes. Both place `th04/orentry.cpp` at
+`13A9:5B54` size `0xA2`, reproduce target slice SHA-256
+`28ec524c11fbf14f6dec94f4a24c5fa16b21461952a75ecadfc93b6f8e450b1a`,
+and reproduce the sole relocation `[0x19668]`. The emitted TC86 object is valid
+and identical across A/B: raw SHA-256
+`bbc10cc760a42c7d24ba76e9a7ebfbe9703e309819e3315844b6e233e49a11ea`,
+normalized SHA-256
+`f0ca55128437f77f35aba95765734a032e70d70c16a9c48a71811d1aa314a052`.
+Focused candidate MAIN identity is identical across A/B at
+`978bd87221b7b539fd38c3a81d85c6aa3bc7a33b2c9eb29a75d25bf770d9bde5`.
+
+The complete default aggregate then actually ran and passed:
+
+`python3 scripts/replay_th04_main_exact_units.py --run-id gptweb-v130-orange-phase-entry-aggregate-001`
+
+Receipt: `.analysis/reconstruction/exact-unit-replay/gptweb-v130-orange-phase-entry-aggregate-001/receipt.json`.
+All 166 default owners pass together twice. The Orange owner retains the same
+162-byte target slice, exact map contribution, object identity, and relocation
+`[0x19668]`; no previously exact owner regresses. Aggregate candidate MAIN
+identity is deterministic across A/B at
+`a43129b502291d37518347a554ffc8eada80ee073b9e5fc737a8740ed927cbb1`.
+
+A fresh function-review pass adds a current target-bound Ghidra observation for
+`0x295E4`. Fresh Ghidra still reports `body_min=0x295E4`,
+`body_max=0x29685`, and only 103 body addresses. The reviewer therefore admits
+`orange_phase_entry()` only through the configured `reviewed_exact` sparse-body
+path, which separately requires exact owner/public placement and a complete raw
+16-bit decode through terminal `RET`. The report yields 290/292 reviewed
+authored functions exact, 144 automatic acceptances, 146 manual acceptances,
+and zero strict rejections.
+
+These receipts establish repository exact-unit acceptance for this reviewed
+extent. They do not establish a standalone TH04 product build, original runtime
+storage identity, or runtime scenario validation. Factory Truth-Kernel
+acceptance remains a separate plane until a committed imported exact claim is
+submitted and accepted.
 
 ## Retained unknowns and next validation
 
@@ -122,14 +159,11 @@ ordinary/register counter forms, `for`/`while`/`do`, explicit `_CX`, `-k-`,
 `-G`, and CPU-level probes do not emit its DS threshold scan with `CX=9` and
 `LOOP`; no new source hypothesis was found in this packet.
 
-The first continuation step for v129 is to run the configured focused replay:
-
-`python3 scripts/replay_th04_main_exact_units.py --unit th04-main-orange-phase-entry-v129 --run-id <unique-id>`
-
-If and only if that passes both isolated cold builds, run the complete default
-aggregate with no `--unit` selection. Promotion requires the resulting raw,
-map, ordered-relocation, OMF, repository-snapshot, and determinism gates. After
-that, the next structurally connected target-first candidate is the immediately
-following Orange handler at load `0x19686` / Ghidra `0x29686`, reviewed together
-with the remaining three direct callers as one cohort rather than as isolated
-small-function wins.
+The formal v130 promotion gate is closed. The next structurally connected
+target-first candidate is the immediately following Orange handler at load
+`0x19686` / Ghidra `0x29686`, reviewed together with the remaining three direct
+callers at Ghidra image addresses `0x29720`, `0x297BB`, and `0x29814` as one
+cohort rather than as isolated small-function wins. Their corresponding
+load-module offsets, exact extents, relocation ownership, and source shape must
+be re-established from current target/TASM/MAP/Ghidra evidence before any
+reconstruction claim.

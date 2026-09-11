@@ -3126,3 +3126,25 @@ address = "0x2915D"
 name = "kurumi_update()"
 evidence_id = "ev-th04-main-kurumi-update-boundary-v128"
 reason = "Explicitly admit the target-proved 0x466 Kurumi far dispatcher function after exact-owner, TLINK-public, raw terminal-RETF, cross-linked-Ghidra rejection, and separate trailing compiler-table ownership review."
+
+# v130: Fresh Ghidra spans the complete Orange phase-entry PROC but omits the
+# reachable 59-byte phase_frame==16 block from its body. Admit only the
+# target/TASM/raw-proved contiguous 0xA2 extent after focused and aggregate
+# cold replay prove the maintained natural-C++ owner.
+[[reviewed_exact]]
+id = "th04-main-fn-295e4"
+address = "0x295E4"
+file_offset = "0x1ADE4"
+size = "0xA2"
+decode_size = "0xA2"
+name = "orange_phase_entry()"
+owner_unit = "th04-main-orange-phase-entry-v129"
+evidence_id = "ev-th04-main-orange-phase-entry-boundary-v129"
+reason = "Fresh Ghidra has the correct 0x295E4..0x29685 min/max but reports only 103/162 body bytes. Pinned TASM and gap-free raw decode prove the omitted 0x2960C..0x29646 phase_frame==16 branch is ordinary reachable code inside the same near PROC; final focused and 166-owner aggregate two-cold replay prove exact natural-C++ ownership through RET at 0x29685 before the next PROC at 0x29686."
+
+[[new_exact]]
+id = "th04-main-fn-295e4"
+address = "0x295E4"
+name = "orange_phase_entry()"
+evidence_id = "ev-th04-main-orange-phase-entry-boundary-v129"
+reason = "Explicitly admit the sparse-Ghidra Orange phase-entry function after exact-owner map placement, pinned TASM/raw full-extent review, missing-block reconciliation, ordered relocation equality, and final focused plus 166-owner aggregate cold replay."
