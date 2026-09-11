@@ -5258,3 +5258,52 @@ map_start = "0x6FAA"
 map_size = "0xAA"
 target_file_offset = "0x1329A"
 size = "0xAA"
+
+
+# v122 MAIN_012_TEXT Orange foreground renderer. The v121 frontier is selected
+# by dependency; this natural producer is inserted immediately before the exact
+# default midboss defeat renderer.
+[[build_replacements]]
+id = "th04-main-orange-fg-v122-build"
+trigger_units = ["th04-main-orange-fg-v122"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/mbdrend.cpp\",\n\t\"th04/y6rend.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/orangefg.cpp\",\n\t\"th04/mbdrend.cpp\",\n\t\"th04/y6rend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-orange-fg-v122-natural"
+trigger_units = ["th04-main-orange-fg-v122"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "6d8d48624dac2693a32962fee8790f32a72d81260f113da2cb745a0ddcd4c0a9"
+patched_sha256 = "e37c600ce4aefd698d0979a4d20cb84fec4c10b2461cf0d82b2a7bb5b2b069ce"
+
+[[source_transforms.ops]]
+id = "externalize-main-orange-fg-v122"
+kind = "replace"
+old = "public @ORANGE_FG_RENDER$QV\r\n"
+new = "extrn @ORANGE_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main-orange-fg-v122"
+kind = "remove_between"
+removed_sha256 = "a4215eb58cf1003e39b2dd66fc0b5e90c7a6b8ec8eaf5bc69ef281a56599684f"
+start = "@orange_fg_render$qv\tproc near\r\n"
+end = "@orange_fg_render$qv\tendp\r\n"
+replacement = "; natural C++ Orange foreground renderer\r\n"
+
+[[units]]
+id = "th04-main-orange-fg-v122"
+default_enabled = true
+requires_units = ["th04-main-midboss-defeat-render-v121"]
+repo_source = "src/main/boss/orange_fg_render.cpp"
+overlay_path = "th04/orangefg.cpp"
+map_module = "th04/orangefg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/orangefg.obj"
+map_segment = "MAIN_012_TEXT"
+map_start = "0x6E7B"
+map_size = "0x12F"
+target_file_offset = "0x1316B"
+size = "0x12F"

@@ -2956,3 +2956,12 @@ address = "0x21A9A"
 name = "midboss_defeat_render()"
 evidence_id = "ev-th04-main-midboss-defeat-boundary-v121"
 reason = "Fresh attested Ghidra constructs the complete 0xAA body, pinned TASM/raw agree through RET at 0x21B43, and focused plus 157-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:6FAA."
+
+
+# v122: complete contiguous MAIN_012_TEXT Orange foreground renderer.
+[[new_exact]]
+id = "th04-main-fn-2196b"
+address = "0x2196B"
+name = "orange_fg_render()"
+evidence_id = "ev-th04-main-orange-fg-boundary-v122"
+reason = "Fresh attested Ghidra constructs the complete 0x12F body, pinned TASM/raw agree through RET at 0x21A99, and focused plus 158-owner aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:6E7B."
