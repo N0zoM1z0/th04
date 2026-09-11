@@ -3148,3 +3148,32 @@ address = "0x295E4"
 name = "orange_phase_entry()"
 evidence_id = "ev-th04-main-orange-phase-entry-boundary-v129"
 reason = "Explicitly admit the sparse-Ghidra Orange phase-entry function after exact-owner map placement, pinned TASM/raw full-extent review, missing-block reconciliation, ordered relocation equality, and final focused plus 166-owner aggregate cold replay."
+
+# v131: Four complete contiguous Orange mode handlers from one natural TC86 producer.
+[[new_exact]]
+id = "th04-main-fn-29686"
+address = "0x29686"
+name = "orange_phase_random_rings()"
+evidence_id = "ev-th04-main-orange-mode-phases-boundary-v131"
+reason = "Fresh Ghidra covers all bytes in 0x29686..0x2971F; pinned TASM/raw review and the boss.mode dispatcher confirm the near-function boundary, and focused plus 167-owner aggregate cold replay prove the exact natural-C++ owner."
+
+[[new_exact]]
+id = "th04-main-fn-29720"
+address = "0x29720"
+name = "orange_phase_aimed_clouds()"
+evidence_id = "ev-th04-main-orange-mode-phases-boundary-v131"
+reason = "Fresh Ghidra covers all bytes in 0x29720..0x297BA; pinned TASM/raw review and the boss.mode dispatcher confirm the near-function boundary, and focused plus 167-owner aggregate cold replay prove the exact natural-C++ owner."
+
+[[new_exact]]
+id = "th04-main-fn-297bb"
+address = "0x297BB"
+name = "orange_phase_ring16()"
+evidence_id = "ev-th04-main-orange-mode-phases-boundary-v131"
+reason = "Fresh Ghidra covers all bytes in 0x297BB..0x29813; pinned TASM/raw review and the boss.mode dispatcher confirm the near-function boundary, and focused plus 167-owner aggregate cold replay prove the exact natural-C++ owner."
+
+[[new_exact]]
+id = "th04-main-fn-29814"
+address = "0x29814"
+name = "orange_phase_side_rings()"
+evidence_id = "ev-th04-main-orange-mode-phases-boundary-v131"
+reason = "Fresh Ghidra covers all bytes in 0x29814..0x29877; pinned TASM/raw review and the boss.mode dispatcher confirm the next PROC at 0x29878, and focused plus 167-owner aggregate cold replay prove the exact natural-C++ owner."

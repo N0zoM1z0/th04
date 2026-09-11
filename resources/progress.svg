@@ -6,7 +6,7 @@
   <text x="536" y="52" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">99.93%</text>
   <rect x="24" y="60" width="512" height="12" rx="6" fill="#3b4058"/>
   <rect x="24" y="60" width="511.65" height="12" rx="6" fill="#9b6de3"/>
-  <text x="24" y="89" fill="#c8cad2" font-family="sans-serif" font-size="12">45,415 exact / 45,446 confirmed authored bytes · denominator provisional</text>
+  <text x="24" y="89" fill="#c8cad2" font-family="sans-serif" font-size="12">45,913 exact / 45,944 confirmed authored bytes · denominator provisional</text>
 
   <text x="24" y="116" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Boundary reviewed or corroborated</text>
   <text x="536" y="116" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">86.75%</text>

@@ -5872,3 +5872,97 @@ map_start = "0x5B54"
 map_size = "0xA2"
 target_file_offset = "0x1ADE4"
 size = "0xA2"
+
+# v131 MAIN_033_TEXT Orange mode-handler cohort. Four contiguous near functions
+# share one natural TC86 producer and are dispatched through the residual
+# boss.mode switch. The prior v129 phase-entry helper remains a separate owner.
+[[build_replacements]]
+id = "th04-main-orange-mode-phases-v131-build"
+trigger_units = ["th04-main-orange-mode-phases-v131"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/kupdate.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/orentry.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+build_replacement = "\t\"th04/kupdate.cpp\",\n\t\"th04/m33kpre.asm\",\n\t\"th04/orentry.cpp\",\n\t\"th04/orangeph.cpp\",\n\t\"th04/m33kseam.asm\",\n\t\"th04/kurumifg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main033-orange-mode-phases-v131"
+trigger_units = ["th04-main-orange-mode-phases-v131"]
+patch_path = "th04/m33kseam.asm"
+encoding = "latin-1"
+scaffold_sha256 = "a1aaf20a7abbfb01dafc256231969ae7e960308f1f6813ea2208e89473218c53"
+patched_sha256 = "0cff728830e0f497f80bc847d0ad3acb179c8e0ea4d125e5509f38e8e97a82b7"
+
+[[source_transforms.ops]]
+id = "remove-main033-orange-random-rings-v131"
+kind = "remove_between"
+removed_sha256 = "6a3c2c509ddc78ba6357f8a5e814d2c27fe2da9a80f931e15f4e431e22c9f92e"
+start = "orange_19686\tproc near\r\n"
+end = "orange_19686\tendp\r\n"
+replacement = "extrn _orange_phase_random_rings:near\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main033-orange-aimed-clouds-v131"
+kind = "remove_between"
+removed_sha256 = "2253b2294b7ffb96e18d874ac1421e4d562ef2f789e3218f9f6571f9ace8c0b9"
+start = "orange_19720\tproc near\r\n"
+end = "orange_19720\tendp\r\n"
+replacement = "extrn _orange_phase_aimed_clouds:near\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main033-orange-ring16-v131"
+kind = "remove_between"
+removed_sha256 = "779ab01eaa310ab67303d9da2d1e76b387f1d463318eab3f31acfaec7c65747c"
+start = "orange_197BB\tproc near\r\n"
+end = "orange_197BB\tendp\r\n"
+replacement = "extrn _orange_phase_ring16:near\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main033-orange-side-rings-v131"
+kind = "remove_between"
+removed_sha256 = "b4271e6020bd791e284a2c786f9acf25357759e885ec1fa10ecf03238e1a23f1"
+start = "orange_19814\tproc near\r\n"
+end = "orange_19814\tendp\r\n"
+replacement = "extrn _orange_phase_side_rings:near\r\n"
+
+[[source_transforms.ops]]
+id = "bind-main033-orange-random-rings-v131"
+kind = "replace"
+old = "\t\tcall\torange_19686\r\n"
+new = "\t\tcall\t_orange_phase_random_rings\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-orange-aimed-clouds-v131"
+kind = "replace"
+old = "\t\tcall\torange_19720\r\n"
+new = "\t\tcall\t_orange_phase_aimed_clouds\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-orange-ring16-v131"
+kind = "replace"
+old = "\t\tcall\torange_197BB\r\n"
+new = "\t\tcall\t_orange_phase_ring16\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "bind-main033-orange-side-rings-v131"
+kind = "replace"
+old = "\t\tcall\torange_19814\r\n"
+new = "\t\tcall\t_orange_phase_side_rings\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-orange-mode-phases-v131"
+default_enabled = true
+requires_units = ["th04-main-orange-phase-entry-v129"]
+repo_source = "src/main/boss/orange_mode_phases.cpp"
+overlay_path = "th04/orangeph.cpp"
+map_module = "th04/orangeph.cpp"
+map_mode = "exact"
+object_path = "obj/th04/orangeph.obj"
+auxiliary_objects = ["obj/th04/m33kseam.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x5BF6"
+map_size = "0x1F2"
+target_file_offset = "0x1AE86"
+size = "0x1F2"
