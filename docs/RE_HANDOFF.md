@@ -15,17 +15,23 @@ The inventory contains 2,120 distinct function-like observations:
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Within the accepted 153-owner MAIN cohort, the live reviewed totals are:
+Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- authored C/C++ bytes: **40,638 / 40,669 exact (99.923775%)**;
-- authored functions: **270 / 272 exact (99.264706%)**;
+- authored C/C++ bytes: **40,638 / 41,049 exact (98.998758%)**;
+- accepted authored functions: **270 / 272 exact (99.264706%)**;
+- accepted exact C/C++ owners: **153**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
-- reviewed nonexact authored bytes: **31 bytes** in two functions.
+- currently confirmed nonexact authored bytes: **411 bytes**: 380 bytes in the
+  reviewed/source-present `yuuka6_fg_render()` owner plus 31 bytes in the two
+  accepted blocked functions.
 
-These percentages use only accepted reviewed MAIN ledger denominators. They
-are not a claim that 99.92% of an executable or the game has been
-reconstructed. Derive current numbers with `python3 scripts/status.py`;
-`config/units.csv`, `config/th04_main_authored_functions.csv`, and
+The byte denominator now honestly includes the v118 reviewed/source-present
+Yuuka6 foreground extent, while the accepted function denominator remains the
+270 exact plus two blocked rows in `th04_main_authored_functions.csv`;
+source-present functions are not silently promoted into it. These percentages
+are not a claim about 98.998758% of an executable or the game. Derive current
+numbers with `python3 scripts/status.py`; `config/units.csv`,
+`config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
 
 `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` still have no accepted reconstruction
@@ -139,6 +145,13 @@ v117 does **not** promote another exact owner. It resolves the immediate `MAIN_0
 Because v117 contains no exact promotion, no focused exact-unit cold replay and no new aggregate cold replay were run. The current accepted aggregate therefore remains `gptweb-v116-aggregate-001`; v117 evidence is boundary review plus bounded compiler/object probing only.
 
 
+v118 takes the preceding `MAIN_012_TEXT` owner instead of forcing either unresolved v117 origin. `yuuka6_fg_render()` is now target-reviewed at map `0AAF:712A`, load `0x11C1A..0x11D95`, Ghidra `2000:1C1A`, file `0x1341A..0x13595` (**0x17C / 380 bytes**). Pinned TASM, one contiguous Ghidra body, raw `RET`, the immediate `shots_add()` entry, and ten FAR-call MZ relocations close the boundary. Ghidra reports zero direct callers because maintained `boss.cpp` installs this near public through `boss_fg_render_func`.
+
+`src/main/boss/yuuka6_fg_render.cpp` is maintained natural C++ and is now recorded as `source-present`. A bounded TC4J probe first emitted 392 bytes when left/top were forced through `_SI`/`_DI`; replacing only those pseudo-register bindings with natural `register int` locals makes the compiler emit the six target `LEA` forms and produces exactly 380 code bytes. Candidate-versus-target has 45 two-byte mismatch runs, exactly matching all 45 OMF FIXUPP locations, and all other 290 bytes are target-identical. This is strong object/fixup-shape evidence, not exact acceptance. The target position precedes `shots_add`, `shot_velocity_set`, and `sub_11DE6` inside the still-monolithic assembler contribution, so there is no legal TLINK interleaving yet. No focused or aggregate exact replay was run for v118, and the accepted 153-owner aggregate remains `gptweb-v116-aggregate-001`.
+
+v118 also corrects an overbroad intermediate interpretation of the v117 `sub_11DE6` result. A corrected scan of all 123 accepted exact MAIN C/C++ owner units finds 25 `LOOP` instructions in 13 units; **all 25** are TC4J compiler-generated CS switch-table scanners followed by indirect CS jump tables. Thus TC4J can emit `LOOP`, but the accepted natural-source corpus still contains no source-level DS-resident threshold scan matching `sub_11DE6`. The v117 ordinary/register loop matrix remains negative for that narrower shape and original assembly remains unproved. Same-target prologue-shape review likewise strengthens, but does not prove, an original-assembly hypothesis for `shot_velocity_set()`. Full evidence is in `docs/reconstruction/TH04_MAIN_012_YUUKA6_FG_V118.md`.
+
+
 The immediately preceding v114 experiment on the 0x60-byte `MAI_TEXT` scroll-update suffix was deliberately rolled back. Its best allowed natural-C++ shape made the first half and relocation order exact but remained seven bytes long because TC4 inserted an extra byte-to-word zero extension and a separate post-subtraction compare instead of preserving AX plus the `SUB` flags. Combining the compound subtraction with its condition clobbered AX through lvalue evaluation, while `SubpixelLength8::to_pixel()` moved the value through BL and was worse. This negative result is checked into evidence/knowledge; do not retry it without a new falsifiable compiler/source hypothesis.
 
 Before accepting the Reimu batch, a target-first probe attempted the adjacent Mugetsu callbacks `0x2812A` and `0x2821E` as one 0x1EA-byte natural-C++ producer. `#pragma option -a` naturally reproduced both zero metadata bytes and both 33-word dense jump tables, but TC4J canonicalized each target `CMP; JGE; JMP ret0` gate into `CMP; JL ret0`, leaving a deterministic two-byte deficit per function. `if`/`goto`/loop/boolean forms and `-O-` probes did not solve it. The candidate was fully rolled back and is recorded as negative evidence; do not repeat it without a new falsifiable source/compiler hypothesis.
@@ -146,6 +159,7 @@ Before accepting the Reimu batch, a target-first probe attempted the adjacent Mu
 The maintained v89-v98 sources are under `src/main/boss/`; v99 adds `src/main/end/ending.cpp`, v100 adds `src/main/formats/map.cpp`, v101 adds `src/main/boss/gengetsu6_fg_render.cpp`, v102 adds `src/main/boss/mugetsu_gengetsu_bg_render.cpp`, v103 adds `src/main/enemy/enemies_invalidate.cpp`, v104 adds `src/main/formats/bb_txt.cpp`, v105 adds `src/main/boss/mugetsu_fg_render.cpp`, v106 adds `src/main/boss/gengetsu_bomb_inv_render.cpp`, v107 adds `src/main/boss/mugetsu_prefix.cpp`, v108 adds `src/main/boss/mugetsu_180bb.cpp`, v109 adds `src/main/boss/reimu_fg_render.cpp`, v110 adds `src/main/boss/reimu_orbs_render.cpp`, v111 adds `src/main/item/items_render.cpp`, v112 adds `src/main/bullet/render.cpp`, v113 adds `src/main/boss/yuuka6_bg_render.cpp`, v115 adds `src/main/stage_state_init.cpp`, and v116 adds `src/main/boss/elly_fg_render.cpp`. These accepted sources contain no target-byte emission, copied machine-code arrays, `#pragma codestring`, or inline assembly.
 
 The v117 frontier additionally keeps `src/main/player/shots_add.cpp` as a nonexact `source-present` candidate behind `compat/rec98/th04/main/player/shot.hpp`. It is not part of the accepted exact-source list above and has no focused or aggregate acceptance receipt yet.
+v118 additionally keeps `src/main/boss/yuuka6_fg_render.cpp` as a nonexact `source-present` candidate. Its 380-byte compiler skeleton and 45 OMF fixup sites match the target shape, but it has no linked map/raw acceptance receipt because the immediately following unresolved `MAIN_012_TEXT` producer seam prevents legitimate placement.
 
 ## Latest replay receipts
 
@@ -215,7 +229,9 @@ corroboration only and must become TH04-local or proved `src/shared/` source.
 
 The v116 boundary re-audit mechanically compares the current MAIN ledger with all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 140 are exact, 266 remain unreviewed, one is blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 281 unreviewed authored candidates, including **81 provisional/high-risk** rows, 43 with no Ghidra observation and 35 with sparse/cross-linked spans. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
-The immediate `MAIN_012_TEXT` frontier is now the three-entry cohort documented above. Resume first at `shot_velocity_set()` as an ABI/origin seam: a useful new hypothesis must explain target `MOV BX,SP` before `PUSH SI`, `XOR BH,BH`, and `RET 4` under the pinned toolchain, or independently justify genuine original-style assembly. `sub_11DE6` should not be retried with another ordinary C loop until there is a new falsifiable way to make TC4J emit `LOOP`. `shots_add()` already has a maintained 52-byte object-shape-ready source; preserve it while resolving the two intervening producers needed for legitimate segment order. If those remain blocked, move one function earlier in `MAIN_012_TEXT` without changing the three proven adjacent extents.
+The immediate `MAIN_012_TEXT` frontier now contains two source-present natural-C++ owners (`yuuka6_fg_render()` and `shots_add()`) around the unresolved `shot_velocity_set()` / `sub_11DE6` origin/code-generation seam. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is now proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly.
+
+If the seam remains unresolved, the first concrete structurally connected source candidate is the immediately preceding `sub_11B44` / Yuuka6 entity renderer at load `0x11B44..0x11C19`, file `0x13344..0x13419` (**0xD6 / 214 bytes**). It is tail-called by `yuuka6_fg_render()` and renders the chase-cross/safety-circle entities. Review its callers, callee ownership, relocations, and boundary locally before source work; ReC98 names/assembly are hypotheses only.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
