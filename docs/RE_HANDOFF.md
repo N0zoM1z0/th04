@@ -315,6 +315,26 @@ The same packet adds compiler negative evidence for the pointnums yellow/white
 shared-tail seam instead of forcing overlapping source. Full evidence is in
 `docs/reconstruction/TH04_MAIN_032_RANDRING2_NEXT16_V134.md`.
 
+v135 reviews that pointnums shared-tail seam without promoting source or
+exactness. Target control flow, both TLINK publics, fresh provider xrefs, pinned
+TASM, and raw decode prove that `pointnums_add_yellow()` is a noncontiguous
+logical function: its `0x23D90..0x23DA9` entry stub (`0x1A` bytes) jumps into
+the `0x23DBE..0x23DF0` shared tail (`0x33` bytes), for `0x4D` logical bytes over
+a `0x61` span. `pointnums_add_white()` is the contiguous `0x23DAA..0x23DF0`
+`0x47`-byte entry and reaches the same tail. No MZ relocation overlaps the
+physical `0x61`-byte PROC. The machine boundary ledger now records both entries
+as reviewed while leaving their source state unreviewed. v134's naive dual
+functions, BX-pseudoreg white-only source, and `-O/-O-/-k/-k-` variants are
+joined by v135 `-G/-G-` and out-of-line same-signature common-helper probes:
+TC4J never delays the public BP frame or lowers the wrapper call into the target
+sibling jump/fallthrough shape. An explicit `return common(args)` form is
+rejected for these void Pascal wrappers. ReC98's ASM file begins in a 2020
+reverse-engineering commit, so it does not independently prove original source
+language; original-style assembly remains a hypothesis rather than an accepted
+origin classification. No maintained source, focused replay, aggregate replay,
+or Factory claim is created by v135. Full evidence is in
+`docs/reconstruction/TH04_MAIN_032_POINTNUMS_SHARED_TAIL_V135.md`.
+
 ## Latest replay receipts
 
 The latest exact owner passes repository focused two-cold replay at:
@@ -440,23 +460,17 @@ The current MAIN ledger still represents all 434 target-derived TASM `PROC` star
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-The first concrete continuation is the `MAIN_032_TEXT` dual-entry
-`pointnums_add_yellow()` / `pointnums_add_white()` shared-tail seam. Fresh Ghidra
-still reports yellow as a contiguous 0x1A-byte function at image
-`0x23D90..0x23DA9` and white as a 0x47-byte function at `0x23DAA..0x23DF0`.
-Target control flow disproves the closed yellow extent: the instruction at
-`0x23DA8` jumps to shared tail `0x23DBE`, which the white entry also reaches,
-and the shared code continues through `RET 6` starting at `0x23DEE`. Existing
-`ev-th04-main-pointnums-shared-tail-v104` already records this contradiction and
-`ev-th04-main-pointnums-shared-tail-v134` adds compiler negative evidence: a
-naive two-function source emits 0xB6 bytes, while white-only pseudo-register
-forms emit 0x49 rather than target 0x47 and put the BP-frame prologue at the
-public entry rather than the shared tail. Optimization and `-k` variants retain
-the mismatch. The live ledger intentionally keeps yellow provisional.
-Re-establish the physical TASM PROC, both logical entry semantics, shared-tail
-denominator, relocations, ABI, callers, and a genuinely different natural
-source form together before granting source or exact credit. This is a structural shared-tail packet, not an easy
-small-function collection pass.
+The first concrete continuation is the contiguous `CIRCLE_TEXT` point-number
+lifecycle/render cohort. Five corroborated target-derived entries tile load
+`0xBCB2..0xBE67` without gaps: `POINTNUMS_INIT` (`0xB` bytes),
+`pointnums_invalidate()` (`0x35`), `POINTNUMS_UPDATE` (`0x70`),
+`POINTNUMS_RENDER` (`0x9A`), and `@pointnum_put` (`0x6A`). Together they form a
+`0x1B6`-byte semantic cohort. Re-establish the target relocations, ABI,
+callers/callees, physical producer ownership, and natural TC4J source shape as
+one packet before promotion. This cohort is preferred over another blind
+pointnums-add flag search because it may expose the original point-number
+register/layout idioms needed to falsify or support a later revisit of the
+reviewed yellow/white shared-tail origin question.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
@@ -466,7 +480,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The current repository 168-owner exact-unit cohort compiles and links reproducibly through the
+The current repository 170-owner exact-unit cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 
