@@ -948,6 +948,87 @@ def inspect_auxiliary_objects(source: Path, paths: list[str]) -> list[dict[str, 
     return results
 
 
+def inspect_auxiliary_extents(
+    source: Path,
+    extents: list[dict[str, object]],
+    target_mz,
+    candidate_mz,
+    map_path: Path,
+) -> list[dict[str, object]]:
+    """Validate linked zero-credit replay extents without granting unit credit."""
+
+    results: list[dict[str, object]] = []
+    for entry in extents:
+        extent_id = str(entry["id"])
+        file_start = integer(str(entry["file_offset"]))
+        size = integer(str(entry["size"]))
+        program_start = file_start - target_mz.header.header_size
+        if program_start < 0:
+            raise RuntimeError(f"{extent_id}: auxiliary extent is inside MZ header")
+        target_slice = target_mz.program_image[program_start : program_start + size]
+        candidate_slice = candidate_mz.program_image[program_start : program_start + size]
+        if len(target_slice) != size or len(candidate_slice) != size:
+            raise RuntimeError(f"{extent_id}: auxiliary candidate/target slice is truncated")
+        map_module = str(entry["map_module"])
+        map_segment = str(entry.get("map_segment", "")) or None
+        map_start, map_size, map_line = map_contribution(
+            map_path, map_module, map_segment
+        )
+        map_mode = str(entry.get("map_mode", "exact"))
+        if map_mode == "exact":
+            map_exact = map_start == program_start and map_size == size
+        elif map_mode == "contains":
+            map_exact = (
+                map_start <= program_start
+                and (program_start + size) <= (map_start + map_size)
+            )
+        else:
+            raise RuntimeError(
+                f"{extent_id}: unknown auxiliary map_mode {map_mode!r}"
+            )
+        object_path = str(entry["object_path"])
+        omf = describe_omf((source / object_path).read_bytes())
+        target_relocs = overlapping_relocations(target_mz, program_start, size)
+        candidate_relocs = overlapping_relocations(candidate_mz, program_start, size)
+        results.append({
+            "id": extent_id,
+            "file_start": file_start,
+            "program_start": program_start,
+            "size": size,
+            "target_slice_sha256": digest_bytes(target_slice),
+            "candidate_slice_sha256": digest_bytes(candidate_slice),
+            "raw_exact": target_slice == candidate_slice,
+            "map_start": map_start,
+            "map_size": map_size,
+            "map_mode": map_mode,
+            "map_exact": map_exact,
+            "map_line": map_line,
+            "map_module": map_module,
+            "target_overlapping_relocations": target_relocs,
+            "candidate_overlapping_relocations": candidate_relocs,
+            "relocations_exact": target_relocs == candidate_relocs,
+            "object_path": object_path,
+            "object_valid": bool(omf["valid"]),
+            "object_sha256": omf["sha256"],
+            "object_normalized_sha256": omf["dependency_timestamp_normalized_sha256"],
+            "object_module_name": omf["module_name"],
+            "object_translators": omf["translator_comments"],
+        })
+    return results
+
+
+def auxiliary_extents_pass(extents: list[dict[str, object]]) -> bool:
+    """Return whether every declared zero-credit auxiliary extent passes."""
+
+    return all(
+        bool(item["raw_exact"])
+        and bool(item["map_exact"])
+        and bool(item["relocations_exact"])
+        and bool(item["object_valid"])
+        for item in extents
+    )
+
+
 def resolved_producer_outputs(
     entry: dict[str, object], selected_ids: set[str]
 ) -> tuple[str, str, str]:
@@ -1012,6 +1093,9 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
         auxiliary_objects = inspect_auxiliary_objects(
             source, [str(value) for value in entry.get("auxiliary_objects", [])]
         )
+        auxiliary_extents = inspect_auxiliary_extents(
+            source, list(entry.get("auxiliary_extents", [])), target_mz, candidate_mz, map_path
+        )
         target_relocs = overlapping_relocations(target_mz, program_start, size)
         candidate_relocs = overlapping_relocations(candidate_mz, program_start, size)
         results[entry["id"]] = {
@@ -1039,6 +1123,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             "object_dependencies": omf["dependency_paths"],
             "zero_code_objects": zero_code_objects,
             "auxiliary_objects": auxiliary_objects,
+            "auxiliary_extents": auxiliary_extents,
         }
     return candidate_path, results
 
@@ -1206,6 +1291,18 @@ def main() -> int:
             "auxiliary_objects_deterministic": (
                 [item["normalized_sha256"] for item in a["auxiliary_objects"]]
                 == [item["normalized_sha256"] for item in b["auxiliary_objects"]]
+            ),
+            "auxiliary_extents_a": auxiliary_extents_pass(a["auxiliary_extents"]),
+            "auxiliary_extents_b": auxiliary_extents_pass(b["auxiliary_extents"]),
+            "auxiliary_extents_deterministic": (
+                [
+                    (item["candidate_slice_sha256"], item["object_normalized_sha256"])
+                    for item in a["auxiliary_extents"]
+                ]
+                == [
+                    (item["candidate_slice_sha256"], item["object_normalized_sha256"])
+                    for item in b["auxiliary_extents"]
+                ]
             ),
         }
         if not all(checks.values()):

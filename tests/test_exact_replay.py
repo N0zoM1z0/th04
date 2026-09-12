@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -715,6 +716,88 @@ class AuxiliaryObjectTests(unittest.TestCase):
             self.assertTrue(result["valid"])
             self.assertEqual(result["normalized_sha256"], "normalized")
             self.assertEqual(result["module_name"], "residual.asm")
+
+
+class AuxiliaryExtentTests(unittest.TestCase):
+    def test_auxiliary_extent_checks_linked_slice_map_relocations_and_omf(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            (source / "aux.obj").write_bytes(b"fixture")
+            (source / "main.map").write_text("fixture", encoding="utf-8")
+            image = bytes(range(32))
+            target = SimpleNamespace(
+                header=SimpleNamespace(header_size=4),
+                program_image=image,
+                relocations=[],
+            )
+            candidate = SimpleNamespace(
+                header=SimpleNamespace(header_size=4),
+                program_image=image,
+                relocations=[],
+            )
+            description = {
+                "valid": True,
+                "sha256": "raw",
+                "dependency_timestamp_normalized_sha256": "normalized",
+                "module_name": "aux.asm",
+                "translator_comments": ["TASM"],
+            }
+            entry = {
+                "id": "aux",
+                "file_offset": "0x8",
+                "size": "0x4",
+                "map_module": "aux.asm",
+                "map_segment": "CODE",
+                "object_path": "aux.obj",
+            }
+            with patch.object(replay, "map_contribution", return_value=(4, 4, "map")), patch.object(
+                replay, "describe_omf", return_value=description
+            ):
+                result = replay.inspect_auxiliary_extents(
+                    source, [entry], target, candidate, source / "main.map"
+                )[0]
+            self.assertTrue(replay.auxiliary_extents_pass([result]))
+            self.assertTrue(result["raw_exact"])
+            self.assertTrue(result["map_exact"])
+            self.assertTrue(result["relocations_exact"])
+
+    def test_auxiliary_extent_rejects_linked_byte_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            (source / "aux.obj").write_bytes(b"fixture")
+            (source / "main.map").write_text("fixture", encoding="utf-8")
+            target = SimpleNamespace(
+                header=SimpleNamespace(header_size=4),
+                program_image=b"abcdefgh",
+                relocations=[],
+            )
+            candidate = SimpleNamespace(
+                header=SimpleNamespace(header_size=4),
+                program_image=b"abcdEfgh",
+                relocations=[],
+            )
+            description = {
+                "valid": True,
+                "sha256": "raw",
+                "dependency_timestamp_normalized_sha256": "normalized",
+                "module_name": "aux.asm",
+                "translator_comments": ["TASM"],
+            }
+            entry = {
+                "id": "aux",
+                "file_offset": "0x8",
+                "size": "0x4",
+                "map_module": "aux.asm",
+                "object_path": "aux.obj",
+            }
+            with patch.object(replay, "map_contribution", return_value=(4, 4, "map")), patch.object(
+                replay, "describe_omf", return_value=description
+            ):
+                result = replay.inspect_auxiliary_extents(
+                    source, [entry], target, candidate, source / "main.map"
+                )[0]
+            self.assertFalse(result["raw_exact"])
+            self.assertFalse(replay.auxiliary_extents_pass([result]))
 
 
 class ZeroCodeObjectTests(unittest.TestCase):

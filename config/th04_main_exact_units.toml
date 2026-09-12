@@ -6781,3 +6781,58 @@ map_start = "0x1062"
 map_size = "0x486"
 target_file_offset = "0x162F2"
 size = "0x486"
+
+# v151: Stage X seven-helper/FAR-dispatcher producer. The existing v150
+# zero-credit B4M prefix still contains Stage X and an independently included
+# gather renderer; v151 removes both from that prefix, inserts natural mxu.cpp,
+# and re-materializes the unchanged gather renderer as a separately validated
+# zero-credit TASM extent before the exact v150 Stage 2 owner.
+[[build_inserts]]
+id = "th04-main-midbossx-gather-wrapper-v151"
+trigger_units = ["th04-main-midbossx-update-v151"]
+repo_source = "config/replay/th04_b4m_gather_v151.asm"
+overlay_path = "th04/b4mgath.asm"
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/dialog.cpp\",\n"
+build_insert = "\t-- v151 B4M gather wrapper is materialized for the later build replacement\n"
+
+[[build_replacements]]
+id = "th04-main-midbossx-update-v151-build"
+trigger_units = ["th04-main-midbossx-update-v151"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/b4mpre.asm\",\n\t\"th04/m2u.cpp\",\n\t\"th04/m4u.cpp\",\n"
+build_replacement = "\t\"th04/b4mpre.asm\",\n\t\"th04/mxu.cpp\",\n\t\"th04/b4mgath.asm\",\n\t\"th04/m2u.cpp\",\n\t\"th04/m4u.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-midbossx-prefix-v151"
+trigger_units = ["th04-main-midbossx-update-v151"]
+patch_path = "th04/b4mpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "726b5e781fe360c00fd13678942c41655e3a6861c7cde5f4a704715fbfe1333e"
+patched_sha256 = "7a551a24a2ddc77529cf16eb6187f41bbfaba60922c5dd5b25de2ef5a68f2b57"
+
+[[source_transforms.ops]]
+id = "remove-midbossx-and-gather-from-b4mpre-v151"
+kind = "remove_between"
+removed_sha256 = "ed03fdd3e2a546b12a41057623b88ead63b354a6bddbc4f979f5de51cbcdb931"
+start = "sub_146AF\tproc near\r\n"
+end = "include th04/main/gather_point_render.asm\r\n"
+replacement = ""
+
+[[units]]
+id = "th04-main-midbossx-update-v151"
+default_enabled = true
+requires_units = ["th04-main-midboss2-update-v150"]
+repo_source = "src/main/midboss/mx_update.cpp"
+overlay_path = "th04/mxu.cpp"
+map_module = "th04/mxu.cpp"
+object_path = "obj/th04/mxu.obj"
+auxiliary_objects = ["obj/th04/b4mpre.obj", "obj/th04/b4mgath.obj"]
+auxiliary_extents = [
+  { id = "th04-main-midbossx-gather-plumbing-v151", file_offset = "0x16298", size = "0x5A", map_module = "th04\\b4mgath.asm", map_segment = "B4M_UPDATE_TEXT", object_path = "obj/th04/b4mgath.obj" },
+]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x0C1F"
+map_size = "0x3E9"
+target_file_offset = "0x15EAF"
+size = "0x3E9"
