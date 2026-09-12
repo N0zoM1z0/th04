@@ -1,0 +1,5 @@
+.386
+.model use16 large _TEXT
+CIRCLE_TEXT segment byte public 'CODE' use16
+{{EXTRACTED_SPAN}}CIRCLE_TEXT ends
+end

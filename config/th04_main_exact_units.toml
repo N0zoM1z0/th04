@@ -6105,3 +6105,162 @@ map_start = "0x02C2"
 map_size = "0xD"
 target_file_offset = "0x15552"
 size = "0xD"
+
+# v137 CIRCLE_TEXT randring1 natural-source cohort. The two natural functions
+# are physically interleaved with original TASM alignment bytes, so both exact
+# units are selected as one dependency cohort. The prefix and two one-byte
+# layout gaps are source-extracted replay scaffolds and receive zero credit.
+[[scaffold_extractions]]
+id = "th04-main-randring1-tile-inv-v137"
+trigger_units = ["th04-main-randring1-next16-v137", "th04-main-randring1-next16-and-v137"]
+scaffold_path = "th04/main/tile/inv.asm"
+encoding = "latin-1"
+scaffold_sha256 = "5ab9c69b5842319239e48ab54ded935c726aff22614fde80a4189fec1fc86058"
+start = "; void pascal near tiles_invalidate_around(Point center);\r\n"
+end = "tiles_invalidate_around endp\r\n"
+span_sha256 = "5ab9c69b5842319239e48ab54ded935c726aff22614fde80a4189fec1fc86058"
+template_source = "config/replay/th04_tile_inv_external_v137.asm.in"
+output_path = "th04/r1inv.asm"
+
+[[scaffold_extractions.replacements]]
+old = "\tsub\tdi, size _halftiles_dirty\r\n"
+new = "\tsub\tdi, (TILES_MEMORY_X * TILE_FLAGS_Y)\r\n"
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-circle-prefix-v137"
+trigger_units = ["th04-main-randring1-next16-v137", "th04-main-randring1-next16-and-v137"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "include th04/main/tile/inv.asm\r\n"
+end = "include th03/math/randring_fill.asm\r\n"
+span_sha256 = "81463a2aff41619a168bae1e22ceee56af35ea0ec929c4d44c2b5fd7c345f9c2"
+template_source = "config/replay/th04_circle_prefix_v137.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/cirpre.asm"
+
+[[scaffold_extractions.replacements]]
+old = "include th04/main/tile/inv.asm\r\n"
+new = "include th04/r1inv.asm\r\n"
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-randring1-gap1-v137"
+trigger_units = ["th04-main-randring1-next16-v137", "th04-main-randring1-next16-and-v137"]
+scaffold_path = "th04/math/randring.inc"
+encoding = "latin-1"
+scaffold_sha256 = "6f36c64ef467bb30255becc4f888e3b6f9a292c67f804eb5e447cac7fc39b4f5"
+start = "\t@randring&instance&_next16$qv endp\n"
+end = "\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n"
+span_sha256 = "8d334f46b05d74ca5f0fcfbd121a8c1f58b78f981c5edaf766ea06d4b89a9da0"
+template_source = "config/replay/th04_circle_gap_v137.asm.in"
+output_path = "th04/r1gap1.asm"
+
+[[scaffold_extractions.replacements]]
+old = "\t@randring&instance&_next16$qv endp\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-randring1-gap2-v137"
+trigger_units = ["th04-main-randring1-next16-v137", "th04-main-randring1-next16-and-v137"]
+scaffold_path = "th04/math/randring.inc"
+encoding = "latin-1"
+scaffold_sha256 = "6f36c64ef467bb30255becc4f888e3b6f9a292c67f804eb5e447cac7fc39b4f5"
+start = "\t@randring&instance&_next16_and$qui endp\n"
+end = "\tpublic @RANDRING&INSTANCE&_NEXT16_MOD$QUI\n"
+span_sha256 = "001049792bfa97dacfb26f389a94569bd627c75ef6336a23e6a22d4c376df2ea"
+template_source = "config/replay/th04_circle_gap_v137.asm.in"
+output_path = "th04/r1gap2.asm"
+
+[[scaffold_extractions.replacements]]
+old = "\t@randring&instance&_next16_and$qui endp\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\tpublic @RANDRING&INSTANCE&_NEXT16_MOD$QUI\n"
+new = ""
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-randring1-cohort-v137-build"
+trigger_units = ["th04-main-randring1-next16-v137", "th04-main-randring1-next16-and-v137"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/rr2next.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/rr2next.cpp\",\n\t\"th04/cirpre.asm\",\n\t\"th04/r1next.cpp\",\n\t\"th04/r1gap1.asm\",\n\t\"th04/r1and.cpp\",\n\t\"th04/r1gap2.asm\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main-randring1-residual-v137"
+trigger_units = ["th04-main-randring1-next16-v137", "th04-main-randring1-next16-and-v137"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "5f8a07afb84f0bbea7036dc826bc54c3bb096228f5af19eecf5f6f9e745ab6b8"
+patched_sha256 = "aeeedc73c56697f7277a3b4455ea6bfb54d6c4711632b3bf3ff7318ad62b7b75"
+
+[[source_transforms.ops]]
+id = "externalize-circle-prefix-v137"
+kind = "replace"
+old = "\textern _execl:proc\r\n"
+new = "\textern _execl:proc\r\n\textrn sub_BAEE:near\r\n\textrn TILES_FILL_INITIAL:near\r\n\textrn @randring_fill$qv:near\r\n\textrn TILES_INVALIDATE_AROUND:near\r\n\textrn SCROLL_SUBPIXEL_Y_TO_VRAM_SEG1:near\r\n\textrn @PlayfieldMotion@update_seg1$qv:near\r\n\textrn @TILES_REDRAW_INVALIDATED$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-circle-prefix-v137"
+kind = "remove_between"
+removed_sha256 = "81463a2aff41619a168bae1e22ceee56af35ea0ec929c4d44c2b5fd7c345f9c2"
+start = "include th04/main/tile/inv.asm\r\n"
+end = "include th03/math/randring_fill.asm\r\n"
+replacement = "; replay-extracted CIRCLE prefix v137\r\n"
+
+[[source_transforms.ops]]
+id = "move-randring1-next-and-v137"
+kind = "replace"
+old = "RANDRING_NEXT_DEF 1\r\n"
+new = "extrn @randring1_next16$qv:near\r\nextrn @RANDRING1_NEXT16_AND$QUI:near\r\npublic @RANDRING1_NEXT16_MOD$QUI\r\n@randring1_next16_mod$qui proc near\r\n\tmov\tbx, _randring_p\r\n\tmov\tax, word ptr _randring[bx]\r\n\tinc\tbyte ptr _randring_p\r\n\txor\tdx, dx\r\narg_bx near, @n:word\r\n\tdiv\tword ptr @mask\r\n\tmov\tax, dx\r\n\tret_bx\r\n@randring1_next16_mod$qui endp\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-circle-prefix-private-data-v137"
+kind = "replace"
+old = "_invalidate_left_x_tile\tdw ?\r\nbyte_25104\tdb ?\r\nword_25105\tdw ?\r\nword_25107\tdw ?\r\nword_25109\tdw ?\r\n"
+new = "public _invalidate_left_x_tile, byte_25104, word_25105, word_25107, word_25109\r\n_invalidate_left_x_tile\tdw ?\r\nbyte_25104\tdb ?\r\nword_25105\tdw ?\r\nword_25107\tdw ?\r\nword_25109\tdw ?\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-randring1-next16-v137"
+default_enabled = true
+requires_units = ["th04-main-randring2-next16-v134", "th04-main-randring1-next16-and-v137"]
+repo_source = "src/main/math/randring1_next16.cpp"
+overlay_path = "th04/r1next.cpp"
+map_module = "th04/r1next.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r1next.obj"
+auxiliary_objects = ["obj/th04/cirpre.obj", "obj/th04/r1gap1.obj", "obj/th04/r1gap2.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1180"
+map_size = "0xD"
+target_file_offset = "0xD470"
+size = "0xD"
+
+[[units]]
+id = "th04-main-randring1-next16-and-v137"
+default_enabled = true
+requires_units = ["th04-main-randring1-next16-v137"]
+repo_source = "src/main/math/randring1_next16_and.cpp"
+overlay_path = "th04/r1and.cpp"
+map_module = "th04/r1and.cpp"
+map_mode = "exact"
+object_path = "obj/th04/r1and.obj"
+auxiliary_objects = ["obj/th04/cirpre.obj", "obj/th04/r1gap1.obj", "obj/th04/r1gap2.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x118E"
+map_size = "0x15"
+target_file_offset = "0xD47E"
+size = "0x15"

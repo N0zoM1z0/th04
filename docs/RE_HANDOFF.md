@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 298 accepted exact MAIN functions and five reviewed blocked MAIN functions;
-- 429 authored candidates otherwise unreviewed;
+- 300 accepted exact MAIN functions and five reviewed blocked MAIN functions;
+- 427 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- authored C/C++ bytes: **47,530 / 47,737 exact (99.566374%)**;
-- accepted authored functions: **298 / 303 exact (98.349835%)**;
-- accepted exact C/C++ owners: **170**;
+- authored C/C++ bytes: **47,564 / 47,771 exact (99.566683%)**;
+- accepted authored functions: **300 / 305 exact (98.360656%)**;
+- accepted exact C/C++ owners: **172**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **207 bytes** in five reviewed
   blocked functions.
@@ -54,7 +54,7 @@ dispatcher compile as one exact 0xBD0-byte TC4J producer. Final focused plus a
 165-owner aggregate close every declared slice, the shared map contribution, and
 all 28 ordered MZ relocations. The unresolved shot residual still receives no
 reconstruction or function exactness credit. These percentages are not a claim
-about 99.566374% of an executable or the game. Derive current
+about 99.566683% of an executable or the game. Derive current
 numbers with `python3 scripts/status.py`; `config/units.csv`,
 `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -389,16 +389,41 @@ present. Final pre-checkpoint validation passes `scripts/validate_tracking.py`,
 Ghidra/MZ mutation Oracles, and `git diff --check`. No v136 replay command is
 listed because none was run.
 
+
+v137 recovers two entries in the `CIRCLE_TEXT` randring1 boundary packet without
+claiming the adjacent unresolved functions. `randring1_next16()` is a target-
+reviewed 0xD-byte near function at load `0xBC70`; fresh Ghidra still misses its
+entry. `randring1_next16_and(unsigned int)` is the contiguous 0x15-byte Pascal-
+near body at load `0xBC7E` that fresh Ghidra does construct. Natural sources
+`src/main/math/randring1_next16.cpp` and
+`src/main/math/randring1_next16_and.cpp` reproduce the target word-storage/low-
+byte ring index update and the historical `_SP`/`_SS`/`peek` Pascal stack-read
+shape without inline assembly. Focused
+`gptweb-v137-randring1-focused-001` passes a 108-owner dependency cohort twice;
+aggregate `gptweb-v137-randring1-aggregate-001` passes all 172 default owners
+twice with candidate MAIN SHA-256
+`ad3892d8093df45c1fb6452e288dcd6e9f8cfb0b900909c3686827fa9efc47f8`. Both
+new owners have empty ordered relocation overlap and deterministic valid TC86
+OMF. Independent function review admits the Ghidra-visible 0x15 function
+automatically and the Ghidra-missed 0xD function only through the existing
+no-Ghidra exact-owner/public/raw-RET gate. The live campaign denominator becomes
+47,564 / 47,771 exact bytes and 300 / 305 exact functions.
+`randring1_next16_mod()` and the near/far null entries remain reviewed but
+source/origin unreviewed and receive no exactness credit. Full evidence is in
+`docs/reconstruction/TH04_CIRCLE_RANDRING1_V137.md`. Factory acceptance for the
+two v137 exact-owner claims remains pending until a post-commit controlled
+replay actually returns accepted receipts.
+
 ## Latest replay receipts
 
 The latest exact owner passes repository focused two-cold replay at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v134-randring2-next16-focused-003/receipt.json`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v137-randring1-focused-001/receipt.json`.
 
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v134-randring2-next16-aggregate-001/receipt.json`
-  — all 170 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v137-randring1-aggregate-001/receipt.json`
+  — all 172 default owners, two isolated cold materializations.
 
 The v119 shots/Yuuka foreground, v120 Yuuka entity-render, v121 midboss
 defeat, v122 Orange, and v123 Kurumi foreground focused receipts remain valid
@@ -417,11 +442,22 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 170-owner aggregate reports zero raw differences for every declared
+The current 172-owner aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
-`c807ba0d2320d744d20f18c711a7409b5af13c7b6bd8d8eab69e05055f4ef51a`.
+`ad3892d8093df45c1fb6452e288dcd6e9f8cfb0b900909c3686827fa9efc47f8`.
+
+The retained v137 private function-review artifact uses the v137 172-owner
+aggregate map, retained target-bound metadata plus the fresh complete Ghidra
+observation at `0x1BC7E`, and deliberately no synthetic Ghidra entry at
+`0x1BC70`. It reports 300 exact admissions in its 302-entry configured review
+universe: 150 automatic, 150 manual, and zero strict rejections. The live
+function ledger is broader because it also retains the three v136 blocked
+pointnum entries, so current repository accounting is 300 / 305.
+`randring1_next16()` passes only the explicit no-Ghidra owner/public/raw-RET
+gate; `randring1_next16_and()` is automatic. The retained report is
+`.analysis/gpt-web/th04-main-20260912-v137/function-review-v137.json`.
 
 The retained v134 private function-review artifact uses the v134 170-owner
 aggregate map, retained target-bound metadata plus the fresh complete Ghidra
@@ -508,36 +544,34 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 429 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 427 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 239 MAIN entries currently represented by
+The largest remaining class is 234 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 168 are exact, 235 remain unreviewed, four are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 250 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact, 233 remain unreviewed, four are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 248 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-The first concrete continuation is now the immediately preceding `CIRCLE_TEXT`
-RNG/null-function boundary packet at load `0xBC70..0xBCB1`. Raw target decoding
-closes `randring1_next16()` at `0xBC70..0xBC7C` (0xD), the already corroborated
-`randring1_next16_and(unsigned int)` at `0xBC7E..0xBC92` (0x15),
-`randring1_next16_mod(unsigned int)` at `0xBC94..0xBCAC` (0x19), `NULLFUNC_NEAR`
-at `0xBCAE` (one-byte `RET`), and `NULLFUNC_FAR` at `0xBCB0` (one-byte `RETF`),
-with independent NOP alignment at `0xBC7D`, `0xBC93`, `0xBCAD`, `0xBCAF`, and
-`0xBCB1`. The 0x42-byte window has SHA-256
-`eb326c526a757c6e522136a394bd540bda42c24e9c124d362f97be3e774b2256`.
-Fresh Ghidra constructs only the `randring1_next16_and` body; it reports no
-function containing the other four entries even though MAP/TASM keep their
-public/PROC boundaries visible. Review these four missing boundaries as one
-packet, reconcile their callers and any relocation ownership, and test a
-natural RNG source shape using the adjacent exact `randring2_next16()` idiom
-before promotion. This is a boundary-audit packet first, not permission to count
-one-byte null functions as easy exact wins in isolation.
+The first concrete continuation should now be the connected `CIRCLE_TEXT`
+point-number render/put cohort rather than collecting the remaining tiny RNG/null
+entries. `POINTNUMS_RENDER` is the reviewed 0x9A-byte near body at load `0xBD64`;
+`@pointnum_put` immediately follows at load `0xBDFE` for 0x6A bytes, ending at
+`0xBE67` before the next public. The renderer carries put arguments in AX/DX/CX,
+calls the scroll-conversion extent and the internal put routine, and modifies a
+width immediate in its own code path; `@pointnum_put` preserves its working
+register set while writing PC-98 VRAM. Treat these 0x104 bytes as one difficult-
+ABI/physical-owner packet: close callers/callees, code-modified ownership, ABI,
+relocations, and natural TC4J source shape together. This is also the most useful
+local evidence for revisiting the v135 yellow/white shared-tail origin question.
+`randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
+and should not be harvested as isolated easy wins without a new source/origin
+hypothesis.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
@@ -547,7 +581,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The current repository 170-owner exact-unit cohort compiles and links reproducibly through the
+The current repository 172-owner exact-unit cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

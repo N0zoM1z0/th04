@@ -3257,3 +3257,32 @@ address = "0x23D52"
 name = "randring2_next16()"
 evidence_id = "ev-th04-main-randring2-next16-boundary-v134"
 reason = "Fresh Ghidra constructs exactly 0x23D52..0x23D5E through terminal RET; pinned TASM/map and raw bytes agree, and focused 106-owner plus aggregate 170-owner cold replay prove the 0xD natural-C++ owner at MAIN_032_TEXT 13A9:02C2. The following target NOP at 0x23D5F remains residual layout outside function and owner credit."
+
+# v137: CIRCLE_TEXT randring1_next16() is a target/MAP/TASM public that fresh
+# Ghidra still fails to construct. Exact owner + generated public + raw terminal
+# RET and owner-end alignment close the function without synthesizing metadata.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1bc70"
+address = "0x1BC70"
+file_offset = "0xD470"
+size = "0xD"
+name = "randring1_next16()"
+owner_unit = "th04-main-randring1-next16-v137"
+evidence_id = "ev-th04-main-randring1-next16-boundary-v137"
+reason = "Fresh attested Ghidra has no function entry at 0x1BC70. Pinned TASM/MAP and gap-free raw decode close all 0xD bytes through RET at 0x1BC7C; exact natural-C++ ownership begins at generated public CIRCLE_TEXT 0AAF:1180 and ends exactly before the target NOP at 0x1BC7D."
+
+[[new_exact]]
+id = "th04-main-fn-1bc70"
+address = "0x1BC70"
+name = "randring1_next16()"
+evidence_id = "ev-th04-main-randring1-next16-boundary-v137"
+reason = "Explicitly admit the Ghidra-missed randring1_next16() only after exact natural-C++ owner, generated public, raw terminal RET, and exact owner-end review."
+
+# v137: fresh Ghidra, MAP/TASM/raw and exact owner agree on the complete 0x15
+# Pascal-near randring1_next16_and() body through RET 2.
+[[new_exact]]
+id = "th04-main-fn-1bc7e"
+address = "0x1BC7E"
+name = "randring1_next16_and(unsigned int)"
+evidence_id = "ev-th04-main-randring1-and-boundary-v137"
+reason = "Fresh Ghidra constructs exactly 0x1BC7E..0x1BC92 through RET 2; pinned TASM/MAP and raw bytes agree, and focused 108-owner plus aggregate 172-owner cold replay prove the 0x15 natural-C++ owner at CIRCLE_TEXT 0AAF:118E. Surrounding NOPs remain residual layout outside function and owner credit."
