@@ -4632,6 +4632,10 @@ overlay_path = "th04/m5pre.cpp"
 map_module = "th04/m5pre.cpp"
 map_mode = "exact"
 object_path = "obj/th04/m5pre.obj"
+producer_override_when_unit = "th04-main-mugetsu-dense-transitions-v144"
+producer_map_module = "M5A.CPP"
+producer_object_path = "obj/th04/m5all.obj"
+producer_map_mode = "contains"
 
 [[build_replacements]]
 id = "th04-main-mugetsu-transition-a-v108-build"
@@ -4671,6 +4675,10 @@ overlay_path = "th04/m5tr0.cpp"
 map_module = "th04/m5tr0.cpp"
 map_mode = "exact"
 object_path = "obj/th04/m5tr0.obj"
+producer_override_when_unit = "th04-main-mugetsu-dense-transitions-v144"
+producer_map_module = "M5A.CPP"
+producer_object_path = "obj/th04/m5all.obj"
+producer_map_mode = "contains"
 
 
 [[build_replacements]]
@@ -6422,15 +6430,121 @@ expected_count = 1
 [[units]]
 id = "th04-main-mugetsu-phase2-callbacks-v145"
 default_enabled = true
-requires_units = ["th04-main-pointnums-add-asm-v139", "th04-main-shot-velocity-level-asm-v143"]
+requires_units = ["th04-main-pointnums-add-asm-v139", "th04-main-shot-velocity-level-asm-v143", "th04-main-mugetsu-dense-transitions-v144"]
 repo_source = "src/main/boss/mugetsu_phase2_callbacks.cpp"
 overlay_path = "th04/m5p1.cpp"
 map_module = "th04/m5p1.cpp"
 map_mode = "exact"
 object_path = "obj/th04/m5p1.obj"
-auxiliary_objects = ["obj/th04/m5tr12.obj"]
+producer_override_when_unit = "th04-main-mugetsu-dense-transitions-v144"
+producer_map_module = "M5A.CPP"
+producer_object_path = "obj/th04/m5all.obj"
+producer_map_mode = "contains"
 map_segment = "MAIN_033_TEXT"
 map_start = "0x4884"
 map_size = "0x14A"
 target_file_offset = "0x19B14"
 size = "0x14A"
+
+# v147: one source-driven PC-98 integrated-compiler physical producer replaces
+# the five historical Mugetsu sub-producers while preserving their non-overlap
+# logical ownership rows and exact replay accounting.
+[[build_replacements]]
+id = "th04-main-mugetsu-main033-v147-build-m5pre"
+trigger_units = ["th04-main-mugetsu-dense-transitions-v144"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m5pre.cpp\",\n"
+build_replacement = "\t\"obj/th04/m5all.obj\",\n"
+
+[[build_replacements]]
+id = "th04-main-mugetsu-main033-v147-build-m5tr0"
+trigger_units = ["th04-main-mugetsu-dense-transitions-v144"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m5tr0.cpp\",\n"
+build_replacement = "\t-- v147 fused Mugetsu replaces m5tr0.cpp\n"
+
+[[build_replacements]]
+id = "th04-main-mugetsu-main033-v147-build-m5tr12"
+trigger_units = ["th04-main-mugetsu-dense-transitions-v144"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m5tr12.asm\",\n"
+build_replacement = "\t-- v147 fused Mugetsu replaces m5tr12.asm\n"
+
+[[build_replacements]]
+id = "th04-main-mugetsu-main033-v147-build-m5p1"
+trigger_units = ["th04-main-mugetsu-dense-transitions-v144"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m5p1.cpp\",\n"
+build_replacement = "\t-- v147 fused Mugetsu replaces m5p1.cpp\n"
+
+[[source_transforms]]
+id = "th04-main-mugetsu-main033-v147-layout"
+trigger_units = ["th04-main-mugetsu-dense-transitions-v144"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "8818ba02f0f69b92ca2a1a4b274640d41eb59b0fc78eadb2b429b7e52b7ed93e"
+patched_sha256 = "cc141bf6cb7fbc48f57bad6deb346b0adbfe26649ea771b16f2e2d3ad43c0f2d"
+
+[[source_transforms.ops]]
+id = "remove-main033-mugetsu-physical-owner-v147"
+kind = "remove_between"
+removed_sha256 = "233e42d33ea8dc3a72990355dbdbd48f5fd67a8e1ecab3768ad71b87416dd119"
+start = "; natural C++ Mugetsu gather prefix\r\n"
+end = "\t\tdw offset loc_1894A\r\n\r\n"
+replacement = "; natural C++ Mugetsu MAIN_033 physical producer\r\nextrn @MUGETSU_UPDATE$QV:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main033-mugetsu-update-v147"
+kind = "replace"
+old = "public @MUGETSU_UPDATE$QV\r\n"
+new = "extrn @MUGETSU_UPDATE$QV:far\r\n"
+expected_count = 1
+
+[[prebuild_objects]]
+id = "th04-main-mugetsu-main033-v147-pc98-ide"
+trigger_units = ["th04-main-mugetsu-dense-transitions-v144"]
+driver = "scripts/compile_tc4j_pc98_ide.py"
+repo_source = "src/main/boss/mugetsu_main033.cpp"
+repo_inputs = [
+  "scripts/probe_tc4j_pc98_ide.py",
+  "scripts/attest_toolchain.py",
+  "scripts/lib/omf.py",
+  "scripts/lib/pc98.py",
+  "config/runtime.toml",
+  "config/runtime/dosbox-x-headless.conf",
+  "config/toolchain.toml",
+]
+source_path = "th04/m5all.cpp"
+output_path = "obj/th04/m5all.obj"
+receipt_path = "obj/th04/m5all.pc98-ide.json"
+game = 4
+
+[[units]]
+id = "th04-main-mugetsu-dense-transitions-v144"
+default_enabled = true
+requires_units = ["th04-main-mugetsu-transition-a-v108"]
+repo_source = "src/main/boss/mugetsu_transitions.cpp"
+overlay_path = "th04/m5tr12.cpp"
+map_module = "M5A.CPP"
+map_mode = "contains"
+object_path = "obj/th04/m5all.obj"
+map_segment = "MAIN_033_TEXT"
+map_start = "0x469A"
+map_size = "0x1EA"
+target_file_offset = "0x1992A"
+size = "0x1EA"
+
+[[units]]
+id = "th04-main-mugetsu-late-v146"
+default_enabled = true
+requires_units = ["th04-main-mugetsu-phase2-callbacks-v145"]
+repo_source = "src/main/boss/mugetsu_late.cpp"
+overlay_path = "th04/m5late.cpp"
+map_module = "M5A.CPP"
+map_mode = "contains"
+object_path = "obj/th04/m5all.obj"
+map_segment = "MAIN_033_TEXT"
+map_start = "0x49CE"
+map_size = "0x590"
+target_file_offset = "0x19C5E"
+size = "0x590"

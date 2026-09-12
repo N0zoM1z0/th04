@@ -1,9 +1,11 @@
+#ifndef TH04_MUGETSU_MAIN033_COMBINED
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 #include "compat/rec98/th02/v_colors.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/gather.hpp"
 #include "th04/main/circle.hpp"
 #pragma option -a2
+#endif
 
 extern int mugetsu_gather_frame_offset;
 extern SPPoint mugetsu_anchor;

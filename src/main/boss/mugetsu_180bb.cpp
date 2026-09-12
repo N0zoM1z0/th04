@@ -1,7 +1,9 @@
+#ifndef TH04_MUGETSU_MAIN033_COMBINED
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"
 #include "th04/snd/snd.h"
+#endif
 
 extern int mugetsu_gather_frame_offset;
 extern "C" void near mugetsu_gather_intro(void);

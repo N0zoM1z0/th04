@@ -1,8 +1,10 @@
+#ifndef TH04_MUGETSU_MAIN033_COMBINED
 #pragma option -a
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"
 #include "th04/snd/snd.h"
+#endif
 
 extern int mugetsu_gather_frame_offset;
 extern SPPoint mugetsu_anchor;
@@ -24,7 +26,7 @@ extern "C" unsigned char near mugetsu_1812A(void)
     case 28: case 42: boss.sprite = 133; break;
     case 26: case 44: boss.sprite = 132; break;
     case 24: case 46: boss.sprite = 131; break;
-    case 16: case 48: boss.sprite = 129; break;
+    case 16: case 48: boss.sprite = 129;
     }
 
     if(boss.phase_frame < 48) {
@@ -36,9 +38,9 @@ extern "C" unsigned char near mugetsu_1812A(void)
         }
         if(stage_frame_mod2 != 0) {
             boss.sprite = 130;
-        } else {
-            boss.sprite = 129;
+            goto ret0;
         }
+        boss.sprite = 129;
         goto ret0;
     }
     if(boss.phase_frame == 64) {
@@ -69,7 +71,7 @@ extern "C" unsigned char near mugetsu_1821E(void)
     case 28: case 42: boss.sprite = 133; break;
     case 26: case 44: boss.sprite = 132; break;
     case 24: case 46: boss.sprite = 131; break;
-    case 16: case 48: boss.sprite = 129; break;
+    case 16: case 48: boss.sprite = 129;
     }
 
     if(boss.phase_frame < 48) {
@@ -81,9 +83,9 @@ extern "C" unsigned char near mugetsu_1821E(void)
         }
         if(stage_frame_mod2 != 0) {
             boss.sprite = 130;
-        } else {
-            boss.sprite = 129;
+            goto ret0;
         }
+        boss.sprite = 129;
         goto ret0;
     }
     if(boss.phase_frame == 128) {

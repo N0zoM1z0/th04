@@ -1,3 +1,4 @@
+#ifndef TH04_MUGETSU_MAIN033_COMBINED
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/th02/v_colors.hpp"
@@ -10,6 +11,7 @@
 #include "th04/snd/snd.h"
 
 #pragma option -a
+#endif
 
 extern unsigned char bullet_special_turns_max;
 extern unsigned char (near *mugetsu_transition_func)(void);
@@ -186,12 +188,15 @@ extern unsigned char player_invincibility_time;
 extern unsigned int __cdecl PaletteTone;
 extern SPPoint homing_target;
 extern void pascal near hud_hp_update_and_render(int hp_cur, int hp_max);
+extern void pascal near boss_explode_big(unsigned int type);
 
 #pragma codeseg MAI_TEXT main_01
 extern void pascal near mugetsu_gengetsu_bg_render(void);
 #pragma codeseg
 
+#ifndef TH04_MUGETSU_MAIN033_COMBINED
 #pragma option -a
+#endif
 void pascal far mugetsu_update(void)
 {
     unsigned char next_mode;
@@ -348,7 +353,7 @@ mode_0_6:
             boss_explode_small(ET_VERTICAL);
         }
         if(boss.phase_frame == 32) {
-            boss_explode_big(ET_SW_NE);
+            boss_explode_big(static_cast<unsigned int>(ET_SW_NE));
             boss.phase = PHASE_EXPLODE_BIG;
             bullet_zap = boss.phase_state.defeat_bonus;
             if(boss.phase_state.defeat_bonus != 0) {

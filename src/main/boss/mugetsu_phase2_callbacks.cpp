@@ -1,3 +1,4 @@
+#ifndef TH04_MUGETSU_MAIN033_COMBINED
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "th04/sprites/main_pat.h"
@@ -7,6 +8,7 @@
 #include "th04/main/player/player.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
+#endif
 
 extern unsigned char bullet_special_turns_max;
 extern unsigned char (near *mugetsu_transition_func)(void);

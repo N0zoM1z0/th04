@@ -85,6 +85,7 @@ def repo_input_paths(
     splits: list[dict[str, object]],
     build_inserts: list[dict[str, object]],
     scaffold_extractions: list[dict[str, object]] | None = None,
+    prebuild_objects: list[dict[str, object]] | None = None,
 ) -> list[Path]:
     """Return all live repository inputs that cold replay must freeze once."""
 
@@ -102,6 +103,13 @@ def repo_input_paths(
     for entry in scaffold_extractions or []:
         if entry.get("template_source"):
             paths.add(Path(str(entry["template_source"])))
+    for entry in prebuild_objects or []:
+        if entry.get("driver"):
+            paths.add(Path(str(entry["driver"])))
+        if entry.get("repo_source"):
+            paths.add(Path(str(entry["repo_source"])))
+        for value in entry.get("repo_inputs", []):
+            paths.add(Path(str(value)))
     if REC98_COMPAT.is_dir():
         for path in REC98_COMPAT.rglob("*"):
             if path.is_file():
@@ -724,6 +732,154 @@ def apply_source_transforms(
         })
     return receipts
 
+def apply_prebuild_objects(
+    source_root: Path,
+    prebuild_objects: list[dict[str, object]],
+    selected_ids: set[str],
+    repo_root: Path | None = None,
+) -> list[dict[str, object]]:
+    """Generate declared OMF objects from frozen cold-tree source before Tup."""
+
+    repo_root = ROOT if repo_root is None else repo_root
+    receipts: list[dict[str, object]] = []
+
+    def relative_path(value: object, field: str) -> Path:
+        path = Path(str(value))
+        if path.is_absolute() or ".." in path.parts:
+            raise RuntimeError(f"prebuild {field} must stay relative: {path}")
+        return path
+
+    for entry in prebuild_objects:
+        triggers = {str(value) for value in entry.get("trigger_units", [])}
+        active = sorted(triggers & selected_ids)
+        if not active:
+            continue
+        prebuild_id = str(entry["id"])
+        driver_rel = relative_path(entry["driver"], "driver")
+        source_rel = relative_path(entry["source_path"], "source_path")
+        output_rel = relative_path(entry["output_path"], "output_path")
+        receipt_rel = relative_path(entry["receipt_path"], "receipt_path")
+        repo_source_rel = (
+            relative_path(entry["repo_source"], "repo_source")
+            if entry.get("repo_source") is not None
+            else None
+        )
+        live_driver = ROOT / driver_rel
+        frozen_driver = repo_root / driver_rel
+        if not live_driver.is_file() or live_driver.is_symlink():
+            raise FileNotFoundError(live_driver)
+        if not frozen_driver.is_file() or frozen_driver.is_symlink():
+            raise FileNotFoundError(frozen_driver)
+        live_driver_sha = digest_file(live_driver)
+        if live_driver_sha != digest_file(frozen_driver):
+            raise RuntimeError(f"{prebuild_id}: prebuild driver drift during replay")
+        frozen_inputs: list[dict[str, object]] = []
+        for value in entry.get("repo_inputs", []):
+            relative = relative_path(value, "repo_inputs")
+            live = ROOT / relative
+            frozen = repo_root / relative
+            if not live.is_file() or live.is_symlink():
+                raise FileNotFoundError(live)
+            if not frozen.is_file() or frozen.is_symlink():
+                raise FileNotFoundError(frozen)
+            live_sha = digest_file(live)
+            if live_sha != digest_file(frozen):
+                raise RuntimeError(
+                    f"{prebuild_id}: prebuild repository input drift: {relative}"
+                )
+            frozen_inputs.append({"path": relative.as_posix(), "sha256": live_sha})
+        source = source_root / source_rel
+        materialized_repo_source: dict[str, object] | None = None
+        if repo_source_rel is not None:
+            live_repo_source = ROOT / repo_source_rel
+            frozen_repo_source = repo_root / repo_source_rel
+            if not live_repo_source.is_file() or live_repo_source.is_symlink():
+                raise FileNotFoundError(live_repo_source)
+            if not frozen_repo_source.is_file() or frozen_repo_source.is_symlink():
+                raise FileNotFoundError(frozen_repo_source)
+            live_repo_source_sha = digest_file(live_repo_source)
+            if live_repo_source_sha != digest_file(frozen_repo_source):
+                raise RuntimeError(
+                    f"{prebuild_id}: prebuild repository source drift: {repo_source_rel}"
+                )
+            if source.exists():
+                raise RuntimeError(
+                    f"{prebuild_id}: prebuild source path already exists: {source_rel}"
+                )
+            source.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(frozen_repo_source, source)
+            materialized_repo_source = {
+                "path": repo_source_rel.as_posix(),
+                "sha256": live_repo_source_sha,
+            }
+        if not source.is_file() or source.is_symlink():
+            raise FileNotFoundError(source)
+        output = source_root / output_rel
+        driver_receipt = source_root / receipt_rel
+        output.parent.mkdir(parents=True, exist_ok=True)
+        driver_receipt.parent.mkdir(parents=True, exist_ok=True)
+        if output.exists():
+            output.unlink()
+        if driver_receipt.exists():
+            driver_receipt.unlink()
+        command = [
+            sys.executable,
+            str(live_driver),
+            "--source-root", str(source_root),
+            "--source", source_rel.as_posix(),
+            "--output", output_rel.as_posix(),
+            "--receipt", receipt_rel.as_posix(),
+        ]
+        if entry.get("game") is not None:
+            command.extend(["--game", str(int(entry["game"]))])
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+        if completed.returncode:
+            raise RuntimeError(
+                f"{prebuild_id}: prebuild driver failed ({completed.returncode})\n"
+                f"{completed.stdout}"
+            )
+        if not output.is_file() or output.is_symlink():
+            raise RuntimeError(f"{prebuild_id}: driver produced no regular object")
+        if not driver_receipt.is_file() or driver_receipt.is_symlink():
+            raise RuntimeError(f"{prebuild_id}: driver produced no regular receipt")
+        omf = describe_omf(output.read_bytes())
+        payload = json.loads(driver_receipt.read_text(encoding="utf-8"))
+        if not omf["valid"]:
+            raise RuntimeError(f"{prebuild_id}: generated object is not valid OMF")
+        if str(payload.get("source")) != source_rel.as_posix():
+            raise RuntimeError(f"{prebuild_id}: driver receipt source mismatch")
+        if str(payload.get("output")) != output_rel.as_posix():
+            raise RuntimeError(f"{prebuild_id}: driver receipt output mismatch")
+        if str(payload.get("source_sha256")) != digest_file(source):
+            raise RuntimeError(f"{prebuild_id}: driver receipt source digest mismatch")
+        if str(payload.get("object_sha256")) != digest_file(output):
+            raise RuntimeError(f"{prebuild_id}: driver receipt object digest mismatch")
+        receipts.append({
+            "id": prebuild_id,
+            "trigger_units": active,
+            "driver": driver_rel.as_posix(),
+            "driver_sha256": live_driver_sha,
+            "repo_source": materialized_repo_source,
+            "repo_inputs": frozen_inputs,
+            "source_path": source_rel.as_posix(),
+            "source_sha256": digest_file(source),
+            "output_path": output_rel.as_posix(),
+            "object_sha256": digest_file(output),
+            "object_normalized_sha256": omf["dependency_timestamp_normalized_sha256"],
+            "receipt_path": receipt_rel.as_posix(),
+            "receipt_sha256": digest_file(driver_receipt),
+            "driver_stdout_sha256": digest_bytes(completed.stdout.encode("utf-8")),
+        })
+    return receipts
+
+
 def build(source: Path, log: Path) -> None:
     prefix = ROOT / ".analysis" / "toolchain" / "wineprefix"
     environment = os.environ.copy()
@@ -926,6 +1082,7 @@ def main() -> int:
     build_inserts = list(config.get("build_inserts", []))
     build_replacements = list(config.get("build_replacements", []))
     source_transforms = list(config.get("source_transforms", []))
+    prebuild_objects = list(config.get("prebuild_objects", []))
     if args.unit:
         wanted = set(args.unit)
         try:
@@ -962,7 +1119,9 @@ def main() -> int:
     snapshot_root = root / "repo-inputs"
     snapshot_receipt = materialize_repo_snapshot(
         snapshot_root,
-        repo_input_paths(entries, splits, build_inserts, scaffold_extractions),
+        repo_input_paths(
+            entries, splits, build_inserts, scaffold_extractions, prebuild_objects
+        ),
     )
     snapshot_compat = snapshot_root / "compat" / "rec98"
     target_mz = parse_mz(TARGET.read_bytes())
@@ -994,6 +1153,9 @@ def main() -> int:
         source_transform_receipts = apply_source_transforms(
             source, source_transforms, selected_ids
         )
+        prebuild_object_receipts = apply_prebuild_objects(
+            source, prebuild_objects, selected_ids, repo_root=snapshot_root
+        )
         log = run_root / "build.log"
         build(source, log)
         candidate_path, units = inspect_build(source, entries, ledger, target_mz)
@@ -1008,6 +1170,7 @@ def main() -> int:
                 "build_inserts": build_insert_receipts,
                 "build_replacements": build_replacement_receipts,
                 "source_transforms": source_transform_receipts,
+                "prebuild_objects": prebuild_object_receipts,
                 "build_log_sha256": digest_file(log),
                 "candidate_main_sha256": digest_file(candidate_path),
                 "units": units,

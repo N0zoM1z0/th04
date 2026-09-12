@@ -165,9 +165,34 @@ Use TDUMP only as a diagnostic decoder after the normal media/toolchain identity
 checks. `scripts/lib/omf.py` remains the checked-in integrity/parser authority;
 no proprietary dump utility is needed for CI or cold exact replay.
 
-### Optional PC-98 IDE integrated-compiler diagnostic
+### PC-98 IDE integrated compiler: diagnostic and exact-replay use
 
-The same attested TC4J media contains the original PC-98 IDE in `TCPC98.PAK`. Keep its proprietary `TC.EXE` in ignored analysis space only. Replay it with `python3 scripts/probe_tc4j_pc98_ide.py --run-id UNIQUE` under the pinned DOSBox-X `machine=pc98` profile; the IBM-compatible ReC98 MS-DOS Player fails PC-98 machine detection. The probe privately extracts Borland TCALC, runs `TC /b TCALC.PRJ`, and validates the generated OMF public from CODE LEDATA. Current natural `_BX = _AX` output is `55 8B EC 8B D8 5D CB`; the OMF translator remains `TC86 Borland C++ 4.02`. This is diagnostic producer evidence only, never an exactness Oracle, and no Borland binary/object is checked in.
+The attested TC4J media contains the original PC-98 IDE in `TCPC98.PAK`. Keep
+its proprietary `TC.EXE` in ignored analysis space only. The standalone
+`python3 scripts/probe_tc4j_pc98_ide.py --run-id UNIQUE` command remains a
+diagnostic producer probe: it privately extracts Borland TCALC, runs
+`TC /b TCALC.PRJ` under pinned DOSBox-X `machine=pc98`, and validates the
+generated OMF. A standalone probe result has no exactness credit.
+
+For a source-driven producer whose command-line TCC output is known to differ,
+`scripts/compile_tc4j_pc98_ide.py` may be used **only as a prebuild inside the
+normal exact-unit replay**. The replay manifest must declare `repo_source`; the
+replay driver freezes that checked-in source and every declared driver/runtime/
+toolchain input in `repo_input_snapshot`, materializes the frozen source into the
+cold build tree, and then invokes the PC-98 IDE compiler serially. The prebuild
+receipt records the source hash, `TCPC98.PAK`, extracted `TC.EXE`, DOSBox-X,
+DOSBox configuration, raw OMF, dependency-normalized OMF, and translator
+identity. Missing output, source drift, object invalidity, or changed frozen
+inputs fail closed.
+
+The integrated compiler prebuild still does **not** establish exactness by
+itself. The containing focused and aggregate cold replays must independently
+close target identity, MZ format, reviewed ownership, exact map placement,
+ordered MZ relocations, raw bytes, valid deterministic OMF, and ledger gates.
+The first admitted use is the v147 Mugetsu MAIN_033 `M5A.CPP` producer: the
+source-driven IDE object contributes exactly `0x9BF` CODE bytes, while focused
+and candidate/post-promotion aggregate replay prove the declared logical owners.
+No Borland executable or generated proprietary object is checked into Git.
 
 ### OMF raw and dependency-normalized identities
 

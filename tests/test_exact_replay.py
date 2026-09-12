@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -312,6 +314,18 @@ class ScaffoldExtractionTests(unittest.TestCase):
                     source, [extraction], {"unit-a"}, repo_root=repo
                 )
 
+    def test_repo_input_paths_include_prebuild_inputs(self) -> None:
+        prebuild = {
+            "driver": "scripts/compile_tc4j_pc98_ide.py",
+            "repo_source": "src/main/boss/mugetsu_main033.cpp",
+            "repo_inputs": ["scripts/probe_tc4j_pc98_ide.py", "config/runtime.toml"],
+        }
+        paths = replay.repo_input_paths([], [], [], [], [prebuild])
+        self.assertIn(Path("scripts/compile_tc4j_pc98_ide.py"), paths)
+        self.assertIn(Path("src/main/boss/mugetsu_main033.cpp"), paths)
+        self.assertIn(Path("scripts/probe_tc4j_pc98_ide.py"), paths)
+        self.assertIn(Path("config/runtime.toml"), paths)
+
     def test_repo_input_paths_include_extraction_template(self) -> None:
         extraction = {"template_source": "wrapper.asm.in"}
         paths = replay.repo_input_paths([], [], [], [extraction])
@@ -378,6 +392,85 @@ class BuildReplacementTests(unittest.TestCase):
             "build_replacement": '"a.cpp",\n',
         }
         return source, entry
+
+    def test_prebuild_object_rejects_escaping_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            entry = {
+                "id": "bad-prebuild",
+                "trigger_units": ["unit-a"],
+                "driver": "../escape.py",
+                "source_path": "unit.cpp",
+                "output_path": "unit.obj",
+                "receipt_path": "unit.json",
+            }
+            with self.assertRaises(RuntimeError):
+                replay.apply_prebuild_objects(source, [entry], {"unit-a"})
+
+
+    def test_prebuild_object_materializes_frozen_repo_source(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            live = root / "live"
+            frozen = root / "frozen"
+            source = root / "source"
+            for base in (live, frozen, source):
+                base.mkdir()
+            for base in (live, frozen):
+                (base / "scripts").mkdir()
+                (base / "src").mkdir()
+                (base / "scripts" / "driver.py").write_text("# driver\n", encoding="utf-8")
+                (base / "src" / "producer.cpp").write_text("natural();\n", encoding="utf-8")
+            entry = {
+                "id": "fixture-prebuild",
+                "trigger_units": ["unit-a"],
+                "driver": "scripts/driver.py",
+                "repo_source": "src/producer.cpp",
+                "source_path": "generated/producer.cpp",
+                "output_path": "obj/producer.obj",
+                "receipt_path": "obj/producer.json",
+            }
+
+            def fake_run(command, **kwargs):
+                output = source / "obj" / "producer.obj"
+                receipt = source / "obj" / "producer.json"
+                output.parent.mkdir(parents=True, exist_ok=True)
+                output.write_bytes(b"OMF")
+                receipt.write_text(
+                    json.dumps({
+                        "source": "generated/producer.cpp",
+                        "output": "obj/producer.obj",
+                        "source_sha256": replay.digest_file(source / "generated" / "producer.cpp"),
+                        "object_sha256": replay.digest_file(output),
+                    }),
+                    encoding="utf-8",
+                )
+                return subprocess.CompletedProcess(command, 0, stdout="ok")
+
+            with (
+                patch.object(replay, "ROOT", live),
+                patch.object(replay.subprocess, "run", side_effect=fake_run),
+                patch.object(
+                    replay,
+                    "describe_omf",
+                    return_value={
+                        "valid": True,
+                        "dependency_timestamp_normalized_sha256": "11" * 32,
+                    },
+                ),
+            ):
+                receipts = replay.apply_prebuild_objects(
+                    source, [entry], {"unit-a"}, repo_root=frozen
+                )
+            self.assertEqual(
+                (source / "generated" / "producer.cpp").read_bytes(),
+                (frozen / "src" / "producer.cpp").read_bytes(),
+            )
+            self.assertEqual(receipts[0]["repo_source"]["path"], "src/producer.cpp")
+            self.assertEqual(
+                receipts[0]["repo_source"]["sha256"],
+                replay.digest_file(frozen / "src" / "producer.cpp"),
+            )
 
     def test_build_replacement_is_anchor_bound(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
