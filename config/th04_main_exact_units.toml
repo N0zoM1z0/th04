@@ -6333,3 +6333,18 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+
+
+# v141 CIRCLE_TEXT point-number lifecycle original-style assembly candidate.
+# The physical owner contains three public near bodies plus the two TASM EVEN
+# alignment bytes between them. Logical function boundaries remain separate.
+[[units]]
+id = "th04-main-pointnum-lifecycle-asm-v141"
+default_enabled = true
+requires_units = ["th04-main-pointnums-render-v138"]
+repo_source = "src/main/pointnum/lifecycle.asm"
+overlay_path = "th04/main/pointnum/inv_upd.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
