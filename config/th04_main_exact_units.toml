@@ -4891,6 +4891,10 @@ overlay_path = "th04/y6bg.cpp"
 map_module = "th04/y6bg.cpp"
 map_mode = "exact"
 object_path = "obj/th04/y6bg.obj"
+producer_override_when_unit = "th04-main-yuuka6-bg-update-v148"
+producer_map_module = "th04/b6all.cpp"
+producer_object_path = "obj/th04/b6all.obj"
+producer_map_mode = "contains"
 map_segment = "BOSS_BG_TEXT"
 map_start = "0x7DC9"
 map_size = "0xC0"
@@ -6548,3 +6552,74 @@ map_start = "0x49CE"
 map_size = "0x590"
 target_file_offset = "0x19C5E"
 size = "0x590"
+
+
+# v148: complete BOSS_BG natural TC4J physical producer. The new 0x73B
+# logical prefix and the adjacent exact v113 0xC0 renderer share b6all.obj;
+# byte-credit owners remain non-overlapping.
+[[build_replacements]]
+id = "th04-main-yuuka6-bg-update-v148-build"
+trigger_units = ["th04-main-yuuka6-bg-update-v148"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/g6fg.cpp\",\n\t\"th04/y6bg.cpp\",\n\t\"th04/mgbg.cpp\",\n"
+build_replacement = "\t\"th04/g6fg.cpp\",\n\t\"th04/b6all.cpp\",\n\t\"th04/mgbg.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-boss-bg-v148-natural"
+trigger_units = ["th04-main-yuuka6-bg-update-v148"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "04314aafa7ff062b382dc3ec26ecfaa65247717757abfd8125d3d07c7ce646df",
+  "cc141bf6cb7fbc48f57bad6deb346b0adbfe26649ea771b16f2e2d3ad43c0f2d",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-boss-bg-prefix-v148"
+kind = "remove_between"
+removed_sha256 = "47a7c91e0098d0e46144f488069cf95434df41af660c9d6ac325a5f750b61a63"
+start = "@orange_bg_render$qv\tproc near\r\n"
+end = "\t\tdw loc_12484\r\n\r\n"
+replacement = "; natural C++ BOSS_BG physical producer prefix\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main-orange-bg-v148"
+kind = "replace"
+old = "public @ORANGE_BG_RENDER$QV\r\n"
+new = "extrn @ORANGE_BG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-main-kurumi-bg-v148"
+kind = "replace"
+old = "public @KURUMI_BG_RENDER$QV\r\n"
+new = "extrn @KURUMI_BG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-main-yuuka5-bg-v148"
+kind = "replace"
+old = "public @YUUKA5_BG_RENDER$QV\r\n"
+new = "extrn @YUUKA5_BG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main-yuuka6-bg-palette-latch-v148"
+kind = "insert_before"
+anchor = "byte_23242\tdb 0\r\n"
+text = "public _yuuka6_bg_palette_latch\r\n_yuuka6_bg_palette_latch label byte\r\n"
+
+[[units]]
+id = "th04-main-yuuka6-bg-update-v148"
+default_enabled = true
+requires_units = ["th04-main-yuuka6-bg-v113"]
+repo_source = "src/main/boss/boss_bg_main01.cpp"
+overlay_path = "th04/b6all.cpp"
+map_module = "th04/b6all.cpp"
+map_mode = "contains"
+object_path = "obj/th04/b6all.obj"
+map_segment = "BOSS_BG_TEXT"
+map_start = "0x768E"
+map_size = "0x73B"
+target_file_offset = "0x1397E"
+size = "0x73B"

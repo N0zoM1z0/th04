@@ -1,3 +1,4 @@
+#ifndef TH04_BOSS_BG_MAIN01_COMBINED
 #pragma option -zCBOSS_BG_TEXT -zPmain_01
 
 #include "compat/rec98/th01/hardware/grcg.hpp"
@@ -24,6 +25,8 @@ extern unsigned char yuuka6_bg_fade;
 extern "C" void near playfield_fill(void);
 extern "C" void near yuuka6_bg_update_render(void);
 void near playfield_checkerboard_grcg_tdw_(void);
+
+#endif
 
 void pascal near yuuka6_bg_render(void)
 {
