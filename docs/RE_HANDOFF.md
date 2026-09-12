@@ -10,19 +10,19 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 722 authored reconstruction candidates: OP 94, MAIN 543, MAINE 72, ZUN 13;
-- 346 accepted exact MAIN functions and one reviewed blocked MAIN function;
-- 375 authored candidates otherwise unreviewed;
+- 346 accepted exact MAIN functions and seven reviewed blocked MAIN functions;
+- 369 authored candidates otherwise unreviewed;
 - 62 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- reviewed authored bytes: **57,102 / 57,106 exact (99.992995%)**;
-- accepted authored functions: **346 / 347 exact (99.711816%)**;
+- reviewed authored bytes: **57,102 / 58,456 exact (97.683728%)**;
+- accepted authored functions: **346 / 353 exact (98.016997%)**;
 - accepted default exact replay owners: **187**;
 - original-style ASM: **15 units / 2,124 exact bytes**, tracked separately;
-- currently confirmed nonexact authored bytes: **4 bytes** in one reviewed
-  blocked function.
+- currently confirmed nonexact authored bytes: **1,354 bytes** across seven
+  reviewed blocked functions.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
 and aggregate cold replay. v120 then closes the structurally adjacent 0xD6
@@ -171,6 +171,19 @@ placement, fourteen ordered relocations, and deterministic OMF. The former
 `b4mpre.asm` code producer is now a validated zero-code structural anchor. The
 reviewed denominator becomes 57,102 / 57,106 exact bytes and 346 / 347 exact
 functions. Boundary discovery remains active.
+v154 then expands the reviewed denominator into `MAIN_035_TEXT` instead of
+harvesting another exact neighbor. Target-first review closes six contiguous item
+routines as one `0x546` physical producer at load `0x1DA1B..0x1DF60`, including
+a Ghidra-truncated FAR `items_miss_add()`, two compiler jump-table tails, and a
+grossly cross-linked `item_lower_playperf()`. Maintained natural C++ reproduces
+the exact map contribution, all fifteen ordered relocations, deterministic valid
+OMF, and five individual function slices byte-for-byte. The complete producer
+still differs by four bytes inside `items_update()`: target `29 C3 / 29 D3`
+versus candidate `2B D8 / 2B DA`, two semantically equivalent `SUB BX,AX/DX`
+encodings. No v154 function or owner exactness is granted. The reviewed
+denominator therefore expands to 57,102 / 58,456 exact bytes and 346 / 353 exact
+functions. A separate 187-owner default aggregate excludes the blocked v154 unit
+and proves the previously accepted exact baseline remains regression-free.
 Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -551,7 +564,42 @@ runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
-v153 current-source focused replay:
+v154 current-source focused replay is intentionally a **nonexact** result:
+
+- `gptweb-v154-items-update-focused-candidate-010`;
+- 96-owner dependency closure;
+- receipt SHA-256
+  `77c5a1bc3a9a30f02d16b5029990a2d9483a3d1c29d4a5009140804d70bc56ce`;
+- current source SHA-256
+  `bfb87a0ee1a702870cd731050ad6636d52aded80ede5938b88985ddd1c92d7fb`;
+- manifest SHA-256
+  `7dcd56f5ca9e1432a533fa7c48ffca98c9128312a26f9b33b094b3a5977c24e7`;
+- exact map contribution `13A9:9F8B`, size `0x546`;
+- all fifteen ordered MZ relocations match in both cold builds;
+- deterministic valid `itemsu.obj`, raw SHA-256
+  `73f5c71cc5c61ac3779d17eb3e7201c46316922a57626dfca7712292710209f2`,
+  dependency-normalized SHA-256
+  `d29f351c6010cfcc2fe3fc713b3a49890e8770cc2f2f443aa4571340891679ac`;
+- target owner SHA-256
+  `a0949b541b517ba4be1cb7afd1094b60017235eefd777630b20c038a030f6531`;
+- candidate owner SHA-256
+  `de372a92ed989ee5d5f1ee8ad556b381f754a5cc76f263110854f67563dd886d`;
+- `raw_exact=false`: only load `0x1DF1F` (`29 C3` versus `2B D8`) and load
+  `0x1DF2F` (`29 D3` versus `2B DA`) differ; both pairs decode to the same
+  `SUB BX,AX/DX` operations;
+- every selected dependency owner passes.
+
+There is no v154 candidate-state or post-promotion aggregate because there is no
+exact promotion. The v154 unit is deliberately non-default and blocked. Instead,
+`gptweb-v154-items-blocked-baseline-001` replays all **187 accepted default exact
+owners** twice with the blocked v154 unit absent; `failures=[]`, receipt SHA-256
+`3b2f770fab5bb0830a4e0243f0a02ce8787de5e9778645c625dea939632e456b`,
+and both candidate MAIN images retain SHA-256
+`49118749258855f0c6b51f73ffeee76697274f353b6176b7898775c695cafc32`.
+This is the current repository-native exact baseline; it proves regression-free
+plumbing, not v154 exactness.
+
+v153 historical exact-focused replay:
 
 - `gptweb-v153-midboss1-focused-candidate-001`;
 - 95-unit dependency closure;
@@ -577,7 +625,7 @@ twice again; receipt SHA-256 is
 `4db4654fe46e2524b1be3bcb95c2bb9fe988e3462fda724be169fbd88f32e8d2`,
 and both candidate MAIN images have SHA-256
 `49118749258855f0c6b51f73ffeee76697274f353b6176b7898775c695cafc32`.
-This is the current repository-native exact replay baseline.
+This was the repository-native exact replay baseline at v153.
 
 v152 current-source focused replay:
 
@@ -793,7 +841,7 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 187-owner post-promotion aggregate reports zero raw differences for every declared
+The current 187-owner default exact baseline aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable remains deterministic across A/B with SHA-256
@@ -874,12 +922,20 @@ acceptance for the entire 170-owner set.
 
 ## Remaining reviewed nonexact work
 
-One reviewed authored function remains nonexact:
+Seven reviewed authored functions remain nonexact:
 
-1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
+1. The six v154 `MAIN_035_TEXT` item routines from load `0x1DA1B..0x1DF60`
+   are target-reviewed and source-present inside one `0x546` physical producer.
+   The first five focused function slices are individually byte-identical, but
+   owner-bound function credit is withheld because the complete producer differs
+   by four bytes in `items_update()`: `29 C3 / 29 D3` versus `2B D8 / 2B DA`.
+   Bounded command-line source variants and the genuinely different source-driven
+   original PC-98 IDE integrated compiler have both been tested without resolving
+   those encodings. Do not resume spelling matrices without a new mechanism.
+2. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
    recorded as negative results; do not repeat them without a new falsifiable
-   compiler/source/origin mechanism. v153 does not alter this blocker.
+   compiler/source/origin mechanism.
 
 The twelve Mugetsu functions that were blocked in v144-v146 are now exact inside
 the recovered `0x9BF` PC-98 IDE physical producer. Their historical command-line
@@ -2263,42 +2319,132 @@ baseline. Final `.analysis` size is `3673202009` bytes, growth
 projects, provider state, legacy/unknown data, and unrelated analysis artifacts
 were untouched.
 
-The first concrete continuation is now `th04-main-boundary-1ddf7` in
-`MAIN_035_TEXT`. Fresh Ghidra reports only `0x94` body bytes spread across three
-ranges with the absurd span `0x200B4..0x2DE50` (`0xDD9D`), so its current
-provisional boundary is not usable. Pinned TASM instead closes load
-`0x1DDF7..0x1DE5C`, physical `0x66`: `0x5A` executable bytes through `RET 2`,
-followed by the six-word jump table `off_1DE51` through `0x1DE5C`;
-`ITEMS_UPDATE` starts at the next byte `0x1DE5D` and is the sole fresh Ghidra
-caller. Target physical slice SHA-256 is
-`3584bb31ff2eb54e9e07055c034edfcf564f43237139e3dc5b104f0489fcdea1`;
-its two overlapping MZ relocations are target-ordered at `0x1DE4A, 0x1DE34`.
-Next conversation should reconcile those jump-table targets against raw
-instruction starts and `ITEMS_UPDATE` semantics before writing source.
-Do not prioritize the already-contiguous `midboss1_render()` or retry `snd_load`
-without a new mechanism.
+That v153 continuation is now closed as the reviewed blocked v154 item producer.
+
+## v154 session checkpoint
+
+v154 started from handoff `e8b294ccc443588b1c80ca1b1e8cd2e57d378c6c`,
+ahead 9 / behind 0, with five coherent non-clean paths already present:
+`config/th04_main_exact_units.toml`, `config/units.csv`,
+`src/main/player/shot_velocity.asm`, new `src/main/item/items_update.cpp`, and a
+new one-line item compatibility forwarder. Complete diff/source/ignored-state
+review classified all five as one recoverable-current-work `MAIN_035_TEXT` item
+packet; no unrelated or unknown work was found. Required repository and Factory
+documents were reread. Preflight, status, the 2,120-observation boundary
+validator, Factory `th04-ghidra` `check {}`, and repository-native
+`scripts/ghidra.py th04-main check` passed. The provider still exposes no
+`get_metadata` operation, so no undiscovered schema was invoked. Intermittent
+Factory network/advisory-lock failures occurred before command dispatch and did
+not authorize bypassing Factory.
+
+Target-first review expands the interrupted experiment to the complete contiguous
+item producer at `MAIN_035_TEXT 13A9:9F8B..A4D0`, load
+`0x1DA1B..0x1DF60`, target file `0x1F21B..0x1F760`, size `0x546 / 1350`.
+The six reviewed functions are `items_init()` (`0x1D`), `items_add()` (`0x96`),
+FAR `items_miss_add()` (`0xE0`), `item_collect()` physical `0x249`,
+`item_lower_playperf()` physical `0x66`, and FAR `items_update()` (`0x104`).
+Fresh Ghidra truncates `items_miss_add()` to `0x0B`, omits `item_collect()`'s
+seven-word compiler table, and grossly cross-links `item_lower_playperf()` from
+image `0x200B4` to `0x2DE50`. Pinned TASM/include source plus raw decode close
+the real extents. The seven-word table at load `0x1DDE9..0x1DDF6` and six-word
+table at `0x1DE51..0x1DE5C` both point entirely to decoded instruction starts.
+Exact `boss_reset()` begins at the next byte `0x1DF61`. The physical producer
+contains fifteen MZ relocation entries, all reproduced in target order.
+
+Maintained source is `src/main/item/items_update.cpp`, SHA-256
+`bfb87a0ee1a702870cd731050ad6636d52aded80ede5938b88985ddd1c92d7fb`.
+Replay corrects three target-local declaration/storage seams without moving data:
+FAR `items_miss_add()`, byte-sized `stage_point_items_collected`, and a short
+word alias `_max_valued_point_items` over the existing long-named word counter.
+The already-exact v143 shot selector only gains the additional public spelling
+`SUB_11DE6` at its existing FAR address. No inline ASM, codestring, copied target
+bytes, padding, fake return, object/target patch, or ABI lie is used.
+
+Final focused run `gptweb-v154-items-update-focused-candidate-010` is the durable
+nonexact receipt summarized above. Its exact map placement, fifteen ordered
+relocations, deterministic valid OMF, and dependency closure pass twice, but raw
+bytes differ at exactly the two equivalent SUB instructions inside
+`items_update()`. A per-function diagnostic finds zero differing bytes in the
+other five reviewed function slices, but the repository owner gate correctly
+withholds exact function credit from all six. The unit is therefore
+`default_enabled=false`, reviewed/source-present, and blocked. No candidate or
+post-promotion aggregate was run because there was no promotion.
+
+Bounded negative mechanism evidence includes command-line TC4J source variants
+and the source-driven original PC-98 IDE integrated compiler. The latter compiles
+an `_EAX`-free ordinary-C++ variant but emits 1380 CODE bytes and still chooses
+`2B D8 / 2B DA`; the final `_EAX`-lifetime source is not accepted by that IDE
+surface because its integrated environment lacks the ReC98 `_EAX` pseudo-register
+macro. Further spelling matrices are not justified without a genuinely new
+compiler/source mechanism.
+
+The separate default regression run `gptweb-v154-items-blocked-baseline-001`
+passes all 187 accepted exact owners twice with the blocked v154 owner absent and
+candidate MAIN SHA-256
+`49118749258855f0c6b51f73ffeee76697274f353b6176b7898775c695cafc32`.
+Implementation checkpoint is
+`330171196b09405b51be3d330e25767e5cafa656`
+(`gpt-web: review MAIN_035 item update source`). A continuation recovery then
+resumed at that committed checkpoint with only `docs/RE_HANDOFF.md` unstaged;
+that path was classified as recoverable-current-work, all mandatory documents
+were reread, current focused/baseline receipts were rebound to the committed
+source and manifest, and the mandatory gates plus full repository CI were rerun.
+Full repository CI passes on that recovered handoff state. v154 establishes boundary ownership and maintainable
+source presence, but **does not establish v154 function/owner exactness**.
+Standalone TH04 production-source/link closure, runtime-storage identity,
+runtime-scenario validation, whole-image exactness, and v154 Factory Truth
+Kernel acceptance are not established.
+
+The live MAIN denominator is now **57,102 / 58,456 exact reviewed authored bytes
+(97.683728%)** and **346 / 353 exact reviewed functions (98.016997%)**. Seven
+reviewed functions are blocked and 190 MAIN authored candidates remain unreviewed;
+187 default exact owners remain accepted. This exactness drop is a denominator
+expansion, not an accepted-owner regression.
+
+The v154 ignored manifest began at `3,673,214,429` bytes. Receiptless exploratory
+focused runs were deleted; receipt-bearing nonexact focused runs were compacted
+to receipt-only; the complete 187-owner default baseline remains the current cold
+baseline; `V154SRC` and the retained IDE debug workspace were deleted; only the
+small command-line/IDE probes named by durable evidence remain. Final `.analysis`
+size is `3742498874` bytes, growth `69284445` bytes. The
+private target, shared toolchains, Ghidra/provider state, legacy/unknown data,
+and unrelated analysis artifacts were untouched.
+
+The first concrete continuation is `th04-main-boundary-1d5e9` in
+`MAIN_035_TEXT`. Fresh Ghidra reports only `0xAB` body bytes across a gross
+`0x33F9` three-range span (`0x2A2C0..0x2D6B8`). Pinned TASM/raw instead close
+load `0x1D5E9..0x1D6C0`, physical `0xD8 / 216`: executable code through the
+return, followed by the four-word compiler table `0x1D6B9..0x1D6C0`.
+Its words resolve to loads `0x1D688`, `0x1D692`, `0x1D69C`, and `0x1D6A6`, all
+validated instruction starts. There are **zero MZ relocations** in this physical
+owner. Target slice SHA-256 is
+`cc45660ac109856cdc8bd0b7609cfd4b0fc746df343b32e906636ab73ff53de3`.
+The next PROC/public `stage_clear_bonus()` begins exactly at load `0x1D6C1` and
+fresh Ghidra also records it as a caller. Review this `0xD8` physical owner and
+its semantic relationship with `sub_1D58F` / `stage_clear_bonus()` before writing
+source. Do not reopen the v154 SUB-encoding blocker or `snd_load` without a new
+mechanism.
 
 ## Next target-first queue
 
-First review `th04-main-boundary-1ddf7` in `MAIN_035_TEXT` before opening an
-unrelated subsystem. Treat Ghidra's three-range `0xDD9D` span as rejected
-provisional routing evidence. Reconcile the TASM/raw physical `0x66` extent,
-its `0x0C` six-word switch table, two ordered MZ relocations, and the direct
-`ITEMS_UPDATE` caller before deciding source ownership.
+First review `th04-main-boundary-1d5e9` in `MAIN_035_TEXT` before opening an
+unrelated subsystem. Reject Ghidra's `0x33F9` cross-linked span, verify the
+`0xD8` TASM/raw physical extent and four-word table against target control flow,
+then decide source/TU ownership from the two known callers and `sub_1D58F` callee.
 
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 375 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 369 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining MAIN target-derived-assembly class is now 182 entries. That label means “likely authored game code awaiting
+The largest remaining MAIN target-derived-assembly class is now 176 entries. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 216 exact, 191 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 182 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 196 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger continues to represent the complete TASM-visible `PROC` inventory. Relative to the v153 partition, five TASM-visible v154 item entries moved from unreviewed to blocked, while the included FAR `items_miss_add()` is reviewed through its source include rather than an automatic TASM-row binding. Of the remaining MAIN authored queue, 176 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 190 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 v143 closes the former `MAIN_012_TEXT` semantic seam: `shot_velocity_set()` and `sub_11DE6` are now routed to original-style ASM attestation and the old replay-only residual extraction is gone. Preserve the v117/v118 TC4J negatives as compiler evidence, but do not continue retrying source-level loop spellings for these now-classified functions.
 
@@ -2317,7 +2463,7 @@ Mugetsu source merely because earlier command-line/isolated producer failures ar
 still documented; the current focused and candidate/post-promotion aggregates
 are authoritative for repository-native exactness. v148 later superseded the old
 BOSS_BG `sub_12461` queue item. The current structural priority is the
-`MAIN_035_TEXT sub_1DDF7` cross-link described in the v153 checkpoint.
+`MAIN_035_TEXT sub_1D5E9` cross-link described in the v154 checkpoint.
 `randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
 and should not be harvested as isolated easy wins without a new source/origin
 hypothesis.
