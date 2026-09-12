@@ -9,18 +9,18 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 
 The inventory contains 2,120 distinct function-like observations:
 
-- 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
+- 730 authored reconstruction candidates: OP 94, MAIN 551, MAINE 72, ZUN 13;
 - 300 accepted exact MAIN functions and seven reviewed blocked MAIN functions;
-- 425 authored candidates otherwise unreviewed;
-- 52 original-style ASM observations in a separate attestation queue;
+- 423 authored candidates otherwise unreviewed;
+- 54 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
 - reviewed authored bytes: **47,564 / 48,031 exact (99.027711%)**;
 - accepted authored functions: **300 / 307 exact (97.719870%)**;
-- accepted exact C/C++ owners: **172**;
-- original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
+- accepted default exact replay owners: **173**;
+- original-style ASM: **10 units / 1,587 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **467 bytes** in seven reviewed
   blocked functions.
 
@@ -53,10 +53,20 @@ the two remaining 0x3F orbit helpers plus all v124-v127 Kurumi source and the FA
 dispatcher compile as one exact 0xBD0-byte TC4J producer. Final focused plus a
 165-owner aggregate close every declared slice, the shared map contribution, and
 all 28 ordered MZ relocations. The unresolved shot residual still receives no
-reconstruction or function exactness credit. These percentages are not a claim
-about 99.027711% of an executable or the game. Derive current
-numbers with `python3 scripts/status.py`; `config/units.csv`,
-`config/th04_main_authored_functions.csv`, and
+reconstruction or function exactness credit. v139 then corrects the point-number
+add shared-tail origin rather than forcing another C++ approximation. Independent
+TH04 and TH05 original-target bytes preserve the same yellow/white dual-entry,
+common-tail, delayed-BP-frame architecture. `src/main/pointnum/add.asm` is a
+standalone symbolic TASM producer for MAIN_032_TEXT load `0x13D90..0x13DF1`: the
+0x61-byte shared-tail PROC plus the post-ENDP alignment NOP naturally emitted
+by TASM `EVEN`. Focused 109-owner replay and the final 173-owner aggregate both pass twice with raw/map/
+ordered-relocation/OMF/determinism exactness. The two logical function extents
+remain 0x4D-over-0x61 for yellow and contiguous 0x47 for white; the NOP is not
+function-body credit. Reclassifying those two observations from authored C/C++
+to original-style ASM leaves the authored denominator and 99.027711% exact-byte
+rate unchanged. These percentages are not a claim about 99.027711% of an
+executable or the game. Derive current numbers with `python3 scripts/status.py`;
+`config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
 
 `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` still have no accepted reconstruction
@@ -435,12 +445,14 @@ runtime-storage identity, or runtime-scenario validation.
 
 The latest exact owner passes repository focused two-cold replay at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v137-randring1-focused-001/receipt.json`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v139-pointnums-add-focused-align-candidate-003/receipt.json`
+  — 109-owner dependency closure, two isolated cold materializations.
 
 The complete default cohort then passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v137-randring1-aggregate-001/receipt.json`
-  — all 172 default owners, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v139-pointnums-add-aggregate-align-final-003/receipt.json`
+  — all 173 default owners, two isolated cold materializations; receipt SHA-256
+  `5f37b3986c4c1ca21689e24897aab0430adc795a0c38d493a29d009e7dbe2083`.
 
 The v119 shots/Yuuka foreground, v120 Yuuka entity-render, v121 midboss
 defeat, v122 Orange, and v123 Kurumi foreground focused receipts remain valid
@@ -459,7 +471,7 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 172-owner aggregate reports zero raw differences for every declared
+The current 173-owner aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
@@ -536,7 +548,7 @@ acceptance for the entire 170-owner set.
 
 ## Remaining reviewed nonexact work
 
-Five reviewed authored functions are nonexact:
+Seven reviewed authored functions are nonexact:
 
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
@@ -570,17 +582,17 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 425 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 423 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 232 MAIN entries currently represented by
+The largest remaining class is 230 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact, 231 remain unreviewed, six are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 246 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact, 231 remain unreviewed, six are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 244 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
@@ -595,18 +607,23 @@ shape. Both routines are now reviewed blocked with source absent; v138 runs no
 focused or aggregate exact replay. See
 `docs/reconstruction/TH04_CIRCLE_POINTNUM_RENDER_PUT_V138.md`.
 
-The first concrete continuation should revisit the v135 `pointnums_add_yellow()`
-/ `pointnums_add_white()` shared-tail physical PROC as an **origin-classification
-packet**, not another ordinary C++ flag sweep. That owner spans load
-`0x13D90..0x13DF0`: yellow has a 0x1A entry range plus the shared
-`0x13DBE..0x13DF0` tail, while white is contiguous from `0x13DAA`. v135 already
-proved that ordinary dual functions, register-pseudoreg forms, `-O/-O-/-k/-k-`,
-`-G/-G-`, and an out-of-line common helper do not create the target delayed shared
-BP frame. v138 supplies genuinely new subsystem-local evidence: self-modifying
-renderer code and an assembly-shaped pointnum blitter that legal TC4J source also
-misses. Compare TH04 with same-era TH02/TH05 target code, physical TASM/TLINK
-ownership, and independently attested original-style signatures before changing
-origin. ReC98 assembly remains hypothesis evidence only.
+v139 closes the v135 point-number add origin question: the maintained physical
+owner at load `0x13D90..0x13DF1` is now exact original-style assembly, including
+the TASM-`EVEN`-generated post-ENDP alignment NOP but excluding that byte from
+both logical function bodies. The
+classification is supported by independent TH04/TH05 target architecture, not by
+ReC98 self-corroboration. Do not extrapolate that result automatically to other
+point-number routines.
+
+The first concrete continuation should therefore return to the v138
+`POINTNUMS_RENDER` / `@pointnum_put` cohort as a new target-to-target
+origin-classification packet. Search the attested TH05 target for the distinctive
+frameless `LODSW`/`LOOP`/`XCHG CX,BX` put shape and for a renderer that rewrites a
+CS-resident width immediate, then reconcile any match with TH04 TASM/TLINK owner
+boundaries and the v138 failed legal TC4J probes. A TH05 match would be new
+independent evidence; absence is also durable negative evidence. Do not inherit
+v139's original-ASM classification merely because these routines share the
+pointnum subsystem, and do not use ReC98 assembly as authority.
 `randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
 and should not be harvested as isolated easy wins without a new source/origin
 hypothesis.
@@ -619,7 +636,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The current repository 172-owner exact-unit cohort compiles and links reproducibly through the
+The current repository 173-owner exact-unit cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 

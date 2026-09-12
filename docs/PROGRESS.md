@@ -5,14 +5,14 @@ provisional until each boundary is reconciled with exact target control flow.
 
 | Measure | Count |
 | --- | ---: |
-| Tracked all-artifact authored function candidates | 732 |
+| Tracked all-artifact authored function candidates | 730 |
 | Provisional boundaries remaining | 90 |
-| Reviewed/corroborated authored boundaries | 642 |
+| Reviewed/corroborated authored boundaries | 640 |
 | Source-present accepted `MAIN.EXE` mappings | 303 |
 | Accepted exact `MAIN.EXE` functions | 300 |
 | Accepted exact authored bytes | 47,564 |
 | Exact / currently confirmed authored bytes | 99.03% |
-| Exact original-style ASM units | 9 / 1,489 bytes |
+| Exact original-style ASM units | 10 / 1,587 bytes |
 
 Exact totals count only reviewed authored C/C++ ownership ranges whose
 maintained source passes the complete configured cold replay and raw
