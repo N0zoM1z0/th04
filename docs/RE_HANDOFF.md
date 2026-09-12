@@ -9,18 +9,18 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 
 The inventory contains 2,120 distinct function-like observations:
 
-- 724 authored reconstruction candidates: OP 94, MAIN 545, MAINE 72, ZUN 13;
+- 722 authored reconstruction candidates: OP 94, MAIN 543, MAINE 72, ZUN 13;
 - 300 accepted exact MAIN functions and one reviewed blocked MAIN function;
-- 423 authored candidates otherwise unreviewed;
-- 60 original-style ASM observations in a separate attestation queue;
+- 421 authored candidates otherwise unreviewed;
+- 62 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
 - reviewed authored bytes: **47,564 / 47,568 exact (99.991591%)**;
 - accepted authored functions: **300 / 301 exact (99.667774%)**;
-- accepted default exact replay owners: **177**;
-- original-style ASM: **14 units / 2,052 exact bytes**, tracked separately;
+- accepted default exact replay owners: **178**;
+- original-style ASM: **15 units / 2,124 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **4 bytes** in one reviewed
   blocked function.
 
@@ -77,10 +77,14 @@ v141 then resolves the three remaining point-number lifecycle routines as one
 `EVEN` alignment bytes outside the logical function bodies. v142 resolves the
 27-byte `enemy_bullet_template_push()` producer the same way after independent
 TH05 target corroboration, while splitting the adjacent `ENEMIES_UPDATE` back
-into a standalone exact natural-C++ producer. Both current reviewed authored
-ratios now exceed the campaign pressure target, but the denominator remains
-expandable and this grants no completion authority. These percentages are not
-a claim about an executable or the game.
+into a standalone exact natural-C++ producer. v143 closes the former replay-only
+MAIN_012_TEXT shot seam: independent TH04/TH05 original-target evidence supports
+original-style assembly for the adjacent 0x1C `shot_velocity_set()` and 0x2C
+shot-level selector, and maintained symbolic TASM replaces the old extracted
+0x48 residual without changing the 178-owner aggregate image. Both current
+reviewed authored ratios remain above the campaign pressure target, but the
+denominator remains expandable and this grants no completion authority. These
+percentages are not a claim about an executable or the game.
 Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -461,30 +465,31 @@ runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
-The current enemy bullet-template / `ENEMIES_UPDATE` producer split passes
-repository focused two-cold replay at:
+The current MAIN_012_TEXT shot-seam packet passes repository focused two-cold
+replay at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v142-enemy-btpush-focused-candidate-001/receipt.json`
-  — 43-owner dependency closure, two isolated cold materializations; receipt
-  SHA-256 `4ee4961d02444570efffa374a19e78834d4148987f6d7f44cdbb229c70a0abeb`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v143-shot-seam-focused-candidate-002/receipt.json`
+  — 91-owner dependency closure, two isolated cold materializations; receipt
+  SHA-256 `929b6b88e7a4731197bbf78e065687428a7df90b794cfba676a400388d0ee450`.
 
 Before promotion, the complete default cohort passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v142-enemy-btpush-aggregate-candidate-001/receipt.json`
-  — all 177 default owners, two isolated cold materializations; receipt SHA-256
-  `fc08ef7eba3e94bfab54666abea80d2dbd6caf5fa62a34b9423886f625e03443`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v143-shot-seam-aggregate-candidate-001/receipt.json`
+  — all 178 default owners, two isolated cold materializations; receipt SHA-256
+  `11baa79daaa97e436a2f526cf4bc549a6dd5d2cb5bd47cbe258277377a7347d8`.
 
 After promotion, the complete default cohort passes again at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v142-enemy-btpush-aggregate-final-001/receipt.json`
-  — all 177 default owners, two isolated cold materializations, `failures=[]`;
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v143-shot-seam-aggregate-final-001/receipt.json`
+  — all 178 default owners, two isolated cold materializations, `failures=[]`;
   receipt SHA-256
-  `2360b81d24e0637f99d6552ce4f24283e9671ce9c6d30661ec932dbcff5eb608`.
+  `d5d4d5a28261f0a194d396ae155d15b10572963de47f1f46a5203ed72b7a924d`.
 
-The immediately preceding v141 lifecycle packet also retains focused
-`gptweb-v141-pointnum-lifecycle-focused-candidate-002` and final 176-owner
-aggregate `gptweb-v141-pointnum-lifecycle-aggregate-final-001`, with final
-receipt SHA-256
+The immediately preceding v142 enemy-template packet retains final 177-owner
+aggregate `gptweb-v142-enemy-btpush-aggregate-final-001`, receipt SHA-256
+`2360b81d24e0637f99d6552ce4f24283e9671ce9c6d30661ec932dbcff5eb608`;
+v141 lifecycle retains final 176-owner aggregate
+`gptweb-v141-pointnum-lifecycle-aggregate-final-001`, receipt SHA-256
 `9809f03159d1490ccf5931f13537809b93c75b08330b1f94b430877bd697ca0c`.
 
 The v119 shots/Yuuka foreground, v120 Yuuka entity-render, v121 midboss
@@ -504,10 +509,10 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 177-owner aggregate reports zero raw differences for every declared
+The current 178-owner aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
-executable is deterministic across A/B with SHA-256
+executable remains deterministic across A/B with SHA-256
 `87b62fa0ba11f043d0138f5512940f45fc8393c76b1ab002ea28b9adbbd26800`.
 
 The retained v137 private function-review artifact uses the v137 172-owner
@@ -929,24 +934,137 @@ matrix and v118 exact-source corpus cross-check remain negative for this DS
 source-level loop shape. No new compiler mechanism was found, so no source,
 origin, or exactness promotion was forced.
 
+## v143 session checkpoint
+
+This conversation started from clean `main` at
+`36f94510d42ec8d3e485ff95941d84ad081266d3`. Factory initially observed the
+branch two commits ahead of `origin/main`; during the conversation the upstream
+ref advanced independently to the same checkpoint and later to the v143
+implementation checkpoint. No Factory push operation exists and no push was
+invoked. There was no staged, unstaged, untracked, conflicted, unrelated, or
+interrupted tracked work to recover at entry.
+
+The compact MAIN_012_TEXT frontier was re-attested before editing. Fresh Ghidra
+still misses `shot_velocity_set()` at image `0x21DCA`, while pinned TASM/TLINK,
+gap-free raw decode, `RET 4`, and the immediate next entry close its logical
+0x1C body at map `0AAF:72DA`, load `0x11DCA..0x11DE5`, file
+`0x135CA..0x135E5`. Fresh Ghidra constructs the complete FAR `sub_11DE6` body at
+map `0AAF:72F6`, load `0x11DE6..0x11E11`, file `0x135E6..0x13611`, 0x2C bytes.
+Neither body overlaps an MZ relocation.
+
+The v117/v118 compiler negatives remain valid. Legal TC4J stack-peek forms for
+the velocity helper miss the target `MOV BX,SP`-before-`PUSH SI` and `XOR BH,BH`
+shape; legal source-level loop matrices do not emit the selector's DS-resident
+`CX=9` / `LOOP`. v143 adds independent original-target evidence: attested TH05
+`MAIN.EXE` load `0xE3C4` preserves the same Pascal-near stack/SS/dword-velocity
+copy architecture with game-specific MOVZX/angle differences, and load `0xE3E2`
+uniquely preserves the `CX=9` DS threshold `LOOP`, shot-level derivation,
+callback-table selection, and `NOP; PUSH CS; CALL near; RETF` selector architecture
+modulo linked addresses. The attested TH03 target has no full match. This supports
+original-style assembly without claiming recovery of the historical author text.
+
+Maintained `src/main/player/shot_velocity.asm` SHA-256 is
+`99202dd10eb180f5e2774bd834903af5ea75474ea4c8339dadf8e3aebb2589fc`. The source
+uses symbolic constants/externals, preserves the FAR HUD ABI, and models the
+target-supported PC-98 compatibility NOP explicitly rather than using inert
+alignment padding, copied target bytes, codestrings, or target patching. A cheap
+standalone TASM probe emits exactly 72 LEDATA bytes before link fixups. The
+complete physical owner is file `0x135CA..0x13611`, SHA-256
+`23795f7fc0a402f6baa4273dda0c3e0d4957ad16166abb86dd583a128bf3824a`.
+
+v143 removes the current replay manifest's target-derived `m12seam.asm` scaffold
+extraction and overlays the maintained source at the identical 0x48 contribution
+between exact `shots_add()` and exact `elly_fg_render()`. The v119 source
+transform is split with hash-bound intermediate identity
+`49f2e695859aec0b0732db71f2f41372f7da61911f634499516e76a42970aa64` while
+retaining historical final scaffold SHA-256
+`1bac8bdb2c8b8c1b142f7fcd911763e004ed3b1e2f826a19976e6a2b44e784ed`.
+
+The first focused run, `gptweb-v143-shot-seam-focused-candidate-001`, failed
+before exactness inspection because a latent v142 dependency-closure issue
+selected standalone `ENEMIES_UPDATE` without its split
+`ENEMY_BULLET_TEMPLATE_PUSH` definition. Status was inspected immediately. The
+manifest now co-selects that physical producer pair; no v143 source byte changed
+to address the infrastructure failure. After the compact failure conclusion was
+recorded, its receiptless 35 MiB current-session replay tree was deleted as
+owned reproducible scratch.
+
+The final promotion chain passes completely:
+
+- focused candidate-state 91-owner replay
+  `gptweb-v143-shot-seam-focused-candidate-002`, receipt SHA-256
+  `929b6b88e7a4731197bbf78e065687428a7df90b794cfba676a400388d0ee450`;
+- candidate-state 178-owner aggregate
+  `gptweb-v143-shot-seam-aggregate-candidate-001`, receipt SHA-256
+  `11baa79daaa97e436a2f526cf4bc549a6dd5d2cb5bd47cbe258277377a7347d8`;
+- post-promotion 178-owner aggregate
+  `gptweb-v143-shot-seam-aggregate-final-001`, receipt SHA-256
+  `d5d4d5a28261f0a194d396ae155d15b10572963de47f1f46a5203ed72b7a924d`.
+
+Both final aggregate builds keep candidate MAIN SHA-256
+`87b62fa0ba11f043d0138f5512940f45fc8393c76b1ab002ea28b9adbbd26800`. The
+physical owner maps exactly at
+`0AAF:72DA 0048 C=CODE S=MAIN_012_TEXT G=MAIN_01 M=th04\m12seam.asm ACBP=28`,
+has empty target/candidate relocation overlap, and emits valid deterministic
+TASM OMF with dependency-normalized SHA-256
+`a28ca4aafa6fee3af39e834b925182cf665f690e35fd516447c081766b87d5a1`. The
+implementation checkpoint is `3c314581907d44b361a22cadea73e790861bbfae`
+(`gpt-web: reconstruct shot velocity level assembly`). It was not pushed by this
+conversation.
+
+The two logical observations move from the unreviewed authored reconstruction
+queue to the separate original-style ASM attestation queue. Because neither was
+in the reviewed authored denominator, reviewed C/C++ exactness remains 47,564 /
+47,568 bytes (99.991591%) and 300 / 301 functions (99.667774%). Exact
+original-style ASM becomes 15 units / 2,124 bytes. The all-artifact authored
+candidate inventory becomes 722 with 421 unreviewed, while MAIN has 543 authored
+candidates and 242 unreviewed. These are moving ledger denominators; no completion
+claim follows.
+
+Factory `th04-ghidra` attestation and repository-native
+`python3 scripts/ghidra.py th04-main check` agree on the selected target SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`, MZ
+header/load mapping, entry, all 1,136 relocations, load-module identity, and
+sampled bytes. The pinned TC4J/TASM/TLINK/MS-DOS Player gates pass. Tracking,
+preflight, the 2,120-row boundary validator, full `scripts/ci.py`, private
+cross-game Oracle calibration, live Ghidra replay, Ghidra mutation smoke, and
+`git diff --check` all pass on the implementation checkpoint.
+
+Verification planes remain separate. Repository-native function/extent exactness
+is PASS for the new 0x48 maintained owner and the complete 178-owner replay
+cohort. Standalone TH04 production-source/link closure is not established.
+Runtime-storage identity is not established. No runtime scenario validation was
+run in this packet. No v143 Factory acceptance replay was submitted or claimed.
+Pristine-release provenance is not established; target canonicality remains
+`candidate-local-attested`.
+
+The ignored `.analysis/` tree contained 2,952,959,076 bytes at conversation
+entry and `3137459549` bytes after final handoff validation, growth
+`184500473` bytes. The retained successful v143 replay directories
+are approximately 75 MiB focused, 76 MiB candidate aggregate, and 76 MiB final
+aggregate. The receiptless 35 MiB first focused failure and the one-shot TASM
+probe scratch were deleted after compact conclusions were retained. No legacy,
+unknown, target, toolchain, Ghidra-project, or other shared provider state was
+removed.
+
 ## Next target-first queue
 
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 423 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 421 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 230 MAIN entries currently represented by
+The largest remaining class is 228 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact authored reconstructions, 230 authored reconstruction candidates remain unreviewed, seven are routed to original-style ASM attestation, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 244 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact authored reconstructions, 228 authored reconstruction candidates remain unreviewed, nine are routed to original-style ASM attestation, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 242 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
-The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
+v143 closes the former `MAIN_012_TEXT` semantic seam: `shot_velocity_set()` and `sub_11DE6` are now routed to original-style ASM attestation and the old replay-only residual extraction is gone. Preserve the v117/v118 TC4J negatives as compiler evidence, but do not continue retrying source-level loop spellings for these now-classified functions.
 
 v138 originally closed `POINTNUMS_RENDER` / `@pointnum_put` as durable reviewed
 nonexact extents and retained legal TC4J negative evidence. v140 supersedes only
@@ -957,15 +1075,19 @@ replay. Both observations are therefore in the original-style ASM attestation
 queue rather than the authored reconstruction queue. See
 `docs/reconstruction/TH04_CIRCLE_POINTNUM_RENDER_PUT_ASM_V140.md`.
 
-v139, v140, and v141 close the point-number add/render/lifecycle origin packets
-without licensing subsystem-wide ASM assumptions. The first concrete hard
-continuation is now the adjacent MAIN_012_TEXT `shot_velocity_set()` /
-`sub_11DE6` origin cohort. Start with an independent TH05/TH03 target search for
-the DS threshold-scan / callback-selection architecture and for the unusual
-`shot_velocity_set()` prologue, then reconcile any match or durable absence with
-the existing v117/v118 legal TC4J negatives. Do not retry another ordinary
-`for`/`while`/`do` or `_CX` spelling unless a genuinely new compiler mechanism
-explains why a source-level DS table scan would become `LOOP`.
+v143 closes the previous shot-seam continuation. The first concrete hard next
+packet is now the adjacent MAIN_033_TEXT `mugetsu_1812A` / `mugetsu_1821E`
+callback cohort. The live boundary ledger marks `mugetsu_1812A` provisional with
+a noncontiguous 14-range Ghidra body and a cross-linked span approaching 0xFCED,
+while Ghidra has no function entry at `mugetsu_1821E`. Pinned TASM PROC starts
+are load `0x1812A` and `0x1821E`; the historical v109 probe treats the contiguous
+cohort as 0x1EA target bytes and observes a 33-word dense jump table in each
+function. Begin by proving the two true raw/TASM/table extents and validating all
+jump targets, then revisit origin/code generation only with a genuinely new
+hypothesis. The retained v109 negative result already shows that `#pragma option
+-a` natural C++ reproduces table metadata/cases but TC4J canonicalizes each
+target `CMP; JGE; JMP ret0` gate into `CMP; JL`, leaving two bytes missing per
+function; do not repeat the old if/goto/loop/boolean/`-O-` sweep.
 `randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
 and should not be harvested as isolated easy wins without a new source/origin
 hypothesis.
@@ -978,7 +1100,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The current repository 177-owner exact-unit cohort compiles and links reproducibly through the
+The current repository 178-owner exact-unit cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 
