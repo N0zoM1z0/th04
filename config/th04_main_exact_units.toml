@@ -7108,3 +7108,168 @@ map_start = "0x9F8B"
 map_size = "0x546"
 target_file_offset = "0x1F21B"
 size = "0x546"
+
+# v155: Six Stage bonus helpers/routines occupy the complete 0x58D MAIN_035
+# prefix immediately before the blocked v154 item producer. Replay removes the
+# exact original assembler span, exports existing data/code labels without
+# moving storage, and inserts natural sbonus.cpp before the residual monolith.
+[[build_replacements]]
+id = "th04-main-stage-bonus-v155-build"
+trigger_units = ["th04-main-stage-bonus-v155"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/sbonus.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main-stage-bonus-v155-natural"
+trigger_units = ["th04-main-stage-bonus-v155"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "b779a7ddd302f78878225ba9be9201faf619f0e8c0e5847934ee0ab7d580856a",
+  "4a3ec2dee9bd0a07ce0177ab4d2bc4aae704953511311df53a1ffd32469c6163",
+]
+
+[[source_transforms.ops]]
+id = "remove-main035-stage-bonus-v155"
+kind = "remove_between"
+removed_sha256 = "a4eaacb97d155451db179cbb87cfea7111ad42ee0dd25ac9a9c126fa5fc9157b"
+start = "sub_1D48E\tproc near\r\n"
+end = "@stage_allclear_bonus$qv\tendp\r\n"
+replacement = ""
+
+[[source_transforms.ops]]
+id = "externalize-main035-stage-bonus-v155"
+kind = "replace"
+old = "main_035_TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+new = "main_035_TEXT\tsegment\tbyte public 'CODE' use16\r\nextrn @stage_clear_bonus$qv:near\r\nextrn @stage_allclear_bonus$qv:near\r\nextrn STAGE_BONUS_COUNT_PUT:far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main-hud-stage-bonus-count-v155"
+kind = "replace"
+old = "\t\tcall\tsub_1D519\r\n"
+new = "\t\tcall\tSTAGE_BONUS_COUNT_PUT\r\n"
+expected_count = 3
+
+[[source_transforms.ops]]
+id = "alias-main-hud-bombs-put-v155"
+kind = "insert_before"
+anchor = "sub_EFA1\tproc far\r\n"
+text = "public _hud_bombs_put\r\n_hud_bombs_put label far\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-gp-clear-bonus-v155"
+kind = "insert_before"
+anchor = "gpCLEAR_BONUS\tdb "
+text = "public _gpCLEAR_BONUS\r\n_gpCLEAR_BONUS label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-gp-congratulation-v155"
+kind = "insert_before"
+anchor = "gpCONGRATULATION db "
+text = "public _gpCONGRATULATION\r\n_gpCONGRATULATION label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bonus-stage-v155"
+kind = "insert_before"
+anchor = "aBONUS_STAGE\tdb "
+text = "public _aBONUS_STAGE\r\n_aBONUS_STAGE label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-powerx50-v155"
+kind = "insert_before"
+anchor = "aPOWERX50\tdb "
+text = "public _aPOWERX50\r\n_aPOWERX50 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bonus-dream-v155"
+kind = "insert_before"
+anchor = "aBONUS_DREAM\tdb "
+text = "public _aBONUS_DREAM\r\n_aBONUS_DREAM label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-grazex50-v155"
+kind = "insert_before"
+anchor = "aGRAZEX50\tdb "
+text = "public _aGRAZEX50\r\n_aGRAZEX50 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bonus-point-v155"
+kind = "insert_before"
+anchor = "aBONUS_POINT\tdb "
+text = "public _aBONUS_POINT\r\n_aBONUS_POINT label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bonus-total-v155"
+kind = "insert_before"
+anchor = "aBONUS_TOTAL\tdb "
+text = "public _aBONUS_TOTAL\r\n_aBONUS_TOTAL label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bomb-extend-v155"
+kind = "insert_before"
+anchor = "aBOMB_EXTEND\tdb "
+text = "public _aBOMB_EXTEND\r\n_aBOMB_EXTEND label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-all-clear-v155"
+kind = "insert_before"
+anchor = "aALL_CLEAR\tdb "
+text = "public _aALL_CLEAR\r\n_aALL_CLEAR label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-powerx50-2-v155"
+kind = "insert_before"
+anchor = "aPOWERX50_2\tdb "
+text = "public _aPOWERX50_2\r\n_aPOWERX50_2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bonus-dream-2-v155"
+kind = "insert_before"
+anchor = "aBONUS_DREAM_2\tdb "
+text = "public _aBONUS_DREAM_2\r\n_aBONUS_DREAM_2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-grazex50-2-v155"
+kind = "insert_before"
+anchor = "aGRAZEX50_2\tdb "
+text = "public _aGRAZEX50_2\r\n_aGRAZEX50_2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-player-rem-10000-v155"
+kind = "insert_before"
+anchor = "aPLAYER_REM_10000\tdb "
+text = "public _aPLAYER_REM_10000\r\n_aPLAYER_REM_10000 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-player-rem-30000-v155"
+kind = "insert_before"
+anchor = "aPLAYER_REM_30000\tdb "
+text = "public _aPLAYER_REM_30000\r\n_aPLAYER_REM_30000 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bonus-point-2-v155"
+kind = "insert_before"
+anchor = "aBONUS_POINT_2\tdb "
+text = "public _aBONUS_POINT_2\r\n_aBONUS_POINT_2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-a-bonus-total-2-v155"
+kind = "insert_before"
+anchor = "aBONUS_TOTAL_2\tdb "
+text = "public _aBONUS_TOTAL_2\r\n_aBONUS_TOTAL_2 label byte\r\n"
+
+[[units]]
+id = "th04-main-stage-bonus-v155"
+default_enabled = true
+requires_units = ["th04-main-midboss1-update-v153", "th04-main-main035-boss-tu"]
+repo_source = "src/main/stage/bonus.cpp"
+overlay_path = "th04/sbonus.cpp"
+map_module = "th04/sbonus.cpp"
+object_path = "obj/th04/sbonus.obj"
+map_segment = "MAIN_035_TEXT"
+map_start = "0x99FE"
+map_size = "0x58D"
+target_file_offset = "0x1EC8E"
+size = "0x58D"
