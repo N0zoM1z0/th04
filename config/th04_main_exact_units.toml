@@ -6836,3 +6836,69 @@ map_start = "0x0C1F"
 map_size = "0x3E9"
 target_file_offset = "0x15EAF"
 size = "0x3E9"
+
+# v152: Stage 3 four-helper/FAR-dispatcher producer. The v151 zero-credit B4M
+# prefix still contains this contiguous 0x3BE owner. Remove exactly that source
+# span and insert natural m3u.cpp immediately before exact v151 mxu.cpp.
+# The shortened replay-only prefix remains zero-credit OMF/layout plumbing; a
+# v152 diagnostic proves its linked raw bytes/map are exact but its split TASM
+# relocation order differs from the target, so no auxiliary-extent exactness is claimed.
+[[build_replacements]]
+id = "th04-main-midboss3-update-v152-build"
+trigger_units = ["th04-main-midboss3-update-v152"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/b4mpre.asm\",\n\t\"th04/mxu.cpp\",\n\t\"th04/b4mgath.asm\",\n\t\"th04/m2u.cpp\",\n\t\"th04/m4u.cpp\",\n"
+build_replacement = "\t\"th04/b4mpre.asm\",\n\t\"th04/m3u.cpp\",\n\t\"th04/mxu.cpp\",\n\t\"th04/b4mgath.asm\",\n\t\"th04/m2u.cpp\",\n\t\"th04/m4u.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-midboss3-prefix-v152"
+trigger_units = ["th04-main-midboss3-update-v152"]
+patch_path = "th04/b4mpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "7a551a24a2ddc77529cf16eb6187f41bbfaba60922c5dd5b25de2ef5a68f2b57"
+patched_sha256 = "f878e10fbc96180f03e23f4a5174a3b802f49578c6507bb8708e577df656935d"
+
+[[source_transforms.ops]]
+id = "remove-midboss3-from-b4mpre-v152"
+kind = "remove_between"
+removed_sha256 = "5550308586824570d89f541743cd859f4d469bab796b5dc7de0cf5ec119ddf1a"
+start = "sub_142F1\tproc near\r\n"
+end = "\t\tdw offset loc_14552\r\n"
+replacement = ""
+
+[[source_transforms]]
+id = "th04-main-midboss3-state-aliases-v152"
+trigger_units = ["th04-main-midboss3-update-v152"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "f1d5b01d4f9621f6d424ce5db1433f13b3cf69b6d5e9bfce659e57aabb139c06",
+  "e0c9016bd4edd09afe1cff83aaf4b4ee55ce4024c95daaefd1e073fe0a2a6431",
+]
+
+[[source_transforms.ops]]
+id = "alias-main-midboss3-pattern-v152"
+kind = "insert_before"
+anchor = "byte_25598\tdb ?\r\n"
+text = "public _midboss3_pattern\r\n_midboss3_pattern label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss3-mirror-v152"
+kind = "insert_before"
+anchor = "byte_25599\tdb ?\r\n"
+text = "public _midboss3_mirror\r\n_midboss3_mirror label byte\r\n"
+
+[[units]]
+id = "th04-main-midboss3-update-v152"
+default_enabled = true
+requires_units = ["th04-main-midbossx-update-v151"]
+repo_source = "src/main/midboss/m3_update.cpp"
+overlay_path = "th04/m3u.cpp"
+map_module = "th04/m3u.cpp"
+object_path = "obj/th04/m3u.obj"
+auxiliary_objects = ["obj/th04/b4mpre.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x0861"
+map_size = "0x3BE"
+target_file_offset = "0x15AF1"
+size = "0x3BE"
