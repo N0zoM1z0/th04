@@ -9,19 +9,19 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 
 The inventory contains 2,120 distinct function-like observations:
 
-- 730 authored reconstruction candidates: OP 94, MAIN 551, MAINE 72, ZUN 13;
-- 300 accepted exact MAIN functions and seven reviewed blocked MAIN functions;
+- 728 authored reconstruction candidates: OP 94, MAIN 549, MAINE 72, ZUN 13;
+- 300 accepted exact MAIN functions and five reviewed blocked MAIN functions;
 - 423 authored candidates otherwise unreviewed;
-- 54 original-style ASM observations in a separate attestation queue;
+- 56 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- reviewed authored bytes: **47,564 / 48,031 exact (99.027711%)**;
-- accepted authored functions: **300 / 307 exact (97.719870%)**;
-- accepted default exact replay owners: **173**;
-- original-style ASM: **10 units / 1,587 exact bytes**, tracked separately;
-- currently confirmed nonexact authored bytes: **467 bytes** in seven reviewed
+- reviewed authored bytes: **47,564 / 47,771 exact (99.566683%)**;
+- accepted authored functions: **300 / 305 exact (98.360656%)**;
+- accepted default exact replay owners: **175**;
+- original-style ASM: **12 units / 1,847 exact bytes**, tracked separately;
+- currently confirmed nonexact authored bytes: **207 bytes** in five reviewed
   blocked functions.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
@@ -62,10 +62,20 @@ standalone symbolic TASM producer for MAIN_032_TEXT load `0x13D90..0x13DF1`: the
 by TASM `EVEN`. Focused 109-owner replay and the final 173-owner aggregate both pass twice with raw/map/
 ordered-relocation/OMF/determinism exactness. The two logical function extents
 remain 0x4D-over-0x61 for yellow and contiguous 0x47 for white; the NOP is not
-function-body credit. Reclassifying those two observations from authored C/C++
-to original-style ASM leaves the authored denominator and 99.027711% exact-byte
-rate unchanged. These percentages are not a claim about 99.027711% of an
-executable or the game. Derive current numbers with `python3 scripts/status.py`;
+function-body credit. At v139, reclassifying those two observations from
+authored C/C++ to original-style ASM left the authored denominator unchanged.
+v140 then resolves the adjacent CIRCLE point-number renderer/blitter origin:
+`POINTNUMS_RENDER` at `0AAF:1274` owns a direct CS write into the immediate word
+of its own later width-store instruction, and the independently attested TH05
+target contains one complete `@pointnum_put` machine skeleton matching TH04 in
+104/106 bytes, with only the linked `_sPOINTNUMS` word differing. Maintained
+symbolic TASM overlays reproduce both complete TH04 extents in focused and
+175-owner aggregate cold replay. These two observations therefore move from the
+authored C/C++ blocked denominator to the separate original-style ASM track.
+This raises the current reviewed authored-byte ratio above the campaign pressure
+target, but the function ratio remains below it and the denominator remains
+expandable. These percentages are not a claim about an executable or the game.
+Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
 
@@ -443,16 +453,24 @@ runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
-The latest exact owner passes repository focused two-cold replay at:
+The latest point-number render/put packet passes repository focused two-cold
+replay at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v139-pointnums-add-focused-align-candidate-003/receipt.json`
-  — 109-owner dependency closure, two isolated cold materializations.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v140-pointnum-render-put-focused-candidate-002/receipt.json`
+  — 110-owner dependency closure, two isolated cold materializations; receipt
+  SHA-256 `9781ebcf56dbeda5d9276dcfa7e2f7109aeb875995dc6656e58e8998c5de60ea`.
 
-The complete default cohort then passes at:
+Before promotion, the complete default cohort passes at:
 
-- `.analysis/reconstruction/exact-unit-replay/gptweb-v139-pointnums-add-aggregate-align-final-003/receipt.json`
-  — all 173 default owners, two isolated cold materializations; receipt SHA-256
-  `5f37b3986c4c1ca21689e24897aab0430adc795a0c38d493a29d009e7dbe2083`.
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v140-pointnum-render-put-aggregate-candidate-001/receipt.json`
+  — all 175 default owners, two isolated cold materializations; receipt SHA-256
+  `05ee78508891005c7a3073fe7950583a0d6ac94f5fa9f40b31edac13786d74a3`.
+
+After promotion, the complete default cohort passes again at:
+
+- `.analysis/reconstruction/exact-unit-replay/gptweb-v140-pointnum-render-put-aggregate-final-001/receipt.json`
+  — all 175 default owners, two isolated cold materializations; receipt SHA-256
+  `4479103d3374eb16d410176c1519e9c4f9a66dcbbac0044e14d12aed52f2b97e`.
 
 The v119 shots/Yuuka foreground, v120 Yuuka entity-render, v121 midboss
 defeat, v122 Orange, and v123 Kurumi foreground focused receipts remain valid
@@ -471,7 +489,7 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 173-owner aggregate reports zero raw differences for every declared
+The current 175-owner aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable is deterministic across A/B with SHA-256
@@ -482,9 +500,11 @@ aggregate map, retained target-bound metadata plus the fresh complete Ghidra
 observation at `0x1BC7E`, and deliberately no synthetic Ghidra entry at
 `0x1BC70`. It reports 300 exact admissions in its 302-entry configured review
 universe: 150 automatic, 150 manual, and zero strict rejections. The live
-function ledger is broader because it also retains the three v136 blocked
-lifecycle entries plus the two v138 reviewed-nonexact render/put admissions, so
-current repository accounting is 300 / 307.
+function ledger is broader because it retains the three v136 blocked lifecycle
+entries plus two earlier blockers outside that historical v137 review universe.
+v140 reclassifies the two v138 render/put observations to original-style ASM and
+removes them from authored-function accounting, so current repository accounting
+is 300 / 305.
 `randring1_next16()` passes only the explicit no-Ghidra owner/public/raw-RET
 gate; `randring1_next16_and()` is automatic. The retained report is
 `.analysis/gpt-web/th04-main-20260912-v137/function-review-v137.json`.
@@ -548,7 +568,7 @@ acceptance for the entire 170-owner set.
 
 ## Remaining reviewed nonexact work
 
-Seven reviewed authored functions are nonexact:
+Five reviewed authored functions are nonexact:
 
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
@@ -563,14 +583,6 @@ Seven reviewed authored functions are nonexact:
    countdown forms do not emit the target bare `DEC DI; JNZ` tail.
 5. `POINTNUMS_UPDATE`: 0x70 bytes are source-present; the same countdown mismatch
    remains and TC4J merges two target-distinct `F_REMOVE` stores.
-6. `POINTNUMS_RENDER`: 0x9A bytes are now fully boundary-reviewed. The target
-   writes the current width into the immediate operand of its own later store
-   instruction. No natural TC4J producer or independently proved original-style
-   source classification is established; source remains absent.
-7. `@pointnum_put`: 0x6A bytes are now fully boundary-reviewed. Two legal
-   natural TC4J fastcall/register probes emit a 0x87-byte BP-framed body rather
-   than the target frameless `PUSH AX/PUSH DX`, `LODSW`, `LOOP`, and
-   `XCHG CX,BX` shape; source remains absent.
 
 `dialog_op` and `dialog_run` have maintained source and exact code bytes, but
 remain outside the reviewed exact denominator because their ordered MZ
@@ -642,17 +654,18 @@ Player toolchain attestation also passes. The final repository validation run
 passes preflight, status, all 2,120 boundary observations, `scripts/ci.py`, and
 `git diff --check`.
 
-Verification planes remain intentionally separate. Repository-native independent
-exactness is PASS for the new 0x62-byte physical ASM owner and the complete
-173-owner replay cohort. Standalone TH04 production-source/link closure is not
-established. Runtime-storage identity is not established. No runtime scenario
-validation was run in this packet. No Factory acceptance was submitted or
-claimed. Pristine-release provenance is not established; target canonicality
-remains `candidate-local-attested`. Reclassifying the two point-number logical
-observations to original-style ASM does not inflate authored C/C++ progress:
-reviewed authored exactness remains 47,564 / 48,031 bytes (99.027711%) and
-300 / 307 functions (97.719870%), while separately tracked exact original-style
-ASM becomes 10 units / 1,587 bytes.
+Verification planes at the v139 checkpoint remained intentionally separate.
+Repository-native independent exactness was PASS for the new 0x62-byte physical
+ASM owner and that checkpoint's complete 173-owner replay cohort. Standalone
+TH04 production-source/link closure was not established. Runtime-storage
+identity was not established. No runtime scenario validation was run in that
+packet. No Factory acceptance was submitted or claimed. Pristine-release
+provenance was not established; target canonicality remained
+`candidate-local-attested`. Reclassifying the two point-number logical
+observations to original-style ASM did not inflate authored C/C++ progress: at
+that checkpoint, reviewed authored exactness remained 47,564 / 48,031 bytes
+(99.027711%) and 300 / 307 functions (97.719870%), while separately tracked
+exact original-style ASM became 10 units / 1,587 bytes.
 
 `.analysis/` was 1,848,193,197 bytes at entry and 2,341,238,399 bytes after the
 final CI, a growth of 493,045,202 bytes. Exit top-level size is approximately
@@ -669,6 +682,132 @@ and the renderer's CS-resident self-modified width immediate, then reconcile any
 match or durable absence with TH04 TASM/TLINK ownership. Do not inherit v139's
 original-ASM classification merely from subsystem proximity.
 
+## v140 session checkpoint
+
+This conversation started from clean `main` at
+`81b40354c5c2abab30a59c3c068558013d52ea03`, exactly even with `origin/main`.
+There was no staged, unstaged, untracked, conflicted, unrelated, or interrupted
+tracked work to recover. Existing ignored `.analysis/` content was classified as
+private targets, attested toolchains/Ghidra state, retained cold replay evidence,
+and bounded reproducible scratch. The private `th04-main / MAIN.EXE` target was
+never patched, moved, staged, or otherwise modified and remains only
+`candidate-local-attested`.
+
+The compact `MAIN_012_TEXT` orientation frontier was reverified before source
+work. `sub_11DE6` remains the complete reviewed FAR 0x2C-byte extent at map
+`0AAF:72F6`, load `0x11DE6..0x11E11`, file `0x135E6..0x13611`, with no
+overlapping MZ relocation. Fresh Ghidra, raw decoding, pinned TASM, and MAP all
+agree on `CX=9`, the DS threshold scan using `LOOP`, `shot_level` storage,
+callback selection, and the same-segment `NOP; PUSH CS; CALL near; RETF` tail.
+Existing legal TC4J source-level loop probes still do not explain that DS scan;
+no source/origin/exactness credit was added.
+
+The structural packet then revisited v138 `POINTNUMS_RENDER` and
+`@pointnum_put` in `CIRCLE_TEXT`. Fresh target-bound Ghidra and raw/TASM/TLINK
+review reconfirmed renderer `0AAF:1274`, load `0xBD64..0xBDFD`, file
+`0xD564..0xD5FD` (0x9A), and put `0AAF:130E`, load `0xBDFE..0xBE67`, file
+`0xD5FE..0xD667` (0x6A), both with empty MZ relocation overlap. The renderer
+writes through CS at load `0xBDC1` into the immediate operand of its own later
+width store at load `0xBDD6`. Maintained `src/main/pointnum/render.asm` names
+that code-owned word symbolically; source SHA-256 is
+`26e3f010d822e89816f7166ba41b66fd49465a9d693de2eec2ad6eb67e4d771e`.
+
+Independent target-to-target review supplies new evidence for the put helper.
+The attested TH05 original target contains exactly one full 0x6A skeleton match
+at load `0xBE3A`. TH04 and TH05 differ at only two bytes, the linked
+`_sPOINTNUMS` offset word; zeroing that word in each original target yields the
+same SHA-256
+`35d832b1626fed64893e30b7fd6fcf10fe8e0ad7df232ce0b484c4a3f9503048`.
+All 104 remaining bytes, including the frameless register ABI, `LODSW`, `LOOP`,
+vertical wrap, `XCHG CX,BX`, restore sequence, and `RET`, are identical. TH05's
+renderer is instead a different 0x73-byte non-self-modifying routine at load
+`0xE216..0xE288`. The put evidence is therefore a cross-original-target producer
+signature, while the renderer origin classification remains specifically
+TH04-local. `src/main/pointnum/put.asm` SHA-256 is
+`833cef4da5a728ecf813d498601db726197bb87cf59f19ca66571c3b5b6c5c86`.
+Neither maintained source claims to be recovered historical author text;
+`original-asm` here is the evidence-backed irreducible symbolic assembly class.
+
+The first focused replay attempt,
+`gptweb-v140-pointnum-render-put-focused-candidate-001`, failed before any
+exactness verdict because the inspector found 15 MAP contributions from
+`th04_main.asm` and did not qualify the module by segment. Status was inspected
+immediately; no source was changed to manufacture equality. v140 extends the
+replay inspector with an optional fail-closed `map_segment` qualifier and adds
+unit tests for successful multi-segment disambiguation and missing-segment
+rejection. Both point-number units use `map_segment=CIRCLE_TEXT` while remaining
+physically produced by the original `th04_main.asm` object.
+
+The final source form then passed the complete promotion sequence:
+
+- focused candidate-state two-cold replay, 110-owner dependency closure:
+  `gptweb-v140-pointnum-render-put-focused-candidate-002`, receipt SHA-256
+  `9781ebcf56dbeda5d9276dcfa7e2f7109aeb875995dc6656e58e8998c5de60ea`;
+- candidate-state aggregate two-cold replay, all 175 default owners:
+  `gptweb-v140-pointnum-render-put-aggregate-candidate-001`, receipt SHA-256
+  `05ee78508891005c7a3073fe7950583a0d6ac94f5fa9f40b31edac13786d74a3`;
+- post-promotion aggregate two-cold replay, all 175 default owners:
+  `gptweb-v140-pointnum-render-put-aggregate-final-001`, receipt SHA-256
+  `4479103d3374eb16d410176c1519e9c4f9a66dcbbac0044e14d12aed52f2b97e`.
+
+All final aggregate builds keep deterministic candidate MAIN SHA-256
+`ad3892d8093df45c1fb6452e288dcd6e9f8cfb0b900909c3686827fa9efc47f8`.
+The renderer slice SHA-256 is
+`050de3154e84536347926fc05edef5a5a5f1db0d67de4c4fa11f6702c45a1c2f`;
+the put slice SHA-256 is
+`e5f760af38c2a844797b17a2052359a819736e69997df376252a91f2a1c9e63d`.
+Both have empty target/candidate relocation overlap. The aggregate
+`th04_main.obj` dependency-timestamp-normalized OMF identity is
+`9de45cff560aabcab98046cff483b8491150025777628b74e41fde5b21897283`.
+The implementation checkpoint is
+`de0b2d6f6f06b4099ffe2f7923fc5e9821603bac` (`gpt-web: reconstruct pointnum
+render put assembly`). It was not pushed.
+
+The origin correction moves these two reviewed observations out of authored
+C/C++ accounting rather than adding authored exact credit. The live authored
+ledger becomes 47,564 / 47,771 exact bytes (99.566683%) and 300 / 305 exact
+functions (98.360656%), while separately tracked exact original-style ASM
+becomes 12 units / 1,847 bytes. The byte ratio now exceeds 99.5% only on the
+current reviewed ledger; the function ratio remains below the pressure target,
+and continued boundary discovery may expand either denominator. No completion
+claim follows from this packet.
+
+Factory `th04-ghidra` attestation passed for repository `th04` /
+`target:th04-main`; repository-native `python3 scripts/ghidra.py th04-main check`
+and the final CI live Ghidra replay agree on the private target, MZ header/load
+mapping, entry, all 1,136 relocations, load-module identity, and sampled bytes.
+The pinned TC4J/TASM/TLINK/MS-DOS Player toolchain gates pass. Repository-native
+tracking, preflight, the 2,120-row boundary ledger, full `scripts/ci.py`, private
+cross-game Oracle calibration, Ghidra mutation smoke, and `git diff --check` all
+pass on the implementation checkpoint.
+
+Verification planes remain separate. Repository-native independent exactness is
+PASS for both new maintained ASM extents and the 175-owner replay cohort.
+Standalone TH04 production-source/link closure is not established.
+Runtime-storage identity is not established. No runtime scenario validation was
+run in this packet. No Factory acceptance was submitted or claimed. Pristine
+release provenance is not established; target canonicality remains
+`candidate-local-attested`.
+
+`.analysis/` contained 2,341,224,864 bytes at entry. After the v140 replays and
+implementation CI it contained 2,556,269,335 bytes, growth
+215,044,471 bytes. The retained v140 replay directories are
+approximately 38 MiB for the pre-verdict inspector failure, 75 MiB for the
+focused PASS, 76 MiB for the candidate aggregate PASS, and 76 MiB for the final
+aggregate PASS. Current-session GPT-web scratch is about 12 KiB. These ignored,
+owned, inactive replay/scratch artifacts are reproducible evidence and were
+retained rather than bulk-deleted; legacy/unknown analysis state was untouched.
+
+The first concrete evidence-connected continuation is the remaining v136
+point-number lifecycle cohort: `POINTNUMS_INIT` at load `0xBCB2` (0xB),
+`pointnums_invalidate()` at `0xBCBE` (0x35), and `POINTNUMS_UPDATE` at `0xBCF4`
+(0x70), with alignment NOPs at `0xBCBD` and `0xBCF3` outside function bodies.
+Use the attested TH05 original target to search independently for complete or
+relocation-normalized lifecycle producer shapes, then reconcile any match or
+durable absence with the v136 legal TC4J countdown/store negative evidence and
+TH04 TASM/TLINK ownership. Do not inherit the v139/v140 original-ASM result
+merely because the functions share the pointnum subsystem.
+
 ## Next target-first queue
 
 Do not resume from the old prose-only MAIN frontier. Query
@@ -684,41 +823,27 @@ natural source,” not “original handwritten ASM.” OP has 94 unreviewed auth
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact, 231 remain unreviewed, six are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 244 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact, 233 remain unreviewed, four are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 244 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-v138 closes that render/put packet as a durable reviewed nonexact result rather
-than forcing source. `POINTNUMS_RENDER` at load `0xBD64` is a complete 0x9A-byte
-near body and `@pointnum_put` at `0xBDFE` is a complete 0x6A-byte near body; both
-pass fresh Ghidra/TASM/TLINK/raw boundary review with no MZ relocations. The
-renderer writes `CS:0x12E9`, modifying the immediate operand of its own later
-width-store instruction. Two legal natural TC4J put probes instead produce a
-0x87-byte BP-framed body and do not reproduce the target `LODSW`/`LOOP`/`XCHG`
-shape. Both routines are now reviewed blocked with source absent; v138 runs no
-focused or aggregate exact replay. See
-`docs/reconstruction/TH04_CIRCLE_POINTNUM_RENDER_PUT_V138.md`.
+v138 originally closed `POINTNUMS_RENDER` / `@pointnum_put` as durable reviewed
+nonexact extents and retained legal TC4J negative evidence. v140 supersedes only
+the unresolved origin/source outcome: independent TH05 target bytes establish the
+stable put producer shape, TH04's renderer directly owns a self-modified code
+immediate, and maintained symbolic TASM now passes complete focused and aggregate
+replay. Both observations are therefore in the original-style ASM attestation
+queue rather than the authored reconstruction queue. See
+`docs/reconstruction/TH04_CIRCLE_POINTNUM_RENDER_PUT_ASM_V140.md`.
 
-v139 closes the v135 point-number add origin question: the maintained physical
-owner at load `0x13D90..0x13DF1` is now exact original-style assembly, including
-the TASM-`EVEN`-generated post-ENDP alignment NOP but excluding that byte from
-both logical function bodies. The
-classification is supported by independent TH04/TH05 target architecture, not by
-ReC98 self-corroboration. Do not extrapolate that result automatically to other
-point-number routines.
-
-The first concrete continuation should therefore return to the v138
-`POINTNUMS_RENDER` / `@pointnum_put` cohort as a new target-to-target
-origin-classification packet. Search the attested TH05 target for the distinctive
-frameless `LODSW`/`LOOP`/`XCHG CX,BX` put shape and for a renderer that rewrites a
-CS-resident width immediate, then reconcile any match with TH04 TASM/TLINK owner
-boundaries and the v138 failed legal TC4J probes. A TH05 match would be new
-independent evidence; absence is also durable negative evidence. Do not inherit
-v139's original-ASM classification merely because these routines share the
-pointnum subsystem, and do not use ReC98 assembly as authority.
-`randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
-and should not be harvested as isolated easy wins without a new source/origin
-hypothesis.
+v139 closes the point-number add shared-tail origin question separately. Do not
+extrapolate either v139 or v140 automatically to the remaining lifecycle trio.
+The first concrete continuation is `POINTNUMS_INIT`, `pointnums_invalidate()`,
+and `POINTNUMS_UPDATE`: compare their TH04 target control flow against the
+attested TH05 original target before changing origin, and preserve the v136
+negative TC4J countdown/store evidence. `randring1_next16_mod()` and
+`NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns and should not be harvested
+as isolated easy wins without a new source/origin hypothesis.
 
 Re-screening confirmed that several tempting ReC98 candidate-C++ paths are not acceptable drop-ins: checkerboard, TH03 vector, `item_splashes_init`, and `carpet_lighting_put_new` depend on inline ASM and/or `#pragma codestring` for instruction shape. Keep them as routing evidence until an allowed source form is proved. Ghidra also still misses CIRCLE_TEXT boundaries including `randring1_next16`, `randring1_next16_mod`, and the near/far null functions; MAP/TASM keeps those candidates visible.
 
@@ -728,7 +853,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The current repository 173-owner exact-unit cohort compiles and links reproducibly through the
+The current repository 175-owner exact-unit cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 
