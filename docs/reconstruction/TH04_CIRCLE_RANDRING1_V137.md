@@ -152,8 +152,35 @@ source/code-generation mismatch, not permission for inline assembly or byte
 injection. `NULLFUNC_NEAR` and `NULLFUNC_FAR` remain reviewed one-byte target
 entries with unknown source/origin and receive no exactness credit.
 
-Factory Truth-Kernel acceptance is intentionally **pending post-commit** for the
-two new `owned_extent_exact` claims. Repository focused/aggregate replay does not
-by itself establish Factory acceptance. Standalone product closure,
-runtime-storage identity, and runtime-scenario validation also remain
-unestablished.
+## Factory Truth-Kernel state
+
+Post-commit Factory replay is intentionally separate from the repository cold
+replay above. Both claims originate from repository exact checkpoint
+`bb36fa09797ec6baaab95e82510ba7377c10cbb3`. The first controlled replay used
+that clean snapshot. The successful sibling retry remained bound to the same
+commit/tree while the two documentation-only post-commit edits were present;
+Factory independently accepted that bound snapshot.
+
+`claim:unit:th04-main-randring1-next16-v137:owned-extent-exact` is independently
+accepted. Controlled job `job:bd788d6bb4f44681bc0867e6e92a9178` completed with
+receipt `receipt:50309921428bfd73a0f4303f51cca499e47211746a81310ba7b14277a38ac7fc`,
+`receipt_verdict=pass`, and `acceptance_decision=accepted`; the returned registry
+identity is `registry:bf19f29e893833b1c2b9ce1335869178b27d2d5d956ce7c8de3255559ec36a62`.
+
+The sibling
+`claim:unit:th04-main-randring1-next16-and-v137:owned-extent-exact` first hit two
+pre-verdict infrastructure failures. Job `job:fd96d580cf4c47f182d46a2443d649a4`
+and bounded retry `job:c92fab8813c448c6b434016742d80b5a` both terminated before
+an Oracle receipt because another Factory operation owned the registered TH095
+worktree. Both failures have `outcome=null`; they remain infrastructure history,
+not target-byte rejection. After that external lock state changed, controlled
+retry `job:0698e8bf1da345e38c84fe7186917180` completed with receipt
+`receipt:10c933dff77a1042832990364b5fb2a032207e9914ee4f4a22e8da2d4255bf6e`,
+`receipt_verdict=pass`, and `acceptance_decision=accepted`; the returned registry
+identity is `registry:5249a655c14970b38965fbc584258cb413ebba6235f31ce5dfcc89f8c77d7d4c`.
+
+Repository exactness for both v137 owners remains established by the focused and
+aggregate receipts above, and both imported v137 `owned_extent_exact` claims now
+have independent Factory-accepted replay history. Those acceptances do not
+establish standalone product closure, runtime-storage identity, or runtime-
+scenario validation.

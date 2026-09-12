@@ -410,9 +410,26 @@ no-Ghidra exact-owner/public/raw-RET gate. The live campaign denominator becomes
 47,564 / 47,771 exact bytes and 300 / 305 exact functions.
 `randring1_next16_mod()` and the near/far null entries remain reviewed but
 source/origin unreviewed and receive no exactness credit. Full evidence is in
-`docs/reconstruction/TH04_CIRCLE_RANDRING1_V137.md`. Factory acceptance for the
-two v137 exact-owner claims remains pending until a post-commit controlled
-replay actually returns accepted receipts.
+`docs/reconstruction/TH04_CIRCLE_RANDRING1_V137.md`. Post-commit Factory replay
+accepts `claim:unit:th04-main-randring1-next16-v137:owned-extent-exact` from clean
+commit `bb36fa09797ec6baaab95e82510ba7377c10cbb3`: job
+`job:bd788d6bb4f44681bc0867e6e92a9178` returns passing receipt
+`receipt:50309921428bfd73a0f4303f51cca499e47211746a81310ba7b14277a38ac7fc`
+and `acceptance_decision=accepted`. The sibling
+`randring1-next16-and-v137` claim first hit two pre-verdict infrastructure
+failures: jobs `job:fd96d580cf4c47f182d46a2443d649a4` and
+`job:c92fab8813c448c6b434016742d80b5a` both ended with `outcome=null` because
+another Factory operation owned the registered TH095 worktree. After that lock
+state changed, controlled retry `job:0698e8bf1da345e38c84fe7186917180`
+completed with passing receipt
+`receipt:10c933dff77a1042832990364b5fb2a032207e9914ee4f4a22e8da2d4255bf6e`,
+`receipt_verdict=pass`, and `acceptance_decision=accepted`; that job reports
+registry identity
+`registry:5249a655c14970b38965fbc584258cb413ebba6235f31ce5dfcc89f8c77d7d4c`.
+The two earlier failures remain infrastructure history, not target-byte
+rejections. Factory acceptance is scoped to the two imported v137
+`owned_extent_exact` claims and does not establish standalone product closure,
+runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
