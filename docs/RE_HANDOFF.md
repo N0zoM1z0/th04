@@ -10,18 +10,18 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 722 authored reconstruction candidates: OP 94, MAIN 543, MAINE 72, ZUN 13;
-- 300 accepted exact MAIN functions and three reviewed blocked MAIN functions;
-- 419 authored candidates otherwise unreviewed;
+- 300 accepted exact MAIN functions and five reviewed blocked MAIN functions;
+- 417 authored candidates otherwise unreviewed;
 - 62 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- reviewed authored bytes: **47,564 / 48,058 exact (98.972075%)**;
-- accepted authored functions: **300 / 303 exact (99.009901%)**;
+- reviewed authored bytes: **47,564 / 48,388 exact (98.297098%)**;
+- accepted authored functions: **300 / 305 exact (98.360656%)**;
 - accepted default exact replay owners: **178**;
 - original-style ASM: **15 units / 2,124 exact bytes**, tracked separately;
-- currently confirmed nonexact authored bytes: **494 bytes** across three
+- currently confirmed nonexact authored bytes: **824 bytes** across five
   reviewed blocked functions.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
@@ -86,10 +86,15 @@ the reviewed MAIN_033 authored denominator by proving the true physical extents
 of `mugetsu_1812A` and Ghidra-missed `mugetsu_1821E`: together they own 0x1EA
 bytes including two zero metadata bytes and two 33-word switch tables. Maintained
 natural C++ is source-present but nonexact, so reviewed exactness moves to
-98.972075% by bytes and 99.009901% by functions. The drop is a denominator
-correction, not an exact-owner regression, and restores active pressure toward
-the 99.5% campaign target. These percentages are not a claim about an executable
-or the game.
+98.972075% by bytes and 99.009901% by functions. v145 then target-reviews the
+next two phase-2 callbacks, correcting `mugetsu_1838A` from Ghidra's 0xA body to
+0xD4 and adding Ghidra-missed `mugetsu_18314` at 0x76. Maintained natural C++
+reproduces the complete 0x14A linked slice byte-for-byte in two cold builds, but
+the ordered MZ relocation sequence differs, so both functions remain blocked and
+reviewed exactness becomes 98.297098% by bytes and 98.360656% by functions. The
+drops are denominator corrections, not exact-owner regressions, and restore
+active pressure toward the 99.5% campaign target. These percentages are not a
+claim about an executable or the game.
 Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -470,9 +475,16 @@ runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
-v144 performs no focused or aggregate exact-unit replay because its maintained
-Mugetsu source is known nonexact. The current repository-native exact baseline
-therefore remains the v143 shot-seam replay chain below.
+v145 runs focused two-cold replay
+`gptweb-v145-mugetsu-phase2-focused-candidate-002` for the new 0x14A Mugetsu
+phase-2 callback producer. Receipt SHA-256 is
+`354d1f63b18a0ec7c277f2082b85be8aa7c2451ab52b452bd39aec03b03a29da`.
+Both cold builds are raw-byte exact, map exact, deterministic, and valid OMF for
+the new owner, but strict ordered relocation comparison fails: target
+`[0x183FD,0x183AC,0x18379,0x1844D]` versus candidate
+`[0x1844D,0x183FD,0x183AC,0x18379]`. No aggregate replay is run because there is
+no exact promotion. The current repository-native exact baseline therefore
+remains the v143 shot-seam replay chain below.
 
 The current MAIN_012_TEXT shot-seam packet passes repository focused two-cold
 replay at:
@@ -599,7 +611,7 @@ acceptance for the entire 170-owner set.
 
 ## Remaining reviewed nonexact work
 
-Three reviewed authored functions are nonexact:
+Five reviewed authored functions are nonexact:
 
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
@@ -615,6 +627,14 @@ Three reviewed authored functions are nonexact:
    0xF6. It owns 0xB3 code bytes plus the same 0x43-byte compiler table shape.
    Maintained natural C++ is source-present but nonexact; historical v109 source
    reached the sibling two-byte gate-only deficit.
+4. `mugetsu_18314`: reviewed Ghidra-missed near callback MAIN_033_TEXT
+   `13A9:4884..48F9`, load `0x18314..0x18389`, file `0x19B14..0x19B89`, size
+   0x76. Natural C++ is byte/map exact in focused cold replay, but its containing
+   producer fails ordered relocation comparison.
+5. `mugetsu_1838A`: reviewed target extent MAIN_033_TEXT `13A9:48FA..49CD`,
+   load `0x1838A..0x1845D`, file `0x19B8A..0x19C5D`, size 0xD4. Fresh Ghidra
+   includes only the first 0xA bytes. Natural C++ reproduces the complete body,
+   but the same focused producer fails ordered relocation comparison.
 
 `dialog_op` and `dialog_run` have maintained source and exact code bytes, but
 remain outside the reviewed exact denominator because their ordered MZ
@@ -1166,22 +1186,122 @@ conversation should first promote that boundary with callers/function-pointer
 ownership, then test natural C++ for its callback-dispatch body. Do not return to
 the v109 dense-gate spelling matrix without a genuinely new compiler mechanism.
 
+## v145 session checkpoint
+
+v145 began from clean `main` at
+`3f984486010b2f01ef8537584ec3bafc6c4e27a1`, exactly even with `origin/main`.
+There was no staged, unstaged, untracked, conflicted, unrelated, or unknown work
+at packet entry. During the first conversation slice, Factory live-repository
+operations later failed before dispatch; the retained six-path dirty candidate
+was recovered after Factory service returned and every path was classified as
+`recoverable-current-work`. No reset, stash, direct-container bypass, target
+edit, or push was used. The recovered implementation checkpoint is
+`f93fdefc6963f4d88c4ccc035073a07d33c278e9`
+(`gpt-web: review Mugetsu phase2 callbacks`).
+
+Fresh target review closes two adjacent MAIN_033_TEXT callbacks. Ghidra has no
+function at image `0x28314`; TASM/raw/caller evidence proves `mugetsu_18314` at
+`13A9:4884..48F9`, load `0x18314..0x18389`, file `0x19B14..0x19B89`, size
+0x76, with one relocation at load `0x18379`. Ghidra creates only ten bytes at
+image `0x2838A`, but TASM/raw/caller evidence proves `mugetsu_1838A` through
+`RET 13A9:49CD`, load `0x1838A..0x1845D`, file `0x19B8A..0x19C5D`, size 0xD4,
+with relocations at `0x183AC`, `0x183FD`, and `0x1844D`. Target
+`mugetsu_update()` independently calls the first for phase-2 modes 0/6 and the
+second for modes 2/7.
+
+Maintained `src/main/boss/mugetsu_phase2_callbacks.cpp` SHA-256 is
+`a5af91c75b8c75a81900782c2500c126e6753c85128594cf560042cd415117e1`.
+Legal Borland `_AL` dataflow reproduces the first callback's direction-dependent
+angle add; a volatile 16-bit local plus live `_AX` reuse reproduces the second
+callback's target `ENTER 2,0; MOV [BP-2],AX; OR AX,AX` shape. The source contains
+no inline ASM, target-derived byte arrays, codestrings, padding, copied target
+bytes, fake returns, or ABI lies.
+
+The replay-only v144 prefix is hash-extracted into generated `th04/m5tr12.asm`
+with zero reconstruction credit so the maintained v145 C++ producer can occupy
+its true position before residual `mugetsu_1845E`. The first focused attempt,
+`gptweb-v145-mugetsu-phase2-focused-candidate-001`, failed before an Oracle
+verdict because the split prefix did not export two later-referenced assembler
+entries. After a symbol-ownership-only fix, its receiptless 34 MiB tree was
+removed as reproducible current-session scratch.
+
+Focused replay `gptweb-v145-mugetsu-phase2-focused-candidate-002` selects a
+112-unit closure and runs two isolated cold builds. Receipt SHA-256 is
+`354d1f63b18a0ec7c277f2082b85be8aa7c2451ab52b452bd39aec03b03a29da`.
+The complete 0x14A target/candidate slice SHA-256 is
+`94324449758e2307b2b994df14a45238c619d05b7d63f7f4b1d4f9f02f2a9865`,
+map placement is exactly `13A9:4884` size `0x14A`, and both TC86 OMF plus A/B
+replay are deterministic. Exact promotion is blocked solely by ordered MZ
+relocations: target `[0x183FD,0x183AC,0x18379,0x1844D]` versus candidate
+`[0x1844D,0x183FD,0x183AC,0x18379]`. No candidate-state or post-promotion
+aggregate replay is run; v143's 178-owner final aggregate remains the exact
+baseline.
+
+The relocation failure supplies new physical-producer routing evidence. Target
+Mugetsu relocation indices 567-573 descend from `0x183FD` through `0x180A2`,
+while indices 574-579 descend from `0x18787` through `0x1844D`. Exact large TC4J
+owners in this repository emit approximately 0x3FC-byte LEDATA chunks followed
+by FIXUPP records. A producer beginning near the already recovered
+`mugetsu_1802F` would put the first run inside one such chunk and `0x1844D` in
+the next. This is retained as a falsifiable physical-TU hypothesis, not proof of
+historical source identity. Function-body `#pragma option -zC` is rejected by
+TC4J, and compiler `-S` followed by TASM keeps the 330 code bytes but produces an
+ascending relocation sequence, so neither mechanism solves the target order.
+
+The denominator therefore expands again without exact numerator growth. MAIN is
+47,564 / 48,388 exact reviewed authored bytes (98.297098%) and 300 / 305 exact
+reviewed functions (98.360656%), with five blocked functions and 238 unreviewed
+MAIN authored candidates. The all-artifact queue has 417 unreviewed authored
+candidates. Full repository CI, tracking validation, generated reports, private
+TH01-TH05 Oracle calibration, live Ghidra replay, Ghidra mutation smoke, and
+`git diff --check` pass on the implementation checkpoint.
+
+Verification planes remain separate. Boundary ownership and maintained source
+presence are established for the new two callbacks; their raw/map comparison
+passes, but function/extent exactness is **not** established because ordered
+relocation fails. The previously accepted 178-owner cohort remains independently
+passing from v143. Standalone TH04 production-source/link closure is not
+established. Runtime-storage identity is not established. No runtime scenario
+validation was run. No v145 Factory acceptance replay was submitted or claimed.
+Pristine-release provenance remains open and target canonicality stays
+`candidate-local-attested`.
+
+The v145 scratch root is `.analysis/gpt-web/th04-main-20260912-v145`. Its packet
+started with `.analysis/` at 3,137,525,358 bytes. After implementation CI and
+explicit cleanup of current-session probe materializations, source variants, and
+`V145*` Wine scratch, `.analysis/` was 3,198,742,385 bytes. The retained focused
+failure reproducer is approximately 75 MiB and is referenced by tracked raw and
+relocation evidence; the GPT-web scratch root is about 16 KiB. Final post-handoff
+CI size is `3198748613` bytes, for packet growth `61223255`
+bytes. No target, toolchain, Ghidra project, legacy/unknown state, v143 exact
+baseline, or unrelated analysis content was removed.
+
+The first concrete continuation is no longer an isolated callback spelling
+probe. Test the larger MAIN_033_TEXT Mugetsu physical producer beginning near
+load `0x1802F`: compose the already maintained v107/v108/v144/v145 semantics as
+one TC4J producer and inspect LEDATA/FIXUPP chunk boundaries, then recover the
+adjacent `mugetsu_1845E`, `mugetsu_184AC`, `mugetsu_18556`, `mugetsu_185E4`,
+`mugetsu_18655`, `MUGETSU_PHASE2_NEXT`, `mugetsu_186B9`, and `mugetsu_update()`
+only as needed to close or falsify that physical-TU hypothesis. Do not bypass the
+ordered-relocation gate and do not retry source spelling for `18314`/`1838A`;
+their raw bytes already match.
+
 ## Next target-first queue
 
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 419 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 417 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 226 MAIN entries currently represented by
+The largest remaining class is 224 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 170 exact, 2 reviewed blocked, 235 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 226 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 240 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 170 exact, 4 reviewed blocked, 233 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 224 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 238 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 v143 closes the former `MAIN_012_TEXT` semantic seam: `shot_velocity_set()` and `sub_11DE6` are now routed to original-style ASM attestation and the old replay-only residual extraction is gone. Preserve the v117/v118 TC4J negatives as compiler evidence, but do not continue retrying source-level loop spellings for these now-classified functions.
 
@@ -1194,16 +1314,14 @@ replay. Both observations are therefore in the original-style ASM attestation
 queue rather than the authored reconstruction queue. See
 `docs/reconstruction/TH04_CIRCLE_POINTNUM_RENDER_PUT_ASM_V140.md`.
 
-v144 closes the previous Mugetsu dense-transition boundary packet as reviewed,
-source-present, and blocked. The first concrete hard next packet is the directly
-adjacent Ghidra-missed `mugetsu_18314` at MAIN_033_TEXT `13A9:4884`. v144 raw
-orientation already proves a 0x76-byte body through `RET 13A9:48F9`, one MZ
-relocation, and the next TASM PROC at load `0x1838A`; start by recording its
-callers/function-pointer ownership and promoting the boundary, then probe natural
-C++ for the callback-dispatch/body shape. `mugetsu_1838A` is the following
-corroborated 0xA entry and may form a coherent continuation if producer evidence
-connects them. Do not return to the v109/v144 dense-transition gate spellings
-without a new compiler mechanism.
+v145 closes the previous isolated `mugetsu_18314` / `mugetsu_1838A` packet as
+reviewed, source-present, raw/map exact, and relocation-blocked. Do not keep
+tuning those two bodies. The first concrete hard next packet is the larger
+Mugetsu physical-producer hypothesis beginning near MAIN_033_TEXT load `0x1802F`:
+combine the already maintained v107/v108/v144/v145 semantic source under one
+TC4J producer and inspect OMF chunking, then extend through the adjacent
+`0x1845E..mugetsu_update()` cohort only as needed to reproduce or falsify the
+target relocation-run partition. Do not bypass ordered-relocation exactness.
 `randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
 and should not be harvested as isolated easy wins without a new source/origin
 hypothesis.
