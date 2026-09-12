@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 722 authored reconstruction candidates: OP 94, MAIN 543, MAINE 72, ZUN 13;
-- 331 accepted exact MAIN functions and one reviewed blocked MAIN function;
-- 390 authored candidates otherwise unreviewed;
+- 344 accepted exact MAIN functions and one reviewed blocked MAIN function;
+- 377 authored candidates otherwise unreviewed;
 - 62 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- reviewed authored bytes: **54,312 / 54,316 exact (99.992636%)**;
-- accepted authored functions: **331 / 332 exact (99.698795%)**;
-- accepted default exact replay owners: **184**;
+- reviewed authored bytes: **56,271 / 56,275 exact (99.992892%)**;
+- accepted authored functions: **344 / 345 exact (99.710145%)**;
+- accepted default exact replay owners: **186**;
 - original-style ASM: **15 units / 2,124 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **4 bytes** in one reviewed
   blocked function.
@@ -148,6 +148,18 @@ post-promotion 184-owner aggregate all pass twice with exact raw bytes, map
 placement, seven ordered relocations, deterministic valid OMF, and unchanged
 v149 Stage 4 ownership. The reviewed denominator becomes 54,312 / 54,316 exact
 bytes and 331 / 332 exact functions. Boundary discovery remains active.
+v151 continues leftward through the Stage X cohort. Seven near helpers plus FAR
+`midbossx_update()` form one exact `0x3E9` natural-C++ owner at
+`B4M_UPDATE_TEXT 13A9:0C1F`, load `0x146AF..0x14A97`; the independent
+`gather_point_render()` seam remains zero-credit replay plumbing. Focused
+93-owner replay and candidate/post-promotion 185-owner aggregates pass all owner
+bytes, map placement, nine ordered relocations, deterministic OMF, and the linked
+gather guard. v152 then recovers the preceding Stage 3 owner at `13A9:0861`,
+load `0x142F1..0x146AE`, size `0x3BE`: four near helpers plus a cross-linked FAR
+`midboss3_update()` compiler owner. Focused 94-owner replay and both 186-owner
+aggregates pass exactly. The reviewed denominator is now 56,271 / 56,275 exact
+bytes and 344 / 345 exact functions. Boundary discovery remains active; this is
+not a completion claim.
 Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -528,6 +540,53 @@ runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
+v152 current-source focused replay:
+
+- `gptweb-v152-midboss3-focused-candidate-003`;
+- 94-unit dependency closure;
+- receipt SHA-256
+  `89e3adf127e14736a061ba0af5359731a64e658336b68f8e02075f87962d7a99`;
+- two isolated cold builds, `failures=[]`;
+- exact `m3u.cpp` map contribution `13A9:0861`, size `0x3BE`;
+- target/candidate owner SHA-256
+  `9d39b653e75a26bd64d9683e34d75bc88f025ddd52f881665c26c1066d03c997`;
+- `m3u.obj` raw SHA-256
+  `7127b99442237eecc69fd6b1f0ead2315586c795fa6ee8a1f1512fa04a44844e`,
+  dependency-normalized SHA-256
+  `f257612ae47e3f741d171e2f5b3364304d2e9f4020904d90d8eed48d798f0f49`;
+- all seven ordered target MZ relocations match exactly.
+
+Candidate-state aggregate `gptweb-v152-midboss3-aggregate-candidate-001` covers
+all 186 default owners twice with `failures=[]`; receipt SHA-256 is
+`885fbc773f73f5400f9914186a05463353f0b4c41ce58e488893a9a097c27ea5`.
+After promotion, `gptweb-v152-midboss3-aggregate-final-001` passes all 186 owners
+twice again; receipt SHA-256 is
+`26d4aa1da00b69b45430d7e4bbd19ec36399d83826fdc9068f56ebb9a064d079`,
+and both candidate MAIN images have SHA-256
+`2d2a030bf3d894fd465bed8f0fec9000efcd82670ee692c6fb3ab1bee5929534`.
+This is the current repository-native exact replay baseline.
+
+v151 recovered focused replay:
+
+- `gptweb-v151-midbossx-focused-candidate-003`;
+- 93-unit dependency closure;
+- receipt SHA-256
+  `1240e616f81f446a83294c15df8c5ebfb51fb9d904cc56fa16438e1ea9b315c5`;
+- exact Stage X owner SHA-256
+  `ede347aa476ff6f4ee4ed70b19fa98d2a0ace591b0303f21fa49feeb09db52a9`;
+- exact map `13A9:0C1F`, size `0x3E9`;
+- all nine ordered owner relocations and the linked zero-credit gather guard pass.
+
+Its candidate-state aggregate `gptweb-v151-midbossx-aggregate-candidate-001`
+passes all 185 owners; receipt SHA-256 is
+`c56c8838af70febf6963c3ebfaf7561e3336f21dc1e79c226a3e692069b16b26`.
+Post-promotion `gptweb-v151-midbossx-aggregate-final-002` passes the same cohort;
+receipt SHA-256 is
+`76ed549eb80e9e51609c99df5366ea432685914f1767f73d803b7eb81bbd9019`,
+with candidate MAIN SHA-256
+`e94e9ba549c0b75a0b116fb98dd583ecf590f02681866a1df1f02d4814d8aef0`.
+This was the repository-native exact replay baseline at v151.
+
 v150 current-source focused replay:
 
 - `gptweb-v150-midboss2-focused-candidate-001`;
@@ -553,7 +612,7 @@ After promotion, `gptweb-v150-midboss2-aggregate-final-001` passes the complete
 `315a0f3ca0748ec3a674588a4b5a8ce093a655a49d29efdff8dbefb435645afc`,
 and both candidate MAIN images have SHA-256
 `e9cd686b3c435a5aaa630490606aa13fea19ce1c3b1fa12754daa892c3f56cfb`.
-This is the current repository-native exact replay baseline.
+This was the repository-native exact replay baseline at v150.
 
 v149 current-source focused replay:
 
@@ -579,7 +638,7 @@ After promotion, `gptweb-v149-midboss4-aggregate-final-001` passes the complete
 `e84ce9c41248d53808acda34dfcabb2fccc5e574103959e111af85b3db1e9c48`,
 and both candidate MAIN images have SHA-256
 `d3ad291274f83186849a93ed89e3b551789f7cf42ea6e86a75a9ce033d01f4af`.
-This is the current repository-native exact replay baseline.
+This was the repository-native exact replay baseline at v149.
 
 v148 current-source focused replay:
 
@@ -605,7 +664,7 @@ After promotion, `gptweb-v148-boss-bg-aggregate-final-001` passes the complete
 `e7e5e507b89383be385c6c3a3f008fcab997f365dc9cda90abb91cde24006656`,
 and both candidate MAIN images have SHA-256
 `781e1b99f94476f7dce5fa16b340f2c830a43e8ff9945bb373d8a0d8c3e41d38`.
-This is the current repository-native exact replay baseline.
+This was the repository-native exact replay baseline at v148.
 
 v147 current-source focused replay:
 
@@ -630,7 +689,7 @@ After ledger promotion, the complete default cohort passes again at
 `a50851ef415b3a84e31ca024b57b0c2cfe5f9cdf023e518f2b7e0b3f0f22859e`,
 with both candidate MAIN images SHA-256
 `c7905c812815fe02d7d40a7e7bb880a2404e124336df043e742cf69db17c2d84`.
-This final aggregate is the current repository-native exact replay baseline.
+This final aggregate was the repository-native exact replay baseline at v147.
 
 v146 ran no focused or aggregate exact-unit replay. Its maintained late Mugetsu
 source was compiler-validated and the unified 0x9BF physical-producer probe had
@@ -695,11 +754,11 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 184-owner post-promotion aggregate reports zero raw differences for every declared
+The current 186-owner post-promotion aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable remains deterministic across A/B with SHA-256
-`e9cd686b3c435a5aaa630490606aa13fea19ce1c3b1fa12754daa892c3f56cfb`.
+`2d2a030bf3d894fd465bed8f0fec9000efcd82670ee692c6fb3ab1bee5929534`.
 
 The retained v137 private function-review artifact uses the v137 172-owner
 aggregate map, retained target-bound metadata plus the fresh complete Ghidra
@@ -781,7 +840,7 @@ One reviewed authored function remains nonexact:
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
    recorded as negative results; do not repeat them without a new falsifiable
-   compiler/source/origin mechanism. v150 does not alter this blocker.
+   compiler/source/origin mechanism. v152 does not alter this blocker.
 
 The twelve Mugetsu functions that were blocked in v144-v146 are now exact inside
 the recovered `0x9BF` PC-98 IDE physical producer. Their historical command-line
@@ -1968,22 +2027,158 @@ whether the natural TU should extend left over that full helper cohort. Do not
 absorb `gather_point_render()` by adjacency alone, and do not retry `snd_load`
 without a genuinely new mechanism.
 
+
+## v151 recovery checkpoint
+
+The v151 packet began from clean handoff `db47385a3096a788edc4d16ad6ea564ddec80bcf`
+and produced implementation checkpoint
+`0d04c5ab7daf55c848d66f0a2d5cde791b77fc5e`
+(`gpt-web: reconstruct Stage X midboss update`). This conversation started at
+that implementation checkpoint with a clean worktree and an older v150 handoff,
+so the committed v151 source plus retained receipts were treated as recoverable
+continuation state before v152 work began. No unrelated, unknown, staged,
+unstaged, or untracked work was present.
+
+Stage X target-first review closes seven near helpers plus FAR
+`midbossx_update()` as one natural-C++ owner at `B4M_UPDATE_TEXT 13A9:0C1F`,
+load `0x146AF..0x14A97`, file `0x15EAF..0x16297`, size `0x3E9 / 1001`.
+Maintained `src/main/midboss/mx_update.cpp` SHA-256 is
+`37c111c9b96154af61071a1354f3292e8aef6fe8d0cb0937fb1165dcdac11d75`.
+Its exact owner SHA-256 is
+`ede347aa476ff6f4ee4ed70b19fa98d2a0ace591b0303f21fa49feeb09db52a9`.
+The final TC4J object has dependency-normalized SHA-256
+`71634ab85f6870da3e6d836d1d804938df398a1b62766afa62f667a16b3691fc`.
+All nine ordered owner relocations match. The independent
+`gather_point_render()` at load `0x14A98..0x14AF1` remains zero-credit replay
+plumbing and passes its own linked auxiliary-extent guard.
+
+Focused `gptweb-v151-midbossx-focused-candidate-003`, candidate aggregate
+`gptweb-v151-midbossx-aggregate-candidate-001`, and post-promotion aggregate
+`gptweb-v151-midbossx-aggregate-final-002` all pass as recorded above. The
+pre-angle-fix focused receipt remains useful negative evidence: it already passed
+map, nine ordered relocations, OMF, dependency closure, and gather plumbing but
+differed only at target `ADD AL,0xB8` versus candidate `SUB AL,0x48`; the final
+natural unsigned-angle expression resolves that byte mismatch.
+
+This continuation reran preflight, status, the full boundary ledger, Factory
+Ghidra `check {}`, repository-native `scripts/ghidra.py th04-main check`, and a
+full repository CI on the committed v151 state; all passed. v151 repository-native
+function/extent exactness is established. Standalone production closure,
+runtime-storage identity, runtime-scenario validation, whole-image exactness,
+and Factory Truth Kernel acceptance are not established by v151.
+
+The v151 ignored manifest began at 3,472,523,190 bytes. Its previously completed
+cleanup left focused failure/success and candidate aggregate as receipt-only,
+while the 185-owner post-promotion aggregate remained complete. The exact
+pre-v152 fixed point was 3,539,753,937 bytes, growth 67,230,747 bytes. The v151
+manifest is now marked `completed`; no target, toolchain, Ghidra project,
+legacy/unknown state, or unrelated analysis content was removed.
+
+## v152 session checkpoint
+
+v152 started from clean committed v151 implementation
+`0d04c5ab7daf55c848d66f0a2d5cde791b77fc5e`. No tracked recovery paths remained
+after v151 was rebound and validated. All required repository/Factory documents
+were reread; preflight, status, the 2,120-observation boundary validator, Factory
+`th04-ghidra` target attestation through its discovered `check {}` operation, and
+repository-native Ghidra MZ/database attestation passed. The provider still has
+no discovered `get_metadata` operation. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`
+and canonicality remains only `candidate-local-attested`.
+
+The hard packet continues left through Stage 3. Four near helpers and FAR
+`midboss3_update()` form one exact owner at `B4M_UPDATE_TEXT 13A9:0861..0C1E`,
+load `0x142F1..0x146AE`, file `0x15AF1..0x15EAE`, size `0x3BE / 958`.
+Fresh Ghidra gives complete contiguous near helpers but grossly cross-links the
+FAR dispatcher into unrelated code. Target/TASM/raw close the dispatcher through
+`RETF` at load `0x14699`, one zero metadata byte, and a five-value/five-jump
+switch tail through `0x146AE`; exact v151 begins at the next byte. Stage 3 setup
+installs the FAR entry through `_midboss_update_func`.
+
+Maintained `src/main/midboss/m3_update.cpp` SHA-256 is
+`01e10963aea10c01ba4bf79553f3ad525cf36dd32c7d7e1a225035c0a3569719`.
+With the complete production `-b-` profile, all four near-function seams already
+match target. The remaining dispatcher mismatch is solved by keeping the
+`phase_frame == 1` flight block inside pattern `case 0xFF`, matching target
+control-flow ownership rather than forcing registers or bytes. The cold-replay
+`m3u.obj` raw SHA-256 is
+`7127b99442237eecc69fd6b1f0ead2315586c795fa6ee8a1f1512fa04a44844e`
+and dependency-normalized SHA-256 is
+`f257612ae47e3f741d171e2f5b3364304d2e9f4020904d90d8eed48d798f0f49`.
+All seven ordered MZ relocations match. No inline ASM, codestring, copied target
+bytes, inert padding, fake return, target/object patch, or ABI lie is used.
+
+The shortened zero-credit `b4mpre.asm` prefix is deliberately not promoted. A
+focused diagnostic proves its linked raw bytes and MAP placement are exact and
+its TASM OMF deterministic, but splitting the prefix makes its fourteen MZ
+relocations ascend while the target table stores those sites descending. Receipt
+`2cff535f5f7a2563591029277def108e9af4604b2f1f26efe7f44e507bed7aa7`
+retains that negative. v152 owner exactness uses only the natural owner's own
+seven ordered relocations; no plumbing bytes receive authored/function credit.
+
+Focused `gptweb-v152-midboss3-focused-candidate-003`, candidate aggregate
+`gptweb-v152-midboss3-aggregate-candidate-001`, and post-promotion aggregate
+`gptweb-v152-midboss3-aggregate-final-001` pass as recorded above. The current
+MAIN ledger is **56,271 / 56,275 exact reviewed authored bytes (99.992892%)** and
+**344 / 345 exact reviewed functions (99.710145%)**, with 186 default exact
+owners. The only reviewed blocker remains the four-byte `snd_load` remainder;
+MAIN still has 198 unreviewed authored candidates, so the campaign remains open.
+
+Implementation checkpoint is
+`c71cfe429b0e9159b640f7da8f2547c7cc11113c`
+(`gpt-web: reconstruct Stage 3 midboss update`). Full repository CI passes on
+that state, including tracking, boundary validation, generated reports, private
+TH01-TH05 Oracle calibration, Ghidra/JDK identity, live Ghidra database replay,
+and mutation smoke; `git diff --check` passes. Repository-native function/extent
+exactness is established for v152. Standalone TH04 production-source/link closure
+is not established; runtime-storage identity is not established; no runtime
+scenario was run; no v152 Factory Truth Kernel acceptance claim was submitted.
+
+The v152 ignored manifest began at 3,539,753,937 bytes. During source diagnosis
+five cold trees plus one reusable short-path compiler workspace raised the tree
+above the session soft budget. After durable evidence and the implementation
+checkpoint, receiptless focused candidate 001 and `V152SRC` were removed;
+focused candidate 002 (prefix negative), focused candidate 003, and the candidate
+aggregate were compacted to receipt-only; the complete post-promotion 186-owner
+aggregate remains the current cold baseline. Compact compiler source/object
+probes remain because checked-in negative evidence names their hashes. Final
+`.analysis` size is `3607139569` bytes, for v152 growth
+`67385632` bytes. Shared provider state, targets, toolchains,
+legacy/unknown data, and unrelated artifacts were untouched.
+
+The first concrete continuation is the remaining left edge of `B4M_UPDATE_TEXT`:
+load `0x13FB2..0x142F0`, exactly `0x33F / 831` bytes. Fresh Ghidra sees the near
+helper at image `0x23FB2` as a complete `0x65` body but constructs only four
+bytes at FAR `midboss1_update()` image `0x24017`. Pinned TASM/raw instead close
+the FAR dispatcher continuously through `RETF` at load `0x142F0`; the next byte
+is exact v152 Stage 3. Thus the falsifiable physical-owner hypothesis is a
+`0x65` helper plus `0x2DA` FAR dispatcher, with fourteen target MZ relocations.
+Stage 1 setup installs the FAR entry through `_midboss_update_func`. Review this
+complete `0x33F` window, its tile-ring calls/state words, callers/callees and
+relocation ownership before writing source. Do not retry the four-byte
+`snd_load` blocker without a genuinely new compiler/source/origin mechanism.
+
 ## Next target-first queue
+
+First review the Stage 1 `B4M_UPDATE_TEXT` physical-owner hypothesis from the
+v152 checkpoint: load `0x13FB2..0x142F0`, size `0x33F`, before opening another
+subsystem. The right seam is already exact v152. Keep the near helper and FAR
+dispatcher together until target/TASM/raw/relocation evidence proves a different
+producer boundary.
 
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 409 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 377 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 216 MAIN entries currently represented by
-target-derived assembly. That label means “likely authored game code awaiting
+The largest remaining MAIN target-derived-assembly class is now 184 entries. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 201 exact, 206 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 197 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 211 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 214 exact, 193 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 184 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 198 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 v143 closes the former `MAIN_012_TEXT` semantic seam: `shot_velocity_set()` and `sub_11DE6` are now routed to original-style ASM attestation and the old replay-only residual extraction is gone. Preserve the v117/v118 TC4J negatives as compiler evidence, but do not continue retrying source-level loop spellings for these now-classified functions.
 
@@ -2015,7 +2210,7 @@ proved `src/shared/` ownership with semantic subsystem directories.
 
 ## Build status
 
-The current repository 184-owner exact-unit cohort compiles and links reproducibly through the
+The current repository 186-owner exact-unit cohort compiles and links reproducibly through the
 pinned ReC98 cold-replay scaffold. This is a strict exactness Oracle, not a
 standalone TH04 build.
 
