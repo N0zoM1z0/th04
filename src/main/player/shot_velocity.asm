@@ -43,7 +43,8 @@ public @SHOT_VELOCITY_SET$QP7SPPOINTUC
 	retn	4
 @shot_velocity_set$qp7sppointuc endp
 
-public sub_11DE6
+public sub_11DE6, SUB_11DE6
+SUB_11DE6 label far
 sub_11DE6 proc far
 	xor	bx, bx
 	xor	ax, ax
