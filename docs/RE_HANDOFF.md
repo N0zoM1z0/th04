@@ -10,19 +10,19 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 722 authored reconstruction candidates: OP 94, MAIN 543, MAINE 72, ZUN 13;
-- 300 accepted exact MAIN functions and one reviewed blocked MAIN function;
-- 421 authored candidates otherwise unreviewed;
+- 300 accepted exact MAIN functions and three reviewed blocked MAIN functions;
+- 419 authored candidates otherwise unreviewed;
 - 62 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- reviewed authored bytes: **47,564 / 47,568 exact (99.991591%)**;
-- accepted authored functions: **300 / 301 exact (99.667774%)**;
+- reviewed authored bytes: **47,564 / 48,058 exact (98.972075%)**;
+- accepted authored functions: **300 / 303 exact (99.009901%)**;
 - accepted default exact replay owners: **178**;
 - original-style ASM: **15 units / 2,124 exact bytes**, tracked separately;
-- currently confirmed nonexact authored bytes: **4 bytes** in one reviewed
-  blocked function.
+- currently confirmed nonexact authored bytes: **494 bytes** across three
+  reviewed blocked functions.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
 and aggregate cold replay. v120 then closes the structurally adjacent 0xD6
@@ -81,10 +81,15 @@ into a standalone exact natural-C++ producer. v143 closes the former replay-only
 MAIN_012_TEXT shot seam: independent TH04/TH05 original-target evidence supports
 original-style assembly for the adjacent 0x1C `shot_velocity_set()` and 0x2C
 shot-level selector, and maintained symbolic TASM replaces the old extracted
-0x48 residual without changing the 178-owner aggregate image. Both current
-reviewed authored ratios remain above the campaign pressure target, but the
-denominator remains expandable and this grants no completion authority. These
-percentages are not a claim about an executable or the game.
+0x48 residual without changing the 178-owner aggregate image. v144 then expands
+the reviewed MAIN_033 authored denominator by proving the true physical extents
+of `mugetsu_1812A` and Ghidra-missed `mugetsu_1821E`: together they own 0x1EA
+bytes including two zero metadata bytes and two 33-word switch tables. Maintained
+natural C++ is source-present but nonexact, so reviewed exactness moves to
+98.972075% by bytes and 99.009901% by functions. The drop is a denominator
+correction, not an exact-owner regression, and restores active pressure toward
+the 99.5% campaign target. These percentages are not a claim about an executable
+or the game.
 Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -465,6 +470,10 @@ runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
+v144 performs no focused or aggregate exact-unit replay because its maintained
+Mugetsu source is known nonexact. The current repository-native exact baseline
+therefore remains the v143 shot-seam replay chain below.
+
 The current MAIN_012_TEXT shot-seam packet passes repository focused two-cold
 replay at:
 
@@ -525,7 +534,7 @@ point-number producers out of authored C/C++ accounting. v140 reclassifies the
 two v138 render/put observations to original-style ASM; v141 and v142
 subsequently move the lifecycle trio and bullet-template helper to the same
 separate attestation track. The live authored-function accounting is therefore
-300 / 301.
+300 / 303 after v144 adds two reviewed blocked Mugetsu callbacks.
 `randring1_next16()` passes only the explicit no-Ghidra owner/public/raw-RET
 gate; `randring1_next16_and()` is automatic. The retained report is
 `.analysis/gpt-web/th04-main-20260912-v137/function-review-v137.json`.
@@ -590,12 +599,22 @@ acceptance for the entire 170-owner set.
 
 ## Remaining reviewed nonexact work
 
-One reviewed authored function is nonexact:
+Three reviewed authored functions are nonexact:
 
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
    recorded as negative results; do not repeat them without a new falsifiable
    source shape.
+2. `mugetsu_1812A`: reviewed physical extent MAIN_033_TEXT `13A9:469A..478D`,
+   load `0x1812A..0x1821D`, file `0x1992A..0x19A1D`, size 0xF4. This is 0xB1
+   code bytes through RET plus one zero compiler metadata byte and a validated
+   33-word dense switch table. Maintained natural C++ is source-present but
+   nonexact; historical v109 source reached a two-byte gate-only deficit.
+3. `mugetsu_1821E`: reviewed Ghidra-missed physical extent MAIN_033_TEXT
+   `13A9:478E..4883`, load `0x1821E..0x18313`, file `0x19A1E..0x19B13`, size
+   0xF6. It owns 0xB3 code bytes plus the same 0x43-byte compiler table shape.
+   Maintained natural C++ is source-present but nonexact; historical v109 source
+   reached the sibling two-byte gate-only deficit.
 
 `dialog_op` and `dialog_run` have maintained source and exact code bytes, but
 remain outside the reviewed exact denominator because their ordered MZ
@@ -1047,22 +1066,122 @@ probe scratch were deleted after compact conclusions were retained. No legacy,
 unknown, target, toolchain, Ghidra-project, or other shared provider state was
 removed.
 
+## v144 session checkpoint
+
+This conversation recovered one interrupted handoff before new source work. Live
+Git began at `3c314581907d44b361a22cadea73e790861bbfae` with exactly one unstaged
+tracked path, `docs/RE_HANDOFF.md`; complete diff review classified it as
+`recoverable-current-work` from the v143 Factory outage. There was no unrelated,
+unknown, staged, untracked, or conflicted work. The recovered handoff passed full
+CI and was checkpointed as `6a506c26c0115b5fb466580919a5250b2847d4a4`
+(`gpt-web: update TH04 handoff`) before v144 began. No reset, stash, target edit,
+or push was used.
+
+v144 takes the adjacent MAIN_033 Mugetsu dense-transition packet. Fresh attested
+Ghidra cross-links image `0x2812A` into a 14-range body spanning unrelated code
+and has no function entry at `0x2821E`; neither Ghidra extent is accepted.
+Pinned TASM, gap-free target decoding, next-PROC adjacency, switch-table target
+validation, and relocation parsing instead prove:
+
+- `mugetsu_1812A`: MAIN_033_TEXT `13A9:469A..478D`, load
+  `0x1812A..0x1821D`, file `0x1992A..0x19A1D`, physical size 0xF4. Code is
+  0xB1 bytes through RET at `13A9:474A`; one zero metadata byte and a 33-word
+  dense jump table own the remaining 0x43 bytes. All 33 words target valid
+  instruction starts; one MZ relocation overlaps at load `0x181A0`.
+- `mugetsu_1821E`: MAIN_033_TEXT `13A9:478E..4883`, load
+  `0x1821E..0x18313`, file `0x19A1E..0x19B13`, physical size 0xF6. Code is
+  0xB3 bytes through RET at `13A9:4840`, followed by the same zero-byte plus
+  33-word table class. All entries are instruction-aligned; one relocation
+  overlaps at load `0x18295`.
+
+Maintained `src/main/boss/mugetsu_transitions.cpp` SHA-256 is
+`1317f688d5a63fc622d220a217797d1165e4fba1b006ac104011a0a768358866`. After a
+fresh toolchain attestation, production-profile TC4J emits a valid 486-byte CODE
+LEDATA object (raw SHA-256
+`b637ea09f4fe5b778de1d959cfe1836b478ae7cc6a7cdf17d1322d1dfa45838d`,
+dependency-normalized SHA-256
+`537746a2d57d1c4a637d52268dea09091bfd7518365982c83312d2140b5a29d1`). The
+source is semantically maintained and reproduces the dense-switch/table producer
+class, but it is not instruction-shape exact: its selector prelude differs and
+the `< 48` return gate lowers to `JL`. Historical v109 evidence remains a
+separate stronger near-match for a now-pruned source text: that SHA-bound source
+was four bytes short solely at one `JGE + JMP` versus `JL` gate per function.
+No v109 exactness is inherited by the new source.
+
+New bounded compiler tests eliminate additional mechanisms without forcing a
+promotion. TC4J documents `-O` as jump optimization, but normal optimization,
+function-local `#pragma option -O-`, and whole-function `-O-` all retain the
+`JL` lowering. A Borland `_BX` selector adds `MOV AX,BX; MOV BX,AX`; a block-
+scoped `register int` selector emits exactly 490 CODE bytes but routes the value
+through DX and AX before BX. Equal code size is therefore explicitly rejected as
+an exactness proxy. A bounded original-target scan finds the producer prefix and
+the distinctive `JGE +2; JMP short` gate only in these two TH04 callbacks;
+TH02, TH03, and TH05 have no match, so there is no independent cross-target basis
+for original-style ASM reclassification.
+
+The two functions enter the reviewed authored denominator as blocked/source-
+present. MAIN accounting is now 47,564 / 48,058 exact bytes (98.972075%) and
+300 / 303 exact functions (99.009901%). MAIN boundary routing is 300 exact, 3
+blocked, 240 unreviewed, and 28 ASM-attestation observations. The all-artifact
+authored inventory remains 722 candidates, with 419 unreviewed. This denominator
+expansion is the intended result of continued boundary auditing.
+
+No v144 exact-unit focused replay or aggregate replay was run: the source is
+known nonexact, so running promotion gates would be misleading. The latest exact
+baseline remains v143's 178-owner final aggregate
+`gptweb-v143-shot-seam-aggregate-final-001`, receipt SHA-256
+`d5d4d5a28261f0a194d396ae155d15b10572963de47f1f46a5203ed72b7a924d`.
+Repository-native target/source tracking, boundary validation, generated reports,
+full `scripts/ci.py`, private cross-game Oracle calibration, live Ghidra replay,
+Ghidra mutation smoke, and `git diff --check` pass for implementation checkpoint
+`a112bde5ecf8fef1f5697478cf181a06c09bb2f6`
+(`gpt-web: review Mugetsu dense transitions`).
+
+Verification planes remain separate. Boundary ownership and maintained source
+presence are established for the two v144 callbacks, but function/extent byte
+exactness is **not** established for them. The previously accepted 178-owner
+exact cohort remains independently passing from v143. Standalone TH04 production
+source/link closure is not established. Runtime-storage identity is not
+established. No runtime scenario validation was run. No v144 Factory acceptance
+replay was submitted or claimed. Pristine-release provenance remains open and
+target canonicality stays `candidate-local-attested`.
+
+The v144 scratch root is `.analysis/gpt-web/th04-main-20260912-v144`. Its packet
+started with `.analysis/` at 3,137,459,549 bytes. A 15 MiB pinned ReC98 probe
+materialization and duplicate source variants were current-session reproducible
+scratch and were explicitly removed after tracked source/evidence capture. Only
+four compact compiler/cross-game reports plus the manifest remain (about 24 KiB).
+After cleanup and before final handoff CI, `.analysis/` was 3,137,506,717 bytes;
+final post-handoff-CI size is `3137512938` bytes, for packet growth
+`53389` bytes. No target, replay baseline, legacy/unknown content,
+toolchain, Wine prefix, or Ghidra project was removed.
+
+The first evidence-connected continuation is the immediately following
+`mugetsu_18314`. Fresh Ghidra again has no entry. Bounded v144 orientation already
+closes raw bytes at MAIN_033_TEXT `13A9:4884..48F9`, load
+`0x18314..0x18389`, file `0x19B14..0x19B89`, size 0x76, SHA-256
+`c63dfb08b9fa8d7ebc510e92112962c6f2af6169b8bcbdaeabecd2bf64a59ed5`, with one
+MZ relocation and the next TASM PROC exactly at load `0x1838A`. The next
+conversation should first promote that boundary with callers/function-pointer
+ownership, then test natural C++ for its callback-dispatch body. Do not return to
+the v109 dense-gate spelling matrix without a genuinely new compiler mechanism.
+
 ## Next target-first queue
 
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 421 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 419 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 228 MAIN entries currently represented by
+The largest remaining class is 226 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact authored reconstructions, 228 authored reconstruction candidates remain unreviewed, nine are routed to original-style ASM attestation, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 242 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 170 exact, 2 reviewed blocked, 235 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 226 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 240 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 v143 closes the former `MAIN_012_TEXT` semantic seam: `shot_velocity_set()` and `sub_11DE6` are now routed to original-style ASM attestation and the old replay-only residual extraction is gone. Preserve the v117/v118 TC4J negatives as compiler evidence, but do not continue retrying source-level loop spellings for these now-classified functions.
 
@@ -1075,19 +1194,16 @@ replay. Both observations are therefore in the original-style ASM attestation
 queue rather than the authored reconstruction queue. See
 `docs/reconstruction/TH04_CIRCLE_POINTNUM_RENDER_PUT_ASM_V140.md`.
 
-v143 closes the previous shot-seam continuation. The first concrete hard next
-packet is now the adjacent MAIN_033_TEXT `mugetsu_1812A` / `mugetsu_1821E`
-callback cohort. The live boundary ledger marks `mugetsu_1812A` provisional with
-a noncontiguous 14-range Ghidra body and a cross-linked span approaching 0xFCED,
-while Ghidra has no function entry at `mugetsu_1821E`. Pinned TASM PROC starts
-are load `0x1812A` and `0x1821E`; the historical v109 probe treats the contiguous
-cohort as 0x1EA target bytes and observes a 33-word dense jump table in each
-function. Begin by proving the two true raw/TASM/table extents and validating all
-jump targets, then revisit origin/code generation only with a genuinely new
-hypothesis. The retained v109 negative result already shows that `#pragma option
--a` natural C++ reproduces table metadata/cases but TC4J canonicalizes each
-target `CMP; JGE; JMP ret0` gate into `CMP; JL`, leaving two bytes missing per
-function; do not repeat the old if/goto/loop/boolean/`-O-` sweep.
+v144 closes the previous Mugetsu dense-transition boundary packet as reviewed,
+source-present, and blocked. The first concrete hard next packet is the directly
+adjacent Ghidra-missed `mugetsu_18314` at MAIN_033_TEXT `13A9:4884`. v144 raw
+orientation already proves a 0x76-byte body through `RET 13A9:48F9`, one MZ
+relocation, and the next TASM PROC at load `0x1838A`; start by recording its
+callers/function-pointer ownership and promoting the boundary, then probe natural
+C++ for the callback-dispatch/body shape. `mugetsu_1838A` is the following
+corroborated 0xA entry and may form a coherent continuation if producer evidence
+connects them. Do not return to the v109/v144 dense-transition gate spellings
+without a new compiler mechanism.
 `randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
 and should not be harvested as isolated easy wins without a new source/origin
 hypothesis.
