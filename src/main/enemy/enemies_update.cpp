@@ -7,15 +7,8 @@
 #include "th04/main/spark.hpp"
 #include "th04/snd/snd.h"
 
-// Physical-layout prefix: this remains a reviewed nonexact function. Keeping
-// its natural 27-byte -G lowering in the same producer preserves the target
-// position of ENEMIES_UPDATE without claiming these prefix bytes as exact.
-#pragma option -G
-extern "C" void pascal near enemy_bullet_template_push(enemy_t near &enemy)
-{
-    bullet_template = enemy.bullet_template;
-}
-#pragma option -G-
+// The reviewed low-level template-copy producer is owned separately.
+extern "C" void pascal near enemy_bullet_template_push(enemy_t near &enemy);
 
 #pragma samecodeseg sparks_add_random
 
