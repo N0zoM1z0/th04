@@ -3286,3 +3286,24 @@ address = "0x1BC7E"
 name = "randring1_next16_and(unsigned int)"
 evidence_id = "ev-th04-main-randring1-and-boundary-v137"
 reason = "Fresh Ghidra constructs exactly 0x1BC7E..0x1BC92 through RET 2; pinned TASM/MAP and raw bytes agree, and focused 108-owner plus aggregate 172-owner cold replay prove the 0x15 natural-C++ owner at CIRCLE_TEXT 0AAF:118E. Surrounding NOPs remain residual layout outside function and owner credit."
+
+# v138: CIRCLE_TEXT point-number render/put are boundary-reviewed but remain nonexact.
+[[reviewed_nonexact]]
+id = "th04-main-fn-1bd64"
+address = "0x1BD64"
+file_offset = "0xD564"
+size = "0x9A"
+name = "POINTNUMS_RENDER"
+evidence_id = "ev-th04-main-pointnum-render-put-boundary-v138"
+reason = "Fresh Ghidra, pinned TASM, v137 aggregate TLINK MAP and gap-free raw decode agree on the complete 154-byte near body through RET. Exactness remains blocked because the target writes a width value into the immediate operand of its own later instruction and no natural TC4J producer for that code-owned write is established."
+next_public_address = "0x1BDFE"
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1bdfe"
+address = "0x1BDFE"
+file_offset = "0xD5FE"
+size = "0x6A"
+name = "@pointnum_put"
+evidence_id = "ev-th04-main-pointnum-render-put-boundary-v138"
+reason = "Fresh Ghidra, pinned TASM, v137 aggregate TLINK MAP and gap-free raw decode agree on the complete 106-byte near body through RET. Warning-free natural TC4J fastcall/register probes emit a 135-byte BP-framed shape and do not reproduce the target LODSW/LOOP/XCHG register loop."
+next_public_address = "0x1BE68"

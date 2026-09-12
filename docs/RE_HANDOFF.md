@@ -10,18 +10,18 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 732 authored reconstruction candidates: OP 94, MAIN 553, MAINE 72, ZUN 13;
-- 300 accepted exact MAIN functions and five reviewed blocked MAIN functions;
-- 427 authored candidates otherwise unreviewed;
+- 300 accepted exact MAIN functions and seven reviewed blocked MAIN functions;
+- 425 authored candidates otherwise unreviewed;
 - 52 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- authored C/C++ bytes: **47,564 / 47,771 exact (99.566683%)**;
-- accepted authored functions: **300 / 305 exact (98.360656%)**;
+- reviewed authored bytes: **47,564 / 48,031 exact (99.027711%)**;
+- accepted authored functions: **300 / 307 exact (97.719870%)**;
 - accepted exact C/C++ owners: **172**;
 - original-style ASM: **9 units / 1,489 exact bytes**, tracked separately;
-- currently confirmed nonexact authored bytes: **207 bytes** in five reviewed
+- currently confirmed nonexact authored bytes: **467 bytes** in seven reviewed
   blocked functions.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
@@ -54,7 +54,7 @@ dispatcher compile as one exact 0xBD0-byte TC4J producer. Final focused plus a
 165-owner aggregate close every declared slice, the shared map contribution, and
 all 28 ordered MZ relocations. The unresolved shot residual still receives no
 reconstruction or function exactness credit. These percentages are not a claim
-about 99.566683% of an executable or the game. Derive current
+about 99.027711% of an executable or the game. Derive current
 numbers with `python3 scripts/status.py`; `config/units.csv`,
 `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -471,7 +471,8 @@ observation at `0x1BC7E`, and deliberately no synthetic Ghidra entry at
 `0x1BC70`. It reports 300 exact admissions in its 302-entry configured review
 universe: 150 automatic, 150 manual, and zero strict rejections. The live
 function ledger is broader because it also retains the three v136 blocked
-pointnum entries, so current repository accounting is 300 / 305.
+lifecycle entries plus the two v138 reviewed-nonexact render/put admissions, so
+current repository accounting is 300 / 307.
 `randring1_next16()` passes only the explicit no-Ghidra owner/public/raw-RET
 gate; `randring1_next16_and()` is automatic. The retained report is
 `.analysis/gpt-web/th04-main-20260912-v137/function-review-v137.json`.
@@ -482,7 +483,7 @@ observation at `0x23D52`, pinned target bytes, and the configured reviewed-
 boundary policy. It reports the historical v134 screen of **298/300 exact
 functions (99.333333%)**, 149 automatic acceptances, 149 manual reviewed
 acceptances, and zero strict rejections; it predates the three v136 blocked
-lifecycle admissions and therefore is not the current 303-function denominator. `randring2_next16()` is
+lifecycle admissions and therefore is not the current 307-function denominator. `randring2_next16()` is
 an ordinary automatic exact admission: Ghidra covers all 13 bytes through RET,
 the TLINK public begins at `13A9:02C2`, and the exact owner has the identical
 0xD extent. The following target NOP remains outside function and owner credit.
@@ -550,6 +551,14 @@ Five reviewed authored functions are nonexact:
    countdown forms do not emit the target bare `DEC DI; JNZ` tail.
 5. `POINTNUMS_UPDATE`: 0x70 bytes are source-present; the same countdown mismatch
    remains and TC4J merges two target-distinct `F_REMOVE` stores.
+6. `POINTNUMS_RENDER`: 0x9A bytes are now fully boundary-reviewed. The target
+   writes the current width into the immediate operand of its own later store
+   instruction. No natural TC4J producer or independently proved original-style
+   source classification is established; source remains absent.
+7. `@pointnum_put`: 0x6A bytes are now fully boundary-reviewed. Two legal
+   natural TC4J fastcall/register probes emit a 0x87-byte BP-framed body rather
+   than the target frameless `PUSH AX/PUSH DX`, `LODSW`, `LOOP`, and
+   `XCHG CX,BX` shape; source remains absent.
 
 `dialog_op` and `dialog_run` have maintained source and exact code bytes, but
 remain outside the reviewed exact denominator because their ordered MZ
@@ -561,31 +570,43 @@ already tested and does not solve those two functions.
 Do not resume from the old prose-only MAIN frontier. Query
 `config/th04_function_boundaries.csv` for `work_queue=reconstruct` and
 `accepted_state=unreviewed`, then select one coherent artifact-local unit.
-There are 427 such rows. Prefer `boundary_state=corroborated`; the remaining
+There are 425 such rows. Prefer `boundary_state=corroborated`; the remaining
 provisional rows need focused target control-flow, return/shared-tail,
 jump-table, alignment, and adjacent ownership review before source work.
 
-The largest remaining class is 234 MAIN entries currently represented by
+The largest remaining class is 232 MAIN entries currently represented by
 target-derived assembly. That label means “likely authored game code awaiting
 natural source,” not “original handwritten ASM.” OP has 94 unreviewed authored
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact, 233 remain unreviewed, four are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 248 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Of those TASM starts, 170 are exact, 231 remain unreviewed, six are blocked, and 27 are library-excluded; no non-library TASM `PROC` is silently excluded. This does not exhaust boundary discovery: MAIN still has 246 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, and sparse/cross-linked rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe. Continue target-first review of those rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 The immediate `MAIN_012_TEXT` physical layout blocker is closed for the exact Yuuka6/shots owners, but the semantic origin/code-generation seam remains unresolved at `shot_velocity_set()` / `sub_11DE6`. Do not retry `sub_11DE6` with another ordinary source-level loop merely because TC4J is proved capable of generating `LOOP`: every accepted natural-source `LOOP` currently comes from compiler-generated CS switch-table scanning, not a DS threshold loop. A new probe must explain that distinction. `shot_velocity_set()` still requires either a genuinely new ABI/compiler source shape that explains `MOV BX,SP` before `PUSH SI` plus `XOR BH,BH`, or independent evidence for original-style assembly. Replay-only residual extraction is not such evidence.
 
-The first concrete continuation should now be the connected `CIRCLE_TEXT`
-point-number render/put cohort rather than collecting the remaining tiny RNG/null
-entries. `POINTNUMS_RENDER` is the reviewed 0x9A-byte near body at load `0xBD64`;
-`@pointnum_put` immediately follows at load `0xBDFE` for 0x6A bytes, ending at
-`0xBE67` before the next public. The renderer carries put arguments in AX/DX/CX,
-calls the scroll-conversion extent and the internal put routine, and modifies a
-width immediate in its own code path; `@pointnum_put` preserves its working
-register set while writing PC-98 VRAM. Treat these 0x104 bytes as one difficult-
-ABI/physical-owner packet: close callers/callees, code-modified ownership, ABI,
-relocations, and natural TC4J source shape together. This is also the most useful
-local evidence for revisiting the v135 yellow/white shared-tail origin question.
+v138 closes that render/put packet as a durable reviewed nonexact result rather
+than forcing source. `POINTNUMS_RENDER` at load `0xBD64` is a complete 0x9A-byte
+near body and `@pointnum_put` at `0xBDFE` is a complete 0x6A-byte near body; both
+pass fresh Ghidra/TASM/TLINK/raw boundary review with no MZ relocations. The
+renderer writes `CS:0x12E9`, modifying the immediate operand of its own later
+width-store instruction. Two legal natural TC4J put probes instead produce a
+0x87-byte BP-framed body and do not reproduce the target `LODSW`/`LOOP`/`XCHG`
+shape. Both routines are now reviewed blocked with source absent; v138 runs no
+focused or aggregate exact replay. See
+`docs/reconstruction/TH04_CIRCLE_POINTNUM_RENDER_PUT_V138.md`.
+
+The first concrete continuation should revisit the v135 `pointnums_add_yellow()`
+/ `pointnums_add_white()` shared-tail physical PROC as an **origin-classification
+packet**, not another ordinary C++ flag sweep. That owner spans load
+`0x13D90..0x13DF0`: yellow has a 0x1A entry range plus the shared
+`0x13DBE..0x13DF0` tail, while white is contiguous from `0x13DAA`. v135 already
+proved that ordinary dual functions, register-pseudoreg forms, `-O/-O-/-k/-k-`,
+`-G/-G-`, and an out-of-line common helper do not create the target delayed shared
+BP frame. v138 supplies genuinely new subsystem-local evidence: self-modifying
+renderer code and an assembly-shaped pointnum blitter that legal TC4J source also
+misses. Compare TH04 with same-era TH02/TH05 target code, physical TASM/TLINK
+ownership, and independently attested original-style signatures before changing
+origin. ReC98 assembly remains hypothesis evidence only.
 `randring1_next16_mod()` and `NULLFUNC_NEAR/FAR` remain bounded reviewed unknowns
 and should not be harvested as isolated easy wins without a new source/origin
 hypothesis.
