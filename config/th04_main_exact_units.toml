@@ -6341,3 +6341,96 @@ trigger_units = ["th04-main-enemy-bullet-template-push-v69"]
 build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/stdrun.cpp\",\n\t\"th04/enupd.cpp\",\n"
 build_replacement = "\t\"th04/stdrun.cpp\",\n\t\"th04/enbtpush.asm\",\n\t\"th04/enupd.cpp\",\n"
+
+# v145 MAIN_033_TEXT Mugetsu phase-2 callback pair. The two preceding v144
+# source-present/nonexact callbacks remain exact replay plumbing only: a
+# hash-bound extraction preserves their original assembler contribution before
+# the maintained natural-C++ v145 producer. The residual th04_main.asm then
+# resumes at mugetsu_1845E.
+[[scaffold_extractions]]
+id = "th04-main-main033-mugetsu-blocked-prefix-v145"
+trigger_units = ["th04-main-mugetsu-phase2-callbacks-v145"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "mugetsu_1812A\tproc near\r\n"
+end = "\t\tdw offset loc_1826C\r\n\t\tdw offset loc_18278\r\n\t\tdw offset loc_18273\r\n"
+span_sha256 = "dd34039c40302d44d5f694d84a7cffa29cf0d74fa44b097a00ee41581565bc23"
+template_source = "config/replay/th04_main033_mugetsu_blocked_prefix.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m5tr12.asm"
+
+[[scaffold_extractions.replacements]]
+old = "word_231F2"
+new = "_mugetsu_gather_frame_offset"
+expected_count = 2
+
+[[scaffold_extractions.replacements]]
+old = "point_259EA"
+new = "_mugetsu_anchor"
+expected_count = 4
+
+[[scaffold_extractions.replacements]]
+old = "mugetsu_18044"
+new = "_mugetsu_gather_intro"
+expected_count = 2
+
+[[build_replacements]]
+id = "th04-main-mugetsu-phase2-callbacks-v145-build"
+trigger_units = ["th04-main-mugetsu-phase2-callbacks-v145"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/r1gap2.asm\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/r1gap2.asm\",\n\t\"th04/m5tr12.asm\",\n\t\"th04/m5p1.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[source_transforms]]
+id = "th04-main-mugetsu-phase2-callbacks-v145-layout"
+trigger_units = ["th04-main-mugetsu-phase2-callbacks-v145"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1236b93abd1ea8b70b15fc2c732bcbc8310ccb27742e2dc0f06cb71acc92a1ef"
+patched_sha256 = "8818ba02f0f69b92ca2a1a4b274640d41eb59b0fc78eadb2b429b7e52b7ed93e"
+
+[[source_transforms.ops]]
+id = "remove-main033-mugetsu-v144-v145-span"
+kind = "remove_between"
+removed_sha256 = "695a0e259a0ee105ad471810b4e66e17a1b2556ba6d53f0614a6b5be910e188f"
+start = "mugetsu_1812A\tproc near\r\n"
+end = "mugetsu_1838A\tendp\r\n"
+replacement = "; replay-only blocked Mugetsu transition prefix moved to th04/m5tr12.asm\r\nextrn mugetsu_1812A:near\r\nextrn mugetsu_1821E:near\r\nextrn _mugetsu_18314:near\r\nextrn _mugetsu_1838A:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main033-mugetsu-18314-v145"
+kind = "replace"
+old = "call\tmugetsu_18314"
+new = "call\t_mugetsu_18314"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main033-mugetsu-1838a-v145"
+kind = "replace"
+old = "call\tmugetsu_1838A"
+new = "call\t_mugetsu_1838A"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-main033-mugetsu-transition-func-v145"
+kind = "replace"
+old = "fp_259E8\tdw ?\r\n"
+new = "public _mugetsu_transition_func\r\n_mugetsu_transition_func label word\r\nfp_259E8\tdw ?\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-mugetsu-phase2-callbacks-v145"
+default_enabled = true
+requires_units = ["th04-main-pointnums-add-asm-v139", "th04-main-shot-velocity-level-asm-v143"]
+repo_source = "src/main/boss/mugetsu_phase2_callbacks.cpp"
+overlay_path = "th04/m5p1.cpp"
+map_module = "th04/m5p1.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m5p1.obj"
+auxiliary_objects = ["obj/th04/m5tr12.obj"]
+map_segment = "MAIN_033_TEXT"
+map_start = "0x4884"
+map_size = "0x14A"
+target_file_offset = "0x19B14"
+size = "0x14A"

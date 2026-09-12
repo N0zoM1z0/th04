@@ -1,0 +1,26 @@
+.386
+.model use16 large _TEXT
+include ReC98.inc
+include th04/th04.inc
+include th01/math/subpixel.inc
+include th04/math/motion.inc
+
+main_033_TEXT segment byte public 'CODE' use16
+main_033_TEXT ends
+main_03 group main_033_TEXT
+
+extrn _mugetsu_gather_frame_offset:word
+extrn _mugetsu_gather_intro:near
+extrn _boss_phase_frame:word
+extrn _boss_sprite:byte
+extrn _mugetsu_anchor:Point
+extrn _boss_pos:motion_t
+extrn SND_SE_PLAY:far
+extrn _stage_frame_mod2:byte
+
+public mugetsu_1812A, mugetsu_1821E
+main_033_TEXT segment byte public 'CODE' use16
+assume cs:main_03
+{{EXTRACTED_SPAN}}
+main_033_TEXT ends
+end
