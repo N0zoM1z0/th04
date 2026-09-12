@@ -6902,3 +6902,67 @@ map_start = "0x0861"
 map_size = "0x3BE"
 target_file_offset = "0x15AF1"
 size = "0x3BE"
+
+# v153: Stage 1 near pattern helper plus FAR dispatcher occupy the complete
+# remaining 0x33F B4M prefix immediately before exact v152 Stage 3. Remove the
+# final code-bearing span from replay-only b4mpre.asm, keep that object as a
+# zero-code structural anchor, and insert natural m1u.cpp before m3u.cpp.
+[[build_replacements]]
+id = "th04-main-midboss1-update-v153-build"
+trigger_units = ["th04-main-midboss1-update-v153"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/b4mpre.asm\",\n\t\"th04/m3u.cpp\",\n\t\"th04/mxu.cpp\",\n\t\"th04/b4mgath.asm\",\n\t\"th04/m2u.cpp\",\n\t\"th04/m4u.cpp\",\n"
+build_replacement = "\t\"th04/b4mpre.asm\",\n\t\"th04/m1u.cpp\",\n\t\"th04/m3u.cpp\",\n\t\"th04/mxu.cpp\",\n\t\"th04/b4mgath.asm\",\n\t\"th04/m2u.cpp\",\n\t\"th04/m4u.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-midboss1-prefix-v153"
+trigger_units = ["th04-main-midboss1-update-v153"]
+patch_path = "th04/b4mpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "f878e10fbc96180f03e23f4a5174a3b802f49578c6507bb8708e577df656935d"
+patched_sha256 = "cb73fb2b70b44f2d35a7acf1f86373dffee696e71e00e55b1ff50017ce5acb04"
+
+[[source_transforms.ops]]
+id = "remove-midboss1-from-b4mpre-v153"
+kind = "remove_between"
+removed_sha256 = "c26b5824b66ff609d0fc500f47d93b61aafdf1465905938c92dd4615efa3946a"
+start = "sub_13FB2\tproc near\r\n"
+end = "@midboss1_update$qv\tendp\r\n"
+replacement = ""
+
+[[source_transforms]]
+id = "th04-main-midboss1-state-aliases-v153"
+trigger_units = ["th04-main-midboss1-update-v153"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "b5d14d0e702296ae639437f8d7025d36ac5ce4f7f3800171cba3c77dd9b74181",
+  "f722468c7ba7ef83e830c337c7ed71932fd5c4da538171ad9a60513fbb1e240a",
+]
+
+[[source_transforms.ops]]
+id = "alias-main-midboss1-angle-v153"
+kind = "insert_before"
+anchor = "byte_25594\tdb ?\r\n"
+text = "public _midboss1_angle\r\n_midboss1_angle label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss1-vram-y-v153"
+kind = "insert_before"
+anchor = "word_25596\tdw ?\r\n"
+text = "public _midboss1_vram_y\r\n_midboss1_vram_y label word\r\n"
+
+[[units]]
+id = "th04-main-midboss1-update-v153"
+default_enabled = true
+requires_units = ["th04-main-midboss3-update-v152"]
+repo_source = "src/main/midboss/m1_update.cpp"
+overlay_path = "th04/m1u.cpp"
+map_module = "th04/m1u.cpp"
+object_path = "obj/th04/m1u.obj"
+zero_code_objects = ["obj/th04/b4mpre.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x0522"
+map_size = "0x33F"
+target_file_offset = "0x157B2"
+size = "0x33F"
