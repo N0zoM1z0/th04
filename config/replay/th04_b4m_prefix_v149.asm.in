@@ -1,0 +1,144 @@
+.386
+.model use16 large _TEXT
+include ReC98.inc
+include th04/th04.inc
+include th01/math/subpixel.inc
+include th02/main/sparks.inc
+include th04/sprites/main_pat.inc
+include th04/sprites/main_cdg.inc
+include th04/sprites/blit.inc
+include th04/main/phase.inc
+include th04/main/tile/tile.inc
+
+bullet_template_delta_t union
+ spread_angle db ?
+ stack_speed db ?
+bullet_template_delta_t ends
+
+include th04/main/bullet/bullet.inc
+include th04/main/gather.inc
+include th04/main/enemy/enemy.inc
+
+BG_SINGLE = 000h
+BG_RING = 026h
+BG_SPREAD = 02Dh
+BG_SPREAD_AIMED = 02Eh
+BST_PELLET = 1
+BST_BULLET16 = 2
+BST_BULLET16_CLOUD_FORWARDS = 4
+BST_BULLET16_CLOUD_BACKWARDS = 5
+IT_BIGPOWER = 3
+IT_BOMB = 4
+IT_1UP = 5
+MIDBOSS3_PATTERNS_MAX = 12
+PELLET_H = 8
+
+GATHER_TEXT segment byte public 'CODE' use16
+	@GATHER_ADD_ONLY_3STACK$QIUIUI procdesc pascal near \
+		frame:word, col_for_0_2_and_4:dword
+GATHER_TEXT ends
+SCROLLY3_TEXT segment byte public 'CODE' use16
+	SCROLL_SUBPIXEL_Y_TO_VRAM_SEG3 procdesc pascal near \
+		y:word
+	SCROLL_SUBPIXEL_Y_TO_VRAM_ALWAYS procdesc pascal near \
+		y:word
+SCROLLY3_TEXT ends
+MOTION_3_TEXT segment byte public 'CODE' use16
+	@PlayfieldMotion@update_seg3$qv procdesc pascal near \
+		motion:word
+MOTION_3_TEXT ends
+main_032_TEXT segment byte public 'CODE' use16
+	@randring2_next16$qv procdesc near
+	@RANDRING2_NEXT16_AND$QUI procdesc pascal near \
+		mask:word
+main_032_TEXT ends
+VECTOR2N_TEXT segment byte public 'CODE' use16
+VECTOR2N_TEXT ends
+SPARK_A_TEXT segment byte public 'CODE' use16
+	@SPARKS_ADD_CIRCLE$Q20%SUBPIXELBASE$TI$TI%T1II procdesc pascal near \
+		center_x:word, center_y:word, distance_and_count:dword
+SPARK_A_TEXT ends
+GRCG_3_TEXT segment byte public 'CODE' use16
+GRCG_3_TEXT ends
+IT_SPL_U_TEXT segment byte public 'CODE' use16
+IT_SPL_U_TEXT ends
+B4M_UPDATE_TEXT segment word public 'CODE' use16
+B4M_UPDATE_TEXT ends
+main_033_TEXT segment byte public 'CODE' use16
+main_033_TEXT ends
+MIDBOSS_TEXT segment byte public 'CODE' use16
+	extern @midboss_reset$qv:proc
+MIDBOSS_TEXT ends
+HUD_HP_TEXT segment byte public 'CODE' use16
+	@HUD_HP_UPDATE_AND_RENDER$QII procdesc pascal near \
+		hp_cur:word, hp_max:word
+HUD_HP_TEXT ends
+MB_DFT_TEXT segment byte public 'CODE' use16
+	@MIDBOSS_SCORE_BONUS$QUI procdesc pascal near \
+		units:word
+	@midboss_defeat_update$qv procdesc pascal near
+MB_DFT_TEXT ends
+main_034_TEXT segment byte public 'CODE' use16
+main_034_TEXT ends
+BULLET_U_TEXT segment byte public 'CODE' use16
+BULLET_U_TEXT ends
+BULLET_A_TEXT segment byte public 'CODE' use16
+BULLET_A_TEXT ends
+main_035_TEXT segment byte public 'CODE' use16
+main_035_TEXT ends
+BOSS_TEXT segment byte public 'CODE' use16
+	@MIDBOSS_HITTEST_SHOTS_DAMAGE$QIII procdesc pascal near \
+		radius:Point, se_on_hit:word
+BOSS_TEXT ends
+main_036_TEXT segment byte public 'CODE' use16
+main_036_TEXT ends
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
+
+extrn @TILE_RING_SET_VO$QIII:proc
+extrn @shots_hittest$qv:proc
+extrn SND_SE_PLAY:proc
+extrn _midboss_pos:motion_t
+extrn _midboss_phase_frame:word
+extrn _midboss_phase:byte
+extrn _midboss_sprite:byte
+extrn _homing_target:Point
+extrn _shot_hitbox_radius:Point
+extrn _shot_hitbox_center:Point
+extrn _bullet_template:bullet_template_t
+extrn _bullet_template_tune:word
+extrn _bullets_add_special:word
+extrn _scroll_subpixel_line:byte
+extrn byte_25594:byte
+extrn word_25596:word
+
+extrn @ITEMS_ADD$QII11ITEM_TYPE_T:near
+extrn @POLAR$QIII:proc
+extrn IATAN2:proc
+extrn VECTOR2:proc
+extrn _bullets_add_regular:word
+extrn _bullets_add_regular_fixedspeed:near
+extrn _bullet_zap_active:byte
+extrn _CosTable8:word
+extrn _SinTable8:word
+extrn _gather_template:gather_t
+extrn _MIDBOSS3_FLY_ANGLES:byte
+extrn _midboss3_patterns_done:byte
+extrn _midboss_angle:byte
+extrn _midboss_damage_this_frame:byte
+extrn _midboss_hp:word
+extrn _player_pos:motion_t
+extrn _scroll_speed:byte
+extrn _stage_frame_mod16:byte
+extrn byte_25598:byte
+extrn byte_25599:byte
+
+extrn byte_255B2:byte
+extrn byte_255B3:byte
+extrn byte_255B4:byte
+extrn _bullet_special_turns_max:byte
+extrn _playfield_shake_anim_time:word
+extrn _sPELLET:byte
+
+{{EXTRACTED_SPAN}}
+B4M_UPDATE_TEXT	ends
+end

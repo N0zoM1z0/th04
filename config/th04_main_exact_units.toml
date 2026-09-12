@@ -6623,3 +6623,91 @@ map_start = "0x768E"
 map_size = "0x73B"
 target_file_offset = "0x1397E"
 size = "0x73B"
+
+# v149: Stage 4 midboss pattern helpers plus FAR update dispatcher. The target
+# places this 0x5D7 natural TC4J producer in the middle of the original
+# B4M_UPDATE_TEXT assembler contribution. Cold replay therefore hash-extracts
+# only the preceding 0xFC6 assembler prefix into zero-credit b4mpre.asm and
+# leaves the following assembler suffix in th04_main.asm.
+[[scaffold_extractions]]
+id = "th04-main-b4m-prefix-v149"
+trigger_units = ["th04-main-midboss4-update-v149"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "B4M_UPDATE_TEXT\tsegment\tword public 'CODE' use16\r\n"
+end = "\t\tdw offset loc_14DBE\r\n"
+span_sha256 = "c2fde385e5abab7c281c05cd9bb00959468438c1e7782d05cbc71cd538b0d8c4"
+template_source = "config/replay/th04_b4m_prefix_v149.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/b4mpre.asm"
+
+[[scaffold_extractions.replacements]]
+old = "B4M_UPDATE_TEXT\tsegment\tword public 'CODE' use16\r\n"
+new = "B4M_UPDATE_TEXT\tsegment\tword public 'CODE' use16\r\nassume cs:main_03\r\n"
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-midboss4-update-v149-build"
+trigger_units = ["th04-main-midboss4-update-v149"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/b4mpre.asm\",\n\t\"th04/m4u.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main-midboss4-update-v149-natural"
+trigger_units = ["th04-main-midboss4-update-v149"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "e41f8fa605396731bdba919c5cbc3744115eb0fc607e91852a3b29ca362d17bb",
+  "92e99562edf3d7a6aac901e08177411d63ef48941a89ec3b1c2b8cac26e1be1b",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-b4m-prefix-and-midboss4-v149"
+kind = "remove_between"
+removed_sha256 = "5a18575aede5c1e324d89babe8e7162044df7de05491272f49157c9dfcec5d8a"
+start = "B4M_UPDATE_TEXT\tsegment\tword public 'CODE' use16\r\n"
+end = "\t\tdw offset loc_15370\r\n"
+replacement = "public byte_25594, word_25596, byte_25598, byte_25599, byte_255B2, byte_255B3, byte_255B4, _bullet_zap_active\r\nB4M_UPDATE_TEXT\tsegment\tbyte public 'CODE' use16\r\nextrn @MIDBOSS1_UPDATE$QV:far\r\nextrn @MIDBOSS3_UPDATE$QV:far\r\nextrn @MIDBOSSX_UPDATE$QV:far\r\nextrn @MIDBOSS2_UPDATE$QV:far\r\nextrn @midboss4_update$qv:far\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss4-aim-toggle-v149"
+kind = "insert_before"
+anchor = "byte_22B9E\tdb 1\r\n"
+text = "public _midboss4_aim_toggle\r\n_midboss4_aim_toggle label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss4-pattern-v149"
+kind = "insert_before"
+anchor = "byte_255C6\tdb ?\r\n"
+text = "public _midboss4_pattern\r\n_midboss4_pattern label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss4-patterns-done-v149"
+kind = "insert_before"
+anchor = "byte_255C7\tdb ?\r\n"
+text = "public _midboss4_patterns_done\r\n_midboss4_patterns_done label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss4-unknown-state-v149"
+kind = "insert_before"
+anchor = "byte_255C8\tdb ?\r\n"
+text = "public _midboss4_unknown_state\r\n_midboss4_unknown_state label byte\r\n"
+
+[[units]]
+id = "th04-main-midboss4-update-v149"
+default_enabled = true
+requires_units = ["th04-main-midboss4-render", "th04-main-yuuka6-bg-update-v148"]
+repo_source = "src/main/midboss/m4_update.cpp"
+overlay_path = "th04/m4u.cpp"
+map_module = "th04/m4u.cpp"
+map_mode = "contains"
+object_path = "obj/th04/m4u.obj"
+auxiliary_objects = ["obj/th04/b4mpre.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x14E8"
+map_size = "0x5D7"
+target_file_offset = "0x16778"
+size = "0x5D7"
