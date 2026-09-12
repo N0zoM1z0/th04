@@ -577,6 +577,98 @@ remain outside the reviewed exact denominator because their ordered MZ
 relocation sequences do not match. Restoring the lower historical TU split was
 already tested and does not solve those two functions.
 
+## v139 session checkpoint
+
+This conversation started from clean `main` at
+`35b43559d61a66a58496ab4ea49d58d01ba1beb1`, exactly even with `origin/main`.
+There was no staged, unstaged, untracked, or conflicted work to recover. The
+existing ignored `.analysis/` tree was classified as private targets, attested
+toolchains/Ghidra state, retained cold-replay evidence, and bounded reproducible
+scratch; none was staged, reset, relocated, or deleted. The private
+`th04-main / MAIN.EXE` target remained untouched and remains only
+`candidate-local-attested`.
+
+The compact `MAIN_012_TEXT` frontier was rechecked first. `sub_11DE6` remains a
+44-byte FAR reviewed nonexact extent at map `0AAF:72F6`, load
+`0x11DE6..0x11E11`, file `0x135E6..0x13611`, with no overlapping MZ relocation.
+Its nine-threshold DS scan still requires `CX=9` plus `LOOP`; prior legal TC4J
+loop/source matrices do not explain that form. The same-segment
+`NOP; PUSH CS; CALL near; RETF` tail remains target-observed. No source or
+exactness credit was added.
+
+The structural packet was `MAIN_032_TEXT` point-number insertion. Independent
+TH04 and TH05 original-target bytes establish the same two-public-entry,
+shared-tail, delayed-BP-frame organization. The maintained symbolic source
+`src/main/pointnum/add.asm` is therefore classified as original-style assembly,
+not authored C/C++. Its physical owner is map `13A9:0300`, load
+`0x13D90..0x13DF1`, file `0x15590..0x155F1`, 0x62 bytes. The logical yellow
+function remains 0x4D bytes over a 0x61 span and the white function remains
+contiguous 0x47 bytes through `RET 6`; the final byte is layout ownership, not
+function-body credit. TASM `EVEN` naturally emits that post-ENDP alignment NOP,
+so no hand-authored inert padding is used. Final source SHA-256 is
+`d8986526e00e35521e1b29cf227f1cf7fabd338a6ff8d94cc7b01f89eb5c341e`.
+
+The final source form passed the complete promotion sequence:
+
+- candidate-state focused two-cold replay, 109-owner dependency closure:
+  `gptweb-v139-pointnums-add-focused-align-candidate-003`, receipt SHA-256
+  `d83fbb939d0805d1d74606f1a9d5445b5f02ee5c0ab150d904338066114f6491`;
+- candidate-state aggregate two-cold replay, all 173 default owners:
+  `gptweb-v139-pointnums-add-aggregate-align-candidate-003`, receipt SHA-256
+  `7d219aa2042aec8d8fad00626859e747672456563ac23646bb6d1cb6d2b07e1e`;
+- post-promotion aggregate two-cold replay, all 173 default owners:
+  `gptweb-v139-pointnums-add-aggregate-align-final-003`, receipt SHA-256
+  `5f37b3986c4c1ca21689e24897aab0430adc795a0c38d493a29d009e7dbe2083`.
+
+Both final aggregate builds produce candidate MAIN SHA-256
+`ad3892d8093df45c1fb6452e288dcd6e9f8cfb0b900909c3686827fa9efc47f8`.
+The point-number owner is raw-byte exact with slice SHA-256
+`b845d13f2233e2ba17e4a7c99bd42d5f26f7ab8fa43c40f444fe634ed2cd6ce3`,
+map-exact at
+`13A9:0300 0062 C=CODE S=MAIN_032_TEXT G=MAIN_03 M=th04\ptadd.asm ACBP=48`,
+has empty target/candidate ordered relocation overlap, and emits deterministic
+TASM OMF with dependency-timestamp-normalized SHA-256
+`de8176317c9901538f1583a3c09ba02cb1fe341d4343c153f01c37c688a7dde4`.
+The implementation checkpoint is
+`a81e1f02ffda6b9ba067be8c77380a925e2d9dd5` (`gpt-web: attest pointnums
+shared-tail assembly`). It was not pushed.
+
+Target and analysis identity were re-attested before use. Factory
+`th04-ghidra` passed for repository `th04` / `target:th04-main`; the
+repository-native `python3 scripts/ghidra.py th04-main check` and final CI live
+Ghidra database replay agree on target bytes, MZ header/load mapping, entry,
+1,136 ordered relocations, and sampled bytes. The pinned TC4J/TASM/TLINK/MS-DOS
+Player toolchain attestation also passes. The final repository validation run
+passes preflight, status, all 2,120 boundary observations, `scripts/ci.py`, and
+`git diff --check`.
+
+Verification planes remain intentionally separate. Repository-native independent
+exactness is PASS for the new 0x62-byte physical ASM owner and the complete
+173-owner replay cohort. Standalone TH04 production-source/link closure is not
+established. Runtime-storage identity is not established. No runtime scenario
+validation was run in this packet. No Factory acceptance was submitted or
+claimed. Pristine-release provenance is not established; target canonicality
+remains `candidate-local-attested`. Reclassifying the two point-number logical
+observations to original-style ASM does not inflate authored C/C++ progress:
+reviewed authored exactness remains 47,564 / 48,031 bytes (99.027711%) and
+300 / 307 functions (97.719870%), while separately tracked exact original-style
+ASM becomes 10 units / 1,587 bytes.
+
+`.analysis/` was 1,848,193,197 bytes at entry and 2,341,238,399 bytes after the
+final CI, a growth of 493,045,202 bytes. Exit top-level size is approximately
+1.3 GiB toolchain, 1.1 GiB reconstruction, 37 MiB builds, 21 MiB runtime,
+14 MiB Ghidra, 11 MiB current/legacy GPT-web scratch, and 1.5 MiB targets. The
+three retained final v139 replay directories are approximately 75 MiB, 76 MiB,
+and 76 MiB; current-session scratch is approximately 388 KiB. These are ignored
+private/reproducible evidence and were retained rather than bulk-cleaned.
+
+The next concrete evidence-connected packet is still the v138
+`POINTNUMS_RENDER` / `@pointnum_put` origin question: use the attested TH05 target
+to search independently for the frameless `LODSW`/`LOOP`/`XCHG CX,BX` put shape
+and the renderer's CS-resident self-modified width immediate, then reconcile any
+match or durable absence with TH04 TASM/TLINK ownership. Do not inherit v139's
+original-ASM classification merely from subsystem proximity.
+
 ## Next target-first queue
 
 Do not resume from the old prose-only MAIN frontier. Query
