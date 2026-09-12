@@ -45,23 +45,33 @@ def integer(value: str) -> int:
     return int(value, 0)
 
 
-def map_contribution(map_path: Path, module: str) -> tuple[int, int, str]:
+def map_contribution(
+    map_path: Path, module: str, segment: str | None = None
+) -> tuple[int, int, str]:
     pattern = re.compile(
         r"^\s*([0-9A-F]{4}):([0-9A-F]{4})\s+([0-9A-F]{4})\s+C=CODE\s+.*\bM="
         + re.escape(module)
         + r"(?:\s|$)",
         re.IGNORECASE,
     )
+    segment_pattern = (
+        re.compile(r"\bS=" + re.escape(segment) + r"(?:\s|$)", re.IGNORECASE)
+        if segment
+        else None
+    )
     matches: list[tuple[int, int, str]] = []
     for line in map_path.read_text(encoding="cp437", errors="replace").splitlines():
         match = pattern.search(line)
-        if match:
+        if match and (segment_pattern is None or segment_pattern.search(line)):
             start = int(match.group(1), 16) * 16 + int(match.group(2), 16)
             size = int(match.group(3), 16)
             if size:
                 matches.append((start, size, line.strip()))
+    qualifier = f" in segment {segment}" if segment else ""
     if len(matches) != 1:
-        raise RuntimeError(f"expected one map contribution for {module}, got {len(matches)}")
+        raise RuntimeError(
+            f"expected one map contribution for {module}{qualifier}, got {len(matches)}"
+        )
     return matches[0]
 
 
@@ -828,7 +838,10 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
         map_module, object_path, map_mode = resolved_producer_outputs(
             entry, selected_ids
         )
-        map_start, map_size, map_line = map_contribution(map_path, map_module)
+        map_segment = str(entry.get("map_segment", "")) or None
+        map_start, map_size, map_line = map_contribution(
+            map_path, map_module, map_segment
+        )
         if map_mode == "exact":
             map_exact = map_start == program_start and map_size == size
         elif map_mode == "contains":

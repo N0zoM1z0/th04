@@ -11,6 +11,37 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import replay_th04_main_exact_units as replay
 
 
+class MapContributionTests(unittest.TestCase):
+    def test_segment_qualifier_disambiguates_multi_segment_module(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            map_path = Path(temporary) / "main.map"
+            map_path.write_text(
+                " 0AAF:11A4 09B6 C=CODE   S=CIRCLE_TEXT G=MAIN_01 M=th04_main.asm ACBP=48\n"
+                " 13A9:0300 0062 C=CODE   S=MAIN_032_TEXT G=MAIN_03 M=th04_main.asm ACBP=48\n",
+                encoding="cp437",
+            )
+            with self.assertRaisesRegex(RuntimeError, "got 2"):
+                replay.map_contribution(map_path, "th04_main.asm")
+            start, size, line = replay.map_contribution(
+                map_path, "th04_main.asm", "CIRCLE_TEXT"
+            )
+            self.assertEqual(start, 0x0AAF0 + 0x11A4)
+            self.assertEqual(size, 0x09B6)
+            self.assertIn("S=CIRCLE_TEXT", line)
+
+    def test_segment_qualifier_fails_closed_when_absent(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            map_path = Path(temporary) / "main.map"
+            map_path.write_text(
+                " 0AAF:11A4 09B6 C=CODE S=CIRCLE_TEXT G=MAIN_01 M=th04_main.asm ACBP=48\n",
+                encoding="cp437",
+            )
+            with self.assertRaisesRegex(RuntimeError, "segment MAIN_032_TEXT, got 0"):
+                replay.map_contribution(
+                    map_path, "th04_main.asm", "MAIN_032_TEXT"
+                )
+
+
 class UnitDependencyTests(unittest.TestCase):
     def test_dependency_closure_preserves_manifest_order(self) -> None:
         entries = [

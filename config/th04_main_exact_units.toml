@@ -6307,3 +6307,29 @@ map_start = "0x0300"
 map_size = "0x62"
 target_file_offset = "0x15590"
 size = "0x62"
+
+
+# v140 CIRCLE_TEXT point-number render/put exact original-style assembly.
+# These maintained symbolic includes remain physically produced by th04_main.asm;
+# map_segment disambiguates its CIRCLE_TEXT contribution before contains checks.
+[[units]]
+id = "th04-main-pointnum-put-v138"
+default_enabled = true
+requires_units = ["th04-main-randring1-next16-v137"]
+repo_source = "src/main/pointnum/put.asm"
+overlay_path = "th04/main/pointnum/num_put.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
+
+[[units]]
+id = "th04-main-pointnums-render-v138"
+default_enabled = true
+requires_units = ["th04-main-pointnum-put-v138"]
+repo_source = "src/main/pointnum/render.asm"
+overlay_path = "th04/main/pointnum/render.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
