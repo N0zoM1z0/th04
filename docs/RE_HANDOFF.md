@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 722 authored reconstruction candidates: OP 94, MAIN 543, MAINE 72, ZUN 13;
-- 312 accepted exact MAIN functions and one reviewed blocked MAIN function;
-- 409 authored candidates otherwise unreviewed;
+- 321 accepted exact MAIN functions and one reviewed blocked MAIN function;
+- 400 authored candidates otherwise unreviewed;
 - 62 original-style ASM observations in a separate attestation queue;
 - 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
 
 Across the live MAIN source/acceptance ledgers, the current totals are:
 
-- reviewed authored bytes: **49,808 / 49,812 exact (99.991970%)**;
-- accepted authored functions: **312 / 313 exact (99.680511%)**;
-- accepted default exact replay owners: **181**;
+- reviewed authored bytes: **51,659 / 51,663 exact (99.992258%)**;
+- accepted authored functions: **321 / 322 exact (99.689441%)**;
+- accepted default exact replay owners: **182**;
 - original-style ASM: **15 units / 2,124 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **4 bytes** in one reviewed
   blocked function.
@@ -118,6 +118,16 @@ present to exact without changing the reviewed denominator. Current reviewed
 exactness is 99.991970% by bytes and 99.680511% by functions. Crossing the
 99.5% campaign pressure target does not authorize completion; boundary discovery
 and the remaining authored queue stay active.
+v148 then target-reviews the complete remaining BOSS_BG prefix instead of trusting
+several Ghidra truncations and one grossly cross-linked dispatcher. Nine functions
+from load `0x1217E..0x128B8` become one exact `0x73B` logical owner, while the
+adjacent exact v113 `yuuka6_bg_render()` remains a separate `0xC0` byte-credit
+owner. Both are emitted by one natural `0x7FB` TC4J `b6all.cpp` physical
+producer. Focused 89-owner replay, candidate-state 182-owner aggregate, and
+post-promotion 182-owner aggregate all pass twice. The reviewed denominator
+therefore expands again while exactness remains 99.992258% by bytes and
+99.689441% by functions. This remains a moving reviewed denominator, not a
+completion claim.
 Derive current numbers with `python3 scripts/status.py`;
 `config/units.csv`, `config/th04_main_authored_functions.csv`, and
 `config/th04_function_boundaries.csv` override prose.
@@ -498,6 +508,32 @@ runtime-storage identity, or runtime-scenario validation.
 
 ## Latest replay receipts
 
+v148 current-source focused replay:
+
+- `gptweb-v148-boss-bg-focused-candidate-001`;
+- 89-unit dependency closure;
+- receipt SHA-256
+  `aa16b6abe1cc08f6f1a60a50c0ee2c2ca20c0fcaa492f3adcda472d442034388`;
+- two isolated cold builds, `failures=[]`;
+- new `0x73B` BOSS_BG logical owner SHA-256
+  `866296cce626be8776ed73fa433fe768631c8e9d0e10ffa65d90ef9f7410ff69`;
+- shared `b6all.obj` raw SHA-256
+  `fd514140713431cb8f9f29d2c8f7d4b12cb14286d7c574fcf22ec13869bec83f`,
+  normalized SHA-256
+  `847d6f99ada5789f6e16d63eb8a0a4c8dcfcbf229fe1eaf730f6b78ffbc3b851`;
+- exact shared map contribution `0AAF:768E`, size `0x7FB`;
+- both the new owner and adjacent v113 `yuuka6_bg_render()` pass raw/map/ordered-relocation/OMF/determinism.
+
+Candidate-state aggregate `gptweb-v148-boss-bg-aggregate-candidate-001` covers
+all 182 default owners twice with `failures=[]`; receipt SHA-256 is
+`a8ee7a5db6c3044a8bc5fac60cd0017136081d07682105ad6b5969add804e34b`.
+After promotion, `gptweb-v148-boss-bg-aggregate-final-001` passes the complete
+182-owner cohort twice again; receipt SHA-256 is
+`e7e5e507b89383be385c6c3a3f008fcab997f365dc9cda90abb91cde24006656`,
+and both candidate MAIN images have SHA-256
+`781e1b99f94476f7dce5fa16b340f2c830a43e8ff9945bb373d8a0d8c3e41d38`.
+This is the current repository-native exact replay baseline.
+
 v147 current-source focused replay:
 
 - `gptweb-v147-mugetsu-main033-focused-candidate-007`;
@@ -523,12 +559,13 @@ with both candidate MAIN images SHA-256
 `c7905c812815fe02d7d40a7e7bb880a2404e124336df043e742cf69db17c2d84`.
 This final aggregate is the current repository-native exact replay baseline.
 
-v146 runs no focused or aggregate exact-unit replay. Its maintained late Mugetsu
-source is compiler-validated and the unified 0x9BF physical-producer probe has
-target-like OMF/fixup topology, but the earlier v144 dense-transition portion is
-already known nonexact. Promotion replay would therefore be misleading. The most
-recent actually run focused replay remains the v145 relocation-blocked receipt
-below, and the repository-native exact baseline remains v143's 178-owner chain.
+v146 ran no focused or aggregate exact-unit replay. Its maintained late Mugetsu
+source was compiler-validated and the unified 0x9BF physical-producer probe had
+target-like OMF/fixup topology, but the earlier v144 dense-transition portion was
+already known nonexact. Promotion replay would therefore have been misleading.
+At that checkpoint, the most recent focused replay was the v145 relocation-blocked
+receipt below, and the repository-native exact baseline remained v143's 178-owner
+chain.
 
 v145 runs focused two-cold replay
 `gptweb-v145-mugetsu-phase2-focused-candidate-002` for the new 0x14A Mugetsu
@@ -537,9 +574,9 @@ phase-2 callback producer. Receipt SHA-256 is
 Both cold builds are raw-byte exact, map exact, deterministic, and valid OMF for
 the new owner, but strict ordered relocation comparison fails: target
 `[0x183FD,0x183AC,0x18379,0x1844D]` versus candidate
-`[0x1844D,0x183FD,0x183AC,0x18379]`. No aggregate replay is run because there is
-no exact promotion. The current repository-native exact baseline therefore
-remains the v143 shot-seam replay chain below.
+`[0x1844D,0x183FD,0x183AC,0x18379]`. No aggregate replay was run at v145 because
+there was no exact promotion. The repository-native exact baseline at that
+checkpoint therefore remained the v143 shot-seam replay chain below.
 
 The current MAIN_012_TEXT shot-seam packet passes repository focused two-cold
 replay at:
@@ -585,11 +622,11 @@ also removed. This reduced the private `.analysis` tree from about 27 GiB to
 1.6 GiB without removing targets, installed toolchains, Ghidra state, runtime
 state, current boundary inputs, or the cold reconstruction seed.
 
-The current 178-owner aggregate reports zero raw differences for every declared
+The current 182-owner post-promotion aggregate reports zero raw differences for every declared
 owner, exact map placement, identical ordered overlapping MZ relocations, valid
 deterministic OMF, and stable repository snapshots. The aggregate candidate
 executable remains deterministic across A/B with SHA-256
-`87b62fa0ba11f043d0138f5512940f45fc8393c76b1ab002ea28b9adbbd26800`.
+`781e1b99f94476f7dce5fa16b340f2c830a43e8ff9945bb373d8a0d8c3e41d38`.
 
 The retained v137 private function-review artifact uses the v137 172-owner
 aggregate map, retained target-bound metadata plus the fresh complete Ghidra
@@ -671,7 +708,7 @@ One reviewed authored function remains nonexact:
 1. `snd_load`: 4 bytes remain blocked by target-specific register/segment-save
    instruction encodings. Existing pure-C, TC4J flag, and TASM probes are
    recorded as negative results; do not repeat them without a new falsifiable
-   compiler/source/origin mechanism. v147 does not alter this blocker.
+   compiler/source/origin mechanism. v148 does not alter this blocker.
 
 The twelve Mugetsu functions that were blocked in v144-v146 are now exact inside
 the recovered `0x9BF` PC-98 IDE physical producer. Their historical command-line
@@ -1547,6 +1584,103 @@ relocations, tables/tails, and callers before writing source. `snd_load` should
 not be retried without a genuinely new falsifiable compiler/source/origin
 mechanism.
 
+## v148 session checkpoint
+
+v148 started by recovering a non-clean worktree at committed HEAD
+`e7e36fba43c6a162c7f5826c8099720af45b3ab2`. Six modified paths plus one
+untracked source formed one coherent interrupted BOSS_BG promotion packet and
+were classified `recoverable-current-work`; there was no unrelated or unknown
+tracked work. `origin/main` had independently caught up to the same starting
+checkpoint. No reset, stash, target mutation, or push was used.
+
+All mandatory repository and Factory guidance paths were reread. Preflight,
+status, tracking, and the 2,120-row boundary validator passed. The registered
+`th04-ghidra` provider still exposes ten operations and no `get_metadata`, so
+only the discovered `check {}` attestation was used; it passed for
+`target:th04-main`. `python3 scripts/ghidra.py th04-main check` independently
+passed the same 156,258-byte target, 6,144-byte MZ header, 1,136 relocations,
+load mapping, entry point, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`.
+
+The target-first BOSS_BG review rejects several database boundaries rather than
+inheriting them. `orange_bg_render()` at load `0x1217E` is completely absent
+from Ghidra; the Elly invalidation helper at `0x12247` expands from Ghidra's
+`0x1C` to target `0x28`; `reimu_marisa_bg_render()` at `0x122D7` expands from
+four Ghidra bytes to target `0x8D`; and the former `sub_12461` at load
+`0x12461` is a severely cross-linked Ghidra function. Fresh recovery-time Ghidra
+again reports that function over image `0x20000..0x246FF`, while pinned TASM,
+gap-free raw decode, caller storage, switch-table validation, relocations, and
+the exact next-owner seam close a physical `0x458` target extent. Its first
+`0x41B` bytes execute through `RET` at load `0x1287B`; load `0x1287C` is one
+zero compiler metadata byte, followed by 17-word and 13-word switch tables
+through `0x128B8`, all thirty targets landing on instruction starts.
+
+Together with the other contiguous render/clip helpers, nine newly reviewed
+functions tile BOSS_BG load `0x1217E..0x128B8` without gaps.
+`src/main/boss/boss_bg_main01.cpp` provides the maintained natural C++ logical
+owner (`0x73B` bytes, SHA-256
+`ede7cb9ebb0796d0a7fc896f2bc87e51c33a6d9fd6c51fb4994b82109d01dafe`).
+The already exact v113 `yuuka6_bg_render()` remains a separate `0xC0` logical
+owner, with only its standalone preamble guarded for combined mode. Replay
+compiles both source truths as one `0x7FB` TC4J physical producer,
+`th04/b6all.cpp`. No inline assembly, `#pragma codestring`, target-derived byte
+array, copied target bytes, inert padding, fake return, target/object patch, or
+ABI lie is used.
+
+The current-source focused, candidate aggregate, and post-promotion aggregate
+all pass as recorded above. The final A/B `b6all.obj` raw SHA-256 is
+`fd514140713431cb8f9f29d2c8f7d4b12cb14286d7c574fcf22ec13869bec83f`
+and normalized SHA-256 is
+`847d6f99ada5789f6e16d63eb8a0a4c8dcfcbf229fe1eaf730f6b78ffbc3b851`;
+TLINK places it at `0AAF:768E`, size `0x7FB`. The new logical owner reproduces
+all five ordered MZ relocations and the v113 subextent remains exact in the same
+object. Two older focused receipts bind superseded source hashes and remain
+negative producer-routing evidence rather than acceptance evidence.
+
+The reviewed MAIN denominator expands by 1,851 bytes and nine functions. Current
+metrics are **51,659 / 51,663 exact reviewed authored bytes (99.992258%)** and
+**321 / 322 exact reviewed functions (99.689441%)**, with 182 default exact
+owners. The only reviewed blocker remains the four-byte `snd_load` remainder;
+MAIN still has 221 unreviewed authored candidates, so the campaign remains open.
+
+Implementation checkpoint is
+`f3b28f182c7bf4dde2cbce8357bcf4983298cdf6`
+(`gpt-web: reconstruct BOSS_BG producer`). Full repository CI passes on that
+state, including tracking, function boundaries, generated reports, private
+TH01-TH05 Oracle calibration, Ghidra/JDK identity, live Ghidra database replay,
+and mutation smoke; `git diff --check` also passes. Function/extent exactness
+for the new BOSS_BG owner is established repository-locally. Standalone TH04
+production-source/link closure is not established; runtime-storage identity is
+not established; no runtime scenario was run; no v148 Factory Truth Kernel
+acceptance claim was submitted.
+
+The v148 ignored manifest started at 3,271,592,086 bytes. Recovery found five
+75-77 MiB cold trees plus a 32 MiB probe-source materialization, pushing
+`.analysis` above the 256 MiB soft session budget. After tracked evidence and the
+implementation checkpoint were established, the two superseded failed focused
+runs, current-source focused run, and candidate aggregate were compacted to
+receipt-only; the post-promotion 182-owner aggregate remains complete as the new
+cold baseline. Explicit v148 probe-source/log scratch was deleted after checking
+producer inactivity and references. Final `.analysis` size is
+`3339661610` bytes, for v148 growth `68069524` bytes. No
+target, toolchain, Ghidra, legacy/unknown, or unrelated state was removed.
+
+The first concrete next target-first candidate is FAR `midboss4_update()` in
+`B4M_UPDATE_TEXT`, load `0x152B4`. Fresh Ghidra reports 479 body bytes across
+three ranges spanning image `0x252B4..0x25539` and zero direct callers. Pinned
+TASM instead provides a falsifiable physical-owner hypothesis: executable code
+runs through `RETF` at load `0x15539`; load `0x1553A` is one zero compiler
+metadata byte; a five-value table and five-word jump table occupy
+`0x1553B..0x1554E`; the next PROC `ENEMY_POS_UPDATE` begins exactly at
+`0x1554F`. That suggests a candidate physical size `0x29B`, containing target
+MZ relocations at loads `0x1546A` and `0x154E8`. Stage 4 setup installs the FAR
+entry through `_midboss_update_func`, explaining why Ghidra's callers list is
+empty. The next conversation should verify this complete extent, internal omitted
+blocks/tables, function-pointer ownership, and adjacent B4M_UPDATE producer seams
+before writing source. Do not retry the `snd_load` four-byte blocker without a
+genuinely new compiler/source/origin mechanism.
+
 ## Next target-first queue
 
 Do not resume from the old prose-only MAIN frontier. Query
@@ -1562,7 +1696,7 @@ natural source,” not “original handwritten ASM.” OP has 94 unreviewed auth
 candidates, MAINE 72, and ZUN 13. Cross-game source paths in MAP evidence are
 corroboration only and must become TH04-local or proved `src/shared/` source.
 
-The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 182 exact, 225 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 216 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 230 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
+The current MAIN ledger still represents all 434 target-derived TASM `PROC` starts: **434/434 are represented and zero starts are missing**. Their current accepted-state partition is 191 exact, 216 unreviewed, and 27 excluded; origin routing is 398 authored, nine original-style ASM, and 27 library. Of the remaining MAIN authored queue, 207 entries are still represented by target-derived assembly. This does not exhaust boundary discovery: MAIN still has 230 unreviewed authored candidates. Continue target-first review of provisional/high-risk, no-Ghidra, sparse/cross-linked, and compiler-table rows rather than treating Ghidra or the TASM-visible inventory as a complete function universe.
 
 v143 closes the former `MAIN_012_TEXT` semantic seam: `shot_velocity_set()` and `sub_11DE6` are now routed to original-style ASM attestation and the old replay-only residual extraction is gone. Preserve the v117/v118 TC4J negatives as compiler evidence, but do not continue retrying source-level loop spellings for these now-classified functions.
 
