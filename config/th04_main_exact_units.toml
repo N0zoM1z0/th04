@@ -6711,3 +6711,73 @@ map_start = "0x14E8"
 map_size = "0x5D7"
 target_file_offset = "0x16778"
 size = "0x5D7"
+
+# v150: Stage 2 midboss pattern helpers and FAR dispatcher occupy the 0x486
+# bytes immediately before the exact v149 Stage 4 owner. v149's generated
+# b4mpre.asm remains the zero-credit prefix object, but v150 hash-removes only
+# the Stage 2 PROC/table suffix from that generated file and inserts natural
+# m2u.cpp before m4u.cpp.
+[[build_replacements]]
+id = "th04-main-midboss2-update-v150-build"
+trigger_units = ["th04-main-midboss2-update-v150"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/b4mpre.asm\",\n\t\"th04/m4u.cpp\",\n"
+build_replacement = "\t\"th04/b4mpre.asm\",\n\t\"th04/m2u.cpp\",\n\t\"th04/m4u.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-midboss2-prefix-v150"
+trigger_units = ["th04-main-midboss2-update-v150"]
+patch_path = "th04/b4mpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "9d1d5251cc58cf9752facdda3225b2940046de30a6e9765d6b0c017c3ae0e9f1"
+
+[[source_transforms.ops]]
+id = "remove-midboss2-from-b4mpre-v150"
+kind = "remove_between"
+removed_sha256 = "0512f39373a571d98b096ca2c0ddd8b590f09d3f111fec3857f15229c870a4cc"
+start = "sub_14AF2\tproc near\r\n"
+end = "\t\tdw offset loc_14DBE\r\n"
+replacement = ""
+
+[[source_transforms]]
+id = "th04-main-midboss2-state-aliases-v150"
+trigger_units = ["th04-main-midboss2-update-v150"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "e46e0916088bd51979d80d655d004ca915e2895d9ff26012367ec2fc847356ca",
+  "ea64f07e815d22b4f41c7a2df670a66b02b8de3cd43f3fa443948668222014ee",
+]
+
+[[source_transforms.ops]]
+id = "alias-main-midboss2-pattern-v150"
+kind = "insert_before"
+anchor = "byte_255B2\tdb ?\r\n"
+text = "public _midboss2_pattern\r\n_midboss2_pattern label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss2-direction-v150"
+kind = "insert_before"
+anchor = "byte_255B3\tdb ?\r\n"
+text = "public _midboss2_direction\r\n_midboss2_direction label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-midboss2-patterns-done-v150"
+kind = "insert_before"
+anchor = "byte_255B4\tdb ?\r\n"
+text = "public _midboss2_patterns_done\r\n_midboss2_patterns_done label byte\r\n"
+
+[[units]]
+id = "th04-main-midboss2-update-v150"
+default_enabled = true
+requires_units = ["th04-main-midboss4-update-v149"]
+repo_source = "src/main/midboss/m2_update.cpp"
+overlay_path = "th04/m2u.cpp"
+map_module = "th04/m2u.cpp"
+object_path = "obj/th04/m2u.obj"
+auxiliary_objects = ["obj/th04/b4mpre.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x1062"
+map_size = "0x486"
+target_file_offset = "0x162F2"
+size = "0x486"
