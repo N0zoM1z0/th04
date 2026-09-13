@@ -7273,3 +7273,110 @@ map_start = "0x99FE"
 map_size = "0x58D"
 target_file_offset = "0x1EC8E"
 size = "0x58D"
+
+# v156 candidate: Natural C++ replaces the complete explosion-reset/small/big
+# producer inside B4M_UPDATE_TEXT. Cold replay hash-extracts the untouched B4M
+# suffix from sub_15D74 onward into a zero-credit auxiliary TASM object so the
+# natural 0x107-byte contribution remains at its original physical position.
+[[scaffold_extractions]]
+id = "th04-main-b4m-post-explosions-v156"
+trigger_units = ["th04-main-boss-explosions-add-v156"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "sub_15D74\tproc far\r\n"
+end = "B4M_UPDATE_TEXT\tends\r\n"
+span_sha256 = "ea6e08367aee7a30df5068796114cb7ff5a608722049c900fa7e20b49a52371e"
+template_source = "config/replay/th04_b4m_suffix_v156.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/b4msuf.asm"
+
+[[scaffold_extractions.replacements]]
+old = "sub_15DBD\tproc near\r\n"
+new = "public _thicklaser_add\r\n_thicklaser_add\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_15DBD\tendp\r\n"
+new = "_thicklaser_add\tendp\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_15DE8\tproc near\r\n"
+new = "public _thicklasers_update\r\n_thicklasers_update label near\r\nsub_15DE8\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\t\tcall\tsub_15DBD\r\n"
+new = "\t\tcall\t_thicklaser_add\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "marisa_16A1A\tproc near\r\n"
+new = "public _marisa_phase_entry\r\n_marisa_phase_entry label near\r\nmarisa_16A1A\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "marisa_16AE9\tproc near\r\n"
+new = "public _marisa_phase_move\r\n_marisa_phase_move label near\r\nmarisa_16AE9\tproc near\r\n"
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-boss-explosions-v156-build"
+trigger_units = ["th04-main-boss-explosions-add-v156"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/eadd.cpp\",\n\t\"th04/b4msuf.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-boss-explosions-v156-layout"
+trigger_units = ["th04-main-boss-explosions-add-v156"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "e3145c55bb4d6fb2849be7324b77bc1076e7821962f56ef2029d5a6dd66f68cc",
+  "f708611b935195353f4235cf76e0e4a65b04f8120e1f9f1b62222d002e4272f5",
+]
+
+[[source_transforms.ops]]
+id = "export-b4m-yuuka5-state-v156"
+kind = "insert_before"
+anchor = "word_25662\tdw ?\r\n"
+text = "public word_25662, byte_25664, byte_25665, byte_25666, byte_25667\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-b4m-suffix-publics-v156"
+kind = "replace"
+old = "public @YUUKA5_UPDATE$QV\r\n"
+new = "extrn @YUUKA5_UPDATE$QV:far\r\nextrn sub_15D74:far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-b4m-explosion-producer-v156"
+kind = "replace"
+old = "B4M_UPDATE_TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+new = "B4M_UPDATE_TEXT\tsegment\tbyte public 'CODE' use16\r\nextrn @explosions_small_reset$qv:far\r\nextrn @BOSS_EXPLODE_SMALL$Q16EXPLOSION_TYPE_T:near\r\nextrn @BOSS_EXPLODE_BIG$QUI:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-b4m-explosion-producer-and-suffix-v156"
+kind = "remove_between"
+removed_sha256 = "cd76681ea561ff3216eb3d7c1a1cde47791bb3521f5fe282bdac9a2abfb8c151"
+start = "include th04/main/boss/explosions_reset.asm\r\n"
+end = "B4M_UPDATE_TEXT\tends\r\n"
+replacement = "B4M_UPDATE_TEXT\tends\r\n"
+
+[[units]]
+id = "th04-main-boss-explosions-add-v156"
+default_enabled = true
+requires_units = ["th04-main-stage-bonus-v155"]
+repo_source = "src/main/boss/explosion_add.cpp"
+overlay_path = "th04/eadd.cpp"
+map_module = "th04/eadd.cpp"
+object_path = "obj/th04/eadd.obj"
+auxiliary_objects = ["obj/th04/b4msuf.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x21DD"
+map_size = "0x107"
+target_file_offset = "0x1746D"
+size = "0x107"
