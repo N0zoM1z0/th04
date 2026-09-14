@@ -3108,3 +3108,201 @@ C++ local/static authored helpers, internal labels/shared tails, compiler data,
 or false function starts, then bind any real extents to the maintained
 `bullet_u.cpp` physical producer and ordered relocation ownership before adding
 them to the reviewed denominator or claiming source exactness.
+
+## v160-v162 recovery and session checkpoint
+
+This conversation began from clean repository `th04`, branch `main`, HEAD
+`076f0560ca266f0afc3ad0e2c6f3683c853c442d`, with the local branch five commits
+ahead of `origin/main`. There was no staged, unstaged, untracked, conflicted,
+unrelated, or unknown tracked work to recover. The ignored `.analysis/` tree was
+`4,498,769,023` bytes at entry. All required repository and Factory guidance
+paths were read. Startup `preflight.py`, `status.py`, and the 2,120-observation
+function-boundary validator passed.
+
+Before target-dependent analysis, the registered `th04-ghidra` provider was
+re-enumerated. It still exposes ten operations and no `get_metadata` schema, so
+no undiscovered operation was invoked. Its discovered `check {}` operation passed
+for repository `th04` / `target:th04-main`. Repository-native
+`python3 scripts/ghidra.py th04-main check` independently passed the same
+156,258-byte MZ target, 6,144-byte header, entry point, all 1,136 relocations,
+load-module mapping, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. The pinned TC86 Borland
+C++ 4.02 / TASM32 5.0 / TLINK 6.10 toolchain attestation also passed.
+
+During an early read-only BULLET_U boundary investigation, the live repository
+HEAD advanced independently while the worktree stayed clean. Recovery review
+found two new local `gpt-web:` checkpoints, neither created by the read-only
+command: `e07b7778e8377a7f14ba1ecf42cb23122d957965`
+(`gpt-web: exclude BULLET_U Ghidra alias boundaries`) and
+`d3660c1c6ea36d9653b6eb6b5d5789b4e71d9552`
+(`gpt-web: attest pellet render assembly`). Both were treated as committed
+recoverable continuation state and audited before any new edit. No reset, stash,
+target mutation, or push was used. Mandatory validators were rerun on the new
+HEAD and passed.
+
+v160 closes a real authored-universe false-positive cluster rather than adding
+functions. Ghidra-only MAIN load entries `0x1C99C`, `0x1C9DA`, and `0x1CA2E`
+inside the already exact `bullets_update()` owner are not separate authored
+function starts. Target `bullets_render()` near calls that Ghidra presents as
+`0x1C99C` / `0x1CA2E` are 64-KiB synthetic-segment aliases of the real
+`TILE_TEXT` pellet renderer entries at loads `0xC99C` / `0xCA2E`; `0x1C9DA` is
+an internal `bullets_update()` control-flow block. Raw disassembly and maintained
+exact source agree that these entries have no independent function ABI/return
+ownership. The three observations therefore remain excluded and contribute no
+function or byte exactness credit. Full evidence is in
+`docs/reconstruction/TH04_BULLET_U_GHIDRA_ALIAS_V160.md`.
+
+v161 then reviews the real `TILE_TEXT` pellet renderer pair and classifies it as
+one exact original-style symbolic-ASM physical owner. `pellets_render_top()` is
+load `0xC99C..0xCA2C`, size `0x91`; TASM `EVEN` owns load `0xCA2D`; and
+`pellets_render_bottom()` is load `0xCA2E..0xCA97`, size `0x6A`. The complete
+physical owner is target file `0xE19C..0xE297`, size `0xFC / 252`, with empty
+MZ-relocation overlap. Independently attested TH05 original-target structure
+preserves the same low-level `MOVSB` / `MOVSW` / `LOOP` / wrap producer family,
+while legal TC4J probes do not reproduce the shape without forbidden inline
+assembly. Maintained source is `src/main/bullet/pellet_render.asm`.
+
+The v161 cold builds were completed before this conversation's v162 edit; this
+conversation audited their retained receipts rather than rerunning them.
+Focused `gptweb-v161-pellet-render-focused-candidate-001` passed the 114-owner
+dependency closure twice, receipt SHA-256
+`ad4528909c14271a33964eb64a947012f17644f1ff79597f498aae5248c90007`.
+Candidate-state `gptweb-v161-pellet-render-aggregate-candidate-001` and
+post-promotion `gptweb-v161-pellet-render-aggregate-final-001` each passed all
+193 default owners twice with `failures=[]`; receipt SHA-256 values are
+`4f0c7eb07d35cb30c7a07ac2d3fe1ef9459b9f8ac56cedab314213ad9f07825a`
+and `06d13f298aa93dbf35ddcacbdcf8e95a8be42cd223dcd31423a22ce6fe1d51a2`.
+Both aggregate builds produce candidate MAIN SHA-256
+`03eef452d5be04dd225fd401a6829f52e5a364d5d7445cbc5c5c9ff4d13647ff`.
+Full v161 evidence is in
+`docs/reconstruction/TH04_TILE_PELLET_RENDER_ASM_V161.md`.
+
+v162 reviews the immediately following `bullets_and_gather_invalidate()` rather
+than forcing another C++ approximation. Fresh target Ghidra, the candidate MAP
+public, pinned TASM PROC, gap-free raw decode, and the independently exact next
+owner close the logical near function at `TILE_TEXT 0AAF:1FA8..203C`, load
+`0xCA98..0xCB2C`, target file `0xE298..0xE32C`, size `0x95 / 149` bytes. TASM
+`EVEN` owns the following NOP at load `0xCB2D`; exact
+`tiles_invalidate_reset()` starts at load `0xCB2E`. The maintained v162 physical
+owner is therefore target file `0xE298..0xE32D`, size `0x96 / 150`, SHA-256
+`27f4964c7ff23550748c558fb32ff007aea13a0160454748a17e24605612e028`.
+Its ordered MZ-relocation overlap is empty.
+
+The origin decision uses independent target and compiler evidence rather than
+ReC98 authority. The attested TH05 original `MAIN.EXE` contains the corresponding
+invalidator at load `0xE40E..0xE4B5`; it independently preserves the same SI/DI
+bullet/gather traversal and direct packed `SHL/SHR dword
+[tile_invalidate_box],1` architecture, modulo game-specific counts and structure
+sizes. ReC98 history confirms its TH04 invalidator ASM was reverse-engineering
+material added in 2020 and is therefore not historical-source proof.
+
+A production-profile TC4J natural-C++ probe recovered the surrounding register
+allocation and loop shape but emitted 161 function bytes instead of the target
+149. The entire twelve-byte excess is localized to the two packed box shifts:
+TC4J expands each direct target memory shift into an EAX load/shift/store
+sequence, adding six bytes per occurrence. `volatile`, multiplication, and
+division variants do not recover the target form. The best negative source is
+retained only in bounded private v162 scratch; it is not product source and gets
+zero exactness credit.
+
+Maintained `src/main/bullet/invalidate.asm` is evidence-backed symbolic TASM,
+source SHA-256
+`5f3639c5d862c7fc285e3a39f719aee48abd9b48d13f84466cd025fdbb51b391`.
+It uses semantic symbols and ordinary assembler instructions, contains no copied
+target-byte arrays, `#pragma codestring`, target patching, fake returns, or inert
+byte padding, and lets TASM `EVEN` produce the layout byte naturally.
+
+The complete v162 promotion sequence was run in this conversation. Focused
+`gptweb-v162-bullets-gather-focused-candidate-001` selected the 115-owner
+dependency closure and passed two isolated cold builds with `failures=[]`;
+receipt SHA-256 is
+`a2be963470582af571d5d6a6e1512bae350aa424fe0f4474953d937c4fac5889`.
+The v162 slice is raw/map/relocation exact in A/B; focused dependency-normalized
+`th04_main.obj` SHA-256 is
+`78374e905a2f4ba260b4cc4d7dc96fd273f7dd5b6fb8fbd9f834a3a64b76c0c1`.
+Candidate-state aggregate `gptweb-v162-bullets-gather-aggregate-candidate-001`
+then passed all 194 default owners twice, receipt SHA-256
+`ec501007cc5582797cf083cdd7a54f659bc8c742761612c303c41f4cee781a1d`.
+After exact-unit promotion,
+`gptweb-v162-bullets-gather-aggregate-final-001` passed the same 194-owner cohort
+twice again, receipt SHA-256
+`fe89825f13007bccf7f6d3d0bb57d514c976b8f487ca0ab98fd1560dff5b5250`.
+Both aggregates produce deterministic candidate MAIN SHA-256
+`03eef452d5be04dd225fd401a6829f52e5a364d5d7445cbc5c5c9ff4d13647ff`;
+normalized aggregate `th04_main.obj` SHA-256 is
+`cf4afa6f593f0cfe167d011bd2a6319ab867f9011c3c6d293b4c70fb2d26e0e8`.
+The v162 implementation checkpoint is
+`209ae4bfc7d6b5ebd389c74e9f446d2bbd604d37`
+(`gpt-web: attest bullet gather invalidation assembly`). Nothing was pushed.
+
+After v160-v162, live MAIN C/C++ accounting remains **62,041 / 63,395 exact
+reviewed authored bytes (97.864185%)** and **366 / 373 exact reviewed authored
+functions (98.123324%)**. These numerators do not increase because v161/v162 are
+origin corrections into the separate original-style ASM plane. Exact
+original-style ASM is now **17 units / 2,526 bytes**. The all-artifact authored
+candidate inventory is **716**; MAIN has 537 authored reconstruction candidates,
+164 unreviewed C/C++ candidates, seven reviewed blocked functions, 31 ASM
+attestation observations, and 472 exclusions. Other artifacts remain separate:
+`th04-op` has 94 unreviewed authored candidates, `th04-maine` 72, and `th04-zun`
+13. No MAIN result is a claim about those artifacts or the whole game; `ZUN.COM`
+remains an MZ artifact despite its extension.
+
+Repository-native function/extent exactness is established for the v161 and v162
+ASM owners and the post-promotion 194-owner cohort. Standalone TH04 production
+compile/link closure is **not established**. Runtime-storage identity is **not
+established**. No runtime scenario was executed. Whole-image exactness is not
+established. Independent pristine-release provenance is not established; the
+target remains `candidate-local-attested`. No v160/v161/v162 Factory Truth
+Kernel replay was submitted or claimed. The private executable was never staged,
+modified, patched, relocated, or published.
+
+The v162 session scratch root is
+`.analysis/gpt-web/th04-main-20260914-v162`, approximately 28 KiB. It retains the
+compact invalidator natural-source negative plus a compact source/object/report
+for the next natural-C++ frontier. A current-session short-path compiler workspace
+at `.analysis/toolchain/wineprefix/drive_c/WORK/V162` was 136 KiB; after producer
+inactivity and reference checks, its useful source/object/report were copied into
+the manifested scratch and the workspace was removed. No target, toolchain,
+Ghidra project, shared provider state, legacy/unknown content, or unrelated replay
+artifact was removed.
+
+The three successful v162 replay trees remain complete rather than being
+compacted: approximately 76 MiB focused, 78 MiB candidate aggregate, and 78 MiB
+post-promotion aggregate. They are current referenced reproducible evidence, and
+the v162 session stayed within the 256 MiB soft analysis-growth budget. Final
+handoff-state `.analysis` size is `4,753,236,719` bytes, net
+`254,467,696` bytes from conversation entry.
+
+The first concrete continuation is the immediately preceding natural-C++
+`TILE_TEXT` renderer pair, not another easy isolated function. Target
+`midboss3_render()` is load `0xC885..0xC949`, size `0xC5`, and
+`midbossx_render()` is `0xC94A..0xC99A`, size `0x51`. Together they form target
+load `0xC885..0xC99A`, file `0xE085..0xE19A`, size `0x116 / 278`, SHA-256
+`4ca7083efaf8e02ebb1f29280dda7be7e1ffe5828ccb91500d1879e335af46dc`,
+with ordered target MZ relocations `[0xC93F, 0xC92D, 0xC997]`. Load `0xC99B` is
+an independent zero seam; v161's pellet ASM owner begins at load `0xC99C`.
+
+A production-profile natural TC4J probe already gives unusually strong next-step
+evidence without granting exactness: candidate source SHA-256
+`bb169fcd256b3bae916f49f0924b06ad029d47aae9e0b67693ae2899a71584ce`
+compiles to one `0x116` CODE LEDATA record, exactly the target combined size, with
+public `@MIDBOSS3_RENDER$QV` at offset `0` and `@MIDBOSSX_RENDER$QV` at offset
+`0xC5`, exactly the target function seam. Probe OMF raw SHA-256 is
+`a285b8f6f3b4731ba6b739aa5909102352e6fce3b7d7f8101d1b9797e40011c8` and
+dependency-normalized SHA-256 is
+`1b45edcaa4569b82347dceac6636c167a3a925f0eb8cec2a98b366a01a0d9db5`.
+The source and OMF are retained privately as `m3x_render_candidate.cpp` and
+`m3x_probe.obj` under the v162 scratch root. They are compiler observations only,
+not source-present ledger credit or byte exactness.
+
+The next conversation should first re-audit live Git, then inspect the existing
+hash-bound scaffold extraction/split patterns in
+`config/th04_main_exact_units.toml`. The physical ordering to preserve is the
+remaining `th04_main.asm` TILE prefix through load `0xC884`, natural `m3x.cpp`
+for `0xC885..0xC99A`, the independent zero byte at `0xC99B`, exact v161 pellet
+ASM `0xC99C..0xCA97`, exact v162 invalidator ASM `0xCA98..0xCB2D`, then exact
+`tile.cpp` beginning `0xCB2E`. Do not combine midboss and bullet semantics into a
+fake translation unit. First prove the split/link layout and the three ordered
+m3x relocations in a cheap candidate link before paying for focused cold replay.
+Campaign status remains active; this handoff is not a phase-completion claim.
