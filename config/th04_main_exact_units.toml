@@ -7380,3 +7380,151 @@ map_start = "0x21DD"
 map_size = "0x107"
 target_file_offset = "0x1746D"
 size = "0x107"
+
+# v157 candidate: Recover the first four contiguous Yuuka5 pattern helpers as
+# natural C++ while preserving the adjacent thicklaser cohort as a separate,
+# zero-credit physical producer. Two hash-bound TASM scaffold extractions keep
+# the untouched B4M prefix/suffix on either side of the natural owner.
+[[scaffold_extractions]]
+id = "th04-main-b4m-thicklaser-prefix-v157"
+trigger_units = ["th04-main-yuuka5-first4-v157"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "sub_15D74\tproc far\r\n"
+end = "sub_15DE8\tendp\r\n"
+span_sha256 = "9d257cbfc0f682c60568298a063f9c75b27881003a2059f1ad218a93792549ac"
+template_source = "config/replay/th04_b4m_thicklaser_v157.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/b4mthick.asm"
+
+[[scaffold_extractions.replacements]]
+old = "sub_15DBD\tproc near\r\n"
+new = "public _thicklaser_add\r\n_thicklaser_add\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_15DBD\tendp\r\n"
+new = "_thicklaser_add\tendp\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_15DE8\tproc near\r\n"
+new = "public _thicklasers_update\r\n_thicklasers_update label near\r\nsub_15DE8\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-b4m-post-yuuka5-v157"
+trigger_units = ["th04-main-yuuka5-first4-v157"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "yuuka5_162A3\tproc near\r\n"
+end = "B4M_UPDATE_TEXT\tends\r\n"
+span_sha256 = "60d5c2f4125cc968dcfb602dcf6dddc3ec358f9707a447ddb875a2e6ee8c0a11"
+template_source = "config/replay/th04_b4m_post_yuuka5_v157.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/b4msuf2.asm"
+
+[[scaffold_extractions.replacements]]
+old = "\t\tcall\tsub_15DBD\r\n"
+new = "\t\tcall\t_thicklaser_add\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\t\tcall\tsub_15DE8\r\n"
+new = "\t\tcall\t_thicklasers_update\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\t\tcall\tyuuka5_15ECE\r\n"
+new = "\t\tcall\t@YUUKA5_MOVE_TRANSITION$QUI\r\n"
+expected_count = 4
+
+[[scaffold_extractions.replacements]]
+old = "\t\tcall\tyuuka5_15F97\t; jumptable 000166F5 case 0\r\n"
+new = "\t\tcall\t@yuuka5_pattern_sweep$qv\t; jumptable 000166F5 case 0\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\t\tcall\tyuuka5_160A5\t; jumptable 000166F5 case 1\r\n"
+new = "\t\tcall\t@yuuka5_pattern_clouds$qv\t; jumptable 000166F5 case 1\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\t\tcall\tyuuka5_161D7\r\n"
+new = "\t\tcall\t@yuuka5_pattern_gather$qv\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "marisa_16A1A\tproc near\r\n"
+new = "public _marisa_phase_entry\r\n_marisa_phase_entry label near\r\nmarisa_16A1A\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "marisa_16AE9\tproc near\r\n"
+new = "public _marisa_phase_move\r\n_marisa_phase_move label near\r\nmarisa_16AE9\tproc near\r\n"
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-yuuka5-first4-v157-build"
+trigger_units = ["th04-main-yuuka5-first4-v157"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/eadd.cpp\",\n\t\"th04/b4msuf.asm\",\n"
+build_replacement = "\t\"th04/eadd.cpp\",\n\t\"th04/b4mthick.asm\",\n\t\"th04/y5p1.cpp\",\n\t\"th04/b4msuf2.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-yuuka5-state-aliases-v157"
+trigger_units = ["th04-main-yuuka5-first4-v157"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "a2c0f09ed816a0003d3d3052e10618d489735d5c39997710936dc2da1162e464",
+  "d3a4b63f27b1da758cb8aa29414581f5a7d30f81a3f5c0e157fa3504b81203b6",
+]
+
+[[source_transforms.ops]]
+id = "alias-yuuka5-sweep-x-v157"
+kind = "insert_before"
+anchor = "word_25662\tdw ?\r\n"
+text = "public _yuuka5_sweep_x\r\n_yuuka5_sweep_x label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-yuuka5-cloud-step-v157"
+kind = "insert_before"
+anchor = "byte_25664\tdb ?\r\n"
+text = "public _yuuka5_cloud_step\r\n_yuuka5_cloud_step label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-yuuka5-cloud-accum-v157"
+kind = "insert_before"
+anchor = "byte_25665\tdb ?\r\n"
+text = "public _yuuka5_cloud_accum\r\n_yuuka5_cloud_accum label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-yuuka5-move-state-v157"
+kind = "insert_before"
+anchor = "byte_25667\tdb ?\r\n"
+text = "public _yuuka5_move_state\r\n_yuuka5_move_state label byte\r\n"
+
+[[units]]
+id = "th04-main-yuuka5-first4-v157"
+default_enabled = true
+requires_units = ["th04-main-boss-explosions-add-v156"]
+repo_source = "src/main/boss/yuuka5_patterns.cpp"
+overlay_path = "th04/y5p1.cpp"
+map_module = "th04/y5p1.cpp"
+object_path = "obj/th04/y5p1.obj"
+auxiliary_objects = ["obj/th04/b4mthick.obj", "obj/th04/b4msuf2.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x243E"
+map_size = "0x3D5"
+target_file_offset = "0x176CE"
+size = "0x3D5"
+
+[[build_replacements]]
+id = "th04-main-yuuka5-v157-retain-v156-suffix-omf"
+trigger_units = ["th04-main-yuuka5-first4-v157"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/boss_x2.cpp\",\n})\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
+build_replacement = "\t\"th04/boss_x2.cpp\",\n})\n-- v157 keeps the v156 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf.asm\" })\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
