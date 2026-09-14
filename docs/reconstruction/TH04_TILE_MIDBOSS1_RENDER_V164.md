@@ -22,6 +22,8 @@ Candidate-state aggregate `gptweb-v164-midboss1-render-aggregate-candidate-001` 
 
 The fail-closed authored-function reviewer admits exactly one new row for `midboss1_render()` after explicit `[[new_exact]]` policy. Historical ledger rows are preserved rather than accepting unrelated reviewer note normalization.
 
-## Verification-plane boundaries
+## Factory acceptance and verification-plane boundaries
 
-This packet establishes repository-native natural-source function/extent exactness for the Stage 1 renderer and its standalone TC4J object. It does not establish standalone TH04 production compile/link closure, runtime-storage identity, a runtime scenario, whole-image exactness, independent pristine-release provenance, or Factory Truth Kernel acceptance.
+After the clean implementation checkpoint `701792a773ec8488b75a308969d7716d901abcea`, Factory replay job `job:4315bb55902049368e62032e0d8ecd8a` independently replayed the imported `claim:unit:th04-main-midboss1-render-v164:owned-extent-exact` claim. It completed with receipt `receipt:002bee2a9dd16f2030c7930588899c280493ca53be42d1aa0bfdf9d4181c1093`, `receipt_verdict=pass`, `acceptance_decision=accepted`, no rejection reasons, and registry entry `registry:a77c077f11ebbcb77ad7b34fe57c41411545e3a4f82ef6d40333d5a3b0336637`. The replay source binding is the clean implementation commit and tree `14c921ba0e9627338535cbf2cbe422f7580e8c8e` with no untracked files.
+
+This Factory acceptance is scoped only to the v164 owned-extent exact claim. Repository-native and Factory-controlled exactness are therefore both established for the Stage 1 renderer and its standalone TC4J object. Standalone TH04 production compile/link closure remains unestablished, runtime-storage identity remains unestablished, no runtime scenario was executed, whole-image exactness is unestablished, and independent pristine-release provenance is unestablished. The private target remains only `candidate-local-attested`.

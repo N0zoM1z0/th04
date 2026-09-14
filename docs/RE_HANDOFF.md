@@ -3511,3 +3511,235 @@ v163 solely because the functions are adjacent.
 Campaign status remains active. This handoff closes one bounded conversation
 slice and is not a project, exact-phase, standalone-build, or whole-game
 completion claim.
+
+
+## v164 Stage 1 TILE renderer exact reconstruction and accepted checkpoint
+
+This conversation started from a clean `th04` repository on branch `main` at
+`7d31a0f8c89a8b4990c2feb17d988f92047a65ff`, eleven commits ahead of
+`origin/main` and zero behind. Startup recovery found no staged, unstaged,
+untracked, conflicted, unrelated, or unknown tracked work. The ignored
+`.analysis/` tree measured `4,916,211,403` bytes at entry. All requested TH04 and
+Factory guidance paths were mounted and reread through the repository Factory
+shell before editing; no missing Factory path had to be substituted by prompt
+text alone.
+
+The mandatory startup gates passed: `scripts/preflight.py`, `scripts/status.py`,
+and the 2,120-observation function-boundary validator. The live machine baseline
+was 238 exact/candidate units, 1,878 evidence rows, 307 knowledge rows, and 375
+reviewed authored C/C++ function rows. MAIN had 62,319 / 63,673 reviewed authored
+C/C++ bytes exact (97.873510%) and 368 / 375 reviewed authored C/C++ functions
+exact (98.133333%). The separate original-style ASM exact plane remained 17 units
+/ 2,526 bytes.
+
+The registered `th04-ghidra` provider was re-enumerated before target analysis.
+It exposes ten operations (`check`, `decompile`, `function`, `disassemble`,
+`callers`, `callees`, `xrefs_to`, `xrefs_from`, `list_functions`, and
+`search_strings`) and still does not expose the prompt's illustrative
+`get_metadata` operation, so no undiscovered schema was invented. Provider
+`check {}` passed for repository `th04` / target `target:th04-main`. The
+repository-native `python3 scripts/ghidra.py th04-main check` independently
+passed the same 156,258-byte MZ target with SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte header/load mapping, entry CS:IP, all 1,136 ordered relocation
+records, load-module digest, and sampled bytes. TC86 Borland C++ 4.02, TASM32
+5.0, and TLINK 6.10 toolchain attestation passed. The known host `wine64`
+identity mismatch remained informational because the required pinned portable
+surfaces and execution probes passed. Target canonicality remains only
+`candidate-local-attested`.
+
+The older prompt hypothesis around `sub_11DE6` was not reopened merely because it
+was repeated in the operator prompt: the live handoff and ledgers already close
+that extent in the separate original-style ASM track from v143. The active live
+frontier was instead the immediately preceding TILE renderer identified by the
+v163 handoff.
+
+Target-first review closes `midboss1_render()` in `th04-main / MAIN.EXE /
+TILE_TEXT` at `0AAF:1C88..1D94`, MZ load-module `0xC778..0xC884`, target file
+`0xDF78..0xE084`, size `0x10D / 269`, target slice SHA-256
+`f746590b8e7f3b70527c3be7413062c34cd6be5076d8f09e3266e1ea1f91350a`.
+Fresh target-bound Ghidra reports one contiguous 269-byte near body. Pinned TASM
+and MAP evidence bind the same public at `TILE_TEXT 0AAF:1C88`; gap-free raw
+16-bit decoding reaches the terminal RET at load `0xC884`, and the next byte
+`0xC885` starts the independently exact v163 `midboss3_render()` owner. There is
+no post-return jump table or function-owned data tail. Ghidra reports zero direct
+callers and three callees (`SCROLL_SUBPIXEL_Y_TO_VRAM_SEG1`, `SUPER_ROLL_PUT`,
+and `SUPER_ROLL_PUT_1PLANE`), while maintained `src/main/boss/boss.cpp`
+independently installs `midboss1_render` through `midboss_render_func`, explaining
+the indirect callback edge.
+
+The five target MZ relocations overlapping the reviewed body, in original table
+order, are `[0xC86E,0xC853,0xC821,0xC7E1,0xC7C7]`. They belong to the far
+blitter calls in the phase-specific render paths. The natural source at
+`src/main/midboss/m1_render.cpp`, SHA-256
+`a4f426cbde09c3fbb9a87abf0fc1eb32808e2a5d9c83a73d432ada041ed87f1b`,
+uses ordinary C++ only and preserves the target's Pascal-near ABI, TILE_TEXT
+segment, phase dispatch, two-sprite Stage 1 layout, white-plane damage flash,
+`damage_this_frame` clear, and `midboss_defeat_render()` explosion path. It uses
+no inline assembly, target-derived byte arrays, `#pragma codestring`, fake
+returns, inert padding, target/object patching, or ABI lie.
+
+The cheap compiler/source feedback loop was decisive. Two initial probe commands
+failed before source compilation because the wrapper path / `MSDOS_PATH`
+environment was incomplete; they are setup failures, not codegen negatives.
+Once the pinned short-path environment was correct, TC86 Borland C++ 4.02 emitted
+exactly `0x10D` CODE bytes with `@MIDBOSS1_RENDER$QV` at object offset zero. The
+scratch probe source SHA-256 was
+`955d588e30b6fdb94ab1581407d3a80081c4d9a449298e02e84ce4ea88ac73e0`,
+raw OMF SHA-256
+`4146d443de8293bc73fda72f01ebdf77b6d47a98aa7a876dc508a21496c77d9e`,
+and dependency-normalized OMF SHA-256
+`910cd78eb39928e8d06a2b87c1dae9f061d5430ca35b5267a9827f27e2a75edd`.
+Before link resolution all 205 non-fixup object bytes were already target-identical;
+the only 64 differences were 32 two-byte OMF fixup operand fields.
+
+A bounded ephemeral link probe then removed only the historical Stage 1 PROC from
+the current v163 TILE scaffold and inserted the natural m1 object before exact
+m3r/mxr. The linked contribution is exactly `TILE_TEXT 0AAF:1C88`, size `0x10D`;
+Stage 3 remains at `0AAF:1D95` and Stage X remains at `0AAF:1E5A`. The complete
+269-byte linked slice has zero target differences and the candidate ordered
+relocation overlap exactly matches `[0xC86E,0xC853,0xC821,0xC7E1,0xC7C7]`.
+This establishes a standalone Stage 1 physical C++ object rather than borrowing a
+neighboring translation-unit boundary.
+
+The maintained exact replay layer deliberately makes the v164 unit directly
+replayable: selecting `th04-main-midboss1-render-v164` requires the v163 Stage X
+split trigger, which in turn brings in Stage 3 and the exact TILE suffix owners.
+The remaining historical Stage 1 PROC is then removed by a hash-bound transform
+and `m1r.cpp` is inserted before `m3r.cpp` / `mxr.cpp`. The Stage 1 removed span
+SHA-256 is `8c791349f6cf968c0961e8bb6ee22c7c6fcae2b65accec44680237a94623390a`.
+The transform accepts only two observed post-v163 whole-scaffold hashes:
+`8c1cf331e79619a6fe6f4bed931f53328177cd3ab792576e98ccab728f3969de`
+for the focused dependency closure and
+`53776135395510ee7817221b9b7e042164935ccbed9bb91768a72500a0d1e0ff`
+for the aggregate closure. The first focused run failed before any build because
+this closure-dependent distinction had not yet been encoded; it is a fail-closed
+scaffold-binding correction, not a byte/codegen failure, and its reproducible
+failed tree was later removed.
+
+The exactness Oracles actually run are:
+
+- focused `gptweb-v164-midboss1-render-focused-candidate-002`: 118-owner
+  dependency closure, two isolated cold builds, `pass=true`, `failures=[]`,
+  receipt SHA-256
+  `abff4ed3298b042906db7c6419ae66111708270c7f7216c7888d2ff59ce7866f`;
+  both candidate MAIN images have SHA-256
+  `92cad9d97a2424564d6615db5a91a649f48fefea7f0f97af73e8a5bb2ef99a32`;
+- candidate-state aggregate `gptweb-v164-midboss1-render-aggregate-candidate-001`:
+  all 197 default owners pass twice with `failures=[]`, receipt SHA-256
+  `6e34fb2e09906ed188a6fd5aef74c8b4053f1ba4984960d5795018508c0523f9`;
+- post-promotion aggregate `gptweb-v164-midboss1-render-aggregate-final-001`: the
+  same 197-owner cohort passes twice again with `failures=[]`, receipt SHA-256
+  `71d36675154a8824ee7a87fd3dab3e2a727795380f2fcb8bd70f3b4fe55a023d`.
+
+Both aggregate runs produce deterministic candidate MAIN SHA-256
+`2f984f3b7852be26c624ab6db56afe99fde4fa56fd183cdd04374c4c9ce23b2e`.
+Focused/aggregate A/B `m1r.obj` raw SHA-256 is
+`e474982f4915e3fd09cb0811d52290d0c985818d25c9093321d0cdd9353a4abf` and
+dependency-normalized SHA-256 is
+`993b62d774019a2af3b67827a5e1ef27ecd57555509c4ff5303bad4c31df7368`.
+The owner is raw exact, map exact, ordered-relocation exact, valid OMF, and
+deterministic in every successful cold build. The exact v163 m3r/mxr owners and
+v161/v162 TILE suffix remain exact under the expanded producer split.
+
+Post-promotion fail-closed function review used the final aggregate MAP plus
+current target-bound Ghidra metadata. It admitted exactly one new row,
+`th04-main-fn-1c778`, after explicit `[[new_exact]]` policy. The trial writer
+would also have normalized seven historical note/name fields, so those unrelated
+rewrites were rejected; the maintained authored-function ledger preserves all
+375 prior rows byte-for-byte and inserts only the new Stage 1 row.
+
+The resulting live MAIN accounting is **62,588 / 63,942 exact reviewed authored
+C/C++ bytes (97.882456%)** and **369 / 376 exact reviewed authored C/C++
+functions (98.138298%)**. The reviewed denominator honestly grows by 269 bytes
+and one function. MAIN has 161 remaining unreviewed C/C++ authored candidates
+and the same seven reviewed blockers. Exact original-style ASM remains separate
+at **17 units / 2,526 bytes**.
+
+Other TH04 artifacts remain independent queues and received no exactness credit
+from this MAIN packet. `th04-op` still has 94 unreviewed authored candidates,
+`th04-maine` 72, and `th04-zun` 13, with no honest accepted exact denominator for
+those artifacts yet. `ZUN.COM` remains an MZ artifact despite its extension.
+
+Implementation checkpoint is
+`701792a773ec8488b75a308969d7716d901abcea`
+(`gpt-web: reconstruct TILE stage 1 midboss renderer`). The complete implementation
+diff was inspected before staging. Historical CSV quoting churn introduced by a
+trial writer was detected and removed by restoring historical bytes from the
+clean starting HEAD and adding only the v164 rows. The implementation commit
+contains exactly twelve source/config/evidence/generated-report paths. The
+worktree was clean immediately after the checkpoint, `main` was twelve commits
+ahead of `origin/main`, and nothing was pushed.
+
+Full repository CI passed on the implementation state, including Python tests,
+tracking, the 2,120-row boundary ledger, generated progress/boundary reports,
+private TH01-TH05 Oracle calibration, target verification, Ghidra/JDK identity,
+live Ghidra database replay, and Ghidra mutation smoke. `git diff --check`
+passed.
+
+Factory Truth-Kernel replay then independently accepted the imported owned-extent
+claim `claim:unit:th04-main-midboss1-render-v164:owned-extent-exact`, bound to the
+clean implementation commit `701792a773ec8488b75a308969d7716d901abcea`, tree
+`14c921ba0e9627338535cbf2cbe422f7580e8c8e`, source snapshot
+`73a16b350bccc3bfa20470a66fb553bde4580236a560f01beac75c0cba1d1cc5`,
+with `dirty=false` and zero untracked files. Factory job
+`job:4315bb55902049368e62032e0d8ecd8a` completed with receipt
+`receipt:002bee2a9dd16f2030c7930588899c280493ca53be42d1aa0bfdf9d4181c1093`,
+`receipt_verdict=pass`, `acceptance_decision=accepted`, no rejection reasons, and
+registry entry
+`registry:a77c077f11ebbcb77ad7b34fe57c41411545e3a4f82ef6d40333d5a3b0336637`.
+A later convenience read of the repository-wide accepted snapshot could not be
+repeated because another Factory operation temporarily owned an operator path;
+this does not supersede the terminal accepted job/receipt above.
+
+Verification planes remain separate. Repository-native natural-source
+function/extent exactness is PASS for the v164 Stage 1 owner and the complete
+197-owner post-promotion cohort. Factory acceptance is PASS for exactly the v164
+owned-extent claim bound to implementation checkpoint `701792a...`. Standalone
+TH04 production compile/link closure is **not established**. Runtime-storage
+identity is **not established**. No runtime scenario was executed. Whole-image
+exactness is not established. Independent pristine-release provenance is not
+established; the private target remains only `candidate-local-attested` and was
+never staged, modified, patched, relocated, or published.
+
+The v164 `.analysis/` entry size was `4,916,211,403` bytes. After exact replay and
+Factory acceptance, producer/reference review found no active Borland producer.
+The failed pre-build focused 001 tree was deleted as explicit current-session
+reproducible scratch. Passing focused 002 and candidate-state aggregate trees were
+compacted to receipt-only. The full 197-owner post-promotion aggregate is retained
+as the current cold baseline. The compact v164 compiler/link/function-review
+scratch is retained as bounded evidence, and the complete Factory accepted replay
+`factory-20260914T064559Z-4ee2e485aaec` is retained as Factory provenance. Final
+handoff-state `.analysis` size is `5,048,975,771` bytes, net
+`132,764,368` bytes from conversation entry. Shared toolchains,
+private targets, Ghidra project/provider state, Wine prefix, legacy/unknown
+analysis content, and unrelated replay state were not bulk-deleted.
+
+The first concrete continuation should now move to a structurally meaningful
+boundary cohort rather than another easy isolated exact win. Two adjacent large
+provisional observations in `th04-main / MAIN.EXE / DEMO_TEXT` are strong
+candidates:
+
+- `sub_AD03`: MZ load-module offset `0xAD03`, analysis linear `0x1AD03`, body size
+  `0x413`, Ghidra body non-contiguous across three ranges, one caller, ten
+  callees, and a matching near TASM PROC but no accepted public/owner boundary;
+- `sub_AED0`: MZ load-module offset `0xAED0`, analysis linear `0x1AED0`, body size
+  `0x286`, Ghidra body non-contiguous across seven ranges, one caller, twenty-six
+  callees, and a matching near TASM PROC but no accepted public/owner boundary.
+
+Their ledger body spans are much larger than their nominal bodies, so the next
+conversation should not trust either Ghidra or TASM as the denominator. Reconcile
+their callers/callees, raw control-flow reachability, gaps, shared tails, embedded
+data/tables, MZ relocations, MAP ownership, and the boundary between the two
+before writing source. If that cohort turns out to be library/runtime or a false
+split, record the correction rather than forcing reconstruction. A cleaner
+secondary source-present frontier, if the DEMO_TEXT cohort proves external, is
+`dialog_run()` in `DIALOG_TEXT` at MZ load-module offset `0xD56C`, size `0x17F`,
+which is currently corroborated and candidate-C++ but still unreviewed. Another
+large target-derived candidate is `@yuuka5_fg_render$qv` in `MAIN_TEXT` at
+MZ load-module offset `0xE8A3`, size `0x1CC`.
+
+Campaign status remains active. This v164 handoff closes one bounded
+conversation slice; it is not a project-completion, 99.5%-completion,
+standalone-build, runtime, whole-image, OP/MAINE/ZUN, or whole-game completion
+claim.
