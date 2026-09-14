@@ -7660,3 +7660,17 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "TILE_TEXT"
+
+# v162 candidate: original-style symbolic ASM for the TILE_TEXT bullet/gather
+# invalidator plus its source-owned EVEN byte. Depends on the adjacent v161
+# pellet renderer overlay in the same monolithic th04_main.asm object.
+[[units]]
+id = "th04-main-bullets-gather-invalidate-asm-v162"
+default_enabled = true
+requires_units = ["th04-main-pellet-render-asm-v161"]
+repo_source = "src/main/bullet/invalidate.asm"
+overlay_path = "th04/main/bullets_gather_inv.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "TILE_TEXT"
