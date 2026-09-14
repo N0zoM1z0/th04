@@ -4610,3 +4610,9 @@ handlers as one producer cohort: reconcile TASM/raw seams, table targets,
 relocations, shot-function-table callers, and shared data before writing source.
 Do not accept either the current `0xC1` Ghidra body or `0xBE8D` span without that
 owner review.
+
+The v169 implementation checkpoint is
+`6037991e0f3e0c378ec1820507b7a1529fb988c7`
+(`gpt-web: reconstruct gameover MAIN_TEXT cohort`). It was not pushed. This Git
+commit is resume/review state only; the exactness evidence remains the focused,
+candidate-aggregate, and post-promotion aggregate receipts listed above.
