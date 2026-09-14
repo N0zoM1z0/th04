@@ -8224,3 +8224,79 @@ map_start = "0x03E0"
 map_size = "0x51E"
 target_file_offset = "0xC6D0"
 size = "0x51E"
+
+
+# v167 candidate: Recover the complete Yuuka5 foreground renderer as natural
+# TC4J C++ inside MAIN_TEXT. The target keeps one zero byte and the following
+# Kurumi backdrop helper in the same historical main.obj contribution, so cold
+# replay extracts that 0x1B suffix into a separate zero-credit TASM object and
+# preserves the physical link order main prefix -> y5fg.cpp -> suffix.
+[[scaffold_extractions]]
+id = "th04-main-main-text-yuuka5-tail-v167"
+trigger_units = ["th04-main-yuuka5-fg-v167"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "\t\tdb    0\r\n\r\n; =============== S U B\tR O U T\tI N E =======================================\r\n\r\npublic @KURUMI_BACKDROP_COLORFILL$QV\r\n"
+end = "main_TEXT\tends\r\n"
+span_sha256 = "e2c11ed5afae40e9c4d802b8654df2ae29764cd9b6f09e074d650dec7871cfc1"
+template_source = "config/replay/th04_main_yuuka5_tail_v167.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m1y5tl.asm"
+
+[[build_replacements]]
+id = "th04-main-yuuka5-fg-v167-build"
+trigger_units = ["th04-main-yuuka5-fg-v167"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/m1r.cpp\",\n\t\"th04/m3r.cpp\",\n\t\"th04/mxr.cpp\",\n\t\"th04/tilegap.asm\",\n\t\"th04/tilesuf.asm\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/y5fg.cpp\",\n\t\"th04/m1y5tl.asm\",\n\t\"th04/m1r.cpp\",\n\t\"th04/m3r.cpp\",\n\t\"th04/mxr.cpp\",\n\t\"th04/tilegap.asm\",\n\t\"th04/tilesuf.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-yuuka5-fg-v167-layout"
+trigger_units = ["th04-main-yuuka5-fg-v167"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "736a25ca2173da2314e9c76d0f172636c945f78dc44041d3ebb5bb457d9bec9e",
+  "33e779ef95f3fdadf50ca5ed6a09a582e71edfad83c327f3f70436da90c2ef2c",
+]
+
+[[source_transforms.ops]]
+id = "externalize-main-yuuka5-fg-v167"
+kind = "replace"
+old = "public @YUUKA5_FG_RENDER$QV\r\n"
+new = "extrn @YUUKA5_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main-yuuka5-move-state-v167"
+kind = "replace_optional"
+old = "byte_25666\tdb ?\r\nbyte_25667\tdb ?\r\n"
+new = "byte_25666\tdb ?\r\npublic _yuuka5_move_state\r\n_yuuka5_move_state label byte\r\nbyte_25667\tdb ?\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main-yuuka5-fg-and-tail-v167"
+kind = "remove_between"
+removed_sha256 = "1b503975a414296a8cae11918ee022325119465c1a9ffbf8485d691920ae3480"
+start = "@yuuka5_fg_render$qv\tproc near\r\n"
+end = "main_TEXT\tends\r\n"
+replacement = "main_TEXT\tends\r\n"
+
+[[units]]
+id = "th04-main-yuuka5-fg-v167"
+default_enabled = true
+requires_units = ["th04-main-midboss1-render-v164"]
+repo_source = "src/main/boss/yuuka5_fg_render.cpp"
+overlay_path = "th04/y5fg.cpp"
+map_module = "th04/y5fg.cpp"
+map_mode = "exact"
+object_path = "obj/th04/y5fg.obj"
+auxiliary_objects = ["obj/th04/m1y5tl.obj"]
+auxiliary_extents = [
+  { id = "th04-main-main-text-yuuka5-tail-plumbing-v167", file_offset = "0x1026F", size = "0x1B", map_module = "th04\\m1y5tl.asm", map_segment = "MAIN_TEXT", object_path = "obj/th04/m1y5tl.obj" },
+]
+map_segment = "MAIN_TEXT"
+map_start = "0x3DB3"
+map_size = "0x1CC"
+target_file_offset = "0x100A3"
+size = "0x1CC"

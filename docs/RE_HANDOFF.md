@@ -4148,3 +4148,149 @@ self-referential handoff text and must be read from live Git. No remote push is
 performed. Campaign status remains active: this handoff closes one bounded hard
 packet and is not a 99.5% completion, project completion, whole-product build,
 runtime, whole-image, OP/MAINE/ZUN, or whole-game completion claim.
+
+## 2026-09-14 v167 Yuuka5 foreground exact reconstruction recovery checkpoint
+
+This conversation started from clean `main` at
+`e6aadefee56ad7ae840c291a0e8f3040cda1ec98`, three commits ahead of
+`origin/main` and zero behind. Startup recovery initially observed no staged,
+unstaged, untracked, conflicted, unrelated, or unknown tracked work. During the
+mandatory document/provider recovery sequence, live HEAD remained unchanged but
+ten tracked paths became unstaged and two files appeared untracked. Complete
+diff, untracked-file, retained-replay, process, and latest-handoff review
+classified all twelve paths as one coherent `recoverable-current-work` v167
+Yuuka5 foreground packet. No unrelated or unknown path was found. No reset,
+stash, target mutation, indiscriminate staging, or push was used.
+
+The recovered packet is independently rebound to the selected evidence plane
+`th04 / th04-ghidra / target:th04-main / MAIN.EXE`. All requested repository and
+Factory guidance paths were mounted and read. `scripts/preflight.py`,
+`scripts/status.py`, and the 2,120-observation boundary validator pass. The
+registered `th04-ghidra` provider was re-enumerated and exposes exactly ten
+operations (`check`, `decompile`, `function`, `disassemble`, `callers`, `callees`,
+`xrefs_to`, `xrefs_from`, `list_functions`, and `search_strings`); it still has
+no `get_metadata` schema, so no undiscovered operation was invented. Provider
+`check {}` passed for repository `th04` / target `target:th04-main`, size 156258,
+SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native `python3 scripts/ghidra.py th04-main check` independently passed
+the 6,144-byte MZ header/load mapping, entry point, all 1,136 relocations,
+load-module identity, and sampled bytes. TC86 Borland C++ 4.02, TASM32 5.0, and
+TLINK 6.10 toolchain attestation passes. Intermittent Factory transport failures
+occurred before several read-only calls; each failed call was followed by live
+status recovery and caused no repository drift.
+
+Target-first review closes `yuuka5_fg_render()` at `th04-main / MAIN.EXE /
+MAIN_TEXT`. The original segment view is `0C7E:20C3`; the target-layout MAIN_01
+MAP view is `0AAF:3DB3`. Both resolve to MZ load offset `0xE8A3`. The reviewed
+function is load `0xE8A3..0xEA6E`, target file `0x100A3..0x1026E`, size
+`0x1CC / 460`, SHA-256
+`cf8a8f6e1386573171163d3faba5df597230cbd40a11ce34fb2d7e47a17048ee`.
+Fresh recovery-time Ghidra again constructs exactly 460 contiguous body addresses
+through the terminal RET at `0x1EA6E`. It reports nine callees and zero direct
+callers/xrefs to the entry. Maintained `src/main/boss/boss.cpp` independently
+installs `yuuka5_fg_render` through `boss_fg_render_func`, explaining the missing
+direct-call edge. Raw target decode confirms RET at load `0xEA6E`; load `0xEA6F`
+is one independent zero layout byte, and `kurumi_backdrop_colorfill()` begins at
+load `0xEA70`. The zero seam and following helper are not credited to the v167
+C++ function.
+
+The owner contains exactly twelve target MZ relocations in original table order:
+`[0xEA53, 0xEA49, 0xEA09, 0xE9D9, 0xE9C9, 0xE984, 0xE96F, 0xE95C,
+0xE94D, 0xE913, 0xE901, 0xE8D3]`. The final aggregate MAP places maintained
+`th04/y5fg.cpp` exactly at `MAIN_TEXT 0AAF:3DB3`, size `0x1CC`, followed by
+zero-credit `th04/m1y5tl.asm` at `0AAF:3F7F`, size `0x1B`. The replay-only tail
+owns the independent zero seam plus unchanged historical helper/layout bytes and
+is checked as an auxiliary extent rather than counted as natural-source
+reconstruction.
+
+Maintained natural source is `src/main/boss/yuuka5_fg_render.cpp`, SHA-256
+`c596fc9a40f25c5f4f935bf78491297cc501e9659ae941ab4d029c29a3ab5d68`.
+It is ordinary natural C++ with the target near/Pascal ABI and uses no inline
+assembly, `__emit__`, target-derived byte arrays, `#pragma codestring`, fake
+returns, inert padding, target/object patching, or ABI lies. A first
+pseudo-register `_SI/_DI` source shape emitted 473 CODE bytes. Allowing TC4J to
+manage the `left`/`top` register locals naturally recovers six target LEA forms,
+the short branches, and exactly 460 CODE bytes. A separate full-group replay
+wrapper was rejected because zero-length word-aligned SEGDEFs displaced later
+MAIN_01 layout; the minimal MAIN_TEXT-only tail wrapper preserves target layout.
+These are source/plumbing negatives, not target-byte workarounds.
+
+The three required v167 replay runs completed before recovery detected the dirty
+packet. This continuation did not rerun those expensive cold builds; it read and
+rehash-verified their retained receipts, checked their live source/manifest
+bindings, reran target/toolchain/boundary gates, and reran the fail-closed function
+reviewer. The retained results are:
+
+- focused `gptweb-v167-yuuka5-fg-focused-candidate-006`: `pass=true`,
+  `failures=[]`, receipt SHA-256
+  `f2f081d1d86094cb365eae864a55b5f3a2217939230f2f7beb1e7c3983ed3752`;
+- candidate-state aggregate `gptweb-v167-yuuka5-fg-aggregate-candidate-001`:
+  `pass=true`, `failures=[]`, receipt SHA-256
+  `ee1718a42df6e88be2b91bb6f2471f87d038d9d7f9e9b3f3aea32fdd430ee325`;
+- post-promotion aggregate `gptweb-v167-yuuka5-fg-aggregate-final-001`:
+  `pass=true`, `failures=[]`, receipt SHA-256
+  `e9acd70ca5ad0de5d3a7460c16ed42b7ba96e7de963c10379a291088a9b79d9a`.
+
+The two aggregate receipts bind current replay-manifest SHA-256
+`c562ecd99f881a4a2768cac11677e3b377118a0ab0bac63b9a82ba9cceb4efc3`.
+The focused source hash matches the maintained source. The recovered
+fail-closed function-review rerun produces report SHA-256
+`36c0a111109a7e0687f8de9ce2238949a5a047943193baf130d48c93794e7693`
+and exactly the same 383 function IDs as the maintained authored-function
+projection, including new exact row `th04-main-fn-1e8a3`; no function ID is added
+or removed by the rerun. Historical CSV quote normalization produced by the
+interrupted writer was deliberately discarded, preserving only the ten new v167
+evidence rows.
+
+Live MAIN accounting after v167 is **63,048 / 66,552 exact reviewed authored
+C/C++ bytes (94.734944%)** and **370 / 383 exact reviewed authored C/C++
+functions (96.605744%)**. MAIN has 154 unreviewed authored C/C++ candidates and
+thirteen reviewed blockers; the separate exact original-style ASM plane remains
+17 units / 2,526 bytes. These are moving reviewed denominators only, not a
+percentage of MAIN.EXE or the game as a whole.
+
+Other TH04 executables remain active independent queues and receive no credit
+from v167. Current all-artifact boundary accounting still has `th04-op` with 94
+unreviewed authored candidates, `th04-maine` with 72, and `th04-zun` with 13;
+none has an honest accepted exact-function/byte denominator yet. `ZUN.COM`
+remains an MZ artifact despite its extension. Their packed-target/hybrid-analysis
+contracts remain artifact-specific and cannot inherit MAIN results.
+
+Verification planes remain separate. Repository-native function/extent exactness
+is PASS for v167 and its complete post-promotion default exact cohort. Standalone
+TH04 production compile/link closure is not established. Whole-image exactness is
+not established. Runtime-storage identity is not established. No runtime scenario
+was executed. Portable-runtime validation is not established. Independent
+pristine-release provenance is not established; the private MAIN target remains
+only `candidate-local-attested` and was never staged, modified, patched,
+relocated, or published. No v167 Factory Truth-Kernel claim has yet been accepted;
+a local Git checkpoint remains review/resume state only.
+
+The conversation-level `.analysis/` measurement before the unexpected v167 packet
+appeared was `5,695,059,018` bytes. The post-CI handoff-state size is
+`6,017,255,629` bytes, a net increase of `322,196,611` bytes, reflecting the
+already-created v167 focused/candidate/final replay trees plus bounded
+compiler/reviewer and attestation state. The three replay trees are approximately
+61.5, 63.0, and 63.0 MiB, and current v167 GPT-web scratch is about 1.9 MiB.
+Current policy treats the 256 MiB budget as a review trigger, not destructive
+authority; these replay trees live outside the current-session scratch-root
+deletion boundary, are evidence-linked, and are retained. The post-promotion tree
+is the current full cold baseline. No target, toolchain, Wine prefix, Ghidra
+project/provider state, legacy/unknown analysis content, or unrelated replay state
+is removed.
+
+After checkpointing v167, the next packet should be selected from the live
+unreviewed MAIN boundary ledger rather than stale prompt prose. Prefer a
+structurally meaningful corroborated target-derived cohort or high-risk
+provisional boundary over a tiny isolated helper. The adjacent
+`kurumi_backdrop_colorfill()` at load `0xEA70` is a real unresolved boundary seam
+inside v167's zero-credit tail but should not be harvested alone merely because it
+is easy. A later packet should first rank the remaining MAIN
+corroborated/unreviewed candidates by physical size/call structure and choose a
+coherent owner/dispatcher cohort. OP/MAINE/ZUN remain separate future artifact
+sessions rather than being silently ignored.
+
+Campaign status remains active. This v167 recovery is not a 99.5%-completion,
+phase-completion, standalone-build, runtime, whole-image, OP/MAINE/ZUN, or
+whole-game completion claim.
