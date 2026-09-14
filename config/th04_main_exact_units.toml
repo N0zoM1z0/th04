@@ -7645,3 +7645,18 @@ map_start = "0x2F8A"
 map_size = "0x16B"
 target_file_offset = "0x1821A"
 size = "0x16B"
+
+# v161 candidate: TH04/TH05 target-local structure and legal TC4J negative
+# probes support original-style assembly for the paired TILE_TEXT pellet renderer.
+# The physical owner contains top + one EVEN byte + bottom; logical function
+# bodies remain separately reviewed.
+[[units]]
+id = "th04-main-pellet-render-asm-v161"
+default_enabled = true
+requires_units = ["th04-main-pointnum-lifecycle-asm-v141"]
+repo_source = "src/main/bullet/pellet_render.asm"
+overlay_path = "th04/main/bullet/pellet_r.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "TILE_TEXT"
