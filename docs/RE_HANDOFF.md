@@ -3743,3 +3743,200 @@ Campaign status remains active. This v164 handoff closes one bounded
 conversation slice; it is not a project-completion, 99.5%-completion,
 standalone-build, runtime, whole-image, OP/MAINE/ZUN, or whole-game completion
 claim.
+
+## v165 DEMO_TEXT internal gameplay boundary review checkpoint
+
+This conversation began from clean repository `th04`, branch `main`, HEAD
+`28457634f654fa0d8c57f6ec1f99098c5e16ed49`. Factory initially reported the
+local branch thirteen commits ahead of `origin/main`; the upstream ref later
+advanced independently to that same checkpoint while local HEAD remained
+unchanged. No push was available or invoked. Startup recovery found zero staged,
+unstaged, untracked, conflicted, unrelated, or unknown tracked paths. The ignored
+`.analysis/` tree measured `5,048,975,771` bytes at entry.
+
+All requested repository and Factory guidance paths were mounted and read before
+editing. `scripts/preflight.py`, `scripts/status.py`, and the 2,120-observation
+function-boundary validator passed. The registered `th04-ghidra` provider was
+re-enumerated and still exposes exactly ten operations with no `get_metadata`
+schema, so no undiscovered operation was invented. Its discovered `check {}`
+operation passed for repository `th04` / `target:th04-main`; repository-native
+`python3 scripts/ghidra.py th04-main check` independently passed the same
+156,258-byte MZ target, 6,144-byte header/load mapping, entry point, all 1,136
+relocation-table entries, load-module identity, and sampled bytes. Target SHA-256
+remains `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`
+and canonicality remains only `candidate-local-attested`. TC86 Borland C++ 4.02,
+TASM32 5.0, and TLINK 6.10 toolchain attestation passed; the host-only `wine64`
+file-hash mismatch remains an informational observation under the documented
+policy.
+
+After the read-only orientation began, live status changed unexpectedly while
+HEAD remained unchanged: `config/th04_main_function_review.toml`,
+`scripts/review_th04_main_functions.py`, and `tests/test_function_review.py`
+appeared as three coherent unstaged modifications. Complete diff and current
+private scratch review classified all three as one `recoverable-current-work`
+v165 packet for the selected DEMO_TEXT frontier, not unrelated or unknown work.
+The packet already contained a fail-closed internal-function reviewer route,
+target/compiler probes, target-bound function metadata, and a trial reviewer
+report. It was therefore adopted and completed before unrelated work; no reset,
+stash, deletion, or overwrite was used to manufacture a clean tree.
+
+The boundary review closes three real game-authored internal functions that have
+no original TLINK publics and therefore were previously undercounted or grossly
+cross-linked by Ghidra:
+
+- `gameplay_loop()` is `th04-main / MAIN.EXE / DEMO_TEXT 0AAF:0098`, MZ load
+  `0xAB88..0xAD02`, target file `0xC388..0xC502`, size `0x17B / 379`, target
+  slice SHA-256
+  `54ac4974b571dc990934e9c5ed39afb1b91206c397b67c734442fe81fd6c4448`.
+  Fresh Ghidra independently constructs exactly 379 contiguous body bytes through
+  the terminal RET. Pinned TASM/raw decode agrees, target near `CALL 0xAB6E`
+  resolves exactly to `0xAB88`, and the next local PROC begins at `0xAD03`.
+  Twelve MZ relocation sites overlap its far-call-heavy body.
+- `gameplay_session_init()` is `DEMO_TEXT 0AAF:0213`, load
+  `0xAD03..0xAECF`, target file `0xC503..0xC6CF`, physical size
+  `0x1CD / 461`. Ghidra cross-links this entry into unrelated earlier code.
+  Target/TASM/raw review instead closes `0x1C2 / 450` executable bytes through
+  RET at `0xAEC4`, one zero compiler metadata/alignment byte at `0xAEC5`, then
+  five jump words at `0xAEC6..0xAECF`. Their targets
+  `0xAE17/0xAE3C/0xAE4E/0xAE77/0xAEA0` are all decoded instruction starts.
+  Target near `CALL 0xAF10` resolves exactly to `0xAD03`; the next local PROC
+  begins at `0xAED0`. No MZ relocation overlaps this complete physical extent.
+  Target slice SHA-256 is
+  `2e37dff3ee0d9933fc207c7157cc5bdb3a8dd582128a07089f4cac2538cf833b`.
+- `stage_session_init()` is `DEMO_TEXT 0AAF:03E0`, load
+  `0xAED0..0xB1CF`, target file `0xC6D0..0xC9CF`, physical size
+  `0x300 / 768`. Ghidra cross-links it across seven ranges into unrelated code.
+  Target/TASM/raw instead closes `0x2F2 / 754` executable bytes through RET at
+  `0xB1C1`, followed immediately by seven jump words through `0xB1CF`. Their
+  targets `0xB003/0xB04B/0xB071/0xB097/0xB0D4/0xB0F9/0xB11E` are decoded
+  instruction starts. Target near `CALL 0xAB6B` resolves to `0xAED0`, and the
+  next local PROC begins exactly at `0xB1D0`. This body contains numerous far-call
+  MZ relocations. Target slice SHA-256 is
+  `8a00b573ab1fa3127a37a24b4cd9f8a5ed7558296a3b7233a617b7a49b07537c`.
+
+Maintained natural source is now present for the first two reviewed functions:
+
+- `src/main/core/gameplay_loop.cpp`, SHA-256
+  `8da7b71af0efb01f15d1f3bb9e111ea2d16b374a94f3ce4cb7b8a173b242eff2`;
+- `src/main/core/gameplay_session_init.cpp`, SHA-256
+  `d42f952cdf7e1c500c70a186ca6c702f8f125a184101c2849752af834e58e714`.
+
+Both use ordinary natural C++ and repository-approved TH04/compat headers; neither
+contains inline assembly, target-derived byte arrays, `#pragma codestring`, fake
+returns, inert padding, target/object patching, or ABI lies. Production-profile
+TC86 Borland C++ 4.02 compiles both without warnings to valid OMF. The gameplay
+loop emits 370 CODE bytes versus target 379; raw OMF SHA-256 is
+`631775df2b357b83d7674bb5e2ea2d44f7658ce4ce7719aee27c7ebba2cab6c0`
+and dependency-normalized SHA-256 is
+`0dd46474b0b7d8cc2451d191b6dcd6450e21ee19af329ca620489d4e29e674bf`.
+The session initializer emits 460 physical CODE bytes versus target 461; raw OMF
+SHA-256 is
+`8cab42e27baf30d45edbecec679a2e7e21a0b0a12dd9e38c06348ae7217d8218`
+and dependency-normalized SHA-256 is
+`32e2dba9c27a2427a5a8654189e09cd325de04467de7384bd4e9550384e70c41`.
+Its remaining one-byte deficit is specifically the target zero compiler metadata
+byte between RET and the five-word switch table.
+
+v165 tested one genuinely new compiler mechanism rather than extending a spelling
+matrix: function-local `#pragma option -a`, motivated by earlier TC4J switch-table
+metadata behavior. The probe still emits 460 CODE bytes and does not insert the
+target zero byte. Probe source SHA-256 is
+`ae8b24e34c3bd1225d2064a72f2832afe010709d349e2df3987dff875e58b3ad`;
+raw OMF SHA-256 is
+`03c4ce16fa27dcd2d8e91ac3578a87a6e090e4d7dcd84084febbd5eaab7f41ca`
+and normalized SHA-256 is
+`3f3816a7fb86d687253b082630eaa75b49b2f2cde9366a6e4c17ed00755d1075`.
+This mechanism is therefore retained as negative compiler evidence. Do not retry
+alignment-pragma spelling without a new falsifiable mechanism. No maintained
+source is claimed yet for `stage_session_init()`.
+
+The function-review control plane now has a fail-closed
+`reviewed_nonexact_internal_call` path for target-called internal functions that
+have no TLINK public. Admission requires a real target Ghidra entry, no target
+public at that address, a configured near CALL resolving exactly to the entry,
+an adjacent configured next boundary, raw terminal RET/RETF, and complete
+accounting of any configured trailing compiler metadata/table bytes. Cross-linked
+Ghidra bodies require explicit opt-in, and a separate `[[new_nonexact]]`
+declaration is mandatory before a newly reviewed function may enter the authored
+ledger. Optional `owner_unit` / `source` projection records maintained
+source-present candidates without granting exactness. Thirty-one focused function-
+review unit tests pass. The current target-bound trial reviewer adds exactly the
+three v165 blocked rows; seven unrelated historical note/name normalizations from
+the generic writer were deliberately not adopted.
+
+Because no v165 function is exact, **no focused exact-unit cold replay, candidate
+aggregate, post-promotion aggregate, or Factory exact claim was run or submitted**.
+Running promotion gates for a known nonexact source would be misleading. The
+latest exact repository-native baseline therefore remains v164's 197-owner
+post-promotion aggregate, and the previously accepted v164 Factory claim remains
+unchanged. v165 adds boundary/source/compiler evidence only.
+
+The reviewed MAIN denominator expands by `0x348 / 840` bytes and three functions
+without any exact-numerator increase. Live accounting is now **62,588 / 64,782
+exact reviewed authored C/C++ bytes (96.613257%)** and **369 / 379 exact reviewed
+authored C/C++ functions (97.361478%)**. MAIN has ten reviewed blocked functions
+and 158 unreviewed authored C/C++ candidates. Exact original-style ASM remains a
+separate plane at **17 units / 2,526 bytes**. This percentage drop is an honest
+denominator correction, not an accepted-owner regression and not a claim about
+MAIN.EXE as a whole.
+
+Other TH04 artifacts remain separate queues and received no credit from this MAIN
+packet: `th04-op` still has 94 unreviewed authored candidates, `th04-maine` 72,
+and `th04-zun` 13. None has an honest accepted exact-function/byte denominator.
+`ZUN.COM` remains an MZ artifact despite its extension.
+
+Implementation checkpoint is
+`79036d9fac2d16cb2950e784c9d3c8ff69fc45e7`
+(`gpt-web: review DEMO internal gameplay boundaries`). The complete working and
+staged diffs were inspected before commit; an intermediate function-ledger row
+reordering caused by the trial writer was detected and removed by restoring only
+that current-session file from the clean starting HEAD and appending the three
+validated v165 rows. No unrelated path was reset or overwritten. Full repository
+CI passed on the implementation state, including tracking, the 2,120-row boundary
+ledger, generated reports, private TH01-TH05 Oracle calibration, target checks,
+Ghidra/JDK identity, live Ghidra database replay, and Ghidra mutation smoke.
+`git diff --check` passed.
+
+Verification planes remain separate. v165 establishes reviewed target-bound
+function extents for all three functions and maintained source presence for the
+first two, but **function/extent byte exactness is not established for any v165
+function**. Standalone TH04 production compile/link closure is not established.
+Runtime-storage identity is not established. No runtime scenario was executed.
+Whole-image exactness is not established. No v165 Factory acceptance exists
+because no exact claim was created. Independent pristine-release provenance is
+not established; the private target remains only `candidate-local-attested` and
+was never staged, modified, patched, relocated, or published.
+
+The v165 `.analysis/` entry size was `5,048,975,771` bytes. No cold-replay tree
+was created by this packet. Current-session compiler/reviewer scratch briefly
+reached about 1.87 MiB. After producer/reference review, superseded source-spelling
+probes, combined-pair probes, no-optimization variants, and duplicate trial
+reviewer outputs were deleted; the retained bounded v165 scratch is about 0.96
+MiB and contains target slices/disassemblies, the best natural-source compiler
+probes, the new `-a` negative, tracked-source OMF reports, fresh target-bound
+function metadata, and the current reviewer report. Short-path `V165*` compiler
+workspaces are removed and no Borland/replay producer remains active. Final
+handoff-state `.analysis` size is `5050121340` bytes, net
+`1145569` bytes from entry. Shared toolchains, targets, Ghidra
+project/provider state, Wine prefix, legacy/unknown analysis content, and unrelated
+replay evidence were left untouched.
+
+The first concrete continuation is now the reviewed but source-unknown
+`stage_session_init()` owner itself, not another isolated easy function. Its
+boundary is already closed at `th04-main / MAIN.EXE / DEMO_TEXT 0AAF:03E0`, load
+`0xAED0..0xB1CF`, file `0xC6D0..0xC9CF`, physical `0x300` bytes with seven
+validated compiler jump words and a target near-call anchor. The next conversation
+should recover the minimum natural C++ semantics from target/TASM plus TH04-local
+headers, then run a production-profile compiler-only probe before touching replay
+plumbing. Diagnose physical size, seven-case table shape, register lifetime, OMF
+FIXUPP topology, and the target's dense far-call relocation order first. If a
+natural source is structurally close, test whether its true physical producer
+must extend into adjacent `sub_B1D0` rather than forcing `stage_session_init()`
+standalone. If it is structurally far, retain the unknown/source-negative result
+and audit the adjacent DEMO_TEXT cohort instead. Do not reopen `gameplay_loop()`
+or the one-byte `gameplay_session_init()` blocker without a genuinely new
+compiler/source/physical-producer mechanism.
+
+Campaign status remains active. This v165 handoff closes one bounded conversation
+slice; it is not a 99.5%-completion, project-completion, standalone-build,
+runtime, whole-image, OP/MAINE/ZUN, or whole-game completion claim.
