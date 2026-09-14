@@ -7521,6 +7521,10 @@ map_start = "0x243E"
 map_size = "0x3D5"
 target_file_offset = "0x176CE"
 size = "0x3D5"
+producer_override_when_unit = "th04-main-yuuka5-tail-v158"
+producer_map_module = "th04/y5all.cpp"
+producer_object_path = "obj/th04/y5all.obj"
+producer_map_mode = "contains"
 
 [[build_replacements]]
 id = "th04-main-yuuka5-v157-retain-v156-suffix-omf"
@@ -7528,3 +7532,84 @@ trigger_units = ["th04-main-yuuka5-first4-v157"]
 build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/boss_x2.cpp\",\n})\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
 build_replacement = "\t\"th04/boss_x2.cpp\",\n})\n-- v157 keeps the v156 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf.asm\" })\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
+
+# v158 candidate: The v157 first-four helpers and this tail are one physical
+# TC4J producer. Keep v157 independently replayable, but use the fused producer
+# whenever v158 is selected.
+[[build_inserts]]
+id = "th04-main-yuuka5-tail-source-v158"
+trigger_units = ["th04-main-yuuka5-tail-v158"]
+repo_source = "src/main/boss/yuuka5_tail.cpp"
+overlay_path = "th04/y5p2.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v158 materializes the Yuuka5 tail include for the fused physical producer.\n"
+
+[[scaffold_extractions]]
+id = "th04-main-b4m-post-yuuka5-v158"
+trigger_units = ["th04-main-yuuka5-tail-v158"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "marisa_16A1A\tproc near\r\n"
+end = "B4M_UPDATE_TEXT\tends\r\n"
+span_sha256 = "c13e5e8c7caf26f9d79ed994c43faa8df592b735f3a81e43b5ea468e5e07341e"
+template_source = "config/replay/th04_b4m_post_yuuka5_v158.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/b4msuf3.asm"
+
+[[scaffold_extractions.replacements]]
+old = "marisa_16A1A\tproc near\r\n"
+new = "public _marisa_phase_entry\r\n_marisa_phase_entry label near\r\nmarisa_16A1A\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "marisa_16AE9\tproc near\r\n"
+new = "public _marisa_phase_move\r\n_marisa_phase_move label near\r\nmarisa_16AE9\tproc near\r\n"
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-yuuka5-tail-v158-build"
+trigger_units = ["th04-main-yuuka5-tail-v158"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/eadd.cpp\",\n\t\"th04/b4mthick.asm\",\n\t\"th04/y5p1.cpp\",\n\t\"th04/b4msuf2.asm\",\n"
+build_replacement = "\t\"th04/eadd.cpp\",\n\t\"th04/b4mthick.asm\",\n\t\"th04/y5all.cpp\",\n\t\"th04/b4msuf3.asm\",\n"
+
+[[build_replacements]]
+id = "th04-main-yuuka5-v158-retain-v157-suffix-omf"
+trigger_units = ["th04-main-yuuka5-tail-v158"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/boss_x2.cpp\",\n})\n-- v157 keeps the v156 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf.asm\" })\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
+build_replacement = "\t\"th04/boss_x2.cpp\",\n})\n-- v157 keeps the v156 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf.asm\" })\n-- v158 keeps the v157 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf2.asm\" })\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
+
+[[source_transforms]]
+id = "th04-main-yuuka5-tail-state-alias-v158"
+trigger_units = ["th04-main-yuuka5-tail-v158"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "1a64a7b1485a8f5f938f2ce1726a77a802fef99ee62af46599443f33b123dc8c",
+  "09fa8d60ec12ef4de782677ebb6635cc81c973294857b8246c84b7175b8b1fa4",
+]
+
+[[source_transforms.ops]]
+id = "alias-yuuka5-palette-tone-v158"
+kind = "insert_before"
+anchor = "byte_25666\tdb ?\r\n"
+text = "public _yuuka5_palette_tone\r\n_yuuka5_palette_tone label byte\r\n"
+
+[[units]]
+id = "th04-main-yuuka5-tail-v158"
+default_enabled = true
+requires_units = ["th04-main-yuuka5-first4-v157"]
+repo_source = "src/main/boss/yuuka5.cpp"
+overlay_path = "th04/y5all.cpp"
+map_module = "th04/y5all.cpp"
+map_mode = "contains"
+object_path = "obj/th04/y5all.obj"
+auxiliary_objects = ["obj/th04/b4msuf3.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x2813"
+map_size = "0x777"
+target_file_offset = "0x17AA3"
+size = "0x777"

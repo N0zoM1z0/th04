@@ -1,3 +1,4 @@
+#ifndef TH04_YUUKA5_COMBINED
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
 #include "compat/rec98/libs/master.lib/master.hpp"
@@ -12,6 +13,7 @@
 
 #pragma codeseg B4M_UPDATE_TEXT main_03
 #pragma option -a
+#endif
 
 extern int yuuka5_sweep_x;
 extern unsigned char yuuka5_cloud_step;
@@ -245,4 +247,6 @@ void near yuuka5_pattern_gather(void)
     }
 }
 
+#ifndef TH04_YUUKA5_COMBINED
 #pragma codeseg
+#endif
