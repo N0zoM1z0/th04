@@ -7660,6 +7660,10 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "TILE_TEXT"
+producer_override_when_unit = "th04-main-midbossx-render-v163"
+producer_map_module = "th04\\tilesuf.asm"
+producer_object_path = "obj/th04/tilesuf.obj"
+producer_map_mode = "contains"
 
 # v162 candidate: original-style symbolic ASM for the TILE_TEXT bullet/gather
 # invalidator plus its source-owned EVEN byte. Depends on the adjacent v161
@@ -7674,3 +7678,99 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "TILE_TEXT"
+producer_override_when_unit = "th04-main-midbossx-render-v163"
+producer_map_module = "th04\\tilesuf.asm"
+producer_object_path = "obj/th04/tilesuf.obj"
+producer_map_mode = "contains"
+
+# v163 candidate: Natural TC4J reconstruction of the adjacent TILE_TEXT Stage 3
+# and Stage X midboss renderers. Target relocation order requires two C++ OMF
+# producers. Replay-only source-extracted gap/suffix objects preserve the
+# historical zero seam and the already exact v161/v162 assembly owners.
+[[scaffold_extractions]]
+id = "th04-main-tile-gap-v163"
+trigger_units = ["th04-main-midbossx-render-v163"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "@midbossx_render$qv\tendp\r\n\r\n; ---------------------------------------------------------------------------\r\n\t\tdb    0\r\n"
+end = "PELLET_W = 8\r\n"
+span_sha256 = "d383b6f110e392e8450b72a447e79365c379a3160759d1c793cc8f974758704b"
+replacements = [
+  { old = "@midbossx_render$qv\tendp\r\n\r\n; ---------------------------------------------------------------------------\r\n\t\tdb    0\r\n\r\nPELLET_W = 8\r\n", new = "\t\tdb    0\r\n" },
+]
+template_source = "config/replay/th04_tile_gap_v163.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/tilegap.asm"
+
+[[scaffold_extractions]]
+id = "th04-main-tile-suffix-v163"
+trigger_units = ["th04-main-midbossx-render-v163"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "PELLET_W = 8\r\n"
+end = "TILE_TEXT\tends\r\n"
+span_sha256 = "2ee8c437b3897e86ec592bb26d1e92e1ba01ef4a4e4b51eeefdac8adb75e5d8f"
+template_source = "config/replay/th04_tile_suffix_v163.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/tilesuf.asm"
+
+[[build_replacements]]
+id = "th04-main-midboss3x-render-v163-build"
+trigger_units = ["th04-main-midbossx-render-v163"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/m3r.cpp\",\n\t\"th04/mxr.cpp\",\n\t\"th04/tilegap.asm\",\n\t\"th04/tilesuf.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-midboss3x-render-v163-layout"
+trigger_units = ["th04-main-midbossx-render-v163"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "aeeedc73c56697f7277a3b4455ea6bfb54d6c4711632b3bf3ff7318ad62b7b75",
+  "b02f4ac5361d173dac9c3a13cf95cc256870b697dd73c6053b7bf5c2bf7516ff",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-tile-midboss3x-and-suffix-v163"
+kind = "remove_between"
+removed_sha256 = "4544820071f8c3eb9f236dd18b7fbcad7b6832696d1f4aec2840c49fe2652bde"
+start = "public @MIDBOSS3_RENDER$QV\r\n"
+end = "TILE_TEXT\tends\r\n"
+replacement = "PELLET_W = 8\r\nPELLET_H = 8\r\nBULLET16_W = 16\r\nBULLET16_H = 16\r\n\t@tiles_invalidate_reset$qv procdesc near\r\n\t@TILES_RENDER$QV procdesc near\r\n\textern @tiles_activate$qv:proc\r\nTILE_TEXT\tends\r\n"
+
+[[units]]
+id = "th04-main-midboss3-render-v163"
+default_enabled = true
+requires_units = ["th04-main-bullets-gather-invalidate-asm-v162"]
+repo_source = "src/main/midboss/m3_render.cpp"
+overlay_path = "th04/m3r.cpp"
+map_module = "th04/m3r.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m3r.obj"
+map_segment = "TILE_TEXT"
+map_start = "0x1D95"
+map_size = "0xC5"
+target_file_offset = "0xE085"
+size = "0xC5"
+
+[[units]]
+id = "th04-main-midbossx-render-v163"
+default_enabled = true
+requires_units = ["th04-main-midboss3-render-v163"]
+repo_source = "src/main/midboss/mx_render.cpp"
+overlay_path = "th04/mxr.cpp"
+map_module = "th04/mxr.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mxr.obj"
+auxiliary_objects = ["obj/th04/tilegap.obj", "obj/th04/tilesuf.obj"]
+auxiliary_extents = [
+  { id = "th04-main-tile-zero-seam-v163", file_offset = "0xE19B", size = "0x1", map_module = "th04\\tilegap.asm", map_segment = "TILE_TEXT", object_path = "obj/th04/tilegap.obj" },
+]
+map_segment = "TILE_TEXT"
+map_start = "0x1E5A"
+map_size = "0x51"
+target_file_offset = "0xE14A"
+size = "0x51"

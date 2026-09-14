@@ -1,0 +1,5 @@
+.386
+.model use16 large _TEXT
+TILE_TEXT segment byte public 'CODE' use16
+{{EXTRACTED_SPAN}}TILE_TEXT ends
+end

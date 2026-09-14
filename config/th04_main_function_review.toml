@@ -1942,16 +1942,8 @@ name = "std_run()"
 evidence_id = "ev-th04-main-std-run-boundary-v68"
 reason = "New target-first MAIN_033 exact public admitted after complete raw/TASM/TLINK/Ghidra boundary review and two-cold natural-C++ replay."
 
-# v69: reviewed authored boundary is complete, but natural C++ codegen remains blocked.
-[[reviewed_nonexact]]
-id = "th04-main-fn-27e3e"
-address = "0x27E3E"
-file_offset = "0x1963E"
-size = "0x1B"
-name = "enemy_bullet_template_push(enemy_t&)"
-evidence_id = "ev-th04-main-enemy-bullet-template-push-boundary-v69"
-reason = "Target raw, TASM, TLINK, and fresh Ghidra agree on the full 27-byte Pascal near function through RET 2 at 0x27E58, immediately before ENEMIES_UPDATE at 0x27E59. Exactness remains blocked because all tested natural C++ copy forms reorder the target REP MOVSW setup; inline ASM is intentionally not used."
-next_public_address = "0x27E59"
+# v142 supersedes the former v69 reviewed_nonexact enemy_bullet_template_push
+# declaration: it now lives in the separate original-style ASM plane.
 
 # v70: complete public ENEMIES_UPDATE body after the blocked v69 copy helper.
 [[reviewed_exact_extent]]
@@ -3287,23 +3279,24 @@ name = "randring1_next16_and(unsigned int)"
 evidence_id = "ev-th04-main-randring1-and-boundary-v137"
 reason = "Fresh Ghidra constructs exactly 0x1BC7E..0x1BC92 through RET 2; pinned TASM/MAP and raw bytes agree, and focused 108-owner plus aggregate 172-owner cold replay prove the 0x15 natural-C++ owner at CIRCLE_TEXT 0AAF:118E. Surrounding NOPs remain residual layout outside function and owner credit."
 
-# v138: CIRCLE_TEXT point-number render/put are boundary-reviewed but remain nonexact.
-[[reviewed_nonexact]]
-id = "th04-main-fn-1bd64"
-address = "0x1BD64"
-file_offset = "0xD564"
-size = "0x9A"
-name = "POINTNUMS_RENDER"
-evidence_id = "ev-th04-main-pointnum-render-put-boundary-v138"
-reason = "Fresh Ghidra, pinned TASM, v137 aggregate TLINK MAP and gap-free raw decode agree on the complete 154-byte near body through RET. Exactness remains blocked because the target writes a width value into the immediate operand of its own later instruction and no natural TC4J producer for that code-owned write is established."
-next_public_address = "0x1BDFE"
+# v140 supersedes the former v138 reviewed_nonexact POINTNUMS_RENDER and
+# @pointnum_put declarations: both now live in the separate original-style ASM
+# plane and must not be required in the authored C/C++ function ledger.
 
-[[reviewed_nonexact]]
-id = "th04-main-fn-1bdfe"
-address = "0x1BDFE"
-file_offset = "0xD5FE"
-size = "0x6A"
-name = "@pointnum_put"
-evidence_id = "ev-th04-main-pointnum-render-put-boundary-v138"
-reason = "Fresh Ghidra, pinned TASM, v137 aggregate TLINK MAP and gap-free raw decode agree on the complete 106-byte near body through RET. Warning-free natural TC4J fastcall/register probes emit a 135-byte BP-framed shape and do not reproduce the target LODSW/LOOP/XCHG register loop."
-next_public_address = "0x1BE68"
+# v163: Fresh Ghidra, TLINK, raw target decode, and split-object exact replay
+# agree on the two adjacent TILE_TEXT midboss renderers. Each function is an
+# independent natural-C++ owner because the target relocation order rejects a
+# combined translation unit.
+[[new_exact]]
+id = "th04-main-fn-1c885"
+address = "0x1C885"
+name = "midboss3_render()"
+evidence_id = "ev-th04-main-midboss3-render-boundary-v163"
+reason = "Fresh Ghidra constructs the complete 0xC5 near body at the matching TLINK public; target raw decode closes at RET immediately before midbossx_render, and split-object focused plus 196-owner aggregate cold replay prove exact natural-C++ ownership with target relocation order."
+
+[[new_exact]]
+id = "th04-main-fn-1c94a"
+address = "0x1C94A"
+name = "midbossx_render()"
+evidence_id = "ev-th04-main-midbossx-render-boundary-v163"
+reason = "Fresh Ghidra constructs the complete 0x51 near body at the matching TLINK public; target raw decode closes at RET before the independent 0xC99B zero seam, and split-object focused plus 196-owner aggregate cold replay prove exact natural-C++ ownership with target relocation order."
