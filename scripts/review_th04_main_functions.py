@@ -535,8 +535,17 @@ def reviewed_nonexact_internal_call_reviews(functions, metadata, publics, target
             raise ValueError(f"internal-call nonexact address 0x{address:X} has invalid decode_size")
         if address not in functions:
             raise ValueError(f"internal-call nonexact address 0x{address:X} lacks Ghidra function entry")
-        if address in publics:
-            raise ValueError(f"internal-call nonexact address 0x{address:X} unexpectedly has a TLINK public")
+        generated_public = override.get("generated_public")
+        if generated_public is None:
+            if address in publics:
+                raise ValueError(f"internal-call nonexact address 0x{address:X} unexpectedly has a TLINK public")
+        else:
+            names = publics.get(address, [])
+            if str(generated_public) not in names:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} lacks configured generated public "
+                    f"{generated_public!r}"
+                )
         if file_offset != file_offset_for(address):
             raise ValueError(f"internal-call nonexact address 0x{address:X} file offset mismatch")
 

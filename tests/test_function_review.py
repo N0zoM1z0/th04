@@ -1001,6 +1001,61 @@ call_site_address = "0x10010"
             self.assertEqual(switch["table_metadata_value"], "0x00")
             self.assertEqual(switch["jump_targets"], ["0x10000"])
 
+    def test_internal_call_nonexact_accepts_configured_generated_public(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_nonexact_internal_call]]
+id = "fn-generated-public-nonexact"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x2"
+name = "generated_public_nonexact_fixture()"
+owner_unit = "source-present-owner"
+source = "src/generated_public_nonexact.cpp"
+generated_public = "_generated_alias"
+evidence_id = "ev-generated-public-nonexact"
+reason = "synthetic reconstruction-only public alias"
+next_internal_address = "0x10002"
+call_site_address = "0x10010"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1820)
+            data[0x1800:0x1802] = b"\x90\xC3"
+            data[0x1802:0x1805] = b"\x55\x8B\xEC"
+            data[0x1810:0x1813] = b"\xE8\xED\xFF"
+            target.write_bytes(data)
+            functions = {0x10000: "FUN_10000", 0x10002: "FUN_10002"}
+            metadata = {
+                0x10000: {
+                    "address": "0x10000", "body_min": "0x10000",
+                    "body_max": "0x10001", "body_addresses": "2",
+                    "is_thunk": "false", "is_external": "false",
+                },
+                0x10002: {
+                    "address": "0x10002", "body_min": "0x10002",
+                    "body_max": "0x10004", "body_addresses": "3",
+                    "is_thunk": "false", "is_external": "false",
+                },
+            }
+            decoded = {
+                "instruction_count": 2,
+                "instruction_addresses": [0x10000, 0x10001],
+                "terminal": "ret", "first_address": "0x10000",
+                "end_address_exclusive": "0x10002",
+            }
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "linear_decode", return_value=dict(decoded)
+            ):
+                accepted = review.reviewed_nonexact_internal_call_reviews(
+                    functions, metadata, {0x10000: ["_generated_alias"]}, target
+                )
+                self.assertEqual(len(accepted), 1)
+                with self.assertRaisesRegex(ValueError, "lacks configured generated public"):
+                    review.reviewed_nonexact_internal_call_reviews(
+                        functions, metadata, {0x10000: ["_wrong_alias"]}, target
+                    )
+
     def test_new_reviewed_nonexact_row_requires_explicit_declaration(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

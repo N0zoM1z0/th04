@@ -4294,3 +4294,197 @@ sessions rather than being silently ignored.
 Campaign status remains active. This v167 recovery is not a 99.5%-completion,
 phase-completion, standalone-build, runtime, whole-image, OP/MAINE/ZUN, or
 whole-game completion claim.
+
+## 2026-09-14 v168 MAIN_TEXT thick-laser renderer boundary/source checkpoint
+
+This conversation first recovered and independently revalidated an interrupted
+v167 Yuuka5 foreground exact-promotion packet. The live repository initially
+reported clean `main` at `e6aadefee56ad7ae840c291a0e8f3040cda1ec98`, then
+became non-clean while HEAD remained unchanged. Complete diff/untracked review
+classified all twelve paths as one coherent `recoverable-current-work` v167
+packet. Retained focused, candidate-state aggregate, and post-promotion aggregate
+receipts were rebound to the live source and manifest and all passed. During the
+recovery, HEAD independently advanced to clean checkpoint
+`27e7135458f6a308197699dc99c23927f4446382`
+(`gpt-web: reconstruct Yuuka5 foreground renderer`), whose complete name/status
+set matched the recovered v167 packet. No duplicate commit was created. Later
+`origin/main` independently advanced to the same checkpoint; no Factory push
+operation exists and no push was invoked. v168 therefore began from clean
+`27e7135458f6a308197699dc99c23927f4446382`, ahead 0 / behind 0.
+
+All requested TH04 and Factory guidance paths were mounted and reread. Startup
+`preflight.py`, `status.py`, and the 2,120-observation function-boundary validator
+passed on the recovered v167 checkpoint. The registered `th04-ghidra` provider
+was re-enumerated and still exposes exactly ten operations with no `get_metadata`
+schema, so no undiscovered operation was invented. Its discovered `check {}`
+operation passed for repository `th04` / target `target:th04-main`, target size
+156,258 and SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native `python3 scripts/ghidra.py th04-main check` independently
+passed MZ header/load mapping, entry, all 1,136 relocation records, load-module
+identity, and sampled bytes. The pinned TC86 Borland C++ 4.02 / TASM32 5.0 /
+TLINK 6.10 toolchain attestation passed. Target canonicality remains only
+`candidate-local-attested`; none of these identity checks grant semantic or
+exactness credit by themselves.
+
+The stale prompt orientation around `sub_11DE6` was not reopened: live v143
+state already classifies and exactly reconstructs that extent as evidence-backed
+original-style assembly. After v167 recovery, the next packet was selected from
+the live corroborated/unreviewed MAIN queue rather than frozen prose. The chosen
+structural target is the central thick-laser renderer directly called by newly
+exact `yuuka5_fg_render()`.
+
+Target-first review closes `thicklasers_render()` at `th04-main / MAIN.EXE /
+MAIN_TEXT 0AAF:37D3`, MZ load `0xE2C3..0xE460`, target file
+`0xFAC3..0xFC60`, size `0x19E / 414`, target slice SHA-256
+`217a422e808e1d86bd6bd5ccd9439b1bb263ca8f829bb19074d04ae614849159`.
+Fresh attested Ghidra constructs exactly one contiguous 414-byte near body and
+reports four callees at analysis addresses `0x1107C`, `0x1114C`, `0x11744`, and
+`0x11774`. Its sole direct caller is exact v167 `yuuka5_fg_render()` at
+`0x1E8A3`; raw target bytes independently show the near call at load `0xEA68`
+resolving exactly to `0xE2C3`. Pinned TASM opens `sub_E2C3` at the same entry,
+ends it at terminal `RET` load `0xE460`, and opens `sub_E461` at the next byte.
+The reviewed body contains thirteen MZ relocation entries in target table order:
+`0xE447`, `0xE436`, `0xE425`, `0xE414`, `0xE3F6`, `0xE3DA`, `0xE3C2`,
+`0xE3AF`, `0xE394`, `0xE37B`, `0xE36D`, `0xE311`, and `0xE303`.
+
+Maintained natural source is `src/main/bullet/thicklaser_render.cpp`, SHA-256
+`c9530cb8fd03aa1a1e75681586947e31f1fe0243a9df64e7374502029e8fa6b7`.
+The still-unlocalized TH04 laser ABI is explicitly quarantined through the new
+one-line compatibility forwarder
+`compat/rec98/th04/main/bullet/laser_t.hpp`; product source does not directly
+include the pinned ReC98 tree. Earlier exact v32 evidence remains authoritative
+for a critical target-local ABI fact: the upstream ReC98 `thicklaser_t` header
+has one unknown byte after `origin`, while TH04 target layout requires four.
+The existing hash-bound v32 replay transform changes that field to a four-byte
+array before compilation. The v168 object probe was run in a current v167 cold
+source carrying that already-proved target layout; v168 does not infer the stale
+upstream layout from ReC98.
+
+The first natural source probe emitted 412 CODE bytes. Its only structural
+mismatch was the function prologue: TC4J selected four-byte `ENTER 0Ah,0`, while
+the target uses six-byte `PUSH BP; MOV BP,SP; SUB SP,0Ah`. The repository already
+has an independently exact same-toolchain precedent for this mechanism in
+`bullets_render()`. Adding only `#pragma option -G` selects the classic target BP
+frame. No source-spelling matrix was needed.
+
+The final maintained source compiles under production TC4J to exactly 414 CODE
+bytes. Natural compiler allocation matches the target: SI holds the laser
+pointer, DI holds the clamped quarter-radius, and the five integer locals occupy
+the target BP slots. Signed `/4` and `/2` expressions reproduce the target IDIV
+and signed-halving sequences; ordinary `_DX`, `_AL`, and `outportb` produce the
+GRCG shutdown without inline assembly, `__emit__`, `#pragma codestring`, copied
+target bytes, inert padding, fake returns, object patching, target patching, or an
+ABI lie. The tracked-source object raw SHA-256 is
+`bf0a8389d72044d03dda825ddea8927f087681e147968ba858aae31d2207fec5` and
+dependency-timestamp-normalized SHA-256 is
+`92879b77749959e138af22bd6569c66ea16212ea3bf0e4f66156f7d085a2b72f`.
+Masking only the `_thicklasers` offset word and thirteen far-call pointer operands
+leaves 360 fixed code bytes; all 360 match target. The masked target/candidate
+code SHA-256 is identically
+`61192d0090b16bb17bb9849d95d0d905a8dcaa0357729ff9e65fd18272a3a5c0`.
+This establishes source/codegen shape, not linked exactness.
+
+The remaining blocker is physical target-position ownership. The historical
+`main.obj` MAIN_TEXT contribution continues immediately after this function with
+six corroborated/unreviewed functions that tile the entire residual suffix with
+no gaps: `sub_E461` 0x70, `sub_E4D1` 0x70, `sub_E541` 0x139, `sub_E67A` 0x164,
+`sub_E7DE` 0x1F, and FAR `GameExecl()` at `0xE7FD` size 0xA6. Together they own
+`0xE461..0xE8A2`, size `0x442`; including `thicklasers_render()` gives one
+structurally connected `0xE2C3..0xE8A2` window of `0x5E0` bytes. Exact v167
+`yuuka5_fg_render()` begins at the next byte `0xE8A3` in a separate natural
+object.
+
+Simply deleting `sub_E2C3` from the monolithic assembler and appending a new C++
+object would put the renderer after `GameExecl()` and fail target map ownership.
+An isolated exact promotion would therefore require a large replay-only TASM
+suffix wrapper with many external dependencies. v168 deliberately does not
+manufacture that plumbing merely to promote one function. The maintained unit is
+reviewed/source-present/blocked until a later packet resolves the complete
+physical cohort or otherwise proves a truthful split.
+
+Function review exposed one useful control-plane distinction. The v101 exact
+replay already adds reconstruction-only MAP public `_thicklasers_render` at the
+internal target entry so other natural objects can link to it. The nonexact
+internal-call reviewer initially rejected this candidate MAP public, even though
+the original target has no TLINK public there. The exact internal-call gate
+already supported an explicit `generated_public` field for exactly this
+reconstruction-only situation. v168 mirrors that existing fail-closed behavior
+into the nonexact internal-call gate: without configuration, any MAP public still
+rejects; with `generated_public`, the configured name must be present exactly or
+the review rejects. Focused tests cover the prior no-public route, successful
+configured alias, and wrong-alias rejection. No target fact is inferred from the
+candidate-only alias.
+
+The final fail-closed reviewer uses the fresh v167 target function inventory and
+metadata, the v164 target-layout aggregate MAP, the private attested target, and
+`generated_public = "_thicklasers_render"`. It passes the target Ghidra entry,
+raw terminal RET, next internal entry `0x1E461`, and target CALL anchor
+`0x1EA68 -> 0x1E2C3`. Review report SHA-256 is
+`882823b5894a506220ae73d681ad603a2c9b5282b59e7478ee62834c24bc368c`.
+The trial and maintained projections contain exactly the same 384 function IDs.
+As in v166, the generic writer omits maintained owner/source projection on blocked
+rows, so that unrelated normalization was not adopted.
+
+No v168 focused exact-unit cold replay, candidate aggregate, post-promotion
+aggregate, or Factory exact claim was run or submitted. The source is known to
+lack a target-position physical link proof, so promotion replay would be
+misleading. The current repository-native exact baseline remains v167's passing
+post-promotion aggregate `gptweb-v167-yuuka5-fg-aggregate-final-001`, receipt
+SHA-256 `e9acd70ca5ad0de5d3a7460c16ed42b7ba96e7de963c10379a291088a9b79d9a`.
+
+The honest denominator expansion adds one reviewed function and 414 authored
+bytes without changing the exact numerator. Live MAIN accounting is now
+**63,048 / 66,966 exact reviewed authored bytes (94.149270%)** and
+**370 / 384 exact reviewed authored functions (96.354167%)**. MAIN routing is
+370 exact, 14 reviewed blocked, 153 unreviewed, and 31 original-style ASM
+attestation observations. These percentages apply only to the moving reviewed
+authored denominator; they are not percentages of MAIN.EXE, an executable image,
+or the game.
+
+Other TH04 executables remain active independent queues and receive no credit
+from this MAIN packet: `th04-op` has 94 unreviewed authored candidates,
+`th04-maine` 72, and `th04-zun` 13, with no honest exact-function/byte denominator
+for those artifacts. `ZUN.COM` remains an MZ artifact despite its extension.
+Their DIET/unpacked target-specific review remains separate from the selected
+`target:th04-main` analysis provider.
+
+Verification planes remain separate. v168 establishes one reviewed boundary and
+maintainable natural-source/codegen presence, but function/extent linked exactness
+is **not established**. Standalone TH04 production compile/link closure is **not
+established**. Whole-image exactness is not established. Runtime-storage identity
+is **not established**. No runtime scenario was executed. Portable runtime
+validation is not established. No v168 Factory acceptance exists. Independent
+pristine-release provenance remains unestablished; the private target remains
+only `candidate-local-attested` and was never staged, modified, patched,
+relocated, or published.
+
+The committed v167 handoff recorded `.analysis/` at `6,017,255,629` bytes. The
+v168 pre-final-CI inventory is `6,146,774,635` bytes. The dedicated v168 scratch
+root `.analysis/gpt-web/th04-main-20260914-v168` is only 845,700 bytes and keeps
+bounded source/object/fixed-byte reports; no v168 cold replay tree was created.
+Most private storage remains under `.analysis/reconstruction/exact-unit-replay`
+(about 4.68 GB). Because the extra growth outside v168 scratch is not proven to
+be v168-owned solely from timestamps or size, it is retained as pre-existing or
+concurrent reproducible/unknown analysis state rather than deleted. No active
+Borland/Wine/replay producer was visible at the checkpoint inventory. Shared
+toolchains, Wine prefix, private targets, Ghidra project/provider state,
+legacy/unknown content, and evidence-linked v167 replay trees remain untouched.
+Final post-CI `.analysis/` size is `6,146,786,927` bytes.
+
+The first concrete continuation is the complete residual MAIN_TEXT cohort, not
+an isolated easy helper: audit `0xE461..0xE8A2` (`sub_E461`, `sub_E4D1`,
+`sub_E541`, `sub_E67A`, `sub_E7DE`, and FAR `GameExecl()`) as one structural
+producer question, together with the blocked natural `thicklasers_render()` that
+precedes it. Reconcile all six boundaries, callers/callees, target publics versus
+reconstruction aliases, relocations, shared data/strings, and translation-unit
+seams before writing or fusing source. If that 0x442 residual can be recovered
+naturally in target order, the combined `0x5E0` window may remove v168's physical
+link blocker without a large replay-only suffix. If not, retain the honest
+source-present blocker and document the physical-origin evidence. Do not reopen
+the v166 DEMO relocation ordering or old `dialog_run()` relocation blocker
+without a genuinely new OMF/link-history mechanism.
+
+Campaign status remains active. This v168 handoff closes one bounded hard packet;
+it is not a 99.5% completion, project completion, whole-product build, runtime,
+whole-image, OP/MAINE/ZUN, or whole-game completion claim.
