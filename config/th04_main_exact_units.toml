@@ -8496,3 +8496,117 @@ map_start = "0x3D0D"
 map_size = "0xA6"
 target_file_offset = "0xFFFD"
 size = "0xA6"
+
+# v170 candidate: Recover Reimu's B-shot level 5-9 callback cohort as one
+# natural TC4J producer in main__TEXT. The original monolithic assembler
+# contribution is split at the physical owner boundary: the prefix remains in
+# th04_main.asm, the 0x412-byte natural C++ contribution occupies the original
+# callback/table window, and a hash-extracted zero-credit TASM suffix preserves
+# the untouched remainder of main__TEXT at its original physical position.
+[[scaffold_extractions]]
+id = "th04-main01-reimu-b-suffix-v170"
+trigger_units = ["th04-main-reimu-b-l5-l9-v170"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "include th04/formats/bb_playchar.asm\r\n"
+end = "main__TEXT\tends\r\n"
+span_sha256 = "0d1b8bd8e6f786f61356e28f823940f9a8dd04224ce5172c3eedcdb2c61a57cc"
+template_source = "config/replay/th04_main01_reimu_b_suffix_v170.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m1rsuf.asm"
+
+# TASM knew these three far targets were in main_01 while assembling the
+# original monolithic object, so nopcall encoded NOP; PUSH CS; CALL near. Once
+# the untouched suffix is split into an auxiliary object, an unqualified
+# external would encode a true far CALL. Preserve the original same-group call
+# semantics explicitly; this auxiliary source receives zero reconstruction
+# credit.
+[[scaffold_extractions.replacements]]
+old = "\t\tnopcall\t@circles_add_growing$qii\r\n"
+new = "\t\tnop\r\n\t\tpush\tcs\r\n\t\tcall\tnear ptr @circles_add_growing$qii\r\n"
+expected_count = 3
+
+# These suffix-local near entries are called from the retained prefix but were
+# not TLINK publics in the monolithic object. Export them only in the replay
+# split so the retained prefix can preserve its original same-group calls.
+[[scaffold_extractions.replacements]]
+old = "sub_FFA4\tproc near\r\n"
+new = "public sub_FFA4\r\nsub_FFA4\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_1042A\tproc near\r\n"
+new = "public sub_1042A\r\nsub_1042A\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_104B6\tproc near\r\n"
+new = "public sub_104B6\r\nsub_104B6\tproc near\r\n"
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-reimu-b-l5-l9-v170-build"
+trigger_units = ["th04-main-reimu-b-l5-l9-v170"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/tlr.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/rshb.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/tlr.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-reimu-b-l5-l9-v170-layout"
+trigger_units = ["th04-main-reimu-b-l5-l9-v170"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "2f25851c708acbdaf05799a0971782580a2e5779b686a1fa05a5aa0db368ba3d",
+  "a16f9e43e241c2c1e9cc0c59dcdace620ab0c3d1ba30c21da76d13c73e5f3ba4",
+]
+
+[[source_transforms.ops]]
+id = "publish-reimu-shot-cycle-v170"
+kind = "insert_before"
+anchor = "byte_256A2\tdb ?\r\n"
+text = "public _reimu_shot_cycle\r\n_reimu_shot_cycle label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-sub-efa1-v170"
+kind = "insert_before"
+anchor = "sub_EFA1\tproc far\r\n"
+text = "public sub_EFA1\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main01-reimu-b-split-v170"
+kind = "insert_before"
+anchor = "main__TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+text = "public byte_259A3, rgb_257D6, byte_259A7, sub_E1F4, byte_25980\r\npublic @grcg_setmode_tdw$qv, @grcg_setcolor_direct_raw$qv, PLAYFIELD_FILLM_0_40_384_274, @grcg_setmode_rmw$qv\r\nextrn _shot_reimu_b_l5:near\r\nextrn _shot_reimu_b_l6:near\r\nextrn _shot_reimu_b_l7:near\r\nextrn _shot_reimu_b_l8:near\r\nextrn _shot_reimu_b_l9:near\r\nextrn BB_PLAYCHAR_LOAD:near\r\nextrn BB_PLAYCHAR_FREE:near\r\nextrn ENEMIES_RENDER:near\r\nextrn PLAYER_BOMB:near\r\nextrn BOMB_REIMU:near\r\nextrn BOMB_MARISA:near\r\nextrn @bomb_update_and_render$qv:near\r\nextrn @SHOTS_RENDER$QV:near\r\nextrn @shots_hittest$qv:far\r\nextrn sub_FFA4:near\r\nextrn sub_1042A:near\r\nextrn sub_104B6:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-main01-reimu-b-table-v170"
+kind = "replace"
+old = "\tdw shot_reimu_b_l5\r\n\tdw shot_reimu_b_l6\r\n\tdw shot_reimu_b_l7\r\n\tdw shot_reimu_b_l8\r\n\tdw shot_reimu_b_l9\r\n"
+new = "\tdw _shot_reimu_b_l5\r\n\tdw _shot_reimu_b_l6\r\n\tdw _shot_reimu_b_l7\r\n\tdw _shot_reimu_b_l8\r\n\tdw _shot_reimu_b_l9\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main01-reimu-b-and-suffix-v170"
+kind = "remove_between"
+removed_sha256 = "5e27f20d68fadb3273496a01a19b1a9c01897211b17334b569f0db459c173f90"
+start = "shot_reimu_b_l5\tproc near\r\n"
+end = "main__TEXT\tends\r\n"
+replacement = "main__TEXT\tends\r\n"
+
+[[units]]
+id = "th04-main-reimu-b-l5-l9-v170"
+default_enabled = true
+requires_units = ["th04-main-gameexecl-v169"]
+repo_source = "src/main/player/reimu_shot_b.cpp"
+overlay_path = "th04/rshb.cpp"
+map_module = "th04/rshb.cpp"
+map_mode = "exact"
+object_path = "obj/th04/rshb.obj"
+auxiliary_objects = ["obj/th04/m1rsuf.obj"]
+map_segment = "MAIN__TEXT"
+map_start = "0x5032"
+map_size = "0x412"
+target_file_offset = "0x11322"
+size = "0x412"

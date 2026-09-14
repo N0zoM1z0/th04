@@ -167,9 +167,10 @@ def reviewed_exact_no_ghidra_reviews(functions, publics, target):
         address = int(str(override["address"]), 0)
         file_offset = int(str(override["file_offset"]), 0)
         size = int(str(override["size"]), 0)
+        physical_size = int(str(override.get("physical_size", override["size"])), 0)
         decode_size = int(str(override.get("decode_size", override["size"])), 0)
-        if not (0 < decode_size <= size):
-            raise ValueError(f"no-Ghidra exact address 0x{address:X} has invalid decode_size")
+        if not (0 < decode_size <= size <= physical_size):
+            raise ValueError(f"no-Ghidra exact address 0x{address:X} has invalid logical/physical size")
         item = by_address.get(address)
         if item is None:
             raise ValueError(f"no-Ghidra exact address 0x{address:X} lacks exact-owner/TLINK-public candidate")
@@ -179,16 +180,16 @@ def reviewed_exact_no_ghidra_reviews(functions, publics, target):
             raise ValueError(f"no-Ghidra exact address 0x{address:X} owner mismatch")
         if file_offset != address - 0x10000 + 0x1800:
             raise ValueError(f"no-Ghidra exact address 0x{address:X} file offset mismatch")
-        if address + size > int(item["owner_end"]):
+        if address + physical_size > int(item["owner_end"]):
             raise ValueError(f"no-Ghidra exact address 0x{address:X} escapes exact owner")
         next_public = override.get("next_public_address")
         if next_public is not None:
             boundary = int(str(next_public), 0)
-            if address + size != boundary or boundary not in publics:
+            if address + physical_size != boundary or boundary not in publics:
                 raise ValueError(f"no-Ghidra exact address 0x{address:X} next-public boundary mismatch")
             boundary_mode = f"next TLINK public 0x{boundary:X}"
         else:
-            if address + size != int(item["owner_end"]):
+            if address + physical_size != int(item["owner_end"]):
                 raise ValueError(f"no-Ghidra exact address 0x{address:X} must end at exact owner boundary")
             boundary_mode = f"exact owner end 0x{int(item['owner_end']):X}"
 
@@ -197,7 +198,7 @@ def reviewed_exact_no_ghidra_reviews(functions, publics, target):
         switch_review = None
         if "jump_table_address" in override:
             code_end = address + decode_size
-            extent_end = address + size
+            extent_end = address + physical_size
             jump_table_address = int(str(override["jump_table_address"]), 0)
             jump_table_count = int(override["jump_table_count"])
             cs_base = int(str(override["cs_base"]), 0)
@@ -235,7 +236,7 @@ def reviewed_exact_no_ghidra_reviews(functions, publics, target):
                 "table_metadata_value": (f"0x{metadata_value:02X}" if metadata_value is not None else None),
                 "trailing_extent_fully_accounted": True,
             }
-        elif decode_size != size:
+        elif decode_size != physical_size:
             raise ValueError(f"no-Ghidra exact address 0x{address:X} has unexplained trailing bytes")
 
         decoded.pop("instruction_addresses", None)
@@ -244,6 +245,7 @@ def reviewed_exact_no_ghidra_reviews(functions, publics, target):
             "id": str(override["id"]),
             "file_offset": file_offset,
             "size": size,
+            "physical_size": physical_size,
             "decode_size": decode_size,
             "evidence_id": str(override["evidence_id"]),
             "reason": str(override["reason"]),
@@ -1079,9 +1081,10 @@ def reviewed_nonexact_reviews(
         address = int(str(override["address"]), 0)
         file_offset = int(str(override["file_offset"]), 0)
         size = int(str(override["size"]), 0)
+        physical_size = int(str(override.get("physical_size", override["size"])), 0)
         decode_size = int(str(override.get("decode_size", override["size"])), 0)
-        if not (0 < decode_size <= size):
-            raise ValueError(f"reviewed nonexact 0x{address:X} has invalid decode_size")
+        if not (0 < decode_size <= size <= physical_size):
+            raise ValueError(f"reviewed nonexact 0x{address:X} has invalid logical/physical size")
         item = by_address.get(address)
         if item is None:
             raise ValueError(
@@ -1095,7 +1098,7 @@ def reviewed_nonexact_reviews(
                 )
             if not (
                 int(item["owner_start"]) <= address
-                and address + size <= int(item["owner_end"])
+                and address + physical_size <= int(item["owner_end"])
             ):
                 raise ValueError(
                     f"reviewed exact extent address 0x{address:X} escapes exact owner"
@@ -1113,7 +1116,7 @@ def reviewed_nonexact_reviews(
         next_public = override.get("next_public_address")
         if next_public is not None:
             next_public_address = int(str(next_public), 0)
-            if address + size != next_public_address or next_public_address not in publics:
+            if address + physical_size != next_public_address or next_public_address not in publics:
                 raise ValueError(
                     f"reviewed nonexact address 0x{address:X} next-public boundary mismatch"
                 )
@@ -1131,7 +1134,7 @@ def reviewed_nonexact_reviews(
                     f"reviewed extent 0x{address:X} has empty trailing_switch_tables"
                 )
             code_end = address + decode_size
-            extent_end = address + size
+            extent_end = address + physical_size
             trailing_cursor = code_end
             table_reviews: list[dict[str, object]] = []
             total_jump_entries = 0
@@ -1237,7 +1240,7 @@ def reviewed_nonexact_reviews(
             jump_table_count = int(override["jump_table_count"])
             cs_base = int(str(override["cs_base"]), 0)
             code_end = address + decode_size
-            extent_end = address + size
+            extent_end = address + physical_size
             if not (code_end <= jump_table_address < extent_end):
                 raise ValueError(
                     f"reviewed nonexact switch table for 0x{address:X} is outside trailing data"
@@ -1354,6 +1357,7 @@ def reviewed_nonexact_reviews(
                 "id": str(override["id"]),
                 "file_offset": file_offset,
                 "size": size,
+                "physical_size": physical_size,
                 "decode_size": decode_size,
                 "name": str(override.get("name", item.get("public") or item.get("ghidra_name", ""))),
                 "reason": str(override["reason"]),

@@ -4616,3 +4616,177 @@ The v169 implementation checkpoint is
 (`gpt-web: reconstruct gameover MAIN_TEXT cohort`). It was not pushed. This Git
 commit is resume/review state only; the exactness evidence remains the focused,
 candidate-aggregate, and post-promotion aggregate receipts listed above.
+
+## v170 session checkpoint
+
+This conversation resumed from clean `main` HEAD
+`b04ebb15eca1992b67cc4d32c4d626764a502f80`, ahead 3 / behind 0 versus
+`origin/main`. Mandatory recovery initially found no staged, unstaged, or
+untracked paths. During the target-boundary investigation the live worktree
+acquired one coherent interrupted v170 packet: `config/th04_main_exact_units.toml`,
+`config/units.csv`, `src/main/player/reimu_shot_b.cpp`, and
+`config/replay/th04_main01_reimu_b_suffix_v170.asm.in`. Complete diff and ignored
+scratch review classified all four as `recoverable-current-work`; no unrelated or
+unknown dirty path was found. One historical v120 CSV quoting normalization side
+effect was removed rather than adopted. No reset, stash, target mutation, or push
+was used.
+
+All required repository and Factory guidance paths were reread. Preflight,
+`status.py`, and the 2,120-observation function-boundary validator pass. Factory
+`th04-ghidra` still exposes ten discovered operations and no `get_metadata`;
+its discovered `check {}` passes for repository `th04` /
+`target:th04-main`. Repository-native `python3 scripts/ghidra.py th04-main check`
+independently passes the MZ/header/load mapping, entry, all 1,136 relocation
+entries, load-module identity, and sampled bytes. The private target remains
+156,258 bytes with SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+ignored under `/.analysis/`, with unchanged mtime. Its provenance status remains
+only `candidate-local-attested`.
+
+The stale prompt orientation around `sub_11DE6` was not reopened. Live v143
+already routes `shot_velocity_set()` plus `sub_11DE6` to exact original-style
+symbolic TASM after independent TH05 original-target corroboration and durable
+legal-TC4J negative evidence. The actual v170 frontier is the Reimu B-shot
+level-5 through level-9 cohort in `MAIN__TEXT`.
+
+Target-first review corrects a material function-boundary gap. Fresh attested
+Ghidra creates an entry only at linear `0x1FB22`; that function is grossly
+cross-linked backward to `0x13D5B` and has three disjoint body ranges. Ghidra
+constructs no functions at `0x1FBF0`, `0x1FCBE`, `0x1FD8C`, or `0x1FE5A`.
+Pinned TASM, gap-free raw decode, terminal RETs, next PROC seams, and compiler
+jump-table validation instead close:
+
+- `shot_reimu_b_l5()` at `MAIN__TEXT 0AAF:5032`, load `0xFB22`, executable
+  `0xC6`, followed by a four-word table `0xFBE8..0xFBEF`, physical `0xCE`;
+- `shot_reimu_b_l6()` at `0AAF:5100`, load `0xFBF0`, executable `0xC6`, table
+  `0xFCB6..0xFCBD`, physical `0xCE`;
+- `shot_reimu_b_l7()` at `0AAF:51CE`, load `0xFCBE`, executable `0xC6`, table
+  `0xFD84..0xFD8B`, physical `0xCE`;
+- `shot_reimu_b_l8()` at `0AAF:529C`, load `0xFD8C`, executable `0xC6`, table
+  `0xFE52..0xFE59`, physical `0xCE`;
+- `shot_reimu_b_l9()` at `0AAF:536A`, load `0xFE5A`, executable `0xCE`, six-word
+  table `0xFF28..0xFF33`, physical `0xDA`.
+
+All twenty target table words resolve through CS base `0x1AAF0` to decoded
+instruction starts inside their own executable body. The final table ends exactly
+before the historical `bb_playchar` contribution at `0xFF34`. The full physical
+producer is therefore file `0x11322..0x11733`, load `0xFB22..0xFF33`, size
+`0x412`, with no overlapping MZ relocation and target SHA-256
+`dd0f0ababdaf3909c9d2d9091cb3e9b9a03b97a1bba4ee975813e5caf0168387`.
+The five function-ledger sizes count only the executable bodies. The 0x2C total
+post-RET switch-table bytes remain exact compiler-owned physical data and do not
+inflate logical function-body credit.
+
+Maintained natural source is `src/main/player/reimu_shot_b.cpp`. TC86 emits one
+`0x412` CODE object with five publics at relative offsets `0`, `0xCE`, `0x19C`,
+`0x26A`, and `0x338`. Source order matters: TC86 emits switch case blocks in
+source order, while the target physically orders the level-5 through level-8
+blocks from highest case downward and likewise orders level 9 from its shared
+10/11 case downward. Writing the natural C++ cases in that physical order
+reproduces the target blocks and compiler table words. The final source SHA-256
+is `1ba040bddb3e62a5bb9090587eda3aec020ae1c058d04938af88939b0aa04a94`.
+There is no inline assembly, copied target byte array, `#pragma codestring`, fake
+return, inert padding, object patch, or ABI lie.
+
+The original position is inside monolithic historical `main__TEXT`, so replay
+hash-splits the pinned scaffold into retained prefix, natural `rshb.cpp`, and a
+zero-credit extracted TASM suffix beginning at the original `bb_playchar`
+include. Splitting the original single OMF exposed module-local symbol visibility;
+all cross-seam adaptations are symbolic. TASM `/mx` case is preserved according
+to real PUBDEF/EXTDEF spelling. `ReC98.inc` normally publishes absolute
+`_address_0` when `BINARY` is defined; the replay-only suffix inlines the same
+small dependency surface while omitting only that duplicate absolute-public
+block, avoiding a second physical owner for the symbol.
+
+The useful negative linked diagnostic is `gptweb-v170-reimu-b-split-005`, receipt
+SHA-256 `55dbf79c1683f089f067e34307a906da3272ccdd771af74e011184b99c1bf629`.
+It links, but replay fails because zero-length word-aligned suffix SEGDEFs still
+impose TLINK alignment: empty `MAIN_0_TEXT` and `MAIN_01_TEXT` contributions add
+one byte each and shift `MAIN_012_TEXT` and later segments by +2, with additional
+empty aligned segments disturbing later owners. The same diagnostic independently
+exposed ascending source-case block order versus descending target order. The
+final plumbing byte-aligns only zero-length replay segment declarations and keeps
+the byte-bearing `main__TEXT` contribution at its real alignment. This removes
+layout side effects rather than manufacturing compensation bytes.
+
+Final focused replay `gptweb-v170-reimu-b-split-006` passes a 123-owner dependency
+closure twice with `failures=[]`; receipt SHA-256 is
+`8e28ab1c7cd338dbe1a5778a6313d9945c93bd489617ec02fc284bb9692cfc08`.
+Both focused candidate MAIN images are
+`23095a8571d66c653f13c0625582f6b8a23bee4dcda9df98fed6fafeaeb6b4bf`.
+The complete 0x412 linked slice is raw exact in both builds, map placement is
+`0AAF:5032` size `0x412`, ordered relocation overlap is empty/exact, the TC86 OMF
+is valid and deterministic, and dependency-normalized object SHA-256 is
+`35bf7c65460cfa4d84b93a291768372334872253c699d4076dbb91c610c3a3ac`.
+
+Candidate-state no-unit aggregate
+`gptweb-v170-reimu-b-aggregate-candidate-001` passes all **202** default owners
+twice; receipt SHA-256 is
+`c55e5c89bf745a474cd7252f6f46a4c958bb092fe913385f2b01378c906c45ec`.
+After ledger promotion, post-promotion aggregate
+`gptweb-v170-reimu-b-aggregate-final-001` passes the same 202-owner cohort twice;
+receipt SHA-256 is
+`a3a1da4fb4472b10b3964d18ef6a229b1999695708b89476e05b825b9a75e9a3`.
+Both aggregate A/B candidate MAIN images have SHA-256
+`e18f426cd5075d3e41f0d216de327c3a6a98286197c4f10eff42f15fe2d80aed`.
+
+Function review adds an optional `physical_size` to the existing exact-extent and
+no-Ghidra gates. `size` remains executable function-body credit;
+`physical_size` is used only for exact-owner containment, next-public seams, and
+trailing compiler-table validation. Policies without it retain their previous
+behavior. Focused regression tests and the complete function-review module pass.
+Level 5 uses the cross-linked exact-extent route; levels 6-9 use the no-Ghidra
+route. Trial report SHA-256 is
+`825414cfb7f6b9310dd2144a1e5bce77088c4bc74716aeb2b0defdd16790c365`.
+The trial changes 390 reviewed IDs to exactly 395, adds only the expected five
+v170 functions, removes none, changes no prior address/size/state, and yields
+382 exact plus 13 blocked functions.
+
+Live MAIN accounting after v170 is **65,594 / 69,098 exact reviewed authored
+bytes (94.928942%)** and **382 / 395 exact reviewed authored functions
+(96.708861%)**. MAIN routing is 382 exact, 13 blocked, 142 unreviewed, and 31
+ASM-attestation observations. These remain moving reviewed denominators, not
+percentages of `MAIN.EXE`, product closure, or the game. `OP.EXE`, `MAINE.EXE`,
+and `ZUN.COM` remain independent queues with 94, 72, and 13 unreviewed authored
+candidates and no honest exact-function/byte denominator; v170 grants them no
+MAIN-derived credit.
+
+The full repository `scripts/ci.py` passes after v170, including Python tests,
+tracking, the 2,120-row boundary ledger, generated artifacts, all private TH04
+target checks, TH01-TH05 Oracle calibration, Ghidra/JDK identity, live Ghidra DB
+replay, and mutation smoke. `git diff --check` also passes.
+
+Verification planes remain separate. Repository-native physical-owner exactness
+is established for the 0x412 producer and logical exactness for the five reviewed
+functions. Standalone TH04 production-source/link closure, whole-image exactness,
+runtime-storage identity, runtime-scenario validation, portable-runtime
+validation, v170 Factory Truth-Kernel acceptance, and pristine-release provenance
+remain unestablished. No v170 Factory claim has been submitted in this packet.
+
+The ignored `.analysis/` tree was **6,428,776,762 bytes** at conversation entry
+and peaked at 6,846,081,869 bytes while v170 exploratory and cold replays were
+present. After proving inactive producers and tracked-reference disposition,
+receiptless/intermediate probe/split trees 001-004 plus the unneeded probe-001
+were removed; split-005 negative, split-006 focused, and candidate aggregate were
+compacted to receipt-only; the candidate aggregate MAP and fail-closed reviewer
+outputs were retained as small v170 scratch evidence; and the complete
+post-promotion 202-owner aggregate was retained as the current cold baseline.
+Post-cleanup `.analysis/` was 6,499,168,828 bytes; post-CI it is
+**6,499,174,961 bytes**. Shared target, toolchain, Wine prefix, Ghidra state,
+legacy/unknown content, and all non-v170 artifacts were left untouched.
+
+The next structural packet should continue left through the complete pre-v170
+Reimu shot-handler cohort rather than harvesting a small helper. Live routing
+contains exactly **13 contiguous authored functions** from `shot_reimu_l0` at
+load `0xF36C` through `shot_reimu_b_l4` ending at `0xFB21`: l0/l1, A levels
+2-9, and B levels 2-4. Their current target/Ghidra body sizes sum exactly to the
+entire **0x7B6-byte** window, with no unexplained gap before exact v170 l5. First
+reconcile whether this target-derived assembler window is one or multiple TC86
+physical producers by compiling natural source and comparing OMF LEDATA/FIXUPP,
+MAP seams, and relocation order; do not assume the 13 current Ghidra-contiguous
+bodies imply one translation unit. If a physical seam appears, preserve it rather
+than fusing functions for convenience.
+
+Campaign status remains active. v170 closes one bounded hard packet and does not
+claim 99.5% completion, project completion, whole-product build closure,
+runtime validation, OP/MAINE/ZUN reconstruction, or whole-game completion.

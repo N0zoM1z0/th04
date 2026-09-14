@@ -1,0 +1,253 @@
+.386
+.model use16 large _TEXT
+; ReC98
+; Main include file
+
+locals
+
+LDATA = @DataSize
+dPtrSize = (@DataSize + 1) * 2
+
+include libs/master.lib/func.inc
+include libs/master.lib/super.inc
+include libs/master.lib/bgm.inc
+include libs/master.lib/pf.inc
+include libs/master.lib/clip.inc
+include libs/master.lib/macros.inc
+include libs/kaja/kaja.inc
+include twobyte.inc
+include pc98.inc
+include th01/hardware/egc.inc
+include th02/formats/pi_slots.inc
+
+nopcall macro func
+if LDATA
+	nop	; PC-98 Touhou compatibility
+endif
+	call func
+endm
+
+; Avoids specifying both segment and offset of a function. Too bad that it
+; still doesn't cause TASM to require [func] to be a valid identifier.
+setfarfp macro farfp, func
+	mov word ptr farfp+2, seg func
+	mov word ptr farfp, offset func
+endm
+
+; master.lib extensions
+; ---------------------
+; super_roll_put_1plane() plane_put constants
+PLANE_PUT  = 0FF00h or GC_RMW
+; ---------------------
+
+; Rank definitions
+RANK_EASY = 0
+RANK_NORMAL = 1
+RANK_HARD = 2
+RANK_LUNATIC = 3
+RANK_EXTRA = 4
+RANK_COUNT = 5
+BINARY = 'M'
+include th04/th04.inc
+include th01/math/subpixel.inc
+include th02/main/sparks.inc
+include th04/sprites/main_pat.inc
+include th04/sprites/main_cdg.inc
+include th04/sprites/blit.inc
+include th04/main/phase.inc
+include th04/main/tile/tile.inc
+bullet_template_delta_t union
+ spread_angle db ?
+ stack_speed db ?
+bullet_template_delta_t ends
+include th04/main/bullet/bullet.inc
+include th04/main/gather.inc
+include th04/main/enemy/enemy.inc
+BOMB_STAR_COUNT = 48
+BOMB_STAR_W = 16
+BOMB_STAR_H = 16
+bomb_star_t struc
+ BS_center Point <?>
+ BS_angle db ?
+ BS_speed db ?
+bomb_star_t ends
+
+shot_t struc
+ flag db ?
+ SHOT_age db ?
+ pos motion_t <?>
+ patnum_base dw ?
+ damage db ?
+ SHOT_angle db ?
+shot_t ends
+HITSHOT_FRAMES_PER_CEL = 4
+SHOT_COUNT = 68
+HITSHOT_FRAMES = (HITSHOT_CELS * HITSHOT_FRAMES_PER_CEL)
+SF_FREE = 0
+SF_ALIVE = 1
+SF_HIT = 2
+SF_REMOVE = (SF_HIT + HITSHOT_FRAMES)
+SHOT_LASER_COOLDOWN_FRAMES = 32
+SHOT_W = 16
+SHOT_H = 16
+
+shot_alive_t struct
+ SA_pos Point <?>
+ SA_shot dw ?
+shot_alive_t ends
+
+ENEMY_W = 32
+ENEMY_H = 32
+EF_FREE = 0
+EF_ALIVE = 1
+EF_KILLED = 2
+EF_ALIVE_FIRST_FRAME = 3
+EF_KILL_ANIM = 80h
+ENEMY_COUNT = 32
+
+SLOWDOWN_TEXT segment byte public 'CODE' use16
+SLOWDOWN_TEXT ends
+DEMO_TEXT segment byte public 'CODE' use16
+DEMO_TEXT ends
+EMS_TEXT segment byte public 'CODE' use16
+EMS_TEXT ends
+TILE_SET_TEXT segment byte public 'CODE' use16
+TILE_SET_TEXT ends
+STD_TEXT segment byte public 'CODE' use16
+STD_TEXT ends
+END_TEXT segment byte public 'CODE' use16
+END_TEXT ends
+CIRCLE_TEXT segment byte public 'CODE' use16
+CIRCLE_TEXT ends
+TILE_TEXT segment byte public 'CODE' use16
+TILE_TEXT ends
+mai_TEXT segment byte public 'CODE' use16
+mai_TEXT ends
+PLAYFLD_TEXT segment byte public 'CODE' use16
+PLAYFLD_TEXT ends
+M4_RENDER_TEXT segment byte public 'CODE' use16
+M4_RENDER_TEXT ends
+DIALOG_TEXT segment byte public 'CODE' use16
+DIALOG_TEXT ends
+BOSS_EXP_TEXT segment byte public 'CODE' use16
+BOSS_EXP_TEXT ends
+main_TEXT segment byte public 'CODE' use16
+main_TEXT ends
+STAGES_TEXT segment byte public 'CODE' use16
+STAGES_TEXT ends
+main__TEXT segment byte public 'CODE' use16
+main__TEXT ends
+PLAYER_M_TEXT segment byte public 'CODE' use16
+PLAYER_M_TEXT ends
+PLAYER_P_TEXT segment byte public 'CODE' use16
+PLAYER_P_TEXT ends
+main_0_TEXT segment byte public 'CODE' use16
+main_0_TEXT ends
+HUD_OVRL_TEXT segment byte public 'CODE' use16
+HUD_OVRL_TEXT ends
+main_01_TEXT segment byte public 'CODE' use16
+main_01_TEXT ends
+main_012_TEXT segment byte public 'CODE' use16
+main_012_TEXT ends
+CFG_LRES_TEXT segment byte public 'CODE' use16
+CFG_LRES_TEXT ends
+main_013_TEXT segment byte public 'CODE' use16
+main_013_TEXT ends
+CHECKERB_TEXT segment byte public 'CODE' use16
+CHECKERB_TEXT ends
+MB_INV_TEXT segment byte public 'CODE' use16
+MB_INV_TEXT ends
+BOSS_BD_TEXT segment byte public 'CODE' use16
+BOSS_BD_TEXT ends
+BOSS_BG_TEXT segment byte public 'CODE' use16
+BOSS_BG_TEXT ends
+SCORE_TEXT segment byte public 'CODE' use16
+SCORE_TEXT ends
+BOSS_FG_TEXT segment byte public 'CODE' use16
+BOSS_FG_TEXT ends
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, END_TEXT, CIRCLE_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, BOSS_FG_TEXT
+extrn sub_EFA1:far
+extrn _resident:dword
+extrn _bb_playchar_bb_fn:dword
+extrn _bb_playchar_cdg_fn:dword
+extrn FILE_ROPEN:proc
+extrn HMEM_ALLOCBYTE:proc
+extrn _bb_playchar_seg:word
+extrn FILE_READ:proc
+extrn FILE_CLOSE:proc
+extrn CDG_LOAD_SINGLE_NOALPHA:far
+extrn HMEM_FREE:proc
+extrn _bombing:byte
+extrn _bg_render_bombing:word
+extrn _bombing_disabled:byte
+extrn _miss_time:byte
+extrn _player_is_hit:byte
+extrn byte_259A3:byte
+extrn _bomb_frame:byte
+extrn _player_invincibility_time:byte
+extrn _bg_render_bombing_func:word
+extrn _bullet_clear_time:byte
+extrn SND_SE_PLAY:far
+extrn _items_pull_to_player:byte
+extrn _playchar:byte
+extrn _tiles_bb_col:byte
+extrn _tiles_bb_seg:word
+extrn @TILES_BB_PUT_RAW$QI:near
+extrn @grcg_setmode_tdw$qv:near
+extrn @grcg_setcolor_direct_raw$qv:near
+extrn PLAYFIELD_FILLM_0_40_384_274:near
+extrn CDG_PUT_NOALPHA_8:far
+extrn _circles_color:byte
+extrn PaletteTone:word
+extrn _palette_changed:byte
+extrn _stage_frame_mod4:byte
+extrn _stage_frame:word
+extrn _drawpoint:Point
+extrn VECTOR2_AT:far
+extrn @CIRCLES_ADD_GROWING$QII:far
+extrn @RANDRING1_NEXT16_MOD$QUI:near
+extrn _scroll_active:byte
+extrn GRAPH_SCROLLUP:proc
+extrn Palettes:rgb_t
+extrn NULLFUNC_NEAR:near
+extrn @grcg_setmode_rmw$qv:near
+extrn rgb_257D6:rgb_t
+extrn _playchar_bomb_func:word
+extrn _scroll_line:word
+extrn _bomb_stars:bomb_star_t
+extrn @RANDRING1_NEXT16_AND$QUI:near
+extrn VECTOR2:proc
+extrn @Z_SUPER_PUT_16X16_MONO_RAW$QI:near
+extrn _shot_laser_time:word
+extrn _shot_laser_style:byte
+extrn _shot_time:byte
+extrn byte_259A7:byte
+extrn _tile_invalidate_box:Point
+extrn _shots:shot_t
+extrn TILES_INVALIDATE_AROUND:near
+extrn _shot_laser_bottomcenter:motion_t
+extrn _shots_alive_count:word
+extrn _shots_alive:shot_alive_t
+extrn @PlayfieldMotion@update_seg1$qv:near
+extrn _player_option_pos_cur:Point
+extrn sub_E1F4:near
+extrn SCROLL_SUBPIXEL_Y_TO_VRAM_SEG1:near
+extrn Z_SUPER_ROLL_PUT_TINY_16X16_RAW:near
+extrn _shot_hitbox_center:Point
+extrn _shot_hitbox_radius:Point
+extrn byte_25980:byte
+extrn @SPARKS_ADD_RANDOM$Q20%SUBPIXELBASE$TI$TI%T1II:far
+extrn _shots_hittest_against_boss:byte
+extrn _stage_frame_mod2:byte
+extrn _score_delta:dword
+extrn _enemies:enemy_t
+extrn SUPER_ROLL_PUT:proc
+extrn SUPER_ROLL_PUT_1PLANE:proc
+extrn _miss_explosion_radius:word
+extrn _miss_explosion_angle:byte
+extrn _player_pos:motion_t
+extrn _player_option_pos_prev:Point
+main__TEXT segment byte public 'CODE' use16
+assume cs:main_01
+{{EXTRACTED_SPAN}}
+end

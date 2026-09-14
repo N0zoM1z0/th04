@@ -3604,3 +3604,123 @@ address = "0x1E7FD"
 name = "GameExecl(const char far*)"
 evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
 reason = "Admit FAR GameExecl() only after original-public boundary review and exact focused plus candidate-state aggregate replay of its separate 0xA6 producer."
+
+
+# v170: Reimu B-shot level 5-9 physical producer. Fresh Ghidra grossly
+# cross-links l5 and constructs no l6-l9 entries. Pinned TASM/raw close each
+# executable body through RET, followed immediately by a compiler jump table.
+# physical_size validates the table and next-entry seam while size remains
+# executable function-body credit.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-1fb22"
+address = "0x1FB22"
+file_offset = "0x11322"
+size = "0xC6"
+physical_size = "0xCE"
+decode_size = "0xC6"
+name = "shot_reimu_b_l5()"
+owner_unit = "th04-main-reimu-b-l5-l9-v170"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Fresh Ghidra enters at the correct l5 address but grossly cross-links its body. Pinned TASM and gap-free raw decode close the executable body through RET at 0x1FBE7; the four-word compiler jump table at 0x1FBE8..0x1FBEF targets decoded instruction starts and fills the physical span through generated l6 public 0x1FBF0."
+jump_table_address = "0x1FBE8"
+jump_table_count = 4
+cs_base = "0x1AAF0"
+next_public_address = "0x1FBF0"
+
+[[new_exact]]
+id = "th04-main-fn-1fb22"
+address = "0x1FB22"
+name = "shot_reimu_b_l5()"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Admit the target-proved l5 executable body only after exact physical-owner replay and separate validation of its post-RET switch table."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1fbf0"
+address = "0x1FBF0"
+file_offset = "0x113F0"
+size = "0xC6"
+physical_size = "0xCE"
+decode_size = "0xC6"
+name = "shot_reimu_b_l6()"
+owner_unit = "th04-main-reimu-b-l5-l9-v170"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Fresh Ghidra has no l6 entry. Pinned TASM and raw decode close through RET at 0x1FCB5; the contiguous four-word compiler jump table fills 0x1FCB6..0x1FCBD and targets decoded instruction starts before generated l7 public 0x1FCBE."
+jump_table_address = "0x1FCB6"
+jump_table_count = 4
+cs_base = "0x1AAF0"
+next_public_address = "0x1FCBE"
+
+[[new_exact]]
+id = "th04-main-fn-1fbf0"
+address = "0x1FBF0"
+name = "shot_reimu_b_l6()"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Admit Ghidra-missed l6 only after exact generated public, raw RET, fully validated switch tail, and next-public boundary review."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1fcbe"
+address = "0x1FCBE"
+file_offset = "0x114BE"
+size = "0xC6"
+physical_size = "0xCE"
+decode_size = "0xC6"
+name = "shot_reimu_b_l7()"
+owner_unit = "th04-main-reimu-b-l5-l9-v170"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Fresh Ghidra has no l7 entry. Pinned TASM and raw decode close through RET at 0x1FD83; the contiguous four-word compiler jump table fills 0x1FD84..0x1FD8B and targets decoded instruction starts before generated l8 public 0x1FD8C."
+jump_table_address = "0x1FD84"
+jump_table_count = 4
+cs_base = "0x1AAF0"
+next_public_address = "0x1FD8C"
+
+[[new_exact]]
+id = "th04-main-fn-1fcbe"
+address = "0x1FCBE"
+name = "shot_reimu_b_l7()"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Admit Ghidra-missed l7 only after exact generated public, raw RET, fully validated switch tail, and next-public boundary review."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1fd8c"
+address = "0x1FD8C"
+file_offset = "0x1158C"
+size = "0xC6"
+physical_size = "0xCE"
+decode_size = "0xC6"
+name = "shot_reimu_b_l8()"
+owner_unit = "th04-main-reimu-b-l5-l9-v170"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Fresh Ghidra has no l8 entry. Pinned TASM and raw decode close through RET at 0x1FE51; the contiguous four-word compiler jump table fills 0x1FE52..0x1FE59 and targets decoded instruction starts before generated l9 public 0x1FE5A."
+jump_table_address = "0x1FE52"
+jump_table_count = 4
+cs_base = "0x1AAF0"
+next_public_address = "0x1FE5A"
+
+[[new_exact]]
+id = "th04-main-fn-1fd8c"
+address = "0x1FD8C"
+name = "shot_reimu_b_l8()"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Admit Ghidra-missed l8 only after exact generated public, raw RET, fully validated switch tail, and next-public boundary review."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1fe5a"
+address = "0x1FE5A"
+file_offset = "0x1165A"
+size = "0xCE"
+physical_size = "0xDA"
+decode_size = "0xCE"
+name = "shot_reimu_b_l9()"
+owner_unit = "th04-main-reimu-b-l5-l9-v170"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Fresh Ghidra has no l9 entry. Pinned TASM and raw decode close through RET at 0x1FF27; the six-word compiler jump table fills 0x1FF28..0x1FF33, targets decoded instruction starts, and reaches the exact physical owner end before bb_playchar code at 0x1FF34."
+jump_table_address = "0x1FF28"
+jump_table_count = 6
+cs_base = "0x1AAF0"
+
+[[new_exact]]
+id = "th04-main-fn-1fe5a"
+address = "0x1FE5A"
+name = "shot_reimu_b_l9()"
+evidence_id = "ev-th04-main-reimu-b-functions-boundary-v170"
+reason = "Admit Ghidra-missed l9 only after exact generated public, raw RET, fully validated switch tail, and physical-owner-end review."

@@ -246,7 +246,8 @@ next_public_address = "0x10005"
 id = "fn-exact"
 address = "0x10000"
 file_offset = "0x1800"
-size = "0x5"
+size = "0x2"
+physical_size = "0x5"
 decode_size = "0x2"
 name = "exact_fixture"
 owner_unit = "owner"
@@ -302,6 +303,8 @@ next_public_address = "0x10005"
                     require_exact_extent=True,
                 )
                 self.assertEqual(len(accepted), 1)
+                self.assertEqual(accepted[0]["size"], 0x2)
+                self.assertEqual(accepted[0]["physical_size"], 0x5)
                 escaped = dict(item)
                 escaped["owner_end"] = 0x10004
                 with self.assertRaisesRegex(ValueError, "escapes exact owner"):
@@ -820,7 +823,8 @@ next_public_address = "0x10002"
 id = "fn-switch"
 address = "0x10000"
 file_offset = "0x1800"
-size = "0x5"
+size = "0x2"
+physical_size = "0x5"
 decode_size = "0x2"
 name = "fixture"
 owner_unit = "owner"
@@ -845,6 +849,8 @@ next_public_address = "0x10005"
             ), patch.object(review, "linear_decode", side_effect=lambda *args: dict(decoded)):
                 accepted = review.reviewed_exact_no_ghidra_reviews({}, publics, target)
                 self.assertTrue(accepted[0]["switch_review"]["trailing_extent_fully_accounted"])
+                self.assertEqual(accepted[0]["size"], 0x2)
+                self.assertEqual(accepted[0]["physical_size"], 0x5)
             bad = bytearray(target.read_bytes()); bad[0x1803:0x1805] = b"\x05\x00"; target.write_bytes(bad)
             with patch.object(review, "POLICY", policy), patch.object(
                 review, "exact_authored_owners", return_value=owners
