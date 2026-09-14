@@ -198,7 +198,9 @@ extrn @ORANGE_BG_RENDER$QV:near
 extrn @BOSS_HITTEST_SHOTS_DAMAGE$QIII:near
 
 public sub_15D74
+public @thicklasers_init$qv
 B4M_UPDATE_TEXT segment byte public 'CODE' use16
 assume cs:main_03
+@thicklasers_init$qv label far
 {{EXTRACTED_SPAN}}
 end

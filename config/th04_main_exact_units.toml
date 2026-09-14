@@ -7818,3 +7818,409 @@ map_start = "0x1C88"
 map_size = "0x10D"
 target_file_offset = "0xDF78"
 size = "0x10D"
+
+
+# v166 candidate: maintained natural C++ covers four reviewed logical functions
+# across the complete 0x51E DEMO_TEXT span ending immediately before exact
+# demo.cpp. Two isolated cold links reproduce all owned bytes, exact map
+# placement, and deterministic valid OMF, but ordered MZ relocation comparison
+# remains blocked by one site: load 0xB2DA is first in the target overlap order
+# and last in the candidate order. This unit is intentionally not exact.
+[[build_replacements]]
+id = "th04-main-demo-session-v166-build"
+trigger_units = ["th04-main-demo-session-v166"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/m1r.cpp\",\n\t\"th04/m3r.cpp\",\n\t\"th04/mxr.cpp\",\n\t\"th04/tilegap.asm\",\n\t\"th04/tilesuf.asm\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/sess.cpp\",\n\t\"th04/m1r.cpp\",\n\t\"th04/m3r.cpp\",\n\t\"th04/mxr.cpp\",\n\t\"th04/tilegap.asm\",\n\t\"th04/tilesuf.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-demo-session-v166-layout"
+trigger_units = ["th04-main-demo-session-v166"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "736a25ca2173da2314e9c76d0f172636c945f78dc44041d3ebb5bb457d9bec9e",
+  "33e779ef95f3fdadf50ca5ed6a09a582e71edfad83c327f3f70436da90c2ef2c",
+]
+
+[[source_transforms.ops]]
+id = "externalize-demo-session-v166"
+kind = "insert_before"
+anchor = "DEMO_TEXT\tsegment\tword public 'CODE' use16\r\n"
+text = "extrn @stage_session_init$qv:near\r\nextrn _pause:near\r\nextrn _stage_session_free:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-demo-session-call-v166"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_AED0\r\n"
+new = "\t\tcall\t@stage_session_init$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-stage-session-free-call-v166"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_B29E\r\n"
+new = "\t\tcall\t_stage_session_free\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-pause-gaiji-v166"
+kind = "insert_before"
+anchor = "include th04/gaiji/pause[data].asm\r\n"
+text = "public gsCHUUDAN, gsSAIKAI, gsSHUURYOU\r\n"
+
+[[source_transforms.ops]]
+id = "publish-pause-spaces-v166"
+kind = "insert_before"
+anchor = "include th04/main/pause[data].asm\r\n"
+text = "public _aGAME_PAUSE_SPACES_1\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gameplay-session-init-v166"
+kind = "insert_before"
+anchor = "sub_AD03\tproc near\r\n"
+text = "public @gameplay_session_init$qv\r\n@gameplay_session_init$qv label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-sub-12024-v166"
+kind = "insert_before"
+anchor = "sub_12024\tproc near\r\n"
+text = "public @sub_12024$qv\r\n@sub_12024$qv label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-hud-put-v166"
+kind = "insert_before"
+anchor = "hud_put\tproc far\r\n"
+text = "public @hud_put$qv\r\n@hud_put$qv label far\r\n"
+
+[[source_transforms.ops]]
+id = "alias-shot-cycle-reset-v166"
+kind = "insert_before"
+anchor = "sub_1042A\tproc near\r\n"
+text = "public @shot_cycle_reset$qv\r\n@shot_cycle_reset$qv label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-bomb-state-reset-v166"
+kind = "insert_before"
+anchor = "sub_FFA4\tproc near\r\n"
+text = "public @bomb_state_reset$qv\r\n@bomb_state_reset$qv label near\r\n"
+
+[[source_transforms.ops]]
+id = "alias-items-init-v166"
+kind = "insert_before"
+anchor = "sub_1DA1B\tproc far\r\n"
+text = "public @items_init$qv\r\n@items_init$qv label far\r\n"
+
+[[source_transforms.ops]]
+id = "alias-thicklasers-init-in-monolith-v166"
+kind = "replace_optional"
+old = "sub_15D74\tproc far\r\n"
+new = "public @thicklasers_init$qv\r\n@thicklasers_init$qv label far\r\nsub_15D74\tproc far\r\n"
+
+[[source_transforms.ops]]
+id = "alias-fp-23d90-v166"
+kind = "insert_before"
+anchor = "fp_23D90\tdw ?\r\n"
+text = "public _fp_23D90\r\n_fp_23D90 label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-load-playchar-resources-v166"
+kind = "insert_before"
+anchor = "word_213DE\tdw 0\r\n"
+text = "public _load_playchar_resources\r\n_load_playchar_resources label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-stage-bgm-name-v166"
+kind = "insert_before"
+anchor = "off_213E0\tdd aSt00\r\n"
+text = "public _stage_bgm_name\r\n_stage_bgm_name label dword\r\n"
+
+[[source_transforms.ops]]
+id = "alias-stage-faceset-count-v166"
+kind = "insert_before"
+anchor = "word_2CFF4\tdw ?\r\n"
+text = "public _stage_faceset_count\r\n_stage_faceset_count label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-scroll-row-prev-v166"
+kind = "insert_before"
+anchor = "word_25100\tdw ?\r\n"
+text = "public _tile_ring_scroll_row_prev\r\n_tile_ring_scroll_row_prev label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-scroll-row-current-v166"
+kind = "insert_before"
+anchor = "byte_25104\tdb ?\r\n"
+text = "public _scroll_row_advance_current\r\n_scroll_row_advance_current label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-scroll-row-previous-v166"
+kind = "insert_before"
+anchor = "byte_250FE\tdb ?\r\n"
+text = "public _scroll_row_advance_previous\r\n_scroll_row_advance_previous label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-player-state-unknown-0-v166"
+kind = "insert_before"
+anchor = "word_2599A\tdw ?\r\n"
+text = "public _player_state_unknown_0\r\n_player_state_unknown_0 label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-player-state-unknown-1-v166"
+kind = "insert_before"
+anchor = "word_2599C\tdw ?\r\n"
+text = "public _player_state_unknown_1\r\n_player_state_unknown_1 label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-player-state-unknown-2-v166"
+kind = "insert_before"
+anchor = "word_2599E\tdw ?\r\n"
+text = "public _player_state_unknown_2\r\n_player_state_unknown_2 label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-player-state-unknown-3-v166"
+kind = "insert_before"
+anchor = "word_259A0\tdw ?\r\n"
+text = "public _player_state_unknown_3\r\n_player_state_unknown_3 label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-player-miss-animation-frame-v166"
+kind = "insert_before"
+anchor = "byte_259A3\tdb ?\r\n"
+text = "public _player_miss_animation_frame\r\n_player_miss_animation_frame label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-eye-rgb-v166"
+kind = "insert_before"
+anchor = "aEye_rgb\tdb "
+text = "public _eye_rgb\r\n_eye_rgb label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-miko-bft-v166"
+kind = "insert_before"
+anchor = "aMiko_bft\tdb "
+text = "public _miko_bft\r\n_miko_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-mari-bft-v166"
+kind = "insert_before"
+anchor = "aMari_bft\tdb "
+text = "public _mari_bft\r\n_mari_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-mikod-bft-v166"
+kind = "insert_before"
+anchor = "aMikod_bft\tdb "
+text = "public _mikod_bft\r\n_mikod_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-miko32-bft-v166"
+kind = "insert_before"
+anchor = "aMiko32_bft\tdb "
+text = "public _miko32_bft\r\n_miko32_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-miko16-bft-v166"
+kind = "insert_before"
+anchor = "aMiko16_bft\tdb "
+text = "public _miko16_bft\r\n_miko16_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-bss0-cd2-v166"
+kind = "insert_before"
+anchor = "aBss0_cd2\tdb "
+text = "public _bss0_cd2\r\n_bss0_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-bss1-cd2-v166"
+kind = "insert_before"
+anchor = "aBss1_cd2\tdb "
+text = "public _bss1_cd2\r\n_bss1_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-bss2-cd2-v166"
+kind = "insert_before"
+anchor = "aBss2_cd2\tdb "
+text = "public _bss2_cd2\r\n_bss2_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-kao3-cd2-v166"
+kind = "insert_before"
+anchor = "aKao3_cd2\tdb "
+text = "public _kao3_cd2\r\n_kao3_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-kao2-cd2-v166"
+kind = "insert_before"
+anchor = "aKao2_cd2\tdb "
+text = "public _kao2_cd2\r\n_kao2_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-bss4-cd2-v166"
+kind = "insert_before"
+anchor = "aBss4_cd2\tdb "
+text = "public _bss4_cd2\r\n_bss4_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-bss5-cd2-v166"
+kind = "insert_before"
+anchor = "aBss5_cd2\tdb "
+text = "public _bss5_cd2\r\n_bss5_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-bss6-cd2-v166"
+kind = "insert_before"
+anchor = "aBss6_cd2\tdb "
+text = "public _bss6_cd2\r\n_bss6_cd2 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st00-bft-v166"
+kind = "insert_before"
+anchor = "aSt00_bft\tdb "
+text = "public _st00_bft\r\n_st00_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st01-bft-v166"
+kind = "insert_before"
+anchor = "aSt01_bft\tdb "
+text = "public _st01_bft\r\n_st01_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st02-bft-v166"
+kind = "insert_before"
+anchor = "aSt02_bft\tdb "
+text = "public _st02_bft\r\n_st02_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st03-bft-v166"
+kind = "insert_before"
+anchor = "aSt03_bft\tdb "
+text = "public _st03_bft\r\n_st03_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st04-bft-v166"
+kind = "insert_before"
+anchor = "aSt04_bft\tdb "
+text = "public _st04_bft\r\n_st04_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st05-bft-v166"
+kind = "insert_before"
+anchor = "aSt05_bft\tdb "
+text = "public _st05_bft\r\n_st05_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st06-bft-v166"
+kind = "insert_before"
+anchor = "aSt06_bft\tdb "
+text = "public _st06_bft\r\n_st06_bft label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st00-mpn-v166"
+kind = "insert_before"
+anchor = "aSt00_mpn\tdb "
+text = "public _st00_mpn\r\n_st00_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st10-mpn-v166"
+kind = "insert_before"
+anchor = "aSt10_mpn\tdb "
+text = "public _st10_mpn\r\n_st10_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st01-mpn-v166"
+kind = "insert_before"
+anchor = "aSt01_mpn\tdb "
+text = "public _st01_mpn\r\n_st01_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st02-mpn-v166"
+kind = "insert_before"
+anchor = "aSt02_mpn\tdb "
+text = "public _st02_mpn\r\n_st02_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st03-mpn-v166"
+kind = "insert_before"
+anchor = "aSt03_mpn\tdb "
+text = "public _st03_mpn\r\n_st03_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st04-mpn-v166"
+kind = "insert_before"
+anchor = "aSt04_mpn\tdb "
+text = "public _st04_mpn\r\n_st04_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st05-mpn-v166"
+kind = "insert_before"
+anchor = "aSt05_mpn\tdb "
+text = "public _st05_mpn\r\n_st05_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-st06-mpn-v166"
+kind = "insert_before"
+anchor = "aSt06_mpn\tdb "
+text = "public _st06_mpn\r\n_st06_mpn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "remove-demo-session-owner-v166"
+kind = "remove_between"
+removed_sha256 = "aca9fad198bee5ea4c3df92e951a046db36a2f32add92e15cf3e457fc7ea861b"
+start = "sub_AED0\tproc near\r\n"
+end = "DEMO_TEXT\tends\r\n"
+replacement = "DEMO_TEXT\tends\r\n"
+
+
+[[source_transforms]]
+id = "th04-main-demo-pause-gaiji-c-aliases-v166"
+trigger_units = ["th04-main-demo-session-v166"]
+patch_path = "th04/gaiji/pause[data].asm"
+encoding = "latin-1"
+scaffold_sha256 = "61c141aac203c48198cc96c16b7330a40f932a9304d8a6bfb7b9c7c038c95ecf"
+
+[[source_transforms.ops]]
+id = "alias-pause-gaiji-chuudan-v166"
+kind = "insert_before"
+anchor = "gsCHUUDAN\tdb "
+text = "public _gsCHUUDAN\r\n_gsCHUUDAN label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-pause-gaiji-saikai-v166"
+kind = "insert_before"
+anchor = "gsSAIKAI\tdb "
+text = "public _gsSAIKAI\r\n_gsSAIKAI label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-pause-gaiji-shuuryou-v166"
+kind = "insert_before"
+anchor = "gsSHUURYOU\tdb "
+text = "public _gsSHUURYOU\r\n_gsSHUURYOU label byte\r\n"
+
+[[source_transforms]]
+id = "th04-main-demo-null-alias-v166"
+trigger_units = ["th04-main-demo-session-v166"]
+patch_path = "th04/main/null.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1c30e0847d1f44501232bbcca7111e1bf09bac28426d36903df18e2f308e368a"
+
+[[source_transforms.ops]]
+id = "alias-demo-input-null-v166"
+kind = "insert_before"
+anchor = "nullfunc_near\tproc near\r\n"
+text = "public _demo_input_null\r\n_demo_input_null label near\r\n"
+
+[[units]]
+id = "th04-main-demo-session-v166"
+default_enabled = false
+requires_units = ["th04-main-midboss1-render-v164"]
+repo_source = "src/main/stage/session_init.cpp"
+overlay_path = "th04/sess.cpp"
+map_module = "th04/sess.cpp"
+map_mode = "exact"
+object_path = "obj/th04/sess.obj"
+map_segment = "DEMO_TEXT"
+map_start = "0x03E0"
+map_size = "0x51E"
+target_file_offset = "0xC6D0"
+size = "0x51E"

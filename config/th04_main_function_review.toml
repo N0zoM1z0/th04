@@ -3368,6 +3368,8 @@ file_offset = "0xC6D0"
 size = "0x300"
 decode_size = "0x2F2"
 name = "stage_session_init()"
+owner_unit = "th04-main-demo-session-v166"
+source = "src/main/stage/session_init.cpp"
 evidence_id = "ev-th04-main-stage-session-init-boundary-v165"
 reason = "Fresh Ghidra cross-links this stage/demo setup dispatcher across unrelated code. Pinned TASM and gap-free raw decode close 0x2F2 executable bytes through RET at 0x1B1C1, followed immediately by seven compiler jump words through 0x1B1CF; all seven targets are decoded instruction starts. The next local PROC begins at 0x1B1D0, and target near CALL 0x1AB6B resolves exactly to 0x1AED0."
 allow_crosslinked_body = true
@@ -3381,4 +3383,64 @@ call_site_address = "0x1AB6B"
 id = "th04-main-fn-1aed0"
 address = "0x1AED0"
 evidence_id = "ev-th04-main-stage-session-init-boundary-v165"
-reason = "Explicitly expand the reviewed denominator for the cross-linked target-called internal stage/session setup dispatcher after raw code, compiler table, next-entry, and call-anchor review. No source/exactness credit is granted yet."
+reason = "Explicitly expand the reviewed denominator for the cross-linked target-called internal stage/session setup dispatcher after raw code, compiler table, next-entry, and call-anchor review. Maintained natural C++ is now source-present in v166, but owner-level ordered relocation exactness remains blocked."
+# v166: Continue the DEMO_TEXT boundary denominator through the full natural
+# session/pause candidate. Fresh target Ghidra, pinned TASM, raw decode, and
+# caller/next-entry anchors close the three following functions. All remain
+# nonexact because the shared 0x51E candidate has one ordered MZ relocation
+# mismatch at load 0xB2DA.
+[[reviewed_nonexact_internal_call]]
+id = "th04-main-fn-1b1d0"
+address = "0x1B1D0"
+file_offset = "0xC9D0"
+size = "0xCE"
+decode_size = "0xCE"
+name = "stage_runtime_init()"
+owner_unit = "th04-main-demo-session-v166"
+source = "src/main/stage/session_init.cpp"
+evidence_id = "ev-th04-main-stage-runtime-init-boundary-v166"
+reason = "Fresh Ghidra constructs the complete contiguous 0xCE body through RET at 0x1B29D. Pinned TASM/raw agree; the next internal entry begins at 0x1B29E, and target near CALL 0x1AF76 resolves exactly to 0x1B1D0."
+next_internal_address = "0x1B29E"
+call_site_address = "0x1AF76"
+
+[[new_nonexact]]
+id = "th04-main-fn-1b1d0"
+address = "0x1B1D0"
+evidence_id = "ev-th04-main-stage-runtime-init-boundary-v166"
+reason = "Explicitly expand the reviewed denominator for the contiguous target-called stage runtime initializer. Maintained natural C++ is source-present but its shared v166 owner remains relocation-order nonexact."
+
+[[reviewed_nonexact_internal_call]]
+id = "th04-main-fn-1b29e"
+address = "0x1B29E"
+file_offset = "0xCA9E"
+size = "0x31"
+decode_size = "0x31"
+name = "stage_session_free()"
+owner_unit = "th04-main-demo-session-v166"
+source = "src/main/stage/session_init.cpp"
+evidence_id = "ev-th04-main-stage-session-free-boundary-v166"
+reason = "Fresh Ghidra constructs the complete contiguous 0x31 body through RET at 0x1B2CE. Pinned TASM/raw agree; pause() begins at 0x1B2CF, and target near CALL 0x1AB78 resolves exactly to 0x1B29E."
+next_internal_address = "0x1B2CF"
+call_site_address = "0x1AB78"
+
+[[new_nonexact]]
+id = "th04-main-fn-1b29e"
+address = "0x1B29E"
+evidence_id = "ev-th04-main-stage-session-free-boundary-v166"
+reason = "Explicitly expand the reviewed denominator for the target-called session cleanup helper. Maintained natural C++ is source-present but its shared v166 owner remains relocation-order nonexact."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1b2cf"
+address = "0x1B2CF"
+file_offset = "0xCACF"
+size = "0x11F"
+name = "pause()"
+evidence_id = "ev-th04-main-pause-boundary-v166"
+reason = "Fresh Ghidra, the local TLINK public _pause, pinned TASM, and raw decode agree on the complete 0x11F near body through RET at 0x1B3ED; the next TLINK public demo_load() starts at 0x1B3EE. Maintained natural C++ reproduces all linked bytes but the owner-level MZ relocation order remains nonexact at load 0xB2DA."
+next_public_address = "0x1B3EE"
+
+[[new_nonexact]]
+id = "th04-main-fn-1b2cf"
+address = "0x1B2CF"
+evidence_id = "ev-th04-main-pause-boundary-v166"
+reason = "Explicitly expand the reviewed denominator for pause() after independent Ghidra/TLINK/TASM/raw/next-public boundary review. Maintained natural C++ is source-present but the shared v166 owner remains relocation-order nonexact."

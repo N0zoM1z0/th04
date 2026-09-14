@@ -3940,3 +3940,211 @@ compiler/source/physical-producer mechanism.
 Campaign status remains active. This v165 handoff closes one bounded conversation
 slice; it is not a 99.5%-completion, project-completion, standalone-build,
 runtime, whole-image, OP/MAINE/ZUN, or whole-game completion claim.
+
+## 2026-09-14 v166 DEMO_TEXT natural-source review and relocation-order blocker
+
+This conversation started from `main` at
+`f2938dc807dc54d7f770b08f4710e5b32b265d43`, tracking `origin/main` at
+`ahead 2 / behind 0`. Entry recovery found five modified paths and two untracked
+paths, all belonging to one coherent interrupted v166 DEMO_TEXT reconstruction
+packet rather than unrelated operator work:
+
+- `config/evidence.csv`
+- `config/replay/th04_b4m_thicklaser_v157.asm.in`
+- `config/th04_main_exact_units.toml`
+- `config/units.csv`
+- `src/main/player/shot_velocity.asm`
+- untracked `config/replay/th04_demo_suffix_v166.asm.in`
+- untracked `src/main/stage/session_init.cpp`
+
+The packet was recovered in place without reset, overwrite, or cleanup of unknown
+state. The two assembly edits export the natural-source link names
+`@shot_level_update$qv` and `@thicklasers_init$qv`; they are symbol aliases, not
+target-byte injection. The untracked 0x150 `th04_demo_suffix_v166.asm.in` scaffold
+was later proven to have no live references and to be superseded by the complete
+natural-source tail, so that reproducible current-session scaffold was removed.
+`src/main/stage/session_init.cpp` remains the maintained natural-source candidate.
+No private target, ignored analysis target, shared toolchain, Wine prefix, Ghidra
+project, or unrelated legacy analysis state was staged, patched, replaced,
+relocated, or published.
+
+The selected evidence plane remained exactly `th04 / th04-ghidra /
+target:th04-main / th04-main MAIN.EXE`. The private local target at
+`.analysis/targets/th04/main.exe` is still only `candidate-local-attested`; its
+SHA-256 is
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+This identifies the tested local Japanese copy and is not independent pristine-
+release provenance. Factory provider attestation passed for repository `th04`
+and target `target:th04-main`. The repository-native
+`python3 scripts/ghidra.py th04-main check` also passed its MZ/header/load mapping,
+entry, relocation sequence, load-module digest, and sampled-byte identity checks.
+`python3 scripts/attest_toolchain.py` passed for the pinned Turbo C++ 4.0J/TCC
+4.02, TASM32 5.0, TLINK 6.10, and configured Wine environment. Ghidra names,
+bodies, xrefs, and types were used only as provisional target observations and
+received no exactness credit.
+
+v166 closes the target boundary review for one contiguous DEMO_TEXT cohort while
+keeping four logical near functions distinct:
+
+- `stage_session_init()` at `th04-main / MAIN.EXE / DEMO_TEXT 0AAF:03E0`, load
+  `0xAED0..0xB1CF`, target file `0xC6D0..0xC9CF`, physical size `0x300`. Its
+  executable body ends at the RET near load `0xB1C1`; seven validated post-RET
+  compiler jump words remain owned through `0xB1CF`.
+- `stage_runtime_init()` at `DEMO_TEXT 0AAF:06E0`, load
+  `0xB1D0..0xB29D`, target file `0xC9D0..0xCA9D`, size `0xCE`.
+- `stage_session_free()` at `DEMO_TEXT 0AAF:07AE`, load
+  `0xB29E..0xB2CE`, target file `0xCA9E..0xCACE`, size `0x31`.
+- `pause()` at `DEMO_TEXT 0AAF:07DF`, load `0xB2CF..0xB3ED`, target file
+  `0xCACF..0xCBED`, size `0x11F`.
+
+Fresh attested Ghidra constructs a contiguous 49-byte body for
+`stage_session_free()` and a contiguous 287-byte body for `pause()`. Raw target
+decoding and the pinned TASM source agree on both RET seams, and the already exact
+`demo_load()` begins immediately afterward at `DEMO_TEXT 0AAF:08FE`, load
+`0xB3EE`. Target near-call anchors at load `0xAF76 -> 0xB1D0` and
+`0xAB78 -> 0xB29E` independently support the two internal entries. The maintained
+projection and fail-closed review policy now record all four functions as reviewed,
+source-present natural C++, and blocked rather than exact.
+
+The maintained natural source in `src/main/stage/session_init.cpp` compiles as one
+TC86 physical contribution covering the complete `0x51E`-byte owner at target file
+`0xC6D0`, load `0xAED0..0xB3ED`, immediately before the independently exact
+`demo.cpp` contribution. Current source SHA-256 is
+`ca56645765cf76c473bb25942b7d8de536e91cad82bcb6e93a755e0faf780a1d`.
+The final current replay manifest SHA-256 is
+`413bb4e7ba5f0464508ef82da85223546599cb60ec1da919c18dbfbe5a3b6b4d`.
+The final focused cold replay was:
+
+`python3 scripts/replay_th04_main_exact_units.py --unit th04-main-demo-session-v166 --run-id gptweb-v166-demo-fulltail-focused-final-001`
+
+Its receipt SHA-256 is
+`6ede8275e6ff87a69579e749a5f2ac3fad99ee6e0e62fa4e086d4f3a0c255b8e`.
+Both isolated serial cold builds reproduce the complete owned raw byte slice,
+exact MAP placement, valid TC86 OMF, deterministic normalized object output, and
+all configured auxiliary/zero-code checks. The unit nevertheless fails closed on
+exactly one verification dimension in both builds: ordered MZ relocations.
+Therefore **v166 is not exact and receives zero exactness promotion**.
+
+The relocation blocker is narrowly characterized. Target and candidate contain
+the same 52 overlapping relocation sites and every owned byte matches. Their only
+ordering difference is load `0xB2DA`: it is first in the target overlap sequence
+and last in the candidate overlap sequence, while all other 51 sites preserve
+relative order. `0xB2DA` is the segment-word relocation of the far CALL beginning
+at load `0xB2D7`, bytes `9A BC 06 0E 13`, targeting
+`input_reset_sense()` at `SHARED 130E:06BC`. This is a linker/OMF-history problem,
+not evidence for changing the already matching machine code or ABI.
+
+Several bounded mechanism probes were retained as negative evidence rather than
+forced into source changes. The earlier mixed natural/TASM suffix candidate has
+receipt
+`9ce4218e0cbb8448b0caab94d25b55aa0bfd364bcb012eac671747258dfa9c2b`;
+its natural prefix was exact but the auxiliary suffix preserved the relocation-
+order problem. Full-tail natural source already showed the same blocker in receipt
+`805c11a5b3407088e7c395002304b3dda92685bb7df1ea428ec4df67d7106386`.
+The PC-98 IDE integrated compiler expanded the contribution from `0x51E` to
+`0x527` and shifted downstream layout, so it was rejected. A physical composition
+probe that fused the maintained session source with adjacent exact `demo.cpp`
+produced valid deterministic TC86 OMF and retained exact bytes/MAP, but the final
+relocation sequence did not change; its focused receipt is
+`f8ae47455ea00e2fc9441830f8c792b91dbc7e647710fc4d8ea67d963c839282`.
+Moving `th04/hardware/input.h` to the TU header set left both LEDATA payloads
+byte-identical while moving `@input_reset_sense$qv` from EXTDEF index 129 to 31
+and changing FIXUPP metadata, yet TLINK still placed `0xB2DA` last; focused receipt
+`ac1e058763b09b672cda8b86d183587f32234f022ed6e9c2cbdd68e4aa286c2a`.
+Both source/producer experiments were reverted. Do not retry header spelling,
+declaration order, or adjacent-`demo.cpp` fusion without a genuinely new OMF or
+link-history mechanism.
+
+The denominator expansion was independently re-run through the repository's
+fail-closed function reviewer. The first trial correctly rejected stale v165
+metadata because it lacked the new `pause()` entry. Fresh attested Ghidra metadata
+was then added only to bounded scratch. A second trial correctly rejected a v166
+candidate MAP because reconstruction overlays introduce candidate-only publics.
+The successful target-bound review therefore used the v165 target function
+inventory, the v164 target-layout baseline MAP, fresh v166 metadata, and the
+private attested target. Its report SHA-256 is
+`8ffc40d37bd0a03ca76f9ff50c0d1e868e676383290894dae9caf14cd50191c2`;
+the scratch trial ledger SHA-256 is
+`8f2ff1b17f2dc813024f194817704f153113286abcca6461104147736219bb8c`;
+the bounded fresh metadata SHA-256 is
+`1c31ec34709b43d8ddfdbb6c738032213aad8094275a366eb0436d5cbfca28bb`.
+The reviewer produces exactly the same 382 function IDs as the maintained MAIN
+projection, including the three newly reviewed blocked entries at `0x1B1D0`,
+`0x1B29E`, and `0x1B2CF`. Generic writer normalization would also rewrite 13
+unrelated historical note/name/source fields, so those unrelated rewrites were
+not adopted.
+
+Live MAIN accounting after this honest boundary expansion is **62,588 / 66,092
+exact reviewed authored bytes (94.698299%)** and **369 / 382 exact reviewed
+authored functions (96.596859%)**. Function exactness falls from the previous
+369/379 because three real reviewed authored functions entered the denominator
+without any false numerator increase. The byte denominator was already present in
+the physical owner and remains 66,092. Current boundary accounting is 1,040
+observations, 537 authored candidates, 369 exact, 13 reviewed blocked, 155
+unreviewed, and 31 exact original-style-ASM attestations. This is an authored-
+review denominator only, not a percentage of MAIN.EXE or the game as a whole.
+
+Because the final focused replay is known nonexact, **no v166 aggregate promotion
+replay was run**. Running the expensive aggregate promotion gate cannot promote a
+unit whose focused ordered-relocation gate already fails. No v166 Factory claim
+was created or submitted. The latest policy-accepted Factory snapshot remains the
+v164 claim `th04-main-exact-052`, repository checkpoint
+`619cbd76dd7583fca63dc462d88af26824417439`, receipt
+`35a893db27ee0f3baec2efb1bb934c642238169e46a6ca3f8825b67d297dd6a7`.
+That accepted snapshot reports exact owned bytes/relocations/determinism for its
+own v164 claim only. It does not accept v166 and does not establish independent
+pristine-release provenance.
+
+Verification planes remain explicitly separate. v166 establishes reviewed
+boundaries and maintainable natural-source presence for this four-function cohort,
+plus complete linked-byte equality for its current physical owner, but ordered
+relocation exactness remains false. Standalone TH04-owned production compile/link
+closure is not established. Whole-image exactness is not established. Runtime-
+storage identity is not established. No runtime scenario or dynamic contract was
+run. Portable-runtime validation is not established. There is no v166 Factory
+acceptance. The private target remains `candidate-local-attested` and was not
+staged or modified.
+
+Other TH04 executables remain active independent authored-boundary queues and did
+not receive credit from this MAIN packet. The live repository still carries the
+registered `target:th04-op`, `target:th04-maine`, and `target:th04-zun` targets;
+OP has 94 unreviewed authored candidates, MAINE 72, and ZUN 13, with no honest
+accepted exact-function/byte denominator yet. `ZUN.COM` remains an MZ artifact
+despite its extension. They require their own target-bound review rather than
+borrowing MAIN conclusions.
+
+The `.analysis/` entry size for this conversation was `5,509,274,505` bytes. The
+post-CI handoff-state size is `5,695,059,018` bytes, a net increase of
+`185,784,513` bytes. Top-level retained sizes are approximately 4.252 GiB for
+`reconstruction`, 1.358 GiB for `toolchain`, 30.2 MiB for `builds`, 21.4 MiB for
+`runtime`, 17.0 MiB for `ghidra`, 15.3 MiB for `gpt-web`, and 1.42 MiB for
+`targets`. The retained v166 scratch contains bounded compiler/OMF probes, fresh
+metadata/reviewer outputs, and evidence-linked cold replay receipts. Transient
+probe source/object files placed into cold source trees were explicitly removed.
+No whole worktree, Ghidra database, Wine prefix, target, or legacy analysis tree
+was copied or bulk-deleted. Evidence-linked v166 replay directories are retained
+because the new negative-result ledger cites them.
+
+The first concrete next boundary packet is `@yuuka5_fg_render$qv` in
+`th04-main / MAIN.EXE / MAIN_TEXT 0C7E:20C3`, load `0xE8A3`, target file
+`0x100A3`, size `0x1CC`. The live unified ledger still classifies it as a
+corroborated/unreviewed authored reconstruction candidate with target-derived ASM
+reference. Fresh attested Ghidra independently constructs exactly the contiguous
+`0x1E8A3..0x1EA6E` 460-byte near body, matching the ledger extent. A fresh caller
+query hit a transient Factory network error and returned no evidence, so the next
+conversation should begin by re-running callers/callees/xrefs, then reconcile raw
+seams, TASM/MAP evidence, relocation ownership, and source origin before deciding
+natural C++ versus evidence-backed original-style ASM versus durable unknown. This
+is preferable to another easy small-function sweep.
+
+The v166 DEMO relocation blocker is also a valid later frontier, but only if a new
+hypothesis addresses original OMF/FIXUPP/link-record history. Repeating declaration
+order, header placement, adjacent-demo producer fusion, or byte-matching C++ edits
+without such evidence is explicitly negative work already closed by this packet.
+
+The local `gpt-web:` checkpoint containing this handoff is created only after the
+final repository validation pass; its hash is intentionally not embedded in this
+self-referential handoff text and must be read from live Git. No remote push is
+performed. Campaign status remains active: this handoff closes one bounded hard
+packet and is not a 99.5% completion, project completion, whole-product build,
+runtime, whole-image, OP/MAINE/ZUN, or whole-game completion claim.
