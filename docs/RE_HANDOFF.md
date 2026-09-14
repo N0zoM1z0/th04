@@ -2812,3 +2812,160 @@ The compact acceptance contract and unresolved producer constraints remain in
 `docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`, and
 `config/knowledge.csv`. Whole-artifact boundary results are in
 `docs/BOUNDARY_REVIEW.md` and `config/th04_function_boundaries.csv`.
+
+## v157 session checkpoint
+
+v157 started from clean `main` HEAD
+`a63f273faf699bb09ad73baf7626d6dc1f89b5ad`, synchronized with
+`origin/main` at conversation entry. Recovery found no staged, unstaged,
+untracked, unrelated, or unknown tracked work. The implementation checkpoint is
+`4091a922d4066ab24841f2770c3da5e6ab50c250`
+(`gpt-web: reconstruct Yuuka5 first pattern cohort`). It was created locally
+only; nothing was pushed. The worktree was clean immediately after that
+checkpoint.
+
+All required repository and Factory documents were reread. `scripts/preflight.py`,
+`scripts/status.py`, and the 2,120-observation function-boundary validator pass.
+The Factory `th04-ghidra` provider was enumerated before use and attested through
+its discovered `check {}` operation; it still exposes no `get_metadata`
+operation, so no undiscovered schema was invoked. Provider identity binds
+repository `th04`, target `target:th04-main`, and target SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`
+(size 156,258). Repository-native `python3 scripts/ghidra.py th04-main check`
+also passes the MZ header/load mapping, entry point, all 1,136 relocation-table
+entries, load-module identity, and sampled bytes. The pinned TC86 Borland C++
+4.02 / TASM32 5.0 / TLINK 6.10 toolchain attestation passes. These attest target
+and tool identities only; Ghidra semantics remain provisional.
+
+Target-first review closes four contiguous authored near helpers in
+`B4M_UPDATE_TEXT` as one maintainable natural-C++ physical producer:
+
+- `yuuka5_move_transition(unsigned int)`: load `0x15ECE..0x15F96`, file
+  `0x176CE..0x17796`, size `0xC9`;
+- `yuuka5_pattern_sweep()`: load `0x15F97..0x160A4`, file
+  `0x17797..0x178A4`, size `0x10E`;
+- `yuuka5_pattern_clouds()`: load `0x160A5..0x161D6`, file
+  `0x178A5..0x179D6`, size `0x132`;
+- `yuuka5_pattern_gather()`: load `0x161D7..0x162A2`, file
+  `0x179D7..0x17AA2`, physical size `0xCC` including its RET-following compiler
+  switch metadata.
+
+The complete owner is `B4M_UPDATE_TEXT 13A9:243E..2812`, load
+`0x15ECE..0x162A2`, target file `0x176CE..0x17AA2`, size `0x3D5 / 981`, target
+slice SHA-256
+`49a1200656a7fcc0aa59431fe988b7716c358f828c54d0f8179e1e57d29b4537`.
+Its ordered MZ relocations are `[0x1628E,0x16233,0x161BE,0x16170,0x16147,
+0x160A1]` and are reproduced exactly. The final helper's switch values are
+`{1,3,5,0x11}` and its jump words resolve to decoded instruction starts at load
+`0x161FA/0x16221/0x1621C/0x16228`.
+
+The boundary audit corrected two provisional Ghidra artifacts without inflating
+the authored denominator. Load `0x15F8F` is the common `mov al,0` return tail
+inside `yuuka5_move_transition()`, not a function. Ghidra's apparent external
+call to its internal `0x15F56` entry comes from load `0x1830C`, which target
+ownership places inside the already reviewed exact 33-word `mugetsu_1821E`
+dense jump table; it is data misdecoded as code. Neither internal address is a
+TASM PROC or target CALL boundary. Ghidra also truncates `yuuka5_pattern_gather()`
+before its compiler table, so the physical boundary is target/TASM/raw-derived,
+not database-derived.
+
+Maintained source is `src/main/boss/yuuka5_patterns.cpp`, source SHA-256
+`215d9480b1a582e87e3f13e282b453d624438c70b969471696bf152e629221ef`.
+It contains ordinary natural C++ only: no inline assembly, `__emit__`, copied
+target-byte array, `#pragma codestring`, inert padding, fake return, target
+patching, or ABI lie. Focused A/B builds emit valid TC86 Borland C++ 4.02 OMF
+with raw object SHA-256
+`126d0103fe9329cc1f3c4e59b4bfe077496125469ca9854646ced38948377e50`
+and dependency-timestamp-normalized SHA-256
+`da49f408c4937baca809ab77e9633f3ba46d2734893a3a3942809af3031dad49`.
+
+Replay keeps ownership conservative. The immediately preceding generic
+thicklaser cohort at load `0x15D74..0x15ECD` remains a separate zero-credit TASM
+producer, and the suffix beginning at `yuuka5_162A3` remains zero-credit replay
+plumbing. Hash-bound scaffold extraction splits the old v156 suffix into
+`b4mthick.asm`, natural `y5p1.cpp`, and `b4msuf2.asm`. The old v156
+`b4msuf.asm` is still cold-built as an Oracle-only OMF object but is not linked,
+so predecessor OMF validation remains closed rather than being bypassed. No
+natural-source or function exactness is claimed for either TASM seam.
+
+The exactness Oracles actually run in v157 are:
+
+- focused `gptweb-v157-yuuka5-probe-006`: PASS twice for the 98-owner dependency
+  closure; raw bytes, exact map placement, all six ordered relocations, valid
+  deterministic OMF, and dependency owners pass; focused candidate MAIN SHA-256
+  is `e9b492f7c47b83707f65382c9e3bde62d3bef157736bb1c91a88934d8ba31dca`;
+- candidate-state aggregate `gptweb-v157-yuuka5-aggregate-candidate-001`: PASS
+  twice for all 190 default owners before ledger promotion; candidate MAIN
+  SHA-256 is
+  `a71bea187f61f7d1a55bce02d83a1a6893482cf565d4842ff713a43329b79717`;
+- post-promotion aggregate `gptweb-v157-yuuka5-aggregate-final-001`: PASS twice
+  for all 190 default owners with `failures=[]`; v157 remains raw/map/ordered-
+  relocation exact and normalized OMF-identical, with the same deterministic
+  candidate MAIN SHA-256
+  `a71bea187f61f7d1a55bce02d83a1a6893482cf565d4842ff713a43329b79717`.
+
+Early v157 probes were diagnostic only and receive no exactness credit. Probe
+002 exposed a legitimate focused-vs-aggregate scaffold pre-state hash and was
+closed with an explicit two-hash allowlist. Probe 003 exposed a duplicate TH04
+header include. Probe 004 proved the three `void(void)` TC4J public names use
+lowercase decoration. Probe 005 reached link closure but exposed the v156
+residual-object Oracle dependency; v157 now cold-builds that old residual object
+without linking it. Failed probe trees 002-005 were deleted after confirming no
+tracked references or active producers. Focused 006 plus the candidate and
+post-promotion aggregate trees are retained as bounded reproducible evidence
+cache.
+
+The live MAIN ledger after promotion is **59,767 / 61,121 exact reviewed
+authored bytes (97.784722%)** and **359 / 366 exact reviewed authored functions
+(98.087432%)**, with 232 tracked MAIN units and 177 unreviewed MAIN authored
+candidates. The exact denominator changed because the four newly reviewed
+physical extents add 981 confirmed authored bytes/functions; this is not a claim
+about all bytes in MAIN.EXE or TH04 as a product. The seven pre-existing MAIN
+blocked functions remain blocked.
+
+The user explicitly noted the other TH04 executables. They remain separate
+artifact queues and were not conflated with this selected MAIN target: `th04-op`
+has 94 unreviewed authored candidates, `th04-maine` has 72, and `th04-zun` has
+13; none currently has an honest accepted exact-function/byte denominator.
+Those artifacts require their own target-specific analysis/replay sessions.
+`ZUN.COM` remains treated as MZ despite its extension.
+
+Repository-native exact owner/function reconstruction is established only for
+the four v157 functions and 981-byte owner described above. Standalone TH04
+production compile/link closure is **not established**. Runtime-storage identity
+is **not established**. No runtime scenario was run, so runtime-scenario
+validation is **not established**. Independent pristine-release provenance is
+**not established**; the private target remains only `candidate-local-attested`.
+No Factory Truth Kernel acceptance claim was submitted, so Factory acceptance is
+**not established**. The private executable was never staged, modified, patched,
+relocated, or published.
+
+The prior v156 handoff recorded `.analysis` at `3,876,242,290` bytes. The first
+exact v157 in-session byte measurement, after current-session scratch and
+attestation updates, was `3,876,303,504` bytes. After all builds and deletion of
+only the four explicitly owned failed replay trees, final `.analysis` size after the handoff-state CI is
+`4,062,901,875` bytes, net `+186,598,371` bytes from that exact v157 baseline.
+Top-level final usage is approximately: reconstruction 3.1G, toolchain 1.3G,
+builds 37M, runtime 21M, Ghidra 16M, gpt-web 12M, targets 1.5M. Retained v157
+PASS trees are approximately 75M focused + 77M candidate aggregate + 77M final
+aggregate. Legacy/unknown analysis state, shared toolchains, target files, and
+other artifacts were not bulk-deleted or copied.
+
+Full repository CI passes after promotion, including Python tests, tracking,
+boundary validation, generated progress/boundary reports, private target checks,
+TH01-TH05 Oracle calibration, Ghidra/JDK identity, live Ghidra database replay,
+and mutation smoke. `git diff --check` passes. The complete staged
+implementation diff was inspected before checkpointing; unrelated v120 CSV
+quoting churn was restored before commit.
+
+The first concrete continuation is the adjacent structurally meaningful Yuuka5
+cohort beginning at load `0x162A3`: `yuuka5_162A3`, `yuuka5_1630D`,
+`yuuka5_16389`, and `yuuka5_1653D`, followed by FAR dispatcher
+`@yuuka5_update$qv` at load `0x16610`. `yuuka5_162A3` and `yuuka5_1653D` are
+TASM-visible entries with no corresponding Ghidra function; `yuuka5_16389` is
+noncontiguous in Ghidra and owns a 20-case switch value/jump-table region. The
+next conversation should bound that cohort target-first, including table target
+alignment, relocations, shared tails, callers/callees, and physical owner seams,
+before deciding natural TU ownership. The preceding thicklaser
+`0x15D74..0x15ECD` remains an independent generic-laser ownership question and
+must not be merged into Yuuka code merely because it is adjacent.
