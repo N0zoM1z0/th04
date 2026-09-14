@@ -1053,6 +1053,43 @@ def resolved_producer_outputs(
     )
 
 
+def resolved_unit_extent(
+    entry: dict[str, object], row: dict[str, str]
+) -> tuple[int, int, str]:
+    """Resolve a replay extent without granting candidate byte ownership.
+
+    Addressed units keep using the maintained ledger. Only an unaddressed
+    candidate may use the manifest target extent for replay inspection. This
+    permits an expanding candidate to prove a replacement owner before the
+    previous exact owner is demoted, while tracking still assigns the
+    candidate no byte ownership.
+    """
+
+    ledger_file_offset = row.get("file_offset", "").strip()
+    if ledger_file_offset:
+        return (
+            integer(ledger_file_offset),
+            integer(row["compare_size"]),
+            "ledger",
+        )
+    if row.get("state") != "candidate":
+        raise RuntimeError(
+            f"{entry['id']}: only an unaddressed candidate may use a manifest replay extent"
+        )
+    if not entry.get("target_file_offset") or not entry.get("size"):
+        raise RuntimeError(
+            f"{entry['id']}: unaddressed candidate lacks manifest target_file_offset/size"
+        )
+    file_start = integer(str(entry["target_file_offset"]))
+    manifest_size = integer(str(entry["size"]))
+    ledger_size = integer(row["compare_size"])
+    if manifest_size != ledger_size:
+        raise RuntimeError(
+            f"{entry['id']}: candidate manifest size does not match ledger compare_size"
+        )
+    return file_start, manifest_size, "manifest-candidate"
+
+
 def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str, dict[str, str]], target_mz):
     candidate_path = source / "bin" / "th04" / "main.exe"
     candidate_mz = parse_mz(candidate_path.read_bytes())
@@ -1063,8 +1100,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
     selected_ids = {str(entry["id"]) for entry in entries}
     for entry in entries:
         row = ledger[entry["id"]]
-        file_start = integer(row["file_offset"])
-        size = integer(row["compare_size"])
+        file_start, size, extent_source = resolved_unit_extent(entry, row)
         program_start = file_start - target_mz.header.header_size
         if program_start < 0:
             raise RuntimeError(f"{entry['id']}: extent is inside MZ header")
@@ -1102,6 +1138,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             "file_start": file_start,
             "program_start": program_start,
             "size": size,
+            "extent_source": extent_source,
             "target_slice_sha256": digest_bytes(target_slice),
             "candidate_slice_sha256": digest_bytes(candidate_slice),
             "raw_exact": target_slice == candidate_slice,

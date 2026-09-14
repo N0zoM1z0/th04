@@ -4796,3 +4796,209 @@ The v170 implementation checkpoint is
 (`gpt-web: reconstruct Reimu B shot handlers`). It was not pushed. This Git
 checkpoint is resume/review state only; exactness remains established by the
 focused, candidate-aggregate, and post-promotion aggregate receipts above.
+
+## 2026-09-15 v171 unified Reimu shot producer recovery checkpoint
+
+This conversation started from clean repository `th04`, branch `main`, HEAD
+`1aa314cb30df1d4ca2379bd93e978df1638bc6e6`, five commits ahead of
+`origin/main` and zero behind. The mandatory startup recovery initially found no
+staged, unstaged, untracked, conflicted, unrelated, or unknown tracked work. All
+requested repository and Factory guidance paths were mounted and read before
+editing. Startup `preflight.py`, `status.py`, and the 2,120-observation boundary
+validator passed.
+
+The registered `th04-ghidra` provider was re-enumerated before target-dependent
+use. It exposes ten operations and still has no `get_metadata` schema, so no
+undiscovered operation was invented. Its discovered `check {}` operation passed
+for repository `th04` / `target:th04-main`, target size 156,258 and SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native `python3 scripts/ghidra.py th04-main check` independently passed
+the 6,144-byte MZ header/load mapping, entry point, all 1,136 relocation-table
+entries, load-module identity, and sampled bytes. TC86 Borland C++ 4.02, TASM32
+5.0, and TLINK 6.10 toolchain attestation passed. Target canonicality remains
+only `candidate-local-attested`; these identity checks grant no semantic or byte
+exactness by themselves.
+
+Several Factory transport failures occurred before command dispatch. Each such
+failure returned no repository command ID and was followed by live status
+recovery. During the target-bound Reimu boundary investigation, the worktree then
+changed unexpectedly while HEAD stayed fixed: nine tracked paths became unstaged
+and three files appeared untracked. Complete staged/unstaged/untracked diff,
+private replay, process, and handoff review classified all twelve paths as one
+coherent `recoverable-current-work` v171 packet; there was no unrelated or
+unknown work. The paths were:
+
+- `config/evidence.csv`;
+- `config/th04_function_boundaries.csv`;
+- `config/th04_main_authored_functions.csv`;
+- `config/th04_main_exact_units.toml`;
+- `config/th04_main_function_review.toml`;
+- `config/units.csv`;
+- `scripts/replay_th04_main_exact_units.py`;
+- `scripts/status.py`;
+- `tests/test_exact_replay.py`;
+- new `compat/rec98/th04/main/homing.hpp`;
+- new `src/main/player/reimu_shot.cpp`;
+- new `tests/test_status.py`.
+
+No reset, stash, target mutation, indiscriminate staging, or push was used. No
+active Borland/Wine/replay producer remained when the packet was recovered.
+
+The boundary audit corrects the v170 handoff's first routing hypothesis rather
+than blindly preserving its `0x7B6` window. The immediately preceding
+`sub_F33C` is itself an unreviewed authored helper with eight target callers,
+not an already-owned seam. Fresh Ghidra constructs its complete contiguous
+`0x30` body; pinned TASM/raw close `RET 4` at load `0xF36B`; the preceding FAR
+`hud_put` closes at `0xF33B`. The true natural producer therefore begins at
+`0xF33C`, not `0xF36C`.
+
+Target-first review and natural TC4J reconstruction close one physical producer
+at `th04-main / MAIN.EXE / MAIN__TEXT 0AAF:484C`, load
+`0xF33C..0xFF33`, target file `0x10B3C..0x11733`, size
+`0xBF8 / 3,064`, target SHA-256
+`2e121568889d69062af53517dff1e75100a91437c4bf0b0b9633496746c45f96`.
+The following `BB_PLAYCHAR_LOAD` begins at load `0xFF34`. Raw MZ parsing finds
+one relocation in the complete producer, relocation-table index 468 at load
+`0xF355`, and replay preserves it in target order.
+
+Fourteen logical functions become newly reviewed exact inside this owner:
+static `reimu_homing_set()` at load `0xF33C`, `shot_reimu_l0/l1`, Reimu A levels
+2-9, and Reimu B levels 2-4. Their executable bodies tile the first
+`0x7E6 / 2,022` bytes with no gap. The static helper has no original TLINK
+public and is admitted only through exact owner containment, contiguous target
+Ghidra, raw `RET 4`, next-entry `0x1F36C`, and target near-call anchor
+`0x1F437 -> 0x1F33C`. The thirteen callbacks all have complete contiguous fresh
+Ghidra bodies and exact generated TC4J publics.
+
+The five already exact v170 Reimu B level 5-9 logical functions complete the
+unified producer. Their executable bodies remain `0xC6/0xC6/0xC6/0xC6/0xCE`,
+and their `0x08/0x08/0x08/0x08/0x0C` post-RET compiler jump tables remain
+exact physical data rather than function-body credit. The v170 `0x412` unit is
+retained as historical exact subextent evidence but is now `state=excluded` with
+no current physical address ownership; `default_enabled=false` likewise prevents
+it from coexisting as a second byte owner. `scripts/status.py` now excludes
+historical authored `state=excluded` rows from the reviewed authored-byte
+denominator, with a focused regression test.
+
+Maintained natural source is `src/main/player/reimu_shot.cpp`, SHA-256
+`902c6c38c1fbc6bd8ce0724bb2b88240ffcefcd15f45ff22276c9e926ade1cad`.
+It uses the one-line `compat/rec98/th04/main/homing.hpp` migration forwarder and
+contains no inline assembly, target-derived byte arrays, `#pragma codestring`,
+fake returns, inert padding, target/object patching, or ABI lies. TC4J emits one
+`0xBF8` `MAIN__TEXT` object with every public callback at the target offset and
+the static helper at producer offset zero. Final A/B `rshot.obj` raw SHA-256 is
+`2904cf0728c5717a6015511e8a3d7aa7387828e94ec56554341c55dbcd89cb43`;
+dependency-normalized SHA-256 is
+`577fb6111377be17255c414384c8a55516f056bd57eaeacefe421c76cf2aaf7a`.
+
+The replay control plane gains one fail-closed capability required to prove an
+expanding replacement owner without first destroying the accepted predecessor:
+an **unaddressed candidate** may be inspected against its hash-bound manifest
+target extent. Addressed units still use the ledger; only `state=candidate` with
+blank physical address ownership may use the manifest path; unaddressed exact or
+other non-candidate states reject; and manifest size must equal ledger
+`compare_size`. After promotion the same v171 extent is read from the ledger.
+Focused unit tests cover all four rules.
+
+The exact replay sequence was already present when the interrupted packet was
+recovered and was independently rebound to the live source and manifest:
+
+- focused `gptweb-v171-reimu-shots-focused-002`: PASS twice for a 123-owner
+  dependency closure, receipt SHA-256
+  `1271c124b24b51f3a0dccc2b03075f7c7871eb08c8eccce89de8f036c7aa4026`;
+- candidate-state aggregate `gptweb-v171-reimu-shots-aggregate-candidate-001`:
+  all 202 default owners pass twice, receipt SHA-256
+  `cd443b56ba3b063f0770022b86c559081b89be8233043b413925aae7161968c6`;
+- post-promotion aggregate `gptweb-v171-reimu-shots-aggregate-final-001`:
+  the same 202-owner cohort passes twice again with `failures=[]`, receipt
+  SHA-256
+  `bd841c7dc07fa2387ab9d50ba86748c3002b5a182b60ffc10f39300996967235`.
+
+Focused and candidate aggregate report the replacement extent as
+`manifest-candidate`; the final aggregate reports `extent_source=ledger`.
+All successful A/B v171 slices are raw/MAP/ordered-relocation exact and
+OMF-deterministic. Both aggregate A/B candidate MAIN images are SHA-256
+`dbbcd91955aec312e2796456b8d1b1121b88d1c6d07bccf8a9b4cf35cd4e9d3c`.
+The current replay manifest SHA-256 is
+`4a9d5905fc5743416e31996df3fd4e678a59892cc6359b2d5ff55c8fd7382ce6`.
+Receiptless focused-001 had zero exactness credit and was removed after tracked-reference and producer-inactivity review.
+
+The fail-closed function reviewer was rerun against the **post-promotion**
+aggregate MAP. Its report SHA-256
+`7356d1897018e234a9995aeff9a5524cee6b413e65f775c4dbacb54388a2cf16`
+is identical to the candidate-state trial. The reviewer directly traverses 360
+target candidates (353 exact / 7 reviewed nonexact); its emitted ledger preserves
+the complete maintained 409-row projection (396 exact / 13 blocked), with the
+same ID/state set as the checked-in ledger. Generic writer output would rewrite
+26 unrelated historical owner/source/note/name fields, so those normalizations
+were deliberately not adopted.
+
+The live reviewed MAIN authored C/C++ denominator is now
+**67,616 / 71,120 exact bytes (95.073116%)** and
+**396 / 409 exact functions (96.821516%)**. The exact numerator grows by the
+fourteen genuinely new function bodies (`0x7E6` bytes); the already exact v170
+subextent is not counted twice. MAIN routing is 396 exact, 13 blocked, 128
+unreviewed, and 31 original-style ASM attestation observations. These are moving
+reviewed denominators, not percentages of `MAIN.EXE` or the game.
+
+Other TH04 artifacts remain active independent queues and receive no v171 credit:
+`th04-op` has 94 unreviewed authored candidates, `th04-maine` 72, and
+`th04-zun` 13. None has an honest accepted exact-function or byte denominator;
+`ZUN.COM` remains an MZ artifact despite its extension. Their DIET/hybrid target
+contracts require target-specific sessions rather than borrowing MAIN evidence.
+
+Verification planes remain separate. Repository-native natural-source
+function/owned-extent exactness is PASS for the v171 producer and the complete
+202-owner post-promotion cohort. Standalone TH04 production compile/link closure
+is **not established**. Whole-image exactness is not established. Runtime-storage
+identity is **not established**. No runtime scenario was executed. Portable
+runtime validation is not established. No v171 Factory Truth-Kernel acceptance
+has been submitted or claimed in this conversation. Independent pristine-release
+provenance remains unestablished; the private target remains
+`candidate-local-attested`.
+
+The ignored `.analysis/` tree was `6,499,174,958` bytes at the v171 session
+manifest entry. Full repository CI raised the tree to `6,720,389,866` bytes.
+After confirming no tracked reference and no active producer, the explicit
+30,222,314-byte receiptless `gptweb-v171-reimu-shots-focused-001` directory was
+removed as current-session reproducible scratch. Final retained `.analysis/`
+size is `6,690,167,552` bytes, net v171 growth `190,992,594` bytes, below the
+256 MiB soft session budget. Retained replay material is approximately 61.7 MiB
+focused PASS, 63.2 MiB candidate aggregate PASS, and 63.2 MiB final aggregate
+PASS, plus bounded compiler/link/function-review scratch. The post-promotion
+aggregate remains the complete current cold baseline. Shared targets, toolchains,
+Wine prefix, Ghidra/provider state, legacy/unknown analysis content, and unrelated
+replay state are untouched.
+
+Full `python3 scripts/ci.py` passes on this handoff state, including Python unit
+tests, tracking, the 2,120-row boundary ledger, generated reports, all private
+TH04 target checks, TH01-TH05 Oracle calibration, Ghidra/JDK identity, live Ghidra
+database replay, and Ghidra mutation smoke. `git diff --check` passes.
+
+The first evidence-connected continuation is the immediately preceding HUD
+producer seam, not an unrelated easy leaf. Four contiguous corroborated FAR
+functions tile `MAIN__TEXT` load `0xF0A5..0xF33B`, size `0x297`:
+`HUD_POWER_PUT` (`0x38`), `hud_hp_put(int)` (`0x9A`), `HUD_BAR_PUT` (`0x8D`),
+and central `HUD_PUT` (`0x138`, ten callees). The window ends exactly before the
+new exact v171 owner and contains thirteen target MZ relocations in table order:
+`0xF1FC, 0xF170, 0xF15D, 0xF12B, 0xF332, 0xF2EE, 0xF2C1, 0xF2AC,
+0xF297, 0xF286, 0xF255, 0xF229, 0xF217`. The next conversation should first
+test whether the physical TC4J producer begins at `0xF0A5` or extends left over
+the three adjacent far HUD helpers at `0xF064`, `0xF07A`, and `0xF091`; preserve
+any OMF/FIXUPP seam rather than fusing for convenience. Reconcile target
+callers/callees, raw seams, MAP/TASM ownership, and relocation order before
+writing source.
+
+The stale prompt hypothesis around `sub_11DE6` should not be reopened: live v143
+already classifies and exactly reconstructs that extent as evidence-backed
+original-style symbolic assembly after independent TH05 corroboration and durable
+TC4J negative evidence. Existing v154 item, v166 DEMO relocation-order, and
+`snd_load` blockers likewise should not be retried without a genuinely new
+compiler/source/link-history mechanism.
+
+Campaign status remains active. This v171 checkpoint closes one bounded hard
+packet; it is not a 99.5% completion, project completion, standalone build,
+runtime validation, whole-image exactness, OP/MAINE/ZUN reconstruction, or
+whole-game completion claim. The local `gpt-web:` implementation checkpoint is
+created only after final validation; its hash is intentionally read from live Git
+rather than embedded in this self-referential handoff text. Nothing is pushed.

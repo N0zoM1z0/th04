@@ -104,6 +104,36 @@ class ProducerOverrideTests(unittest.TestCase):
             replay.resolved_producer_outputs(entry, {"prefix", "tail"})
 
 
+class CandidateExtentTests(unittest.TestCase):
+    def test_addressed_unit_uses_ledger_extent(self) -> None:
+        entry = {"id": "unit-a", "target_file_offset": "0x200", "size": "0x20"}
+        row = {"file_offset": "0x180", "compare_size": "0x10", "state": "exact"}
+        self.assertEqual(
+            replay.resolved_unit_extent(entry, row),
+            (0x180, 0x10, "ledger"),
+        )
+
+    def test_unaddressed_candidate_uses_manifest_extent_without_ownership(self) -> None:
+        entry = {"id": "unit-a", "target_file_offset": "0x200", "size": "0x20"}
+        row = {"file_offset": "", "compare_size": "0x20", "state": "candidate"}
+        self.assertEqual(
+            replay.resolved_unit_extent(entry, row),
+            (0x200, 0x20, "manifest-candidate"),
+        )
+
+    def test_unaddressed_exact_unit_fails_closed(self) -> None:
+        entry = {"id": "unit-a", "target_file_offset": "0x200", "size": "0x20"}
+        row = {"file_offset": "", "compare_size": "0x20", "state": "exact"}
+        with self.assertRaisesRegex(RuntimeError, "only an unaddressed candidate"):
+            replay.resolved_unit_extent(entry, row)
+
+    def test_candidate_manifest_size_must_match_ledger_compare_size(self) -> None:
+        entry = {"id": "unit-a", "target_file_offset": "0x200", "size": "0x20"}
+        row = {"file_offset": "", "compare_size": "0x21", "state": "candidate"}
+        with self.assertRaisesRegex(RuntimeError, "manifest size does not match"):
+            replay.resolved_unit_extent(entry, row)
+
+
 class RepoInputSnapshotTests(unittest.TestCase):
     def test_snapshot_freezes_overlay_and_detects_live_drift(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

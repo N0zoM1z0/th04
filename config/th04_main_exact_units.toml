@@ -8505,7 +8505,7 @@ size = "0xA6"
 # the untouched remainder of main__TEXT at its original physical position.
 [[scaffold_extractions]]
 id = "th04-main01-reimu-b-suffix-v170"
-trigger_units = ["th04-main-reimu-b-l5-l9-v170"]
+trigger_units = ["th04-main-reimu-b-l5-l9-v170", "th04-main-reimu-shots-v171"]
 scaffold_path = "th04_main.asm"
 encoding = "latin-1"
 scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
@@ -8597,7 +8597,7 @@ replacement = "main__TEXT\tends\r\n"
 
 [[units]]
 id = "th04-main-reimu-b-l5-l9-v170"
-default_enabled = true
+default_enabled = false
 requires_units = ["th04-main-gameexecl-v169"]
 repo_source = "src/main/player/reimu_shot_b.cpp"
 overlay_path = "th04/rshb.cpp"
@@ -8610,3 +8610,193 @@ map_start = "0x5032"
 map_size = "0x412"
 target_file_offset = "0x11322"
 size = "0x412"
+
+# v171 candidate: target-first review expands the physical Reimu shot producer
+# across the previously exact v170 subextent. Natural TC4J emits one 0xBF8
+# MAIN__TEXT contribution from sub_F33C through the five B-shot switch tables,
+# with all 18 public callback offsets matching the target. Keep v170 replayable
+# as a historical subextent while v171 is proved fail-closed.
+[[build_replacements]]
+id = "th04-main-reimu-shots-v171-build"
+trigger_units = ["th04-main-reimu-shots-v171"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/tlr.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/tlr.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-reimu-shots-v171-layout"
+trigger_units = ["th04-main-reimu-shots-v171"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "2f25851c708acbdaf05799a0971782580a2e5779b686a1fa05a5aa0db368ba3d",
+  "a16f9e43e241c2c1e9cc0c59dcdace620ab0c3d1ba30c21da76d13c73e5f3ba4",
+]
+
+[[source_transforms.ops]]
+id = "publish-reimu-shot-cycle-v171"
+kind = "insert_before"
+anchor = "byte_256A2\tdb ?\r\n"
+text = "public _reimu_shot_cycle\r\n_reimu_shot_cycle label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-sub-efa1-v171"
+kind = "insert_before"
+anchor = "sub_EFA1\tproc far\r\n"
+text = "public sub_EFA1\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main01-reimu-shots-v171"
+kind = "insert_before"
+anchor = "main__TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+text = "public byte_259A3, rgb_257D6, byte_259A7, sub_E1F4, byte_25980\r\npublic @grcg_setmode_tdw$qv, @grcg_setcolor_direct_raw$qv, PLAYFIELD_FILLM_0_40_384_274, @grcg_setmode_rmw$qv\r\nextrn _shot_reimu_l0:near\r\nextrn _shot_reimu_l1:near\r\nextrn _shot_reimu_a_l2:near\r\nextrn _shot_reimu_a_l3:near\r\nextrn _shot_reimu_a_l4:near\r\nextrn _shot_reimu_a_l5:near\r\nextrn _shot_reimu_a_l6:near\r\nextrn _shot_reimu_a_l7:near\r\nextrn _shot_reimu_a_l8:near\r\nextrn _shot_reimu_a_l9:near\r\nextrn _shot_reimu_b_l2:near\r\nextrn _shot_reimu_b_l3:near\r\nextrn _shot_reimu_b_l4:near\r\nextrn _shot_reimu_b_l5:near\r\nextrn _shot_reimu_b_l6:near\r\nextrn _shot_reimu_b_l7:near\r\nextrn _shot_reimu_b_l8:near\r\nextrn _shot_reimu_b_l9:near\r\nextrn BB_PLAYCHAR_LOAD:near\r\nextrn BB_PLAYCHAR_FREE:near\r\nextrn ENEMIES_RENDER:near\r\nextrn PLAYER_BOMB:near\r\nextrn BOMB_REIMU:near\r\nextrn BOMB_MARISA:near\r\nextrn @bomb_update_and_render$qv:near\r\nextrn @SHOTS_RENDER$QV:near\r\nextrn @shots_hittest$qv:far\r\nextrn sub_FFA4:near\r\nextrn sub_1042A:near\r\nextrn sub_104B6:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-l0-v171"
+kind = "replace"
+old = "\tdw shot_reimu_l0\r\n"
+new = "\tdw _shot_reimu_l0\r\n"
+expected_count = 2
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-l1-v171"
+kind = "replace"
+old = "\tdw shot_reimu_l1\r\n"
+new = "\tdw _shot_reimu_l1\r\n"
+expected_count = 2
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l2-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l2\r\n"
+new = "\tdw _shot_reimu_a_l2\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l3-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l3\r\n"
+new = "\tdw _shot_reimu_a_l3\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l4-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l4\r\n"
+new = "\tdw _shot_reimu_a_l4\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l5-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l5\r\n"
+new = "\tdw _shot_reimu_a_l5\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l6-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l6\r\n"
+new = "\tdw _shot_reimu_a_l6\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l7-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l7\r\n"
+new = "\tdw _shot_reimu_a_l7\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l8-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l8\r\n"
+new = "\tdw _shot_reimu_a_l8\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-a-l9-v171"
+kind = "replace"
+old = "\tdw shot_reimu_a_l9\r\n"
+new = "\tdw _shot_reimu_a_l9\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l2-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l2\r\n"
+new = "\tdw _shot_reimu_b_l2\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l3-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l3\r\n"
+new = "\tdw _shot_reimu_b_l3\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l4-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l4\r\n"
+new = "\tdw _shot_reimu_b_l4\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l5-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l5\r\n"
+new = "\tdw _shot_reimu_b_l5\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l6-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l6\r\n"
+new = "\tdw _shot_reimu_b_l6\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l7-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l7\r\n"
+new = "\tdw _shot_reimu_b_l7\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l8-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l8\r\n"
+new = "\tdw _shot_reimu_b_l8\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shot-reimu-b-l9-v171"
+kind = "replace"
+old = "\tdw shot_reimu_b_l9\r\n"
+new = "\tdw _shot_reimu_b_l9\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-main01-reimu-shots-and-suffix-v171"
+kind = "remove_between"
+removed_sha256 = "bd2cd84d649e480a4b1d018f00960e95c56cb24fa4e23390c40b87f94570aef5"
+start = "sub_F33C\tproc near\r\n"
+end = "main__TEXT\tends\r\n"
+replacement = "main__TEXT\tends\r\n"
+
+[[units]]
+id = "th04-main-reimu-shots-v171"
+default_enabled = true
+requires_units = ["th04-main-gameexecl-v169"]
+repo_source = "src/main/player/reimu_shot.cpp"
+overlay_path = "th04/rshot.cpp"
+map_module = "th04/rshot.cpp"
+map_mode = "exact"
+object_path = "obj/th04/rshot.obj"
+auxiliary_objects = ["obj/th04/m1rsuf.obj"]
+map_segment = "MAIN__TEXT"
+map_start = "0x484C"
+map_size = "0xBF8"
+target_file_offset = "0x10B3C"
+size = "0xBF8"

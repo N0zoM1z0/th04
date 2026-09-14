@@ -15,6 +15,23 @@ import tomllib
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def reviewed_authored_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Return current reviewed authored byte owners for denominator accounting.
+
+    Excluded authored rows are historical/superseded records kept so prior
+    evidence remains addressable. They are not current physical ownership and
+    therefore must not be counted in the reviewed authored-byte denominator.
+    """
+
+    return [
+        row
+        for row in rows
+        if row["origin"] == "authored"
+        and row["boundary_state"] in {"reviewed", "shared"}
+        and row["state"] != "excluded"
+    ]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", action="store_true")
@@ -44,12 +61,7 @@ def main() -> int:
         state_bytes: dict[str, int] = defaultdict(int)
         for row in rows:
             state_bytes[row["state"]] += int(row["size"], 0)
-        reviewed_authored = [
-            row
-            for row in rows
-            if row["origin"] == "authored"
-            and row["boundary_state"] in {"reviewed", "shared"}
-        ]
+        reviewed_authored = reviewed_authored_rows(rows)
         known_authored = sum(int(row["size"], 0) for row in reviewed_authored)
         exact_authored = sum(
             int(row["size"], 0)
