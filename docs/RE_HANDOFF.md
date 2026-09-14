@@ -4790,3 +4790,9 @@ than fusing functions for convenience.
 Campaign status remains active. v170 closes one bounded hard packet and does not
 claim 99.5% completion, project completion, whole-product build closure,
 runtime validation, OP/MAINE/ZUN reconstruction, or whole-game completion.
+
+The v170 implementation checkpoint is
+`781ae3bf6ffb51cdf9a0721d93515ca77dbeefcb`
+(`gpt-web: reconstruct Reimu B shot handlers`). It was not pushed. This Git
+checkpoint is resume/review state only; exactness remains established by the
+focused, candidate-aggregate, and post-promotion aggregate receipts above.
