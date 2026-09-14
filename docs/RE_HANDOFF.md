@@ -2969,3 +2969,142 @@ alignment, relocations, shared tails, callers/callees, and physical owner seams,
 before deciding natural TU ownership. The preceding thicklaser
 `0x15D74..0x15ECD` remains an independent generic-laser ownership question and
 must not be merged into Yuuka code merely because it is adjacent.
+
+## v158 recovery and v159 session checkpoint
+
+This conversation started from repository `th04`, branch `main`, HEAD
+`b8bbbe69a2d9043ddfad3338f7fbc982235c1b2e`, with the local branch two commits
+ahead of `origin/main`. Recovery found nine unstaged and four untracked paths.
+Complete diff, untracked-file, ignored-state, and latest-handoff review classified
+all thirteen as one coherent `recoverable-current-work` v158 Yuuka5-tail packet;
+no unrelated or unknown tracked work was found.
+
+The recovered packet was independently re-attested before checkpointing.
+`preflight.py`, `status.py`, and the 2,120-row boundary validator passed. The
+registered `th04-ghidra` provider was enumerated before use; it still exposes no
+`get_metadata`, so no undiscovered schema was invoked. Its discovered `check {}`
+operation passed for repository `th04` / `target:th04-main`, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+size 156,258. Repository-native `python3 scripts/ghidra.py th04-main check` also
+passed MZ header/load mapping, entry point, all 1,136 relocation-table entries,
+load-module identity, and sampled bytes. Pinned TC86 Borland C++ 4.02, TASM32
+5.0, and TLINK 6.10 toolchain attestation passed. These checks attest identity,
+not inferred semantics.
+
+v158 closes the Yuuka5 tail in `B4M_UPDATE_TEXT`, load `0x162A3..0x16A19`,
+target file `0x17AA3..0x18219`, map `13A9:2813..2F89`, size `0x777 / 1,911`,
+target SHA-256
+`7299efa9e4e1eed70986172ad3333f5a0cd6daaa35ae518c9356c9ed5257326b`.
+Reviewed functions are `yuuka5_pattern_speedup_ring()` (`0x6A`),
+`yuuka5_pattern_aimed_spread()` (`0x7C`), `yuuka5_pattern_laser_burst()`
+(physical `0x1B4`, including a twenty-value/twenty-jump compiler table),
+`yuuka5_pattern_mirrored_streams()` (`0xD3`), and FAR `yuuka5_update()`
+(physical `0x40A`, including RETF-following compiler metadata/tables). Ghidra-only
+`0x1665A` and compiler-data `0x16A01` remain excluded.
+
+v158 also corrects the physical-owner seam: v157 + v158 form one original TC4J
+producer at load `0x15ECE..0x16A19`, map `13A9:243E..2F89`, size `0xB4C / 2,892`.
+Exact credit adds only the non-overlapping `0x777` tail. Maintained source is split
+semantically across `src/main/boss/yuuka5_patterns.cpp`, `yuuka5.cpp`, and
+`yuuka5_tail.cpp`, then replayed through fused `y5all.obj`.
+
+Recovered receipts were read directly. Focused
+`gptweb-v158-yuuka5-tail-focused-candidate-005` passed twice for 99 owners.
+Candidate-state `gptweb-v158-yuuka5-tail-aggregate-candidate-001` and
+post-promotion `gptweb-v158-yuuka5-tail-aggregate-final-001` each passed twice
+for all 191 default owners with `failures=[]`, deterministic candidate MAIN
+SHA-256 `b973c2696e7b27640b4d68b098ba7a8a083f6808d28bc8c53781bf54e08f2cc4`,
+and exact v157/v158 logical bytes, MAP, ordered relocations, fused OMF, and
+residual Oracle checks. The recovered implementation checkpoint is
+`d0df4dc00dfb1457776ae422e5db5a5be088b124`
+(`gpt-web: reconstruct Yuuka5 tail producer`). Nothing was pushed.
+
+v159 then continued into the adjacent structural Marisa seam. Fresh Ghidra
+recognized `marisa_16A1A` at image `0x26A1A` as only the three-byte
+`PUSH BP; MOV BP,SP` prologue, despite ten existing callers. Target/TASM/raw close
+`marisa_phase_entry()` as load `0x16A1A..0x16AE8`, file `0x1821A..0x182E8`,
+size `0xCF`, SHA-256
+`3788bf6829a6004bfbb349569dce0e812232ae4b8d4485cbbaab515c9b3a3e91`,
+with ordered target relocations at `0x16AD4`, `0x16A9E`, and `0x16A82`.
+`marisa_phase_move()` is the following contiguous load `0x16AE9..0x16B84`, size
+`0x9C`, SHA-256
+`4fa42506bb39594d05a48fc330f856b9e6312719c75bf1b172be0664ad4cf64b`.
+The next byte is independently exact `marisa_flystep_pointreflected(int)` at
+load `0x16B85`, so the end seam has no inferred trailing data.
+
+Natural source `src/main/boss/marisa4_phase.cpp` exactly reconstructs both near
+helpers as map `13A9:2F8A..30F4`, load `0x16A1A..0x16B84`, target file
+`0x1821A..0x18384`, size `0x16B / 363`, target SHA-256
+`189e83b7c5d207767a8f814315450e73bca9bbcbe5e876804b6c7a90739594e1`.
+Final source SHA-256 is
+`8e7fc55529e38e1b556df7217ea89e18db73706c0a0b959e46ff788aeefbff74`.
+It uses ordinary natural C++ with C linkage and no inline assembly, `__emit__`,
+target-derived byte arrays, `#pragma codestring`, inert padding, fake returns,
+target patching, or ABI lies.
+
+Two deterministic failed v159 source shapes are retained as negative compiler
+evidence. Candidate 001 used direct per-branch random velocity stores: the first
+helper and all three relocations already matched, but TC4J emitted a `0x167`
+producer, four bytes short. Candidate 002 introduced a `register int` random-y
+temporary: TC4J allocated SI and emitted `PUSH/POP SI`, producing `0x16E`, three
+bytes long. The accepted nested conditional expressions naturally preserve the
+random velocity result in AX and emit the target common store without a saved
+register.
+
+Focused `gptweb-v159-marisa-phase-focused-candidate-003` passed twice for the
+100-owner dependency closure with exact bytes, MAP, all three ordered
+relocations, deterministic valid OMF, predecessor `b4msuf3.obj` validation, and
+unchanged dependencies. Both focused MAIN images are SHA-256
+`de5de5f666d3ea45005ad4dac6ddaaceb6b3ff5ed73b1f5d20f39ea0462e4ca8`.
+Accepted `m4phase.obj` raw SHA-256 is
+`6a104da2b0c668460abfad28360e2e13d3e2907dc90e872d8b47da7b52139537`;
+normalized SHA-256 is
+`c33fa95efd8324e7dd1a07698d8c81743e99cd060c910b578ce927be18e86778`.
+Candidate-state `gptweb-v159-marisa-phase-aggregate-candidate-001` and
+post-promotion `gptweb-v159-marisa-phase-aggregate-final-001` both passed twice
+for all 192 default owners with `failures=[]`; both aggregates produce candidate
+MAIN SHA-256
+`03eef452d5be04dd225fd401a6829f52e5a364d5d7445cbc5c5c9ff4d13647ff`.
+The v159 implementation checkpoint is
+`59647142d112e107aef9cb3afb3952d7f0800426`
+(`gpt-web: reconstruct Marisa phase helpers`). Nothing was pushed.
+
+The live MAIN ledger is now **62,041 / 63,395 exact reviewed authored bytes
+(97.864185%)** and **366 / 373 exact reviewed authored functions (98.123324%)**,
+with 170 unreviewed authored candidates and the same seven blocked reviewed
+functions. This remains a moving reviewed denominator, not a whole-MAIN.EXE or
+whole-product percentage. Other TH04 artifacts remain separate queues and were
+not conflated with MAIN: `th04-op` has 94 unreviewed authored candidates,
+`th04-maine` 72, and `th04-zun` 13; none has an honest accepted exact-byte or
+function denominator yet. `ZUN.COM` remains an MZ artifact despite its extension.
+
+Repository-native exact natural-source reconstruction is established only for
+the reviewed v158/v159 extents above. Standalone TH04 production compile/link
+closure is **not established**. Runtime-storage identity is **not established**.
+No runtime scenario was executed. Independent pristine-release provenance is
+**not established**; the target remains `candidate-local-attested`. No Factory
+Truth Kernel acceptance claim was submitted. The private executable was never
+staged, modified, patched, relocated, or published.
+
+`.analysis` measured `4,429,001,751` bytes at conversation entry. v159 temporarily
+rose to `4,738,843,238` bytes while five current-session replay trees were
+retained. After confirming no active Borland producer, failed candidates 001/002,
+focused PASS 003, and the candidate-state aggregate were compacted to receipt-only;
+the post-promotion 192-owner aggregate remains the complete current cold baseline.
+Final handoff-state `.analysis` size is `4,498,769,023` bytes, net
+`69,767,272` bytes from entry. Shared toolchains, private targets,
+legacy/unknown state, and unrelated replay data were not bulk-deleted or copied.
+
+The next concrete target-first frontier should not be the easy 0x25
+`POINTNUM_DIGITS_SET`. Prefer the structurally meaningful `BULLET_U_TEXT` local
+cohort at load `0x1C99C`, `0x1C9DA`, and `0x1CA2E` (image `0x2C99C`, `0x2C9DA`,
+`0x2CA2E`; map offsets `13A9:8F0C`, `8F4A`, `8F9E`). The current MAP shows the
+entire `BULLET_U_TEXT` contribution at `13A9:8C3E`, size `0x565`, owned by
+`th04/bullet_u.cpp`. None of these three candidate starts has a TASM PROC or
+TLINK public. Fresh Ghidra nevertheless gives `0x3E`, `0x54`, and a sparse
+`0x125` body spanning `0x1FA`, each with a direct caller; the third is
+noncontiguous. The next session should first establish whether these are original
+C++ local/static authored helpers, internal labels/shared tails, compiler data,
+or false function starts, then bind any real extents to the maintained
+`bullet_u.cpp` physical producer and ordered relocation ownership before adding
+them to the reviewed denominator or claiming source exactness.
