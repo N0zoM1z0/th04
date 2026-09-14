@@ -3453,8 +3453,9 @@ name = "yuuka5_fg_render()"
 evidence_id = "ev-th04-main-yuuka5-fg-boundary-v167"
 reason = "Fresh attested Ghidra constructs the complete contiguous 0x1CC body, target MAP/TASM/raw close RET at 0x1EA6E before the independent 0x1EA6F zero seam, and focused plus candidate aggregate cold replay prove exact natural-C++ ownership at TLINK public 0AAF:3DB3."
 
-# v168: target-called internal thick-laser renderer with natural source.
-[[reviewed_nonexact_internal_call]]
+# v168/v169: exact linked ownership for the thick-laser renderer and the
+# contiguous game-over / continue / score-save / executable-chain cohort.
+[[reviewed_exact_internal_call]]
 id = "th04-main-fn-1e2c3"
 address = "0x1E2C3"
 file_offset = "0xFAC3"
@@ -3465,12 +3466,141 @@ owner_unit = "th04-main-thicklasers-render-v168"
 source = "src/main/bullet/thicklaser_render.cpp"
 generated_public = "_thicklasers_render"
 evidence_id = "ev-th04-main-thicklasers-render-boundary-v168"
-reason = "Fresh Ghidra constructs the contiguous 0x19E body through RET at 0x1E460. Pinned TASM/raw agree; sub_E461 starts at 0x1E461, and exact yuuka5_fg_render() near CALL at 0x1EA68 resolves exactly to 0x1E2C3. Natural source is present, but no target-position cold link/replay exists yet."
+reason = "Target-bound Ghidra constructs the complete 0x19E body through RET at 0x1E460; pinned TASM/raw agree, target CALL 0x1EA68 resolves to this entry, and v169 focused plus candidate-state aggregate cold replay prove exact linked ownership after the physical producer split."
 next_internal_address = "0x1E461"
 call_site_address = "0x1EA68"
 
-[[new_nonexact]]
+[[new_exact]]
 id = "th04-main-fn-1e2c3"
 address = "0x1E2C3"
+name = "thicklasers_render()"
 evidence_id = "ev-th04-main-thicklasers-render-boundary-v168"
-reason = "Explicitly expand the reviewed denominator for the target-called thick-laser renderer after Ghidra/TASM/raw/call-anchor/next-entry review. Maintained natural C++ has an exact-size fixed instruction skeleton but physical target-position link ownership remains unresolved."
+reason = "Promote the previously reviewed blocked renderer only after exact target-position focused and candidate-state aggregate replay."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-1e461"
+address = "0x1E461"
+file_offset = "0xFC61"
+size = "0x70"
+decode_size = "0x70"
+name = "gameover_fade_in()"
+owner_unit = "th04-main-gameover-ui-v169"
+source = "src/main/core/gameover.cpp"
+generated_public = "gameover_fade_in()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Target-bound Ghidra, pinned TASM, and raw decode close this complete contiguous body. The exact v169 owner contains it; the configured target CALL resolves to this entry and the configured next target function begins at the following boundary."
+next_internal_address = "0x1E4D1"
+call_site_address = "0x1E571"
+
+[[new_exact]]
+id = "th04-main-fn-1e461"
+address = "0x1E461"
+name = "gameover_fade_in()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Admit this internal game-over cohort function only after exact owner replay plus target CALL, terminal return, and next-entry review."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-1e4d1"
+address = "0x1E4D1"
+file_offset = "0xFCD1"
+size = "0x70"
+decode_size = "0x70"
+name = "gameover_fade_out()"
+owner_unit = "th04-main-gameover-ui-v169"
+source = "src/main/core/gameover.cpp"
+generated_public = "gameover_fade_out()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Target-bound Ghidra, pinned TASM, and raw decode close this complete contiguous body. The exact v169 owner contains it; the configured target CALL resolves to this entry and the configured next target function begins at the following boundary."
+next_internal_address = "0x1E541"
+call_site_address = "0x1E556"
+
+[[new_exact]]
+id = "th04-main-fn-1e4d1"
+address = "0x1E4D1"
+name = "gameover_fade_out()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Admit this internal game-over cohort function only after exact owner replay plus target CALL, terminal return, and next-entry review."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-1e541"
+address = "0x1E541"
+file_offset = "0xFD41"
+size = "0x139"
+decode_size = "0x139"
+name = "gameover_run()"
+owner_unit = "th04-main-gameover-ui-v169"
+source = "src/main/core/gameover.cpp"
+generated_public = "gameover_run()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Target-bound Ghidra, pinned TASM, and raw decode close this complete contiguous body. The exact v169 owner contains it; the configured target CALL resolves to this entry and the configured next target function begins at the following boundary."
+next_internal_address = "0x1E67A"
+call_site_address = "0x20AB7"
+
+[[new_exact]]
+id = "th04-main-fn-1e541"
+address = "0x1E541"
+name = "gameover_run()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Admit this internal game-over cohort function only after exact owner replay plus target CALL, terminal return, and next-entry review."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-1e67a"
+address = "0x1E67A"
+file_offset = "0xFE7A"
+size = "0x164"
+decode_size = "0x164"
+name = "gameover_continue_menu()"
+owner_unit = "th04-main-gameover-ui-v169"
+source = "src/main/core/gameover.cpp"
+generated_public = "gameover_continue_menu()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Target-bound Ghidra, pinned TASM, and raw decode close this complete contiguous body. The exact v169 owner contains it; the configured target CALL resolves to this entry and the configured next target function begins at the following boundary."
+next_internal_address = "0x1E7DE"
+call_site_address = "0x1E611"
+
+[[new_exact]]
+id = "th04-main-fn-1e67a"
+address = "0x1E67A"
+name = "gameover_continue_menu()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Admit this internal game-over cohort function only after exact owner replay plus target CALL, terminal return, and next-entry review."
+
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-1e7de"
+address = "0x1E7DE"
+file_offset = "0xFFDE"
+size = "0x1F"
+decode_size = "0x1F"
+name = "game_state_save_score()"
+owner_unit = "th04-main-gameover-ui-v169"
+source = "src/main/core/gameover.cpp"
+generated_public = "game_state_save_score()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Target-bound Ghidra, pinned TASM, and raw decode close this complete contiguous body. The exact v169 owner contains it; the configured target CALL resolves to this entry and the configured next target function begins at the following boundary."
+next_internal_address = "0x1E7FD"
+call_site_address = "0x1E800"
+
+[[new_exact]]
+id = "th04-main-fn-1e7de"
+address = "0x1E7DE"
+name = "game_state_save_score()"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Admit this internal game-over cohort function only after exact owner replay plus target CALL, terminal return, and next-entry review."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-1e7fd"
+address = "0x1E7FD"
+file_offset = "0xFFFD"
+size = "0xA6"
+decode_size = "0xA6"
+name = "GameExecl(const char far*)"
+owner_unit = "th04-main-gameexecl-v169"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Target-bound Ghidra constructs the complete 0xA6 FAR body through 0x1E8A2; the original TLINK/TASM public starts at the same address, raw decode closes the function, and exact v169 replay places the separate gmexe.cpp producer at MAIN_TEXT 0AAF:3D0D."
+
+[[new_exact]]
+id = "th04-main-fn-1e7fd"
+address = "0x1E7FD"
+name = "GameExecl(const char far*)"
+evidence_id = "ev-th04-main-gameover-cohort-boundary-v169"
+reason = "Admit FAR GameExecl() only after original-public boundary review and exact focused plus candidate-state aggregate replay of its separate 0xA6 producer."

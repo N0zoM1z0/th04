@@ -8300,3 +8300,199 @@ map_start = "0x3DB3"
 map_size = "0x1CC"
 target_file_offset = "0x100A3"
 size = "0x1CC"
+
+
+# v169 candidate: split the complete MAIN_TEXT thicklaser/game-over window
+# from the historical main.obj contribution. Target relocation topology further
+# separates the first five game-over near functions from FAR GameExecl(); the
+# build preserves both physical objects before exact v167 Yuuka5 foreground.
+# Existing game-over strings stay in their assembler data owner and are exposed
+# through zero-byte aliases; this candidate claims code ownership only.
+[[build_replacements]]
+id = "th04-main-gameover-window-v169-build"
+trigger_units = ["th04-main-gameexecl-v169"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/y5fg.cpp\",\n\t\"th04/m1y5tl.asm\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/tlr.cpp\",\n\t\"th04/gmov5.cpp\",\n\t\"th04/gmexe.cpp\",\n\t\"th04/y5fg.cpp\",\n\t\"th04/m1y5tl.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-gameover-window-v169-layout"
+trigger_units = ["th04-main-gameexecl-v169"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "60e1c62a15e3430fc3eba2f5fd882448a173e543d2f7fe994bcc4ddc51dd37fc",
+  "42ca6136b14d04c655c027e0d741c6656ac7f24aedce70063ee2eccee407073c",
+]
+
+[[source_transforms.ops]]
+id = "declare-gameover-externals-v169"
+kind = "insert_before"
+anchor = "main_TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+text = "extrn @gameover_run$qv:near\r\nextrn @GAMEEXECL$QNXC:near\r\n"
+
+[[source_transforms.ops]]
+id = "redirect-gameover-run-v169"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_E541\r\n"
+new = "\t\tcall\t@gameover_run$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-gameover-erase-in-v169"
+kind = "insert_before"
+anchor = "asc_22C3F\tdb '  ',0\r\n"
+text = "public _gameover_erase_in\r\n_gameover_erase_in label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-erase-out-v169"
+kind = "insert_before"
+anchor = "asc_22C42\tdb '  ',0\r\n"
+text = "public _gameover_erase_out\r\n_gameover_erase_out label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-maine-binary-v169"
+kind = "insert_before"
+anchor = "aMaine_2\tdb 'maine',0\r\n"
+text = "public _maine_binary\r\n_maine_binary label byte\r\n"
+
+[[source_transforms.ops]]
+id = "remove-generated-thicklaser-public-v169"
+kind = "replace"
+old = "public _thicklasers_render\r\n_thicklasers_render label near\r\n"
+new = ""
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "publish-gameover-fade-frame-v169"
+kind = "insert_before"
+anchor = "byte_25660\tdb ?\r\n"
+text = "public _gameover_fade_frame\r\n_gameover_fade_frame label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-score-refresh-v169"
+kind = "insert_before"
+anchor = "sub_EEB0\tproc near\r\n"
+text = "public @sub_EEB0$qv\r\n@sub_EEB0$qv label near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-life-update-v169"
+kind = "insert_before"
+anchor = "sub_EEE8\tproc far\r\n"
+text = "public _sub_EEE8\r\n_sub_EEE8 label far\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-bomb-update-v169"
+kind = "insert_before"
+anchor = "sub_EFA1\tproc far\r\n"
+text = "public _sub_EFA1\r\n_sub_EFA1 label far\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main-thicklaser-gameover-v169"
+kind = "remove_between"
+removed_sha256 = "fe3db1bcbce95040b0577567b8b3f4e816ae0b12d269a20234edc1ac054ed194"
+start = "sub_E2C3\tproc near\r\n"
+end = "main_TEXT\tends\r\n"
+replacement = "main_TEXT\tends\r\n"
+
+[[source_transforms.ops]]
+id = "preserve-residual-gameexecl-same-segment-call-v169"
+kind = "replace"
+old = "\t\tnopcall\t@GameExecl$qnxc\r\n"
+new = "\t\tnop\r\n\t\tpush\tcs\r\n\t\tcall\tnear ptr @GameExecl$qnxc\r\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-gameover-gaiji-data-v169"
+trigger_units = ["th04-main-gameexecl-v169"]
+patch_path = "th04/gaiji/gameover[data].asm"
+encoding = "latin-1"
+scaffold_sha256 = "27e95ade8404e323caf430e7fd761a7a8edf2aacf81709bd6df7fa3d80f0d4bb"
+
+[[source_transforms.ops]]
+id = "publish-gameover-gaiji-title-v169"
+kind = "insert_before"
+anchor = "gGAMEOVER\tdb 0B0h, 0AAh, 0B6h, 0AEh, 0B8h, 0BFh, 0AEh, 0BBh, 0, 0\r\n"
+text = "public _gGAMEOVER\r\n_gGAMEOVER label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-gaiji-question-v169"
+kind = "insert_before"
+anchor = "gCONTINUE?\tdb 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 8, 0, 0\r\n"
+text = "public _gCONTINUE_QUESTION\r\n_gCONTINUE_QUESTION label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-gaiji-yes-v169"
+kind = "insert_before"
+anchor = "gYES\t\tdb 0C2h, 0AEh, 0BCh, 0\r\n"
+text = "public _gYES\r\n_gYES label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-gaiji-no-v169"
+kind = "insert_before"
+anchor = "gNO\t\tdb 0B7h, 0B8h, 0\r\n"
+text = "public _gNO\r\n_gNO label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-gameover-gaiji-credit-v169"
+kind = "insert_before"
+anchor = "gCREDIT\t\tdb 0ACh, 0BBh, 0AEh, 0ADh, 0B2h, 0BDh, 0\r\n"
+text = "public _gCREDIT\r\n_gCREDIT label byte\r\n"
+
+[[source_transforms]]
+id = "th04-main-gameover-item-data-v169"
+trigger_units = ["th04-main-gameexecl-v169"]
+patch_path = "th04/main/item/items[data].asm"
+encoding = "latin-1"
+scaffold_sha256 = "34d809a6599edc2e3753c06d6bca6e2448d45117ced9d15dc4acf86580a9d7b5"
+
+[[source_transforms.ops]]
+id = "publish-gameover-max-valued-items-v169"
+kind = "insert_before"
+anchor = "_total_max_valued_point_items_collected\tdw 0\r\n"
+text = "public _max_valued_point_items\r\n_max_valued_point_items label word\r\n"
+
+[[units]]
+id = "th04-main-thicklasers-render-v168"
+default_enabled = true
+requires_units = ["th04-main-yuuka5-fg-v167"]
+repo_source = "src/main/bullet/thicklaser_render.cpp"
+overlay_path = "th04/tlr.cpp"
+map_module = "th04/tlr.cpp"
+map_mode = "exact"
+object_path = "obj/th04/tlr.obj"
+map_segment = "MAIN_TEXT"
+map_start = "0x37D3"
+map_size = "0x19E"
+target_file_offset = "0xFAC3"
+size = "0x19E"
+
+[[units]]
+id = "th04-main-gameover-ui-v169"
+default_enabled = true
+requires_units = ["th04-main-thicklasers-render-v168"]
+repo_source = "src/main/core/gameover.cpp"
+overlay_path = "th04/gmov5.cpp"
+map_module = "th04/gmov5.cpp"
+map_mode = "exact"
+object_path = "obj/th04/gmov5.obj"
+map_segment = "MAIN_TEXT"
+map_start = "0x3971"
+map_size = "0x39C"
+target_file_offset = "0xFC61"
+size = "0x39C"
+
+[[units]]
+id = "th04-main-gameexecl-v169"
+default_enabled = true
+requires_units = ["th04-main-gameover-ui-v169"]
+repo_source = "src/main/core/gameexecl.cpp"
+overlay_path = "th04/gmexe.cpp"
+map_module = "th04/gmexe.cpp"
+map_mode = "exact"
+object_path = "obj/th04/gmexe.obj"
+map_segment = "MAIN_TEXT"
+map_start = "0x3D0D"
+map_size = "0xA6"
+target_file_offset = "0xFFFD"
+size = "0xA6"

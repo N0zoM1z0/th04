@@ -4488,3 +4488,125 @@ without a genuinely new OMF/link-history mechanism.
 Campaign status remains active. This v168 handoff closes one bounded hard packet;
 it is not a 99.5% completion, project completion, whole-product build, runtime,
 whole-image, OP/MAINE/ZUN, or whole-game completion claim.
+
+## v169 session checkpoint
+
+This conversation started from committed `main` at
+`e581de5f0749f4b30f73045d32db4c991e59199a` (`gpt-web: review thick-laser
+renderer source`), one commit ahead of `origin/main`, with a clean worktree.
+During recovery the live worktree acquired one coherent interrupted v169 packet;
+complete diff/scratch review classified it as `recoverable-current-work`. No
+unrelated or unknown dirty work was found, and no reset, stash, target mutation,
+or push was used.
+
+All required repository and Factory guidance paths were reread. Mandatory
+preflight, status, and the 2,120-row boundary validator pass. Factory
+`th04-ghidra` still exposes ten operations and no `get_metadata`; its discovered
+`check {}` passes for repository `th04` / `target:th04-main`. Repository-native
+`python3 scripts/ghidra.py th04-main check` independently agrees on the
+156,258-byte private target, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte MZ header, entry, all 1,136 relocations, load mapping, and sampled
+bytes. Canonicality remains only `candidate-local-attested`. The pinned
+TC4J/TASM/TLINK/MS-DOS toolchain attestation passes.
+
+v169 closes the physical-layout blocker left by v168. `thicklasers_render()`
+remains `MAIN_TEXT 0AAF:37D3`, load `0xE2C3..0xE460`, size `0x19E`. The next
+six target-reviewed authored functions are:
+
+- `gameover_fade_in()` `0AAF:3971`, load `0xE461..0xE4D0`, size `0x70`;
+- `gameover_fade_out()` `0AAF:39E1`, load `0xE4D1..0xE540`, size `0x70`;
+- `gameover_run()` `0AAF:3A51`, load `0xE541..0xE679`, size `0x139`;
+- `gameover_continue_menu()` `0AAF:3B8A`, load `0xE67A..0xE7DD`, size `0x164`;
+- `game_state_save_score()` `0AAF:3CEE`, load `0xE7DE..0xE7FC`, size `0x1F`;
+- FAR `GameExecl()` `0AAF:3D0D`, load `0xE7FD..0xE8A2`, size `0xA6`.
+
+Target-bound Ghidra metadata constructs contiguous 112/112/313/356/31/166-byte
+bodies; pinned TASM/raw and target CALL/next-entry anchors close the same logical
+boundaries. Exact `yuuka5_fg_render()` begins at the next byte `0xE8A3`. Ghidra
+remains provisional navigation with zero exactness credit.
+
+An early natural TC4J diagnostic emitted all six new functions as one exact-size
+`0x442` CODE contribution, but target relocation ordering proves a physical
+producer seam at `GameExecl()`: the five near functions occupy one contiguous
+FIXUPP/TLINK run through relocation index 370, while FAR `GameExecl()` begins the
+next run at indices 371-379. Maintained natural source is therefore split into
+`src/main/core/gameover.cpp` (`0x39C`, five near functions) and
+`src/main/core/gameexecl.cpp` (`0xA6`, FAR `GameExecl()`). Together with v168 the
+target-order chain is `tlr.cpp 0x19E -> gmov5.cpp 0x39C -> gmexe.cpp 0xA6 ->
+y5fg.cpp 0x1CC`. Historical blank strings and the `maine` binary name remain
+assembler-owned data exposed through symbolic aliases, with no new DATA credit.
+Neither maintained C++ source uses inline assembly, target-derived byte arrays,
+`#pragma codestring`, fake returns, inert padding, copied target bytes, object
+patching, or ABI lies.
+
+Focused two-cold replay `gptweb-v169-gameover-focused-candidate-003` selects a
+122-unit closure and passes with `failures=[]`; receipt SHA-256 is
+`f2e566eec3187c16ba4d18440be1e2f8c8056e038737422095ae5303e7d71c7c`.
+Both focused candidate MAIN images are
+`14fe983faadd7f9d46c788bb79b83c240e8e6212ac5dd2a5fd32ad69bf76e0ab`.
+The three affected physical owners pass independently in both builds: 414 bytes
+plus 13 ordered relocations for thick-laser, 924 bytes plus 29 ordered
+relocations for game-over UI, and 166 bytes plus nine ordered relocations for FAR
+`GameExecl`, all at exact MAP positions with deterministic valid OMF.
+
+Candidate-state no-unit aggregate
+`gptweb-v169-gameover-aggregate-candidate-001` passes all **201** default owners
+twice; receipt SHA-256 is
+`8599ce1fc392efcfbe318ec9152e3df47a87b8558dbec8be64cb2dbf3b394235`.
+After ledger promotion, no-unit aggregate
+`gptweb-v169-gameover-aggregate-final-001` passes the same 201-owner cohort twice;
+receipt SHA-256 is
+`2275a3a95f9bb3ce979ce2ef0a259afe298f825f0a69e5291e3122a5a9100b43`.
+Both aggregate A/B images have SHA-256
+`b98f80796da4bd0733a6d32e41b03a54e5ddeeb7471bfdbe67b247fa2b844e5d`.
+
+Fail-closed logical-function review uses target-bound metadata, target bytes, and
+the v169 candidate aggregate MAP. The five near functions have no original TLINK
+public, so their reconstruction-generated C++ publics require the existing
+`generated_public` plus target CALL plus next-entry gates. FAR `GameExecl()`
+retains its original target public. Trial report SHA-256 is
+`f7144169df432c1a3b1cfe3aa7be66af36ff98ecfd9360e733fddfac803fb801`.
+It expands the maintained reviewed function set from 384 to exactly 390 IDs,
+adds only the expected six v169 entries, removes none, and promotes the previous
+v168 thick-laser blocker.
+
+Live MAIN accounting after v169 is **64,552 / 68,056 exact reviewed authored
+bytes (94.851299%)** and **377 / 390 exact reviewed authored functions
+(96.666667%)**. Boundary routing is 377 exact, 13 blocked, 147 unreviewed, and 31
+ASM-attestation observations. These are moving reviewed denominators, not
+percentages of `MAIN.EXE` or the whole game. `OP.EXE`, `MAINE.EXE`, and `ZUN.COM`
+remain independent queues with 94, 72, and 13 unreviewed authored candidates and
+no honest accepted exact-function or exact-byte denominator; v169 grants them no
+MAIN-derived credit.
+
+Verification planes remain separate. Repository-native owned-extent exactness is
+established for the three promoted physical owners and logical exactness for the
+seven affected reviewed functions. Standalone TH04 production-source/link
+closure, whole-image exactness, runtime-storage identity, runtime-scenario
+validation, portable-runtime validation, v169 Factory Truth-Kernel acceptance,
+and pristine-release provenance remain unestablished.
+
+The ignored `.analysis/` tree contained **6,146,713,352 bytes** at conversation
+entry and reached 6,598,569,156 bytes before retention cleanup. After confirming
+inactive producers and no tracked references, receiptless interrupted focused
+runs 001/002 were deleted; focused 003 and the candidate aggregate were compacted
+to receipt-only; the candidate aggregate MAP used by function review was copied
+to the v169 scratch root; and the complete post-promotion 201-owner aggregate was
+retained as the cold baseline. Post-cleanup `.analysis/` was **6,428,770,493 bytes**; after final repository CI it is
+**6,428,776,626 bytes**. Remaining growth outside manifested v169 artifacts cannot
+be safely attributed to this packet, so legacy, unknown, target, toolchain,
+Wine-prefix, Ghidra, and unrelated state were left untouched.
+
+The next structural packet should audit the Reimu shot-handler cohort rather than
+harvest another easy leaf. Live routing gives `shot_reimu_b_l5` at `MAIN__TEXT`
+offset `0xFB22` a provisional three-range Ghidra span of **0xBE8D**, clearly
+cross-linked. Pinned TASM instead keeps one near PROC through its terminal `RET`,
+immediately followed by four words at `off_FBE8`, and begins
+`shot_reimu_b_l6` at `0xFBF0`. First determine whether `off_FBE8` is compiler
+jump-table ownership of `shot_reimu_b_l5` and whether the true physical extent
+continues through this post-return table. Audit the adjacent Reimu A/B shot-level
+handlers as one producer cohort: reconcile TASM/raw seams, table targets,
+relocations, shot-function-table callers, and shared data before writing source.
+Do not accept either the current `0xC1` Ghidra body or `0xBE8D` span without that
+owner review.
