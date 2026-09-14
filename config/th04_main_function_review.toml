@@ -3300,3 +3300,12 @@ address = "0x1C94A"
 name = "midbossx_render()"
 evidence_id = "ev-th04-main-midbossx-render-boundary-v163"
 reason = "Fresh Ghidra constructs the complete 0x51 near body at the matching TLINK public; target raw decode closes at RET before the independent 0xC99B zero seam, and split-object focused plus 196-owner aggregate cold replay prove exact natural-C++ ownership with target relocation order."
+
+# v164: Fresh Ghidra, TLINK, raw target decode, callback installation, and
+# focused plus 197-owner aggregate replay agree on the complete Stage 1 renderer.
+[[new_exact]]
+id = "th04-main-fn-1c778"
+address = "0x1C778"
+name = "midboss1_render()"
+evidence_id = "ev-th04-main-midboss1-render-boundary-v164"
+reason = "Fresh Ghidra constructs the complete 0x10D near body at the matching TLINK public; raw decode closes at RET immediately before exact midboss3_render, and focused plus 197-owner aggregate cold replay prove exact natural-C++ ownership with target relocation order."

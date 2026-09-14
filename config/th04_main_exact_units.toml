@@ -7774,3 +7774,47 @@ map_start = "0x1E5A"
 map_size = "0x51"
 target_file_offset = "0xE14A"
 size = "0x51"
+
+# v164 exact: Natural TC4J reconstruction of the Stage 1 TILE_TEXT
+# midboss renderer. Selecting this unit pulls in the v163 Stage X split trigger,
+# then removes the remaining historical Stage 1 PROC and inserts m1r.cpp before
+# the exact Stage 3 / Stage X objects. This keeps the unit directly replayable.
+[[build_replacements]]
+id = "th04-main-midboss1-render-v164-build"
+trigger_units = ["th04-main-midboss1-render-v164"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/m3r.cpp\",\n\t\"th04/mxr.cpp\",\n\t\"th04/tilegap.asm\",\n\t\"th04/tilesuf.asm\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/m1r.cpp\",\n\t\"th04/m3r.cpp\",\n\t\"th04/mxr.cpp\",\n\t\"th04/tilegap.asm\",\n\t\"th04/tilesuf.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-midboss1-render-v164-layout"
+trigger_units = ["th04-main-midboss1-render-v164"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "8c1cf331e79619a6fe6f4bed931f53328177cd3ab792576e98ccab728f3969de",
+  "53776135395510ee7817221b9b7e042164935ccbed9bb91768a72500a0d1e0ff",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-tile-midboss1-v164"
+kind = "remove_between"
+removed_sha256 = "8c791349f6cf968c0961e8bb6ee22c7c6fcae2b65accec44680237a94623390a"
+start = "public @MIDBOSS1_RENDER$QV\r\n"
+end = "@midboss1_render$qv\tendp\r\n"
+replacement = ""
+
+[[units]]
+id = "th04-main-midboss1-render-v164"
+default_enabled = true
+requires_units = ["th04-main-midbossx-render-v163"]
+repo_source = "src/main/midboss/m1_render.cpp"
+overlay_path = "th04/m1r.cpp"
+map_module = "th04/m1r.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m1r.obj"
+map_segment = "TILE_TEXT"
+map_start = "0x1C88"
+map_size = "0x10D"
+target_file_offset = "0xDF78"
+size = "0x10D"
