@@ -507,6 +507,212 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
     return accepted
 
 
+
+def reviewed_nonexact_internal_call_reviews(functions, metadata, publics, target):
+    """Review target-called internal functions without granting exactness.
+
+    The entry must be a real target Ghidra function with no target TLINK public.
+    A configured near CALL must resolve exactly to the entry, the configured next
+    boundary must immediately follow the complete reviewed extent, and the raw
+    executable span plus any configured trailing compiler switch data must account
+    for every byte. Cross-linked Ghidra bodies require explicit opt-in.
+    """
+    policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
+    raw_target = target.read_bytes()
+    synthetic_items: list[dict[str, object]] = []
+    synthetic_publics: dict[int, list[str]] = {}
+    anchors: dict[int, dict[str, object]] = {}
+
+    def file_offset_for(linear: int) -> int:
+        return linear - 0x10000 + 0x1800
+
+    for override in policy.get("reviewed_nonexact_internal_call", []):
+        address = int(str(override["address"]), 0)
+        file_offset = int(str(override["file_offset"]), 0)
+        size = int(str(override["size"]), 0)
+        decode_size = int(str(override.get("decode_size", override["size"])), 0)
+        if not (0 < decode_size <= size):
+            raise ValueError(f"internal-call nonexact address 0x{address:X} has invalid decode_size")
+        if address not in functions:
+            raise ValueError(f"internal-call nonexact address 0x{address:X} lacks Ghidra function entry")
+        if address in publics:
+            raise ValueError(f"internal-call nonexact address 0x{address:X} unexpectedly has a TLINK public")
+        if file_offset != file_offset_for(address):
+            raise ValueError(f"internal-call nonexact address 0x{address:X} file offset mismatch")
+
+        data = metadata.get(address)
+        if data is None:
+            raise ValueError(f"internal-call nonexact address 0x{address:X} lacks Ghidra metadata")
+        if data.get("is_thunk") != "false" or data.get("is_external") != "false":
+            raise ValueError(f"internal-call nonexact address 0x{address:X} is thunk/external")
+        body_min = int(data["body_min"], 16)
+        body_max = int(data["body_max"], 16)
+        body_addresses = int(data["body_addresses"])
+        allow_crosslinked_body = override.get("allow_crosslinked_body") is True
+        bounded_body = (
+            body_min == address
+            and address <= body_max < address + size
+            and 0 < body_addresses <= size
+        )
+        if allow_crosslinked_body:
+            if not (body_min <= address <= body_max):
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} cross-linked Ghidra body misses entry"
+                )
+            if bounded_body:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} does not require cross-linked override"
+                )
+        elif not bounded_body:
+            raise ValueError(
+                f"internal-call nonexact address 0x{address:X} lacks a bounded Ghidra entry body"
+            )
+
+        next_internal_raw = override.get("next_internal_address")
+        next_target_raw = override.get("next_target_address")
+        if (next_internal_raw is None) == (next_target_raw is None):
+            raise ValueError(
+                f"internal-call nonexact address 0x{address:X} requires exactly one next-boundary mode"
+            )
+        if next_internal_raw is not None:
+            next_boundary = int(str(next_internal_raw), 0)
+            if address + size != next_boundary or next_boundary not in functions:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} next-internal boundary mismatch"
+                )
+            next_data = metadata.get(next_boundary)
+            if next_data is None or int(next_data["address"], 16) != next_boundary:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} next internal entry lacks metadata"
+                )
+            if next_data.get("is_thunk") != "false" or next_data.get("is_external") != "false":
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} next internal entry is thunk/external"
+                )
+            boundary_mode = f"next internal Ghidra entry 0x{next_boundary:X}"
+        else:
+            next_boundary = int(str(next_target_raw), 0)
+            if address + size != next_boundary:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} next-target boundary mismatch"
+                )
+            prefix_size = int(str(override.get("next_target_prefix_size", "0")), 0)
+            expected_prefix_sha = str(override.get("next_target_prefix_sha256", ""))
+            next_offset = file_offset_for(next_boundary)
+            if prefix_size <= 0 or not expected_prefix_sha:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} lacks next-target prefix attestation"
+                )
+            observed_prefix_sha = hashlib.sha256(
+                raw_target[next_offset:next_offset + prefix_size]
+            ).hexdigest()
+            if observed_prefix_sha != expected_prefix_sha:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} next-target prefix mismatch"
+                )
+            boundary_mode = (
+                f"target-attested next entry 0x{next_boundary:X} "
+                f"({prefix_size}-byte prefix SHA-256)"
+            )
+
+        call_site = int(str(override["call_site_address"]), 0)
+        call_offset = file_offset_for(call_site)
+        if call_offset < 0 or call_offset + 3 > len(raw_target):
+            raise ValueError(f"internal-call nonexact address 0x{address:X} call anchor escapes target")
+        if raw_target[call_offset] != 0xE8:
+            raise ValueError(f"internal-call nonexact address 0x{address:X} call anchor is not near CALL")
+        displacement = int.from_bytes(
+            raw_target[call_offset + 1:call_offset + 3], "little", signed=True
+        )
+        resolved_call = call_site + 3 + displacement
+        if resolved_call != address:
+            raise ValueError(
+                f"internal-call nonexact address 0x{address:X} call target mismatch: "
+                f"0x{resolved_call:X} != 0x{address:X}"
+            )
+
+        if decode_size != size:
+            if "trailing_switch_tables" in override:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} does not yet support multi-table trailing data"
+                )
+            if "jump_table_address" not in override:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} has unexplained trailing bytes"
+                )
+            cursor = address + decode_size
+            metadata_address = override.get("table_metadata_address")
+            if metadata_address is not None:
+                if int(str(metadata_address), 0) != cursor:
+                    raise ValueError(
+                        f"internal-call nonexact address 0x{address:X} switch metadata is not contiguous"
+                    )
+                cursor += 1
+            compare_address = override.get("compare_table_address")
+            if compare_address is not None:
+                compare_count = int(override.get("compare_table_count", override["jump_table_count"]))
+                if int(str(compare_address), 0) != cursor:
+                    raise ValueError(
+                        f"internal-call nonexact address 0x{address:X} compare table is not contiguous"
+                    )
+                cursor += compare_count * 2
+            jump_table_address = int(str(override["jump_table_address"]), 0)
+            jump_table_count = int(override["jump_table_count"])
+            if jump_table_address != cursor:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} switch table is not contiguous"
+                )
+            if jump_table_address + (jump_table_count * 2) != address + size:
+                raise ValueError(
+                    f"internal-call nonexact address 0x{address:X} switch table does not fill extent"
+                )
+
+        name = str(override["name"])
+        synthetic_items.append({
+            "address": address,
+            "address_hex": f"0x{address:X}",
+            "ghidra_name": functions[address],
+            "public": name,
+            "owner_unit": str(override.get("owner_unit", "")),
+            "owner_start": address,
+            "owner_end": address + size,
+            "file_offset": file_offset,
+            "source": str(override.get("source", "")),
+            "owner_name": str(override.get("owner_name", "")),
+        })
+        synthetic_publics[address] = [name]
+        anchors[address] = {
+            "boundary_mode": boundary_mode,
+            "call_site_address": f"0x{call_site:X}",
+            "resolved_call_target": f"0x{resolved_call:X}",
+            "ghidra_body_min": f"0x{body_min:X}",
+            "ghidra_body_max": f"0x{body_max:X}",
+            "ghidra_body_addresses": body_addresses,
+        }
+
+    reviewed = reviewed_nonexact_reviews(
+        synthetic_items,
+        metadata,
+        synthetic_publics,
+        target,
+        policy_key="reviewed_nonexact_internal_call",
+    )
+    for item in reviewed:
+        address = int(item["address"])
+        item.update(anchors[address])
+        decoded = item.get("decode")
+        if not isinstance(decoded, dict):
+            raise ValueError(f"internal-call nonexact address 0x{address:X} lacks raw decode")
+        if decoded.get("end_address_exclusive") != f"0x{address + int(item['decode_size']):X}":
+            raise ValueError(f"internal-call nonexact address 0x{address:X} raw decode extent mismatch")
+        terminal = str(decoded.get("terminal", "")).lower()
+        if not terminal.startswith(("ret", "retf")):
+            raise ValueError(f"internal-call nonexact address 0x{address:X} lacks terminal RET/RETF")
+        switch_review = item.get("switch_review")
+        if isinstance(switch_review, dict):
+            switch_review["trailing_extent_fully_accounted"] = True
+    return reviewed
+
 def reviewed_exact_no_ghidra_internal_call_reviews(functions, metadata, publics, target):
     """Review a target-called internal function that Ghidra misses entirely."""
     policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
@@ -1405,6 +1611,52 @@ def write_reviewed_ledger(
         raise ValueError(
             "manual exact rows missing from function ledger: " + ", ".join(missing_manual)
         )
+    new_nonexact_by_id: dict[str, dict[str, object]] = {}
+    for declaration in policy.get("new_nonexact", []):
+        declaration_id = str(declaration["id"])
+        if declaration_id in new_nonexact_by_id:
+            raise ValueError(f"duplicate new nonexact id {declaration_id}")
+        new_nonexact_by_id[declaration_id] = declaration
+
+    missing_nonexact = sorted(set(nonexact_by_id) - seen_nonexact)
+    existing_addresses = {int(row["address"], 0) for row in rows}
+    for nonexact_id in list(missing_nonexact):
+        item = nonexact_by_id[nonexact_id]
+        declaration = new_nonexact_by_id.get(nonexact_id)
+        if declaration is None:
+            continue
+        address = int(item["address"])
+        if int(str(declaration["address"]), 0) != address:
+            raise ValueError(f"new nonexact address mismatch for {nonexact_id}")
+        if address in existing_addresses:
+            raise ValueError(f"new nonexact address 0x{address:X} already exists in function ledger")
+        declared_evidence = str(declaration.get("evidence_id", ""))
+        item_evidence = str(item.get("evidence_id", ""))
+        if not declared_evidence or declared_evidence != item_evidence:
+            raise ValueError(f"new nonexact evidence mismatch for {nonexact_id}")
+        row = {field: "" for field in fieldnames}
+        row.update({
+            "id": nonexact_id,
+            "artifact": "th04-main",
+            "address": f"0x{address:X}",
+            "file_offset": f"0x{int(item['file_offset']):X}",
+            "size": f"0x{int(item['size']):X}",
+            "boundary_state": "reviewed",
+            "state": "blocked",
+            "name": str(item["name"]),
+            "owner_unit": str(item.get("owner_unit", "")),
+            "source": str(item.get("source", "")),
+            "evidence_ids": item_evidence,
+            "notes": (
+                "New reviewed nonexact function admitted by explicit policy: "
+                + str(declaration["reason"])
+            ),
+        })
+        rows.append(row)
+        existing_addresses.add(address)
+        seen_nonexact.add(nonexact_id)
+    rows.sort(key=lambda row: int(row["address"], 0))
+
     missing_nonexact = sorted(set(nonexact_by_id) - seen_nonexact)
     if missing_nonexact:
         raise ValueError(
@@ -1448,6 +1700,7 @@ def main() -> int:
         manual_exact_internal_call: list[dict[str, object]] = []
         manual_exact_extent: list[dict[str, object]] = []
         reviewed_nonexact: list[dict[str, object]] = []
+        reviewed_nonexact_internal_call: list[dict[str, object]] = []
         if (
             policy.get("reviewed_exact", [])
             or policy.get("reviewed_exact_no_ghidra", [])
@@ -1457,6 +1710,7 @@ def main() -> int:
             or policy.get("reviewed_exact_internal_call", [])
             or policy.get("reviewed_exact_extent", [])
             or policy.get("reviewed_nonexact", [])
+            or policy.get("reviewed_nonexact_internal_call", [])
         ):
             if args.target is None:
                 parser.error("--target is required for manual/reviewed nonexact policy")
@@ -1502,12 +1756,18 @@ def main() -> int:
                 publics,
                 args.target,
             )
+        if policy.get("reviewed_nonexact_internal_call", []):
+            assert args.target is not None
+            reviewed_nonexact_internal_call = reviewed_nonexact_internal_call_reviews(
+                functions, parsed_metadata, publics, args.target
+            )
+        reviewed_nonexact_all = [*reviewed_nonexact, *reviewed_nonexact_internal_call]
         manual_exact_all = [
             *manual_exact, *manual_exact_no_ghidra, *manual_exact_no_ghidra_internal_call,
             *manual_exact_no_ghidra_internal_pointer, *manual_exact_internal, *manual_exact_internal_call, *manual_exact_extent
         ]
         reviewed_addresses = {
-            int(item["address"]) for item in [*manual_exact_all, *reviewed_nonexact]
+            int(item["address"]) for item in [*manual_exact_all, *reviewed_nonexact_all]
         }
         accepted = [
             item for item in accepted if int(item["address"]) not in reviewed_addresses
@@ -1516,7 +1776,7 @@ def main() -> int:
             item for item in rejected if int(item["address"]) not in reviewed_addresses
         ]
         exact_count = len(accepted) + len(manual_exact_all)
-        denominator = exact_count + len(reviewed_nonexact)
+        denominator = exact_count + len(reviewed_nonexact_all)
         report.update(
             {
                 "strict_exact_count": len(accepted),
@@ -1529,14 +1789,15 @@ def main() -> int:
                 "manual_exact_extent_count": len(manual_exact_extent),
                 "exact_function_count": exact_count,
                 "strict_rejected_count": len(rejected),
-                "reviewed_nonexact_count": len(reviewed_nonexact),
+                "reviewed_nonexact_count": len(reviewed_nonexact_all),
+                "reviewed_nonexact_internal_call_count": len(reviewed_nonexact_internal_call),
                 "reviewed_function_count": denominator,
                 "exact_function_percent": (exact_count * 100 / denominator if denominator else None),
                 "accepted": accepted,
                 "manual_exact": manual_exact_all,
                 "manual_exact_extent": manual_exact_extent,
                 "rejected": rejected,
-                "reviewed_nonexact": reviewed_nonexact,
+                "reviewed_nonexact": reviewed_nonexact_all,
             }
         )
         print(
@@ -1547,7 +1808,7 @@ def main() -> int:
         print(f"provisional strict rejections: {len(rejected)}")
         if args.ledger_out:
             write_reviewed_ledger(
-                args.ledger_out, accepted, manual_exact_all, reviewed_nonexact
+                args.ledger_out, accepted, manual_exact_all, reviewed_nonexact_all
             )
             print(f"reviewed ledger: {args.ledger_out}")
     else:

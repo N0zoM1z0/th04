@@ -935,6 +935,123 @@ cs_base = "0xF000"
 
 
 
+    def test_internal_call_nonexact_accepts_crosslinked_switch_extent(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            policy = root / "policy.toml"
+            policy.write_text("""[[reviewed_nonexact_internal_call]]
+id = "fn-internal-nonexact"
+address = "0x10000"
+file_offset = "0x1800"
+size = "0x6"
+decode_size = "0x3"
+name = "internal_nonexact_fixture()"
+owner_unit = "source-present-owner"
+source = "src/internal_nonexact.cpp"
+evidence_id = "ev-internal-nonexact"
+reason = "synthetic cross-linked internal nonexact boundary"
+allow_crosslinked_body = true
+table_metadata_address = "0x10003"
+table_metadata_value = "0x00"
+jump_table_address = "0x10004"
+jump_table_count = 1
+cs_base = "0x10000"
+next_internal_address = "0x10006"
+call_site_address = "0x10010"
+""", encoding="utf-8")
+            target = root / "target.bin"
+            data = bytearray(0x1820)
+            data[0x1800:0x1806] = b"\x90\x90\xC3\x00\x00\x00"
+            data[0x1806:0x1809] = b"\x55\x8B\xEC"
+            data[0x1810:0x1813] = b"\xE8\xED\xFF"
+            target.write_bytes(data)
+            functions = {0x10000: "FUN_10000", 0x10006: "FUN_10006"}
+            metadata = {
+                0x10000: {
+                    "address": "0x10000", "body_min": "0x0FFF0",
+                    "body_max": "0x10002", "body_addresses": "8",
+                    "is_thunk": "false", "is_external": "false",
+                },
+                0x10006: {
+                    "address": "0x10006", "body_min": "0x10006",
+                    "body_max": "0x10008", "body_addresses": "3",
+                    "is_thunk": "false", "is_external": "false",
+                },
+            }
+            decoded = {
+                "instruction_count": 3,
+                "instruction_addresses": [0x10000, 0x10001, 0x10002],
+                "terminal": "ret", "first_address": "0x10000",
+                "end_address_exclusive": "0x10003",
+            }
+            with patch.object(review, "POLICY", policy), patch.object(
+                review, "linear_decode", return_value=dict(decoded)
+            ):
+                accepted = review.reviewed_nonexact_internal_call_reviews(
+                    functions, metadata, {}, target
+                )
+            self.assertEqual(len(accepted), 1)
+            self.assertEqual(accepted[0]["resolved_call_target"], "0x10000")
+            self.assertEqual(accepted[0]["boundary_mode"], "next internal Ghidra entry 0x10006")
+            self.assertEqual(accepted[0]["owner_unit"], "source-present-owner")
+            self.assertEqual(accepted[0]["source"], "src/internal_nonexact.cpp")
+            switch = accepted[0]["switch_review"]
+            self.assertIsInstance(switch, dict)
+            assert isinstance(switch, dict)
+            self.assertEqual(switch["table_metadata_value"], "0x00")
+            self.assertEqual(switch["jump_targets"], ["0x10000"])
+
+    def test_new_reviewed_nonexact_row_requires_explicit_declaration(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "config"
+            config.mkdir()
+            ledger = config / "th04_main_authored_functions.csv"
+            header = [
+                "id", "artifact", "address", "file_offset", "size",
+                "boundary_state", "state", "name", "owner_unit", "source",
+                "evidence_ids", "notes",
+            ]
+            with ledger.open("w", newline="", encoding="utf-8") as stream:
+                csv.DictWriter(stream, fieldnames=header).writeheader()
+            item = {
+                "id": "fn-new-blocked", "address": 0x100,
+                "file_offset": 0x200, "size": 0x20,
+                "name": "new_blocked_fixture()",
+                "owner_unit": "blocked-owner", "source": "src/blocked.cpp",
+                "evidence_id": "ev-new-blocked", "reason": "reviewed boundary",
+            }
+            policy = root / "policy.toml"
+            policy.write_text("schema_version = 1\n", encoding="utf-8")
+            out = root / "out.csv"
+            old_root = review.ROOT
+            review.ROOT = root
+            try:
+                with patch.object(review, "POLICY", policy):
+                    with self.assertRaisesRegex(ValueError, "reviewed nonexact rows missing"):
+                        review.write_reviewed_ledger(out, [], [], [item])
+                policy.write_text("""schema_version = 1
+[[new_nonexact]]
+id = "fn-new-blocked"
+address = "0x100"
+evidence_id = "ev-new-blocked"
+reason = "explicit synthetic denominator admission"
+""", encoding="utf-8")
+                with patch.object(review, "POLICY", policy):
+                    review.write_reviewed_ledger(out, [], [], [item])
+            finally:
+                review.ROOT = old_root
+            with out.open(newline="", encoding="utf-8") as stream:
+                rows = list(csv.DictReader(stream))
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["id"], "fn-new-blocked")
+            self.assertEqual(rows[0]["boundary_state"], "reviewed")
+            self.assertEqual(rows[0]["state"], "blocked")
+            self.assertEqual(rows[0]["size"], "0x20")
+            self.assertEqual(rows[0]["evidence_ids"], "ev-new-blocked")
+            self.assertEqual(rows[0]["owner_unit"], "blocked-owner")
+            self.assertEqual(rows[0]["source"], "src/blocked.cpp")
+
     def test_internal_call_exact_accepts_truncated_ghidra_with_call_anchor(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)
