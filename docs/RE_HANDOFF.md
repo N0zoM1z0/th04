@@ -3306,3 +3306,208 @@ ASM `0xC99C..0xCA97`, exact v162 invalidator ASM `0xCA98..0xCB2D`, then exact
 fake translation unit. First prove the split/link layout and the three ordered
 m3x relocations in a cheap candidate link before paying for focused cold replay.
 Campaign status remains active; this handoff is not a phase-completion claim.
+
+## v163 recovery and session checkpoint
+
+This conversation started from clean repository `th04`, branch `main`, HEAD
+`877608a4817e9d4d7176ad7f4b4aa7ee6fee4e20`, with the local branch nine commits
+ahead of `origin/main`. Startup recovery found no staged, unstaged, untracked,
+conflicted, unrelated, or unknown tracked work. The ignored `.analysis/` tree
+measured `4,753,236,719` bytes at entry. All required repository and Factory
+guidance paths were reread. `scripts/preflight.py`, `scripts/status.py`, and the
+2,120-observation function-boundary validator passed before target-dependent
+work.
+
+The registered `th04-ghidra` provider was re-enumerated before use. It still
+exposes ten operations and no `get_metadata` schema, so no undiscovered operation
+was invoked. Its discovered `check {}` operation passed for repository `th04` /
+`target:th04-main`, target size 156,258 and SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native `python3 scripts/ghidra.py th04-main check` independently passed
+the same MZ target, 6,144-byte header/load mapping, entry point, all 1,136
+relocations, load-module identity, and sampled bytes. The pinned TC86 Borland C++
+4.02 / TASM32 5.0 / TLINK 6.10 toolchain attestation also passed. Target
+canonicality remains only `candidate-local-attested`.
+
+Before the planned TILE renderer edit, live status changed unexpectedly while
+HEAD stayed at `877608a...`: four tracked paths became unstaged and four files
+appeared untracked. Complete diff/untracked review classified all eight paths as
+one coherent `recoverable-current-work` v163 packet, not unrelated or unknown
+work. The modified paths were `config/evidence.csv`,
+`config/th04_function_boundaries.csv`, `config/th04_main_exact_units.toml`, and
+`config/units.csv`; the untracked paths were
+`config/replay/th04_tile_gap_v163.asm.in`,
+`config/replay/th04_tile_suffix_v163.asm.in`,
+`src/main/midboss/m3_render.cpp`, and `src/main/midboss/mx_render.cpp`. No reset,
+stash, deletion, target edit, or indiscriminate staging was used. Recovery found
+that focused replay had already completed before the interruption, so it was
+rebound and audited rather than rerun.
+
+Target-first review closes two adjacent `TILE_TEXT` near functions:
+
+- `midboss3_render()` at `0AAF:1D95..1E59`, load `0xC885..0xC949`, target file
+  `0xE085..0xE149`, size `0xC5 / 197`, target slice SHA-256
+  `8eff8ea44f86b9f3d2978d76c54a5715a966723abb84d50710c1be1211c904e8`;
+- `midbossx_render()` at `0AAF:1E5A..1EAA`, load `0xC94A..0xC99A`, target file
+  `0xE14A..0xE19A`, size `0x51 / 81`, target slice SHA-256
+  `6194e35df530d0ee97e2cf932144c2e5f851fc1e9a7c583ea1b8e8c9a400a67a`.
+
+Fresh target-bound Ghidra constructs both bodies contiguously with the exact
+197/81 body-address counts. TLINK publics, pinned TASM, raw target decode, and
+callback installation agree on the entries and ends. Together the two function
+bodies cover `0x116 / 278` target bytes, target file `0xE085..0xE19A`, SHA-256
+`4ca7083efaf8e02ebb1f29280dda7be7e1ffe5828ccb91500d1879e335af46dc`.
+Load `0xC99B` is a separate zero layout seam and receives no authored-function or
+C++ byte credit; exact v161 pellet ASM starts at load `0xC99C`.
+
+The packet resolves a physical-producer question rather than accepting equal
+size as sufficient evidence. A production-profile natural combined-TU probe from
+the prior v162 scratch emits exactly `0x116` CODE bytes and public offsets `0`
+and `0xC5`, but its linked MZ relocation order is
+`[0xC997,0xC93F,0xC92D]`. The target order is
+`[0xC93F,0xC92D,0xC997]`. The compact combined negative remains independently
+bound by source SHA-256
+`bb169fcd256b3bae916f49f0924b06ad029d47aae9e0b67693ae2899a71584ce`
+and OMF SHA-256
+`a285b8f6f3b4731ba6b739aa5909102352e6fce3b7d7f8101d1b9797e40011c8`.
+
+Splitting the same natural semantics into two TC4J objects restores the target
+relocation topology. `m3r.obj` owns target/candidate ordered relocations
+`[0xC93F,0xC92D]`; `mxr.obj` owns `[0xC997]`. Replay therefore preserves the
+physical order as the remaining monolithic TILE prefix, natural Stage 3 object,
+natural Stage X object, a hash-bound one-byte zero-seam object, then a hash-bound
+suffix containing the independently exact v161 pellet-render and v162
+bullet/gather ASM owners. The seam and suffix are replay/layout plumbing only and
+receive zero authored C++ credit.
+
+Maintained natural sources are `src/main/midboss/m3_render.cpp` (SHA-256
+`2f29422c92bec09ff1f3a33f0028506595b5c56eab099933afe2241cc7e3b50f`) and
+`src/main/midboss/mx_render.cpp` (SHA-256
+`10ad57cd96a76e7a6004f34853e4d990d525940e401d1994d7a1dfd8fc0c4316`).
+They contain ordinary C++ only: no inline assembly, `__emit__`, target-derived
+byte arrays, `#pragma codestring`, fake returns, inert padding, target/object
+patching, or ABI lies. Focused `m3r.obj` raw SHA-256 is
+`c6f4c6cd3ce062c7cac4ebce45df55f57f142c5990523edbdf0a282b305892ef`,
+dependency-normalized SHA-256
+`0b0c7b05b77306dc02d5fba63b577e4dc408b064b79720a827040c3bf31a8372`.
+Focused `mxr.obj` raw SHA-256 is
+`a29afcb73c4b8b228113b5a478035a9d97c95e7bd0e4c783b79837c4b536fec5`,
+dependency-normalized SHA-256
+`7fd1b60de7ac74f7605221ba681c0199dc9e556ed051eb1bfa3db1b04cab62ba`.
+
+The exactness Oracles actually used are:
+
+- recovered focused `gptweb-v163-midboss3x-focused-candidate-001`: 117-owner
+  dependency closure, two isolated cold builds, `pass=true`, `failures=[]`,
+  receipt SHA-256
+  `9ae731115f73dee2f32d6639c999812c08fc4280d9f5ba06ca70ad122a6b26a4`;
+  both new slices, maps, ordered relocations, OMF identities, the one-byte seam,
+  and all dependencies pass; both focused MAIN images are SHA-256
+  `2903f6732689a1c19d0b48d93bc66f7052c3ff1f4d4290588ef58761d7214305`;
+- candidate-state aggregate `gptweb-v163-midboss3x-aggregate-candidate-001`:
+  all 196 default owners pass twice with `failures=[]`, receipt SHA-256
+  `96208d620904828077b91fd446941b24b497642e5d23c30bfbd8a5138b2a6233`;
+- post-promotion aggregate `gptweb-v163-midboss3x-aggregate-final-001`: the same
+  196-owner cohort passes twice again with `failures=[]`, receipt SHA-256
+  `cd4d14e9f573768901817122f49aeb4682e9226f86cce20c5364ba40fc569ba6`.
+
+Both aggregate runs produce deterministic candidate MAIN SHA-256
+`53609b5b30d8c42cb23eb78702dbd2d1d4eb098f89b3546ea9952a2ab7d430fd`.
+After post-promotion replay, the fail-closed function reviewer was rerun against
+the final aggregate MAP and target-bound Ghidra metadata. It admitted both new
+entries only after explicit `[[new_exact]]` declarations. That review also
+exposed three stale authored-C/C++ `reviewed_nonexact` policy requirements for
+functions already moved to the separate original-style ASM plane by v140/v142:
+`POINTNUMS_RENDER`, `@pointnum_put`, and `enemy_bullet_template_push()`. Only
+those superseded policy blocks were removed; their ASM source, evidence, and
+accepted owners were not changed. The existing authored-function ledger was
+preserved byte-for-byte except for the two new v163 rows.
+
+The resulting live MAIN accounting is **62,319 / 63,673 exact reviewed authored
+bytes (97.873510%)** and **368 / 375 exact reviewed authored functions
+(98.133333%)**. The reviewed denominator honestly grows by the two renderer
+functions and 278 bytes. MAIN has 162 remaining unreviewed C/C++ authored
+candidates and the same seven reviewed blockers. Exact original-style ASM stays
+separate at **17 units / 2,526 bytes**. Other artifacts remain separate queues:
+`th04-op` still has 94 unreviewed authored candidates, `th04-maine` 72, and
+`th04-zun` 13, with no accepted exact denominator; `ZUN.COM` remains an MZ
+artifact despite its extension.
+
+Implementation checkpoint is
+`e4c2f19697432c331f26f92c7b7f26e4d40e5e25`
+(`gpt-web: reconstruct TILE midboss renderers`). The complete working and staged
+diffs were inspected before commit; only the 15 v163 source/config/evidence/
+generated-report paths were staged. The worktree was clean immediately after
+commit and nothing was pushed. Full repository CI passes on the implementation
+state, including tracking, the 2,120-row boundary ledger, generated reports,
+private TH01-TH05 Oracle calibration, target checks, Ghidra/JDK identity, live
+Ghidra database replay, and Ghidra mutation smoke. `git diff --check` passes.
+
+Factory Truth-Kernel replay was attempted after the clean implementation commit.
+The imported Stage 3 exact claim
+`claim:unit:th04-main-midboss3-render-v163:owned-extent-exact` bound clean commit
+`e4c2f196...` but Factory job
+`job:ecfed7fce6d9485284ca1982d36a1108` ended with receipt
+`receipt:561f46e3bc19ce960e2048793d783f8952075febffb2b4d9f90d9306ff546740`,
+`receipt_verdict=error`, and `acceptance_decision=rejected`. This is not a target
+byte rejection: Factory selected the Stage 3 subject alone, while the v163 full
+TILE split is triggered by the Stage X unit, and repository replay failed before
+comparison with `expected one map contribution for th04/m3r.cpp ... got 0`.
+Factory policy therefore reported incomplete receipt coverage / toolchain below
+policy. This is a claim-specific replayability/control-plane gap.
+
+A second Factory job for the actual Stage X split-trigger claim,
+`job:4e5955b9042840d18cd7a4716ee058ff`, was then submitted from the same clean
+commit. It ended before any receipt or Oracle verdict with `outcome=null` because
+another Factory operation owned the registered TH095 worktree. This is retained
+as infrastructure history, not a TH04 rejection. Consequently v163 repository-
+native exactness is established for both renderer owners, but Factory acceptance
+is **not established** for either v163 claim in this conversation.
+
+Verification planes remain separate. Repository-native function/extent
+exactness is PASS for both new natural-C++ owners and the complete 196-owner
+post-promotion cohort. Standalone TH04 production compile/link closure is **not
+established**. Runtime-storage identity is **not established**. No runtime
+scenario was executed. Whole-image exactness is not established. Independent
+pristine-release provenance is not established; the private target remains only
+`candidate-local-attested`.
+
+The v163 `.analysis/` entry size was `4,753,236,719` bytes. Before cleanup, the
+focused, candidate aggregate, final aggregate, and one-shot diagnostics raised it
+to roughly 4.97 GB. After implementation checkpoint and producer/reference
+review, the focused and candidate aggregate trees were compacted to receipt-only;
+the complete 196-owner post-promotion aggregate remains the current cold
+baseline. The v163 one-shot source materialization, reviewer trial files, and
+single-link diagnostics were removed because they are current-session,
+reproducible, inactive, and no longer referenced. The exact combined-TU negative
+source/object remains in the pre-existing compact v162 scratch by the hashes
+listed above. Factory claim replay created two additional bounded local replay
+materializations: `factory-20260914T060633Z-bf359d95e24d` (31,418,274 bytes)
+for the Stage 3 coverage/plumbing rejection and
+`factory-20260914T060853Z-afbc210cf36f` (64,132,600 bytes) for the Stage X
+pre-verdict TH095-lock failure. They are retained as Factory-bound failure
+reproducers rather than deleted as ordinary session scratch. Final handoff-state
+`.analysis` size is `4,916,211,403` bytes, net
+`162,974,684` bytes from conversation entry. Shared
+toolchains, targets, Ghidra project/provider state, Wine prefix, legacy/unknown
+analysis content, and unrelated artifacts were not removed.
+
+The first concrete continuation is the immediately preceding Stage 1 renderer,
+not an unrelated easy function. Fresh target Ghidra constructs
+`midboss1_render()` as one contiguous near function at `TILE_TEXT 0AAF:1C88`,
+load `0xC778..0xC884`, target file `0xDF78..0xE084`, size `0x10D / 269`, target
+slice SHA-256
+`f746590b8e7f3b70527c3be7413062c34cd6be5076d8f09e3266e1ea1f91350a`.
+The five target MZ relocations in order are
+`[0xC86E,0xC853,0xC821,0xC7E1,0xC7C7]`; exact v163 Stage 3 begins at the next
+byte `0xC885`. Ghidra reports zero direct callers and three callees, while
+maintained `src/main/boss/boss.cpp` independently installs `midboss1_render`
+through `midboss_render_func`, explaining the missing direct-call edge. The next
+conversation should first reconcile its raw/TASM/MAP ownership and test a natural
+TC4J source/object probe, with special attention to whether relocation order
+requires another standalone physical object. Do not infer its producer shape from
+v163 solely because the functions are adjacent.
+
+Campaign status remains active. This handoff closes one bounded conversation
+slice and is not a project, exact-phase, standalone-build, or whole-game
+completion claim.
