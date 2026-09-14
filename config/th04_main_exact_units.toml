@@ -7613,3 +7613,35 @@ map_start = "0x2813"
 map_size = "0x777"
 target_file_offset = "0x17AA3"
 size = "0x777"
+
+# v159 candidate: Replace the complete 0x16B Marisa phase-entry/movement
+# residual immediately after exact Yuuka5 with one natural C++ producer. Keep
+# the v158 b4msuf3 residual cold-built as an Oracle-only predecessor object.
+[[build_replacements]]
+id = "th04-main-marisa-phase-v159-build"
+trigger_units = ["th04-main-marisa-phase-v159"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/eadd.cpp\",\n\t\"th04/b4mthick.asm\",\n\t\"th04/y5all.cpp\",\n\t\"th04/b4msuf3.asm\",\n"
+build_replacement = "\t\"th04/eadd.cpp\",\n\t\"th04/b4mthick.asm\",\n\t\"th04/y5all.cpp\",\n\t\"th04/m4phase.cpp\",\n"
+
+[[build_replacements]]
+id = "th04-main-marisa-phase-v159-retain-v158-suffix-omf"
+trigger_units = ["th04-main-marisa-phase-v159"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/boss_x2.cpp\",\n})\n-- v157 keeps the v156 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf.asm\" })\n-- v158 keeps the v157 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf2.asm\" })\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
+build_replacement = "\t\"th04/boss_x2.cpp\",\n})\n-- v157 keeps the v156 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf.asm\" })\n-- v158 keeps the v157 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf2.asm\" })\n-- v159 keeps the v158 residual suffix as a cold-built Oracle-only OMF object.\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='M'\" }):build({ \"th04/b4msuf3.asm\" })\nth04:branch(MODEL_LARGE, { cflags = \"-DBINARY='E'\" }):link(\"maine\", {\n"
+
+[[units]]
+id = "th04-main-marisa-phase-v159"
+default_enabled = true
+requires_units = ["th04-main-yuuka5-tail-v158"]
+repo_source = "src/main/boss/marisa4_phase.cpp"
+overlay_path = "th04/m4phase.cpp"
+map_module = "th04/m4phase.cpp"
+object_path = "obj/th04/m4phase.obj"
+auxiliary_objects = ["obj/th04/b4msuf3.obj"]
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x2F8A"
+map_size = "0x16B"
+target_file_offset = "0x1821A"
+size = "0x16B"
