@@ -6834,3 +6834,115 @@ This section is written before the local v184 checkpoint commit so it cannot
 self-reference its own final Git hash. The final checkpoint hash, tree, dirty
 state, and `.analysis` exit inventory are reported from live Git after final CI
 and commit. Nothing is pushed.
+
+
+## v185 CIRCLE_TEXT items invalidation checkpoint
+
+This session began from committed HEAD `51d2bda8c8ddb45070b7ffd465c0fc9d0157f40b`,
+branch `main`, upstream `origin/main`, ahead 6 / behind 0. The tracked worktree
+was initially clean. During mandatory documentation recovery, a coherent v185
+interrupted packet appeared with five unstaged ledger/policy edits and untracked
+`src/main/item/invalidate.cpp`. The complete diff and v185 ignored scratch were
+inspected before any further edit. No TCC/TASM/TLINK/replay producer was active.
+The work was classified as recoverable interrupted work because it consistently
+contained the dense-CIRCLE boundary audit, the 75-byte natural source candidate,
+compiler-shape evidence, and a fail-closed nonexact function-review row, but no
+physical split or cold replay. It was adopted and completed rather than reset.
+No unrelated or unknown path was overwritten or staged.
+
+The `.analysis/` tree measured **8,577,883,709 bytes** at conversation entry.
+All required repository and Factory recovery/verification guidance was reread.
+`preflight.py`, `status.py`, and the function-boundary validator passed before
+continuing the interrupted packet. Provider discovery again exposed ten
+`th04-ghidra` operations and no `get_metadata`; provider `check {}` passed and
+was bound to repository `th04`, target `target:th04-main`, target SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native Ghidra independently passed the 6,144-byte MZ header/load
+mapping, entry point, 1,136 ordered relocations, load digest, and sampled bytes.
+Required TC4J/TASM32/TLINK surfaces attested; optional host `wine64` hash drift
+remains informational.
+
+The recovered dense-seam review closes eight previously provisional zero-sized
+entries in CIRCLE_TEXT and records all nearby source-owned layout bytes. Ghidra
+still has no function containing those eight entries, so their reviewed extents
+come from target raw control flow plus TASM/TLINK seams rather than database
+inference. The selected natural-C++ function is `items_invalidate()` at map
+`0AAF:160C..1656`, load `0xC0FC..0xC146`, file `0xD8FC..0xD946`, size
+`0x4B / 75`, target SHA-256
+`4c138c62ef87c53e2da2b73c6c8eaeb79c6eac59f41559982c578a9d191dfee7`.
+The immediate `0xC147` NOP is separate source-owned layout, not part of the
+function. Maintained source is `src/main/item/invalidate.cpp`, SHA-256
+`35c7cda49d77d5176d8237a888c31d2c371a4d2bc690d5394b6e0b54c8397dae`.
+
+A contextual TC86 Borland C++ 4.02 compile emits exactly 75 CODE bytes; every
+non-relocatable instruction/control-flow byte matches target and the 14 pre-link
+differences are seven OMF-resolved operand words. Linked exactness required a
+physical split of the remaining monolithic CIRCLE contribution. The final cold
+MAP is `th04_main.asm 0AAF:11A4 size 0x468`, natural `itemsinv.cpp`
+`0AAF:160C size 0x4B`, source-extracted zero-credit `itemgap185.asm`
+`0AAF:1657 size 1`, word-aligned zero-credit `cirsuf185.asm`
+`0AAF:1658 size 0x502`, then existing exact `circle.cpp` at `0AAF:1B5A`.
+The one-byte gap is extracted from the actual historical NOP after the function
+ENDP and receives no authored reconstruction credit.
+
+The final focused run is `gptweb-v185-items-invalidate-focused-007`, 114 owners
+per isolated build, receipt SHA-256
+`21167e4ad6c9228ea69323583b67e8f359613db8f7d78528ee3b5e86c921947b`,
+`failures=[]`. A/B `itemsinv.obj` SHA-256 is
+`8df982bb65e411650e5f1aa8e8c7bbc6bcab62b13918ba7da0f55ebb342960b8`;
+A/B focused MAP SHA-256 is
+`c740e47a0581158109a850c9c00421c67b49006aaa7d61495fe0e12daf2ef5e6`;
+A/B focused candidate MAIN SHA-256 is
+`518811db1bf863343e7bf69fdad4613c537cd08113b8a40538e0519ee46512df`.
+All 75 v185 bytes, MAP placement, and empty relocation overlap are exact.
+
+Promotion candidate aggregate `gptweb-v185-items-invalidate-aggregate-candidate-002`
+passes all 218 candidate-state default owners twice, receipt SHA-256
+`31a4356414ea430376c4621018b94c7971bb6c0fe701205563cb6fb17c7c753b`;
+the command-local manifest is restored byte-for-byte. Post-promotion tracked
+aggregate `gptweb-v185-items-invalidate-aggregate-final-001` passes all 218
+default owners twice, receipt SHA-256
+`c59861d5cc3e98fe2d5d03752cbf6cacb2c0744a3273593c00f59f7320f627a4`.
+A/B final MAP SHA-256 is
+`bc4e3452e3ca0574008f01f603519cb8c7edb922a2aabeaa112077fd62a60881`;
+A/B final candidate MAIN SHA-256 is
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+The exact function-review report SHA-256 is
+`7cc964249cdf13d7d2e12ddd283fcec942bea8d3a01be0ed7996c6d11116f8f7`;
+it promotes only `th04-main-fn-1c0fc` from blocked to exact with unchanged
+extent, owner, and source. Generic unrelated normalization output is deliberately
+not adopted. Live MAIN accounting after promotion is **74,996 / 80,481 exact
+reviewed authored bytes (93.184727%)** and **452 / 475 exact reviewed functions
+(95.157895%)**. Routing is 452 exact, 23 blocked, 57 unreviewed authored
+candidates, and 36 ASM-attestation observations. OP, MAINE, and ZUN remain
+independent active queues with 94, 72, and 13 unreviewed authored candidates;
+no MAIN credit transfers to them.
+
+Failing intermediate runs are control-plane/layout evidence only. focused-001
+failed before build on a focused-only scaffold hash; focused-002 and focused-003
+exposed missing post-split declarations/public spelling; focused-004 made the
+new body exact but shifted suffix publics because TLINK inserted `00` before the
+historical NOP; focused-005 fixed that local NOP with byte alignment but broke
+internal `EVEN` parity and downstream segment layout. The source-extracted
+one-byte gap plus word-aligned suffix resolves both constraints. The first
+candidate aggregate then exposed the aggregate-only v171 GRCG public handoff; a
+fail-closed optional transform fixes only that existing closure. None of these
+negative runs is credited as function exactness.
+
+Verification planes remain separate. v185 proves exact natural-C++ ownership of
+`items_invalidate()` under the repository exact Oracles. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario validation, portable-runtime validation, independent pristine-release
+provenance, and Factory Truth-Kernel acceptance remain unestablished.
+
+The first structural continuation is the coherent item-splash/spark lifecycle
+cohort at load `0xC17C..0xC363`, size `0x1E8 / 488`: `ITEM_SPLASHES_RENDER`,
+`@spark_render`, `_sparks_update`, `_sparks_render`, `sparks_invalidate()`,
+`_sparks_init`, `@item_splash_dot_render`, and reviewed `sub_C34E`. It includes
+source-owned layout bytes at `0xC1FF`, `0xC265`, and `0xC2ED` and relocation
+sites `0xC1AE` and `0xC31F`. Review physical producer/origin seams before
+choosing natural C++ or evidence-backed original-style ASM. This remains an
+active campaign, not project or artifact completion. Nothing is pushed.
+
+After exact promotion, current-session cleanup retained compact focused/candidate/final receipts, the final `itemsinv.obj` and MAP, exact function-review outputs, target/compiler evidence, and the complete `gptweb-v185-items-invalidate-aggregate-final-001` cold baseline. With no active Borland/replay producer, only explicit v185 failed/superseded replay trees were deleted; v184 and older baselines, targets, toolchains, Wine/Ghidra state, and unknown/legacy analysis content were untouched. The `.analysis/` tree measured **8,652,742,193 bytes** immediately after this bounded cleanup, net growth **74,858,484 bytes** from conversation entry. The v185 compact scratch measured **10,989,700 bytes** and the retained final aggregate baseline **63,771,490 bytes**. Full CI is run after this handoff update; the final live post-CI/commit inventory is reported from Git/session state rather than guessed here.

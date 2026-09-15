@@ -9854,3 +9854,115 @@ map_start = "0x0EE6"
 map_size = "0x23A"
 target_file_offset = "0xD1D6"
 size = "0x23A"
+
+
+# v185: exact natural-C++ items_invalidate() split from the remaining monolithic
+# CIRCLE_TEXT contribution. The source-owned NOP after the function and all
+# following target-derived CIRCLE code stay in zero-credit replay owners.
+[[scaffold_extractions]]
+id = "th04-main-items-invalidate-gap-v185"
+trigger_units = ["th04-main-items-invalidate-v185"]
+scaffold_path = "th04/main/item/invalidate.asm"
+encoding = "latin-1"
+scaffold_sha256 = "0e878737c4db93f7131da4826a66c51abc612c9dd1298f558c0866c5fbe6382c"
+start = "@items_invalidate$qv endp\r\n"
+end = "\tnop\r\n"
+span_sha256 = "252b03361e6aca9a6ce3cc1d47c58b75f0bf7b2dfa1e4643fe047f9f649170c4"
+template_source = "config/replay/th04_circle_gap_v137.asm.in"
+output_path = "th04/itemgap185.asm"
+
+[[scaffold_extractions.replacements]]
+old = "@items_invalidate$qv endp\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-items-invalidate-suffix-v185"
+trigger_units = ["th04-main-items-invalidate-v185"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "include th04/main/item/invalidate.asm\r\n"
+end = "CIRCLE_TEXT ends\r\n"
+span_sha256 = "c3cb842513695430a5519a49295e18607bca4ea1cfa57939d2506937587b1ad7"
+template_source = "config/replay/th04_circle_items_suffix_v185.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/cirsuf185.asm"
+
+[[scaffold_extractions.replacements]]
+old = "include th04/main/item/invalidate.asm\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "public @MUGETSU_GENGETSU_BACKDROP_COLORFILL$QV\r\n"
+new = "public @MUGETSU_GENGETSU_BACKDROP_COLORF$QV\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "@mugetsu_gengetsu_backdrop_colorfill$qv\tproc near\r\n"
+new = "@MUGETSU_GENGETSU_BACKDROP_COLORF$QV\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "@mugetsu_gengetsu_backdrop_colorfill$qv\tendp\r\n"
+new = "@MUGETSU_GENGETSU_BACKDROP_COLORF$QV\tendp\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_C34E\tproc near\r\n"
+new = "public CLEAR_DWORDS\r\nCLEAR_DWORDS label near\r\nsub_C34E\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "CIRCLE_TEXT ends\r\n"
+new = ""
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-items-invalidate-v185-build"
+trigger_units = ["th04-main-items-invalidate-v185"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/itemsinv.cpp\",\n\t\"th04/itemgap185.asm\",\n\t\"th04/cirsuf185.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-items-invalidate-v185-layout"
+trigger_units = ["th04-main-items-invalidate-v185"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "aeeedc73c56697f7277a3b4455ea6bfb54d6c4711632b3bf3ff7318ad62b7b75",
+  "8d80db22a01add66ec95adcf0578f207db60a392670936e787248bac3e892fa5",
+]
+
+[[source_transforms.ops]]
+id = "remove-items-invalidate-circle-suffix-v185"
+kind = "remove_between"
+removed_sha256 = "39dabef397957e263c4027b71cc3cc38e5c90b2420ca8b7dbc15e424940b5996"
+start = "include th04/main/item/invalidate.asm\r\n"
+end = "CIRCLE_TEXT ends\r\n"
+replacement = "extrn _sparks_update:near\r\nextrn _sparks_render:near\r\nextrn _sparks_init:near\r\nextrn @grcg_setmode_rmw$qv:near\r\nextrn @grcg_setmode_tdw$qv:near\r\nextrn @grcg_setcolor_direct_raw$qv:near\r\nextrn PLAYPERF_RAISE:far\r\nextrn PLAYPERF_LOWER:far\r\nextrn Z_SUPER_ROLL_PUT_TINY_16X16_RAW:near\r\nextern @CIRCLES_ADD_GROWING$QII:proc\r\nextern @CIRCLES_ADD_SHRINKING$QII:proc\r\n\t@circles_update$qv procdesc near\r\n\t@circles_render$qv procdesc near\r\nCIRCLE_TEXT ends\r\n"
+
+
+[[source_transforms.ops]]
+id = "handoff-circle-grcg-publics-v185"
+kind = "replace_optional"
+old = "public @grcg_setmode_tdw$qv, @grcg_setcolor_direct_raw$qv, PLAYFIELD_FILLM_0_40_384_274, @grcg_setmode_rmw$qv\r\n"
+new = "public PLAYFIELD_FILLM_0_40_384_274\r\n"
+
+[[units]]
+id = "th04-main-items-invalidate-v185"
+default_enabled = true
+requires_units = ["th04-main-circle-tile-core-asm-v184"]
+repo_source = "src/main/item/invalidate.cpp"
+overlay_path = "th04/itemsinv.cpp"
+map_module = "th04/itemsinv.cpp"
+map_mode = "exact"
+object_path = "obj/th04/itemsinv.obj"
+auxiliary_objects = ["obj/th04/itemgap185.obj", "obj/th04/cirsuf185.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x160C"
+map_size = "0x4B"
+target_file_offset = "0xD8FC"
+size = "0x4B"

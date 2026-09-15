@@ -4185,3 +4185,16 @@ id = "th04-main-fn-1bc10"
 address = "0x1BC10"
 evidence_id = "ev-th04-main-scroll-seg1-boundary-v183"
 reason = "Fresh target-bound Ghidra reports the complete contiguous 0x28 body at the matching TLINK public, and the newly exact natural-C++ owner closes raw bytes, MAP placement, relocation overlap, OMF integrity, and cold determinism."
+
+# v185: Natural C++ items invalidation promoted after final focused and candidate aggregate replay.
+[[reviewed_exact]]
+id = "th04-main-fn-1c0fc"
+address = "0x1C0FC"
+file_offset = "0xD8FC"
+size = "0x4B"
+decode_size = "0x4B"
+name = "items_invalidate()"
+owner_unit = "th04-main-items-invalidate-v185"
+source = "src/main/item/invalidate.cpp"
+evidence_id = "ev-th04-main-items-invalidate-boundary-v185"
+reason = "Fresh target-bound Ghidra/raw/TASM close the full 75-byte body; final focused replay and the 218-owner candidate aggregate prove exact natural-C++ ownership through RET at 0x1C146 while keeping the following source-owned NOP outside the logical extent."
