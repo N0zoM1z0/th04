@@ -9541,3 +9541,132 @@ map_start = "0x5C23"
 map_size = "0xCF"
 target_file_offset = "0x11F13"
 size = "0xCF"
+
+# v178 candidate: replace the final residual target-derived MAIN__TEXT bomb
+# window immediately before the exact v177 shot producer with two natural TC4J
+# objects. Ordered target relocations separate the 0x3D9 bomb core from the
+# 0x11D bomb-star renderer, so preserve that physical producer split.
+[[build_replacements]]
+id = "th04-main-bomb-v178-build"
+trigger_units = ["th04-main-bomb-stars-v178"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/shotmain.cpp\",\n\t\"th04/enrend.cpp\",\n\t\"th04/pinv.cpp\",\n"
+build_replacement = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/bomb.cpp\",\n\t\"th04/bstar.cpp\",\n\t\"th04/shotmain.cpp\",\n\t\"th04/enrend.cpp\",\n\t\"th04/pinv.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-bomb-v178-residual"
+trigger_units = ["th04-main-bomb-stars-v178"]
+patch_path = "th04/m1rsuf.asm"
+encoding = "latin-1"
+scaffold_sha256 = "15e8e08e90087e18d89425d2eafdfbd10cf1086b11d19c0f86490dd154023cfc"
+
+[[source_transforms.ops]]
+id = "remove-bomb-residual-v178"
+kind = "remove_between"
+removed_sha256 = "30fc161bb7dcf43932a54d9f9e752cbf96da8a796ed57da37d66cb0db8f7ea04"
+start = "include th04/formats/bb_playchar.asm\r\n"
+end = "bomb_stars_update_and_render_for\tendp\r\n"
+replacement = ""
+
+[[source_transforms]]
+id = "th04-main-bomb-v178-callers-storage"
+trigger_units = ["th04-main-bomb-stars-v178"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "16990ebf3e06f1624761f51882b04e3ab7ce2830e551870b465c9b3c781e85fb",
+  "e0e0ff41a1a52a9d2f36e1a2841b77f2e35cf2de17c6182451c0cf074c50aef6",
+]
+
+[[source_transforms.ops]]
+id = "alias-bomb-palette-color-backup-v178"
+kind = "insert_before"
+anchor = "rgb_257D6\trgb_t <?>\r\n"
+text = "public _bomb_palette_color_backup\r\n_bomb_palette_color_backup label byte\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-bomb-reset-extrn-v178"
+kind = "replace"
+old = "extrn sub_FFA4:near\r\n"
+new = "extrn @bomb_reset$qv:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-player-bomb-extrn-v178"
+kind = "replace"
+old = "extrn PLAYER_BOMB:near\r\n"
+new = "extrn @PLAYER_BOMB$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-bomb-reimu-extrn-v178"
+kind = "replace"
+old = "extrn BOMB_REIMU:near\r\n"
+new = "extrn @BOMB_REIMU$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-bomb-marisa-extrn-v178"
+kind = "replace"
+old = "extrn BOMB_MARISA:near\r\n"
+new = "extrn @BOMB_MARISA$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-player-bomb-pointer-v178"
+kind = "replace"
+old = "		mov	_player_bomb_func, offset player_bomb\r\n"
+new = "		mov	_player_bomb_func, offset @PLAYER_BOMB$QV\r\n"
+expected_count = 2
+
+[[source_transforms.ops]]
+id = "retarget-reimu-bomb-pointer-v178"
+kind = "replace"
+old = "		mov	_playchar_bomb_func, offset bomb_reimu\r\n"
+new = "		mov	_playchar_bomb_func, offset @BOMB_REIMU$QV\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-marisa-bomb-pointer-v178"
+kind = "replace"
+old = "		mov	_playchar_bomb_func, offset bomb_marisa\r\n"
+new = "		mov	_playchar_bomb_func, offset @BOMB_MARISA$QV\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-bomb-reset-call-v178"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_FFA4\r\n"
+new = "\t\tcall\t@bomb_reset$qv\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-bomb-core-v178"
+default_enabled = false
+requires_units = ["th04-main-enemies-render-v177"]
+repo_source = "src/main/player/bomb.cpp"
+overlay_path = "th04/bomb.cpp"
+map_module = "th04/bomb.cpp"
+map_mode = "exact"
+object_path = "obj/th04/bomb.obj"
+map_segment = "MAIN__TEXT"
+map_start = "0x5444"
+map_size = "0x3D9"
+target_file_offset = "0x11734"
+size = "0x3D9"
+
+[[units]]
+id = "th04-main-bomb-stars-v178"
+default_enabled = true
+requires_units = ["th04-main-bomb-core-v178"]
+repo_source = "src/main/player/bomb_stars.cpp"
+overlay_path = "th04/bstar.cpp"
+map_module = "th04/bstar.cpp"
+map_mode = "exact"
+object_path = "obj/th04/bstar.obj"
+zero_code_objects = ["obj/th04/m1rsuf.obj"]
+map_segment = "MAIN__TEXT"
+map_start = "0x581D"
+map_size = "0x11D"
+target_file_offset = "0x11B0D"
+size = "0x11D"

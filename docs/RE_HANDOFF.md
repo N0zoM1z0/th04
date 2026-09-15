@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 716 authored reconstruction candidates: OP 94, MAIN 537, MAINE 72, ZUN 13;
-- 421 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
-- 281 authored candidates otherwise unreviewed across all four artifacts;
+- 430 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
+- 272 authored candidates otherwise unreviewed across all four artifacts;
 - 65 original-style ASM observations in a separate attestation queue;
 - 1,339 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Across the live MAIN source/acceptance ledgers, the current v177 totals are:
+Across the live MAIN source/acceptance ledgers, the current v178 totals are:
 
-- reviewed authored bytes: **71,447 / 75,041 exact (95.210618%)**;
-- accepted authored functions: **421 / 435 exact (96.781609%)**;
-- accepted default exact replay owners: **211**;
+- reviewed authored bytes: **72,717 / 76,311 exact (95.290325%)**;
+- accepted authored functions: **430 / 444 exact (96.846847%)**;
+- accepted default exact replay owners: **213**;
 - original-style ASM: **17 units / 2,526 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **3,594 bytes** across 14
   reviewed blocked functions.
@@ -5837,6 +5837,136 @@ Exact v177 `shots_reset()` begins at `0x1042A`. The next packet should determine
 which tiny starts are real authored functions versus internal/shared/compiler
 entries, validate the two provisional extents, and infer physical TC4J/TASM
 producer seams from MAP/OMF/FIXUPP/relocation evidence before writing source.
+
+The local `gpt-web:` checkpoint is created only after final validation; read its
+hash from live Git. Nothing is pushed. Campaign status remains active.
+
+
+## 2026-09-15 v178 MAIN__TEXT bomb cohort checkpoint
+
+This conversation started from clean repository `th04`, branch `main`, HEAD
+`d974520ee338627378bdd84c646b7e21c27b2e1d`, four commits ahead of
+`origin/main`. Mandatory worktree recovery found no staged, unstaged, untracked,
+conflicted, unrelated, unknown, or recoverable tracked work. All required TH04
+and Factory guidance files were mounted and read completely. The v178 session
+manifest recorded `.analysis/` at 8,133,619,677 bytes at entry, with no active
+Borland/Wine/replay producer.
+
+The selected evidence plane remained repository `th04`, analysis provider
+`th04-ghidra`, target `target:th04-main`, artifact `th04-main / MAIN.EXE`. The
+provider again exposed ten operations and no `get_metadata`; no undiscovered
+operation was invented. Its discovered `check {}` attestation passed. The
+repository-native `python3 scripts/ghidra.py th04-main check` independently
+passed the 156,258-byte MZ target, 6,144-byte header/load mapping, entry point,
+all 1,136 ordered relocations, load-module identity, and sampled bytes. Target
+SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. TC86 Borland C++ 4.02,
+TASM32 5.0, and TLINK 6.10 attestation passed.
+
+Target-first review closes the complete MAIN__TEXT bomb window immediately
+before exact v177 shots, load `0xFF34..0x10429`, file `0x11734..0x11C29`, size
+`0x4F6 / 1270`. Nine authored functions tile the window with no gap:
+`bb_playchar_load()` 0x55, `bb_playchar_free()` 0x1B, `bomb_reset()` 0x10,
+`player_bomb()` 0x76, `bb_playchar_put(int)` 0x23, `bomb_reimu()` 0xC6,
+`bomb_marisa()` 0xF7, `bomb_update_and_render()` 0x103, and
+`bomb_stars_update_and_render_for(int)` 0x11D. Exact v177 `shots_reset()` begins
+at load `0x1042A`.
+
+This expands and corrects the authored boundary denominator. Ghidra/old ledger
+sizes materially undercounted `PLAYER_BOMB` (0x4D vs 0x76), `BB_PLAYCHAR_PUT`
+(0x03 vs 0x23), `BOMB_REIMU` (0x04 vs 0xC6), `BOMB_MARISA` (0x01 vs 0xF7),
+and `bomb_update_and_render()` (0x3C vs 0x103). Raw 16-bit control flow closes
+each function at its terminal RET or RET 2 and the next adjacent entry.
+
+Physical ownership is two natural TC4J objects. `src/main/player/bomb.cpp`,
+SHA-256 `1fb6a50345f6e7ee59a92a1d4a74d7bd59dce95c0ed850aa7d0d6a0f5821b30f`,
+owns `MAIN__TEXT 0AAF:5444..581C`, load `0xFF34..0x1030C`, size `0x3D9`, target
+and candidate SHA-256
+`354fe2369fbbb605d8b1e7deea259afd64470f1d15927e8a66c6c4c0b220f640`.
+Its 16 target ordered relocation sites reproduce exactly. `src/main/player/bomb_stars.cpp`,
+SHA-256 `ab54122307da94f8f3d2e3ea1085b2989e88183b1001dce75d8435e6b273f9ce`,
+owns `MAIN__TEXT 0AAF:581D..5939`, size `0x11D`, target/candidate SHA-256
+`7a97e3330f4d74739ba44c8e108f4dc2ef1b0d9187c595f370e68d79c1fc0664`,
+with ordered relocation overlap `[0x103A4]`.
+
+The residual target-derived `m1rsuf.asm` bomb suffix is removed in replay and its
+object is gated as zero-code. Existing runtime data owners are reused. The new
+source does not duplicate BB storage, bomb-star storage, resident data, player
+state, or palette storage. A source-level semantic alias
+`bomb_palette_color_backup` is bound by a zero-byte public alias to the existing
+three-byte target storage. Existing `player_respawn_motion_time` linkage is
+reused for the historical deathbomb state slot.
+
+Natural-source recovery used only normal TC4J language/toolchain mechanisms.
+`bomb_update_and_render()` expresses two real target shared tails with semantic
+source labels and `goto`. `#pragma samecodeseg` is used only on same-segment FAR
+callees `hud_bombs_put` and `circles_add_growing`, following previously accepted
+repository evidence: TC4J keeps the FAR call in OMF while TLINK 6.10 relaxes it
+to the historical `NOP; PUSH CS; CALL near` form and removes the segment
+relocation. There is no inline assembly, target-derived byte array, codestring,
+fake return, inert padding, copied target bytes, object/target patching, or ABI
+lie.
+
+Useful negative evidence was retained in bounded form. Candidate006 had exact
+MAP placement and deterministic valid OMF but four extra segment relocations at
+load `0xFFF8`, `0x100CC`, `0x100F5`, and `0x101EB`; these are the same-segment
+`hud_bombs_put` / `circles_add_growing` calls before `samecodeseg`. Candidate007
+made ordered relocations exact and left only four raw-byte differences: the two
+Reimu/Marisa CDG coordinate pairs were supplied as `(56,32)` instead of target
+`(32,56)`. Small copies of both receipts and their source snapshots are retained
+under `.analysis/gpt-web/th04-main-20260915-v178/`; their large cold trees were
+removed after tracked references were redirected and producer inactivity was
+confirmed.
+
+The complete exact replay chain binds manifest SHA-256
+`f37c1c68d8c7b2c522805502f2b50a5d14524aabbd23618f6035cbc0df7ff0a6`:
+
+- focused `gptweb-v178-bomb-focused-candidate-008`: 134-owner closure, two cold
+  builds, `failures=[]`, receipt SHA-256
+  `371435f7865801cfafec3294f973ed0c15a676eaed30194cd71b76504f663eb3`;
+- candidate-state aggregate `gptweb-v178-bomb-aggregate-candidate-001`: 213
+  default owners twice, `failures=[]`, receipt SHA-256
+  `8fe16889154b29dd4242d3581b1be67f4f3ab4ecacdc8415827fa7a972d371e1`;
+- post-promotion aggregate `gptweb-v178-bomb-aggregate-final-001`: 213 default
+  owners twice, `failures=[]`, receipt SHA-256
+  `ba4cd9ad30bbe47f7ff20d24d604475894c7965445ca960e6666d5105fe4d301`.
+
+After promotion the non-overlapping MAIN reviewed ledger is **72,717 / 76,311
+exact authored bytes (95.290325%)** and **430 / 444 exact reviewed authored
+functions (96.846847%)**. MAIN retains 14 reviewed blockers, 93 unreviewed
+authored candidates, and 31 original-style ASM attestation observations. This is
+a moving reviewed-authored denominator, not a percentage of `MAIN.EXE` or TH04
+as a product and not a completion claim.
+
+Other TH04 artifacts remain independent active queues and receive no v178 MAIN
+credit: OP has 94 unreviewed authored candidates, MAINE 72, and ZUN 13. None has
+an honest accepted exact-byte/function denominator yet. `ZUN.COM` remains an MZ
+artifact despite its extension.
+
+Verification planes remain separate. Repository-native owned-extent/function
+exactness is PASS for both v178 physical owners, all nine logical functions, and
+the post-promotion 213-owner cohort. Standalone TH04 product compile/link closure
+is not established. Whole-image exactness is not established. Runtime-storage
+identity is not established. No runtime scenario was executed. Portable-runtime
+validation is not established. No v178 Factory Truth-Kernel acceptance claim is
+submitted or claimed. Independent pristine-release provenance remains
+unestablished.
+
+After deleting current-session non-authoritative large cold trees 001-007 while
+retaining bounded candidate006/007 negative receipts, the pre-CI `.analysis/`
+inventory is 8,327,341,528 bytes. The authoritative focused008,
+candidate-aggregate, and post-promotion-aggregate trees remain intact. Shared
+targets, toolchains, Wine prefix, Ghidra/provider state, legacy/unknown analysis
+content, and unrelated evidence were not removed. Final post-CI inventory is **8,327,400,089 bytes**, net growth **193,780,412 bytes** from the v178 entry measurement. No active reconstruction or analysis producer remained at that measurement.
+
+Detailed evidence is in `docs/reconstruction/TH04_MAIN_BOMB_V178.md`.
+The first concrete next packet is the Marisa B late-shot boundary cohort:
+provisional `shot_marisa_b_l6` at load `0xDF56` has `body_size=0x71` versus
+`body_span=0x8B`, followed by zero-body provisional `shot_marisa_b_l7`,
+`shot_marisa_b_l8`, `shot_marisa_b_l9`, and `sub_E1F4`. The next conversation
+should reconcile those real target extents, callers/shared tails, physical
+producer seams, and ordered relocations before writing or fusing source.
 
 The local `gpt-web:` checkpoint is created only after final validation; read its
 hash from live Git. Nothing is pushed. Campaign status remains active.
