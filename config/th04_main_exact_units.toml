@@ -9806,3 +9806,51 @@ map_start = "0x1148"
 map_size = "0x20"
 target_file_offset = "0xD438"
 size = "0x20"
+
+# v184 CIRCLE_TEXT stage-tile core. Independent TH04/TH05 target structure and
+# bounded legal-TC4J negatives support original-style symbolic assembly. Focused
+# two-cold and candidate/post-promotion aggregate replay prove the owner exact.
+[[build_replacements]]
+id = "th04-main-circle-tile-core-asm-v184-build"
+trigger_units = ["th04-main-circle-tile-core-asm-v184"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/cirpre.asm\",\n\t\"th04/scroll1.cpp\",\n"
+build_replacement = "\t\"th04/circlep.asm\",\n\t\"th04/cirpre.asm\",\n\t\"th04/scroll1.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-circle-tile-core-zero-cirpre-v184"
+trigger_units = ["th04-main-circle-tile-core-asm-v184"]
+patch_path = "th04/cirpre.asm"
+encoding = "latin-1"
+scaffold_sha256 = "7d454f0527abdc37520cbd797a9243c1d4bead4b02eaed1bf9ca65dacce8859e"
+patched_sha256 = "1ac2cf2b27a9531d9213621bb370f224afa75fcc30d28a5b7d7315dd5ff51a6e"
+
+[[source_transforms.ops]]
+id = "remove-circle-tile-core-v184"
+kind = "remove_between"
+removed_sha256 = "7f1fc8176c90a97322eb0aa5943bb186faa526685fc8cf47624ec81a46bb508a"
+start = "include th04/r1inv.asm\r\n"
+end = "include th04/main/tile/redraw.asm\r\n"
+replacement = ""
+
+[[source_transforms.ops]]
+id = "remove-circle-prefix-public-v184"
+kind = "replace"
+old = "public sub_BAEE\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-circle-tile-core-asm-v184"
+default_enabled = true
+requires_units = ["th04-main-motion-seg1-asm-v183"]
+repo_source = "src/main/tile/circle_core.asm"
+overlay_path = "th04/circlep.asm"
+map_module = "th04\\circlep.asm"
+map_mode = "exact"
+object_path = "obj/th04/circlep.obj"
+map_segment = "CIRCLE_TEXT"
+map_start = "0x0EE6"
+map_size = "0x23A"
+target_file_offset = "0xD1D6"
+size = "0x23A"

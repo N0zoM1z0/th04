@@ -6717,3 +6717,120 @@ remains an independent later seam.
 Campaign status remains active. This packet is not 99.5% completion, standalone
 product closure, runtime validation, OP/MAINE/ZUN completion, or whole-game
 completion. Nothing is pushed.
+
+## v184 CIRCLE_TEXT tile-core checkpoint
+
+This session restarted from clean live HEAD
+`226c496d671cec00f91ccfeeabeec3daf6ed286e`, branch `main`, upstream
+`origin/main`, ahead 5 / behind 0. Staged, unstaged, untracked, and conflicted
+tracked state were empty at entry. `.analysis/` entry size was
+**8,506,804,970 bytes**. No pre-existing dirty path required recovery or
+exclusion.
+
+All required repository and Factory recovery/verification guidance was reread.
+`preflight.py`, `status.py`, and the function-boundary ledger validator passed
+before edits. Provider discovery again exposed ten allowlisted `th04-ghidra`
+operations and no `get_metadata`; no undiscovered schema was invented. This
+session's provider `check {}` passed with registered-bridge attestation bound to
+repository `th04`, target `target:th04-main`, and target SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native `python3 scripts/ghidra.py th04-main check` independently
+passed the 6,144-byte MZ header/load mapping, entry, 1,136 ordered relocations,
+load digest, and sampled bytes. Required TC4J/TASM32/TLINK toolchain surfaces
+attested; the optional host `wine64` hash difference remains informational.
+
+The selected structural packet is the CIRCLE_TEXT pre-scroll tile core at
+map `0AAF:0EE6..111F`, load `0xB9D6..0xBC0F`, file
+`0xD1D6..0xD40F`, size `0x23A / 570`, target SHA-256
+`0442cf41e550709cead0b65ae590288af06b6e2b0fbd1b988d023cba591a8e88`.
+Fresh Ghidra/raw/TASM review closes four logical functions:
+`TILES_INVALIDATE_AROUND` (`0xCC`), `TILES_FILL_INITIAL` (`0x4B`),
+`sub_BAEE` (`0xB6`), and `tiles_redraw_invalidated()` (`0x6C`). The byte at
+load `0xBAED` is a separate source-owned TASM `EVEN` NOP. Exact v183
+`scroll_subpixel_y_to_vram_seg1()` starts at the next byte, `0xBC10`.
+
+The only target MZ relocation overlapping the physical owner is load `0xBC0B`
+/ `0AAF:111B`, the segment word of the terminal FAR `EGC_OFF` call. Focused and
+aggregate candidates reproduce the same owner-local relocation. Fresh provider
+caller/callee observations are retained as provisional semantics only; exactness
+comes from raw/MAP/relocation/OMF/cold replay.
+
+Origin classification was corrected rather than inherited from the former
+TASM scaffold. Independent TH05 MAIN target bytes uniquely preserve the
+complete `0xCC` invalidator architecture, the `0xB6` register/segment/`LOOP`
+tile-copy architecture, and the complete `0x6C` redraw architecture; the TH05
+initial-fill path independently preserves the FS/`REP MOVSD` producer
+mechanism. Bounded legal TC86 Borland C++ 4.02 probes provide independent
+negative producer evidence: ordinary byte/word/dword loops emit BP-framed
+`DEC/OR/JNZ`; `memset()` is a FAR call; `__memset__()` emits `REP STOSW` plus a
+residual `REP STOSB`; and `__memcpy__(48)` emits `MOV CX,0x18; REP MOVSW`, not
+target `MOV CX,0x0C; REP MOVSD`. ReC98 history was used only to form hypotheses
+and never as origin authority.
+
+Maintained source is `src/main/tile/circle_core.asm`, SHA-256
+`2c1d13b36a5d2dddc74423fb6fb3acdd392e6c481598954f71d721da559c9aea`.
+It is symbolic source with no target byte arrays, inline C/C++ assembly,
+`#pragma codestring`, fake returns, inert padding, ABI lies, or target patching.
+A standalone TASM probe produces one valid 0x23A CIRCLE_TEXT LEDATA with PUBDEF
+offsets `0x000`, `0x0CC`, `0x118`, and `0x1CE`.
+
+The first focused replay attempt failed before comparison because removing
+`cirpre.obj` violated the accepted v183 scroll unit's auxiliary-object contract.
+The second failed before link because the resulting zero-CODE scaffold retained
+an undefined `public sub_BAEE`. Both failures are control-plane negatives with
+zero exactness meaning. Final replay preserves `cirpre.obj` as a hash-bound
+zero-CODE valid OMF while `circlep.obj` exclusively owns the 0x23A bytes.
+
+Final focused replay
+`gptweb-v184-circle-tile-core-focused-003` passes both isolated cold builds with
+113 selected owners. Receipt SHA-256 is
+`a1f8c1439b068d20cd9d6536cbefe73bc6613532765765ca290927043e7a28dc`.
+A/B `circlep.obj` SHA-256 is
+`3a144ccf7ca78d69f11ff3e301eed945df9465170ab69cd26a9e46cd33b8d8d8`;
+all 570 owner bytes equal the target and exact MAP/ordered relocation overlap
+passes.
+
+Candidate-state aggregate
+`gptweb-v184-circle-tile-core-aggregate-candidate-001` passes all 217 owners
+twice, receipt SHA-256
+`20ae069ba46b48a5f32cc025588bea98e4f69aaacd6f4238ef0ff09275fec284`.
+The command-local manifest was restored byte-for-byte afterward. Post-promotion
+aggregate `gptweb-v184-circle-tile-core-aggregate-final-001` also passes all 217
+tracked default owners twice, receipt SHA-256
+`2a47f20590e2d7a2496049a338db41e16c903e02faa1dd9440a3aeb88f372e62`.
+A/B final MAP SHA-256 is
+`691369e5f89b461ef4aab47fd4c4a66843db8495d0673f1bca3a99a863dee399`;
+A/B candidate MAIN SHA-256 is
+`6685687e0f7554e4f84395e71cabac1f2e3babccaa76abaa86877846108145a4`.
+
+The four logical boundaries move from the authored-C/C++ reconstruction queue
+to original-style ASM attestation. MAIN routing is therefore 532 C/C++
+reconstruction candidates and 36 ASM-attestation observations. Because this is
+an ASM origin correction, reviewed authored-C/C++ accounting remains exactly
+**74,921 / 80,406 bytes (93.178370%)** and **451 / 474 functions
+(95.147679%)**. OP.EXE, MAINE.EXE, and ZUN.COM remain independent active queues
+with 94, 72, and 13 unreviewed authored candidates respectively; no MAIN credit
+transfers to them, and ZUN.COM remains treated as an MZ executable.
+
+Verification-plane limits remain explicit. v184 proves exact symbolic-ASM
+ownership only for this 0x23A CIRCLE_TEXT contribution. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity,
+runtime-scenario validation, portable-runtime validation, independent
+pristine-release provenance, and Factory Truth-Kernel acceptance remain
+unestablished.
+
+The first evidence-connected continuation should be the dense CIRCLE_TEXT
+renderer seam after the already exact point-number blitter: load
+`0xBE68..0xC34D`, size `0x4E6`. It begins with `SHOT_LASER_PUT_RAW`, includes
+backdrop/tile-BB helpers, `items_invalidate()`, GRCG helpers, item-splash and
+spark render/update/invalidate routines, and ends before provisional
+`sub_C34E`. The next conversation should recover live Git first, then close the
+physical producer/include seams, relocations, callers/callees, and provisional
+boundaries before choosing source forms. Do not reduce that packet to the
+isolated `randring_fill()` helper unless new evidence makes it structurally
+necessary.
+
+This section is written before the local v184 checkpoint commit so it cannot
+self-reference its own final Git hash. The final checkpoint hash, tree, dirty
+state, and `.analysis` exit inventory are reported from live Git after final CI
+and commit. Nothing is pushed.
