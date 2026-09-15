@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 716 authored reconstruction candidates: OP 94, MAIN 537, MAINE 72, ZUN 13;
-- 415 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
-- 287 authored candidates otherwise unreviewed across all four artifacts;
+- 421 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
+- 281 authored candidates otherwise unreviewed across all four artifacts;
 - 65 original-style ASM observations in a separate attestation queue;
 - 1,339 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Across the live MAIN source/acceptance ledgers, the current v176 totals are:
+Across the live MAIN source/acceptance ledgers, the current v177 totals are:
 
-- reviewed authored bytes: **70,495 / 74,089 exact (95.149077%)**;
-- accepted authored functions: **415 / 429 exact (96.736597%)**;
-- accepted default exact replay owners: **209**;
+- reviewed authored bytes: **71,447 / 75,041 exact (95.210618%)**;
+- accepted authored functions: **421 / 435 exact (96.781609%)**;
+- accepted default exact replay owners: **211**;
 - original-style ASM: **17 units / 2,526 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **3,594 bytes** across 14
   reviewed blocked functions.
@@ -5682,3 +5682,161 @@ ownership together.
 
 The local `gpt-web:` checkpoint is created only after final validation; read its
 hash from live Git. Nothing is pushed.
+
+
+## 2026-09-15 v177 MAIN__TEXT shot / enemy renderer recovery checkpoint
+
+This conversation started from clean repository `th04`, branch `main`, HEAD
+`2eb1d84490d271f79e0a00bedb3d6d772983c6f2`, three commits ahead of
+`origin/main`. Startup recovery initially found no staged, unstaged, untracked,
+conflicted, unrelated, or unknown tracked work. All mandated TH04 and Factory
+guidance paths were mounted and read. Startup preflight/status and the
+2,120-observation boundary validator passed. The current-session v177 manifest
+recorded `.analysis/` at 7,944,081,347 bytes at creation.
+
+The selected evidence plane remained exactly repository `th04`, provider
+`th04-ghidra`, target `target:th04-main`, artifact `th04-main / MAIN.EXE`.
+The provider was re-enumerated; it still exposes ten operations and no
+`get_metadata`, so no undiscovered operation was invented. Its discovered
+`check {}` attestation passed for the selected target. Repository-native
+`python3 scripts/ghidra.py th04-main check` independently passed the 156,258-byte
+MZ file, 6,144-byte header/load mapping, entry point, all 1,136 ordered
+relocation records, load-module identity, and sampled bytes. Target SHA-256
+remains `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. Pinned TC86 Borland C++
+4.02 / TASM32 5.0 / TLINK 6.10 attestation passed. Several address-taking Ghidra
+requests suffered transient Factory transport failures; live Git status was
+rechecked after failures, and no semantic or exactness claim relies on failed
+calls.
+
+While this conversation was performing read-only startup/target orientation,
+the worktree changed with HEAD still fixed: six tracked paths became unstaged and
+two natural-source files appeared untracked. Complete diff, source, replay,
+process, and handoff review classified all eight paths as one coherent
+`recoverable-current-work` v177 shot/enemy packet. There was no unrelated or
+unknown tracked work. The packet had already completed its focused,
+candidate-state aggregate, and post-promotion aggregate cold replays before the
+recovery gate observed it. Those receipts were therefore rebound and audited
+rather than rerun, and the recoverable packet was finished before unrelated work.
+
+Target-first review closes six contiguous MAIN__TEXT functions from load
+`0x1042A..0x107E1`, immediately before exact v176 `player_invalidate()`:
+
+- reconstructed semantic `shots_reset()` / target `sub_1042A`, load
+  `0x1042A..0x10443`, size `0x1A`;
+- `shots_invalidate()`, load `0x10444..0x104B5`, corrected size `0x72`;
+- reconstructed semantic `shots_update()` / target `sub_104B6`, load
+  `0x104B6..0x10551`, size `0x9C`;
+- `shots_render()`, load `0x10552..0x105B8`, size `0x67`;
+- FAR `shots_hittest()`, load `0x105B9..0x10712`, size `0x15A`;
+- `enemies_render()`, load `0x10713..0x107E1`, size `0xCF`.
+
+`shots_invalidate()` is another real Ghidra body-construction undercount: the live
+ledger records `body_size=0x6C`, `body_span=0x72`, and two ranges. Independent
+recovery-time raw decoding tiles all 0x72 bytes through RET at load `0x104B5`,
+and the next TASM PROC starts exactly at `0x104B6`. The other five extents likewise
+close at their RET/RETF and immediate next boundary. The combined newly reviewed
+window is `0x3B8 / 952` bytes.
+
+Physical producer evidence does not fuse all six functions. The first five form
+one natural TC4J contribution `MAIN__TEXT 0AAF:593A..5C22`, size `0x2E9`, target
+SHA-256
+`47804105eef832fcc43f7fe4ad2ba28e0e395535c1f35f15722d17366614931e`.
+Its original target relocation overlap in table order is
+`[0x10702,0x106D2,0x1065B]`. The adjacent enemy renderer is a separate
+`MAIN__TEXT 0AAF:5C23..5CF1`, size `0xCF`, target SHA-256
+`1569689d4fb4c791a5f8e782282f01c6d4e5d2765a09e7651fe8fc2900d202f6`,
+with ordered relocations `[0x107CA,0x107B3]`. Exact v176 `pinv.cpp` starts at the
+next byte/load `0x107E2`. Recovery-time parsing independently reproduced all five
+MZ relocation sites in this exact order.
+
+Maintained natural sources are `src/main/player/shots.cpp`, SHA-256
+`acad88d7e7345bf43dece46d21d7b94b496af1db85bfebfdcf37093a8c24dd7e`,
+and `src/main/enemy/enemies_render.cpp`, SHA-256
+`51926025a766ae6a193f6d3869130a86b4df5f9a65818ef17349f7a315dc8704`.
+They use ordinary TC4J source only. The shot producer preserves the target
+movement AX/DX lifetime, dword position copy, CX pattern temporary, FAR hittest
+ABI, collision arithmetic, and damage division. The enemy renderer preserves the
+ordinary branch's live AX scroll return and the explicit top value in the damage
+flash path. Neither source uses inline assembly, target-derived byte arrays,
+`#pragma codestring`, fake returns, inert padding, copied target bytes,
+target/object patching, or ABI lies.
+
+The exact replay chain is complete and binds current replay-manifest SHA-256
+`420fe713f3cf62ed0f89665524dd4a954e1af82a5f0b7a2edc639517539bd71a`:
+
+- focused `gptweb-v177-shots-enemy-focused-candidate-003`, 132-owner dependency
+  closure, two cold builds, `pass=true`, `failures=[]`, receipt SHA-256
+  `fa2c73d81fd6d78f52826e1de3c5ad3588d5059b9498fadfc29e650a50638182`;
+- candidate-state aggregate `gptweb-v177-shots-enemy-aggregate-candidate-001`, all
+  211 selected default owners twice, `pass=true`, `failures=[]`, receipt SHA-256
+  `fe255d3df131fe3b2f4fba631888105843b7330e212a921f3e48dba0c1fc60f6`;
+- post-promotion aggregate `gptweb-v177-shots-enemy-aggregate-final-001`, all 211
+  default owners twice from the promoted ledger state, `pass=true`, `failures=[]`,
+  receipt SHA-256
+  `cb95a60f17ab1df39c77cefc9b438fa95e268cc390f91c535a3d400c5eac4b0d`.
+
+The post-promotion receipt was created before recovery at
+`2026-09-15T09:13:03.174415+00:00`, explicitly selects both v177 units, and binds
+the same maintained sources/manifest. It was not rerun merely to duplicate a
+valid completed gate. `units.csv` was repaired to reference the actual focused
+PASS run rather than receiptless candidate001, and per-unit final aggregate
+evidence rows now bind the completed final receipt.
+
+Receiptless focused candidate001/002 have zero exactness credit. Candidate002's
+real link failed only because `_byte_25980` and `_byte_259A7` zero-byte linkage
+aliases were not yet exported; candidate001 produced no receipt. After exact
+run-id reference checks and producer-inactivity checks, both receiptless trees
+were removed as reproducible v177 output. Focused003 plus the candidate/final
+aggregate trees remain retained evidence.
+
+Live MAIN accounting after v177 is **71,447 / 75,041 exact reviewed authored
+bytes (95.210618%)** and **421 / 435 exact reviewed authored functions
+(96.781609%)**. There are 14 reviewed blockers, 102 unreviewed MAIN authored
+candidates, and 31 original-style ASM attestation observations. This denominator
+increase is an authored-boundary review result, not a percentage of MAIN.EXE or
+TH04 as a product and not a completion claim.
+
+Other TH04 executables remain independent active queues and receive no v177 MAIN
+credit: OP has 94 unreviewed authored candidates, MAINE has 72, and ZUN has 13.
+None has an honest accepted exact-byte/function denominator yet. `ZUN.COM` remains
+an MZ artifact despite its extension.
+
+Verification planes remain separate. Repository-native owned-extent/function
+exactness is PASS for both v177 physical producers, all six logical functions,
+and the complete 211-owner post-promotion cohort. Standalone TH04 production
+compile/link closure is not established. Whole-image exactness is not established.
+Runtime-storage identity is not established. No runtime scenario was executed.
+Portable-runtime validation is not established. No v177 Factory Truth-Kernel
+acceptance claim has been submitted or claimed. Independent pristine-release
+provenance remains unestablished; the private target remains only
+`candidate-local-attested` and was never staged, modified, patched, relocated, or
+published.
+
+The v177 manifest entry inventory was 7,944,081,347 bytes. Before cleanup, retained
+and receiptless v177 replays raised `.analysis/` to 8,183,177,231 bytes. After
+proving no tracked references and no active producer, the 28 MiB receiptless
+focused candidate001 and 36 MiB receiptless candidate002 trees were deleted.
+Pre-CI retained size is 8,133,611,585 bytes. The retained complete v177 trees are
+approximately 77 MiB focused PASS, 78 MiB candidate aggregate PASS, and 78 MiB
+post-promotion aggregate PASS; the bounded v177 GPT-web scratch is below 1 MiB.
+Shared targets, toolchains, Wine prefix, Ghidra/provider state, legacy/unknown
+analysis content, and unrelated replay evidence were left untouched. Final
+post-CI inventory is 8,133,617,718 bytes, net growth 189,536,371 bytes from the
+v177 manifest entry measurement. No active reconstruction or analysis producer
+remained at that measurement.
+
+Detailed evidence is in `docs/reconstruction/TH04_MAIN_SHOTS_ENEMY_V177.md`.
+The first concrete continuation is the immediately preceding bomb cohort, not an
+unrelated leaf: start at provisional `PLAYER_BOMB` load `0xFFB4`
+(`body_size=0x4D`, `body_span=0x76`), reconcile the tiny `BB_PLAYCHAR_PUT`,
+`BOMB_REIMU`, and `BOMB_MARISA` observations, then close provisional
+`bomb_update_and_render()` at `0x1020A` (`body_size=0x3C`, `body_span=0x103`)
+and corroborated `BOMB_STARS_UPDATE_AND_RENDER_FOR` through load `0x10429`.
+Exact v177 `shots_reset()` begins at `0x1042A`. The next packet should determine
+which tiny starts are real authored functions versus internal/shared/compiler
+entries, validate the two provisional extents, and infer physical TC4J/TASM
+producer seams from MAP/OMF/FIXUPP/relocation evidence before writing source.
+
+The local `gpt-web:` checkpoint is created only after final validation; read its
+hash from live Git. Nothing is pushed. Campaign status remains active.

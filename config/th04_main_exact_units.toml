@@ -9408,3 +9408,136 @@ map_start = "0x5CF2"
 map_size = "0xB6"
 target_file_offset = "0x11FE2"
 size = "0xB6"
+
+# v177 candidate: replace the final target-derived MAIN__TEXT shot/enemy tail
+# before exact v176 player_invalidate() with two independent natural TC4J
+# producers. Target relocation ordering separates the FAR shot-hittest calls
+# from the enemy renderer calls, so keep these as distinct physical objects.
+[[build_replacements]]
+id = "th04-main-shots-enemy-render-v177-build"
+trigger_units = ["th04-main-enemies-render-v177"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/pinv.cpp\",\n\t\"th04/tlr.cpp\",\n"
+build_replacement = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/shotmain.cpp\",\n\t\"th04/enrend.cpp\",\n\t\"th04/pinv.cpp\",\n\t\"th04/tlr.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-shots-enemy-render-v177-suffix"
+trigger_units = ["th04-main-enemies-render-v177"]
+patch_path = "th04/m1rsuf.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c58eb32d0ef37f9994cdb3a94554be03957e9f2091425b4b9502f09e8ca0ea0e"
+
+[[source_transforms.ops]]
+id = "remove-shots-enemy-render-v177"
+kind = "remove_between"
+removed_sha256 = "298b03d663313a74108178562748396a270a8ecb4070d3975299aa989f68750f"
+start = "public sub_1042A\r\n"
+end = "include th04/main/enemy/render.asm\r\n"
+replacement = ""
+
+[[source_transforms]]
+id = "th04-main-shots-enemy-render-v177-callers"
+trigger_units = ["th04-main-enemies-render-v177"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "a6380894129f329cadbc0b09bfe0cced5e3aa816801da2fe99faaa27e4368d0f",
+  "bf7b6672021d89f37f4f331d689a04a941217bc6c422c784fab6d081af877de7",
+]
+
+[[source_transforms.ops]]
+id = "alias-sub-e1f4-c-linkage-v177"
+kind = "insert_before"
+anchor = "sub_E1F4\tproc near\r\n"
+text = "public _sub_E1F4\r\n_sub_E1F4 label proc\r\n"
+
+[[source_transforms.ops]]
+id = "alias-byte-259a7-c-linkage-v177"
+kind = "insert_before"
+anchor = "byte_259A7\tdb ?\r\n"
+text = "public _byte_259A7\r\n_byte_259A7 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-byte-25980-c-linkage-v177"
+kind = "insert_before"
+anchor = "byte_25980\tdb ?\r\n"
+text = "public _byte_25980\r\n_byte_25980 label byte\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-shots-reset-extrn-v177"
+kind = "replace"
+old = "extrn sub_1042A:near\r\n"
+new = "extrn @shots_reset$qv:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shots-update-extrn-v177"
+kind = "replace"
+old = "extrn sub_104B6:near\r\n"
+new = "extrn @shots_update$qv:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-enemies-render-extrn-v177"
+kind = "replace"
+old = "extrn ENEMIES_RENDER:near\r\n"
+new = "extrn @ENEMIES_RENDER$QV:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "normalize-shots-render-extrn-case-v177"
+kind = "replace"
+old = "extrn @SHOTS_RENDER$QV:near\r\n"
+new = "extrn @shots_render$qv:near\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shots-reset-call-v177"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_1042A\r\n"
+new = "\t\tcall\t@shots_reset$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-shots-update-call-v177"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_104B6\r\n"
+new = "\t\tcall\t@shots_update$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-enemies-render-call-v177"
+kind = "replace"
+old = "\t\tcall\tmain_01:enemies_render\r\n"
+new = "\t\tcall\t@ENEMIES_RENDER$QV\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-shots-main01-v177"
+default_enabled = false
+requires_units = ["th04-main-player-invalidate-v176"]
+repo_source = "src/main/player/shots.cpp"
+overlay_path = "th04/shotmain.cpp"
+map_module = "th04/shotmain.cpp"
+map_mode = "exact"
+object_path = "obj/th04/shotmain.obj"
+map_segment = "MAIN__TEXT"
+map_start = "0x593A"
+map_size = "0x2E9"
+target_file_offset = "0x11C2A"
+size = "0x2E9"
+
+[[units]]
+id = "th04-main-enemies-render-v177"
+default_enabled = true
+requires_units = ["th04-main-shots-main01-v177"]
+repo_source = "src/main/enemy/enemies_render.cpp"
+overlay_path = "th04/enrend.cpp"
+map_module = "th04/enrend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/enrend.obj"
+map_segment = "MAIN__TEXT"
+map_start = "0x5C23"
+map_size = "0xCF"
+target_file_offset = "0x11F13"
+size = "0xCF"
