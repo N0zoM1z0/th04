@@ -4121,3 +4121,60 @@ id = "th04-main-fn-25de8"
 address = "0x25DE8"
 evidence_id = "ev-th04-main-thicklaser-update-boundary-v181"
 reason = "Expand the reviewed denominator for thicklasers_update(); its slice is diagnostic-byte-identical but the enclosing physical owner remains raw-nonexact."
+
+# v182: DIALOG_TEXT rendering primitives between the exact std-transition
+# prefix and exact dialog_box_fade_in_animate(). Maintained natural C++ removes
+# the ReC98 inline assembly, so all three functions remain reviewed/nonexact.
+[[reviewed_nonexact]]
+id = "th04-main-fn-1cfbe"
+address = "0x1CFBE"
+file_offset = "0xE7BE"
+size = "0x58"
+name = "dialog_box_put(unsigned int,unsigned int,int)"
+owner_unit = "th04-main-dialog-render-primitives-v182"
+source = "src/main/dialog/render_primitives.inl"
+evidence_id = "ev-th04-main-dialog-box-put-boundary-v182"
+reason = "Fresh target-bound Ghidra constructs all 88 bytes contiguously; target raw closes RET 6 and the next TLINK public begins immediately at 0x1D016. Maintained natural C++ is source-present but cannot legally reproduce REP STOSW, TEST BX,7, or the three target reg-reg opcode-direction encodings."
+next_public_address = "0x1D016"
+
+[[new_nonexact]]
+id = "th04-main-fn-1cfbe"
+address = "0x1CFBE"
+evidence_id = "ev-th04-main-dialog-box-put-boundary-v182"
+reason = "Expand the reviewed authored denominator with the complete dialog_box_put() body while preserving the assembly/codegen blocker."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1d016"
+address = "0x1D016"
+file_offset = "0xE816"
+size = "0x38"
+name = "playfield_copy_front_to_back()"
+owner_unit = "th04-main-dialog-render-primitives-v182"
+source = "src/main/dialog/render_primitives.inl"
+evidence_id = "ev-th04-main-dialog-copy-front-back-boundary-v182"
+reason = "Fresh target-bound Ghidra constructs all 56 bytes contiguously; raw closes RET and the next TLINK public begins at 0x1D04E. The historical candidate scaffold slice is byte-identical, but maintained inline-asm-free C++ expands the target LOOP sequence and receives no exactness credit."
+next_public_address = "0x1D04E"
+
+[[new_nonexact]]
+id = "th04-main-fn-1d016"
+address = "0x1D016"
+evidence_id = "ev-th04-main-dialog-copy-front-back-boundary-v182"
+reason = "Expand the reviewed authored denominator with the complete playfield copy helper while its maintained natural source remains codegen-nonexact."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1d04e"
+address = "0x1D04E"
+file_offset = "0xE84E"
+size = "0x4A"
+name = "dialog_face_unput_8(unsigned int,unsigned int)"
+owner_unit = "th04-main-dialog-render-primitives-v182"
+source = "src/main/dialog/render_primitives.inl"
+evidence_id = "ev-th04-main-dialog-face-unput-boundary-v182"
+reason = "Fresh target-bound Ghidra constructs all 74 bytes contiguously; target raw closes RET 4 and exact dialog_box_fade_in_animate() begins at 0x1D098. Maintained natural C++ remains nonexact at the target LOOP sequence and three reg-reg opcode-direction encodings."
+next_public_address = "0x1D098"
+
+[[new_nonexact]]
+id = "th04-main-fn-1d04e"
+address = "0x1D04E"
+evidence_id = "ev-th04-main-dialog-face-unput-boundary-v182"
+reason = "Expand the reviewed authored denominator with the complete face-unput helper while preserving its compiler/code-shape blocker."

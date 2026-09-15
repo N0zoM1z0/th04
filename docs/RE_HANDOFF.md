@@ -6462,3 +6462,110 @@ Campaign status remains active. This v181 packet is not 99.5% completion,
 standalone product closure, runtime validation, OP/MAINE/ZUN completion, or
 whole-game completion. The local `gpt-web:` checkpoint is created only after
 final CI and staged-diff review; nothing is pushed.
+
+## v182 DIALOG_TEXT rendering-primitives review
+
+The conversation resumed from clean `main` at starting HEAD
+`4845749527953409586c019880b8e007e4aa0b07` (`gpt-web: review MAIN thick-laser
+producer`), upstream `origin/main`, ahead 3 / behind 0. Mandatory recovery found
+no staged, unstaged, untracked, conflicted, recoverable, unrelated, or
+unknown-origin work. All requested repository and Factory guidance paths were
+readable. Preflight, live status, the 2,120-observation boundary validator,
+repository-native `th04-main` Ghidra check, and TC4J/TASM/TLINK attestation all
+passed before editing. `factory_describe`/repository discovery and the
+registered `th04-ghidra` provider were re-audited; the provider still exposes no
+`get_metadata` operation, so only discovered schemas were used. Provider
+`check {}` passed for `target:th04-main`.
+
+The selected hard packet was the DIALOG_TEXT seam immediately after the exact
+STD-transition prefix and before exact `dialog_box_fade_in_animate()`. Fresh
+provider metadata, target raw decoding, TLINK publics, and neighboring exact
+owners close three contiguous authored functions with no gap:
+
+- `dialog_box_put(unsigned int,unsigned int,int)`: map `0AAF:24CE`, load
+  `0xCFBE..0xD015`, file `0xE7BE..0xE815`, `0x58` bytes;
+- `playfield_copy_front_to_back()`: `0AAF:2526`, load `0xD016..0xD04D`, file
+  `0xE816..0xE84D`, `0x38` bytes;
+- `dialog_face_unput_8(unsigned int,unsigned int)`: `0AAF:255E`, load
+  `0xD04E..0xD097`, file `0xE84E..0xE897`, `0x4A` bytes.
+
+Exact STD-transition ownership ends at load `0xCFBD`; exact fade-in starts at
+`0xD098 / 0AAF:25A8`. Fresh Ghidra reports each target body as contiguous at the
+same sizes. Raw target closes `RET 6`, `RET`, and `RET 4` respectively. The
+complete `0xDA / 218` target window SHA-256 is
+`3f2b47655411684fb0c01460b3bb254599e145fbab18b8eb6d9bd0cbb0a125ae`.
+Target ordered MZ relocations overlapping the window are load
+`[0xD091, 0xD049, 0xCFCB]`; the retained linked candidate has the same ordered
+site sequence and exact public placement.
+
+The historical ReC98-backed candidate localizes the old provisional dialog
+module mismatch to exactly twelve linked bytes, all six equivalent reg-reg
+instruction encodings. `dialog_box_put()` has target/candidate `01 D0 / 03 C2`
+twice and `89 C7 / 8B F8`; `dialog_face_unput_8()` has `89 C3 / 8B D8`,
+`01 D8 / 03 C3`, and `01 C7 / 03 F8`. Its
+`playfield_copy_front_to_back()` slice is byte-identical. That scaffold obtains
+target `REP STOSW`, `TEST BX,7`, and `LOOP` through inline assembly and therefore
+cannot be accepted as maintained natural source under current project rules.
+
+New maintained source `src/main/dialog/render_primitives.inl` expresses the
+three helpers without inline assembly, copied target bytes, codestrings, fake
+returns, padding, or target patching. Source SHA-256 is
+`641b3a18f725302e11ebd3f54eef0c976c1880ea47276b0d822faf99f2fe5923`.
+A bounded contextual production-profile TC4J compile succeeds without warnings
+and emits valid OMF SHA-256
+`b926e909b5c364c7a5f940f2051cf15c7c836779627855e92623be25ab2a6c95`,
+dependency-normalized SHA-256
+`43c09ecea141fa8faad872df8287cbaf4150e90a58fd14493f1f7bad98d31107`.
+The maintained natural versions are `0x62`, `0x3D`, and `0x4F` bytes, moving the
+following exact fade-in public by only `0x14` bytes total; the additional bytes
+are ordinary loop expansions of the target string/LOOP operations.
+
+A bounded command-line TC4J pseudo-register probe, OMF SHA-256
+`3283be7ef89f4fa6dd7de9887b3d218777adfc63d24b916760789635d58d7862`,
+shows the obvious legal source forms still emit candidate opcode directions:
+`03 C2`, `8B F8`, `8B D8`, `03 C3`, and `03 F8`. Mask/modulo forms emit
+`TEST BL,7`, and explicit `_CX` loops emit `DEC/MOV/OR/JNZ`, not `LOOP`. A
+separate original PC-98 IDE integrated-compiler diagnostic also remains
+negative: receipt SHA-256
+`0bba0e27d5dd77f150e7012d18fb6c1423e98c507848e70c822c88d735f0f525`
+and generated OMF SHA-256
+`2047f9fae060fe71a5baabb79cb190d9a0bbe94f0722d7b8db836781bac9e986`;
+`_BX = _AX` still emits `8B D8`, not target `89 C3`. No further spelling matrix
+should be resumed without a genuinely new producer or compiler-IR mechanism.
+
+The three boundary rows are now reviewed/blocked and one reviewed blocked
+`th04-main-dialog-render-primitives-v182` `0xDA` unit records the maintained
+source. The fail-closed function-review trial adds exactly
+`th04-main-fn-1cfbe`, `th04-main-fn-1d016`, and `th04-main-fn-1d04e`, removes
+none, and has SHA-256
+`b4425cf334cdc9923ba75caef7303dac084e8edbb67c33254ad2d9fb5296588f`.
+Generic-writer changes to unrelated historical rows were not adopted. Current
+repository status after admission is MAIN 74,881 exact bytes out of 80,366
+reviewed authored bytes (`93.174974%`) and 450 exact functions out of 473
+reviewed authored functions (`95.137421%`), with 23 reviewed blockers and 64
+unreviewed MAIN authored candidates. OP/MAINE/ZUN remain separate active queues:
+94 / 72 / 13 unreviewed authored candidates respectively, with no honest exact
+denominator for those artifacts yet.
+
+No v182 focused exact replay, candidate-state exact aggregate, or post-promotion
+exact aggregate was run: the maintained natural source is already known
+nonexact from bounded compiler evidence, so promotion gates would be misleading.
+No v182 Factory Truth-Kernel claim or acceptance exists. The prior accepted
+exact baseline remains separate. Standalone TH04 production compile/link
+closure, whole-image exactness, runtime-storage identity, runtime-scenario
+validation, portable-runtime validation, and independent pristine-release
+provenance remain unestablished. The private target remains
+`candidate-local-attested` and was never modified, staged, or published.
+
+v182 began with `.analysis/` at 8,433,906,138 bytes. Final post-CI size is **8,434,894,324 bytes**, net growth **988,186 bytes**; bounded v182 scratch is **945,860 bytes** and retains only the function-review report, small target/candidate slices, legal compiler probe OMFs, and the compact PC-98 IDE negative receipt/object. The temporary 9.8 MB PC-98 IDE workspace was removed after confirming no active producer and copying the compact bound evidence. Mistaken exploratory TH05 byte slices derived from candidate-map addresses were deleted and are not evidence; no TH05 origin claim is made from that failed route. Shared targets, toolchain/Wine state, Ghidra/provider state, and legacy/unknown analysis trees were left untouched.
+
+DIALOG_TEXT function coverage is now closed at this seam: subsequent fade-in and
+script-parameter helpers are exact, v180 `dialog_op()`/`dialog_run()` are
+reviewed blocked, and animate/init/exit are exact. The first concrete next route
+is therefore the dense unreviewed CIRCLE_TEXT cohort beginning with
+`TILES_INVALIDATE_AROUND` at load `0xB9D6` (`0xCC` bytes), currently the largest
+unreviewed MAIN authored candidate. Review the neighboring tile/fill/bounding-box,
+item-splash, shot-laser, and spark PROCs as a physical producer/include-seam
+question before writing source; do not fuse them merely because they are
+contiguous in TASM. The campaign remains active. This section was prepared
+before the local v182 checkpoint; read live Git for the final checkpoint hash.
