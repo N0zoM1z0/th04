@@ -6569,3 +6569,151 @@ item-splash, shot-laser, and spark PROCs as a physical producer/include-seam
 question before writing source; do not fuse them merely because they are
 contiguous in TASM. The campaign remains active. This section was prepared
 before the local v182 checkpoint; read live Git for the final checkpoint hash.
+
+
+## 2026-09-15 v183 CIRCLE scroll/motion exact checkpoint
+
+This conversation recovered repository `th04`, branch `main`, from clean
+starting HEAD `5c94877d88e8a871f5d2ec6224f9e1c4c07bd305`, ahead 4 / behind 0 versus
+`origin/main`. No staged, unstaged, untracked, conflicted, unrelated, or unknown
+work existed at entry. All required TH04 repository documents and mounted
+Factory contracts/guidance were read before editing. The full `.analysis/` tree
+measured **8,434,894,471 bytes** at entry.
+
+Mandatory entry preflight, live status, the function-boundary validator,
+repository-native Ghidra database attestation, and pinned toolchain attestation
+passed. The selected target remains the 156,258-byte Japanese-local MAIN MZ,
+SHA-256 `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+with 6,144-byte MZ header and 1,136 ordered relocations. Canonicality remains
+only `candidate-local-attested`. Required TC86 Borland C++ 4.02, TASM32 5.0,
+and TLINK 6.10 surfaces attest; the optional host `wine64` hash mismatch remains
+informational.
+
+Provider discovery exposed the same ten `th04-ghidra` operations and still no
+`get_metadata` operation. The explicit `check {}` call was blocked by the
+platform before provider dispatch and has no result; no unavailable operation
+or attestation was invented. Subsequent bounded `function`, `callers`, and
+`callees` operations succeeded with `passed-by-registered-bridge` target binding
+for repository `th04` / `target:th04-main`. Ghidra observations receive zero
+exactness credit.
+
+The target-first CIRCLE review separates two adjacent functions from the former
+v137 replay-only prefix. `SCROLL_SUBPIXEL_Y_TO_VRAM_SEG1` is CIRCLE_TEXT
+`0AAF:1120`, load `0xBC10..0xBC37`, file `0xD410..0xD437`, size `0x28 / 40`,
+SHA-256 `4a4462bd241d2940c042943e2b1295aa1a139c91824d6ce158f5e6012797b686`.
+Maintained `src/main/scroll/scroll_subpixel_y.cpp`, SHA-256
+`af33abbc26558bb0e2ee35d5268d81faf08a842468afe368225deacf799ab24a`,
+is ordinary natural C++ and emits the exact linked body with no target-byte or
+assembly shortcut. The only standalone pre-link differences were the two
+unresolved 16-bit data-symbol words for `scroll_active` and `scroll_line`.
+
+The immediate next `PlayfieldMotion::update_seg1()` is CIRCLE_TEXT
+`0AAF:1148`, load `0xBC38..0xBC57`, file `0xD438..0xD457`, size `0x20 / 32`,
+SHA-256 `77752519e9fe9e2974c43d2a8e29684bba67c63d2a9e1b326e9e22b49e7270f7`.
+The exact 32-byte frameless stack-peek skeleton occurs twice in the TH04 target
+(load `0xBC38`, `0x13D32`) and twice in the independent TH05 target (load
+`0xBE1A`, `0x1527C`). TH04 load `0x13D32` is already reproduced by accepted
+symbolic TASM `src/main/math/motion.asm` using the same `MOTION_UPDATE_DEF`
+producer mechanism. A bounded natural TC4J member-function probe instead emits
+a 34-byte BP/SI frame. The seg1 boundary therefore moves from authored C++ to
+the separate original-style ASM attestation queue. Maintained symbolic source is
+`src/main/math/motion_seg1.asm`, SHA-256
+`bf2493917afe20dabbe693af8654d9e39c1c93aec329724886cbbbc4748879df`.
+
+v183 preserves physical link order by splitting the old replay residual around
+the new owners. Final MAP order is `cirpre.asm` at `0AAF:0EE6` size `0x23A`,
+natural `scroll1.cpp` at `0AAF:1120` size `0x28`, symbolic `motion1.asm` at
+`0AAF:1148` size `0x20`, zero-credit `cirs183.asm` `randring_fill` residual at
+`0AAF:1168` size `0x18`, then exact v137 `r1next.cpp` at `0AAF:1180`.
+Neither promoted body overlaps an MZ relocation. The transformed prefix and
+suffix are replay plumbing only and receive no reconstruction credit.
+
+The final focused physical-producer replay is
+`gptweb-v183-motion-seg1-focused-002`: 112 selected units, two isolated cold
+builds, receipt SHA-256
+`4bc9baeb2bd1b1470b12a4859d422b77d30692f1e2bbd9bc09d73a4dc44cc385`,
+`failures=[]`. Scroll and motion both pass raw bytes, exact MAP placement,
+empty relocation overlap, valid deterministic OMF, and dependency closure while
+v137 randring owners remain exact. A/B scroll object SHA-256 is
+`b30cbdc5aedb621351c0551d289d8ee043918f912db34fad5f6b4b2a339306c6`;
+A/B motion object SHA-256 is
+`28b9a22941442050aec19cf37a2b88f4e679e2415189a923110f9670091319ed`.
+
+Candidate-state aggregate `gptweb-v183-circle-aggregate-candidate-001` covers
+216 owners twice with `failures=[]`, receipt SHA-256
+`5482d8a3d3dbce9c26c16ab86571209e9ef40fb7e104e1179f3a9c4d4cbeb8aa`.
+The command-local temporary enablement was restored byte-for-byte. After
+promotion, `gptweb-v183-circle-aggregate-final-002` passes the tracked 216-owner
+default cohort twice again, receipt SHA-256
+`85d22b45df4113f03103662b72f13ba18fcfabc54ecb76a9a8a19dbd27d877cc`.
+Both final candidate MAIN images have SHA-256
+`6685687e0f7554e4f84395e71cabac1f2e3babccaa76abaa86877846108145a4`,
+and final MAP SHA-256 is
+`d35f21ada45f6a26586224ee75cf2333344c9e3cb072ca374277a653dd31d4c9`.
+
+Two exploratory failures are explicitly control-plane-only: an early symbolic
+motion overlay collided with the existing `circle.cpp` object name, and a direct
+final `--unit scroll` attempt lacked the separately selected `motion1.asm`
+overlay required by the physical split. Neither produced a byte verdict. The
+replay command retained by both v183 units selects the motion unit, which pulls
+in the scroll dependency and reproduces the final physical closure.
+
+
+A pre-final complete-diff audit found one unrelated manifest edit introduced by an
+overbroad path replacement: the existing exact `th04-main-module-th04-circle-cpp-c64a`
+object path had temporarily changed from `obj/th04/circle.obj` to
+`obj/th04/motion1.obj`. The tracked manifest was restored before checkpointing.
+No source or linked v183 byte changed. Because the earlier aggregate receipts were
+bound to the pre-correction manifest identity, the authoritative post-promotion
+baseline was rerun as `gptweb-v183-circle-aggregate-final-002`; it passes all 216
+default owners twice and is the final receipt cited here.
+
+The fail-closed function-review trial adds exactly `th04-main-fn-1bc10`, removes
+none, and has report SHA-256
+`b8e6989021a6874c1391726dd86f0f7a0d28f078e42519a74bdcbe42d53303d0`.
+Thirty-nine unrelated historical normalization changes proposed by the generic
+writer were deliberately not adopted. Motion remains outside the authored-C++
+function denominator on the ASM attestation surface.
+
+Live MAIN authored accounting after v183 is **74,921 / 80,406 exact reviewed
+bytes (93.178370%)** and **451 / 474 exact reviewed functions (95.147679%)**.
+Routing is 451 exact, 23 reviewed blocked, 62 unreviewed authored candidates,
+and 32 original-style ASM attestation observations. The byte/function percentages
+remain a moving reviewed denominator and are not MAIN.EXE or whole-game coverage.
+Other artifacts remain independent: OP has 94 unreviewed authored candidates,
+MAINE 72, and ZUN 13; none receives MAIN credit.
+
+The current-session compiler source materialization and superseded/failed replay
+trees were removed only after no TCC/TASM/TLINK/replay producer remained active
+and compact receipts/objects/MAP slices were copied into the bounded v183
+scratch. The corrected post-promotion `gptweb-v183-circle-aggregate-final-002`
+worktree is intentionally retained as the current exact cold baseline. The
+`.analysis/` tree began at **8,434,894,471 bytes** and, after bounded cleanup
+and final CI, is **8,506,804,935 bytes**, net growth **71,910,464 bytes**. The
+v183 compact scratch is **8,150,033 bytes** and the retained final aggregate is
+**63,654,960 bytes**. Shared targets, toolchains, Wine prefix, Ghidra/provider
+state, and legacy/unknown analysis content were left untouched. The local
+checkpoint is created only after final validation; read its hash from live Git.
+
+Verification planes remain separate. v183 proves the scroll natural-C++ extent
+and motion symbolic-ASM extent under the repository exact Oracles. Standalone
+TH04 production compile/link closure is not established. Whole-image exactness,
+runtime-storage identity, runtime-scenario validation, portable-runtime
+validation, independent pristine-release provenance, and v183 Factory
+Truth-Kernel acceptance are not established.
+
+The first concrete continuation is the remaining pre-scroll CIRCLE residual,
+load `0xB9D6..0xBC0F`, size `0x23A / 570`, SHA-256
+`0442cf41e550709cead0b65ae590288af06b6e2b0fbd1b988d023cba591a8e88`.
+Review it as one coherent producer/origin packet, not four easy functions:
+`TILES_INVALIDATE_AROUND` (`0xCC`), `TILES_FILL_INITIAL` (`0x4B`), alignment
+NOP `0xBAED`, `sub_BAEE` (`0xB6`), and `tiles_redraw_invalidated()` (`0x6C`).
+Close original include/TU seams, the target relocation at `0xBC0B`, callers,
+callees, and cross-game/original-ASM evidence before selecting natural source.
+The smaller `randring_fill()` residual at `0xBC58..0xBC6F`, SHA-256
+`42c2cd75d930070226e8d40f836ee38666b7a541ba6c472902ad8a594b12ae89`,
+remains an independent later seam.
+
+Campaign status remains active. This packet is not 99.5% completion, standalone
+product closure, runtime validation, OP/MAINE/ZUN completion, or whole-game
+completion. Nothing is pushed.

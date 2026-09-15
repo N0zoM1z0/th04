@@ -4178,3 +4178,10 @@ id = "th04-main-fn-1d04e"
 address = "0x1D04E"
 evidence_id = "ev-th04-main-dialog-face-unput-boundary-v182"
 reason = "Expand the reviewed authored denominator with the complete face-unput helper while preserving its compiler/code-shape blocker."
+
+# v183: Natural C++ scroll helper promoted only after final focused and candidate-state aggregate replay.
+[[new_exact]]
+id = "th04-main-fn-1bc10"
+address = "0x1BC10"
+evidence_id = "ev-th04-main-scroll-seg1-boundary-v183"
+reason = "Fresh target-bound Ghidra reports the complete contiguous 0x28 body at the matching TLINK public, and the newly exact natural-C++ owner closes raw bytes, MAP placement, relocation overlap, OMF integrity, and cold determinism."
