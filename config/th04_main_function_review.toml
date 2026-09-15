@@ -4269,20 +4269,19 @@ address = "0x1C2EE"
 evidence_id = "ev-th04-main-sparks-invalidate-boundary-v186"
 reason = "Admit the complete sparks_invalidate() near body only after natural TC4J code-shape closure, final focused two-cold replay, exact MAP placement, empty relocation overlap, and the 219-owner candidate aggregate."
 
-[[reviewed_nonexact]]
+# v187: _sparks_init promotion after selective lifecycle ABI localization,
+# focused two-cold replay, and the 220-owner candidate aggregate.
+[[reviewed_exact]]
 id = "th04-main-fn-1c314"
 address = "0x1C314"
 file_offset = "0xDB14"
 size = "0x1E"
+decode_size = "0x1E"
 name = "_sparks_init"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Fresh target-bound Ghidra/TLINK/TASM/raw evidence closes the complete 0x1E initializer. Natural TC4J emits an exact 30-byte fixed instruction shape, but target C-linkage _sparks_init conflicts with the current C++ linkage declaration in spark.hpp; Borland rejects an extern-C definition after that declaration, so no ABI workaround or exact claim is used."
-
-[[new_nonexact]]
-id = "th04-main-fn-1c314"
-address = "0x1C314"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Expand the reviewed denominator for _sparks_init while preserving its header/linkage blocker."
+owner_unit = "th04-main-sparks-init-v187"
+source = "src/main/spark/init.cpp"
+evidence_id = "ev-th04-main-sparks-init-boundary-v187"
+reason = "The existing v186 reviewed body is unchanged. v187 localizes target-proved C linkage for init/update/render while preserving sparks_invalidate() C++ linkage, expresses low-byte initialization without changing 16-bit storage, and proves the complete 30-byte owner through focused and 220-owner candidate aggregate replay."
 
 [[reviewed_nonexact]]
 id = "th04-main-fn-1c332"

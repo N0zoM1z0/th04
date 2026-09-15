@@ -10065,3 +10065,51 @@ map_start = "0x17FE"
 map_size = "0x26"
 target_file_offset = "0xDAEE"
 size = "0x26"
+
+# v187: exact natural-C++ sparks_init() with a maintained mixed-linkage spark
+# declaration surface, split from the zero-credit v186 CIRCLE suffix.
+[[build_inserts]]
+id = "th04-main-spark-header-v187"
+trigger_units = ["th04-main-sparks-init-v187"]
+repo_source = "src/main/spark/spark.hpp"
+overlay_path = "th04/main/spark.hpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v187 maintained TH04 spark declarations overlay\n"
+
+[[build_replacements]]
+id = "th04-main-sparks-init-v187-build"
+trigger_units = ["th04-main-sparks-init-v187"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/cirsuf185.asm\",\n\t\"th04/spkinv.cpp\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/cirsuf185.asm\",\n\t\"th04/spkinv.cpp\",\n\t\"th04/spkinit.cpp\",\n\t\"th04/cirsuf186.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-sparks-init-v187-layout"
+trigger_units = ["th04-main-sparks-init-v187"]
+patch_path = "th04/cirsuf186.asm"
+encoding = "latin-1"
+scaffold_sha256 = "68a3b3cfba7affd9e8c9be8195e5a919595bd16762c2355cfceadf085c6e4993"
+
+[[source_transforms.ops]]
+id = "remove-replay-sparks-init-v187"
+kind = "replace"
+old = "include th04/sparkinit186.inc\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-sparks-init-v187"
+default_enabled = true
+requires_units = ["th04-main-sparks-invalidate-v186"]
+repo_source = "src/main/spark/init.cpp"
+overlay_path = "th04/spkinit.cpp"
+map_module = "th04/spkinit.cpp"
+map_mode = "exact"
+object_path = "obj/th04/spkinit.obj"
+auxiliary_objects = ["obj/th04/cirsuf185.obj", "obj/th04/cirsuf186.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1824"
+map_size = "0x1E"
+target_file_offset = "0xDB14"
+size = "0x1E"

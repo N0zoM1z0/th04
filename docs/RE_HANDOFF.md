@@ -7056,3 +7056,130 @@ then replay affected exact owners; couple that work with `_sparks_render` and
 `@item_splash_dot_render`. Preserve `_sparks_update`'s 71-vs-76 negative until a
 genuinely new compiler-IR hypothesis appears. `sub_C34E` remains the adjacent
 Ghidra-missed boundary for later source/origin review. Nothing is pushed.
+
+
+## v187 CIRCLE_TEXT spark ABI / initializer checkpoint
+
+This session starts from clean committed HEAD
+`4b90db0f1faceb8da25d2896ccc6227433c7a113`, branch `main`, upstream
+`origin/main`, ahead 8 / behind 0. `.analysis/` measured **8,725,089,108 bytes**
+at entry. Mandatory preflight/status/boundary gates passed. During v187 recovery, `origin/main` independently caught up to the starting HEAD while local HEAD stayed unchanged; no push was invoked. `th04-ghidra`
+discovery again exposed ten operations and no `get_metadata`; provider `check {}`
+passed for target `target:th04-main`, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native Ghidra independently passed the 6,144-byte MZ header, entry,
+1,136 ordered relocations, mapping/digest, and samples. Required TC4J/TASM/TLINK
+surfaces passed; optional host `wine64` hash drift remains informational.
+
+The stale prompt hypothesis around `sub_11DE6` was not reopened. Live v143
+already reconstructs that shot-velocity/shot-level physical seam as exact
+original-style symbolic TASM.
+
+v187 resolves the header/ABI blocker retained by v186 for `_sparks_init`.
+Target publics prove a mixed linkage surface: `_sparks_init`, `_sparks_update`,
+and `_sparks_render` use C linkage, while `sparks_invalidate()` and the
+`sparks_add_*` functions retain C++ decoration. Maintained
+`src/main/spark/spark.hpp`, SHA-256
+`f560ad477bbd32801a9f408d665e420de867a6f89de0e307c16e398d5930a01f`,
+localizes exactly that distinction. `src/main/core/gameplay_loop.cpp` corrects
+its update/render declarations to the same target-proved C linkage but receives
+no new exactness credit.
+
+Maintained `src/main/spark/init.cpp`, SHA-256
+`213f43e3073313dc986a6a68fb1f5ac7f3de6bbd9506c3100486f25a949a3fb3`,
+reconstructs CIRCLE_TEXT `0AAF:1824..1841`, load `0xC314..0xC331`, file
+`0xDB14..0xDB31`, size `0x1E / 30`, target SHA-256
+`16384305e570f94bd3fef1189d3d0e103e6e8ef32c7361a57b73db90c908201f`.
+`spark_ring_offset` remains 16-bit storage; source explicitly models the target's
+low-byte-only clear rather than changing the type. The 16-bit angle field is
+likewise initialized through its low byte from `IRand()`. A contextual TC86
+probe emits exactly 30 CODE bytes and PUBDEF `_sparks_init`; all fixed bytes
+match target and only three ordinary link-resolved words differ before linking.
+No inline ASM, codestring, target bytes, padding, alias trick, or ABI lie is used.
+
+Final focused run `gptweb-v187-sparks-init-focused-current-001` selects 116 owners and
+passes both cold builds. Receipt SHA-256 is
+`045b3921f0cc228fd2ea2fdad9627af5b548055e2c26769755262342c2f91dbc`;
+A/B `spkinit.obj` SHA-256 is
+`1cb16def69edbe1b41a6582fd7eb86d2ead322f4488d3124095c997cd535ed3e`.
+The natural owner has exact raw bytes, exact MAP `0AAF:1824 size 0x1E`, and exact
+ordered relocation overlap at load `0xC31F`.
+
+The local spark header is structurally important: 57 logical exact units map to
+16 previously accepted physical objects that depend on it. Their raw and
+normalized OMF identities change after the maintained header overlay, so v187
+does not claim object-identity stability. Instead the no-unit candidate
+aggregate `gptweb-v187-sparks-init-aggregate-candidate-001` recompiles the full
+220-owner candidate cohort and proves every accepted linked raw/MAP/relocation
+extent again. It passes twice, receipt SHA-256
+`e4c42e64768a6ea2bfebf2e7a94e555aa22094981280fa316bf00d38c8104d51`;
+candidate MAIN SHA-256 remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+For function promotion, the older v128 metadata was insufficient for later
+manual-policy entries. v187 therefore refreshed the missing policy-related
+function metadata directly from the already-attested `th04-ghidra` provider in
+bounded batches. No-function provider results are preserved as no-function
+results; no synthetic Ghidra entry is invented. Canonical function-review report
+SHA-256 is
+`11b86623bd7d05a109debba3b3d89547b6b90c1fe73e9362ede65d612607d28c`.
+The target `th04-main-fn-1c314` row alone is manually merged from blocked to
+exact with unchanged extent, owner, and source. The generic writer would alter
+46 unrelated historical rows, so those changes are deliberately not adopted.
+
+Post-promotion tracked aggregate
+`gptweb-v187-sparks-init-aggregate-current-final-002` passes all 220 default owners
+twice, receipt SHA-256
+`e6c5c4c4ca3cf1d20538f0fc091fa9b3d27fae310dc6ce7e1ab592eb0bab2778`.
+Its tracked manifest SHA-256 is
+`7008d5e6398d0c996840166760647ed699bc2d3240e27f78c395391050848dc3`;
+A/B MAP SHA-256 is
+`1a9ede117a5a1ceaeca956a1571197e163a54f00821bd74b159f9a9e8e2e9968`;
+A/B candidate MAIN remains `205e4206...` and the initializer object remains
+`1cb16def...`.
+
+Recovery of the interrupted v187 packet also detected that the earlier PASS
+receipts recorded a manifest digest different from the final live file. No
+semantic equivalence was assumed. The live manifest was replayed again: focused
+`gptweb-v187-sparks-init-focused-current-001` passes 116 owners twice with
+receipt SHA-256
+`045b3921f0cc228fd2ea2fdad9627af5b548055e2c26769755262342c2f91dbc`, and
+no-unit aggregate `gptweb-v187-sparks-init-aggregate-current-final-002` passes
+all 220 default owners twice with receipt SHA-256
+`e6c5c4c4ca3cf1d20538f0fc091fa9b3d27fae310dc6ce7e1ab592eb0bab2778`.
+Both bind the final live exact-manifest SHA-256
+`7008d5e6398d0c996840166760647ed699bc2d3240e27f78c395391050848dc3`;
+raw/MAP/ordered-relocation verdicts remain exact.
+
+Live MAIN accounting is now **75,064 / 80,549 exact reviewed authored bytes
+(93.190480%)** and **454 / 482 exact reviewed functions (94.190871%)**. Function
+routing is 454 exact, 28 blocked, 50 unreviewed, and 36 ASM-attestation
+observations. OP.EXE, MAINE.EXE, and ZUN.COM remain independent active queues
+with 94, 72, and 13 unreviewed authored candidates; no MAIN credit transfers to
+them.
+
+After final CI, before checkpoint commit, `.analysis/` measures
+**8,806,476,774 bytes**, net growth **81,387,666 bytes** from v187 entry. The v187
+compact scratch is **12,967,337 bytes** and the retained post-promotion aggregate
+baseline is **63,889,513 bytes**. Only explicit v187 reproducible focused/
+candidate full trees and superseded top-level probe copies were deleted after
+retaining compact receipts, final OBJ/MAP, function-review inputs/results,
+compiler probe, target slice, and header-impact audit. Earlier baselines,
+private targets, toolchains, Wine/Ghidra state, and unknown/legacy analysis
+content were untouched.
+
+Verification planes remain separate. v187 proves exact natural-C++ ownership of
+`_sparks_init` and revalidates the default exact cohort under the maintained
+spark declaration surface. Standalone TH04 product compile/link closure,
+whole-image exactness, runtime-storage identity, runtime scenario, portable
+runtime, independent pristine provenance, and Factory acceptance remain
+unestablished.
+
+Next continue the render side of this same lifecycle cohort rather than taking
+an unrelated tiny win: `ITEM_SPLASHES_RENDER` (`0xC17C`), `@spark_render`
+(`0xC200`), `_sparks_render` (`0xC2B2`), and
+`@item_splash_dot_render` (`0xC332`). Re-test them under the corrected local
+spark declaration surface and preserve the explicit layout bytes at `0xC1FF`,
+`0xC265`, and `0xC2ED`. Keep `_sparks_update`'s v186 71-vs-76 compiler negative
+until a genuinely new compiler-IR hypothesis appears. `sub_C34E` remains the
+adjacent Ghidra-missed source/origin seam. Nothing is pushed.
