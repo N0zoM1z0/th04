@@ -9670,3 +9670,67 @@ map_start = "0x581D"
 map_size = "0x11D"
 target_file_offset = "0x11B0D"
 size = "0x11D"
+
+# v179 exact owner: reconstruct the complete 0x874 MAIN_TEXT Marisa shot
+# producer from shot_marisa_l0 through the post-RET switch table owned by
+# sub_E1F4. Natural TC4J source passes focused and candidate aggregate two-build
+# raw/MAP/ordered-relocation replay exactly. Keep this owner default-enabled.
+[[build_replacements]]
+id = "th04-main-marisa-shots-v179-build"
+trigger_units = ["th04-main-marisa-shots-v179"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/bomb.cpp\",\n\t\"th04/bstar.cpp\",\n\t\"th04/shotmain.cpp\",\n\t\"th04/enrend.cpp\",\n\t\"th04/pinv.cpp\",\n\t\"th04/tlr.cpp\",\n"
+build_replacement = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/bomb.cpp\",\n\t\"th04/bstar.cpp\",\n\t\"th04/shotmain.cpp\",\n\t\"th04/enrend.cpp\",\n\t\"th04/pinv.cpp\",\n\t\"th04/mshot.cpp\",\n\t\"th04/tlr.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-marisa-shots-v179-layout"
+trigger_units = ["th04-main-marisa-shots-v179"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "405afec0cec0086bc46fab09177765b8de4070842c3e4b34eba7564c86e81473",
+  "59791398ab2ff7f29ea2fbb3a512581491c49ae2c329b0e4e262e23bd9403501",
+]
+
+[[source_transforms.ops]]
+id = "externalize-marisa-shot-publics-v179"
+kind = "insert_before"
+anchor = "main_TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+text = "extrn _shot_marisa_l0:near\r\nextrn _shot_marisa_l1:near\r\nextrn _shot_marisa_a_l2:near\r\nextrn _shot_marisa_a_l3:near\r\nextrn _shot_marisa_a_l4:near\r\nextrn _shot_marisa_a_l5:near\r\nextrn _shot_marisa_a_l6:near\r\nextrn _shot_marisa_a_l7:near\r\nextrn _shot_marisa_a_l8:near\r\nextrn _shot_marisa_a_l9:near\r\nextrn _shot_marisa_b_l2:near\r\nextrn _shot_marisa_b_l3:near\r\nextrn _shot_marisa_b_l4:near\r\nextrn _shot_marisa_b_l5:near\r\nextrn _shot_marisa_b_l6:near\r\nextrn _shot_marisa_b_l7:near\r\nextrn _shot_marisa_b_l8:near\r\nextrn _shot_marisa_b_l9:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-marisa-shot-tables-v179"
+kind = "replace"
+old = "SHOT_FUNCS_MARISA_A label word\r\n\tdw shot_marisa_l0\r\n\tdw shot_marisa_l1\r\n\tdw shot_marisa_a_l2\r\n\tdw shot_marisa_a_l3\r\n\tdw shot_marisa_a_l4\r\n\tdw shot_marisa_a_l5\r\n\tdw shot_marisa_a_l6\r\n\tdw shot_marisa_a_l7\r\n\tdw shot_marisa_a_l8\r\n\tdw shot_marisa_a_l9\r\nSHOT_FUNCS_MARISA_B label word\r\n\tdw shot_marisa_l0\r\n\tdw shot_marisa_l1\r\n\tdw shot_marisa_b_l2\r\n\tdw shot_marisa_b_l3\r\n\tdw shot_marisa_b_l4\r\n\tdw shot_marisa_b_l5\r\n\tdw shot_marisa_b_l6\r\n\tdw shot_marisa_b_l7\r\n\tdw shot_marisa_b_l8\r\n\tdw shot_marisa_b_l9\r\n"
+new = "SHOT_FUNCS_MARISA_A label word\r\n\tdw _shot_marisa_l0\r\n\tdw _shot_marisa_l1\r\n\tdw _shot_marisa_a_l2\r\n\tdw _shot_marisa_a_l3\r\n\tdw _shot_marisa_a_l4\r\n\tdw _shot_marisa_a_l5\r\n\tdw _shot_marisa_a_l6\r\n\tdw _shot_marisa_a_l7\r\n\tdw _shot_marisa_a_l8\r\n\tdw _shot_marisa_a_l9\r\nSHOT_FUNCS_MARISA_B label word\r\n\tdw _shot_marisa_l0\r\n\tdw _shot_marisa_l1\r\n\tdw _shot_marisa_b_l2\r\n\tdw _shot_marisa_b_l3\r\n\tdw _shot_marisa_b_l4\r\n\tdw _shot_marisa_b_l5\r\n\tdw _shot_marisa_b_l6\r\n\tdw _shot_marisa_b_l7\r\n\tdw _shot_marisa_b_l8\r\n\tdw _shot_marisa_b_l9\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "drop-obsolete-sub-e1f4-public-v179"
+kind = "replace"
+old = "public byte_259A3, rgb_257D6, byte_259A7, sub_E1F4, byte_25980\r\n"
+new = "public byte_259A3, rgb_257D6, byte_259A7, byte_25980\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "remove-marisa-shot-producer-v179"
+kind = "remove_between"
+removed_sha256 = "cf58de68a19b0a1087ae0fbcde3d830a89234090c48ee9256fff0fbf40f00dcf"
+start = "shot_marisa_l0\tproc near\r\n"
+end = "sub_E1F4\tendp\r\n"
+replacement = ""
+
+[[units]]
+id = "th04-main-marisa-shots-v179"
+default_enabled = true
+requires_units = ["th04-main-bomb-stars-v178"]
+repo_source = "src/main/player/marisa_shot.cpp"
+overlay_path = "th04/mshot.cpp"
+map_module = "th04/mshot.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mshot.obj"
+map_segment = "MAIN_TEXT"
+map_start = "0x2F5F"
+map_size = "0x874"
+target_file_offset = "0xF24F"
+size = "0x874"

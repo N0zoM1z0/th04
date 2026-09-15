@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 716 authored reconstruction candidates: OP 94, MAIN 537, MAINE 72, ZUN 13;
-- 430 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
-- 272 authored candidates otherwise unreviewed across all four artifacts;
+- 450 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
+- 252 authored candidates otherwise unreviewed across all four artifacts;
 - 65 original-style ASM observations in a separate attestation queue;
 - 1,339 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Across the live MAIN source/acceptance ledgers, the current v178 totals are:
+Across the live MAIN source/acceptance ledgers, the current v179 totals are:
 
-- reviewed authored bytes: **72,717 / 76,311 exact (95.290325%)**;
-- accepted authored functions: **430 / 444 exact (96.846847%)**;
-- accepted default exact replay owners: **213**;
+- reviewed authored bytes: **74,881 / 78,475 exact (95.420198%)**;
+- accepted authored functions: **450 / 464 exact (96.982759%)**;
+- latest post-promotion default aggregate includes the v179 owner and passes twice;
 - original-style ASM: **17 units / 2,526 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **3,594 bytes** across 14
   reviewed blocked functions.
@@ -5967,6 +5967,177 @@ provisional `shot_marisa_b_l6` at load `0xDF56` has `body_size=0x71` versus
 `shot_marisa_b_l8`, `shot_marisa_b_l9`, and `sub_E1F4`. The next conversation
 should reconcile those real target extents, callers/shared tails, physical
 producer seams, and ordered relocations before writing or fusing source.
+
+The local `gpt-web:` checkpoint is created only after final validation; read its
+hash from live Git. Nothing is pushed. Campaign status remains active.
+
+
+## 2026-09-15 v179 MAIN_TEXT Marisa-shot checkpoint
+
+This conversation recovered repository `th04`, branch `main`, starting HEAD
+`e7ac6d0e91e749481d78facbbfa6ab8d195dab50`, exactly synchronized with
+`origin/main` at entry. Mandatory recovery found no staged or conflicted work,
+but did find one coherent interrupted v179 packet: five unstaged tracked paths
+(`config/evidence.csv`, `config/th04_function_boundaries.csv`,
+`config/th04_main_authored_functions.csv`, `config/th04_main_exact_units.toml`,
+and `config/units.csv`) plus untracked `src/main/player/marisa_shot.cpp`. Those
+paths, including pre-existing CSV quote normalization, were classified as
+recoverable current work and finished in place. No unrelated or unknown tracked
+work was reset, overwritten, deleted, staged, or absorbed. All requested TH04
+repository documents and Factory contracts/guidance were mounted and read before
+editing.
+
+The selected evidence plane remained repository `th04`, provider `th04-ghidra`,
+target `target:th04-main`, artifact `th04-main / MAIN.EXE`. The provider exposes
+ten discovered operations and no `get_metadata`; no undiscovered operation was
+invented. Its discovered `check {}` attestation passed for the 156,258-byte
+private MZ target. Repository-native `python3 scripts/ghidra.py th04-main check`
+independently passed the header/load mapping, entry point, all 1,136 ordered MZ
+relocations, load-module digest, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. TC86 Borland C++ 4.02,
+TASM32 5.0, TLINK 6.10, and the configured MS-DOS runner attested successfully.
+The ignored private target remained covered by `/.analysis/` and was never
+modified, patched, replaced, relocated, staged, committed, or published.
+
+The stale handoff hypothesis for `sub_11DE6` was not repeated: live v143 evidence
+already classifies that MAIN_012_TEXT extent as exact original-style symbolic
+assembly. The recovered v179 frontier instead proved one complete Marisa-shot
+physical producer in `MAIN_TEXT`: `0AAF:2F5F..37D2`, load
+`0xDA4F..0xE2C2`, file `0xF24F..0xFAC2`, size `0x874 / 2164`. The next exact
+producer, `th04/tlr.cpp`, begins at `0AAF:37D3` / load `0xE2C3`. Target and
+accepted natural-source owner SHA-256 are both
+`41961528c20d7d12d43494e173984672032ab069b0e64bf2fd21211ab2f8d341`.
+
+Target-first boundary review closes twenty logical authored functions inside that
+owner. It corrects Ghidra's noncontiguous/short `shot_marisa_b_l6()` observation
+and adds real late entries that Ghidra did not construct:
+`shot_marisa_b_l7()`, `shot_marisa_b_l8()`, `shot_marisa_b_l9()`, and
+`sub_E1F4()`. Their logical bodies are respectively `0x8B`, `0x8B`, `0xA9`,
+`0xB7`, and `0xC4`; their physical producer spans are `0x94`, `0x94`, `0xB2`,
+`0xC4`, and `0xCF` because TC4J owns dense-switch metadata after each terminal
+`RET`. Exact byte accounting includes those producer bytes, while logical
+function-body accounting still stops at the executable return.
+
+The same boundary pass independently corrects `SHOT_LASER_PUT_RAW` in
+`CIRCLE_TEXT`: target raw plus the pinned `shot_laser.asm` include close a real
+near routine at load `0xBE68..0xBECA`, size `0x63`; the `NOP` at `0xBECB` is
+residual layout before the next callback. The pinned include contains an actual
+`PROC near`. A bounded TC4J ABI probe supports `extern "C" void pascal near
+SHOT_LASER_PUT_RAW(void)` for the observed AX/DX/BX/SI contract and exact OMF
+external name; an extern-C fastcall spelling produces the wrong decorated name
+and is rejected. This separate assembly routine receives no Marisa C++ exactness
+credit and its source-origin/exactness classification remains open.
+
+Maintained natural source is `src/main/player/marisa_shot.cpp`, SHA-256
+`9b42810185e050cc2c125c6014efa98c96446921db63970ce0d37a584912b79b`.
+It uses ordinary C++ plus legitimate TC4J `#pragma option -a`; there is no inline
+assembly, `__emit__`, target-derived byte array, `#pragma codestring`, fake
+return, inert padding, target/object patching, or ABI lie. Five A-shot functions
+assign their angle local after `shot_laser_update()` to reproduce target lifetime
+and store order. `sub_E1F4()` uses ascending threshold ladders for SLS_4/SLS_6/
+SLS_1_4_1 and semantic shared labels for the SLS_8 common CEL chain. TC4J then
+naturally emits the target four `JA next; JMP celN` double branches and CEL0 ->
+CEL1 -> CEL2 -> CEL4 physical block order.
+
+Useful negative evidence was preserved instead of erased. Recovered focused run
+`gptweb-v179-marisa-shots-focused-negative-002` was deterministic and preserved
+the owner start plus ordered relocations, but emitted `0x867` bytes versus target
+`0x874`, shifting `tlr.cpp` by 13 bytes; it remains nonexact evidence. Bounded
+compiler/link probes showed that legitimate `#pragma option -a` restores five
+compiler-owned zero metadata bytes, whole-function `#pragma option -O-` over-
+expands unrelated control flow, function-internal `-O-/-O` does not alter the
+function-level decision, and a near-final hybrid with exact total size still had
+42 raw branch-target mismatches. The final natural probe017 reproduced the whole
+`0x874` linked owner byte-for-byte before authoritative replay.
+
+The authoritative exact replay chain is complete:
+
+- focused `gptweb-v179-marisa-shots-focused-exact-003`, two isolated serial cold
+  builds, `failures=[]`, v179 `raw=True`, `map=True`, `relocs=True`, size 2164,
+  receipt SHA-256
+  `10790bd1bc37dd735302ff94f3f5b864eb5085f38f6e3579d9d9a892dff27271`;
+- candidate-state aggregate
+  `gptweb-v179-marisa-shots-aggregate-candidate-001`, the complete default cohort
+  twice before ledger promotion, `failures=[]`, receipt SHA-256
+  `c4dda384b9f435f738387162067855884eaec479c9d750fad2748e875f106206`;
+- post-promotion aggregate `gptweb-v179-marisa-shots-aggregate-final-001`, the
+  complete default cohort twice from the promoted ledger state, `failures=[]`,
+  receipt SHA-256
+  `e51840bf0a437d646f4f9b8a04d9b51c8ad12db83e2b9097dcb39d06061989ac`.
+
+Both final aggregate builds produce candidate `MAIN.EXE` SHA-256
+`6685687e0f7554e4f84395e71cabac1f2e3babccaa76abaa86877846108145a4`
+and identical `mshot.obj` SHA-256
+`4f83fa08287a037bffb60de082444002457d3fb53e7eb0ed436499073cb83999`.
+Whole-image identity is not claimed; exactness is scoped to configured owned
+extents and functions. The v179 unit, all twenty reviewed authored-function rows,
+and all twenty boundary observations are promoted to exact only after these
+gates. Their boundary `evidence_basis` is bound to the positive boundary,
+codegen, toolchain, OMF, cold, layout, raw, candidate-aggregate, and final-
+aggregate evidence; historical negative rows remain in the evidence ledger and
+detailed reconstruction document.
+
+After promotion, the non-overlapping reviewed MAIN ledger is **74,881 / 78,475
+exact authored bytes (95.420198%)** and **450 / 464 exact reviewed authored
+functions (96.982759%)**. MAIN retains 14 reviewed blockers, 73 unreviewed
+authored candidates, and 31 original-style ASM attestation observations. The
+generated `docs/PROGRESS.md` intentionally uses a broader conservative confirmed-
+authored denominator and reports 74,881 / 79,517 (`94.17%`); these are different
+planes, not contradictory claims. Neither percentage describes all of
+`MAIN.EXE`, all code in the executable, or the game as a product.
+
+Other TH04 artifacts remain independent active queues and receive no v179 MAIN
+credit: OP has 94 unreviewed authored candidates, MAINE has 72, and ZUN has 13.
+None currently has an honest accepted exact-byte/function denominator. `ZUN.COM`
+continues to be treated as an MZ executable despite its extension.
+
+Verification planes remain separate. Repository-native owned-extent/function
+exactness is PASS for the v179 physical owner, all twenty logical functions, and
+the complete post-promotion default aggregate cohort. Standalone TH04 product
+compile/link closure is not established. Whole-image exactness is not
+established. Runtime-storage identity is not established. No runtime scenario
+was executed. Portable-runtime validation is not established. No v179 Factory
+Truth-Kernel acceptance claim was submitted or claimed. Independent pristine-
+release provenance remains open.
+
+Final repository gates before checkpoint pass: the 2,120-observation boundary
+validator, `scripts/preflight.py`, `scripts/status.py`, `scripts/ci.py`, the
+repository-native Ghidra live replay and mutation smoke contained by CI, and
+`git diff --check`. CI regenerated `docs/BOUNDARY_REVIEW.md`,
+`docs/PROGRESS.md`, and `resources/progress.svg` consistently with the live
+machine ledgers.
+
+The v179 manifest entry inventory was 8,327,556,351 bytes. After exact probes,
+three cold-replay gates, CI/provider work, and cleanup, final pre-checkpoint
+`.analysis/` inventory is **8,429,023,186 bytes**, net growth **101,466,835
+bytes**. The current bounded v179 GPT-web scratch is 10,747,558 bytes. The three
+current-session large exact replay trees and eight temporary replay-A backup
+directories were removed only after their receipts/final OMF+MAP were copied into
+bounded v179 scratch and no related TCC/TLINK/replay producer remained active.
+Retained bounded receipt hashes are the three exact replay hashes above; retained
+`exact-final/mshot.obj` SHA-256 is
+`4f83fa08287a037bffb60de082444002457d3fb53e7eb0ed436499073cb83999`
+and retained `exact-final/main.map` SHA-256 is
+`605bbdf3a459ea2e737ca987e14d17a85c556eabb15c12e32ac86c94ec43ab8d`.
+The pre-existing `focused-negative-002`, shared targets/toolchain/Wine prefix,
+Ghidra/provider state, legacy/unknown analysis content, and unrelated replay
+evidence were left untouched.
+
+Detailed evidence is in
+`docs/reconstruction/TH04_MAIN_MARISA_SHOTS_V179.md`. The first concrete next
+source-present structural blocker is `th04-main-items-update-v154`: one `0x546`
+`MAIN_035_TEXT` physical producer containing six reviewed functions. Its focused
+replay already has exact MAP placement, all 15 ordered MZ relocations,
+deterministic valid OMF, and byte-identical slices for the first five functions.
+Only four raw bytes remain different, both inside `items_update()`:
+load `0x1DF1F` target `29 C3` versus candidate `2B D8` (`SUB BX,AX`), and load
+`0x1DF2F` target `29 D3` versus candidate `2B DA` (`SUB BX,DX`). Previous direct-
+expression, alternate-local, compound-assignment, and original PC-98 IDE probes
+retained the alternate equivalent encodings or disturbed surrounding allocation.
+The next session should test a genuinely new source/compiler register-lifetime
+hypothesis while continuing independent boundary auditing, rather than another
+source-spelling matrix.
 
 The local `gpt-web:` checkpoint is created only after final validation; read its
 hash from live Git. Nothing is pushed. Campaign status remains active.
