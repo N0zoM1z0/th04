@@ -5002,3 +5002,143 @@ runtime validation, whole-image exactness, OP/MAINE/ZUN reconstruction, or
 whole-game completion claim. The local `gpt-web:` implementation checkpoint is
 created only after final validation; its hash is intentionally read from live Git
 rather than embedded in this self-referential handoff text. Nothing is pushed.
+
+## 2026-09-15 — v172 HUD / score producer exact packet
+
+### Recovery state and scope
+
+This session resumed at HEAD
+`15c63cd3da3dcf39891d0003c5346365a150ba4a` on `main`, tracking
+`origin/main` at `+6/-0`. The recovered dirty tree was one coherent interrupted
+v172 packet, not unrelated operator work: semantic HUD caller renames in
+`src/main/core/{gameexecl.cpp,gameover.cpp,gameplay_session_init.cpp}` and
+`src/main/item/items_update.cpp`, plus new `src/main/hud/{hud.cpp,hud.hpp}`.
+During integration, `src/main/stage/bonus.cpp` received the single necessary
+linkage correction from obsolete C linkage to the actual C++ FAR
+`hud_bombs_put()` producer. No staged or conflicted paths were present. No
+private target/toolchain/database file was modified or staged.
+
+The selected target remained exactly `th04-main / MAIN.EXE`, provider
+`th04-ghidra`, identity `target:th04-main`. OP/MAINE/ZUN were not reconstructed
+in this packet and receive no MAIN-derived credit.
+
+### Target / Ghidra / toolchain attestation
+
+Fresh Factory `th04-ghidra` `check` passes for the registered target, size
+156,258, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+canonicality `candidate-local-attested`. Repository-native
+`python3 scripts/ghidra.py th04-main check` independently closes the 6,144-byte
+MZ header/load map, external entry, all 1,136 relocations, load-module identity,
+and sampled bytes. TC86 Borland C++ 4.02 / TASM32 5.0 / TLINK 6.10 attestation
+passes required identity and execution probes. Ghidra semantics remain
+provisional and receive zero exactness credit.
+
+### Reviewed physical owner and logical boundaries
+
+v172 reconstructs `MAIN__TEXT / MAIN_01` at MAP `0AAF:4316`, load
+`0xEE06..0xF33B`, file `0x10606..0x10B3B`, size `0x536`, target SHA-256
+`a2d39c1f44d69d626a7c961d61cc3a824c0a18b05831b34b79170f6f9dd3d751`.
+The next byte at load `0xF33C` remains the exact v171 Reimu owner.
+
+Eleven logical functions are now reviewed/exact: `SCORE_EXTEND_UPDATE_AND_RENDER`
+(0x9F logical), `score_reset()` (0x38), `hud_lives_put()` (0xB9),
+`hud_bombs_put()` (0xC3), `HUD_POINT_ITEMS_PUT` (0x16), `HUD_DREAM_PUT`
+(0x17), `hud_graze_put()` (0x14), `HUD_POWER_PUT` (0x38), `hud_hp_put(int)`
+(0x9A), `HUD_BAR_PUT` (0x8D), and `hud_put()` (0x138). The first function has
+separate compiler data: metadata byte `0x00` at analysis `0x1EEA5` and five
+switch words at `0x1EEA6..0x1EEAF`. The fail-closed reviewer resolves those
+words through CS base `0x1AAF0` to five decoded instruction starts and closes the
+physical span exactly at generated `score_reset()` public `0x1EEB0`.
+
+Final function-review report SHA-256 is
+`50dcbd861918a44760b8f33f9f484182bd478a144b4358d8fe2b1b6527f20e17`.
+The pre-promotion trial and post-promotion final reports are byte-identical. The
+maintained ledger adds exactly eleven IDs and deliberately does not adopt 26
+unrelated historical normalization changes from the generic writer.
+
+### Natural-source and negative evidence
+
+Maintained natural source is `src/main/hud/hud.cpp`, SHA-256
+`4744765113ee2456af66a3741dcea33f9788c5e8670157baa91fa7f4b4e501ef`,
+with local header SHA-256
+`823438968ad03713977796f28755ab522b7c9633ae2557695009d2b006c64fa9`.
+It contains no inline assembly, `__emit__`, target-derived arrays,
+`#pragma codestring`, inert padding, fake returns, object/target patching, or ABI
+lies.
+
+Focused candidate003 is retained as durable negative evidence, receipt SHA-256
+`ddba90e0dc90a83f52667e261e48810973cee162336e4ea9714d1fe52b13e069`.
+It had exact size/MAP and deterministic valid OMF but two mismatch mechanisms:
+a true FAR `playperf_raise` call added one relocation at load `0xEE6B`, and the
+rank-label far-pointer expression pushed DS after the offset arithmetic. Final
+natural source uses the repository-proven Borland `#pragma samecodeseg` mechanism
+and a direct near DGROUP pointer expression; both mechanisms then match without
+byte emission. Earlier focused001/002 and aggregate-candidate001 were build/link
+plumbing failures with zero exactness credit.
+
+### Cold replay / exactness evidence
+
+Focused `gptweb-v172-hud-score-focused-candidate-004` passes two isolated cold
+builds over a 124-owner dependency closure. Receipt SHA-256 is
+`be232c61bad68838ebd97825f8c112086bdf9637650cf59405cdac09ebdc42f5`.
+Both A/B v172 slices are raw/MAP/27-relocation exact. `hud.obj` raw SHA-256 is
+`3a83552d792624c5cf261b041d1d8f98e70747e05f5b4a5eaf8c8c8f311809b8`;
+dependency-timestamp-normalized OMF SHA-256 is
+`ca2e3cc0fcb4acb0e355bd8ec05646555313841303ee514052f108896b27124f`.
+
+Candidate-state aggregate `gptweb-v172-hud-score-aggregate-candidate-002` passes
+all 203 default owners twice with `failures=[]`, receipt SHA-256
+`c6bcfe9cb875cbf95699fa54cd57033a7f6e54c9314f2b686b3e71a863dde8e4`.
+It also proves that current `src/main/stage/bonus.cpp` remains fully exact after
+the HUD linkage correction: all `0x58D` bytes, exact MAP, and all 26 ordered
+relocations pass in both builds.
+
+Post-promotion aggregate `gptweb-v172-hud-score-aggregate-final-001` passes all
+203 owners twice again from ledger extents, `failures=[]`, receipt SHA-256
+`cd4449b638c3924456c888fdcd5ec8b4e930eaef8913e7e30044ddda30724858`.
+Both aggregate A/B candidate MAIN images are
+`07ca518915a708a8337c90329ce3167b5000e5987f509163a0390865a0d8f92e`.
+Replay manifest SHA-256 is
+`4bc3bc77a7bda60d0b1be5b13023d53849bd077f33192506babdf26818e2e3df`.
+
+### Live accounting and verification planes
+
+After v172, MAIN reviewed authored accounting is 68,950 / 72,454 exact bytes
+(95.163828%) and 407 / 420 exact functions (96.904762%), with 13 reviewed
+blockers, 117 unreviewed authored candidates, and 31 ASM-attestation candidates.
+These are moving reviewed denominators, not percentages of MAIN.EXE or TH04 as a
+product, and remain below the campaign pressure target.
+
+Repository-native owned-extent/function exactness is established for v172 and
+the 203-owner post-promotion cohort. Standalone TH04 production source/link
+closure is not established. Runtime-storage identity is not established. No
+runtime scenario was executed. Whole-image exactness is not established. No
+Factory Truth-Kernel acceptance was submitted or accepted. Independent pristine
+release provenance remains open.
+
+### `.analysis` disposition
+
+v172 entry size recorded in the campaign manifest was 6,690,228,082 bytes.
+Before cleanup the tree reached 7,026,431,281 bytes. Three explicit
+current-session receiptless failure trees (`focused-candidate-001`,
+`focused-candidate-002`, and `aggregate-candidate-001`) had no tracked references
+or active producers and were deleted. Candidate003 plus focused004,
+aggregate-candidate002, and aggregate-final001 are retained. Exit inventory after
+that cleanup is 6,942,359,788 bytes, net growth 252,131,706 bytes, below the
+256 MiB soft session budget. No legacy/unknown analysis tree, target, Ghidra
+project, toolchain, or Wine prefix was bulk-deleted.
+
+### Continuation
+
+The first evidence-connected hard packet for the next session is the immediate
+left neighbor of v172 in `MAIN__TEXT`: `sub_EC8E` at load `0xEC8E` (current
+0xE3 body), `@marisa_fg_render$qv` at `0xED71` (0x70), the single zero byte after
+its RET at `0xEDE1`, and `orange_backdrop_colorfill()` beginning `0xEDE2` and
+ending before exact v172 at `0xEE06` if the present TASM seam is correct. Review
+that as a physical-producer / padding / source-language question. Determine
+whether the zero byte is compiler alignment or separate ownership and whether the
+GRCG-heavy backdrop is natural C++, original-style assembly, or a mixed producer.
+Do not force one TU merely because these extents are adjacent.
+
+Final validation after this handoff update: `python3 scripts/ci.py` passes, including tracking/ledger checks, generated progress and boundary reports, private TH04 target checks, cross-game Oracle calibration, Ghidra/JDK identity, live read-only Ghidra database attestation, and Ghidra Oracle mutation smoke. `git diff --check` is clean.

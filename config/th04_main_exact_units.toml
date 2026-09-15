@@ -8800,3 +8800,239 @@ map_start = "0x484C"
 map_size = "0xBF8"
 target_file_offset = "0x10B3C"
 size = "0xBF8"
+
+# v172 candidate: target-first review plus production-profile TC4J probing
+# identifies one natural MAIN__TEXT producer at 0AAF:4316 / load 0xEE06..0xF33B.
+# The 0x536 contribution contains eleven authored functions and the first
+# function's 0x0B compiler metadata/table tail. It ends exactly at the v171
+# Reimu producer. Keep this candidate fail-closed until linked cold replay proves
+# raw bytes, map placement, ordered relocations, deterministic OMF, and the
+# complete existing exact dependency cohort.
+[[build_inserts]]
+id = "th04-main-hud-header-v172"
+trigger_units = ["th04-main-hud-score-v172"]
+repo_source = "src/main/hud/hud.hpp"
+overlay_path = "hud.hpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v172 maintained TH04 HUD declarations overlay\n"
+
+[[build_replacements]]
+id = "th04-main-hud-score-v172-build"
+trigger_units = ["th04-main-hud-score-v172"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/tlr.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/hud.cpp\",\n\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/tlr.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-hud-score-v172-layout"
+trigger_units = ["th04-main-hud-score-v172"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "fb21b6daed2133a007dfc1936717e91b311b8c499ab09fa6c0aab2de0011c922",
+  "84e9720eeda728786339e1182b8945f22b86dee6c34800ffc49e636b94160444",
+]
+
+[[source_transforms.ops]]
+id = "remove-main01-hud-score-v172"
+kind = "remove_between"
+start = "public SCORE_EXTEND_UPDATE_AND_RENDER\r\n"
+end = "main__TEXT\tends\r\n"
+replacement = "main__TEXT\tends\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main01-hud-score-v172"
+kind = "insert_before"
+anchor = "main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, END_TEXT, CIRCLE_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, BOSS_FG_TEXT\r\n"
+text = "extrn @score_reset$qv:near\r\nextrn @hud_lives_put$qv:far\r\nextrn @hud_bombs_put$qv:far\r\nextrn HUD_POINT_ITEMS_PUT:far\r\nextrn HUD_DREAM_PUT:far\r\nextrn @hud_put$qv:far\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-score-reset-v172"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_EEB0\r\n"
+new = "\t\tcall\t@score_reset$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-lives-nopcall-v172"
+kind = "replace"
+old = "\t\tnopcall\tmain_01:sub_EEE8\r\n"
+new = "\t\tnopcall\tmain_01:@hud_lives_put$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-lives-stage-bonus-v172"
+kind = "replace"
+old = "\t\tcall\tsub_EEE8\r\n"
+new = "\t\tcall\t@hud_lives_put$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-bombs-nopcall-v172"
+kind = "replace"
+old = "\t\tnopcall\tmain_01:sub_EFA1\r\n"
+new = "\t\tnopcall\tmain_01:@hud_bombs_put$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-bombs-items-optional-v172"
+kind = "replace_optional"
+old = "loc_1D854:\r\n\t\tles\tbx, _resident\r\n\t\tinc\tes:[bx+resident_t.rem_bombs]\r\n\t\tcall\tsub_EFA1\r\n"
+new = "loc_1D854:\r\n\t\tles\tbx, _resident\r\n\t\tinc\tes:[bx+resident_t.rem_bombs]\r\n\t\tcall\t@hud_bombs_put$qv\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-bombs-stage-bonus-v172"
+kind = "replace"
+old = "loc_1DD35:\r\n\t\tles\tbx, _resident\r\n\t\tinc\tes:[bx+resident_t.rem_bombs]\r\n\t\tmov\tsi, 100\r\n\t\tcall\tsub_EFA1\r\n"
+new = "loc_1DD35:\r\n\t\tles\tbx, _resident\r\n\t\tinc\tes:[bx+resident_t.rem_bombs]\r\n\t\tmov\tsi, 100\r\n\t\tcall\t@hud_bombs_put$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-hud-put-v172"
+kind = "replace"
+old = "\t\tnopcall\tmain_01:hud_put\r\n"
+new = "\t\tnopcall\tmain_01:@hud_put$qv\r\n"
+expected_count = 2
+
+[[source_transforms.ops]]
+id = "retarget-point-items-v172"
+kind = "replace"
+old = "\t\tcall\thud_point_items_put\r\n"
+new = "\t\tcall\tHUD_POINT_ITEMS_PUT\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-dream-nopcall-v172"
+kind = "replace"
+old = "\t\tnopcall\tmain_01:hud_dream_put\r\n"
+new = "\t\tnopcall\tmain_01:HUD_DREAM_PUT\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-dream-call-v172"
+kind = "replace"
+old = "\t\tcall\thud_dream_put\r\n"
+new = "\t\tcall\tHUD_DREAM_PUT\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-stage-bonus-count-v172"
+kind = "replace_optional"
+old = "sub_1D519\tproc far\r\n"
+new = "public STAGE_BONUS_COUNT_PUT\r\nSTAGE_BONUS_COUNT_PUT label far\r\nsub_1D519\tproc far\r\n"
+
+[[source_transforms.ops]]
+id = "alias-hud-lives-extra-v172"
+kind = "insert_before"
+anchor = "aB@b@bB@b@\tdb "
+text = "public _hud_lives_extra\r\n_hud_lives_extra label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-hud-bombs-extra-v172"
+kind = "insert_before"
+anchor = "aB@b@bB@b@_0\tdb "
+text = "public _hud_bombs_extra\r\n_hud_bombs_extra label byte\r\n"
+
+[[source_transforms]]
+id = "th04-main-hud-score-v172-suffix"
+trigger_units = ["th04-main-hud-score-v172"]
+patch_path = "th04/m1rsuf.asm"
+encoding = "latin-1"
+scaffold_sha256 = "9b76315db918a2079eb99d1e6ccf64bccd2360a2cae379313ffa256f2cd8bbdc"
+
+[[source_transforms.ops]]
+id = "retarget-suffix-bombs-extrn-v172"
+kind = "replace"
+old = "extrn sub_EFA1:far\r\n"
+new = "extrn @hud_bombs_put$qv:far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-suffix-bombs-call-v172"
+kind = "replace"
+old = "\t\tnopcall\tmain_01:sub_EFA1\r\n"
+new = "\t\tnopcall\tmain_01:@hud_bombs_put$qv\r\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-hud-gaiji-data-v172"
+trigger_units = ["th04-main-hud-score-v172"]
+patch_path = "th04/gaiji/hud[data].asm"
+encoding = "latin-1"
+scaffold_sha256 = "c639ccedb616288d15b3ddde9de32c995cd98e84e3921ff78d3a3400fec4f7c2"
+
+[[source_transforms.ops]]
+id = "alias-gleasy-v172"
+kind = "insert_before"
+anchor = "glEASY\t"
+text = "public _glEASY\r\n_glEASY label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gsscore-v172"
+kind = "insert_before"
+anchor = "gsSCORE\t"
+text = "public _gsSCORE\r\n_gsSCORE label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gshiscore-v172"
+kind = "insert_before"
+anchor = "gsHISCORE\t"
+text = "public _gsHISCORE\r\n_gsHISCORE label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gsreigeki-v172"
+kind = "insert_before"
+anchor = "gsREIGEKI\t"
+text = "public _gsREIGEKI\r\n_gsREIGEKI label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gsreimu-v172"
+kind = "insert_before"
+anchor = "gsREIMU\t"
+text = "public _gsREIMU\r\n_gsREIMU label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gsreiryoku-v172"
+kind = "insert_before"
+anchor = "gsREIRYOKU\t"
+text = "public _gsREIRYOKU\r\n_gsREIRYOKU label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gsbomb-v172"
+kind = "insert_before"
+anchor = "gsBOMB\t"
+text = "public _gsBOMB\r\n_gsBOMB label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gsplayer-v172"
+kind = "insert_before"
+anchor = "gsPLAYER\t"
+text = "public _gsPLAYER\r\n_gsPLAYER label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gspower-v172"
+kind = "insert_before"
+anchor = "gsPOWER\t"
+text = "public _gsPOWER\r\n_gsPOWER label byte\r\n"
+
+[[source_transforms.ops]]
+id = "alias-gsenemy-v172"
+kind = "insert_before"
+anchor = "gsENEMY\t"
+text = "public _gsENEMY\r\n_gsENEMY label byte\r\n"
+
+[[units]]
+id = "th04-main-hud-score-v172"
+default_enabled = true
+requires_units = ["th04-main-reimu-shots-v171"]
+repo_source = "src/main/hud/hud.cpp"
+overlay_path = "th04/hud.cpp"
+map_module = "th04/hud.cpp"
+map_mode = "exact"
+object_path = "obj/th04/hud.obj"
+map_segment = "MAIN__TEXT"
+map_start = "0x4316"
+map_size = "0x536"
+target_file_offset = "0x10606"
+size = "0x536"

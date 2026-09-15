@@ -3827,3 +3827,102 @@ id = "th04-main-fn-1fa7d"
 address = "0x1FA7D"
 evidence_id = "ev-th04-main-reimu-shots-functions-boundary-v171"
 reason = "Explicitly admit the contiguous target Ghidra callback at its exact generated TC4J public inside the unified Reimu shot owner."
+
+# v172: exact MAIN__TEXT HUD/score producer. score_extend_update_and_render()
+# has a 0x9F executable body followed by one zero metadata byte and a five-word
+# compiler switch table. The remaining ten entries are contiguous target Ghidra
+# bodies at exact generated TC4J publics inside the same 0x536 owner.
+[[reviewed_exact_extent]]
+id = "th04-main-fn-1ee06"
+address = "0x1EE06"
+file_offset = "0x10606"
+size = "0x9F"
+physical_size = "0xAA"
+decode_size = "0x9F"
+name = "score_extend_update_and_render()"
+owner_unit = "th04-main-hud-score-v172"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Fresh attested Ghidra enters at 0x1EE06 but its switch body is noncontiguous. Pinned TASM and gap-free raw decode close the executable body through RET at 0x1EEA4; target byte 0 at 0x1EEA5 is compiler metadata and five switch words at 0x1EEA6..0x1EEAF target decoded instruction starts before exact generated score_reset public 0x1EEB0."
+table_metadata_address = "0x1EEA5"
+table_metadata_value = "0x00"
+jump_table_address = "0x1EEA6"
+jump_table_count = 5
+cs_base = "0x1AAF0"
+next_public_address = "0x1EEB0"
+
+[[new_exact]]
+id = "th04-main-fn-1ee06"
+address = "0x1EE06"
+name = "score_extend_update_and_render()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit only the 0x9F executable function body after exact owner replay and explicit validation of the separate 0x0B compiler metadata/switch tail."
+
+[[new_exact]]
+id = "th04-main-fn-1eeb0"
+address = "0x1EEB0"
+name = "score_reset()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM near body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1eee8"
+address = "0x1EEE8"
+name = "hud_lives_put()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1efa1"
+address = "0x1EFA1"
+name = "hud_bombs_put()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1f064"
+address = "0x1F064"
+name = "hud_point_items_put()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1f07a"
+address = "0x1F07A"
+name = "hud_dream_put()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1f091"
+address = "0x1F091"
+name = "hud_graze_put()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1f0a5"
+address = "0x1F0A5"
+name = "hud_power_put()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1f0dd"
+address = "0x1F0DD"
+name = "hud_hp_put(int)"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM Pascal-FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1f177"
+address = "0x1F177"
+name = "hud_bar_put(int, int, int)"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous target Ghidra/TASM Pascal-FAR body at its exact generated TC4J public inside the v172 owner."
+
+[[new_exact]]
+id = "th04-main-fn-1f204"
+address = "0x1F204"
+name = "hud_put()"
+evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
+reason = "Admit the contiguous central HUD FAR body at its exact generated TC4J public after target Ghidra confirms all ten direct callees and exact owner replay closes the complete extent."

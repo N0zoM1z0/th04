@@ -23,7 +23,7 @@ extern unsigned int __cdecl PaletteTone;
 
 extern "C" void pascal far playperf_raise(char delta);
 extern "C" void pascal far playperf_lower(char delta);
-extern "C" void far hud_bombs_put(void);
+void far hud_bombs_put(void);
 
 extern const char far *STAGE_CLEAR_BONUS_DESC[];
 extern const char gpCLEAR_BONUS[];

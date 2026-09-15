@@ -43,13 +43,13 @@ void far end_game_bad(void);
 #pragma samecodeseg end_game_bad
 
 extern "C" void pascal near hud_score_put(void);
-void near sub_EEB0(void);
-extern "C" void far sub_EEE8(void);
-extern "C" void far sub_EFA1(void);
+void near score_reset(void);
+void far hud_lives_put(void);
+void far hud_bombs_put(void);
 void far shot_level_update(void);
 extern "C" int pascal ems_free(unsigned handle);
-#pragma samecodeseg sub_EEE8
-#pragma samecodeseg sub_EFA1
+#pragma samecodeseg hud_lives_put
+#pragma samecodeseg hud_bombs_put
 #pragma samecodeseg shot_level_update
 
 extern "C" void pascal near bb_txt_free(void);
@@ -244,10 +244,10 @@ unsigned char near gameover_continue_menu(void)
         resident->rem_bombs = resident->credit_bombs;
         resident->rem_lives = resident->credit_lives;
         shot_level_update();
-        sub_EEE8();
-        sub_EFA1();
+        hud_lives_put();
+        hud_bombs_put();
         continues_used++;
-        sub_EEB0();
+        score_reset();
         hud_score_put();
         return Q_KEEP_RUNNING;
     }

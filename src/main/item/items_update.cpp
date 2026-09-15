@@ -30,8 +30,8 @@ extern "C" unsigned char pascal far IRand(void);
 extern "C" void pascal far hud_point_items_put(void);
 extern "C" void pascal far hud_dream_put(void);
 extern "C" void pascal far sub_11DE6(void);
-extern "C" void far sub_EFA1(void);
-extern "C" void far sub_EEE8(void);
+void far hud_bombs_put(void);
+void far hud_lives_put(void);
 
 void far items_init(void)
 {
@@ -223,13 +223,13 @@ static void pascal near item_collect(item_t near *item)
     case IT_BOMB:
         resident->rem_bombs++;
         points = 100;
-        sub_EFA1();
+        hud_bombs_put();
         break;
 
     case IT_1UP:
         playperf_raise(3);
         resident->rem_lives++;
-        sub_EEE8();
+        hud_lives_put();
         snd_se_play(7);
         overlay_popup_show(POPUP_ID_EXTEND);
         points = 100;

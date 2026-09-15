@@ -28,7 +28,7 @@ extern nearfunc_t_near near SHOT_FUNCS_MARISA_A[];
 extern nearfunc_t_near near SHOT_FUNCS_MARISA_B[];
 
 void pascal near bb_txt_load(void);
-void near sub_EEB0(void);
+void near score_reset(void);
 
 void near gameplay_session_init(void)
 {
@@ -85,7 +85,7 @@ void near gameplay_session_init(void)
         }
     }
 
-    sub_EEB0();
+    score_reset();
     hiscore_load();
 
     switch(rank) {
