@@ -3926,3 +3926,70 @@ address = "0x1F204"
 name = "hud_put()"
 evidence_id = "ev-th04-main-hud-score-functions-boundary-v172"
 reason = "Admit the contiguous central HUD FAR body at its exact generated TC4J public after target Ghidra confirms all ten direct callees and exact owner replay closes the complete extent."
+
+# v173: exact pre-HUD MAIN__TEXT renderer cohort. The internal Marisa bit
+# renderer is anchored by the only target near CALL from marisa_fg_render.
+# marisa_fg_render itself is a generated-public callback whose target function
+# pointer lives in the separately exact boss stage-setup owner. Orange's backdrop
+# callback is missed by Ghidra and uses the existing no-Ghidra pointer gate.
+[[reviewed_exact_internal_call]]
+id = "th04-main-fn-1ec8e"
+address = "0x1EC8E"
+file_offset = "0x1048E"
+size = "0xE3"
+name = "marisa_bits_render()"
+owner_unit = "th04-main-marisa-render-v173"
+evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
+reason = "Fresh target Ghidra constructs the complete contiguous 0xE3 helper body through RET at 0x1ED70. Raw target CALL at 0x1EDBE resolves exactly to the entry, and the next target Ghidra function begins at 0x1ED71 inside the exact natural Marisa producer."
+next_internal_address = "0x1ED71"
+call_site_address = "0x1EDBE"
+
+[[new_exact]]
+id = "th04-main-fn-1ec8e"
+address = "0x1EC8E"
+name = "marisa_bits_render()"
+evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
+reason = "Admit the internal Marisa bit renderer only after exact-owner replay, complete target Ghidra/raw body review, target near-CALL anchoring, and the exact following entry."
+
+[[reviewed_exact_internal]]
+id = "th04-main-fn-1ed71"
+address = "0x1ED71"
+file_offset = "0x10571"
+size = "0x70"
+name = "marisa_fg_render()"
+owner_unit = "th04-main-marisa-render-v173"
+pointer_owner_unit = "th04-main-main035-boss-tu"
+evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
+reason = "Fresh target Ghidra constructs exactly 0x70 contiguous bytes through RET at 0x1EDE0, which is the exact Marisa owner end before the independent zero seam. Target stage-4 setup stores MAIN_01 callback offset 0x4281 at analysis 0x2E369 inside the independently exact boss setup owner."
+generated_public = "marisa_fg_render()"
+pointer_word_address = "0x2E369"
+cs_base = "0x1AAF0"
+
+[[new_exact]]
+id = "th04-main-fn-1ed71"
+address = "0x1ED71"
+name = "marisa_fg_render()"
+evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
+reason = "Admit the generated-public Marisa foreground callback only after exact owner-end, complete target Ghidra/raw body, and independent target callback-pointer review."
+
+[[reviewed_exact_no_ghidra_internal_pointer]]
+id = "th04-main-fn-1ede2"
+address = "0x1EDE2"
+file_offset = "0x105E2"
+size = "0x24"
+name = "orange_backdrop_colorfill()"
+owner_unit = "th04-main-orange-backdrop-v173"
+pointer_owner_unit = "th04-main-main035-boss-tu"
+evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
+reason = "Ghidra has no entry at the Orange backdrop callback. Pinned TASM/raw decode closes the 0x24 body through RET at 0x1EE05; exact v172 begins at 0x1EE06; target stage-1 setup stores MAIN_01 callback offset 0x42F2 at analysis 0x2E07C inside the independently exact boss setup owner."
+generated_public = "orange_backdrop_colorfill()"
+next_internal_address = "0x1EE06"
+pointer_word_address = "0x2E07C"
+cs_base = "0x1AAF0"
+
+[[new_exact]]
+id = "th04-main-fn-1ede2"
+address = "0x1EDE2"
+name = "orange_backdrop_colorfill()"
+evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
+reason = "Admit the Ghidra-missed Orange backdrop callback only after exact natural owner, raw RET, exact next target entry, generated public, and independent target callback-pointer review."

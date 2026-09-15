@@ -257,11 +257,13 @@ def reviewed_exact_no_ghidra_reviews(functions, publics, target):
 
 
 def reviewed_exact_internal_reviews(functions, metadata, publics, target):
-    """Validate exact internal/static functions that intentionally lack TLINK publics.
+    """Validate exact internal/static or generated-public callback functions.
 
     Internal starts are admitted only when an exact authored owner, a contiguous
-    target Ghidra entry, a gap-free raw RET/RETF decode, the next TLINK public,
-    and an independent target pointer word all agree on the same entry.
+    target Ghidra entry, a gap-free raw RET/RETF decode, an exact owner/public
+    boundary, and an independent target pointer word all agree on the same entry.
+    The pointer may live in a separately named exact owner. A reconstruction-only
+    MAP public is accepted only when its exact name is configured explicitly.
     """
     policy = tomllib.loads(POLICY.read_text(encoding="utf-8"))
     owners = {str(owner["unit_id"]): owner for owner in exact_authored_owners()}
@@ -284,8 +286,14 @@ def reviewed_exact_internal_reviews(functions, metadata, publics, target):
             raise ValueError(f"internal exact address 0x{address:X} lacks named exact owner")
         if address not in functions:
             raise ValueError(f"internal exact address 0x{address:X} lacks Ghidra function entry")
-        if address in publics:
-            raise ValueError(f"internal exact address 0x{address:X} unexpectedly has a TLINK public")
+        generated_public = override.get("generated_public")
+        if generated_public is None:
+            if address in publics:
+                raise ValueError(f"internal exact address 0x{address:X} unexpectedly has a TLINK public")
+        elif str(generated_public) not in publics.get(address, []):
+            raise ValueError(
+                f"internal exact address 0x{address:X} lacks configured generated public {generated_public!r}"
+            )
         if file_offset != address - 0x10000 + 0x1800:
             raise ValueError(f"internal exact address 0x{address:X} file offset mismatch")
         if not (int(owner["start"]) <= address and address + size <= int(owner["end"])):
@@ -301,13 +309,27 @@ def reviewed_exact_internal_reviews(functions, metadata, publics, target):
         if data.get("is_thunk") != "false" or data.get("is_external") != "false":
             raise ValueError(f"internal exact address 0x{address:X} is thunk/external")
 
-        next_public = int(str(override["next_public_address"]), 0)
-        if address + size != next_public or next_public not in publics:
-            raise ValueError(f"internal exact address 0x{address:X} next-public boundary mismatch")
+        next_public_value = override.get("next_public_address")
+        if next_public_value is not None:
+            next_public = int(str(next_public_value), 0)
+            if address + size != next_public or next_public not in publics:
+                raise ValueError(f"internal exact address 0x{address:X} next-public boundary mismatch")
+            boundary_mode = f"next TLINK public 0x{next_public:X}"
+        else:
+            if address + size != int(owner["end"]):
+                raise ValueError(f"internal exact address 0x{address:X} must end at exact owner boundary")
+            boundary_mode = f"exact owner end 0x{int(owner['end']):X}"
 
+        pointer_owner_unit = str(override.get("pointer_owner_unit", owner_unit))
+        pointer_owner = owners.get(pointer_owner_unit)
+        if pointer_owner is None:
+            raise ValueError(f"internal exact address 0x{address:X} lacks named pointer owner")
         pointer_word_address = int(str(override["pointer_word_address"]), 0)
-        if not (int(owner["start"]) <= pointer_word_address and pointer_word_address + 2 <= int(owner["end"])):
-            raise ValueError(f"internal exact address 0x{address:X} pointer word escapes exact owner")
+        if not (
+            int(pointer_owner["start"]) <= pointer_word_address
+            and pointer_word_address + 2 <= int(pointer_owner["end"])
+        ):
+            raise ValueError(f"internal exact address 0x{address:X} pointer word escapes named exact pointer owner")
         cs_base = int(str(override["cs_base"]), 0)
         expected_word = address - cs_base
         if not (0 <= expected_word <= 0xFFFF):
@@ -341,7 +363,8 @@ def reviewed_exact_internal_reviews(functions, metadata, publics, target):
             "reason": str(override["reason"]),
             "decode": decoded,
             "switch_review": None,
-            "boundary_mode": f"next TLINK public 0x{next_public:X}",
+            "boundary_mode": boundary_mode,
+            "pointer_owner_unit": pointer_owner_unit,
             "pointer_word_address": f"0x{pointer_word_address:X}",
             "pointer_word": f"0x{pointer_word:04X}",
             "cs_base": f"0x{cs_base:X}",

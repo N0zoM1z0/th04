@@ -9036,3 +9036,115 @@ map_start = "0x4316"
 map_size = "0x536"
 target_file_offset = "0x10606"
 size = "0x536"
+
+# v173 candidate: recover the immediate pre-HUD MAIN__TEXT renderer cohort as
+# two natural TC4J producers. The original target-derived scaffold owns one
+# independent zero layout byte between them; cold replay hash-extracts that byte
+# into a zero-credit TASM gap object rather than attributing it to C++.
+[[build_inserts]]
+id = "th04-main-marisa-render-source-v173"
+trigger_units = ["th04-main-marisa-render-v173", "th04-main-orange-backdrop-v173"]
+repo_source = "src/main/boss/marisa4_render.cpp"
+overlay_path = "th04/m4rend.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v173 maintained Marisa renderer overlay\n"
+
+[[build_inserts]]
+id = "th04-main-orange-backdrop-source-v173"
+trigger_units = ["th04-main-marisa-render-v173", "th04-main-orange-backdrop-v173"]
+repo_source = "src/main/boss/orange_backdrop.cpp"
+overlay_path = "th04/orange.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v173 maintained Orange backdrop overlay\n"
+
+[[scaffold_extractions]]
+id = "th04-main-marisa-orange-gap-v173"
+trigger_units = ["th04-main-marisa-render-v173", "th04-main-orange-backdrop-v173"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "@marisa_fg_render$qv\tendp\r\n\r\n; ---------------------------------------------------------------------------\r\n\t\tdb    0\r\n"
+end = "public @ORANGE_BACKDROP_COLORFILL$QV\r\n"
+span_sha256 = "0c7b5cbbe3fb22177e57ab1dc74e89866501ffec0cb763059f5d18cad74217f1"
+template_source = "config/replay/th04_main01_marisa_orange_gap_v173.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m4gap.asm"
+
+[[scaffold_extractions.replacements]]
+old = "@marisa_fg_render$qv\tendp\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "public @ORANGE_BACKDROP_COLORFILL$QV\r\n"
+new = ""
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-marisa-orange-v173-build"
+trigger_units = ["th04-main-marisa-render-v173", "th04-main-orange-backdrop-v173"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/hud.cpp\",\n\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/tlr.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/m4rend.cpp\",\n\t\"th04/m4gap.asm\",\n\t\"th04/orange.cpp\",\n\t\"th04/hud.cpp\",\n\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/tlr.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-marisa-orange-v173-layout"
+trigger_units = ["th04-main-marisa-render-v173", "th04-main-orange-backdrop-v173"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "88d1eee9d12162d123b5d20518e3249918a4906c17a2aa60ae8dba3139ad5ce4",
+  "cd776a55ba1d95f4b27f7e1fe8a58567006c508fc94cdf8fb226680027fbaac1",
+]
+
+[[source_transforms.ops]]
+id = "remove-main01-marisa-orange-v173"
+kind = "remove_between"
+removed_sha256 = "efa2f550bd7713911163c9410143a50fe88150c1700e330c06800114011457b7"
+start = "sub_EC8E\tproc near\r\n"
+end = "main__TEXT\tends\r\n"
+replacement = "main__TEXT\tends\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-marisa-fg-v173"
+kind = "replace"
+old = "public @MARISA_FG_RENDER$QV\r\n"
+new = "extrn @MARISA_FG_RENDER$QV:near\r\n"
+expected_count = 1
+
+
+[[units]]
+id = "th04-main-marisa-render-v173"
+default_enabled = true
+requires_units = ["th04-main-hud-score-v172"]
+repo_source = "src/main/boss/marisa4_render.cpp"
+overlay_path = "th04/m4rend.cpp"
+map_module = "th04/m4rend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m4rend.obj"
+auxiliary_objects = ["obj/th04/m4gap.obj"]
+auxiliary_extents = [
+  { id = "th04-main-marisa-orange-zero-seam-v173", file_offset = "0x105E1", size = "0x1", map_module = "th04\\m4gap.asm", map_segment = "MAIN__TEXT", object_path = "obj/th04/m4gap.obj" },
+]
+map_segment = "MAIN__TEXT"
+map_start = "0x419E"
+map_size = "0x153"
+target_file_offset = "0x1048E"
+size = "0x153"
+
+[[units]]
+id = "th04-main-orange-backdrop-v173"
+default_enabled = true
+requires_units = ["th04-main-marisa-render-v173"]
+repo_source = "src/main/boss/orange_backdrop.cpp"
+overlay_path = "th04/orange.cpp"
+map_module = "th04/orange.cpp"
+map_mode = "exact"
+object_path = "obj/th04/orange.obj"
+map_segment = "MAIN__TEXT"
+map_start = "0x42F2"
+map_size = "0x24"
+target_file_offset = "0x105E2"
+size = "0x24"

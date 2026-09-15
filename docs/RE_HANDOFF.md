@@ -5142,3 +5142,157 @@ GRCG-heavy backdrop is natural C++, original-style assembly, or a mixed producer
 Do not force one TU merely because these extents are adjacent.
 
 Final validation after this handoff update: `python3 scripts/ci.py` passes, including tracking/ledger checks, generated progress and boundary reports, private TH04 target checks, cross-game Oracle calibration, Ghidra/JDK identity, live read-only Ghidra database attestation, and Ghidra Oracle mutation smoke. `git diff --check` is clean.
+
+## 2026-09-15 v173 Marisa / Orange renderer seam checkpoint
+
+This conversation started from clean repository `th04`, branch `main`, HEAD
+`67712567677f7f84c7b524226fd6127f636c8445`. At the first Factory recovery read,
+`main` was seven commits ahead of `origin/main`; the upstream reference later
+advanced independently to the same commit while local HEAD and worktree remained
+unchanged, leaving ahead/behind 0/0. Startup recovery found no staged, unstaged,
+untracked, conflicted, unrelated, or unknown tracked work. All requested TH04 and
+Factory guidance paths were mounted and reread before editing. Startup
+`preflight.py`, `status.py`, and the 2,120-observation function-boundary validator
+passed. The ignored `.analysis/` tree measured 6,942,384,498 bytes at v173
+manifest creation.
+
+The registered `th04-ghidra` provider was re-enumerated before target use. It
+still exposes ten operations and no `get_metadata` schema, so no undiscovered
+operation was invented. Its discovered `check {}` operation passed for repository
+`th04` / `target:th04-main`. Repository-native
+`python3 scripts/ghidra.py th04-main check` independently passed the 156,258-byte
+MZ target, 6,144-byte header/load mapping, entry point, all 1,136 relocation
+records, load-module identity, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. Pinned TC86 Borland C++
+4.02 / TASM32 5.0 / TLINK 6.10 toolchain attestation passed. One later bounded
+provider decompile request failed at the Factory transport layer; live Git status
+was immediately rechecked and had not changed. Existing function/caller/callee
+operations plus raw/TASM/compiler evidence were sufficient, so no target claim
+was inferred from the failed transport.
+
+v173 closes the historical `th04_main.asm` `MAIN__TEXT` contribution immediately
+before the exact v172 HUD owner. Target-first physical review separates natural
+Marisa load `0xEC8E..0xEDE0` (file `0x1048E..0x105E0`, size `0x153`, SHA-256
+`e093297e7cc146a4af6e96338761ca2e99a4f9148a074e2499195fe0131b9f35`),
+one independent zero layout byte at load `0xEDE1`, and natural Orange load
+`0xEDE2..0xEE05` (file `0x105E2..0x10605`, size `0x24`, SHA-256
+`6c6d3dbd230171ca2fbc2615720705382fb61868865ade815f8e1be9b1abf07f`).
+Exact v172 begins at the next byte `0xEE06`. Marisa owns seven target MZ
+relocations in original order `[0xEDD5,0xEDB7,0xEDA2,0xED5D,0xED47,0xECF2,
+0xECC4]`; Orange and the zero seam have none.
+
+Fresh target-bound Ghidra constructs complete contiguous `0xE3` and `0x70` bodies
+at `sub_EC8E` and `marisa_fg_render`, respectively, and no function at Orange
+load `0xEDE2`. Target call/pointer review closes all three logical entries without
+trusting candidate publics alone: near CALL at analysis `0x1EDBE` resolves to the
+internal bit renderer; exact `boss_stage_setup_tu` stores callback word `0x4281`
+at `0x2E369`, resolving to Marisa foreground; and stores `0x42F2` at `0x2E07C`,
+resolving to Orange. The function reviewer gains one narrow backward-compatible
+extension: explicit `reviewed_exact_internal` rows may name a separately exact
+pointer owner, require a configured reconstruction-only MAP public, and close at
+the exact code-owner end. The full function-review test module passes.
+
+Maintained source is `src/main/boss/marisa4_render.cpp` (SHA-256
+`dcc815b90eefe4445fc9b2928752b87280f47cf4e271036d7e84c461f61373cc`)
+and `src/main/boss/orange_backdrop.cpp` (SHA-256
+`1d2496b62fe66e6f7edec384cbabc6050c6018d67e8825957071009cab73e9bd`).
+Production TC4J emits Marisa as exactly `0x153` CODE bytes with the foreground
+public at offset `0xE3`. Orange needs the ordinary source-level Borland `-k-`
+frame option to reproduce the target frameless `0x24` body and `_AL ^= _AL` to
+select target `XOR AL,AL`. No inline assembly, copied target bytes, `__emit__`,
+`#pragma codestring`, fake return, inert C++ padding, target/object patching, or
+ABI lie is used.
+
+The physical-producer split is independently negative-tested. Combining the
+natural Marisa and Orange functions into one translation unit emits `0x177` CODE
+bytes and places Orange directly at relative `0x153`; it does not produce the
+target zero byte. The target window is `0x178` and places Orange at `0x154`.
+Consequently load `0xEDE1` remains a zero-credit hash-extracted TASM layout seam
+through `config/replay/th04_main01_marisa_orange_gap_v173.asm.in`; it is not
+counted as natural-source or function exactness.
+
+Focused `gptweb-v173-marisa-orange-focused-candidate-002` passes twice over a
+126-owner dependency closure with `failures=[]`, receipt SHA-256
+`03a1cdcea9416b47c24b40babd88fdc201f79773387a8a5843dc8661573d59ad`.
+Marisa is raw/MAP/seven-ordered-relocation exact; Orange is raw/MAP exact with an
+empty relocation overlap; the one-byte auxiliary gap is independently raw/MAP
+exact. The initial focused attempt failed before any build because an over-strict replay
+transform expected a second Orange public after the old body had already been
+removed; it has zero exactness credit.
+
+Candidate-state aggregate `gptweb-v173-marisa-orange-aggregate-candidate-001`
+passes all 205 default owners twice, receipt SHA-256
+`ad865e66d5d5f56df4f0116d6210395d147c050e1cad73c7aa996d38ac6d1a66`.
+After physical and function promotion, post-promotion aggregate
+`gptweb-v173-marisa-orange-aggregate-final-001` passes the same 205-owner cohort
+twice from ledger extents with `failures=[]`, receipt SHA-256
+`6cb676f05c3e85d2aa1e4ce07aa377869489fbec1676cd10d85f32f85d4f9882`.
+Both aggregate A/B candidate MAIN images are SHA-256
+`931ad9d05c41397d145c85ef531dbdd4d544dc40ae95d99c60caade5c89270e1`.
+Replay manifest SHA-256 is
+`6edb2fe027383c52b6770a2295368453a8df67724387bf9244fd787e94791aa4`.
+
+The post-promotion function-review report is byte-identical to the candidate-state
+trial, SHA-256
+`e2833f96888051658ed9aaef9819f8edcfd587981c6b93e438dd6a860c996ec3`.
+The maintained function ledger adds exactly three IDs; unrelated generic writer
+normalizations are not adopted.
+
+Live MAIN reviewed authored accounting after v173 is **69,325 / 72,829 exact
+bytes (95.188730%)** and **410 / 423 exact functions (96.926714%)**, with 13
+reviewed blockers, 114 unreviewed authored candidates, and 31 ASM-attestation
+observations. The one-byte gap receives no natural-C++ byte credit. These are
+moving reviewed denominators, not percentages of MAIN.EXE or the whole game and
+remain below the campaign pressure target.
+
+Verification planes remain separate. Repository-native natural-source
+function/owned-extent exactness is PASS for both v173 owners and the complete
+205-owner post-promotion cohort. Standalone TH04 production compile/link closure
+is not established. Runtime-storage identity is not established. No runtime
+scenario was executed. Whole-image exactness and portable-runtime validation are
+not established. No v173 Factory Truth-Kernel acceptance has been submitted or
+claimed. Independent pristine-release provenance is not established; the private
+target remains `candidate-local-attested` and was never staged, modified,
+patched, relocated, or published.
+
+Other TH04 artifacts remain independent active queues and receive no v173 credit:
+`th04-op` has 94 unreviewed authored candidates, `th04-maine` 72, and `th04-zun`
+13, with no honest accepted exact-function or exact-byte denominator. `ZUN.COM`
+remains an MZ artifact despite its extension. Future sessions must review those
+artifact-specific DIET/hybrid contracts rather than borrowing MAIN evidence.
+
+The v173 `.analysis/` entry size was 6,942,384,498 bytes. After compiler probes,
+focused replay, candidate aggregate, final aggregate, and full CI, the tree peaked
+at 7,153,944,577 bytes before cleanup. After confirming no active Borland/Wine/
+replay producer and no tracked reference, the receiptless pre-build focused
+failure tree and the 92 KiB short-path V173 compiler workspace were removed as
+current-session reproducible scratch. Post-cleanup size is 7,132,764,791 bytes. The final pre-checkpoint inventory
+observed after validation was 7,132,785,517 bytes, net growth 190,401,019 bytes
+from v173 entry. Retained current evidence is the 76 MiB focused PASS, 78 MiB candidate aggregate PASS,
+78 MiB post-promotion aggregate PASS, and approximately 1.8 MiB bounded v173
+scratch containing the combined-TU negative, compiler objects/reports, target
+slices, and function-review reports. Shared targets, toolchains, Wine prefix,
+Ghidra project/provider state, legacy/unknown analysis content, and unrelated
+replay evidence were left untouched.
+
+Full `python3 scripts/ci.py` passed after the v173 handoff/source/ledger changes,
+including Python tests, tracking, the 2,120-row boundary ledger, generated
+progress/boundary reports, private TH04 target checks, cross-game Oracle
+calibration, Ghidra/JDK identity, live read-only Ghidra database replay, and
+Ghidra mutation smoke. `git diff --check`, preflight, status, boundary validation,
+and generated-report checks also passed.
+
+The next concrete hard packet is the cross-segment seam at load
+`0xEA70..0xEAE3`. Ghidra still misses `kurumi_backdrop_colorfill()`; pinned TASM
+places its body at `0xEA70..0xEA88`, followed by one independent NOP at `0xEA89`.
+Fresh Ghidra constructs `carpet_lighting_put_new(int,unsigned int)` contiguously at
+`STAGES_TEXT` load `0xEA8A..0xEAE3`, size `0x5A`, with exact `stage4_render()` as
+its sole direct caller. The complete 0x74-byte window has no target MZ relocation
+overlap and ends exactly before accepted `stage4_render()` at `0xEAE4`. Review
+backdrop source language, the NOP ownership, and the cross-segment physical
+producer boundary together; do not harvest the small backdrop in isolation.
+
+Campaign status remains active. The local `gpt-web:` implementation checkpoint is
+created only after final validation; its hash is intentionally read from live Git
+rather than embedded in this self-referential handoff. Nothing is pushed.
