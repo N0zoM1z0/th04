@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 716 authored reconstruction candidates: OP 94, MAIN 537, MAINE 72, ZUN 13;
-- 411 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
-- 291 authored candidates otherwise unreviewed across all four artifacts;
+- 414 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
+- 288 authored candidates otherwise unreviewed across all four artifacts;
 - 65 original-style ASM observations in a separate attestation queue;
 - 1,339 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Across the live MAIN source/acceptance ledgers, the current v174 totals are:
+Across the live MAIN source/acceptance ledgers, the current v175 totals are:
 
-- reviewed authored bytes: **69,350 / 72,944 exact (95.072933%)**;
-- accepted authored functions: **411 / 425 exact (96.705882%)**;
-- accepted default exact replay owners: **206**;
+- reviewed authored bytes: **70,313 / 73,907 exact (95.137132%)**;
+- accepted authored functions: **414 / 428 exact (96.728972%)**;
+- accepted default exact replay owners: **208**;
 - original-style ASM: **17 units / 2,526 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **3,594 bytes** across 14
   reviewed blocked functions.
@@ -5445,3 +5445,122 @@ manufacture C++ exactness.
 The local `gpt-web:` checkpoint is created only after final validation; its hash
 must be read from live Git because embedding a commit hash in the commit itself is
 self-referential. Nothing is pushed.
+
+
+## 2026-09-15 v175 MAIN_0_TEXT player producer checkpoint
+
+This conversation started from clean tracked repository `th04`, branch `main`,
+HEAD `ef45c68c51902c49a6d0b0b7f6a241ced98be1b9`, one commit ahead of
+`origin/main`. No staged, unstaged, untracked, conflicted, unrelated, or unknown
+tracked work required recovery. All mandated repository and Factory guidance was
+reread before editing. Startup preflight/status and the 2,120-observation boundary
+validator passed. Entry `.analysis/` size was 7,380,091,098 bytes.
+
+The registered `th04-ghidra` provider was re-enumerated and its discovered
+read-only `check {}` operation passed for repository `th04` /
+`target:th04-main`; the live provider still exposes no `get_metadata` operation,
+so none was invented. Repository-native `python3 scripts/ghidra.py th04-main
+check` independently passed the 156,258-byte MZ target, 6,144-byte header/load
+mapping, entry point, all 1,136 relocation records, load-module identity, and
+sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. TC86 Borland C++ 4.02 /
+TASM32 5.0 / TLINK 6.10 attestation passed. The provider's address-taking
+`disassemble` and `function` calls rejected schema-valid address arrays before
+execution during this session. Git status was checked after those failures; no
+semantic claim is derived from the failed calls.
+
+The compact v174 Carpet frontier was first audited for source origin. SHA-bound
+searches across registered TH01-TH05 MAIN targets found the distinctive TH04
+Carpet prologue and LODSB-loop motifs only in TH04 MAIN. ReC98 history records the
+inline-assembly implementation as a 2023 decompilation change, not historical
+source. This is durable negative evidence against an unsupported original-ASM
+promotion; `carpet_lighting_put_new()` remains reviewed/source-present/blocked.
+
+The main v175 packet then reviews the complete historical `MAIN_0_TEXT` player
+window at load `0x10988..0x10D4A`, file `0x12188..0x1254A`, total `0x3C3`
+bytes. Target-first review closes three contiguous near functions with no
+post-RET compiler data: `player_miss_update()` `0x10988..0x10ABE` (`0x137`),
+`player_update()` `0x10ABF..0x10BFC` (`0x13E`), and `player_render()`
+`0x10BFD..0x10D4A` (`0x14E`). Exact HUD_OVRL_TEXT starts at the next byte.
+Pinned TASM/raw boundaries agree with the live contiguous Ghidra inventory;
+gameplay directly calls update/render, and update directly calls the miss helper.
+
+Maintained natural source is `src/main/player/update.cpp` SHA-256
+`8b55e7869128050f6fc9d7e14cd9984f8e21b054cb84de21f49791adc86ff2a6`
+and `src/main/player/render.cpp` SHA-256
+`1438369bca78b7054a19ad411c8ac07d410dea1a339bbb9fb0b8cb6778761fe1`.
+Production TC4J emits exactly `0x275` CODE for update/miss and `0x14E` CODE for
+renderer. No inline assembly, target byte emission, codestring, fake return,
+inert padding, target patch, or ABI lie is used. Zero-byte replay aliases publish
+pre-existing storage/functions only; they create no duplicate runtime state.
+
+Physical producer order was a real linker question. Target relocation overlap is
+`[0x10BB9,0x10A08,0x109BD]` for update/miss and
+`[0x10D34,0x10CF5,0x10C6D,0x10C61]` for renderer. The intervening target
+relocation at `0x10837` belongs to the preceding still-unreviewed
+`player_invalidate()` owner. Focused candidate003 tested `pupdate -> residual
+main -> prender`: the residual zero-length word-aligned MAIN_0_TEXT declaration
+inserted one padding byte after the odd `0x275` producer and shifted renderer,
+HUD, and later exact owners. This failed physical order is retained as negative
+linker evidence. Exact order is residual `th04_main.asm -> pupdate.cpp ->
+prender.cpp`.
+
+Current-source focused replay
+`gptweb-v175-player-main0-focused-final-002` passes 129 owners twice with
+`failures=[]`; receipt SHA-256 is
+`86d9c16ddc7e37d4c0c71900763be94a93174a8739e88a2f9e0ef5dd1d00a43a`.
+The update owner is raw/MAP/three-ordered-relocation exact at `0AAF:5E98`, and
+renderer is raw/MAP/four-ordered-relocation exact at `0AAF:610D`; both emit valid
+deterministic TC86 OMF. Post-promotion aggregate
+`gptweb-v175-player-main0-aggregate-final-002` passes all 208 default owners twice
+with `failures=[]`; receipt SHA-256 is
+`c75c75114966bdd1a1ce70279ee975c1daa2fd72db5b9c20791b1401b3cd6dd4`. Both final runs bind replay manifest SHA-256
+`d27105cd1560b4f4e1435c113fde6991c9a510ddc7da505553356843a55cbae5`.
+
+Live MAIN accounting after v175 is **70,313 / 73,907 exact reviewed authored
+bytes (95.137132%)** and **414 / 428 exact reviewed authored functions
+(96.728972%)**, with 14 reviewed blockers, 109 unreviewed MAIN authored
+candidates, and 31 ASM-attestation observations. This remains below the campaign
+pressure target and is not a whole-executable percentage or completion claim.
+
+Verification planes remain separate. Repository-native exactness is PASS for the
+two v175 physical owners, all three logical functions, and the complete 208-owner
+post-promotion default cohort. Standalone TH04 production compile/link closure is
+not established. Runtime-storage identity is not established. No runtime
+scenario was executed. Whole-image exactness and portable-runtime validation are
+not established. No v175 Factory Truth-Kernel acceptance has been submitted or
+claimed. The private target remains `candidate-local-attested` and was never
+staged, modified, patched, relocated, or published.
+
+OP.EXE, MAINE.EXE, and ZUN.COM remain independent active queues and receive no
+v175 MAIN credit: OP has 94 unreviewed authored candidates, MAINE 72, and ZUN 13.
+`ZUN.COM` remains an MZ artifact despite its extension.
+
+An earlier observed v175 `.analysis/` high-water mark was 7,742,561,474 bytes
+after compiler probes and replay runs. Final manifest rebinding temporarily
+retained both final-001 and final-002 replay trees; that later transient peak was
+not measured before the superseded final-001 trees were removed, so no higher
+peak value is claimed. After proving no tracked references or active producers,
+focused candidate001/002 harness/transform failure trees were deleted as explicit
+current-session reproducible output. Candidate003 is retained as physical-order
+negative evidence; candidate004 and candidate aggregate are retained as historical
+exact mechanism evidence; current focused-final and aggregate-final receipts are
+retained as current-source exact evidence. The first cleanup reduced the tree to
+7,693,041,755 bytes. After final manifest rebinding and removal of superseded
+final-001 replay trees, the final pre-CI inventory was 7,693,065,167 bytes.
+Shared targets, toolchains, Wine prefix, Ghidra state, legacy/unknown analysis
+content, and unrelated replay evidence were left untouched. Final post-CI
+pre-checkpoint inventory is 7,693,071,312 bytes, a net growth of 312,980,214
+bytes from session entry.
+
+Detailed source/boundary/linker evidence is recorded in
+`docs/reconstruction/TH04_MAIN_PLAYER_MAIN0_V175.md`. The first concrete
+continuation is `player_invalidate()` at MAIN__TEXT load `0x107E2..0x10875`,
+currently provisional size `0x94`. Its relocation at load `0x10837` is exactly
+the relocation interleaved between the v175 update and renderer groups. Review
+its true physical owner, callers/callees, source language, and relocation
+ownership next rather than treating it as an isolated small-function win.
+
+The local `gpt-web:` checkpoint is created only after final validation; read its
+hash from live Git. Nothing is pushed.

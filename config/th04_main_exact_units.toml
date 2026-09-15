@@ -9244,3 +9244,112 @@ replace_sha256 = "38eeca85c565a3a5b43f445c58f59cf1e669978db40cccce4e72cbb12593dc
 map_module = "th04/stages.cpp"
 map_mode = "contains"
 object_path = "obj/th04/stages.obj"
+
+# v175 candidate: recover the complete MAIN_0_TEXT player update/miss/render
+# cohort as two natural TC4J producers. Target relocation order motivates the
+# physical object order residual th04_main.asm -> pupdate.cpp -> prender.cpp.
+# The residual object retains zero MAIN_0_TEXT bytes and all unrelated owners.
+[[build_replacements]]
+id = "th04-main-player-main0-v175-build"
+trigger_units = ["th04-main-player-render-v175"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/m4rend.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/pupdate.cpp\",\n\t\"th04/prender.cpp\",\n\t\"th04/m4rend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-player-main0-v175-layout"
+trigger_units = ["th04-main-player-render-v175"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "9b511da3076ec43e06ca62c218979f7e9fd01c09c7c3071ab9d15c131c410418",
+  "8114fbea6e1a560825271ed074f0e3e280b07569e914bdbf885bcc30e255a664",
+]
+
+[[source_transforms.ops]]
+id = "declare-player-main0-v175"
+kind = "insert_before"
+anchor = "_TEXT\t\tsegment\tword public 'CODE' use16\r\n"
+text = "extrn @player_update$qv:near\r\nextrn @PLAYER_RENDER$QV:near\r\n"
+
+[[source_transforms.ops]]
+id = "redirect-player-update-v175"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_10ABF\r\n"
+new = "\t\tcall\t@player_update$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "redirect-player-render-v175"
+kind = "replace"
+old = "\t\tcall\tmain_01:player_render\r\n"
+new = "\t\tcall\t@PLAYER_RENDER$QV\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-playchar-shot-func-v175"
+kind = "insert_before"
+anchor = "playchar_shot_func\tdw ?\r\n"
+text = "public _playchar_shot_func\r\n_playchar_shot_func label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-player-input-prev-v175"
+kind = "insert_before"
+anchor = "word_2598C\tdw ?\r\n"
+text = "public _player_input_prev\r\n_player_input_prev label word\r\n"
+
+[[source_transforms.ops]]
+id = "alias-player-respawn-motion-time-v175"
+kind = "insert_before"
+anchor = "byte_259A3\tdb ?\r\n"
+text = "public _player_respawn_motion_time\r\n_player_respawn_motion_time label byte\r\n"
+
+[[source_transforms.ops]]
+id = "remove-main0-player-cohort-v175"
+kind = "remove_between"
+removed_sha256 = "6e420d29d8b66561dd9a3fbae0a47c9faba7c949fd4df688ef7d703cae44d3b6"
+start = "sub_10988\tproc near\r\n"
+end = "main_0_TEXT\tends\r\n"
+replacement = "main_0_TEXT\tends\r\n"
+
+[[source_transforms]]
+id = "th04-main-player-option-storage-v175"
+trigger_units = ["th04-main-player-render-v175"]
+patch_path = "th04/main/player/option[bss].asm"
+encoding = "latin-1"
+scaffold_sha256 = "fa662118ac0fa27649378c36469fee17b746e5c867a79aae36e60569b5a45f4e"
+
+[[source_transforms.ops]]
+id = "publish-player-option-patnum-v175"
+kind = "insert_before"
+anchor = "	_player_option_patnum\tdw ?\r\n"
+text = "public _player_option_patnum\r\n"
+
+[[units]]
+id = "th04-main-player-update-v175"
+default_enabled = false
+repo_source = "src/main/player/update.cpp"
+overlay_path = "th04/pupdate.cpp"
+map_module = "th04/pupdate.cpp"
+map_mode = "exact"
+object_path = "obj/th04/pupdate.obj"
+map_segment = "MAIN_0_TEXT"
+map_start = "0x5E98"
+map_size = "0x275"
+target_file_offset = "0x12188"
+size = "0x275"
+
+[[units]]
+id = "th04-main-player-render-v175"
+default_enabled = true
+requires_units = ["th04-main-player-update-v175", "th04-main-kurumi-backdrop-v174"]
+repo_source = "src/main/player/render.cpp"
+overlay_path = "th04/prender.cpp"
+map_module = "th04/prender.cpp"
+map_mode = "exact"
+object_path = "obj/th04/prender.obj"
+map_segment = "MAIN_0_TEXT"
+map_start = "0x610D"
+map_size = "0x14E"
+target_file_offset = "0x123FD"
+size = "0x14E"
