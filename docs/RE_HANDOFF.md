@@ -6335,3 +6335,130 @@ whole-image result, OP/MAINE/ZUN reconstruction, or whole-game completion claim.
 The local `gpt-web:` checkpoint is created only after final validation; read its
 hash from live Git rather than embedding a self-referential hash here. Nothing is
 pushed.
+
+## 2026-09-15 v181 B4M thick-laser reviewed-blocked checkpoint
+
+This conversation recovered repository `th04`, branch `main`, from clean starting
+HEAD `51fe41540243964a80be3713b66da390d7a202a2`, ahead 2 / behind 0 versus
+`origin/main`. No staged, unstaged, untracked, conflicted, unrelated, or unknown
+work existed at entry. All required TH04 repository documents and Factory
+contracts/guidance were mounted and read before editing. `factory_describe`
+remained intermittently unavailable at the Factory transport layer, but repository
+registry/status operations and the registered analysis provider remained usable;
+missing skill injection or that transport failure did not weaken repository gates.
+
+Mandatory entry gates passed: `scripts/preflight.py`, `scripts/status.py`, the
+2,120-observation function-boundary validator, repository-native
+`python3 scripts/ghidra.py th04-main check`, and pinned toolchain attestation.
+The selected target remains the 156,258-byte local Japanese MAIN MZ with SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+1,136 ordered MZ relocations, and only `candidate-local-attested` provenance.
+TC86 Borland C++ 4.02, TASM32 5.0, and TLINK 6.10 required surfaces attest.
+The optional host `wine64` identity remains informationally different from the
+recorded hash and does not invalidate the pinned required toolchain.
+
+Provider discovery again showed ten allowlisted `th04-ghidra` operations and no
+`get_metadata` operation; no undiscovered schema was invented. Provider `check
+{}` passed for repository `th04` / target `target:th04-main`. Fresh provisional
+function/caller/callee observations agree on four contiguous B4M_UPDATE_TEXT
+entries at Ghidra image `0x25D74`, `0x25DA5`, `0x25DBD`, and `0x25DE8` with
+body sizes `0x31`, `0x18`, `0x2B`, and `0xE6`. Exactness credit comes from no
+Ghidra observation.
+
+Target/TASM/raw/MAP review closes one historical physical producer at
+B4M_UPDATE_TEXT `13A9:22E4..243D`, load `0x15D74..0x15ECD`, file
+`0x17574..0x176CD`, size `0x15A / 346`, SHA-256
+`e2f991b94fd1976978c612c8641c84ef4746f55493bfa66ef63fd08615c80627`.
+The four logical functions are `thicklasers_init()` (`0x31`),
+`thicklaser_template_pull(thicklaser_t near&)` (`0x18`), `thicklaser_add()`
+(`0x2B`), and `thicklasers_update()` (`0xE6`). Exact v156 ownership ends before
+the first byte; exact v157 `yuuka5_move_transition()` begins at load `0x15ECE`.
+The target ordered relocation overlap is exactly `[0x15E1B, 0x15DD7]`.
+
+Call anchors are independently target-bound. Session initialization has FAR CALL
+bytes `9A E4 22 A9 13` at load `0xB286`, resolving to B4M `13A9:22E4`.
+`thicklaser_add()` calls the public template helper from load `0x15DCF`.
+Exact `y6_phase_dual_lasers()` calls `thicklaser_add()` from load `0x1AF91`.
+Exact `yuuka5_update()` calls `thicklasers_update()` from load `0x169C4`.
+The fail-closed function reviewer was extended only to support an explicit
+`call_distance = "far"` internal anchor by validating opcode `9A` and resolving
+the target segment:offset into the Ghidra image address space; existing near
+`E8` behavior is unchanged and focused tests pass.
+
+Maintained natural source is `src/main/bullet/thicklaser_update.cpp`, SHA-256
+`97b632ca700eaa8f8e55be1208cc337149306211e04e11a62469c2e00ae45a56`.
+Cheap TC4J probes progressively closed code shape without padding or byte
+injection: `-G` restored the target update frame, an unsigned flag comparison
+restored target `JBE`, and legal Borland `__memcpy__()` restored exact total
+`0x15A` size and public offsets. The only remaining codegen difference is the
+`0x18` template-copy helper's register setup before identical `REP MOVSW`.
+ReC98 reproduces that reordered setup with inline assembly; v181 deliberately
+rejects that prohibited shortcut and records the helper as a durable natural-C++
+blocker.
+
+The authoritative v181 diagnostic is the bounded two-cold aggregate
+`gptweb-v181-thicklaser-aggregate-negative-001`, receipt SHA-256
+`087fbd90fb78599533ea70401d03dfbe252d266d17c7d01bca92f0760990a69b`.
+The candidate was temporarily enabled only for that complete current default
+cohort and the manifest was restored immediately afterward. All previously
+accepted default owners pass; v181 is the sole failure. v181 has exact MAP
+placement `13A9:22E4 015A`, exact ordered relocations `[0x15E1B, 0x15DD7]`,
+valid deterministic OMF, and deterministic linked slices. Raw equality alone
+fails: exactly eight bytes differ, all in template-copy register setup. Candidate
+object SHA-256 is `d30ce8a1d148b4dddd244c3a599bad801adf743eb33c9117d69a122fdd54b3ff`;
+MAP SHA-256 is `a44a9e0a09db5c5ef378e0138dfb63d5fbe9278a439a599a9c3f0a062dbb3083`;
+linked owner SHA-256 is `1731e8125b1eda9916b0a07bd8c7ea70aa18830a74f115999ede3875ca7ab26f`.
+The init/add/update function slices are individually target-identical in both
+builds, but receive zero function exactness credit because the complete physical
+producer is nonexact.
+
+The function-review trial SHA-256 is
+`ab069d15279a92afa19608351fd3fd5f731b0db7812818ce04d79e3923855e73`.
+It adds exactly four function IDs and removes none; 32 unrelated historical
+normalization edits proposed by the generic writer are not adopted. Live MAIN
+accounting after review is **74,881 / 80,148 exact reviewed authored bytes
+(93.428407%)** and **450 / 470 exact reviewed authored functions (95.744681%)**,
+with 20 reviewed blockers, 67 unreviewed authored candidates, and 31 original-
+style ASM attestation observations. The denominator increase is a hard boundary
+result, not an accepted exact regression and not a percentage of MAIN.EXE as a
+whole.
+
+No v181 exact promotion occurred. There is no v181 focused exact receipt,
+candidate-state exact aggregate, post-promotion aggregate, or Factory acceptance
+claim. The v179 post-promotion aggregate remains the current accepted exact
+baseline. Standalone TH04 product compile/link closure, whole-image identity,
+runtime-storage identity, runtime-scenario validation, portable-runtime
+validation, and independent pristine-release provenance remain unestablished.
+OP.EXE, MAINE.EXE, and ZUN.COM remain independent active queues and receive no
+v181 MAIN credit; ZUN.COM remains treated as MZ.
+
+The v181 analysis root began at **8,430,044,096 bytes**. Four explicit current-session
+replay trees totaling about 135 MB were removed only after no TCC/TASM/TLINK or
+replay producer remained active and the durable aggregate receipt, candidate OMF,
+MAP, and linked 0x15A owner slice were copied into the bounded v181 scratch.
+Superseded cheap probes 001..003 and the temporary manifest snapshot were also
+removed. Final post-CI `.analysis/` size is **8,433,906,138 bytes**, net growth
+**3,862,042 bytes**; bounded v181 scratch is **3,855,909 bytes**. The scratch
+retains the authoritative receipt/artifacts, function-review trial, target comparison,
+and final legal probe004. Shared targets, toolchains, Wine prefix, Ghidra/provider
+state, and all legacy/unknown analysis content were left untouched. Full
+`python3 scripts/ci.py` passed after cleanup, including Python tests, tracking,
+boundary/generated-report validation, private TH04 target checks, TH01-TH05 Oracle
+calibration, Ghidra/JDK identity, live Ghidra database replay, and Ghidra mutation smoke.
+
+The first concrete continuation is the DIALOG_TEXT prefix immediately before the
+already exact fade-in helper. Three corroborated/unreviewed candidate-C++
+functions tile load `0xCFBE..0xD097`: `dialog_box_put(unsigned int,unsigned
+int,int)` (`0x58`), `playfield_copy_front_to_back()` (`0x38`), and
+`dialog_face_unput_8(unsigned int,unsigned int)` (`0x4A`). Exact std-transition
+ownership ends at `0xCFBD`; exact `dialog_box_fade_in_animate()` begins at
+`0xD098`. The old provisional `th04/dialog.cpp` module reports its twelve target
+byte differences only in relative range `0xA1..0x131`, which overlaps this
+three-function cohort. The next conversation should re-audit live Git, then close
+this physical producer/TU seam, relocations, and natural source shape rather than
+collecting unrelated small functions.
+
+Campaign status remains active. This v181 packet is not 99.5% completion,
+standalone product closure, runtime validation, OP/MAINE/ZUN completion, or
+whole-game completion. The local `gpt-web:` checkpoint is created only after
+final CI and staged-diff review; nothing is pushed.

@@ -991,6 +991,11 @@ cs_base = "0xF000"
 
 
 
+    def test_resolve_call_anchor_accepts_far_call(self) -> None:
+        data = bytearray(0x1820)
+        data[0x1810:0x1815] = b"\x9A\x24\x01\x11\x11"
+        self.assertEqual(review.resolve_call_anchor(bytes(data), 0x10010, 0x21234, distance="far", context="fixture"), 0x21234)
+
     def test_internal_call_nonexact_accepts_crosslinked_switch_extent(self) -> None:
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

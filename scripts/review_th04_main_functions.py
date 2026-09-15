@@ -533,6 +533,26 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
 
 
 
+def resolve_call_anchor(raw_target: bytes, call_site: int, expected_target: int, *, distance: str, context: str) -> int:
+    call_offset = call_site - 0x10000 + 0x1800
+    if distance == "near":
+        if call_offset < 0 or call_offset + 3 > len(raw_target) or raw_target[call_offset] != 0xE8:
+            raise ValueError(f"{context} call anchor is not near CALL")
+        displacement = int.from_bytes(raw_target[call_offset + 1:call_offset + 3], "little", signed=True)
+        resolved = call_site + 3 + displacement
+    elif distance == "far":
+        if call_offset < 0 or call_offset + 5 > len(raw_target) or raw_target[call_offset] != 0x9A:
+            raise ValueError(f"{context} call anchor is not far CALL")
+        offset = int.from_bytes(raw_target[call_offset + 1:call_offset + 3], "little")
+        segment = int.from_bytes(raw_target[call_offset + 3:call_offset + 5], "little")
+        resolved = 0x10000 + (segment << 4) + offset
+    else:
+        raise ValueError(f"{context} has unsupported call_distance {distance!r}")
+    if resolved != expected_target:
+        raise ValueError(f"{context} call target mismatch: 0x{resolved:X} != 0x{expected_target:X}")
+    return resolved
+
+
 def reviewed_nonexact_internal_call_reviews(functions, metadata, publics, target):
     """Review target-called internal functions without granting exactness.
 
@@ -650,20 +670,11 @@ def reviewed_nonexact_internal_call_reviews(functions, metadata, publics, target
             )
 
         call_site = int(str(override["call_site_address"]), 0)
-        call_offset = file_offset_for(call_site)
-        if call_offset < 0 or call_offset + 3 > len(raw_target):
-            raise ValueError(f"internal-call nonexact address 0x{address:X} call anchor escapes target")
-        if raw_target[call_offset] != 0xE8:
-            raise ValueError(f"internal-call nonexact address 0x{address:X} call anchor is not near CALL")
-        displacement = int.from_bytes(
-            raw_target[call_offset + 1:call_offset + 3], "little", signed=True
+        call_distance = str(override.get("call_distance", "near"))
+        resolved_call = resolve_call_anchor(
+            raw_target, call_site, address, distance=call_distance,
+            context=f"internal-call nonexact address 0x{address:X}",
         )
-        resolved_call = call_site + 3 + displacement
-        if resolved_call != address:
-            raise ValueError(
-                f"internal-call nonexact address 0x{address:X} call target mismatch: "
-                f"0x{resolved_call:X} != 0x{address:X}"
-            )
 
         if decode_size != size:
             if "trailing_switch_tables" in override:
