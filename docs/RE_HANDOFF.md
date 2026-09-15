@@ -9,20 +9,24 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 
 The inventory contains 2,120 distinct function-like observations:
 
-- 722 authored reconstruction candidates: OP 94, MAIN 543, MAINE 72, ZUN 13;
-- 355 accepted exact MAIN functions and seven reviewed blocked MAIN functions;
-- 360 authored candidates otherwise unreviewed;
-- 62 original-style ASM observations in a separate attestation queue;
-- 1,336 compiler/runtime/library/data/switch observations explicitly excluded.
+- 716 authored reconstruction candidates: OP 94, MAIN 537, MAINE 72, ZUN 13;
+- 411 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
+- 291 authored candidates otherwise unreviewed across all four artifacts;
+- 65 original-style ASM observations in a separate attestation queue;
+- 1,339 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Across the live MAIN source/acceptance ledgers, the current totals are:
+Across the live MAIN source/acceptance ledgers, the current v174 totals are:
 
-- reviewed authored bytes: **58,786 / 60,140 exact (97.748587%)**;
-- accepted authored functions: **355 / 362 exact (98.066298%)**;
-- accepted default exact replay owners: **189**;
-- original-style ASM: **15 units / 2,124 exact bytes**, tracked separately;
-- currently confirmed nonexact authored bytes: **1,354 bytes** across seven
+- reviewed authored bytes: **69,350 / 72,944 exact (95.072933%)**;
+- accepted authored functions: **411 / 425 exact (96.705882%)**;
+- accepted default exact replay owners: **206**;
+- original-style ASM: **17 units / 2,526 exact bytes**, tracked separately;
+- currently confirmed nonexact authored bytes: **3,594 bytes** across 14
   reviewed blocked functions.
+
+These status percentages use the non-overlapping reviewed owner/function ledgers.
+`docs/PROGRESS.md` also reports its conservative generated mapping denominator;
+that generated percentage is intentionally a different accounting surface.
 
 v119 promotes the v117/v118 source-present frontier owners only after focused
 and aggregate cold replay. v120 then closes the structurally adjacent 0xD6
@@ -5296,3 +5300,148 @@ producer boundary together; do not harvest the small backdrop in isolation.
 Campaign status remains active. The local `gpt-web:` implementation checkpoint is
 created only after final validation; its hash is intentionally read from live Git
 rather than embedded in this self-referential handoff. Nothing is pushed.
+
+## 2026-09-15 v174 Kurumi backdrop / carpet-lighting seam checkpoint
+
+This conversation started from clean repository `th04`, branch `main`, HEAD
+`4447d942b3037546fc9349fefa9ee7d783b7fbbf`, tracking `origin/main` at 0/0.
+Startup recovery found no staged, unstaged, untracked, conflicted, unrelated, or
+unknown tracked work. All requested TH04 and Factory guidance paths were mounted
+and reread before editing. Startup `preflight.py`, `status.py`, and the
+2,120-observation function-boundary validator passed. Entry `.analysis/` size was
+7,132,791,783 bytes.
+
+The registered `th04-ghidra` provider was re-enumerated before target use. It
+still exposes ten operations and no `get_metadata` schema, so the discovered
+read-only `check {}` operation was used and passed for repository `th04` /
+`target:th04-main`. Repository-native `python3 scripts/ghidra.py th04-main check`
+independently passed the 156,258-byte MZ target, 6,144-byte header/load mapping,
+entry point, all 1,136 relocation records, load-module identity, and sampled
+bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. Pinned TC86 Borland C++
+4.02 / TASM32 5.0 / TLINK 6.10 attestation passed. Several read-only Factory
+transport requests failed transiently; live Git status was rechecked after each
+failed/interrupted command before work continued, and no unexpected tracked
+change was found.
+
+The stale prompt orientation around `sub_11DE6` was not reused as a frontier.
+Live handoff and ledgers show that routine was already resolved in v143 as
+original-style assembly. v174 instead follows the live v173 continuation at the
+cross-segment seam after exact `yuuka5_fg_render()`.
+
+Target-first physical review splits the historical tail into four independent
+regions before exact `stage4_render()`:
+
+- load `0xEA6F`, file `0x1026F`: one zero layout byte, zero reconstruction credit;
+- load `0xEA70..0xEA88`, file `0x10270..0x10288`: MAIN_TEXT
+  `0AAF:3F80` `kurumi_backdrop_colorfill()`, 0x19 bytes;
+- load `0xEA89`, file `0x10289`: one NOP layout byte, zero reconstruction credit;
+- load `0xEA8A..0xEAE3`, file `0x1028A..0x102E3`: STAGES_TEXT
+  `0AAF:3F9A` `carpet_lighting_put_new(int,unsigned int)`, 0x5A bytes;
+- exact `stage4_render()` begins at the next byte, load `0xEAE4`.
+
+Ghidra has no function entry at analysis `0x1EA70`. Pinned TASM/TLINK, raw target
+decode, and the terminal RET close the 0x19 Kurumi extent independently. A second
+start anchor comes from attested target disassembly of independently exact
+`stage2_setup()`: at analysis `0x2E141` it stores callback offset `0x3F80` into
+`boss_backdrop_colorfill`, matching the MAIN_TEXT public. The target Kurumi slice
+SHA-256 is
+`f814c1bd6eb1547a9193b911f9e9dd83a9ae47cccdbcc01c02ba753e001f2b31`
+and has no MZ relocation overlap.
+
+Maintained Kurumi source is `src/main/boss/kurumi_backdrop.cpp`, SHA-256
+`9f7244be236c370163307ff2ca9efa99f97af6b5f1728649402cf9b66ca3f515`.
+A production-profile compiler-only probe emits the target 25-byte CODE shape with
+only the two normal near-call fixup fields unresolved. No inline assembly, target
+byte arrays, codestrings, fake returns, inert padding, target patching, or ABI
+lies are used. v174 also narrows the old v167 auxiliary contract to the single
+leading zero byte and hash-extracts only the trailing NOP into
+`config/replay/th04_main_yuuka5_tail_nop_v174.asm.in`; both seam bytes remain
+zero-credit Oracle/layout plumbing.
+
+Focused `gptweb-v174-kurumi-backdrop-focused-candidate-003` passes a 127-owner
+dependency closure twice with `failures=[]`; receipt SHA-256 is
+`90e8d4dc4db7d74d0fbb824144f6d9ca28f199ff470fc04292f8f857987d7151`.
+Kurumi is raw/MAP/empty-relocation exact with deterministic valid TC86 OMF; the
+leading zero and trailing NOP auxiliaries are independently raw/MAP exact.
+Candidate-state aggregate `gptweb-v174-kurumi-backdrop-aggregate-candidate-001`
+passes all 206 default owners twice, receipt SHA-256
+`30e018bd5e1febff9bad7f05be81309106a8d9090c7b7c22d18a5183d3da7ed7`.
+After boundary/function/unit promotion, post-promotion aggregate
+`gptweb-v174-kurumi-carpet-aggregate-final-001` again passes all 206 default
+owners twice with `failures=[]`, receipt SHA-256
+`369cafd0949041e8cd038c8dfb2e31cf17a0e5363974bfc204f7ba8cf28ff3d5`.
+
+The structurally adjacent carpet routine is deliberately not forced exact.
+Attested Ghidra constructs one contiguous 0x5A near function at analysis
+`0x1EA8A`; exact `stage4_render()` is its sole direct caller, raw decoding closes
+`RET 4` at load `0xEAE3`, MAP ownership is exact at `STAGES_TEXT 0AAF:3F9A`, and
+there is no target relocation overlap. Maintained semantic source is
+`src/main/stage/carpet_lighting.inl`, SHA-256
+`cbd3e93a4ba08aa58b0d922c24104816f6eb3208a92b1afb0e5478ac3682526e`.
+
+Bounded legal TC4J probes provide new negative evidence rather than reusing ReC98
+inline assembly. Natural `_ES = _DS` selects `MOV AX,DS; MOV ES,AX` instead of
+target `PUSH DS; POP ES`; ordinary dereference/increment selects
+`MOV AL,[SI]; INC SI` instead of `LODSB`; `_DI <<= 1` selects `ADD DI,DI` instead
+of target `SHL DI,1`; natural loop control selects DEC/test/JNZ instead of
+`LOOP`; the target also uses unsigned `MUL BX`. The maintained-source cold replay
+`gptweb-v174-carpet-lighting-negative-001` compiles twice with exact MAP, exact
+empty relocation overlap, valid/deterministic OMF, and deterministic linked
+slices, but `raw_exact_a/raw_exact_b` both fail. Target slice SHA-256 is
+`d06f7b07a8e6a162a9c211f1014ff514f9df053d9c5594f814bbc19bb14dc5c9`;
+candidate slice SHA-256 is
+`9ab61cb3e7b0db0e88edd991e4147775a81f635b949cb01d2fe2930a857df20a`;
+negative receipt SHA-256 is
+`1e2950804f9165fc926cdc03c97062b1f607f4ebfd4d8453ecdefeab1b3d8c49`.
+The function remains reviewed/source-present/blocked with zero exactness credit.
+
+The reviewed MAIN denominator therefore expands by both results. Live status
+becomes **69,350 / 72,944 exact authored bytes (95.072933%)** and **411 / 425
+exact reviewed authored functions (96.705882%)**, with 14 reviewed blockers, 112
+unreviewed MAIN authored candidates, and 31 MAIN ASM-attestation observations.
+The percentage drop from v173 is expected: the denominator gained 25 exact Kurumi
+bytes and 90 reviewed-but-blocked carpet bytes. Accuracy takes precedence over
+percentage pressure.
+
+Verification planes remain separate. Repository-native function/owned-extent
+exactness is PASS for Kurumi and for the full 206-owner default post-promotion
+cohort. Carpet is explicitly nonexact. Standalone TH04 production compile/link
+closure is not established. Runtime-storage identity is not established. No
+runtime scenario was executed. Whole-image exactness and portable-runtime
+validation are not established. No v174 Factory Truth-Kernel acceptance has been
+submitted or claimed. Independent pristine-release provenance is not established;
+the private target remains `candidate-local-attested` and was never staged,
+modified, patched, relocated, or published.
+
+Other TH04 artifacts remain independent active queues and receive no v174 MAIN
+credit: `th04-op` has 94 unreviewed authored candidates, `th04-maine` 72, and
+`th04-zun` 13, with no honest accepted exact-function or exact-byte denominator.
+`ZUN.COM` remains an MZ artifact despite its extension.
+
+The v174 `.analysis/` entry size was 7,132,791,783 bytes. Replay/probe activity
+peaked at 7,441,964,470 bytes before cleanup. After confirming no tracked
+reference or active producer, the 76 MiB failed
+`gptweb-v174-kurumi-backdrop-focused-candidate-002` tree was removed as explicit
+current-session reproducible output. The focused PASS, candidate aggregate PASS,
+post-promotion aggregate PASS, carpet negative receipt/build, and bounded v174
+compiler-probe scratch are retained. Shared targets, toolchains, Wine prefix,
+Ghidra state, legacy/unknown analysis content, and unrelated replay evidence were
+left untouched. Final post-CI exit inventory is `7380091027` bytes, net growth
+`247299244` bytes from entry.
+
+Detailed evidence and negative mechanisms are recorded in
+`docs/reconstruction/TH04_MAIN_KURUMI_CARPET_V174.md`. Campaign status remains
+active. The first concrete continuation is the blocked 0x5A
+`carpet_lighting_put_new()` producer: its physical boundary, caller, MAP owner,
+and relocation topology are closed, so a future packet should test only genuinely
+new legal natural-TC4J mechanisms or independent cross-game original-target
+analogues for the `PUSH DS/POP ES`, `MUL BX`, `LODSB`, `SHL DI,1`, and `LOOP`
+sequence. If that evidence does not support natural C++, keep it blocked or
+reclassify origin only with independent evidence. Do not use inline assembly to
+manufacture C++ exactness.
+
+The local `gpt-web:` checkpoint is created only after final validation; its hash
+must be read from live Git because embedding a commit hash in the commit itself is
+self-referential. Nothing is pushed.

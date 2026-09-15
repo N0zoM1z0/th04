@@ -8227,10 +8227,10 @@ size = "0x51E"
 
 
 # v167 candidate: Recover the complete Yuuka5 foreground renderer as natural
-# TC4J C++ inside MAIN_TEXT. The target keeps one zero byte and the following
-# Kurumi backdrop helper in the same historical main.obj contribution, so cold
-# replay extracts that 0x1B suffix into a separate zero-credit TASM object and
-# preserves the physical link order main prefix -> y5fg.cpp -> suffix.
+# TC4J C++ inside MAIN_TEXT. Historical standalone replay still materializes the
+# following 0x1B main.obj tail for layout, but only the leading zero byte belongs
+# to the v167 auxiliary contract. v174 independently reconstructs the Kurumi
+# callback and retains its following NOP as separate zero-credit plumbing.
 [[scaffold_extractions]]
 id = "th04-main-main-text-yuuka5-tail-v167"
 trigger_units = ["th04-main-yuuka5-fg-v167"]
@@ -8293,7 +8293,7 @@ map_mode = "exact"
 object_path = "obj/th04/y5fg.obj"
 auxiliary_objects = ["obj/th04/m1y5tl.obj"]
 auxiliary_extents = [
-  { id = "th04-main-main-text-yuuka5-tail-plumbing-v167", file_offset = "0x1026F", size = "0x1B", map_module = "th04\\m1y5tl.asm", map_segment = "MAIN_TEXT", object_path = "obj/th04/m1y5tl.obj" },
+  { id = "th04-main-main-text-yuuka5-leading-zero-v167", file_offset = "0x1026F", size = "0x1", map_module = "th04\\m1y5tl.asm", map_segment = "MAIN_TEXT", object_path = "obj/th04/m1y5tl.obj" },
 ]
 map_segment = "MAIN_TEXT"
 map_start = "0x3DB3"
@@ -9148,3 +9148,99 @@ map_start = "0x42F2"
 map_size = "0x24"
 target_file_offset = "0x105E2"
 size = "0x24"
+
+# v174 candidate: split the historical MAIN_TEXT Yuuka5 tail plumbing into its
+# two independent one-byte seams and recover the intervening Ghidra-missed
+# Kurumi backdrop callback as natural TC4J C++. The leading zero at load 0xEA6F
+# and trailing NOP at 0xEA89 remain zero-credit Oracle/layout plumbing.
+[[build_inserts]]
+id = "th04-main-kurumi-backdrop-source-v174"
+trigger_units = ["th04-main-kurumi-backdrop-v174"]
+repo_source = "src/main/boss/kurumi_backdrop.cpp"
+overlay_path = "th04/kback.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v174 maintained Kurumi backdrop overlay\n"
+
+[[scaffold_extractions]]
+id = "th04-main-yuuka5-tail-nop-v174"
+trigger_units = ["th04-main-kurumi-backdrop-v174"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "@kurumi_backdrop_colorfill$qv\tendp\r\n\r\n; ---------------------------------------------------------------------------\r\n\t\tnop\r\n"
+end = "main_TEXT\tends\r\n"
+span_sha256 = "159a73a6504770e74c8b52413d29eedd383d9d997ba0d5ab2ce9ce72b6cbcd2d"
+template_source = "config/replay/th04_main_yuuka5_tail_nop_v174.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/m1y5n.asm"
+
+[[scaffold_extractions.replacements]]
+old = "@kurumi_backdrop_colorfill$qv\tendp\r\n\r\n; ---------------------------------------------------------------------------\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "main_TEXT\tends\r\n"
+new = ""
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-kurumi-backdrop-v174-build"
+trigger_units = ["th04-main-kurumi-backdrop-v174"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/y5fg.cpp\",\n\t\"th04/m1y5tl.asm\",\n\t\"th04/m1r.cpp\",\n"
+build_replacement = "\t\"th04/y5fg.cpp\",\n\t\"th04/m1y5tl.asm\",\n\t\"th04/kback.cpp\",\n\t\"th04/m1y5n.asm\",\n\t\"th04/m1r.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-yuuka5-tail-leading-zero-v174"
+trigger_units = ["th04-main-kurumi-backdrop-v174"]
+patch_path = "th04/m1y5tl.asm"
+encoding = "latin-1"
+scaffold_sha256 = "3b3054abf5407e461e47cd4cbbb9b379b9a2d68c6dcd1af0581cae8d74321e5c"
+
+[[source_transforms.ops]]
+id = "remove-kurumi-and-trailing-nop-v174"
+kind = "remove_between"
+removed_sha256 = "f9a72e8d29866f1497ad5ec2e59a9585ab49bb7939099dcdbde8d4d28de2765c"
+start = "; =============== S U B\tR O U T\tI N E =======================================\r\n"
+end = "main_TEXT\tends\r\n"
+replacement = "main_TEXT\tends\r\n"
+
+[[units]]
+id = "th04-main-kurumi-backdrop-v174"
+default_enabled = true
+requires_units = ["th04-main-orange-backdrop-v173"]
+repo_source = "src/main/boss/kurumi_backdrop.cpp"
+overlay_path = "th04/kback.cpp"
+map_module = "th04/kback.cpp"
+map_mode = "exact"
+object_path = "obj/th04/kback.obj"
+auxiliary_objects = ["obj/th04/m1y5tl.obj", "obj/th04/m1y5n.obj"]
+auxiliary_extents = [
+  { id = "th04-main-yuuka5-tail-leading-zero-v174", file_offset = "0x1026F", size = "0x1", map_module = "th04\\m1y5tl.asm", map_segment = "MAIN_TEXT", object_path = "obj/th04/m1y5tl.obj" },
+  { id = "th04-main-kurumi-trailing-nop-v174", file_offset = "0x10289", size = "0x1", map_module = "th04\\m1y5n.asm", map_segment = "MAIN_TEXT", object_path = "obj/th04/m1y5n.obj" },
+]
+map_segment = "MAIN_TEXT"
+map_start = "0x3F80"
+map_size = "0x19"
+target_file_offset = "0x10270"
+size = "0x19"
+
+# v174 negative packet: keep a maintainable natural-C++ semantic baseline for
+# the Stage 4 carpet-lighting producer. This unit is deliberately non-default
+# and blocked; it exists to preserve compiler/source-shape evidence, not to
+# manufacture equality with the historical inline-assembly instruction shape.
+[[units]]
+id = "th04-main-carpet-lighting-v174"
+default_enabled = false
+repo_source = "src/main/stage/carpet_lighting.inl"
+source_mode = "replace"
+patch_path = "th04/main/stage/stages.cpp"
+scaffold_sha256 = "8a1081f83bcc6b0a52edf60e0f8be3f24bc4f9aa092bfb041b4f27cd752756f1"
+replace_offset = 1775
+replace_size = 1922
+replace_sha256 = "38eeca85c565a3a5b43f445c58f59cf1e669978db40cccce4e72cbb12593dc70"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
