@@ -4198,3 +4198,103 @@ owner_unit = "th04-main-items-invalidate-v185"
 source = "src/main/item/invalidate.cpp"
 evidence_id = "ev-th04-main-items-invalidate-boundary-v185"
 reason = "Fresh target-bound Ghidra/raw/TASM close the full 75-byte body; final focused replay and the 218-owner candidate aggregate prove exact natural-C++ ownership through RET at 0x1C146 while keeping the following source-owned NOP outside the logical extent."
+
+# v186: Dense CIRCLE item-splash/spark lifecycle boundary review. Only
+# sparks_invalidate() has an exact maintained natural-C++ owner; the six
+# neighboring Ghidra-recognized bodies enter the reviewed denominator without
+# source/origin/exactness credit.
+[[reviewed_nonexact]]
+id = "th04-main-fn-1c17c"
+address = "0x1C17C"
+file_offset = "0xD97C"
+size = "0x83"
+name = "ITEM_SPLASHES_RENDER"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x83 near item-splash renderer through RET at 0x1C1FE. The following 0x1C1FF byte is explicit source-owned layout outside the logical body; source/origin and exactness remain unresolved."
+
+[[new_nonexact]]
+id = "th04-main-fn-1c17c"
+address = "0x1C17C"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Expand the reviewed authored denominator with the complete ITEM_SPLASHES_RENDER body while preserving unknown source/origin/exactness."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1c200"
+address = "0x1C200"
+file_offset = "0xDA00"
+size = "0x65"
+name = "@spark_render"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x65 low-level spark blitter through RET at 0x1C264. The 0x1C265 EVEN byte is separate layout; the independent TH05 target uses the same shared assembler include, but that does not decide maintained-source form or exactness."
+
+[[new_nonexact]]
+id = "th04-main-fn-1c200"
+address = "0x1C200"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Expand the reviewed authored denominator with the complete low-level spark renderer without inheriting an ASM/exact verdict from ReC98 or TH05."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1c266"
+address = "0x1C266"
+file_offset = "0xDA66"
+size = "0x4C"
+name = "_sparks_update"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Fresh target-bound Ghidra/TLINK/TASM/raw evidence closes the complete 0x4C update loop. v186 natural TC4J probes emit 71 bytes and fold the target's two F_REMOVE stores into one shared tail even under explicit source labels, so exact/source promotion is withheld."
+
+[[new_nonexact]]
+id = "th04-main-fn-1c266"
+address = "0x1C266"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Expand the reviewed denominator with the complete spark update body while retaining the durable 71-versus-76 natural-codegen blocker."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1c2b2"
+address = "0x1C2B2"
+file_offset = "0xDAB2"
+size = "0x3B"
+name = "_sparks_render"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x3B high-level render loop through RET at 0x1C2EC; the 0x1C2ED EVEN byte is separate layout ownership. Source and exactness remain unclaimed."
+
+[[new_nonexact]]
+id = "th04-main-fn-1c2b2"
+address = "0x1C2B2"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Expand the reviewed denominator with the complete spark render loop without forcing a source form."
+
+[[new_exact]]
+id = "th04-main-fn-1c2ee"
+address = "0x1C2EE"
+evidence_id = "ev-th04-main-sparks-invalidate-boundary-v186"
+reason = "Admit the complete sparks_invalidate() near body only after natural TC4J code-shape closure, final focused two-cold replay, exact MAP placement, empty relocation overlap, and the 219-owner candidate aggregate."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1c314"
+address = "0x1C314"
+file_offset = "0xDB14"
+size = "0x1E"
+name = "_sparks_init"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Fresh target-bound Ghidra/TLINK/TASM/raw evidence closes the complete 0x1E initializer. Natural TC4J emits an exact 30-byte fixed instruction shape, but target C-linkage _sparks_init conflicts with the current C++ linkage declaration in spark.hpp; Borland rejects an extern-C definition after that declaration, so no ABI workaround or exact claim is used."
+
+[[new_nonexact]]
+id = "th04-main-fn-1c314"
+address = "0x1C314"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Expand the reviewed denominator for _sparks_init while preserving its header/linkage blocker."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1c332"
+address = "0x1C332"
+file_offset = "0xDB32"
+size = "0x1C"
+name = "@item_splash_dot_render"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x1C low-level splash-dot blitter through RET at 0x1C34D; reviewed TASM-only sub_C34E begins immediately after it. Source/origin and exactness remain unresolved."
+
+[[new_nonexact]]
+id = "th04-main-fn-1c332"
+address = "0x1C332"
+evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
+reason = "Expand the reviewed denominator with the complete splash-dot blitter without forcing a source form."

@@ -6946,3 +6946,113 @@ choosing natural C++ or evidence-backed original-style ASM. This remains an
 active campaign, not project or artifact completion. Nothing is pushed.
 
 After exact promotion, current-session cleanup retained compact focused/candidate/final receipts, the final `itemsinv.obj` and MAP, exact function-review outputs, target/compiler evidence, and the complete `gptweb-v185-items-invalidate-aggregate-final-001` cold baseline. With no active Borland/replay producer, only explicit v185 failed/superseded replay trees were deleted; v184 and older baselines, targets, toolchains, Wine/Ghidra state, and unknown/legacy analysis content were untouched. The `.analysis/` tree measured **8,652,742,193 bytes** immediately after this bounded cleanup, net growth **74,858,484 bytes** from conversation entry. The v185 compact scratch measured **10,989,700 bytes** and the retained final aggregate baseline **63,771,490 bytes**. Full CI is run after this handoff update; the final live post-CI/commit inventory is reported from Git/session state rather than guessed here.
+
+
+## v186 CIRCLE_TEXT spark lifecycle checkpoint
+
+This session starts from committed HEAD `eb970d1cd955761ff3cae9330d8de91df55efcfa`,
+branch `main`, upstream `origin/main`, ahead 7 / behind 0, with a clean tracked
+worktree. `.analysis/` measured **8,652,756,627 bytes** at entry. Mandatory
+preflight/status/boundary gates passed. `th04-ghidra` discovery again exposed ten
+operations and no `get_metadata`; provider `check {}` passed for repository
+`th04`, target `target:th04-main`, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native Ghidra independently passed the 6,144-byte MZ header, entry,
+1,136 ordered relocations, complete mapping/digest, and samples. Required
+TC4J/TASM/TLINK surfaces passed; optional host `wine64` hash drift remains
+informational.
+
+The stale prompt route `sub_11DE6` was checked against live evidence and not
+reopened: v143 already reconstructs the adjacent 0x48 shot velocity/level seam
+as exact original-style symbolic TASM.
+
+During initial read-only review of the handoff-selected CIRCLE lifecycle cohort,
+the live tree changed from clean to six unstaged ledger/manifest edits plus
+untracked `src/main/spark/invalidate.cpp`. This was not attributed from mtime
+alone. The complete staged/unstaged/untracked state, v186 scratch, replay
+receipts, current source hash, and process list were inspected. No Borland or
+replay producer was active. The packet is internally coherent, uses the same
+v186 scratch manifest and starting HEAD, and contains final focused/candidate/
+post-promotion receipts. It was therefore classified as recoverable current work
+and adopted; nothing was reset, overwritten, or staged before the recovery
+review completed.
+
+The cohort is CIRCLE_TEXT `0AAF:168C..1873`, load `0xC17C..0xC363`, file
+`0xD97C..0xDB63`, size `0x1E8 / 488`, target SHA-256
+`80f435f69d36768c441dd56c96952d520b9a4d953f085d04347e3e627fb01a36`.
+Fresh provider/raw/TASM/TLINK review closes seven Ghidra-recognized lifecycle
+bodies plus the Ghidra-missed `sub_C34E`; source-owned layout bytes remain at
+`0xC1FF`, `0xC265`, and `0xC2ED`, with target relocations only at `0xC1AE` and
+`0xC31F`. `sub_C34E` remains a reviewed boundary outside the function denominator
+because the current review driver has no nonexact/no-Ghidra admission mode; this
+packet does not weaken the policy to add one.
+
+Maintained natural source `src/main/spark/invalidate.cpp`, SHA-256
+`a515166caeb898f934a6563cb220cdf1c28f09987edbd0f2cef79e039f878a86`,
+reconstructs `sparks_invalidate()` at map `0AAF:17FE..1823`, load
+`0xC2EE..0xC313`, file `0xDAEE..0xDB13`, size `0x26 / 38`, target slice SHA-256
+`c276012d7f67a319ba2fe203deb3acbfe9522b6b5c07f58a562369a4c8722e3c`.
+TC86 emits exactly 38 bytes; before linking only the three unresolved 16-bit
+words differ. Final hash-bound replay keeps neighboring update/render/init code
+in zero-credit scaffold owners.
+
+Final focused run `gptweb-v186-sparks-invalidate-focused-004` selects 115 owners
+and passes both isolated cold builds; receipt SHA-256 is
+`99eb92590613b32991376884378150d2ce7bf8772708cb4eda21bbf3a75d4b15`.
+A/B `spkinv.obj` SHA-256 is
+`9178b8cea141e03ad28011855df5499116886a8788d10c07acc2f3ac59e64b2a`,
+normalized SHA-256
+`32062a7f467c5824c874b0d287b72ade23c623cf0963972568957a1209eed80c`;
+raw/MAP/relocation checks all pass. Candidate aggregate
+`gptweb-v186-sparks-invalidate-aggregate-candidate-001` passes all 219 owners
+twice, receipt SHA-256
+`e0f4b11e3f535c9a179fd80ee679d2514b188cb2c95a754ad1f685301dd9f9b8`.
+Post-promotion tracked aggregate `gptweb-v186-sparks-invalidate-aggregate-final-001`
+also passes all 219 owners twice, receipt SHA-256
+`731efc53560be3146f6405cd1fbf30b56f134606cc69599c57bddd71114f0fea`;
+its manifest SHA-256 is the current tracked
+`545c0602988c82c5b56315040fe60a5733a391bb1bb7548cde7c9d5c4a52b0d0`.
+
+The function-review report SHA-256
+`9e5a1209b37bed0c72aecd7a39ff379a602bfc05bba9b504eb07a98d27bace1c`
+adds exactly seven rows and removes none: `sparks_invalidate()` is exact; six
+neighbors enter as reviewed blockers. Generic changes to 40 historical rows are
+not adopted. Durable negatives are retained: natural `_sparks_update` emits 71
+bytes instead of target 76 because TC4J merges two removal stores; natural
+`_sparks_init` emits the exact 30-byte fixed instruction shape but cannot be
+legally defined with target C-linkage after the current C++-linkage header
+declaration. No inline asm, codestring, target bytes, padding, alias trick, or
+ABI lie is used to cross either blocker.
+
+Live MAIN accounting after recovery/admission is **75,034 / 80,519 exact
+reviewed authored bytes (93.187943%)** and **453 / 482 exact reviewed functions
+(93.983402%)**. Function routing is 453 exact, 29 blocked, 50 unreviewed, and 36
+ASM-attestation observations. The function percentage decline is honest
+boundary-denominator expansion. OP, MAINE, and ZUN remain independent active
+queues with 94, 72, and 13 unreviewed authored candidates; no MAIN credit
+transfers to them.
+
+Verification planes remain separate. v186 establishes exact natural-C++
+ownership only for the 38-byte spark invalidator plus reviewed lifecycle
+boundaries/negatives. Standalone TH04 product compile/link closure, whole-image
+exactness, runtime-storage identity, runtime scenario, portable runtime,
+independent pristine provenance, and Factory acceptance remain unestablished.
+
+After bounded v186 cleanup, `.analysis/` measures **8,725,070,431 bytes**, net
+growth **72,313,804 bytes** from session entry. The compact v186 scratch is
+**8,350,178 bytes** and the retained
+`gptweb-v186-sparks-invalidate-aggregate-final-001` cold baseline is
+**63,857,373 bytes**. Only current-session reproducible top-level probe copies
+were deleted after durable-final receipts, target/probe negatives, function
+review, object, and MAP evidence were retained. v185/v184 and older baselines,
+private targets, toolchains, Wine/Ghidra state, and legacy/unknown analysis
+content were not touched. The v186 ignored manifest is checkpoint-ready; full CI
+is run after this handoff update and final post-commit inventory is reported
+from live state rather than predicted.
+
+The first next route is the spark header/ABI ownership seam around `_sparks_init`,
+not a macro spelling workaround. Review and localize the declaration surface,
+then replay affected exact owners; couple that work with `_sparks_render` and
+`@item_splash_dot_render`. Preserve `_sparks_update`'s 71-vs-76 negative until a
+genuinely new compiler-IR hypothesis appears. `sub_C34E` remains the adjacent
+Ghidra-missed boundary for later source/origin review. Nothing is pushed.

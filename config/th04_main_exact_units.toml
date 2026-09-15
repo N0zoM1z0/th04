@@ -9966,3 +9966,102 @@ map_start = "0x160C"
 map_size = "0x4B"
 target_file_offset = "0xD8FC"
 size = "0x4B"
+
+
+# v186: exact natural-C++ sparks_invalidate() split from the zero-credit
+# v185 CIRCLE suffix. Neighboring update/render/init code remains replay-only.
+[[scaffold_extractions]]
+id = "th04-main-spark-pre-v186"
+trigger_units = ["th04-main-sparks-invalidate-v186"]
+scaffold_path = "th04/main/sparks.asm"
+encoding = "latin-1"
+scaffold_sha256 = "cb22fb4fc3a191fa2d897532ac4cdb2c69520b7cd4547daf02caca202191a7f2"
+start = "public _sparks_update\r\n"
+end = "_sparks_render endp\r\n\teven\r\n"
+span_sha256 = "b94669523205ffa57ec8180261003055fe72ae5da812680c2e799803c205eaa4"
+template_source = "config/replay/th04_tile_inv_external_v137.asm.in"
+output_path = "th04/sparkpre186.inc"
+
+[[scaffold_extractions]]
+id = "th04-main-spark-init-v186"
+trigger_units = ["th04-main-sparks-invalidate-v186"]
+scaffold_path = "th04/main/sparks.asm"
+encoding = "latin-1"
+scaffold_sha256 = "cb22fb4fc3a191fa2d897532ac4cdb2c69520b7cd4547daf02caca202191a7f2"
+start = "public _sparks_init\r\n"
+end = "_sparks_init endp\r\n"
+span_sha256 = "d90bbd321c3624ba36b97eebd768a7d5da80a5d07dde8d716d8623c51840fb70"
+template_source = "config/replay/th04_tile_inv_external_v137.asm.in"
+output_path = "th04/sparkinit186.inc"
+
+[[scaffold_extractions]]
+id = "th04-main-circle-post-spark-v186"
+trigger_units = ["th04-main-sparks-invalidate-v186"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "include th04/main/item/splash_dot_render.asm\r\n"
+end = "CIRCLE_TEXT ends\r\n"
+span_sha256 = "79b551c87b2a492d42f60f586ea913eb413dedb3a07fd3fa48ba5d56a96fc45a"
+template_source = "config/replay/th04_circle_items_suffix_v185.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/cirsuf186.asm"
+
+[[scaffold_extractions.replacements]]
+old = "include th04/main/item/splash_dot_render.asm\r\n"
+new = "include th04/sparkinit186.inc\r\ninclude th04/main/item/splash_dot_render.asm\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "sub_C34E\tproc near\r\n"
+new = "public CLEAR_DWORDS\r\nCLEAR_DWORDS label near\r\nsub_C34E\tproc near\r\n"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "CIRCLE_TEXT ends\r\n"
+new = ""
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-sparks-invalidate-v186-build"
+trigger_units = ["th04-main-sparks-invalidate-v186"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/cirsuf185.asm\",\n"
+build_replacement = "\t\"th04/cirsuf185.asm\",\n\t\"th04/spkinv.cpp\",\n\t\"th04/cirsuf186.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-sparks-invalidate-v186-layout"
+trigger_units = ["th04-main-sparks-invalidate-v186"]
+patch_path = "th04/cirsuf185.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c3c5a08b04f54da16a3f289544718a73aa88b5f8535bbd01839707776b1bfa3f"
+
+[[source_transforms.ops]]
+id = "externalize-splash-dot-for-prefix-v186"
+kind = "insert_before"
+anchor = "main_01 group CIRCLE_TEXT\r\n"
+text = "extrn @item_splash_dot_render:near\r\n"
+
+[[source_transforms.ops]]
+id = "truncate-v185-circle-suffix-before-invalidate-v186"
+kind = "remove_between"
+removed_sha256 = "754e9e6300a703e2bbe1cb63e35cb848e60b528e74922999b9fdbbad5510fa8e"
+start = "include th04/main/sparks.asm\r\n"
+end = "CIRCLE_TEXT ends\r\nend\r\n"
+replacement = "include th04/sparkpre186.inc\r\nCIRCLE_TEXT ends\r\nend\r\n"
+
+[[units]]
+id = "th04-main-sparks-invalidate-v186"
+default_enabled = true
+requires_units = ["th04-main-items-invalidate-v185"]
+repo_source = "src/main/spark/invalidate.cpp"
+overlay_path = "th04/spkinv.cpp"
+map_module = "th04/spkinv.cpp"
+map_mode = "exact"
+object_path = "obj/th04/spkinv.obj"
+auxiliary_objects = ["obj/th04/cirsuf185.obj", "obj/th04/cirsuf186.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x17FE"
+map_size = "0x26"
+target_file_offset = "0xDAEE"
+size = "0x26"
