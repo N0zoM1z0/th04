@@ -216,3 +216,36 @@ It does **not** establish v154 function/owner byte exactness. The replay also do
 not establish standalone TH04 production-source/link closure, runtime-storage
 identity, a runtime scenario, whole-image exactness, independently pristine target
 provenance, or Factory Truth Kernel acceptance.
+
+## v180 additional codegen negatives
+
+v180 revisited the remaining four-byte `items_update()` mismatch only through two
+genuinely new producer/register hypotheses. Neither changes the maintained v154
+source or its blocked state.
+
+First, a pinned TASM32 5.0 control tested whether a hypothetical TCC `-S` -> TASM
+producer could naturally select the target opcode direction. Symbolic source with
+ordinary `SUB BX,AX` and `SUB BX,DX` assembled to `2B D8 / 2B DA`, exactly the
+same direction as direct TC4J OMF output and not target `29 C3 / 29 D3`.
+Therefore an assembly-output pipeline alone cannot explain the target bytes.
+The retained bounded control has source SHA-256
+`a91f9c90918174667b4e6ab43722d8dc4679f156ac0faaebced723f47824afce` and object
+SHA-256
+`9aff6485dedf366994f4c37601b5d5efe5ecc59f66e636e6310f96b5a54b075a`.
+
+Second, after calibrating the current short-path compiler loop back to the exact
+v154 `0x546` / 1,350-byte diagnostic CODE identity
+`d402522822e87b54b43e349a489567abf13fbd03accb9511004026fad0d2f520`, the two
+collision differences were expressed through one block-scoped
+`register unsigned int delta`. This is narrower than the earlier function-scope
+third-register experiment and tests whether SI/DI occupancy could naturally leave
+BX for a short-lived delta. TC4J instead emits `0x54C / 1,356` CODE bytes, changes
+228 bytes in the late function region, and emits none of `29 C3`, `29 D3`,
+`2B D8`, or `2B DA` at the intended subtraction sites. Probe source SHA-256 is
+`40df2e934fcc0a54b1a2c58d6fc0bea4fcce0c052b4c96989e378aa5752c0f5e`; CODE
+SHA-256 is
+`9b73289eb7ea34c9cce7f822d61762e3c0d40659d5f4138b55478031185a4133`.
+
+These results strengthen the existing v154 conclusion: do not resume source
+spelling or register-local matrices without a new falsifiable compiler IR,
+producer, or link-history mechanism.

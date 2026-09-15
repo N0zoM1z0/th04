@@ -130,6 +130,8 @@ decode_size = "0x2"
 name = "blocked_fixture"
 evidence_id = "ev-blocked"
 reason = "synthetic reviewed nonexact boundary"
+owner_unit = "blocked-owner"
+source = "src/blocked.cpp"
 table_metadata_address = "0x10002"
 table_metadata_value = "0x00"
 jump_table_address = "0x10003"
@@ -179,6 +181,8 @@ next_public_address = "0x10005"
                 )
             self.assertEqual(len(accepted), 1)
             self.assertEqual(accepted[0]["size"], 5)
+            self.assertEqual(accepted[0]["owner_unit"], "blocked-owner")
+            self.assertEqual(accepted[0]["source"], "src/blocked.cpp")
             switch = accepted[0]["switch_review"]
             self.assertIsInstance(switch, dict)
             assert isinstance(switch, dict)

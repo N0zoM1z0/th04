@@ -1378,6 +1378,9 @@ def reviewed_nonexact_reviews(
             {
                 **item,
                 "id": str(override["id"]),
+                "owner_unit": str(override.get("owner_unit", item.get("owner_unit", ""))),
+                "source": str(override.get("source", item.get("source", ""))),
+                "owner_name": str(override.get("owner_name", item.get("owner_name", ""))),
                 "file_offset": file_offset,
                 "size": size,
                 "physical_size": physical_size,

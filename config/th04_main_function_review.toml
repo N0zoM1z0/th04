@@ -3993,3 +3993,49 @@ address = "0x1EDE2"
 name = "orange_backdrop_colorfill()"
 evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
 reason = "Admit the Ghidra-missed Orange backdrop callback only after exact natural owner, raw RET, exact next target entry, generated public, and independent target callback-pointer review."
+
+# v180: Target-first DIALOG_TEXT review corrects dialog_op() from Ghidra's
+# sparse 60-address body to a 0x374 executable body plus two 15-word compiler
+# switch tables. dialog_run() is contiguous through the next exact public. Both
+# maintained natural-source functions remain blocked only by historical ordered
+# MZ relocation differences despite raw-byte/MAP equality.
+[[reviewed_nonexact]]
+id = "th04-main-fn-1d1bc"
+address = "0x1D1BC"
+file_offset = "0xE9BC"
+size = "0x374"
+physical_size = "0x3B0"
+decode_size = "0x374"
+name = "dialog_op(unsigned char)"
+owner_unit = "th04-main-dialog-op"
+source = "src/main/dialog/op.inl"
+evidence_id = "ev-th04-main-dialog-op-boundary-v180"
+reason = "Target-first review closes executable code through RET 2 at 0x1D52F, then the 15-word sorted opcode-value table at 0x1D530 and 15-word jump table at 0x1D54E through 0x1D56B. Every jump resolves through DIALOG_TEXT CS base 0x1AAF0 to a decoded instruction start, and dialog_run() begins at the next TLINK public 0x1D56C. Maintained natural source is source-present, but exact promotion remains blocked by ordered MZ relocation mismatch."
+next_public_address = "0x1D56C"
+trailing_switch_tables = [
+  { compare_table_address = "0x1D530", compare_table_count = 15, compare_table_values = [35, 36, 61, 98, 99, 100, 101, 102, 103, 107, 108, 109, 110, 116, 119], jump_table_address = "0x1D54E", jump_table_count = 15, cs_base = "0x1AAF0" },
+]
+
+[[new_nonexact]]
+id = "th04-main-fn-1d1bc"
+address = "0x1D1BC"
+evidence_id = "ev-th04-main-dialog-op-boundary-v180"
+reason = "Expand the reviewed authored denominator with the complete target-proved dialog_op() executable extent. The following compare/jump tables remain physical compiler ownership rather than function-body credit."
+
+[[reviewed_nonexact]]
+id = "th04-main-fn-1d56c"
+address = "0x1D56C"
+file_offset = "0xED6C"
+size = "0x17F"
+name = "dialog_run()"
+owner_unit = "th04-main-dialog-run"
+source = "src/main/dialog/run.inl"
+evidence_id = "ev-th04-main-dialog-run-boundary-v180"
+reason = "Fresh target-bound Ghidra constructs all 383 bytes contiguously; raw decode closes RET at 0x1D6EA and exact dialog_animate() begins at the next TLINK public 0x1D6EB. Maintained natural source is source-present, but exact promotion remains blocked by ordered MZ relocation mismatch."
+next_public_address = "0x1D6EB"
+
+[[new_nonexact]]
+id = "th04-main-fn-1d56c"
+address = "0x1D56C"
+evidence_id = "ev-th04-main-dialog-run-boundary-v180"
+reason = "Expand the reviewed authored denominator with the complete contiguous dialog_run() body while preserving its relocation-order blocker."

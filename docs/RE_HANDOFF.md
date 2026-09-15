@@ -6141,3 +6141,197 @@ source-spelling matrix.
 
 The local `gpt-web:` checkpoint is created only after final validation; read its
 hash from live Git. Nothing is pushed. Campaign status remains active.
+
+## 2026-09-15 v180 DIALOG_TEXT boundary review and v154 codegen-negative checkpoint
+
+This conversation initially entered repository `th04` on branch `main` at
+`e7ac6d0e91e749481d78facbbfa6ab8d195dab50`, tracking `origin/main` at 0/0,
+with five unstaged tracked paths plus untracked
+`src/main/player/marisa_shot.cpp`. Complete staged/unstaged/untracked review,
+latest-handoff review, and retained replay inspection classified all six paths as
+one coherent `recoverable-current-work` v179 Marisa-shot packet. No unrelated or
+unknown tracked work was found. The recovery gate also corrected two internal
+ledger-token inconsistencies before preflight could pass: reviewed
+`SHOT_LASER_PUT_RAW` retained real TASM PROC metadata and therefore required the
+`tasm-proc` observation token, while `shot_marisa_b_l6` retained Ghidra range
+metadata and required a Ghidra observation token. No validator was weakened.
+
+During read-only continuation work, live HEAD then advanced independently to
+clean checkpoint `c73688842434888f54e36421119f6310cce05d1e`
+(`gpt-web: reconstruct MAIN Marisa shot cohort`). This conversation did not
+create that commit. Work immediately stopped for another recovery audit. The
+complete commit diff, current handoff, ledgers, compact receipts, source, OMF,
+and final MAP were reviewed before new edits. The checkpoint is the completed
+v179 state: natural `src/main/player/marisa_shot.cpp` reconstructs the complete
+`0x874` MAIN_TEXT Marisa-shot physical owner, and the retained focused,
+candidate-state aggregate, and post-promotion aggregate receipts all rehash and
+report `pass=true`, `failures=[]`. v179's legal source mechanisms are ordinary
+TC4J code plus `#pragma option -a` for compiler switch metadata; no target-byte
+emission or padding is used. v179 is therefore treated as committed recovered
+continuation state, not reimplemented here.
+
+All requested repository and Factory guidance paths were mounted and read. The
+registered `th04-ghidra` provider was enumerated and exposes ten operations with
+no `get_metadata` schema, so only discovered operations were used. Provider
+`check {}` passed for repository `th04` / `target:th04-main`. Repository-native
+`python3 scripts/ghidra.py th04-main check` independently passed the same
+156,258-byte MZ target, 6,144-byte header/load mapping, entry point, all 1,136
+ordered relocation entries, load-module identity, and sampled bytes. Target
+SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b` and
+canonicality remains only `candidate-local-attested`. Pinned TC86 Borland C++
+4.02 / TASM32 5.0 / TLINK 6.10 attestation passes. Ghidra function bodies,
+names, xrefs, and types remain provisional target observations with zero
+exactness credit.
+
+The stale prompt hypothesis around `sub_11DE6` was deliberately not reopened.
+Live v143 evidence already classifies and exactly reconstructs that extent as
+original-style symbolic assembly after independent TH05 target corroboration and
+legal-TC4J negative evidence.
+
+v180 first tested the v154 `items_update()` four-byte blocker through two genuinely
+new mechanisms rather than restarting the old source-spelling matrix. The v154
+physical owner remains MAIN_035_TEXT load `0x1DA1B..0x1DF60`, size `0x546`, with
+exact MAP placement and all fifteen ordered relocations; only target
+`29 C3 / 29 D3` versus candidate `2B D8 / 2B DA` remains inside
+`items_update()`.
+
+A pinned TASM32 5.0 control disproves the hypothesis that a TCC `-S` -> TASM
+producer alone selects the target opcode direction. Ordinary symbolic
+`SUB BX,AX` / `SUB BX,DX` assemble to `2B D8 / 2B DA`. The retained control
+source SHA-256 is
+`a91f9c90918174667b4e6ab43722d8dc4679f156ac0faaebced723f47824afce` and object
+SHA-256 is
+`9aff6485dedf366994f4c37601b5d5efe5ecc59f66e636e6310f96b5a54b075a`.
+A second calibrated probe restricts the collision delta to a block-scoped
+`register unsigned int` in the full v154 source, testing whether existing SI/DI
+lifetimes naturally leave BX for the short-lived value. It instead emits
+`0x54C / 1,356` CODE bytes versus the calibrated `0x546 / 1,350`, changes 228
+late-region CODE bytes, and produces none of the desired subtraction forms at the
+intended sites. Probe source SHA-256 is
+`40df2e934fcc0a54b1a2c58d6fc0bea4fcce0c052b4c96989e378aa5752c0f5e` and CODE
+SHA-256 is
+`9b73289eb7ea34c9cce7f822d61762e3c0d40659d5f4138b55478031185a4133`.
+Both are durable negative mechanism evidence; v154 remains blocked and should not
+resume spelling/register matrices without a new compiler-IR, producer, or link-
+history hypothesis.
+
+The structural v180 packet then corrects the DIALOG_TEXT authored denominator.
+Fresh target-bound Ghidra constructs `dialog_op(unsigned char)` at analysis
+`0x1D1BC` with min/max `0x1D1BC..0x1D52F` but only 60 body addresses across two
+ranges. Target-first gap-free decode proves a complete `0x374 / 884` executable
+body through `RET 2` at load `0xD52F`. The following `0x3C / 60` bytes are
+compiler switch ownership: fifteen sorted 16-bit opcode values at load
+`0xD530..0xD54D` (`#`, `$`, `=`, `b`, `c`, `d`, `e`, `f`, `g`, `k`, `l`, `m`,
+`n`, `t`, `w`) followed by fifteen jump words at `0xD54E..0xD56B`. Every jump
+resolves through DIALOG_TEXT CS base `0x1AAF0` to a decoded instruction start
+inside the executable body. The complete physical owner is therefore
+DIALOG_TEXT `0AAF:26CC`, load `0xD1BC..0xD56B`, target file
+`0xE9BC..0xED6B`, size `0x3B0 / 944`, SHA-256
+`1643a72bd7d6c411a5686efd6da2ae77385953fe509b289af623d21df71ddd67`, with 26
+target MZ relocations. `dialog_run()` begins at the immediate next byte.
+
+`dialog_run()` is independently reviewed at DIALOG_TEXT `0AAF:2A7C`, analysis
+`0x1D56C`, load `0xD56C..0xD6EA`, target file `0xED6C..0xEEEA`, size
+`0x17F / 383`, SHA-256
+`52036afb6ec9c1fea4087cff75482a80908eed66b60e5e45caf4296f5892c2db`. Fresh
+Ghidra constructs all 383 body bytes contiguously, raw decode closes at RET, and
+exact `dialog_animate()` begins at the next byte `0xD6EB`. Four target MZ
+relocations overlap the body. Fresh caller analysis gives the expected chain
+`dialog_animate()` -> `dialog_run()` -> `dialog_op()`.
+
+Maintained sources are `src/main/dialog/op.inl`, SHA-256
+`2626af35399e82f88edfbb7c2679cd50c2af14f6adeab2047e145a59e6f2cfa7`, and
+`src/main/dialog/run.inl`, SHA-256
+`897fc631b6bc2a6116a85eb873aff3ef6b203d33340616ea7da87211b4470b03`. Git
+history proves both are byte-identical to their pre-product-layout migration
+source text at commit `62a56f41b763b2cab9c78fe852e05f9a8801844d`. Historical two-cold replay
+`gptweb-partials-001` remains negative linker evidence: both units are raw-byte,
+MAP, OMF-valid, and deterministic in A/B, but their ordered MZ relocation lists
+are cyclically different from target. Existing natural-TU, pre-decomp assembly,
+wrapper, PC-98 IDE, `#line`/debug, and EXTDEF-order experiments already fail to
+restore target order and are not retried.
+
+The fail-closed function reviewer already supports logical/physical size,
+terminal raw decode, next-public seams, compare tables, jump tables, and jump-
+target validation for reviewed nonexact publics. v180 adds only one backward-
+compatible projection rule: when a nonexact policy explicitly names
+`owner_unit`, `source`, or `owner_name`, those maintained values survive the
+writer. Policies that omit them retain the previous blank behavior. Focused
+function-review tests pass. A trial review against the current v179 final MAP,
+the complete target-bound metadata snapshot, and the pinned target adds exactly
+two IDs (`th04-main-fn-1d1bc`, `th04-main-fn-1d56c`) and removes none. The
+trial report SHA-256 is
+`57c654ba2efa423a2f936c2a2b6b4da24060165f4ab1d43f37646a645634bb81`. Thirty
+unrelated historical normalization edits proposed by the generic writer are
+explicitly not adopted.
+
+No v180 focused exact-unit replay, candidate-state aggregate, post-promotion
+aggregate, or Factory exact claim was run. Both dialog units are known nonexact
+under the required ordered-relocation Oracle, and the v154 experiment is also
+known nonexact. Running promotion gates would be misleading. The current
+repository-native exact baseline remains v179's post-promotion aggregate
+`gptweb-v179-marisa-shots-aggregate-final-001`, whose retained receipt SHA-256 is
+`e51840bf0a437d646f4f9b8a04d9b51c8ad12db83e2b9097dcb39d06061989ac` and was
+rehash-verified rather than rerun in this conversation.
+
+Live MAIN accounting after the denominator correction is **74,881 / 79,802 exact
+reviewed authored bytes (93.833488%)** and **450 / 466 exact reviewed authored
+functions (96.566524%)**. MAIN routing is 450 exact, 16 reviewed blocked, 71
+unreviewed authored candidates, and 31 original-style ASM attestation
+observations. `docs/PROGRESS.md` retains its separate conservative generated
+mapping denominator; it is not the same accounting surface as `scripts/status.py`.
+The percentage decrease is an honest boundary expansion, not an exact-owner
+regression and not a percentage of MAIN.EXE or TH04 as a product.
+
+Other TH04 executables remain active independent queues and receive no v180 MAIN
+credit. `th04-op` has 94 unreviewed authored candidates, `th04-maine` 72, and
+`th04-zun` 13, with no honest accepted exact-byte/function denominator yet.
+`ZUN.COM` remains an MZ artifact despite its extension. Their DIET/hybrid target
+contracts require artifact-specific sessions rather than borrowing MAIN evidence.
+
+Verification planes remain separate. v180 establishes reviewed target boundaries
+and maintained source presence for the two dialog functions, and durable compiler
+negative evidence for v154; it establishes no new exact owner. Standalone TH04
+production compile/link closure is **not established**. Whole-image exactness is
+not established. Runtime-storage identity is **not established**. No runtime
+scenario was executed. Portable-runtime validation is not established. No v180
+Factory Truth-Kernel acceptance exists. Independent pristine-release provenance
+remains unestablished; the private target stays `candidate-local-attested` and
+was never staged, modified, patched, relocated, or published.
+
+The v180 bounded scratch root is
+`.analysis/gpt-web/th04-main-20260915-v180`. It began at **8,429,023,186 bytes**
+for the full `.analysis/` tree. After current-session compiler probes, target
+review, trial function review, and explicit deletion of only current-session
+unreferenced raw disassemblies/calibration copies, the scratch root is about
+0.93 MiB and retains only evidence-linked compiler objects/sources/reports plus
+the function-review report/trial ledger. The pre-final-CI `.analysis/` size was
+**8,429,989,811 bytes**. Full `python3 scripts/ci.py` then passed, including
+Python tests, tracking, boundary/generated-report validation, all private TH04
+target checks, TH01-TH05 Oracle calibration, Ghidra/JDK identity, live Ghidra
+database replay, and Ghidra mutation smoke. Final post-CI `.analysis/` size is
+**8,429,995,944 bytes**, net growth **972,758 bytes** from v180 entry. Shared
+targets, toolchains, Wine prefix, Ghidra/provider state, legacy/unknown analysis
+content, and unrelated replay evidence were left untouched.
+
+The first concrete continuation is the complete B4M_UPDATE_TEXT thick-laser seam
+between exact v156 and exact v157. Four corroborated/unreviewed functions tile
+load `0x15D74..0x15ECD`, size `0x15A / 346`, with no gap:
+`sub_15D74` (`0x31`), `thicklaser_template_pull(thicklaser_t near&)` (`0x18`),
+`sub_15DBD` (`0x2B`), and `sub_15DE8` (`0xE6`). Exact v156 explosion ownership
+ends at `0x15D73`; exact v157 `yuuka5_move_transition()` begins at `0x15ECE`.
+Fresh Ghidra currently shows each of the four entries as one contiguous body, but
+that does not prove one historical producer. The next conversation should first
+re-audit live Git, then close raw RET seams, callers/callees, target relocation
+order, TASM/MAP ownership, and any data/table tail. Only after that should it
+compile natural source in combined and evidence-supported split forms to infer the
+true TC4J/OMF producer seam. Do not fuse the four functions merely because they
+are adjacent.
+
+Campaign status remains active. This v180 conversation slice is not a 99.5%
+completion, project completion, standalone product build, runtime validation,
+whole-image result, OP/MAINE/ZUN reconstruction, or whole-game completion claim.
+The local `gpt-web:` checkpoint is created only after final validation; read its
+hash from live Git rather than embedding a self-referential hash here. Nothing is
+pushed.
