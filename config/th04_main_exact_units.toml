@@ -9353,3 +9353,58 @@ map_start = "0x610D"
 map_size = "0x14E"
 target_file_offset = "0x123FD"
 size = "0x14E"
+
+# v176 candidate: close the final MAIN__TEXT player invalidation function after
+# correcting its Ghidra-truncated 0x94 body to the complete 0xB6 public extent.
+# Keep the extracted m1rsuf prefix byte-identical, then append the natural TC4J
+# producer at the historical 0AAF:5CF2 boundary immediately before PLAYER_M_TEXT.
+[[build_replacements]]
+id = "th04-main-player-invalidate-v176-build"
+trigger_units = ["th04-main-player-invalidate-v176"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/tlr.cpp\",\n"
+build_replacement = "\t\"th04/rshot.cpp\",\n\t\"th04/m1rsuf.asm\",\n\t\"th04/pinv.cpp\",\n\t\"th04/tlr.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-player-invalidate-v176-suffix"
+trigger_units = ["th04-main-player-invalidate-v176"]
+patch_path = "th04/m1rsuf.asm"
+encoding = "latin-1"
+scaffold_sha256 = "4f6bf4aaccd86a53efbd9870c85e11f3056386d9248925882b4c57003f1893ca"
+
+[[source_transforms.ops]]
+id = "remove-player-invalidate-v176"
+kind = "replace"
+old = "include th04/main/player/invalidate.asm\r\n"
+new = ""
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-player-invalidate-v176-drawpoint-storage"
+trigger_units = ["th04-main-player-invalidate-v176"]
+patch_path = "th04/main/drawpoint[bss].asm"
+encoding = "latin-1"
+scaffold_sha256 = "c9abb0c3916d10f5ec47e8fde8a92fd1e57cdf7cdd61b26a5eeef3f5a24366a1"
+
+[[source_transforms.ops]]
+id = "split-drawpoint-field-publics-v176"
+kind = "replace"
+old = "public _drawpoint\r\n_drawpoint\tPoint <?>\r\n"
+new = "public _drawpoint, _drawpoint_x, _drawpoint_y\r\n_drawpoint label Point\r\n_drawpoint_x\tdw ?\r\n_drawpoint_y\tdw ?\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-player-invalidate-v176"
+default_enabled = true
+requires_units = ["th04-main-player-render-v175"]
+repo_source = "src/main/player/invalidate.cpp"
+overlay_path = "th04/pinv.cpp"
+map_module = "th04/pinv.cpp"
+map_mode = "exact"
+object_path = "obj/th04/pinv.obj"
+auxiliary_objects = ["obj/th04/m1rsuf.obj"]
+map_segment = "MAIN__TEXT"
+map_start = "0x5CF2"
+map_size = "0xB6"
+target_file_offset = "0x11FE2"
+size = "0xB6"

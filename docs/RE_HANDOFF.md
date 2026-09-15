@@ -10,16 +10,16 @@ routing inventory and `docs/BOUNDARY_REVIEW.md` is its generated explanation.
 The inventory contains 2,120 distinct function-like observations:
 
 - 716 authored reconstruction candidates: OP 94, MAIN 537, MAINE 72, ZUN 13;
-- 414 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
-- 288 authored candidates otherwise unreviewed across all four artifacts;
+- 415 accepted exact MAIN functions and 14 reviewed blocked MAIN functions;
+- 287 authored candidates otherwise unreviewed across all four artifacts;
 - 65 original-style ASM observations in a separate attestation queue;
 - 1,339 compiler/runtime/library/data/switch observations explicitly excluded.
 
-Across the live MAIN source/acceptance ledgers, the current v175 totals are:
+Across the live MAIN source/acceptance ledgers, the current v176 totals are:
 
-- reviewed authored bytes: **70,313 / 73,907 exact (95.137132%)**;
-- accepted authored functions: **414 / 428 exact (96.728972%)**;
-- accepted default exact replay owners: **208**;
+- reviewed authored bytes: **70,495 / 74,089 exact (95.149077%)**;
+- accepted authored functions: **415 / 429 exact (96.736597%)**;
+- accepted default exact replay owners: **209**;
 - original-style ASM: **17 units / 2,526 exact bytes**, tracked separately;
 - currently confirmed nonexact authored bytes: **3,594 bytes** across 14
   reviewed blocked functions.
@@ -5561,6 +5561,124 @@ currently provisional size `0x94`. Its relocation at load `0x10837` is exactly
 the relocation interleaved between the v175 update and renderer groups. Review
 its true physical owner, callers/callees, source language, and relocation
 ownership next rather than treating it as an isolated small-function win.
+
+The local `gpt-web:` checkpoint is created only after final validation; read its
+hash from live Git. Nothing is pushed.
+
+
+## 2026-09-15 v176 player invalidate boundary/exact checkpoint
+
+This conversation started from clean tracked repository `th04`, branch `main`,
+HEAD `6dce0a79d5b931f0e2a08475b90e0c33d2321b98`, two commits ahead of
+`origin/main`. No staged, unstaged, untracked, conflicted, unrelated, or unknown
+tracked work required recovery. All mandated repository and Factory guidance was
+reread before editing. Startup preflight/status and the 2,120-observation boundary
+validator passed. Entry `.analysis/` size was 7,693,071,372 bytes.
+
+The registered `th04-ghidra` provider was re-enumerated. Its discovered read-only
+`check {}` operation passed for repository `th04` / `target:th04-main`; the live
+provider still exposes no `get_metadata` operation, so none was invented. The
+address-taking `function` operation again rejected a schema-valid address array
+before returning semantic data, and a later `list_functions` call hit a network
+transport failure. Git status was checked after failures, and no boundary claim
+uses those failed calls. Repository-native `python3 scripts/ghidra.py th04-main
+check` independently passed the 156,258-byte MZ target, 6,144-byte header/load
+mapping, entry point, all 1,136 relocation records, load-module identity, and
+sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains only `candidate-local-attested`. TC86 Borland C++ 4.02 /
+TASM32 5.0 / TLINK 6.10 attestation passed.
+
+The v175 handoff pointed at `player_invalidate()` as provisional size `0x94`.
+v176 corrects that denominator rather than inheriting it. The live boundary row
+already contained `body_span=0xB6` with two noncontiguous Ghidra ranges. TLINK
+public `0AAF:5CF2`, pinned TASM, complete 16-bit raw decode through `RET` at load
+`0x10897`, and exact next `PLAYER_M_TEXT` at load `0x10898` independently close
+one near function of `0xB6` bytes at load `0x107E2..0x10897`, file
+`0x11FE2..0x12097`. A target near `CALL` at load `0xCB5E` inside MAP-public
+`tiles_render()` resolves to `0AAF:5CF2`, supplying a direct target caller anchor
+despite Ghidra reporting zero callers. The function has one target MZ relocation,
+at load `0x10837`.
+
+Maintained natural source is `src/main/player/invalidate.cpp`, SHA-256
+`23e0e6ed67f9c5929cb629018a2e3597936591d64c81b8f4acca58bca515d966`.
+Cheap TC4J probes isolated two source-shape details: addition of the negative
+explosion-radius velocity produces target `ADD AX,FF90`, and field-level linkage
+names for the existing `drawpoint.x/y` words prevent TC4J from coalescing the two
+arguments into one 32-bit push. The replay data transform preserves the original
+four-byte `_drawpoint` allocation while publishing `_drawpoint_x` at `2134:539A`
+and `_drawpoint_y` at `2134:539C`; no new storage is allocated. No inline
+assembly, target byte emission, codestring, fake return, inert padding, target
+patch, or ABI lie is used.
+
+The physical producer split removes only the old invalidate include from
+`th04/m1rsuf.asm` and inserts `pinv.cpp` immediately after `m1rsuf.obj`. The
+residual `m1rsuf` prefix remains exactly `0x8AE` bytes at `0AAF:5444`, raw slice
+SHA-256 `c0958ca18d9268a00f477311230ffb9166661f52a2ce5540a615ef9e5b59d0d9`;
+`pinv.cpp` then occupies `0AAF:5CF2..5DA7` before `PLAYER_M_TEXT`. Focused
+candidate002 deliberately applied an overbroad auxiliary gate to the entire
+legacy residual object. Its raw bytes and MAP were exact, but historical ordered
+relocation sequence was not; that pre-existing residual property is retained as
+negative evidence and is not used to deny the new owner, whose own sole ordered
+relocation is exact at `0x10837`.
+
+Focused replay `gptweb-v176-player-invalidate-focused-candidate-003` passes 130
+owners twice with `failures=[]`; receipt SHA-256 is
+`9c035ee0083f251a5a4555b55483c23b725a4ac9e3ebad4cb63894190f2dd1c6`.
+Candidate-state aggregate `gptweb-v176-player-invalidate-aggregate-candidate-001`
+passes all 209 selected default owners twice; receipt SHA-256 is
+`99a1c1606ce7e30591bf38c012999e7a549f472a4de14cc9afb93898af083749`.
+After unit/boundary/function promotion, post-promotion aggregate
+`gptweb-v176-player-invalidate-aggregate-final-001` again passes all 209 default
+owners twice with `failures=[]`; receipt SHA-256 is
+`7c5adbf291d878ee212744ca7fa0a4f436479ddd3a9798a61711b5f45cff48ee`.
+All authoritative exact runs bind replay manifest SHA-256
+`e5736907b146b1a3005608e1947b2aeaba0cbca63b5b68bf6842761f1c15de86`.
+The v176 owner is raw/MAP/ordered-relocation exact in every authoritative run;
+its normalized OMF SHA-256 is
+`bcc0d8628214b4873921dbd6ff16a22cde54954b0a450d1901e80bf7e1e9c2b7`.
+
+Live MAIN accounting after v176 is **70,495 / 74,089 exact reviewed authored
+bytes (95.149077%)** and **415 / 429 exact reviewed authored functions
+(96.736597%)**, with 14 reviewed blockers, 108 unreviewed MAIN authored
+candidates, and 31 ASM-attestation observations. This remains below the campaign
+pressure target and is not a whole-executable percentage or completion claim.
+
+Verification planes remain separate. Repository-native exactness is PASS for the
+complete v176 physical/logical owner and the 209-owner post-promotion cohort.
+Standalone TH04 production compile/link closure is not established. Whole-program
+runtime-storage identity is not established. No runtime scenario was executed.
+Whole-image exactness and portable-runtime validation are not established. No v176
+Factory Truth-Kernel acceptance has been submitted or claimed. The private target
+remains `candidate-local-attested` and was never staged, modified, patched,
+relocated, or published.
+
+OP.EXE, MAINE.EXE, and ZUN.COM remain independent active queues and receive no
+v176 MAIN credit: OP has 94 unreviewed authored candidates, MAINE 72, and ZUN 13.
+`ZUN.COM` remains an MZ artifact despite its extension.
+
+The v176 `.analysis/` workspace was 7,693,071,372 bytes at entry and
+7,944,153,574 bytes after the full CI pass, a measured net growth of 251,082,202
+bytes. The retained v176 replay trees are intentionally bounded evidence:
+focused candidate002 records the overbroad residual-relocation negative, focused
+candidate003 is the authoritative focused exact run, and candidate/final
+aggregates preserve pre- and post-promotion closure. The v176 scratch directory is
+about 104 KiB and contains the bounded compiler probes, target decode, and caller
+anchor used by this packet. No v176 replay tree is currently unreferenced; none
+was deleted merely to reduce disk usage. Shared targets, toolchains, Wine prefix,
+Ghidra state, legacy/unknown analysis content, and unrelated prior replay evidence
+were left untouched. No active reconstruction or analysis producer remained at
+this measurement.
+
+Detailed source/boundary/linker evidence is recorded in
+`docs/reconstruction/TH04_MAIN_PLAYER_INVALIDATE_V176.md`. The first concrete
+continuation is the connected `MAIN__TEXT` shot cohort rather than an isolated
+small function: start at provisional `shots_invalidate()` load `0x10444`
+(`body_size=0x6C`, `body_span=0x72`, two Ghidra ranges), then reconcile adjacent
+`sub_1042A`, `sub_104B6`, `shots_render()`, FAR `shots_hittest()` (eight reported
+callers), and the seam into `ENEMIES_RENDER` at load `0x10713`. This packet should
+audit shared tails, post-return data, near/far ABI shape, and physical relocation
+ownership together.
 
 The local `gpt-web:` checkpoint is created only after final validation; read its
 hash from live Git. Nothing is pushed.
