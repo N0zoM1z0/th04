@@ -4267,3 +4267,12 @@ id = "th04-main-fn-1b8fc"
 address = "0x1B8FC"
 evidence_id = "ev-th04-main-mpn-load-boundary-v195"
 reason = "Admit the complete MPN_LOAD near Pascal body only after natural TC4J code-shape closure, focused two-cold replay, exact MAP placement, all four ordered relocations, raw equality, and the 233-owner candidate aggregate."
+
+
+# v196: Natural-C++ Stage 2 midboss renderer. Strict automatic review uses the
+# target Ghidra body, TLINK public, exact owner, and raw terminal decode.
+[[new_exact]]
+id = "th04-main-fn-1cc3a"
+address = "0x1CC3A"
+evidence_id = "ev-th04-main-midboss2-render-boundary-v196"
+reason = "Admit the complete midboss2_render() callback only after target boundary/callback-pointer closure, natural TC4J code-shape closure, focused two-cold replay, exact MAP/ordered relocations/raw bytes, and the 234-owner candidate aggregate."

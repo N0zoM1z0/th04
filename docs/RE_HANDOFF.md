@@ -8217,3 +8217,144 @@ driver. Reconcile its physical owner, adjacent entries/data, callers/callees,
 relocations, and source lineage before choosing natural C++ versus original-style
 assembly. Do not resume blind spelling searches for `sub_CCD6` or `sub_B835`
 unless a genuinely new compiler/source mechanism appears.
+
+## 2026-09-16 v196 Stage 2 midboss renderer checkpoint
+
+This conversation started from clean committed HEAD
+`902ac3357ed19679774b8ae952f115bd0720ccfd`, branch `main`, upstream
+`origin/main`, ahead 2 / behind 0. There were no staged, unstaged, untracked,
+unrelated, or unknown tracked paths at entry. `.analysis` began at
+**3,514,791,807 bytes**. All required repository and Factory documents/contracts
+were read completely before editing.
+
+Mandatory preflight/status/function-boundary gates passed. The discovered
+`th04-ghidra` surface again contains ten operations and no `get_metadata`, so the
+available `check {}` attestation was used rather than inventing an operation.
+It passed for repository `th04` and target `target:th04-main`. Repository-native
+`python3 scripts/ghidra.py th04-main check` independently passed the 156,258-byte
+private MZ, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte header/load mapping, entry point, all 1,136 ordered relocations, load
+module digest, and sampled bytes. Required TC4J/TASM/TLINK surfaces were READY;
+the optional host `wine64` file-hash mismatch remained informational. The
+private target stayed ignored, unmodified, uncommitted, and unpublished with
+`candidate-local-attested` canonicality.
+
+The stale prompt orientation around `sub_11DE6` was not reopened because the
+live repository already closed it in v143. v196 followed the live v195 handoff
+into the structurally connected MAI_TEXT Stage 2 midboss callback at target map
+`0AAF:214A`, load `0xCC3A..0xCCD5`, file `0xE43A..0xE4D5`, size `0x9C`, target
+slice SHA-256
+`014fc001cac26ab247a2b65ae8b075bd6daebb269d666a45564566f05bd333f3`.
+
+Fresh Ghidra constructs one contiguous 156-byte near body but reports zero
+direct callers. Target-first review closes the missing callback edge
+independently: exact `stage2_setup()` stores near offset `0x214A` into
+`_midboss_render_func` at analysis `0x2E0C2`, and maintained setup source assigns
+`midboss_render_func = midboss2_render`. The body calls exact same-group
+`scroll_subpixel_y_to_vram_seg1()` plus FAR `SUPER_ROLL_PUT_1PLANE` and
+`SUPER_ROLL_PUT`; the two target MZ segment-word relocations are at load
+`0xCCB9` and `0xCCCB`. Raw/TASM/Ghidra all close the body through the near RET at
+`0xCCD5`; reviewed `sub_CCD6` starts at the next byte.
+
+Maintained natural source is `src/main/midboss/m2_render.cpp`, SHA-256
+`2498c00775f9ab24b5c26f3c8c29a5ef547d55b2a539cdf5e876fbd323ee1b2c`.
+The first semantic TC4J source hypothesis already emitted the complete 156-byte
+target instruction skeleton. It naturally reproduces `ENTER 2`, SI/DI register
+allocation, the one stack local, all coordinate/phase checks, the three sprite
+animation branches, both render paths, and RET. The target's uninitialized
+`patnum` behavior outside sprite values 0/1/2 is deliberately preserved rather
+than repaired.
+
+The physical owner required a real three-way MAI_TEXT split. Before v196,
+`th04_main.asm` contributed one `0x17E` region from `0AAF:20C8`. Final v196
+layout is monolithic prefix `0AAF:20C8 +0x82`, natural `th04/m2r.cpp`
+`0AAF:214A +0x9C`, then zero-credit replay-only `th04\\maisuf196.asm`
+`0AAF:21E6 +0x60`. The prefix keeps the `0xCC39` alignment NOP outside the
+natural owner. The suffix is reviewed `sub_CCD6`, whose source/origin remains
+unknown; it is supplied only through fail-closed `scaffold_extractions` bound to
+original scaffold SHA-256
+`c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b`
+and extracted-span SHA-256
+`c74871efaf6f24a1b336ecd56aa37a36af7055e459b9032cb3fe48e92874cccd`.
+Maintained wrapper template SHA-256 is
+`38527e4a49f0d391c95d760aabc9d3f0396463064c76b73d39deb111e5c6fce3`.
+
+Cross-object suffix linkage required generated publics for existing `sub_B835`,
+`byte_250FE`, and `_scroll_last_delta` labels. These are reconstruction OMF
+metadata only, not original-target MAP evidence. Focused and aggregate replay
+prove unchanged linked bytes/layout/relocations. The replay-only suffix TASM
+objects have run-dependent raw OMF metadata hashes, which is not hidden:
+their LEDATA/FIXUPP records are byte-identical in focused and aggregate A/B
+builds with semantic-record SHA-256
+`1d95c4bafde6deb4f760816b0edb63d3b001190a3dc1695c959936f94155bbac`.
+Natural `m2r.obj` is fully byte-deterministic.
+
+Focused `gptweb-v196-midboss2-focused-candidate-003` passes 130 selected units
+twice with `failures=[]`, receipt SHA-256
+`69203f63aecde63985b3caf23d50fe7fd0f225a1791e633113aa4e788c6644d7`.
+Candidate no-unit aggregate `gptweb-v196-midboss2-aggregate-candidate-001` passes
+234 candidate-state defaults twice, receipt SHA-256
+`bc8f0120fb5f7d50fe9e3b85f1d12f1098497416eeb6422d13677d0613f609af`.
+Post-promotion aggregate `gptweb-v196-midboss2-aggregate-final-001` passes all
+234 tracked defaults twice, receipt SHA-256
+`0a54dc8e899dc808b5b9c337fefeaf70f34b4737e691164b52b86dee835375dd`.
+Tracked manifest SHA-256 is
+`3b935189fe00d4b3199d1abcbdcf5ad91b8f1a0f6e1b97da110c968f57a0d370`;
+A/B natural `m2r.obj` SHA-256 is
+`47d114eef35d21f0613b9fbe3bf4ba5e68b767a2fe72f5650b4a9c512108f7ce`;
+A/B final MAP SHA-256 is
+`8d047ff471d025c2c60c92926d34cd89aae2e7735ac9088222593cb531f2f106`;
+A/B overlay MAIN SHA-256 is
+`44e65ec09456f930770248545ed449e46ec74f927db0781c607bf93e598dd72c`.
+
+Strict automatic function review adds exactly one previously absent semantic
+ID, `th04-main-fn-1cc3a`, pointing to the exact natural owner. Trial report
+SHA-256 is
+`a8ea2987680ede200f89ec1f6c9bf551d57760de3d5c8a43a3cd8a5c1d3f31ba`.
+Only that validated row was inserted into the live ledger; pre-existing rows
+kept their order.
+
+OP/MAINE/ZUN were checked explicitly. Their attested unpacked payload hashes
+remain OP
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`,
+MAINE `7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`,
+and ZUN `baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+Longest contiguous exact matches to the complete 156-byte MAIN body are only
+8/6/4 bytes respectively. This is negative routing evidence only; those
+artifacts retain their independent authored queues and receive no MAIN source
+or exactness credit.
+
+Live MAIN accounting is now **75,482 / 81,141 exact reviewed C/C++ bytes
+(93.025721%)** and **458 / 481 exact reviewed C/C++ functions (95.218295%)**.
+Generated progress uses a separate conservative denominator and reports 75,482
+exact authored bytes at 91.85%. Original-style ASM remains separate at
+**29 units / 4,370 bytes**. The all-artifact remaining reconstruction queue is
+233 nonexact authored candidates: 209 unreviewed plus 24 known MAIN blockers.
+
+Current-session `.analysis` peaked at **3,756,239,799 bytes**. After confirming
+no active writable compiler/link/replay producer, explicit failed focused-001
+and focused-002 trees were deleted; successful focused-003 and candidate
+aggregate were compacted to receipt-only, and the complete post-promotion final
+aggregate was retained as the current cold baseline. The compact v196 scratch
+retains compiler/OMF/function-review/cross-artifact evidence. Pre-final-CI
+`.analysis` was **3,585,350,003 bytes**. Full final `python3 scripts/ci.py`
+returned `CI: PASS` and left `.analysis` at **3,585,356,136 bytes**, currently
+**70,564,329 bytes** above entry. Older baselines, private targets, toolchains,
+Wine/Ghidra state, and legacy/unknown analysis content were untouched.
+
+Verification planes remain separate. Repository-native exact ownership and
+function exactness are established for `midboss2_render()` only. The replay-only
+scroll suffix gains no reconstruction credit. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario validation, portable runtime, independent pristine provenance, and
+v196 Factory Truth-Kernel acceptance remain unestablished. No remote push is
+performed.
+
+Next review the connected remaining MAI_TEXT physical prefix at load
+`0xCBB8..0xCC39`, size `0x82`: `tiles_render_all()` (`0x42`),
+`egc_start_copy_noframe()` (`0x3F`), and the final alignment NOP. Reconcile both
+logical boundaries, the NOP owner, callers/callees, relocations, and natural
+source/origin as one packet before splitting the last monolithic MAI prefix.
+`sub_CCD6` and `sub_B835` remain reviewed source/origin unknowns; do not resume
+blind spelling searches without a genuinely new mechanism.

@@ -10858,3 +10858,81 @@ map_start = "0x0E0C"
 map_size = "0x75"
 target_file_offset = "0xD0FC"
 size = "0x75"
+
+
+# v196: natural-C++ Stage 2 midboss renderer inserted between the retained
+# MAI_TEXT tile/EGC prefix and the zero-credit replay-only scroll-driver suffix.
+[[scaffold_extractions]]
+id = "th04-main-mai-scroll-suffix-v196"
+trigger_units = ["th04-main-midboss2-render-v196"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "sub_CCD6\tproc near\r\n"
+end = "sub_CCD6\tendp\r\n"
+span_sha256 = "c74871efaf6f24a1b336ecd56aa37a36af7055e459b9032cb3fe48e92874cccd"
+template_source = "config/replay/th04_mai_scroll_suffix_v196.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/maisuf196.asm"
+
+[[build_replacements]]
+id = "th04-main-midboss2-render-v196-build"
+trigger_units = ["th04-main-midboss2-render-v196"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/mpnend.cpp\",\n\t\"th04/itemsinv.cpp\",\n"
+build_replacement = "\t\"th04/m2r.cpp\",\n\t\"th04/maisuf196.asm\",\n\t\"th04/mpnend.cpp\",\n\t\"th04/itemsinv.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-midboss2-render-v196-layout"
+trigger_units = ["th04-main-midboss2-render-v196"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "cccf0f466d6bfb153e2063805d47629fae7a6cb4cb8755d9e1628c020bca821f",
+  "83e2d5d9dc0d4103549b4494d7786e97c3c2e724482c867d991ff12c0df1ab5e",
+]
+
+[[source_transforms.ops]]
+id = "publish-scroll-helper-v196"
+kind = "insert_before"
+anchor = "sub_B835\tproc near\r\n"
+text = "public sub_B835\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-midboss2-and-scroll-suffix-v196"
+kind = "remove_between"
+removed_sha256 = "456ccc5067a15c40d150c99dba5f134fbe6885bd481294768c429ee2420d536b"
+start = "public @MIDBOSS2_RENDER$QV\r\n"
+end = "sub_CCD6\tendp\r\n"
+replacement = "extrn sub_CCD6:near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-scroll-row-previous-storage-v196"
+kind = "insert_before"
+anchor = "byte_250FE\tdb ?\r\n"
+text = "public byte_250FE\r\n"
+
+[[source_transforms.ops]]
+id = "publish-scroll-last-delta-storage-v196"
+kind = "insert_before"
+anchor = "include th04/main/playfld[bss].asm\r\n"
+text = "public _scroll_last_delta\r\n"
+
+[[units]]
+id = "th04-main-midboss2-render-v196"
+default_enabled = true
+requires_units = ["th04-main-mpn-load-v195"]
+repo_source = "src/main/midboss/m2_render.cpp"
+overlay_path = "th04/m2r.cpp"
+map_module = "th04/m2r.cpp"
+map_mode = "exact"
+object_path = "obj/th04/m2r.obj"
+auxiliary_objects = ["obj/th04/maisuf196.obj"]
+auxiliary_extents = [
+  { id = "th04-main-mai-scroll-suffix-v196", file_offset = "0xE4D6", size = "0x60", map_module = "th04\\maisuf196.asm", map_segment = "MAI_TEXT", object_path = "obj/th04/maisuf196.obj" },
+]
+map_segment = "MAI_TEXT"
+map_start = "0x214A"
+map_size = "0x9C"
+target_file_offset = "0xE43A"
+size = "0x9C"

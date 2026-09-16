@@ -1,0 +1,29 @@
+.386
+.model use16 large _TEXT
+include ReC98.inc
+include th04/th04.inc
+
+END_TEXT segment word public 'CODE' use16
+END_TEXT ends
+mai_TEXT segment word public 'CODE' use16
+mai_TEXT ends
+main_01 group END_TEXT, mai_TEXT
+
+extrn _page_back:byte
+extrn _scroll_line_on_page:word
+extrn _scroll_line:word
+extrn byte_250FE:byte
+extrn _scroll_active:byte
+extrn GRAPH_SCROLLUP:far
+extrn _scroll_last_delta:word
+extrn _scroll_subpixel_line:byte
+extrn _scroll_speed:byte
+extrn byte_25104:byte
+extrn sub_B835:near
+
+mai_TEXT segment word public 'CODE' use16
+assume cs:main_01
+public sub_CCD6
+{{EXTRACTED_SPAN}}
+mai_TEXT ends
+end
