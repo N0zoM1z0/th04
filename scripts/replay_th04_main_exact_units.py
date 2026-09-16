@@ -1034,20 +1034,45 @@ def resolved_auxiliary_extents(
 ) -> list[dict[str, object]]:
     """Resolve trigger-scoped zero-credit extent ownership without weakening it."""
 
-    baseline = list(entry.get("auxiliary_extents", []))
+    def checked_override(value: object, label: str) -> list[dict[str, object]]:
+        if not isinstance(value, list) or not value:
+            raise RuntimeError(
+                f"{entry['id']}: {label} is active but missing"
+            )
+        if not all(isinstance(item, dict) for item in value):
+            raise RuntimeError(
+                f"{entry['id']}: {label} contains a non-table entry"
+            )
+        return list(value)
+
+    resolved = list(entry.get("auxiliary_extents", []))
     trigger = entry.get("auxiliary_extents_override_when_unit")
-    if trigger is None or str(trigger) not in selected_ids:
-        return baseline
-    override = entry.get("auxiliary_extents_override")
-    if not isinstance(override, list) or not override:
-        raise RuntimeError(
-            f"{entry['id']}: auxiliary extent override is active but missing"
+    if trigger is not None and str(trigger) in selected_ids:
+        resolved = checked_override(
+            entry.get("auxiliary_extents_override"), "auxiliary extent override"
         )
-    if not all(isinstance(item, dict) for item in override):
+
+    ordered = entry.get("auxiliary_extents_overrides", [])
+    if not isinstance(ordered, list):
         raise RuntimeError(
-            f"{entry['id']}: auxiliary extent override contains a non-table entry"
+            f"{entry['id']}: auxiliary_extents_overrides must be a list"
         )
-    return list(override)
+    for index, candidate in enumerate(ordered):
+        if not isinstance(candidate, dict):
+            raise RuntimeError(
+                f"{entry['id']}: auxiliary extent override #{index} is not a table"
+            )
+        when_unit = candidate.get("when_unit")
+        if when_unit is None:
+            raise RuntimeError(
+                f"{entry['id']}: auxiliary extent override #{index} has no when_unit"
+            )
+        if str(when_unit) not in selected_ids:
+            continue
+        resolved = checked_override(
+            candidate.get("extents"), f"auxiliary extent override #{index}"
+        )
+    return resolved
 
 
 def resolved_producer_outputs(

@@ -4218,36 +4218,6 @@ source = "src/main/item/splashes_render.cpp"
 evidence_id = "ev-th04-main-item-splashes-render-boundary-v188"
 reason = "The reviewed v186 0x83 body is unchanged. v188 proves a target-consistent two-argument C-fastcall splash-dot ABI, natural TC4J fixed-byte equality, exact byte-aligned ownership of the following 0xC1FF layout seam, focused two-cold replay, and the 221-owner candidate aggregate."
 
-[[reviewed_nonexact]]
-id = "th04-main-fn-1c266"
-address = "0x1C266"
-file_offset = "0xDA66"
-size = "0x4C"
-name = "_sparks_update"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Fresh target-bound Ghidra/TLINK/TASM/raw evidence closes the complete 0x4C update loop. v186 natural TC4J probes emit 71 bytes and fold the target's two F_REMOVE stores into one shared tail even under explicit source labels, so exact/source promotion is withheld."
-
-[[new_nonexact]]
-id = "th04-main-fn-1c266"
-address = "0x1C266"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Expand the reviewed denominator with the complete spark update body while retaining the durable 71-versus-76 natural-codegen blocker."
-
-[[reviewed_nonexact]]
-id = "th04-main-fn-1c2b2"
-address = "0x1C2B2"
-file_offset = "0xDAB2"
-size = "0x3B"
-name = "_sparks_render"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x3B high-level render loop through RET at 0x1C2EC; the 0x1C2ED EVEN byte is separate layout ownership. Source and exactness remain unclaimed."
-
-[[new_nonexact]]
-id = "th04-main-fn-1c2b2"
-address = "0x1C2B2"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Expand the reviewed denominator with the complete spark render loop without forcing a source form."
-
 [[new_exact]]
 id = "th04-main-fn-1c2ee"
 address = "0x1C2EE"

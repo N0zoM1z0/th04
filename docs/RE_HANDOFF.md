@@ -7495,3 +7495,107 @@ consumes CX/CL directly, while ordinary Borland three-integer fastcall wants BX.
 Do not hide that mismatch with an ABI lie. `_sparks_update` keeps its v186
 71-vs-76 compiler negative until a genuinely new producer mechanism appears.
 Nothing is pushed.
+
+## 2026-09-16 v190 CIRCLE_TEXT spark update/render ASM checkpoint
+
+This conversation originally entered clean `main` at
+`2fb7a7d757bea56b1bd950b1e6dc7d69b5358830`, ahead 3 / behind 0. During a
+read/probe interval, live HEAD independently advanced to clean
+`cf4e9e5cdac2b6608d49c4890c13b64408771f2f`
+(`gpt-web: reconstruct CIRCLE low-level render pair`), which was the completed
+v189 packet overlapping the active investigation. Work stopped for recovery; the
+complete v189 commit/handoff, exact source, retained receipts, ignored state, and
+process state were audited and the commit was adopted as committed recoverable
+continuation rather than duplicated. No reset, stash, target mutation, or push
+was used.
+
+The recovered v189 checkpoint and the v190 packet were independently re-attested.
+Factory `th04-ghidra` `check {}` passes for repository `th04` /
+`target:th04-main`; repository-native `python3 scripts/ghidra.py th04-main check`
+passes the 156,258-byte MZ target, 6,144-byte header/load map, entry, all 1,136
+ordered relocations, load digest, and samples. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`
+and canonicality remains only `candidate-local-attested`. Required TC86 Borland
+C++ 4.02 / TASM32 5.0 / TLINK 6.10 surfaces attest; the optional host `wine64`
+hash difference remains informational. The provider still exposes ten operations
+and no `get_metadata` operation.
+
+v190 closes the remaining CIRCLE_TEXT residual between exact v189 spark-render
+and exact v186 `sparks_invalidate()`: map `0AAF:1776..17FD`, load
+`0xC266..0xC2ED`, file `0xDA66..0xDAED`, size `0x88`, target SHA-256
+`90362bf610678578e72834baf8890f341978149bb7e75188641c76f0d860c389`.
+It contains `_sparks_update` (`0x4C`), `_sparks_render` (`0x3B`), and the genuine
+source-owned `EVEN` NOP at load `0xC2ED`.
+
+Independent TH05 original-target comparison strongly preserves the same producer.
+The 76-byte updater differs from TH04 only in the SPARK_COUNT immediate, linked
+`_sparks` word, and `update_seg1` call displacement. The 59-byte renderer differs
+only in SPARK_COUNT, the linked `_sparks` word, and two near-call displacements.
+ReC98 history shows `th04/main/sparks.asm` first entered in a 2019
+`[Reverse-engineering] [th04/th05] Spark animation` commit and is therefore not
+historical-source authority.
+
+Bounded legal TC4J negatives remain decisive. v186 update source emits 71 bytes
+by merging the target's two distinct F_REMOVE stores. v188 render probe 001 emits
+a 59-byte high-level skeleton but routes the third fastcall value through BL;
+probe 002 forces CL but adds `MOV BX,CX` and selects `SHR AX,4` instead of target
+`SAR AX,4`. No inline ASM, byte emission, codestring, padding, ABI fabrication,
+or target patch is used to cross these blockers.
+
+Maintained `src/main/spark/update_render.asm`, SHA-256
+`17982f9968b26b7b2bd4c625951561ae000ac8c136fac020e69d9012aa811470`,
+is therefore classified as evidence-backed original-style symbolic assembly. A
+standalone TASM32 5.0 probe emits one valid `0x88` CIRCLE_TEXT LEDATA with publics
+`_sparks_update=0` and `_sparks_render=0x4C`; all 124 non-fixup bytes match target
+and `EVEN` naturally owns the final NOP. Probe OMF SHA-256 is
+`87488cdb8f169211660dc3bba16c9a910be55d57144b8ed2b85db0203b238a1e`.
+
+Focused `gptweb-v190-sparks-update-render-focused-candidate-001` passes 120
+owners twice, receipt SHA-256
+`f34fc3b9a37d2c5dcd78f15168fc619c255ecf84109c377dd7c58b0bc68ccde7`.
+Candidate-state aggregate
+`gptweb-v190-sparks-update-render-aggregate-candidate-001` passes 224 default
+owners twice, receipt SHA-256
+`58261e6f9af4fbd8d83b260937fa5a2480912a4f77137686228b98d17298654b`;
+the command restores the pre-promotion manifest byte-for-byte. Post-promotion
+aggregate `gptweb-v190-sparks-update-render-aggregate-final-001` passes the same
+224 tracked default owners twice from ledger extents, receipt SHA-256
+`4b6aa7e19c379c6a512e1dfbd9e432e3712e119f6e9b9d0e27c0acfa4f083b5b`.
+A/B final `spkur.obj` SHA-256 is
+`2b509ae087a7378a7eccc75aec1e91616d8d3868d52e2620842d1db9c3dec879`;
+A/B final MAP SHA-256 is
+`c20d18bcbb9cd0729e356d071c5e96fc372eb3c5767c2a2195343b7f40b205f3`;
+candidate MAIN remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+The two logical rows are removed from the authored-C/C++ function ledger and
+moved to ASM attestation without increasing the C/C++ numerator. `sub_C34E`
+remains reviewed/no-Ghidra/unreviewed: exact target scans of TH02/TH03/TH05 find
+no complete copy of its 22-byte TH04 skeleton, so v190 does not force an origin
+classification.
+
+Other artifacts remain independent: OP has 94 unreviewed authored candidates,
+MAINE 72, and ZUN 13; no MAIN exactness transfers to them and `ZUN.COM` remains
+an MZ artifact despite its extension. Standalone product closure, whole-image
+exactness, runtime-storage identity, runtime scenario, portable runtime,
+independent pristine provenance, and v190 Factory acceptance remain
+unestablished.
+
+The v190 bounded analysis manifest started from **9,152,657,097 bytes**. Three
+successful cold trees plus compact probes raised `.analysis/` to
+**9,342,436,951 bytes** before cleanup. After confirming no active TCC/TASM/TLINK
+or replay producer and copying the focused/candidate/final receipts plus final
+OBJ/MAP into the manifested v190 scratch, only the focused and candidate full
+trees and the explicit short-path V190 probe workspace were deleted. The complete
+224-owner post-promotion aggregate remains the current cold baseline. Pre-final-CI
+`.analysis/` is **9,224,548,298 bytes**, net growth **71,891,201 bytes** from
+v190 entry; compact v190 scratch is about 7.6 MiB. v189/older baselines, private
+targets, toolchains, Wine/Ghidra state, and legacy/unknown analysis content were
+left untouched.
+
+The next MAIN route should not harvest `sub_C34E` alone. Prefer a coherent
+remaining CIRCLE low-level producer packet around the still-unreviewed GRCG /
+backdrop / playperf seams, using fresh live-ledger ranking after recovery. Keep
+`sub_C34E` as an explicit adjacent no-Ghidra origin question and require a new
+independent source/origin mechanism before promotion. OP/MAINE/ZUN remain active
+separate queues for later artifact-specific sessions.

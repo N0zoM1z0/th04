@@ -95,6 +95,43 @@ class AuxiliaryExtentOverrideTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "override is active but missing"):
             replay.resolved_auxiliary_extents(entry, {"owner", "split"})
 
+    def test_ordered_override_supersedes_legacy_override(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_extents": [{"id": "old"}],
+            "auxiliary_extents_override_when_unit": "split",
+            "auxiliary_extents_override": [{"id": "middle"}],
+            "auxiliary_extents_overrides": [
+                {"when_unit": "resplit", "extents": [{"id": "new"}]}
+            ],
+        }
+        self.assertEqual(
+            replay.resolved_auxiliary_extents(entry, {"owner", "split"}),
+            [{"id": "middle"}],
+        )
+        self.assertEqual(
+            replay.resolved_auxiliary_extents(entry, {"owner", "split", "resplit"}),
+            [{"id": "new"}],
+        )
+
+    def test_ordered_override_fails_closed_when_missing_extents(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_extents": [{"id": "old"}],
+            "auxiliary_extents_overrides": [{"when_unit": "split"}],
+        }
+        with self.assertRaisesRegex(RuntimeError, "override #0 is active but missing"):
+            replay.resolved_auxiliary_extents(entry, {"owner", "split"})
+
+    def test_ordered_override_rejects_non_table(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_extents": [{"id": "old"}],
+            "auxiliary_extents_overrides": ["split"],
+        }
+        with self.assertRaisesRegex(RuntimeError, "override #0 is not a table"):
+            replay.resolved_auxiliary_extents(entry, {"owner", "split"})
+
 
 class ProducerOverrideTests(unittest.TestCase):
     def test_logical_unit_uses_standalone_producer_without_trigger(self) -> None:

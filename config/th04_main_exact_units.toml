@@ -10221,6 +10221,13 @@ auxiliary_extents_override = [
   { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
   { id = "th04-main-circle-render-residual-v189", file_offset = "0xDA66", size = "0x88", map_module = "th04\\cirsuf188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf188.obj" },
 ]
+auxiliary_extents_overrides = [
+  { when_unit = "th04-main-sparks-update-render-asm-v190", extents = [
+    { id = "th04-main-circle-prefix-before-item-render-v188", file_offset = "0xD948", size = "0x34", map_module = "th04\\cirsuf185.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf185.obj" },
+    { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
+    { id = "th04-main-circle-spark-update-render-v190", file_offset = "0xDA66", size = "0x88", map_module = "th04\\spkur.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/spkur.obj" },
+  ] },
+]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x168C"
 map_size = "0x83"
@@ -10272,6 +10279,10 @@ auxiliary_objects = ["obj/th04/cirsuf188.obj"]
 auxiliary_extents = [
   { id = "th04-main-circle-spark-update-render-residual-v189", file_offset = "0xDA66", size = "0x88", map_module = "th04\\cirsuf188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf188.obj" },
 ]
+auxiliary_extents_override_when_unit = "th04-main-sparks-update-render-asm-v190"
+auxiliary_extents_override = [
+  { id = "th04-main-circle-spark-update-render-v190", file_offset = "0xDA66", size = "0x88", map_module = "th04\\spkur.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/spkur.obj" },
+]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x1710"
 map_size = "0x66"
@@ -10318,3 +10329,43 @@ map_start = "0x1842"
 map_size = "0x1C"
 target_file_offset = "0xDB32"
 size = "0x1C"
+
+# v190 CIRCLE_TEXT shared spark lifecycle update/render pair. Independent TH04/TH05
+# target identity plus bounded legal-TC4J negatives support original-style symbolic
+# assembly. The candidate is unaddressed until focused and aggregate replay pass.
+[[build_replacements]]
+id = "th04-main-sparks-update-render-asm-v190-build"
+trigger_units = ["th04-main-sparks-update-render-asm-v190"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/itemrendgap188.asm\",\n\t\"th04/sprendr.asm\",\n\t\"th04/cirsuf188.asm\",\n"
+build_replacement = "\t\"th04/itemrendgap188.asm\",\n\t\"th04/sprendr.asm\",\n\t\"th04/spkur.asm\",\n\t\"th04/cirsuf188.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-sparks-update-render-asm-v190-layout"
+trigger_units = ["th04-main-sparks-update-render-asm-v190"]
+patch_path = "th04/cirsuf188.asm"
+encoding = "latin-1"
+scaffold_sha256 = "67cf521e5f7facee33721fc255c4fb75f5942f3c7748fdf8d0d0639e612bb34e"
+
+[[source_transforms.ops]]
+id = "remove-replay-sparks-update-render-v190"
+kind = "replace"
+old = "include th04/sparkpre186.inc\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-sparks-update-render-asm-v190"
+default_enabled = true
+requires_units = ["th04-main-item-splash-dot-render-asm-v189"]
+repo_source = "src/main/spark/update_render.asm"
+overlay_path = "th04/spkur.asm"
+map_module = "th04\\spkur.asm"
+map_mode = "exact"
+object_path = "obj/th04/spkur.obj"
+zero_code_objects = ["obj/th04/cirsuf188.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1776"
+map_size = "0x88"
+target_file_offset = "0xDA66"
+size = "0x88"
