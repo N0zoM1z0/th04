@@ -7834,3 +7834,110 @@ Resolve the 32x32 boundary, private state ownership, callers, 32-bit register
 operations, alignment, and TH05/original-library lineage before choosing
 shared/original ASM versus authored variation. OP/MAINE/ZUN remain separate
 artifact queues for later artifact-specific reconstruction.
+
+## 2026-09-16 v193 CIRCLE_TEXT rolling-blitter ASM checkpoint
+
+This session recovered clean committed HEAD
+`33d99bd34547c278836f38abefceebdcf18ede3d`, tree
+`45e0a25d9635d121be8c7687a9abc3ac43ea675c`, branch `main`, upstream
+`origin/main`, ahead 7 / behind 0. There was no staged, unstaged, untracked,
+unrelated, or unknown tracked work at entry. `.analysis/` measured
+**9,373,891,584 bytes** before fresh attestation and the v193 manifest records
+**9,373,904,004 bytes** at campaign-scratch creation. All requested repository
+and Factory recovery/verification documents were read before editing.
+
+Mandatory preflight/status/boundary gates passed. Factory `th04-ghidra`
+operation discovery still exposes ten operations and no `get_metadata`; the
+registered `check {}` operation passed for repository `th04` /
+`target:th04-main`. Repository-native `python3 scripts/ghidra.py th04-main
+check` passed target SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+size 156,258, 6,144-byte header/load mapping, entry point, all 1,136 ordered
+relocations, load digest, and samples. Required TC4J/TASM/TLINK surfaces passed;
+the optional host `wine64` mismatch remains informational. The ignored private
+target remains `candidate-local-attested`, unmodified, and unpublished.
+
+v193 closes one CIRCLE_TEXT physical producer at map `0AAF:193A..1B59`, load
+`0xC42A..0xC649`, file `0xDC2A..0xDE49`, size `0x220 / 544`, target SHA-256
+`8c7fe30f73f9eb2a60cfd02b75503ed4ef46ffbea8968758539730d93a645a75`.
+It consists of the two-byte private `srpt32x32_vram_topleft` code-segment state,
+`Z_SUPER_ROLL_PUT_TINY_32X32_RAW` at `0xC42C..0xC545` (`0x11A`), and
+`Z_SUPER_ROLL_PUT_TINY_16X16_RAW` at `0xC546..0xC649` (`0x104`). The next exact
+owner, `circle.cpp`, begins immediately at `0xC64A`. The complete v193 extent has
+no ordered MZ relocation overlap.
+
+Fresh Ghidra misses the 32x32 public entirely. It constructs the exact 260-byte
+16x16 body but reports only one caller; target raw decoding finds seven near
+callers. Target raw finds one caller for the 32x32 public. Three RET-terminated
+32x32 helpers remain internal labels inside the enclosing public TASM PROC and
+are not promoted as separate authored functions.
+
+Independent TH05 target evidence is exceptionally strong: across the complete
+544-byte TH04/TH05 physical windows only ten bytes differ, grouped into five
+linked address words; the remaining 534 bytes are identical. TH02 original
+target bytes preserve the older MASTER.LIB inner blit lineage. ReC98 and its
+MASTER.LIB source are used only to explain candidate lineage, not as historical
+source authority. Bounded signature searches of the independently attested TH04
+OP, MAINE, and ZUN payloads find none of the MAIN rolling-blitter cores, so no
+MAIN source or exactness credit transfers to those artifacts.
+
+Maintained symbolic source is `src/main/formats/z_super_roll_put_tiny.asm`,
+SHA-256
+`d8afcbeea8e2edb96bb4b9cfc80f2f121b65175f9cd427aa0a90bb8e827ad7b4`.
+A standalone TASM32 5.0 producer probe emits a valid 915-byte OMF, SHA-256
+`348c7ca50f950dccf5e8b4087e94099499279e133a2b81b42c57c81df676e651`,
+with a 544-byte CIRCLE_TEXT contribution and publics at +0x2 / +0x11C. Exactly
+five unresolved address words differ before linking; all other fixed bytes are
+identical. The exact replay object SHA-256 is
+`ed10e22742453021badd85079ae5d4dab52b9eaa5d54d2f788039b37d8e59328`.
+
+Focused `gptweb-v193-zsuper-focused-candidate-001` passes 127 owners twice with
+`failures=[]`, receipt SHA-256
+`49f1ca8c58aef0ad6da7d593c7eb4cfda673074ae83571736d67e9389da9ed08`.
+Candidate aggregate `gptweb-v193-zsuper-aggregate-candidate-001` passes 231
+candidate-state defaults twice, receipt SHA-256
+`47f8116a85c248c375166cf5ba9ad36cf035ac480b6ac7e57c51b7f732b7cc9e`.
+Post-promotion aggregate `gptweb-v193-zsuper-aggregate-final-001` passes the
+tracked default cohort twice, receipt SHA-256
+`f97b53497ee3f2ec12c76760278202e3b16641b2f43c841293c993ce1c26cfcb`.
+Tracked exact-manifest SHA-256 is
+`dd41a32e183475beec6b1a03b4daaac222338c7a9b1fa0b3a1438c19e01d22a6`;
+final MAP SHA-256 is
+`ec91105fd65ccf795cba7e1034485df07115b25528f7b8564d3bbe622afcb29e`;
+candidate MAIN remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+The maintained C/C++ denominator is intentionally unchanged: MAIN remains
+**75,209 / 80,694 exact reviewed C/C++ bytes (93.202716%)** and **456 / 479
+exact reviewed C/C++ functions (95.198330%)**. Routing is now 456 exact, 23
+blocked, 38 unreviewed, and 51 ASM-attestation observations. Generated progress
+reports **28 exact original-style ASM physical units / 4,196 bytes**. OP, MAINE,
+and ZUN remain independent queues with 94, 72, and 13 unreviewed authored
+candidates.
+
+Three successful v193 cold trees raised `.analysis/` to **9,564,778,918 bytes**
+before bounded cleanup. After confirming no active compiler/linker/replay
+producer, compact focused/candidate/final receipts, final object/MAP/candidate
+image, target-first metadata, and standalone producer evidence were retained.
+Only the explicit v193 focused and candidate-aggregate complete trees plus the
+short-path standalone probe directory were removed. The complete post-promotion
+aggregate remains the current cold baseline. After cleanup `.analysis/` was
+**9,446,838,478 bytes**. Final full CI leaves it at **9,446,844,611 bytes**,
+net growth **72,953,027 bytes** from the recovery-entry inventory. v192/older
+baselines, private targets, toolchains, Wine/Ghidra state, and legacy/unknown
+analysis content remain untouched.
+
+Verification planes remain separate. Repository-native exact physical ownership
+for the v193 rolling-blitter producer is established. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario, portable runtime, independent pristine provenance, and v193 Factory
+Truth-Kernel acceptance remain unestablished. Nothing is pushed.
+
+Next take the structurally connected remaining authored provisional GRCG packet
+at load `0x11FC8..0x120A3`: `@grcg_tile_bb_put_8` at `0x11FC8`, zero-size
+`sub_12024`, and `playfield_checkerboard_grcg_tdw_()` at `0x12076`. Reconcile
+all three boundaries, shared tails/internal labels, adjacent data/alignment,
+call ownership, ordered relocation ownership, and TH05/library lineage before
+choosing natural C/C++ versus symbolic ASM. Do not spend the next conversation
+only on the older tiny `randring_fill()` frontier. OP/MAINE/ZUN remain active
+separate artifact queues for later artifact-specific reconstruction.

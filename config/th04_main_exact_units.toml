@@ -10359,6 +10359,13 @@ auxiliary_extents_overrides = [
     { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
     { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
   ] },
+  { when_unit = "th04-main-z-super-roll-put-tiny-asm-v193", extents = [
+    { id = "th04-main-clear-dwords-v192", file_offset = "0xDB4E", size = "0x16", map_module = "th04\\clrdw.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/clrdw.obj" },
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-v193", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\zsuper.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/zsuper.obj" },
+  ] },
 ]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x1842"
@@ -10547,6 +10554,12 @@ auxiliary_extents_overrides = [
     { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
     { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
   ] },
+  { when_unit = "th04-main-z-super-roll-put-tiny-asm-v193", extents = [
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-v193", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\zsuper.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/zsuper.obj" },
+  ] },
 ]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x185E"
@@ -10596,6 +10609,11 @@ auxiliary_extents_overrides = [
     { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
     { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
   ] },
+  { when_unit = "th04-main-z-super-roll-put-tiny-asm-v193", extents = [
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-v193", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\zsuper.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/zsuper.obj" },
+  ] },
 ]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x1874"
@@ -10640,6 +10658,10 @@ auxiliary_extents_overrides = [
     { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
     { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
   ] },
+  { when_unit = "th04-main-z-super-roll-put-tiny-asm-v193", extents = [
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-v193", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\zsuper.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/zsuper.obj" },
+  ] },
 ]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x18A6"
@@ -10679,8 +10701,50 @@ auxiliary_objects = ["obj/th04/cirsuf186.obj"]
 auxiliary_extents = [
   { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
 ]
+auxiliary_extents_overrides = [
+  { when_unit = "th04-main-z-super-roll-put-tiny-asm-v193", extents = [
+    { id = "th04-main-zsuper-v193", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\zsuper.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/zsuper.obj" },
+  ] },
+]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x18BA"
 map_size = "0x80"
 target_file_offset = "0xDBAA"
 size = "0x80"
+
+[[build_replacements]]
+id = "th04-main-z-super-roll-put-tiny-asm-v193-build"
+trigger_units = ["th04-main-z-super-roll-put-tiny-asm-v193"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/scode.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/scode.asm\",\n\t\"th04/zsuper.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-z-super-roll-put-tiny-asm-v193-layout"
+trigger_units = ["th04-main-z-super-roll-put-tiny-asm-v193"]
+patch_path = "th04/cirsuf186.asm"
+encoding = "latin-1"
+scaffold_sha256 = "8d89193b2b47534b39ceb4fe842e3848f523dda302d3f66c8c6c8f19c5cc2795"
+patched_sha256 = "5b2f6eccf5b18155d5be4f902e3165704d7a1dbc5cb328c72df7b3722bbce86f"
+[[source_transforms.ops]]
+id = "remove-replay-zsuper-v193"
+kind = "replace"
+old = "include th04/formats/z_super_roll_put_tiny.asm\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-z-super-roll-put-tiny-asm-v193"
+default_enabled = true
+requires_units = ["th04-main-scoredat-code-asm-v192"]
+repo_source = "src/main/formats/z_super_roll_put_tiny.asm"
+overlay_path = "th04/zsuper.asm"
+map_module = "th04\\zsuper.asm"
+map_mode = "exact"
+object_path = "obj/th04/zsuper.obj"
+zero_code_objects = ["obj/th04/cirsuf186.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x193A"
+map_size = "0x220"
+target_file_offset = "0xDC2A"
+size = "0x220"
