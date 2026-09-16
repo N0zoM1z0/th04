@@ -10227,6 +10227,18 @@ auxiliary_extents_overrides = [
     { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
     { id = "th04-main-circle-spark-update-render-v190", file_offset = "0xDA66", size = "0x88", map_module = "th04\\spkur.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/spkur.obj" },
   ] },
+  { when_unit = "th04-main-mugetsu-gengetsu-backdrop-v191", extents = [
+    { id = "th04-main-circle-backdrop-v191", file_offset = "0xD948", size = "0x0E", map_module = "th04/mgbd.cpp", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/mgbd.obj" },
+    { id = "th04-main-circle-grcg-residual-v191", file_offset = "0xD956", size = "0x26", map_module = "th04\\cirsuf185.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf185.obj" },
+    { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
+    { id = "th04-main-circle-spark-update-render-v190", file_offset = "0xDA66", size = "0x88", map_module = "th04\\spkur.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/spkur.obj" },
+  ] },
+  { when_unit = "th04-main-grcg-modecolor-asm-v191", extents = [
+    { id = "th04-main-circle-backdrop-v191", file_offset = "0xD948", size = "0x0E", map_module = "th04/mgbd.cpp", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/mgbd.obj" },
+    { id = "th04-main-circle-grcg-modecolor-v191", file_offset = "0xD956", size = "0x26", map_module = "th04\\grcgmc.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/grcgmc.obj" },
+    { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
+    { id = "th04-main-circle-spark-update-render-v190", file_offset = "0xDA66", size = "0x88", map_module = "th04\\spkur.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/spkur.obj" },
+  ] },
 ]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x168C"
@@ -10369,3 +10381,90 @@ map_start = "0x1776"
 map_size = "0x88"
 target_file_offset = "0xDA66"
 size = "0x88"
+
+
+# v191 CIRCLE_TEXT residual split: natural-C++ Mugetsu/Gengetsu backdrop followed
+# by the shared original-style GRCG mode/color producer. Both remain candidates
+# until focused and aggregate cold replay close linked ownership.
+[[build_replacements]]
+id = "th04-main-mugetsu-gengetsu-backdrop-v191-build"
+trigger_units = ["th04-main-mugetsu-gengetsu-backdrop-v191"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/cirsuf185.asm\",\n\t\"th04/isprend.cpp\",\n"
+build_replacement = "\t\"th04/mgbd.cpp\",\n\t\"th04/cirsuf185.asm\",\n\t\"th04/isprend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-mugetsu-gengetsu-backdrop-v191-layout"
+trigger_units = ["th04-main-mugetsu-gengetsu-backdrop-v191"]
+patch_path = "th04/cirsuf185.asm"
+encoding = "latin-1"
+scaffold_sha256 = "502f78c7316f2c31bc3fae56e117d28a8ed272c38572a8765a655f304e039397"
+patched_sha256 = "e28ad6309ea721b36fb1bca269b578d717c96cf51a16a72fb775b33746806bf9"
+
+[[source_transforms.ops]]
+id = "remove-replay-mugetsu-gengetsu-backdrop-v191"
+kind = "replace"
+old = "public @MUGETSU_GENGETSU_BACKDROP_COLORF$QV\r\n@MUGETSU_GENGETSU_BACKDROP_COLORF$QV\tproc near\r\n\t\tpush\tdi\r\n\t\tGRCG_FILL_PLAYFIELD_ROWS\t192, 176\r\n\t\tpop\tdi\r\n\t\tretn\r\n@MUGETSU_GENGETSU_BACKDROP_COLORF$QV\tendp\r\n\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-mugetsu-gengetsu-backdrop-v191"
+default_enabled = true
+requires_units = ["th04-main-sparks-update-render-asm-v190"]
+repo_source = "src/main/boss/mugetsu_gengetsu_backdrop.cpp"
+overlay_path = "th04/mgbd.cpp"
+map_module = "th04/mgbd.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mgbd.obj"
+auxiliary_objects = ["obj/th04/cirsuf185.obj"]
+auxiliary_extents = [
+  { id = "th04-main-circle-grcg-residual-v191", file_offset = "0xD956", size = "0x26", map_module = "th04\\cirsuf185.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf185.obj" },
+]
+auxiliary_extents_override_when_unit = "th04-main-grcg-modecolor-asm-v191"
+auxiliary_extents_override = [
+  { id = "th04-main-circle-grcg-modecolor-v191", file_offset = "0xD956", size = "0x26", map_module = "th04\\grcgmc.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/grcgmc.obj" },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1658"
+map_size = "0x0E"
+target_file_offset = "0xD948"
+size = "0x0E"
+
+[[build_replacements]]
+id = "th04-main-grcg-modecolor-asm-v191-build"
+trigger_units = ["th04-main-grcg-modecolor-asm-v191"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/mgbd.cpp\",\n\t\"th04/cirsuf185.asm\",\n\t\"th04/isprend.cpp\",\n"
+build_replacement = "\t\"th04/mgbd.cpp\",\n\t\"th04/grcgmc.asm\",\n\t\"th04/cirsuf185.asm\",\n\t\"th04/isprend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-grcg-modecolor-asm-v191-layout"
+trigger_units = ["th04-main-grcg-modecolor-asm-v191"]
+patch_path = "th04/cirsuf185.asm"
+encoding = "latin-1"
+scaffold_sha256 = "e28ad6309ea721b36fb1bca269b578d717c96cf51a16a72fb775b33746806bf9"
+patched_sha256 = "8295fc3e83bcd975f516d95e4f40db4614f556673e929ef0ec8dd3c1c916e3b9"
+
+[[source_transforms.ops]]
+id = "remove-replay-grcg-modecolor-v191"
+kind = "replace"
+old = "include th04/hardware/grcg_modecol.asm\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-grcg-modecolor-asm-v191"
+default_enabled = true
+requires_units = ["th04-main-mugetsu-gengetsu-backdrop-v191"]
+repo_source = "src/main/hardware/grcg_modecolor.asm"
+overlay_path = "th04/grcgmc.asm"
+map_module = "th04\\grcgmc.asm"
+map_mode = "exact"
+object_path = "obj/th04/grcgmc.obj"
+zero_code_objects = ["obj/th04/cirsuf185.obj"]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1666"
+map_size = "0x26"
+target_file_offset = "0xD956"
+size = "0x26"

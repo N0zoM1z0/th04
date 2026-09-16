@@ -7599,3 +7599,108 @@ backdrop / playperf seams, using fresh live-ledger ranking after recovery. Keep
 `sub_C34E` as an explicit adjacent no-Ghidra origin question and require a new
 independent source/origin mechanism before promotion. OP/MAINE/ZUN remain active
 separate queues for later artifact-specific sessions.
+
+## 2026-09-16 v191 CIRCLE_TEXT backdrop/GRCG checkpoint
+
+This session recovered clean committed HEAD
+`957d51e974664edf2d59e10968d8179b7b026b39`, tree
+`1c0c8d4afc9908d035fcf7976038d392c9c5650d`, branch `main`, upstream
+`origin/main`, ahead 5 / behind 0. No staged, unstaged, untracked, unrelated, or
+unknown tracked work existed at entry. Required repository and mounted Factory
+documents/contracts were read before editing. `.analysis/` entry size was
+**9,224,623,954 bytes**. Mandatory preflight/status/boundary gates, provider
+`check {}`, repository-native Ghidra, and TC4J/TASM/TLINK attestation all passed.
+Provider discovery still exposes ten operations and no `get_metadata` operation.
+The private MAIN target remains SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+`candidate-local-attested`, ignored, and unmodified.
+
+v191 closes the complete v190 CIRCLE residual at map `0AAF:1658..168B`, load
+`0xC148..0xC17B`, file `0xD948..0xD97B`, size `0x34`, target SHA-256
+`fddd050002423d2c6b72e78bde962a78d23a1305a0442ce6818e825ea528fbae`.
+There is no overlapping MZ relocation. The window contains the 14-byte
+Mugetsu/Gengetsu backdrop callback, 5-byte RMW setter, source-owned NOP, 5-byte
+TDW setter, source-owned NOP, and 26-byte direct-color helper. Exact
+`ITEM_SPLASHES_RENDER` begins immediately at load `0xC17C`.
+
+Fresh Ghidra constructs RMW and direct-color but still misses the backdrop and
+TDW entries. Independent TH05 original-target evidence preserves the same
+14-byte backdrop skeleton modulo its near-call displacement and a byte-identical
+complete 38-byte GRCG producer. The GRCG region is therefore not forced into
+C++ merely because historical candidate assembly exposes it.
+
+Maintained natural backdrop source is
+`src/main/boss/mugetsu_gengetsu_backdrop.cpp`, SHA-256
+`125342bca05cf8aeae6f037fe2bb4fa9648ad46fb112570c409ddfd4800278ea`.
+TC4J emits exactly 14 bytes with only the ordinary near-call fixup unresolved.
+The first focused build exposed a real ABI omission rather than a byte mismatch:
+the definition lacked the target-proved Pascal calling convention, so TLINK could
+not resolve the existing Pascal caller public. Adding `pascal` fixes the real ABI
+and does not change the body. This failed run receives zero exactness credit.
+
+Maintained symbolic GRCG source is `src/main/hardware/grcg_modecolor.asm`, SHA-256
+`626042137517600f06a8c3722a6d40cc78ef31c1fa00473feafcb2a91d4477e4`.
+Legal TC4J probes remain negative: standard `outportb()` emits longer DX-based
+mode setters, and an arithmetic color expansion emits 42 bytes rather than the
+target 26-byte `SHR AH; SBB AL,AL` producer. Byte-emission helpers are explicitly
+excluded. Standalone TASM emits the complete target-identical 38-byte producer.
+
+Focused `gptweb-v191-circle-backdrop-grcg-focused-candidate-002` passes 122
+owners twice, receipt SHA-256
+`4a2c62dd3b93e517911bceb76f0c67916ff42edf44f62c9c1332c20066edc373`.
+Candidate aggregate `gptweb-v191-circle-backdrop-grcg-aggregate-candidate-001`
+passes 226 candidate-state defaults twice, receipt SHA-256
+`187eb7c9cee1c020a01a192f77bc8eeeb5d0bfb152bbd80f41a42504bf33e850`.
+Post-promotion aggregate `gptweb-v191-circle-backdrop-grcg-aggregate-final-001`
+passes the tracked default cohort twice from ledger extents, receipt SHA-256
+`7f99af8665ff9cb31959706e3bf7c1d6e537594d4bc0531163ab1e6729ac938a`.
+A/B final object SHA-256 values are
+`cf6488438d5bb6886f3721be3091c90ea3b97bc42943efd37256f498cc0bc638`
+for `mgbd.obj` and
+`3407ea75991bb274ab66dcab984ef26c92bfdefb7e7889f34ffd2eb9263c60c1`
+for `grcgmc.obj`; final MAP SHA-256 is
+`41dfb776c3ed81209e5ce3aaf89fdec00b41245506b8d8456933c2ef9acdfa9f`;
+candidate MAIN remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+Tracked exact-manifest SHA-256 is
+`5a36c51af2223f247ea3904fa7ab018c7a0b46490976ba9d9698afd0f6581fcf`.
+
+The Ghidra-missed backdrop function is admitted through the stricter no-Ghidra
+function-review path. Trial report SHA-256 is
+`e5591b30d05760dadceb1a9cb97a9f68e4adda3200a95f3dcbfd8c8014e1e24c`;
+only `th04-main-fn-1c148` is merged. The maintained semantic ledger keeps the
+full `mugetsu_gengetsu_backdrop_colorfill()` name; the TLINK public is the normal
+Borland-truncated `colorf()` spelling.
+
+Live MAIN accounting is now **75,209 / 80,694 exact reviewed authored bytes
+(93.202716%)** and **456 / 479 exact reviewed functions (95.198330%)**. Routing
+is 456 exact, 23 blocked, 46 unreviewed, and 43 ASM-attestation observations.
+Exact original-style ASM ownership is **23 units / 3,432 bytes**. OP.EXE,
+MAINE.EXE, and ZUN.COM remain independent queues with 94, 72, and 13 unreviewed
+authored candidates; no MAIN credit transfers to them.
+
+Three successful v191 cold trees plus one failed control tree raised `.analysis/`
+to **9,444,315,023 bytes** before bounded cleanup. After confirming no active
+TCC/TASM/TLINK/replay producer, compact failed/focused/candidate/final receipts,
+final objects/MAP, function-review outputs, and probe evidence were retained.
+Only explicit current-session failed/focused/candidate full replay trees were
+removed. The complete post-promotion aggregate remains the current cold baseline.
+After bounded cleanup `.analysis/` was **9,299,100,132 bytes**. Final full CI
+leaves `.analysis/` at **9,299,106,265 bytes**, net growth **74,482,311 bytes**
+from v191 entry. v190/older baselines, targets, toolchains, Wine/Ghidra state,
+and legacy/unknown analysis content are untouched.
+
+Verification planes remain separate. Repository-native exact ownership for the
+natural backdrop and symbolic GRCG producer is established. Standalone TH04
+product compile/link closure, whole-image exactness, runtime-storage identity,
+runtime scenario, portable runtime, independent pristine provenance, and v191
+Factory Truth-Kernel acceptance remain unestablished. Nothing is pushed.
+
+Next take a structurally connected MAIN CIRCLE packet at load
+`0xC34E..0xC42B`: the Ghidra-missed 22-byte `sub_C34E` clear-dwords helper,
+`PLAYPERF_RAISE`, `PLAYPERF_LOWER`, `SELECT_FOR_RANK`, and the currently
+zero-size/provisional `scoredat_decode()` / `scoredat_encode()` entries. Resolve
+the two score-codec boundaries, any alignment/data seam, far/near ABI, call
+ownership, and relocation ownership before choosing C++ versus symbolic ASM.
+Do not isolate `sub_C34E` as a tiny win. OP/MAINE/ZUN remain active separate
+artifact queues for later artifact-specific sessions.

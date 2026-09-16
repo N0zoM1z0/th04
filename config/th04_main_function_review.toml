@@ -4237,3 +4237,24 @@ owner_unit = "th04-main-sparks-init-v187"
 source = "src/main/spark/init.cpp"
 evidence_id = "ev-th04-main-sparks-init-boundary-v187"
 reason = "The existing v186 reviewed body is unchanged. v187 localizes target-proved C linkage for init/update/render while preserving sparks_invalidate() C++ linkage, expresses low-byte initialization without changing 16-bit storage, and proves the complete 30-byte owner through focused and 220-owner candidate aggregate replay."
+
+
+# v191: natural-C++ Mugetsu/Gengetsu backdrop callback. Target Ghidra does not
+# construct the entry, so exact promotion uses the stricter no-Ghidra path.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1c148"
+address = "0x1C148"
+file_offset = "0xD948"
+size = "0x0E"
+name = "mugetsu_gengetsu_backdrop_colorfill()"
+owner_unit = "th04-main-mugetsu-gengetsu-backdrop-v191"
+source = "src/main/boss/mugetsu_gengetsu_backdrop.cpp"
+evidence_id = "ev-th04-main-mugetsu-gengetsu-backdrop-v191-boundary-v191"
+reason = "Target Ghidra has no function entry at this reviewed TLINK public. Exact natural-C++ ownership, gap-free raw decode through RET, and the next exact public at 0x1C156 close the complete 0x0E body."
+next_public_address = "0x1C156"
+
+[[new_exact]]
+id = "th04-main-fn-1c148"
+address = "0x1C148"
+evidence_id = "ev-th04-main-mugetsu-gengetsu-backdrop-v191-boundary-v191"
+reason = "Explicitly admit the reviewed Ghidra-missed callback only after natural TC4J code-shape closure, focused two-cold replay, exact map/relocation/raw checks, and the 226-owner candidate aggregate."
