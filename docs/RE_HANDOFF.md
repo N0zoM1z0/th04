@@ -8626,3 +8626,118 @@ seams, callers/callees, relocations, low-level producer origin, and independent
 cross-target evidence before selecting natural C++ versus symbolic assembly.
 Campaign status remains active; this is not project, standalone-build, runtime,
 whole-image, OP/MAINE/ZUN, or whole-game completion.
+
+## 2026-09-16 v199 CIRCLE_TEXT low-level blitter ASM checkpoint
+
+This conversation restarted from clean committed HEAD
+`d0708ebabffa6bf2b8b0613d67d1a3ad78b5d3fd`, branch `main`, upstream
+`origin/main`, ahead 5 / behind 0. There was no staged, unstaged, untracked,
+conflicted, recoverable, unrelated, or unknown tracked work at entry. `.analysis`
+measured **3,725,535,946 bytes**. All requested TH04 repository documents and
+Factory contracts/guidance were reread before editing. Entry preflight/status and
+the 2,120-observation boundary validator passed.
+
+The selected plane remained repository `th04`, provider `th04-ghidra`, target
+`target:th04-main`, artifact `th04-main / MAIN.EXE`. Provider discovery again
+exposed ten operations and no `get_metadata`, so only the discovered `check {}`
+operation was used. Provider and repository-native Ghidra checks both passed for
+the same 156,258-byte MZ, 6,144-byte header/load mapping, entry, all 1,136
+ordered relocations, load digest, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains `candidate-local-attested`. Required TC86 Borland C++ 4.02,
+TASM32 5.0, and TLINK 6.10 surfaces attest. The private target remained ignored,
+unmodified, uncommitted, and unpublished.
+
+v199 closes three distinct low-level CIRCLE_TEXT producers over load
+`0xBFF8..0xC0FB` (0x104 bytes, no MZ relocations):
+
+- `yuuka5_backdrop_colorfill()` at `0AAF:1508`, load `0xBFF8..0xC019`,
+  physical size 0x22, maintained `src/main/boss/yuuka5_backdrop.asm`, SHA-256
+  `67baeaefa2221ce6caeea13f3cdc24d81dacc8de8027db74e663cfed13e36833`;
+- `z_super_put_16x16_mono_raw(int)` at `0AAF:152A`, body
+  `0xC01A..0xC098` plus source-owned `EVEN` at `0xC099`, physical size 0x80,
+  maintained `src/main/formats/z_super_put_16x16_mono.asm`, SHA-256
+  `ecb076cbe6952aa3a2bade09a82fda1d7203ef378a480f644a3e173079a545dc`;
+- `bb_txt_put_8_raw(unsigned int,unsigned int)` at `0AAF:15AA`, body
+  `0xC09A..0xC0FA` plus source-owned `EVEN` at `0xC0FB`, physical size 0x62,
+  maintained `src/main/formats/bb_txt_put.asm`, SHA-256
+  `63edd4b19f45fc83b0c1aa05f7e5c7f34a1040d7a3775aa4c21fa3a27cf641b4`.
+
+Fresh target-bound Ghidra constructs none of the three entries as functions, so
+exactness is not inferred from database boundaries. Raw target control flow,
+TASM PROC/include seams, TLINK publics, alignment ownership, and the adjacent
+exact `items_invalidate()` owner close the extents. The Yuuka inline body is
+externalized through a hash-bound transform that accepts only the observed
+focused/aggregate scaffold hashes and removes exactly the 427-byte span SHA-256
+`6e5eee96e1e50273d031043faa32756352373de909fbed4c399d1f2f86727041`.
+
+A bounded legal TC4J mechanism probe rejects ordinary typed C++ without a
+spelling matrix. Yuuka emits 64 bytes versus target 34 with BP/far-pointer state;
+z-super emits 122 versus target 127 but uses three explicit parameters, BP/LES,
+and `RET 6` instead of target implicit AX/CX plus one Pascal stack argument,
+DS/ES string state, and `RET 2`; BB-text emits 105 versus target 97 with
+BP/LES/DEC-OR-JNZ instead of target implicit CX, caller-supplied ES,
+`LODSD`/`MOVSD`/`LOOP`. Probe source/object SHA-256 values are
+`5f6e9edfbaabd7cb9c99fd8270883903d8c162666169ca12e5804cd0fe514316` and
+`86ee179e33a5cc66af973638828b09dbcb4c83f5262ae76260d49a43abab1d0c`.
+The maintained sources are therefore evidence-backed irreducible/original-style
+symbolic ASM, not a claim of recovered historical source text.
+
+Independent TH05 target evidence strongly preserves the BB-text producer: its
+97-byte homolog differs from TH04 only at the two-byte linked `_bb_txt_seg` word,
+leaving 95/97 body bytes identical. Yuuka and this z-super variant have only
+shorter shared runs, so no full cross-game identity is claimed for them.
+OP/MAINE/ZUN were independently scanned through their attested unpacked payloads;
+longest exact runs are Yuuka 3/3/2, z-super 18/18/3, and BB-text 4/5/4 bytes.
+This is negative routing only and transfers no MAIN source or exactness credit.
+
+The complete repository-native cold replay chain passes:
+
+- focused `gptweb-v199-circle-lowlevel-focused-candidate-001`: 135 selected
+  owners twice, `failures=[]`, receipt SHA-256
+  `4e83f8bea5428a326ae7a49e8ad99163e5aa162fe9fc94e32057e7d20798c8e1`;
+- candidate aggregate `gptweb-v199-circle-lowlevel-aggregate-candidate-001`:
+  239 default owners twice, `failures=[]`, receipt SHA-256
+  `5fbbf4dbabbe98551e9e58353f3ce34d10b54cccef9697e122496b2fac9e0dc6`;
+- post-promotion aggregate `gptweb-v199-circle-lowlevel-aggregate-final-001`:
+  239 tracked defaults twice, `failures=[]`, receipt SHA-256
+  `bf2822d8e14509305b547f214dc76557e093ac13b7ee842a4851a25c6a9c8cb1`.
+
+Every v199 owner is `raw=True`, `map=True`, `relocs=True` in all applicable
+replays. Both aggregates bind manifest SHA-256
+`d920aa40684ef59551118e195ec87c8c093c8a4b3d5702e7cd3de880a222717b`;
+final MAP SHA-256 is
+`0465b4e10041a2c2dd718e89c8432a97a7668a53af171f2c52285e191676c375`;
+candidate MAIN SHA-256 is
+`a07df1577dae48c3513627f5fd5c593f037bc1a4d103e8e7a010386024e8b759`.
+Borland dependency timestamps make raw monolithic objects differ while final A/B
+normalized `th04_main.obj` identity remains
+`f17dd6106bc34437bb6308eb91c731b62df382e402e435b299e5c5157e38c04d`.
+
+The three logical boundaries move from `reconstruct` to `attest-asm` and remain
+outside the authored C/C++ function ledger. MAIN C/C++ accounting is unchanged
+at **75,482 / 81,141 exact reviewed bytes (93.025721%)** and **458 / 481 exact
+reviewed functions (95.218295%)**. MAIN routing is 505 reconstruction candidates
+and 63 ASM attestations; generated progress reports **34 exact original-style ASM
+physical units / 4,986 bytes**.
+
+Verification planes remain separate. v199 establishes repository-native exact
+physical ownership for these three ASM owners only. Standalone product closure,
+whole-image exactness, runtime-storage identity, runtime scenario, portable
+runtime, independent pristine provenance, and v199 Factory Truth-Kernel
+acceptance remain unestablished. No remote push is performed.
+
+`.analysis/` started at **3,725,535,946 bytes**, peaked at
+**3,916,723,352 bytes**, and after bounded cleanup is **3,804,187,834 bytes** before final CI. Full final `python3 scripts/ci.py` returns `CI: PASS` and leaves `.analysis/` at **3,804,193,967 bytes**, net growth **78,658,021 bytes** from entry. Focused and candidate trees are receipt-only; compact v199
+scratch retains all three receipts plus final OBJ/MAP/candidate MAIN; the full
+239-owner post-promotion aggregate remains the current cold baseline. Older
+baselines, private targets, toolchains, Wine/Ghidra state, and legacy/unknown
+analysis content were untouched.
+
+The first concrete continuation is the complete immediately preceding CIRCLE
+seam `0xBE68..0xBF15`, size `0xAE / 174`: `SHOT_LASER_PUT_RAW` (`0x63`), NOP
+`0xBECB`, `elly_backdrop_colorfill()` (`0x0E`),
+`mai_yuki_backdrop_colorfill()` (`0x3B`), and NOP `0xBF15`; v198 starts at the
+next byte. Review its source/include seams, callers/callees, alignment,
+relocations, legal compiler mechanisms, and independent TH05/OP/MAINE/ZUN
+evidence as one packet. Campaign status remains active.

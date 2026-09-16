@@ -10994,3 +10994,56 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+
+# v199: three source-distinct CIRCLE_TEXT low-level producers immediately after
+# the v198 .BB tile-mask owner. Yuuka is externalized from an inline scaffold
+# PROC; z-super and BB text replace their historical include paths in place.
+[[source_transforms]]
+id = "th04-main-yuuka5-backdrop-asm-v199-layout"
+trigger_units = ["th04-main-yuuka5-backdrop-asm-v199"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "19449d4a05b906ef2905514ba574a029fb030cbbd5cc2c973e6eb31f7e791ec8",
+  "ad927fde01b2d7af69e091f1adaf67c1f974769b7442c827d6e8281b08162935",
+]
+[[source_transforms.ops]]
+id = "externalize-yuuka5-backdrop-v199"
+kind = "remove_between"
+start = "public @YUUKA5_BACKDROP_COLORFILL$QV\r\n"
+end = "@yuuka5_backdrop_colorfill$qv\tendp\r\n"
+removed_sha256 = "6e5eee96e1e50273d031043faa32756352373de909fbed4c399d1f2f86727041"
+replacement = "include th04/main/boss/yuuka5_backdrop.asm\r\n"
+
+[[units]]
+id = "th04-main-yuuka5-backdrop-asm-v199"
+default_enabled = true
+requires_units = ["th04-main-bb-tile-mask-asm-v198"]
+repo_source = "src/main/boss/yuuka5_backdrop.asm"
+overlay_path = "th04/main/boss/yuuka5_backdrop.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
+
+[[units]]
+id = "th04-main-z-super-put-mono-asm-v199"
+default_enabled = true
+requires_units = ["th04-main-yuuka5-backdrop-asm-v199"]
+repo_source = "src/main/formats/z_super_put_16x16_mono.asm"
+overlay_path = "th04/formats/z_super_put_16x16_mono.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
+
+[[units]]
+id = "th04-main-bb-txt-put-asm-v199"
+default_enabled = true
+requires_units = ["th04-main-z-super-put-mono-asm-v199"]
+repo_source = "src/main/formats/bb_txt_put.asm"
+overlay_path = "th04/formats/bb_txt_put.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
