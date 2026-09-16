@@ -983,7 +983,7 @@ object_path = "obj/th04/snd_pmdr.obj"
 
 [[units]]
 id = "th04-main-snd-load-prefix"
-repo_source = "src/main/sound/load_prefix.inl"
+repo_source = "src/shared/sound/load_prefix.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -992,7 +992,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-tail"
-repo_source = "src/main/sound/load_tail.inl"
+repo_source = "src/shared/sound/load_tail.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -1002,7 +1002,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-open"
-repo_source = "src/main/sound/load_open.inl"
+repo_source = "src/shared/sound/load_open.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -1011,7 +1011,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-dispatch-read"
-repo_source = "src/main/sound/load_dispatch_read.inl"
+repo_source = "src/shared/sound/load_dispatch_read.inl"
 source_mode = "fragment"
 patch_path = "th04/snd/load.cpp"
 map_module = "th04/snd_load.cpp"
@@ -1020,7 +1020,7 @@ object_path = "obj/th04/snd_load.obj"
 
 [[units]]
 id = "th04-main-snd-load-func-load"
-repo_source = "src/main/sound/load_func.inl"
+repo_source = "src/shared/sound/load_func.inl"
 source_mode = "replace"
 patch_path = "th04/snd/load.cpp"
 scaffold_sha256 = "9777ebd973098395823bfcfbc53daa451d2c6db62500aa038873e72729c1a39a"

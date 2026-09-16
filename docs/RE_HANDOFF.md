@@ -9610,3 +9610,159 @@ several exact natural subextents inside the 0xEA producer, while a reviewed
 41-byte middle gap keeps the complete function blocked. Determine whether that
 gap has a legal natural TC4J mechanism before considering original-style ASM.
 ZUN has no corresponding candidate contribution. Campaign status remains active.
+
+## 2026-09-16 v206 multi-artifact SND_LOAD ownership checkpoint
+
+This conversation restarted from clean committed HEAD
+`2e58b79f6612b7c184d5fcea3a6eddc2ab94b7ea`, branch `main`, upstream
+`origin/main`, ahead 4 / behind 0. Entry recovery found no staged, unstaged,
+untracked, conflicted, unrelated, unknown, or recoverable tracked work. All
+required repository and Factory documents were reread completely. The initial
+recovery inventory measured `.analysis/` at **4,287,850,734 bytes**; the v206
+manifest was created after fresh attestation at **4,287,863,154 bytes**.
+
+Entry preflight/status and the 2,120-observation function-boundary validator
+passed. Analysis-provider discovery again exposed ten read-only `th04-ghidra`
+operations and no `get_metadata`; the discovered `check {}` operation was used
+rather than inventing that interface. Factory attestation and repository-native
+`python3 scripts/ghidra.py th04-main check` both passed against target
+`target:th04-main`, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+size 156,258, 6,144-byte MZ header, entry point, complete load mapping, and all
+1,136 ordered relocations. Required TC86 Borland C++ 4.02, TASM32 5.0, TLINK
+6.10, MS-DOS Player, and Wine execution surfaces attest. Canonicality remains
+`candidate-local-attested`; the ignored private target was not modified,
+committed, relocated, or published.
+
+v206 reviewed the complete `SND_LOAD` producer across the TH04 artifacts that
+contain it. MAIN target load `0x13496..0x1357F` / file
+`0x14C96..0x14D7F`, OP unpacked payload `0xDDCA..0xDEB3`, and MAINE unpacked
+payload `0xD112..0xD1FB` are each complete `0xEA` FAR bodies ending in
+`RETF 6`. ZUN has no corresponding producer. OP's next target boundary is
+`GRAPH_PUTSA_FX` at `0xDEB4`; MAINE's is `GRAPH_PUTSA_FX` at `0xD1FC`.
+The OP and MAINE `SND_LOAD` rows move from corroborated to reviewed without
+receiving exactness credit.
+
+Fresh Ghidra constructs the complete MAIN body at analysis
+`0x23496..0x2357F` and reports two callers and two callees. Independent raw
+target scanning proves three instruction-aligned MAIN FAR callers at load
+`0xAB66`, `0xB1A2`, and `0xD46C`; the omitted third call lies in reviewed
+`dialog_op(unsigned char)`. MAIN caller accounting is corrected from 2 to 3.
+OP has ten raw aligned FAR callers and MAINE has three. These corrections are
+boundary/callgraph evidence only. Exactly one MAIN MZ relocation overlaps the
+producer, at load `0x134F2`, the `BGM_READ_SDATA` FAR-call segment word.
+
+The candidate Intel OMF was used to derive the 53 positions changed by normal
+link resolution. After masking exactly that OMF-derived field set, not target
+differences, all three candidate producers have fixed-byte SHA-256
+`f372dd28b7e8405436ddb04ab48671db383b0934febbd666978b55fc7e8d443e`,
+and all three independent TH04 target bodies have fixed-byte SHA-256
+`67f05625db1478d9a106ca24fe32e33ae42a007db3a2031b2f487a0bcb280bfd`.
+The only fixed target/candidate mismatch in every artifact is logical
+`+0xC1..+0xC2`: target `89 C3` versus current TC4J `8B D8`. Compact comparison
+receipt SHA-256 is
+`b312a4fe7e7c5b9e5084f8d7f9b1e986fe2c517f291b59bbe0278c000c70d12c`.
+This proves TH04 multi-artifact producer/source sharing without transferring
+MAIN exactness into OP or MAINE.
+
+The MAINE target entry `0xD112` is retained. The cold candidate public at
+`0xD110` is two bytes early because the upstream SHARED layout has already
+diverged: target `SND_KAJA_INTERRUPT` is +1 from candidate, the +1 persists
+through `SND_DELAY_UNTIL_MEASURE`, and target `CDG_PUT_PLANE` introduces a
+second byte so `SND_LOAD` and later owners remain +2. Compact seam receipt
+SHA-256 is
+`c40a9b7ce5067f85e6ef2349aa51de2ec91e97be675e213c2371599746cce5d4`.
+The two currently unexplained target bytes are `0xCF8B` before
+`SND_KAJA_INTERRUPT` and `0xD077` (observed `00`) before `CDG_PUT_PLANE`.
+Their owner/origin remains unknown.
+
+MAIN's existing natural-source partition remains honest: 230 of the 234
+`snd_load` bytes are exact, while `PUSH DS`, target `89 C3 MOV BX,AX`, and
+`POP DS` remain four blocked bytes. Existing TC4J/TASM/PC-98 IDE/compiler-corpus
+negative evidence was not repeated as a spelling matrix. ReC98 provenance does
+not change the classification: the first tracked `th04/snd/load.asm` commit is
+2014 `[Reverse-engineering] Music and sound effect loader`, and the 2021
+`[Decompilation] [th04] snd_load()` conversion retained inline assembly.
+A v206 standalone symbolic TASM control emits a valid 234-byte SHARED producer
+but ordinary `mov bx, ax` still encodes as `8B D8`; source SHA-256 is
+`af6eefc6bff9c35d1acee21ea706b9bfedc494ee6ec50d70332c67dde956025a`,
+object SHA-256 is
+`8cc1b69f545333a6422d1fb9753536a0125b742c284cedcab5e37421db9bed1b`.
+The complete function therefore remains authored C++/blocked rather than being
+forced into original-style ASM.
+
+Cross-artifact target evidence is strong enough to correct repository ownership
+of the already-exact natural fragments. Five content-identical files move from
+`src/main/sound/` to `src/shared/sound/`: `load_prefix.inl`, `load_open.inl`,
+`load_func.inl`, `load_dispatch_read.inl`, and `load_tail.inl`. Their target
+semantics and bytes are unchanged. Ledgers and exact replay now reference the
+shared paths. MAIN exactness remains artifact-local; OP/MAINE gain only shared
+source ownership and reviewed boundary evidence.
+
+Focused `gptweb-v206-snd-load-prefix-focused-001` passes two isolated cold
+builds with `raw/map/relocs=true`; receipt SHA-256 is
+`48182e6d03a943ba50eceb408eef553f155019849650930886b553bbef3546c4`.
+Focused `gptweb-v206-snd-load-func-focused-001` separately verifies the
+`source_mode=replace` path and passes with receipt SHA-256
+`c3126dd570e7b7850848fbd30cd457aa69d9f021ae5e7e3d98b7d185265f567b`.
+Mandatory no-unit aggregate `gptweb-v206-snd-load-shared-aggregate-001` passes
+all 246 default owners twice with `failures=[]`, receipt SHA-256
+`efa52e2a39b652863fb7d9d03d9f70d5adb233c1f8565309ec9fd1978af8ef79`.
+Tracked exact-replay manifest SHA-256 is
+`b0e75efa57ca360b19893a71b45144979c7605cc8f8646cb3d817af63ae85dd1`.
+Aggregate A/B `snd_load.obj` remains
+`55a0f19718afc6470fc3f857b24eea4c24393eb5fe437a3fe1c8cba4140d71d2`;
+A/B MAP remains
+`4bea5732094f5f08b2c37365d7cae466f063e54f7cb22cad115c973810cf59cc`;
+A/B candidate MAIN remains
+`1932b7feb681e3fa198d24a10cd93a70ce2cb6d400d1ecab39545cafa26b9f9b`.
+This was a source-ownership change, not a new exact promotion; no second
+"post-promotion" aggregate is claimed.
+
+Tracking after the packet contains 293 units, 2,532 evidence rows, 331 knowledge
+rows, and 483 authored-function rows. MAIN C/C++ accounting remains exactly
+**75,620 / 81,279 reviewed bytes (93.037562%)** and **460 / 483 reviewed
+functions (95.238095%)**; MAIN still has 24 blocked functions/boundary items and
+`snd_load` remains blocked. OP/MAINE/ZUN exactness denominators remain
+unestablished.
+
+`.analysis/` peaked at **4,469,622,147 bytes** while the two focused cold trees
+and the aggregate tree coexisted. After confirming no writable compiler/linker
+or replay producer was active, both focused trees were compacted to receipt-only
+state after copying their A/B `snd_load.obj`, MAP, candidate MAIN, and receipts
+into the bounded v206 scratch. The complete 246-owner v206 aggregate remains the
+current cold baseline. Pre-final-CI `.analysis/` measured **4,357,664,856
+bytes**. Full `python3 scripts/ci.py` returned `CI: PASS`, including tracking,
+boundary generation, all four private TH04 target identities, cross-game Oracle
+calibration, Ghidra/JDK identity, fresh read-only MAIN database replay, and
+Ghidra mutation smoke. Post-CI `.analysis/` measured **4,357,677,134 bytes**,
+net growth **69,826,400 bytes** from the initial recovery inventory. Legacy and
+unknown analysis trees, private targets, toolchain state, Wine state, and Ghidra
+provider state were left untouched.
+
+Recovery handling was fail-closed. One provider-list call and one analysis-call
+used stale wrapper argument shapes and were rejected before semantic use; live
+Git status was re-audited and the discovered schemas were used. The standalone
+TASM probe unexpectedly wrote `V206.OBJ` at repository root; status was audited,
+no producer was active, and only that explicit v206-owned output was moved into
+ignored scratch before the root returned clean. A knowledge-row writer used two
+nonexistent CSV fields and failed; the complete staged/unstaged diff and the
+330-row knowledge file were inspected before the row was rewritten against the
+real schema. One larger tool-layer command was blocked before repository
+execution; status was re-audited and the steps were split. No historical work
+was reset or deleted.
+
+Verification planes remain independent. Repository-native MAIN exactness is
+re-established for the five unchanged natural fragments from their new shared
+source paths. OP and MAINE have reviewed `SND_LOAD` boundaries and shared-source
+evidence only. Standalone TH04 product compile/link closure, whole-image
+exactness, runtime-storage identity, runtime-scenario validation, portable
+runtime, independently pristine target provenance, and v206 Factory
+Truth-Kernel acceptance remain unestablished. No remote push is performed.
+
+The next packet should audit the MAINE SHARED sound/layout seam at
+`0xCF5C..0xD078`. First bind the one-byte target gap at `0xCF8B` between
+`_snd_mmd_resident` and `SND_KAJA_INTERRUPT`, then the one-byte target gap at
+`0xD077` before `CDG_PUT_PLANE`. Compare their OP and MAIN counterparts,
+relocation/fixup ownership, alignment class, and source provenance before
+changing any later MAINE boundary. Campaign status remains active.

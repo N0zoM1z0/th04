@@ -45,13 +45,15 @@ it enters the standalone product build.
 
 | Artifact | Reviewed | Corroborated | Provisional |
 | --- | ---: | ---: | ---: |
-| `th04-op` | 0 | 85 | 8 |
+| `th04-op` | 1 | 84 | 8 |
 | `th04-main` | 489 | 9 | 1 |
-| `th04-maine` | 0 | 64 | 8 |
+| `th04-maine` | 1 | 63 | 8 |
 | `th04-zun` | 1 | 6 | 6 |
 
-- `reviewed` is inherited only from the accepted MAIN function ledger or a
-  configured exact composite entry.
+- `reviewed` records a completed target-first boundary review backed by durable
+  evidence. MAIN entries commonly inherit this state from the accepted function
+  ledger, configured exact composites can establish it, and explicitly reviewed
+  non-MAIN entries remain artifact-local without gaining exactness credit.
 - `corroborated` means target Ghidra control flow agrees at the entry with a
   candidate TLINK public or TASM `PROC`, and the Ghidra body stays inside that
   ownership contribution.
