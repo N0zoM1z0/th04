@@ -4203,20 +4203,20 @@ reason = "Fresh target-bound Ghidra/raw/TASM close the full 75-byte body; final 
 # sparks_invalidate() has an exact maintained natural-C++ owner; the six
 # neighboring Ghidra-recognized bodies enter the reviewed denominator without
 # source/origin/exactness credit.
-[[reviewed_nonexact]]
+# v188: natural-C++ ITEM_SPLASHES_RENDER promotion after fixed-byte codegen
+# closure, byte-aligned layout ownership, focused two-cold replay, and the
+# 221-owner candidate aggregate.
+[[reviewed_exact]]
 id = "th04-main-fn-1c17c"
 address = "0x1C17C"
 file_offset = "0xD97C"
 size = "0x83"
+decode_size = "0x83"
 name = "ITEM_SPLASHES_RENDER"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x83 near item-splash renderer through RET at 0x1C1FE. The following 0x1C1FF byte is explicit source-owned layout outside the logical body; source/origin and exactness remain unresolved."
-
-[[new_nonexact]]
-id = "th04-main-fn-1c17c"
-address = "0x1C17C"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Expand the reviewed authored denominator with the complete ITEM_SPLASHES_RENDER body while preserving unknown source/origin/exactness."
+owner_unit = "th04-main-item-splashes-render-v188"
+source = "src/main/item/splashes_render.cpp"
+evidence_id = "ev-th04-main-item-splashes-render-boundary-v188"
+reason = "The reviewed v186 0x83 body is unchanged. v188 proves a target-consistent two-argument C-fastcall splash-dot ABI, natural TC4J fixed-byte equality, exact byte-aligned ownership of the following 0xC1FF layout seam, focused two-cold replay, and the 221-owner candidate aggregate."
 
 [[reviewed_nonexact]]
 id = "th04-main-fn-1c200"

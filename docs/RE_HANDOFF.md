@@ -7183,3 +7183,153 @@ spark declaration surface and preserve the explicit layout bytes at `0xC1FF`,
 `0xC265`, and `0xC2ED`. Keep `_sparks_update`'s v186 71-vs-76 compiler negative
 until a genuinely new compiler-IR hypothesis appears. `sub_C34E` remains the
 adjacent Ghidra-missed source/origin seam. Nothing is pushed.
+
+
+## v188 CIRCLE_TEXT item-splash render checkpoint
+
+This session starts from clean committed HEAD
+`7343d926e55daa10824f1dd1abbc5072707fab5b`, tree
+`9da184bb172ca14ae9f37a0db0038b2d49df8ab3`, branch `main`, upstream
+`origin/main`, ahead 1 / behind 0. `.analysis/` measured **8,870,791,896 bytes**
+at entry. Mandatory preflight/status/boundary gates passed. All required
+repository and Factory session/recovery/verification documents were mounted and
+read before editing.
+
+`th04-ghidra` discovery again exposed ten operations and no `get_metadata`.
+Provider `check {}` passed for target `target:th04-main`, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native Ghidra independently passed the 6,144-byte MZ header, entry,
+1,136 ordered relocations, load mapping/digest, and sampled bytes. Required
+TC4J/TASM/TLINK surfaces passed; optional host `wine64` drift remains
+informational. The private target remains `candidate-local-attested` ignored
+operator input and was never modified or published.
+
+Fresh target-bound function/caller/callee review covers the connected CIRCLE
+render cohort: `ITEM_SPLASHES_RENDER` load `0xC17C` size `0x83`,
+`@spark_render` `0xC200` size `0x65`, `_sparks_render` `0xC2B2` size `0x3B`, and
+`@item_splash_dot_render` `0xC332` size `0x1C`. `sub_C34E` at `0xC34E` remains a
+reviewed Ghidra-missed source/origin seam. The bytes at `0xC1FF`, `0xC265`, and
+`0xC2ED` remain separate layout ownership rather than function bodies.
+
+Independent TH05 target evidence preserves all four render architectures; the
+splash-dot primitive is byte-identical between TH04 and TH05. This is target
+cross-check evidence only. ReC98 reconstruction-era `.asm` files are not treated
+as historical-source authority.
+
+v188 adds maintained `src/main/item/splash.hpp`, SHA-256
+`1fc0ed49dab1dd65164113ab482c3512e3bafe38a3258c73f7ca33fcccc63118`,
+and `src/main/item/splashes_render.cpp`, SHA-256
+`3610cfb382260aef5c418641ad147cbf6adaee05686a9f70fb8e9efb83fe3c3e`.
+A minimal TC4J ABI probe proves that `extern "C" __fastcall` emits the exact
+low-level target public `@item_splash_dot_render` with AX/DX argument passing;
+its object SHA-256 is
+`5c46bda648c2eaeb7660e3e6d57742b84e215935fe686aae613b6dba407c877b`.
+The final natural renderer probe emits exactly 131 CODE bytes, CODE SHA-256
+`56c630bdab005208bc7aa039bb78002615a669bbbf7165ab068f73e5e06444fe`;
+all fixed bytes match target and only ordinary link-resolved fields differ before
+linking. No inline ASM, codestring, target bytes, padding, target patch, or ABI
+lie is used.
+
+The exact owner is CIRCLE_TEXT `0AAF:168C..170E`, load `0xC17C..0xC1FE`, file
+`0xD97C..0xD9FE`, size `0x83 / 131`, target SHA-256
+`d1a0dce276dcc8dadf49cedf2229c4ef2d4308e533fe674fad3ad9da99d59d87`.
+The final physical split preserves zero-credit surrounding ownership as
+`cirsuf185.asm` `0AAF:1658 size 0x34`, natural `isprend.cpp`
+`0AAF:168C size 0x83`, byte-aligned `itemrendgap188.asm`
+`0AAF:170F size 0x01`, and `cirsuf188.asm` `0AAF:1710 size 0xEE` before the v186
+natural owner at `0AAF:17FE`. The one-byte owner is hash-bound extraction from
+the pinned source seam, not a hand-written target byte. Replay-only wrapper
+`config/replay/th04_circle_render_suffix_v188.asm.in` has SHA-256
+`6749178894e2a720e0a6382b51c151e0add14fbbd8c1bd1f7aa62d206c055e5a`.
+
+Final focused run
+`gptweb-v188-item-splashes-render-focused-candidate-005` selects 117 owners and
+passes both cold builds with `failures=[]`. Receipt SHA-256 is
+`8f8670c8c1c5b28e4dc92f44b8bb7710d5b8fc6e56af22e67f50234694399f3e`.
+A/B natural `isprend.obj` SHA-256 is
+`484a63c6a6e846afc40e61893b27fa416aaab1352117f9d273daa76cfe2cfdd5`,
+normalized SHA-256
+`f92dd3b2c94d645df5221fae2377f65f9c5ac8bae865f828e0e627f5abbdcd0a`.
+Natural raw/MAP/ordered-relocation checks pass; target and candidate both contain
+the overlapping relocation at load `0xC1AE`. The `0x34` prefix, one-byte
+`0xC1FF` owner, and `0xEE` residual also pass raw/MAP/relocation checks.
+
+Candidate aggregate
+`gptweb-v188-item-splashes-render-aggregate-candidate-001` passes all 221
+candidate-state default owners twice, receipt SHA-256
+`7a1c0c2fafb95930bb8f77a3a5f9958836a9414dc1581f53b4af50c00cf40787`.
+Post-promotion tracked aggregate
+`gptweb-v188-item-splashes-render-aggregate-final-001` also passes all 221
+default owners twice, receipt SHA-256
+`cc8b4b635f74d1f7cbad11b370ec22b25a799c4944bfa7364a287916e90c95f2`.
+Its tracked manifest SHA-256 is
+`4fdf0859833367615419ad2279685abf285f52b938ed1a8285894b72e0b8adb7`;
+A/B MAP SHA-256 is
+`b3199896ae52684f03ac8b154e701178d2fcc9187442736174d95afc5741e6a7`;
+A/B candidate MAIN remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+The fail-closed function-review trial report SHA-256 is
+`cc5e2795324c2cc543d00709874dd230c8a92b287b4fa1fb7d1180806c3e3eba`.
+It validates the existing `th04-main-fn-1c17c` 131-byte body as 48 decoded
+instructions through `RET`, with exact Ghidra min/max, TLINK public, exact owner,
+and source. Generic ledger output would modify 45 historical rows, so only this
+target row is manually merged from blocked to exact. No neighboring render
+function receives credit.
+
+The packet also produces durable negative evidence for `_sparks_render` rather
+than stopping at the easy exact win. A natural typed TC4J probe emits the target
+59-byte high-level skeleton; a second evidence-driven hypothesis emits 61 bytes
+because Borland places the third integer fastcall argument in BX and inserts a
+`MOV BX,CX`, while the target only loads CL. It also exposes an SHR/SAR semantic
+shape difference. Probe CODE SHA-256 values are
+`f91e074277952e14566fa167810388989670a57c25e4d2e8a5895aedbc2ca6e5`
+and `dc3362d5ff3609cdd5c73121464332ae43abc74ee2f50dcd59b56ae2fdd3ca99`.
+`_sparks_render` stays blocked; no spelling matrix or ABI fabrication is used.
+
+Four intermediate v188 failures are explicitly non-evidence: missing unit
+registration before build, a residual-wrapper external introduced by the split,
+the initially wrong splash-dot linkage declaration exposed by TLINK, and a real
+failed replay whose two-byte downstream drift exposed incorrect ownership of the
+`0xC1FF` layout byte. The final byte-aligned split resolves those issues without
+changing target bytes.
+
+Live MAIN accounting is now **75,195 / 80,680 exact reviewed authored bytes
+(93.201537%)** and **455 / 482 exact reviewed functions (94.398340%)**. Routing
+is 455 exact, 27 blocked, 50 unreviewed, and 36 ASM-attestation observations.
+OP.EXE, MAINE.EXE, and ZUN.COM remain independent active queues with 94, 72, and
+13 unreviewed authored candidates; no MAIN credit transfers to them.
+
+Before bounded cleanup, `.analysis/` reached **9,177,319,742 bytes**. The
+interrupted packet had already removed explicit failed/superseded/focused/
+candidate replay trees after retaining compact receipts and durable artifacts.
+Recovery found no active producer and preserved both complete post-promotion
+aggregates. After the recovery rebind, cleanup of only this conversation's
+unreferenced probe control, and full CI, `.analysis/` measures
+**9,008,251,083 bytes**, net growth **137,459,187 bytes** from v188 entry. The
+v188 scratch is **9,485,385 bytes**, its compact `durable-final` is
+**8,535,548 bytes**, `aggregate-final-001` is **63,954,856 bytes**, and the
+later current-manifest `aggregate-final-002` is **63,946,664 bytes** and is the
+latest full cold baseline. The reconstructed ignored session manifest SHA-256 is
+`20a1095b5b416369c4df489aef75767c17a0ffd762ea363a7fd585a0ca39cec3`; it was
+rebuilt from actual retained files/receipts after a local probe bootstrap had
+overwritten the ignored manifest before recovery classification. v187/older
+baselines, the retained v187 Factory lock-failure reproducer, private targets,
+toolchains, Ghidra/Wine state, and legacy or unknown analysis content are
+untouched.
+
+Verification planes remain separate. v188 proves exact natural-C++ ownership of
+`ITEM_SPLASHES_RENDER` and revalidates the tracked exact cohort. Standalone TH04
+product compile/link closure, whole-image exactness, runtime-storage identity,
+runtime scenario, portable runtime, independent pristine provenance, and v188
+Factory Truth-Kernel acceptance remain unestablished.
+
+Next continue the same render cohort with `@item_splash_dot_render` and
+`@spark_render` as an origin/source pair. The splash-dot body is byte-identical
+across TH04/TH05 and the spark renderer has a cross-game invariant instruction
+skeleton, but neither is yet classified as natural C++ or original/shared ASM.
+Use legal TC4J probes for their LODS/LOOP/ES-override register ABI before any
+origin promotion. Preserve `_sparks_render`'s v188 fastcall negative and
+`_sparks_update`'s v186 71-vs-76 negative unless a genuinely new mechanism
+appears. `sub_C34E` remains the adjacent Ghidra-missed source/origin seam.
+Nothing is pushed.

@@ -10113,3 +10113,110 @@ map_start = "0x1824"
 map_size = "0x1E"
 target_file_offset = "0xDB14"
 size = "0x1E"
+
+# v188 candidate: natural-C++ ITEM_SPLASHES_RENDER split from the v185
+# replay-only CIRCLE_TEXT residual. The shortened v185 prefix remains a valid
+# zero-credit auxiliary producer; a new suffix preserves the three historical
+# layout bytes and the still-unresolved spark render/update/render cohort.
+[[build_inserts]]
+id = "th04-main-item-splash-header-v188"
+trigger_units = ["th04-main-item-splashes-render-v188"]
+repo_source = "src/main/item/splash.hpp"
+overlay_path = "th04/main/item/splash.hpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v188 maintained TH04 item splash declarations overlay\n"
+
+[[scaffold_extractions]]
+id = "th04-main-item-splashes-render-suffix-v188"
+trigger_units = ["th04-main-item-splashes-render-v188"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "include th04/main/item/splashes_render.asm\r\n"
+end = "include th04/main/sparks.asm\r\n"
+span_sha256 = "2a311e21af1ef630c02a67fc065f64884cc6240222d97a6122514a65d9ac23fb"
+template_source = "config/replay/th04_circle_render_suffix_v188.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/cirsuf188.asm"
+
+[[scaffold_extractions.replacements]]
+old = "include th04/main/item/splashes_render.asm\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\t\tdb    0\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "include th04/main/sparks.asm\r\n"
+new = "include th04/sparkpre186.inc\r\n"
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-item-splashes-render-gap-v188"
+trigger_units = ["th04-main-item-splashes-render-v188"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "include th04/main/item/splashes_render.asm\r\n"
+end = "include th04/main/spark_render.asm\r\n"
+span_sha256 = "9064dbbb05fd53e14a5d5f4c80469531e2ebb339ce06c3eda139e293d69f83b8"
+template_source = "config/replay/th04_circle_gap_v137.asm.in"
+output_path = "th04/itemrendgap188.asm"
+
+[[scaffold_extractions.replacements]]
+old = "include th04/main/item/splashes_render.asm\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "include th04/main/spark_render.asm\r\n"
+new = ""
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-item-splashes-render-v188-build"
+trigger_units = ["th04-main-item-splashes-render-v188"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/cirsuf185.asm\",\n\t\"th04/spkinv.cpp\",\n\t\"th04/spkinit.cpp\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/cirsuf185.asm\",\n\t\"th04/isprend.cpp\",\n\t\"th04/itemrendgap188.asm\",\n\t\"th04/cirsuf188.asm\",\n\t\"th04/spkinv.cpp\",\n\t\"th04/spkinit.cpp\",\n\t\"th04/cirsuf186.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-item-splashes-render-v188-layout"
+trigger_units = ["th04-main-item-splashes-render-v188"]
+patch_path = "th04/cirsuf185.asm"
+encoding = "latin-1"
+scaffold_sha256 = "ba021ec85780336387a67b0a74b5ee20afa312394fc901fed4b7ffea8c8839f0"
+patched_sha256 = "502f78c7316f2c31bc3fae56e117d28a8ed272c38572a8765a655f304e039397"
+
+[[source_transforms.ops]]
+id = "remove-replay-item-splashes-render-v188"
+kind = "remove_between"
+removed_sha256 = "982a4f6c10e0c0269445908999060f48f63231c6f426458167b0759a57b7f316"
+start = "include th04/main/item/splashes_render.asm\r\n"
+end = "include th04/sparkpre186.inc\r\n"
+replacement = ""
+
+[[units]]
+id = "th04-main-item-splashes-render-v188"
+default_enabled = true
+requires_units = ["th04-main-sparks-init-v187"]
+repo_source = "src/main/item/splashes_render.cpp"
+overlay_path = "th04/isprend.cpp"
+map_module = "th04/isprend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/isprend.obj"
+auxiliary_objects = ["obj/th04/cirsuf185.obj", "obj/th04/itemrendgap188.obj", "obj/th04/cirsuf188.obj"]
+auxiliary_extents = [
+  { id = "th04-main-circle-prefix-before-item-render-v188", file_offset = "0xD948", size = "0x34", map_module = "th04\\cirsuf185.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf185.obj" },
+  { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
+  { id = "th04-main-circle-render-residual-v188", file_offset = "0xDA00", size = "0xEE", map_module = "th04\\cirsuf188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf188.obj" },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x168C"
+map_size = "0x83"
+target_file_offset = "0xD97C"
+size = "0x83"
