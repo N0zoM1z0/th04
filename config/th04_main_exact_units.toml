@@ -10994,6 +10994,10 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+producer_override_when_unit = "th04-main-elly-backdrop-v200"
+producer_map_module = "th04\\cpost201.asm"
+producer_object_path = "obj/th04/cpost201.obj"
+producer_map_mode = "contains"
 
 # v199: three source-distinct CIRCLE_TEXT low-level producers immediately after
 # the v198 .BB tile-mask owner. Yuuka is externalized from an inline scaffold
@@ -11025,6 +11029,10 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+producer_override_when_unit = "th04-main-elly-backdrop-v200"
+producer_map_module = "th04\\cpost201.asm"
+producer_object_path = "obj/th04/cpost201.obj"
+producer_map_mode = "contains"
 
 [[units]]
 id = "th04-main-z-super-put-mono-asm-v199"
@@ -11036,6 +11044,10 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+producer_override_when_unit = "th04-main-elly-backdrop-v200"
+producer_map_module = "th04\\cpost201.asm"
+producer_object_path = "obj/th04/cpost201.obj"
+producer_map_mode = "contains"
 
 [[units]]
 id = "th04-main-bb-txt-put-asm-v199"
@@ -11047,6 +11059,10 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+producer_override_when_unit = "th04-main-elly-backdrop-v200"
+producer_map_module = "th04\\cpost201.asm"
+producer_object_path = "obj/th04/cpost201.obj"
+producer_map_mode = "contains"
 
 # v200: source-distinct low-level CIRCLE_TEXT producers immediately before the
 # v198 .BB mask owner. Elly remains natural-C++ source-present but is not an
@@ -11073,3 +11089,78 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+producer_override_when_unit = "th04-main-elly-backdrop-v200"
+producer_map_module = "th04\\cpost201.asm"
+producer_object_path = "obj/th04/cpost201.obj"
+producer_map_mode = "contains"
+
+
+# v201: split the natural 14-byte Elly backdrop callback out of the monolithic
+# CIRCLE_TEXT producer. The integration wrapper contains only maintained v198-
+# v200 symbolic sources; trigger-scoped producer overrides keep historical
+# standalone replay of those accepted owners authoritative when v201 is absent.
+[[scaffold_extractions]]
+id = "th04-main-elly-backdrop-v201-wrapper"
+trigger_units = ["th04-main-elly-backdrop-v200"]
+scaffold_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "c872e7c1d94d571fc62e6b14e0960b89ef882f46df60a1d8467d117b9e0e549b"
+start = "include th04/hardware/fillm64-56_256-256.asm\r\n"
+end = "include th04/hardware/fillm64-56_256-256.asm\r\n"
+span_sha256 = "c504dec8fdc41e03aa4b45eaa96ac0e384dc6d548fd7e16fa471fc6757a8b76e"
+template_source = "config/replay/th04_circle_post_elly_v201.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/cpost201.asm"
+
+[[scaffold_extractions.replacements]]
+old = "include th04/hardware/fillm64-56_256-256.asm\r\n"
+new = "; v201 wrapper materialized after validating the maintained fill include seam\r\n"
+expected_count = 1
+
+[[build_replacements]]
+id = "th04-main-elly-backdrop-v201-build"
+trigger_units = ["th04-main-elly-backdrop-v200"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/maipre197.asm\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/ellybd.cpp\",\n\t\"th04/cpost201.asm\",\n\t\"th04/maipre197.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-elly-backdrop-v201-layout"
+trigger_units = ["th04-main-elly-backdrop-v200"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "157276c76c50bbb19e391a51f29a8da6ca1269b1c5edb5c1374bde347bc8318f",
+  "06d33c8da4fb706276914d51ef54e7d4717087bdbdeb71c115f093480b3007f1",
+]
+
+[[source_transforms.ops]]
+id = "remove-inline-elly-backdrop-v201"
+kind = "remove_between"
+start = "public @ELLY_BACKDROP_COLORFILL$QV\r\n"
+end = "@elly_backdrop_colorfill$qv\tendp\r\n"
+removed_sha256 = "df2f3f21a3976bbc06c9a74678a937d33341a01c817b6d3379f152e3db2f64ef"
+replacement = ""
+
+[[source_transforms.ops]]
+id = "remove-post-elly-circle-includes-v201"
+kind = "remove_between"
+start = "include th04/hardware/fillm64-56_256-256.asm\r\n"
+end = "include th04/formats/bb_txt_put.asm\r\n"
+removed_sha256 = "6ff8275c9c820e420699f008152ca70fb67ac8051077b4114c92c082179753bc"
+replacement = "extrn @REIMU_MARISA_BACKDROP_COLORFILL$QV:near\r\nextrn @MAI_YUKI_BACKDROP_COLORFILL$QV:near\r\nextrn @TILES_BB_PUT_RAW$QI:near\r\nextrn @TILES_BB_INVALIDATE_RAW$QI:near\r\nextrn @YUUKA5_BACKDROP_COLORFILL$QV:near\r\nextrn @Z_SUPER_PUT_16X16_MONO_RAW$QI:near\r\nextrn @bb_txt_put_8_raw$quiui:near\r\n"
+
+[[units]]
+id = "th04-main-elly-backdrop-v200"
+default_enabled = true
+requires_units = ["th04-main-fillm64-backdrop-asm-v200"]
+repo_source = "src/main/boss/elly_backdrop.cpp"
+overlay_path = "th04/ellybd.cpp"
+map_module = "th04/ellybd.cpp"
+map_mode = "exact"
+object_path = "obj/th04/ellybd.obj"
+map_segment = "CIRCLE_TEXT"
+map_start = "0x13DC"
+map_size = "0x0E"
+target_file_offset = "0xD6CC"
+size = "0x0E"

@@ -8881,3 +8881,150 @@ C++ object while enumerating and preserving every v198/v199/v200 contained
 fixup, MAP placement, adjacent alignment, all affected accepted extents, and
 aggregate determinism before Elly receives exact or function-ledger credit.
 Campaign status remains active.
+
+## 2026-09-16 v201 Elly CIRCLE producer-split checkpoint
+
+This conversation restarted from clean committed HEAD
+`0b4697190c8d9a0cb72f44a651a71ddf15c05cee`, branch `main`, upstream
+`origin/main`, ahead 7 / behind 0. There was no staged, unstaged, untracked,
+conflicted, recoverable, unrelated, or unknown tracked work at entry.
+`.analysis/` measured **3,883,288,072 bytes**. All requested TH04 repository
+instructions and mounted Factory contracts/guidance were read completely before
+editing; entry preflight/status and the 2,120-observation boundary validator
+passed.
+
+Provider discovery again exposes ten `th04-ghidra` operations and no
+`get_metadata`; the discovered `check {}` operation was used rather than
+inventing a schema. Factory and repository-native Ghidra attestation pass for
+repository `th04` / target `target:th04-main`, binding the 156,258-byte private
+MZ, 6,144-byte header/load mapping, entry, all 1,136 ordered relocations, load
+digest, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains `candidate-local-attested`. Required TC86 Borland C++
+4.02, TASM32 5.0, and TLINK 6.10 surfaces attest. The private target remains
+ignored, unmodified, uncommitted, and unpublished.
+
+v201 resolves the v200 integration blocker for natural
+`elly_backdrop_colorfill()` at `CIRCLE_TEXT 0AAF:13DC`, load
+`0xBECC..0xBED9`, file `0xD6CC..0xD6D9`, size `0x0E`. Fresh Ghidra still creates
+no function at analysis `0x1BECC`, so no Ghidra exactness credit is used.
+Maintained source remains `src/main/boss/elly_backdrop.cpp`, SHA-256
+`f31dad909a71fc89ecf3db7da549a1cbfc32efda53dc038a7aeb115583570159`.
+
+The linked physical owner is now real natural C++, not the old scaffold body.
+When Elly is active, CIRCLE layout becomes monolithic main prefix
+`0AAF:11A4 +0x238`, natural `th04/ellybd.cpp` `0AAF:13DC +0x0E`, maintained
+integration `th04\\cpost201.asm` `0AAF:13EA +0x222`, then unchanged exact
+`itemsinv.cpp` at `0AAF:160C`. Checked-in
+`config/replay/th04_circle_post_elly_v201.asm.in`, SHA-256
+`9ea9a2a7b66432ddb000e386eb4b0fc4363557c8c675c6981354cc75c5abbfa4`,
+contains no recovered target body. It only declares the CIRCLE environment and
+includes the five maintained v198-v200 symbolic sources after Elly.
+
+The five pre-existing suffix units retain `obj/th04/main.obj` as their normal
+historical producer. Trigger-scoped producer overrides route them to
+`obj/th04/cpost201.obj` only while the Elly split is active. This covers fillm64,
+the v198 BB mask, v199 Yuuka backdrop, v199 z-super mono, and v199 BB-text
+owners. Focused and aggregate replay independently revalidate every migrated
+raw/MAP/ordered-relocation extent. The shortened main object leaves exact shot
+and point-number owners in place and exact `items_invalidate()` begins at the
+same following byte.
+
+Focused `gptweb-v201-elly-split-focused-candidate-003` selects 138 owners twice
+and passes with `failures=[]`, receipt SHA-256
+`b5bc020a8c620a5e0dc2e1628910a8622ece54daa61972f571dd4234ee4ef3bd`.
+Natural A/B `ellybd.obj` is raw-identical SHA-256
+`9e64cc59bba8622f59d41aec2c9a48ef4170b19545edb4316b6db0308d472938`;
+its dependency-normalized OMF SHA-256 is
+`5401837af5eebc20c2004cd3d9aabe76ba1cbc4518bfb9a7d6fe540be99f0dfe`.
+The migrated suffix object's dependency-normalized A/B identity is
+`921fe32bf9efc982ae20800dbcb6d9bcea6ca70db88360c874b0648728a004c7`.
+Focused A/B MAP SHA-256 is
+`f7f1cdc7e99ec2560ed5582639e0d6feda56199a500a915077adc3baf02da616`.
+
+Candidate no-unit aggregate
+`gptweb-v201-elly-split-aggregate-candidate-001` passes all 242 candidate-state
+default owners twice, receipt SHA-256
+`6ae9863abe8c16bfbdd541055edc3f1ee49ce33a3ca4cc403cc1af185cb5e726`.
+Post-promotion aggregate `gptweb-v201-elly-split-aggregate-final-001` passes the
+same 242 tracked defaults twice, receipt SHA-256
+`aab1d6eab440cc8b7ba48428f6b65fd6e87b372ee60873d91d08c7a381ce0d83`.
+Tracked exact-manifest SHA-256 is
+`715f3000edb6a444f5de1f07149cfa7a6d963fa1a97f9d0ff0db2e661cc575e5`;
+final A/B MAP SHA-256 is
+`818e1681f3627b3216efe8c73848542b825b72ad318cc1266bcde25f6b022b85`;
+A/B candidate MAIN SHA-256 is
+`6e087e39ee8dbb04ac4215749ff796b6a35590cf2a1129375b1fb03da2ccc414`.
+Elly and every affected old exact owner are `raw=True`, `map=True`, and
+`relocs=True` in final replay.
+
+The no-Ghidra function-review trial report SHA-256 is
+`d5be583a79a4966d3bf2d5c629d30df9940c441ebeaa5c911ff9255ca261c64e`.
+It validates one gap-free 14-byte / seven-instruction body through RET with next
+TLINK public `0x1BEDA`. Trial ledger SHA-256 is
+`81607eb77ea70b3dc8cdc2a737fdf6ae64111cf544fcdac608e48e88f1ded997`.
+It adds exactly `th04-main-fn-1becc`, removes none, and proposes 42 unrelated
+historical normalization changes; only the validated Elly row is merged.
+
+Live MAIN accounting is now **75,496 / 81,155 exact reviewed C/C++ bytes
+(93.026924%)** and **459 / 482 exact reviewed functions (95.228216%)**. MAIN
+routing remains 503 reconstruction candidates but becomes 459 exact, 24 blocked,
+20 unreviewed, with 65 ASM-attestation observations. Generated progress reports
+75,496 exact authored bytes at 91.85%; original-style ASM remains separate at
+36 exact physical units / 5,146 bytes.
+
+Other TH04 artifacts remain independent. A fresh DIET unpack was attempted for
+OP but failed closed before emulation because the active host Python lacks the
+required pinned `unicorn==1.0.2`; the set-e command therefore did not run fresh
+MAINE/ZUN decompression. No fresh-unpack claim is made. Read-only SHA rebinding
+instead proves the retained independent packed-target/receipt/payload triples
+still agree exactly: OP payload 69,028 bytes SHA-256
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`,
+MAINE 62,414 bytes SHA-256
+`7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`,
+and ZUN 13,422 bytes SHA-256
+`baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+Packed `ZUN.COM` still has MZ magic. Elly's 14-byte target body has a longest
+exact run of only two bytes in each retained payload. Routing receipt SHA-256 is
+`13fbad2534efc898fc9d720d336ee8af5462d93fd633cb27696fc99235ee4b2e`.
+OP/MAINE/ZUN retain independent 94 / 72 / 13 authored reconstruction queues and
+receive no MAIN credit.
+
+Recovery/negative controls are intentionally retained. focused-001 changed the
+Tup build graph too early and failed an existing hash/anchor gate before any
+compiler work. focused-002 compiled natural Elly successfully but exposed two
+truthful cross-object declaration requirements in the physical split; adding
+only those declarations closed the build. A promotion-script schema mistake
+later truncated the last two `units.csv` rows; recovery review restored only
+that current-session-damaged file from committed HEAD before reapplying the
+Elly edit using the actual `replay_command` field. Tracking then caught a second
+new-evidence schema mismatch; Oracle/result/extent fields were corrected against
+the live CSV schema before promotion. An initial function-review call omitted
+metadata and therefore performed discovery only; the proper metadata-bound trial
+was rerun before function credit.
+
+`.analysis/` started at **3,883,288,072 bytes**, peaked at
+**4,124,363,145 bytes**, and after proving no active producer and performing
+bounded v201-only cleanup is **3,963,107,794 bytes** before final CI. Full final `python3 scripts/ci.py` returns `CI: PASS`; after its live Ghidra replay, `.analysis/` is **3,963,120,072 bytes**, net growth **79,832,000 bytes** from entry. Failed
+focused trees were removed after compact logs were retained; focused-003 and the
+candidate aggregate are receipt-only; the complete 242-owner post-promotion
+aggregate remains the current cold baseline. Older baselines, private targets,
+toolchains, Wine/Ghidra state, unrelated ignored objects, and legacy/unknown
+content were left untouched.
+
+Verification planes remain separate. Repository-native exact physical and
+function ownership is established for natural Elly. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario validation, portable runtime, independent pristine provenance, and
+v201 Factory Truth-Kernel acceptance remain unestablished. No remote push is
+performed.
+
+The next concrete structural candidate is `_main` at `DEMO_TEXT 0AAF:001C`,
+load `0xAB0C..0xAB87`, size `0x7C`. Fresh target-bound Ghidra sees one contiguous
+FAR body called directly from the MZ entry and twelve callees, including the
+reviewed gameplay/session lifecycle cohort. Six ordered MZ relocation sites are
+inside the extent. Next review startup/entry ownership, those call edges,
+relocations, return/exit semantics, adjacent DEMO ownership, TASM provenance,
+and natural TC4J feasibility as one packet. Do not resume blind source spelling
+for `sub_B835` / `sub_CCD6` without a genuinely new mechanism. Campaign status
+remains active.

@@ -4276,3 +4276,25 @@ id = "th04-main-fn-1cc3a"
 address = "0x1CC3A"
 evidence_id = "ev-th04-main-midboss2-render-boundary-v196"
 reason = "Admit the complete midboss2_render() callback only after target boundary/callback-pointer closure, natural TC4J code-shape closure, focused two-cold replay, exact MAP/ordered relocations/raw bytes, and the 234-owner candidate aggregate."
+
+
+# v201: natural-C++ Elly backdrop callback. Target Ghidra does not construct
+# the entry, so exact admission uses the strict no-Ghidra owner/public/raw
+# boundary path after the physical CIRCLE producer split.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1becc"
+address = "0x1BECC"
+file_offset = "0xD6CC"
+size = "0x0E"
+name = "elly_backdrop_colorfill()"
+owner_unit = "th04-main-elly-backdrop-v200"
+source = "src/main/boss/elly_backdrop.cpp"
+evidence_id = "ev-th04-main-elly-backdrop-function-exact-review-v201"
+reason = "Target Ghidra has no function entry at this reviewed TLINK public. Exact natural-C++ ownership, gap-free raw decode through RET, and the next exact public at 0x1BEDA close the complete 0x0E body after the v201 physical producer split."
+next_public_address = "0x1BEDA"
+
+[[new_exact]]
+id = "th04-main-fn-1becc"
+address = "0x1BECC"
+evidence_id = "ev-th04-main-elly-backdrop-function-exact-review-v201"
+reason = "Explicitly admit the Ghidra-missed callback only after natural TC4J code-shape closure, focused two-cold replay, exact producer split/MAP/relocation/raw checks, and the 242-owner candidate aggregate."
