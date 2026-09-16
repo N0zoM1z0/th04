@@ -568,7 +568,7 @@ object_path = "obj/th04/cfg_lres.obj"
 
 [[units]]
 id = "th04-main-vram-planes-set"
-repo_source = "src/main/hardware/vram_planes.cpp"
+repo_source = "src/shared/hardware/vram_planes.cpp"
 overlay_path = "th01/hardware/vplanset.cpp"
 map_module = "th01/vplanset.cpp"
 object_path = "obj/th01/vplanset.obj"

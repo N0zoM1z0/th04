@@ -10193,3 +10193,107 @@ after reviewed `frame_delay` by `pi_palette_apply()` (`0x25`), `pi_put_8()`
 all three entries are currently corroborated cross-game C++ candidates. Close
 TU seams, fixed bytes, relocations, callers/callees, and source lineage before any
 shared-source or exactness claim. Campaign status remains active.
+
+## 2026-09-17 v210 shared VRAM / PI front-cohort checkpoint
+
+v210 continues from clean committed v209 checkpoint
+`44a6cd3dffb7840199754c06d286cd193bf47856`, branch `main`, upstream
+`origin/main`, ahead 8 / behind 0 at entry. Recovery found no staged, unstaged,
+untracked, conflicted, unrelated, unknown, or recoverable tracked work. Entry
+preflight/status and the 2,120-observation boundary validator pass. The v210
+ignored manifest started at **4,565,529,847 bytes** under `.analysis/`.
+
+The selected analysis plane remains repository `th04`, provider `th04-ghidra`,
+target `target:th04-main`, artifact `th04-main / MAIN.EXE`. v209 had already
+re-attested the provider and repository-native database against the 156,258-byte
+MAIN target, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte MZ header, entry point, complete mapping, and all 1,136 ordered
+relocations. The live provider still exposes ten operations and no `get_metadata`.
+Required TC86 Borland C++ 4.02 / TASM32 5.0 / TLINK 6.10 surfaces remain the
+attested toolchain. Canonicality remains `candidate-local-attested`; private
+targets were not patched, replaced, relocated, committed, or published.
+
+v210 reviews the connected OP/MAINE SHARED front cohort rather than transferring
+MAIN conclusions. OP target payload `0xDA12..0xDB42` and MAINE target payload
+`0xCC7A..0xCDAA` contain, in order, `vram_planes_set()` (`0x29`), already-
+reviewed `frame_delay(int)` (`0x15`), the `0xAD` PI put producer
+(`pi_palette_apply()` `0x25` + `pi_put_8()` `0x88`), and `pi_load()` (`0x46`).
+MAINE `pi_put_quarter_8()` begins exactly at `0xCDAB`. No retained OP/MAINE
+payload relocation overlaps the reviewed v210 owners.
+
+Candidate OMF FIXUPP locations independently explain every cross-artifact linked
+field. After masking only those fields, `vram_planes_set()` has one fixed producer
+across MAIN/OP/MAINE, SHA-256
+`b0fc08641718c8299d856d10a1c1856109ff18000dcea4f2490d20451bb17bb8`.
+OP/MAINE PI put has fixed SHA-256
+`7b922462ebcfa345fb2a28538521ed19bccb6cd6bc6da0ac610e76da839703a2`,
+and PI load has fixed SHA-256
+`71d800e1bbb8233c1b24f3d6bb91d3a170be98d8a00fcf5f7b854ba74562d21b`.
+The current cold OP/MAINE candidate slices are already raw-identical to each
+corresponding target extent. Compact receipt SHA-256 is
+`2d6bae0aca20761208ec10dfce214b469e745ef3bef4762757b1a62d33c36290`.
+
+The already-exact MAIN source moves unchanged to
+`src/shared/hardware/vram_planes.cpp`, SHA-256
+`b18d07a61c0aeb04d6c7a7eac00b62e0d6cb0b4d438fd516364c19bc8a61a6b2`.
+Maintained natural PI source is now `src/shared/formats/pi_put.cpp`, SHA-256
+`dc94dcb027e0f554d222deb0c6086cce603463c33370e3f506ce20324b3c649c`,
+and `src/shared/formats/pi_load.cpp`, SHA-256
+`0305c2e99a9fc60e2952f9fcc20b8aa4f1da79286729da68129837db987f6dcd`.
+The still-unlocalized PI declaration/data surface is quarantined through one-line
+`compat/rec98/th02/formats/pi.h`. A fresh production-profile TC4J probe of the
+maintained natural source emits LEDATA/FIXUPP/PUBDEF/EXTDEF/SEGDEF records byte-
+identical to the historical cold PI objects; probe object SHA-256 values are
+`05cdf00c5209bf7fb5dfbc44fc08911a97fe714dc4843e27eac89ccd7b422d17`
+and `483049ddec115e3807e943a5f2685ab6f3d5027d97ed5c23a974a64101426957`.
+ReC98 decompilation history is provenance only.
+
+Focused `gptweb-v210-vram-shared-focused-001` passes the current shared VRAM
+source twice, receipt SHA-256
+`af13d01ba896c62883714f6fb04f349526d1a3eb7a6deb2c162f477ffd57d548`;
+`raw/map/relocs=true`, A/B `vplanset.obj` SHA-256
+`65f7d0bd86cf0e321b04f8fd56f70cd421dca0e1c80eb48fbfe70ea7bc3da3ca`.
+Mandatory no-unit aggregate `gptweb-v210-shared-front-aggregate-001` passes all
+246 default MAIN exact owners twice with `failures=[]`, receipt SHA-256
+`de3705cfeaf696017aa3c639c3bed224472de1f7ad23e69a11ab1c3ac5509987`,
+bound to exact-manifest SHA-256
+`461619ad069dc6666388d512c6b3bca55111ab16bc116a24e4600c9857ab15b8`.
+This is source-ownership migration/review, not a new exact promotion; no
+post-promotion aggregate is claimed.
+
+MAIN accounting remains **75,620 / 81,279 reviewed C/C++ bytes exact
+(93.037562%)** and **460 / 483 reviewed functions exact (95.238095%)**. OP and
+MAINE each gain four reviewed natural-source boundaries but still have no honest
+artifact-local exact-function or exact-byte denominator. ZUN remains independent
+and receives no source/exactness credit from this packet.
+
+Verification planes remain separate. Repository-native MAIN `vram_planes_set()`
+exactness is re-established from its shared path; OP/MAINE gain reviewed
+boundaries and maintained shared natural source only. Standalone product closure,
+whole-image equality, runtime-storage identity, runtime-scenario validation,
+portable runtime, independent pristine provenance, and v210 Factory acceptance
+remain unestablished.
+
+The next evidence-connected non-MAIN packet is the immediate continuation of the
+same MAINE SHARED chain: `pi_put_quarter_8(int,int,int,int)` at payload `0xCDAB`,
+size `0xB1`, currently corroborated and linked from `th03/pi_put_q.cpp`. OP does
+not link that contribution. Before source localization, compare the MAINE target
+body/fixups against the candidate producer and independent TH03/TH05 lineage,
+then decide whether it is TH04/MAINE-local source or genuinely shared cross-game
+source. On MAIN, keep the 24 known blockers and remaining 15 unreviewed authored
+candidates as separate queues; do not reopen old blocked codegen without a new
+mechanism. Campaign status remains active.
+
+v210 final validation: full `python3 scripts/ci.py` passes on the complete
+source/ledger/documentation state, including all four private TH04 target checks,
+cross-game Oracle calibration, Ghidra/JDK identity, fresh read-only MAIN database
+replay, and Ghidra mutation smoke; `git diff --check` passes. The v210
+`.analysis/` entry was **4,565,529,847 bytes** and the post-CI inventory is
+**4,688,710,840 bytes**, net **123,180,993 bytes**. Focused
+`gptweb-v210-vram-shared-focused-001` (**58,555,001 bytes**) and no-unit
+aggregate `gptweb-v210-shared-front-aggregate-001` (**64,576,905 bytes**) are
+retained complete; the latter is the current cold baseline. The compact v210
+scratch was **8,396 bytes** at that inventory. No target, older replay baseline,
+toolchain, Ghidra project/provider state, Wine prefix, or legacy/unknown analysis
+content is removed.
