@@ -10748,3 +10748,66 @@ map_start = "0x193A"
 map_size = "0x220"
 target_file_offset = "0xDC2A"
 size = "0x220"
+
+# v194: close the complete MAIN_013_TEXT low-level GRCG producer as one
+# symbolic original-style ASM owner. The adjacent checkerboard remains a
+# separate natural-C++ source-present candidate and is intentionally non-default.
+[[build_replacements]]
+id = "th04-main-main013-grcg-asm-v194-build"
+trigger_units = ["th04-main-main013-grcg-asm-v194"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/cfg_lres.cpp\",\n\t\"th04/checkerb.cpp\",\n"
+build_replacement = "\t\"th04/cfg_lres.cpp\",\n\t\"th04/main013.asm\",\n\t\"th04/checkerb.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-main013-grcg-asm-v194-layout"
+trigger_units = ["th04-main-main013-grcg-asm-v194"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "935e63129d212ca2606cbd438365982aa78d6a69d14003fc4fab6f61bcb0e232",
+  "de2b88038a20fa11d290cb37e37784b3cccd1ef7151678e9fa0e0e8f049d61b4",
+]
+
+[[source_transforms.ops]]
+id = "externalize-main013-grcg-v194"
+kind = "remove_between"
+start = "main_013_TEXT\tsegment\tword public 'CODE' use16\r\n"
+end = "main_013_TEXT\tends\r\n"
+replacement = "extrn @grcg_tile_bb_put_8:near\r\nextrn PLAYFIELD_FILLM_0_40_384_274:near\r\nextrn sub_12024:near\r\nextrn playfield_fill:near\r\nextrn _grcg_fill_playfield_rows:near\r\nmain_013_TEXT\tsegment\tword public 'CODE' use16\r\nmain_013_TEXT\tends\r\n"
+
+[[source_transforms.ops]]
+id = "drop-stale-playfield-fillm-public-v194"
+kind = "replace_optional"
+old = "public PLAYFIELD_FILLM_0_40_384_274\r\n"
+new = ""
+
+[[units]]
+id = "th04-main-main013-grcg-asm-v194"
+default_enabled = true
+requires_units = ["th04-main-z-super-roll-put-tiny-asm-v193"]
+repo_source = "src/main/hardware/playfield_grcg.asm"
+overlay_path = "th04/main013.asm"
+map_module = "th04\\main013.asm"
+map_mode = "exact"
+object_path = "obj/th04/main013.obj"
+map_segment = "MAIN_013_TEXT"
+map_start = "0x74D8"
+map_size = "0xAE"
+target_file_offset = "0x137C8"
+size = "0xAE"
+
+[[units]]
+id = "th04-main-module-th04-checkerb-cpp-12076"
+default_enabled = false
+requires_units = ["th04-main-main013-grcg-asm-v194"]
+repo_source = "src/main/stage/checkerboard.cpp"
+overlay_path = "th04/checkerb.cpp"
+map_module = "th04/checkerb.cpp"
+map_mode = "exact"
+object_path = "obj/th04/checkerb.obj"
+map_segment = "CHECKERB_TEXT"
+map_start = "0x7586"
+map_size = "0xAE"
+target_file_offset = "0x13876"
+size = "0xAE"

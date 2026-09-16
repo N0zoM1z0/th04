@@ -7941,3 +7941,141 @@ call ownership, ordered relocation ownership, and TH05/library lineage before
 choosing natural C/C++ versus symbolic ASM. Do not spend the next conversation
 only on the older tiny `randring_fill()` frontier. OP/MAINE/ZUN remain active
 separate artifact queues for later artifact-specific reconstruction.
+
+## 2026-09-16 v194 MAIN_013 GRCG recovery and exact-owner checkpoint
+
+This conversation recovered an interrupted v194 worktree at starting HEAD
+`de5ed90d63f3ae17914986ab7311873338484ba9`, branch `main`, upstream
+`origin/main`, ahead 0 / behind 0. Entry had no staged changes, three unstaged
+tracked paths (`config/evidence.csv`, `config/th04_main_exact_units.toml`,
+`config/units.csv`), and two untracked maintained-source candidates
+(`src/main/hardware/playfield_grcg.asm`, `src/main/stage/checkerboard.cpp`).
+Those five paths were classified as coherent recoverable interrupted v194 work;
+no unrelated or unknown tracked work was reset, overwritten, deleted, or
+staged. A failed current-conversation TASM probe briefly created `BASE.OBJ` and
+`UPPER.OBJ`; after status re-audit proved them to be inactive reproducible
+session output, only those two explicit files and their explicit short-path Wine
+probe directory were removed.
+
+All requested repository and Factory recovery/verification documents were read
+before editing. Mandatory preflight, status, and function-boundary-ledger gates
+passed. Factory operation discovery for `th04-ghidra` still exposes ten
+operations and no `get_metadata`; the discovered `check {}` operation passed
+for repository `th04` and `target:th04-main`. Repository-native
+`python3 scripts/ghidra.py th04-main check` passed the 156,258-byte private
+target, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte MZ header/load mapping, entry point, all 1,136 ordered relocations,
+load digest, and samples. Required TC4J/TASM/TLINK surfaces passed; the optional
+host `wine64` hash mismatch remains informational. The ignored private target
+remains `candidate-local-attested`, unmodified, uncommitted, and unpublished.
+
+The prompt's old `sub_11DE6` orientation was not reopened: live handoff and
+ledgers already route that v143 shot-velocity producer to exact original-style
+ASM. The recovered v194 frontier was instead the connected `MAIN_013_TEXT` /
+`CHECKERB_TEXT` seam requested by the live v193 handoff.
+
+The exact physical owner is complete `MAIN_013_TEXT`, map
+`0AAF:74D8..7585`, load `0x11FC8..0x12075`, file
+`0x137C8..0x13875`, size `0xAE / 174`, target SHA-256
+`82e90acf57d9fb1c8ef83ed1b0e91857cfba3dc98a3d3a8a27fda89cfe97ac85`.
+Five logical near entries are now reviewed: `@grcg_tile_bb_put_8`
+`0x11FC8..0x12009` (`0x42`), `playfield_fillm_0_40_384_274`
+`0x1200A..0x12022` (`0x19`), `sub_12024` `0x12024..0x12059`
+(`0x36`), `playfield_fill` `0x1205A..0x12067` (`0x0E`), and
+`_grcg_fill_playfield_rows` `0x12068..0x12074` (`0x0D`). Alignment NOPs at
+`0x12023` and `0x12075` remain physical owner bytes, not functions. No ordered
+MZ relocation overlaps the segment.
+
+Fresh attested Ghidra still has no function at analysis-linear `0x21FC8` or
+`0x22024`; it constructs the other three near entries. The five observations
+are therefore routed from `authored/reconstruct` to
+`reviewed/original-asm/attest-asm` based on raw decoding, TASM/MAP boundaries,
+independent TH05 target lineage, natural-codegen negative evidence, and exact
+symbolic-owner replay rather than Ghidra inference alone. Maintained source is
+`src/main/hardware/playfield_grcg.asm`, SHA-256
+`7840ea15852072823aed7569d98dcb1d5a20881a2e0d4868247573d9df6690e7`.
+
+Recovery also closed a subtle OMF ownership failure. Focused replay already had
+exact code bytes, but candidate aggregate TLINK first failed because
+`bomb.cpp` requires Pascal public `PLAYFIELD_FILLM_0_40_384_274` while TASM
+`/mx` had recorded the lowercase first-declared spelling. A pinned standalone
+probe shows that uppercase-first versus lowercase-first changes only public
+symbol metadata: both objects have identical LEDATA SHA-256
+`26a338c181b9be70afa1790c3ae0fd2d3eef02142519b05235f52c3bc7675212`
+and no FIXUPP. The maintained producer now lists the uppercase public first and
+the transformed monolithic scaffold declares the uppercase external. Exact
+focused `main013.obj` SHA-256 is
+`b3eff3dd886711e66130bc261de3e69388a870db01dd52efc15a662278effb89`.
+
+Focused `gptweb-v194-main013-grcg-focused-candidate-007` passes 128 owners
+twice with `failures=[]`, receipt SHA-256
+`bb0bd95b8e718e776003771e0dfb5356fea8429b8b76194541abce032f8ee96d`.
+Candidate aggregate `gptweb-v194-main013-grcg-aggregate-candidate-005` passes
+232 candidate-state defaults twice with `failures=[]`, receipt SHA-256
+`e5d84ffd60fc6451c247fd2eb79e016de7eb01366c554cdd5265cf2f166eae55`.
+Post-promotion aggregate `gptweb-v194-main013-grcg-aggregate-final-001` passes
+the 232 tracked defaults twice with `failures=[]`, receipt SHA-256
+`2324133cdc691856bb502b404ec6d735319307326862f5bf6cccf3ab5cb4b899`.
+Tracked exact-manifest SHA-256 is
+`ef03f9e7071efef57bc8c8e6204bfd7cf492b3284ddf9656deea13981b2093e4`,
+A/B MAP SHA-256 is
+`6d9caabc4e0a87eed403e246e164e1a78e9798576b3285c313f3cd0899c2b670`,
+and candidate overlay MAIN remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+The adjacent `playfield_checkerboard_grcg_tdw_update_and_render()` boundary is
+now reviewed as the complete `CHECKERB_TEXT` map `0AAF:7586..7633`, load
+`0x12076..0x12123`, file `0x13876..0x13923`, size `0xAE`, target SHA-256
+`a1ce86ff7d72218b6ea7c8ae3a4e2f94b64cd4c6c792c523d28e7be9f5732c60`.
+Fresh Ghidra constructs only 46 sparse body bytes through `0x220BC` and reports
+no callers; target raw review finds two near-call anchors and `MB_INV_TEXT`
+begins immediately at `0x12124`. Maintained natural source is
+`src/main/stage/checkerboard.cpp`, SHA-256
+`647bb108f3ede67d98d09157dd305d41deaa4e34c47606cdc3090732af51679f`.
+Historical reconstructed source needs prohibited inline ASM to force `LOOP`;
+natural TC4J emits a deterministic 179-byte contribution versus target 174,
+expanding the target `LOOP` by five bytes. The function is therefore
+source-present, reviewed, and blocked with zero exactness credit.
+
+Generated accounting now reports MAIN **75,209 / 80,868 exact reviewed C/C++
+bytes (93.002176%)** and **456 / 479 exact reviewed C/C++ functions
+(95.198330%)**. Routing is 456 exact, 24 blocked, 32 unreviewed, and 56
+ASM-attestation observations. Exact original-style ASM physical ownership is
+**29 units / 4,370 bytes**. The lower C/C++ byte percentage is intentional:
+checkerboard entered the reviewed denominator while the five MAIN_013 original
+ASM observations left the C/C++ reconstruction queue. OP, MAINE, and ZUN remain
+independent queues with 94, 72, and 13 unreviewed authored candidates; no MAIN
+credit transfers to them.
+
+Analysis-workspace accounting needs one recovery caveat. The pre-existing v194
+manifest was created before this conversation and records
+`entry_analysis_bytes=9446857449`; intervening interrupted-session compaction
+had already occurred before this conversation, whose first recovery audit saw
+about 3.6 GiB allocated under `.analysis/`. Therefore the old manifest number
+is not used as this conversation's growth denominator. Immediately before
+current-session cleanup, the live logical sum was 3,564,251,839 file bytes.
+After confirming no active Borland/replay producer, only the current-conversation
+focused-007 and candidate-005 build trees were compacted to receipt-only and
+the 20 KiB public-case probe scratch was removed. The complete post-promotion
+aggregate remains the current cold baseline. Post-cleanup logical sum was
+**3,444,264,071 file bytes**; after the full CI/Ghidra replay, the final
+pre-checkpoint logical inventory is **3,444,270,204 file bytes**. v193/older
+baselines, the pre-conversation v194
+recovery trees, private targets, toolchains, Wine/Ghidra state, and
+legacy/unknown analysis content were untouched.
+
+Verification planes remain separate. Repository-native exact physical ownership
+for `MAIN_013_TEXT` is established by the configured focused and aggregate
+Oracles. Standalone TH04 production compile/link closure, whole-image exactness,
+runtime-storage identity, runtime scenario, portable runtime, independent
+pristine provenance, and v194 Factory Truth-Kernel acceptance remain
+unestablished. No remote push is performed.
+
+Next take a structurally meaningful remaining MAIN owner rather than another
+tiny tail. First inspect `END_TEXT sub_B835` at load `0xB835`, currently a
+corroborated `0xC7` TASM/Ghidra extent with no accepted source/origin verdict.
+Bound its owner, neighboring entries/data, callers/callees, relocations, and
+TH04-local/source lineage before selecting natural C/C++ versus original ASM.
+If that packet proves library-owned or otherwise unsuitable, the next sizeable
+fallback is `MAI_TEXT midboss2_render()` at load `0xCC3A`, size `0x9C`.
