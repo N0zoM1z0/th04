@@ -596,14 +596,14 @@ object_path = "obj/th04/input_w.obj"
 
 [[units]]
 id = "th04-main-snd-kaja-interrupt"
-repo_source = "src/main/sound/kaja_interrupt.cpp"
+repo_source = "src/shared/sound/kaja_interrupt.cpp"
 overlay_path = "th02/snd/kajaint.cpp"
 map_module = "th04/snd_kaja.cpp"
 object_path = "obj/th04/snd_kaja.obj"
 
 [[units]]
 id = "th04-main-snd-determine-modes"
-repo_source = "src/main/sound/determine_modes.cpp"
+repo_source = "src/shared/sound/determine_modes.cpp"
 overlay_path = "th04/snd/detmodes.cpp"
 map_module = "th04/snd_mode.cpp"
 object_path = "obj/th04/snd_mode.obj"
@@ -1059,7 +1059,7 @@ object_path = "obj/th04/bullet_u.obj"
 
 [[units]]
 id = "th04-main-snd-mmd-resident"
-repo_source = "src/main/sound/mmd_resident.c"
+repo_source = "src/shared/sound/mmd_resident.c"
 overlay_path = "th04/snd_mmdr.c"
 map_module = "th04/snd_mmdr.c"
 map_mode = "contains"

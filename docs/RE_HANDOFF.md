@@ -9766,3 +9766,196 @@ The next packet should audit the MAINE SHARED sound/layout seam at
 `0xD077` before `CDG_PUT_PLANE`. Compare their OP and MAIN counterparts,
 relocation/fixup ownership, alignment class, and source provenance before
 changing any later MAINE boundary. Campaign status remains active.
+
+## 2026-09-17 v207 shared sound-core and MAINE alignment checkpoint
+
+This conversation restarted from clean committed HEAD
+`af18d1df1787241ab567ac8d335900ac7eac6af0`, branch `main`, upstream
+`origin/main`, ahead 5 / behind 0. Recovery found no staged, unstaged, untracked,
+conflicted, unrelated, unknown, or recoverable tracked work. The completed v206
+ignored manifest was bound to that HEAD/tree and no TCC/TASM/TLINK/exact-replay
+producer was active. The initial recovery `.analysis/` inventory was
+**4,357,684,641 bytes**; the v207 manifest was created at
+**4,357,754,160 bytes**. All required repository and Factory documents were read
+completely before tracked edits.
+
+Entry preflight/status and the 2,120-observation boundary validator passed.
+Analysis-provider discovery again exposed ten read-only `th04-ghidra` operations
+and no `get_metadata`; the discovered `check {}` interface was used instead of
+inventing the stale prompt operation. Factory attestation and repository-native
+`python3 scripts/ghidra.py th04-main check` both passed for
+`target:th04-main`, size 156,258, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte MZ header, external entry point, complete load mapping, and all 1,136
+ordered relocations. TC86 Borland C++ 4.02, TASM32 5.0, TLINK 6.10, MS-DOS
+Player, and the required Wine execution surfaces attest. The optional host
+`wine64` hash mismatch remains informational. Target canonicality remains
+`candidate-local-attested`; no private executable was modified, relocated,
+committed, or published.
+
+v207 followed the v206 MAINE SHARED seam upstream. Fresh MAIN Ghidra confirms
+contiguous target bodies for `_snd_mmd_resident` at analysis
+`0x233AC..0x233DA` (47 bytes), `SND_KAJA_INTERRUPT` at
+`0x233DC..0x233F9` (30 bytes), and `SND_DETERMINE_MODES` at
+`0x233FA..0x23495` (156 bytes). These are provisional boundary observations;
+MAIN exactness continues to come from the repository cold-replay receipts.
+
+Independent raw OP target review now closes four complete authored FAR bodies:
+`_snd_mmd_resident` payload `0xDC44..0xDC72`, `SND_KAJA_INTERRUPT`
+`0xDC74..0xDC91`, `SND_DETERMINE_MODES` `0xDCE4..0xDD7F`, and
+`SND_DELAY_UNTIL_MEASURE` `0xDD80..0xDDB0`. Their terminal instructions are,
+respectively, `RETF`, `RETF 2`, `RETF 4`, and `RETF 4`. These four OP boundary
+rows move from corroborated to reviewed. Together with v206 `SND_LOAD`, OP now
+has five reviewed authored sound boundaries in the generated confidence report.
+No OP exactness denominator or exact credit is created.
+
+Independent raw MAINE target review closes the corresponding authored bodies:
+`_snd_mmd_resident` `0xCF5C..0xCF8A`, `SND_KAJA_INTERRUPT`
+`0xCF8C..0xCFA9`, `SND_DETERMINE_MODES` `0xCFAA..0xD045`, and
+`SND_DELAY_UNTIL_MEASURE` `0xD046..0xD076`. All four move from corroborated to
+reviewed. The adjacent original-style-ASM candidate `CDG_PUT_PLANE` is also
+reviewed at `0xD078..0xD111`, size `0x9A`, ending in `RETF 8` immediately
+before already-reviewed `SND_LOAD` at `0xD112`. It remains in the ASM attestation
+queue with no exact credit. The generated authored confidence table therefore
+shows five reviewed MAINE authored boundaries; the reviewed CDG row is separate
+original-ASM evidence.
+
+The v206 unexplained byte at MAINE `0xCF8B` is now classified. MAIN load
+`0x133DB`, OP payload `0xDC73`, and MAINE payload `0xCF8B` all contain `90`
+immediately after the complete 47-byte RETF-terminated MMD function and before
+KAJA. This repeated TH04-local placement confirms function-external padding,
+not a hidden function tail or entry byte. Historical ReC98 contains a matching
+trailing `#pragma codestring "\x90"`, but that target-derived candidate is used
+only as corroboration. No codestring, inert byte-emitting source, target copy, or
+fake padding is admitted. Existing `th04-main-snd-mmd-padding` remains excluded.
+
+The MAINE byte at `0xD077` has a different owner. The target-only MMD NOP shifts
+KAJA, MODE, and DELAY by +1 relative to the cold candidate. The 49-byte target
+DELAY body therefore leaves odd byte `0xD077` free. The following
+`th04\\cdg_p_pl.asm` contribution is word-aligned (`ACBP=48`), so TLINK inserts
+`00` at `0xD077` and starts target `CDG_PUT_PLANE` at even `0xD078`. The
+candidate DELAY starts at `0xD045`, leaves even `0xD076` free, and requires no
+fill before candidate CDG at `0xD076`. OP provides the independent control:
+target owns the MMD `90` before KAJA, while the candidate instead reaches an odd
+post-KAJA address and TLINK inserts `00` at candidate `0xDC91` before the
+word-aligned `CDG_PUT_NOCOLORS_8`, resynchronizing target and candidate at
+`0xDC92`. Thus target padding and linker alignment fill are distinct ownership
+classes. No OP/MAINE relocation record overlaps either one-byte seam.
+
+Candidate OMF LEDATA was used only to derive normal link-resolved positions.
+After masking those candidate-derived positions, fixed producer bytes have zero
+differences across all applicable TH04 targets:
+
+- MMD, 47 bytes, four link-field positions, masked SHA-256
+  `11786fa28aa8e40ea2a8bf19533098a72c2d20ea0e5fec267cb9bf7f3226afb6`
+  across MAIN/OP/MAINE;
+- KAJA, 30 bytes, four link-field positions, masked SHA-256
+  `22776cbef0cdd63cf55b2643a263230459c1f0584162712434ff4d66589cb45f`
+  across MAIN/OP/MAINE;
+- MODE, 156 bytes, 36 link-field positions, masked SHA-256
+  `12274c8ac59b56c78d7bdccaa7a79bf7f2d6aa208f6bade1c3b4ad3d6922e2cb`
+  across MAIN/OP/MAINE;
+- DELAY, 49 bytes, nine link-field positions, masked SHA-256
+  `01b90abb46302d79cda253a007c8015427d727bd68e74029d2c840b1a6325384`
+  across OP/MAINE.
+
+The compact v207 cross-artifact receipt SHA-256 is
+`6cf4ffb89d4084554b51dbc951df86957dfe90e4f66c7f189045a79963d0d4bd`.
+The independently attested OP/MAINE payload SHA-256 values remain
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`
+and
+`7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`.
+ZUN remains an independent queue and contains no corresponding producer in this
+packet.
+
+Three already-exact MAIN natural producers are therefore moved with **no content
+changes** from `src/main/sound/` to `src/shared/sound/`:
+`mmd_resident.c`, `kaja_interrupt.cpp`, and `determine_modes.cpp`. Their SHA-256
+values are respectively
+`a65bb7bf8c1bfeaf02f8e6da38aa3df968d4b77881d0932ffe91d43a6995ada5`,
+`f01beb0fece5673d113c3a32297b42f32c16bbb044d5027ca07a0961a0648e93`,
+and
+`248aca155a313409bb76bfc397837b91ce1b0f792443d9ed71a14f9390903a82`.
+MAIN exact-unit and authored-function ledgers now bind those shared paths. OP and
+MAINE rows gain maintained shared-source ownership only; exactness remains
+artifact-local.
+
+`src/main/sound/mmd_align.c` deliberately does **not** move. It is a MAIN exact-
+replay control: an empty word-aligned SHARED translation unit that emits no
+LEDATA and preserves MAIN placement without claiming the target NOP. It is not
+historical or shared game source. `SND_DELAY_UNTIL_MEASURE` likewise does not get
+a maintained source in v207: OP/MAINE prove one shared target producer, but the
+ReC98 TH03 natural C++ remains only a hypothesis until its dependencies and TC4J
+producer are localized under TH04 ownership.
+
+Focused `gptweb-v207-shared-sound-core-focused-001` selected MMD, KAJA, and MODE
+and passed two isolated cold builds with all three `raw/map/relocs=true`. Receipt
+SHA-256 is
+`ffb516247086ff83d468a991c42a0eb62cb0a47b8a61983193f52609635c9632`.
+A/B object SHA-256 values are MMD
+`8cbc7b19f51ce4c4185da700a66d4d5ac909ec90d48d25a382b65e7ddb19edb0`,
+KAJA
+`b030046945a74e5ac4c207a77495b8a1b6686d35d3963c81f315d010c973d3d3`,
+and MODE
+`d72462fdc6d759e5cce8d1a13f8b90cf7ba828970094678cba179d452b2de0cd`.
+
+Mandatory no-unit aggregate `gptweb-v207-shared-sound-core-aggregate-001`
+passes all 246 default exact owners twice with `failures=[]`; receipt SHA-256 is
+`82495b0b08693f0f972cf09174e1adb6d2f0b9805e092e1401323646f75999ef`.
+Tracked exact-manifest SHA-256 is
+`8ecd1d6270c2d5c2c884b72c8a09fac1e870a5d6c677917058c9efe93d6a2892`.
+Aggregate A/B MAP remains
+`4bea5732094f5f08b2c37365d7cae466f063e54f7cb22cad115c973810cf59cc`
+and A/B candidate MAIN remains
+`1932b7feb681e3fa198d24a10cd93a70ce2cb6d400d1ecab39545cafa26b9f9b`.
+This is an ownership migration of already-exact source, not a new exact
+promotion, so no second post-promotion aggregate is claimed.
+
+One intermediate boundary-validator run failed fail-closed after the manual OP
+rows were marked reviewed: the rewritten observation string omitted the word
+`ghidra` while retained Ghidra continuity metadata was still populated, causing
+`orphaned Ghidra metadata`. Git status and the complete affected rows were
+re-audited immediately. The target/boundary evidence was unchanged; the
+observation field was corrected to describe the actual
+`target-unpacked-ghidra+raw-target+candidate-map+cross-artifact` evidence. The
+boundary validator, tracking validator, generated reports, and `git diff
+--check` then pass. No reset or unrelated deletion occurred.
+
+MAIN accounting remains intentionally unchanged: 293 units, **75,620 / 81,279
+reviewed C/C++ bytes exact (93.037562%)**, and **460 / 483 reviewed functions
+exact (95.238095%)**. `snd_load` remains independently blocked on its four known
+bytes. OP/MAINE/ZUN still have no honest artifact-local exactness denominator.
+Tracking now contains 2,554 evidence rows and 332 knowledge rows.
+
+`.analysis/` peaked at **4,480,944,222 bytes** while the v207 focused and
+aggregate cold trees coexisted. After confirming no writable compiler/linker or
+replay producer was active, the focused tree was compacted to receipt-only after
+copying its A/B core objects, MAP, candidate MAIN, and receipt into the bounded
+v207 `durable-final` directory. The complete 246-owner aggregate remains the
+current cold baseline. Pre-CI cleanup measured **4,426,909,392 bytes**. A full
+`python3 scripts/ci.py` on the implementation/ledger state returned `CI: PASS`,
+including Python tests, tracking/boundary generation, all four private TH04
+target identities, cross-game Oracle calibration, Ghidra/JDK identity, fresh
+read-only MAIN database replay, and Ghidra mutation smoke; post-CI analysis size
+was **4,426,915,525 bytes**. A second full CI after the completed handoff also
+returned `CI: PASS` with the same validation planes; its post-CI analysis size
+was **4,426,921,670 bytes**. After updating this record, one final full CI is
+run as the tracked-state commit gate; no tracked content is changed afterward.
+
+Verification planes remain separate. Repository-native MAIN exactness is
+re-established for the three moved natural producers from their shared paths.
+OP and MAINE have target-first reviewed boundaries and maintained shared-source
+ownership where stated, but no exactness transfer. Standalone TH04 production
+compile/link closure, whole-image equality, runtime-storage identity,
+runtime-scenario validation, portable runtime, independently pristine target
+provenance, and v207 Factory Truth-Kernel acceptance remain unestablished. No
+remote push is performed.
+
+The first evidence-connected next packet is `SND_DELAY_UNTIL_MEASURE`: OP payload
+`0xDD80..0xDDB0`, MAINE payload `0xD046..0xD076`, 49 bytes. Its fixed producer
+bytes are already proven identical across both TH04 artifacts. Start from ReC98
+`th03/snd/delaymea.cpp` only as a hypothesis, localize `frame_delay` and sound-
+measure dependencies through TH04-owned headers or `compat/rec98/` forwarders,
+then compile with the attested TC4J profile and compare valid OMF/link fields.
+Do not infer OP/MAINE exactness until an artifact-local Oracle supports it.
+Campaign status remains active.
