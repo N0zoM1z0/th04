@@ -7704,3 +7704,133 @@ the two score-codec boundaries, any alignment/data seam, far/near ABI, call
 ownership, and relocation ownership before choosing C++ versus symbolic ASM.
 Do not isolate `sub_C34E` as a tiny win. OP/MAINE/ZUN remain active separate
 artifact queues for later artifact-specific sessions.
+
+## 2026-09-16 v192 CIRCLE_TEXT score-tail ASM checkpoint
+
+This session recovered clean committed HEAD
+`617064a35ea5cbce52d6e9483868963195c0619f`, tree
+`fa37aa60e289b073760053aff8c750f4424f3eeb`, branch `main`, upstream
+`origin/main`, ahead 6 / behind 0. There was no staged, unstaged, untracked,
+unrelated, or unknown tracked work at entry. The initial recovery inventory
+measured `.analysis/` at **9,299,106,635 bytes**; the v192 manifest was created
+after fresh attestation at **9,299,119,055 bytes**. All required repository and
+Factory recovery/verification documents were read before editing.
+
+Mandatory preflight/status/boundary gates passed. Factory `th04-ghidra`
+operation discovery still exposes ten operations and no `get_metadata`;
+provider `check {}` passed for repository `th04` / `target:th04-main`.
+Repository-native `python3 scripts/ghidra.py th04-main check` passed the
+156,258-byte MZ target, 6,144-byte header/load mapping, entry point, all 1,136
+ordered relocations, load digest, and samples. Required TC4J/TASM/TLINK surfaces
+passed; optional host `wine64` drift remains informational. The private MAIN
+target remains SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+`candidate-local-attested`, ignored, and unmodified.
+
+v192 target-first review closes CIRCLE_TEXT load `0xC34E..0xC42B`, map
+`0AAF:185E..193B`, file `0xDB4E..0xDC2B`, size `0xDE`, SHA-256
+`c0be83d38160eced77ac07f5f5279d02bd2bbb3e3a4f10b805e8ff1ca63c277c`.
+The packet contains `CLEAR_DWORDS`, PLAYPERF raise/lower plus one `EVEN` NOP,
+`SELECT_FOR_RANK`, two corrected `0x3F` score-codec bodies plus one `EVEN` NOP
+after each, followed by the two-byte `srpt32x32_vram_topleft` state owned by the
+next zsuper producer. The only ordered MZ relocation in the v192 ASM owners is
+load `0xC40A`, the segment word of `scoredat_encode()`'s far `IRand` call.
+
+Fresh Ghidra constructs only PLAYPERF raise/lower and SELECT. It misses
+`CLEAR_DWORDS`, both score codecs, and the following 32x32 zsuper entry. Target
+raw calls also expose analysis undercoverage: lower has three target far-call
+anchors versus two Ghidra callers, and SELECT has eleven target far-call anchors
+versus four Ghidra callers. No synthetic Ghidra metadata is created.
+
+Bounded legal TC4J probes reject a natural-C++ producer route without a spelling
+matrix. The typed clear loop emits 32 bytes versus target 22; the truthful
+SS-parameter rank selector emits 29 bytes versus target 20; an `_AL`
+pseudo-register PLAYPERF probe still keeps BP framing and signed-promotion bloat;
+typed score codecs emit 121/136-byte bodies versus target 63/63 and replace the
+target LOOP pipelines. Independent TH05 target bytes preserve the corresponding
+low-level producer architecture, including ROR/XOR/LOOP score coding. ReC98
+history is used only as reconstruction provenance.
+
+The packet also explicitly checked non-MAIN artifacts. The existing attested
+DIET-decompressed TH04 OP payload is 69,028 bytes, SHA-256
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`;
+the MAINE payload is 62,414 bytes, SHA-256
+`7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`.
+Neither contains an exact copy of the MAIN helper bodies, and the MAIN score
+codec core signatures are absent. This is negative routing evidence only; no
+MAIN source or exactness credit transfers to OP/MAINE/ZUN.
+
+Maintained symbolic sources are `src/main/core/clear_dwords.asm` SHA-256
+`9f00af8d88a16d01c0be777a5fbb6d35ff9bc0b018a13608b81038f5f35b15fa`,
+`src/main/playperf.asm` SHA-256
+`00db4ae2fda7d7a32f711ed0ceea5fc42a17385bcf5f0380a58b5203bf6e6e01`,
+`src/main/select_for_rank.asm` SHA-256
+`aeca5c51f411c1bfafe594d6a85eab02f39cf11e4dba4042a868a4b2fc3f7143`,
+and `src/main/score/scoredat_code.asm` SHA-256
+`c406e8656a71befc76672428df60fbcd0d0d477050efdbda865a77d8e9042c67`.
+Their exact physical owners are `0x16`, `0x32`, `0x14`, and `0x80` bytes at map
+`0AAF:185E`, `1874`, `18A6`, and `18BA` respectively.
+
+Focused run `gptweb-v192-circle-score-tail-focused-candidate-001` is retained as
+control-plane negative evidence only: every new owner's own raw/MAP/relocation/
+OMF check was already true, but three upstream units still expected monolithic
+residual auxiliary extents after downstream v192 units split those bytes.
+Trigger-scoped ordered auxiliary overrides now preserve the historical baseline
+when a later split is absent and replace each old residual with all new owners
+plus the shorter residual when present.
+
+Authoritative focused
+`gptweb-v192-circle-score-tail-focused-candidate-002` passes 126 owners twice
+with `failures=[]`, receipt SHA-256
+`3ba5203b4f10e1cd3e3077df0a68fdb2698d0d03169190e67f5edd56029e826a`.
+Candidate no-unit aggregate
+`gptweb-v192-circle-score-tail-aggregate-candidate-001` passes 230 candidate-state
+defaults twice, receipt SHA-256
+`4919758f588ad0d03105de46a0475c47af828e0e97bf7eb56cddb75abf3f77f9`.
+Post-promotion aggregate
+`gptweb-v192-circle-score-tail-aggregate-final-001` passes the tracked default
+cohort twice from promoted ledger extents, receipt SHA-256
+`8c762e9f0f81aa96af016d69cbffbbfc38f153dc975f8dcaf05c6603312c74ec`.
+Tracked exact-manifest SHA-256 is
+`d30ff50e233ed00584d0bedd81a76a997bde1b2c3fa59f994f4a0843d6d930db`;
+A/B final MAP SHA-256 is
+`db4d76df7b16132043a4130e2d3c81ad09ec22409e697562896689d158407165`;
+candidate MAIN remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+The maintained authored-C/C++ denominator is intentionally unchanged: MAIN
+remains **75,209 / 80,694 exact reviewed C/C++ bytes (93.202716%)** and
+**456 / 479 exact reviewed C/C++ functions (95.198330%)**. Six logical boundary
+observations move from reconstruct to ASM attestation, leaving MAIN routing at
+456 exact, 23 blocked, 40 unreviewed, and 49 ASM-attestation observations.
+Generated progress reports **27 exact original-style ASM physical units / 3,652
+bytes**. OP, MAINE, and ZUN remain independent queues with 94, 72, and 13
+unreviewed authored candidates.
+
+Four v192 replay trees raised `.analysis/` to **9,551,793,894 bytes** before
+bounded cleanup. After confirming no active compiler/linker/replay producer,
+compact focused-failure/focused-pass/candidate/final receipts, final objects/MAP,
+producer probes, target-first metadata, and the candidate image were retained in
+the v192 scratch. Only the explicit v192 failed focused, successful focused, and
+candidate-aggregate complete trees were deleted. The complete post-promotion
+aggregate remains the current cold baseline. After cleanup `.analysis/` was
+**9,373,883,931 bytes**; final full CI leaves it at **9,373,891,193 bytes**,
+net growth **74,784,558 bytes** from the recovery-entry inventory. v191/older
+baselines, private targets, toolchains, Wine/Ghidra state, and legacy/unknown
+analysis content were untouched.
+
+Verification planes remain separate. Repository-native exact physical ownership
+is established for the four v192 symbolic ASM units. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario, portable runtime, independent pristine provenance, and v192 Factory
+Truth-Kernel acceptance remain unestablished. Nothing is pushed.
+
+Next continue the connected low-level CIRCLE producer rather than taking an
+unrelated tiny win. Start at the reviewed two-byte zsuper private state
+`0xC42A..0xC42B` and close the Ghidra-missed provisional
+`Z_SUPER_ROLL_PUT_TINY_32X32_RAW` entry at load `0xC42C`, then carry the review
+through the corroborated `Z_SUPER_ROLL_PUT_TINY_16X16_RAW` entry at `0xC546`.
+Resolve the 32x32 boundary, private state ownership, callers, 32-bit register
+operations, alignment, and TH05/original-library lineage before choosing
+shared/original ASM versus authored variation. OP/MAINE/ZUN remain separate
+artifact queues for later artifact-specific reconstruction.

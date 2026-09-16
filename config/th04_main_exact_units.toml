@@ -10336,6 +10336,30 @@ auxiliary_objects = ["obj/th04/cirsuf186.obj"]
 auxiliary_extents = [
   { id = "th04-main-circle-post-splash-dot-residual-v189", file_offset = "0xDB4E", size = "0x2FC", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
 ]
+auxiliary_extents_overrides = [
+  { when_unit = "th04-main-clear-dwords-asm-v192", extents = [
+    { id = "th04-main-clear-dwords-v192", file_offset = "0xDB4E", size = "0x16", map_module = "th04\\clrdw.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/clrdw.obj" },
+    { id = "th04-main-circle-post-clear-residual-v192", file_offset = "0xDB64", size = "0x2E6", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+  { when_unit = "th04-main-playperf-asm-v192", extents = [
+    { id = "th04-main-clear-dwords-v192", file_offset = "0xDB4E", size = "0x16", map_module = "th04\\clrdw.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/clrdw.obj" },
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-circle-post-playperf-residual-v192", file_offset = "0xDB96", size = "0x2B4", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+  { when_unit = "th04-main-select-for-rank-asm-v192", extents = [
+    { id = "th04-main-clear-dwords-v192", file_offset = "0xDB4E", size = "0x16", map_module = "th04\\clrdw.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/clrdw.obj" },
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-circle-post-select-residual-v192", file_offset = "0xDBAA", size = "0x2A0", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+  { when_unit = "th04-main-scoredat-code-asm-v192", extents = [
+    { id = "th04-main-clear-dwords-v192", file_offset = "0xDB4E", size = "0x16", map_module = "th04\\clrdw.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/clrdw.obj" },
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x1842"
 map_size = "0x1C"
@@ -10468,3 +10492,195 @@ map_start = "0x1666"
 map_size = "0x26"
 target_file_offset = "0xD956"
 size = "0x26"
+
+
+# v192: close the CIRCLE_TEXT clear/playperf/rank/scoredat packet as four
+# evidence-backed original-style symbolic ASM producers. The zsuper private word
+# and following blitter remain replay-only residual ownership.
+[[build_replacements]]
+id = "th04-main-clear-dwords-asm-v192-build"
+trigger_units = ["th04-main-clear-dwords-asm-v192"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/spldot.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/spldot.asm\",\n\t\"th04/clrdw.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-clear-dwords-asm-v192-layout"
+trigger_units = ["th04-main-clear-dwords-asm-v192"]
+patch_path = "th04/cirsuf186.asm"
+encoding = "latin-1"
+scaffold_sha256 = "0a3727fa116d5f0c499b21fe550ccf10d4fe416a91293191d0284d46a46e9a8f"
+patched_sha256 = "49ba3c89373ca3f9b7adcc9ac542043e75bfdc9a6e4322644fee642f79c41f6b"
+[[source_transforms.ops]]
+id = "remove-replay-clear-dwords-v192"
+kind = "replace"
+old = "public CLEAR_DWORDS\r\nCLEAR_DWORDS label near\r\nsub_C34E\tproc near\r\n\t\tmov\tbx, sp\r\n\t\tpush\tdi\r\n\t\tmov\tdi, ss:[bx+4]\r\n\t\tmov\tcx, ss:[bx+2]\r\n\t\tpush\tds\r\n\t\tpop\tes\r\n\t\tassume es:_DATA\r\n\t\txor\tax, ax\r\n\t\trep stosd\r\n\t\tpop\tdi\r\n\t\tretn\t4\r\nsub_C34E\tendp\r\n\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-clear-dwords-asm-v192"
+default_enabled = true
+requires_units = ["th04-main-grcg-modecolor-asm-v191"]
+repo_source = "src/main/core/clear_dwords.asm"
+overlay_path = "th04/clrdw.asm"
+map_module = "th04\\clrdw.asm"
+map_mode = "exact"
+object_path = "obj/th04/clrdw.obj"
+auxiliary_objects = ["obj/th04/cirsuf186.obj"]
+auxiliary_extents = [
+  { id = "th04-main-circle-post-clear-residual-v192", file_offset = "0xDB64", size = "0x2E6", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+]
+auxiliary_extents_overrides = [
+  { when_unit = "th04-main-playperf-asm-v192", extents = [
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-circle-post-playperf-residual-v192", file_offset = "0xDB96", size = "0x2B4", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+  { when_unit = "th04-main-select-for-rank-asm-v192", extents = [
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-circle-post-select-residual-v192", file_offset = "0xDBAA", size = "0x2A0", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+  { when_unit = "th04-main-scoredat-code-asm-v192", extents = [
+    { id = "th04-main-playperf-v192", file_offset = "0xDB64", size = "0x32", map_module = "th04\\pperf.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/pperf.obj" },
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x185E"
+map_size = "0x16"
+target_file_offset = "0xDB4E"
+size = "0x16"
+
+[[build_replacements]]
+id = "th04-main-playperf-asm-v192-build"
+trigger_units = ["th04-main-playperf-asm-v192"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/clrdw.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/clrdw.asm\",\n\t\"th04/pperf.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+[[source_transforms]]
+id = "th04-main-playperf-asm-v192-layout"
+trigger_units = ["th04-main-playperf-asm-v192"]
+patch_path = "th04/cirsuf186.asm"
+encoding = "latin-1"
+scaffold_sha256 = "49ba3c89373ca3f9b7adcc9ac542043e75bfdc9a6e4322644fee642f79c41f6b"
+patched_sha256 = "414d8191db76575eba235e1074e8dba0c31918af28bd2f296be451a5d735a669"
+[[source_transforms.ops]]
+id = "remove-replay-playperf-v192"
+kind = "replace"
+old = "include th04/main/playperf.asm\r\n"
+new = ""
+expected_count = 1
+[[units]]
+id = "th04-main-playperf-asm-v192"
+default_enabled = true
+requires_units = ["th04-main-clear-dwords-asm-v192"]
+repo_source = "src/main/playperf.asm"
+overlay_path = "th04/pperf.asm"
+map_module = "th04\\pperf.asm"
+map_mode = "exact"
+object_path = "obj/th04/pperf.obj"
+auxiliary_objects = ["obj/th04/cirsuf186.obj"]
+auxiliary_extents = [
+  { id = "th04-main-circle-post-playperf-residual-v192", file_offset = "0xDB96", size = "0x2B4", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+]
+auxiliary_extents_overrides = [
+  { when_unit = "th04-main-select-for-rank-asm-v192", extents = [
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-circle-post-select-residual-v192", file_offset = "0xDBAA", size = "0x2A0", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+  { when_unit = "th04-main-scoredat-code-asm-v192", extents = [
+    { id = "th04-main-select-for-rank-v192", file_offset = "0xDB96", size = "0x14", map_module = "th04\\selrank.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/selrank.obj" },
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1874"
+map_size = "0x32"
+target_file_offset = "0xDB64"
+size = "0x32"
+
+[[build_replacements]]
+id = "th04-main-select-for-rank-asm-v192-build"
+trigger_units = ["th04-main-select-for-rank-asm-v192"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/pperf.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/pperf.asm\",\n\t\"th04/selrank.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+[[source_transforms]]
+id = "th04-main-select-for-rank-asm-v192-layout"
+trigger_units = ["th04-main-select-for-rank-asm-v192"]
+patch_path = "th04/cirsuf186.asm"
+encoding = "latin-1"
+scaffold_sha256 = "414d8191db76575eba235e1074e8dba0c31918af28bd2f296be451a5d735a669"
+patched_sha256 = "b88bfcb59faab50a01612339a9b5f53908ca2b91911ee809eb363b8822b7bb08"
+[[source_transforms.ops]]
+id = "remove-replay-select-rank-v192"
+kind = "replace"
+old = "include th04/main/select_for_rank.asm\r\n"
+new = ""
+expected_count = 1
+[[units]]
+id = "th04-main-select-for-rank-asm-v192"
+default_enabled = true
+requires_units = ["th04-main-playperf-asm-v192"]
+repo_source = "src/main/select_for_rank.asm"
+overlay_path = "th04/selrank.asm"
+map_module = "th04\\selrank.asm"
+map_mode = "exact"
+object_path = "obj/th04/selrank.obj"
+auxiliary_objects = ["obj/th04/cirsuf186.obj"]
+auxiliary_extents = [
+  { id = "th04-main-circle-post-select-residual-v192", file_offset = "0xDBAA", size = "0x2A0", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+]
+auxiliary_extents_overrides = [
+  { when_unit = "th04-main-scoredat-code-asm-v192", extents = [
+    { id = "th04-main-scoredat-code-v192", file_offset = "0xDBAA", size = "0x80", map_module = "th04\\scode.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/scode.obj" },
+    { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+  ] },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x18A6"
+map_size = "0x14"
+target_file_offset = "0xDB96"
+size = "0x14"
+
+[[build_replacements]]
+id = "th04-main-scoredat-code-asm-v192-build"
+trigger_units = ["th04-main-scoredat-code-asm-v192"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/selrank.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/selrank.asm\",\n\t\"th04/scode.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+[[source_transforms]]
+id = "th04-main-scoredat-code-asm-v192-layout"
+trigger_units = ["th04-main-scoredat-code-asm-v192"]
+patch_path = "th04/cirsuf186.asm"
+encoding = "latin-1"
+scaffold_sha256 = "b88bfcb59faab50a01612339a9b5f53908ca2b91911ee809eb363b8822b7bb08"
+patched_sha256 = "8d89193b2b47534b39ceb4fe842e3848f523dda302d3f66c8c6c8f19c5cc2795"
+[[source_transforms.ops]]
+id = "remove-replay-scoredat-code-v192"
+kind = "replace"
+old = "include th04/formats/scoredat_code_asm.asm\r\n"
+new = ""
+expected_count = 1
+[[units]]
+id = "th04-main-scoredat-code-asm-v192"
+default_enabled = true
+requires_units = ["th04-main-select-for-rank-asm-v192"]
+repo_source = "src/main/score/scoredat_code.asm"
+overlay_path = "th04/scode.asm"
+map_module = "th04\\scode.asm"
+map_mode = "exact"
+object_path = "obj/th04/scode.obj"
+auxiliary_objects = ["obj/th04/cirsuf186.obj"]
+auxiliary_extents = [
+  { id = "th04-main-zsuper-residual-v192", file_offset = "0xDC2A", size = "0x220", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x18BA"
+map_size = "0x80"
+target_file_offset = "0xDBAA"
+size = "0x80"
