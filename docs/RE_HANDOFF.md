@@ -8741,3 +8741,143 @@ seam `0xBE68..0xBF15`, size `0xAE / 174`: `SHOT_LASER_PUT_RAW` (`0x63`), NOP
 next byte. Review its source/include seams, callers/callees, alignment,
 relocations, legal compiler mechanisms, and independent TH05/OP/MAINE/ZUN
 evidence as one packet. Campaign status remains active.
+
+## 2026-09-16 v200 pre-.BB CIRCLE mixed-source checkpoint
+
+This conversation restarted from clean committed HEAD
+`2f4196b655295b8e7005a111b8142714707f29e8`, branch `main`, upstream
+`origin/main`, ahead 6 / behind 0. No staged, unstaged, untracked, conflicted,
+recoverable, unrelated, or unknown tracked work existed at entry. `.analysis/`
+measured **3,804,202,716 bytes**. All required TH04 repository documents and
+Factory contracts/guidance were reread before editing; entry preflight/status
+and the 2,120-observation boundary validator passed.
+
+The selected plane remained repository `th04`, provider `th04-ghidra`, target
+`target:th04-main`, artifact `th04-main / MAIN.EXE`. Provider discovery exposed
+ten operations and again no `get_metadata`, so the discovered `check {}` was
+used. Provider and repository-native Ghidra attestation agree on the same
+156,258-byte MZ, 6,144-byte header/load mapping, entry, all 1,136 ordered
+relocations, load digest, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains `candidate-local-attested`. TC86 Borland C++ 4.02,
+TASM32 5.0, and TLINK 6.10 required surfaces attest. The private target remained
+ignored, unmodified, uncommitted, and unpublished.
+
+v200 reviews the complete no-relocation `CIRCLE_TEXT` window `0AAF:1378..1425`,
+load `0xBE68..0xBF15`, file `0xD668..0xD715`, size `0xAE`, target-window
+SHA-256 `fdcbf9c660c6483217e35bda7f0bde5204fb233075a5bcb7e3d9681e9b981a99`.
+Fresh Ghidra constructs none of its three entries as functions. Raw target
+control flow plus the real cold scaffold establishes three source owners:
+
+- `SHOT_LASER_PUT_RAW`: 0x63-byte logical body plus source-owned `EVEN` at
+  `0xBECB`, physical owner 0x64. Maintained symbolic source
+  `src/main/player/shot_laser.asm`, SHA-256
+  `d5c694ee23d108b511be2c13e577b278940b0edc3f2a86004841e46f9f503f68`;
+- `elly_backdrop_colorfill()`: `0xBECC..0xBED9`, 0x0E. Maintained natural source
+  `src/main/boss/elly_backdrop.cpp`, SHA-256
+  `f31dad909a71fc89ecf3db7da549a1cbfc32efda53dc038a7aeb115583570159`;
+- `mai_yuki_backdrop_colorfill()` / `reimu_marisa_backdrop_colorfill()`:
+  0x3B-byte logical body plus source-owned `EVEN` at `0xBF15`, physical owner
+  0x3C. Maintained symbolic source `src/main/hardware/fillm64_56_256_256.asm`,
+  SHA-256 `aedc820bea26eca909c805ff3a22027210666ae7a804e821790333bbb666bcab`.
+
+Shot and fillm64 are classified as evidence-backed original-style/irreducible
+ASM. A bounded legal TC4J shot probe emits 204 bytes versus target 99 and
+introduces BP locals, an RTL FAR rotate call, typed ES stores, and expanded
+loops instead of the target frameless ROR/STOS/LOOP architecture. A defined
+fill probe emits 81 bytes versus target 59, expanding STOSD/LOOP and adding
+explicit flag tests. Independent TH05 raw-target evidence preserves a 99-byte
+shot homolog at load `0xDDF4` with only its linked `SHOT_LASER_DOTS` word
+changed, and an exact 59-byte fill homolog at load `0xBF24`. These locations
+come from raw-target search, not the nonexact TH05 candidate MAP. The ReC98
+candidates were introduced by explicit reverse-engineering commits and remain
+lineage evidence rather than authority.
+
+Elly has the opposite result. Production-profile TC4J emits exactly 14 CODE
+bytes with all 12 fixed bytes target-identical; the only two pre-link differences
+are the normal near-call field and one OMF FIXUPP covers that call. Probe object
+SHA-256 is `35b3fc247c6d7fa20afe480f0bff5ccd142aaac7d86a59a1d3ef6c8a7d10818b`.
+The natural source is therefore maintained and source-present, but v200
+intentionally withholds exact linked credit. Current accepted v198/v199 CIRCLE
+units still compare contained extents of monolithic `obj/th04/main.obj`, and a
+safe internal C++ split would have to migrate those producer bindings
+explicitly. Linking the old scaffold ASM while crediting the new C++ is
+forbidden. Elly is consequently `blocked`, not `exact`.
+
+OP, MAINE, and ZUN were independently checked through their attested unpacked
+payloads. Longest exact runs are shot 6/6/3, Elly 2/2/2, and fill 3/3/2 bytes
+across OP/MAINE/ZUN. This is negative routing only and transfers no MAIN source,
+boundary, or exactness credit.
+
+The repository-native cold replay chain for the two ASM owners passes:
+
+- focused `gptweb-v200-circle-prebb-focused-candidate-001`: 137 selected owners
+  twice, `failures=[]`, receipt SHA-256
+  `00474852b3bc8ca771f426b3e00c96ce14b0cbaae264c3377e3d07b4dc9ac921`;
+- candidate aggregate `gptweb-v200-circle-prebb-aggregate-candidate-001`: 241
+  default owners twice, `failures=[]`, receipt SHA-256
+  `fc8054e0a4a0eaf007b0c72cc56ef171b5c32edd6d6cf13f885afb7b8a134933`;
+- post-promotion aggregate `gptweb-v200-circle-prebb-aggregate-final-001`: 241
+  tracked defaults twice, `failures=[]`, receipt SHA-256
+  `ae07c088f3e354246b105080f755e6dba58f99a96bca8d54e42fdaa011193457`.
+
+Shot and fillm64 are `raw=True`, `map=True`, `relocs=True` in all applicable
+replays. All three runs bind manifest SHA-256
+`3b618394cc61469ae2ea20ff49aa012f157c152de01f508b2c110ba023bbe73b`.
+Aggregate A/B MAP SHA-256 is
+`0465b4e10041a2c2dd718e89c8432a97a7668a53af171f2c52285e191676c375`;
+A/B candidate MAIN SHA-256 is
+`a07df1577dae48c3513627f5fd5c593f037bc1a4d103e8e7a010386024e8b759`;
+final A/B dependency-normalized `th04_main.obj` identity is
+`f17dd6106bc34437bb6308eb91c731b62df382e402e435b299e5c5157e38c04d`.
+
+The two logical low-level rows move from `reconstruct` to `attest-asm`; Elly
+remains authored/reconstruct/blocked. MAIN C/C++ accounting is therefore
+**75,482 / 81,155 exact reviewed bytes (93.009673%)** and **458 / 481 exact
+reviewed functions (95.218295%)**. MAIN routing is 503 reconstruction
+candidates, 25 blocked, 20 unreviewed, and 65 ASM attestations. Generated
+progress reports **36 exact original-style ASM physical owners / 5,146 bytes**.
+The strict function ledger remains 481 rows because fresh Ghidra has no Elly
+entry and an exact physical natural-source owner does not yet exist for the
+no-Ghidra admission path.
+
+Recovery notes: an initial analysis-operation call used the wrong Factory
+argument name and was rejected before execution; live Git was rechecked clean.
+The first Elly standalone compiler probe incorrectly placed `-zC/-zP` as source
+pragmas and produced no object. The corrected probe compiled successfully but,
+because the shell CWD was wrong, wrote current-session ignored `elly.obj` at the
+repository root; recovery audit proved the producer inactive, copied the object
+to v200 scratch, and removed only that file plus `V200E1`. Unrelated ignored
+objects were left untouched. A candidate preflight then failed closed because
+one new evidence row used unsupported evidence class `layout`; the complete
+dirty diff was reviewed, only that enum was corrected to `linker`, and preflight
+passed. Finally, an attempted TH05 candidate-MAP address inference was rejected
+after raw bytes disproved it; durable cross-target evidence uses raw-target
+homologs only.
+
+`.analysis/` started at **3,804,202,716 bytes** and peaked at
+**3,995,620,847 bytes** after the three v200 cold replays. After proving no
+active producer, the focused and candidate replay trees were reduced to compact
+receipt state while the complete 241-owner post-promotion aggregate was retained
+as the current baseline. The resulting pre-CI `.analysis/` size is
+**3,883,271,203 bytes**. Full final `python3 scripts/ci.py` returns `CI: PASS`;
+after its live Ghidra replay, `.analysis/` is **3,883,277,336 bytes**, net growth
+**79,074,620 bytes** from entry. Older v199 baselines, private targets, toolchains,
+Wine/Ghidra state, unrelated ignored objects, and legacy/unknown analysis content
+were left untouched.
+
+Verification planes remain separate. Repository-native physical-owner exactness
+is established for the v200 shot and fillm64 ASM owners. Elly has maintainable
+natural source and exact fixed-code generation, but linked exactness is blocked.
+Standalone product closure, whole-image exactness, runtime-storage identity,
+runtime scenario validation, portable runtime, independent pristine provenance,
+and v200 Factory Truth-Kernel acceptance remain unestablished. No push is
+performed.
+
+The first concrete continuation is the **Elly CIRCLE physical-producer split**.
+The next conversation should explicitly extract the internal 14-byte natural
+C++ object while enumerating and preserving every v198/v199/v200 contained
+`main.obj` ownership dependency. It should prove the new object order, near-call
+fixup, MAP placement, adjacent alignment, all affected accepted extents, and
+aggregate determinism before Elly receives exact or function-ledger credit.
+Campaign status remains active.

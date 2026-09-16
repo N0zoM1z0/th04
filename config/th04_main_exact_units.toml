@@ -11047,3 +11047,29 @@ map_module = "th04_main.asm"
 map_mode = "contains"
 object_path = "obj/th04/main.obj"
 map_segment = "CIRCLE_TEXT"
+
+# v200: source-distinct low-level CIRCLE_TEXT producers immediately before the
+# v198 .BB mask owner. Elly remains natural-C++ source-present but is not an
+# exact-unit producer until the containing monolithic CIRCLE contribution is
+# safely split around its 0x0E body.
+[[units]]
+id = "th04-main-shot-laser-put-asm-v200"
+default_enabled = true
+requires_units = ["th04-main-bb-txt-put-asm-v199"]
+repo_source = "src/main/player/shot_laser.asm"
+overlay_path = "th04/main/player/shot_laser.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
+
+[[units]]
+id = "th04-main-fillm64-backdrop-asm-v200"
+default_enabled = true
+requires_units = ["th04-main-shot-laser-put-asm-v200"]
+repo_source = "src/main/hardware/fillm64_56_256_256.asm"
+overlay_path = "th04/hardware/fillm64-56_256-256.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"
