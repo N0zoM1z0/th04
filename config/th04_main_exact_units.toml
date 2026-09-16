@@ -10979,3 +10979,18 @@ map_start = "0x20C8"
 map_size = "0x82"
 target_file_offset = "0xE3B8"
 size = "0x82"
+
+# v198: evidence-backed irreducible/original-style CIRCLE_TEXT .BB tile-mask
+# renderer + invalidator. The maintained fragment replaces the existing include
+# inside th04_main.asm, preserving monolithic physical layout while replay gates
+# only the reviewed 0xE2 owner extent.
+[[units]]
+id = "th04-main-bb-tile-mask-asm-v198"
+default_enabled = true
+requires_units = ["th04-main-mai-tile-render-asm-v197"]
+repo_source = "src/main/tile/bb_mask.asm"
+overlay_path = "th04/main/tile/bb_put_a.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "CIRCLE_TEXT"

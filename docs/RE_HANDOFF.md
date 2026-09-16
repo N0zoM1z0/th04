@@ -8478,3 +8478,151 @@ owner, callers/callees, data/segment assumptions, relocations, TH05 lineage, and
 natural-source feasibility using the new v197 low-level tile evidence. Do not
 resume blind source spelling for `sub_CCD6` or `sub_B835` without a genuinely
 new compiler/source mechanism.
+
+## 2026-09-16 v198 CIRCLE_TEXT .BB tile-mask assembly recovery checkpoint
+
+This conversation resumed from clean committed HEAD
+`aea101c6d81638adafce0f3f43239786e9808105`, branch `main`, upstream
+`origin/main`, ahead 4 / behind 0. The initial worktree had no staged, unstaged,
+untracked, conflicted, unrelated, or unknown tracked paths. `.analysis` measured
+**3,654,727,372 bytes** at entry. All requested TH04 repository documents and
+Factory contracts/guidance were read completely before editing.
+
+While only the completed read-only documentation command was being paged, live
+HEAD remained unchanged but the worktree changed to seven unstaged tracked paths
+plus untracked `src/main/tile/bb_mask.asm`. Recovery review stopped the planned
+new batch and inspected the complete diff, untracked source, latest handoff,
+recent history, v198 scratch/replay trees, and process state. The eight paths are
+one coherent `recoverable-current-work` v198 packet: exact-unit, boundary,
+evidence, generated-report changes plus one maintained symbolic source. There is
+no unrelated or unknown dirty work, and no active TCC/TASM/TLINK/replay producer.
+Nothing was reset, stashed, overwritten, deleted, or staged merely to restore a
+clean tree.
+
+The selected evidence plane remains repository `th04`, provider `th04-ghidra`,
+target `target:th04-main`, artifact `th04-main / MAIN.EXE`. Provider discovery
+again exposes ten operations and no `get_metadata`; no undiscovered schema was
+invented. The discovered `check {}` operation passed for the 156,258-byte target,
+SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Repository-native `python3 scripts/ghidra.py th04-main check` independently passed
+the 6,144-byte MZ header/load mapping, entry, all 1,136 ordered relocations, load
+digest, and sampled bytes. Required TC86 Borland C++ 4.02 / TASM32 5.0 / TLINK
+6.10 surfaces attest; the optional host `wine64` hash mismatch remains
+informational. The private target remains ignored, unmodified, unpublished, and
+only `candidate-local-attested`.
+
+The recovered v198 packet closes one exact `CIRCLE_TEXT` physical owner at
+`MAIN_01 0AAF:1426`, load `0xBF16..0xBFF7`, target file
+`0xD716..0xD7F7`, size `0xE2 / 226`, target/candidate SHA-256
+`655dfe2664c04ed3d529409ffba3689c5f28a7aa24d8793941f1d07efe577e86`.
+The logical bodies are `tiles_bb_put_raw(int)` at `0xBF16..0xBF92` (`0x7D`),
+a source-owned `EVEN` NOP at `0xBF93`, and
+`tiles_bb_invalidate_raw(int)` at `0xBF94..0xBFF7` (`0x64`). The preceding NOP
+at `0xBF15` remains with the earlier backdrop producer and
+`yuuka5_backdrop_colorfill()` starts at `0xBFF8`. The complete owner has one
+ordered MZ relocation, load `0xBF27` / CIRCLE `0AAF:1437`, the segment word of
+the FAR `grcg_setcolor` call.
+
+Fresh target-bound Ghidra independently reconstructs contiguous 125-byte and
+100-byte bodies at analysis `0x1BF16` and `0x1BF94`. It reports no direct callers
+for either and one callee for each. These are provisional target observations
+only. Exactness comes from target raw/MAP/relocation/OMF/cold replay.
+
+Maintained source is `src/main/tile/bb_mask.asm`, SHA-256
+`1ec9c305cee7076778ef72fb468c87236c25d8a8a727e6181d3ac77c00fde740`.
+It is symbolic original-style / irreducible assembly with semantic constants and
+identifiers; it contains no copied target byte array, `__emit__`, codestring,
+C++ inline assembly, fake return, inert byte padding, target patch, or ABI lie.
+It remains overlaid at the historical include path inside the monolithic
+`th04_main.asm` object, while the exact-unit gate compares only the reviewed
+0xE2 subextent.
+
+Origin classification is evidence-backed rather than inherited from the old
+assembly scaffold. Independent TH05 original-target code preserves the same
+BP-local, FS mask-reader, and bit-walk producer family. TH05's put routine is
+five bytes longer because of its GAME 5 `scroll_active` branch; its invalidator
+keeps the same 100-byte architecture modulo linked operands/displacements.
+Legal TC4J `__seg` pointer probes use ES rather than target FS, and a full natural
+semantic C++ probe emits 258 CODE bytes versus target 226 with additional
+segment-pointer storage, register saves, and expanded countdowns. ReC98 history
+is only hypothesis/provenance. These observations support original-style /
+irreducible ASM classification without claiming historical author text.
+
+The interrupted packet had already completed and retained the full exact replay
+chain. This conversation rehashed the receipts, rebound them to the live source
+and manifest, and reran target/toolchain/boundary gates rather than duplicating
+expensive cold builds:
+
+- focused `gptweb-v198-bb-mask-focused-candidate-001`: 132 selected units,
+  `pass=true`, `failures=[]`, receipt SHA-256
+  `ad17e5767f71d39a67653fd0a50d98237bcfc4722932b7b9401a2ffce0120888`;
+- candidate aggregate `gptweb-v198-bb-mask-aggregate-candidate-001`: 236
+  candidate-state defaults twice, `pass=true`, `failures=[]`, receipt SHA-256
+  `ce992c2d20b36100c834ad6baddff175a10b4b7e7f2170b7ce2e90d438dd6f74`;
+- post-promotion aggregate `gptweb-v198-bb-mask-aggregate-final-001`: the same
+  236 tracked defaults twice, `pass=true`, `failures=[]`, receipt SHA-256
+  `ec43a7a89de24e7b84a0b6b9764a0a82145acd9cdc075ac2140aa103eb550aef`.
+
+Both aggregate receipts bind manifest SHA-256
+`12b53db3bad2759ef1868a91a9d5256913a1630231163f2e3d17d0b7764c40dd`,
+which is also the current live `config/th04_main_exact_units.toml` SHA-256. The
+final receipt reads the v198 extent from the promoted ledger and directly reports
+`raw_exact=true`, `map_exact=true`, `relocations_exact=true`, size 226, identical
+target/candidate slice hashes, and relocation overlap `[0xBF27]`.
+
+Borland dependency metadata makes A/B raw `th04_main.obj` hashes differ. This is
+not hidden: focused objects normalize to
+`e9822d015d24ae75700cf12856e94f7d5daa8888b94689bebf5fef340feffc6f`,
+and aggregate objects normalize to
+`9610b416ad2feb6173c8577457bd03a790a90e2836ae9fd614e8fda2afd73212`.
+Linked bytes, MAP, and ordered relocation results are deterministic.
+
+The other TH04 artifacts were checked independently. Their attested unpacked
+payload hashes remain OP
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`,
+MAINE `7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`,
+and ZUN `baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+Longest exact runs against the MAIN put body are only 7/7/3 bytes and against the
+invalidator 4/4/4 bytes. This is bounded negative routing evidence only; OP,
+MAINE, and ZUN remain independent authored queues and receive no MAIN source or
+exactness credit.
+
+The two logical v198 rows move from the C/C++ reconstruction queue to the
+independent original-ASM attestation plane. They do not enter
+`config/th04_main_authored_functions.csv` and do not increase C/C++ function
+exactness. MAIN therefore remains **75,482 / 81,141 exact reviewed C/C++ bytes
+(93.025721%)** and **458 / 481 exact reviewed C/C++ functions (95.218295%)**.
+The original-style ASM plane rises to **31 exact physical units / 4,726 bytes**;
+MAIN routing becomes 508 reconstruction candidates and 60 ASM attestations.
+
+Verification planes remain separate. Repository-native exact physical ownership
+is established for the bounded v198 0xE2 owner. Standalone TH04 production
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario validation, portable-runtime validation, v198 Factory Truth-Kernel
+acceptance, and independent pristine-release provenance remain unestablished. No
+remote push is performed.
+
+The v198 replay footprint is already bounded: focused and candidate aggregate
+runs are compact at roughly 2.5 MiB and 3.9 MiB, while the complete roughly
+64.4 MiB post-promotion aggregate is retained as the current cold baseline. The
+v198 GPT-web scratch is only compact target/compiler/cross-artifact evidence and
+its ignored manifest is updated at checkpoint. The pre-final-validation
+`.analysis` measurement after fresh target/toolchain attestation was
+**3,725,485,141 bytes**. Full `python3 scripts/ci.py` then returned `CI: PASS`,
+including tracking, the 2,120-row boundary ledger, private TH04 target checks,
+cross-game Oracle calibration, Ghidra/JDK identity, live read-only Ghidra replay,
+and Ghidra mutation smoke. Post-CI `.analysis` is **3,725,526,849 bytes**, net
+**70,799,477 bytes** above conversation entry. No v197/older baseline, target,
+toolchain, Wine/Ghidra state, or legacy/unknown analysis content is deleted.
+
+The next structurally connected packet should review CIRCLE_TEXT load
+`0xBFF8..0xC0FB` as one physical-producer question rather than harvesting a
+single leaf: `yuuka5_backdrop_colorfill()` (`0x22`),
+`z_super_put_16x16_mono_raw(int)` (`0x7F`), its layout NOP at `0xC099`,
+`bb_txt_put_8_raw(unsigned int,unsigned int)` (`0x61`), and the layout NOP at
+`0xC0FB`. Exact `items_invalidate()` begins at `0xC0FC`. Reconcile include/TU
+seams, callers/callees, relocations, low-level producer origin, and independent
+cross-target evidence before selecting natural C++ versus symbolic assembly.
+Campaign status remains active; this is not project, standalone-build, runtime,
+whole-image, OP/MAINE/ZUN, or whole-game completion.
