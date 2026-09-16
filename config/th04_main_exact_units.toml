@@ -11164,3 +11164,96 @@ map_start = "0x13DC"
 map_size = "0x0E"
 target_file_offset = "0xD6CC"
 size = "0x0E"
+
+
+# v202: natural-C++ MAIN.EXE gameplay entry body. The unit is linked before the
+# retained DEMO_TEXT monolith; the transform removes only the historical _main
+# body and publishes truthful aliases for the still-blocked internal DEMO
+# helpers and existing string data needed across the new object boundary.
+[[build_replacements]]
+id = "th04-main-main-entry-v202-build"
+trigger_units = ["th04-main-main-entry-v202"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/ellybd.cpp\",\n\t\"th04/cpost201.asm\",\n\t\"th04/maipre197.asm\",\n"
+build_replacement = "\t\"th04/mainent.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/ellybd.cpp\",\n\t\"th04/cpost201.asm\",\n\t\"th04/maipre197.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-main-entry-v202-layout"
+trigger_units = ["th04-main-main-entry-v202"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "cd23f08ae231c4747641f4e58c14443d656e0e0246e53bcef0ee8bb00c95748f",
+  "0be2bbb10f942f056a19403a4059635cafe393292f7a6acbe17d805c33bc0a77",
+]
+
+[[source_transforms.ops]]
+id = "normalize-main-gameexecl-nopcall-v202"
+kind = "replace_optional"
+old = "loc_AB7D:\r\n\t\tpush\tds\r\n\t\tpush\toffset arg0\t; \"op\"\r\n\t\tnopcall\t@GameExecl$qnxc\r\n"
+new = "loc_AB7D:\r\n\t\tpush\tds\r\n\t\tpush\toffset arg0\t; \"op\"\r\n\t\tnop\r\n\t\tpush\tcs\r\n\t\tcall\tnear ptr @GameExecl$qnxc\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main-entry-v202"
+kind = "remove_between"
+start = "public _main\r\n"
+end = "_main\t\tendp\r\n"
+removed_sha256 = "78e8375d2ffcc5903acd9df614f3ce76cd9d05b202a4db58a5ea102aec0328e9"
+replacement = ""
+
+[[source_transforms.ops]]
+id = "publish-gameplay-loop-v202"
+kind = "insert_before"
+anchor = "sub_AB88\tproc near\r\n"
+text = "public @gameplay_loop$qv\r\n@gameplay_loop$qv label near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-stage-session-init-v202"
+kind = "insert_before"
+anchor = "sub_AED0\tproc near\r\n"
+text = "public @stage_session_init$qv\r\n@stage_session_init$qv label near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-stage-session-free-v202"
+kind = "insert_before"
+anchor = "sub_B29E\tproc near\r\n"
+text = "public _stage_session_free\r\n_stage_session_free label near\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-pf-fn-v202"
+kind = "insert_before"
+anchor = "aUmx\t\tdb "
+text = "public _main_pf_fn\r\n_main_pf_fn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-gaiji-fn-v202"
+kind = "insert_before"
+anchor = "aGameft_bft\tdb "
+text = "public _gaiji_fn\r\n_gaiji_fn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-se-fn-v202"
+kind = "insert_before"
+anchor = "aMiko\t\tdb "
+text = "public _se_fn\r\n_se_fn label byte\r\n"
+
+[[source_transforms.ops]]
+id = "publish-main-op-fn-v202"
+kind = "insert_before"
+anchor = "arg0\t\tdb "
+text = "public _op_fn\r\n_op_fn label byte\r\n"
+
+[[units]]
+id = "th04-main-main-entry-v202"
+default_enabled = true
+requires_units = ["th04-main-elly-backdrop-v200"]
+repo_source = "src/main/core/main.cpp"
+overlay_path = "th04/mainent.cpp"
+map_module = "th04/mainent.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mainent.obj"
+map_segment = "DEMO_TEXT"
+map_start = "0x001C"
+map_size = "0x7C"
+target_file_offset = "0xC30C"
+size = "0x7C"

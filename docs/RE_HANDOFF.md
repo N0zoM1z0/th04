@@ -9028,3 +9028,142 @@ relocations, return/exit semantics, adjacent DEMO ownership, TASM provenance,
 and natural TC4J feasibility as one packet. Do not resume blind source spelling
 for `sub_B835` / `sub_CCD6` without a genuinely new mechanism. Campaign status
 remains active.
+
+## 2026-09-16 v202 natural MAIN gameplay entry checkpoint
+
+This conversation restarted from clean committed HEAD
+`0e33f10aadb5e2019059530d09c06b84ce4bf09a`, branch `main`. At the first
+recovery snapshot the branch was eight commits ahead of `origin/main`; the
+upstream reference caught up during the read-only entry checks, leaving 0/0
+without changing local HEAD or worktree content. There was no staged, unstaged,
+untracked, conflicted, recoverable, unrelated, or unknown tracked work at entry.
+`.analysis/` measured **3,963,193,860 bytes** at v202 manifest creation. All
+requested repository documents and mounted Factory contracts/guidance were read
+completely before editing. Entry preflight/status and the 2,120-observation
+boundary validator passed.
+
+Provider discovery again exposes ten `th04-ghidra` operations and no
+`get_metadata`; the discovered `check {}` operation was used. Factory and
+repository-native Ghidra attestation pass for repository `th04` / target
+`target:th04-main`, binding the same 156,258-byte private MZ, 6,144-byte header,
+entry, all 1,136 ordered relocations, load digest, and sampled bytes. Target
+SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains `candidate-local-attested`. Required TC86 Borland C++ 4.02,
+TASM32 5.0, and TLINK 6.10 surfaces attest. The private target remains ignored,
+unmodified, uncommitted, and unpublished.
+
+v202 reconstructs natural gameplay `_main` at `DEMO_TEXT 0AAF:001C`, load
+`0xAB0C..0xAB87`, file `0xC30C..0xC387`, size `0x7C`, target slice SHA-256
+`fd82b0be8ecde06f30c04b2f3066380ffa9017cb7bba9118da46418f05235a2e`.
+The MZ startup at load `0x013B` directly FAR-calls this entry. Fresh Ghidra
+constructs the complete contiguous 124-byte FAR body, reports only the startup
+caller and twelve callees, and `gameplay_loop()` begins at the next byte
+`0xAB88`. The body ends in `RETF`. Six ordered MZ relocation words lie inside at
+loads `0xAB23`, `0xAB38`, `0xAB3D`, `0xAB46`, `0xAB5D`, and `0xAB69`.
+
+Maintained natural source is `src/main/core/main.cpp`, SHA-256
+`b1eeed5be7cf8d8082108667cab3af616fefdac0bf1f501c22d269926ff3c295`.
+It contains no inline assembly, target byte array, codestring, emitter, padding,
+fake return, ABI lie, or target patch. Standalone production-profile TC4J emits
+exactly 124 CODE bytes and the target instruction skeleton. The final object
+FAR `GameExecl()` call becomes the target's length-preserving same-group
+`NOP; PUSH CS; CALL near` form at TLINK time.
+
+The linked physical split is `th04/mainent.cpp` at `DEMO_TEXT 0AAF:001C +0x7C`
+followed by the shortened historical `th04_main.asm` contribution at
+`0AAF:0098 +0x866`; the next maintained DEMO owner remains at `0AAF:08FE`.
+Three old reviewed-nonexact internal helpers (`gameplay_loop()`,
+`stage_session_init()`, and `_stage_session_free`) gain only truthful TLINK
+public aliases so the new object can call them. Their exactness status, bytes,
+extents, and sources do not change. Their function-review policy explicitly
+acknowledges these generated publics. Four existing string/data labels likewise
+gain aliases without moving storage.
+
+Focused `gptweb-v202-main-entry-focused-candidate-004` selects 139 owners twice
+and passes with `failures=[]`, receipt SHA-256
+`58d3ed4dd8b45c238f84d76243506868637c517cfac5e9d14299e6cabe7d47ba`.
+A/B `mainent.obj` is raw-identical SHA-256
+`85235e275214ae905e7c2e957714d6e2cb86e2650b7fe00e1c6ecd5a0edb5745`
+and dependency-normalized identical at
+`8c545d6bc1d0129c960a29c72bc2cb40a10617be4dea0cbb2d2b2442ca6650b5`.
+Focused A/B MAP SHA-256 is
+`b92af86d956216beec421793248dbe14de11deeeca0ee30cc369dbe7c451756a`.
+
+Candidate no-unit aggregate `gptweb-v202-main-entry-aggregate-candidate-001`
+passes all 243 candidate-state defaults twice, receipt SHA-256
+`70e7103bfc716645980dabea6d2934184d526e1bd6785d48ef638d0dbd4e5ce8`.
+Post-promotion aggregate `gptweb-v202-main-entry-aggregate-final-001` passes the
+same 243 tracked default owners twice, receipt SHA-256
+`106cb3d8fa621168ea5a52106dfd706260e72b68056e9ce0944bd755616b9ac0`.
+Tracked exact-manifest SHA-256 is
+`9cadda0658a6c54db63e02e41b57b999561ea114674797240336cb162bd95a75`.
+Final A/B MAP SHA-256 is
+`4a565e0cff733a69ae1dbb976234333a65bb81d624c09989fc22a7d312821d05`;
+A/B candidate MAIN SHA-256 is
+`1932b7feb681e3fa198d24a10cd93a70ce2cb6d400d1ecab39545cafa26b9f9b`.
+`_main` is `raw=True`, `map=True`, and `relocs=True` in both final builds.
+
+Strict function review uses the complete target Ghidra body, generated `_main`
+TLINK public, exact owner, raw terminal `RETF`, and target-bound metadata. Review
+report SHA-256 is
+`1416aca86c7405187e3a4cde1773ef22559f9ac1cb078497d5ed8613fa089894`;
+trial ledger SHA-256 is
+`66a5aae5f3673256362c3fd3b480cea9cd9b9295462a12da611d3a32f5d3e6e3`.
+It adds exactly `th04-main-fn-1ab0c`, removes none, and proposes 43 unrelated
+historical normalization changes; only the new row is merged.
+
+Other TH04 artifacts remain independent. No fresh unpack is claimed. Read-only
+SHA rebinding confirms the independently attested retained payloads still match:
+OP 69,028 bytes / SHA-256
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`,
+MAINE 62,414 / SHA-256
+`7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`,
+and ZUN 13,422 / SHA-256
+`baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+Longest exact `_main` runs are 15 / 15 / 3 bytes across OP/MAINE/ZUN; the OP and
+MAINE match is a generic resident-mode-load/FAR-call sequence, not a complete
+producer. Packed `ZUN.COM` still begins `MZ`. Routing receipt SHA-256 is
+`c1f197942448b480da76c27a4cb6ba9c6e4f15835c61f81692440e6a9ac4bea1`.
+The three artifacts retain independent 94 / 72 / 13 reconstruction queues and
+receive no MAIN credit.
+
+Recovery controls are preserved: two standalone compiler invocations failed on
+DOS-path/`true` scaffolding rather than codegen; a successful compiler invocation
+wrote a current-session ignored OBJ to repository CWD and that file alone was
+audited, copied, and removed; focused-001/002 failed closed on historical
+`nopcall` text normalization; focused-003 reached TLINK and exposed only
+probe-style MASTER symbol declarations; early function-review trials rejected
+new split-generated publics until the three existing nonexact helper policies
+explicitly acknowledged them. None receives exactness credit.
+
+Live accounting is now **75,620 / 81,279 exact reviewed C/C++ bytes
+(93.037562%)** and **460 / 483 exact reviewed functions (95.238095%)**. MAIN
+routing is 503 authored reconstruction candidates, 460 exact, 24 blocked,
+19 unreviewed, and 65 ASM-attestation observations. Original-style ASM remains a
+separate plane; v202 adds no ASM exact owner.
+
+`.analysis/` peaked/currently measured **4,226,635,831 bytes** before bounded
+cleanup. After confirming no active producer, only current-session failed
+focused trees were removed; focused-004 and the candidate aggregate were
+compacted to receipt-only state after durable receipts/OBJ/MAP evidence were
+copied into v202 scratch. The complete 243-owner post-promotion aggregate remains
+the current cold baseline. Pre-final-CI `.analysis/` is **4,043,321,084 bytes**. Full final `python3 scripts/ci.py` returns `CI: PASS`; after its live Ghidra replay, `.analysis/` is **4,043,350,901 bytes**, net growth **80,157,041 bytes** from v202 entry.
+Older baselines, private targets, toolchains, Wine/Ghidra state, unrelated
+ignored objects, and legacy/unknown analysis content remain untouched.
+
+Verification planes remain separate. Repository-native exact physical and
+function ownership is established for natural `_main`. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario validation, portable runtime, independent pristine provenance, and
+v202 Factory Truth-Kernel acceptance remain unestablished. No remote push is
+performed.
+
+The next evidence-connected structural candidate is `sub_3680` in `_TEXT`, load
+`0x3680`, analysis `0x13680`, size `0x75`, FAR. Its boundary is currently
+corroborated from target Ghidra plus TASM PROC, but source/origin remain
+unreviewed. Fresh v202 Ghidra constructs one contiguous 117-byte body and reports
+exactly one caller: independently exact v195 `MPN_LOAD` at analysis `0x1B8FC`.
+Next review should bound the surrounding MASTER.LIB seam, ABI/data inputs,
+relocations, TH04/TH05 lineage, and legal natural TC4J feasibility before
+assigning source or original-ASM origin. Campaign status remains active.
