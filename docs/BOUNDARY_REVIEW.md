@@ -30,9 +30,9 @@ The 104 original-style ASM observations remain a separate attestation queue.
 
 | Artifact | Target-derived ASM | Candidate C++ | Candidate C | Cross-game C/C++ |
 | --- | ---: | ---: | ---: | ---: |
-| `th04-op` | 4 | 79 | 2 | 8 |
+| `th04-op` | 4 | 80 | 2 | 7 |
 | `th04-main` | 14 | 1 | 0 | 0 |
-| `th04-maine` | 25 | 38 | 2 | 7 |
+| `th04-maine` | 25 | 39 | 2 | 6 |
 | `th04-zun` | 11 | 2 | 0 | 0 |
 
 `target-derived-asm` means an IDA/ReC98 assembly body identifies a likely game
@@ -45,9 +45,9 @@ it enters the standalone product build.
 
 | Artifact | Reviewed | Corroborated | Provisional |
 | --- | ---: | ---: | ---: |
-| `th04-op` | 6 | 79 | 8 |
+| `th04-op` | 7 | 78 | 8 |
 | `th04-main` | 489 | 9 | 1 |
-| `th04-maine` | 6 | 58 | 8 |
+| `th04-maine` | 7 | 57 | 8 |
 | `th04-zun` | 1 | 6 | 6 |
 
 - `reviewed` records a completed target-first boundary review backed by durable

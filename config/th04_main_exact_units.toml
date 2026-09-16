@@ -575,7 +575,7 @@ object_path = "obj/th01/vplanset.obj"
 
 [[units]]
 id = "th04-main-frame-delay"
-repo_source = "src/main/hardware/frame_delay.cpp"
+repo_source = "src/shared/hardware/frame_delay.cpp"
 overlay_path = "th02/hardware/frmdely1.cpp"
 map_module = "th02/frmdely1.cpp"
 object_path = "obj/th02/frmdely1.obj"

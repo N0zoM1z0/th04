@@ -10098,3 +10098,98 @@ MAINE are corroborated and all three candidate maps use the same
 adjacent ownership and relocations before deciding whether to move it to
 `src/shared/hardware/` and retire DELAY's `frmdelay.h` compatibility dependency.
 Campaign status remains active.
+
+
+## 2026-09-17 v209 shared frame-delay checkpoint
+
+This conversation restarted from clean committed HEAD
+`7966869d0a5c9b10c18c64735a9dbd8e5647da70`, branch `main`, upstream
+`origin/main`, ahead 7 / behind 0. Recovery found no staged, unstaged, untracked,
+conflicted, recoverable, unrelated, or unknown tracked work. The completed v208
+ignored manifest matched that HEAD/tree and no writable Borland/replay producer
+was active. `.analysis/` measured **4,496,175,740 bytes** at initial recovery and
+**4,496,223,696 bytes** when the v209 manifest was created after fresh entry
+attestation. All required repository and Factory guidance was reread before edits.
+
+Entry preflight/status and the 2,120-observation boundary validator passed.
+Provider discovery still exposes ten read-only `th04-ghidra` operations and no
+`get_metadata`; discovered `check {}` passed. Repository-native Ghidra also
+passed for `target:th04-main`, the 156,258-byte MZ with SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte header, complete mapping, entry, and all 1,136 ordered relocations.
+Required TC86 Borland C++ 4.02 / TASM32 5.0 / TLINK 6.10 / execution surfaces
+attest. Canonicality remains only `candidate-local-attested`; no private target
+was modified, committed, relocated, or published.
+
+v209 proves one shared natural `frame_delay(int)` producer across MAIN load
+`0x131B7..0x131CB`, OP payload `0xDA3B..0xDA4F`, and MAINE payload
+`0xCCA3..0xCCB7`, each `0x15 / 21` bytes. Candidate OMF FIXUPP independently
+identifies the only varying words, `_vsync_Count1` at logical `+5..+6` and
+`+10..+11`; masking exactly those fields gives common fixed SHA-256
+`b25bd556ae297ead66b7869049beb7d5a20ab0a599047e78c65f742eda78f55b`.
+Each raw body closes at `RETF 2`, adjacent ownership is gap-free, and no target
+relocation overlaps the owner.
+
+Maintained source moves to `src/shared/hardware/frame_delay.cpp`, SHA-256
+`6e721bcebcfb25afff531b733fd869591307ee15bf7d514f598ef5f187ad26a8`,
+and drops its redundant ReC98 frame-delay declaration include. New maintained
+`src/shared/hardware/frame_delay.hpp`, SHA-256
+`ecb110bb9ae12ca45053fef81582262f56234933ad6d462e24214b6c880a7931`,
+provides the declaration to shared consumers. `src/shared/sound/delay_until_measure.cpp`
+now uses that header and has SHA-256
+`fa9ab668a21c26e049732f1e40a15605d13d0bbd4f80abf96dbfce774b43a075`.
+A fresh TC4J probe emits valid OMF SHA-256
+`e81a89bd55eb15634ba09063e61ec579deb1d97efbd4e97c2dea8c1dac1b8e3b`;
+its LEDATA/FIXUPP/PUBDEF/EXTDEF/SEGDEF records remain byte-identical to the
+historical DELAY candidate object. OP/MAINE exactness is not inferred.
+
+Focused `gptweb-v209-frame-delay-shared-focused-001` passes twice with
+`raw/map/relocs=true`, receipt SHA-256
+`de289a7a6a39ea291bab1c2c0223b0397bd6b008af898112f702092559b3b859`.
+A/B frame objects are
+`0e43271ceeed4fd71714bb5c055f34db79035b7b98222568461cd3d6bb4a46ff`.
+Mandatory no-unit aggregate `gptweb-v209-frame-delay-shared-aggregate-001`
+passes all 246 default exact owners twice with `failures=[]`, receipt SHA-256
+`e8d261784d2c44e3181c4eb43acbc64d557c93f89320a622f60f28a01acf9031`,
+bound to exact-manifest SHA-256
+`b11a7b3aeddeb1aa162c01e3f712c30e3f1903e0e864d60002e17a838296531f`.
+A/B aggregate MAP remains `4bea5732...` and candidate MAIN remains
+`1932b7fe...`. This is an already-exact source-ownership migration, not a new
+promotion; no post-promotion aggregate is claimed.
+
+MAIN accounting remains **75,620 / 81,279 reviewed C/C++ bytes exact
+(93.037562%)** and **460 / 483 reviewed functions exact (95.238095%)**. OP and
+MAINE each gain one reviewed boundary; their artifact-local exactness denominators
+remain unestablished. Standalone product closure, whole-image exactness,
+runtime-storage identity, runtime scenario, portable runtime, independent
+pristine provenance, and v209 Factory acceptance remain unestablished.
+
+`.analysis/` peaked at **4,619,378,237 bytes** while focused and aggregate replay
+trees coexisted. After confirming no active producer, focused A/B trees were
+removed only after receipts/objects/MAP/candidate MAIN were copied to bounded v209
+`durable-final`; the complete 246-owner aggregate remains the current cold
+baseline. Pre-final-CI `.analysis/` is **4,565,512,972 bytes**. Full
+`python3 scripts/ci.py` on the completed implementation/ledger/documentation
+state returns `CI: PASS`, including Python tests, tracking/boundary generation,
+all four private TH04 target identities, cross-game Oracle calibration,
+Ghidra/JDK identity, fresh read-only MAIN database replay, and Ghidra mutation
+smoke. Post-CI `.analysis/` is **4,565,519,105 bytes**. Older baselines, private
+targets, toolchain/Wine/Ghidra state, and legacy/unknown analysis content remain
+untouched.
+
+Recovery was fail-closed: an incorrect candidate-object path, a missing
+`src/shared/hardware` destination before `git mv`, obsolete evidence/knowledge
+CSV field assumptions, and an unsupported boundary-report option were each
+caught before acceptance; live status and affected files were re-audited after
+each failure. Two read-only output pagination calls hit transient Factory
+transport failures and likewise triggered status re-audit. None affected the
+target or exactness verdict.
+
+The next packet should review the remaining **OP/MAINE SHARED front cohort** as
+one producer/layout question rather than another leaf: `vram_planes_set()` at OP
+`0xDA12` / MAINE `0xCC7A` (`0x29` each; MAIN already exact natural C++), followed
+after reviewed `frame_delay` by `pi_palette_apply()` (`0x25`), `pi_put_8()`
+(`0x88`), and `pi_load()` (`0x46`). The PI trio is `0xF3` bytes per artifact and
+all three entries are currently corroborated cross-game C++ candidates. Close
+TU seams, fixed bytes, relocations, callers/callees, and source lineage before any
+shared-source or exactness claim. Campaign status remains active.
