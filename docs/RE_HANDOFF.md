@@ -7346,3 +7346,152 @@ origin promotion. Preserve `_sparks_render`'s v188 fastcall negative and
 `_sparks_update`'s v186 71-vs-76 negative unless a genuinely new mechanism
 appears. `sub_C34E` remains the adjacent Ghidra-missed source/origin seam.
 Nothing is pushed.
+
+## v189 CIRCLE_TEXT low-level render pair checkpoint
+
+This session recovered clean committed HEAD
+`2fb7a7d757bea56b1bd950b1e6dc7d69b5358830`, tree
+`4f024734550c3b9a62ce4b5de3a21be868f3035a`, branch `main`, upstream
+`origin/main`, ahead 3 / behind 0. No staged, unstaged, untracked, unrelated, or
+unknown tracked work existed at entry. `.analysis/` measured **9,072,648,150
+bytes**. All required TH04 repository and mounted Factory recovery/verification
+documents were read before editing. Mandatory preflight/status/boundary gates,
+provider `check {}`, repository-native Ghidra, and TC4J/TASM/TLINK attestation
+all passed. Provider discovery still exposes ten operations and no
+`get_metadata`. The private MAIN target remains SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+`candidate-local-attested`, ignored, and unmodified.
+
+v189 reviews the connected low-level render pair rather than taking a small
+unrelated win. `@spark_render` is a 0x65 logical near body at load
+`0xC200..0xC264`; its following `0xC265` NOP is genuine source-owned alignment.
+`@item_splash_dot_render` is a 0x1C near body at `0xC332..0xC34D`; `sub_C34E`
+begins at the next byte and remains Ghidra-missed. Neither renderer has an
+overlapping MZ relocation.
+
+Independent TH05 target evidence supports a shared low-level producer. The
+splash-dot bodies are byte-identical across TH04/TH05. The two 101-byte
+`spark_render` bodies differ only in the linked `_sSPARKS` word at offsets
+0x1F..0x20; after zeroing that word, TH04, TH05, and the maintained symbolic
+TASM body all have normalized SHA-256
+`7d5119907caee763471fe69f3b9f07cc8896467419c1a45c7bc10141d94ce970`.
+ReC98 `.asm` history was used only as a hypothesis and not as origin authority.
+
+Bounded legal TC4J probes close the natural-C++ producer route without a spelling
+matrix. Splash-dot ordinary/direct typed forms emit 48 and 40 bytes; direct
+fastcall pseudo-register form reaches 32 bytes but cannot produce the target
+direct signed AX shift without extra MOVs, a signed pseudo-register reference is
+illegal, and a `register` lifetime hypothesis emits 55 bytes. A natural typed
+spark loop emits 165 bytes with BP framing, `MOV/ADD` source traversal, and
+`DEC/OR/JNZ`; it does not emit target `LODSW` or `LOOP`. These are compiler-origin
+negatives, not byte-exact evidence.
+
+Maintained symbolic sources are `src/main/spark/render.asm`, SHA-256
+`fabd1630eb20f3f99ecbed6ba92e2c45c886ac3cd7777fd0f313b39a19432b0d`, and
+`src/main/item/splash_dot_render.asm`, SHA-256
+`b0e63104c53d7fd112bfec1c1a1126b7c56a32e46f03408da6bac35aa08d7417`.
+The spark physical ASM owner is CIRCLE_TEXT `0AAF:1710 size 0x66`, file
+`0xDA00 size 0x66`, combining the 101-byte logical function with the real
+assembler `EVEN` byte. Splash-dot is CIRCLE_TEXT `0AAF:1842 size 0x1C`, file
+`0xDB32 size 0x1C`. Standalone TASM emits valid OMF for both; spark has one
+ordinary `_sSPARKS` EXTDEF/FIXUPP and otherwise fixed-byte equality, while
+splash-dot's 28 LEDATA bytes are already target-identical.
+
+The first focused replay, `gptweb-v189-circle-lowlevel-render-focused-candidate-001`,
+is retained only as control-plane negative evidence. Both new owners already
+passed raw/MAP/relocation checks, but accepted v188 still expected the old
+monolithic `cirsuf188.asm` auxiliary extent. The replay driver now has a tested,
+fail-closed trigger-scoped auxiliary extent override: the historical baseline
+contract remains active without the split trigger; an active replacement must be
+a complete nonempty table list. This preserves rather than weakens the v188
+zero-credit layout gate.
+
+A dedicated baseline regression, `gptweb-v189-v188-baseline-regression-001`,
+then replays v188 without selecting v189. All 117 selected owners pass twice
+with `failures=[]`, receipt SHA-256
+`53821bf6c346605d9c2ce5503dd8a4263675820c6b8c18e36963586641cfb09d`.
+Both builds use the historical `cirsuf188.asm` auxiliary extent at CIRCLE_TEXT
+`0xC200 size 0xEE`, proving the trigger-scoped override preserves the baseline
+path as well as the split path. This is control-plane regression evidence, not
+additional byte-exactness credit.
+
+Final focused run `gptweb-v189-circle-lowlevel-render-focused-candidate-002`
+selects 119 owners and passes twice with `failures=[]`, receipt SHA-256
+`d47912741917e947d5559d1ec190d406696d0c4b792160c66d671e51c58831a8`.
+A/B `sprendr.obj` SHA-256 is
+`a3a837753ddecf693b4274a4193a0c07b44b3791cd9a5663ed0fed5922fe1b76`;
+A/B `spldot.obj` SHA-256 is
+`acb097364d43e724e346723e66c2dd37b11258ee39abc3f2f7a6bf72a01d68cb`;
+focused MAP SHA-256 is
+`b1ce9200cc25b1e4db25dd595b8be90fa1d15f63e9d8a52cdb7c8d4212d4855a`.
+
+Candidate no-unit aggregate
+`gptweb-v189-circle-lowlevel-render-aggregate-candidate-001` passes all **223**
+candidate-state defaults twice with `failures=[]`, receipt SHA-256
+`79f9e05366924ea4fabe570be52c8d2341d1d7dc573802827f49400e743857ea`.
+Post-promotion aggregate
+`gptweb-v189-circle-lowlevel-render-aggregate-final-001` again passes all 223
+tracked defaults twice, receipt SHA-256
+`e7eae826a7a0e42f4ce37a1029f8e7c5731427f3e28cd23772b02c4c60f29492`.
+Tracked exact-manifest SHA-256 is
+`01058995277ddf54dbc45921023cc09eb994e574d17c8b5588490d840bd853ad`;
+A/B final MAP SHA-256 is
+`11fb0d13a30807b1d02fe14b0362aa77e16ade11c137e04b5a6c355951c752d4`;
+candidate MAIN remains
+`205e42067b0eb3534dc83deba125ebf845c1c153f6515ebe60430d3a79f21bd9`.
+
+Git EOL normalization was caught before commit. Repository attributes store the
+two new `.asm` files with LF endings, so the exact committed source SHA-256
+values are `fabd1630eb20f3f99ecbed6ba92e2c45c886ac3cd7777fd0f313b39a19432b0d`
+for spark render and
+`b0e63104c53d7fd112bfec1c1a1126b7c56a32e46f03408da6bac35aa08d7417`
+for splash-dot. The earlier CRLF receipts remain promotion history only. Current
+focused run `gptweb-v189-circle-lowlevel-render-focused-lf-003` passes 119
+owners twice, receipt SHA-256
+`89224f049c1ec289996daba08921093dca328f568d2fa34c05c9bc7272443d7a`; current
+no-unit aggregate `gptweb-v189-circle-lowlevel-render-aggregate-final-lf-002`
+passes all 223 tracked defaults twice, receipt SHA-256
+`ae4ee4a28a982ee3d55b6e4128e9e94aa4c2177361a19ba493970f2479215adc`, bound to
+live exact-manifest SHA-256
+`a13775eb9fecc08e398e0c3fa552bce86530fcba52bd18ede24f2c5b9839e1d9`. A/B MAP
+and candidate MAIN identities remain unchanged. These LF replays are the
+authoritative clean-checkout source binding.
+
+The two reviewed logical functions move from the authored-C/C++ function
+ledger to the original-ASM attestation queue. MAIN reviewed C/C++ accounting is
+therefore **75,195 / 80,680 bytes exact (93.201537%)** and **455 / 480 functions
+exact (94.791667%)**. Boundary routing is 530 authored-C/C++ candidates: 455
+exact, 25 blocked, 50 unreviewed, plus 38 ASM-attestation observations. Exact
+original-style ASM ownership is now **21 units / 3,258 bytes**. These planes are
+kept separate. OP.EXE, MAINE.EXE, and ZUN.COM remain independent queues with
+94, 72, and 13 unreviewed authored candidates; no MAIN credit transfers.
+
+v189 replay trees raised `.analysis/` to **9,324,232,904 bytes** before bounded
+cleanup. Compact failed/focused/candidate/final receipts, final objects/MAP,
+cross-game target slices, compiler negatives, and standalone TASM probes were
+retained. Only explicit v189 failed/focused/candidate full replay trees and the
+session-owned DOS short-path probe workspace were removed; the complete
+post-promotion aggregate remains as the current cold baseline. After cleanup,
+`.analysis/` measures **9,152,590,464 bytes**, net growth **79,942,314 bytes**.
+The v189 scratch is **15,786,584 bytes**, compact `durable-final` is **15,760,869
+bytes**, and the retained current committed-LF final aggregate
+`gptweb-v189-circle-lowlevel-render-aggregate-final-lf-002` is **64,020,463
+bytes**. The superseded pre-normalization full final tree was removed after its
+receipt had been retained compactly. Older
+baselines, Factory-accepted v188 provenance, private targets, toolchains,
+Ghidra/Wine state, and legacy/unknown analysis content are untouched.
+
+Verification planes remain separate. Repository-native exact physical ownership
+is established for both v189 symbolic ASM units. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario, portable runtime, independent pristine provenance, and v189 Factory
+Truth-Kernel acceptance are not established by this packet.
+
+Next continue the same CIRCLE lifecycle with `_sparks_render` and
+`_sparks_update`, keeping `sub_C34E` as the adjacent Ghidra-missed origin seam.
+The v188 `_sparks_render` fastcall negative now has a new structural clue: its
+callee `@spark_render` is proven original-style register/LODSW/LOOP assembly and
+consumes CX/CL directly, while ordinary Borland three-integer fastcall wants BX.
+Do not hide that mismatch with an ABI lie. `_sparks_update` keeps its v186
+71-vs-76 compiler negative until a genuinely new producer mechanism appears.
+Nothing is pushed.

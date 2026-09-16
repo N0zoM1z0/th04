@@ -1029,6 +1029,27 @@ def auxiliary_extents_pass(extents: list[dict[str, object]]) -> bool:
     )
 
 
+def resolved_auxiliary_extents(
+    entry: dict[str, object], selected_ids: set[str]
+) -> list[dict[str, object]]:
+    """Resolve trigger-scoped zero-credit extent ownership without weakening it."""
+
+    baseline = list(entry.get("auxiliary_extents", []))
+    trigger = entry.get("auxiliary_extents_override_when_unit")
+    if trigger is None or str(trigger) not in selected_ids:
+        return baseline
+    override = entry.get("auxiliary_extents_override")
+    if not isinstance(override, list) or not override:
+        raise RuntimeError(
+            f"{entry['id']}: auxiliary extent override is active but missing"
+        )
+    if not all(isinstance(item, dict) for item in override):
+        raise RuntimeError(
+            f"{entry['id']}: auxiliary extent override contains a non-table entry"
+        )
+    return list(override)
+
+
 def resolved_producer_outputs(
     entry: dict[str, object], selected_ids: set[str]
 ) -> tuple[str, str, str]:
@@ -1130,7 +1151,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             source, [str(value) for value in entry.get("auxiliary_objects", [])]
         )
         auxiliary_extents = inspect_auxiliary_extents(
-            source, list(entry.get("auxiliary_extents", [])), target_mz, candidate_mz, map_path
+            source, resolved_auxiliary_extents(entry, selected_ids), target_mz, candidate_mz, map_path
         )
         target_relocs = overlapping_relocations(target_mz, program_start, size)
         candidate_relocs = overlapping_relocations(candidate_mz, program_start, size)

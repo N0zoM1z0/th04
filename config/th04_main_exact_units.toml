@@ -10215,8 +10215,106 @@ auxiliary_extents = [
   { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
   { id = "th04-main-circle-render-residual-v188", file_offset = "0xDA00", size = "0xEE", map_module = "th04\\cirsuf188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf188.obj" },
 ]
+auxiliary_extents_override_when_unit = "th04-main-spark-render-asm-v189"
+auxiliary_extents_override = [
+  { id = "th04-main-circle-prefix-before-item-render-v188", file_offset = "0xD948", size = "0x34", map_module = "th04\\cirsuf185.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf185.obj" },
+  { id = "th04-main-item-render-gap-v188", file_offset = "0xD9FF", size = "0x1", map_module = "th04\\itemrendgap188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/itemrendgap188.obj" },
+  { id = "th04-main-circle-render-residual-v189", file_offset = "0xDA66", size = "0x88", map_module = "th04\\cirsuf188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf188.obj" },
+]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x168C"
 map_size = "0x83"
 target_file_offset = "0xD97C"
 size = "0x83"
+
+
+# v189 CIRCLE_TEXT shared low-level render pair. Independent TH04/TH05 target
+# identity plus bounded legal-TC4J producer negatives support original-style
+# symbolic assembly. Focused and aggregate replay establish exact ownership.
+[[build_replacements]]
+id = "th04-main-spark-render-asm-v189-build"
+trigger_units = ["th04-main-spark-render-asm-v189"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/itemrendgap188.asm\",\n\t\"th04/cirsuf188.asm\",\n"
+build_replacement = "\t\"th04/itemrendgap188.asm\",\n\t\"th04/sprendr.asm\",\n\t\"th04/cirsuf188.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-spark-render-asm-v189-layout"
+trigger_units = ["th04-main-spark-render-asm-v189"]
+patch_path = "th04/cirsuf188.asm"
+encoding = "latin-1"
+scaffold_sha256 = "01e076ff4d82c8092ffe9e3181ffd82929824de8c5ee7733ed9f5d1fed27cea9"
+patched_sha256 = "67cf521e5f7facee33721fc255c4fb75f5942f3c7748fdf8d0d0639e612bb34e"
+
+[[source_transforms.ops]]
+id = "remove-replay-spark-render-v189"
+kind = "replace"
+old = "include th04/main/spark_render.asm\r\n"
+new = ""
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-spark-render-v189"
+kind = "insert_before"
+anchor = "main_01 group CIRCLE_TEXT\r\n"
+text = "extrn @spark_render:near\r\n"
+
+[[units]]
+id = "th04-main-spark-render-asm-v189"
+default_enabled = true
+requires_units = ["th04-main-item-splashes-render-v188"]
+repo_source = "src/main/spark/render.asm"
+overlay_path = "th04/sprendr.asm"
+map_module = "th04\\sprendr.asm"
+map_mode = "exact"
+object_path = "obj/th04/sprendr.obj"
+auxiliary_objects = ["obj/th04/cirsuf188.obj"]
+auxiliary_extents = [
+  { id = "th04-main-circle-spark-update-render-residual-v189", file_offset = "0xDA66", size = "0x88", map_module = "th04\\cirsuf188.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf188.obj" },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1710"
+map_size = "0x66"
+target_file_offset = "0xDA00"
+size = "0x66"
+
+[[build_replacements]]
+id = "th04-main-item-splash-dot-render-asm-v189-build"
+trigger_units = ["th04-main-item-splash-dot-render-asm-v189"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/spkinv.cpp\",\n\t\"th04/spkinit.cpp\",\n\t\"th04/cirsuf186.asm\",\n"
+build_replacement = "\t\"th04/spkinv.cpp\",\n\t\"th04/spkinit.cpp\",\n\t\"th04/spldot.asm\",\n\t\"th04/cirsuf186.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-item-splash-dot-render-asm-v189-layout"
+trigger_units = ["th04-main-item-splash-dot-render-asm-v189"]
+patch_path = "th04/cirsuf186.asm"
+encoding = "latin-1"
+scaffold_sha256 = "5e02321f799e550e00e5b2269382f7c43726b43b294404cf44ec0567a8abce5c"
+patched_sha256 = "0a3727fa116d5f0c499b21fe550ccf10d4fe416a91293191d0284d46a46e9a8f"
+
+[[source_transforms.ops]]
+id = "remove-replay-item-splash-dot-render-v189"
+kind = "replace"
+old = "include th04/main/item/splash_dot_render.asm\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-item-splash-dot-render-asm-v189"
+default_enabled = true
+requires_units = ["th04-main-spark-render-asm-v189"]
+repo_source = "src/main/item/splash_dot_render.asm"
+overlay_path = "th04/spldot.asm"
+map_module = "th04\\spldot.asm"
+map_mode = "exact"
+object_path = "obj/th04/spldot.obj"
+auxiliary_objects = ["obj/th04/cirsuf186.obj"]
+auxiliary_extents = [
+  { id = "th04-main-circle-post-splash-dot-residual-v189", file_offset = "0xDB4E", size = "0x2FC", map_module = "th04\\cirsuf186.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/cirsuf186.obj" },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1842"
+map_size = "0x1C"
+target_file_offset = "0xDB32"
+size = "0x1C"

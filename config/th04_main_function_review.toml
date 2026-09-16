@@ -4219,21 +4219,6 @@ evidence_id = "ev-th04-main-item-splashes-render-boundary-v188"
 reason = "The reviewed v186 0x83 body is unchanged. v188 proves a target-consistent two-argument C-fastcall splash-dot ABI, natural TC4J fixed-byte equality, exact byte-aligned ownership of the following 0xC1FF layout seam, focused two-cold replay, and the 221-owner candidate aggregate."
 
 [[reviewed_nonexact]]
-id = "th04-main-fn-1c200"
-address = "0x1C200"
-file_offset = "0xDA00"
-size = "0x65"
-name = "@spark_render"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x65 low-level spark blitter through RET at 0x1C264. The 0x1C265 EVEN byte is separate layout; the independent TH05 target uses the same shared assembler include, but that does not decide maintained-source form or exactness."
-
-[[new_nonexact]]
-id = "th04-main-fn-1c200"
-address = "0x1C200"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Expand the reviewed authored denominator with the complete low-level spark renderer without inheriting an ASM/exact verdict from ReC98 or TH05."
-
-[[reviewed_nonexact]]
 id = "th04-main-fn-1c266"
 address = "0x1C266"
 file_offset = "0xDA66"
@@ -4282,18 +4267,3 @@ owner_unit = "th04-main-sparks-init-v187"
 source = "src/main/spark/init.cpp"
 evidence_id = "ev-th04-main-sparks-init-boundary-v187"
 reason = "The existing v186 reviewed body is unchanged. v187 localizes target-proved C linkage for init/update/render while preserving sparks_invalidate() C++ linkage, expresses low-byte initialization without changing 16-bit storage, and proves the complete 30-byte owner through focused and 220-owner candidate aggregate replay."
-
-[[reviewed_nonexact]]
-id = "th04-main-fn-1c332"
-address = "0x1C332"
-file_offset = "0xDB32"
-size = "0x1C"
-name = "@item_splash_dot_render"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Fresh target-bound Ghidra, TLINK/TASM, and raw decode close the complete 0x1C low-level splash-dot blitter through RET at 0x1C34D; reviewed TASM-only sub_C34E begins immediately after it. Source/origin and exactness remain unresolved."
-
-[[new_nonexact]]
-id = "th04-main-fn-1c332"
-address = "0x1C332"
-evidence_id = "ev-th04-main-spark-lifecycle-boundaries-v186"
-reason = "Expand the reviewed denominator with the complete splash-dot blitter without forcing a source form."

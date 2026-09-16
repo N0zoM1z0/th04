@@ -165,6 +165,17 @@ existing repository source file, and a shell-free replay command naming a
 repository driver. Evidence for another unit cannot be reused even when both
 units belong to the same executable.
 
+When an exact unit later splits bytes out of a previously accepted replay-only
+auxiliary producer, the old unit must not simply drop its auxiliary extent gate.
+The TH04 exact replay manifest may use
+`auxiliary_extents_override_when_unit` plus a complete
+`auxiliary_extents_override` list to transfer that zero-credit physical
+ownership only while the splitting unit is selected. Without the trigger, the
+original auxiliary list remains authoritative. An active missing, empty, or
+non-table override fails closed, and the new owner must independently pass its
+own raw/MAP/relocation gates. This mechanism changes physical ownership without
+weakening historical acceptance checks.
+
 Artifact-level exactness additionally requires the whole physical file,
 including header, relocation table, padding, library/runtime code, and overlay,
 to have the target SHA-256.  There is no rounded `99.99% exact` state.

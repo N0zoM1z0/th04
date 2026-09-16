@@ -61,6 +61,41 @@ class UnitDependencyTests(unittest.TestCase):
             replay.resolve_unit_dependencies(entries, {"leaf"})
 
 
+class AuxiliaryExtentOverrideTests(unittest.TestCase):
+    def test_uses_baseline_without_trigger(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_extents": [{"id": "old"}],
+            "auxiliary_extents_override_when_unit": "split",
+            "auxiliary_extents_override": [{"id": "new"}],
+        }
+        self.assertEqual(
+            replay.resolved_auxiliary_extents(entry, {"owner"}),
+            [{"id": "old"}],
+        )
+
+    def test_uses_override_with_trigger(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_extents": [{"id": "old"}],
+            "auxiliary_extents_override_when_unit": "split",
+            "auxiliary_extents_override": [{"id": "new-a"}, {"id": "new-b"}],
+        }
+        self.assertEqual(
+            replay.resolved_auxiliary_extents(entry, {"owner", "split"}),
+            [{"id": "new-a"}, {"id": "new-b"}],
+        )
+
+    def test_active_override_fails_closed_when_missing(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_extents": [{"id": "old"}],
+            "auxiliary_extents_override_when_unit": "split",
+        }
+        with self.assertRaisesRegex(RuntimeError, "override is active but missing"):
+            replay.resolved_auxiliary_extents(entry, {"owner", "split"})
+
+
 class ProducerOverrideTests(unittest.TestCase):
     def test_logical_unit_uses_standalone_producer_without_trigger(self) -> None:
         entry = {
