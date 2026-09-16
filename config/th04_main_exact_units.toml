@@ -11292,3 +11292,29 @@ object_path = "obj/th04/main.obj"
 map_segment = "_TEXT"
 target_file_offset = "0x4E80"
 size = "0x75"
+
+
+# v204: replace only MAIN.EXE's reverse-engineered inline-ASM/codestring CDG
+# producer with the TH04-shared maintained symbolic producer. OP independently
+# preserves the same fixed 0x66 producer but has no exact-unit acceptance plane.
+[[build_replacements]]
+id = "th04-main-cdg-noalpha-shared-v204-build"
+trigger_units = ["th04-main-module-th04-cdg-p-na-cpp-136b4"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/exit.cpp\",\n\t\"th04/initmain.cpp\",\n\t\"th04/cdg_p_na.cpp\",\n\t\"th04/cdg_p_pr.asm\",\n"
+build_replacement = "\t\"th04/exit.cpp\",\n\t\"th04/initmain.cpp\",\n\t\"th04/cdgpna.asm\",\n\t\"th04/cdg_p_pr.asm\",\n"
+
+[[units]]
+id = "th04-main-module-th04-cdg-p-na-cpp-136b4"
+default_enabled = true
+requires_units = ["th04-main-mpn-render-asm-v203"]
+repo_source = "src/shared/formats/cdg_put_noalpha_8.asm"
+overlay_path = "th04/cdgpna.asm"
+map_module = "th04\\cdgpna.asm"
+map_mode = "exact"
+object_path = "obj/th04/cdgpna.obj"
+map_segment = "SHARED"
+map_start = "0x05D4"
+map_size = "0x66"
+target_file_offset = "0x14EB4"
+size = "0x66"

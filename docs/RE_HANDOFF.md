@@ -9311,3 +9311,140 @@ same `0x65` size. Next review should compare MAIN and OP raw bodies, the one-byt
 module/layout seam, callers, relocations, candidate C++ producer, and TH03/TH05
 lineage before deciding whether ownership is genuinely shared or artifact-local.
 Campaign status remains active.
+
+## 2026-09-16 v204 shared CDG no-alpha renderer checkpoint
+
+This conversation restarted from clean committed HEAD
+`c2fd96b79bf5ce499f8e872b9a4a77aef4a27a52`, branch `main`, upstream
+`origin/main`, ahead 2 / behind 0. There was no staged, unstaged, untracked,
+conflicted, recoverable, unrelated, or unknown tracked work at entry. All
+required repository instructions, `docs/ARCHITECTURE.md`, and mounted Factory
+contracts/guidance were read completely before editing. Entry `.analysis/`
+measured **4,124,534,669 bytes**. Entry preflight/status and the 2,120-observation
+boundary validator passed.
+
+Provider discovery again exposes ten `th04-ghidra` operations and no
+`get_metadata`; the discovered `check {}` operation was used and passed rather
+than inventing a schema. Repository-native `python3 scripts/ghidra.py th04-main
+check` independently passes for the 156,258-byte private MZ, 6,144-byte header,
+entry, all 1,136 ordered relocations, load digest, and sampled bytes. Target
+SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains `candidate-local-attested`. Required TC86 Borland C++
+4.02, TASM32 5.0, and TLINK 6.10 surfaces attest. The private target remains
+ignored, unmodified, uncommitted, and unpublished.
+
+v204 reviews `CDG_PUT_NOALPHA_8` as a TH04-shared MAIN/OP producer. MAIN has one
+contiguous 101-byte FAR body at `SHARED 130E:05D4`, load
+`0x136B4..0x13718`, file `0x14EB4..0x14F18`, followed by a source-owned EVEN
+NOP at load `0x13719`; the complete physical owner is `0x66` bytes with SHA-256
+`39f73c57a235238c10102d69915aa45904474413da0dfb1122c4dcf2ee3a1e23`.
+Fresh Ghidra reports five callers and no callees. No MAIN MZ relocation overlaps
+the producer.
+
+The independently attested retained OP payload contains the same logical body at
+`0xE176..0xE1DA` and the same NOP at `0xE1DB`. Of the 101 body bytes, only the
+linked `_cdg_slots` word differs: MAIN links `0x3978`, while OP links `0x2716`.
+All other 99 bytes and the final NOP are identical, and no OP payload relocation
+overlaps the producer. This proves TH04 multi-artifact shared producer shape but
+does not transfer MAIN exactness. MAINE and ZUN retained payloads have no masked
+match, so shared ownership is currently proved for MAIN + OP only. Their retained
+payload hashes remain OP `13222cb6...`, MAINE `7495ae43...`, and ZUN
+`baf5a58b...`; packed `ZUN.COM` remains MZ.
+
+Independent TH05 MAIN target evidence preserves the same complete producer after
+masking only its own `_cdg_slots` word and is lineage evidence only. The current
+ReC98 TH04 C++ was introduced as decompilation and uses explicit inline assembly,
+`__emit__`-backed `REP MOVSD`, and a codestring NOP; those mechanisms are not
+admissible maintained C++ exactness. One legal natural TC4J probe without inline
+assembly, emitters, or codestrings emits an expanded segmented-pointer producer
+with a local frame, scalar ES accesses, and ordinary loops, not the target
+DS/ES stack plus `REP MOVSD` architecture. Probe source SHA-256 is
+`1705deaf2a959448d5e2db8f964d5080b1d8f03243ee6519e7c2a1e8a2f19aa0`;
+object SHA-256 is
+`9a1b7b48cad96f0a7ac3a62bc4598488a6d5d4f2ecef2dd9b7151ed7d97f5d62`.
+No spelling matrix was pursued.
+
+Maintained source is `src/shared/formats/cdg_put_noalpha_8.asm`, SHA-256
+`803a362e27932392724d1922b863066d29f5c4e98f9317610408445fbfb6eab5`.
+It is evidence-backed symbolic original-style / irreducible assembly, not a
+claim of historical source spelling. A standalone TASM probe emits exactly 102
+SHARED bytes, one public and one `_cdg_slots` fixup; masking only the fixup word
+makes the complete producer identical to MAIN, OP, and TH05 lineage bytes with
+masked SHA-256
+`d6f788bbe22ce9dc30ec964541a36b9111be7c30fc2870459113621bb8b6aa8b`.
+
+The stable historical unit ID
+`th04-main-module-th04-cdg-p-na-cpp-136b4` is retained for receipt continuity
+rather than creating an overlapping owner. Its source/origin are corrected to
+the shared ASM producer. The MAIN exact-replay build replaces only the old
+`th04/cdg_p_na.cpp` scaffold entry with `th04/cdgpna.asm`; OP stays outside the
+MAIN exactness plane.
+
+Focused `gptweb-v204-cdg-noalpha-focused-candidate-001` selects 141 owners twice
+and passes with `failures=[]`, receipt SHA-256
+`e400d0e61151bff1c462ce5018a8e1d1f0f57e8a4bd7a1aa2955a5347df22885`.
+A/B `cdgpna.obj` is raw-identical SHA-256
+`eaa26a880d0f922636bfde01c0e80d0cfddb4f4c85b322a586de35594721b505`;
+A/B MAP SHA-256 is
+`a38e7e8710a2fa5edba09b6b0217e46ac579e9ed46429bf3568fd72647610889`;
+A/B focused candidate MAIN SHA-256 is
+`ad51bc32345301eb9e212bc009e6ce757fe24d10c77e0dbc20de4a398648c0a6`.
+The complete `0x66` owner is raw/MAP/relocation exact in both builds.
+
+Candidate no-unit aggregate `gptweb-v204-cdg-noalpha-aggregate-candidate-001`
+passes all 245 candidate-state default owners twice, receipt SHA-256
+`aa4798f1211a120ca2da6ca774950ab7a1e0693b98807572b323d56204aa04ee`.
+Post-promotion aggregate `gptweb-v204-cdg-noalpha-aggregate-final-001` passes the
+same 245 tracked defaults twice, receipt SHA-256
+`3f6a77a264551eb5d3021bbf4d6c7ee5605ece5d8d9b10fbcf96a8c8635093c2`.
+Tracked replay-manifest SHA-256 is
+`0850c2aed66c8426c75d716555916d574432196dde58583f5aec782feba126f3`.
+Final A/B MAP SHA-256 is
+`a0d1f5d71213121f0d8fbec2c542e409fe94227e11604f74111df69fa4cd993a`;
+A/B candidate MAIN SHA-256 remains
+`1932b7feb681e3fa198d24a10cd93a70ce2cb6d400d1ecab39545cafa26b9f9b`.
+The promoted producer remains raw/MAP/empty-MZ-relocation exact.
+
+Accounting keeps C/C++ and ASM planes separate. MAIN C/C++ exact reviewed bytes
+remain **75,620 / 81,279 (93.037562%)** and exact reviewed functions remain
+**460 / 483 (95.238095%)**. MAIN routing is now 501 reconstruction candidates,
+17 unreviewed, 24 blocked, and 67 ASM-attestation observations. OP routing is now
+93 reconstruction candidates and 16 ASM-attestation observations. Generated
+progress reports **38 exact original-style ASM units / 5,365 bytes**. Both
+artifact boundary rows keep `accepted_state=unreviewed`; only the MAIN physical
+unit has exact replay credit.
+
+A post-focused receipt-inspection helper incorrectly assumed the receipt `builds`
+field was a mapping and failed after the authoritative focused replay had already
+passed; live Git was re-audited immediately and the receipt was then read using
+its actual schema. A later read-only next-candidate Factory command hit a
+transient connection failure; live status was re-audited and only that read-only
+query was retried. Neither control-plane failure changes reconstruction evidence.
+
+`.analysis/` entered at **4,124,534,669 bytes**, peaked at
+**4,316,467,571 bytes**, and after proving no active producer and performing
+bounded v204-only cleanup is **4,205,486,183 bytes** before final CI. Focused and
+candidate aggregate trees are receipt-only after their receipts, A/B object/MAP,
+and candidate MAIN evidence were copied into v204 durable scratch. The complete
+245-owner post-promotion aggregate remains the current cold baseline. Full final `python3 scripts/ci.py` returns `CI: PASS`; after its live Ghidra replay, `.analysis/` is **4,205,492,764 bytes**, net growth **80,958,095 bytes** from v204 entry. Older
+baselines, private targets, toolchains, Wine/Ghidra state, and legacy/unknown
+analysis content remain untouched.
+
+Verification planes remain separate. Repository-native exact physical ownership
+is established for MAIN's shared CDG producer; OP receives only independently
+supported shared source/origin/boundary routing. Standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario validation, portable runtime, independent pristine provenance, and
+v204 Factory Truth-Kernel acceptance remain unestablished. No remote push is
+performed.
+
+The next evidence-connected structural packet is the complete `th03/vector.cpp`
+SHARED physical contribution in MAIN: `130E:0037 +0xA0`, load
+`0x13117..0x131B6`, target SHA-256
+`0761c1bb2d84e4b3353831a50ad34b9d8385166ab2264beb2c7e9eddc7df85ca`.
+It contains `VECTOR2` at `0x13117` (`0x45`), a NOP at `0x1315C`, and
+`VECTOR2_BETWEEN_PLUS` at `0x1315D` (`0x5A`). Review the two logical boundaries,
+NOP ownership, callers/callee, actual `th03/math/vector.cpp` natural source,
+OMF/link context, and cross-artifact/cross-game evidence as one packet before
+promotion. Campaign status remains active.
