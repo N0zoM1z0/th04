@@ -11318,3 +11318,29 @@ map_start = "0x05D4"
 map_size = "0x66"
 target_file_offset = "0x14EB4"
 size = "0x66"
+
+
+# v205: replace only TH04 MAIN's reverse-engineered th03/vector.cpp producer
+# with the maintained symbolic far-vector owner. TH03/TH05 target lineage is
+# corroboration only; OP/MAINE/ZUN do not contain this producer.
+[[build_replacements]]
+id = "th04-main-vector-far-v205-build"
+trigger_units = ["th04-main-module-th03-vector-cpp-13117"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/score_rm.cpp\",\n\t\"th01/vplanset.cpp\",\n\t\"th03/vector.cpp\",\n\t\"th02/frmdely1.cpp\",\n\t\"th03/hfliplut.asm\",\n"
+build_replacement = "\t\"th04/score_rm.cpp\",\n\t\"th01/vplanset.cpp\",\n\t\"th04/vectorfar.asm\",\n\t\"th02/frmdely1.cpp\",\n\t\"th03/hfliplut.asm\",\n"
+
+[[units]]
+id = "th04-main-module-th03-vector-cpp-13117"
+default_enabled = true
+requires_units = ["th04-main-module-th04-cdg-p-na-cpp-136b4"]
+repo_source = "src/main/math/vector_far.asm"
+overlay_path = "th04/vectorfar.asm"
+map_module = "th04\\vectorfar.asm"
+map_mode = "exact"
+object_path = "obj/th04/vectorfar.obj"
+map_segment = "SHARED"
+map_start = "0x0037"
+map_size = "0xA0"
+target_file_offset = "0x14917"
+size = "0xA0"

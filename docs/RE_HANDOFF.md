@@ -9448,3 +9448,165 @@ It contains `VECTOR2` at `0x13117` (`0x45`), a NOP at `0x1315C`, and
 NOP ownership, callers/callee, actual `th03/math/vector.cpp` natural source,
 OMF/link context, and cross-artifact/cross-game evidence as one packet before
 promotion. Campaign status remains active.
+
+## 2026-09-16 v205 MAIN far-vector producer checkpoint
+
+This conversation restarted from clean committed HEAD
+`daa30acf70d8fdd474b33f4f13a2fadfe96970ed`, branch `main`, upstream
+`origin/main`, ahead 3 / behind 0. No staged, unstaged, untracked, conflicted,
+recoverable, unrelated, or unknown tracked work existed at entry. All required
+repository documents, `docs/ARCHITECTURE.md`, and mounted Factory
+contracts/guidance were reread completely before editing. Entry `.analysis/`
+measured **4,205,032,131 bytes**.
+
+Entry preflight/status and the 2,120-observation boundary validator passed.
+Provider discovery again exposes ten `th04-ghidra` operations and no
+`get_metadata`; the discovered `check {}` operation was used rather than
+inventing a schema and passed for repository `th04` / target
+`target:th04-main`. Repository-native `python3 scripts/ghidra.py th04-main
+check` independently passed for the same 156,258-byte private MZ, 6,144-byte
+header, entry, all 1,136 ordered relocations, load digest, and sampled bytes.
+Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains `candidate-local-attested`. Required TC86 Borland C++
+4.02, TASM32 5.0, and TLINK 6.10 surfaces attest. The private target remained
+ignored, unmodified, uncommitted, and unpublished.
+
+v205 reviews the complete `th03/vector.cpp` SHARED physical producer at
+`130E:0037`, load `0x13117..0x131B6`, target file
+`0x14917..0x149B6`, size `0xA0`, SHA-256
+`0761c1bb2d84e4b3353831a50ad34b9d8385166ab2264beb2c7e9eddc7df85ca`.
+It consists of `VECTOR2` at `0x13117 +0x45`, the source-owned alignment NOP at
+`0x1315C`, and `VECTOR2_BETWEEN_PLUS` at `0x1315D +0x5A`. Exactly one target MZ
+relocation overlaps, at load `0x13175`, the segment word of the latter function's
+FAR `IATAN2` call.
+
+Fresh Ghidra constructs complete contiguous FAR bodies for both public entries.
+It reports six direct callers for `VECTOR2`, but an independent raw FAR-call
+search finds seven, confirming the database caller set is incomplete. It reports
+zero direct callers for `VECTOR2_BETWEEN_PLUS` and one callee (`IATAN2`); the
+cold MAP still exposes the latter as a real public entry. Ghidra receives zero
+exactness credit.
+
+The other TH04 artifacts were checked independently. Bounded masked scans of the
+attested OP, MAINE, and ZUN payloads find neither body. Independent TH03 MAIN and
+TH05 MAIN targets preserve both fixed instruction skeletons modulo ordinary
+linked table and FAR-call fields. This is cross-game producer-lineage evidence
+only. TH04 ownership remains MAIN-local; no OP/MAINE/ZUN or cross-game exactness
+credit transfers.
+
+The current ReC98 C++ is quarantined as reverse-engineering scaffold rather than
+source authority. Its 2021 introduction commit
+`8d953dc42e1b31eee572299475c6012e68490992` explicitly describes an
+"impossible" decompilation, and the maintained upstream C++ forces two `MOVSX`
+forms with raw inline opcodes plus the inter-function NOP with a codestring.
+Three legal TC4J 4.02 mechanisms were tested instead. Pseudo-register pointer
+loads add EAX-to-EDX/ECX moves; direct natural multiply expressions emit 79
+bytes and recompute the angle index/length; `register long` caches emit 91 bytes
+with an 8-byte stack frame. None reproduces the 69-byte target `VECTOR2`
+register lifetime, so no source-spelling matrix was pursued. Compact negative
+receipt SHA-256 is
+`e40d688696d13a6b694a134d5629bd042968071beb76cf6f793d2cd78175638f`.
+
+Maintained source is `src/main/math/vector_far.asm`, SHA-256
+`58442c35f1d08d3c6d5ceb7cadfe187fd3ee559461969209bb3fd341e9873750`.
+It is evidence-backed irreducible/original-style symbolic assembly, not a claim
+of historical source spelling. A standalone TASM producer emits exactly 160
+SHARED LEDATA bytes, two publics, and extern/fixup metadata for `_SinTable8`,
+`_CosTable8`, and `IATAN2`. Its complete pre-link LEDATA is byte-identical to the
+current exact scaffold object, SHA-256
+`aa8542332b365b8b2bf9a773fa8362a6d71da12105be845c02fdef587e3e75a3`.
+
+The first focused integration deliberately remains durable negative evidence.
+It used a word-aligned SHARED SEGDEF (`ACBP=48`) while the historical C++ object
+uses byte alignment (`ACBP=28`). Because the previous contribution ends at odd
+offset `0x0037`, TLINK moved the new producer to `0x0038`, shifting all later
+SHARED owners. Focused candidate 001 therefore failed broadly; receipt SHA-256 is
+`0be4c88783f7780fff4813aadb1e2036fcbc58225ea6f230c7d1a737b65a3c76`.
+Changing only the source segment declaration to byte alignment emits the same
+160-byte LEDATA plus matching ACBP=28. The byte-aligned standalone object SHA is
+`3d757670a26fb852f886489dbddacd019e2f30dcf367085c51185c323ad75bf6`.
+TASM's resulting "segment alignment not strict enough" warning is retained; the
+valid OMF and exact link replay below establish the actual producer behavior.
+
+Focused `gptweb-v205-vector-far-focused-candidate-002` selects 142 owners twice
+and passes with `failures=[]`, receipt SHA-256
+`666b4856bd9cbd3b9fed990e5a80e6fe21f743f4343e9e225c8ca6a2bfdac74c`.
+A/B `vectorfar.obj` is raw-identical SHA-256
+`367880d164d8c68ce6406157bb499f56eac92b9f96271e9a75b2fb8c1b6a73c5`;
+A/B focused MAP SHA-256 is
+`8c2444fe366c2fd53a5f38252a6fdb2ea922c9cf8ae14a9aafcf6c9b793f0724`;
+A/B focused candidate MAIN SHA-256 is
+`ad51bc32345301eb9e212bc009e6ce757fe24d10c77e0dbc20de4a398648c0a6`.
+The complete owner is raw/MAP/ordered-relocation exact in both builds.
+
+Candidate no-unit aggregate `gptweb-v205-vector-far-aggregate-candidate-001`
+passes all 246 candidate-state default owners twice, receipt SHA-256
+`ca5f5c44a60bc04c0eee7dbedadf2a556ee7fb9479d461463e62c4bef3633d8a`.
+Post-promotion aggregate `gptweb-v205-vector-far-aggregate-final-001` passes the
+same 246 tracked default owners twice, receipt SHA-256
+`bc1931e3619916262a210afbd1390fdacdf92957f9be02274e743a406c12d8e8`.
+Tracked replay-manifest SHA-256 is
+`f28c1631c5116821d52bb0de7f245925fa065456324f4198fd86e7ef8d7fa0c5`.
+Both aggregates have A/B `vectorfar.obj` SHA-256 `367880d1...`, A/B MAP
+SHA-256 `4bea5732094f5f08b2c37365d7cae466f063e54f7cb22cad115c973810cf59cc`,
+and A/B candidate MAIN SHA-256
+`1932b7feb681e3fa198d24a10cd93a70ce2cb6d400d1ecab39545cafa26b9f9b`.
+
+The stable unit ID `th04-main-module-th03-vector-cpp-13117` is retained for
+receipt continuity but now points to the maintained original-style ASM owner.
+The two logical boundary rows move from C/C++ reconstruction to the independent
+ASM-attestation queue and deliberately do not enter the C/C++ function ledger.
+MAIN C/C++ accounting therefore remains **75,620 / 81,279 exact reviewed bytes
+(93.037562%)** and **460 / 483 exact reviewed functions (95.238095%)**. MAIN
+routing becomes 499 reconstruction candidates, 15 unreviewed, 24 blocked, and 69
+ASM-attestation observations. Generated progress reports **39 exact
+original-style ASM physical units / 5,525 bytes**. The all-artifact remaining
+reconstruction queue is 217 observations.
+
+Recovery controls are retained. A read-only OMF helper initially assumed the
+repository parser returned an object with `.records`; it actually returns an
+iterable/tuple and the query was rerun after a clean-status audit. The first TC4J
+probe expected uppercase `V205.OBJ`; Borland emitted lowercase `v205.obj`, so
+only the output path was corrected after a clean-status audit. Two evidence-write
+helpers accidentally placed `rows.extend(new)` inside their validation loops,
+creating repeated current-session v205 evidence IDs; fail-closed tracking caught
+both events. Live status and the evidence tail were audited each time, and only
+the duplicated v205 IDs were removed, preserving every historical row. A
+read-only next-candidate sorter also failed when equal-size tuples attempted to
+compare dictionaries; status was re-audited and the sort was rerun with an
+explicit key. None of these control-plane failures grants or removes exactness.
+
+`.analysis/` entered at **4,205,032,131 bytes** and peaked at
+**4,459,262,523 bytes** while failed focused-001, focused-002, candidate
+aggregate, and final aggregate trees coexisted. After proving no active writable
+compiler/link/replay producer, the explicit failed focused-001 tree was removed
+after copying its receipt, object, and MAP diagnostic into v205 durable scratch.
+Focused-002 and candidate aggregate were compacted to receipt-only state after
+copying their A/B object/MAP/candidate MAIN evidence. The complete 246-owner
+post-promotion aggregate remains the current cold baseline. Pre-final-CI
+`.analysis/` is **4,287,834,907 bytes**. Full final `python3 scripts/ci.py`
+returns `CI: PASS`; after its live Ghidra replay, `.analysis/` is
+**4,287,841,040 bytes**, net growth **82,808,909 bytes** from v205 entry. Older
+baselines, private targets, toolchains, Wine/Ghidra state, and legacy/unknown
+analysis content were left untouched.
+
+Verification planes remain separate. Repository-native exact physical ownership
+is established for the 160-byte MAIN original-style ASM producer. Standalone
+TH04 product compile/link closure, whole-image exactness, runtime-storage
+identity, runtime scenario validation, portable runtime, independent pristine
+provenance, and v205 Factory Truth-Kernel acceptance remain unestablished. No
+remote push is performed.
+
+The next evidence-connected packet should review `SND_LOAD` across TH04 MAIN,
+OP, and MAINE as one multi-artifact producer question. Independent boundary rows
+currently identify `0xEA` target bodies at MAIN load `0x13496`, OP load
+`0xDDCA`, and MAINE load `0xD112`. All three cold candidate graphs link a
+`th04/snd_load.cpp` 0xEA SHARED contribution, but the MAINE candidate MAP places
+that module at `0CC7:04A0` (linear approximately `0xD110`), two bytes before the
+current target-ledger entry. Reconcile that seam, artifact-local relocation/data
+ownership, and all callers before attempting source transfer. MAIN already has
+several exact natural subextents inside the 0xEA producer, while a reviewed
+41-byte middle gap keeps the complete function blocked. Determine whether that
+gap has a legal natural TC4J mechanism before considering original-style ASM.
+ZUN has no corresponding candidate contribution. Campaign status remains active.
