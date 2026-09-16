@@ -7304,25 +7304,38 @@ Before bounded cleanup, `.analysis/` reached **9,177,319,742 bytes**. The
 interrupted packet had already removed explicit failed/superseded/focused/
 candidate replay trees after retaining compact receipts and durable artifacts.
 Recovery found no active producer and preserved both complete post-promotion
-aggregates. After the recovery rebind, cleanup of only this conversation's
-unreferenced probe control, and full CI, `.analysis/` measures
-**9,008,251,083 bytes**, net growth **137,459,187 bytes** from v188 entry. The
-v188 scratch is **9,485,385 bytes**, its compact `durable-final` is
-**8,535,548 bytes**, `aggregate-final-001` is **63,954,856 bytes**, and the
-later current-manifest `aggregate-final-002` is **63,946,664 bytes** and is the
-latest full cold baseline. The reconstructed ignored session manifest SHA-256 is
-`20a1095b5b416369c4df489aef75767c17a0ffd762ea363a7fd585a0ca39cec3`; it was
-rebuilt from actual retained files/receipts after a local probe bootstrap had
-overwritten the ignored manifest before recovery classification. v187/older
+aggregates. After the recovery rebind, Factory-accepted replay, cleanup of only
+this conversation's unreferenced probe control, and final full CI, `.analysis/`
+measures **9,072,647,969 bytes**, net growth **201,856,073 bytes** from v188
+entry. The v188 scratch is **9,486,964 bytes**, its compact `durable-final` is
+**8,535,548 bytes**, repository-native `aggregate-final-001` is **63,954,856
+bytes**, `aggregate-final-002` is **63,946,664 bytes**, and accepted Factory
+replay `factory-20260916T005301Z-618cd99cf775` is **64,332,072 bytes**. The
+packet remains below the 256 MiB soft growth trigger. `final-002` remains the
+latest repository-native full cold baseline; the Factory replay is retained as
+separate accepted provenance. The ignored session manifest was rebuilt from
+actual retained files/receipts after a local probe bootstrap overwrote it before
+recovery classification and now records the Factory job/receipt/registry. Its
+final live hash is reported after the handoff-only checkpoint rather than
+embedded here because `current_head` is part of that ignored manifest. v187/older
 baselines, the retained v187 Factory lock-failure reproducer, private targets,
 toolchains, Ghidra/Wine state, and legacy or unknown analysis content are
 untouched.
 
-Verification planes remain separate. v188 proves exact natural-C++ ownership of
-`ITEM_SPLASHES_RENDER` and revalidates the tracked exact cohort. Standalone TH04
-product compile/link closure, whole-image exactness, runtime-storage identity,
-runtime scenario, portable runtime, independent pristine provenance, and v188
-Factory Truth-Kernel acceptance remain unestablished.
+Factory Truth-Kernel replay is now independently closed for the v188 owned
+extent. Clean implementation commit `29eb054418aafd010250318065006d1b620a008c`,
+tree `2ff81c8bae4ff8b047904258c648b19fc76d3c16`, and source snapshot
+`1fcf712b964d4976f4ec3ac0aed94a9545ae5c13b1957683be4f4b5920db3576`
+bind job `job:d3df738176b94361a9dddb8a7424d03c`. It completed with receipt
+`receipt:b704415718e783c861aafc398234c3c139d32b519aec1d7154cccea09be924d7`,
+`receipt_verdict=pass`, `acceptance_decision=accepted`, no rejection reasons,
+and registry entry
+`registry:a9682c41c49a62eca77dfea77f5b7da49eaf0631a2574a4b44bb254a8e6e973f`.
+Verification planes remain separate: repository-native v188 exactness and this
+single Factory owned-extent acceptance are established; standalone TH04 product
+compile/link closure, whole-image exactness, runtime-storage identity, runtime
+scenario, portable runtime, and independent pristine provenance remain
+unestablished.
 
 Next continue the same render cohort with `@item_splash_dot_render` and
 `@spark_render` as an origin/source pair. The splash-dot body is byte-identical

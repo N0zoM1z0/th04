@@ -267,10 +267,26 @@ still treated as an MZ executable despite its extension.
 
 This packet proves exact natural-C++ ownership of `ITEM_SPLASHES_RENDER` and
 revalidates the complete current exact cohort under the maintained splash header.
-It does not establish standalone TH04 product compile/link closure, whole-image
-exactness, runtime-storage identity, runtime-scenario validation, portable
-runtime validation, independent pristine-release provenance, or Factory
-Truth-Kernel acceptance.
+Standalone TH04 product compile/link closure, whole-image exactness,
+runtime-storage identity, runtime-scenario validation, portable runtime
+validation, and independent pristine-release provenance remain unestablished.
+
+## Factory Truth-Kernel acceptance
+
+After clean implementation checkpoint `29eb054418aafd010250318065006d1b620a008c`
+(tree `2ff81c8bae4ff8b047904258c648b19fc76d3c16`), Factory replay job
+`job:d3df738176b94361a9dddb8a7424d03c` independently replayed imported claim
+`claim:unit:th04-main-item-splashes-render-v188:owned-extent-exact`. The source
+binding was clean (`dirty=false`, zero untracked files), snapshot SHA-256
+`1fcf712b964d4976f4ec3ac0aed94a9545ae5c13b1957683be4f4b5920db3576`.
+The isolated-double-build job completed with receipt
+`receipt:b704415718e783c861aafc398234c3c139d32b519aec1d7154cccea09be924d7`,
+`receipt_verdict=pass`, `acceptance_decision=accepted`, no rejection reasons,
+and registry entry
+`registry:a9682c41c49a62eca77dfea77f5b7da49eaf0631a2574a4b44bb254a8e6e973f`.
+This Factory acceptance is scoped only to the v188 131-byte owned-extent claim;
+it does not establish product closure, whole-image identity, runtime-storage
+identity, runtime-scenario validity, portable runtime, or pristine provenance.
 
 ## Analysis retention
 
@@ -283,25 +299,28 @@ the successful focused/candidate full trees, and the current-session Wine probe
 workspace/symlink were deleted. The complete post-promotion aggregate remains as
 the current cold baseline.
 
-After recovery rebind and the full final CI:
+After Factory acceptance and the final full CI:
 
-- `.analysis/`: **9,008,251,083 bytes**;
-- net growth from entry: **137,459,187 bytes**;
-- v188 compact scratch: **9,485,385 bytes**;
+- `.analysis/`: **9,072,647,969 bytes**;
+- net growth from entry: **201,856,073 bytes**;
+- v188 compact scratch: **9,486,964 bytes**;
 - compact `durable-final`: **8,535,548 bytes**;
-- retained `aggregate-final-001`: **63,954,856 bytes**;
-- retained later current-manifest `aggregate-final-002`: **63,946,664 bytes**.
+- retained repository-native `aggregate-final-001`: **63,954,856 bytes**;
+- retained repository-native `aggregate-final-002`: **63,946,664 bytes**;
+- retained Factory-accepted replay `factory-20260916T005301Z-618cd99cf775`:
+  **64,332,072 bytes**.
 
-Both full post-promotion aggregates are retained because they are bounded v188
-reproducible evidence and the packet remains below the 256 MiB soft growth
-trigger. `final-002` is the latest current cold baseline. The reconstructed
-ignored session manifest SHA-256 is
-`20a1095b5b416369c4df489aef75767c17a0ffd762ea363a7fd585a0ca39cec3`; it records
-that an earlier local probe bootstrap had overwritten the ignored scratch
-manifest before recovery classification, so its contents were rebuilt only from
-actual retained files and receipts. v187 and older baselines, the retained v187
-Factory lock-failure reproducer, private targets, toolchains, Wine/Ghidra state,
-and legacy or unknown analysis content were untouched.
+The packet remains below the 256 MiB soft growth trigger. `final-002` remains the
+latest repository-native full cold baseline, while the Factory directory is
+retained separately as accepted replay provenance. The ignored session manifest
+was reconstructed from actual retained files/receipts after an earlier local
+probe bootstrap overwrote the scratch manifest before recovery classification;
+it now also records the Factory job/receipt/registry binding. Its final live hash
+is intentionally read after the handoff-only checkpoint rather than embedded in
+tracked text that would become stale when `current_head` changes. v187 and older
+baselines, the retained v187 Factory lock-failure reproducer, private targets,
+toolchains, Wine/Ghidra state, and legacy or unknown analysis content were
+untouched.
 
 ## Next structural packet
 
