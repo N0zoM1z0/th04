@@ -45,9 +45,9 @@ it enters the standalone product build.
 
 | Artifact | Reviewed | Corroborated | Provisional |
 | --- | ---: | ---: | ---: |
-| `th04-op` | 5 | 80 | 8 |
+| `th04-op` | 6 | 79 | 8 |
 | `th04-main` | 489 | 9 | 1 |
-| `th04-maine` | 5 | 59 | 8 |
+| `th04-maine` | 6 | 58 | 8 |
 | `th04-zun` | 1 | 6 | 6 |
 
 - `reviewed` records a completed target-first boundary review backed by durable

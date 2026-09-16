@@ -9959,3 +9959,142 @@ measure dependencies through TH04-owned headers or `compat/rec98/` forwarders,
 then compile with the attested TC4J profile and compare valid OMF/link fields.
 Do not infer OP/MAINE exactness until an artifact-local Oracle supports it.
 Campaign status remains active.
+
+
+## 2026-09-17 v208 shared PMD and measure-delay checkpoint
+
+This conversation restarted from clean committed HEAD
+`b8a41656ddaa94d99c59378129976bfdbde1b057`, branch `main`, upstream
+`origin/main`, ahead 6 / behind 0. Recovery found no staged, unstaged, untracked,
+conflicted, recoverable, unrelated, or unknown tracked work. The completed v207
+ignored manifest was bound to that HEAD/tree and no writable Borland or replay
+producer was active. The initial recovery `.analysis/` inventory was
+**4,426,942,425 bytes**; after fresh entry attestation the v208 manifest was
+created at **4,427,011,943 bytes**. All required repository and mounted Factory
+documents were read completely before tracked edits.
+
+Entry preflight/status and the 2,120-observation boundary validator passed.
+Analysis-provider discovery again exposes ten read-only `th04-ghidra` operations
+and no `get_metadata`; the discovered `check {}` operation was used instead of
+inventing that stale interface. Factory and repository-native Ghidra checks bind
+`target:th04-main` to the 156,258-byte MZ, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte header, entry point, complete load mapping, and all 1,136 ordered
+relocations. Required TC86 Borland C++ 4.02, TASM32 5.0, TLINK 6.10, MS-DOS
+Player, and Wine execution surfaces attest; the optional host `wine64` hash
+mismatch remains informational. Canonicality remains `candidate-local-attested`.
+The private targets were not patched, replaced, relocated, committed, or
+published.
+
+v208 first closes `_snd_pmd_resident` across TH04 MAIN/OP/MAINE. MAIN load
+`0x1337E..0x133AB`, OP payload `0xDC16..0xDC43`, and MAINE payload
+`0xCF2E..0xCF5B` are complete 46-byte FAR bodies with identical instruction
+shape and terminal `INC AX; RETF`. OP and MAINE immediately continue into their
+reviewed MMD entries with no gap, and no retained payload relocation overlaps
+PMD. Fresh MAIN Ghidra independently constructs one contiguous 46-byte body at
+analysis `0x2337E..0x233AB`; this remains provisional navigation evidence.
+
+The candidate PMD OMF derives exactly eight ordinary linked-field positions.
+Masking only those positions leaves zero fixed producer differences for
+MAIN/OP/MAINE, with common fixed SHA-256
+`0f3d844a79e2a599bc6bbe10c0f424bd2bd32470613de1ba6554a08b3ba87b12`.
+The maintained pure-C source therefore moves content-identically from
+`src/main/sound/pmd_resident.c` to `src/shared/sound/pmd_resident.c`, SHA-256
+`2477c5197df11edc5c76d27ce023192e2c130d402c47008ae7360e982dd3af2e`.
+OP `0xDC16` and MAINE `0xCF2E` move from corroborated to reviewed and bind that
+source, but remain `accepted_state=unreviewed`; no MAIN exactness transfers.
+Historical ReC98 PMD provenance is commit `4c8a3cb3`, explicitly a decompilation.
+The repository-maintained source avoids its historical inline `LES` by using
+natural Borland `__es` pointer semantics.
+
+v208 also localizes `SND_DELAY_UNTIL_MEASURE`, already reviewed in v207 at OP
+payload `0xDD80..0xDDB0` and MAINE payload `0xD046..0xD076`, 49 bytes. Their
+fixed producer bytes were already identical after masking nine candidate-derived
+link fields, fixed SHA-256
+`01b90abb46302d79cda253a007c8015427d727bd68e74029d2c840b1a6325384`.
+ReC98 commit `f539cca1` introduced the function as `[Decompilation] [th03/th04]
+snd_delay_until_measure()` and remains provenance rather than authority.
+
+Maintained source is now `src/shared/sound/delay_until_measure.cpp`, SHA-256
+`4b3284e07bb2be822dd8673e5b5de2dead038dd7ebdbaf19a589909ded4c13e8`.
+It uses normal C++ only and routes the still-unlocalized measure helper through
+a new one-line `compat/rec98/th02/snd/measure.hpp` forwarder; the existing
+`compat/rec98/th02/hardware/frmdelay.h` remains the second quarantine dependency.
+A fresh TC4J 4.02 probe with the historical TH04 flags emits valid OMF SHA-256
+`5adeef89b0d9d0368476a5d2bc6838d51b526c2afa48cfd9608f856a2be1e690`.
+Its LEDATA, FIXUPP, PUBDEF, EXTDEF, and SEGDEF records are each byte-identical to
+historical `th04/snd_dlym.obj`; raw whole-object differences are only source and
+dependency metadata. OP/MAINE DELAY rows now bind maintained shared source but
+remain unreviewed for exactness because no artifact-local exact replay plane is
+configured.
+
+Focused `gptweb-v208-pmd-shared-focused-001` replays the existing exact MAIN PMD
+owner twice from the shared path and passes `raw/map/relocs=true`; receipt
+SHA-256 is
+`8a4ccbabe039035b911b1b8171d3e69eff8742499985c4c2b17d1f72291952e2`.
+A/B `snd_pmdr.obj` SHA-256 is
+`044df0a84e776c4306dfe997f89cb2873634fd2c4c559836b7b6cf37d97a2a19`.
+Mandatory no-unit aggregate `gptweb-v208-pmd-shared-aggregate-001` passes all
+246 default exact owners twice with `failures=[]`; receipt SHA-256 is
+`d8e99f7efb835be911bd7f623ffeda8d620ee915bd894f4ce2116188ca906787`.
+Tracked exact-manifest SHA-256 is
+`0abb1f5a1b964a5944815b4034b04927e11755cbf72064a953d0e4846f42e9b2`;
+A/B MAP remains
+`4bea5732094f5f08b2c37365d7cae466f063e54f7cb22cad115c973810cf59cc`
+and A/B candidate MAIN remains
+`1932b7feb681e3fa198d24a10cd93a70ce2cb6d400d1ecab39545cafa26b9f9b`.
+This is a source-ownership migration of an already-exact unit, not a new exact
+promotion, so no post-promotion aggregate is claimed.
+
+MAIN accounting remains unchanged at 293 units, **75,620 / 81,279 reviewed
+C/C++ bytes exact (93.037562%)** and **460 / 483 reviewed functions exact
+(95.238095%)**. Generated confidence now reports six reviewed OP candidates and
+six reviewed MAINE candidates. OP/MAINE/ZUN still have no honest artifact-local
+exactness denominator. Tracking contains 2,561 evidence rows and 333 knowledge
+rows before final documentation validation.
+
+Recovery and probe handling remained fail-closed. The first operation-list call
+used the obsolete outer field `provider_id`; Factory rejected it at schema level
+and Git was re-audited before retrying with `analysis_provider_id`. A first
+`function` call likewise used the obsolete `arguments` wrapper instead of
+`arguments_json`; Git was re-audited, the live wrapper schema was loaded, and the
+query was then repeated successfully. One read-only `git grep` used unsupported
+pathspec magic and was ignored only inside that bounded search command. The
+first DELAY compiler probe compiled successfully but the helper expected uppercase
+`DELAY.OBJ`; status was re-audited, the real lowercase `delay.obj` was consumed,
+and the explicit short-path workspace was removed. No semantic source tuning was
+performed in response to these control-plane issues.
+
+`.analysis/` peaked at **4,550,185,797 bytes** while the v208 focused and
+aggregate replay trees coexisted. After proving no compiler/linker/replay producer
+was active, the focused tree was compacted to receipt-only after copying its A/B
+PMD object, MAP, candidate MAIN, and receipt into v208 `durable-final`. The
+complete 246-owner aggregate remains the current cold baseline. Post-cleanup
+`.analysis/` is **4,496,149,250 bytes** before final CI. Older baselines,
+private targets, toolchain/Wine/Ghidra state, and legacy/unknown analysis content
+remain untouched.
+
+Verification planes remain separate. Repository-native MAIN PMD exactness is
+re-established from the shared path. OP and MAINE gain reviewed PMD boundaries
+and maintained shared natural source for PMD and DELAY, but no exactness
+transfer. Standalone TH04 product compile/link closure, whole-image equality,
+runtime-storage identity, runtime-scenario validation, portable runtime,
+independent pristine provenance, and v208 Factory Truth-Kernel acceptance remain
+unestablished. No remote push is performed. Full `python3 scripts/ci.py` on the completed
+implementation/ledger/documentation state returns `CI: PASS`, including all four
+private TH04 target identities, cross-game Oracle calibration, Ghidra/JDK
+identity, fresh read-only MAIN database replay, and Ghidra mutation smoke.
+Post-CI `.analysis/` is **4,496,155,383 bytes**. A second full CI after this
+record update also returns `CI: PASS` on the final tracked state; its post-CI
+`.analysis/` measurement is **4,496,161,528 bytes**. No semantic content changes
+after that tracked-state gate.
+
+The next evidence-connected packet is `frame_delay(int)`, the direct remaining
+compatibility dependency of DELAY: OP payload `0xDA3B..0xDA4F`, MAIN load
+`0x131B7..0x131CB`, and MAINE payload `0xCCA3..0xCCB7`, each `0x15` bytes. MAIN
+already has exact natural source `src/main/hardware/frame_delay.cpp`; OP and
+MAINE are corroborated and all three candidate maps use the same
+`th02/frmdely1.cpp` contribution. Review fixed target producer identity,
+adjacent ownership and relocations before deciding whether to move it to
+`src/shared/hardware/` and retire DELAY's `frmdelay.h` compatibility dependency.
+Campaign status remains active.
