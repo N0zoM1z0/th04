@@ -4258,3 +4258,12 @@ id = "th04-main-fn-1c148"
 address = "0x1C148"
 evidence_id = "ev-th04-main-mugetsu-gengetsu-backdrop-v191-boundary-v191"
 reason = "Explicitly admit the reviewed Ghidra-missed callback only after natural TC4J code-shape closure, focused two-cold replay, exact map/relocation/raw checks, and the 226-owner candidate aggregate."
+
+# v195: Natural-C++ END_TEXT MPN uploader. Strict automatic review uses the
+# target Ghidra body, TLINK public, and exact owner; this declaration only
+# authorizes adding the previously absent function-ledger row.
+[[new_exact]]
+id = "th04-main-fn-1b8fc"
+address = "0x1B8FC"
+evidence_id = "ev-th04-main-mpn-load-boundary-v195"
+reason = "Admit the complete MPN_LOAD near Pascal body only after natural TC4J code-shape closure, focused two-cold replay, exact MAP placement, all four ordered relocations, raw equality, and the 233-owner candidate aggregate."

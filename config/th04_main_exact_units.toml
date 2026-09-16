@@ -10811,3 +10811,50 @@ map_start = "0x7586"
 map_size = "0xAE"
 target_file_offset = "0x13876"
 size = "0xAE"
+
+# v195: split the natural-C++ END_TEXT MPN uploader out of the remaining
+# monolithic 0x13C END_TEXT residual. sub_B835 remains in th04_main.asm.
+[[build_replacements]]
+id = "th04-main-mpn-load-v195-build"
+trigger_units = ["th04-main-mpn-load-v195"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/itemsinv.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/mpnend.cpp\",\n\t\"th04/itemsinv.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-mpn-load-v195-layout"
+trigger_units = ["th04-main-mpn-load-v195"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "6ad7b5684783649a7fbee9754094f4d7ea9be9c5df2db4179eed0f96a1cdba6b",
+  "f7ee1d836af4abbd75dfb51883569908bbf8bcbb34c6a765ec19d29a26da50ab",
+]
+
+[[source_transforms.ops]]
+id = "publish-sub-3680-v195"
+kind = "insert_before"
+anchor = "sub_3680\tproc far\r\n"
+text = "public SUB_3680\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-mpn-load-v195"
+kind = "remove_between"
+start = "public MPN_LOAD\r\n"
+end = "mpn_load\tendp\r\n"
+replacement = "extrn MPN_LOAD:near\r\n"
+
+[[units]]
+id = "th04-main-mpn-load-v195"
+default_enabled = true
+requires_units = ["th04-main-main013-grcg-asm-v194"]
+repo_source = "src/main/formats/mpn_upload.cpp"
+overlay_path = "th04/mpnend.cpp"
+map_module = "th04/mpnend.cpp"
+map_mode = "exact"
+object_path = "obj/th04/mpnend.obj"
+map_segment = "END_TEXT"
+map_start = "0x0E0C"
+map_size = "0x75"
+target_file_offset = "0xD0FC"
+size = "0x75"

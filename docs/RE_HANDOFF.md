@@ -8079,3 +8079,141 @@ Bound its owner, neighboring entries/data, callers/callees, relocations, and
 TH04-local/source lineage before selecting natural C/C++ versus original ASM.
 If that packet proves library-owned or otherwise unsuitable, the next sizeable
 fallback is `MAI_TEXT midboss2_render()` at load `0xCC3A`, size `0x9C`.
+
+## 2026-09-16 v195 END/MAI scroll and MPN checkpoint
+
+This conversation started from clean committed HEAD
+`c56170994ffab47726a15894b8620cbf4a49a4ac`, branch `main`, upstream
+`origin/main`, ahead 1 / behind 0. There were no staged, unstaged, untracked,
+unrelated, or unknown tracked paths at entry. The v195 analysis manifest began
+at **3,444,359,174 bytes** under `.analysis/`. All required repository and
+mounted Factory documents/contracts were read before editing.
+
+Mandatory preflight/status/function-boundary gates passed. Factory discovery
+still exposes ten `th04-ghidra` operations and no `get_metadata`; the discovered
+`check {}` operation passed for repository `th04` / `target:th04-main`.
+Repository-native `python3 scripts/ghidra.py th04-main check` again passed the
+156,258-byte private MZ target, SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte header/load mapping, entry point, all 1,136 ordered relocations, load
+digest, and sampled bytes. Required TC4J/TASM/TLINK surfaces passed; optional
+host `wine64` drift remains informational. The ignored private target remains
+`candidate-local-attested`, unmodified, uncommitted, and unpublished.
+
+The stale prompt orientation around `sub_11DE6` was not reopened. Live v143
+already classifies and exactly replays that shot-level producer as
+original-style assembly. v195 instead followed the live v194 handoff into the
+structurally connected END/MAI scroll/MPN seam.
+
+Target-first review closes the physical END_TEXT residual between exact v99 and
+v100 owners. `sub_B835` is a complete `0xC7` near body at load
+`0xB835..0xB8FB`, file `0xD035..0xD0FB`, SHA-256
+`80f17b65eee2a5e9ce7338e727e4a00dcef4f641a8cdddfae03e08e2925922d8`.
+`MPN_LOAD` immediately follows at END_TEXT `0AAF:0E0C`, load
+`0xB8FC..0xB970`, file `0xD0FC..0xD170`, size `0x75`, SHA-256
+`746d80268b65200ceee3667bee747c3c235a4baa5813bf8197761021453bf976`.
+The exact `map_load()` owner begins at the next byte `0xB971`. The MAI_TEXT
+caller `sub_CCD6` is separately reviewed as a complete `0x60` body at load
+`0xCCD6..0xCD35`, SHA-256
+`0115bd70a1f2a3a1e637dfd111e6125e355934e3fdae7d654fa2f0f3171ccb9e`;
+`PLAYFLD_TEXT` begins immediately at `0xCD36`.
+
+Fresh Ghidra sees `sub_CCD6` as a contiguous scroll driver called only from
+`gameplay_loop()`, with END_TEXT `sub_B835` as its game-local callee. It sees
+`sub_B835` as one complete 199-byte tile-ring/EGC helper. Both boundaries are
+now reviewed, but source/origin remain deliberately unresolved. Three bounded
+natural TC4J driver mechanisms emit 109, 105, and 110 bytes versus target 96;
+they fail for distinct value-lifetime/register-allocation reasons. Independent
+TH05 target-derived bodies preserve the broad BP/local-byte, DS/ES `REP MOVSW`,
+flag-shuffle, EGC-redraw, and homologous-driver architecture. This is durable
+negative/corroborating evidence, not proof of original assembly. Neither scroll
+function receives source, exactness, or ASM-attestation credit in v195.
+
+Maintained natural MPN source is `src/main/formats/mpn_upload.cpp`, SHA-256
+`5f252e25ce3cd491c82d3bf20ed1bd280de689bf1f23283c9f3dd51f0f165603`.
+The target-observed historical API is retained as `extern "C" int pascal near`:
+Turbo C++ warns that the function reaches the end without returning a value,
+matching the target `RET 4` path that does not assign AX. No fake return is
+introduced. A bounded compiler progression first localized ordinary ABI/source
+shape mistakes; the final natural source emits the complete 117-byte fixed
+instruction stream with four target-shaped FAR-call fixups and the correct
+`MPN_LOAD` public.
+
+The split exposes one real OMF-symbol ownership seam. C++ requests uppercase
+Pascal `SUB_3680`; TASM `/mx` records the first case spelling of the existing
+monolithic helper. Focused candidate 002 therefore failed TLINK with an
+undefined uppercase symbol after successfully compiling `mpnend.obj`. Publishing
+the existing PROC first as `SUB_3680` fixes only symbol metadata. No helper
+body is replaced, and successful focused/aggregate replay keeps all selected
+pre-existing owners exact.
+
+Authoritative focused
+`gptweb-v195-mpn-focused-candidate-003` passes 129 owners twice with
+`failures=[]`, receipt SHA-256
+`33d0e628621049b03e0217d0bf77dd004aae7ced631f949f8c7588029ba78a86`.
+Candidate no-unit aggregate
+`gptweb-v195-mpn-aggregate-candidate-001` passes 233 candidate-state defaults
+twice, receipt SHA-256
+`7d074441962dc66eb73b4e7adc5debc6f4049615ecab99046826f5dca520b3c4`.
+Post-promotion aggregate `gptweb-v195-mpn-aggregate-final-001` passes the 233
+tracked defaults twice, receipt SHA-256
+`e8cf7c951e3a0bd54172a3ce756e2c537860931892ad483610e017faa0f386b9`.
+Tracked manifest SHA-256 is
+`281dfc31b0d59a60d4ae5da835b80c729c5143538777a8f8ee1fe7c9507f3000`;
+A/B `mpnend.obj` SHA-256 is
+`e6a414002536e265b1f3cd52b51d590ca8497e32aa7d915807e112f160312a9f`;
+A/B MAP SHA-256 is
+`0e3b868a7f0eedd4f60eef1463be7915fe3e1e2bac54980f3b307f68a7120f7d`;
+candidate overlay MAIN SHA-256 is
+`27ac9d000382410e0dcee7358a978fb52aad940232450d44248410825f494422`.
+
+Strict automatic function review admits the complete target `MPN_LOAD` body
+inside the exact owner. Trial report SHA-256 is
+`c9d463ce28f7c5a9b1368bf0a7fe2c3c50d4a841ee955056c2785caa8fb48b7c`.
+The reviewer also reordered many historical rows, so only its newly validated
+`0x1B8FC` row was extracted into the live function ledger; the other 479 rows
+were preserved rather than accepting unrelated diff noise.
+
+The other TH04 artifacts were checked explicitly rather than inferred from MAIN.
+Their attested unpacked payload hashes remain OP
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`,
+MAINE `7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`,
+and ZUN `baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+Bounded longest-contiguous-match checks against the three MAIN bodies find only
+single-digit common runs: helper 6/6/4 bytes, MPN 8/8/5, driver 5/5/3 across
+OP/MAINE/ZUN. This is negative routing evidence only. OP, MAINE, and ZUN remain
+independent queues with 94, 72, and 13 unreviewed authored candidates and gain
+no MAIN source/exactness credit.
+
+Live MAIN accounting after promotion is **75,326 / 80,985 exact reviewed C/C++
+bytes (93.012286%)** and **457 / 480 exact reviewed C/C++ functions
+(95.208333%)**. Generated progress uses a separate conservative denominator and
+reports 75,326 exact authored bytes at 91.83%. Original-style ASM remains
+separate at **29 units / 4,370 bytes**. The all-artifact remaining authored
+reconstruction queue is 234 observations: 210 unreviewed plus 24 known MAIN
+blockers.
+
+Current-session `.analysis` grew to **3,685,589,551 bytes** before cleanup.
+After confirming no active TCC/TASM/TLINK/replay producer, only explicit v195
+failed focused trees were removed; focused-003 and candidate-aggregate-001 were
+compacted to receipt-only. The complete post-promotion aggregate remains the
+current cold baseline, while the approximately 1.2 MiB v195 scratch retains the
+compiler negatives, strict function-review report, and cross-artifact routing
+receipt. Pre-final-CI `.analysis` was **3,514,776,781 bytes**. Full final CI leaves
+`.analysis` at **3,514,789,059 bytes**, net growth **70,429,885 bytes** from
+v195 entry. v194/older baselines, targets, toolchains, Wine/Ghidra state, and
+legacy/unknown analysis content were untouched.
+
+Verification planes remain separate. Repository-native exact ownership is
+established for the natural `MPN_LOAD` owner/function only. Standalone TH04
+product compile/link closure, whole-image exactness, runtime-storage identity,
+runtime scenario, portable runtime, independent pristine provenance, and v195
+Factory Truth-Kernel acceptance remain unestablished. No remote push is
+performed.
+
+Next continue the connected MAI_TEXT structural seam with `midboss2_render()` at
+load `0xCC3A`, size `0x9C`, immediately before the reviewed `sub_CCD6` scroll
+driver. Reconcile its physical owner, adjacent entries/data, callers/callees,
+relocations, and source lineage before choosing natural C++ versus original-style
+assembly. Do not resume blind spelling searches for `sub_CCD6` or `sub_B835`
+unless a genuinely new compiler/source mechanism appears.
