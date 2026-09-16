@@ -8358,3 +8358,123 @@ logical boundaries, the NOP owner, callers/callees, relocations, and natural
 source/origin as one packet before splitting the last monolithic MAI prefix.
 `sub_CCD6` and `sub_B835` remain reviewed source/origin unknowns; do not resume
 blind spelling searches without a genuinely new mechanism.
+
+## 2026-09-16 v197 MAI_TEXT tile renderer / EGC assembly checkpoint
+
+This conversation started from clean committed HEAD
+`cffa0e00b7f1a50ee6cde3d946e318dd9a14b666`, branch `main`, upstream
+`origin/main`, ahead 3 / behind 0. There were no staged, unstaged, untracked,
+unrelated, or unknown tracked paths at entry. `.analysis` began at
+**3,585,358,944 bytes**. All required repository and Factory documents/contracts
+were read completely before editing. Mandatory preflight/status/boundary-ledger
+gates passed.
+
+The discovered `th04-ghidra` surface again contains ten operations and no
+`get_metadata`; the discovered read-only `check {}` operation was used rather
+than inventing a schema. Provider and repository-native Ghidra checks passed for
+repository `th04` / target `target:th04-main`, binding the same 156,258-byte MZ,
+SHA-256
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`,
+6,144-byte header/load mapping, entry point, 1,136 ordered relocations, load
+module digest, and sampled bytes. Required TC4J/TASM/TLINK surfaces were READY;
+the optional host `wine64` file-hash mismatch remained informational. The
+private target stayed ignored, unmodified, uncommitted, and unpublished with
+`candidate-local-attested` canonicality.
+
+v197 followed the live v196 handoff into the remaining physical `MAI_TEXT`
+prefix at map `0AAF:20C8`, load `0xCBB8..0xCC39`, file
+`0xE3B8..0xE439`, size `0x82`, target SHA-256
+`30db68d11fd2a8c61a7bdd99be811c382bf386739551525b7945b5cb63e5fd9d`.
+Fresh Ghidra and raw decode close `tiles_render_all()` at
+`0xCBB8..0xCBF9` (`0x42`), `egc_start_copy_noframe()` at
+`0xCBFA..0xCC38` (`0x3F`), and the independent alignment `NOP` at `0xCC39`.
+The sole overlapping MZ relocation is relocation index 230, segment word at
+load `0xCBF5`, inside the FAR `EGC_OFF` call. Exact v196 `midboss2_render()`
+begins immediately at load `0xCC3A`.
+
+ReC98's `render_a.asm` remains hypothesis only: its own history records the
+TH04/TH05 all-tile renderer as reverse engineering rather than historical
+source. Independent original targets instead provide the origin signal. TH05
+MAIN preserves the same 66-byte renderer architecture modulo linked operands,
+the complete 63-byte EGC helper, and the following NOP. TH04 MAINE preserves
+the same first 62 EGC bytes inside its own BP-framed helper, differing at its
+`POP BP; RET` epilogue. OP preserves only the first 20 activation bytes and ZUN
+has no meaningful full-helper match. These observations transfer no MAIN
+exactness to other artifacts.
+
+A legal natural TC4J `<dos.h>` EGC probe compiled successfully but emitted 73
+CODE bytes instead of 63: it adds a BP frame, uses DX-port byte outputs instead
+of target immediate-port `OUT`, orders word-port setup differently, and
+optimizes zero with `XOR AX,AX`. Borland `outp`/`outpw` are aliases of the same
+intrinsics. The only inspected immediate-port route uses forbidden `__emit__`
+byte emission. Existing repository-local TC4J loop probes likewise do not
+produce the renderer's source-level `LOOP` / ES-copy architecture. Combined
+with TH05 target structure, this supports original-style ASM classification.
+
+Maintained source is `src/main/tile/render_all.asm`, SHA-256
+`05546fe82310a8232cee65eba272c9c1f856b46cf22e64480ac914eb290ed61e`.
+It is symbolic assembly, not target-byte emission. A standalone TASM32 probe
+emits exactly 130 `MAI_TEXT` CODE bytes, two PUBDEF symbols and one FIXUPP
+record. Exactly four pre-link bytes differ from target and are the `_tile_ring`
+addend plus FAR `EGC_OFF` offset covered by the two fixups; all other 126 CODE
+bytes match target. The standalone probe object SHA-256 is
+`002050adcf690f9ca466c228941efdaa0a4e3e3a2c21062d90fe314ced2ecf98`.
+
+Focused replay `gptweb-v197-mai-prefix-focused-candidate-001` selects 131 units
+and passes twice with `failures=[]`; receipt SHA-256 is
+`8f0ce73a02d3dd7599cef47e4e4c48b04afb7605d6525535b75bd8fbf5dd2d0c`.
+A/B maintained `maipre197.obj` SHA-256 is
+`f97de1d0de91a52049707789e7cef3785f326158760b4a9fea60aaa4b1e28a08`.
+Candidate aggregate `gptweb-v197-mai-prefix-aggregate-candidate-001` passes all
+235 candidate-state default owners twice, receipt SHA-256
+`55857c713399919f6dfbb1f87b0580abfcc5c9d302a45d19fbf722384f0a4f3e`.
+Post-promotion aggregate `gptweb-v197-mai-prefix-aggregate-final-001` passes all
+235 tracked defaults twice, receipt SHA-256
+`3e11427714c344d23c9bb646d476f7252d4900ed0614907aa30ccf430082afa5`.
+The aggregate manifest SHA-256 is
+`59874231d5ff2ced9f37f4c8884d324a1c8a22785426e4a4dd3c1128dbaf26f2`;
+A/B final MAP SHA-256 is
+`0465b4e10041a2c2dd718e89c8432a97a7668a53af171f2c52285e191676c375`;
+A/B overlay MAIN SHA-256 is
+`a07df1577dae48c3513627f5fd5c593f037bc1a4d103e8e7a010386024e8b759`.
+
+Final linked MAI ownership is monolithic `th04_main.asm` size 0 at this seam,
+maintained `th04\\maipre197.asm` `0AAF:20C8 +0x82`, natural v196 `m2r.cpp`
+`0AAF:214A +0x9C`, and replay-only v196 `maisuf196.asm`
+`0AAF:21E6 +0x60`. All raw, MAP, ordered-relocation and determinism gates pass.
+
+The two logical v197 functions move from `reconstruct` to the independent
+`attest-asm` queue. They deliberately do not enter the authored C/C++ function
+ledger. Thus MAIN C/C++ accounting remains **75,482 / 81,141 exact reviewed
+bytes (93.025721%)** and **458 / 481 exact reviewed functions (95.218295%)**.
+Original-style ASM rises to **30 exact units / 4,500 bytes**. MAIN boundary
+routing is now 510 reconstruction candidates and 58 ASM attestations. Generated
+all-artifact authored reconstruction candidates fall to 689.
+
+Current-session `.analysis` peaked at **3,776,116,551 bytes** after the three
+cold replay trees. After confirming no active compiler/link/replay producer,
+focused-candidate-001 and aggregate-candidate-001 were compacted to receipt-only
+state; the complete post-promotion aggregate-final-001 was retained as the
+current cold baseline. v197 compact scratch retains target slices, legal TC4J
+negative evidence, symbolic OMF evidence, cross-artifact routing evidence, and
+the campaign manifest. Pre-final-CI `.analysis` was **3,654,718,467 bytes**. Full final
+`python3 scripts/ci.py` returned `CI: PASS` and left `.analysis` at
+**3,654,724,600 bytes**, **69,365,656 bytes** above entry before the final
+ignored manifest rewrite. Pre-existing v196 state, private targets, toolchains,
+Wine/Ghidra state, and legacy/unknown analysis content were untouched.
+
+Verification planes remain separate. Repository-native exact physical ownership
+is established for the `0x82` MAIN original-style ASM producer. Standalone TH04
+product compile/link closure, whole-image exactness, runtime-storage identity,
+runtime scenario validation, portable runtime validation, independent pristine
+provenance, and v197 Factory Truth-Kernel acceptance remain unestablished. No
+remote push is performed.
+
+Next review the evidence-connected low-level tile/bomb-background cohort
+`tiles_bb_put_raw()` at load `0xBF16`, size `0x7D`, together with
+`tiles_bb_invalidate_raw()` at load `0xBF94`, size `0x64`. Both remain
+unreviewed target-derived assembly candidates. Reconcile their combined physical
+owner, callers/callees, data/segment assumptions, relocations, TH05 lineage, and
+natural-source feasibility using the new v197 low-level tile evidence. Do not
+resume blind source spelling for `sub_CCD6` or `sub_B835` without a genuinely
+new compiler/source mechanism.

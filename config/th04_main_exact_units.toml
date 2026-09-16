@@ -10936,3 +10936,46 @@ map_start = "0x214A"
 map_size = "0x9C"
 target_file_offset = "0xE43A"
 size = "0x9C"
+
+
+# v197: evidence-backed original-style symbolic MAI_TEXT tile renderer and EGC
+# setup owner. The two logical functions plus the source-owned alignment NOP form
+# one physical 0x82 producer before the v196 natural midboss renderer.
+[[build_replacements]]
+id = "th04-main-mai-tile-render-asm-v197-build"
+trigger_units = ["th04-main-mai-tile-render-asm-v197"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m2r.cpp\",\n\t\"th04/maisuf196.asm\",\n"
+build_replacement = "\t\"th04/maipre197.asm\",\n\t\"th04/m2r.cpp\",\n\t\"th04/maisuf196.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-mai-tile-render-asm-v197-layout"
+trigger_units = ["th04-main-mai-tile-render-asm-v197"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "08f83295ef4ba6bf8bfbc0d940320f7094cf9352cdf47569b778da47c1f01c34",
+  "24bd160eb9ef4f8826c28cfe0c77ae16ff55e27df4fec6d53b1410a7fe9130ee",
+]
+
+[[source_transforms.ops]]
+id = "externalize-mai-tile-render-v197"
+kind = "replace"
+old = "include th04/main/tile/render_a.asm\r\n"
+new = "\t@TILES_RENDER_ALL$QV procdesc pascal near\r\n\t@egc_start_copy_noframe$qv procdesc near\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-mai-tile-render-asm-v197"
+default_enabled = true
+requires_units = ["th04-main-midboss2-render-v196"]
+repo_source = "src/main/tile/render_all.asm"
+overlay_path = "th04/maipre197.asm"
+map_module = "th04\\maipre197.asm"
+map_mode = "exact"
+object_path = "obj/th04/maipre197.obj"
+map_segment = "MAI_TEXT"
+map_start = "0x20C8"
+map_size = "0x82"
+target_file_offset = "0xE3B8"
+size = "0x82"
