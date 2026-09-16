@@ -9167,3 +9167,147 @@ exactly one caller: independently exact v195 `MPN_LOAD` at analysis `0x1B8FC`.
 Next review should bound the surrounding MASTER.LIB seam, ABI/data inputs,
 relocations, TH04/TH05 lineage, and legal natural TC4J feasibility before
 assigning source or original-ASM origin. Campaign status remains active.
+
+## 2026-09-16 v203 MAIN MPN renderer ASM checkpoint
+
+This conversation restarted from clean committed HEAD
+`501f61d17894e642d7f7f0e517440f194358a633`, branch `main`, with local main
+one commit ahead of `origin/main`. There was no staged, unstaged, untracked,
+conflicted, recoverable, unrelated, or unknown tracked work at entry. All
+required repository documents, `docs/ARCHITECTURE.md`, and mounted Factory
+contracts/guidance were read before editing. Entry `.analysis/` measured
+**4,043,355,632 bytes**. Entry preflight, live status, and the 2,120-observation
+boundary validator passed.
+
+Provider discovery again exposes ten `th04-ghidra` operations and no
+`get_metadata`; the discovered `check {}` operation was used and passed.
+Repository-native `python3 scripts/ghidra.py th04-main check` also passes,
+binding the same 156,258-byte private MZ, 6,144-byte header, entry, all 1,136
+ordered relocations, load digest, and sampled bytes. Target SHA-256 remains
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+canonicality remains `candidate-local-attested`. TC86 Borland C++ 4.02,
+TASM32 5.0, and TLINK 6.10 required surfaces attest. The private target remains
+ignored, unmodified, uncommitted, and unpublished.
+
+v203 reviews game-owned `sub_3680` at `_TEXT 0000:3680`, MZ load
+`0x3680..0x36F4`, file `0x4E80..0x4EF4`, size `0x75`, target slice SHA-256
+`70b048108a2279b0246b32199d65fa77633e2280792fd179309539d2deb74d13`.
+Raw decode closes through `RETF 8` with no overlapping MZ relocations. Fresh
+Ghidra constructs the complete contiguous 117-byte FAR body, reports no callees,
+and reports one caller: independently exact v195 `MPN_LOAD` at analysis
+`0x1B8FC`. The following load `0x36F5` NOP is proven by the emitting TASM listing
+to be the `EVEN` byte owned by the next MASTER.LIB `_BGM_BELL_ORG` producer;
+it is excluded from the renderer owner.
+
+Ghidra's textual disassembly reverses the apparent operand direction of segment-
+register opcodes `8E DA/E0/E8/C0`. Raw ndisasm and the emitting TASM listing are
+used as the physical authority and prove `MOV DS,DX`, `MOV FS,AX`, `MOV GS,AX`,
+and `MOV ES,AX`. No exactness or source-form conclusion is taken from the
+mis-rendered provider text.
+
+Independent TH05 target/source lineage preserves the same game-owned 16-row
+`MOVSW`/`LOOP` VRAM-plane architecture, but as a FAR controller plus a near
+per-plane helper. TH04 fuses B/R/G through DS+FS+GS+ES and copies E in a second
+loop. This is lineage evidence only.
+
+One bounded natural TC4J semantic probe closes the relevant compiler question.
+Probe source SHA-256 is
+`07a00541859a93f6033af4da2ad79a5a9c013ca2c795f1578c1481eca1d6aafc`;
+valid TC86 OMF SHA-256 is
+`20429763691e51e16b7c60011789ade2b2c27a98fce016ca4afe2f230e4e5416`.
+TC4J emits 207 CODE bytes versus target 117, creates a 0x14-byte local frame for
+four far pointers, repeatedly uses `LES`/ES, emits `IMUL`, and lowers row control
+to `INC/CMP/JL`; it does not produce the target FS/GS segment allocation,
+`MOVSW` pair, or `LOOP`. Together with the independent v198 `__seg` mechanism
+probe, this supports original-style ASM classification. No spelling matrix was
+continued.
+
+Maintained symbolic source is `src/main/formats/mpn_render.asm`, SHA-256
+`8428d8bd4d80817384fe71a09b95ba3f93deab833ce0c7b3f5862986c169445b`.
+It is included in place of only the historical inline renderer body inside
+`th04_main.asm`, preserving the surrounding library producers and existing
+uppercase `SUB_3680` public supplied by the v195 integration seam. It contains
+symbolic parameters/constants and instructions, not target byte arrays or copied
+code strings.
+
+The first focused integration reached TASM but failed because generic parameter
+equates such as `slot` polluted the monolithic TASM namespace and collided with
+later MASTER.LIB symbols. Renaming only those equates to `mpn_arg_*` fixed the
+build without changing instruction semantics or ABI. Earlier standalone probe
+output-location mistakes were control-plane failures; tracked Git was re-audited
+clean after each and they receive zero exactness credit.
+
+Authoritative focused run `gptweb-v203-mpn-render-focused-candidate-002`
+selects 140 owners twice and passes with `failures=[]`, receipt SHA-256
+`8371d798ac05265bda4718be7170a07fef182fed9ae6f807bb21aa11612ac924`.
+The renderer is `raw=True`, `map=True`, and `relocs=True`; target/candidate slice
+SHA-256 is `70b04810...`. A/B MAP SHA-256 is
+`b92af86d956216beec421793248dbe14de11deeeca0ee30cc369dbe7c451756a`;
+A/B candidate MAIN SHA-256 is
+`ad51bc32345301eb9e212bc009e6ce757fe24d10c77e0dbc20de4a398648c0a6`.
+Focused monolithic object raw hashes differ by Borland dependency metadata, but
+normalized OMF identity is equal at
+`0110922f5d2f52db6cf2ed0eef8ce519a00e22a6166c6a4769ca0548e3339a54`.
+
+Candidate no-unit aggregate `gptweb-v203-mpn-render-aggregate-candidate-001`
+passes all 244 candidate-state default owners twice, receipt SHA-256
+`4573778c74a4ac4a11645366b47ca48ed47fa9f10f15b104413f974cce038746`.
+Post-promotion aggregate `gptweb-v203-mpn-render-aggregate-final-001` passes the
+same 244 tracked defaults twice, receipt SHA-256
+`b873433bb06c459f6b7f1d965aa9739f3a315088e0f6189600b532a07e70bda9`.
+Tracked replay-manifest SHA-256 is
+`edc8ba8a195fb1e9ab43f7f336da7b0764957b439543c38e425ec8daedd4db65`.
+Final A/B MAP SHA-256 is
+`4a565e0cff733a69ae1dbb976234333a65bb81d624c09989fc22a7d312821d05`;
+A/B candidate MAIN SHA-256 is
+`1932b7feb681e3fa198d24a10cd93a70ce2cb6d400d1ecab39545cafa26b9f9b`.
+The promoted renderer remains raw/MAP/empty-ordered-relocation exact in both
+final builds.
+
+Other TH04 artifacts remain independent. No fresh unpack is claimed. Rebinding
+the retained independently attested payloads and scanning the complete MAIN
+renderer gives longest exact runs of only 8 / 8 / 6 bytes in OP/MAINE/ZUN,
+all generic FAR-prologue prefixes. Payload SHA-256 values remain OP
+`13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`,
+MAINE `7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`,
+and ZUN `baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+Packed `ZUN.COM` still begins `MZ`. Routing receipt SHA-256 is
+`b486cc6ab5d9cec0013ff25dd7bc7b7e34b243d9db816d10625aaf0a1240f2ad`.
+No MAIN credit transfers.
+
+Accounting intentionally keeps C/C++ and ASM planes separate. MAIN C/C++ exact
+reviewed bytes remain **75,620 / 81,279 (93.037562%)** and exact reviewed
+functions remain **460 / 483 (95.238095%)**. MAIN reconstruction routing is now
+502 candidates, 460 exact C/C++, 24 blocked, 18 unreviewed, and 66 ASM-attest
+observations. Exact original-style ASM increases to **37 units / 5,263 bytes**.
+The ASM boundary row follows the existing convention and keeps
+`accepted_state=unreviewed`; physical exactness is recorded in the exact-unit
+plane, not the C/C++ function ledger.
+
+`.analysis/` entered at **4,043,355,632 bytes**, peaked at
+**4,262,184,643 bytes**, and after bounded cleanup measures
+**4,124,523,508 bytes** before final CI. Full final `python3 scripts/ci.py` returns `CI: PASS`; after its live Ghidra replay, `.analysis/` is **4,124,529,641 bytes**, net growth **81,174,009 bytes** from v203 entry. No active producer existed at cleanup.
+Only the explicit v203 failed focused tree was removed; focused-002 and candidate
+aggregate were compacted to receipt-only state after copying their receipts,
+A/B OMF/MAP, and candidate MAIN evidence into v203 durable scratch. The complete
+244-owner post-promotion aggregate-final-001 is retained as the current cold
+baseline. Older baselines, targets, toolchains, Wine/Ghidra state, and unrelated
+legacy/unknown `.analysis` content remain untouched.
+
+Verification planes remain separate. Repository-native exact original-style ASM
+physical ownership is established for the 117-byte renderer. No new natural-C++
+function exactness is claimed. Standalone TH04 product compile/link closure,
+whole-image exactness, runtime-storage identity, runtime-scenario validation,
+portable runtime, independent pristine provenance, and v203 Factory Truth-Kernel
+acceptance remain unestablished. No remote push is performed.
+
+The next evidence-connected structural packet is `CDG_PUT_NOALPHA_8` in SHARED.
+MAIN coordinates are load `0x136B4`, analysis `0x236B4`, size `0x65`; a
+`th04/cdg_p_na.cpp` module candidate contributes `0x66` raw-identical bytes but
+ownership/internal boundaries are still provisional. Fresh v203 Ghidra constructs
+a contiguous 101-byte FAR body and reports five callers. Crucially, the OP ledger
+independently contains a same-named authored `CDG_PUT_NOALPHA_8` candidate of the
+same `0x65` size. Next review should compare MAIN and OP raw bodies, the one-byte
+module/layout seam, callers, relocations, candidate C++ producer, and TH03/TH05
+lineage before deciding whether ownership is genuinely shared or artifact-local.
+Campaign status remains active.

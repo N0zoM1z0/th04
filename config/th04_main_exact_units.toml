@@ -11257,3 +11257,38 @@ map_start = "0x001C"
 map_size = "0x7C"
 target_file_offset = "0xC30C"
 size = "0x7C"
+
+
+# v203: evidence-backed original-style _TEXT MPN renderer. The maintained
+# symbolic fragment replaces only the game-owned 0x75 inline FAR body; the
+# following MASTER.LIB _BGM_BELL_ORG EVEN byte remains outside this owner.
+[[source_transforms]]
+id = "th04-main-mpn-render-asm-v203-layout"
+trigger_units = ["th04-main-mpn-render-asm-v203"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "43149bc81ffebd332f4b764afff1d3a35ea8806fda4aa7e981fb3fa04f84d751",
+  "d98b5a50e8a13f1a14fe869386f17257f5fedd1bc6c2dcdb9543d942658d4791",
+]
+
+[[source_transforms.ops]]
+id = "replace-inline-mpn-render-v203"
+kind = "remove_between"
+start = "sub_3680\tproc far\r\n"
+end = "sub_3680\tendp\r\n"
+removed_sha256 = "b9e3567f5d1cf4b38d97dce1a2617cb172bc012c5e1f200f64d029b381bc91c4"
+replacement = "include th04/main/formats/mpn_render.asm\r\n"
+
+[[units]]
+id = "th04-main-mpn-render-asm-v203"
+default_enabled = true
+requires_units = ["th04-main-main-entry-v202"]
+repo_source = "src/main/formats/mpn_render.asm"
+overlay_path = "th04/main/formats/mpn_render.asm"
+map_module = "th04_main.asm"
+map_mode = "contains"
+object_path = "obj/th04/main.obj"
+map_segment = "_TEXT"
+target_file_offset = "0x4E80"
+size = "0x75"
