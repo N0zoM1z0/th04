@@ -45,41 +45,25 @@ means whole MAIN.EXE or whole TH04 is exact.
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; target orders site 0xB2DA first, candidate FIXUPP/MZ last. [Evidence](reconstruction/TH04_DEMO_FIXUP_ORDER_V214.md) |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
 | Thick laser update | B4M_UPDATE_TEXT load 0x15D74..0x15ECD, 0x15A bytes | Eight-byte template-copy setup-order difference. [Evidence](reconstruction/TH04_MAIN_THICKLASER_UPDATE_V181.md) |
-| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte; loop differs in code shape. [Evidence](reconstruction/TH04_DEMO_INTERNAL_BOUNDARIES_V165.md) |
+| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte; loop is 372/379 bytes after the [v248 branch control](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md). [Boundary](reconstruction/TH04_DEMO_INTERNAL_BOUNDARIES_V165.md) |
 
-The [target-stub payload comparison](reconstruction/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
-leaves OP 7 bytes, MAINE 5 bytes, and ZUN 0/13,422 bytes different from two
-cold ReC98-overlay candidates. [DIET 1.45f replay](reconstruction/TH04_DIET145F_ROUNDTRIP_V228.md)
-round-trips isolated target copies raw exact with `-B -G` for OP/MAINE
-and `-B` for ZUN. Candidate ZUN also packs raw equal; candidate
-OP/MAINE remain 42,251/42,290 and 37,985/38,035 bytes. This is packer
-calibration, not authored-source acceptance.
+The [decoded-payload comparison](reconstruction/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
+leaves 7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes different from the cold
+ReC98-overlay candidates. The [DIET replay](reconstruction/TH04_DIET145F_ROUNDTRIP_V228.md)
+round-trips the target copies and packs candidate ZUN raw equal, but OP/MAINE
+packed outputs still differ. Their [MZ partition](reconstruction/TH04_DIET145F_MZ_PARTITION_V231.md)
+and [relocation projection](reconstruction/TH04_DIET_RELOCATION_OWNERS_V232.md)
+identify payload, ordered-relocation, and header/tail differences; the original
+pre-DIET MZ/OMF remain unknown. No OP/MAINE/ZUN artifact-local exact cohort is
+accepted.
 
-The [v231 partition](reconstruction/TH04_DIET145F_MZ_PARTITION_V231.md)
-localizes OP/MAINE input MZ differences to payload bytes, ordered relocation
-tables, and coupled length/allocation/trailing-zero topology. The
-[v232 MAP projection](reconstruction/TH04_DIET_RELOCATION_OWNERS_V232.md)
-shows candidate master ASM relocation groups interleaved in the
-target-restored order. A [v234 compiler probe](reconstruction/TH04_BGIMAGE_B_MODE_V234.md)
-finds that TCC-generated ASM plus pinned TASM preserves all BGIMAGE CODE bytes
-and gives its eight OP/MAINE relocations the target-restored order; packed
-files still differ. The upstream source uses inline ASM and `codestring`,
-so no exact/source credit follows. The historical pre-DIET target MZ and OMF
-remain unknown; OP/MAINE/ZUN have no accepted artifact-local exact cohort.
-[v247](reconstruction/TH04_BGIMAGE_NATURAL_V247.md) adds TH04-owned BGIMAGE
-source for three reviewed functions in each of OP and MAINE. Two isolated
-TC4J builds agree, but natural CODE is 269 bytes versus the 208-byte target
-producer, so all six units remain source-present.
-[v250](reconstruction/TH04_BGIMAGE_HMEM_V250.md) moves BGIMAGE's two HMem
-ABI declarations into TH04 shared source; a product-only TU compiles with the
-same CODE and extern names as both overlay builds, with no exact promotion.
-ZUN `cfg_init` now has [target-reviewed maintained source](reconstruction/TH04_ZUN_CFG_INIT_V239.md):
-two isolated overlay rebuilds and DIET packs are raw equal, with no exact
-credit while the remaining composite inputs and standalone build are unresolved.
-ZUN [`_main`](reconstruction/TH04_ZUN_MAIN_V241.md) also has reviewed maintained
-source. Its natural TC4J CODE is 246 versus 252 target bytes: the compiler
-merges two error-print calls without the inert ReC98 statements. The A/B
-diagnostic builds are deterministic; the unit remains source-present.
+[BGIMAGE v247/v250](reconstruction/TH04_BGIMAGE_HMEM_V250.md) has six reviewed
+source-present OP/MAINE functions. Its product-only TU compiles from checked-in
+headers, but natural CODE is 269 versus 208 target bytes. ZUN
+[`cfg_init`](reconstruction/TH04_ZUN_CFG_INIT_V239.md) and
+[`_main`](reconstruction/TH04_ZUN_MAIN_V241.md) have reviewed maintained source;
+the first matches in an untrusted composite overlay, while natural `_main` is
+246 versus 252 target bytes. Neither is exact.
 
 The current product still uses compat/rec98 forwarding headers and a pinned
 ReC98 overlay for replay. Standalone checked-in TH04 build closure, full
@@ -90,33 +74,14 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
 ## Next work and finish gate
 
-Investigate a natural compiler/OMF producer that predicts the dialog or DEMO
-FIXUPP order while retaining matching raw bytes and MAP. Continue the large
-gameplay-loop, item, and laser owners when that producer remains unresolved. For OP/MAINE,
-review the SND_LOAD and OP music physical owners against the unpacked target,
-migrate source into src/op, src/maine, or proved src/shared. Reconstruct
-ZUN component source independently: its equal candidate composite contains
-IDA-derived assembly and an external ONGCHK binary, so payload equality gives
-no authored-source credit for those components. Continue after the recovered
-`cfg_init` and `_main` sources with natural `_main` call placement, ZUNINIT,
-MEMCHK, and ONGCHK ownership. Resolve the natural OP/MAINE payload bytes and
-linker/packer input topology identified by the v231 partition. Use the pinned
-DIET replay after checked-in source and input topology are recovered;
-OP/MAINE candidates have no raw packed equality yet.
-
-The [v236–v237 MAIN `-B` probe](reconstruction/TH04_MAIN_B_MODE_V237.md)
-fails the raw CODE extent for both dialog and stage session; the original
-target OMF producer remains unknown.
-The [v238 DEMO compiler probe](reconstruction/TH04_DEMO_INTERNAL_BOUNDARIES_V165.md)
-also rejects simple odd-offset switch-table padding and two stage-frame
-codegen hypotheses without changing exact counts.
-A [v245 dialog OMF control](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md)
-shows that same-segment and empty-bounce `#pragma codeseg` switches preserve
-CODE and both FIXUPP groups at a comparable size; they do not explain the
-target's third relocation run.
-[v248 gameplay-loop control](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md)
-reproduces its 25-byte play-performance interval branch with a natural
-conditional expression, but complete CODE is 372 versus 379 target bytes.
+Find a natural OMF producer for MAIN dialog/DEMO ordered relocations without
+changing raw bytes or MAP; [current controls](reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
+rule out common switches and source-boundary variants. Continue the large
+gameplay-loop, item, and thick-laser owners. For OP/MAINE, recover SND_LOAD,
+OP music, the remaining decoded payload bytes, and the v231 link/packer input
+topology as checked-in source. For ZUN, recover ZUNINIT, MEMCHK, ONGCHK, and
+natural `_main` call placement; the equal candidate composite still includes
+IDA-derived assembly and an external binary.
 
 For any promotion, run focused two-cold comparison and a complete cold
 aggregate of affected accepted owners. Finish each bounded packet with
@@ -127,11 +92,7 @@ and unknowns in the focused note and ledgers.
 ## Private workspace
 
 Targets, toolchains, Ghidra/IDA projects, generated builds, and receipts stay
-ignored under .analysis/ or ghidra-project/. Historical unreferenced worktrees
-were pruned (489,112,433 logical bytes; receipt
-.analysis/prune-v214-unreferenced-worktrees.json). Retain current v212/v213/v214
-replay inputs until superseded. v221 archived 34 unreferenced gpt-web probe
-directories (118,316,081 bytes to 7,045,790 bytes) with a verified
-.analysis/prune-v221-unreferenced-gpt-web-receipt.json and recoverable
-.analysis/prune-v221-unreferenced-gpt-web.tar.zst. Never commit original
-executables or assets.
+ignored under .analysis/ or ghidra-project/. Retain v212/v213/v214 replay
+inputs until superseded; older unreferenced worktrees and probes have been
+pruned or archived with private receipts. Never commit original executables
+or assets.

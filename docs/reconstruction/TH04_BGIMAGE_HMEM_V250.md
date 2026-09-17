@@ -48,3 +48,7 @@ and the same nonexact 269-versus-208-byte physical-code gap. No standalone
 artifact link, packed-file equality, or exact-state promotion follows. The new header
 does not affect any accepted exact unit; BGIMAGE is source-present in both
 artifacts.
+
+The later [v251 intrinsic control](TH04_BGIMAGE_INTRINSIC_V251.md) emits
+`REP MOVSW` rather than the target's `REP MOVSD`; it does not change the
+maintained source or exactness state.
