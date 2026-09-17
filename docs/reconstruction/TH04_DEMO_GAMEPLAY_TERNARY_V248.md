@@ -42,10 +42,29 @@ exactness, and it does not justify an inert jump or byte padding. The probe
 now reconstructs the historical baseline from the maintained source and
 replays both variants, preserving the original v248 comparison.
 
-The maintained-source rerun is
+The historical maintained-source rerun was
 `python3 scripts/probes/probe_th04_gameplay_ternary.py --output-dir .analysis/reconstruction/probes/v252-gameplay-ternary-maintained`.
-Its private receipt SHA-256 remains
+Its private receipt SHA-256 was
 `3e49ce3a4af999c67ec74cd27aba8c1274f818ee932cc3987f501a6298c511ff`:
-both variants, object CODE hashes, and branch offsets are unchanged. The
-maintained source SHA-256 is
+both variants, object CODE hashes, and branch offsets were unchanged. The
+source SHA-256 for that run is
 `330b49a298b0a27a52685b4daa4cad3ebf34fdb7e5ada51b4a62c9a8ea8b0c5b`.
+
+## v273 frame-counter source revision
+
+The current maintained source combines the increment and first modulo assignment
+as `stage_frame_mod16 = ((stage_frame = stage_frame + 1) & 15)`. Its unsigned
+16-bit `stage_frame` declaration makes this equivalent to the former two
+statements. Run `python3 scripts/probes/probe_th04_gameplay_ternary.py
+--output-dir .analysis/reconstruction/probes/v273-gameplay-frame-replay`.
+The pinned TC4J/OMF replay compares the old and revised frame expressions and
+also retains the old branch control. The revised 372-byte CODE SHA-256 is
+`e3d6e451f5c5988c21c885be406815bf8c8fd23c181494db67bea74001b245ed`;
+the former 372-byte CODE is still
+`54c691f5ea776a4b71003c10f772c825e729ea852eb494fa65a364710c8c6ebc`.
+The revision emits the target-style `MOV AX; INC AX; MOV [stage_frame],AX`
+sequence while preserving the exact 25-byte interval branch. The target still
+has an extra `MOV DX,AX`, a 16-bit rather than 8-bit first mask, and two
+`EB 00` jumps. Complete bytes remain 372 versus 379, so this is
+compiler-observed local progress, not exactness. Receipt SHA-256:
+`b107b6d7d48ebc53a5a1b7086d6c9a8b6fda09f201535141106c454c2b479e97`.

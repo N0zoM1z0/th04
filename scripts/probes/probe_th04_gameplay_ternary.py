@@ -33,6 +33,11 @@ OLD = """        int frames_per_playperf_raise = resident->rem_lives;
 NEW = """        int frames_per_playperf_raise = resident->rem_lives;
         frames_per_playperf_raise = (frames_per_playperf_raise >= 10)
             ? 1000 : (6000 - (frames_per_playperf_raise * 500));"""
+OLD_FRAME = """        stage_frame++;
+        stage_frame_mod16 = (stage_frame & 15);"""
+NEW_FRAME = """        stage_frame_mod16 = ((stage_frame = stage_frame + 1) & 15);"""
+OLD_FRAME_CODE_SHA256 = "54c691f5ea776a4b71003c10f772c825e729ea852eb494fa65a364710c8c6ebc"
+NEW_FRAME_CODE_SHA256 = "e3d6e451f5c5988c21c885be406815bf8c8fd23c181494db67bea74001b245ed"
 BRANCH = bytes.fromhex(
     "83 FE 0A 7C 05 B8 E8 03 EB 0D 8B C6 69 C0 F4 01 "
     "50 B8 70 17 5A 2B C2 8B F0"
@@ -75,9 +80,13 @@ def main() -> int:
         output.mkdir(parents=True)
 
     source = SOURCE.read_text()
-    if source.count(NEW) != 1:
-        raise ValueError("maintained source no longer contains the expected bounded expression")
-    variants = {"baseline": source.replace(NEW, OLD), "ternary": source}
+    if source.count(NEW) != 1 or source.count(NEW_FRAME) != 1:
+        raise ValueError("maintained source no longer contains the expected bounded expressions")
+    variants = {
+        "baseline": source.replace(NEW, OLD),
+        "prior_frame": source.replace(NEW_FRAME, OLD_FRAME),
+        "ternary": source,
+    }
     manifest = tomllib.loads((ROOT / "config/targets.toml").read_text())
     target_info = next(item for item in manifest["artifacts"] if item["id"] == "th04-main")
     target = (ROOT / target_info["private_path"]).read_bytes()
@@ -130,15 +139,24 @@ def main() -> int:
         raise ValueError("baseline already contains target branch")
     if results["ternary"]["target_branch_occurrences"] != 1 or results["ternary"]["target_branch_code_offset"] != 314:
         raise ValueError("ternary did not reproduce bounded target branch")
+    if results["prior_frame"]["code_sha256"] != OLD_FRAME_CODE_SHA256:
+        raise ValueError("prior maintained frame producer changed")
+    if results["ternary"]["code_sha256"] != NEW_FRAME_CODE_SHA256:
+        raise ValueError("revised maintained frame producer changed")
+    if target_body[0x115:0x121] != bytes.fromhex("a1 8a 53 8b d0 40 a3 8a 53 25 0f 00"):
+        raise ValueError("target frame-counter sequence changed")
+    revised_code = (output / "ternary.code").read_bytes()
+    if revised_code[0x113:0x11D] != bytes.fromhex("a1 00 00 40 a3 00 00 24 0f a2"):
+        raise ValueError("revised source did not emit the target-like frame counter prefix")
     receipt = {
         "schema_version": 1,
-        "claim_scope": "MAIN DEMO_TEXT gameplay_loop 25-byte conditional branch only; no exact promotion",
+        "claim_scope": "MAIN DEMO_TEXT gameplay_loop conditional branch and frame-counter producer; no exact promotion",
         "target_sha256": target_info["sha256"], "target_body_sha256": sha(target_body),
         "target_load_extent": "0xAB88..0xAD02", "target_branch_load_offset": "0xACC7",
         "target_branch_sha256": sha(BRANCH), "tcc_sha256": tcc["sha256"],
         "runner_sha256": sha(runner.read_bytes()), "flags": list(FLAGS),
         "variants": results,
-        "result": "ternary reproduces the target's 25-byte AX-result branch; complete CODE is 372 versus 379 bytes",
+        "result": "maintained source reproduces the 25-byte AX-result branch and MOV AX/INC AX/store frame-counter shape; complete CODE is 372 versus 379 target bytes",
         "limit": "No linked MAP/relocation/raw unit or cold aggregate exactness gate is passed.",
     }
     path = output / "receipt.json"

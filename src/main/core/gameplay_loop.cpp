@@ -132,8 +132,7 @@ void near gameplay_loop(void)
         snd_se_update();
         frames_unused++;
 
-        stage_frame++;
-        stage_frame_mod16 = (stage_frame & 15);
+        stage_frame_mod16 = ((stage_frame = stage_frame + 1) & 15);
         stage_frame_mod8 = (stage_frame_mod16 & 7);
         stage_frame_mod4 = (stage_frame_mod8 & 3);
         stage_frame_mod2 = (stage_frame_mod4 & 1);
