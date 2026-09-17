@@ -150,3 +150,17 @@ assignment as the natural source mechanism for the target helper. The probe
 used an ordinary 24-byte struct, not the full `thicklaser_t` declaration, so
 its conclusion is limited to that compiler pattern. No source change or exact
 promotion follows.
+
+## v277 copy-length producer control
+
+`python3 scripts/probes/probe_th04_laser_count.py --output-dir
+.analysis/reconstruction/probes/v277-laser-count-replay` attests the target and
+TC4J, then compiles four 24-byte synthetic near-copy bodies under the production
+flags. Direct `__memcpy__` emits 24 CODE bytes with the known wrong setup order.
+Moving the byte count into a `register unsigned int`, expressing it as a
+register word count times two, and using a local `const unsigned int` emit 32,
+36, and 30 bytes respectively. Each valid OMF body retains one `REP MOVSW`;
+none reproduces the target 24-byte sequence. Receipt SHA-256:
+`0aa9ece20c046786cf989971dc38462d83627cdccf534f2cd1c55ffcf8394393`.
+This rules out those count-expression mechanisms for the synthetic struct only;
+the full producer remains blocked and its original source form unresolved.
