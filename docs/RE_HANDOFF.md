@@ -45,7 +45,7 @@ means whole MAIN.EXE or whole TH04 is exact.
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; target orders site 0xB2DA first, candidate FIXUPP/MZ last. [Evidence](reconstruction/TH04_DEMO_FIXUP_ORDER_V214.md) |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
 | Thick laser update | B4M_UPDATE_TEXT load 0x15D74..0x15ECD, 0x15A bytes | Eight-byte template-copy setup-order difference. [Evidence](reconstruction/TH04_MAIN_THICKLASER_UPDATE_V181.md) |
-| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte; loop is 372/379 bytes after the [v248 branch control](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md). [Boundary](reconstruction/TH04_DEMO_INTERNAL_BOUNDARIES_V165.md) |
+| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte; maintained loop now compiles to 372/379 bytes with the target 25-byte interval branch. The frame-counter sequence and two `EB 00` jumps remain open. [Probe](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md) |
 
 The [decoded-payload comparison](reconstruction/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
 leaves 7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes different from the cold

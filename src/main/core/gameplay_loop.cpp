@@ -139,11 +139,8 @@ void near gameplay_loop(void)
         stage_frame_mod2 = (stage_frame_mod4 & 1);
 
         int frames_per_playperf_raise = resident->rem_lives;
-        if(frames_per_playperf_raise >= 10) {
-            frames_per_playperf_raise = 1000;
-        } else {
-            frames_per_playperf_raise = (6000 - (frames_per_playperf_raise * 500));
-        }
+        frames_per_playperf_raise = (frames_per_playperf_raise >= 10)
+            ? 1000 : (6000 - (frames_per_playperf_raise * 500));
         if((stage_frame % frames_per_playperf_raise) == 0) {
             playperf_raise(1);
         }

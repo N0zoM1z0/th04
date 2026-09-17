@@ -9,11 +9,11 @@ The target's lives-to-play-performance-interval branch begins at load
 `0xACC7` and has a unique 25-byte sequence, SHA-256
 `2ae6bf38991401052fbd9ef0995b4557466b4f5bc982130e4466498ffadba1f9`.
 
-The maintained source currently assigns `frames_per_playperf_raise` in both
+The earlier maintained source assigned `frames_per_playperf_raise` in both
 branches. Target machine code instead forms either branch result in `AX`, then
 moves it into `SI` once at the join. A bounded diagnostic replaced only those
-assignments with a conditional expression of the same values. This is a
-source-form/compiler hypothesis; maintained source was not changed.
+assignments with a conditional expression of the same values. The verified
+conditional expression is now maintained in `src/main/core/gameplay_loop.cpp`.
 
 Run:
 
@@ -33,9 +33,19 @@ and contains **the exact 25 target branch bytes** once, at object offset 314.
 The private receipt SHA-256 is
 `3e49ce3a4af999c67ec74cd27aba8c1274f818ee932cc3987f501a6298c511ff`.
 
-The full target function is still seven bytes longer than this diagnostic
+The full target function is still seven bytes longer than this source
 object. Relative to this compiler output, the target's frame-counter sequence
 is three bytes longer and it retains two `EB 00` jumps. Their natural source
 producer remains open; the linked call shape also needs the complete raw/MAP/
-ordered-relocation replay. The diagnostic is compiler-observed local
-codegen, not exactness, and it does not justify an inert jump or byte padding.
+ordered-relocation replay. This is compiler-observed local codegen, not
+exactness, and it does not justify an inert jump or byte padding. The probe
+now reconstructs the historical baseline from the maintained source and
+replays both variants, preserving the original v248 comparison.
+
+The maintained-source rerun is
+`python3 scripts/probes/probe_th04_gameplay_ternary.py --output-dir .analysis/reconstruction/probes/v252-gameplay-ternary-maintained`.
+Its private receipt SHA-256 remains
+`3e49ce3a4af999c67ec74cd27aba8c1274f818ee932cc3987f501a6298c511ff`:
+both variants, object CODE hashes, and branch offsets are unchanged. The
+maintained source SHA-256 is
+`330b49a298b0a27a52685b4daa4cad3ebf34fdb7e5ada51b4a62c9a8ea8b0c5b`.

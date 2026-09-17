@@ -75,9 +75,9 @@ def main() -> int:
         output.mkdir(parents=True)
 
     source = SOURCE.read_text()
-    if source.count(OLD) != 1:
+    if source.count(NEW) != 1:
         raise ValueError("maintained source no longer contains the expected bounded expression")
-    variants = {"baseline": source, "ternary": source.replace(OLD, NEW)}
+    variants = {"baseline": source.replace(NEW, OLD), "ternary": source}
     manifest = tomllib.loads((ROOT / "config/targets.toml").read_text())
     target_info = next(item for item in manifest["artifacts"] if item["id"] == "th04-main")
     target = (ROOT / target_info["private_path"]).read_bytes()
