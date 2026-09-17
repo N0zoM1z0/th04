@@ -33,9 +33,9 @@ inert padding, ABI changes, or false assembly ownership.
 MAIN has **462/487 reviewed authored C/C++ functions** and
 **75,665/81,619 reviewed authored C/C++ bytes** exact; 39 accepted
 original-style ASM units add 5,525 bytes. The last complete native aggregate,
-gptweb-v212-randring2-and-aggregate-final-001, passes all 248 default
-exact MAIN owners twice (receipt SHA-256
-dd5e63fbc838f722643b55744c7e319d60d23cb38ae7d5f326ddf2843b77a38b).
+gptweb-v287-vcolors-aggregate-001, passes all 248 default exact MAIN owners
+twice after localizing `V_WHITE` (receipt SHA-256
+fa1bb2c54fa22fcbcef5cfcbaa4c0ed107a9378185244c11fc28d3f3a6949119).
 All 51 boss-named MAIN authored candidates are exact. None of these counts
 means whole MAIN.EXE or whole TH04 is exact.
 
@@ -70,8 +70,10 @@ now have maintained product-only C++ source and reviewed 96- and 199-byte
 target extents. TC4J emits 105 and 215 bytes respectively; exactness and
 link ownership remain open.
 
-The current product still uses compat/rec98 forwarding headers and a pinned
-ReC98 overlay for replay. Standalone checked-in TH04 build closure, full
+The [VRAM color header](reconstruction/TH04_VRAM_COLORS_LOCAL_V287.md) is now
+TH04-owned across 37 source files; cold replay freezes product headers. Other
+compat/rec98 forwarders and the pinned ReC98 overlay remain. Standalone
+checked-in TH04 build closure, full
 packed-file matching, runtime scenarios, and independent provenance remain
 open. Track exact owners and the remaining 11 unreviewed MAIN functions from
 config/units.csv, config/th04_main_authored_functions.csv,

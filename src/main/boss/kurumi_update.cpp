@@ -3,7 +3,7 @@
 
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
-#include "compat/rec98/th02/v_colors.hpp"
+#include "src/shared/hardware/v_colors.hpp"
 #include "compat/rec98/th03/math/randring.hpp"
 #include "compat/rec98/th03/math/polar.hpp"
 #include "th04/sprites/main_pat.h"

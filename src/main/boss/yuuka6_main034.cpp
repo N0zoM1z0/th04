@@ -16,7 +16,7 @@
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/custom.hpp"
 #include "th04/main/player/player.hpp"
-#include "compat/rec98/th02/v_colors.hpp"
+#include "src/shared/hardware/v_colors.hpp"
 #include "compat/rec98/th03/math/randring.hpp"
 #include "th04/main/gather.hpp"
 #include "th04/main/circle.hpp"

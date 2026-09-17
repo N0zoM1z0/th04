@@ -1,7 +1,7 @@
 #pragma option -zCMAI_TEXT -zPmain_01
 
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
-#include "compat/rec98/th02/v_colors.hpp"
+#include "src/shared/hardware/v_colors.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"
 #include "th04/main/midboss/midboss.hpp"

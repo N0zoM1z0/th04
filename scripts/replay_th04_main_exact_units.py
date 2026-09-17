@@ -110,11 +110,53 @@ def repo_input_paths(
             paths.add(Path(str(entry["repo_source"])))
         for value in entry.get("repo_inputs", []):
             paths.add(Path(str(value)))
+    # Freeze product-owned headers reached by selected source, including their
+    # own local includes. The pinned ReC98 archive does not contain these files.
+    pending = list(paths)
+    include_pattern = re.compile(rb'^[ \t]*#[ \t]*include[ \t]+"(src/[^"\r\n]+)"', re.MULTILINE)
+    while pending:
+        relative = pending.pop()
+        if relative.parts[0] != "src":
+            continue
+        if relative.is_absolute() or ".." in relative.parts:
+            raise RuntimeError(f"invalid product source path: {relative}")
+        source = ROOT / relative
+        if not source.is_file() or source.is_symlink():
+            raise FileNotFoundError(source)
+        for match in include_pattern.finditer(source.read_bytes()):
+            header = Path(match.group(1).decode("ascii"))
+            if header.is_absolute() or ".." in header.parts or header.suffix not in {".h", ".hpp", ".inl"}:
+                raise RuntimeError(f"invalid product include in {relative}: {header}")
+            if header not in paths:
+                paths.add(header)
+                pending.append(header)
     if REC98_COMPAT.is_dir():
         for path in REC98_COMPAT.rglob("*"):
             if path.is_file():
                 paths.add(path.relative_to(ROOT))
     return sorted(paths, key=lambda value: value.as_posix())
+
+
+def materialize_product_headers(
+    source_root: Path, snapshot_root: Path, receipt: list[dict[str, object]]
+) -> list[dict[str, object]]:
+    """Copy frozen product headers into the cold build without consulting live files."""
+
+    copied: list[dict[str, object]] = []
+    for item in receipt:
+        relative = Path(str(item["path"]))
+        if relative.parts[0] != "src" or relative.suffix not in {".h", ".hpp", ".inl"}:
+            continue
+        frozen = snapshot_root / relative
+        destination = source_root / relative
+        if destination.exists() or destination.is_symlink():
+            raise RuntimeError(f"product header collides with scaffold: {relative}")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(frozen, destination)
+        if digest_file(destination) != str(item["sha256"]):
+            raise RuntimeError(f"product header changed in cold build: {relative}")
+        copied.append(item)
+    return copied
 
 
 def materialize_repo_snapshot(destination: Path, relative_paths: list[Path]) -> list[dict[str, object]]:
@@ -1302,6 +1344,7 @@ def main() -> int:
         source = run_root / "source"
         materialize(revision, source)
         compat_headers = materialize_rec98_compat(source, compat_root=snapshot_compat)
+        product_headers = materialize_product_headers(source, snapshot_root, snapshot_receipt)
         overlays = overlay_sources(
             source, entries, repo_root=snapshot_root, compat_root=snapshot_compat
         )
@@ -1332,6 +1375,7 @@ def main() -> int:
                 "label": label,
                 "source": str(source.relative_to(ROOT)),
                 "rec98_compat": compat_headers,
+                "product_headers": product_headers,
                 "overlays": overlays,
                 "scaffold_extractions": scaffold_extraction_receipts,
                 "source_splits": split_receipts,

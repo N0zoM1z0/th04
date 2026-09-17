@@ -6,7 +6,7 @@
 
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
-#include "compat/rec98/th02/v_colors.hpp"
+#include "src/shared/hardware/v_colors.hpp"
 #ifndef TH04_MARISA_B4M_INCLUDED
 #include "th04/sprites/main_pat.h"
 #include "th04/main/custom.hpp"

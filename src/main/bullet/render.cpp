@@ -2,7 +2,7 @@
 #pragma option -zCBOSS_FG_TEXT -zPmain_01
 
 #include "x86real.h"
-#include "compat/rec98/th02/v_colors.hpp"
+#include "src/shared/hardware/v_colors.hpp"
 #include "compat/rec98/th02/sprites/bullet16.h"
 #include "th04/formats/super.h"
 #include "th04/hardware/grcg.hpp"

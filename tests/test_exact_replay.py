@@ -207,6 +207,50 @@ class CandidateExtentTests(unittest.TestCase):
 
 
 class RepoInputSnapshotTests(unittest.TestCase):
+    def test_transitive_product_headers_are_frozen_before_cold_build(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            snapshot = root / "snapshot"
+            source = root / "source"
+            header_dir = repo / "src" / "shared"
+            header_dir.mkdir(parents=True)
+            source.mkdir()
+            (repo / "src" / "unit.cpp").write_text(
+                '#include "src/shared/first.hpp"\n', encoding="ascii"
+            )
+            first = header_dir / "first.hpp"
+            first.write_text('#include "src/shared/second.hpp"\n', encoding="ascii")
+            (header_dir / "second.hpp").write_bytes(b"original\n")
+            entry = {"repo_source": "src/unit.cpp"}
+            with patch.object(replay, "ROOT", repo), patch.object(
+                replay, "REC98_COMPAT", repo / "compat" / "rec98"
+            ):
+                paths = replay.repo_input_paths([entry], [], [])
+                self.assertIn(Path("src/shared/second.hpp"), paths)
+                receipt = replay.materialize_repo_snapshot(snapshot, paths)
+                first.write_bytes(b"changed\n")
+                copied = replay.materialize_product_headers(source, snapshot, receipt)
+                self.assertEqual(
+                    (source / "src" / "shared" / "first.hpp").read_bytes(),
+                    b'#include "src/shared/second.hpp"\n',
+                )
+                self.assertEqual(len(copied), 2)
+                with self.assertRaisesRegex(RuntimeError, "repository input changed"):
+                    replay.verify_repo_snapshot(receipt)
+
+    def test_product_include_cannot_escape_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            source = repo / "src" / "unit.cpp"
+            source.parent.mkdir()
+            source.write_text('#include "src/../secret.hpp"\n', encoding="ascii")
+            with patch.object(replay, "ROOT", repo), patch.object(
+                replay, "REC98_COMPAT", repo / "compat" / "rec98"
+            ):
+                with self.assertRaisesRegex(RuntimeError, "invalid product include"):
+                    replay.repo_input_paths([{"repo_source": "src/unit.cpp"}], [], [])
+
     def test_snapshot_freezes_overlay_and_detects_live_drift(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
