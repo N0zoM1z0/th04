@@ -20,7 +20,7 @@ import tomllib
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "src/main/scroll/driver.cpp"
 FLAGS = ("-c", "-ml", "-O", "-b-", "-3", "-Z", "-d")
-EXPECTED_CODE_SHA256 = "a3ae10f069d8e284fdbe3e7717151724127fe850ef8d6e47fbb5e419f2826cae"
+EXPECTED_CODE_SHA256 = "1e6ded75015254eaff10edf27d2dad38f73226b247cfcb6d5c3973aa6776008d"
 PREFIX_SIZE = 46
 PREFIX_SYMBOL_WORDS = (4, 12, 18, 22, 29, 36, 42)
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -86,7 +86,7 @@ def main() -> int:
         raise ValueError("unexpected scroll-driver OMF producer")
     records = parse_omf(obj)
     groups = code_ledata(records, "MAI_TEXT")
-    if len(groups) != 1 or groups[0][:2] != (0, 107):
+    if len(groups) != 1 or groups[0][:2] != (0, 105):
         raise ValueError("unexpected MAI_TEXT CODE extent")
     code = records[groups[0][2] - 1].data[3:]
     if sha(code) != EXPECTED_CODE_SHA256:
@@ -98,6 +98,8 @@ def main() -> int:
         code_prefix[start:start + 2] = b"\0\0"
     if target_prefix != code_prefix:
         raise ValueError("scroll-driver initial opcode prefix differs from target")
+    if b"\x29\x06\0\0\x7d\x06" not in code or b"\x29\x06\x78\x42\x79\x06" not in target_body:
+        raise ValueError("scroll-driver subtraction/branch diagnostic changed")
     (output / "driver.code").write_bytes(code)
     receipt = {
         "schema_version": 1,
@@ -117,7 +119,9 @@ def main() -> int:
         "fixed_opcode_prefix_size": PREFIX_SIZE,
         "fixed_opcode_prefix_masked_words": list(PREFIX_SYMBOL_WORDS),
         "fixed_opcode_prefix_equal": True,
-        "result": "source-present, product-only TC4J compile; first 46 fixed opcode bytes agree, complete CODE 107 versus target 96",
+        "sub_memory_ax_observed": True,
+        "target_jns_candidate_jnl": True,
+        "result": "source-present, product-only TC4J compile; first 46 fixed opcode bytes agree and SUB memory,AX appears; complete CODE 105 versus target 96 with JNL versus target JNS",
         "limit": "Storage/helper symbols still need link ownership; full raw/MAP/ordered-relocation and cold aggregate gates do not pass.",
     }
     path = output / "receipt.json"

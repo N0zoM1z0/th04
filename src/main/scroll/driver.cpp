@@ -24,7 +24,7 @@ void near scroll_driver()
 
     scroll_last_delta = 0;
     if((scroll_subpixel_line = (scroll_subpixel_line + scroll_speed)) >= 16) {
-        unsigned int lines = ((unsigned int)scroll_subpixel_line >> 4);
+        unsigned char lines = ((unsigned int)scroll_subpixel_line >> 4);
         if((scroll_line -= lines) < 0) {
             scroll_line += 400;
         }

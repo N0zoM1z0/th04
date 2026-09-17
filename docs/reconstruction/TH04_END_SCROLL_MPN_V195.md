@@ -218,6 +218,21 @@ ownership, MAP, and ordered relocations remain unproved; no exact credit.
 Private receipt SHA-256 is
 `8c48daf843fd9790076708763662fb439666e1015b03c38f4eceeb24ec21d7e6`.
 
+### v284 byte-sized quotient revision
+
+`scroll_subpixel_line` is a byte, so shifting it right by four yields `0..15`.
+The maintained local `lines` now has that exact byte range. Two isolated
+product-only TC4J compiles produce identical valid OMF and `105` MAI_TEXT
+bytes, CODE SHA-256
+`1e6ded75015254eaff10edf27d2dad38f73226b247cfcb6d5c3973aa6776008d`.
+This naturally changes the subtraction to `SUB [scroll_line],AX` and branches
+directly on its flags. The target is still 96 bytes and uses `JNS`; TC4J emits
+`JNL`, which also differs on signed overflow. The candidate retains extra
+register copies. This is source/codegen progress, not exactness or a linked
+owner claim. Run `replay_th04_scroll_driver_natural.py` as above; the two
+v284 private receipts are byte-identical, SHA-256
+`909d48b98e8fdcc8daa3e94a919df9f2ad28c2c3cbc8110b25026f7e86c2b22f`.
+
 Independent TH05 target-derived bodies preserve the same broad scroll-helper
 architecture: BP/local-byte state, tile-ring `REP MOVSW` with DS/ES swap, flag
 shuffle, EGC redraw flow, and a homologous driver. TH05 also has stage-specific

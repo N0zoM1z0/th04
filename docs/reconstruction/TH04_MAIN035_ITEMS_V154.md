@@ -249,3 +249,20 @@ SHA-256 is
 These results strengthen the existing v154 conclusion: do not resume source
 spelling or register-local matrices without a new falsifiable compiler IR,
 producer, or link-history mechanism.
+
+## v283 full-source `-B` control
+
+The v180 synthetic TASM control already showed that `SUB BX,AX/DX` selects
+`2B D8 / 2B DA`. A full maintained-source TC4J `-B` diagnostic confirms
+that result and rejects the producer on size as well. In an isolated v214
+clone, the two established item-header ABI declarations were corrected.
+`TCC -B` generated ASM; pinned TASM32 needed diagnostic-only empty group
+segments and removal of two case-colliding alias lines, with no instruction
+edits. It emitted valid `0x548` CODE, SHA-256
+`fe8c76ee390cdcca573415f2e1d389911bf94e04fbe57193852983f2ba74b7b9`,
+including `2B D8 / 2B DA`. Ordinary source remains `0x546`, CODE SHA-256
+`d402522822e87b54b43e349a489567abf13fbd03accb9511004026fad0d2f520`;
+target requires `0x546` and `29 C3 / 29 D3`. No link or exact promotion follows.
+Retained private ASM/OMF/CODE/logs are under
+`.analysis/reconstruction/probes/v283-items-B/`, receipt SHA-256
+`59ce842bd21e78a830ba55f3821eec655529f4be0a57d411b3566f8aedce2666`.

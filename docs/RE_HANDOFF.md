@@ -67,7 +67,7 @@ the first matches in an untrusted composite overlay, while natural `_main` is
 
 MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte
-target extents. TC4J emits 107 and 215 bytes respectively; exactness and
+target extents. TC4J emits 105 and 215 bytes respectively; exactness and
 link ownership remain open.
 
 The current product still uses compat/rec98 forwarding headers and a pinned
