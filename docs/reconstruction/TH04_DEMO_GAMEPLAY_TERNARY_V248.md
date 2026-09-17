@@ -81,3 +81,28 @@ the seven target bytes. The command, valid OMF, CODE, and private receipt are
 under `.analysis/reconstruction/probes/v285-gameplay-opt/`; receipt SHA-256
 `57b9e2be2f15f9fb7098c059953987bdef5aad0f76dbe8c06d4eb2145d875ad4`.
 No source or exact state changes.
+
+## v296 word-width source revision
+
+The maintained source now assigns the first frame mask through TC4J's real
+`_AX` register interface, then chains the smaller masks through `_AL`.
+For unsigned 16-bit `stage_frame`, the four stored phase values are unchanged.
+This naturally emits target `AND AX,000F` instead of `AND AL,0F`, while leaving
+the previous CODE prefix byte-identical and changing only the necessary
+branch displacement afterward.
+
+Run `python3 scripts/probes/probe_th04_gameplay_ternary.py --output-dir
+.analysis/reconstruction/probes/v296-gameplay-wide-mask-replay`. An independent
+repeat under `v297-gameplay-wide-mask-repeat` produces identical valid OMF
+SHA-256 `3cede1302faeb34bcf68bbf481e6ead8fdbb7c3ead028fa6b15ef32892283387`
+and 373-byte `DEMO_TEXT` CODE SHA-256
+`b756cf95be543098dfb679fadcf7135dd7b54b163731e653b7a149f1595c7c50`.
+Both receipts are byte-identical, SHA-256
+`205e5592a8b5f7626a5e57c078a068af3755f2497b55fc662d012c487be9f8e1`.
+The probe also replays the earlier 370/372-byte historical controls from the
+maintained source, so their compiler observations remain reproducible.
+
+The target remains 379 bytes. Its extra `MOV DX,AX` at body offset 0x118 and
+two `EB 00` jumps at 0xF0 and 0x16A have no justified natural producer yet.
+This revision improves compiler shape by one byte; it does not pass a linked
+raw/MAP/ordered-relocation comparison or promote the unit to exact.

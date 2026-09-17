@@ -132,10 +132,11 @@ void near gameplay_loop(void)
         snd_se_update();
         frames_unused++;
 
-        stage_frame_mod16 = ((stage_frame = stage_frame + 1) & 15);
-        stage_frame_mod8 = (stage_frame_mod16 & 7);
-        stage_frame_mod4 = (stage_frame_mod8 & 3);
-        stage_frame_mod2 = (stage_frame_mod4 & 1);
+        _AX = ((stage_frame = stage_frame + 1) & 15);
+        stage_frame_mod16 = _AL;
+        stage_frame_mod8 = (_AL &= 7);
+        stage_frame_mod4 = (_AL &= 3);
+        stage_frame_mod2 = (_AL &= 1);
 
         int frames_per_playperf_raise = resident->rem_lives;
         frames_per_playperf_raise = (frames_per_playperf_raise >= 10)

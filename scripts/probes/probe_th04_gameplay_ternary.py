@@ -36,8 +36,18 @@ NEW = """        int frames_per_playperf_raise = resident->rem_lives;
 OLD_FRAME = """        stage_frame++;
         stage_frame_mod16 = (stage_frame & 15);"""
 NEW_FRAME = """        stage_frame_mod16 = ((stage_frame = stage_frame + 1) & 15);"""
+CURRENT_MASK = """        _AX = ((stage_frame = stage_frame + 1) & 15);
+        stage_frame_mod16 = _AL;
+        stage_frame_mod8 = (_AL &= 7);
+        stage_frame_mod4 = (_AL &= 3);
+        stage_frame_mod2 = (_AL &= 1);"""
+PREVIOUS_MASK = """        stage_frame_mod16 = ((stage_frame = stage_frame + 1) & 15);
+        stage_frame_mod8 = (stage_frame_mod16 & 7);
+        stage_frame_mod4 = (stage_frame_mod8 & 3);
+        stage_frame_mod2 = (stage_frame_mod4 & 1);"""
 OLD_FRAME_CODE_SHA256 = "54c691f5ea776a4b71003c10f772c825e729ea852eb494fa65a364710c8c6ebc"
 NEW_FRAME_CODE_SHA256 = "e3d6e451f5c5988c21c885be406815bf8c8fd23c181494db67bea74001b245ed"
+CURRENT_MASK_CODE_SHA256 = "b756cf95be543098dfb679fadcf7135dd7b54b163731e653b7a149f1595c7c50"
 BRANCH = bytes.fromhex(
     "83 FE 0A 7C 05 B8 E8 03 EB 0D 8B C6 69 C0 F4 01 "
     "50 B8 70 17 5A 2B C2 8B F0"
@@ -79,13 +89,18 @@ def main() -> int:
             parser.error("output directory must be new and below .analysis")
         output.mkdir(parents=True)
 
-    source = SOURCE.read_text()
+    maintained_source = SOURCE.read_text()
+    if maintained_source.count(CURRENT_MASK) != 1:
+        raise ValueError("maintained source no longer contains the current frame mask")
+    # Reconstruct the historical v273 source before replaying its comparisons.
+    source = maintained_source.replace(CURRENT_MASK, PREVIOUS_MASK)
     if source.count(NEW) != 1 or source.count(NEW_FRAME) != 1:
         raise ValueError("maintained source no longer contains the expected bounded expressions")
     variants = {
         "baseline": source.replace(NEW, OLD),
         "prior_frame": source.replace(NEW_FRAME, OLD_FRAME),
         "ternary": source,
+        "current_mask": maintained_source,
     }
     manifest = tomllib.loads((ROOT / "config/targets.toml").read_text())
     target_info = next(item for item in manifest["artifacts"] if item["id"] == "th04-main")
@@ -143,11 +158,19 @@ def main() -> int:
         raise ValueError("prior maintained frame producer changed")
     if results["ternary"]["code_sha256"] != NEW_FRAME_CODE_SHA256:
         raise ValueError("revised maintained frame producer changed")
+    if (
+        results["current_mask"]["code_size"] != 373
+        or results["current_mask"]["code_sha256"] != CURRENT_MASK_CODE_SHA256
+    ):
+        raise ValueError("current wide-mask producer changed")
     if target_body[0x115:0x121] != bytes.fromhex("a1 8a 53 8b d0 40 a3 8a 53 25 0f 00"):
         raise ValueError("target frame-counter sequence changed")
     revised_code = (output / "ternary.code").read_bytes()
     if revised_code[0x113:0x11D] != bytes.fromhex("a1 00 00 40 a3 00 00 24 0f a2"):
         raise ValueError("revised source did not emit the target-like frame counter prefix")
+    current_code = (output / "current_mask.code").read_bytes()
+    if current_code[0x113:0x11E] != bytes.fromhex("a1 00 00 40 a3 00 00 25 0f 00 a2"):
+        raise ValueError("current source did not emit the target wide-mask prefix")
     receipt = {
         "schema_version": 1,
         "claim_scope": "MAIN DEMO_TEXT gameplay_loop conditional branch and frame-counter producer; no exact promotion",
@@ -156,7 +179,7 @@ def main() -> int:
         "target_branch_sha256": sha(BRANCH), "tcc_sha256": tcc["sha256"],
         "runner_sha256": sha(runner.read_bytes()), "flags": list(FLAGS),
         "variants": results,
-        "result": "maintained source reproduces the 25-byte AX-result branch and MOV AX/INC AX/store frame-counter shape; complete CODE is 372 versus 379 target bytes",
+        "result": "maintained source reproduces the 25-byte AX-result branch and MOV AX/INC AX/store/AND AX,000F frame-counter shape; complete CODE is 373 versus 379 target bytes",
         "limit": "No linked MAP/relocation/raw unit or cold aggregate exactness gate is passed.",
     }
     path = output / "receipt.json"
