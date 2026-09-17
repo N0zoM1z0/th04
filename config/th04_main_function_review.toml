@@ -4310,3 +4310,18 @@ id = "th04-main-fn-1ab0c"
 address = "0x1AB0C"
 evidence_id = "ev-th04-main-main-entry-boundary-v202"
 reason = "Admit the complete MZ-called FAR gameplay entry only after natural TC4J code-shape closure, focused two-cold replay, exact MAP/all six ordered relocations/raw bytes, and the 243-owner candidate aggregate."
+
+# v211: natural-C++ CIRCLE_TEXT randring filler. Fresh Ghidra has a contiguous
+# 24-byte body, while target raw decode and the next public close the boundary.
+[[new_exact]]
+id = "th04-main-fn-1bc58"
+address = "0x1BC58"
+evidence_id = "ev-th04-main-randring-fill-boundary-v211"
+reason = "Admit the 0x18-byte near function only after the maintained C++ producer passes focused and 247-owner candidate aggregate cold replays with exact MAP placement, the ordered relocation at load 0xBC5F, valid OMF, and raw equality."
+
+# v212: complete MAIN_032_TEXT randring2 AND natural-C++ owner.
+[[new_exact]]
+id = "th04-main-fn-23d60"
+address = "0x23D60"
+evidence_id = "ev-th04-main-randring2-and-boundary-v212"
+reason = "Admit the complete 0x15-byte near Pascal function only after focused and 248-owner candidate aggregate A/B replays verify natural C++ bytes, exact TLINK placement, empty overlapping MZ relocations, and a contiguous target Ghidra body."

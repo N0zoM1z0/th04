@@ -98,6 +98,90 @@ No v180 focused exact replay or aggregate promotion replay is run for this packe
 The units are known nonexact under a required Oracle, so promotion gates cannot
 honestly pass. v179's post-promotion aggregate remains the current exact baseline.
 
+## v213 current object to relocation order probe
+
+Current-source A/B cold replay
+gptweb-v213-dialog-reloc-diagnostic-001 selects dialog_op, dialog_run, and
+the adjacent already exact dialog_init. Its receipt SHA-256 is
+e2551c0a7890dec33ba1ebdb443230bcdea4a9baaeac7e3e309502ee9998da7e.
+Both dialog_op and dialog_run again pass raw bytes, exact MAP placement, valid
+deterministic OMF, and relocation-site *sets*, but fail ordered MZ relocations.
+dialog_init remains exact. The A/B dialog.obj SHA-256 is
+15bf3a323b07d735ec0abae6b5c1bc48992038d83f6a4f5044853f28d0fc4e7c.
+
+The checked-in read-only probe
+scripts/probes/inspect_dialog_fixup_order.py uses the pinned target's far CALL
+opcodes, the candidate object's DIALOG_TEXT LEDATA and FIXUPP records, and the
+replay receipt. The candidate object has LEDATA ranges 0x000..0x3FB and
+0x3FC..0x7EB, followed by FIXUPP records 125 and 127. Every overlapping far
+CALL relocation has one corresponding OMF LOCAT at the far pointer's offset
+word. Ordering these locations by FIXUPP record and byte position exactly
+reproduces the candidate MZ relocation order for all 26 dialog_op and four
+dialog_run sites in both cold builds. The target MZ order is that candidate
+order rotated by six and two sites, respectively. Probe JSON SHA-256 is
+56721b615b5800b3834b534d316129c9e2638edceec44b9d277f0bbc859bc6ac.
+
+This directly observes the current compiler object's order and both linked
+MZ orders. The original target object is unavailable, so its internal FIXUPP
+record layout is still an inference. A useful next source/compiler hypothesis
+must change FIXUPP emission order while preserving the already exact code,
+segment placement, and relocation values. Reordering a final MZ relocation
+table or patching an object would only manufacture equality and is not a
+reconstruction solution. These two units remain blocked with zero new exact
+function or byte credit.
+
+A new minimal pinned-TC86 control tested whether simply permuting three
+independent switch case clauses could change FIXUPP order without touching
+machine code. The A/B source and object pair is retained under
+.analysis/reconstruction/probes/v213-dialog-case-order; receipt SHA-256 is
+d3add8345bb1768766180fd890cd612c389a9e67078439de1549c7e6fecf65f3.
+The two case orders emit different LEDATA sizes, 51 and 49 bytes, and
+different hashes. This particular source permutation fails the necessary
+raw-byte-preservation gate. More constrained producer hypotheses remain open.
+
+## v216 complete-contribution relocation order
+
+The read-only `scripts/probes/analyze_dialog_relocation_runs.py` compares the
+whole `dialog.cpp` physical contribution, rather than selecting only the two
+blocked functions. In the attested MAIN target and both current cold candidate
+images, DIALOG_TEXT load `0xCF3D..0xD728` contains the **same 37 far-CALL
+relocation sites**. The candidate `dialog.obj` FIXUPP LOCAT order maps uniquely
+to all 37 candidate MZ entries. A/B probe JSON SHA-256 is
+`b52de2b34665c941a8c392c62f609575823835f6852367a9c19f6757ea289875`.
+
+| MZ table | Strictly descending site runs in table order |
+| --- | --- |
+| target | 10 sites `0xD26E..0xCF68`; 23 sites `0xD642..0xD2A9`; 4 sites `0xD725..0xD6C0` |
+| candidate A/B | 16 sites `0xD32D..0xCF68`; 21 sites `0xD725..0xD34B` |
+
+The candidate's two runs coincide with its two DIALOG_TEXT LEDATA/FIXUPP
+records, covering object offsets `0x000..0x3FB` and `0x3FC..0x7EB`. This
+explains both local function rotations as parts of a whole-contribution
+ordering difference. Three target descending runs are **consistent with**
+different target fixup batching, but the target object is unavailable: the
+target's actual LEDATA count, record boundaries, and compiler mechanism remain
+inferred. No exactness changes. `TCC -B` was already a recorded negative in
+`TH04_MAIN_FIXUP_CODEGEN_PROBES.md`; rerunning it here did not establish a
+raw-preserving alternative. A same-segment `#pragma option -zC` placed inside a
+function is rejected by TC86, so it cannot be used as a natural in-function
+record-flush control.
+
+A v220 bounded `-v` debug-info probe compiled the same v213 dialog overlay
+with the pinned TC86 flags plus `-v`. The candidate DIALOG_TEXT contribution
+changed from 2028 bytes in two LEDATA groups (1020/1008) to 1977 bytes in two
+groups (1022/955), with 1827 differing bytes over the common prefix. Its
+valid OMF SHA-256 is
+`1b46cd7bcb338681dd171f33cea975ac8902fac97197cb5d4bf593711dc1eb6b`;
+the object and compiler log are retained under
+`.analysis/reconstruction/probes/v220-dialog-debug-option/` and
+`.analysis/reconstruction/v220-dialog-debug-compile.log`. This option fails
+the already-satisfied raw and layout gates and supplies no third fixup group.
+
+The later [v237 exact-source `-B`/TASM diagnostic](TH04_MAIN_B_MODE_V237.md)
+also changes the full DIALOG_TEXT contribution (2028 to 2029 bytes, 1753
+different bytes). It cannot replace the current raw-matching producer or
+promote either dialog unit.
+
 ## Function-review control plane
 
 `reviewed_nonexact` already validates logical versus physical size, raw terminal

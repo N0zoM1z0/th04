@@ -133,3 +133,20 @@ Standalone TH04 production compile/link closure, whole-image exactness,
 runtime-storage identity, runtime-scenario validation, portable-runtime
 validation, Factory Truth-Kernel acceptance, and independently pristine release
 provenance are not established by this packet.
+
+## v215 bounded aggregate-assignment control
+
+A new TC86 Borland C++ 4.02 mechanism probe compared a plain 24-byte structure
+assignment with `__memcpy__()` under the production `-ml -3 -O -Z -d -b-`
+profile. The private input, two OMF objects, and JSON receipt are in
+`.analysis/reconstruction/probes/v215-laser-assignment/`; receipt SHA-256 is
+`fe4048274a8941c9899ffa16885d7582fff40dce74f8feaf40a79c5f7cc8604a`.
+Target helper bytes at MAIN.EXE / B4M_UPDATE_TEXT `13A9:2315`, load
+`0x15DA5..0x15DBC`, file `0x175A5..0x175BC`, are 24 bytes. The minimal
+aggregate-assignment probe instead emits 23 CODE bytes containing a FAR runtime
+copy call (`9A`) and no `REP MOVSW`; the intrinsic emits 24 bytes with the
+already known wrong register-setup order. This falsifies simple aggregate
+assignment as the natural source mechanism for the target helper. The probe
+used an ordinary 24-byte struct, not the full `thicklaser_t` declaration, so
+its conclusion is limited to that compiler pattern. No source change or exact
+promotion follows.

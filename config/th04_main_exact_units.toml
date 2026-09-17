@@ -11344,3 +11344,113 @@ map_start = "0x0037"
 map_size = "0xA0"
 target_file_offset = "0x14917"
 size = "0xA0"
+
+# v211 CIRCLE_TEXT randring_fill natural producer. The v183 zero-credit
+# residual remains a zero-code structural anchor; this owner supplies its
+# complete 0x18-byte body in the same physical link position.
+[[build_replacements]]
+id = "th04-main-randring-fill-v211-build"
+trigger_units = ["th04-main-randring-fill-v211"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/cirs183.asm\",\n\t\"th04/r1next.cpp\",\n"
+build_replacement = "\t\"th04/cirs183.asm\",\n\t\"th04/rfill.cpp\",\n\t\"th04/r1next.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-randring-fill-v211-empty-residual"
+trigger_units = ["th04-main-randring-fill-v211"]
+patch_path = "th04/cirs183.asm"
+encoding = "latin-1"
+scaffold_sha256 = "80bcf16da01d5b05dce72837c2e57664b34fa2a92a3e4da28887e68f81d77ae1"
+patched_sha256 = "eb57f9ffd1563d680ca2e39aec3864c836b68e714cfe48fae4e26977f2b32077"
+
+[[source_transforms.ops]]
+id = "remove-randring-fill-residual-v211"
+kind = "replace"
+old = "include th03/math/randring_fill.asm\r\n"
+new = ""
+expected_count = 1
+
+[[units]]
+id = "th04-main-randring-fill-v211"
+default_enabled = true
+requires_units = ["th04-main-motion-seg1-asm-v183"]
+repo_source = "src/main/math/randring_fill.cpp"
+overlay_path = "th04/rfill.cpp"
+map_module = "th04/rfill.cpp"
+map_mode = "exact"
+object_path = "obj/th04/rfill.obj"
+map_segment = "CIRCLE_TEXT"
+map_start = "0x1168"
+map_size = "0x18"
+target_file_offset = "0xD458"
+size = "0x18"
+
+# v212 MAIN_032_TEXT randring2_next16_and natural producer. The one-byte
+# preceding and following alignment and the MOD body remain residual layout.
+[[build_replacements]]
+id = "th04-main-randring2-and-v212-build"
+trigger_units = ["th04-main-randring2-and-v212"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/rr2next.cpp\",\n"
+build_replacement = "\t\"th04/rr2next.cpp\",\n\t\"th04/r2gap.asm\",\n\t\"th04/rr2and.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-randring2-and-v212-residual"
+trigger_units = ["th04-main-randring2-and-v212"]
+patch_path = "th04/math/randring.inc"
+encoding = "latin-1"
+scaffold_sha256 = "fb40b549a732c164b6899af73535b5e1639505c33bb75333e8a1083dc6b4d026"
+patched_sha256 = "4edb5c2ca85f77babca4aa053875ab974b914886789c53c0fb25d6dd7caba4c8"
+
+[[source_transforms.ops]]
+id = "externalize-randring2-and-v212"
+kind = "replace"
+old = "\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n\t@randring&instance&_next16_and$qui proc near\n\t\tmov\tbx, _randring_p\n\t\tmov\tax, word ptr _randring[bx]\n\t\tinc\tbyte ptr _randring_p\n\targ_bx near, @mask:byte\n\t\tand\tax, @mask\n\t\tret_bx\n\t@randring&instance&_next16_and$qui endp\n\t\tnop\n\n"
+new = "\tif GAME eq 4\n\t\textrn @RANDRING&INSTANCE&_NEXT16_AND$QUI:near\n\telse\n\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n\t@randring&instance&_next16_and$qui proc near\n\t\tmov\tbx, _randring_p\n\t\tmov\tax, word ptr _randring[bx]\n\t\tinc\tbyte ptr _randring_p\n\targ_bx near, @mask:byte\n\t\tand\tax, @mask\n\t\tret_bx\n\t@randring&instance&_next16_and$qui endp\n\t\tnop\n\n\tendif\n\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "rename-randring2-mod-arg-v212"
+kind = "replace"
+old = "\targ_bx near, @n:word\n"
+new = "\tif GAME eq 4\n\t\targ_bx near, @mask:word\n\telse\n\t\targ_bx near, @n:word\n\tendif\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-randring2-and-v212"
+default_enabled = true
+requires_units = ["th04-main-randring2-next16-v134", "th04-main-randring1-next16-and-v137"]
+repo_source = "src/main/math/randring2_next16_and.cpp"
+overlay_path = "th04/rr2and.cpp"
+map_module = "th04/rr2and.cpp"
+map_mode = "exact"
+object_path = "obj/th04/rr2and.obj"
+map_segment = "MAIN_032_TEXT"
+map_start = "0x02D0"
+map_size = "0x15"
+target_file_offset = "0x15560"
+size = "0x15"
+
+# Recover the original assembler's one-byte alignment after the NEXT16 body.
+# This replay scaffold is outside the AND function and carries zero credit.
+[[scaffold_extractions]]
+id = "th04-main-randring2-gap-v212"
+trigger_units = ["th04-main-randring2-and-v212"]
+scaffold_path = "th04/math/randring.inc"
+encoding = "latin-1"
+scaffold_sha256 = "6f36c64ef467bb30255becc4f888e3b6f9a292c67f804eb5e447cac7fc39b4f5"
+start = "\t@randring&instance&_next16$qv endp\n"
+end = "\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n"
+span_sha256 = "8d334f46b05d74ca5f0fcfbd121a8c1f58b78f981c5edaf766ea06d4b89a9da0"
+template_source = "config/replay/th04_randring2_gap_v212.asm.in"
+output_path = "th04/r2gap.asm"
+
+[[scaffold_extractions.replacements]]
+old = "\t@randring&instance&_next16$qv endp\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n"
+new = ""
+expected_count = 1

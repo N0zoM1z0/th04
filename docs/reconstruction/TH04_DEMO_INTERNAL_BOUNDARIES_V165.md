@@ -60,3 +60,27 @@ The optional `owner_unit` / `source` projection is used only when a maintained s
 There is no v165 focused exact-unit replay, aggregate replay, or Factory exact claim because no v165 function is exact. Repository-native exact owners from v164 remain unchanged. This packet establishes reviewed authored boundaries and maintained natural source presence for two functions, not byte exactness, production closure, runtime-storage identity, runtime-scenario validation, whole-image exactness, or pristine provenance.
 
 The reviewed MAIN denominator therefore grows by `0x348 / 840` bytes and three functions. The exact numerator is unchanged.
+
+## v238 compiler placement control
+
+The target `gameplay_session_init()` ends with `RET` at DEMO_TEXT
+`0AAF:03D4` (load `0xAEC4`), then `00` at `0AAF:03D5` and five jump words
+from `0AAF:03D6`. A pinned TC4J probe compiled the unchanged v165 source alone
+and after a naturally emitted five-byte function in the **same** `DEMO_TEXT`
+segment. The ordinary source reproduces its prior 460-byte object CODE SHA-256
+`c6240957d82e978078e247c06dd9c0ae79469661e8ac4c612474b8b24218d526`.
+The added function moves the initializer to odd object offset 5, but its jump
+table still begins immediately after `RET`: object offsets 450 versus 455,
+with no inserted byte. Simple odd starting position therefore does not explain
+the target zero under this compiler profile. This does not classify the target
+byte as compiler output or linker fill; the historical OMF is unavailable.
+
+A related `gameplay_loop()` probe kept its 370-byte diagnostic object CODE
+unchanged after declaring `stage_frame` volatile. Moving the increment into
+`stage_frame_mod16 = (++stage_frame & 15)` changed only object byte `0x117`
+from `A0` to `A1`; it did not emit the target `MOV AX; MOV DX,AX; INC AX;
+MOV [stage_frame],AX` sequence. The target loop remains 379 bytes and blocked.
+The isolated source, valid OMF objects, compiler logs, and full hashes are in
+`.analysis/reconstruction/probes/v238-gameplay-switch-align/receipt.json`,
+SHA-256 `d4706c035f945aab1fbd186eecb3e68efbe0e3dae607ac610d7808c122eb8fed`.
+No source or exact state changed; the 25 MB temporary build clone was removed.

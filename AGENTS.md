@@ -128,4 +128,6 @@ global layouts change, invalidate and cold-replay every affected accepted unit.
   `git diff --check`.
 - Update `docs/RE_HANDOFF.md` when the phase, verified facts, or blockers
   change.  Report artifact, segment:offset, evidence classes, commands, exact
-  result, and remaining unknowns.
+  result, and remaining unknowns. Keep it a concise current-state index;
+  put chronological experiment details in bounded reconstruction notes and
+  evidence/knowledge ledgers instead of appending session logs.

@@ -1,0 +1,25 @@
+schema_version = 1
+
+[tool]
+name = "DIET"
+version = "1.45f"
+provenance = "candidate-public-release-mirror"
+archive_url = "https://files.mpoli.fi/software/DOS/COMPRESS/DIET145F.ZIP"
+archive_path = ".analysis/toolchain/media/diet145f.zip"
+archive_sha256 = "9ec134a324035a22a7509868cfd361b01aa11c7fb9bd70529a7533698540b9a7"
+binary_member = "DIET.EXE"
+binary_path = ".analysis/toolchain/media/diet145f/DIET.EXE"
+binary_sha256 = "a3fabbb9e4209ca6654c34f1d0945868732422dff6fe0a7fe0f5bcd2d48d2803"
+
+[pack_options]
+th04-op = ["-B", "-G"]
+th04-maine = ["-B", "-G"]
+th04-zun = ["-B"]
+
+[runtime]
+identity_manifest = "config/runtime.toml"
+profile = "primary"
+
+[claim]
+scope = "packed-file-toolchain-diagnostic"
+warning = "A matching packed file from ReC98 candidate inputs does not establish maintained TH04 source or accepted exact units."
