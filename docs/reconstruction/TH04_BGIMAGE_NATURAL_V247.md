@@ -32,7 +32,9 @@ structure has four two-byte segment pointers with compile-time offset checks.
 The source has no inline assembly, copied target bytes, `codestring`, or inert
 padding. The four plane segments and 32,000-byte size are explicit local
 constants; the v214 headers currently supply `HMem` through the checked-in
-compatibility forwarder.
+compatibility forwarder. [v250](TH04_BGIMAGE_HMEM_V250.md) later replaces that
+dependency with a locally attested TH04 HMem ABI declaration while preserving
+the same CODE bytes.
 
 Run:
 

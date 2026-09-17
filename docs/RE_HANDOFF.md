@@ -70,6 +70,9 @@ remain unknown; OP/MAINE/ZUN have no accepted artifact-local exact cohort.
 source for three reviewed functions in each of OP and MAINE. Two isolated
 TC4J builds agree, but natural CODE is 269 bytes versus the 208-byte target
 producer, so all six units remain source-present.
+[v250](reconstruction/TH04_BGIMAGE_HMEM_V250.md) moves BGIMAGE's two HMem
+ABI declarations into TH04 shared source; a product-only TU compiles with the
+same CODE and extern names as both overlay builds, with no exact promotion.
 ZUN `cfg_init` now has [target-reviewed maintained source](reconstruction/TH04_ZUN_CFG_INIT_V239.md):
 two isolated overlay rebuilds and DIET packs are raw equal, with no exact
 credit while the remaining composite inputs and standalone build are unresolved.

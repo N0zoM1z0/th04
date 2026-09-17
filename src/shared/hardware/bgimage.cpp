@@ -3,8 +3,8 @@
 #include <dos.h>
 #include <mem.h>
 
-#include "compat/rec98/libs/master.lib/master.hpp"
 #include "src/shared/hardware/bgimage.hpp"
+#include "src/shared/memory/hmem.hpp"
 
 enum {
     BGIMAGE_PLANE_SIZE = 32000,
@@ -17,10 +17,10 @@ enum {
 void bgimage_snap(void)
 {
     if(bgimage.B == 0) {
-        bgimage.B = HMem<unsigned char>::alloc(BGIMAGE_PLANE_SIZE);
-        bgimage.R = HMem<unsigned char>::alloc(BGIMAGE_PLANE_SIZE);
-        bgimage.G = HMem<unsigned char>::alloc(BGIMAGE_PLANE_SIZE);
-        bgimage.E = HMem<unsigned char>::alloc(BGIMAGE_PLANE_SIZE);
+        bgimage.B = reinterpret_cast<unsigned char __seg *>(hmem_allocbyte(BGIMAGE_PLANE_SIZE));
+        bgimage.R = reinterpret_cast<unsigned char __seg *>(hmem_allocbyte(BGIMAGE_PLANE_SIZE));
+        bgimage.G = reinterpret_cast<unsigned char __seg *>(hmem_allocbyte(BGIMAGE_PLANE_SIZE));
+        bgimage.E = reinterpret_cast<unsigned char __seg *>(hmem_allocbyte(BGIMAGE_PLANE_SIZE));
     }
 
     memcpy((void far *)bgimage.B, MK_FP(BGIMAGE_SEG_B, 0), BGIMAGE_PLANE_SIZE);
@@ -40,10 +40,10 @@ void bgimage_put(void)
 void bgimage_free(void)
 {
     if(bgimage.B != 0) {
-        HMem<unsigned char>::free(bgimage.B);
-        HMem<unsigned char>::free(bgimage.R);
-        HMem<unsigned char>::free(bgimage.G);
-        HMem<unsigned char>::free(bgimage.E);
+        hmem_free(bgimage.B);
+        hmem_free(bgimage.R);
+        hmem_free(bgimage.G);
+        hmem_free(bgimage.E);
         bgimage.B = 0;
     }
 }
