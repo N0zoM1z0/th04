@@ -179,6 +179,31 @@ These are durable mechanism negatives, not proof of original assembly. No
 source-spelling matrix is continued without a genuinely new compiler/source
 hypothesis.
 
+## v268 maintained scroll driver source
+
+`src/main/scroll/driver.cpp` now keeps the complete `sub_CCD6` scroll-driver
+semantics as natural C++: it records the current page's scroll line, performs
+the conditional hardware scroll, accumulates subpixel movement, wraps the
+signed 400-line scroll position, records the tile delta, and calls the reviewed
+`sub_B835` helper. The unresolved BSS flags retain their target-address names.
+This source compiles from checked-in TH04 text plus pinned TC4J standard
+headers, with no ReC98 header or source overlay.
+
+Run
+`python3 scripts/probes/replay_th04_scroll_driver_natural.py --output-dir .analysis/reconstruction/probes/v268-scroll-driver-maintained`.
+Target `MAI_TEXT 0AAF:21E6`, load `0xCCD6..0xCD35`, file `0xE4D6..0xE535`,
+is 96 bytes. The natural OMF CODE is 107 bytes, SHA-256
+`a3ae10f069d8e284fdbe3e7717151724127fe850ef8d6e47fbb5e419f2826cae`.
+The first 46-byte prefix has identical fixed bytes after masking seven
+unresolved symbol words. The 11-byte excess is concentrated in the later
+`scroll_line` subtraction: this TC4J source preserves the delta in DX and
+reloads the scroll line, while target code subtracts AX directly from memory
+and branches on the sign flag. A direct `_AX` source variant was rejected
+because it emits `SUB AX,AX` and changes semantics. Full linked bytes, symbol
+ownership, MAP, and ordered relocations remain unproved; no exact credit.
+Private receipt SHA-256 is
+`8c48daf843fd9790076708763662fb439666e1015b03c38f4eceeb24ec21d7e6`.
+
 Independent TH05 target-derived bodies preserve the same broad scroll-helper
 architecture: BP/local-byte state, tile-ring `REP MOVSW` with DS/ES swap, flag
 shuffle, EGC redraw flow, and a homologous driver. TH05 also has stage-specific
