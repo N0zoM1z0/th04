@@ -89,9 +89,8 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
 Investigate a natural compiler/OMF producer that predicts the dialog or DEMO
 FIXUPP order while retaining matching raw bytes and MAP. Continue the large
-item and laser owners when that producer remains unresolved. For OP/MAINE,
+gameplay-loop, item, and laser owners when that producer remains unresolved. For OP/MAINE,
 review the SND_LOAD and OP music physical owners against the unpacked target,
-recover BGIMAGE source ownership without upstream inline ASM/codestring, then
 migrate source into src/op, src/maine, or proved src/shared. Reconstruct
 ZUN component source independently: its equal candidate composite contains
 IDA-derived assembly and an external ONGCHK binary, so payload equality gives
@@ -112,6 +111,9 @@ A [v245 dialog OMF control](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md)
 shows that same-segment and empty-bounce `#pragma codeseg` switches preserve
 CODE and both FIXUPP groups at a comparable size; they do not explain the
 target's third relocation run.
+[v248 gameplay-loop control](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md)
+reproduces its 25-byte play-performance interval branch with a natural
+conditional expression, but complete CODE is 372 versus 379 target bytes.
 
 For any promotion, run focused two-cold comparison and a complete cold
 aggregate of affected accepted owners. Finish each bounded packet with
