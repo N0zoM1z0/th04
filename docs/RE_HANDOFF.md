@@ -66,6 +66,10 @@ and gives its eight OP/MAINE relocations the target-restored order; packed
 files still differ. The upstream source uses inline ASM and `codestring`,
 so no exact/source credit follows. The historical pre-DIET target MZ and OMF
 remain unknown; OP/MAINE/ZUN have no accepted artifact-local exact cohort.
+[v247](reconstruction/TH04_BGIMAGE_NATURAL_V247.md) adds TH04-owned BGIMAGE
+source for three reviewed functions in each of OP and MAINE. Two isolated
+TC4J builds agree, but natural CODE is 269 bytes versus the 208-byte target
+producer, so all six units remain source-present.
 ZUN `cfg_init` now has [target-reviewed maintained source](reconstruction/TH04_ZUN_CFG_INIT_V239.md):
 two isolated overlay rebuilds and DIET packs are raw equal, with no exact
 credit while the remaining composite inputs and standalone build are unresolved.
