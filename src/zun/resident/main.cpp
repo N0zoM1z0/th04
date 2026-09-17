@@ -4,7 +4,7 @@
 
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 
 extern char debug;
 void cfg_init(resident_t __seg *resident_seg);

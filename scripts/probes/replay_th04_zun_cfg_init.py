@@ -25,6 +25,7 @@ from inspect_dialog_fixup_order import code_ledata  # noqa: E402
 
 SNAPSHOT = ROOT / ".analysis/reconstruction/exact-unit-replay/gptweb-v214-demo-fixupp-diagnostic-001"
 SOURCE = ROOT / "src/zun/config/cfg_init.cpp"
+RESIDENT_HEADER = ROOT / "src/shared/config/resident.hpp"
 UPSTREAM_SOURCE_SHA = "6590a16417c60dd4858b962463f1433e6a66ff675001e27ec32083a7198e7b12"
 BASELINE_COM_SHA = "cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c151c95110"
 BASELINE_FLAT_SHA = "baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e"
@@ -87,9 +88,16 @@ def build(label: str, snapshot: Path, output: Path, target_cfg: bytes) -> dict[s
     local = work / "th04/zun/config/cfg_init.cpp"
     local.parent.mkdir(parents=True, exist_ok=True)
     local.write_bytes(SOURCE.read_bytes())
+    header = work / "src/shared/config/resident.hpp"
+    header.parent.mkdir(parents=True, exist_ok=True)
+    header.write_bytes(RESIDENT_HEADER.read_bytes())
     (work / "th04/cfginit.cpp").write_text('#include "th04/zun/config/cfg_init.cpp"\n')
 
     upstream = (work / "th04/res_huma.cpp").read_bytes().decode("cp932")
+    old_include = '#include "th04/resident.hpp"'
+    if upstream.count(old_include) != 1:
+        raise ValueError(f"{label}: unrecognized upstream resident include")
+    upstream = upstream.replace(old_include, '#include "src/shared/config/resident.hpp"')
     if upstream.count("char debug = 0;") != 1 or upstream.count("#define LOGO") != 1:
         raise ValueError(f"{label}: unrecognized upstream cfg_init boundary")
     start = upstream.index("char debug = 0;")
@@ -201,6 +209,7 @@ def main() -> int:
         "target_payload_sha256": sha(payload),
         "target_cfg_init_sha256": sha(target_cfg),
         "product_source_sha256": sha(SOURCE.read_bytes()),
+        "resident_header_sha256": sha(RESIDENT_HEADER.read_bytes()),
         "builds": builds,
         "diet_receipt_sha256": sha((diet_dir / "receipt.json").read_bytes()),
         "packed_raw_exact": True,
