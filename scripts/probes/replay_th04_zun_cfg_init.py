@@ -26,6 +26,8 @@ from inspect_dialog_fixup_order import code_ledata  # noqa: E402
 SNAPSHOT = ROOT / ".analysis/reconstruction/exact-unit-replay/gptweb-v214-demo-fixupp-diagnostic-001"
 SOURCE = ROOT / "src/zun/config/cfg_init.cpp"
 RESIDENT_HEADER = ROOT / "src/shared/config/resident.hpp"
+CFG_HEADER = ROOT / "src/shared/config/cfg.hpp"
+DEFAULTS_HEADER = ROOT / "src/zun/config/defaults.hpp"
 UPSTREAM_SOURCE_SHA = "6590a16417c60dd4858b962463f1433e6a66ff675001e27ec32083a7198e7b12"
 BASELINE_COM_SHA = "cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c151c95110"
 BASELINE_FLAT_SHA = "baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e"
@@ -73,7 +75,30 @@ def wine_cmd(*args: str) -> list[str]:
     return ["wine", str(ROOT / "_reference/ReC98/bin/msdos.exe"), "-e", "-x", *args]
 
 
-def build(label: str, snapshot: Path, output: Path, target_cfg: bytes) -> dict[str, str]:
+def materialize_local_headers(work: Path) -> None:
+    for source in (RESIDENT_HEADER, CFG_HEADER, DEFAULTS_HEADER):
+        relative = source.relative_to(ROOT)
+        destination = work / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(source.read_bytes())
+
+
+def localize_wrapper_includes(upstream: str) -> str:
+    changes = (
+        ('#include "th01/rank.h"\n', '#include "src/zun/config/defaults.hpp"\n'),
+        ('#include "th04/resident.hpp"\n', ''),
+        ('#include "th04/snd/snd.h"\n', ''),
+        ('#include "th04/formats/cfg.hpp"\n', ''),
+    )
+    for old, new in changes:
+        if upstream.count(old) != 1:
+            raise ValueError(f"unrecognized upstream include: {old.strip()}")
+        upstream = upstream.replace(old, new)
+    return upstream
+
+
+def build(label: str, snapshot: Path, output: Path, target_cfg: bytes,
+          target_defaults: bytes) -> dict[str, str]:
     if sha((snapshot / "th04/res_huma.cpp").read_bytes()) != UPSTREAM_SOURCE_SHA:
         raise ValueError(f"{label}: unexpected upstream C++ source")
     if sha((snapshot / "bin/th04/res_huma.com").read_bytes()) != BASELINE_COM_SHA:
@@ -88,16 +113,12 @@ def build(label: str, snapshot: Path, output: Path, target_cfg: bytes) -> dict[s
     local = work / "th04/zun/config/cfg_init.cpp"
     local.parent.mkdir(parents=True, exist_ok=True)
     local.write_bytes(SOURCE.read_bytes())
-    header = work / "src/shared/config/resident.hpp"
-    header.parent.mkdir(parents=True, exist_ok=True)
-    header.write_bytes(RESIDENT_HEADER.read_bytes())
+    materialize_local_headers(work)
     (work / "th04/cfginit.cpp").write_text('#include "th04/zun/config/cfg_init.cpp"\n')
 
-    upstream = (work / "th04/res_huma.cpp").read_bytes().decode("cp932")
-    old_include = '#include "th04/resident.hpp"'
-    if upstream.count(old_include) != 1:
-        raise ValueError(f"{label}: unrecognized upstream resident include")
-    upstream = upstream.replace(old_include, '#include "src/shared/config/resident.hpp"')
+    upstream = localize_wrapper_includes(
+        (work / "th04/res_huma.cpp").read_bytes().decode("cp932")
+    )
     if upstream.count("char debug = 0;") != 1 or upstream.count("#define LOGO") != 1:
         raise ValueError(f"{label}: unrecognized upstream cfg_init boundary")
     start = upstream.index("char debug = 0;")
@@ -139,6 +160,8 @@ def build(label: str, snapshot: Path, output: Path, target_cfg: bytes) -> dict[s
         raise ValueError(f"{label}: maintained cfg_init CODE differs from composite")
     if len(composite) != 0x194 or component[0x267:0x2FF] != target_cfg:
         raise ValueError(f"{label}: cfg_init linked bytes or contribution extent differ")
+    if component[0x14FF:0x1505] != target_defaults:
+        raise ValueError(f"{label}: linked six-byte default options differ from target")
     if sha(flat) != BASELINE_FLAT_SHA:
         raise ValueError(f"{label}: full flat ZUN output differs from target payload")
     return {
@@ -181,9 +204,16 @@ def main() -> int:
         raise ValueError("attested decoded payload identity failed")
 
     target_cfg = payload[0xDCF:0xE67]
+    target_defaults = payload[0x2067:0x206D]
+    if target_defaults != bytes.fromhex("FF 03 02 01 01 01"):
+        raise ValueError("target six-byte default options changed")
+    if (target_cfg[0x11:0x14] != bytes.fromhex("B9 06 00")
+            or target_cfg[0x34:0x36] != bytes.fromhex("6A 0A")
+            or target_cfg[0x6E:0x70] != bytes.fromhex("6A 06")):
+        raise ValueError("target cfg size and resident offset instructions changed")
     builds = {
-        "a": build("a", args.snapshot_a.resolve(), output, target_cfg),
-        "b": build("b", args.snapshot_b.resolve(), output, target_cfg),
+        "a": build("a", args.snapshot_a.resolve(), output, target_cfg, target_defaults),
+        "b": build("b", args.snapshot_b.resolve(), output, target_cfg, target_defaults),
     }
     if builds["a"]["standalone_code_sha256"] != builds["b"]["standalone_code_sha256"]:
         raise ValueError("A/B standalone CODE differs")
@@ -208,8 +238,12 @@ def main() -> int:
         "target_sha256": target["sha256"],
         "target_payload_sha256": sha(payload),
         "target_cfg_init_sha256": sha(target_cfg),
+        "target_default_options_payload_offset": "0x2067",
+        "target_default_options_hex": target_defaults.hex(),
         "product_source_sha256": sha(SOURCE.read_bytes()),
         "resident_header_sha256": sha(RESIDENT_HEADER.read_bytes()),
+        "cfg_header_sha256": sha(CFG_HEADER.read_bytes()),
+        "defaults_header_sha256": sha(DEFAULTS_HEADER.read_bytes()),
         "builds": builds,
         "diet_receipt_sha256": sha((diet_dir / "receipt.json").read_bytes()),
         "packed_raw_exact": True,

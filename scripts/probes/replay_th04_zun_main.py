@@ -17,7 +17,8 @@ import tomllib
 
 from replay_th04_zun_cfg_init import (
     ROOT, SNAPSHOT, SOURCE as CFG_SOURCE, UPSTREAM_SOURCE_SHA,
-    BASELINE_COM_SHA, BASELINE_FLAT_SHA, RESIDENT_HEADER,
+    BASELINE_COM_SHA, BASELINE_FLAT_SHA, RESIDENT_HEADER, CFG_HEADER,
+    DEFAULTS_HEADER, materialize_local_headers, localize_wrapper_includes,
     code, run, sha, wine_cmd, wine_env,
 )
 
@@ -64,15 +65,11 @@ def build(label: str, snapshot: Path, output: Path, source_text: str) -> dict[st
     main.parent.mkdir(parents=True)
     cfg.write_bytes(CFG_SOURCE.read_text().encode("cp932"))
     main.write_bytes(source_text.encode("cp932"))
-    header = work / "src/shared/config/resident.hpp"
-    header.parent.mkdir(parents=True, exist_ok=True)
-    header.write_bytes(RESIDENT_HEADER.read_bytes())
+    materialize_local_headers(work)
 
-    upstream = (work / "th04/res_huma.cpp").read_bytes().decode("cp932")
-    old_include = '#include "th04/resident.hpp"'
-    if upstream.count(old_include) != 1:
-        raise ValueError(f"{label}: unrecognized upstream resident include")
-    upstream = upstream.replace(old_include, '#include "src/shared/config/resident.hpp"')
+    upstream = localize_wrapper_includes(
+        (work / "th04/res_huma.cpp").read_bytes().decode("cp932")
+    )
     marker = "char debug = 0;"
     if upstream.count(marker) != 1:
         raise ValueError(f"{label}: unrecognized ReC98 source boundary")
@@ -186,6 +183,8 @@ def main() -> int:
         "comma_return_control": args.comma_return_control,
         "product_cfg_source_sha256": sha(CFG_SOURCE.read_bytes()),
         "resident_header_sha256": sha(RESIDENT_HEADER.read_bytes()),
+        "cfg_header_sha256": sha(CFG_HEADER.read_bytes()),
+        "defaults_header_sha256": sha(DEFAULTS_HEADER.read_bytes()),
         "builds": results,
         "main_code_size_difference": len(target_main) - results["a"]["main_code_size"],
         "exact": False,

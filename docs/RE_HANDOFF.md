@@ -64,8 +64,10 @@ headers, but natural CODE is 269 versus 208 target bytes. ZUN
 [`_main`](reconstruction/TH04_ZUN_MAIN_V241.md) have reviewed maintained source;
 the first matches in an untrusted composite overlay, while natural `_main` is
 246 versus 252 target bytes. Neither is exact.
-Their resident structure is now [TH04-owned](reconstruction/TH04_ZUN_RESIDENT_LAYOUT_V309.md)
-and preserves both pinned compiler results; other external dependencies remain.
+Their [resident](reconstruction/TH04_ZUN_RESIDENT_LAYOUT_V309.md) and
+[configuration](reconstruction/TH04_ZUN_CFG_LAYOUT_V311.md) declarations are
+now TH04-owned and preserve both pinned compiler results; other external
+dependencies remain.
 
 MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte

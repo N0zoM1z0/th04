@@ -3,10 +3,7 @@
 #include <stddef.h>
 
 #include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/th01/rank.h"
-#include "src/shared/config/resident.hpp"
-#include "th04/snd/snd.h"
-#include "th04/formats/cfg.hpp"
+#include "src/zun/config/defaults.hpp"
 
 char debug = 0;
 
