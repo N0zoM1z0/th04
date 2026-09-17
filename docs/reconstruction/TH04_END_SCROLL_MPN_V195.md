@@ -59,6 +59,20 @@ order is different, so this is a compiler-observed plausible primitive, not
 an exact body or a recovered source file. Private receipt SHA-256 is
 `e03131c290771d6371f3998e0a440d6d49126b67a29c4a9bdc708a97c804aa37`.
 
+The complete helper now also has maintained natural C++ candidate source in
+`src/main/scroll/tile_ring_update.cpp`. It covers the reviewed flag tests,
+scroll-row transition, STD section and map lookup, 48-byte map-to-tile copy,
+flag transfer, and EGC redraw calls. The product-only replay is
+`python3 scripts/probes/replay_th04_scroll_tile_ring_natural.py --output-dir .analysis/reconstruction/probes/v270-scroll-tile-ring-maintained`.
+Pinned TC4J emits valid 215-byte END_TEXT OMF CODE with one `REP MOVSW`,
+versus 199 target bytes with one `REP MOVSW`. Source SHA-256 is
+`9f24b009ec307950f07a29cd57d2c8a872975784dbea3f0925149d87800892e6`;
+private receipt SHA-256 is
+`6acf33f78505ed78940c56055af133cc8928fee62987d7339462d66939591777`.
+This records `source-present` only: historical C++/ASM origin, segment setup
+order, external storage aliases, linked MAP, relocation, and complete raw
+extent remain unresolved. The v257 primitive does not waive these gates.
+
 ### `sub_CCD6`
 
 `sub_CCD6` is now reviewed as the complete near MAI_TEXT function at load

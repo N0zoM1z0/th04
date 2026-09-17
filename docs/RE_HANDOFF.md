@@ -30,8 +30,8 @@ inert padding, ABI changes, or false assembly ownership.
 
 ## Current state
 
-MAIN has **462/486 reviewed authored C/C++ functions** and
-**75,665/81,420 reviewed authored C/C++ bytes** exact; 39 accepted
+MAIN has **462/487 reviewed authored C/C++ functions** and
+**75,665/81,619 reviewed authored C/C++ bytes** exact; 39 accepted
 original-style ASM units add 5,525 bytes. The last complete native aggregate,
 gptweb-v212-randring2-and-aggregate-final-001, passes all 248 default
 exact MAIN owners twice (receipt SHA-256
@@ -65,15 +65,15 @@ headers, but natural CODE is 269 versus 208 target bytes. ZUN
 the first matches in an untrusted composite overlay, while natural `_main` is
 246 versus 252 target bytes. Neither is exact.
 
-MAIN [`sub_CCD6`](reconstruction/TH04_END_SCROLL_MPN_V195.md) now has maintained
-product-only C++ source and a reviewed 96-byte target extent. Its first
-46-byte prefix matches after masking seven unresolved symbol words, but TC4J
-emits 107 bytes; exactness and link ownership remain open.
+MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
+now have maintained product-only C++ source and reviewed 96- and 199-byte
+target extents. TC4J emits 107 and 215 bytes respectively; exactness and
+link ownership remain open.
 
 The current product still uses compat/rec98 forwarding headers and a pinned
 ReC98 overlay for replay. Standalone checked-in TH04 build closure, full
 packed-file matching, runtime scenarios, and independent provenance remain
-open. Track exact owners and the remaining 12 unreviewed MAIN functions from
+open. Track exact owners and the remaining 11 unreviewed MAIN functions from
 config/units.csv, config/th04_main_authored_functions.csv,
 config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
