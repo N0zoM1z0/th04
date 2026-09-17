@@ -80,3 +80,17 @@ Replay with `python3 scripts/probes/replay_th04_zun_main.py
 `f309dc6135528d0a06eab9ddaecb7e8cac7fb7fc5fe404971c8769d1a45a80f5`.
 This rejects comma-return lowering as the missing natural producer; the
 maintained source and acceptance state do not change.
+
+## v286 optimization-toggle control
+
+Replacing `-O` with `-O-` in one isolated pinned TC4J source overlay emits
+248 standalone `_main` CODE bytes, SHA-256
+`28f26e6f6ac85ed09aeb844df72d84edf6109651e8310c443fb92fc5621854f6`.
+The target remains 252 bytes, and the bad-option and already-resident branches
+still share a later `dos_puts2` call instead of the two target calls. The
+composite `cfg_init` plus `_main` object also changes from 398 to 402 CODE
+bytes, so this toggle does not preserve the established component shape.
+Private OMF, CODE, logs, and receipt are under
+`.analysis/reconstruction/probes/v286-zun-O-minus/`; receipt SHA-256
+`82d28ed6dcb2535a135a0d2dca1f9cb7a7382b341d5bf118ce14681f9709c3e3`.
+No source or exact state changes.
