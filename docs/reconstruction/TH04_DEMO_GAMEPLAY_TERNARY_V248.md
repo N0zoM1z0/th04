@@ -139,3 +139,19 @@ The `(void)0` arms have no runtime effect and cannot be inserted into product
 source solely to manufacture the two jumps. The maintained source and exact
 state remain unchanged. The original source form, target `MOV DX,AX`
 producer, and linked owner comparison are still open.
+
+## v308 frame-increment control
+
+The target frame-counter bytes at body `0x115..0x120` remain
+`A1 8A 53 8B D0 40 A3 8A 53 25 0F 00`: `MOV DX,AX` precedes the increment.
+`python3 scripts/probes/probe_th04_gameplay_increment.py --output-dir
+.analysis/reconstruction/probes/v308-gameplay-increment-replay` compiles four
+semantically equivalent increment forms in two isolated pinned-TC4J rounds.
+All OMF and CODE pairs agree. Pre-increment, `+= 1`, and a separate
+post-increment/read each emit 373 bytes; post-increment plus one emits 374.
+None emits `MOV DX,AX`. The maintained 373-byte baseline is unchanged.
+
+Receipt SHA-256: `5e97328ffe6a36f8ea027c423b402cbd2de4152332d663c11299284686984636`.
+These ordinary increment forms do not solve the two-byte gap. No product
+source, linked bytes, or exactness state changed. The target producer remains
+unknown; introducing a dead DX assignment would not be justified.
