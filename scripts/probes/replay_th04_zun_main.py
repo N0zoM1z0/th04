@@ -18,7 +18,8 @@ import tomllib
 from replay_th04_zun_cfg_init import (
     ROOT, SNAPSHOT, SOURCE as CFG_SOURCE, UPSTREAM_SOURCE_SHA,
     BASELINE_COM_SHA, BASELINE_FLAT_SHA, RESIDENT_HEADER, CFG_HEADER,
-    DEFAULTS_HEADER, materialize_local_headers, localize_wrapper_includes,
+    DEFAULTS_HEADER, API_HEADER, materialize_local_headers,
+    localize_wrapper_includes,
     code, run, sha, wine_cmd, wine_env,
 )
 
@@ -185,6 +186,7 @@ def main() -> int:
         "resident_header_sha256": sha(RESIDENT_HEADER.read_bytes()),
         "cfg_header_sha256": sha(CFG_HEADER.read_bytes()),
         "defaults_header_sha256": sha(DEFAULTS_HEADER.read_bytes()),
+        "runtime_api_header_sha256": sha(API_HEADER.read_bytes()),
         "builds": results,
         "main_code_size_difference": len(target_main) - results["a"]["main_code_size"],
         "exact": False,

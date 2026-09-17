@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/zun/runtime/api.hpp"
 #include "src/zun/config/defaults.hpp"
 
 char debug = 0;

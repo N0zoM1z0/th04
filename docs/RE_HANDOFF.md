@@ -67,7 +67,9 @@ the first matches in an untrusted composite overlay, while natural `_main` is
 Their [resident](reconstruction/TH04_ZUN_RESIDENT_LAYOUT_V309.md) and
 [configuration](reconstruction/TH04_ZUN_CFG_LAYOUT_V311.md) declarations are
 now TH04-owned and preserve both pinned compiler results; other external
-dependencies remain.
+dependencies remain. Both ZUN C++ TUs also [compile from checked-in source
+and headers alone](reconstruction/TH04_ZUN_SOURCE_ONLY_V314.md); the ZUN link
+and packed product build still require external inputs.
 
 MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte

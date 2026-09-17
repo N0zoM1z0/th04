@@ -2,8 +2,7 @@
 
 #include <stddef.h>
 
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/zun/runtime/api.hpp"
 #include "src/shared/config/resident.hpp"
 
 extern char debug;

@@ -28,6 +28,7 @@ SOURCE = ROOT / "src/zun/config/cfg_init.cpp"
 RESIDENT_HEADER = ROOT / "src/shared/config/resident.hpp"
 CFG_HEADER = ROOT / "src/shared/config/cfg.hpp"
 DEFAULTS_HEADER = ROOT / "src/zun/config/defaults.hpp"
+API_HEADER = ROOT / "src/zun/runtime/api.hpp"
 UPSTREAM_SOURCE_SHA = "6590a16417c60dd4858b962463f1433e6a66ff675001e27ec32083a7198e7b12"
 BASELINE_COM_SHA = "cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c151c95110"
 BASELINE_FLAT_SHA = "baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e"
@@ -76,7 +77,7 @@ def wine_cmd(*args: str) -> list[str]:
 
 
 def materialize_local_headers(work: Path) -> None:
-    for source in (RESIDENT_HEADER, CFG_HEADER, DEFAULTS_HEADER):
+    for source in (RESIDENT_HEADER, CFG_HEADER, DEFAULTS_HEADER, API_HEADER):
         relative = source.relative_to(ROOT)
         destination = work / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -244,6 +245,7 @@ def main() -> int:
         "resident_header_sha256": sha(RESIDENT_HEADER.read_bytes()),
         "cfg_header_sha256": sha(CFG_HEADER.read_bytes()),
         "defaults_header_sha256": sha(DEFAULTS_HEADER.read_bytes()),
+        "runtime_api_header_sha256": sha(API_HEADER.read_bytes()),
         "builds": builds,
         "diet_receipt_sha256": sha((diet_dir / "receipt.json").read_bytes()),
         "packed_raw_exact": True,
