@@ -64,6 +64,19 @@ and `ec8dbc3e9b576a33dafdde1174bcb7868cc037a9b904e1dec372d46f5b51bdbd`.
 The probe inputs and objects are under
 `.analysis/reconstruction/probes/v219-op-music-option-g/`.
 
+## v281 TASM `EVEN` context control
+
+`python3 scripts/probes/probe_th04_tasm_even_context.py --output-dir
+.analysis/reconstruction/probes/v281-tasm-even-context` assembles a checked-in
+four-segment source with pinned TASM32 5.0 and validates the OMF LEDATA. `EVEN`
+after a data definition emits `00` in both `CODE` and `DATA` classes; after a
+`NOP` instruction it emits `90` in both classes. Receipt SHA-256:
+`c8abb0a991dcfe758a31a3736a718d7fb377e601c10582246b88d86138144c91`.
+Segment class alone therefore does not explain the three opposite OP/MAINE
+alignment bytes. The historical source statement and object boundary before
+each byte remain unknown; this synthetic control does not promote packed or
+source exactness.
+
 ## Next acceptance work
 
 Recover natural source and physical boundaries for OP/MAINE owners, starting
