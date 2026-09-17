@@ -104,6 +104,10 @@ target OMF producer remains unknown.
 The [v238 DEMO compiler probe](reconstruction/TH04_DEMO_INTERNAL_BOUNDARIES_V165.md)
 also rejects simple odd-offset switch-table padding and two stage-frame
 codegen hypotheses without changing exact counts.
+A [v245 dialog OMF control](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md)
+shows that same-segment and empty-bounce `#pragma codeseg` switches preserve
+CODE and both FIXUPP groups at a comparable size; they do not explain the
+target's third relocation run.
 
 For any promotion, run focused two-cold comparison and a complete cold
 aggregate of affected accepted owners. Finish each bounded packet with

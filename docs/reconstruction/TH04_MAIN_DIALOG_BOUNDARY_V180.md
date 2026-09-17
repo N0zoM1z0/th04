@@ -182,6 +182,32 @@ also changes the full DIALOG_TEXT contribution (2028 to 2029 bytes, 1753
 different bytes). It cannot replace the current raw-matching producer or
 promote either dialog unit.
 
+## v245 code-segment flush control
+
+The checked-in compiler control
+`python3 scripts/probes/probe_th04_dialog_segment_flush.py` tests a distinct
+OMF-batching hypothesis: repeating `#pragma codeseg DIALOG_TEXT main_01`, or
+briefly switching to an empty `TEMP_TEXT` and back, might flush CODE/FIXUPP
+records without changing generated instructions. A smaller control showed
+that `#pragma option -zC` is rejected after code starts; `#pragma codeseg`
+is accepted there.
+
+The pinned TC4J 4.02 `-ml -O -b- -3 -Z -d` probe generates 1,830 bytes of
+CODE with far calls and volatile writes, so it crosses the same 1 KiB OMF
+record threshold as dialog. Baseline, same-segment, and empty-bounce variants
+produce identical CODE SHA-256
+`f77c60a5c9e735331632f3301f18dd45e34917536f14c68e15d8c7f62c5f6057`.
+All three retain exactly two LEDATA ranges, `0x000..0x3FB` and
+`0x3FC..0x725`, and identical following FIXUPP payloads. Only the empty
+segment's metadata adds one OMF record. The private three-variant receipt is
+`.analysis/reconstruction/probes/v245-dialog-segment-flush-replay/receipt.json`,
+SHA-256 `e26d412d8395a1e336fd9d920996591b4ffc05169bbdfb61058157bdcc328a9b`.
+
+This rejects those two source-level segment switches as simple explanations
+for the target's third descending relocation run. It is a compiler control,
+not the unavailable original dialog object. The target OMF producer remains
+unknown, and no dialog exactness changes.
+
 ## Function-review control plane
 
 `reviewed_nonexact` already validates logical versus physical size, raw terminal
