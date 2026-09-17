@@ -42,7 +42,7 @@ means whole MAIN.EXE or whole TH04 is exact.
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
-| Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A byte-identical split across synthetic segments still fails global MZ order and does not prove target segment ownership. [Evidence](reconstruction/TH04_DEMO_PAUSE_SPLIT_V282.md) |
+| Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A synthetic split and [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md) fail the global byte/layout/relocation gates. |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
 | Thick laser update | B4M_UPDATE_TEXT load 0x15D74..0x15ECD, 0x15A bytes | Eight-byte template-copy setup-order difference. [Evidence](reconstruction/TH04_MAIN_THICKLASER_UPDATE_V181.md) |
 | Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte; maintained loop compiles to 372/379 bytes with the target 25-byte interval branch and frame-counter load/increment/store shape. A dead DX copy, first mask width, and two `EB 00` jumps remain open. [Probe](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md) |
