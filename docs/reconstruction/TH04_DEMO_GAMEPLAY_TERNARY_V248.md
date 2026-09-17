@@ -68,3 +68,16 @@ has an extra `MOV DX,AX`, a 16-bit rather than 8-bit first mask, and two
 `EB 00` jumps. Complete bytes remain 372 versus 379, so this is
 compiler-observed local progress, not exactness. Receipt SHA-256:
 `b107b6d7d48ebc53a5a1b7086d6c9a8b6fda09f201535141106c454c2b479e97`.
+
+## v285 optimization-toggle control
+
+Replacing only production `-O` with `-O-` for the current maintained source
+under the pinned TC4J/v214 header snapshot emits the **same** 372-byte
+DEMO_TEXT CODE, SHA-256
+`e3d6e451f5c5988c21c885be406815bf8c8fd23c181494db67bea74001b245ed`.
+It still contains no `EB 00`, `MOV DX,AX`, or 16-bit `AND AX,000F`; the exact
+25-byte interval branch remains. This single option toggle does not explain
+the seven target bytes. The command, valid OMF, CODE, and private receipt are
+under `.analysis/reconstruction/probes/v285-gameplay-opt/`; receipt SHA-256
+`57b9e2be2f15f9fb7098c059953987bdef5aad0f76dbe8c06d4eb2145d875ad4`.
+No source or exact state changes.
