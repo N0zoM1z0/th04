@@ -60,3 +60,23 @@ TU fusion, and IDE compiler experiments did not. No exactness is promoted.
 The later [v236 `-B`/TASM diagnostic](TH04_MAIN_B_MODE_V237.md) changes the
 same v214 `sess.cpp` contribution from 1310 to 1306 bytes, failing the raw
 extent gate before linking. Its modified generated ASM is diagnostic only.
+
+## v255 current TLINK switch control
+
+The read-only-input probe
+`python3 scripts/probes/probe_th04_demo_tlink_switches.py --output-dir .analysis/reconstruction/probes/v255-demo-tlink-switches`
+relinks the pinned v214 cold object snapshot five times. The response file,
+`sess.obj`, retained candidate image, target, TLINK 6.10 binary, and MS-DOS
+runner are digest-attested before the probe. It varies only the active response
+file's `-c`, `-s`, and `-E` prefix, with the same ordered objects and libraries.
+
+Baseline, omission of each switch, and omission of `-s -E` all produce the
+**identical complete 152,974-byte candidate MAIN.EXE**, SHA-256
+`1c1bcec509b775a6fa994d403d573ede75e74b8781ac5f0db06eb124d5fbae21`.
+All five retain the same ordered 52 stage-session relocation sites (order
+SHA-256 `8278cb727703b21f4a97de1f441089c8fe22a6beb3854c9c3ba1bcdb96da0ab3`),
+with `0xB2DA` last; the target orders that site first. Private receipt SHA-256
+is `245cb935ddab7c1ec800bc36e7e0211350690272f5e6676b665a925115b328af`.
+Thus these three current switches alone cannot explain the target rotation.
+The target OMF and historical linker invocation remain unknown. No exactness
+state changes.
