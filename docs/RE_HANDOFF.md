@@ -73,7 +73,10 @@ and headers alone](reconstruction/TH04_ZUN_SOURCE_ONLY_V314.md). A
 [separate cold link](reconstruction/TH04_ZUN_COMPONENT_LINK_V317.md) produces
 a 6360-byte resident component from those two objects plus a pinned external
 support library; it differs from the decoded target at 4241 bytes. Full ZUN
-source, composite link, and packed product build remain open.
+source, composite link, and packed product build remain open. A
+[local `GRAPH_CLEAR`](reconstruction/TH04_ZUN_GRAPH_CLEAR_V319.md) TASM unit
+replaces one support-library member without changing the candidate component;
+its linked 36 bytes equal the target decoded extent, with no exact promotion.
 
 MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte
