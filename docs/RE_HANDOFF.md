@@ -63,7 +63,8 @@ headers, but natural CODE is 269 versus 208 target bytes. ZUN
 [`cfg_init`](reconstruction/TH04_ZUN_CFG_INIT_V239.md) and
 [`_main`](reconstruction/TH04_ZUN_MAIN_V241.md) have reviewed maintained source;
 the first matches in an untrusted composite overlay, while natural `_main` is
-246 versus 252 target bytes. Neither is exact.
+246 versus 252 target bytes; [five semantic branch rewrites](reconstruction/TH04_ZUN_MAIN_V241.md)
+also fail the size gate. Neither is exact.
 Their [resident](reconstruction/TH04_ZUN_RESIDENT_LAYOUT_V309.md) and
 [configuration](reconstruction/TH04_ZUN_CFG_LAYOUT_V311.md) declarations are
 now TH04-owned and preserve both pinned compiler results; other external

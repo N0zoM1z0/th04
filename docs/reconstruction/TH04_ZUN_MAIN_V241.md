@@ -94,3 +94,21 @@ Private OMF, CODE, logs, and receipt are under
 `.analysis/reconstruction/probes/v286-zun-O-minus/`; receipt SHA-256
 `82d28ed6dcb2535a135a0d2dca1f9cb7a7382b341d5bf118ce14681f9709c3e3`.
 No source or exact state changes.
+
+## v315 semantic branch-shape controls
+
+`python3 scripts/probes/probe_th04_zun_main_branch_shapes.py --output-dir
+.analysis/reconstruction/probes/v315-zun-main-branch-shapes-ab` compiles five
+ordinary C++ alternatives from checked-in ZUN source and headers only. It
+attests the pinned packed target, decoded `_main` at `_TEXT` `0xE67..0xF62`,
+and TC4J; two isolated rounds produce identical valid OMF for every variant.
+The target body is 252 bytes. Shared error-label forms emit 248 and 249 bytes;
+a local message pointer and a const local return value each emit 251 bytes;
+a mutable local return value emits 257 bytes. All fail the size gate, so none
+can be a raw-exact producer. The last form does retain a separate bad-option
+print call, but adds a stack store and reload absent from the target.
+
+Receipt SHA-256:
+`5f0ae65c3a52c92d50ce517c844de58c70c4fecc5825c40cec4fe93de79452c3`.
+This eliminates those source-shape hypotheses only. The maintained `_main`
+remains 246 bytes, source-present, and nonexact; no ZUN exact state changes.
