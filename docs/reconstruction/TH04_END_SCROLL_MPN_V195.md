@@ -48,6 +48,17 @@ The boundary is reviewed, but its source form and origin remain deliberately
 unresolved. It receives no natural-source exactness and no original-ASM
 attestation credit in v195.
 
+A later bounded compiler control tests the copy mechanism without assigning
+origin to the whole function. Run
+`python3 scripts/probes/probe_th04_end_scroll_copy.py --output-dir .analysis/reconstruction/probes/v257-end-scroll-copy`.
+Pinned TC4J 4.02 compiles a small C++ `__memcpy__` from a far map-segment
+pointer to a near tile-ring pointer with length 48. Its valid 33-byte OMF CODE
+contains one 24-word `REP MOVSW` and DS/ES exchange, as does the target at
+`END_TEXT 0AAF:0DDB` / load `0xB8CB`. The generated register and segment setup
+order is different, so this is a compiler-observed plausible primitive, not
+an exact body or a recovered source file. Private receipt SHA-256 is
+`e03131c290771d6371f3998e0a440d6d49126b67a29c4a9bdc708a97c804aa37`.
+
 ### `sub_CCD6`
 
 `sub_CCD6` is now reviewed as the complete near MAI_TEXT function at load
