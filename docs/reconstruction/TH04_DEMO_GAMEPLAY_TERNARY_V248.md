@@ -106,3 +106,36 @@ The target remains 379 bytes. Its extra `MOV DX,AX` at body offset 0x118 and
 two `EB 00` jumps at 0xF0 and 0x16A have no justified natural producer yet.
 This revision improves compiler shape by one byte; it does not pass a linked
 raw/MAP/ordered-relocation comparison or promote the unit to exact.
+
+## v302 conditional-expression control
+
+The target has `EB 00` at body offsets `0xF0` and `0x16A`, immediately after
+the palette update and play-performance raise conditional bodies. A pinned
+TC4J synthetic control shows that an ordinary one-arm `if` and an explicit
+empty `else` emit no such jump. A void conditional expression with a true
+side effect and `(void)0` false arm emits `EB 00` after the true body.
+
+`python3 scripts/probes/probe_th04_gameplay_conditional.py --output-dir
+.analysis/reconstruction/probes/v302-gameplay-conditional-replay` applies
+each candidate form independently to the maintained complete loop. Two
+isolated compiler rounds produce identical valid objects:
+
+| Temporary source form | CODE bytes | `EB 00` offsets |
+| --- | ---: | --- |
+| Maintained `if` source | 373 | none |
+| Explicit empty `else` | 373 | none |
+| Palette condition only | 375 | `0xF0` |
+| Raise condition only | 375 | `0x166` |
+| Both conditions | 377 | `0xF0`, `0x168` |
+
+The second offset is two bytes before the target's `0x16A`, consistent with
+the still-missing target `MOV DX,AX` at `0x118`. The two-condition CODE SHA-256
+is `4715a98c6b059be0f7ebfff9c67172bb81e9458037280c2f8f467b93f9419b6e`;
+private receipt SHA-256 is
+`3a7abc379d5209239533e0e9424ece435eb57f31c3480e35a233c85d59e8a8bd`.
+
+This identifies a possible compiler mechanism, not the historical source.
+The `(void)0` arms have no runtime effect and cannot be inserted into product
+source solely to manufacture the two jumps. The maintained source and exact
+state remain unchanged. The original source form, target `MOV DX,AX`
+producer, and linked owner comparison are still open.
