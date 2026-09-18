@@ -41,7 +41,7 @@ means whole MAIN.EXE or whole TH04 is exact.
 
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
-| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | [Three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) now have natural C++: TC4J emits 134 versus 142 target bytes, with a 24-byte velocity instruction match after address masking. The 0x690 dispatcher/table lacks source; complete raw and three ordered relocations remain open. |
+| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | [Three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) have natural C++ (134 versus 142 target bytes); the velocity helper's 24 instruction bytes match after address masking. A [TC4J `__es` pointer probe](reconstruction/TH04_MAIN_ENEMY_SCRIPT_ES_CODEGEN_V329.md) reproduces the dispatcher's SI/ES/DI entry. Its full 0x690 source, raw bytes, and three ordered relocations remain open. |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A synthetic split and [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md) fail the global byte/layout/relocation gates. |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
