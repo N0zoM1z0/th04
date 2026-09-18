@@ -31,7 +31,7 @@ The 105 original-style ASM observations remain a separate attestation queue.
 | Artifact | Target-derived ASM | Candidate C++ | Candidate C | Cross-game C/C++ |
 | --- | ---: | ---: | ---: | ---: |
 | `th04-op` | 4 | 81 | 2 | 3 |
-| `th04-main` | 9 | 1 | 0 | 0 |
+| `th04-main` | 6 | 4 | 0 | 0 |
 | `th04-maine` | 25 | 40 | 2 | 2 |
 | `th04-zun` | 11 | 2 | 0 | 0 |
 

@@ -41,7 +41,7 @@ means whole MAIN.EXE or whole TH04 is exact.
 
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
-| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | [Target boundary](reconstruction/TH04_MAIN_ENEMY_SCRIPT_BOUNDARY_V327.md) now closes four near bodies and the 144-word table; maintained source and exact acceptance are open. This denominator correction changes MAIN authored exactness to 90.681% without losing accepted bytes. |
+| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | [Three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) now have natural C++: TC4J emits 134 versus 142 target bytes, with a 24-byte velocity instruction match after address masking. The 0x690 dispatcher/table lacks source; complete raw and three ordered relocations remain open. |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A synthetic split and [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md) fail the global byte/layout/relocation gates. |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
@@ -104,8 +104,9 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
 ## Next work and finish gate
 
-Recover natural C++ for the 0x71E MAIN enemy-script owner, preserving its
-144-case table and three ordered relocations. Find a natural OMF producer for
+Recover natural C++ for the 0x690 MAIN enemy-script dispatcher/table, then
+resolve the helper BP-local and ES-save producers and all three ordered
+relocations. Find a natural OMF producer for
 MAIN dialog/DEMO ordered relocations without
 changing raw bytes or MAP; [current controls](reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
 rule out common switches and the simple pause split. Continue the large

@@ -45,6 +45,7 @@ def measures() -> dict[str, int]:
         for row in units
         if row["origin"] == "authored"
         and row["boundary_state"] in {"reviewed", "shared"}
+        and row["state"] != "excluded"
     ]
     original_asm = [
         row
