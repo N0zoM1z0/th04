@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-17. This is a current-state index. Historical experiments
+Updated 2026-09-18. This is a current-state index. Historical experiments
 belong in the ledgers and focused notes, not here. Before target-dependent work,
 read [AGENTS.md](../AGENTS.md), [architecture](ARCHITECTURE.md),
 [workflow](RE_WORKFLOW.md), and the relevant local skill; inspect git status and
@@ -76,7 +76,11 @@ support library; it differs from the decoded target at 4241 bytes. Full ZUN
 source, composite link, and packed product build remain open. A
 [local `GRAPH_CLEAR`](reconstruction/TH04_ZUN_GRAPH_CLEAR_V319.md) TASM unit
 replaces one support-library member without changing the candidate component;
-its linked 36 bytes equal the target decoded extent, with no exact promotion.
+its linked 36 bytes equal the target decoded extent. The
+[local `RESDATA`](reconstruction/TH04_ZUN_RESDATA_V323.md) unit also matches
+190 target code and ten target data bytes. Rebuilding the diagnostic library
+in its original physical member order preserves the whole candidate component
+and MAP; neither support unit has artifact-local exact acceptance.
 
 MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte
