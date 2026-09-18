@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-18. This is a current-state index. Historical experiments
+Updated 2026-09-19. This is a current-state index. Historical experiments
 belong in the ledgers and focused notes, not here. Before target-dependent work,
 read [AGENTS.md](../AGENTS.md), [architecture](ARCHITECTURE.md),
 [workflow](RE_WORKFLOW.md), and the relevant local skill; inspect git status and
@@ -31,11 +31,11 @@ inert padding, ABI changes, or false assembly ownership.
 ## Current state
 
 MAIN has **462/487 reviewed authored C/C++ functions** and
-**75,665/81,619 reviewed authored C/C++ bytes** exact; 39 accepted
-original-style ASM units add 5,525 bytes. The last complete native aggregate,
-gptweb-v287-vcolors-aggregate-001, passes all 248 default exact MAIN owners
-twice after localizing `V_WHITE` (receipt SHA-256
-fa1bb2c54fa22fcbcef5cfcbaa4c0ed107a9378185244c11fc28d3f3a6949119).
+**75,665/81,619 reviewed authored C/C++ bytes** exact; 40 accepted
+original-style ASM units add 5,615 bytes. The last complete native aggregate,
+gpt-5-6-sol-v326-gather-aggregate-final-001, passes all 249 default exact
+MAIN owners twice (receipt SHA-256
+371425f1e165a56ea88dd35f3b4db9ae6b4bcefce786eee059fd13101af42421).
 All 51 boss-named MAIN authored candidates are exact. None of these counts
 means whole MAIN.EXE or whole TH04 is exact.
 
@@ -89,12 +89,15 @@ now have maintained product-only C++ source and reviewed 96- and 199-byte
 target extents. TC4J emits 105 and 215 bytes respectively; exactness and
 link ownership remain open.
 
+The [gather-point renderer](reconstruction/TH04_MAIN_GATHER_POINT_RENDER_V326.md)
+is now a checked-in 90-byte original-style ASM owner at B4M_UPDATE_TEXT
+`13A9:1008`, raw/MAP/relocation exact. Its old replay wrapper is retired.
 The [VRAM color header](reconstruction/TH04_VRAM_COLORS_LOCAL_V287.md) is now
 TH04-owned across 37 source files; cold replay freezes product headers. Other
 compat/rec98 forwarders and the pinned ReC98 overlay remain. Standalone
 checked-in TH04 build closure, full
 packed-file matching, runtime scenarios, and independent provenance remain
-open. Track exact owners and the remaining 11 unreviewed MAIN functions from
+open. Track exact owners and the remaining 10 unreviewed MAIN functions from
 config/units.csv, config/th04_main_authored_functions.csv,
 config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
@@ -119,6 +122,6 @@ and unknowns in the focused note and ledgers.
 
 Targets, toolchains, Ghidra/IDA projects, generated builds, and receipts stay
 ignored under .analysis/ or ghidra-project/. Retain v212/v213/v214 replay
-inputs until superseded; older unreferenced worktrees and probes have been
-pruned or archived with private receipts. Never commit original executables
+inputs until superseded; v287 and v326 cold build trees were pruned after the
+v326 final replay, retaining their receipts. Never commit original executables
 or assets.

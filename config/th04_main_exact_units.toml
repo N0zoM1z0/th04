@@ -6161,6 +6161,23 @@ old = "\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n"
 new = ""
 expected_count = 1
 
+# The v151 B4M gather wrapper remains the link-order anchor. Replacing its
+# source with the maintained symbolic TU preserves the physical 0x5A owner.
+[[units]]
+id = "th04-main-gather-point-render-asm-v326"
+default_enabled = true
+requires_units = ["th04-main-midbossx-update-v151"]
+repo_source = "src/main/gather/point_render.asm"
+overlay_path = "th04/b4mgath.asm"
+map_module = "th04\\b4mgath.asm"
+map_mode = "exact"
+object_path = "obj/th04/b4mgath.obj"
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x1008"
+map_size = "0x5A"
+target_file_offset = "0x16298"
+size = "0x5A"
+
 [[scaffold_extractions]]
 id = "th04-main-randring1-gap2-v137"
 trigger_units = ["th04-main-randring1-next16-v137", "th04-main-randring1-next16-and-v137"]
@@ -6784,13 +6801,13 @@ size = "0x486"
 
 # v151: Stage X seven-helper/FAR-dispatcher producer. The existing v150
 # zero-credit B4M prefix still contains Stage X and an independently included
-# gather renderer; v151 removes both from that prefix, inserts natural mxu.cpp,
-# and re-materializes the unchanged gather renderer as a separately validated
-# zero-credit TASM extent before the exact v150 Stage 2 owner.
+# gather renderer; v151 removes both from that prefix and inserts natural
+# mxu.cpp. The independent gather link-order slot now uses TH04-owned symbolic
+# assembly; it stays zero-credit unless v326 is selected and accepted.
 [[build_inserts]]
 id = "th04-main-midbossx-gather-wrapper-v151"
 trigger_units = ["th04-main-midbossx-update-v151"]
-repo_source = "config/replay/th04_b4m_gather_v151.asm"
+repo_source = "src/main/gather/point_render.asm"
 overlay_path = "th04/b4mgath.asm"
 build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/dialog.cpp\",\n"
