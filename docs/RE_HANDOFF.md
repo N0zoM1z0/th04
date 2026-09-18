@@ -80,7 +80,9 @@ its linked 36 bytes equal the target decoded extent. The
 [local `RESDATA`](reconstruction/TH04_ZUN_RESDATA_V323.md) unit also matches
 190 target code and ten target data bytes. Rebuilding the diagnostic library
 in its original physical member order preserves the whole candidate component
-and MAP; neither support unit has artifact-local exact acceptance.
+and MAP. A [local `FILE_READ`](reconstruction/TH04_ZUN_FILE_READ_V325.md)
+matches another 180 target code bytes with the same component and MAP. These
+support units have no artifact-local exact acceptance.
 
 MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte
