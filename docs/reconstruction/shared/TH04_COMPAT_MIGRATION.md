@@ -11,8 +11,8 @@ product interfaces under `src/`.
 
 ## Current baseline
 
-After the CDG/resident batch, the dependency audit reports 26 forwarding
-headers and 47 include sites in 32 product files, down from the original 43
+After the overlap/sound/shot batch, the dependency audit reports 23 forwarding
+headers and 34 include sites in 27 product files, down from the original 43
 headers and 261 sites in 138 files. There are no missing, invalid, unused, or
 direct cross-game includes.
 
@@ -125,6 +125,36 @@ the resident and CDG surfaces. The v350 default MAIN replay then builds twice
 and keeps all 253 accepted owners exact. Receipt:
 `.analysis/reconstruction/exact-unit-replay/gpt-5-6-sol-v350-cdg-resident-aggregate-002/receipt.json`
 (SHA-256 `06dde8c2982b09aeaa235d9bcaba7867bef82181ef45185e8b598ffd8f8e5fa6`).
+No new exact owner is claimed by this dependency migration.
+
+## Overlap, sound, and player-shot batch
+
+The fifth batch removes the three tied four-site adapters:
+
+| Old dependency | TH04-owned replacement |
+| --- | --- |
+| `th01/math/overlap.hpp` | `src/main/math/overlap.hpp` |
+| `th02/snd/snd.h` | `src/shared/sound/api.hpp` |
+| `th04/main/player/shot.hpp` | `src/main/player/shot.hpp` and local player/playfield/math foundations |
+
+The overlap header keeps the four macro forms required by the complete boss,
+bullet-add, and bullet-update producers, including their in-place evaluation
+order. The sound header owns the TH04 mode enums, KAJA constants, globals, and
+calling conventions. The player-shot header keeps the 68-entry layout, forced
+byte enums, collision ABI, and option-laser declarations on local Q12.4 motion
+types. Product paths and public API names contain no source-game identity;
+legacy include guards only prevent duplicate pinned-scaffold declarations.
+
+The shared KAJA implementation now overlays the TH04 wrapper instead of the
+lower-game implementation, so the all-game calibration build remains
+untouched. The unchanged `snd_se_reset` body is an identity fragment. The two
+overlap fragments map the local include back to the pinned scaffold include.
+
+The v351 focused replay passes the overlap, sound, and shot entry owners with
+raw, MAP, relocation, and OMF equality. The v351 default MAIN replay then
+builds twice and keeps all 253 accepted owners exact. Receipt:
+`.analysis/reconstruction/exact-unit-replay/gpt-5-6-sol-v351-overlap-sound-shot-aggregate-001/receipt.json`
+(SHA-256 `f599e4b1371d1e204031b3e0f5ee16ced7a4b5beebdf628edc1271e7a9577211`).
 No new exact owner is claimed by this dependency migration.
 
 ## Batch workflow
