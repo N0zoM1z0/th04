@@ -11,7 +11,7 @@
 #include "src/shared/config/resident.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
-#include "compat/rec98/th02/main/item/shared.hpp"
+#include "src/main/item/power_overflow.hpp"
 #include "src/main/math/randring.hpp"
 
 #pragma codeseg MAIN_035_TEXT main_03
