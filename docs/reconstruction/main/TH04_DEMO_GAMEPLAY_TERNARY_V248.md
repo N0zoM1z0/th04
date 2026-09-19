@@ -182,3 +182,50 @@ Earlier ABI fixes reduced the initial unresolved list to that one symbol. A
 continuation should reconstruct the bounded source/config change from this
 materialization, bind the external without changing generated instructions,
 then run focused A/B and the full default aggregate before promotion.
+
+
+## v375 exact linked closure
+
+The v346 compiler result is now a linked exact owner. The maintained
+`src/main/core/gameplay_loop.cpp` keeps the two void conditional expressions
+and the cross-game-corroborated `_AX`/`_DX` frame-counter dataflow. Under
+the current localized header closure, TC4J still emits exactly 379 DEMO_TEXT
+CODE bytes with SHA-256
+`645e6530f9907d469842dd924db5c1f7b2e2414177a76ea9f3de35441f3e8c27`;
+this is identical to the retained v346 LEDATA.
+
+Two link-only details were required without changing those instructions.
+First, splitting the original word-aligned DEMO_TEXT monolith after a 0x17B
+object made TLINK align the residual `th04_main.asm` contribution from target
+offset `0x0213` to `0x0214`. A SHA-bound replay transform changes only the
+residual contribution alignment to byte alignment, restoring physical continuity
+at `0AAF:0213` without emitting a padding byte. Second, the historical
+monolith exposed alternate public names including the case-sensitive
+`SHOTS_RENDER()` name. OMF `ALIAS` records bind those names to already
+accepted natural producers and add no code bytes.
+
+After those fixes, the only mismatch was the call to `playperf_raise()`.
+Both v346 and v375 objects use the same far-pointer FIXUPP shape and identical
+LEDATA, but an ordinary split link retained a FAR call and added a segment
+relocation at load `0xACF0`. `#pragma samecodeseg playperf_raise` leaves the
+379-byte LEDATA unchanged and gives TLINK the segment relation needed to emit
+the target five-byte `NOP; PUSH CS; CALL near` nopcall form. The extra
+relocation disappears.
+
+`gpt-web-gameplay-v375-focused-006` passes two cold builds across its
+185-owner dependency closure. Its gameplay MAP contribution is exactly
+`0AAF:0098 017B`, its linked slice SHA-256 is the target
+`54ac4974b571dc990934e9c5ed39afb1b91206c397b67c734442fe81fd6c4448`,
+and all twelve ordered MZ relocation sites match. Receipt SHA-256 is
+`378aaccbe3b739577ebb0bb1b816e2abd566f3e6389c987bea80319ae29b2bcc`.
+
+The candidate-state 254-owner aggregate
+`gpt-web-gameplay-v375-aggregate-candidate-001` and promoted aggregate
+`gpt-web-gameplay-v375-aggregate-final-001` both pass twice with
+`failures=[]`. The final receipt SHA-256 is
+`bc4aabf5e3c3f5f241f52a7946459064190bd13b9e6d95b83bb1108f7404a200`.
+Strict internal-call function review also accepts the complete target-called
+`gameplay_loop()` boundary using the exact owner, target near CALL at
+`0x1AB6E`, raw terminal RET, and a target-prefix-attested next entry at
+`0x1AD03`. This promotes 379 reviewed authored C/C++ bytes and one reviewed
+function; it does not establish whole MAIN.EXE equality.

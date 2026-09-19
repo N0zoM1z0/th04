@@ -11831,7 +11831,7 @@ build_replacement = "\t\"th04/mainent.cpp\",\n\t\"th04/gloop.cpp\",\n\t{ \"th04_
 
 [[units]]
 id = "th04-main-gameplay-loop-v165"
-default_enabled = false
+default_enabled = true
 requires_units = [
   "th04-main-main035-boss-tu",
   "th04-main-chasecrosses-add",

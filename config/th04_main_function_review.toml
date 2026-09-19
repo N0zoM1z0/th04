@@ -3310,12 +3310,12 @@ name = "midboss1_render()"
 evidence_id = "ev-th04-main-midboss1-render-boundary-v164"
 reason = "Fresh Ghidra constructs the complete 0x10D near body at the matching TLINK public; raw decode closes at RET immediately before exact midboss3_render, and focused plus 197-owner aggregate cold replay prove exact natural-C++ ownership with target relocation order."
 
-# v165: DEMO_TEXT local gameplay helpers are real target-called internal
-# functions despite having no original TLINK publics. Target Ghidra constructs
-# gameplay_loop() contiguously but severely cross-links the following two entries.
-# Admit their target/TASM/raw-proved physical extents as reviewed nonexact only;
-# this expands the reviewed denominator without granting byte or function exactness.
-[[reviewed_nonexact_internal_call]]
+# v165/v375: DEMO_TEXT local gameplay helpers are real target-called internal
+# functions despite having no original TLINK publics. v375 promotes gameplay_loop()
+# after exact owner replay while the following helpers remain reviewed nonexact.
+# The 0x1AD03 next boundary is target-prefix-attested because Ghidra cross-links
+# that following function's body into unrelated code.
+[[reviewed_exact_internal_call]]
 id = "th04-main-fn-1ab88"
 address = "0x1AB88"
 file_offset = "0xC388"
@@ -3324,17 +3324,19 @@ decode_size = "0x17B"
 name = "gameplay_loop()"
 owner_unit = "th04-main-gameplay-loop-v165"
 source = "src/main/core/gameplay_loop.cpp"
-evidence_id = "ev-th04-main-gameplay-loop-boundary-v165"
+evidence_id = "ev-th04-main-gameplay-function-exact-review-v375"
 generated_public = "gameplay_loop()"
-reason = "Pinned TASM and gap-free target decode close the 0x17B near gameplay loop through RET immediately before the next local PROC at 0x1AD03. Fresh Ghidra independently constructs the same contiguous 379-byte entry, and target near CALL 0x1AB6E resolves exactly to 0x1AB88. No original TLINK public exists because this is an internal helper in the monolithic DEMO_TEXT producer."
-next_internal_address = "0x1AD03"
+reason = "Pinned TASM and gap-free target decode close the complete 0x17B near gameplay loop through RET immediately before the independently reviewed next entry at 0x1AD03. Fresh Ghidra constructs the same contiguous 379-byte entry, target near CALL 0x1AB6E resolves exactly to 0x1AB88, and v375 focused plus 254-owner aggregate cold replay prove exact natural-C++ ownership."
+next_target_address = "0x1AD03"
+next_target_prefix_size = "0x10"
+next_target_prefix_sha256 = "10690fee956cb8544118bf42f2bcdf04ac5b798f8dd1e0afdf68f6e30ac4cefa"
 call_site_address = "0x1AB6E"
 
-[[new_nonexact]]
+[[new_exact]]
 id = "th04-main-fn-1ab88"
 address = "0x1AB88"
-evidence_id = "ev-th04-main-gameplay-loop-boundary-v165"
-reason = "Explicitly expand the reviewed denominator for the target-called internal gameplay loop after independent Ghidra/TASM/raw/next-entry/call-anchor boundary review. The maintained natural source remains nonexact."
+evidence_id = "ev-th04-main-gameplay-function-exact-review-v375"
+reason = "Promote the previously reviewed blocked gameplay loop only after complete exact-owner replay plus target Ghidra/TASM/raw/near-call/next-entry review."
 
 [[reviewed_nonexact_internal_call]]
 id = "th04-main-fn-1ad03"
