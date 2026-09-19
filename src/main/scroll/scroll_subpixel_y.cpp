@@ -1,7 +1,7 @@
 #pragma option -zCCIRCLE_TEXT -zPmain_01 -k- -G
 
 #include "x86real.h"
-#include "compat/rec98/th01/math/subpixel.hpp"
+#include "src/main/math/subpixel.hpp"
 
 extern vram_y_t scroll_line;
 extern bool scroll_active;
