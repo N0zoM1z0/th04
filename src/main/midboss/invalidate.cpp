@@ -1,5 +1,5 @@
 #include "th04/main/phase.hpp"
-#include "th04/main/enemy/size.hpp"
+#include "src/main/enemy/size.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/tile/tile.hpp"
 

@@ -1,7 +1,7 @@
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
 #include "th04/main/enemy/enemy.hpp"
-#include "compat/rec98/th04/main/enemy/size.hpp"
+#include "src/main/enemy/size.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/math/vector.hpp"
 #include "src/shared/runtime/api.hpp"

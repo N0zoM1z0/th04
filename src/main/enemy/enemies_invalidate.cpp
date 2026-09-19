@@ -1,7 +1,7 @@
 #pragma option -zCTILE_TEXT -zPmain_01
 #pragma option -k-
 
-#include "compat/rec98/th04/main/enemy/size.hpp"
+#include "src/main/enemy/size.hpp"
 #include "th04/main/enemy/enemy.hpp"
 #include "th04/main/tile/tile.hpp"
 
