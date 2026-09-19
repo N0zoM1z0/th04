@@ -20,6 +20,9 @@ typedef enum {
 #define PMD 0x60
 #define MMD 0x61
 
+// Hardcoded timing unit of the MMD format.
+#define MMD_TICKS_PER_QUARTER_NOTE 48
+
 typedef struct {
 	uint8_t jmp[2];
 	uint8_t magic[3];

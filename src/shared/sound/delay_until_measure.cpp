@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
 #include "src/shared/hardware/frame_delay.hpp"
-#include "compat/rec98/th02/snd/measure.hpp"
+#include "src/shared/sound/measure.hpp"
 
 void pascal snd_delay_until_measure(int measure, unsigned int frames_if_no_bgm)
 {
