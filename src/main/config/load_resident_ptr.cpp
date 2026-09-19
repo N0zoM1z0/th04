@@ -1,4 +1,4 @@
-#include "compat/rec98/th03/formats/cfg_impl.hpp"
+#include "src/main/config/load_resident_impl.hpp"
 
 resident_t __seg* near cfg_load_resident_ptr(void)
 {
