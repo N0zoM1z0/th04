@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **16 forwarders and 18 include sites in 17 files**. The
+138 product files to **15 forwarders and 16 include sites in 16 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -28,35 +28,50 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Tile | shared tile/file-format dimensions and GAME4+ ring-storage width | 18 | `ca98da6` |
 | BB | TH04 .BB size/type/segment ABI, text-dissolve helpers, and pinned tile-BB include rewrite | 17 | `0b6bfaf` |
 | Enemy size | MAIN enemy and kill-box dimensions used by enemy/midboss code | 16 | `f1884f4` |
+| Main pat | bounded GAME4/5 sprite-pattern subset used by maintained explosion/bullet code | 15 | `e726a05` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-enemy-size-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-main-pat-aggregate-001/receipt.json`
 (SHA-256
-`b613dfbdf1196abfed9de2d90bb2df0adee779987f6c4081d015be35d7437412`).
+`39cc0f0136857e720fb9685fb882a1f2bd5a9157a116125edb138369164b5ebe`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The enemy-size batch replaces the two compatibility-forwarder uses of
-`th04/main/enemy/size.hpp` plus the remaining same-game include in
-`src/main/midboss/invalidate.cpp` with the MAIN-owned
-`src/main/enemy/size.hpp`. The interface is deliberately small: it keeps
-`ENEMY_W=32`, `ENEMY_H=32`, and the two `pixel_t` kill-box
-constants at 32. All three maintained consumers are full translation-unit
-overlays, so no replay scaffold rewrite is necessary.
+The main-pat batch removes `compat/rec98/th05/sprites/main_pat.h` from
+the two maintained consumers without copying the several-hundred-entry TH05
+enum. `src/main/sprites/main_pat.hpp` keeps only the pattern numbers
+actually required by `boss/explode.cpp` and the shared
+`bullet/update.cpp` translation unit. Its GAME4 branch carries TH04
+explosion/zap/decay values; its GAME5 branch carries the directional/vector,
+zap/decay, and explosion values needed when the same maintained fragment is
+compiled as calibration source.
+
+The localized bullet prefix must preserve the original preprocessor include
+positions. Its two occurrences of the local header are therefore mapped
+separately back to `th05/sprites/main_pat.h` and
+`th04/sprites/main_pat.h`. Hoisting the include is semantically harmless
+but fails the repository's strict fragment-composition replay, so the branch
+placement remains explicit.
+
+A pinned TC4J GAME5 probe compares the old TH05 header against the final local
+header. Thirteen compile-time value assertions pass and both probes emit
+identical CODE SHA-256
+`85f9bdc8328ec8ae7692c2cb41785f01dc5da7971ffc980dd410006131e6915f`;
+probe receipt SHA-256 is `67faed201848fe585da25081161192d61041c4be9146f91f95722930145809d8`. This is compiler evidence only and
+does not grant TH04 exact credit to GAME5-only constants.
 
 Focused two-cold replay passes for
-`th04-main-module-th04-mb-inv-cpp-12124` (receipt SHA-256
-`7dc85fefcb92cd281ecd297b3989372e6c82632eda46a4e19ea27ca003c64935`) and `th04-main-enemies-invalidate-v103`
-(receipt SHA-256 `6d838089730c3e9b8213632d61b630cf44f9ba9fdc12fe2dc67bf0f94ae5524b`). The complete
-`gpt-web-enemy-size-aggregate-001` replay passes all 253 default MAIN
-owners twice with `failures=[]` and also covers
-`th04-main-enemy-script-helpers-v328`. Both candidate MAIN images remain
-SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 17 forwarders / 20
-sites / 19 files to 16 / 18 / 17, with no missing, orphan, invalid, or direct
-forbidden include. No new exact owner is claimed.
+`th04-main-module-th04-boss-exp-cpp-d88c` (receipt SHA-256
+`1034c430c9e4ab8c305576df9e9a8f251dddf96e7dda5a913b4099e8bfb202a1`) and `th04-main-bullet-u-prefix` (receipt SHA-256
+`3a14739803a062f2def4bcece7b9505cbad5898252cd91375f19fcbd0a5787d3`). The complete `gpt-web-main-pat-aggregate-001` replay
+passes all 253 default MAIN owners twice with `failures=[]`; both
+candidate MAIN images remain SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit
+moves from 16 forwarders / 18 sites / 17 files to 15 / 16 / 16, with no
+missing, orphan, invalid, or direct forbidden include. No new exact owner is
+claimed.
 
 ## Next families
 
@@ -66,7 +81,6 @@ line locations. The next bounded families are:
 | Forwarder | Sites | Product files |
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
-| `th05/sprites/main_pat.h` | 2 | 2 |
 
 The remaining fourteen families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
