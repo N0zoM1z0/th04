@@ -125,7 +125,8 @@ and unknowns in the focused note and ledgers.
 ## Private workspace
 
 Targets, toolchains, Ghidra/IDA projects, generated builds, and receipts stay
-ignored under .analysis/ or ghidra-project/. Retain v212/v213/v214 replay
-inputs until superseded; v287 and v326 cold build trees were pruned after the
+ignored under .analysis/ or ghidra-project/. The two late v212 replay trees are
+hash-manifested and receipt-archived; active v213 dialog and v214 shared probe
+inputs remain expanded. v287 and v326 cold build trees were pruned after the
 v326 final replay, retaining their receipts. Never commit original executables
 or assets.

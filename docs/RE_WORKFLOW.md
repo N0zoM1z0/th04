@@ -165,8 +165,9 @@ On this workspace, older `.analysis/gpt-web/` outputs and 303 superseded
 exact-unit replay trees are in verified `tar.zst` archives under
 `.analysis/reconstruction/receipt-archive/`. The adjacent SHA-256 manifests
 list every retained file. Restore an archived path into its original directory
-before replaying a historical probe that names it; the active v212, v213,
-v214, and v287 replay inputs remain expanded.
+before replaying a historical probe that names it. The v212 late focused and
+aggregate trees are archived with complete file manifests; active v213 and
+v214 compiler-probe inputs remain expanded.
 
 Finish with:
 
