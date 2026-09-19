@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **14 forwarders and 15 include sites in 15 files**. The
+138 product files to **13 forwarders and 14 include sites in 14 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -30,41 +30,39 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Enemy size | MAIN enemy and kill-box dimensions used by enemy/midboss code | 16 | `f1884f4` |
 | Main pat | bounded GAME4/5 sprite-pattern subset used by maintained explosion/bullet code | 15 | `e726a05` |
 | Polar | TH04 polar helper plus consumed unsafe trig-table offset helpers | 14 | `2e871dd` |
+| Subpixel | existing TH04 Q12.4 interface reused by the CIRCLE_TEXT scroll helper | 13 | `ff84251` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-polar-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-subpixel-aggregate-001/receipt.json`
 (SHA-256
-`e394b7b343076894dc527a1836d6fc3ac1e345d4b66a682a9bcc5b859fd87c52`).
+`0b3cb43f4677f656ee6a4afd961c151f422e82c1d7962937bd2f90489f90aeb4`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The polar batch removes the sole product use of
-`compat/rec98/th01/math/polar.hpp` from `src/main/math/vector.cpp`.
-That TU already consumed `src/main/math/polar.hpp`; the migration extends the
-existing TH04 interface only with the two actually used unsafe offset helpers
-and their byte-offset table expression instead of copying the full TH01 header.
+The subpixel batch removes the sole product use of
+`compat/rec98/th01/math/subpixel.hpp` from
+`src/main/scroll/scroll_subpixel_y.cpp`. The TU only consumes `subpixel_t` and
+`TO_PIXEL`, both already provided by `src/main/math/subpixel.hpp`; no additional
+legacy decimal-subpixel surface is imported.
 
-The helper keeps the original arithmetic-right-shift behavior for negative
-products and reads a signed 16-bit trig entry through a byte offset into
-`CosTable8`/`SinTable8`. The self-contained TH04 header sources those tables
-from the localized runtime API and `pixel_t`/`uint16_t` from the localized
-PC-98 types. A first compiler attempt that omitted `pc98.hpp` failed because
-TC4J misparsed the unknown `pixel_t` return type at `static inline`; restoring
-the original header type dependency fixed the compile without changing the
-helper source shape.
+The focused replay follows the unit's accepted physical dependency contract:
+selecting `th04-main-motion-seg1-asm-v183` materializes `motion1.asm` after the
+natural 0x28 scroll helper and therefore replays both the maintained scroll
+source and its adjacent symbolic producer. Selecting the scroll owner alone is
+not a valid focused entry because that smaller selection does not materialize
+the required motion producer.
 
-Focused two-cold replay passes for
-`th04-main-module-th04-vector-cpp-13320` (receipt SHA-256
-`ef0ba66f685a26e9f9c032b8f1bee788e083d05f987b3501e070b5a1a0e80812`).
-The complete `gpt-web-polar-aggregate-001` replay passes all 253 default MAIN
+Focused two-cold replay passes through that dependency closure (receipt SHA-256
+`09a21c56ec3af14504ee21bcd60cfe9545d05097973bfca0ed18cb9de6fbd8d7`).
+The complete `gpt-web-subpixel-aggregate-001` replay passes all 253 default MAIN
 owners twice with `failures=[]`; both candidate MAIN images remain SHA-256
 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 15 forwarders / 16 sites / 16 files to 14 / 15 /
-15, with no missing, orphan, invalid, or direct forbidden include. No new
-exact owner is claimed.
+The compat audit moves from 14 forwarders / 15 sites / 15 files to 13 / 14 /
+14, with no missing, orphan, invalid, or direct forbidden include. No new exact
+owner is claimed.
 
 ## Next families
 
@@ -75,7 +73,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining thirteen families have one site each. Re-run the audit instead
+The remaining twelve families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow
