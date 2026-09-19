@@ -31,15 +31,14 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-5-6-sol-v351-overlap-sound-shot-aggregate-001`: all 253 selected MAIN
-  owners pass two cold builds, raw bytes, MAP, ordered relocations, and OMF.
-  Receipt SHA-256:
-  `f599e4b1371d1e204031b3e0f5ee16ced7a4b5beebdf628edc1271e7a9577211`.
+  `gpt-web-palette-aggregate-001`: all 253 selected MAIN owners pass two cold
+  builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
+  `0fcb957699e4653e464e527b0b659ce847c68d106588f57cdf2f7e45971cab1f`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
-  randring, CDG, resident, overlap, sound, and player-shot interfaces. The
-  remaining compatibility boundary is **23 forwarders, 34 include sites, and
+  randring, CDG, resident, overlap, sound, player-shot, and palette interfaces.
+  The remaining compatibility boundary is **22 forwarders, 31 include sites, and
   27 product files**, with no missing, unused, invalid, or direct forbidden
   includes.
 
@@ -47,8 +46,8 @@ the accepted extent.
 
 1. **Finish standalone source closure.** Follow the
    [compatibility migration recipe](reconstruction/shared/TH04_COMPAT_MIGRATION.md).
-   Next are `th03/hardware/palette.hpp` and `th05/playchar.h`, each with three
-   include sites. Then take the two-site families in dependency-audit order.
+   Next is `th05/playchar.h` with three include sites. Then take the two-site
+   families in dependency-audit order.
    Run a complete default aggregate after each shared-header or ABI batch.
 2. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
@@ -80,7 +79,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-5-6-sol-v351-overlap-sound-shot-aggregate-001`
+- `gpt-web-palette-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`

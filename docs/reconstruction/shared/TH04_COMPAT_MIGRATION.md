@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **23 forwarders and 34 include sites in 27 files**. The
+138 product files to **22 forwarders and 31 include sites in 27 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -21,14 +21,34 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Randring and GRCG | random-ring state/ranges and all GRCG adapters | 28 | `6a15a28` |
 | CDG and resident | CDG format API and resident/score layout | 26 | `52cb7b3` |
 | Overlap, sound, and shot | overlap predicates, KAJA/sound API, player-shot layout | 23 | `bd61cce` |
+| Palette | deferred palette-tone latch and MAIN palette-change declaration | 22 | `e19539d` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-5-6-sol-v351-overlap-sound-shot-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-palette-aggregate-001/receipt.json`
 (SHA-256
-`f599e4b1371d1e204031b3e0f5ee16ced7a4b5beebdf628edc1271e7a9577211`).
+`0fcb957699e4653e464e527b0b659ce847c68d106588f57cdf2f7e45971cab1f`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
+
+## Latest completed batch
+
+The palette batch replaces `compat/rec98/th03/hardware/palette.hpp` with `src/main/hardware/palette.hpp`. The interface
+stays MAIN-owned because all three product include sites are under MAIN. It
+preserves the target-visible `bool palette_changed`, `PaletteTone` assignment, and the braced
+`palette_settone_deferred()` evaluation order.
+
+The accepted full-TU owners `th04-main-module-th04-boss-exp-cpp-d88c` and `th04-main-main035-boss-tu` each pass a focused
+two-cold replay after the migration. The complete `gpt-web-palette-aggregate-001` replay passes
+all 253 default MAIN owners twice with `failures=[]`; both candidate MAIN
+images remain `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The audit moves from 23 forwarders / 34 sites to
+22 / 31 with no missing, orphan, invalid, or direct forbidden include.
+
+`th04-main-boss-prefix` is an excluded historical owner whose bytes migrated to the
+contiguous `th04-main-main035-boss-tu`. Its direct diagnostic replay is not an acceptance gate
+and still encounters the pre-existing TH05 `resident_t::stage_score` incompatibility
+when that localized fragment is materialized across the all-game scaffold. This
+failed diagnostic is not used to claim exactness.
 
 ## Next families
 
@@ -37,7 +57,6 @@ line locations. The next bounded families are:
 
 | Forwarder | Sites | Product files |
 | --- | ---: | ---: |
-| `th03/hardware/palette.hpp` | 3 | 3 |
 | `th05/playchar.h` | 3 | 2 |
 | `th01/rank.h` | 2 | 2 |
 | `th02/formats/pi.h` | 2 | 2 |
