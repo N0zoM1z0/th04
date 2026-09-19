@@ -11,8 +11,9 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **1 forwarder and 2 include sites in 2 files**. The
-audit reports zero missing, unused, invalid, and direct forbidden includes.
+138 product files to **0 forwarders and 0 include sites in 0 product files**.
+The audit reports zero missing, unused, invalid, and direct forbidden includes;
+`python3 scripts/audit_compat_dependencies.py --require-zero` passes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
 | --- | --- | ---: | --- |
@@ -43,50 +44,55 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Thicklaser ABI | target-verified four-byte post-origin padding and maintained laser state layout | 3 | `0b27b64` |
 | Homing state | single TH04 SPPoint target declaration used across player/enemy/boss code | 2 | `3c6c9a7` |
 | Faceset filenames | conditional GAME4/5 faceset-loader macro with exact filename byte case | 1 | `ee3dbfd` |
+| Boss base | common TH04 boss ABI used by GAME4 source and GAME5 calibration | 0 | `510be3b` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-faceset-filenames-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-boss-base-aggregate-001/receipt.json`
 (SHA-256
-`d2f908e4b3b1dd100cd4189f8f62a00dbb2f56459d911f5f6898a75813dcee70`).
+`d4289749d75a3b7efcefd9330b83348bd0a206374d4d6d0c6209608b556faa00`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The faceset-filename batch removes `compat/rec98/th05/shiftjis/fns.hpp` from
-`src/main/ems.cpp` and replaces the old GAME4/5 include split by
-`src/main/shiftjis/fns.hpp`. The local surface keeps only the one macro this TU
-actually consumes: `main_cdg_load_faceset_playchar()` plus the filename
-literals it references.
+The boss-base batch removes the final compatibility forwarder,
+`compat/rec98/th05/main/boss/boss.hpp`. The recovered
+`src/main/boss/boss.hpp` is byte-identical to the pinned TH04 base header
+(SHA-256
+`51828ba1008dd4b2523352b4a4b3bae8756f2d0d9831f749e16dc67dc9c3085e`).
+All 86 maintained consumer files / 89 include lines now use that local path.
+The historical `boss_prefix.inl` localized fragment maps its two occurrences
+explicitly back to the TH05 wrapper and TH04 base scaffold includes; product
+source itself no longer includes either legacy path.
 
-GAME4 retains the two-character if/else form and is covered by focused replay
-of the exact `ems.cpp` owner (receipt SHA-256
-`5be464ba78252c2f62831e13f1ba390ca02732d48705add771f9e19e2fb7baf1`).
-A pinned PC-98 IDE GAME5 A/B probe expands the four-character switch and emits
-all four filenames; all 13 semantic OMF records are byte-identical after
-excluding dependency/producer COMENT and LINNUM metadata. Probe receipt SHA-256
-is `5a19b266dff01e539b6b87e3b91ea0fefc571c0ad72feef22f4e93fb92ea18cf`.
-The probe also demonstrates that exact filename byte case matters: GAME5 must
-emit `KAO0.cd2` through `KAO3.cd2`; casing-only alternatives change LEDATA.
+Focused two-cold replay passes for the main035 boss TU (receipt SHA-256
+`01bd28013703d1c0737b3bbea2eef84639af908707a7cfae25e20424a61360ff`),
+the fused Yuuka6 producer (receipt SHA-256
+`dc0a43c2f48af09699b1a67bb45e56181f46ea02196f3629bfbd0d4eeb82aa32`),
+and the midboss HUD/defeat TU (receipt SHA-256
+`73ce7e3c9a1ae2529c5814f96825e863b7c7bda7259e77cb0814912cc04a343c`).
+A pinned PC-98 IDE GAME5 A/B probe uses only the common boss ABI consumed by
+the maintained GAME5 branches; all 23 semantic OMF records are byte-identical
+after excluding dependency/producer COMENT and LINNUM metadata. Probe receipt
+SHA-256 is
+`1d296c07acb0eec86546d350d16f08fcf79bd1a7622ddb686c123bd72f2eddb7`.
+The TH05-only `boss2`, flystep, and sprite-callback declarations are not needed
+by those maintained sources.
 
-The complete `gpt-web-faceset-filenames-aggregate-001` replay passes all 253
-default MAIN owners twice with `failures=[]`; both candidate MAIN images remain
-SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 2 forwarders / 3 sites / 3 files to 1 / 2 / 2,
-with no missing, orphan, invalid, or direct forbidden include. No new exact
-owner is claimed.
+The complete `gpt-web-boss-base-aggregate-001` replay passes all 253 default
+MAIN owners twice with `failures=[]`; both candidate MAIN images remain
+SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compatibility audit reaches 0 forwarders / 0
+sites / 0 product files, and the strict `--require-zero` gate passes. This
+completes the `compat/rec98` forwarding migration; it does not by itself prove
+complete reconstructed source coverage or whole-artifact standalone rebuilds
+for every TH04 executable. No new exact owner is claimed.
 
 ## Next families
 
-Run `python3 scripts/audit_compat_dependencies.py --json` for exact source and
-line locations. The next bounded families are:
-
-| Forwarder | Sites | Product files |
-| --- | ---: | ---: |
-| `th05/main/boss/boss.hpp` | 2 | 2 |
-
-No one-site families remain. Re-run the audit after the final boss-base batch.
+None. The compatibility forwarding boundary is closed. Keep the final
+`--require-zero` audit in the packet gate so future source changes cannot
+silently reintroduce a forwarder dependency.
 
 ## Migration workflow
 

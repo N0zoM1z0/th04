@@ -31,48 +31,45 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-faceset-filenames-aggregate-001`: all 253 selected MAIN owners pass two
+  `gpt-web-boss-base-aggregate-001`: all 253 selected MAIN owners pass two
   cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
-  `d2f908e4b3b1dd100cd4189f8f62a00dbb2f56459d911f5f6898a75813dcee70`.
+  `d4289749d75a3b7efcefd9330b83348bd0a206374d4d6d0c6209608b556faa00`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
   randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
-  PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, subpixel, bullet-add implementation, HUD
-  geometry, item-overflow, midboss-state, scroll-state, sound-implementation, sound-measure, config-loader, MAP-format, target-verified thicklaser, homing-state, and faceset-filename interfaces. The
-  remaining compatibility boundary is **1 forwarder, 2 include sites, and 2
-  product files**, with no missing, unused, invalid, or
-  direct forbidden includes.
+  PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, subpixel,
+  bullet-add implementation, HUD geometry, item-overflow, midboss-state,
+  scroll-state, sound-implementation, sound-measure, config-loader, MAP-format,
+  target-verified thicklaser, homing-state, faceset-filename, and boss-base
+  interfaces. The `compat/rec98` forwarding boundary is now **0 forwarders, 0
+  include sites, and 0 product files**; `audit_compat_dependencies.py
+  --require-zero` passes. This closes the compatibility include migration, not
+  complete source coverage or whole-artifact standalone rebuilds for every
+  TH04 executable.
 
 ## Ordered work queue
 
-1. **Finish standalone source closure.** Follow the
-   [compatibility migration recipe](reconstruction/shared/TH04_COMPAT_MIGRATION.md).
-   The only remaining multi-site forwarder is
-   `th05/main/boss/boss.hpp`. Its two uses sit in GAME5 calibration
-   branches and currently consume no TH05-exclusive boss symbol, so close it
-   together with the TH04 boss-base ownership rather than inventing a mirror
-   interface. Close `th05/main/boss/boss.hpp` together with TH04 boss-base ownership; its two remaining sites are the final compatibility boundary. Run a complete default aggregate and then `python3 scripts/audit_compat_dependencies.py --require-zero`.
-2. **Close the MAIN gameplay loop candidate.** Retained run
+1. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
    379-byte object. Bind the final case-sensitive `SHOTS_RENDER()` external
    without changing that object, then run focused A/B and the complete default
    aggregate. This remains compiler evidence until linked raw/MAP/ordered-reloc
    checks pass. See the
    [gameplay note](reconstruction/main/TH04_DEMO_GAMEPLAY_TERNARY_V248.md).
-3. **Recover natural OMF relocation order.** Dialog raw bytes, MAP, and sites
+2. **Recover natural OMF relocation order.** Dialog raw bytes, MAP, and sites
    match, but its target has three descending MZ relocation runs while the
    current object produces two. Stage-session raw bytes, MAP, and sites also
    match, but ordered relocations differ. Continue from the
    [dialog](reconstruction/main/TH04_MAIN_DIALOG_BOUNDARY_V180.md) and
    [stage-session](reconstruction/main/TH04_DEMO_PAUSE_SPLIT_V282.md) notes.
-4. **Continue the remaining artifacts.** The cold decoded-payload residual is
+3. **Continue the remaining artifacts.** The cold decoded-payload residual is
    7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes; this is not packed-file equality.
    ZUN's 6,360-byte diagnostic component differs at 4,241 bytes and still uses
    external support code. Continue from the
    [packed frontier](reconstruction/packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
    and [ZUN component link](reconstruction/zun/TH04_ZUN_COMPONENT_LINK_V317.md).
-5. **Add deterministic DOSBox-X runtime scenarios** after standalone build and
+4. **Add deterministic DOSBox-X runtime scenarios** after standalone build and
    link closure can produce the artifacts under test.
 
 The live six-function MAIN review queue comes from `config/units.csv`,
@@ -83,7 +80,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-faceset-filenames-aggregate-001`
+- `gpt-web-boss-base-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`
