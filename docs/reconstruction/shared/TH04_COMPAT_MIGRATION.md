@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **4 forwarders and 5 include sites in 5 files**. The
+138 product files to **3 forwarders and 4 include sites in 4 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -40,41 +40,42 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Sound measure | KAJA measure wrapper and MMD quarter-note timing constant | 6 | `9d56bf1` |
 | CFG loader | shared GAME3/4 resident-pointer loader with target-specific cfg layouts | 5 | `8d0f544` |
 | MAP format | packed TH04 map header/section layout without legacy planar dependency | 4 | `572482e` |
+| Thicklaser ABI | target-verified four-byte post-origin padding and maintained laser state layout | 3 | `0b27b64` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-map-format-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-thicklaser-aggregate-001/receipt.json`
 (SHA-256
-`a3269df61dc86ff5428ed6102d50161c9c9ef8d262999f04f767e60998b8e144`).
+`741dd7f01ca64ec9d1f98bf1c55629a7a2c4cb4cee09df351ef736e4f0387ca0`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The MAP-format batch removes `compat/rec98/th04/formats/map.hpp` and the
-remaining same-game include from `src/main/stage/session_init.cpp`, replacing
-both with `src/main/formats/map.hpp`. The local format surface keeps the
-packed 8-byte file header, five rows per section, and 32 stored tile entries
-per row. The stored tile values are expressed directly as signed 16-bit
-offsets, which is the historical `vram_offset_t` representation, instead of
-importing the much broader legacy `planar.h` just for one typedef.
+The thicklaser batch removes `compat/rec98/th04/main/bullet/laser_t.hpp` and
+routes all six maintained TH04 consumers through
+`src/main/bullet/laser_t.hpp`. Unlike the historical ReC98 header, the local
+product ABI permanently records the target-verified four-byte `unused_2[4]`
+padding after `thicklaser_t::origin`; this was previously corrected only by a
+SHA-locked v32 replay transform for the pinned scaffold header.
 
-Compile-time checks pin `sizeof(map_header_t)==8` and
-`sizeof(map_section_tiles_t)==320`. The exact `th04-main-end-map-v100` owner
-passes focused two-cold replay (receipt SHA-256
-`632869156a474d278d2eda8dca2cfac6f13a7150b66319b73a97e052b4b2a1cf`).
-A separate diagnostic replay of the non-exact session producer (receipt
-`6d93bb75ca7481c170ee64d4a1a0883398f07e6dc676213c96c85b5e2a52ecbb`)
-still passes raw bytes, MAP placement, valid deterministic OMF, auxiliary
-ownership and determinism; only `relocations_exact` remains false, exactly the
-pre-existing stage-session blocker.
+Focused two-cold replay passes for the most ABI-sensitive complete thicklaser
+producer (receipt SHA-256
+`6c97a7a379d32548d7e3d321a89375a063cd347c32d6c72a1ad90632c1c6a1eb`),
+the fused Yuuka6 producer (receipt SHA-256
+`b14ec60054a3d85607cb64e8819f96329e63a896a225203bf9b345fb8c8363bf`),
+and Gengetsu columns (receipt SHA-256
+`446971c8b4a26890a0303663a5dbca434981828676c47dea918c9a651082ca25`).
+The historical Yuuka5 and MAIN_TEXT-renderer focused selections now stop at
+final link because their old dependency closures omit later score/HUD owners;
+their touched objects compile, and the current full default aggregate is the
+acceptance gate for those owners.
 
-The complete `gpt-web-map-format-aggregate-001` replay passes all 253 default
+The complete `gpt-web-thicklaser-aggregate-001` replay passes all 253 default
 MAIN owners twice with `failures=[]`; both candidate MAIN images remain
-SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 5 forwarders / 6 sites / 6 files to 4 / 5 / 5,
-with no missing, orphan, invalid, or direct forbidden include. No new exact
-owner is claimed.
+SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 4 forwarders / 5
+sites / 5 files to 3 / 4 / 4, with no missing, orphan, invalid, or direct
+forbidden include. No new exact owner is claimed.
 
 ## Next families
 
@@ -85,7 +86,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining three families have one site each. Re-run the audit instead
+The remaining two families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow

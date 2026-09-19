@@ -31,16 +31,16 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-map-format-aggregate-001`: all 253 selected MAIN owners pass two
+  `gpt-web-thicklaser-aggregate-001`: all 253 selected MAIN owners pass two
   cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
-  `a3269df61dc86ff5428ed6102d50161c9c9ef8d262999f04f767e60998b8e144`.
+  `741dd7f01ca64ec9d1f98bf1c55629a7a2c4cb4cee09df351ef736e4f0387ca0`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
   randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
   PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, subpixel, bullet-add implementation, HUD
-  geometry, item-overflow, midboss-state, scroll-state, sound-implementation, sound-measure, config-loader, and MAP-format interfaces. The
-  remaining compatibility boundary is **4 forwarders, 5 include sites, and 5
+  geometry, item-overflow, midboss-state, scroll-state, sound-implementation, sound-measure, config-loader, MAP-format, and target-verified thicklaser interfaces. The
+  remaining compatibility boundary is **3 forwarders, 4 include sites, and 4
   product files**, with no missing, unused, invalid, or
   direct forbidden includes.
 
@@ -53,8 +53,8 @@ the accepted extent.
    branches and currently consume no TH05-exclusive boss symbol, so close it
    together with the TH04 boss-base ownership rather than inventing a mirror
    interface. In parallel, continue the one-site families in audit order,
-   beginning with `th04/main/bullet/laser_t.hpp` and
-   `th04/main/homing.hpp`. Run a complete default aggregate after each
+   beginning with `th04/main/homing.hpp` and
+   `th05/shiftjis/fns.hpp`. Run a complete default aggregate after each
    shared-header or ABI batch.
 2. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
@@ -86,7 +86,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-map-format-aggregate-001`
+- `gpt-web-thicklaser-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`
