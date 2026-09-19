@@ -22,6 +22,10 @@ not define current progress or exactness by themselves.
 - [ZUN resident main](zun/TH04_ZUN_MAIN_V241.md)
 - [ZUN standalone component link](zun/TH04_ZUN_COMPONENT_LINK_V317.md)
 
+### Standalone source closure
+
+- [Compatibility dependency migration and handoff template](shared/TH04_COMPAT_MIGRATION.md)
+
 ## Recent MAIN milestones
 
 - [Accepted MAIN cohort](main/TH04_MAIN_EXACT_BATCH.md)

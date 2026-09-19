@@ -22,6 +22,12 @@ The directory is reusable by other PC-98 reconstruction repositories:
    headers; place genuinely shared maintained code in that repository's
    `src/shared/` tree.
 
+For this repository, product declarations and names remain TH04-owned;
+`src/shared/` only means shared across TH04 artifacts. The current inventory,
+exact-replay modes, batch checklist, and handoff template live in
+[`docs/reconstruction/shared/TH04_COMPAT_MIGRATION.md`](../../docs/reconstruction/shared/TH04_COMPAT_MIGRATION.md).
+Run `python3 scripts/audit_compat_dependencies.py --check` after every batch.
+
 This is a migration boundary, not the final shared library. It still requires
 the pinned ReC98 checkout behind the forwarding headers and therefore does not
 make TH04 independently buildable by itself. A clean standalone build is only

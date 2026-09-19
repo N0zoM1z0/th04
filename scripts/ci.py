@@ -24,6 +24,10 @@ def main() -> int:
         run("Python unit tests", [python, "-m", "unittest", "discover", "-s", "tests", "-v"])
         run("Tracking ledgers", [python, "scripts/validate_tracking.py"])
         run(
+            "Compatibility dependency audit",
+            [python, "scripts/audit_compat_dependencies.py", "--check"],
+        )
+        run(
             "Function boundary ledger",
             [python, "scripts/boundary_review/validate_function_boundary_ledger.py"],
         )
