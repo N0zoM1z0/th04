@@ -2,15 +2,11 @@
 #define TH04_LOCAL_RESIDENT_HPP
 
 #include <stddef.h>
+#include "src/shared/config/score.hpp"
 
 // TH04 resident block shared by ZUN.COM and MAIN.EXE. The byte layout is
 // constrained by the decoded ZUN initializer and MAIN field accesses.
 #define RES_ID "HUMAConfig"
-
-typedef union {
-    unsigned char continues_used;
-    unsigned char digits[8];
-} score_lebcd_t;
 
 struct resident_t {
     char id[sizeof(RES_ID)];

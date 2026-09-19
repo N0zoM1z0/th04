@@ -31,6 +31,8 @@ The former `master.hpp` and `pc98_gfx.hpp` adapters are now TH04-owned runtime,
 graphics, and platform interfaces under `src/shared/`.
 The former cross-game randring and three GRCG adapters are now TH04-owned math
 and hardware interfaces under `src/main/`.
+The former cross-game CDG and resident adapters are now TH04-owned format and
+configuration interfaces under `src/main/` and `src/shared/`.
 
 This is a migration boundary, not the final shared library. It still requires
 the pinned ReC98 checkout behind the forwarding headers and therefore does not

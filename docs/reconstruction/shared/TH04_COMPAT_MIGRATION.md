@@ -11,8 +11,8 @@ product interfaces under `src/`.
 
 ## Current baseline
 
-After the randring/GRCG batch, the dependency audit reports 28 forwarding
-headers and 59 include sites in 38 product files, down from the original 43
+After the CDG/resident batch, the dependency audit reports 26 forwarding
+headers and 47 include sites in 32 product files, down from the original 43
 headers and 261 sites in 138 files. There are no missing, invalid, unused, or
 direct cross-game includes.
 
@@ -97,6 +97,36 @@ MAP, relocation, and OMF exact. Receipt:
 (SHA-256 `72369ca8835e52bf356e9fe6c9c4c26553024ae80957ad63cbaccfdf61fccb21`).
 No new exact owner is claimed by this dependency migration.
 
+## CDG and resident batch
+
+The fourth batch removes the next two queued adapters and localizes the
+remaining TH04 resident includes at the same time:
+
+| Old dependency | TH04-owned replacement |
+| --- | --- |
+| `th03/formats/cdg.h` | `src/main/formats/cdg.hpp` |
+| `th05/resident.hpp` and `th04/resident.hpp` | `src/shared/config/resident.hpp` and `score.hpp` |
+
+The CDG header exposes the eight load, free, and blit entries used by maintained
+MAIN source with the target memory-model Pascal ABI. The resident header keeps
+the attested 0x100-byte layout and offset assertions shared by MAIN and ZUN.
+The local score header uses the historical `TH04_SCORE_H` guard so remaining
+pinned TH04 headers cannot redeclare `score_lebcd_t`.
+
+This batch removes 12 audited compatibility include sites and changes 21
+remaining `th04/resident.hpp` includes, touching 24 product source files. The
+disabled `boss_prefix` fragment maps its two resident include occurrences and
+one CDG include back to their exact pinned-scaffold positions; replay tests
+cover the occurrence-qualified mapping. The fragment has no current promotable
+extent and receives no exact claim.
+
+The two-owner v350 smoke replay passes raw, MAP, relocation, and OMF checks for
+the resident and CDG surfaces. The v350 default MAIN replay then builds twice
+and keeps all 253 accepted owners exact. Receipt:
+`.analysis/reconstruction/exact-unit-replay/gpt-5-6-sol-v350-cdg-resident-aggregate-002/receipt.json`
+(SHA-256 `06dde8c2982b09aeaa235d9bcaba7867bef82181ef45185e8b598ffd8f8e5fa6`).
+No new exact owner is claimed by this dependency migration.
+
 ## Batch workflow
 
 1. Establish a clean baseline.
@@ -138,6 +168,10 @@ No new exact owner is claimed by this dependency migration.
      One local include may map to several old scaffold includes. Replay first
      matches the mapped old fragment, then compiles the maintained TH04 fragment.
      Both hashes and the mapping are recorded in the receipt.
+
+     If the same local include occurs in multiple conditional branches, give
+     each mapping its one-based `occurrence` so every old position stays
+     explicit and independently checked.
 
    - If an unchanged pinned TH04 scaffold header still includes the old
      cross-game declaration, add a hash-bound `[[scaffold_header_rewrites]]`
