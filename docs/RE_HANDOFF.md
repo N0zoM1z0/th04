@@ -33,9 +33,9 @@ inert padding, ABI changes, or false assembly ownership.
 MAIN has **476/491 reviewed authored C/C++ functions** and
 **79,183/83,441 reviewed authored C/C++ bytes** exact; 40 accepted
 original-style ASM units add 5,615 bytes. The last complete native aggregate,
-gpt-5-6-sol-v348-runtime-gfx-aggregate-004, passes all 253 default exact MAIN
+gpt-5-6-sol-v349-randring-grcg-aggregate-001, passes all 253 default exact MAIN
 owners twice (receipt SHA-256
-5ef3de5246fd967ecb863ba907b2c61521fba34be8e66a0668d4d7ce9841b785).
+72369ca8835e52bf356e9fe6c9c4c26553024ae80957ad63cbaccfdf61fccb21).
 All 51 boss-named MAIN authored candidates are exact. None of these counts
 means whole MAIN.EXE or whole TH04 is exact.
 
@@ -76,12 +76,12 @@ is now a checked-in 90-byte original-style ASM owner at B4M_UPDATE_TEXT
 The [VRAM color header](reconstruction/shared/TH04_VRAM_COLORS_LOCAL_V287.md) is now
 TH04-owned across 37 source files; cold replay freezes product headers. The
 ongoing [compatibility migration](reconstruction/shared/TH04_COMPAT_MIGRATION.md)
-has replaced eleven adapters, including the former 69-site `master.hpp` and
-63-site `pc98_gfx.hpp` boundaries, with TH04-owned runtime, graphics, and
-platform interfaces. The remaining boundary is 32 forwarders and 103 include
-sites in 71 product files; the audit has no missing, unused, invalid, or direct
-cross-game includes. The pinned ReC98 overlay remains. Standalone checked-in
-TH04 build closure, full
+has replaced fifteen adapters. The former `master.hpp`, `pc98_gfx.hpp`,
+cross-game randring, and three GRCG boundaries now use TH04-owned runtime,
+graphics, platform, math, and hardware interfaces. The remaining boundary is
+28 forwarders and 59 include sites in 38 product files; the audit has no
+missing, unused, invalid, or direct cross-game includes. The pinned ReC98
+overlay remains. Standalone checked-in TH04 build closure, full
 packed-file matching, runtime scenarios, and independent provenance remain
 open. Track exact owners and the remaining 6 unreviewed MAIN functions from
 config/units.csv, config/th04_main_authored_functions.csv,
@@ -90,10 +90,10 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 ## Next work and finish gate
 
 Continue standalone source closure with the migration recipe above. The next
-high-reach boundaries are `th03/math/randring.hpp` (19 include sites) and the
-TH04 `hardware/grcg.hpp` adapter (17). Recover each declaration set under its
-TH04 or shared owner and run a complete default aggregate after every shared
-header batch.
+high-reach boundaries are `th03/formats/cdg.h` (7 include sites) and
+`th05/resident.hpp` (5), followed by the 4-site overlap, sound, and player-shot
+families. Recover each declaration set under its TH04 or shared owner and run a
+complete default aggregate after every shared-header batch.
 
 The independent MAIN byte frontier remains the gameplay loop from retained run
 `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`: bind the final case-sensitive
@@ -115,7 +115,7 @@ and unknowns in the focused note and ledgers.
 ## Private workspace
 
 Targets, toolchains, Ghidra/IDA projects, generated builds, and receipts stay
-ignored under `.analysis/` or `ghidra-project/`. The cleanup retains the v348
-runtime/graphics aggregate, v213 dialog diagnostic, v214 DEMO snapshot required
+ignored under `.analysis/` or `ghidra-project/`. The cleanup retains the v349
+randring/GRCG aggregate, v213 dialog diagnostic, v214 DEMO snapshot required
 by gameplay probes, and v346 focused-004 continuation tree. Never commit
 original executables or assets.

@@ -11,8 +11,8 @@ product interfaces under `src/`.
 
 ## Current baseline
 
-After the runtime/graphics batch, the dependency audit reports 32 forwarding
-headers and 103 include sites in 71 product files, down from the original 43
+After the randring/GRCG batch, the dependency audit reports 28 forwarding
+headers and 59 include sites in 38 product files, down from the original 43
 headers and 261 sites in 138 files. There are no missing, invalid, unused, or
 direct cross-game includes.
 
@@ -65,6 +65,38 @@ MAP, relocation, and OMF exact. Receipt:
 This proves the exercised declarations preserve the accepted MAIN producers;
 it does not grant independent exact credit to unused API declarations.
 
+## Randring and GRCG batch
+
+The third batch removes the two queued families and the two smaller GRCG
+adapters that the TH04 hardware interface supersedes:
+
+| Old adapter | TH04-owned replacement |
+| --- | --- |
+| `th03/math/randring.hpp` | `src/main/math/randring.hpp` and `randring_ranges.hpp` |
+| `th04/hardware/grcg.hpp` | `src/main/hardware/grcg.hpp` |
+| `th01/hardware/grcg.hpp` | `src/main/hardware/grcg.hpp` |
+| `platform/x86real/pc98/grcg.hpp` | `src/main/hardware/grcg.hpp` |
+
+The batch removes 44 audited compatibility include sites. It also changes the
+remaining maintained TH04 randring and GRCG includes, for 75 affected product
+files in total. The random-ring interface keeps the target word cursor and
+near/Pascal ABI; the range helpers used only by bullet addition have their own
+bounded header. The GRCG interface owns TH04 mode switching, direct color
+setup, and the segment-3 inline implementation without cross-game product
+names.
+
+Exact replay keeps these changes in TH04 product overlays. The `grcg3` fragment
+uses one explicit localized-fragment mapping from the local header to its two
+old scaffold includes. Do not tree-rewrite these pinned TH04 headers: the
+all-game calibration also consumes some of them while compiling TH05, which
+would leak the TH04-only interface into another artifact's build.
+
+The v349 default MAIN replay builds twice and keeps all 253 accepted owners raw,
+MAP, relocation, and OMF exact. Receipt:
+`.analysis/reconstruction/exact-unit-replay/gpt-5-6-sol-v349-randring-grcg-aggregate-001/receipt.json`
+(SHA-256 `72369ca8835e52bf356e9fe6c9c4c26553024ae80957ad63cbaccfdf61fccb21`).
+No new exact owner is claimed by this dependency migration.
+
 ## Batch workflow
 
 1. Establish a clean baseline.
@@ -115,7 +147,9 @@ it does not grant independent exact credit to unused API declarations.
    - A high-reach vendor include that remains across many pinned TH04 scaffold
      files uses `[[scaffold_tree_include_rewrites]]`. The rewrite is restricted
      to the pinned `th04/` tree, gated by a frozen local header, limited to one
-     exact include line, and records every input/output file hash.
+     exact include line, and records every input/output file hash. First verify
+     that another artifact's calibration build does not consume those files;
+     otherwise use maintained overlays and bounded fragment mappings.
 
 6. Run the narrow replay first, then the complete default aggregate after any
    shared header or ABI change.

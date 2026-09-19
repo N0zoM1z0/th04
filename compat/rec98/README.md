@@ -29,6 +29,8 @@ exact-replay modes, batch checklist, and handoff template live in
 Run `python3 scripts/audit_compat_dependencies.py --check` after every batch.
 The former `master.hpp` and `pc98_gfx.hpp` adapters are now TH04-owned runtime,
 graphics, and platform interfaces under `src/shared/`.
+The former cross-game randring and three GRCG adapters are now TH04-owned math
+and hardware interfaces under `src/main/`.
 
 This is a migration boundary, not the final shared library. It still requires
 the pinned ReC98 checkout behind the forwarding headers and therefore does not
