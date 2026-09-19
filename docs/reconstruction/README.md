@@ -50,4 +50,5 @@ addressable. Continue an existing subject note when an experiment advances the
 same claim. Add a new note only for a distinct ownership decision, reusable
 negative result, or replay boundary. Keep live priorities in
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) and live counts in the CSV ledgers and
-generated progress reports.
+generated progress reports. Notes not listed under active frontiers or recent
+milestones are retained evidence; do not scan them during routine handoff.

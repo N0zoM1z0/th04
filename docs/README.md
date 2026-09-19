@@ -1,7 +1,8 @@
 # Documentation map
 
-Start with the smallest document that answers the current question. The CSV
-ledgers remain authoritative when prose and generated reports disagree.
+Start with the smallest document that answers the current question. For a new
+work session, read the handoff and only the focused note it links for that task.
+The CSV ledgers remain authoritative when prose and generated reports disagree.
 
 ## Continue reconstruction
 
@@ -33,5 +34,6 @@ ledgers remain authoritative when prose and generated reports disagree.
   reconstruction projects and the pinned ReC98 control.
 
 `RE_HANDOFF.md` contains only live state. Focused notes retain replayable
-evidence and failed approaches. Historical outcomes should enter the ledgers or
-an existing subject note instead of accumulating in the handoff.
+evidence and failed approaches; they are an archive, not a reading queue.
+Historical outcomes should enter the ledgers or an existing subject note
+instead of accumulating in the handoff.
