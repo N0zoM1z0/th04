@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **5 forwarders and 6 include sites in 6 files**. The
+138 product files to **4 forwarders and 5 include sites in 5 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -39,43 +39,40 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Sound impl | shared SE/load helpers plus hash-bound fragment include transforms | 7 | `fc6c1cb` |
 | Sound measure | KAJA measure wrapper and MMD quarter-note timing constant | 6 | `9d56bf1` |
 | CFG loader | shared GAME3/4 resident-pointer loader with target-specific cfg layouts | 5 | `8d0f544` |
+| MAP format | packed TH04 map header/section layout without legacy planar dependency | 4 | `572482e` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-cfg-impl-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-map-format-aggregate-001/receipt.json`
 (SHA-256
-`246373a243c353fb813ea8846743b34328be8ad311645f50b9d7ceafcbc52e7d`).
+`a3269df61dc86ff5428ed6102d50161c9c9ef8d262999f04f767e60998b8e144`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The CFG-loader batch removes `compat/rec98/th03/formats/cfg_impl.hpp` from
-`src/main/config/load_resident_ptr.cpp` and replaces it with
-`src/main/config/load_resident_impl.hpp`. The maintained source is genuinely
-shared by the GAME3 and GAME4 build paths, but not GAME5; the local header
-therefore preserves exactly those two producer contexts rather than importing
-the complete historical TH03 configuration API.
+The MAP-format batch removes `compat/rec98/th04/formats/map.hpp` and the
+remaining same-game include from `src/main/stage/session_init.cpp`, replacing
+both with `src/main/formats/map.hpp`. The local format surface keeps the
+packed 8-byte file header, five rows per section, and 32 stored tile entries
+per row. The stored tile values are expressed directly as signed 16-bit
+offsets, which is the historical `vram_offset_t` representation, instead of
+importing the much broader legacy `planar.h` just for one typedef.
 
-For GAME4, the helper uses the already-attested `src/shared/config/cfg.hpp`
-10-byte file layout. For GAME3, it declares only the compact calibration
-`cfg_options_t` and `cfg_t` needed by this producer. The previous cold GAME3
-`cfg_lres.obj` directly emits `ENTER 8,0` and pushes 8 as the `file_read` size,
-proving `sizeof(cfg_t)==8`; the observed field order fixes the options prefix
-at five bytes. The local runtime file declarations preserve master.lib's
-large-model far-Pascal return convention and far filename pointer.
+Compile-time checks pin `sizeof(map_header_t)==8` and
+`sizeof(map_section_tiles_t)==320`. The exact `th04-main-end-map-v100` owner
+passes focused two-cold replay (receipt SHA-256
+`632869156a474d278d2eda8dca2cfac6f13a7150b66319b73a97e052b4b2a1cf`).
+A separate diagnostic replay of the non-exact session producer (receipt
+`6d93bb75ca7481c170ee64d4a1a0883398f07e6dc676213c96c85b5e2a52ecbb`)
+still passes raw bytes, MAP placement, valid deterministic OMF, auxiliary
+ownership and determinism; only `relocations_exact` remains false, exactly the
+pre-existing stage-session blocker.
 
-The exact TH04 `th04-main-cfg-load-resident-ptr` owner passes focused two-cold
-replay (receipt SHA-256
-`bb6e94169f00dc0aaf4bc19d41428c4a932d820a1aad4fae5ce6f4fb6d3faf31`).
-Separately, the actual old and new GAME3 cold-build `cfg_lres.obj` files have
-11 byte-identical semantic OMF records after excluding dependency/producer
-COMENT and source-line LINNUM metadata; the semantic receipt SHA-256 is
-`6bbcdc04b3e6e27fb285dc702f790c3dfce8b9b650c79a62d76528c2995310b9`.
-The complete `gpt-web-cfg-impl-aggregate-001` replay passes all 253 default
+The complete `gpt-web-map-format-aggregate-001` replay passes all 253 default
 MAIN owners twice with `failures=[]`; both candidate MAIN images remain
 SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 6 forwarders / 7 sites / 7 files to 5 / 6 / 6,
+The compat audit moves from 5 forwarders / 6 sites / 6 files to 4 / 5 / 5,
 with no missing, orphan, invalid, or direct forbidden include. No new exact
 owner is claimed.
 
@@ -88,7 +85,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining four families have one site each. Re-run the audit instead
+The remaining three families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow
