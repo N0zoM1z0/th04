@@ -150,6 +150,63 @@ build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/coanch.asm\",\n\t\"th04/chase.cpp\",\n\t\"th04/anims.cpp\",\n\t\"th04/y6gath.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 build_replacement = "\t\"th04/coanch.asm\",\n\t\"th04/y6all.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
 
+# Keep the maintained TH04 sound implementation header active even for
+# exact replay units that patch shared ReC98 translation units rather than
+# overlaying one complete repository source file.
+[[source_transforms]]
+id = "th04-sound-impl-se-local"
+trigger_units = ["th04-main-snd-se-play", "th04-main-snd-se-update"]
+patch_path = "th02/snd/se.cpp"
+encoding = "utf-8"
+scaffold_sha256 = "3c8648ea60fa7fbae8c10068bb1ac1178e8481b3841eac297356b956109970df"
+repo_inputs = ["src/shared/sound/impl.hpp"]
+
+[[source_transforms.ops]]
+id = "localize-sound-impl-include"
+kind = "replace"
+old = "#include \"th02/snd/impl.hpp\""
+new = "#include \"src/shared/sound/impl.hpp\""
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-sound-impl-se-reset-local"
+trigger_units = ["th04-main-snd-se-reset"]
+patch_path = "th02/snd/se_reset.cpp"
+encoding = "utf-8"
+scaffold_sha256 = "be06ff1731cf5a6e4ec985565209db9a729c5afd7f570009bc05b4ecf047e94b"
+repo_inputs = ["src/shared/sound/impl.hpp"]
+
+[[source_transforms.ops]]
+id = "localize-sound-impl-include"
+kind = "replace"
+old = "#include \"th02/snd/impl.hpp\""
+new = "#include \"src/shared/sound/impl.hpp\""
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-sound-impl-load-local"
+trigger_units = [
+  "th04-main-snd-load-prefix",
+  "th04-main-snd-load-tail",
+  "th04-main-snd-load-open",
+  "th04-main-snd-load-dispatch-read",
+  "th04-main-snd-load-func-load",
+]
+patch_path = "th04/snd/load.cpp"
+encoding = "utf-8"
+scaffold_sha256_any = [
+  "9777ebd973098395823bfcfbc53daa451d2c6db62500aa038873e72729c1a39a",
+  "613843af0adeed77cff3ea237ecbb43876f68d3a5e75b29e1d3204425132de8f",
+]
+repo_inputs = ["src/shared/sound/impl.hpp"]
+
+[[source_transforms.ops]]
+id = "localize-sound-impl-include"
+kind = "replace"
+old = "#include \"th02/snd/impl.hpp\""
+new = "#include \"src/shared/sound/impl.hpp\""
+expected_count = 1
+
 [[source_transforms]]
 id = "th04-main035-boss-natural-tu"
 trigger_units = ["th04-main-main035-boss-tu"]

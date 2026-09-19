@@ -1,6 +1,6 @@
 #pragma option -zCSHARED
 #include "src/shared/sound/api.hpp"
-#include "compat/rec98/th02/snd/impl.hpp"
+#include "src/shared/sound/impl.hpp"
 
 int16_t pascal snd_kaja_interrupt(int16_t ax)
 {
