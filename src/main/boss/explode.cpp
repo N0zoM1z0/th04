@@ -6,11 +6,7 @@
 #include "src/main/hardware/palette.hpp"
 #include "th04/formats/super.h"
 #include "th04/main/boss/boss.hpp"
-#if (GAME == 5)
-#include "compat/rec98/th05/sprites/main_pat.h"
-#else
-#include "th04/sprites/main_pat.h"
-#endif
+#include "src/main/sprites/main_pat.hpp"
 
 // Structures
 // ----------

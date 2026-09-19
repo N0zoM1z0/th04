@@ -20,7 +20,7 @@
 
 #if (GAME == 5)
 #include "th04/main/item/item.hpp"
-#include "compat/rec98/th05/sprites/main_pat.h"
+#include "src/main/sprites/main_pat.hpp"
 
 static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 32;
 
@@ -44,7 +44,7 @@ void pascal near bullet_update_patnum(bullet_t near &bullet)
 	bullet.patnum = bullet_patnum_for_angle(patnum_base, bullet.angle);
 }
 #else
-#include "th04/sprites/main_pat.h"
+#include "src/main/sprites/main_pat.hpp"
 
 static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 24;
 
