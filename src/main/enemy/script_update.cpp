@@ -20,9 +20,9 @@ extern "C" void near enemy_aim_at_player(void);
 extern "C" unsigned char near enemy_script_update(void)
 {
     register enemy_t near *enemy = enemy_cur;
-    int temp;
-    unsigned char advance;
     unsigned char duration;
+    unsigned char advance;
+    int temp;
 
     _ES = FP_SEG(std_seg);
 
@@ -32,10 +32,8 @@ refetch:
     instr += enemy->script_ip;
 
 dispatch:
+    // This case order preserves TC4J's target-observed physical basic-block order.
     switch(*instr) {
-    case 0x00:
-        goto killed;
-
     case 0x01:
         if(enemy->cur_instr_frame == 0) {
             enemy->speed.v = instr[2];
@@ -85,8 +83,32 @@ dispatch:
         enemy->angle += enemy->angle_delta;
         goto timed;
 
+    case 0x0D:
+    case 0x0E:
+        enemy_velocity_set();
+        if(*instr == 0x0E) {
+            enemy->pos.velocity.x.v += static_cast<signed char>(instr[1]);
+            enemy->pos.velocity.y.v += static_cast<signed char>(instr[2]);
+            duration = instr[3];
+            advance = 4;
+        } else {
+            duration = instr[1];
+            advance = 2;
+        }
+        if(enemy_pos_update()) goto killed;
+        enemy->angle += enemy->angle_delta;
+        goto timed;
+
     case 0x06:
         if(enemy->cur_instr_frame == 0) enemy->pos.prev = enemy->pos.cur;
+        duration = instr[1];
+        advance = 2;
+        goto timed;
+
+    case 0x0B:
+        if(enemy->cur_instr_frame == 0) enemy->pos.velocity.x.v = 0;
+        enemy->pos.velocity.y.v = scroll_last_delta.v;
+        if(enemy_pos_update()) goto killed;
         duration = instr[1];
         advance = 2;
         goto timed;
@@ -122,74 +144,16 @@ dispatch:
     case 0x0A:
         enemy->angle += instr[1];
         enemy_velocity_set();
-        advance = 2;
-        goto next;
-
-    case 0x0B:
-        if(enemy->cur_instr_frame == 0) enemy->pos.velocity.x.v = 0;
-        enemy->pos.velocity.y.v = scroll_last_delta.v;
-        if(enemy_pos_update()) goto killed;
-        duration = instr[1];
-        advance = 2;
-        goto timed;
+        goto advance_two;
 
     case 0x0C:
         enemy->speed.v += static_cast<signed char>(instr[1]);
         enemy_velocity_set();
-        advance = 2;
-        goto next;
-
-    case 0x0D:
-    case 0x0E:
-        enemy_velocity_set();
-        if(*instr == 0x0E) {
-            enemy->pos.velocity.x.v += static_cast<signed char>(instr[1]);
-            enemy->pos.velocity.y.v += static_cast<signed char>(instr[2]);
-            duration = instr[3];
-            advance = 4;
-        } else {
-            duration = instr[1];
-            advance = 2;
-        }
-        if(enemy_pos_update()) goto killed;
-        enemy->angle += enemy->angle_delta;
-        goto timed;
-
-    case 0x10:
-        enemy->flag = EF_ALIVE;
-        enemy->patnum_base = instr[1];
-        enemy->hp = SCRIPT_WORD(2);
-        enemy->score = SCRIPT_WORD(4);
-        enemy->can_be_damaged = true;
-        enemy->kills_player_on_collision = true;
-        advance = 6;
-        goto next;
+        goto advance_two;
 
     case 0x11:
         enemy->angle = randring2_next16();
-        advance = 1;
-        goto next;
-
-    case 0x12:
-        enemy->angle = instr[1];
-        enemy->speed.v = instr[2];
-        enemy_velocity_set();
-        advance = 3;
-        goto next;
-
-    case 0x13:
-        enemy->angle = instr[1];
-        enemy->speed.v = instr[2];
-        if(!enemy->spawned_in_left_half) enemy->angle = 0x80 - enemy->angle;
-        enemy_velocity_set();
-        advance = 3;
-        goto next;
-
-    case 0x14:
-        enemy->speed.v = instr[1];
-        enemy_velocity_set();
-        advance = 2;
-        goto next;
+        goto advance_one;
 
     case 0x20:
         bullet_template.spawn_type = enemy->bullet_template.spawn_type;
@@ -207,8 +171,7 @@ dispatch:
         bullet_template.delta = enemy->bullet_template.delta;
         bullet_template_tune();
         bullets_add_regular();
-        advance = 1;
-        goto next;
+        goto advance_one;
 
     case 0x21:
         enemy->autofire = false;
@@ -225,8 +188,7 @@ dispatch:
 
     case 0x22:
         enemy->bullet_template.spawn_type = instr[1];
-        advance = 2;
-        goto next;
+        goto advance_two;
 
     case 0x23:
         if(enemy->cur_instr_frame == 0) enemy->pos.prev = enemy->pos.cur;
@@ -237,43 +199,39 @@ dispatch:
 
     case 0x24:
         enemy->bullet_template.angle = instr[1];
-        advance = 2;
-        goto next;
+        goto advance_two;
 
     case 0x25:
         enemy->bullet_template.angle += instr[1];
-        advance = 2;
-        goto next;
+        goto advance_two;
 
-    case 0x26:
-        enemy->bullet_template.speed.v = instr[1];
-        advance = 2;
-        goto next;
+    case 0x2D:
+        enemy->bullet_template.angle = randring2_next16();
+        goto advance_one;
 
-    case 0x27:
-        enemy->bullet_template.speed.v += instr[1];
-        advance = 2;
-        goto next;
-
-    case 0x28:
-        enemy->bullet_template.group = static_cast<bullet_group_t>(instr[1]);
-        advance = 2;
-        goto next;
-
-    case 0x29:
-        enemy->bullet_template.count = instr[1];
-        advance = 2;
-        goto next;
+advance_one:
+    advance = 1;
+    goto next;
 
     case 0x2A:
         enemy->bullet_template.patnum = instr[1];
-        advance = 2;
-        goto next;
+        goto advance_two;
 
-    case 0x2B:
-        enemy->autofire = true;
-        advance = 1;
-        goto next;
+    case 0x29:
+        enemy->bullet_template.count = instr[1];
+        goto advance_two;
+
+    case 0x26:
+        enemy->bullet_template.speed.v = instr[1];
+        goto advance_two;
+
+    case 0x27:
+        enemy->bullet_template.speed.v += instr[1];
+        goto advance_two;
+
+    case 0x28:
+        enemy->bullet_template.group = static_cast<bullet_group_t>(instr[1]);
+        goto advance_two;
 
     case 0x2C:
         temp = instr[1];
@@ -289,54 +247,50 @@ dispatch:
         advance = 2;
         goto next;
 
-    case 0x2D:
-        enemy->bullet_template.angle = randring2_next16();
-        advance = 1;
-        goto next;
+    case 0x2B:
+        enemy->autofire = true;
+        goto advance_one;
 
     case 0x2E:
         enemy->autofire = false;
-        advance = 1;
-        goto next;
+        goto advance_one;
 
     case 0x30:
         enemy->bullet_template.delta.spread_angle = instr[1];
-        advance = 2;
-        goto next;
+        goto advance_two;
 
-    case 0x80:
-    case 0x81:
-        if(enemy->loop_i >= instr[2]) {
-            enemy->loop_i = 0;
-            advance = 3;
-            goto next;
-        }
-        enemy->loop_i++;
-        if(*instr == 0x80) enemy->script_ip = instr[1];
-        else enemy->script_ip -= instr[1];
-        goto refetch;
+    case 0x00:
+    killed:
+        enemy->flag = EF_KILLED;
+        return 1;
+
+    case 0x10:
+        enemy->flag = EF_ALIVE;
+        enemy->patnum_base = instr[1];
+        enemy->hp = SCRIPT_WORD(2);
+        enemy->score = SCRIPT_WORD(4);
+        enemy->can_be_damaged = true;
+        enemy->kills_player_on_collision = true;
+        advance = 6;
+        goto next;
 
     case 0x82:
         enemy->clip_x = true;
-        advance = 1;
-        goto next;
-
-    case 0x83:
-        enemy->clip_y = true;
-        advance = 1;
-        goto next;
+        goto advance_one;
 
     case 0x84:
         enemy->clip_x = true;
         enemy->clip_y = true;
-        advance = 1;
-        goto next;
+        goto advance_one;
+
+    case 0x83:
+        enemy->clip_y = true;
+        goto advance_one;
 
     case 0x85:
         enemy->anim_cels = instr[1];
         enemy->anim_frames_per_cel = instr[2];
-        advance = 3;
-        goto next;
+        goto advance_three;
 
     case 0x86:
         snd_se_play(instr[1]);
@@ -345,13 +299,12 @@ dispatch:
 
     case 0x87:
         enemy->patnum_base = instr[1];
-        advance = 2;
-        goto next;
+        goto advance_two;
 
     case 0x88:
         enemy->can_be_damaged = false;
-        enemy->autofire = false;
         advance = 1;
+        enemy->autofire = false;
         goto next;
 
     case 0x89:
@@ -359,6 +312,14 @@ dispatch:
         enemy->autofire = (rank == RANK_LUNATIC);
         advance = 1;
         goto next;
+
+    case 0x8C:
+        enemy->kills_player_on_collision = false;
+        goto advance_one;
+
+    case 0x8D:
+        enemy->kills_player_on_collision = true;
+        goto advance_one;
 
     case 0x8A:
         enemy->pos.prev = enemy->pos.cur;
@@ -376,27 +337,53 @@ dispatch:
         advance = 5;
         goto timed;
 
-    case 0x8C:
-        enemy->kills_player_on_collision = false;
-        advance = 1;
-        goto next;
-
-    case 0x8D:
-        enemy->kills_player_on_collision = true;
-        advance = 1;
-        goto next;
-
     case 0x8E:
         enemy->patnum_base += instr[1];
-        advance = 2;
-        goto next;
+        goto advance_two;
+
+    case 0x12:
+        enemy->angle = instr[1];
+        enemy->speed.v = instr[2];
+        enemy_velocity_set();
+        goto advance_three;
+
+advance_three:
+    advance = 3;
+    goto next;
+
+    case 0x13:
+        enemy->angle = instr[1];
+        enemy->speed.v = instr[2];
+        if(!enemy->spawned_in_left_half) enemy->angle = 0x80 - enemy->angle;
+        enemy_velocity_set();
+        goto advance_three;
+
+    case 0x14:
+        enemy->speed.v = instr[1];
+        enemy_velocity_set();
+        goto advance_two;
 
     case 0x8F:
         tile_ring_set_vo(
             enemy->pos.cur.x.v, enemy->pos.cur.y.v, instr[1]
         );
-        advance = 2;
-        goto next;
+        goto advance_two;
+
+advance_two:
+    advance = 2;
+    goto next;
+
+    case 0x80:
+    case 0x81:
+        if(enemy->loop_i >= instr[2]) {
+            enemy->loop_i = 0;
+            advance = 3;
+            goto next;
+        }
+        enemy->loop_i++;
+        if(*instr == 0x80) enemy->script_ip = instr[1];
+        else enemy->script_ip -= instr[1];
+        goto refetch;
 
     default:
         // The target reaches the frame branch with uninitialized locals.
@@ -417,9 +404,6 @@ next:
     instr += advance;
     goto dispatch;
 
-killed:
-    enemy->flag = EF_KILLED;
-    return 1;
 }
 
 #undef SCRIPT_WORD

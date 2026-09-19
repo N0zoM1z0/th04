@@ -41,7 +41,7 @@ means whole MAIN.EXE or whole TH04 is exact.
 
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
-| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | The [three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) and [full VM](reconstruction/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) have natural C++ (134/142 and 1,627/1,680 target bytes). The VM's 42-byte entry shape and all 144 switch-case destination groups agree after address masking; raw bytes and three ordered relocations remain open. |
+| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | The [three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) and [full VM](reconstruction/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) have natural C++ (134/142 and 1,634/1,680 target bytes). The VM's 42-byte entry shape, BP-local layout, and physical order of all 49 switch destination groups agree after address masking; raw bytes and three ordered relocations remain open. |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A synthetic split and [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md) fail the global byte/layout/relocation gates. |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
@@ -104,7 +104,7 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
 ## Next work and finish gate
 
-Classify the 53-byte MAIN enemy VM body mismatch without breaking its exact
+Classify the 46-byte MAIN enemy VM body mismatch without breaking its exact
 144-case destination partition; resolve the helper BP-local and ES-save
 producers and all three ordered relocations. Find a natural OMF producer for
 MAIN dialog/DEMO ordered relocations without

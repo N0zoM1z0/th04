@@ -44,14 +44,18 @@ def snapshot_sha256() -> str:
     return digest.hexdigest()
 
 
-def partition(table: bytes) -> tuple[tuple[int, ...], ...]:
+def switch_topology(
+    table: bytes,
+) -> tuple[tuple[tuple[int, ...], ...], tuple[tuple[int, ...], ...]]:
     if len(table) != 288:
         raise ValueError("switch table is not 144 words")
     groups: dict[int, list[int]] = {}
     for opcode in range(144):
         offset = int.from_bytes(table[opcode * 2:opcode * 2 + 2], "little")
         groups.setdefault(offset, []).append(opcode)
-    return tuple(sorted(tuple(group) for group in groups.values()))
+    partition = tuple(sorted(tuple(group) for group in groups.values()))
+    physical_order = tuple(tuple(groups[offset]) for offset in sorted(groups))
+    return partition, physical_order
 
 
 def main() -> int:
@@ -106,22 +110,29 @@ def main() -> int:
 
     records = parse_omf(obj)
     groups = code_ledata(records, "B4M_UPDATE_TEXT")
-    if [(start, end) for start, end, _, _ in groups] != [(0, 1024), (1024, 1627)]:
+    if [(start, end) for start, end, _, _ in groups] != [(0, 1024), (1024, 1634)]:
         raise ValueError("natural VM CODE topology changed")
-    code = bytearray(1627)
+    code = bytearray(1634)
     for start, end, record_number, _ in groups:
         code[start:end] = records[record_number - 1].data[3:]
     code = bytes(code)
-    if len(code) != 1627 or len(code) == len(target_body):
+    if len(code) != 1634 or len(code) == len(target_body):
         raise ValueError("natural VM size result changed")
     ignored = {index for start in (8, 12, 33, 40) for index in (start, start + 1)}
     if any(a != b for i, (a, b) in enumerate(zip(target_body[:42], code[:42]))
            if i not in ignored):
         raise ValueError("42-byte target VM entry opcode shape changed")
-    target_groups = partition(target_body[-288:])
-    candidate_groups = partition(code[-288:])
+    target_groups, target_order = switch_topology(target_body[-288:])
+    candidate_groups, candidate_order = switch_topology(code[-288:])
     if len(target_groups) != 49 or target_groups != candidate_groups:
         raise ValueError("144-case switch destination partition differs")
+    if target_order != candidate_order:
+        raise ValueError("49 switch destination groups differ in physical order")
+    local_layout = bytes.fromhex("26 8A 45 03 88 46 FF C6 46 FE 04")
+    target_layout_sites = [i for i in range(len(target_body)) if target_body.startswith(local_layout, i)]
+    candidate_layout_sites = [i for i in range(len(code)) if code.startswith(local_layout, i)]
+    if target_layout_sites != [76, 266] or candidate_layout_sites != target_layout_sites:
+        raise ValueError("duration/advance BP local layout differs")
     (output / "enemy_vm.obj").write_bytes(obj)
     (output / "enemy_vm.code").write_bytes(code)
 
@@ -142,9 +153,11 @@ def main() -> int:
                "candidate_executable_size": len(code) - 288,
                "switch_entries": 144, "switch_unique_destinations": len(target_groups),
                "switch_partition_equal": True,
+               "switch_physical_group_order_equal": True,
+               "duration_advance_bp_local_layout_equal": True,
                "entry_42_byte_opcode_shape_equal_after_four_word_mask": True,
-               "result": "Natural C++ compiles to 1627 versus 1680 target bytes, with the same entry opcode shape and all 144 switch opcodes partitioned among the same 49 destination groups.",
-               "limit": "The executable body is 53 bytes shorter; no linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
+               "result": "Natural C++ compiles to 1634 versus 1680 target bytes, with the same entry and BP-local shapes plus the same physical order for all 49 switch destination groups.",
+               "limit": "The executable body is 46 bytes shorter; no linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
     receipt_path = output / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"receipt": str(receipt_path), "result": receipt["result"]}))
