@@ -1,6 +1,6 @@
 #pragma option -zCSHARED
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 
 void pascal frame_delay(int frames)
 {

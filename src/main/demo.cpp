@@ -1,5 +1,5 @@
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "src/main/core/gameexecl.hpp"
 #include "th04/hardware/inputvar.h"
 #include "th04/main/frames.h"

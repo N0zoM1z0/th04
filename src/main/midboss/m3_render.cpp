@@ -1,6 +1,6 @@
 #pragma option -zCTILE_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/phase.hpp"

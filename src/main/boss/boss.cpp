@@ -1,5 +1,5 @@
 #pragma option -zCMAIN_035_TEXT -zPmain_03
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #pragma codeseg MAI_TEXT main_01
 extern "C" void pascal near nullfunc_near(void);
 void pascal near midboss1_render(void);
@@ -34,7 +34,7 @@ void pascal near stage5_invalidate(void);
 void pascal near tiles_render_all(void);
 #pragma codeseg
 #include "decomp.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "compat/rec98/th01/math/overlap.hpp"
 #include "src/shared/hardware/frame_delay.hpp"
 #include "compat/rec98/th03/hardware/palette.hpp"

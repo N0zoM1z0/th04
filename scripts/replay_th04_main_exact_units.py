@@ -367,7 +367,7 @@ def overlay_sources(
             maintained_fragment = repo_source.read_bytes()
             forwarded_headers: list[str] = []
             include_mappings: list[dict[str, object]] = []
-            if mode in {"forwarded-fragment", "localized-fragment"}:
+            if mode == "forwarded-fragment" or b"compat/rec98/" in maintained_fragment:
                 scaffold_fragment, forwarded_headers = resolve_rec98_forwarders(
                     maintained_fragment, compat_root=compat_root
                 )
@@ -496,12 +496,20 @@ def apply_scaffold_header_rewrites(
             )
         old_line = f'#include "{old_include}"\n'.encode("ascii")
         new_line = f'#include "{local_header}"\n'.encode("ascii")
-        if original.count(old_line) != 1:
+        old_count = original.count(old_line)
+        local_count = original.count(new_line)
+        if old_count == 1 and local_count == 0:
+            action = "rewritten"
+            patched = original.replace(old_line, new_line, 1)
+        elif old_count == 0 and local_count == 1:
+            action = "already-local"
+            patched = original
+        else:
             raise RuntimeError(
-                f"{entry['id']}: old include must occur exactly once in {scaffold_path}"
+                f"{entry['id']}: expected exactly one old or local include in "
+                f"{scaffold_path}"
             )
         stat = destination.stat()
-        patched = original.replace(old_line, new_line, 1)
         destination.write_bytes(patched)
         os.utime(destination, ns=(stat.st_atime_ns, stat.st_mtime_ns))
         receipts.append(
@@ -510,9 +518,82 @@ def apply_scaffold_header_rewrites(
                 "scaffold_path": scaffold_path,
                 "old_include": old_include,
                 "local_header": local_header,
+                "action": action,
                 "scaffold_sha256": actual_sha256,
                 "accepted_scaffold_sha256s": expected_sha256s,
                 "patched_scaffold_sha256": digest_bytes(patched),
+            }
+        )
+    return receipts
+
+
+def apply_scaffold_tree_include_rewrites(
+    source_root: Path,
+    rewrites: list[dict[str, object]],
+    product_headers: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    """Rewrite one exact include line across the pinned TH04 scaffold tree."""
+
+    available = {str(item["path"]) for item in product_headers}
+    receipts: list[dict[str, object]] = []
+    source_suffixes = {".c", ".cpp", ".h", ".hpp", ".inl"}
+    for entry in rewrites:
+        local_header = str(entry["local_header"])
+        if local_header not in available:
+            continue
+        tree_root = str(entry.get("tree_root", "th04"))
+        old_include = str(entry["old_include"])
+        if tree_root != "th04":
+            raise RuntimeError(f"{entry['id']}: scaffold tree rewrite must use th04")
+        if not local_header.startswith("src/"):
+            raise RuntimeError(f"{entry['id']}: local header must stay within src/")
+        for path in (old_include, local_header):
+            if (
+                not path
+                or "\\" in path
+                or Path(path).is_absolute()
+                or ".." in Path(path).parts
+                or "." in Path(path).parts
+            ):
+                raise RuntimeError(f"{entry['id']}: invalid include rewrite path {path!r}")
+        old_line = f'#include "{old_include}"\n'.encode("ascii")
+        new_line = f'#include "{local_header}"\n'.encode("ascii")
+        files: list[dict[str, object]] = []
+        occurrence_count = 0
+        for destination in sorted((source_root / tree_root).rglob("*")):
+            if not destination.is_file() or destination.suffix.lower() not in source_suffixes:
+                continue
+            original = destination.read_bytes()
+            count = original.count(old_line)
+            if not count:
+                continue
+            stat = destination.stat()
+            patched = original.replace(old_line, new_line)
+            destination.write_bytes(patched)
+            os.utime(destination, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+            occurrence_count += count
+            files.append(
+                {
+                    "path": destination.relative_to(source_root).as_posix(),
+                    "occurrences": count,
+                    "scaffold_sha256": digest_bytes(original),
+                    "patched_scaffold_sha256": digest_bytes(patched),
+                }
+            )
+        minimum_count = int(entry.get("minimum_count", 1))
+        if occurrence_count < minimum_count:
+            raise RuntimeError(
+                f"{entry['id']}: expected at least {minimum_count} include rewrites, "
+                f"got {occurrence_count}"
+            )
+        receipts.append(
+            {
+                "id": entry["id"],
+                "tree_root": tree_root,
+                "old_include": old_include,
+                "local_header": local_header,
+                "occurrences": occurrence_count,
+                "files": files,
             }
         )
     return receipts
@@ -1465,6 +1546,9 @@ def main() -> int:
     build_replacements = list(config.get("build_replacements", []))
     source_transforms = list(config.get("source_transforms", []))
     scaffold_header_rewrites = list(config.get("scaffold_header_rewrites", []))
+    scaffold_tree_include_rewrites = list(
+        config.get("scaffold_tree_include_rewrites", [])
+    )
     prebuild_objects = list(config.get("prebuild_objects", []))
     if args.unit:
         wanted = set(args.unit)
@@ -1540,6 +1624,9 @@ def main() -> int:
         scaffold_header_rewrite_receipts = apply_scaffold_header_rewrites(
             source, scaffold_header_rewrites, product_headers
         )
+        scaffold_tree_include_rewrite_receipts = apply_scaffold_tree_include_rewrites(
+            source, scaffold_tree_include_rewrites, product_headers
+        )
         prebuild_object_receipts = apply_prebuild_objects(
             source, prebuild_objects, selected_ids, repo_root=snapshot_root
         )
@@ -1554,6 +1641,7 @@ def main() -> int:
                 "product_headers": product_headers,
                 "overlays": overlays,
                 "scaffold_header_rewrites": scaffold_header_rewrite_receipts,
+                "scaffold_tree_include_rewrites": scaffold_tree_include_rewrite_receipts,
                 "scaffold_extractions": scaffold_extraction_receipts,
                 "source_splits": split_receipts,
                 "build_inserts": build_insert_receipts,

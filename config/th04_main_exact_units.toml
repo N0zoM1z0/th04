@@ -2,6 +2,20 @@ schema_version = 1
 artifact = "th04-main"
 reference_revision = "b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
 
+[[scaffold_tree_include_rewrites]]
+id = "th04-runtime-api-local"
+tree_root = "th04"
+old_include = "libs/master.lib/master.hpp"
+local_header = "src/shared/runtime/api.hpp"
+minimum_count = 1
+
+[[scaffold_tree_include_rewrites]]
+id = "th04-graphics-api-local"
+tree_root = "th04"
+old_include = "libs/master.lib/pc98_gfx.hpp"
+local_header = "src/shared/hardware/graphics.hpp"
+minimum_count = 1
+
 [[scaffold_header_rewrites]]
 id = "th04-entity-bullet-header-local"
 scaffold_path = "th04/main/bullet/bullet.hpp"
@@ -30,6 +44,33 @@ local_header = "src/main/core/entity.hpp"
 id = "th04-entity-player-shot-header-local"
 scaffold_path = "th04/main/player/shot.hpp"
 scaffold_sha256 = "61ccc51fa488f6816ae2dbb69b969c5ce1dbc60331eb394b64256aa5d7a02d32"
+old_include = "th02/main/entity.hpp"
+local_header = "src/main/core/entity.hpp"
+
+[[scaffold_header_rewrites]]
+id = "th04-entity-circle-source-local"
+scaffold_path = "th04/main/circle.cpp"
+scaffold_sha256 = "98dc19943c9c182180de813bd50137417673de10c502a30b305f0d197cd94d7e"
+old_include = "th02/main/entity.hpp"
+local_header = "src/main/core/entity.hpp"
+
+[[scaffold_header_rewrites]]
+id = "th04-entity-spark-header-local"
+scaffold_path = "th04/main/spark.hpp"
+scaffold_sha256_any = [
+  "c69b115c3926962df0b9f650508cf9026c28669a3564655e43299ac66c905f87",
+  "f20403688ac2f034008fb1dcc7617428d9ea7203fe639408ed0f563a01ebe46b",
+]
+old_include = "th02/main/entity.hpp"
+local_header = "src/main/core/entity.hpp"
+
+[[scaffold_header_rewrites]]
+id = "th04-entity-item-splash-header-local"
+scaffold_path = "th04/main/item/splash.hpp"
+scaffold_sha256_any = [
+  "54f6d0f94d06a89023d47a9268c2ce2fc02f2b305bf41d827b2118871325ae35",
+  "784ac070ca4e62ce0b8eb6d8599770dd90ca3fb28283376571e1a5c7a608937e",
+]
 old_include = "th02/main/entity.hpp"
 local_header = "src/main/core/entity.hpp"
 
@@ -909,6 +950,7 @@ repo_source = "src/main/bullet/update_prefix.inl"
 source_mode = "localized-fragment"
 patch_path = "th04/main/bullet/update.cpp"
 scaffold_include_mappings = [
+  { local = "src/shared/runtime/api.hpp", scaffold = ["libs/master.lib/master.hpp"] },
   { local = "src/main/bullet/sizes.hpp", scaffold = ["th01/sprites/pellet.h", "th02/sprites/bullet16.h"] },
 ]
 map_module = "th04/bullet_u.cpp"
@@ -942,6 +984,7 @@ repo_source = "src/main/boss/boss_prefix.inl"
 source_mode = "localized-fragment"
 patch_path = "th04/main/boss/boss.cpp"
 scaffold_include_mappings = [
+  { local = "src/shared/hardware/graphics.hpp", scaffold = ["libs/master.lib/pc98_gfx.hpp"] },
   { local = "src/shared/hardware/frame_delay.hpp", scaffold = ["th02/hardware/frmdelay.h"] },
 ]
 map_module = "th04/boss.cpp"
@@ -999,6 +1042,8 @@ repo_source = "src/main/core/init.cpp"
 source_mode = "localized-fragment"
 patch_path = "th03/core/initmain.cpp"
 scaffold_include_mappings = [
+  { local = "src/shared/runtime/api.hpp", scaffold = ["libs/master.lib/master.hpp"] },
+  { local = "src/shared/hardware/graphics.hpp", scaffold = ["libs/master.lib/pc98_gfx.hpp"] },
   { local = "src/shared/hardware/vram_planes.hpp", scaffold = ["th01/hardware/vplanset.h"] },
   { local = "src/main/core/initexit.hpp", scaffold = ["th03/core/initexit.h"] },
 ]

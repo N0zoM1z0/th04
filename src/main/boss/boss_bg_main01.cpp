@@ -1,7 +1,7 @@
 #pragma option -zCBOSS_BG_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "compat/rec98/th01/hardware/grcg.hpp"
 #include "compat/rec98/th04/hardware/grcg.hpp"
 #include "compat/rec98/th03/formats/cdg.h"

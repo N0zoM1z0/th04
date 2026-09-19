@@ -1,6 +1,6 @@
 #pragma option -zCEND_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 
 extern "C" int pascal mpn_load_palette_show(int slot, const char *fn);
 extern "C" void pascal mpn_free(int slot);

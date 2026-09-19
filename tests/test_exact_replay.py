@@ -419,6 +419,35 @@ class Rec98CompatTests(unittest.TestCase):
                 [{"local": "src/shared/header.hpp", "scaffold": ["../old.hpp"]}],
             )
 
+    def test_localized_fragment_can_finish_without_compat_forwarders(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            source = root / "source"
+            repo.mkdir()
+            source.mkdir()
+            maintained = b'#include "src/shared/runtime/api.hpp"\nbody\n'
+            (repo / "unit.inl").write_bytes(maintained)
+            destination = source / "scaffold.cpp"
+            destination.write_bytes(
+                b'#include "libs/master.lib/master.hpp"\nbody\ntail\n'
+            )
+            entry = {
+                "id": "fully-localized-unit",
+                "repo_source": "unit.inl",
+                "source_mode": "localized-fragment",
+                "patch_path": "scaffold.cpp",
+                "scaffold_include_mappings": [
+                    {
+                        "local": "src/shared/runtime/api.hpp",
+                        "scaffold": ["libs/master.lib/master.hpp"],
+                    }
+                ],
+            }
+            receipt = replay.overlay_sources(source, [entry], repo_root=repo)
+            self.assertEqual(destination.read_bytes(), maintained + b"tail\n")
+            self.assertEqual(receipt[0]["forwarded_headers"], [])
+
     def test_localized_fragment_runs_after_offset_bound_replacement(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -486,11 +515,15 @@ class Rec98CompatTests(unittest.TestCase):
             header = source / "th04" / "main" / "consumer.hpp"
             header.parent.mkdir(parents=True)
             original = b'#include "old/entity.hpp"\nbody\n'
+            local = b'#include "src/main/core/entity.hpp"\nbody\n'
             header.write_bytes(original)
             rewrite = {
                 "id": "entity-local",
                 "scaffold_path": "th04/main/consumer.hpp",
-                "scaffold_sha256": replay.digest_bytes(original),
+                "scaffold_sha256_any": [
+                    replay.digest_bytes(original),
+                    replay.digest_bytes(local),
+                ],
                 "old_include": "old/entity.hpp",
                 "local_header": "src/main/core/entity.hpp",
             }
@@ -505,14 +538,53 @@ class Rec98CompatTests(unittest.TestCase):
             self.assertEqual(len(receipt), 1)
             self.assertEqual(
                 header.read_bytes(),
-                b'#include "src/main/core/entity.hpp"\nbody\n',
+                local,
             )
+            already_local = replay.apply_scaffold_header_rewrites(
+                source,
+                [rewrite],
+                [{"path": "src/main/core/entity.hpp"}],
+            )
+            self.assertEqual(already_local[0]["action"], "already-local")
+            header.write_bytes(local + b"drift\n")
             with self.assertRaisesRegex(RuntimeError, "scaffold SHA-256 drift"):
                 replay.apply_scaffold_header_rewrites(
                     source,
                     [rewrite],
                     [{"path": "src/main/core/entity.hpp"}],
                 )
+
+    def test_scaffold_tree_rewrite_stays_in_th04_and_records_every_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            old_line = b'#include "libs/vendor/api.hpp"\n'
+            for relative in ("th04/a.cpp", "th04/sub/b.hpp", "th03/keep.cpp"):
+                path = source / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(old_line + b"body\n")
+            rewrite = {
+                "id": "th04-runtime-local",
+                "tree_root": "th04",
+                "old_include": "libs/vendor/api.hpp",
+                "local_header": "src/shared/runtime/api.hpp",
+                "minimum_count": 2,
+            }
+            self.assertEqual(
+                replay.apply_scaffold_tree_include_rewrites(source, [rewrite], []),
+                [],
+            )
+            receipt = replay.apply_scaffold_tree_include_rewrites(
+                source,
+                [rewrite],
+                [{"path": "src/shared/runtime/api.hpp"}],
+            )
+            self.assertEqual(receipt[0]["occurrences"], 2)
+            self.assertEqual(len(receipt[0]["files"]), 2)
+            self.assertIn(
+                b'#include "src/shared/runtime/api.hpp"\n',
+                (source / "th04/a.cpp").read_bytes(),
+            )
+            self.assertEqual((source / "th03/keep.cpp").read_bytes(), old_line + b"body\n")
 
 
 class SourceSplitTests(unittest.TestCase):

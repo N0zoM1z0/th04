@@ -1,7 +1,7 @@
 #pragma option -zCSCORE_TEXT
 
 #include "th04/formats/scoredat/scoredat.hpp"
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th01/rank.h"
 #if (GAME == 5)
 #include "compat/rec98/th05/playchar.h"

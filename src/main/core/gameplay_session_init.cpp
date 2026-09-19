@@ -3,7 +3,7 @@
 // Maintained natural source for the reviewed DEMO_TEXT gameplay-session initializer.
 // Current production-profile TC4J omits one target compiler-metadata byte after RET.
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th01/rank.h"
 #include "th04/end/end.h"
 #include "th04/playchar.h"

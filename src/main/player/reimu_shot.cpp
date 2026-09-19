@@ -1,6 +1,6 @@
 #pragma option -zCMAIN__TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th04/main/player/shot.hpp"
 #include "compat/rec98/th04/main/homing.hpp"
 

@@ -1,6 +1,6 @@
 #pragma option -G
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th01/math/overlap.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"

@@ -1,5 +1,5 @@
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "compat/rec98/th01/hardware/grcg.hpp"
 #include "compat/rec98/th02/main/hud/hud.hpp"
 #include "src/main/math/polar.hpp"

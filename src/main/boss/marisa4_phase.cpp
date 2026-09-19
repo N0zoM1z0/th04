@@ -1,6 +1,6 @@
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/circle.hpp"
 #include "th04/main/gather.hpp"

@@ -1,8 +1,8 @@
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
 #define TH04_YUUKA5_COMBINED 1
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/frames.h"

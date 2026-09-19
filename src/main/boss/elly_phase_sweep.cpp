@@ -1,7 +1,7 @@
 #ifndef TH04_ELLY_MAIN034_COMBINED
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "th04/snd/snd.h"
 #ifndef TH04_ELLY_MAIN034_COMBINED
 #include "th04/main/bullet/bullet.hpp"

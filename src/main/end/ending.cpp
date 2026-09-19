@@ -1,6 +1,6 @@
 #pragma option -zCEND_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/end/end.h"
 #include "th04/resident.hpp"
 #include "th04/snd/snd.h"

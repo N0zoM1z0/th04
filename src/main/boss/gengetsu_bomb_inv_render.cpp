@@ -1,6 +1,6 @@
 #pragma option -zCMAIN_01_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/main/boss/boss.hpp"
 
 extern unsigned char boss_bomb_invincibility_frames;

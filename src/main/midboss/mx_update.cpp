@@ -1,6 +1,6 @@
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "src/main/math/polar.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/frames.h"

@@ -4,7 +4,7 @@
 // were emitted by one TC86 producer object. Keep ABI-bearing headers before
 // the word-alignment switch, then enable -a only after the chase prefix.
 #define TH04_YUUKA6_MAIN034_COMBINED 1
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "th04/snd/snd.h"
 #include "th04/sprites/main_pat.h"
 #include "th04/math/vector.hpp"

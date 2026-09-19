@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
 #include <mem.h>
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th02/formats/tile.hpp"
 #include "th04/formats/mpn.hpp"
 

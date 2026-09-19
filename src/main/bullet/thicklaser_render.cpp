@@ -1,7 +1,7 @@
 #pragma option -G
 #pragma option -zCMAIN_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/main/playfld.hpp"
 #include "compat/rec98/th04/main/bullet/laser_t.hpp"

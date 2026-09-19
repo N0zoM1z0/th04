@@ -1,7 +1,7 @@
 #pragma option -zCmain_0_TEXT -zPmain_01
 
 #include "x86real.h"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/formats/super.h"
 #include "compat/rec98/th04/hardware/grcg.hpp"
 #include "th04/main/drawp.hpp"

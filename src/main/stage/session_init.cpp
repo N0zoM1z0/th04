@@ -4,8 +4,8 @@
 // Target evidence binds both logical functions to one physical TC4J object.
 
 #include "platform.h"
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/playchar.h"
 #include "th04/resident.hpp"
 #include "th04/snd/snd.h"

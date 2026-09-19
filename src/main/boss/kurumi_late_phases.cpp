@@ -1,7 +1,7 @@
 #if !defined(TH04_KURUMI_MAIN033_COMBINED)
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "compat/rec98/th03/math/randring.hpp"
 #include "th04/sprites/main_pat.h"

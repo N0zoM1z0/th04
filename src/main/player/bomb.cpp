@@ -1,6 +1,6 @@
 #pragma option -zCMAIN__TEXT -zPmain_01
 #include "x86real.h"
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th04/formats/bb.h"
 #include "th04/resident.hpp"
 #include "compat/rec98/th03/formats/cdg.h"
@@ -44,7 +44,7 @@ void near bomb_reset(void)
 #include "th04/main/tile/bb.hpp"
 void pascal near tiles_bb_put_raw(int cel);
 #include "th04/playchar.h"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "compat/rec98/th02/snd/snd.h"
 
 extern unsigned char miss_time;

@@ -3,7 +3,7 @@
 
 #include "platform.h"
 #include "planar.h"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/common.h"
 #include "th04/main/playfld.hpp"
 

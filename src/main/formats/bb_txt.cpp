@@ -1,7 +1,7 @@
 #pragma option -zCMAIN_01_TEXT -zPmain_01
 
 #include "x86real.h"
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th04/formats/bb.h"
 
 extern bb_tiles8_t __seg *bb_txt_seg;

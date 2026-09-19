@@ -1,7 +1,7 @@
 #pragma option -zCSHARED -3
 
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/vram_planes.hpp"
 #include "src/main/core/initexit.hpp"
 

@@ -1,6 +1,6 @@
 #pragma option -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th01/math/overlap.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/math/vector.hpp"

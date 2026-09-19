@@ -4,7 +4,7 @@
 #include "compat/rec98/th04/main/enemy/size.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/math/vector.hpp"
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 
 extern unsigned int enemies_gone;
 

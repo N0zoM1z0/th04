@@ -1,4 +1,4 @@
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"

@@ -1,6 +1,6 @@
 #pragma option -zCEND_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th04/formats/map.hpp"
 #include "th04/resident.hpp"
 

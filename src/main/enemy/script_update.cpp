@@ -8,7 +8,7 @@
 #include "th04/main/scroll.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/snd/snd.h"
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th03/math/randring.hpp"
 
 extern "C" unsigned char near enemy_pos_update(void);

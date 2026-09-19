@@ -1,6 +1,6 @@
 #pragma option -zCMAIN_035_TEXT -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/main/item/item.hpp"
 #include "th04/main/item/splash.hpp"

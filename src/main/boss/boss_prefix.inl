@@ -1,5 +1,5 @@
 #include "decomp.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "compat/rec98/th01/math/overlap.hpp"
 #include "src/shared/hardware/frame_delay.hpp"
 #include "compat/rec98/th03/hardware/palette.hpp"

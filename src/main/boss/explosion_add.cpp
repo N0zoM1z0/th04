@@ -1,7 +1,7 @@
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/snd/snd.h"
 

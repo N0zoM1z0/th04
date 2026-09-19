@@ -1,6 +1,6 @@
 #pragma option -zCMAIN_012_TEXT -zPmain_01
 
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "compat/rec98/th04/hardware/grcg.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"

@@ -2,7 +2,7 @@
 #include "th04/hardware/grcg.hpp"
 #include "th04/main/playfld.hpp"
 #include "src/main/core/entity.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 
 // More like 17 though, due to the quirks documented below.
 static const int CIRCLE_FRAMES = 16;

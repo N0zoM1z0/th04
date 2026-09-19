@@ -3,8 +3,8 @@
 // Maintained natural source for the reviewed DEMO_TEXT gameplay loop.
 // Current production-profile TC4J codegen is intentionally recorded as nonexact.
 
-#include "compat/rec98/libs/master.lib/master.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/runtime/api.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "compat/rec98/th01/hardware/grcg.hpp"
 #include "th04/hardware/input.h"
 #include "th04/resident.hpp"

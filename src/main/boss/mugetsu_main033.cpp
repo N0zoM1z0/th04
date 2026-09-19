@@ -9,7 +9,7 @@
 #pragma option -O
 #define TH04_MUGETSU_MAIN033_COMBINED 1
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/frames.h"

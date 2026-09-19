@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "th04/resident.hpp"
-#include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
+#include "src/shared/hardware/graphics.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/quit.hpp"
 

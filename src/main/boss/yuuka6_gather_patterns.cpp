@@ -2,7 +2,7 @@
 #pragma option -a
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
-#include "compat/rec98/libs/master.lib/master.hpp"
+#include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/gather.hpp"
