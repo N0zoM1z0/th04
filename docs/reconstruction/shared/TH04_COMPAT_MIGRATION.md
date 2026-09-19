@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **20 forwarders and 26 include sites in 25 files**. The
+138 product files to **19 forwarders and 24 include sites in 23 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -24,39 +24,43 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Palette | deferred palette-tone latch and MAIN palette-change declaration | 22 | `e19539d` |
 | Playchar | GAME4/5 play-character enum ABI used by shared maintained TUs | 21 | `777b8cf` |
 | Rank | rank enum width/constants and MAIN rank selector declaration | 20 | `8005fee` |
+| PI | shared PI slots, load/free/display API, row-pointer macros, and GAME-dependent call ABI | 19 | `40ccff5` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-rank-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-pi-aggregate-001/receipt.json`
 (SHA-256
-`4724feaf255a5633ded14622d7d13c8bcd713955b2d9955320e093439dc029b5`).
+`f663f61c617b6a8902a60799724541ac3b2cda859c4bf1bec9607f88c4e73924`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The rank batch replaces the two product uses of `compat/rec98/th01/rank.hg`
-with `src/main/rank.hpp`. In `gameplay_session_init.cpp`, the same local
-interface also replaces the redundant pinned `th04/main/rank.hpp` include.
+The PI batch replaces the two product uses of `compat/rec98/th02/formats/pi.h`
+with `src/shared/formats/pi.hpp`. The local interface keeps the six-slot
+TH02-TH04 / eight-slot TH05 split, PI dimensions and quarter helpers, global
+slot ABI, load/free/display helpers, and the original far-pointer row
+arithmetic.
 
-The local header preserves the original signed 16-bit `rank_t` forcing
-enumerator (`0x7FFF`), the GAME-dependent Extra rank, the TH04 setup-menu
-sentinel (`0xFF`), the two rank label macros, the byte-sized global `rank`,
-and the C-linkage Pascal selector declaration.
+The helper calling convention remains historically conditional: cdecl for
+TH02 and Pascal from TH03 onward. A fresh TC86 A/B probe compiles the same
+`PIPUT.CPP` and `PILOAD.CPP` module names before and after localization with
+the production GAME4 large-model profile. Dependency COMENT records change as
+expected because the include closure is now local, while every non-COMENT OMF
+record is identical: 12/12 for PI put and 11/11 for PI load, covering
+LEDATA, FIXUPP, PUBDEF, EXTDEF, SEGDEF, LNAMES, GRPDEF, THEADR, and MODEND.
+The comparison receipt is
+`.analysis/gpt-web/pi-header-abi-probe-001/semantic-compare.json`
+(SHA-256
+`30fca9002730eb5e26db7a3e3a4676f6207d7d7ea16487b6a7c93cb40305e854`).
 
-Focused two-cold replay for
-`th04-main-module-th04-score-rm-cpp-12a0a` passes. The complete
-`gpt-web-rank-aggregate-001` replay passes all 253 default MAIN owners twice
-with `failures=[]`; both candidate MAIN images remain SHA-256
+The complete `gpt-web-pi-aggregate-001` replay passes all 253 default MAIN
+owners twice with `failures=[]`; both candidate MAIN images remain SHA-256
 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 21 forwarders / 28 sites / 27 files to
-20 / 26 / 25, with no missing, orphan, invalid, or direct forbidden include.
-
-``gameplay_session_init()`` remains a reviewed blocked function. Existing
-target-first evidence closes its 461-byte physical extent as executable code,
-one zero compiler metadata/alignment byte, and five jump words; the retained
-production-profile natural C++ evidence is still 460 bytes. This compatibility
-batch makes no new exactness claim for that function.
+The compat audit moves from 20 forwarders / 26 sites / 25 files to
+19 / 24 / 23, with no missing, orphan, invalid, or direct forbidden include.
+No new artifact-local exactness is claimed for the shared OP/MAINE PI
+producers.
 
 ## Next families
 
@@ -65,7 +69,6 @@ line locations. The next bounded families are:
 
 | Forwarder | Sites | Product files |
 | --- | ---: | ---: |
-| `th02/formats/pi.h` | 2 | 2 |
 | `th02/formats/tile.hpp` | 2 | 2 |
 | `th04/formats/bb.h` | 2 | 2 |
 | `th04/main/enemy/size.hpp` | 2 | 2 |
