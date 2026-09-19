@@ -11817,3 +11817,190 @@ map_start = "0x22E4"
 map_size = "0x15A"
 target_file_offset = "0x17574"
 size = "0x15A"
+
+# v375 candidate: target/cross-game-backed natural TC4J gameplay loop.
+# The first diagnostic materialization intentionally leaves the historical
+# DEMO_TEXT body in place so we can bind the final source-transform hash after
+# all accepted dependency transforms have run.
+[[build_replacements]]
+id = "th04-main-gameplay-loop-v375-build"
+trigger_units = ["th04-main-gameplay-loop-v165"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/mainent.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/mainent.cpp\",\n\t\"th04/gloop.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[units]]
+id = "th04-main-gameplay-loop-v165"
+default_enabled = false
+requires_units = [
+  "th04-main-main035-boss-tu",
+  "th04-main-chasecrosses-add",
+  "th04-main-yuuka6-animations",
+  "th04-main-yuuka6-gather-patterns",
+  "th04-main-yuuka6-attack-patterns",
+  "th04-main-yuuka6-late-phase-patterns",
+  "th04-main-yuuka6-update-v33",
+  "th04-main-elly-scythe-v34",
+  "th04-main-elly-scythe-init-v35",
+  "th04-main-elly-orbit-v36",
+  "th04-main-elly-phase-scythe-v37",
+  "th04-main-elly-phase-orbit-v38",
+  "th04-main-elly-gather-v39",
+  "th04-main-elly-phase-burst-v40",
+  "th04-main-elly-phase-sweep-v41",
+  "th04-main-elly-phase-ring-v42",
+  "th04-main-elly-phase-cloud-v43",
+  "th04-main-elly-phase-dual-v44",
+  "th04-main-elly-phase-cloud-reverse-v45",
+  "th04-main-elly-phase-ring16-v46",
+  "th04-main-elly-phase-four-rings-v47",
+  "th04-main-elly-phase-final-v48",
+  "th04-main-elly-update-v49",
+  "th04-main-marisa-bits-init-v50",
+  "th04-main-marisa-orbit-cloud-v59",
+  "th04-main-marisa-random-burst-v60",
+  "th04-main-marisa-special-angles-v61",
+  "th04-main-marisa-edge-stars-v62",
+  "th04-main-marisa-ring-cycle-v63",
+  "th04-main-marisa-spread-mirror-v64",
+  "th04-main-marisa-hittest-v65",
+  "th04-main-marisa-update-v66",
+  "th04-main-enemies-add-v67",
+  "th04-main-std-run-v68",
+  "th04-main-enemies-update-v70",
+  "th04-main-reimu-phase-move-a-v71",
+  "th04-main-reimu-phase-move-b-v72",
+  "th04-main-reimu-gather-intro-v73",
+  "th04-main-reimu-orbs-add-moving-v74",
+  "th04-main-reimu-orbs-add-spinning-v75",
+  "th04-main-reimu-orbs-update-v76",
+  "th04-main-reimu-phase-spread-yellow-v77",
+  "th04-main-reimu-phase-special-blue-v78",
+  "th04-main-reimu-phase-orb-spawn-v79",
+  "th04-main-reimu-phase-cloud-ring-stack-v80",
+  "th04-main-reimu-phase-pellet-cloud-v81",
+  "th04-main-reimu-phase-random-aimed-v82",
+  "th04-main-reimu-phase-orb-stream-v83",
+  "th04-main-reimu-phase-stack-octet-v84",
+  "th04-main-reimu-phase-dual-special-v85",
+  "th04-main-reimu-phase-stack-fan-v86",
+  "th04-main-reimu-bg-pulse-v87",
+  "th04-main-reimu-update-v88",
+  "th04-main-gengetsu-prefix-v89",
+  "th04-main-gengetsu-wave-bounce-v90",
+  "th04-main-gengetsu-anim-ring-v91",
+  "th04-main-gengetsu-patterns1-v92",
+  "th04-main-gengetsu-turn-gather-v93",
+  "th04-main-gengetsu-cycle-v93b",
+  "th04-main-gengetsu-patterns3-v94",
+  "th04-main-gengetsu-columns-v95",
+  "th04-main-gengetsu-random-ring-v96",
+  "th04-main-gengetsu-helpers-v97",
+  "th04-main-gengetsu-update-v98",
+  "th04-main-end-family-v99",
+  "th04-main-end-map-v100",
+  "th04-main-gengetsu-fg-v101",
+  "th04-main-mugetsu-gengetsu-bg-v102",
+  "th04-main-enemies-invalidate-v103",
+  "th04-main-bb-txt-v104",
+  "th04-main-mugetsu-fg-v105",
+  "th04-main-gengetsu-bomb-inv-render-v106",
+  "th04-main-mugetsu-gather-prefix-v107",
+  "th04-main-mugetsu-transition-a-v108",
+  "th04-main-reimu-fg-v109",
+  "th04-main-reimu-orbs-render-v110",
+  "th04-main-items-render-v111",
+  "th04-main-bullets-render-v112",
+  "th04-main-yuuka6-bg-v113",
+  "th04-main-stage-state-init-v115",
+  "th04-main-elly-fg-v116",
+  "th04-main-shot-velocity-level-asm-v143",
+  "th04-main-shots-add-v117",
+  "th04-main-yuuka6-fg-v118",
+  "th04-main-yuuka6-entities-render-v120",
+  "th04-main-midboss-defeat-render-v121",
+  "th04-main-orange-fg-v122",
+  "th04-main-kurumi-fg-v123",
+  "th04-main-kurumi-spawnrays-v124",
+  "th04-main-kurumi-late-phases-v126",
+  "th04-main-kurumi-update-v128",
+  "th04-main-randring1-next16-v137",
+  "th04-main-randring1-next16-and-v137",
+  "th04-main-pointnums-add-asm-v139",
+  "th04-main-mugetsu-phase2-callbacks-v145",
+  "th04-main-mugetsu-dense-transitions-v144",
+  "th04-main-mugetsu-late-v146",
+  "th04-main-yuuka6-bg-update-v148",
+  "th04-main-midboss4-update-v149",
+  "th04-main-midboss2-update-v150",
+  "th04-main-midboss3-update-v152",
+  "th04-main-midboss1-update-v153",
+  "th04-main-stage-bonus-v155",
+  "th04-main-boss-explosions-add-v156",
+  "th04-main-yuuka5-first4-v157",
+  "th04-main-yuuka5-tail-v158",
+  "th04-main-midbossx-render-v163",
+  "th04-main-midboss1-render-v164",
+  "th04-main-yuuka5-fg-v167",
+  "th04-main-gameexecl-v169",
+  "th04-main-reimu-shots-v171",
+  "th04-main-hud-score-v172",
+  "th04-main-marisa-render-v173",
+  "th04-main-orange-backdrop-v173",
+  "th04-main-player-render-v175",
+  "th04-main-enemies-render-v177",
+  "th04-main-bomb-stars-v178",
+  "th04-main-marisa-shots-v179",
+  "th04-main-items-invalidate-v185",
+  "th04-main-main013-grcg-asm-v194",
+  "th04-main-mpn-load-v195",
+  "th04-main-midboss2-render-v196",
+  "th04-main-mai-tile-render-asm-v197",
+  "th04-main-yuuka5-backdrop-asm-v199",
+  "th04-main-elly-backdrop-v200",
+  "th04-main-main-entry-v202",
+  "th04-main-mpn-render-asm-v203",
+  "th04-main-enemy-script-helpers-v328",
+  "th04-main-enemy-script-dispatch-v328",
+  "th04-main-items-update-v154",
+  "th04-main-thicklaser-update-v181",
+]
+repo_source = "src/main/core/gameplay_loop.cpp"
+overlay_path = "th04/gloop.cpp"
+map_module = "th04/gloop.cpp"
+map_mode = "exact"
+object_path = "obj/th04/gloop.obj"
+map_segment = "DEMO_TEXT"
+map_start = "0x0098"
+map_size = "0x17B"
+target_file_offset = "0xC388"
+size = "0x17B"
+
+[[source_transforms]]
+id = "th04-main-gameplay-loop-v375-layout"
+trigger_units = ["th04-main-gameplay-loop-v165"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "5d10f3366ba7830888c27da584cfbc964408bf2384099fc5115ce546c55d5888"
+
+[[source_transforms.ops]]
+id = "relax-gameplay-residual-demo-alignment-v375"
+kind = "replace"
+old = "DEMO_TEXT\tsegment\tword public 'CODE' use16\r\n"
+new = "DEMO_TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "externalize-gameplay-loop-v375"
+kind = "remove_between"
+start = "public @gameplay_loop$qv\r\n"
+end = "sub_AB88\tendp\r\n"
+removed_sha256 = "9dc5d17bfd27ccbdb86ad9fa37db3134f217402a8efd27d0881fdd8b3a66256d"
+replacement = "ALIAS <@sub_CCD6$qv>=<sub_CCD6>\r\nALIAS <PLAYER_RENDER>=<@PLAYER_RENDER$QV>\r\nALIAS <@SHOTS_RENDER$qv>=<@shots_render$qv>\r\nALIAS <ENEMIES_RENDER>=<@ENEMIES_RENDER$QV>\r\nALIAS <ITEMS_UPDATE>=<@items_update$qv>\r\nALIAS <@sub_104B6$qv>=<@shots_update$qv>\r\nALIAS <@sub_10ABF$qv>=<@player_update$qv>\r\nextrn @gameplay_loop$qv:near\r\n"
+
+
+[[source_transforms.ops]]
+id = "publish-gameplay-fp23d90-v375"
+kind = "insert_before"
+anchor = "fp_23D90\tdw ?\r\n"
+text = "public _fp_23D90\r\n_fp_23D90 label word\r\n"

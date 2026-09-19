@@ -1,7 +1,7 @@
 #pragma option -zCDEMO_TEXT -zPmain_01
 
 // Maintained natural source for the reviewed DEMO_TEXT gameplay loop.
-// Current production-profile TC4J codegen is intentionally recorded as nonexact.
+// Target- and cross-game-backed source shape for the reviewed DEMO_TEXT gameplay loop.
 
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
@@ -11,7 +11,6 @@
 #include "th04/main/frames.h"
 #include "th04/main/slowdown.hpp"
 #include "th04/main/quit.hpp"
-#include "th04/main/playperf.hpp"
 #include "th04/main/score.hpp"
 
 extern nearfunc_t_near fp_23D90;
@@ -31,32 +30,34 @@ extern nearfunc_t_near midboss_render;
 extern nearfunc_t_near overlay1;
 extern nearfunc_t_near overlay2;
 
-void pascal far frame_delay(unsigned int frames);
-int near pause(void);
+void pascal far frame_delay(int frames);
+extern "C" int near pause(void);
+extern "C" void pascal far playperf_raise(char delta);
+#pragma samecodeseg playperf_raise
 void far midboss_activate_if_stage_frame_is_midboss_start_frame(void);
-void pascal near pointnums_update(void);
+extern "C" void pascal near pointnums_update(void);
 void near circles_update(void);
 extern "C" void near sparks_update(void);
 void near sub_10ABF(void);
 void near sub_104B6(void);
 void far bullets_update(void);
-void pascal far enemies_update(void);
-void far items_update(void);
+extern "C" void pascal far enemies_update(void);
+extern "C" void pascal far items_update(void);
 void far gather_update(void);
 void near bomb_update_and_render(void);
-void pascal near enemies_render(void);
-void near shots_render(void);
-void pascal near player_render(void);
+extern "C" void pascal near enemies_render(void);
+void near SHOTS_RENDER(void);
+extern "C" void pascal near player_render(void);
 void near grcg_setmode_rmw(void);
 void far gather_render(void);
 extern "C" void near sparks_render(void);
-void pascal near items_render(void);
-void pascal near pointnums_render(void);
-void pascal near bullets_render(void);
+extern "C" void pascal near items_render(void);
+extern "C" void pascal near pointnums_render(void);
+extern "C" void pascal near bullets_render(void);
 void near circles_render(void);
 void near playfield_shake_update_and_render(void);
 void near sub_CCD6(void);
-void far snd_se_update(void);
+extern "C" void far snd_se_update(void);
 
 void near gameplay_loop(void)
 {
@@ -100,7 +101,7 @@ void near gameplay_loop(void)
         boss_fg_render();
         midboss_render();
         enemies_render();
-        shots_render();
+        SHOTS_RENDER();
         player_render();
         grcg_setmode_rmw();
         gather_render();
@@ -119,10 +120,9 @@ void near gameplay_loop(void)
         total_frames++;
         slowdown_frame_delay();
 
-        if(palette_changed) {
-            palette_show();
-            palette_changed = false;
-        }
+        palette_changed
+            ? (void)(palette_show(), palette_changed = false)
+            : (void)0;
 
         sub_CCD6();
         graph_accesspage(page_front);
@@ -132,7 +132,11 @@ void near gameplay_loop(void)
         snd_se_update();
         frames_unused++;
 
-        _AX = ((stage_frame = stage_frame + 1) & 15);
+        // Shared TH04/TH05 compiler-visible frame-counter dataflow.
+        _AX = stage_frame;
+        _DX = _AX++;
+        stage_frame = _AX;
+        _AX &= 15;
         stage_frame_mod16 = _AL;
         stage_frame_mod8 = (_AL &= 7);
         stage_frame_mod4 = (_AL &= 3);
@@ -141,9 +145,9 @@ void near gameplay_loop(void)
         int frames_per_playperf_raise = resident->rem_lives;
         frames_per_playperf_raise = (frames_per_playperf_raise >= 10)
             ? 1000 : (6000 - (frames_per_playperf_raise * 500));
-        if((stage_frame % frames_per_playperf_raise) == 0) {
-            playperf_raise(1);
-        }
+        ((stage_frame % frames_per_playperf_raise) == 0)
+            ? (void)playperf_raise(1)
+            : (void)0;
 
         score_update_and_render();
     } while(quit == Q_KEEP_RUNNING);
