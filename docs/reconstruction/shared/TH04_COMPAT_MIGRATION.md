@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **10 forwarders and 11 include sites in 11 files**. The
+138 product files to **9 forwarders and 10 include sites in 10 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -34,20 +34,21 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Bullet add impl | ring-group switch macro actually consumed by TH04 bullet/add.cpp | 12 | `1000bb7` |
 | HUD metrics | HUD_LEFT geometry consumed indirectly by playfield clipping macros | 11 | `dfdbf1d` |
 | Item overflow | power-overflow limit and signed bonus table used by the MAIN item producer | 10 | `b1fbe04` |
+| Midboss state | GAME4 midboss_active flag used by the stage script runner | 9 | `a136f71` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-item-overflow-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-midboss-state-aggregate-001/receipt.json`
 (SHA-256
-`61f8414f9e5e0a05994cb7b3fac8d6b72fa3ce8c60e08439bd2ec65cda6e9f93`).
+`bc092a52a4bce3e60b8a77978ac6d7b3a0a7444ae003c98eb74f12b9194a5924`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The item-overflow batch removes `compat/rec98/th02/main/item/shared.hpp` from `src/main/item/items_update.cpp`. The old header also declares `ITEM_MISS_COUNT=5`, but the TH04 `item.hpp` included earlier in the same TU already owns that miss-item count and its velocity-table shape, so duplicating it would not be a minimal migration.
+The midboss-state batch removes `compat/rec98/th02/main/midboss/midboss.hpp` from `src/main/stage/std_run.cpp`. Under GAME4 the old cross-game header contributes only `extern bool midboss_active`; its GAME2 invalidation/update function pointers and declaration macro are preprocessor-dead and are not part of the TH04 product interface.
 
-The new `src/main/item/power_overflow.hpp` contains only the missing TH04 collection-state ABI: `POWER_OVERFLOW_MAX=42` and the signed 16-bit `POWER_OVERFLOW_BONUS` table declaration. Focused two-cold replay of `th04-main-items-update-v154` passes (receipt SHA-256 `64d7f20b96784578ca7c15d9ac4c4af65a3c29e894b909cb46b0aebefabd9cde`). The complete `gpt-web-item-overflow-aggregate-001` replay passes all 253 default MAIN owners twice with `failures=[]`; both candidate MAIN images remain SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 11 forwarders / 12 sites / 12 files to 10 / 11 / 11, with no missing, orphan, invalid, or direct forbidden include. No new exact owner is claimed.
+The new `src/main/midboss/state.hpp` therefore contains only the active-state declaration. Focused two-cold replay of `th04-main-std-run-v68` passes (receipt SHA-256 `f72f7d1f1816c99809c4aecf1adb1797abd7bfe29f377271e6e481f6a4a9c97b`). The complete `gpt-web-midboss-state-aggregate-001` replay passes all 253 default MAIN owners twice with `failures=[]`; both candidate MAIN images remain SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 10 forwarders / 11 sites / 11 files to 9 / 10 / 10, with no missing, orphan, invalid, or direct forbidden include. No new exact owner is claimed.
 
 ## Next families
 
@@ -58,7 +59,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining nine families have one site each. Re-run the audit instead
+The remaining eight families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow
