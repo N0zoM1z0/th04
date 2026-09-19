@@ -3,7 +3,7 @@
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"
 #if (GAME == 5)
-#include "compat/rec98/th02/main/scroll.hpp"
+#include "src/main/scroll/state.hpp"
 #endif
 
 extern int8_t playfield_shake_redraw_time;
