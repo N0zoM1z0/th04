@@ -8,7 +8,7 @@
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/circle.hpp"
-#include "th04/main/bullet/laser_t.hpp"
+#include "src/main/bullet/laser_t.hpp"
 #include "th04/main/gather.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/main/rank.hpp"

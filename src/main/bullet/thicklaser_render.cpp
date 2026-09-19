@@ -4,7 +4,7 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/main/playfld.hpp"
-#include "compat/rec98/th04/main/bullet/laser_t.hpp"
+#include "src/main/bullet/laser_t.hpp"
 
 extern "C" void near thicklasers_render(void)
 {

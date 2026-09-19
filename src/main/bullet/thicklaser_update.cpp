@@ -1,7 +1,7 @@
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
 #include <mem.h>
-#include "th04/main/bullet/laser_t.hpp"
+#include "src/main/bullet/laser_t.hpp"
 #include "th04/main/player/player.hpp"
 
 extern bool player_is_hit;
