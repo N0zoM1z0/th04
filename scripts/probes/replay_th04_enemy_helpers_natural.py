@@ -25,9 +25,9 @@ SNAPSHOT = ROOT / ".analysis/reconstruction/exact-unit-replay/gptweb-v214-demo-f
 SNAPSHOT_SHA256 = "ae9105c56ff94cd6823ad365c03016a0106d923e0b0f653610cf1170e151a3e8"
 FLAGS = ("-c", "-I.", "-O", "-b-", "-3", "-Z", "-d", "-DGAME=4", "-ml", "-nobj/th04/")
 HELPERS = (
-    ("position", 0x1554F, 67, 0, 61),
-    ("velocity", 0x15592, 24, 61, 24),
-    ("aim", 0x155AA, 51, 85, 49),
+    ("position", 0x1554F, 67, 0, 67),
+    ("velocity", 0x15592, 24, 67, 24),
+    ("aim", 0x155AA, 51, 91, 49),
 )
 
 
@@ -104,10 +104,10 @@ def main() -> int:
         obj = object_path.read_bytes()
     records = parse_omf(obj)
     groups = code_ledata(records, "B4M_UPDATE_TEXT")
-    if len(groups) != 1 or groups[0][:2] != (0, 134):
+    if len(groups) != 1 or groups[0][:2] != (0, 140):
         raise ValueError("unexpected B4M_UPDATE_TEXT LEDATA topology")
     code = records[groups[0][2] - 1].data[3:]
-    if len(code) != 134:
+    if len(code) != 140:
         raise ValueError("unexpected helper CODE length")
     (output / "helpers.obj").write_bytes(obj)
     (output / "helpers.code").write_bytes(code)
@@ -123,17 +123,14 @@ def main() -> int:
     position = target[header_size + 0x1554F:header_size + 0x15592]
     velocity = target[header_size + 0x15592:header_size + 0x155AA]
     aim = target[header_size + 0x155AA:header_size + 0x155DD]
-    anchor = bytes.fromhex("80 7C 20 00")
-    pos_suffix_target = position[position.index(anchor):]
-    pos_suffix_code = code[code.index(anchor):61]
-    if not masked_equal(pos_suffix_target[:-2], pos_suffix_code[:-2], (36,)):
-        raise ValueError("position helper body changed beyond the BP/local producer")
-    if not masked_equal(velocity, code[61:85], (6, 19)):
+    if not masked_equal(position, code[:67], (6, 16, 57)):
+        raise ValueError("position helper instructions changed")
+    if not masked_equal(velocity, code[67:91], (6, 19)):
         raise ValueError("velocity helper instructions changed")
     if aim[8] != 0x06 or aim[-4] != 0x07:
         raise ValueError("target aim helper ES save pair changed")
     aim_without_es = aim[:8] + aim[9:-4] + aim[-3:]
-    if not masked_equal(aim_without_es, code[85:134], (6, 9, 16, 23, 44)):
+    if not masked_equal(aim_without_es, code[91:140], (6, 9, 16, 23, 44)):
         raise ValueError("aim helper differs beyond ES save and address fixups")
 
     receipt = {
@@ -147,7 +144,7 @@ def main() -> int:
         "omf_record_count": len(records), "omf_ledata": [[a, b, n] for a, b, n, _ in groups],
         "helpers": results,
         "structural_result": {
-            "position": "44-byte body suffix agrees apart from the absolute global word; target uses a 2-byte BP local and LEAVE, candidate uses SI and POP BP",
+            "position": "all 67 instruction bytes agree after masking two address words and one unresolved near CALL word",
             "velocity": "24 instructions bytes agree after masking one absolute global word and one unresolved near CALL word",
             "aim": "49 instructions bytes agree after masking five address words and removing the target ES save pair",
         },

@@ -10,8 +10,9 @@ extern unsigned int enemies_gone;
 
 extern "C" unsigned char near enemy_pos_update(void)
 {
-    enemy_t near *enemy = enemy_cur;
-    enemy->pos.update_seg3();
+    enemy_t near *enemy_before_update = enemy_cur;
+    enemy_cur->pos.update_seg3();
+    register enemy_t near *enemy = enemy_before_update;
 
     if(enemy->clip_x && static_cast<unsigned int>(
         _AX + TO_SP(ENEMY_W / 2)
