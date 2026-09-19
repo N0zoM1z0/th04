@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **7 forwarders and 8 include sites in 8 files**. The
+138 product files to **6 forwarders and 7 include sites in 7 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -37,43 +37,42 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Midboss state | GAME4 midboss_active flag used by the stage script runner | 9 | `a136f71` |
 | Scroll state | GAME5 scroll_line declaration used by shared playfield shake source | 8 | `d5a5d3d` |
 | Sound impl | shared SE/load helpers plus hash-bound fragment include transforms | 7 | `fc6c1cb` |
+| Sound measure | KAJA measure wrapper and MMD quarter-note timing constant | 6 | `9d56bf1` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-sound-impl-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-sound-measure-aggregate-001/receipt.json`
 (SHA-256
-`24207e3b8486eba287cb9d6f69884ba6a41781f8f580fabbb6e9520a06c70f0c`).
+`b88c6d6603d4d2807de88796682e1e255c1c4cc6395ccaf26066e7efb92f35eb`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The sound-impl batch removes `compat/rec98/th02/snd/impl.hpp` and replaces it
-with `src/shared/sound/impl.hpp`. The local interface preserves only the
-implementation helpers and state actually consumed by maintained TH04 sound
-code: `SE_NONE=0xFF`, the SE state arrays/frame globals, the GAME>=4
-`snd_get_param()` stack-peek behavior, and `snd_load_size()` returning `0x5000`
-for TH04.
+The sound-measure batch removes `compat/rec98/th02/snd/measure.hpp` from
+`src/shared/sound/delay_until_measure.cpp` and adds
+`src/shared/sound/measure.hpp`. The local wrapper preserves the exact
+`KAJA_GET_SONG_MEASURE` interrupt setup, PMD/MMD dispatch, and hardcoded 4/4
+MMD tick conversion. `MMD_TICKS_PER_QUARTER_NOTE=48` moves into
+`src/shared/sound/api.hpp`, which already owns the KAJA function numbers and
+PMD/MMD interrupt constants.
 
-This dependency reaches both a complete maintained TU and accepted fragments.
-`src/shared/sound/kaja_interrupt.cpp` includes the local header directly, while
-three SHA-256-bound replay transforms replace `th02/snd/impl.hpp` in pinned
-`th02/snd/se.cpp`, `th02/snd/se_reset.cpp`, and `th04/snd/load.cpp`. Each
-transform declares `src/shared/sound/impl.hpp` in `repo_inputs`, freezing the
-actual local header in the replay input snapshot rather than depending on live
-worktree state.
+`delay_until_measure.cpp` has no independent accepted MAIN owner, so this batch
+uses a compiler A/B probe instead of inventing focused exact credit. The same
+GAME4 probe function is compiled by the pinned PC-98 IDE TC86 once against the
+old header and once against the local header. Fourteen non-metadata OMF records
+are byte-identical: THEADR, LNAMES, three SEGDEF, COMDEF, GRPDEF, EXTDEF,
+PUBDEF, two LEDATA, two FIXUPP, and MODEND. Only dependency/producer COMENT
+records and one LINNUM source-line record differ because the include closure
+and header line numbers changed. The semantic receipt SHA-256 is
+`b57e9db373e3c68d4cdb39645008100487d0929cfb5163e5cefa199383cf7bde`.
 
-Focused two-cold replay passes for the complete Kaja owner (receipt SHA-256
-`cfba085d2537103077c487be2c4059dcfcc429ff7fa53198451a38e7b73f43d4`),
-the `se.cpp` path (`9bf647fb99a33a5277be1ecb04f5863d030faa82e1b46a2704c09a79f0184abf`),
-the `se_reset.cpp` path (`d0d787d2a1db20284458950584959c46d629f69c8cd5a1368efd72526e595451`),
-and the `th04/snd/load.cpp` path (`1c6f8f68e00f9d67e57710800461bb0a7e69b25f561f57b712d9eda9729da4de`).
-The complete `gpt-web-sound-impl-aggregate-001` replay passes all 253 default
-MAIN owners twice with `failures=[]`; both candidate MAIN images remain
+The complete `gpt-web-sound-measure-aggregate-001` replay passes all 253
+default MAIN owners twice with `failures=[]`; both candidate MAIN images remain
 SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 8 forwarders / 9 sites / 9 files to 7 / 8 / 8,
-with no missing, orphan, invalid, or direct forbidden include. This batch does
-not alter or promote the separate four-byte low-level `snd_load` blocker.
+The compat audit moves from 7 forwarders / 8 sites / 8 files to 6 / 7 / 7,
+with no missing, orphan, invalid, or direct forbidden include. No new exact
+owner is claimed.
 
 ## Next families
 
@@ -84,7 +83,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining six families have one site each. Re-run the audit instead
+The remaining five families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow
