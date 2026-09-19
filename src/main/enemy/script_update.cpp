@@ -168,8 +168,12 @@ dispatch:
         bullet_template.speed.v = enemy->bullet_template.speed.v;
         bullet_template.count = enemy->bullet_template.count;
         bullet_template.delta = enemy->bullet_template.delta;
+        // Handwritten ABI preservation. The following indirect calls return
+        // to a dispatcher whose instruction pointer remains in ES:DI.
+        asm { push es; }
         bullet_template_tune();
         bullets_add_regular();
+        asm { pop es; }
         goto advance_one;
 
     case 0x21:

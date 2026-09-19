@@ -41,7 +41,7 @@ means whole MAIN.EXE or whole TH04 is exact.
 
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
-| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | The [three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) and [full VM](reconstruction/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) have natural C++ (140/142 and 1,678/1,680 target bytes). The 67-byte position helper has exact compiler instruction shape; both remaining gaps are `PUSH ES`/`POP ES`. TH05 independently corroborates this call-preservation pattern, while TC4J automatic, register, and `__saveregs` forms fail to produce it. Original low-level source syntax, raw bytes, and three ordered relocations remain open. |
+| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | The [three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) and [full VM](reconstruction/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) now emit the target 142 and 1,680 compiler bytes. TH03/TH04/TH05 evidence supports classifying the two ES-save pairs as handwritten ABI preservation. Raw bytes, MAP placement, three ordered relocations, and cold aggregate replay remain open. |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A [function split and mid-function segment controls](reconstruction/TH04_DEMO_PAUSE_SPLIT_V282.md), plus [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md), cannot reproduce the target order. |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
@@ -104,9 +104,9 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
 ## Next work and finish gate
 
-Classify the two-byte MAIN enemy VM ES-save mismatch without breaking its exact
-144-case destination partition; resolve the helper BP-local and ES-save
-producers and all three ordered relocations. Find a natural OMF producer for
+Cold-link the target-sized MAIN enemy helper/VM objects without breaking the
+144-case destination partition, then prove raw/MAP and all three ordered
+relocations. Find a natural OMF producer for
 MAIN dialog/DEMO ordered relocations without
 changing raw bytes or MAP; [current controls](reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
 rule out common switches and the simple pause split. Continue the large

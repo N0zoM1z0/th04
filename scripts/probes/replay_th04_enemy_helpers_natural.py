@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile the three natural MAIN enemy-script helpers without exact promotion."""
+"""Compile the three MAIN enemy-script helpers without exact promotion."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ FLAGS = ("-c", "-I.", "-O", "-b-", "-3", "-Z", "-d", "-DGAME=4", "-ml", "-nobj/t
 HELPERS = (
     ("position", 0x1554F, 67, 0, 67),
     ("velocity", 0x15592, 24, 67, 24),
-    ("aim", 0x155AA, 51, 91, 49),
+    ("aim", 0x155AA, 51, 91, 51),
 )
 
 
@@ -104,10 +104,10 @@ def main() -> int:
         obj = object_path.read_bytes()
     records = parse_omf(obj)
     groups = code_ledata(records, "B4M_UPDATE_TEXT")
-    if len(groups) != 1 or groups[0][:2] != (0, 140):
+    if len(groups) != 1 or groups[0][:2] != (0, 142):
         raise ValueError("unexpected B4M_UPDATE_TEXT LEDATA topology")
     code = records[groups[0][2] - 1].data[3:]
-    if len(code) != 140:
+    if len(code) != 142:
         raise ValueError("unexpected helper CODE length")
     (output / "helpers.obj").write_bytes(obj)
     (output / "helpers.code").write_bytes(code)
@@ -127,11 +127,10 @@ def main() -> int:
         raise ValueError("position helper instructions changed")
     if not masked_equal(velocity, code[67:91], (6, 19)):
         raise ValueError("velocity helper instructions changed")
-    if aim[8] != 0x06 or aim[-4] != 0x07:
-        raise ValueError("target aim helper ES save pair changed")
-    aim_without_es = aim[:8] + aim[9:-4] + aim[-3:]
-    if not masked_equal(aim_without_es, code[91:140], (6, 9, 16, 23, 44)):
-        raise ValueError("aim helper differs beyond ES save and address fixups")
+    if aim[8] != 0x06 or aim[-4] != 0x07 or code[99] != 0x06 or code[138] != 0x07:
+        raise ValueError("aim helper ES save pair changed")
+    if not masked_equal(aim, code[91:142], (6, 10, 17, 24, 45)):
+        raise ValueError("aim helper instructions changed")
 
     receipt = {
         "schema_version": 1,
@@ -146,7 +145,7 @@ def main() -> int:
         "structural_result": {
             "position": "all 67 instruction bytes agree after masking two address words and one unresolved near CALL word",
             "velocity": "24 instructions bytes agree after masking one absolute global word and one unresolved near CALL word",
-            "aim": "49 instructions bytes agree after masking five address words and removing the target ES save pair",
+            "aim": "all 51 instruction bytes agree after masking five address words; the two explicit ES-save instructions are classified handwritten ABI preservation",
         },
         "limit": "No linked raw, MAP, relocation, aggregate, or runtime exactness gate passed.",
     }

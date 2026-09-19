@@ -7,23 +7,23 @@ B4M_UPDATE_TEXT `13A9:1B4D..21DC`, MZ load `0x155DD..0x15C6C`, target file
 It contains a 1,392-byte near body and a 288-byte, 144-word switch table.
 The target's pristine-retail provenance is still unproved.
 
-The maintained [natural C++ VM](../../src/main/enemy/script_update.cpp) uses
+The maintained [C++ VM](../../src/main/enemy/script_update.cpp) uses
 TC4J's `__es` pointer to read stage bytecode while preserving the target's
 separate DI pointer addition. It implements the target-observed movement,
 bullet-template, timing, loop, clipping, animation, sound, position, and tile
 instruction branches. The default path deliberately retains the target's
 uninitialized duration/advance behavior; that path remains semantically
 uncertain and needs runtime validation. Source SHA-256:
-`58162c4dcffd41a4aa6e25e6e31aa492d63b9d7566812d6cede2962f1d2ca136`.
+`6976850412439ab34dfcf75f6ff1103afbd7fcbd9f7db4a56d1c5224dcd75226`.
 
 Replay:
 
     python3 scripts/probes/replay_th04_enemy_script_natural.py \
-      --output-dir .analysis/reconstruction/probes/v336-enemy-script-layout-001
+      --output-dir .analysis/reconstruction/probes/v342-enemy-es-explicit-001
 
 The pinned TC4J 4.02 and frozen compiler snapshot produce a valid OMF object
-with B4M_UPDATE_TEXT LEDATA spans `0..1023` and `1024..1677`. The resulting
-1,678 CODE bytes contain a 1,390-byte executable body and a 288-byte table.
+with B4M_UPDATE_TEXT LEDATA spans `0..1023` and `1024..1679`. The resulting
+1,680 CODE bytes contain a 1,392-byte executable body and a 288-byte table.
 The first 42 entry bytes have the same opcodes as the target after masking
 two DS addresses, one conditional branch displacement, and one table address.
 The candidate's 144 table entries have **exactly the same partition into 49
@@ -48,18 +48,16 @@ but the target surrounds two indirect calls with `PUSH ES` and `POP ES`.
 
 The v340 target Oracle attests this pair and the equivalent pair in the TH04
 aim helper. It also finds three analogous save/call/restore sites in the
-independently hash-attested TH05 MAIN target, including aim and bullet-call
-paths. Receipt SHA-256:
+independently hash-attested TH05 MAIN target. A masked TH03 target/compiler
+comparison additionally locates the same handwritten ES-save source idiom in
+an enemy velocity helper. This evidence supports classifying the two inline
+instructions as handwritten ABI preservation. The target evidence receipt
+SHA-256 is
 `8f4529c1de197a4d97561828ac5fea3b19d8588bb950af014627df1480f4424a`.
-The cross-game pattern corroborates intentional ES preservation while stage
-script data remains addressed through ES. It does not identify the original
-source syntax or permit copied inline assembly.
+This cross-game evidence supplies no exact credit by itself.
 
-The private receipt SHA-256 is
-`dc6c9aefa240fb967454b04b597b57567754e2eaef1e52a1e6fbdf7030a684cc`.
-The candidate executable body is two bytes shorter than the target before
-linking (1,390 versus 1,392). The complete 0x690 owner is source-present,
-but raw bytes, MAP placement, ordered MZ relocations, runtime behavior, and
-cold aggregate replay remain open. The next matching step is to classify
-the opcode `0x20` ES-preservation producer without changing the verified
-144-case destination partition or physical block layout.
+The v342 private compiler receipt SHA-256 is
+`e5ace2d81d9bfcecc1338eaf7b2baa21d9b3d1509bb0a3250f74790ef67549f1`.
+All 49 physical blocks now have the target size and order. The complete 0x690
+owner remains source-present because raw bytes, MAP placement, the three
+ordered MZ relocations, runtime behavior, and cold aggregate replay are open.

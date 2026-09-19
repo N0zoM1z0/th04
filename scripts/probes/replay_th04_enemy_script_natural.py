@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile the natural MAIN enemy VM and compare its complete switch topology."""
+"""Compile the MAIN enemy VM and compare its complete switch topology."""
 
 from __future__ import annotations
 
@@ -126,13 +126,13 @@ def main() -> int:
     records = parse_omf(obj)
     groups = code_ledata(records, "B4M_UPDATE_TEXT")
     topology = [(start, end) for start, end, _, _ in groups]
-    if topology != [(0, 1024), (1024, 1678)]:
+    if topology != [(0, 1024), (1024, 1680)]:
         raise ValueError(f"natural VM CODE topology changed: {topology}")
-    code = bytearray(1678)
+    code = bytearray(1680)
     for start, end, record_number, _ in groups:
         code[start:end] = records[record_number - 1].data[3:]
     code = bytes(code)
-    if len(code) != 1678 or len(code) == len(target_body):
+    if len(code) != 1680 or len(code) != len(target_body):
         raise ValueError("natural VM size result changed")
     ignored = {index for start in (8, 12, 33, 40) for index in (start, start + 1)}
     if any(a != b for i, (a, b) in enumerate(zip(target_body[:42], code[:42]))
@@ -147,7 +147,7 @@ def main() -> int:
     target_sizes = switch_block_sizes(target_body[-288:], 1392, 0x1B4D)
     candidate_sizes = switch_block_sizes(code[-288:], len(code) - 288, 0)
     block_size_matches = sum(a == b for a, b in zip(target_sizes, candidate_sizes))
-    if len(target_sizes) != 49 or block_size_matches != 48:
+    if len(target_sizes) != 49 or block_size_matches != 49:
         raise ValueError("physical switch-block size agreement changed")
     local_layout = bytes.fromhex("26 8A 45 03 88 46 FF C6 46 FE 04")
     target_layout_sites = [i for i in range(len(target_body)) if target_body.startswith(local_layout, i)]
@@ -178,8 +178,9 @@ def main() -> int:
                "switch_physical_group_size_matches": block_size_matches,
                "duration_advance_bp_local_layout_equal": True,
                "entry_42_byte_opcode_shape_equal_after_four_word_mask": True,
-               "result": "Natural C++ compiles to 1678 versus 1680 target bytes; 48 of 49 physical switch blocks have target size, and all 49 retain target order.",
-               "limit": "The executable body is two bytes shorter because opcode 0x20 lacks the target PUSH ES / POP ES pair; no linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
+               "handwritten_abi_preservation": "opcode 0x20 explicitly saves/restores ES across two indirect calls; TH04/TH05 target patterns and the TH03 enemy-source idiom corroborate this low-level construct",
+               "result": "C++ plus classified handwritten ES preservation compiles to the target 1680-byte physical size; all 49 physical switch blocks retain target size and order.",
+               "limit": "No linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
     receipt_path = output / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"receipt": str(receipt_path), "result": receipt["result"]}))
