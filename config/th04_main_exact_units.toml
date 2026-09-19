@@ -6729,6 +6729,54 @@ map_size = "0x5D7"
 target_file_offset = "0x16778"
 size = "0x5D7"
 
+# v343 exact replay: Replace the three target helper bodies immediately after
+# the Stage 4 midboss owner with the maintained TC4J producer.
+[[build_replacements]]
+id = "th04-main-enemy-script-helpers-v342-build"
+trigger_units = ["th04-main-enemy-script-helpers-v328"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/b4mpre.asm\",\n\t\"th04/m4u.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/b4mpre.asm\",\n\t\"th04/m4u.cpp\",\n\t\"th04/ehelp.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[units]]
+id = "th04-main-enemy-script-helpers-v328"
+default_enabled = true
+requires_units = ["th04-main-midboss4-update-v149"]
+repo_source = "src/main/enemy/script_helpers.cpp"
+overlay_path = "th04/ehelp.cpp"
+map_module = "th04/ehelp.cpp"
+map_mode = "exact"
+object_path = "obj/th04/ehelp.obj"
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x1ABF"
+map_size = "0x8E"
+target_file_offset = "0x16D4F"
+size = "0x8E"
+
+# v343 exact replay: Replace the following dispatcher and its 144-word compiler
+# table. The helper unit is a physical/link-order dependency.
+[[build_replacements]]
+id = "th04-main-enemy-script-dispatch-v342-build"
+trigger_units = ["th04-main-enemy-script-dispatch-v328"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m4u.cpp\",\n\t\"th04/ehelp.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+build_replacement = "\t\"th04/m4u.cpp\",\n\t\"th04/ehelp.cpp\",\n\t\"th04/escript.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n"
+
+[[units]]
+id = "th04-main-enemy-script-dispatch-v328"
+default_enabled = true
+requires_units = ["th04-main-enemy-script-helpers-v328"]
+repo_source = "src/main/enemy/script_update.cpp"
+overlay_path = "th04/escript.cpp"
+map_module = "th04/escript.cpp"
+map_mode = "exact"
+object_path = "obj/th04/escript.obj"
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x1B4D"
+map_size = "0x690"
+target_file_offset = "0x16DDD"
+size = "0x690"
+
 # v150: Stage 2 midboss pattern helpers and FAR dispatcher occupy the 0x486
 # bytes immediately before the exact v149 Stage 4 owner. v149's generated
 # b4mpre.asm remains the zero-credit prefix object, but v150 hash-removes only
@@ -11471,3 +11519,69 @@ expected_count = 1
 old = "\tpublic @RANDRING&INSTANCE&_NEXT16_AND$QUI\n"
 new = ""
 expected_count = 1
+
+# Keep these transforms after all previously accepted th04_main.asm edits.
+# The helper call routing is part of the dispatcher's hash-attested span, so
+# the helper transform must remain immediately before the dispatcher transform.
+[[source_transforms]]
+id = "th04-main-enemy-script-helpers-v342-natural"
+trigger_units = ["th04-main-enemy-script-helpers-v328"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "e46e0916088bd51979d80d655d004ca915e2895d9ff26012367ec2fc847356ca",
+  "678ff96a693dfc42899d0179859bd9a8c9c85c0936570f6809db213d6728134e",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-enemy-script-helpers-v342"
+kind = "remove_between"
+removed_sha256 = "13ca091469950ecfcc0062f836d0c19c2bba659db81430f4de96fd29416aa208"
+start = "public ENEMY_POS_UPDATE\r\n"
+end = "sub_155AA\tendp\r\n"
+replacement = "extrn _enemy_pos_update:near\r\nextrn _enemy_velocity_set:near\r\nextrn _enemy_aim_at_player:near\r\n\r\n"
+
+[[source_transforms.ops]]
+id = "route-main-enemy-position-helper-v342"
+kind = "replace"
+old = "call\tenemy_pos_update"
+new = "call\t_enemy_pos_update"
+expected_count = 7
+
+[[source_transforms.ops]]
+id = "route-main-enemy-velocity-helper-v342"
+kind = "replace"
+old = "call\tenemy_velocity_set"
+new = "call\t_enemy_velocity_set"
+expected_count = 7
+
+[[source_transforms.ops]]
+id = "route-main-enemy-aim-helper-v342"
+kind = "replace"
+old = "call\tsub_155AA"
+new = "call\t_enemy_aim_at_player"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-enemy-script-dispatch-v342-natural"
+trigger_units = ["th04-main-enemy-script-dispatch-v328"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "5f49f9046b9e8ecc57f22725d30ce6da6b269a149c55789241df060bbef40d45",
+  "197992edcba0a51f3926cb97f6c15611ad2d4c11d88c7a807c88b248b90600c3",
+]
+
+[[source_transforms.ops]]
+id = "remove-main-enemy-script-dispatch-v342"
+kind = "remove_between"
+removed_sha256 = "811325951b67f6ca7ef647cf8104f1cd49b8f38d3cb1deeaf7973f0954058587"
+start = "public _enemy_script_update\r\n"
+end = "\t\tdw offset loc_15AD2\r\n"
+replacement = ""
+
+[[source_transforms.ops]]
+id = "export-main-scroll-last-delta-v342"
+kind = "insert_before"
+anchor = "include th04/main/playfld[bss].asm\r\n"
+text = "public _scroll_last_delta\r\n"

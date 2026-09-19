@@ -30,18 +30,22 @@ inert padding, ABI changes, or false assembly ownership.
 
 ## Current state
 
-MAIN has **462/487 reviewed authored C/C++ functions** and
-**75,665/83,441 reviewed authored C/C++ bytes** exact; 40 accepted
+MAIN has **466/491 reviewed authored C/C++ functions** and
+**77,487/83,441 reviewed authored C/C++ bytes** exact; 40 accepted
 original-style ASM units add 5,615 bytes. The last complete native aggregate,
-gpt-5-6-sol-v326-gather-aggregate-final-001, passes all 249 default exact
+gpt-5-6-sol-v343-enemy-dispatch-aggregate-final-004, passes all 251 default exact
 MAIN owners twice (receipt SHA-256
-371425f1e165a56ea88dd35f3b4db9ae6b4bcefce786eee059fd13101af42421).
+8addd30b7e420cab0bf1709fc3d275310c80fd4e5b4eed2debd8317813f17898).
 All 51 boss-named MAIN authored candidates are exact. None of these counts
 means whole MAIN.EXE or whole TH04 is exact.
 
+The [enemy helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) and
+[script VM](reconstruction/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) now own
+the complete B4M_UPDATE_TEXT load range `0x1554F..0x15C6C`: 1,822 bytes,
+four reviewed functions, and all three ordered relocations are exact.
+
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
-| Enemy script VM and helpers | B4M_UPDATE_TEXT load 0x1554F..0x15C6C, 0x71E bytes | The [three helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) and [full VM](reconstruction/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) now emit the target 142 and 1,680 compiler bytes. TH03/TH04/TH05 evidence supports classifying the two ES-save pairs as handwritten ABI preservation. Raw bytes, MAP placement, three ordered relocations, and cold aggregate replay remain open. |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A [function split and mid-function segment controls](reconstruction/TH04_DEMO_PAUSE_SPLIT_V282.md), plus [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md), cannot reproduce the target order. |
 | Item update | MAIN_035_TEXT load 0x1DA1B..0x1DF60, 0x546 bytes | Two compiler SUB encodings, four differing bytes. [Evidence](reconstruction/TH04_MAIN035_ITEMS_V154.md) |
@@ -98,16 +102,13 @@ TH04-owned across 37 source files; cold replay freezes product headers. Other
 compat/rec98 forwarders and the pinned ReC98 overlay remain. Standalone
 checked-in TH04 build closure, full
 packed-file matching, runtime scenarios, and independent provenance remain
-open. Track exact owners and the remaining 10 unreviewed MAIN functions from
+open. Track exact owners and the remaining 6 unreviewed MAIN functions from
 config/units.csv, config/th04_main_authored_functions.csv,
 config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
 ## Next work and finish gate
 
-Cold-link the target-sized MAIN enemy helper/VM objects without breaking the
-144-case destination partition, then prove raw/MAP and all three ordered
-relocations. Find a natural OMF producer for
-MAIN dialog/DEMO ordered relocations without
+Find a natural OMF producer for MAIN dialog/DEMO ordered relocations without
 changing raw bytes or MAP; [current controls](reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
 rule out common switches and the simple pause split. Continue the large
 gameplay-loop, item, and thick-laser owners. For OP/MAINE, recover SND_LOAD,
@@ -125,8 +126,5 @@ and unknowns in the focused note and ledgers.
 ## Private workspace
 
 Targets, toolchains, Ghidra/IDA projects, generated builds, and receipts stay
-ignored under .analysis/ or ghidra-project/. The two late v212 replay trees are
-hash-manifested and receipt-archived; active v213 dialog and v214 shared probe
-inputs remain expanded. v287 and v326 cold build trees were pruned after the
-v326 final replay, retaining their receipts. Never commit original executables
-or assets.
+ignored under `.analysis/` or `ghidra-project/`. Retain final receipts and
+prune replaceable build trees. Never commit original executables or assets.

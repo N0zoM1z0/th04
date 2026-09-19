@@ -4325,3 +4325,71 @@ id = "th04-main-fn-23d60"
 address = "0x23D60"
 evidence_id = "ev-th04-main-randring2-and-boundary-v212"
 reason = "Admit the complete 0x15-byte near Pascal function only after focused and 248-owner candidate aggregate A/B replays verify natural C++ bytes, exact TLINK placement, empty overlapping MZ relocations, and a contiguous target Ghidra body."
+
+# v343 enemy-script helper and VM functions. The fresh nonce-bound Ghidra
+# inventory sees three entries but misses the position helper, truncates the
+# aim helper, and constructs only the 42-byte dispatcher entry block.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-2554f"
+address = "0x2554F"
+file_offset = "0x16D4F"
+size = "0x43"
+name = "ENEMY_POS_UPDATE"
+owner_unit = "th04-main-enemy-script-helpers-v328"
+source = "src/main/enemy/script_helpers.cpp"
+next_public_address = "0x25592"
+evidence_id = "ev-th04-main-enemy-functions-v343"
+reason = "The target Ghidra inventory has no entry, but the original TASM public, gap-free 67-byte raw decode through RET, next exact public at 0x25592, and the focused plus 251-owner exact replay agree."
+
+[[new_exact]]
+id = "th04-main-fn-2554f"
+address = "0x2554F"
+evidence_id = "ev-th04-main-enemy-functions-v343"
+reason = "Admit the complete 67-byte position helper only after no-Ghidra target boundary review and exact owner replay."
+
+[[new_exact]]
+id = "th04-main-fn-25592"
+address = "0x25592"
+evidence_id = "ev-th04-main-enemy-functions-v343"
+reason = "Admit the complete 24-byte velocity helper after fresh Ghidra, TLINK public, raw body, and exact owner all agree."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-255aa"
+address = "0x255AA"
+file_offset = "0x16DAA"
+size = "0x33"
+decode_size = "0x33"
+physical_size = "0x33"
+name = "sub_155AA"
+owner_unit = "th04-main-enemy-script-helpers-v328"
+next_public_address = "0x255DD"
+evidence_id = "ev-th04-main-enemy-functions-v343"
+reason = "Ghidra stops after 23 bytes; original TASM and gap-free raw decode close all 51 bytes through RET immediately before the exact dispatcher public."
+
+[[new_exact]]
+id = "th04-main-fn-255aa"
+address = "0x255AA"
+evidence_id = "ev-th04-main-enemy-functions-v343"
+reason = "Admit the complete 51-byte aim helper only after raw/TASM extent closure and exact owner replay."
+
+[[reviewed_exact_extent]]
+id = "th04-main-fn-255dd"
+address = "0x255DD"
+file_offset = "0x16DDD"
+size = "0x570"
+decode_size = "0x570"
+physical_size = "0x690"
+name = "sub_155DD"
+owner_unit = "th04-main-enemy-script-dispatch-v328"
+next_public_address = "0x25C6D"
+evidence_id = "ev-th04-main-enemy-functions-v343"
+trailing_switch_tables = [
+  { jump_table_address = "0x25B4D", jump_table_count = 144, cs_base = "0x23A90" },
+]
+reason = "Ghidra constructs only the 42-byte entry block; original TASM, gap-free raw decode through RET at the end of the 1392-byte body, and all 144 target jump words account contiguously for the full 1680-byte exact owner."
+
+[[new_exact]]
+id = "th04-main-fn-255dd"
+address = "0x255DD"
+evidence_id = "ev-th04-main-enemy-functions-v343"
+reason = "Admit the complete VM function only after raw code and its 144-word compiler switch table fill the exact physical owner."

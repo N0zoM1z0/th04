@@ -240,12 +240,12 @@ advance_one:
         temp = instr[1];
         if(playperf > 16) {
             temp = ((playperf - 16) * temp);
-            temp = (temp / 32);
+            temp /= 32;
             temp = (instr[1] - temp);
             if(temp < 16) temp = 16;
         } else if(playperf < 16) {
             temp = ((16 - playperf) * temp);
-            temp = (temp / 32);
+            temp /= 32;
             temp = (instr[1] + temp);
             if(temp >= 256) temp = 255;
         }

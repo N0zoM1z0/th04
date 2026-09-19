@@ -28,11 +28,11 @@ The private receipt SHA-256 is
 The valid object has one 142-byte B4M_UPDATE_TEXT LEDATA. Its three helper
 lengths are the target 67, 24, and 51 bytes:
 
-| Helper | Compiler observation | Remaining difference |
+| Helper | Compiler observation | Linked result |
 | --- | --- | --- |
-| Position | Saving the pre-call `enemy_cur`, calling through the global, and assigning the post-call register alias reproduces all 67 instruction bytes after masking two address words and one unresolved near call. | Linked placement and raw extent have not been tested. |
-| Velocity | All 24 instruction bytes agree after masking the absolute `enemy_cur` word and unresolved near-call word. | Linked placement and raw extent have not been tested. |
-| Aim | All 51 instruction bytes agree after masking five address words. | Linked placement and raw extent have not been tested. |
+| Position | Saving the pre-call `enemy_cur`, calling through the global, and assigning the post-call register alias reproduces all 67 instruction bytes after masking two address words and one unresolved near call. | Exact inside the complete linked owner. |
+| Velocity | All 24 instruction bytes agree after masking the absolute `enemy_cur` word and unresolved near-call word. | Exact inside the complete linked owner. |
+| Aim | All 51 instruction bytes agree after masking five address words. | Exact inside the complete linked owner. |
 
 Two bounded v340/v341 Oracles narrow the remaining aim gap. The attested TH05
 target independently contains the same `PUSH ES` / calls / `POP ES` pattern at
@@ -55,6 +55,19 @@ classifying the two one-instruction statements as genuine handwritten ABI
 preservation rather than compiler output. This is an inferred source-level
 classification; it supplies no exact credit by itself.
 
-The target and candidate helper groups now have equal 142-byte compiler
-extents. No exact or runtime claim follows until linked raw bytes, MAP
-placement, relocations, and aggregate replay pass.
+Strict replay:
+
+    python3 scripts/replay_th04_main_exact_units.py \
+      --unit th04-main-enemy-script-helpers-v328 \
+      --run-id gpt-5-6-sol-v342-enemy-helpers-candidate-001
+
+The focused A/B receipt has SHA-256
+`9ae8e9038cf882aeef42d6cb10e31d4dbe8ab4804bf18ff33085af8b3e555ec1`.
+Both cold builds produce valid deterministic OMF, the exact
+`13A9:1ABF 008E` MAP contribution, the ordered relocation at load `0x155C4`,
+and zero raw differences. The 251-owner aggregate
+`gpt-5-6-sol-v343-enemy-dispatch-aggregate-final-004` also passes twice; its
+receipt SHA-256 is
+`8addd30b7e420cab0bf1709fc3d275310c80fd4e5b4eed2debd8317813f17898`.
+The complete 142-byte helper owner is therefore exact. No separate runtime
+scenario has yet been recorded.
