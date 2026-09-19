@@ -7,7 +7,7 @@
 #include "th04/snd/snd.h"
 #include "th04/main/gather.hpp"
 #include "th04/main/circle.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #endif
 
 extern SPPoint yuuka6_aux_pos;

@@ -8,7 +8,7 @@
 #include "src/main/math/polar.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/frames.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/custom.hpp"
 #include "th04/main/gather.hpp"
 #include "th04/main/circle.hpp"

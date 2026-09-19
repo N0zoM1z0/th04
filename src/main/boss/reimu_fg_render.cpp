@@ -3,7 +3,7 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "src/main/hardware/grcg.hpp"
 #include "th04/main/frames.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 
 static const unsigned PLANE_BI_PUT = (0xFF00 | GC_RMW | GC_BI);
 static const unsigned PLANE_ALL_PUT = (0xFF00 | GC_RMW | GC_BRGI);

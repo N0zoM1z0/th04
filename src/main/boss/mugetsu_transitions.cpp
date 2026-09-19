@@ -2,7 +2,7 @@
 #pragma option -a
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 #include "th04/main/frames.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/snd/snd.h"
 #endif
 

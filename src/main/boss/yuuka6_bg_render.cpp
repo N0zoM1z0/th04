@@ -4,7 +4,7 @@
 #include "src/main/hardware/grcg.hpp"
 #include "src/main/math/randring.hpp"
 #include "th04/sprites/main_pat.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/tile/bb.hpp"
 
 static const int YUUKA6_BG_SHAPE_COUNT = 56;

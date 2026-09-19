@@ -1,6 +1,6 @@
 #pragma option -zCMAIN_036_TEXT -zPmain_03
 
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 
 extern unsigned char reimu_trail_visible;
 

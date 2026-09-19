@@ -10,7 +10,7 @@
 #include "th04/main/spark.hpp"
 #include "th04/main/item/item.hpp"
 #include "th04/main/bullet/bullet.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/custom.hpp"
 #include "th04/main/player/player.hpp"
 #endif

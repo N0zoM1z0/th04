@@ -5,7 +5,7 @@
 
 #include "th04/sprites/main_pat.h"
 #include "th04/main/custom.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 
 // Constants
 // ---------

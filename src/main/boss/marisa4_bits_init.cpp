@@ -62,7 +62,7 @@ extern "C" void near marisa_bits_init(void)
 #include "th04/math/vector.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/spark.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/player/player.hpp"
 
 #pragma samecodeseg sparks_add_random

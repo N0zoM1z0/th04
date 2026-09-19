@@ -3,7 +3,7 @@
 
 #include "th04/sprites/main_pat.h"
 #include "th04/main/frames.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "src/main/math/randring.hpp"
 #include "th04/snd/snd.h"

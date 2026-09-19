@@ -14,7 +14,7 @@
 #include "th04/main/gather.hpp"
 #include "th04/main/circle.hpp"
 #include "th04/main/spark.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/player/player.hpp"
 
 #pragma option -a
@@ -47,7 +47,7 @@
 #ifndef TH04_ELLY_MAIN034_COMBINED
 #include "th04/main/bullet/bullet.hpp"
 #endif
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/player/player.hpp"
 
 #pragma option -a

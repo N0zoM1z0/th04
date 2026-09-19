@@ -4,7 +4,7 @@
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/sprites/main_pat.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/circle.hpp"
 #include "th04/main/gather.hpp"
 #include "th04/main/rank.hpp"

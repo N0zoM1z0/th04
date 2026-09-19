@@ -5,7 +5,7 @@
 #include "src/main/math/polar.hpp"
 #include "src/main/hardware/palette.hpp"
 #include "th04/formats/super.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "src/main/sprites/main_pat.hpp"
 
 // Structures

@@ -4,7 +4,7 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/main/custom.hpp"
 #include "src/main/hardware/grcg.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 
 static const int MARISA_BIT_COUNT = 4;
 static const unsigned char MARISA_BIT_FREE = 0;

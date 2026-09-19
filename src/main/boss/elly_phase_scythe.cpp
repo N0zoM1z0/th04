@@ -2,7 +2,7 @@
 #pragma option -a
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 
 #endif
 

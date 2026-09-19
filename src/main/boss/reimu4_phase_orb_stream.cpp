@@ -1,7 +1,7 @@
 #pragma option -zCMAIN_036_TEXT -zPmain_03
 
 #include "th04/main/custom.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/snd/snd.h"
 
 enum reimu_orb_flag_t {

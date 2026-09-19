@@ -3,7 +3,7 @@
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
 #include "src/shared/runtime/api.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/player/player.hpp"
 
 #endif

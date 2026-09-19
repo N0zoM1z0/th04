@@ -2,7 +2,7 @@
 
 #include "th04/sprites/main_pat.h"
 #include "th04/main/bullet/bullet.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 
 extern "C" unsigned char near reimu_gather_intro(void);
 extern unsigned char bullet_special_turns_max;

@@ -29,13 +29,13 @@
 #include "th04/main/midboss/midboss.hpp"
 #if (GAME == 5)
 #include "src/shared/config/resident.hpp"
-#include "compat/rec98/th05/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #else
 #include "src/main/formats/cdg.hpp"
 #include "src/shared/config/resident.hpp"
 #include "src/main/formats/bb.hpp"
 #include "th04/formats/dialog.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/boss/bosses.hpp"
 #include "th04/shiftjis/fns.hpp"
 #endif

@@ -1,7 +1,7 @@
 #if !defined(TH04_KURUMI_MAIN033_COMBINED)
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/circle.hpp"
 #include "th04/main/custom.hpp"

@@ -1060,6 +1060,8 @@ scaffold_include_mappings = [
   { local = "src/shared/config/resident.hpp", occurrence = 2, scaffold = ["th04/resident.hpp"] },
   { local = "src/main/formats/bb.hpp", scaffold = ["th04/formats/bb.h"] },
   { local = "src/main/homing.hpp", scaffold = ["th04/main/homing.hpp"] },
+  { local = "src/main/boss/boss.hpp", occurrence = 1, scaffold = ["th05/main/boss/boss.hpp"] },
+  { local = "src/main/boss/boss.hpp", occurrence = 2, scaffold = ["th04/main/boss/boss.hpp"] },
 ]
 map_module = "th04/boss.cpp"
 map_mode = "contains"

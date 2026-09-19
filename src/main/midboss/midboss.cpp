@@ -6,7 +6,7 @@
 #include "th04/sprites/main_pat.h"
 #include "th04/main/score.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 
 void midboss_reset(void)
 {

@@ -2,7 +2,7 @@
 
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/snd/snd.h"
 
 #pragma codeseg B4M_UPDATE_TEXT main_03

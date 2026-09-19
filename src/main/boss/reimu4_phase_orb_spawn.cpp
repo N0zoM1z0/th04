@@ -2,7 +2,7 @@
 
 #include "src/main/math/randring.hpp"
 #include "th04/main/custom.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/snd/snd.h"
 
 enum reimu_orb_flag_t {

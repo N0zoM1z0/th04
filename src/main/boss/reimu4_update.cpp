@@ -4,7 +4,7 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "th04/sprites/main_pat.h"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/player/shot.hpp"
 #include "th04/snd/snd.h"

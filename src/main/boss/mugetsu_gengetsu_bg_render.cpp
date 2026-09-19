@@ -3,7 +3,7 @@
 #include "src/main/hardware/grcg.hpp"
 #include "src/main/formats/cdg.hpp"
 #include "src/main/formats/bb.hpp"
-#include "th04/main/boss/boss.hpp"
+#include "src/main/boss/boss.hpp"
 #include "th04/main/boss/backdrop.hpp"
 #include "th04/main/boss/bosses.hpp"
 #include "th04/main/null.hpp"
