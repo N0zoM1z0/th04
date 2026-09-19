@@ -1,15 +1,15 @@
 #pragma option -zCSHARED
 
 #include <mem.h>
-#include "compat/rec98/th02/formats/pi.h"
+#include "src/shared/formats/pi.hpp"
 
-void DEFCONV pi_palette_apply(int slot)
+void PI_CALL pi_palette_apply(int slot)
 {
 	palette_set_all(pi_headers[slot].palette);
 	palette_show();
 }
 
-void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot)
+void PI_CALL pi_put_8(screen_x_t left, vram_y_t top, int slot)
 {
 	pi_buffer_p_t row_p;
 	pixel_t y;
