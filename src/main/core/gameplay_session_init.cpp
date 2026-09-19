@@ -4,7 +4,7 @@
 // Current production-profile TC4J omits one target compiler-metadata byte after RET.
 
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th01/rank.h"
+#include "src/main/rank.hpp"
 #include "th04/end/end.h"
 #include "th04/playchar.h"
 #include "src/shared/config/resident.hpp"
@@ -14,7 +14,6 @@
 #include "th04/main/player/bomb.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/playperf.hpp"
-#include "th04/main/rank.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/slowdown.hpp"
 #include "th04/main/hiscore.hpp"

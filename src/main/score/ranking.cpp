@@ -2,7 +2,7 @@
 
 #include "th04/formats/scoredat/scoredat.hpp"
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th01/rank.h"
+#include "src/main/rank.hpp"
 #include "src/main/playchar.hpp"
 #include "th04/gaiji/gaiji.h"
 
