@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **3 forwarders and 4 include sites in 4 files**. The
+138 product files to **2 forwarders and 3 include sites in 3 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -41,41 +41,39 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | CFG loader | shared GAME3/4 resident-pointer loader with target-specific cfg layouts | 5 | `8d0f544` |
 | MAP format | packed TH04 map header/section layout without legacy planar dependency | 4 | `572482e` |
 | Thicklaser ABI | target-verified four-byte post-origin padding and maintained laser state layout | 3 | `0b27b64` |
+| Homing state | single TH04 SPPoint target declaration used across player/enemy/boss code | 2 | `3c6c9a7` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-thicklaser-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-homing-aggregate-001/receipt.json`
 (SHA-256
-`741dd7f01ca64ec9d1f98bf1c55629a7a2c4cb4cee09df351ef736e4f0387ca0`).
+`2efab85ea09f0e5c45be06a4142c4f12e8bee72e60a533d369ac91e6e8738e73`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The thicklaser batch removes `compat/rec98/th04/main/bullet/laser_t.hpp` and
-routes all six maintained TH04 consumers through
-`src/main/bullet/laser_t.hpp`. Unlike the historical ReC98 header, the local
-product ABI permanently records the target-verified four-byte `unused_2[4]`
-padding after `thicklaser_t::origin`; this was previously corrected only by a
-SHA-locked v32 replay transform for the pinned scaffold header.
+The homing batch removes `compat/rec98/th04/main/homing.hpp` and replaces all
+eight maintained same-game include sites with `src/main/homing.hpp`. The
+localized interface intentionally contains only `extern SPPoint homing_target`
+and reuses the already-local Q12.4 subpixel/point ABI.
 
-Focused two-cold replay passes for the most ABI-sensitive complete thicklaser
-producer (receipt SHA-256
-`6c97a7a379d32548d7e3d321a89375a063cd347c32d6c72a1ad90632c1c6a1eb`),
-the fused Yuuka6 producer (receipt SHA-256
-`b14ec60054a3d85607cb64e8819f96329e63a896a225203bf9b345fb8c8363bf`),
-and Gengetsu columns (receipt SHA-256
-`446971c8b4a26890a0303663a5dbca434981828676c47dea918c9a651082ca25`).
-The historical Yuuka5 and MAIN_TEXT-renderer focused selections now stop at
-final link because their old dependency closures omit later score/HUD owners;
-their touched objects compile, and the current full default aggregate is the
-acceptance gate for those owners.
+The four-midboss update dependency chain passes focused two-cold replay
+(receipt SHA-256
+`2b59adeef4c59b7b948412120ca0160e7ef0a46fbccba13e74e5d5f4671a3b01`),
+and `enemies_update` passes focused replay (receipt SHA-256
+`816581e3902563f15d036f25295819cf0146497926c7025a4535366295c4c544`).
+The historical Reimu-shot focused selection now reaches a later final-link
+failure because its old gameover closure omits score/HUD owners; `rshot.cpp`
+itself compiles. The current full aggregate therefore supplies the acceptance
+gate for Reimu shots, boss.cpp, and every other affected accepted owner.
 
-The complete `gpt-web-thicklaser-aggregate-001` replay passes all 253 default
-MAIN owners twice with `failures=[]`; both candidate MAIN images remain
-SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 4 forwarders / 5
-sites / 5 files to 3 / 4 / 4, with no missing, orphan, invalid, or direct
-forbidden include. No new exact owner is claimed.
+The complete `gpt-web-homing-aggregate-001` replay passes all 253 default MAIN
+owners twice with `failures=[]`; both candidate MAIN images remain SHA-256
+`54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
+The compat audit moves from 3 forwarders / 4 sites / 4 files to 2 / 3 / 3,
+with no missing, orphan, invalid, or direct forbidden include. No new exact
+owner is claimed.
 
 ## Next families
 
@@ -86,7 +84,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining two families have one site each. Re-run the audit instead
+The remaining one family has one site. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow
