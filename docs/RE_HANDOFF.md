@@ -26,14 +26,17 @@ the accepted extent.
 - Target canonicality is `candidate-local-attested`. The pinned Japanese
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **477/491 reviewed authored C/C++ functions** and
-  **79,562/83,441 reviewed authored C/C++ bytes** exact (95.351206%). Forty
+- MAIN has **478/491 reviewed authored C/C++ functions** and
+  **80,023/83,441 reviewed authored C/C++ bytes** exact (95.903692%). Forty
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-gameplay-v375-aggregate-final-001`: all 254 selected MAIN owners
+  `gpt-web-session-v377-aggregate-final-001`: all 255 selected MAIN owners
   pass two cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt
-  SHA-256: `bc4aabf5e3c3f5f241f52a7946459064190bd13b9e6d95b83bb1108f7404a200`.
+  SHA-256: `20a23766aa1963d93907179709fa55030a1ff26d4a0018aa489f0aa638a86b5f`.
+- The remaining reviewed authored C/C++ gap is **3,418 bytes**: stage
+  session 1,310, dialog op/run/render 1,545, scroll 295, checkerboard 174,
+  Stage 4 carpet 90, and the final 4 `snd_load` bytes.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
@@ -50,15 +53,16 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Recover natural OMF relocation order and continue DEMO_TEXT closure.**
-   `gameplay_loop()` is now exact. `gameplay_session_init()` still has the
-   established one-byte compiler metadata/alignment shortfall. Dialog raw
-   bytes, MAP, and relocation sites match but its target has three descending
-   MZ relocation runs while the current object produces two. Stage-session raw
-   bytes, MAP, and sites also match while ordered relocations differ. Continue
-   from the [gameplay](reconstruction/main/TH04_DEMO_GAMEPLAY_TERNARY_V248.md),
-   [dialog](reconstruction/main/TH04_MAIN_DIALOG_BOUNDARY_V180.md), and
-   [stage-session](reconstruction/main/TH04_DEMO_PAUSE_SPLIT_V282.md) notes.
+1. **Recover natural OMF relocation order.** `gameplay_loop()` and
+   `gameplay_session_init()` are now exact; the latter closes its historical
+   one-byte gap through the compiler's natural word-aligned switch-table
+   producer. Stage-session raw bytes, MAP, and relocation sites match while
+   ordered relocations differ. Dialog raw bytes, MAP, and sites match but its
+   target has three descending MZ relocation runs while the current object
+   produces two. Continue from the
+   [session](reconstruction/main/TH04_DEMO_GAMEPLAY_SESSION_V377.md),
+   [stage-session](reconstruction/main/TH04_DEMO_PAUSE_SPLIT_V282.md), and
+   [dialog](reconstruction/main/TH04_MAIN_DIALOG_BOUNDARY_V180.md) notes.
 2. **Continue the remaining artifacts.** The cold decoded-payload residual is
    7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes; this is not packed-file equality.
    ZUN's 6,360-byte diagnostic component differs at 4,241 bytes and still uses
@@ -76,8 +80,8 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-gameplay-v375-aggregate-final-001`
-- `gpt-web-gameplay-v375-focused-006`
+- `gpt-web-session-v377-aggregate-final-001`
+- `gpt-web-session-v377-focused-003`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`
 
