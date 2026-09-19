@@ -2,6 +2,37 @@ schema_version = 1
 artifact = "th04-main"
 reference_revision = "b6ba5b0a529edbb31efdf8c0e939263804f8ee47"
 
+[[scaffold_header_rewrites]]
+id = "th04-entity-bullet-header-local"
+scaffold_path = "th04/main/bullet/bullet.hpp"
+scaffold_sha256 = "a3ecd6ed0d6758e13a43f96ee022fa3368e5024ec7ac60e9555251879f15c2ef"
+old_include = "th02/main/entity.hpp"
+local_header = "src/main/core/entity.hpp"
+
+[[scaffold_header_rewrites]]
+id = "th04-entity-gather-header-local"
+scaffold_path = "th04/main/gather.hpp"
+scaffold_sha256 = "ff991006671cfc5706260a366d3d902acf60294a0b02c6372a985a213843ff9b"
+old_include = "th02/main/entity.hpp"
+local_header = "src/main/core/entity.hpp"
+
+[[scaffold_header_rewrites]]
+id = "th04-entity-item-header-local"
+scaffold_path = "th04/main/item/item.hpp"
+scaffold_sha256_any = [
+  "dfe0863033559d9ac2aa248c3fdd59ffe95485a88ae47928fc1e9a74bafee11a",
+  "9aa09cd990f79dc28d9a3e2390b4224b307c08bb848ec2d9c2b3222e260e6795",
+]
+old_include = "th02/main/entity.hpp"
+local_header = "src/main/core/entity.hpp"
+
+[[scaffold_header_rewrites]]
+id = "th04-entity-player-shot-header-local"
+scaffold_path = "th04/main/player/shot.hpp"
+scaffold_sha256 = "61ccc51fa488f6816ae2dbb69b969c5ce1dbc60331eb394b64256aa5d7a02d32"
+old_include = "th02/main/entity.hpp"
+local_header = "src/main/core/entity.hpp"
+
 
 [[splits]]
 id = "th04-dialog-init-exit-tu-split"
@@ -875,8 +906,11 @@ object_path = "obj/th04/it_spl_u.obj"
 [[units]]
 id = "th04-main-bullet-u-prefix"
 repo_source = "src/main/bullet/update_prefix.inl"
-source_mode = "forwarded-fragment"
+source_mode = "localized-fragment"
 patch_path = "th04/main/bullet/update.cpp"
+scaffold_include_mappings = [
+  { local = "src/main/bullet/sizes.hpp", scaffold = ["th01/sprites/pellet.h", "th02/sprites/bullet16.h"] },
+]
 map_module = "th04/bullet_u.cpp"
 map_mode = "contains"
 object_path = "obj/th04/bullet_u.obj"
@@ -905,8 +939,11 @@ object_path = "obj/th04/bullet_u.obj"
 id = "th04-main-boss-prefix"
 default_enabled = false
 repo_source = "src/main/boss/boss_prefix.inl"
-source_mode = "forwarded-fragment"
+source_mode = "localized-fragment"
 patch_path = "th04/main/boss/boss.cpp"
+scaffold_include_mappings = [
+  { local = "src/shared/hardware/frame_delay.hpp", scaffold = ["th02/hardware/frmdelay.h"] },
+]
 map_module = "th04/boss.cpp"
 map_mode = "contains"
 object_path = "obj/th04/boss.obj"
@@ -959,8 +996,12 @@ object_path = "obj/th04/scrolly3.obj"
 [[units]]
 id = "th04-main-initmain-function"
 repo_source = "src/main/core/init.cpp"
-source_mode = "forwarded-fragment"
+source_mode = "localized-fragment"
 patch_path = "th03/core/initmain.cpp"
+scaffold_include_mappings = [
+  { local = "src/shared/hardware/vram_planes.hpp", scaffold = ["th01/hardware/vplanset.h"] },
+  { local = "src/main/core/initexit.hpp", scaffold = ["th03/core/initexit.h"] },
+]
 map_module = "th04/initmain.cpp"
 map_mode = "contains"
 object_path = "obj/th04/initmain.obj"

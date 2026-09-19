@@ -2,8 +2,8 @@
 
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
-#include "compat/rec98/th01/hardware/vplanset.h"
-#include "compat/rec98/th03/core/initexit.h"
+#include "src/shared/hardware/vram_planes.hpp"
+#include "src/main/core/initexit.hpp"
 
 #if (GAME <= 3)
 #define mem_assign_paras (288000 >> 4)

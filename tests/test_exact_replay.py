@@ -348,6 +348,172 @@ class Rec98CompatTests(unittest.TestCase):
             self.assertEqual(resolved, b'#include "th02/hardware/frmdelay.h"\nbody\n')
             self.assertEqual(used, ["th02/hardware/frmdelay.h"])
 
+    def test_localized_fragment_matches_scaffold_then_builds_local_source(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            source = root / "source"
+            compat = repo / "compat" / "rec98"
+            forwarder = compat / "libs" / "master.lib" / "master.hpp"
+            forwarder.parent.mkdir(parents=True)
+            forwarder.write_text(
+                '#include "libs/master.lib/master.hpp"\n', encoding="ascii"
+            )
+            repo.mkdir(exist_ok=True)
+            maintained = (
+                b'#include "compat/rec98/libs/master.lib/master.hpp"\n'
+                b'#include "src/main/bullet/sizes.hpp"\n'
+                b"body\n"
+            )
+            (repo / "unit.inl").write_bytes(maintained)
+            destination = source / "scaffold.cpp"
+            destination.parent.mkdir(parents=True)
+            destination.write_bytes(
+                b'#include "libs/master.lib/master.hpp"\n'
+                b'#include "th01/sprites/pellet.h"\n'
+                b'#include "th02/sprites/bullet16.h"\n'
+                b"body\ntail\n"
+            )
+            entry = {
+                "id": "localized-unit",
+                "repo_source": "unit.inl",
+                "source_mode": "localized-fragment",
+                "patch_path": "scaffold.cpp",
+                "scaffold_include_mappings": [
+                    {
+                        "local": "src/main/bullet/sizes.hpp",
+                        "scaffold": [
+                            "th01/sprites/pellet.h",
+                            "th02/sprites/bullet16.h",
+                        ],
+                    }
+                ],
+            }
+            receipt = replay.overlay_sources(
+                source, [entry], repo_root=repo, compat_root=compat
+            )
+            self.assertEqual(destination.read_bytes(), maintained + b"tail\n")
+            self.assertEqual(receipt[0]["mode"], "localized-fragment")
+            self.assertEqual(
+                receipt[0]["forwarded_headers"], ["libs/master.lib/master.hpp"]
+            )
+            self.assertEqual(
+                receipt[0]["scaffold_include_mappings"],
+                entry["scaffold_include_mappings"],
+            )
+            self.assertNotEqual(
+                receipt[0]["scaffold_sha256"],
+                receipt[0]["patched_scaffold_sha256"],
+            )
+
+    def test_localized_fragment_rejects_unmapped_or_unsafe_include(self) -> None:
+        source = b'#include "src/shared/header.hpp"\nbody\n'
+        with self.assertRaisesRegex(RuntimeError, "exactly once"):
+            replay.rewrite_local_includes_for_scaffold(
+                source,
+                [{"local": "src/shared/missing.hpp", "scaffold": ["old.hpp"]}],
+            )
+        with self.assertRaisesRegex(RuntimeError, "invalid include mapping path"):
+            replay.rewrite_local_includes_for_scaffold(
+                source,
+                [{"local": "src/shared/header.hpp", "scaffold": ["../old.hpp"]}],
+            )
+
+    def test_localized_fragment_runs_after_offset_bound_replacement(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            source = root / "source"
+            compat = repo / "compat" / "rec98"
+            forwarder = compat / "old" / "base.hpp"
+            forwarder.parent.mkdir(parents=True)
+            forwarder.write_text('#include "old/base.hpp"\n', encoding="ascii")
+            local_fragment = (
+                b'#include "compat/rec98/old/base.hpp"\n'
+                b'#include "src/shared/local.hpp"\n'
+                b"prefix\n"
+            )
+            (repo / "prefix.inl").write_bytes(local_fragment)
+            (repo / "body.inl").write_bytes(b"new_body\n")
+            original = (
+                b'#include "old/base.hpp"\n'
+                b'#include "old/header.hpp"\n'
+                b"prefix\nold_body\ntail\n"
+            )
+            destination = source / "scaffold.cpp"
+            destination.parent.mkdir(parents=True)
+            destination.write_bytes(original)
+            old_body = b"old_body\n"
+            localized = {
+                "id": "localized-prefix",
+                "repo_source": "prefix.inl",
+                "source_mode": "localized-fragment",
+                "patch_path": "scaffold.cpp",
+                "scaffold_include_mappings": [
+                    {
+                        "local": "src/shared/local.hpp",
+                        "scaffold": ["old/header.hpp"],
+                    }
+                ],
+            }
+            replacement = {
+                "id": "natural-body",
+                "repo_source": "body.inl",
+                "source_mode": "replace",
+                "patch_path": "scaffold.cpp",
+                "scaffold_sha256": replay.digest_bytes(original),
+                "replace_offset": original.index(old_body),
+                "replace_size": len(old_body),
+                "replace_sha256": replay.digest_bytes(old_body),
+            }
+            receipt = replay.overlay_sources(
+                source,
+                [localized, replacement],
+                repo_root=repo,
+                compat_root=compat,
+            )
+            self.assertEqual(
+                destination.read_bytes(), local_fragment + b"new_body\ntail\n"
+            )
+            self.assertEqual(
+                [item["mode"] for item in receipt],
+                ["replace", "localized-fragment"],
+            )
+
+    def test_scaffold_header_rewrite_is_hash_bound_and_product_gated(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            header = source / "th04" / "main" / "consumer.hpp"
+            header.parent.mkdir(parents=True)
+            original = b'#include "old/entity.hpp"\nbody\n'
+            header.write_bytes(original)
+            rewrite = {
+                "id": "entity-local",
+                "scaffold_path": "th04/main/consumer.hpp",
+                "scaffold_sha256": replay.digest_bytes(original),
+                "old_include": "old/entity.hpp",
+                "local_header": "src/main/core/entity.hpp",
+            }
+            self.assertEqual(
+                replay.apply_scaffold_header_rewrites(source, [rewrite], []), []
+            )
+            receipt = replay.apply_scaffold_header_rewrites(
+                source,
+                [rewrite],
+                [{"path": "src/main/core/entity.hpp"}],
+            )
+            self.assertEqual(len(receipt), 1)
+            self.assertEqual(
+                header.read_bytes(),
+                b'#include "src/main/core/entity.hpp"\nbody\n',
+            )
+            with self.assertRaisesRegex(RuntimeError, "scaffold SHA-256 drift"):
+                replay.apply_scaffold_header_rewrites(
+                    source,
+                    [rewrite],
+                    [{"path": "src/main/core/entity.hpp"}],
+                )
+
 
 class SourceSplitTests(unittest.TestCase):
     def fixture(self, root: Path, *, suffix: bool = True) -> tuple[Path, dict[str, object]]:

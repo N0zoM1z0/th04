@@ -36,7 +36,7 @@ void pascal near tiles_render_all(void);
 #include "decomp.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
 #include "compat/rec98/th01/math/overlap.hpp"
-#include "compat/rec98/th02/hardware/frmdelay.h"
+#include "src/shared/hardware/frame_delay.hpp"
 #include "compat/rec98/th03/hardware/palette.hpp"
 #include "th04/common.h"
 #include "th04/snd/snd.h"

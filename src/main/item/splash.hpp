@@ -2,7 +2,7 @@
 #define TH04_MAIN_ITEM_SPLASH_HPP
 
 #include "th04/main/playfld.hpp"
-#include "compat/rec98/th02/main/entity.hpp"
+#include "src/main/core/entity.hpp"
 
 struct item_splash_t {
     entity_flag_t flag;

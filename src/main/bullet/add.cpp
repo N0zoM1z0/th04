@@ -12,7 +12,7 @@
 
 #pragma option -a2
 #include "compat/rec98/th02/main/bullet/impl.hpp"
-#include "compat/rec98/th02/sprites/bullet16.h"
+#include "src/main/bullet/sizes.hpp"
 
 void pascal near bullets_add_regular_raw(void);
 void pascal near bullets_add_special_raw(void);

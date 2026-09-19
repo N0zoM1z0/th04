@@ -1,7 +1,7 @@
 #include "th04/main/circle.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/main/playfld.hpp"
-#include "compat/rec98/th02/main/entity.hpp"
+#include "src/main/core/entity.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
 
 // More like 17 though, due to the quirks documented below.

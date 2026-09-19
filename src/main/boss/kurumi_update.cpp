@@ -5,7 +5,7 @@
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "compat/rec98/th03/math/randring.hpp"
-#include "compat/rec98/th03/math/polar.hpp"
+#include "src/main/math/polar.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"

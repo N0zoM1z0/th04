@@ -2,7 +2,7 @@
 
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
-#include "compat/rec98/th02/core/initexit.h"
+#include "src/main/core/initexit.hpp"
 
 void game_exit(void)
 {

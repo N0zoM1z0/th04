@@ -1,6 +1,6 @@
 #pragma option -zCSHARED
 
-#include "compat/rec98/th02/hardware/frmdelay.h"
+#include "src/shared/hardware/frame_delay.hpp"
 #include "th04/hardware/input.h"
 
 void pascal input_wait_for_change(int frames_to_wait)

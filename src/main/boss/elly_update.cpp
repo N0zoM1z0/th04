@@ -8,7 +8,7 @@
 #include "th04/sprites/main_pat.h"
 #include "th04/main/frames.h"
 #include "th04/math/vector.hpp"
-#include "compat/rec98/th03/math/polar.hpp"
+#include "src/main/math/polar.hpp"
 #include "src/shared/hardware/v_colors.hpp"
 #include "compat/rec98/th03/math/randring.hpp"
 #include "th04/main/gather.hpp"

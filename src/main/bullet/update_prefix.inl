@@ -16,8 +16,7 @@
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
-#include "compat/rec98/th01/sprites/pellet.h"
-#include "compat/rec98/th02/sprites/bullet16.h"
+#include "src/main/bullet/sizes.hpp"
 
 #if (GAME == 5)
 #include "th04/main/item/item.hpp"

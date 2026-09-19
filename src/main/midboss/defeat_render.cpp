@@ -2,7 +2,7 @@
 
 #include "compat/rec98/libs/master.lib/master.hpp"
 #include "compat/rec98/libs/master.lib/pc98_gfx.hpp"
-#include "compat/rec98/th03/math/polar.hpp"
+#include "src/main/math/polar.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/midboss/midboss.hpp"
 

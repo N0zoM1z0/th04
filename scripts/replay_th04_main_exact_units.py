@@ -280,13 +280,79 @@ def resolve_rec98_forwarders(
     return resolved, sorted(set(used))
 
 
+def rewrite_local_includes_for_scaffold(
+    source: bytes, mappings: object
+) -> tuple[bytes, list[dict[str, object]]]:
+    """Rewrite declared product includes only for matching a pinned scaffold."""
+
+    if not isinstance(mappings, list) or not mappings:
+        raise RuntimeError("localized fragment requires scaffold_include_mappings")
+    rewritten = source
+    used: list[dict[str, object]] = []
+    seen_local: set[str] = set()
+    for mapping in mappings:
+        if not isinstance(mapping, dict):
+            raise RuntimeError("scaffold include mapping must be a table")
+        local = mapping.get("local")
+        scaffold = mapping.get("scaffold")
+        if not isinstance(local, str) or not local.startswith("src/"):
+            raise RuntimeError(f"invalid local include mapping path: {local!r}")
+        if local in seen_local:
+            raise RuntimeError(f"duplicate local include mapping path: {local}")
+        seen_local.add(local)
+        if not isinstance(scaffold, list) or not scaffold or not all(
+            isinstance(path, str) for path in scaffold
+        ):
+            raise RuntimeError(f"invalid scaffold include mapping for {local}")
+        all_paths = [local, *scaffold]
+        for path in all_paths:
+            parts = Path(path).parts
+            if (
+                not path
+                or "\\" in path
+                or Path(path).is_absolute()
+                or ".." in parts
+                or "." in parts
+            ):
+                raise RuntimeError(f"invalid include mapping path: {path!r}")
+        if any(path.startswith(("src/", "compat/rec98/")) for path in scaffold):
+            raise RuntimeError(f"invalid scaffold include path for {local}")
+        marker = f'#include "{local}"'.encode("ascii")
+        pattern = re.compile(
+            rb"^" + re.escape(marker) + rb"(?P<eol>\r?\n)", re.MULTILINE
+        )
+        matches = list(pattern.finditer(rewritten))
+        if len(matches) != 1:
+            raise RuntimeError(
+                f"local include must occur exactly once in localized fragment: {local}"
+            )
+        match = matches[0]
+        eol = match.group("eol")
+        replacement = b"".join(
+            f'#include "{path}"'.encode("ascii") + eol for path in scaffold
+        )
+        rewritten = rewritten[:match.start()] + replacement + rewritten[match.end():]
+        used.append({"local": local, "scaffold": list(scaffold)})
+    return rewritten, used
+
+
 def overlay_sources(
     source_root: Path, entries: list[dict[str, object]],
     repo_root: Path | None = None, compat_root: Path | None = None,
 ) -> list[dict[str, object]]:
     repo_root = ROOT if repo_root is None else repo_root
     overlays: list[dict[str, object]] = []
-    for entry in entries:
+    # A localized fragment intentionally changes include-line lengths. Apply it
+    # after offset-bound replacements so those replacements are always checked
+    # against the pristine pinned scaffold named by their manifest hashes.
+    ordered_entries = sorted(
+        enumerate(entries),
+        key=lambda item: (
+            str(item[1].get("source_mode", "overlay")) == "localized-fragment",
+            item[0],
+        ),
+    )
+    for _, entry in ordered_entries:
         repo_source = repo_root / str(entry["repo_source"])
         if not repo_source.is_file():
             raise FileNotFoundError(repo_source)
@@ -296,27 +362,56 @@ def overlay_sources(
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(repo_source, destination)
             overlays.append({"unit_id": entry["id"], "mode": mode, "repo_source": entry["repo_source"], "source_path": entry["overlay_path"], "sha256": digest_file(repo_source)})
-        elif mode in {"fragment", "forwarded-fragment"}:
+        elif mode in {"fragment", "forwarded-fragment", "localized-fragment"}:
             destination = source_root / str(entry["patch_path"])
             maintained_fragment = repo_source.read_bytes()
             forwarded_headers: list[str] = []
-            if mode == "forwarded-fragment":
-                fragment, forwarded_headers = resolve_rec98_forwarders(
+            include_mappings: list[dict[str, object]] = []
+            if mode in {"forwarded-fragment", "localized-fragment"}:
+                scaffold_fragment, forwarded_headers = resolve_rec98_forwarders(
                     maintained_fragment, compat_root=compat_root
                 )
             else:
-                fragment = maintained_fragment
+                scaffold_fragment = maintained_fragment
+            if mode == "localized-fragment":
+                scaffold_fragment, include_mappings = rewrite_local_includes_for_scaffold(
+                    scaffold_fragment, entry.get("scaffold_include_mappings")
+                )
             original = destination.read_bytes()
-            if original.count(fragment) != 1:
+            if original.count(scaffold_fragment) != 1:
                 raise RuntimeError(f"{entry['id']}: maintained fragment must occur exactly once in {entry['patch_path']}")
-            offset = original.index(fragment)
+            offset = original.index(scaffold_fragment)
             stat = destination.stat()
-            patched = original[:offset] + fragment + original[offset + len(fragment):]
+            replacement = (
+                maintained_fragment if mode == "localized-fragment" else scaffold_fragment
+            )
+            patched = (
+                original[:offset]
+                + replacement
+                + original[offset + len(scaffold_fragment):]
+            )
             destination.write_bytes(patched)
             os.utime(destination, ns=(stat.st_atime_ns, stat.st_mtime_ns))
-            if patched != original:
+            if mode != "localized-fragment" and patched != original:
                 raise RuntimeError(f"{entry['id']}: identity fragment unexpectedly changed scaffold bytes")
-            overlays.append({"unit_id": entry["id"], "mode": mode, "repo_source": entry["repo_source"], "source_path": entry["patch_path"], "fragment_offset": offset, "fragment_size": len(fragment), "maintained_fragment_size": len(maintained_fragment), "sha256": digest_file(repo_source), "resolved_fragment_sha256": digest_bytes(fragment), "forwarded_headers": forwarded_headers, "scaffold_sha256": digest_bytes(original)})
+            overlays.append(
+                {
+                    "unit_id": entry["id"],
+                    "mode": mode,
+                    "repo_source": entry["repo_source"],
+                    "source_path": entry["patch_path"],
+                    "fragment_offset": offset,
+                    "fragment_size": len(scaffold_fragment),
+                    "maintained_fragment_size": len(maintained_fragment),
+                    "sha256": digest_file(repo_source),
+                    "resolved_fragment_sha256": digest_bytes(scaffold_fragment),
+                    "scaffold_fragment_sha256": digest_bytes(scaffold_fragment),
+                    "forwarded_headers": forwarded_headers,
+                    "scaffold_include_mappings": include_mappings,
+                    "scaffold_sha256": digest_bytes(original),
+                    "patched_scaffold_sha256": digest_bytes(patched),
+                }
+            )
         elif mode == "replace":
             destination = source_root / str(entry["patch_path"])
             replacement = repo_source.read_bytes()
@@ -356,6 +451,71 @@ def overlay_sources(
         else:
             raise RuntimeError(f"{entry['id']}: unknown source_mode {mode!r}")
     return overlays
+
+
+def apply_scaffold_header_rewrites(
+    source_root: Path,
+    rewrites: list[dict[str, object]],
+    product_headers: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    """Point attested TH04 scaffold headers at a selected product-owned header."""
+
+    available = {str(item["path"]) for item in product_headers}
+    receipts: list[dict[str, object]] = []
+    for entry in rewrites:
+        local_header = str(entry["local_header"])
+        if local_header not in available:
+            continue
+        scaffold_path = str(entry["scaffold_path"])
+        old_include = str(entry["old_include"])
+        if not scaffold_path.startswith("th04/"):
+            raise RuntimeError(
+                f"{entry['id']}: scaffold header rewrite must stay within th04/"
+            )
+        if not local_header.startswith("src/"):
+            raise RuntimeError(f"{entry['id']}: local header must stay within src/")
+        for path in (scaffold_path, old_include, local_header):
+            if (
+                not path
+                or "\\" in path
+                or Path(path).is_absolute()
+                or ".." in Path(path).parts
+                or "." in Path(path).parts
+            ):
+                raise RuntimeError(f"{entry['id']}: invalid include rewrite path {path!r}")
+        destination = source_root / scaffold_path
+        original = destination.read_bytes()
+        if entry.get("scaffold_sha256_any"):
+            expected_sha256s = [str(value) for value in entry["scaffold_sha256_any"]]
+        else:
+            expected_sha256s = [str(entry["scaffold_sha256"])]
+        actual_sha256 = digest_bytes(original)
+        if actual_sha256 not in expected_sha256s:
+            raise RuntimeError(
+                f"{entry['id']}: scaffold SHA-256 drift in {scaffold_path}"
+            )
+        old_line = f'#include "{old_include}"\n'.encode("ascii")
+        new_line = f'#include "{local_header}"\n'.encode("ascii")
+        if original.count(old_line) != 1:
+            raise RuntimeError(
+                f"{entry['id']}: old include must occur exactly once in {scaffold_path}"
+            )
+        stat = destination.stat()
+        patched = original.replace(old_line, new_line, 1)
+        destination.write_bytes(patched)
+        os.utime(destination, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        receipts.append(
+            {
+                "id": entry["id"],
+                "scaffold_path": scaffold_path,
+                "old_include": old_include,
+                "local_header": local_header,
+                "scaffold_sha256": actual_sha256,
+                "accepted_scaffold_sha256s": expected_sha256s,
+                "patched_scaffold_sha256": digest_bytes(patched),
+            }
+        )
+    return receipts
 
 
 def apply_scaffold_extractions(
@@ -1304,6 +1464,7 @@ def main() -> int:
     build_inserts = list(config.get("build_inserts", []))
     build_replacements = list(config.get("build_replacements", []))
     source_transforms = list(config.get("source_transforms", []))
+    scaffold_header_rewrites = list(config.get("scaffold_header_rewrites", []))
     prebuild_objects = list(config.get("prebuild_objects", []))
     if args.unit:
         wanted = set(args.unit)
@@ -1376,6 +1537,9 @@ def main() -> int:
         source_transform_receipts = apply_source_transforms(
             source, source_transforms, selected_ids
         )
+        scaffold_header_rewrite_receipts = apply_scaffold_header_rewrites(
+            source, scaffold_header_rewrites, product_headers
+        )
         prebuild_object_receipts = apply_prebuild_objects(
             source, prebuild_objects, selected_ids, repo_root=snapshot_root
         )
@@ -1389,6 +1553,7 @@ def main() -> int:
                 "rec98_compat": compat_headers,
                 "product_headers": product_headers,
                 "overlays": overlays,
+                "scaffold_header_rewrites": scaffold_header_rewrite_receipts,
                 "scaffold_extractions": scaffold_extraction_receipts,
                 "source_splits": split_receipts,
                 "build_inserts": build_insert_receipts,

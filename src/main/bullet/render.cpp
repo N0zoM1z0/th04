@@ -3,7 +3,7 @@
 
 #include "x86real.h"
 #include "src/shared/hardware/v_colors.hpp"
-#include "compat/rec98/th02/sprites/bullet16.h"
+#include "src/main/bullet/sizes.hpp"
 #include "th04/formats/super.h"
 #include "th04/hardware/grcg.hpp"
 #include "th04/main/bullet/clearzap.hpp"
