@@ -21,7 +21,7 @@ preserves that observed behavior.
 
 ## Maintained source and replay
 
-[Source](../../src/zun/config/cfg_init.cpp) is a complete natural C++
+[Source](../../../src/zun/config/cfg_init.cpp) is a complete natural C++
 translation unit for this function and its default options/debug data. It uses
 the observed near 8086/Tiny ABI and checked-in `compat/rec98/` forwarding
 headers for still-unlocalized declarations. It contains no copied target code,

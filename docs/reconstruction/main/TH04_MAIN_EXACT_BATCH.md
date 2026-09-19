@@ -21,7 +21,7 @@ the configured Oracle stack against the hash-attested Japanese `MAIN.EXE`.
 ReC98 revision `b6ba5b0a529edbb31efdf8c0e939263804f8ee47` supplies pinned clean-build
 scaffolding and candidate provenance only.
 
-The generated [progress summary](../PROGRESS.md) reports the live reviewed
+The generated [progress summary](../../PROGRESS.md) reports the live reviewed
 denominator. It is not whole-executable or whole-game completion. `OP.EXE`,
 `MAINE.EXE`, and `ZUN.COM` have separate identities and currently have no
 accepted reconstruction units.

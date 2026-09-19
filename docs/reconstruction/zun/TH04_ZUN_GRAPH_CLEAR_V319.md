@@ -10,7 +10,7 @@ on the complete extent. The independent historical master-library assembly
 corroborates the GRCG behavior and near ABI; it is candidate source, not an
 exact Oracle.
 
-[Maintained shared TASM source](../../src/shared/pc98/graph_clear.asm) uses
+[Maintained shared TASM source](../../../src/shared/pc98/graph_clear.asm) uses
 the mutable VRAM segment and word-count symbols, writes black through the
 GRCG tile ports, clears the selected page, restores `DI`, and turns GRCG off.
 The `GRAPH_CLEAR` public spelling, word segment alignment, and trailing

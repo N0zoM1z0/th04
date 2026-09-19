@@ -59,7 +59,8 @@ TH01/TH02/TH03/TH05 includes are quarantined behind the reusable
 progress. The current reconstruction is not yet a complete standalone build:
 the strict exact replay still uses pinned ReC98 as clean build scaffolding for
 bounded recovered units. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for
-the ownership and migration rules.
+the ownership and migration rules, and
+[`docs/SOURCE_LAYOUT.md`](docs/SOURCE_LAYOUT.md) for the source placement map.
 
 ## Fresh machine setup
 
@@ -272,6 +273,7 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
   origin classification, confidence, and reconstruction routing.
 - `config/evidence.csv` — replayable observations, commands, and digests.
 - `config/hypotheses.csv` — falsifiable claims and their current disposition.
+- `docs/README.md` — short documentation entry point by task.
 - `docs/ARCHITECTURE.md` — PC-98-specific architecture and address model.
 - `docs/ORACLES.md` — independent Oracle stack and acceptance matrix.
 - `docs/TOOLCHAIN.md` — build-chain acquisition, installation, attestation,
@@ -284,10 +286,9 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 - `docs/PROGRESS.md` — conservative source-present and exact-byte totals.
 - `docs/BOUNDARY_REVIEW.md` — reviewed OP/MAIN/MAINE/ZUN boundary inventory and
   the reproducible DIET/Ghidra/MAP/TASM workflow.
-- `docs/reconstruction/TH04_MAIN_EXACT_BATCH.md` — compact `MAIN.EXE`
-  acceptance and cold-replay contract; live state remains ledger-derived.
-- `docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md` — reusable negative
-  compiler/TU/FIXUPP results for the remaining difficult units.
+- `docs/reconstruction/README.md` — focused evidence notes grouped by artifact
+  and technical surface; live state remains ledger-derived.
+- `docs/SOURCE_LAYOUT.md` — product-source placement and path-change rules.
 - `compat/rec98/README.md` — temporary, reusable boundary around unlocalized
   ReC98 declarations; never reconstructed-source progress.
 - `docs/REFERENCE_ANALYSIS.md` — findings from TH08/TH095/TH105 and ReC98.

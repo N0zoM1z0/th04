@@ -7,7 +7,7 @@ B4M_UPDATE_TEXT `13A9:1B4D..21DC`, MZ load `0x155DD..0x15C6C`, target file
 It contains a 1,392-byte near body and a 288-byte, 144-word switch table.
 The target's pristine-retail provenance is still unproved.
 
-The maintained [C++ VM](../../src/main/enemy/script_update.cpp) uses
+The maintained [C++ VM](../../../src/main/enemy/script_update.cpp) uses
 TC4J's `__es` pointer to read stage bytecode while preserving the target's
 separate DI pointer addition. It implements the target-observed movement,
 bullet-template, timing, loop, clipping, animation, sound, position, and tile

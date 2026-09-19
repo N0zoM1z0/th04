@@ -8,7 +8,7 @@ range follows the [resident-data support](TH04_ZUN_RESDATA_V323.md). The
 target identity and decoded payload are checked by the replay script; the
 segment label comes from the compiler/linker projection.
 
-[Maintained TASM source](../../src/shared/dos/file_read.asm) implements the
+[Maintained TASM source](../../../src/shared/dos/file_read.asm) implements the
 near Pascal `FILE_READ` ABI: a far buffer pointer, a word count, and `RET 6`.
 It reads through the shared file buffer or directly through DOS interrupt
 21h. The historical master-library source corroborates the algorithm and

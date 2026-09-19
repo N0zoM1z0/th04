@@ -39,24 +39,24 @@ d889eece6b57c25b56f90ded4c0eb4b60b1543c517711ba740c7db4e0c5f5500).
 All 51 boss-named MAIN authored candidates are exact. None of these counts
 means whole MAIN.EXE or whole TH04 is exact.
 
-The [enemy helpers](reconstruction/TH04_MAIN_ENEMY_HELPERS_V328.md) and
-[script VM](reconstruction/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) now own
+The [enemy helpers](reconstruction/main/TH04_MAIN_ENEMY_HELPERS_V328.md) and
+[script VM](reconstruction/main/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) now own
 the complete B4M_UPDATE_TEXT load range `0x1554F..0x15C6C`: 1,822 bytes,
 four reviewed functions, and all three ordered relocations are exact.
-The [item producer](reconstruction/TH04_MAIN035_ITEMS_V154.md) owns
+The [item producer](reconstruction/main/TH04_MAIN035_ITEMS_V154.md) owns
 MAIN_035_TEXT load `0x1DA1B..0x1DF60`: all 1,350 bytes, six reviewed
 functions, both switch-table tails, and fifteen ordered relocations are exact.
-The [thick-laser producer](reconstruction/TH04_MAIN_THICKLASER_UPDATE_V181.md)
+The [thick-laser producer](reconstruction/main/TH04_MAIN_THICKLASER_UPDATE_V181.md)
 owns B4M_UPDATE_TEXT load `0x15D74..0x15ECD`: all 346 bytes, four reviewed
 functions, and both ordered relocations are exact.
 
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
-| Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
-| Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A [function split and mid-function segment controls](reconstruction/TH04_DEMO_PAUSE_SPLIT_V282.md), plus [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md), cannot reproduce the target order. |
-| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte. A [v346 compiler/cross-game candidate](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md) emits all 379 loop bytes at the object level with target instruction positions; focused linking is down to one case-sensitive `SHOTS_RENDER()` external. No linked exact claim yet. |
+| Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/main/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
+| Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A [function split and mid-function segment controls](reconstruction/main/TH04_DEMO_PAUSE_SPLIT_V282.md), plus [simple object reordering](reconstruction/main/TH04_DEMO_LINK_ORDER_V291.md), cannot reproduce the target order. |
+| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte. A [v346 compiler/cross-game candidate](reconstruction/main/TH04_DEMO_GAMEPLAY_TERNARY_V248.md) emits all 379 loop bytes at the object level with target instruction positions; focused linking is down to one case-sensitive `SHOTS_RENDER()` external. No linked exact claim yet. |
 
-The [decoded-payload frontier](reconstruction/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
+The [decoded-payload frontier](reconstruction/packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
 is 7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes against the cold overlay
 candidates. DIET round-trip and relocation/header partitioning are recorded in
 the linked note; no OP/MAINE/ZUN artifact-local exact cohort is accepted.
@@ -65,15 +65,15 @@ from checked-in source and local headers, and three local support units match
 bounded decoded extents, but the 6360-byte diagnostic component still differs
 from target at 4241 bytes and depends on an external support library.
 
-MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
+MAIN [`sub_CCD6` and `sub_B835`](reconstruction/op-maine/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte
 target extents. TC4J emits 105 and 215 bytes respectively; exactness and
 link ownership remain open.
 
-The [gather-point renderer](reconstruction/TH04_MAIN_GATHER_POINT_RENDER_V326.md)
+The [gather-point renderer](reconstruction/main/TH04_MAIN_GATHER_POINT_RENDER_V326.md)
 is now a checked-in 90-byte original-style ASM owner at B4M_UPDATE_TEXT
 `13A9:1008`, raw/MAP/relocation exact. Its old replay wrapper is retired.
-The [VRAM color header](reconstruction/TH04_VRAM_COLORS_LOCAL_V287.md) is now
+The [VRAM color header](reconstruction/shared/TH04_VRAM_COLORS_LOCAL_V287.md) is now
 TH04-owned across 37 source files; cold replay freezes product headers. Other
 compat/rec98 forwarders and the pinned ReC98 overlay remain. Standalone
 checked-in TH04 build closure, full

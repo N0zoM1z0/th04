@@ -9,7 +9,7 @@ frontier.
 ## Claim and inputs
 
 The public DIET 1.45f archive is pinned in
-[config/diet145f.toml](../../config/diet145f.toml): archive SHA-256
+[config/diet145f.toml](../../../config/diet145f.toml): archive SHA-256
 `9ec134a324035a22a7509868cfd361b01aa11c7fb9bd70529a7533698540b9a7`,
 DIET.EXE SHA-256
 `a3fabbb9e4209ca6654c34f1d0945868732422dff6fe0a7fe0f5bcd2d48d2803`.

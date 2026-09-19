@@ -12,7 +12,7 @@ These are target observations; the `_TEXT` and `_DATA` segment names come from
 the compiler/linker projection. The target Ghidra database passed its MZ and
 sampled-byte attestation during this packet.
 
-[Maintained TASM source](../../src/shared/dos/resdata.asm) searches the DOS
+[Maintained TASM source](../../../src/shared/dos/resdata.asm) searches the DOS
 MCB chain and allocates a resident block with the historical near Pascal
 three-word ABI (`RET 6`). It preserves the original strategy selection and
 MCB ownership behavior. The independent historical master-library assembly

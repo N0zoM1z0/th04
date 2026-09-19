@@ -12,7 +12,7 @@ in both OP and MAINE. Their target-restored MZ views contain the same eight
 sites in exactly **reverse** order. The absolute MZ load-module site ranges
 are OP `0xE437..0xE4EF` and MAINE `0xD635..0xD6ED`.
 
-The [v232 owner projection](TH04_DIET_RELOCATION_OWNERS_V232.md) records the
+The [v232 owner projection](../packed/TH04_DIET_RELOCATION_OWNERS_V232.md) records the
 full ordered tables, candidate MAP ownership, and attested target-restored
 input hashes. The target OMF and historical pre-DIET MZ remain unavailable.
 

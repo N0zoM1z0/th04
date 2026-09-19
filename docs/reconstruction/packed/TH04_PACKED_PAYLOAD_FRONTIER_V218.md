@@ -45,7 +45,7 @@ seams remains provisional.
 | --- | --- | --- |
 | OP `0x2D59`, `0x34AF` | `00 → 90` each | `th04_op.asm` `_TEXT` `EVEN` before `SUPER_PUT` and `_BGM_BELL_ORG`; current TASM listing offsets `2AE7`, `323D` |
 | OP `0xBFB7`, `0xBFB9` | `31 → 33` each | `th04/op_music.cpp` `OP_MUSIC_TEXT`, `nopoly_B_put()` at payload `0xBFA7`; two equivalent XOR-register opcode directions from the `__memcpy__` intrinsic |
-| OP `0xDE8B..0xDE8C` | `89 C3 → 8B D8` | shared `SND_LOAD` at payload `0xDDCA`; also blocks MAIN and MAINE; see [shared review](TH04_SND_LOAD_SHARED_V206.md) |
+| OP `0xDE8B..0xDE8C` | `89 C3 → 8B D8` | shared `SND_LOAD` at payload `0xDDCA`; also blocks MAIN and MAINE; see [shared review](../shared/TH04_SND_LOAD_SHARED_V206.md) |
 | OP `0xFB97` | `90 → 00` | `th04_op.asm` `_DATA` `EVEN`, current TASM listing offset `0357` |
 | MAINE `0x0CBD`, `0x2D11` | `00 → 90` each | `th04_maine_master.asm` `_TEXT` alignment bytes |
 | MAINE `0xD1D3..0xD1D4` | `89 C3 → 8B D8` | shared `SND_LOAD` at payload `0xD112` |

@@ -67,7 +67,7 @@ Already disproved controls include:
 - source wrappers that leave the same producer shape;
 - `#line`, local debug metadata, and external declaration reordering;
 - `TCC -B` and the tested TC86 option matrix;
-- `TCC -y` line-number output: [two cold dialog compiles](../../scripts/probes/probe_th04_dialog_line_info.py)
+- `TCC -y` line-number output: [two cold dialog compiles](../../../scripts/probes/probe_th04_dialog_line_info.py)
   add three LINNUM records but retain the same two DIALOG_TEXT LEDATA/FIXUPP
   groups and change 20 program bytes at object offsets `0x790..0x7A6`
   (receipt SHA-256 `f25a2c3c770595c2c88cc71dc58f6e2621c566679e2f4c351097dc4d257996bc`);

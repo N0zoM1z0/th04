@@ -39,7 +39,7 @@ Within candidate-MAP modules, OP has three changed projections:
 `th04/bgimage.cpp` (8). The eight `bgimage.cpp` sites are in
 **exact reverse order** in the candidate and target-restored views for both
 artifacts. The other changed module-local sequences are more complex. The
-[v233 OMF and TASM control](TH04_BGIMAGE_FIXUP_PRODUCER_V233.md) ties the
+[v233 OMF and TASM control](../op-maine/TH04_BGIMAGE_FIXUP_PRODUCER_V233.md) ties the
 candidate eight-site order to its FIXUPP record and tests a symbolic ascending
 producer without assigning historical source form.
 

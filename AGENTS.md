@@ -93,6 +93,9 @@ Use these claim words precisely:
 - The product build must ultimately use checked-in TH04 source and headers.
   Overlaying maintained source into pinned ReC98 is an Oracle, not a standalone
   build and not permission to bulk-import its source tree.
+- Use `docs/SOURCE_LAYOUT.md` for new source placement. Treat an accepted
+  translation unit's path, split, and include composition as replay inputs
+  rather than cosmetic layout choices.
 
 ## Database and target safety
 
@@ -131,3 +134,7 @@ global layouts change, invalidate and cold-replay every affected accepted unit.
   result, and remaining unknowns. Keep it a concise current-state index;
   put chronological experiment details in bounded reconstruction notes and
   evidence/knowledge ledgers instead of appending session logs.
+- Use `docs/reconstruction/README.md` to route focused notes. Continue an
+  existing subject note when the same claim advances; create a new note only
+  for a distinct ownership decision, reusable negative result, or replay
+  surface.

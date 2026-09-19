@@ -21,7 +21,7 @@ configuration, then sets the debug byte when requested.
 
 ## Maintained source and diagnostic replay
 
-[Maintained source](../../src/zun/resident/main.cpp) expresses the complete
+[Maintained source](../../../src/zun/resident/main.cpp) expresses the complete
 control flow and resident-memory writes in ordinary C++. Japanese literals are
 kept as readable UTF-8 source and converted to CP932 before the pinned Japanese
 compiler runs. It includes TH04 and `compat/rec98/` declarations only; it has no

@@ -119,6 +119,7 @@ standalone source owner. A `.inl` file is a bounded body that is included by a
 semantic translation unit; the extension records source composition, not a
 weaker acceptance state. Replay-only overlay and fragment mechanics belong in
 `config/th04_main_exact_units.toml` and must not determine the product layout.
+The concise placement map is maintained in [source layout](SOURCE_LAYOUT.md).
 
 The intended end state is a clean checkout whose TH04 source builds with the
 pinned compiler, assembler, linker, and documented external libraries without

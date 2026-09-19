@@ -4,7 +4,7 @@
 
 The pinned packed `OP.EXE` and `MAINE.EXE` targets pass `preflight.py`; their
 active Ghidra databases pass `ghidra.py ... check`. The independent DIET-stub
-payloads from [v218](TH04_PACKED_PAYLOAD_FRONTIER_V218.md) have SHA-256
+payloads from [v218](../packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md) have SHA-256
 `13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74`
 and `7495ae43641bc696d13d18c366e364f6bc8b6a86a1afb681f34c9a334dae792c`.
 Offsets below are **decoded MZ load-module offsets**, not packed-file offsets.

@@ -8,7 +8,7 @@ The [v327 boundary review](TH04_MAIN_ENEMY_SCRIPT_BOUNDARY_V327.md) attests
 the adjacent dispatcher and 144-word switch table through load `0x15C6C`.
 Target provenance remains `candidate-local-attested`.
 
-The maintained [C++](../../src/main/enemy/script_helpers.cpp) implements
+The maintained [C++](../../../src/main/enemy/script_helpers.cpp) implements
 the position/clipping helper, velocity helper, and aim-at-player helper. The
 product source SHA-256 is
 `541f7e991afaff1f3ed8b2c852867f7a27589b328774299f86b7c6d1d6ab4caf`.

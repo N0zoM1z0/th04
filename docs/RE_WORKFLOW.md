@@ -33,7 +33,8 @@ reviewed in one session.  Large dispatchers and shared segment changes need an
 explicit sub-plan.
 
 Use `docs/PROGRESS.md`, `docs/BOUNDARY_REVIEW.md`, `docs/RE_HANDOFF.md`, and the
-live ledgers as the current queue. `config/th04_function_boundaries.csv` is the
+live ledgers as the current queue. Use `docs/reconstruction/README.md` to find
+the focused evidence behind a current blocker. `config/th04_function_boundaries.csv` is the
 all-artifact inventory: select only `work_queue=reconstruct`; runtime/library/
 data exclusions must not re-enter authored progress. Prefer a corroborated
 entry. A provisional entry first needs a focused return/tail/table and adjacent
@@ -95,6 +96,11 @@ required declaration has not yet been localized, route it through the matching
 one-line `compat/rec98/<upstream-path>` forwarder and include that directory in
 the build receipt. Then recover and attest a TH04-local or proved
 `src/shared/` declaration before removing the compatibility dependency.
+
+Follow `docs/SOURCE_LAYOUT.md` when choosing a new path. Do not relocate an
+accepted translation unit only to make the tree look tidier: its path, split,
+and include composition are replay inputs and require affected focused and
+aggregate revalidation.
 
 The independent-build target is the checked-in TH04 source plus the pinned
 toolchain and documented libraries. A successful replay that overlays source
@@ -160,6 +166,11 @@ checked-in evidence/knowledge row and required digests validate, prune old
 cold-build trees, probe matrices, logs, and disassemblies. Preserve pinned
 inputs, active databases, current boundary-review inputs, and the latest
 focused/aggregate receipts.
+
+Continue the existing focused note when work advances the same producer,
+boundary, or blocker. Create a new note only for a distinct ownership decision,
+reusable negative result, or replay surface, and add it to the reconstruction
+index. Keep chronological session narration out of durable documentation.
 
 On this workspace, older `.analysis/gpt-web/` outputs and 303 superseded
 exact-unit replay trees are in verified `tar.zst` archives under

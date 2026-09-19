@@ -106,6 +106,6 @@ state, and current aggregate replay are the durable record; an old private
 materialization may be regenerated when deeper archaeology is actually needed.
 
 Current unresolved producer/code-generation negatives are summarized in
-`docs/reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`. Resolved exact owners
+`docs/reconstruction/main/TH04_MAIN_FIXUP_CODEGEN_PROBES.md`. Resolved exact owners
 and the replay contract are summarized in
-`docs/reconstruction/TH04_MAIN_EXACT_BATCH.md`.
+`docs/reconstruction/main/TH04_MAIN_EXACT_BATCH.md`.

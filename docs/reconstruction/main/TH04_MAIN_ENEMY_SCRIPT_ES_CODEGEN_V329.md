@@ -8,7 +8,7 @@ They load `enemy_cur` into SI and `std_seg` into ES, add `script_ip` to a DI
 script pointer, read `ES:[DI]`, and dispatch through a CS-relative table.
 These are target observations; provenance is still `candidate-local-attested`.
 
-The [compiler probe](../../scripts/probes/probe_th04_enemy_script_es_codegen.py)
+The [compiler probe](../../../scripts/probes/probe_th04_enemy_script_es_codegen.py)
 uses the pinned TC4J 4.02 and a frozen ReC98 source snapshot with tree digest
 `ae9105c56ff94cd6823ad365c03016a0106d923e0b0f653610cf1170e151a3e8`.
 It compiles the same three-case toy switch with three natural pointer forms:
