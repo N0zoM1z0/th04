@@ -1,8 +1,7 @@
 #pragma option -zCBOSS_BG_TEXT -zPmain_01
 
-#include "compat/rec98/th01/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "compat/rec98/th03/formats/cdg.h"
-#include "compat/rec98/th04/hardware/grcg.hpp"
 #include "th04/formats/bb.h"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/boss/backdrop.hpp"

@@ -2,7 +2,7 @@
 #include "th04/main/null.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/hud/hud.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/score.hpp"
 #include "th04/main/pointnum/pointnum.hpp"

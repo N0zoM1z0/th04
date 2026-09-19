@@ -1,7 +1,7 @@
 #pragma option -zCBOSS_FG_TEXT -zPmain_01
 
 #include "src/shared/hardware/graphics.hpp"
-#include "compat/rec98/th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"
 

@@ -2,7 +2,7 @@
 #include "x86real.h"
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/math/vector.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/player/bomb.hpp"
 #include "th04/playchar.h"

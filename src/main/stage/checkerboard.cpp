@@ -1,7 +1,7 @@
 #pragma option -k-
 
 #include "planar.h"
-#include "th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/checkerb.hpp"
 

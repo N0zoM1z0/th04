@@ -1,7 +1,7 @@
 #pragma option -zCMAIN_032_TEXT -zPmain_03 -k-
 
 #include <dos.h>
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 
 extern uint16_t randring_p;
 

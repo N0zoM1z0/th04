@@ -7,7 +7,7 @@
 #include "th04/main/bullet/laser_t.hpp"
 #include "th04/main/custom.hpp"
 #include "th04/main/player/player.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/snd/snd.h"
 
 static const int GENGETSU_SPAWNCOLUMN_COUNT = 16;

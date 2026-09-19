@@ -7,7 +7,7 @@
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/rank.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 
 extern "C" void near orange_phase_bounce_random(void)
 {

@@ -1,10 +1,9 @@
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
-#include "compat/rec98/th01/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "compat/rec98/th02/main/hud/hud.hpp"
 #include "src/main/math/polar.hpp"
 #include "compat/rec98/th03/hardware/palette.hpp"
-#include "th04/hardware/grcg.hpp"
 #include "th04/formats/super.h"
 #include "th04/main/boss/boss.hpp"
 #if (GAME == 5)

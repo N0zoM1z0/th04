@@ -5,7 +5,7 @@
 
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
-#include "compat/rec98/th01/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/hardware/input.h"
 #include "th04/resident.hpp"
 #include "th04/main/frames.h"

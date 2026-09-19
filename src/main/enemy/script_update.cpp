@@ -9,7 +9,7 @@
 #include "th04/main/tile/tile.hpp"
 #include "th04/snd/snd.h"
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th03/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 
 extern "C" unsigned char near enemy_pos_update(void);
 extern "C" void near enemy_velocity_set(void);

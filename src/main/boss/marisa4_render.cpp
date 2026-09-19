@@ -3,7 +3,7 @@
 #include "platform.h"
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/main/custom.hpp"
-#include "compat/rec98/th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/boss/boss.hpp"
 
 static const int MARISA_BIT_COUNT = 4;

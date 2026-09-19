@@ -1,9 +1,8 @@
 #ifndef TH04_BOSS_BG_MAIN01_COMBINED
 #pragma option -zCBOSS_BG_TEXT -zPmain_01
 
-#include "compat/rec98/th01/hardware/grcg.hpp"
-#include "compat/rec98/th04/hardware/grcg.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/hardware/grcg.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/tile/bb.hpp"

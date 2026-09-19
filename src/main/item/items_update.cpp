@@ -12,7 +12,7 @@
 #include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
 #include "compat/rec98/th02/main/item/shared.hpp"
-#include "compat/rec98/th03/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 
 #pragma codeseg MAIN_035_TEXT main_03
 #pragma option -a

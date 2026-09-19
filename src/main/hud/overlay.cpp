@@ -3,9 +3,8 @@
 #include <string.h>
 #include "shiftjis.hpp"
 #include "src/shared/hardware/graphics.hpp"
-#include "compat/rec98/th01/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "src/shared/hardware/v_colors.hpp"
-#include "th04/hardware/grcg.hpp"
 #include "th04/formats/bb.h"
 #include "th04/main/null.hpp"
 #include "th04/main/playfld.hpp"

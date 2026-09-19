@@ -2,11 +2,12 @@
 
 #include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th01/math/overlap.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/playperf.hpp"
 #include "th04/main/player/player.hpp"
+#include "src/main/math/randring_ranges.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/gather.hpp"
 

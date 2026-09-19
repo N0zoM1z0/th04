@@ -17,7 +17,7 @@ void pascal near midboss4_render(void);
 #include "th04/main/player/player.hpp"
 #include "th04/main/spark.hpp"
 #include "th04/main/item/item.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/snd/snd.h"
 
 #pragma codeseg B4M_UPDATE_TEXT main_03

@@ -3,7 +3,7 @@
 #include "x86real.h"
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/formats/super.h"
-#include "compat/rec98/th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/player/player.hpp"

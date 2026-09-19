@@ -3,7 +3,7 @@
 #include "th04/main/enemy/enemy.hpp"
 #include "th04/formats/std.hpp"
 #include "th04/main/rank.hpp"
-#include "compat/rec98/th03/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 
 extern "C" void pascal near enemies_add(
     int script,

@@ -5,7 +5,7 @@
 #include "src/shared/hardware/v_colors.hpp"
 #include "src/main/bullet/sizes.hpp"
 #include "th04/formats/super.h"
-#include "th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/scroll.hpp"

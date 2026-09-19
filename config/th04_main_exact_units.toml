@@ -1054,8 +1054,11 @@ object_path = "obj/th04/initmain.obj"
 [[units]]
 id = "th04-main-grcg3-functions"
 repo_source = "src/main/hardware/grcg3.cpp"
-source_mode = "forwarded-fragment"
+source_mode = "localized-fragment"
 patch_path = "th04/hardware/grcg_3.cpp"
+scaffold_include_mappings = [
+  { local = "src/main/hardware/grcg.hpp", scaffold = ["platform/x86real/pc98/grcg.hpp", "th04/hardware/grcg.hpp"] },
+]
 map_module = "th04/grcg_3.cpp"
 map_mode = "contains"
 object_path = "obj/th04/grcg_3.obj"

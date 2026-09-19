@@ -12,7 +12,7 @@
 #include "th04/main/custom.hpp"
 #endif
 #include "th04/main/frames.h"
-#include "compat/rec98/th03/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 
 struct marisa_bit_t {
     unsigned char flag;

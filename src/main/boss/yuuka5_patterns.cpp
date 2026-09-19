@@ -8,7 +8,7 @@
 #include "th04/main/circle.hpp"
 #include "th04/main/gather.hpp"
 #include "th04/main/rank.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/snd/snd.h"
 
 #pragma codeseg B4M_UPDATE_TEXT main_03

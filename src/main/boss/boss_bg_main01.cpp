@@ -2,10 +2,9 @@
 
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
-#include "compat/rec98/th01/hardware/grcg.hpp"
-#include "compat/rec98/th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "compat/rec98/th03/formats/cdg.h"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/boss/boss.hpp"

@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <mem.h>
 #include "decomp.hpp"
-#include "th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/drawp.hpp"

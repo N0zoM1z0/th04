@@ -2,7 +2,7 @@
 
 #include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/v_colors.hpp"
-#include "compat/rec98/th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"
 

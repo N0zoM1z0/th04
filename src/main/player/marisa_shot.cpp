@@ -3,7 +3,7 @@
 
 #include "x86real.h"
 #include "compat/rec98/th04/main/player/shot.hpp"
-#include "compat/rec98/th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/frames.h"
 #include "th04/math/vector.hpp"

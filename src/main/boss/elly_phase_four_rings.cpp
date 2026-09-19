@@ -2,7 +2,7 @@
 #pragma option -zCMAIN_034_TEXT -zPmain_03
 
 #include "th04/snd/snd.h"
-#include "compat/rec98/th03/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #ifndef TH04_ELLY_MAIN034_COMBINED
 #include "th04/main/bullet/bullet.hpp"
 #endif

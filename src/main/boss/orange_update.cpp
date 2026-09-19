@@ -9,7 +9,7 @@
 #include "th04/main/gather.hpp"
 #include "th04/main/circle.hpp"
 #include "th04/main/spark.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/snd/snd.h"
 
 extern bool palette_changed;

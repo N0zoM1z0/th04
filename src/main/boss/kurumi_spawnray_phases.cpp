@@ -2,7 +2,7 @@
 #pragma option -zCMAIN_033_TEXT -zPmain_03
 
 #include "src/shared/hardware/v_colors.hpp"
-#include "compat/rec98/th03/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/bullet/bullet.hpp"

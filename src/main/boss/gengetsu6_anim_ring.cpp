@@ -3,7 +3,7 @@
 #include "th04/main/frames.h"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/bullet/bullet.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/snd/snd.h"
 
 extern "C" void near gengetsu_gather_intro(void);

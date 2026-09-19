@@ -85,11 +85,11 @@ extern "C" void pascal near bb_playchar_put(int cel)
     tiles_bb_put_raw(cel);
 }
 
-#include "compat/rec98/th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/circle.hpp"
 #pragma samecodeseg circles_add_growing
 #include "th04/math/vector.hpp"
-#include "th04/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
 

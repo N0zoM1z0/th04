@@ -1,7 +1,7 @@
 #pragma option -zCMAIN_036_TEXT -zPmain_03
 
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th03/math/randring.hpp"
+#include "src/main/math/randring.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/boss/boss.hpp"

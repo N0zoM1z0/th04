@@ -1,5 +1,5 @@
 #include "th04/main/circle.hpp"
-#include "th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/playfld.hpp"
 #include "src/main/core/entity.hpp"
 #include "src/shared/hardware/graphics.hpp"

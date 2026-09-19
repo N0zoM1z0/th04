@@ -1,7 +1,7 @@
 #pragma option -zCCIRCLE_TEXT -zPmain_01
 
 #include "x86real.h"
-#include "th04/hardware/grcg.hpp"
+#include "src/main/hardware/grcg.hpp"
 #include "th04/main/item/splash.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/math/vector.hpp"
