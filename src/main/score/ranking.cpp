@@ -3,11 +3,7 @@
 #include "th04/formats/scoredat/scoredat.hpp"
 #include "src/shared/runtime/api.hpp"
 #include "compat/rec98/th01/rank.h"
-#if (GAME == 5)
-#include "compat/rec98/th05/playchar.h"
-#else
-#include "th04/playchar.h"
-#endif
+#include "src/main/playchar.hpp"
 #include "th04/gaiji/gaiji.h"
 
 static const int SCORE_INITIAL_DIGIT = ((GAME == 5) ? 6 : 5);
@@ -99,13 +95,11 @@ void near scoredat_recreate(void)
 // `debloated` or `anniversary` branches instead.
 
 #if (GAME == 5)
-#include "compat/rec98/th05/playchar.h"
 typedef int playchar2;
 #else
 #if ((GAME == 4) && (BINARY == 'M'))
 #include "src/shared/config/resident.hpp"
 #endif
-#include "th04/playchar.h"
 typedef playchar_t playchar2;
 #endif
 
