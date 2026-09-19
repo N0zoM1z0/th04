@@ -1,7 +1,7 @@
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
 #include "src/main/hardware/grcg.hpp"
-#include "compat/rec98/th02/main/hud/hud.hpp"
+#include "src/main/hud/metrics.hpp"
 #include "src/main/math/polar.hpp"
 #include "src/main/hardware/palette.hpp"
 #include "th04/formats/super.h"
