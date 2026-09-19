@@ -3338,31 +3338,31 @@ address = "0x1AB88"
 evidence_id = "ev-th04-main-gameplay-function-exact-review-v375"
 reason = "Promote the previously reviewed blocked gameplay loop only after complete exact-owner replay plus target Ghidra/TASM/raw/near-call/next-entry review."
 
-[[reviewed_nonexact_internal_call]]
+[[reviewed_exact_extent]]
 id = "th04-main-fn-1ad03"
 address = "0x1AD03"
 file_offset = "0xC503"
 size = "0x1CD"
+physical_size = "0x1CD"
 decode_size = "0x1C2"
 name = "gameplay_session_init()"
 owner_unit = "th04-main-gameplay-session-init-v165"
 source = "src/main/core/gameplay_session_init.cpp"
-evidence_id = "ev-th04-main-gameplay-session-init-boundary-v165"
-reason = "Fresh Ghidra cross-links this entry into unrelated earlier code. Pinned TASM and gap-free raw decode instead close 0x1C2 executable bytes through RET at 0x1AEC4, followed by one zero metadata/alignment byte and five compiler jump words through 0x1AECF; all five targets are decoded instruction starts. The next local PROC begins at 0x1AED0, and target near CALL 0x1AF10 resolves exactly to 0x1AD03."
-allow_crosslinked_body = true
+evidence_id = "ev-th04-main-gameplay-session-function-exact-review-v377"
+reason = "The exact v377 fused DEMO_TEXT owner reproduces the complete reviewed 0x1CD extent. Raw decode closes the 0x1C2 executable body through RET at 0x1AEC4; TC4J naturally emits the target 0x00 switch-table alignment byte at 0x1AEC5 under #pragma option -a, followed by five jump words through 0x1AECF. The candidate MAP exposes gameplay_session_init() at 0x1AD03, and all jump targets are target instruction starts."
 table_metadata_address = "0x1AEC5"
 table_metadata_value = "0x00"
 jump_table_address = "0x1AEC6"
 jump_table_count = 5
 cs_base = "0x1AAF0"
-next_internal_address = "0x1AED0"
-call_site_address = "0x1AF10"
+next_public_address = "0x1AED0"
+replace_evidence_ids = true
 
-[[new_nonexact]]
+[[new_exact]]
 id = "th04-main-fn-1ad03"
 address = "0x1AD03"
-evidence_id = "ev-th04-main-gameplay-session-init-boundary-v165"
-reason = "Explicitly expand the reviewed denominator for the cross-linked target-called internal session initializer after raw code, compiler metadata/table, next-entry, and call-anchor review. The natural C++ source is source-present but not exact."
+evidence_id = "ev-th04-main-gameplay-session-function-exact-review-v377"
+reason = "Promote the previously reviewed blocked gameplay session initializer only after v377 exact-owner replay, compiler-generated switch alignment, complete metadata/table validation, and the 255-owner candidate aggregate."
 
 [[reviewed_nonexact_internal_call]]
 id = "th04-main-fn-1aed0"
