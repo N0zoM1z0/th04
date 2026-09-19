@@ -31,16 +31,17 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-midboss-state-aggregate-001`: all 253 selected MAIN owners pass two
+  `gpt-web-scroll-state-aggregate-001`: all 253 selected MAIN owners pass two
   cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
-  `bc092a52a4bce3e60b8a77978ac6d7b3a0a7444ae003c98eb74f12b9194a5924`.
+  `7ccf4a2233d7761ccea5c540fd2ccda0fb1d5de87999dd18ecbc25eae1becef2`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
   randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
   PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, subpixel, bullet-add implementation, HUD
-  geometry, item-overflow, and midboss-state interfaces. The remaining
-  compatibility boundary is **9 forwarders, 10 include sites, and 10 product files**, with no missing, unused, invalid, or
+  geometry, item-overflow, midboss-state, and scroll-state interfaces. The
+  remaining compatibility boundary is **8 forwarders, 9 include sites, and 9
+  product files**, with no missing, unused, invalid, or
   direct forbidden includes.
 
 ## Ordered work queue
@@ -52,8 +53,8 @@ the accepted extent.
    branches and currently consume no TH05-exclusive boss symbol, so close it
    together with the TH04 boss-base ownership rather than inventing a mirror
    interface. In parallel, continue the one-site families in audit order,
-   beginning with `th02/main/scroll.hpp` and
-   `th02/snd/impl.hpp`. Run a complete default aggregate after each
+   beginning with `th02/snd/impl.hpp` and
+   `th02/snd/measure.hpp`. Run a complete default aggregate after each
    shared-header or ABI batch.
 2. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
@@ -85,7 +86,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-midboss-state-aggregate-001`
+- `gpt-web-scroll-state-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`
