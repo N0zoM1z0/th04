@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **6 forwarders and 7 include sites in 7 files**. The
+138 product files to **5 forwarders and 6 include sites in 6 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -38,39 +38,44 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Scroll state | GAME5 scroll_line declaration used by shared playfield shake source | 8 | `d5a5d3d` |
 | Sound impl | shared SE/load helpers plus hash-bound fragment include transforms | 7 | `fc6c1cb` |
 | Sound measure | KAJA measure wrapper and MMD quarter-note timing constant | 6 | `9d56bf1` |
+| CFG loader | shared GAME3/4 resident-pointer loader with target-specific cfg layouts | 5 | `8d0f544` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-sound-measure-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-cfg-impl-aggregate-001/receipt.json`
 (SHA-256
-`b88c6d6603d4d2807de88796682e1e255c1c4cc6395ccaf26066e7efb92f35eb`).
+`246373a243c353fb813ea8846743b34328be8ad311645f50b9d7ceafcbc52e7d`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The sound-measure batch removes `compat/rec98/th02/snd/measure.hpp` from
-`src/shared/sound/delay_until_measure.cpp` and adds
-`src/shared/sound/measure.hpp`. The local wrapper preserves the exact
-`KAJA_GET_SONG_MEASURE` interrupt setup, PMD/MMD dispatch, and hardcoded 4/4
-MMD tick conversion. `MMD_TICKS_PER_QUARTER_NOTE=48` moves into
-`src/shared/sound/api.hpp`, which already owns the KAJA function numbers and
-PMD/MMD interrupt constants.
+The CFG-loader batch removes `compat/rec98/th03/formats/cfg_impl.hpp` from
+`src/main/config/load_resident_ptr.cpp` and replaces it with
+`src/main/config/load_resident_impl.hpp`. The maintained source is genuinely
+shared by the GAME3 and GAME4 build paths, but not GAME5; the local header
+therefore preserves exactly those two producer contexts rather than importing
+the complete historical TH03 configuration API.
 
-`delay_until_measure.cpp` has no independent accepted MAIN owner, so this batch
-uses a compiler A/B probe instead of inventing focused exact credit. The same
-GAME4 probe function is compiled by the pinned PC-98 IDE TC86 once against the
-old header and once against the local header. Fourteen non-metadata OMF records
-are byte-identical: THEADR, LNAMES, three SEGDEF, COMDEF, GRPDEF, EXTDEF,
-PUBDEF, two LEDATA, two FIXUPP, and MODEND. Only dependency/producer COMENT
-records and one LINNUM source-line record differ because the include closure
-and header line numbers changed. The semantic receipt SHA-256 is
-`b57e9db373e3c68d4cdb39645008100487d0929cfb5163e5cefa199383cf7bde`.
+For GAME4, the helper uses the already-attested `src/shared/config/cfg.hpp`
+10-byte file layout. For GAME3, it declares only the compact calibration
+`cfg_options_t` and `cfg_t` needed by this producer. The previous cold GAME3
+`cfg_lres.obj` directly emits `ENTER 8,0` and pushes 8 as the `file_read` size,
+proving `sizeof(cfg_t)==8`; the observed field order fixes the options prefix
+at five bytes. The local runtime file declarations preserve master.lib's
+large-model far-Pascal return convention and far filename pointer.
 
-The complete `gpt-web-sound-measure-aggregate-001` replay passes all 253
-default MAIN owners twice with `failures=[]`; both candidate MAIN images remain
+The exact TH04 `th04-main-cfg-load-resident-ptr` owner passes focused two-cold
+replay (receipt SHA-256
+`bb6e94169f00dc0aaf4bc19d41428c4a932d820a1aad4fae5ce6f4fb6d3faf31`).
+Separately, the actual old and new GAME3 cold-build `cfg_lres.obj` files have
+11 byte-identical semantic OMF records after excluding dependency/producer
+COMENT and source-line LINNUM metadata; the semantic receipt SHA-256 is
+`6bbcdc04b3e6e27fb285dc702f790c3dfce8b9b650c79a62d76528c2995310b9`.
+The complete `gpt-web-cfg-impl-aggregate-001` replay passes all 253 default
+MAIN owners twice with `failures=[]`; both candidate MAIN images remain
 SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 7 forwarders / 8 sites / 8 files to 6 / 7 / 7,
+The compat audit moves from 6 forwarders / 7 sites / 7 files to 5 / 6 / 6,
 with no missing, orphan, invalid, or direct forbidden include. No new exact
 owner is claimed.
 
@@ -83,7 +88,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining five families have one site each. Re-run the audit instead
+The remaining four families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow
