@@ -54,44 +54,16 @@ functions, and both ordered relocations are exact.
 | --- | --- | --- |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A [function split and mid-function segment controls](reconstruction/TH04_DEMO_PAUSE_SPLIT_V282.md), plus [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md), cannot reproduce the target order. |
-| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte; maintained loop compiles to 373/379 bytes. A [compiler probe](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md) produces both target `EB 00` jumps from void conditional expressions, but their no-op arms lack source provenance; the dead DX copy remains open. |
+| Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte. A [v346 compiler/cross-game candidate](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md) emits all 379 loop bytes at the object level with target instruction positions; focused linking is down to one case-sensitive `SHOTS_RENDER()` external. No linked exact claim yet. |
 
-The [decoded-payload comparison](reconstruction/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
-leaves 7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes different from the cold
-ReC98-overlay candidates. The [DIET replay](reconstruction/TH04_DIET145F_ROUNDTRIP_V228.md)
-round-trips the target copies and packs candidate ZUN raw equal, but OP/MAINE
-packed outputs still differ. Their [MZ partition](reconstruction/TH04_DIET145F_MZ_PARTITION_V231.md)
-and [relocation projection](reconstruction/TH04_DIET_RELOCATION_OWNERS_V232.md)
-identify payload, ordered-relocation, and header/tail differences; the original
-pre-DIET MZ/OMF remain unknown. No OP/MAINE/ZUN artifact-local exact cohort is
-accepted.
-
-[BGIMAGE v247/v250](reconstruction/TH04_BGIMAGE_HMEM_V250.md) has six reviewed
-source-present OP/MAINE functions. Its product-only TU compiles from checked-in
-headers, but natural CODE is 269 versus 208 target bytes. ZUN
-[`cfg_init`](reconstruction/TH04_ZUN_CFG_INIT_V239.md) and
-[`_main`](reconstruction/TH04_ZUN_MAIN_V241.md) have reviewed maintained source;
-the first matches in an untrusted composite overlay, while natural `_main` is
-246 versus 252 target bytes; [five semantic branch rewrites](reconstruction/TH04_ZUN_MAIN_V241.md)
-also fail the size gate. Neither is exact.
-Their [resident](reconstruction/TH04_ZUN_RESIDENT_LAYOUT_V309.md) and
-[configuration](reconstruction/TH04_ZUN_CFG_LAYOUT_V311.md) declarations are
-now TH04-owned and preserve both pinned compiler results; other external
-dependencies remain. Both ZUN C++ TUs also [compile from checked-in source
-and headers alone](reconstruction/TH04_ZUN_SOURCE_ONLY_V314.md). A
-[separate cold link](reconstruction/TH04_ZUN_COMPONENT_LINK_V317.md) produces
-a 6360-byte resident component from those two objects plus a pinned external
-support library; it differs from the decoded target at 4241 bytes. Full ZUN
-source, composite link, and packed product build remain open. A
-[local `GRAPH_CLEAR`](reconstruction/TH04_ZUN_GRAPH_CLEAR_V319.md) TASM unit
-replaces one support-library member without changing the candidate component;
-its linked 36 bytes equal the target decoded extent. The
-[local `RESDATA`](reconstruction/TH04_ZUN_RESDATA_V323.md) unit also matches
-190 target code and ten target data bytes. Rebuilding the diagnostic library
-in its original physical member order preserves the whole candidate component
-and MAP. A [local `FILE_READ`](reconstruction/TH04_ZUN_FILE_READ_V325.md)
-matches another 180 target code bytes with the same component and MAP. These
-support units have no artifact-local exact acceptance.
+The [decoded-payload frontier](reconstruction/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
+is 7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes against the cold overlay
+candidates. DIET round-trip and relocation/header partitioning are recorded in
+the linked note; no OP/MAINE/ZUN artifact-local exact cohort is accepted.
+BGIMAGE remains 269 versus 208 target CODE. ZUN `cfg_init` and `_main` compile
+from checked-in source and local headers, and three local support units match
+bounded decoded extents, but the 6360-byte diagnostic component still differs
+from target at 4241 bytes and depends on an external support library.
 
 MAIN [`sub_CCD6` and `sub_B835`](reconstruction/TH04_END_SCROLL_MPN_V195.md)
 now have maintained product-only C++ source and reviewed 96- and 199-byte
@@ -112,14 +84,18 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 
 ## Next work and finish gate
 
-Find a natural OMF producer for MAIN dialog/DEMO ordered relocations without
-changing raw bytes or MAP; [current controls](reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
-rule out common switches and the simple pause split. Continue the large
-gameplay-loop owner. For OP/MAINE, recover SND_LOAD,
-OP music, the remaining decoded payload bytes, and the v231 link/packer input
-topology as checked-in source. For ZUN, recover ZUNINIT, MEMCHK, ONGCHK, and
-natural `_main` call placement; the equal candidate composite still includes
-IDA-derived assembly and an external binary.
+Resume the gameplay loop from retained run
+`gpt-5-6-sol-v346-gameplay-symbolic-focused-004`: bind the final
+case-sensitive `SHOTS_RENDER()` external without altering the 379-byte object,
+then run focused A/B, raw/MAP/ordered-relocation checks, function review, and a
+complete default aggregate. The product source and exact-unit manifest are
+currently restored to commit `1a98e0c`; the v346 result is evidence, not a
+promotion.
+
+After gameplay, find a natural OMF producer for dialog/DEMO ordered
+relocations without changing raw bytes or MAP. For OP/MAINE/ZUN, continue the
+decoded payload and standalone source/link closure before packed-file and
+runtime acceptance.
 
 For any promotion, run focused two-cold comparison and a complete cold
 aggregate of affected accepted owners. Finish each bounded packet with
@@ -130,5 +106,7 @@ and unknowns in the focused note and ledgers.
 ## Private workspace
 
 Targets, toolchains, Ghidra/IDA projects, generated builds, and receipts stay
-ignored under `.analysis/` or `ghidra-project/`. Retain final receipts and
-prune replaceable build trees. Never commit original executables or assets.
+ignored under `.analysis/` or `ghidra-project/`. The cleanup retains the v345
+focused/final aggregate, v213 dialog diagnostic, v214 DEMO snapshot required
+by gameplay probes, and v346 focused-004 continuation tree. Never commit
+original executables or assets.

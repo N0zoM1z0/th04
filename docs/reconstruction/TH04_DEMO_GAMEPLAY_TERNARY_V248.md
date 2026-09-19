@@ -155,3 +155,30 @@ Receipt SHA-256: `5e97328ffe6a36f8ea027c423b402cbd2de4152332d663c112992846869846
 These ordinary increment forms do not solve the two-byte gap. No product
 source, linked bytes, or exactness state changed. The target producer remains
 unknown; introducing a dead DX assignment would not be justified.
+
+## v346 shared-codegen handoff
+
+The pinned TH05 MAIN target supplies independent cross-game evidence for all
+three remaining TH04 instruction shapes. A masked scan of the two attested
+load modules finds the same
+`MOV AX,[stage_frame]; MOV DX,AX; INC AX; MOV [stage_frame],AX; AND AX,000F`
+sequence at TH04 load `0xAC9D` and TH05 load `0xB026`. The nearby zero-distance
+jumps are at TH04 loads `0xAC78/0xACF2` and TH05 loads `0xB001/0xB053`.
+
+A bounded TC4J experiment combined the two already observed void conditional
+expressions with symbolic `_AX/_DX` frame-counter dataflow. The resulting
+valid `gloop.obj` CODE is exactly 379 bytes, SHA-256
+`645e6530f9907d469842dd924db5c1f7b2e2414177a76ea9f3de35441f3e8c27`.
+It places `EB 00` at body offsets `0xF0/0x16A` and `MOV DX,AX` at `0x118`,
+matching the target instruction positions. This is compiler-observed and
+cross-game-corroborated source evidence; it has not passed linked raw bytes,
+MAP, ordered relocations, or aggregate replay.
+
+The temporary v346 product/config edits were restored. The retained private
+build
+`.analysis/reconstruction/exact-unit-replay/gpt-5-6-sol-v346-gameplay-symbolic-focused-004/`
+reaches TLINK and stops only on the case-sensitive `SHOTS_RENDER()` external.
+Earlier ABI fixes reduced the initial unresolved list to that one symbol. A
+continuation should reconstruct the bounded source/config change from this
+materialization, bind the external without changing generated instructions,
+then run focused A/B and the full default aggregate before promotion.
