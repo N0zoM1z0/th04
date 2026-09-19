@@ -84,3 +84,39 @@ The isolated source, valid OMF objects, compiler logs, and full hashes are in
 `.analysis/reconstruction/probes/v238-gameplay-switch-align/receipt.json`,
 SHA-256 `d4706c035f945aab1fbd186eecb3e68efbe0e3dae607ac610d7808c122eb8fed`.
 No source or exact state changed; the 25 MB temporary build clone was removed.
+
+## v376 session metadata producer matrix
+
+The remaining `gameplay_session_init()` blocker is still exactly one physical
+byte: target executable code ends with `RET` at load `0xAEC4`, target byte
+`0xAEC5` is zero, and the five jump words occupy `0xAEC6..0xAECF`. The
+current pinned-TC4J source emits 460 bytes with the same rank-switch structure
+but puts the five jump words immediately after `RET`.
+
+A new isolated producer matrix rules out several plausible historical-TU and
+compiler explanations. The baseline command-line TC4J object remains 460 bytes
+with CODE SHA-256
+`c6240957d82e978078e247c06dd9c0ae79469661e8ac4c612474b8b24218d526`.
+Compiling the exact 379-byte gameplay producer before it yields `379 + 460`;
+compiling exact `_main` plus gameplay before it leaves the session public at
+offset `0x1F7` and still 460 bytes. Appending the maintained
+`stage_session_init()`/`stage_runtime_init()` producer places
+`stage_session_init()` at `+0x1CC`, not `+0x1CD`, while preserving that
+producer's known 768-byte first logical extent. Therefore the target zero is not
+naturally created merely by the real preceding or following DEMO_TEXT functions.
+
+Near/far, C/C++, and C/Pascal declaration variants all stay at 460. Explicit
+`return;`, explicit `default: break;`, and their combination optimize to the
+same baseline object. Function-level option probes produce `-G` 465 bytes,
+`-O-` 462, `-k-` 456, `-Z-` 492, and `-r-` 467; `-G-`, `-O`, `-k`,
+`-Z`, `-r`, `-a1`, and `-a2` remain exactly 460. None yields the target
+461-byte layout.
+
+This is not evidence that TC4J cannot generate a post-return zero: accepted
+natural `midboss4_update()`, near `midbossx_pattern_events()`, and
+`midbossx_update()` objects contain compiler-emitted zero bytes before their
+switch metadata/tables. The unresolved question is therefore a more specific
+historical switch-data/OMF materialization mechanism. Private probe receipt:
+`.analysis/gpt-web/gameplay-session-fusion-001/receipt.json`, SHA-256
+`448a90e324fa121a8f172bedd6b4c3a11509a4c81bb0874e4697870ecf443720`.
+No product source, exact-unit state, or reviewed denominator changes in v376.
