@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **21 forwarders and 28 include sites in 27 files**. The
+138 product files to **20 forwarders and 26 include sites in 25 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -23,33 +23,40 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Overlap, sound, and shot | overlap predicates, KAJA/sound API, player-shot layout | 23 | `bd61cce` |
 | Palette | deferred palette-tone latch and MAIN palette-change declaration | 22 | `e19539d` |
 | Playchar | GAME4/5 play-character enum ABI used by shared maintained TUs | 21 | `777b8cf` |
+| Rank | rank enum width/constants and MAIN rank selector declaration | 20 | `8005fee` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-playchar-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-rank-aggregate-001/receipt.json`
 (SHA-256
-`8c70cf7c193d2b64bbee90bc2272151dde612a6058b2d1c974d7d9f46e8e1ebe`).
+`4724feaf255a5633ded14622d7d13c8bcd713955b2d9955320e093439dc029b5`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The play-character batch replaces the three product uses of
-`compat/rec98/th05/playchar.h` in `ems.cpp` and `ranking.cpp` with
-`src/main/playchar.hpp`. The same edit removes three duplicate direct
-`th04/playchar.h` includes from those two maintained TUs.
+The rank batch replaces the two product uses of `compat/rec98/th01/rank.hg`
+with `src/main/rank.hpp`. In `gameplay_session_init.cpp`, the same local
+interface also replaces the redundant pinned `th04/main/rank.hpp` include.
 
-The local header preserves TH04's two-character `playchar_t`, `shottype_t`,
-`playchar_other()`, and global declaration. Under `GAME == 5`, where the pinned
-all-game scaffold recompiles shared maintained source, it preserves the
-four-character enum and the `0xFF` enumerator that forces the original 8-bit
-enum ABI, plus the selector declaration.
+The local header preserves the original signed 16-bit `rank_t` forcing
+enumerator (`0x7FFF`), the GAME-dependent Extra rank, the TH04 setup-menu
+sentinel (`0xFF`), the two rank label macros, the byte-sized global `rank`,
+and the C-linkage Pascal selector declaration.
 
-Focused two-cold replay passes for `th04-main-module-th04-ems-cpp-b488` and `th04-main-module-th04-score-rm-cpp-12a0a`.
-The complete `gpt-web-playchar-aggregate-001` replay passes all 253 default MAIN owners twice
+Focused two-cold replay for
+`th04-main-module-th04-score-rm-cpp-12a0a` passes. The complete
+`gpt-web-rank-aggregate-001` replay passes all 253 default MAIN owners twice
 with `failures=[]`; both candidate MAIN images remain SHA-256
-`54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 22 forwarders / 31 sites to 21 / 28,
-with no missing, orphan, invalid, or direct forbidden include.
+`54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
+The compat audit moves from 21 forwarders / 28 sites / 27 files to
+20 / 26 / 25, with no missing, orphan, invalid, or direct forbidden include.
+
+``gameplay_session_init()`` remains a reviewed blocked function. Existing
+target-first evidence closes its 461-byte physical extent as executable code,
+one zero compiler metadata/alignment byte, and five jump words; the retained
+production-profile natural C++ evidence is still 460 bytes. This compatibility
+batch makes no new exactness claim for that function.
 
 ## Next families
 
@@ -58,7 +65,6 @@ line locations. The next bounded families are:
 
 | Forwarder | Sites | Product files |
 | --- | ---: | ---: |
-| `th01/rank.h` | 2 | 2 |
 | `th02/formats/pi.h` | 2 | 2 |
 | `th02/formats/tile.hpp` | 2 | 2 |
 | `th04/formats/bb.h` | 2 | 2 |
