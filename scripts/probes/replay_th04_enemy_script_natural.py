@@ -110,13 +110,14 @@ def main() -> int:
 
     records = parse_omf(obj)
     groups = code_ledata(records, "B4M_UPDATE_TEXT")
-    if [(start, end) for start, end, _, _ in groups] != [(0, 1024), (1024, 1634)]:
-        raise ValueError("natural VM CODE topology changed")
-    code = bytearray(1634)
+    topology = [(start, end) for start, end, _, _ in groups]
+    if topology != [(0, 1024), (1024, 1670)]:
+        raise ValueError(f"natural VM CODE topology changed: {topology}")
+    code = bytearray(1670)
     for start, end, record_number, _ in groups:
         code[start:end] = records[record_number - 1].data[3:]
     code = bytes(code)
-    if len(code) != 1634 or len(code) == len(target_body):
+    if len(code) != 1670 or len(code) == len(target_body):
         raise ValueError("natural VM size result changed")
     ignored = {index for start in (8, 12, 33, 40) for index in (start, start + 1)}
     if any(a != b for i, (a, b) in enumerate(zip(target_body[:42], code[:42]))
@@ -156,8 +157,8 @@ def main() -> int:
                "switch_physical_group_order_equal": True,
                "duration_advance_bp_local_layout_equal": True,
                "entry_42_byte_opcode_shape_equal_after_four_word_mask": True,
-               "result": "Natural C++ compiles to 1634 versus 1680 target bytes, with the same entry and BP-local shapes plus the same physical order for all 49 switch destination groups.",
-               "limit": "The executable body is 46 bytes shorter; no linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
+               "result": "Natural C++ compiles to 1670 versus 1680 target bytes, with the same entry and BP-local shapes plus the same physical order for all 49 switch destination groups.",
+               "limit": "The executable body is 10 bytes shorter; no linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
     receipt_path = output / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"receipt": str(receipt_path), "result": receipt["result"]}))

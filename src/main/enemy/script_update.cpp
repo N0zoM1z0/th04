@@ -22,7 +22,7 @@ extern "C" unsigned char near enemy_script_update(void)
     register enemy_t near *enemy = enemy_cur;
     unsigned char duration;
     unsigned char advance;
-    int temp;
+    volatile int temp;
 
     _ES = FP_SEG(std_seg);
 
@@ -236,10 +236,14 @@ advance_one:
     case 0x2C:
         temp = instr[1];
         if(playperf > 16) {
-            temp -= ((playperf - 16) * temp) / 32;
+            temp = ((playperf - 16) * temp);
+            temp = (temp / 32);
+            temp = (instr[1] - temp);
             if(temp < 16) temp = 16;
         } else if(playperf < 16) {
-            temp += ((16 - playperf) * temp) / 32;
+            temp = ((16 - playperf) * temp);
+            temp = (temp / 32);
+            temp = (instr[1] + temp);
             if(temp >= 256) temp = 255;
         }
         if(rank == RANK_EASY) temp = 255;
