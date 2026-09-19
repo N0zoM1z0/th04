@@ -1,4 +1,6 @@
+#ifndef TH04_DEMO_PREFIX_COMBINED
 #pragma option -zCDEMO_TEXT -zPmain_01
+#endif
 
 // Maintained natural source for the reviewed DEMO_TEXT gameplay loop.
 // Target- and cross-game-backed source shape for the reviewed DEMO_TEXT gameplay loop.
@@ -10,7 +12,9 @@
 #include "src/shared/config/resident.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/slowdown.hpp"
+#ifndef TH04_DEMO_PREFIX_COMBINED
 #include "th04/main/quit.hpp"
+#endif
 #include "th04/main/score.hpp"
 
 extern nearfunc_t_near fp_23D90;

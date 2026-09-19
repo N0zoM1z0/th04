@@ -11373,6 +11373,10 @@ map_start = "0x001C"
 map_size = "0x7C"
 target_file_offset = "0xC30C"
 size = "0x7C"
+producer_override_when_unit = "th04-main-gameplay-session-init-v165"
+producer_map_module = "th04/demopre.cpp"
+producer_object_path = "obj/th04/demopre.obj"
+producer_map_mode = "contains"
 
 
 # v203: evidence-backed original-style _TEXT MPN renderer. The maintained
@@ -11975,6 +11979,10 @@ map_start = "0x0098"
 map_size = "0x17B"
 target_file_offset = "0xC388"
 size = "0x17B"
+producer_override_when_unit = "th04-main-gameplay-session-init-v165"
+producer_map_module = "th04/demopre.cpp"
+producer_object_path = "obj/th04/demopre.obj"
+producer_map_mode = "contains"
 
 [[source_transforms]]
 id = "th04-main-gameplay-loop-v375-layout"
@@ -12004,3 +12012,91 @@ id = "publish-gameplay-fp23d90-v375"
 kind = "insert_before"
 anchor = "fp_23D90\tdw ?\r\n"
 text = "public _fp_23D90\r\n_fp_23D90 label word\r\n"
+
+# v377 candidate: fuse the exact _main/gameplay prefix with the reviewed
+# gameplay-session initializer under the compiler's word-aligned switch-table
+# mode. This is the historical TC4J mechanism observed in accepted m4u/mxu
+# producers; no padding byte is emitted by maintained source.
+[[build_inserts]]
+id = "th04-main-gameplay-session-v377-source"
+trigger_units = ["th04-main-gameplay-session-init-v165"]
+repo_source = "src/main/core/gameplay_session_init.cpp"
+overlay_path = "th04/gsinit.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v377 materializes gameplay_session_init for fused DEMO_TEXT producer.\n"
+
+[[build_replacements]]
+id = "th04-main-gameplay-session-v377-build"
+trigger_units = ["th04-main-gameplay-session-init-v165"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/mainent.cpp\",\n\t\"th04/gloop.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+build_replacement = "\t\"th04/demopre.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+[[source_transforms]]
+id = "th04-main-gameplay-session-v377-layout"
+trigger_units = ["th04-main-gameplay-session-init-v165"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "6d0bb4fa4f86fcb2591e5a9a2897f80325ec661ca4195ac4e90c8c42efbbe137"
+
+[[source_transforms.ops]]
+id = "externalize-gameplay-session-init-v377"
+kind = "remove_between"
+start = "sub_AD03\tproc near\r\n"
+end = "sub_AD03\tendp\r\n"
+removed_sha256 = "79235601309e37d7a5047e83e3a0f4f91139992406d5fc5bab05650757f186d7"
+replacement = "extrn @gameplay_session_init$qv:near\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-stage-session-gameplay-init-v377"
+kind = "replace"
+old = "\t\tcall\tmain_01:sub_AD03\r\n"
+new = "\t\tcall\t@gameplay_session_init$qv\r\n"
+expected_count = 1
+
+
+[[source_transforms.ops]]
+id = "publish-session-shot-funcs-reimu-a-v377"
+kind = "insert_before"
+anchor = "SHOT_FUNCS_REIMU_A label word\r\n"
+text = "public _SHOT_FUNCS_REIMU_A\r\n_SHOT_FUNCS_REIMU_A label word\r\n"
+
+[[source_transforms.ops]]
+id = "publish-session-shot-funcs-reimu-b-v377"
+kind = "insert_before"
+anchor = "SHOT_FUNCS_REIMU_B label word\r\n"
+text = "public _SHOT_FUNCS_REIMU_B\r\n_SHOT_FUNCS_REIMU_B label word\r\n"
+
+[[source_transforms.ops]]
+id = "publish-session-shot-funcs-marisa-a-v377"
+kind = "insert_before"
+anchor = "SHOT_FUNCS_MARISA_A label word\r\n"
+text = "public _SHOT_FUNCS_MARISA_A\r\n_SHOT_FUNCS_MARISA_A label word\r\n"
+
+[[source_transforms.ops]]
+id = "publish-session-shot-funcs-marisa-b-v377"
+kind = "insert_before"
+anchor = "SHOT_FUNCS_MARISA_B label word\r\n"
+text = "public _SHOT_FUNCS_MARISA_B\r\n_SHOT_FUNCS_MARISA_B label word\r\n"
+
+[[source_transforms.ops]]
+id = "publish-session-shot-func-table-ptr-v377"
+kind = "insert_before"
+anchor = "playchar_shot_funcs\tdw ?\r\n"
+text = "public _playchar_shot_funcs\r\n_playchar_shot_funcs label word\r\n"
+
+[[units]]
+id = "th04-main-gameplay-session-init-v165"
+default_enabled = false
+requires_units = ["th04-main-gameplay-loop-v165"]
+repo_source = "src/main/core/demo_prefix.cpp"
+overlay_path = "th04/demopre.cpp"
+map_module = "th04/demopre.cpp"
+map_mode = "contains"
+object_path = "obj/th04/demopre.obj"
+map_segment = "DEMO_TEXT"
+map_start = "0x0213"
+map_size = "0x1CD"
+target_file_offset = "0xC503"
+size = "0x1CD"

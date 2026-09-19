@@ -1,4 +1,6 @@
+#ifndef TH04_DEMO_PREFIX_COMBINED
 #pragma option -zCDEMO_TEXT -zPmain_01
+#endif
 
 #include "platform.h"
 #include "src/shared/config/resident.hpp"

@@ -1,10 +1,14 @@
+#ifndef TH04_DEMO_PREFIX_COMBINED
 #pragma option -zCDEMO_TEXT -zPmain_01
+#endif
 
 // Maintained natural source for the reviewed DEMO_TEXT gameplay-session initializer.
 // Current production-profile TC4J omits one target compiler-metadata byte after RET.
 
 #include "src/shared/runtime/api.hpp"
+#ifndef TH04_DEMO_PREFIX_COMBINED
 #include "src/main/rank.hpp"
+#endif
 #include "th04/end/end.h"
 #include "th04/playchar.h"
 #include "src/shared/config/resident.hpp"
@@ -12,9 +16,17 @@
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/main/player/bomb.hpp"
+#ifdef TH04_DEMO_PREFIX_COMBINED
+#pragma codeseg BULLET_A_TEXT main_03
+#endif
 #include "th04/main/bullet/bullet.hpp"
+#ifdef TH04_DEMO_PREFIX_COMBINED
+#pragma codeseg DEMO_TEXT main_01
+#endif
 #include "th04/main/playperf.hpp"
+#ifndef TH04_DEMO_PREFIX_COMBINED
 #include "th04/main/score.hpp"
+#endif
 #include "th04/main/slowdown.hpp"
 #include "th04/main/hiscore.hpp"
 
@@ -26,8 +38,10 @@ extern nearfunc_t_near near SHOT_FUNCS_REIMU_B[];
 extern nearfunc_t_near near SHOT_FUNCS_MARISA_A[];
 extern nearfunc_t_near near SHOT_FUNCS_MARISA_B[];
 
-void pascal near bb_txt_load(void);
+extern "C" void pascal near bb_txt_load(void);
 void near score_reset(void);
+
+#pragma option -a
 
 void near gameplay_session_init(void)
 {
@@ -136,3 +150,5 @@ void near gameplay_session_init(void)
         break;
     }
 }
+
+#pragma option -a.
