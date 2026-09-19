@@ -1,6 +1,6 @@
 #pragma option -zCMAIN__TEXT -zPmain_01
 
-#include "compat/rec98/th04/main/player/shot.hpp"
+#include "src/main/player/shot.hpp"
 
 static const unsigned char REIMU_SHOT_CYCLE_FRAMES = 18;
 

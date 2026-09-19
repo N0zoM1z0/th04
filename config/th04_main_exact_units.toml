@@ -669,7 +669,7 @@ object_path = "obj/th04/input_w.obj"
 [[units]]
 id = "th04-main-snd-kaja-interrupt"
 repo_source = "src/shared/sound/kaja_interrupt.cpp"
-overlay_path = "th02/snd/kajaint.cpp"
+overlay_path = "th04/snd_kaja.cpp"
 map_module = "th04/snd_kaja.cpp"
 object_path = "obj/th04/snd_kaja.obj"
 
@@ -952,6 +952,7 @@ patch_path = "th04/main/bullet/update.cpp"
 scaffold_include_mappings = [
   { local = "src/shared/runtime/api.hpp", scaffold = ["libs/master.lib/master.hpp"] },
   { local = "src/main/bullet/sizes.hpp", scaffold = ["th01/sprites/pellet.h", "th02/sprites/bullet16.h"] },
+  { local = "src/main/math/overlap.hpp", scaffold = ["th01/math/overlap.hpp"] },
 ]
 map_module = "th04/bullet_u.cpp"
 map_mode = "contains"
@@ -985,6 +986,7 @@ source_mode = "localized-fragment"
 patch_path = "th04/main/boss/boss.cpp"
 scaffold_include_mappings = [
   { local = "src/shared/hardware/graphics.hpp", scaffold = ["libs/master.lib/pc98_gfx.hpp"] },
+  { local = "src/main/math/overlap.hpp", scaffold = ["th01/math/overlap.hpp"] },
   { local = "src/shared/hardware/frame_delay.hpp", scaffold = ["th02/hardware/frmdelay.h"] },
   { local = "src/shared/config/resident.hpp", occurrence = 1, scaffold = ["th05/resident.hpp"] },
   { local = "src/main/formats/cdg.hpp", scaffold = ["th03/formats/cdg.h"] },
@@ -1160,7 +1162,7 @@ object_path = "obj/th04/snd_mmdr.obj"
 [[units]]
 id = "th04-main-snd-se-reset"
 repo_source = "src/main/sound/se_reset.inl"
-source_mode = "forwarded-fragment"
+source_mode = "fragment"
 patch_path = "th02/snd/se_reset.cpp"
 map_module = "th02/snd_se_r.cpp"
 map_mode = "contains"

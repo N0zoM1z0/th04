@@ -1,8 +1,3 @@
-#pragma option -zCSHARED -WX -k-
-
-#include "compat/rec98/th02/snd/snd.h"
-#include "compat/rec98/th02/snd/impl.hpp"
-
 void snd_se_reset(void)
 {
 	snd_se_frame = 0;

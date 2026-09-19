@@ -45,7 +45,7 @@ void near bomb_reset(void)
 void pascal near tiles_bb_put_raw(int cel);
 #include "th04/playchar.h"
 #include "src/shared/hardware/graphics.hpp"
-#include "compat/rec98/th02/snd/snd.h"
+#include "src/shared/sound/api.hpp"
 
 extern unsigned char miss_time;
 extern unsigned char player_respawn_motion_time;

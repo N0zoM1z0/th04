@@ -1,7 +1,7 @@
 #pragma option -zPmain_03
 
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th01/math/overlap.hpp"
+#include "src/main/math/overlap.hpp"
 #include "src/main/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/sprites/main_pat.h"

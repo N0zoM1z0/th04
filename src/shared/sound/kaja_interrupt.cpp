@@ -1,12 +1,8 @@
 #pragma option -zCSHARED
-#if (GAME >= 4)
-#include "th04/snd/snd.h"
-#else
-#include "compat/rec98/th02/snd/snd.h"
-#endif
+#include "src/shared/sound/api.hpp"
 #include "compat/rec98/th02/snd/impl.hpp"
 
-int16_t DEFCONV snd_kaja_interrupt(int16_t ax)
+int16_t pascal snd_kaja_interrupt(int16_t ax)
 {
 	if(!snd_bgm_active()) {
 		return _AX;

@@ -1,6 +1,6 @@
 #pragma option -zCMAIN_012_TEXT -zPmain_01 -k-
 
-#include "compat/rec98/th04/main/player/shot.hpp"
+#include "src/main/player/shot.hpp"
 
 Shot near * near shots_add(void)
 {

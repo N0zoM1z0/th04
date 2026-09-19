@@ -5,7 +5,7 @@
 #include "th04/main/player/move.hpp"
 #include "th04/main/quit.hpp"
 #include "src/shared/config/resident.hpp"
-#include "compat/rec98/th02/snd/snd.h"
+#include "src/shared/sound/api.hpp"
 
 static const unsigned char MISS_ANIM_FRAMES = 32;
 static const unsigned char MISS_ANIM_FLASH_AT = 28;

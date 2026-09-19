@@ -20,4 +20,8 @@ uint16_t near randring2_next16(void);
 uint16_t pascal near randring2_next16_and(uint16_t mask);
 uint16_t pascal near randring2_next16_mod(uint16_t divisor);
 
+inline uint8_t randring1_next8_ge_lt(uint8_t min, uint8_t max) {
+	return (min + randring1_next16_and((max - min) - 1));
+}
+
 #endif

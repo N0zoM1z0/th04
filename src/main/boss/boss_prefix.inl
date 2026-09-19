@@ -1,6 +1,6 @@
 #include "decomp.hpp"
 #include "src/shared/hardware/graphics.hpp"
-#include "compat/rec98/th01/math/overlap.hpp"
+#include "src/main/math/overlap.hpp"
 #include "src/shared/hardware/frame_delay.hpp"
 #include "compat/rec98/th03/hardware/palette.hpp"
 #include "th04/common.h"

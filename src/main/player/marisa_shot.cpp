@@ -2,7 +2,7 @@
 #pragma option -a
 
 #include "x86real.h"
-#include "compat/rec98/th04/main/player/shot.hpp"
+#include "src/main/player/shot.hpp"
 #include "src/main/hardware/grcg.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/frames.h"

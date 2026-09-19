@@ -1,7 +1,7 @@
 #pragma option -G
 
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th01/math/overlap.hpp"
+#include "src/main/math/overlap.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"
