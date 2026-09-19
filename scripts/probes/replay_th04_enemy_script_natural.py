@@ -58,6 +58,21 @@ def switch_topology(
     return partition, physical_order
 
 
+def switch_block_sizes(table: bytes, body_size: int, linked_base: int) -> tuple[int, ...]:
+    offsets = {
+        0 if value == 0 else value - linked_base
+        for value in (
+            int.from_bytes(table[opcode * 2:opcode * 2 + 2], "little")
+            for opcode in range(144)
+        )
+    }
+    starts = sorted(offsets)
+    return tuple(
+        (starts[index + 1] if index + 1 < len(starts) else body_size) - start
+        for index, start in enumerate(starts)
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path)
@@ -111,13 +126,13 @@ def main() -> int:
     records = parse_omf(obj)
     groups = code_ledata(records, "B4M_UPDATE_TEXT")
     topology = [(start, end) for start, end, _, _ in groups]
-    if topology != [(0, 1024), (1024, 1670)]:
+    if topology != [(0, 1024), (1024, 1678)]:
         raise ValueError(f"natural VM CODE topology changed: {topology}")
-    code = bytearray(1670)
+    code = bytearray(1678)
     for start, end, record_number, _ in groups:
         code[start:end] = records[record_number - 1].data[3:]
     code = bytes(code)
-    if len(code) != 1670 or len(code) == len(target_body):
+    if len(code) != 1678 or len(code) == len(target_body):
         raise ValueError("natural VM size result changed")
     ignored = {index for start in (8, 12, 33, 40) for index in (start, start + 1)}
     if any(a != b for i, (a, b) in enumerate(zip(target_body[:42], code[:42]))
@@ -129,6 +144,11 @@ def main() -> int:
         raise ValueError("144-case switch destination partition differs")
     if target_order != candidate_order:
         raise ValueError("49 switch destination groups differ in physical order")
+    target_sizes = switch_block_sizes(target_body[-288:], 1392, 0x1B4D)
+    candidate_sizes = switch_block_sizes(code[-288:], len(code) - 288, 0)
+    block_size_matches = sum(a == b for a, b in zip(target_sizes, candidate_sizes))
+    if len(target_sizes) != 49 or block_size_matches != 48:
+        raise ValueError("physical switch-block size agreement changed")
     local_layout = bytes.fromhex("26 8A 45 03 88 46 FF C6 46 FE 04")
     target_layout_sites = [i for i in range(len(target_body)) if target_body.startswith(local_layout, i)]
     candidate_layout_sites = [i for i in range(len(code)) if code.startswith(local_layout, i)]
@@ -155,10 +175,11 @@ def main() -> int:
                "switch_entries": 144, "switch_unique_destinations": len(target_groups),
                "switch_partition_equal": True,
                "switch_physical_group_order_equal": True,
+               "switch_physical_group_size_matches": block_size_matches,
                "duration_advance_bp_local_layout_equal": True,
                "entry_42_byte_opcode_shape_equal_after_four_word_mask": True,
-               "result": "Natural C++ compiles to 1670 versus 1680 target bytes, with the same entry and BP-local shapes plus the same physical order for all 49 switch destination groups.",
-               "limit": "The executable body is 10 bytes shorter; no linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
+               "result": "Natural C++ compiles to 1678 versus 1680 target bytes; 48 of 49 physical switch blocks have target size, and all 49 retain target order.",
+               "limit": "The executable body is two bytes shorter because opcode 0x20 lacks the target PUSH ES / POP ES pair; no linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
     receipt_path = output / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"receipt": str(receipt_path), "result": receipt["result"]}))

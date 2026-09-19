@@ -14,16 +14,16 @@ bullet-template, timing, loop, clipping, animation, sound, position, and tile
 instruction branches. The default path deliberately retains the target's
 uninitialized duration/advance behavior; that path remains semantically
 uncertain and needs runtime validation. Source SHA-256:
-`980382bba545775e5b610f235a9a3a388781a3e6141b0565c7e77e77df12ad2`.
+`58162c4dcffd41a4aa6e25e6e31aa492d63b9d7566812d6cede2962f1d2ca136`.
 
 Replay:
 
     python3 scripts/probes/replay_th04_enemy_script_natural.py \
-      --output-dir .analysis/reconstruction/probes/v335-enemy-script-volatile-002
+      --output-dir .analysis/reconstruction/probes/v336-enemy-script-layout-001
 
 The pinned TC4J 4.02 and frozen compiler snapshot produce a valid OMF object
-with B4M_UPDATE_TEXT LEDATA spans `0..1023` and `1024..1669`. The resulting
-1,670 CODE bytes contain a 1,382-byte executable body and a 288-byte table.
+with B4M_UPDATE_TEXT LEDATA spans `0..1023` and `1024..1677`. The resulting
+1,678 CODE bytes contain a 1,390-byte executable body and a 288-byte table.
 The first 42 entry bytes have the same opcodes as the target after masking
 two DS addresses, one conditional branch displacement, and one table address.
 The candidate's 144 table entries have **exactly the same partition into 49
@@ -39,11 +39,18 @@ That source shape recovers 30 target bytes. The target also reloads the
 `volatile` makes TC4J emit both three-byte reloads without assembly or copied
 target bytes.
 
+Routing opcodes `0x09`, `0x2C`, `0x86`, and `0x80/81` through their target
+shared tails, placing the `0x89` and `0x8A/8B` assignments in target order,
+and making the `0x8B` script-word additions explicitly signed reproduces the
+target size for 48 of the 49 physical switch blocks. The remaining block,
+opcode `0x20`, is two bytes short: its instructions otherwise agree in shape,
+but the target surrounds two indirect calls with `PUSH ES` and `POP ES`.
+
 The private receipt SHA-256 is
-`3a8aabdaa7cdaadef232c2822f85257e085150237a44d06fb4652a53020dbce1`.
-The candidate executable body is 10 bytes shorter than the target before
-linking (1,382 versus 1,392). The complete 0x690 owner is source-present,
+`dc6c9aefa240fb967454b04b597b57567754e2eaef1e52a1e6fbdf7030a684cc`.
+The candidate executable body is two bytes shorter than the target before
+linking (1,390 versus 1,392). The complete 0x690 owner is source-present,
 but raw bytes, MAP placement, ordered MZ relocations, runtime behavior, and
 cold aggregate replay remain open. The next matching step is to classify
-compiler differences inside the 49 branch bodies without changing the
-verified 144-case destination partition.
+the opcode `0x20` ES-preservation producer without changing the verified
+144-case destination partition or physical block layout.

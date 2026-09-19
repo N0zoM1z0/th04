@@ -138,8 +138,7 @@ dispatch:
         enemy->angle = instr[1];
         enemy->speed.v = instr[2];
         enemy_aim_at_player();
-        advance = 3;
-        goto next;
+        goto advance_three;
 
     case 0x0A:
         enemy->angle += instr[1];
@@ -248,8 +247,7 @@ advance_one:
         }
         if(rank == RANK_EASY) temp = 255;
         enemy->autofire_interval = static_cast<unsigned char>(temp);
-        advance = 2;
-        goto next;
+        goto advance_two;
 
     case 0x2B:
         enemy->autofire = true;
@@ -298,8 +296,7 @@ advance_one:
 
     case 0x86:
         snd_se_play(instr[1]);
-        advance = 2;
-        goto next;
+        goto advance_two;
 
     case 0x87:
         enemy->patnum_base = instr[1];
@@ -313,8 +310,8 @@ advance_one:
 
     case 0x89:
         enemy->can_be_damaged = true;
-        enemy->autofire = (rank == RANK_LUNATIC);
         advance = 1;
+        enemy->autofire = (rank == RANK_LUNATIC);
         goto next;
 
     case 0x8C:
@@ -329,16 +326,16 @@ advance_one:
         enemy->pos.prev = enemy->pos.cur;
         enemy->pos.cur.x.v = SCRIPT_WORD(1);
         enemy->pos.cur.y.v = SCRIPT_WORD(3);
-        duration = 0;
         advance = 5;
+        duration = 0;
         goto timed;
 
     case 0x8B:
         enemy->pos.prev = enemy->pos.cur;
-        enemy->pos.cur.x.v += SCRIPT_WORD(1);
-        enemy->pos.cur.y.v += SCRIPT_WORD(3);
-        duration = 0;
+        enemy->pos.cur.x.v += static_cast<int>(SCRIPT_WORD(1));
+        enemy->pos.cur.y.v += static_cast<int>(SCRIPT_WORD(3));
         advance = 5;
+        duration = 0;
         goto timed;
 
     case 0x8E:
@@ -381,8 +378,7 @@ advance_two:
     case 0x81:
         if(enemy->loop_i >= instr[2]) {
             enemy->loop_i = 0;
-            advance = 3;
-            goto next;
+            goto advance_three;
         }
         enemy->loop_i++;
         if(*instr == 0x80) enemy->script_ip = instr[1];
