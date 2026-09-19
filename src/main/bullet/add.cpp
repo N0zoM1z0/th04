@@ -12,7 +12,7 @@
 #include "th04/main/gather.hpp"
 
 #pragma option -a2
-#include "compat/rec98/th02/main/bullet/impl.hpp"
+#include "src/main/bullet/add_impl.hpp"
 #include "src/main/bullet/sizes.hpp"
 
 void pascal near bullets_add_regular_raw(void);
