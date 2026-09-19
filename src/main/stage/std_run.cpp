@@ -4,7 +4,7 @@
 #include "th04/formats/std.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/item/item.hpp"
-#include "compat/rec98/th02/main/midboss/midboss.hpp"
+#include "src/main/midboss/state.hpp"
 #include "th04/main/null.hpp"
 
 extern "C" void pascal near enemies_add(
