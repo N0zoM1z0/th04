@@ -9,6 +9,7 @@
 	.386
 	.model use16 large _TEXT
 	locals
+	option casemap:none
 
 SHOT_LEVEL_MAX = 9
 
@@ -30,6 +31,7 @@ MAIN_012_TEXT segment byte public 'CODE' use16
 	assume cs:main_01
 
 public @SHOT_VELOCITY_SET$QP7SPPOINTUC
+@SHOT_VELOCITY_SET$QP7SPPOINTUC label near
 @shot_velocity_set$qp7sppointuc proc near
 	mov	bx, sp
 	push	si

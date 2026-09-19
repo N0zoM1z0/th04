@@ -2,9 +2,11 @@
 
 ## Result
 
-v154 target-reviews the contiguous item-management producer in `th04-main / MAIN.EXE`
-and recovers maintainable natural C++ for it, but deliberately does **not** promote
-it to exact.
+v154 target-reviewed the contiguous item-management producer in
+`th04-main / MAIN.EXE`; v344 closes its last four bytes and promotes the complete
+owner to **exact**. The maintained source is C++ with two symbolic low-level
+`SUB` instructions whose handwritten classification is independently supported
+by the homologous TH05 target and a bounded compiler probe.
 
 The reviewed physical producer is:
 
@@ -15,8 +17,8 @@ The reviewed physical producer is:
 - size: `0x546 / 1350` bytes;
 - target slice SHA-256:
   `a0949b541b517ba4be1cb7afd1094b60017235eefd777630b20c038a030f6531`;
-- focused candidate slice SHA-256:
-  `de372a92ed989ee5d5f1ee8ad556b381f754a5cc76f263110854f67563dd886d`.
+- current focused candidate slice SHA-256:
+  `a0949b541b517ba4be1cb7afd1094b60017235eefd777630b20c038a030f6531`.
 
 The selected private target remains read-only and only
 `candidate-local-attested`.
@@ -65,15 +67,17 @@ original target order:
 0x1DA21 0x1DF40 0x1DEB2 0x1DE4A 0x1DE34
 ```
 
-## Maintained natural source
+## Maintained source
 
 Maintained source is `src/main/item/items_update.cpp`, SHA-256
-`bfb87a0ee1a702870cd731050ad6636d52aded80ede5938b88985ddd1c92d7fb`.
+`75ee749d04c4b31b1455b89980b5fbb8fa27e500ba1800fb49e3bffd61728efc`.
 The source keeps the historical FAR/near ABIs, the `MAIN_035_TEXT` / `MAIN_03`
 code owner, byte-sized item state, 16-bit item counters where target storage is
 word-sized, and the `PlayfieldMotion::update_seg3()` `DX:AX` return convention.
-No inline assembly, `#pragma codestring`, copied target bytes, inert padding,
-fake return, object patch, target patch, or ABI lie is used.
+Two register-symbolic inline-assembly statements express `sub bx,ax` and
+`sub bx,dx`; their classification and bounded compiler effect are recorded in
+the v344 section below. No copied target byte arrays, `#pragma codestring`,
+inert padding, fake return, object patch, target patch, or ABI lie is used.
 
 Three target-local declaration/storage corrections are replay-only plumbing, not
 new storage owners:
@@ -91,12 +95,12 @@ new storage owners:
    or duplicated.
 
 The maintained v143 original-style shot selector already owns the required FAR
-entry at `sub_11DE6`. v154 only exports the additional spelling `SUB_11DE6` at
-that same address so the recovered item source can resolve the historical call;
-the v143 instruction bytes are unchanged and the default exact aggregate
-revalidates them.
+entry at `sub_11DE6`. It now uses `option casemap:none` and exports the additional
+spelling `SUB_11DE6` at the same address so the item source resolves the
+historical call. The v344 TASM probe proves that all 72 selector CODE bytes stay
+unchanged while both PUBDEF spellings are emitted.
 
-## Focused replay: source-present but blocked
+## Historical v154 focused replay: source-present but blocked
 
 The final current-source focused run is
 `gptweb-v154-items-update-focused-candidate-010`:
@@ -266,3 +270,58 @@ target requires `0x546` and `29 C3 / 29 D3`. No link or exact promotion follows.
 Retained private ASM/OMF/CODE/logs are under
 `.analysis/reconstruction/probes/v283-items-B/`, receipt SHA-256
 `59ce842bd21e78a830ba55f3821eec655529f4be0a57d411b3566f8aedce2666`.
+
+## v344 handwritten-source classification and exact promotion
+
+v344 tested a new source-provenance hypothesis instead of continuing the
+rejected C++ spelling matrix. The pinned TH05 MAIN target, SHA-256
+`c41f6e6b9a97b2433acc576ceaee800707c8d4ea7e498150a259663c8fa7d4f0`,
+contains the homologous collision block with the same `29 C3` and `29 D3`
+encodings at file offsets `0x1E11C` and `0x1E12C`. Each word occurs exactly once
+in that complete executable. The surrounding instruction sequence matches the
+TH04 architecture while its data addresses and call targets differ. This is
+independent cross-game corroboration for a reused low-level source idiom.
+
+A pinned TC4J probe then replaced only the two ordinary `_BX -= _AX/_DX`
+expressions with symbolic `asm { sub bx, ax/dx; }` statements. Ordinary and
+symbolic variants both emit 1,350 CODE bytes and 86 OMF records. Their CODE
+diff has exactly four bytes at offsets `0x504..0x505` and `0x514..0x515`:
+`2B D8 / 2B DA` become `29 C3 / 29 D3`; every other CODE byte is identical.
+The retained receipt is
+`.analysis/reconstruction/probes/v344-items-inline-asm/receipt.json`, SHA-256
+`a0ec8a4a07ab4a396d0aa417e2d8f7cfebf534b7adb43720825217376f5d98fa`.
+The cross-game observation and bounded compiler result justify classifying the
+two symbolic statements as genuine handwritten low-level source. Neither
+observation grants exact credit by itself.
+
+The focused acceptance replay is
+`gpt-5-6-sol-v344-items-inline-focused-006`:
+
+- 96 selected owners pass in two isolated cold builds;
+- receipt SHA-256:
+  `71dfc157ceb7a9ad2d3c9d5a2ef71261e6ef23ac37832b67926d14dc4f19db4d`;
+- manifest SHA-256:
+  `e69e9c9468abf61263e484feab96851a566b32aac5f71ed358ff4ad587bab478`;
+- exact map contribution:
+  `13A9:9F8B 0546 C=CODE S=MAIN_035_TEXT G=MAIN_03 M=th04/itemsu.cpp ACBP=28`;
+- all fifteen overlapping MZ relocations match in target order;
+- both valid `itemsu.obj` files have raw SHA-256
+  `5fb64d49b144ffd14db7044321af9464d948e520725e5a89af720de5a58befea`
+  and dependency-normalized SHA-256
+  `77ae7cc1676baeb9ecc029e8ec2fc7371d9a543df325e130853cb2e08de07b33`;
+- both candidate MAIN images have SHA-256
+  `08c798e316521896771f1f375f37562a8568bbb2e87a4ea6dcda28a92106c890`;
+- the complete 1,350-byte owner slice equals target SHA-256
+  `a0949b541b517ba4be1cb7afd1094b60017235eefd777630b20c038a030f6531`.
+
+The complete default-cohort replay
+`gpt-5-6-sol-v344-items-inline-aggregate-final-008` passes all 252 selected
+owners twice with `failures=[]`. Its receipt SHA-256 is
+`aa0ef5a8e51a60edcde34e572a852351980bac983d3afb4165677267e97a80c8`;
+both candidate MAIN images have SHA-256
+`ed61611def35139c4cbd2126a8408438c40670cae243d9da0d20aa3c0eaeb9fe`.
+Raw bytes, MAP ownership, ordered relocations, OMF integrity, cold determinism,
+ledger validation, and aggregate replay therefore all pass for the complete
+owner. All six reviewed functions, including both compiler switch-table tails,
+are exact. This does not claim whole-image equality, standalone checked-in
+product closure, runtime validation, or pristine retail provenance.

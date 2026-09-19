@@ -742,15 +742,27 @@ def apply_source_transforms(
                 start = text.index(start_anchor)
                 end = text.index(end_anchor, start) + len(end_anchor)
                 removed = text[start:end]
+                removed_digest = digest_bytes(removed.encode(encoding))
                 expected_removed = op.get("removed_sha256")
-                if expected_removed is not None and digest_bytes(removed.encode(encoding)) != str(expected_removed):
+                expected_removed_any = op.get("removed_sha256_any")
+                if expected_removed is not None and expected_removed_any is not None:
+                    raise RuntimeError(
+                        f"{transform_id}/{op_id}: configure only one removed source-span hash form"
+                    )
+                if expected_removed_any is not None:
+                    accepted_removed = {str(value) for value in expected_removed_any}
+                    if not accepted_removed or removed_digest not in accepted_removed:
+                        raise RuntimeError(
+                            f"{transform_id}/{op_id}: removed source-span SHA-256 mismatch"
+                        )
+                elif expected_removed is not None and removed_digest != str(expected_removed):
                     raise RuntimeError(f"{transform_id}/{op_id}: removed source-span SHA-256 mismatch")
                 replacement = str(op.get("replacement", ""))
                 text = text[:start] + replacement + text[end:]
                 op_receipts.append({
                     "id": op_id, "kind": kind,
                     "removed_size": len(removed.encode(encoding)),
-                    "removed_sha256": digest_bytes(removed.encode(encoding)),
+                    "removed_sha256": removed_digest,
                     "replacement_sha256": digest_bytes(replacement.encode(encoding)),
                 })
             else:

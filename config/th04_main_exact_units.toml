@@ -7044,125 +7044,11 @@ build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/bullet_a.cpp\",\n\t\"th04/boss.cpp\",\n"
 build_replacement = "\t\"th04/bullet_a.cpp\",\n\t\"th04/itemsu.cpp\",\n\t\"th04/boss.cpp\",\n"
 
-[[source_transforms]]
-id = "th04-main-items-update-v154-natural"
-trigger_units = ["th04-main-items-update-v154"]
-patch_path = "th04_main.asm"
-encoding = "latin-1"
-scaffold_sha256_any = [
-  "b779a7ddd302f78878225ba9be9201faf619f0e8c0e5847934ee0ab7d580856a",
-  "4a3ec2dee9bd0a07ce0177ab4d2bc4aae704953511311df53a1ffd32469c6163",
-]
-
-[[source_transforms.ops]]
-id = "remove-main035-items-v154"
-kind = "remove_between"
-removed_sha256 = "ab03edd652557dd0217c087ca68e428d0f27974718084e18b0920cdb46a01938"
-start = "sub_1DA1B\tproc far\r\n"
-end = "items_update\tendp\r\n"
-replacement = ""
-
-[[source_transforms.ops]]
-id = "retarget-main-items-init-v154"
-kind = "replace"
-old = "\t\tcall\tsub_1DA1B\r\n"
-new = "\t\tcall\t@items_init$qv\r\n"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "retarget-main-items-update-v154"
-kind = "replace"
-old = "\t\tcall\titems_update\r\n"
-new = "\t\tcall\t@items_update$qv\r\n"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "retarget-main-items-miss-add-v154"
-kind = "replace"
-old = "\t\tcall\titems_miss_add\r\n"
-new = "\t\tcall\t@ITEMS_MISS_ADD$QV\r\n"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "externalize-main035-items-v154"
-kind = "replace"
-old = "main_035_TEXT\tsegment\tbyte public 'CODE' use16\r\n"
-new = "main_035_TEXT\tsegment\tbyte public 'CODE' use16\r\nextrn @items_init$qv:far\r\nextrn @ITEMS_ADD$QII11ITEM_TYPE_T:near\r\nextrn @ITEMS_MISS_ADD$QV:far\r\nextrn @items_update$qv:far\r\n"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "alias-main-sub11-uppercase-v154"
-kind = "replace_optional"
-old = "sub_11DE6\tproc far\r\n"
-new = "public SUB_11DE6\r\nSUB_11DE6 label far\r\nsub_11DE6\tproc far\r\n"
-
-[[source_transforms.ops]]
-id = "export-main-item-bomb-update-v154"
-kind = "replace"
-old = "sub_EFA1\tproc far\r\n"
-new = "public sub_EFA1, _sub_EFA1\r\n_sub_EFA1 label far\r\nsub_EFA1\tproc far\r\n"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "export-main-item-life-update-v154"
-kind = "replace"
-old = "sub_EEE8\tproc far\r\n"
-new = "public sub_EEE8, _sub_EEE8\r\n_sub_EEE8 label far\r\nsub_EEE8\tproc far\r\n"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "alias-main-item-drop-cycle-v154"
-kind = "replace"
-old = "byte_2D00E\tdb ?\r\n"
-new = "public _item_drop_cycle\r\n_item_drop_cycle label byte\r\nbyte_2D00E\tdb ?\r\n"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "alias-main-enemy-drops-v154"
-kind = "replace"
-old = "include th04/main/item/enemy_drops[data].asm\r\n"
-new = "public _ENEMY_DROPS\r\n_ENEMY_DROPS label byte\r\ninclude th04/main/item/enemy_drops[data].asm\r\n"
-expected_count = 1
-
-[[source_transforms]]
-id = "th04-main-items-miss-distance-v154"
-trigger_units = ["th04-main-items-update-v154"]
-patch_path = "th04/main/item/item.hpp"
-encoding = "latin-1"
-scaffold_sha256 = "dfe0863033559d9ac2aa248c3fdd59ffe95485a88ae47928fc1e9a74bafee11a"
-patched_sha256 = "22879043f5a9a7e003687753567230b09998c329e6cb63c7a8b25f6d70823c19"
-
-[[source_transforms.ops]]
-id = "correct-items-miss-add-far-v154"
-kind = "replace"
-old = "void pascal near items_miss_add(void);"
-new = "void pascal far items_miss_add(void);"
-expected_count = 1
-
-[[source_transforms.ops]]
-id = "correct-stage-point-items-width-v154"
-kind = "replace"
-old = "extern unsigned int stage_point_items_collected;"
-new = "extern unsigned char stage_point_items_collected;"
-expected_count = 1
-
-[[source_transforms]]
-id = "th04-main-item-counter-word-alias-v154"
-trigger_units = ["th04-main-items-update-v154"]
-patch_path = "th04/main/item/items[data].asm"
-encoding = "latin-1"
-scaffold_sha256 = "34d809a6599edc2e3753c06d6bca6e2448d45117ced9d15dc4acf86580a9d7b5"
-
-[[source_transforms.ops]]
-id = "alias-main-total-max-valued-items-word-v154"
-kind = "replace"
-old = "_total_max_valued_point_items_collected\tdw 0\r\n"
-new = "public _max_valued_point_items\r\n_max_valued_point_items label word\r\n_total_max_valued_point_items_collected\tdw 0\r\n"
-expected_count = 1
+# v154 source transforms replay after all accepted th04_main.asm edits.
 
 [[units]]
 id = "th04-main-items-update-v154"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-midboss1-update-v153", "th04-main-main035-boss-tu"]
 repo_source = "src/main/item/items_update.cpp"
 overlay_path = "th04/itemsu.cpp"
@@ -11585,3 +11471,125 @@ id = "export-main-scroll-last-delta-v342"
 kind = "insert_before"
 anchor = "include th04/main/playfld[bss].asm\r\n"
 text = "public _scroll_last_delta\r\n"
+
+# Keep the v154 transforms after all previously accepted th04_main.asm edits.
+[[source_transforms]]
+id = "th04-main-items-update-v154-natural"
+trigger_units = ["th04-main-items-update-v154"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "b779a7ddd302f78878225ba9be9201faf619f0e8c0e5847934ee0ab7d580856a",
+  "4a3ec2dee9bd0a07ce0177ab4d2bc4aae704953511311df53a1ffd32469c6163",
+  "66cae301ea7b3ad6909537b5257ee7031813712c04bc0fa2a786ad1b5fca6229",
+]
+
+[[source_transforms.ops]]
+id = "remove-main035-items-v154"
+kind = "remove_between"
+removed_sha256_any = [
+  "ab03edd652557dd0217c087ca68e428d0f27974718084e18b0920cdb46a01938",
+  "c8d6b65857187f973644bc240b4b16beaaf2002ff95817d688c90bb64c53a21f",
+]
+start = "sub_1DA1B\tproc far\r\n"
+end = "items_update\tendp\r\n"
+replacement = ""
+
+[[source_transforms.ops]]
+id = "retarget-main-items-init-v154"
+kind = "replace"
+old = "\t\tcall\tsub_1DA1B\r\n"
+new = "\t\tcall\t@items_init$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main-items-update-v154"
+kind = "replace"
+old = "\t\tcall\titems_update\r\n"
+new = "\t\tcall\t@items_update$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main-items-miss-add-v154"
+kind = "replace_optional"
+old = "\t\tcall\titems_miss_add\r\n"
+new = "\t\tcall\tITEMS_MISS_ADD\r\n"
+
+[[source_transforms.ops]]
+id = "externalize-main035-items-v154"
+kind = "replace"
+old = "main_035_TEXT\tsegment\tbyte public 'CODE' use16\r\n"
+new = "main_035_TEXT\tsegment\tbyte public 'CODE' use16\r\nextrn @items_init$qv:far\r\nextrn @ITEMS_ADD$QII11ITEM_TYPE_T:near\r\nextrn ITEMS_MISS_ADD:far\r\nextrn @items_update$qv:far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main-sub11-uppercase-v154"
+kind = "replace_optional"
+old = "sub_11DE6\tproc far\r\n"
+new = "public SUB_11DE6\r\nSUB_11DE6 label far\r\nsub_11DE6\tproc far\r\n"
+
+[[source_transforms.ops]]
+id = "export-main-item-bomb-update-v154"
+kind = "replace_optional"
+old = "sub_EFA1\tproc far\r\n"
+new = "public sub_EFA1, _sub_EFA1, @hud_bombs_put$qv\r\n_sub_EFA1 label far\r\n@hud_bombs_put$qv label far\r\nsub_EFA1\tproc far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "export-main-item-life-update-v154"
+kind = "replace_optional"
+old = "sub_EEE8\tproc far\r\n"
+new = "public sub_EEE8, _sub_EEE8, @hud_lives_put$qv\r\n_sub_EEE8 label far\r\n@hud_lives_put$qv label far\r\nsub_EEE8\tproc far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main-item-drop-cycle-v154"
+kind = "replace"
+old = "byte_2D00E\tdb ?\r\n"
+new = "public _item_drop_cycle\r\n_item_drop_cycle label byte\r\nbyte_2D00E\tdb ?\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main-enemy-drops-v154"
+kind = "replace"
+old = "include th04/main/item/enemy_drops[data].asm\r\n"
+new = "public _ENEMY_DROPS\r\n_ENEMY_DROPS label byte\r\ninclude th04/main/item/enemy_drops[data].asm\r\n"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-items-miss-distance-v154"
+trigger_units = ["th04-main-items-update-v154"]
+patch_path = "th04/main/item/item.hpp"
+encoding = "latin-1"
+scaffold_sha256 = "dfe0863033559d9ac2aa248c3fdd59ffe95485a88ae47928fc1e9a74bafee11a"
+patched_sha256 = "9aa09cd990f79dc28d9a3e2390b4224b307c08bb848ec2d9c2b3222e260e6795"
+
+[[source_transforms.ops]]
+id = "correct-items-miss-add-far-v154"
+kind = "replace"
+old = "void pascal near items_miss_add(void);"
+new = "extern \"C\" void pascal far items_miss_add(void);"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "correct-stage-point-items-width-v154"
+kind = "replace"
+old = "extern unsigned int stage_point_items_collected;"
+new = "extern unsigned char stage_point_items_collected;"
+expected_count = 1
+
+[[source_transforms]]
+id = "th04-main-item-counter-word-alias-v154"
+trigger_units = ["th04-main-items-update-v154"]
+patch_path = "th04/main/item/items[data].asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "34d809a6599edc2e3753c06d6bca6e2448d45117ced9d15dc4acf86580a9d7b5",
+  "f9de691fd119ee2e06083800928ffeb11350588da5b42d78cfe343c6889985bc",
+]
+
+[[source_transforms.ops]]
+id = "alias-main-total-max-valued-items-word-v154"
+kind = "replace_optional"
+old = "public _total_point_items_collected, _total_max_valued_point_items_collected\r\n_total_point_items_collected\tdw 0\r\n_total_max_valued_point_items_collected\tdw 0\r\n"
+new = "public _total_point_items_collected, _total_max_valued_point_items_collected\r\n_total_point_items_collected\tdw 0\r\npublic _max_valued_point_items\r\n_max_valued_point_items label word\r\n_total_max_valued_point_items_collected\tdw 0\r\n"

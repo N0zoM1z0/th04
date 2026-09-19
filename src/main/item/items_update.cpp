@@ -75,7 +75,7 @@ void pascal near items_add(subpixel_t x, subpixel_t y, item_type_t type)
     }
 }
 
-void pascal far items_miss_add(void)
+extern "C" void pascal far items_miss_add(void)
 {
     int total_item_i;
     int field;
@@ -348,13 +348,15 @@ void far items_update(void)
         if(miss_time == 0) {
             _BX = player_pos.cur.x.v;
             _BX += TO_SP(24);
-            _BX -= _AX;
+            // The same collision block in the attested TH05 target uses the
+            // operand direction selected by TC4J's inline assembler here.
+            asm { sub bx, ax; }
             if(_BX > TO_SP(48)) {
                 goto no_collect;
             }
             _BX = player_pos.cur.y.v;
             _BX += TO_SP(24);
-            _BX -= _DX;
+            asm { sub bx, dx; }
             if(_BX > TO_SP(38)) {
                 goto no_collect;
             }
