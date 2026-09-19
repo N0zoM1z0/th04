@@ -34,6 +34,23 @@ lengths are 67, 24, and 49 bytes against target lengths 67, 24, and 51:
 | Velocity | All 24 instruction bytes agree after masking the absolute `enemy_cur` word and unresolved near-call word. | Linked placement and raw extent have not been tested. |
 | Aim | Its 49 instruction bytes agree after masking five address words and removing the target `PUSH ES` / `POP ES` pair. | Natural TC4J source does not emit that ES preservation pair. |
 
+Two bounded v340/v341 Oracles narrow the remaining aim gap. The attested TH05
+target independently contains the same `PUSH ES` / calls / `POP ES` pattern at
+three enemy-script sites, including an aim helper and bullet calls. In TC4J,
+an ordinary unsigned ES temporary instead emits a 56-byte helper with a BP
+local, a register temporary emits 55 bytes using DI, and `__saveregs` emits 67
+bytes by saving every general and segment register. None produces the target
+51-byte helper. Receipts:
+
+- `.analysis/reconstruction/probes/v340-enemy-es-preservation-001/receipt.json`
+  SHA-256 `8f4529c1de197a4d97561828ac5fea3b19d8588bb950af014627df1480f4424a`;
+- `.analysis/reconstruction/probes/v341-enemy-es-save-codegen-001/receipt.json`
+  SHA-256 `3e99cf2e7d125116f4d52d59aa07f5b003a4f1265bfaef26b8c5489d200b4466`.
+
+This corroborates deliberate low-level ES preservation, but does not prove the
+original source spelling and therefore does not authorize a target-derived
+inline-assembly shortcut.
+
 The target and candidate helper group have unequal lengths (142 versus 140)
 before linking. No exact or runtime claim follows from these normalized
 compiler observations. The v327 superowner remains a historical boundary

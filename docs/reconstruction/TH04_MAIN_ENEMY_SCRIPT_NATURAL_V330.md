@@ -46,6 +46,15 @@ target size for 48 of the 49 physical switch blocks. The remaining block,
 opcode `0x20`, is two bytes short: its instructions otherwise agree in shape,
 but the target surrounds two indirect calls with `PUSH ES` and `POP ES`.
 
+The v340 target Oracle attests this pair and the equivalent pair in the TH04
+aim helper. It also finds three analogous save/call/restore sites in the
+independently hash-attested TH05 MAIN target, including aim and bullet-call
+paths. Receipt SHA-256:
+`8f4529c1de197a4d97561828ac5fea3b19d8588bb950af014627df1480f4424a`.
+The cross-game pattern corroborates intentional ES preservation while stage
+script data remains addressed through ES. It does not identify the original
+source syntax or permit copied inline assembly.
+
 The private receipt SHA-256 is
 `dc6c9aefa240fb967454b04b597b57567754e2eaef1e52a1e6fbdf7030a684cc`.
 The candidate executable body is two bytes shorter than the target before
