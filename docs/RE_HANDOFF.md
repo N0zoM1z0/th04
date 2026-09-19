@@ -31,16 +31,16 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-homing-aggregate-001`: all 253 selected MAIN owners pass two
+  `gpt-web-faceset-filenames-aggregate-001`: all 253 selected MAIN owners pass two
   cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
-  `2efab85ea09f0e5c45be06a4142c4f12e8bee72e60a533d369ac91e6e8738e73`.
+  `d2f908e4b3b1dd100cd4189f8f62a00dbb2f56459d911f5f6898a75813dcee70`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
   randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
   PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, subpixel, bullet-add implementation, HUD
-  geometry, item-overflow, midboss-state, scroll-state, sound-implementation, sound-measure, config-loader, MAP-format, target-verified thicklaser, and homing-state interfaces. The
-  remaining compatibility boundary is **2 forwarders, 3 include sites, and 3
+  geometry, item-overflow, midboss-state, scroll-state, sound-implementation, sound-measure, config-loader, MAP-format, target-verified thicklaser, homing-state, and faceset-filename interfaces. The
+  remaining compatibility boundary is **1 forwarder, 2 include sites, and 2
   product files**, with no missing, unused, invalid, or
   direct forbidden includes.
 
@@ -52,10 +52,7 @@ the accepted extent.
    `th05/main/boss/boss.hpp`. Its two uses sit in GAME5 calibration
    branches and currently consume no TH05-exclusive boss symbol, so close it
    together with the TH04 boss-base ownership rather than inventing a mirror
-   interface. In parallel, continue the one-site families in audit order,
-   beginning with `th05/shiftjis/fns.hpp`. After that, close
-   `th05/main/boss/boss.hpp` together with TH04 boss-base ownership. Run a complete default aggregate after each
-   shared-header or ABI batch.
+   interface. Close `th05/main/boss/boss.hpp` together with TH04 boss-base ownership; its two remaining sites are the final compatibility boundary. Run a complete default aggregate and then `python3 scripts/audit_compat_dependencies.py --require-zero`.
 2. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
    379-byte object. Bind the final case-sensitive `SHOTS_RENDER()` external
@@ -86,7 +83,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-homing-aggregate-001`
+- `gpt-web-faceset-filenames-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`

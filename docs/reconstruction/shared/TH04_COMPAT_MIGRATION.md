@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **2 forwarders and 3 include sites in 3 files**. The
+138 product files to **1 forwarder and 2 include sites in 2 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -42,36 +42,38 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | MAP format | packed TH04 map header/section layout without legacy planar dependency | 4 | `572482e` |
 | Thicklaser ABI | target-verified four-byte post-origin padding and maintained laser state layout | 3 | `0b27b64` |
 | Homing state | single TH04 SPPoint target declaration used across player/enemy/boss code | 2 | `3c6c9a7` |
+| Faceset filenames | conditional GAME4/5 faceset-loader macro with exact filename byte case | 1 | `ee3dbfd` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-homing-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-faceset-filenames-aggregate-001/receipt.json`
 (SHA-256
-`2efab85ea09f0e5c45be06a4142c4f12e8bee72e60a533d369ac91e6e8738e73`).
+`d2f908e4b3b1dd100cd4189f8f62a00dbb2f56459d911f5f6898a75813dcee70`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The homing batch removes `compat/rec98/th04/main/homing.hpp` and replaces all
-eight maintained same-game include sites with `src/main/homing.hpp`. The
-localized interface intentionally contains only `extern SPPoint homing_target`
-and reuses the already-local Q12.4 subpixel/point ABI.
+The faceset-filename batch removes `compat/rec98/th05/shiftjis/fns.hpp` from
+`src/main/ems.cpp` and replaces the old GAME4/5 include split by
+`src/main/shiftjis/fns.hpp`. The local surface keeps only the one macro this TU
+actually consumes: `main_cdg_load_faceset_playchar()` plus the filename
+literals it references.
 
-The four-midboss update dependency chain passes focused two-cold replay
-(receipt SHA-256
-`2b59adeef4c59b7b948412120ca0160e7ef0a46fbccba13e74e5d5f4671a3b01`),
-and `enemies_update` passes focused replay (receipt SHA-256
-`816581e3902563f15d036f25295819cf0146497926c7025a4535366295c4c544`).
-The historical Reimu-shot focused selection now reaches a later final-link
-failure because its old gameover closure omits score/HUD owners; `rshot.cpp`
-itself compiles. The current full aggregate therefore supplies the acceptance
-gate for Reimu shots, boss.cpp, and every other affected accepted owner.
+GAME4 retains the two-character if/else form and is covered by focused replay
+of the exact `ems.cpp` owner (receipt SHA-256
+`5be464ba78252c2f62831e13f1ba390ca02732d48705add771f9e19e2fb7baf1`).
+A pinned PC-98 IDE GAME5 A/B probe expands the four-character switch and emits
+all four filenames; all 13 semantic OMF records are byte-identical after
+excluding dependency/producer COMENT and LINNUM metadata. Probe receipt SHA-256
+is `5a19b266dff01e539b6b87e3b91ea0fefc571c0ad72feef22f4e93fb92ea18cf`.
+The probe also demonstrates that exact filename byte case matters: GAME5 must
+emit `KAO0.cd2` through `KAO3.cd2`; casing-only alternatives change LEDATA.
 
-The complete `gpt-web-homing-aggregate-001` replay passes all 253 default MAIN
-owners twice with `failures=[]`; both candidate MAIN images remain SHA-256
-`54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 3 forwarders / 4 sites / 4 files to 2 / 3 / 3,
+The complete `gpt-web-faceset-filenames-aggregate-001` replay passes all 253
+default MAIN owners twice with `failures=[]`; both candidate MAIN images remain
+SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
+The compat audit moves from 2 forwarders / 3 sites / 3 files to 1 / 2 / 2,
 with no missing, orphan, invalid, or direct forbidden include. No new exact
 owner is claimed.
 
@@ -84,8 +86,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining one family has one site. Re-run the audit instead
-of copying this queue once another batch lands.
+No one-site families remain. Re-run the audit after the final boss-base batch.
 
 ## Migration workflow
 
