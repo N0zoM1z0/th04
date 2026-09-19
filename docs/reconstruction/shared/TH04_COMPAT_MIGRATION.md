@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **12 forwarders and 13 include sites in 13 files**. The
+138 product files to **11 forwarders and 12 include sites in 12 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -32,22 +32,23 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Polar | TH04 polar helper plus consumed unsafe trig-table offset helpers | 14 | `2e871dd` |
 | Subpixel | existing TH04 Q12.4 interface reused by the CIRCLE_TEXT scroll helper | 13 | `ff84251` |
 | Bullet add impl | ring-group switch macro actually consumed by TH04 bullet/add.cpp | 12 | `1000bb7` |
+| HUD metrics | HUD_LEFT geometry consumed indirectly by playfield clipping macros | 11 | `dfdbf1d` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-bullet-impl-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-hud-metrics-aggregate-001/receipt.json`
 (SHA-256
-`cb797c1ac0e1dc1aec16e8a57f8838cb94886c9c8f93afbde3d4f5c1e2f4a84b`).
+`f6c9a735d65e23a06466ff84b02a014edeb1025ae7f19203942413a5077d9350`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The bullet-add implementation batch removes the sole product use of `compat/rec98/th02/main/bullet/impl.hpp` from `src/main/bullet/add.cpp`. A source-wide usage check shows that TH04 consumes only `bullet_group_ring_impl` from that legacy header; the spread and TH02/TH03 shared macro families are not used by this TU and are intentionally not copied.
+The HUD-metrics batch removes `compat/rec98/th02/main/hud/hud.hpp` from `src/main/boss/explode.cpp`. The dependency is not visible as a direct HUD identifier in that source: `playfield_clip_topleft_large()` expands through `PLAYFIELD_CLIP_RIGHT`, whose definition depends on `HUD_LEFT`.
 
-The local `src/main/bullet/add_impl.hpp` preserves the consumed macro source shape: GAME >= 3 computes the ring angle as `(i * 0x100) / count`, the last bullet sets `done` when `i >= count - 1`, and control transfers through the caller-supplied `goto` label. This is kept as a macro because its labels and surrounding switch control flow are part of TC4J code generation.
+A deliberate first probe that simply removed the compatibility include failed TC4J compilation with `HUD_LEFT` undefined. The corrected migration adds only `src/main/hud/metrics.hpp` with the TH04 HUD-left text-cell coordinate 56, making the hidden clipping dependency explicit without importing the unrelated TH02 HUD API or changing the existing exact HUD implementation TU.
 
-Focused two-cold replay of the complete `th04-main-module-th04-bullet-a-cpp-1cc33` owner passes (receipt SHA-256 `656195bdf3e355799a2e3f5d1accb51f30f9a50af5c20c7dce4986449147285d`). The complete `gpt-web-bullet-impl-aggregate-001` replay passes all 253 default MAIN owners twice with `failures=[]`; both candidate MAIN images remain SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 13 forwarders / 14 sites / 14 files to 12 / 13 / 13, with no missing, orphan, invalid, or direct forbidden include. No new exact owner is claimed.
+Focused two-cold replay of `th04-main-module-th04-boss-exp-cpp-d88c` passes (receipt SHA-256 `9d76018059a3cc1edbfc8d46bd8bf00b9a38c5571be5f41ddf634840c6ffac25`). The complete `gpt-web-hud-metrics-aggregate-001` replay passes all 253 default MAIN owners twice with `failures=[]`; both candidate MAIN images remain SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 12 forwarders / 13 sites / 13 files to 11 / 12 / 12, with no missing, orphan, invalid, or direct forbidden include. No new exact owner is claimed.
 
 ## Next families
 
@@ -58,7 +59,7 @@ line locations. The next bounded families are:
 | --- | ---: | ---: |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 
-The remaining eleven families have one site each. Re-run the audit instead
+The remaining ten families have one site each. Re-run the audit instead
 of copying this queue once another batch lands.
 
 ## Migration workflow
