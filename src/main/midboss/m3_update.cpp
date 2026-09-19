@@ -6,7 +6,7 @@
 #include "th04/main/frames.h"
 #include "th04/main/phase.hpp"
 #include "th04/main/scroll.hpp"
-#include "th04/main/homing.hpp"
+#include "src/main/homing.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/player/player.hpp"

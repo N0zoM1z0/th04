@@ -47,7 +47,7 @@ void pascal near tiles_render_all(void);
 #include "th04/main/bg.hpp"
 #include "th04/main/end.hpp"
 #include "th04/main/frames.h"
-#include "th04/main/homing.hpp"
+#include "src/main/homing.hpp"
 #include "th04/main/null.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/quit.hpp"

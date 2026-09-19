@@ -2,7 +2,7 @@
 
 #include "src/shared/runtime/api.hpp"
 #include "src/main/player/shot.hpp"
-#include "compat/rec98/th04/main/homing.hpp"
+#include "src/main/homing.hpp"
 
 static const unsigned char REIMU_SHOT_CYCLE_FRAMES = 18;
 extern "C" unsigned char reimu_shot_cycle;

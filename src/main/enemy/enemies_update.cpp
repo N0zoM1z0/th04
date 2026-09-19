@@ -2,7 +2,7 @@
 
 #include "th04/main/enemy/enemy.hpp"
 #include "th04/main/player/shot.hpp"
-#include "th04/main/homing.hpp"
+#include "src/main/homing.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/spark.hpp"
 #include "th04/snd/snd.h"
