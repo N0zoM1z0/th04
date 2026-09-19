@@ -68,7 +68,7 @@ void pascal near tiles_render_all(void);
 #else
 #include "src/main/formats/cdg.hpp"
 #include "src/shared/config/resident.hpp"
-#include "th04/formats/bb.h"
+#include "src/main/formats/bb.hpp"
 #include "th04/formats/dialog.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/boss/backdrop.hpp"

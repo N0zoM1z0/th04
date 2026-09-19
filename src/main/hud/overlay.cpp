@@ -5,7 +5,7 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "src/main/hardware/grcg.hpp"
 #include "src/shared/hardware/v_colors.hpp"
-#include "th04/formats/bb.h"
+#include "src/main/formats/bb.hpp"
 #include "th04/main/null.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"

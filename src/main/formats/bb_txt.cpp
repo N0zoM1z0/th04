@@ -2,7 +2,7 @@
 
 #include "x86real.h"
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th04/formats/bb.h"
+#include "src/main/formats/bb.hpp"
 
 extern bb_tiles8_t __seg *bb_txt_seg;
 extern const char bb_txt_fn[];

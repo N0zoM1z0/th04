@@ -17,6 +17,13 @@ local_header = "src/shared/hardware/graphics.hpp"
 minimum_count = 1
 
 [[scaffold_header_rewrites]]
+id = "th04-bb-format-local"
+scaffold_path = "th04/main/tile/bb.hpp"
+scaffold_sha256 = "ffb1a3f9e522e4c94680e43ca20468430630f574e237acf83234ef8df42a59ad"
+old_include = "th04/formats/bb.h"
+local_header = "src/main/formats/bb.hpp"
+
+[[scaffold_header_rewrites]]
 id = "th04-entity-bullet-header-local"
 scaffold_path = "th04/main/bullet/bullet.hpp"
 scaffold_sha256 = "a3ecd6ed0d6758e13a43f96ee022fa3368e5024ec7ac60e9555251879f15c2ef"
@@ -992,6 +999,7 @@ scaffold_include_mappings = [
   { local = "src/shared/config/resident.hpp", occurrence = 1, scaffold = ["th05/resident.hpp"] },
   { local = "src/main/formats/cdg.hpp", scaffold = ["th03/formats/cdg.h"] },
   { local = "src/shared/config/resident.hpp", occurrence = 2, scaffold = ["th04/resident.hpp"] },
+  { local = "src/main/formats/bb.hpp", scaffold = ["th04/formats/bb.h"] },
 ]
 map_module = "th04/boss.cpp"
 map_mode = "contains"

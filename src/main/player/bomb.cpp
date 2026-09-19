@@ -1,7 +1,7 @@
 #pragma option -zCMAIN__TEXT -zPmain_01
 #include "x86real.h"
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th04/formats/bb.h"
+#include "src/main/formats/bb.hpp"
 #include "src/shared/config/resident.hpp"
 #include "src/main/formats/cdg.hpp"
 #include "th04/sprites/main_cdg.h"
