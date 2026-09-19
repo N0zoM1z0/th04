@@ -37,7 +37,7 @@ void pascal near tiles_render_all(void);
 #include "src/shared/hardware/graphics.hpp"
 #include "src/main/math/overlap.hpp"
 #include "src/shared/hardware/frame_delay.hpp"
-#include "compat/rec98/th03/hardware/palette.hpp"
+#include "src/main/hardware/palette.hpp"
 #include "th04/common.h"
 #include "th04/snd/snd.h"
 #include "th04/sprites/main_cdg.h"
