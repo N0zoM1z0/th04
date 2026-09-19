@@ -86,6 +86,7 @@ def repo_input_paths(
     build_inserts: list[dict[str, object]],
     scaffold_extractions: list[dict[str, object]] | None = None,
     prebuild_objects: list[dict[str, object]] | None = None,
+    source_transforms: list[dict[str, object]] | None = None,
 ) -> list[Path]:
     """Return all live repository inputs that cold replay must freeze once."""
 
@@ -108,6 +109,9 @@ def repo_input_paths(
             paths.add(Path(str(entry["driver"])))
         if entry.get("repo_source"):
             paths.add(Path(str(entry["repo_source"])))
+        for value in entry.get("repo_inputs", []):
+            paths.add(Path(str(value)))
+    for entry in source_transforms or []:
         for value in entry.get("repo_inputs", []):
             paths.add(Path(str(value)))
     # Freeze product-owned headers reached by selected source, including their
@@ -1609,7 +1613,12 @@ def main() -> int:
     snapshot_receipt = materialize_repo_snapshot(
         snapshot_root,
         repo_input_paths(
-            entries, splits, build_inserts, scaffold_extractions, prebuild_objects
+            entries,
+            splits,
+            build_inserts,
+            scaffold_extractions,
+            prebuild_objects,
+            source_transforms,
         ),
     )
     snapshot_compat = snapshot_root / "compat" / "rec98"

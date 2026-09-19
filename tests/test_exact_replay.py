@@ -745,6 +745,18 @@ class ScaffoldExtractionTests(unittest.TestCase):
         paths = replay.repo_input_paths([], [], [], [extraction])
         self.assertIn(Path("wrapper.asm.in"), paths)
 
+    def test_repo_input_paths_include_source_transform_inputs(self) -> None:
+        transform = {
+            "patch_path": "th02/snd/se.cpp",
+            "repo_inputs": [
+                "src/shared/sound/api.hpp",
+                "src/shared/platform/x86.hpp",
+            ],
+        }
+        paths = replay.repo_input_paths([], [], [], [], [], [transform])
+        self.assertIn(Path("src/shared/sound/api.hpp"), paths)
+        self.assertIn(Path("src/shared/platform/x86.hpp"), paths)
+
 
 class BuildInsertTests(unittest.TestCase):
     def fixture(self, root: Path, *, duplicate_anchor: bool = False):
