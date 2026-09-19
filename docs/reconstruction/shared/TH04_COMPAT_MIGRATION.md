@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **17 forwarders and 20 include sites in 19 files**. The
+138 product files to **16 forwarders and 18 include sites in 17 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -27,42 +27,36 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | PI | shared PI slots, load/free/display API, row-pointer macros, and GAME-dependent call ABI | 19 | `40ccff5` |
 | Tile | shared tile/file-format dimensions and GAME4+ ring-storage width | 18 | `ca98da6` |
 | BB | TH04 .BB size/type/segment ABI, text-dissolve helpers, and pinned tile-BB include rewrite | 17 | `0b6bfaf` |
+| Enemy size | MAIN enemy and kill-box dimensions used by enemy/midboss code | 16 | `f1884f4` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-bb-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-enemy-size-aggregate-001/receipt.json`
 (SHA-256
-`c3512f416504c122fae23b9c57a3ac23f4d72c47069c05eb6360edae67ad6ef2`).
+`b613dfbdf1196abfed9de2d90bb2df0adee779987f6c4081d015be35d7437412`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The BB batch replaces all six maintained direct uses of
-`th04/formats/bb.h` with the MAIN-owned `src/main/formats/bb.hpp`.
-This includes the two remaining compatibility-forwarder sites and four
-same-game scaffold-path includes. The local interface preserves
-`BB_SIZE=2048`, the 8-bit `bb_tiles8_t` element type, segmented boss
-storage, the GAME5 near versus GAME4 far distance of `bb_boss_free()`, and
-the original `bb_txt_put_8()` register/evaluation order.
+The enemy-size batch replaces the two compatibility-forwarder uses of
+`th04/main/enemy/size.hpp` plus the remaining same-game include in
+`src/main/midboss/invalidate.cpp` with the MAIN-owned
+`src/main/enemy/size.hpp`. The interface is deliberately small: it keeps
+`ENEMY_W=32`, `ENEMY_H=32`, and the two `pixel_t` kill-box
+constants at 32. All three maintained consumers are full translation-unit
+overlays, so no replay scaffold rewrite is necessary.
 
-The pinned scaffold header `th04/main/tile/bb.hpp` also includes the old
-BB header transitively. Exact replay therefore uses one
-`scaffold_header_rewrites` entry bound to source SHA-256
-`ffb1a3f9e522e4c94680e43ca20468430630f574e237acf83234ef8df42a59ad`; this keeps the rewrite confined to that attested header
-rather than applying a broad tree substitution. The historical
-`boss_prefix.inl` localized fragment gets an explicit include mapping.
-
-Focused two-cold replay passes for `th04-main-bb-txt-v104`
-(receipt SHA-256 `5a241539abd9d24d49699e02233ebc95ec8fab7c3659de715298d463603f8029`) and
-`th04-main-module-th04-hud-ovrl-cpp-10d4b`
-(receipt SHA-256 `08fa27b086507da1d9f02fdd7baabd53fd5f3b4f967944f3b2a9c0e561e0a2b8`). The complete
-`gpt-web-bb-aggregate-001` replay passes all 253 default MAIN owners twice
-with `failures=[]` and includes all seven affected exact owners, including
-the bomb core and both Yuuka6 background owners. Both candidate MAIN images
-remain SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 18 forwarders /
-22 sites / 21 files to 17 / 20 / 19, with no missing, orphan, invalid, or
-direct forbidden include. No new exact owner is claimed.
+Focused two-cold replay passes for
+`th04-main-module-th04-mb-inv-cpp-12124` (receipt SHA-256
+`7dc85fefcb92cd281ecd297b3989372e6c82632eda46a4e19ea27ca003c64935`) and `th04-main-enemies-invalidate-v103`
+(receipt SHA-256 `6d838089730c3e9b8213632d61b630cf44f9ba9fdc12fe2dc67bf0f94ae5524b`). The complete
+`gpt-web-enemy-size-aggregate-001` replay passes all 253 default MAIN
+owners twice with `failures=[]` and also covers
+`th04-main-enemy-script-helpers-v328`. Both candidate MAIN images remain
+SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 17 forwarders / 20
+sites / 19 files to 16 / 18 / 17, with no missing, orphan, invalid, or direct
+forbidden include. No new exact owner is claimed.
 
 ## Next families
 
@@ -71,7 +65,6 @@ line locations. The next bounded families are:
 
 | Forwarder | Sites | Product files |
 | --- | ---: | ---: |
-| `th04/main/enemy/size.hpp` | 2 | 2 |
 | `th05/main/boss/boss.hpp` | 2 | 2 |
 | `th05/sprites/main_pat.h` | 2 | 2 |
 

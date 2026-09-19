@@ -31,23 +31,23 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-bb-aggregate-001`: all 253 selected MAIN owners pass two cold
-  builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
-  `c3512f416504c122fae23b9c57a3ac23f4d72c47069c05eb6360edae67ad6ef2`.
+  `gpt-web-enemy-size-aggregate-001`: all 253 selected MAIN owners pass two
+  cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
+  `b613dfbdf1196abfed9de2d90bb2df0adee779987f6c4081d015be35d7437412`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
   randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
-  PI, tile-format, and BB interfaces. The remaining compatibility boundary is
-  **17 forwarders, 20 include sites, and 19 product files**, with no missing,
-  unused, invalid, or direct forbidden includes.
+  PI, tile-format, BB, and enemy-size interfaces. The remaining compatibility
+  boundary is **16 forwarders, 18 include sites, and 17 product files**, with
+  no missing, unused, invalid, or direct forbidden includes.
 
 ## Ordered work queue
 
 1. **Finish standalone source closure.** Follow the
    [compatibility migration recipe](reconstruction/shared/TH04_COMPAT_MIGRATION.md).
    Continue with the two-site families in dependency-audit order, beginning
-   with `th04/main/enemy/size.hpp` and `th05/main/boss/boss.hpp`.
+   with `th05/main/boss/boss.hpp` and `th05/sprites/main_pat.h`.
    Run a complete default aggregate after each shared-header or ABI batch.
 2. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
@@ -79,7 +79,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-bb-aggregate-001`
+- `gpt-web-enemy-size-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`
