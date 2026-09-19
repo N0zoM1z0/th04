@@ -11,10 +11,10 @@ product interfaces under `src/`.
 
 ## Current baseline
 
-After the first batch, the dependency audit reports 34 forwarding headers and
-235 include sites in 133 product files, down from 43 headers and 261 sites in
-138 files. There are no missing, invalid, unused, or direct cross-game
-includes.
+After the runtime/graphics batch, the dependency audit reports 32 forwarding
+headers and 103 include sites in 71 product files, down from the original 43
+headers and 261 sites in 138 files. There are no missing, invalid, unused, or
+direct cross-game includes.
 
 The first batch removed these nine adapters:
 
@@ -35,6 +35,35 @@ MAP, relocation, and OMF exact. Receipt:
 The disabled, unaddressed `th04-main-boss-prefix` replay entry has no promotable
 extent; its new localized-fragment path is covered by replay unit tests and is
 not presented as a byte-exact unit claim.
+
+## Runtime and graphics batch
+
+The second batch removes both high-reach vendor adapters:
+
+| Old adapter | TH04-owned replacement |
+| --- | --- |
+| `libs/master.lib/master.hpp` | `src/shared/runtime/api.hpp` |
+| `libs/master.lib/pc98_gfx.hpp` | `src/shared/hardware/graphics.hpp` |
+
+The local interfaces use checked-in foundations under `src/shared/platform/`:
+16-bit compiler and memory-model ABI, PC-98 types/constants, and x86 real-mode
+operations. Product code contains no direct vendor or cross-game include. The
+external function and variable names remain unchanged because they are part of
+the target ABI.
+
+This batch changes 132 include sites across 106 product files. Exact replay
+also rewrites 13 runtime and 14 graphics include lines still present in the
+pinned TH04 scaffold, recording every original and patched file hash. The local
+headers retain the vendor include guards so an indirect pinned-scaffold include
+cannot redeclare inline bodies. This guard compatibility is replay plumbing;
+the checked-in product paths and organization remain TH04-owned.
+
+The v348 default MAIN replay builds twice and keeps all 253 accepted owners raw,
+MAP, relocation, and OMF exact. Receipt:
+`.analysis/reconstruction/exact-unit-replay/gpt-5-6-sol-v348-runtime-gfx-aggregate-004/receipt.json`
+(SHA-256 `5ef3de5246fd967ecb863ba907b2c61521fba34be8e66a0668d4d7ce9841b785`).
+This proves the exercised declarations preserve the accepted MAIN producers;
+it does not grant independent exact credit to unused API declarations.
 
 ## Batch workflow
 
@@ -82,6 +111,11 @@ not presented as a byte-exact unit claim.
      cross-game declaration, add a hash-bound `[[scaffold_header_rewrites]]`
      entry. This is replay plumbing only. It is gated by the presence of the
      selected local product header and only rewrites one attested include line.
+
+   - A high-reach vendor include that remains across many pinned TH04 scaffold
+     files uses `[[scaffold_tree_include_rewrites]]`. The rewrite is restricted
+     to the pinned `th04/` tree, gated by a frozen local header, limited to one
+     exact include line, and records every input/output file hash.
 
 6. Run the narrow replay first, then the complete default aggregate after any
    shared header or ABI change.

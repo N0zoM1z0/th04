@@ -27,6 +27,8 @@ For this repository, product declarations and names remain TH04-owned;
 exact-replay modes, batch checklist, and handoff template live in
 [`docs/reconstruction/shared/TH04_COMPAT_MIGRATION.md`](../../docs/reconstruction/shared/TH04_COMPAT_MIGRATION.md).
 Run `python3 scripts/audit_compat_dependencies.py --check` after every batch.
+The former `master.hpp` and `pc98_gfx.hpp` adapters are now TH04-owned runtime,
+graphics, and platform interfaces under `src/shared/`.
 
 This is a migration boundary, not the final shared library. It still requires
 the pinned ReC98 checkout behind the forwarding headers and therefore does not
