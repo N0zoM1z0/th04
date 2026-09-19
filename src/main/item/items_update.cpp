@@ -8,7 +8,7 @@
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/score.hpp"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
 #include "compat/rec98/th02/main/item/shared.hpp"

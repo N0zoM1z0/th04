@@ -1,5 +1,5 @@
 #include "src/main/hardware/grcg.hpp"
-#include "compat/rec98/th03/formats/cdg.h"
+#include "src/main/formats/cdg.hpp"
 #include "th04/main/boss/backdrop.hpp"
 #include "th04/sprites/main_cdg.h"
 

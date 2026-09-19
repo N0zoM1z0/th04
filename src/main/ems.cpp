@@ -4,15 +4,14 @@
 #pragma option -zPmain_01
 
 #include "src/shared/hardware/graphics.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/common.h"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
 #if (GAME == 5)
-#include "compat/rec98/th05/resident.hpp"
 #include "compat/rec98/th05/playchar.h"
 #include "compat/rec98/th05/shiftjis/fns.hpp"
 #else
-#include "th04/resident.hpp"
 #include "th04/playchar.h"
 #include "th04/shiftjis/fns.hpp"
 #endif

@@ -419,6 +419,35 @@ class Rec98CompatTests(unittest.TestCase):
                 [{"local": "src/shared/header.hpp", "scaffold": ["../old.hpp"]}],
             )
 
+    def test_localized_fragment_maps_repeated_include_occurrences(self) -> None:
+        source = (
+            b'#include "src/shared/config/resident.hpp"\n'
+            b"branch\n"
+            b'#include "src/shared/config/resident.hpp"\n'
+            b"body\n"
+        )
+        mappings = [
+            {
+                "local": "src/shared/config/resident.hpp",
+                "occurrence": 1,
+                "scaffold": ["th05/resident.hpp"],
+            },
+            {
+                "local": "src/shared/config/resident.hpp",
+                "occurrence": 2,
+                "scaffold": ["th04/resident.hpp"],
+            },
+        ]
+        rewritten, used = replay.rewrite_local_includes_for_scaffold(source, mappings)
+        self.assertEqual(
+            rewritten,
+            b'#include "th05/resident.hpp"\n'
+            b"branch\n"
+            b'#include "th04/resident.hpp"\n'
+            b"body\n",
+        )
+        self.assertEqual(used, mappings)
+
     def test_localized_fragment_can_finish_without_compat_forwarders(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

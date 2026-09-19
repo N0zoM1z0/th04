@@ -7,7 +7,7 @@
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/playchar.h"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/player/player.hpp"
@@ -18,7 +18,7 @@
 #include "th04/main/dialog/dialog.hpp"
 #include "th04/formats/map.hpp"
 #include "th04/formats/dialog.hpp"
-#include "compat/rec98/th03/formats/cdg.h"
+#include "src/main/formats/cdg.hpp"
 
 extern unsigned char page_front;
 extern unsigned char page_back;

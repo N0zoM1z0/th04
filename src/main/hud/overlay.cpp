@@ -13,12 +13,10 @@
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
+#include "src/shared/config/resident.hpp"
 
-#if (GAME == 5)
-#include "compat/rec98/th05/resident.hpp"
-#else
+#if (GAME != 5)
 #include "th04/playchar.h"
-#include "th04/resident.hpp"
 #endif
 
 // See tile.hpp for the reason why this declaration is necessary

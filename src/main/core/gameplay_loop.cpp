@@ -7,7 +7,7 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "src/main/hardware/grcg.hpp"
 #include "th04/hardware/input.h"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/slowdown.hpp"
 #include "th04/main/quit.hpp"

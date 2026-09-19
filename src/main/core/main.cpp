@@ -1,7 +1,7 @@
 #pragma option -zCDEMO_TEXT -zPmain_01
 
 #include "platform.h"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/quit.hpp"

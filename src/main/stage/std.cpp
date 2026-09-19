@@ -5,7 +5,7 @@
 
 #include "x86real.h"
 #include "src/shared/runtime/api.hpp"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/formats/std.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/scroll.hpp"

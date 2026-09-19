@@ -7,7 +7,7 @@
 #include "compat/rec98/th01/rank.h"
 #include "th04/end/end.h"
 #include "th04/playchar.h"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/player/player.hpp"

@@ -4,7 +4,7 @@
 #include "th04/main/player/player.hpp"
 #include "th04/main/player/move.hpp"
 #include "th04/main/quit.hpp"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "compat/rec98/th02/snd/snd.h"
 
 static const unsigned char MISS_ANIM_FRAMES = 32;

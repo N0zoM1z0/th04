@@ -3,7 +3,7 @@
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
 #include "src/main/hardware/grcg.hpp"
-#include "compat/rec98/th03/formats/cdg.h"
+#include "src/main/formats/cdg.hpp"
 #include "src/main/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/sprites/main_pat.h"

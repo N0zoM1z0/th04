@@ -287,19 +287,24 @@ def rewrite_local_includes_for_scaffold(
 
     if not isinstance(mappings, list) or not mappings:
         raise RuntimeError("localized fragment requires scaffold_include_mappings")
-    rewritten = source
     used: list[dict[str, object]] = []
-    seen_local: set[str] = set()
+    replacements: list[tuple[int, int, bytes]] = []
+    selected_occurrences: set[tuple[str, int]] = set()
     for mapping in mappings:
         if not isinstance(mapping, dict):
             raise RuntimeError("scaffold include mapping must be a table")
         local = mapping.get("local")
         scaffold = mapping.get("scaffold")
+        occurrence = mapping.get("occurrence")
         if not isinstance(local, str) or not local.startswith("src/"):
             raise RuntimeError(f"invalid local include mapping path: {local!r}")
-        if local in seen_local:
-            raise RuntimeError(f"duplicate local include mapping path: {local}")
-        seen_local.add(local)
+        if occurrence is not None and (
+            not isinstance(occurrence, int) or isinstance(occurrence, bool)
+            or occurrence < 1
+        ):
+            raise RuntimeError(
+                f"invalid local include mapping occurrence for {local}: {occurrence!r}"
+            )
         if not isinstance(scaffold, list) or not scaffold or not all(
             isinstance(path, str) for path in scaffold
         ):
@@ -321,18 +326,35 @@ def rewrite_local_includes_for_scaffold(
         pattern = re.compile(
             rb"^" + re.escape(marker) + rb"(?P<eol>\r?\n)", re.MULTILINE
         )
-        matches = list(pattern.finditer(rewritten))
-        if len(matches) != 1:
+        matches = list(pattern.finditer(source))
+        if occurrence is None and len(matches) != 1:
             raise RuntimeError(
                 f"local include must occur exactly once in localized fragment: {local}"
             )
-        match = matches[0]
+        if occurrence is not None and occurrence > len(matches):
+            raise RuntimeError(
+                f"local include occurrence {occurrence} is missing in localized fragment: {local}"
+            )
+        selected = 1 if occurrence is None else occurrence
+        key = (local, selected)
+        if key in selected_occurrences:
+            raise RuntimeError(
+                f"duplicate local include mapping occurrence {selected}: {local}"
+            )
+        selected_occurrences.add(key)
+        match = matches[selected - 1]
         eol = match.group("eol")
         replacement = b"".join(
             f'#include "{path}"'.encode("ascii") + eol for path in scaffold
         )
-        rewritten = rewritten[:match.start()] + replacement + rewritten[match.end():]
-        used.append({"local": local, "scaffold": list(scaffold)})
+        replacements.append((match.start(), match.end(), replacement))
+        record: dict[str, object] = {"local": local, "scaffold": list(scaffold)}
+        if occurrence is not None:
+            record["occurrence"] = occurrence
+        used.append(record)
+    rewritten = source
+    for start, end, replacement in sorted(replacements, reverse=True):
+        rewritten = rewritten[:start] + replacement + rewritten[end:]
     return rewritten, used
 
 

@@ -103,7 +103,7 @@ void near scoredat_recreate(void)
 typedef int playchar2;
 #else
 #if ((GAME == 4) && (BINARY == 'M'))
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #endif
 #include "th04/playchar.h"
 typedef playchar_t playchar2;

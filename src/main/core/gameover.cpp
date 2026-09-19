@@ -7,7 +7,7 @@
 #include "platform.h"
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/hardware/input.h"
 #include "th04/main/null.hpp"
 #include "th04/main/score.hpp"

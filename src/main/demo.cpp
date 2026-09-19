@@ -4,11 +4,7 @@
 #include "th04/hardware/inputvar.h"
 #include "th04/main/frames.h"
 #include "th04/main/demo.hpp"
-#if (GAME == 5)
-#include "compat/rec98/th05/resident.hpp"
-#else
-#include "th04/resident.hpp"
-#endif
+#include "src/shared/config/resident.hpp"
 
 void near demo_load(void)
 {

@@ -2,7 +2,7 @@
 
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/end/end.h"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/snd/snd.h"
 
 int pascal GameExecl(const char *binary_fn);

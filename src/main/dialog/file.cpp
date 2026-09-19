@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 #include "src/shared/runtime/api.hpp"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/formats/dialog.hpp"
 
 void pascal near dialog_load(const char *fn)

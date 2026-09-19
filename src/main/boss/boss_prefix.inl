@@ -28,11 +28,11 @@
 #include "th04/main/player/shot.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #if (GAME == 5)
-#include "compat/rec98/th05/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "compat/rec98/th05/main/boss/boss.hpp"
 #else
-#include "compat/rec98/th03/formats/cdg.h"
-#include "th04/resident.hpp"
+#include "src/main/formats/cdg.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/formats/bb.h"
 #include "th04/formats/dialog.hpp"
 #include "th04/main/boss/boss.hpp"

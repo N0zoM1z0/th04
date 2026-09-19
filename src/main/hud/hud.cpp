@@ -5,7 +5,7 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "th04/gaiji/gaiji.h"
 #include "th04/main/score.hpp"
-#include "th04/resident.hpp"
+#include "src/shared/config/resident.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/playchar.h"
