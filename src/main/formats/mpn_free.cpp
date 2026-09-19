@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th02/formats/tile.hpp"
+#include "src/shared/formats/tile.hpp"
 #include "th04/formats/mpn.hpp"
 
 void pascal mpn_free(int slot)

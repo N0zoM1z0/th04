@@ -2,7 +2,7 @@
 
 #include <mem.h>
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th02/formats/tile.hpp"
+#include "src/shared/formats/tile.hpp"
 #include "th04/formats/mpn.hpp"
 
 // Basically just a copy of the TH02 one, adjusted to work with multiple slots.
