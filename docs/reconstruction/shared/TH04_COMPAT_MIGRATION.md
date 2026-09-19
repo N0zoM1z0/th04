@@ -11,7 +11,7 @@ ReC98 scaffold. They must not become product interfaces under `src/`.
 ## Current baseline
 
 The migration reduced the boundary from 43 forwarders and 261 include sites in
-138 product files to **19 forwarders and 24 include sites in 23 files**. The
+138 product files to **18 forwarders and 22 include sites in 21 files**. The
 audit reports zero missing, unused, invalid, and direct forbidden includes.
 
 | Batch | Localized boundary | Forwarders after | Code commit |
@@ -25,42 +25,33 @@ audit reports zero missing, unused, invalid, and direct forbidden includes.
 | Playchar | GAME4/5 play-character enum ABI used by shared maintained TUs | 21 | `777b8cf` |
 | Rank | rank enum width/constants and MAIN rank selector declaration | 20 | `8005fee` |
 | PI | shared PI slots, load/free/display API, row-pointer macros, and GAME-dependent call ABI | 19 | `40ccff5` |
+| Tile | shared tile/file-format dimensions and GAME4+ ring-storage width | 18 | `ca98da6` |
 
 The latest complete proof is
-`.analysis/reconstruction/exact-unit-replay/gpt-web-pi-aggregate-001/receipt.json`
+`.analysis/reconstruction/exact-unit-replay/gpt-web-tile-aggregate-001/receipt.json`
 (SHA-256
-`f663f61c617b6a8902a60799724541ac3b2cda859c4bf1bec9607f88c4e73924`).
+`0d837c3dafb7e0f3b168bfd5e065cf5f3ddd310ea684cc1c7a92550adb22157e`).
 It builds twice and keeps all 253 selected MAIN owners raw, MAP, relocation,
 and OMF exact. This validates the exercised declarations; it gives no exact
 credit to unused API declarations.
 
 ## Latest completed batch
 
-The PI batch replaces the two product uses of `compat/rec98/th02/formats/pi.h`
-with `src/shared/formats/pi.hpp`. The local interface keeps the six-slot
-TH02-TH04 / eight-slot TH05 split, PI dimensions and quarter helpers, global
-slot ABI, load/free/display helpers, and the original far-pointer row
-arithmetic.
+The tile batch replaces the two product uses of
+`compat/rec98/th02/formats/tile.hpp` with `src/shared/formats/tile.hpp`.
+The local interface preserves the original format constants exactly:
+`TILE_W/H=16`, `TILES_X=24`, `TILES_Y=25`, `TILE_BITS_W/H=4`, and
+`TILES_MEMORY_X=32` for GAME >= 4. These remain format dimensions rather than
+being rewritten in terms of playfield metrics.
 
-The helper calling convention remains historically conditional: cdecl for
-TH02 and Pascal from TH03 onward. A fresh TC86 A/B probe compiles the same
-`PIPUT.CPP` and `PILOAD.CPP` module names before and after localization with
-the production GAME4 large-model profile. Dependency COMENT records change as
-expected because the include closure is now local, while every non-COMENT OMF
-record is identical: 12/12 for PI put and 11/11 for PI load, covering
-LEDATA, FIXUPP, PUBDEF, EXTDEF, SEGDEF, LNAMES, GRPDEF, THEADR, and MODEND.
-The comparison receipt is
-`.analysis/gpt-web/pi-header-abi-probe-001/semantic-compare.json`
-(SHA-256
-`30fca9002730eb5e26db7a3e3a4676f6207d7d7ea16487b6a7c93cb40305e854`).
-
-The complete `gpt-web-pi-aggregate-001` replay passes all 253 default MAIN
-owners twice with `failures=[]`; both candidate MAIN images remain SHA-256
-`54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
-The compat audit moves from 20 forwarders / 26 sites / 25 files to
-19 / 24 / 23, with no missing, orphan, invalid, or direct forbidden include.
-No new artifact-local exactness is claimed for the shared OP/MAINE PI
-producers.
+Focused two-cold replay passes for both touched accepted owners:
+`th04-main-mpn-free` (receipt SHA-256 `b6c7cb134f3731cccd369f67a495db768d475ea917997f53d8f3cf5dd34a527d`) and
+`th04-main-module-th04-mpn-l-i-cpp-13269` (receipt SHA-256
+`7ce46b2455868b246a2486dd6fc7eeb00358dc806c9223a7e47daa345d5a46d2`). The complete `gpt-web-tile-aggregate-001` replay passes
+all 253 default MAIN owners twice with `failures=[]`; both candidate MAIN
+images remain SHA-256 `54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`. The compat audit moves from 19
+forwarders / 24 sites / 23 files to 18 / 22 / 21, with no missing, orphan,
+invalid, or direct forbidden include. No new exact owner is claimed.
 
 ## Next families
 
@@ -69,7 +60,6 @@ line locations. The next bounded families are:
 
 | Forwarder | Sites | Product files |
 | --- | ---: | ---: |
-| `th02/formats/tile.hpp` | 2 | 2 |
 | `th04/formats/bb.h` | 2 | 2 |
 | `th04/main/enemy/size.hpp` | 2 | 2 |
 | `th05/main/boss/boss.hpp` | 2 | 2 |

@@ -31,23 +31,23 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-pi-aggregate-001`: all 253 selected MAIN owners pass two cold
+  `gpt-web-tile-aggregate-001`: all 253 selected MAIN owners pass two cold
   builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
-  `f663f61c617b6a8902a60799724541ac3b2cda859c4bf1bec9607f88c4e73924`.
+  `0d837c3dafb7e0f3b168bfd5e065cf5f3ddd310ea684cc1c7a92550adb22157e`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
   randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
-  and PI interfaces. The remaining compatibility boundary is **19 forwarders,
-  24 include sites, and 23 product files**, with no missing, unused, invalid,
-  or direct forbidden includes.
+  PI, and tile-format interfaces. The remaining compatibility boundary is **18
+  forwarders, 22 include sites, and 21 product files**, with no missing, unused,
+  invalid, or direct forbidden includes.
 
 ## Ordered work queue
 
 1. **Finish standalone source closure.** Follow the
    [compatibility migration recipe](reconstruction/shared/TH04_COMPAT_MIGRATION.md).
    Continue with the two-site families in dependency-audit order, beginning
-   with `th02/formats/tile.hpp` and `th04/formats/bb.h`.
+   with `th04/formats/bb.h` and `th04/main/enemy/size.hpp`.
    Run a complete default aggregate after each shared-header or ABI batch.
 2. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
@@ -79,7 +79,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-pi-aggregate-001`
+- `gpt-web-tile-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`
