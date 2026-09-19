@@ -1,7 +1,7 @@
 #pragma option -zCEND_TEXT -zPmain_01
 
 #include "src/shared/runtime/api.hpp"
-#include "compat/rec98/th04/formats/map.hpp"
+#include "src/main/formats/map.hpp"
 #include "src/shared/config/resident.hpp"
 
 extern char *map_fn;

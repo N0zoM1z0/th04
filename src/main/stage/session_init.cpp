@@ -16,7 +16,7 @@
 #include "th04/main/scroll.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/dialog/dialog.hpp"
-#include "th04/formats/map.hpp"
+#include "src/main/formats/map.hpp"
 #include "th04/formats/dialog.hpp"
 #include "src/main/formats/cdg.hpp"
 
