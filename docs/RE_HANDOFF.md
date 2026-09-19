@@ -30,12 +30,12 @@ inert padding, ABI changes, or false assembly ownership.
 
 ## Current state
 
-MAIN has **472/491 reviewed authored C/C++ functions** and
-**78,837/83,441 reviewed authored C/C++ bytes** exact; 40 accepted
+MAIN has **476/491 reviewed authored C/C++ functions** and
+**79,183/83,441 reviewed authored C/C++ bytes** exact; 40 accepted
 original-style ASM units add 5,615 bytes. The last complete native aggregate,
-gpt-5-6-sol-v344-items-inline-aggregate-final-008, passes all 252 default exact
+gpt-5-6-sol-v345-thicklaser-symbolic-aggregate-001, passes all 253 default exact
 MAIN owners twice (receipt SHA-256
-aa0ef5a8e51a60edcde34e572a852351980bac983d3afb4165677267e97a80c8).
+d889eece6b57c25b56f90ded4c0eb4b60b1543c517711ba740c7db4e0c5f5500).
 All 51 boss-named MAIN authored candidates are exact. None of these counts
 means whole MAIN.EXE or whole TH04 is exact.
 
@@ -46,12 +46,14 @@ four reviewed functions, and all three ordered relocations are exact.
 The [item producer](reconstruction/TH04_MAIN035_ITEMS_V154.md) owns
 MAIN_035_TEXT load `0x1DA1B..0x1DF60`: all 1,350 bytes, six reviewed
 functions, both switch-table tails, and fifteen ordered relocations are exact.
+The [thick-laser producer](reconstruction/TH04_MAIN_THICKLASER_UPDATE_V181.md)
+owns B4M_UPDATE_TEXT load `0x15D74..0x15ECD`: all 346 bytes, four reviewed
+functions, and both ordered relocations are exact.
 
 | MAIN physical owner | Target extent | Current blocker |
 | --- | --- | --- |
 | Dialog | DIALOG_TEXT load 0xCF3D..0xD728, 0x7EC bytes | Raw bytes/MAP/sites match, ordered relocs fail. Target has three descending MZ runs; current dialog.obj has two LEDATA/FIXUPP groups and two runs. Target OMF unknown. [Evidence](reconstruction/TH04_MAIN_DIALOG_BOUNDARY_V180.md) |
 | Stage session | DEMO_TEXT load 0xAED0..0xB3ED, 0x51E bytes | Raw bytes/MAP/sites match; ordered relocations fail. A [function split and mid-function segment controls](reconstruction/TH04_DEMO_PAUSE_SPLIT_V282.md), plus [simple object reordering](reconstruction/TH04_DEMO_LINK_ORDER_V291.md), cannot reproduce the target order. |
-| Thick laser update | B4M_UPDATE_TEXT load 0x15D74..0x15ECD, 0x15A bytes | Eight-byte template-copy setup-order difference. [Evidence](reconstruction/TH04_MAIN_THICKLASER_UPDATE_V181.md) |
 | Gameplay init/loop | DEMO_TEXT load 0xAD03..0xAECF / 0xAB88..0xAD02 | Init misses one metadata byte; maintained loop compiles to 373/379 bytes. A [compiler probe](reconstruction/TH04_DEMO_GAMEPLAY_TERNARY_V248.md) produces both target `EB 00` jumps from void conditional expressions, but their no-op arms lack source provenance; the dead DX copy remains open. |
 
 The [decoded-payload comparison](reconstruction/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
@@ -113,7 +115,7 @@ config/th04_function_boundaries.csv, and python3 scripts/status.py.
 Find a natural OMF producer for MAIN dialog/DEMO ordered relocations without
 changing raw bytes or MAP; [current controls](reconstruction/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
 rule out common switches and the simple pause split. Continue the large
-gameplay-loop and thick-laser owners. For OP/MAINE, recover SND_LOAD,
+gameplay-loop owner. For OP/MAINE, recover SND_LOAD,
 OP music, the remaining decoded payload bytes, and the v231 link/packer input
 topology as checked-in source. For ZUN, recover ZUNINIT, MEMCHK, ONGCHK, and
 natural `_main` call placement; the equal candidate composite still includes

@@ -11593,3 +11593,62 @@ id = "alias-main-total-max-valued-items-word-v154"
 kind = "replace_optional"
 old = "public _total_point_items_collected, _total_max_valued_point_items_collected\r\n_total_point_items_collected\tdw 0\r\n_total_max_valued_point_items_collected\tdw 0\r\n"
 new = "public _total_point_items_collected, _total_max_valued_point_items_collected\r\n_total_point_items_collected\tdw 0\r\npublic _max_valued_point_items\r\n_max_valued_point_items label word\r\n_total_max_valued_point_items_collected\tdw 0\r\n"
+
+# v345 replaces the retained v157 thick-laser scaffold with maintained source.
+[[build_replacements]]
+id = "th04-main-thicklaser-update-v181-build"
+trigger_units = ["th04-main-thicklaser-update-v181"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/eadd.cpp\",\n\t\"th04/b4mthick.asm\",\n"
+build_replacement = "\t\"th04/eadd.cpp\",\n\t\"th04/b4mthick.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-thicklaser-update-v181-call"
+trigger_units = ["th04-main-thicklaser-update-v181"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "c904eb6fef4314195b61a42bc601bca171313d80979d0bd46ab6e836acf426a5",
+  "bef7ec261da82c483d43b750b6dddcfc42f3b8c7e279af8804fe9717bc84ba10",
+]
+
+[[source_transforms.ops]]
+id = "retarget-main-thicklasers-init-declaration-v181"
+kind = "replace"
+old = "extrn sub_15D74:far\r\n"
+new = "extrn @thicklasers_init$qv:far\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-main-thicklasers-init-call-v181"
+kind = "replace"
+old = "\t\tcall\tsub_15D74\r\n"
+new = "\t\tcall\t@thicklasers_init$qv\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "alias-main-thicklaser-hud-bombs-v181"
+kind = "replace_optional"
+old = "sub_EFA1\tproc far\r\n"
+new = "public @hud_bombs_put$qv\r\n@hud_bombs_put$qv label far\r\nsub_EFA1\tproc far\r\n"
+
+[[source_transforms.ops]]
+id = "alias-main-thicklaser-hud-lives-v181"
+kind = "replace_optional"
+old = "sub_EEE8\tproc far\r\n"
+new = "public @hud_lives_put$qv\r\n@hud_lives_put$qv label far\r\nsub_EEE8\tproc far\r\n"
+
+[[units]]
+id = "th04-main-thicklaser-update-v181"
+default_enabled = true
+requires_units = ["th04-main-yuuka5-tail-v158"]
+repo_source = "src/main/bullet/thicklaser_update.cpp"
+overlay_path = "th04/b4mthick.cpp"
+map_module = "th04/b4mthick.cpp"
+map_mode = "exact"
+object_path = "obj/th04/b4mthick.obj"
+map_segment = "B4M_UPDATE_TEXT"
+map_start = "0x22E4"
+map_size = "0x15A"
+target_file_offset = "0x17574"
+size = "0x15A"

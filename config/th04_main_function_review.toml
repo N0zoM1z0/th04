@@ -4043,11 +4043,8 @@ address = "0x1D56C"
 evidence_id = "ev-th04-main-dialog-run-boundary-v180"
 reason = "Expand the reviewed authored denominator with the complete contiguous dialog_run() body while preserving its relocation-order blocker."
 
-# v181: Complete B4M_UPDATE_TEXT thick-laser producer. The physical 0x15A owner
-# is source-present but raw-nonexact only in the 0x18 template copy helper.
-# Function-boundary admission therefore expands the reviewed denominator without
-# granting function exactness to the three byte-identical diagnostic slices.
-[[reviewed_nonexact_internal_call]]
+# v181/v345: Complete exact B4M_UPDATE_TEXT thick-laser producer.
+[[reviewed_exact_internal_call]]
 id = "th04-main-fn-25d74"
 address = "0x25D74"
 file_offset = "0x17574"
@@ -4055,20 +4052,14 @@ size = "0x31"
 name = "thicklasers_init()"
 owner_unit = "th04-main-thicklaser-update-v181"
 source = "src/main/bullet/thicklaser_update.cpp"
-generated_public = "sub_15D74"
+generated_public = "thicklasers_init()"
 evidence_id = "ev-th04-main-thicklaser-init-boundary-v181"
-reason = "Target-first review closes the 0x31 FAR initializer through RETF immediately before thicklaser_template_pull(). The target session-init FAR call at image 0x1B286 resolves exactly to B4M_UPDATE_TEXT 13A9:22E4. The enclosing natural-C++ owner remains raw-nonexact, so exactness is withheld."
+reason = "Target-first review closes the 0x31 FAR initializer through RETF immediately before thicklaser_template_pull(). The target session-init FAR call at image 0x1B286 resolves exactly to B4M_UPDATE_TEXT 13A9:22E4, and v345 focused plus aggregate replay prove exact physical ownership."
 next_internal_address = "0x25DA5"
 call_site_address = "0x1B286"
 call_distance = "far"
 
-[[new_nonexact]]
-id = "th04-main-fn-25d74"
-address = "0x25D74"
-evidence_id = "ev-th04-main-thicklaser-init-boundary-v181"
-reason = "Expand the reviewed denominator for the target-called thick-laser initializer while its complete physical C++ producer remains raw-nonexact."
-
-[[reviewed_nonexact]]
+[[reviewed_exact]]
 id = "th04-main-fn-25da5"
 address = "0x25DA5"
 file_offset = "0x175A5"
@@ -4077,15 +4068,9 @@ name = "thicklaser_template_pull(thicklaser_t near&)"
 owner_unit = "th04-main-thicklaser-update-v181"
 source = "src/main/bullet/thicklaser_update.cpp"
 evidence_id = "ev-th04-main-thicklaser-template-pull-boundary-v181"
-reason = "Fresh target-bound Ghidra, the target MAP public, pinned TASM, and gap-free raw decode agree on the complete 0x18 near Pascal structure-copy helper through RET 2. Natural TC4J __memcpy__ preserves size and semantics but reorders the register-setup instructions, so the function remains blocked."
+reason = "Fresh target-bound Ghidra, the target MAP public, pinned TASM, and gap-free raw decode agree on the complete 0x18 near Pascal structure-copy helper through RET 2. v345 reproduces the complete exact owner from independently corroborated symbolic low-level source."
 
-[[new_nonexact]]
-id = "th04-main-fn-25da5"
-address = "0x25DA5"
-evidence_id = "ev-th04-main-thicklaser-template-pull-boundary-v181"
-reason = "Expand the reviewed denominator for the complete public template-copy helper; source is present but eight setup bytes remain nonexact."
-
-[[reviewed_nonexact_internal_call]]
+[[reviewed_exact_internal_call]]
 id = "th04-main-fn-25dbd"
 address = "0x25DBD"
 file_offset = "0x175BD"
@@ -4095,17 +4080,11 @@ owner_unit = "th04-main-thicklaser-update-v181"
 source = "src/main/bullet/thicklaser_update.cpp"
 generated_public = "_thicklaser_add"
 evidence_id = "ev-th04-main-thicklaser-add-boundary-v181"
-reason = "Fresh Ghidra/TASM/raw close the 0x2B near add routine through RET. The target near CALL at image 0x2AF91 resolves to the entry, and the next target function begins at 0x25DE8. Diagnostic cold-replay slice bytes are identical, but owner-level raw exactness is required before function credit."
+reason = "Fresh Ghidra/TASM/raw close the 0x2B near add routine through RET. The target near CALL at image 0x2AF91 resolves to the entry, the next target function begins at 0x25DE8, and v345 proves exact physical ownership."
 next_internal_address = "0x25DE8"
 call_site_address = "0x2AF91"
 
-[[new_nonexact]]
-id = "th04-main-fn-25dbd"
-address = "0x25DBD"
-evidence_id = "ev-th04-main-thicklaser-add-boundary-v181"
-reason = "Expand the reviewed denominator for thicklaser_add(); its slice is diagnostic-byte-identical but the enclosing physical owner remains raw-nonexact."
-
-[[reviewed_nonexact_internal_call]]
+[[reviewed_exact_internal_call]]
 id = "th04-main-fn-25de8"
 address = "0x25DE8"
 file_offset = "0x175E8"
@@ -4115,15 +4094,9 @@ owner_unit = "th04-main-thicklaser-update-v181"
 source = "src/main/bullet/thicklaser_update.cpp"
 generated_public = "_thicklasers_update"
 evidence_id = "ev-th04-main-thicklaser-update-boundary-v181"
-reason = "Fresh Ghidra/TASM/raw close the complete 0xE6 near state/update/hit-test routine through RET. The target near CALL at image 0x269C4 resolves to the entry, and exact yuuka5_move_transition() begins at 0x25ECE. Diagnostic cold-replay slice bytes are identical, but owner-level raw exactness is required before function credit."
+reason = "Fresh Ghidra/TASM/raw close the complete 0xE6 near state/update/hit-test routine through RET. The target near CALL at image 0x269C4 resolves to the entry, exact yuuka5_move_transition() begins at 0x25ECE, and v345 proves exact physical ownership."
 next_internal_address = "0x25ECE"
 call_site_address = "0x269C4"
-
-[[new_nonexact]]
-id = "th04-main-fn-25de8"
-address = "0x25DE8"
-evidence_id = "ev-th04-main-thicklaser-update-boundary-v181"
-reason = "Expand the reviewed denominator for thicklasers_update(); its slice is diagnostic-byte-identical but the enclosing physical owner remains raw-nonexact."
 
 # v182: DIALOG_TEXT rendering primitives between the exact std-transition
 # prefix and exact dialog_box_fade_in_animate(). Maintained natural C++ removes

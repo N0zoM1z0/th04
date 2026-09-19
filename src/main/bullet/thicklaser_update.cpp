@@ -21,12 +21,16 @@ void far thicklasers_init(void)
     thicklaser_template.radius_speed = 1;
 }
 
-// TC4J's intrinsic expresses the original 24-byte near structure copy without
-// embedding target bytes. Its register-setup order remains an exactness question.
+// TH05 independently repeats this low-level copy order in two homologous
+// helpers: word count, DS:ES, source/destination offsets, then REP MOVSW.
 #pragma option -G
 void near pascal thicklaser_template_pull(thicklaser_t near& laser)
 {
-    __memcpy__(&laser, &thicklaser_template, sizeof(thicklaser_t));
+    _CX = (sizeof(thicklaser_t) / sizeof(unsigned int));
+    asm { push ds; pop es; }
+    _SI = reinterpret_cast<unsigned int>(&thicklaser_template);
+    _DI = reinterpret_cast<unsigned int>(&laser);
+    asm { rep movsw; }
 }
 
 extern "C" void near thicklaser_add(void)

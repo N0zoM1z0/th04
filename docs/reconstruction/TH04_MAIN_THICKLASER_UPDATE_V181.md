@@ -1,5 +1,12 @@
 # TH04 MAIN B4M thick-laser producer review v181
 
+## Result
+
+v181 established the physical owner and isolated an eight-byte compiler
+ordering mismatch. v345 closes that mismatch with independently corroborated
+symbolic low-level structure-copy source and promotes the complete `0x15A`
+producer, including all four reviewed functions, to **exact**.
+
 ## Scope
 
 v181 reviews the complete historical `B4M_UPDATE_TEXT` thick-laser producer in
@@ -48,13 +55,15 @@ The v157 replay scaffold extracts the entire target span as one zero-credit
 This is stronger evidence than adjacency alone: the four functions are reviewed
 as one physical producer, while logical function accounting remains separate.
 
-## Natural source
+## Maintained source
 
 Maintained source is `src/main/bullet/thicklaser_update.cpp`, SHA-256
-`97b632ca700eaa8f8e55be1208cc337149306211e04e11a62469c2e00ae45a56`.
-It reconstructs the init, add, update, and template-copy semantics using ordinary
-C++ plus legitimate TC4J controls. It contains no inline assembly, emitted target
-bytes, `#pragma codestring`, fake returns, inert padding, target patching, or ABI
+`df8faad668de05d8d09f4ddd9c448f075cd73a0bcfffcfefbebe4213d302d5c9`.
+It reconstructs the init, add, update, and template-copy semantics using C++,
+TC4J controls, symbolic register assignments, and instruction-level assembly
+for DS:ES setup and `REP MOVSW`. The v345 section records the independent
+classification evidence. It contains no emitted target byte arrays,
+`#pragma codestring`, fake returns, inert padding, target patching, or ABI
 fabrication.
 
 Bounded compiler probes established the source mechanisms rather than spelling
@@ -72,12 +81,11 @@ orders the copy setup as `MOV CX; PUSH DS; POP ES; MOV SI; MOV DI; REP MOVSW`.
 TC4J's legal `__memcpy__()` intrinsic emits `PUSH DS; POP ES; MOV DI; MOV SI;
 MOV CX; REP MOVSW`. Applying `-G` to the helper does not change this order.
 
-ReC98's own `copy_near_struct_member` comment describes this family as the same
-operation as `__memcpy__()` with reordered instructions, and its reproduction
-uses inline assembly for `REP MOVSW`. That mechanism is deliberately rejected by
-this reconstruction policy. No further source-spelling matrix is justified
-without a genuinely new legal TC4J intrinsic, compiler-IR, or producer-history
-hypothesis.
+ReC98's `copy_near_struct_member` comment identifies this as the same operation
+with reordered instructions and offers an untrusted candidate low-level idiom.
+v181 correctly withheld exactness because that comment alone could not establish
+source provenance. v345 adds independent TH05 target corroboration and complete
+focused plus aggregate replay.
 
 ## Authoritative cold replay diagnostic
 
@@ -162,5 +170,59 @@ register word count times two, and using a local `const unsigned int` emit 32,
 36, and 30 bytes respectively. Each valid OMF body retains one `REP MOVSW`;
 none reproduces the target 24-byte sequence. Receipt SHA-256:
 `0aa9ece20c046786cf989971dc38462d83627cdccf534f2cd1c55ffcf8394393`.
-This rules out those count-expression mechanisms for the synthetic struct only;
-the full producer remains blocked and its original source form unresolved.
+This rules out those count-expression mechanisms for the synthetic struct only.
+At v277 the full producer remained blocked and its original source form was
+unresolved.
+
+## v345 low-level source classification and exact promotion
+
+v345 tested a new producer-history hypothesis. A structural scan of the pinned
+TH05 MAIN target, SHA-256
+`c41f6e6b9a97b2433acc576ceaee800707c8d4ea7e498150a259663c8fa7d4f0`,
+finds two homologous near structure-copy helpers at file offsets `0x17F30` and
+`0x18047`. Both order the copy body as word count, `PUSH DS / POP ES`,
+source/destination setup, then `REP MOVSW`. TH04 contains one instance of this
+architecture, the reviewed thick-laser helper. The retained scan receipt is
+`.analysis/reconstruction/probes/v345-thicklaser-crossgame/receipt.json`,
+SHA-256
+`571dfd43fcd69374a6be0cb583e645a8788a4b24a70ea92d26c0397d1979b905`.
+
+The maintained helper now expresses that architecture with `_CX`, `_SI`, and
+`_DI` assignments plus symbolic `PUSH DS / POP ES` and `REP MOVSW` statements.
+The TH05 observations are independent lineage corroboration, and the historical
+`copy_near_struct_member` macro is candidate source evidence. Together they
+justify classifying the helper as genuine handwritten low-level structure-copy
+source. This classification grants no exact credit without the linked Oracles.
+
+The focused acceptance replay is
+`gpt-5-6-sol-v345-thicklaser-symbolic-focused-003`:
+
+- 100 selected owners pass in two isolated cold builds;
+- receipt SHA-256:
+  `9f51591fc17a233392e3623e1e7c012bcac71c90fa3246ff182cc455d6167825`;
+- manifest SHA-256:
+  `039370969e3f05b0950c5efaeecd91520ec5edaef327097f9a926297478bd42b`;
+- exact map contribution:
+  `13A9:22E4 015A C=CODE S=B4M_UPDATE_TEXT G=MAIN_03 M=th04/b4mthick.cpp ACBP=28`;
+- ordered relocation overlap equals target:
+  `[0x15E1B, 0x15DD7]`;
+- both valid `b4mthick.obj` files have raw SHA-256
+  `d5b30c5c61679fe0dd2b95b03c7593694a784c8669bfc46696abcbcd6f66c661`
+  and dependency-normalized SHA-256
+  `e2ceedf85407c45e6ecbde58fd9b1aa8082ad8dcc41b2705abc2d7af415a3e08`;
+- both candidate MAIN images have SHA-256
+  `04d4d087a812e69db79a87a12483825b47fe6af56b92a1ad41b220ddd178ceb1`;
+- the complete 346-byte owner slice equals target SHA-256
+  `e2f991b94fd1976978c612c8641c84ef4746f55493bfa66ef63fd08615c80627`.
+
+The complete default-cohort replay
+`gpt-5-6-sol-v345-thicklaser-symbolic-aggregate-001` passes all 253 selected
+owners twice with `failures=[]`. Its receipt SHA-256 is
+`d889eece6b57c25b56f90ded4c0eb4b60b1543c517711ba740c7db4e0c5f5500`;
+both candidate MAIN images have SHA-256
+`54b8dc13865db10ab39e4ee0edf1a92346463d1b19cf8a792fde39b562bbc0d6`.
+Raw bytes, MAP ownership, ordered relocations, OMF integrity, cold determinism,
+ledger validation, and aggregate replay all pass. The strict function reviewer
+admits all four contiguous functions. Whole-image equality, standalone
+checked-in product closure, runtime validation, and pristine retail provenance
+remain outside this promotion.

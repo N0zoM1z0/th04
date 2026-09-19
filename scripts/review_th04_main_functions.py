@@ -485,18 +485,11 @@ def reviewed_exact_internal_call_reviews(functions, metadata, publics, target):
             )
 
         call_site = int(str(override["call_site_address"]), 0)
-        call_offset = file_offset_for(call_site)
-        if call_offset < 0 or call_offset + 3 > len(raw_target):
-            raise ValueError(f"internal-call exact address 0x{address:X} call anchor escapes target")
-        if raw_target[call_offset] != 0xE8:
-            raise ValueError(f"internal-call exact address 0x{address:X} call anchor is not near CALL")
-        displacement = int.from_bytes(raw_target[call_offset + 1:call_offset + 3], "little", signed=True)
-        resolved_call = call_site + 3 + displacement
-        if resolved_call != address:
-            raise ValueError(
-                f"internal-call exact address 0x{address:X} call target mismatch: "
-                f"0x{resolved_call:X} != 0x{address:X}"
-            )
+        call_distance = str(override.get("call_distance", "near"))
+        resolved_call = resolve_call_anchor(
+            raw_target, call_site, address, distance=call_distance,
+            context=f"internal-call exact address 0x{address:X}",
+        )
 
         decoded = linear_decode(target, address, file_offset, size)
         instruction_addresses = decoded.pop("instruction_addresses", None)
