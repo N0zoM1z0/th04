@@ -1,6 +1,5 @@
 #pragma option -zCSHARED
 
-#include "compat/rec98/th01/math/polar.hpp"
 #include "src/main/math/polar.hpp"
 #include "th04/math/vector.hpp"
 
