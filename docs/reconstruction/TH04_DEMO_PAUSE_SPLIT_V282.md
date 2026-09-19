@@ -50,3 +50,28 @@ Private receipt SHA-256:
 The next producer hypothesis must predict the **global** MZ table placement
 as well as owner-local FIXUPP order while preserving the `0x51E` bytes and
 verified source semantics.
+
+## Mid-function segment control (v337)
+
+The target order can be described as one `pause()` relocation at load
+`0xB2DA`, then the 40 session-core relocations, then the remaining 11
+`pause()` relocations. This suggests a three-part object topology, so the
+bounded follow-up tested whether TC4J can switch code segments after the first
+`input_reset_sense()` call without changing the function body:
+
+```sh
+python3 scripts/probes/probe_th04_demo_midfunction_segment.py \
+  --output-dir .analysis/reconstruction/probes/v337-demo-midfunction-segment-001
+```
+
+The probe attests MAIN, the retained v214 session object, and the pinned TC4J
+binary. `#pragma option -zCPAUSE_TAIL_TEXT` inside `pause()` is rejected with
+an incorrect-directive diagnostic. `#pragma codeseg PAUSE_TAIL_TEXT main_01`
+at the same position compiles, but all `0x11F` bytes remain in one
+`PAUSE_HEAD_TEXT` LEDATA range and `PAUSE_TAIL_TEXT` receives no CODE.
+
+Thus the source-level pragma mechanisms cannot produce the proposed
+one/core/eleven FIXUPP partition inside this function. The historical object
+producer remains unknown, and the unit stays blocked on ordered relocations.
+Private receipt SHA-256:
+`069ee4f7fc6ccbad0b6dc5f63b83eb299d5f31b49bac97c26df9a9c057c7b850`.
