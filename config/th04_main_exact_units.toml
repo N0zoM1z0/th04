@@ -12088,7 +12088,7 @@ text = "public _playchar_shot_funcs\r\n_playchar_shot_funcs label word\r\n"
 
 [[units]]
 id = "th04-main-gameplay-session-init-v165"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-gameplay-loop-v165"]
 repo_source = "src/main/core/demo_prefix.cpp"
 overlay_path = "th04/demopre.cpp"
