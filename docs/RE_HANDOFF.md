@@ -31,16 +31,16 @@ the accepted extent.
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-subpixel-aggregate-001`: all 253 selected MAIN owners pass two
+  `gpt-web-bullet-impl-aggregate-001`: all 253 selected MAIN owners pass two
   cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt SHA-256:
-  `0b3cb43f4677f656ee6a4afd961c151f422e82c1d7962937bd2f90489f90aeb4`.
+  `cb797c1ac0e1dc1aec16e8a57f8838cb94886c9c8f93afbde3d4f5c1e2f4a84b`.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
   randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
-  PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, and subpixel
-  interfaces. The remaining compatibility boundary is **13 forwarders, 14
-  include sites, and 14 product files**, with no missing, unused, invalid, or
+  PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, subpixel, and bullet-add implementation
+  interfaces. The remaining compatibility boundary is **12 forwarders, 13
+  include sites, and 13 product files**, with no missing, unused, invalid, or
   direct forbidden includes.
 
 ## Ordered work queue
@@ -52,8 +52,8 @@ the accepted extent.
    branches and currently consume no TH05-exclusive boss symbol, so close it
    together with the TH04 boss-base ownership rather than inventing a mirror
    interface. In parallel, continue the one-site families in audit order,
-   beginning with `th02/main/bullet/impl.hpp` and
-   `th02/main/hud/hud.hpp`. Run a complete default aggregate after each
+   beginning with `th02/main/hud/hud.hpp` and
+   `th02/main/item/shared.hpp`. Run a complete default aggregate after each
    shared-header or ABI batch.
 2. **Close the MAIN gameplay loop candidate.** Retained run
    `gpt-5-6-sol-v346-gameplay-symbolic-focused-004` emits the target-positioned
@@ -85,7 +85,7 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
-- `gpt-web-subpixel-aggregate-001`
+- `gpt-web-bullet-impl-aggregate-001`
 - `gpt-5-6-sol-v346-gameplay-symbolic-focused-004`
 - `gptweb-v213-dialog-reloc-diagnostic-001`
 - `gptweb-v214-demo-fixupp-diagnostic-001`
