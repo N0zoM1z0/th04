@@ -9,11 +9,7 @@
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
 #include "src/main/playchar.hpp"
-#if (GAME == 5)
-#include "compat/rec98/th05/shiftjis/fns.hpp"
-#else
-#include "th04/shiftjis/fns.hpp"
-#endif
+#include "src/main/shiftjis/fns.hpp"
 #include "th04/main/ems.hpp"
 
 extern char *eyename;	/* ZUN symbol [MAGNet2010] */
