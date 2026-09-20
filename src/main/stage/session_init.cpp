@@ -84,12 +84,12 @@ extern unsigned char stage_point_items_collected;
 extern unsigned char dream_items_collected;
 extern nearfunc_t_near bg_render_bombing_func;
 extern "C" void near stage_state_init(void);
-void near shot_cycle_reset(void);
+void near shots_reset(void);
 void far shot_level_update(void);
 #pragma samecodeseg shot_level_update
 void near randring_fill(void);
 void far items_init(void);
-void near bomb_state_reset(void);
+void near bomb_reset(void);
 extern "C" void near sparks_init(void);
 extern "C" void pascal near hud_score_put(void);
 void far thicklasers_init(void);
@@ -311,11 +311,11 @@ void near stage_runtime_init(void)
     dream_items_collected = 0;
     std_update = std_update_frames_then_animate_dialog_and_activate_boss_if_done;
     scroll_active = true;
-    shot_cycle_reset();
+    shots_reset();
     shot_level_update();
     randring_fill();
     items_init();
-    bomb_state_reset();
+    bomb_reset();
     sparks_init();
     hud_score_put();
     thicklasers_init();
