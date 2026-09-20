@@ -12418,7 +12418,10 @@ id = "th04-main-randring2-mod-asm-v388-residual"
 trigger_units = ["th04-main-randring2-next16-mod-asm-v388"]
 patch_path = "th04_main.asm"
 encoding = "latin-1"
-scaffold_sha256 = "3ff9d2478a09d4871069745516e0a415ea738529c47d1df4918b1352346a2b72"
+scaffold_sha256_any = [
+  "56a53cc327002c7fde8672852a7bd4828ef1a25ee38b38d610b81a5f7ea1ec64",
+  "3ff9d2478a09d4871069745516e0a415ea738529c47d1df4918b1352346a2b72",
+]
 
 [[source_transforms.ops]]
 id = "externalize-randring2-mod-v388"
