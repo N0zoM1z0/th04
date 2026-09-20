@@ -974,7 +974,7 @@ producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-dialog-op"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-dialog-run"]
 repo_source = "src/main/dialog/op.inl"
 source_mode = "fragment"
@@ -990,7 +990,7 @@ producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-dialog-run"
-default_enabled = false
+default_enabled = true
 requires_units = [
   "th04-main-module-th04-f-dialog-cpp-ce93",
   "th04-main-dialog-std-prefix",
