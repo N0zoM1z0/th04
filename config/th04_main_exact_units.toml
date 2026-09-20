@@ -12554,7 +12554,10 @@ id = "th04-main-scroll-tile-ring-v393-layout"
 trigger_units = ["th04-main-scroll-tile-ring-v270"]
 patch_path = "th04_main.asm"
 encoding = "latin-1"
-scaffold_sha256 = "2c107a5c2dd81a0e77dff42c2aaa3deb9c1b49636f51bad7713649aa3c41f72e"
+scaffold_sha256_any = [
+  "4ff9e7e1960746bebdb244cc1b9eb0b0f0878086cbcf4bf579c99299d18db2bb",
+  "2c107a5c2dd81a0e77dff42c2aaa3deb9c1b49636f51bad7713649aa3c41f72e",
+]
 
 [[source_transforms.ops]]
 id = "externalize-scroll-tile-ring-v393"
