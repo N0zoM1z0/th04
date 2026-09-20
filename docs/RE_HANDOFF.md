@@ -26,18 +26,16 @@ the accepted extent.
 - Target canonicality is `candidate-local-attested`. The pinned Japanese
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **482/491 reviewed authored C/C++ functions** and
-  **81,333/83,441 reviewed authored C/C++ bytes** exact (97.473664%). Forty
+- MAIN has **484/491 reviewed authored C/C++ functions** and
+  **82,660/83,441 reviewed authored C/C++ bytes** exact (99.064009%). Forty
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-demo-session-v380-aggregate-final-001`: all 256 selected MAIN
-  owners pass two cold builds, raw bytes, MAP, ordered relocations, and OMF.
-  Receipt SHA-256:
-  `c87c01b0152815d72eee36eb3d18106e312e854d82b883c1b47db782222183ad`.
-- The remaining reviewed authored C/C++ gap is **2,108 bytes**: dialog
-  op/run/render 1,545, scroll 295, checkerboard 174, Stage 4 carpet 90, and
-  the final 4 `snd_load` bytes.
+  `gpt-web-dialog-v381-aggregate-final-001`: all 258 selected MAIN owners
+  pass two cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt
+  SHA-256: `507bc4ab4bb70f23088deb83d82360274656d6e360bcb3d0bff3eae3f60b2f76`.
+- The remaining reviewed authored C/C++ gap is **781 bytes**: dialog render
+  218, scroll 295, checkerboard 174, Stage 4 carpet 90, and the final 4 `snd_load` bytes.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
@@ -54,14 +52,13 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Recover natural DIALOG_TEXT relocation order.** The complete 1,310-byte
-   stage-session owner is now exact; its formerly isolated `0xB2DA` relocation
-   is explained and reproduced by natural TC4J LEDATA/FIXUPP batching in the
-   fused slowdown/DEMO producer. `dialog_op()` and `dialog_run()` already match
-   raw bytes, MAP, and relocation sites, but the target has three descending MZ
-   relocation runs while the current object produces two. Continue from the
-   [dialog](reconstruction/main/TH04_MAIN_DIALOG_BOUNDARY_V180.md) and FIXUPP
-   codegen notes.
+1. **Close the remaining 218 DIALOG_TEXT render bytes.** `dialog_op()` and
+   `dialog_run()` are now exact after restoring the fused
+   f_dialog/shared-dialog TC4J producer. The remaining dialog blockers are
+   `dialog_box_put()` (88), `playfield_copy_front_to_back()` (56),
+   and `dialog_face_unput_8()` (74); these are instruction-shape/codegen
+   problems rather than unresolved relocation topology. Continue from the
+   dialog-render notes and compiler codegen probes.
 2. **Close the remaining 563 non-dialog MAIN bytes.** The remaining blockers
    are scroll 295 bytes, checkerboard 174, Stage 4 carpet 90, and the final 4
    `snd_load` bytes. These are primarily compiler/code-shape or ownership
@@ -69,9 +66,8 @@ the accepted extent.
 3. **Continue the remaining artifacts.** The cold decoded-payload residual is
    7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes; this is not packed-file equality.
    ZUN's 6,360-byte diagnostic component differs at 4,241 bytes and still uses
-   external support code. Continue from the
-   [packed frontier](reconstruction/packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
-   and [ZUN component link](reconstruction/zun/TH04_ZUN_COMPONENT_LINK_V317.md).
+   external support code. Continue from the packed-frontier and ZUN component
+   link notes.
 4. **Add deterministic DOSBox-X runtime scenarios** after standalone build and
    link closure can produce the artifacts under test.
 
@@ -81,11 +77,11 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 ## Retained private evidence
 
-Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
+Keep these ignored .analysis/reconstruction/exact-unit-replay/ trees:
 
+- `gpt-web-dialog-v381-aggregate-final-001`
+- `gpt-web-dialog-v381-focused-003`
 - `gpt-web-demo-session-v380-aggregate-final-001`
-- `gpt-web-demo-session-v380-focused-008`
-- `gptweb-v213-dialog-reloc-diagnostic-001`
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.

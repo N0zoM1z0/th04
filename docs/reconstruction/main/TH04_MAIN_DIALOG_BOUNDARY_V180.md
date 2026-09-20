@@ -244,3 +244,37 @@ functions are blocked, so the exact numerator does not change. MAIN routing is
 450 exact, 16 blocked, 71 unreviewed, and 31 original-style ASM attestation
 observations. This denominator expansion is the intended authored-boundary result,
 not an accepted-owner regression or a percentage of MAIN.EXE as a whole.
+
+
+## v381 fused physical producer exact closure
+
+The relocation-order blocker is now closed without patching OMF or the final MZ
+table. The maintained `src/main/dialog/fused.cpp` restores the physical
+TC4J producer that combines the preceding `f_dialog` source with the
+shared dialog source in `M4_RENDER_TEXT`, while retaining an empty
+`DIALOG_TEXT` contribution before the already exact
+`dialog_i.cpp` producer.
+
+Focused two-cold replay `gpt-web-dialog-v381-focused-003` passes with
+`failures=[]` (receipt SHA-256
+`9c0feeb796aa905a0ebfbe23c43155dddf20ee8f3e50c8a6ace6d8f19d23560b`).
+The fused producer has raw object SHA-256
+`41b599255325df38efc38b515488b1328a8860ae21ec53c74dd1adb788a34649`.
+The logical `dialog_op` owner reproduces all 0x3B0 physical bytes and all
+26 ordered overlapping MZ relocations. `dialog_run` reproduces all 0x17F
+bytes and all four ordered relocations. In both cases, the candidate sequences
+are identical to the target sequences rather than merely equal as sets.
+
+Candidate aggregate `gpt-web-dialog-v381-aggregate-candidate-002` passes
+all 258 default owners twice. After promotion, the independent final aggregate
+`gpt-web-dialog-v381-aggregate-final-001` again passes all 258 owners
+twice with `failures=[]`; receipt SHA-256 is
+`507bc4ab4bb70f23088deb83d82360274656d6e360bcb3d0bff3eae3f60b2f76`. Both final candidate MAIN images are SHA-256
+`5b66159a13a11f235fcf484aedf5a6f99464978e758dfa7c9138cecce6a5050b`.
+
+This establishes that the historical three descending relocation runs arise
+naturally from TC4J LEDATA/FIXUPP batching in the fused physical producer. The
+older TU-boundary, linker-switch, -B, debug-option, source-rotation, and
+segment-flush experiments remain useful negative controls, but they are no
+longer live blockers. `dialog_op` and `dialog_run` are exact as of
+v381.
