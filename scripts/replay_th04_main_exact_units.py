@@ -1557,10 +1557,311 @@ def resolve_unit_dependencies(
     return [entry for entry in all_entries if str(entry["id"]) in resolved]
 
 
+def staged_state_hashes() -> dict[str, str]:
+    """Return live control-file hashes that must not drift between stages."""
+
+    return {
+        "manifest_sha256": digest_file(MANIFEST),
+        "ledger_sha256": digest_file(ROOT / "config" / "units.csv"),
+        "driver_sha256": digest_file(Path(__file__).resolve()),
+    }
+
+
+def write_json(path: Path, value: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def read_json(path: Path) -> object:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def staged_validate_state(
+    root: Path,
+    entries: list[dict[str, object]],
+    revision: str,
+) -> dict[str, object]:
+    state_path = root / "staged-state.json"
+    if not state_path.is_file():
+        raise RuntimeError(f"staged replay state is missing: {state_path}")
+    state = read_json(state_path)
+    if not isinstance(state, dict):
+        raise RuntimeError("staged replay state is not an object")
+    if state.get("schema_version") != 1 or state.get("kind") != "th04-main-exact-unit-staged-state":
+        raise RuntimeError("staged replay state schema/kind mismatch")
+    expected_units = [str(entry["id"]) for entry in entries]
+    if state.get("selected_units") != expected_units:
+        raise RuntimeError("staged replay selected-unit closure changed")
+    if state.get("reference_revision") != revision:
+        raise RuntimeError("staged replay reference revision changed")
+    for key, value in staged_state_hashes().items():
+        if state.get(key) != value:
+            raise RuntimeError(f"staged replay control input changed: {key}")
+    if state.get("target_sha256") != digest_file(TARGET):
+        raise RuntimeError("staged replay target changed")
+    snapshot = state.get("repo_input_snapshot")
+    if not isinstance(snapshot, list):
+        raise RuntimeError("staged replay repo-input snapshot is missing")
+    verify_repo_snapshot(snapshot)
+    return state
+
+
+def staged_materialize_build(
+    root: Path,
+    label: str,
+    revision: str,
+    entries: list[dict[str, object]],
+    splits: list[dict[str, object]],
+    build_inserts: list[dict[str, object]],
+    build_replacements: list[dict[str, object]],
+    scaffold_extractions: list[dict[str, object]],
+    source_transforms: list[dict[str, object]],
+    scaffold_header_rewrites: list[dict[str, object]],
+    scaffold_tree_include_rewrites: list[dict[str, object]],
+    prebuild_objects: list[dict[str, object]],
+    snapshot_receipt: list[dict[str, object]],
+) -> Path:
+    """Materialize one staged cold tree and persist all pre-build receipts."""
+
+    run_root = root / label
+    if run_root.exists():
+        raise RuntimeError(f"staged build tree already exists: {run_root}")
+    source = run_root / "source"
+    snapshot_root = root / "repo-inputs"
+    snapshot_compat = snapshot_root / "compat" / "rec98"
+    materialize(revision, source)
+    compat_headers = materialize_rec98_compat(source, compat_root=snapshot_compat)
+    product_headers = materialize_product_headers(source, snapshot_root, snapshot_receipt)
+    overlays = overlay_sources(
+        source, entries, repo_root=snapshot_root, compat_root=snapshot_compat
+    )
+    selected_ids = {str(entry["id"]) for entry in entries}
+    scaffold_extraction_receipts = apply_scaffold_extractions(
+        source, scaffold_extractions, selected_ids, repo_root=snapshot_root
+    )
+    split_receipts = apply_source_splits(
+        source, splits, selected_ids, repo_root=snapshot_root
+    )
+    build_insert_receipts = apply_build_inserts(
+        source, build_inserts, selected_ids, repo_root=snapshot_root
+    )
+    build_replacement_receipts = apply_build_replacements(
+        source, build_replacements, selected_ids
+    )
+    source_transform_receipts = apply_source_transforms(
+        source, source_transforms, selected_ids
+    )
+    scaffold_header_rewrite_receipts = apply_scaffold_header_rewrites(
+        source, scaffold_header_rewrites, product_headers
+    )
+    scaffold_tree_include_rewrite_receipts = apply_scaffold_tree_include_rewrites(
+        source, scaffold_tree_include_rewrites, product_headers
+    )
+    prebuild_object_receipts = apply_prebuild_objects(
+        source, prebuild_objects, selected_ids, repo_root=snapshot_root
+    )
+    write_json(
+        run_root / "materialization.json",
+        {
+            "rec98_compat": compat_headers,
+            "product_headers": product_headers,
+            "overlays": overlays,
+            "scaffold_header_rewrites": scaffold_header_rewrite_receipts,
+            "scaffold_tree_include_rewrites": scaffold_tree_include_rewrite_receipts,
+            "scaffold_extractions": scaffold_extraction_receipts,
+            "source_splits": split_receipts,
+            "build_inserts": build_insert_receipts,
+            "build_replacements": build_replacement_receipts,
+            "source_transforms": source_transform_receipts,
+            "prebuild_objects": prebuild_object_receipts,
+        },
+    )
+    return source
+
+
+def staged_build(root: Path, label: str) -> None:
+    """Run exactly one full build in an already materialized staged cold tree."""
+
+    run_root = root / label
+    source = run_root / "source"
+    materialization = run_root / "materialization.json"
+    complete = run_root / "build-complete.json"
+    if not source.is_dir() or not materialization.is_file():
+        raise RuntimeError(f"staged build {label} has not been prepared")
+    if complete.exists():
+        raise RuntimeError(f"staged build {label} is already complete")
+
+    run_checked([sys.executable, "scripts/attest_toolchain.py"], ROOT)
+    toolchain_receipt = ROOT / ".analysis" / "toolchain" / "attestation.json"
+    log = run_root / "build.log"
+    if log.exists():
+        raise RuntimeError(f"staged build {label} log already exists")
+    build(source, log)
+    candidate = source / "bin" / "th04" / "main.exe"
+    if not candidate.is_file():
+        raise RuntimeError(f"staged build {label} produced no TH04 MAIN candidate")
+    write_json(
+        complete,
+        {
+            "label": label,
+            "build_log_sha256": digest_file(log),
+            "candidate_main_sha256": digest_file(candidate),
+            "toolchain_attestation_sha256": digest_file(toolchain_receipt),
+        },
+    )
+    print(f"staged replay build {label}: COMPLETE")
+
+
+def replay_failures(
+    entries: list[dict[str, object]],
+    build_results: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    """Apply the ordinary two-cold-build exact-unit gate."""
+
+    failures: list[dict[str, object]] = []
+    for entry in entries:
+        unit_id = str(entry["id"])
+        a = build_results[0]["units"][unit_id]
+        b = build_results[1]["units"][unit_id]
+        checks = {
+            "raw_exact_a": a["raw_exact"],
+            "raw_exact_b": b["raw_exact"],
+            "map_exact_a": a["map_exact"],
+            "map_exact_b": b["map_exact"],
+            "relocations_exact_a": a["relocations_exact"],
+            "relocations_exact_b": b["relocations_exact"],
+            "object_valid_a": a["object_valid"],
+            "object_valid_b": b["object_valid"],
+            "slice_deterministic": a["candidate_slice_sha256"] == b["candidate_slice_sha256"],
+            "object_normalized_deterministic": a["object_normalized_sha256"] == b["object_normalized_sha256"],
+            "zero_code_objects_a": all(item["zero_code"] for item in a["zero_code_objects"]),
+            "zero_code_objects_b": all(item["zero_code"] for item in b["zero_code_objects"]),
+            "zero_code_objects_deterministic": (
+                [item["normalized_sha256"] for item in a["zero_code_objects"]]
+                == [item["normalized_sha256"] for item in b["zero_code_objects"]]
+            ),
+            "auxiliary_objects_a": all(item["valid"] for item in a["auxiliary_objects"]),
+            "auxiliary_objects_b": all(item["valid"] for item in b["auxiliary_objects"]),
+            "auxiliary_objects_deterministic": (
+                [item["normalized_sha256"] for item in a["auxiliary_objects"]]
+                == [item["normalized_sha256"] for item in b["auxiliary_objects"]]
+            ),
+            "auxiliary_extents_a": auxiliary_extents_pass(a["auxiliary_extents"]),
+            "auxiliary_extents_b": auxiliary_extents_pass(b["auxiliary_extents"]),
+            "auxiliary_extents_deterministic": (
+                [
+                    (item["candidate_slice_sha256"], item["object_normalized_sha256"])
+                    for item in a["auxiliary_extents"]
+                ]
+                == [
+                    (item["candidate_slice_sha256"], item["object_normalized_sha256"])
+                    for item in b["auxiliary_extents"]
+                ]
+            ),
+        }
+        if not all(checks.values()):
+            failures.append({"unit_id": unit_id, "checks": checks})
+    return failures
+
+
+def staged_finalize(
+    root: Path,
+    entries: list[dict[str, object]],
+    ledger: dict[str, dict[str, str]],
+    revision: str,
+    state: dict[str, object],
+) -> int:
+    """Inspect two completed staged cold builds and emit the canonical receipt."""
+
+    target_mz = parse_mz(TARGET.read_bytes())
+    if not target_mz.valid:
+        raise RuntimeError("pinned target failed MZ integrity")
+    build_results: list[dict[str, object]] = []
+    attestation_hashes: dict[str, str] = {}
+    for label in ("a", "b"):
+        run_root = root / label
+        source = run_root / "source"
+        materialization_path = run_root / "materialization.json"
+        complete_path = run_root / "build-complete.json"
+        log = run_root / "build.log"
+        if not source.is_dir() or not materialization_path.is_file() or not complete_path.is_file():
+            raise RuntimeError(f"staged build {label} is incomplete")
+        materialization = read_json(materialization_path)
+        complete = read_json(complete_path)
+        if not isinstance(materialization, dict) or not isinstance(complete, dict):
+            raise RuntimeError(f"staged build {label} receipt is malformed")
+        if complete.get("label") != label:
+            raise RuntimeError(f"staged build {label} label mismatch")
+        if complete.get("build_log_sha256") != digest_file(log):
+            raise RuntimeError(f"staged build {label} log changed")
+        candidate_path, units = inspect_build(source, entries, ledger, target_mz)
+        if complete.get("candidate_main_sha256") != digest_file(candidate_path):
+            raise RuntimeError(f"staged build {label} candidate changed")
+        attestation_hashes[label] = str(complete["toolchain_attestation_sha256"])
+        build_results.append(
+            {
+                "label": label,
+                "source": str(source.relative_to(ROOT)),
+                **materialization,
+                "build_log_sha256": digest_file(log),
+                "candidate_main_sha256": digest_file(candidate_path),
+                "units": units,
+            }
+        )
+
+    snapshot = state["repo_input_snapshot"]
+    if not isinstance(snapshot, list):
+        raise RuntimeError("staged replay snapshot is malformed")
+    verify_repo_snapshot(snapshot)
+    failures = replay_failures(entries, build_results)
+    receipt = {
+        "schema_version": 1,
+        "kind": "th04-main-exact-unit-cold-replay",
+        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "reference_revision": revision,
+        "reference_tree": subprocess.check_output(
+            ["git", "rev-parse", f"{revision}^{{tree}}"], cwd=REFERENCE, text=True
+        ).strip(),
+        "target_sha256": digest_file(TARGET),
+        "target_header_size": target_mz.header.header_size,
+        "toolchain_attestation_sha256": attestation_hashes["b"],
+        "toolchain_attestation_sha256_by_build": attestation_hashes,
+        "manifest_sha256": digest_file(MANIFEST),
+        "repo_input_snapshot": snapshot,
+        "selected_units": [entry["id"] for entry in entries],
+        "builds": build_results,
+        "failures": failures,
+        "pass": not failures,
+        "policy": "Natural repository source plus two isolated cold builds; exact unit bytes require zero differences and matching map/relocation/OMF surfaces.",
+        "staged_execution": True,
+    }
+    receipt_path = root / "receipt.json"
+    write_json(receipt_path, receipt)
+    print(f"receipt: {receipt_path}")
+    for unit_id in receipt["selected_units"]:
+        a = build_results[0]["units"][unit_id]
+        print(
+            f"{unit_id}: raw={a['raw_exact']} map={a['map_exact']} "
+            f"relocs={a['relocations_exact']} size={a['size']} "
+            f"sha256={a['candidate_slice_sha256']}"
+        )
+    if failures:
+        print(json.dumps(failures, indent=2), file=sys.stderr)
+        return 1
+    print("exact-unit cold replay: PASS")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--unit", action="append", default=[], help="unit id; repeatable")
     parser.add_argument("--run-id", default=None)
+    parser.add_argument(
+        "--stage",
+        choices=("all", "prepare-a", "build-a", "prepare-b", "build-b", "finalize"),
+        default="all",
+        help="explicitly split the ordinary two-cold-build replay across invocations",
+    )
     parser.add_argument("--list-selected", action="store_true", help="print selected unit ids without building")
     args = parser.parse_args()
 
@@ -1603,6 +1904,73 @@ def main() -> int:
         raise RuntimeError("pinned ReC98 revision is unavailable")
     if not TARGET.is_file():
         raise FileNotFoundError(TARGET)
+
+    if args.stage != "all":
+        if not args.run_id:
+            parser.error("--stage requires an explicit --run-id")
+        root = ROOT / ".analysis" / "reconstruction" / "exact-unit-replay" / args.run_id
+
+        if args.stage == "prepare-a":
+            if root.exists():
+                raise RuntimeError(f"refusing to overwrite staged replay: {root}")
+            snapshot_root = root / "repo-inputs"
+            snapshot_receipt = materialize_repo_snapshot(
+                snapshot_root,
+                repo_input_paths(
+                    entries,
+                    splits,
+                    build_inserts,
+                    scaffold_extractions,
+                    prebuild_objects,
+                    source_transforms,
+                ),
+            )
+            state = {
+                "schema_version": 1,
+                "kind": "th04-main-exact-unit-staged-state",
+                "created_utc": datetime.now(timezone.utc).isoformat(),
+                "reference_revision": revision,
+                "target_sha256": digest_file(TARGET),
+                "selected_units": [entry["id"] for entry in entries],
+                "repo_input_snapshot": snapshot_receipt,
+                **staged_state_hashes(),
+            }
+            write_json(root / "staged-state.json", state)
+            staged_materialize_build(
+                root, "a", revision, entries, splits, build_inserts, build_replacements,
+                scaffold_extractions, source_transforms, scaffold_header_rewrites,
+                scaffold_tree_include_rewrites, prebuild_objects, snapshot_receipt,
+            )
+            print("staged replay prepare a: COMPLETE")
+            return 0
+
+        state = staged_validate_state(root, entries, revision)
+        snapshot_receipt = state["repo_input_snapshot"]
+        if not isinstance(snapshot_receipt, list):
+            raise RuntimeError("staged replay snapshot is malformed")
+
+        if args.stage == "build-a":
+            staged_build(root, "a")
+            return 0
+
+        if args.stage == "prepare-b":
+            if not (root / "a" / "build-complete.json").is_file():
+                raise RuntimeError("staged build a must complete before preparing build b")
+            staged_materialize_build(
+                root, "b", revision, entries, splits, build_inserts, build_replacements,
+                scaffold_extractions, source_transforms, scaffold_header_rewrites,
+                scaffold_tree_include_rewrites, prebuild_objects, snapshot_receipt,
+            )
+            print("staged replay prepare b: COMPLETE")
+            return 0
+
+        if args.stage == "build-b":
+            if not (root / "a" / "build-complete.json").is_file():
+                raise RuntimeError("staged build a must complete before build b")
+            staged_build(root, "b")
+            return 0
+
+        return staged_finalize(root, entries, ledger, revision, state)
 
     # Identity/execution attestation is always replayed immediately before builds.
     run_checked([sys.executable, "scripts/attest_toolchain.py"], ROOT)
@@ -1689,49 +2057,7 @@ def main() -> int:
 
     verify_repo_snapshot(snapshot_receipt)
 
-    failures = []
-    for entry in entries:
-        unit_id = entry["id"]
-        a = build_results[0]["units"][unit_id]
-        b = build_results[1]["units"][unit_id]
-        checks = {
-            "raw_exact_a": a["raw_exact"],
-            "raw_exact_b": b["raw_exact"],
-            "map_exact_a": a["map_exact"],
-            "map_exact_b": b["map_exact"],
-            "relocations_exact_a": a["relocations_exact"],
-            "relocations_exact_b": b["relocations_exact"],
-            "object_valid_a": a["object_valid"],
-            "object_valid_b": b["object_valid"],
-            "slice_deterministic": a["candidate_slice_sha256"] == b["candidate_slice_sha256"],
-            "object_normalized_deterministic": a["object_normalized_sha256"] == b["object_normalized_sha256"],
-            "zero_code_objects_a": all(item["zero_code"] for item in a["zero_code_objects"]),
-            "zero_code_objects_b": all(item["zero_code"] for item in b["zero_code_objects"]),
-            "zero_code_objects_deterministic": (
-                [item["normalized_sha256"] for item in a["zero_code_objects"]]
-                == [item["normalized_sha256"] for item in b["zero_code_objects"]]
-            ),
-            "auxiliary_objects_a": all(item["valid"] for item in a["auxiliary_objects"]),
-            "auxiliary_objects_b": all(item["valid"] for item in b["auxiliary_objects"]),
-            "auxiliary_objects_deterministic": (
-                [item["normalized_sha256"] for item in a["auxiliary_objects"]]
-                == [item["normalized_sha256"] for item in b["auxiliary_objects"]]
-            ),
-            "auxiliary_extents_a": auxiliary_extents_pass(a["auxiliary_extents"]),
-            "auxiliary_extents_b": auxiliary_extents_pass(b["auxiliary_extents"]),
-            "auxiliary_extents_deterministic": (
-                [
-                    (item["candidate_slice_sha256"], item["object_normalized_sha256"])
-                    for item in a["auxiliary_extents"]
-                ]
-                == [
-                    (item["candidate_slice_sha256"], item["object_normalized_sha256"])
-                    for item in b["auxiliary_extents"]
-                ]
-            ),
-        }
-        if not all(checks.values()):
-            failures.append({"unit_id": unit_id, "checks": checks})
+    failures = replay_failures(entries, build_results)
 
     receipt = {
         "schema_version": 1,
