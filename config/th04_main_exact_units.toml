@@ -12489,7 +12489,7 @@ expected_count = 1
 [[units]]
 id = "th04-main-pointnum-digits-set-asm-v389"
 default_enabled = false
-requires_units = ["th04-main-kurumi-update-v128"]
+requires_units = ["th04-main-kurumi-update-v128", "th04-main-pointnums-add-asm-v139"]
 repo_source = "src/main/pointnum/digits.asm"
 overlay_path = "th04/pndig.asm"
 map_module = "th04\\pndig.asm"
