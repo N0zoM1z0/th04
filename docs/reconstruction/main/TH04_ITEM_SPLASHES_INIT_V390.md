@@ -61,3 +61,36 @@ After v390, MAIN has no provisional/unreviewed authored C/C++ boundaries.
 `item_splashes_init()` remains blocked until a natural producer explains
 both the inline fill shape and the target XOR encoding without target-derived
 inline assembly.
+
+
+## v395 exact hybrid closure
+
+v390 correctly kept the function blocked when the only known exact spelling
+came from decompilation inline assembly. v395 adds independent provenance that
+changes the classification without relaxing the byte gate: TH05 directly
+reuses the TH04 item-splash translation unit, and the independently attested
+TH05 MAIN target contains one matching 26-byte initializer with the same
+DS-to-ES setup, `31 C0` zeroing, `REP STOSW`, last-ID reset, and
+epilogue.
+
+The maintained exact fragment is
+`src/main/item/splashes_init.inl`. Only `xor ax,ax` and
+`rep stosw` are symbolic low-level statements; surrounding code remains
+authored C++. Pinned TC4J compiles the complete IT_SPL_U_TEXT translation unit
+without changing the separately exact add/update suffix.
+
+Focused replay `gpt-web-item-splashes-init-v395-focused-001` passes two
+cold builds with `failures=[]`; receipt SHA-256 is
+`5049ce5be50591385ee3d4c50460a463cb39a492ae9c2611f1cf8c17b10caef3`.
+The 26-byte logical owner is target-identical, MAP-exact inside the unchanged
+0x9C IT_SPL_U_TEXT contribution, has empty relocation overlap, and comes from
+valid deterministic TC86 OMF.
+
+Candidate aggregate
+`gpt-web-item-splashes-init-v395-aggregate-candidate-001` passes all 269
+default owners twice. After promotion, independent final aggregate
+`gpt-web-item-splashes-init-v395-aggregate-final-001` again passes all
+269 owners twice with `failures=[]`; final receipt SHA-256 is
+`b5810190e492ea0a7bb5403c61d9b0f5f8d6f53bf657ccfdcbbac7a4d2fed57c`.
+
+The reviewed function is exact as of v395.

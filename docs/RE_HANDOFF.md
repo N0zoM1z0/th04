@@ -26,18 +26,18 @@ the accepted extent.
 - Target canonicality is `candidate-local-attested`. The pinned Japanese
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **491/494 reviewed authored C/C++ functions** and
-  **83,177/83,469 reviewed authored C/C++ bytes** exact (99.650170%).
+- MAIN has **492/494 reviewed authored C/C++ functions** and
+  **83,203/83,469 reviewed authored C/C++ bytes** exact (99.681319%).
   Forty-three accepted original-style ASM units add 5,702 bytes. Whole MAIN.EXE
-  is not yet exact. v394 closes all three remaining dialog-render helpers as
-  authored hybrid C++ after independent TH05 producer corroboration.
+  is not yet exact. v395 closes item_splashes_init() as authored hybrid C++
+  after direct TH05 TU reuse and independent target corroboration.
 - The latest complete native aggregate is
-  `gpt-web-dialog-render-v394-aggregate-final-001`: all 268 selected MAIN
-  owners pass two cold builds, raw bytes, MAP, ordered relocations, and OMF.
-  Receipt SHA-256: `2c6b8b699f13c0b90aac3dcac6139ac13bdca3257b2de430241797cd988c2293`.
-- The remaining reviewed authored C/C++ gap is **292 bytes**: checkerboard
-  174, Stage 4 carpet 90, `item_splashes_init()` 26, and the final 2
-  `snd_load` bytes (`89 C3`).
+  `gpt-web-item-splashes-init-v395-aggregate-final-001`: all 269 selected
+  MAIN owners pass two cold builds, raw bytes, MAP, ordered relocations, and
+  OMF. Receipt SHA-256: `b5810190e492ea0a7bb5403c61d9b0f5f8d6f53bf657ccfdcbbac7a4d2fed57c`.
+- The remaining reviewed authored C/C++ gap is **266 bytes**: checkerboard
+  174, Stage 4 carpet 90, and the final 2 `snd_load` bytes
+  (`89 C3`).
 - MAIN now has **no provisional authored C/C++ boundaries**. v390 reviews the
   final provisional `item_splashes_init()` boundary as blocked, while
   `POINTNUM_DIGITS_SET` remains on the original-ASM plane from v389.
@@ -57,13 +57,14 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Close the remaining reviewed 292-byte C/C++ gap.** Checkerboard is 174
-   bytes, Stage 4 carpet 90, `item_splashes_init()` is 26, and `snd_load` has
-   the two-byte `89 C3` residual. Dialog render is exact as of v394.
+1. **Close the remaining reviewed 266-byte C/C++ gap.** Checkerboard is 174
+   bytes, Stage 4 carpet 90, and `snd_load` has only the two-byte
+   `89 C3` MOV BX,AX residual. Every MAIN C/C++ boundary is formally
+   reviewed; the remaining work is producer/codegen provenance closure.
 2. **Keep provenance gates strict.** Checkerboard still lacks an independent
-   non-switch counted-LOOP producer; carpet is TH04-only; item_splashes and the
-   remaining `snd_load` MOV encoding have explicit compiler/provenance negative
-   evidence. Do not replace them with target-derived inline assembly.
+   non-switch counted-LOOP producer; carpet is TH04-only; the remaining
+   `snd_load` MOV encoding has explicit cross-game negative evidence.
+   Do not replace these with target-derived inline assembly.
 3. **Continue the remaining artifacts and deterministic runtime scenarios**
    after standalone build/link closure can produce the artifacts under test.
 
@@ -75,9 +76,9 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
+- `gpt-web-item-splashes-init-v395-aggregate-final-001`
+- `gpt-web-item-splashes-init-v395-focused-001`
 - `gpt-web-dialog-render-v394-aggregate-final-001`
-- `gpt-web-dialog-render-v394-focused-004`
-- `gpt-web-sub-b835-v393-aggregate-final-001`
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.
