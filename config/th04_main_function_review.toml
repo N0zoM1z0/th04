@@ -4308,3 +4308,39 @@ id = "th04-main-fn-255dd"
 address = "0x255DD"
 evidence_id = "ev-th04-main-enemy-functions-v343"
 reason = "Admit the complete VM function only after raw code and its 144-word compiler switch table fill the exact physical owner."
+
+
+# v387: two one-byte Pascal callback stubs missed by target Ghidra. Target raw,
+# pinned TASM, TLINK publics, and exact natural TC4J owners all agree; source-
+# owned EVEN/NOP bytes remain outside the credited function extents.
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1bcae"
+address = "0x1BCAE"
+file_offset = "0xD4AE"
+size = "0x1"
+name = "NULLFUNC_NEAR"
+owner_unit = "th04-main-nullfunc-near-v387"
+evidence_id = "ev-th04-main-nullfunc-near-boundary-v387"
+reason = "Target Ghidra has no entry at this TLINK public. Raw decode is exactly one RET byte and ends at the one-byte exact natural-C++ owner boundary; the following NOP is separate layout."
+
+[[new_exact]]
+id = "th04-main-fn-1bcae"
+address = "0x1BCAE"
+evidence_id = "ev-th04-main-nullfunc-near-boundary-v387"
+reason = "Admit the reviewed one-byte near Pascal callback only after v387 natural-C++ focused and aggregate exact replay."
+
+[[reviewed_exact_no_ghidra]]
+id = "th04-main-fn-1bcb0"
+address = "0x1BCB0"
+file_offset = "0xD4B0"
+size = "0x1"
+name = "NULLFUNC_FAR"
+owner_unit = "th04-main-nullfunc-far-v387"
+evidence_id = "ev-th04-main-nullfunc-far-boundary-v387"
+reason = "Target Ghidra has no entry at this TLINK public. Raw decode is exactly one RETF byte and ends at the one-byte exact natural-C++ owner boundary; the following NOP is separate layout."
+
+[[new_exact]]
+id = "th04-main-fn-1bcb0"
+address = "0x1BCB0"
+evidence_id = "ev-th04-main-nullfunc-far-boundary-v387"
+reason = "Admit the reviewed one-byte far Pascal callback only after v387 natural-C++ focused and aggregate exact replay."
