@@ -110,3 +110,34 @@ Private diagnostic receipt:
 `.analysis/gpt-web/demo-pause-B-only-001/receipt.json`, SHA-256
 `0046c2f9a60af035bee7732b6144f5cc64e0dd957fe26abf1bac48bcebfd8a8e`.
 No maintained source, accepted unit, or exactness denominator changes in v378.
+
+## DEMO producer LEDATA batching (v379)
+
+The v378 pause-only producer experiments showed that changing only the pause
+compiler path cannot produce the target one/core/eleven relocation order.
+The next diagnostic instead changes the **translation-unit prefix** while
+keeping the stage-session source itself unchanged.
+
+A single pinned-TC4J producer containing the 0x1A-byte
+`slowdown_frame_delay()` body, the already accepted v377 demo prefix, and the
+0x51E-byte stage-session source emits three DEMO_TEXT LEDATA chunks:
+`0x000..0x3FA`, `0x3FB..0x7F8`, and `0x7F9..0x8FB`.
+`stage_session_init()` begins at object offset `0x3DE`. Parsing FIXUPP
+subrecords according to the OMF Location field and selecting only Location=3
+(16:16 long-pointer) entries yields exactly 56 stage-session fixups in the
+target owner-local order: the first pause pointer at `+0x408`, all forty core
+pointers descending, then the remaining eleven pause pointers descending.
+
+The causal control omits only the slowdown prefix. The same TC4J source then
+places `stage_session_init()` at `+0x3C4`, uses LEDATA boundaries at `0x400`
+and `0x800`, and fails the target order. Separate `-v`, `-y`, `-v -y`,
+`-v-`, and `-y-` probes preserve the 1310-byte session CODE and the baseline
+FIXUPP order; adding LINNUM metadata therefore does not explain the target.
+
+Private semantic receipt:
+`.analysis/gpt-web/demo-fixupp-batching-v379/receipt.json`, SHA-256
+`60095c49bb1239b820f28b9e0c8423edd939ea523526db963632eb155694e066`.
+This establishes a natural TC86 producer mechanism for the previously
+unexplained relocation order, but grants no exact credit until a linked
+candidate passes raw bytes, MAP placement, ordered MZ relocations, OMF, and
+the complete aggregate.
