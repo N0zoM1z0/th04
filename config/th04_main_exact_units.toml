@@ -12222,3 +12222,156 @@ map_start = "0x21E6"
 map_size = "0x60"
 target_file_offset = "0xE4D6"
 size = "0x60"
+
+# v387 candidate: the two target null callbacks are naturally emitted by TC4J
+# from empty Pascal C++ functions once the standard stack frame is disabled.
+# The unresolved randring1 MOD body and the two source-owned EVEN bytes remain
+# hash-bound replay-only plumbing and receive zero reconstruction credit.
+[[scaffold_extractions]]
+id = "th04-main-randring1-mod-v387"
+trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
+scaffold_path = "th04/math/randring.inc"
+encoding = "latin-1"
+scaffold_sha256 = "6f36c64ef467bb30255becc4f888e3b6f9a292c67f804eb5e447cac7fc39b4f5"
+start = "\tpublic @RANDRING&INSTANCE&_NEXT16_MOD$QUI\n"
+end = "\t@randring&instance&_next16_mod$qui endp\n"
+span_sha256 = "8de6a2e92f80b3d4f449f2a08aa02f951b15a65e74f97c9dd306da6b7edfdfcf"
+template_source = "config/replay/th04_randring1_mod_v387.asm.in"
+output_path = "th04/r1mod387.asm"
+
+[[scaffold_extractions.replacements]]
+old = "&INSTANCE&"
+new = "1"
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "&instance&"
+new = "1"
+expected_count = 2
+
+[[scaffold_extractions.replacements]]
+old = "@mask"
+new = "@n"
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-nullfunc-near-gap-v387"
+trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
+scaffold_path = "th04/main/null.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1c30e0847d1f44501232bbcca7111e1bf09bac28426d36903df18e2f308e368a"
+start = "nullfunc_near\tendp\r\n"
+end = "public NULLFUNC_FAR\r\n"
+span_sha256 = "da701405234be7007e5bfaba0b7bda7809a55e1793ed31860c3236c73244b745"
+template_source = "config/replay/th04_circle_gap_v137.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/nulg1.asm"
+
+[[scaffold_extractions.replacements]]
+old = "nullfunc_near\tendp\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\teven\r\n\r\n\r\npublic NULLFUNC_FAR\r\n"
+new = "\tnop\r\n"
+expected_count = 1
+
+[[scaffold_extractions]]
+id = "th04-main-nullfunc-far-gap-v387"
+trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
+scaffold_path = "th04/main/null.asm"
+encoding = "latin-1"
+scaffold_sha256 = "1c30e0847d1f44501232bbcca7111e1bf09bac28426d36903df18e2f308e368a"
+start = "nullfunc_far\tendp\r\n"
+end = "\teven\r\n"
+span_sha256 = "357692c71d1e780ee980a4e3ef403327cb9dbf4b1ec77efb2caed06afcde081c"
+template_source = "config/replay/th04_circle_gap_v137.asm.in"
+template_line_endings = "crlf"
+output_path = "th04/nulg2.asm"
+
+[[scaffold_extractions.replacements]]
+old = "nullfunc_far\tendp\r\n"
+new = ""
+expected_count = 1
+
+[[scaffold_extractions.replacements]]
+old = "\teven\r\n"
+new = "\tnop\r\n"
+expected_count = 1
+
+[[build_inserts]]
+id = "th04-main-nullfunc-far-source-v387"
+trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
+repo_source = "src/main/core/nullfunc_far.cpp"
+overlay_path = "th04/nullf.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v387 materializes the natural NULLFUNC_FAR source.\n"
+
+[[build_inserts]]
+id = "th04-main-nullfunc-cohort-v387-build"
+trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
+repo_source = "src/main/core/nullfunc_near.cpp"
+overlay_path = "th04/nulln.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/r1gap2.asm\",\n"
+build_insert = "\t\"th04/r1mod387.asm\",\n\t\"th04/nulln.cpp\",\n\t\"th04/nulg1.asm\",\n\t\"th04/nullf.cpp\",\n\t\"th04/nulg2.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-nullfunc-cohort-v387-residual"
+trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "4ff9e7e1960746bebdb244cc1b9eb0b0f0878086cbcf4bf579c99299d18db2bb",
+  "6c8c719f979649afd7fe01d22b124e8802a9bb286cc960f3851643232293a52b",
+]
+
+[[source_transforms.ops]]
+id = "externalize-randring1-mod-and-nullfuncs-v387"
+kind = "remove_between"
+start = "public @RANDRING1_NEXT16_MOD$QUI\r\n"
+end = "include th04/main/null.asm\r\n"
+removed_sha256 = "8e367398883c0ebfd177f17aa2962f02194e1c16fee684492e8e6e7d6ac5b1b6"
+replacement = "extrn @RANDRING1_NEXT16_MOD$QUI:near\r\nextrn NULLFUNC_NEAR:near\r\nextrn NULLFUNC_FAR:far\r\n"
+
+[[units]]
+id = "th04-main-nullfunc-near-v387"
+default_enabled = false
+requires_units = ["th04-main-scroll-driver-v268", "th04-main-nullfunc-far-v387"]
+repo_source = "src/main/core/nullfunc_near.cpp"
+overlay_path = "th04/nulln.cpp"
+map_module = "th04/nulln.cpp"
+map_mode = "exact"
+object_path = "obj/th04/nulln.obj"
+auxiliary_objects = [
+  "obj/th04/r1mod387.obj",
+  "obj/th04/nulg1.obj",
+  "obj/th04/nulg2.obj",
+]
+auxiliary_extents = [
+  { id = "th04-main-randring1-mod-gap-v387", file_offset = "0xD494", size = "0x1A", map_module = "th04\\r1mod387.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/r1mod387.obj" },
+  { id = "th04-main-nullfunc-near-gap-v387", file_offset = "0xD4AF", size = "0x1", map_module = "th04\\nulg1.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/nulg1.obj" },
+  { id = "th04-main-nullfunc-far-gap-v387", file_offset = "0xD4B1", size = "0x1", map_module = "th04\\nulg2.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/nulg2.obj" },
+]
+map_segment = "CIRCLE_TEXT"
+map_start = "0x11BE"
+map_size = "0x1"
+target_file_offset = "0xD4AE"
+size = "0x1"
+
+[[units]]
+id = "th04-main-nullfunc-far-v387"
+default_enabled = false
+requires_units = ["th04-main-nullfunc-near-v387"]
+repo_source = "src/main/core/nullfunc_far.cpp"
+overlay_path = "th04/nullf.cpp"
+map_module = "th04/nullf.cpp"
+map_mode = "exact"
+object_path = "obj/th04/nullf.obj"
+map_segment = "CIRCLE_TEXT"
+map_start = "0x11C0"
+map_size = "0x1"
+target_file_offset = "0xD4B0"
+size = "0x1"
