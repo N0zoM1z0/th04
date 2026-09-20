@@ -52,17 +52,16 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Close the remaining 218 DIALOG_TEXT render bytes.** `dialog_op()` and
-   `dialog_run()` are now exact after restoring the fused
-   f_dialog/shared-dialog TC4J producer. The remaining dialog blockers are
-   `dialog_box_put()` (88), `playfield_copy_front_to_back()` (56),
-   and `dialog_face_unput_8()` (74); these are instruction-shape/codegen
-   problems rather than unresolved relocation topology. Continue from the
-   dialog-render notes and compiler codegen probes.
-2. **Close the remaining 563 non-dialog MAIN bytes.** The remaining blockers
+1. **Move to the remaining 563 non-dialog MAIN bytes.** The remaining blockers
    are scroll 295 bytes, checkerboard 174, Stage 4 carpet 90, and the final 4
-   `snd_load` bytes. These are primarily compiler/code-shape or ownership
-   problems rather than unexplained artifact layout.
+   `snd_load` bytes. Start with scroll, where producer/link ownership is still
+   open and therefore offers more room for natural closure.
+2. **Keep the 218 DIALOG_TEXT render bytes as a bounded compiler blocker.**
+   Independent TH05 target bytes preserve the same compact `REP STOSW`/`LOOP`
+   and register-direction shape, but pinned TC4J rejects both command-line and
+   pragma `-Ol`; ReC98's matching inline assembly is explicitly decompilation
+   provenance, not recovered original ASM. Do not convert these functions to
+   standalone TASM solely to gain exactness.
 3. **Continue the remaining artifacts.** The cold decoded-payload residual is
    7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes; this is not packed-file equality.
    ZUN's 6,360-byte diagnostic component differs at 4,241 bytes and still uses

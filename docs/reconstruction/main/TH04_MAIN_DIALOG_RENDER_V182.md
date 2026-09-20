@@ -160,3 +160,40 @@ starting at load `0xB9D6` with `TILES_INVALIDATE_AROUND` (`0xCC` bytes), then
 reconcile its adjacent tile, bounding-box, item-splash, shot-laser, and spark
 owners before attempting source reconstruction. Do not assume that contiguous
 TASM PROCs share one historical producer; close include/module seams first.
+
+
+## v382 cross-game producer shape and loop-optimizer surface
+
+An independently attested TH05 MAIN target closes an important ambiguity in
+the v182 codegen diagnosis. Bounded raw signature scans locate the same three
+shared functions contiguously at TH05 load `0x13A3E`, `0x13A96`, and
+`0x13ACE`, again with sizes `0x58`, `0x38`, and `0x4A`. After ordinary linked
+operands are allowed to differ, the bodies preserve the same low-level
+architecture as TH04: `dialog_box_put()` keeps target-direction `ADD`/`MOV`,
+`REP STOSW`, and `TEST BX,7`; both EGC copy helpers keep compact `LOOP`,
+and `dialog_face_unput_8()` keeps the target-direction `MOV BX,AX`,
+`ADD AX,BX`, and `ADD DI,AX`. The fixed-byte agreement is 84/88, 51/56,
+and 69/74 respectively. Private receipt SHA-256:
+`d18c838d321f106270979bbda09dae736c53641d884362c0f1765c5efe49f0c5`.
+
+This is strong cross-game producer corroboration, not permission to declare
+the functions original ASM. Local ReC98 history introduces the corresponding
+inline-assembly implementations in explicit decompilation commits
+`35d6fe30`, `36166192`, and `a06996af`; there is no independent recovered
+standalone-ASM provenance.
+
+A separate compiler-surface probe followed a new falsifiable mechanism:
+Borland C++ documentation describes `-Ol` loop optimization as compacting
+loops into string operations. The maintained natural fragment still compiles
+to the known `0x62/0x3D/0x4F` public sizes under the accepted TC4J profile.
+However, the pinned Japanese `TCC.EXE` rejects command-line `-Ol`, and the
+compiler also rejects `#pragma option -Ol` and `-Ol-`. Thus that documented
+optimizer path is not available through the attested compiler surface used by
+this repository.
+
+The v382 conclusion is deliberately conservative: the three functions remain
+reviewed/authored/blocked. The target/cross-game evidence says the compact
+shape is deliberate and reused, while the accepted natural compiler surface
+still cannot express it. Do not replace this packet with standalone symbolic
+TASM merely to manufacture exactness. Resume it only if a distinct, replayable
+natural producer mechanism is found.
