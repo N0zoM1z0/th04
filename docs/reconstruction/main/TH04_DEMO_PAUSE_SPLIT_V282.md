@@ -75,3 +75,38 @@ one/core/eleven FIXUPP partition inside this function. The historical object
 producer remains unknown, and the unit stays blocked on ordered relocations.
 Private receipt SHA-256:
 `069ee4f7fc6ccbad0b6dc5f63b83eb299d5f31b49bac97c26df9a9c057c7b850`.
+
+## Pause-only `-B` producer and TH05 control (v378)
+
+The whole-session v236 `-B` diagnostic changed the 0x51E CODE extent and
+therefore could not answer whether only `pause()` had a different historical
+producer. A bounded follow-up isolates the 0x11F-byte `pause()` body from the
+retained v214 source and compiles that source twice. Direct TC86 emits 287
+DEMO_TEXT bytes with SHA-256
+`fa82e39b2363c970eb3fec366a04c4f15678562e3030cb4c7b45f69210cbdf92`.
+TCC `-B` emits assembly; after adding only the same empty `MAI_TEXT` segment
+declaration required by the earlier diagnostic, pinned TASM32 emits the
+**identical 287 CODE bytes**.
+
+The producer switch changes only OMF fixup ordering. Direct TC86 records the
+twelve far-call FIXUPP locations in descending order:
+
+`0x116, 0x104, 0xF2, 0xD9, 0xAB, 0x99, 0x78, 0x4D, 0x46, 0x34, 0x22, 0x09`.
+
+The TASM object records the exact reverse ascending order. Thus whole-pause
+`-B` cannot explain the TH04 target sequence, which needs only the first
+pause relocation (`0xB2DA`, local pointer-fixup location `0x09`) before the
+40 session-core relocations while retaining the other eleven in descending
+order.
+
+An independent TH05 target control further narrows the hypothesis. Its
+`pause()` is also 0x11F bytes at load `0xB638..0xB756`; the twelve target MZ
+relocations are contiguous and descend by local address
+`0x117, 0x105, 0xF3, 0xDA, 0xAC, 0x9A, 0x79, 0x4E, 0x47, 0x35, 0x23, 0x0A`.
+The first input-call relocation is therefore last, not first. TH04's isolated
+`0xB2DA` relocation is not a generic cross-game pause producer property.
+
+Private diagnostic receipt:
+`.analysis/gpt-web/demo-pause-B-only-001/receipt.json`, SHA-256
+`0046c2f9a60af035bee7732b6144f5cc64e0dd957fe26abf1bac48bcebfd8a8e`.
+No maintained source, accepted unit, or exactness denominator changes in v378.
