@@ -12510,7 +12510,7 @@ size = "0x25"
 # separately from the still-blocked TH04-specific MOV BX,AX encoding.
 [[units]]
 id = "th04-main-snd-load-push-ds"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-snd-load-prefix"]
 repo_source = "src/shared/sound/load_push_ds.inl"
 source_mode = "fragment"
@@ -12525,7 +12525,7 @@ size = "0x1"
 
 [[units]]
 id = "th04-main-snd-load-pop-ds"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-snd-load-push-ds"]
 repo_source = "src/shared/sound/load_pop_ds.inl"
 source_mode = "fragment"
