@@ -12459,3 +12459,44 @@ map_start = "0x02E6"
 map_size = "0x1A"
 target_file_offset = "0x15576"
 size = "0x19"
+
+# v389: evidence-backed original-style POINTNUM_DIGITS_SET. ReC98 commit
+# c6b17b0c reverse-engineered independent TH04/TH05 ASM variants in one packet,
+# and the attested TH05 target independently preserves the same DIV/LOOP digit
+# producer architecture. The TH04 source owns one post-ENDP NOP outside the
+# 0x25 logical function extent.
+[[build_replacements]]
+id = "th04-main-pointnum-digits-set-asm-v389-build"
+trigger_units = ["th04-main-pointnum-digits-set-asm-v389"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/ptadd.asm\",\n\t\"th04/kupdate.cpp\",\n"
+build_replacement = "\t\"th04/ptadd.asm\",\n\t\"th04/pndig.asm\",\n\t\"th04/kupdate.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-pointnum-digits-set-asm-v389-residual"
+trigger_units = ["th04-main-pointnum-digits-set-asm-v389"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "5130639e5603c99f17bf235182378636b9c8760756ad5a72a50ab549e1d82063"
+
+[[source_transforms.ops]]
+id = "externalize-pointnum-digits-set-v389"
+kind = "replace"
+old = "include th04/main/pointnum/digits.asm\r\n"
+new = "; maintained POINTNUM_DIGITS_SET producer\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-pointnum-digits-set-asm-v389"
+default_enabled = false
+requires_units = ["th04-main-kurumi-update-v128"]
+repo_source = "src/main/pointnum/digits.asm"
+overlay_path = "th04/pndig.asm"
+map_module = "th04\\pndig.asm"
+map_mode = "contains"
+object_path = "obj/th04/pndig.obj"
+map_segment = "MAIN_033_TEXT"
+map_start = "0x4F5E"
+map_size = "0x26"
+target_file_offset = "0x289EE"
+size = "0x25"
