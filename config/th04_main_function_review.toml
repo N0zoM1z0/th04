@@ -4040,10 +4040,12 @@ reason = "Fresh Ghidra/TASM/raw close the complete 0xE6 near state/update/hit-te
 next_internal_address = "0x25ECE"
 call_site_address = "0x269C4"
 
-# v182: DIALOG_TEXT rendering primitives between the exact std-transition
-# prefix and exact dialog_box_fade_in_animate(). Maintained natural C++ removes
-# the ReC98 inline assembly, so all three functions remain reviewed/nonexact.
-[[reviewed_nonexact]]
+# v182/v394: DIALOG_TEXT rendering primitives. v394 retains authored C++
+# while classifying only independently TH05-corroborated REP STOSW / TEST /
+# LOOP / register-direction operations as handwritten low-level statements.
+# Focused A/B and the 268-owner candidate aggregate now close the complete
+# physical owner.
+[[reviewed_exact]]
 id = "th04-main-fn-1cfbe"
 address = "0x1CFBE"
 file_offset = "0xE7BE"
@@ -4051,17 +4053,11 @@ size = "0x58"
 name = "dialog_box_put(unsigned int,unsigned int,int)"
 owner_unit = "th04-main-dialog-render-primitives-v182"
 source = "src/main/dialog/render_primitives.inl"
-evidence_id = "ev-th04-main-dialog-box-put-boundary-v182"
-reason = "Fresh target-bound Ghidra constructs all 88 bytes contiguously; target raw closes RET 6 and the next TLINK public begins immediately at 0x1D016. Maintained natural C++ is source-present but cannot legally reproduce REP STOSW, TEST BX,7, or the three target reg-reg opcode-direction encodings."
+evidence_id = "ev-th04-main-dialog-render-function-exact-review-v394"
+reason = "Fresh target-bound Ghidra constructs all 88 bytes contiguously; v394 hybrid authored source reproduces the target body exactly inside the fused dialog producer, and playfield_copy_front_to_back begins at the next public."
 next_public_address = "0x1D016"
 
-[[new_nonexact]]
-id = "th04-main-fn-1cfbe"
-address = "0x1CFBE"
-evidence_id = "ev-th04-main-dialog-box-put-boundary-v182"
-reason = "Expand the reviewed authored denominator with the complete dialog_box_put() body while preserving the assembly/codegen blocker."
-
-[[reviewed_nonexact]]
+[[reviewed_exact]]
 id = "th04-main-fn-1d016"
 address = "0x1D016"
 file_offset = "0xE816"
@@ -4069,17 +4065,11 @@ size = "0x38"
 name = "playfield_copy_front_to_back()"
 owner_unit = "th04-main-dialog-render-primitives-v182"
 source = "src/main/dialog/render_primitives.inl"
-evidence_id = "ev-th04-main-dialog-copy-front-back-boundary-v182"
-reason = "Fresh target-bound Ghidra constructs all 56 bytes contiguously; raw closes RET and the next TLINK public begins at 0x1D04E. The historical candidate scaffold slice is byte-identical, but maintained inline-asm-free C++ expands the target LOOP sequence and receives no exactness credit."
+evidence_id = "ev-th04-main-dialog-render-function-exact-review-v394"
+reason = "Fresh target-bound Ghidra constructs all 56 bytes contiguously; v394 hybrid authored source reproduces the compact LOOP body exactly and dialog_face_unput_8 begins at the next public."
 next_public_address = "0x1D04E"
 
-[[new_nonexact]]
-id = "th04-main-fn-1d016"
-address = "0x1D016"
-evidence_id = "ev-th04-main-dialog-copy-front-back-boundary-v182"
-reason = "Expand the reviewed authored denominator with the complete playfield copy helper while its maintained natural source remains codegen-nonexact."
-
-[[reviewed_nonexact]]
+[[reviewed_exact]]
 id = "th04-main-fn-1d04e"
 address = "0x1D04E"
 file_offset = "0xE84E"
@@ -4087,15 +4077,9 @@ size = "0x4A"
 name = "dialog_face_unput_8(unsigned int,unsigned int)"
 owner_unit = "th04-main-dialog-render-primitives-v182"
 source = "src/main/dialog/render_primitives.inl"
-evidence_id = "ev-th04-main-dialog-face-unput-boundary-v182"
-reason = "Fresh target-bound Ghidra constructs all 74 bytes contiguously; target raw closes RET 4 and exact dialog_box_fade_in_animate() begins at 0x1D098. Maintained natural C++ remains nonexact at the target LOOP sequence and three reg-reg opcode-direction encodings."
+evidence_id = "ev-th04-main-dialog-render-function-exact-review-v394"
+reason = "Fresh target-bound Ghidra constructs all 74 bytes contiguously; v394 hybrid authored source reproduces target LOOP/register direction exactly and exact dialog_box_fade_in_animate begins at the next public."
 next_public_address = "0x1D098"
-
-[[new_nonexact]]
-id = "th04-main-fn-1d04e"
-address = "0x1D04E"
-evidence_id = "ev-th04-main-dialog-face-unput-boundary-v182"
-reason = "Expand the reviewed authored denominator with the complete face-unput helper while preserving its compiler/code-shape blocker."
 
 # v183: Natural C++ scroll helper promoted only after final focused and candidate-state aggregate replay.
 [[new_exact]]
