@@ -61,6 +61,51 @@ class UnitDependencyTests(unittest.TestCase):
             replay.resolve_unit_dependencies(entries, {"leaf"})
 
 
+class AuxiliaryObjectOverrideTests(unittest.TestCase):
+    def test_uses_baseline_without_trigger(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_objects": ["old.obj"],
+            "auxiliary_objects_override_when_unit": "split",
+            "auxiliary_objects_override": ["new.obj"],
+        }
+        self.assertEqual(
+            replay.resolved_auxiliary_objects(entry, {"owner"}),
+            ["old.obj"],
+        )
+
+    def test_uses_override_with_trigger(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_objects": ["old.obj"],
+            "auxiliary_objects_override_when_unit": "split",
+            "auxiliary_objects_override": ["new.obj"],
+        }
+        self.assertEqual(
+            replay.resolved_auxiliary_objects(entry, {"owner", "split"}),
+            ["new.obj"],
+        )
+
+    def test_active_override_fails_closed_when_missing(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_objects": ["old.obj"],
+            "auxiliary_objects_override_when_unit": "split",
+        }
+        with self.assertRaisesRegex(RuntimeError, "override is active but missing"):
+            replay.resolved_auxiliary_objects(entry, {"owner", "split"})
+
+    def test_override_rejects_non_path(self) -> None:
+        entry = {
+            "id": "owner",
+            "auxiliary_objects": ["old.obj"],
+            "auxiliary_objects_override_when_unit": "split",
+            "auxiliary_objects_override": [{"path": "new.obj"}],
+        }
+        with self.assertRaisesRegex(RuntimeError, "non-path"):
+            replay.resolved_auxiliary_objects(entry, {"owner", "split"})
+
+
 class AuxiliaryExtentOverrideTests(unittest.TestCase):
     def test_uses_baseline_without_trigger(self) -> None:
         entry = {

@@ -10756,8 +10756,14 @@ map_module = "th04/m2r.cpp"
 map_mode = "exact"
 object_path = "obj/th04/m2r.obj"
 auxiliary_objects = ["obj/th04/maisuf196.obj"]
+auxiliary_objects_override_when_unit = "th04-main-scroll-driver-v268"
+auxiliary_objects_override = ["obj/th04/scrdrv.obj"]
 auxiliary_extents = [
   { id = "th04-main-mai-scroll-suffix-v196", file_offset = "0xE4D6", size = "0x60", map_module = "th04\\maisuf196.asm", map_segment = "MAI_TEXT", object_path = "obj/th04/maisuf196.obj" },
+]
+auxiliary_extents_override_when_unit = "th04-main-scroll-driver-v268"
+auxiliary_extents_override = [
+  { id = "th04-main-mai-scroll-suffix-v196-v383", file_offset = "0xE4D6", size = "0x60", map_module = "th04/scrdrv.cpp", map_segment = "MAI_TEXT", object_path = "obj/th04/scrdrv.obj" },
 ]
 map_segment = "MAI_TEXT"
 map_start = "0x214A"

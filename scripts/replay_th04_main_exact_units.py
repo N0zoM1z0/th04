@@ -1250,6 +1250,27 @@ def inspect_zero_code_objects(source: Path, paths: list[str]) -> list[dict[str, 
     return results
 
 
+def resolved_auxiliary_objects(
+    entry: dict[str, object], selected_ids: set[str]
+) -> list[str]:
+    """Resolve trigger-scoped replay-only OMF producers without weakening validation."""
+
+    def checked_override(value: object, label: str) -> list[str]:
+        if not isinstance(value, list) or not value:
+            raise RuntimeError(f"{entry['id']}: {label} is active but missing")
+        if not all(isinstance(item, str) and item for item in value):
+            raise RuntimeError(f"{entry['id']}: {label} contains a non-path entry")
+        return list(value)
+
+    resolved = [str(value) for value in entry.get("auxiliary_objects", [])]
+    trigger = entry.get("auxiliary_objects_override_when_unit")
+    if trigger is not None and str(trigger) in selected_ids:
+        resolved = checked_override(
+            entry.get("auxiliary_objects_override"), "auxiliary object override"
+        )
+    return resolved
+
+
 def inspect_auxiliary_objects(source: Path, paths: list[str]) -> list[dict[str, object]]:
     """Validate replay-only OMF producers that contribute real program bytes."""
 
@@ -1496,7 +1517,7 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
             source, [str(value) for value in entry.get("zero_code_objects", [])]
         )
         auxiliary_objects = inspect_auxiliary_objects(
-            source, [str(value) for value in entry.get("auxiliary_objects", [])]
+            source, resolved_auxiliary_objects(entry, selected_ids)
         )
         auxiliary_extents = inspect_auxiliary_extents(
             source, resolved_auxiliary_extents(entry, selected_ids), target_mz, candidate_mz, map_path
