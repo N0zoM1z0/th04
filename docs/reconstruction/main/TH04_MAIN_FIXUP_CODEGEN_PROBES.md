@@ -13,34 +13,37 @@ assembly, or add inline assembly to maintained C/C++.
 
 ## Unresolved cases
 
-### `snd_load`: four bytes
+### `snd_load`: two bytes
 
-The reviewed function occupies target file `0x14C96..0x14D7F` (234 bytes).
-Maintained natural source reproduces 230 bytes. The remaining target bytes are:
+The reviewed function occupies target file `0x14C96..0x14D7F` (234 bytes). After v391, maintained source owns **232/234 bytes exact**.
+
+v391 closes the two segment-register preservation bytes:
 
 ```text
-file 0x14D4E: 1E       PUSH DS
-file 0x14D57: 89 C3    MOV BX,AX
-file 0x14D76: 1F       POP DS
+file 0x14D4E: 1E       PUSH DS    exact
+file 0x14D76: 1F       POP DS     exact
 ```
 
-The following approaches are already disproved for this exact TC4J producer
-path and should not be repeated without new target or compiler evidence:
+These are not accepted merely because ReC98 contains inline assembly. Independent attested TH02 and TH05 targets preserve the same DS lifetime around their song-data read paths: caller DS is saved, the driver/read path uses another DS value, and DS is restored afterward. The checked-in symbolic fragments uniquely match the pinned TH04 scaffold and pass focused A/B plus the promoted 266-owner aggregate.
+
+The sole remaining target bytes are now:
+
+```text
+file 0x14D57: 89 C3    MOV BX,AX
+```
+
+The following approaches are already disproved for this exact TC4J producer path and should not be repeated without materially new compiler evidence:
 
 - ordinary `_BX = _AX`, casts, aliases, references, and register pressure;
 - TASM 4.1/5.0 syntax or mode changes for `MOV BX,AX`;
 - `TCC -B`, `-Z`/`-Z-`, and tested compiler option matrices;
-- ordinary, register, `void __seg *`, or `unsigned __seg *` DS temporaries;
-- assuming `geninterrupt()` gives TC4J a DS-clobber contract;
-- generic far-pointer or `MK_FP` rewrites.
+- pseudoregister alias tricks that attempt to make BX an addressable lvalue.
 
-Direct `_AX = func` also promotes the parameter to DI and changes surrounding
-code. The accepted memory-resident reload spelling is already preserved in the
-maintained source; changing it is not a route to the three instructions above.
+Cross-game target evidence now makes the blocker stronger rather than weaker. The homologous TH02 loader uses `8B D8` after DOS open, and the TH05 loader does the same. TH04 alone uses `89 C3`. Therefore no shared low-level producer provenance currently justifies forcing TH04's direction-bit encoding.
 
-Next useful work requires a materially different original source/producer
-hypothesis that explains all three instruction choices together. Otherwise the
-four bytes stay blocked.
+Direct `_AX = func` also promotes the parameter to DI and changes surrounding code. The accepted memory-resident reload spelling is already preserved in the maintained source.
+
+Next useful work must explain why this TH04 producer alone selected `89 C3` without injecting bytes or target-derived inline assembly. Otherwise these final two bytes stay blocked.
 
 ### `enemy_bullet_template_push`: 27 bytes
 

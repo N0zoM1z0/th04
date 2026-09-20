@@ -27,17 +27,17 @@ the accepted extent.
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
 - MAIN has **487/494 reviewed authored C/C++ functions** and
-  **82,758/83,469 reviewed authored C/C++ bytes** exact (99.148187%).
+  **82,760/83,469 reviewed authored C/C++ bytes** exact (99.150583%).
   Forty-three accepted original-style ASM units add 5,702 bytes. Whole MAIN.EXE
-  is not yet exact. v390 formally reviews item_splashes_init() as a
-  source-present blocked C++ function, so the denominator grows by 26 bytes.
+  is not yet exact. v391 promotes the two source-owned snd_load DS
+  preservation bytes; the C/C++ denominator is unchanged.
 - The latest complete native aggregate is
-  `gpt-web-pointnum-digits-v389-aggregate-final-001`: all 264 selected
+  `gpt-web-snd-load-ds-v391-aggregate-final-001`: all 266 selected
   MAIN owners pass two cold builds, raw bytes, MAP, ordered relocations, and
-  OMF. Receipt SHA-256: `a2d7deabd90a0a67658677d75ce49d14e2349efc39cf5f142437cd7b72661a05`.
-- The remaining reviewed authored C/C++ gap is **711 bytes**: dialog render
+  OMF. Receipt SHA-256: `d55f438321b2cb31b7aae05390e8fb74d031f047e64bc51f3750b75a8eba398b`.
+- The remaining reviewed authored C/C++ gap is **709 bytes**: dialog render
   218, `sub_B835` 199, checkerboard 174, Stage 4 carpet 90,
-  `item_splashes_init()` 26, and the final 4 `snd_load` bytes.
+  `item_splashes_init()` 26, and the final 2 `snd_load` bytes (`89 C3`).
 - MAIN now has **no provisional authored C/C++ boundaries**. v390 reviews the
   final provisional `item_splashes_init()` boundary as blocked, while
   `POINTNUM_DIGITS_SET` remains on the original-ASM plane from v389.
@@ -57,12 +57,12 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Close the reviewed 711-byte C/C++ gap.** `sub_B835` is 199 bytes,
+1. **Close the reviewed 709-byte C/C++ gap.** `sub_B835` is 199 bytes,
    checkerboard 174, Stage 4 carpet 90, the three dialog-render helpers total
-   218, `item_splashes_init()` is 26, and `snd_load` has four
-   residual bytes. Every MAIN C/C++ boundary is now formally reviewed; the
-   remaining work is codegen/provenance/ownership closure rather than boundary
-   discovery.
+   218, `item_splashes_init()` is 26, and `snd_load` has only
+   the two-byte `89 C3` MOV BX,AX residual. Every MAIN C/C++ boundary
+   is formally reviewed; the remaining work is codegen/provenance/ownership
+   closure.
 2. **Keep v390 item_splashes_init blocked without inline-ASM cheating.** Its
    near-target body differs only at `31 C0` versus `33 C0`, but
    pure-C++ zeroing variants do not select the target encoding and the
@@ -78,9 +78,9 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
+- `gpt-web-snd-load-ds-v391-aggregate-final-001`
+- `gpt-web-snd-load-ds-v391-focused-002`
 - `gpt-web-pointnum-digits-v389-aggregate-final-001`
-- `gpt-web-pointnum-digits-v389-focused-004`
-- `gpt-web-randring-mod-v388-aggregate-final-001`
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.
