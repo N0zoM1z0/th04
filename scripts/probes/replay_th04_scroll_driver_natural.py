@@ -20,7 +20,7 @@ import tomllib
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "src/main/scroll/driver.cpp"
 FLAGS = ("-c", "-ml", "-O", "-b-", "-3", "-Z", "-d")
-EXPECTED_CODE_SHA256 = "1e6ded75015254eaff10edf27d2dad38f73226b247cfcb6d5c3973aa6776008d"
+EXPECTED_CODE_SHA256 = "d322b71c44879335558e18e4fffc5501237dab3deeed0c10e612f8192f53503f"
 PREFIX_SIZE = 46
 PREFIX_SYMBOL_WORDS = (4, 12, 18, 22, 29, 36, 42)
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -30,6 +30,70 @@ from inspect_dialog_fixup_order import code_ledata  # noqa: E402
 
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def omf_index(data: bytes, pos: int) -> tuple[int, int]:
+    first = data[pos]
+    if first < 0x80:
+        return first, pos + 1
+    return ((first & 0x7F) << 8) | data[pos + 1], pos + 2
+
+
+def fixup_locations(data: bytes) -> list[tuple[int, int]]:
+    """Return (location-kind, LEDATA-relative offset) from one FIXUPP payload."""
+
+    pos = 0
+    result: list[tuple[int, int]] = []
+    while pos < len(data):
+        first = data[pos]
+
+        # Thread subrecord.
+        if first < 0x80:
+            is_target_thread = (first >> 6) & 1
+            method = (first >> 2) & 7
+            pos += 1
+            if not is_target_thread:
+                datum_kind = method & 3
+                if datum_kind < 3:
+                    _, pos = omf_index(data, pos)
+                else:
+                    pos += 2
+            elif method < 3:
+                _, pos = omf_index(data, pos)
+            elif method == 3:
+                pos += 2
+            continue
+
+        # Fixup subrecord.
+        locat = first
+        offset_low = data[pos + 1]
+        pos += 2
+        location = (locat >> 2) & 0xF
+        offset = ((locat & 3) << 8) | offset_low
+
+        fixdat = data[pos]
+        pos += 1
+        frame_thread = (fixdat >> 7) & 1
+        frame_method = (fixdat >> 4) & 7
+        target_thread = (fixdat >> 3) & 1
+        no_displacement = (fixdat >> 2) & 1
+        target_method = fixdat & 3
+
+        if not frame_thread:
+            if frame_method < 3:
+                _, pos = omf_index(data, pos)
+            elif frame_method == 3:
+                pos += 2
+        if not target_thread:
+            if target_method < 3:
+                _, pos = omf_index(data, pos)
+            else:
+                pos += 2
+        if not no_displacement:
+            pos += 2
+
+        result.append((location, offset))
+    return result
 
 
 def main() -> int:
@@ -86,7 +150,7 @@ def main() -> int:
         raise ValueError("unexpected scroll-driver OMF producer")
     records = parse_omf(obj)
     groups = code_ledata(records, "MAI_TEXT")
-    if len(groups) != 1 or groups[0][:2] != (0, 105):
+    if len(groups) != 1 or groups[0][:2] != (0, 96):
         raise ValueError("unexpected MAI_TEXT CODE extent")
     code = records[groups[0][2] - 1].data[3:]
     if sha(code) != EXPECTED_CODE_SHA256:
@@ -98,7 +162,29 @@ def main() -> int:
         code_prefix[start:start + 2] = b"\0\0"
     if target_prefix != code_prefix:
         raise ValueError("scroll-driver initial opcode prefix differs from target")
-    if b"\x29\x06\0\0\x7d\x06" not in code or b"\x29\x06\x78\x42\x79\x06" not in target_body:
+
+    fixup_mask: set[int] = set()
+    for start, _end, _record, fixupp in groups:
+        for location, offset in fixup_locations(fixupp):
+            width = {1: 2, 2: 2, 3: 4, 5: 2}.get(location)
+            if width is None:
+                raise ValueError(f"unsupported MAI_TEXT FIXUPP location kind {location}")
+            fixup_mask.update(range(start + offset, start + offset + width))
+
+    masked_target = bytearray(target_body)
+    masked_code = bytearray(code)
+    for offset in fixup_mask:
+        masked_target[offset] = 0
+        masked_code[offset] = 0
+    if masked_target != masked_code:
+        mismatch = [
+            offset for offset, (target_byte, code_byte)
+            in enumerate(zip(masked_target, masked_code))
+            if target_byte != code_byte
+        ]
+        raise ValueError(f"scroll-driver fixed bytes differ at {mismatch}")
+
+    if b"\x29\x06\0\0\x79\x06" not in code or b"\x29\x06\x78\x42\x79\x06" not in target_body:
         raise ValueError("scroll-driver subtraction/branch diagnostic changed")
     (output / "driver.code").write_bytes(code)
     receipt = {
@@ -119,9 +205,11 @@ def main() -> int:
         "fixed_opcode_prefix_size": PREFIX_SIZE,
         "fixed_opcode_prefix_masked_words": list(PREFIX_SYMBOL_WORDS),
         "fixed_opcode_prefix_equal": True,
+        "fixup_masked_offsets": sorted(fixup_mask),
+        "all_non_fixup_bytes_equal": True,
         "sub_memory_ax_observed": True,
-        "target_jns_candidate_jnl": True,
-        "result": "source-present, product-only TC4J compile; first 46 fixed opcode bytes agree and SUB memory,AX appears; complete CODE 105 versus target 96 with JNL versus target JNS",
+        "target_jns_candidate_jnl": False,
+        "result": "source-present, product-only TC4J compile; complete 96-byte CODE has zero fixed-opcode differences from target after masking OMF fixup fields, including SUB memory,AX and JNS",
         "limit": "Storage/helper symbols still need link ownership; full raw/MAP/ordered-relocation and cold aggregate gates do not pass.",
     }
     path = output / "receipt.json"

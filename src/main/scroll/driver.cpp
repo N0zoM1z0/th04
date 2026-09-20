@@ -1,5 +1,7 @@
 #pragma option -zCMAI_TEXT -zPmain_01
 
+#define FLAGS_SIGN (_FLAGS & 0x80)
+
 // MAI_TEXT scroll driver at MAIN.EXE load 0xCCD6. The two unresolved BSS
 // flags keep their target-address names until their wider ownership is known.
 extern unsigned char page_back;
@@ -24,13 +26,19 @@ void near scroll_driver()
 
     scroll_last_delta = 0;
     if((scroll_subpixel_line = (scroll_subpixel_line + scroll_speed)) >= 16) {
-        unsigned char lines = ((unsigned int)scroll_subpixel_line >> 4);
-        if((scroll_line -= lines) < 0) {
+        // Keep the quotient in AX. The signed cast tells TC4J that AX is the
+        // complete 16-bit RHS, avoiding both a byte-local spill and an
+        // unnecessary second zero-extension of AL.
+        _AH = 0;
+        _AX >>= 4;
+        scroll_line -= static_cast<int>(_AX);
+        if(FLAGS_SIGN) {
             scroll_line += 400;
         }
-        byte_25104 = lines;
+        byte_25104 = _AL;
         scroll_subpixel_line &= 15;
-        scroll_last_delta = (lines << 4);
+        _AX <<= 4;
+        scroll_last_delta = _AX;
     }
     sub_B835();
 }
