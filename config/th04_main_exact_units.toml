@@ -798,6 +798,11 @@ repo_source = "src/main/dialog/file.cpp"
 overlay_path = "th04/f_dialog.cpp"
 map_module = "th04/f_dialog.cpp"
 object_path = "obj/th04/f_dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-module-th04-boss-exp-cpp-d88c"
@@ -947,6 +952,11 @@ patch_path = "th04/main/dialog/shared.cpp"
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-dialog-fade-in"
@@ -956,26 +966,51 @@ patch_path = "th04/main/dialog/shared.cpp"
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-dialog-op"
 default_enabled = false
+requires_units = ["th04-main-dialog-run"]
 repo_source = "src/main/dialog/op.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-dialog-run"
 default_enabled = false
+requires_units = [
+  "th04-main-module-th04-f-dialog-cpp-ce93",
+  "th04-main-dialog-std-prefix",
+  "th04-main-dialog-fade-in",
+  "th04-main-dialog-script-params",
+  "th04-main-dialog-animate",
+  "th04-main-dialog-init",
+  "th04-main-dialog-exit",
+]
 repo_source = "src/main/dialog/run.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/dialog.cpp"
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-dialog-init"
@@ -1257,6 +1292,11 @@ replace_sha256 = "169aaea7b307d2525d024b732caff5ffdae32bb290c7d609a5dcd8d68477c4
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
 
 [[units]]
 id = "th04-main-dialog-script-params"
@@ -1267,6 +1307,11 @@ patch_path = "th03/formats/script.hpp"
 map_module = "th04/dialog.cpp"
 map_mode = "contains"
 object_path = "obj/th04/dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
 
 
 [[units]]
@@ -12088,3 +12133,36 @@ removed_sha256 = "8f227f4798dba7d365987068b5db15f553afb5028ef38381c8ee04490db672
 start = "public @stage_session_init$qv\r\n"
 end = "DEMO_TEXT\tends\r\n"
 replacement = "DEMO_TEXT\tends\r\n"
+
+# v381 candidate: recover the historical physical dialog producer. f_dialog
+# and the following shared dialog source occupy one TC4J M4_RENDER_TEXT object;
+# DIALOG_TEXT remains a zero-size contribution before the accepted dialog_i TU.
+[[build_inserts]]
+id = "th04-main-dialog-fused-v381-source"
+trigger_units = ["th04-main-dialog-run"]
+repo_source = "src/main/dialog/fused.cpp"
+overlay_path = "th04/dlgfuse.cpp"
+build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v381 materializes the fused f_dialog/dialog producer.\n"
+
+[[build_replacements]]
+id = "th04-main-dialog-fused-v381-build"
+trigger_units = ["th04-main-dialog-run"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/f_dialog.cpp\",\n\t\"th04/dialog.cpp\",\n\t\"th04/dialog_i.cpp\",\n"
+build_replacement = "\t\"th04/dlgfuse.cpp\",\n\t\"th04/dialog_i.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-dialog-fused-v381-scaffold"
+trigger_units = ["th04-main-dialog-run"]
+patch_path = "th04/main/dialog/dialog.cpp"
+encoding = "latin-1"
+scaffold_sha256 = "ed3961bd3d0e93728ec1c88871151d3fe5ba8d5645a4c68e8b2e4368c97213be"
+
+[[source_transforms.ops]]
+id = "guard-dialog-group-pragma-v381"
+kind = "replace"
+old = "#pragma option -zPmain_01\n"
+new = "#ifndef TH04_DIALOG_FUSED\n#pragma option -zPmain_01\n#endif\n"
+expected_count = 1

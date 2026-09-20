@@ -1,4 +1,6 @@
+#ifndef TH04_DIALOG_FUSED
 #pragma option -zCM4_RENDER_TEXT
+#endif
 
 #include <stddef.h>
 #include "src/shared/runtime/api.hpp"
