@@ -12556,6 +12556,7 @@ patch_path = "th04_main.asm"
 encoding = "latin-1"
 scaffold_sha256_any = [
   "4ff9e7e1960746bebdb244cc1b9eb0b0f0878086cbcf4bf579c99299d18db2bb",
+  "6c8c719f979649afd7fe01d22b124e8802a9bb286cc960f3851643232293a52b",
   "2c107a5c2dd81a0e77dff42c2aaa3deb9c1b49636f51bad7713649aa3c41f72e",
 ]
 
