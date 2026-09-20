@@ -12593,7 +12593,7 @@ size = "0xC7"
 # only independently TH05-corroborated low-level operations are symbolic.
 [[units]]
 id = "th04-main-dialog-render-primitives-v182"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-dialog-op"]
 repo_source = "src/main/dialog/render_primitives.inl"
 source_mode = "replace"
