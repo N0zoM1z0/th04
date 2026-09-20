@@ -3937,12 +3937,12 @@ name = "orange_backdrop_colorfill()"
 evidence_id = "ev-th04-main-marisa-orange-functions-boundary-v173"
 reason = "Admit the Ghidra-missed Orange backdrop callback only after exact natural owner, raw RET, exact next target entry, generated public, and independent target callback-pointer review."
 
-# v180: Target-first DIALOG_TEXT review corrects dialog_op() from Ghidra's
+# v180/v381: Target-first DIALOG_TEXT review corrects dialog_op() from Ghidra's
 # sparse 60-address body to a 0x374 executable body plus two 15-word compiler
-# switch tables. dialog_run() is contiguous through the next exact public. Both
-# maintained natural-source functions remain blocked only by historical ordered
-# MZ relocation differences despite raw-byte/MAP equality.
-[[reviewed_nonexact]]
+# switch tables. dialog_run() is contiguous through the next exact public.
+# v381 restores the historical fused f_dialog/shared-dialog producer and makes
+# both physical owners raw/MAP/ordered-relocation exact.
+[[reviewed_exact_extent]]
 id = "th04-main-fn-1d1bc"
 address = "0x1D1BC"
 file_offset = "0xE9BC"
@@ -3952,20 +3952,21 @@ decode_size = "0x374"
 name = "dialog_op(unsigned char)"
 owner_unit = "th04-main-dialog-op"
 source = "src/main/dialog/op.inl"
-evidence_id = "ev-th04-main-dialog-op-boundary-v180"
-reason = "Target-first review closes executable code through RET 2 at 0x1D52F, then the 15-word sorted opcode-value table at 0x1D530 and 15-word jump table at 0x1D54E through 0x1D56B. Every jump resolves through DIALOG_TEXT CS base 0x1AAF0 to a decoded instruction start, and dialog_run() begins at the next TLINK public 0x1D56C. Maintained natural source is source-present, but exact promotion remains blocked by ordered MZ relocation mismatch."
+evidence_id = "ev-th04-main-dialog-function-exact-review-v381"
+reason = "The exact v381 fused M4_RENDER_TEXT producer reproduces the complete reviewed 0x3B0 physical owner. Raw decode closes the 0x374 executable body through RET 2 at 0x1D52F; the following 15-word compare table and 15-word jump table occupy 0x1D530..0x1D56B, every jump resolves to a decoded instruction start, and dialog_run() begins at the next TLINK public 0x1D56C."
 next_public_address = "0x1D56C"
 trailing_switch_tables = [
   { compare_table_address = "0x1D530", compare_table_count = 15, compare_table_values = [35, 36, 61, 98, 99, 100, 101, 102, 103, 107, 108, 109, 110, 116, 119], jump_table_address = "0x1D54E", jump_table_count = 15, cs_base = "0x1AAF0" },
 ]
+replace_evidence_ids = true
 
-[[new_nonexact]]
+[[new_exact]]
 id = "th04-main-fn-1d1bc"
 address = "0x1D1BC"
-evidence_id = "ev-th04-main-dialog-op-boundary-v180"
-reason = "Expand the reviewed authored denominator with the complete target-proved dialog_op() executable extent. The following compare/jump tables remain physical compiler ownership rather than function-body credit."
+evidence_id = "ev-th04-main-dialog-function-exact-review-v381"
+reason = "Promote the previously reviewed blocked dialog_op() only after v381 exact fused-owner replay and complete compiler-table boundary validation."
 
-[[reviewed_nonexact]]
+[[reviewed_exact_extent]]
 id = "th04-main-fn-1d56c"
 address = "0x1D56C"
 file_offset = "0xED6C"
@@ -3973,15 +3974,16 @@ size = "0x17F"
 name = "dialog_run()"
 owner_unit = "th04-main-dialog-run"
 source = "src/main/dialog/run.inl"
-evidence_id = "ev-th04-main-dialog-run-boundary-v180"
-reason = "Fresh target-bound Ghidra constructs all 383 bytes contiguously; raw decode closes RET at 0x1D6EA and exact dialog_animate() begins at the next TLINK public 0x1D6EB. Maintained natural source is source-present, but exact promotion remains blocked by ordered MZ relocation mismatch."
+evidence_id = "ev-th04-main-dialog-run-function-exact-review-v381"
+reason = "The exact v381 fused M4_RENDER_TEXT producer reproduces all 0x17F bytes. Fresh target-bound Ghidra constructs the complete body, raw decode closes RET at 0x1D6EA, and exact dialog_animate() begins at the next TLINK public 0x1D6EB."
 next_public_address = "0x1D6EB"
+replace_evidence_ids = true
 
-[[new_nonexact]]
+[[new_exact]]
 id = "th04-main-fn-1d56c"
 address = "0x1D56C"
-evidence_id = "ev-th04-main-dialog-run-boundary-v180"
-reason = "Expand the reviewed authored denominator with the complete contiguous dialog_run() body while preserving its relocation-order blocker."
+evidence_id = "ev-th04-main-dialog-run-function-exact-review-v381"
+reason = "Promote the previously reviewed blocked dialog_run() only after v381 exact fused-owner replay and next-public validation."
 
 # v181/v345: Complete exact B4M_UPDATE_TEXT thick-laser producer.
 [[reviewed_exact_internal_call]]
