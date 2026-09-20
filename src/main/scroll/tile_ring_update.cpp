@@ -3,8 +3,8 @@
 #include <dos.h>
 #include <mem.h>
 
-// END_TEXT scroll/tile-ring helper at MAIN.EXE load 0xB835. Address-style
-// names mark BSS state whose wider ownership is still unresolved.
+#define FLAGS_SIGN (_FLAGS & 0x80)
+
 extern "C" unsigned char byte_250FE;
 extern "C" unsigned char byte_25104;
 extern "C" unsigned int word_25100;
@@ -34,14 +34,23 @@ void near scroll_tile_ring_update()
         return;
     }
 
-    unsigned int row = (scroll_line >> 4);
-    if(row != word_25100) {
-        word_25100 = row;
-        if((--tile_row_in_section) < 0) {
+    _AX = scroll_line;
+    _AX >>= 4;
+    if(_AX != word_25100) {
+        word_25100 = _AX;
+
+        _BX = (unsigned int)std_seg;
+        _ES = _BX;
+        tile_row_in_section--;
+        if(FLAGS_SIGN) {
             tile_row_in_section = 4;
             std_map_section_id++;
             std_scroll_speed++;
-            if((scroll_speed = std_seg[std_scroll_speed]) == 0) {
+
+            _BX = std_scroll_speed;
+            _DL = *reinterpret_cast<unsigned char __es *>(_BX);
+            scroll_speed = _DL;
+            if(_DL == 0) {
                 scroll_line = 0;
                 byte_250FE = 0;
                 byte_25104 = 0;
@@ -49,14 +58,35 @@ void near scroll_tile_ring_update()
             }
         }
 
-        unsigned int source_offset =
-            ((unsigned int)(unsigned char)tile_row_in_section * 64)
-            + TILE_SECTION_OFFSETS[std_seg[std_map_section_id]];
-        __memcpy__(
-            &tile_ring[row][0],
-            MK_FP((unsigned int)map_seg, source_offset),
-            48
+        _AX <<= 6;
+        _AX += (unsigned int)&tile_ring[0][0];
+        asm { mov di, ax; }
+
+        asm { xor ax, ax; }
+        _AL = tile_row_in_section;
+        _AX <<= 6;
+
+        _BX = std_map_section_id;
+        _BL = *reinterpret_cast<unsigned char __es *>(_BX);
+        asm {
+            xor bh, bh
+            add bl, bl
+        }
+        _BX = *reinterpret_cast<const unsigned int *>(
+            reinterpret_cast<const unsigned char *>(TILE_SECTION_OFFSETS) + _BX
         );
+        asm {
+            mov si, ax
+            add si, bx
+            push ds
+            pop es
+            push ds
+            mov ax, map_seg
+            mov ds, ax
+            mov cx, 24
+            rep movsw
+            pop ds
+        }
     }
 
     previous_copy_request = byte_250FE;

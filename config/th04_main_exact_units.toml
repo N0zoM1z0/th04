@@ -12537,3 +12537,50 @@ map_start = "0x00B8"
 map_size = "0x32"
 target_file_offset = "0x14D76"
 size = "0x1"
+
+# v393: hybrid authored-C++ candidate for the complete END_TEXT sub_B835
+# tile-ring helper. Ordinary TC4J reaches the target size/CFG but not the
+# low-level direction/copy producer. Independent TH05 target evidence supports
+# the symbolic inline statements using the same standard as v344/v342.
+[[build_replacements]]
+id = "th04-main-scroll-tile-ring-v393-build"
+trigger_units = ["th04-main-scroll-tile-ring-v270"]
+build_file = "Tupfile.lua"
+build_anchor = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/ellybd.cpp\",\n"
+build_replacement = "\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/tilering.cpp\",\n\t\"th04/ellybd.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-scroll-tile-ring-v393-layout"
+trigger_units = ["th04-main-scroll-tile-ring-v270"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "2c107a5c2dd81a0e77dff42c2aaa3deb9c1b49636f51bad7713649aa3c41f72e"
+
+[[source_transforms.ops]]
+id = "externalize-scroll-tile-ring-v393"
+kind = "remove_between"
+start = "public sub_B835\r\nsub_B835\tproc near\r\n"
+end = "sub_B835\tendp\r\n"
+replacement = "extrn @scroll_tile_ring_update$qv:near\r\nALIAS <sub_B835>=<@scroll_tile_ring_update$qv>\r\n"
+
+[[source_transforms.ops]]
+id = "retarget-scroll-tile-ring-symbols-v393"
+kind = "replace"
+old = "extrn sub_CCD6:near\r\nextrn @scroll_driver$qv:near\r\nALIAS <sub_CCD6>=<@scroll_driver$qv>\r\nALIAS <_sub_B835>=<sub_B835>\r\nALIAS <_byte_250FE>=<byte_250FE>\r\nALIAS <_byte_25104>=<byte_25104>\r\nALIAS <@GRAPH_SCROLLUP$QI>=<GRAPH_SCROLLUP>\r\n"
+new = "extrn sub_CCD6:near\r\nextrn @scroll_driver$qv:near\r\nALIAS <sub_CCD6>=<@scroll_driver$qv>\r\nALIAS <_sub_B835>=<@scroll_tile_ring_update$qv>\r\nALIAS <_word_25100>=<_tile_ring_scroll_row_prev>\r\nALIAS <_sub_BAEE>=<sub_BAEE>\r\nALIAS <@egc_off$qv>=<EGC_OFF>\r\nALIAS <_byte_250FE>=<byte_250FE>\r\nALIAS <_byte_25104>=<byte_25104>\r\nALIAS <@GRAPH_SCROLLUP$QI>=<GRAPH_SCROLLUP>\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-scroll-tile-ring-v270"
+default_enabled = false
+requires_units = ["th04-main-mpn-load-v195", "th04-main-scroll-driver-v268"]
+repo_source = "src/main/scroll/tile_ring_update.cpp"
+overlay_path = "th04/tilering.cpp"
+map_module = "th04/tilering.cpp"
+map_mode = "exact"
+object_path = "obj/th04/tilering.obj"
+map_segment = "END_TEXT"
+map_start = "0x0D45"
+map_size = "0xC7"
+target_file_offset = "0xD035"
+size = "0xC7"
