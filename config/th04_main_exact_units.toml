@@ -12594,7 +12594,7 @@ size = "0xC7"
 [[units]]
 id = "th04-main-dialog-render-primitives-v182"
 default_enabled = false
-requires_units = ["th04-main-dialog-run"]
+requires_units = ["th04-main-dialog-op"]
 repo_source = "src/main/dialog/render_primitives.inl"
 source_mode = "fragment"
 patch_path = "th04/main/dialog/shared.cpp"
