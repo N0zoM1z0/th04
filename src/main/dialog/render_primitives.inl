@@ -9,7 +9,12 @@ void pascal near dialog_box_put(uscreen_x_t left, uvram_y_t top, int tile)
 	_ES = SEG_PLANE_B;
 	_AX = left;
 	_DX = top;
-	_DI = vram_offset_shift_fast(_AX, _DX);
+	_AX >>= 3;
+	_DX <<= 6;
+	asm { add ax, dx; }
+	_DX >>= 2;
+	asm { add ax, dx; }
+	asm { mov di, ax; }
 
 	static_assert(BOX_TILE_SIZE == 8);
 	offset = tile;
@@ -90,11 +95,16 @@ void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top)
 
 	// ZUN bloat: _ES = grcg_segment(0, top);
 	_AX = top;
-	_BX = _AX;
-	_ES = (SEG_PLANE_B + ((_AX * 4) + _BX));
+	asm { mov bx, ax; }
+	_AX <<= 2;
+	asm { add ax, bx; }
+	_AX += SEG_PLANE_B;
+	_ES = _AX;
 
 	_DI = ((FACE_H - 1) * ROW_SIZE);
-	_DI += (left / BYTE_DOTS);
+	_AX = left;
+	_AX >>= 3;
+	asm { add di, ax; }
 	egc_rect_interpage_16(
 		reinterpret_cast<egc_temp_t __es *>(_DI), FACE_W, page_back
 	);
