@@ -59,14 +59,23 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 ## Retained private evidence
 
-Keep only these current expanded MAIN replay trees:
+No expanded exact-unit replay tree is required for the current handoff. The
+latest accepted MAIN replay remains
+`gpt-web-item-splashes-init-v395-aggregate-final-001`; its run ID and
+receipt SHA-256 are durable in the checked-in evidence ledger. Re-run it if the
+full receipt body is needed.
 
-- `gpt-web-item-splashes-init-v395-aggregate-final-001`
-- `gpt-web-item-splashes-init-v395-focused-001`
+Keep the current small blocker/frontier probe cache while those topics remain
+active:
 
-Older receipts are archived under
-`.analysis/reconstruction/receipt-archive/`. Current blocker/master-object
-probe receipts may remain under `.analysis/gpt-web/` while active.
+- `.analysis/gpt-web/v391-snd-load-crossgame-001`
+- `.analysis/gpt-web/v396-checkerboard-negative-001`
+- `.analysis/gpt-web/v396-final-opcode-corpus-001`
+- `.analysis/gpt-web/v397-master-object-boundaries-001`
+
+Other current v397 object/listing controls may remain expanded because they are
+small and directly support the active OP/MAINE frontier. Superseded probe
+receipts are archived under `.analysis/reconstruction/receipt-archive/`.
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.
