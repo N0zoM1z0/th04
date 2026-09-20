@@ -12432,7 +12432,7 @@ expected_count = 1
 
 [[units]]
 id = "th04-main-randring1-next16-mod-asm-v388"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-nullfunc-near-v387"]
 repo_source = "src/main/math/randring1_next16_mod.asm"
 overlay_path = "th04/r1mod.asm"
@@ -12447,7 +12447,7 @@ size = "0x19"
 
 [[units]]
 id = "th04-main-randring2-next16-mod-asm-v388"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-randring2-and-v212"]
 repo_source = "src/main/math/randring2_next16_mod.asm"
 overlay_path = "th04/r2mod.asm"
