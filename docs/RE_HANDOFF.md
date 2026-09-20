@@ -26,16 +26,17 @@ the accepted extent.
 - Target canonicality is `candidate-local-attested`. The pinned Japanese
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **484/491 reviewed authored C/C++ functions** and
-  **82,660/83,441 reviewed authored C/C++ bytes** exact (99.064009%). Forty
+- MAIN has **485/491 reviewed authored C/C++ functions** and
+  **82,756/83,441 reviewed authored C/C++ bytes** exact (99.179061%). Forty
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
   exact.
 - The latest complete native aggregate is
-  `gpt-web-dialog-v381-aggregate-final-001`: all 258 selected MAIN owners
-  pass two cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt
-  SHA-256: `507bc4ab4bb70f23088deb83d82360274656d6e360bcb3d0bff3eae3f60b2f76`.
-- The remaining reviewed authored C/C++ gap is **781 bytes**: dialog render
-  218, scroll 295, checkerboard 174, Stage 4 carpet 90, and the final 4 `snd_load` bytes.
+  `gpt-web-scroll-driver-v383-aggregate-final-001`: all 259 selected MAIN
+  owners pass two cold builds, raw bytes, MAP, ordered relocations, and OMF.
+  Receipt SHA-256: `103b24688460ca0c4a17a886b075b5c08ae283f097942af7c05fc5bab023ac2d`.
+- The remaining reviewed authored C/C++ gap is **685 bytes**: dialog render
+  218, `sub_B835` 199, checkerboard 174, Stage 4 carpet 90, and the final 4
+  `snd_load` bytes.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
@@ -52,23 +53,21 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Move to the remaining 563 non-dialog MAIN bytes.** The remaining blockers
-   are scroll 295 bytes, checkerboard 174, Stage 4 carpet 90, and the final 4
-   `snd_load` bytes. Start with scroll, where producer/link ownership is still
-   open and therefore offers more room for natural closure.
-2. **Keep the 218 DIALOG_TEXT render bytes as a bounded compiler blocker.**
+1. **Close the remaining 199-byte scroll helper `sub_B835`.** The 96-byte
+   `scroll_driver` is now exact from maintained natural C++, including its
+   historical MAI_TEXT link slot and symbol/storage ownership. Continue with
+   `sub_B835`, whose natural TC4J source is still oversized and whose physical
+   segment/link ownership remains open.
+2. **Close checkerboard 174, Stage 4 carpet 90, and the final 4 `snd_load`
+   bytes.** These are primarily compiler/code-shape or ownership problems.
+3. **Keep the 218 DIALOG_TEXT render bytes as a bounded compiler blocker.**
    Independent TH05 target bytes preserve the same compact `REP STOSW`/`LOOP`
    and register-direction shape, but pinned TC4J rejects both command-line and
    pragma `-Ol`; ReC98's matching inline assembly is explicitly decompilation
    provenance, not recovered original ASM. Do not convert these functions to
    standalone TASM solely to gain exactness.
-3. **Continue the remaining artifacts.** The cold decoded-payload residual is
-   7 OP bytes, 5 MAINE bytes, and 0 ZUN bytes; this is not packed-file equality.
-   ZUN's 6,360-byte diagnostic component differs at 4,241 bytes and still uses
-   external support code. Continue from the packed-frontier and ZUN component
-   link notes.
-4. **Add deterministic DOSBox-X runtime scenarios** after standalone build and
-   link closure can produce the artifacts under test.
+4. **Continue the remaining artifacts and deterministic runtime scenarios**
+   after standalone build/link closure can produce the artifacts under test.
 
 The live six-function MAIN review queue comes from `config/units.csv`,
 `config/th04_main_authored_functions.csv`,
@@ -76,11 +75,11 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 ## Retained private evidence
 
-Keep these ignored .analysis/reconstruction/exact-unit-replay/ trees:
+Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
+- `gpt-web-scroll-driver-v383-aggregate-final-001`
+- `gpt-web-scroll-driver-v383-staged-002`
 - `gpt-web-dialog-v381-aggregate-final-001`
-- `gpt-web-dialog-v381-focused-003`
-- `gpt-web-demo-session-v380-aggregate-final-001`
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.
