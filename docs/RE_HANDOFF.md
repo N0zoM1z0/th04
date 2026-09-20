@@ -53,11 +53,12 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Close the remaining 199-byte scroll helper `sub_B835`.** The 96-byte
-   `scroll_driver` is now exact from maintained natural C++, including its
-   historical MAI_TEXT link slot and symbol/storage ownership. Continue with
-   `sub_B835`, whose natural TC4J source is still oversized and whose physical
-   segment/link ownership remains open.
+1. **Close the remaining 199-byte scroll helper `sub_B835`.** A bounded
+   pure-C++ TC4J variant now reaches the exact 199-byte size and target CFG.
+   TC4J built-in symbolic inline assembly explains the remaining register
+   encoding/copy-order shape, and an independent TH05 target preserves the same
+   low-level producer. Historical source provenance and linked END_TEXT ownership
+   are still open, so do not promote or add tracked inline assembly yet.
 2. **Close checkerboard 174, Stage 4 carpet 90, and the final 4 `snd_load`
    bytes.** These are primarily compiler/code-shape or ownership problems.
 3. **Keep the 218 DIALOG_TEXT render bytes as a bounded compiler blocker.**
