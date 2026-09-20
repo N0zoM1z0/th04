@@ -191,6 +191,8 @@ trigger_units = [
   "th04-main-snd-load-open",
   "th04-main-snd-load-dispatch-read",
   "th04-main-snd-load-func-load",
+  "th04-main-snd-load-push-ds",
+  "th04-main-snd-load-pop-ds",
 ]
 patch_path = "th04/snd/load.cpp"
 encoding = "utf-8"
@@ -12503,3 +12505,37 @@ map_start = "0x4F5E"
 map_size = "0x26"
 target_file_offset = "0x1A1EE"
 size = "0x25"
+
+# v391: DS preservation bytes are source-owned symbolic TC4J inline assembly,
+# separately from the still-blocked TH04-specific MOV BX,AX encoding.
+[[units]]
+id = "th04-main-snd-load-push-ds"
+default_enabled = false
+requires_units = ["th04-main-snd-load-prefix"]
+repo_source = "src/shared/sound/load_push_ds.inl"
+source_mode = "fragment"
+patch_path = "th04/snd/load.cpp"
+map_module = "th04/snd_load.cpp"
+map_mode = "contains"
+object_path = "obj/th04/snd_load.obj"
+map_segment = "SND_LOAD_TEXT"
+map_start = "0x00B8"
+map_size = "0x32"
+target_file_offset = "0x14D4E"
+size = "0x1"
+
+[[units]]
+id = "th04-main-snd-load-pop-ds"
+default_enabled = false
+requires_units = ["th04-main-snd-load-push-ds"]
+repo_source = "src/shared/sound/load_pop_ds.inl"
+source_mode = "fragment"
+patch_path = "th04/snd/load.cpp"
+map_module = "th04/snd_load.cpp"
+map_mode = "contains"
+object_path = "obj/th04/snd_load.obj"
+map_segment = "SND_LOAD_TEXT"
+map_start = "0x00B8"
+map_size = "0x32"
+target_file_offset = "0x14D76"
+size = "0x1"
