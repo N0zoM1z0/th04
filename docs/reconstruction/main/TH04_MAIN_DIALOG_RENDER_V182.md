@@ -197,3 +197,44 @@ shape is deliberate and reused, while the accepted natural compiler surface
 still cannot express it. Do not replace this packet with standalone symbolic
 TASM merely to manufacture exactness. Resume it only if a distinct, replayable
 natural producer mechanism is found.
+
+
+## v394 hybrid exact closure
+
+The v182 compiler blocker is now closed without converting these authored C++
+functions into standalone ASM.
+
+Independent TH05 target bytes preserve the same three physical extents and the
+same low-level producer architecture: `REP STOSW` plus `TEST BX,7`
+in `dialog_box_put()`, compact `LOOP` in both interpage-copy
+helpers, and the same register-direction dataflow in the box and face helpers.
+Following the accepted v393 hybrid-C++ precedent, only those independently
+corroborated irreducible operations are represented as symbolic low-level
+statements; all surrounding logic remains authored C++.
+
+The maintained source is `src/main/dialog/render_primitives.inl`.
+Repository replay applies it through a four-way fail-closed replacement bound
+to the pinned `shared.cpp` scaffold SHA, byte offset, replaced-span size,
+and replaced-span SHA. It is compiled inside the exact v381 fused
+`f_dialog`/shared-dialog producer.
+
+Focused staged replay `gpt-web-dialog-render-v394-focused-004` passes two
+cold builds with `failures=[]`; receipt SHA-256:
+
+`31b278f1518ce4230b4e99262cf1e759a4a4b00b268a4487f61aaaec7153ff38`
+
+The complete 0xDA linked owner is target-identical (SHA-256
+`3f2b47655411684fb0c01460b3bb254599e145fbab18b8eb6d9bd0cbb0a125ae`),
+lies inside the exact fused `M4_RENDER_TEXT` producer, and has the exact
+ordered relocation overlap `[0xD091,0xD049,0xCFCB]`. The three public
+functions keep their target sizes `0x58 / 0x38 / 0x4A`.
+
+Candidate aggregate `gpt-web-dialog-render-v394-aggregate-candidate-001`
+passes all 268 default owners twice. After promotion, independent final
+aggregate `gpt-web-dialog-render-v394-aggregate-final-001` again passes
+all 268 owners twice with `failures=[]`; final receipt SHA-256:
+
+`2c6b8b699f13c0b90aac3dcac6139ac13bdca3257b2de430241797cd988c2293`
+
+`dialog_box_put()`, `playfield_copy_front_to_back()`, and
+`dialog_face_unput_8()` are exact as of v394.
