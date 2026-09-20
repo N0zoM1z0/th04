@@ -17,7 +17,12 @@
 #endif
 #include "th04/main/score.hpp"
 
+#ifdef TH04_DEMO_FULL_COMBINED
+typedef void (near *callback_cdecl_t)(void);
+extern callback_cdecl_t fp_23D90;
+#else
 extern nearfunc_t_near fp_23D90;
+#endif
 extern bool bombing;
 extern bool palette_changed;
 extern unsigned char page_front;

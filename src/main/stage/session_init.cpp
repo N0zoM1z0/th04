@@ -1,8 +1,11 @@
+#ifndef TH04_DEMO_FULL_COMBINED
 #pragma option -zCDEMO_TEXT -zPmain_01
+#endif
 
 // TH04 stage/demo session setup and per-stage runtime state initialization.
 // Target evidence binds both logical functions to one physical TC4J object.
 
+#ifndef TH04_DEMO_FULL_COMBINED
 #include "platform.h"
 #include "src/shared/runtime/api.hpp"
 #include "src/shared/hardware/graphics.hpp"
@@ -15,6 +18,7 @@
 #include "th04/main/player/bomb.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/playfld.hpp"
+#endif
 #include "th04/main/dialog/dialog.hpp"
 #include "src/main/formats/map.hpp"
 #include "th04/formats/dialog.hpp"
@@ -340,7 +344,9 @@ extern "C" void near stage_session_free(void)
     }
 }
 
+#ifndef TH04_DEMO_FULL_COMBINED
 #include "th04/hardware/input.h"
+#endif
 extern char gsCHUUDAN[];
 extern char gsSAIKAI[];
 extern char gsSHUURYOU[];

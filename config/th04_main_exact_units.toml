@@ -673,6 +673,11 @@ repo_source = "src/main/slowdown.cpp"
 overlay_path = "th04/main/slowdown.cpp"
 map_module = "th04/slowdown.cpp"
 object_path = "obj/th04/slowdown.obj"
+producer_override_when_unit = "th04-main-demo-session-v166"
+producer_map_module = "th04/demopre.cpp"
+producer_object_path = "obj/th04/demopre.obj"
+producer_map_mode = "contains"
+producer_map_segment = "DEMO_TEXT"
 
 [[units]]
 id = "th04-main-tile-ring-set-vo"
@@ -8329,7 +8334,10 @@ text = "public _demo_input_null\r\n_demo_input_null label near\r\n"
 [[units]]
 id = "th04-main-demo-session-v166"
 default_enabled = false
-requires_units = ["th04-main-midboss1-render-v164"]
+requires_units = [
+  "th04-main-gameplay-session-init-v165",
+  "th04-main-slowdown-frame-delay",
+]
 repo_source = "src/main/stage/session_init.cpp"
 overlay_path = "th04/sess.cpp"
 map_module = "th04/sess.cpp"
@@ -8340,6 +8348,11 @@ map_start = "0x03E0"
 map_size = "0x51E"
 target_file_offset = "0xC6D0"
 size = "0x51E"
+producer_override_when_unit = "th04-main-demo-session-v166"
+producer_map_module = "th04/demopre.cpp"
+producer_object_path = "obj/th04/demopre.obj"
+producer_map_mode = "contains"
+producer_map_segment = "DEMO_TEXT"
 
 
 # v167 candidate: Recover the complete Yuuka5 foreground renderer as natural
@@ -12100,3 +12113,55 @@ map_start = "0x0213"
 map_size = "0x1CD"
 target_file_offset = "0xC503"
 size = "0x1CD"
+
+# v380 candidate: preserve the accepted v377 DEMO prefix and fuse the natural
+# 0x1A slowdown function plus the complete 0x51E stage-session source into the
+# same TC4J DEMO_TEXT producer. v379 compiler/OMF probes show that this exact
+# physical prefix naturally yields the target one/core/eleven FIXUPP batching.
+[[source_transforms]]
+id = "th04-main-demo-session-v380-fuse-source"
+trigger_units = ["th04-main-demo-session-v166"]
+patch_path = "th04/demopre.cpp"
+encoding = "utf-8"
+scaffold_sha256 = "b51153f2f1c791924837126bcc1f61c1fa9de98a77680605e7840cb17dda3c7a"
+
+[[source_transforms.ops]]
+id = "enable-demo-full-combined-v380"
+kind = "replace"
+old = "#define TH04_DEMO_PREFIX_COMBINED 1\n"
+new = "#define TH04_DEMO_PREFIX_COMBINED 1\n#define TH04_DEMO_FULL_COMBINED 1\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "prepend-slowdown-to-demo-prefix-v380"
+kind = "replace"
+old = "#include \"th04/mainent.cpp\"\n"
+new = "#include \"th04/main/slowdown.cpp\"\n#include \"th04/mainent.cpp\"\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "append-stage-session-to-demo-prefix-v380"
+kind = "replace"
+old = "#undef TH04_DEMO_PREFIX_COMBINED\n"
+new = "#include \"th04/sess.cpp\"\n\n#undef TH04_DEMO_FULL_COMBINED\n#undef TH04_DEMO_PREFIX_COMBINED\n"
+expected_count = 1
+
+# v166 first materializes sess.cpp as a separate link input; v377 then fuses
+# main/gameplay/gameplay-session into demopre.cpp. Replace that final physical
+# topology by one demopre producer that includes sess.cpp itself.
+[[build_replacements]]
+id = "th04-main-demo-session-v380-fused-link"
+trigger_units = ["th04-main-demo-session-v166"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/demopre.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n\t\"th04/sess.cpp\",\n"
+build_replacement = "\t\"th04/demopre.cpp\",\n\t{ \"th04_main.asm\", extra_inputs = {\n\t\tth02_sprites[\"pellet\"],\n\t\tth02_sprites[\"sparks\"],\n\t\tth04_sprites[\"pelletbt\"],\n\t\tth04_sprites[\"pointnum\"],\n\t} },\n"
+
+# slowdown_frame_delay() now lives at the start of the fused demopre object.
+# Keep the original wrapper source materialized for the include, but do not
+# compile/link a second standalone slowdown object.
+[[build_replacements]]
+id = "th04-main-demo-session-v380-remove-standalone-slowdown"
+trigger_units = ["th04-main-demo-session-v166"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/slowdown.cpp\",\n\t\"th04/demo.cpp\",\n"
+build_replacement = "\t\"th04/demo.cpp\",\n"
