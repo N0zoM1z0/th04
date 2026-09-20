@@ -12616,7 +12616,7 @@ producer_map_segment = "M4_RENDER_TEXT"
 # DS->ES / XOR AX,AX / REP STOSW / last-id reset producer architecture.
 [[units]]
 id = "th04-main-item-splashes-init-v390"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-item-splashes-suffix"]
 repo_source = "src/main/item/splashes_init.inl"
 source_mode = "replace"
