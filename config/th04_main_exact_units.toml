@@ -12362,6 +12362,18 @@ auxiliary_extents = [
   { id = "th04-main-nullfunc-near-gap-v387", file_offset = "0xD4AF", size = "0x1", map_module = "th04\\nulg1.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/nulg1.obj" },
   { id = "th04-main-nullfunc-far-gap-v387", file_offset = "0xD4B1", size = "0x1", map_module = "th04\\nulg2.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/nulg2.obj" },
 ]
+auxiliary_objects_override_when_unit = "th04-main-randring1-next16-mod-asm-v388"
+auxiliary_objects_override = [
+  "obj/th04/r1mod.obj",
+  "obj/th04/nulg1.obj",
+  "obj/th04/nulg2.obj",
+]
+auxiliary_extents_override_when_unit = "th04-main-randring1-next16-mod-asm-v388"
+auxiliary_extents_override = [
+  { id = "th04-main-randring1-mod-physical-v388", file_offset = "0xD494", size = "0x1A", map_module = "th04\\r1mod.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/r1mod.obj" },
+  { id = "th04-main-nullfunc-near-gap-v387", file_offset = "0xD4AF", size = "0x1", map_module = "th04\\nulg1.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/nulg1.obj" },
+  { id = "th04-main-nullfunc-far-gap-v387", file_offset = "0xD4B1", size = "0x1", map_module = "th04\\nulg2.asm", map_segment = "CIRCLE_TEXT", object_path = "obj/th04/nulg2.obj" },
+]
 map_segment = "CIRCLE_TEXT"
 map_start = "0x11BE"
 map_size = "0x1"
@@ -12382,3 +12394,65 @@ map_start = "0x11C0"
 map_size = "0x1"
 target_file_offset = "0xD4B0"
 size = "0x1"
+
+# v388: evidence-backed original-style symbolic randring MOD producers. ReC98
+# reverse-engineered one shared macro family across TH02-TH05, TH05 directly
+# includes the TH04 macro, and the independently attested TH05 target contains
+# two matching 25-byte MOD bodies.
+[[build_replacements]]
+id = "th04-main-randring1-mod-asm-v388-build"
+trigger_units = ["th04-main-randring1-next16-mod-asm-v388"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/r1gap2.asm\",\n\t\"th04/r1mod387.asm\",\n\t\"th04/nulln.cpp\",\n"
+build_replacement = "\t\"th04/r1gap2.asm\",\n\t\"th04/r1mod.asm\",\n\t\"th04/nulln.cpp\",\n"
+
+[[build_replacements]]
+id = "th04-main-randring2-mod-asm-v388-build"
+trigger_units = ["th04-main-randring2-next16-mod-asm-v388"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/rr2and.cpp\",\n\t\"th04/circlep.asm\",\n"
+build_replacement = "\t\"th04/rr2and.cpp\",\n\t\"th04/r2mod.asm\",\n\t\"th04/circlep.asm\",\n"
+
+[[source_transforms]]
+id = "th04-main-randring2-mod-asm-v388-residual"
+trigger_units = ["th04-main-randring2-next16-mod-asm-v388"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256 = "3ff9d2478a09d4871069745516e0a415ea738529c47d1df4918b1352346a2b72"
+
+[[source_transforms.ops]]
+id = "externalize-randring2-mod-v388"
+kind = "replace"
+old = "RANDRING_NEXT_DEF 2\r\n\t\tdb    0\r\n"
+new = "extrn @randring2_next16$qv:near\r\nextrn @RANDRING2_NEXT16_AND$QUI:near\r\nextrn @RANDRING2_NEXT16_MOD$QUI:near\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-randring1-next16-mod-asm-v388"
+default_enabled = false
+requires_units = ["th04-main-nullfunc-near-v387"]
+repo_source = "src/main/math/randring1_next16_mod.asm"
+overlay_path = "th04/r1mod.asm"
+map_module = "th04\\r1mod.asm"
+map_mode = "contains"
+object_path = "obj/th04/r1mod.obj"
+map_segment = "CIRCLE_TEXT"
+map_start = "0x11A4"
+map_size = "0x1A"
+target_file_offset = "0xD494"
+size = "0x19"
+
+[[units]]
+id = "th04-main-randring2-next16-mod-asm-v388"
+default_enabled = false
+requires_units = ["th04-main-randring2-and-v212"]
+repo_source = "src/main/math/randring2_next16_mod.asm"
+overlay_path = "th04/r2mod.asm"
+map_module = "th04\\r2mod.asm"
+map_mode = "contains"
+object_path = "obj/th04/r2mod.obj"
+map_segment = "MAIN_032_TEXT"
+map_start = "0x02E6"
+map_size = "0x1A"
+target_file_offset = "0x15576"
+size = "0x19"
