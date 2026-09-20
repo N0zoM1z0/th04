@@ -12610,3 +12610,23 @@ producer_map_module = "th04/dlgfuse.cpp"
 producer_object_path = "obj/th04/dlgfuse.obj"
 producer_map_mode = "contains"
 producer_map_segment = "M4_RENDER_TEXT"
+
+# v395: item_splashes_init hybrid candidate. TH05 directly reuses the TH04
+# item-splash TU and its independent target preserves the same 26-byte
+# DS->ES / XOR AX,AX / REP STOSW / last-id reset producer architecture.
+[[units]]
+id = "th04-main-item-splashes-init-v390"
+default_enabled = false
+requires_units = ["th04-main-item-splashes-suffix"]
+repo_source = "src/main/item/splashes_init.inl"
+source_mode = "replace"
+patch_path = "th04/main/item/splash_u.cpp"
+scaffold_sha256 = "a5006875b4fb973d1509af579535ed31fb4600e3d1e1b70760224c81e3720138"
+replace_offset = 212
+replace_size = 281
+replace_sha256 = "d86a0014a96d5deaf54d8676792b531c50b051aa50f9e27134158a9409240413"
+map_module = "th04/it_spl_u.cpp"
+map_mode = "contains"
+object_path = "obj/th04/it_spl_u.obj"
+target_file_offset = "0x15716"
+size = "0x1A"
