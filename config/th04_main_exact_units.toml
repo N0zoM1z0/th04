@@ -12588,3 +12588,21 @@ map_start = "0x0D45"
 map_size = "0xC7"
 target_file_offset = "0xD035"
 size = "0xC7"
+
+# v394: dialog render hybrid candidate. The three functions stay authored C++;
+# only independently TH05-corroborated low-level operations are symbolic.
+[[units]]
+id = "th04-main-dialog-render-primitives-v182"
+default_enabled = false
+requires_units = ["th04-main-dialog-run"]
+repo_source = "src/main/dialog/render_primitives.inl"
+source_mode = "fragment"
+patch_path = "th04/main/dialog/shared.cpp"
+map_module = "th04/dialog.cpp"
+map_mode = "contains"
+object_path = "obj/th04/dialog.obj"
+producer_override_when_unit = "th04-main-dialog-run"
+producer_map_module = "th04/dlgfuse.cpp"
+producer_object_path = "obj/th04/dlgfuse.obj"
+producer_map_mode = "contains"
+producer_map_segment = "M4_RENDER_TEXT"
