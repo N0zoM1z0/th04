@@ -12341,7 +12341,7 @@ kind = "remove_between"
 start = "public @RANDRING1_NEXT16_MOD$QUI\r\n"
 end = "include th04/main/null.asm\r\n"
 removed_sha256 = "8e367398883c0ebfd177f17aa2962f02194e1c16fee684492e8e6e7d6ac5b1b6"
-replacement = "extrn @RANDRING1_NEXT16_MOD$QUI:near\r\nextrn NULLFUNC_NEAR:near\r\nextrn NULLFUNC_FAR:far\r\n"
+replacement = "extrn @RANDRING1_NEXT16_MOD$QUI:near\r\nextrn NULLFUNC_NEAR:near\r\nextrn NULLFUNC_FAR:far\r\nALIAS <_demo_input_null>=<NULLFUNC_NEAR>\r\n"
 
 [[units]]
 id = "th04-main-nullfunc-near-v387"
