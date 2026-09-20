@@ -12310,13 +12310,20 @@ build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
 build_insert = "-- v387 materializes the natural NULLFUNC_FAR source.\n"
 
 [[build_inserts]]
-id = "th04-main-nullfunc-cohort-v387-build"
+id = "th04-main-nullfunc-near-source-v387"
 trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
 repo_source = "src/main/core/nullfunc_near.cpp"
 overlay_path = "th04/nulln.cpp"
 build_file = "Tupfile.lua"
+build_anchor = "tup.include(\"Pipeline/rules.lua\")\n"
+build_insert = "-- v387 materializes the natural NULLFUNC_NEAR source.\n"
+
+[[build_replacements]]
+id = "th04-main-nullfunc-cohort-v387-build"
+trigger_units = ["th04-main-nullfunc-near-v387", "th04-main-nullfunc-far-v387"]
+build_file = "Tupfile.lua"
 build_anchor = "\t\"th04/r1gap2.asm\",\n"
-build_insert = "\t\"th04/r1mod387.asm\",\n\t\"th04/nulln.cpp\",\n\t\"th04/nulg1.asm\",\n\t\"th04/nullf.cpp\",\n\t\"th04/nulg2.asm\",\n"
+build_replacement = "\t\"th04/r1gap2.asm\",\n\t\"th04/r1mod387.asm\",\n\t\"th04/nulln.cpp\",\n\t\"th04/nulg1.asm\",\n\t\"th04/nullf.cpp\",\n\t\"th04/nulg2.asm\",\n"
 
 [[source_transforms]]
 id = "th04-main-nullfunc-cohort-v387-residual"
