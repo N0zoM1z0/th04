@@ -12210,7 +12210,7 @@ expected_count = 1
 
 [[units]]
 id = "th04-main-scroll-driver-v268"
-default_enabled = false
+default_enabled = true
 requires_units = ["th04-main-midboss2-render-v196"]
 repo_source = "src/main/scroll/driver.cpp"
 overlay_path = "th04/scrdrv.cpp"
