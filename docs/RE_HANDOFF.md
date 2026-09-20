@@ -26,22 +26,21 @@ the accepted extent.
 - Target canonicality is `candidate-local-attested`. The pinned Japanese
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **487/493 reviewed authored C/C++ functions** and
-  **82,758/83,443 reviewed authored C/C++ bytes** exact (99.179080%).
+- MAIN has **487/494 reviewed authored C/C++ functions** and
+  **82,758/83,469 reviewed authored C/C++ bytes** exact (99.148187%).
   Forty-three accepted original-style ASM units add 5,702 bytes. Whole MAIN.EXE
-  is not yet exact. v389 moves POINTNUM_DIGITS_SET onto the separate
-  original-ASM plane, so the C/C++ denominator is unchanged.
+  is not yet exact. v390 formally reviews item_splashes_init() as a
+  source-present blocked C++ function, so the denominator grows by 26 bytes.
 - The latest complete native aggregate is
   `gpt-web-pointnum-digits-v389-aggregate-final-001`: all 264 selected
   MAIN owners pass two cold builds, raw bytes, MAP, ordered relocations, and
   OMF. Receipt SHA-256: `a2d7deabd90a0a67658677d75ce49d14e2349efc39cf5f142437cd7b72661a05`.
-- The remaining reviewed authored C/C++ gap is **685 bytes**: dialog render
-  218, `sub_B835` 199, checkerboard 174, Stage 4 carpet 90, and the final 4
-  `snd_load` bytes.
-- One provisional boundary remains outside the reviewed denominator:
-  `item_splashes_init()`, 26 bytes at load `0x13F16`.
-  `POINTNUM_DIGITS_SET` moved to the original-ASM plane in v389 after
-  independent TH04/TH05 producer provenance and full replay acceptance.
+- The remaining reviewed authored C/C++ gap is **711 bytes**: dialog render
+  218, `sub_B835` 199, checkerboard 174, Stage 4 carpet 90,
+  `item_splashes_init()` 26, and the final 4 `snd_load` bytes.
+- MAIN now has **no provisional authored C/C++ boundaries**. v390 reviews the
+  final provisional `item_splashes_init()` boundary as blocked, while
+  `POINTNUM_DIGITS_SET` remains on the original-ASM plane from v389.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
@@ -58,17 +57,16 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Formally review the last provisional boundary.** `item_splashes_init()`
-   is 26 bytes at load `0x13F16`. The full body and ownership are known;
-   the current natural/scaffold producer differs from target by only the XOR
-   encoding `33 C0` versus `31 C0`, and the historical REP STOSW
-   source is explicit decompilation inline assembly. Admit it to the reviewed
-   C/C++ denominator as blocked rather than manufacturing exactness.
-2. **Close the remaining reviewed 685-byte C/C++ gap.** `sub_B835` is 199
-   bytes, checkerboard 174, Stage 4 carpet 90, the three dialog-render helpers
-   total 218, and `snd_load` has four residual bytes. Existing notes
-   record the compiler/provenance blockers; do not replace them with
-   target-derived inline assembly.
+1. **Close the reviewed 711-byte C/C++ gap.** `sub_B835` is 199 bytes,
+   checkerboard 174, Stage 4 carpet 90, the three dialog-render helpers total
+   218, `item_splashes_init()` is 26, and `snd_load` has four
+   residual bytes. Every MAIN C/C++ boundary is now formally reviewed; the
+   remaining work is codegen/provenance/ownership closure rather than boundary
+   discovery.
+2. **Keep v390 item_splashes_init blocked without inline-ASM cheating.** Its
+   near-target body differs only at `31 C0` versus `33 C0`, but
+   pure-C++ zeroing variants do not select the target encoding and the
+   historical REP STOSW source is explicit decompilation inline assembly.
 3. **Continue the remaining artifacts and deterministic runtime scenarios**
    after standalone build/link closure can produce the artifacts under test.
 

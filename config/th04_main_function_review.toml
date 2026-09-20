@@ -4344,3 +4344,25 @@ id = "th04-main-fn-1bcb0"
 address = "0x1BCB0"
 evidence_id = "ev-th04-main-nullfunc-far-boundary-v387"
 reason = "Admit the reviewed one-byte far Pascal callback only after v387 natural-C++ focused and aggregate exact replay."
+
+# v390: Last provisional MAIN C/C++ boundary. The target body, TLINK/MAP public,
+# and next public all agree on the complete 0x1A item_splashes_init() extent.
+# Exactness remains blocked by one XOR encoding byte and decompilation-only
+# inline-assembly provenance for REP STOSW.
+[[reviewed_nonexact]]
+id = "th04-main-fn-23f16"
+address = "0x23F16"
+file_offset = "0x15716"
+size = "0x1A"
+name = "item_splashes_init()"
+owner_unit = "th04-main-item-splashes-init-v390"
+source = "src/main/item/splashes_init.cpp"
+evidence_id = "ev-th04-main-item-splashes-init-reviewed-boundary-v390"
+reason = "Fresh target-bound Ghidra constructs all 26 bytes contiguously; candidate MAP publishes the same start and the exact item_splashes_add() begins at the next public 0x23F30. The candidate module differs by only one byte, target 31 C0 versus TC4J 33 C0 for XOR AX,AX. Six natural pseudo-register zeroing spellings fail to select 31 C0, and the historical REP STOSW inline assembly is explicit decompilation provenance."
+next_public_address = "0x23F30"
+
+[[new_nonexact]]
+id = "th04-main-fn-23f16"
+address = "0x23F16"
+evidence_id = "ev-th04-main-item-splashes-init-reviewed-boundary-v390"
+reason = "Admit the complete reviewed item_splashes_init() body to the authored C/C++ denominator while preserving the compiler/provenance blocker and granting no exact credit."
