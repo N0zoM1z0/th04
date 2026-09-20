@@ -12150,8 +12150,8 @@ build_insert = "-- v381 materializes the fused f_dialog/dialog producer.\n"
 id = "th04-main-dialog-fused-v381-build"
 trigger_units = ["th04-main-dialog-run"]
 build_file = "Tupfile.lua"
-build_anchor = "\t\"th04/f_dialog.cpp\",\n\t\"th04/dialog.cpp\",\n\t\"th04/dialog_i.cpp\",\n"
-build_replacement = "\t\"th04/dlgfuse.cpp\",\n\t\"th04/dialog_i.cpp\",\n"
+build_anchor = "\t\"th04/f_dialog.cpp\",\n\t\"th04/dialog.cpp\",\n"
+build_replacement = "\t\"th04/dlgfuse.cpp\",\n"
 
 [[source_transforms]]
 id = "th04-main-dialog-fused-v381-scaffold"
