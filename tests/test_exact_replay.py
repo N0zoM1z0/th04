@@ -146,7 +146,7 @@ class ProducerOverrideTests(unittest.TestCase):
         }
         self.assertEqual(
             replay.resolved_producer_outputs(entry, {"prefix"}),
-            ("prefix.cpp", "prefix.obj", "exact"),
+            ("prefix.cpp", "prefix.obj", "exact", None),
         )
 
     def test_logical_unit_uses_fused_producer_when_trigger_selected(self) -> None:
@@ -161,7 +161,39 @@ class ProducerOverrideTests(unittest.TestCase):
         }
         self.assertEqual(
             replay.resolved_producer_outputs(entry, {"prefix", "tail"}),
-            ("combined.cpp", "combined.obj", "contains"),
+            ("combined.cpp", "combined.obj", "contains", None),
+        )
+
+    def test_fused_producer_can_override_map_segment(self) -> None:
+        entry = {
+            "id": "prefix",
+            "map_module": "prefix.cpp",
+            "object_path": "prefix.obj",
+            "map_segment": "PREFIX_TEXT",
+            "producer_override_when_unit": "tail",
+            "producer_map_module": "combined.cpp",
+            "producer_object_path": "combined.obj",
+            "producer_map_mode": "contains",
+            "producer_map_segment": "COMBINED_TEXT",
+        }
+        self.assertEqual(
+            replay.resolved_producer_outputs(entry, {"prefix", "tail"}),
+            ("combined.cpp", "combined.obj", "contains", "COMBINED_TEXT"),
+        )
+
+    def test_fused_producer_keeps_logical_segment_without_override(self) -> None:
+        entry = {
+            "id": "prefix",
+            "map_module": "prefix.cpp",
+            "object_path": "prefix.obj",
+            "map_segment": "PREFIX_TEXT",
+            "producer_override_when_unit": "tail",
+            "producer_map_module": "combined.cpp",
+            "producer_object_path": "combined.obj",
+        }
+        self.assertEqual(
+            replay.resolved_producer_outputs(entry, {"prefix", "tail"}),
+            ("combined.cpp", "combined.obj", "exact", "PREFIX_TEXT"),
         )
 
     def test_active_override_fails_closed_when_output_is_incomplete(self) -> None:

@@ -1398,25 +1398,28 @@ def resolved_auxiliary_extents(
 
 def resolved_producer_outputs(
     entry: dict[str, object], selected_ids: set[str]
-) -> tuple[str, str, str]:
+) -> tuple[str, str, str, str | None]:
     """Resolve the physical producer without weakening logical-unit checks."""
 
     map_module = str(entry["map_module"])
     object_path = str(entry["object_path"])
     map_mode = str(entry.get("map_mode", "exact"))
+    map_segment = str(entry.get("map_segment", "")) or None
     trigger = entry.get("producer_override_when_unit")
     if trigger is None or str(trigger) not in selected_ids:
-        return map_module, object_path, map_mode
+        return map_module, object_path, map_mode, map_segment
     required = ("producer_map_module", "producer_object_path")
     missing = [key for key in required if not entry.get(key)]
     if missing:
         raise RuntimeError(
             f"{entry['id']}: producer override lacks {', '.join(missing)}"
         )
+    producer_segment = entry.get("producer_map_segment")
     return (
         str(entry["producer_map_module"]),
         str(entry["producer_object_path"]),
         str(entry.get("producer_map_mode", map_mode)),
+        (str(producer_segment) if producer_segment else map_segment),
     )
 
 
@@ -1475,10 +1478,9 @@ def inspect_build(source: Path, entries: list[dict[str, str]], ledger: dict[str,
         candidate_slice = candidate_mz.program_image[program_start : program_start + size]
         if len(target_slice) != size or len(candidate_slice) != size:
             raise RuntimeError(f"{entry['id']}: candidate/target slice is truncated")
-        map_module, object_path, map_mode = resolved_producer_outputs(
+        map_module, object_path, map_mode, map_segment = resolved_producer_outputs(
             entry, selected_ids
         )
-        map_segment = str(entry.get("map_segment", "")) or None
         map_start, map_size, map_line = map_contribution(
             map_path, map_module, map_segment
         )
