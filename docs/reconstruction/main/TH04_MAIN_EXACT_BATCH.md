@@ -174,6 +174,23 @@ relocation overlap, and deterministic TC86 OMF. The v116 boundary audit again fi
 natural C++ without manufactured padding. Candidate-C++ paths that require inline
 ASM/codestring remain explicitly unaccepted.
 
+## Recent retired exact packets
+
+These resolved one-off notes were removed after their conclusions became fully
+durable in maintained source and the CSV ledgers:
+
+| Packet | Durable knowledge key |
+| --- | --- |
+| gameplay session v377 | `th04-gameplay-session-switch-align-v377` |
+| NULLFUNC near/far v387 | `th04-nullfunc-v387` |
+| randring modulo helpers v388 | `th04-randring-mod-v388` |
+| POINTNUM_DIGITS_SET v389 | `th04-pointnum-digits-v389` |
+| sub_B835 / tile-ring v393 | `th04-main-sub-b835-linked-v393` |
+| item_splashes_init v395 | `th04-item-splashes-init-v395` |
+
+No exactness claim depends on the removed prose; use the ledgers or Git history
+for archaeology.
+
 ## Historical detail
 
 Former per-version narratives were pruned because old counts and “next

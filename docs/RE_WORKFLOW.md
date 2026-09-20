@@ -172,13 +172,12 @@ boundary, or blocker. Create a new note only for a distinct ownership decision,
 reusable negative result, or replay surface, and add it to the reconstruction
 index. Keep chronological session narration out of durable documentation.
 
-On this workspace, older `.analysis/gpt-web/` outputs and 303 superseded
-exact-unit replay trees are in verified `tar.zst` archives under
-`.analysis/reconstruction/receipt-archive/`. The adjacent SHA-256 manifests
-list every retained file. Restore an archived path into its original directory
-before replaying a historical probe that names it. The v212 late focused and
-aggregate trees are archived with complete file manifests; active v213 and
-v214 compiler-probe inputs remain expanded.
+On this workspace, older `.analysis/gpt-web/` outputs and superseded
+exact-unit replay receipts are periodically moved into verified `tar.zst`
+archives under `.analysis/reconstruction/receipt-archive/`. Adjacent
+SHA-256 manifests list every retained file. Restore archived material only for
+real archaeology; the live handoff names the small set of replay trees that
+should remain expanded.
 
 Finish with:
 

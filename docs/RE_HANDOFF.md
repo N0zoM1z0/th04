@@ -28,45 +28,30 @@ the accepted extent.
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
 - MAIN has **492/494 reviewed authored C/C++ functions** and
   **83,203/83,469 reviewed authored C/C++ bytes** exact (99.681319%).
-  Forty-three accepted original-style ASM units add 5,702 bytes. Whole MAIN.EXE
-  is not yet exact. v395 closes item_splashes_init() as authored hybrid C++
-  after direct TH05 TU reuse and independent target corroboration.
-- The latest complete native aggregate is
-  `gpt-web-item-splashes-init-v395-aggregate-final-001`: all 269 selected
-  MAIN owners pass two cold builds, raw bytes, MAP, ordered relocations, and
-  OMF. Receipt SHA-256: `b5810190e492ea0a7bb5403c61d9b0f5f8d6f53bf657ccfdcbbac7a4d2fed57c`.
-- The remaining reviewed authored C/C++ gap is **266 bytes**: checkerboard
-  174, Stage 4 carpet 90, and the final 2 `snd_load` bytes
-  (`89 C3`).
-- MAIN now has **no provisional authored C/C++ boundaries**. v390 reviews the
-  final provisional `item_splashes_init()` boundary as blocked, while
-  `POINTNUM_DIGITS_SET` remains on the original-ASM plane from v389.
-- OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
-  ledger exact count is zero.
-- The TH04 product tree now uses local runtime, graphics, platform, GRCG,
-  randring, CDG, resident, overlap, sound, player-shot, palette, playchar, rank,
-  PI, tile-format, BB, enemy-size, maintained sprite-pattern, polar, subpixel,
-  bullet-add implementation, HUD geometry, item-overflow, midboss-state,
-  scroll-state, sound-implementation, sound-measure, config-loader, MAP-format,
-  target-verified thicklaser, homing-state, faceset-filename, and boss-base
-  interfaces. The `compat/rec98` forwarding boundary is now **0 forwarders, 0
-  include sites, and 0 product files**; `audit_compat_dependencies.py
-  --require-zero` passes. This closes the compatibility include migration, not
-  complete source coverage or whole-artifact standalone rebuilds for every
-  TH04 executable.
+  Forty-three accepted original-style ASM units add 5,702 bytes.
+- Latest complete native aggregate:
+  `gpt-web-item-splashes-init-v395-aggregate-final-001`, 269 MAIN owners,
+  receipt SHA-256
+  `b5810190e492ea0a7bb5403c61d9b0f5f8d6f53bf657ccfdcbbac7a4d2fed57c`.
+- Remaining reviewed MAIN C/C++ gap: **266 bytes** — checkerboard 174,
+  Stage 4 carpet 90, and the two-byte `89 C3` MOV BX,AX residual in
+  `snd_load`.
+- MAIN has **no provisional authored C/C++ boundaries**.
+- OP, MAINE, and ZUN have no artifact-local exact cohort yet.
+- `compat/rec98` migration is closed: 0 forwarders, 0 include sites,
+  0 product files.
 
 ## Ordered work queue
 
-1. **Close the remaining reviewed 266-byte C/C++ gap.** Checkerboard is 174
-   bytes, Stage 4 carpet 90, and `snd_load` has only the two-byte
-   `89 C3` MOV BX,AX residual. Every MAIN C/C++ boundary is formally
-   reviewed; the remaining work is producer/codegen provenance closure.
-2. **Keep provenance gates strict.** Checkerboard still lacks an independent
-   non-switch counted-LOOP producer; carpet is TH04-only; the remaining
-   `snd_load` MOV encoding has explicit cross-game negative evidence.
-   Do not replace these with target-derived inline assembly.
-3. **Continue the remaining artifacts and deterministic runtime scenarios**
-   after standalone build/link closure can produce the artifacts under test.
+1. **Close the remaining 266-byte MAIN gap.** Continue only the three live
+   blockers: checkerboard, Stage 4 carpet, and the final `snd_load`
+   MOV BX,AX encoding.
+2. **Keep provenance gates strict.** Current corpus/cross-game evidence does
+   not justify target-derived inline assembly for any of the three blockers.
+3. **Continue OP/MAINE packed-object topology** from the v397 master.lib
+   object-boundary note.
+4. **Add deterministic DOSBox-X runtime scenarios** after standalone build/link
+   closure can produce the artifacts under test.
 
 The live six-function MAIN review queue comes from `config/units.csv`,
 `config/th04_main_authored_functions.csv`,
@@ -74,11 +59,14 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 ## Retained private evidence
 
-Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
+Keep only these current expanded MAIN replay trees:
 
 - `gpt-web-item-splashes-init-v395-aggregate-final-001`
 - `gpt-web-item-splashes-init-v395-focused-001`
-- `gpt-web-dialog-render-v394-aggregate-final-001`
+
+Older receipts are archived under
+`.analysis/reconstruction/receipt-archive/`. Current blocker/master-object
+probe receipts may remain under `.analysis/gpt-web/` while active.
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.

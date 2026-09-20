@@ -8,32 +8,32 @@ not define current progress or exactness by themselves.
 
 ### MAIN.EXE
 
-- [Gameplay loop compiler candidate](main/TH04_DEMO_GAMEPLAY_TERNARY_V248.md)
-- [Dialog ownership and relocation order](main/TH04_MAIN_DIALOG_BOUNDARY_V180.md)
-- [Stage-session split diagnostic](main/TH04_DEMO_PAUSE_SPLIT_V282.md)
-- [DEMO link-order diagnostic](main/TH04_DEMO_LINK_ORDER_V291.md)
-- [Remaining FIXUPP and compiler negatives](main/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
-- [END/MAI scroll and MPN source gap](op-maine/TH04_END_SCROLL_MPN_V195.md)
+- [Checkerboard counted-LOOP blocker](main/TH04_MAIN_CHECKERBOARD_V396.md)
+- [Stage 4 carpet low-level producer blocker](main/TH04_MAIN_KURUMI_CARPET_V174.md)
+- [snd_load DS/MOV analysis](main/TH04_SND_LOAD_DS_V391.md)
+- [Cross-cutting compiler/FIXUPP negatives](main/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
 
-### Packed artifacts and ZUN.COM
+### OP / MAINE / packed artifacts
 
+- [master.lib object-boundary frontier](packed/TH04_MASTER_OBJECT_BOUNDARIES_V397.md)
 - [Decoded payload frontier](packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
 - [BGIMAGE natural-source frontier](op-maine/TH04_BGIMAGE_NATURAL_V247.md)
+
+### ZUN.COM
+
 - [ZUN resident main](zun/TH04_ZUN_MAIN_V241.md)
 - [ZUN standalone component link](zun/TH04_ZUN_COMPONENT_LINK_V317.md)
 
-### Standalone source closure
-
-- [Compatibility dependency migration and handoff template](shared/TH04_COMPAT_MIGRATION.md)
-
 ## Recent MAIN milestones
 
-- [Accepted MAIN cohort](main/TH04_MAIN_EXACT_BATCH.md)
-- [Enemy helpers](main/TH04_MAIN_ENEMY_HELPERS_V328.md)
-- [Enemy script dispatcher](main/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md)
-- [Item producer](main/TH04_MAIN035_ITEMS_V154.md)
+- [Accepted MAIN cohort and durable exact summary](main/TH04_MAIN_EXACT_BATCH.md)
+- [Dialog ownership / relocation history](main/TH04_MAIN_DIALOG_BOUNDARY_V180.md)
+- [Dialog render producer evidence](main/TH04_MAIN_DIALOG_RENDER_V182.md)
 - [Thick-laser producer](main/TH04_MAIN_THICKLASER_UPDATE_V181.md)
 - [Gather-point renderer](main/TH04_MAIN_GATHER_POINT_RENDER_V326.md)
+
+Resolved one-off packet notes are folded into the exact summary, CSV ledgers,
+and Git history instead of remaining in the routine documentation surface.
 
 ## Directory map
 
