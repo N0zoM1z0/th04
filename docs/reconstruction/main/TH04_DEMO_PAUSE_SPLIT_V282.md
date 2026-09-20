@@ -141,3 +141,44 @@ This establishes a natural TC86 producer mechanism for the previously
 unexplained relocation order, but grants no exact credit until a linked
 candidate passes raw bytes, MAP placement, ordered MZ relocations, OMF, and
 the complete aggregate.
+
+## Exact fused DEMO producer closure (v380)
+
+The v379 batching mechanism is now reproduced by maintained product source and
+accepted by the normal exact replay path. The selected v380 producer compiles
+the exact 0x1A-byte `slowdown_frame_delay()` body, the already accepted DEMO
+prefix, and `src/main/stage/session_init.cpp` as one natural TC4J `DEMO_TEXT`
+object. No relocation-table patch, target-derived byte array, or synthetic
+pause producer is involved.
+
+Focused run `gpt-web-demo-session-v380-focused-008` passes two isolated cold
+builds with `failures=[]`. Both builds emit the same fused `demopre.obj`
+(SHA-256
+`92e41ff285ed0696722cb28f447d11196c2ed8d7ab8b943bffcf3e202e628c09`).
+The logical stage-session owner remains at `0AAF:03E0`, and all `0x51E`
+linked bytes match the target slice SHA-256
+`1c409149015a161d36078c7297e9e5fee04bb2dc4ef1b088c72ec81ed1f71e34`.
+All 52 overlapping MZ relocations now match in target order, including
+`0xB2DA` first, followed by the 40 core sites and the remaining 11 pause
+sites. Focused receipt SHA-256:
+`1b724362896b55837be39b3c42de61b7e2b04b761891099707f963b215f3bb9d`.
+
+The candidate-state 256-owner aggregate
+`gpt-web-demo-session-v380-aggregate-candidate-001` also passes twice. A fresh
+attested 920-function Ghidra inventory plus the fail-closed function reviewer
+then promotes exactly the four logical functions in this owner:
+`stage_session_init()`, `stage_runtime_init()`, `stage_session_free()`, and
+`pause()`. Unrelated historical ledger-note normalizations from the trial
+writer were deliberately not merged.
+
+After promotion, `gpt-web-demo-session-v380-aggregate-final-001` again passes
+all 256 default MAIN owners twice with `failures=[]`; both candidate MAIN
+images remain SHA-256
+`3512f20edf5bbff733fba23ce55e78b016d2ba39c691df5668e5cde2b2e5eeb5`.
+Final receipt SHA-256:
+`c87c01b0152815d72eee36eb3d18106e312e854d82b883c1b47db782222183ad`.
+
+This closes the complete 1,310-byte reviewed stage-session gap and four
+reviewed authored functions. MAIN now has 81,333 / 83,441 reviewed authored
+C/C++ bytes and 482 / 491 reviewed authored C/C++ functions exact. The next
+OMF-order target is DIALOG_TEXT.
