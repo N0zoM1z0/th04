@@ -26,18 +26,18 @@ the accepted extent.
 - Target canonicality is `candidate-local-attested`. The pinned Japanese
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **487/494 reviewed authored C/C++ functions** and
-  **82,760/83,469 reviewed authored C/C++ bytes** exact (99.150583%).
+- MAIN has **488/494 reviewed authored C/C++ functions** and
+  **82,959/83,469 reviewed authored C/C++ bytes** exact (99.388995%).
   Forty-three accepted original-style ASM units add 5,702 bytes. Whole MAIN.EXE
-  is not yet exact. v391 promotes the two source-owned snd_load DS
-  preservation bytes; the C/C++ denominator is unchanged.
+  is not yet exact. v393 closes the complete 199-byte `sub_B835` tile-ring
+  helper after repository-native focused and aggregate replay.
 - The latest complete native aggregate is
-  `gpt-web-snd-load-ds-v391-aggregate-final-001`: all 266 selected
-  MAIN owners pass two cold builds, raw bytes, MAP, ordered relocations, and
-  OMF. Receipt SHA-256: `d55f438321b2cb31b7aae05390e8fb74d031f047e64bc51f3750b75a8eba398b`.
-- The remaining reviewed authored C/C++ gap is **709 bytes**: dialog render
-  218, `sub_B835` 199, checkerboard 174, Stage 4 carpet 90,
-  `item_splashes_init()` 26, and the final 2 `snd_load` bytes (`89 C3`).
+  `gpt-web-sub-b835-v393-aggregate-final-001`: all 267 selected MAIN owners
+  pass two cold builds, raw bytes, MAP, ordered relocations, and OMF. Receipt
+  SHA-256: `8274430e750c707f368e547fe24cb20d2f8b8e2aa6c35f5e53e2b79c5d04835f`.
+- The remaining reviewed authored C/C++ gap is **510 bytes**: dialog render
+  218, checkerboard 174, Stage 4 carpet 90, `item_splashes_init()` 26, and the
+  final 2 `snd_load` bytes (`89 C3`).
 - MAIN now has **no provisional authored C/C++ boundaries**. v390 reviews the
   final provisional `item_splashes_init()` boundary as blocked, while
   `POINTNUM_DIGITS_SET` remains on the original-ASM plane from v389.
@@ -57,16 +57,14 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Close the reviewed 709-byte C/C++ gap.** `sub_B835` is 199 bytes,
-   checkerboard 174, Stage 4 carpet 90, the three dialog-render helpers total
-   218, `item_splashes_init()` is 26, and `snd_load` has only
-   the two-byte `89 C3` MOV BX,AX residual. Every MAIN C/C++ boundary
-   is formally reviewed; the remaining work is codegen/provenance/ownership
-   closure.
-2. **Keep v390 item_splashes_init blocked without inline-ASM cheating.** Its
-   near-target body differs only at `31 C0` versus `33 C0`, but
-   pure-C++ zeroing variants do not select the target encoding and the
-   historical REP STOSW source is explicit decompilation inline assembly.
+1. **Close the remaining reviewed 510-byte C/C++ gap.** Checkerboard is 174
+   bytes, Stage 4 carpet 90, the three dialog-render helpers total 218,
+   `item_splashes_init()` is 26, and `snd_load` has the two-byte `89 C3`
+   residual. `sub_B835` is exact as of v393.
+2. **Keep provenance gates strict.** The remaining compact `LOOP` / `REP STOSW`
+   / register-direction cases already have compiler-negative evidence. Do not
+   replace them with target-derived inline assembly unless independent
+   producer provenance meets the same standard used by accepted hybrid units.
 3. **Continue the remaining artifacts and deterministic runtime scenarios**
    after standalone build/link closure can produce the artifacts under test.
 
@@ -78,9 +76,9 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
+- `gpt-web-sub-b835-v393-aggregate-final-001`
+- `gpt-web-sub-b835-v393-focused-005`
 - `gpt-web-snd-load-ds-v391-aggregate-final-001`
-- `gpt-web-snd-load-ds-v391-focused-002`
-- `gpt-web-pointnum-digits-v389-aggregate-final-001`
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.
