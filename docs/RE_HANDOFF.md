@@ -27,21 +27,22 @@ the accepted extent.
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
 - MAIN has **487/493 reviewed authored C/C++ functions** and
-  **82,758/83,443 reviewed authored C/C++ bytes** exact (99.179080%). Forty
-  accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
-  exact. The denominator grew by two because v387 formally reviewed and
-  accepted the previously provisional NULLFUNC_NEAR / NULLFUNC_FAR bytes.
+  **82,758/83,443 reviewed authored C/C++ bytes** exact (99.179080%).
+  Forty-two accepted original-style ASM units add 5,665 bytes. Whole MAIN.EXE
+  is not yet exact. v388 moves the two randring modulo helpers onto the
+  separate original-ASM plane, so the C/C++ denominator is unchanged.
 - The latest complete native aggregate is
-  `gpt-web-nullfunc-v387-aggregate-final-001`: all 261 selected MAIN
+  `gpt-web-randring-mod-v388-aggregate-final-001`: all 263 selected MAIN
   owners pass two cold builds, raw bytes, MAP, ordered relocations, and OMF.
-  Receipt SHA-256: `5450ddca56533691f2963d7518d143ad90099888578c75200d4121c38aff0ab2`.
+  Receipt SHA-256: `a063756e427f5c2faba4275f1307f64eac5ea1494bb16f49604375b774977fc3`.
 - The remaining reviewed authored C/C++ gap is **685 bytes**: dialog render
   218, `sub_B835` 199, checkerboard 174, Stage 4 carpet 90, and the final 4
   `snd_load` bytes.
-- Four small provisional boundaries totaling **113 bytes** remain outside the
-  reviewed denominator: `randring1_next16_mod()` 25,
-  `randring2_next16_mod()` 25, `item_splashes_init()` 26, and
-  `POINTNUM_DIGITS_SET` 37.
+- Two small provisional boundaries totaling **63 bytes** remain outside the
+  reviewed denominator: `item_splashes_init()` 26 and
+  `POINTNUM_DIGITS_SET` 37. v388 closes both 25-byte randring modulo
+  helpers on the original-ASM plane after cross-game producer provenance and
+  full replay acceptance.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
@@ -58,21 +59,16 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Close the remaining 199-byte scroll helper `sub_B835`.** A bounded
-   pure-C++ TC4J variant now reaches the exact 199-byte size and target CFG.
-   TC4J built-in symbolic inline assembly explains the remaining register
-   encoding/copy-order shape, and an independent TH05 target preserves the same
-   low-level producer. Historical source provenance and linked END_TEXT ownership
-   are still open, so do not promote or add tracked inline assembly yet.
-2. **Close checkerboard 174, Stage 4 carpet 90, and the final 4 `snd_load`
-   bytes.** These are primarily compiler/code-shape or ownership problems.
-3. **Keep the 218 DIALOG_TEXT render bytes as a bounded compiler blocker.**
-   Independent TH05 target bytes preserve the same compact `REP STOSW`/`LOOP`
-   and register-direction shape, but pinned TC4J rejects both command-line and
-   pragma `-Ol`; ReC98's matching inline assembly is explicitly decompilation
-   provenance, not recovered original ASM. Do not convert these functions to
-   standalone TASM solely to gain exactness.
-4. **Continue the remaining artifacts and deterministic runtime scenarios**
+1. **Review the remaining two provisional boundaries.** `item_splashes_init()`
+   is 26 bytes at load `0x13F16`; `POINTNUM_DIGITS_SET` is 37 bytes
+   at `0x189EE`. They remain outside the reviewed C/C++ denominator until
+   origin, ownership, and exactness are formally accepted.
+2. **Close the remaining reviewed 685-byte C/C++ gap.** `sub_B835` is 199
+   bytes, checkerboard 174, Stage 4 carpet 90, the three dialog-render helpers
+   total 218, and `snd_load` has four residual bytes. Existing notes
+   record the compiler/provenance blockers; do not replace them with
+   target-derived inline assembly.
+3. **Continue the remaining artifacts and deterministic runtime scenarios**
    after standalone build/link closure can produce the artifacts under test.
 
 The live six-function MAIN review queue comes from `config/units.csv`,
@@ -83,9 +79,9 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
+- `gpt-web-randring-mod-v388-aggregate-final-001`
+- `gpt-web-randring-mod-v388-focused-002`
 - `gpt-web-nullfunc-v387-aggregate-final-001`
-- `gpt-web-nullfunc-v387-focused-005`
-- `gpt-web-scroll-driver-v383-aggregate-final-001`
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.
