@@ -12477,7 +12477,10 @@ id = "th04-main-pointnum-digits-set-asm-v389-residual"
 trigger_units = ["th04-main-pointnum-digits-set-asm-v389"]
 patch_path = "th04_main.asm"
 encoding = "latin-1"
-scaffold_sha256 = "5130639e5603c99f17bf235182378636b9c8760756ad5a72a50ab549e1d82063"
+scaffold_sha256_any = [
+  "1236b93abd1ea8b70b15fc2c732bcbc8310ccb27742e2dc0f06cb71acc92a1ef",
+  "5130639e5603c99f17bf235182378636b9c8760756ad5a72a50ab549e1d82063",
+]
 
 [[source_transforms.ops]]
 id = "externalize-pointnum-digits-set-v389"
