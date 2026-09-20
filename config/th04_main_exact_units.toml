@@ -12166,3 +12166,53 @@ kind = "replace"
 old = "#pragma option -zPmain_01\n"
 new = "#ifndef TH04_DIALOG_FUSED\n#pragma option -zPmain_01\n#endif\n"
 expected_count = 1
+
+# v383 candidate: natural TC4J scroll driver now reproduces all 0x60 target
+# CODE bytes modulo ordinary OMF fixups. Replace the v196 zero-credit
+# hash-extracted MAI_TEXT suffix in the same link slot and bridge the historical
+# local label plus the later C++ caller name to the maintained public.
+[[build_replacements]]
+id = "th04-main-scroll-driver-v383-build"
+trigger_units = ["th04-main-scroll-driver-v268"]
+build_file = "Tupfile.lua"
+build_anchor = "\t\"th04/m2r.cpp\",\n\t\"th04/maisuf196.asm\",\n\t\"th04/mpnend.cpp\",\n"
+build_replacement = "\t\"th04/m2r.cpp\",\n\t\"th04/scrdrv.cpp\",\n\t\"th04/mpnend.cpp\",\n"
+
+[[source_transforms]]
+id = "th04-main-scroll-driver-v383-symbols"
+trigger_units = ["th04-main-scroll-driver-v268"]
+patch_path = "th04_main.asm"
+encoding = "latin-1"
+scaffold_sha256_any = [
+  "08f83295ef4ba6bf8bfbc0d940320f7094cf9352cdf47569b778da47c1f01c34",
+  "9a574384af484e52d1425a25e23125c7a0168069d205921b24e65bce404a97e8",
+]
+
+[[source_transforms.ops]]
+id = "retarget-scroll-driver-local-label-v383"
+kind = "replace"
+old = "extrn sub_CCD6:near\r\n"
+new = "extrn sub_CCD6:near\r\nextrn @scroll_driver$qv:near\r\nALIAS <sub_CCD6>=<@scroll_driver$qv>\r\nALIAS <_sub_B835>=<sub_B835>\r\nALIAS <_byte_250FE>=<byte_250FE>\r\nALIAS <_byte_25104>=<byte_25104>\r\nALIAS <@GRAPH_SCROLLUP$QI>=<GRAPH_SCROLLUP>\r\n"
+expected_count = 1
+
+[[source_transforms.ops]]
+id = "retarget-scroll-driver-cpp-alias-v383"
+kind = "replace_optional"
+old = "ALIAS <@sub_CCD6$qv>=<sub_CCD6>\r\n"
+new = "ALIAS <@sub_CCD6$qv>=<@scroll_driver$qv>\r\n"
+expected_count = 1
+
+[[units]]
+id = "th04-main-scroll-driver-v268"
+default_enabled = false
+requires_units = ["th04-main-midboss2-render-v196"]
+repo_source = "src/main/scroll/driver.cpp"
+overlay_path = "th04/scrdrv.cpp"
+map_module = "th04/scrdrv.cpp"
+map_mode = "exact"
+object_path = "obj/th04/scrdrv.obj"
+map_segment = "MAI_TEXT"
+map_start = "0x21E6"
+map_size = "0x60"
+target_file_offset = "0xE4D6"
+size = "0x60"
