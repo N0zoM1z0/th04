@@ -26,17 +26,22 @@ the accepted extent.
 - Target canonicality is `candidate-local-attested`. The pinned Japanese
   MAIN.EXE is 156,258 bytes, SHA-256
   `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **485/491 reviewed authored C/C++ functions** and
-  **82,756/83,441 reviewed authored C/C++ bytes** exact (99.179061%). Forty
+- MAIN has **487/493 reviewed authored C/C++ functions** and
+  **82,758/83,443 reviewed authored C/C++ bytes** exact (99.179080%). Forty
   accepted original-style ASM units add 5,615 bytes. Whole MAIN.EXE is not yet
-  exact.
+  exact. The denominator grew by two because v387 formally reviewed and
+  accepted the previously provisional NULLFUNC_NEAR / NULLFUNC_FAR bytes.
 - The latest complete native aggregate is
-  `gpt-web-scroll-driver-v383-aggregate-final-001`: all 259 selected MAIN
+  `gpt-web-nullfunc-v387-aggregate-final-001`: all 261 selected MAIN
   owners pass two cold builds, raw bytes, MAP, ordered relocations, and OMF.
-  Receipt SHA-256: `103b24688460ca0c4a17a886b075b5c08ae283f097942af7c05fc5bab023ac2d`.
+  Receipt SHA-256: `5450ddca56533691f2963d7518d143ad90099888578c75200d4121c38aff0ab2`.
 - The remaining reviewed authored C/C++ gap is **685 bytes**: dialog render
   218, `sub_B835` 199, checkerboard 174, Stage 4 carpet 90, and the final 4
   `snd_load` bytes.
+- Four small provisional boundaries totaling **113 bytes** remain outside the
+  reviewed denominator: `randring1_next16_mod()` 25,
+  `randring2_next16_mod()` 25, `item_splashes_init()` 26, and
+  `POINTNUM_DIGITS_SET` 37.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet. Their current
   ledger exact count is zero.
 - The TH04 product tree now uses local runtime, graphics, platform, GRCG,
@@ -78,9 +83,9 @@ The live six-function MAIN review queue comes from `config/units.csv`,
 
 Keep these ignored `.analysis/reconstruction/exact-unit-replay/` trees:
 
+- `gpt-web-nullfunc-v387-aggregate-final-001`
+- `gpt-web-nullfunc-v387-focused-005`
 - `gpt-web-scroll-driver-v383-aggregate-final-001`
-- `gpt-web-scroll-driver-v383-staged-002`
-- `gpt-web-dialog-v381-aggregate-final-001`
 
 Targets, toolchains, generated builds, database projects, and receipts stay
 ignored. Never commit original executables or game assets.
