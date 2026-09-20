@@ -70,6 +70,7 @@ active:
 
 - `.analysis/gpt-web/v391-snd-load-crossgame-001`
 - `.analysis/gpt-web/v396-checkerboard-negative-001`
+- `.analysis/gpt-web/v398-checker-loop-forms-001`
 - `.analysis/gpt-web/v396-final-opcode-corpus-001`
 - `.analysis/gpt-web/v397-master-object-boundaries-001`
 

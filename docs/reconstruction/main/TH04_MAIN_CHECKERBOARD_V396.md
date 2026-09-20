@@ -46,3 +46,38 @@ The function remains reviewed/source-present/blocked. The historical inline
 `LOOP` is still routing evidence only: neither the pinned compiler surface
 nor independent target provenance currently justifies hybrid authored-source
 promotion.
+
+## v398 natural source-form matrix
+
+A follow-up compiler probe now closes the remaining obvious source-spelling
+escape hatch rather than repeating optimizer flags. The checked-in
+`scripts/probes/probe_tc4_checkerboard_loop_forms.py` compiles fourteen legal
+C++ countdown forms around the exact architectural core
+`MOV ES,DX / ES:[DI] dword store / ADD DI,8`:
+
+- `_CX` and ordinary-local counters;
+- `do`, `while`, and `for` loops;
+- pre-decrement and post-decrement conditions;
+- explicit C++ `goto` backedges.
+
+All fourteen compile under the production `-ml -O -b- -3 -Z -d` profile and
+zero emit x86 `LOOP`. The normal maintained shape still lowers through
+`DEC CX; MOV AX,CX; OR AX,AX; JNZ`. The shortest newly tested form,
+`_CX--; if(_CX) goto label`, removes the AX copy but still emits
+`DEC CX; OR CX,CX; JNZ`, so it cannot match the target two-byte backedge.
+
+The pinned `TCC.EXE` no-argument help independently describes its exposed
+`-O` switch as `Optimize jumps`; it exposes no separate loop-optimization
+switch. This is consistent with the earlier v396 rejection of BCC-style
+`-O1/-Os/-O2/-Ot/-Ol` spellings and keeps the PC-98 compiler observation
+separate from documentation for other Borland driver variants.
+
+Private receipt:
+`.analysis/gpt-web/v398-checker-loop-forms-001/receipt.json`, SHA-256
+`e915db190969a5792670695664a45c11fcc1d48f9458882a4a64779d18750a2e`.
+
+The conclusion remains deliberately bounded: natural source spelling and
+exposed compiler switches have no demonstrated path to the historical
+counted `LOOP`. This does not prove every possible TC4J program incapable of
+emitting `LOOP`, and it still does not establish provenance for target-derived
+inline assembly.
