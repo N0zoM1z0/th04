@@ -138,3 +138,39 @@ The packed frontier is now byte-localized to two producer questions only:
 OP music's two equivalent XOR-register encoding directions, and the shared
 `snd_load` `MOV BX,AX` encoding (`89 C3` target versus `8B D8` candidate),
 which accounts for two bytes in each OP/MAINE payload.
+
+## v402 cross-game nopoly copy core
+
+After v401, OP still differed at the two register-zeroing bytes inside
+`nopoly_B_put()` plus the shared two-byte `snd_load` handle copy. v402 adds
+independent producer provenance for the OP-music pair rather than choosing the
+target opcode direction by inspection.
+
+Pinned DIET 1.45f restores the registered TH03 and TH05 packed OP targets under
+the pinned DOSBox-X PC-98 profile. Each restored payload contains exactly one
+homologous `nopoly_B_put()` body: TH03 at load `0xA5F6`, TH04 at `0xBFA7`, and
+TH05 at `0xBFF6`. After masking only the ordinary linked `nopoly_B` word, all
+three 30-byte bodies have normalized SHA-256
+`ec0ca0d388011a3a96e3c34b10d0f8c26e176a86de11bae5271d530f8bfac9a3`
+and all independently encode `XOR DI,DI; XOR SI,SI` as `31 FF 31 F6`.
+
+Compiler controls make the mechanism distinction explicit. Pinned TC4J emits
+`33 FF 33 F6` for both ordinary `_DI = 0; _SI = 0` and `_DI ^= _DI;
+_SI ^= _SI`, while its integrated assembler emits the target `31 FF 31 F6`
+for the corresponding symbolic mnemonics. The checked-in v402 fragment therefore
+contains only the cross-game-corroborated irreducible XOR/REP copy core. It is a
+replay input, not an OP product-source or exact-function promotion.
+
+Two copied v401 source trees relink deterministically. The OP decoded-payload
+difference count falls from 4 to **2**, payload size remains `0x10DA4`, the
+804-site relocation multiset remains target-equal, and both linked candidates
+have SHA-256
+`5a7af3868e28e2bc46268d413f8f7e78213603431b3c1acc3e4f85f4d8cb95eb`.
+The only remaining payload mismatch is shared `snd_load` at
+`0xDE8B..0xDE8C` (`89 C3` target versus `8B D8` candidate).
+
+Private receipt SHA-256:
+`e44d231470d74dcc1899ee61c66ab741d22266f4d7c91d1d7e93fb1302a0c18c`.
+
+No packed-file exactness, original unpacked relocation order, OP authored-source
+credit, or OP function exactness is claimed by this packet.

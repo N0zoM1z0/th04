@@ -38,7 +38,7 @@ the accepted extent.
   `snd_load`.
 - MAIN has **no provisional authored C/C++ boundaries**.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet.
-- OP/MAINE v400/v401 physical-object replay closes all six former master.lib CODE/DATA alignment residuals without explicit padding: OP decoded-payload differences are now 4 bytes and MAINE 2 bytes; both retain target-equal relocation multisets.
+- OP/MAINE v400/v401 physical-object replay closes all six former master.lib CODE/DATA alignment residuals. v402 then closes the two OP-music XOR-direction bytes with a TH03/TH05-corroborated low-level copy core. OP and MAINE diagnostic payload candidates now each differ only at the shared two-byte `snd_load` `89 C3`; payload lengths and target-equal relocation multisets remain unchanged.
 - `compat/rec98` migration is closed: 0 forwarders, 0 include sites,
   0 product files.
 
@@ -49,10 +49,10 @@ the accepted extent.
    MOV BX,AX encoding.
 2. **Keep provenance gates strict.** Current corpus/cross-game evidence does
    not justify target-derived inline assembly for any of the three blockers.
-3. **Continue OP/MAINE packed closure from v401.** The four master.lib CODE
-   seams and two master.lib DATA seams are closed by real historical object
-   ownership. Remaining decoded payload residuals are only OP music XOR
-   direction (2 bytes) and shared `snd_load` (2 bytes per artifact).
+3. **Continue OP/MAINE packed closure from v402.** Master.lib CODE/DATA seams
+   are closed by real historical object ownership and the OP-music XOR pair is
+   closed by independent TH03/TH05 producer corroboration. Both decoded payload
+   candidates now differ only at shared `snd_load` (2 bytes per artifact).
 4. **Add deterministic DOSBox-X runtime scenarios** after standalone build/link
    closure can produce the artifacts under test.
 
@@ -79,6 +79,7 @@ active:
 - `.analysis/gpt-web/v397-master-object-boundaries-001`
 - `.analysis/gpt-web/v400-master-object-split-replay-001`
 - `.analysis/gpt-web/v401-master-vs-object-replay-001`
+- `.analysis/gpt-web/v402-opmusic-hybrid-replay-001`
 - `.analysis/gpt-web/v400-master-object-split-baseline-001`
 
 Other current v397 object/listing controls may remain expanded because they are
