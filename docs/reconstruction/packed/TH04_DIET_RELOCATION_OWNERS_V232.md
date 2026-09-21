@@ -115,3 +115,43 @@ acceptance oracle for historical TLINK order.
 
 Private receipt SHA-256:
 `5192771073c57be2bbf9b80b0dc2ae4fe069fe6969c4bc7bc05152c8b71e60c6`.
+
+## v427 OP_MUSIC_TEXT physical-object split
+
+The post-v401/v402 OP relocation discrepancy has a structural cut that was not
+visible in v232's old monolithic candidate. In the fused `th04_op.asm` object,
+relocation indices 139..144 are all in `_TEXT`, while indices 145..179 are all
+in the separate `OP_MUSIC_TEXT` segment. The DIET-restored MZ view places the
+master mid/tail/data relocation blocks between those two segment groups.
+
+v427 therefore changes **physical OMF ownership only**. The existing
+`OP_MUSIC_TEXT` source span is removed from `th04_op.asm` and assembled as its
+own TASM object with only the extern/type interface required by that source.
+Master CODE objects are linked before historical `VS.OBJ` / DATA ownership, and
+the new music object follows them. No function body, payload constant, or MZ
+relocation-table byte is edited.
+
+Two copied v402 trees build identically. The candidate payload stays `0x10DA4`
+and still differs only at shared `snd_load` load `0xDE8B..0xDE8C`; all 804
+relocation sites remain target-equal as a multiset. The baseline v402 candidate
+differs from the pinned DIET-restored MZ relocation table at indices `145..187`
+(43 entries). The v427 candidate MZ relocation table is **804/804 ordered equal**
+to that restored MZ table. Candidate SHA-256 is
+`78468a2ae389ba9c97fb7b391355e4eda2cb750f84f3cc4abf3e34802bceafbd`;
+MAP SHA-256 is
+`cd2e0a35b1d1262dca398db0302ab68243179cf18edfac2e1ec0810acf2ef334`.
+
+A subtle OMF detail is also pinned by the replay: the separate music object must
+reproduce the fused file's minimal extern environment. Including the broader
+`master.inc` changes TASM FIXUPP threading for four segment relocations and
+leaves a 22-index restored-view discrepancy even though the payload stays
+unchanged. This is module-interface metadata, not source-code behavior.
+
+Private receipt SHA-256:
+`4dcb4c44ca64f4b32156e8ee9e608b740963802cab39ab7a18c34a6ffaf88808`.
+
+This still does **not** prove the historical pre-DIET TLINK table or packed-file
+exactness. `compare_diet_payloads.py` separately reports that DIET decompressor
+application order differs from candidate MZ order beginning around this same
+region. The restored MZ table and the stub application order remain distinct
+diagnostic surfaces.

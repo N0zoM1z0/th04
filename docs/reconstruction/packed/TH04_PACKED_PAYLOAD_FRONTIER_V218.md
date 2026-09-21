@@ -174,3 +174,16 @@ Private receipt SHA-256:
 
 No packed-file exactness, original unpacked relocation order, OP authored-source
 credit, or OP function exactness is claimed by this packet.
+
+## v427 OP relocation-topology follow-up
+
+After v400/v401 physical master ownership and v402's cross-game-corroborated
+OP-music copy core, v427 splits `th04_op.asm`'s existing `OP_MUSIC_TEXT` segment
+into its own OMF object. This keeps the decoded payload frontier unchanged at
+**2 bytes**, both the shared `snd_load` MOV encoding, while making the candidate
+MZ relocation table order identical to the pinned DIET-restored MZ table at all
+804 entries. No relocation table is patched or authored manually.
+
+The DIET decompressor's relocation application order is still a separate
+diagnostic and is not claimed exact. Receipt SHA-256:
+`4dcb4c44ca64f4b32156e8ee9e608b740963802cab39ab7a18c34a6ffaf88808`.
