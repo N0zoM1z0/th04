@@ -271,3 +271,21 @@ The remaining blocked bytes are: `PUSH DS/POP ES` (2), first `MUL BX` plus the
 `SHL DI,1` (4), the second `MOV DI,DX` direction (2), and `LOOP` (2). The
 complete function remains blocked; only these 23 bytes should be targeted by
 future carpet work.
+
+## v411 register-encoding closure
+
+The remaining 23 carpet bytes include six ordinary-looking register operations
+adjacent to the historically explicit `asm` statements. v411 tests whether their
+target directions could come from another legal TC4J front end or optimizer /
+register strategy. They cannot: pinned TCC is byte-identical across all tested
+`-O/-G/-r` profiles, and same-media PC-98 `TC.EXE` selects the same `8B`, `33`,
+`03`, and `IMUL` forms. In particular it does not naturally produce target
+`89 C6`, `01 DB`, `89 C3`, `31 D2`, `89 D7`, `D1 E7`, or `F7 E3` for the bounded
+pseudoregister/multiply probes.
+
+Receipt SHA-256:
+`73096dccfd0f4ad4a813378407d8a49d170059b86da6fd7dd9e78e5d152e887a`.
+
+No physical byte ownership changes in v411. Carpet remains 67 exact + 23
+blocked bytes; the new result only closes the compiler-front-end explanation for
+the register-direction/MUL/shift subset.

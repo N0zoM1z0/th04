@@ -229,3 +229,32 @@ Private receipt SHA-256:
 This closes the same-media IDE hidden-optimizer route for the remaining
 checkerboard/carpet instruction shapes. It does not prove original source
 language and does not authorize target-derived inline assembly.
+
+## v411 register-encoding front-end matrix
+
+The final `snd_load` and carpet residuals share one remaining compiler question:
+could a different *attested* TC4J front end or register/optimization strategy
+naturally select the target-equivalent register/register opcode directions?
+`scripts/probes/probe_tc4_register_encoding_surface.py` closes that surface.
+
+The pinned TCC 4.02 driver compiles one combined pseudo-register probe under
+production `-O`, no `-O`, explicit `-O-`, `-O -G`, `-O -G-`, `-O -r`, and
+`-O -G- -r`. All seven profiles emit the same CODE body. The probe then builds
+the same operations with the independently attested same-media PC-98 `TC.EXE`
+under the production-like IDE project established by v406. Its OMF translator
+identity remains `TC86 Borland C++ 4.02` and the opcode choices agree with TCC.
+
+Observed natural forms are `8B D8` for `_BX=_AX`, `8B F0` for `_SI=_AX`,
+`8B FA` for `_DI=_DX`, `33 D2` for `_DX=0`, `03 DB` for `_BX+=_BX`, `03 FF`
+for `_DI<<=1`, and `F7 EB` (`IMUL BX`) for the tested low-word `_AX*_BX`
+expression. None emits the target residual forms `89 C3`, `89 C6`, `89 D7`,
+`31 D2`, `01 DB`, `D1 E7`, or `F7 E3`. Explicit unsigned C multiplication was
+also checked separately in the private scratch matrix and still selects IMUL
+when only the low 16-bit result is consumed.
+
+Private receipt SHA-256:
+`73096dccfd0f4ad4a813378407d8a49d170059b86da6fd7dd9e78e5d152e887a`.
+
+This is bounded negative compiler evidence. It does not prove original source
+language and does not authorize target-derived inline assembly. `snd_load`'s
+`89 C3` and the corresponding carpet register/MUL/shift residuals stay blocked.
