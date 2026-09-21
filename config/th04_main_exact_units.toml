@@ -12675,3 +12675,97 @@ map_mode = "contains"
 object_path = "obj/th04/it_spl_u.obj"
 target_file_offset = "0x15716"
 size = "0x1A"
+
+# v409 candidate: natural exact identity fragments inside the still-blocked
+# Stage 4 carpet function. All historical inline-ASM and compiler-direction
+# mismatch instructions remain outside these extents with zero credit.
+[[units]]
+id = "th04-main-carpet-setup-indices-v409"
+default_enabled = true
+repo_source = "src/main/stage/carpet_setup_indices.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x10291"
+size = "0x06"
+
+[[units]]
+id = "th04-main-carpet-anim-row-level-v409"
+default_enabled = true
+repo_source = "src/main/stage/carpet_anim_row_level.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x1029B"
+size = "0x07"
+
+[[units]]
+id = "th04-main-carpet-image-base-v409"
+default_enabled = true
+repo_source = "src/main/stage/carpet_image_base.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x102A6"
+size = "0x03"
+
+[[units]]
+id = "th04-main-carpet-column-count-v409"
+default_enabled = true
+repo_source = "src/main/stage/carpet_column_count.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x102AD"
+size = "0x03"
+
+[[units]]
+id = "th04-main-carpet-active-test-v409"
+default_enabled = true
+repo_source = "src/main/stage/carpet_active_test.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x102B1"
+size = "0x04"
+
+[[units]]
+id = "th04-main-carpet-tile-store-v409"
+default_enabled = true
+repo_source = "src/main/stage/carpet_tile_store.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x102B9"
+size = "0x0F"
+
+[[units]]
+id = "th04-main-carpet-dirty-advance-v409"
+default_enabled = true
+repo_source = "src/main/stage/carpet_dirty_advance.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x102CA"
+size = "0x12"

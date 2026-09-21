@@ -183,3 +183,56 @@ Private receipt SHA-256:
 This is a stronger negative provenance result, not a source-language proof. It
 does not authorize target-derived inline assembly; the 90-byte function remains
 reviewed/source-present/blocked.
+
+## v409 partial exact ownership
+
+v409 applies the same conservative physical-ownership strategy that reduced the
+checkerboard blocker in v408. The complete `carpet_lighting_put_new()` function
+remains reviewed and blocked; this packet does **not** reinterpret the historical
+inline assembly as authored C++ and does not inject target opcodes.
+
+The pinned scaffold contains several source spans that are ordinary C++ / Turbo
+C++ pseudo-register statements and occur exactly once inside the reviewed
+function. Seven such spans are maintained as identity fragments and are accepted
+only for their instruction-aligned target extents:
+
+| Natural fragment | File range | Bytes |
+| --- | --- | ---: |
+| setup indices | `0x10291..0x10296` | 6 |
+| animation row / target level | `0x1029B..0x102A1` | 7 |
+| image-table base add | `0x102A6..0x102A8` | 3 |
+| column count | `0x102AD..0x102AF` | 3 |
+| active-column test | `0x102B1..0x102B4` | 4 |
+| tile-ring store loop | `0x102B9..0x102C7` | 15 |
+| dirty-flag loop / column advance | `0x102CA..0x102DB` | 18 |
+
+These seven owners total **56 exact bytes**. Focused two-cold replay
+`gpt-web-v409-carpet-fragments-focused-001` passes raw bytes, containing MAP
+ownership, empty ordered relocation overlap, valid deterministic TC86 OMF, and
+A/B identity for all seven fragments. Receipt SHA-256:
+`23c9cdefbf951f717e98c431bd63e609f4e107bee1362691090a53967d1e1402`.
+
+Before promotion, the 279-owner candidate aggregate
+`gpt-web-v409-carpet-fragments-aggregate-candidate-001` passes with
+`failures=[]`; receipt SHA-256:
+`d0084a3c84b9fee23ce007348cbedc11f0ff4491cb4d1ea0af728811bbd1ae66`.
+After physical-ledger promotion, the independent 279-owner aggregate
+`gpt-web-v409-carpet-fragments-aggregate-final-001` again passes with
+`failures=[]`; both candidate MAIN binaries have SHA-256
+`4a5138bf2be6292986827f29addeed77765178ee414511cf5c87e223e5cc1cb5`
+and the receipt SHA-256 is
+`dfcc475bec3375ec3aaaa1975146176d6d5403a732ae2e6a8bf4f51579288af4`.
+
+The remaining **34 bytes** are not hidden inside the old 90-byte owner. They are
+explicit instruction-aligned blocked owners covering, in order: the entry /
+`PUSH DS; POP ES` bridge (7), first `MUL BX` plus `MOV SI,AX` direction (4),
+`ADD BX,BX` direction plus second `MUL BX` (4), `MOV BX,AX` plus `XOR DX,DX`
+directions (4), `LODSB` (1), `MOV DI,DX` plus `SHL DI,1` (4), the second
+`MOV DI,DX` direction (2), and `LOOP` plus the conservatively attached epilogue
+(8). These eight spans exactly complement the 56 accepted bytes with no overlap
+or gap across `0x1028A..0x102E3`.
+
+The full function therefore stays function-level **blocked** even though 56/90
+physical bytes now have exact natural-source ownership. Future work should attack
+only the 34-byte residual owners, and must still satisfy the existing provenance
+gates before introducing any symbolic low-level source.
