@@ -90,6 +90,13 @@ python3 scripts/audit_compat_dependencies.py --check
   those pure reversals. Real OP music OMF/multipass variants keep current order;
   symbolic `/uT100..T500` and MASM compatibility fixtures remain ascending even
   when FAR-call fixup kind changes. Look for a different producer or TU shape.
+- v461 recovers a natural OP topology instead of permuting MZ entries. TC86
+  4.02 naturally emits the four `SND_LOAD_EXT` pointer FIXUPPs in target reverse
+  order; placing that data-only owner after `snd_load`, moving master tail after
+  PI load, and placing OP music after `op_setup` keeps the payload unchanged and
+  the 804-site multiset exact while cutting ordered mismatch **223 -> 105**. The
+  `SND_LOAD_EXT` block is exact at indices 158..161. Remaining OP R is only
+  BGIMAGE 8, OP music 35, and `score_e`/`hi_view` 63 relocation entries.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -98,13 +105,14 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from v429/v430/v436/v441/v446-v448.
+2. **OP/MAINE packed closure:** continue from v461 for OP and v448 for MAINE.
+   OP global owner order is now aligned through OP music; attack only BGIMAGE
+   internal direction, OP-music internal direction, and the `hi_view` /
+   `score_e` historical TU split. MAINE still needs its monolith interleavings.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
-   order. For pure TASM-record reversals, probe assembler producer/version
-   behavior; for `hi_view` and MAINE record interleavings, recover plausible
-   historical TU/object ownership. Historical `minalloc` provenance remains
-   unresolved. Active TLINK 6.10 switch routes are closed; do not hand-permute
-   the table.
+   order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
+   switch routes and pinned TASM5 option/version emulation are closed; do not
+   hand-permute the table.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 
@@ -121,7 +129,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 

@@ -351,3 +351,69 @@ Two source-independent fixtures cover version emulation. `DW SEG F1..F8` tests s
 Private receipt SHA-256: `5bc420f45907e0c32bcdff9c3673b1804ad0b66abd8bc47c6e74908f94aadaba`.
 
 This closes only the pinned TASM32 5.0 option/version-emulation surface. It does not prove the historical TH04 producer was TASM; v448's reverse records must come from another producer/version or a different physical source/TU organization.
+
+## v461 OP natural owner topology and `SND_LOAD_EXT`
+
+v448 showed that the four relocations attributed to the reconstructed OP
+master-DATA tail form one exact reverse. Inspecting their local offsets pins the
+actual source owner: they are the four far pointers in TH04's
+`SND_LOAD_EXT = { m26, m26, m86, mmd }` table, not MASTER.LIB BGM data.
+
+A bounded TC86 4.02 probe supplies a natural producer mechanism. Ordinary C++
+static initialization
+
+```cpp
+extern "C" const char *SND_LOAD_EXT[4] = {
+    "m26", "m26", "m86", "mmd"
+};
+```
+
+emits the same 28 data bytes and one kind-3 FIXUPP record whose LOCAT order is
+**`0x0C, 0x08, 0x04, 0x00`**. This is exactly the reverse direction required by
+the v448 target projection. The checked-in template is only a replay input; it
+is not promoted as authored product source.
+
+The global OP block order also exposes two physical owner moves that preserve
+program bytes because they cross independent segment contributions:
+
+- `opmtail.obj` follows `th03/pi_load.cpp` rather than preceding the PI objects;
+- the data-only TC86 `SND_LOAD_EXT` owner follows `th04/snd_load.cpp`;
+- `opmusicm.obj` follows `th04/op_setup.cpp` instead of occupying the early
+  master-data region.
+
+`scripts/probes/probe_th04_op_relocation_topology_v461.py` reproduces that
+layout twice from the retained v402 source snapshot, after first reapplying the
+v427 OP-music split. No MZ relocation bytes are edited. Both cold builds have:
+
+- candidate OP SHA-256
+  `53db8945c76daaf04124636d98e7c1d187eae252f75c21c29305edb446922301`;
+- MAP SHA-256
+  `572b323a047b7b448822cce7179613fb91a14703f4cd0b746339b5ce19b59da2`;
+- unchanged decoded payload except the existing two-byte `snd_load`
+  `89 C3` / `8B D8` residual;
+- target-equal 804-site relocation multiset;
+- **699 / 804 same-index relocations**, reducing the ordered mismatch from
+  v429's 223 entries to **105**;
+- `SND_LOAD_EXT` target-index exact at entries `158..161`, with sites
+  `0xFD32, 0xFD2E, 0xFD2A, 0xFD26`.
+
+The remaining 105 differences are now completely localized:
+
+| Owner | Candidate block | Sites | Differing indices |
+| --- | ---: | ---: | ---: |
+| `th04/bgimage.cpp` | 186 | 8 | 8 |
+| `th04_op_music_master.asm` | 271 | 35 | 34 |
+| `th04/score_e.cpp` | 403 | 2 | 2 |
+| `th04/hi_view.cpp` | 405 | 61 | 61 |
+
+Thus every OP relocation before the BGIMAGE block, and the global block
+position through OP music, is naturally aligned. The next OP work is no longer
+a broad TLINK-order search: it is the internal BGIMAGE/OP-music producer
+direction and the `hi_view` / `score_e` historical TU split.
+
+Private receipt SHA-256:
+`12d8334f2f2c10ce47ca4263890f50bc7627de625bab23f46acd06e9b0f674ee`.
+
+This grants layout/producer evidence only. It does not promote OP authored
+functions, resolve the shared two-byte `snd_load` code residual, or close packed
+`T`/`minalloc` provenance.

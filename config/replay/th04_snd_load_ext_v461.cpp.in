@@ -1,0 +1,1 @@
+extern "C" const char *SND_LOAD_EXT[4] = { "m26", "m26", "m86", "mmd" };
