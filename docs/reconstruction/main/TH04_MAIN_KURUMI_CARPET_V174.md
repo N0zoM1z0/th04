@@ -453,3 +453,24 @@ Aggregate receipt SHA-256:
 The unit still remains **candidate-state evidence**. No new exact-byte credit is
 granted until the v409/v410 partition is explicitly superseded without overlap
 or double counting and a post-migration aggregate passes.
+
+## v422 hybrid quarantine / provenance audit
+
+v421 proves a bounded mechanism claim: the v420 symbolic TC4J integrated-assembler
+core can reproduce all 90 carpet bytes in focused A/B and a complete candidate
+aggregate. It does **not** add an independent historical source witness. v420 itself
+records that source provenance is missing, and v421 adds no separate game, surviving
+source artifact, or external historical material showing that ZUN authored this body
+as inline assembly.
+
+Using the same target-derived symbolic statements to obtain raw equality and then
+using that equality to justify their authorship would be circular. It would also
+violate the repository rule against manufacturing equality with target-derived inline
+assembly. Therefore v422 deliberately refuses the prepared ownership migration.
+
+The current product source is restored to the natural C++ semantic baseline. The
+complete carpet unit is non-default and zero-credit; v420/v421 remain diagnostic
+evidence only. Physical accounting remains the v409/v410 partition: **67 exact +
+23 blocked bytes**, with the complete logical function still blocked. A future
+promotion requires genuinely independent source-origin evidence; the hybrid byte
+replay itself need not be repeated unless that provenance gate changes.
