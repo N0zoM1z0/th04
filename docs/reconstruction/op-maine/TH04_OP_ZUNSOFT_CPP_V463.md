@@ -79,3 +79,58 @@ functions. Do not promote the OP-music relocation block by manually reversing
 FIXUPP or MZ entries. This packet proves one linked-exact natural function and a
 compiler direction fingerprint; it does not yet establish the remaining source
 text or packed-file exactness.
+
+## v464 `zunsoft_update_and_render()`
+
+The second ZUNSOFT body at load `0xBAC9` is `0x12B` bytes. Its TASM body has no
+irreducible low-level instruction sequence: it is a 256-entry near-pointer
+particle loop with four integer locals, three age ranges, two `polar()` pairs,
+and `super_put_rect()` calls.
+
+The first natural C++ baseline was 349 bytes because assigning/adding the
+`Subpixel` wrappers selected floating-point conversion helpers. The target uses
+the underlying Q12.4 words directly. Replacing only those operations with
+
+```cpp
+pyro->distance_prev.v = pyro->distance.v;
+pyro->distance.v += pyro->speed.v;
+```
+
+removes exactly the floating-point temporaries and produces the target compiler
+shape: `ENTER 8`, `SI` as a `pyro_t near *` iterator, `DI` as the loop index,
+and four ordinary stack locals.
+
+The resulting TC86 function is **299 / 299 bytes**. At raw OMF level, 298 bytes
+already equal the old TASM owner; relative offset `0x07` differs only because
+the C++ TU owns `_pyros` locally and carries its near-offset fixup addend. The
+linked word resolves identically.
+
+`probe_th04_zunsoft_update_cpp_v464.py` rebuilds the v461 baseline twice,
+recovers both first functions as one TC86 owner, keeps only the final two
+ZUNSOFT functions in the TASM tail, and relinks TH04 OP. Both runs produce:
+
+- OP SHA-256
+  `6668546c64d9f00e61338fea93df401ce3a65485a8a94fb805cc943a717599e2`;
+- MAP SHA-256
+  `65e596ca2f0914ecf3468cd1549fb808aeffe89c97a8621a0da3d74ff1144447`;
+- exact linked update body SHA-256
+  `a2ecb4e9a3c07ff4bb8cf81f539d642a0622b871ce2c456d25a91793e1d5b6b7`;
+- combined C++ `OP_MUSIC_TEXT` contribution size `0x1AF`;
+- remaining TASM tail size `0x2E1`;
+- the complete v461 program image unchanged and the 804-site relocation
+  multiset target-equal.
+
+TC86 now emits the eight segment relocations from the first two functions as
+one descending-address block:
+
+`0xBBE2, 0xBBC3, 0xBBA5, 0xBB7C, 0xBB5E, 0xBB3A, 0xBAA0, 0xBA8F`.
+
+The total ordered residual remains 105 only because these exact C++ functions
+and the two remaining ASM functions are still separate physical OMF owners. The
+result strengthens the single historical TC86-TU explanation for the complete
+0x490-byte ZUNSOFT block.
+
+Private receipt SHA-256:
+`ae10a6bc0bbfe25eb76340fc9710c18b58c514e8568c6cd5475d81dd6d1422b3`.
+
+Next recover `zunsoft_palette_update_and_show()`, then `zunsoft_animate()`.
