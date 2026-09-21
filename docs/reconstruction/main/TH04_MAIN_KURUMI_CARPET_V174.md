@@ -236,3 +236,38 @@ The full function therefore stays function-level **blocked** even though 56/90
 physical bytes now have exact natural-source ownership. Future work should attack
 only the 34-byte residual owners, and must still satisfy the existing provenance
 gates before introducing any symbolic low-level source.
+
+## v410 function-boundary exact spans
+
+v410 narrows two of v409's conservative residual owners without touching their
+historical low-level instructions. The unique natural function signature and
+macro prefix are replayed as an identity fragment and own the compiler-generated
+five-byte prologue `55 8B EC 56 57`. A second unique fragment containing only
+the closing `#undef` directives and function brace owns the compiler-generated
+six-byte epilogue `5F 5E 5D C2 04 00`.
+
+The adjacent historical instructions remain separate and blocked: `PUSH DS;
+POP ES` is now a two-byte owner at file `0x1028F..0x10290`, and the compact
+`LOOP column_loop` is a two-byte owner at `0x102DC..0x102DD`. Neither target
+opcode is present in the maintained v410 fragments.
+
+Focused replay `gpt-web-v410-carpet-frame-focused-001` passes both extents in
+A/B with raw/MAP/empty-relocation/valid-OMF equality; receipt SHA-256 is
+`2ade1b72b834dd449ba9db37a1b30bddd3fce0dbd3f201eb7502bbed0d247b78`.
+The 281-owner candidate aggregate
+`gpt-web-v410-carpet-frame-aggregate-candidate-001` passes with `failures=[]`;
+receipt SHA-256 is
+`cfab67a5a4800d9e34818e689cc776ad6eb86f368fb67cd021398e36eeca2881`.
+After promotion, `gpt-web-v410-carpet-frame-aggregate-final-001` again closes all
+281 default owners twice with `failures=[]`; both MAIN candidates remain
+`4a5138bf2be6292986827f29addeed77765178ee414511cf5c87e223e5cc1cb5`
+and the receipt SHA-256 is
+`d1c5af30fe7419391e48b60156b87b8d4ccb5202ca7e7ca216f18e1c877c2487`.
+
+Carpet physical ownership is now **67 exact bytes + 23 blocked bytes = 90**.
+The remaining blocked bytes are: `PUSH DS/POP ES` (2), first `MUL BX` plus the
+`MOV SI,AX` direction (4), `ADD BX,BX` direction plus second `MUL BX` (4),
+`MOV BX,AX` plus `XOR DX,DX` directions (4), `LODSB` (1), `MOV DI,DX` plus
+`SHL DI,1` (4), the second `MOV DI,DX` direction (2), and `LOOP` (2). The
+complete function remains blocked; only these 23 bytes should be targeted by
+future carpet work.

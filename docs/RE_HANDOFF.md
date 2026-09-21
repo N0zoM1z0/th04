@@ -30,10 +30,10 @@ the accepted extent.
   **83,375/83,469 reviewed authored C/C++ bytes** exact (99.887383%).
   Forty-three accepted original-style ASM units add 5,702 bytes.
 - Latest complete native aggregate:
-  `gpt-web-v409-carpet-fragments-aggregate-final-001`, 279 MAIN owners,
+  `gpt-web-v410-carpet-frame-aggregate-final-001`, 281 MAIN owners,
   receipt SHA-256
-  `dfcc475bec3375ec3aaaa1975146176d6d5403a732ae2e6a8bf4f51579288af4`.
-- Remaining reviewed MAIN C/C++ gap: **38 bytes** — checkerboard contributes only its two-byte `E2 F7` `LOOP`, Stage 4 carpet contributes 34 instruction-aligned low-level residual bytes after v409 recovers 56/90 bytes naturally, and `snd_load` retains the two-byte `89 C3` MOV BX,AX residual.
+  `d1c5af30fe7419391e48b60156b87b8d4ccb5202ca7e7ca216f18e1c877c2487`.
+- Remaining reviewed MAIN C/C++ gap: **27 bytes** — checkerboard contributes only its two-byte `E2 F7` `LOOP`, Stage 4 carpet contributes 23 low-level residual bytes after v409/v410 recover 67/90 bytes, and `snd_load` retains the two-byte `89 C3` MOV BX,AX residual.
 - v403 confirms TH03 joins TH02/TH05 at natural `8B D8` in homologous
   `snd_load`; the TH04-only `89 C3` therefore remains provenance-blocked.
 - v404 verifies pinned TC4J `#pragma intrinsic` string-op codegen, but tested
@@ -42,6 +42,7 @@ the accepted extent.
 - v406 closes the same-media PC-98 IDE hidden-optimizer hypothesis: exhaustive TCALC.PRJ/PRJ2MAK scalar toggles expose only `-O`, and PC-98 `TC.EXE` still emits no `LOOP`/`LODSB` for the bounded blocker probes.
 - v408 splits the 174-byte checkerboard owner into 172 exact natural-source bytes plus one two-byte blocked `LOOP`; focused A/B, 272-owner candidate aggregate, and 272-owner post-promotion aggregate all pass with zero failures. The complete checkerboard function remains blocked.
 - v409 similarly partitions Stage 4 carpet: seven natural identity fragments totaling 56 bytes are exact, while eight low-level residual owners totaling 34 bytes remain blocked. Focused A/B plus 279-owner candidate and post-promotion aggregates all pass; the complete carpet function remains blocked.
+- v410 further separates compiler-generated carpet entry/exit bytes from the adjacent historical PUSH DS/POP ES and LOOP: 11 more bytes become exact, leaving carpet at 67/90 exact and 23 blocked. Focused A/B plus 281-owner candidate/post-promotion aggregates pass; the function remains blocked.
 - MAIN has **no provisional authored C/C++ boundaries**.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet.
 - OP/MAINE v400/v401 physical-object replay closes all six former master.lib CODE/DATA alignment residuals. v402 then closes the two OP-music XOR-direction bytes with a TH03/TH05-corroborated low-level copy core. OP and MAINE diagnostic payload candidates now each differ only at the shared two-byte `snd_load` `89 C3`; payload lengths and target-equal relocation multisets remain unchanged.
@@ -50,7 +51,7 @@ the accepted extent.
 
 ## Ordered work queue
 
-1. **Close the remaining 38-byte MAIN gap.** Continue only the three live byte blockers: checkerboard `E2 F7` (2 bytes), the eight Stage 4 carpet residual owners (34 bytes total), and the final `snd_load` MOV BX,AX encoding (2 bytes).
+1. **Close the remaining 27-byte MAIN gap.** Continue only the three live byte blockers: checkerboard `E2 F7` (2 bytes), the eight Stage 4 carpet residual owners (23 bytes total), and the final `snd_load` MOV BX,AX encoding (2 bytes).
 2. **Keep provenance gates strict.** Current corpus/cross-game evidence does
    not justify target-derived inline assembly for any of the three blockers.
 3. **Continue OP/MAINE packed closure from v402.** Master.lib CODE/DATA seams
@@ -66,8 +67,8 @@ The live MAIN review state comes from `config/units.csv`, `config/th04_main_auth
 
 No expanded exact-unit replay tree is required for the current handoff. The
 latest accepted MAIN replay is
-`gpt-web-v409-carpet-fragments-aggregate-final-001`; its receipt SHA-256 is
-`dfcc475bec3375ec3aaaa1975146176d6d5403a732ae2e6a8bf4f51579288af4` and is durable in the checked-in evidence ledger. Re-run it if the full receipt body is needed.
+`gpt-web-v410-carpet-frame-aggregate-final-001`; its receipt SHA-256 is
+`d1c5af30fe7419391e48b60156b87b8d4ccb5202ca7e7ca216f18e1c877c2487` and is durable in the checked-in evidence ledger. Re-run it if the full receipt body is needed.
 
 Keep the current small blocker/frontier probe cache while those topics remain
 active:

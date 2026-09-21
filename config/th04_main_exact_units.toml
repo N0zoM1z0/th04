@@ -12769,3 +12769,32 @@ object_path = "obj/th04/stages.obj"
 map_segment = "STAGES_TEXT"
 target_file_offset = "0x102CA"
 size = "0x12"
+
+# v410 candidate: compiler-generated carpet function entry/exit bytes owned by
+# unique natural source-boundary fragments. Historical PUSH DS/POP ES and LOOP
+# remain outside these extents with zero credit.
+[[units]]
+id = "th04-main-carpet-function-entry-v410"
+default_enabled = true
+repo_source = "src/main/stage/carpet_function_entry.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x1028A"
+size = "0x05"
+
+[[units]]
+id = "th04-main-carpet-function-exit-v410"
+default_enabled = true
+repo_source = "src/main/stage/carpet_function_exit.inl"
+source_mode = "fragment"
+patch_path = "th04/main/stage/stages.cpp"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+map_segment = "STAGES_TEXT"
+target_file_offset = "0x102DE"
+size = "0x06"
