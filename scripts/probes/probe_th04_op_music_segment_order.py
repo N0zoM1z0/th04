@@ -35,7 +35,7 @@ BASE = {
     "bin/th04/op.exe": "5a7af3868e28e2bc46268d413f8f7e78213603431b3c1acc3e4f85f4d8cb95eb",
     "obj/th04/op.map": "08ab21543cc5e7c58e29a566538011aab3514adb5d3193216df7e44d671b0cf3",
 }
-TARGET_RESTORED_SHA = "cb9b1c6cbd6b2c7bad6763fabd106c3cf451b1c20efef0f1fcfd3e3a47c0cdaa"
+REFERENCE_CANDIDATE_SHA = "cb9b1c6cbd6b2c7bad6763fabd106c3cf451b1c20efef0f1fcfd3e3a47c0cdaa"
 NEW_EXE = "78468a2ae389ba9c97fb7b391355e4eda2cb750f84f3cc4abf3e34802bceafbd"
 NEW_MAP = "cd2e0a35b1d1262dca398db0302ab68243179cf18edfac2e1ec0810acf2ef334"
 NEW_MUSIC_OBJ_NORM = "fd1796688022e6fecbdfbd54e38216a84b8d5fee10a269771db852cf86de7e55"
@@ -121,11 +121,11 @@ def apply_split(work: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-dir", type=Path, required=True)
-    parser.add_argument("--target-restored", type=Path, required=True)
+    parser.add_argument("--reference-candidate", "--target-restored", dest="reference_candidate", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path)
     args = parser.parse_args()
     source_dir = args.source_dir.resolve()
-    target_restored = args.target_restored.resolve()
+    reference_candidate = args.reference_candidate.resolve()
     output = output_dir(args.output_dir)
 
     if not source_dir.is_dir():
@@ -134,11 +134,11 @@ def main() -> int:
         path = source_dir / rel
         if not path.is_file() or sha(path) != expected:
             raise ValueError(f"v402 baseline identity drift: {rel}")
-    if not target_restored.is_file() or sha(target_restored) != TARGET_RESTORED_SHA:
-        raise ValueError("target-restored OP identity drift")
+    if not reference_candidate.is_file() or sha(reference_candidate) != REFERENCE_CANDIDATE_SHA:
+        raise ValueError("reference-candidate OP identity drift")
 
-    target_sites = relocation_sites(target_restored)
-    baseline_order = order_metrics(relocation_sites(source_dir / "bin/th04/op.exe"), target_sites)
+    reference_sites = relocation_sites(reference_candidate)
+    baseline_order = order_metrics(relocation_sites(source_dir / "bin/th04/op.exe"), reference_sites)
     if baseline_order["differing_indices"] != list(range(145, 188)):
         raise ValueError(f"v402 baseline order drift: {baseline_order}")
     baseline_payload = compare("th04-op", source_dir)
@@ -155,9 +155,9 @@ def main() -> int:
         exe = work / "bin/th04/op.exe"
         map_path = work / "obj/th04/op.map"
         music_obj = work / "obj/th04/opmusicm.obj"
-        order = order_metrics(relocation_sites(exe), target_sites)
+        order = order_metrics(relocation_sites(exe), reference_sites)
         if order["ordered_exact"] is not True or order["same_index_count"] != 804:
-            raise ValueError(f"{label}: restored-MZ relocation order not exact: {order}")
+            raise ValueError(f"{label}: v231 candidate-control relocation order not exact: {order}")
         normalized = digest(normalize_dependency_timestamps(music_obj.read_bytes()))
         if sha(exe) != NEW_EXE or sha(map_path) != NEW_MAP or normalized != NEW_MUSIC_OBJ_NORM:
             raise ValueError(f"{label}: output identity drift")
@@ -166,11 +166,11 @@ def main() -> int:
             "map_sha256": sha(map_path),
             "music_object_sha256": sha(music_obj),
             "music_object_normalized_sha256": normalized,
-            "relocation_order_vs_restored_mz": order,
+            "relocation_order_vs_reference_candidate": order,
             "payload_comparison": payload,
         }
 
-    for key in ("exe_sha256", "map_sha256", "music_object_normalized_sha256", "relocation_order_vs_restored_mz"):
+    for key in ("exe_sha256", "map_sha256", "music_object_normalized_sha256", "relocation_order_vs_reference_candidate"):
         if builds["a"][key] != builds["b"][key]:
             raise ValueError(f"A/B {key} differs")
     left = dict(builds["a"]["payload_comparison"])
@@ -182,20 +182,20 @@ def main() -> int:
 
     receipt = {
         "schema_version": 1,
-        "claim_scope": "TH04 OP OP_MUSIC_TEXT physical-object/restored-MZ relocation-order diagnostic; no packed-file or authored exactness claim",
+        "claim_scope": "TH04 OP OP_MUSIC_TEXT physical-object/v231 candidate-control relocation-order diagnostic; no packed-file or authored exactness claim",
         "baseline_identity": BASE,
-        "target_restored_sha256": TARGET_RESTORED_SHA,
+        "reference_candidate_sha256": REFERENCE_CANDIDATE_SHA,
         "template_path": str(TEMPLATE.relative_to(ROOT)),
         "template_sha256": TEMPLATE_SHA,
-        "baseline_relocation_order_vs_restored_mz": baseline_order,
+        "baseline_relocation_order_vs_reference_candidate": baseline_order,
         "baseline_payload_comparison": baseline_payload,
         "object_order_after": ["op.obj", "opmmid.obj", "opmtail.obj", "vsorig.obj", "opmdata.obj", "opmusicm.obj"],
         "builds": builds,
         "observed_effect": (
-            "Splitting only th04_op.asm's existing OP_MUSIC_TEXT source segment into its own TASM object and placing master CODE before VS/DATA ownership preserves the snd_load-only two-byte payload residual and the 804-site relocation multiset, while making the candidate MZ relocation table order identical to the pinned DIET-restored MZ table at all 804 indices. No relocation-table bytes are edited."
+            "Splitting only th04_op.asm's existing OP_MUSIC_TEXT source segment into its own TASM object and placing master CODE before VS/DATA ownership preserves the snd_load-only two-byte payload residual and the 804-site relocation multiset, while making the candidate MZ relocation table order identical to the pinned DIET-v231 candidate-control MZ table at all 804 indices. No relocation-table bytes are edited."
         ),
         "limit": (
-            "DIET decompressor application order is a separate diagnostic surface and still differs from candidate MZ order; the restored MZ table is not independently proven to be the historical pre-DIET TLINK table. This replay grants no OP authored-source/function or packed-file exactness credit."
+            "DIET decompressor application order is a separate diagnostic surface and still differs from candidate MZ order; the v231 candidate-control MZ table is not independently proven to be the historical pre-DIET TLINK table. This replay grants no OP authored-source/function or packed-file exactness credit."
         ),
     }
     rp = output / "receipt.json"
@@ -204,7 +204,7 @@ def main() -> int:
         "receipt": str(rp),
         "receipt_sha256": sha(rp),
         "candidate_op_sha256": NEW_EXE,
-        "restored_mz_relocation_order_exact": True,
+        "reference_candidate_relocation_order_exact": True,
         "remaining_payload_differences": 2,
     }, sort_keys=True))
     return 0
