@@ -1,0 +1,196 @@
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th04/formats/scoredat/scoredat.hpp"
+#include "th04/resident.hpp"
+#include "th04/common.h"
+#include "th04/gaiji/gaiji.h"
+#include "th04/end/end.h"
+#include "th04/playchar.h"
+
+extern unsigned char entered_place;
+
+#pragma codeseg SCORE_TEXT score_01
+void near score_insert(void)
+{
+	int place;
+	int c;
+
+	for(place = (SCOREDAT_PLACES - 1); place >= 0; place--) {
+		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+			if(resident->score_last.digits[c] > (hi.score.g_score[place].digits[c] - gb_0)) {
+				break;
+			}
+			if(resident->score_last.digits[c] < (hi.score.g_score[place].digits[c] - gb_0)) {
+				goto found_place;
+			}
+		}
+	}
+	entered_place = 0;
+	goto shift;
+
+found_place:
+	if(place == (SCOREDAT_PLACES - 1)) {
+		entered_place = -1;
+		return;
+	}
+	entered_place = (place + 1);
+
+shift:
+	for(place = (SCOREDAT_PLACES - 2); place >= entered_place; place--) {
+		for(c = (SCOREDAT_NAME_LEN - 1); c >= 0; c--) {
+			hi.score.g_name[place + 1][c] = hi.score.g_name[place][c];
+		}
+		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+			hi.score.g_score[place + 1].digits[c] = hi.score.g_score[place].digits[c];
+		}
+		hi.score.g_stage[place + 1] = hi.score.g_stage[place];
+	}
+	for(c = (SCOREDAT_NAME_LEN - 1); c >= 0; c--) {
+		hi.score.g_name[entered_place][c] = gs_DOT;
+	}
+	for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+		hi.score.g_score[entered_place].digits[c] = (resident->score_last.digits[c] + gb_0);
+	}
+	if(resident->end_sequence >= ES_EXTRA) {
+		hi.score.g_stage[entered_place] = gs_ALL;
+	} else {
+		hi.score.g_stage[entered_place] = (resident->stage + gb_1);
+	}
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near score_put(int place, unsigned char rendered_playchar)
+{
+	int digit;
+	int y;
+	register int place_r = place;
+	register int x;
+
+	y = ((place_r == 0) ? 96 : ((place_r * 16) + 112));
+	x = ((rendered_playchar == PLAYCHAR_REIMU) ? 172 : 480);
+
+	rendered_playchar = (
+		((entered_place == place_r) && (rendered_playchar == static_cast<unsigned char>(playchar))) ? 10 : 0
+	);
+
+	if((hi.score.g_score[place_r].digits[SCORE_DIGITS - 1] - gb_0) >= 10) {
+		super_put(
+			(x - 32), y,
+			(((hi.score.g_score[place_r].digits[SCORE_DIGITS - 1] - gb_0) / 10) + rendered_playchar)
+		);
+	}
+	super_put(
+		(x - 16), y,
+		(((hi.score.g_score[place_r].digits[SCORE_DIGITS - 1] - gb_0) % 10) + rendered_playchar)
+	);
+	for(digit = 6; digit >= 0; digit--, x += 16) {
+		super_put(
+			x, y,
+			(hi.score.g_score[place_r].digits[digit] + rendered_playchar - gb_0)
+		);
+	}
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near stage_put(int place, int rendered_playchar, int gaiji)
+{
+	int x;
+	int y;
+	unsigned char col;
+	register int place_r = place;
+	register int playchar_r = rendered_playchar;
+
+	col = (
+		((entered_place == place_r) && (playchar_r == static_cast<unsigned char>(playchar))) ? 7 : 12
+	);
+	y = ((place_r == 0) ? 96 : ((place_r * 16) + 112));
+	x = ((playchar_r == PLAYCHAR_REIMU) ? 292 : 600);
+
+	graph_gaiji_putc((x + 2), (y + 2), gaiji, 14);
+	graph_gaiji_putc(x, y, gaiji, col);
+}
+#pragma codeseg
+
+void pascal near score_rect_copy(int left, int top, int w, int h);
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near name_cursor_put(int place, unsigned char rendered_playchar, unsigned char cursor)
+{
+	int y;
+	register int place_r = place;
+	register int x;
+
+	x = ((rendered_playchar == 0) ? 2 : 40);
+	y = ((place_r == 0) ? 6 : (place_r + 7));
+
+	score_rect_copy(((x * 8) + 2), ((y * 16) + 2), 128, 16);
+	graph_gaiji_puts(
+		((x * 8) + 2), ((y * 16) + 2), GAIJI_W,
+		reinterpret_cast<const char*>(hi.score.g_name[place_r]), 14
+	);
+	gaiji_putsa(x, y, reinterpret_cast<const char*>(hi.score.g_name[place_r]), TX_RED);
+	gaiji_putca(
+		(x + (cursor * 2)), y,
+		hi.score.g_name[place_r][cursor],
+		(TX_RED + TX_REVERSE)
+	);
+}
+#pragma codeseg
+
+extern unsigned char gALPHABET[];
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near place_row_put(int place, unsigned char rendered_playchar)
+{
+	int x;
+	register int place_r = place;
+	register int y;
+
+	x = ((rendered_playchar == 0) ? 16 : 320);
+	y = ((place_r == 0) ? 96 : ((place_r * 16) + 112));
+
+	graph_gaiji_puts(
+		(x + 2), (y + 2), GAIJI_W,
+		reinterpret_cast<const char *>(hi.score.g_name[place_r]), 14
+	);
+	if(
+		(entered_place != place_r) ||
+		(rendered_playchar != static_cast<unsigned char>(playchar))
+	) {
+		graph_gaiji_puts(
+			x, y, GAIJI_W,
+			reinterpret_cast<const char *>(hi.score.g_name[place_r]), 12
+		);
+	} else {
+		gaiji_putsa(
+			(x / 8), (y / 16),
+			reinterpret_cast<const char *>(hi.score.g_name[place_r]), TX_RED
+		);
+	}
+	score_put(place_r, rendered_playchar);
+	stage_put(place_r, rendered_playchar, hi.score.g_stage[place_r]);
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near places_put(unsigned char rendered_playchar)
+{
+	register int place = 0;
+	for(; place < SCOREDAT_PLACES; place++) {
+		place_row_put(place, rendered_playchar);
+	}
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near alphabet_cursor_put(int col, int row, int color)
+{
+	register int col_r = col;
+	register int row_r = row;
+	gaiji_putca(
+		((col_r * 2) + 23), (row_r + 18),
+		gALPHABET[(row_r * 17) + col_r], color
+	);
+}
+#pragma codeseg

@@ -187,6 +187,12 @@ python3 scripts/audit_compat_dependencies.py --check
   call addend to the later private copy helper. Eight segment sites now appear
   in the exact target-local sequence for indices 324..331. Continue `sub_C711`
   and higher-address SCORE helpers in the same TC86 owner.
+- v482 recovers `sub_C711`, `sub_C7C9`, and `sub_C7E3` as raw-exact
+  natural C++ and grows the SCORE prefix to **0x462 / 1122 linked-exact bytes**.
+  Its 12 segment sites map exactly to target-local indices 320..331. The
+  temporary split residual is 43 (not an improvement) because higher-address
+  `regist_menu`/EGC code is still a following TASM object; continue fusing that
+  tail into the same TC86 TU.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 

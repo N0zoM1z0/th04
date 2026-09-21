@@ -186,3 +186,64 @@ Both A/B builds preserve the complete linked program image and target-equal
 
 Continue with `sub_C711` and following higher-address SCORE helpers, extending
 this same TC86 owner until the complete first SCORE FIXUPP record is recovered.
+
+## v482 row/table/cursor helpers
+
+v482 extends the natural SCORE_TEXT producer through the three helpers directly
+preceding `regist_menu()`:
+
+- the `0xB8` place-row renderer (`sub_C711`);
+- the `0x1A` ten-row wrapper (`sub_C7C9`);
+- the `0x31` alphabet cursor renderer (`sub_C7E3`).
+
+All three are ordinary TC86 C++ and **raw CODE exact**. The only source-shape
+adjustment needed by the largest helper is branch orientation: the target lays
+out the ordinary-name path first and jumps to the highlighted path only when
+both `entered_place` and playchar match. Spelling the condition as the negative
+case followed by `else` reproduces that physical branch order exactly.
+
+Together with v479-v481, the natural C++ prefix now spans `0xC3B2..0xC813`,
+exactly **`0x462` / 1122 bytes**. Raw SHA-256:
+
+`836b450754b7c9a7db562235d2858e77afe7c369594db3614749dde81afd81da`.
+
+As in v481, the only raw differences from the original monolithic TASM prefix
+are offsets `0x2F5..0x2F6`, the zero addend for the same-segment near call from
+the name/cursor helper to the still-later private copy helper. TLINK resolves the
+full `0x462` linked slice target-exact; linked SHA-256:
+
+`11bc4d06b392a9ce4ad9b71f791e3f6ff5ca859f041f68c15809718773b7e49a`.
+
+### Producer-order projection
+
+The prefix now emits 12 segment fixups. In the temporary split replay they
+occupy candidate indices `311..322` in this site order:
+
+`C7A9, C783, C75A, C709, C6E2, C6CD, C65D, C649, C5D8, C5AF, C587, C80C`.
+
+Those exact sites occur in the target at indices:
+
+`321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 320`.
+
+That is the expected TC86 single-TU shape: the higher-address registration/EGC
+code still lives in the following TASM object, so the partial C++ owner is
+emitted too early in relocation-table order. Consequently the temporary split
+has **43** ordered mismatches rather than v478's 42. This is intentionally not
+claimed as packed-frontier improvement; the complete linked program image is
+still byte-identical and the relocation multiset is still exact.
+
+Both A/B replays produce candidate SHA-256
+`2dac1a8a1cf6ee10d41946c82933112e496cd19f3df354fed11cbc49e50f597b`
+and MAP SHA-256
+`a3cc85e0d705a96c539f71ba0803d062bf035f9b886004eb2d6c5604ea869c64`.
+
+Private receipt SHA-256:
+`39ad6614b958b275de7b5f630a44383e5f2f99045e2ded6c19c78fcca7b53a0b`.
+
+## Updated next work after v482
+
+Recover `regist_menu()` and the final EGC copy helper pair into the **same**
+TC86 SCORE_TEXT translation unit. Do not preserve the v482 physical split as a
+final topology and do not permute relocation entries. Once the high-address
+functions join this prefix, TC86 should be able to emit the complete SCORE_TEXT
+segment-fixup stream in target order.
