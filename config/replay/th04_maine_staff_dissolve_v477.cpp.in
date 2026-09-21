@@ -1,0 +1,96 @@
+#include "pc98.h"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th03/math/polar.hpp"
+#include "th02/v_colors.hpp"
+#include "th04/formats/cdg.h"
+#include "th04/hardware/bgimage.hpp"
+
+extern uint8_t cdg_slot;
+extern unsigned char radial_angle;
+
+#pragma codeseg MAINE_01_TEXT maine_01
+void pascal near staffroll_dissolve_radial_put(
+	screen_x_t base_left, screen_y_t base_top, int distance
+)
+{
+	if(!distance) {
+		cdg_put_8(base_left, base_top, cdg_slot);
+		return;
+	}
+	grcg_setcolor(GC_RMW, V_WHITE);
+	distance /= 4;
+	int x = polar(base_left, distance, CosTable8[radial_angle]);
+	int y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 0);
+	radial_angle += 0x40;
+	x = polar(base_left, distance, CosTable8[radial_angle]);
+	y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 1);
+	radial_angle += 0x40;
+	x = polar(base_left, distance, CosTable8[radial_angle]);
+	y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 2);
+	radial_angle += 0x40;
+	x = polar(base_left, distance, CosTable8[radial_angle]);
+	y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 3);
+	radial_angle += 0x40;
+	_DX = 0x7C; _AL = 0; outportb(_DX, _AL);
+}
+
+void pascal near staffroll_dissolve_diagonal_put(
+	screen_x_t base_left, screen_y_t base_top, int distance
+)
+{
+	if(!distance) { cdg_put_8(base_left, base_top, cdg_slot); return; }
+	grcg_setcolor(GC_RMW, V_WHITE);
+	distance /= 2;
+	int x = polar(base_left, (distance / 2), CosTable8[96]);
+	int y = polar(base_top, (distance / 2), CosTable8[32]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 0);
+	x = polar(base_left, distance, CosTable8[64]);
+	y = polar(base_top, distance, CosTable8[0]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 1);
+	x = polar(base_left, (distance / 2), CosTable8[224]);
+	y = polar(base_top, (distance / 2), CosTable8[160]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 2);
+	x = polar(base_left, distance, CosTable8[192]);
+	y = polar(base_top, distance, CosTable8[128]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 3);
+	_DX = 0x7C; _AL = 0; outportb(_DX, _AL);
+}
+
+void pascal near staffroll_dissolve_axis_put(
+	screen_x_t base_left, screen_y_t base_top, int distance
+)
+{
+	if(!distance) { cdg_put_8(base_left, base_top, cdg_slot); return; }
+	grcg_setcolor(GC_RMW, V_WHITE);
+	distance /= 2;
+	int x = polar(base_left, (distance / 2), CosTable8[0]);
+	int y = polar(base_top, (distance / 2), SinTable8[0]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 0);
+	x = polar(base_left, distance, CosTable8[0]);
+	y = polar(base_top, distance, SinTable8[0]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 1);
+	x = polar(base_left, (distance / 2), CosTable8[128]);
+	y = polar(base_top, (distance / 2), CosTable8[64]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 2);
+	x = polar(base_left, distance, CosTable8[128]);
+	y = polar(base_top, distance, CosTable8[64]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 3);
+	_DX = 0x7C; _AL = 0; outportb(_DX, _AL);
+}
+
+void pascal near staffroll_bgimage_expand_put(
+	screen_x_t left, screen_y_t top, pixel_t w, pixel_t h, int distance
+)
+{
+	register int half = distance;
+	half /= 2;
+	bgimage_put_rect_16(
+		(left - half), (top - half), (w + (half * 2)), (h + (half * 2))
+	);
+}
+#pragma codeseg

@@ -161,6 +161,11 @@ python3 scripts/audit_compat_dependencies.py --check
   `sub_BB81` into one 0x5C8 TC86 TU. Linked bytes remain exact; target indices
   274..290 become exact and MAINE ordered residual drops **157 -> 140**. The
   verdict run is now fully C++; continue earlier MAINE_01 producer recovery.
+- v477 recovers the first four staff-roll helpers as one **0x3C1 / 961-byte
+  raw-and-linked exact TC86 C++ owner**. Compiler FIXUPP order naturally matches
+  `B25B -> B144 -> B02D -> AED0`; target indices 152..194 become exact and
+  MAINE ordered residual drops **140 -> 98**. Continue the contiguous
+  `B291/B31E/B3AC + staffroll_animate` block.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
