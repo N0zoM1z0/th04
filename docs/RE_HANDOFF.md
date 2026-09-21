@@ -65,6 +65,10 @@ python3 scripts/audit_compat_dependencies.py --check
   missing `T` mechanism. Natural `/i` packs +93 OP / +167 MAINE bytes over
   target, and even target-derived payload+relocation controls retaining `/i`'s
   own extent/minalloc remain +79/+119. Do not repeat `/i` on this linker.
+- v441 closes the remaining obvious active-TLINK switch surface: `/e`, no
+  extended-dictionary switch, and `/P` reproduce current OP/MAINE EXE/MAP and
+  relocation order byte-for-byte; `/f` changes >1.2 KiB of program bytes and
+  changes relocation counts/multisets. Do not revisit these switches by default.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -73,14 +77,13 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from v429/v430/v436. Treat v228
+2. **OP/MAINE packed closure:** continue from v429/v430/v436/v441. Treat v228
    restored relocation order and zero-tail/minalloc as target-derived
-   diagnostics, not historical TLINK requirements; active TLINK 6.10 `/i` is
-   now closed negative. Prefer independently supported physical OMF ownership,
-   natural producer order, or a separately attested historical linker/version
-   mechanism. Test OP `hi_view` / OP music and MAINE segment ownership only
-   where a real object interface can be justified. Historical pre-DIET MZ
-   remains unobserved.
+   diagnostics, not historical TLINK requirements. Active TLINK 6.10 `/i`,
+   `/e`/`/E`, `/P`, and `/f` routes are closed. Prefer independently supported
+   physical OMF ownership, DIET-preimage analysis, or a separately attested
+   historical linker/version mechanism. Historical pre-DIET MZ remains
+   unobserved.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 
@@ -97,7 +100,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 

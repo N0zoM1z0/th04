@@ -212,3 +212,41 @@ re-packs raw exact, but its restored MZ is not proven to be the historical
 pre-DIET TLINK output. v429 therefore supplies a **target-derived routing
 baseline**, not a relocation-order exactness oracle. Do not patch or permute the
 MZ table to satisfy it.
+
+## v441 active TLINK switch surface
+
+The current packed frontier leaves only shared `snd_load` in program bytes and
+an unresolved linker/packer `R/T` surface. v441 therefore tests the remaining
+active TLINK 6.10 switches that could plausibly affect library extraction or
+segment/link organization without editing OMF or MZ bytes.
+
+The pinned linker binary itself exposes these help entries:
+
+- `/e` — ignore extended dictionaries;
+- `/E` — process extended dictionaries;
+- `/f` — inhibit optimizing far calls to near;
+- `/P[=dd]` — pack code segments.
+
+Starting from the retained v429 current OP/MAINE source trees, the replay
+changes only the response-file flags and relinks with the same objects and
+libraries:
+
+| Variant | OP result | MAINE result |
+| --- | --- | --- |
+| `/e` instead of `/E` | EXE/MAP/804 relocation order byte-identical | EXE/MAP/559 relocation order byte-identical |
+| no `/e` or `/E` | byte-identical | byte-identical |
+| `/P` | byte-identical | byte-identical |
+| `/f` | 1,221 program bytes differ; relocations 804→1050 | 1,215 program bytes differ; relocations 559→804 |
+
+Thus extended-library dictionaries and code-segment packing are inert for these
+already-selected link inputs. Far-call optimization is active, but disabling it
+changes a large amount of already target-equal code and changes the relocation
+site multiset, so it cannot explain the isolated packed `R/T` frontier.
+
+Private receipt SHA-256:
+`19c09864c81e461b362c871b8f398fdedc9451f837bb96c4bbd0cd881f606133`.
+
+This closes these **active TLINK 6.10** switch routes only. A different
+independently attested linker version or a real historical OMF boundary remains
+a separate hypothesis; v441 is not evidence for the lost original command
+line.
