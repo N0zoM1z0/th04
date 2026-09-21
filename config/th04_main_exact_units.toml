@@ -9057,25 +9057,6 @@ map_size = "0x19"
 target_file_offset = "0x10270"
 size = "0x19"
 
-# v421 candidate: complete maintained hybrid carpet producer. It stays
-# non-default and unaddressed until aggregate replay and explicit migration
-# supersede the v409/v410 physical partition without double counting.
-[[units]]
-id = "th04-main-carpet-lighting-v174"
-default_enabled = false
-repo_source = "src/main/stage/carpet_lighting.inl"
-source_mode = "replace"
-patch_path = "th04/main/stage/stages.cpp"
-scaffold_sha256 = "8a1081f83bcc6b0a52edf60e0f8be3f24bc4f9aa092bfb041b4f27cd752756f1"
-replace_offset = 1775
-replace_size = 1922
-replace_sha256 = "38eeca85c565a3a5b43f445c58f59cf1e669978db40cccce4e72cbb12593dc70"
-map_module = "th04/stages.cpp"
-map_mode = "contains"
-object_path = "obj/th04/stages.obj"
-target_file_offset = "0x1028A"
-size = "0x5A"
-
 # v175 candidate: recover the complete MAIN_0_TEXT player update/miss/render
 # cohort as two natural TC4J producers. Target relocation order motivates the
 # physical object order residual th04_main.asm -> pupdate.cpp -> prender.cpp.
@@ -12800,3 +12781,24 @@ object_path = "obj/th04/stages.obj"
 map_segment = "STAGES_TEXT"
 target_file_offset = "0x102DE"
 size = "0x06"
+# v421 aggregate ordering: apply all v409/v410 identity fragments against the
+# pristine scaffold first, then replace the complete carpet function with the
+# maintained hybrid candidate. The candidate remains unaddressed in units.csv.
+# v421 candidate: complete maintained hybrid carpet producer. It stays
+# non-default and unaddressed until aggregate replay and explicit migration
+# supersede the v409/v410 physical partition without double counting.
+[[units]]
+id = "th04-main-carpet-lighting-v174"
+default_enabled = true
+repo_source = "src/main/stage/carpet_lighting.inl"
+source_mode = "replace"
+patch_path = "th04/main/stage/stages.cpp"
+scaffold_sha256 = "8a1081f83bcc6b0a52edf60e0f8be3f24bc4f9aa092bfb041b4f27cd752756f1"
+replace_offset = 1775
+replace_size = 1922
+replace_sha256 = "38eeca85c565a3a5b43f445c58f59cf1e669978db40cccce4e72cbb12593dc70"
+map_module = "th04/stages.cpp"
+map_mode = "contains"
+object_path = "obj/th04/stages.obj"
+target_file_offset = "0x1028A"
+size = "0x5A"

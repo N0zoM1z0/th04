@@ -440,7 +440,16 @@ trees and passes with `failures=[]`. For both A and B, the candidate reports:
 Focused receipt SHA-256:
 `19377502e0dc68e13bb802b1c41c03c0f1cb2de7d4027868195bce41e9eae37e`.
 
-This is the first complete linked-exact carpet producer from maintained source,
-but it remains **candidate-state evidence**. No new exact-byte credit is granted
-until the default aggregate passes and the v409/v410 partition is explicitly
-superseded without overlap or double counting.
+This is the first complete linked-exact carpet producer from maintained source.
+The next candidate gate also passes: staged default aggregate
+`gpt-web-v421-carpet-hybrid-aggregate-candidate-001` selects **282 owners** and
+closes A/B with `failures=[]`. The carpet candidate remains raw/MAP/empty-
+relocation/OMF exact in both builds; both aggregate MAIN files are byte-identical
+with SHA-256
+`add464d80f0bca1ce290b43545f006a3be1e68455d8f527fb7f0780251863945`.
+Aggregate receipt SHA-256:
+`03524cae64d259b655ad06568a9c58e4df70cdb60358389c4979702fd044d8e0`.
+
+The unit still remains **candidate-state evidence**. No new exact-byte credit is
+granted until the v409/v410 partition is explicitly superseded without overlap
+or double counting and a post-migration aggregate passes.
