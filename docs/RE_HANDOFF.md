@@ -125,6 +125,12 @@ python3 scripts/audit_compat_dependencies.py --check
   order. These 24 entries are producer-closed; MAINE still stays at 299 global
   mismatches because `th04_maine.asm` must split into its target-attested
   139-entry `MAINE_01_TEXT` and 36-entry `SCORE_TEXT` owners.
+- v470 performs that split at the existing assembly segment boundaries. A
+  source-level MAINE_01 owner (139 kind-3), SCORE owner (36), and rest/data owner
+  keep the complete program image byte-identical; combined with v468 producers,
+  every global block through SCORE_TEXT is target-position exact. MAINE ordered
+  mismatch drops **299 -> 178** (381/559 same-index). Remaining MAINE R is only
+  BGIMAGE 8 plus internal FIXUPP order of MAINE_01 136 and SCORE 34.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -136,8 +142,9 @@ python3 scripts/audit_compat_dependencies.py --check
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
    Attack only BGIMAGE internal direction (8 relocation entries) and the
-   `hi_view` / `score_e` historical TU split (63 entries). MAINE producer direction is closed for `SND_LOAD_EXT` and `score_e+hi_end`;
-   next recover the `th04_maine.asm` MAINE_01_TEXT / SCORE_TEXT physical split.
+   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is now closed through SCORE_TEXT; next recover
+   internal producer/FIXUPP direction of the split MAINE_01/SCORE owners (plus
+   shared BGIMAGE direction).
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
    switch routes and pinned TASM5 option/version emulation are closed; do not
@@ -158,7 +165,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
