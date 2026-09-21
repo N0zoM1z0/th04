@@ -289,3 +289,36 @@ Receipt SHA-256:
 No physical byte ownership changes in v411. Carpet remains 67 exact + 23
 blocked bytes; the new result only closes the compiler-front-end explanation for
 the register-direction/MUL/shift subset.
+
+## v412 full-context natural register check
+
+v411 showed that isolated pseudo-register probes and both attested TC4J front
+ends prefer the non-target register-opcode directions. A remaining question was
+whether the real carpet function context — especially the neighboring inline-ASM
+barriers — changes TC4J's selection for the *ordinary* C++ statements between
+those barriers.
+
+`scripts/probes/probe_th04_carpet_natural_context.py` answers that without
+creating any new reconstruction owner. It materializes the pinned ReC98 revision
+twice, compiles only `th04/main/stage/stages.cpp` with the production TC4J
+profile, requires deterministic valid TC86 OMF, and inspects `STAGES_TEXT` at
+the six natural-statement offsets. Both cold compiles produce the same 0x204-byte
+segment and the same mismatches:
+
+| natural statement | target | TC4J in full carpet context |
+| --- | --- | --- |
+| `_SI = _AX` | `89 C6` | `8B F0` |
+| `_BX += _BX` | `01 DB` | `03 DB` |
+| `tile_image_vos = _AX` | `89 C3` | `8B D8` |
+| `int tile_x = 0` | `31 D2` | `33 D2` |
+| first `_DI = tile_x` | `89 D7` | `8B FA` |
+| second `_DI = tile_x` | `89 D7` | `8B FA` |
+
+Private receipt SHA-256:
+`e5df5aa3e5dc82f39151d7d88cf4366560059f61c55eecff42febb75e4c5b124`.
+
+A temporary exact-unit candidate matrix was also run before this dedicated
+probe and failed raw equality at the same six two-byte extents while passing
+MAP/relocation/object/determinism gates; it was deliberately removed rather
+than leaving six new provisional owners. v412 therefore changes no byte
+accounting: carpet remains 67 exact + 23 blocked bytes.
