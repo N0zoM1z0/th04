@@ -152,6 +152,11 @@ python3 scripts/audit_compat_dependencies.py --check
   MAINE_01 pragma. One high-address-first FIXUPP record makes indices 251..258
   target-exact and reduces MAINE ordered residual **176 -> 170**. Continue with
   following `sub_BB81`, whose target segment run is indices 259..273.
+- v475 recovers `sub_BB81()` as **0x577 raw-and-linked exact TC86 C++**,
+  including both compiler switch tables. The complete MAINE image stays
+  unchanged; target indices 259..273 become exact and ordered residual drops
+  **170 -> 157**. Only the adjacent 0x51 `verdict_animate()` TASM tail remains
+  in this verdict run before re-measuring the MAINE_01 producer frontier.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -163,8 +168,8 @@ python3 scripts/audit_compat_dependencies.py --check
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
    Attack only BGIMAGE internal direction (8 relocation entries) and the
-   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471-v474 recover the first 0x3FA verdict block as one linked-exact TC86
-   owner; continue `sub_BB81` and expand the verdict C++ producer
+   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471-v475 recover the verdict path through `sub_BB81`; continue the
+   adjacent 0x51 `verdict_animate()` tail and expand the same C++ producer
    to recover MAINE_01 internal FIXUPP direction, then SCORE
    and shared BGIMAGE direction.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation

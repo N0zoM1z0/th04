@@ -1,0 +1,237 @@
+#include "pc98.h"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/rank.h"
+#include "th02/hardware/frmdelay.h"
+#include "th02/v_colors.hpp"
+#include "th04/common.h"
+#include "th04/end/end.h"
+#include "th04/hardware/input.h"
+#include "th04/hardware/grppsafx.h"
+#include "th04/resident.hpp"
+
+extern uint32_t skill;
+extern unsigned char verdict_rank;
+extern unsigned char byte_124CC;
+extern unsigned char byte_124EF;
+extern unsigned char unk_124D3[30];
+extern unsigned char grEASY[5][8];
+
+extern "C" shiftjis_t aB_b_b_b_b_b_b[];
+extern "C" shiftjis_t aUqiUx[];
+extern "C" shiftjis_t aNPiuU_[];
+extern "C" shiftjis_t aGGxi[];
+extern "C" shiftjis_t aGGaogcpi[];
+extern "C" shiftjis_t aGqbGatbrmcj[];
+extern "C" shiftjis_t aIlcSObcj[];
+extern "C" shiftjis_t aGagcgegai[];
+extern "C" shiftjis_t aUU_gagcgeganNv[];
+extern "C" shiftjis_t aLcnzvv[];
+extern "C" shiftjis_t aPicacovCj[];
+extern "C" shiftjis_t aVavVVSrso[];
+extern "C" shiftjis_t aTimes[];
+extern "C" shiftjis_t aTimes_0[];
+extern "C" shiftjis_t aPoint[];
+extern "C" char a_ude_txt[];
+extern "C" shiftjis_t aBhbhbhbhbhbhu_[];
+extern "C" shiftjis_t aPicacovVVcvsfT[];
+
+void near sub_B81D(void);
+void pascal near graph_3_digit_put(screen_x_t left, screen_y_t top, uint16_t num);
+void pascal near skill_apply_and_graph_percentage_put(
+	screen_x_t left, screen_y_t top, uint16_t total, uint16_t share
+);
+void pascal near graph_fraction_of_million_put(
+	screen_x_t left, screen_y_t top, uint32_t num
+);
+void near sub_B9F2(void);
+
+#pragma option -a2
+#pragma codeseg MAINE_01_TEXT maine_01
+void near sub_BB81(void)
+{
+	uint32_t max_skill;
+	register int line;
+
+	graph_putsa_fx_func = FX_WEIGHT_BOLD;
+	graph_accesspage(0);
+	graph_showpage(0);
+	graph_putsa_fx(16, 48,  V_WHITE, aB_b_b_b_b_b_b);
+	graph_putsa_fx(16, 72,  V_WHITE, aUqiUx);
+	graph_putsa_fx(16, 96,  V_WHITE, aNPiuU_);
+	graph_putsa_fx(16, 120, V_WHITE, aGGxi);
+	graph_putsa_fx(16, 144, V_WHITE, aGGaogcpi);
+	graph_putsa_fx(16, 168, V_WHITE, aGqbGatbrmcj);
+	graph_putsa_fx(16, 192, V_WHITE, aIlcSObcj);
+	graph_putsa_fx(16, 216, V_WHITE, aGagcgegai);
+	graph_putsa_fx(16, 240, V_WHITE, aUU_gagcgeganNv);
+	graph_putsa_fx(16, 264, V_WHITE, aLcnzvv);
+	graph_putsa_fx(16, 288, V_WHITE, aPicacovCj);
+	graph_putsa_fx(16, 336, V_WHITE, aVavVVSrso);
+
+	verdict_rank = (
+		(resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank
+	);
+	graph_gaiji_puts(176, 72, GAIJI_W, &grEASY[verdict_rank][0], 14);
+	sub_B81D();
+	graph_3_digit_put(240, 120, resident->miss_count);
+	graph_3_digit_put(240, 144, resident->bombs_used);
+	graph_putsa_fx(288, 120, 14, aTimes);
+	graph_putsa_fx(288, 144, 14, aTimes_0);
+
+	byte_124CC = 1;
+	if(resident->stage != STAGE_EXTRA) {
+		if(resident->end_sequence == ES_GOOD) {
+			resident->std_frames = 44000;
+		}
+		skill_apply_and_graph_percentage_put(192, 168, 44000, resident->std_frames);
+	} else {
+		if(resident->end_sequence == ES_EXTRA) {
+			resident->std_frames = 12000;
+		}
+		skill_apply_and_graph_percentage_put(192, 168, 12000, resident->std_frames);
+	}
+	byte_124CC = 0;
+	skill_apply_and_graph_percentage_put(
+		192, 192, resident->enemies_gone, resident->enemies_killed
+	);
+	skill_apply_and_graph_percentage_put(
+		192, 216, resident->items_spawned, resident->items_collected
+	);
+	skill_apply_and_graph_percentage_put(
+		192, 240,
+		resident->point_items_collected,
+		resident->max_valued_point_items_collected
+	);
+	sub_B9F2();
+	skill_apply_and_graph_percentage_put(
+		192, 288, (resident->frames / 10), (resident->slow_frames / 10)
+	);
+
+	reinterpret_cast<long &>(skill) /= 5;
+	if(resident->score_last.digits[7] >= 9) {
+		skill += 600000UL;
+	} else {
+		skill += (static_cast<uint32_t>(resident->score_last.digits[6]) * 10000UL);
+		if(resident->score_last.digits[7] > 3) {
+			skill += (
+				static_cast<uint32_t>(resident->score_last.digits[7] - 3) * 100000UL
+			);
+		}
+	}
+
+	switch(verdict_rank) {
+	case RANK_EASY:
+		skill -= 50000UL;
+		max_skill = 800000UL;
+		break;
+	case RANK_NORMAL:
+		max_skill = 1000000UL;
+		break;
+	case RANK_HARD:
+		skill += 150000UL;
+		max_skill = 1200000UL;
+		break;
+	case RANK_LUNATIC:
+		skill += 300000UL;
+		max_skill = 1400000UL;
+		break;
+	case RANK_EXTRA:
+		skill += 450000UL;
+		max_skill = 1500000UL;
+		break;
+	}
+
+	switch(resident->credit_lives) {
+	case 1:
+		skill += 50000UL;
+		max_skill += 100000UL;
+		break;
+	case 2:
+		skill += 25000UL;
+		max_skill += 50000UL;
+		break;
+	case 3:
+		break;
+	case 4:
+		max_skill -= 25000UL;
+		break;
+	case 5:
+		max_skill -= 50000UL;
+		break;
+	case 6:
+		max_skill -= 75000UL;
+		break;
+	}
+
+	switch(resident->credit_bombs) {
+	case 0:
+		skill += 50000UL;
+		max_skill += 100000UL;
+		break;
+	case 1:
+		skill += 20000UL;
+		max_skill += 50000UL;
+		break;
+	}
+	if(!resident->turbo_mode) {
+		skill -= 100000UL;
+	}
+	if(resident->miss_count >= 15) {
+		skill -= 300000UL;
+	} else {
+		skill -= (static_cast<uint32_t>(resident->miss_count) * 20000UL);
+	}
+	if(resident->bombs_used >= 30) {
+		skill -= 90000UL;
+	} else {
+		skill -= (static_cast<uint32_t>(resident->bombs_used) * 3000UL);
+	}
+
+	if(resident->end_sequence < ES_EXTRA) {
+		if(verdict_rank != RANK_EXTRA) {
+			reinterpret_cast<long &>(skill) /= 2;
+		} else {
+			skill -= 200000UL;
+		}
+	} else if(resident->end_sequence == ES_BAD) {
+		max_skill -= 100000UL;
+	}
+
+	if(static_cast<int32_t>(skill) < 0) {
+		skill = 0;
+	} else if(skill > max_skill) {
+		skill = max_skill;
+	}
+
+	if((resident->frames >> 1) > resident->slow_frames) {
+		graph_fraction_of_million_put(192, 336, skill);
+		graph_putsa_fx(288, 336, 14, aPoint);
+		file_ropen(a_ude_txt);
+		if(static_cast<int32_t>(skill) < 1500000) {
+			if(skill == 0) {
+				line = 25;
+			} else if(static_cast<int32_t>(skill) < 1050000) {
+				line = (24 - (static_cast<int32_t>(skill) / 50000));
+			} else if(static_cast<int32_t>(skill) < 1200000) {
+				line = 3;
+			} else if(static_cast<int32_t>(skill) < 1350000) {
+				line = 2;
+			} else {
+				line = 1;
+			}
+			file_seek((line * 30), SEEK_SET);
+		}
+		file_read(unk_124D3, 30);
+		byte_124EF = 0;
+		file_close();
+		frame_delay(64);
+		graph_putsa_fx(64, 360, V_WHITE, reinterpret_cast<shiftjis_t *>(unk_124D3));
+	} else {
+		graph_putsa_fx(192, 336, 14, aBhbhbhbhbhbhu_);
+		graph_putsa_fx(64, 360, V_WHITE, aPicacovVVcvsfT);
+	}
+	input_wait_for_change(0);
+	palette_black_out(2);
+}
+#pragma codeseg

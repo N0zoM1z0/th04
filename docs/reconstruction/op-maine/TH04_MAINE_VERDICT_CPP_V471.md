@@ -289,3 +289,56 @@ segment relocations at indices `259..273` already form a high-address-first
 run, so recovering that function as a natural TC86 owner should be the next
 bounded producer test. Do not alter the MZ table or insert switch padding by
 hand.
+
+## v475 `sub_BB81()`
+
+The next MAINE_01 verdict function is substantially larger: load
+`0xBB81..0xC0F7`, exactly `0x577` bytes. It includes the full verdict page setup,
+percentage application, skill normalization, rank/lives/bombs switches, score
+clamping, text-file lookup, and final fade/input wait.
+
+A natural TC86 source recovers the complete function **1399 / 1399 raw CODE
+bytes exactly**, including both compiler-generated switch tables. Several source
+shape details are compiler-observed rather than hand-coded byte controls:
+
+- ternary assignment to `verdict_rank` keeps the value in `AL` across the global
+  store and immediate `grEASY` lookup;
+- `reinterpret_cast<long &>(skill) /= N` selects the target signed compound
+  division load order while preserving the maintained `uint32_t` global ABI;
+- `credit_bombs` is naturally a `switch`;
+- the end-sequence condition is written in target control-flow order;
+- `#pragma option -a2` preserves the target table/alignment surface.
+
+The v475 source split replaces only this function and leaves the final
+`verdict_animate()` body as an `0x51`-byte TASM tail. Existing strings and data
+labels remain physically owned by the v470 rest/data object and are exposed to
+TC86 through zero-byte aliases; the near `sub_BB81` public name similarly only
+bridges the new object boundary.
+
+Both A/B cold replays produce:
+
+- MAINE SHA-256
+  `10633c16550b1f82cbe15b9ec92abd92aad68649d4ce4257e8b1b7a0c695c161`;
+- MAP SHA-256
+  `9d831202195630aeeb07842da439c01e81debdb5c8548c8adb12f194fc989332`;
+- unchanged program-image SHA-256
+  `0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`;
+- raw BB81 SHA-256
+  `303a7c12d21ab36596070997e0ed6040c5c1f4cead6a8e873ceb9a3355bcb672`;
+- linked BB81 SHA-256
+  `8db6709abadd107aca1437a89d4c050af7b6f4a76d325490b5e86f171e9ecc00`;
+- target-equal 559-site relocation multiset.
+
+The first TC86 FIXUPP record contributes 15 segment relocations in descending
+code-address order, making target indices `259..273` exact. Ordered MAINE
+residual drops from **170 to 157** (`402 / 559` same-index). The remaining
+`0x51` verdict_animate TASM owner still perturbs indices `274..283`.
+
+Private receipt SHA-256:
+`28080aaf0d06e4fc7101ac7e380b118c4beac50e36514d4aad5bdcf1caba412a`.
+
+## Updated next work after v475
+
+Recover the adjacent `verdict_animate()` function into the same TC86 verdict
+owner. Once that final `0x51` tail is natural C++, re-measure the remaining
+MAINE_01 internal FIXUPP residual before moving on to SCORE_TEXT and BGIMAGE.
