@@ -342,3 +342,37 @@ Private receipt SHA-256:
 Recover the adjacent `verdict_animate()` function into the same TC86 verdict
 owner. Once that final `0x51` tail is natural C++, re-measure the remaining
 MAINE_01 internal FIXUPP residual before moving on to SCORE_TEXT and BGIMAGE.
+
+## v476 fused `sub_BB81()` + `verdict_animate()`
+
+`verdict_animate()` is the final adjacent MAINE_01 tail, exactly `0x51` bytes.
+A direct TC86 spelling (`PaletteTone = 0`, PI load/apply/put/free, page copy,
+black-in, `sub_BB81()`) emits all 81 raw CODE bytes exactly.
+
+Keeping that function in a separate C++ object is insufficient for target
+relocation order: TLINK necessarily finishes both `sub_BB81` FIXUPP records
+before processing the later object. The target instead requires the seven
+higher-address `verdict_animate` segment fixups before `sub_BB81`'s second
+10-entry record. Fusing the two adjacent functions into one TC86 TU gives that
+ordering naturally.
+
+The fused owner is `0x5C8` bytes. Compared with the old v475 two-owner raw CODE,
+only offsets `0x5C4..0x5C5` differ: same-TU TC86 writes the direct near-call
+displacement to `sub_BB81`, while the split TASM owner carried a zero addend plus
+FIXUPP. Linked bytes are identical.
+
+Both A/B replays produce MAINE SHA-256
+`9fc54212d78f113dd2869562976860e2b9d3d0fe96e41ee5361dc19c1e0c9aeb`,
+MAP SHA-256
+`c87f8868d18fb36e934c3a73bf3618fad2bf1dcf46e94ee204273d2ebd8cc811`,
+and target-exact fused linked slice SHA-256
+`6c4abcf2cf53fdd2e4132233917546de9ff3423b460ca3f392bd8941085c531e`.
+The complete program image is unchanged and the 559-site relocation multiset
+remains exact. Target indices `274..290` become exact, reducing ordered residual
+from **157 to 140** (`419 / 559` same-index).
+
+Private receipt SHA-256:
+`54a36d90781ceaa344f71e36692a42ec439dabf0b2a3c5845137f004e6389733`.
+
+The verdict run is now fully source-recovered. Continue earlier MAINE_01 producer
+recovery before SCORE_TEXT and shared BGIMAGE direction.

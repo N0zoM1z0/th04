@@ -157,6 +157,10 @@ python3 scripts/audit_compat_dependencies.py --check
   unchanged; target indices 259..273 become exact and ordered residual drops
   **170 -> 157**. Only the adjacent 0x51 `verdict_animate()` TASM tail remains
   in this verdict run before re-measuring the MAINE_01 producer frontier.
+- v476 recovers `verdict_animate()` as 81/81 raw exact and fuses it with
+  `sub_BB81` into one 0x5C8 TC86 TU. Linked bytes remain exact; target indices
+  274..290 become exact and MAINE ordered residual drops **157 -> 140**. The
+  verdict run is now fully C++; continue earlier MAINE_01 producer recovery.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
