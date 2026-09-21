@@ -247,3 +247,69 @@ TC86 SCORE_TEXT translation unit. Do not preserve the v482 physical split as a
 final topology and do not permute relocation entries. Once the high-address
 functions join this prefix, TC86 should be able to emit the complete SCORE_TEXT
 segment-fixup stream in target order.
+
+## v483 `regist_menu()` compiler frontier
+
+The next SCORE_TEXT function is the `0x39C`-byte registration menu at load
+`0xC814`. Cross-game TH02 source supplies the high-level registration state
+machine; TH04 target code fixes the game-specific PI background, dual-character
+score loading, slow-mode warning, clear-bit update, input handling, and alphabet
+layout.
+
+A natural TC86 source reproduces the target function shape extremely closely:
+
+- exact `ENTER 0xA` frame and SI/DI allocation;
+- exact PI/sound/rank/playchar setup;
+- exact 3x17 alphabet initialization;
+- exact four-direction cursor movement and wrapping;
+- exact 9-entry character switch table;
+- exact name editing, bomb/cancel handling, save/wait/cleanup flow;
+- exact total function size `0x39C`.
+
+The A/B replay fixes the compiler frontier at **920 / 924 raw CODE bytes**.
+Candidate SHA-256 is
+`d9481b34f6872fc507a9053549ad1e05a2a0dbecbab40a5809358d5693becb02`;
+the v478 reference function SHA-256 is
+`e8fdf2245ad5a741ff86603daf612ecdd36625e724f34b6f2d807ed9ae943340`.
+
+Only four raw bytes remain different, all at function offsets
+`0x345, 0x346, 0x348, 0x349`. They are one zero-test instruction:
+
+```text
+candidate: A1 ?? ?? 0B C0    MOV AX,[key_det] / OR AX,AX
+reference: 83 3E ?? ?? 00    CMP word ptr [key_det],0
+```
+
+The following `JZ` and otherwise-redundant `JMP` are already exact in the best
+source shape. Structured `if(key_det == 0)` produces the direct-memory `CMP` but
+TC86's `-O` jump optimizer removes the `JMP`; a one-case `switch(key_det)` keeps
+the target double jump but selects `MOV/OR`.
+
+### Bounded negative compiler surface
+
+Local probes intentionally kept the remaining 920 exact bytes fixed while
+checking only plausible compiler/source mechanisms. None closes the four-byte
+site without perturbing already-exact code:
+
+- ordinary `if` / goto / do / while / for / tail-merge spellings;
+- signed, unsigned, union, struct, bitfield, lvalue, and volatile switch forms;
+- empty and meaningful repeated-scope variable declarations;
+- whole-function `-O-`, `-O- -y`, and global `-Z-`;
+- normal `-O -y` and local `#pragma option -Z-`.
+
+This matches the repo-local TC86 research: `-O` performs jump merging, while
+`-O- -y` provides only a different partial optimizer surface. Neither matches
+this function as a whole.
+
+The complete natural C++ prefix now spans `0x7FE` bytes. Relative to the v478
+TASM owner it has only six raw differences: the four bytes above plus the known
+`0x2F5..0x2F6` same-segment near-call addend that TLINK already resolves exact.
+The remaining assembly tail is `0xCA` bytes: `_egc_start_copy_inlined` plus the
+private EGC rectangle-copy helper.
+
+Private receipt SHA-256:
+`ea6867099f1ecdb24a40e701132fb9be8470d96679854257c0f8826965f21558`.
+
+**No exact or packed-file credit is granted by v483.** Continue the EGC tail and
+SCORE record-ownership analysis independently; do not hand-encode the remaining
+zero-test instruction.
