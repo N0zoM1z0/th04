@@ -116,3 +116,25 @@ OP/MAINE candidate MZ residual, and
 [v232](TH04_DIET_RELOCATION_OWNERS_V232.md) projects ordered relocations onto
 candidate MAP owners. ZUN's ReC98-overlay candidate packs raw equal, but
 payload equality alone still grants no authored-source credit.
+
+## v401 VS.OBJ data-owner follow-up
+
+v401 restores the independently historical master.lib `VS.OBJ` physical DATA/BSS
+owner on top of the v400 CODE-object topology. This removes the last two
+master.lib alignment residuals without copying target bytes or adding explicit
+padding.
+
+| Artifact | v400 split candidate | v401 VS-object candidate | Remaining raw positions |
+| --- | ---: | ---: | --- |
+| `OP.EXE` | 5 bytes | 4 bytes | `0xBFB7`, `0xBFB9`, `0xDE8B..0xDE8C` |
+| `MAINE.EXE` | 3 bytes | 2 bytes | `0xD1D3..0xD1D4` |
+
+Both payload lengths and target-equal relocation multisets remain unchanged.
+OP `0xFB97` and MAINE `0xE933` are therefore closed as historical master.lib
+VS-object ownership. The A/B replay receipt SHA-256 is
+`c36fb2656a3bb9435e5c1c32e2d485f890318337b96eb56878255358f3010faf`.
+
+The packed frontier is now byte-localized to two producer questions only:
+OP music's two equivalent XOR-register encoding directions, and the shared
+`snd_load` `MOV BX,AX` encoding (`89 C3` target versus `8B D8` candidate),
+which accounts for two bytes in each OP/MAINE payload.

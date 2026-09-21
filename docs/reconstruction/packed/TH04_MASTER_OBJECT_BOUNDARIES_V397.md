@@ -114,3 +114,43 @@ does **not** promote OP or MAINE to exact, establish historical source
 filenames, recover the original unpacked relocation-table order, or solve the
 remaining DATA alignment, OP music opcode-direction, or shared `snd_load`
 residuals.
+
+## v401 historical VS.OBJ data ownership
+
+v400 removed the four CODE seams but left one master-owned DATA mismatch in
+each artifact: OP payload `0xFB97` and MAINE payload `0xE933`, both target
+`90` versus candidate `00`. v401 tests whether those bytes belong to an
+independent historical master.lib object rather than to the monolithic game
+assembler source.
+
+`scripts/probes/probe_th04_master_vs_object.py` starts from the hash-pinned
+v400 topology candidate, verifies the independent `bin/masters.lib` archive
+(SHA-256 `6be41dbcfcf4504977165ccc44443525a29a01f85a1580e6ad0c620bf802faf6`),
+and extracts its historical `VS.OBJ` (SHA-256
+`3bb280d22f01581b08c4fed605f09c198f54cde8b9b6767a4fef5a09953a8318`).
+The surrounding monolithic DATA/BSS ranges are split into separate maintained
+tail objects; the historical library object is linked between the head and
+tail contributions. No target byte or explicit alignment directive is added.
+
+The result is deterministic in two copied builds. OP drops from 5 to 4 payload
+differences, removing `0xFB97`; MAINE drops from 3 to 2, removing `0xE933`.
+Payload lengths remain `0x10DA4` and `0xF3CE`, and the 804-site / 559-site
+relocation multisets remain target-equal. A/B executable SHA-256 values are
+`3000d2c113cc4a7eb4d2f79cdb9c5cebbec1d7180e699525dafe86fbb8af3d5a`
+(OP) and
+`8b4a3bb3e6985f729113967398b35cff2c9c4d32860b9034fc84b839e8862553`
+(MAINE).
+
+The producer-version control matters: the historical `VS.OBJ` independently
+contains an eight-byte VS DATA contribution whose tail is `90`, while pinned
+TASM32 5.0 reassembly of the same maintained `vs[data].asm` / `vs[bss].asm`
+source produces a zero-filled tail. Thus the recovered bytes are explained by
+historical library-object identity, not by choosing a desired fill value.
+
+Private receipt SHA-256:
+`c36fb2656a3bb9435e5c1c32e2d485f890318337b96eb56878255358f3010faf`.
+
+This closes the two remaining master.lib DATA alignment residuals as library
+physical ownership. It does not grant authored reconstruction credit, prove
+packed-file equality, recover the original unpacked relocation-table order, or
+resolve OP music's two XOR direction bytes or the shared `snd_load` `89 C3`.

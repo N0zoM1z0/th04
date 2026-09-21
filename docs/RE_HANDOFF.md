@@ -38,7 +38,7 @@ the accepted extent.
   `snd_load`.
 - MAIN has **no provisional authored C/C++ boundaries**.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet.
-- OP/MAINE v400 object-topology replay removes all four former master.lib CODE alignment residuals without explicit padding: OP decoded-payload differences are now 5 bytes and MAINE 3 bytes in this diagnostic candidate; both retain target-equal relocation multisets.
+- OP/MAINE v400/v401 physical-object replay closes all six former master.lib CODE/DATA alignment residuals without explicit padding: OP decoded-payload differences are now 4 bytes and MAINE 2 bytes; both retain target-equal relocation multisets.
 - `compat/rec98` migration is closed: 0 forwarders, 0 include sites,
   0 product files.
 
@@ -49,10 +49,10 @@ the accepted extent.
    MOV BX,AX encoding.
 2. **Keep provenance gates strict.** Current corpus/cross-game evidence does
    not justify target-derived inline assembly for any of the three blockers.
-3. **Continue OP/MAINE packed closure from v400.** The four master.lib
-   CODE seams are closed by real OMF object boundaries. Remaining decoded
-   payload residuals are OP music XOR direction (2 bytes), shared `snd_load`
-   (2 bytes per artifact), and one DATA alignment byte in each artifact.
+3. **Continue OP/MAINE packed closure from v401.** The four master.lib CODE
+   seams and two master.lib DATA seams are closed by real historical object
+   ownership. Remaining decoded payload residuals are only OP music XOR
+   direction (2 bytes) and shared `snd_load` (2 bytes per artifact).
 4. **Add deterministic DOSBox-X runtime scenarios** after standalone build/link
    closure can produce the artifacts under test.
 
@@ -78,6 +78,7 @@ active:
 - `.analysis/gpt-web/v396-final-opcode-corpus-001`
 - `.analysis/gpt-web/v397-master-object-boundaries-001`
 - `.analysis/gpt-web/v400-master-object-split-replay-001`
+- `.analysis/gpt-web/v401-master-vs-object-replay-001`
 - `.analysis/gpt-web/v400-master-object-split-baseline-001`
 
 Other current v397 object/listing controls may remain expanded because they are
