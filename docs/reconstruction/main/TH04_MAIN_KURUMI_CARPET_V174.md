@@ -322,3 +322,24 @@ probe and failed raw equality at the same six two-byte extents while passing
 MAP/relocation/object/determinism gates; it was deliberately removed rather
 than leaving six new provisional owners. v412 therefore changes no byte
 accounting: carpet remains 67 exact + 23 blocked bytes.
+
+## v417 unsigned multiplication source forms
+
+The v411 register-surface probe established that ordinary `_AX = (_AX * _BX)`
+selects signed one-operand `IMUL BX` (`F7 EB`), while the target uses unsigned
+`MUL BX` (`F7 E3`) at both carpet index calculations. v417 tests whether this is
+simply a missing source signedness or product-width distinction.
+
+`probe_tc4_unsigned_mul_forms.py` compiles five type-correct natural forms under
+the pinned production TCC profile. Direct low-16-bit multiplication and explicit
+`unsigned int` casts both remain `F7 EB`. Unsigned local variables instead spill
+or occupy other registers and select memory/register `IMUL` forms. Finally, when
+the complete unsigned 32-bit product is observable, TC4J emits 386
+`MOVZX / IMUL / SHLD` code rather than the 16-bit `MUL` instruction.
+
+None of the five forms contains target `F7 E3`. Private receipt SHA-256:
+`ab098fd5eb994b5a6dd9b16bbd5e3b45f8e619d41b4720302e24d50cdd11a06d`.
+
+This closes the signedness/product-width source hypothesis for the two remaining
+carpet `MUL BX` sites. Both physical owners remain blocked; the 27-byte MAIN gap
+is unchanged and no inline-assembly provenance is inferred.
