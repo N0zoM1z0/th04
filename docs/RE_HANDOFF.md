@@ -51,6 +51,12 @@ python3 scripts/audit_compat_dependencies.py --check
   ordered indices differ at **223 / 804** OP entries and **299 / 559** MAINE
   entries. The changed owner set is now localized; next packed work should test
   physical segment/object cuts, not the v231 candidate-control ordering.
+- v430 localizes the v228 restored MZ zero-tail EOF to the end of the shared
+  MASTER.LIB BGM BSS (`_snd_load_fn`, exactly `0xC6` after `timerorg`) in both
+  OP and MAINE. Independent historical `b_data.OBJ` has that exact `0xC6` BSS
+  layout but **no BSS LEDATA/LIDATA**, so do not materialize the v228 zero tail
+  in source merely to imitate a DIET-restored preimage. Historical pre-DIET
+  MZ length/minalloc remain unobserved.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -59,11 +65,13 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from the v429 target-derived routing
-   baseline. Test natural physical cuts for OP `hi_view` / OP music and MAINE
-   `MAINE_01_TEXT` / `SCORE_TEXT`, plus the already-known BGIMAGE FIXUPP
-   direction. Treat both v231 candidate-inverse and v228 target-restored order
-   as diagnostics; historical pre-DIET relocation order remains unobserved.
+2. **OP/MAINE packed closure:** continue from v429/v430. Treat v228 restored
+   relocation order and zero-tail/minalloc as target-derived diagnostics, not
+   historical TLINK requirements. Prefer independently supported physical OMF
+   ownership (especially historical MASTER.LIB members) and natural producer
+   order; test OP `hi_view` / OP music and MAINE segment ownership only where a
+   real object interface can be justified. Historical pre-DIET MZ remains
+   unobserved.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 

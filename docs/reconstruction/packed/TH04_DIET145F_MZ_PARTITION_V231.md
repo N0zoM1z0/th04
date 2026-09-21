@@ -63,3 +63,45 @@ and are forbidden as product source or exact-match evidence. Next resolve
 the seven/five natural payload bytes and recover the compiler/linker cause of
 relocation order and `T` topology. The original pre-DIET target MZ remains
 unobserved; alternate preimages of the packed target are not excluded.
+
+## v430 historical BGM BSS check
+
+The v228 target-derived restored views have a striking `T` boundary that was
+not localized in v231. Relative to the current v427/v425 topology candidates,
+OP gains `0xC9C` file-backed zero bytes and MAINE gains `0xC94`; in both cases
+minimum allocation falls by 202 paragraphs. The restored program-image EOF is:
+
+| Artifact | Restored EOF | Current MAP public at EOF | `timerorg` | Span |
+| --- | ---: | --- | ---: | ---: |
+| OP | `0x11A40` | `_snd_load_fn` | `0x1197A` | `0xC6` |
+| MAINE | `0x10062` | `_snd_load_fn` | `0x0FF9C` | `0xC6` |
+
+That `0xC6` span is exactly the maintained `libs/master.lib/bgm[bss].asm`
+layout: `timerorg`, `part`, then `esound`; `_snd_load_fn` begins immediately
+after it. This initially makes the v228 zero tail look like a plausible BGM-BSS
+materialization boundary.
+
+v430 checks that interpretation against the independent historical
+`_reference/ReC98/bin/masters.lib`, rather than changing source to fit the
+restored image. Pinned TLIB extracts `b_data.OBJ` SHA-256
+`e85c6d60229b3137b3c9c32228e3744577c74fd28e36f53712018a2d9007e688`.
+Its OMF has:
+
+- `_DATA` length `0x11C`, with one LEDATA record;
+- `_BSS` length **`0xC6`**;
+- `_BSS` publics `timerorg=0`, `part/_bgm_part=4`,
+  `esound/_bgm_esound=0x46`;
+- **zero `_BSS` LEDATA and zero `_BSS` LIDATA records**.
+
+So the historical library object independently confirms the same BGM BSS shape
+while also confirming that this state was genuinely uninitialized in OMF. It
+does **not** support rewriting that BSS as initialized zero data just because
+DIET `-RA` emits a repackable target-derived view whose EOF lands there.
+
+Private receipt SHA-256:
+`23ac23e2ddf3111a510eeb048c25978b6b35ebeeda4610da24b7e9873d4db1e3`.
+
+This strengthens the existing v231 limit: the restored `T` surface is useful
+for understanding one DIET preimage, but historical pre-DIET TLINK file length
+and `minalloc` remain unobserved. A future packed closure must explain raw DIET
+output without treating v228's zero tail as an authored-source requirement.
