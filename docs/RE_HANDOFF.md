@@ -111,6 +111,13 @@ python3 scripts/audit_compat_dependencies.py --check
 - v465 recovers `zunsoft_palette_update_and_show()` as 65/65 raw-and-linked
   exact natural C++. The TC86 owner is now 0x1F0 bytes with nine descending
   segment FIXUPPs; only `zunsoft_animate()` remains as a 0x2A0 TASM tail.
+- v466 completes `zunsoft_animate()` and the entire 0x490-byte ZUNSOFT owner
+  as one TC86 C++ TU. Linked owner bytes are target-exact; all 35 OP-music
+  relocation entries at indices 271..305 are now target-index exact without MZ
+  edits. OP ordered residual drops **105 -> 71**: BGIMAGE 8 plus
+  `score_e`/`hi_view` 63. `#pragma option -a2` naturally supplies the switch-table
+  pad; the exact historical spelling of the adjacent alive/age 16-bit zero
+  statement remains a source-text caveat only, not a linked-byte blocker.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -119,11 +126,11 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from v461 for OP and v448 for MAINE.
-   OP global owner order is aligned through OP music. v463 proves the first
-   0x84 ZUNSOFT function as linked-exact TC86 C++; continue reconstructing the
-   remaining 0x2A0 ZUNSOFT C++ owner (`zunsoft_animate`), then BGIMAGE internal direction and the
-   `hi_view` / `score_e` historical TU split. MAINE still needs its monolith interleavings.
+2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
+   OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
+   Attack only BGIMAGE internal direction (8 relocation entries) and the
+   `hi_view` / `score_e` historical TU split (63 entries). MAINE still needs its
+   monolith interleavings.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
    switch routes and pinned TASM5 option/version emulation are closed; do not
@@ -144,7 +151,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v465. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 

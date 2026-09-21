@@ -167,3 +167,74 @@ Only the final `0x2A0` animate body remains as a separate TASM producer.
 
 Private receipt SHA-256:
 `d083f02938b3e2deeb53fb65ced27118724f55cee4364eb0334514f0389ba543`.
+
+## v466 complete TC86 C++ owner
+
+The final `zunsoft_animate()` body and its compiler-generated sparse-switch
+tables occupy OP-music offset `0x1F0..0x48F` (`0x2A0` bytes). The target is a
+170-frame animation, with switch cases at frames
+`0, 16, 24, 32, 40, 44, 48, 52, 56, 60, 64, 68`.
+
+A natural TC86 source shape recovers the target compiler structure:
+
+- `ENTER 8`, with four byte state locals, one near `pyro_t *`, and the
+  compiler's word spill for the sparse switch;
+- `SI` for the palette / pyro initialization loops and `DI` for the frame loop;
+- ordinary PI, bgimage, sound, input, palette, and page-flip APIs;
+- an ordinary sparse `switch(frame)`. Borland keeps case-body source order,
+  while emitting its own sorted value/jump tables;
+- `#pragma option -a2`, already used elsewhere in the ReC98 C++ tree, which
+  naturally inserts the target one-byte pad after the near `RET` so the switch
+  table begins on an even address;
+- an `if(fade_out > 0) ... else goto ret` merge, which naturally makes TC86
+  reload `fade_out` after the store, reproducing the target's otherwise
+  redundant `MOV AL,[BP-4]`;
+- one 16-bit zero store over the adjacent `alive` / `age` bytes, reproducing the
+  target `MOV word ptr [BX],0`. This is valid ordinary C++ producer evidence,
+  but the exact historical spelling of that single statement remains unknown.
+
+The full replay also refines the first function's ABI. Declaring the constructor
+as
+
+```cpp
+void pascal near zunsoft_pyro_new(
+    int origin_y, int origin_x, int n, char patnum_base
+);
+```
+
+preserves the previously exact 0x84 linked body (131/132 raw bytes already
+match, with only the local `_pyros` addend differing) and naturally explains
+why animate's constant coordinates compile to the target 32-bit immediate
+pushes. This refines the source shape without invalidating the v463 linked-exact
+observation.
+
+`probe_th04_zunsoft_animate_cpp_v466.py` cold-replays the entire path twice from
+the retained v402 source snapshot. It removes the old TASM physical owner and
+lets one TC86 object own all four functions. Both builds produce:
+
+- OP SHA-256
+  `310ad3af095ba29067f264acbd5c88ed320d64f07bf9d315336b592fef8b5192`;
+- MAP SHA-256
+  `e8a3813d4a369fadda19582237e2066680a28353e5b6acc9e23e0925be122a95`;
+- exact linked 0x490-byte ZUNSOFT owner SHA-256
+  `c0b9629f17aaa316af5b332cd6883e0f119f956ff2cfa64892dc067c3281c23e`;
+- the complete v461 OP program image unchanged, retaining only the shared
+  two-byte `snd_load` payload residual versus the target;
+- the same target-equal 804-site relocation multiset.
+
+At raw OMF CODE level only eight bytes differ from the former TASM owner, at
+`0x1F, 0x8B, 0x2BF, 0x2D3, 0x303, 0x30C, 0x315, 0x31E`. All eight are ordinary
+kind-1 local offset-FIXUPP addends for data that now lives in the same C++ TU;
+the old external-reference TASM owner contains zero placeholders there. TLINK
+resolves every one to the identical linked byte stream.
+
+Most importantly, all **35 / 35** OP-music segment relocations at MZ indices
+`271..305` now equal the v228 target-constrained order naturally. No relocation
+entry is permuted or rewritten. The ordered OP residual drops from **105 to
+71**, leaving exactly:
+
+- BGIMAGE: indices `186..193` (8 entries);
+- `score_e` / `hi_view`: indices `403..465` (63 entries).
+
+Private receipt SHA-256:
+`44435a1005c7709e96e706af0b872c373ba6e97cfc9ecc63ea93c917354f69c1`.

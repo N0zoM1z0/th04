@@ -417,3 +417,23 @@ Private receipt SHA-256:
 This grants layout/producer evidence only. It does not promote OP authored
 functions, resolve the shared two-byte `snd_load` code residual, or close packed
 `T`/`minalloc` provenance.
+
+## v466 OP music owner closure
+
+v463-v465 progressively recovered the first three functions from the former
+`th04/zunsoft.asm` physical owner as linked-exact TC86 C++. v466 completes
+`zunsoft_animate()` and removes the TASM OP-music owner entirely.
+
+The resulting single TC86 `OP_MUSIC_TEXT` contribution is exactly `0x490`
+bytes and links byte-for-byte to the target owner at load `0xBA45`. Its 35
+segment relocations occupy MZ indices `271..305` in exactly the v228
+order-preserving target sequence. The complete OP program image is unchanged
+from v461 and the 804-site relocation multiset remains exact.
+
+Therefore the OP ordered relocation residual falls **105 -> 71**. Remaining
+indices are only `186..193` (BGIMAGE) and `403..465` (`score_e` / `hi_view`).
+The OP-music reversal is closed by a natural compiler producer and must not be
+reopened as a TASM option or MZ-table permutation problem.
+
+Replay receipt SHA-256:
+`44435a1005c7709e96e706af0b872c373ba6e97cfc9ecc63ea93c917354f69c1`.

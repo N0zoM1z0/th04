@@ -1,0 +1,109 @@
+#pragma option -a2
+#if (GAME == 4)
+#pragma codeseg OP_MUSIC_TEXT op_01
+void near zunsoft_animate(void)
+{
+	unsigned char page;
+	bool skip;
+	unsigned char fade_in;
+	unsigned char fade_out;
+	pyro_t near *pyro;
+	register int i;
+	register int frame;
+
+	skip = false;
+	fade_in = 0;
+	fade_out = 100;
+	PaletteTone = 0;
+	palette_show();
+	graph_accesspage(1);
+	pi_load(0, zun00_pi);
+	pi_palette_apply(0);
+	pi_put_8(0, 0, 0);
+	pi_free(0);
+	graph_copy_page(0);
+	bgimage_snap();
+	graph_accesspage(1);
+	graph_clear();
+	graph_accesspage(0);
+	graph_clear();
+
+	for(i = 0; i < 15; i++) {
+		zunsoft_palette[i].c.r = Palettes[i].c.r;
+		zunsoft_palette[i].c.g = Palettes[i].c.g;
+		zunsoft_palette[i].c.b = Palettes[i].c.b;
+		Palettes[i].c.r = 0;
+		Palettes[i].c.g = 0;
+		Palettes[i].c.b = 0;
+	}
+	snd_load(logo, SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+
+	pyro = pyros;
+	for(i = 0; i < 256; i++, pyro++) {
+		*reinterpret_cast<unsigned int near *>(pyro) = 0;
+	}
+	snd_delay_until_measure(2, 0);
+	PaletteTone = 100;
+	palette_show();
+	super_entry_bfnt(zun02_bft);
+	super_entry_bfnt(zun04_bft);
+	super_entry_bfnt(zun01_bft);
+	super_entry_bfnt(zun03_bft);
+
+	page = 0;
+	graph_accesspage(1);
+	graph_showpage(0);
+	input_reset_sense();
+	for(frame = 0; frame < 170; frame++) {
+		input_sense();
+		if(key_det != INPUT_NONE) {
+			skip = true;
+		}
+		switch(frame) {
+		case 0:  zunsoft_pyro_new(180, 180, 20, 0); break;
+		case 16: zunsoft_pyro_new(460, 220, 20, 10); break;
+		case 24: zunsoft_pyro_new(220, 160, 20, 0); break;
+		case 32: zunsoft_pyro_new(380, 240, 20, 10); break;
+		case 44: zunsoft_pyro_new(340, 200, 20, 10); break;
+		case 48: zunsoft_pyro_new(280, 170, 20, 0); break;
+		case 52: zunsoft_pyro_new(380, 260, 20, 10); break;
+		case 40:
+		case 56: zunsoft_pyro_new(200, 190, 20, 0); break;
+		case 60: zunsoft_pyro_new(440, 210, 20, 10); break;
+		case 64: zunsoft_pyro_new(320, 200, 64, 0); break;
+		case 68: zunsoft_pyro_new(320, 200, 64, 10); break;
+		}
+
+		bgimage_put();
+		zunsoft_update_and_render();
+		input_reset_sense();
+		while(vsync_Count1 < 2) {}
+		vsync_Count1 = 0;
+		graph_accesspage(page);
+		page = (1 - page);
+		graph_showpage(page);
+
+		if(!skip) {
+			if((frame >= 16) && (fade_in < 100)) {
+				fade_in += 2;
+			}
+			zunsoft_palette_update_and_show(fade_in);
+		} else {
+			if(fade_out > 0) {
+				fade_out -= 2;
+			} else {
+				goto ret;
+			}
+			PaletteTone = fade_out;
+			palette_show();
+		}
+		snd_se_update();
+	}
+	palette_black_out(1);
+ret:
+	super_free();
+	bgimage_free();
+}
+#pragma codeseg
+#endif
