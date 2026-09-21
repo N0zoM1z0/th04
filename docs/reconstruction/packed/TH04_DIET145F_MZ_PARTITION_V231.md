@@ -102,9 +102,11 @@ Private receipt SHA-256:
 `23ac23e2ddf3111a510eeb048c25978b6b35ebeeda4610da24b7e9873d4db1e3`.
 
 This strengthens the existing v231 limit: the restored `T` surface is useful
-for understanding one DIET preimage, but historical pre-DIET TLINK file length
-and `minalloc` remain unobserved. A future packed closure must explain raw DIET
-output without treating v228's zero tail as an authored-source requirement.
+for understanding one DIET preimage, but at v430 neither its file length nor
+`minalloc` had an independent packed-container interpretation. v446 below later
+attests the **unpacked file length** directly from target DIET metadata; it still
+does not turn the zero tail into authored initialized BSS or establish the
+historical TLINK `minalloc`.
 
 ## v436 current packed frontier and TLINK `/i`
 
@@ -158,3 +160,53 @@ The remaining packed problem is thus still provenance/topology: natural source
 payload is down to `snd_load`, while historical/legitimate causes for the `R`
 and `T` surfaces remain unobserved. Do not retry active TLINK 6.10 `/i` unless
 new evidence changes the linker identity or invocation semantics.
+
+## v446 DIET 1.45f internal metadata
+
+The bundled public 1.45f release contains an unusually useful self-diagnostic.
+Its `UPDATE.DOC` says the 1.45d→1.45f test revision added `-^` to reveal
+information during DIETing/unDIETing. The checked-in
+`scripts/probes/probe_diet145f_internal_metadata.py` verifies that documentation
+inside the same pinned archive, runs `DIET -^` under the already-attested
+DOSBox-X profile, and parses the packed-file metadata without modifying inputs.
+
+The real packed targets report:
+
+| Artifact | `dlzflag` | compressed `packsize` | CRC | `unpacksize` | SFX/header overhead |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OP | `0x30` | `0xA342` (41,794) | `0xE124` | **`0x12C40` (76,864)** | 496 |
+| MAINE | `0x30` | `0x92A3` (37,539) | `0x97CF` | **`0x10E62` (69,218)** | 496 |
+
+Those two `unpacksize` values are exactly the v228 `-RA` restored file sizes.
+Therefore the `T` **file-length** surface is not merely an arbitrary choice made
+by the restore command: the packed target itself carries the same logical
+unpacked length. This is narrower than proving a lost historical TLINK file.
+The packed metadata still does not reveal whether that EOF came from TLINK,
+an intermediate post-link transform, or another equivalent preimage, and it
+does not recover historical `minalloc` provenance or historical relocation-table
+order.
+
+The current v432 factorial gives two further constraints. In both artifacts,
+private target-derived `R+T` produces compressed data exactly **one byte shorter**
+than target, while `P+R+T` matches target `packsize` and CRC. `P` at this frontier
+is only the shared two-byte `snd_load` `89 C3` versus natural `8B D8` residual.
+
+MAINE additionally exposes a format-mode threshold entirely controlled by `T`:
+
+| MAINE factorial cells | `dlzflag` | overhead | `unpacksize` |
+| --- | ---: | ---: | ---: |
+| base, `P`, `R`, `PR` | `0x20` | 444 | 65,998 |
+| `T`, `PT`, `RT`, `PRT` | **`0x30`** | **496** | **69,218** |
+
+Thus neither payload bytes nor relocation order cause the MAINE target's larger
+SFX form; changing the `T` extent alone does. OP is already `0x30` / 496 in all
+eight cells.
+
+Private receipt SHA-256:
+`e40613031d86a0c5646845f6d3af415cdf1ca8d3990e84b1ac6c98942871aa41`.
+
+All non-target factorial cells are private target-derived diagnostics and grant
+no reconstruction credit. The practical routing change is only this: preserve
+the target-attested logical unpacked lengths as a real packed-file constraint,
+while continuing to treat v228 relocation order and the source of the zero-backed
+extent/minalloc as unresolved reconstruction questions.

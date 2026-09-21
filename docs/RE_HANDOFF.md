@@ -55,8 +55,8 @@ python3 scripts/audit_compat_dependencies.py --check
   MASTER.LIB BGM BSS (`_snd_load_fn`, exactly `0xC6` after `timerorg`) in both
   OP and MAINE. Independent historical `b_data.OBJ` has that exact `0xC6` BSS
   layout but **no BSS LEDATA/LIDATA**, so do not materialize the v228 zero tail
-  in source merely to imitate a DIET-restored preimage. Historical pre-DIET
-  MZ length/minalloc remain unobserved.
+  in source merely to imitate a DIET-restored preimage. v446 later confirms the
+  target container's logical unpacked length, but not TLINK `minalloc` origin.
 - v436 re-packs the current candidates: OP is 42,256 vs target 42,290 and
   MAINE 37,989 vs 38,035. Private target-derived `R+T` controls land exactly
   one packed byte short in both; adding the two-byte `snd_load` `P` residual
@@ -69,6 +69,12 @@ python3 scripts/audit_compat_dependencies.py --check
   extended-dictionary switch, and `/P` reproduce current OP/MAINE EXE/MAP and
   relocation order byte-for-byte; `/f` changes >1.2 KiB of program bytes and
   changes relocation counts/multisets. Do not revisit these switches by default.
+- v446 uses DIET 1.45f's bundled-documented hidden `-^` diagnostic. The packed
+  targets themselves report `unpacksize=0x12C40` OP (76,864) and `0x10E62`
+  MAINE (69,218), exactly v228 restored sizes. `T` file length is therefore a
+  real packed-container constraint, while historical relocation order and
+  `minalloc` provenance remain open. MAINE `T` alone also selects target
+  `dlzflag=0x30` / 496-byte SFX overhead; `P/R` alone stay `0x20` / 444.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -77,13 +83,13 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from v429/v430/v436/v441. Treat v228
-   restored relocation order and zero-tail/minalloc as target-derived
-   diagnostics, not historical TLINK requirements. Active TLINK 6.10 `/i`,
-   `/e`/`/E`, `/P`, and `/f` routes are closed. Prefer independently supported
-   physical OMF ownership, DIET-preimage analysis, or a separately attested
-   historical linker/version mechanism. Historical pre-DIET MZ remains
-   unobserved.
+2. **OP/MAINE packed closure:** continue from v429/v430/v436/v441/v446. The
+   target container now attests logical unpacked lengths 76,864 / 69,218, so
+   preserve those `T` lengths. Still treat v228 relocation order and historical
+   `minalloc` provenance as unresolved. Active TLINK 6.10 `/i`, `/e`/`/E`,
+   `/P`, and `/f` routes are closed. Next prefer DIET relocation-stream
+   analysis, independently supported physical OMF ownership, or a separately
+   attested historical linker/version mechanism.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 
@@ -100,7 +106,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
