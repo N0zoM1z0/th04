@@ -67,7 +67,7 @@ the accepted extent.
 1. **Close the remaining 27-byte MAIN gap.** Continue only the three live byte blockers: checkerboard `E2 F7` (2 bytes), the eight Stage 4 carpet residual owners (23 bytes total), and the final `snd_load` MOV BX,AX encoding (2 bytes).
 2. **Keep provenance gates strict.** Current corpus/cross-game evidence does
    not justify target-derived inline assembly for any of the three blockers.
-3. **Continue OP/MAINE packed closure from v425.** Master.lib CODE/DATA seams and the OP-music XOR pair are closed. MAINE code-before-data object order now reduces the DIET-restored relocation-order diagnostic to one two-entry swap while preserving the snd_load-only two-byte payload residual; do not treat the restored order as historical TLINK truth. OP still needs the analogous post-v401 topology review.
+3. **Continue OP/MAINE packed closure from v426.** MAINE code-before-data object order reduces the DIET-restored relocation diagnostic to one two-entry swap, and independent historical `masters.lib` keeps the corresponding `b_r_sdat` object before `b_timer`; do not reverse source/object order merely to satisfy `-RA`. OP still needs the analogous post-v401 topology review. Both payloads otherwise differ only at shared `snd_load`.
 4. **Add deterministic DOSBox-X runtime scenarios** after standalone build/link
    closure can produce the artifacts under test.
 
@@ -108,6 +108,7 @@ active:
 - `.analysis/gpt-web/v423-carpet-semantic-lineage-001`
 - `.analysis/gpt-web/v424-checker-semantic-lineage-001`
 - `.analysis/gpt-web/v425-maine-reloc-order-replay-001`
+- `.analysis/gpt-web/v426-master-bgm-archive-replay-001`
 - `.analysis/reconstruction/exact-unit-replay/gpt-web-v421-carpet-hybrid-focused-candidate-001`
 - `.analysis/reconstruction/exact-unit-replay/gpt-web-v421-carpet-hybrid-aggregate-candidate-001`
 - `.analysis/gpt-web/v406-tc4j-pc98-ide-optimizer-001`

@@ -85,3 +85,33 @@ claim. DIET `-RA` is known to restore the stub/application order; the historical
 pre-DIET TLINK table remains unobserved. The final two-entry swap must therefore
 not be repaired by hand or promoted into a source requirement merely to make a
 restored diagnostic view equal.
+
+## v426 historical MASTER.LIB BGM members
+
+v425 reduces MAINE's DIET-restored-view relocation-order discrepancy to a
+single two-entry swap. v426 asks whether independent historical support-library
+evidence favors that swap or the candidate's natural read-before-timer order.
+
+The locally pinned historical `masters.lib` is listed and extracted with the
+pinned Borland TLIB 4.00. It stores the relevant routines as **separate OMF
+members** and lists them in this order:
+
+1. `b_r_sdat` — exports `BGM_READ_SDATA`; extracted object size 626 bytes,
+   SHA-256 `4840e85e4dadc80791a2214ee02cde1edc8c60081f690b11b8aa2fafe98cbf58`;
+   one `_TEXT` LEDATA of `0x130` bytes with its segment-word fixup at local
+   `+0xB7`.
+2. `b_timer` — exports `_BGM_TIMER_INIT` / `_BGM_TIMER_FINISH`; extracted
+   object size 407 bytes, SHA-256
+   `651bfe73ac4ef8fc5261513cde4e6ae82cc1cb30fdd166f8403663f1076c0c68`;
+   one `_TEXT` LEDATA of `0x6A` bytes with its segment-word fixup at local
+   `+0x13`.
+
+This is independent historical library-object evidence for a read-before-timer
+producer organization. It does **not** prove the original TH04 executable's
+TLINK extraction order, but it provides no basis for reversing these two
+routines merely to match DIET `-RA`'s final two restored relocation entries.
+That restored order remains a diagnostic application/restoration view, not an
+acceptance oracle for historical TLINK order.
+
+Private receipt SHA-256:
+`5192771073c57be2bbf9b80b0dc2ae4fe069fe6969c4bc7bc05152c8b71e60c6`.
