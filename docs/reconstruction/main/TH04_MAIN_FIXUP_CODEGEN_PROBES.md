@@ -195,3 +195,37 @@ Private receipt SHA-256:
 This is a bounded compiler negative, not a universal proof about every TC4J
 source form. It closes the newly discovered intrinsic/string-op route for the
 current final MAIN blockers without granting exactness.
+
+## v406 same-media PC-98 IDE optimizer surface
+
+Borland C++ 4.0 documentation for other distributions exposes an IDE loop
+optimizer, so the command-line TCC rejection of `-Ol` did not by itself close
+the possibility that the Japanese PC-98 integrated environment stored a hidden
+project flag. v406 tests that exact mechanism using only the pinned TC4J media.
+
+The probe extracts Borland's own `TCALC.PRJ` and PC-98 `TC.EXE` from the
+attested media, parses all 102 scalar project option records, and uses the
+media's `PRJ2MAK.EXE` to toggle every binary-valued record. Across 120 mutated
+project configurations plus the CPU=386 enum control, the complete observed
+optimizer flag set is only `-O`; no `-Ol`, `-O1`, `-O2`, or other `-O*`
+suboption appears. The production-like project resolves to `-ml -3 -O -Z -d
+-b-` with the sample debug flags removed.
+
+The same-media PC-98 integrated compiler is then run under the pinned DOSBox-X
+PC-98 profile. Its OMF still identifies `TC86 Borland C++ 4.02` and emits:
+
+- counted loop: `55 8B EC 57 B9 06 00 83 C7 08 49 8B C1 0B C0 75 F6 5F 5D CB`;
+- load/increment: `55 8B EC 56 8A 04 46 5E 5D CB`.
+
+Thus the IDE producer also emits `DEC/MOV/OR/JNZ`, not x86 `LOOP`, and
+`MOV AL,[SI]; INC SI`, not `LODSB`. The long project scan can be finalized
+with `--resume-existing`, which revalidates every generated `P.MAK`, the
+production configuration, DOSBox markers, OMF identity, and both public code
+slices before writing the receipt.
+
+Private receipt SHA-256:
+`e63c0972715f1f681eb06fb086ee2dd272fc144691df685ce4777ef4fa721ef5`.
+
+This closes the same-media IDE hidden-optimizer route for the remaining
+checkerboard/carpet instruction shapes. It does not prove original source
+language and does not authorize target-derived inline assembly.
