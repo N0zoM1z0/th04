@@ -474,3 +474,26 @@ evidence only. Physical accounting remains the v409/v410 partition: **67 exact +
 23 blocked bytes**, with the complete logical function still blocked. A future
 promotion requires genuinely independent source-origin evidence; the hybrid byte
 replay itself need not be repeated unless that provenance gate changes.
+
+## v423 generalized semantic-lineage scan
+
+v405 searched all registered target images for the combined carpet opcode
+signature. v423 deliberately weakens that search so a homolog with different
+constants or setup registers is not missed. It identifies the semantic memory
+layout instead: a word column-fill loop followed nearby by a byte dirty-flag
+column-fill loop, both terminating at the same array bound, with the word stride
+exactly twice the dirty-byte stride. Base displacements, stride values, limits,
+and branch distances are otherwise unconstrained.
+
+The eight DIET-wrapped registered artifacts are restored with the pinned local
+DIET/DOSBox-X toolchain before scanning. Across all 20 TH01-TH05 program images,
+exactly one such paired architecture exists: TH04 MAIN at word loop load
+`0xEABB` and dirty loop load `0xEACA`. No TH01/TH02/TH03/TH05 OP/MAIN/MAINE/ZUN
+image supplies a same-semantics lineage witness with different dimensions.
+
+Private receipt SHA-256:
+`a07d83f0febf23fdb72daa7b1373cf0c1c71c09ed835c8f608769ca82b896032`.
+
+This strengthens the provenance negative beyond a literal opcode/constant scan.
+It changes no physical accounting: carpet remains **67 exact + 23 blocked bytes**
+and the complete function stays blocked.
