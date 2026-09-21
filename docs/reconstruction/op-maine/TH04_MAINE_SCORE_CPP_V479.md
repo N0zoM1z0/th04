@@ -131,3 +131,58 @@ relocation multiset. Private receipt SHA-256:
 
 Continue with `sub_C665` and the following rendering helpers, extending this
 same TC86 owner rather than creating independent final objects.
+
+## v481 name/cursor renderer and four-function prefix
+
+The next SCORE helper (`sub_C665`, `0xAC` bytes) redraws one registration row and
+its current-name cursor. Its ABI is target-constrained by the call site:
+
+```cpp
+void pascal near name_cursor_put(
+    int place, unsigned char rendered_playchar, unsigned char cursor
+);
+```
+
+The function derives the TH04 left column (`2` / `40`) and row (`6` /
+`place + 7`), copies a `128x16` rectangle from page 1 to page 0 through the
+private near EGC helper, draws the shadowed name, and reverse-highlights the
+current character.
+
+A cross-game source clue resolves the only non-obvious pointer expression:
+TH02's preserved `scoredat_name_puts()` uses
+
+```cpp
+reinterpret_cast<const char*>(hi.score.g_name[place])
+```
+
+for the same gaiji string. Using that spelling in TH04 causes TC86 to generate
+the target sequence "compute row offset, then push DS:offset" for both string
+calls. The isolated function then matches **170 / 172 raw bytes**; the remaining
+two raw bytes are only the relative displacement of its call to the still-later
+private copy helper. When split into separate objects the C++ owner carries a
+zero addend plus same-segment FIXUPP, and TLINK resolves the exact target call.
+
+Fusing this helper with the v480 prefix yields one `0x35F` / 863-byte natural
+TC86 owner. Its raw SHA-256 is
+`20e21f50d69da87e08ae964f400c547fdf1df7d4d1338126d8b14766b05d6e80`;
+raw differences from the original same-object TASM prefix are only offsets
+`0x2F5..0x2F6` (the near-call addend). The linked slice is target exact with
+SHA-256
+`37e3e6e243f8ec56c7be9f6420d1d70dac54db46e41a4afd409ac9f95ad59e40`.
+
+TC86 emits eight segment FIXUPPs in descending code-address order:
+
+`0x355, 0x32E, 0x319, 0x2A9, 0x295, 0x224, 0x1FB, 0x1D3`.
+
+Their linked sites are
+`0xC709, 0xC6E2, 0xC6CD, 0xC65D, 0xC649, 0xC5D8, 0xC5AF, 0xC587`, exactly the
+sequence required at target indices `324..331`. Under the partial source split
+they currently occupy candidate indices `311..318`, so the global ordered
+residual intentionally remains **42**.
+
+Both A/B builds preserve the complete linked program image and target-equal
+559-site relocation multiset. Private receipt SHA-256:
+`3ee59d7ea4c2c1dfe2dd67607ea04040e5a62ec52fc7e2984c6e180d26e9aa52`.
+
+Continue with `sub_C711` and following higher-address SCORE helpers, extending
+this same TC86 owner until the complete first SCORE FIXUPP record is recovered.

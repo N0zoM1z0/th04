@@ -181,6 +181,12 @@ python3 scripts/audit_compat_dependencies.py --check
   required at indices 327..331; global residual remains 42 only because the
   higher-address SCORE helpers are still in the following TASM owner. Continue
   from `sub_C665` and grow the same producer forward.
+- v481 adds the name/cursor renderer and grows the natural SCORE owner to
+  **0x35F / 863 linked-exact bytes**. Cross-game TH02 source supplies the exact
+  gaiji string-pointer spelling; the only raw difference is a same-segment near
+  call addend to the later private copy helper. Eight segment sites now appear
+  in the exact target-local sequence for indices 324..331. Continue `sub_C711`
+  and higher-address SCORE helpers in the same TC86 owner.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
