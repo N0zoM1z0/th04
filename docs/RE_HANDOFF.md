@@ -36,6 +36,8 @@ the accepted extent.
 - Remaining reviewed MAIN C/C++ gap: **266 bytes** — checkerboard 174,
   Stage 4 carpet 90, and the two-byte `89 C3` MOV BX,AX residual in
   `snd_load`.
+- v403 confirms TH03 joins TH02/TH05 at natural `8B D8` in homologous
+  `snd_load`; the TH04-only `89 C3` therefore remains provenance-blocked.
 - MAIN has **no provisional authored C/C++ boundaries**.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet.
 - OP/MAINE v400/v401 physical-object replay closes all six former master.lib CODE/DATA alignment residuals. v402 then closes the two OP-music XOR-direction bytes with a TH03/TH05-corroborated low-level copy core. OP and MAINE diagnostic payload candidates now each differ only at the shared two-byte `snd_load` `89 C3`; payload lengths and target-equal relocation multisets remain unchanged.
@@ -80,6 +82,7 @@ active:
 - `.analysis/gpt-web/v400-master-object-split-replay-001`
 - `.analysis/gpt-web/v401-master-vs-object-replay-001`
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001`
+- `.analysis/gpt-web/v403-snd-load-th03-001`
 - `.analysis/gpt-web/v400-master-object-split-baseline-001`
 
 Other current v397 object/listing controls may remain expanded because they are

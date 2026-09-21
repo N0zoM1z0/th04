@@ -39,7 +39,7 @@ The following approaches are already disproved for this exact TC4J producer path
 - `TCC -B`, `-Z`/`-Z-`, and tested compiler option matrices;
 - pseudoregister alias tricks that attempt to make BX an addressable lvalue.
 
-Cross-game target evidence now makes the blocker stronger rather than weaker. The homologous TH02 loader uses `8B D8` after DOS open, and the TH05 loader does the same. TH04 alone uses `89 C3`. Therefore no shared low-level producer provenance currently justifies forcing TH04's direction-bit encoding.
+Cross-game target evidence now makes the blocker stronger rather than weaker. The homologous TH02 and TH05 loaders use `8B D8` after DOS open. v403 additionally restores the registered TH03 OP target and proves its complete 0x70-byte `snd_load` body is byte-identical to the shared natural candidate, including `8B D8` at load `0xBF9B`. TH04 alone uses `89 C3`. Therefore no shared low-level producer provenance currently justifies forcing TH04's direction-bit encoding.
 
 Direct `_AX = func` also promotes the parameter to DI and changes surrounding code. The accepted memory-resident reload spelling is already preserved in the maintained source.
 
@@ -148,3 +148,22 @@ This closes the BCC-style optimizer-suboption route for the currently attested
 Turbo C++ 4.0J toolchain. It does not prove that every possible C++ source form
 is incapable of producing a remaining blocker, and it does not authorize a
 different compiler, inline assembly, or target-derived machine code.
+
+## v403 TH03 snd_load cross-check
+
+The remaining TH04 `89 C3` anomaly is not shared by TH03 either.
+`scripts/probes/probe_th04_snd_load_th03.py` restores the registered
+`th03-op-smoke` target with pinned DIET 1.45f under pinned DOSBox-X PC-98,
+then compares its decoded loader with the hash-pinned v401 candidate. The
+complete TH03 `snd_load` body at load `0xBF52..0xBFC1` is byte-identical
+(body SHA-256
+`5f8f4aee2edc3a11243bc57dbd716cfd3665adcdccfd63192c6bda6be516ad6c`)
+and encodes the DOS-open handle copy at `0xBF9B` as `8B D8`.
+
+Private receipt SHA-256:
+`0c42953f500081a16546e1767440c0acb26b2d4099d09a831a82c1b077058bd3`.
+
+Together with v391, every independently checked homologous loader in TH02,
+TH03, and TH05 uses `8B D8`; only TH04's shared MAIN/OP/MAINE producer uses
+`89 C3`. This is stronger negative provenance, not permission to infer that the
+TH04 line was inline assembly. The two bytes remain blocked.
