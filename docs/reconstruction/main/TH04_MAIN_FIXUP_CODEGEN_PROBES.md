@@ -167,3 +167,31 @@ Together with v391, every independently checked homologous loader in TH02,
 TH03, and TH05 uses `8B D8`; only TH04's shared MAIN/OP/MAINE producer uses
 `89 C3`. This is stronger negative provenance, not permission to infer that the
 TH04 line was inline assembly. The two bytes remain blocked.
+
+## v404 TC4J pragma-intrinsic surface
+
+A Borland C++ 4.0 manual surfaced one compiler mechanism not covered by the
+command-line option matrix: `#pragma intrinsic` can request inline forms of
+standard memory/string routines even when the driver does not expose `-Oi`.
+The web/manual observation is routing only; v404 tests the pinned Japanese
+TC4J compiler itself.
+
+The attested TCC 4.02 accepts pragma intrinsics and naturally emits string
+instructions: `memcpy` produces `REP MOVSW`, `memset(...,0,...)` produces
+`REP STOSW`, `strlen` uses `REPNE SCASB`, `memcmp` uses `REPE CMPSB`, and the
+string-copy family combines SCAS/MOVS/STOS forms. The same driver hard-rejects
+lowercase `-z/-z-`, `-Oa/-Oa-`, and `-OW/-Ow`, so those BCC manual switches do
+not extend the pinned TCC surface.
+
+Across the tested `memcpy`, `memset`, `strlen`, `memcmp`, `strcpy`, `strncpy`,
+and `strcat` bodies, none emits `LODSB` or x86 `LOOP`. More importantly, these
+are contiguous-range primitives: substituting them for carpet's stride-0x40
+tile writes / stride-0x20 dirty writes or checkerboard's stride-8 stores would
+change the touched addresses and is therefore not a legal reconstruction.
+
+Private receipt SHA-256:
+`4c65b90e53178acefaf2ae68506d33fbc9800d205acc77e15252d32996c5db73`.
+
+This is a bounded compiler negative, not a universal proof about every TC4J
+source form. It closes the newly discovered intrinsic/string-op route for the
+current final MAIN blockers without granting exactness.
