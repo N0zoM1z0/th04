@@ -1,0 +1,174 @@
+#include "pc98.h"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th04/resident.hpp"
+#include "th04/gaiji/gaiji.h"
+#include "th04/hardware/grppsafx.h"
+
+extern bool skill_subtract;
+extern uint32_t skill;
+extern bool graph_3_digit_put_as_fixed_2_digit;
+extern "C" shiftjis_t aU_[];
+extern "C" shiftjis_t aBd[];
+extern "C" shiftjis_t aBu[];
+extern "C" shiftjis_t aBd_0[];
+extern "C" shiftjis_t aBu_0[];
+
+#pragma option -a2
+#pragma codeseg MAINE_01_TEXT maine_01
+
+void pascal near graph_3_digit_put(
+	screen_x_t left, screen_y_t top, uint16_t num
+)
+{
+	register int digit_seen = 0;
+	char g_str[4];
+	int digit;
+
+	g_str[0] = g_EMPTY;
+	digit = (num / 100);
+	num %= 100;
+	if(!graph_3_digit_put_as_fixed_2_digit) {
+		digit_seen |= digit;
+		if(digit_seen) {
+			g_str[0] = (gb_0 + digit);
+		} else {
+			g_str[0] = g_EMPTY;
+		}
+	}
+	digit = (num / 10);
+	num %= 10;
+	digit_seen |= digit;
+	digit_seen |= graph_3_digit_put_as_fixed_2_digit;
+	if(digit_seen) {
+		g_str[1] = (gb_0 + digit);
+	} else {
+		g_str[1] = g_EMPTY;
+	}
+	g_str[2] = (gb_0 + num);
+	g_str[3] = 0;
+	graph_gaiji_puts(left, top, GAIJI_W, g_str, 14);
+}
+
+void near sub_B81D(void)
+{
+	unsigned char digit;
+	unsigned char past_leading_zeroes = 0;
+	unsigned char g_str[SCORE_DIGITS + 1];
+	register int i = 0;
+	for(; i < SCORE_DIGITS; i++) {
+		digit = resident->score_last.digits[(SCORE_DIGITS - 1) - i];
+		past_leading_zeroes |= digit;
+		if(past_leading_zeroes) {
+			g_str[i] = (gb_0 + digit);
+		} else {
+			g_str[i] = g_EMPTY;
+		}
+	}
+	g_str[SCORE_DIGITS] = g_NULL;
+	graph_gaiji_puts(160, 96, GAIJI_W, g_str, 14);
+	past_leading_zeroes = 1;
+	graph_putsa_fx(288, 96, 14, aU_);
+}
+
+void pascal near skill_apply_and_graph_percentage_put(
+	screen_x_t left, screen_y_t top, uint16_t total, uint16_t share
+)
+{
+	register screen_x_t left_reg = left;
+	register screen_y_t top_reg = top;
+	uint16_t digits;
+	uint32_t fraction;
+	if(total) {
+		fraction = 1000000UL;
+	} else {
+		fraction = 0;
+	}
+	if(total != share) {
+		if(total) {
+			fraction /= total;
+		} else {
+			fraction = 0;
+		}
+		fraction *= share;
+	}
+	if(!skill_subtract) {
+		skill = (skill + fraction);
+	} else {
+		skill = (skill - fraction);
+	}
+	digits = (fraction / 10000UL);
+	graph_3_digit_put(left_reg, top_reg, digits);
+	fraction %= 10000UL;
+	digits = (fraction / 100UL);
+	graph_3_digit_put_as_fixed_2_digit = true;
+	graph_3_digit_put((left_reg + 48), top_reg, digits);
+	graph_3_digit_put_as_fixed_2_digit = false;
+	graph_putsa_fx((left_reg + 48), top_reg, 14, aBd);
+	graph_putsa_fx((left_reg + 96), top_reg, 14, aBu);
+}
+
+void pascal near graph_fraction_of_million_put(
+	screen_x_t left, screen_y_t top, uint32_t num
+)
+{
+	register screen_x_t left_reg = left;
+	register screen_y_t top_reg = top;
+	uint16_t digits;
+	digits = (num / 10000UL);
+	graph_3_digit_put(left_reg, top_reg, digits);
+	num %= 10000UL;
+	digits = (num / 100UL);
+	graph_3_digit_put_as_fixed_2_digit = true;
+	graph_3_digit_put((left_reg + 48), top_reg, digits);
+	graph_3_digit_put_as_fixed_2_digit = false;
+	graph_putsa_fx((left_reg + 48), top_reg, 14, aBd_0);
+}
+
+void near sub_B9F2(void)
+{
+	uint32_t bonus;
+	uint32_t item_penalty;
+	random_seed = resident->rand;
+	switch(resident->credit_lives) {
+	case 1: bonus = 2500; break;
+	case 2: bonus = 2000; break;
+	case 3: bonus = 1500; break;
+	case 4: bonus = 1000; break;
+	case 5: bonus = 500;  break;
+	case 6: bonus = 0;    break;
+	}
+	switch(resident->credit_bombs) {
+	case 0: bonus += 2500; break;
+	case 1: bonus += 1500; break;
+	}
+	if(resident->turbo_mode) {
+		bonus += 2000;
+	}
+	if(resident->graze) {
+		bonus += (resident->graze * 2);
+	}
+	item_penalty = 1000000UL;
+	if(resident->items_spawned != resident->items_collected) {
+		if(resident->items_spawned) {
+			item_penalty /= resident->items_spawned;
+		} else {
+			item_penalty = 0;
+		}
+		item_penalty *= resident->items_collected;
+	}
+	item_penalty = (1000000UL - item_penalty);
+	item_penalty /= 100UL;
+	if(item_penalty) {
+		bonus += (static_cast<uint32_t>(irand()) % item_penalty);
+	}
+	bonus *= 100UL;
+	if(bonus > 1000000UL) {
+		bonus = 1000000UL;
+	}
+	skill = (skill + bonus);
+	graph_fraction_of_million_put(192, 264, bonus);
+	graph_putsa_fx(288, 264, 14, aBu_0);
+}
+
+#pragma codeseg

@@ -190,3 +190,102 @@ formatting) are now natural TC86 C++ and linked exact. Continue into the larger
 following verdict logic beginning at `sub_B9F2`; that code carries enough
 segment fixups that converting it into the same TC86 producer can further
 reduce the MAINE_01 relocation residual.
+
+## v474 combined verdict TC86 owner
+
+The next private helpers expose the historical compiler-unit boundary more
+strongly than isolated function recovery alone.
+
+### `sub_B81D()`
+
+The `0x69` helper formats `resident->score_last` as an eight-digit gaiji string
+with leading-zero suppression, then appends the reconstructed `点` string. A
+natural C++ loop is **105 / 105 raw CODE exact** once locals are declared in the
+stack order implied by TC86:
+
+1. `digit` (`BP-1`);
+2. `past_leading_zeroes` (`BP-2`);
+3. the 9-byte gaiji buffer (`BP-0x0C..BP-4`).
+
+No low-level source form is needed.
+
+### `sub_B9F2()`
+
+The `sub_B9F2` calculation is ordinary C++ over `resident`:
+
+- score bonus from starting lives, bombs, turbo mode, and graze;
+- item-collection penalty derived in 32-bit arithmetic;
+- an `irand()` remainder contribution;
+- `×100`, clamp to 1,000,000, then `skill = skill + bonus`;
+- render through the v473 fraction helper and append `%`.
+
+The source form `skill = (skill + bonus)` matters: `skill += bonus` lets TC86
+shorten the target load/add/store sequence to a memory add. The six-case lives
+switch is generated normally by the compiler.
+
+Compiled by itself, the B9 switch table is one byte earlier than the target.
+This is **not** a padding-byte reconstruction problem. In the historical owner,
+the preceding exact functions have sizes:
+
+- `sub_B81D`: `0x69`;
+- skill helper: `0xF5`;
+- fraction helper: `0x77`.
+
+Their `0x1D5` subtotal places the B9 table at an odd owner offset. Repo-standard
+`#pragma option -a2` then naturally inserts the one target pad before the table.
+
+### First-declaration code-segment rule
+
+A bounded TC86 experiment found one additional compiler rule needed to recover
+the physical owner. If `graph_3_digit_put()` is prototyped **before** the
+`#pragma codeseg MAINE_01_TEXT`, TC86 binds that function to the default module
+segment at its first declaration; its later definition does not move it. The
+object then contains two different SEGDEFs and two FIXUPP records.
+
+Removing that pre-pragma prototype and letting the definition be the function's
+first declaration produces one single `MAINE_01_TEXT` SEGDEF/LEDATA/FIXUPP
+owner containing, in physical code order:
+
+1. `graph_3_digit_put()`;
+2. `sub_B81D()`;
+3. `skill_apply_and_graph_percentage_put()`;
+4. `graph_fraction_of_million_put()`;
+5. `sub_B9F2()` plus its aligned switch table.
+
+The resulting CODE contribution is exactly **`0x3FA` bytes**.
+
+### Linked result
+
+`probe_th04_maine_verdict_cpp_v474.py` reconstructs v473 twice, substitutes
+that single TC86 owner, keeps the remaining tail in TASM, and relinks MAINE.
+Both runs produce:
+
+- MAINE SHA-256
+  `9436f51a66156cfda240296ae43972669ec76a952f04276c597081c992324c6a`;
+- MAP SHA-256
+  `2bfad457813561e365c3c9ef56f5c590eeb36e079865caa45623b0a601761488`;
+- unchanged program-image SHA-256
+  `0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`;
+- one `0x3FA` `MAINE_01_TEXT` LEDATA/FIXUPP contribution;
+- kind-3 LOCAT order
+  `3E7, 392, 261, 1EA, 1DA, F8, E3, 8D`;
+- target-equal 559-site relocation multiset.
+
+Those eight segment fixups become MZ relocation indices `251..258`, all
+**target-index exact**:
+
+`BB70, BB1B, B9EA, B973, B963, B881, B86C, B816`.
+
+Ordered MAINE residual therefore drops from **176 to 170** (`389 / 559`
+same-index) while every linked program byte remains unchanged.
+
+Private receipt SHA-256:
+`129537a6142cd2c85d2b40085b145f5a140ee750d79f2d00cd2a5458c10476e0`.
+
+## Updated next work after v474
+
+Continue immediately with the following `sub_BB81` verdict routine. Its target
+segment relocations at indices `259..273` already form a high-address-first
+run, so recovering that function as a natural TC86 owner should be the next
+bounded producer test. Do not alter the MZ table or insert switch padding by
+hand.
