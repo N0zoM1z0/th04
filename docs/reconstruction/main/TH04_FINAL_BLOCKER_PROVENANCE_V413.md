@@ -122,3 +122,27 @@ receipt SHA-256:
 This closes the local anonymous-uncompressed-code route. It does not exclude
 compressed fragments or bytes that have been overwritten, and therefore remains
 negative provenance evidence only. The 27-byte MAIN gap is unchanged.
+
+## v416 allocated-slack raw-code scan
+
+v415 covers all FAT-free clusters, but DOS file replacement can leave old bytes in
+the unused tail of a **still allocated** final cluster. Directory allocations can
+likewise retain bytes after the first end-marker entry. v416 scans this complementary
+space rather than broadening the target/source acceptance policy.
+
+`scripts/probes/probe_th04_hdi_allocated_slack.py` recursively walks the pinned FAT12
+volume and validates an inventory of **163 regular files** and **7 directories**. It
+then scans 169 logically unused regions totaling **880,571 bytes**: each regular
+file's final-cluster tail plus every directory tail after the first `0x00` end marker.
+The patterns are exactly the v415 final-blocker signatures: wildcarded short/long
+`snd_load` forms accepting either `89 C3` or `8B D8`, the exact checkerboard compact
+`LOOP` core, and the distinctive carpet low-level prefix.
+
+All four searches return zero hits. Private receipt SHA-256:
+`692ea2a8e4153878b550786feccb376cedb6dd82e86a26074e43700726a30a0d`.
+
+Together, v415 and v416 leave no anonymous **uncompressed** second-build blocker code
+in either FAT-free space or logically unused allocated slack on the supplied HDI.
+This remains negative provenance evidence only; compressed, overwritten, or bytes
+inside unrelated live logical file contents are outside the claim, and the 27-byte
+MAIN gap is unchanged.
