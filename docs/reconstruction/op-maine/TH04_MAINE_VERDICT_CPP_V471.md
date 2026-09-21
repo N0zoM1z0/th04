@@ -139,3 +139,54 @@ then expand the same TC86 owner toward `verdict_animate()`. Do not hand-reverse
 FIXUPP records; the graph3 and skill packets now demonstrate that natural C++
 producer recovery changes exactly the target-constrained entries while keeping
 all linked program bytes exact.
+
+## v473 `graph_fraction_of_million_put()`
+
+The next helper begins immediately after v472 at load `0x192B` and spans
+`0x77` bytes. Its source semantics are the formatting-only subset of the skill
+helper:
+
+1. divide a 32-bit value by 10,000 and render the integer part;
+2. retain the remainder;
+3. divide by 100 and render exactly two fractional digits;
+4. append the second reconstructed fullwidth dot string (`aBd_0`).
+
+A direct C++ spelling with `SI`/`DI` register copies of `left`/`top` causes
+pinned TC86 4.02 to emit **119 / 119 raw CODE bytes exactly** on the first
+bounded source shape. The function OMF fixups are:
+
+- kind-3 segment fixup at `0x6D` for `graph_putsa_fx`;
+- kind-1 offsets at `0x6A`, `0x5E`, `0x5A`, `0x4E`, and `0x23`.
+
+v473 splits only the first function from the v472 TASM tail. The existing
+`aBd_0` data remains in the v470 rest owner and receives a zero-byte `_aBd_0`
+C-linkage alias. The remaining TASM tail declares the new C++ function as a
+near external. Neither adapter emits executable or data bytes.
+
+Both A/B cold replays produce:
+
+- MAINE EXE SHA-256 unchanged from v472:
+  `db8d82aeb64407563a97a77ae285b477296c8f54cccd4ed743a6352d9e5bd418`;
+- MAP SHA-256
+  `5edcd404826e00950979ba8194a09b01e75544ce84cd3145fd41cddedd596409`;
+- unchanged program-image SHA-256
+  `0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`;
+- raw helper SHA-256
+  `c375f560be88e44c832501be3d83fc628ebc71a86badcf1a1e933185292610b4`;
+- linked helper SHA-256
+  `fc3bf1fc7fb56d0130390936ea4562bdc324920a60fec5b2336a9e5a855a4260`;
+- complete 559-entry relocation table byte-for-byte unchanged from v472.
+
+The single segment relocation was already in its target-constrained v472
+position, so ordered residual remains **176** (`383 / 559` same-index).
+
+Private receipt SHA-256:
+`446b292ffda60a758fba5cca5e93c128fefd8d650d55af9768761110972347f8`.
+
+## Updated next work after v473
+
+The three adjacent helpers (`graph_3_digit_put`, skill percentage, and fraction
+formatting) are now natural TC86 C++ and linked exact. Continue into the larger
+following verdict logic beginning at `sub_B9F2`; that code carries enough
+segment fixups that converting it into the same TC86 producer can further
+reduce the MAINE_01 relocation residual.

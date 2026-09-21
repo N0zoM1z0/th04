@@ -141,6 +141,11 @@ python3 scripts/audit_compat_dependencies.py --check
   two `graph_putsa_fx` segment FIXUPPs naturally reverse to target indices
   254..255, reducing ordered residual **178 -> 176**. Continue directly with
   adjacent `graph_fraction_of_million_put()`, then grow the same verdict owner.
+- v473 recovers `graph_fraction_of_million_put()` as **119/119 raw-and-linked
+  exact TC86 C++**. The complete v472 relocation table remains byte-for-byte
+  unchanged, so residual stays 176; its one segment relocation was already at
+  the correct index. The three adjacent verdict helpers are now source-recovered;
+  continue into the larger following verdict logic beginning at `sub_B9F2`.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -152,8 +157,8 @@ python3 scripts/audit_compat_dependencies.py --check
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
    Attack only BGIMAGE internal direction (8 relocation entries) and the
-   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471/v472 prove the first two verdict helpers as linked-exact TC86 C++;
-   continue `graph_fraction_of_million_put()` and expand the verdict C++ owner
+   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471-v473 prove three adjacent verdict helpers as linked-exact TC86 C++;
+   continue the following `sub_B9F2`/verdict logic and expand the C++ owner
    to recover MAINE_01 internal FIXUPP direction, then SCORE
    and shared BGIMAGE direction.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
