@@ -146,3 +146,28 @@ in either FAT-free space or logically unused allocated slack on the supplied HDI
 This remains negative provenance evidence only; compressed, overwritten, or bytes
 inside unrelated live logical file contents are outside the claim, and the 27-byte
 MAIN gap is unchanged.
+
+## v419 active-file and active-archive audit
+
+v413-v416 cover deleted directory entries, FAT-free runs, anonymous raw code,
+and allocated slack. v419 closes the complementary **active logical file**
+surface on the same hash-attested HDI.
+
+`scripts/probes/probe_th04_hdi_active_dev_remnants.py` recursively walks the
+active FAT12 directory tree and validates an inventory of 170 entries: 164
+regular files and 6 directories. No active file uses a development/build
+extension such as `.C`, `.CPP`, `.H`, `.ASM`, `.OBJ`, `.MAP`, `.PRJ`, `.MAK`,
+`.LIB`, or `.BAK`, and no `GEN_TS1.EXE` trial executable is present.
+
+The two active LZH archives are also parsed by member table. `GENSO/CANBE.LZH`
+contains only `PMDPPZ.COM` and `GAMECB.BAT`; `GENSO/OMAKE2.LZH` contains music
+and text data only. Neither archive contains a TH04 executable or development
+artifact.
+
+Private receipt SHA-256:
+`c443839a472e66a0f199030c9abd5fa17e0348912c469362250de862f44a072f`.
+
+Together with v413-v416, the supplied HDI offers no attributable alternate
+producer through active files, active archives, deleted entries, free space, or
+allocated slack. This is negative provenance evidence only and leaves the
+27-byte MAIN gap unchanged.
