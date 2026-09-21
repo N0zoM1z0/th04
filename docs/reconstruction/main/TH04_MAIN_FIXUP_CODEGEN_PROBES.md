@@ -117,3 +117,34 @@ Private paths in historical evidence rows may no longer exist after retention
 cleanup. Recreate an experiment from its checked-in command and pinned inputs
 only when the recorded observation is insufficient; do not treat a missing
 cache directory as permission to repeat every old source-shape guess.
+
+## v399 pinned Turbo C++ optimizer-driver surface
+
+External Borland C++ documentation suggested a genuinely different hypothesis:
+the 16-bit `BCC.EXE` family exposes individual `-O*` optimization controls such
+as loop optimization. That material is only search routing, not TH04 evidence.
+The pinned TH04 toolchain is the locally attested Japanese Turbo C++ 4.0J
+installation whose active compiler is `TCC.EXE` 4.02, and its active `TC4/BIN`
+contains no `BCC.EXE`.
+
+`scripts/probes/probe_tc4_optimizer_suboptions.py` therefore tests the candidate
+switches against the actual pinned compiler instead of substituting another
+Borland driver. Under the normal `-ml -b- -3 -Z -d` base profile, `TCC.EXE`
+accepts `-O` and hard-rejects each of the following as an incorrect command-line
+option:
+
+`-Ob -Oc -Oe -Og -Oi -Ol -Om -Op -Os -Ot -Ov -O1 -O2 -Ox -Od`
+
+The probe verifies the configured TCC SHA-256 before execution and records the
+absence of `BCC.EXE` from the active TC4 binary directory. Private receipt:
+
+`.analysis/gpt-web/v399-tcc-opt-surface-001/receipt.json`
+
+SHA-256:
+
+`21841e42bcdb3346d1ffb379319152804308c91460b0402a189f26d89dac69e8`
+
+This closes the BCC-style optimizer-suboption route for the currently attested
+Turbo C++ 4.0J toolchain. It does not prove that every possible C++ source form
+is incapable of producing a remaining blocker, and it does not authorize a
+different compiler, inline assembly, or target-derived machine code.

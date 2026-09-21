@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-20. This file contains only live state and the next work queue.
+Updated 2026-09-21. This file contains only live state and the next work queue.
 Use the linked focused notes for experiment history. The CSV ledgers and fresh
 script output remain authoritative.
 
@@ -71,6 +71,7 @@ active:
 - `.analysis/gpt-web/v391-snd-load-crossgame-001`
 - `.analysis/gpt-web/v396-checkerboard-negative-001`
 - `.analysis/gpt-web/v398-checker-loop-forms-001`
+- `.analysis/gpt-web/v399-tcc-opt-surface-001`
 - `.analysis/gpt-web/v396-final-opcode-corpus-001`
 - `.analysis/gpt-web/v397-master-object-boundaries-001`
 
