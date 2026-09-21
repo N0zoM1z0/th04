@@ -19,7 +19,7 @@ python3 scripts/audit_compat_dependencies.py --check
 
 - Target canonicality is `candidate-local-attested`. MAIN.EXE is 156,258 bytes,
   SHA-256 `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-- MAIN has **83,375 / 83,469 reviewed authored C/C++ bytes exact** and
+- MAIN has **83,442 / 83,469 reviewed authored C/C++ bytes exact** and
   **492 / 494 reviewed authored C/C++ functions exact**.
 - The accepted MAIN byte gap is **27 bytes** only: checkerboard `LOOP` (2),
   Stage 4 carpet low-level residuals (23), and `snd_load` `MOV BX,AX` (2).
@@ -46,6 +46,11 @@ python3 scripts/audit_compat_dependencies.py --check
   not a historical pre-DIET MZ. OP's 804/804 ordering and MAINE's two-entry
   residual are candidate-to-candidate topology diagnostics only. Do not use
   that ordering as a target acceptance Oracle.
+- v429 rebases the current v427 OP and v425 MAINE candidates onto the actual
+  v228 target-derived DIET restore. Relocation-site multisets remain equal, but
+  ordered indices differ at **223 / 804** OP entries and **299 / 559** MAINE
+  entries. The changed owner set is now localized; next packed work should test
+  physical segment/object cuts, not the v231 candidate-control ordering.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -54,9 +59,11 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from the current physical object
-   topology, but treat v231 candidate-inverse relocation order as diagnostic
-   only. Historical pre-DIET relocation order remains unobserved.
+2. **OP/MAINE packed closure:** continue from the v429 target-derived routing
+   baseline. Test natural physical cuts for OP `hi_view` / OP music and MAINE
+   `MAINE_01_TEXT` / `SCORE_TEXT`, plus the already-known BGIMAGE FIXUPP
+   direction. Treat both v231 candidate-inverse and v228 target-restored order
+   as diagnostics; historical pre-DIET relocation order remains unobserved.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 

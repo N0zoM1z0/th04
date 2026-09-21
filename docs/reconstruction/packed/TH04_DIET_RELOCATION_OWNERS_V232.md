@@ -162,3 +162,53 @@ Therefore v425/v427 establish candidate physical/link topology only. They do
 not establish the target's historical pre-DIET relocation-table order. The
 probe scripts retain `--target-restored` only as a deprecated CLI alias for
 old command lines; new use should pass `--reference-candidate`.
+
+## v429 current candidates versus the real v228 target restore
+
+v425 and v427 intentionally established only candidate-to-candidate physical
+link topology. v429 now rebases those current candidates onto the **actual v228
+target-derived DIET restore**, without changing any source body, object, or
+relocation-table byte. The checked-in
+`scripts/probes/probe_th04_current_target_relocation_topology.py` verifies the
+current candidate/MAP identities, the v228 restored identities, relocation-site
+multisets, ordered indices, and candidate-MAP owner projection.
+
+The result is deliberately different from the v425/v427 candidate-control
+numbers:
+
+| Artifact | Current candidate | v228 target-restored | Same-index relocations | Ordered differences |
+| --- | --- | --- | ---: | ---: |
+| OP | `78468a2a...` | `40a981a6...` | 581 / 804 | **223** (`146..465`) |
+| MAINE | `9b14cad4...` | `6b454718...` | 260 / 559 | **299** (`48..346`) |
+
+Both relocation-site **multisets remain equal**. The new differences are
+therefore ordering/topology diagnostics, not missing relocation sites. Candidate
+MAP projection localizes every module-local order change to a small set:
+
+- OP: `th04/bgimage.cpp` (8, exact reverse), `th04/hi_view.cpp` (61),
+  `th04_op_master_data_tail.asm` (4, exact reverse), and
+  `th04_op_music_master.asm` (35).
+- MAINE: `th04/bgimage.cpp` (8, exact reverse), `th04_maine.asm` (175), and
+  `th04_maine_master_data_tail.asm` (4, exact reverse).
+
+The target-restored owner blocks expose especially useful physical cuts. OP's
+61 `hi_view.cpp` relocation sites appear as **23 + 38** target-restored blocks
+with the two `score_e.cpp` relocations between them. MAINE's 175
+`th04_maine.asm` relocations appear as **139 `MAINE_01_TEXT` + 36
+`SCORE_TEXT`**, with `hi_end.cpp` and `score_e.cpp` between those blocks. These
+are concrete object/segment hypotheses for the next non-patching link-topology
+experiments.
+
+The current candidates also retain the already-known MZ tail/header difference:
+OP is 3,228 bytes shorter and MAINE 3,220 bytes shorter than the v228 restored
+views, with the corresponding page-count/minalloc differences. v429 does not
+alter or claim ownership of that surface.
+
+Private receipt SHA-256:
+`80f22afe0711fa905acc5d761f5c0731953cd16b4867db158ad78a4c382ea92a`.
+
+The acceptance limit remains unchanged: DIET `-RA` starts from the target and
+re-packs raw exact, but its restored MZ is not proven to be the historical
+pre-DIET TLINK output. v429 therefore supplies a **target-derived routing
+baseline**, not a relocation-order exactness oracle. Do not patch or permute the
+MZ table to satisfy it.
