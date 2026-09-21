@@ -160,3 +160,26 @@ TC4J mechanisms or cross-game original-target analogues for the `PUSH DS/POP ES`
 `MUL BX`, `LODSB`, `SHL DI,1`, and `LOOP` sequence. If no natural mechanism is
 demonstrated, keep the function blocked or reclassify origin only with independent
 evidence; do not use inline assembly as a shortcut to C++ exactness.
+
+## v405 all-artifact provenance scan
+
+The earlier cross-game work concentrated on MAIN-style code and the accepted
+TC86 object corpus. v405 broadens the origin check to **every registered
+TH01-TH05 artifact image**, including OP, MAINE, and ZUN-family executables.
+The eight DIET-wrapped inputs are first restored from private copies using the
+pinned DIET 1.45f / DOSBox-X PC-98 toolchain; scans operate on the restored
+program image, never on the packer stub.
+
+The structural carpet signature is deliberately stronger than any single
+opcode: a near-function prologue followed within 96 bytes by `PUSH DS/POP ES`,
+at least two `MUL BX`, `LODSB`, `SHL DI,1`, and `LOOP`. Across all 20 registered
+artifact images it has exactly one hit, TH04 MAIN load `0xEA8A`, the reviewed
+`carpet_lighting_put_new()` owner. No OP/MAINE/ZUN image supplies an independent
+homologous producer.
+
+Private receipt SHA-256:
+`86de803fe7b93f0b66b26e33004ab1c0535f936187eb370fa8f7bd7447a02913`.
+
+This is a stronger negative provenance result, not a source-language proof. It
+does not authorize target-derived inline assembly; the 90-byte function remains
+reviewed/source-present/blocked.

@@ -40,6 +40,7 @@ the accepted extent.
   `snd_load`; the TH04-only `89 C3` therefore remains provenance-blocked.
 - v404 verifies pinned TC4J `#pragma intrinsic` string-op codegen, but tested
   families emit no `LODSB`/`LOOP` and cannot preserve the strided carpet/checkerboard semantics.
+- v405 expands carpet/checkerboard provenance scanning to all 20 registered TH01-TH05 artifact images (restoring 8 DIET containers first); both unusual signatures remain TH04-MAIN-only, so neither blocker gains hybrid-source provenance.
 - MAIN has **no provisional authored C/C++ boundaries**.
 - OP, MAINE, and ZUN have no artifact-local exact cohort yet.
 - OP/MAINE v400/v401 physical-object replay closes all six former master.lib CODE/DATA alignment residuals. v402 then closes the two OP-music XOR-direction bytes with a TH03/TH05-corroborated low-level copy core. OP and MAINE diagnostic payload candidates now each differ only at the shared two-byte `snd_load` `89 C3`; payload lengths and target-equal relocation multisets remain unchanged.
@@ -86,6 +87,7 @@ active:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001`
 - `.analysis/gpt-web/v403-snd-load-th03-001`
 - `.analysis/gpt-web/v404-tc4-intrinsic-surface-001`
+- `.analysis/gpt-web/v405-final-blocker-crossartifact-001`
 - `.analysis/gpt-web/v400-master-object-split-baseline-001`
 
 Other current v397 object/listing controls may remain expanded because they are

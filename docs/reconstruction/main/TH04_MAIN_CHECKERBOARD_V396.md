@@ -81,3 +81,22 @@ exposed compiler switches have no demonstrated path to the historical
 counted `LOOP`. This does not prove every possible TC4J program incapable of
 emitting `LOOP`, and it still does not establish provenance for target-derived
 inline assembly.
+
+## v405 all-artifact provenance scan
+
+v405 extends the earlier TH01-TH05 MAIN-target search to every registered
+artifact image. DIET-wrapped OP/MAINE/ZUN inputs are restored with the pinned
+toolchain before inspection, so the scan is over executable payload code rather
+than compression stubs.
+
+The exact compact core `MOV ES,DX; MOV CX,6; MOV ES:[DI],EAX; ADD DI,8; LOOP`
+(`8E C2 B9 06 00 66 26 89 05 83 C7 08 E2`) occurs exactly once across the 20
+images: TH04 MAIN load `0x120AF`. No OP/MAINE/ZUN target adds independent
+producer provenance for the counted `LOOP`.
+
+Private receipt SHA-256:
+`86de803fe7b93f0b66b26e33004ab1c0535f936187eb370fa8f7bd7447a02913`.
+
+The function therefore stays blocked. This closes another provenance search
+surface but does not prove that every possible original source form is assembly
+or permit copying the target `LOOP`.
