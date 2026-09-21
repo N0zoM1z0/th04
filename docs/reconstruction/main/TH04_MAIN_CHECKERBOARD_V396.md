@@ -100,3 +100,48 @@ Private receipt SHA-256:
 The function therefore stays blocked. This closes another provenance search
 surface but does not prove that every possible original source form is assembly
 or permit copying the target `LOOP`.
+
+## v408 exact natural subextent split
+
+The earlier packets correctly kept the **complete 174-byte function** blocked,
+but that coarse owner hid a much narrower fact: the only source/codegen
+disagreement is the two-byte counted `LOOP` itself. v408 therefore follows the
+existing `snd_load` precedent and separates physical byte ownership without
+promoting the complete function.
+
+Three maintained natural-C++ identity fragments are checked in. Each fragment
+is byte-for-byte identical to one unique source span in the pinned checkerboard
+scaffold, so replay leaves the historical `asm { loop ... }` statement in place
+with **zero credit** rather than replacing it:
+
+| Owner | Target load/file range | Size | Maintained source |
+| --- | --- | ---: | --- |
+| natural prefix | `0x12076..0x120B3` / `0x13876..0x138B3` | `0x3E` | `checkerboard_prefix.inl` |
+| natural store | `0x120B4..0x120BA` / `0x138B4..0x138BA` | `0x07` | `checkerboard_store.inl` |
+| blocked counted loop | `0x120BB..0x120BC` / `0x138BB..0x138BC` | `0x02` | none accepted; target `E2 F7` |
+| natural suffix | `0x120BD..0x12123` / `0x138BD..0x13923` | `0x67` | `checkerboard_suffix.inl` |
+
+The exact spans total **172 / 174 bytes**. The old 0xAE physical unit is now a
+zero-credit routing umbrella; the two-byte `LOOP` is a separate reviewed
+blocked owner. The complete function boundary remains reviewed/blocked, so v408
+does not convert partial byte evidence into a false function-exact claim.
+
+Focused replay `gpt-web-v408-checker-fragments-focused-001` builds two isolated
+materializations with `failures=[]`. For all three spans, raw bytes, containing
+`CHECKERB_TEXT 0AAF:7586` ownership, empty ordered relocation overlap, valid
+TC86 OMF, and normalized object determinism pass. Receipt SHA-256:
+`a96e3184e93e51325f5e0ebbb9d3ce3d06bfc97acfb00599c47ae7c774bed91d`.
+
+Before promotion, the complete 272-owner candidate aggregate
+`gpt-web-v408-checker-fragments-aggregate-candidate-001` also passes twice with
+`failures=[]`; receipt SHA-256 is
+`d7e474cfdf3f4c31231019f2c6897db45f47f010fd603802199c6d6ec486d6c4`.
+After ledger promotion, `gpt-web-v408-checker-fragments-aggregate-final-001`
+again passes all 272 default owners twice with `failures=[]`; receipt SHA-256 is
+`0ef5d146ff5baed58dfe7d0eefa4accfe9e0043bbadb383ca14eb14a251e9d71`.
+Both final candidate MAIN images have SHA-256
+`4a5138bf2be6292986827f29addeed77765178ee414511cf5c87e223e5cc1cb5`.
+
+This adds **172 exact reviewed authored bytes** while leaving the only
+unsupported instruction untouched and blocked. Checkerboard's remaining byte
+gap is now exactly two bytes, `E2 F7`.

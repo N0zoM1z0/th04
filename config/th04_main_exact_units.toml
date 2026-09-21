@@ -10642,6 +10642,51 @@ map_size = "0xAE"
 target_file_offset = "0x13876"
 size = "0xAE"
 
+# v408: natural exact-subextent candidates around the still-blocked two-byte
+# checkerboard LOOP. These are identity fragments in the pinned scaffold; they
+# intentionally leave the historical LOOP in place with zero credit.
+[[units]]
+id = "th04-main-checkerboard-prefix-v408"
+default_enabled = true
+requires_units = ["th04-main-main013-grcg-asm-v194"]
+repo_source = "src/main/stage/checkerboard_prefix.inl"
+source_mode = "fragment"
+patch_path = "th04/main/checkerb.cpp"
+map_module = "th04/checkerb.cpp"
+map_mode = "contains"
+object_path = "obj/th04/checkerb.obj"
+map_segment = "CHECKERB_TEXT"
+target_file_offset = "0x13876"
+size = "0x3E"
+
+[[units]]
+id = "th04-main-checkerboard-store-v408"
+default_enabled = true
+requires_units = ["th04-main-main013-grcg-asm-v194"]
+repo_source = "src/main/stage/checkerboard_store.inl"
+source_mode = "fragment"
+patch_path = "th04/main/checkerb.cpp"
+map_module = "th04/checkerb.cpp"
+map_mode = "contains"
+object_path = "obj/th04/checkerb.obj"
+map_segment = "CHECKERB_TEXT"
+target_file_offset = "0x138B4"
+size = "0x7"
+
+[[units]]
+id = "th04-main-checkerboard-suffix-v408"
+default_enabled = true
+requires_units = ["th04-main-main013-grcg-asm-v194"]
+repo_source = "src/main/stage/checkerboard_suffix.inl"
+source_mode = "fragment"
+patch_path = "th04/main/checkerb.cpp"
+map_module = "th04/checkerb.cpp"
+map_mode = "contains"
+object_path = "obj/th04/checkerb.obj"
+map_segment = "CHECKERB_TEXT"
+target_file_offset = "0x138BD"
+size = "0x67"
+
 # v195: split the natural-C++ END_TEXT MPN uploader out of the remaining
 # monolithic 0x13C END_TEXT residual. sub_B835 remains in th04_main.asm.
 [[build_replacements]]
