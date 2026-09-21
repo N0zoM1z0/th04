@@ -108,6 +108,9 @@ python3 scripts/audit_compat_dependencies.py --check
   natural C++ owner; its eight segment FIXUPPs are all emitted high-address
   first, exactly the local direction required by the target OP-music reversal.
   The remaining ZUNSOFT TASM tail is now only 0x2E1 bytes (palette + animate).
+- v465 recovers `zunsoft_palette_update_and_show()` as 65/65 raw-and-linked
+  exact natural C++. The TC86 owner is now 0x1F0 bytes with nine descending
+  segment FIXUPPs; only `zunsoft_animate()` remains as a 0x2A0 TASM tail.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -119,7 +122,7 @@ python3 scripts/audit_compat_dependencies.py --check
 2. **OP/MAINE packed closure:** continue from v461 for OP and v448 for MAINE.
    OP global owner order is aligned through OP music. v463 proves the first
    0x84 ZUNSOFT function as linked-exact TC86 C++; continue reconstructing the
-   remaining 0x2E1 ZUNSOFT C++ owner (palette + animate), then BGIMAGE internal direction and the
+   remaining 0x2A0 ZUNSOFT C++ owner (`zunsoft_animate`), then BGIMAGE internal direction and the
    `hi_view` / `score_e` historical TU split. MAINE still needs its monolith interleavings.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
@@ -141,7 +144,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v464. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v465. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 

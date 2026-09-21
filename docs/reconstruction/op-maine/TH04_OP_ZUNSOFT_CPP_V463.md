@@ -134,3 +134,36 @@ Private receipt SHA-256:
 `ae10a6bc0bbfe25eb76340fc9710c18b58c514e8568c6cd5475d81dd6d1422b3`.
 
 Next recover `zunsoft_palette_update_and_show()`, then `zunsoft_animate()`.
+
+## v465 `zunsoft_palette_update_and_show()`
+
+The third body spans load `0xBBF4..0xBC34` (`0x41` bytes). A direct natural C++
+translation is enough: `SI` is the color index, `DI` the RGB component index,
+and the assignment is simply
+
+```cpp
+Palettes[color].v[component] =
+    (zunsoft_palette[color].v[component] * tone) / 100;
+```
+
+followed by `palette_show()`. TC86 emits **all 65 raw OMF CODE bytes exactly**
+on the first bounded source shape, including loop branches, multiply/divide,
+and `ret 2`.
+
+The v465 A/B replay links this function after the v463/v464 C++ bodies and
+keeps only `zunsoft_animate()` in TASM. Both runs produce OP SHA-256
+`1e87ecbf564a5ef522c52fc94370ff78f2d917d084fafd249c33ebf91228819b`,
+MAP SHA-256
+`f026e0bc299a49d9ffd376d51683085a5f8bc5182a7a73e4f3249a03d7ca62bd`,
+and exact palette-body SHA-256
+`08fc22f1c1142e43cb2ce54b09a86b1472f5788c1287637847f6b0e7ee90e04c`.
+The complete v461 program image is unchanged and the relocation multiset remains
+804-site exact.
+
+The natural C++ owner now covers `0x1F0` bytes. Its nine segment relocation
+sites are emitted in descending address order:
+`0xBC2D, 0xBBE2, 0xBBC3, 0xBBA5, 0xBB7C, 0xBB5E, 0xBB3A, 0xBAA0, 0xBA8F`.
+Only the final `0x2A0` animate body remains as a separate TASM producer.
+
+Private receipt SHA-256:
+`d083f02938b3e2deeb53fb65ced27118724f55cee4364eb0334514f0389ba543`.
