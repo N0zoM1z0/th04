@@ -170,6 +170,11 @@ python3 scripts/audit_compat_dependencies.py --check
   raw-and-linked exact TC86 C++ owner**. Target indices 195..250 become exact;
   MAINE ordered residual drops **98 -> 42** and MAINE_01 internal order is fully
   closed. Remaining MAINE R is SCORE_TEXT 34 + BGIMAGE 8.
+- v479 starts SCORE_TEXT producer recovery. The leading `0x154` registration
+  score-insertion helper is **340/340 raw-and-linked exact TC86 C++**. Splitting
+  only this function preserves the entire v478 MAINE image and all 559
+  relocation entries byte-for-byte, so residual stays 42 by design. Continue
+  adjacent SCORE helpers to grow one natural TC86 SCORE_TEXT owner.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -182,9 +187,8 @@ python3 scripts/audit_compat_dependencies.py --check
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
    Attack only BGIMAGE internal direction (8 relocation entries) and the
    `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471-v475 recover the verdict path through `sub_BB81`; continue the
-   adjacent 0x51 `verdict_animate()` tail and expand the same C++ producer
-   to recover MAINE_01 internal FIXUPP direction, then SCORE
-   and shared BGIMAGE direction.
+   adjacent SCORE_TEXT helpers from the v479 exact prefix to recover the remaining
+   34 SCORE relocation entries, then shared BGIMAGE direction.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
    switch routes and pinned TASM5 option/version emulation are closed; do not

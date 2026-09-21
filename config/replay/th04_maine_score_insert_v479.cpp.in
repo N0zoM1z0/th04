@@ -1,0 +1,57 @@
+#include "th04/formats/scoredat/scoredat.hpp"
+#include "th04/resident.hpp"
+#include "th04/common.h"
+#include "th04/gaiji/gaiji.h"
+#include "th04/end/end.h"
+
+extern unsigned char entered_place;
+
+#pragma codeseg SCORE_TEXT score_01
+void near score_insert(void)
+{
+	int place;
+	int c;
+
+	for(place = (SCOREDAT_PLACES - 1); place >= 0; place--) {
+		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+			if(resident->score_last.digits[c] > (hi.score.g_score[place].digits[c] - gb_0)) {
+				break;
+			}
+			if(resident->score_last.digits[c] < (hi.score.g_score[place].digits[c] - gb_0)) {
+				goto found_place;
+			}
+		}
+	}
+	entered_place = 0;
+	goto shift;
+
+found_place:
+	if(place == (SCOREDAT_PLACES - 1)) {
+		entered_place = -1;
+		return;
+	}
+	entered_place = (place + 1);
+
+shift:
+	for(place = (SCOREDAT_PLACES - 2); place >= entered_place; place--) {
+		for(c = (SCOREDAT_NAME_LEN - 1); c >= 0; c--) {
+			hi.score.g_name[place + 1][c] = hi.score.g_name[place][c];
+		}
+		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+			hi.score.g_score[place + 1].digits[c] = hi.score.g_score[place].digits[c];
+		}
+		hi.score.g_stage[place + 1] = hi.score.g_stage[place];
+	}
+	for(c = (SCOREDAT_NAME_LEN - 1); c >= 0; c--) {
+		hi.score.g_name[entered_place][c] = gs_DOT;
+	}
+	for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+		hi.score.g_score[entered_place].digits[c] = (resident->score_last.digits[c] + gb_0);
+	}
+	if(resident->end_sequence >= ES_EXTRA) {
+		hi.score.g_stage[entered_place] = gs_ALL;
+	} else {
+		hi.score.g_stage[entered_place] = (resident->stage + gb_1);
+	}
+}
+#pragma codeseg
