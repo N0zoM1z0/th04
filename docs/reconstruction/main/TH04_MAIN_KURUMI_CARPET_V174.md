@@ -372,3 +372,34 @@ Private receipt SHA-256:
 
 Carpet remains **67 exact + 23 blocked bytes**. The result narrows mechanism
 claims only; it grants no exactness or inline-assembly provenance.
+
+## v420 integrated-assembler encoding fingerprint
+
+The compiler-negative packets through v418 establish that natural C++ source
+forms do not produce the remaining 23 carpet bytes. v420 asks a different,
+strictly mechanism-level question: if the residual instructions are written as
+symbolic assembly, which of the two pinned Borland assembler paths selects the
+target encodings?
+
+A bounded TC4J integrated-assembler probe emits, in order, the full residual
+instruction vocabulary: `PUSH DS; POP ES`, `MUL BX`, `MOV SI,AX`, `ADD BX,BX`,
+a second `MUL BX`, `MOV BX,AX`, `XOR DX,DX`, `LODSB`, `MOV DI,DX`,
+`SHL DI,1`, the second `MOV DI,DX`, and `LOOP`. Every direction-sensitive
+instruction matches the TH04 target: `89 C6`, `01 DB`, `89 C3`, `31 D2`, and
+`89 D7` (twice). The fixed-opcode instructions likewise use the target
+`1E 07`, `F7 E3`, `AC`, `D1 E7`, and `E2` forms.
+
+The external pinned TASM32 5.0 control is deliberately assembled from the same
+symbolic mnemonics. It agrees on fixed opcodes but systematically chooses the
+other legal ModR/M direction for every ambiguous register operation: `8B F0`,
+`03 DB`, `8B D8`, `33 D2`, and `8B FA`. Thus the target residual is not merely
+"generic x86 assembly"; as an encoding family it matches the TC4J integrated
+assembler and differs coherently from external TASM.
+
+Private receipt SHA-256:
+`3e17938922d5565febee6d3c06b844f0af79b8b34a9ad7a8ecd3eeb22ef772f7`.
+
+This is strong **producer-mechanism** evidence, not independent historical
+source provenance. Repository policy still forbids promoting these owners by
+copying target-derived inline assembly. Carpet remains **67 exact + 23 blocked
+bytes**, and MAIN remains 27 bytes short overall.
