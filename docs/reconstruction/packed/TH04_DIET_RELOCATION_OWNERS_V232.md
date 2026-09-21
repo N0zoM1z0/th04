@@ -341,3 +341,13 @@ The practical routing is now two-track: test assembler/FIXUPP emission behavior
 for the pure per-record reversals, and recover plausible historical TU/object
 boundaries for the C++/monolithic interleavings. Neither route permits editing
 the linked relocation table directly.
+
+## v453 TASM5 FIXUPP option/version surface
+
+v448 isolated several pure per-record reversals, so v453 tests whether the pinned TASM32 5.0 can naturally change FIXUPP emission direction without touching relocation bytes. On the real OP music source, `/m1..5`, `/q`, `/a`, `/s`, `/os`, `/o`, `/oi`, and `/uT500` preserve the target-relevant FIXUPP group order; options that change OMF metadata still keep the same CODE and relocation LOCAT sequence.
+
+Two source-independent fixtures cover version emulation. `DW SEG F1..F8` tests segment fixups, and eight external FAR calls test far-call fixups. Every legal compatibility ID tested (`T100,T101,T200,T250,T300,T310,T320,T400,T410,T500` and `M400,M500,M510,M520`) keeps LOCATs ascending. T100/T101 and MASM modes can change the FAR-call encoding/fixup kind, proving `/u` is active, but still never reverse emission.
+
+Private receipt SHA-256: `5bc420f45907e0c32bcdff9c3673b1804ad0b66abd8bc47c6e74908f94aadaba`.
+
+This closes only the pinned TASM32 5.0 option/version-emulation surface. It does not prove the historical TH04 producer was TASM; v448's reverse records must come from another producer/version or a different physical source/TU organization.

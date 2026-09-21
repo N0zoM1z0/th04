@@ -86,6 +86,10 @@ python3 scripts/audit_compat_dependencies.py --check
   while FIXUPP 74 rotates left by 9, yielding target runs 74×23, 76×29, 74×9.
   MAINE monolith similarly interleaves multiple records. Treat assembler
   emission direction and historical TU/object ownership as separate blockers.
+- v453 closes pinned TASM32 5.0 option/version emulation as the source of
+  those pure reversals. Real OP music OMF/multipass variants keep current order;
+  symbolic `/uT100..T500` and MASM compatibility fixtures remain ascending even
+  when FAR-call fixup kind changes. Look for a different producer or TU shape.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -117,7 +121,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
