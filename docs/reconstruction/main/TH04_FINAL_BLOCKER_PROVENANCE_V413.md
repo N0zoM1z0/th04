@@ -93,3 +93,32 @@ nor a surviving trial/executable LHA member table is recoverable from free FAT
 data. Anonymous compressed fragments without a surviving filename/header remain
 unattributable and therefore cannot serve as independent reconstruction
 provenance. The MAIN byte count is unchanged.
+
+## v415 anonymous raw-code remnant scan
+
+v413/v414 closed intact deleted files, free-cluster file starts, surviving LHA
+member headers, and trial/executable text markers. One narrower loophole remained:
+a deleted build could have lost all metadata while one or more **uncompressed code
+fragments** survived in FAT-free clusters.
+
+`scripts/probes/probe_th04_hdi_raw_code_remnants.py` verifies the same pinned HDI
+and FAT geometry, concatenates each of the four attested free-cluster runs, and
+searches their raw bytes for four final-blocker signatures:
+
+- a short `snd_load` DOS-open sequence with the filename word wildcarded and
+  either `89 C3` or `8B D8` accepted for the handle copy;
+- a longer form continuing through driver dispatch, DOS read, `POP DS`, and close,
+  again with data-symbol words wildcarded;
+- checkerboard's exact `MOV ES,DX / MOV CX,6 / ES:[DI] dword store / ADD DI,8 /
+  LOOP` core;
+- carpet's distinctive prologue through `PUSH DS/POP ES`, two `MUL BX`, the target
+  register directions, `MOV CX,24`, and `LODSB`, with only the two data offsets
+  wildcarded.
+
+Across all **1,083** free clusters, every search returns zero hits. Private
+receipt SHA-256:
+`23a477e59cddd3ff4e124388ab9e11d11ed37b4581b2175a39bb5e61e40deedc`.
+
+This closes the local anonymous-uncompressed-code route. It does not exclude
+compressed fragments or bytes that have been overwritten, and therefore remains
+negative provenance evidence only. The 27-byte MAIN gap is unchanged.
