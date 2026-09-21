@@ -43,6 +43,7 @@ the accepted extent.
 - v411 closes the remaining register-encoding front-end hypothesis: TCC across `-O/-G/-r` profiles and same-media PC-98 `TC.EXE` all retain natural `8B/33/03/IMUL` forms rather than the residual `89/31/01/D1/MUL` encodings.
 - v412 confirms the six ordinary carpet C++/pseudo-register statements still choose the non-target `8B/03/33` directions in the full real function context; neighboring inline-ASM barriers do not rescue those 12 bytes.
 - v413 performs deleted/unallocated FAT12 forensics on the pinned user-supplied HDI: the active GENSO set is unique, deleted directory entries are only NP2 SYS files, and the sole free-cluster MZ is an old CanBe/PMD self-extractor, not an alternate TH04 build.
+- v414 closes the partial-archive variant of that search: whole contiguous free runs contain no GEN_TS1/trial marker and no TH04 executable LHA member name; the only contiguous surviving archive pair is the already-classified CanBe GAMECB/PMDPPZ pair.
 - v408 splits the 174-byte checkerboard owner into 172 exact natural-source bytes plus one two-byte blocked `LOOP`; focused A/B, 272-owner candidate aggregate, and 272-owner post-promotion aggregate all pass with zero failures. The complete checkerboard function remains blocked.
 - v409 similarly partitions Stage 4 carpet: seven natural identity fragments totaling 56 bytes are exact, while eight low-level residual owners totaling 34 bytes remain blocked. Focused A/B plus 279-owner candidate and post-promotion aggregates all pass; the complete carpet function remains blocked.
 - v410 further separates compiler-generated carpet entry/exit bytes from the adjacent historical PUSH DS/POP ES and LOOP: 11 more bytes become exact, leaving carpet at 67/90 exact and 23 blocked. Focused A/B plus 281-owner candidate/post-promotion aggregates pass; the function remains blocked.
@@ -91,6 +92,7 @@ active:
 - `.analysis/gpt-web/v411-register-encoding-surface-001`
 - `.analysis/gpt-web/v412-carpet-natural-context-001`
 - `.analysis/gpt-web/v413-hdi-deleted-builds-001`
+- `.analysis/gpt-web/v414-hdi-partial-trial-001`
 - `.analysis/gpt-web/v406-tc4j-pc98-ide-optimizer-001`
 - `.analysis/gpt-web/v400-master-object-split-baseline-001`
 

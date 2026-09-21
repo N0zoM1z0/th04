@@ -54,3 +54,42 @@ The conclusion is intentionally bounded: FAT forensics cannot rule out partial
 fragments of a deleted file whose original first cluster was later overwritten
 or reallocated. Such fragments would not form a self-identifying executable and
 are not sufficient provenance for exact reconstruction anyway.
+
+## v414 partial-archive remnant scan
+
+v413 could only rule out intact deleted directory entries and file starts at a
+free-cluster boundary. v414 addresses the remaining forensic loophole: a deleted
+LHA self-extractor whose first cluster was later overwritten while later archive
+member headers survived in physically free clusters.
+
+`scripts/probes/probe_th04_hdi_partial_trial_remnants.py` verifies the same pinned
+HDI and FAT12 geometry, groups all 1,083 free clusters into four physically
+contiguous runs, and scans each complete run. This intentionally crosses 8 KiB
+cluster boundaries rather than searching clusters independently. It searches for
+`GEN_TS1`, `TAIKEN`, CP932 `体験版` / `３面まで`, and the four TH04 executable
+filenames, and independently parses plausible level-0/1 `-lh?-` headers at every
+offset.
+
+No trial or executable marker is present. Exactly six LHA member headers survive:
+
+| file offset | member | method | packed | original |
+| ---: | --- | --- | ---: | ---: |
+| `0xD3ECDF` | `OMAKE.TXT` | `-lh5-` | 8,551 | 21,523 |
+| `0xD45267` | `怪綺談.txt` | `-lh5-` | 8,259 | 27,195 |
+| `0xD4C6CC` | `README.TXT` | `-lh5-` | 2,996 | 7,145 |
+| `0xD502A6` | `GAMECB.BAT` | `-lh5-` | 243 | 301 |
+| `0xD503BB` | `PMDPPZ.COM` | `-lh5-` | 16,173 | 28,587 |
+| `0xD55DB7` | `RESET.BAT` | `-lh0-` | 70 | 70 |
+
+Only `GAMECB.BAT` has its computed next-member offset exactly equal to another
+surviving header, `PMDPPZ.COM`, matching the old CanBe SFX classified in v413.
+The other four are isolated archive remnants and none is a TH04 executable.
+
+Private receipt SHA-256:
+`2c1cc47ac78c4718f44781d61b1c45f122749d89bdabb82753927a18299f1112`.
+
+This strengthens the local-disk negative: neither an intact alternate TH04 file
+nor a surviving trial/executable LHA member table is recoverable from free FAT
+data. Anonymous compressed fragments without a surviving filename/header remain
+unattributable and therefore cannot serve as independent reconstruction
+provenance. The MAIN byte count is unchanged.
