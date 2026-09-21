@@ -207,11 +207,11 @@ alter or claim ownership of that surface.
 Private receipt SHA-256:
 `80f22afe0711fa905acc5d761f5c0731953cd16b4867db158ad78a4c382ea92a`.
 
-The acceptance limit remains unchanged: DIET `-RA` starts from the target and
-re-packs raw exact, but its restored MZ is not proven to be the historical
-pre-DIET TLINK output. v429 therefore supplies a **target-derived routing
-baseline**, not a relocation-order exactness oracle. Do not patch or permute the
-MZ table to satisfy it.
+At v429 this remained a target-derived routing baseline because `-RA` had not
+yet been shown to preserve arbitrary input relocation order. v447 below closes
+that ambiguity for the pinned DIET 1.45f path: the target-restored order becomes
+a packed-container constraint, while its historical **linker/object cause**
+remains unresolved. In either case, do not patch or permute product MZ tables.
 
 ## v441 active TLINK switch surface
 
@@ -250,3 +250,52 @@ This closes these **active TLINK 6.10** switch routes only. A different
 independently attested linker version or a real historical OMF boundary remains
 a separate hypothesis; v441 is not evidence for the lost original command
 line.
+
+## v447 DIET relocation-order preservation
+
+v429 localized the current candidate-versus-target-restored order differences,
+but deliberately stopped short of assuming that `DIET -RA` reconstructs the
+original input order. v447 tests that ambiguity directly with the pinned 1.45f
+packer rather than relying on undocumented format assumptions.
+
+For each artifact, the probe creates five private valid MZ copies differing
+**only** in relocation-table entry order:
+
+1. the current natural candidate order;
+2. a one-entry rotation;
+3. complete reversal;
+4. a swap of the first two entries;
+5. the v228 target-restored order.
+
+All entries are unique and the raw four-byte relocation-entry multiset remains
+identical in every variant. Each file is packed with the normal `-B -G` options,
+then immediately restored with `-RA`.
+
+| Artifact | relocations | tested orders | distinct packed outputs | byte-exact pack→`-RA` restores |
+| --- | ---: | ---: | ---: | ---: |
+| OP | 804 | 5 | **5** | **5 / 5** |
+| MAINE | 559 | 5 | **5** | **5 / 5** |
+
+Even tiny order changes matter. OP baseline/rotate/swap pack to 42,256 / 42,255
+/ 42,257 bytes; MAINE's three corresponding variants all happen to be 37,989
+bytes but have different SHA-256 values. Reversal also changes both packed byte
+streams. Most importantly, `-RA` returns every chosen permutation byte-for-byte,
+not a sorted or canonical table.
+
+The target-order-only controls reproduce the v432 `R` cells exactly:
+
+- OP: 42,242 bytes, SHA-256
+  `0f0b8b7bc1a56042beeb50540757c69b18df76b3edc429423120425aa99f96bb`;
+- MAINE: 37,935 bytes, SHA-256
+  `07b8154440b8b10c93ad70c970f2863cf53063370e410a6d0c169442a7de5973`.
+
+Private receipt SHA-256:
+`ef13a13e8be39118591e5a325cd19ea175c6025ecbfe8ff516e0c79bab46667f`.
+
+This upgrades the interpretation of the v228 order. Under the pinned DIET 1.45f
+path, relocation-table order is **preserved information in the packed
+container**; the v228 target-restored order is therefore a real packed-file
+reconstruction constraint, not a restore-time sorting artifact. What remains
+unknown is the historical producer: which natural OMF FIXUPP/object/library
+ordering made TLINK emit that sequence. Product relocation bytes still must not
+be rewritten merely to satisfy the container.

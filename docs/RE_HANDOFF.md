@@ -75,6 +75,11 @@ python3 scripts/audit_compat_dependencies.py --check
   real packed-container constraint, while historical relocation order and
   `minalloc` provenance remain open. MAINE `T` alone also selects target
   `dlzflag=0x30` / 496-byte SFX overhead; `P/R` alone stay `0x20` / 444.
+- v447 proves pinned DIET 1.45f preserves relocation-table order: five legal
+  private orders per artifact all pack differently and all `-RA` roundtrip
+  byte-exact. Therefore v228's target-restored relocation order is now a
+  **packed-container constraint**. The blocker is recovering its natural
+  OMF/FIXUPP/link cause, not deciding whether DIET sorted the table.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -83,13 +88,13 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from v429/v430/v436/v441/v446. The
-   target container now attests logical unpacked lengths 76,864 / 69,218, so
-   preserve those `T` lengths. Still treat v228 relocation order and historical
-   `minalloc` provenance as unresolved. Active TLINK 6.10 `/i`, `/e`/`/E`,
-   `/P`, and `/f` routes are closed. Next prefer DIET relocation-stream
-   analysis, independently supported physical OMF ownership, or a separately
-   attested historical linker/version mechanism.
+2. **OP/MAINE packed closure:** continue from v429/v430/v436/v441/v446/v447.
+   Preserve target-attested unpacked lengths 76,864 / 69,218 **and** the v228
+   relocation-table order; DIET 1.45f is now proven order-preserving on legal
+   TH04 permutations. Historical `minalloc` provenance and the natural
+   OMF/FIXUPP/link cause of the order remain unresolved. Active TLINK 6.10
+   `/i`, `/e`/`/E`, `/P`, and `/f` routes are closed. Do not hand-permute the
+   table; recover physical producer ordering instead.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 
@@ -106,7 +111,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v447. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
