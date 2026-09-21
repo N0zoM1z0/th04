@@ -403,3 +403,44 @@ This is strong **producer-mechanism** evidence, not independent historical
 source provenance. Repository policy still forbids promoting these owners by
 copying target-derived inline assembly. Carpet remains **67 exact + 23 blocked
 bytes**, and MAIN remains 27 bytes short overall.
+
+## v421 focused hybrid candidate
+
+v420 identifies one coherent TC4J integrated-assembler encoding fingerprint
+across all 23 residual carpet bytes. v421 tests the corresponding maintained
+**hybrid C++** producer without changing physical ownership yet. The ordinary
+C++ portions retain the semantics and code shapes already accepted by v409/v410;
+only the residual low-level operations are expressed as symbolic integrated
+assembly. The source contains no machine-byte array, `__emit__`, codestring,
+inert operation, fake return, target patch, or ABI lie.
+
+The complete 90-byte owner is deliberately registered as an **unaddressed
+candidate**. This uses the replay driver's explicit manifest-candidate path:
+`target_file_offset = 0x1028A` and `size = 0x5A` are inspection coordinates
+only, while `units.csv` grants this candidate no file-offset ownership. The
+v409/v410 exact fragments and blocked residual rows therefore remain the live
+physical accounting during this packet.
+
+Staged focused replay
+`gpt-web-v421-carpet-hybrid-focused-candidate-001` builds two isolated cold
+trees and passes with `failures=[]`. For both A and B, the candidate reports:
+
+- raw exact over all 90 bytes, target/candidate SHA-256
+  `d06f7b07a8e6a162a9c211f1014ff514f9df053d9c5594f814bbc19bb14dc5c9`;
+- containing MAP contribution exact at `STAGES_TEXT 0AAF:3F9A`;
+- ordered relocation overlap exact and empty;
+- valid `TC86 Borland C++ 4.02` OMF;
+- `stages.obj` SHA-256
+  `a9c627b4db38c2102ba5ddafa6b104bbcc9d85b1a49ea52d2ea9cda96da1a73f`;
+- dependency-normalized OMF SHA-256
+  `0ad0bec4384663236dc88e41e95a3f3621a243b7e2e0e208706f7d9b6c6dbaeb`;
+- identical candidate MAIN SHA-256
+  `6b17431e8e9a373a8e37d7dc635d8a341d6daac949923bbcb396939b652a2203`.
+
+Focused receipt SHA-256:
+`19377502e0dc68e13bb802b1c41c03c0f1cb2de7d4027868195bce41e9eae37e`.
+
+This is the first complete linked-exact carpet producer from maintained source,
+but it remains **candidate-state evidence**. No new exact-byte credit is granted
+until the default aggregate passes and the v409/v410 partition is explicitly
+superseded without overlap or double counting.

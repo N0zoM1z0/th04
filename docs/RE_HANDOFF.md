@@ -48,6 +48,7 @@ the accepted extent.
 - v416 scans 880,571 bytes of allocated file/directory slack (163 files, 7 directories); the same blocker signatures again have zero hits, closing the allocated-slack remnant route.
 - v419 closes the active-file/archive side of the supplied HDI: 164 active files contain no development/build artifacts or GEN_TS1, and the only active LZH archives contain PMD compatibility or music/text data.
 - v420 identifies a coherent carpet producer fingerprint: TC4J integrated assembly reproduces every remaining 89/01/31 direction plus MUL/LODSB/SHL/LOOP, while external TASM systematically chooses 8B/03/33 synonyms. This is mechanism evidence only; provenance is still insufficient for promotion.
+- v421 focused candidate replay closes the complete 90-byte carpet owner twice from maintained hybrid C++ (raw/MAP/empty-relocation/OMF exact). It remains unaddressed and zero-credit pending default aggregate replay and explicit v409/v410 ownership migration.
 - v417 closes carpet multiplication signedness/width forms: casts and unsigned locals still choose IMUL variants, while a full 32-bit unsigned product uses MOVZX/IMUL/SHLD; no natural form emits F7 E3 MUL BX.
 - v418 closes the remaining LODSB/post-increment and movedata surfaces. Near-array intrinsic memcpy can naturally emit `PUSH DS; POP ES`, but the pair stays at the real copy site and is not hoisted across earlier scalar work; carpet has no semantically matching string operation.
 - v408 splits the 174-byte checkerboard owner into 172 exact natural-source bytes plus one two-byte blocked `LOOP`; focused A/B, 272-owner candidate aggregate, and 272-owner post-promotion aggregate all pass with zero failures. The complete checkerboard function remains blocked.
@@ -105,6 +106,7 @@ active:
 - `.analysis/gpt-web/v418-lodsb-segment-surface-001`
 - `.analysis/gpt-web/v419-hdi-active-dev-001`
 - `.analysis/gpt-web/v420-carpet-asm-fingerprint-001`
+- `.analysis/reconstruction/exact-unit-replay/gpt-web-v421-carpet-hybrid-focused-candidate-001`
 - `.analysis/gpt-web/v406-tc4j-pc98-ide-optimizer-001`
 - `.analysis/gpt-web/v400-master-object-split-baseline-001`
 

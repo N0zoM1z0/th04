@@ -9057,10 +9057,9 @@ map_size = "0x19"
 target_file_offset = "0x10270"
 size = "0x19"
 
-# v174 negative packet: keep a maintainable natural-C++ semantic baseline for
-# the Stage 4 carpet-lighting producer. This unit is deliberately non-default
-# and blocked; it exists to preserve compiler/source-shape evidence, not to
-# manufacture equality with the historical inline-assembly instruction shape.
+# v421 candidate: complete maintained hybrid carpet producer. It stays
+# non-default and unaddressed until aggregate replay and explicit migration
+# supersede the v409/v410 physical partition without double counting.
 [[units]]
 id = "th04-main-carpet-lighting-v174"
 default_enabled = false
@@ -9074,11 +9073,14 @@ replace_sha256 = "38eeca85c565a3a5b43f445c58f59cf1e669978db40cccce4e72cbb12593dc
 map_module = "th04/stages.cpp"
 map_mode = "contains"
 object_path = "obj/th04/stages.obj"
+target_file_offset = "0x1028A"
+size = "0x5A"
 
 # v175 candidate: recover the complete MAIN_0_TEXT player update/miss/render
 # cohort as two natural TC4J producers. Target relocation order motivates the
 # physical object order residual th04_main.asm -> pupdate.cpp -> prender.cpp.
 # The residual object retains zero MAIN_0_TEXT bytes and all unrelated owners.
+
 [[build_replacements]]
 id = "th04-main-player-main0-v175-build"
 trigger_units = ["th04-main-player-render-v175"]
