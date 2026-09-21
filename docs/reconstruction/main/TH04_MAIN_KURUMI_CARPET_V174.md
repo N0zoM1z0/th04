@@ -343,3 +343,32 @@ None of the five forms contains target `F7 E3`. Private receipt SHA-256:
 This closes the signedness/product-width source hypothesis for the two remaining
 carpet `MUL BX` sites. Both physical owners remain blocked; the 27-byte MAIN gap
 is unchanged and no inline-assembly provenance is inferred.
+
+## v418 LODSB and DS→ES compiler surface
+
+v418 closes two remaining natural-codegen questions without changing byte
+ownership. Fixed-`SI` post-increment byte loads are tested as cast,
+`reinterpret_cast`, explicit load-then-increment, and register near-pointer
+forms. Pinned TC4J lowers all of them to `MOV AL,[SI]; INC SI` (or an
+equivalent temporary-register sequence); none emits target `LODSB` (`AC`).
+
+The Borland `movedata()` runtime primitive is also tested. It remains a FAR
+library call, and `#pragma intrinsic movedata` is rejected as ill-formed. Thus
+it does not provide an inline DS→ES setup or LODSB path.
+
+One correction to the older wording is important: `PUSH DS; POP ES` is not an
+assembler-only opcode pair. The already-attested TC4J `#pragma intrinsic
+memcpy` path for two near arrays naturally emits `1E 07`. v418 therefore adds a
+placement control with a real scalar statement before the copy. The scalar
+statement remains first and `PUSH DS; POP ES` stays attached to the memcpy
+lowering, proving that TC4J does not hoist this setup to function entry simply
+because a later string intrinsic exists. Carpet contains no corresponding
+string operation, so no semantically matching natural source for its entry pair
+is demonstrated. An inert/fake memcpy would violate repository policy and is
+not considered.
+
+Private receipt SHA-256:
+`2a82ad809032d72099738740737475f6ad8a09bc6a182e1570ecfe2287490e35`.
+
+Carpet remains **67 exact + 23 blocked bytes**. The result narrows mechanism
+claims only; it grants no exactness or inline-assembly provenance.
