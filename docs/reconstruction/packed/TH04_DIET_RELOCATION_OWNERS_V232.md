@@ -59,3 +59,29 @@ For OP/MAINE, inspect the ASM master and `bgimage.cpp` OMF FIXUPP ownership,
 segment contributions, and natural link input order before changing the
 source layout. A final table permutation or target-derived hybrid would only
 manufacture packed equality; neither is a reconstruction solution.
+
+## v425 MAINE master-object order follow-up
+
+v232 measured the old monolithic candidate. After v400/v401 restored real
+master CODE/DATA object boundaries, v425 revisits MAINE without editing source
+bodies or relocation-table bytes. The only change is TLINK input order among
+already-separated objects: `mainem.obj`, then the two master CODE tails, then
+the historical `VS.OBJ` and maintained DATA tail.
+
+Two copied v401 source trees build identically. Payload size stays `0xF3CE`; the
+only payload difference remains the shared two-byte `snd_load` handle copy, and
+the 559 relocation-site multiset stays target-equal. Relative to the pinned
+DIET-restored target view, the ordered mismatch collapses from 13 indices
+`42..54` to exactly two indices, `48..49`: candidate `0x2F59, 0x2FE7` versus
+restored view `0x2FE7, 0x2F59`. 557/559 entries are now equal at the same table
+index. Both A/B candidates have SHA-256
+`9b14cad4fc3bbd079890cd15d64de03d3c7159fb2b4ae38dab111bdfc8a0df60`.
+
+Private receipt SHA-256:
+`8b0154c2c2a28e7877b2b1a94fe4831664ac29ec700ae929fde3c16c15fc6f6e`.
+
+This is physical/link-topology evidence, not an ordered-relocation exactness
+claim. DIET `-RA` is known to restore the stub/application order; the historical
+pre-DIET TLINK table remains unobserved. The final two-entry swap must therefore
+not be repaired by hand or promoted into a source requirement merely to make a
+restored diagnostic view equal.
