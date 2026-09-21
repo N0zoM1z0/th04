@@ -50,6 +50,7 @@ the accepted extent.
 - v420 identifies a coherent carpet producer fingerprint: TC4J integrated assembly reproduces every remaining 89/01/31 direction plus MUL/LODSB/SHL/LOOP, while external TASM systematically chooses 8B/03/33 synonyms. This is mechanism evidence only; provenance is still insufficient for promotion.
 - v421 focused replay and the complete 282-owner candidate aggregate prove that the 90-byte carpet hybrid can link raw-exact, but v422 quarantines it: exact replay cannot supply the missing independent historical source provenance. Natural product source and v409/v410 accounting remain authoritative (67 exact + 23 blocked).
 - v423 weakens carpet cross-game matching to a semantic paired-column-fill invariant (common bound, 2:1 word/dirty stride) and still finds only TH04 MAIN across all 20 registered images; differing constants do not reveal an independent lineage witness.
+- v424 likewise generalizes checkerboard matching across ES register, repeat count, dword source register, and DI stride; the compact dword-store LOOP plus row-rewind architecture still appears only in TH04 MAIN.
 - v417 closes carpet multiplication signedness/width forms: casts and unsigned locals still choose IMUL variants, while a full 32-bit unsigned product uses MOVZX/IMUL/SHLD; no natural form emits F7 E3 MUL BX.
 - v418 closes the remaining LODSB/post-increment and movedata surfaces. Near-array intrinsic memcpy can naturally emit `PUSH DS; POP ES`, but the pair stays at the real copy site and is not hoisted across earlier scalar work; carpet has no semantically matching string operation.
 - v408 splits the 174-byte checkerboard owner into 172 exact natural-source bytes plus one two-byte blocked `LOOP`; focused A/B, 272-owner candidate aggregate, and 272-owner post-promotion aggregate all pass with zero failures. The complete checkerboard function remains blocked.
@@ -108,6 +109,7 @@ active:
 - `.analysis/gpt-web/v419-hdi-active-dev-001`
 - `.analysis/gpt-web/v420-carpet-asm-fingerprint-001`
 - `.analysis/gpt-web/v423-carpet-semantic-lineage-001`
+- `.analysis/gpt-web/v424-checker-semantic-lineage-001`
 - `.analysis/reconstruction/exact-unit-replay/gpt-web-v421-carpet-hybrid-focused-candidate-001`
 - `.analysis/reconstruction/exact-unit-replay/gpt-web-v421-carpet-hybrid-aggregate-candidate-001`
 - `.analysis/gpt-web/v406-tc4j-pc98-ide-optimizer-001`

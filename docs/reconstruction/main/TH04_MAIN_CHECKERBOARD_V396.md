@@ -145,3 +145,23 @@ Both final candidate MAIN images have SHA-256
 This adds **172 exact reviewed authored bytes** while leaving the only
 unsupported instruction untouched and blocked. Checkerboard's remaining byte
 gap is now exactly two bytes, `E2 F7`.
+
+## v424 generalized semantic-lineage scan
+
+v405 searched for the exact unusual checkerboard core. v424 removes the
+TH04-specific register/count/stride choices: the scan accepts any `MOV ES,r16`,
+any immediate `CX` repeat count, any 32-bit source register stored to `ES:[DI]`,
+and any byte-sized DI stride. It then requires the compact `LOOP` backedge plus
+a following DI row rewind and signed row backedge.
+
+All eight DIET-wrapped registered artifacts are restored with the pinned local
+toolchain first. Across all 20 TH01-TH05 program images, the generalized
+architecture still occurs exactly once: TH04 MAIN load `0x120AF`. No other
+artifact supplies a same-semantics compact-LOOP producer with different
+dimensions or register allocation.
+
+Private receipt SHA-256:
+`10e4b4b76c69327a43de6113d5c7efb9592c076bc603038fd1a8ae44362002bb`.
+
+This strengthens the provenance negative but changes no accounting. The two-byte
+`E2 F7` owner remains blocked.
