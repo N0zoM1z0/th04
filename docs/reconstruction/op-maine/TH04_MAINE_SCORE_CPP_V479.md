@@ -74,3 +74,60 @@ Continue forward through the adjacent SCORE_TEXT helpers (`sub_C506`,
 and the final EGC helper pair). The goal is to grow one natural TC86 SCORE_TEXT
 producer until its internal segment-FIXUPP order matches the remaining 34 target
 indices. Do not permute MZ relocation entries.
+
+## v480 score/stage rendering prefix
+
+Two adjacent helpers immediately follow the v479 insertion routine.
+
+### Score renderer (`sub_C506`)
+
+Cross-game comparison with TH05 `sub_B899` reveals the same score-digit renderer
+with TH04's two-character layout. The target ABI is naturally expressed as
+`pascal (place, unsigned char playchar)`: Borland pushes `place` first and the
+byte playchar second, producing the observed `[bp+6]` / `[bp+4]` slots and
+`RET 4`.
+
+The exact source-shape controls are ordinary C++ semantics:
+
+- ternary expressions for y/x/pattern-base selection produce the target
+  branch-merge stores;
+- the rendered playchar is byte-sized, matching the target zero-extension;
+- digit arithmetic is written before addition of the pattern base, selecting
+  the target AX/DX evaluation order.
+
+TC86 emits **230 / 230 raw CODE bytes exactly**.
+
+### Stage renderer (`sub_C5EC`)
+
+The next helper selects highlight color, derives x/y from `(place, playchar)`,
+and draws a two-pixel color-14 shadow plus the actual gaiji. Its natural source
+uses a word-sized playchar argument but explicitly compares it to the byte-sized
+global `playchar`, matching the target `mov al / mov ah,0 / cmp ax,di` sequence.
+TC86 emits **121 / 121 raw CODE bytes exactly**.
+
+### One natural SCORE_TEXT producer
+
+v480 compiles `score_insert + score_put + stage_put` as one TC86 TU. The complete
+prefix is **`0x2B3` / 691 raw bytes exact**, SHA-256
+`33c15523010ce54850087504a918a1b0a681ba5009470fdc3ffb0b450c006b1b`.
+
+The five segment FIXUPPs are emitted high-address first at local offsets:
+
+`0x2A9, 0x295, 0x224, 0x1FB, 0x1D3`.
+
+After linking, their physical sites are:
+
+`0xC65D, 0xC649, 0xC5D8, 0xC5AF, 0xC587`.
+
+That sequence exactly equals target indices `327..331`. At the current partial
+source split the C++ prefix appears before the higher-address TASM remainder,
+so the same sequence occupies candidate indices `311..315`; ordered residual
+therefore remains **42**. This is expected and demonstrates the producer
+direction needed when the rest of the first SCORE FIXUPP record is recovered.
+
+Both A/B runs preserve the full linked program image and target-equal 559-site
+relocation multiset. Private receipt SHA-256:
+`ff298d52b99f5d020b79239b539889bb830613aea1e03fd6de9d13b5749cf30a`.
+
+Continue with `sub_C665` and the following rendering helpers, extending this
+same TC86 owner rather than creating independent final objects.

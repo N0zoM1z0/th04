@@ -175,6 +175,12 @@ python3 scripts/audit_compat_dependencies.py --check
   only this function preserves the entire v478 MAINE image and all 559
   relocation entries byte-for-byte, so residual stays 42 by design. Continue
   adjacent SCORE helpers to grow one natural TC86 SCORE_TEXT owner.
+- v480 extends that SCORE owner through the adjacent score and stage renderers.
+  `score_insert + score_put + stage_put` are **0x2B3 / 691 raw bytes exact** as
+  one TC86 TU. Its five segment FIXUPPs are already in the target-local order
+  required at indices 327..331; global residual remains 42 only because the
+  higher-address SCORE helpers are still in the following TASM owner. Continue
+  from `sub_C665` and grow the same producer forward.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
