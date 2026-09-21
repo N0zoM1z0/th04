@@ -299,3 +299,45 @@ reconstruction constraint, not a restore-time sorting artifact. What remains
 unknown is the historical producer: which natural OMF FIXUPP/object/library
 ordering made TLINK emit that sequence. Product relocation bytes still must not
 be rewritten merely to satisfy the container.
+
+## v448 OMF FIXUPP record projection
+
+With v447 establishing relocation-table order as packed information, v448 asks
+where the current order differs **inside the producer OMF**, rather than treating
+all 223/299 index differences as one TLINK-order problem. The probe parses the
+current OMFs, maps only kind-3 far-pointer FIXUPP locations to the corresponding
+DOS segment-word relocation (`LOCAT + 2`), and projects the target-constrained
+v228 order back through the current MAP contribution. MAP filenames are only
+candidate projection aids; they are not historical target ownership claims.
+
+The OP projection splits cleanly:
+
+| Current producer | Translator | Current FIXUPP runs | Target-projected runs | Relation |
+| --- | --- | --- | --- | --- |
+| `bgimage.obj` | TC86 4.02 | `33×8` | `33×8` | record 33 exact reverse |
+| `opmdata.obj` | TASM 5.0 | `154×4` | `154×4` | record 154 exact reverse |
+| `opmusicm.obj` | TASM 5.0 | `64×30, 66×5` | same record runs | **each record exact reverse** |
+| `hi_view.obj` | TC86 4.02 | `74×32, 76×29` | `74×23, 76×29, 74×9` | record 74 rotate-left 9; record 76 exact |
+
+That last row is particularly important. `hi_view` cannot be explained by a
+single assembler-wide reversal or by moving one whole current object in the
+TLINK response. The target projection keeps one FIXUPP record unchanged while
+splitting the other around it; globally those 61 sites are also interrupted by
+two `score_e.cpp` relocations. A historical TU/object/source split is therefore
+a live hypothesis for this C++ owner.
+
+MAINE likewise rejects a one-knob explanation. Its BGIMAGE record 33 and master
+DATA record 111 are exact reverses. The current TASM5 `th04_maine.asm` contributes
+175 MZ relocations across FIXUPP records 128, 130, 132, 134, 136, 138, 140 and
+142. The target projection changes the record run sequence from
+`43,44,18,17,17,10,22,4` contiguous sites to an interleaving that revisits
+records 132, 134 and 140. Records 138 and 142 are exact reverses; the remaining
+records are partitioned into smaller mostly reverse-oriented runs.
+
+Private receipt SHA-256:
+`5db2e319d1df6f61fa771b1fe11bba88e4c2816a9ed3b30044a3dcdc36583117`.
+
+The practical routing is now two-track: test assembler/FIXUPP emission behavior
+for the pure per-record reversals, and recover plausible historical TU/object
+boundaries for the C++/monolithic interleavings. Neither route permits editing
+the linked relocation table directly.
