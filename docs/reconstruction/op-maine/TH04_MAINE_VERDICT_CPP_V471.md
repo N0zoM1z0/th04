@@ -78,3 +78,64 @@ C++ shell:
 then expand toward `verdict_animate()`. The goal is to recover enough of the
 MAINE_01 TASM owner as one TC86 producer to reproduce the target's internal
 FIXUPP order naturally, never by permuting relocation records.
+
+## v472 `skill_apply_and_graph_percentage_put()`
+
+The next adjacent MAINE_01 helper spans load `0x1836..0x192A` (`0xF5` bytes).
+The maintained verdict semantics already constrain a straightforward natural
+C++ body:
+
+- derive a six-digit fraction from `share / total` in 32-bit arithmetic;
+- add or subtract that fraction from global `skill`;
+- render the integer percentage with `graph_3_digit_put()`;
+- render the two fixed fractional digits;
+- append the reconstructed fullwidth dot and percent strings through
+  `graph_putsa_fx()`.
+
+Pinned TC86 4.02 emits **all 245 raw CODE bytes exactly** from the checked replay
+template. The function OMF carries 12 fixups; the two segment fixups are at
+function offsets `0xEB` and `0xDB`, naturally emitted high-address first.
+
+### Linked source-level split
+
+v472 refines the v471 TASM suffix into:
+
+- `0x69` bytes of TASM immediately preceding the helper;
+- `0xF5` bytes of TC86 C++;
+- `0x7CE` bytes of remaining TASM.
+
+The existing private near helper `sub_B81D` crosses the new source-level object
+boundary and is therefore made `public near` in the replay scaffold. The two
+fullwidth string labels `aBd` and `aBu` live in the v470 rest/data owner; zero-byte
+`_aBd` / `_aBu` aliases expose those same addresses to TC86. These are symbolic
+boundary adapters only: they emit no new data and alter no linked address or
+program byte.
+
+Both A/B cold replays produce:
+
+- MAINE SHA-256
+  `db8d82aeb64407563a97a77ae285b477296c8f54cccd4ed743a6352d9e5bd418`;
+- MAP SHA-256
+  `22fab072431657e7d2ec33fb95fe79e1eb61605a5c985782535d25d0c403029a`;
+- unchanged program-image SHA-256
+  `0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`;
+- raw helper SHA-256
+  `9d2f2eb5690a82e44ce8b6fb87aa573a0c25752a18f136f952879b435a6e61b7`;
+- linked helper SHA-256
+  `1a4143ca6004cfb50313ba830da1d1490eb15de5c0366ce4392403867c5daa79`;
+- target-equal 559-site relocation multiset.
+
+Only relocation indices `254` and `255` change relative to v471. They become
+`0xB973, 0xB963`, exactly matching the target-constrained order. Ordered MAINE
+residual therefore falls from **178 to 176** (`383 / 559` same-index).
+
+Private receipt SHA-256:
+`ebf14039d80a96c8328eb18647e9eadec5381cdfeecd396bcd072878d331cffb`.
+
+## Updated next work
+
+Continue directly with the adjacent `graph_fraction_of_million_put()` helper,
+then expand the same TC86 owner toward `verdict_animate()`. Do not hand-reverse
+FIXUPP records; the graph3 and skill packets now demonstrate that natural C++
+producer recovery changes exactly the target-constrained entries while keeping
+all linked program bytes exact.

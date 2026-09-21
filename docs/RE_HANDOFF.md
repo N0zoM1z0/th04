@@ -136,6 +136,11 @@ python3 scripts/audit_compat_dependencies.py --check
   inside the v470 MAINE_01 owner preserves the entire MAINE EXE and all 559
   relocation entries byte-for-byte. This gives positive C++-producer evidence
   for the MAINE_01 residual; continue with the adjacent skill/fraction helpers.
+- v472 recovers `skill_apply_and_graph_percentage_put()` as **245/245 raw-and-
+  linked exact TC86 C++**. The whole MAINE program image stays unchanged; its
+  two `graph_putsa_fx` segment FIXUPPs naturally reverse to target indices
+  254..255, reducing ordered residual **178 -> 176**. Continue directly with
+  adjacent `graph_fraction_of_million_put()`, then grow the same verdict owner.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -147,9 +152,9 @@ python3 scripts/audit_compat_dependencies.py --check
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
    Attack only BGIMAGE internal direction (8 relocation entries) and the
-   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471 proves the
-   first verdict helper as linked-exact TC86 C++; continue the adjacent verdict
-   helper C++ owner to recover MAINE_01 internal FIXUPP direction, then SCORE
+   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471/v472 prove the first two verdict helpers as linked-exact TC86 C++;
+   continue `graph_fraction_of_million_put()` and expand the verdict C++ owner
+   to recover MAINE_01 internal FIXUPP direction, then SCORE
    and shared BGIMAGE direction.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
