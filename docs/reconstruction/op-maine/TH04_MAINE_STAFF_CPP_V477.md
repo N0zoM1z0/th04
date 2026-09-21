@@ -85,3 +85,38 @@ The remaining MAINE_01 prefix consists of `sub_B291`, `sub_B31E`, `sub_B3AC`,
 and `staffroll_animate()`. Target ordering shows another compiler-record
 interleave across that contiguous run, so continue recovering those functions
 as a natural TC86 owner rather than splitting or permuting relocation records.
+
+## v478 complete staff-roll owner
+
+v478 extends the v477 C++ owner through `sub_B291`, `sub_B31E`, `sub_B3AC`, and
+`staffroll_animate()`. The three loop helpers are direct page-flip/dissolve loops
+using the existing `graph_accesspage/showpage` macros and the typed
+`dissolve_put_func` pointer. All seven helpers through `sub_B3AC` form a
+`0x57D` raw-exact TC86 prefix.
+
+`staffroll_animate()` then reproduces the remaining `0x33A` bytes. The only
+source-level subtlety is restoring the actual coordinate-pair ordering at calls
+to the Pascal helpers; once those pairs are written in their historical order,
+the entire **0x8B7 / 2231-byte MAINE_01 staff owner is raw CODE exact**. Raw
+SHA-256:
+`d30e94167ce85eb5e38ecf6f9dce4f634a9088b7a3f8a9fcb238d5697a0da4d4`.
+
+Existing `sff*.pi`, `sff*.cdg`, and `staff` filename bytes stay in the v470
+rest/data owner. Zero-byte `_aSff*` / `_aStaff` aliases expose the same addresses
+to TC86 without moving or duplicating data.
+
+Both A/B replays produce MAINE SHA-256
+`45aa099ecb29aee883c29ea37c7ad8493ed1871e8b3694a19b63b8e28c331989`,
+MAP SHA-256
+`4be00e3e72042ef0a2ee38a223f63dea39fbf763cd19232b7321adb416200ccc`,
+and unchanged program-image SHA-256
+`0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`.
+TC86's three FIXUPP records naturally make target indices `195..250` exact.
+Ordered MAINE residual drops **98 -> 42** (`517 / 559` same-index), fully closing
+MAINE_01 internal relocation order.
+
+Private receipt SHA-256:
+`2b9c51d7497ee2b443a563151c39a61087900e77b29c7d30d43a50066bffead1`.
+
+Remaining MAINE relocation work is now only SCORE_TEXT internal direction (34)
+and shared BGIMAGE direction (8).

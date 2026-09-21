@@ -166,6 +166,10 @@ python3 scripts/audit_compat_dependencies.py --check
   `B25B -> B144 -> B02D -> AED0`; target indices 152..194 become exact and
   MAINE ordered residual drops **140 -> 98**. Continue the contiguous
   `B291/B31E/B3AC + staffroll_animate` block.
+- v478 completes all eight staff-roll functions as one **0x8B7 / 2231-byte
+  raw-and-linked exact TC86 C++ owner**. Target indices 195..250 become exact;
+  MAINE ordered residual drops **98 -> 42** and MAINE_01 internal order is fully
+  closed. Remaining MAINE R is SCORE_TEXT 34 + BGIMAGE 8.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 

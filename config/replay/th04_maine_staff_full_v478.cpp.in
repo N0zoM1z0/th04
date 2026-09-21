@@ -1,0 +1,319 @@
+#include "pc98.h"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th03/math/polar.hpp"
+#include "th02/v_colors.hpp"
+#include "th04/formats/cdg.h"
+#include "th04/hardware/bgimage.hpp"
+
+extern uint8_t cdg_slot;
+extern unsigned char radial_angle;
+
+#pragma codeseg MAINE_01_TEXT maine_01
+void pascal near staffroll_dissolve_radial_put(
+	screen_x_t base_left, screen_y_t base_top, int distance
+)
+{
+	if(!distance) {
+		cdg_put_8(base_left, base_top, cdg_slot);
+		return;
+	}
+	grcg_setcolor(GC_RMW, V_WHITE);
+	distance /= 4;
+	int x = polar(base_left, distance, CosTable8[radial_angle]);
+	int y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 0);
+	radial_angle += 0x40;
+	x = polar(base_left, distance, CosTable8[radial_angle]);
+	y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 1);
+	radial_angle += 0x40;
+	x = polar(base_left, distance, CosTable8[radial_angle]);
+	y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 2);
+	radial_angle += 0x40;
+	x = polar(base_left, distance, CosTable8[radial_angle]);
+	y = polar(base_top, distance, SinTable8[radial_angle]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 3);
+	radial_angle += 0x40;
+	_DX = 0x7C; _AL = 0; outportb(_DX, _AL);
+}
+
+void pascal near staffroll_dissolve_diagonal_put(
+	screen_x_t base_left, screen_y_t base_top, int distance
+)
+{
+	if(!distance) { cdg_put_8(base_left, base_top, cdg_slot); return; }
+	grcg_setcolor(GC_RMW, V_WHITE);
+	distance /= 2;
+	int x = polar(base_left, (distance / 2), CosTable8[96]);
+	int y = polar(base_top, (distance / 2), CosTable8[32]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 0);
+	x = polar(base_left, distance, CosTable8[64]);
+	y = polar(base_top, distance, CosTable8[0]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 1);
+	x = polar(base_left, (distance / 2), CosTable8[224]);
+	y = polar(base_top, (distance / 2), CosTable8[160]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 2);
+	x = polar(base_left, distance, CosTable8[192]);
+	y = polar(base_top, distance, CosTable8[128]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 3);
+	_DX = 0x7C; _AL = 0; outportb(_DX, _AL);
+}
+
+void pascal near staffroll_dissolve_axis_put(
+	screen_x_t base_left, screen_y_t base_top, int distance
+)
+{
+	if(!distance) { cdg_put_8(base_left, base_top, cdg_slot); return; }
+	grcg_setcolor(GC_RMW, V_WHITE);
+	distance /= 2;
+	int x = polar(base_left, (distance / 2), CosTable8[0]);
+	int y = polar(base_top, (distance / 2), SinTable8[0]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 0);
+	x = polar(base_left, distance, CosTable8[0]);
+	y = polar(base_top, distance, SinTable8[0]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 1);
+	x = polar(base_left, (distance / 2), CosTable8[128]);
+	y = polar(base_top, (distance / 2), CosTable8[64]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 2);
+	x = polar(base_left, distance, CosTable8[128]);
+	y = polar(base_top, distance, CosTable8[64]);
+	cdg_put_plane(x, y, (cdg_slot + 1), 3);
+	_DX = 0x7C; _AL = 0; outportb(_DX, _AL);
+}
+
+void pascal near staffroll_bgimage_expand_put(
+	screen_x_t left, screen_y_t top, pixel_t w, pixel_t h, int distance
+)
+{
+	register int half = distance;
+	half /= 2;
+	bgimage_put_rect_16(
+		(left - half), (top - half), (w + (half * 2)), (h + (half * 2))
+	);
+}
+#pragma codeseg
+
+extern void (near pascal *near dissolve_put_func)(
+	screen_x_t base_left, screen_y_t base_top, pixel_t distance
+);
+
+#pragma codeseg MAINE_01_TEXT maine_01
+void pascal near staffroll_dissolve_out(screen_x_t base_left, screen_y_t base_top)
+{
+	register int distance;
+	register screen_x_t left = base_left;
+	distance = 63;
+	int page = 0;
+	graph_accesspage(0);
+	graph_showpage(1);
+	while(distance > 0) {
+		staffroll_bgimage_expand_put(
+			left, base_top,
+			cdg_slots[cdg_slot].pixel_w,
+			cdg_slots[cdg_slot].pixel_h,
+			(distance + 1)
+		);
+		distance--;
+		radial_angle += 8;
+		dissolve_put_func(left, base_top, distance);
+		while(vsync_Count1 < 2) { }
+		vsync_Count1 = 0;
+		graph_showpage(page);
+		page = (1 - page);
+		graph_accesspage(page);
+	}
+	graph_copy_page(page);
+}
+#pragma codeseg
+
+#pragma codeseg MAINE_01_TEXT maine_01
+void pascal near staffroll_dissolve_in(screen_x_t base_left, screen_y_t base_top)
+{
+	register int distance;
+	register screen_x_t left = base_left;
+	distance = 0;
+	int page = 0;
+	graph_accesspage(0);
+	graph_showpage(1);
+	while(true) {
+		staffroll_bgimage_expand_put(
+			left, base_top,
+			cdg_slots[cdg_slot].pixel_w,
+			cdg_slots[cdg_slot].pixel_h,
+			distance
+		);
+		distance++;
+		radial_angle += 8;
+		if(distance >= 64) {
+			break;
+		}
+		dissolve_put_func(left, base_top, distance);
+		while(vsync_Count1 < 2) { }
+		vsync_Count1 = 0;
+		graph_showpage(page);
+		page = (1 - page);
+		graph_accesspage(page);
+	}
+	graph_copy_page(1 - page);
+}
+
+void pascal near staffroll_dissolve_two(
+	screen_x_t base_left_1, screen_y_t base_top_1,
+	screen_x_t base_left_2, screen_y_t base_top_2
+)
+{
+	register int distance;
+	register screen_x_t left_1 = base_left_1;
+	distance = 0;
+	int page = 0;
+	graph_accesspage(0);
+	graph_showpage(1);
+	while(true) {
+		staffroll_bgimage_expand_put(
+			left_1, base_top_1,
+			cdg_slots[2].pixel_w,
+			cdg_slots[2].pixel_h,
+			distance
+		);
+		staffroll_bgimage_expand_put(
+			base_left_2, base_top_2,
+			cdg_slots[0].pixel_w,
+			cdg_slots[0].pixel_h,
+			distance
+		);
+		distance++;
+		radial_angle -= 8;
+		if(distance >= 64) {
+			break;
+		}
+		cdg_slot = 2;
+		dissolve_put_func(left_1, base_top_1, distance);
+		cdg_slot = 0;
+		dissolve_put_func(base_left_2, base_top_2, distance);
+		while(vsync_Count1 < 2) { }
+		vsync_Count1 = 0;
+		graph_showpage(page);
+		page = (1 - page);
+		graph_accesspage(page);
+	}
+	graph_copy_page(1 - page);
+}
+#pragma codeseg
+
+#include "th02/formats/pi.h"
+#include "th04/snd/snd.h"
+#include "th04/hardware/bgimage.hpp"
+
+extern "C" {
+extern char aSff1_pi[];
+extern char aStaff[];
+extern char aSff1_cdg[]; extern char aSff1b_cdg[];
+extern char aSff2_cdg[]; extern char aSff2b_cdg[];
+extern char aSff3_cdg[]; extern char aSff3b_cdg[];
+extern char aSff2_pi[];
+extern char aSff4_cdg[]; extern char aSff4b_cdg[];
+extern char aSff5_cdg[]; extern char aSff5b_cdg[];
+extern char aSff8_cdg[]; extern char aSff8b_cdg[];
+extern char aSff9_cdg[]; extern char aSff9b_cdg[];
+extern char aSff6_cdg[]; extern char aSff6b_cdg[];
+extern char aSff7_cdg[]; extern char aSff7b_cdg[];
+}
+
+#pragma codeseg MAINE_01_TEXT maine_01
+void near staffroll_animate(void)
+{
+	PaletteTone = 0;
+	palette_show();
+	graph_accesspage(1);
+	pi_load(0, aSff1_pi);
+	pi_palette_apply(0);
+	pi_put_8(0, 0, 0);
+	pi_free(0);
+	graph_copy_page(0);
+	bgimage_snap();
+	snd_kaja_func(KAJA_SONG_STOP, 0);
+	snd_load(aStaff, SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+	palette_black_in(12);
+	cdg_load_single(0, aSff1_cdg, 0);
+	cdg_load_single_noalpha(1, aSff1b_cdg, 0);
+	snd_delay_until_measure(3, 64);
+	cdg_slot = 0;
+	dissolve_put_func = staffroll_dissolve_radial_put;
+	staffroll_dissolve_out(352, 160);
+	cdg_load_single(2, aSff2_cdg, 0);
+	cdg_load_single_noalpha(3, aSff2b_cdg, 0);
+	snd_delay_until_measure(7, 160);
+	dissolve_put_func = staffroll_dissolve_diagonal_put;
+	staffroll_dissolve_in(352, 160);
+	cdg_slot = 2;
+	dissolve_put_func = staffroll_dissolve_axis_put;
+	staffroll_dissolve_out(192, 128);
+	graph_accesspage(0);
+	cdg_slot = 0;
+	cdg_load_single(0, aSff3_cdg, 0);
+	cdg_load_single_noalpha(1, aSff3b_cdg, 0);
+	snd_delay_until_measure(11, 160);
+	staffroll_dissolve_out(288, 200);
+	snd_delay_until_measure(19, 160);
+	dissolve_put_func = staffroll_dissolve_diagonal_put;
+	staffroll_dissolve_two(192, 128, 288, 200);
+	palette_black_out(4);
+	cdg_free_all();
+	graph_accesspage(1);
+	pi_load(0, aSff2_pi);
+	pi_palette_apply(0);
+	pi_put_8(0, 0, 0);
+	pi_free(0);
+	graph_copy_page(0);
+	bgimage_snap();
+	palette_black_in(4);
+	cdg_load_single(2, aSff4_cdg, 0);
+	cdg_load_single_noalpha(3, aSff4b_cdg, 0);
+	snd_delay_until_measure(23, 160);
+	cdg_slot = 2;
+	dissolve_put_func = staffroll_dissolve_axis_put;
+	staffroll_dissolve_out(32, 112);
+	cdg_free(2);
+	cdg_load_single(4, aSff5_cdg, 0);
+	cdg_load_single_noalpha(5, aSff5b_cdg, 0);
+	snd_delay_until_measure(27, 160);
+	cdg_slot = 4;
+	dissolve_put_func = staffroll_dissolve_diagonal_put;
+	staffroll_dissolve_out(32, 184);
+	cdg_load_single(0, aSff8_cdg, 0);
+	cdg_load_single_noalpha(1, aSff8b_cdg, 0);
+	snd_delay_until_measure(31, 160);
+	dissolve_put_func = staffroll_dissolve_axis_put;
+	staffroll_dissolve_in(32, 184);
+	cdg_slot = 0;
+	staffroll_dissolve_out(64, 184);
+	cdg_load_single(4, aSff9_cdg, 0);
+	cdg_load_single_noalpha(5, aSff9b_cdg, 0);
+	snd_delay_until_measure(35, 160);
+	dissolve_put_func = staffroll_dissolve_radial_put;
+	staffroll_dissolve_in(64, 184);
+	cdg_slot = 4;
+	staffroll_dissolve_out(64, 184);
+	cdg_load_single(0, aSff6_cdg, 0);
+	cdg_load_single_noalpha(1, aSff6b_cdg, 0);
+	snd_delay_until_measure(39, 160);
+	dissolve_put_func = staffroll_dissolve_diagonal_put;
+	staffroll_dissolve_in(64, 184);
+	cdg_slot = 0;
+	staffroll_dissolve_out(32, 184);
+	snd_delay_until_measure(43, 160);
+	dissolve_put_func = staffroll_dissolve_axis_put;
+	staffroll_dissolve_two(32, 112, 32, 184);
+	cdg_load_single(0, aSff7_cdg, 0);
+	cdg_load_single_noalpha(1, aSff7b_cdg, 0);
+	cdg_slot = 0;
+	staffroll_dissolve_out(32, 336);
+	snd_delay_until_measure(48, 160);
+	bgimage_free();
+	cdg_free_all();
+	palette_black_out(4);
+}
+#pragma codeseg
