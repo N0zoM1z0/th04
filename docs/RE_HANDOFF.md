@@ -97,6 +97,12 @@ python3 scripts/audit_compat_dependencies.py --check
   the 804-site multiset exact while cutting ordered mismatch **223 -> 105**. The
   `SND_LOAD_EXT` block is exact at indices 158..161. Remaining OP R is only
   BGIMAGE 8, OP music 35, and `score_e`/`hi_view` 63 relocation entries.
+- v463 recovers `zunsoft_pyro_new()` as a natural TC86 C++ function. Its
+  linked 0x84 bytes at load `0xBA45` are target-exact and the whole OP program
+  image is unchanged. TC86 emits its two far-call segment FIXUPPs in descending
+  address order (`0x59`, `0x48`), matching the direction required by the target
+  OP-music block. Mixed C++/ASM ownership keeps the global residual at 105; next
+  recover the remaining 0x40C ZUNSOFT tail as C++ rather than reversing entries.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -106,9 +112,10 @@ python3 scripts/audit_compat_dependencies.py --check
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
 2. **OP/MAINE packed closure:** continue from v461 for OP and v448 for MAINE.
-   OP global owner order is now aligned through OP music; attack only BGIMAGE
-   internal direction, OP-music internal direction, and the `hi_view` /
-   `score_e` historical TU split. MAINE still needs its monolith interleavings.
+   OP global owner order is aligned through OP music. v463 proves the first
+   0x84 ZUNSOFT function as linked-exact TC86 C++; continue reconstructing the
+   remaining 0x40C ZUNSOFT C++ owner, then BGIMAGE internal direction and the
+   `hi_view` / `score_e` historical TU split. MAINE still needs its monolith interleavings.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
    switch routes and pinned TASM5 option/version emulation are closed; do not
@@ -129,7 +136,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 

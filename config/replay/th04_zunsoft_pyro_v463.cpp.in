@@ -1,0 +1,36 @@
+#if (GAME == 4)
+#pragma codeseg OP_MUSIC_TEXT op_01
+extern "C" void pascal near zunsoft_pyro_new(
+	screen_point_t origin, int n, char patnum_base
+)
+{
+	register pyro_t near *pyro;
+	register int origin_y = origin.y;
+	int i;
+	int pyros_created = 0;
+	origin.x *= SUBPIXEL_FACTOR;
+	origin_y *= SUBPIXEL_FACTOR;
+	pyro = pyros;
+	for(i = 0; i < 256; i++, pyro++) {
+		if(!pyro->alive) {
+			pyro->alive = true;
+			pyro->age = 0;
+			pyro->origin.x.v = origin_y;
+			pyro->origin.y.v = origin.x;
+			pyro->distance.v = 0;
+			pyro->distance_prev.v = 0;
+			pyro->speed.v = ((irand() % 224) + 64);
+			pyro->angle = irand();
+			pyro->patnum_base = patnum_base;
+			pyros_created++;
+			if(pyros_created >= n) {
+				break;
+			}
+		}
+	}
+}
+#pragma codeseg
+#else
+void pascal zunsoft_pyro_new(screen_point_t origin, int n, char patnum_base)
+;
+#endif
