@@ -1,0 +1,47 @@
+.386
+.model use16 large _TEXT
+include ReC98.inc
+include th02/snd/snd.inc
+include th04/th04.inc
+
+; Diagnostic: preserve same-segment FAR-call lowering across OMF modules.
+purge nopcall
+nopcall macro target
+if LDATA
+	nop
+endif
+	push cs
+	call near ptr target
+endm
+
+extrn DOS_CLOSE:near, DOS_READ:near, DOS_ROPEN:near, DOS_SEEK:near, DOS_SETVECT:near
+extrn SMEM_RELEASE:near, SMEM_WGET:near
+extrn rtc_int_set:near
+extrn Machine_State:word, intdiv:word, lcount:word, note_dat:word
+extrn timerorg:dword
+extrn glb:SGLB, esound:SESOUND, part:SPART
+extrn GET_MACHINE:near, HMEM_ALLOCBYTE:near, HMEM_FREE:near
+extrn mem_AllocID:word, graph_VramSeg:word
+extrn ClipYT_seg:word, RotTbl:dword
+
+_TEXT segment word public 'CODE' use16
+	assume cs:_TEXT
+	assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
+include libs/master.lib/bgm_bell_org.asm
+include libs/master.lib/bgm_mget.asm
+include libs/master.lib/bgm_read_sdata.asm
+include libs/master.lib/bgm_timer.asm
+include libs/master.lib/bgm_pinit.asm
+include libs/master.lib/bgm_timerhook.asm
+include libs/master.lib/bgm_play.asm
+include libs/master.lib/bgm_sound.asm
+include libs/master.lib/bgm_effect_sound.asm
+include libs/master.lib/bgm_stop_play.asm
+include libs/master.lib/bgm_set_tempo.asm
+include libs/master.lib/bgm_init_finish.asm
+include libs/master.lib/bgm_stop_sound.asm
+include libs/master.lib/graph_pack_put_8_noclip.asm
+include libs/master.lib/graph_gaiji_puts.asm
+include libs/master.lib/graph_gaiji_putc.asm
+_TEXT ends
+	end

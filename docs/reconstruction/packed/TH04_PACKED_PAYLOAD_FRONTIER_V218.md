@@ -64,6 +64,31 @@ and `ec8dbc3e9b576a33dafdde1174bcb7868cc037a9b904e1dec372d46f5b51bdbd`.
 The probe inputs and objects are under
 `.analysis/reconstruction/probes/v219-op-music-option-g/`.
 
+## v400 object-topology follow-up
+
+The v218 table above remains the frozen baseline measurement. v400 independently
+replays the later v397 master.lib object-boundary hypothesis against that exact
+baseline and removes all four CODE alignment residuals without explicit padding
+or target-byte injection.
+
+| Artifact | v218 baseline | v400 split candidate | Remaining raw positions |
+| --- | ---: | ---: | --- |
+| `OP.EXE` | 7 bytes | 5 bytes | `0xBFB7`, `0xBFB9`, `0xDE8B..0xDE8C`, `0xFB97` |
+| `MAINE.EXE` | 5 bytes | 3 bytes | `0xD1D3..0xD1D4`, `0xE933` |
+
+Both candidates preserve the target payload length and target-equal relocation
+multiset. OP's former `0x2D59` / `0x34AF` mismatches and MAINE's former
+`0x0CBD` / `0x2D11` mismatches are therefore closed as object-topology effects.
+The replay is A/B deterministic and is recorded by
+`scripts/probes/probe_th04_master_object_split.py`; private receipt SHA-256 is
+`8f5203364b876557d71d645911ee612a4ba4df89361d03266eec5cb3314a70e9`.
+
+The remaining bytes retain their previous classifications: OP has two
+`nopoly_B_put()` XOR direction bytes, the shared two-byte `snd_load` handle copy,
+and one DATA alignment byte; MAINE has the same two-byte `snd_load` residual and
+one DATA alignment byte. None receives authored-source or packed-file exactness
+credit from the v400 topology replay.
+
 ## v281 TASM `EVEN` context control
 
 `python3 scripts/probes/probe_th04_tasm_even_context.py --output-dir

@@ -1,0 +1,44 @@
+.386
+.model use16 large _TEXT
+include ReC98.inc
+include th02/snd/snd.inc
+include th04/th04.inc
+
+; Diagnostic: preserve TASM same-segment FAR-call lowering across OMF modules.
+purge nopcall
+nopcall macro target
+if LDATA
+	nop
+endif
+	push cs
+	call near ptr target
+endm
+
+IDLEN EQU 10
+extrn BCLOSER:near, BOPENR:near, BSEEK_:near
+extrn FILE_CLOSE:near, FILE_READ:near, FILE_ROPEN:near
+extrn HMEM_ALLOCBYTE:near, HMEM_FREE:near
+extrn PFCLOSE:near, PFREAD:near, PFREWIND:near, PFSEEK:near
+extrn PFGETC1:near, PFGETX0:near, PFGETX1:near
+extrn SOUND_I:near, SOUND_O:near
+extrn BYTE_MASK:byte, ResPalID:byte, parfilename:byte
+extrn ClipXL:word, ClipXW:word, ClipYB_adr:word, EDGES:word
+extrn js_bexist:word, mem_AllocID:word, pferrno:word
+extrn pfint21_entries:word, pfint21_handle:word, pfint21_pf:word
+extrn ResPalSeg:word, super_patdata:word, super_patsize:word
+extrn trapezoid_hmask:word, trapez_a:word, trapez_b:word
+_TEXT segment word public 'CODE' use16
+	assume cs:_TEXT
+	assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
+include libs/master.lib/super_put.asm
+include libs/master.lib/respal_exist.asm
+include libs/master.lib/respal_free.asm
+include libs/master.lib/pfint21.asm
+		db 0
+include libs/master.lib/js_start.asm
+include libs/master.lib/draw_trapezoid.asm
+include th03/formats/pfopen.asm
+include libs/master.lib/pf_str_ieq.asm
+include libs/master.lib/js_sense.asm
+_TEXT ends
+	end

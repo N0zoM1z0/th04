@@ -63,3 +63,54 @@ master-module object boundaries while preserving module order.
 This does not close OP or MAINE. Their DATA alignment bytes, ordered relocation
 tables, MZ length/minalloc/trailing topology, and shared `snd_load`
 `89 C3` residual remain independent gates.
+
+## v400 linked object-boundary replay
+
+v400 tests the v397 producer-topology hypothesis against the same hash-pinned
+v214 ReC98-overlay candidate used by the v218 decoded-payload frontier. The
+replay does not add an explicit `db 0`, patch OMF bytes, or copy any target
+byte. It changes only `_TEXT` translation-unit boundaries plus the symbol
+visibility needed to link the existing large-model master.lib source across
+those OMF objects.
+
+`scripts/probes/probe_th04_master_object_split.py` first requires the frozen
+baseline identities, including OP candidate SHA-256
+`cb9b1c6cbd6b2c7bad6763fabd106c3cf451b1c20efef0f1fcfd3e3a47c0cdaa`
+and MAINE candidate SHA-256
+`7e6b78861613cdd06d72e2f8584268444642b31abcc35d686c0ed1f4cc668f70`.
+It verifies the pinned TASM32/TLINK identities, reproduces the old v218
+mismatch vectors, copies the source tree twice, applies the object split to both
+copies, rebuilds, and reruns the DIET payload Oracle.
+
+For OP, `_TEXT` becomes three linked contributions: the original head object,
+a middle object beginning at `SUPER_PUT`, and a tail object beginning at
+`_BGM_BELL_ORG`. The decoded-payload mismatch count falls from 7 to 5. Target
+bytes `00` at `0x2D59` and `0x34AF` are now produced naturally by TLINK's
+word-aligned object contribution boundary. Payload size remains `0x10DA4`, the
+804-site relocation multiset remains target-equal, and both cold copies produce
+candidate SHA-256
+`7d3e9887f633474278e89023d315858394b12527860ca5cbc2ecdbbd082bb60d`.
+
+For MAINE, `_TEXT` likewise becomes a head object, a middle object beginning at
+`GET_MACHINE_98`, and a tail object beginning at `_BGM_BELL_ORG`; DATA/BSS stay
+with the head object. Splitting exposed a real ABI detail hidden by the old
+monolith: same-segment FAR calls emitted through `nopcall` must retain their
+`PUSH CS; CALL near` lowering across OMF objects. Preserving that lowering and
+the exact external-symbol spelling (`gdc_outpw`) restores the original payload
+length and relocation topology. The mismatch count falls from 5 to 3, removing
+`0x0CBD` and `0x2D11`; payload size remains `0xF3CE`, the 559-site relocation
+multiset remains target-equal, and both copies produce candidate SHA-256
+`98e1a1c270837d4c154fb9cacc3176fa95ff053ab215e84d9ee72d3c212e6779`.
+
+The replay is deterministic A/B. Private receipt SHA-256:
+`8f5203364b876557d71d645911ee612a4ba4df89361d03266eec5cb3314a70e9`.
+The checked-in replay templates describe only OMF ownership/interface changes.
+They preserve the pre-existing `db 0` after `pfint21.asm` from the baseline
+monolith, but introduce no new explicit padding and contain no target-derived
+alignment byte.
+
+This validates the v397 object-topology mechanism for all four CODE seams. It
+does **not** promote OP or MAINE to exact, establish historical source
+filenames, recover the original unpacked relocation-table order, or solve the
+remaining DATA alignment, OP music opcode-direction, or shared `snd_load`
+residuals.
