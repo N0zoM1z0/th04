@@ -105,3 +105,56 @@ This strengthens the existing v231 limit: the restored `T` surface is useful
 for understanding one DIET preimage, but historical pre-DIET TLINK file length
 and `minalloc` remain unobserved. A future packed closure must explain raw DIET
 output without treating v228's zero tail as an authored-source requirement.
+
+## v436 current packed frontier and TLINK `/i`
+
+The v231 factorial table predates the v397-v427 object-topology work. v436
+replays the **current** v427 OP and v425 MAINE preimages through the same pinned
+DIET 1.45f toolchain and then repeats the useful target-derived controls. No
+product source, object bytes, or relocation-table bytes are edited for the
+natural baseline.
+
+| Input surface | OP packed bytes | MAINE packed bytes | Raw target equality |
+| --- | ---: | ---: | --- |
+| current natural candidate | 42,256 | 37,989 | neither |
+| current + target-derived `R+T` | **42,289** | **38,034** | neither; each 1 byte short |
+| current + target-derived `P+R+T` | **42,290** | **38,035** | both raw exact |
+
+At this frontier, `P` is no longer the old seven/five-byte surface. All prior
+payload residuals are closed except the shared `snd_load` handle copy
+(`89 C3` target versus natural TC4J `8B D8`), two decoded bytes in each
+artifact. Under the private `R+T` control, those two input bytes account for one
+remaining packed byte in each file. This is a localization result only: `R`,
+`T`, and `PRT` still copy target-derived bytes and are not acceptable product
+inputs.
+
+v430 made the target-restored zero tail look linker-related, so v436 also tests
+the active Borland linker mechanism directly. The pinned TLINK 6.10 binary
+(SHA-256 `e54f5177...`) contains its own help text:
+`/i   Initialize all segments`. Adding **only** `/i` to the otherwise unchanged
+current response files gives:
+
+| Artifact | Natural MZ | TLINK `/i` MZ | `/i` minalloc | `/i` packed | Target |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OP | 73,636 | 83,424 | 0 | 42,383 | 42,290 |
+| MAINE | 65,998 | 79,056 | 0 | 38,202 | 38,035 |
+
+The `/i` images preserve the target-equal relocation-site multisets and merely
+extend the image with zero-backed uninitialized storage, but they materialize
+**all** trailing storage rather than the v228 target-derived partial tail.
+Their packed outputs overshoot target by 93 and 167 bytes.
+
+One final private control tests whether DIET might nevertheless treat the full
+`/i` tail as an equivalent `T` preimage: keep `/i`'s own file extent and
+`minalloc=0`, but substitute target-derived payload and ordered relocation
+bytes. It still packs to **42,369** OP and **38,154** MAINE, respectively 79
+and 119 bytes over target. Therefore active TLINK 6.10 `/i` is a **closed
+negative** for the missing `T` mechanism, not an alternate exact preimage.
+
+v436 private receipt SHA-256:
+`c21073e17762709d0be818bcc888fd6a2db142dbb72361927745ae80826f594d`.
+
+The remaining packed problem is thus still provenance/topology: natural source
+payload is down to `snd_load`, while historical/legitimate causes for the `R`
+and `T` surfaces remain unobserved. Do not retry active TLINK 6.10 `/i` unless
+new evidence changes the linker identity or invocation semantics.

@@ -57,6 +57,14 @@ python3 scripts/audit_compat_dependencies.py --check
   layout but **no BSS LEDATA/LIDATA**, so do not materialize the v228 zero tail
   in source merely to imitate a DIET-restored preimage. Historical pre-DIET
   MZ length/minalloc remain unobserved.
+- v436 re-packs the current candidates: OP is 42,256 vs target 42,290 and
+  MAINE 37,989 vs 38,035. Private target-derived `R+T` controls land exactly
+  one packed byte short in both; adding the two-byte `snd_load` `P` residual
+  makes `PRT` raw exact. This is localization only, not product acceptance.
+- v436 also closes active TLINK 6.10 `/i` (`Initialize all segments`) as the
+  missing `T` mechanism. Natural `/i` packs +93 OP / +167 MAINE bytes over
+  target, and even target-derived payload+relocation controls retaining `/i`'s
+  own extent/minalloc remain +79/+119. Do not repeat `/i` on this linker.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -65,13 +73,14 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** continue from v429/v430. Treat v228 restored
-   relocation order and zero-tail/minalloc as target-derived diagnostics, not
-   historical TLINK requirements. Prefer independently supported physical OMF
-   ownership (especially historical MASTER.LIB members) and natural producer
-   order; test OP `hi_view` / OP music and MAINE segment ownership only where a
-   real object interface can be justified. Historical pre-DIET MZ remains
-   unobserved.
+2. **OP/MAINE packed closure:** continue from v429/v430/v436. Treat v228
+   restored relocation order and zero-tail/minalloc as target-derived
+   diagnostics, not historical TLINK requirements; active TLINK 6.10 `/i` is
+   now closed negative. Prefer independently supported physical OMF ownership,
+   natural producer order, or a separately attested historical linker/version
+   mechanism. Test OP `hi_view` / OP music and MAINE segment ownership only
+   where a real object interface can be justified. Historical pre-DIET MZ
+   remains unobserved.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 
@@ -88,7 +97,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
