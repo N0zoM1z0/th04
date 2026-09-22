@@ -18,13 +18,14 @@ import replay_th04_zun_file_append as file_append
 import replay_th04_zun_file_close as file_close
 import replay_th04_zun_fontopen as fontopen
 import replay_th04_zun_version_grp as version_grp
+import replay_th04_zun_file_state as file_state
 import replay_th04_zun_file_read as file_read
 import replay_th04_zun_resdata as resdata
 
 
 class ZunSupportReplayImportTests(unittest.TestCase):
     def test_transitive_source_closure_is_live(self) -> None:
-        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek, file_append, file_close, fontopen, version_grp):
+        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek, file_append, file_close, fontopen, version_grp, file_state):
             closure = module.source_closure(module.ROOT, tuple(module.SOURCES.values()))
             self.assertIn("src/zun/config/cfg_init.cpp", closure)
             self.assertIn("src/zun/resident/main.cpp", closure)
@@ -121,6 +122,32 @@ class ZunSupportReplayImportTests(unittest.TestCase):
         self.assertEqual(version_grp.GRP_TARGET_PADDING_OFFSET, 0x2203)
         self.assertTrue(version_grp.LOCAL_VERSION.is_file())
         self.assertTrue(version_grp.LOCAL_GRP.is_file())
+
+
+    def test_file_state_member_contract(self) -> None:
+        self.assertEqual(file_state.FILE_STATE_MEMBER_POSITION, 163)
+        self.assertEqual(file_state.FILE_STATE_TARGET_DATA_OFFSET, 0x220E)
+        self.assertEqual(file_state.FILE_STATE_DATA_SIZE, 0x04)
+        self.assertEqual(file_state.FILE_STATE_BSS_SIZE, 0x14)
+        self.assertTrue(file_state.LOCAL_FILE_STATE.is_file())
+
+    def test_file_state_map_gate_only_allows_bufferpos_alias_swap(self) -> None:
+        original = "\n".join((
+            "prefix",
+            " 0000:19E2 idle  _file_BufferPos",
+            " 0000:19E2       file_BufferPos",
+            "suffix",
+        )).encode("cp437")
+        swapped = "\n".join((
+            "prefix",
+            " 0000:19E2       file_BufferPos",
+            " 0000:19E2 idle  _file_BufferPos",
+            "suffix",
+        )).encode("cp437")
+        wrong = swapped.replace(b"19E2", b"19E4", 1)
+        self.assertTrue(file_state.map_equal_except_bufferpos_alias_order(original, original))
+        self.assertTrue(file_state.map_equal_except_bufferpos_alias_order(original, swapped))
+        self.assertFalse(file_state.map_equal_except_bufferpos_alias_order(original, wrong))
 
 
 if __name__ == "__main__":
