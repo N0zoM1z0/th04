@@ -386,3 +386,34 @@ This closes inline pseudo-register return propagation as a natural compiler
 explanation for the remaining snd_load direction-bit encoding. It does not
 prove original source language, does not authorize target-derived inline
 assembly, and leaves the MAIN gap at 27 bytes.
+
+## v505 TC4J source-debug / line-info surface
+
+Borland's own TCC 4.02 help exposes two additional 16-bit compiler surfaces
+that were previously exercised only for relocation batching: `-v` source-level
+debugging and `-y` line-number information. Because old compiler debug modes can
+affect optimization and code motion, v505 tests them directly against the final
+MAIN instruction-selection blockers rather than assuming the dialog result
+generalizes.
+
+`scripts/probes/probe_tc4_debug_final_blocker_surface_v505.py` compiles three
+natural C++ representatives under baseline, `-v`, `-y`, and `-v -y`:
+
+- the shared register/zero/doubling/MUL/DS-to-ES core;
+- checkerboard's fixed-CX 32-bit ES-store countdown;
+- a fixed-SI byte load/increment.
+
+The switches are demonstrably active. Every debug profile adds one OMF LINNUM
+record for each representative, while baseline adds none. Despite that metadata
+change, all three CODE bodies are byte-identical across all four profiles.
+No profile selects `89 C3`, the related carpet register/zero/doubling/MUL forms,
+x86 `LOOP`, or `LODSB`.
+
+Three independent cold runs produce identical receipt SHA-256
+`f50848ffd76807956cf7cde6bb8c4073271cabeedec9ba6c1a9ebcedfde20d5b`.
+The stable compiler/runner/probe/source bundle SHA-256 is
+`c12f00d47f5858fbd22d2bc5f4e6cbf3a210b7e6fde9f5fd15b58c7720554a05`.
+
+This closes source-debug and line-info modes as a compiler explanation for the
+tested final-blocker lowerings. It does not establish original source
+provenance, authorize inline assembly, or change the 27-byte MAIN gap.

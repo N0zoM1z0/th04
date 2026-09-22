@@ -149,6 +149,9 @@ Primary packed notes:
 - TC4J C/C++ language mode (v499): a front-end sentinel proves real C versus
   C++ selection, but the tested register/MUL/DS-ES, checkerboard countdown, and
   fixed-SI byte-load lowerings remain byte-identical and avoid the target forms;
+- TC4J source-debug / line-info modes (v505): -v, -y, and -v -y
+  demonstrably add OMF line/debug metadata but leave the tested final-blocker
+  CODE byte-identical to baseline and never select the target forms;
 - TC4J inline pseudo-register return propagation (v501): helpers returning
   _AX fully inline across direct, INT 21h, and DOS-open-shaped forms, but the
   resulting AX-to-BX transfer remains 8B D8; a local temporary spills/reloads
