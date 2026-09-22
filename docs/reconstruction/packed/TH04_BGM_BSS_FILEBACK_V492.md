@@ -108,9 +108,14 @@ independent target code that ZUN's TH04/TH05 MASTER object set was not this
 generic archive verbatim: the archive gaiji objects retain the official `ADC
 5680h` bug, while all four TH04/TH05 OP/MAINE targets contain ZUN's corrected
 `ADD` form. The generic `b_data.OBJ` therefore cannot be treated as definitive
-negative evidence about ZUN's modified BGM object. Even so, the explicit-zero
-replay template is not promoted as historical source; the exact modified
-`b_data` object/source remains unavailable.
+negative evidence about ZUN's modified BGM object. Even so, the v492 all-zero replay template is not promoted as ZUN historical
+source; the exact modified `b_data` object/source remains unavailable. v494
+adds a separate repository-history fact: ReC98 Reduction #172 already used the
+binary-equivalent `timerorg dd ?` plus `part/esound dup(<0>)` representation in
+2014, with an explicit commit note that the zero initialization was needed to
+avoid MZ header size changes. That history attests the reconstruction/build
+representation while simultaneously confirming that the known original source
+spelling used `?`.
 
 The durable conclusion is narrower:
 

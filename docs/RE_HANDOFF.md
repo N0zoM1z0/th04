@@ -271,6 +271,14 @@ python3 scripts/audit_compat_dependencies.py --check
   Thus v491's generic `b_data.OBJ` no-LEDATA result cannot by itself exclude a
   different ZUN-modified BGM object. This strengthens v492 provenance but still
   does not prove the exact historical `b_data` initialization/source spelling.
+- v494 finds a pre-existing repository-history representation for the same T
+  surface. ReC98 Reduction #172 (2014) used `timerorg dd ?` plus
+  `part/esound dup(<0>)`, with a commit message explicitly stating that the zero
+  initialization avoided MZ header size changes relative to the `?` in the
+  original source. Replaying that exact historical Git blob today reproduces
+  the v492 OP/MAINE EXEs byte-for-byte. This is strong provenance for the
+  binary-preserving build representation, while still **not** claiming ZUN's
+  original source used zero initialization.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -302,7 +310,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v493. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v494. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
