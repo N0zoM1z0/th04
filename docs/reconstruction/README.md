@@ -43,6 +43,7 @@ contain residual counts that were correct only at that packet.
 - [ZUNINIT physical boundary review](zun/TH04_ZUNINIT_BOUNDARIES_V520.md)
 - [MEMCHK physical boundary review](zun/TH04_MEMCHK_BOUNDARIES_V521.md)
 - [ZUNINIT/MEMCHK generated-assembly provenance](zun/TH04_ZUN_GENERATED_ASM_PROVENANCE_V522.md)
+- [ZUN DOS_FREE library replacement](zun/TH04_ZUN_DOS_FREE_V524.md)
 
 ## Recent MAIN milestones
 
