@@ -165,8 +165,12 @@ producer model.
 
 ## Ordered work queue
 
-1. **MAIN final 27 bytes.** Seek new independent provenance or a genuinely new
-   compiler/backend mechanism. Do not re-run closed matrices.
+1. **MAIN final 27 bytes.** The highest-value new provenance source is the
+   1998-07-02 public TH04 trial. v500 provides a fail-closed structural intake
+   gate for a private `GEN_TS1.EXE` candidate, but no candidate bytes are
+   currently attested. Do not infer blocker bytes from public metadata alone.
+   Otherwise seek only genuinely new provenance or compiler/backend mechanisms;
+   do not re-run closed matrices.
 2. **Packed source provenance.** Technically the container is constrained to the
    shared `snd_load` two bytes; the exact historical ZUN MASTER BGM object/source
    behind the file-backed BSS surface remains unavailable. Do not turn private

@@ -16,6 +16,7 @@ contain residual counts that were correct only at that packet.
 - [Stage 4 carpet low-level producer blocker](main/TH04_MAIN_KURUMI_CARPET_V174.md)
 - [snd_load DS/MOV analysis](main/TH04_SND_LOAD_DS_V391.md)
 - [Cross-cutting compiler/FIXUPP negatives](main/TH04_MAIN_FIXUP_CODEGEN_PROBES.md)
+- [Public trial provenance intake](main/TH04_TRIAL_PROVENANCE_V500.md)
 
 ### OP / MAINE / packed artifacts
 
