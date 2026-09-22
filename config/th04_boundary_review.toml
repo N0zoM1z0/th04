@@ -448,3 +448,52 @@ expected_body_span = 0xA7
 reviewed_body_size = 0xA7
 review_evidence_id = "ev-th04-maine-score-codec-boundaries-v540"
 notes = "scoredat_recreate target boundary reviewed by v540; candidate source provenance remains decompilation."
+
+# v541 target-reviewed selected SCORE high-score C++ boundaries. These use exact
+# target Ghidra body spans plus v541 target-analysis evidence. Pinned ReC98
+# history directly introduces each logical implementation under [Decompilation],
+# so these overrides review physical boundaries only and grant no source credit.
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC733
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0x6B
+reviewed_body_size = 0x6B
+review_evidence_id = "ev-th04-op-score-hiscore-boundaries-v541"
+notes = "hiscore_scoredat_load_both target boundary reviewed by v541; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC79E
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0x107
+reviewed_body_size = 0x107
+review_evidence_id = "ev-th04-op-score-hiscore-boundaries-v541"
+notes = "scores_put target boundary reviewed by v541; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC2AD
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_end.cpp"
+expected_body_span = 0x69
+reviewed_body_size = 0x69
+review_evidence_id = "ev-th04-maine-score-hiscore-boundaries-v541"
+notes = "hiscore_scoredat_load_for target boundary reviewed by v541; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC316
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_end.cpp"
+expected_body_span = 0x9C
+reviewed_body_size = 0x9C
+review_evidence_id = "ev-th04-maine-score-hiscore-boundaries-v541"
+notes = "hiscore_scoredat_save target boundary reviewed by v541; candidate source provenance remains decompilation."

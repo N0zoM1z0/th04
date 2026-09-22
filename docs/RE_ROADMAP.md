@@ -39,12 +39,13 @@ That is 13 decoded-exact functions / 840 source-owner bytes per artifact.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
-packed-file accounting. v540 has now target-reviewed the decode/encode/recreate
-SCORE codec boundaries in both OP and MAINE, but their pinned ReC98
-implementation history is explicitly decompilation provenance and grants no
-source credit. Continue SCORE by reviewing the remaining hiscore view/end
-physical owners, while keeping source authority separate from byte/codegen
-corroboration.
+packed-file accounting. v540/v541 have now target-reviewed the codec plus
+selected loading/saving/score-rendering SCORE boundaries in both artifacts.
+MAINE's hi_end candidate-C++ owners are physically reviewed; OP hi_view still
+has five corroborated owners. All pinned ReC98 implementation paths examined
+here are explicit decompilation provenance and grant no source credit. Continue
+OP hi_view target review while keeping source authority separate from
+byte/codegen corroboration.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
@@ -66,13 +67,13 @@ as source. Independently attest the 35 non-MAIN `attest-asm` observations
 
 ## 4. Reconstruct by physical translation unit
 
-OP first: finish SCORE physical review without importing the decompiled candidate
-C++; then small input/vector/init helpers, title/setup, music and character units,
-and larger main/animation units after boundary/origin review. MAINE: finish the
-remaining hiscore/end SCORE owners in the grouped physical producer, again keeping
-decompilation provenance separate from source acceptance; then small ending/cutscene
-helpers and the larger cutscene/staff/verdict/registration families after their
-respective physical reviews. Candidate byte totals in the boundary inventory
+OP first: continue the five remaining hi_view SCORE owners without importing
+decompiled candidate C++; then small input/vector/init helpers, title/setup,
+music and character units, and larger main/animation units after boundary/origin
+review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
+v541; move next to its adjacent grouped/ASM SCORE ownership and then small
+ending/cutscene helpers, keeping source provenance separate from target-boundary
+confidence. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link
 impact, not by address order or attractive percentage.
 

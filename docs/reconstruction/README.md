@@ -32,6 +32,7 @@ contain residual counts that were correct only at that packet.
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [OP/MAINE score codec boundary / provenance review](op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md)
+- [OP/MAINE SCORE high-score boundary / provenance review](op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md)
 - [DIET MZ partition / derived minalloc](packed/TH04_DIET145F_MZ_PARTITION_V231.md)
 - [Packed BGM-BSS file-backing mechanism](packed/TH04_BGM_BSS_FILEBACK_V492.md)
 - [ZUN-modified MASTER provenance](packed/TH04_ZUN_MASTER_VERSION_V493.md)
