@@ -189,14 +189,15 @@ Everything else under `.analysis/gpt-web` should be treated as disposable unless
 it is referenced by tracked evidence/docs. Use:
 
 ```bash
-python3 scripts/prune_analysis.py          # dry run
-python3 scripts/prune_analysis.py --apply  # remove only unreferenced top-level dirs
+python3 scripts/prune_analysis.py --compact-referenced          # dry run
+python3 scripts/prune_analysis.py --apply --compact-referenced  # prune + safe receipt compaction
 ```
 
-The script deliberately does not shrink referenced directories to receipt-only
-form; that stronger cleanup needs a human replay-dependency review. Expanded
-exact-unit replay trees can be regenerated from checked-in source once their
-receipt SHA-256 is durable.
+Referenced directories are compacted only when tracked references are limited
+to the directory/receipt plus explicitly configured small replay dependencies;
+any `a/source` or other unlisted file reference automatically prevents
+compaction. Expanded exact-unit replay trees can be regenerated from checked-in
+source once their receipt SHA-256 is durable.
 
 ## Finish every reconstruction packet
 

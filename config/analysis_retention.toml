@@ -10,3 +10,17 @@ full_keep_dirs = [
   "v402-opmusic-hybrid-replay-001",
   "v489-bgimage-hybrid-replay-003",
 ]
+
+# Extra files required by current replay commands when a referenced experiment
+# directory is compacted. `receipt.json` is always retained automatically.
+[compact_keep_files]
+"v436-tlink-uninitialized-replay-001" = [
+  "controls/th04-op-RT.exe",
+  "controls/th04-op-target-PR-on-I.exe",
+  "controls/th04-maine-RT.exe",
+  "controls/th04-maine-target-PR-on-I.exe",
+]
+"v492-bgm-bss-fileback-replay-002" = [
+  "crossgame-restores/th05-op-smoke/OP.EXE",
+  "crossgame-restores/th05-maine-smoke/MAINE.EXE",
+]
