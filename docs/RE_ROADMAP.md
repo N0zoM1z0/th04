@@ -32,13 +32,16 @@ the BGIMAGE backend cannot grant credit to another TU.
 
 ## 2. Harvest maintained shared source in small cohorts
 
-For each of OP and MAINE, five remaining reviewed functions (328 decoded
-bytes) already have maintained shared sound source: PMD/MMD/KAJA/mode/measure.
-Frame delay and all three maintained PI functions are now independently
-decoded-exact in both artifacts. Keep the remaining sound work in small
-producer-focused checkpoints. The three BGIMAGE functions plus VRAM, frame
-delay, and the three PI functions per artifact are already decoded/link-exact;
-only replay maintenance and later packed-file accounting remain.
+For each of OP and MAINE, four remaining reviewed functions (282 decoded
+bytes) already have maintained shared sound source: MMD/KAJA/mode/measure.
+PMD is now independently decoded-exact in both artifacts. The next MMD seam
+must keep its 47-byte natural-C function separate from the following target
+0x90 padding; the existing zero-code alignment TU restores downstream layout
+without emitting or claiming that byte. Keep KAJA and mode/measure isolated
+until the MMD seam is fixed so downstream shifts cannot masquerade as source
+mismatches. The three BGIMAGE functions plus VRAM, frame delay, PI, and PMD
+already accepted per artifact need only replay maintenance and later
+packed-file accounting.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 

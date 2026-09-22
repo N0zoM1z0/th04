@@ -142,8 +142,19 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("op-maine-pi-load-v511", saved)[1],
             "scripts/probes/replay_th04_shared_pi_load.py",
         )
+        self.assertEqual(
+            acceptance.backend_command("op-maine-pmd-v512", saved)[1],
+            "scripts/probes/replay_th04_shared_pmd.py",
+        )
         with self.assertRaisesRegex(ValueError, "unknown decoded replay backend"):
             acceptance.backend_command("not-a-backend", saved)
+
+    def test_pmd_backend_is_bound_to_maintained_source(self) -> None:
+        entries = deepcopy(self.entries)
+        pmd = next(row for row in entries if row["replay_backend"] == "op-maine-pmd-v512")
+        pmd["replay_backend"] = "op-maine-pi-load-v511"
+        with self.assertRaisesRegex(ValueError, "PI load backend does not compile"):
+            self.check(entries)
 
 
 if __name__ == "__main__":

@@ -53,6 +53,7 @@ VRAM_PRODUCERS = {"th04-op": 0xDA12, "th04-maine": 0xCC7A}
 FRAME_DELAY_PRODUCERS = {"th04-op": 0xDA3B, "th04-maine": 0xCCA3}
 PI_PUT_PRODUCERS = {"th04-op": 0xDA50, "th04-maine": 0xCCB8}
 PI_LOAD_PRODUCERS = {"th04-op": 0xDAFD, "th04-maine": 0xCD65}
+PMD_PRODUCERS = {"th04-op": 0xDC16, "th04-maine": 0xCF2E}
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -168,7 +169,7 @@ def validate(
         backend = entry["replay_backend"]
         allowed_backend = ({"zun-resident-link"} if artifact == "th04-zun"
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
-                                 "op-maine-pi-put-v511", "op-maine-pi-load-v511"})
+                                 "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512"})
         if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
@@ -191,9 +192,13 @@ def validate(
             if (source_name != "src/shared/formats/pi_put.cpp"
                     or producer_start != PI_PUT_PRODUCERS[artifact] or producer_size != 0xAD):
                 raise ValueError(f"{ident}: PI put backend does not compile this producer")
-        elif (source_name != "src/shared/formats/pi_load.cpp"
-              or producer_start != PI_LOAD_PRODUCERS[artifact] or producer_size != 0x46):
-            raise ValueError(f"{ident}: PI load backend does not compile this producer")
+        elif backend == "op-maine-pi-load-v511":
+            if (source_name != "src/shared/formats/pi_load.cpp"
+                    or producer_start != PI_LOAD_PRODUCERS[artifact] or producer_size != 0x46):
+                raise ValueError(f"{ident}: PI load backend does not compile this producer")
+        elif (source_name != "src/shared/sound/pmd_resident.c"
+              or producer_start != PMD_PRODUCERS[artifact] or producer_size != 0x2E):
+            raise ValueError(f"{ident}: PMD backend does not compile this producer")
         evidence_id = entry["replay_evidence_id"]
         if evidence_id not in evidence_by_id or evidence_by_id[evidence_id]["artifact"] != artifact:
             raise ValueError(f"{ident}: missing artifact-local replay evidence")
@@ -327,6 +332,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-pi-load-v511":
         return [sys.executable, "scripts/probes/replay_th04_shared_pi_load.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-maine-pmd-v512":
+        return [sys.executable, "scripts/probes/replay_th04_shared_pmd.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-bgimage-v489":
         snapshot = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"
