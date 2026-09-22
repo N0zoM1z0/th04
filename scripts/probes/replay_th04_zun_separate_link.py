@@ -14,12 +14,11 @@ import tempfile
 import tomllib
 
 from replay_th04_zun_source_only import (
-    HEADERS, PAYLOAD, PAYLOAD_SHA256, ROOT, RUNNER, SOURCES, build, sha,
+    PAYLOAD, PAYLOAD_SHA256, ROOT, RUNNER, SOURCES, build, sha, source_closure,
 )
 
 MASTER_LIB = ROOT / (
-    ".analysis/reconstruction/exact-unit-replay/"
-    "gptweb-v214-demo-fixupp-diagnostic-001/a/source/bin/masters.lib"
+    ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a/op/source/bin/masters.lib"
 )
 MASTER_LIB_SHA256 = "6be41dbcfcf4504977165ccc44443525a29a01f85a1580e6ad0c620bf802faf6"
 TARGET_COMPONENT_SHA256 = "cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c151c95110"
@@ -88,8 +87,8 @@ def main() -> int:
     args = parser.parse_args()
     output = args.output_dir.resolve()
     private = (ROOT / ".analysis/reconstruction/probes").resolve()
-    if output.exists() or output.parent != private:
-        parser.error("output directory must be new directly below .analysis/reconstruction/probes")
+    if output.exists() or output == private or not output.is_relative_to(private):
+        parser.error("output directory must be new below .analysis/reconstruction/probes")
     manifest = tomllib.loads((ROOT / "config/targets.toml").read_text())
     target_info = next(item for item in manifest["artifacts"] if item["id"] == "th04-zun")
     target = (ROOT / target_info["private_path"]).read_bytes()
@@ -104,7 +103,10 @@ def main() -> int:
     subprocess.run([sys.executable, "scripts/attest_toolchain.py"], cwd=ROOT,
                    check=True, capture_output=True, text=True)
 
-    inputs = {relative: sha((ROOT / relative).read_bytes()) for relative in (*SOURCES.values(), *HEADERS)}
+    inputs = {
+        relative: sha((ROOT / relative).read_bytes())
+        for relative in source_closure(ROOT, tuple(SOURCES.values()))
+    }
     output.mkdir(parents=True)
     (output / "compile").mkdir()
     compiled = {label: build(label, output / "compile", inputs) for label in ("a", "b")}

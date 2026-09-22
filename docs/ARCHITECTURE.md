@@ -43,7 +43,7 @@ Emulator linear addresses are observations that also record the load segment.
 
 ## Control plane
 
-The repository stores five independent kinds of durable state:
+The repository stores six independent kinds of durable state:
 
 1. `targets.toml` pins private inputs and provenance.
 2. `units.csv` records boundaries, ownership, source presence, and acceptance.
@@ -52,6 +52,9 @@ The repository stores five independent kinds of durable state:
 5. `th04_function_boundaries.csv` records all-artifact function-like
    observations, origin classification, boundary confidence, and work routing;
    it is not an exactness ledger.
+6. `th04_decoded_function_acceptance.csv` binds accepted/diagnostic OP,
+   MAINE, and ZUN decoded functions to artifact-local producer extents, source,
+   replay backend, and raw evidence. It never creates packed-file offsets.
 
 Exact-required evidence has an explicit scope: global, artifact, or
 unit-plus-file-extent as declared in `config/oracles.toml`. This keeps the

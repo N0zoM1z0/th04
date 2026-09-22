@@ -31,6 +31,7 @@ def main() -> int:
             "Function boundary ledger",
             [python, "scripts/boundary_review/validate_function_boundary_ledger.py"],
         )
+        run("Decoded function acceptance", [python, "scripts/decoded_function_acceptance.py"])
         run("Python syntax", [python, "-m", "compileall", "-q", "scripts", "tests"])
         run("Regenerate progress artifacts", [python, "scripts/progress.py"])
         run("Check generated progress", [python, "scripts/progress.py", "--check"])

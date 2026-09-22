@@ -45,14 +45,17 @@ reviewed file-backed authored C/C++ bytes exact and 492 / 494 reviewed
 authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
 carpet 23, and shared `snd_load` encoding 2. It is not the project-wide gate.
 
-The next control-plane packet is an **artifact-local acceptance plane** for
-already maintained `src/shared/` functions in OP and MAINE: ten reviewed
-owners / 633 decoded bytes in each artifact. Do not transfer MAIN's exact
-credit. Review OP/MAINE physical boundaries and create cold replay with
-artifact-local bytes, relocation/layout checks, source identity, and durable
-function evidence. Work in small hardware/PI and sound cohorts. In parallel,
-review provisional boundaries and source-origin questions by related physical
-owner; do not halt every mature TU behind a global clearance phase.
+The artifact-local decoded-function acceptance plane is now implemented and
+cold-tested for OP/MAINE BGIMAGE and ZUN resident diagnostics. Run
+`python3 scripts/decoded_function_acceptance.py` for its static ledger gate,
+or add `--artifact th04-op`, `th04-maine`, or `th04-zun` for a fresh cold
+comparison. See the [v508 acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
+The **next** source packet is the ten reviewed `src/shared/` owners / 633
+decoded bytes in each OP/MAINE artifact. Extend the cold backend to compile
+their actual source, review each artifact-local extent, and record its own raw
+function evidence; do not transfer MAIN's exact credit. Work in small
+hardware/PI and sound cohorts. Review provisional boundaries and source-origin
+questions alongside mature TUs, not as a global gate.
 
 ## Replayed facility checks
 
@@ -69,9 +72,11 @@ owner; do not halt every mature TU behind a global clearance phase.
 - `scripts/probes/replay_th04_zun_source_only.py` now captures transitive local
   headers. Both maintained ZUN C++ TUs compile twice identically: `cfg_init`
   152 CODE bytes, `_main` 246 versus the 252-byte target body. This is only
-  source-only compilation. The old v214-snapshot ZUN component driver is not
-  currently replayable without rebasing its inputs; a maintained-source
-  component/packed replay is still needed.
+  source-only compilation. The separate resident component link has now been
+  rebased from the deleted v214 inputs to the retained v489 library and seven
+  transitive TH04 source/header files; two cold links agree. The linked
+  `cfg_init` still has 13 byte differences and `_main` remains nonexact.
+  Composite/packed product replay is still missing.
 - Same-media DOS/V TC4J backend intake is structurally attested as distinct
   from the PC-98 `TC.EXE`; no dynamic OMF/codegen has been attested, and it
   grants zero MAIN exact credit. See the compiler blocker note.

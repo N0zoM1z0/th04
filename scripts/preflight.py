@@ -29,6 +29,7 @@ def main() -> int:
             "Function boundaries",
             [python, "scripts/boundary_review/validate_function_boundary_ledger.py"],
         ),
+        run("Decoded function acceptance", [python, "scripts/decoded_function_acceptance.py"]),
         run("TH04 targets", [python, "scripts/verify_targets.py", "--game", "th04"]),
         run("Status", [python, "scripts/status.py"]),
     ]

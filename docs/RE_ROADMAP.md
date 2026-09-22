@@ -7,18 +7,22 @@ side lane, not a dependency for the other artifacts.
 
 ## 1. Establish OP/MAINE/ZUN acceptance surfaces
 
-OP and MAINE have mature decoded-image/link Oracles, but lack a general
-artifact-local function-acceptance ledger and accepted packed-file byte
-extents. Extend the all-artifact boundary ledger or introduce a common
-function ledger with explicit decoded segment:offset, complete physical
-extent, source owner, artifact-local cold replay, ordered relocation/layout
-comparison, and evidence references. Keep decoded function acceptance apart
-from `units.csv` raw-file exactness. Never invent packed `file_offset` values
-to make a percentage. Rebase ZUN's component replay on checked-in source and
-headers, then add missing link inputs incrementally. Preserve OP/MAINE SCORE
-TU composition and v489/v494 aggregate Oracles during each source edit. The
-[replay handoff](reconstruction/packed/TH04_NONMAIN_REPLAY_HANDOFF_V507.md)
-names working commands and gaps.
+**Baseline complete:** `config/th04_decoded_function_acceptance.csv` and
+`scripts/decoded_function_acceptance.py` provide reviewed physical extent,
+source/backend binding, producer-scoped evidence, function-scoped equal raw
+hashes, two cold rounds, and artifact-local target comparison. CI/preflight
+validate the ledger. Six existing OP/MAINE BGIMAGE rows replay decoded-exact;
+ZUN's two C++ rows replay as nonexact diagnostics. ZUN's resident component
+driver is rebased on retained inputs. See the
+[acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
+
+**Next extension:** write bounded cold backends for the already maintained
+shared OP/MAINE owners, then incrementally replace ZUN's external link inputs.
+Keep decoded function acceptance apart from `units.csv` raw-file exactness;
+never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
+composition and v489/v494 aggregate Oracles during every source edit. A new
+backend must actually compile the claimed source and compare its own artifact;
+the BGIMAGE backend cannot grant credit to another TU.
 
 ## 2. Harvest maintained shared source in small cohorts
 
@@ -63,8 +67,9 @@ ZUN: first accept or decisively block `cfg_init` at decoded `_TEXT`
 `0xDCF..0xE66` (152 bytes), while keeping resident `_main` at
 `0xE67..0xF62` source-present with a six-byte blocker (246 natural versus 252 target bytes).
 Then ZUNINIT/MEMCHK origin and component ownership, external library
-replacement, composite link, and finally the DIET-packed container. Rebase
-the historical v214 component driver before claiming a full replay.
+replacement, composite link, and finally the DIET-packed container. The
+separate resident component link now replays on retained inputs; the old
+v214-only `cfg_init` diagnostic is historical and is not a product replay.
 
 ## 5. Close whole artifacts and validate runtime behavior
 

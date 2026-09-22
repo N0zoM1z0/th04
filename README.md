@@ -271,6 +271,8 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 - `config/units.csv` — bounded code/data ownership and reconstruction state.
 - `config/th04_function_boundaries.csv` — all-artifact function observations,
   origin classification, confidence, and reconstruction routing.
+- `config/th04_decoded_function_acceptance.csv` — artifact-local decoded
+  function acceptance, distinct from packed-file raw exactness.
 - `config/evidence.csv` — replayable observations, commands, and digests.
 - `config/hypotheses.csv` — falsifiable claims and their current disposition.
 - `docs/README.md` — short documentation entry point by task.
@@ -311,8 +313,11 @@ Its remaining 27 bytes are a side lane. OP and MAINE each have three
 decoded/link-exact BGIMAGE functions and target-exact ordered relocations in
 the retained aggregate replay, but no honest packed-file authored-byte
 denominator. ZUN has bounded maintained source and a reproducible source-only
-compile, not an accepted whole-product link. None is a standalone TH04 game
-build yet, and no calibrated deterministic TH04 runtime scenario exists.
+compile and resident component link, not an accepted whole-product link.
+The OP/MAINE/ZUN decoded-function ledger and cold comparison are now checked
+by preflight and CI; they do not confer packed-file exactness. None is a
+standalone TH04 game build yet, and no calibrated deterministic TH04 runtime
+scenario exists.
 See the [current handoff](docs/RE_HANDOFF.md),
 [roadmap](docs/RE_ROADMAP.md), and four-artifact progress image above. Run:
 

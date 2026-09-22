@@ -10,6 +10,7 @@ The CSV ledgers remain authoritative when prose and generated reports disagree.
 - [Roadmap](RE_ROADMAP.md) — ordered non-MAIN reconstruction and control-plane work.
 - [Progress](PROGRESS.md) — generated all-artifact function routing and MAIN exact-byte totals.
 - [Boundary review](BOUNDARY_REVIEW.md) — generated all-artifact work queue.
+- [Decoded function acceptance](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md) — OP/MAINE/ZUN cold replay and packed-file claim boundary.
 - [Reconstruction evidence index](reconstruction/README.md) — focused notes
   grouped by artifact and technical surface.
 

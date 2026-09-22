@@ -38,10 +38,12 @@ used one profile.  Probe individual ABI/code-generation claims.
 6. **In progress:** freeze artifact-specific flags, ordered objects, libraries,
    linker response files, map topology, and output digests for each TH04 claim.
    MAIN has accepted file-backed units; OP/MAINE have repeatable decoded
-   aggregate replays; ZUN has source-only TU compilation.
-7. **In progress:** add artifact-local unit/object acceptance adapters and
-   exact ledger rows only for extents with complete reviewed ownership. A
-   decoded packed-function match is separate from a raw-file exact unit.
+   aggregate replays; ZUN has source-only TU compilation and a repeatable
+   external-library resident component link.
+7. **Baseline complete, extension in progress:** the OP/MAINE/ZUN decoded
+   function ledger and cold wrapper validate current BGIMAGE/ZUN owners.
+   Add a source-compiling backend and exact evidence for each new TU.
+   A decoded packed-function match is separate from a raw-file exact unit.
 
 ReC98 source remains an untrusted calibration fixture and is never copied into
 `src/` wholesale.  Only outputs built locally from an attested environment can

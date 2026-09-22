@@ -13,11 +13,13 @@ Use these sources in order:
 2. `config/units.csv` for accepted byte-owner state;
 3. `config/th04_main_authored_functions.csv` for reviewed MAIN functions;
 4. `config/th04_function_boundaries.csv` for the all-artifact candidate queue;
-5. `config/evidence.csv` for replayable observations;
-6. `config/knowledge.csv` for reusable facts, hazards, recipes, and negative
+5. `config/th04_decoded_function_acceptance.csv` for non-MAIN decoded-function
+   acceptance and diagnostics, separate from packed-file raw exactness;
+6. `config/evidence.csv` for replayable observations;
+7. `config/knowledge.csv` for reusable facts, hazards, recipes, and negative
    results;
-7. `docs/PROGRESS.md` and `docs/BOUNDARY_REVIEW.md` for generated summaries;
-8. `docs/RE_HANDOFF.md` for the current phase and blockers.
+8. `docs/PROGRESS.md` and `docs/BOUNDARY_REVIEW.md` for generated summaries;
+9. `docs/RE_HANDOFF.md` for the current phase and blockers.
 
 Historical evidence IDs, paths, and batch numbers preserve provenance. They
 are not a current queue and must not override the ledgers. In particular,

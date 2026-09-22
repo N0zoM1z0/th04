@@ -144,9 +144,9 @@ column; another ASM attestation entry may also have a provisional boundary.
 The MAIN byte percentage uses reviewed file-backed authored C/C++ owner extents,
 not MAIN.EXE's complete file and not all TH04 artifacts. OP, MAINE, and ZUN
 currently have no accepted packed-file byte denominator. Their decoded exact
-function counts are a separate acceptance plane and must not be read as packed
-raw-file exactness. Ghidra body sizes are provisional until physical ownership
-is reviewed.
+function counts are checked against `config/th04_decoded_function_acceptance.csv`
+and must not be read as packed raw-file exactness. Ghidra body sizes are
+provisional until physical ownership is reviewed.
 """
 
 

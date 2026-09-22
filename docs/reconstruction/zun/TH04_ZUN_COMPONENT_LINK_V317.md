@@ -43,3 +43,19 @@ This closes an independent link step for the maintained ZUN C++ source.
 `masters.lib`, ZUNINIT, MEMCHK, ONGCHK, the full composite build, and the
 packer inputs still have external ownership; the natural `_main` body and
 component raw bytes fail exactness. No ZUN unit or artifact is promoted.
+
+## Current replay route (v508)
+
+The old v317 path is a historical receipt location. The driver now obtains
+the same hash-attested `masters.lib` from the protected v489 OP source snapshot
+and materializes the current seven-file transitive TH04 source/header closure;
+the stale `HEADERS` import and pruned v214 library path are removed. Run with
+a fresh `--output-dir` under `.analysis/reconstruction/probes/`, or use the
+common `python3 scripts/decoded_function_acceptance.py --artifact th04-zun`
+entrypoint. The latter's v508 receipt SHA-256 is
+`6542091d838059274c470c9f567c2e3bb2ba57d42a71f411cca99326908560b5`.
+Two cold links reproduce the v317 component SHA-256 and 4,241 differences.
+Within target-sized function extents, `cfg_init` differs at 13 linked bytes
+and `_main` at 130 bytes; neither is decoded-exact. The current acceptance
+contract and limits are in the
+[v508 note](../packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).

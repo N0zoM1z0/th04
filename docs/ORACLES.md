@@ -184,7 +184,11 @@ For DIET-packed OP/MAINE/ZUN, a decoded function may have a target-restored
 segment:offset and an artifact-local link comparison without a direct packed
 file offset. Track that as decoded function acceptance, not `units.csv` raw
 file exactness. The six OP/MAINE BGIMAGE functions are an existing special
-case; a reusable function-acceptance plane is still needed for other owners.
+case. `config/th04_decoded_function_acceptance.csv` and its cold replay driver
+now enforce the separate acceptance plane; its initial backends cover BGIMAGE
+and ZUN resident diagnostics. New TUs need actual source-compiling backends
+and function-scoped equal raw evidence. Neither a decoded-exact row nor the
+wrapper's successful exit promotes `units.csv` packed-file exactness.
 
 ## Comparator self-tests
 
