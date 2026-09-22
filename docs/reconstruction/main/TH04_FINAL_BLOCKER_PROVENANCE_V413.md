@@ -214,3 +214,31 @@ contain hand-selected low-level instructions, but it does not provide the
 independent source-origin evidence required by this repository. The complete
 MAIN gap therefore remains 27 bytes: checkerboard 2, carpet 23, and `snd_load`
 2. Reopen this route only if a genuinely new historical source artifact appears.
+
+## v496 complete MAGNet2010 transcription-lineage audit
+
+v495 checked the pinned tree and the documented leak scope. v496 closes the
+narrower historical loophole that a MAGNet2010 source tag might previously
+have lived in a final-blocker file and later moved elsewhere.
+
+scripts/probes/probe_th04_magnet_transcription_provenance_v496.py binds the
+same pinned ReC98 commit and enumerates the complete
+git log -S[MAGNet2010] -- th04 history. Exactly nine commits change the TH04
+tag count. The first three 2019 transcription commits introduce provenance in
+demo/memory, EMS/memory, and key_det / shiftkey input material. The six
+later commits only migrate or preserve tagged identifiers within
+demo/input/EMS files.
+
+Across all nine diffs there are 11 distinct tag-bearing paths. None names
+checkerboard, carpet/stages, or snd_load; the pinned current tree's 13 tags
+also have zero final-blocker hits. The probe checks the exact commit sequence
+and exact tag-bearing path set, so a future upstream-history drift fails closed.
+
+Replay v496-magnet-transcription-provenance-002 has receipt SHA-256
+a6a1a9d162aa058c49ec6d9b5400c6a3cc7fd8942e0767116ddefed5e342faac;
+the bound history/patch/current-tag bundle SHA-256 is
+504db3934cd1c7b8e123daa6405569a42aba124633a8e656f19b89182eb3fcac.
+
+This is stronger upstream provenance bookkeeping, not the original broadcast
+frame and not an exactness Oracle. It changes no source ownership and leaves
+the complete MAIN gap at 27 bytes.

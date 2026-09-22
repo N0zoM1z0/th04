@@ -132,9 +132,10 @@ Primary packed notes:
 ## Closed routes that should not be repeated by default
 
 - supplied-HDI deleted/free/slack/source-remnant forensics (v413-v419);
-- pinned ReC98 2023 decompilation history plus the documented MAGNet2010 TH04
-  source leak (v495): the leak is confined to demo/input/EMS material and does
-  not independently witness checkerboard, carpet, or `snd_load` low-level source;
+- pinned ReC98 2023 decompilation history plus the complete documented
+  MAGNet2010 TH04 transcription lineage (v495-v496): all nine tag-changing
+  history commits keep tag-bearing hunks in demo/input/EMS/memory material and
+  never independently witness checkerboard, carpet, or snd_load low-level source;
 - checkerboard ordinary countdown source spellings / accepted optimizer / IDE /
   cross-artifact scans (v396, v398, v404-v406);
 - carpet natural opcode/source-lineage/cross-artifact scans (v396, v404-v405,
