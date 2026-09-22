@@ -84,7 +84,7 @@ authored boundary remains provisional; its eight code entries still retain
 `target-derived-asm` source provenance and zero exact credit. Routine ZUN work
 should now resolve ZUNINIT/MEMCHK source/origin authority and component ownership
 and replace external library inputs. The library-origin `GRAPH_CLEAR` slice is
-support-only. v521 additionally closes all three MEMCHK authored physical function extents while keeping the IDA-generated candidate source at zero source/exact credit. All 13 current ZUN authored candidates are now target-reviewed; the remaining work is source/origin authority and component ownership. After source ownership and inputs close, compare the composite
+support-only. v521 additionally closes all three MEMCHK authored physical function extents while keeping the IDA-generated candidate source at zero source/exact credit. All 13 current ZUN authored candidates are now target-reviewed. v522 also closes the pinned ReC98 generated-assembly route: ZUNINIT and MEMCHK enter that ancestry as IDA-generated initial-state reconstructions, so their raw-equal candidate links cannot satisfy source authority. The remaining work is independent provenance or natural reconstruction plus component ownership. After source ownership and inputs close, compare the composite
 link and only then the DIET-packed container.
 
 ## 5. Close whole artifacts and validate runtime behavior
