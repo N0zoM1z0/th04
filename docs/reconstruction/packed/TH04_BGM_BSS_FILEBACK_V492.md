@@ -102,11 +102,15 @@ are exact.
 
 ## Provenance limit
 
-v430/v491 independently extract the historical `masters.lib:b_data.OBJ`; its
-`0xC6` BSS contribution has **no LEDATA/LIDATA**. Therefore the explicit-zero
-replay template is not promoted as historical source. The original trigger for
-file-backing the BGM span could instead be another MASTER library build, a
-monolithic-object spelling, or a post-link transformation.
+v430/v491 independently extract the pinned generic `masters.lib:b_data.OBJ`;
+its `0xC6` BSS contribution has **no LEDATA/LIDATA**. v493 then proves from
+independent target code that ZUN's TH04/TH05 MASTER object set was not this
+generic archive verbatim: the archive gaiji objects retain the official `ADC
+5680h` bug, while all four TH04/TH05 OP/MAINE targets contain ZUN's corrected
+`ADD` form. The generic `b_data.OBJ` therefore cannot be treated as definitive
+negative evidence about ZUN's modified BGM object. Even so, the explicit-zero
+replay template is not promoted as historical source; the exact modified
+`b_data` object/source remains unavailable.
 
 The durable conclusion is narrower:
 

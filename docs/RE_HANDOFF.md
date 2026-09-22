@@ -264,6 +264,13 @@ python3 scripts/audit_compat_dependencies.py --check
   raw-exact. Because historical `b_data.OBJ` itself has no BSS LEDATA, keep the
   explicit-zero template as provenance/mechanism evidence, not maintained
   historical source.
+- v493 proves the pinned generic `masters.lib` is **not** the exact MASTER
+  object set ZUN linked for TH04/TH05. Its extracted `GRAPH_GAIJI_PUTC/PUTS`
+  members retain the official `ADC 5680h` bug, while all four independently
+  restored TH04/TH05 OP/MAINE targets contain ZUN's corrected `ADD` forms.
+  Thus v491's generic `b_data.OBJ` no-LEDATA result cannot by itself exclude a
+  different ZUN-modified BGM object. This strengthens v492 provenance but still
+  does not prove the exact historical `b_data` initialization/source spelling.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -295,7 +302,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v492. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v493. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
