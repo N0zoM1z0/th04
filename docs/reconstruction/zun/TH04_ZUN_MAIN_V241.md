@@ -112,3 +112,20 @@ Receipt SHA-256:
 `5f0ae65c3a52c92d50ce517c844de58c70c4fecc5825c40cec4fe93de79452c3`.
 This eliminates those source-shape hypotheses only. The maintained `_main`
 remains 246 bytes, source-present, and nonexact; no ZUN exact state changes.
+
+## v517 branch-shape replay maintenance
+
+The v315 branch-shape driver had retained a stale import of the former static
+HEADERS list after the maintained ZUN source-only compiler route moved to a
+transitive checked-in source closure. This was tooling drift, not new target
+evidence. The driver now derives the _main header set through the same
+source_closure() helper and still materializes no ReC98 source or header.
+
+A fresh two-round replay at
+.analysis/reconstruction/probes/v517-zun-branch-shapes-002/ has receipt
+SHA-256
+acace69547c0f0f5b69338d98b77f56a39d28f2746a2d9bf64a29427fe0e4332.
+The five ordinary C++ controls reproduce the v315 CODE sizes exactly:
+248, 249, 251, 251, and 257 bytes against the 252-byte target. This restores
+the negative experiment's current replayability without changing maintained
+_main, cfg_init, or any ZUN acceptance state.

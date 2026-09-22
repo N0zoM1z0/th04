@@ -15,10 +15,15 @@ import tomllib
 
 from replay_th04_zun_cfg_init import code
 from replay_th04_zun_source_only import (
-    FLAGS, HEADERS, PAYLOAD, PAYLOAD_SHA256, ROOT, RUNNER, sha,
+    FLAGS, PAYLOAD, PAYLOAD_SHA256, ROOT, RUNNER, sha, source_closure,
 )
 
 SOURCE = ROOT / "src/zun/resident/main.cpp"
+SOURCE_RELATIVE = SOURCE.relative_to(ROOT).as_posix()
+HEADERS = tuple(
+    path for path in source_closure(ROOT, (SOURCE_RELATIVE,))
+    if path != SOURCE_RELATIVE
+)
 TARGET_MAIN_SHA256 = "db04398b52ca5780c734f839e2cf3768718f7f7c65705a9cdb9e88e34aa64871"
 BAD = '            dos_puts2("そんなオプション付けられても、困るんですけど\\n\\n");\n            return 1;'
 ALREADY = '        dos_puts2("わたし、すでにいますよぉ\\n\\n");\n        return 1;'
