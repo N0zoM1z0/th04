@@ -26,22 +26,22 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 14 / 71 / 8 | 12 | 81 | Remaining shared sound owner; SCORE physical TU |
+| OP.EXE | 93 | 14 / 71 / 8 | 13 | 80 | Shared maintained cohort complete; SCORE physical TU |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
-| MAINE.EXE | 72 | 14 / 51 / 7 | 12 | 60 | Remaining shared sound owner; SCORE physical TU |
+| MAINE.EXE | 72 | 14 / 51 / 7 | 13 | 59 | Shared maintained cohort complete; SCORE physical TU |
 | ZUN.COM | 13 | 3 / 4 / 6 | 0 | 13 | `cfg_init`, ZUNINIT boundary, component link |
 
-The non-MAIN authored backlog is 154 pending acceptances, 21 provisional
+The non-MAIN authored backlog is 152 pending acceptances, 21 provisional
 boundaries, and 40 unresolved `target-derived-asm` candidate representations.
 There is a separate 35-entry OP/MAINE/ZUN original-ASM attestation queue.
 `target-derived-asm` does **not** prove original ASM ownership. Corroborated
 boundaries still require target-local physical review before exact promotion.
 
-OP and MAINE each have three decoded/link-exact BGIMAGE functions plus nine
+OP and MAINE each have three decoded/link-exact BGIMAGE functions plus ten
 artifact-local cold-relinked natural C/C++ shared functions: vram_planes_set(),
 frame_delay(), pi_palette_apply(), pi_put_8(), pi_load(), and
-snd_pmd_resident(), snd_mmd_resident(), snd_kaja_interrupt(), and
-snd_determine_modes(). Their units.csv
+snd_pmd_resident(), snd_mmd_resident(), snd_kaja_interrupt(),
+snd_determine_modes(), and snd_delay_until_measure(). Their units.csv
 rows stay source-present: DIET-packed files have no honest raw
 file offsets for those decoded function bodies. Neither artifact, nor ZUN, has
 a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
@@ -50,16 +50,16 @@ authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
 carpet 23, and shared `snd_load` encoding 2. It is not the project-wide gate.
 
 The artifact-local decoded-function acceptance plane is implemented and
-cold-tested for OP/MAINE BGIMAGE, VRAM, frame-delay, PI, PMD, MMD, KAJA, and sound-mode source plus ZUN resident diagnostics. Run
+cold-tested for OP/MAINE BGIMAGE, VRAM, frame-delay, PI, PMD, MMD, KAJA, sound-mode, and delay source plus ZUN resident diagnostics. Run
 `python3 scripts/decoded_function_acceptance.py` for its static ledger gate,
 or add `--artifact th04-op`, `th04-maine`, or `th04-zun` for a fresh cold
 comparison. See the [v508 acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
-The **next** source packet is the final reviewed shared sound owner /
-49 decoded bytes in each OP/MAINE artifact: snd_delay_until_measure(). Extend the cold backend to compile
-their actual source, review each artifact-local extent, and record its own raw
-function evidence; do not transfer another artifact's exact credit. Work in small
-sound cohorts. Review provisional boundaries and source-origin
-questions alongside mature TUs, not as a global gate.
+The maintained reviewed shared hardware/PI/sound cohort is now complete: 13
+decoded-exact functions / 840 source-owner bytes in each OP/MAINE artifact.
+The next bounded OP/MAINE packet should move to a physically coherent TU such
+as SCORE, or to another mature reviewed owner; corroborated/provisional entries
+still need target-local physical review before promotion. Do not transfer exact
+credit between artifacts.
 
 ## Replayed facility checks
 
@@ -76,6 +76,7 @@ questions alongside mature TUs, not as a global gate.
 - v513 cold-compiles maintained mmd_resident.c plus the already attested zero-code SHARED alignment TU into OP and MAINE. Both complete 47-byte functions are raw-zero in two rounds and all 804/559 ordered relocations remain exact. The only aggregate linked-program difference per artifact is the explicitly excluded post-MMD padding byte (OP 0xDC73, MAINE 0xCF8B); the alignment object has zero LEDATA and does not emit or claim that byte. The fail-closed combined wrapper now executes seven explicit backends and keeps ten accepted functions per artifact raw-zero. See the [v513 MMD note](reconstruction/packed/TH04_SHARED_MMD_V513.md).
 - v514 independently cold-compiles maintained kaja_interrupt.cpp into OP and MAINE. Both complete 30-byte functions are raw-zero in two rounds, both linked program images and EXEs remain v489-identical, and all 804/559 ordered relocations remain exact. The fail-closed combined wrapper now executes eight explicit backends and keeps eleven accepted functions per artifact raw-zero. See the [v514 KAJA note](reconstruction/packed/TH04_SHARED_KAJA_V514.md).
 - v515 independently cold-compiles maintained determine_modes.cpp into OP and MAINE. Both complete 156-byte functions are raw-zero in two rounds, both complete linked programs and EXEs remain v489-identical, and all 804/559 ordered relocations remain exact. The fail-closed combined wrapper now executes nine explicit backends and keeps twelve accepted functions per artifact raw-zero. See the [v515 sound-mode note](reconstruction/packed/TH04_SHARED_MODE_V515.md).
+- v516 independently cold-compiles maintained delay_until_measure.cpp into OP and MAINE. Both complete 49-byte functions are raw-zero in two rounds, both complete linked programs and EXEs remain v489-identical, and all 804/559 ordered relocations remain exact. MAINE 0xD077 remains function-external linker fill before CDG_PUT_PLANE and receives no delay-owner credit. The fail-closed combined wrapper now executes ten explicit backends and keeps thirteen accepted functions per artifact raw-zero. See the [v516 delay note](reconstruction/packed/TH04_SHARED_DELAY_V516.md).
 - The six BGIMAGE `units.csv` replay commands now use the retained v489 source
   snapshot via `--current-snapshot`; compacted v487/v488 input paths in the
   historical note are not the live command.
