@@ -129,3 +129,52 @@ The five ordinary C++ controls reproduce the v315 CODE sizes exactly:
 248, 249, 251, 251, and 257 bytes against the 252-byte target. This restores
 the negative experiment's current replayability without changing maintained
 _main, cfg_init, or any ZUN acceptance state.
+
+## v518 selective-tail compiler and provenance bound
+
+Fresh target/object alignment localizes the entire six-byte natural-source gap.
+The 252-byte target does not merely disable tail merging globally. Its four
+error paths have a selective print-call fingerprint:
+
+- /R not-resident: push the message, then jump to the later no-space print call;
+- bad option: keep its own dos_puts2 call, then jump to the shared return 1;
+- already resident: keep its own dos_puts2 call, then jump to the shared return 1;
+- no-space: keep the later dos_puts2 call immediately before the shared return 1.
+
+The maintained 246-byte build instead folds bad-option and already-resident
+into that later call, accounting exactly for two missing three-byte CALL
+instructions.
+
+The checked-in optimizer-profile driver
+scripts/probes/probe_th04_zun_main_optimizer_profile.py compiles the maintained
+source twice per supported PC-98 TC4J profile and also attests this target-local
+fingerprint with ndisasm. Receipt
+.analysis/reconstruction/probes/v518-zun-main-optimizer-profile-001/receipt.json
+has SHA-256
+9f70a971b1943cea0aa8c6850f9628fd7628eb2abf4804b275bc1ecd6ed71cb8.
+Baseline is 246 bytes; -O- is 248; -Z- is 258. Those three retain the excessive
+jmp/jmp/jmp/call tail merge. -v is 254, -y is 256, -G is 280, and -y with
+-O- is 260; these preserve all four print calls or change other codegen.
+None reproduces both 252 bytes and the target selective call placement.
+The active 16-bit TCC frontend exposes no finer common-tail optimizer switch.
+
+The separate upstream-provenance driver
+scripts/probes/probe_th04_zun_main_barrier_provenance.py binds pinned ReC98
+history rather than treating its current source as authority. Receipt
+.analysis/reconstruction/probes/v518-zun-main-barrier-provenance-001/receipt.json
+has SHA-256
+9336932190f1b9b9a63b82ea03e0501d6c331c835a2851ff5e604de326f78007.
+The self-assignment statements first appear in ReC98 commit b8ca607c as
+decompilation work; its commit message describes them as no-ops used to block
+TCC tail folding and only speculates that ZUN could have written them. Later
+resident splits and the C++ wrapper migration preserve those barriers as
+maintenance. This is upstream reconstruction provenance, not independent
+original-source evidence.
+
+Therefore maintained _main stays natural and source-present at 246 bytes.
+Do not add inert self-assignments, codestrings, target-derived assembly, or
+other optimizer barriers for equality. Reopen the six-byte source shape only
+with materially new provenance or a compiler mechanism outside the now-bounded
+supported profile surface. Work on cfg_init and independent ZUN
+boundary/origin/component questions can continue without claiming that this
+blocker is solved.

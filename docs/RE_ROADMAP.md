@@ -72,15 +72,17 @@ respective physical reviews. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link
 impact, not by address order or attractive percentage.
 
-ZUN: first accept or decisively block `cfg_init` at decoded `_TEXT`
-`0xDCF..0xE66` (152 bytes), while keeping resident `_main` at
-`0xE67..0xF62` source-present with a six-byte blocker (246 natural versus 252 target bytes).
-The fresh library-origin `GRAPH_CLEAR` linked slice is byte-equal but cannot
-stand in for an authored function or clear the resident component blocker.
-Then ZUNINIT/MEMCHK origin and component ownership, external library
-replacement, composite link, and finally the DIET-packed container. The
-separate resident component link now replays on retained inputs; the old
-v214-only `cfg_init` diagnostic is historical and is not a product replay.
+ZUN: validate `cfg_init` function-locally at decoded `_TEXT`
+`0xDCF..0xE66` (152 bytes) without letting the resident layout shift masquerade
+as source mismatch. Keep `_main` at `0xE67..0xF62` source-present: v518
+localizes its six-byte gap to two selectively unmerged print calls and closes
+the supported TC4J profile surface as an explanation. ReC98 self-assignment
+barriers are upstream decompilation workarounds without independent source
+provenance, so reopen _main only for materially new provenance or compiler
+evidence. The library-origin `GRAPH_CLEAR` linked slice remains support-only
+and cannot stand in for authored acceptance. In parallel, review ZUNINIT/MEMCHK
+origin and component ownership, replace external library inputs, then close the
+composite link and finally the DIET-packed container.
 
 ## 5. Close whole artifacts and validate runtime behavior
 
