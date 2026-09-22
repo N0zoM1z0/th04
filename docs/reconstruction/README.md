@@ -53,6 +53,7 @@ contain residual counts that were correct only at that packet.
 - [ZUN FILE_APPEND library replacement](zun/TH04_ZUN_FILE_APPEND_V531.md)
 - [ZUN FILE_FLUSH / FILE_CLOSE library replacement](zun/TH04_ZUN_FILE_CLOSE_V532.md)
 - [ZUN DOS_ROPEN / FONTFILE_OPEN library replacement](zun/TH04_ZUN_FONTOPEN_V533.md)
+- [ZUN VERSION / GRP pure-data library replacement](zun/TH04_ZUN_VERSION_GRP_V534.md)
 
 ## Recent MAIN milestones
 

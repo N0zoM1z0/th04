@@ -17,13 +17,14 @@ import replay_th04_zun_file_seek as file_seek
 import replay_th04_zun_file_append as file_append
 import replay_th04_zun_file_close as file_close
 import replay_th04_zun_fontopen as fontopen
+import replay_th04_zun_version_grp as version_grp
 import replay_th04_zun_file_read as file_read
 import replay_th04_zun_resdata as resdata
 
 
 class ZunSupportReplayImportTests(unittest.TestCase):
     def test_transitive_source_closure_is_live(self) -> None:
-        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek, file_append, file_close, fontopen):
+        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek, file_append, file_close, fontopen, version_grp):
             closure = module.source_closure(module.ROOT, tuple(module.SOURCES.values()))
             self.assertIn("src/zun/config/cfg_init.cpp", closure)
             self.assertIn("src/zun/resident/main.cpp", closure)
@@ -107,6 +108,19 @@ class ZunSupportReplayImportTests(unittest.TestCase):
         self.assertEqual(fontopen.FONTOPEN_CODE_SIZE, 0x18)
         self.assertEqual(fontopen.FONTOPEN_DATA_SIZE, 0x02)
         self.assertTrue(fontopen.LOCAL_FONTOPEN.is_file())
+
+
+    def test_version_grp_member_contract(self) -> None:
+        self.assertEqual(version_grp.VERSION_MEMBER_POSITION, 0)
+        self.assertEqual(version_grp.VERSION_TARGET_DATA_OFFSET, 0x219A)
+        self.assertEqual(version_grp.VERSION_DATA_SIZE, 0x5D)
+        self.assertEqual(version_grp.VERSION_TARGET_PADDING_OFFSET, 0x21F7)
+        self.assertEqual(version_grp.GRP_MEMBER_POSITION, 91)
+        self.assertEqual(version_grp.GRP_TARGET_DATA_OFFSET, 0x21F8)
+        self.assertEqual(version_grp.GRP_DATA_SIZE, 0x0B)
+        self.assertEqual(version_grp.GRP_TARGET_PADDING_OFFSET, 0x2203)
+        self.assertTrue(version_grp.LOCAL_VERSION.is_file())
+        self.assertTrue(version_grp.LOCAL_GRP.is_file())
 
 
 if __name__ == "__main__":
