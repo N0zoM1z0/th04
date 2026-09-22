@@ -242,6 +242,17 @@ python3 scripts/audit_compat_dependencies.py --check
   complete MZ relocation tables are now **100% target-index exact** (804/804 and
   559/559). The only decoded program-image residual in either artifact is the
   shared two-byte `snd_load` encoding.
+- v490 proves target-restored `e_minalloc` is derived from T extent plus the
+  unchanged initial `SS:SP`: all v489 candidates, v228 restores, v436 RT
+  controls, and `/i` controls satisfy the DOS-MZ stack-gap formula exactly.
+  The target T extents lower OP/MAINE minalloc by exactly 202 paragraphs, so
+  minalloc is no longer an independent provenance search.
+- v491 restores the real historical `masters.lib:b_data.OBJ` as a physical
+  linker member between split pre/post master-data owners. Both OP and MAINE
+  EXEs remain byte-identical to v489, including file extent and minalloc. The
+  historical `b_data` object boundary alone therefore **does not** produce T;
+  remaining T mechanisms require initialized BSS-class data, a different
+  linker version, or a post-link transform.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -274,7 +285,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v490. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v491. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 

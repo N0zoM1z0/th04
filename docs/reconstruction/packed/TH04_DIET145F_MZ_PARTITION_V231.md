@@ -256,3 +256,41 @@ is not the mechanism. The remaining packed-header problem is the provenance of
 
 Private receipt SHA-256:
 `a76b89c99b6f008f7e6f5986a785d45af66fe5048875a64f738d804696a3fec9`.
+
+## v491 historical `b_data.OBJ` boundary is not the T mechanism
+
+v430 established that the independently extracted historical
+`masters.lib:b_data.OBJ` has:
+
+- `_DATA` length `0x11C`;
+- `_BSS` length `0xC6`;
+- `timerorg` at `_BSS+0`, `part` at `+4`, and `esound` at `+0x46`;
+- **no LEDATA or LIDATA record for `_BSS`**.
+
+Because the TH04 target-restored `T` EOF lands exactly `0xC6` bytes after
+`timerorg`, one remaining historical-topology hypothesis was that merely
+restoring this real MASTER library member as a separate OMF producer could make
+TLINK file-back that span.
+
+v491 tests that hypothesis directly. For both OP and MAINE, the reconstructed
+master data-tail is split into **pre-BGM / historical `b_data.OBJ` / post-BGM**
+objects so that `_DATA` and `_BSS` contribution order and all linked addresses
+remain unchanged. The `b_data.OBJ` is freshly extracted from the pinned
+`masters.lib` and hash-checked before every replay.
+
+Both A/B relinks are byte-identical to the v489 natural baselines:
+
+| Artifact | EXE SHA-256 | File bytes | Load bytes | minalloc | Relocations |
+| --- | --- | ---: | ---: | ---: | ---: |
+| OP | `c32633e0b679e8d8bd97f55b9280bb1a9beae82a4530fd33f4cbcc9d1f421274` | 73,636 | 69,028 | 612 | 804 unchanged |
+| MAINE | `d3bdc485782a9fb953823155426ca7f0e6e8212d6bc0cdffaaa32f91df2dc90c` | 65,998 | 62,414 | 817 | 559 unchanged |
+
+Therefore the **real historical `b_data` physical member boundary alone does
+not produce `T`**. This closes the object-boundary form of the hypothesis left
+open by v441. It remains possible that another historical object emitted
+initialized bytes inside a BSS-class segment, that another linker version had a
+different uninitialized-segment policy, or that a post-link transform changed
+the pre-DIET file extent.
+
+Private receipt SHA-256:
+`7847229f1c8423fe17e31d5eac349fc032d060f49f578b95a7e3f6f95558cfa6`.
