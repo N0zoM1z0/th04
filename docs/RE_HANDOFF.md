@@ -136,6 +136,9 @@ Primary packed notes:
   MAGNet2010 TH04 transcription lineage (v495-v496): all nine tag-changing
   history commits keep tag-bearing hunks in demo/input/EMS/memory material and
   never independently witness checkerboard, carpet, or snd_load low-level source;
+- TC4J -WX / DPMI16 final-blocker codegen (v497): the switch is
+  demonstrably active via CODE SEGDEF alignment but does not change the tested
+  register, LOOP, LODSB, or DS-to-ES instruction selections;
 - checkerboard ordinary countdown source spellings / accepted optimizer / IDE /
   cross-artifact scans (v396, v398, v404-v406);
 - carpet natural opcode/source-lineage/cross-artifact scans (v396, v404-v405,

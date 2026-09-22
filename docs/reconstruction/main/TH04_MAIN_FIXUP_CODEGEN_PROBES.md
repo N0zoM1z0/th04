@@ -258,3 +258,39 @@ Private receipt SHA-256:
 This is bounded negative compiler evidence. It does not prove original source
 language and does not authorize target-derived inline assembly. `snd_load`'s
 `89 C3` and the corresponding carpet register/MUL/shift residuals stay blocked.
+
+## v497 TC4J -WX / DPMI16 final-blocker surface
+
+Earlier reconstruction work established that -WX is a real TC4J code-generation
+surface: it changes segment alignment and can alter control flow in
+frame-bearing functions. That made it a materially new option to test against
+the final blockers rather than another spelling-only retry.
+
+scripts/probes/probe_tc4_wx_final_blocker_surface_v497.py runs the attested
+TCC 4.02 under the same base profile with and without -WX. The control proves
+that the switch is active: the first CODE SEGDEF alignment code changes from
+1 to 2. Despite that physical producer change, the combined register core is
+byte-identical under both profiles and remains:
+
+    56 57 8B D8 8B F0 8B FA 33 D2 03 DB 03 FF F7 EB 5F 5E C3
+
+Thus -WX still does not select the target 89 C3 / 89 C6 / 89 D7 register
+directions, 31 D2 zeroing, 01 DB doubling, D1 E7 shift, or F7 E3 unsigned
+MUL form.
+
+The same -WX profile compiles all 14 previously tested legal checkerboard
+countdown spellings; none emits x86 LOOP. Four fixed-SI byte-load spellings
+still emit MOV AL,[SI] plus INC SI or equivalent rather than LODSB. Direct
+_ES=_DS remains MOV AX,DS / MOV ES,AX. The existing real string-intrinsic
+control still emits PUSH DS / POP ES, but only at the memcpy copy site after
+preceding scalar work, so -WX does not create a semantically free carpet
+entry bridge.
+
+Two cold runs produce identical receipt SHA-256
+2eb2a930f6930bbb6c49735202e0d716c646f34977173e4ad97b1c19b8a28814.
+The stable input/tool/source bundle SHA-256 is
+5bc53f95cab168550259af8c1b2ba403aa7fab3a465c0588c65a8b5b571cb266.
+
+This closes -WX as a compiler-option explanation for the tested final-blocker
+forms. It does not establish handwritten source provenance, does not authorize
+inline assembly, and leaves the MAIN gap at 27 bytes.
