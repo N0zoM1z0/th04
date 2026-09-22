@@ -26,18 +26,19 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 14 / 71 / 8 | 3 | 90 | Shared hardware/PI and sound owners; SCORE physical TU |
+| OP.EXE | 93 | 14 / 71 / 8 | 4 | 89 | Remaining shared hardware/PI and sound owners; SCORE physical TU |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
-| MAINE.EXE | 72 | 14 / 51 / 7 | 3 | 69 | Shared owners; SCORE physical TU |
+| MAINE.EXE | 72 | 14 / 51 / 7 | 4 | 68 | Remaining shared owners; SCORE physical TU |
 | ZUN.COM | 13 | 3 / 4 / 6 | 0 | 13 | `cfg_init`, ZUNINIT boundary, component link |
 
-The non-MAIN authored backlog is 172 pending acceptances, 21 provisional
+The non-MAIN authored backlog is 170 pending acceptances, 21 provisional
 boundaries, and 40 unresolved `target-derived-asm` candidate representations.
 There is a separate 35-entry OP/MAINE/ZUN original-ASM attestation queue.
 `target-derived-asm` does **not** prove original ASM ownership. Corroborated
 boundaries still require target-local physical review before exact promotion.
 
-OP and MAINE each have three decoded/link-exact BGIMAGE functions. Their
+OP and MAINE each have three decoded/link-exact BGIMAGE functions plus one
+artifact-local cold-relinked natural-C++ `vram_planes_set()` function. Their
 `units.csv` rows stay `source-present`: DIET-packed files have no honest raw
 file offsets for those decoded function bodies. Neither artifact, nor ZUN, has
 a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
@@ -45,15 +46,15 @@ reviewed file-backed authored C/C++ bytes exact and 492 / 494 reviewed
 authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
 carpet 23, and shared `snd_load` encoding 2. It is not the project-wide gate.
 
-The artifact-local decoded-function acceptance plane is now implemented and
-cold-tested for OP/MAINE BGIMAGE and ZUN resident diagnostics. Run
+The artifact-local decoded-function acceptance plane is implemented and
+cold-tested for OP/MAINE BGIMAGE and VRAM source plus ZUN resident diagnostics. Run
 `python3 scripts/decoded_function_acceptance.py` for its static ledger gate,
 or add `--artifact th04-op`, `th04-maine`, or `th04-zun` for a fresh cold
 comparison. See the [v508 acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
-The **next** source packet is the ten reviewed `src/shared/` owners / 633
-decoded bytes in each OP/MAINE artifact. Extend the cold backend to compile
+The **next** source packet is the nine remaining reviewed `src/shared/` owners /
+592 decoded bytes in each OP/MAINE artifact. Extend the cold backend to compile
 their actual source, review each artifact-local extent, and record its own raw
-function evidence; do not transfer MAIN's exact credit. Work in small
+function evidence; do not transfer another artifact's exact credit. Work in small
 hardware/PI and sound cohorts. Review provisional boundaries and source-origin
 questions alongside mature TUs, not as a global gate.
 
@@ -77,6 +78,12 @@ questions alongside mature TUs, not as a global gate.
   transitive TH04 source/header files; two cold links agree. The linked
   `cfg_init` still has 13 byte differences and `_main` remains nonexact.
   Composite/packed product replay is still missing.
+- The [v509 three-artifact cold smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
+  independently compiles and links maintained VRAM source into OP and MAINE:
+  each complete 41-byte decoded function is raw-zero in two rounds with all
+  ordered relocations exact. The rebased ZUN `GRAPH_CLEAR` replay also raw-matches
+  its complete 36-byte linked support slice, but this library-origin result is
+  not an authored exact acceptance; ZUN's authored count remains zero.
 - Same-media DOS/V TC4J backend intake is structurally attested as distinct
   from the PC-98 `TC.EXE`; no dynamic OMF/codegen has been attested, and it
   grants zero MAIN exact credit. See the compiler blocker note.

@@ -75,6 +75,14 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "function-scoped raw evidence"):
             acceptance.validate(self.entries, self.boundaries, self.units, evidence)
 
+    def test_rejects_malformed_producer_receipt_digest(self) -> None:
+        evidence = deepcopy(self.evidence)
+        next(row for row in evidence if row["id"] == "ev-th04-op-vram-aggregate-v509")[
+            "output_sha256"
+        ] = "0" * 62
+        with self.assertRaisesRegex(ValueError, "producer-scoped exact evidence"):
+            acceptance.validate(self.entries, self.boundaries, self.units, evidence)
+
     def test_raw_comparison_rejects_target_drift_and_detects_candidate_mutation(self) -> None:
         entry = deepcopy(self.entries[0])
         entry["payload_offset"] = "0x1"
@@ -91,13 +99,21 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.compare_extent(entry, b"_abc_", b"_ab")
 
     def test_zun_diagnostic_mismatch_never_counts_as_acceptance(self) -> None:
-        entry = deepcopy(self.entries[-1])
+        entry = deepcopy(next(row for row in self.entries
+                              if row["artifact"] == "th04-zun" and row["decoded_state"] == "source-present"))
         entry["payload_offset"] = "0x1"
         entry["size"] = "0x3"
         entry["target_sha256"] = acceptance.sha(b"abc")
         result = acceptance.compare_extent(entry, b"_abc_", b"_adc_")
         self.assertEqual(result["raw_difference_count"], 1)
         acceptance.require_exact_zero([result])
+
+    def test_vram_backend_is_bound_to_maintained_source_and_artifact(self) -> None:
+        entries = deepcopy(self.entries)
+        vram = next(row for row in entries if row["replay_backend"] == "op-maine-vram-v509")
+        vram["replay_backend"] = "op-maine-bgimage-v489"
+        with self.assertRaisesRegex(ValueError, "BGIMAGE backend does not compile"):
+            self.check(entries)
 
 
 if __name__ == "__main__":

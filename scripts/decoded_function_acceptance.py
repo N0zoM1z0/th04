@@ -49,6 +49,7 @@ ZUN_PAYLOAD_SHA256 = "baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b
 ZUN_COMPONENT_OFFSET = 0xB68
 ZUN_COMPONENT_SHA256 = "cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c151c95110"
 BGIMAGE_PRODUCERS = {"th04-op": 0xE428, "th04-maine": 0xD626}
+VRAM_PRODUCERS = {"th04-op": 0xDA12, "th04-maine": 0xCC7A}
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -56,6 +57,10 @@ ZUN_LINKED_SOURCES = {
 
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def valid_digest(value: str) -> bool:
+    return len(value) == 64 and all(char in "0123456789abcdef" for char in value)
 
 
 def rows(path: Path, expected_header: list[str] | None = None) -> list[dict[str, str]]:
@@ -155,18 +160,24 @@ def validate(
         if owner["file_offset"] or owner["state"] != "source-present":
             raise ValueError(f"{ident}: decoded owner must not claim packed-file exactness")
         digest = entry["target_sha256"]
-        if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+        if not valid_digest(digest):
             raise ValueError(f"{ident}: invalid target slice SHA-256")
         backend = entry["replay_backend"]
-        if backend != ("zun-resident-link" if artifact == "th04-zun" else "op-maine-bgimage-v489"):
+        allowed_backend = ({"zun-resident-link"} if artifact == "th04-zun"
+                           else {"op-maine-bgimage-v489", "op-maine-vram-v509"})
+        if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
             if (source_name not in ZUN_LINKED_SOURCES
                     or producer_start != ZUN_COMPONENT_OFFSET or producer_size != 0x18D8):
                 raise ValueError(f"{ident}: ZUN backend does not compile this producer")
-        elif (source_name != "src/shared/hardware/bgimage.cpp"
-              or producer_start != BGIMAGE_PRODUCERS[artifact] or producer_size != 0xD0):
-            raise ValueError(f"{ident}: BGIMAGE backend does not compile this producer")
+        elif backend == "op-maine-bgimage-v489":
+            if (source_name != "src/shared/hardware/bgimage.cpp"
+                    or producer_start != BGIMAGE_PRODUCERS[artifact] or producer_size != 0xD0):
+                raise ValueError(f"{ident}: BGIMAGE backend does not compile this producer")
+        elif (source_name != "src/shared/hardware/vram_planes.cpp"
+              or producer_start != VRAM_PRODUCERS[artifact] or producer_size != 0x29):
+            raise ValueError(f"{ident}: VRAM backend does not compile this producer")
         evidence_id = entry["replay_evidence_id"]
         if evidence_id not in evidence_by_id or evidence_by_id[evidence_id]["artifact"] != artifact:
             raise ValueError(f"{ident}: missing artifact-local replay evidence")
@@ -193,6 +204,8 @@ def validate(
                 ev["oracle"] for eid in owner["evidence_ids"].split(";")
                 if (ev := evidence_by_id.get(eid)) is not None
                 and ev["artifact"] == artifact and ev["result"] == "pass"
+                and valid_digest(ev["input_sha256"])
+                and valid_digest(ev["output_sha256"])
                 and ev["extent_start"] and ev["extent_size"]
                 and number(ev["extent_start"], eid) == producer_start
                 and number(ev["extent_size"], eid) == producer_size
@@ -282,10 +295,13 @@ def verified_target(artifact: str) -> tuple[bytes, str, str]:
     return decoded, info["sha256"], expected
 
 
-def backend(artifact: str, output: Path) -> tuple[list[bytes], int, dict[str, object]]:
-    saved = output / "backend"
-    if artifact == "th04-zun":
+def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], int, dict[str, object]]:
+    saved = output / backend_id
+    if backend_id == "zun-resident-link":
         command = [sys.executable, "scripts/probes/replay_th04_zun_separate_link.py",
+                   "--output-dir", str(saved)]
+    elif backend_id == "op-maine-vram-v509":
+        command = [sys.executable, "scripts/probes/replay_th04_shared_vram.py",
                    "--output-dir", str(saved)]
     else:
         snapshot = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"
@@ -299,16 +315,16 @@ def backend(artifact: str, output: Path) -> tuple[list[bytes], int, dict[str, ob
             "--output-dir", str(saved),
         ]
     completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=600)
-    (output / "backend.log").write_text(
+    (output / f"{backend_id}.log").write_text(
         json.dumps(command) + f"\nexit={completed.returncode}\n"
         + completed.stdout + completed.stderr, encoding="utf-8"
     )
     if completed.returncode:
-        raise RuntimeError(f"{artifact}: cold backend failed; see {output / 'backend.log'}")
+        raise RuntimeError(f"{artifact}: cold backend failed; see {output / f'{backend_id}.log'}")
     receipt = saved / "receipt.json"
     if not receipt.is_file():
         raise RuntimeError(f"{artifact}: cold backend omitted receipt")
-    if artifact == "th04-zun":
+    if backend_id == "zun-resident-link":
         candidate = [(saved / label / "res_huma.com").read_bytes() for label in ("a", "b")]
         if sha(candidate[0]) != sha(candidate[1]):
             raise RuntimeError("ZUN cold component links disagree")
@@ -323,10 +339,10 @@ def backend(artifact: str, output: Path) -> tuple[list[bytes], int, dict[str, ob
     else:
         name = "op" if artifact == "th04-op" else "maine"
         target_mz = parse_mz(RESTORED[artifact].read_bytes())
-        images = [
-            parse_mz((saved / label / name / "source/bin/th04" / f"{name}.exe").read_bytes())
-            for label in ("a", "b")
-        ]
+        images = []
+        for label in ("a", "b"):
+            path = (saved / label / name / "source/bin/th04" / f"{name}.exe")
+            images.append(parse_mz(path.read_bytes()))
         if any(not image.valid for image in images):
             raise RuntimeError(f"{artifact}: invalid cold linked MZ")
         target_relocs = [item.linear for item in target_mz.relocations]
@@ -351,30 +367,40 @@ def replay(artifact: str, entries: list[dict[str, str]], output: Path) -> dict[s
         raise ValueError(f"{artifact}: no decoded acceptance entries")
     source_hashes = {entry["source"]: sha((ROOT / entry["source"]).read_bytes())
                      for entry in selected}
-    candidate_rounds, origin, build = backend(artifact, output)
+    groups: dict[str, list[dict[str, str]]] = {}
+    for entry in selected:
+        groups.setdefault(entry["replay_backend"], []).append(entry)
+    compared: list[dict[str, object]] = []
+    builds: dict[str, dict[str, object]] = {}
+    candidates: dict[str, list[str]] = {}
+    for backend_id, group in groups.items():
+        candidate_rounds, origin, build = backend(artifact, backend_id, output)
+        rounds = [
+            [compare_extent(entry, target, candidate, candidate_origin=origin) for entry in group]
+            for candidate in candidate_rounds
+        ]
+        if rounds[0] != rounds[1]:
+            raise RuntimeError(f"{artifact}/{backend_id}: cold function comparisons disagree")
+        require_exact_zero(rounds[0])
+        compared.extend(rounds[0])
+        builds[backend_id] = build
+        candidates[backend_id] = [sha(candidate) for candidate in candidate_rounds]
     if any(sha((ROOT / source).read_bytes()) != digest
            for source, digest in source_hashes.items()):
         raise RuntimeError(f"{artifact}: maintained source changed during cold replay")
-    rounds = [
-        [compare_extent(entry, target, candidate, candidate_origin=origin) for entry in selected]
-        for candidate in candidate_rounds
-    ]
-    if rounds[0] != rounds[1]:
-        raise RuntimeError(f"{artifact}: cold function comparisons disagree")
     receipt = {
         "schema_version": 1,
         "observed_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "artifact": artifact,
         "packed_target_sha256": packed_sha,
         "decoded_target_sha256": decoded_sha,
-        "candidate_round_sha256": [sha(candidate) for candidate in candidate_rounds],
-        "backend": build,
-        "functions": rounds[0],
+        "candidate_round_sha256": candidates,
+        "backends": builds,
+        "functions": compared,
         "limit": "Decoded artifact-local function comparison only; no raw packed-file byte or standalone product acceptance.",
     }
     path = output / "receipt.json"
     path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-    require_exact_zero(rounds[0])
     return receipt
 
 

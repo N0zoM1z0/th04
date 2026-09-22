@@ -16,8 +16,14 @@ ZUN's two C++ rows replay as nonexact diagnostics. ZUN's resident component
 driver is rebased on retained inputs. See the
 [acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
 
-**Next extension:** write bounded cold backends for the already maintained
-shared OP/MAINE owners, then incrementally replace ZUN's external link inputs.
+**First extension verified:** the v509 VRAM backend cold-compiles the checked-in
+shared C++ TU independently into OP and MAINE, with complete decoded raw-zero
+function comparisons and target-ordered relocations. The ZUN graph-clear
+support backend is also rebased and raw-zero on its 36-byte library-origin
+slice, but this does not grant authored-function acceptance. See the
+[three-artifact smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md).
+Next, write bounded cold backends for the remaining maintained shared
+OP/MAINE owners, then incrementally replace ZUN's external link inputs.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
 composition and v489/v494 aggregate Oracles during every source edit. A new
@@ -26,12 +32,12 @@ the BGIMAGE backend cannot grant credit to another TU.
 
 ## 2. Harvest maintained shared source in small cohorts
 
-For each of OP and MAINE, ten reviewed functions (633 decoded bytes) already
-have maintained `src/shared/` source: VRAM/frame delay, PI palette/put/load,
+For each of OP and MAINE, nine remaining reviewed functions (592 decoded
+bytes) already have maintained `src/shared/` source: frame delay, PI palette/put/load,
 and PMD/MMD/KAJA/mode/measure sound functions. Review each artifact's physical
 extent and compare its own cold output. A hardware/PI cohort and a sound
 cohort per artifact make focused, reviewable checkpoints. The three BGIMAGE
-functions per artifact are already decoded/link-exact; only replay
+and one VRAM function per artifact are already decoded/link-exact; only replay
 maintenance and later packed-file accounting remain.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
@@ -66,6 +72,8 @@ impact, not by address order or attractive percentage.
 ZUN: first accept or decisively block `cfg_init` at decoded `_TEXT`
 `0xDCF..0xE66` (152 bytes), while keeping resident `_main` at
 `0xE67..0xF62` source-present with a six-byte blocker (246 natural versus 252 target bytes).
+The fresh library-origin `GRAPH_CLEAR` linked slice is byte-equal but cannot
+stand in for an authored function or clear the resident component blocker.
 Then ZUNINIT/MEMCHK origin and component ownership, external library
 replacement, composite link, and finally the DIET-packed container. The
 separate resident component link now replays on retained inputs; the old

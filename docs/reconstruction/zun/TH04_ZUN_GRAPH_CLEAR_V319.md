@@ -39,3 +39,15 @@ ONGCHK, and the packed product build remain external. The resident component
 still differs from the target at 4241 bytes because `_main` and later layout
 remain nonexact. This library-origin unit is source-present; no artifact-local
 exact acceptance or authored-function credit is claimed.
+
+## v509 retained-input replay
+
+The original v319 command depended on a pruned v214 master library and a
+nonexistent fixed `HEADERS` import. The checked-in driver now uses the retained
+v489 master library with the same attested SHA-256 and discovers the transitive
+checked-in ZUN header closure. A fresh two-round run at
+`.analysis/reconstruction/probes/v509-zun-graph-clear-001/receipt.json`
+(SHA-256 `dfa44ee8fb708cf3a9252c4adb1c1736f497fe3e107feac621a0682e1c41a374`)
+again gives raw-zero on all 36 linked bytes, while the component still has
+4,241 differences. Use a new output directory with the command above. The
+source-presence and no-authored-credit boundary is unchanged.

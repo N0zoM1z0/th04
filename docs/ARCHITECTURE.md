@@ -144,7 +144,7 @@ calibration scaffold rather than the TH04 product layout. See
 `compat/rec98/README.md`.
 
 The current tree is not yet a complete standalone game build. It has many
-accepted MAIN owners, decoded/link-exact BGIMAGE functions in OP/MAINE,
+accepted MAIN owners, decoded/link-exact BGIMAGE and VRAM functions in OP/MAINE,
 maintained shared source used by their diagnostic replays, and bounded ZUN
 source/components; OP/MAINE artifact-owned product trees are not yet populated.
 Several exact Oracles still compile through pinned ReC98 scaffolding. Do not

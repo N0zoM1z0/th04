@@ -134,7 +134,7 @@ record integrity and exposes producer/dependency metadata plus raw and narrowly
 timestamp-normalized identities. MAIN has accepted file-backed unit replay;
 OP/MAINE and ZUN now have a common decoded-function ledger and cold replay
 entrypoint (`scripts/decoded_function_acceptance.py`). The current OP/MAINE
-backend compiles BGIMAGE only; the ZUN backend links the two maintained C++
+backends compile BGIMAGE and the shared VRAM-plane TU; the ZUN backend links the two maintained C++
 resident TUs but remains nonexact. For any new packed-artifact function,
 review physical ownership, add a backend that really compiles its source, and
 bind artifact-local raw bytes/evidence before claiming decoded acceptance.
