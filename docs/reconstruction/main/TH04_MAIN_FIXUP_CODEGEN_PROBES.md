@@ -324,3 +324,35 @@ The stable probe/dependency input bundle SHA-256 is
 This closes CPU target selection as a compiler explanation for the tested
 final-blocker forms. It grants no source provenance or exactness credit and
 leaves the MAIN gap at 27 bytes.
+
+
+## v499 TC4J C/C++ language-mode surface
+
+The Borland C++ 4.0 command-line documentation exposes a separate front-end
+mechanism that was not covered by the option/CPU matrices: by default .c
+selects C while .cpp selects C++, and -P forces C++ regardless of extension.
+The documentation is routing only; the experiment below uses the pinned
+Japanese TCC 4.02.
+
+scripts/probes/probe_tc4_language_mode_final_blocker_surface_v499.py first
+uses a __cplusplus sentinel to prove that the profiles are genuinely distinct.
+Natural .c emits B8 01 C0 C3, while .cpp and .c -P both emit B8 02 C0 C3.
+
+It then compiles three C-compatible representatives under all three modes:
+
+- the shared register/zero/doubling/MUL/DS-to-ES core;
+- checkerboard's fixed-CX 32-bit ES store countdown;
+- a fixed-SI byte load/increment.
+
+For each representative, all three language modes produce byte-identical CODE.
+The register core selects none of the remaining target register/MUL/DS-ES
+forms, the checkerboard representative still emits explicit DEC/test/JNZ rather
+than x86 LOOP, and the byte load remains MOV AL,[SI]; INC SI rather than
+LODSB.
+
+Two independent cold runs produce identical receipt SHA-256
+8bc3255f4d0ed07c4641d8ec80afa3607da87549540f968f9d41838ec3c86bc0.
+
+This closes C-versus-C++ language mode for these representative natural
+lowerings. It does not prove every possible source spelling, provides no source
+provenance, and leaves the MAIN gap at 27 bytes.

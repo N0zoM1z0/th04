@@ -142,6 +142,9 @@ Primary packed notes:
 - TC4J processor-target codegen (v498): default/80186/80286/80386/80486
   selection yields no target register/core or LODSB forms; only 386/486 can
   compile the checkerboard _EAX forms and neither profile emits LOOP;
+- TC4J C/C++ language mode (v499): a front-end sentinel proves real C versus
+  C++ selection, but the tested register/MUL/DS-ES, checkerboard countdown, and
+  fixed-SI byte-load lowerings remain byte-identical and avoid the target forms;
 - checkerboard ordinary countdown source spellings / accepted optimizer / IDE /
   cross-artifact scans (v396, v398, v404-v406);
 - carpet natural opcode/source-lineage/cross-artifact scans (v396, v404-v405,
