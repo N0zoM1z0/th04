@@ -98,8 +98,8 @@ Program entry point at 0000:00100
 
 
 
-    def test_target_reviewed_override_requires_evidence_and_tasm_entry(self) -> None:
-        base = {
+    def test_target_reviewed_override_requires_evidence_and_boundary_oracle(self) -> None:
+        asm_base = {
             "artifact": "th04-zun",
             "payload_offset": 0x6F6,
             "origin": "authored",
@@ -108,13 +108,50 @@ Program entry point at 0000:00100
             "reviewed_body_size": 0x12,
         }
         with self.assertRaises(BoundaryLedgerError):
-            parse_function_overrides({"function_overrides": [base]})
+            parse_function_overrides({"function_overrides": [asm_base]})
         with self.assertRaises(BoundaryLedgerError):
             parse_function_overrides({
                 "function_overrides": [
-                    {**base, "expected_tasm_proc": "sub_103"}
+                    {
+                        **asm_base,
+                        "expected_body_span": 0x12,
+                        "review_evidence_id": "ev-review",
+                    }
                 ]
             })
+        with self.assertRaises(BoundaryLedgerError):
+            parse_function_overrides({
+                "function_overrides": [
+                    {**asm_base, "expected_tasm_proc": "sub_103"}
+                ]
+            })
+
+        cpp_base = {
+            "artifact": "th04-op",
+            "payload_offset": 0xC627,
+            "origin": "authored",
+            "source_form": "candidate-cpp",
+            "source_ref": "candidate:th04/score_e.cpp",
+            "reviewed_body_size": 0x65,
+        }
+        with self.assertRaises(BoundaryLedgerError):
+            parse_function_overrides({
+                "function_overrides": [
+                    {**cpp_base, "review_evidence_id": "ev-review"}
+                ]
+            })
+        rules = parse_function_overrides({
+            "function_overrides": [
+                {
+                    **cpp_base,
+                    "expected_body_span": 0x65,
+                    "review_evidence_id": "ev-review",
+                }
+            ]
+        })
+        self.assertEqual(
+            rules[("th04-op", 0xC627)]["expected_body_span"], 0x65
+        )
 
     def test_target_reviewed_override_sets_extent_without_ghidra(self) -> None:
         contribution = Contribution(
@@ -144,6 +181,44 @@ Program entry point at 0000:00100
         self.assertEqual(row["body_span"], "0x12")
         self.assertEqual(row["origin"], "authored")
         self.assertEqual(row["source_form"], "target-derived-asm")
+        self.assertIn("ev-review", row["notes"])
+
+    def test_target_reviewed_cpp_override_uses_exact_ghidra_span(self) -> None:
+        contribution = Contribution(
+            "th04-op", 0xC627, 0xC68C, "th04/score_e.cpp", "SCORE_TEXT",
+            "authored", "candidate-cpp", "candidate:th04/score_e.cpp",
+            "target-unpacked-ghidra+candidate-map",
+        )
+        ghidra = {
+            "name": "FUN_1a74_1ee7",
+            "body_addresses": "101",
+            "body_span": "101",
+            "body_min_linear": "0x1C627",
+            "body_max_linear": "0x1C68B",
+            "contiguous": "true",
+            "body_range_count": "1",
+            "caller_count": "1",
+            "callee_count": "1",
+            "symbol_source": "DEFAULT",
+        }
+        override = {
+            "artifact": "th04-op",
+            "payload_offset": 0xC627,
+            "origin": "authored",
+            "source_form": "candidate-cpp",
+            "source_ref": "candidate:th04/score_e.cpp",
+            "expected_body_span": 0x65,
+            "reviewed_body_size": 0x65,
+            "review_evidence_id": "ev-review",
+        }
+        row = function_row(
+            "th04-op", 0xC627, 0x10000, ghidra, [], contribution, None,
+            None, None, False, override,
+        )
+        self.assertEqual(row["boundary_state"], "reviewed")
+        self.assertEqual(row["body_size"], "0x65")
+        self.assertEqual(row["body_span"], "0x65")
+        self.assertEqual(row["source_form"], "candidate-cpp")
         self.assertIn("ev-review", row["notes"])
 
     def test_target_reviewed_override_rejects_owner_escape(self) -> None:

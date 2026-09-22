@@ -26,9 +26,9 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 14 / 71 / 8 | 13 | 80 | Shared maintained cohort complete; SCORE physical TU |
+| OP.EXE | 93 | 17 / 68 / 8 | 13 | 80 | SCORE codec boundaries reviewed; remaining SCORE/view source authority |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
-| MAINE.EXE | 72 | 14 / 51 / 7 | 13 | 59 | Shared maintained cohort complete; SCORE physical TU |
+| MAINE.EXE | 72 | 17 / 48 / 7 | 13 | 59 | SCORE codec boundaries reviewed; remaining SCORE/end source authority |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | ZUNINIT/MEMCHK provenance; external component inputs |
 
 The non-MAIN authored backlog is 152 pending acceptances, 15 provisional
@@ -110,6 +110,7 @@ credit between artifacts.
 - v535 localizes the physical FIL state member at archive index 163: four initialized target DATA bytes plus 0x14 bytes of uninitialized BSS. BSS receives no invented target-byte extent; it is accepted only through OMF/MAP/link layout. TASM5 reverses the same-address file_BufferPos alias display order, and the replay permits only that exact two-line MAP swap while requiring every other line and the complete resident component to match. ZUN authored exact remains zero. See the [v535 FIL note](reconstruction/zun/TH04_ZUN_FILE_STATE_V535.md).
 - v536 closes the external MASTER archive dependency for the ZUN resident. Fifteen already-localized support members are rebuilt into a deterministic 8192-byte compact archive, while GRAPH_CLEAR remains a standalone local object; the external 640-member masters.lib is not read or linked. The same 6360-byte candidate resident is reproduced with 4241 target differences. Remaining external link inputs are c0t.obj, emu.lib, maths.lib, and ct.lib. This is dependency closure only; ZUN authored exact remains zero. See the [v536 compact MASTER note](reconstruction/zun/TH04_ZUN_COMPACT_MASTER_V536.md).
 - v537 proves emu.lib and maths.lib are unused by the resident: removing both from the link response changes zero COM or MAP bytes. c0t.obj contributes c0.ASM, while fresh TLIB/MAP classification reduces CT.LIB to exactly 26 pulled runtime members. The remaining external runtime surface is therefore c0t.obj plus CT.LIB; this is compiler/runtime inventory only and ZUN authored exact remains zero. See the [v537 runtime inventory note](reconstruction/zun/TH04_ZUN_RUNTIME_INVENTORY_V537.md).
+- v540 target-reviews the OP and MAINE scoredat_decode / scoredat_encode / scoredat_recreate physical boundaries independently. Target Ghidra spans, complete disassembly, internal jump closure, adjacent entries, and each artifact's v489 linked bytes all agree. Pinned ReC98 history introduces the logical codec implementations explicitly as Decompilation, so all six rows remain candidate-cpp / unreviewed with no source-present or exact credit. See the [v540 SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
 - The [v509 three-artifact cold smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
   independently compiles and links maintained VRAM source into OP and MAINE:
   each complete 41-byte decoded function is raw-zero in two rounds with all

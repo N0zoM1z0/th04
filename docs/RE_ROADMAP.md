@@ -39,20 +39,23 @@ That is 13 decoded-exact functions / 840 source-owner bytes per artifact.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
-packed-file accounting. Move next to physically coherent TUs such as SCORE or
-other mature reviewed owners, while reviewing corroborated/provisional
-boundaries alongside them.
+packed-file accounting. v540 has now target-reviewed the decode/encode/recreate
+SCORE codec boundaries in both OP and MAINE, but their pinned ReC98
+implementation history is explicitly decompilation provenance and grants no
+source credit. Continue SCORE by reviewing the remaining hiscore view/end
+physical owners, while keeping source authority separate from byte/codegen
+corroboration.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
-Review the 21 provisional authored boundaries by neighboring ownership:
-OP's eight (prioritize Ghidra-only `FUN_1da1_09d8` and noncontiguous music/main
-owners), MAINE's seven (the three MAP-public sound entries first, then
-cutscene/registration), and ZUN's six (review ZUNINIT as one contiguous
-physical block). For each, inspect attested target entry, callers, all
-returns/tails, tables, alignment, adjacent bytes, MAP/TASM contribution, and
-segment identity. A provisional owner cannot be promoted exact, but it need
-not block an unrelated reviewed source TU.
+Review the 15 remaining provisional authored boundaries by neighboring ownership:
+OP's eight (prioritize the Ghidra-only and noncontiguous music/main owners) and
+MAINE's seven (the remaining MAP-public/sound and cutscene/registration entries).
+ZUN's authored physical boundaries are already fully reviewed by v520/v521.
+For each remaining owner, inspect attested target entry, callers, all returns/tails,
+tables, alignment, adjacent bytes, MAP/TASM contribution, and segment identity.
+A provisional owner cannot be promoted exact, but it need not block an unrelated
+reviewed source TU.
 
 Classify the 40 unresolved `target-derived-asm` authored candidates by
 subsystem and independent producer fingerprints: OP ZUNSOFT animation 4;
@@ -63,11 +66,12 @@ as source. Independently attest the 35 non-MAIN `attest-asm` observations
 
 ## 4. Reconstruct by physical translation unit
 
-OP first: SCORE (`score_db + score_e + hi_view` as one producer), small
-input/vector/init helpers, title/setup, music and character units, then
-larger main/animation units after their boundary/origin reviews. MAINE:
-SCORE (`score_d + score_hi + complete score`), small ending/cutscene helpers,
-then large cutscene and staff/verdict/registration families only after their
+OP first: finish SCORE physical review without importing the decompiled candidate
+C++; then small input/vector/init helpers, title/setup, music and character units,
+and larger main/animation units after boundary/origin review. MAINE: finish the
+remaining hiscore/end SCORE owners in the grouped physical producer, again keeping
+decompilation provenance separate from source acceptance; then small ending/cutscene
+helpers and the larger cutscene/staff/verdict/registration families after their
 respective physical reviews. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link
 impact, not by address order or attractive percentage.

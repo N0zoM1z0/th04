@@ -376,3 +376,75 @@ expected_tasm_proc = "sub_3B6"
 reviewed_body_size = 0x14
 review_evidence_id = "ev-th04-zun-memchk-boundaries-v521"
 notes = "Target memory query helper closes at RET at the end of the authored MEMCHK CODE contribution."
+
+# v540 target-reviewed SCORE codec C++ boundaries. Unlike target-derived ASM,
+# these entries use exact target Ghidra body spans rather than TASM PROC
+# corroboration. The linked candidate slices raw-match target, but pinned
+# ReC98 history explicitly labels the implementation files as Decompilation;
+# these overrides review physical boundaries only and grant no source credit.
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC57A
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/score_db.cpp"
+expected_body_span = 0xAD
+reviewed_body_size = 0xAD
+review_evidence_id = "ev-th04-op-score-codec-boundaries-v540"
+notes = "scoredat_decode target boundary reviewed by v540; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC627
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/score_e.cpp"
+expected_body_span = 0x65
+reviewed_body_size = 0x65
+review_evidence_id = "ev-th04-op-score-codec-boundaries-v540"
+notes = "scoredat_encode target boundary reviewed by v540; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC68C
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0xA7
+reviewed_body_size = 0xA7
+review_evidence_id = "ev-th04-op-score-codec-boundaries-v540"
+notes = "scoredat_recreate target boundary reviewed by v540; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC149
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/score_d.cpp"
+expected_body_span = 0x58
+reviewed_body_size = 0x58
+review_evidence_id = "ev-th04-maine-score-codec-boundaries-v540"
+notes = "scoredat_decode target boundary reviewed by v540; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC1A1
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/score_e.cpp"
+expected_body_span = 0x65
+reviewed_body_size = 0x65
+review_evidence_id = "ev-th04-maine-score-codec-boundaries-v540"
+notes = "scoredat_encode target boundary reviewed by v540; candidate source provenance remains decompilation."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC206
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_end.cpp"
+expected_body_span = 0xA7
+reviewed_body_size = 0xA7
+review_evidence_id = "ev-th04-maine-score-codec-boundaries-v540"
+notes = "scoredat_recreate target boundary reviewed by v540; candidate source provenance remains decompilation."

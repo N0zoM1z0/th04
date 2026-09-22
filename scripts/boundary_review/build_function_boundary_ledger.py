@@ -155,9 +155,15 @@ def parse_function_overrides(
                 raise BoundaryLedgerError(
                     f"function override for {key[0]} at {key[1]:#x} has invalid reviewed_body_size"
                 )
-            if not str(rule.get("expected_tasm_proc", "")).strip():
+            expected_tasm = str(rule.get("expected_tasm_proc", "")).strip()
+            has_ghidra_span = "expected_body_span" in rule
+            if str(rule["source_form"]) == "target-derived-asm" and not expected_tasm:
                 raise BoundaryLedgerError(
-                    f"target-reviewed function override for {key[0]} at {key[1]:#x} lacks expected_tasm_proc"
+                    f"target-derived ASM reviewed override for {key[0]} at {key[1]:#x} lacks expected_tasm_proc"
+                )
+            if not expected_tasm and not has_ghidra_span:
+                raise BoundaryLedgerError(
+                    f"target-reviewed function override for {key[0]} at {key[1]:#x} lacks TASM PROC or expected Ghidra body span"
                 )
             if not str(rule.get("review_evidence_id", "")).strip():
                 raise BoundaryLedgerError(
