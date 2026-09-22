@@ -16,13 +16,14 @@ import replay_th04_zun_file_write as file_write
 import replay_th04_zun_file_seek as file_seek
 import replay_th04_zun_file_append as file_append
 import replay_th04_zun_file_close as file_close
+import replay_th04_zun_fontopen as fontopen
 import replay_th04_zun_file_read as file_read
 import replay_th04_zun_resdata as resdata
 
 
 class ZunSupportReplayImportTests(unittest.TestCase):
     def test_transitive_source_closure_is_live(self) -> None:
-        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek, file_append, file_close):
+        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek, file_append, file_close, fontopen):
             closure = module.source_closure(module.ROOT, tuple(module.SOURCES.values()))
             self.assertIn("src/zun/config/cfg_init.cpp", closure)
             self.assertIn("src/zun/resident/main.cpp", closure)
@@ -97,6 +98,15 @@ class ZunSupportReplayImportTests(unittest.TestCase):
         self.assertEqual(file_close.FILE_CLOSE_BODY_SIZE, 0x0E)
         self.assertEqual(file_close.FILE_CLOSE_MODULE_SIZE, 0x7A)
         self.assertTrue(file_close.LOCAL_FILE_CLOSE.is_file())
+
+
+    def test_fontopen_member_contract(self) -> None:
+        self.assertEqual(fontopen.FONTOPEN_MEMBER_POSITION, 337)
+        self.assertEqual(fontopen.FONTOPEN_TARGET_CODE_OFFSET, 0x136C)
+        self.assertEqual(fontopen.FONTOPEN_TARGET_DATA_OFFSET, 0x2212)
+        self.assertEqual(fontopen.FONTOPEN_CODE_SIZE, 0x18)
+        self.assertEqual(fontopen.FONTOPEN_DATA_SIZE, 0x02)
+        self.assertTrue(fontopen.LOCAL_FONTOPEN.is_file())
 
 
 if __name__ == "__main__":
