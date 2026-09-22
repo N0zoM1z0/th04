@@ -20,6 +20,7 @@ import replay_th04_zun_fontopen as fontopen
 import replay_th04_zun_version_grp as version_grp
 import replay_th04_zun_file_state as file_state
 import replay_th04_zun_compact_master as compact_master
+import replay_th04_zun_runtime_inventory as runtime_inventory
 import replay_th04_zun_file_read as file_read
 import replay_th04_zun_resdata as resdata
 
@@ -159,6 +160,17 @@ class ZunSupportReplayImportTests(unittest.TestCase):
         )
         self.assertNotIn("base.MASTER_LIB", compact_master.__file__ and Path(compact_master.__file__).read_text())
         self.assertEqual(set(compact_master.COMPACT_ORDER), set(compact_master.SOURCES) - {"GRPCLEAR"})
+
+
+    def test_runtime_inventory_contract(self) -> None:
+        self.assertNotIn("emu.lib", runtime_inventory.REDUCED_LINK_RESPONSE.lower())
+        self.assertNotIn("maths.lib", runtime_inventory.REDUCED_LINK_RESPONSE.lower())
+        self.assertIn("ct.lib", runtime_inventory.REDUCED_LINK_RESPONSE.lower())
+        self.assertEqual(len(runtime_inventory.EXPECTED_CT_MODULES), 26)
+        self.assertEqual(runtime_inventory.EXPECTED_C0_MODULE, "c0.ASM")
+        self.assertTrue(set(runtime_inventory.EXPECTED_CT_MODULES).isdisjoint(
+            runtime_inventory.LOCAL_MAP_MODULES
+        ))
 
 
 if __name__ == "__main__":
