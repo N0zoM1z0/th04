@@ -417,3 +417,76 @@ zero-test peephole (`MOV AX,[key_det] / OR AX,AX` versus target
 `CMP word ptr [key_det],0`). Because `keep_0()` is also documented for
 zero-comparison peepholes, test that mechanism next before reopening broader
 optimizer/source-shape searches.
+
+## v486 complete SCORE_TEXT C++ producer
+
+The final `regist_menu()` four-byte compiler frontier is closed with the
+repository's existing `optimization_barrier()` mechanism. The target repeat-key
+branch contains a direct memory zero comparison followed by both `JZ` and an
+otherwise-redundant `JMP`. Ordinary structured C++ lets TC86 fold that jump;
+placing `optimization_barrier()` only in the nonzero arm preserves the original
+control-flow shape without emitting any machine-code bytes. `regist_menu()` then
+compiles **924 / 924 raw bytes exactly**.
+
+Together with v479-v482 and the v485 EGC tail, the complete executable
+`SCORE_TEXT` body is now one natural TC86 translation unit:
+
+- code size: `0x8C7` / **2247 bytes**;
+- raw SCORE CODE SHA-256:
+  `99b6809c3ccac9d8f4257609132ec19fd0625fe12be0a95b54b1e6b5df718f17`;
+- linked SCORE slice SHA-256:
+  `491222d0f3c105e253ea4d6daf8546ec338b35ff9ad617abf76020bd60c2bda3`;
+- linked MAINE program-image SHA-256 remains
+  `0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`.
+
+Five existing SCORE strings remain physically owned by the v470 rest/data
+object and are exposed to TC86 only through zero-byte C aliases. The historical
+one-byte SCORE segment pad remains a separate assembly contribution. Neither
+changes any executable or data address.
+
+### OMF record frontier
+
+This packet intentionally **does not grant packed relocation-order credit**.
+The exact C++ object emits three target-relevant kind-3 FIXUPP records:
+
+1. `R1` — 11 sites from the first `0x400` LEDATA;
+2. `R2` — 24 sites from the second `0x400` LEDATA;
+3. `R3` — 1 site from the final `0xC7` LEDATA.
+
+Current TLINK order is:
+
+`R1(11) -> R2-prefix(14) -> R2-suffix(10) -> R3(1)`.
+
+The packed target requires:
+
+`R2-suffix(10) -> R1(11) -> R3(1) -> R2-prefix(14)`.
+
+Thus the full-source candidate has 44 ordered differences: all 36 SCORE entries
+plus the independent 8-entry BGIMAGE block. The relocation-site multiset remains
+559/559 exact.
+
+Two natural surfaces are already closed:
+
+- moving the complete SCORE contribution to several response-file positions
+  leaves its **relative 36-site SCORE order unchanged** (while globally moving
+  the whole block, as expected);
+- TC86 `-y` line-number metadata keeps the exact same LEDATA/FIXUPP record
+  topology while preserving code; `-v` changes code and is therefore not a
+  candidate metadata-only explanation.
+
+The remaining SCORE problem is therefore not source code. It is recovery of the
+historical OMF/library record topology that caused TLINK to produce the target
+cross-record interleave. Do not split functions at relocation offsets or edit MZ
+entries to manufacture this sequence.
+
+Both v486 A/B replays produce:
+
+- EXE SHA-256
+  `eba75be94f3e43776b5206a10ab3b9818eefc0308d9d87b7c148eca8f6b83397`;
+- MAP SHA-256
+  `57286cfe662899fd1889c3caca5d7e0cb38f89072fc40d462ad3ad3a6b01eaac`;
+- 515 / 559 same-index relocations;
+- ordered residual **44**, explicitly non-promoted.
+
+Private receipt SHA-256:
+`7b5e5863dc6f1310de87fe38967a55e09f1529324c39f999d904fca398c16af9`.

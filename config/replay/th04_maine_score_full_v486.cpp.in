@@ -1,0 +1,451 @@
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "planar.h"
+#include "x86real.h"
+#include "th04/formats/scoredat/scoredat.hpp"
+#include "th04/resident.hpp"
+#include "th04/common.h"
+#include "th04/gaiji/gaiji.h"
+#include "th04/end/end.h"
+#include "th04/playchar.h"
+#include "th04/main/rank.hpp"
+#include "th04/hardware/input.h"
+#include "th04/hardware/grppsafx.h"
+#include "th04/snd/snd.h"
+#include "th02/hardware/frmdelay.h"
+#include "th02/formats/pi.h"
+#include "th02/formats/bfnt.h"
+#include "decomp.hpp"
+
+extern unsigned char entered_place;
+
+#pragma codeseg SCORE_TEXT score_01
+void near score_insert(void)
+{
+	int place;
+	int c;
+
+	for(place = (SCOREDAT_PLACES - 1); place >= 0; place--) {
+		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+			if(resident->score_last.digits[c] > (hi.score.g_score[place].digits[c] - gb_0)) {
+				break;
+			}
+			if(resident->score_last.digits[c] < (hi.score.g_score[place].digits[c] - gb_0)) {
+				goto found_place;
+			}
+		}
+	}
+	entered_place = 0;
+	goto shift;
+
+found_place:
+	if(place == (SCOREDAT_PLACES - 1)) {
+		entered_place = -1;
+		return;
+	}
+	entered_place = (place + 1);
+
+shift:
+	for(place = (SCOREDAT_PLACES - 2); place >= entered_place; place--) {
+		for(c = (SCOREDAT_NAME_LEN - 1); c >= 0; c--) {
+			hi.score.g_name[place + 1][c] = hi.score.g_name[place][c];
+		}
+		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+			hi.score.g_score[place + 1].digits[c] = hi.score.g_score[place].digits[c];
+		}
+		hi.score.g_stage[place + 1] = hi.score.g_stage[place];
+	}
+	for(c = (SCOREDAT_NAME_LEN - 1); c >= 0; c--) {
+		hi.score.g_name[entered_place][c] = gs_DOT;
+	}
+	for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+		hi.score.g_score[entered_place].digits[c] = (resident->score_last.digits[c] + gb_0);
+	}
+	if(resident->end_sequence >= ES_EXTRA) {
+		hi.score.g_stage[entered_place] = gs_ALL;
+	} else {
+		hi.score.g_stage[entered_place] = (resident->stage + gb_1);
+	}
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near score_put(int place, unsigned char rendered_playchar)
+{
+	int digit;
+	int y;
+	register int place_r = place;
+	register int x;
+
+	y = ((place_r == 0) ? 96 : ((place_r * 16) + 112));
+	x = ((rendered_playchar == PLAYCHAR_REIMU) ? 172 : 480);
+
+	rendered_playchar = (
+		((entered_place == place_r) && (rendered_playchar == static_cast<unsigned char>(playchar))) ? 10 : 0
+	);
+
+	if((hi.score.g_score[place_r].digits[SCORE_DIGITS - 1] - gb_0) >= 10) {
+		super_put(
+			(x - 32), y,
+			(((hi.score.g_score[place_r].digits[SCORE_DIGITS - 1] - gb_0) / 10) + rendered_playchar)
+		);
+	}
+	super_put(
+		(x - 16), y,
+		(((hi.score.g_score[place_r].digits[SCORE_DIGITS - 1] - gb_0) % 10) + rendered_playchar)
+	);
+	for(digit = 6; digit >= 0; digit--, x += 16) {
+		super_put(
+			x, y,
+			(hi.score.g_score[place_r].digits[digit] + rendered_playchar - gb_0)
+		);
+	}
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near stage_put(int place, int rendered_playchar, int gaiji)
+{
+	int x;
+	int y;
+	unsigned char col;
+	register int place_r = place;
+	register int playchar_r = rendered_playchar;
+
+	col = (
+		((entered_place == place_r) && (playchar_r == static_cast<unsigned char>(playchar))) ? 7 : 12
+	);
+	y = ((place_r == 0) ? 96 : ((place_r * 16) + 112));
+	x = ((playchar_r == PLAYCHAR_REIMU) ? 292 : 600);
+
+	graph_gaiji_putc((x + 2), (y + 2), gaiji, 14);
+	graph_gaiji_putc(x, y, gaiji, col);
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near score_rect_copy(int left, int top, int w, int h);
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near name_cursor_put(int place, unsigned char rendered_playchar, unsigned char cursor)
+{
+	int y;
+	register int place_r = place;
+	register int x;
+
+	x = ((rendered_playchar == 0) ? 2 : 40);
+	y = ((place_r == 0) ? 6 : (place_r + 7));
+
+	score_rect_copy(((x * 8) + 2), ((y * 16) + 2), 128, 16);
+	graph_gaiji_puts(
+		((x * 8) + 2), ((y * 16) + 2), GAIJI_W,
+		reinterpret_cast<const char*>(hi.score.g_name[place_r]), 14
+	);
+	gaiji_putsa(x, y, reinterpret_cast<const char*>(hi.score.g_name[place_r]), TX_RED);
+	gaiji_putca(
+		(x + (cursor * 2)), y,
+		hi.score.g_name[place_r][cursor],
+		(TX_RED + TX_REVERSE)
+	);
+}
+#pragma codeseg
+
+extern unsigned char gALPHABET[];
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near place_row_put(int place, unsigned char rendered_playchar)
+{
+	int x;
+	register int place_r = place;
+	register int y;
+
+	x = ((rendered_playchar == 0) ? 16 : 320);
+	y = ((place_r == 0) ? 96 : ((place_r * 16) + 112));
+
+	graph_gaiji_puts(
+		(x + 2), (y + 2), GAIJI_W,
+		reinterpret_cast<const char *>(hi.score.g_name[place_r]), 14
+	);
+	if(
+		(entered_place != place_r) ||
+		(rendered_playchar != static_cast<unsigned char>(playchar))
+	) {
+		graph_gaiji_puts(
+			x, y, GAIJI_W,
+			reinterpret_cast<const char *>(hi.score.g_name[place_r]), 12
+		);
+	} else {
+		gaiji_putsa(
+			(x / 8), (y / 16),
+			reinterpret_cast<const char *>(hi.score.g_name[place_r]), TX_RED
+		);
+	}
+	score_put(place_r, rendered_playchar);
+	stage_put(place_r, rendered_playchar, hi.score.g_stage[place_r]);
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near places_put(int rendered_playchar)
+{
+	register int place = 0;
+	for(; place < SCOREDAT_PLACES; place++) {
+		place_row_put(place, rendered_playchar);
+	}
+}
+#pragma codeseg
+
+#pragma codeseg SCORE_TEXT score_01
+void pascal near alphabet_cursor_put(int col, int row, int color)
+{
+	register int col_r = col;
+	register int row_r = row;
+	gaiji_putca(
+		((col_r * 2) + 23), (row_r + 18),
+		gALPHABET[(row_r * 17) + col_r], color
+	);
+}
+#pragma codeseg
+
+
+static const int ALPHABET_ROWS = 3;
+static const int ALPHABET_COLS = 17;
+static const int ALPHABET_ENTER_ROW = (ALPHABET_ROWS - 1);
+static const int ALPHABET_ENTER_COL = (ALPHABET_COLS - 1);
+
+extern "C" char aHi01_pi[];
+extern "C" char aScnum2_bft[];
+extern "C" char aGxgnbGvbGhvVGv[];
+extern "C" char aGxgnbGvbGhvV_1[];
+extern "C" char aName[];
+
+bool pascal near hiscore_scoredat_load_for(playchar_t pc);
+void near hiscore_scoredat_save(void);
+
+#pragma codeseg SCORE_TEXT score_01
+void near regist_menu(void)
+{
+	register int name_pos = 0;
+	register int col;
+	int row;
+	input_t input_locked;
+	int initial_row;
+	int initial_col;
+	unsigned char input_delay = 0;
+	unsigned char c;
+
+	PaletteTone = 0;
+	palette_show();
+	graph_accesspage(1);
+	pi_load(0, aHi01_pi);
+	pi_palette_apply(0);
+	pi_put_8(0, 0, 0);
+	pi_free(0);
+	graph_copy_page(0);
+	super_entry_bfnt(aScnum2_bft);
+
+	rank = ((resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank);
+	playchar = (resident->playchar_ascii == ('0' + PLAYCHAR_MARISA));
+	hiscore_scoredat_load_for(playchar_other(playchar));
+	places_put(1 - static_cast<unsigned char>(playchar));
+	hiscore_scoredat_load_for(playchar);
+
+	if(resident->turbo_mode || (rank == RANK_EXTRA)) {
+		score_insert();
+		places_put(static_cast<unsigned char>(playchar));
+	} else {
+		entered_place = -1;
+		places_put(static_cast<unsigned char>(playchar));
+		graph_putsa_fx(124, 196, 9, reinterpret_cast<shiftjis_t *>(aGxgnbGvbGhvVGv));
+		graph_putsa_fx(120, 192, 2, reinterpret_cast<shiftjis_t *>(aGxgnbGvbGhvV_1));
+	}
+
+	if(
+		(resident->end_sequence == ES_GOOD) ||
+		(resident->end_sequence == ES_EXTRA) ||
+		(rank == RANK_EASY)
+	) {
+		c = hi.score.cleared;
+		if(c >= (SCOREDAT_CLEARED_BOTH + 1)) {
+			c = ((resident->shottype == SHOTTYPE_A) ? SCOREDAT_CLEARED_A : SCOREDAT_CLEARED_B);
+		} else {
+			c |= ((resident->shottype == SHOTTYPE_A) ? SCOREDAT_CLEARED_A : SCOREDAT_CLEARED_B);
+		}
+		hi.score.cleared = c;
+	}
+
+	snd_kaja_func(KAJA_SONG_STOP, 0);
+	snd_load(aName, SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+	palette_black_in(2);
+
+	if(entered_place == 0xFF) {
+		goto no_entry;
+	}
+
+	for(initial_row = 0; initial_row < ALPHABET_ROWS; initial_row++) {
+		for(initial_col = 0; initial_col < ALPHABET_COLS; initial_col++) {
+			gaiji_putca(
+				((initial_col * 2) + 23), (initial_row + 18),
+				gALPHABET[(initial_row * ALPHABET_COLS) + initial_col], TX_WHITE
+			);
+		}
+	}
+	gaiji_putca(23, 18, gALPHABET[0], (TX_GREEN | TX_REVERSE));
+
+	col = 0;
+	row = 0;
+	input_reset_sense();
+	input_locked = 1;
+
+	while(1) {
+		input_sense();
+		if(!input_locked) {
+			if(static_cast<unsigned char>(key_det) & 0x0F) {
+				alphabet_cursor_put(col, row, TX_WHITE);
+				if(key_det & INPUT_UP) {
+					row--;
+				}
+				if(key_det & INPUT_DOWN) {
+					row++;
+				}
+				if(key_det & INPUT_LEFT) {
+					col--;
+				}
+				if(key_det & INPUT_RIGHT) {
+					col++;
+				}
+				if(row < 0) {
+					row = (ALPHABET_ROWS - 1);
+				} else if(row > (ALPHABET_ROWS - 1)) {
+					row = 0;
+				}
+				if(col < 0) {
+					col = (ALPHABET_COLS - 1);
+				} else if(col > (ALPHABET_COLS - 1)) {
+					col = 0;
+				}
+				alphabet_cursor_put(col, row, (TX_GREEN | TX_REVERSE));
+			}
+
+			if((key_det & INPUT_SHOT) || (key_det & INPUT_OK)) {
+				c = gALPHABET[(row * ALPHABET_COLS) + col];
+				switch(c) {
+				case gs_SPACE:
+					c = g_EMPTY;
+					goto regular;
+				case gs_ARROW_LEFT:
+					hi.score.g_name[entered_place][name_pos] = g_EMPTY;
+					if(name_pos > 0) {
+						name_pos--;
+					}
+					goto name_updated;
+				case gs_ARROW_RIGHT:
+					if(name_pos < (SCOREDAT_NAME_LEN - 1)) {
+						name_pos++;
+					}
+					goto name_updated;
+				case (gs_SPACE + 8):
+					goto enter;
+				default:
+regular:
+					hi.score.g_name[entered_place][name_pos] = c;
+					if(name_pos == (SCOREDAT_NAME_LEN - 1)) {
+						alphabet_cursor_put(col, row, TX_WHITE);
+						col = ALPHABET_ENTER_COL;
+						row = ALPHABET_ENTER_ROW;
+						alphabet_cursor_put(col, row, (TX_GREEN | TX_REVERSE));
+					}
+					if(name_pos < (SCOREDAT_NAME_LEN - 1)) {
+						name_pos++;
+					}
+				}
+name_updated:
+				name_cursor_put(entered_place, playchar, name_pos);
+			}
+
+			if(key_det & INPUT_BOMB) {
+				hi.score.g_name[entered_place][name_pos] = g_EMPTY;
+				if(name_pos > 0) {
+					name_pos--;
+				}
+				name_cursor_put(entered_place, playchar, name_pos);
+			}
+			if(key_det & INPUT_CANCEL) {
+				goto enter;
+			}
+			input_locked = key_det;
+		} else {
+			if(key_det == input_locked) {
+				input_delay++;
+				if((input_delay > 30) && ((input_delay & 1) == 0)) {
+					input_locked = 0;
+				}
+			} else {
+				if(key_det != INPUT_NONE) {
+					optimization_barrier();
+				} else {
+					input_locked = 0;
+				}
+				input_delay = 0;
+			}
+		}
+		input_reset_sense();
+		frame_delay(1);
+	}
+
+enter:
+	hiscore_scoredat_save();
+	goto done;
+no_entry:
+	hiscore_scoredat_save();
+	input_wait_for_change(0);
+done:
+	super_free();
+	text_clear();
+	palette_black_out(1);
+}
+#pragma codeseg
+
+
+#pragma codeseg SCORE_TEXT score_01
+void near score_egc_start_copy(void)
+{
+	_outportb_(0x7C, 0);
+	_outportb_(0x6A, 7);
+	_outportb_(0x6A, 5);
+	_outportb_(0x7C, 0x80);
+	_outportb_(0x6A, 6);
+	_AX = 0xFFF0; _DX = EGC_ACTIVEPLANEREG; outport(_DX, _AX);
+	_AX = 0x00FF; _DX = EGC_READPLANEREG; outport(_DX, _AX);
+	_AX = 0x3100; _DX = EGC_MODE_ROP_REG; outport(_DX, _AX);
+	_AX = 0xFFFF; _DX = EGC_MASKREG; outport(_DX, _AX);
+	_AX = keep_0(0); _DX = EGC_ADDRRESSREG; outport(_DX, _AX);
+	_AX = 0x000F; _DX = EGC_BITLENGTHREG; outport(_DX, _AX);
+}
+
+void pascal near score_rect_copy(int left, int top, int w, int h)
+{
+	int x;
+	int y;
+	vram_offset_t vo;
+	dots16_t dots;
+	register vram_offset_t vo_r;
+	register int word_w = w;
+	score_egc_start_copy();
+	vo = ((left >> 3) + (top << 6) + (top << 4));
+	word_w /= 16;
+	for(y = 0; y < h; y++, vo += ROW_SIZE) {
+		x = 0;
+		vo_r = vo;
+		for(; x < word_w; x++, vo_r += 2) {
+			_DX = 0xA6;
+			outportb(_DX, 1);
+			dots = *reinterpret_cast<dots16_t far *>(VRAM_PLANE_B + vo_r);
+			outportb(_DX, 0);
+			*reinterpret_cast<dots16_t far *>(VRAM_PLANE_B + vo_r) = dots;
+		}
+	}
+	egc_off();
+}
+#pragma codeseg
