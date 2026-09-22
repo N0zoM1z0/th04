@@ -44,6 +44,7 @@ contain residual counts that were correct only at that packet.
 - [MEMCHK physical boundary review](zun/TH04_MEMCHK_BOUNDARIES_V521.md)
 - [ZUNINIT/MEMCHK generated-assembly provenance](zun/TH04_ZUN_GENERATED_ASM_PROVENANCE_V522.md)
 - [ZUN DOS_FREE library replacement](zun/TH04_ZUN_DOS_FREE_V524.md)
+- [ZUN DOS_AXDX library replacement](zun/TH04_ZUN_DOS_AXDX_V525.md)
 
 ## Recent MAIN milestones
 
