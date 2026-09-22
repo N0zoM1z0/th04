@@ -45,6 +45,7 @@ contain residual counts that were correct only at that packet.
 - [ZUNINIT/MEMCHK generated-assembly provenance](zun/TH04_ZUN_GENERATED_ASM_PROVENANCE_V522.md)
 - [ZUN DOS_FREE library replacement](zun/TH04_ZUN_DOS_FREE_V524.md)
 - [ZUN DOS_AXDX library replacement](zun/TH04_ZUN_DOS_AXDX_V525.md)
+- [ZUN DOS_PUTS2 library replacement](zun/TH04_ZUN_DOS_PUTS2_V526.md)
 
 ## Recent MAIN milestones
 
