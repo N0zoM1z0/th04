@@ -26,20 +26,21 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 14 / 71 / 8 | 5 | 88 | Remaining shared hardware/PI and sound owners; SCORE physical TU |
+| OP.EXE | 93 | 14 / 71 / 8 | 8 | 85 | Remaining shared sound owners; SCORE physical TU |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
-| MAINE.EXE | 72 | 14 / 51 / 7 | 5 | 67 | Remaining shared owners; SCORE physical TU |
+| MAINE.EXE | 72 | 14 / 51 / 7 | 8 | 64 | Remaining shared sound owners; SCORE physical TU |
 | ZUN.COM | 13 | 3 / 4 / 6 | 0 | 13 | `cfg_init`, ZUNINIT boundary, component link |
 
-The non-MAIN authored backlog is 168 pending acceptances, 21 provisional
+The non-MAIN authored backlog is 162 pending acceptances, 21 provisional
 boundaries, and 40 unresolved `target-derived-asm` candidate representations.
 There is a separate 35-entry OP/MAINE/ZUN original-ASM attestation queue.
 `target-derived-asm` does **not** prove original ASM ownership. Corroborated
 boundaries still require target-local physical review before exact promotion.
 
-OP and MAINE each have three decoded/link-exact BGIMAGE functions plus
-artifact-local cold-relinked natural-C++ `vram_planes_set()` and `frame_delay()` functions. Their
-`units.csv` rows stay `source-present`: DIET-packed files have no honest raw
+OP and MAINE each have three decoded/link-exact BGIMAGE functions plus five
+artifact-local cold-relinked natural-C++ shared functions: vram_planes_set(),
+frame_delay(), pi_palette_apply(), pi_put_8(), and pi_load(). Their units.csv
+rows stay source-present: DIET-packed files have no honest raw
 file offsets for those decoded function bodies. Neither artifact, nor ZUN, has
 a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
 reviewed file-backed authored C/C++ bytes exact and 492 / 494 reviewed
@@ -47,15 +48,15 @@ authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
 carpet 23, and shared `snd_load` encoding 2. It is not the project-wide gate.
 
 The artifact-local decoded-function acceptance plane is implemented and
-cold-tested for OP/MAINE BGIMAGE, VRAM, and frame-delay source plus ZUN resident diagnostics. Run
+cold-tested for OP/MAINE BGIMAGE, VRAM, frame-delay, and PI source plus ZUN resident diagnostics. Run
 `python3 scripts/decoded_function_acceptance.py` for its static ledger gate,
 or add `--artifact th04-op`, `th04-maine`, or `th04-zun` for a fresh cold
 comparison. See the [v508 acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
-The **next** source packet is the eight remaining reviewed `src/shared/` owners /
-571 decoded bytes in each OP/MAINE artifact. Extend the cold backend to compile
+The **next** source packet is the five remaining reviewed shared sound owners /
+328 decoded bytes in each OP/MAINE artifact. Extend the cold backend to compile
 their actual source, review each artifact-local extent, and record its own raw
 function evidence; do not transfer another artifact's exact credit. Work in small
-hardware/PI and sound cohorts. Review provisional boundaries and source-origin
+sound cohorts. Review provisional boundaries and source-origin
 questions alongside mature TUs, not as a global gate.
 
 ## Replayed facility checks
@@ -68,6 +69,7 @@ questions alongside mature TUs, not as a global gate.
   product builds or whole-packed exactness. Commands, receipts, and limits:
   [non-MAIN replay handoff](reconstruction/packed/TH04_NONMAIN_REPLAY_HANDOFF_V507.md).
 - v510 cold-compiles maintained `frame_delay.cpp` independently into OP and MAINE. Both complete 21-byte decoded functions are raw-zero in two rounds; all 804/559 ordered relocations remain exact, and both aggregate linked program images remain identical to v489. The combined decoded wrapper replays five accepted functions per artifact. See the [v510 frame-delay note](reconstruction/packed/TH04_SHARED_FRAME_DELAY_V510.md).
+- v511 cold-compiles maintained pi_put.cpp and pi_load.cpp independently into OP and MAINE. Palette, put, and load are raw-zero in both artifacts, all 804/559 ordered relocations remain exact, and aggregate program images remain v489-identical. The combined wrapper now replays eight accepted functions per artifact. Borland dependency timestamps are normalized only for OMF determinism, never for raw function acceptance. See the [v511 PI note](reconstruction/packed/TH04_SHARED_PI_V511.md).
 - The six BGIMAGE `units.csv` replay commands now use the retained v489 source
   snapshot via `--current-snapshot`; compacted v487/v488 input paths in the
   historical note are not the live command.

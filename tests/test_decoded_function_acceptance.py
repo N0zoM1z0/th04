@@ -124,5 +124,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
             self.check(entries)
 
 
+    def test_pi_backends_are_bound_to_their_maintained_producers(self) -> None:
+        entries = deepcopy(self.entries)
+        pi_put = next(row for row in entries if row["replay_backend"] == "op-maine-pi-put-v511")
+        pi_put["replay_backend"] = "op-maine-pi-load-v511"
+        with self.assertRaisesRegex(ValueError, "PI load backend does not compile"):
+            self.check(entries)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -51,6 +51,8 @@ ZUN_COMPONENT_SHA256 = "cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c1
 BGIMAGE_PRODUCERS = {"th04-op": 0xE428, "th04-maine": 0xD626}
 VRAM_PRODUCERS = {"th04-op": 0xDA12, "th04-maine": 0xCC7A}
 FRAME_DELAY_PRODUCERS = {"th04-op": 0xDA3B, "th04-maine": 0xCCA3}
+PI_PUT_PRODUCERS = {"th04-op": 0xDA50, "th04-maine": 0xCCB8}
+PI_LOAD_PRODUCERS = {"th04-op": 0xDAFD, "th04-maine": 0xCD65}
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -165,7 +167,8 @@ def validate(
             raise ValueError(f"{ident}: invalid target slice SHA-256")
         backend = entry["replay_backend"]
         allowed_backend = ({"zun-resident-link"} if artifact == "th04-zun"
-                           else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510"})
+                           else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
+                                 "op-maine-pi-put-v511", "op-maine-pi-load-v511"})
         if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
@@ -180,9 +183,17 @@ def validate(
             if (source_name != "src/shared/hardware/vram_planes.cpp"
                     or producer_start != VRAM_PRODUCERS[artifact] or producer_size != 0x29):
                 raise ValueError(f"{ident}: VRAM backend does not compile this producer")
-        elif (source_name != "src/shared/hardware/frame_delay.cpp"
-              or producer_start != FRAME_DELAY_PRODUCERS[artifact] or producer_size != 0x15):
-            raise ValueError(f"{ident}: frame-delay backend does not compile this producer")
+        elif backend == "op-maine-frame-delay-v510":
+            if (source_name != "src/shared/hardware/frame_delay.cpp"
+                    or producer_start != FRAME_DELAY_PRODUCERS[artifact] or producer_size != 0x15):
+                raise ValueError(f"{ident}: frame-delay backend does not compile this producer")
+        elif backend == "op-maine-pi-put-v511":
+            if (source_name != "src/shared/formats/pi_put.cpp"
+                    or producer_start != PI_PUT_PRODUCERS[artifact] or producer_size != 0xAD):
+                raise ValueError(f"{ident}: PI put backend does not compile this producer")
+        elif (source_name != "src/shared/formats/pi_load.cpp"
+              or producer_start != PI_LOAD_PRODUCERS[artifact] or producer_size != 0x46):
+            raise ValueError(f"{ident}: PI load backend does not compile this producer")
         evidence_id = entry["replay_evidence_id"]
         if evidence_id not in evidence_by_id or evidence_by_id[evidence_id]["artifact"] != artifact:
             raise ValueError(f"{ident}: missing artifact-local replay evidence")

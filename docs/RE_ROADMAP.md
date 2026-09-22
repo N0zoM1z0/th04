@@ -32,14 +32,13 @@ the BGIMAGE backend cannot grant credit to another TU.
 
 ## 2. Harvest maintained shared source in small cohorts
 
-For each of OP and MAINE, eight remaining reviewed functions (571 decoded
-bytes) already have maintained `src/shared/` source: PI palette/put/load and
-PMD/MMD/KAJA/mode/measure sound functions. The maintained frame-delay owner is
-now independently decoded-exact in both artifacts. Review each artifact's physical
-extent and compare its own cold output. A hardware/PI cohort and a sound
-cohort per artifact make focused, reviewable checkpoints. The three BGIMAGE, VRAM, and frame-delay functions per artifact are already
-decoded/link-exact; only replay maintenance and later packed-file accounting
-remain.
+For each of OP and MAINE, five remaining reviewed functions (328 decoded
+bytes) already have maintained shared sound source: PMD/MMD/KAJA/mode/measure.
+Frame delay and all three maintained PI functions are now independently
+decoded-exact in both artifacts. Keep the remaining sound work in small
+producer-focused checkpoints. The three BGIMAGE functions plus VRAM, frame
+delay, and the three PI functions per artifact are already decoded/link-exact;
+only replay maintenance and later packed-file accounting remain.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
