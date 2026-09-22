@@ -165,3 +165,32 @@ Private receipt SHA-256:
 
 This strengthens the provenance negative but changes no accounting. The two-byte
 `E2 F7` owner remains blocked.
+
+## v502 inline-expansion loop surface
+
+The v398 matrix varied the countdown spelling inside the final function, but
+did not test a distinct Turbo C++ mechanism later observed elsewhere in the
+PC-98 codebase: C++ inline expansion can change pseudo-register lowering. v502
+therefore tests only this new front-end boundary rather than repeating the
+fourteen direct loop spellings.
+
+scripts/probes/probe_tc4_checkerboard_inline_loop_v502.py uses the pinned TCC
+4.02 and the same checkerboard core. Six natural C++ candidates cover a direct
+baseline, an inline one-store helper, a complete inline loop helper, constant
+count parameters, a local count, and a goto backedge.
+
+The result separates two compiler behaviors cleanly:
+
+- the small one-store helper really is inlined and the complete caller CODE is
+  byte-identical to the direct baseline;
+- helpers that own the complete countdown, the count parameter, or the goto
+  loop are not inlined. The caller contains a CALL and the helper body is
+  emitted separately, so these forms cannot match the target CFG;
+- no tested caller contains x86 LOOP.
+
+Two independent cold runs are receipt-identical. Final receipt SHA-256:
+69b43c95e1fe8a828dfab4ca849d1dd3ce1e20e492420329e7ab9f466d248f29.
+
+This closes inline-expansion boundary placement as a natural explanation for
+the checkerboard E2 F7 backedge. It provides no handwritten-source provenance,
+grants no exactness credit, and leaves the checkerboard gap at two bytes.

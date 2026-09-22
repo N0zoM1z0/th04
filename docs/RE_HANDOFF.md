@@ -150,7 +150,9 @@ Primary packed notes:
   resulting AX-to-BX transfer remains 8B D8; a local temporary spills/reloads
   through memory rather than selecting target 89 C3;
 - checkerboard ordinary countdown source spellings / accepted optimizer / IDE /
-  cross-artifact scans (v396, v398, v404-v406);
+  cross-artifact scans (v396, v398, v404-v406), plus inline-expansion boundary
+  placement (v502): a small body helper inlines byte-identically while helpers
+  owning the countdown remain CALL-based; none emits LOOP;
 - carpet natural opcode/source-lineage/cross-artifact scans (v396, v404-v405,
   v409-v424);
 - `snd_load` ordinary register/alias/codegen and cross-game provenance searches
