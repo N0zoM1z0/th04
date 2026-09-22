@@ -242,3 +242,27 @@ the bound history/patch/current-tag bundle SHA-256 is
 This is stronger upstream provenance bookkeeping, not the original broadcast
 frame and not an exactness Oracle. It changes no source ownership and leaves
 the complete MAIN gap at 27 bytes.
+
+## v504 pinned ReC98 trial-history negative
+
+The v500 intake gate makes the 1998 public TH04 trial a potentially useful
+independent producer if a provenance-bearing GEN_TS1.EXE candidate is obtained.
+Before sourcing it externally, v504 tests a narrower possibility: whether the
+already pinned ReC98 mainline ever contained a trial executable, trial-derived
+source, or an explicit trial/prototype marker that was later removed.
+
+scripts/probes/probe_th04_trial_upstream_history_v504.py binds ReC98 HEAD to
+b6ba5b0a529edbb31efdf8c0e939263804f8ee47 and searches both the current TH04
+tree and every content change in all 3,071 commits reachable from that HEAD.
+The tested markers are GEN_TS1, gen_ts1, the Japanese TH04 trial title,
+体験版, taiken, and trial.
+
+All current-tree and pickaxe-history result sets are empty. Two independent
+runs are receipt-identical; final receipt SHA-256 is
+069b85137e8c0b6e558331103c6348d38a5de634dff651301cdc292400f0e97b.
+
+This result is intentionally narrow. It closes only pinned ReC98 mainline as a
+hidden source of TH04 trial provenance. It says nothing about the actual public
+1998 trial binary, unrelated archives, or deleted upstream refs, and grants no
+source or exactness credit. The v500 external trial intake remains the live
+route.

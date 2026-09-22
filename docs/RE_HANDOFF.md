@@ -136,6 +136,10 @@ Primary packed notes:
   MAGNet2010 TH04 transcription lineage (v495-v496): all nine tag-changing
   history commits keep tag-bearing hunks in demo/input/EMS/memory material and
   never independently witness checkerboard, carpet, or snd_load low-level source;
+- pinned ReC98 mainline trial/prototype history (v504): all 3,071 commits
+  reachable from pinned HEAD have zero TH04 content-change hits for GEN_TS1,
+  Japanese trial markers, taiken, or trial; the public 1998 trial must be
+  sourced independently and still pass the v500 intake gate;
 - TC4J -WX / DPMI16 final-blocker codegen (v497): the switch is
   demonstrably active via CODE SEGDEF alignment but does not change the tested
   register, LOOP, LODSB, or DS-to-ES instruction selections;
