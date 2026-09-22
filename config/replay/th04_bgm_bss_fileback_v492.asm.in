@@ -1,0 +1,12 @@
+	public	timerorg
+	public	part, _bgm_part
+	public	esound, _bgm_esound
+
+timerorg	label	dword
+		db	4 dup(0)
+_bgm_part	label	word
+part		label	word
+		db	(046h - 4) dup(0)
+_bgm_esound	label	word
+esound		label	word
+		db	(0C6h - 046h) dup(0)

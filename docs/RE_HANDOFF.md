@@ -253,6 +253,17 @@ python3 scripts/audit_compat_dependencies.py --check
   historical `b_data` object boundary alone therefore **does not** produce T;
   remaining T mechanisms require initialized BSS-class data, a different
   linker version, or a post-link transform.
+- v492 closes the **mechanism** for the target T extent without claiming its
+  historical source spelling. Symbolically file-backing the shared 0xC6 MASTER
+  BGM BSS as zero data yields exact TH04 OP/MAINE T extents and minalloc with
+  unchanged program prefixes and relocation tables. Independent TH05 cold
+  builds corroborate the same physical structure: TH05 OP reaches its real
+  target T extent/minalloc exactly, and four TH04/TH05 target restores contain
+  the identical 198-byte zero BGM span. Pinned DIET then leaves only the known
+  `snd_load` two-byte P residual; a private P-only control packs both targets
+  raw-exact. Because historical `b_data.OBJ` itself has no BSS LEDATA, keep the
+  explicit-zero template as provenance/mechanism evidence, not maintained
+  historical source.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -261,14 +272,13 @@ python3 scripts/audit_compat_dependencies.py --check
 1. **MAIN final 27 bytes:** continue only with genuinely new independent source
    provenance or a new legal compiler mechanism. Do not reopen already-closed
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
-2. **OP/MAINE packed closure:** v488/v489 close OP/MAINE SCORE, BGIMAGE, and
-   both complete MZ relocation tables. Continue only the shared `snd_load`
-   two-byte program-image encoding and the historical mechanism for the target-
-   attested unpacked-file `T` extents (76,864 OP / 69,218 MAINE). v490 proves
-   `minalloc` is mechanically derived from that extent plus unchanged `SS:SP`,
-   so it is no longer a separate provenance search. Active TLINK 6.10 switch
-   routes and pinned TASM5 option/version emulation are closed; do not hand-edit
-   payload/header/relocation bytes.
+2. **OP/MAINE packed closure:** v488/v489 close all relocation ordering and
+   v492 gives a cross-game-corroborated natural mechanism for the exact T
+   extents/minalloc surface. The historical trigger for BGM BSS file-backing is
+   still provenance-open because the independently extracted `b_data.OBJ` has
+   no BSS LEDATA. Technically, pinned DIET now leaves only the shared `snd_load`
+   two-byte program-image encoding; a private P-only control packs OP and MAINE
+   raw-exact. Do not promote that control or hand-edit payload/header bytes.
 3. **Standalone build/runtime:** after source/link closure can produce the
    artifacts under test, add deterministic DOSBox-X runtime scenarios.
 
@@ -285,7 +295,7 @@ For current OP/MAINE replay dependencies, keep only these source snapshots:
 - `.analysis/gpt-web/v402-opmusic-hybrid-replay-001/a/source`
 
 Keep receipt-only directories for current blocker/frontier evidence, especially
-v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v491. Superseded scratch matrices,
+v391, v396, v398-v406, v411-v420, v423-v427, v429-v430, v436, v441, v446-v448, v453, v461, v463-v466, v468, v470-v492. Superseded scratch matrices,
 second A/B source copies, and expanded exact-unit replay trees can be deleted
 and regenerated from checked-in source.
 
