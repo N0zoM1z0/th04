@@ -26,21 +26,21 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 14 / 71 / 8 | 10 | 83 | Remaining shared sound owners; SCORE physical TU |
+| OP.EXE | 93 | 14 / 71 / 8 | 11 | 82 | Remaining shared sound owners; SCORE physical TU |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
-| MAINE.EXE | 72 | 14 / 51 / 7 | 10 | 62 | Remaining shared sound owners; SCORE physical TU |
+| MAINE.EXE | 72 | 14 / 51 / 7 | 11 | 61 | Remaining shared sound owners; SCORE physical TU |
 | ZUN.COM | 13 | 3 / 4 / 6 | 0 | 13 | `cfg_init`, ZUNINIT boundary, component link |
 
-The non-MAIN authored backlog is 158 pending acceptances, 21 provisional
+The non-MAIN authored backlog is 156 pending acceptances, 21 provisional
 boundaries, and 40 unresolved `target-derived-asm` candidate representations.
 There is a separate 35-entry OP/MAINE/ZUN original-ASM attestation queue.
 `target-derived-asm` does **not** prove original ASM ownership. Corroborated
 boundaries still require target-local physical review before exact promotion.
 
-OP and MAINE each have three decoded/link-exact BGIMAGE functions plus seven
+OP and MAINE each have three decoded/link-exact BGIMAGE functions plus eight
 artifact-local cold-relinked natural C/C++ shared functions: vram_planes_set(),
 frame_delay(), pi_palette_apply(), pi_put_8(), pi_load(), and
-snd_pmd_resident(), and snd_mmd_resident(). Their units.csv
+snd_pmd_resident(), snd_mmd_resident(), and snd_kaja_interrupt(). Their units.csv
 rows stay source-present: DIET-packed files have no honest raw
 file offsets for those decoded function bodies. Neither artifact, nor ZUN, has
 a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
@@ -49,12 +49,12 @@ authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
 carpet 23, and shared `snd_load` encoding 2. It is not the project-wide gate.
 
 The artifact-local decoded-function acceptance plane is implemented and
-cold-tested for OP/MAINE BGIMAGE, VRAM, frame-delay, PI, PMD, and MMD source plus ZUN resident diagnostics. Run
+cold-tested for OP/MAINE BGIMAGE, VRAM, frame-delay, PI, PMD, MMD, and KAJA source plus ZUN resident diagnostics. Run
 `python3 scripts/decoded_function_acceptance.py` for its static ledger gate,
 or add `--artifact th04-op`, `th04-maine`, or `th04-zun` for a fresh cold
 comparison. See the [v508 acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
-The **next** source packet is the three remaining reviewed shared sound owners /
-235 decoded bytes in each OP/MAINE artifact. Extend the cold backend to compile
+The **next** source packet is the two remaining reviewed shared sound owners /
+205 decoded bytes in each OP/MAINE artifact. Extend the cold backend to compile
 their actual source, review each artifact-local extent, and record its own raw
 function evidence; do not transfer another artifact's exact credit. Work in small
 sound cohorts. Review provisional boundaries and source-origin
@@ -73,6 +73,7 @@ questions alongside mature TUs, not as a global gate.
 - v511 cold-compiles maintained pi_put.cpp and pi_load.cpp independently into OP and MAINE. Palette, put, and load are raw-zero in both artifacts, all 804/559 ordered relocations remain exact, and aggregate program images remain v489-identical. The combined wrapper now replays eight accepted functions per artifact. Its dispatcher was corrected to name PI backends explicitly and fail closed on unknown IDs; corrected -002 receipts supersede the old combined -001 receipts, while the focused PI evidence itself was unaffected. Borland dependency timestamps are normalized only for OMF determinism, never for raw function acceptance. See the [v511 PI note](reconstruction/packed/TH04_SHARED_PI_V511.md).
 - v512 independently cold-compiles maintained pmd_resident.c into OP and MAINE. Both complete 46-byte functions are raw-zero in two rounds, the complete linked images remain v489-identical, and all 804/559 ordered relocations remain exact. See the [v512 PMD note](reconstruction/packed/TH04_SHARED_PMD_V512.md).
 - v513 cold-compiles maintained mmd_resident.c plus the already attested zero-code SHARED alignment TU into OP and MAINE. Both complete 47-byte functions are raw-zero in two rounds and all 804/559 ordered relocations remain exact. The only aggregate linked-program difference per artifact is the explicitly excluded post-MMD padding byte (OP 0xDC73, MAINE 0xCF8B); the alignment object has zero LEDATA and does not emit or claim that byte. The fail-closed combined wrapper now executes seven explicit backends and keeps ten accepted functions per artifact raw-zero. See the [v513 MMD note](reconstruction/packed/TH04_SHARED_MMD_V513.md).
+- v514 independently cold-compiles maintained kaja_interrupt.cpp into OP and MAINE. Both complete 30-byte functions are raw-zero in two rounds, both linked program images and EXEs remain v489-identical, and all 804/559 ordered relocations remain exact. The fail-closed combined wrapper now executes eight explicit backends and keeps eleven accepted functions per artifact raw-zero. See the [v514 KAJA note](reconstruction/packed/TH04_SHARED_KAJA_V514.md).
 - The six BGIMAGE `units.csv` replay commands now use the retained v489 source
   snapshot via `--current-snapshot`; compacted v487/v488 input paths in the
   historical note are not the live command.

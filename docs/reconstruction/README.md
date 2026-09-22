@@ -26,6 +26,7 @@ contain residual counts that were correct only at that packet.
 - [OP/MAINE shared PI decoded acceptance](packed/TH04_SHARED_PI_V511.md)
 - [OP/MAINE shared PMD resident decoded acceptance](packed/TH04_SHARED_PMD_V512.md)
 - [OP/MAINE shared MMD resident decoded acceptance](packed/TH04_SHARED_MMD_V513.md)
+- [OP/MAINE shared KAJA interrupt decoded acceptance](packed/TH04_SHARED_KAJA_V514.md)
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [DIET MZ partition / derived minalloc](packed/TH04_DIET145F_MZ_PARTITION_V231.md)

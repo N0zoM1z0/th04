@@ -55,6 +55,7 @@ PI_PUT_PRODUCERS = {"th04-op": 0xDA50, "th04-maine": 0xCCB8}
 PI_LOAD_PRODUCERS = {"th04-op": 0xDAFD, "th04-maine": 0xCD65}
 PMD_PRODUCERS = {"th04-op": 0xDC16, "th04-maine": 0xCF2E}
 MMD_PRODUCERS = {"th04-op": 0xDC44, "th04-maine": 0xCF5C}
+KAJA_PRODUCERS = {"th04-op": 0xDC74, "th04-maine": 0xCF8C}
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -171,7 +172,7 @@ def validate(
         allowed_backend = ({"zun-resident-link"} if artifact == "th04-zun"
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
-                                 "op-maine-mmd-v513"})
+                                 "op-maine-mmd-v513", "op-maine-kaja-v514"})
         if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
@@ -202,9 +203,13 @@ def validate(
             if (source_name != "src/shared/sound/pmd_resident.c"
                     or producer_start != PMD_PRODUCERS[artifact] or producer_size != 0x2E):
                 raise ValueError(f"{ident}: PMD backend does not compile this producer")
-        elif (source_name != "src/shared/sound/mmd_resident.c"
-              or producer_start != MMD_PRODUCERS[artifact] or producer_size != 0x2F):
-            raise ValueError(f"{ident}: MMD backend does not compile this producer")
+        elif backend == "op-maine-mmd-v513":
+            if (source_name != "src/shared/sound/mmd_resident.c"
+                    or producer_start != MMD_PRODUCERS[artifact] or producer_size != 0x2F):
+                raise ValueError(f"{ident}: MMD backend does not compile this producer")
+        elif (source_name != "src/shared/sound/kaja_interrupt.cpp"
+              or producer_start != KAJA_PRODUCERS[artifact] or producer_size != 0x1E):
+            raise ValueError(f"{ident}: KAJA backend does not compile this producer")
         evidence_id = entry["replay_evidence_id"]
         if evidence_id not in evidence_by_id or evidence_by_id[evidence_id]["artifact"] != artifact:
             raise ValueError(f"{ident}: missing artifact-local replay evidence")
@@ -344,6 +349,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-mmd-v513":
         return [sys.executable, "scripts/probes/replay_th04_shared_mmd.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-maine-kaja-v514":
+        return [sys.executable, "scripts/probes/replay_th04_shared_kaja.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-bgimage-v489":
         snapshot = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"
