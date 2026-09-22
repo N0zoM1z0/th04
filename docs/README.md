@@ -7,7 +7,8 @@ The CSV ledgers remain authoritative when prose and generated reports disagree.
 ## Continue reconstruction
 
 - [Current handoff](RE_HANDOFF.md) — present state, blockers, and next action.
-- [Progress](PROGRESS.md) — generated artifact and exact-byte totals.
+- [Roadmap](RE_ROADMAP.md) — ordered non-MAIN reconstruction and control-plane work.
+- [Progress](PROGRESS.md) — generated all-artifact function routing and MAIN exact-byte totals.
 - [Boundary review](BOUNDARY_REVIEW.md) — generated all-artifact work queue.
 - [Reconstruction evidence index](reconstruction/README.md) — focused notes
   grouped by artifact and technical surface.

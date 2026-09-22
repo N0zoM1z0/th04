@@ -1,16 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="560" height="176" role="img" aria-label="TH04 reconstruction progress: 99.97% of the confirmed authored-byte set is exact, boundary reviewed or corroborated 96.88%">
-  <rect width="560" height="176" rx="8" fill="#1f2335"/>
-  <text x="24" y="28" fill="#f4f4f5" font-family="sans-serif" font-size="16" font-weight="600">TH04 reconstruction progress</text>
-
-  <text x="24" y="52" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Confirmed authored-byte coverage</text>
-  <text x="536" y="52" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">99.97%</text>
-  <rect x="24" y="60" width="512" height="12" rx="6" fill="#3b4058"/>
-  <rect x="24" y="60" width="511.83" height="12" rx="6" fill="#9b6de3"/>
-  <text x="24" y="89" fill="#c8cad2" font-family="sans-serif" font-size="12">83,442 exact / 83,469 confirmed authored bytes · denominator provisional</text>
-
-  <text x="24" y="116" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Boundary reviewed or corroborated</text>
-  <text x="536" y="116" fill="#f4f4f5" text-anchor="end" font-family="monospace" font-size="13">96.88%</text>
-  <rect x="24" y="124" width="512" height="12" rx="6" fill="#3b4058"/>
-  <rect x="24" y="124" width="496.02" height="12" rx="6" fill="#9b6de3"/>
-  <text x="24" y="153" fill="#c8cad2" font-family="sans-serif" font-size="12">652 / 673 candidates · 21 pending</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="788" height="440" role="img" aria-label="TH04 per-artifact reconstruction progress">
+  <title>TH04 reconstruction progress by artifact</title>
+  <desc>Each artifact has separate authored-boundary and function-acceptance bars. Only MAIN has a file-backed authored-byte percentage.</desc>
+  <rect width="788" height="440" rx="8" fill="#1f2335"/>
+  <text x="24" y="31" fill="#f4f4f5" font-family="sans-serif" font-size="18" font-weight="600">TH04 reconstruction progress</text>
+  <text x="24" y="52" fill="#c8cad2" font-family="sans-serif" font-size="12">Two independent planes · authored function candidates only</text>
+  <text x="154" y="83" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Boundary confidence</text>
+  <text x="476" y="83" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">Function acceptance</text>
+  <text x="154" y="100" fill="#c8cad2" font-family="sans-serif" font-size="11">R reviewed · C corroborated · P provisional</text>
+  <text x="476" y="100" fill="#c8cad2" font-family="sans-serif" font-size="11">Exact · blocked · pending</text>
+  <text x="24" y="128" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">OP.EXE</text>
+  <text x="24" y="148" fill="#c8cad2" font-family="monospace" font-size="11">93 candidates</text>
+  <rect x="154" y="121" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="154.00" y="121" width="42.45" height="12" fill="#9b6de3"/>
+  <rect x="196.45" y="121" width="215.29" height="12" fill="#5496d6"/>
+  <rect x="411.74" y="121" width="24.26" height="12" fill="#596078"/>
+  <rect x="476" y="121" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="476.00" y="121" width="9.10" height="12" fill="#55c7a6"/>
+  <rect x="485.10" y="121" width="272.90" height="12" fill="#596078"/>
+  <text x="154" y="150" fill="#c8cad2" font-family="monospace" font-size="11">R 14 · C 71 · P 8</text>
+  <text x="476" y="150" fill="#c8cad2" font-family="monospace" font-size="11">Exact 3 · Blocked 0 · Pending 90</text>
+  <text x="24" y="190" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">MAIN.EXE</text>
+  <text x="24" y="210" fill="#c8cad2" font-family="monospace" font-size="11">495 candidates</text>
+  <rect x="154" y="183" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="154.00" y="183" width="282.00" height="12" fill="#9b6de3"/>
+  <rect x="476" y="183" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="476.00" y="183" width="280.29" height="12" fill="#55c7a6"/>
+  <rect x="756.29" y="183" width="1.71" height="12" fill="#f0a95c"/>
+  <text x="154" y="212" fill="#c8cad2" font-family="monospace" font-size="11">R 495 · C 0 · P 0</text>
+  <text x="476" y="212" fill="#c8cad2" font-family="monospace" font-size="11">Exact 492 · Blocked 3 · Pending 0</text>
+  <text x="24" y="252" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">MAINE.EXE</text>
+  <text x="24" y="272" fill="#c8cad2" font-family="monospace" font-size="11">72 candidates</text>
+  <rect x="154" y="245" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="154.00" y="245" width="54.83" height="12" fill="#9b6de3"/>
+  <rect x="208.83" y="245" width="199.75" height="12" fill="#5496d6"/>
+  <rect x="408.58" y="245" width="27.42" height="12" fill="#596078"/>
+  <rect x="476" y="245" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="476.00" y="245" width="11.75" height="12" fill="#55c7a6"/>
+  <rect x="487.75" y="245" width="270.25" height="12" fill="#596078"/>
+  <text x="154" y="274" fill="#c8cad2" font-family="monospace" font-size="11">R 14 · C 51 · P 7</text>
+  <text x="476" y="274" fill="#c8cad2" font-family="monospace" font-size="11">Exact 3 · Blocked 0 · Pending 69</text>
+  <text x="24" y="314" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">ZUN.COM</text>
+  <text x="24" y="334" fill="#c8cad2" font-family="monospace" font-size="11">13 candidates</text>
+  <rect x="154" y="307" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="154.00" y="307" width="65.08" height="12" fill="#9b6de3"/>
+  <rect x="219.08" y="307" width="86.77" height="12" fill="#5496d6"/>
+  <rect x="305.85" y="307" width="130.15" height="12" fill="#596078"/>
+  <rect x="476" y="307" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="476.00" y="307" width="282.00" height="12" fill="#596078"/>
+  <text x="154" y="336" fill="#c8cad2" font-family="monospace" font-size="11">R 3 · C 4 · P 6</text>
+  <text x="476" y="336" fill="#c8cad2" font-family="monospace" font-size="11">Exact 0 · Blocked 0 · Pending 13</text>
+  <path d="M24 366 H764" stroke="#4b526d"/>
+  <text x="24" y="392" fill="#f4f4f5" font-family="sans-serif" font-size="13" font-weight="600">MAIN file-backed authored bytes only</text>
+  <text x="764" y="392" fill="#c8cad2" text-anchor="end" font-family="monospace" font-size="12">83,442 / 83,469 · 99.97%</text>
+  <rect x="24" y="402" width="282" height="12" rx="4" fill="#353b52"/>
+  <rect x="24" y="402" width="281.91" height="12" fill="#9b6de3"/>
+  <text x="330" y="413" fill="#c8cad2" font-family="sans-serif" font-size="11">OP / MAINE / ZUN packed-file byte denominator: n/a</text>
 </svg>

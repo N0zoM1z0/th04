@@ -180,6 +180,12 @@ Artifact-level exactness additionally requires the whole physical file,
 including header, relocation table, padding, library/runtime code, and overlay,
 to have the target SHA-256.  There is no rounded `99.99% exact` state.
 
+For DIET-packed OP/MAINE/ZUN, a decoded function may have a target-restored
+segment:offset and an artifact-local link comparison without a direct packed
+file offset. Track that as decoded function acceptance, not `units.csv` raw
+file exactness. The six OP/MAINE BGIMAGE functions are an existing special
+case; a reusable function-acceptance plane is still needed for other owners.
+
 ## Comparator self-tests
 
 `scripts/smoke_oracles.py` uses private targets from all five PC-98 games as

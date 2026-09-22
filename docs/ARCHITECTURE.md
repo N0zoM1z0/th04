@@ -140,13 +140,16 @@ linker-map evidence, and focused notes because those fields describe the pinned
 calibration scaffold rather than the TH04 product layout. See
 `compat/rec98/README.md`.
 
-The current tree is not yet a complete standalone game build: only bounded
-`MAIN.EXE` source owners have been reconstructed, and several still compile in
-the exact Oracle through pinned ReC98 scaffolding. Do not conceal that gap with
-copied declarations or a bulk import. Recover bounded TH04 units from the
-verified target, using ReC98 and adjacent games as corroboration. When shared
-code is proved, keep target-specific build/link ownership explicit rather than
-erasing it behind a modern abstraction.
+The current tree is not yet a complete standalone game build. It has many
+accepted MAIN owners, decoded/link-exact BGIMAGE functions in OP/MAINE,
+maintained shared source used by their diagnostic replays, and bounded ZUN
+source/components; OP/MAINE artifact-owned product trees are not yet populated.
+Several exact Oracles still compile through pinned ReC98 scaffolding. Do not
+conceal that gap with copied declarations or a bulk import. Recover bounded
+TH04 units from the verified target, using ReC98 and adjacent games as
+corroboration. Keep each artifact's build/link and acceptance ownership
+explicit even for shared source. Decoded function acceptance in a packed
+artifact is not a raw packed-file byte extent.
 
 Exact reconstruction and a future portable runtime are separate products.  A
 portable branch may replace segmentation and hardware access only after the

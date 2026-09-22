@@ -417,3 +417,22 @@ The stable compiler/runner/probe/source bundle SHA-256 is
 This closes source-debug and line-info modes as a compiler explanation for the
 tested final-blocker lowerings. It does not establish original source
 provenance, authorize inline assembly, or change the 27-byte MAIN gap.
+
+## v506 same-media DOS/V backend intake (structural only)
+
+`python3 scripts/probes/probe_tc4_dosv_backend_intake_v506.py --output-dir
+.analysis/reconstruction/probes/NEW_UNIQUE_DOSV_BACKEND_INTAKE` attests and
+re-extracts the same-media DOS/V and PC-98 integrated `TC.EXE` binaries. The
+DOS/V binary SHA-256 is
+`9bc31d09ae8fb5b776269142e7785f5a7c7f06ca603d1d8ced71a116078a2aa2`;
+the PC-98 binary is
+`91d410850da69c6ff894f902d1b5610f04b5e2b6d0097b2a11cf2fafa54f14b4`.
+Both are 16-bit NE binaries with 206 segments, but only three CODE segment
+hashes are shared (four segment hashes agree at the same position). The
+v506 input-bundle SHA-256 is
+`5027a38d113821f622fdd4499256bbe99cd1893eb949f98df6eca00785009712`;
+receipt SHA-256 is
+`43161b13d680f9f94f8cafefbfcb18606eba7fb239c795c67768dd6a4b899352`.
+This establishes a distinct same-media backend **candidate** only. No
+accepted runner has yet produced valid OMF from it, so code-generation
+effects, final-blocker relevance, and MAIN exactness remain unattested.

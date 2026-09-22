@@ -35,9 +35,13 @@ used one profile.  Probe individual ABI/code-generation claims.
 5. **Complete:** survey all 20 TH01-TH05 outputs, pin their full compact
    comparison vectors, and repeat the all-game output/OMF identities across
    three independent cold builds.
-6. Freeze artifact-specific flags, ordered objects, libraries, linker response
-   files, map topology, and output digests as each TH04 claim is attempted.
-7. Only then add TH04 unit/object adapters and exact ledger rows.
+6. **In progress:** freeze artifact-specific flags, ordered objects, libraries,
+   linker response files, map topology, and output digests for each TH04 claim.
+   MAIN has accepted file-backed units; OP/MAINE have repeatable decoded
+   aggregate replays; ZUN has source-only TU compilation.
+7. **In progress:** add artifact-local unit/object acceptance adapters and
+   exact ledger rows only for extents with complete reviewed ownership. A
+   decoded packed-function match is separate from a raw-file exact unit.
 
 ReC98 source remains an untrusted calibration fixture and is never copied into
 `src/` wholesale.  Only outputs built locally from an attested environment can
@@ -86,8 +90,9 @@ The strict gate rejects all four TH04 candidates:
 | `MAINE.EXE` | 62,009 bytes outside relocation sites; size 38,003→62,414 | 0→559 | broad content/layout candidate |
 | `ZUN.COM` | target MZ versus candidate flat COM | n/a | container/target mismatch |
 
-These are observations for search routing, not percentages or source-quality
-judgments.  For contrast, TH02's three rejected MZ program images retain equal
+These are the original pinned ReC98 calibration observations, not current
+OP/MAINE hybrid-replay residuals, percentages, or source-quality judgments.
+For contrast, TH02's three rejected MZ program images retain equal
 sizes and relocation counts and differ outside relocation sites by only 2, 17,
 and 1 bytes.  That makes narrow compiler/source probes efficient there, while
 the large TH04 `OP`/`MAINE` differences require ownership and link-topology

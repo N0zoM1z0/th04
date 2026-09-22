@@ -124,3 +124,15 @@ OP/MAINE are DIET-packed artifacts and there is no honest packed-file byte
 `file_offset` corresponding to these decompressed function bodies. This avoids
 claiming compressed raw-unit exactness while still recording decoded/link exact
 function reconstruction.
+
+## Current replay route (v507)
+
+The historical command above records the original v489 input snapshots; its
+v487/v488 source directories have since been compacted. Use
+`--current-snapshot` with the retained v489 OP/MAINE `a/*/source` trees as
+documented in the [non-MAIN replay handoff](../packed/TH04_NONMAIN_REPLAY_HANDOFF_V507.md).
+The two-cold-build v507 receipt SHA-256 is
+`38894c47024315f857991bda6e5d3d6b0f2852ef66499a82a996cdd5a4322c2f`.
+The six live `units.csv` commands have been updated accordingly. This replay
+preserves the exact ordered relocation tables and shared two-byte program
+residual; it does not alter the acceptance boundary above.

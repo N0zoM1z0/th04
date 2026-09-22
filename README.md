@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="resources/progress.svg" alt="TH04 exact reconstruction progress">
+  <img src="resources/progress.svg" alt="TH04 four-artifact boundary and function acceptance progress">
 </p>
 
 This repository is an agent-first reconstruction of the original Japanese
@@ -46,9 +46,9 @@ a candidate build exactly matches the pinned bytes.
 ## Source layout
 
 As in the TH08 reconstruction, `src/` is organized as product code rather than
-as a progress report. Current reconstructed code is under `src/main/` and its
-engine subsystems. Future artifact-owned code belongs under `src/op/`,
-`src/maine/`, or `src/zun/`; code proved shared between TH04 artifacts belongs
+as a progress report. Current maintained code is under `src/main/`, `src/zun/`,
+and `src/shared/`; future OP/MAINE-owned translation units belong under
+`src/op/` and `src/maine/`. Code proved shared between TH04 artifacts belongs
 under `src/shared/`. Exact, structural, and source-present state is tracked in
 the CSV ledgers, never with `exact/`, `partials/`, or `modules/` directories.
 
@@ -283,7 +283,9 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 - `docs/RUNTIME.md` — optional headless DOSBox-X install, attestation, private
   HDI boot smoke, and deterministic Runtime Oracle requirements.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
-- `docs/PROGRESS.md` — conservative source-present and exact-byte totals.
+- `docs/PROGRESS.md` — generated four-artifact boundary/function routing and
+  MAIN-only file-backed authored-byte totals.
+- `docs/RE_ROADMAP.md` — current non-MAIN work sequence and acceptance gaps.
 - `docs/BOUNDARY_REVIEW.md` — reviewed OP/MAIN/MAINE/ZUN boundary inventory and
   the reproducible DIET/Ghidra/MAP/TASM workflow.
 - `docs/reconstruction/README.md` — focused evidence notes grouped by artifact
@@ -302,24 +304,17 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 
 The control plane, target ingestion, locally attested Borland build chain, OMF
 integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
-attestation, repeated ReC98 TH01-TH05 cold-build calibration, and optional
-headless PC-98 startup/HDI boot smoke are operational. For `MAIN.EXE`, 35,980
-of 36,011 reviewed authored C/C++ bytes and 241 of 243 reviewed functions are
-exact. Nine standalone original-style ASM units add 1,489 exact bytes outside
-that C/C++ denominator. The reviewed nonexact functions are `snd_load` (four blocked bytes) and the
-27-byte `enemy_bullet_template_push`, whose natural TC4 REP-copy setup order
-still differs from target. `dialog_op` and `dialog_run` also have maintained
-source and exact code bytes, but remain outside the reviewed denominator
-because their ordered MZ relocations do not match.
-
-This is not yet a standalone game build. The 132 default exact owners compile
-and raw-match through the pinned ReC98 cold-replay scaffold, but the repository
-does not yet contain all TH04 translation units, local headers, or a complete
-TH04-owned link graph. The completed classification inventory currently routes
-94 OP, 553 MAIN, 72 MAINE, and 13 ZUN authored function candidates; 241 MAIN
-functions are accepted exact, two are blocked, and 489 candidates remain
-unreviewed. `OP.EXE`, `MAINE.EXE`, and `ZUN.COM` still have no accepted
-reconstruction units. No deterministic TH04 runtime scenario exists. Run:
+attestation, ReC98 cold-build calibration, and optional PC-98 startup smoke
+are operational. The current MAIN reviewed authored C/C++ extent is
+83,442 / 83,469 bytes exact; 492 / 494 reviewed authored functions are exact.
+Its remaining 27 bytes are a side lane. OP and MAINE each have three
+decoded/link-exact BGIMAGE functions and target-exact ordered relocations in
+the retained aggregate replay, but no honest packed-file authored-byte
+denominator. ZUN has bounded maintained source and a reproducible source-only
+compile, not an accepted whole-product link. None is a standalone TH04 game
+build yet, and no calibrated deterministic TH04 runtime scenario exists.
+See the [current handoff](docs/RE_HANDOFF.md),
+[roadmap](docs/RE_ROADMAP.md), and four-artifact progress image above. Run:
 
 ```bash
 python3 scripts/status.py

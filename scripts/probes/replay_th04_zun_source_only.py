@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -29,17 +30,34 @@ SOURCES = {
     "cfg_init": "src/zun/config/cfg_init.cpp",
     "main": "src/zun/resident/main.cpp",
 }
-HEADERS = (
-    "src/zun/runtime/api.hpp",
-    "src/zun/config/defaults.hpp",
-    "src/shared/config/cfg.hpp",
-    "src/shared/config/resident.hpp",
-)
+LOCAL_INCLUDE = re.compile(rb'^\s*#\s*include\s+"(src/[^"\r\n]+)"', re.MULTILINE)
 FLAGS = ("-c", "-I.", "-O", "-b-", "-3", "-Z", "-d", "-DGAME=4", "-mt", "-nobj/th04/")
 
 
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def source_closure(root: Path, roots: tuple[str, ...]) -> tuple[str, ...]:
+    """Hash and materialize every repository-local quoted include transitively."""
+
+    source_root = (root / "src").resolve()
+    pending = list(roots)
+    visited: set[str] = set()
+    while pending:
+        relative = pending.pop()
+        path = Path(relative)
+        if path.is_absolute() or not path.parts or path.parts[0] != "src" or ".." in path.parts:
+            raise ValueError(f"unsafe local include: {relative}")
+        if relative in visited:
+            continue
+        source = (root / path).resolve()
+        if not source.is_relative_to(source_root) or not source.is_file():
+            raise ValueError(f"missing or escaping local include: {relative}")
+        visited.add(relative)
+        for match in LOCAL_INCLUDE.finditer(source.read_bytes()):
+            pending.append(match.group(1).decode("ascii"))
+    return tuple(sorted(visited))
 
 
 def build(label: str, output: Path, inputs: dict[str, str]) -> dict[str, dict[str, object]]:
@@ -119,7 +137,10 @@ def main() -> int:
     if sha((ROOT / tcc["path"]).read_bytes()) != tcc["sha256"]:
         raise RuntimeError("active TC4J identity changed")
 
-    inputs = {relative: sha((ROOT / relative).read_bytes()) for relative in (*SOURCES.values(), *HEADERS)}
+    inputs = {
+        relative: sha((ROOT / relative).read_bytes())
+        for relative in source_closure(ROOT, tuple(SOURCES.values()))
+    }
     output.mkdir(parents=True)
     a = build("a", output, inputs)
     b = build("b", output, inputs)
@@ -135,7 +156,10 @@ def main() -> int:
         "runner_sha256": sha(RUNNER.read_bytes()),
         "flags": list(FLAGS),
         "builds": {"a": a, "b": b},
-        "result": "both maintained ZUN C++ translation units compile from six checked-in TH04 source/header files alone",
+        "result": (
+            "both maintained ZUN C++ translation units compile from "
+            f"{len(inputs)} checked-in TH04 source/header files alone"
+        ),
         "limit": "The other ZUN components, libraries, TLINK inputs, and DIET product build are not yet checked in; natural _main remains 246 versus 252 target bytes.",
     }
     path = output / "receipt.json"
