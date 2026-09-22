@@ -154,6 +154,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("op-maine-kaja-v514", saved)[1],
             "scripts/probes/replay_th04_shared_kaja.py",
         )
+        self.assertEqual(
+            acceptance.backend_command("op-maine-mode-v515", saved)[1],
+            "scripts/probes/replay_th04_shared_mode.py",
+        )
         with self.assertRaisesRegex(ValueError, "unknown decoded replay backend"):
             acceptance.backend_command("not-a-backend", saved)
 
@@ -178,6 +182,14 @@ class DecodedAcceptanceTests(unittest.TestCase):
         kaja = next(row for row in entries if row["replay_backend"] == "op-maine-kaja-v514")
         kaja["replay_backend"] = "op-maine-mmd-v513"
         with self.assertRaisesRegex(ValueError, "MMD backend does not compile"):
+            self.check(entries)
+
+
+    def test_mode_backend_is_bound_to_maintained_source(self) -> None:
+        entries = deepcopy(self.entries)
+        mode = next(row for row in entries if row["replay_backend"] == "op-maine-mode-v515")
+        mode["replay_backend"] = "op-maine-kaja-v514"
+        with self.assertRaisesRegex(ValueError, "KAJA backend does not compile"):
             self.check(entries)
 
 
