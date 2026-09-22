@@ -11,6 +11,18 @@ full_keep_dirs = [
   "v489-bgimage-hybrid-replay-003",
 ]
 
+# Human-reviewed historical replay trees whose expanded source copies are
+# superseded by later retained snapshots. Their tracked command strings remain
+# historical records; keep only receipt.json despite those old path mentions.
+superseded_compact_dirs = [
+  "v429-op-current-vs-target-001",
+  "v429-maine-current-vs-target-001",
+  "v466-zunsoft-full-cpp-replay-001",
+  "v478-maine-staff-full-replay-001",
+  "v487-maine-score-super-replay-001",
+  "v488-op-score-group-replay-002",
+]
+
 # Extra files required by current replay commands when a referenced experiment
 # directory is compacted. `receipt.json` is always retained automatically.
 [compact_keep_files]

@@ -194,10 +194,13 @@ python3 scripts/prune_analysis.py --apply --compact-referenced  # prune + safe r
 ```
 
 Referenced directories are compacted only when tracked references are limited
-to the directory/receipt plus explicitly configured small replay dependencies;
-any `a/source` or other unlisted file reference automatically prevents
-compaction. Expanded exact-unit replay trees can be regenerated from checked-in
-source once their receipt SHA-256 is durable.
+to the directory/receipt plus explicitly configured small replay dependencies.
+A small explicit `superseded_compact_dirs` allowlist covers human-reviewed old
+replays whose `a/source` snapshots have been replaced by later retained source
+trees; their historical command strings may therefore mention paths that are no
+longer kept locally. The durable evidence is the receipt/hash, not permanent
+retention of every cold-build tree. Expanded exact-unit replay trees can likewise
+be regenerated from checked-in source once their receipt SHA-256 is durable.
 
 ## Finish every reconstruction packet
 

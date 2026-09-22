@@ -69,8 +69,9 @@ def compact_plan(
     refs: dict[str, set[str]],
     protected: set[str],
     extra_keep: dict[str, list[str]],
-) -> list[tuple[Path, int, set[str]]]:
-    plan: list[tuple[Path, int, set[str]]] = []
+    superseded: set[str],
+) -> list[tuple[Path, int, set[str], bool]]:
+    plan: list[tuple[Path, int, set[str], bool]] = []
     for path in sorted(root.iterdir(), key=lambda p: p.name):
         if not path.is_dir() or path.is_symlink() or path.name in protected:
             continue
@@ -82,7 +83,8 @@ def compact_plan(
         keep = {"receipt.json", *extra_keep.get(path.name, [])}
         referenced = refs[path.name]
         allowed_refs = {"", *keep}
-        if not referenced.issubset(allowed_refs):
+        forced = path.name in superseded
+        if not forced and not referenced.issubset(allowed_refs):
             continue
         missing = [rel for rel in keep if not (path / rel).is_file()]
         if missing:
@@ -90,7 +92,7 @@ def compact_plan(
         current = tree_bytes(path)
         kept = sum((path / rel).stat().st_size for rel in keep)
         if current > kept:
-            plan.append((path, current - kept, keep))
+            plan.append((path, current - kept, keep, forced))
     return plan
 
 
@@ -130,6 +132,10 @@ def main() -> int:
 
     protected = set(cfg.get("full_keep_dirs", []))
     extra_keep = {str(k): list(v) for k, v in cfg.get("compact_keep_files", {}).items()}
+    superseded = set(cfg.get("superseded_compact_dirs", []))
+    overlap = protected & superseded
+    if overlap:
+        raise SystemExit(f"retention config conflict: protected and superseded: {sorted(overlap)}")
     refs = tracked_reference_map()
 
     delete_candidates: list[tuple[Path, int]] = []
@@ -144,10 +150,11 @@ def main() -> int:
         delete_candidates.append((path, tree_bytes(path)))
 
     compact_candidates = (
-        compact_plan(root, refs, protected, extra_keep) if args.compact_referenced else []
+        compact_plan(root, refs, protected, extra_keep, superseded)
+        if args.compact_referenced else []
     )
     delete_total = sum(size for _, size in delete_candidates)
-    compact_total = sum(size for _, size, _ in compact_candidates)
+    compact_total = sum(size for _, size, _, _ in compact_candidates)
     mode = "APPLY" if args.apply else "DRY-RUN"
     print(
         f"analysis prune [{mode}]: delete {len(delete_candidates)} dirs / "
@@ -156,14 +163,15 @@ def main() -> int:
     )
     for path, size in sorted(delete_candidates, key=lambda item: item[1], reverse=True):
         print(f"  DELETE  {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
-    for path, size, keep in sorted(compact_candidates, key=lambda item: item[1], reverse=True):
+    for path, size, keep, forced in sorted(compact_candidates, key=lambda item: item[1], reverse=True):
         kept = ", ".join(sorted(keep))
-        print(f"  COMPACT {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}  keep=[{kept}]")
+        mode = "SUPERSEDED" if forced else "COMPACT"
+        print(f"  {mode:10s} {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}  keep=[{kept}]")
 
     if args.apply:
         for path, _ in delete_candidates:
             shutil.rmtree(path)
-        for path, _, keep in compact_candidates:
+        for path, _, keep, _ in compact_candidates:
             compact_directory(path, keep)
         print(
             f"analysis prune: removed {len(delete_candidates)} dirs; "
