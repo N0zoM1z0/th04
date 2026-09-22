@@ -116,5 +116,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
             self.check(entries)
 
 
+    def test_frame_delay_backend_is_bound_to_maintained_source_and_artifact(self) -> None:
+        entries = deepcopy(self.entries)
+        frame = next(row for row in entries if row["replay_backend"] == "op-maine-frame-delay-v510")
+        frame["replay_backend"] = "op-maine-vram-v509"
+        with self.assertRaisesRegex(ValueError, "VRAM backend does not compile"):
+            self.check(entries)
+
+
 if __name__ == "__main__":
     unittest.main()
