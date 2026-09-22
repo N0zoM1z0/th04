@@ -1,0 +1,12 @@
+schema_version = 1
+
+gpt_web_root = ".analysis/gpt-web"
+
+# These top-level analysis directories contain source snapshots still used by
+# current replay commands. Keep them even if a future documentation edit stops
+# mentioning them explicitly.
+full_keep_dirs = [
+  "v401-master-vs-object-replay-001",
+  "v402-opmusic-hybrid-replay-001",
+  "v489-bgimage-hybrid-replay-003",
+]

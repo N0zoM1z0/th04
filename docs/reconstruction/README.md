@@ -6,6 +6,10 @@ not define current progress or exactness by themselves.
 
 ## Active frontiers
 
+Only the links in this section and `docs/RE_HANDOFF.md` describe the current
+frontier. Versioned notes outside this list are historical snapshots and may
+contain residual counts that were correct only at that packet.
+
 ### MAIN.EXE
 
 - [Checkerboard counted-LOOP blocker](main/TH04_MAIN_CHECKERBOARD_V396.md)
@@ -15,14 +19,12 @@ not define current progress or exactness by themselves.
 
 ### OP / MAINE / packed artifacts
 
-- [master.lib object-boundary frontier](packed/TH04_MASTER_OBJECT_BOUNDARIES_V397.md)
-- [Decoded payload frontier](packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
-- [BGIMAGE natural-source frontier](op-maine/TH04_BGIMAGE_NATURAL_V247.md)
-- [BGIMAGE hybrid producer closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
-- [OP ZUNSOFT natural-C++ frontier](op-maine/TH04_OP_ZUNSOFT_CPP_V463.md)
+- [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
-- [MAINE verdict natural-C++ frontier](op-maine/TH04_MAINE_VERDICT_CPP_V471.md)
-- [MAINE SCORE_TEXT natural-C++ frontier](op-maine/TH04_MAINE_SCORE_CPP_V479.md)
+- [DIET MZ partition / derived minalloc](packed/TH04_DIET145F_MZ_PARTITION_V231.md)
+- [Packed BGM-BSS file-backing mechanism](packed/TH04_BGM_BSS_FILEBACK_V492.md)
+- [ZUN-modified MASTER provenance](packed/TH04_ZUN_MASTER_VERSION_V493.md)
+- [BGM BSS Reduction #172 provenance](packed/TH04_BGM_BSS_REDUCTION172_V494.md)
 
 ### ZUN.COM
 
@@ -51,7 +53,8 @@ and Git history instead of remaining in the routine documentation surface.
 | [`zun/`](zun/) | ZUN.COM resident, configuration, and support code |
 
 Version suffixes remain in filenames so old evidence and Git history stay
-addressable. Continue an existing subject note when an experiment advances the
+addressable. Treat every versioned note as state-at-that-packet unless it is
+listed under Active frontiers above. Continue an existing subject note when an experiment advances the
 same claim. Add a new note only for a distinct ownership decision, reusable
 negative result, or replay boundary. Keep live priorities in
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) and live counts in the CSV ledgers and
