@@ -18,6 +18,7 @@ not define current progress or exactness by themselves.
 - [master.lib object-boundary frontier](packed/TH04_MASTER_OBJECT_BOUNDARIES_V397.md)
 - [Decoded payload frontier](packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
 - [BGIMAGE natural-source frontier](op-maine/TH04_BGIMAGE_NATURAL_V247.md)
+- [BGIMAGE hybrid producer closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP ZUNSOFT natural-C++ frontier](op-maine/TH04_OP_ZUNSOFT_CPP_V463.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [MAINE verdict natural-C++ frontier](op-maine/TH04_MAINE_VERDICT_CPP_V471.md)

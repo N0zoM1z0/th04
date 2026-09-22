@@ -233,6 +233,15 @@ python3 scripts/audit_compat_dependencies.py --check
   hi_view 38`, making OP indices 403..465 target exact. OP ordered residual
   drops **71 -> 8**. OP and MAINE now both have exactly one shared blocker:
   BGIMAGE's eight reversed segment relocations.
+- v489 closes the shared BGIMAGE blocker with maintained
+  `hybrid-cpp-symbolic-lowlevel` source, following the accepted v393/v394
+  provenance model. Independent TH05 OP/MAINE targets preserve the same full
+  0xD0 segment-stack / REP MOVSD / EVEN architecture. Product source contains
+  no emitted opcode bytes or codestring. `TCC -B -> TASM32` yields exact code
+  and target FIXUPPs; OP indices 186..193 and MAINE 80..87 become exact. Both
+  complete MZ relocation tables are now **100% target-index exact** (804/804 and
+  559/559). The only decoded program-image residual in either artifact is the
+  shared two-byte `snd_load` encoding.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -243,8 +252,9 @@ python3 scripts/audit_compat_dependencies.py --check
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
-   The `hi_view` / `score_e` historical TU split is closed by v488. Attack only
-   shared BGIMAGE internal direction (8 relocation entries in each OP/MAINE). MAINE SCORE_TEXT is fully closed through source, physical TC86 producer, and target relocation order as of v487. Continue only the shared BGIMAGE 8-entry reverse.
+   v488/v489 close OP/MAINE SCORE and BGIMAGE relocation order. Both MZ relocation
+   tables are target-index exact; continue only the shared `snd_load` two-byte
+   program-image encoding and the independent historical packed-header/minalloc provenance. MAINE SCORE_TEXT is fully closed through source, physical TC86 producer, and target relocation order as of v487. Continue only the shared BGIMAGE 8-entry reverse.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
    switch routes and pinned TASM5 option/version emulation are closed; do not
