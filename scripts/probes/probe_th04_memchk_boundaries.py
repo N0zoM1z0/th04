@@ -1,0 +1,305 @@
+#!/usr/bin/env python3
+"""Review TH04 MEMCHK authored-function boundaries on target bytes.
+
+The retained assembly is IDA-generated and is used only for PROC-entry
+corroboration. Boundary acceptance comes from the hash-attested target bytes.
+"""
+
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+import tomllib
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from boundary_review.export_tasm_function_boundaries import export as export_tasm
+from replay_th04_zun_source_only import PAYLOAD, PAYLOAD_SHA256, sha
+
+CANDIDATE_ROOT = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a/op/source"
+COMPONENT_START = 0x2440
+COMPONENT_SIZE = 0x0FE2
+COMPONENT_RUNTIME_BASE = 0x100
+COMPONENT_SHA256 = "2531795670b5cafb65bf261f499d5d77b71aeaf26015f8481000cdbb96272dfc"
+SOURCE_SHA256 = "37738cdf77006976928c78b9da207ecb4c35a5b155e5c28f3d62f4f9deaf57fa"
+MAP_SHA256 = "9ee17529c50af3d01aeb58507474d43e6a2d7f6fa664d3c6ccb94a38d46c3079"
+AUTHORED_RUNTIME_START = 0x367
+AUTHORED_RUNTIME_END = 0x3CA
+
+FUNCTIONS = (
+    ("_main", 0x367, 0x38D, "near", "ret", ""),
+    ("sub_38E", 0x38E, 0x3B5, "near", "ret", "0x2"),
+    ("sub_3B6", 0x3B6, 0x3CA, "near", "ret", ""),
+)
+PADDING = (
+    (0x38D, 0x00),
+    (0x3B5, 0x90),
+)
+EXPECTED_EDGES = {
+    "_main": (
+        (0x36B, "call", 0x3B6),
+        (0x374, "call", 0x38E),
+        (0x37C, "ja", 0x389),
+        (0x381, "call", 0x38E),
+    ),
+    "sub_38E": (
+        (0x399, "jz", 0x3B0),
+        (0x39F, "jnz", 0x3A7),
+        (0x3AE, "jnz", 0x39D),
+    ),
+    "sub_3B6": (
+        (0x3C0, "jnz", 0x3C6),
+    ),
+}
+
+
+def digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def payload_offset(runtime: int) -> int:
+    return COMPONENT_START + runtime - COMPONENT_RUNTIME_BASE
+
+
+def parse_ndisasm(ndisasm: str, data: bytes, origin: int) -> list[dict[str, object]]:
+    completed = subprocess.run(
+        [ndisasm, "-b16", f"-o0x{origin:X}", "-"],
+        input=data, capture_output=True, check=True,
+    )
+    pattern = re.compile(
+        rb"^([0-9A-Fa-f]+)\s+([0-9A-Fa-f]+)\s+([A-Za-z0-9]+)\s*(.*)$"
+    )
+    rows = []
+    for raw in completed.stdout.splitlines():
+        match = pattern.match(raw)
+        if not match:
+            raise RuntimeError(f"unexpected ndisasm line: {raw!r}")
+        hex_bytes = match[2].decode("ascii")
+        rows.append({
+            "address": int(match[1], 16),
+            "size": len(hex_bytes) // 2,
+            "hex": hex_bytes.lower(),
+            "mnemonic": match[3].decode("ascii").lower(),
+            "operands": match[4].decode("ascii").strip().lower(),
+            "text": raw.decode("ascii"),
+        })
+    return rows
+
+
+def branch_edges(rows: list[dict[str, object]]) -> tuple[tuple[int, str, int], ...]:
+    result = []
+    for row in rows:
+        mnemonic = str(row["mnemonic"])
+        if not (mnemonic == "call" or mnemonic.startswith("j")):
+            continue
+        target = re.search(r"0x([0-9a-f]+)", str(row["operands"]))
+        if target:
+            result.append((int(row["address"]), mnemonic, int(target.group(1), 16)))
+    return tuple(result)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    args = parser.parse_args()
+    output = args.output_dir.resolve()
+    private = (ROOT / ".analysis/reconstruction/probes").resolve()
+    if output.exists() or output.parent != private:
+        parser.error("output directory must be new directly below .analysis/reconstruction/probes")
+
+    subprocess.run(
+        [sys.executable, "scripts/preflight.py"], cwd=ROOT,
+        check=True, capture_output=True, text=True,
+    )
+    retention = tomllib.loads(
+        (ROOT / "config/analysis_retention.toml").read_text(encoding="utf-8")
+    )
+    if "v489-bgimage-hybrid-replay-003" not in retention["full_keep_dirs"]:
+        raise RuntimeError("retained v489 source snapshot is no longer pinned")
+
+    payload = PAYLOAD.read_bytes()
+    if sha(payload) != PAYLOAD_SHA256:
+        raise RuntimeError("decoded ZUN payload identity drift")
+    component = payload[COMPONENT_START:COMPONENT_START + COMPONENT_SIZE]
+    if len(component) != COMPONENT_SIZE or sha(component) != COMPONENT_SHA256:
+        raise RuntimeError("target MEMCHK component identity drift")
+
+    source = CANDIDATE_ROOT / "th04_memchk.asm"
+    map_path = CANDIDATE_ROOT / "obj/th04/memchk.map"
+    linked = CANDIDATE_ROOT / "bin/th04/memchk.com"
+    if (
+        digest(source) != SOURCE_SHA256
+        or digest(map_path) != MAP_SHA256
+        or digest(linked) != COMPONENT_SHA256
+        or linked.read_bytes() != component
+    ):
+        raise RuntimeError("retained target-derived MEMCHK corroboration scaffold drift")
+    source_text = source.read_text(encoding="cp932", errors="strict")
+    if "generated by The Interactive Disassembler (IDA)" not in source_text:
+        raise RuntimeError("MEMCHK candidate no longer carries IDA-generated provenance header")
+
+    output.mkdir()
+    tasm_dir = output / "tasm"
+    rows = export_tasm(CANDIDATE_ROOT, tasm_dir)
+    actual_entries = [
+        row for row in rows
+        if row["artifact"] == "th04-zun" and row["module"] == "th04_memchk.asm"
+    ]
+    expected_entries = [
+        {
+            "payload_offset": f"0x{payload_offset(start):X}",
+            "name": name,
+            "distance": distance,
+        }
+        for name, start, _end, distance, _term, _operand in FUNCTIONS
+    ]
+    compact_actual = [
+        {
+            "payload_offset": row["payload_offset"],
+            "name": row["name"],
+            "distance": row["distance"],
+        }
+        for row in actual_entries
+    ]
+    if compact_actual != expected_entries:
+        raise RuntimeError(f"fresh TASM MEMCHK PROC inventory drift: {compact_actual!r}")
+
+    ndisasm = shutil.which("ndisasm")
+    if not ndisasm:
+        raise RuntimeError("ndisasm is required")
+
+    function_receipts = []
+    padding_receipts = []
+    all_edges = []
+    for name, start, end, distance, terminal, terminal_operands in FUNCTIONS:
+        body = component[
+            start - COMPONENT_RUNTIME_BASE:
+            end - COMPONENT_RUNTIME_BASE
+        ]
+        decoded = parse_ndisasm(ndisasm, body, start)
+        if not decoded:
+            raise RuntimeError(f"{name}: target body did not decode")
+        if int(decoded[0]["address"]) != start:
+            raise RuntimeError(f"{name}: target entry drift")
+        last = decoded[-1]
+        if int(last["address"]) + int(last["size"]) != end:
+            raise RuntimeError(f"{name}: instruction stream does not close at extent end")
+        if last["mnemonic"] != terminal:
+            raise RuntimeError(f"{name}: terminal mnemonic drift: {last}")
+        if terminal_operands and last["operands"] != terminal_operands:
+            raise RuntimeError(f"{name}: terminal operands drift: {last}")
+        edges = branch_edges(decoded)
+        if edges != EXPECTED_EDGES[name]:
+            raise RuntimeError(f"{name}: target control-flow edge drift: {edges!r}")
+        all_edges.extend(edges)
+        function_receipts.append({
+            "name": name,
+            "distance": distance,
+            "runtime_start": f"0x{start:X}",
+            "runtime_end": f"0x{end:X}",
+            "payload_offset": f"0x{payload_offset(start):X}",
+            "size": end - start,
+            "target_slice_sha256": sha(body),
+            "instruction_count": len(decoded),
+            "terminal": decoded[-1]["text"],
+            "edges": [
+                {"source": f"0x{s:X}", "kind": k, "target": f"0x{t:X}"}
+                for s, k, t in edges
+            ],
+        })
+        (output / f"{name}.ndisasm").write_text(
+            "\n".join(str(row["text"]) for row in decoded) + "\n",
+            encoding="ascii",
+        )
+
+    padding_runtime = {runtime for runtime, _value in PADDING}
+    for runtime, expected in PADDING:
+        actual = component[runtime - COMPONENT_RUNTIME_BASE]
+        if actual != expected:
+            raise RuntimeError(
+                f"MEMCHK padding drift at runtime {runtime:#x}: {actual:#x}"
+            )
+        if any(target == runtime for _source, _kind, target in all_edges):
+            raise RuntimeError(f"MEMCHK control flow targets padding at {runtime:#x}")
+        padding_receipts.append({
+            "runtime_offset": f"0x{runtime:X}",
+            "payload_offset": f"0x{payload_offset(runtime):X}",
+            "value": expected,
+        })
+
+    partition = sorted(
+        [(start, end, "code") for _name, start, end, *_rest in FUNCTIONS]
+        + [(runtime, runtime + 1, "padding") for runtime, _value in PADDING]
+    )
+    cursor = AUTHORED_RUNTIME_START
+    for start, end, _kind in partition:
+        if start != cursor or end <= start:
+            raise RuntimeError(f"MEMCHK authored contribution gap/overlap at {cursor:#x}")
+        cursor = end
+    if cursor != AUTHORED_RUNTIME_END:
+        raise RuntimeError("MEMCHK authored CODE contribution partition is incomplete")
+
+    tasm_receipt = json.loads((tasm_dir / "receipt.json").read_text(encoding="utf-8"))
+    receipt = {
+        "schema_version": 1,
+        "observed_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "claim_scope": "TH04 MEMCHK target-local authored function boundaries and padding partition",
+        "target_payload_sha256": PAYLOAD_SHA256,
+        "component_payload_offset": f"0x{COMPONENT_START:X}",
+        "component_size": COMPONENT_SIZE,
+        "component_sha256": COMPONENT_SHA256,
+        "candidate_source_sha256": SOURCE_SHA256,
+        "candidate_map_sha256": MAP_SHA256,
+        "candidate_linked_component_raw_equal": True,
+        "candidate_source_generated_by_ida": True,
+        "authored_code_payload_offset": f"0x{payload_offset(AUTHORED_RUNTIME_START):X}",
+        "authored_code_size": AUTHORED_RUNTIME_END - AUTHORED_RUNTIME_START,
+        "tasm_function_csv_sha256": tasm_receipt["function_csv_sha256"],
+        "tasm_listing_sha256": next(
+            row["listing_sha256"] for row in tasm_receipt["listings"]
+            if row["artifact"] == "th04-zun"
+            and row["source"] == "th04_memchk.asm"
+        ),
+        "ndisasm_path": ndisasm,
+        "ndisasm_sha256": digest(Path(ndisasm)),
+        "functions": function_receipts,
+        "padding": padding_receipts,
+        "authored_code_partition_complete": True,
+        "conclusion": (
+            "The 0x63-byte target MEMCHK authored CODE contribution is tiled by "
+            "three physical functions plus two one-byte padding gaps. Target "
+            "control flow closes each function independently and does not enter "
+            "either padding byte."
+        ),
+        "limit": (
+            "The candidate assembly is explicitly IDA-generated and the raw-equal "
+            "linked MEMCHK component is corroboration only. This receipt proves "
+            "physical function boundaries and padding separation, not original "
+            "ASM provenance or authored exactness."
+        ),
+    }
+    path = output / "receipt.json"
+    path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({
+        row["name"]: {
+            "payload_offset": row["payload_offset"],
+            "size": row["size"],
+            "terminal": row["terminal"],
+        }
+        for row in function_receipts
+    }, sort_keys=True))
+    print(json.dumps({"padding": padding_receipts}, sort_keys=True))
+    print(f"receipt: {path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

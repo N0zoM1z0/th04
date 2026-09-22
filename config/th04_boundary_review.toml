@@ -337,3 +337,42 @@ expected_tasm_proc = "start_0"
 reviewed_body_size = 0xDA
 review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
 notes = "Target main body terminates with DOS INT 21h/AH=4Ch at runtime 0x40B; trailing 0x168 bytes are data, not the extra Ghidra ranges."
+
+
+# MEMCHK target-reviewed authored CODE extents. The retained source explicitly
+# identifies itself as IDA-generated, so fresh TASM PROC entries corroborate
+# starts only. v521 independently closes each function on target bytes and
+# keeps the two one-byte gaps outside all authored function extents.
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x26A7
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_memchk.asm"
+expected_tasm_proc = "_main"
+reviewed_body_size = 0x26
+review_evidence_id = "ev-th04-zun-memchk-boundaries-v521"
+notes = "Target _main closes at RET; following payload 0x26CD byte 0x00 is external padding."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x26CE
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_memchk.asm"
+expected_tasm_proc = "sub_38E"
+reviewed_body_size = 0x27
+review_evidence_id = "ev-th04-zun-memchk-boundaries-v521"
+notes = "Target helper closes at RET 2; following payload 0x26F5 byte 0x90 is external padding."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x26F6
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_memchk.asm"
+expected_tasm_proc = "sub_3B6"
+reviewed_body_size = 0x14
+review_evidence_id = "ev-th04-zun-memchk-boundaries-v521"
+notes = "Target memory query helper closes at RET at the end of the authored MEMCHK CODE contribution."
