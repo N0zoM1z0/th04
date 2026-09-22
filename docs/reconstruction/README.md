@@ -19,6 +19,7 @@ not define current progress or exactness by themselves.
 - [Decoded payload frontier](packed/TH04_PACKED_PAYLOAD_FRONTIER_V218.md)
 - [BGIMAGE natural-source frontier](op-maine/TH04_BGIMAGE_NATURAL_V247.md)
 - [OP ZUNSOFT natural-C++ frontier](op-maine/TH04_OP_ZUNSOFT_CPP_V463.md)
+- [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [MAINE verdict natural-C++ frontier](op-maine/TH04_MAINE_VERDICT_CPP_V471.md)
 - [MAINE SCORE_TEXT natural-C++ frontier](op-maine/TH04_MAINE_SCORE_CPP_V479.md)
 

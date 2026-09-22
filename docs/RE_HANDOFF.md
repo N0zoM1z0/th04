@@ -227,6 +227,12 @@ python3 scripts/audit_compat_dependencies.py --check
   relative switch-table fixups. Linked program bytes stay unchanged; SCORE
   indices 291..346 become target-index exact and MAINE ordered residual drops
   **42 -> 8**. Only shared BGIMAGE indices 80..87 remain.
+- v488 applies the same physical-producer recovery to OP: `score_db` (0xAD) +
+  `score_e` (0x65) + `hi_view` (0x60B) compile as one 0x71D TC86 SCORE_TEXT TU.
+  Natural 0x3FE/0x31F LEDATA batching emits `hi_view 23 -> score_e 2 ->
+  hi_view 38`, making OP indices 403..465 target exact. OP ordered residual
+  drops **71 -> 8**. OP and MAINE now both have exactly one shared blocker:
+  BGIMAGE's eight reversed segment relocations.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -237,8 +243,8 @@ python3 scripts/audit_compat_dependencies.py --check
    optimizer, register-form, HDI-remnant, or cross-game scans by default.
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
-   Attack only BGIMAGE internal direction (8 relocation entries) and the
-   `hi_view` / `score_e` historical TU split (63 entries). MAINE SCORE_TEXT is fully closed through source, physical TC86 producer, and target relocation order as of v487. Continue only the shared BGIMAGE 8-entry reverse.
+   The `hi_view` / `score_e` historical TU split is closed by v488. Attack only
+   shared BGIMAGE internal direction (8 relocation entries in each OP/MAINE). MAINE SCORE_TEXT is fully closed through source, physical TC86 producer, and target relocation order as of v487. Continue only the shared BGIMAGE 8-entry reverse.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
    switch routes and pinned TASM5 option/version emulation are closed; do not

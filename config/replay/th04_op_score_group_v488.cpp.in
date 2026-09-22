@@ -1,0 +1,3 @@
+#include "th04/score_db.cpp"
+#include "th04/score_e.cpp"
+#include "th04/hi_view.cpp"
