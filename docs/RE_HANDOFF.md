@@ -220,6 +220,13 @@ python3 scripts/audit_compat_dependencies.py --check
   ordered differences (SCORE 36 + BGIMAGE 8), so no packed credit is claimed.
   SCORE response-position sweeps and `-y` metadata do not change its relative
   36-site order; remaining SCORE work is historical OMF/library topology.
+- v487 restores that historical SCORE physical producer: `score_d` (0x58) +
+  `score_hi` (0x211) + v486 SCORE compile as one grouped `SCORE_TEXT` TC86 TU.
+  The preceding 0x269 bytes naturally shift LEDATA batching to 0x400/0x3FD/0x333
+  while one top-level `#pragma codeseg SCORE_TEXT score_01` preserves group-
+  relative switch-table fixups. Linked program bytes stay unchanged; SCORE
+  indices 291..346 become target-index exact and MAINE ordered residual drops
+  **42 -> 8**. Only shared BGIMAGE indices 80..87 remain.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -231,7 +238,7 @@ python3 scripts/audit_compat_dependencies.py --check
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
    Attack only BGIMAGE internal direction (8 relocation entries) and the
-   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v486 closes all SCORE executable source bytes; continue only the historical SCORE OMF/library record topology that yields the target 36-site cross-record interleave, then shared BGIMAGE direction.
+   `hi_view` / `score_e` historical TU split (63 entries). MAINE SCORE_TEXT is fully closed through source, physical TC86 producer, and target relocation order as of v487. Continue only the shared BGIMAGE 8-entry reverse.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10
    switch routes and pinned TASM5 option/version emulation are closed; do not

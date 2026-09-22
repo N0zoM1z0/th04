@@ -1,0 +1,5 @@
+#pragma codeseg SCORE_TEXT score_01
+#include "th04/score_d.cpp"
+#include "th04/score_e.cpp"
+#include "th04/hi_end.cpp"
+#include "th04/score86.cpp"

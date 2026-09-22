@@ -490,3 +490,90 @@ Both v486 A/B replays produce:
 
 Private receipt SHA-256:
 `7b5e5863dc6f1310de87fe38967a55e09f1529324c39f999d904fca398c16af9`.
+
+## v487 historical SCORE_TEXT physical producer
+
+v486 proves all residual SCORE executable source bytes, but its isolated
+`0x8C7` object starts LEDATA batching at object offset zero and therefore does
+not reproduce the packed target's cross-record relocation order. The successful
+mechanism mirrors MAIN dialog v381: recover the **larger physical TC86 producer**
+that precedes the residual block.
+
+The final SCORE_TEXT layout already contains two exact C++ contributions before
+the reconstructed owner:
+
+- `score_d`: `0x58` bytes;
+- combined `score_hi`: `0x211` bytes.
+
+Together they contribute `0x269` bytes. v487 compiles
+
+`score_d + score_hi + complete v486 SCORE`
+
+as one TC86 translation unit. A single top-level
+
+```cpp
+#pragma codeseg SCORE_TEXT score_01
+```
+
+creates one grouped `SCORE_TEXT` SEGDEF; later duplicate `-zCSCORE_TEXT` and
+per-function reopen pragmas are suppressed only as compile-scaffold hygiene so
+all code remains in that one physical segment contribution.
+
+### Natural OMF batching
+
+The resulting `0xB30` CODE contribution has TC86 LEDATA extents:
+
+- `0x000..0x3FF` (`0x400` bytes);
+- `0x400..0x7FC` (`0x3FD` bytes);
+- `0x7FD..0xB2F` (`0x333` bytes).
+
+These shifted boundaries naturally produce the target SCORE relocation table
+order. Keeping the segment in group `SCORE_01` is essential: it preserves the
+OMF offset fixups for `regist_menu()`'s switch dispatch base and jump table.
+A control with the same single SEGDEF but no group generated segment-local
+constants and changed exactly those 10 linked words; grouping restores their
+target values without patching.
+
+The super-TU raw SCORE code SHA-256 is
+`d8180ee4acb342cefe168337bb6dff4986b6bac625a4c614128c1b9430cec693`.
+Six raw bytes differ from the previously split `score_d + score_hi` objects only
+because same-TU local offset references no longer carry external addends; TLINK
+resolves the combined contribution to the exact target SCORE slice SHA-256
+`a7ccdd75806f46444a768186f6661ba31c69bd7bdb3163229428488860db24a0`.
+
+### Packed closure
+
+Both v487 A/B replays produce:
+
+- MAINE SHA-256
+  `b8aa92ccea28a435a17e6bd9bab39507b851cbaa6ece281552daa553efbd411f`;
+- MAP SHA-256
+  `f4581d687d59e880962cee121a1edbb5246e248fff82b851319ac2522210455a`;
+- unchanged program-image SHA-256
+  `0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`;
+- target-equal 559-site relocation multiset;
+- every SCORE relocation at indices `291..346` target-index exact;
+- **551 / 559 same-index relocations**, reducing ordered residual from
+  **42 to 8**.
+
+The only remaining ordered differences are indices `80..87`, the shared
+BGIMAGE block:
+
+candidate:
+`0xD6ED, 0xD6E4, 0xD6DB, 0xD6D2, 0xD656, 0xD64B, 0xD640, 0xD635`
+
+target:
+`0xD635, 0xD640, 0xD64B, 0xD656, 0xD6D2, 0xD6DB, 0xD6E4, 0xD6ED`.
+
+The shared `snd_load` payload encoding remains the independent two-byte
+`8B D8` versus target `89 C3` residual and is unchanged by this packet.
+
+Private receipt SHA-256:
+`081987dbb7b368139cdf5067b4fe546a3c7f892beff948aaec87e722bbbf4e61`.
+
+## Updated MAINE frontier after v487
+
+SCORE_TEXT source, machine code, physical-TU batching, and relocation order are
+closed. MAINE packed relocation order now has exactly one blocker: the shared
+8-entry BGIMAGE reverse. Do not revisit SCORE function spelling or manually
+permute relocation records.
