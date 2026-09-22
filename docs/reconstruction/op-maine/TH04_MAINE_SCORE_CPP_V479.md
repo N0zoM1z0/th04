@@ -313,3 +313,53 @@ Private receipt SHA-256:
 **No exact or packed-file credit is granted by v483.** Continue the EGC tail and
 SCORE record-ownership analysis independently; do not hand-encode the remaining
 zero-test instruction.
+
+## v484 `score_rect_copy()`
+
+The final SCORE_TEXT function at load `0xCBF3` is a `0x86`-byte EGC-assisted
+rectangle copy helper. Its preceding `0x43` EGC-start routine remains assembly-
+owned in this packet; only the rectangle loop moves to natural C++.
+
+The checked source computes the VRAM byte offset, converts width to 16-dot
+words, walks rows/words, toggles the transfer port around a VRAM read, writes the
+captured word back, and finally disables EGC. No inline assembly or emitted
+opcode bytes are used in the recovered function itself.
+
+Pinned TC86 emits exactly `0x86` bytes. Relative to the old same-object TASM
+body, raw offsets `0x0A..0x0B` differ only because the call to the preceding EGC
+start helper is now an external same-segment near call with a zero addend plus
+FIXUPP. The retained TASM SCORE head similarly differs at only offsets
+`0x2F5..0x2F6`, where the earlier name/cursor helper now calls the C++ rectangle
+copy through an external same-segment symbol. TLINK resolves both forms to the
+same final machine code.
+
+Both A/B replays produce:
+
+- MAINE SHA-256 unchanged from v478:
+  `45aa099ecb29aee883c29ea37c7ad8493ed1871e8b3694a19b63b8e28c331989`;
+- MAP SHA-256
+  `162d50edd4600047c1cb922a49c842a5ba40adedd091c56395bc0781b70654a3`;
+- unchanged program-image SHA-256
+  `0f9658c8a89a6e29d4eb0eba852299b1b2c08037f79ec76ce1f9d0981e1a34d1`;
+- natural C++ raw helper SHA-256
+  `d0b6cdfac6dbbf9f4ac811380e98d216bec149b7c8536b3a8a4831bfdf9e50c4`;
+- target-exact linked helper SHA-256
+  `86b8046d73b79655f913d1b7f62c34db3a3f6d43ffc168b9a4c855e78b7d7d2f`;
+- all 559 relocation entries byte-for-byte unchanged from v478;
+- ordered residual still **42** by design.
+
+Private receipt SHA-256:
+`cef7d44132d366839f13d267ba1838e9e8527014fbdc5e53787355ad637feea4`.
+
+### Remaining SCORE tail
+
+Only two source frontiers remain inside the reconstructed SCORE owner:
+
+1. `regist_menu()`, already narrowed by v483 to one 4-byte zero-test peephole;
+2. the preceding `0x43` EGC-start helper, where the current natural C++/intrinsic
+   form is 66/67 bytes because TC86 emits `XOR AX,AX` instead of target
+   `MOV AX,0`.
+
+Neither is credited as exact yet. Once both join the same TC86 producer as the
+v482 prefix, re-measure the 34 SCORE relocation entries; do not permute MZ
+records.
