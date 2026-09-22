@@ -154,7 +154,9 @@ Primary packed notes:
   placement (v502): a small body helper inlines byte-identically while helpers
   owning the countdown remain CALL-based; none emits LOOP;
 - carpet natural opcode/source-lineage/cross-artifact scans (v396, v404-v405,
-  v409-v424);
+  v409-v424), plus inline-helper expansion (v503): all tested helpers fully
+  inline but preserve the non-target IMUL, MOV/INC, register-direction,
+  zeroing, doubling, and shift lowerings;
 - `snd_load` ordinary register/alias/codegen and cross-game provenance searches
   documented through v391/v392 and the compiler probe notes;
 - active TLINK 6.10 `/i`, `/e`, `/P`, `/f` and related layout-switch searches

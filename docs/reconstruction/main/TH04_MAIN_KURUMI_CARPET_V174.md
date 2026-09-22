@@ -497,3 +497,36 @@ Private receipt SHA-256:
 This strengthens the provenance negative beyond a literal opcode/constant scan.
 It changes no physical accounting: carpet remains **67 exact + 23 blocked bytes**
 and the complete function stays blocked.
+
+## v503 inline-helper codegen surface
+
+The v411, v417, and v418 probes test direct natural source forms. A separate
+Turbo C++ mechanism remained worth isolating after v501/v502: an inline helper
+can alter pseudo-register lowering even when its source semantics are unchanged.
+
+scripts/probes/probe_tc4_carpet_inline_helpers_v503.py tests thirteen natural
+C++ candidates under the pinned TCC 4.02 profile. The matrix covers unsigned
+AX-by-BX multiplication through inline returns, inline writes, and value
+arguments; fixed-SI byte loading through inline returns, writes, and pointer
+arguments; and inline AX-to-SI, DX-to-DI, DX-zero, BX-doubling, and DI-shift
+helpers. No inline assembly, target byte, fake work, or product-source change is
+present.
+
+All tested helpers fully inline and none leaves a CALL in the probe body. The
+important codegen remains unchanged from the direct controls:
+
+- all multiply variants remain F7 EB, IMUL BX, rather than target F7 E3;
+- all fixed-SI byte loads remain MOV AL,[SI] plus INC SI, never LODSB;
+- AX-to-SI remains 8B F0 rather than 89 C6;
+- DX-to-DI remains 8B FA rather than 89 D7;
+- DX zeroing remains 33 D2 rather than 31 D2;
+- BX doubling remains 03 DB rather than 01 DB;
+- DI doubling remains 03 FF rather than target D1 E7.
+
+Two independent cold runs are receipt-identical. Final receipt SHA-256:
+7a7db54bbfc43cf31e958a51a67af485ad596df229f8cd15129c5d7db1624d94.
+
+This closes inline-helper expansion as a natural compiler explanation for these
+remaining carpet instruction selections. It grants no low-level source
+provenance or exactness credit. Carpet remains 67 exact plus 23 blocked bytes,
+and the complete MAIN gap remains 27 bytes.
