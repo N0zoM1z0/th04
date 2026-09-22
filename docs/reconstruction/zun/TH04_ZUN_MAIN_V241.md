@@ -178,3 +178,39 @@ with materially new provenance or a compiler mechanism outside the now-bounded
 supported profile surface. Work on cfg_init and independent ZUN
 boundary/origin/component questions can continue without claiming that this
 blocker is solved.
+
+## v538 pragma optimizer-scope negative
+
+English Borland manuals distinguish full optimizer controls from the older
+Turbo C frontend, but the pinned Japanese Turbo C++ 4.02 command-line driver
+has a smaller surface. Existing v399 toolchain evidence proves that this TCC
+accepts plain -O while rejecting the tested BCC-style -O suboptions, including
+-Od; the active TC4 BIN also contains no BCC.EXE. Therefore -Od is not an
+available TH04 product compiler switch.
+
+The remaining legitimate local-control idea is pragma option -O-. The
+checked-in v538 probe tests it against maintained _main without adding inert
+statements or changing behavior:
+
+- before the function: 248 bytes, identical to the already-known command-line
+  -O- build;
+- inside _main, then reset with pragma option -O.: 246 bytes, identical to the
+  baseline;
+- inside _main without the reset: 248 bytes, again identical to the global
+  no-jump build.
+
+All three variants retain the natural error-tail fingerprint
+jmp / jmp / jmp / call for not-resident / bad-option / already-resident /
+no-space. The target remains jmp / call / call / call. Thus pragma placement
+does not provide statement-level control of the two missing calls.
+
+Run:
+
+    python3 scripts/probes/probe_th04_zun_main_pragma_optimizer_scope.py       --output-dir .analysis/reconstruction/probes/NEW-UNIQUE-NAME
+
+Accepted receipt v538-zun-main-pragma-optimizer-001/receipt.json has SHA-256
+27bc5a25b41a176156f33698703882b67c1bcb0df767c53679eaa3ca0415b8c2.
+
+This closes the available pragma jump-optimization scope route only. _main
+remains source-present at 246/252 bytes and must not gain inert barriers,
+codestrings, or target-derived assembly for equality.

@@ -78,8 +78,10 @@ the 152-byte cfg_init has no non-FIXUPP target/object differences; its current
 13 raw linked differences are entirely link fields shifted by the six-byte
 blocked _main layout. v518 closes the supported TC4J profile surface for
 _main's selective print-call shape and rejects ReC98 inert barriers as
-independent source provenance. Reopen either C++ function only for a natural
-raw-zero link, materially new provenance, or new compiler evidence. v520 now closes the complete ZUNINIT physical function/data partition, so no ZUN
+independent source provenance. v538 additionally closes pragma option -O-
+scoping: the pinned TCC cannot use BCC-style -Od, and pragma placement cannot
+selectively preserve the two target calls. Reopen either C++ function only for
+a natural raw-zero link, materially new provenance, or a genuinely new compiler mechanism. v520 now closes the complete ZUNINIT physical function/data partition, so no ZUN
 authored boundary remains provisional; its eight code entries still retain
 `target-derived-asm` source provenance and zero exact credit. Routine ZUN work
 should now resolve ZUNINIT/MEMCHK source/origin authority and component ownership
