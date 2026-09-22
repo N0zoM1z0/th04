@@ -19,6 +19,7 @@ import replay_th04_zun_file_close as file_close
 import replay_th04_zun_fontopen as fontopen
 import replay_th04_zun_version_grp as version_grp
 import replay_th04_zun_file_state as file_state
+import replay_th04_zun_compact_master as compact_master
 import replay_th04_zun_file_read as file_read
 import replay_th04_zun_resdata as resdata
 
@@ -148,6 +149,16 @@ class ZunSupportReplayImportTests(unittest.TestCase):
         self.assertTrue(file_state.map_equal_except_bufferpos_alias_order(original, original))
         self.assertTrue(file_state.map_equal_except_bufferpos_alias_order(original, swapped))
         self.assertFalse(file_state.map_equal_except_bufferpos_alias_order(original, wrong))
+
+
+    def test_compact_master_contract(self) -> None:
+        self.assertEqual(len(compact_master.COMPACT_ORDER), 15)
+        self.assertEqual(
+            compact_master.REMAINING_EXTERNAL_LINK_INPUTS,
+            ("c0t.obj", "emu.lib", "maths.lib", "ct.lib"),
+        )
+        self.assertNotIn("base.MASTER_LIB", compact_master.__file__ and Path(compact_master.__file__).read_text())
+        self.assertEqual(set(compact_master.COMPACT_ORDER), set(compact_master.SOURCES) - {"GRPCLEAR"})
 
 
 if __name__ == "__main__":

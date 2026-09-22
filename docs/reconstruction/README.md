@@ -55,6 +55,7 @@ contain residual counts that were correct only at that packet.
 - [ZUN DOS_ROPEN / FONTFILE_OPEN library replacement](zun/TH04_ZUN_FONTOPEN_V533.md)
 - [ZUN VERSION / GRP pure-data library replacement](zun/TH04_ZUN_VERSION_GRP_V534.md)
 - [ZUN FIL file-state DATA / BSS library replacement](zun/TH04_ZUN_FILE_STATE_V535.md)
+- [ZUN compact local MASTER archive](zun/TH04_ZUN_COMPACT_MASTER_V536.md)
 
 ## Recent MAIN milestones
 
