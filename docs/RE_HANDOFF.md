@@ -29,7 +29,7 @@ and fresh read-only attestation. Target canonicality remains
 | OP.EXE | 93 | 14 / 71 / 8 | 13 | 80 | Shared maintained cohort complete; SCORE physical TU |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
 | MAINE.EXE | 72 | 14 / 51 / 7 | 13 | 59 | Shared maintained cohort complete; SCORE physical TU |
-| ZUN.COM | 13 | 3 / 4 / 6 | 0 | 13 | `cfg_init` local validation; _main provenance; ZUNINIT boundary |
+| ZUN.COM | 13 | 3 / 4 / 6 | 0 | 11, plus 2 blocked | ZUNINIT/MEMCHK ownership; external component inputs |
 
 The non-MAIN authored backlog is 152 pending acceptances, 21 provisional
 boundaries, and 40 unresolved `target-derived-asm` candidate representations.
@@ -89,6 +89,7 @@ credit between artifacts.
   `cfg_init` still has 13 byte differences and `_main` remains nonexact.
   Composite/packed product replay is still missing.
 - v518 localizes the resident _main six-byte gap to two missing three-byte dos_puts2 calls: the target selectively preserves bad-option and already-resident calls while sharing only the /R-not-resident path with the no-space call. A two-round supported TC4J profile matrix closes baseline, -O-, -Z-, -G, -v, -y, and -y/-O- as producer explanations. Pinned ReC98 history independently classifies its self-assignment barriers as decompilation no-op workarounds and only speculates about original provenance, so they remain quarantined. _main stays 246/252 source-present; proceed with cfg_init function-local validation and other ZUN ownership work. See the ZUN main note.
+- v519 closes cfg_init source/codegen locally without weakening the raw gate: the 152-byte natural object has 15 two-byte OMF FIXUPP fields, and all 30 target/object differences are exactly those fields; every non-fixup byte matches. The current natural resident link still has 13 raw cfg_init differences, all inside those same fixup words because downstream symbols remain six bytes early under the blocked _main layout. cfg_init and _main are now function-level blocked but remain source-present units. Move routine ZUN work to ZUNINIT/MEMCHK ownership and external component inputs. See the cfg_init and ZUN main notes.
 - The [v509 three-artifact cold smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
   independently compiles and links maintained VRAM source into OP and MAINE:
   each complete 41-byte decoded function is raw-zero in two rounds with all

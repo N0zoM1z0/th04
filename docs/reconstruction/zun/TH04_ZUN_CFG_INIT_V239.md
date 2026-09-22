@@ -68,3 +68,44 @@ barriers shrinks its C++ CODE contribution from 404 to 398 bytes, so that
 upstream form cannot be credited as natural maintained source. A standalone
 checked-in TH04 build and a packed-artifact unit-coordinate acceptance route
 remain to be built before exact promotion.
+
+## v519 function-local codegen closure and raw link blocker
+
+A fresh checked-in-source-only compiler Oracle now separates cfg_init source
+shape from the resident component layout. The maintained function and target
+are both 152 bytes. The standalone TC4J object contains 15 kind-1 two-byte OMF
+FIXUPP fields, emitted in descending code-address order. The raw target/object
+comparison has exactly 30 differing bytes, and they are exactly the two bytes
+of those 15 FIXUPP words. No difference occurs outside a link field.
+
+Masking only those 15 words is diagnostic, not acceptance, but it is complete:
+the target and natural object then have the same full 152-byte SHA-256
+57e30f5075b690ceb8a797039fd108138e408e3d273cc09963c31022f4ac8eea.
+The natural object CODE itself remains
+4c80c1405ba9994053738757cbdad5478425ff6ff92baf455c8f2f4c32383fd4;
+the raw target function remains
+8fc23f22f653db2afd65ad4cdab19776f5e9f1cdbbfa9de2dd407426fed9bfa2.
+
+The same v519 driver then runs the current natural separate resident component
+link. That link leaves 13 raw cfg_init byte differences at function-relative
+offsets 0x15, 0x19, 0x21, 0x2B, 0x37, 0x3A, 0x6A, 0x73, 0x7D, 0x86, 0x90,
+0x93, and 0x94. Every one lies inside the same standalone FIXUPP words.
+The resolved downstream calls/data addresses are six bytes early because the
+natural resident _main remains 246 bytes instead of the target 252 bytes.
+Therefore the current raw failure is a link-context consequence of the blocked
+_main layout, not evidence for changing cfg_init source.
+
+Replay with:
+
+    python3 scripts/probes/probe_th04_zun_cfg_function_local.py --output-dir .analysis/reconstruction/probes/NEW-UNIQUE-NAME
+
+The v519 receipt
+.analysis/reconstruction/probes/v519-zun-cfg-function-local-001/receipt.json
+has SHA-256
+0125bb834cb5e1cfa1147d73a53bfad2d1b539e509ae9c79f893e583de5151a5.
+
+Function-level acceptance is now marked blocked, while the unit deliberately
+remains source-present. A fixup-normalized equality cannot waive the raw-byte
+gate. Reopen cfg_init exact promotion only after an artifact-local natural
+resident link resolves those FIXUPP words raw-zero; do not tune the already
+closed non-fixup source bytes.
