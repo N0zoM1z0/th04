@@ -139,6 +139,9 @@ Primary packed notes:
 - TC4J -WX / DPMI16 final-blocker codegen (v497): the switch is
   demonstrably active via CODE SEGDEF alignment but does not change the tested
   register, LOOP, LODSB, or DS-to-ES instruction selections;
+- TC4J processor-target codegen (v498): default/80186/80286/80386/80486
+  selection yields no target register/core or LODSB forms; only 386/486 can
+  compile the checkerboard _EAX forms and neither profile emits LOOP;
 - checkerboard ordinary countdown source spellings / accepted optimizer / IDE /
   cross-artifact scans (v396, v398, v404-v406);
 - carpet natural opcode/source-lineage/cross-artifact scans (v396, v404-v405,

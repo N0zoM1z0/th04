@@ -294,3 +294,33 @@ The stable input/tool/source bundle SHA-256 is
 This closes -WX as a compiler-option explanation for the tested final-blocker
 forms. It does not establish handwritten source provenance, does not authorize
 inline assembly, and leaves the MAIN gap at 27 bytes.
+
+
+## v498 TC4J processor-target surface
+
+External Borland 4.0 documentation exposes another real 16-bit compiler
+mechanism that had not been tested across the complete final-blocker probe set:
+the processor target switches for the default instruction set, 80186 (-1),
+80286 (-2), 80386 (-3), and 80486 (-4). The external documentation is
+routing only; scripts/probes/probe_tc4_processor_final_blocker_surface_v498.py
+tests the pinned Japanese TCC 4.02 itself.
+
+The combined register/core probe is byte-identical under all five profiles and
+never selects any target residual encoding (89 C3, 89 C6, 89 D7,
+31 D2, 01 DB, D1 E7, or F7 E3). All five profiles compile the four
+fixed-SI byte-load forms without emitting LODSB.
+
+The checkerboard probe also gives a useful producer constraint. The default,
+80186, and 80286 profiles reject all 14 source forms because _EAX is
+unavailable, so they cannot compile the actual checkerboard operation that
+stores a 32-bit value through ES. The 80386 and 80486 profiles compile all 14
+forms, but none emits x86 LOOP.
+
+Three independent cold runs produce the same receipt SHA-256
+45a6e2d3c7b1945ccd2b5804fe5ded3c674494dc9244610a7830d089d63d8d75.
+The stable probe/dependency input bundle SHA-256 is
+1c9e379386964655d2d38debf55f525a2a2a202b73533dcea8c897a750c078b9.
+
+This closes CPU target selection as a compiler explanation for the tested
+final-blocker forms. It grants no source provenance or exactness credit and
+leaves the MAIN gap at 27 bytes.
