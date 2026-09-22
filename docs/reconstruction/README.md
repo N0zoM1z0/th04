@@ -46,6 +46,7 @@ contain residual counts that were correct only at that packet.
 - [ZUN DOS_FREE library replacement](zun/TH04_ZUN_DOS_FREE_V524.md)
 - [ZUN DOS_AXDX library replacement](zun/TH04_ZUN_DOS_AXDX_V525.md)
 - [ZUN DOS_PUTS2 library replacement](zun/TH04_ZUN_DOS_PUTS2_V526.md)
+- [ZUN FILE_CREATE library replacement](zun/TH04_ZUN_FILE_CREATE_V527.md)
 
 ## Recent MAIN milestones
 
