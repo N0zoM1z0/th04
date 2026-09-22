@@ -206,6 +206,12 @@ python3 scripts/audit_compat_dependencies.py --check
   final bytes and the entire 559-entry relocation table remains unchanged. The
   exact SCORE frontier is now v482 prefix + this final copy helper; only the
   4-byte `regist_menu()` compiler peephole and 0x43 EGC-start helper remain.
+- v485 closes the remaining 0x43 EGC-start helper and fuses it with the v484
+  copy helper into a **0xC9 raw-and-linked exact TC86 C++ tail**. The key legal
+  mechanism is `decomp.hpp::keep_0(0)`, independently used by TH05 for the same
+  EGC address-register zero write. Program bytes and all 559 relocation entries
+  stay unchanged. Only the v483 four-byte `regist_menu()` zero-test frontier
+  remains inside SCORE_TEXT.
 - MAIN has no provisional authored C/C++ boundaries. `compat/rec98` has zero
   forwarders and zero product include sites.
 
@@ -217,7 +223,7 @@ python3 scripts/audit_compat_dependencies.py --check
 2. **OP/MAINE packed closure:** continue from v466 for OP and v448 for MAINE.
    OP global owner order and the complete ZUNSOFT/OP-music producer are closed.
    Attack only BGIMAGE internal direction (8 relocation entries) and the
-   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471-v475 recover the verdict path through `sub_BB81`; continue the remaining `regist_menu()` four-byte compiler frontier and the 0x43 EGC-start SCORE helper;
+   `hi_view` / `score_e` historical TU split (63 entries). MAINE global block placement is closed through SCORE_TEXT. v471-v475 recover the verdict path through `sub_BB81`; continue the remaining `regist_menu()` four-byte compiler frontier;
    then re-evaluate SCORE record ownership before shared BGIMAGE direction.
    Preserve target-attested unpacked lengths 76,864 / 69,218 and v228 relocation
    order. Historical `minalloc` provenance remains unresolved. Active TLINK 6.10

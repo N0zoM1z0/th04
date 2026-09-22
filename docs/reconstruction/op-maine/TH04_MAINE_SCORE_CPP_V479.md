@@ -363,3 +363,57 @@ Only two source frontiers remain inside the reconstructed SCORE owner:
 Neither is credited as exact yet. Once both join the same TC86 producer as the
 v482 prefix, re-measure the 34 SCORE relocation entries; do not permute MZ
 records.
+
+## v485 complete EGC tail
+
+v484 left the preceding `0x43` EGC-start helper one byte short: ordinary
+`_AX = 0` is strength-reduced by TC86 to `XOR AX,AX`, while the target contains
+`MOV AX,0`.
+
+The repository already contains the intended legal source-level mechanism in
+`decomp.hpp::keep_0()`. Its comment explicitly names pseudoregister zero
+assignments as the use case, and TH05 independently uses
+
+```cpp
+outport(EGC_ADDRRESSREG, keep_0(0));
+```
+
+inside `th05/formats/pi_cpp_2.cpp` for the same EGC register. This is therefore
+cross-game producer evidence, not a target-specific emitted-opcode workaround.
+
+Replacing only the zero write with `keep_0(0)` makes the EGC-start helper
+**67 / 67 raw CODE bytes exact**. Compiling it in the same TC86 TU as the v484
+rectangle-copy helper yields the complete final SCORE code tail, `0xC9` bytes,
+byte-for-byte identical to the original owner:
+
+- raw/linked tail SHA-256
+  `6b55b254101a12f91c53798f8e8838896de7b12b7591b4d9368f3bdd5a0d314d`
+  at object level;
+- linked target slice SHA-256
+  `c97000dbc25f0ea6e58724b0f3b32739ec66e5bb9d181b687433c4a0b8b988b9`.
+
+The v485 A/B replay keeps the original one-byte segment pad as a separate
+assembly contribution. The retained SCORE head differs raw only at offsets
+`0x2F5..0x2F6`, the expected same-segment near-call addend from the earlier name
+renderer to the now-external C++ copy helper. TLINK resolves the full MAINE image
+byte-identically and preserves all 559 relocation entries in the same order.
+
+Both runs produce:
+
+- MAINE SHA-256 unchanged from v478:
+  `45aa099ecb29aee883c29ea37c7ad8493ed1871e8b3694a19b63b8e28c331989`;
+- MAP SHA-256
+  `5c882d63dfe20686e566a9fd3def7b4a4c5b914d4d1108b3dfd227c0da00c682`;
+- unchanged ordered residual **42** (`517 / 559` same-index).
+
+Private receipt SHA-256:
+`5a0eb9865656ea3315dcd3b2cfc7c7a9f9a16c0ee10af041a75680eff5f8db33`.
+
+### SCORE frontier after v485
+
+Every SCORE_TEXT helper except `regist_menu()` now has a linked-exact natural
+C++ reconstruction. v483 has already narrowed `regist_menu()` to one four-byte
+zero-test peephole (`MOV AX,[key_det] / OR AX,AX` versus target
+`CMP word ptr [key_det],0`). Because `keep_0()` is also documented for
+zero-comparison peepholes, test that mechanism next before reopening broader
+optimizer/source-shape searches.
