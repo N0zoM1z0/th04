@@ -210,3 +210,49 @@ no reconstruction credit. The practical routing change is only this: preserve
 the target-attested logical unpacked lengths as a real packed-file constraint,
 while continuing to treat v228 relocation order and the source of the zero-backed
 extent/minalloc as unresolved reconstruction questions.
+
+## v490 minalloc is derived from the T extent
+
+Earlier packets conservatively kept the target-restored `e_minalloc` values as
+an independent historical-header provenance question. v490 separates that field
+from the still-open `T` file extent.
+
+For a DOS MZ whose initial stack lies beyond the file-backed load image, the
+observed Borland outputs in this corpus satisfy:
+
+```text
+e_minalloc = ceil(max(0, e_ss * 16 + e_sp - load_image_bytes) / 16)
+```
+
+The checked probe applies this formula to eight identity-bound cases:
+
+- current v489 OP and MAINE natural candidates;
+- v228 target-restored OP and MAINE views;
+- retained v436 target-derived `RT` controls;
+- retained v436 full `/i` controls.
+
+Every case matches its MZ header exactly. In particular:
+
+| Artifact | Natural load bytes | Restored load bytes | SS:SP | Natural minalloc | Restored minalloc |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| OP | 69,028 | 72,256 | `4918:0080` | 612 | 410 |
+| MAINE | 62,414 | 65,634 | `4709:0080` | 817 | 615 |
+
+The initial stack endpoint is unchanged. The restored `T` surface adds 3,228 OP
+bytes and 3,220 MAINE bytes; both increases round up to **202 paragraphs**,
+exactly the observed minalloc drop. The v436 `/i` controls file-back storage all
+the way to the stack endpoint and correspondingly have `e_minalloc=0`, again
+matching the same formula.
+
+Therefore `minalloc` is **not an independent reconstruction degree of freedom**
+for the remaining packed frontier. Once the target-attested file extent and
+unchanged `SS:SP` are fixed, the header field follows mechanically.
+
+This does **not** explain what historical linker or post-link step produced the
+target-attested `T` extent. v446 already proves that packed DIET metadata carries
+that larger logical unpacked length, and v436 proves that active TLINK 6.10 `/i`
+is not the mechanism. The remaining packed-header problem is the provenance of
+`T` itself, not a separate search for `minalloc`.
+
+Private receipt SHA-256:
+`a76b89c99b6f008f7e6f5986a785d45af66fe5048875a64f738d804696a3fec9`.
