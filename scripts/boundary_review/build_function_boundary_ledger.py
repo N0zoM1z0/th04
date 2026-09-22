@@ -149,6 +149,20 @@ def parse_function_overrides(
                 raise BoundaryLedgerError(
                     f"function override for {key[0]} at {key[1]:#x} lacks {field}"
                 )
+        if "reviewed_body_size" in rule:
+            reviewed_size = int(rule["reviewed_body_size"])
+            if reviewed_size <= 0:
+                raise BoundaryLedgerError(
+                    f"function override for {key[0]} at {key[1]:#x} has invalid reviewed_body_size"
+                )
+            if not str(rule.get("expected_tasm_proc", "")).strip():
+                raise BoundaryLedgerError(
+                    f"target-reviewed function override for {key[0]} at {key[1]:#x} lacks expected_tasm_proc"
+                )
+            if not str(rule.get("review_evidence_id", "")).strip():
+                raise BoundaryLedgerError(
+                    f"target-reviewed function override for {key[0]} at {key[1]:#x} lacks review_evidence_id"
+                )
         result[key] = rule
     return result
 
@@ -322,6 +336,7 @@ def function_row(
         ghidra["name"] if ghidra else f"sub_{offset:05x}"
     )
     notes: list[str] = []
+    target_reviewed_size: int | None = None
 
     if function_override is not None:
         expected_tasm = str(function_override.get("expected_tasm_proc", ""))
@@ -338,6 +353,23 @@ def function_row(
                     f"function override for {artifact} at {offset:#x} expected "
                     f"Ghidra body span {expected_span:#x}, observed {body_span:#x}"
                 )
+        if "reviewed_body_size" in function_override:
+            target_reviewed_size = int(function_override["reviewed_body_size"])
+            owner_end = (
+                contribution.end if contribution is not None
+                else region.end if region is not None else None
+            )
+            if owner_end is None or offset + target_reviewed_size > owner_end:
+                raise BoundaryLedgerError(
+                    f"target-reviewed extent for {artifact} at {offset:#x} "
+                    f"escapes its physical owner"
+                )
+            body_size = target_reviewed_size
+            body_span = target_reviewed_size
+            notes.append(
+                f"Target-reviewed extent {target_reviewed_size:#x} from "
+                f"{function_override['review_evidence_id']}."
+            )
         origin = str(function_override["origin"])
         source_form = str(function_override["source_form"])
         source_ref = str(function_override["source_ref"])
@@ -359,7 +391,15 @@ def function_row(
         notes.append(
             "Ghidra-only entry is not a PROC in the complete attested TASM listing."
         )
-    if false_function:
+    if target_reviewed_size is not None:
+        boundary_state = "reviewed"
+        work_queue = (
+            "reconstruct" if origin == "authored"
+            else "attest-asm" if origin == "original-asm"
+            else "exclude"
+        )
+        accepted_state = "unreviewed" if work_queue != "exclude" else "excluded"
+    elif false_function:
         boundary_state = "excluded"
         work_queue = "exclude"
         accepted_state = "excluded"

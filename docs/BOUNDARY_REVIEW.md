@@ -48,7 +48,7 @@ it enters the standalone product build.
 | `th04-op` | 14 | 71 | 8 |
 | `th04-main` | 495 | 0 | 0 |
 | `th04-maine` | 14 | 51 | 7 |
-| `th04-zun` | 3 | 4 | 6 |
+| `th04-zun` | 10 | 3 | 0 |
 
 - `reviewed` records a completed target-first boundary review backed by durable
   evidence. MAIN entries commonly inherit this state from the accepted function

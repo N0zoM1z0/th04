@@ -10,7 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from boundary_review.build_function_boundary_ledger import (
     BoundaryLedgerError,
+    Contribution,
     classify_module,
+    function_row,
     map_contributions,
     parse_map,
     parse_function_overrides,
@@ -93,6 +95,79 @@ Program entry point at 0000:00100
         )
         self.assertEqual(rules[("th04-main", 0x3680)]["origin"], "authored")
         self.assertNotIn(("th04-main", 0x367F), rules)
+
+
+
+    def test_target_reviewed_override_requires_evidence_and_tasm_entry(self) -> None:
+        base = {
+            "artifact": "th04-zun",
+            "payload_offset": 0x6F6,
+            "origin": "authored",
+            "source_form": "target-derived-asm",
+            "source_ref": "candidate:th04_zuninit.asm",
+            "reviewed_body_size": 0x12,
+        }
+        with self.assertRaises(BoundaryLedgerError):
+            parse_function_overrides({"function_overrides": [base]})
+        with self.assertRaises(BoundaryLedgerError):
+            parse_function_overrides({
+                "function_overrides": [
+                    {**base, "expected_tasm_proc": "sub_103"}
+                ]
+            })
+
+    def test_target_reviewed_override_sets_extent_without_ghidra(self) -> None:
+        contribution = Contribution(
+            "th04-zun", 0x6F3, 0xB68, "th04_zuninit.asm", "_TEXT",
+            "authored", "target-derived-asm", "candidate:th04_zuninit.asm",
+            "target-exact-composite+candidate-map",
+        )
+        override = {
+            "artifact": "th04-zun",
+            "payload_offset": 0x6F6,
+            "origin": "authored",
+            "source_form": "target-derived-asm",
+            "source_ref": "candidate:th04_zuninit.asm",
+            "expected_tasm_proc": "sub_103",
+            "reviewed_body_size": 0x12,
+            "review_evidence_id": "ev-review",
+        }
+        row = function_row(
+            "th04-zun", 0x6F6, 0x10000, None, [], contribution, None, None,
+            {
+                "name": "sub_103", "distance": "far", "listing_line": "12",
+            },
+            False, override,
+        )
+        self.assertEqual(row["boundary_state"], "reviewed")
+        self.assertEqual(row["body_size"], "0x12")
+        self.assertEqual(row["body_span"], "0x12")
+        self.assertEqual(row["origin"], "authored")
+        self.assertEqual(row["source_form"], "target-derived-asm")
+        self.assertIn("ev-review", row["notes"])
+
+    def test_target_reviewed_override_rejects_owner_escape(self) -> None:
+        contribution = Contribution(
+            "th04-zun", 0x6F3, 0x700, "th04_zuninit.asm", "_TEXT",
+            "authored", "target-derived-asm", "candidate:th04_zuninit.asm",
+            "target-exact-composite+candidate-map",
+        )
+        override = {
+            "origin": "authored",
+            "source_form": "target-derived-asm",
+            "source_ref": "candidate:th04_zuninit.asm",
+            "expected_tasm_proc": "sub_103",
+            "reviewed_body_size": 0x12,
+            "review_evidence_id": "ev-review",
+        }
+        with self.assertRaises(BoundaryLedgerError):
+            function_row(
+                "th04-zun", 0x6F6, 0x10000, None, [], contribution, None, None,
+                {
+                    "name": "sub_103", "distance": "far", "listing_line": "12",
+                },
+                False, override,
+            )
 
     def test_rejects_duplicate_function_override(self) -> None:
         rule = {

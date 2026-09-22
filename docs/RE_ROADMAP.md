@@ -79,9 +79,11 @@ the 152-byte cfg_init has no non-FIXUPP target/object differences; its current
 blocked _main layout. v518 closes the supported TC4J profile surface for
 _main's selective print-call shape and rejects ReC98 inert barriers as
 independent source provenance. Reopen either C++ function only for a natural
-raw-zero link, materially new provenance, or new compiler evidence. Routine
-ZUN work should now review ZUNINIT/MEMCHK origin and component ownership and
-replace external library inputs. The library-origin `GRAPH_CLEAR` slice is
+raw-zero link, materially new provenance, or new compiler evidence. v520 now closes the complete ZUNINIT physical function/data partition, so no ZUN
+authored boundary remains provisional; its eight code entries still retain
+`target-derived-asm` source provenance and zero exact credit. Routine ZUN work
+should now resolve ZUNINIT/MEMCHK source/origin authority and component ownership
+and replace external library inputs. The library-origin `GRAPH_CLEAR` slice is
 support-only. After source ownership and inputs close, compare the composite
 link and only then the DIET-packed container.
 

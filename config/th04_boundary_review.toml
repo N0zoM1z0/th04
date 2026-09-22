@@ -244,3 +244,96 @@ size = 0x0044
 kind = "code"
 origin = "original-asm"
 entry_offsets = [0]
+
+# ZUNINIT target-reviewed physical extents. The candidate TASM listing only
+# corroborates entries; v520 independently closes every extent on the target
+# byte stream and proves the complete code/data partition. These overrides do
+# not classify the target-derived assembly as original source.
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x6F3
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "start"
+reviewed_body_size = 0x03
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "ZUNINIT entry thunk; target JMP closes exactly before sub_103."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x6F6
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "sub_103"
+reviewed_body_size = 0x12
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "Target FAR interrupt handler closes at IRET."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x708
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "sub_115"
+reviewed_body_size = 0x12
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "Target FAR interrupt handler closes at IRET."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x71A
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "sub_127"
+reviewed_body_size = 0x96
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "Target control flow closes at RET immediately before sub_1BD."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x7B0
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "sub_1BD"
+reviewed_body_size = 0x12
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "Target helper closes at RET immediately before sub_1CF."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x7C2
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "sub_1CF"
+reviewed_body_size = 0x3B
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "Target helper closes at RET; following 0x102 bytes are the first ZUNINIT data island."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x8FF
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "sub_30C"
+reviewed_body_size = 0x27
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "Target helper closes at RET immediately before start_0."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x926
+origin = "authored"
+source_form = "target-derived-asm"
+source_ref = "candidate:th04_zuninit.asm"
+expected_tasm_proc = "start_0"
+reviewed_body_size = 0xDA
+review_evidence_id = "ev-th04-zun-zuninit-boundaries-v520"
+notes = "Target main body terminates with DOS INT 21h/AH=4Ch at runtime 0x40B; trailing 0x168 bytes are data, not the extra Ghidra ranges."

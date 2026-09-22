@@ -7,15 +7,18 @@ from collections import Counter
 import csv
 from pathlib import Path
 import sys
+import tomllib
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from boundary_review.build_function_boundary_ledger import HEADER
+from boundary_review.build_function_boundary_ledger import HEADER, parse_function_overrides
 
 
 ROOT = Path(__file__).resolve().parents[2]
 LEDGER = ROOT / "config" / "th04_function_boundaries.csv"
 MAIN_LEDGER = ROOT / "config" / "th04_main_authored_functions.csv"
+REVIEW_CONFIG = ROOT / "config" / "th04_boundary_review.toml"
+EVIDENCE_LEDGER = ROOT / "config" / "evidence.csv"
 ARTIFACTS = ("th04-op", "th04-main", "th04-maine", "th04-zun")
 BOUNDARY_STATES = {"reviewed", "corroborated", "provisional", "excluded"}
 ORIGINS = {"authored", "original-asm", "compiler", "library", "data"}
@@ -33,6 +36,62 @@ def read_rows(path: Path) -> list[dict[str, str]]:
         if reader.fieldnames != HEADER:
             raise ValidationError(f"unexpected boundary ledger header: {path}")
         return list(reader)
+
+
+def validate_reviewed_overrides(
+    rows: list[dict[str, str]],
+    review_rules: dict[tuple[str, int], dict[str, object]],
+    evidence_by_id: dict[str, dict[str, str]],
+) -> None:
+    indexed = {
+        (row["artifact"], int(row["payload_offset"], 0)): row
+        for row in rows
+    }
+    for key, rule in review_rules.items():
+        if "reviewed_body_size" not in rule:
+            continue
+        row = indexed.get(key)
+        if row is None:
+            raise ValidationError(
+                f"target-reviewed override has no ledger row: {key[0]} {key[1]:#x}"
+            )
+        reviewed_size = int(rule["reviewed_body_size"])
+        if (
+            row["boundary_state"] != "reviewed"
+            or int(row["body_size"], 0) != reviewed_size
+            or int(row["body_span"], 0) != reviewed_size
+        ):
+            raise ValidationError(
+                f"target-reviewed override did not project exactly: {row['id']}"
+            )
+        evidence_id = str(rule["review_evidence_id"])
+        evidence = evidence_by_id.get(evidence_id)
+        if evidence is None:
+            raise ValidationError(
+                f"target-reviewed override lacks tracked evidence: {evidence_id}"
+            )
+        if (
+            evidence["artifact"] != key[0]
+            or evidence["oracle"] != "boundary-ownership"
+            or evidence["result"] != "pass"
+            or evidence["evidence_class"] != "target-analysis"
+        ):
+            raise ValidationError(
+                f"target-reviewed override has invalid evidence authority: {evidence_id}"
+            )
+        if not evidence["extent_start"] or not evidence["extent_size"]:
+            raise ValidationError(
+                f"target-reviewed override evidence lacks extent: {evidence_id}"
+            )
+        evidence_start = int(evidence["extent_start"], 0)
+        evidence_size = int(evidence["extent_size"], 0)
+        if (
+            evidence_start > key[1]
+            or evidence_start + evidence_size < key[1] + reviewed_size
+        ):
+            raise ValidationError(
+                f"target-reviewed override escapes evidence extent: {evidence_id}"
+            )
 
 
 def validate(rows: list[dict[str, str]]) -> None:
@@ -136,6 +195,13 @@ def main() -> int:
     try:
         rows = read_rows(LEDGER)
         validate(rows)
+        review_config = tomllib.loads(REVIEW_CONFIG.read_text(encoding="utf-8"))
+        review_rules = parse_function_overrides(review_config)
+        with EVIDENCE_LEDGER.open(newline="", encoding="utf-8") as stream:
+            evidence_by_id = {
+                row["id"]: row for row in csv.DictReader(stream)
+            }
+        validate_reviewed_overrides(rows, review_rules, evidence_by_id)
         counts = Counter((row["artifact"], row["work_queue"]) for row in rows)
         print(f"function boundary ledger: PASS ({len(rows)} observations)")
         for key in sorted(counts):
