@@ -356,3 +356,33 @@ Two independent cold runs produce identical receipt SHA-256
 This closes C-versus-C++ language mode for these representative natural
 lowerings. It does not prove every possible source spelling, provides no source
 provenance, and leaves the MAIN gap at 27 bytes.
+
+## v501 inline pseudo-register return propagation
+
+A separate Turbo C++ behavior suggested one compiler mechanism not covered by
+the direct assignment and option matrices: an inline function can return a
+pseudo-register such as _AH without first materializing an ordinary C return
+copy. That observation is routing only; v501 tests the pinned Japanese TCC 4.02
+and specifically asks whether the same propagation can change TH04
+snd_load's AX-to-BX move encoding.
+
+scripts/probes/probe_tc4_inline_return_register_v501.py compares six natural
+C++ forms, with no inline assembly, __emit__, target bytes, or product-source
+changes. The helpers are demonstrably inlined: even the variants containing
+geninterrupt(0x21) have no CALL. Nevertheless:
+
+- direct _BX = _AX remains 8B D8;
+- _BX = ax_result() also remains 8B D8;
+- an inline INT 21h helper returning _AX emits CD 21 8B D8;
+- an inline DOS-open-shaped helper emits B8 00 3D CD 21 8B D8;
+- routing the result through an automatic local spills AX to the stack and
+  reloads BX from memory rather than selecting 89 C3.
+
+Two cold runs are receipt-identical. Final receipt SHA-256:
+985852462f1b4c1cca3a48305487be2c520308bcaf89f4e33f3f066a299973ea.
+The probe/tool input bundle SHA-256 is recorded in the evidence ledger.
+
+This closes inline pseudo-register return propagation as a natural compiler
+explanation for the remaining snd_load direction-bit encoding. It does not
+prove original source language, does not authorize target-derived inline
+assembly, and leaves the MAIN gap at 27 bytes.

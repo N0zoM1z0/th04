@@ -145,6 +145,10 @@ Primary packed notes:
 - TC4J C/C++ language mode (v499): a front-end sentinel proves real C versus
   C++ selection, but the tested register/MUL/DS-ES, checkerboard countdown, and
   fixed-SI byte-load lowerings remain byte-identical and avoid the target forms;
+- TC4J inline pseudo-register return propagation (v501): helpers returning
+  _AX fully inline across direct, INT 21h, and DOS-open-shaped forms, but the
+  resulting AX-to-BX transfer remains 8B D8; a local temporary spills/reloads
+  through memory rather than selecting target 89 C3;
 - checkerboard ordinary countdown source spellings / accepted optimizer / IDE /
   cross-artifact scans (v396, v398, v404-v406);
 - carpet natural opcode/source-lineage/cross-artifact scans (v396, v404-v405,
