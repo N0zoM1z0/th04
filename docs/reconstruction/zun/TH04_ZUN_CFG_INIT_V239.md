@@ -109,3 +109,35 @@ remains source-present. A fixup-normalized equality cannot waive the raw-byte
 gate. Reopen cfg_init exact promotion only after an artifact-local natural
 resident link resolves those FIXUPP words raw-zero; do not tune the already
 closed non-fixup source bytes.
+
+## v539 current-link revalidation
+
+v519 proved the 152-byte standalone natural cfg_init object differs from the
+target only in its 15 two-byte OMF FIXUPP fields. v539 repeats the link-side
+part against the current resident path rather than the old external-MASTER
+scaffold: all maintained support is local, MASTER is the compact 15-member
+archive, EMU/MATHS are gone, and the only remaining external runtime inputs
+are c0t.obj and CT.LIB.
+
+Run:
+
+    python3 scripts/probes/probe_th04_zun_cfg_current_link.py \
+      --output-dir .analysis/reconstruction/probes/NEW-UNIQUE-NAME
+
+Accepted receipt v539-zun-cfg-current-link-001/receipt.json has SHA-256
+25b880efe3580b1ab0461babf96dfd7332a1537eba574a3529a294defd642ca5.
+
+The current linked cfg_init still has exactly 13 raw differing bytes. The
+15 FIXUPP words split cleanly:
+
+- offsets 0x06, 0x0F, and 0x81 already equal target;
+- the other 12 FIXUPP words are each exactly target minus 6.
+
+Those twelve shifted words produce exactly the 13 differing byte offsets
+0x15, 0x19, 0x21, 0x2B, 0x37, 0x3A, 0x6A, 0x73, 0x7D, 0x86, 0x90, 0x93,
+and 0x94. No linked difference escapes these fields.
+
+This directly ties the current cfg_init residual to the six-byte short _main
+layout. It does not waive the raw gate: cfg_init remains source-present and
+blocked until an artifact-local natural link is raw-zero. Do not patch or
+normalize relocation values to claim exactness.

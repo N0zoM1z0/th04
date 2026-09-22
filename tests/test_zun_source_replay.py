@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "probes"))
 
 from replay_th04_zun_source_only import SOURCES, source_closure
 import probe_th04_zun_main_pragma_optimizer_scope as pragma_optimizer
+import probe_th04_zun_cfg_current_link as cfg_current
 
 
 class ZunSourceClosureTests(unittest.TestCase):
@@ -39,6 +40,21 @@ class ZunSourceClosureTests(unittest.TestCase):
             pragma_optimizer.TARGET_FINGERPRINT,
             {"not_resident": "jmp", "bad_option": "call",
              "already_resident": "call", "no_space": "call"},
+        )
+
+
+    def test_cfg_current_link_shift_contract(self) -> None:
+        self.assertEqual(cfg_current.EXPECTED_DELTA, -6)
+        self.assertEqual(len(cfg_current.SHIFTED_FIXUPS), 12)
+        self.assertEqual(len(cfg_current.UNCHANGED_FIXUPS), 3)
+        self.assertEqual(
+            set(cfg_current.SHIFTED_FIXUPS) | set(cfg_current.UNCHANGED_FIXUPS),
+            set(cfg_current.local.EXPECTED_FIXUPS),
+        )
+        self.assertTrue(
+            set(cfg_current.SHIFTED_FIXUPS).isdisjoint(
+                cfg_current.UNCHANGED_FIXUPS
+            )
         )
 
 

@@ -74,9 +74,10 @@ impact, not by address order or attractive percentage.
 
 ZUN: `cfg_init` and resident `_main` are now explicit
 function-level blockers while their units remain source-present. v519 proves
-the 152-byte cfg_init has no non-FIXUPP target/object differences; its current
-13 raw linked differences are entirely link fields shifted by the six-byte
-blocked _main layout. v518 closes the supported TC4J profile surface for
+the 152-byte cfg_init has no non-FIXUPP target/object differences. v539
+revalidates it on the current compact-MASTER c0t+CT link: three FIXUPP words
+already equal target and the other twelve are each exactly target minus 6,
+accounting for all 13 raw linked differences under the six-byte blocked _main layout. v518 closes the supported TC4J profile surface for
 _main's selective print-call shape and rejects ReC98 inert barriers as
 independent source provenance. v538 additionally closes pragma option -O-
 scoping: the pinned TCC cannot use BCC-style -Od, and pragma placement cannot
