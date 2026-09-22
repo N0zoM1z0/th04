@@ -48,6 +48,7 @@ contain residual counts that were correct only at that packet.
 - [ZUN DOS_PUTS2 library replacement](zun/TH04_ZUN_DOS_PUTS2_V526.md)
 - [ZUN FILE_CREATE library replacement](zun/TH04_ZUN_FILE_CREATE_V527.md)
 - [ZUN FILE_ROPEN library replacement](zun/TH04_ZUN_FILE_ROPEN_V528.md)
+- [ZUN FILE_WRITE library replacement](zun/TH04_ZUN_FILE_WRITE_V529.md)
 
 ## Recent MAIN milestones
 

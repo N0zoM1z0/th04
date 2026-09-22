@@ -12,13 +12,14 @@ import replay_th04_zun_dos_axdx as dos_axdx
 import replay_th04_zun_dos_free as dos_free
 import replay_th04_zun_file_create as file_create
 import replay_th04_zun_file_ropen as file_ropen
+import replay_th04_zun_file_write as file_write
 import replay_th04_zun_file_read as file_read
 import replay_th04_zun_resdata as resdata
 
 
 class ZunSupportReplayImportTests(unittest.TestCase):
     def test_transitive_source_closure_is_live(self) -> None:
-        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen):
+        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write):
             closure = module.source_closure(module.ROOT, tuple(module.SOURCES.values()))
             self.assertIn("src/zun/config/cfg_init.cpp", closure)
             self.assertIn("src/zun/resident/main.cpp", closure)
@@ -61,6 +62,13 @@ class ZunSupportReplayImportTests(unittest.TestCase):
         self.assertEqual(file_ropen.FILE_ROPEN_TARGET_OFFSET, 0x1174)
         self.assertEqual(file_ropen.FILE_ROPEN_MODULE_SIZE, 0x36)
         self.assertTrue(file_ropen.LOCAL_FILE_ROPEN.is_file())
+
+
+    def test_file_write_member_contract(self) -> None:
+        self.assertEqual(file_write.FILE_WRITE_MEMBER_POSITION, 171)
+        self.assertEqual(file_write.FILE_WRITE_TARGET_OFFSET, 0x11AA)
+        self.assertEqual(file_write.FILE_WRITE_MODULE_SIZE, 0xA6)
+        self.assertTrue(file_write.LOCAL_FILE_WRITE.is_file())
 
 
 if __name__ == "__main__":
