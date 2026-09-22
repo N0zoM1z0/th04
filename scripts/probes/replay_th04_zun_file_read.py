@@ -15,10 +15,10 @@ import tempfile
 import tomllib
 
 from replay_th04_zun_resdata import (
-    BASELINE_COMPONENT_SHA256, HEADERS, LINK_RESPONSE, LOCAL_GRAPH_CLEAR,
+    BASELINE_COMPONENT_SHA256, LINK_RESPONSE, LOCAL_GRAPH_CLEAR,
     LOCAL_RESDATA, MASTER_LIB, MASTER_LIB_SHA256, PAYLOAD, PAYLOAD_SHA256,
     ROOT, SOURCES, TARGET_COMPONENT_SHA256, build, dos_tool, link_component,
-    original_physical_order, sha,
+    original_physical_order, sha, source_closure,
 )
 
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -164,7 +164,10 @@ def main() -> int:
         raise RuntimeError("pinned external master library changed")
     subprocess.run([sys.executable, "scripts/attest_toolchain.py"], cwd=ROOT,
                    check=True, capture_output=True, text=True)
-    inputs = {relative: sha((ROOT / relative).read_bytes()) for relative in (*SOURCES.values(), *HEADERS)}
+    inputs = {
+        relative: sha((ROOT / relative).read_bytes())
+        for relative in source_closure(ROOT, tuple(SOURCES.values()))
+    }
     for source in (LOCAL_GRAPH_CLEAR, LOCAL_RESDATA, LOCAL_FILE_READ):
         inputs[str(source.relative_to(ROOT))] = sha(source.read_bytes())
     output.mkdir(parents=True)

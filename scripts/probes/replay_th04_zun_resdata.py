@@ -15,9 +15,9 @@ import tempfile
 import tomllib
 
 from replay_th04_zun_graph_clear import (
-    BASELINE_COMPONENT_SHA256, HEADERS, LOCAL_GRAPH_CLEAR,
+    BASELINE_COMPONENT_SHA256, LOCAL_GRAPH_CLEAR,
     MASTER_LIB, MASTER_LIB_SHA256, PAYLOAD, PAYLOAD_SHA256, ROOT,
-    RUNNER, SOURCES, TARGET_COMPONENT_SHA256, build, sha,
+    RUNNER, SOURCES, TARGET_COMPONENT_SHA256, build, sha, source_closure,
 )
 
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -245,7 +245,10 @@ def main() -> int:
     subprocess.run([sys.executable, "scripts/attest_toolchain.py"], cwd=ROOT,
                    check=True, capture_output=True, text=True)
 
-    inputs = {relative: sha((ROOT / relative).read_bytes()) for relative in (*SOURCES.values(), *HEADERS)}
+    inputs = {
+        relative: sha((ROOT / relative).read_bytes())
+        for relative in source_closure(ROOT, tuple(SOURCES.values()))
+    }
     inputs[str(LOCAL_GRAPH_CLEAR.relative_to(ROOT))] = sha(LOCAL_GRAPH_CLEAR.read_bytes())
     inputs[str(LOCAL_RESDATA.relative_to(ROOT))] = sha(LOCAL_RESDATA.read_bytes())
     output.mkdir(parents=True)

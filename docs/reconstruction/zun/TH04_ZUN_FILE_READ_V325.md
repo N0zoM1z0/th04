@@ -38,3 +38,20 @@ The diagnostic component still differs from the target at 4241 raw bytes.
 Other support members and composite inputs remain external, `_main` is six
 bytes short, and packed ZUN exact acceptance remains open. This library-origin
 unit is source-present without artifact-local exact promotion.
+
+## Current replay route (v523)
+
+The combined FILE_READ replay already replaces local GRAPH_CLEAR, RESDATA,
+and FILE_READ in one cold resident link. It now derives the ZUN C++ input
+closure transitively with source_closure() instead of importing the removed
+legacy HEADERS tuple.
+
+A fresh combined replay at
+.analysis/reconstruction/probes/v523-zun-support-surface-001/receipt.json
+has SHA-256
+88fe0457e81f234c94aa4544af8f740c9cda4c18ae9d550583748d53f4994677.
+Both cold rounds reproduce the same 6360-byte component SHA-256
+a15ee1e7eac9616e9cd60656a00fb5700c7e20299efc2c0ab44bce6c27cf1dab
+and the same 4241 target differences. No source or exactness state changes;
+this only restores the maintained cold replay after the source-only API
+migrated to transitive include discovery.

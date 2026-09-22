@@ -46,3 +46,20 @@ against the decoded target component. `_main` remains 246 rather than 252
 bytes, other library members and composite inputs remain external, and the
 packed ZUN artifact is not source-closed. Both RESDATA ranges are recorded as
 library-origin source-present, with no artifact-local exact promotion.
+
+## Current replay route (v523)
+
+The source-only ZUN compiler driver now discovers repository-local headers
+transitively with source_closure() rather than exporting a fixed HEADERS tuple.
+The v323 RESDATA replay was updated to use the same closure API instead of
+importing the removed legacy list.
+
+A fresh replay at
+.analysis/reconstruction/probes/v523-zun-resdata-001/receipt.json
+has SHA-256
+a9e14ddefabe5fcf8ea522e40f9d2f09189dc057456b7c8f7c361465b10c9ebc.
+It reproduces the historical 6360-byte candidate component SHA-256
+a15ee1e7eac9616e9cd60656a00fb5700c7e20299efc2c0ab44bce6c27cf1dab,
+with 4241 raw differences versus the target component, exactly as before.
+This is replay maintenance only; the RESDATA source/acceptance claim is
+unchanged.
