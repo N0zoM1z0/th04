@@ -50,6 +50,7 @@ contain residual counts that were correct only at that packet.
 - [ZUN FILE_ROPEN library replacement](zun/TH04_ZUN_FILE_ROPEN_V528.md)
 - [ZUN FILE_WRITE library replacement](zun/TH04_ZUN_FILE_WRITE_V529.md)
 - [ZUN FILE_SEEK / FILE_TELL library replacement](zun/TH04_ZUN_FILE_SEEK_V530.md)
+- [ZUN FILE_APPEND library replacement](zun/TH04_ZUN_FILE_APPEND_V531.md)
 
 ## Recent MAIN milestones
 

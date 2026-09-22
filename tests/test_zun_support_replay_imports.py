@@ -14,13 +14,14 @@ import replay_th04_zun_file_create as file_create
 import replay_th04_zun_file_ropen as file_ropen
 import replay_th04_zun_file_write as file_write
 import replay_th04_zun_file_seek as file_seek
+import replay_th04_zun_file_append as file_append
 import replay_th04_zun_file_read as file_read
 import replay_th04_zun_resdata as resdata
 
 
 class ZunSupportReplayImportTests(unittest.TestCase):
     def test_transitive_source_closure_is_live(self) -> None:
-        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek):
+        for module in (resdata, file_read, dos_free, dos_axdx, dos_puts2, file_create, file_ropen, file_write, file_seek, file_append):
             closure = module.source_closure(module.ROOT, tuple(module.SOURCES.values()))
             self.assertIn("src/zun/config/cfg_init.cpp", closure)
             self.assertIn("src/zun/resident/main.cpp", closure)
@@ -79,6 +80,13 @@ class ZunSupportReplayImportTests(unittest.TestCase):
         self.assertEqual(file_seek.FILE_TELL_BODY_SIZE, 0x0E)
         self.assertEqual(file_seek.FILE_SEEK_MODULE_SIZE, 0x42)
         self.assertTrue(file_seek.LOCAL_FILE_SEEK.is_file())
+
+
+    def test_file_append_member_contract(self) -> None:
+        self.assertEqual(file_append.FILE_APPEND_MEMBER_POSITION, 182)
+        self.assertEqual(file_append.FILE_APPEND_TARGET_OFFSET, 0x12CE)
+        self.assertEqual(file_append.FILE_APPEND_MODULE_SIZE, 0x50)
+        self.assertTrue(file_append.LOCAL_FILE_APPEND.is_file())
 
 
 if __name__ == "__main__":
