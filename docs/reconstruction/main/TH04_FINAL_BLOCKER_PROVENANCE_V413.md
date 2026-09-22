@@ -171,3 +171,46 @@ Together with v413-v416, the supplied HDI offers no attributable alternate
 producer through active files, active archives, deleted entries, free space, or
 allocated slack. This is negative provenance evidence only and leaves the
 27-byte MAIN gap unchanged.
+
+## v495 pinned ReC98 / MAGNet source-provenance audit
+
+v413-v419 exhausted the supplied HDI as an attributable alternate-producer
+source. v495 tests a different provenance class: pinned public ReC98 history
+plus the only explicitly documented TH04 source-code leak in that history.
+
+`scripts/probes/probe_th04_final_blocker_upstream_provenance_v495.py` binds the
+pinned ReC98 checkout at
+`b6ba5b0a529edbb31efdf8c0e939263804f8ee47` and verifies the exact history
+rather than relying on current comments or blog wording.
+
+For checkerboard, decompilation commit
+`45df9ec0c688e7e463c690112ed61d3a734b1cc6` introduces
+`asm { loop put_loop; }`; its parent still carries the target-derived
+`sub_12076` body in the monolithic `th04_main.asm`. For Stage 4 carpet,
+decompilation commit `2aae476a855101c2d86fb192a71b2e74d34feaca`
+introduces the surviving `PUSH DS / POP ES`, `MUL BX`, `LODSB`, `SHL DI,1`,
+and `LOOP` statements while its parent likewise carries target-derived
+`sub_EA8A` assembly. These commits are useful reconstruction history, not an
+independent historical source witness.
+
+The independently documented `[MAGNet2010]` source leak is narrower. Pinned
+`CONTRIBUTING.md` states that the 2010-05-02 broadcast briefly showed TH04
+`MAIN.EXE` source for demo recording and EMS setup. The pinned tree contains
+13 TH04 `[MAGNet2010]`-tagged identifiers, all in demo/input/EMS material and
+none in checkerboard, carpet/stages, or `snd_load`. A tempting apparent
+counterexample is the `_asm` block currently present in `demo_end()`, but Git
+history proves that block first appears in ReC98 commit
+`4c888ee4ade6aca57b56eae3ecc5673f0dafdf9b` in 2023 rather than in the leak.
+
+Final replay:
+`v495-final-blocker-upstream-provenance-002`; receipt SHA-256
+`cbf5d82e84de8209f96ed6818a72ef0cc7dfb4534ff944c544a0a76deef281d7`.
+The SHA-bound source/history bundle is
+`5e02464e1f31c2861ab056ff4b726775c6f696b8ef1dab19cad97cda094d0649`.
+
+The result deliberately changes no source ownership or exact-byte accounting.
+Pinned upstream history strengthens the hypothesis that checkerboard/carpet
+contain hand-selected low-level instructions, but it does not provide the
+independent source-origin evidence required by this repository. The complete
+MAIN gap therefore remains 27 bytes: checkerboard 2, carpet 23, and `snd_load`
+2. Reopen this route only if a genuinely new historical source artifact appears.
