@@ -75,14 +75,21 @@ The complete function SHA-256 values are:
 | MAINE | pi_put_8() | 9e0724a079563b41971a9801b3c1e6e91bd4c373c346120d0ecfba804c728757 |
 | MAINE | pi_load() | d0745829d42677ef9d29623565f63b4030b00ebb4f17522df847e3d5fd2d1daa |
 
-The complete decoded acceptance wrapper then cold-replayed all five backends
-(BGIMAGE, VRAM, frame delay, PI put, PI load). OP receipt
-v511-decoded-op-001/receipt.json has SHA-256
-f7736c27954b91436ce564dce9610410eedefd976677787e4585bd894e122157;
-all eight accepted OP functions are raw-zero. MAINE receipt
-v511-decoded-maine-001/receipt.json has SHA-256
-499ee4c90226affc24e7bce76652158b17dc7f0747a0d03bd066b42965726e43;
-all eight accepted MAINE functions are raw-zero.
+The complete decoded acceptance wrapper was re-run after correcting a
+fail-open dispatcher bug: PI backend IDs had previously fallen through to the
+BGIMAGE command. The focused PI receipts above were always genuine maintained
+source replays and remain the ledger evidence, but the old
+v511-decoded-*-001 receipts must not be used as proof that PI backend commands
+ran.
+
+The corrected dispatcher names every backend explicitly and rejects unknown
+IDs. Corrected OP receipt v511-decoded-op-002/receipt.json has SHA-256
+47c262bfa044664711a4595c6ac0f9362e4531da7c70405e1dce9e2379c1d6e0;
+corrected MAINE receipt v511-decoded-maine-002/receipt.json has SHA-256
+76ae7f03b7340a9b09c69f5f6f6b7a978e5c41f3ea9e40efbac29e408e166754.
+Both execute BGIMAGE, VRAM, frame-delay, PI-put, and PI-load replay scripts,
+retain 804/559 ordered relocations in every backend, and report raw zero
+differences for all eight accepted functions.
 
 The new units.csv rows remain source-present; function-level exact state is
 carried by the reviewed boundary and decoded-acceptance ledgers. No MAIN

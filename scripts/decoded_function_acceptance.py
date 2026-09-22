@@ -311,20 +311,26 @@ def verified_target(artifact: str) -> tuple[bytes, str, str]:
     return decoded, info["sha256"], expected
 
 
-def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], int, dict[str, object]]:
-    saved = output / backend_id
+def backend_command(backend_id: str, saved: Path) -> list[str]:
+    """Return the exact cold replay command for one accepted backend ID."""
     if backend_id == "zun-resident-link":
-        command = [sys.executable, "scripts/probes/replay_th04_zun_separate_link.py",
-                   "--output-dir", str(saved)]
-    elif backend_id == "op-maine-vram-v509":
-        command = [sys.executable, "scripts/probes/replay_th04_shared_vram.py",
-                   "--output-dir", str(saved)]
-    elif backend_id == "op-maine-frame-delay-v510":
-        command = [sys.executable, "scripts/probes/replay_th04_shared_frame_delay.py",
-                   "--output-dir", str(saved)]
-    else:
+        return [sys.executable, "scripts/probes/replay_th04_zun_separate_link.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-maine-vram-v509":
+        return [sys.executable, "scripts/probes/replay_th04_shared_vram.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-maine-frame-delay-v510":
+        return [sys.executable, "scripts/probes/replay_th04_shared_frame_delay.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-maine-pi-put-v511":
+        return [sys.executable, "scripts/probes/replay_th04_shared_pi_put.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-maine-pi-load-v511":
+        return [sys.executable, "scripts/probes/replay_th04_shared_pi_load.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-maine-bgimage-v489":
         snapshot = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"
-        command = [
+        return [
             sys.executable, "scripts/probes/probe_th04_bgimage_hybrid_v489.py",
             "--current-snapshot",
             "--op-source-dir", str(snapshot / "op/source"),
@@ -333,6 +339,12 @@ def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], 
             "--maine-target-restored", str(RESTORED["th04-maine"]),
             "--output-dir", str(saved),
         ]
+    raise ValueError(f"unknown decoded replay backend: {backend_id}")
+
+
+def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], int, dict[str, object]]:
+    saved = output / backend_id
+    command = backend_command(backend_id, saved)
     completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=600)
     (output / f"{backend_id}.log").write_text(
         json.dumps(command) + f"\nexit={completed.returncode}\n"

@@ -132,5 +132,19 @@ class DecodedAcceptanceTests(unittest.TestCase):
             self.check(entries)
 
 
+    def test_backend_dispatch_is_explicit_and_fail_closed(self) -> None:
+        saved = ROOT / ".analysis/reconstruction/probes/unit-dispatch"
+        self.assertEqual(
+            acceptance.backend_command("op-maine-pi-put-v511", saved)[1],
+            "scripts/probes/replay_th04_shared_pi_put.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-maine-pi-load-v511", saved)[1],
+            "scripts/probes/replay_th04_shared_pi_load.py",
+        )
+        with self.assertRaisesRegex(ValueError, "unknown decoded replay backend"):
+            acceptance.backend_command("not-a-backend", saved)
+
+
 if __name__ == "__main__":
     unittest.main()
