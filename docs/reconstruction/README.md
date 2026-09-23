@@ -61,6 +61,7 @@ contain residual counts that were correct only at that packet.
 - [ZUN FIL file-state DATA / BSS library replacement](zun/TH04_ZUN_FILE_STATE_V535.md)
 - [ZUN compact local MASTER archive](zun/TH04_ZUN_COMPACT_MASTER_V536.md)
 - [ZUN Borland runtime inventory / EMU-MATHS removal](zun/TH04_ZUN_RUNTIME_INVENTORY_V537.md)
+- [ZUN resident six-byte layout cascade diagnostic](zun/TH04_ZUN_RESIDENT_SHIFT_V546.md)
 
 ## Recent MAIN milestones
 

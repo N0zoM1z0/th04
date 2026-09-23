@@ -104,6 +104,16 @@ and replace external library inputs. v524 removes DOS_FREE from that external su
 support-only. v521 additionally closes all three MEMCHK authored physical function extents while keeping the IDA-generated candidate source at zero source/exact credit. All 13 current ZUN authored candidates are now target-reviewed. v522 also closes the pinned ReC98 generated-assembly route: ZUNINIT and MEMCHK enter that ancestry as IDA-generated initial-state reconstructions, so their raw-equal candidate links cannot satisfy source authority. The remaining work is independent provenance or natural reconstruction plus component ownership. After source ownership and inputs close, compare the composite
 link and only then the DIET-packed container.
 
+The v546 current-source replay confirms that ZUN's 4,241 resident
+same-position differences are dominated by the six-byte `_main` layout
+cascade: after a read-only gap alignment, 46 of 6,354 mapped positions still
+differ. This narrows diagnosis but grants no byte credit. Treat `c0t.obj` and
+the 26 pulled CT.LIB members as pinned compiler/runtime inputs unless a
+specific full-product Oracle proves a replacement necessary; they are not
+TH04 authored source. Prioritize a legitimate natural-source explanation for
+the two `_main` calls and independent ZUNINIT/MEMCHK ownership evidence, not
+bulk runtime transcriptions or comparator normalization.
+
 ## 5. Close whole artifacts and validate runtime behavior
 
 Once enough maintained source and external object ownership are present,
