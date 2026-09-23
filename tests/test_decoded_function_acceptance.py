@@ -162,6 +162,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("op-maine-delay-v516", saved)[1],
             "scripts/probes/replay_th04_shared_delay_measure.py",
         )
+        self.assertEqual(
+            acceptance.backend_command("maine-score-insert-v543", saved)[1],
+            "scripts/probes/replay_th04_maine_score_insert.py",
+        )
         with self.assertRaisesRegex(ValueError, "unknown decoded replay backend"):
             acceptance.backend_command("not-a-backend", saved)
 
@@ -202,6 +206,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         delay = next(row for row in entries if row["replay_backend"] == "op-maine-delay-v516")
         delay["replay_backend"] = "op-maine-mode-v515"
         with self.assertRaisesRegex(ValueError, "mode backend does not compile"):
+            self.check(entries)
+
+    def test_maine_score_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        score = next(row for row in entries if row["replay_backend"] == "maine-score-insert-v543")
+        score["replay_backend"] = "op-maine-delay-v516"
+        with self.assertRaisesRegex(ValueError, "delay backend does not compile"):
             self.check(entries)
 
 

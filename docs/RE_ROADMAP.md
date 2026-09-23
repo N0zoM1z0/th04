@@ -22,8 +22,9 @@ function comparisons and target-ordered relocations. The ZUN graph-clear
 support backend is also rebased and raw-zero on its 36-byte library-origin
 slice, but this does not grant authored-function acceptance. See the
 [three-artifact smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md).
-Next, write bounded cold backends for the remaining maintained shared
-OP/MAINE owners, then incrementally replace ZUN's external link inputs.
+The shared hardware/PI/sound cohort is complete. MAINE now also has one
+artifact-local SCORE insertion backend; expand natural source one reviewed
+physical owner at a time while resolving ZUN's remaining source authority.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
 composition and v489/v494 aggregate Oracles during every source edit. A new
@@ -44,9 +45,13 @@ selected loading/saving/score-rendering SCORE boundaries in both artifacts.
 MAINE's hi_end candidate-C++ owners and OP's five remaining hi_view owners are
 now physically reviewed. The OP review corrected Ghidra's truncated
 `rank_render` body from `0x3C` to a reachable `0x7A` bytes. All pinned ReC98
-implementations examined here have explicit decompilation provenance and grant
-no source credit. Continue with new target-first owners while keeping source
-authority separate from byte/codegen corroboration.
+implementations examined in v540-v542 have explicit decompilation provenance
+and grant no source credit. In v543 MAINE `score_insert` was independently
+cold-compiled from maintained natural source and matched all 340 linked bytes,
+bringing MAINE to 14 functions / 1,180 decoded source-owner bytes. This is a
+function-level acceptance, not a packed-file or entire SCORE-TU claim. Continue
+with new target-first owners while keeping source authority separate from
+byte/codegen corroboration.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
@@ -72,7 +77,8 @@ OP next: move beyond the now-reviewed hi_view SCORE owners without importing
 decompiled candidate C++; examine small input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
-v541; move next to its adjacent grouped/ASM SCORE ownership and then small
+v541 and its first SCORE_TEXT insertion function is accepted after v543; move
+next to adjacent SCORE_TEXT owners and then small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
 confidence. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link

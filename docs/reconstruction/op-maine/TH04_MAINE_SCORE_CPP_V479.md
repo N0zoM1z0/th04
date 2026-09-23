@@ -577,3 +577,39 @@ SCORE_TEXT source, machine code, physical-TU batching, and relocation order are
 closed. MAINE packed relocation order now has exactly one blocker: the shared
 8-entry BGIMAGE reverse. Do not revisit SCORE function spelling or manually
 permute relocation records.
+
+## v543 maintained SCORE insertion acceptance
+
+The earlier v479/v487 source was a producer experiment, not by itself a
+maintained-source acceptance. v543 checks in the bounded natural C++ owner as
+`src/maine/score/insert.cpp`, with its field layout in `scoredat.hpp` and its
+bounded body in `score_insert.inl`. The descriptive `score_insert` name is not
+asserted to be original. No target bytes, fake returns, or inline assembly are
+used.
+
+Fresh MAINE target bytes, an attested Ghidra inventory, complete instruction
+tiling, internal branch closure, adjacent entry `0xC506`, and the candidate
+SCORE_TEXT PROC/MAP position establish the reviewed `1A05:2362` extent:
+payload `0xC3B2..0xC505`, `0x154` bytes. The target linked function SHA-256 is
+`ed7880a5a1cd7aa721c2a95bafb819da15768fd660cf6dd96dbccc9fdc30c093`.
+
+Run `python3 scripts/probes/replay_th04_maine_score_insert.py --output-dir
+.analysis/reconstruction/probes/v543-maine-score-insert-007` for the focused
+two-round replay. Each round compiles the checked-in TU separately to the
+same 340-byte CODE SHA-256
+`978e0eb303d2875ed00983f0ea3fc9d48136949afbcd677190a7447eeba2d09c`,
+then inserts the maintained body into the historically grouped SCORE_TEXT
+producer and cold-relinks. The complete linked function is raw-zero against
+the target; all 559 ordered MAINE relocations match, and the aggregate
+candidate EXE and MAP remain v489-identical. Focused receipt SHA-256:
+`8a33a94dac32d586079889416c0fd72759ad32a9a98e72033bef75fe3f2f4457`.
+The full MAINE decoded-function wrapper also passes 14 registered slices;
+receipt SHA-256:
+`a88f35253b805f9b0805df1ef668593ac7808c5c915973b06f36180b043c4265`.
+
+This is exact only for the decoded function acceptance plane. MAINE remains
+DIET-packed without an honest file offset for this body, and the v489 ReC98
+snapshot supplies unaccepted surrounding SCORE/link scaffolding. Neither the
+whole SCORE TU nor the complete MAINE.EXE is claimed as restored product source
+or exact. The next target-first source experiment should inspect `sub_C506`
+and its physical dependencies before reusing any historical candidate text.

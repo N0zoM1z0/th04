@@ -58,6 +58,7 @@ MMD_PRODUCERS = {"th04-op": 0xDC44, "th04-maine": 0xCF5C}
 KAJA_PRODUCERS = {"th04-op": 0xDC74, "th04-maine": 0xCF8C}
 MODE_PRODUCERS = {"th04-op": 0xDCE4, "th04-maine": 0xCFAA}
 DELAY_PRODUCERS = {"th04-op": 0xDD80, "th04-maine": 0xD046}
+MAINE_SCORE_INSERT_PRODUCER = 0xC3B2
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -174,7 +175,8 @@ def validate(
         allowed_backend = ({"zun-resident-link"} if artifact == "th04-zun"
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
-                                 "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516"})
+                                 "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
+                                 "maine-score-insert-v543"})
         if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
@@ -217,6 +219,12 @@ def validate(
             if (source_name != "src/shared/sound/determine_modes.cpp"
                     or producer_start != MODE_PRODUCERS[artifact] or producer_size != 0x9C):
                 raise ValueError(f"{ident}: mode backend does not compile this producer")
+        elif backend == "maine-score-insert-v543":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/score/insert.cpp"
+                    or producer_start != MAINE_SCORE_INSERT_PRODUCER
+                    or producer_size != 0x154):
+                raise ValueError(f"{ident}: MAINE score-insert backend does not compile this producer")
         elif (source_name != "src/shared/sound/delay_until_measure.cpp"
               or producer_start != DELAY_PRODUCERS[artifact] or producer_size != 0x31):
             raise ValueError(f"{ident}: delay backend does not compile this producer")
@@ -368,6 +376,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-delay-v516":
         return [sys.executable, "scripts/probes/replay_th04_shared_delay_measure.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-score-insert-v543":
+        return [sys.executable, "scripts/probes/replay_th04_maine_score_insert.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-bgimage-v489":
         snapshot = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"

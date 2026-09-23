@@ -557,3 +557,18 @@ expected_body_span = 0xB4
 reviewed_body_size = 0xB4
 review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
 notes = "cleardata_and_regist_view_sprite target extent reviewed by v542; candidate implementation is decompilation."
+
+# v543 MAINE SCORE insertion: target + expanded TASM listing agree on the
+# complete 0x154-byte near function, and maintained C++ is cold-relinked.
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC3B2
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/insert.cpp"
+expected_body_span = 0x154
+expected_tasm_proc = "sub_C3B2"
+reviewed_body_size = 0x154
+review_evidence_id = "ev-th04-maine-score-insert-boundary-v543"
+notes = "Target-reviewed MAINE score insertion extent; source independently compiles from src/maine/score/insert.cpp. score_insert is a descriptive name."
