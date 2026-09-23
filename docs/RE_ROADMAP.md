@@ -74,8 +74,9 @@ as source. Independently attest the 35 non-MAIN `attest-asm` observations
 
 ## 4. Reconstruct by physical translation unit
 
-OP next: move beyond the now-reviewed hi_view SCORE owners without importing
-decompiled candidate C++; examine small input/vector/init helpers, title/setup,
+OP now has one locally maintained hi_view stage renderer accepted after v545;
+the rest of the candidate hi_view source is still untrusted. Continue with
+target-first input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
 v541 and its first two SCORE_TEXT functions are accepted after v543-v544; move

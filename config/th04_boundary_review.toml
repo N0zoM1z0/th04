@@ -508,11 +508,11 @@ artifact = "th04-op"
 payload_offset = 0xC8A5
 origin = "authored"
 source_form = "candidate-cpp"
-source_ref = "candidate:th04/hi_view.cpp"
+source_ref = "src/op/score/stage.cpp"
 expected_body_span = 0x50
 reviewed_body_size = 0x50
 review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
-notes = "stage_put target extent reviewed by v542; candidate implementation is decompilation."
+notes = "stage_put target extent reviewed by v542; v545 independently cold-compiles maintained natural C++ to exact decoded function bytes. Original name not asserted."
 
 [[function_overrides]]
 artifact = "th04-op"

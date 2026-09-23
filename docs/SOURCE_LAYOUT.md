@@ -7,7 +7,7 @@ ledgers.
 | Path | Purpose | Current state |
 | --- | --- | --- |
 | `src/main/` | MAIN.EXE gameplay and engine translation units | Active |
-| `src/op/` | OP.EXE-owned translation units | Created when the first bounded owner is recovered |
+| `src/op/` | OP.EXE-owned translation units | Active: bounded high-score stage renderer |
 | `src/maine/` | MAINE.EXE-owned translation units | Active: bounded SCORE insertion source |
 | `src/zun/` | ZUN.COM launcher and resident code | Active |
 | `src/shared/` | Code or declarations proved to be shared by TH04 artifacts | Active |

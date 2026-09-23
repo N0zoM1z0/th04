@@ -26,12 +26,12 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 24 / 61 / 8 | 13 | 80 | hi_view complete physical review; next small input/vector/init owner |
+| OP.EXE | 93 | 24 / 61 / 8 | 14 | 79 | hi_view stage renderer accepted; next independent owner |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
 | MAINE.EXE | 72 | 21 / 44 / 7 | 15 | 57 | SCORE insertion and renderer accepted; inspect stage renderer |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | ZUNINIT/MEMCHK provenance; external component inputs |
 
-The non-MAIN authored backlog is 150 pending acceptances, 15 provisional
+The non-MAIN authored backlog is 149 pending acceptances, 15 provisional
 boundaries, and 40 unresolved `target-derived-asm` candidate representations.
 There is a separate 35-entry OP/MAINE/ZUN original-ASM attestation queue.
 `target-derived-asm` does **not** prove original ASM ownership. Corroborated
@@ -44,7 +44,8 @@ snd_pmd_resident(), snd_mmd_resident(), snd_kaja_interrupt(),
 snd_determine_modes(), and snd_delay_until_measure(). Their units.csv
 rows stay source-present: DIET-packed files have no honest raw
 file offsets for those decoded function bodies. MAINE additionally has the
-340-byte SCORE insertion and 230-byte score renderer. Neither artifact, nor ZUN, has
+340-byte SCORE insertion and 230-byte score renderer; OP additionally has an
+80-byte local stage renderer. Neither artifact, nor ZUN, has
 a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
 reviewed file-backed authored C/C++ bytes exact and 492 / 494 reviewed
 authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
@@ -57,7 +58,8 @@ or add `--artifact th04-op`, `th04-maine`, or `th04-zun` for a fresh cold
 comparison. See the [v508 acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
 The maintained reviewed shared hardware/PI/sound cohort is now complete: 13
 decoded-exact functions / 840 source-owner bytes in each OP/MAINE artifact.
-Two MAINE SCORE functions bring MAINE to 15 / 1,410. Continue adjacent SCORE
+Two MAINE SCORE functions bring MAINE to 15 / 1,410; the OP stage renderer
+brings OP to 14 / 920. Continue adjacent SCORE
 owners from target-first boundaries; corroborated/provisional entries
 still need target-local physical review before promotion. Do not transfer exact
 credit between artifacts.
@@ -116,6 +118,7 @@ credit between artifacts.
 - v542 independently target-reviews OP's five remaining hi_view owners. In `1A74:22DA`, `rank_render` is `0x7A` bytes, not Ghidra's truncated `0x3C`: a target JMP enters the omitted `0x3E`-byte reachable tail and the RET is at payload `0xCA93`. OP boundary counts become 24/61/8; source and exact counts do not change because all five ReC98 logical implementations have explicit decompilation introductions. See the [v542 OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md).
 - v543 accepts MAINE's first local SCORE source owner: target-reviewed `1A05:2362`, payload `0xC3B2..0xC505`, 340 bytes. Two cold compilations and grouped SCORE_TEXT relinks are raw-zero for this complete function; all 559 ordered relocations and the v489 candidate EXE/MAP remain unchanged. The full MAINE acceptance wrapper passes 14 slices. The packed file, other SCORE owners, and surrounding ReC98 scaffold are not accepted. See the [SCORE insertion note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md#v543-maintained-score-insertion-acceptance).
 - v544 accepts the next bounded MAINE SCORE renderer at `1A05:24B6`, payload `0xC506..0xC5EB`, 230 bytes ending `RET 4`. Two cold natural-source compilations and grouped relinks match the complete decoded function, leave all 559 ordered relocations and the v489 candidate EXE/MAP unchanged. The full MAINE wrapper passes 15 slices; the surrounding candidate scaffold remains unaccepted. See the [SCORE note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md#v544-maintained-score-renderer-acceptance).
+- v545 accepts OP's bounded high-score stage renderer at `1A74:2165`, payload `0xC8A5..0xC8F4`, 80 bytes ending `RET 6`. Two cold natural-source compilations and grouped SCORE_TEXT relinks match the whole decoded function, keep all 804 ordered relocations and the v489 candidate EXE/MAP unchanged. The full OP wrapper passes 14 slices; other hi_view candidate source stays unaccepted. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v545-maintained-stage-renderer-acceptance).
 - The [v509 three-artifact cold smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
   independently compiles and links maintained VRAM source into OP and MAINE:
   each complete 41-byte decoded function is raw-zero in two rounds with all
