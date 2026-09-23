@@ -109,3 +109,30 @@ remains at 21 exact / 72 pending and no packed-file offset is inferred. Do not
 copy the decompilation candidate's inline assembly or change compiler flags to
 force equality. Next target-first codec owner is `scoredat_decode` at payload
 `0xC57A`.
+
+## v563 OP decoder source-present result
+
+The target `scoredat_decode` extent is 173 bytes at `1A74:1E3A`, payload
+`0xC57A..0xC626`, SHA-256
+`5efe0d5065947fa7bc698dba06267ca16d3b34b3e90369907e14451fc9d0e2a5`.
+Direct target decoding shows two forward passes over the 196-byte `hi` and
+`hi2` sections: for each byte from `+4` through `+194`, feedback comes from the
+next encoded byte rotated right three bits and XORed with `key2`; the current
+encoded byte is increased by `key1 + feedback`. Byte `+195` is increased by
+`key1`, then the 16-bit sum over `+4..+195` is checked. A failed first section
+returns 1; after the second section, the routine returns the low-byte difference
+between its stored checksum and computed sum.
+
+Maintained natural source is `src/op/score/scoredec.cpp` plus
+`src/op/score/scoredec.inl`. The bounded TC86 probe at
+`scripts/probes/probe_th04_op_scoredat_decode_codegen.py` produces 197 standalone
+bytes against the target's 173. The two ordinary shift/OR feedback rotations
+each compile to a longer sequence than the target's in-place `ROR byte
+[BP-1],3`; the candidate's inline assembly was not imported. Its retained
+receipt `.analysis/reconstruction/probes/v563-op-scoredat-decode-codegen-005/receipt.json`
+has SHA-256
+`06e516fa190d5ac8462ed3b2a65728a7cfae39dde86570fb3f783b9546e25afa`, and the
+small generated listing is kept beside it for diagnosis. The unit remains
+source-present/nonexact and its packed-file offset is unknown. OP remains at
+21 exact / 72 pending. Next target-first surface is `input_wait_for_change` at
+payload `0xDB62`.

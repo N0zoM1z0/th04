@@ -219,8 +219,8 @@ trees were removed, leaving a 1.7 MiB receipt/log directory. The unit remains
 `source-present` because the DIET-packed file offset is unknown; decoded
 function state is `decoded-exact`. The candidate image remains 69,028 bytes
 versus the 72,256-byte target-restored image, so packed OP and whole-EXE exactness
-remain unclaimed. v562 now maintains an encoder source candidate, but pinned
-natural-C++ output is 111 bytes rather than the 101-byte target because the
-byte-rotate helper call does not emit the target's in-place byte ROR. It remains
-source-present only; proceed target-first with `scoredat_decode` at `0xC57A` and
-leave the encoder pending without target-derived assembly.
+remain unclaimed. v562/v563 now maintain natural-C++ encoder/decoder candidates,
+but their pinned standalone outputs are 111/197 bytes versus target extents of
+101/173 because neither C rotate form emits the target in-place byte ROR. Both
+remain source-present only; do not use target-derived assembly. Continue
+target-first with the OP input/vector helper at `0xDB62`.
