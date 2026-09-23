@@ -324,6 +324,17 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "OP place-put backend does not compile"):
             self.check(entries)
 
+    def test_op_regist_menu_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        menu = next(row for row in entries if row["replay_backend"] == "op-regist-menu-v556")
+        menu["replay_backend"] = "op-rank-render-v553"
+        with self.assertRaisesRegex(ValueError, "OP rank-render backend does not compile"):
+            self.check(entries)
+        self.assertEqual(
+            acceptance.backend_command("op-regist-menu-v556", ROOT / ".analysis/reconstruction/probes/test")[1],
+            "scripts/probes/replay_th04_op_regist_view_menu.py",
+        )
+
     def test_op_clear_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         clear = next(row for row in entries if row["replay_backend"] == "op-clear-sprites-v554")

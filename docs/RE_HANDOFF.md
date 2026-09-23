@@ -26,13 +26,13 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 24 / 61 / 8 | 17 | 76 | Four hi_view functions accepted; registration menu is next reviewed owner |
+| OP.EXE | 93 | 24 / 61 / 8 | 18 | 75 | Five hi_view functions accepted; next reviewed SCORE loader or codec owner |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
 | MAINE.EXE | 72 | 26 / 39 / 7 | 20 | 52 | Seven SCORE_TEXT owners accepted; review registration menu or pivot subsystem |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | `_main` natural CALL shape; ZUNINIT/MEMCHK source authority |
 
-The non-MAIN authored backlog is 141 pending acceptances, 15 provisional
-boundaries, and 36 unresolved `target-derived-asm` candidate representations.
+The non-MAIN authored backlog is 140 pending acceptances, 15 provisional
+boundaries, and 33 unresolved `target-derived-asm` candidate representations.
 There is a separate 35-entry OP/MAINE/ZUN original-ASM attestation queue.
 `target-derived-asm` does **not** prove original ASM ownership. Corroborated
 boundaries still require target-local physical review before exact promotion.
@@ -47,8 +47,8 @@ file offsets for those decoded function bodies. MAINE additionally has the
 340-byte SCORE insertion, 230-byte score renderer, 121-byte stage renderer,
 172-byte name cursor renderer, 184-byte score-entry row renderer,
 26-byte places dispatcher, and 49-byte alphabet cursor renderer;
-OP additionally has 80-byte stage, 293-byte two-column row, 122-byte
-rank renderers, and the 180-byte clear-state/sprite initializer. Neither artifact, nor ZUN, has
+OP additionally has 80-byte stage, 293-byte two-column row, 122-byte rank,
+335-byte registration menu, and 180-byte clear-state/sprite owners. Neither artifact, nor ZUN, has
 a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
 reviewed file-backed authored C/C++ bytes exact and 492 / 494 reviewed
 authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
@@ -68,14 +68,14 @@ remain for diagnosis. Full v554 OP/MAINE aggregate replays preserved the
 previous linked-image hashes and avoided the former roughly 1.2–1.5 GiB of
 retained duplicate snapshots per replay. Neither pinned inputs nor targets
 are deleted.
-The final v554 wrapper replays checked OP 17/17 and MAINE 20/20 accepted
-decoded slices raw-zero in two rounds; their receipt directories are 1.4 MiB
-and 1.6 MiB. The ZUN control still reports 13/130 raw differences for its two
+The latest v556 OP wrapper checks 18/18 accepted decoded slices raw-zero in
+two rounds; MAINE's v554 wrapper checks 20/20. Their retained receipt
+directories are 1.5 MiB and 1.6 MiB. The ZUN control still reports 13/130 raw differences for its two
 source-present C++ diagnostics and grants no exact credit.
 The maintained reviewed shared hardware/PI/sound cohort is now complete: 13
 decoded-exact functions / 840 source-owner bytes in each OP/MAINE artifact.
-Seven MAINE SCORE functions bring MAINE to 20 / 1,962; four OP SCORE functions
-bring OP to 17 / 1,515. Continue adjacent SCORE
+Seven MAINE SCORE functions bring MAINE to 20 / 1,962; five OP SCORE functions
+bring OP to 18 / 1,850. Continue adjacent SCORE
 owners from target-first boundaries; corroborated/provisional entries
 still need target-local physical review before promotion. Do not transfer exact
 credit between artifacts.
@@ -137,7 +137,8 @@ credit between artifacts.
 - v551 accepts MAINE's 49-byte alphabet cursor renderer at `1A05:2793`, payload `0xC7E3..0xC813`, ending `RET 6`. Standalone TC86 CODE itself equals the grouped owner without fixup exceptions; two cold links reproduce the target function, candidate EXE/MAP, and 559 ordered relocations. The decoded wrapper now covers 20 MAINE slices. The following registration menu is unaccepted, as are the packed file and whole SCORE TU. See the [SCORE note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md#v551-maintained-alphabet-cursor-renderer).
 - v552 accepts OP's 293-byte two-column row renderer at `1A74:21B5`, payload `0xC8F5..0xCA19`, ending `RET 2`. Standalone natural C++ differs only at five near-call and five data-address OMF fixup words; the complete grouped SCORE_TEXT and both linked target functions are raw-zero. The candidate EXE/MAP and 804 ordered relocations stay stable; packed-file and whole-TU exactness remain open. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v552-maintained-two-column-row-renderer).
 - v553 accepts OP's 122-byte rank renderer at `1A74:22DA`, payload `0xCA1A..0xCA93`, ending `RET`. Ghidra lists only the 60-byte prefix; the target jump at `0xCA54` enters the omitted reachable tail. The bounded harness verifies full disassembly, the jump, five OMF fixup words, grouped SCORE_TEXT, both linked complete functions, and 804 ordered relocations. The decoded OP wrapper now covers 16 slices. Packed OP and the following registration menu remain unaccepted. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v553-maintained-rank-renderer-with-reachable-ghidra-tail).
-- v554 accepts OP's 180-byte clear-state/sprite initializer at `1A74:24A3`, payload `0xCBE3..0xCC96`, ending `RET`. Target/Ghidra disassembly establishes its extent, while the v489 candidate MAP public at `0A74:24A3` corroborates placement without proving an original name. Maintained C++ matches standalone CODE outside one near-call and 25 data-address OMF fixup words, then links raw-zero in two cold rounds with 804 ordered relocations. The OP wrapper now covers 17 slices. Packed OP, whole SCORE TU, and the adjacent registration menu remain unaccepted. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v554-maintained-clear-state-and-sprite-initializer).
+- v554 accepts OP's 180-byte clear-state/sprite initializer at `1A74:24A3`, payload `0xCBE3..0xCC96`, ending `RET`. Target/Ghidra disassembly establishes its extent, while the v489 candidate MAP public at `0A74:24A3` corroborates placement without proving an original name. Maintained C++ matches standalone CODE outside one near-call and 25 data-address OMF fixup words, then links raw-zero in two cold rounds with 804 ordered relocations. The OP wrapper now covers 17 slices. Packed OP and whole SCORE TU remain unaccepted; v556 below accepts the adjacent registration menu. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v554-maintained-clear-state-and-sprite-initializer).
+- v556 accepts OP's adjacent 335-byte registration-view menu at `1A74:2354`, payload `0xCA94..0xCBE2`, ending `RET`. Target disassembly tiles 99 instructions with ten internal branches. Maintained natural C++ differs standalone only at five near-call and nine data-address OMF fixup words; grouped SCORE_TEXT and both complete linked target functions are raw-zero. Candidate EXE/MAP and all 804 ordered relocations remain stable, and the OP wrapper now checks 18 slices. Packed OP and whole SCORE TU remain unaccepted. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v556-maintained-registration-view-menu).
 - v540 target-reviews the OP and MAINE scoredat_decode / scoredat_encode / scoredat_recreate physical boundaries independently. Target Ghidra spans, complete disassembly, internal jump closure, adjacent entries, and each artifact's v489 linked bytes all agree. Pinned ReC98 history introduces the logical codec implementations explicitly as Decompilation, so all six rows remain candidate-cpp / unreviewed with no source-present or exact credit. See the [v540 SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
 - v541 target-reviews four additional SCORE/high-score owners: OP hiscore_scoredat_load_both and scores_put, plus MAINE hiscore_scoredat_load_for and hiscore_scoredat_save. Target Ghidra spans, complete disassembly, internal branch closure, adjacent entries, and artifact-local v489 linked bytes all agree. Each logical function is directly present in an explicitly Decompilation-labeled ReC98 commit, so all four remain candidate-cpp / unreviewed with no source-present or exact credit. MAINE hi_end physical C++ owners are now reviewed. See the [v541 SCORE high-score note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md).
 - v542 independently target-reviews OP's five remaining hi_view owners. In `1A74:22DA`, `rank_render` is `0x7A` bytes, not Ghidra's truncated `0x3C`: a target JMP enters the omitted `0x3E`-byte reachable tail and the RET is at payload `0xCA93`. OP boundary counts become 24/61/8; source and exact counts do not change because all five ReC98 logical implementations have explicit decompilation introductions. See the [v542 OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md).

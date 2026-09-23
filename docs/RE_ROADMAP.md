@@ -71,23 +71,22 @@ tables, alignment, adjacent bytes, MAP/TASM contribution, and segment identity.
 A provisional owner cannot be promoted exact, but it need not block an unrelated
 reviewed source TU.
 
-Classify the 40 unresolved `target-derived-asm` authored candidates by
+Classify the 33 unresolved `target-derived-asm` authored candidates by
 subsystem and independent producer fingerprints: OP ZUNSOFT animation 4;
-MAINE staff/verdict/registration/EGC families 25; ZUN ZUNINIT/MEMCHK 11.
+MAINE staff/verdict/registration/EGC families 18; ZUN ZUNINIT/MEMCHK 11.
 This is an authority question, not an instruction to transcribe disassembly
 as source. Independently attest the 35 non-MAIN `attest-asm` observations
 (OP 16, MAINE 15, ZUN 4) without counting them as authored C/C++ progress.
 
 ## 4. Reconstruct by physical translation unit
 
-OP now has four locally maintained hi_view functions accepted after
-v545/v552-v554: 80-byte stage, 293-byte two-column row, 122-byte rank
-renderer, and 180-byte clear-state/sprite initializer. The v553 rank
-acceptance checks the v542 Ghidra-missed reachable tail; the v489 candidate
-MAP corroborates the v554 entry at `0A74:24A3`, but does not prove an original
-name. The remaining registration menu and other
-candidate hi_view source are still untrusted. Continue with
-target-first input/vector/init helpers, title/setup,
+OP now has all five target-reviewed hi_view functions locally maintained after
+v545/v552-v556: 80-byte stage, 293-byte two-column row, 122-byte rank,
+335-byte registration menu, and 180-byte clear-state/sprite initializer.
+The v553 rank acceptance checks the v542 Ghidra-missed reachable tail;
+candidate MAP publics corroborate layout but not original names. The
+surrounding SCORE scaffold remains untrusted. Continue with reviewed
+SCORE loading/codec owners, then target-first input/vector/init helpers and title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
 v541 and its first seven SCORE_TEXT functions are accepted after v543-v551;

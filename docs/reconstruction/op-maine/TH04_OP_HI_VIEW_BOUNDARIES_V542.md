@@ -206,3 +206,37 @@ zero raw differences. Its retained receipt is
 (SHA-256 `f5808754a501d658ef4ebf3b9dfdb07f24c88a79e2a2c52c165868898cf38f7b`);
 the candidate-image and function-slice hashes are unchanged from the v554
 compact replay.
+
+## v556 maintained registration-view menu
+
+OP SCORE_TEXT at `1A74:2354`, decoded payload `0xCA94..0xCBE2`, is a
+335-byte function ending `RET` immediately before the v554 clear-state owner
+at `0xCBE3`. The pinned target and Ghidra inventory agree on its full extent;
+99 target instructions tile it with ten aligned internal direct branches.
+The target tests OK twice in its exit condition, checks left/right against
+rank bounds, then fades and redraws the main-menu background. These oddities
+are preserved as observed behavior, not cleaned up in the exact source.
+
+Maintained natural C++ is `src/op/score/menu.cpp` with bounded
+`regist_view_menu.inl`. Two pinned TC86 4.02 standalone compilations emit a
+335-byte SCORE_TEXT body. All 24 bytes differing from the grouped owner lie
+within five near-call and nine data-address OMF FIXUPP words; no non-fixup
+CODE byte differs. The grouped SCORE_TEXT object, complete linked OP EXE/MAP,
+and all 804 ordered relocations remain v489-identical. Both complete linked
+functions are raw-zero against target SHA-256
+`907bc127317f2fb9e5fc10d14030f13051b9cee40a9d7fd66a90cd9dc6c16355`.
+The v489 candidate MAP publics at `0A74:2354` and `0A74:24A3` corroborate
+placement only, not original names or source provenance.
+
+Replay with `python3 scripts/probes/replay_th04_op_regist_view_menu.py
+--output-dir .analysis/reconstruction/probes/<new-id>`. The retained focused
+receipt is
+`.analysis/reconstruction/probes/v556-op-regist-view-menu-003/receipt.json`
+(SHA-256 `d7fdb2a1bdae98d7ab653591b40f6ba510b4571d9f4cf277fd1ce0b72b618114`).
+This accepts the reviewed decoded function only; the packed OP file and
+complete SCORE translation unit are not exact.
+The full cold OP decoded-function wrapper passes all 18 registered slices
+with zero raw differences in two rounds; the prior 14 backend candidate-image
+hash sets are unchanged. Its retained receipt is
+`.analysis/reconstruction/probes/v556-op-regist-aggregate-001/receipt.json`
+(SHA-256 `130b4252f471accf0175dfd37e818d18f41afe10f6945b4e3ed2a2134fb4777a`).

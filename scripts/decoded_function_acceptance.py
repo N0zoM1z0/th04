@@ -69,6 +69,7 @@ MAINE_ALPHABET_CURSOR_PRODUCER = 0xC7E3
 OP_STAGE_PUT_PRODUCER = 0xC8A5
 OP_PLACE_PUT_PRODUCER = 0xC8F5
 OP_RANK_RENDER_PRODUCER = 0xCA1A
+OP_REGIST_MENU_PRODUCER = 0xCA94
 OP_CLEAR_SPRITES_PRODUCER = 0xCBE3
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
@@ -189,6 +190,7 @@ def validate(
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
                                  "maine-score-insert-v543", "maine-score-put-v544", "op-stage-put-v545",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
+                                 "op-regist-menu-v556",
                                  "maine-stage-put-v547", "maine-name-cursor-v548", "maine-place-row-v549",
                                  "maine-places-v550", "maine-alphabet-cursor-v551"})
         if backend not in allowed_backend:
@@ -293,6 +295,12 @@ def validate(
                     or producer_start != OP_RANK_RENDER_PRODUCER
                     or producer_size != 0x7A):
                 raise ValueError(f"{ident}: OP rank-render backend does not compile this producer")
+        elif backend == "op-regist-menu-v556":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/score/menu.cpp"
+                    or producer_start != OP_REGIST_MENU_PRODUCER
+                    or producer_size != 0x14F):
+                raise ValueError(f"{ident}: OP registration-menu backend does not compile this producer")
         elif backend == "op-clear-sprites-v554":
             if (artifact != "th04-op"
                     or source_name != "src/op/score/clear.cpp"
@@ -480,6 +488,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "op-rank-render-v553":
         return [sys.executable, "scripts/probes/replay_th04_op_rank_render.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-regist-menu-v556":
+        return [sys.executable, "scripts/probes/replay_th04_op_regist_view_menu.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-clear-sprites-v554":
         return [sys.executable, "scripts/probes/replay_th04_op_clear_sprites.py",
