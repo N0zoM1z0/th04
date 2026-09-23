@@ -72,6 +72,7 @@ OP_PLACE_PUT_PRODUCER = 0xC8F5
 OP_RANK_RENDER_PRODUCER = 0xCA1A
 OP_REGIST_MENU_PRODUCER = 0xCA94
 OP_CLEAR_SPRITES_PRODUCER = 0xCBE3
+OP_HISCORE_LOAD_BOTH_PRODUCER = 0xC733
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -189,6 +190,7 @@ def validate(
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
+                                 "op-score-load-both-v558",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
@@ -285,6 +287,12 @@ def validate(
                     or producer_start != MAINE_ALPHABET_CURSOR_PRODUCER
                     or producer_size != 0x31):
                 raise ValueError(f"{ident}: MAINE alphabet-cursor backend does not compile this producer")
+        elif backend == "op-score-load-both-v558":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/score/loadboth.cpp"
+                    or producer_start != OP_HISCORE_LOAD_BOTH_PRODUCER
+                    or producer_size != 0x6B):
+                raise ValueError(f"{ident}: OP high-score loader backend does not compile this producer")
         elif backend == "op-stage-put-v545":
             if (artifact != "th04-op"
                     or source_name != "src/op/score/stage.cpp"
@@ -466,6 +474,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-delay-v516":
         return [sys.executable, "scripts/probes/replay_th04_shared_delay_measure.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-score-load-both-v558":
+        return [sys.executable, "scripts/probes/replay_th04_op_score_load_both.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-insert-v543":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_insert.py",

@@ -113,3 +113,38 @@ original-source provenance.
 The boundary and decoded-function ledgers mark this one function exact on the
 decoded plane only. The corresponding `units.csv` row remains
 `source-present`, because no honest packed-file offset exists.
+
+## v558 maintained OP two-column high-score loader
+
+Fresh target review closes `hiscore_scoredat_load_both` at `1A74:1FF3`,
+payload `0xC733..0xC79D` (107 bytes). The complete stream has 39 instructions,
+two internal direct branches, and a terminal `RET`; `scores_put` begins at the
+adjacent payload `0xC79E`. The target slice SHA-256 is
+`81cd0235b3e97394fab9168a5faeb316cf3590646ef4b71941c06d2a7dbe5e72`.
+
+Target bytes at payload `0x10682` contain `GENSOU.SCR\0`, matching the
+loader's direct `DS:1342` filename reference under the attested MZ load map.
+The target stream observes a `rank * 0xC4` seek, a `0xC4`-byte read into
+`hi`, a `0x310` relative seek, then a second `0xC4`-byte read into `hi2`.
+After close it calls the score decoder; the target returns true after
+recreation and false after a successful load/decode. The maintained natural
+owner is `src/op/score/loadboth.cpp` with body
+`src/op/score/load_both.inl`, using `sizeof(hi)` so the shared body compiles
+in both its standalone TU and the candidate's grouped SCORE scaffold.
+
+TC86 standalone CODE differs from the grouped owner only at two OMF FIXUPP
+words for DGROUP addresses (`0x1A`, `0x4A`) and two near-call displacements
+(`0x5A`, `0x61`). Both cold rounds agree on the standalone and grouped
+link-relevant OMF, complete candidate EXE/MAP, full function slice, and all
+804 ordered MZ relocation sites. The focused receipt is
+`.analysis/reconstruction/probes/v558-op-score-load-both-probe-004/receipt.json`
+(SHA-256 `12df8a2551d03452a3ec6327ac4b34eb16867ad9c036729d732649515e1e1305`);
+the OP aggregate receipt is
+`.analysis/reconstruction/probes/v558-op-cold-aggregate-001/receipt.json`
+(SHA-256 `8d2a1958cf0da1bd9a6d969161b9b1fe7b4e44328a9e594558ad2988bd44c177`).
+All 19 registered OP slices compare raw-zero. The candidate program image is
+69,028 bytes versus the target-restored 72,256 bytes, so neither packed OP nor
+the whole executable is exact. The `units.csv` owner remains `source-present`
+because its DIET-packed file offset is unknown; decoded exactness is recorded
+separately. The MAP label and retained ReC98 source remain candidate evidence,
+not proof of original-source provenance.

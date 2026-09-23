@@ -310,6 +310,23 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "score-put backend does not compile"):
             self.check(entries)
 
+    def test_op_score_load_both_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries if row["replay_backend"] == "op-score-load-both-v558")
+        owner["source"] = "src/op/score/stage.cpp"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries if row["replay_backend"] == "op-score-load-both-v558")
+        owner["replay_backend"] = "op-stage-put-v545"
+        with self.assertRaisesRegex(ValueError, "OP stage-put backend does not compile"):
+            self.check(entries)
+        self.assertEqual(
+            acceptance.backend_command("op-score-load-both-v558", ROOT / ".analysis/reconstruction/probes/test")[1],
+            "scripts/probes/replay_th04_op_score_load_both.py",
+        )
+
     def test_op_place_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         place = next(row for row in entries if row["replay_backend"] == "op-place-put-v552")

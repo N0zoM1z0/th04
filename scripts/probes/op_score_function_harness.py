@@ -39,6 +39,10 @@ class ScoreFunction:
     standalone_near_fixup_words: tuple[int, ...] = ()
     standalone_data_fixup_words: tuple[int, ...] = ()
     ghidra_prefix_size: int | None = None
+    translation_unit: str = "th04/hiscore/view.cpp"
+    translation_unit_sha256: str | None = None
+    replace_end_anchor: bool = False
+    target_data_references: tuple[tuple[int, bytes], ...] = ()
 
 
 def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
@@ -102,9 +106,12 @@ def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
 
 
 def overlay_source(spec: ScoreFunction, work: Path) -> None:
-    path = work / "th04/hiscore/view.cpp"
-    if prior.sha_file(path) != prior.INPUTS[prior.SNAPSHOT / "th04/hiscore/view.cpp"]:
-        raise RuntimeError("v489 OP high-score source drift")
+    path = work / spec.translation_unit
+    expected = spec.translation_unit_sha256
+    if expected is None:
+        expected = prior.INPUTS.get(prior.SNAPSHOT / spec.translation_unit)
+    if expected is None or prior.sha_file(path) != expected:
+        raise RuntimeError(f"v489 OP high-score source drift: {spec.translation_unit}")
     shutil.copytree(ROOT / "src/shared", work / "src/shared", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src/op/score", work / "src/op/score", dirs_exist_ok=True)
     data = path.read_bytes()
@@ -114,6 +121,8 @@ def overlay_source(spec: ScoreFunction, work: Path) -> None:
     if spec.end_anchor not in data[start:]:
         raise RuntimeError(f"{spec.name} source end anchor missing after start")
     end = data.index(spec.end_anchor, start)
+    if spec.replace_end_anchor:
+        end += len(spec.end_anchor)
     include = f'#include "{spec.body}"\n\n'.encode("ascii")
     path.write_bytes(data[:start] + include + data[end:])
 
@@ -130,6 +139,14 @@ def run(spec: ScoreFunction, output: Path) -> Path:
     for path, expected in prior.INPUTS.items():
         if prior.sha_file(path) != expected:
             raise RuntimeError(f"input identity drift: {path}")
+    translation_unit = prior.SNAPSHOT / spec.translation_unit
+    translation_unit_sha = prior.sha_file(translation_unit)
+    expected_translation_unit_sha = spec.translation_unit_sha256
+    if expected_translation_unit_sha is None:
+        expected_translation_unit_sha = prior.INPUTS.get(translation_unit)
+    if (expected_translation_unit_sha is None
+            or translation_unit_sha != expected_translation_unit_sha):
+        raise RuntimeError(f"candidate OP translation-unit identity drift: {translation_unit}")
     closure = prior.source_closure(ROOT, (spec.source,))
     if spec.body not in closure:
         raise RuntimeError("bounded source body is not in compile closure")
@@ -138,6 +155,9 @@ def run(spec: ScoreFunction, output: Path) -> Path:
     base = parse_mz((prior.SNAPSHOT / "bin/th04/op.exe").read_bytes())
     if not target.valid or not base.valid or len(target.relocations) != prior.EXPECTED_RELOCATIONS:
         raise RuntimeError("invalid OP target or candidate MZ")
+    for offset, expected in spec.target_data_references:
+        if target.program_image[offset:offset + len(expected)] != expected:
+            raise RuntimeError(f"OP target {spec.name} data reference drift at {offset:#x}")
     end = spec.offset + spec.size
     body = target.program_image[spec.offset:end]
     boundary = target_boundary(spec, body)
@@ -244,8 +264,16 @@ def run(spec: ScoreFunction, output: Path) -> Path:
         "inventory_sha256": prior.INPUTS[prior.INVENTORY],
         "analysis_image_sha256": prior.INPUTS[prior.ANALYSIS_IMAGE],
         "baseline_exe_sha256": prior.INPUTS[prior.SNAPSHOT / "bin/th04/op.exe"],
+        "candidate_translation_unit": spec.translation_unit,
+        "candidate_translation_unit_sha256": translation_unit_sha,
+        "replaced_end_anchor": spec.replace_end_anchor,
         "source_sha256": source_hashes,
         "boundary": boundary,
+        "target_data_references": [
+            {"payload_offset": f"0x{offset:X}", "bytes_hex": expected.hex(),
+             "sha256": prior.sha(expected)}
+            for offset, expected in spec.target_data_references
+        ],
         "candidate_map": {
             "sha256": prior.INPUTS[prior.SNAPSHOT / "obj/th04/op.map"],
             "public_at_start": spec.map_public,
