@@ -749,3 +749,31 @@ at `0xC7C9` target-first.
 The full cold MAINE decoded-function wrapper passes all 18 registered slices;
 retained aggregate receipt SHA-256 is
 `71536a057db091a9036cf279c5a48ac4c5578c9dd0cdc5326d1a7ae141d2b4e9`.
+
+## v550 maintained score-entry row dispatcher
+
+The next MAINE SCORE_TEXT owner is `1A05:2779`, decoded payload
+`0xC7C9..0xC7E2`, exactly `0x1A` (26) bytes ending `RET 2`; the next physical
+entry at `0xC7E3` is `alphabet_cursor_put`. All 14 target instructions tile
+the attested Ghidra span and both direct branches stay inside it. The near
+call at `0xC7D5` targets the v549 row renderer. `places_put` is descriptive,
+not an original-symbol claim.
+
+Maintained natural C++ in `src/maine/score/places.cpp` includes the bounded
+`places_put.inl`. Two pinned TC86 4.02 standalone builds differ from grouped
+CODE only at the near-call displacement word at local `0x0D..0x0E`; OMF
+FIXUPP owns it. Both grouped SCORE_TEXT objects and linked 26-byte functions
+are raw-zero against target SHA-256
+`41c7ea43ba1363082f2d5bf46fb02d2bb89ac257863b811417e6e006771b34e9`.
+The candidate EXE/MAP and all 559 ordered relocations remain unchanged.
+
+Replay with `python3 scripts/probes/replay_th04_maine_places.py --output-dir
+.analysis/reconstruction/probes/<new-id>`; focused receipt
+`.analysis/reconstruction/probes/v550-maine-places-001/receipt.json` has
+SHA-256 `3dbda09902ea640851ebc9c09b31b95fba250e1fc8e9ae168997d1bcc164ebe8`.
+The six accepted MAINE SCORE functions total 1,073 decoded source-owner bytes.
+This does not claim the packed MAINE file or whole SCORE translation unit.
+Next inspect the alphabet cursor renderer at `0xC7E3` target-first.
+The full cold MAINE decoded-function wrapper passes all 19 registered slices;
+retained aggregate receipt SHA-256 is
+`8587283869c0e5da725a0acd58c364e2bbf9c97965c5e6858d85e4f2822057ea`.
