@@ -25,6 +25,9 @@ slice, but this does not grant authored-function acceptance. See the
 The shared hardware/PI/sound cohort is complete. MAINE now has eight and OP has
 eight artifact-local SCORE function backends; expand natural source one
 reviewed physical owner at a time while resolving ZUN's remaining source authority.
+v562 adds maintained natural-C++ source for OP `scoredat_encode`, but its pinned
+standalone object is 111 bytes rather than the reviewed 101-byte target, so it
+remains source-present only; do not turn the target rotate into copied assembly.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
 composition and v489/v494 aggregate Oracles during every source edit. A new
@@ -87,9 +90,13 @@ v545/v552-v556: 80-byte stage, 293-byte two-column row, 122-byte rank,
 The v553 rank acceptance checks the v542 Ghidra-missed reachable tail;
 candidate MAP publics corroborate layout but not original names. v558/v559/v561
 add `hiscore_scoredat_load_both`, `scores_put`, and `scoredat_recreate` to the
-maintained OP SCORE set. The surrounding SCORE scaffold remains untrusted; next
-target-review/reconstruct `scoredat_encode` at `0xC627` and `scoredat_decode` at
-`0xC57A`, then target-first input/vector/init helpers and title/setup,
+maintained OP SCORE set. v562 reviews `scoredat_encode` at `0xC627` and adds a
+natural-C++ source candidate, but standalone CODE is 111 bytes against the
+target's 101 because TC86 emits a byte-rotate helper call rather than the
+target's in-place byte ROR. Keep it source-present only, do not use
+target-derived inline assembly, and proceed target-first with `scoredat_decode`
+at `0xC57A`. The surrounding SCORE scaffold remains untrusted; continue with
+target-first input/vector/init helpers and title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
 v541 and its first seven SCORE_TEXT functions are accepted after v543-v551;

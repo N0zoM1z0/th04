@@ -80,3 +80,32 @@ keeps C++ target review durable without weakening assembly provenance rules.
 The next SCORE boundary packet should review the remaining four hiscore
 view/end functions. Source reconstruction remains a separate task and must
 not copy the decompiled candidate merely because its linked bytes match.
+
+## v562 OP encoder source-present result
+
+Fresh OP review retains the 101-byte `scoredat_encode` target extent at
+`1A74:1EE7`, payload `0xC627..0xC68B`, SHA-256
+`737bdcca37820fb3848004e60f12b6e8121470668ea058fb233be1bac7e3b69f`.
+It clears and accumulates the checksum over bytes `+4..+195`, calls the target
+far helper at payload `0x204E` twice for the low-byte keys, then walks the score
+payload backward. Each byte is reduced by `key1 + feedback`; the new feedback
+is that byte rotated right three bits and XORed with `key2`. The pinned
+candidate MAP labels the helper `IRAND`; that name is corroboration, not a
+target-discovered symbol.
+
+Maintained natural source is `src/op/score/scoreenc.cpp` plus
+`src/op/score/scoreenc.inl`. The bounded pinned-TC86 probe at
+`scripts/probes/probe_th04_op_scoredat_encode_codegen.py` is deliberately a
+negative exactness diagnostic: it produces a valid 111-byte standalone OMF
+CODE segment, not the target's 101 bytes. In particular, `_crotr` generates a
+helper call rather than target `ROR byte [BP-1],3`; the size and raw comparison
+fail before grouped acceptance. Its retained receipt
+`.analysis/reconstruction/probes/v562-op-scoredat-encode-codegen-002/receipt.json`
+has SHA-256
+`9dda17426fd7c6f35bcebcbd2ab500333a141b7fec65410fb608843dcd6ff2b7`; its
+generated A source tree was pruned, leaving only the receipt and compile log
+(about 12 KiB). The encoder unit is `source-present`, not `decoded-exact`; OP
+remains at 21 exact / 72 pending and no packed-file offset is inferred. Do not
+copy the decompilation candidate's inline assembly or change compiler flags to
+force equality. Next target-first codec owner is `scoredat_decode` at payload
+`0xC57A`.

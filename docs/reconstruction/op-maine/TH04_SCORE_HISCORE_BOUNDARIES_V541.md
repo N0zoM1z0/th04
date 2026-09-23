@@ -180,9 +180,11 @@ retained directory is about 1.6 MiB, with generated A/B source trees removed.
 `scores_put` is `decoded-exact`, while its `units.csv` row remains
 `source-present` because the packed-file offset is unknown. The aggregate
 candidate image is still 69,028 bytes against the 72,256-byte target-restored
-program; OP.EXE is not exact. The adjacent SCORE codec owner
-`scoredat_recreate` was accepted in v561 below. Continue target-first with
-`scoredat_encode` at payload `0xC627`, followed by `scoredat_decode` at `0xC57A`.
+program; OP.EXE is not exact. At the v559 checkpoint, the next codec owners
+were `scoredat_encode` at `0xC627` and `scoredat_decode` at `0xC57A`; v561 later
+accepted `scoredat_recreate`, and the v562 source-present/nonexact encoder
+result below supersedes that queue. See the v562 section for the current next
+owner.
 
 ## v561 maintained OP score-file regeneration
 
@@ -217,5 +219,8 @@ trees were removed, leaving a 1.7 MiB receipt/log directory. The unit remains
 `source-present` because the DIET-packed file offset is unknown; decoded
 function state is `decoded-exact`. The candidate image remains 69,028 bytes
 versus the 72,256-byte target-restored image, so packed OP and whole-EXE exactness
-remain unclaimed. Next target-first owners are `scoredat_encode` at `0xC627`
-and `scoredat_decode` at `0xC57A`.
+remain unclaimed. v562 now maintains an encoder source candidate, but pinned
+natural-C++ output is 111 bytes rather than the 101-byte target because the
+byte-rotate helper call does not emit the target's in-place byte ROR. It remains
+source-present only; proceed target-first with `scoredat_decode` at `0xC57A` and
+leave the encoder pending without target-derived assembly.

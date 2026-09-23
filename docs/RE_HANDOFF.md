@@ -18,15 +18,15 @@ python3 scripts/audit_compat_dependencies.py --check
 python3 scripts/ghidra.py th04-op check  # substitute artifact under review
 ```
 
-All four targets and OP/MAINE/ZUN databases passed the 2026-09-23 preflight
-and fresh read-only attestation. Target canonicality remains
+All four targets passed the 2026-09-24 preflight; OP's database passed fresh
+read-only attestation this session. Target canonicality remains
 `candidate-local-attested`, not independently pristine.
 
 ## Live state and next action
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 24 / 61 / 8 | 21 | 72 | Eight SCORE/high-score owners accepted; next target-first with `scoredat_encode` at payload `0xC627` |
+| OP.EXE | 93 | 24 / 61 / 8 | 21 | 72 | Eight SCORE/high-score owners accepted; `scoredat_encode` is source-present but nonexact (111-byte natural object vs 101-byte target); inspect `scoredat_decode` at `0xC57A` next |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
 | MAINE.EXE | 72 | 26 / 39 / 7 | 21 | 51 | Seven SCORE_TEXT owners plus one high-score loader accepted; review registration menu or pivot subsystem |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | `_main` natural CALL shape; ZUNINIT/MEMCHK source authority |
@@ -77,12 +77,18 @@ directories are about 1.6 MiB and 1.6 MiB. The ZUN control still reports 13/130 
 source-present C++ diagnostics and grants no exact credit.
 The maintained reviewed shared hardware/PI/sound cohort is now complete: 13
 decoded-exact functions / 840 source-owner bytes in each OP/MAINE artifact.
-Eight MAINE SCORE/high-score functions bring MAINE to 21 / 2,067; eight OP SCORE
-functions bring OP to 21 / 2,387. OP `scoredat_recreate` at payload `0xC68C` is
-decoded-exact after two focused cold links and the 21-slice aggregate. Next,
-target-review and reconstruct `scoredat_encode` at `0xC627`, then `scoredat_decode`
-at `0xC57A`. Corroborated/provisional entries still need target-local physical
-review before promotion. Do not transfer exact credit between artifacts.
+Eight MAINE SCORE/high-score functions bring MAINE to 21 / 2,067; eight exact OP
+SCORE functions bring OP to 21 / 2,387. OP `scoredat_recreate` at payload
+`0xC68C` is decoded-exact after two focused cold links and the 21-slice
+aggregate. `scoredat_encode` at `0xC627` is physically reviewed and now has a
+maintained natural-C++ source, but pinned standalone codegen is 111 bytes rather
+than the target's 101: the C byte-rotate helper call does not reproduce target
+`ROR [BP-1],3`. It remains pending and source-present only; do not import the
+candidate's inline assembly or alter toolchain flags without target evidence.
+Continue target-first at `scoredat_decode` payload `0xC57A`, then revisit the
+encoder only with independent origin/codegen evidence. Corroborated/provisional
+entries still need target-local physical review before promotion. Do not
+transfer exact credit between artifacts.
 
 ## Replayed facility checks
 
