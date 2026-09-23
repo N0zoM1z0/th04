@@ -14,7 +14,8 @@ import shutil
 
 
 OBJECT_REF = re.compile(rb"obj\\[A-Za-z0-9_.\\-]+\.obj", re.IGNORECASE)
-ROOT_SUFFIXES = {".obj", ".lib", ".h", ".hpp", ".inc", ".cpp"}
+ROOT_BINARY_SUFFIXES = {".obj", ".lib"}
+SOURCE_SUFFIXES = {".h", ".hpp", ".inc", ".cpp", ".c", ".csp", ".inl"}
 SKIP_DIRS = {".github", ".tup", "bin", "obj"}
 
 
@@ -29,12 +30,13 @@ def reject_symlinks(tree: Path) -> None:
                 raise ValueError(f"snapshot symlink is not a replay input: {path}")
 
 
-def copy_compact_snapshot(snapshot: Path, work: Path, artifact: str) -> None:
-    """Copy all C/C++ source trees but only the artifact's link-input objects.
+def copy_compact_snapshot(snapshot: Path, work: Path, artifact: str) -> dict[str, int]:
+    """Copy compile-facing sources and only this artifact's link-input objects.
 
-    The response file is the source of truth for required object paths. Large
-    generated listings, other games' binaries, Tup metadata, and unused object
-    archives are not part of an OP/MAINE cold-link input.
+    The response file is the source of truth for required object paths. The
+    compiler probes consume C/C++ sources, headers, and textual include files;
+    unrelated listings, maps, executables, assets, assembly sources, other
+    games' binaries, and Tup metadata are not copied into each backend round.
     """
     if artifact not in {"op", "maine"}:
         raise ValueError(f"unsupported compact snapshot artifact: {artifact}")
@@ -76,12 +78,32 @@ def copy_compact_snapshot(snapshot: Path, work: Path, artifact: str) -> None:
     reject_symlinks(snapshot / "bin/th04")
 
     work.mkdir(parents=True)
+    source_files = 0
+    source_bytes = 0
+    for parent, directories, files in os.walk(snapshot, followlinks=False):
+        source_dir = Path(parent)
+        relative_dir = source_dir.relative_to(snapshot)
+        if not relative_dir.parts:
+            directories[:] = [name for name in directories if name not in SKIP_DIRS]
+        selected = [name for name in files
+                    if Path(name).suffix.lower() in SOURCE_SUFFIXES]
+        if not selected:
+            continue
+        destination_dir = work / relative_dir
+        destination_dir.mkdir(parents=True, exist_ok=True)
+        for name in selected:
+            source = source_dir / name
+            if source.is_symlink() or not source.is_file():
+                raise ValueError(f"source input is not a regular file: {source}")
+            shutil.copy2(source, destination_dir / name)
+            source_files += 1
+            source_bytes += source.stat().st_size
+
     for entry in snapshot.iterdir():
-        if entry.is_dir():
-            if entry.name not in SKIP_DIRS:
-                shutil.copytree(entry, work / entry.name, symlinks=True)
-        elif entry.is_file() and entry.suffix.lower() in ROOT_SUFFIXES:
+        if entry.is_file() and entry.suffix.lower() in ROOT_BINARY_SUFFIXES:
             shutil.copy2(entry, work / entry.name)
+            source_files += 1
+            source_bytes += entry.stat().st_size
 
     for source in object_sources:
         destination = work / source.relative_to(snapshot)
@@ -99,3 +121,9 @@ def copy_compact_snapshot(snapshot: Path, work: Path, artifact: str) -> None:
 
     if (work / "obj/th04" / f"{artifact}.@l").read_bytes() != response_bytes:
         raise RuntimeError("compact snapshot response copy changed")
+    return {
+        "source_file_count": source_files,
+        "source_bytes": source_bytes,
+        "linked_object_count": len(object_sources),
+        "linked_object_bytes": sum(source.stat().st_size for source in object_sources),
+    }

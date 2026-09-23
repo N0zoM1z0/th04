@@ -37,14 +37,18 @@ class DecodedAcceptanceTests(unittest.TestCase):
                 (source / "generated.obj").write_bytes(b"scratch")
             (saved / "receipt.json").write_text("{}")
             (saved / "compile.log").write_text("ok")
+            (saved / "a-op.exe").write_bytes(b"candidate-a")
+            (saved / "b-op.exe").write_bytes(b"candidate-b")
             self.assertEqual(
                 acceptance.discard_backend_worktrees(saved),
-                ["a/op/source", "b/op/source"],
+                ["a/op/source", "b/op/source", "a-op.exe", "b-op.exe"],
             )
             self.assertTrue((saved / "receipt.json").is_file())
             self.assertTrue((saved / "compile.log").is_file())
             self.assertFalse((saved / "a/op/source").exists())
             self.assertFalse((saved / "b/op/source").exists())
+            self.assertFalse((saved / "a-op.exe").exists())
+            self.assertFalse((saved / "b-op.exe").exists())
 
     def test_backend_cleanup_rejects_source_symlink(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -169,6 +173,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "VRAM backend does not compile"):
             self.check(entries)
 
+    def test_input_wait_backend_is_bound_to_maintained_source_and_extent(self) -> None:
+        entries = deepcopy(self.entries)
+        wait = next(row for row in entries if row["replay_backend"] == "op-maine-input-wait-v565")
+        wait["replay_backend"] = "op-maine-delay-v516"
+        with self.assertRaisesRegex(ValueError, "delay backend does not compile"):
+            self.check(entries)
+
 
     def test_pi_backends_are_bound_to_their_maintained_producers(self) -> None:
         entries = deepcopy(self.entries)
@@ -208,6 +219,12 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("op-maine-delay-v516", saved)[1],
             "scripts/probes/replay_th04_shared_delay_measure.py",
         )
+        input_wait = acceptance.backend_command(
+            "op-maine-input-wait-v565", saved, artifact="th04-op"
+        )
+        self.assertEqual(input_wait[1], "scripts/probes/replay_th04_shared_input_wait.py")
+        self.assertIn("th04-op", input_wait)
+        self.assertIn("--retain-candidates", input_wait)
         self.assertEqual(
             acceptance.backend_command("maine-score-insert-v543", saved)[1],
             "scripts/probes/replay_th04_maine_score_insert.py",

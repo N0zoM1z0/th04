@@ -2,7 +2,8 @@
 """Validate and cold-replay artifact-local decoded TH04 function acceptance.
 
 This is deliberately separate from units.csv raw packed-file exactness. The
-OP/MAINE backend relinks both artifacts; the ZUN backend links its resident
+Shared OP/MAINE backends may relink both artifacts, while artifact-specific
+backends run only their claimed product; the ZUN backend links its resident
 component. A diagnostic source-present row never gains acceptance from a
 successful compile or a normalized/shifted comparison.
 """
@@ -52,6 +53,7 @@ ZUN_COMPONENT_SHA256 = "cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c1
 BGIMAGE_PRODUCERS = {"th04-op": 0xE428, "th04-maine": 0xD626}
 VRAM_PRODUCERS = {"th04-op": 0xDA12, "th04-maine": 0xCC7A}
 FRAME_DELAY_PRODUCERS = {"th04-op": 0xDA3B, "th04-maine": 0xCCA3}
+INPUT_WAIT_PRODUCERS = {"th04-op": 0xDB62, "th04-maine": 0xCE7A}
 PI_PUT_PRODUCERS = {"th04-op": 0xDA50, "th04-maine": 0xCCB8}
 PI_LOAD_PRODUCERS = {"th04-op": 0xDAFD, "th04-maine": 0xCD65}
 PMD_PRODUCERS = {"th04-op": 0xDC16, "th04-maine": 0xCF2E}
@@ -192,6 +194,7 @@ def validate(
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
+                                 "op-maine-input-wait-v565",
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
@@ -337,6 +340,11 @@ def validate(
                     or producer_start != OP_CLEAR_SPRITES_PRODUCER
                     or producer_size != 0xB4):
                 raise ValueError(f"{ident}: OP clear-sprites backend does not compile this producer")
+        elif backend == "op-maine-input-wait-v565":
+            if (source_name != "src/shared/hardware/input_wait.cpp"
+                    or producer_start != INPUT_WAIT_PRODUCERS[artifact]
+                    or producer_size != 0x56):
+                raise ValueError(f"{ident}: input-wait backend does not compile this producer")
         elif (source_name != "src/shared/sound/delay_until_measure.cpp"
               or producer_start != DELAY_PRODUCERS[artifact] or producer_size != 0x31):
             raise ValueError(f"{ident}: delay backend does not compile this producer")
@@ -457,7 +465,7 @@ def verified_target(artifact: str) -> tuple[bytes, str, str]:
     return decoded, info["sha256"], expected
 
 
-def backend_command(backend_id: str, saved: Path) -> list[str]:
+def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None) -> list[str]:
     """Return the exact cold replay command for one accepted backend ID."""
     if backend_id == "zun-resident-link":
         return [sys.executable, "scripts/probes/replay_th04_zun_separate_link.py",
@@ -489,6 +497,11 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
     if backend_id == "op-maine-delay-v516":
         return [sys.executable, "scripts/probes/replay_th04_shared_delay_measure.py",
                 "--output-dir", str(saved)]
+    if backend_id == "op-maine-input-wait-v565":
+        if artifact not in {"th04-op", "th04-maine"}:
+            raise ValueError("input-wait backend requires one OP/MAINE artifact")
+        return [sys.executable, "scripts/probes/replay_th04_shared_input_wait.py",
+                "--artifact", artifact, "--retain-candidates", "--output-dir", str(saved)]
     if backend_id == "op-score-load-both-v558":
         return [sys.executable, "scripts/probes/replay_th04_op_score_load_both.py",
                 "--output-dir", str(saved)]
@@ -552,7 +565,7 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
 
 
 def discard_backend_worktrees(saved: Path) -> list[str]:
-    """Drop only completed OP/MAINE A/B snapshots, retaining receipts and logs."""
+    """Drop completed source snapshots and transient candidate MZ files only."""
     removed = []
     for label in ("a", "b"):
         for game in ("op", "maine"):
@@ -564,12 +577,22 @@ def discard_backend_worktrees(saved: Path) -> list[str]:
                 raise RuntimeError(f"unsafe decoded backend worktree: {source}")
             shutil.rmtree(source)
             removed.append(source.relative_to(saved).as_posix())
+    for game in ("op", "maine"):
+        for label in ("a", "b"):
+            candidate = saved / f"{label}-{game}.exe"
+            if not candidate.exists() and not candidate.is_symlink():
+                continue
+            if (candidate.is_symlink() or not candidate.is_file()
+                    or not candidate.resolve().is_relative_to(saved.resolve())):
+                raise RuntimeError(f"unsafe decoded candidate artifact: {candidate}")
+            candidate.unlink()
+            removed.append(candidate.relative_to(saved).as_posix())
     return removed
 
 
 def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], int, dict[str, object]]:
     saved = output / backend_id
-    command = backend_command(backend_id, saved)
+    command = backend_command(backend_id, saved, artifact=artifact)
     completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=600)
     (output / f"{backend_id}.log").write_text(
         json.dumps(command) + f"\nexit={completed.returncode}\n"
@@ -592,6 +615,23 @@ def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], 
         origin = ZUN_COMPONENT_OFFSET
         layout = {"component_size": len(candidate[0]), "component_sha256": sha(candidate[0]),
                   "target_component_sha256": sha(target)}
+    elif backend_id == "op-maine-input-wait-v565":
+        name = "op" if artifact == "th04-op" else "maine"
+        target_mz = parse_mz(RESTORED[artifact].read_bytes())
+        images = [parse_mz((saved / f"{label}-{name}.exe").read_bytes())
+                  for label in ("a", "b")]
+        if any(not image.valid for image in images):
+            raise RuntimeError(f"{artifact}: invalid cold linked MZ")
+        target_relocs = [item.linear for item in target_mz.relocations]
+        if any([item.linear for item in image.relocations] != target_relocs for image in images):
+            raise RuntimeError(f"{artifact}: ordered relocation mismatch")
+        candidate = [image.program_image for image in images]
+        if candidate[0] != candidate[1]:
+            raise RuntimeError(f"{artifact}: cold linked program images disagree")
+        origin = 0
+        layout = {"ordered_relocations": len(target_relocs),
+                  "candidate_program_size": len(candidate[0]),
+                  "target_program_size": len(target_mz.program_image)}
     else:
         name = "op" if artifact == "th04-op" else "maine"
         target_mz = parse_mz(RESTORED[artifact].read_bytes())
