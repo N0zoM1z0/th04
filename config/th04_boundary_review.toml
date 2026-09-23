@@ -556,7 +556,7 @@ source_ref = "src/op/score/clear.cpp"
 expected_body_span = 0xB4
 reviewed_body_size = 0xB4
 review_evidence_id = "ev-th04-op-clear-sprites-boundary-v554"
-notes = "Target-reviewed private 180-byte clear-state and sprite initializer; maintained natural C++ links raw-zero. No own MAP public; name is descriptive."
+notes = "Target-reviewed 180-byte clear-state and sprite initializer; maintained natural C++ links raw-zero. v489 candidate MAP public at 0A74:24A3 corroborates placement, not original name."
 
 # v543 MAINE SCORE insertion: target + expanded TASM listing agree on the
 # complete 0x154-byte near function, and maintained C++ is cold-relinked.

@@ -21,10 +21,11 @@ SPEC = ScoreFunction(
     start_anchor=b"// ZUN bloat: Same as the TH05 version",
     end_anchor=b"#endif\n",
     terminal="ret",
-    # The private function has no MAP public; Ghidra/target disassembly and
-    # the grouped SCORE_TEXT contribution bound it instead.
-    map_public="",
-    next_public="",
+    # The v489 candidate MAP has this public at 0A74:24A3 and the adjacent
+    # OP_TITLE_TEXT public at 0A74:2557. They corroborate target boundaries,
+    # not original-source names.
+    map_public="0A74:24A3       cleardata_and_regist_view_sprite()",
+    next_public="0A74:2557       main_cdg_load()",
     target_references=(b"\xe8\x42\xfb", b"\x3b\x3f", b"\x46\x3f", b"\x86\x2a"),
     standalone_near_fixup_words=(0x0C,),
     standalone_data_fixup_words=(

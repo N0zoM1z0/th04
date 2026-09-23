@@ -82,9 +82,10 @@ as source. Independently attest the 35 non-MAIN `attest-asm` observations
 
 OP now has four locally maintained hi_view functions accepted after
 v545/v552-v554: 80-byte stage, 293-byte two-column row, 122-byte rank
-renderer, and 180-byte private clear-state/sprite initializer. The v553 rank
-acceptance checks the v542 Ghidra-missed reachable tail; the v554 private
-function has no own MAP public. The remaining registration menu and other
+renderer, and 180-byte clear-state/sprite initializer. The v553 rank
+acceptance checks the v542 Ghidra-missed reachable tail; the v489 candidate
+MAP corroborates the v554 entry at `0A74:24A3`, but does not prove an original
+name. The remaining registration menu and other
 candidate hi_view source are still untrusted. Continue with
 target-first input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin

@@ -28,9 +28,10 @@ returns, next-entry adjacency, available candidate MAP publics, and raw-equal OP
 v489 candidate slices. Pinned ReC98 history separately introduces all five
 logical functions under explicit `[Decompilation]` subjects. Those source
 files remain candidate material even though their linked bytes match.
-The private `cleardata_and_regist_view_sprite` entry has no own MAP public;
-its physical SCORE_TEXT ownership is established by the grouped contribution,
-target flow, and neighboring entries, not by a nonexistent public symbol.
+The v489 candidate MAP lists `cleardata_and_regist_view_sprite()` at
+`0A74:24A3`, and `main_cdg_load()` at the next `0A74:2557` entry. This
+corroborates the target-reviewed physical extent, but not original naming or
+source provenance. The earlier "no own MAP public" statement was incorrect.
 The v489 MAP names the grouped physical SCORE producer `th04/scall.cpp`;
 `hi_view.cpp` is a logical included component. The boundary ledger's older
 `map_module=th04/hi_view.cpp` field describes its original candidate MAP
@@ -154,7 +155,7 @@ The full cold OP decoded-function wrapper passes all 16 registered slices;
 retained aggregate receipt SHA-256 is
 `b29eb9a03e836c630ddc8b91d388c799de74b2eb27834e616db4962473321ff8`.
 
-## v554 maintained private clear-state and sprite initializer
+## v554 maintained clear-state and sprite initializer
 
 OP SCORE_TEXT at `1A74:24A3`, decoded payload `0xCBE3..0xCC96`, is a
 180-byte function ending `RET` before OP_TITLE_TEXT begins at `0xCC97`.
@@ -175,10 +176,11 @@ linked functions are raw-zero against target SHA-256
 `2093f45b6f1e8fda9ef6004999ba3dedbf24c6ec12134c11262ad8dd455b633c`.
 
 Replay with `python3 scripts/probes/replay_th04_op_clear_sprites.py
---output-dir .analysis/reconstruction/probes/<new-id>`. Retained focused
-receipt `.analysis/reconstruction/probes/v554-op-clear-sprites-005/receipt.json`
+--output-dir .analysis/reconstruction/probes/<new-id>`. Retained corrected
+focused receipt
+`.analysis/reconstruction/probes/v555-op-clear-sprites-map-public-002/receipt.json`
 has SHA-256
-`cb47bde9df2d4642663f3d0f2200585ccc1be1d6da74bf59715904b6d95a9950`.
+`cffa9fcd2bf2ef051880a3f27e3d5f09c2d577907016983166f8215787cb3da1`.
 The first strict probe rejected standalone relocation differences as designed;
 the later probe records only explicitly located OMF fixup words. This accepts
 the reviewed decoded function, not the packed file, complete SCORE TU, or
@@ -186,3 +188,21 @@ the preceding registration menu.
 The full cold OP decoded-function wrapper passes all 17 registered slices;
 retained aggregate receipt SHA-256 is
 `444800e04108ec7cba997b589cf8c3f194022cd14ecfd97844c27d7ce83a6c60`.
+
+## v555 candidate-MAP public correction
+
+The earlier v554 prose incorrectly called this function MAP-private. The
+attested v489 candidate MAP lists its public at `0A74:24A3`, followed by
+`main_cdg_load()` at `0A74:2557`; the older v542 boundary probe already
+required both entries. The focused harness now checks those exact address/name
+strings and records them separately from the target boundary in its receipt.
+The corrected two-round focused replay leaves the 180-byte raw-zero function,
+grouped SCORE_TEXT, full candidate EXE/MAP, and 804 ordered relocations
+unchanged. Candidate MAP symbols corroborate layout only; they do not prove
+original names or source authenticity.
+The corrected full OP wrapper rechecks all 17 accepted decoded slices with
+zero raw differences. Its retained receipt is
+`.analysis/reconstruction/probes/v555-op-map-correction-aggregate-001/receipt.json`
+(SHA-256 `f5808754a501d658ef4ebf3b9dfdb07f24c88a79e2a2c52c165868898cf38f7b`);
+the candidate-image and function-slice hashes are unchanged from the v554
+compact replay.

@@ -246,6 +246,12 @@ def run(spec: ScoreFunction, output: Path) -> Path:
         "baseline_exe_sha256": prior.INPUTS[prior.SNAPSHOT / "bin/th04/op.exe"],
         "source_sha256": source_hashes,
         "boundary": boundary,
+        "candidate_map": {
+            "sha256": prior.INPUTS[prior.SNAPSHOT / "obj/th04/op.map"],
+            "public_at_start": spec.map_public,
+            "next_public": spec.next_public,
+            "role": "candidate link corroboration, not original symbol provenance",
+        },
         "builds": builds,
         "limit": "Decoded function only; no packed offset, complete SCORE TU, or whole OP exact claim. Surrounding v489 source remains candidate scaffold.",
     }
