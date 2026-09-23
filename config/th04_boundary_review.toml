@@ -572,3 +572,15 @@ expected_tasm_proc = "sub_C3B2"
 reviewed_body_size = 0x154
 review_evidence_id = "ev-th04-maine-score-insert-boundary-v543"
 notes = "Target-reviewed MAINE score insertion extent; source independently compiles from src/maine/score/insert.cpp. score_insert is a descriptive name."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC506
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/put.cpp"
+expected_body_span = 0xE6
+expected_tasm_proc = "sub_C506"
+reviewed_body_size = 0xE6
+review_evidence_id = "ev-th04-maine-score-put-boundary-v544"
+notes = "Target-reviewed 230-byte score renderer ending RET 4 before stage_put; maintained C++ replays raw-zero. score_put is descriptive."

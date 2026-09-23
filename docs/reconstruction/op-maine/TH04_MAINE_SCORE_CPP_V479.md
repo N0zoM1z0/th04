@@ -613,3 +613,36 @@ snapshot supplies unaccepted surrounding SCORE/link scaffolding. Neither the
 whole SCORE TU nor the complete MAINE.EXE is claimed as restored product source
 or exact. The next target-first source experiment should inspect `sub_C506`
 and its physical dependencies before reusing any historical candidate text.
+
+## v544 maintained score renderer acceptance
+
+The next physical SCORE_TEXT function, `1A05:24B6` / payload
+`0xC506..0xC5EB`, is 230 bytes and ends in `RET 4`. Fresh target disassembly
+tiles the Ghidra-reported span, ten direct branches stay inside it, and the
+next public/function begins at `0xC5EC`. Target field references independently
+include `entered_place` at `0x4086`, `playchar` at `0x4088`, and high-score
+digits at `0x4020`/`0x4027`. Candidate MAP/TASM agreement corroborates the
+boundary but does not establish source authority. `score_put` is a descriptive
+name, not an asserted original symbol.
+
+Maintained `src/maine/score/put.cpp` and bounded `score_put.inl` use ordinary
+C++ arithmetic and calls through the repository-owned graphics declaration.
+`python3 scripts/probes/replay_th04_maine_score_put.py --output-dir
+.analysis/reconstruction/probes/v544-maine-score-put-001` independently compiles
+the 230-byte TU and includes the same bounded body in the historically grouped
+SCORE_TEXT source. Both cold rounds produce the identical link-relevant OMF,
+standalone CODE SHA-256
+`2133ca16b63c6ae5d0435d2ec254b2b7041da5e3abf2ce40e3f67bb730793308`,
+and target-equal linked function SHA-256
+`4ee2bfe2eff6035c43d09d1bce72c928760117344e5816a32f0378fb2a8a7437`.
+All 559 target-ordered relocations, the v489 candidate EXE, and MAP remain
+unchanged. Focused receipt SHA-256:
+`01859a07a7f1888e104a6922403194ec0a9f68c832e66a89524f00f8ede9a6e9`.
+The complete MAINE decoded-function wrapper passes all 15 registered slices;
+its receipt SHA-256 is
+`3ba1552ca345c0460b207fade5652206a3715b036730e15b37b8458d933ca497`.
+
+The acceptance is restricted to this complete decoded function. Its packed
+DIET file offset is unknown, while the surrounding v489 ReC98 source is
+unaccepted scaffolding. Neither the complete SCORE TU nor MAINE.EXE is exact.
+Next inspect the `0xC5EC` stage renderer target-first.

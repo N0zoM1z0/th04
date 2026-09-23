@@ -46,9 +46,10 @@ MAINE's hi_end candidate-C++ owners and OP's five remaining hi_view owners are
 now physically reviewed. The OP review corrected Ghidra's truncated
 `rank_render` body from `0x3C` to a reachable `0x7A` bytes. All pinned ReC98
 implementations examined in v540-v542 have explicit decompilation provenance
-and grant no source credit. In v543 MAINE `score_insert` was independently
-cold-compiled from maintained natural source and matched all 340 linked bytes,
-bringing MAINE to 14 functions / 1,180 decoded source-owner bytes. This is a
+and grant no source credit. In v543-v544 MAINE `score_insert` and `score_put`
+were independently cold-compiled from maintained natural source and matched
+all 340 and 230 linked bytes, bringing MAINE to 15 functions / 1,410 decoded
+source-owner bytes. This is a
 function-level acceptance, not a packed-file or entire SCORE-TU claim. Continue
 with new target-first owners while keeping source authority separate from
 byte/codegen corroboration.
@@ -77,8 +78,8 @@ OP next: move beyond the now-reviewed hi_view SCORE owners without importing
 decompiled candidate C++; examine small input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
-v541 and its first SCORE_TEXT insertion function is accepted after v543; move
-next to adjacent SCORE_TEXT owners and then small
+v541 and its first two SCORE_TEXT functions are accepted after v543-v544; move
+next to the adjacent stage renderer and other SCORE_TEXT owners, then small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
 confidence. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link
