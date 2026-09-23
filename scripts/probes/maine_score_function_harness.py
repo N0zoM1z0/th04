@@ -17,7 +17,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[0:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/probes")]
 
-from lib.omf import describe_omf  # noqa: E402
+from lib.omf import describe_omf, parse_omf  # noqa: E402
 from lib.pc98 import parse_mz  # noqa: E402
 from probe_th04_maine_staff_full_cpp_v478 import segment_bytes  # noqa: E402
 from probe_th04_score_hiscore_boundaries import branch_edges, disassemble, ghidra_rows  # noqa: E402
@@ -25,6 +25,7 @@ from probe_th04_maine_segment_topology_v470 import tcc  # noqa: E402
 from probe_th04_maine_score_producers_v468 import RUNNER, RUNNER_SHA, run_checked  # noqa: E402
 from replay_th04_shared_delay_measure import link_relevant_omf_sha  # noqa: E402
 from replay_th04_zun_source_only import source_closure  # noqa: E402
+from replay_th04_scroll_driver_natural import fixup_locations  # noqa: E402
 import replay_th04_maine_score_insert as prior  # noqa: E402
 
 
@@ -44,6 +45,7 @@ class ScoreFunction:
     map_public: str
     next_public: str
     target_references: tuple[bytes, ...]
+    standalone_near_fixup_word: int | None = None
 
 
 def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
@@ -170,8 +172,23 @@ def run(spec: ScoreFunction, output: Path) -> Path:
         if not local_omf["valid"] or "TC86 Borland C++ 4.02" not in local_omf["translator_comments"]:
             raise RuntimeError(f"{label}: standalone {spec.name} OMF drift")
         local_code = segment_bytes(local_obj, "SCORE_TEXT")
-        if local_code != object_body:
-            raise RuntimeError(f"{label}: maintained {spec.name} standalone CODE differs")
+        differences = tuple(i for i, (left, right) in enumerate(zip(local_code, object_body))
+                            if left != right)
+        if len(local_code) != spec.size:
+            raise RuntimeError(f"{label}: maintained {spec.name} standalone CODE size drift")
+        if spec.standalone_near_fixup_word is None:
+            if differences:
+                raise RuntimeError(f"{label}: maintained {spec.name} standalone CODE differs")
+        else:
+            word = spec.standalone_near_fixup_word
+            if (differences != (word, word + 1) or word < 1 or word + 1 >= spec.size
+                    or local_code[word - 1] != 0xE8 or object_body[word - 1] != 0xE8):
+                raise RuntimeError(f"{label}: {spec.name} non-fixup CODE mismatch: {differences}")
+            fixups = [location for record in parse_omf(local_obj.read_bytes())
+                      if record.record_type == 0x9C
+                      for _, location in fixup_locations(record.data)]
+            if word not in fixups:
+                raise RuntimeError(f"{label}: {spec.name} near-call OMF fixup missing")
         (work / "obj/th04/scoreall.obj").unlink()
         tcc(work, output, f"{spec.version}-group-{label}", "th04/scoreall.cpp")
         group_obj = work / "obj/th04/scoreall.obj"
@@ -195,6 +212,8 @@ def run(spec: ScoreFunction, output: Path) -> Path:
         builds[label] = {
             "standalone_object_link_relevant_sha256": link_relevant_omf_sha(local_obj),
             "standalone_code_sha256": prior.sha(local_code),
+            "standalone_code_difference_offsets": differences,
+            "standalone_near_fixup_word": spec.standalone_near_fixup_word,
             "group_object_link_relevant_sha256": link_relevant_omf_sha(group_obj),
             "group_code_sha256": prior.sha(base_code),
             "linked_exe_sha256": prior.sha_file(exe),

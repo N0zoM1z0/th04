@@ -677,3 +677,40 @@ each new function still needs its own target-first physical review and natural
 source. The three accepted SCORE functions total 691 decoded owner bytes;
 their DIET-packed file offsets and the rest of the physical SCORE TU remain
 unaccepted. The next adjacent owner starts at `0xC665`.
+
+## v548 maintained name cursor renderer
+
+The next physical MAINE SCORE_TEXT owner is `1A05:2615`, decoded payload
+`0xC665..0xC710`, exactly `0xAC` (172) bytes, ending `RET 6` before
+`place_row_put` at `0xC711`. Fresh target disassembly tiles the 172-byte
+attested Ghidra extent with 71 instructions; all four direct branches stay
+inside it. The near call at `0xC6A6` targets the private SCORE rectangle-copy
+helper. The name `name_cursor_put` is descriptive, not original-source proof.
+
+Maintained natural C++ is in `src/maine/score/cursor.cpp` and
+`name_cursor.inl`. The v548 bounded harness compiles it twice with pinned
+TC86 4.02. Standalone SCORE_TEXT CODE has only two differences from the
+grouped baseline body, at local offsets `0x42..0x43`: the relative displacement
+of that near call. Its OMF FIXUPP explicitly owns the word. The grouped
+SCORE_TEXT object is identical to the v489 baseline; both complete linked
+functions are raw-zero against target SHA-256
+`a56e939fd6ecbb8809646a383d1c5c13fd41c7768e2b0a7ff87563ec2954d823`.
+All 559 ordered relocations, full candidate EXE, and MAP remain unchanged.
+
+Replay with `python3 scripts/probes/replay_th04_maine_name_cursor.py
+--output-dir .analysis/reconstruction/probes/<new-id>`; the retained focused
+receipt is `.analysis/reconstruction/probes/v548-maine-name-cursor-002/receipt.json`
+with SHA-256
+`f0b450c5932ef4b5d289efa1c16a79c48abf3f79c5d68ae174506ab0a6bf48a2`.
+The first scratch run failed its grouped compile because the replacement
+anchor swallowed an unrelated `gALPHABET` declaration; the corrected anchor
+preserves it. This was a harness-composition error, not evidence of a target
+or compiler mismatch.
+
+This grants only the complete decoded cursor function. The four maintained
+MAINE SCORE functions total 863 bytes; neither the DIET-packed file nor the
+whole SCORE translation unit is exact. Next review the adjacent `place_row_put`
+owner target-first before considering a new source candidate.
+The complete cold MAINE decoded-function wrapper passes all 17 registered
+slices; retained aggregate receipt SHA-256 is
+`f164000f6cfb8f5c0374d8826693c32216576c36033c00b59891a48bc19963a8`.

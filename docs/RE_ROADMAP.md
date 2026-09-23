@@ -22,8 +22,8 @@ function comparisons and target-ordered relocations. The ZUN graph-clear
 support backend is also rebased and raw-zero on its 36-byte library-origin
 slice, but this does not grant authored-function acceptance. See the
 [three-artifact smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md).
-The shared hardware/PI/sound cohort is complete. MAINE now also has one
-artifact-local SCORE insertion backend; expand natural source one reviewed
+The shared hardware/PI/sound cohort is complete. MAINE now also has four
+artifact-local SCORE function backends; expand natural source one reviewed
 physical owner at a time while resolving ZUN's remaining source authority.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
@@ -49,8 +49,9 @@ implementations examined in v540-v542 have explicit decompilation provenance
 and grant no source credit. In v543-v544 MAINE `score_insert` and `score_put`
 were independently cold-compiled from maintained natural source and matched
 all 340 and 230 linked bytes. v547 adds the adjacent 121-byte stage renderer
-with a reusable bounded SCORE function harness, bringing MAINE to 16 functions
-/ 1,531 decoded
+with a reusable bounded SCORE function harness. v548 adds the adjacent 172-byte
+name cursor renderer after proving its standalone near-call OMF fixup and
+grouped raw-zero link. MAINE now has 17 functions / 1,703 decoded
 source-owner bytes. This is a
 function-level acceptance, not a packed-file or entire SCORE-TU claim. Continue
 with new target-first owners while keeping source authority separate from
@@ -81,8 +82,8 @@ the rest of the candidate hi_view source is still untrusted. Continue with
 target-first input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
-v541 and its first three SCORE_TEXT functions are accepted after v543-v547;
-move next to the adjacent cursor and other SCORE_TEXT owners, then small
+v541 and its first four SCORE_TEXT functions are accepted after v543-v548;
+move next to the adjacent place-row and other SCORE_TEXT owners, then small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
 confidence. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link

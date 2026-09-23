@@ -178,6 +178,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("maine-stage-put-v547", saved)[1],
             "scripts/probes/replay_th04_maine_stage_put.py",
         )
+        self.assertEqual(
+            acceptance.backend_command("maine-name-cursor-v548", saved)[1],
+            "scripts/probes/replay_th04_maine_name_cursor.py",
+        )
         with self.assertRaisesRegex(ValueError, "unknown decoded replay backend"):
             acceptance.backend_command("not-a-backend", saved)
 
@@ -245,6 +249,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         stage = next(row for row in entries if row["replay_backend"] == "maine-stage-put-v547")
         stage["replay_backend"] = "op-stage-put-v545"
         with self.assertRaisesRegex(ValueError, "OP stage-put backend does not compile"):
+            self.check(entries)
+
+    def test_maine_name_cursor_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        cursor = next(row for row in entries if row["replay_backend"] == "maine-name-cursor-v548")
+        cursor["replay_backend"] = "maine-stage-put-v547"
+        with self.assertRaisesRegex(ValueError, "MAINE stage-put backend does not compile"):
             self.check(entries)
 
 
