@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-22. This is the current-state index, not an experiment log.
+Updated 2026-09-23. This is the current-state index, not an experiment log.
 The ledgers and generated [progress](PROGRESS.md) are authoritative; old
 versioned notes describe their historical packet. The active work plan is
 in [RE_ROADMAP.md](RE_ROADMAP.md).
@@ -18,7 +18,7 @@ python3 scripts/audit_compat_dependencies.py --check
 python3 scripts/ghidra.py th04-op check  # substitute artifact under review
 ```
 
-All four targets and OP/MAINE/ZUN databases passed the 2026-09-22 preflight
+All four targets and OP/MAINE/ZUN databases passed the 2026-09-23 preflight
 and fresh read-only attestation. Target canonicality remains
 `candidate-local-attested`, not independently pristine.
 
@@ -26,7 +26,7 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 19 / 66 / 8 | 13 | 80 | SCORE codec/load/score-render boundaries reviewed; remaining OP hi_view owners |
+| OP.EXE | 93 | 24 / 61 / 8 | 13 | 80 | hi_view complete physical review; next small input/vector/init owner |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
 | MAINE.EXE | 72 | 19 / 46 / 7 | 13 | 59 | MAINE hi_end C++ boundaries reviewed; source authority still decompilation |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | ZUNINIT/MEMCHK provenance; external component inputs |
@@ -111,7 +111,8 @@ credit between artifacts.
 - v536 closes the external MASTER archive dependency for the ZUN resident. Fifteen already-localized support members are rebuilt into a deterministic 8192-byte compact archive, while GRAPH_CLEAR remains a standalone local object; the external 640-member masters.lib is not read or linked. The same 6360-byte candidate resident is reproduced with 4241 target differences. Remaining external link inputs are c0t.obj, emu.lib, maths.lib, and ct.lib. This is dependency closure only; ZUN authored exact remains zero. See the [v536 compact MASTER note](reconstruction/zun/TH04_ZUN_COMPACT_MASTER_V536.md).
 - v537 proves emu.lib and maths.lib are unused by the resident: removing both from the link response changes zero COM or MAP bytes. c0t.obj contributes c0.ASM, while fresh TLIB/MAP classification reduces CT.LIB to exactly 26 pulled runtime members. The remaining external runtime surface is therefore c0t.obj plus CT.LIB; this is compiler/runtime inventory only and ZUN authored exact remains zero. See the [v537 runtime inventory note](reconstruction/zun/TH04_ZUN_RUNTIME_INVENTORY_V537.md).
 - v540 target-reviews the OP and MAINE scoredat_decode / scoredat_encode / scoredat_recreate physical boundaries independently. Target Ghidra spans, complete disassembly, internal jump closure, adjacent entries, and each artifact's v489 linked bytes all agree. Pinned ReC98 history introduces the logical codec implementations explicitly as Decompilation, so all six rows remain candidate-cpp / unreviewed with no source-present or exact credit. See the [v540 SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
-- v541 target-reviews four additional SCORE/high-score owners: OP hiscore_scoredat_load_both and scores_put, plus MAINE hiscore_scoredat_load_for and hiscore_scoredat_save. Target Ghidra spans, complete disassembly, internal branch closure, adjacent entries, and artifact-local v489 linked bytes all agree. Each logical function is directly present in an explicitly Decompilation-labeled ReC98 commit, so all four remain candidate-cpp / unreviewed with no source-present or exact credit. MAINE hi_end physical C++ owners are now reviewed; OP hi_view still has five corroborated owners. See the [v541 SCORE high-score note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md).
+- v541 target-reviews four additional SCORE/high-score owners: OP hiscore_scoredat_load_both and scores_put, plus MAINE hiscore_scoredat_load_for and hiscore_scoredat_save. Target Ghidra spans, complete disassembly, internal branch closure, adjacent entries, and artifact-local v489 linked bytes all agree. Each logical function is directly present in an explicitly Decompilation-labeled ReC98 commit, so all four remain candidate-cpp / unreviewed with no source-present or exact credit. MAINE hi_end physical C++ owners are now reviewed. See the [v541 SCORE high-score note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md).
+- v542 independently target-reviews OP's five remaining hi_view owners. In `1A74:22DA`, `rank_render` is `0x7A` bytes, not Ghidra's truncated `0x3C`: a target JMP enters the omitted `0x3E`-byte reachable tail and the RET is at payload `0xCA93`. OP boundary counts become 24/61/8; source and exact counts do not change because all five ReC98 logical implementations have explicit decompilation introductions. See the [v542 OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md).
 - The [v509 three-artifact cold smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
   independently compiles and links maintained VRAM source into OP and MAINE:
   each complete 41-byte decoded function is raw-zero in two rounds with all

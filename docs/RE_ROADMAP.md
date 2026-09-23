@@ -1,6 +1,6 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-22. Live counts come from `python3 scripts/status.py` and
+Updated 2026-09-23. Live counts come from `python3 scripts/status.py` and
 `docs/PROGRESS.md`; regenerate them rather than editing counts here. This
 replaces MAIN-last-bytes-first work. MAIN's 27 bytes are an evidence-triggered
 side lane, not a dependency for the other artifacts.
@@ -41,11 +41,12 @@ padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
 packed-file accounting. v540/v541 have now target-reviewed the codec plus
 selected loading/saving/score-rendering SCORE boundaries in both artifacts.
-MAINE's hi_end candidate-C++ owners are physically reviewed; OP hi_view still
-has five corroborated owners. All pinned ReC98 implementation paths examined
-here are explicit decompilation provenance and grant no source credit. Continue
-OP hi_view target review while keeping source authority separate from
-byte/codegen corroboration.
+MAINE's hi_end candidate-C++ owners and OP's five remaining hi_view owners are
+now physically reviewed. The OP review corrected Ghidra's truncated
+`rank_render` body from `0x3C` to a reachable `0x7A` bytes. All pinned ReC98
+implementations examined here have explicit decompilation provenance and grant
+no source credit. Continue with new target-first owners while keeping source
+authority separate from byte/codegen corroboration.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
@@ -67,8 +68,8 @@ as source. Independently attest the 35 non-MAIN `attest-asm` observations
 
 ## 4. Reconstruct by physical translation unit
 
-OP first: continue the five remaining hi_view SCORE owners without importing
-decompiled candidate C++; then small input/vector/init helpers, title/setup,
+OP next: move beyond the now-reviewed hi_view SCORE owners without importing
+decompiled candidate C++; examine small input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
 v541; move next to its adjacent grouped/ASM SCORE ownership and then small

@@ -497,3 +497,63 @@ expected_body_span = 0x9C
 reviewed_body_size = 0x9C
 review_evidence_id = "ev-th04-maine-score-hiscore-boundaries-v541"
 notes = "hiscore_scoredat_save target boundary reviewed by v541; candidate source provenance remains decompilation."
+
+# v542 OP hi_view target review. rank_render has a Ghidra-truncated 0x3C-byte
+# body: its branch at 0xCA54 reaches the omitted 0xCA56..0xCA93 tail, so the
+# independently reviewed extent is 0x7A bytes. Candidate C++ grants no source
+# or exact acceptance.
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC8A5
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0x50
+reviewed_body_size = 0x50
+review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
+notes = "stage_put target extent reviewed by v542; candidate implementation is decompilation."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC8F5
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0x125
+reviewed_body_size = 0x125
+review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
+notes = "place_put target extent reviewed by v542; candidate implementation is decompilation."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xCA1A
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0x3C
+reviewed_body_size = 0x7A
+review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
+notes = "rank_render target flow reaches the 0x3E-byte tail missed by Ghidra; complete extent 0xCA1A..0xCA93, no source credit."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xCA94
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0x14F
+reviewed_body_size = 0x14F
+review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
+notes = "regist_view_menu target extent reviewed by v542; candidate implementation is decompilation."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xCBE3
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hi_view.cpp"
+expected_body_span = 0xB4
+reviewed_body_size = 0xB4
+review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
+notes = "cleardata_and_regist_view_sprite target extent reviewed by v542; candidate implementation is decompilation."
