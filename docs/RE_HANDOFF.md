@@ -26,7 +26,7 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 24 / 61 / 8 | 19 | 74 | Six hi_view owners accepted; continue with `scores_put` at payload `0xC79E` |
+| OP.EXE | 93 | 24 / 61 / 8 | 20 | 73 | Seven SCORE/high-score owners accepted; continue target-first with `scoredat_recreate` at payload `0xC68C` |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
 | MAINE.EXE | 72 | 26 / 39 / 7 | 21 | 51 | Seven SCORE_TEXT owners plus one high-score loader accepted; review registration menu or pivot subsystem |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | `_main` natural CALL shape; ZUNINIT/MEMCHK source authority |
@@ -50,8 +50,9 @@ file offsets for those decoded function bodies. MAINE additionally has the
 105-byte high-score loader at payload `0xC2AD`;
 OP additionally has 80-byte stage, 293-byte two-column row, 122-byte rank,
 335-byte registration menu, 180-byte clear-state/sprite owner, and the
-107-byte high-score loader at payload `0xC733`. Neither artifact, nor ZUN, has
-a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
+107-byte high-score loader at payload `0xC733` and 263-byte score renderer at
+payload `0xC79E`. Neither artifact, nor ZUN, has a file-backed authored-byte
+percentage yet. MAIN alone has 83,442 / 83,469
 reviewed file-backed authored C/C++ bytes exact and 492 / 494 reviewed
 authored functions exact. The 27-byte gap is checkerboard `LOOP` 2, Stage 4
 carpet 23, and shared `snd_load` encoding 2. It is not the project-wide gate.
@@ -70,15 +71,15 @@ remain for diagnosis. Full v554 OP/MAINE aggregate replays preserved the
 previous linked-image hashes and avoided the former roughly 1.2–1.5 GiB of
 retained duplicate snapshots per replay. Neither pinned inputs nor targets
 are deleted.
-The v558 OP wrapper checks 19/19 accepted decoded slices raw-zero in two
+The v559 OP wrapper checks 20/20 accepted decoded slices raw-zero in two
 rounds; MAINE's v557 wrapper checks 21/21. Their retained aggregate receipt
-directories are about 1.5 MiB and 1.6 MiB. The ZUN control still reports 13/130 raw differences for its two
+directories are about 1.6 MiB and 1.6 MiB. The ZUN control still reports 13/130 raw differences for its two
 source-present C++ diagnostics and grants no exact credit.
 The maintained reviewed shared hardware/PI/sound cohort is now complete: 13
 decoded-exact functions / 840 source-owner bytes in each OP/MAINE artifact.
-Eight MAINE SCORE/high-score functions bring MAINE to 21 / 2,067; six OP SCORE
-functions bring OP to 19 / 1,957. The next adjacent OP owner is `scores_put`
-at payload `0xC79E`; continue from target-first boundaries. Corroborated/provisional entries
+Eight MAINE SCORE/high-score functions bring MAINE to 21 / 2,067; seven OP SCORE
+functions bring OP to 20 / 2,220. The next target-first OP SCORE owner is
+`scoredat_recreate` at payload `0xC68C`. Corroborated/provisional entries
 still need target-local physical review before promotion. Do not transfer exact
 credit between artifacts.
 
@@ -142,7 +143,7 @@ credit between artifacts.
 - v554 accepts OP's 180-byte clear-state/sprite initializer at `1A74:24A3`, payload `0xCBE3..0xCC96`, ending `RET`. Target/Ghidra disassembly establishes its extent, while the v489 candidate MAP public at `0A74:24A3` corroborates placement without proving an original name. Maintained C++ matches standalone CODE outside one near-call and 25 data-address OMF fixup words, then links raw-zero in two cold rounds with 804 ordered relocations. The OP wrapper now covers 17 slices. Packed OP and whole SCORE TU remain unaccepted; v556 below accepts the adjacent registration menu. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v554-maintained-clear-state-and-sprite-initializer).
 - v556 accepts OP's adjacent 335-byte registration-view menu at `1A74:2354`, payload `0xCA94..0xCBE2`, ending `RET`. Target disassembly tiles 99 instructions with ten internal branches. Maintained natural C++ differs standalone only at five near-call and nine data-address OMF fixup words; grouped SCORE_TEXT and both complete linked target functions are raw-zero. Candidate EXE/MAP and all 804 ordered relocations remain stable, and the OP wrapper now checks 18 slices. Packed OP and whole SCORE TU remain unaccepted. See the [OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md#v556-maintained-registration-view-menu).
 - v557 accepts MAINE's target-reviewed 105-byte high-score loader at `1A05:225D`, payload `0xC2AD..0xC315`, ending `RET 2`. Maintained natural C++ reproduces the complete decoded function raw-zero in two focused cold links and the 21-slice aggregate replay; standalone differences are limited to two OMF near-call fixups. All 559 ordered relocations match, but candidate and target program sizes differ, so packed/whole-MAINE exactness remains open. See the [v541 high-score note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md#v557-maintained-maine-high-score-loader).
-- v558 accepts OP's target-reviewed 107-byte high-score loader at `1A74:1FF3`, payload `0xC733..0xC79D`. Maintained target-first C++ reproduces the complete slice raw-zero in two focused rounds and the 19-slice OP aggregate; all 804 ordered relocations match. The target string `GENSOU.SCR` is observed at payload `0x10682`. Candidate program size 69,028 versus target 72,256 leaves packed/whole-OP exactness open; continue at `scores_put`, payload `0xC79E`. See the [v558 OP loader note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md#v558-maintained-op-two-column-high-score-loader).
+- v558 accepts OP's target-reviewed 107-byte high-score loader at `1A74:1FF3`, payload `0xC733..0xC79D`. Maintained target-first C++ reproduces the complete slice raw-zero in two focused rounds and the 19-slice OP aggregate; all 804 ordered relocations match. The target string `GENSOU.SCR` is observed at payload `0x10682`. v559 then accepts the adjacent 263-byte `scores_put` renderer; both remain decoded-function claims only. Candidate program size 69,028 versus target 72,256 leaves packed/whole-OP exactness open. See the [v559 OP SCORE note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md#v559-maintained-op-score-renderer).
 - v540 target-reviews the OP and MAINE scoredat_decode / scoredat_encode / scoredat_recreate physical boundaries independently. Target Ghidra spans, complete disassembly, internal jump closure, adjacent entries, and each artifact's v489 linked bytes all agree. Pinned ReC98 history introduces the logical codec implementations explicitly as Decompilation, so all six rows remain candidate-cpp / unreviewed with no source-present or exact credit. See the [v540 SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
 - v541 target-reviews four additional SCORE/high-score owners: OP hiscore_scoredat_load_both and scores_put, plus MAINE hiscore_scoredat_load_for and hiscore_scoredat_save. Target Ghidra spans, complete disassembly, internal branch closure, adjacent entries, and artifact-local v489 linked bytes all agree. Each logical function is directly present in an explicitly Decompilation-labeled ReC98 commit, so all four remain candidate-cpp / unreviewed with no source-present or exact credit. MAINE hi_end physical C++ owners are now reviewed. See the [v541 SCORE high-score note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md).
 - v542 independently target-reviews OP's five remaining hi_view owners. In `1A74:22DA`, `rank_render` is `0x7A` bytes, not Ghidra's truncated `0x3C`: a target JMP enters the omitted `0x3E`-byte reachable tail and the RET is at payload `0xCA93`. OP boundary counts become 24/61/8; source and exact counts do not change because all five ReC98 logical implementations have explicit decompilation introductions. See the [v542 OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md).

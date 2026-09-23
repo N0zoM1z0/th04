@@ -148,3 +148,37 @@ the whole executable is exact. The `units.csv` owner remains `source-present`
 because its DIET-packed file offset is unknown; decoded exactness is recorded
 separately. The MAP label and retained ReC98 source remain candidate evidence,
 not proof of original-source provenance.
+
+## v559 maintained OP score renderer
+
+Fresh target boundary replay and the earlier v541 review agree that
+`scores_put` owns payload `0xC79E..0xC8A4` (263 bytes) at `1A74:205E`. The
+target stream has 102 instructions and four internal branches, terminates at
+`0xC8A2` with `RET 4`, and is followed by `stage_put` at `0xC8A5`. Its target
+slice SHA-256 is
+`f2d96c5f6893b598f652e03a82b3264267304b86b88e011286c946dc01695841`.
+
+Target operands read the final encoded score digits at `BX+0x3E17` and
+`BX+0x3EDB`, then the preceding digits from `BX+0x3E10` and `BX+0x3ED4`.
+The source implements both score columns with natural `super_put()` calls,
+suppresses an extra leading decimal digit below ten, and advances the remaining
+seven digit columns by 16 pixels. MAP names and ReC98's decompilation are
+candidate evidence only; the original source spelling is not asserted.
+
+The maintained owner is `src/op/score/scoreput.cpp` plus
+`src/op/score/scores_put.inl`. Focused cold replay verified four standalone
+data-address differences at CODE offsets `0x49`, `0x60`, `0x9C`, and `0xE7`;
+each is an actual OMF FIXUPP site. Both grouped `SCORE_TEXT` cold links
+reproduce the complete function raw-zero, the candidate EXE/MAP hashes remain
+stable, and all 804 ordered MZ relocation sites match. Focused receipt SHA-256:
+`5811b7cf58ae83bca0c04b90da3529e9142debf191b7b55d78818a25157c40fd`.
+
+The v559 OP aggregate checks all 20 registered decoded slices raw-zero in two
+cold rounds. Its receipt SHA-256 is
+`c28d6bf2f998a0670fcc7398f7250dcab95a1ed03e88aef9c8b30f9a033e99ae`; the
+retained directory is about 1.6 MiB, with generated A/B source trees removed.
+`scores_put` is `decoded-exact`, while its `units.csv` row remains
+`source-present` because the packed-file offset is unknown. The aggregate
+candidate image is still 69,028 bytes against the 72,256-byte target-restored
+program; OP.EXE is not exact. Continue target-first with the adjacent SCORE
+codec owner `scoredat_recreate` at payload `0xC68C`.

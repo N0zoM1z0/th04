@@ -327,6 +327,23 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_op_score_load_both.py",
         )
 
+    def test_op_scores_put_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries if row["replay_backend"] == "op-scores-put-v559")
+        owner["source"] = "src/op/score/stage.cpp"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries if row["replay_backend"] == "op-scores-put-v559")
+        owner["replay_backend"] = "op-score-load-both-v558"
+        with self.assertRaisesRegex(ValueError, "OP high-score loader backend does not compile"):
+            self.check(entries)
+        self.assertEqual(
+            acceptance.backend_command("op-scores-put-v559", ROOT / ".analysis/reconstruction/probes/test")[1],
+            "scripts/probes/replay_th04_op_scores_put.py",
+        )
+
     def test_op_place_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         place = next(row for row in entries if row["replay_backend"] == "op-place-put-v552")
