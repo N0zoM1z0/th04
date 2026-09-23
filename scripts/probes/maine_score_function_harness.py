@@ -48,6 +48,9 @@ class ScoreFunction:
     target_references: tuple[bytes, ...]
     standalone_near_fixup_word: int | None = None
     standalone_near_fixup_words: tuple[int, ...] = ()
+    translation_unit: str = "th04/score86.cpp"
+    translation_unit_sha256: str | None = None
+    replace_end_anchor: bool = False
 
 
 def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
@@ -99,9 +102,12 @@ def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
 
 
 def overlay_source(spec: ScoreFunction, work: Path) -> None:
-    path = work / "th04/score86.cpp"
-    if prior.sha_file(path) != prior.BASE_SCORE_SOURCE_SHA:
-        raise RuntimeError("v489 SCORE source drift")
+    path = work / spec.translation_unit
+    expected = spec.translation_unit_sha256
+    if expected is None and spec.translation_unit == "th04/score86.cpp":
+        expected = prior.BASE_SCORE_SOURCE_SHA
+    if expected is None or prior.sha_file(path) != expected:
+        raise RuntimeError(f"v489 SCORE translation-unit drift: {spec.translation_unit}")
     shutil.copytree(ROOT / "src/shared", work / "src/shared", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src/maine/score", work / "src/maine/score", dirs_exist_ok=True)
     data = path.read_bytes()
@@ -109,6 +115,8 @@ def overlay_source(spec: ScoreFunction, work: Path) -> None:
         raise RuntimeError(f"{spec.name} source anchors not unique")
     start = data.index(spec.start_anchor)
     end = data.index(spec.end_anchor, start)
+    if spec.replace_end_anchor:
+        end += len(spec.end_anchor)
     include = f'#include "{spec.body}"\n\n'.encode("ascii")
     path.write_bytes(data[:start] + include + data[end:])
 
@@ -133,6 +141,14 @@ def run(spec: ScoreFunction, output: Path) -> Path:
     ):
         if prior.sha_file(path) != expected:
             raise RuntimeError(f"input identity drift: {path}")
+    translation_unit = prior.SNAPSHOT / spec.translation_unit
+    translation_unit_sha = prior.sha_file(translation_unit)
+    expected_translation_unit_sha = spec.translation_unit_sha256
+    if expected_translation_unit_sha is None and spec.translation_unit == "th04/score86.cpp":
+        expected_translation_unit_sha = prior.BASE_SCORE_SOURCE_SHA
+    if (expected_translation_unit_sha is None
+            or translation_unit_sha != expected_translation_unit_sha):
+        raise RuntimeError(f"candidate translation-unit identity drift: {translation_unit}")
     closure = source_closure(ROOT, (spec.source,))
     if spec.body not in closure:
         raise RuntimeError("bounded source body is not in compile closure")
@@ -244,6 +260,9 @@ def run(spec: ScoreFunction, output: Path) -> Path:
         "inventory_sha256": prior.INVENTORY_SHA,
         "analysis_image_sha256": prior.ANALYSIS_IMAGE_SHA,
         "baseline_exe_sha256": prior.BASE_EXE_SHA,
+        "candidate_translation_unit": spec.translation_unit,
+        "candidate_translation_unit_sha256": translation_unit_sha,
+        "replaced_end_anchor": spec.replace_end_anchor,
         "source_sha256": source_hashes,
         "boundary": boundary,
         "builds": builds,

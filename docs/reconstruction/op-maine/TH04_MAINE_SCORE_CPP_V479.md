@@ -69,11 +69,11 @@ Private receipt SHA-256:
 
 ## Next work
 
-Continue forward through the adjacent SCORE_TEXT helpers (`sub_C506`,
-`sub_C5EC`, `sub_C665`, `sub_C711`, `sub_C7C9`, `sub_C7E3`, registration menu,
-and the final EGC helper pair). The goal is to grow one natural TC86 SCORE_TEXT
-producer until its internal segment-FIXUPP order matches the remaining 34 target
-indices. Do not permute MZ relocation entries.
+This was the v479 starting queue; later sections record accepted owners through
+v551. The following registration menu and final EGC helper pair remain open.
+The separate earlier high-score loader is now reconstructed on the decoded
+plane; see the [v557 MAINE high-score loader](TH04_SCORE_HISCORE_BOUNDARIES_V541.md#v557-maintained-maine-high-score-loader).
+Do not permute MZ relocation entries.
 
 ## v480 score/stage rendering prefix
 
@@ -803,6 +803,12 @@ has SHA-256
 Seven maintained MAINE SCORE functions total 1,122 decoded source-owner bytes.
 The packed file, full SCORE translation unit, and following registration menu
 remain unaccepted.
-The full cold MAINE decoded-function wrapper passes all 20 registered slices;
-retained aggregate receipt SHA-256 is
+The v551 full cold MAINE decoded-function wrapper passed its 20 registered
+slices; its retained aggregate receipt SHA-256 is
 `67d7dc51601abba526b6056466590406b80ca3285d71860e130a6c81c7457bdb`.
+
+As of v557, the full cold MAINE decoded-function wrapper passes 21 slices,
+including the separately documented 105-byte high-score loader. Seven of the
+accepted SCORE_TEXT owners remain the natural C++ cohort described here; the
+eighth newly accepted MAINE SCORE/high-score function belongs to the earlier
+`score_hi` area, not this grouped SCORE_TEXT translation unit.

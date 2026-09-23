@@ -61,6 +61,7 @@ MODE_PRODUCERS = {"th04-op": 0xDCE4, "th04-maine": 0xCFAA}
 DELAY_PRODUCERS = {"th04-op": 0xDD80, "th04-maine": 0xD046}
 MAINE_SCORE_INSERT_PRODUCER = 0xC3B2
 MAINE_SCORE_PUT_PRODUCER = 0xC506
+MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
 MAINE_STAGE_PUT_PRODUCER = 0xC5EC
 MAINE_NAME_CURSOR_PRODUCER = 0xC665
 MAINE_PLACE_ROW_PRODUCER = 0xC711
@@ -188,7 +189,8 @@ def validate(
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
-                                 "maine-score-insert-v543", "maine-score-put-v544", "op-stage-put-v545",
+                                 "maine-score-insert-v543", "maine-score-put-v544",
+                                 "maine-score-load-for-v557", "op-stage-put-v545",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
                                  "op-regist-menu-v556",
                                  "maine-stage-put-v547", "maine-name-cursor-v548", "maine-place-row-v549",
@@ -247,6 +249,12 @@ def validate(
                     or producer_start != MAINE_SCORE_PUT_PRODUCER
                     or producer_size != 0xE6):
                 raise ValueError(f"{ident}: MAINE score-put backend does not compile this producer")
+        elif backend == "maine-score-load-for-v557":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/score/load_for.cpp"
+                    or producer_start != MAINE_SCORE_LOAD_FOR_PRODUCER
+                    or producer_size != 0x69):
+                raise ValueError(f"{ident}: MAINE score-load backend does not compile this producer")
         elif backend == "maine-stage-put-v547":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/score/stage.cpp"
@@ -464,6 +472,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-put-v544":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_put.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-score-load-for-v557":
+        return [sys.executable, "scripts/probes/replay_th04_maine_score_load_for.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-stage-put-v547":
         return [sys.executable, "scripts/probes/replay_th04_maine_stage_put.py",
