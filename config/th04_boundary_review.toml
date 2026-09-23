@@ -530,11 +530,11 @@ artifact = "th04-op"
 payload_offset = 0xCA1A
 origin = "authored"
 source_form = "candidate-cpp"
-source_ref = "candidate:th04/hi_view.cpp"
+source_ref = "src/op/score/rank.cpp"
 expected_body_span = 0x3C
 reviewed_body_size = 0x7A
-review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
-notes = "rank_render target flow reaches the 0x3E-byte tail missed by Ghidra; complete extent 0xCA1A..0xCA93, no source credit."
+review_evidence_id = "ev-th04-op-rank-render-boundary-v553"
+notes = "Target-reviewed 122-byte rank renderer includes the 0x3E-byte reachable tail omitted by Ghidra; maintained natural C++ links raw-zero. Descriptive name."
 
 [[function_overrides]]
 artifact = "th04-op"

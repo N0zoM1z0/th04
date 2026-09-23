@@ -179,6 +179,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_op_place_put.py",
         )
         self.assertEqual(
+            acceptance.backend_command("op-rank-render-v553", saved)[1],
+            "scripts/probes/replay_th04_op_rank_render.py",
+        )
+        self.assertEqual(
             acceptance.backend_command("maine-stage-put-v547", saved)[1],
             "scripts/probes/replay_th04_maine_stage_put.py",
         )
@@ -265,6 +269,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         place = next(row for row in entries if row["replay_backend"] == "op-place-put-v552")
         place["replay_backend"] = "op-stage-put-v545"
         with self.assertRaisesRegex(ValueError, "OP stage-put backend does not compile"):
+            self.check(entries)
+
+    def test_op_rank_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        rank = next(row for row in entries if row["replay_backend"] == "op-rank-render-v553")
+        rank["replay_backend"] = "op-place-put-v552"
+        with self.assertRaisesRegex(ValueError, "OP place-put backend does not compile"):
             self.check(entries)
 
     def test_maine_stage_backend_is_artifact_and_source_bound(self) -> None:

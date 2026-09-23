@@ -80,10 +80,10 @@ as source. Independently attest the 35 non-MAIN `attest-asm` observations
 
 ## 4. Reconstruct by physical translation unit
 
-OP now has two locally maintained hi_view renderers accepted after v545/v552:
-the 80-byte stage renderer and 293-byte two-column row renderer. The rest of
-the candidate hi_view source is still untrusted; `rank_render` needs its
-v542 reachable-tail correction in every replay. Continue with
+OP now has three locally maintained hi_view renderers accepted after
+v545/v552/v553: 80-byte stage, 293-byte two-column row, and 122-byte rank
+renderer. The v553 rank acceptance checks the v542 Ghidra-missed reachable
+tail. The rest of the candidate hi_view source is still untrusted. Continue with
 target-first input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after

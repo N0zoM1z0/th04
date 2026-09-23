@@ -67,6 +67,7 @@ MAINE_PLACES_PRODUCER = 0xC7C9
 MAINE_ALPHABET_CURSOR_PRODUCER = 0xC7E3
 OP_STAGE_PUT_PRODUCER = 0xC8A5
 OP_PLACE_PUT_PRODUCER = 0xC8F5
+OP_RANK_RENDER_PRODUCER = 0xCA1A
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -185,7 +186,7 @@ def validate(
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
                                  "maine-score-insert-v543", "maine-score-put-v544", "op-stage-put-v545",
-                                 "op-place-put-v552",
+                                 "op-place-put-v552", "op-rank-render-v553",
                                  "maine-stage-put-v547", "maine-name-cursor-v548", "maine-place-row-v549",
                                  "maine-places-v550", "maine-alphabet-cursor-v551"})
         if backend not in allowed_backend:
@@ -284,6 +285,12 @@ def validate(
                     or producer_start != OP_PLACE_PUT_PRODUCER
                     or producer_size != 0x125):
                 raise ValueError(f"{ident}: OP place-put backend does not compile this producer")
+        elif backend == "op-rank-render-v553":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/score/rank.cpp"
+                    or producer_start != OP_RANK_RENDER_PRODUCER
+                    or producer_size != 0x7A):
+                raise ValueError(f"{ident}: OP rank-render backend does not compile this producer")
         elif (source_name != "src/shared/sound/delay_until_measure.cpp"
               or producer_start != DELAY_PRODUCERS[artifact] or producer_size != 0x31):
             raise ValueError(f"{ident}: delay backend does not compile this producer")
@@ -462,6 +469,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "op-place-put-v552":
         return [sys.executable, "scripts/probes/replay_th04_op_place_put.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-rank-render-v553":
+        return [sys.executable, "scripts/probes/replay_th04_op_rank_render.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-maine-bgimage-v489":
         snapshot = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"

@@ -37,19 +37,26 @@ class ScoreFunction:
     target_references: tuple[bytes, ...]
     standalone_near_fixup_words: tuple[int, ...] = ()
     standalone_data_fixup_words: tuple[int, ...] = ()
+    ghidra_prefix_size: int | None = None
 
 
 def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
     row = prior.ghidra_rows(prior.INVENTORY).get(spec.offset)
     linear = 0x10000 + spec.offset
+    ghidra_size = spec.ghidra_prefix_size or spec.size
+    if spec.ghidra_prefix_size is not None and (
+        spec.name != "rank_render" or spec.offset != 0xCA1A or spec.size != 0x7A
+        or ghidra_size != 0x3C or body[0x3A:0x3C] != b"\xeb\x05"
+    ):
+        raise RuntimeError("OP rank_render Ghidra-tail exception drift")
     if row is None or (
         int(row["entry_linear"], 0) != linear
         or int(row["entry_segment"], 0) != 0x1A74
         or int(row["entry_offset"], 0) != spec.segment_offset
         or int(row["body_min_linear"], 0) != linear
-        or int(row["body_max_linear"], 0) != linear + spec.size - 1
-        or int(row["body_addresses"]) != spec.size
-        or int(row["body_span"]) != spec.size
+        or int(row["body_max_linear"], 0) != linear + ghidra_size - 1
+        or int(row["body_addresses"]) != ghidra_size
+        or int(row["body_span"]) != ghidra_size
         or row["contiguous"] != "true"
         or row["body_range_count"] != "1"
     ):
@@ -67,6 +74,11 @@ def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
             or not str(rows[-1]["text"]).endswith(spec.terminal)):
         raise RuntimeError(f"OP target {spec.name} instruction/RET drift")
     edges = prior.branch_edges(rows)
+    if spec.ghidra_prefix_size is not None and not any(
+        source == 0xCA54 and destination == 0xCA5B
+        for source, _, destination in edges
+    ):
+        raise RuntimeError("OP rank_render reachable tail lost")
     if any(not spec.offset <= dest < spec.offset + spec.size or dest not in starts
            for _, _, dest in edges):
         raise RuntimeError(f"OP target {spec.name} direct branch escapes")
@@ -79,7 +91,8 @@ def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
         "payload_offset": f"0x{spec.offset:X}",
         "size": spec.size,
         "target_sha256": prior.sha(body),
-        "ghidra_span": spec.size,
+        "ghidra_span": ghidra_size,
+        **({"target_reviewed_span": spec.size} if spec.ghidra_prefix_size is not None else {}),
         "instruction_count": len(rows),
         "direct_branches": len(edges),
         "terminal": str(rows[-1]["text"]),
@@ -173,6 +186,7 @@ def run(spec: ScoreFunction, output: Path) -> Path:
                            for word in near_words)
                     or any(word < 2 or word + 1 >= spec.size
                            or not (local_code[word - 1] == object_body[word - 1] == 0x05
+                                   or local_code[word - 1] == object_body[word - 1] == 0xA0
                                    or local_code[word - 2:word] == object_body[word - 2:word] == b"\x8a\x84")
                            for word in data_words)
                     or not set(differences).issubset(allowed)

@@ -117,3 +117,36 @@ when reconstructed.
 The full cold OP decoded-function wrapper passes all 15 registered slices;
 retained aggregate receipt SHA-256 is
 `7e796a3c2f833e6f8cb804d92687c0bf4a8b3c579db5d63b2edc9393a01969d8`.
+
+## v553 maintained rank renderer with reachable Ghidra tail
+
+The OP SCORE_TEXT function at `1A74:22DA` is decoded payload
+`0xCA1A..0xCA93`, `0x7A` (122) bytes ending `RET` before `regist_view_menu`
+at `0xCA94`. The live Ghidra inventory still reports only the 60-byte prefix
+`0xCA1A..0xCA55`. Target bytes at `0xCA54` encode `JMP 0xCA5B`; the tail is
+reachable, contains the loop and rank-glyph calls, and ends at `0xCA93`.
+Fresh target disassembly tiles all 122 bytes with 47 instructions and two
+internal direct branches. The new harness permits this prefix discrepancy
+only for the pinned `rank_render` extent and explicitly checks the jump into
+the tail. The name is descriptive, not original-source proof.
+
+Maintained natural C++ is in `src/op/score/rank.cpp` and bounded
+`rank_render.inl`. Two pinned TC86 4.02 standalone CODE bodies differ from
+the grouped owner only at three near `place_put` call displacements and two
+absolute rank-global loads; all five words have OMF FIXUPP entries. The
+grouped SCORE_TEXT object, full candidate EXE/MAP, and 804 ordered
+relocations remain v489-identical. Both complete linked functions are
+raw-zero against target SHA-256
+`42f01ff3f1a4f34d2f5b06cce22e05d6b617e3491f0dfa7b8ee6d72bc9be8a1e`.
+
+Replay with `python3 scripts/probes/replay_th04_op_rank_render.py --output-dir
+.analysis/reconstruction/probes/<new-id>`; retained focused receipt
+`.analysis/reconstruction/probes/v553-op-rank-render-002/receipt.json` has
+SHA-256 `3dcfc70275402a7590faf55a58c81a421b7c9c57d989e1e5d0935f25024518aa`.
+The first scratch probe failed its strict standalone gate until the two
+rank-global `MOV AL,[imm16]` fixups were independently located in OMF. This
+accepts the whole target-reviewed function, not the packed file, complete
+SCORE TU, or following registration menu.
+The full cold OP decoded-function wrapper passes all 16 registered slices;
+retained aggregate receipt SHA-256 is
+`b29eb9a03e836c630ddc8b91d388c799de74b2eb27834e616db4962473321ff8`.
