@@ -22,7 +22,7 @@ function comparisons and target-ordered relocations. The ZUN graph-clear
 support backend is also rebased and raw-zero on its 36-byte library-origin
 slice, but this does not grant authored-function acceptance. See the
 [three-artifact smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md).
-The shared hardware/PI/sound cohort is complete. MAINE now also has six
+The shared hardware/PI/sound cohort is complete. MAINE now also has seven
 artifact-local SCORE function backends; expand natural source one reviewed
 physical owner at a time while resolving ZUN's remaining source authority.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
@@ -53,7 +53,8 @@ with a reusable bounded SCORE function harness. v548 adds the adjacent 172-byte
 name cursor renderer after proving its standalone near-call OMF fixup and
 grouped raw-zero link. v549 adds the adjacent 184-byte score-entry row
 renderer with two separately attested near-call fixups. v550 adds the 26-byte
-places dispatcher with its single near-call fixup. MAINE now has 19 functions / 1,913 decoded
+places dispatcher with its single near-call fixup. v551 adds the 49-byte
+alphabet cursor renderer with standalone CODE equality. MAINE now has 20 functions / 1,962 decoded
 source-owner bytes. This is a
 function-level acceptance, not a packed-file or entire SCORE-TU claim. Continue
 with new target-first owners while keeping source authority separate from
@@ -84,8 +85,9 @@ the rest of the candidate hi_view source is still untrusted. Continue with
 target-first input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
-v541 and its first six SCORE_TEXT functions are accepted after v543-v550;
-move next to the adjacent alphabet cursor and other SCORE_TEXT owners, then small
+v541 and its first seven SCORE_TEXT functions are accepted after v543-v551;
+move next to the registration menu only after its physical review or pivot to
+other bounded SCORE_TEXT owners and small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
 confidence. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link

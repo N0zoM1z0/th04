@@ -777,3 +777,32 @@ Next inspect the alphabet cursor renderer at `0xC7E3` target-first.
 The full cold MAINE decoded-function wrapper passes all 19 registered slices;
 retained aggregate receipt SHA-256 is
 `8587283869c0e5da725a0acd58c364e2bbf9c97965c5e6858d85e4f2822057ea`.
+
+## v551 maintained alphabet cursor renderer
+
+The adjacent MAINE SCORE_TEXT owner at `1A05:2793`, decoded payload
+`0xC7E3..0xC813`, is `0x31` (49) bytes ending `RET 6` before `regist_menu`
+at `0xC814`. All 23 target instructions tile the attested Ghidra span and
+there are no internal branch escapes. The code reads an external alphabet
+table at the target displacement `0x082C` and makes a far gaiji call; this
+does not establish original source ownership of that table.
+
+Maintained natural C++ in `src/maine/score/alpha.cpp` includes only the
+bounded `alphabet_cursor.inl`. Both pinned TC86 4.02 standalone CODE bodies
+already match the 49-byte grouped owner with zero differences: no special
+data-fixup exception was required. Grouped SCORE_TEXT, the full candidate
+EXE/MAP, and all 559 ordered relocations remain v489-identical; both linked
+functions are raw-zero against target SHA-256
+`58e2ceb2bc35e2055a362078ce7205adbcfb6857557feb2b3e6b004f5033bf2e`.
+
+Replay with `python3 scripts/probes/replay_th04_maine_alphabet_cursor.py
+--output-dir .analysis/reconstruction/probes/<new-id>`; focused receipt
+`.analysis/reconstruction/probes/v551-maine-alphabet-cursor-001/receipt.json`
+has SHA-256
+`7a1df5a92371551dfad1a3e0557cddeb963fa987899a9fa397aeb84ade515e87`.
+Seven maintained MAINE SCORE functions total 1,122 decoded source-owner bytes.
+The packed file, full SCORE translation unit, and following registration menu
+remain unaccepted.
+The full cold MAINE decoded-function wrapper passes all 20 registered slices;
+retained aggregate receipt SHA-256 is
+`67d7dc51601abba526b6056466590406b80ca3285d71860e130a6c81c7457bdb`.

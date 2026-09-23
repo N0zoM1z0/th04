@@ -632,3 +632,15 @@ expected_tasm_proc = "sub_C7C9"
 reviewed_body_size = 0x1A
 review_evidence_id = "ev-th04-maine-places-boundary-v550"
 notes = "Target-reviewed 26-byte score-entry row dispatcher ending RET 2 before alphabet_cursor_put; maintained C++ links raw-zero. Name is descriptive."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC7E3
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/alpha.cpp"
+expected_body_span = 0x31
+expected_tasm_proc = "sub_C7E3"
+reviewed_body_size = 0x31
+review_evidence_id = "ev-th04-maine-alphabet-cursor-boundary-v551"
+notes = "Target-reviewed 49-byte alphabet cursor renderer ending RET 6 before regist_menu; maintained C++ replays raw-zero. Name is descriptive."

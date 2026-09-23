@@ -190,6 +190,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("maine-places-v550", saved)[1],
             "scripts/probes/replay_th04_maine_places.py",
         )
+        self.assertEqual(
+            acceptance.backend_command("maine-alphabet-cursor-v551", saved)[1],
+            "scripts/probes/replay_th04_maine_alphabet_cursor.py",
+        )
         with self.assertRaisesRegex(ValueError, "unknown decoded replay backend"):
             acceptance.backend_command("not-a-backend", saved)
 
@@ -278,6 +282,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         places = next(row for row in entries if row["replay_backend"] == "maine-places-v550")
         places["replay_backend"] = "maine-place-row-v549"
         with self.assertRaisesRegex(ValueError, "MAINE place-row backend does not compile"):
+            self.check(entries)
+
+    def test_maine_alphabet_cursor_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        cursor = next(row for row in entries if row["replay_backend"] == "maine-alphabet-cursor-v551")
+        cursor["replay_backend"] = "maine-places-v550"
+        with self.assertRaisesRegex(ValueError, "MAINE places backend does not compile"):
             self.check(entries)
 
 
