@@ -26,6 +26,37 @@ python3 scripts/decoded_function_acceptance.py --artifact th04-maine
 python3 scripts/decoded_function_acceptance.py --artifact th04-zun
 ```
 
+Successful wrapper replays now discard only the generated OP/MAINE A/B
+`source` worktrees immediately after each backend has read and checked both
+linked images. Backend and aggregate receipts and logs remain. This limits
+peak disk usage as the backend count grows; pass `--keep-workdirs` only when
+the expanded source/object trees are needed for debugging. The inputs under
+`.analysis/gpt-web/`, pinned targets, and checked-in source are never pruned
+by this option. A failed backend is left intact for diagnosis.
+
+OP/MAINE backends now materialize independent compact v489 snapshots through
+`scripts/probes/compact_op_maine_snapshot.py`. The helper keeps writable source
+trees, the artifact's response-file link inputs, and its baseline EXE/MAP,
+but omits unused object trees, generated listings, and Tup metadata. This
+reduces each A/B worktree from about 27 MiB to about 11 MiB before the wrapper
+removes it. It never hardlinks or symlinks a writable worktree to the retained
+baseline. The v554 full OP and MAINE aggregate replays reproduce the earlier
+linked-image hashes with this input closure; the pruning behavior is covered
+by failure-preservation tests.
+
+The v554 final control replays checked 17 OP and 20 MAINE slices with zero
+raw differences in both cold rounds, and reproduced the prior compact
+aggregate candidate-image and function-slice hashes. Their retained wrapper
+receipts are `v554-op-compact-final-001/receipt.json` (SHA-256
+`1c1533b0bc5602a5412c386c1690d3b8475cc9a908f0439742e0eaa051f41992`)
+and `v554-maine-compact-final-001/receipt.json` (SHA-256
+`c1422a5b7de9be61b5d483b69e9342b72ca9db0c5d8ba6d85325cac1e94e72ce`)
+under `.analysis/reconstruction/probes/`. The ZUN control replay still has
+13 and 130 raw differences in its two diagnostic C++ slices, respectively;
+`v554-zun-control-final-001/receipt.json` has SHA-256
+`45ae0f170c7bda7d29994319fb0c579e776414e9cc332ba9c0e40a9897bace37`.
+No ZUN source or exactness promotion follows from this control.
+
 OP/MAINE use the retained v489 source snapshots and v228 **target-derived**
 DIET restores. The backend recompiles maintained BGIMAGE hybrid source via
 TC86 `-B`/TASM, relinks both programs in two isolated rounds, and checks each

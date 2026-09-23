@@ -24,10 +24,13 @@ The other four Ghidra bodies already match their complete target extents.
 The replay checks the target-restored MZ and OP-local candidate identities,
 Ghidra inventory and analysis-image identities, all five target body hashes,
 complete 16-bit instruction tiling, aligned internal direct branches, terminal
-returns, next-entry adjacency, candidate MAP publics, and raw-equal OP-local
+returns, next-entry adjacency, available candidate MAP publics, and raw-equal OP-local
 v489 candidate slices. Pinned ReC98 history separately introduces all five
 logical functions under explicit `[Decompilation]` subjects. Those source
 files remain candidate material even though their linked bytes match.
+The private `cleardata_and_regist_view_sprite` entry has no own MAP public;
+its physical SCORE_TEXT ownership is established by the grouped contribution,
+target flow, and neighboring entries, not by a nonexistent public symbol.
 The v489 MAP names the grouped physical SCORE producer `th04/scall.cpp`;
 `hi_view.cpp` is a logical included component. The boundary ledger's older
 `map_module=th04/hi_view.cpp` field describes its original candidate MAP
@@ -150,3 +153,36 @@ SCORE TU, or following registration menu.
 The full cold OP decoded-function wrapper passes all 16 registered slices;
 retained aggregate receipt SHA-256 is
 `b29eb9a03e836c630ddc8b91d388c799de74b2eb27834e616db4962473321ff8`.
+
+## v554 maintained private clear-state and sprite initializer
+
+OP SCORE_TEXT at `1A74:24A3`, decoded payload `0xCBE3..0xCC96`, is a
+180-byte function ending `RET` before OP_TITLE_TEXT begins at `0xCC97`.
+The pinned target and Ghidra inventory agree on the complete extent. Fresh
+16-bit disassembly tiles 60 instructions with six aligned internal branches.
+The function loops over the five ranks, normalizes both play-character clear
+flags to values at most three, accumulates extra-unlock state, then restores
+the resident rank and loads two BFNT sprite resources. These are target
+observations; the descriptive function name is not original-source proof.
+
+Maintained natural C++ is `src/op/score/clear.cpp` with a bounded
+`clear_sprites_load.inl`. Two pinned TC86 4.02 standalone compilations emit
+the same 180-byte CODE shape as the grouped SCORE_TEXT owner outside one
+near-call and 25 data-address words. Every differing word has an OMF FIXUPP
+entry; no other CODE byte differs. The grouped object, full linked OP
+EXE/MAP, and all 804 ordered relocations stay v489-identical. Both complete
+linked functions are raw-zero against target SHA-256
+`2093f45b6f1e8fda9ef6004999ba3dedbf24c6ec12134c11262ad8dd455b633c`.
+
+Replay with `python3 scripts/probes/replay_th04_op_clear_sprites.py
+--output-dir .analysis/reconstruction/probes/<new-id>`. Retained focused
+receipt `.analysis/reconstruction/probes/v554-op-clear-sprites-005/receipt.json`
+has SHA-256
+`cb47bde9df2d4642663f3d0f2200585ccc1be1d6da74bf59715904b6d95a9950`.
+The first strict probe rejected standalone relocation differences as designed;
+the later probe records only explicitly located OMF fixup words. This accepts
+the reviewed decoded function, not the packed file, complete SCORE TU, or
+the preceding registration menu.
+The full cold OP decoded-function wrapper passes all 17 registered slices;
+retained aggregate receipt SHA-256 is
+`444800e04108ec7cba997b589cf8c3f194022cd14ecfd97844c27d7ce83a6c60`.

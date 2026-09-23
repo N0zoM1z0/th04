@@ -16,6 +16,7 @@ import re
 import shutil
 import subprocess
 import sys
+from compact_op_maine_snapshot import copy_compact_snapshot
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -117,7 +118,7 @@ def main() -> int:
         for name, (start, size, reloc_count, _, _, baseline_sha) in ARTIFACTS.items():
             work = output / label / name / "source"
             work.parent.mkdir(parents=True)
-            shutil.copytree(SNAPSHOT / name / "source", work, symlinks=True)
+            copy_compact_snapshot(SNAPSHOT / name / "source", work, name)
             shutil.copy2(SOURCE, work / "th04/snd_dlym.cpp")
             shared_dst = work / "src/shared"
             shared_dst.parent.mkdir(parents=True, exist_ok=True)

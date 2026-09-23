@@ -16,6 +16,7 @@ import re
 import shutil
 import subprocess
 import sys
+from compact_op_maine_snapshot import copy_compact_snapshot
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -105,7 +106,7 @@ def main() -> int:
         builds[label] = {}
         for name, (start, reloc_count, _, _, baseline_sha) in ARTIFACTS.items():
             work = output / label / name / "source"
-            shutil.copytree(SNAPSHOT / name / "source", work, symlinks=True)
+            copy_compact_snapshot(SNAPSHOT / name / "source", work, name)
             source_dst = work / "th01/vplanset.cpp"
             shutil.copy2(SOURCE, source_dst)
             header_dst = work / "src/shared/hardware/vram_planes.hpp"

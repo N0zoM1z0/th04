@@ -19,6 +19,7 @@ sys.path[0:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/probes")]
 
 from lib.omf import describe_omf, parse_omf  # noqa: E402
 from lib.pc98 import parse_mz  # noqa: E402
+from compact_op_maine_snapshot import copy_compact_snapshot  # noqa: E402
 from probe_th04_maine_staff_full_cpp_v478 import segment_bytes  # noqa: E402
 from probe_th04_score_hiscore_boundaries import branch_edges, disassemble, ghidra_rows  # noqa: E402
 from probe_th04_maine_segment_topology_v470 import tcc  # noqa: E402
@@ -165,7 +166,7 @@ def run(spec: ScoreFunction, output: Path) -> Path:
     for label in ("a", "b"):
         work = output / label / "maine/source"
         work.parent.mkdir(parents=True)
-        shutil.copytree(prior.SNAPSHOT, work, symlinks=True)
+        copy_compact_snapshot(prior.SNAPSHOT, work, "maine")
         overlay_source(spec, work)
         tcc(work, output, f"{spec.version}-local-{label}", spec.source)
         local_obj = work / f"obj/th04/{spec.object_stem}.obj"

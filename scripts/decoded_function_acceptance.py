@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -68,6 +69,7 @@ MAINE_ALPHABET_CURSOR_PRODUCER = 0xC7E3
 OP_STAGE_PUT_PRODUCER = 0xC8A5
 OP_PLACE_PUT_PRODUCER = 0xC8F5
 OP_RANK_RENDER_PRODUCER = 0xCA1A
+OP_CLEAR_SPRITES_PRODUCER = 0xCBE3
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -186,7 +188,7 @@ def validate(
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
                                  "maine-score-insert-v543", "maine-score-put-v544", "op-stage-put-v545",
-                                 "op-place-put-v552", "op-rank-render-v553",
+                                 "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
                                  "maine-stage-put-v547", "maine-name-cursor-v548", "maine-place-row-v549",
                                  "maine-places-v550", "maine-alphabet-cursor-v551"})
         if backend not in allowed_backend:
@@ -291,6 +293,12 @@ def validate(
                     or producer_start != OP_RANK_RENDER_PRODUCER
                     or producer_size != 0x7A):
                 raise ValueError(f"{ident}: OP rank-render backend does not compile this producer")
+        elif backend == "op-clear-sprites-v554":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/score/clear.cpp"
+                    or producer_start != OP_CLEAR_SPRITES_PRODUCER
+                    or producer_size != 0xB4):
+                raise ValueError(f"{ident}: OP clear-sprites backend does not compile this producer")
         elif (source_name != "src/shared/sound/delay_until_measure.cpp"
               or producer_start != DELAY_PRODUCERS[artifact] or producer_size != 0x31):
             raise ValueError(f"{ident}: delay backend does not compile this producer")
@@ -473,6 +481,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
     if backend_id == "op-rank-render-v553":
         return [sys.executable, "scripts/probes/replay_th04_op_rank_render.py",
                 "--output-dir", str(saved)]
+    if backend_id == "op-clear-sprites-v554":
+        return [sys.executable, "scripts/probes/replay_th04_op_clear_sprites.py",
+                "--output-dir", str(saved)]
     if backend_id == "op-maine-bgimage-v489":
         snapshot = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"
         return [
@@ -485,6 +496,22 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
             "--output-dir", str(saved),
         ]
     raise ValueError(f"unknown decoded replay backend: {backend_id}")
+
+
+def discard_backend_worktrees(saved: Path) -> list[str]:
+    """Drop only completed OP/MAINE A/B snapshots, retaining receipts and logs."""
+    removed = []
+    for label in ("a", "b"):
+        for game in ("op", "maine"):
+            source = saved / label / game / "source"
+            if not source.exists() and not source.is_symlink():
+                continue
+            if (source.is_symlink() or not source.is_dir()
+                    or not source.resolve().is_relative_to(saved.resolve())):
+                raise RuntimeError(f"unsafe decoded backend worktree: {source}")
+            shutil.rmtree(source)
+            removed.append(source.relative_to(saved).as_posix())
+    return removed
 
 
 def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], int, dict[str, object]]:
@@ -536,7 +563,8 @@ def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], 
     }
 
 
-def replay(artifact: str, entries: list[dict[str, str]], output: Path) -> dict[str, object]:
+def replay(artifact: str, entries: list[dict[str, str]], output: Path,
+           *, keep_workdirs: bool = False) -> dict[str, object]:
     target, packed_sha, decoded_sha = verified_target(artifact)
     selected = [entry for entry in entries if entry["artifact"] == artifact]
     if not selected:
@@ -558,6 +586,12 @@ def replay(artifact: str, entries: list[dict[str, str]], output: Path) -> dict[s
         if rounds[0] != rounds[1]:
             raise RuntimeError(f"{artifact}/{backend_id}: cold function comparisons disagree")
         require_exact_zero(rounds[0])
+        if any(sha((ROOT / entry["source"]).read_bytes()) != source_hashes[entry["source"]]
+               for entry in group):
+            raise RuntimeError(f"{artifact}/{backend_id}: maintained source changed during replay")
+        build["discarded_replay_worktrees"] = (
+            [] if keep_workdirs else discard_backend_worktrees(output / backend_id)
+        )
         compared.extend(rounds[0])
         builds[backend_id] = build
         candidates[backend_id] = [sha(candidate) for candidate in candidate_rounds]
@@ -584,6 +618,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact", choices=sorted(ARTIFACTS), help="run the cold artifact backend")
     parser.add_argument("--output-dir", type=Path, help="new private receipt directory")
+    parser.add_argument("--keep-workdirs", action="store_true",
+                        help="retain large generated A/B source snapshots for debugging")
     args = parser.parse_args()
     entries = rows(LEDGER, HEADER)
     validate(
@@ -595,10 +631,13 @@ def main() -> int:
     print(f"decoded function ledger: PASS ({len(entries)} rows; 3 artifacts)")
     if args.artifact:
         output = output_directory(args.output_dir)
-        receipt = replay(args.artifact, entries, output)
+        receipt = replay(args.artifact, entries, output,
+                         keep_workdirs=args.keep_workdirs)
         print(f"{args.artifact}: {len(receipt['functions'])} slices checked; receipt: {output / 'receipt.json'}")
     elif args.output_dir:
         parser.error("--output-dir requires --artifact")
+    elif args.keep_workdirs:
+        parser.error("--keep-workdirs requires --artifact")
     return 0
 
 

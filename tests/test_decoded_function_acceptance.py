@@ -3,7 +3,9 @@ from __future__ import annotations
 from copy import deepcopy
 from pathlib import Path
 import sys
+import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -25,6 +27,50 @@ class DecodedAcceptanceTests(unittest.TestCase):
     def test_current_three_artifact_ledger(self) -> None:
         self.check(self.entries)
         self.assertEqual({row["artifact"] for row in self.entries}, acceptance.ARTIFACTS)
+
+    def test_completed_backend_discards_only_replay_worktrees(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            saved = Path(temp)
+            for label in ("a", "b"):
+                source = saved / label / "op" / "source"
+                source.mkdir(parents=True)
+                (source / "generated.obj").write_bytes(b"scratch")
+            (saved / "receipt.json").write_text("{}")
+            (saved / "compile.log").write_text("ok")
+            self.assertEqual(
+                acceptance.discard_backend_worktrees(saved),
+                ["a/op/source", "b/op/source"],
+            )
+            self.assertTrue((saved / "receipt.json").is_file())
+            self.assertTrue((saved / "compile.log").is_file())
+            self.assertFalse((saved / "a/op/source").exists())
+            self.assertFalse((saved / "b/op/source").exists())
+
+    def test_backend_cleanup_rejects_source_symlink(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            saved = Path(temp) / "saved"
+            external = Path(temp) / "external"
+            (saved / "a/op").mkdir(parents=True)
+            external.mkdir()
+            (saved / "a/op/source").symlink_to(external, target_is_directory=True)
+            with self.assertRaisesRegex(RuntimeError, "unsafe decoded backend worktree"):
+                acceptance.discard_backend_worktrees(saved)
+            self.assertTrue(external.is_dir())
+
+    def test_failed_raw_comparison_keeps_worktree_for_diagnosis(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp)
+            source = output / "probe/a/op/source"
+            source.mkdir(parents=True)
+            entry = {"artifact": "th04-op", "source": "src/op/score/clear.cpp",
+                     "replay_backend": "probe"}
+            with (patch.object(acceptance, "verified_target", return_value=(b"", "packed", "decoded")),
+                  patch.object(acceptance, "backend", return_value=([b"", b""], 0, {})),
+                  patch.object(acceptance, "compare_extent", return_value={"difference_count": 1}),
+                  patch.object(acceptance, "require_exact_zero", side_effect=RuntimeError("raw mismatch"))):
+                with self.assertRaisesRegex(RuntimeError, "raw mismatch"):
+                    acceptance.replay("th04-op", [entry], output)
+            self.assertTrue(source.is_dir())
 
     def test_rejects_cross_artifact_credit(self) -> None:
         entries = deepcopy(self.entries)
@@ -276,6 +322,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         rank = next(row for row in entries if row["replay_backend"] == "op-rank-render-v553")
         rank["replay_backend"] = "op-place-put-v552"
         with self.assertRaisesRegex(ValueError, "OP place-put backend does not compile"):
+            self.check(entries)
+
+    def test_op_clear_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        clear = next(row for row in entries if row["replay_backend"] == "op-clear-sprites-v554")
+        clear["replay_backend"] = "op-rank-render-v553"
+        with self.assertRaisesRegex(ValueError, "OP rank-render backend does not compile"):
             self.check(entries)
 
     def test_maine_stage_backend_is_artifact_and_source_bound(self) -> None:

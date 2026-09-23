@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PRIVATE = (ROOT / ".analysis").resolve()
 sys.path[0:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/probes")]
 
+from compact_op_maine_snapshot import copy_compact_snapshot  # noqa: E402
 from inspect_dialog_fixup_order import code_ledata  # noqa: E402
 from lib.omf import parse_omf  # noqa: E402
 from lib.pc98 import parse_mz  # noqa: E402
@@ -161,7 +162,7 @@ def main() -> int:
  for label in ("a","b"):
   works={}
   for art in ("op","maine"):
-   w=output/label/art/"source"; shutil.copytree(sources[art],w,symlinks=True); works[art]=w
+   w=output/label/art/"source"; copy_compact_snapshot(sources[art],w,art); works[art]=w
   objinfo=compile_bgimage(works["op"],output,f"{label}-bgimage")
   shutil.copy2(works["op"]/"obj/th04/bgimage.obj",works["maine"]/"obj/th04/bgimage.obj")
   arts={}

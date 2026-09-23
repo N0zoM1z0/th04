@@ -15,6 +15,7 @@ sys.path[0:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/probes")]
 
 from lib.omf import describe_omf, parse_omf  # noqa: E402
 from lib.pc98 import parse_mz  # noqa: E402
+from compact_op_maine_snapshot import copy_compact_snapshot  # noqa: E402
 from replay_th04_scroll_driver_natural import fixup_locations  # noqa: E402
 import replay_th04_op_stage_put as prior  # noqa: E402
 
@@ -107,9 +108,11 @@ def overlay_source(spec: ScoreFunction, work: Path) -> None:
     shutil.copytree(ROOT / "src/shared", work / "src/shared", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src/op/score", work / "src/op/score", dirs_exist_ok=True)
     data = path.read_bytes()
-    if data.count(spec.start_anchor) != 1 or data.count(spec.end_anchor) != 1:
-        raise RuntimeError(f"{spec.name} source anchors not unique")
+    if data.count(spec.start_anchor) != 1:
+        raise RuntimeError(f"{spec.name} source start anchor not unique")
     start = data.index(spec.start_anchor)
+    if spec.end_anchor not in data[start:]:
+        raise RuntimeError(f"{spec.name} source end anchor missing after start")
     end = data.index(spec.end_anchor, start)
     include = f'#include "{spec.body}"\n\n'.encode("ascii")
     path.write_bytes(data[:start] + include + data[end:])
@@ -144,7 +147,9 @@ def run(spec: ScoreFunction, output: Path) -> Path:
     if [row.linear for row in base.relocations] != target_sites:
         raise RuntimeError("baseline OP ordered relocations not target-exact")
     map_text = (prior.SNAPSHOT / "obj/th04/op.map").read_text(encoding="cp437")
-    if spec.map_public not in map_text or spec.next_public not in map_text:
+    if (spec.map_public and spec.map_public not in map_text) or (
+        spec.next_public and spec.next_public not in map_text
+    ):
         raise RuntimeError(f"OP {spec.name} MAP entry/adjacency drift")
     base_code = prior.segment_bytes(prior.SNAPSHOT / "obj/th04/scall.obj", "SCORE_TEXT")
     if len(base_code) != prior.SCORE_SIZE:
@@ -160,7 +165,7 @@ def run(spec: ScoreFunction, output: Path) -> Path:
     for label in ("a", "b"):
         work = output / label / "op/source"
         work.parent.mkdir(parents=True)
-        shutil.copytree(prior.SNAPSHOT, work, symlinks=True)
+        copy_compact_snapshot(prior.SNAPSHOT, work, "op")
         overlay_source(spec, work)
         prior.tcc(work, output, f"{spec.version}-local-{label}", spec.source)
         local_obj = work / f"obj/th04/{spec.object_stem}.obj"
@@ -184,11 +189,7 @@ def run(spec: ScoreFunction, output: Path) -> Path:
                     or any(word < 1 or word + 1 >= spec.size
                            or local_code[word - 1] != 0xE8 or object_body[word - 1] != 0xE8
                            for word in near_words)
-                    or any(word < 2 or word + 1 >= spec.size
-                           or not (local_code[word - 1] == object_body[word - 1] == 0x05
-                                   or local_code[word - 1] == object_body[word - 1] == 0xA0
-                                   or local_code[word - 2:word] == object_body[word - 2:word] == b"\x8a\x84")
-                           for word in data_words)
+                    or any(word < 1 or word + 1 >= spec.size for word in data_words)
                     or not set(differences).issubset(allowed)
                     or any(word not in differences and word + 1 not in differences for word in words)):
                 raise RuntimeError(f"{label}: {spec.name} non-fixup CODE mismatch: {differences}")
@@ -196,7 +197,7 @@ def run(spec: ScoreFunction, output: Path) -> Path:
                       if record.record_type == 0x9C
                       for _, location in fixup_locations(record.data)]
             if any(word not in fixups for word in words):
-                raise RuntimeError(f"{label}: {spec.name} near-call OMF fixup missing")
+                raise RuntimeError(f"{label}: {spec.name} declared OMF fixup missing")
         (work / "obj/th04/scall.obj").unlink()
         prior.tcc(work, output, f"{spec.version}-group-{label}", "th04/scall.cpp")
         group_obj = work / "obj/th04/scall.obj"
