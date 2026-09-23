@@ -22,9 +22,9 @@ function comparisons and target-ordered relocations. The ZUN graph-clear
 support backend is also rebased and raw-zero on its 36-byte library-origin
 slice, but this does not grant authored-function acceptance. See the
 [three-artifact smoke](reconstruction/packed/TH04_THREE_ARTIFACT_SMOKE_V509.md).
-The shared hardware/PI/sound cohort is complete. MAINE now also has seven
-artifact-local SCORE function backends; expand natural source one reviewed
-physical owner at a time while resolving ZUN's remaining source authority.
+The shared hardware/PI/sound cohort is complete. MAINE now has eight and OP has
+eight artifact-local SCORE function backends; expand natural source one
+reviewed physical owner at a time while resolving ZUN's remaining source authority.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
 composition and v489/v494 aggregate Oracles during every source edit. A new
@@ -54,7 +54,8 @@ name cursor renderer after proving its standalone near-call OMF fixup and
 grouped raw-zero link. v549 adds the adjacent 184-byte score-entry row
 renderer with two separately attested near-call fixups. v550 adds the 26-byte
 places dispatcher with its single near-call fixup. v551 adds the 49-byte
-alphabet cursor renderer with standalone CODE equality. MAINE now has 20 functions / 1,962 decoded
+alphabet cursor renderer with standalone CODE equality. v557 adds MAINE's
+105-byte high-score loader; MAINE now has 21 functions / 2,067 decoded
 source-owner bytes. This is a
 function-level acceptance, not a packed-file or entire SCORE-TU claim. Continue
 with new target-first owners while keeping source authority separate from
@@ -84,13 +85,16 @@ OP now has all five target-reviewed hi_view functions locally maintained after
 v545/v552-v556: 80-byte stage, 293-byte two-column row, 122-byte rank,
 335-byte registration menu, and 180-byte clear-state/sprite initializer.
 The v553 rank acceptance checks the v542 Ghidra-missed reachable tail;
-candidate MAP publics corroborate layout but not original names. The
-surrounding SCORE scaffold remains untrusted. Continue with reviewed
-SCORE loading/codec owners, then target-first input/vector/init helpers and title/setup,
+candidate MAP publics corroborate layout but not original names. v558/v559/v561
+add `hiscore_scoredat_load_both`, `scores_put`, and `scoredat_recreate` to the
+maintained OP SCORE set. The surrounding SCORE scaffold remains untrusted; next
+target-review/reconstruct `scoredat_encode` at `0xC627` and `scoredat_decode` at
+`0xC57A`, then target-first input/vector/init helpers and title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
 v541 and its first seven SCORE_TEXT functions are accepted after v543-v551;
-move next to the registration menu only after its physical review or pivot to
+v557 adds the high-score loader, bringing MAINE to 21 / 2,067 decoded function
+bytes. Move next to the registration menu only after its physical review or pivot to
 other bounded SCORE_TEXT owners and small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
 confidence. Candidate byte totals in the boundary inventory

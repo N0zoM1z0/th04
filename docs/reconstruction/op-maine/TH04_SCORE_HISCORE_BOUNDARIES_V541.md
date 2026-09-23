@@ -180,5 +180,42 @@ retained directory is about 1.6 MiB, with generated A/B source trees removed.
 `scores_put` is `decoded-exact`, while its `units.csv` row remains
 `source-present` because the packed-file offset is unknown. The aggregate
 candidate image is still 69,028 bytes against the 72,256-byte target-restored
-program; OP.EXE is not exact. Continue target-first with the adjacent SCORE
-codec owner `scoredat_recreate` at payload `0xC68C`.
+program; OP.EXE is not exact. The adjacent SCORE codec owner
+`scoredat_recreate` was accepted in v561 below. Continue target-first with
+`scoredat_encode` at payload `0xC627`, followed by `scoredat_decode` at `0xC57A`.
+
+## v561 maintained OP score-file regeneration
+
+Fresh target review closes `scoredat_recreate` at `1A74:1F4C`, payload
+`0xC68C..0xC732` (167 bytes, SHA-256
+`b5f25d0f2b5b7b1448d75000b98578cd8710ae419e2c8c079d717a014c796909`). The
+contiguous body tiles 66 instructions, has ten direct internal branches, ends
+in `RET`, and is followed at `0xC733` by the separately accepted high-score
+loader. The target initializes ten records in `hi`: score digits to `0xA0`,
+place zero's digit slot 5 to `0xA1`, later slot 4 values from `0xA9` down to
+`0xA1`, cleared byte `0x19`, stage `0xA5 - floor(place / 2)`, eight `0xC4`
+name cells, and a zero terminator. It then creates `GENSOU.SCR`, writes ten
+`0xC4`-byte encoded `hi` sections, and decodes each section after writing.
+
+The target instruction stream passes `DS:1342` to the file-create routine,
+and target bytes at MZ load-module payload `0x10682` contain `GENSOU.SCR\0`.
+The pinned candidate MAP's DGROUP entry `0F34:1342` corroborates the segment
+mapping; it is not independent target or original-source provenance.
+
+Maintained source is `src/op/score/scoregen.cpp` plus
+`src/op/score/scoregen.inl`. Standalone TC86 CODE differs only at the two
+near-call displacement words `0x87` and `0x96`, both verified as OMF FIXUPP
+sites for the internal encode/decode calls. Both grouped cold links reproduce
+the complete 167-byte target function raw-zero, the candidate EXE/MAP, and all
+804 ordered MZ relocation sites. Focused receipt SHA-256:
+`50546d64fcc7869a9826d05c9d4c5df2c8fe1c1f8caf26c12198693f3540d702`.
+
+The v561 OP aggregate checks all 21 registered decoded slices raw-zero in two
+cold rounds. Its receipt SHA-256 is
+`4b83f9b0a05f0697e2e1b170e869c509a8b89deef95871307ab6148ebb464a36`; A/B source
+trees were removed, leaving a 1.7 MiB receipt/log directory. The unit remains
+`source-present` because the DIET-packed file offset is unknown; decoded
+function state is `decoded-exact`. The candidate image remains 69,028 bytes
+versus the 72,256-byte target-restored image, so packed OP and whole-EXE exactness
+remain unclaimed. Next target-first owners are `scoredat_encode` at `0xC627`
+and `scoredat_decode` at `0xC57A`.

@@ -26,7 +26,7 @@ and fresh read-only attestation. Target canonicality remains
 
 | Artifact | Authored candidates | Reviewed / corroborated / provisional boundary | Function exact | Pending acceptance | Next surface |
 | --- | ---: | ---: | ---: | ---: | --- |
-| OP.EXE | 93 | 24 / 61 / 8 | 20 | 73 | Seven SCORE/high-score owners accepted; continue target-first with `scoredat_recreate` at payload `0xC68C` |
+| OP.EXE | 93 | 24 / 61 / 8 | 21 | 72 | Eight SCORE/high-score owners accepted; next target-first with `scoredat_encode` at payload `0xC627` |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
 | MAINE.EXE | 72 | 26 / 39 / 7 | 21 | 51 | Seven SCORE_TEXT owners plus one high-score loader accepted; review registration menu or pivot subsystem |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | `_main` natural CALL shape; ZUNINIT/MEMCHK source authority |
@@ -77,11 +77,12 @@ directories are about 1.6 MiB and 1.6 MiB. The ZUN control still reports 13/130 
 source-present C++ diagnostics and grants no exact credit.
 The maintained reviewed shared hardware/PI/sound cohort is now complete: 13
 decoded-exact functions / 840 source-owner bytes in each OP/MAINE artifact.
-Eight MAINE SCORE/high-score functions bring MAINE to 21 / 2,067; seven OP SCORE
-functions bring OP to 20 / 2,220. The next target-first OP SCORE owner is
-`scoredat_recreate` at payload `0xC68C`. Corroborated/provisional entries
-still need target-local physical review before promotion. Do not transfer exact
-credit between artifacts.
+Eight MAINE SCORE/high-score functions bring MAINE to 21 / 2,067; eight OP SCORE
+functions bring OP to 21 / 2,387. OP `scoredat_recreate` at payload `0xC68C` is
+decoded-exact after two focused cold links and the 21-slice aggregate. Next,
+target-review and reconstruct `scoredat_encode` at `0xC627`, then `scoredat_decode`
+at `0xC57A`. Corroborated/provisional entries still need target-local physical
+review before promotion. Do not transfer exact credit between artifacts.
 
 ## Replayed facility checks
 
