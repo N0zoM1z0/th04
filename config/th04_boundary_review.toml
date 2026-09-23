@@ -608,3 +608,15 @@ expected_tasm_proc = "sub_C665"
 reviewed_body_size = 0xAC
 review_evidence_id = "ev-th04-maine-name-cursor-boundary-v548"
 notes = "Target-reviewed 172-byte name cursor renderer ending RET 6 before place_row_put; maintained C++ links raw-zero. Name is descriptive."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC711
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/place.cpp"
+expected_body_span = 0xB8
+expected_tasm_proc = "sub_C711"
+reviewed_body_size = 0xB8
+review_evidence_id = "ev-th04-maine-place-row-boundary-v549"
+notes = "Target-reviewed 184-byte score-entry row renderer ending RET 4 before places_put; maintained C++ links raw-zero. Name is descriptive."

@@ -714,3 +714,38 @@ owner target-first before considering a new source candidate.
 The complete cold MAINE decoded-function wrapper passes all 17 registered
 slices; retained aggregate receipt SHA-256 is
 `f164000f6cfb8f5c0374d8826693c32216576c36033c00b59891a48bc19963a8`.
+
+## v549 maintained score-entry row renderer
+
+The adjacent physical owner at `1A05:26C1`, decoded payload
+`0xC711..0xC7C8`, is `0xB8` (184) bytes ending `RET 4`; `places_put` begins
+at `0xC7C9`. Fresh target disassembly tiles the attested Ghidra extent with
+81 instructions and seven internal direct branches. The two near calls at
+`0xC7AF` and `0xC7C0` reach the already accepted `score_put` and `stage_put`
+owners. `place_row_put` is descriptive, not original-source proof.
+
+Maintained natural C++ in `src/maine/score/place.cpp` includes the bounded
+`place_row_put.inl`. Two pinned TC86 4.02 standalone objects differ from the
+grouped owner only at the two near-call displacement words, local offsets
+`0x9F..0xA0` and `0xB0..0xB1`; both have OMF FIXUPP entries. The generalized
+SCORE harness requires the *complete* mismatch set to equal those four bytes
+and all other CODE bytes to match. Both grouped objects and linked functions
+are raw-zero against target SHA-256
+`d9fa9131bb812019baf9fc8bceb740cb3bd7951e271abc583ddd1306be61816a`.
+All 559 ordered relocations, candidate EXE, and MAP remain v489-identical.
+
+Replay with `python3 scripts/probes/replay_th04_maine_place_row.py --output-dir
+.analysis/reconstruction/probes/<new-id>`; focused receipt
+`.analysis/reconstruction/probes/v549-maine-place-row-002/receipt.json` has
+SHA-256 `db957fc7643a4081e9914863294773bc4f156bce42d23be591f614b1f30b3fb4`.
+The first scratch attempt used a source basename longer than DOS 8.3 and the
+compiler silently generated a short-name object outside the expected path;
+the maintained TU was renamed `place.cpp` and the complete replay rerun.
+
+The five maintained MAINE SCORE functions now total 1,047 decoded source-owner
+bytes. This remains function-level only: packed MAINE.EXE and the whole SCORE
+translation unit are not exact. Next inspect the small `places_put` dispatcher
+at `0xC7C9` target-first.
+The full cold MAINE decoded-function wrapper passes all 18 registered slices;
+retained aggregate receipt SHA-256 is
+`71536a057db091a9036cf279c5a48ac4c5578c9dd0cdc5326d1a7ae141d2b4e9`.

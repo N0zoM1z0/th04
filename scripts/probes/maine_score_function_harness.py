@@ -46,6 +46,7 @@ class ScoreFunction:
     next_public: str
     target_references: tuple[bytes, ...]
     standalone_near_fixup_word: int | None = None
+    standalone_near_fixup_words: tuple[int, ...] = ()
 
 
 def target_boundary(spec: ScoreFunction, body: bytes) -> dict[str, object]:
@@ -176,18 +177,25 @@ def run(spec: ScoreFunction, output: Path) -> Path:
                             if left != right)
         if len(local_code) != spec.size:
             raise RuntimeError(f"{label}: maintained {spec.name} standalone CODE size drift")
-        if spec.standalone_near_fixup_word is None:
+        if spec.standalone_near_fixup_word is not None and spec.standalone_near_fixup_words:
+            raise RuntimeError(f"{spec.name}: conflicting near-fixup declarations")
+        words = ((spec.standalone_near_fixup_word,)
+                 if spec.standalone_near_fixup_word is not None
+                 else spec.standalone_near_fixup_words)
+        if not words:
             if differences:
                 raise RuntimeError(f"{label}: maintained {spec.name} standalone CODE differs")
         else:
-            word = spec.standalone_near_fixup_word
-            if (differences != (word, word + 1) or word < 1 or word + 1 >= spec.size
-                    or local_code[word - 1] != 0xE8 or object_body[word - 1] != 0xE8):
+            expected = tuple(offset for word in words for offset in (word, word + 1))
+            if (tuple(sorted(set(words))) != words or differences != expected
+                    or any(word < 1 or word + 1 >= spec.size
+                           or local_code[word - 1] != 0xE8 or object_body[word - 1] != 0xE8
+                           for word in words)):
                 raise RuntimeError(f"{label}: {spec.name} non-fixup CODE mismatch: {differences}")
             fixups = [location for record in parse_omf(local_obj.read_bytes())
                       if record.record_type == 0x9C
                       for _, location in fixup_locations(record.data)]
-            if word not in fixups:
+            if any(word not in fixups for word in words):
                 raise RuntimeError(f"{label}: {spec.name} near-call OMF fixup missing")
         (work / "obj/th04/scoreall.obj").unlink()
         tcc(work, output, f"{spec.version}-group-{label}", "th04/scoreall.cpp")
@@ -214,6 +222,7 @@ def run(spec: ScoreFunction, output: Path) -> Path:
             "standalone_code_sha256": prior.sha(local_code),
             "standalone_code_difference_offsets": differences,
             "standalone_near_fixup_word": spec.standalone_near_fixup_word,
+            **({"standalone_near_fixup_words": words} if spec.standalone_near_fixup_words else {}),
             "group_object_link_relevant_sha256": link_relevant_omf_sha(group_obj),
             "group_code_sha256": prior.sha(base_code),
             "linked_exe_sha256": prior.sha_file(exe),

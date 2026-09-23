@@ -62,6 +62,7 @@ MAINE_SCORE_INSERT_PRODUCER = 0xC3B2
 MAINE_SCORE_PUT_PRODUCER = 0xC506
 MAINE_STAGE_PUT_PRODUCER = 0xC5EC
 MAINE_NAME_CURSOR_PRODUCER = 0xC665
+MAINE_PLACE_ROW_PRODUCER = 0xC711
 OP_STAGE_PUT_PRODUCER = 0xC8A5
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
@@ -181,7 +182,7 @@ def validate(
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
                                  "maine-score-insert-v543", "maine-score-put-v544", "op-stage-put-v545",
-                                 "maine-stage-put-v547", "maine-name-cursor-v548"})
+                                 "maine-stage-put-v547", "maine-name-cursor-v548", "maine-place-row-v549"})
         if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
@@ -248,6 +249,12 @@ def validate(
                     or producer_start != MAINE_NAME_CURSOR_PRODUCER
                     or producer_size != 0xAC):
                 raise ValueError(f"{ident}: MAINE name-cursor backend does not compile this producer")
+        elif backend == "maine-place-row-v549":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/score/place.cpp"
+                    or producer_start != MAINE_PLACE_ROW_PRODUCER
+                    or producer_size != 0xB8):
+                raise ValueError(f"{ident}: MAINE place-row backend does not compile this producer")
         elif backend == "op-stage-put-v545":
             if (artifact != "th04-op"
                     or source_name != "src/op/score/stage.cpp"
@@ -417,6 +424,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "maine-name-cursor-v548":
         return [sys.executable, "scripts/probes/replay_th04_maine_name_cursor.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-place-row-v549":
+        return [sys.executable, "scripts/probes/replay_th04_maine_place_row.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-stage-put-v545":
         return [sys.executable, "scripts/probes/replay_th04_op_stage_put.py",
