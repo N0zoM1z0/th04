@@ -584,3 +584,15 @@ expected_tasm_proc = "sub_C506"
 reviewed_body_size = 0xE6
 review_evidence_id = "ev-th04-maine-score-put-boundary-v544"
 notes = "Target-reviewed 230-byte score renderer ending RET 4 before stage_put; maintained C++ replays raw-zero. score_put is descriptive."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC5EC
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/stage.cpp"
+expected_body_span = 0x79
+expected_tasm_proc = "sub_C5EC"
+reviewed_body_size = 0x79
+review_evidence_id = "ev-th04-maine-stage-put-boundary-v547"
+notes = "Target-reviewed 121-byte stage renderer ending RET 6 before name_cursor_put; maintained C++ replays raw-zero. Stage name is descriptive."

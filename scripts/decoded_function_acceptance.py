@@ -60,6 +60,7 @@ MODE_PRODUCERS = {"th04-op": 0xDCE4, "th04-maine": 0xCFAA}
 DELAY_PRODUCERS = {"th04-op": 0xDD80, "th04-maine": 0xD046}
 MAINE_SCORE_INSERT_PRODUCER = 0xC3B2
 MAINE_SCORE_PUT_PRODUCER = 0xC506
+MAINE_STAGE_PUT_PRODUCER = 0xC5EC
 OP_STAGE_PUT_PRODUCER = 0xC8A5
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
@@ -178,7 +179,8 @@ def validate(
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
-                                 "maine-score-insert-v543", "maine-score-put-v544", "op-stage-put-v545"})
+                                 "maine-score-insert-v543", "maine-score-put-v544", "op-stage-put-v545",
+                                 "maine-stage-put-v547"})
         if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
@@ -233,6 +235,12 @@ def validate(
                     or producer_start != MAINE_SCORE_PUT_PRODUCER
                     or producer_size != 0xE6):
                 raise ValueError(f"{ident}: MAINE score-put backend does not compile this producer")
+        elif backend == "maine-stage-put-v547":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/score/stage.cpp"
+                    or producer_start != MAINE_STAGE_PUT_PRODUCER
+                    or producer_size != 0x79):
+                raise ValueError(f"{ident}: MAINE stage-put backend does not compile this producer")
         elif backend == "op-stage-put-v545":
             if (artifact != "th04-op"
                     or source_name != "src/op/score/stage.cpp"
@@ -396,6 +404,9 @@ def backend_command(backend_id: str, saved: Path) -> list[str]:
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-put-v544":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_put.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-stage-put-v547":
+        return [sys.executable, "scripts/probes/replay_th04_maine_stage_put.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-stage-put-v545":
         return [sys.executable, "scripts/probes/replay_th04_op_stage_put.py",

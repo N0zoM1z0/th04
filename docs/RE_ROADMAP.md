@@ -48,7 +48,9 @@ now physically reviewed. The OP review corrected Ghidra's truncated
 implementations examined in v540-v542 have explicit decompilation provenance
 and grant no source credit. In v543-v544 MAINE `score_insert` and `score_put`
 were independently cold-compiled from maintained natural source and matched
-all 340 and 230 linked bytes, bringing MAINE to 15 functions / 1,410 decoded
+all 340 and 230 linked bytes. v547 adds the adjacent 121-byte stage renderer
+with a reusable bounded SCORE function harness, bringing MAINE to 16 functions
+/ 1,531 decoded
 source-owner bytes. This is a
 function-level acceptance, not a packed-file or entire SCORE-TU claim. Continue
 with new target-first owners while keeping source authority separate from
@@ -79,8 +81,8 @@ the rest of the candidate hi_view source is still untrusted. Continue with
 target-first input/vector/init helpers, title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
-v541 and its first two SCORE_TEXT functions are accepted after v543-v544; move
-next to the adjacent stage renderer and other SCORE_TEXT owners, then small
+v541 and its first three SCORE_TEXT functions are accepted after v543-v547;
+move next to the adjacent cursor and other SCORE_TEXT owners, then small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
 confidence. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link

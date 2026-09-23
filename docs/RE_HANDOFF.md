@@ -28,10 +28,10 @@ and fresh read-only attestation. Target canonicality remains
 | --- | ---: | ---: | ---: | ---: | --- |
 | OP.EXE | 93 | 24 / 61 / 8 | 14 | 79 | hi_view stage renderer accepted; next independent owner |
 | MAIN.EXE | 495 | 495 / 0 / 0 | 492 | 0, plus 3 blocked | Evidence-triggered side lane only |
-| MAINE.EXE | 72 | 21 / 44 / 7 | 15 | 57 | SCORE insertion and renderer accepted; inspect stage renderer |
+| MAINE.EXE | 72 | 22 / 43 / 7 | 16 | 56 | Three SCORE_TEXT owners accepted; inspect adjacent cursor owner |
 | ZUN.COM | 13 | 13 / 0 / 0 | 0 | 11, plus 2 blocked | `_main` natural CALL shape; ZUNINIT/MEMCHK source authority |
 
-The non-MAIN authored backlog is 149 pending acceptances, 15 provisional
+The non-MAIN authored backlog is 148 pending acceptances, 15 provisional
 boundaries, and 40 unresolved `target-derived-asm` candidate representations.
 There is a separate 35-entry OP/MAINE/ZUN original-ASM attestation queue.
 `target-derived-asm` does **not** prove original ASM ownership. Corroborated
@@ -44,7 +44,8 @@ snd_pmd_resident(), snd_mmd_resident(), snd_kaja_interrupt(),
 snd_determine_modes(), and snd_delay_until_measure(). Their units.csv
 rows stay source-present: DIET-packed files have no honest raw
 file offsets for those decoded function bodies. MAINE additionally has the
-340-byte SCORE insertion and 230-byte score renderer; OP additionally has an
+340-byte SCORE insertion, 230-byte score renderer, and 121-byte stage renderer;
+OP additionally has an
 80-byte local stage renderer. Neither artifact, nor ZUN, has
 a file-backed authored-byte percentage yet. MAIN alone has 83,442 / 83,469
 reviewed file-backed authored C/C++ bytes exact and 492 / 494 reviewed
@@ -58,7 +59,7 @@ or add `--artifact th04-op`, `th04-maine`, or `th04-zun` for a fresh cold
 comparison. See the [v508 acceptance contract](reconstruction/packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md).
 The maintained reviewed shared hardware/PI/sound cohort is now complete: 13
 decoded-exact functions / 840 source-owner bytes in each OP/MAINE artifact.
-Two MAINE SCORE functions bring MAINE to 15 / 1,410; the OP stage renderer
+Three MAINE SCORE functions bring MAINE to 16 / 1,531; the OP stage renderer
 brings OP to 14 / 920. Continue adjacent SCORE
 owners from target-first boundaries; corroborated/provisional entries
 still need target-local physical review before promotion. Do not transfer exact
@@ -114,6 +115,7 @@ credit between artifacts.
 - v536 closes the external MASTER archive dependency for the ZUN resident. Fifteen already-localized support members are rebuilt into a deterministic 8192-byte compact archive, while GRAPH_CLEAR remains a standalone local object; the external 640-member masters.lib is not read or linked. The same 6360-byte candidate resident is reproduced with 4241 target differences. Remaining external link inputs are c0t.obj, emu.lib, maths.lib, and ct.lib. This is dependency closure only; ZUN authored exact remains zero. See the [v536 compact MASTER note](reconstruction/zun/TH04_ZUN_COMPACT_MASTER_V536.md).
 - v537 proves emu.lib and maths.lib are unused by the resident: removing both from the link response changes zero COM or MAP bytes. c0t.obj contributes c0.ASM, while fresh TLIB/MAP classification reduces CT.LIB to exactly 26 pulled runtime members. The remaining external runtime surface is therefore c0t.obj plus CT.LIB; this is compiler/runtime inventory only and ZUN authored exact remains zero. See the [v537 runtime inventory note](reconstruction/zun/TH04_ZUN_RUNTIME_INVENTORY_V537.md).
 - v546 replays that reduced-runtime link on current sources and probes the 4,241 ZUN resident same-position byte differences without modifying either binary. The two missing 3-byte `_main` calls and one candidate-only six-zero interval give 6,354 aligned positions: 6,308 equal and 46 still different, all with `±6`, `+3`, or one carry-byte delta. This supports a six-byte layout-cascade hypothesis, not an exact claim or proof of every remaining field's ownership. See the [v546 resident shift note](reconstruction/zun/TH04_ZUN_RESIDENT_SHIFT_V546.md).
+- v547 accepts MAINE SCORE_TEXT's adjacent stage renderer at `1A05:259C`, payload `0xC5EC..0xC664`, 121 bytes ending `RET 6`. A reusable bounded SCORE harness independently compiles the maintained TU and overlays only its body into the grouped SCORE producer. Two cold links reproduce the full candidate EXE/MAP, all 559 ordered relocations, and the complete target function; the full MAINE wrapper passes 16 slices. Packed MAINE and surrounding candidate source remain unaccepted. See the [SCORE note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md#v547-maintained-stage-renderer-and-reusable-replay).
 - v540 target-reviews the OP and MAINE scoredat_decode / scoredat_encode / scoredat_recreate physical boundaries independently. Target Ghidra spans, complete disassembly, internal jump closure, adjacent entries, and each artifact's v489 linked bytes all agree. Pinned ReC98 history introduces the logical codec implementations explicitly as Decompilation, so all six rows remain candidate-cpp / unreviewed with no source-present or exact credit. See the [v540 SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
 - v541 target-reviews four additional SCORE/high-score owners: OP hiscore_scoredat_load_both and scores_put, plus MAINE hiscore_scoredat_load_for and hiscore_scoredat_save. Target Ghidra spans, complete disassembly, internal branch closure, adjacent entries, and artifact-local v489 linked bytes all agree. Each logical function is directly present in an explicitly Decompilation-labeled ReC98 commit, so all four remain candidate-cpp / unreviewed with no source-present or exact credit. MAINE hi_end physical C++ owners are now reviewed. See the [v541 SCORE high-score note](reconstruction/op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md).
 - v542 independently target-reviews OP's five remaining hi_view owners. In `1A74:22DA`, `rank_render` is `0x7A` bytes, not Ghidra's truncated `0x3C`: a target JMP enters the omitted `0x3E`-byte reachable tail and the RET is at payload `0xCA93`. OP boundary counts become 24/61/8; source and exact counts do not change because all five ReC98 logical implementations have explicit decompilation introductions. See the [v542 OP hi_view note](reconstruction/op-maine/TH04_OP_HI_VIEW_BOUNDARIES_V542.md).

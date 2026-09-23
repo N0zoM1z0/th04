@@ -646,3 +646,34 @@ The acceptance is restricted to this complete decoded function. Its packed
 DIET file offset is unknown, while the surrounding v489 ReC98 source is
 unaccepted scaffolding. Neither the complete SCORE TU nor MAINE.EXE is exact.
 Next inspect the `0xC5EC` stage renderer target-first.
+
+## v547 maintained stage renderer and reusable replay
+
+The third adjacent MAINE SCORE_TEXT function is `1A05:259C`, payload
+`0xC5EC..0xC664`, `0x79` bytes ending `RET 6`; the next physical function
+starts `0xC665`. Fresh target disassembly tiles the attested Ghidra span and
+all seven direct branches stay inside it. The target's `0x4086` and `0x4088`
+references separately constrain entered-place and playchar reads. The
+`stage_put` name is descriptive, not an original-symbol assertion.
+
+`src/maine/score/stage.cpp` and `stage_put.inl` contain natural C++ only. The
+new `scripts/probes/maine_score_function_harness.py` binds a caller-specified
+target extent, source closure, compiler object, SCORE_TEXT replacement anchors,
+MAP adjacency, full function bytes, and ordered relocations. Its first caller,
+`replay_th04_maine_stage_put.py`, performs two independent cold compilations
+and relinks. Both rounds produce 121-byte standalone CODE SHA-256
+`678eb686624cb0ff4f601037fc6e5754beebac222e18ed454b94211104e8cea7`;
+the linked function is raw-zero against target SHA-256
+`cfe2470a66d9c2ca5951df697be07058997c039f3fd8c73413cb4f2a2a0b8395`.
+All 559 ordered relocations and the v489 candidate EXE/MAP stay unchanged.
+Replay with `python3 scripts/probes/replay_th04_maine_stage_put.py --output-dir
+.analysis/reconstruction/probes/v547-maine-stage-put-001`; focused receipt
+SHA-256 `6884e7ccbb0239bb9a219c6d9e4dfc58582daec5bbc24cf6260c5de0b6637120`.
+The full MAINE decoded-function wrapper passes all 16 registered slices;
+receipt SHA-256 `c7d90994f02dd4b9d2002ba92dae332a5a282d8699f046226c41718521dcc157`.
+
+The generic harness is a replay facility, not a source-authenticity shortcut:
+each new function still needs its own target-first physical review and natural
+source. The three accepted SCORE functions total 691 decoded owner bytes;
+their DIET-packed file offsets and the rest of the physical SCORE TU remain
+unaccepted. The next adjacent owner starts at `0xC665`.
