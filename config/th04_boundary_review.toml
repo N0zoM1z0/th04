@@ -519,11 +519,11 @@ artifact = "th04-op"
 payload_offset = 0xC8F5
 origin = "authored"
 source_form = "candidate-cpp"
-source_ref = "candidate:th04/hi_view.cpp"
+source_ref = "src/op/score/place.cpp"
 expected_body_span = 0x125
 reviewed_body_size = 0x125
-review_evidence_id = "ev-th04-op-hi-view-boundaries-v542"
-notes = "place_put target extent reviewed by v542; candidate implementation is decompilation."
+review_evidence_id = "ev-th04-op-place-put-boundary-v552"
+notes = "Target-reviewed 293-byte two-column row renderer ending RET 2 before rank_render; maintained natural C++ links raw-zero. Descriptive name; historical candidate implementation has decompilation provenance."
 
 [[function_overrides]]
 artifact = "th04-op"

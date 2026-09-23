@@ -80,3 +80,40 @@ Only this decoded function is accepted. The remaining v542 hi_view functions
 still have decompilation provenance, and the DIET-packed OP.EXE has no honest
 file offset for this body. No complete SCORE TU or whole OP product exactness
 is asserted.
+
+## v552 maintained two-column row renderer
+
+The next OP SCORE_TEXT function is target-reviewed at `1A74:21B5`, decoded
+payload `0xC8F5..0xCA19`, exactly `0x125` (293) bytes ending `RET 2` before
+`rank_render` at `0xCA1A`. Fresh target disassembly tiles the attested
+Ghidra extent with 117 instructions and two internal direct branches. Its
+two score columns read names at `+4`, stages at `+176`, and sections spaced
+196 bytes apart. The name `place_put` is descriptive, not original-source
+proof; the earlier ReC98 candidate remains explicitly decompilation-derived.
+
+Maintained natural C++ is in `src/op/score/place.cpp` and bounded
+`place_put.inl`, with artifact-local, offset-checked score layout in
+`scoredat.hpp`. A reusable OP SCORE harness pins the v489 candidate inputs,
+source closure, target extent, standalone OMF, grouped SCORE_TEXT, MAP,
+complete linked function, and ordered relocations. In the standalone object,
+16 differing bytes lie exclusively within five near-call and five data-address
+OMF FIXUPP words. The independent harness verifies every differing position,
+the relevant instruction forms, and the presence of each fixup; it does not
+normalize away any linked mismatch. Both grouped objects are identical to
+v489 and both linked 293-byte functions are raw-zero against target SHA-256
+`79322cc0563bb1c1753393eb704c5869f07563fc658da33c71c217e66b865c71`.
+The full candidate EXE/MAP and all 804 ordered relocations remain unchanged.
+
+Replay with `python3 scripts/probes/replay_th04_op_place_put.py --output-dir
+.analysis/reconstruction/probes/<new-id>`; retained focused receipt
+`.analysis/reconstruction/probes/v552-op-place-put-002/receipt.json` has SHA-256
+`e5ce18c639239fe478f3b0b6c330ec655b78862e38271cb919553dd338246d39`.
+The first scratch probe failed because it allowed near-call fixups only; its
+four `ADD AX,imm16` and one indexed-load data fixups were subsequently
+attested and whitelisted at exact locations. No packed-file, complete SCORE
+TU, or whole OP exactness is asserted. The next `rank_render` owner retains
+the v542 Ghidra-tail correction and requires that special boundary review
+when reconstructed.
+The full cold OP decoded-function wrapper passes all 15 registered slices;
+retained aggregate receipt SHA-256 is
+`7e796a3c2f833e6f8cb804d92687c0bf4a8b3c579db5d63b2edc9393a01969d8`.
