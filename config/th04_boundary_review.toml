@@ -1071,3 +1071,15 @@ expected_body_span = 0x7B
 reviewed_body_size = 0x7B
 review_evidence_id = "ev-th04-op-pic-darken-boundary-v640"
 notes = "Target Ghidra closes one contiguous 123-byte near Pascal body at 1A74:2ACA with one caller and one callee. Raw target and MAP bind GRCG_SETCOLOR at 0000:10D2 and _VRAM_PLANE_B at 0F34:22DA. playchar 0/1 selects VRAM offsets 0x1046/0x106A; the body writes 0xAAAAAAAA/0x55555555 alternating rows over 256x244 pixels and ends RET 2 after direct GRCG off."
+
+# v642: target-first review for _snd_se_update; natural codegen remains nonexact.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xE32C
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/sound/se_update.cpp"
+expected_body_span = 0x4C
+reviewed_body_size = 0x4C
+review_evidence_id = "ev-th04-op-snd-se-update-boundary-v642"
+notes = "Target Ghidra closes one contiguous 76-byte FAR body at 1DA1:091C with five callers and one callee. Natural C++ is 77 bytes because ordinary byte-array indexing uses a one-byte-longer lowering; an explicit register-shaping helper matches only as a diagnostic and grants no exact credit."

@@ -11,13 +11,13 @@
   <text x="24" y="128" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">OP.EXE</text>
   <text x="24" y="148" fill="#c8cad2" font-family="monospace" font-size="11">93 candidates</text>
   <rect x="154" y="121" width="282" height="12" rx="4" fill="#353b52"/>
-  <rect x="154.00" y="121" width="163.74" height="12" fill="#9b6de3"/>
-  <rect x="317.74" y="121" width="94.00" height="12" fill="#5496d6"/>
+  <rect x="154.00" y="121" width="166.77" height="12" fill="#9b6de3"/>
+  <rect x="320.77" y="121" width="90.97" height="12" fill="#5496d6"/>
   <rect x="411.74" y="121" width="24.26" height="12" fill="#596078"/>
   <rect x="476" y="121" width="282" height="12" rx="4" fill="#353b52"/>
   <rect x="476.00" y="121" width="154.65" height="12" fill="#55c7a6"/>
   <rect x="630.65" y="121" width="127.35" height="12" fill="#596078"/>
-  <text x="154" y="150" fill="#c8cad2" font-family="monospace" font-size="11">R 54 · C 31 · P 8</text>
+  <text x="154" y="150" fill="#c8cad2" font-family="monospace" font-size="11">R 55 · C 30 · P 8</text>
   <text x="476" y="150" fill="#c8cad2" font-family="monospace" font-size="11">Exact 51 · Blocked 0 · Pending 42</text>
   <text x="24" y="190" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">MAIN.EXE</text>
   <text x="24" y="210" fill="#c8cad2" font-family="monospace" font-size="11">495 candidates</text>

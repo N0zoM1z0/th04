@@ -26,13 +26,13 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 54 / 31 / 8 | 51 | 42 / 0 | 4,547 |
+| OP.EXE | 55 / 30 / 8 | 51 | 42 / 0 | 4,623 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 4,547 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 4,273 bytes are in the 51 accepted exact
-functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
+OP's 4,623 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
+candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
 These are decoded-function extents, not packed-file byte totals. No honest
@@ -767,7 +767,7 @@ pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus 2 blocked**. There i
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 
-Three small-looking candidates were deliberately **not** promoted:
+Four small-looking candidates were deliberately **not** promoted:
 
 - MAINE `egc_start_copy()` at payload `0xA2D6` (52 bytes): ordinary maintained
   `outport(port,value)` codegen produces the wrong register-load order and
@@ -779,6 +779,12 @@ Three small-looking candidates were deliberately **not** promoted:
   register/peek parameter mechanism and `_BL/_BH` indexing shape. Do not claim
   natural-source exactness by importing those decompilation helpers without
   first resolving source/ABI authority.
+- OP `_snd_se_update` at payload `0xE32C` (76 bytes): target-first review is
+  complete, and maintained natural C++ deterministically compiles to 77 bytes.
+  The only structural gap is one extra byte in ordinary unsigned-byte array
+  indexing, plus the two forward-branch distances shifted by that byte. A
+  register-specific candidate helper reproduces the target only as a diagnostic;
+  the v642 receipt grants it no source or exact credit.
 - OP `nopoly_b_put()` at payload `0xBFA7` (30 bytes): the candidate implementation
   contains explicit DS save/restore and the `__memcpy__` intrinsic. Treat it as
   a low-level authored/intrinsic ownership question rather than a routine C++

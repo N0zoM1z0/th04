@@ -58,10 +58,11 @@ target rotates into copied assembly. The shared input/vector cohort is complete;
 choose the next unit from remaining OP/MAINE target-reviewed work or the ZUN
 authored/source-authority queue after fresh boundary/origin review. Do not
 preselect by address or carry a stale work order across checkpoints. In
-particular, do not treat MAINE `egc_start_copy`, OP `SND_SE_PLAY`, or OP
-`nopoly_b_put` as ordinary natural-C++ leaves: current probes show
-compiler/decomp-helper or explicit low-level-intrinsic dependencies that require
-source/ABI ownership review before any exact attempt.
+particular, do not treat MAINE `egc_start_copy`, OP `SND_SE_PLAY`, OP
+`_snd_se_update`, or OP `nopoly_b_put` as ordinary natural-C++ leaves. The v642
+`snd_se_update` probe narrows its natural mismatch to one byte of array-index
+codegen; a register-specific control explains the target but receives no exact
+credit. These cases require source/ABI ownership review before any exact attempt.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
 composition and v489/v494 aggregate Oracles during every source edit. A new
@@ -79,8 +80,8 @@ decoded-exact functions / 2,783 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `scoredat_encode` (101 bytes), for 2,972 decoded source-owner bytes; OP has
 51 decoded-exact functions / 4,273 exact source-owner bytes, with two separate
-codec candidates (274 bytes) still source-present and nonexact, for 4,547
-decoded source-owner bytes total.
+codec candidates (274 bytes) plus `snd_se_update` (76 bytes) still
+source-present and nonexact, for 4,623 decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
