@@ -70,6 +70,7 @@ MAINE_CUTSCENE_SCRIPT_FREE_PRODUCER = 0xA292
 MAINE_BOX_BG_FREE_PRODUCER = 0xA292
 MAINE_SCRIPT_PARAM_SECOND_PRODUCER = 0xA292
 MAINE_CFG_RESIDENT_PRODUCER = 0xA059
+MAINE_GAME_EXIT_EXEC_PRODUCER = 0xA059
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
 MAINE_SCORE_RECREATE_PRODUCER = 0xC206
 MAINE_STAGE_PUT_PRODUCER = 0xC5EC
@@ -227,6 +228,7 @@ def validate(
                                  "maine-box-animate-v573", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-second-v590",
                                  "maine-cfg-resident-v604",
+                                 "maine-game-exit-exec-v608",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
                                  "maine-scoredat-recreate-v580",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
@@ -317,6 +319,12 @@ def validate(
                     or producer_start != MAINE_CFG_RESIDENT_PRODUCER
                     or producer_size != 0x239):
                 raise ValueError(f"{ident}: MAINE cfg-resident backend does not compile this producer")
+        elif backend == "maine-game-exit-exec-v608":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/core/game_exit_and_exec.cpp"
+                    or producer_start != MAINE_GAME_EXIT_EXEC_PRODUCER
+                    or producer_size != 0x239):
+                raise ValueError(f"{ident}: MAINE game-exit-exec backend does not compile this producer")
         elif backend == "maine-score-load-for-v557":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/score/load_for.cpp"
@@ -714,6 +722,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-cfg-resident-v604":
         return [sys.executable, "scripts/probes/replay_th04_maine_cfg_resident_ptr.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-game-exit-exec-v608":
+        return [sys.executable, "scripts/probes/replay_th04_maine_game_exit_and_exec.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-put-v544":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_put.py",

@@ -27,21 +27,40 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 40 / 45 / 8 | 37 | 56 / 0 | 3,271 |
-| MAINE.EXE | 36 / 31 / 5 | 31 | 41 / 0 | 2,789 |
+| MAINE.EXE | 37 / 30 / 5 | 32 | 40 / 0 | 2,840 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 3,271 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 2,997 bytes are in the 37 accepted exact
-functions. MAINE has 31 decoded-function exact functions (2,600 bytes), plus
+functions. MAINE has 32 decoded-function exact functions (2,651 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,789.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,840.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP nopoly B-plane snapshot
+## Latest verified cohort: MAINE game exit-and-exec wrapper
+
+v608 reconstructs the 51-byte `game_exit_and_exec(char far*)` wrapper at
+payload `0xA08A` (`1A05:003A`) inside `MAINE_E_TEXT`. Ghidra closes one
+contiguous body with one caller and six callees. Raw target operands plus the
+MAP independently bind the sequence to `CDG_FREE_ALL`, `GRAPH_HIDE`,
+`TEXT_CLEAR`, `GAIJI_RESTORE`, `game_exit`, and `_execl`; the `_execl` call
+receives the same far filename pointer twice, followed by a null terminator.
+
+Maintained natural source is `src/maine/core/game_exit_and_exec.cpp`.
+Standalone TC86 output contains exactly six expected FAR-call fixups. The
+grouped replay preserves the complete `0x239`-byte `MAINE_E_TEXT` producer,
+the retained MAINE program image, and all 559 ordered relocations. The v609
+complete MAINE aggregate passes 32/32 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v609-maine-game-exec-aggregate-001/receipt.json`,
+SHA-256 `317d150c83eb9b930e36143df4831e86c2ec54e0fc8e3fbf2c153bdb175253d4`.
+This is decoded-function exactness only; no DIET-packed offset or whole-MAINE
+exactness is claimed.
+
+## Prior verified cohort: OP nopoly B-plane snapshot
 
 v606 reconstructs the 49-byte `nopoly_B_snap()` leaf at payload `0xBF68`
 (`1A74:1828`). Ghidra closes one contiguous body with one caller and one
@@ -391,7 +410,7 @@ receipt, and preserve only artifacts covered by `config/analysis_retention.toml`
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
 leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606, or MAINE
-v590/v604: their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+v590/v604/v608: their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not

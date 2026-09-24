@@ -193,6 +193,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
             ("maine-script-param-second-v590", "0xC3D", "script-param-second"),
             ("maine-cfg-resident-v604", "0x238", "cfg-resident"),
+            ("maine-game-exit-exec-v608", "0x238", "game-exit-exec"),
             ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
             ("op-main-cdg-load-v602", "0x2C6", "main-CDG-load"),
             ("op-nopoly-free-v584", "0x6A4", "nopoly-free"),
@@ -303,6 +304,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("maine-cfg-resident-v604", saved)[1],
             "scripts/probes/replay_th04_maine_cfg_resident_ptr.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("maine-game-exit-exec-v608", saved)[1],
+            "scripts/probes/replay_th04_maine_game_exit_and_exec.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-stage-put-v545", saved)[1],
