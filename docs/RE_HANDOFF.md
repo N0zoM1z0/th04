@@ -27,14 +27,15 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 27 / 58 / 8 | 24 | 69 / 0 | 2,841 |
-| MAINE.EXE | 31 / 35 / 6 | 24 | 48 / 0 | 2,247 |
+| MAINE.EXE | 31 / 35 / 6 | 25 | 47 / 0 | 2,297 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 2,841 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 2,567 bytes are in the 24 accepted exact
-functions. MAINE's 24 functions (2,247 bytes) are exact. These are decoded-function extents,
-not packed-file byte totals. No honest packed-file denominator exists yet for
-OP, MAINE, or ZUN. MAIN is not on the active reconstruction path: its 492/495
+functions. MAINE's 25 functions (2,297 bytes) are decoded-function exact.
+These are decoded-function extents, not packed-file byte totals. No honest
+packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
+active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
@@ -50,7 +51,8 @@ them with `RETF 6` and `RETF 0xA`. The `vector2_at` declaration is only a
 target-observed near reference to two 16-bit output words, not a full `SPPoint`
 API claim.
 
-Full decoded aggregate replay passes 24/24 functions in each artifact:
+At the v570 checkpoint, full decoded aggregate replay passed 24/24 functions
+in each artifact:
 
 - OP receipt: `.analysis/reconstruction/probes/v570-op-vector-exact-aggregate-001/receipt.json`, SHA-256 `c68fd2ef401e95ec1135a2577aaa0a5f0a6b05838b6d7296ab8349a713e73c99`; all 804 ordered target relocations preserved.
 - MAINE receipt: `.analysis/reconstruction/probes/v570-maine-vector-exact-aggregate-002/receipt.json`, SHA-256 `6539b07824f74d88146dbded2dda2f87b1e127a109e9e376458cbb219a48a22e`; all 559 ordered target relocations preserved.
@@ -63,6 +65,16 @@ remains documented in
 the vector/math evidence is in
 [TH04_SHARED_VECTOR_MATH_V570.md](reconstruction/op-maine/TH04_SHARED_VECTOR_MATH_V570.md).
 
+The v573 MAINE cutscene helper at payload `[0xA815,0xA847)` adds one decoded
+function (50 bytes). Its maintained natural-C++ body is cold-compiled in
+`CUTSCENE_TEXT`; the complete function slice is raw-zero, the full
+`0xC3E` linked producer span matches target, all 559 ordered MAINE relocations
+remain equal, and the exact-state aggregate passes 25/25. The surrounding
+MAINE executable is still not byte-exact: this is function-level acceptance
+through a pinned ReC98 replay scaffold, not packed-file acceptance. The name
+`box_1_to_0_animate()` remains an open upstream-derived hypothesis. See
+[the helper note](reconstruction/op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md).
+
 ## Latest physical-boundary review: MAINE cutscene and indirect dispatcher
 
 MAINE payload `0xA847..0xADBB` (`1A05:07F7..0D6B`) is now boundary-reviewed
@@ -70,14 +82,15 @@ as one `0x575`-byte owner. A target-local 16-entry CS-relative dispatch table
 at payload `0xADBC` reaches case blocks that Ghidra omitted from its 58-byte,
 two-range body; all paths reach a shared `RET 2`. This is boundary progress
 only: source, meaning, and the candidate `script_op(unsigned char)` name remain
-unverified, and decoded exact remains 24 functions. See
+unverified. See
 [TH04_MAINE_SCRIPT_OP_BOUNDARY_V571.md](reconstruction/op-maine/TH04_MAINE_SCRIPT_OP_BOUNDARY_V571.md).
 
-The smaller cutscene helper at payload `[0xA815,0xA847)` is also boundary-
-reviewed as a contiguous `0x32` bytes (`1A05:07C5..07F6`), closed by a
-target-local caller and `RET` immediately before the next reviewed entry. Its
-candidate name/source remain unverified; decoded exact remains 24 functions.
-See [TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md](reconstruction/op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md).
+The helper at payload `[0xA815,0xA847)` is now a decoded-function exact
+50-byte extent (`1A05:07C5..07F6`), closed by a target-local caller and `RET`
+immediately before the next reviewed entry. Natural maintained C++ reproduces
+the complete slice; only this function receives exact credit. Its candidate
+name remains an open hypothesis. See
+[TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md](reconstruction/op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md).
 
 ## Replay footprint and next work
 
@@ -92,12 +105,13 @@ are disposable; current private acceptance directories retain only their small
 receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
-For the next MAINE step, test the smaller reviewed `0xA815` helper with a
-natural maintained body and artifact-local source-compiling replay. The larger
-indirect dispatcher still needs a complete source-owner/TU context before
-replay. The local candidate `th04/cutscene.cpp` is an include-only forwarder to
-TH03 source; do not import it as maintained MAINE product code. Do not trust
-either candidate name or assume address order establishes source ownership.
+For the next MAINE step, reconcile ownership and source composition around the
+reviewed `0xA847..0xADBB` indirect dispatcher; it still needs a complete natural
+source-owner/TU context before replay. The local candidate `th04/cutscene.cpp`
+is an include-only forwarder to TH03 source; do not import it as maintained
+MAINE product code. Do not trust candidate names or assume address order
+establishes source ownership. Alternatively, select a fresh target-first OP or
+ZUN owner from the current boundary/status ledgers.
 Preserve OP and MAINE SCORE TU composition, target restore provenance, v489
 BGIMAGE, and v494 relocation/layout Oracles. Keep the two OP SCORE codec units
 source-present/nonexact unless a natural-source cold build reaches raw zero;

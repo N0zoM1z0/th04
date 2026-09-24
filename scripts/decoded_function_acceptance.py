@@ -64,6 +64,7 @@ MODE_PRODUCERS = {"th04-op": 0xDCE4, "th04-maine": 0xCFAA}
 DELAY_PRODUCERS = {"th04-op": 0xDD80, "th04-maine": 0xD046}
 MAINE_SCORE_INSERT_PRODUCER = 0xC3B2
 MAINE_SCORE_PUT_PRODUCER = 0xC506
+MAINE_BOX_ANIMATE_PRODUCER = 0xA292
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
 MAINE_STAGE_PUT_PRODUCER = 0xC5EC
 MAINE_NAME_CURSOR_PRODUCER = 0xC665
@@ -198,6 +199,7 @@ def validate(
                                  "op-maine-input-wait-v565", "op-maine-vector-math-v570",
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "maine-score-insert-v543", "maine-score-put-v544",
+                                 "maine-box-animate-v573",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
                                  "op-regist-menu-v556",
@@ -257,6 +259,12 @@ def validate(
                     or producer_start != MAINE_SCORE_PUT_PRODUCER
                     or producer_size != 0xE6):
                 raise ValueError(f"{ident}: MAINE score-put backend does not compile this producer")
+        elif backend == "maine-box-animate-v573":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/cutscene/box_animate.cpp"
+                    or producer_start != MAINE_BOX_ANIMATE_PRODUCER
+                    or producer_size != 0xC3E):
+                raise ValueError(f"{ident}: MAINE box-animate backend does not compile this producer")
         elif backend == "maine-score-load-for-v557":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/score/load_for.cpp"
@@ -524,6 +532,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-insert-v543":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_insert.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-box-animate-v573":
+        return [sys.executable, "scripts/probes/replay_th04_maine_box_animate.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-put-v544":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_put.py",

@@ -1,1 +1,2 @@
 id,subject,predicate,value,status,confidence,evidence_ids,notes
+hyp-th04-maine-box-animate-name-v573,th04-maine:1A05:07C5,name,box_1_to_0_animate(),open,inferred,ev-th04-maine-box-animate-upstream-v573;ev-th04-maine-box-animate-boundary-v572,"ReC98 proposes this label and behavior; target evidence establishes only a 50-byte near function body, internal control flow, three calls, and RET. Natural-source raw equality does not independently attest the original symbol name."
