@@ -104,6 +104,7 @@ OP_CMT_TRANSITION_PRODUCER = 0xBED5
 OP_MUSIC_UPDATE_PRODUCER = 0xBED5
 OP_HELP_PUT_PRODUCER = 0xB49F
 OP_ROLLUP_PRODUCER = 0xB49F
+OP_BGM_CHOICE_PRODUCER = 0xB49F
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -236,6 +237,7 @@ def validate(
                                  "op-music-update-flip-v610",
                                  "op-help-put-v596",
                                  "op-rollup-v612",
+                                 "op-bgm-choice-v624",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-second-v590",
@@ -507,6 +509,12 @@ def validate(
                     or producer_start != OP_ROLLUP_PRODUCER
                     or producer_size != 0x5A6):
                 raise ValueError(f"{ident}: OP rollup backend does not compile this producer")
+        elif backend == "op-bgm-choice-v624":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/setup/bgm_choice_put.cpp"
+                    or producer_start != OP_BGM_CHOICE_PRODUCER
+                    or producer_size != 0x5A6):
+                raise ValueError(f"{ident}: OP BGM-choice backend does not compile this producer")
         elif backend == "op-stage-put-v545":
             if (artifact != "th04-op"
                     or source_name != "src/op/score/stage.cpp"
@@ -775,6 +783,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-rollup-v612":
         return [sys.executable, "scripts/probes/replay_th04_op_rollup.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-bgm-choice-v624":
+        return [sys.executable, "scripts/probes/replay_th04_op_bgm_choice_put.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-insert-v543":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_insert.py",

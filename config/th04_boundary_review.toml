@@ -963,3 +963,15 @@ expected_body_span = 0x48
 reviewed_body_size = 0x48
 review_evidence_id = "ev-th04-op-cmt-transition-boundary-v622"
 notes = "Target Ghidra closes one contiguous 72-byte near Pascal body at 1A74:1C2F with one caller and seven callees. Raw target and MAP bind _cmt_shown_initial, cmt_unput_both_animate, cmt_load, nopoly_b_put, BGIMAGE_PUT_RECT_16, cmt_fadein_both_animate, cmt_put, and music_update_render_and_flip; the background rectangle is (320,64,320,320)."
+
+# v624: target-first review for bgm_choice_put.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB698
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/bgm_choice_put.cpp"
+expected_body_span = 0x4F
+reviewed_body_size = 0x4F
+review_evidence_id = "ev-th04-op-bgm-choice-boundary-v624"
+notes = "Target Ghidra closes one contiguous 79-byte near Pascal body at 1A74:0F58 with one caller and one callee. Target mode values 0/1/2 select linked DGROUP strings at 0x0DD5/0x0DC4/0x0DB3 with top offsets +32/+16/+0 from CHOICE_TOP=136; CHOICE_LEFT=48 and the sole FAR call is 0DA1:04A4 GRAPH_PUTSA_FX. Pinned op_setup.obj data confirms these linked addresses map to the three 16-byte Shift-JIS BGM choice strings."

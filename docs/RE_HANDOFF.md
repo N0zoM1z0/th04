@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 45 / 40 / 8 | 42 | 51 / 0 | 3,605 |
+| OP.EXE | 46 / 39 / 8 | 43 | 50 / 0 | 3,684 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,605 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 3,331 bytes are in the 42 accepted exact
+OP's 3,684 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 3,410 bytes are in the 43 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,27 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP music-room comment transition wrapper
+## Latest verified cohort: OP BGM choice renderer
+
+v624 reconstructs the 79-byte `bgm_choice_put(int,unsigned int)` renderer at
+payload `0xB698` (`1A74:0F58`) inside `OP_SETUP_TEXT`. Ghidra closes one
+contiguous body with one caller and one callee. Target mode values 0/1/2 select
+three linked DGROUP strings at `0x0DD5` / `0x0DC4` / `0x0DB3` and place them
+at vertical offsets +32 / +16 / +0 from `CHOICE_TOP=136`; `CHOICE_LEFT=48`.
+The sole FAR call is `GRAPH_PUTSA_FX` at `0DA1:04A4`. Pinned
+`op_setup.obj` data independently confirms that those linked addresses hold
+the three 16-byte Shift-JIS BGM-choice strings.
+
+Maintained natural source is `src/op/setup/bgm_choice_put.cpp`. Focused A/B
+cold replay raw-matches the complete 79-byte body and preserves the full
+`OP_SETUP_TEXT` producer plus grouped choice-string OMF. The v625 complete OP
+aggregate passes 43/43 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v625-op-bgm-choice-aggregate-001/receipt.json`,
+SHA-256 `58d6ace11ddd208399ca180e987eb945416c2b47b921412341b142f579e72f91`.
+All 804 ordered target relocations remain preserved. This is decoded-function
+exactness only; no DIET-packed offset or whole-OP exactness is claimed.
+
+## Prior verified cohort: OP music-room comment transition wrapper
 
 v622 reconstructs the 72-byte `cmt_load_unput_and_put_both_animate(int)`
 wrapper at payload `0xC36F` (`1A74:1C2F`) inside `OP_MUSIC_TEXT`. Ghidra
@@ -572,7 +592,7 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622,
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624,
 or MAINE v590/v604/v608/v614: their complete decoded-function extents now pass
 raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
