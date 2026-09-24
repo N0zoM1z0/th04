@@ -1216,3 +1216,15 @@ expected_body_span = 0x62
 reviewed_body_size = 0x62
 review_evidence_id = "ev-th04-op-shottype-menu-initial-boundary-v660"
 notes = "Target Ghidra closes one contiguous 98-byte near body at 1A74:2F10 with one caller and five callees. Raw target and MAP bind playchar_menu_sel/shottype_menu_sel, CDG_PUT_NOALPHA_8 slot 40/41 selection at (184,44), GRCG_SETCOLOR, two GRCG_BYTEBOXFILL_X shadow rectangles, direct GRCG-off port 0x7C, shottype_title_box_put, shottype_titles_put, and RET."
+
+# v662: target-first review for start_extra.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xA96C
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/start/start_extra.cpp"
+expected_body_span = 0x5D
+reviewed_body_size = 0x5D
+review_evidence_id = "ev-th04-op-start-extra-boundary-v662"
+notes = 'Target Ghidra closes one contiguous 93-byte near body at 1A74:022C with no direct callers and seven callees. Raw target and MAP bind the resident pointer, Extra-stage/lives/bombs/ASCII writes, playchar_menu cancellation, demo_num reset, main_cdg_free, cfg_save, GAIJI_RESTORE, KAJA fade AX=0x020A, game_exit, and _execl("main","main",nullptr).'

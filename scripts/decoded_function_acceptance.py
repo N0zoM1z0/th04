@@ -86,6 +86,7 @@ MAINE_NAME_CURSOR_PRODUCER = 0xC665
 MAINE_PLACE_ROW_PRODUCER = 0xC711
 MAINE_PLACES_PRODUCER = 0xC7C9
 MAINE_ALPHABET_CURSOR_PRODUCER = 0xC7E3
+OP_START_EXTRA_PRODUCER = 0xA74C
 OP_STAGE_PUT_PRODUCER = 0xC8A5
 OP_PLACE_PUT_PRODUCER = 0xC8F5
 OP_RANK_RENDER_PRODUCER = 0xCA1A
@@ -268,7 +269,7 @@ def validate(
                                  "maine-cfg-resident-v604",
                                  "maine-game-exit-exec-v608", "maine-game-exit-v654", "maine-game-init-main-v656",
                                  "maine-end-animate-v616",
-                                 "maine-score-load-for-v557", "op-stage-put-v545",
+                                 "maine-score-load-for-v557", "op-start-extra-v662", "op-stage-put-v545",
                                  "maine-scoredat-recreate-v580",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
                                  "op-regist-menu-v556",
@@ -640,6 +641,12 @@ def validate(
                     or producer_start != OP_DROPDOWN_PRODUCER
                     or producer_size != 0x5A6):
                 raise ValueError(f"{ident}: OP dropdown backend does not compile this producer")
+        elif backend == "op-start-extra-v662":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/start/start_extra.cpp"
+                    or producer_start != OP_START_EXTRA_PRODUCER
+                    or producer_size != 0xD53):
+                raise ValueError(f"{ident}: OP start-extra backend does not compile this producer")
         elif backend == "op-stage-put-v545":
             if (artifact != "th04-op"
                     or source_name != "src/op/score/stage.cpp"
@@ -1013,6 +1020,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-alphabet-cursor-v551":
         return [sys.executable, "scripts/probes/replay_th04_maine_alphabet_cursor.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-start-extra-v662":
+        return [sys.executable, "scripts/probes/replay_th04_op_start_extra.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-stage-put-v545":
         return [sys.executable, "scripts/probes/replay_th04_op_stage_put.py",
