@@ -27,21 +27,45 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 42 / 43 / 8 | 39 | 54 / 0 | 3,386 |
-| MAINE.EXE | 37 / 30 / 5 | 32 | 40 / 0 | 2,840 |
+| MAINE.EXE | 38 / 29 / 5 | 33 | 39 / 0 | 2,903 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 3,386 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 3,112 bytes are in the 39 accepted exact
-functions. MAINE has 32 decoded-function exact functions (2,651 bytes), plus
+functions. MAINE has 33 decoded-function exact functions (2,714 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,840.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,903.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP setup rollup helper
+## Latest verified cohort: MAINE cutscene script loader
+
+v614 reconstructs the 63-byte `cutscene_script_load(const char far*)` helper
+at payload `0xA292` (`1A05:0242`), the first function in `CUTSCENE_TEXT`.
+Ghidra closes one contiguous body with one caller and five callees. Raw target
+operands plus the MAP independently bind the near call to
+`cutscene_script_free`, FAR calls to `FILE_ROPEN`, `FILE_SIZE`, `FILE_READ`,
+and `FILE_CLOSE`, `_script` at `0E53:1F48`, and `_script_p` at
+`0E53:3F48`. The target also fixes the failure return to 1 and success return
+to 0.
+
+Maintained natural source is `src/maine/cutscene/script_load.cpp` with the
+function body in `src/maine/cutscene/script_load.inl`. Standalone TC86 output
+matches the complete 63-byte instruction shape with exactly eight expected OMF
+fixups: one near call, four FAR file calls, and three script/script-pointer
+references. The grouped replay preserves the complete `0xC3E`-byte
+`CUTSCENE_TEXT` producer, the retained MAINE program image, and all 559 ordered
+relocations. The v615 complete MAINE aggregate passes 33/33 registered decoded
+functions raw-zero:
+`.analysis/reconstruction/probes/v615-maine-script-load-aggregate-001/receipt.json`,
+SHA-256 `2dd8ba4704d75c0dc3e13804548e4efbe5fb5338454f4caf5f4838d3c0561f34`.
+This is decoded-function exactness only; no DIET-packed offset or whole-MAINE
+exactness is claimed.
+
+## Prior verified cohort: OP setup rollup helper
 
 v612 reconstructs the 60-byte `rollup(int,int)` helper at payload `0xB65C`
 (`1A74:0F1C`) inside `OP_SETUP_TEXT`. Ghidra closes one contiguous body with
@@ -454,7 +478,7 @@ receipt, and preserve only artifacts covered by `config/analysis_retention.toml`
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
 leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612, or MAINE
-v590/v604/v608: their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+v590/v604/v608/v614: their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not

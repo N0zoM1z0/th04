@@ -31,14 +31,14 @@
   <text x="24" y="252" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">MAINE.EXE</text>
   <text x="24" y="272" fill="#c8cad2" font-family="monospace" font-size="11">72 candidates</text>
   <rect x="154" y="245" width="282" height="12" rx="4" fill="#353b52"/>
-  <rect x="154.00" y="245" width="144.92" height="12" fill="#9b6de3"/>
-  <rect x="298.92" y="245" width="117.50" height="12" fill="#5496d6"/>
+  <rect x="154.00" y="245" width="148.83" height="12" fill="#9b6de3"/>
+  <rect x="302.83" y="245" width="113.58" height="12" fill="#5496d6"/>
   <rect x="416.42" y="245" width="19.58" height="12" fill="#596078"/>
   <rect x="476" y="245" width="282" height="12" rx="4" fill="#353b52"/>
-  <rect x="476.00" y="245" width="125.33" height="12" fill="#55c7a6"/>
-  <rect x="601.33" y="245" width="156.67" height="12" fill="#596078"/>
-  <text x="154" y="274" fill="#c8cad2" font-family="monospace" font-size="11">R 37 · C 30 · P 5</text>
-  <text x="476" y="274" fill="#c8cad2" font-family="monospace" font-size="11">Exact 32 · Blocked 0 · Pending 40</text>
+  <rect x="476.00" y="245" width="129.25" height="12" fill="#55c7a6"/>
+  <rect x="605.25" y="245" width="152.75" height="12" fill="#596078"/>
+  <text x="154" y="274" fill="#c8cad2" font-family="monospace" font-size="11">R 38 · C 29 · P 5</text>
+  <text x="476" y="274" fill="#c8cad2" font-family="monospace" font-size="11">Exact 33 · Blocked 0 · Pending 39</text>
   <text x="24" y="314" fill="#f4f4f5" font-family="sans-serif" font-size="14" font-weight="600">ZUN.COM</text>
   <text x="24" y="334" fill="#c8cad2" font-family="monospace" font-size="11">13 candidates</text>
   <rect x="154" y="307" width="282" height="12" rx="4" fill="#353b52"/>

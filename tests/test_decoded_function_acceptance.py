@@ -192,6 +192,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("maine-cutscene-script-free-v582", "0xC3D", "cutscene-script-free"),
             ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
             ("maine-script-param-second-v590", "0xC3D", "script-param-second"),
+            ("maine-cutscene-script-load-v614", "0xC3D", "cutscene-script-load"),
             ("maine-cfg-resident-v604", "0x238", "cfg-resident"),
             ("maine-game-exit-exec-v608", "0x238", "game-exit-exec"),
             ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
@@ -302,6 +303,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("maine-script-param-second-v590", saved)[1],
             "scripts/probes/replay_th04_maine_script_param_second.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("maine-cutscene-script-load-v614", saved)[1],
+            "scripts/probes/replay_th04_maine_script_load.py",
         )
         self.assertEqual(
             acceptance.backend_command("maine-cfg-resident-v604", saved)[1],

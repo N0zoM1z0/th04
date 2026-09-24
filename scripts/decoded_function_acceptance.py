@@ -69,6 +69,7 @@ MAINE_BOX_ANIMATE_PRODUCER = 0xA292
 MAINE_CUTSCENE_SCRIPT_FREE_PRODUCER = 0xA292
 MAINE_BOX_BG_FREE_PRODUCER = 0xA292
 MAINE_SCRIPT_PARAM_SECOND_PRODUCER = 0xA292
+MAINE_CUTSCENE_SCRIPT_LOAD_PRODUCER = 0xA292
 MAINE_CFG_RESIDENT_PRODUCER = 0xA059
 MAINE_GAME_EXIT_EXEC_PRODUCER = 0xA059
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
@@ -231,6 +232,7 @@ def validate(
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-second-v590",
+                                 "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
                                  "maine-game-exit-exec-v608",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
@@ -317,6 +319,12 @@ def validate(
                     or producer_start != MAINE_SCRIPT_PARAM_SECOND_PRODUCER
                     or producer_size != 0xC3E):
                 raise ValueError(f"{ident}: MAINE script-param-second backend does not compile this producer")
+        elif backend == "maine-cutscene-script-load-v614":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/cutscene/script_load.cpp"
+                    or producer_start != MAINE_CUTSCENE_SCRIPT_LOAD_PRODUCER
+                    or producer_size != 0xC3E):
+                raise ValueError(f"{ident}: MAINE cutscene-script-load backend does not compile this producer")
         elif backend == "maine-cfg-resident-v604":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/core/cfg_load_resident_ptr.cpp"
@@ -741,6 +749,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-script-param-second-v590":
         return [sys.executable, "scripts/probes/replay_th04_maine_script_param_second.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-cutscene-script-load-v614":
+        return [sys.executable, "scripts/probes/replay_th04_maine_script_load.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-cfg-resident-v604":
         return [sys.executable, "scripts/probes/replay_th04_maine_cfg_resident_ptr.py",

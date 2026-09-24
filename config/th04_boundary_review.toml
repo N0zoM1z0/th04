@@ -903,3 +903,15 @@ expected_body_span = 0x3C
 reviewed_body_size = 0x3C
 review_evidence_id = "ev-th04-op-rollup-boundary-v612"
 notes = "Target Ghidra closes one contiguous 60-byte near Pascal body at 1A74:0F1C with two callers and two callees. MAP binds _window at 0F34:2B48, so target operand 0x2B4A is window.h; the calls resolve to window_rollup_put and 0DA1:002B frame_delay. Target arithmetic independently fixes MSWIN_H=16, DROP_FRAMES_PER_TILE=2, and DROP_SPEED=8."
+
+# v614: target-first review for cutscene_script_load.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA292
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/script_load.cpp"
+expected_body_span = 0x3F
+reviewed_body_size = 0x3F
+review_evidence_id = "ev-th04-maine-script-load-boundary-v614"
+notes = "Target Ghidra closes one contiguous 63-byte near Pascal body at 1A05:0242 with one caller and five callees. Raw target and MAP bind cutscene_script_free, FILE_ROPEN, FILE_SIZE, FILE_READ, FILE_CLOSE, _script at 0E53:1F48, and _script_p at 0E53:3F48; the open-failure return is 1 and success return is 0."
