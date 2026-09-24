@@ -197,6 +197,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-frame-delay-2-v587", "0x16", "frame-delay-2"),
             ("op-raise-bg-free-v588", "0xAB2", "raise-bg-free"),
             ("op-game-exit-to-dos-v592", "0x1A", "game-exit-to-dos"),
+            ("op-tracklist-put-both-v594", "0x6A4", "tracklist-put-both"),
         )
         for backend, bad_size, message in cases:
             entries = deepcopy(self.entries)
@@ -315,6 +316,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-game-exit-to-dos-v592", saved)[1],
             "scripts/probes/replay_th04_op_game_exit_to_dos.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-tracklist-put-both-v594", saved)[1],
+            "scripts/probes/replay_th04_op_tracklist_put_both.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-place-put-v552", saved)[1],

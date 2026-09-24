@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 33 / 52 / 8 | 30 | 63 / 0 | 2,945 |
+| OP.EXE | 34 / 51 / 8 | 31 | 62 / 0 | 2,984 |
 | MAINE.EXE | 35 / 32 / 5 | 30 | 42 / 0 | 2,740 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 2,945 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,671 bytes are in the 30 accepted exact
+OP's 2,984 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,710 bytes are in the 31 accepted exact
 functions. MAINE has 30 decoded-function exact functions (2,551 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,740.
@@ -41,7 +41,24 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP DOS-exit wrapper
+## Latest verified cohort: OP tracklist renderer
+
+v594 reconstructs the 39-byte `tracklist_put_both(unsigned char)` leaf at payload
+`0xBF41` (`1A74:1801`). Ghidra closes one contiguous body with one caller and
+one callee; the raw target iterates 24 track slots, uses color 3 for the
+selected row and 5 otherwise, and near-calls payload `0xBED5`, corroborated
+by the MAP as `track_put_both`.
+
+Maintained natural source is `src/op/music/tracklist_put_both.cpp`. Standalone
+TC86 output has exactly one near-call OMF fixup, while the grouped replay keeps
+the entire `0x6A5`-byte `OP_MUSIC_TEXT` producer raw-equal. The v595 complete
+OP aggregate passes 31/31 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v595-op-tracklist-aggregate-001/receipt.json`,
+SHA-256 `dad2706759498dca0ca90b71593dce8ce5dfe18843e1cc7c4aab00f8fe16e599`.
+All 804 ordered target relocations remain preserved. This is decoded-function
+exactness only; no DIET-packed offset or whole-OP exactness is claimed.
+
+## Prior verified cohort: OP DOS-exit wrapper
 
 v592 reconstructs the 25-byte `game_exit_to_dos()` wrapper at payload `0xDDB1`
 (`1DA1:03A1`). Target-first evidence closes one contiguous FAR body and binds
@@ -254,8 +271,8 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588, MAINE v590, or OP v592: their complete decoded-function
-extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+leaf batch, OP v587-v588/v592/v594, or MAINE v590: their complete
+decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not
