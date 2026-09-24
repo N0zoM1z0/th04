@@ -208,6 +208,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-cmt-fadein-v600", "0x6A4", "cmt-fadein"),
             ("op-cmt-put-v618", "0x6A4", "cmt-put"),
             ("op-cmt-load-v620", "0x6A4", "cmt-load"),
+            ("op-cmt-transition-v622", "0x6A4", "cmt-transition"),
             ("op-music-update-flip-v610", "0x6A4", "music-update-flip"),
             ("op-help-put-v596", "0x5A5", "help-put"),
             ("op-rollup-v612", "0x5A5", "rollup"),
@@ -373,6 +374,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-cmt-load-v620", saved)[1],
             "scripts/probes/replay_th04_op_cmt_load.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-cmt-transition-v622", saved)[1],
+            "scripts/probes/replay_th04_op_cmt_load_unput_and_put_both_animate.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-music-update-flip-v610", saved)[1],

@@ -100,6 +100,7 @@ OP_CMT_UNPUT_PRODUCER = 0xBED5
 OP_CMT_FADEIN_PRODUCER = 0xBED5
 OP_CMT_PUT_PRODUCER = 0xBED5
 OP_CMT_LOAD_PRODUCER = 0xBED5
+OP_CMT_TRANSITION_PRODUCER = 0xBED5
 OP_MUSIC_UPDATE_PRODUCER = 0xBED5
 OP_HELP_PUT_PRODUCER = 0xB49F
 OP_ROLLUP_PRODUCER = 0xB49F
@@ -231,6 +232,7 @@ def validate(
                                  "op-cmt-fadein-v600",
                                  "op-cmt-put-v618",
                                  "op-cmt-load-v620",
+                                 "op-cmt-transition-v622",
                                  "op-music-update-flip-v610",
                                  "op-help-put-v596",
                                  "op-rollup-v612",
@@ -481,6 +483,12 @@ def validate(
                     or producer_start != OP_CMT_LOAD_PRODUCER
                     or producer_size != 0x6A5):
                 raise ValueError(f"{ident}: OP cmt-load backend does not compile this producer")
+        elif backend == "op-cmt-transition-v622":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/music/cmt_load_unput_and_put_both_animate.cpp"
+                    or producer_start != OP_CMT_TRANSITION_PRODUCER
+                    or producer_size != 0x6A5):
+                raise ValueError(f"{ident}: OP cmt-transition backend does not compile this producer")
         elif backend == "op-music-update-flip-v610":
             if (artifact != "th04-op"
                     or source_name != "src/op/music/music_update_render_and_flip.cpp"
@@ -755,6 +763,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-cmt-load-v620":
         return [sys.executable, "scripts/probes/replay_th04_op_cmt_load.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-cmt-transition-v622":
+        return [sys.executable, "scripts/probes/replay_th04_op_cmt_load_unput_and_put_both_animate.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-music-update-flip-v610":
         return [sys.executable, "scripts/probes/replay_th04_op_music_update_render_and_flip.py",
