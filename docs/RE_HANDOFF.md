@@ -27,21 +27,45 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 56 / 29 / 8 | 52 | 41 / 0 | 4,695 |
-| MAINE.EXE | 46 / 21 / 5 | 39 | 33 / 0 | 3,804 |
+| MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 4,695 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
-candidate; 4,345 bytes are in the 52 accepted exact functions. MAINE has 39 decoded-function exact functions (3,429 bytes), plus
+candidate; 4,345 bytes are in the 52 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
-candidate; total decoded source-owner bytes are 3,804.
+candidate; total decoded source-owner bytes are 3,881.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: MAINE game-init-main wrapper
+
+v656 reconstructs the 77-byte `game_init_main(const unsigned char far*)`
+wrapper at payload `0xD43C` (`1CC7:07CC`) inside `SHARED`.
+Target Ghidra closes one contiguous FAR Pascal body with one caller and eight
+callees. Target operands and the pinned MAP bind `mem_assign_paras`,
+`MEM_ASSIGN_DOS`, `_bbufsiz`=4096, `vram_planes_set`, `VSYNC_START`,
+`EGC_START`, `GRAPH_400LINE`, `JS_START`, `PFSTART`, and `BGM_INIT`.
+The target owner contribution is 78 bytes because `th04/initmain.cpp` adds
+one trailing codestring zero after the 77-byte function.
+
+Maintained natural source is `src/shared/core/game_init_main.cpp`. Standalone
+TC86 output is exactly 77 bytes with ten ordinary fixups; after masking them,
+the sole remaining pre-link delta is the `vram_planes_set` FAR-call opcode.
+TLINK resolves that same-segment call into the target `NOP / PUSH CS / CALL rel16`
+footprint. Recompiling through the original `th04/initmain.cpp` owner restores
+the pinned 78-byte SHARED contribution and baseline-exact link-relevant OMF;
+the linked MAINE EXE/MAP are byte-identical to baseline, with all 559 ordered
+relocations preserved. Focused A/B replay is raw-zero for both the 77-byte
+function and 78-byte producer. The v657 complete MAINE aggregate passes 40/40
+registered decoded slices raw-zero, receipt SHA-256
+`f18ddd9fb4ca1c55d6eb73b8f60cc2065d1e233da64f228ed9e7a33948dcb569`.
+No DIET-packed offset or whole-MAINE exactness is claimed.
 
 ## Latest verified cohort: shared OP/MAINE game-exit wrapper
 
@@ -903,8 +927,8 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v655, tracked reconstruction state is **OP 52 decoded-exact / 41
-pending**, **MAINE 39 / 33**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
+After v657, tracked reconstruction state is **OP 52 decoded-exact / 41
+pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 

@@ -335,6 +335,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(maine_exit[1], "scripts/probes/replay_th04_op_maine_game_exit.py")
         self.assertEqual(maine_exit[2:4], ["--artifact", "maine"])
         self.assertEqual(
+            acceptance.backend_command("maine-game-init-main-v656", saved)[1],
+            "scripts/probes/replay_th04_maine_game_init_main.py",
+        )
+        self.assertEqual(
             acceptance.backend_command("maine-end-animate-v616", saved)[1],
             "scripts/probes/replay_th04_maine_end_animate.py",
         )

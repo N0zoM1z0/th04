@@ -1180,3 +1180,15 @@ expected_body_span = 0x48
 reviewed_body_size = 0x48
 review_evidence_id = "ev-th04-maine-game-exit-boundary-v654"
 notes = "Target Ghidra closes one contiguous 72-byte FAR body at 1CC7:0784 with 1 caller(s) and eight callees. Raw target and MAP bind PFEND, two GRAPH_CLEAR calls with page writes, MEM_UNASSIGN, VSYNC_END, TEXT_CLEAR, JS_END, EGC_START, BGM_FINISH, and RETF. Maintained shared natural C++ reproduces the complete body and owner contribution in focused cold replay; aggregate acceptance pending."
+
+# v656: target-first review for MAINE game_init_main.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xD43C
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/shared/core/game_init_main.cpp"
+expected_body_span = 0x4D
+reviewed_body_size = 0x4D
+review_evidence_id = "ev-th04-maine-game-init-main-boundary-v656"
+notes = "Target Ghidra closes one contiguous 77-byte FAR Pascal body at 1CC7:07CC with one caller and eight callees. Raw target and MAP bind mem_assign_paras, MEM_ASSIGN_DOS, _bbufsiz=4096, vram_planes_set through TLINK same-segment call optimization, VSYNC_START, EGC_START, GRAPH_400LINE, JS_START, PFSTART, BGM_INIT, and RETF 4. The SHARED owner contribution is 78 bytes because th04/initmain.cpp appends one codestring zero."

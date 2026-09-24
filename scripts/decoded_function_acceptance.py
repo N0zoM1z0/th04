@@ -77,6 +77,7 @@ MAINE_CUTSCENE_SCRIPT_LOAD_PRODUCER = 0xA292
 MAINE_CFG_RESIDENT_PRODUCER = 0xA059
 MAINE_GAME_EXIT_EXEC_PRODUCER = 0xA059
 MAINE_GAME_EXIT_PRODUCER = 0xD3F4
+MAINE_GAME_INIT_MAIN_PRODUCER = 0xD43C
 MAINE_END_ANIMATE_PRODUCER = 0xA059
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
 MAINE_SCORE_RECREATE_PRODUCER = 0xC206
@@ -263,7 +264,7 @@ def validate(
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
-                                 "maine-game-exit-exec-v608", "maine-game-exit-v654",
+                                 "maine-game-exit-exec-v608", "maine-game-exit-v654", "maine-game-init-main-v656",
                                  "maine-end-animate-v616",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
                                  "maine-scoredat-recreate-v580",
@@ -397,6 +398,12 @@ def validate(
                     or producer_start != MAINE_GAME_EXIT_PRODUCER
                     or producer_size != 0x48):
                 raise ValueError(f"{ident}: MAINE shared-game-exit backend does not compile this producer")
+        elif backend == "maine-game-init-main-v656":
+            if (artifact != "th04-maine"
+                    or source_name != "src/shared/core/game_init_main.cpp"
+                    or producer_start != MAINE_GAME_INIT_MAIN_PRODUCER
+                    or producer_size != 0x4E):
+                raise ValueError(f"{ident}: MAINE game-init-main backend does not compile this producer")
         elif backend == "maine-end-animate-v616":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/end/end_animate.cpp"
@@ -957,6 +964,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
     if backend_id == "maine-game-exit-v654":
         return [sys.executable, "scripts/probes/replay_th04_op_maine_game_exit.py",
                 "--artifact", "maine", "--output-dir", str(saved)]
+    if backend_id == "maine-game-init-main-v656":
+        return [sys.executable, "scripts/probes/replay_th04_maine_game_init_main.py",
+                "--output-dir", str(saved)]
     if backend_id == "maine-end-animate-v616":
         return [sys.executable, "scripts/probes/replay_th04_maine_end_animate.py",
                 "--output-dir", str(saved)]
