@@ -560,6 +560,11 @@ class DecodedAcceptanceTests(unittest.TestCase):
                                        ROOT / ".analysis/reconstruction/probes/test")[1],
             "scripts/probes/replay_th04_maine_box_animate.py",
         )
+        self.assertEqual(
+            acceptance.backend_command("maine-cursor-advance-v643",
+                                       ROOT / ".analysis/reconstruction/probes/test")[1],
+            "scripts/probes/replay_th04_maine_cursor_advance.py",
+        )
 
     def test_op_stage_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)

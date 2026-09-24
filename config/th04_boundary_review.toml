@@ -1083,3 +1083,15 @@ expected_body_span = 0x4C
 reviewed_body_size = 0x4C
 review_evidence_id = "ev-th04-op-snd-se-update-boundary-v642"
 notes = "Target Ghidra closes one contiguous 76-byte FAR body at 1DA1:091C with five callers and one callee. Natural C++ is 77 bytes because ordinary byte-array indexing uses a one-byte-longer lowering; an explicit register-shaping helper matches only as a diagnostic and grants no exact credit."
+
+# v643: target-first review for cursor_advance_and_animate.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA73B
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/cursor_advance.cpp"
+expected_body_span = 0x54
+reviewed_body_size = 0x54
+review_evidence_id = "ev-th04-maine-cursor-advance-boundary-v643"
+notes = "Target Ghidra closes one contiguous 84-byte near body at 1A05:06EB with one caller and three callees. Raw target and MAP bind _cursor at 0E53:3F8C, _fast_forward at 0E53:3F4E, box_1_to_0_animate at 0A05:07C5, input_wait_for_change at 0CC7:020A, and box_bg_put at 0A05:054E; constants are x step 16, name-area x 144, box right 560, box bottom 384, reset (80,320), and page writes 1 then 0."
