@@ -180,6 +180,14 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "delay backend does not compile"):
             self.check(entries)
 
+    def test_vector_math_backend_is_bound_to_maintained_source_and_extent(self) -> None:
+        entries = deepcopy(self.entries)
+        vector = next(row for row in entries
+                      if row["replay_backend"] == "op-maine-vector-math-v570")
+        vector["producer_size"] = "0x5F"
+        with self.assertRaisesRegex(ValueError, "vector-math backend does not compile"):
+            self.check(entries)
+
 
     def test_pi_backends_are_bound_to_their_maintained_producers(self) -> None:
         entries = deepcopy(self.entries)
@@ -225,6 +233,14 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(input_wait[1], "scripts/probes/replay_th04_shared_input_wait.py")
         self.assertIn("th04-op", input_wait)
         self.assertIn("--retain-candidates", input_wait)
+        vector_math = acceptance.backend_command(
+            "op-maine-vector-math-v570", saved, artifact="th04-maine"
+        )
+        self.assertEqual(vector_math[1], "scripts/probes/replay_th04_shared_vector_math.py")
+        self.assertIn("th04-maine", vector_math)
+        self.assertIn("--retain-candidates", vector_math)
+        with self.assertRaisesRegex(ValueError, "requires one OP/MAINE artifact"):
+            acceptance.backend_command("op-maine-vector-math-v570", saved, artifact="th04-zun")
         self.assertEqual(
             acceptance.backend_command("maine-score-insert-v543", saved)[1],
             "scripts/probes/replay_th04_maine_score_insert.py",
