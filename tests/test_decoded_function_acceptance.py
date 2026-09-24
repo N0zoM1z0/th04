@@ -204,6 +204,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-raise-bg-free-v588", "0xAB2", "raise-bg-free"),
             ("op-game-exit-to-dos-v592", "0x1A", "game-exit-to-dos"),
             ("op-tracklist-put-both-v594", "0x6A4", "tracklist-put-both"),
+            ("op-track-put-both-v636", "0x6A4", "track-put-both"),
             ("op-cmt-unput-v598", "0x6A4", "cmt-unput"),
             ("op-cmt-fadein-v600", "0x6A4", "cmt-fadein"),
             ("op-cmt-put-v618", "0x6A4", "cmt-put"),
@@ -364,6 +365,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-tracklist-put-both-v594", saved)[1],
             "scripts/probes/replay_th04_op_tracklist_put_both.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-track-put-both-v636", saved)[1],
+            "scripts/probes/replay_th04_op_track_put_both.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-cmt-unput-v598", saved)[1],

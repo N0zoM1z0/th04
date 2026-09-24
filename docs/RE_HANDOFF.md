@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 51 / 34 / 8 | 48 | 45 / 0 | 4,210 |
+| OP.EXE | 52 / 33 / 8 | 49 | 44 / 0 | 4,318 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 4,210 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 3,936 bytes are in the 48 accepted exact
+OP's 4,318 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 4,044 bytes are in the 49 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,31 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP setup single-line renderer
+## Latest verified cohort: OP music-room track renderer
+
+v636 reconstructs the 108-byte `track_put_both(unsigned char,unsigned char)`
+helper at payload `0xBED5` (`1A74:1795`) at the start of `OP_MUSIC_TEXT`.
+Fresh target review closes one contiguous near Pascal body with two callers and
+one callee. Raw target operands plus the pinned MAP bind `_music_page_accessed`
+at `0F34:3A7D`, `_MUSIC_CHOICES` at `0F34:0EB6`, and
+`GRAPH_PUTSA_FX` at `0DA1:04A4`. The body directly writes page numbers to
+port `0xA6`, renders at x=16 and y=8+i*16, restores the original page, and
+terminates with Pascal `RET 4`.
+
+Maintained natural source is `src/op/music/track_put_both.cpp`. During review
+the first replay draft was corrected because its maintained-source stability
+check had been accidentally placed after an unconditional raise and was
+therefore unreachable. With that fail-closed check fixed, two focused cold
+rounds raw-match all 108 function bytes and the complete 0x6A5-byte
+`OP_MUSIC_TEXT` producer while preserving grouped link-relevant OMF, the
+retained OP program image, and all 804 ordered relocations. The v637 complete
+OP aggregate passes 49/49 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v637-op-track-put-both-aggregate-001/receipt.json`,
+SHA-256 `c4ecc6e81b322402348ac09da6979f1b354a6fc7ef423d4ff29178dc3f0b3c95`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: OP setup single-line renderer
 
 v634 reconstructs the 122-byte `singleline(int,int)` helper at payload
 `0xB5E2` (`1A74:0EA2`) inside `OP_SETUP_TEXT`. Fresh target review closes
@@ -687,7 +711,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v635, tracked reconstruction state is **OP 48 decoded-exact / 45
+After v637, tracked reconstruction state is **OP 49 decoded-exact / 44
 pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
@@ -751,7 +775,7 @@ after recording their receipt, and preserve pinned inputs plus artifacts
 covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624/v626/v628/v630/v632/v634,
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624/v626/v628/v630/v632/v634/v636,
 or MAINE v590/v604/v608/v614: their complete decoded-function extents now pass
 raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect

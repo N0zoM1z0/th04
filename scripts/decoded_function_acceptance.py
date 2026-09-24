@@ -96,6 +96,7 @@ OP_FRAME_DELAY_2_PRODUCER = 0xE6DE
 OP_RAISE_BG_FREE_PRODUCER = 0xCF5E
 OP_GAME_EXIT_TO_DOS_PRODUCER = 0xDDB1
 OP_TRACKLIST_PUT_BOTH_PRODUCER = 0xBED5
+OP_TRACK_PUT_BOTH_PRODUCER = 0xBED5
 OP_CMT_UNPUT_PRODUCER = 0xBED5
 OP_CMT_FADEIN_PRODUCER = 0xBED5
 OP_CMT_PUT_PRODUCER = 0xBED5
@@ -234,6 +235,7 @@ def validate(
                                  "op-frame-delay-2-v587", "op-raise-bg-free-v588",
                                  "op-game-exit-to-dos-v592",
                                  "op-tracklist-put-both-v594",
+                                 "op-track-put-both-v636",
                                  "op-cmt-unput-v598",
                                  "op-cmt-fadein-v600",
                                  "op-cmt-put-v618",
@@ -471,6 +473,12 @@ def validate(
                     or producer_start != OP_TRACKLIST_PUT_BOTH_PRODUCER
                     or producer_size != 0x6A5):
                 raise ValueError(f"{ident}: OP tracklist-put-both backend does not compile this producer")
+        elif backend == "op-track-put-both-v636":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/music/track_put_both.cpp"
+                    or producer_start != OP_TRACK_PUT_BOTH_PRODUCER
+                    or producer_size != 0x6A5):
+                raise ValueError(f"{ident}: OP track-put-both backend does not compile this producer")
         elif backend == "op-cmt-unput-v598":
             if (artifact != "th04-op"
                     or source_name != "src/op/music/cmt_unput_both_animate.cpp"
@@ -799,6 +807,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-tracklist-put-both-v594":
         return [sys.executable, "scripts/probes/replay_th04_op_tracklist_put_both.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-track-put-both-v636":
+        return [sys.executable, "scripts/probes/replay_th04_op_track_put_both.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-cmt-unput-v598":
         return [sys.executable, "scripts/probes/replay_th04_op_cmt_unput_both_animate.py",

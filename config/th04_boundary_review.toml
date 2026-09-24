@@ -1035,3 +1035,15 @@ expected_body_span = 0x7A
 reviewed_body_size = 0x7A
 review_evidence_id = "ev-th04-op-singleline-boundary-v634"
 notes = "Target Ghidra closes one contiguous 122-byte near Pascal body at 1A74:0EA2 with two callers and two callees. Raw target and MAP bind _window.w at 0F34:2B48, EGC copy at 0DA1:0968, and SUPER_PUT at 0000:2D5A; paired pattern IDs are left 5/6, middle 1/3, right 8/7, copy height is 32, and the function ends RET 4."
+
+# v636: target-first review for track_put_both.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xBED5
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/track_put_both.cpp"
+expected_body_span = 0x6C
+reviewed_body_size = 0x6C
+review_evidence_id = "ev-th04-op-track-put-both-boundary-v636"
+notes = "Target Ghidra closes one contiguous 108-byte near Pascal body at 1A74:1795 with two callers and one callee. Raw target and MAP bind _music_page_accessed at 0F34:3A7D, _MUSIC_CHOICES at 0F34:0EB6, GRAPH_PUTSA_FX at 0DA1:04A4, direct page-port writes to 0xA6, left=16, top=8+i*16, and RET 4."
