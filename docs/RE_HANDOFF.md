@@ -26,22 +26,52 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 28 / 57 / 8 | 25 | 68 / 0 | 2,852 |
-| MAINE.EXE | 32 / 35 / 5 | 27 | 45 / 0 | 2,664 |
+| OP.EXE | 30 / 55 / 8 | 27 | 66 / 0 | 2,876 |
+| MAINE.EXE | 34 / 33 / 5 | 29 | 43 / 0 | 2,700 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 2,852 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,578 bytes are in the 25 accepted exact
-functions. MAINE has 27 decoded-function exact functions (2,475 bytes), plus
+OP's 2,876 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,602 bytes are in the 27 accepted exact
+functions. MAINE has 29 decoded-function exact functions (2,511 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,664.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,700.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP/MAINE shared sound-effect reset
+## Latest verified cohort: OP/MAINE small leaf batch
+
+v582-v585 reconstruct four small target-first leaves without target-derived
+assembly. MAINE `cutscene_script_free()` at payload `0xA2D1` is the complete
+five-byte empty near function `PUSH BP / MOV BP,SP / POP BP / RET`; maintained
+source is `src/maine/cutscene/script_free.cpp`. OP `main_cdg_free()` at
+`0xCCC8` is a ten-byte wrapper whose only FAR call targets `0DA1:0CC0`,
+corroborated by the MAP as `CDG_FREE_ALL`; maintained source is
+`src/op/title/main_cdg_free.cpp`. OP `nopoly_B_free()` at `0xBF99` is a
+14-byte leaf whose target operands independently bind `_nopoly_B` at
+`0F34:3A80` and `HMEM_FREE` at `0000:2856`; maintained source is
+`src/op/music/nopoly_free.cpp`. MAINE `box_bg_free()` at `0xA57F` is a
+31-byte leaf whose target operands bind `_box_bg` at `0E53:3F4A` and
+`HMEM_FREE` at `0000:2454`; maintained source is
+`src/maine/cutscene/box_bg_free.cpp`.
+
+Each function has a focused A/B natural-source replay. `main_cdg_free` keeps
+the complete `0x2C7`-byte `OP_TITLE_TEXT` producer raw-equal; `nopoly_B_free`
+keeps the complete `0x6A5`-byte `OP_MUSIC_TEXT` producer raw-equal; both
+MAINE leaves keep the complete `0xC3E`-byte `CUTSCENE_TEXT` producer
+raw-equal. Standalone OMF checks account only for normal symbol/link fixups.
+The v586 complete decoded aggregates then pass all registered functions:
+
+- OP: 27/27 raw-zero, receipt `.analysis/reconstruction/probes/v586-op-leaf-batch-aggregate-001/receipt.json`, SHA-256 `0300357209b7efc6d1f67f5ef22c0c8d042e8a7be7849262c31b87a343c62f66`; all 804 ordered target relocations preserved.
+- MAINE: 29/29 raw-zero, receipt `.analysis/reconstruction/probes/v586-maine-leaf-batch-aggregate-001/receipt.json`, SHA-256 `14f35284a0764e0120b1606f9cc9502c4b7b56f2192e0586335df4ad3b7ea53c`; all 559 ordered target relocations preserved.
+
+The function names remain candidate/MAP-derived labels rather than target
+source-authority claims. These are decoded-function exact results only; neither
+aggregate establishes a DIET-packed file offset or whole-executable exactness.
+
+## Prior verified cohort: OP/MAINE shared sound-effect reset
 
 Maintained natural C++ in `src/shared/sound/se_reset.cpp` now owns the complete
 11-byte `snd_se_reset` body in both OP and MAINE. Each compiler producer is
@@ -145,7 +175,12 @@ name remains an open hypothesis. See
 
 The replay helper now materializes compiler-facing C/C++ source and include
 files plus only response-file-linked objects, while keeping independent
-writable A/B trees. OP snapshots contain 2,549,948 source/include bytes,
+writable A/B trees. A diagnostic full boundary-ledger rebuild against the
+retained v489 compact source root produced 513 unrelated row drifts, so that
+root is not an authority-equivalent replacement for the boundary input snapshot
+behind the current ledger. Do not wholesale-regenerate
+`config/th04_function_boundaries.csv` from it; use fresh attested boundary inputs
+or project only independently reviewed local overrides. OP snapshots contain 2,549,948 source/include bytes,
 171,255 root support-object/archive bytes, and 101,922 response-linked object
 bytes; MAINE contains 2,583,609, 171,255, and 90,749 bytes respectively. The
 previous source-tree copy was about 27 MiB per artifact/round. The helper is
@@ -154,10 +189,10 @@ are disposable; current private acceptance directories retain only their small
 receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
-Do not reopen MAINE `scoredat_recreate` at payload `0xC206`: its complete
-decoded-function extent now passes raw-zero acceptance. Select any next unit
-from fresh OP/MAINE/ZUN boundary and origin evidence rather than address order
-or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
+Do not reopen MAINE `scoredat_recreate` at payload `0xC206` or the v582-v585
+leaf batch: their complete decoded-function extents now pass raw-zero
+acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not
 trust candidate names or assume address order establishes source ownership.

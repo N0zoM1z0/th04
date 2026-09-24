@@ -671,3 +671,54 @@ expected_no_ghidra = true
 reviewed_body_size = 0x0B
 review_evidence_id = "ev-th04-maine-se-reset-boundary-v581"
 notes = "TLINK public 0CC7:0924 has no Ghidra function entry; target-linear decode is exactly two MOV byte stores plus RETF through 0xD59E, with 0xD59F producer padding."
+
+# v582: target-first review for cutscene_script_free; candidate names only corroborate ownership.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA2D1
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/script_free.cpp"
+expected_body_span = 0x5
+reviewed_body_size = 0x5
+review_evidence_id = "ev-th04-maine-cutscene-script-free-boundary-v582"
+notes = "Target Ghidra closes one contiguous five-byte near body at 1A05:0281 with two callers and zero callees; raw target is PUSH BP / MOV BP,SP / POP BP / RET."
+
+
+# v583: target-first review for main_cdg_free; candidate names only corroborate ownership.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xCCC8
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/title/main_cdg_free.cpp"
+expected_body_span = 0xA
+reviewed_body_size = 0xA
+review_evidence_id = "ev-th04-op-main-cdg-free-boundary-v583"
+notes = "Target Ghidra closes one contiguous ten-byte near body at 1A74:2588; the sole FAR call operand is 0DA1:0CC0, independently corroborated by the MAP as CDG_FREE_ALL."
+
+
+# v584: target-first review for nopoly_B_free; candidate names only corroborate ownership.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xBF99
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/nopoly_free.cpp"
+expected_body_span = 0xE
+reviewed_body_size = 0xE
+review_evidence_id = "ev-th04-op-nopoly-free-boundary-v584"
+notes = "Target Ghidra closes one contiguous fourteen-byte near body at 1A74:1859; direct data operand 0F34:3A80 is _nopoly_B and the sole FAR call 0000:2856 is HMEM_FREE in the independent candidate MAP."
+
+
+# v585: target-first review for box_bg_free; candidate names only corroborate ownership.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA57F
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/box_bg_free.cpp"
+expected_body_span = 0x1F
+reviewed_body_size = 0x1F
+review_evidence_id = "ev-th04-maine-box-bg-free-boundary-v585"
+notes = "Target Ghidra independently closes one contiguous 31-byte near body at 1A05:052F with two callers and one callee; target operands bind _box_bg at 0E53:3F4A and HMEM_FREE at 0000:2454."

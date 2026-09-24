@@ -187,6 +187,21 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "sound-effect reset backend does not compile"):
             self.check(entries)
 
+    def test_leaf_backends_are_bound_to_maintained_source_and_extent(self) -> None:
+        cases = (
+            ("maine-cutscene-script-free-v582", "0xC3D", "cutscene-script-free"),
+            ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
+            ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
+            ("op-nopoly-free-v584", "0x6A4", "nopoly-free"),
+        )
+        for backend, bad_size, message in cases:
+            entries = deepcopy(self.entries)
+            row = next(item for item in entries if item["replay_backend"] == backend)
+            row["producer_size"] = bad_size
+            with self.subTest(backend=backend):
+                with self.assertRaisesRegex(ValueError, message):
+                    self.check(entries)
+
     def test_vector_math_backend_is_bound_to_maintained_source_and_extent(self) -> None:
         entries = deepcopy(self.entries)
         vector = next(row for row in entries
@@ -263,8 +278,24 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_score_put.py",
         )
         self.assertEqual(
+            acceptance.backend_command("maine-cutscene-script-free-v582", saved)[1],
+            "scripts/probes/replay_th04_maine_cutscene_script_free.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("maine-box-bg-free-v585", saved)[1],
+            "scripts/probes/replay_th04_maine_box_bg_free.py",
+        )
+        self.assertEqual(
             acceptance.backend_command("op-stage-put-v545", saved)[1],
             "scripts/probes/replay_th04_op_stage_put.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-main-cdg-free-v583", saved)[1],
+            "scripts/probes/replay_th04_op_main_cdg_free.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-nopoly-free-v584", saved)[1],
+            "scripts/probes/replay_th04_op_nopoly_free.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-place-put-v552", saved)[1],

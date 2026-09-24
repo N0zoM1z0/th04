@@ -70,12 +70,12 @@ The currently maintained reviewed shared hardware/PI/sound/input/math cohort is
 complete in both OP and MAINE: three BGIMAGE functions plus VRAM, frame delay,
 three PI functions, PMD, MMD, KAJA, mode detection, delay-until-measure,
 input-wait, `snd_se_reset`, plus `polar` and `VECTOR2_AT`. That is 17
-decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 27
-decoded-exact functions / 2,475 exact source-owner bytes plus two
+decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 29
+decoded-exact functions / 2,511 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
-`scoredat_encode` (101 bytes), for 2,664 decoded source-owner bytes; OP has
-25 decoded-exact functions / 2,578 exact source-owner bytes, with two separate
-codec candidates (274 bytes) still source-present and nonexact, for 2,852
+`scoredat_encode` (101 bytes), for 2,700 decoded source-owner bytes; OP has
+27 decoded-exact functions / 2,602 exact source-owner bytes, with two separate
+codec candidates (274 bytes) still source-present and nonexact, for 2,876
 decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
@@ -119,15 +119,23 @@ maintained natural-C++ producer. OP uses its contiguous target Ghidra body;
 MAINE deliberately uses a separate no-Ghidra review path bound to the TLINK
 public and complete linear decode. Full aggregates pass 25/25 OP and 27/27
 MAINE slices with 804/559 ordered relocations preserved.
+v582-v585 then add four target-first leaves: MAINE's 5-byte
+`cutscene_script_free` and 31-byte `box_bg_free`, plus OP's 10-byte
+`main_cdg_free` and 14-byte `nopoly_B_free`. Their focused natural-source
+replays preserve the complete surrounding `CUTSCENE_TEXT`, `OP_TITLE_TEXT`,
+or `OP_MUSIC_TEXT` producer as applicable. The v586 full aggregates pass
+27/27 OP and 29/29 MAINE decoded slices with 804/559 ordered relocations
+preserved. These labels remain candidate/MAP-derived and grant no packed-file
+or whole-product exactness.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
-Review the 14 remaining provisional authored boundaries by neighboring ownership:
+Review the 13 remaining provisional authored boundaries by neighboring ownership:
 OP's eight (prioritize the Ghidra-only and noncontiguous music/main owners) and
-MAINE's six (the remaining MAP-public/sound and cutscene/registration entries).
+MAINE's five (the remaining MAP-public/sound and cutscene/registration entries).
 ZUN's authored physical boundaries are already fully reviewed by v520/v521.
 For each remaining owner, inspect attested target entry, callers, all returns/tails,
 tables, alignment, adjacent bytes, MAP/TASM contribution, and segment identity.
@@ -170,9 +178,11 @@ natural standalone CODE is 113 bytes against a reviewed 101-byte target because
 of the rotate codegen mismatch. v580 then reconstructs the adjacent
 `scoredat_recreate` from target evidence and obtains a decoded-function raw-zero
 slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
-`snd_se_reset` to OP and MAINE, bringing the current decoded-function totals to
-25/25 OP and 27/27 MAINE. The next MAINE unit is not preselected: re-evaluate
-outstanding reviewed owners and boundary/origin maturity before starting it.
+`snd_se_reset` to OP and MAINE. v582-v585 add the four small cutscene/title/music
+leaves described above, and the v586 aggregates bring the current
+decoded-function totals to 27/27 OP and 29/29 MAINE. The next unit is not
+preselected: re-evaluate outstanding small reviewed/corroborated owners and
+boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with
 source provenance kept apart from target-boundary confidence. v572 reviewed
 the adjacent 50-byte MAINE cutscene helper at payload
