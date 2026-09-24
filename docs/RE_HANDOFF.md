@@ -573,6 +573,49 @@ the complete slice; only this function receives exact credit. Its candidate
 name remains an open hypothesis. See
 [TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md](reconstruction/op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md).
 
+## Cleanup checkpoint and paused low-level candidates
+
+After v625, tracked reconstruction state is intentionally paused at **OP 43
+decoded-exact / 50 pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus
+2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
+left in the worktree. Resume only from a fresh boundary/origin review, not from
+ignored cache contents or address order.
+
+Three small-looking candidates were deliberately **not** promoted:
+
+- MAINE `egc_start_copy()` at payload `0xA2D6` (52 bytes): ordinary maintained
+  `outport(port,value)` codegen produces the wrong register-load order and
+  shortens the zero-address write to `XOR AX,AX`. Using the historical
+  `keep_0` decompilation helper or copying the old inline-assembly `outport2`
+  would force bytes without first proving authored low-level source ownership.
+- OP `SND_SE_PLAY` at payload `0xE2F2` (57 bytes): ordinary Pascal C++ produces
+  a 60-byte BP-framed function. The target uses the old `snd_get_param`
+  register/peek parameter mechanism and `_BL/_BH` indexing shape. Do not claim
+  natural-source exactness by importing those decompilation helpers without
+  first resolving source/ABI authority.
+- OP `nopoly_b_put()` at payload `0xBFA7` (30 bytes): the candidate implementation
+  contains explicit DS save/restore and the `__memcpy__` intrinsic. Treat it as
+  a low-level authored/intrinsic ownership question rather than a routine C++
+  leaf.
+
+Private probe cleanup was performed after v625. All 1,207
+`.analysis/reconstruction/probes/**/receipt.json` files were archived to
+`.analysis/reconstruction/receipt-archive/probes-v625-cleanup-20260924.tar.zst`
+with archive SHA-256
+`f015afe31af4715aacc40f268e424b541c3e6aa280a4f1fd656156adf0ad6b07`.
+The live probe tree now keeps only the full
+`v546-zun-runtime-inventory-001` directory (a current script dependency) plus
+receipt-only `v616-maine-end-animate-focused-003`,
+`v617-maine-end-animate-aggregate-001`,
+`v624-op-bgm-choice-focused-001`, and
+`v625-op-bgm-choice-aggregate-001`. Historical analysis paths in ledgers remain
+provenance strings, not promises that expanded worktrees still exist.
+
+`scripts/prune_analysis.py --compact-referenced` reported no safe
+`.analysis/gpt-web` deletions under the current retention policy. Do **not**
+manually remove pinned targets/toolchains, active Ghidra boundary-review inputs,
+or retained v401/v402/v489 snapshots merely to save space.
+
 ## Replay footprint and next work
 
 The replay helper now materializes compiler-facing C/C++ source and include
@@ -587,9 +630,12 @@ or project only independently reviewed local overrides. OP snapshots contain 2,5
 bytes; MAINE contains 2,583,609, 171,255, and 90,749 bytes respectively. The
 previous source-tree copy was about 27 MiB per artifact/round. The helper is
 TCC-only (do not apply its source filter to TASM). Focused worktrees and logs
-are disposable; current private acceptance directories retain only their small
-receipts. Delete experiment intermediates immediately after recording their
-receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
+are disposable. After the v625 cleanup, only the four latest OP/MAINE
+focused/aggregate receipts and the full v546 ZUN runtime
+inventory remain expanded under `.analysis/reconstruction/probes`; older probe
+receipts are archived as described above. Delete new experiment intermediates
+after recording their receipt, and preserve pinned inputs plus artifacts
+covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
 leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624,

@@ -57,7 +57,11 @@ reviewed 101/173-byte targets. Both remain source-present only; do not turn the
 target rotates into copied assembly. The shared input/vector cohort is complete;
 choose the next unit from remaining OP/MAINE target-reviewed work or the ZUN
 authored/source-authority queue after fresh boundary/origin review. Do not
-preselect by address or carry a stale work order across checkpoints.
+preselect by address or carry a stale work order across checkpoints. In
+particular, do not treat MAINE `egc_start_copy`, OP `SND_SE_PLAY`, or OP
+`nopoly_b_put` as ordinary natural-C++ leaves: current probes show
+compiler/decomp-helper or explicit low-level-intrinsic dependencies that require
+source/ABI ownership review before any exact attempt.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
 composition and v489/v494 aggregate Oracles during every source edit. A new
