@@ -58,8 +58,9 @@ target rotates into copied assembly. The shared input/vector cohort is complete;
 choose the next unit from remaining OP/MAINE target-reviewed work or the ZUN
 authored/source-authority queue after fresh boundary/origin review. Do not
 preselect by address or carry a stale work order across checkpoints. In
-particular, do not treat MAINE `egc_start_copy`, OP `SND_SE_PLAY`, OP
-`_snd_se_update`, or OP `nopoly_b_put` as ordinary natural-C++ leaves. The v642
+particular, do not treat MAINE `egc_start_copy`, MAINE `box_1_to_0_masked`,
+OP `SND_SE_PLAY`, OP `_snd_se_update`, or OP `nopoly_b_put` as ordinary
+natural-C++ leaves. The v642
 `snd_se_update` probe narrows its natural mismatch to one byte of array-index
 codegen; a register-specific control explains the target but receives no exact
 credit. These cases require source/ABI ownership review before any exact attempt.
@@ -78,7 +79,8 @@ input-wait, `snd_se_reset`, plus `polar` and `VECTOR2_AT`. That is 17
 decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 35
 decoded-exact functions / 2,867 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
-`scoredat_encode` (101 bytes), for 3,056 decoded source-owner bytes; OP has
+`scoredat_encode` (101 bytes), plus the 134-byte nonexact
+`box_1_to_0_masked`, for 3,190 decoded source-owner bytes; OP has
 51 decoded-exact functions / 4,273 exact source-owner bytes, with two separate
 codec candidates (274 bytes) plus `snd_se_update` (76 bytes) still
 source-present and nonexact, for 4,623 decoded source-owner bytes total.
@@ -356,6 +358,15 @@ directory used by the aggregate wrapper. Commit 8289f36 fixes only that path
 policy; the repaired v644 aggregate passes 35/35 MAINE decoded slices raw-zero.
 This remains decoded-function evidence only, not packed-file or whole-MAINE
 exactness.
+v645 then target-reviews the adjacent 134-byte `box_1_to_0_masked` leaf and
+keeps it deliberately nonexact. Natural maintained C++ reaches the target
+length once the PC-98 planar offset is expressed as y<<6 + y<<4, but after
+masking the three ordinary pointer/data fixups, 18 bytes still differ solely
+in the first three EGC port-write load orders. A y*ROW_SIZE control is 127
+bytes, independently explaining the seven-byte arithmetic gap. The only known
+target-order helper, `outport2`, is explicit decompilation `_asm` and is not
+compiled or credited. Treat this as a low-level source-authority problem, not
+an invitation to copy the target instruction order.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.

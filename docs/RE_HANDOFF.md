@@ -27,14 +27,15 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 55 / 30 / 8 | 51 | 42 / 0 | 4,623 |
-| MAINE.EXE | 40 / 27 / 5 | 35 | 37 / 0 | 3,056 |
+| MAINE.EXE | 41 / 26 / 5 | 35 | 37 / 0 | 3,190 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 4,623 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
 candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 35 decoded-function exact functions (2,867 bytes), plus
-two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 3,056.
+two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
+`scoredat_encode` 101 bytes) and the 134-byte nonexact
+`box_1_to_0_masked` candidate; total decoded source-owner bytes are 3,190.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
@@ -785,18 +786,25 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v644, tracked reconstruction state is **OP 51 decoded-exact / 42
+After v645, tracked reconstruction state is **OP 51 decoded-exact / 42
 pending**, **MAINE 35 / 37**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 
-Four small-looking candidates were deliberately **not** promoted:
+Five small-looking candidates were deliberately **not** promoted:
 
 - MAINE `egc_start_copy()` at payload `0xA2D6` (52 bytes): ordinary maintained
   `outport(port,value)` codegen produces the wrong register-load order and
   shortens the zero-address write to `XOR AX,AX`. Using the historical
   `keep_0` decompilation helper or copying the old inline-assembly `outport2`
   would force bytes without first proving authored low-level source ownership.
+- MAINE `box_1_to_0_masked()` at payload `0xA78F` (134 bytes): v645
+  target-first review and two-cold natural-C++ probing reach the exact target
+  length and isolate every remaining non-relocation difference to 18 bytes in
+  the first three EGC setup writes. Ordinary `outport()` loads DX=port
+  before AX=value; the target reverses those loads. The historical `outport2`
+  that forces target order is explicit `_asm` in `decomp.hpp`, so it is
+  provenance evidence only and grants no exact credit.
 - OP `SND_SE_PLAY` at payload `0xE2F2` (57 bytes): ordinary Pascal C++ produces
   a 60-byte BP-framed function. The target uses the old `snd_get_param`
   register/peek parameter mechanism and `_BL/_BH` indexing shape. Do not claim

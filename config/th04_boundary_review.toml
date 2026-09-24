@@ -1095,3 +1095,15 @@ expected_body_span = 0x54
 reviewed_body_size = 0x54
 review_evidence_id = "ev-th04-maine-cursor-advance-boundary-v643"
 notes = "Target Ghidra closes one contiguous 84-byte near body at 1A05:06EB with one caller and three callees. Raw target and MAP bind _cursor at 0E53:3F8C, _fast_forward at 0E53:3F4E, box_1_to_0_animate at 0A05:07C5, input_wait_for_change at 0CC7:020A, and box_bg_put at 0A05:054E; constants are x step 16, name-area x 144, box right 560, box bottom 384, reset (80,320), and page writes 1 then 0."
+
+# v645: target-first review for box_1_to_0_masked; ordinary C++ remains nonexact.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA78F
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/box_1_to_0_masked.cpp"
+expected_body_span = 0x86
+reviewed_body_size = 0x86
+review_evidence_id = "ev-th04-maine-box-masked-boundary-v645"
+notes = "Target Ghidra closes one contiguous 134-byte near Pascal body at 1A05:073F with one caller and no callees. Raw target binds BOX_MASKS, VRAM_PLANE_B, page-port writes, 64 rows and 480-pixel width. Maintained natural C++ reaches the exact 134-byte length after using the PC-98 planar shift formula, but 18 non-relocation bytes remain because ordinary outport() loads DX before AX for the first three EGC setup writes; historical outport2 is explicit decomp inline assembly and is not accepted for exact credit."
