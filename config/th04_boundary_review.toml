@@ -999,3 +999,15 @@ expected_body_span = 0x59
 reviewed_body_size = 0x59
 review_evidence_id = "ev-th04-op-window-rollup-put-boundary-v628"
 notes = "Target Ghidra closes one contiguous 89-byte near Pascal body at 1A74:0DD9 with one caller and two callees. Raw target and MAP bind _window.w at 0F34:2B48, EGC copy at 0DA1:0968, and SUPER_PUT at 0000:2D5A; constants are MSWIN_W/H=16, DROP_SPEED=8, bottom pattern IDs 6/3/7, and terminal RET 4."
+
+# v630: target-first review for dropdown.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB572
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/dropdown.cpp"
+expected_body_span = 0x70
+reviewed_body_size = 0x70
+review_evidence_id = "ev-th04-op-dropdown-boundary-v630"
+notes = "Target Ghidra closes one contiguous 112-byte near Pascal body at 1A74:0E32 with two callers and three callees. Raw target and MAP bind _window.w/h at 0F34:2B48/+2, SUPER_PUT at 0000:2D5A, window_dropdown_put at 1A74:0D5F, and frame_delay at 0DA1:002B; top pattern IDs are 5/1/8 and the function ends RET 4."

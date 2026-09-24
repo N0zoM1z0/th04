@@ -215,6 +215,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-bgm-choice-v624", "0x5A5", "BGM-choice"),
             ("op-se-choice-v626", "0x5A5", "SE-choice"),
             ("op-window-rollup-put-v628", "0x5A5", "window-rollup-put"),
+            ("op-dropdown-v630", "0x5A5", "dropdown"),
         )
         for backend, bad_size, message in cases:
             entries = deepcopy(self.entries)
@@ -405,6 +406,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-window-rollup-put-v628", saved)[1],
             "scripts/probes/replay_th04_op_window_rollup_put.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-dropdown-v630", saved)[1],
+            "scripts/probes/replay_th04_op_dropdown.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-place-put-v552", saved)[1],
