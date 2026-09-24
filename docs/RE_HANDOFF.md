@@ -26,13 +26,13 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 57 / 28 / 8 | 53 | 40 / 0 | 4,781 |
+| OP.EXE | 58 / 27 / 8 | 54 | 39 / 0 | 4,879 |
 | MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 4,781 source-owner bytes include two source-present but nonexact SCORE
+OP's 4,879 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
-candidate; 4,431 bytes are in the 53 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+candidate; 4,529 bytes are in the 54 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -42,6 +42,26 @@ packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: OP initial shot-type renderer
+
+v660 reconstructs the 98-byte `shottype_menu_put_initial()` helper at
+`0xD650` (`1A74:2F10`) inside `OP_01_TEXT`. Target Ghidra
+closes one contiguous near body with one caller and five callees. Target
+operands and the pinned MAP bind `playchar_menu_sel` / `shottype_menu_sel`,
+`CDG_PUT_NOALPHA_8` slot 40/41 selection at (184,44), `GRCG_SETCOLOR`,
+two `GRCG_BYTEBOXFILL_X` shadow rectangles, direct GRCG-off via port
+0x7C, `shottype_title_box_put`, `shottype_titles_put`, and near RET.
+
+Maintained natural source is `src/op/menu/shottype_menu_initial.cpp`.
+Standalone TC86 output is exactly 98 CODE bytes; all pre-link differences are
+confined to eight ordinary data/call fixups. Focused A/B cold replay
+raw-matches the complete function and the full `0xAB3`-byte
+`OP_01_TEXT` producer while preserving grouped OMF, complete OP EXE/MAP
+identity, and all 804 ordered relocations. The v661 OP aggregate passes 54/54
+registered decoded slices raw-zero, receipt SHA-256
+`e45699f1c15ee7c18332b47ecc36fefd1fdbc54cabce030f03c588eba7fc2d1f`.
+No DIET-packed offset or whole-OP exactness is claimed.
 
 ## Latest verified cohort: OP initial character-menu renderer
 
@@ -947,7 +967,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v659, tracked reconstruction state is **OP 53 decoded-exact / 40
+After v661, tracked reconstruction state is **OP 54 decoded-exact / 39
 pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.

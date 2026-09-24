@@ -1204,3 +1204,15 @@ expected_body_span = 0x56
 reviewed_body_size = 0x56
 review_evidence_id = "ev-th04-op-playchar-menu-initial-boundary-v658"
 notes = "Target Ghidra closes one contiguous 86-byte near body at 1A74:2F72 with one caller and nine callees. Raw target and MAP bind PaletteTone=0, PALETTE_SHOW, pi_load(0, slb1.pi), page access/show writes, PI rendering, raise-bg snapshot, both title boxes, pic_put, page copy, black-in, and RET."
+
+# v660: target-first review for shottype_menu_put_initial.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD650
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/shottype_menu_initial.cpp"
+expected_body_span = 0x62
+reviewed_body_size = 0x62
+review_evidence_id = "ev-th04-op-shottype-menu-initial-boundary-v660"
+notes = "Target Ghidra closes one contiguous 98-byte near body at 1A74:2F10 with one caller and five callees. Raw target and MAP bind playchar_menu_sel/shottype_menu_sel, CDG_PUT_NOALPHA_8 slot 40/41 selection at (184,44), GRCG_SETCOLOR, two GRCG_BYTEBOXFILL_X shadow rectangles, direct GRCG-off port 0x7C, shottype_title_box_put, shottype_titles_put, and RET."
