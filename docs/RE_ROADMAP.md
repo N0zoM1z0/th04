@@ -400,14 +400,6 @@ ordinary-C++ controls produce 65/65/82 bytes. The historical `outport2` that
 forces target order is explicit `_asm` in `decomp.hpp`, so it remains
 provenance/diagnostic evidence only and grants no exact credit.
 v654/v655 then close the shared 72-byte `game_exit` wrapper independently in
-OP and MAINE. Target-first review binds the same shutdown sequence in both
-artifacts while preserving their different linked library addresses. One
-maintained shared C++ source emits identical unlinked SHARED code with nine
-ordinary FAR-call fixups; each original `exit.obj` retains baseline-exact
-link-relevant OMF, and both linked EXE/MAP pairs remain byte-identical to their
-pinned baselines. The v655 OP aggregate passes 52/52 with 804 relocations, and
-the v655 MAINE aggregate independently passes 39/39 with 559 relocations.
-v654/v655 then close the shared 72-byte `game_exit` wrapper independently in
 both OP and MAINE. One maintained natural source emits the same unlinked
 SHARED body with nine ordinary FAR-call fixups, but acceptance remains
 artifact-local: OP links at payload 0xE0AC and passes a 52/52 aggregate with

@@ -68,32 +68,6 @@ Credit is artifact-local despite the shared source: each target has its own
 boundary, raw comparison, aggregate receipt, and relocation proof. No
 DIET-packed offset or whole-program exactness is claimed.
 
-## Latest verified cohort: shared game-exit wrapper in OP and MAINE
-
-v654 reconstructs one maintained shared `game_exit()` source owner and replays it
-independently in both non-MAIN executables. OP closes a 72-byte FAR body at
-`0xE0AC` (`1DA1:069C`) with four callers and eight callees; MAINE
-closes the corresponding 72-byte FAR body at `0xD3F4` (`1CC7:0784`)
-with one caller and eight callees. Target calls bind `PFEND`, two
-`GRAPH_CLEAR` calls bracketed by page writes, `MEM_UNASSIGN`, `VSYNC_END`,
-`TEXT_CLEAR`, `JS_END`, `EGC_START`, and `BGM_FINISH`, followed by
-FAR return. The library addresses differ between OP and MAINE, so exact credit
-is kept artifact-local even though the unlinked instruction stream is shared.
-
-Maintained natural source is `src/shared/core/game_exit.cpp`. Under both OP
-and MAINE builds, TC86 emits the same 72-byte SHARED instruction stream with
-nine ordinary FAR-call fixups. Recompiling through each original `th04/exit.cpp`
-owner preserves the pinned `exit.obj` link-relevant OMF exactly; relinking
-then reproduces each baseline EXE and MAP byte-for-byte. Focused A/B replay is
-raw-zero in both artifacts. The v655 OP aggregate passes 52/52 registered
-decoded slices with all 804 ordered relocations preserved, receipt SHA-256
-`29aa89e8383e12094f5fe8b8f530e9c3acbeeeac447b457d6a9502d08dd015fd`.
-The v655 MAINE aggregate independently passes 39/39 with all 559 ordered
-relocations preserved, receipt SHA-256
-`1275edd08055b17b3416b8681282802fecc8ff2e7a98f741bc4179fdcb47ce7a`.
-This is function-level decoded exactness only; no packed-file or whole-program
-exactness is claimed.
-
 ## Latest diagnostic: MAINE EGC start-copy codegen gap
 
 v653 target-reviews the 52-byte `egc_start_copy()` helper at payload
