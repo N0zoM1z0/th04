@@ -102,6 +102,7 @@ OP_FRAME_DELAY_2_PRODUCER = 0xE6DE
 OP_RAISE_BG_FREE_PRODUCER = 0xCF5E
 OP_PLAYCHAR_TITLE_BOX_PRODUCER = 0xCF5E
 OP_PIC_DARKEN_PRODUCER = 0xCF5E
+OP_PLAYCHAR_MENU_INITIAL_PRODUCER = 0xCF5E
 OP_GAME_EXIT_TO_DOS_PRODUCER = 0xDDB1
 OP_GAME_EXIT_PRODUCER = 0xE0AC
 OP_TRACKLIST_PUT_BOTH_PRODUCER = 0xBED5
@@ -241,7 +242,7 @@ def validate(
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "op-main-cdg-free-v583", "op-main-cdg-load-v602", "op-nopoly-free-v584",
                                  "op-nopoly-snap-v606",
-                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-playchar-title-box-v638", "op-pic-darken-v640",
+                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-playchar-title-box-v638", "op-pic-darken-v640", "op-playchar-menu-initial-v658",
                                  "op-game-exit-to-dos-v592", "op-game-exit-v654",
                                  "op-tracklist-put-both-v594",
                                  "op-track-put-both-v636",
@@ -518,6 +519,12 @@ def validate(
                     or producer_start != OP_PIC_DARKEN_PRODUCER
                     or producer_size != 0xAB3):
                 raise ValueError(f"{ident}: OP pic-darken backend does not compile this producer")
+        elif backend == "op-playchar-menu-initial-v658":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/menu/playchar_menu_initial.cpp"
+                    or producer_start != OP_PLAYCHAR_MENU_INITIAL_PRODUCER
+                    or producer_size != 0xAB3):
+                raise ValueError(f"{ident}: OP playchar-menu-initial backend does not compile this producer")
         elif backend == "op-game-exit-to-dos-v592":
             if (artifact != "th04-op"
                     or source_name != "src/op/core/game_exit_to_dos.cpp"
@@ -870,6 +877,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-pic-darken-v640":
         return [sys.executable, "scripts/probes/replay_th04_op_pic_darken.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-playchar-menu-initial-v658":
+        return [sys.executable, "scripts/probes/replay_th04_op_playchar_menu_initial.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-game-exit-to-dos-v592":
         return [sys.executable, "scripts/probes/replay_th04_op_game_exit_to_dos.py",

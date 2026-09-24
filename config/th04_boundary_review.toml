@@ -1192,3 +1192,15 @@ expected_body_span = 0x4D
 reviewed_body_size = 0x4D
 review_evidence_id = "ev-th04-maine-game-init-main-boundary-v656"
 notes = "Target Ghidra closes one contiguous 77-byte FAR Pascal body at 1CC7:07CC with one caller and eight callees. Raw target and MAP bind mem_assign_paras, MEM_ASSIGN_DOS, _bbufsiz=4096, vram_planes_set through TLINK same-segment call optimization, VSYNC_START, EGC_START, GRAPH_400LINE, JS_START, PFSTART, BGM_INIT, and RETF 4. The SHARED owner contribution is 78 bytes because th04/initmain.cpp appends one codestring zero."
+
+# v658: target-first review for playchar_menu_put_initial.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD6B2
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/playchar_menu_initial.cpp"
+expected_body_span = 0x56
+reviewed_body_size = 0x56
+review_evidence_id = "ev-th04-op-playchar-menu-initial-boundary-v658"
+notes = "Target Ghidra closes one contiguous 86-byte near body at 1A74:2F72 with one caller and nine callees. Raw target and MAP bind PaletteTone=0, PALETTE_SHOW, pi_load(0, slb1.pi), page access/show writes, PI rendering, raise-bg snapshot, both title boxes, pic_put, page copy, black-in, and RET."

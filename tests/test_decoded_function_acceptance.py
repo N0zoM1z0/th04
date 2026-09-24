@@ -378,6 +378,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_op_pic_darken.py",
         )
         self.assertEqual(
+            acceptance.backend_command("op-playchar-menu-initial-v658", saved)[1],
+            "scripts/probes/replay_th04_op_playchar_menu_initial.py",
+        )
+        self.assertEqual(
             acceptance.backend_command("op-game-exit-to-dos-v592", saved)[1],
             "scripts/probes/replay_th04_op_game_exit_to_dos.py",
         )
