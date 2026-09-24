@@ -27,21 +27,40 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 32 / 53 / 8 | 29 | 64 / 0 | 2,920 |
-| MAINE.EXE | 34 / 33 / 5 | 29 | 43 / 0 | 2,700 |
+| MAINE.EXE | 35 / 32 / 5 | 30 | 42 / 0 | 2,740 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 2,920 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 2,646 bytes are in the 29 accepted exact
-functions. MAINE has 29 decoded-function exact functions (2,511 bytes), plus
+functions. MAINE has 30 decoded-function exact functions (2,551 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,700.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,740.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP frame-delay and background-free leaves
+## Latest verified cohort: MAINE second script parameter
+
+v590 reconstructs the 40-byte `script_param_read_number_second(int far&)`
+helper at payload `0xA713` (`1A05:06C3`). Target evidence is independent of
+the candidate source label: Ghidra closes one contiguous 40-byte body; raw
+operands bind `_script_p` at `0E53:3F48`,
+`script_param_number_default` at `0E53:3F94`, and the sole near call resolves
+to payload `0xA64D`, the adjacent first-number parser.
+
+Maintained natural source is
+`src/maine/cutscene/script_param_second.cpp`. Standalone TC86 output has the
+complete 40-byte instruction shape with exactly four expected OMF fixups; the
+grouped replay preserves the complete `0xC3E`-byte `CUTSCENE_TEXT` producer.
+The v591 complete MAINE aggregate passes 30/30 registered decoded functions
+raw-zero: `.analysis/reconstruction/probes/v591-maine-script-param-aggregate-001/receipt.json`,
+SHA-256 `b5d6bde55cbda6e1e7e1b804ee8ae6c15a31b6701d3ee4df11ecb2f941cf194c`.
+All 559 ordered target relocations remain preserved. This is decoded-function
+exactness only; no DIET-packed offset or whole-MAINE exactness is claimed.
+
+## Prior verified cohort: OP frame-delay and background-free leaves
 
 v587-v588 add two more target-first OP leaves. `frame_delay_2(int)` at payload
 `0xE6DE` is a separate 21-byte FAR Pascal producer in `SHARED`; its target
@@ -214,8 +233,8 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, or OP v587-v588: their complete decoded-function extents now pass
-raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+leaf batch, OP v587-v588, or MAINE v590: their complete decoded-function
+extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not

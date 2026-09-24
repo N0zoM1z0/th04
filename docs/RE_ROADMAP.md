@@ -70,10 +70,10 @@ The currently maintained reviewed shared hardware/PI/sound/input/math cohort is
 complete in both OP and MAINE: three BGIMAGE functions plus VRAM, frame delay,
 three PI functions, PMD, MMD, KAJA, mode detection, delay-until-measure,
 input-wait, `snd_se_reset`, plus `polar` and `VECTOR2_AT`. That is 17
-decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 29
-decoded-exact functions / 2,511 exact source-owner bytes plus two
+decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 30
+decoded-exact functions / 2,551 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
-`scoredat_encode` (101 bytes), for 2,700 decoded source-owner bytes; OP has
+`scoredat_encode` (101 bytes), for 2,740 decoded source-owner bytes; OP has
 29 decoded-exact functions / 2,646 exact source-owner bytes, with two separate
 codec candidates (274 bytes) still source-present and nonexact, for 2,920
 decoded source-owner bytes total.
@@ -135,6 +135,14 @@ frame-delay body; `raise_bg_free` is bound to `_raise_bg` and two
 aggregate passes 29/29 decoded slices with all 804 ordered relocations
 preserved. These remain decoded-function claims, not packed-file or whole-OP
 exactness.
+v590 then adds MAINE's 40-byte `script_param_read_number_second(int far&)`
+helper from target-first operand evidence: `_script_p`,
+`script_param_number_default`, and the near call to the adjacent first-number
+parser all resolve independently. Standalone TC86 output has exactly four
+expected OMF fixups, while the grouped replay preserves the complete `0xC3E`
+`CUTSCENE_TEXT` producer. The v591 MAINE aggregate passes 30/30 decoded
+slices with all 559 ordered relocations preserved. The helper name remains
+candidate/MAP-derived, and no packed-file or whole-MAINE exactness is claimed.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
@@ -188,8 +196,9 @@ of the rotate codegen mismatch. v580 then reconstructs the adjacent
 slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
 `snd_se_reset` to OP and MAINE. v582-v585 add the four small cutscene/title/music
 leaves described above; v587-v588 then add OP frame_delay_2 and raise_bg_free,
-and the v589 aggregate brings the current decoded-function totals to 29/29 OP
-and 29/29 MAINE. The next unit is not preselected: re-evaluate outstanding small reviewed/corroborated owners and
+and v590/v591 add the second MAINE script-number helper. The current
+decoded-function totals are 29/29 OP and 30/30 MAINE. The next unit is not
+preselected: re-evaluate outstanding small reviewed/corroborated owners and
 boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with
 source provenance kept apart from target-boundary confidence. v572 reviewed

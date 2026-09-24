@@ -747,3 +747,15 @@ expected_body_span = 0x17
 reviewed_body_size = 0x17
 review_evidence_id = "ev-th04-op-raise-bg-free-boundary-v588"
 notes = "Target Ghidra closes one contiguous 23-byte near body at 1A74:2AB3; target operands bind the two raise_bg segment words at _raise_bg+2/+6 and both FAR calls to 0000:2856 HMEM_FREE."
+
+# v590: target-first review for script_param_read_number_second.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA713
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/script_param_second.cpp"
+expected_body_span = 0x28
+reviewed_body_size = 0x28
+review_evidence_id = "ev-th04-maine-script-param-second-boundary-v590"
+notes = "Target Ghidra closes one contiguous 40-byte near Pascal body at 1A05:06C3. Target operands bind _script_p at 0E53:3F48, script_param_number_default at 0E53:3F94, and the sole near call resolves to payload 0xA64D script_param_read_number_first."

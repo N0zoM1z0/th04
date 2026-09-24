@@ -191,6 +191,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
         cases = (
             ("maine-cutscene-script-free-v582", "0xC3D", "cutscene-script-free"),
             ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
+            ("maine-script-param-second-v590", "0xC3D", "script-param-second"),
             ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
             ("op-nopoly-free-v584", "0x6A4", "nopoly-free"),
             ("op-frame-delay-2-v587", "0x16", "frame-delay-2"),
@@ -286,6 +287,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("maine-box-bg-free-v585", saved)[1],
             "scripts/probes/replay_th04_maine_box_bg_free.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("maine-script-param-second-v590", saved)[1],
+            "scripts/probes/replay_th04_maine_script_param_second.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-stage-put-v545", saved)[1],
