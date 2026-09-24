@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 30 / 55 / 8 | 27 | 66 / 0 | 2,876 |
+| OP.EXE | 32 / 53 / 8 | 29 | 64 / 0 | 2,920 |
 | MAINE.EXE | 34 / 33 / 5 | 29 | 43 / 0 | 2,700 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 2,876 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,602 bytes are in the 27 accepted exact
+OP's 2,920 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,646 bytes are in the 29 accepted exact
 functions. MAINE has 29 decoded-function exact functions (2,511 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,700.
@@ -41,7 +41,31 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP/MAINE small leaf batch
+## Latest verified cohort: OP frame-delay and background-free leaves
+
+v587-v588 add two more target-first OP leaves. `frame_delay_2(int)` at payload
+`0xE6DE` is a separate 21-byte FAR Pascal producer in `SHARED`; its target
+bytes independently match the already accepted frame-delay logic, but credit is
+not transferred. Maintained source `src/op/hardware/frame_delay_2.cpp` is
+cold-compiled into the distinct `th02/frmdely2.cpp` owner, and both focused
+rounds reproduce the complete function while preserving the v489 OP program
+image and all 804 ordered relocations.
+
+`raise_bg_free()` at payload `0xD1F3` is a 23-byte near leaf in `OP_01_TEXT`.
+Target operands independently bind `_raise_bg` at `0F34:3F7A` and both FAR
+calls to `0000:2856 HMEM_FREE`. Maintained natural source
+`src/op/menu/raise_bg_free.cpp` compiles to the expected four normal OMF
+fixups; the grouped replay preserves the complete `0xAB3`-byte `OP_01_TEXT`
+producer raw-equal.
+
+The v589 complete OP aggregate passes 29/29 registered decoded functions
+raw-zero: `.analysis/reconstruction/probes/v589-op-leaf-batch-aggregate-001/receipt.json`,
+SHA-256 `eb34efeb2eb692e029a1b9beeb2825d158ea2689ddadac16a14cfe9f3c0605cd`.
+All 804 ordered target relocations remain preserved. These are decoded-function
+exact claims only; neither function has a DIET-packed file offset and no
+whole-OP exactness is claimed.
+
+## Prior verified cohort: OP/MAINE small leaf batch
 
 v582-v585 reconstruct four small target-first leaves without target-derived
 assembly. MAINE `cutscene_script_free()` at payload `0xA2D1` is the complete
@@ -189,9 +213,9 @@ are disposable; current private acceptance directories retain only their small
 receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
-Do not reopen MAINE `scoredat_recreate` at payload `0xC206` or the v582-v585
-leaf batch: their complete decoded-function extents now pass raw-zero
-acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
+leaf batch, or OP v587-v588: their complete decoded-function extents now pass
+raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not

@@ -722,3 +722,28 @@ expected_body_span = 0x1F
 reviewed_body_size = 0x1F
 review_evidence_id = "ev-th04-maine-box-bg-free-boundary-v585"
 notes = "Target Ghidra independently closes one contiguous 31-byte near body at 1A05:052F with two callers and one callee; target operands bind _box_bg at 0E53:3F4A and HMEM_FREE at 0000:2454."
+
+# v587: target-first review for frame_delay_2.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xE6DE
+origin = "authored"
+source_form = "cross-game-candidate-cpp"
+source_ref = "src/op/hardware/frame_delay_2.cpp"
+expected_body_span = 0x15
+reviewed_body_size = 0x15
+review_evidence_id = "ev-th04-op-frame-delay-2-boundary-v587"
+notes = "Target Ghidra closes one contiguous 21-byte FAR Pascal body at 1DA1:0CCE with one caller and zero callees; target bytes zero and poll _vsync_Count1 then return RETF 2."
+
+
+# v588: target-first review for raise_bg_free.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD1F3
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/raise_bg_free.cpp"
+expected_body_span = 0x17
+reviewed_body_size = 0x17
+review_evidence_id = "ev-th04-op-raise-bg-free-boundary-v588"
+notes = "Target Ghidra closes one contiguous 23-byte near body at 1A74:2AB3; target operands bind the two raise_bg segment words at _raise_bg+2/+6 and both FAR calls to 0000:2856 HMEM_FREE."

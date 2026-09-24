@@ -193,6 +193,8 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
             ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
             ("op-nopoly-free-v584", "0x6A4", "nopoly-free"),
+            ("op-frame-delay-2-v587", "0x16", "frame-delay-2"),
+            ("op-raise-bg-free-v588", "0xAB2", "raise-bg-free"),
         )
         for backend, bad_size, message in cases:
             entries = deepcopy(self.entries)
@@ -296,6 +298,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-nopoly-free-v584", saved)[1],
             "scripts/probes/replay_th04_op_nopoly_free.py",
+        )
+        frame2 = acceptance.backend_command("op-frame-delay-2-v587", saved)
+        self.assertEqual(frame2[1], "scripts/probes/replay_th04_op_frame_delay_2.py")
+        self.assertIn("--retain-candidates", frame2)
+        self.assertEqual(
+            acceptance.backend_command("op-raise-bg-free-v588", saved)[1],
+            "scripts/probes/replay_th04_op_raise_bg_free.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-place-put-v552", saved)[1],

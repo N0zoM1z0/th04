@@ -74,8 +74,8 @@ decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 29
 decoded-exact functions / 2,511 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `scoredat_encode` (101 bytes), for 2,700 decoded source-owner bytes; OP has
-27 decoded-exact functions / 2,602 exact source-owner bytes, with two separate
-codec candidates (274 bytes) still source-present and nonexact, for 2,876
+29 decoded-exact functions / 2,646 exact source-owner bytes, with two separate
+codec candidates (274 bytes) still source-present and nonexact, for 2,920
 decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
@@ -127,6 +127,14 @@ or `OP_MUSIC_TEXT` producer as applicable. The v586 full aggregates pass
 27/27 OP and 29/29 MAINE decoded slices with 804/559 ordered relocations
 preserved. These labels remain candidate/MAP-derived and grant no packed-file
 or whole-product exactness.
+v587-v588 then add OP's separate 21-byte `frame_delay_2`
+producer and 23-byte `raise_bg_free` leaf. `frame_delay_2` receives independent
+producer-local replay even though its target body equals the earlier accepted
+frame-delay body; `raise_bg_free` is bound to `_raise_bg` and two
+`HMEM_FREE` calls by target operands plus MAP corroboration. The v589 OP
+aggregate passes 29/29 decoded slices with all 804 ordered relocations
+preserved. These remain decoded-function claims, not packed-file or whole-OP
+exactness.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
@@ -179,9 +187,9 @@ of the rotate codegen mismatch. v580 then reconstructs the adjacent
 `scoredat_recreate` from target evidence and obtains a decoded-function raw-zero
 slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
 `snd_se_reset` to OP and MAINE. v582-v585 add the four small cutscene/title/music
-leaves described above, and the v586 aggregates bring the current
-decoded-function totals to 27/27 OP and 29/29 MAINE. The next unit is not
-preselected: re-evaluate outstanding small reviewed/corroborated owners and
+leaves described above; v587-v588 then add OP frame_delay_2 and raise_bg_free,
+and the v589 aggregate brings the current decoded-function totals to 29/29 OP
+and 29/29 MAINE. The next unit is not preselected: re-evaluate outstanding small reviewed/corroborated owners and
 boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with
 source provenance kept apart from target-boundary confidence. v572 reviewed
