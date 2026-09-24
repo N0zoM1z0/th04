@@ -807,3 +807,15 @@ expected_body_span = 0x2E
 reviewed_body_size = 0x2E
 review_evidence_id = "ev-th04-op-se-help-put-boundary-v596"
 notes = "Target Ghidra closes one contiguous 46-byte near body at 1A74:1026 with one caller and one callee. Raw operands fix HELP_TOP=136, HELP_LEFT=208, V_WHITE=15, nine lines at GLYPH_H=16, table 0F34:0A70 _SE_HELP, and FAR call 0DA1:04A4 GRAPH_PUTSA_FX."
+
+# v598: target-first review for cmt_unput_both_animate.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC33F
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/cmt_unput_both_animate.cpp"
+expected_body_span = 0x30
+reviewed_body_size = 0x30
+review_evidence_id = "ev-th04-op-cmt-unput-boundary-v598"
+notes = "Target Ghidra closes one contiguous 48-byte near body at 1A74:1BFF with one caller and two callees. Raw target writes graph_putsa_fx_func=2, calls BGIMAGE_PUT_RECT_16 twice with (320,64,320,320), and near-calls payload 0xC244 music_update_render_and_flip."
