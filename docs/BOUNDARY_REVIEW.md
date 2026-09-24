@@ -13,14 +13,14 @@ remaining candidate boundaries or source to exact.
 
 | Artifact | Observations | Author candidates | Exact | Blocked | Unreviewed | ASM attestation | Excluded |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `th04-op` | 492 | 93 | 31 | 0 | 62 | 16 | 383 |
+| `th04-op` | 492 | 93 | 33 | 0 | 60 | 16 | 383 |
 | `th04-main` | 1,040 | 495 | 492 | 3 | 0 | 73 | 472 |
 | `th04-maine` | 442 | 72 | 30 | 0 | 42 | 15 | 355 |
 | `th04-zun` | 146 | 13 | 0 | 2 | 11 | 4 | 129 |
-| **Total** | **2,120** | **673** | **553** | **5** | **115** | **108** | **1,339** |
+| **Total** | **2,120** | **673** | **555** | **5** | **113** | **108** | **1,339** |
 
-The remaining reconstruction queue is **120 nonexact authored candidates**:
-115 are unreviewed; 5 known
+The remaining reconstruction queue is **118 nonexact authored candidates**:
+113 are unreviewed; 5 known
 `MAIN.EXE` functions remain blocked.
 Compiler startup, Borland runtime, MASTER.LIB, embedded library code, data/BSS
 false positives, and Ghidra switch-case artifacts are excluded from that queue.
@@ -30,7 +30,7 @@ The 108 original-style ASM observations remain a separate attestation queue.
 
 | Artifact | Target-derived ASM | Candidate C++ | Candidate C | Cross-game C/C++ |
 | --- | ---: | ---: | ---: | ---: |
-| `th04-op` | 4 | 58 | 0 | 0 |
+| `th04-op` | 4 | 56 | 0 | 0 |
 | `th04-main` | 0 | 0 | 0 | 0 |
 | `th04-maine` | 18 | 23 | 0 | 1 |
 | `th04-zun` | 11 | 0 | 0 | 0 |
@@ -45,7 +45,7 @@ it enters the standalone product build.
 
 | Artifact | Reviewed | Corroborated | Provisional |
 | --- | ---: | ---: | ---: |
-| `th04-op` | 34 | 51 | 8 |
+| `th04-op` | 36 | 49 | 8 |
 | `th04-main` | 495 | 0 | 0 |
 | `th04-maine` | 35 | 32 | 5 |
 | `th04-zun` | 13 | 0 | 0 |

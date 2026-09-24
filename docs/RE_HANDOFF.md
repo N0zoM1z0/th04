@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 34 / 51 / 8 | 31 | 62 / 0 | 2,984 |
+| OP.EXE | 36 / 49 / 8 | 33 | 60 / 0 | 3,076 |
 | MAINE.EXE | 35 / 32 / 5 | 30 | 42 / 0 | 2,740 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 2,984 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,710 bytes are in the 31 accepted exact
+OP's 3,076 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,802 bytes are in the 33 accepted exact
 functions. MAINE has 30 decoded-function exact functions (2,551 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,740.
@@ -41,7 +41,27 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP tracklist renderer
+## Latest verified cohort: OP setup help renderers
+
+v596 reconstructs the paired 46-byte `bgm_help_put()` and `se_help_put()`
+leaves at payloads `0xB738` and `0xB766` inside `OP_SETUP_TEXT`. Ghidra closes
+both complete contiguous bodies. Raw target operands independently bind
+`_BGM_HELP` at `0F34:0A4C` or `_SE_HELP` at `0F34:0A70`, and both renderers
+FAR-call `GRAPH_PUTSA_FX` at `0DA1:04A4`. The target constants fix the same
+9-line help geometry in each function: top 136, left 208, glyph height 16, and
+color 15.
+
+Maintained natural source is `src/op/setup/help_put.cpp`. Standalone TC86
+output contains two consecutive 46-byte renderer bodies with exactly two table
+fixups and two `GRAPH_PUTSA_FX` fixups across the pair. The grouped cold replay
+keeps the complete `0x5A6`-byte `OP_SETUP_TEXT` producer raw-equal. The v597
+complete OP aggregate passes 33/33 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v597-op-help-aggregate-001/receipt.json`,
+SHA-256 `bd3146358c794d2f06c721bf902d223132515e67038b381301ab3abb3a1b93cb`.
+All 804 ordered target relocations remain preserved. These are decoded-function
+exact claims only; no DIET-packed offsets or whole-OP exactness are claimed.
+
+## Prior verified cohort: OP tracklist renderer
 
 v594 reconstructs the 39-byte `tracklist_put_both(unsigned char)` leaf at payload
 `0xBF41` (`1A74:1801`). Ghidra closes one contiguous body with one caller and
@@ -271,7 +291,7 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594, or MAINE v590: their complete
+leaf batch, OP v587-v588/v592/v594/v596, or MAINE v590: their complete
 decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`

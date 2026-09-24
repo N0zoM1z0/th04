@@ -783,3 +783,27 @@ expected_body_span = 0x27
 reviewed_body_size = 0x27
 review_evidence_id = "ev-th04-op-tracklist-put-both-boundary-v594"
 notes = "Target Ghidra closes one contiguous 39-byte near Pascal body at 1A74:1801 with one caller and one callee. Raw target iterates i=0..23, chooses color 3 for the selected entry and 5 otherwise, and near-calls payload 0xBED5 track_put_both."
+
+# v596: target-first review for bgm_help_put.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB738
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/help_put.cpp"
+expected_body_span = 0x2E
+reviewed_body_size = 0x2E
+review_evidence_id = "ev-th04-op-bgm-help-put-boundary-v596"
+notes = "Target Ghidra closes one contiguous 46-byte near body at 1A74:0FF8 with one caller and one callee. Raw operands fix HELP_TOP=136, HELP_LEFT=208, V_WHITE=15, nine lines at GLYPH_H=16, table 0F34:0A4C _BGM_HELP, and FAR call 0DA1:04A4 GRAPH_PUTSA_FX."
+
+# v596: target-first review for se_help_put.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB766
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/help_put.cpp"
+expected_body_span = 0x2E
+reviewed_body_size = 0x2E
+review_evidence_id = "ev-th04-op-se-help-put-boundary-v596"
+notes = "Target Ghidra closes one contiguous 46-byte near body at 1A74:1026 with one caller and one callee. Raw operands fix HELP_TOP=136, HELP_LEFT=208, V_WHITE=15, nine lines at GLYPH_H=16, table 0F34:0A70 _SE_HELP, and FAR call 0DA1:04A4 GRAPH_PUTSA_FX."
