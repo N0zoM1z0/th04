@@ -819,3 +819,15 @@ expected_body_span = 0x30
 reviewed_body_size = 0x30
 review_evidence_id = "ev-th04-op-cmt-unput-boundary-v598"
 notes = "Target Ghidra closes one contiguous 48-byte near body at 1A74:1BFF with one caller and two callees. Raw target writes graph_putsa_fx_func=2, calls BGIMAGE_PUT_RECT_16 twice with (320,64,320,320), and near-calls payload 0xC244 music_update_render_and_flip."
+
+# v600: target-first review for cmt_fadein_both_animate.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC30E
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/cmt_fadein_both_animate.cpp"
+expected_body_span = 0x31
+reviewed_body_size = 0x31
+review_evidence_id = "ev-th04-op-cmt-fadein-boundary-v600"
+notes = "Target Ghidra closes one contiguous 49-byte near body at 1A74:1BCE with one caller and two callees. Raw target loops effect values 4..7 through cmt_put and music_update_render_and_flip, then sets effect 2 and performs the final cmt_put/music_update/cmt_put sequence."

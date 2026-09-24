@@ -199,6 +199,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-game-exit-to-dos-v592", "0x1A", "game-exit-to-dos"),
             ("op-tracklist-put-both-v594", "0x6A4", "tracklist-put-both"),
             ("op-cmt-unput-v598", "0x6A4", "cmt-unput"),
+            ("op-cmt-fadein-v600", "0x6A4", "cmt-fadein"),
             ("op-help-put-v596", "0x5A5", "help-put"),
         )
         for backend, bad_size, message in cases:
@@ -326,6 +327,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-cmt-unput-v598", saved)[1],
             "scripts/probes/replay_th04_op_cmt_unput_both_animate.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-cmt-fadein-v600", saved)[1],
+            "scripts/probes/replay_th04_op_cmt_fadein_both_animate.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-help-put-v596", saved)[1],
