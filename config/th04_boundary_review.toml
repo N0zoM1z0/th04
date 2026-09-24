@@ -1143,3 +1143,15 @@ expected_body_span = 0x75
 reviewed_body_size = 0x75
 review_evidence_id = "ev-th04-maine-pic-copy-to-other-boundary-v651"
 notes = "Target Ghidra closes one contiguous 117-byte near Pascal body at 1A05:02BA with one caller and two callees. Raw target and MAP bind egc_start_copy at 1A05:0286, EGC_OFF at 0000:085C, _VRAM_PLANE_B at 0E53:170C, a 320x200 copy, direct page 0 read to page 1 write, and RET 4."
+
+# v653: target-first review for egc_start_copy; ordinary C++ remains nonexact.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA2D6
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/egc_start_copy.cpp"
+expected_body_span = 0x34
+reviewed_body_size = 0x34
+review_evidence_id = "ev-th04-maine-egc-start-copy-boundary-v653"
+notes = "Target Ghidra closes one contiguous 52-byte near body at 1A05:0286 with three callers and one callee. Raw target and MAP bind EGC_ON at 0000:0846 plus six word-port writes to 0x4A0/2/4/8/C/E. Four ordinary-C++ variants fail exact codegen: direct outport() is 51 bytes and loads DX before AX for all six writes, while local/register/const-local variants are 65/65/82 bytes. Historical outport2 is explicit decomp inline assembly and is not accepted for exact credit."

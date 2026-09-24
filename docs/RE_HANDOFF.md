@@ -27,20 +27,43 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 55 / 30 / 8 | 51 | 42 / 0 | 4,623 |
-| MAINE.EXE | 44 / 23 / 5 | 38 | 34 / 0 | 3,680 |
+| MAINE.EXE | 45 / 22 / 5 | 38 | 34 / 0 | 3,732 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 4,623 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
 candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 38 decoded-function exact functions (3,357 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
-`scoredat_encode` 101 bytes) and the 134-byte nonexact
-`box_1_to_0_masked` candidate; total decoded source-owner bytes are 3,680.
+`scoredat_encode` 101 bytes), the 134-byte nonexact
+`box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
+candidate; total decoded source-owner bytes are 3,732.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest diagnostic: MAINE EGC start-copy codegen gap
+
+v653 target-reviews the 52-byte `egc_start_copy()` helper at payload
+`0xA2D6` (`1A05:0286`) inside `CUTSCENE_TEXT`. Target Ghidra closes
+one contiguous near body with three callers and one callee. Raw target and the
+pinned MAP bind `EGC_ON` at `0000:0846` and six word writes to EGC
+ports 0x4A0/0x4A2/0x4A4/0x4A8/0x4AC/0x4AE with values
+0xFFF0/0x00FF/0x3100/0xFFFF/0/0x000F. Every target write loads AX=value
+before DX=port.
+
+Maintained natural source is `src/maine/cutscene/egc_start_copy.cpp`. Two
+cold TC86 compilations of ordinary direct `outport()` source are deterministic
+at 51 CODE bytes versus the 52-byte target: TC86 loads DX before AX for all
+six writes and chooses `XOR AX,AX` for the zero value. Additional ordinary C++
+local/register/const-local experiments produce 65/65/82 bytes and are also
+nonexact. The only known helper that forces target order, `outport2`, is
+explicit inline assembly in `decomp.hpp`; it is not compiled or credited.
+Therefore this is source-present diagnostic progress only, with no function
+exact credit. Receipt:
+`.analysis/reconstruction/probes/v653-maine-egc-start-codegen-gap-002/receipt.json`,
+SHA-256 `36b502343711cd29ee42724cedbc5bb2cbd6bc0ee8ddb479418617e1ed3cd367`.
 
 ## Latest verified cohort: MAINE picture page copy helper
 
@@ -855,18 +878,19 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v652, tracked reconstruction state is **OP 51 decoded-exact / 42
+After v653, tracked reconstruction state is **OP 51 decoded-exact / 42
 pending**, **MAINE 38 / 34**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 
 Five small-looking candidates were deliberately **not** promoted:
 
-- MAINE `egc_start_copy()` at payload `0xA2D6` (52 bytes): ordinary maintained
-  `outport(port,value)` codegen produces the wrong register-load order and
-  shortens the zero-address write to `XOR AX,AX`. Using the historical
-  `keep_0` decompilation helper or copying the old inline-assembly `outport2`
-  would force bytes without first proving authored low-level source ownership.
+- MAINE `egc_start_copy()` at payload `0xA2D6` (52 bytes): v653 now turns the
+  earlier warning into repeatable evidence. Direct ordinary `outport()` is
+  deterministically 51 bytes, with DX-before-AX loads on all six writes and
+  `XOR AX,AX` for zero; local/register/const-local variants are 65/65/82 bytes.
+  The historical inline-assembly `outport2` would force bytes but remains
+  decompilation support rather than authored-source evidence.
 - MAINE `box_1_to_0_masked()` at payload `0xA78F` (134 bytes): v645
   target-first review and two-cold natural-C++ probing reach the exact target
   length and isolate every remaining non-relocation difference to 18 bytes in

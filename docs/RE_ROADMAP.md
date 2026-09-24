@@ -80,7 +80,8 @@ decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 38
 decoded-exact functions / 3,357 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `scoredat_encode` (101 bytes), plus the 134-byte nonexact
-`box_1_to_0_masked`, for 3,680 decoded source-owner bytes; OP has
+`box_1_to_0_masked` and 52-byte nonexact `egc_start_copy`, for 3,732 decoded
+source-owner bytes; OP has
 51 decoded-exact functions / 4,273 exact source-owner bytes, with two separate
 codec candidates (274 bytes) plus `snd_se_update` (76 bytes) still
 source-present and nonexact, for 4,623 decoded source-owner bytes total.
@@ -391,6 +392,13 @@ raw-matches the function and `CUTSCENE_TEXT` producer, and the v652 MAINE
 aggregate passes 38/38 decoded slices with all 559 ordered relocations
 preserved. Exact credit is local to the caller; `egc_start_copy` remains a
 separate low-level source-authority gap.
+v653 then target-reviews that 52-byte `egc_start_copy` callee and makes the
+low-level gap reproducible. Direct ordinary `outport()` C++ is deterministic
+at 51 bytes and reverses the target AX/DX load order on all six EGC writes;
+the zero value additionally becomes `XOR AX,AX`. Local/register/const-local
+ordinary-C++ controls produce 65/65/82 bytes. The historical `outport2` that
+forces target order is explicit `_asm` in `decomp.hpp`, so it remains
+provenance/diagnostic evidence only and grants no exact credit.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
