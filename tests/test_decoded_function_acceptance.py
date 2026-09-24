@@ -196,6 +196,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
             ("op-main-cdg-load-v602", "0x2C6", "main-CDG-load"),
             ("op-nopoly-free-v584", "0x6A4", "nopoly-free"),
+            ("op-nopoly-snap-v606", "0x6A4", "nopoly-snap"),
             ("op-frame-delay-2-v587", "0x16", "frame-delay-2"),
             ("op-raise-bg-free-v588", "0xAB2", "raise-bg-free"),
             ("op-game-exit-to-dos-v592", "0x1A", "game-exit-to-dos"),
@@ -318,6 +319,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-nopoly-free-v584", saved)[1],
             "scripts/probes/replay_th04_op_nopoly_free.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-nopoly-snap-v606", saved)[1],
+            "scripts/probes/replay_th04_op_nopoly_snap.py",
         )
         frame2 = acceptance.backend_command("op-frame-delay-2-v587", saved)
         self.assertEqual(frame2[1], "scripts/probes/replay_th04_op_frame_delay_2.py")

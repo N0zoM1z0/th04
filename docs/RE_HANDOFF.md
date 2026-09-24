@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 39 / 46 / 8 | 36 | 57 / 0 | 3,222 |
+| OP.EXE | 40 / 45 / 8 | 37 | 56 / 0 | 3,271 |
 | MAINE.EXE | 36 / 31 / 5 | 31 | 41 / 0 | 2,789 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,222 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,948 bytes are in the 36 accepted exact
+OP's 3,271 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,997 bytes are in the 37 accepted exact
 functions. MAINE has 31 decoded-function exact functions (2,600 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,789.
@@ -41,7 +41,29 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: MAINE resident-pointer CFG loader
+## Latest verified cohort: OP nopoly B-plane snapshot
+
+v606 reconstructs the 49-byte `nopoly_B_snap()` leaf at payload `0xBF68`
+(`1A74:1828`). Ghidra closes one contiguous body with one caller and one
+callee. Target operands independently bind the `0x7D00` allocation to
+`HMEM_ALLOCBYTE` at `0000:2752`, the destination segment to `_nopoly_B` at
+`0F34:3A80`, and the source far pointer to `_VRAM_PLANE_B` at `0F34:22DA`.
+The loop advances by four bytes and, importantly, the target uses a signed
+`JL` comparison; declaring the loop variable unsigned naturally produced
+`JB` and was rejected before the maintained source was finalized.
+
+Maintained natural source is `src/op/music/nopoly_snap.cpp`. Standalone TC86
+output matches the complete 49-byte instruction shape with exactly four
+expected OMF fixups: `HMEM_ALLOCBYTE`, two `_nopoly_B` references, and
+`_VRAM_PLANE_B`. The grouped replay preserves the complete `0x6A5`-byte
+`OP_MUSIC_TEXT` producer and the retained OP program image. The v607 complete
+OP aggregate passes 37/37 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v607-op-nopoly-snap-aggregate-001/receipt.json`,
+SHA-256 `8940dc51ae42b5cbfafd18a8d6fe965ce393b6dff752492eff2435feb3aae777`.
+All 804 ordered target relocations remain preserved. This is decoded-function
+exactness only; no DIET-packed offset or whole-OP exactness is claimed.
+
+## Prior verified cohort: MAINE resident-pointer CFG loader
 
 v604 reconstructs the 49-byte `cfg_load_resident_ptr()` leaf at payload
 `0xA059` (`1A05:0009`). Ghidra closes one contiguous body with one caller and
@@ -368,8 +390,8 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602, or MAINE v590/v604:
-their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606, or MAINE
+v590/v604: their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not

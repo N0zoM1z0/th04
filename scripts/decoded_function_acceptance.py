@@ -88,6 +88,7 @@ OP_SCOREDAT_RECREATE_PRODUCER = 0xC68C
 OP_MAIN_CDG_FREE_PRODUCER = 0xCC97
 OP_MAIN_CDG_LOAD_PRODUCER = 0xCC97
 OP_NOPOLY_FREE_PRODUCER = 0xBED5
+OP_NOPOLY_SNAP_PRODUCER = 0xBED5
 OP_FRAME_DELAY_2_PRODUCER = 0xE6DE
 OP_RAISE_BG_FREE_PRODUCER = 0xCF5E
 OP_GAME_EXIT_TO_DOS_PRODUCER = 0xDDB1
@@ -215,6 +216,7 @@ def validate(
                                  "op-maine-input-wait-v565", "op-maine-se-reset-v581", "op-maine-vector-math-v570",
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "op-main-cdg-free-v583", "op-main-cdg-load-v602", "op-nopoly-free-v584",
+                                 "op-nopoly-snap-v606",
                                  "op-frame-delay-2-v587", "op-raise-bg-free-v588",
                                  "op-game-exit-to-dos-v592",
                                  "op-tracklist-put-both-v594",
@@ -393,6 +395,12 @@ def validate(
                     or producer_start != OP_NOPOLY_FREE_PRODUCER
                     or producer_size != 0x6A5):
                 raise ValueError(f"{ident}: OP nopoly-free backend does not compile this producer")
+        elif backend == "op-nopoly-snap-v606":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/music/nopoly_snap.cpp"
+                    or producer_start != OP_NOPOLY_SNAP_PRODUCER
+                    or producer_size != 0x6A5):
+                raise ValueError(f"{ident}: OP nopoly-snap backend does not compile this producer")
         elif backend == "op-frame-delay-2-v587":
             if (artifact != "th04-op"
                     or source_name != "src/op/hardware/frame_delay_2.cpp"
@@ -664,6 +672,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-nopoly-free-v584":
         return [sys.executable, "scripts/probes/replay_th04_op_nopoly_free.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-nopoly-snap-v606":
+        return [sys.executable, "scripts/probes/replay_th04_op_nopoly_snap.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-frame-delay-2-v587":
         return [sys.executable, "scripts/probes/replay_th04_op_frame_delay_2.py",
