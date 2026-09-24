@@ -1131,3 +1131,15 @@ expected_body_span = 0xC6
 reviewed_body_size = 0xC6
 review_evidence_id = "ev-th04-maine-script-param-first-boundary-v649"
 notes = "Target Ghidra closes one contiguous 198-byte near Pascal body at 1A05:05FD with one caller and no callees. Raw target and MAP bind _script_p at 0E53:3F48, _script_param_number_default at 0E53:3F94, and __ctype at 0E53:0B68; the parser reads three bytes, tests digit bit 2 at __ctype[c+1], rolls script_p back by 3/2/1/0 bytes, and ends RET 4."
+
+# v651: target-first review for pic_copy_to_other.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA30A
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/pic_copy_to_other.cpp"
+expected_body_span = 0x75
+reviewed_body_size = 0x75
+review_evidence_id = "ev-th04-maine-pic-copy-to-other-boundary-v651"
+notes = "Target Ghidra closes one contiguous 117-byte near Pascal body at 1A05:02BA with one caller and two callees. Raw target and MAP bind egc_start_copy at 1A05:0286, EGC_OFF at 0000:085C, _VRAM_PLANE_B at 0E53:170C, a 320x200 copy, direct page 0 read to page 1 write, and RET 4."

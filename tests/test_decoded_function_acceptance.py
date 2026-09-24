@@ -563,6 +563,11 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_box_animate.py",
         )
         self.assertEqual(
+            acceptance.backend_command("maine-pic-copy-to-other-v651",
+                                       ROOT / ".analysis/reconstruction/probes/test")[1],
+            "scripts/probes/replay_th04_maine_pic_copy_to_other.py",
+        )
+        self.assertEqual(
             acceptance.backend_command("maine-cursor-advance-v643",
                                        ROOT / ".analysis/reconstruction/probes/test")[1],
             "scripts/probes/replay_th04_maine_cursor_advance.py",
