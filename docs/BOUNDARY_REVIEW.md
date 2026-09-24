@@ -47,7 +47,7 @@ it enters the standalone product build.
 | --- | ---: | ---: | ---: |
 | `th04-op` | 27 | 58 | 8 |
 | `th04-main` | 495 | 0 | 0 |
-| `th04-maine` | 29 | 36 | 7 |
+| `th04-maine` | 30 | 36 | 6 |
 | `th04-zun` | 13 | 0 | 0 |
 
 - `reviewed` records a completed target-first boundary review backed by durable

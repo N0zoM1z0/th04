@@ -27,7 +27,7 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 27 / 58 / 8 | 24 | 69 / 0 | 2,841 |
-| MAINE.EXE | 29 / 36 / 7 | 24 | 48 / 0 | 2,247 |
+| MAINE.EXE | 30 / 36 / 6 | 24 | 48 / 0 | 2,247 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 2,841 source-owner bytes include two source-present but nonexact SCORE
@@ -63,6 +63,16 @@ remains documented in
 the vector/math evidence is in
 [TH04_SHARED_VECTOR_MATH_V570.md](reconstruction/op-maine/TH04_SHARED_VECTOR_MATH_V570.md).
 
+## Latest physical-boundary review: MAINE indirect dispatcher
+
+MAINE payload `0xA847..0xADBB` (`1A05:07F7..0D6B`) is now boundary-reviewed
+as one `0x575`-byte owner. A target-local 16-entry CS-relative dispatch table
+at payload `0xADBC` reaches case blocks that Ghidra omitted from its 58-byte,
+two-range body; all paths reach a shared `RET 2`. This is boundary progress
+only: source, meaning, and the candidate `script_op(unsigned char)` name remain
+unverified, and decoded exact remains 24 functions. See
+[TH04_MAINE_SCRIPT_OP_BOUNDARY_V571.md](reconstruction/op-maine/TH04_MAINE_SCRIPT_OP_BOUNDARY_V571.md).
+
 ## Replay footprint and next work
 
 The replay helper now materializes compiler-facing C/C++ source and include
@@ -76,9 +86,13 @@ are disposable; current private acceptance directories retain only their small
 receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
-Continue OP/MAINE from a fresh physical-boundary review and select one adjacent
-menu or other small owner whose source and producer can be truthfully tested;
-do not assume the next address-ordered function is the next good unit.
+For the next MAINE step, recover the natural source-owner and translation-unit
+context for the reviewed indirect dispatcher as a whole; if that cannot be
+closed against target-local callers and the pinned toolchain, select a smaller
+reviewed OP/MAINE owner instead. The local candidate `th04/cutscene.cpp` is an
+include-only forwarder to TH03 source; do not import it as maintained MAINE
+product code. Do not trust the candidate `script_op` name or assume the next
+address-ordered function is the next good unit.
 Preserve OP and MAINE SCORE TU composition, target restore provenance, v489
 BGIMAGE, and v494 relocation/layout Oracles. Keep the two OP SCORE codec units
 source-present/nonexact unless a natural-source cold build reaches raw zero;

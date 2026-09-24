@@ -91,9 +91,9 @@ byte/codegen corroboration.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
-Review the 15 remaining provisional authored boundaries by neighboring ownership:
+Review the 14 remaining provisional authored boundaries by neighboring ownership:
 OP's eight (prioritize the Ghidra-only and noncontiguous music/main owners) and
-MAINE's seven (the remaining MAP-public/sound and cutscene/registration entries).
+MAINE's six (the remaining MAP-public/sound and cutscene/registration entries).
 ZUN's authored physical boundaries are already fully reviewed by v520/v521.
 For each remaining owner, inspect attested target entry, callers, all returns/tails,
 tables, alignment, adjacent bytes, MAP/TASM contribution, and segment identity.
@@ -132,7 +132,12 @@ v557 adds the high-score loader, v565 adds shared input-wait, and v570 adds
 shared vector math, bringing MAINE to 24 / 2,247 decoded function bytes. Move next to the registration menu only after its physical review or pivot to
 other bounded SCORE_TEXT owners and small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
-confidence. Candidate byte totals in the boundary inventory
+confidence. v571 target-review closes the MAINE indirect-dispatch candidate at
+payload `0xA847..0xADBB` (`0x575` bytes), including 16 switch targets omitted
+from Ghidra's 0x3A-byte/two-range body. Its mapped ReC98 path is only a TH03
+forwarder; recover a natural TH04 source owner/TU before attempting decoded
+acceptance, and do not promote its candidate name. If that ownership cannot be
+closed, pivot to a smaller reviewed owner. Candidate byte totals in the boundary inventory
 are **not** exact denominators; prioritize by evidence maturity and TU/link
 impact, not by address order or attractive percentage.
 
