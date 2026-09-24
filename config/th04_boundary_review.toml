@@ -1119,3 +1119,15 @@ expected_body_span = 0xAF
 reviewed_body_size = 0xAF
 review_evidence_id = "ev-th04-maine-box-bg-put-boundary-v647"
 notes = "Target Ghidra closes one contiguous 175-byte near body at 1A05:054E with two callers and no callees. Raw target and MAP bind _box_bg at 0E53:3F4A and all four VRAM plane pointers at 0E53:170C/1710/1714/1718; geometry is left 80, top 320, width 480, height 64, and the function ends RET."
+
+# v649: target-first review for script_param_read_number_first.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA64D
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/script_param_first.cpp"
+expected_body_span = 0xC6
+reviewed_body_size = 0xC6
+review_evidence_id = "ev-th04-maine-script-param-first-boundary-v649"
+notes = "Target Ghidra closes one contiguous 198-byte near Pascal body at 1A05:05FD with one caller and no callees. Raw target and MAP bind _script_p at 0E53:3F48, _script_param_number_default at 0E53:3F94, and __ctype at 0E53:0B68; the parser reads three bytes, tests digit bit 2 at __ctype[c+1], rolls script_p back by 3/2/1/0 bytes, and ends RET 4."

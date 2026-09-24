@@ -27,22 +27,46 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 55 / 30 / 8 | 51 | 42 / 0 | 4,623 |
-| MAINE.EXE | 42 / 25 / 5 | 36 | 36 / 0 | 3,365 |
+| MAINE.EXE | 43 / 24 / 5 | 37 | 35 / 0 | 3,563 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 4,623 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
-candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 36 decoded-function exact functions (3,042 bytes), plus
+candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 37 decoded-function exact functions (3,240 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes) and the 134-byte nonexact
-`box_1_to_0_masked` candidate; total decoded source-owner bytes are 3,365.
+`box_1_to_0_masked` candidate; total decoded source-owner bytes are 3,563.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: MAINE box background restore helper
+## Latest verified cohort: MAINE first script-number parser
+
+v649 reconstructs the 198-byte `script_param_read_number_first(int far&)`
+leaf at payload `0xA64D` (`1A05:05FD`) inside `CUTSCENE_TEXT`. Fresh
+target review closes one contiguous near Pascal body with one caller and no
+callees. Raw target and the pinned MAP bind `_script_p` at `0E53:3F48`,
+`_script_param_number_default` at `0E53:3F94`, and `__ctype` at
+`0E53:0B68`. The body reads three bytes, tests digit bit 2 through
+`__ctype[c+1]`, computes one/two/three-digit decimal values, rolls
+`script_p` back by 3/2/1/0 bytes, and terminates with Pascal `RET 4`.
+
+Maintained natural source is `src/maine/cutscene/script_param_first.cpp`.
+Standalone TC86 output is exactly 198 CODE bytes; all 13 pre-link differences
+are ordinary 16-bit fixups, including the +1 addend on each `__ctype` lookup.
+Focused A/B cold replay raw-matches the complete function and the full
+`0xC3E`-byte `CUTSCENE_TEXT` producer while preserving grouped OMF, the
+retained MAINE program image, and all 559 ordered relocations. An independent
+focused recheck reproduces the same result. Two complete v650 MAINE aggregate
+runs pass 37/37 registered decoded functions raw-zero; the primary receipt is
+`.analysis/reconstruction/probes/v650-maine-script-param-first-aggregate-001/receipt.json`,
+SHA-256 `b1240a448f47a76dea6365f877f2ca92e7424e355bb716d3762d996d9a4dee4a`.
+This is decoded-function exactness only; no DIET-packed offset or whole-MAINE
+exactness is claimed.
+
+## Prior verified cohort: MAINE box background restore helper
 
 v647 reconstructs the 175-byte `box_bg_put()` leaf at payload `0xA59E`
 (`1A05:054E`) inside `CUTSCENE_TEXT`. Fresh target review closes one
@@ -807,8 +831,8 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v648, tracked reconstruction state is **OP 51 decoded-exact / 42
-pending**, **MAINE 36 / 36**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
+After v650, tracked reconstruction state is **OP 51 decoded-exact / 42
+pending**, **MAINE 37 / 35**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 

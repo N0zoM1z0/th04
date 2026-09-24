@@ -70,6 +70,7 @@ MAINE_CURSOR_ADVANCE_PRODUCER = 0xA292
 MAINE_BOX_BG_PUT_PRODUCER = 0xA292
 MAINE_CUTSCENE_SCRIPT_FREE_PRODUCER = 0xA292
 MAINE_BOX_BG_FREE_PRODUCER = 0xA292
+MAINE_SCRIPT_PARAM_FIRST_PRODUCER = 0xA292
 MAINE_SCRIPT_PARAM_SECOND_PRODUCER = 0xA292
 MAINE_CUTSCENE_SCRIPT_LOAD_PRODUCER = 0xA292
 MAINE_CFG_RESIDENT_PRODUCER = 0xA059
@@ -256,7 +257,7 @@ def validate(
                                  "op-dropdown-v630",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
-                                 "maine-script-param-second-v590",
+                                 "maine-script-param-first-v649", "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
                                  "maine-game-exit-exec-v608",
@@ -351,6 +352,12 @@ def validate(
                     or producer_start != MAINE_BOX_BG_FREE_PRODUCER
                     or producer_size != 0xC3E):
                 raise ValueError(f"{ident}: MAINE box-bg-free backend does not compile this producer")
+        elif backend == "maine-script-param-first-v649":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/cutscene/script_param_first.cpp"
+                    or producer_start != MAINE_SCRIPT_PARAM_FIRST_PRODUCER
+                    or producer_size != 0xC3E):
+                raise ValueError(f"{ident}: MAINE script-param-first backend does not compile this producer")
         elif backend == "maine-script-param-second-v590":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/cutscene/script_param_second.cpp"
@@ -904,6 +911,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-box-bg-free-v585":
         return [sys.executable, "scripts/probes/replay_th04_maine_box_bg_free.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-script-param-first-v649":
+        return [sys.executable, "scripts/probes/replay_th04_maine_script_param_first.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-script-param-second-v590":
         return [sys.executable, "scripts/probes/replay_th04_maine_script_param_second.py",

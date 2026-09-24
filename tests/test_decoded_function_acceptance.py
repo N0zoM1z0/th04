@@ -192,6 +192,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("maine-box-bg-put-v647", "0xC3D", "box-bg-put"),
             ("maine-cutscene-script-free-v582", "0xC3D", "cutscene-script-free"),
             ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
+            ("maine-script-param-first-v649", "0xC3D", "script-param-first"),
             ("maine-script-param-second-v590", "0xC3D", "script-param-second"),
             ("maine-cutscene-script-load-v614", "0xC3D", "cutscene-script-load"),
             ("maine-cfg-resident-v604", "0x238", "cfg-resident"),
@@ -570,6 +571,11 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("maine-box-bg-put-v647",
                                        ROOT / ".analysis/reconstruction/probes/test")[1],
             "scripts/probes/replay_th04_maine_box_bg_put.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("maine-script-param-first-v649",
+                                       ROOT / ".analysis/reconstruction/probes/test")[1],
+            "scripts/probes/replay_th04_maine_script_param_first.py",
         )
 
     def test_op_stage_backend_is_artifact_and_source_bound(self) -> None:
