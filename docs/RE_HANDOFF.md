@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 40 / 45 / 8 | 37 | 56 / 0 | 3,271 |
+| OP.EXE | 41 / 44 / 8 | 38 | 55 / 0 | 3,326 |
 | MAINE.EXE | 37 / 30 / 5 | 32 | 40 / 0 | 2,840 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,271 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,997 bytes are in the 37 accepted exact
+OP's 3,326 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 3,052 bytes are in the 38 accepted exact
 functions. MAINE has 32 decoded-function exact functions (2,651 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,840.
@@ -41,7 +41,29 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: MAINE game exit-and-exec wrapper
+## Latest verified cohort: OP music update/render/page-flip helper
+
+v610 reconstructs the 55-byte `music_update_render_and_flip()` helper at
+payload `0xC244` (`1A74:1B04`) inside `OP_MUSIC_TEXT`. Ghidra closes one
+contiguous body with four callers and four callees. Raw target operands and
+MAP evidence independently bind `nopoly_b_put`, `GRCG_SETCOLOR`,
+`polygons_update_and_render`, `_music_page_accessed`, and `frame_delay_2`;
+the target also fixes the inline page/GRCG port writes at 0x7C, 0xA4, and
+0xA6.
+
+Maintained natural source is
+`src/op/music/music_update_render_and_flip.cpp`. Standalone TC86 output matches
+the complete target instruction shape with seven expected OMF fixups: two near
+calls, two FAR calls, and three references to `_music_page_accessed`. The
+grouped replay preserves the complete `0x6A5`-byte `OP_MUSIC_TEXT` producer,
+the retained OP program image, and all 804 ordered relocations. The v611
+complete OP aggregate passes 38/38 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v611-op-music-update-aggregate-001/receipt.json`,
+SHA-256 `07402645c29b2f907af0d8975c4dda590b102fa06f68c1d43da459878a8d065d`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: MAINE game exit-and-exec wrapper
 
 v608 reconstructs the 51-byte `game_exit_and_exec(char far*)` wrapper at
 payload `0xA08A` (`1A05:003A`) inside `MAINE_E_TEXT`. Ghidra closes one
@@ -409,7 +431,7 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606, or MAINE
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610, or MAINE
 v590/v604/v608: their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`

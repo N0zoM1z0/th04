@@ -879,3 +879,15 @@ expected_body_span = 0x33
 reviewed_body_size = 0x33
 review_evidence_id = "ev-th04-maine-game-exec-boundary-v608"
 notes = "Target Ghidra closes one contiguous 51-byte near Pascal body at 1A05:003A. Raw target and MAP bind CDG_FREE_ALL, GRAPH_HIDE, TEXT_CLEAR, GAIJI_RESTORE, game_exit, and _execl; the execl call receives two identical far filename pointers plus a null terminator."
+
+# v610: target-first review for music_update_render_and_flip.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC244
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/music_update_render_and_flip.cpp"
+expected_body_span = 0x37
+reviewed_body_size = 0x37
+review_evidence_id = "ev-th04-op-music-update-flip-boundary-v610"
+notes = "Target Ghidra closes one contiguous 55-byte near body at 1A74:1B04 with four callers and four callees. Raw target binds nopoly_b_put, GRCG_SETCOLOR, polygons_update_and_render, _music_page_accessed, frame_delay_2, and inline page/GRCG port writes."

@@ -96,6 +96,7 @@ OP_GAME_EXIT_TO_DOS_PRODUCER = 0xDDB1
 OP_TRACKLIST_PUT_BOTH_PRODUCER = 0xBED5
 OP_CMT_UNPUT_PRODUCER = 0xBED5
 OP_CMT_FADEIN_PRODUCER = 0xBED5
+OP_MUSIC_UPDATE_PRODUCER = 0xBED5
 OP_HELP_PUT_PRODUCER = 0xB49F
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
@@ -223,6 +224,7 @@ def validate(
                                  "op-tracklist-put-both-v594",
                                  "op-cmt-unput-v598",
                                  "op-cmt-fadein-v600",
+                                 "op-music-update-flip-v610",
                                  "op-help-put-v596",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
@@ -445,6 +447,12 @@ def validate(
                     or producer_start != OP_CMT_FADEIN_PRODUCER
                     or producer_size != 0x6A5):
                 raise ValueError(f"{ident}: OP cmt-fadein backend does not compile this producer")
+        elif backend == "op-music-update-flip-v610":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/music/music_update_render_and_flip.cpp"
+                    or producer_start != OP_MUSIC_UPDATE_PRODUCER
+                    or producer_size != 0x6A5):
+                raise ValueError(f"{ident}: OP music-update-flip backend does not compile this producer")
         elif backend == "op-help-put-v596":
             if (artifact != "th04-op"
                     or source_name != "src/op/setup/help_put.cpp"
@@ -701,6 +709,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-cmt-fadein-v600":
         return [sys.executable, "scripts/probes/replay_th04_op_cmt_fadein_both_animate.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-music-update-flip-v610":
+        return [sys.executable, "scripts/probes/replay_th04_op_music_update_render_and_flip.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-help-put-v596":
         return [sys.executable, "scripts/probes/replay_th04_op_help_put.py",

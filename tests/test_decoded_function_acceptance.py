@@ -204,6 +204,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-tracklist-put-both-v594", "0x6A4", "tracklist-put-both"),
             ("op-cmt-unput-v598", "0x6A4", "cmt-unput"),
             ("op-cmt-fadein-v600", "0x6A4", "cmt-fadein"),
+            ("op-music-update-flip-v610", "0x6A4", "music-update-flip"),
             ("op-help-put-v596", "0x5A5", "help-put"),
         )
         for backend, bad_size, message in cases:
@@ -351,6 +352,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-cmt-fadein-v600", saved)[1],
             "scripts/probes/replay_th04_op_cmt_fadein_both_animate.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-music-update-flip-v610", saved)[1],
+            "scripts/probes/replay_th04_op_music_update_render_and_flip.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-help-put-v596", saved)[1],
