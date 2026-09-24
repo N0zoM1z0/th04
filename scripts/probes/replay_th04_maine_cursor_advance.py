@@ -155,8 +155,8 @@ def main() -> int:
     args = ap.parse_args()
     output = args.output_dir.resolve()
     private = (ROOT / ".analysis/reconstruction/probes").resolve()
-    if output.exists() or output.parent != private:
-        ap.error("output must be a new direct child of .analysis/reconstruction/probes")
+    if output.exists() or output == private or not output.is_relative_to(private):
+        ap.error("output must be new below .analysis/reconstruction/probes")
 
     if base.prior.sha_file(RUNNER) != RUNNER_SHA:
         raise RuntimeError("pinned DOS runner drift")
