@@ -132,7 +132,11 @@ v557 adds the high-score loader, v565 adds shared input-wait, and v570 adds
 shared vector math, bringing MAINE to 24 / 2,247 decoded function bytes. Move next to the registration menu only after its physical review or pivot to
 other bounded SCORE_TEXT owners and small
 ending/cutscene helpers, keeping source provenance separate from target-boundary
-confidence. v571 target-review closes the MAINE indirect-dispatch candidate at
+confidence. v572 reviews the adjacent 50-byte MAINE cutscene helper at payload
+`0xA815..0xA846` (`1A05:07C5..07F6`); this is boundary-only and does not attest
+its candidate name or source. Use that smaller reviewed extent for the next
+source-compiling replay experiment. v571 target-review closes the MAINE
+indirect-dispatch candidate at
 payload `0xA847..0xADBB` (`0x575` bytes), including 16 switch targets omitted
 from Ghidra's 0x3A-byte/two-range body. Its mapped ReC98 path is only a TH03
 forwarder; recover a natural TH04 source owner/TU before attempting decoded

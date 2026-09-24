@@ -31,6 +31,7 @@ contain residual counts that were correct only at that packet.
 - [OP/MAINE shared delay-until-measure decoded acceptance](packed/TH04_SHARED_DELAY_V516.md)
 - [OP/MAINE shared input-wait decoded acceptance and compact replay snapshots](packed/TH04_SHARED_INPUT_WAIT_V565.md)
 - [OP/MAINE shared polar / vector2_at decoded acceptance](op-maine/TH04_SHARED_VECTOR_MATH_V570.md)
+- [MAINE 50-byte cutscene helper boundary at payload 0xA815](op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md)
 - [MAINE indirect-dispatch function boundary at payload 0xA847](op-maine/TH04_MAINE_SCRIPT_OP_BOUNDARY_V571.md)
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
