@@ -927,3 +927,15 @@ expected_body_span = 0x45
 reviewed_body_size = 0x45
 review_evidence_id = "ev-th04-maine-end-animate-boundary-v616"
 notes = "Target Ghidra closes one contiguous 69-byte near body at 1A05:006D with one caller and three callees. Raw target reads resident fields at +0x12/+0x19/+0x25, writes SCRIPT_FN[3:6] through the maine_e.cpp data pointer at 0E53:0090/0092, then near-calls cutscene_script_load, cutscene_animate, and cutscene_script_free."
+
+# v618: target-first review for cmt_put.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC2C4
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/cmt_put.cpp"
+expected_body_span = 0x4A
+reviewed_body_size = 0x4A
+review_evidence_id = "ev-th04-op-cmt-put-boundary-v618"
+notes = "Target Ghidra closes one contiguous 74-byte near body at 1A74:1B84 with two callers and one callee. Raw target and MAP bind _cmt at 0F34:3A92, a 40-byte line stride, 20 total lines, semicolon comment suppression, title/comment coordinates, and both FAR calls to 0DA1:04A4 GRAPH_PUTSA_FX."

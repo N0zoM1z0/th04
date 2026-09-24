@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 42 / 43 / 8 | 39 | 54 / 0 | 3,386 |
+| OP.EXE | 43 / 42 / 8 | 40 | 53 / 0 | 3,460 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,386 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 3,112 bytes are in the 39 accepted exact
+OP's 3,460 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 3,186 bytes are in the 40 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,29 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: MAINE ending script-name animation
+## Latest verified cohort: OP music-room comment renderer
+
+v618 reconstructs the 74-byte `cmt_put()` helper at payload `0xC2C4`
+(`1A74:1B84`) inside `OP_MUSIC_TEXT`. Ghidra closes one contiguous body with
+two callers and one callee. Raw target operands independently bind `_cmt` at
+`0F34:3A92` and both FAR calls to `GRAPH_PUTSA_FX` at `0DA1:04A4`. The target
+also fixes the 40-byte comment-line stride, 20 total lines, title coordinates
+(320,64), comment x=320, 16-pixel row height, color 7, and suppression of lines
+whose first byte is ';'.
+
+Maintained natural source is `src/op/music/cmt_put.cpp` with the function body
+in `src/op/music/cmt_put.inl`. Standalone TC86 output matches the complete
+74-byte instruction shape with exactly five expected OMF fixups: three `_cmt`
+offset references and two FAR-call references. The grouped replay preserves
+the complete `0x6A5`-byte `OP_MUSIC_TEXT` producer, the full OP program image,
+and all 804 ordered relocations. The v619 complete OP aggregate passes 40/40
+registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v619-op-cmt-put-aggregate-001/receipt.json`,
+SHA-256 `56ad081c2eee0dcbfcaeab442547a124a760fbc9918f08c15aa090da5817de7f`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: MAINE ending script-name animation
 
 v616 reconstructs the 69-byte `end_animate()` helper at payload `0xA0BD`
 (`1A05:006D`) inside `MAINE_E_TEXT`. Ghidra closes one contiguous body with
