@@ -66,6 +66,7 @@ MAINE_SCORE_INSERT_PRODUCER = 0xC3B2
 MAINE_SCORE_PUT_PRODUCER = 0xC506
 MAINE_BOX_ANIMATE_PRODUCER = 0xA292
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
+MAINE_SCORE_RECREATE_PRODUCER = 0xC206
 MAINE_STAGE_PUT_PRODUCER = 0xC5EC
 MAINE_NAME_CURSOR_PRODUCER = 0xC665
 MAINE_PLACE_ROW_PRODUCER = 0xC711
@@ -201,6 +202,7 @@ def validate(
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
+                                 "maine-scoredat-recreate-v580",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
                                  "op-regist-menu-v556",
                                  "maine-stage-put-v547", "maine-name-cursor-v548", "maine-place-row-v549",
@@ -271,6 +273,12 @@ def validate(
                     or producer_start != MAINE_SCORE_LOAD_FOR_PRODUCER
                     or producer_size != 0x69):
                 raise ValueError(f"{ident}: MAINE score-load backend does not compile this producer")
+        elif backend == "maine-scoredat-recreate-v580":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/score/scoregen.cpp"
+                    or producer_start != MAINE_SCORE_RECREATE_PRODUCER
+                    or producer_size != 0xA7):
+                raise ValueError(f"{ident}: MAINE score-file regeneration backend does not compile this producer")
         elif backend == "maine-stage-put-v547":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/score/stage.cpp"
@@ -542,6 +550,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
     if backend_id == "maine-score-load-for-v557":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_load_for.py",
                 "--output-dir", str(saved)]
+    if backend_id == "maine-scoredat-recreate-v580":
+        return [sys.executable, "scripts/probes/replay_th04_maine_scoredat_recreate.py",
+                "--retain-candidates", "--output-dir", str(saved)]
     if backend_id == "maine-stage-put-v547":
         return [sys.executable, "scripts/probes/replay_th04_maine_stage_put.py",
                 "--output-dir", str(saved)]

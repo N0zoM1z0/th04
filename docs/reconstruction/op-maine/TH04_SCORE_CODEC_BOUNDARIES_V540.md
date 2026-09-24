@@ -203,7 +203,40 @@ has SHA-256
 `cacd9942ab10700798df036caad7c717b9cd6770ec8d386db390e4b4b7015e5c` and
 contains both target and natural-source disassemblies, source digests, and the
 valid TC86 OMF identity. The generated 8 MiB A worktree and compile log were
-moved to trash immediately, leaving only the 12 KiB receipt. MAINE remains at
-25 decoded-function exact slices / 2,297 exact bytes, plus two nonexact
-source-present codec candidates totaling 189 bytes (2,486 decoded source-owner
-bytes). The next codec owner is `scoredat_recreate` at payload `0xC206`.
+moved to trash immediately, leaving only the 12 KiB receipt. v580 supersedes
+the then-pending adjacent `scoredat_recreate` work described below.
+
+## v580 MAINE score-file recreation decoded-function exact
+
+The reviewed `scoredat_recreate` candidate extent is payload `[0xC206,0xC2AD)`
+(167 bytes) at `1A05:21B6`. Target disassembly observes it initialize the
+high-score cleared flag and ten rows, then create the score-data file, encode
+each row, write 0xC4 bytes, decode the row, and close the file. The source-level
+symbol identity remains candidate/MAP-derived rather than target-attested.
+
+Maintained natural C++ is `src/maine/score/scoregen.cpp` plus
+`src/maine/score/scoregen.inl`. Two cold focused builds reproduce the complete
+decoded slice raw-zero. A standalone-TU diagnostic differs at two near-call
+FIXUPP displacement words (CODE offsets `0x87` and `0x96`); the grouped
+`SCORE_TEXT` producer, candidate MZ/MAP baseline, and all 559 ordered MAINE
+relocations remain stable. The subsequent 26-slice MAINE aggregate checks the
+same complete function raw-zero. This promotes only the decoded function:
+MAINE's candidate program is still shorter than the target, the packed-file
+offset is unknown, and no whole-artifact exactness follows.
+
+The v579 diagnostic isolated a TU-composition hazard: the candidate header
+macro-expands `SCOREDAT_FN` into a filename literal. In the replacement owner,
+undefine that macro before declaring the existing external filename array;
+otherwise a `GENSOU.SCR` DGROUP literal appeared and grew the linked program by
+12 bytes. The v580 source retains the external symbol and restores baseline
+MZ/MAP bytes. Do not interpret this macro behavior as proof of the historical
+symbol name. The focused receipt is
+`.analysis/reconstruction/probes/v580-maine-scoredat-recreate-002/receipt.json`
+(SHA-256 `0ddc5503997680017bad2989749a55b069ac7e787b811a8fc26d89b9c02567f1`);
+the final exact-state aggregate receipt is
+`.analysis/reconstruction/probes/v580-maine-score-exact-aggregate-final-001/receipt.json`
+(SHA-256 `1782fc9ff8ff003485b3dca84fff8c0d5c431ae09e33d97584394c7984bb7b83`).
+
+MAINE now has 26 decoded-function exact slices / 2,464 exact bytes, plus the
+two source-present/nonexact codec candidates `scoredat_decode` (88 bytes) and
+`scoredat_encode` (101 bytes), for 2,653 decoded source-owner bytes total.

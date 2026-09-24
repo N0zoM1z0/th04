@@ -27,14 +27,14 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 27 / 58 / 8 | 24 | 69 / 0 | 2,841 |
-| MAINE.EXE | 31 / 35 / 6 | 25 | 47 / 0 | 2,486 |
+| MAINE.EXE | 31 / 35 / 6 | 26 | 46 / 0 | 2,653 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 2,841 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 2,567 bytes are in the 24 accepted exact
-functions. MAINE has 25 decoded-function exact functions (2,297 bytes), plus
+functions. MAINE has 26 decoded-function exact functions (2,464 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,486.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,653.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
@@ -91,8 +91,15 @@ previous output byte rotated right three bits and XORed with the second key.
 Natural maintained C++ emits 113 standalone bytes; the 12-byte excess is the
 16-byte shift/OR rotation versus target's four-byte in-place `ROR`. It remains
 source-present/nonexact; the helper's candidate name is not target-attested,
-and no packed offset is claimed. The next MAINE codec is `scoredat_recreate` at
-payload `0xC206`.
+and no packed offset is claimed. v580 adds MAINE `scoredat_recreate` at payload
+`0xC206` (`1A05:21B6`): the complete 167-byte reviewed decoded function is
+raw-zero in two focused cold builds and the 26-slice MAINE aggregate. Grouped
+`SCORE_TEXT`, candidate MZ/MAP baseline, and all 559 ordered relocations remain
+stable. Standalone-only near-call FIXUPP displacement words differ in the
+separate-TU diagnostic; no target-derived assembly is used. This is decoded
+function exactness only: DIET-packed offset is unknown and the candidate name
+is not target-attested. Details and the v579 macro-expansion hazard are in
+[the SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
 
 ## Latest physical-boundary review: MAINE cutscene and indirect dispatcher
 
@@ -124,18 +131,21 @@ are disposable; current private acceptance directories retain only their small
 receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
-For the next MAINE step, continue target-first with reviewed `scoredat_recreate`
-at payload `0xC206`; do not inherit its decompiled candidate body. Keep the
-reviewed `0xA847..0xADBB` indirect
+Do not reopen MAINE `scoredat_recreate` at payload `0xC206`: its complete
+decoded-function extent now passes raw-zero acceptance. Select any next unit
+from fresh OP/MAINE/ZUN boundary and origin evidence rather than address order
+or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not
 trust candidate names or assume address order establishes source ownership.
-Select OP and ZUN follow-ons independently from their current target/boundary
-evidence.
+Continue unfinished OP/MAINE boundary and authored-origin review alongside
+ZUN's source-authority/component-ownership work; MAIN remains an evidence-triggered
+side lane, not the default next target.
 Preserve OP and MAINE SCORE TU composition, target restore provenance, v489
 BGIMAGE, and v494 relocation/layout Oracles. Keep OP's two codec candidates and
-MAINE's `scoredat_decode` source-present/nonexact until the complete configured
-exact Oracle vector passes; never transcribe target rotates into inline assembly.
+MAINE's `scoredat_decode` and `scoredat_encode` source-present/nonexact until the
+complete configured exact Oracle vector passes; never transcribe target rotates
+into inline assembly.
 For ZUN, all 13 authored
 boundaries are reviewed, but 11 remain pending and two C++ units are blocked;
 resolve source authority and component/runtime ownership before claiming

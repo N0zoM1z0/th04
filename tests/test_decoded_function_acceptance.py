@@ -336,6 +336,21 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "score-insert backend does not compile"):
             self.check(entries)
 
+    def test_maine_scoredat_recreate_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-scoredat-recreate-v580")
+        owner["producer_offset"] = "0xC205"
+        owner["producer_size"] = "0xA8"
+        with self.assertRaisesRegex(ValueError, "score-file regeneration backend does not compile"):
+            self.check(entries)
+
+        command = acceptance.backend_command(
+            "maine-scoredat-recreate-v580", ROOT / ".analysis/reconstruction/probes/test"
+        )
+        self.assertEqual(command[1], "scripts/probes/replay_th04_maine_scoredat_recreate.py")
+        self.assertIn("--retain-candidates", command)
+
     def test_maine_box_animate_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

@@ -40,23 +40,24 @@ MAINE 559 ordered relocations. `VECTOR2_AT` uses a narrow target-observed
 two-word near-reference ABI view, not a full `SPPoint` API claim. See the
 [vector-math note](reconstruction/op-maine/TH04_SHARED_VECTOR_MATH_V570.md).
 
-The v573 MAINE cutscene helper adds a naturally compiled 50-byte decoded
-function at `1A05:07C5` (payload `[0xA815,0xA847)`). Its complete slice is
+At the v573 checkpoint, the MAINE cutscene helper added a naturally compiled
+50-byte decoded function at `1A05:07C5` (payload `[0xA815,0xA847)`). Its complete slice is
 raw-zero, the `0xC3E` linked `CUTSCENE_TEXT` producer span matches target, and
-the current MAINE aggregate passes 25/25 slices with all 559 ordered
+the MAINE aggregate then passed 25/25 slices with all 559 ordered
 relocations preserved. This does not establish the candidate function name or
 whole-file MAINE exactness; see the
 [helper replay note](reconstruction/op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md).
 
-The shared hardware/PI/sound/input/math cohort is complete. MAINE has eight and OP
+The shared hardware/PI/sound/input/math cohort is complete. MAINE has nine and OP
 has eight artifact-local SCORE function backends; expand natural source one
 reviewed physical owner at a time while resolving ZUN's remaining source authority.
 v562/v563 add maintained natural-C++ source for OP `scoredat_encode` and
 `scoredat_decode`, but pinned standalone objects are 111/197 bytes against
 reviewed 101/173-byte targets. Both remain source-present only; do not turn the
-target rotates into copied assembly. Continue with an adjacent OP/MAINE input,
-vector, or menu owner chosen from fresh boundary review; do not hard-code a
-single next symbol before its target extent and ownership are checked.
+target rotates into copied assembly. The shared input/vector cohort is complete;
+choose the next unit from remaining OP/MAINE target-reviewed work or the ZUN
+authored/source-authority queue after fresh boundary/origin review. Do not
+preselect by address or carry a stale work order across checkpoints.
 Keep decoded function acceptance apart from `units.csv` raw-file exactness;
 never invent packed `file_offset` values. Preserve OP/MAINE SCORE TU
 composition and v489/v494 aggregate Oracles during every source edit. A new
@@ -69,10 +70,11 @@ The currently maintained reviewed shared hardware/PI/sound/input/math cohort is
 complete in both OP and MAINE: three BGIMAGE functions plus VRAM, frame delay,
 three PI functions, PMD, MMD, KAJA, mode detection, delay-until-measure,
 input-wait, plus `polar` and `VECTOR2_AT`. That is 16 decoded-exact
-functions / 1,020 source-owner bytes per artifact. MAINE has 25
-decoded-exact functions / 2,297 exact source-owner bytes plus the 88-byte
-source-present/nonexact `scoredat_decode` candidate (2,385 total decoded
-source-owner bytes); OP has 24 decoded-exact
+functions / 1,020 source-owner bytes per artifact. MAINE has 26
+decoded-exact functions / 2,464 exact source-owner bytes plus two
+source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
+`scoredat_encode` (101 bytes), for 2,653 decoded source-owner bytes; OP has
+24 decoded-exact
 functions / 2,567 exact source-owner bytes, with two separate codec candidates
 (274 bytes) still source-present and nonexact.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
@@ -95,7 +97,7 @@ places dispatcher with its single near-call fixup. v551 adds the 49-byte
 alphabet cursor renderer with standalone CODE equality. v557 adds MAINE's
 105-byte high-score loader, and v570 adds shared vector math; at that checkpoint
 MAINE had 24 functions / 2,247 decoded source-owner bytes. v573 adds one
-50-byte natural-C++ cutscene helper with raw-zero function bytes and 25/25
+50-byte natural-C++ cutscene helper with raw-zero function bytes and a 25/25
 exact-state aggregate replay. v574 adds a target-first MAINE `scoredat_decode`
 source candidate at `0xC149`; its natural TC86 CODE is 97 bytes against the
 reviewed 88-byte target because the target's byte `ROR` is not reproduced by
@@ -104,8 +106,17 @@ function-level work, not a packed-file or entire SCORE-TU claim. v577 adds the
 adjacent MAINE `scoredat_encode` candidate at `0xC1A1`: target flow has a
 separate observation, while natural TC86 output is 113 bytes against 101 because
 the byte rotate expands to shifts/OR. It remains source-present/nonexact; no
-target-derived assembly is used. Continue with target-first `scoredat_recreate`
-at `0xC206`, keeping candidate naming/provenance separate from target evidence.
+target-derived assembly is used. v580 adds a natural maintained
+`scoredat_recreate` body at `0xC206` and promotes only that 167-byte decoded
+function after focused two-cold raw-zero replay and a 26-slice MAINE aggregate.
+The candidate MZ/MAP baseline and all 559 relocations remain stable, but its
+program image is still shorter than the target and no packed offset is known.
+The candidate function name remains unverified. Preserve the v580
+`#undef SCOREDAT_FN`/external filename declaration: leaving the header macro
+active emitted an extra DGROUP filename literal in the failed v579 attempt.
+Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
+boundary/authored-review queues; do not treat C206 as pending or restart MAIN
+by default.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
@@ -140,8 +151,9 @@ target's in-place byte ROR. v563 adds natural-C++ `scoredat_decode` at `0xC57A`,
 whose shift/OR rotation yields 197 bytes against 173 target bytes. Keep both
 source-present only, do not use target-derived inline assembly. v565 adds the
 reviewed 0x56-byte OP input-wait owner beginning at `0xDB62`; v570 adds the
-adjacent shared vector-math producer. OP remains 24/24 and MAINE now passes
-25/25 decoded functions after v573. The surrounding SCORE scaffold
+adjacent shared vector-math producer. OP remains 24/24; MAINE's v573 checkpoint
+passed 25/25 and v580 brings its accepted function slices to 26/26. The
+surrounding SCORE scaffold
 remains untrusted; continue with title/setup,
 music and character units, and larger main/animation units after boundary/origin
 review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
@@ -150,9 +162,11 @@ v557 adds the high-score loader, v565 adds shared input-wait, and v570 adds
 shared vector math, bringing MAINE at that checkpoint to 24 / 2,247 decoded
 function bytes. v577 adds MAINE `scoredat_encode` source at `0xC1A1`, but the
 natural standalone CODE is 113 bytes against a reviewed 101-byte target because
-of the rotate codegen mismatch. The next target-first MAINE SCORE owner is the
-reviewed `scoredat_recreate` at `0xC206`; reconstruct it from target bytes
-rather than inheriting the decompiled candidate body.
+of the rotate codegen mismatch. v580 then reconstructs the adjacent
+`scoredat_recreate` from target evidence and obtains a decoded-function raw-zero
+slice at `0xC206`; MAINE now has 26/26 function slices accepted. The next
+MAINE unit is not preselected: re-evaluate outstanding reviewed owners and boundary/
+origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with
 source provenance kept apart from target-boundary confidence. v572 reviewed
 the adjacent 50-byte MAINE cutscene helper at payload
