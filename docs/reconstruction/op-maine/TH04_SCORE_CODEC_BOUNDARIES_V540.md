@@ -136,3 +136,38 @@ small generated listing is kept beside it for diagnosis. The unit remains
 source-present/nonexact and its packed-file offset is unknown. OP remains at
 21 exact / 72 pending. Next target-first surface is `input_wait_for_change` at
 payload `0xDB62`.
+
+## v574 MAINE decoder source-present result
+
+The reviewed MAINE `scoredat_decode` extent is 88 bytes at `1A05:20F9`, payload
+`0xC149..0xC1A0`, target SHA-256
+`31ea6a61abea7712e7ddd2ef8d9ee446b5947b514611252cba2d70c3930aff99`. The
+freshly attested target body is one contiguous Ghidra range with 33 instructions
+and four internal aligned direct branches, ending in `RET`.
+
+Target interpretation (inferred from those instructions): the loop advances
+from record offset `+4` through `+194`; each current score byte receives
+`key1 + (ROR(next_encoded_byte, 3) XOR key2)`. The final score byte at `+195`
+receives `key1`. The routine sums the 192 decoded score bytes and returns the
+low-byte difference between the stored sum and computed sum. The label
+`scoredat_decode` is a candidate symbol, not an independently observed name.
+
+Maintained natural source is `src/maine/score/scoredec.cpp` plus
+`src/maine/score/scoredec.inl`. It uses a near view of `hi`, ordinary shift/OR
+rotation, and a register checksum accumulator. The focused TC86 4.02 replay
+produces a valid 97-byte standalone `SCORE_TEXT` OMF segment, nine bytes longer
+than the reviewed target. Its rotation compiles to shifts and OR rather than the
+target's in-place `ROR byte [BP-1],3`, so this is source-present/nonexact only;
+no target-derived assembly, packed-file offset, or full-MAINE exactness is
+claimed. The probe stops at this standalone size mismatch before grouped link
+acceptance.
+
+The retained diagnostic receipt is
+`.analysis/reconstruction/probes/v574-maine-scoredat-decode-005/receipt.json`,
+SHA-256
+`b56860ffa421eeac5307e6a5125c1036bfa2abe875b14d2bf352bf55ea6455bd`. It keeps
+the target and natural-source disassemblies; the generated A build tree and
+compile log were moved to trash, leaving only the 5.3 KiB receipt. MAINE remains
+at 25 decoded-function exact slices / 2,297 exact bytes, plus this 88-byte
+source-present candidate (2,385 total decoded source-owner bytes). Next codec
+owner is the separately reviewed `scoredat_encode` at payload `0xC1A1`.

@@ -27,12 +27,14 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 27 / 58 / 8 | 24 | 69 / 0 | 2,841 |
-| MAINE.EXE | 31 / 35 / 6 | 25 | 47 / 0 | 2,297 |
+| MAINE.EXE | 31 / 35 / 6 | 25 | 47 / 0 | 2,385 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 2,841 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 2,567 bytes are in the 24 accepted exact
-functions. MAINE's 25 functions (2,297 bytes) are decoded-function exact.
+functions. MAINE has 25 decoded-function exact functions (2,297 bytes), plus
+one 88-byte source-present/nonexact `scoredat_decode` candidate; total decoded
+source-owner bytes are 2,385.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
@@ -75,6 +77,13 @@ through a pinned ReC98 replay scaffold, not packed-file acceptance. The name
 `box_1_to_0_animate()` remains an open upstream-derived hypothesis. See
 [the helper note](reconstruction/op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md).
 
+The v574 MAINE SCORE decoder candidate at payload `0xC149` (`1A05:20F9`) adds
+88 source-owner bytes. Target disassembly indicates a forward feedback
+transform and checksum-difference return; pinned TC86 emits 97 standalone bytes,
+so this remains source-present/nonexact. No target-derived assembly or packed
+offset is claimed; details are in
+[the SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
+
 ## Latest physical-boundary review: MAINE cutscene and indirect dispatcher
 
 MAINE payload `0xA847..0xADBB` (`1A05:07F7..0D6B`) is now boundary-reviewed
@@ -105,17 +114,19 @@ are disposable; current private acceptance directories retain only their small
 receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
-For the next MAINE step, reconcile ownership and source composition around the
-reviewed `0xA847..0xADBB` indirect dispatcher; it still needs a complete natural
-source-owner/TU context before replay. The local candidate `th04/cutscene.cpp`
-is an include-only forwarder to TH03 source; do not import it as maintained
-MAINE product code. Do not trust candidate names or assume address order
-establishes source ownership. Alternatively, select a fresh target-first OP or
-ZUN owner from the current boundary/status ledgers.
+For the next MAINE step, continue target-first with reviewed `scoredat_encode`
+at payload `0xC1A1`, then `scoredat_recreate` at `0xC206`; do not inherit the
+decompiled candidate bodies. Keep the reviewed `0xA847..0xADBB` indirect
+dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
+is only a forwarder to TH03 and is not maintained MAINE product code. Do not
+trust candidate names or assume address order establishes source ownership.
+Select OP and ZUN follow-ons independently from their current target/boundary
+evidence.
 Preserve OP and MAINE SCORE TU composition, target restore provenance, v489
-BGIMAGE, and v494 relocation/layout Oracles. Keep the two OP SCORE codec units
-source-present/nonexact unless a natural-source cold build reaches raw zero;
-never transcribe target rotates into inline assembly. For ZUN, all 13 authored
+BGIMAGE, and v494 relocation/layout Oracles. Keep OP's two codec candidates and
+MAINE's `scoredat_decode` source-present/nonexact until the complete configured
+exact Oracle vector passes; never transcribe target rotates into inline assembly.
+For ZUN, all 13 authored
 boundaries are reviewed, but 11 remain pending and two C++ units are blocked;
 resolve source authority and component/runtime ownership before claiming
 authored exactness. The ZUN library-origin graph-clear slice is support-only.
