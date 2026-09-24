@@ -26,22 +26,73 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 55 / 30 / 8 | 51 | 42 / 0 | 4,623 |
-| MAINE.EXE | 45 / 22 / 5 | 38 | 34 / 0 | 3,732 |
+| OP.EXE | 56 / 29 / 8 | 52 | 41 / 0 | 4,695 |
+| MAINE.EXE | 46 / 21 / 5 | 39 | 33 / 0 | 3,804 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 4,623 source-owner bytes include two source-present but nonexact SCORE
+OP's 4,695 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
-candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 38 decoded-function exact functions (3,357 bytes), plus
+candidate; 4,345 bytes are in the 52 accepted exact functions. MAINE has 39 decoded-function exact functions (3,429 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
-candidate; total decoded source-owner bytes are 3,732.
+candidate; total decoded source-owner bytes are 3,804.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: shared OP/MAINE game-exit wrapper
+
+v654 reconstructs one maintained shared `game_exit()` source owner and
+replays it independently into both OP and MAINE. The OP target body is 72
+bytes at payload `0xE0AC` (`1DA1:069C`) with four callers; the MAINE
+body is 72 bytes at `0xD3F4` (`1CC7:0784`) with one caller. Both
+have eight callees. Target bytes and MAPs independently bind PFEND, two
+GRAPH_CLEAR calls with page-access/show writes, MEM_UNASSIGN, VSYNC_END,
+TEXT_CLEAR, JS_END, EGC_START, BGM_FINISH, and FAR RET.
+
+Maintained natural source is `src/shared/core/game_exit.cpp`. Under both
+artifact build macros TC86 emits the same 72-byte unlinked SHARED body with
+nine ordinary FAR-call fixups. After linking, each artifact resolves those
+calls to its own library addresses while preserving the original `exit.obj`
+link-relevant OMF, complete executable/MAP identity, and ordered relocations.
+Focused A/B replay is raw-zero for both artifacts. The v655 OP aggregate
+passes 52/52 slices with all 804 relocations preserved (receipt SHA-256
+`29aa89e8383e12094f5fe8b8f530e9c3acbeeeac447b457d6a9502d08dd015fd`),
+and the independent MAINE aggregate passes 39/39 with all 559 relocations
+preserved (receipt SHA-256
+`1275edd08055b17b3416b8681282802fecc8ff2e7a98f741bc4179fdcb47ce7a`).
+Credit is artifact-local despite the shared source: each target has its own
+boundary, raw comparison, aggregate receipt, and relocation proof. No
+DIET-packed offset or whole-program exactness is claimed.
+
+## Latest verified cohort: shared game-exit wrapper in OP and MAINE
+
+v654 reconstructs one maintained shared `game_exit()` source owner and replays it
+independently in both non-MAIN executables. OP closes a 72-byte FAR body at
+`0xE0AC` (`1DA1:069C`) with four callers and eight callees; MAINE
+closes the corresponding 72-byte FAR body at `0xD3F4` (`1CC7:0784`)
+with one caller and eight callees. Target calls bind `PFEND`, two
+`GRAPH_CLEAR` calls bracketed by page writes, `MEM_UNASSIGN`, `VSYNC_END`,
+`TEXT_CLEAR`, `JS_END`, `EGC_START`, and `BGM_FINISH`, followed by
+FAR return. The library addresses differ between OP and MAINE, so exact credit
+is kept artifact-local even though the unlinked instruction stream is shared.
+
+Maintained natural source is `src/shared/core/game_exit.cpp`. Under both OP
+and MAINE builds, TC86 emits the same 72-byte SHARED instruction stream with
+nine ordinary FAR-call fixups. Recompiling through each original `th04/exit.cpp`
+owner preserves the pinned `exit.obj` link-relevant OMF exactly; relinking
+then reproduces each baseline EXE and MAP byte-for-byte. Focused A/B replay is
+raw-zero in both artifacts. The v655 OP aggregate passes 52/52 registered
+decoded slices with all 804 ordered relocations preserved, receipt SHA-256
+`29aa89e8383e12094f5fe8b8f530e9c3acbeeeac447b457d6a9502d08dd015fd`.
+The v655 MAINE aggregate independently passes 39/39 with all 559 ordered
+relocations preserved, receipt SHA-256
+`1275edd08055b17b3416b8681282802fecc8ff2e7a98f741bc4179fdcb47ce7a`.
+This is function-level decoded exactness only; no packed-file or whole-program
+exactness is claimed.
 
 ## Latest diagnostic: MAINE EGC start-copy codegen gap
 
@@ -878,8 +929,8 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v653, tracked reconstruction state is **OP 51 decoded-exact / 42
-pending**, **MAINE 38 / 34**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
+After v655, tracked reconstruction state is **OP 52 decoded-exact / 41
+pending**, **MAINE 39 / 33**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 

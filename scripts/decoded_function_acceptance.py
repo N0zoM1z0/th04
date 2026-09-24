@@ -76,6 +76,7 @@ MAINE_SCRIPT_PARAM_SECOND_PRODUCER = 0xA292
 MAINE_CUTSCENE_SCRIPT_LOAD_PRODUCER = 0xA292
 MAINE_CFG_RESIDENT_PRODUCER = 0xA059
 MAINE_GAME_EXIT_EXEC_PRODUCER = 0xA059
+MAINE_GAME_EXIT_PRODUCER = 0xD3F4
 MAINE_END_ANIMATE_PRODUCER = 0xA059
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
 MAINE_SCORE_RECREATE_PRODUCER = 0xC206
@@ -101,6 +102,7 @@ OP_RAISE_BG_FREE_PRODUCER = 0xCF5E
 OP_PLAYCHAR_TITLE_BOX_PRODUCER = 0xCF5E
 OP_PIC_DARKEN_PRODUCER = 0xCF5E
 OP_GAME_EXIT_TO_DOS_PRODUCER = 0xDDB1
+OP_GAME_EXIT_PRODUCER = 0xE0AC
 OP_TRACKLIST_PUT_BOTH_PRODUCER = 0xBED5
 OP_TRACK_PUT_BOTH_PRODUCER = 0xBED5
 OP_CMT_UNPUT_PRODUCER = 0xBED5
@@ -239,7 +241,7 @@ def validate(
                                  "op-main-cdg-free-v583", "op-main-cdg-load-v602", "op-nopoly-free-v584",
                                  "op-nopoly-snap-v606",
                                  "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-playchar-title-box-v638", "op-pic-darken-v640",
-                                 "op-game-exit-to-dos-v592",
+                                 "op-game-exit-to-dos-v592", "op-game-exit-v654",
                                  "op-tracklist-put-both-v594",
                                  "op-track-put-both-v636",
                                  "op-cmt-unput-v598",
@@ -261,7 +263,7 @@ def validate(
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
-                                 "maine-game-exit-exec-v608",
+                                 "maine-game-exit-exec-v608", "maine-game-exit-v654",
                                  "maine-end-animate-v616",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
                                  "maine-scoredat-recreate-v580",
@@ -389,6 +391,12 @@ def validate(
                     or producer_start != MAINE_GAME_EXIT_EXEC_PRODUCER
                     or producer_size != 0x239):
                 raise ValueError(f"{ident}: MAINE game-exit-exec backend does not compile this producer")
+        elif backend == "maine-game-exit-v654":
+            if (artifact != "th04-maine"
+                    or source_name != "src/shared/core/game_exit.cpp"
+                    or producer_start != MAINE_GAME_EXIT_PRODUCER
+                    or producer_size != 0x48):
+                raise ValueError(f"{ident}: MAINE shared-game-exit backend does not compile this producer")
         elif backend == "maine-end-animate-v616":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/end/end_animate.cpp"
@@ -509,6 +517,12 @@ def validate(
                     or producer_start != OP_GAME_EXIT_TO_DOS_PRODUCER
                     or producer_size != 0x19):
                 raise ValueError(f"{ident}: OP game-exit-to-dos backend does not compile this producer")
+        elif backend == "op-game-exit-v654":
+            if (artifact != "th04-op"
+                    or source_name != "src/shared/core/game_exit.cpp"
+                    or producer_start != OP_GAME_EXIT_PRODUCER
+                    or producer_size != 0x48):
+                raise ValueError(f"{ident}: OP shared-game-exit backend does not compile this producer")
         elif backend == "op-tracklist-put-both-v594":
             if (artifact != "th04-op"
                     or source_name != "src/op/music/tracklist_put_both.cpp"
@@ -853,6 +867,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
     if backend_id == "op-game-exit-to-dos-v592":
         return [sys.executable, "scripts/probes/replay_th04_op_game_exit_to_dos.py",
                 "--output-dir", str(saved)]
+    if backend_id == "op-game-exit-v654":
+        return [sys.executable, "scripts/probes/replay_th04_op_maine_game_exit.py",
+                "--artifact", "op", "--output-dir", str(saved)]
     if backend_id == "op-tracklist-put-both-v594":
         return [sys.executable, "scripts/probes/replay_th04_op_tracklist_put_both.py",
                 "--output-dir", str(saved)]
@@ -937,6 +954,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
     if backend_id == "maine-game-exit-exec-v608":
         return [sys.executable, "scripts/probes/replay_th04_maine_game_exit_and_exec.py",
                 "--output-dir", str(saved)]
+    if backend_id == "maine-game-exit-v654":
+        return [sys.executable, "scripts/probes/replay_th04_op_maine_game_exit.py",
+                "--artifact", "maine", "--output-dir", str(saved)]
     if backend_id == "maine-end-animate-v616":
         return [sys.executable, "scripts/probes/replay_th04_maine_end_animate.py",
                 "--output-dir", str(saved)]

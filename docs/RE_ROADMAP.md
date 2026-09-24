@@ -76,15 +76,15 @@ The currently maintained reviewed shared hardware/PI/sound/input/math cohort is
 complete in both OP and MAINE: three BGIMAGE functions plus VRAM, frame delay,
 three PI functions, PMD, MMD, KAJA, mode detection, delay-until-measure,
 input-wait, `snd_se_reset`, plus `polar` and `VECTOR2_AT`. That is 17
-decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 38
-decoded-exact functions / 3,357 exact source-owner bytes plus two
+decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 39
+decoded-exact functions / 3,429 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `scoredat_encode` (101 bytes), plus the 134-byte nonexact
-`box_1_to_0_masked` and 52-byte nonexact `egc_start_copy`, for 3,732 decoded
+`box_1_to_0_masked` and 52-byte nonexact `egc_start_copy`, for 3,804 decoded
 source-owner bytes; OP has
-51 decoded-exact functions / 4,273 exact source-owner bytes, with two separate
+52 decoded-exact functions / 4,345 exact source-owner bytes, with two separate
 codec candidates (274 bytes) plus `snd_se_update` (76 bytes) still
-source-present and nonexact, for 4,623 decoded source-owner bytes total.
+source-present and nonexact, for 4,695 decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
@@ -399,6 +399,21 @@ the zero value additionally becomes `XOR AX,AX`. Local/register/const-local
 ordinary-C++ controls produce 65/65/82 bytes. The historical `outport2` that
 forces target order is explicit `_asm` in `decomp.hpp`, so it remains
 provenance/diagnostic evidence only and grants no exact credit.
+v654/v655 then close the shared 72-byte `game_exit` wrapper independently in
+OP and MAINE. Target-first review binds the same shutdown sequence in both
+artifacts while preserving their different linked library addresses. One
+maintained shared C++ source emits identical unlinked SHARED code with nine
+ordinary FAR-call fixups; each original `exit.obj` retains baseline-exact
+link-relevant OMF, and both linked EXE/MAP pairs remain byte-identical to their
+pinned baselines. The v655 OP aggregate passes 52/52 with 804 relocations, and
+the v655 MAINE aggregate independently passes 39/39 with 559 relocations.
+v654/v655 then close the shared 72-byte `game_exit` wrapper independently in
+both OP and MAINE. One maintained natural source emits the same unlinked
+SHARED body with nine ordinary FAR-call fixups, but acceptance remains
+artifact-local: OP links at payload 0xE0AC and passes a 52/52 aggregate with
+804 ordered relocations; MAINE links at 0xD3F4 and passes 39/39 with 559.
+Both grouped `exit.obj` contributions preserve the pinned link-relevant OMF
+and full executable/MAP identity. This is function-level exactness only.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
@@ -453,7 +468,7 @@ slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
 `snd_se_reset` to OP and MAINE. v582-v585 add the four small cutscene/title/music
 leaves described above; v587-v588 then add OP frame_delay_2 and raise_bg_free,
 and v590/v591 add the second MAINE script-number helper. The current
-decoded-function totals are 51/51 OP and 38/38 MAINE. The next unit is not
+decoded-function totals are 52/52 OP and 39/39 MAINE. The next unit is not
 preselected: re-evaluate outstanding small reviewed/corroborated owners and
 boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with

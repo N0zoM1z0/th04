@@ -331,6 +331,9 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("maine-game-exit-exec-v608", saved)[1],
             "scripts/probes/replay_th04_maine_game_exit_and_exec.py",
         )
+        maine_exit = acceptance.backend_command("maine-game-exit-v654", saved)
+        self.assertEqual(maine_exit[1], "scripts/probes/replay_th04_op_maine_game_exit.py")
+        self.assertEqual(maine_exit[2:4], ["--artifact", "maine"])
         self.assertEqual(
             acceptance.backend_command("maine-end-animate-v616", saved)[1],
             "scripts/probes/replay_th04_maine_end_animate.py",
@@ -374,6 +377,9 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("op-game-exit-to-dos-v592", saved)[1],
             "scripts/probes/replay_th04_op_game_exit_to_dos.py",
         )
+        op_exit = acceptance.backend_command("op-game-exit-v654", saved)
+        self.assertEqual(op_exit[1], "scripts/probes/replay_th04_op_maine_game_exit.py")
+        self.assertEqual(op_exit[2:4], ["--artifact", "op"])
         self.assertEqual(
             acceptance.backend_command("op-tracklist-put-both-v594", saved)[1],
             "scripts/probes/replay_th04_op_tracklist_put_both.py",
