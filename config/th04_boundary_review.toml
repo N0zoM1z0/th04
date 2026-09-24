@@ -915,3 +915,15 @@ expected_body_span = 0x3F
 reviewed_body_size = 0x3F
 review_evidence_id = "ev-th04-maine-script-load-boundary-v614"
 notes = "Target Ghidra closes one contiguous 63-byte near Pascal body at 1A05:0242 with one caller and five callees. Raw target and MAP bind cutscene_script_free, FILE_ROPEN, FILE_SIZE, FILE_READ, FILE_CLOSE, _script at 0E53:1F48, and _script_p at 0E53:3F48; the open-failure return is 1 and success return is 0."
+
+# v616: target-first review for end_animate.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA0BD
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/end_animate.cpp"
+expected_body_span = 0x45
+reviewed_body_size = 0x45
+review_evidence_id = "ev-th04-maine-end-animate-boundary-v616"
+notes = "Target Ghidra closes one contiguous 69-byte near body at 1A05:006D with one caller and three callees. Raw target reads resident fields at +0x12/+0x19/+0x25, writes SCRIPT_FN[3:6] through the maine_e.cpp data pointer at 0E53:0090/0092, then near-calls cutscene_script_load, cutscene_animate, and cutscene_script_free."

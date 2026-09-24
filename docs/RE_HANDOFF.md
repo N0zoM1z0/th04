@@ -27,21 +27,44 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 42 / 43 / 8 | 39 | 54 / 0 | 3,386 |
-| MAINE.EXE | 38 / 29 / 5 | 33 | 39 / 0 | 2,903 |
+| MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 3,386 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 3,112 bytes are in the 39 accepted exact
-functions. MAINE has 33 decoded-function exact functions (2,714 bytes), plus
+functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,903.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: MAINE cutscene script loader
+## Latest verified cohort: MAINE ending script-name animation
+
+v616 reconstructs the 69-byte `end_animate()` helper at payload `0xA0BD`
+(`1A05:006D`) inside `MAINE_E_TEXT`. Ghidra closes one contiguous body with
+one caller and three callees. Raw target operands independently bind
+`_resident` at `0E53:0E9E`; the accessed resident offsets `+0x12`, `+0x19`,
+and `+0x25` match the maintained `playchar_ascii`, `shottype`, and
+`end_type_ascii` layout. The target writes those bytes into the ending-script
+far string at indices 3/4/5, adds ASCII '0' to the shot type, then near-calls
+`cutscene_script_load`, `cutscene_animate`, and `cutscene_script_free`.
+
+Maintained natural source is `src/maine/end/end_animate.cpp` with the function
+body in `src/maine/end/end_animate.inl`. Standalone TC86 output matches the
+complete 69-byte instruction shape. Its OMF has one static-data initializer
+fixup for the script pointer plus ten code fixups; the grouped link-relevant
+OMF is exactly the v489 baseline, so both the static script data and function
+code ownership are preserved. The v617 complete MAINE aggregate passes 34/34
+registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v617-maine-end-animate-aggregate-001/receipt.json`,
+SHA-256 `04c97930c16a38c77b093dc4a302dd0d5da712f3758ae1c342ecc8df07f332aa`.
+All 559 ordered target relocations remain preserved. This is decoded-function
+exactness only; no DIET-packed offset or whole-MAINE exactness is claimed.
+
+## Prior verified cohort: MAINE cutscene script loader
 
 v614 reconstructs the 63-byte `cutscene_script_load(const char far*)` helper
 at payload `0xA292` (`1A05:0242`), the first function in `CUTSCENE_TEXT`.

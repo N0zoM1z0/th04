@@ -72,6 +72,7 @@ MAINE_SCRIPT_PARAM_SECOND_PRODUCER = 0xA292
 MAINE_CUTSCENE_SCRIPT_LOAD_PRODUCER = 0xA292
 MAINE_CFG_RESIDENT_PRODUCER = 0xA059
 MAINE_GAME_EXIT_EXEC_PRODUCER = 0xA059
+MAINE_END_ANIMATE_PRODUCER = 0xA059
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
 MAINE_SCORE_RECREATE_PRODUCER = 0xC206
 MAINE_STAGE_PUT_PRODUCER = 0xC5EC
@@ -235,6 +236,7 @@ def validate(
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
                                  "maine-game-exit-exec-v608",
+                                 "maine-end-animate-v616",
                                  "maine-score-load-for-v557", "op-stage-put-v545",
                                  "maine-scoredat-recreate-v580",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
@@ -337,6 +339,12 @@ def validate(
                     or producer_start != MAINE_GAME_EXIT_EXEC_PRODUCER
                     or producer_size != 0x239):
                 raise ValueError(f"{ident}: MAINE game-exit-exec backend does not compile this producer")
+        elif backend == "maine-end-animate-v616":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/end/end_animate.cpp"
+                    or producer_start != MAINE_END_ANIMATE_PRODUCER
+                    or producer_size != 0x239):
+                raise ValueError(f"{ident}: MAINE end-animate backend does not compile this producer")
         elif backend == "maine-score-load-for-v557":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/score/load_for.cpp"
@@ -758,6 +766,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-game-exit-exec-v608":
         return [sys.executable, "scripts/probes/replay_th04_maine_game_exit_and_exec.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-end-animate-v616":
+        return [sys.executable, "scripts/probes/replay_th04_maine_end_animate.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-put-v544":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_put.py",
