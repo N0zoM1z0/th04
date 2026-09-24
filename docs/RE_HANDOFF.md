@@ -27,22 +27,43 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 55 / 30 / 8 | 51 | 42 / 0 | 4,623 |
-| MAINE.EXE | 41 / 26 / 5 | 35 | 37 / 0 | 3,190 |
+| MAINE.EXE | 42 / 25 / 5 | 36 | 36 / 0 | 3,365 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 4,623 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
-candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 35 decoded-function exact functions (2,867 bytes), plus
+candidate; 4,273 bytes are in the 51 accepted exact functions. MAINE has 36 decoded-function exact functions (3,042 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes) and the 134-byte nonexact
-`box_1_to_0_masked` candidate; total decoded source-owner bytes are 3,190.
+`box_1_to_0_masked` candidate; total decoded source-owner bytes are 3,365.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: MAINE cursor advance helper
+## Latest verified cohort: MAINE box background restore helper
+
+v647 reconstructs the 175-byte `box_bg_put()` leaf at payload `0xA59E`
+(`1A05:054E`) inside `CUTSCENE_TEXT`. Fresh target review closes one
+contiguous near body with two callers and no callees. Raw target and the pinned
+MAP bind `_box_bg` at `0E53:3F4A`, the B/R/G/E VRAM plane pointers at
+`0E53:170C/1710/1714/1718`, and a 480x64 restore region beginning at
+(80,320). The body terminates with a near RET.
+
+Maintained natural source is `src/maine/cutscene/box_bg_put.cpp`. Standalone
+TC86 output is exactly 175 CODE bytes; every pre-link difference is confined to
+eight ordinary 16-bit pointer fixups. Two independent focused A/B replays
+raw-match the complete function and the full `0xC3E`-byte `CUTSCENE_TEXT`
+producer while preserving grouped OMF, the retained MAINE program image, and
+all 559 ordered relocations. The v648 complete MAINE aggregate passes 36/36
+registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v648-maine-box-bg-put-aggregate-001/receipt.json`,
+SHA-256 `96517fffb218903f273f26aeb59b8d556bf2c55d2d78f2ae672d01032d90aede`.
+This is decoded-function exactness only; no DIET-packed offset or whole-MAINE
+exactness is claimed.
+
+## Prior verified cohort: MAINE cursor advance helper
 
 v643 reconstructs the 84-byte `cursor_advance_and_animate()` helper at
 payload `0xA73B` (`1A05:06EB`) inside `CUTSCENE_TEXT`. Fresh target
@@ -786,8 +807,8 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v645, tracked reconstruction state is **OP 51 decoded-exact / 42
-pending**, **MAINE 35 / 37**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
+After v648, tracked reconstruction state is **OP 51 decoded-exact / 42
+pending**, **MAINE 36 / 36**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 
@@ -864,7 +885,7 @@ covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
 leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624/v626/v628/v630/v632/v634/v636,
-or MAINE v590/v604/v608/v614/v643: their complete decoded-function extents now pass
+or MAINE v590/v604/v608/v614/v643/v647: their complete decoded-function extents now pass
 raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`

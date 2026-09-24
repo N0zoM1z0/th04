@@ -76,11 +76,11 @@ The currently maintained reviewed shared hardware/PI/sound/input/math cohort is
 complete in both OP and MAINE: three BGIMAGE functions plus VRAM, frame delay,
 three PI functions, PMD, MMD, KAJA, mode detection, delay-until-measure,
 input-wait, `snd_se_reset`, plus `polar` and `VECTOR2_AT`. That is 17
-decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 35
-decoded-exact functions / 2,867 exact source-owner bytes plus two
+decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 36
+decoded-exact functions / 3,042 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `scoredat_encode` (101 bytes), plus the 134-byte nonexact
-`box_1_to_0_masked`, for 3,190 decoded source-owner bytes; OP has
+`box_1_to_0_masked`, for 3,365 decoded source-owner bytes; OP has
 51 decoded-exact functions / 4,273 exact source-owner bytes, with two separate
 codec candidates (274 bytes) plus `snd_se_update` (76 bytes) still
 source-present and nonexact, for 4,623 decoded source-owner bytes total.
@@ -367,6 +367,14 @@ bytes, independently explaining the seven-byte arithmetic gap. The only known
 target-order helper, `outport2`, is explicit decompilation `_asm` and is not
 compiled or credited. Treat this as a low-level source-authority problem, not
 an invitation to copy the target instruction order.
+v647/v648 then close the independent 175-byte `box_bg_put` leaf. Target-first
+review binds the background buffer, all four VRAM planes, complete loop
+geometry, and near RET before codegen work. Natural maintained C++ is exactly
+175 CODE bytes modulo eight ordinary pointer fixups; focused A/B replay
+raw-matches the full function and `CUTSCENE_TEXT` producer. The v648 MAINE
+aggregate passes 36/36 decoded slices with all 559 ordered relocations
+preserved. This exact result is separate from the adjacent v645 EGC load-order
+gap and does not weaken that negative conclusion.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
@@ -421,7 +429,7 @@ slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
 `snd_se_reset` to OP and MAINE. v582-v585 add the four small cutscene/title/music
 leaves described above; v587-v588 then add OP frame_delay_2 and raise_bg_free,
 and v590/v591 add the second MAINE script-number helper. The current
-decoded-function totals are 51/51 OP and 35/35 MAINE. The next unit is not
+decoded-function totals are 51/51 OP and 36/36 MAINE. The next unit is not
 preselected: re-evaluate outstanding small reviewed/corroborated owners and
 boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with

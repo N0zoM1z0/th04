@@ -67,6 +67,7 @@ MAINE_SCORE_INSERT_PRODUCER = 0xC3B2
 MAINE_SCORE_PUT_PRODUCER = 0xC506
 MAINE_BOX_ANIMATE_PRODUCER = 0xA292
 MAINE_CURSOR_ADVANCE_PRODUCER = 0xA292
+MAINE_BOX_BG_PUT_PRODUCER = 0xA292
 MAINE_CUTSCENE_SCRIPT_FREE_PRODUCER = 0xA292
 MAINE_BOX_BG_FREE_PRODUCER = 0xA292
 MAINE_SCRIPT_PARAM_SECOND_PRODUCER = 0xA292
@@ -254,7 +255,7 @@ def validate(
                                  "op-singleline-v634",
                                  "op-dropdown-v630",
                                  "maine-score-insert-v543", "maine-score-put-v544",
-                                 "maine-box-animate-v573", "maine-cursor-advance-v643", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
+                                 "maine-box-animate-v573", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
@@ -332,6 +333,12 @@ def validate(
                     or producer_start != MAINE_CURSOR_ADVANCE_PRODUCER
                     or producer_size != 0xC3E):
                 raise ValueError(f"{ident}: MAINE cursor-advance backend does not compile this producer")
+        elif backend == "maine-box-bg-put-v647":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/cutscene/box_bg_put.cpp"
+                    or producer_start != MAINE_BOX_BG_PUT_PRODUCER
+                    or producer_size != 0xC3E):
+                raise ValueError(f"{ident}: MAINE box-bg-put backend does not compile this producer")
         elif backend == "maine-cutscene-script-free-v582":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/cutscene/script_free.cpp"
@@ -888,6 +895,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-cursor-advance-v643":
         return [sys.executable, "scripts/probes/replay_th04_maine_cursor_advance.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-box-bg-put-v647":
+        return [sys.executable, "scripts/probes/replay_th04_maine_box_bg_put.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-cutscene-script-free-v582":
         return [sys.executable, "scripts/probes/replay_th04_maine_cutscene_script_free.py",

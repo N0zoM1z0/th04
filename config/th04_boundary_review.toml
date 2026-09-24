@@ -1107,3 +1107,15 @@ expected_body_span = 0x86
 reviewed_body_size = 0x86
 review_evidence_id = "ev-th04-maine-box-masked-boundary-v645"
 notes = "Target Ghidra closes one contiguous 134-byte near Pascal body at 1A05:073F with one caller and no callees. Raw target binds BOX_MASKS, VRAM_PLANE_B, page-port writes, 64 rows and 480-pixel width. Maintained natural C++ reaches the exact 134-byte length after using the PC-98 planar shift formula, but 18 non-relocation bytes remain because ordinary outport() loads DX before AX for the first three EGC setup writes; historical outport2 is explicit decomp inline assembly and is not accepted for exact credit."
+
+# v647: target-first review for box_bg_put.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA59E
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/box_bg_put.cpp"
+expected_body_span = 0xAF
+reviewed_body_size = 0xAF
+review_evidence_id = "ev-th04-maine-box-bg-put-boundary-v647"
+notes = "Target Ghidra closes one contiguous 175-byte near body at 1A05:054E with two callers and no callees. Raw target and MAP bind _box_bg at 0E53:3F4A and all four VRAM plane pointers at 0E53:170C/1710/1714/1718; geometry is left 80, top 320, width 480, height 64, and the function ends RET."

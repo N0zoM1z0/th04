@@ -189,6 +189,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
 
     def test_leaf_backends_are_bound_to_maintained_source_and_extent(self) -> None:
         cases = (
+            ("maine-box-bg-put-v647", "0xC3D", "box-bg-put"),
             ("maine-cutscene-script-free-v582", "0xC3D", "cutscene-script-free"),
             ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
             ("maine-script-param-second-v590", "0xC3D", "script-param-second"),
@@ -564,6 +565,11 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.backend_command("maine-cursor-advance-v643",
                                        ROOT / ".analysis/reconstruction/probes/test")[1],
             "scripts/probes/replay_th04_maine_cursor_advance.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("maine-box-bg-put-v647",
+                                       ROOT / ".analysis/reconstruction/probes/test")[1],
+            "scripts/probes/replay_th04_maine_box_bg_put.py",
         )
 
     def test_op_stage_backend_is_artifact_and_source_bound(self) -> None:
