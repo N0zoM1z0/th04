@@ -939,3 +939,15 @@ expected_body_span = 0x4A
 reviewed_body_size = 0x4A
 review_evidence_id = "ev-th04-op-cmt-put-boundary-v618"
 notes = "Target Ghidra closes one contiguous 74-byte near body at 1A74:1B84 with two callers and one callee. Raw target and MAP bind _cmt at 0F34:3A92, a 40-byte line stride, 20 total lines, semicolon comment suppression, title/comment coordinates, and both FAR calls to 0DA1:04A4 GRAPH_PUTSA_FX."
+
+# v620: target-first review for cmt_load.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC27B
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/cmt_load.cpp"
+expected_body_span = 0x49
+reviewed_body_size = 0x49
+review_evidence_id = "ev-th04-op-cmt-load-boundary-v620"
+notes = "Target Ghidra closes one contiguous 73-byte near Pascal body at 1A74:1B3B with one caller and four callees. Raw target binds FILE_ROPEN/FILE_SEEK/FILE_READ/FILE_CLOSE, _cmt at 0F34:3A92, cmt size 0x320, 20 lines of 40 bytes, and terminator offset 38. The filename operand DGROUP:132E lies inside the th04/op_music.cpp DATA contribution; the target program image contains a unique _MUSIC.TXT literal."

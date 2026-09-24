@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 43 / 42 / 8 | 40 | 53 / 0 | 3,460 |
+| OP.EXE | 44 / 41 / 8 | 41 | 52 / 0 | 3,533 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,460 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 3,186 bytes are in the 40 accepted exact
+OP's 3,533 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 3,259 bytes are in the 41 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,33 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP music-room comment renderer
+## Latest verified cohort: OP music-room comment loader
+
+v620 reconstructs the 73-byte `cmt_load(int)` helper at payload `0xC27B`
+(`1A74:1B3B`) inside `OP_MUSIC_TEXT`. Ghidra closes one contiguous body with
+one caller and four callees. Raw target operands independently bind the four
+file calls (`FILE_ROPEN`, `FILE_SEEK`, `FILE_READ`, `FILE_CLOSE`), `_cmt` at
+`0F34:3A92`, total comment storage size `0x320`, 20 lines of 40 bytes, and
+the byte-38 terminator written to every line. The filename operand is DGROUP
+offset `0x132E` inside the pinned `th04/op_music.cpp` data contribution; the
+restored target contains a unique `_MUSIC.TXT` literal at the linked data
+location. This is support for the operand identity, not a source-authority
+claim.
+
+Maintained natural source is `src/op/music/cmt_load.cpp` with the function body
+in `src/op/music/cmt_load.inl`. The standalone producer is compiled against
+the maintained runtime ABI and matches the complete 73-byte instruction shape
+with exactly seven expected OMF fixups: filename/data references plus four FAR
+file calls. The grouped replay preserves the complete `0x6A5`-byte
+`OP_MUSIC_TEXT` producer, the full OP program image, and all 804 ordered
+relocations. The v621 complete OP aggregate passes 41/41 registered decoded
+functions raw-zero:
+`.analysis/reconstruction/probes/v621-op-cmt-load-aggregate-001/receipt.json`,
+SHA-256 `e75791c0380f5230076c3174cd90ab3642b0d9a530123bc8259aed883e42e062`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: OP music-room comment renderer
 
 v618 reconstructs the 74-byte `cmt_put()` helper at payload `0xC2C4`
 (`1A74:1B84`) inside `OP_MUSIC_TEXT`. Ghidra closes one contiguous body with
