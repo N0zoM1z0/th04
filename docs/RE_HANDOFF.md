@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 52 / 33 / 8 | 49 | 44 / 0 | 4,318 |
+| OP.EXE | 53 / 32 / 8 | 50 | 43 / 0 | 4,424 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 4,318 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 4,044 bytes are in the 49 accepted exact
+OP's 4,424 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 4,150 bytes are in the 50 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,31 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP music-room track renderer
+## Latest verified cohort: OP playchar title-box renderer
+
+v638 reconstructs the 106-byte `playchar_title_box_put(int)` helper at
+payload `0xD338` (`1A74:2BF8`) inside `OP_01_TEXT`. Fresh target
+review closes one contiguous near Pascal body with one caller and two callees.
+Raw target and the pinned MAP bind `GRCG_SETCOLOR` at `0000:10D2` and
+`GRCG_ROUND_BOXFILL` at `0000:0FF0`. playchar 0/1 selects left 80/368,
+top is 312, the shadow and box colors are 1/2, the round radius is 8, and the
+function finishes by writing zero to GRCG port `0x7C` before Pascal `RET 2`.
+
+Maintained natural source is `src/op/menu/playchar_title_box_put.cpp`. The
+first standalone TC86 probe produces exactly 106 CODE bytes, with every
+pre-link difference confined to four ordinary FAR-call OMF fixups. The first
+full-TU replay then exposed a composability error in the new .inl (standalone-
+only constant names); after rewriting the body to use the original TU symbols,
+focused A/B cold replay raw-matches all 106 function bytes and the complete
+`0xAB3`-byte `OP_01_TEXT` producer while preserving grouped OMF, the
+retained OP program image, and all 804 ordered relocations. The v639 complete
+OP aggregate passes 50/50 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v639-op-playchar-title-box-aggregate-001/receipt.json`,
+SHA-256 `5d80022431f5b7c1e1af3dba987df44a2aa59b89ae81bbfa7b31c05c79cd0ebd`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: OP music-room track renderer
 
 v636 reconstructs the 108-byte `track_put_both(unsigned char,unsigned char)`
 helper at payload `0xBED5` (`1A74:1795`) at the start of `OP_MUSIC_TEXT`.
@@ -711,7 +735,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v637, tracked reconstruction state is **OP 49 decoded-exact / 44
+After v639, tracked reconstruction state is **OP 50 decoded-exact / 43
 pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.

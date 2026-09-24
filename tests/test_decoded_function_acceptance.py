@@ -202,6 +202,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-nopoly-snap-v606", "0x6A4", "nopoly-snap"),
             ("op-frame-delay-2-v587", "0x16", "frame-delay-2"),
             ("op-raise-bg-free-v588", "0xAB2", "raise-bg-free"),
+            ("op-playchar-title-box-v638", "0xAB2", "playchar-title-box"),
             ("op-game-exit-to-dos-v592", "0x1A", "game-exit-to-dos"),
             ("op-tracklist-put-both-v594", "0x6A4", "tracklist-put-both"),
             ("op-track-put-both-v636", "0x6A4", "track-put-both"),
@@ -357,6 +358,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-raise-bg-free-v588", saved)[1],
             "scripts/probes/replay_th04_op_raise_bg_free.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-playchar-title-box-v638", saved)[1],
+            "scripts/probes/replay_th04_op_playchar_title_box_put.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-game-exit-to-dos-v592", saved)[1],

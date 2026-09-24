@@ -1047,3 +1047,15 @@ expected_body_span = 0x6C
 reviewed_body_size = 0x6C
 review_evidence_id = "ev-th04-op-track-put-both-boundary-v636"
 notes = "Target Ghidra closes one contiguous 108-byte near Pascal body at 1A74:1795 with two callers and one callee. Raw target and MAP bind _music_page_accessed at 0F34:3A7D, _MUSIC_CHOICES at 0F34:0EB6, GRAPH_PUTSA_FX at 0DA1:04A4, direct page-port writes to 0xA6, left=16, top=8+i*16, and RET 4."
+
+# v638: target-first review for playchar_title_box_put.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD338
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/playchar_title_box_put.cpp"
+expected_body_span = 0x6A
+reviewed_body_size = 0x6A
+review_evidence_id = "ev-th04-op-playchar-title-box-boundary-v638"
+notes = "Target Ghidra closes one contiguous 106-byte near Pascal body at 1A74:2BF8 with one caller and two callees. Raw target and MAP bind GRCG_SETCOLOR at 0000:10D2 and GRCG_ROUND_BOXFILL at 0000:0FF0. playchar 0/1 selects left 80/368, top is 312, shadow/box colors are 1/2, round radius is 8, and the function ends RET 2 after a direct GRCG-off port write."
