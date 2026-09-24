@@ -108,6 +108,7 @@ OP_BGM_CHOICE_PRODUCER = 0xB49F
 OP_SE_CHOICE_PRODUCER = 0xB49F
 OP_WINDOW_ROLLUP_PUT_PRODUCER = 0xB49F
 OP_WINDOW_DROPDOWN_PUT_PRODUCER = 0xB49F
+OP_SINGLELINE_PRODUCER = 0xB49F
 OP_DROPDOWN_PRODUCER = 0xB49F
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
@@ -245,6 +246,7 @@ def validate(
                                  "op-se-choice-v626",
                                  "op-window-rollup-put-v628",
                                  "op-window-dropdown-put-v632",
+                                 "op-singleline-v634",
                                  "op-dropdown-v630",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
@@ -541,6 +543,12 @@ def validate(
                     or producer_start != OP_WINDOW_DROPDOWN_PUT_PRODUCER
                     or producer_size != 0x5A6):
                 raise ValueError(f"{ident}: OP window-dropdown-put backend does not compile this producer")
+        elif backend == "op-singleline-v634":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/setup/singleline.cpp"
+                    or producer_start != OP_SINGLELINE_PRODUCER
+                    or producer_size != 0x5A6):
+                raise ValueError(f"{ident}: OP singleline backend does not compile this producer")
         elif backend == "op-dropdown-v630":
             if (artifact != "th04-op"
                     or source_name != "src/op/setup/dropdown.cpp"
@@ -827,6 +835,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-window-dropdown-put-v632":
         return [sys.executable, "scripts/probes/replay_th04_op_window_dropdown_put.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-singleline-v634":
+        return [sys.executable, "scripts/probes/replay_th04_op_singleline.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-dropdown-v630":
         return [sys.executable, "scripts/probes/replay_th04_op_dropdown.py",

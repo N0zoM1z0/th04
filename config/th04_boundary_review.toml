@@ -1023,3 +1023,15 @@ expected_body_span = 0x7A
 reviewed_body_size = 0x7A
 review_evidence_id = "ev-th04-op-window-dropdown-put-boundary-v632"
 notes = "Target Ghidra closes one contiguous 122-byte near Pascal body at 1A74:0D5F with one caller and two callees. Raw target and MAP bind _window.w at 0F34:2B48, EGC copy at 0DA1:0968, and SUPER_PUT at 0000:2D5A; paired pattern IDs are left 2/6, middle 0/3, right 4/7, and the function ends RET 4."
+
+# v634: target-first review for singleline.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB5E2
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/singleline.cpp"
+expected_body_span = 0x7A
+reviewed_body_size = 0x7A
+review_evidence_id = "ev-th04-op-singleline-boundary-v634"
+notes = "Target Ghidra closes one contiguous 122-byte near Pascal body at 1A74:0EA2 with two callers and two callees. Raw target and MAP bind _window.w at 0F34:2B48, EGC copy at 0DA1:0968, and SUPER_PUT at 0000:2D5A; paired pattern IDs are left 5/6, middle 1/3, right 8/7, copy height is 32, and the function ends RET 4."
