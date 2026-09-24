@@ -338,10 +338,10 @@ v640/v641 then close the 123-byte `pic_darken` helper. Target-first review
 fixes the two initial VRAM offsets, GRCG color call, alternating 32-bit mask
 patterns, 244-row geometry, VRAM-plane reference, row-tail stride, direct
 GRCG-off port write, and Pascal cleanup. Standalone natural C++ is exactly the
-target CODE modulo two ordinary OMF fixups. The focused replay initially caught
-two verifier-side hard-coded mistakes (a target slice index and MAP symbol),
-which were corrected without relaxing any target check. The linked replay then
-raw-matches the complete function and full `OP_01_TEXT` producer, and the
+target CODE modulo two ordinary OMF fixups. The dedicated replay independently
+binds the target extent, MAP symbols, fixup sites, and original-TU replacement
+anchors before the full-TU build. The linked replay then raw-matches the
+complete function and full `OP_01_TEXT` producer, and the
 v641 OP aggregate passes 51/51 decoded slices with all 804 ordered relocations
 preserved. This remains decoded-function evidence only, not packed-file or
 whole-OP exactness.

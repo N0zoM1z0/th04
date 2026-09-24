@@ -56,10 +56,10 @@ tail by 48 bytes, disables GRCG through port `0x7C`, and ends in Pascal
 Maintained natural source is `src/op/menu/pic_darken.cpp`. The initial
 standalone TC86 probe produces exactly 123 CODE bytes; all four raw pre-link
 byte differences are confined to the two ordinary OMF fixups (one
-GRCG_SETCOLOR FAR call and one VRAM_PLANE_B pointer reference). While building
-the focused replay, two inherited verifier constants were corrected rather
-than weakening the checks: one target-topology slice index and one MAP public
-string. Focused A/B cold replay then raw-matches all 123 function bytes and
+GRCG_SETCOLOR FAR call and one VRAM_PLANE_B pointer reference). The dedicated replay then binds the fresh target extent, MAP symbols, the
+two fixup sites, and the original m_char.cpp replacement anchors before
+compiling the full translation unit. Focused A/B cold replay then raw-matches
+all 123 function bytes and
 the complete `0xAB3`-byte `OP_01_TEXT` producer while preserving grouped
 OMF, the retained OP program image, and all 804 ordered relocations. The v641
 complete OP aggregate passes 51/51 registered decoded functions raw-zero:
