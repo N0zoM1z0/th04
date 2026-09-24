@@ -891,3 +891,15 @@ expected_body_span = 0x37
 reviewed_body_size = 0x37
 review_evidence_id = "ev-th04-op-music-update-flip-boundary-v610"
 notes = "Target Ghidra closes one contiguous 55-byte near body at 1A74:1B04 with four callers and four callees. Raw target binds nopoly_b_put, GRCG_SETCOLOR, polygons_update_and_render, _music_page_accessed, frame_delay_2, and inline page/GRCG port writes."
+
+# v612: target-first review for rollup.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB65C
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/rollup.cpp"
+expected_body_span = 0x3C
+reviewed_body_size = 0x3C
+review_evidence_id = "ev-th04-op-rollup-boundary-v612"
+notes = "Target Ghidra closes one contiguous 60-byte near Pascal body at 1A74:0F1C with two callers and two callees. MAP binds _window at 0F34:2B48, so target operand 0x2B4A is window.h; the calls resolve to window_rollup_put and 0DA1:002B frame_delay. Target arithmetic independently fixes MSWIN_H=16, DROP_FRAMES_PER_TILE=2, and DROP_SPEED=8."

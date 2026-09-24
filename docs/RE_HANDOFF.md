@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 41 / 44 / 8 | 38 | 55 / 0 | 3,326 |
+| OP.EXE | 42 / 43 / 8 | 39 | 54 / 0 | 3,386 |
 | MAINE.EXE | 37 / 30 / 5 | 32 | 40 / 0 | 2,840 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,326 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 3,052 bytes are in the 38 accepted exact
+OP's 3,386 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 3,112 bytes are in the 39 accepted exact
 functions. MAINE has 32 decoded-function exact functions (2,651 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,840.
@@ -41,7 +41,29 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP music update/render/page-flip helper
+## Latest verified cohort: OP setup rollup helper
+
+v612 reconstructs the 60-byte `rollup(int,int)` helper at payload `0xB65C`
+(`1A74:0F1C`) inside `OP_SETUP_TEXT`. Ghidra closes one contiguous body with
+two callers and two callees. MAP places `_window` at `0F34:2B48`, while the
+target reads `0x2B4A` twice, independently identifying the second 16-bit
+field as `window.h`. The target arithmetic also fixes `MSWIN_H=16`,
+`DROP_FRAMES_PER_TILE=2`, and `DROP_SPEED=8`; its calls resolve to
+`window_rollup_put` and FAR `frame_delay`.
+
+Maintained natural source is `src/op/setup/rollup.cpp` with the function body
+in `src/op/setup/rollup.inl`. Standalone TC86 output matches the complete
+60-byte instruction shape with exactly four expected OMF fixups: two
+`_window` references, one near call, and one FAR call. The grouped replay
+preserves the complete `0x5A6`-byte `OP_SETUP_TEXT` producer, the retained OP
+program image, and all 804 ordered relocations. The v613 complete OP aggregate
+passes 39/39 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v613-op-rollup-aggregate-001/receipt.json`,
+SHA-256 `6bc6488bf542c265b08f18b35f67d6bbb7f5c1cc1e707c250bb9d0571e40e3c3`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: OP music update/render/page-flip helper
 
 v610 reconstructs the 55-byte `music_update_render_and_flip()` helper at
 payload `0xC244` (`1A74:1B04`) inside `OP_MUSIC_TEXT`. Ghidra closes one
@@ -431,7 +453,7 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610, or MAINE
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612, or MAINE
 v590/v604/v608: their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
