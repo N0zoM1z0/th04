@@ -74,8 +74,8 @@ decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 30
 decoded-exact functions / 2,551 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `scoredat_encode` (101 bytes), for 2,740 decoded source-owner bytes; OP has
-29 decoded-exact functions / 2,646 exact source-owner bytes, with two separate
-codec candidates (274 bytes) still source-present and nonexact, for 2,920
+30 decoded-exact functions / 2,671 exact source-owner bytes, with two separate
+codec candidates (274 bytes) still source-present and nonexact, for 2,945
 decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
@@ -143,6 +143,13 @@ expected OMF fixups, while the grouped replay preserves the complete `0xC3E`
 `CUTSCENE_TEXT` producer. The v591 MAINE aggregate passes 30/30 decoded
 slices with all 559 ordered relocations preserved. The helper name remains
 candidate/MAP-derived, and no packed-file or whole-MAINE exactness is claimed.
+v592 then adds OP's 25-byte `game_exit_to_dos` wrapper. Its source-level calls
+remain ordinary natural C++; the replay separately proves the Borland OMF and
+TLINK behavior that converts the same-segment `game_exit` FAR-call footprint
+into `NOP / PUSH CS / CALL rel16`, while the three master.lib calls remain FAR.
+The v593 OP aggregate passes 30/30 decoded slices with all 804 ordered
+relocations preserved. This is still decoded-function evidence only, not
+packed-file or whole-OP exactness.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
@@ -197,7 +204,7 @@ slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
 `snd_se_reset` to OP and MAINE. v582-v585 add the four small cutscene/title/music
 leaves described above; v587-v588 then add OP frame_delay_2 and raise_bg_free,
 and v590/v591 add the second MAINE script-number helper. The current
-decoded-function totals are 29/29 OP and 30/30 MAINE. The next unit is not
+decoded-function totals are 30/30 OP and 30/30 MAINE. The next unit is not
 preselected: re-evaluate outstanding small reviewed/corroborated owners and
 boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with

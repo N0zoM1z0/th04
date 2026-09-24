@@ -88,6 +88,7 @@ OP_MAIN_CDG_FREE_PRODUCER = 0xCC97
 OP_NOPOLY_FREE_PRODUCER = 0xBED5
 OP_FRAME_DELAY_2_PRODUCER = 0xE6DE
 OP_RAISE_BG_FREE_PRODUCER = 0xCF5E
+OP_GAME_EXIT_TO_DOS_PRODUCER = 0xDDB1
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -209,6 +210,7 @@ def validate(
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "op-main-cdg-free-v583", "op-nopoly-free-v584",
                                  "op-frame-delay-2-v587", "op-raise-bg-free-v588",
+                                 "op-game-exit-to-dos-v592",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-second-v590",
@@ -380,6 +382,12 @@ def validate(
                     or producer_start != OP_RAISE_BG_FREE_PRODUCER
                     or producer_size != 0xAB3):
                 raise ValueError(f"{ident}: OP raise-bg-free backend does not compile this producer")
+        elif backend == "op-game-exit-to-dos-v592":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/core/game_exit_to_dos.cpp"
+                    or producer_start != OP_GAME_EXIT_TO_DOS_PRODUCER
+                    or producer_size != 0x19):
+                raise ValueError(f"{ident}: OP game-exit-to-dos backend does not compile this producer")
         elif backend == "op-stage-put-v545":
             if (artifact != "th04-op"
                     or source_name != "src/op/score/stage.cpp"
@@ -612,6 +620,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--retain-candidates", "--output-dir", str(saved)]
     if backend_id == "op-raise-bg-free-v588":
         return [sys.executable, "scripts/probes/replay_th04_op_raise_bg_free.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-game-exit-to-dos-v592":
+        return [sys.executable, "scripts/probes/replay_th04_op_game_exit_to_dos.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-insert-v543":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_insert.py",

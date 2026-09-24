@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 32 / 53 / 8 | 29 | 64 / 0 | 2,920 |
+| OP.EXE | 33 / 52 / 8 | 30 | 63 / 0 | 2,945 |
 | MAINE.EXE | 35 / 32 / 5 | 30 | 42 / 0 | 2,740 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 2,920 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,646 bytes are in the 29 accepted exact
+OP's 2,945 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,671 bytes are in the 30 accepted exact
 functions. MAINE has 30 decoded-function exact functions (2,551 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,740.
@@ -41,7 +41,28 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: MAINE second script parameter
+## Latest verified cohort: OP DOS-exit wrapper
+
+v592 reconstructs the 25-byte `game_exit_to_dos()` wrapper at payload `0xDDB1`
+(`1DA1:03A1`). Target-first evidence closes one contiguous FAR body and binds
+the four calls independently: `game_exit` at `0DA1:069C` plus
+`KEY_BEEP_ON`, `TEXT_SYSTEMLINE_SHOW`, and `TEXT_CURSOR_SHOW` in master.lib.
+
+A useful toolchain detail is now explicitly covered by the replay: TC86 emits
+four five-byte FAR-call footprints in `exit_dos.obj`, but TLINK recognizes that
+`game_exit` resides in the same `SHARED` segment and rewrites only that call to
+`NOP / PUSH CS / CALL rel16` while preserving the five-byte footprint. No
+target-derived assembly is used. The focused A/B replay reproduces the complete
+25-byte linked function, the full retained OP program image, MAP identity, and
+all 804 ordered relocations.
+
+The v593 complete OP aggregate passes 30/30 registered decoded functions
+raw-zero: `.analysis/reconstruction/probes/v593-op-dos-exit-aggregate-001/receipt.json`,
+SHA-256 `2bd6d76fb175a08ad1edb06e5a1436e641e2323caea311fd058e912503c60909`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: MAINE second script parameter
 
 v590 reconstructs the 40-byte `script_param_read_number_second(int far&)`
 helper at payload `0xA713` (`1A05:06C3`). Target evidence is independent of
@@ -233,7 +254,7 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588, or MAINE v590: their complete decoded-function
+leaf batch, OP v587-v588, MAINE v590, or OP v592: their complete decoded-function
 extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
