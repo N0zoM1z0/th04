@@ -1059,3 +1059,15 @@ expected_body_span = 0x6A
 reviewed_body_size = 0x6A
 review_evidence_id = "ev-th04-op-playchar-title-box-boundary-v638"
 notes = "Target Ghidra closes one contiguous 106-byte near Pascal body at 1A74:2BF8 with one caller and two callees. Raw target and MAP bind GRCG_SETCOLOR at 0000:10D2 and GRCG_ROUND_BOXFILL at 0000:0FF0. playchar 0/1 selects left 80/368, top is 312, shadow/box colors are 1/2, round radius is 8, and the function ends RET 2 after a direct GRCG-off port write."
+
+# v640: target-first review for pic_darken.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD20A
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/pic_darken.cpp"
+expected_body_span = 0x7B
+reviewed_body_size = 0x7B
+review_evidence_id = "ev-th04-op-pic-darken-boundary-v640"
+notes = "Target Ghidra closes one contiguous 123-byte near Pascal body at 1A74:2ACA with one caller and one callee. Raw target and MAP bind GRCG_SETCOLOR at 0000:10D2 and _VRAM_PLANE_B at 0F34:22DA. playchar 0/1 selects VRAM offsets 0x1046/0x106A; the body writes 0xAAAAAAAA/0x55555555 alternating rows over 256x244 pixels and ends RET 2 after direct GRCG off."

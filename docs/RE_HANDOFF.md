@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 53 / 32 / 8 | 50 | 43 / 0 | 4,424 |
+| OP.EXE | 54 / 31 / 8 | 51 | 42 / 0 | 4,547 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 4,424 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 4,150 bytes are in the 50 accepted exact
+OP's 4,547 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 4,273 bytes are in the 51 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,34 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP playchar title-box renderer
+## Latest verified cohort: OP playchar picture darken helper
+
+v640 reconstructs the 123-byte `pic_darken(playchar_t)` helper at payload
+`0xD20A` (`1A74:2ACA`) inside `OP_01_TEXT`. Fresh target review closes
+one contiguous near Pascal body with one caller and one callee. Raw target and
+the pinned MAP bind `GRCG_SETCOLOR` at `0000:10D2` and
+`_VRAM_PLANE_B` at `0F34:22DA`. playchar 0/1 selects initial VRAM
+offsets 0x1046 / 0x106A. The body covers 244 rows, writes 32 bytes per row
+with alternating 0xAAAAAAAA / 0x55555555 dword patterns, advances the row
+tail by 48 bytes, disables GRCG through port `0x7C`, and ends in Pascal
+`RET 2`.
+
+Maintained natural source is `src/op/menu/pic_darken.cpp`. The initial
+standalone TC86 probe produces exactly 123 CODE bytes; all four raw pre-link
+byte differences are confined to the two ordinary OMF fixups (one
+GRCG_SETCOLOR FAR call and one VRAM_PLANE_B pointer reference). While building
+the focused replay, two inherited verifier constants were corrected rather
+than weakening the checks: one target-topology slice index and one MAP public
+string. Focused A/B cold replay then raw-matches all 123 function bytes and
+the complete `0xAB3`-byte `OP_01_TEXT` producer while preserving grouped
+OMF, the retained OP program image, and all 804 ordered relocations. The v641
+complete OP aggregate passes 51/51 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v641-op-pic-darken-aggregate-001/receipt.json`,
+SHA-256 `3282149a3387a70699858e3b7e531dc4b8b9b828645cfe9a431f388ca9a1f231`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: OP playchar title-box renderer
 
 v638 reconstructs the 106-byte `playchar_title_box_put(int)` helper at
 payload `0xD338` (`1A74:2BF8`) inside `OP_01_TEXT`. Fresh target
@@ -735,7 +762,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v639, tracked reconstruction state is **OP 50 decoded-exact / 43
+After v641, tracked reconstruction state is **OP 51 decoded-exact / 42
 pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
