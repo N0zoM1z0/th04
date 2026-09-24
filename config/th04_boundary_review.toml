@@ -644,3 +644,30 @@ expected_tasm_proc = "sub_C7E3"
 reviewed_body_size = 0x31
 review_evidence_id = "ev-th04-maine-alphabet-cursor-boundary-v551"
 notes = "Target-reviewed 49-byte alphabet cursor renderer ending RET 6 before regist_menu; maintained C++ replays raw-zero. Name is descriptive."
+
+# Shared sound-effect reset: the target producer is 11 bytes of compiler code
+# followed by one explicit codestring NOP. OP has an independently attested
+# contiguous Ghidra body. MAINE has no Ghidra function at its TLINK public, so
+# its review explicitly requires that absence plus target-linear decode evidence.
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xE2E6
+origin = "authored"
+source_form = "cross-game-candidate-cpp"
+source_ref = "src/shared/sound/se_reset.cpp"
+expected_body_span = 0x0B
+reviewed_body_size = 0x0B
+review_evidence_id = "ev-th04-op-se-reset-boundary-v581"
+notes = "Target 0xE2E6..0xE2F0 is one contiguous 11-byte Ghidra body ending at RETF; 0xE2F1 is producer padding, not function ownership."
+
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xD594
+origin = "authored"
+source_form = "cross-game-candidate-cpp"
+source_ref = "src/shared/sound/se_reset.cpp"
+expected_no_ghidra = true
+reviewed_body_size = 0x0B
+review_evidence_id = "ev-th04-maine-se-reset-boundary-v581"
+notes = "TLINK public 0CC7:0924 has no Ghidra function entry; target-linear decode is exactly two MOV byte stores plus RETF through 0xD59E, with 0xD59F producer padding."

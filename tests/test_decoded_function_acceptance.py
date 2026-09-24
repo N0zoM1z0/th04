@@ -180,6 +180,13 @@ class DecodedAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "delay backend does not compile"):
             self.check(entries)
 
+    def test_se_reset_backend_is_bound_to_maintained_source_and_extent(self) -> None:
+        entries = deepcopy(self.entries)
+        reset = next(row for row in entries if row["replay_backend"] == "op-maine-se-reset-v581")
+        reset["producer_size"] = "0xB"
+        with self.assertRaisesRegex(ValueError, "sound-effect reset backend does not compile"):
+            self.check(entries)
+
     def test_vector_math_backend_is_bound_to_maintained_source_and_extent(self) -> None:
         entries = deepcopy(self.entries)
         vector = next(row for row in entries
@@ -233,6 +240,12 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(input_wait[1], "scripts/probes/replay_th04_shared_input_wait.py")
         self.assertIn("th04-op", input_wait)
         self.assertIn("--retain-candidates", input_wait)
+        se_reset = acceptance.backend_command(
+            "op-maine-se-reset-v581", saved, artifact="th04-op"
+        )
+        self.assertEqual(se_reset[1], "scripts/probes/replay_th04_shared_se_reset.py")
+        self.assertIn("th04-op", se_reset)
+        self.assertIn("--retain-candidates", se_reset)
         vector_math = acceptance.backend_command(
             "op-maine-vector-math-v570", saved, artifact="th04-maine"
         )

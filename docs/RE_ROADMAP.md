@@ -69,14 +69,14 @@ the BGIMAGE backend cannot grant credit to another TU.
 The currently maintained reviewed shared hardware/PI/sound/input/math cohort is
 complete in both OP and MAINE: three BGIMAGE functions plus VRAM, frame delay,
 three PI functions, PMD, MMD, KAJA, mode detection, delay-until-measure,
-input-wait, plus `polar` and `VECTOR2_AT`. That is 16 decoded-exact
-functions / 1,020 source-owner bytes per artifact. MAINE has 26
-decoded-exact functions / 2,464 exact source-owner bytes plus two
+input-wait, `snd_se_reset`, plus `polar` and `VECTOR2_AT`. That is 17
+decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 27
+decoded-exact functions / 2,475 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
-`scoredat_encode` (101 bytes), for 2,653 decoded source-owner bytes; OP has
-24 decoded-exact
-functions / 2,567 exact source-owner bytes, with two separate codec candidates
-(274 bytes) still source-present and nonexact.
+`scoredat_encode` (101 bytes), for 2,664 decoded source-owner bytes; OP has
+25 decoded-exact functions / 2,578 exact source-owner bytes, with two separate
+codec candidates (274 bytes) still source-present and nonexact, for 2,852
+decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
@@ -114,6 +114,11 @@ program image is still shorter than the target and no packed offset is known.
 The candidate function name remains unverified. Preserve the v580
 `#undef SCOREDAT_FN`/external filename declaration: leaving the header macro
 active emitted an extra DGROUP filename literal in the failed v579 attempt.
+v581 adds the shared 11-byte `snd_se_reset` leaf to both artifacts from one
+maintained natural-C++ producer. OP uses its contiguous target Ghidra body;
+MAINE deliberately uses a separate no-Ghidra review path bound to the TLINK
+public and complete linear decode. Full aggregates pass 25/25 OP and 27/27
+MAINE slices with 804/559 ordered relocations preserved.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
@@ -164,9 +169,10 @@ function bytes. v577 adds MAINE `scoredat_encode` source at `0xC1A1`, but the
 natural standalone CODE is 113 bytes against a reviewed 101-byte target because
 of the rotate codegen mismatch. v580 then reconstructs the adjacent
 `scoredat_recreate` from target evidence and obtains a decoded-function raw-zero
-slice at `0xC206`; MAINE now has 26/26 function slices accepted. The next
-MAINE unit is not preselected: re-evaluate outstanding reviewed owners and boundary/
-origin maturity before starting it.
+slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
+`snd_se_reset` to OP and MAINE, bringing the current decoded-function totals to
+25/25 OP and 27/27 MAINE. The next MAINE unit is not preselected: re-evaluate
+outstanding reviewed owners and boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with
 source provenance kept apart from target-boundary confidence. v572 reviewed
 the adjacent 50-byte MAINE cutscene helper at payload

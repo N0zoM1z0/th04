@@ -26,22 +26,45 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 27 / 58 / 8 | 24 | 69 / 0 | 2,841 |
-| MAINE.EXE | 31 / 35 / 6 | 26 | 46 / 0 | 2,653 |
+| OP.EXE | 28 / 57 / 8 | 25 | 68 / 0 | 2,852 |
+| MAINE.EXE | 32 / 35 / 5 | 27 | 45 / 0 | 2,664 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 2,841 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,567 bytes are in the 24 accepted exact
-functions. MAINE has 26 decoded-function exact functions (2,464 bytes), plus
+OP's 2,852 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,578 bytes are in the 25 accepted exact
+functions. MAINE has 27 decoded-function exact functions (2,475 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,653.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,664.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP/MAINE shared vector math
+## Latest verified cohort: OP/MAINE shared sound-effect reset
+
+Maintained natural C++ in `src/shared/sound/se_reset.cpp` now owns the complete
+11-byte `snd_se_reset` body in both OP and MAINE. Each compiler producer is
+12 bytes: two byte stores, terminal `RETF`, then one explicit `0x90`
+codestring padding byte that remains outside function ownership. OP is at
+payload `0xE2E6` (`1DA1:08D6`) and has an independently attested contiguous
+Ghidra body. MAINE is at payload `0xD594` (`1CC7:0924`); its attested Ghidra
+inventory has no function entry, so the review uses the explicit fail-closed
+no-Ghidra gate plus the TLINK public and gap-free target decode rather than
+inventing a disassembler boundary.
+
+The v581 focused A/B replay reproduces both the 11-byte function and 12-byte
+producer raw-zero while preserving the retained v489 linked image and all
+ordered relocations. Full decoded aggregates then pass 25/25 OP functions and
+27/27 MAINE functions:
+
+- OP receipt: `.analysis/reconstruction/probes/v581-op-se-reset-aggregate-001/receipt.json`, SHA-256 `96cdcb934de64c67d9feb5825b7e9e65017c628ffadf88f3b102d048dfc4bdf9`; all 804 ordered target relocations preserved.
+- MAINE receipt: `.analysis/reconstruction/probes/v581-maine-se-reset-aggregate-001/receipt.json`, SHA-256 `16d31881d7298b31873d40b2aeb6e2b70dd2220ab316ad71f7cd2a694dab6ab1`; all 559 ordered target relocations preserved.
+
+This is decoded-function exactness only; it does not establish a DIET-packed
+file offset or whole-executable exactness.
+
+## Prior verified cohort: OP/MAINE shared vector math
 
 Maintained source is `src/shared/math/vector.cpp` and its local declarations.
 It naturally compiles a contiguous `0x5E`-byte OP/MAINE `SHARED` producer:

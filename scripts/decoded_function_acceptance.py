@@ -54,6 +54,7 @@ BGIMAGE_PRODUCERS = {"th04-op": 0xE428, "th04-maine": 0xD626}
 VRAM_PRODUCERS = {"th04-op": 0xDA12, "th04-maine": 0xCC7A}
 FRAME_DELAY_PRODUCERS = {"th04-op": 0xDA3B, "th04-maine": 0xCCA3}
 INPUT_WAIT_PRODUCERS = {"th04-op": 0xDB62, "th04-maine": 0xCE7A}
+SE_RESET_PRODUCERS = {"th04-op": 0xE2E6, "th04-maine": 0xD594}
 VECTOR_MATH_PRODUCERS = {"th04-op": 0xDBB8, "th04-maine": 0xCED0}
 PI_PUT_PRODUCERS = {"th04-op": 0xDA50, "th04-maine": 0xCCB8}
 PI_LOAD_PRODUCERS = {"th04-op": 0xDAFD, "th04-maine": 0xCD65}
@@ -197,7 +198,7 @@ def validate(
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
-                                 "op-maine-input-wait-v565", "op-maine-vector-math-v570",
+                                 "op-maine-input-wait-v565", "op-maine-se-reset-v581", "op-maine-vector-math-v570",
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573",
@@ -362,6 +363,11 @@ def validate(
                     or producer_start != INPUT_WAIT_PRODUCERS[artifact]
                     or producer_size != 0x56):
                 raise ValueError(f"{ident}: input-wait backend does not compile this producer")
+        elif backend == "op-maine-se-reset-v581":
+            if (source_name != "src/shared/sound/se_reset.cpp"
+                    or producer_start != SE_RESET_PRODUCERS[artifact]
+                    or producer_size != 0x0C):
+                raise ValueError(f"{ident}: sound-effect reset backend does not compile this producer")
         elif backend == "op-maine-vector-math-v570":
             if (source_name != "src/shared/math/vector.cpp"
                     or producer_start != VECTOR_MATH_PRODUCERS[artifact]
@@ -524,6 +530,11 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
             raise ValueError("input-wait backend requires one OP/MAINE artifact")
         return [sys.executable, "scripts/probes/replay_th04_shared_input_wait.py",
                 "--artifact", artifact, "--retain-candidates", "--output-dir", str(saved)]
+    if backend_id == "op-maine-se-reset-v581":
+        if artifact not in {"th04-op", "th04-maine"}:
+            raise ValueError("sound-effect reset backend requires one OP/MAINE artifact")
+        return [sys.executable, "scripts/probes/replay_th04_shared_se_reset.py",
+                "--artifact", artifact, "--retain-candidates", "--output-dir", str(saved)]
     if backend_id == "op-maine-vector-math-v570":
         if artifact not in {"th04-op", "th04-maine"}:
             raise ValueError("vector-math backend requires one OP/MAINE artifact")
@@ -648,7 +659,7 @@ def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], 
         origin = ZUN_COMPONENT_OFFSET
         layout = {"component_size": len(candidate[0]), "component_sha256": sha(candidate[0]),
                   "target_component_sha256": sha(target)}
-    elif backend_id in {"op-maine-input-wait-v565", "op-maine-vector-math-v570"}:
+    elif backend_id in {"op-maine-input-wait-v565", "op-maine-se-reset-v581", "op-maine-vector-math-v570"}:
         name = "op" if artifact == "th04-op" else "maine"
         target_mz = parse_mz(RESTORED[artifact].read_bytes())
         images = [parse_mz((saved / f"{label}-{name}.exe").read_bytes())
