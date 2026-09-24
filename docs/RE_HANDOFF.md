@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 46 / 39 / 8 | 43 | 50 / 0 | 3,684 |
+| OP.EXE | 47 / 38 / 8 | 44 | 49 / 0 | 3,765 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,684 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 3,410 bytes are in the 43 accepted exact
+OP's 3,765 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 3,491 bytes are in the 44 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,29 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP BGM choice renderer
+## Latest verified cohort: OP SE choice renderer
+
+v626 reconstructs the 81-byte `se_choice_put(int,unsigned int)` renderer at
+payload `0xB6E7` (`1A74:0FA7`) inside `OP_SETUP_TEXT`. Ghidra closes one
+contiguous body with one caller and one callee. Fresh target/codegen review
+corrected an initially tempting but wrong enum assumption: the actual ABI is
+`SND_SE_OFF=0`, `SND_SE_FM=1`, `SND_SE_BEEP=2`. Target control flow and pinned
+`op_setup.obj` data independently bind these modes to linked DGROUP strings at
+`0x0E08` / `0x0DE6` / `0x0DF7`, rendered at vertical offsets +32 / +0 / +16
+from `CHOICE_TOP=136`; `CHOICE_LEFT=48`. The sole FAR call is
+`GRAPH_PUTSA_FX` at `0DA1:04A4`.
+
+Maintained natural source is `src/op/setup/se_choice_put.cpp`. Focused A/B cold
+replay raw-matches all 81 bytes and preserves the full `OP_SETUP_TEXT` producer,
+grouped link-relevant OMF, full OP program image, and all 804 ordered
+relocations. The v627 complete OP aggregate passes 44/44 registered decoded
+functions raw-zero:
+`.analysis/reconstruction/probes/v627-op-se-choice-aggregate-001/receipt.json`,
+SHA-256 `2df7cc741775a01c97d950deb71003d92ac2da8327a3c9e0f2214941ab1db419`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: OP BGM choice renderer
 
 v624 reconstructs the 79-byte `bgm_choice_put(int,unsigned int)` renderer at
 payload `0xB698` (`1A74:0F58`) inside `OP_SETUP_TEXT`. Ghidra closes one
@@ -61,7 +83,7 @@ SHA-256 `58d6ace11ddd208399ca180e987eb945416c2b47b921412341b142f579e72f91`.
 All 804 ordered target relocations remain preserved. This is decoded-function
 exactness only; no DIET-packed offset or whole-OP exactness is claimed.
 
-## Prior verified cohort: OP music-room comment transition wrapper
+## Earlier verified cohort: OP music-room comment transition wrapper
 
 v622 reconstructs the 72-byte `cmt_load_unput_and_put_both_animate(int)`
 wrapper at payload `0xC36F` (`1A74:1C2F`) inside `OP_MUSIC_TEXT`. Ghidra
@@ -575,9 +597,8 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v625, tracked reconstruction state is intentionally paused at **OP 43
-decoded-exact / 50 pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus
-2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
+After v627, tracked reconstruction state is **OP 44 decoded-exact / 49
+pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 
@@ -608,7 +629,9 @@ The live probe tree now keeps only the full
 receipt-only `v616-maine-end-animate-focused-003`,
 `v617-maine-end-animate-aggregate-001`,
 `v624-op-bgm-choice-focused-001`, and
-`v625-op-bgm-choice-aggregate-001`. Historical analysis paths in ledgers remain
+`v625-op-bgm-choice-aggregate-001`. Subsequent v626/v627 work added the SE
+choice focused and aggregate replay directories; no new cleanup claim is made
+for those directories here. Historical analysis paths in ledgers remain
 provenance strings, not promises that expanded worktrees still exist.
 
 `scripts/prune_analysis.py --compact-referenced` reported no safe
@@ -638,7 +661,7 @@ after recording their receipt, and preserve pinned inputs plus artifacts
 covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624,
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624/v626,
 or MAINE v590/v604/v608/v614: their complete decoded-function extents now pass
 raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
