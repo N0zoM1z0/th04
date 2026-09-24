@@ -157,13 +157,20 @@ def parse_function_overrides(
                 )
             expected_tasm = str(rule.get("expected_tasm_proc", "")).strip()
             has_ghidra_span = "expected_body_span" in rule
+            expected_no_ghidra = bool(rule.get("expected_no_ghidra", False))
+            if expected_no_ghidra and (expected_tasm or has_ghidra_span):
+                raise BoundaryLedgerError(
+                    f"target-reviewed function override for {key[0]} at {key[1]:#x} "
+                    "mixes expected_no_ghidra with a Ghidra/TASM expectation"
+                )
             if str(rule["source_form"]) == "target-derived-asm" and not expected_tasm:
                 raise BoundaryLedgerError(
                     f"target-derived ASM reviewed override for {key[0]} at {key[1]:#x} lacks expected_tasm_proc"
                 )
-            if not expected_tasm and not has_ghidra_span:
+            if not expected_tasm and not has_ghidra_span and not expected_no_ghidra:
                 raise BoundaryLedgerError(
-                    f"target-reviewed function override for {key[0]} at {key[1]:#x} lacks TASM PROC or expected Ghidra body span"
+                    f"target-reviewed function override for {key[0]} at {key[1]:#x} "
+                    "lacks TASM PROC, expected Ghidra body span, or an explicit no-Ghidra expectation"
                 )
             if not str(rule.get("review_evidence_id", "")).strip():
                 raise BoundaryLedgerError(
@@ -359,6 +366,18 @@ def function_row(
                     f"function override for {artifact} at {offset:#x} expected "
                     f"Ghidra body span {expected_span:#x}, observed {body_span:#x}"
                 )
+        if function_override.get("expected_no_ghidra", False):
+            if ghidra is not None:
+                raise BoundaryLedgerError(
+                    f"function override for {artifact} at {offset:#x} expected no "
+                    "Ghidra function entry"
+                )
+            if not public_names:
+                raise BoundaryLedgerError(
+                    f"no-Ghidra function override for {artifact} at {offset:#x} "
+                    "lacks a corroborating TLINK public"
+                )
+            notes.append("Reviewed override explicitly expects no Ghidra function entry.")
         if "reviewed_body_size" in function_override:
             target_reviewed_size = int(function_override["reviewed_body_size"])
             owner_end = (

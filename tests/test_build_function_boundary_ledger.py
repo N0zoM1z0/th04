@@ -221,6 +221,89 @@ Program entry point at 0000:00100
         self.assertEqual(row["source_form"], "candidate-cpp")
         self.assertIn("ev-review", row["notes"])
 
+
+
+    def test_target_reviewed_cpp_override_can_require_no_ghidra_entry(self) -> None:
+        contribution = Contribution(
+            "th04-maine", 0xD594, 0xD5A0, "th02/snd_se_r.cpp", "SHARED",
+            "authored", "cross-game-candidate-cpp", "candidate:th02/snd_se_r.cpp",
+            "target-unpacked-ghidra+candidate-map",
+        )
+        override = {
+            "artifact": "th04-maine",
+            "payload_offset": 0xD594,
+            "origin": "authored",
+            "source_form": "cross-game-candidate-cpp",
+            "source_ref": "candidate:th02/snd_se_r.cpp",
+            "expected_no_ghidra": True,
+            "reviewed_body_size": 0xB,
+            "review_evidence_id": "ev-review",
+        }
+        rules = parse_function_overrides({"function_overrides": [override]})
+        self.assertTrue(rules[("th04-maine", 0xD594)]["expected_no_ghidra"])
+        row = function_row(
+            "th04-maine", 0xD594, 0x10000, None, ["_snd_se_reset"],
+            contribution, None, None, None, False, override,
+        )
+        self.assertEqual(row["boundary_state"], "reviewed")
+        self.assertEqual(row["body_size"], "0xB")
+        self.assertIn("expects no Ghidra function entry", row["notes"])
+
+    def test_target_reviewed_no_ghidra_override_rejects_conflicting_observation(self) -> None:
+        contribution = Contribution(
+            "th04-maine", 0xD594, 0xD5A0, "th02/snd_se_r.cpp", "SHARED",
+            "authored", "cross-game-candidate-cpp", "candidate:th02/snd_se_r.cpp",
+            "target-unpacked-ghidra+candidate-map",
+        )
+        override = {
+            "artifact": "th04-maine",
+            "payload_offset": 0xD594,
+            "origin": "authored",
+            "source_form": "cross-game-candidate-cpp",
+            "source_ref": "candidate:th02/snd_se_r.cpp",
+            "expected_no_ghidra": True,
+            "reviewed_body_size": 0xB,
+            "review_evidence_id": "ev-review",
+        }
+        ghidra = {
+            "name": "FUN_1cc7_0924",
+            "body_addresses": "11",
+            "body_span": "11",
+            "body_min_linear": "0x1D594",
+            "body_max_linear": "0x1D59E",
+            "contiguous": "true",
+            "body_range_count": "1",
+            "caller_count": "1",
+            "callee_count": "0",
+            "symbol_source": "DEFAULT",
+        }
+        with self.assertRaises(BoundaryLedgerError):
+            function_row(
+                "th04-maine", 0xD594, 0x10000, ghidra, ["_snd_se_reset"],
+                contribution, None, None, None, False, override,
+            )
+        with self.assertRaises(BoundaryLedgerError):
+            function_row(
+                "th04-maine", 0xD594, 0x10000, None, [],
+                contribution, None, None, None, False, override,
+            )
+
+    def test_target_reviewed_no_ghidra_override_is_exclusive(self) -> None:
+        base = {
+            "artifact": "th04-maine",
+            "payload_offset": 0xD594,
+            "origin": "authored",
+            "source_form": "cross-game-candidate-cpp",
+            "source_ref": "candidate:th02/snd_se_r.cpp",
+            "expected_no_ghidra": True,
+            "reviewed_body_size": 0xB,
+            "review_evidence_id": "ev-review",
+        }
+        with self.assertRaises(BoundaryLedgerError):
+            parse_function_overrides({
+                "function_overrides": [{**base, "expected_body_span": 0xB}]
+            })
+
     def test_target_reviewed_override_rejects_owner_escape(self) -> None:
         contribution = Contribution(
             "th04-zun", 0x6F3, 0x700, "th04_zuninit.asm", "_TEXT",
