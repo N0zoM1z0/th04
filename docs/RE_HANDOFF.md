@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 38 / 47 / 8 | 35 | 58 / 0 | 3,173 |
+| OP.EXE | 39 / 46 / 8 | 36 | 57 / 0 | 3,222 |
 | MAINE.EXE | 35 / 32 / 5 | 30 | 42 / 0 | 2,740 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,173 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 2,899 bytes are in the 35 accepted exact
+OP's 3,222 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 2,948 bytes are in the 36 accepted exact
 functions. MAINE has 30 decoded-function exact functions (2,551 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,740.
@@ -41,7 +41,26 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP comment fade-in animation
+## Latest verified cohort: OP main CDG loader
+
+v602 reconstructs the 49-byte `main_cdg_load()` leaf at payload `0xCC97`
+(`1A74:2557`). Ghidra closes one contiguous body with one caller and two
+distinct callees. Raw target call blocks independently fix slots 0/10/35/40;
+the target DS:offset pointers resolve to `sft1.cd2`, `sft2.cd2`, `car.cd2`,
+and `sl.cd2`. The first three calls target `CDG_LOAD_ALL` at `0DA1:0C2E`;
+the final call targets `CDG_LOAD_ALL_NOALPHA` at `0DA1:0C28`.
+
+Maintained natural source is `src/op/title/main_cdg_load.cpp`. Standalone TC86
+output is the complete 49-byte call sequence with exactly eight OMF fixups:
+four string-address references and four FAR-call operands. The grouped replay
+preserves the complete `0x2C7`-byte `OP_TITLE_TEXT` producer raw-equal. The
+v603 complete OP aggregate passes 36/36 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v603-op-main-cdg-load-aggregate-001/receipt.json`,
+SHA-256 `56c20bb521cc0e72556db6d3f9ef6807a7679ebbb1bcf61108f195edd80bb524`.
+All 804 ordered target relocations remain preserved. This is decoded-function
+exactness only; no DIET-packed offset or whole-OP exactness is claimed.
+
+## Prior verified cohort: OP comment fade-in animation
 
 v600 reconstructs the 49-byte `cmt_fadein_both_animate()` leaf at payload
 `0xC30E` (`1A74:1BCE`). Ghidra closes one contiguous body with one caller and
@@ -329,7 +348,7 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600, or MAINE v590: their
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602, or MAINE v590: their
 complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`

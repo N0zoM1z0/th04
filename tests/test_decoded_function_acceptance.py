@@ -193,6 +193,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("maine-box-bg-free-v585", "0xC3D", "box-bg-free"),
             ("maine-script-param-second-v590", "0xC3D", "script-param-second"),
             ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
+            ("op-main-cdg-load-v602", "0x2C6", "main-CDG-load"),
             ("op-nopoly-free-v584", "0x6A4", "nopoly-free"),
             ("op-frame-delay-2-v587", "0x16", "frame-delay-2"),
             ("op-raise-bg-free-v588", "0xAB2", "raise-bg-free"),
@@ -304,6 +305,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-main-cdg-free-v583", saved)[1],
             "scripts/probes/replay_th04_op_main_cdg_free.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-main-cdg-load-v602", saved)[1],
+            "scripts/probes/replay_th04_op_main_cdg_load.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-nopoly-free-v584", saved)[1],

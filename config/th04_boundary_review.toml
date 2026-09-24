@@ -831,3 +831,15 @@ expected_body_span = 0x31
 reviewed_body_size = 0x31
 review_evidence_id = "ev-th04-op-cmt-fadein-boundary-v600"
 notes = "Target Ghidra closes one contiguous 49-byte near body at 1A74:1BCE with one caller and two callees. Raw target loops effect values 4..7 through cmt_put and music_update_render_and_flip, then sets effect 2 and performs the final cmt_put/music_update/cmt_put sequence."
+
+# v602: target-first review for main_cdg_load.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xCC97
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/title/main_cdg_load.cpp"
+expected_body_span = 0x31
+reviewed_body_size = 0x31
+review_evidence_id = "ev-th04-op-main-cdg-load-boundary-v602"
+notes = "Target Ghidra closes one contiguous 49-byte near body at 1A74:2557 with one caller and two distinct callees. Raw target fixes CDG slots 0/10/35/40, string pointers resolving to sft1.cd2/sft2.cd2/car.cd2/sl.cd2, three CDG_LOAD_ALL calls, and one CDG_LOAD_ALL_NOALPHA call."
