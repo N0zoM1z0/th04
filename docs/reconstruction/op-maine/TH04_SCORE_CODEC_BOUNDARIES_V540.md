@@ -134,8 +134,8 @@ has SHA-256
 `06e516fa190d5ac8462ed3b2a65728a7cfae39dde86570fb3f783b9546e25afa`, and the
 small generated listing is kept beside it for diagnosis. The unit remains
 source-present/nonexact and its packed-file offset is unknown. OP remains at
-21 exact / 72 pending. Next target-first surface is `input_wait_for_change` at
-payload `0xDB62`.
+21 exact / 72 pending. At that checkpoint the next target-first surface was
+`input_wait_for_change` at payload `0xDB62`.
 
 ## v574 MAINE decoder source-present result
 
@@ -170,4 +170,40 @@ the target and natural-source disassemblies; the generated A build tree and
 compile log were moved to trash, leaving only the 5.3 KiB receipt. MAINE remains
 at 25 decoded-function exact slices / 2,297 exact bytes, plus this 88-byte
 source-present candidate (2,385 total decoded source-owner bytes). Next codec
-owner is the separately reviewed `scoredat_encode` at payload `0xC1A1`.
+owner at that checkpoint was the separately reviewed `scoredat_encode` at
+payload `0xC1A1`.
+
+## v577 MAINE encoder source-present result
+
+The reviewed MAINE `scoredat_encode` extent is 101 bytes at `1A05:2151`,
+payload `0xC1A1..0xC205`, target SHA-256
+`c5c56e733842e6ba9b2d0448109939b2e04c8536b8495057425c4e787437c497`. Fresh
+target disassembly closes one contiguous Ghidra body with 34 instructions, four
+internal aligned direct branches, and `RET` at the final byte.
+
+Target observation: the body clears the 16-bit sum word, accumulates the bytes
+at `+4..+195`, calls far `0000:1C5A` twice and stores each return's low byte into
+the two key fields, then walks backward from `+195` to `+4`. Each current byte
+is reduced by key1 plus feedback; feedback becomes that newly encoded byte
+rotated right three bits and XORed with key2. The interpretation as an encoder
+is inferred from those effects. `scoredat_encode` and `irand` are candidate/MAP
+names, not target-attested symbols.
+
+Maintained natural C++ is `src/maine/score/scoreenc.cpp` plus
+`src/maine/score/scoreenc.inl`. Direct near-byte accesses reproduce the
+target-like loop structure and two far calls in TC86 output, but the standalone
+`SCORE_TEXT` segment is 113 bytes, 12 bytes over target. The target's four-byte
+in-place `ROR byte [BP-1],3` is one instruction; natural shift/OR expands to a
+16-byte sequence. The codegen diagnostic therefore stops before grouped/raw
+acceptance. No target-derived assembly or packed-file offset is claimed.
+
+The receipt
+`.analysis/reconstruction/probes/v577-maine-scoredat-encode-002/receipt.json`
+has SHA-256
+`cacd9942ab10700798df036caad7c717b9cd6770ec8d386db390e4b4b7015e5c` and
+contains both target and natural-source disassemblies, source digests, and the
+valid TC86 OMF identity. The generated 8 MiB A worktree and compile log were
+moved to trash immediately, leaving only the 12 KiB receipt. MAINE remains at
+25 decoded-function exact slices / 2,297 exact bytes, plus two nonexact
+source-present codec candidates totaling 189 bytes (2,486 decoded source-owner
+bytes). The next codec owner is `scoredat_recreate` at payload `0xC206`.

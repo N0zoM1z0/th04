@@ -27,14 +27,14 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 27 / 58 / 8 | 24 | 69 / 0 | 2,841 |
-| MAINE.EXE | 31 / 35 / 6 | 25 | 47 / 0 | 2,385 |
+| MAINE.EXE | 31 / 35 / 6 | 25 | 47 / 0 | 2,486 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 2,841 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 2,567 bytes are in the 24 accepted exact
 functions. MAINE has 25 decoded-function exact functions (2,297 bytes), plus
-one 88-byte source-present/nonexact `scoredat_decode` candidate; total decoded
-source-owner bytes are 2,385.
+two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,486.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
@@ -84,6 +84,16 @@ so this remains source-present/nonexact. No target-derived assembly or packed
 offset is claimed; details are in
 [the SCORE codec note](reconstruction/op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md).
 
+The v577 MAINE SCORE encoder candidate at payload `0xC1A1` (`1A05:2151`) adds
+101 source-owner bytes. Target instructions sum bytes `+4..+195`, call the far
+helper at `0000:1C5A` twice for key bytes, then encode backward using the
+previous output byte rotated right three bits and XORed with the second key.
+Natural maintained C++ emits 113 standalone bytes; the 12-byte excess is the
+16-byte shift/OR rotation versus target's four-byte in-place `ROR`. It remains
+source-present/nonexact; the helper's candidate name is not target-attested,
+and no packed offset is claimed. The next MAINE codec is `scoredat_recreate` at
+payload `0xC206`.
+
 ## Latest physical-boundary review: MAINE cutscene and indirect dispatcher
 
 MAINE payload `0xA847..0xADBB` (`1A05:07F7..0D6B`) is now boundary-reviewed
@@ -114,9 +124,9 @@ are disposable; current private acceptance directories retain only their small
 receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
-For the next MAINE step, continue target-first with reviewed `scoredat_encode`
-at payload `0xC1A1`, then `scoredat_recreate` at `0xC206`; do not inherit the
-decompiled candidate bodies. Keep the reviewed `0xA847..0xADBB` indirect
+For the next MAINE step, continue target-first with reviewed `scoredat_recreate`
+at payload `0xC206`; do not inherit its decompiled candidate body. Keep the
+reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not
 trust candidate names or assume address order establishes source ownership.

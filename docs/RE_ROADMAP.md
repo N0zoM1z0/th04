@@ -100,10 +100,12 @@ exact-state aggregate replay. v574 adds a target-first MAINE `scoredat_decode`
 source candidate at `0xC149`; its natural TC86 CODE is 97 bytes against the
 reviewed 88-byte target because the target's byte `ROR` is not reproduced by
 natural shift/OR C++. It remains source-present/nonexact. This is
-function-level work, not a packed-file or entire SCORE-TU claim. Continue with
-the adjacent reviewed MAINE `scoredat_encode` owner at `0xC1A1`, then
-`scoredat_recreate` at `0xC206`; keep source authority separate from target
-boundary and codegen evidence.
+function-level work, not a packed-file or entire SCORE-TU claim. v577 adds the
+adjacent MAINE `scoredat_encode` candidate at `0xC1A1`: target flow has a
+separate observation, while natural TC86 output is 113 bytes against 101 because
+the byte rotate expands to shifts/OR. It remains source-present/nonexact; no
+target-derived assembly is used. Continue with target-first `scoredat_recreate`
+at `0xC206`, keeping candidate naming/provenance separate from target evidence.
 
 ## 3. Reconcile boundary and origin alongside mature TUs
 
@@ -146,9 +148,11 @@ review. MAINE's candidate-C++ hi_end boundaries are physically reviewed after
 v541 and its first seven SCORE_TEXT functions are accepted after v543-v551;
 v557 adds the high-score loader, v565 adds shared input-wait, and v570 adds
 shared vector math, bringing MAINE at that checkpoint to 24 / 2,247 decoded
-function bytes. The next target-first MAINE SCORE owners are the reviewed
-`scoredat_encode` at `0xC1A1` and `scoredat_recreate` at `0xC206`; reconstruct
-them from target bytes rather than inheriting decompiled candidate bodies.
+function bytes. v577 adds MAINE `scoredat_encode` source at `0xC1A1`, but the
+natural standalone CODE is 113 bytes against a reviewed 101-byte target because
+of the rotate codegen mismatch. The next target-first MAINE SCORE owner is the
+reviewed `scoredat_recreate` at `0xC206`; reconstruct it from target bytes
+rather than inheriting the decompiled candidate body.
 Registration-menu and cutscene work remain separate ownership questions, with
 source provenance kept apart from target-boundary confidence. v572 reviewed
 the adjacent 50-byte MAINE cutscene helper at payload
