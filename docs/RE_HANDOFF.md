@@ -27,21 +27,41 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 39 / 46 / 8 | 36 | 57 / 0 | 3,222 |
-| MAINE.EXE | 35 / 32 / 5 | 30 | 42 / 0 | 2,740 |
+| MAINE.EXE | 36 / 31 / 5 | 31 | 41 / 0 | 2,789 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 3,222 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes); 2,948 bytes are in the 36 accepted exact
-functions. MAINE has 30 decoded-function exact functions (2,551 bytes), plus
+functions. MAINE has 31 decoded-function exact functions (2,600 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
-and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,740.
+and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,789.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP main CDG loader
+## Latest verified cohort: MAINE resident-pointer CFG loader
+
+v604 reconstructs the 49-byte `cfg_load_resident_ptr()` leaf at payload
+`0xA059` (`1A05:0009`). Ghidra closes one contiguous body with one caller and
+three callees. The target itself fixes the file flow: open `MIKO.CFG`, read
+exactly 10 bytes into the local CFG structure, close the file, load the
+`resident` segment field, store that segment in `_resident+2`, clear the
+`_resident` offset word, and return the segment.
+
+Maintained natural source is `src/maine/core/cfg_load_resident_ptr.cpp`.
+Standalone TC86 output has exactly six expected fixups: the CFG filename,
+three FAR file calls, and two `_resident` address references. The grouped replay
+preserves the complete `0x239`-byte `MAINE_E_TEXT` producer and the retained
+MAINE program image. The v605 complete MAINE aggregate passes 31/31 registered
+decoded functions raw-zero:
+`.analysis/reconstruction/probes/v605-maine-cfg-resident-aggregate-001/receipt.json`,
+SHA-256 `885d28b9be1c3bd2bbb6a960cef52daca288fae7a336627de57ac8c014bbb8ed`.
+All 559 ordered target relocations remain preserved. This is decoded-function
+exactness only; no DIET-packed offset or whole-MAINE exactness is claimed.
+
+## Prior verified cohort: OP main CDG loader
 
 v602 reconstructs the 49-byte `main_cdg_load()` leaf at payload `0xCC97`
 (`1A74:2557`). Ghidra closes one contiguous body with one caller and two
@@ -348,8 +368,8 @@ receipts. Delete experiment intermediates immediately after recording their
 receipt, and preserve only artifacts covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602, or MAINE v590: their
-complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602, or MAINE v590/v604:
+their complete decoded-function extents now pass raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
 dispatcher as a separate ownership question: its candidate `th04/cutscene.cpp`
 is only a forwarder to TH03 and is not maintained MAINE product code. Do not

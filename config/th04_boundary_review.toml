@@ -843,3 +843,15 @@ expected_body_span = 0x31
 reviewed_body_size = 0x31
 review_evidence_id = "ev-th04-op-main-cdg-load-boundary-v602"
 notes = "Target Ghidra closes one contiguous 49-byte near body at 1A74:2557 with one caller and two distinct callees. Raw target fixes CDG slots 0/10/35/40, string pointers resolving to sft1.cd2/sft2.cd2/car.cd2/sl.cd2, three CDG_LOAD_ALL calls, and one CDG_LOAD_ALL_NOALPHA call."
+
+# v604: target-first review for cfg_load_resident_ptr.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA059
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/core/cfg_load_resident_ptr.cpp"
+expected_body_span = 0x31
+reviewed_body_size = 0x31
+review_evidence_id = "ev-th04-maine-cfg-resident-boundary-v604"
+notes = "Target Ghidra closes one contiguous 49-byte near body at 1A05:0009 with one caller and three callees. Raw target reads 10-byte MIKO.CFG via FILE_ROPEN/FILE_READ/FILE_CLOSE, loads cfg.resident from local offset -4, writes resident segment to _resident+2 while zeroing _resident offset, and returns that segment."

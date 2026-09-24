@@ -70,10 +70,10 @@ The currently maintained reviewed shared hardware/PI/sound/input/math cohort is
 complete in both OP and MAINE: three BGIMAGE functions plus VRAM, frame delay,
 three PI functions, PMD, MMD, KAJA, mode detection, delay-until-measure,
 input-wait, `snd_se_reset`, plus `polar` and `VECTOR2_AT`. That is 17
-decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 30
-decoded-exact functions / 2,551 exact source-owner bytes plus two
+decoded-exact functions / 1,031 source-owner bytes per artifact. MAINE has 31
+decoded-exact functions / 2,600 exact source-owner bytes plus two
 source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
-`scoredat_encode` (101 bytes), for 2,740 decoded source-owner bytes; OP has
+`scoredat_encode` (101 bytes), for 2,789 decoded source-owner bytes; OP has
 36 decoded-exact functions / 2,948 exact source-owner bytes, with two separate
 codec candidates (274 bytes) still source-present and nonexact, for 3,222
 decoded source-owner bytes total.
@@ -187,6 +187,14 @@ fixups; grouped replay preserves the complete `OP_TITLE_TEXT` producer. The
 v603 OP aggregate passes 36/36 decoded slices with all 804 ordered relocations
 preserved. This remains decoded-function evidence only, not packed-file or
 whole-OP exactness.
+v604 then adds MAINE's 49-byte `cfg_load_resident_ptr`
+leaf. Target bytes and MAP evidence independently bind the `MIKO.CFG` file
+flow, 10-byte local CFG read, the resident-segment extraction, and the
+`_resident` far-pointer update. Standalone TC86 output has six expected fixups;
+the grouped replay preserves the complete `MAINE_E_TEXT` producer. The v605
+MAINE aggregate passes 31/31 decoded slices with all 559 ordered relocations
+preserved. This remains decoded-function evidence only, not packed-file or
+whole-MAINE exactness.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.
@@ -241,7 +249,7 @@ slice at `0xC206`; MAINE reached 26/26 at v580. v581 then adds shared
 `snd_se_reset` to OP and MAINE. v582-v585 add the four small cutscene/title/music
 leaves described above; v587-v588 then add OP frame_delay_2 and raise_bg_free,
 and v590/v591 add the second MAINE script-number helper. The current
-decoded-function totals are 36/36 OP and 30/30 MAINE. The next unit is not
+decoded-function totals are 36/36 OP and 31/31 MAINE. The next unit is not
 preselected: re-evaluate outstanding small reviewed/corroborated owners and
 boundary/origin maturity before starting it.
 Registration-menu and cutscene work remain separate ownership questions, with
