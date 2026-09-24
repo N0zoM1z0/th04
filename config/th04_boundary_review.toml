@@ -987,3 +987,15 @@ expected_body_span = 0x51
 reviewed_body_size = 0x51
 review_evidence_id = "ev-th04-op-se-choice-boundary-v626"
 notes = "Target Ghidra closes one contiguous 81-byte near Pascal body at 1A74:0FA7 with one caller and one callee. Target mode values 0/1/2 select OFF/FM/BEEP; linked DGROUP strings at 0x0E08/0x0DE6/0x0DF7 render at vertical offsets +32/+0/+16 from CHOICE_TOP=136. CHOICE_LEFT=48 and the sole FAR call is 0DA1:04A4 GRAPH_PUTSA_FX. Pinned op_setup.obj data independently binds these addresses to the three Shift-JIS SE choice strings."
+
+# v628: target-first review for window_rollup_put.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB519
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/window_rollup_put.cpp"
+expected_body_span = 0x59
+reviewed_body_size = 0x59
+review_evidence_id = "ev-th04-op-window-rollup-put-boundary-v628"
+notes = "Target Ghidra closes one contiguous 89-byte near Pascal body at 1A74:0DD9 with one caller and two callees. Raw target and MAP bind _window.w at 0F34:2B48, EGC copy at 0DA1:0968, and SUPER_PUT at 0000:2D5A; constants are MSWIN_W/H=16, DROP_SPEED=8, bottom pattern IDs 6/3/7, and terminal RET 4."

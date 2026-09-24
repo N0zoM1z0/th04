@@ -26,12 +26,12 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 47 / 38 / 8 | 44 | 49 / 0 | 3,765 |
+| OP.EXE | 48 / 37 / 8 | 45 | 48 / 0 | 3,854 |
 | MAINE.EXE | 39 / 28 / 5 | 34 | 38 / 0 | 2,972 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 3,765 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes); 3,491 bytes are in the 44 accepted exact
+OP's 3,854 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes); 3,580 bytes are in the 45 accepted exact
 functions. MAINE has 34 decoded-function exact functions (2,783 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes
 and `scoredat_encode` 101 bytes); total decoded source-owner bytes are 2,972.
@@ -41,7 +41,27 @@ active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
 
-## Latest verified cohort: OP SE choice renderer
+## Latest verified cohort: OP setup window-rollup renderer
+
+v628 reconstructs the 89-byte `window_rollup_put(int,int)` helper at payload
+`0xB519` (`1A74:0DD9`) inside `OP_SETUP_TEXT`. Fresh target review closes one
+contiguous near Pascal body with one caller and two callees. Raw operands plus
+the pinned MAP bind `_window.w` at `0F34:2B48`, `EGC_COPY_RECT_1_TO_0_16` at
+`0DA1:0968`, and `SUPER_PUT` at `0000:2D5A`. The target independently fixes
+16-pixel window tiles, the 8-pixel drop step, bottom pattern IDs 6/3/7, and
+terminal `RET 4`.
+
+Maintained natural source is `src/op/setup/window_rollup_put.cpp`. Two separate
+focused A/B cold replays reproduce all 89 function bytes and the complete
+`0x5A6`-byte `OP_SETUP_TEXT` producer while preserving grouped link-relevant OMF,
+the full retained OP program image, and all 804 ordered relocations. The v629
+complete OP aggregate passes 45/45 registered decoded functions raw-zero:
+`.analysis/reconstruction/probes/v629-op-window-rollup-aggregate-001/receipt.json`,
+SHA-256 `e025be7d369c913df35a18339145781e6a4e0e9ab9ef1a54311df04301a50fcf`.
+This is decoded-function exactness only; no DIET-packed offset or whole-OP
+exactness is claimed.
+
+## Prior verified cohort: OP SE choice renderer
 
 v626 reconstructs the 81-byte `se_choice_put(int,unsigned int)` renderer at
 payload `0xB6E7` (`1A74:0FA7`) inside `OP_SETUP_TEXT`. Ghidra closes one
@@ -597,7 +617,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v627, tracked reconstruction state is **OP 44 decoded-exact / 49
+After v629, tracked reconstruction state is **OP 45 decoded-exact / 48
 pending**, **MAINE 34 / 38**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
@@ -661,7 +681,7 @@ after recording their receipt, and preserve pinned inputs plus artifacts
 covered by `config/analysis_retention.toml`.
 
 Do not reopen MAINE `scoredat_recreate` at payload `0xC206`, the v582-v585
-leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624/v626,
+leaf batch, OP v587-v588/v592/v594/v596/v598/v600/v602/v606/v610/v612/v622/v624/v626/v628,
 or MAINE v590/v604/v608/v614: their complete decoded-function extents now pass
 raw-zero acceptance. Select the next small unit from fresh OP/MAINE/ZUN boundary and
 origin evidence rather than address order or candidate names. Keep the reviewed `0xA847..0xADBB` indirect
