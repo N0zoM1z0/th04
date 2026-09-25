@@ -83,8 +83,9 @@ source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `box_1_to_0_masked` and 52-byte nonexact `egc_start_copy`, for 3,881 decoded
 source-owner bytes; OP has
 58 decoded-exact functions / 4,981 exact source-owner bytes, with two separate
-codec candidates (274 bytes) plus `snd_se_update` (76 bytes) still
-source-present and nonexact, for 5,331 decoded source-owner bytes total.
+codec candidates (274 bytes), `snd_se_update` (76 bytes), and
+`nopoly_B_put` (30 bytes) still source-present and nonexact, for 5,361
+decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
@@ -457,6 +458,12 @@ the target copy-helper shape without low-level forcing; focused replay raw-match
 the complete function and the 0xD53-byte `OP_MAIN_TEXT` owner, and the
 v669 OP aggregate passes 58/58 decoded slices with all 804 ordered relocations
 preserved.
+v670 then reviews the 30-byte `nopoly_B_put` leaf and closes its natural
+codegen question without exact credit. TC86 intrinsic `memcpy` emits the
+same 30-byte size and `REP MOVSW` strategy, but source/destination segment
+setup ordering differs from target; several other ordinary-C++ variants are
+also nonexact. The current cross-game pseudoregister/`__memcpy__` form is
+explicitly decompilation-oriented and is not accepted as authored source.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.

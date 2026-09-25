@@ -45,7 +45,7 @@ it enters the standalone product build.
 
 | Artifact | Reviewed | Corroborated | Provisional |
 | --- | ---: | ---: | ---: |
-| `th04-op` | 62 | 23 | 8 |
+| `th04-op` | 63 | 22 | 8 |
 | `th04-main` | 495 | 0 | 0 |
 | `th04-maine` | 47 | 20 | 5 |
 | `th04-zun` | 13 | 0 | 0 |

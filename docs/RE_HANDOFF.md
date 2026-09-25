@@ -26,13 +26,14 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 62 / 23 / 8 | 58 | 35 / 0 | 5,331 |
+| OP.EXE | 63 / 22 / 8 | 58 | 35 / 0 | 5,361 |
 | MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 5,331 source-owner bytes include two source-present but nonexact SCORE
-codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
-candidate; 4,981 bytes are in the 58 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+OP's 5,361 source-owner bytes include two source-present but nonexact SCORE
+codec candidates (274 bytes), the 76-byte nonexact `snd_se_update`,
+and the 30-byte nonexact `nopoly_B_put` candidate; 4,981 bytes are in
+the 58 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -42,6 +43,28 @@ packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest diagnostic: OP nopoly B-plane copy codegen gap
+
+v670 target-reviews the 30-byte `nopoly_B_put()` leaf at payload
+`0xBFA7` (`1A74:1867`) inside `OP_MUSIC_TEXT`. Target Ghidra closes
+one contiguous near body with two callers and no callees. Raw target and MAP
+evidence bind destination segment 0xA800, source segment pointer `_nopoly_B`
+at `0F34:3A80`, 0x3E80 words, `REP MOVSW`, explicit DS save/restore,
+and near RET.
+
+Maintained semantic source is `src/op/music/nopoly_put.cpp` using TC86
+intrinsic `memcpy`. Two cold compilations are deterministic and, notably,
+also exactly 30 bytes with `REP MOVSW`. However TC86 evaluates the source
+segment first and delays ES setup / DS save, while the target sets ES=A800
+first and saves DS earlier. Ordinary dword/word loops, normal memcpy/_fmemcpy,
+movedata, and local-pointer intrinsic variants also fail exact codegen. Current
+cross-game reference source forces the target ordering with `_ES/_DS`
+pseudoregisters plus `__memcpy__()`; `decomp.hpp` explicitly describes
+this surface as a reordered decompilation helper. It is therefore not compiled
+or credited as authored source. Receipt SHA-256
+`3386849194676a149b4a5a7fdbc249cd0c2a1113a0449e1299a4c61411afe147`.
+No exact-function credit is claimed.
 
 ## Latest verified cohort: OP exit configuration writer
 
@@ -1051,7 +1074,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v669, tracked reconstruction state is **OP 58 decoded-exact / 35
+After v670, tracked reconstruction state is **OP 58 decoded-exact / 35
 pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.

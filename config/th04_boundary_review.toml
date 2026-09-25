@@ -1264,3 +1264,15 @@ expected_body_span = 0x7E
 reviewed_body_size = 0x7E
 review_evidence_id = "ev-th04-op-cfg-save-exit-boundary-v668"
 notes = "Target Ghidra closes one contiguous 126-byte near body at 1A74:0133 with one caller and five callees. Target binds the compiler-generated F_SCOPY@ initialization from a 10-byte zero template, MIKO.CFG, FILE_APPEND/SEEK/WRITE/CLOSE, six resident option fields, checksum byte, and 10-byte write size."
+
+# v670: target-first review for nopoly_B_put; natural intrinsic codegen remains nonexact.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xBFA7
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/nopoly_put.cpp"
+expected_body_span = 0x1E
+reviewed_body_size = 0x1E
+review_evidence_id = "ev-th04-op-nopoly-b-put-boundary-v670"
+notes = "Target Ghidra closes one contiguous 30-byte near body at 1A74:1867 with two callers and no callees. Raw target and MAP bind ES=A800, _nopoly_B at 0F34:3A80, 0x3E80 words, REP MOVSW, and explicit DS save/restore. Natural intrinsic memcpy is also 30 bytes and uses REP MOVSW but TC86 orders source/destination segment setup differently. Multiple ordinary-C++ variants fail exactness; cross-game pseudoregister/decomp helpers are not accepted for source credit."
