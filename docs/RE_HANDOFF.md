@@ -41,7 +41,7 @@ inputs are independently proven pristine release media.
 
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 83 / 7 / 3 | 77 | 16 / 0 | 11,642 |
+| OP.EXE | 85 / 5 / 3 | 79 | 14 / 0 | 12,212 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
@@ -50,7 +50,7 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-11,205 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
+11,775 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
@@ -206,9 +206,24 @@ receipt:
 SHA-256:
 e24181d3572c50ff6948e7db0fd761b867ff4a8251ae299d3ae0c204f16a3b7f
 
-OP now has 77/93 accepted functions. Only three provisional authored OP
-boundaries remain; continue mixing the remaining large Music Room/setup owners
-with leaf/codegen blockers rather than selecting only short functions.
+The fourth OP promotion closes the two remaining natural setup submenus:
+
+- setup_bgm_menu at 0xB794: 285 bytes;
+- setup_se_menu at 0xB8B1: 285 bytes.
+
+v745 preserves the complete 0x5A6 OP_SETUP_TEXT producer, full linked OP image,
+and all 804 ordered relocations in two cold rounds.
+
+The final current-ledger OP aggregate is v747: 79 unique registered slices, all
+79 raw-zero. Preserved receipt:
+
+.analysis/reconstruction/receipt-archive/v747-op-setup-submenus-canonical-receipt.json
+
+SHA-256:
+30294667ce38d0a1aef1871ffd0b36128dfcea4858fbe5553e5b399e022ec910
+
+OP now has 79/93 accepted functions. Three provisional authored OP boundaries
+remain; continue mixing large Music Room owners with leaf/codegen blockers.
 
 ## Analysis/worktree hygiene
 

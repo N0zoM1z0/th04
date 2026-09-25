@@ -281,7 +281,7 @@ def validate(
                                  "op-window-dropdown-put-v632",
                                  "op-singleline-v634",
                                  "op-dropdown-v630",
-                                 "op-setup-menu-v676",
+                                 "op-setup-menu-v676", "op-setup-submenus-v745",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-put-both-masked-v691", "maine-pi-put-quarter-v695", "maine-main-v697", "maine-staff-bg-helper-v700", "maine-staffroll-animate-v702", "maine-staff-dissolves-v725", "maine-graph-3-digit-v704", "maine-skill-percentage-v706", "maine-million-fraction-v708", "maine-sub-b81d-v711", "maine-sub-b9f2-v714", "maine-verdict-owner-v717", "maine-score-rect-natural-v723", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
@@ -827,6 +827,16 @@ def validate(
                     or producer_start != OP_SETUP_MENU_PRODUCER
                     or producer_size != 0x5A6):
                 raise ValueError(f"{ident}: OP setup-menu backend does not compile this producer")
+        elif backend == "op-setup-submenus-v745":
+            expected = {
+                "src/op/setup/setup_bgm_menu.inl",
+                "src/op/setup/setup_se_menu.inl",
+            }
+            if (artifact != "th04-op"
+                    or source_name not in expected
+                    or producer_start != 0xB49F
+                    or producer_size != 0x5A6):
+                raise ValueError(f"{ident}: OP setup-submenus backend does not compile this producer")
         elif backend == "op-start-extra-v662":
             if (artifact != "th04-op"
                     or source_name != "src/op/start/start_extra.cpp"
@@ -1191,6 +1201,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-setup-menu-v676":
         return [sys.executable, "scripts/probes/replay_th04_op_setup_menu.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-setup-submenus-v745":
+        return [sys.executable, "scripts/probes/replay_th04_op_setup_submenus.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-insert-v543":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_insert.py",

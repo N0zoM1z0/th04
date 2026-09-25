@@ -1846,3 +1846,27 @@ expected_body_span = 0x128
 reviewed_body_size = 0x128
 review_evidence_id = "ev-th04-op-op-main-boundary-v742"
 notes = "Fresh Ghidra, MAP adjacency, target terminal RETF, TC86 -S PROC/ENDP, and v742 cold replay agree on the complete contiguous 0x128 _main body ending exactly at the 0xD53 op_main.cpp producer boundary."
+
+
+# v745: target-reviewed natural OP setup submenus.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB794
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/setup_bgm_menu.inl"
+expected_body_span = 0x11D
+reviewed_body_size = 0x11D
+review_evidence_id = "ev-th04-op-setup-bgm-boundary-v745"
+notes = "Fresh target Ghidra and MAP close one contiguous 285-byte setup_bgm_menu body. v745 maintained natural C++ reproduces the body and complete 0x5A6 OP_SETUP_TEXT producer in two cold rounds; v747 canonical aggregate passes 79/79."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB8B1
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/setup_se_menu.inl"
+expected_body_span = 0x11D
+reviewed_body_size = 0x11D
+review_evidence_id = "ev-th04-op-setup-se-boundary-v745"
+notes = "Fresh target Ghidra and MAP close one contiguous 285-byte setup_se_menu body. v745 maintained natural C++ reproduces the body and complete 0x5A6 OP_SETUP_TEXT producer in two cold rounds; v747 canonical aggregate passes 79/79."
