@@ -663,6 +663,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_cutscene_animate.py",
         )
 
+    def test_maine_box_bg_snap_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-box-bg-snap-v689")
+        owner["source"] = "src/maine/cutscene/box_bg_put.cpp"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-box-bg-snap-v689")
+        owner["producer_offset"] = "0xA293"
+        with self.assertRaisesRegex(ValueError, "box-bg-snap backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-box-bg-snap-v689",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_box_bg_snap.py",
+        )
+
     def test_maine_box_animate_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

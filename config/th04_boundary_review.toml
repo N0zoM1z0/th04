@@ -1384,3 +1384,16 @@ expected_body_span = 0xD4
 reviewed_body_size = 0xD4
 review_evidence_id = "ev-th04-maine-cutscene-animate-boundary-v687"
 notes = "Fresh target Ghidra closes one contiguous 212-byte body at 1A05:0DAC with one caller and seven callees; the next code contribution is 1A05:0E80 MAINE_01_TEXT. v687 maintained natural C++ reproduces the complete body and CUTSCENE_TEXT producer in two cold rounds."
+
+
+# v689: target-first review and exact replay for box_bg_allocate_and_snap.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA4AE
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/box_bg_snap.inl"
+expected_body_span = 0xD1
+reviewed_body_size = 0xD1
+review_evidence_id = "ev-th04-maine-box-bg-snap-boundary-v689"
+notes = "Fresh target Ghidra closes one contiguous 209-byte body at 1A05:045E with one caller and two callees; the next function is box_bg_free at 1A05:052F. v689 maintained natural C++ reproduces the complete body and CUTSCENE_TEXT producer in two cold rounds."

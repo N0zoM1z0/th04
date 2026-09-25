@@ -68,6 +68,7 @@ MAINE_SCORE_PUT_PRODUCER = 0xC506
 MAINE_BOX_ANIMATE_PRODUCER = 0xA292
 MAINE_SCRIPT_OP_PRODUCER = 0xA292
 MAINE_CUTSCENE_ANIMATE_PRODUCER = 0xA292
+MAINE_BOX_BG_SNAP_PRODUCER = 0xA292
 MAINE_PIC_COPY_TO_OTHER_PRODUCER = 0xA292
 MAINE_CURSOR_ADVANCE_PRODUCER = 0xA292
 MAINE_BOX_BG_PUT_PRODUCER = 0xA292
@@ -276,7 +277,7 @@ def validate(
                                  "op-dropdown-v630",
                                  "op-setup-menu-v676",
                                  "maine-score-insert-v543", "maine-score-put-v544",
-                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
+                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
@@ -360,6 +361,12 @@ def validate(
                     or producer_start != MAINE_CUTSCENE_ANIMATE_PRODUCER
                     or producer_size != 0xC3E):
                 raise ValueError(f"{ident}: MAINE cutscene-animate backend does not compile this producer")
+        elif backend == "maine-box-bg-snap-v689":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/cutscene/box_bg_snap.inl"
+                    or producer_start != MAINE_BOX_BG_SNAP_PRODUCER
+                    or producer_size != 0xC3E):
+                raise ValueError(f"{ident}: MAINE box-bg-snap backend does not compile this producer")
         elif backend == "maine-pic-copy-to-other-v651":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/cutscene/pic_copy_to_other.cpp"
@@ -1057,6 +1064,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-cutscene-animate-v687":
         return [sys.executable, "scripts/probes/replay_th04_maine_cutscene_animate.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-box-bg-snap-v689":
+        return [sys.executable, "scripts/probes/replay_th04_maine_box_bg_snap.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-pic-copy-to-other-v651":
         return [sys.executable, "scripts/probes/replay_th04_maine_pic_copy_to_other.py",
