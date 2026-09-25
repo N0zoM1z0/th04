@@ -47,6 +47,7 @@ contain residual counts that were correct only at that packet.
 - [MAINE staffroll animation exact replay](op-maine/TH04_MAINE_STAFFROLL_ANIMATE_EXACT_V702.md)
 - [MAINE skill percentage exact replay](op-maine/TH04_MAINE_SKILL_PERCENTAGE_EXACT_V706.md)
 - [MAINE million-fraction renderer exact replay](op-maine/TH04_MAINE_MILLION_FRACTION_EXACT_V708.md)
+- [MAINE sub_B81D exact replay](op-maine/TH04_MAINE_SUB_B81D_EXACT_V711.md)
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [OP/MAINE score codec boundary / provenance review](op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md)

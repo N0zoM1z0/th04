@@ -1525,3 +1525,16 @@ expected_body_span = 0x77
 reviewed_body_size = 0x77
 review_evidence_id = "ev-th04-maine-million-fraction-boundary-v708"
 notes = "Fresh target Ghidra closes one contiguous 119-byte body at 1A05:192B with two callers and two callees. The MAP public and pinned gv.cpp candidate corroborate the million-fraction renderer; v708 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds, and v710 is the canonical 52-slice current-ledger aggregate."
+
+
+# v711: target-first review and exact replay for sub_B81D.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB81D
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/sub_B81D.inl"
+expected_body_span = 0x69
+reviewed_body_size = 0x69
+review_evidence_id = "ev-th04-maine-sub-b81d-boundary-v711"
+notes = "Fresh target Ghidra closes one contiguous 105-byte body at 1A05:17CD with one caller and two callees. The MAP public/TASM PROC and pinned gv.cpp candidate corroborate sub_B81D; v711 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds, and v713 canonical aggregate passes all 53 slices."

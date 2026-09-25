@@ -709,6 +709,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
         )
 
+    def test_maine_sub_b81d_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-sub-b81d-v711")
+        owner["source"] = "src/maine/end/not_sub_b81d.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-sub-b81d-v711")
+        owner["producer_offset"] = "0xB788"
+        with self.assertRaisesRegex(ValueError, "sub-B81D backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-sub-b81d-v711",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_sub_b81d.py",
+        )
+
     def test_maine_million_fraction_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries
