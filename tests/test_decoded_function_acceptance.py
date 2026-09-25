@@ -709,6 +709,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
         )
 
+    def test_maine_skill_percentage_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-skill-percentage-v706")
+        owner["source"] = "src/maine/end/not_skill_percentage.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-skill-percentage-v706")
+        owner["producer_offset"] = "0xB788"
+        with self.assertRaisesRegex(ValueError, "skill-percentage backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-skill-percentage-v706",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_skill_percentage.py",
+        )
+
     def test_maine_staffroll_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

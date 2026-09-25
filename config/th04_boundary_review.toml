@@ -1499,3 +1499,16 @@ expected_body_span = 0x96
 reviewed_body_size = 0x96
 review_evidence_id = "ev-th04-maine-graph-3-digit-boundary-v704"
 notes = "Fresh target Ghidra closes one contiguous 150-byte body at 1A05:1737 with three callers and one callee. The MAP public and pinned gv.cpp candidate corroborate the graph_3_digit_put label; v704 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds."
+
+
+# v706: target-first review and exact replay for skill percentage owner.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB886
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/skill_apply_and_graph_percentage_put.inl"
+expected_body_span = 0xF5
+reviewed_body_size = 0xF5
+review_evidence_id = "ev-th04-maine-skill-percentage-boundary-v706"
+notes = "Fresh target Ghidra closes one contiguous 245-byte body at 1A05:1836 with one caller and two callees. The MAP public and pinned gv.cpp candidate corroborate the skill percentage owner; v706 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds."

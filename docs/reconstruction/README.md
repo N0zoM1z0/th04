@@ -104,3 +104,5 @@ milestones are retained evidence; do not scan them during routine handoff.
 - [MAINE staff background expansion helper natural-C++ exact replay](op-maine/TH04_MAINE_STAFF_BG_HELPER_EXACT_V700.md)
 
 - [MAINE staffroll animation exact replay](op-maine/TH04_MAINE_STAFFROLL_ANIMATE_EXACT_V702.md)
+
+- [MAINE skill percentage exact replay](op-maine/TH04_MAINE_SKILL_PERCENTAGE_EXACT_V706.md)
