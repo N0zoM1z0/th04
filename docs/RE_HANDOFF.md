@@ -26,14 +26,14 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 67 / 18 / 8 | 61 | 32 / 0 | 5,797 |
+| OP.EXE | 68 / 17 / 8 | 62 | 31 / 0 | 5,934 |
 | MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 5,797 source-owner bytes include two source-present but nonexact SCORE
+OP's 5,934 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes), the 76-byte nonexact `snd_se_update`,
 the 57-byte nonexact `SND_SE_PLAY`, and the 30-byte nonexact
-`nopoly_B_put` candidate; 5,360 bytes are in the 61 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+`nopoly_B_put` candidate; 5,497 bytes are in the 62 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -43,6 +43,27 @@ packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: OP polygon builder
+
+v678 reconstructs the 137-byte `polygon_build(...)` helper at payload
+`0xBFC5` (`1A74:1885`) inside `OP_MUSIC_TEXT`. Target Ghidra
+closes one contiguous near Pascal body with one caller and one callee. Target
+operands and MAP evidence bind `polar(int,int,int)`, `CosTable8`,
+`SinTable8`, the 4-bit center-Y subpixel shift, the 8-bit angle formula
+`((i << 8) / point_count) + plus_angle`, per-point stores, and the final
+copy of point 0 that closes the polygon.
+
+Maintained natural source is `src/op/music/polygon_build.cpp`. TC86 emits
+exactly 137 `OP_MUSIC_TEXT` bytes; masking four ordinary table/FAR-call
+fixups on both streams leaves byte-identical instruction code. Focused A/B
+cold replay raw-matches the complete function and the full 0x6A5-byte
+`OP_MUSIC_TEXT` owner while preserving grouped OMF, complete OP EXE/MAP
+identity, and all 804 ordered relocations. An independent focused recheck also
+passes. The v679 OP aggregate passes 62/62 registered decoded slices raw-zero,
+receipt SHA-256
+`453c09aca5a08735cce654a390342c6e13c4c2aedffc5b2f48d11860f3c17166`.
+No DIET-packed offset or whole-OP exactness is claimed.
 
 ## Latest verified cohort: OP setup-menu wrapper
 
@@ -1139,7 +1160,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v677, tracked reconstruction state is **OP 61 decoded-exact / 32
+After v679, tracked reconstruction state is **OP 62 decoded-exact / 31
 pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
