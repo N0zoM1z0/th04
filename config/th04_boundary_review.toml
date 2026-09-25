@@ -1721,3 +1721,60 @@ expected_body_span = 0x309
 reviewed_body_size = 0x309
 review_evidence_id = "ev-th04-op-playchar-menu-boundary-v735"
 notes = "Fresh target Ghidra and MAP review close one contiguous 777-byte playchar_menu body at 1A74:2FC8. The function ends exactly at the 0xAB3 OP_01_TEXT m_char.cpp module contribution boundary. v735 maintained natural C++ reproduces the complete body and producer in two cold rounds while preserving all 804 ordered relocations; v737 canonical aggregate passes 66/66."
+
+
+# v738: current-snapshot natural m_char.cpp remaining functions.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xCF5E
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/raise_bg_allocate_and_snap.inl"
+expected_body_span = 0x1A1
+reviewed_body_size = 0x1A1
+review_evidence_id = "ev-th04-op-raise-bg-allocate-snap-boundary-v738"
+notes = "Fresh Ghidra and MAP review close one contiguous 417-byte body. v738 maintained natural C++ reproduces it inside the exact 0xAB3 m_char.cpp producer in two cold rounds; v740 canonical aggregate passes 71/71."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD0FF
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/raise_bg_put.inl"
+expected_body_span = 0xF4
+reviewed_body_size = 0xF4
+review_evidence_id = "ev-th04-op-raise-bg-put-boundary-v738"
+notes = "Fresh Ghidra and MAP review close one contiguous 244-byte body. v738 maintained natural C++ reproduces it inside the exact 0xAB3 m_char.cpp producer in two cold rounds; v740 canonical aggregate passes 71/71."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD3A2
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/pic_put.inl"
+expected_body_span = 0xC3
+reviewed_body_size = 0xC3
+review_evidence_id = "ev-th04-op-pic-put-boundary-v738"
+notes = "Fresh Ghidra and MAP review close one contiguous 195-byte body. v738 maintained natural C++ reproduces it inside the exact 0xAB3 m_char.cpp producer in two cold rounds; v740 canonical aggregate passes 71/71."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD465
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/shottype_titles_put.inl"
+expected_body_span = 0x130
+reviewed_body_size = 0x130
+review_evidence_id = "ev-th04-op-shottype-titles-boundary-v738"
+notes = "Fresh Ghidra and MAP review close one contiguous 304-byte body. v738 maintained natural C++ reproduces it inside the exact 0xAB3 m_char.cpp producer in two cold rounds; v740 canonical aggregate passes 71/71."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD595
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/shottype_title_box_put.inl"
+expected_body_span = 0xBB
+reviewed_body_size = 0xBB
+review_evidence_id = "ev-th04-op-shottype-title-box-boundary-v738"
+notes = "Fresh Ghidra and MAP review close one contiguous 187-byte body. v738 maintained natural C++ reproduces it inside the exact 0xAB3 m_char.cpp producer in two cold rounds; v740 canonical aggregate passes 71/71."

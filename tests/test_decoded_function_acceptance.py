@@ -1025,6 +1025,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_script_param_first.py",
         )
 
+    def test_op_mchar_remaining_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["boundary_id"] == "th04-op-boundary-0cf5e")
+        owner["source"] = "src/op/menu/not_raise_bg.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["boundary_id"] == "th04-op-boundary-0d595")
+        owner["producer_size"] = "0xAB2"
+        with self.assertRaisesRegex(ValueError, "OP m-char remaining backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "op-mchar-remaining-v738",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_op_mchar_remaining.py",
+        )
+
     def test_op_big_menu_title_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         title = next(row for row in entries

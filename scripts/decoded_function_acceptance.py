@@ -263,7 +263,7 @@ def validate(
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "op-main-cdg-free-v583", "op-main-cdg-load-v602", "op-nopoly-free-v584",
                                  "op-nopoly-snap-v606",
-                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-big-menu-title-v735", "op-playchar-title-box-v638", "op-playchar-titles-v684", "op-pic-darken-v640", "op-shottype-menu-initial-v660", "op-playchar-menu-initial-v658",
+                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-big-menu-title-v735", "op-mchar-remaining-v738", "op-playchar-title-box-v638", "op-playchar-titles-v684", "op-pic-darken-v640", "op-shottype-menu-initial-v660", "op-playchar-menu-initial-v658",
                                  "op-game-exit-to-dos-v592", "op-game-exit-v654",
                                  "op-tracklist-put-both-v594",
                                  "op-track-put-both-v636", "op-polygon-build-v678",
@@ -650,6 +650,19 @@ def validate(
                     or source_name not in expected
                     or (producer_start, producer_size) != expected[source_name]):
                 raise ValueError(f"{ident}: OP big-menu-title backend does not compile this producer")
+        elif backend == "op-mchar-remaining-v738":
+            expected = {
+                "src/op/menu/raise_bg_allocate_and_snap.inl",
+                "src/op/menu/raise_bg_put.inl",
+                "src/op/menu/pic_put.inl",
+                "src/op/menu/shottype_titles_put.inl",
+                "src/op/menu/shottype_title_box_put.inl",
+            }
+            if (artifact != "th04-op"
+                    or source_name not in expected
+                    or producer_start != 0xCF5E
+                    or producer_size != 0xAB3):
+                raise ValueError(f"{ident}: OP m-char remaining backend does not compile this producer")
         elif backend == "op-playchar-title-box-v638":
             if (artifact != "th04-op"
                     or source_name != "src/op/menu/playchar_title_box_put.cpp"
@@ -1083,6 +1096,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-big-menu-title-v735":
         return [sys.executable, "scripts/probes/replay_th04_op_big_menu_title.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-mchar-remaining-v738":
+        return [sys.executable, "scripts/probes/replay_th04_op_mchar_remaining.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-playchar-title-box-v638":
         return [sys.executable, "scripts/probes/replay_th04_op_playchar_title_box_put.py",

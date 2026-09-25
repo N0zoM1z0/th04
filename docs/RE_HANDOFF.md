@@ -41,7 +41,7 @@ inputs are independently proven pristine release media.
 
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 72 / 13 / 8 | 66 | 27 / 0 | 7,706 |
+| OP.EXE | 77 / 8 / 8 | 71 | 22 / 0 | 9,053 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
@@ -50,7 +50,7 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-7,269 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
+8,616 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
@@ -173,16 +173,29 @@ replaces only their maintained bodies inside the pinned current OP translation
 units and reproduces the complete bodies, producers, linked program image, and
 all 804 ordered relocations in two cold rounds.
 
-The final current-ledger OP aggregate is v737: 66 unique registered slices, all
-66 raw-zero. Preserved receipt:
+The second OP promotion closes the remaining natural m_char.cpp functions:
 
-.analysis/reconstruction/receipt-archive/v737-op-big-menu-title-canonical-receipt.json
+- raise_bg_allocate_and_snap at 0xCF5E: 417 bytes;
+- raise_bg_put at 0xD0FF: 244 bytes;
+- pic_put at 0xD3A2: 195 bytes;
+- shottype_titles_put at 0xD465: 304 bytes;
+- shottype_title_box_put at 0xD595: 187 bytes.
+
+v738 replaces only those five bodies and preserves the complete 0xAB3
+m_char.cpp producer, full linked OP program image, and all 804 ordered
+relocations in two cold rounds.
+
+The final current-ledger OP aggregate is v740: 71 unique registered slices, all
+71 raw-zero. Preserved receipt:
+
+.analysis/reconstruction/receipt-archive/v740-op-mchar-remaining-canonical-receipt.json
 
 SHA-256:
-ad310c10e6eea4bd68b232010e83b2100181f5674eb17ad4e8f2fc1293c1ac37
+61f06b7a708ad3f205d844a50effc3c3d4d0fbc8b9378453b3aaf7735afdb05b
 
-OP now has 66/93 accepted functions. Continue mixing large menu/title/setup
-owners with leaf/codegen blockers rather than selecting only short functions.
+OP now has 71/93 accepted functions. Continue mixing large menu/title/setup and
+Music Room owners with leaf/codegen blockers rather than selecting only short
+functions.
 
 ## Analysis/worktree hygiene
 
