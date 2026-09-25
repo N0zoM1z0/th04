@@ -26,13 +26,13 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 61 / 24 / 8 | 57 | 36 / 0 | 5,205 |
+| OP.EXE | 62 / 23 / 8 | 58 | 35 / 0 | 5,331 |
 | MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 5,205 source-owner bytes include two source-present but nonexact SCORE
+OP's 5,331 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes) plus the 76-byte nonexact `snd_se_update`
-candidate; 4,855 bytes are in the 57 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+candidate; 4,981 bytes are in the 58 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -42,6 +42,27 @@ packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: OP exit configuration writer
+
+v668 reconstructs the 126-byte `cfg_save_exit()` helper at payload
+`0xA873` (`1A74:0133`) inside `OP_MAIN_TEXT`. Target Ghidra closes
+one contiguous near body with one caller and five callees. Raw target data and
+MAP evidence bind TC86 runtime `F_SCOPY@`, a 10-byte all-zero template at
+`DS:0091`, `MIKO.CFG` at `DS:0108`, `FILE_APPEND`, `FILE_SEEK`,
+`FILE_WRITE`, `FILE_CLOSE`, six resident configuration fields, the
+byte-sum checksum at structure offset 9, and a full 10-byte write.
+
+Maintained natural source is `src/op/config/cfg_save_exit.cpp`. The plain
+C++ initializer `cfg_t cfg = { 0 }` naturally makes TC86 emit the target
+`F_SCOPY@` path; standalone output is exactly 126 `OP_MAIN_TEXT` bytes
+and becomes target-identical after masking eight ordinary data/FAR-call
+fixups on both streams. Focused A/B replay raw-matches the complete function
+and 0xD53-byte `OP_MAIN_TEXT` owner while preserving grouped OMF, complete
+OP EXE/MAP identity, and all 804 ordered relocations. The v669 OP aggregate
+passes 58/58 registered decoded slices raw-zero, receipt SHA-256
+`2c40cd03ebac5749e82a9d50b8bfbaec76b1c248458ebabec95ddf3bca0ba013`.
+No DIET-packed offset or whole-OP exactness is claimed.
 
 ## Latest verified cohort: OP normal-game start wrapper
 
@@ -1030,7 +1051,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v667, tracked reconstruction state is **OP 57 decoded-exact / 36
+After v669, tracked reconstruction state is **OP 58 decoded-exact / 35
 pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
