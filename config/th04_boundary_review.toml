@@ -1397,3 +1397,16 @@ expected_body_span = 0xD1
 reviewed_body_size = 0xD1
 review_evidence_id = "ev-th04-maine-box-bg-snap-boundary-v689"
 notes = "Fresh target Ghidra closes one contiguous 209-byte body at 1A05:045E with one caller and two callees; the next function is box_bg_free at 1A05:052F. v689 maintained natural C++ reproduces the complete body and CUTSCENE_TEXT producer in two cold rounds."
+
+
+# v691: target-first review and exact replay for pic_put_both_masked.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA37F
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/pic_put_both_masked.inl"
+expected_body_span = 0x12F
+reviewed_body_size = 0x12F
+review_evidence_id = "ev-th04-maine-pic-put-both-masked-boundary-v691"
+notes = "Fresh target Ghidra closes one contiguous 303-byte body at 1A05:032F with four callees; Ghidra reports zero callers because it misses the large indirect-dispatch owner, while raw target code at payload 0xACBC contains a near CALL to 0xA37F. v691 maintained natural C++ reproduces the complete body and CUTSCENE_TEXT producer in two cold rounds."
