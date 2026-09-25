@@ -127,6 +127,16 @@ Do not retry these without a materially new compiler mechanism or provenance:
   not acceptable authored-source provenance.
 - box_1_to_0_masked still differs in low-level EGC setup ordering under
   natural source.
+- v730 local-optimizer probes do not close regist_menu: local -O- can select
+  the target direct-memory CMP, but then loses the target redundant JMP and
+  shifts later branch layout; local switch remains the same four-byte MOV/OR
+  frontier.
+- v731 _snd_se_update indexing probes keep direct/pointer/cast source at
+  77 bytes versus target 76; local/register/union index forms grow to 79-89.
+  Only explicit BL/BH shaping reaches target and remains diagnostic only.
+- v732 -O-/-O- -y/-Z- probes do not change egc_start_copy's DX-before-AX
+  outport lowering. Box remains 134 bytes under -O- and grows to 137 under
+  -Z-. No new optimizer setting closes either function.
 
 Target-derived assembly, decompiler helper assembly, pseudo-register forcing,
 or copying target instructions never earns authored C/C++ exact credit by
