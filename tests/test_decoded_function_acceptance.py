@@ -709,6 +709,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
         )
 
+    def test_maine_sub_b9f2_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-sub-b9f2-v714")
+        owner["source"] = "src/maine/end/not_sub_b9f2.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-sub-b9f2-v714")
+        owner["producer_offset"] = "0xB788"
+        with self.assertRaisesRegex(ValueError, "sub-B9F2 backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-sub-b9f2-v714",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_sub_b9f2.py",
+        )
+
     def test_maine_sub_b81d_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

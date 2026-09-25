@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-25 after accepting MAINE sub_B81D. This file is the concise
+Updated 2026-09-25 after accepting MAINE sub_B9F2. This file is the concise
 resume index. Do not infer current progress from historical experiment
 directories, old probe paths, candidate source names, or previous session
 prose.
@@ -42,7 +42,7 @@ inputs are independently proven pristine release media.
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 70 / 15 / 8 | 64 | 29 / 0 | 6,277 |
-| MAINE.EXE | 60 / 9 / 3 | 53 | 19 / 0 | 8,234 |
+| MAINE.EXE | 61 / 9 / 2 | 54 | 18 / 0 | 8,620 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 These are decoded-function/source-owner counts, not packed-file coverage.
@@ -50,13 +50,13 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-5,840 for OP and 7,859 for MAINE. The remaining tracked MAINE source-owner
+5,840 for OP and 8,245 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
 
 The campaign started this pass at 41/72 accepted MAINE functions and now sits
-at 53/72. The following natural-source owners were independently re-reviewed,
+at 54/72. The following natural-source owners were independently re-reviewed,
 cold-built, producer-checked, relocation-checked, aggregate-gated, and accepted:
 
 - script_op at 0xA847: 1,397-byte body plus adjacent compiler switch table;
@@ -71,27 +71,28 @@ cold-built, producer-checked, relocation-checked, aggregate-gated, and accepted:
 - skill-percentage owner at 0xB886: 245 bytes;
 - graph_fraction_of_million_put at 0xB97B: 119 bytes.
 - sub_B81D at 0xB81D: 105 bytes.
+- sub_B9F2 at 0xB9F2: 386-byte body plus 13 compiler auxiliary bytes.
 
-The final current-ledger MAINE aggregate is v713: 53 unique registered slices,
-all 53 raw-zero. Its preserved private receipt is:
+The final current-ledger MAINE aggregate is v716: 54 unique registered slices,
+all 54 raw-zero. Its preserved private receipt is:
 
-.analysis/reconstruction/receipt-archive/v713-maine-sub-b81d-canonical-receipt.json
+.analysis/reconstruction/receipt-archive/v716-maine-sub-b9f2-canonical-receipt.json
 
 SHA-256:
-18cbacfce79b25be869a9646158c8d966a1ad75a268fbb9e1a73d79233e8a357
+e0ae500e71e305cd0d5b2fa902d09c884cf59afdc81dd3ce75874cb21a9bada3
 
-The v712 in-memory pre-acceptance aggregate also passed 53/53 and is retained as
-supporting evidence; v713 is the stronger canonical checked-in-ledger replay.
+The v715 in-memory pre-acceptance aggregate also passed 54/54 and is retained as
+supporting evidence; v716 is the stronger canonical checked-in-ledger replay.
 
 ## Important remaining MAINE work
 
 Do not treat the remaining queue as an ASM-only queue merely because old rows
 say target-derived-asm. Re-check source ownership first.
 
-- sub_B9F2 at 0xB9F2 has natural candidate C++ in the same pinned th04/gv.cpp
-  producer, but the current Ghidra body is non-contiguous and the ledger
-  boundary remains provisional. Close physical ownership before any
-  source/exactness promotion.
+- sub_BB81 at 0xBB81 and regist_menu at 0xC814 remain the two large provisional
+  MAINE owners. Their auto-function ranges are not trustworthy physical
+  boundaries; review PROC/tables/shared tails and adjacent ownership before
+  source promotion.
 - SND_SE_PLAY (0xD5A0, 57 bytes) and _snd_se_update (0xD5DA, 76 bytes) now
   have reviewed physical boundaries. Their historical candidate source uses
   code-shape forcing and has no natural exact credit.

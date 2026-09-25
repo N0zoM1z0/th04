@@ -1538,3 +1538,15 @@ expected_body_span = 0x69
 reviewed_body_size = 0x69
 review_evidence_id = "ev-th04-maine-sub-b81d-boundary-v711"
 notes = "Fresh target Ghidra closes one contiguous 105-byte body at 1A05:17CD with one caller and two callees. The MAP public/TASM PROC and pinned gv.cpp candidate corroborate sub_B81D; v711 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds, and v713 canonical aggregate passes all 53 slices."
+
+# v714: reconcile sub_B9F2 noncontiguous auto-body, compiler switch table, and natural C++ replay.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB9F2
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/sub_B9F2.inl"
+expected_body_span = 0x182
+reviewed_body_size = 0x182
+review_evidence_id = "ev-th04-maine-sub-b9f2-boundary-v714"
+notes = "Fresh ownership review reconciles Ghidra's two-range body with the expanded TASM PROC: sub_B9F2 spans payload 0xB9F2..0xBB73 (0x182 bytes), then TC86-owned alignment plus a six-word switch table spans 0xBB74..0xBB80, and the next PROC/public sub_BB81 begins at 0xBB81. v714 maintained natural C++ reproduces the body, all 13 auxiliary compiler bytes, the complete 0x3FA-byte gv producer, and all 559 ordered relocations in two cold rounds; v716 canonical aggregate passes 54/54."
