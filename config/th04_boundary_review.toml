@@ -1613,3 +1613,86 @@ expected_body_span = 0x86
 reviewed_body_size = 0x86
 review_evidence_id = "ev-th04-maine-score-rect-copy-boundary-v720"
 notes = "Expanded TASM and Ghidra close one contiguous 0x86-byte rectangle-copy helper at payload 0xCBF3 through the end of SCORE_TEXT. v723 replaces only this maintained function in the current pinned SCORE TU; surrounding regist_menu and EGC-start remain uncredited scaffold. Both cold rounds reproduce all 134 bytes, the full 0xB30 producer, and all 559 ordered relocations; v724 canonical aggregate passes 57/57."
+
+# v725: target-reviewed natural staff-roll helper staffroll_dissolve_radial_put.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xAED0
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staffroll_dissolve_radial_put.inl"
+expected_tasm_proc = "sub_AED0"
+expected_body_span = 0x15D
+reviewed_body_size = 0x15D
+review_evidence_id = "ev-th04-maine-staff-radial-boundary-v725"
+notes = "Fresh Ghidra, expanded TASM PROC/ENDP, and MAP public agree on the complete physical body. v725 maintained natural C++ reproduces this helper inside the exact 0x8B7 staffall.cpp producer in two cold rounds; v727 canonical aggregate passes 63/63."
+
+
+# v725: target-reviewed natural staff-roll helper staffroll_dissolve_diagonal_put.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB02D
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staffroll_dissolve_diagonal_put.inl"
+expected_tasm_proc = "sub_B02D"
+expected_body_span = 0x117
+reviewed_body_size = 0x117
+review_evidence_id = "ev-th04-maine-staff-diagonal-boundary-v725"
+notes = "Fresh Ghidra, expanded TASM PROC/ENDP, and MAP public agree on the complete physical body. v725 maintained natural C++ reproduces this helper inside the exact 0x8B7 staffall.cpp producer in two cold rounds; v727 canonical aggregate passes 63/63."
+
+
+# v725: target-reviewed natural staff-roll helper staffroll_dissolve_axis_put.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB144
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staffroll_dissolve_axis_put.inl"
+expected_tasm_proc = "sub_B144"
+expected_body_span = 0x117
+reviewed_body_size = 0x117
+review_evidence_id = "ev-th04-maine-staff-axis-boundary-v725"
+notes = "Fresh Ghidra, expanded TASM PROC/ENDP, and MAP public agree on the complete physical body. v725 maintained natural C++ reproduces this helper inside the exact 0x8B7 staffall.cpp producer in two cold rounds; v727 canonical aggregate passes 63/63."
+
+
+# v725: target-reviewed natural staff-roll helper staffroll_dissolve_out.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB291
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staffroll_dissolve_out.inl"
+expected_tasm_proc = "sub_B291"
+expected_body_span = 0x8D
+reviewed_body_size = 0x8D
+review_evidence_id = "ev-th04-maine-staff-out-boundary-v725"
+notes = "Fresh Ghidra, expanded TASM PROC/ENDP, and MAP public agree on the complete physical body. v725 maintained natural C++ reproduces this helper inside the exact 0x8B7 staffall.cpp producer in two cold rounds; v727 canonical aggregate passes 63/63."
+
+
+# v725: target-reviewed natural staff-roll helper staffroll_dissolve_in.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB31E
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staffroll_dissolve_in.inl"
+expected_tasm_proc = "sub_B31E"
+expected_body_span = 0x8E
+reviewed_body_size = 0x8E
+review_evidence_id = "ev-th04-maine-staff-in-boundary-v725"
+notes = "Fresh Ghidra, expanded TASM PROC/ENDP, and MAP public agree on the complete physical body. v725 maintained natural C++ reproduces this helper inside the exact 0x8B7 staffall.cpp producer in two cold rounds; v727 canonical aggregate passes 63/63."
+
+
+# v725: target-reviewed natural staff-roll helper staffroll_dissolve_two.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB3AC
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staffroll_dissolve_two.inl"
+expected_tasm_proc = "sub_B3AC"
+expected_body_span = 0xA1
+reviewed_body_size = 0xA1
+review_evidence_id = "ev-th04-maine-staff-two-boundary-v725"
+notes = "Fresh Ghidra, expanded TASM PROC/ENDP, and MAP public agree on the complete physical body. v725 maintained natural C++ reproduces this helper inside the exact 0x8B7 staffall.cpp producer in two cold rounds; v727 canonical aggregate passes 63/63."

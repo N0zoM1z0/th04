@@ -840,6 +840,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_skill_percentage.py",
         )
 
+    def test_maine_staff_dissolves_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        radial = next(row for row in entries
+                      if row["boundary_id"] == "th04-maine-boundary-0aed0")
+        radial["source"] = "src/maine/end/not_staff_radial.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        two = next(row for row in entries
+                   if row["boundary_id"] == "th04-maine-boundary-0b3ac")
+        two["producer_size"] = "0x8B6"
+        with self.assertRaisesRegex(ValueError, "staff-dissolves backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-staff-dissolves-v725",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_staff_dissolves.py",
+        )
+
     def test_maine_staffroll_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

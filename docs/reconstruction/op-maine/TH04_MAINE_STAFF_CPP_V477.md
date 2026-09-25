@@ -125,3 +125,45 @@ Private receipt SHA-256:
 
 Remaining MAINE relocation work is now only SCORE_TEXT internal direction (34)
 and shared BGIMAGE direction (8).
+
+## v725-v727 current-snapshot acceptance
+
+The six helpers that v477/v478 had reconstructed but the live ledger still
+classified as target-derived ASM were re-tested from scratch against the current
+pinned v489 snapshot:
+
+- staffroll_dissolve_radial_put / old sub_AED0: 0x15D bytes;
+- staffroll_dissolve_diagonal_put / old sub_B02D: 0x117 bytes;
+- staffroll_dissolve_axis_put / old sub_B144: 0x117 bytes;
+- staffroll_dissolve_out / old sub_B291: 0x8D bytes;
+- staffroll_dissolve_in / old sub_B31E: 0x8E bytes;
+- staffroll_dissolve_two / old sub_B3AC: 0xA1 bytes.
+
+v725 substitutes only these six maintained .inl bodies into the pinned current
+staffall.cpp translation unit. The already accepted 0x36 background-expansion
+helper and 0x33A staffroll_animate remain untouched producer context.
+
+Fresh Ghidra, expanded TASM PROC/ENDP, MAP publics, and raw target bytes agree
+on every body boundary. Two independent TC86/TLINK cold rounds reproduce every
+function body, the complete 0x8B7 staffall.cpp MAINE_01_TEXT producer, the full
+linked MAINE program image, and all 559 ordered relocations.
+
+Focused receipt:
+.analysis/reconstruction/receipt-archive/v725-maine-staff-dissolves-focused-receipt.json
+
+Focused receipt SHA-256:
+3b6f0966363143e80ce8d7290349883710305455af3aa1ab7ffcd8f91d9c357a
+
+The v726 in-memory pre-acceptance aggregate passed 63/63. After all six rows
+were written into the checked-in acceptance ledger, canonical v727 again passed
+63/63 raw-zero.
+
+Canonical receipt:
+.analysis/reconstruction/receipt-archive/v727-maine-staff-dissolves-canonical-receipt.json
+
+Canonical receipt SHA-256:
+d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287
+
+This closes all remaining MAINE physical-boundary and old target-derived-ASM
+ownership rows. All 72 authored MAINE candidates now have reviewed boundaries;
+the remaining queue is strictly source/codegen work.

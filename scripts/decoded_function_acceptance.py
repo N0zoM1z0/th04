@@ -283,7 +283,7 @@ def validate(
                                  "op-dropdown-v630",
                                  "op-setup-menu-v676",
                                  "maine-score-insert-v543", "maine-score-put-v544",
-                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-put-both-masked-v691", "maine-pi-put-quarter-v695", "maine-main-v697", "maine-staff-bg-helper-v700", "maine-staffroll-animate-v702", "maine-graph-3-digit-v704", "maine-skill-percentage-v706", "maine-million-fraction-v708", "maine-sub-b81d-v711", "maine-sub-b9f2-v714", "maine-verdict-owner-v717", "maine-score-rect-natural-v723", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
+                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-put-both-masked-v691", "maine-pi-put-quarter-v695", "maine-main-v697", "maine-staff-bg-helper-v700", "maine-staffroll-animate-v702", "maine-staff-dissolves-v725", "maine-graph-3-digit-v704", "maine-skill-percentage-v706", "maine-million-fraction-v708", "maine-sub-b81d-v711", "maine-sub-b9f2-v714", "maine-verdict-owner-v717", "maine-score-rect-natural-v723", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
@@ -403,6 +403,19 @@ def validate(
                     or producer_start != MAINE_STAFFROLL_PRODUCER
                     or producer_size != 0x8B7):
                 raise ValueError(f"{ident}: MAINE staffroll backend does not compile this producer")
+        elif backend == "maine-staff-dissolves-v725":
+            if (artifact != "th04-maine"
+                    or source_name not in {
+                        "src/maine/end/staffroll_dissolve_radial_put.inl",
+                        "src/maine/end/staffroll_dissolve_diagonal_put.inl",
+                        "src/maine/end/staffroll_dissolve_axis_put.inl",
+                        "src/maine/end/staffroll_dissolve_out.inl",
+                        "src/maine/end/staffroll_dissolve_in.inl",
+                        "src/maine/end/staffroll_dissolve_two.inl",
+                    }
+                    or producer_start != 0xAED0
+                    or producer_size != 0x8B7):
+                raise ValueError(f"{ident}: MAINE staff-dissolves backend does not compile this producer")
         elif backend == "maine-graph-3-digit-v704":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/end/graph_3_digit_put.inl"
@@ -1163,6 +1176,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-staffroll-animate-v702":
         return [sys.executable, "scripts/probes/replay_th04_maine_staffroll_animate.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-staff-dissolves-v725":
+        return [sys.executable, "scripts/probes/replay_th04_maine_staff_dissolves.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-graph-3-digit-v704":
         return [sys.executable, "scripts/probes/replay_th04_maine_graph_3_digit_put.py",

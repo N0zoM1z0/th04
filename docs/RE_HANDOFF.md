@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-25 after the strict-source MAINE SCORE-tail review. This file is the concise
+Updated 2026-09-25 after accepting the remaining MAINE staff-roll helpers. This file is the concise
 resume index. Do not infer current progress from historical experiment
 directories, old probe paths, candidate source names, or previous session
 prose.
@@ -42,7 +42,7 @@ inputs are independently proven pristine release media.
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 70 / 15 / 8 | 64 | 29 / 0 | 6,277 |
-| MAINE.EXE | 66 / 6 / 0 | 57 | 15 / 0 | 11,202 |
+| MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 These are decoded-function/source-owner counts, not packed-file coverage.
@@ -50,13 +50,13 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-5,840 for OP and 9,836 for MAINE. The remaining tracked MAINE source-owner
+5,840 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
 
 The campaign started this pass at 41/72 accepted MAINE functions and now sits
-at 57/72. The following natural-source owners were independently re-reviewed,
+at 63/72. The following natural-source owners were independently re-reviewed,
 cold-built, producer-checked, relocation-checked, aggregate-gated, and accepted:
 
 - script_op at 0xA847: 1,397-byte body plus adjacent compiler switch table;
@@ -75,41 +75,43 @@ cold-built, producer-checked, relocation-checked, aggregate-gated, and accepted:
 - sub_BB81 at 0xBB81: 1,376-byte body plus 23 compiler auxiliary bytes;
 - verdict_animate at 0xC0F8: 81 bytes.
 - SCORE rectangle-copy helper at 0xCBF3: 134 bytes (isolated natural-source v723 replay).
-The strict-source current-ledger MAINE aggregate is v724: 57 unique registered
-slices, all 57 raw-zero. Its preserved private receipt is:
+- three staff dissolve renderers at 0xAED0/0xB02D/0xB144: 349 / 279 / 279 bytes;
+- three staff dissolve loops at 0xB291/0xB31E/0xB3AC: 141 / 142 / 161 bytes.
+The strict-source current-ledger MAINE aggregate is v727: 63 unique registered
+slices, all 63 raw-zero. Its preserved private receipt is:
 
-.analysis/reconstruction/receipt-archive/v724-maine-score-rect-canonical-receipt.json
+.analysis/reconstruction/receipt-archive/v727-maine-staff-dissolves-canonical-receipt.json
 
 SHA-256:
-6c5da132bf829cdb3207d987066381a3c82afb8b3fbdb06588c7a9f56972c995
+d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287
 
-v721/v722 reached 59 raw-zero slices but are now diagnostic only: regist_menu
-and the SCORE EGC-start helper required decomp.hpp compiler-shape circumvention
-helpers. Their boundaries remain reviewed and their source remains useful, but
-they are deliberately excluded from exact counts.
+All 72 authored MAINE candidates now have reviewed physical boundaries. No
+corroborated-only or provisional authored rows remain. The remaining 9
+functions are source/codegen blockers, not boundary-ownership blockers.
+
+v721/v722 remain diagnostic 59-slice raw-equality evidence for the SCORE tail;
+they do not override the strict source-admissibility decision for regist_menu
+or the SCORE EGC-start helper.
 
 ## Important remaining MAINE work
 
-Do not treat the remaining queue as an ASM-only queue merely because old rows
-say target-derived-asm. Re-check source ownership first.
+Nine reviewed functions remain nonexact:
 
-- regist_menu at 0xC814 now has a reviewed 0x39C-byte physical boundary, but
-  ordinary C++ remains 920/924. v720 reaches raw equality only via
-  optimization_barrier(), explicitly documented as an anti-optimizer
-  reconstruction helper, so no exact credit is granted.
-- the SCORE EGC-start helper at 0xCBB0 has a reviewed 0x43-byte boundary, but
-  ordinary source remains 66/67. keep_0(0) can force the target MOV AX,0 form,
-  but that helper is explicitly an anti-peephole reconstruction mechanism and
-  therefore receives no exact credit.
-- SND_SE_PLAY (0xD5A0, 57 bytes) and _snd_se_update (0xD5DA, 76 bytes) now
-  have reviewed physical boundaries. Their historical candidate source uses
-  code-shape forcing and has no natural exact credit.
-- SND_LOAD at 0xD112 is reviewed and 234 bytes but remains nonexact.
-- egc_start_copy (52 bytes), box_1_to_0_masked (134 bytes), and the
-  88/101-byte SCORE codecs remain natural-source codegen blockers.
+- regist_menu at 0xC814, 924 bytes: ordinary C++ remains 920/924; v720 raw
+  equality requires optimization_barrier() and is diagnostic only;
+- SND_LOAD at 0xD112, 234 bytes;
+- box_1_to_0_masked at 0xA78F, 134 bytes;
+- scoredat_decode / scoredat_encode at 0xC149 / 0xC1A1, 88 / 101 bytes;
+- _snd_se_update at 0xD5DA, 76 bytes;
+- SCORE EGC-start at 0xCBB0, 67 bytes: ordinary source remains 66/67; raw
+  equality requires keep_0(0) and is diagnostic only;
+- SND_SE_PLAY at 0xD5A0, 57 bytes;
+- egc_start_copy at 0xA2D6, 52 bytes.
 
-Continue mixing large/medium owners with leaf functions. Select by physical
-ownership and producer structure, not by whichever function looks easiest.
+Physical ownership is no longer the bottleneck in MAINE. Continue with natural
+source/codegen experiments, mixing the large regist_menu/SND_LOAD/box owners
+with smaller codec, EGC, and sound leaves. Do not lower the source-admissibility
+bar merely because target bytes can be forced.
 
 ## Reusable negative results
 
