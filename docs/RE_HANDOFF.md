@@ -26,14 +26,14 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 64 / 21 / 8 | 59 | 34 / 0 | 5,490 |
+| OP.EXE | 65 / 20 / 8 | 60 | 33 / 0 | 5,621 |
 | MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 5,490 source-owner bytes include two source-present but nonexact SCORE
+OP's 5,621 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes), the 76-byte nonexact `snd_se_update`,
-and the 30-byte nonexact `nopoly_B_put` candidate; 5,110 bytes are in
-the 59 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+and the 30-byte nonexact `nopoly_B_put` candidate; 5,241 bytes are in
+the 60 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -43,6 +43,25 @@ packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: OP configuration writer
+
+v673 reconstructs the 131-byte `cfg_save()` helper at payload `0xA7F0`
+(`1A74:00B0`) inside `OP_MAIN_TEXT`. Target Ghidra closes one
+contiguous near body with three callers and four callees. Target operands and
+MAP data bind `MIKO.CFG`, `FILE_APPEND`, `FILE_SEEK`, `FILE_WRITE`,
+`FILE_CLOSE`, six resident option fields, a 6-byte options write, seek to
+structure offset 9, a one-byte checksum write, and near return.
+
+Maintained natural source is `src/op/config/cfg_save.cpp`. TC86 emits
+exactly 131 `OP_MAIN_TEXT` bytes; masking eight ordinary data/FAR-call
+fixups on both streams leaves byte-identical instruction code. Focused A/B
+cold replay raw-matches the complete function and the full 0xD53-byte
+`OP_MAIN_TEXT` owner while preserving grouped OMF, complete OP EXE/MAP
+identity, and all 804 ordered relocations. The v674 OP aggregate passes
+60/60 registered decoded slices raw-zero, receipt SHA-256
+`4e4e4efd3696823256117ea94e6029d035687015c38fb2244157ff7ec39f5fd9`.
+No DIET-packed offset or whole-OP exactness is claimed.
 
 ## Latest verified cohort: OP game initialization wrapper
 
@@ -1099,7 +1118,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v672, tracked reconstruction state is **OP 59 decoded-exact / 34
+After v674, tracked reconstruction state is **OP 60 decoded-exact / 33
 pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.

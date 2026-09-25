@@ -1288,3 +1288,15 @@ expected_body_span = 0x81
 reviewed_body_size = 0x81
 review_evidence_id = "ev-th04-op-game-init-op-boundary-v671"
 notes = "Target Ghidra closes one contiguous 129-byte FAR body at 1DA1:06E4 with one caller and twelve callees. Raw target and MAP bind mem_assign_paras/MEM_ASSIGN_DOS, TLINK-optimized vram_planes_set, GRAPH_START, two GRAPH_CLEAR calls with page control, bbufsiz=8192, VSYNC/KEY/TEXT/EGC/JS initialization, optional PFSTART, BGM_INIT(1024), and FAR returns 1/0. The SHARED owner contribution is 130 bytes because th04/initop.cpp appends one codestring zero."
+
+# v673: target-first review for cfg_save.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xA7F0
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/config/cfg_save.cpp"
+expected_body_span = 0x83
+reviewed_body_size = 0x83
+review_evidence_id = "ev-th04-op-cfg-save-boundary-v673"
+notes = "Target Ghidra closes one contiguous 131-byte near body at 1A74:00B0 with three callers and four callees. Target binds MIKO.CFG, FILE_APPEND/SEEK/WRITE/CLOSE, six resident option bytes, a 6-byte options write, seek to offset 9, one-byte checksum write, and RET."
