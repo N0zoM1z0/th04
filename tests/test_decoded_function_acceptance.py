@@ -488,6 +488,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_op_dropdown.py",
         )
         self.assertEqual(
+            acceptance.backend_command("op-setup-menu-v676", saved)[1],
+            "scripts/probes/replay_th04_op_setup_menu.py",
+        )
+        self.assertEqual(
             acceptance.backend_command("op-place-put-v552", saved)[1],
             "scripts/probes/replay_th04_op_place_put.py",
         )

@@ -128,6 +128,7 @@ OP_WINDOW_ROLLUP_PUT_PRODUCER = 0xB49F
 OP_WINDOW_DROPDOWN_PUT_PRODUCER = 0xB49F
 OP_SINGLELINE_PRODUCER = 0xB49F
 OP_DROPDOWN_PRODUCER = 0xB49F
+OP_SETUP_MENU_PRODUCER = 0xB49F
 ZUN_LINKED_SOURCES = {
     "src/zun/config/cfg_init.cpp", "src/zun/resident/main.cpp",
 }
@@ -267,6 +268,7 @@ def validate(
                                  "op-window-dropdown-put-v632",
                                  "op-singleline-v634",
                                  "op-dropdown-v630",
+                                 "op-setup-menu-v676",
                                  "maine-score-insert-v543", "maine-score-put-v544",
                                  "maine-box-animate-v573", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
@@ -646,6 +648,12 @@ def validate(
                     or producer_start != OP_DROPDOWN_PRODUCER
                     or producer_size != 0x5A6):
                 raise ValueError(f"{ident}: OP dropdown backend does not compile this producer")
+        elif backend == "op-setup-menu-v676":
+            if (artifact != "th04-op"
+                    or source_name != "src/op/setup/setup_menu.cpp"
+                    or producer_start != OP_SETUP_MENU_PRODUCER
+                    or producer_size != 0x5A6):
+                raise ValueError(f"{ident}: OP setup-menu backend does not compile this producer")
         elif backend == "op-start-extra-v662":
             if (artifact != "th04-op"
                     or source_name != "src/op/start/start_extra.cpp"
@@ -986,6 +994,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-dropdown-v630":
         return [sys.executable, "scripts/probes/replay_th04_op_dropdown.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-setup-menu-v676":
+        return [sys.executable, "scripts/probes/replay_th04_op_setup_menu.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-score-insert-v543":
         return [sys.executable, "scripts/probes/replay_th04_maine_score_insert.py",

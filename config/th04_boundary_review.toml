@@ -1312,3 +1312,15 @@ expected_body_span = 0x39
 reviewed_body_size = 0x39
 review_evidence_id = "ev-th04-op-snd-se-play-boundary-v675"
 notes = "Target Ghidra closes one contiguous 57-byte FAR Pascal leaf at 1DA1:08E2 with five callers and no callees. Raw target and MAP bind snd_se_mode, snd_se_playing, snd_se_frame, snd_se_priorities, BX=SP/SS:[BX+4] parameter access, BL/BH current-index construction, priority comparison, and RETF 2. Ordinary Pascal C++ is deterministic at 60 bytes with a BP frame and ordinary zero-extension; byte-local variants are 64 bytes. Cross-game pseudoregister forcing is reference evidence only and is not accepted for exact credit."
+
+# v676: target-first review for setup_menu.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB9CE
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/setup/setup_menu.cpp"
+expected_body_span = 0x77
+reviewed_body_size = 0x77
+review_evidence_id = "ev-th04-op-setup-menu-boundary-v676"
+notes = "Target Ghidra closes one contiguous 119-byte near body at 1A74:128E with one caller and thirteen unique callees. Target/MAP bind PaletteTone=0 plus PALETTE_SHOW, SUPER_ENTRY_BFNT, page-1 access, PI load/palette/put/free, two GRAPH_COPY_PAGE calls, palette black in/out, setup_bgm_menu, frame_delay(1), setup_se_menu, SUPER_FREE, and RET."
