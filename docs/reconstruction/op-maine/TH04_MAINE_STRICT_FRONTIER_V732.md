@@ -85,6 +85,25 @@ d9e51f7d519a85e57a4f1552db92b946c31d4ce5a7cc25502f59a7d62ddf34de
 
 No exact credit is granted.
 
+
+## v760 SCORE rotate-intrinsic surface
+
+A later bounded probe closes one additional compiler mechanism for both MAINE
+and OP SCORE codecs. TC4.02 _crotr is a FAR runtime call, _rotr remains a FAR
+runtime call under the pinned flags, and direct __rotr__ is a 16-bit intrinsic
+that emits ROR AX,3. The known memcpy pragma-intrinsic control form is accepted,
+but the compiler rejects _crotr and _rotr as pragma-intrinsic targets. No tested
+compiler surface emits the target ROR byte ptr [BP-1],3.
+
+Receipt:
+.analysis/reconstruction/receipt-archive/v760-tc4-score-rotate-intrinsics-receipt.json
+
+SHA-256:
+e80a367d760da8dffd0a7118490ddcaf7da31d371c2a2fee4e8510e52b2bb9ec
+
+This does not change MAINE's 63/72 count; it strengthens the codec codegen
+frontier.
+
 ## Current MAINE frontier
 
 The remaining nine reviewed/nonexact functions are:

@@ -121,8 +121,10 @@ Do not retry these without a materially new compiler mechanism or provenance:
   AX/DX port-write ordering. Reversed inline-helper arguments collapse back to
   the direct form; assignment-expression variants add variable-preservation
   instructions.
-- SCORE codecs: shift/or rotate expressions stay expanded; tested Borland
-  rotate-intrinsic variants did not produce the target byte-memory ROR form.
+- SCORE codecs: shift/or rotate expressions stay expanded. v760 additionally
+  checks TC4.02 itself: _crotr and _rotr remain FAR RTL calls, direct __rotr__
+  emits 16-bit ROR AX,3, and pragma-intrinsic forcing is rejected. No tested
+  compiler surface emits the target byte-memory ROR form.
 - MAINE/OP sound-effect code: pseudo-register forcing is diagnostic evidence,
   not acceptable authored-source provenance.
 - box_1_to_0_masked still differs in low-level EGC setup ordering under
