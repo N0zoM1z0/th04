@@ -201,6 +201,7 @@ class DecodedAcceptanceTests(unittest.TestCase):
             ("op-start-extra-v662", "0xD52", "start-extra"),
             ("op-start-game-v666", "0xD52", "start-game"),
             ("op-cfg-save-exit-v668", "0xD52", "cfg-save-exit"),
+            ("op-game-init-op-v671", "0x81", "game-init-op"),
             ("op-menu-sel-update-v664", "0xD52", "menu-selection-update"),
             ("op-main-cdg-free-v583", "0x2C6", "main-CDG-free"),
             ("op-main-cdg-load-v602", "0x2C6", "main-CDG-load"),
@@ -358,6 +359,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             acceptance.backend_command("op-cfg-save-exit-v668", saved)[1],
             "scripts/probes/replay_th04_op_cfg_save_exit.py",
+        )
+        self.assertEqual(
+            acceptance.backend_command("op-game-init-op-v671", saved)[1],
+            "scripts/probes/replay_th04_op_game_init_op.py",
         )
         self.assertEqual(
             acceptance.backend_command("op-menu-sel-update-v664", saved)[1],

@@ -1276,3 +1276,15 @@ expected_body_span = 0x1E
 reviewed_body_size = 0x1E
 review_evidence_id = "ev-th04-op-nopoly-b-put-boundary-v670"
 notes = "Target Ghidra closes one contiguous 30-byte near body at 1A74:1867 with two callers and no callees. Raw target and MAP bind ES=A800, _nopoly_B at 0F34:3A80, 0x3E80 words, REP MOVSW, and explicit DS save/restore. Natural intrinsic memcpy is also 30 bytes and uses REP MOVSW but TC86 orders source/destination segment setup differently. Multiple ordinary-C++ variants fail exactness; cross-game pseudoregister/decomp helpers are not accepted for source credit."
+
+# v671: target-first review for OP game_init_op.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xE0F4
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/shared/core/game_init_op.cpp"
+expected_body_span = 0x81
+reviewed_body_size = 0x81
+review_evidence_id = "ev-th04-op-game-init-op-boundary-v671"
+notes = "Target Ghidra closes one contiguous 129-byte FAR body at 1DA1:06E4 with one caller and twelve callees. Raw target and MAP bind mem_assign_paras/MEM_ASSIGN_DOS, TLINK-optimized vram_planes_set, GRAPH_START, two GRAPH_CLEAR calls with page control, bbufsiz=8192, VSYNC/KEY/TEXT/EGC/JS initialization, optional PFSTART, BGM_INIT(1024), and FAR returns 1/0. The SHARED owner contribution is 130 bytes because th04/initop.cpp appends one codestring zero."

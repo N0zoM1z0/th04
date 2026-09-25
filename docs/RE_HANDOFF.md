@@ -26,14 +26,14 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 63 / 22 / 8 | 58 | 35 / 0 | 5,361 |
+| OP.EXE | 64 / 21 / 8 | 59 | 34 / 0 | 5,490 |
 | MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 5,361 source-owner bytes include two source-present but nonexact SCORE
+OP's 5,490 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes), the 76-byte nonexact `snd_se_update`,
-and the 30-byte nonexact `nopoly_B_put` candidate; 4,981 bytes are in
-the 58 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+and the 30-byte nonexact `nopoly_B_put` candidate; 5,110 bytes are in
+the 59 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -43,6 +43,31 @@ packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: OP game initialization wrapper
+
+v671 reconstructs the 129-byte `game_init_op(const unsigned char far*)`
+wrapper at payload `0xE0F4` (`1DA1:06E4`) inside `SHARED`.
+Target Ghidra closes one contiguous FAR body with one caller and twelve
+callees. Raw target operands and the pinned MAP bind `mem_assign_paras`,
+`MEM_ASSIGN_DOS`, TLINK-optimized `vram_planes_set`, `GRAPH_START`,
+two `GRAPH_CLEAR` calls with page-access/show writes, `bbufsiz=8192`,
+`VSYNC_START`, `KEY_BEEP_OFF`, text-system/cursor hiding, `EGC_START`,
+`JS_START`, optional `PFSTART`, `BGM_INIT(1024)`, and both FAR
+return paths.
+
+Maintained natural source is `src/shared/core/game_init_op.cpp`. Standalone
+TC86 output is exactly 129 bytes with 15 ordinary fixups. Once those fields
+are masked, the only non-fixup delta is the FAR-call opcode for
+`vram_planes_set`; TLINK deterministically rewrites it to the target
+`NOP / PUSH CS / CALL rel16` form. Recompiling through the original
+`th04/initop.cpp` owner preserves its complete 130-byte SHARED contribution
+(including one trailing `codestring 0`), baseline link-relevant OMF, the
+complete OP EXE/MAP, and all 804 ordered relocations. Focused A/B replay is
+raw-zero. The v672 OP aggregate passes 59/59 registered decoded slices
+raw-zero, receipt SHA-256
+`abf8ad168c37d5e9142bc9d00cebd5347fc2ba4846ab11f7a35041de80905128`.
+No DIET-packed offset or whole-OP exactness is claimed.
 
 ## Latest diagnostic: OP nopoly B-plane copy codegen gap
 
@@ -1074,7 +1099,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v670, tracked reconstruction state is **OP 58 decoded-exact / 35
+After v672, tracked reconstruction state is **OP 59 decoded-exact / 34
 pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
@@ -1105,10 +1130,11 @@ Five small-looking candidates were deliberately **not** promoted:
   indexing, plus the two forward-branch distances shifted by that byte. A
   register-specific candidate helper reproduces the target only as a diagnostic;
   the v642 receipt grants it no source or exact credit.
-- OP `nopoly_b_put()` at payload `0xBFA7` (30 bytes): the candidate implementation
-  contains explicit DS save/restore and the `__memcpy__` intrinsic. Treat it as
-  a low-level authored/intrinsic ownership question rather than a routine C++
-  leaf.
+- OP `nopoly_b_put()` at payload `0xBFA7` (30 bytes): v670 now makes
+  the gap repeatable. Natural TC86 intrinsic `memcpy` reaches the same 30-byte
+  size and `REP MOVSW` strategy, but orders source/destination segment setup
+  differently from target. Current cross-game pseudoregister/`__memcpy__`
+  code is explicitly decompilation-oriented and grants no exact credit.
 
 Private probe cleanup was performed after v625. All 1,207
 `.analysis/reconstruction/probes/**/receipt.json` files were archived to

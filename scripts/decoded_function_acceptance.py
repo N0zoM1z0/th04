@@ -110,6 +110,7 @@ OP_PIC_DARKEN_PRODUCER = 0xCF5E
 OP_PLAYCHAR_MENU_INITIAL_PRODUCER = 0xCF5E
 OP_GAME_EXIT_TO_DOS_PRODUCER = 0xDDB1
 OP_GAME_EXIT_PRODUCER = 0xE0AC
+OP_GAME_INIT_OP_PRODUCER = 0xE0F4
 OP_TRACKLIST_PUT_BOTH_PRODUCER = 0xBED5
 OP_TRACK_PUT_BOTH_PRODUCER = 0xBED5
 OP_CMT_UNPUT_PRODUCER = 0xBED5
@@ -272,7 +273,7 @@ def validate(
                                  "maine-cfg-resident-v604",
                                  "maine-game-exit-exec-v608", "maine-game-exit-v654", "maine-game-init-main-v656",
                                  "maine-end-animate-v616",
-                                 "maine-score-load-for-v557", "op-start-extra-v662", "op-start-game-v666", "op-cfg-save-exit-v668", "op-menu-sel-update-v664", "op-stage-put-v545",
+                                 "maine-score-load-for-v557", "op-start-extra-v662", "op-start-game-v666", "op-cfg-save-exit-v668", "op-game-init-op-v671", "op-menu-sel-update-v664", "op-stage-put-v545",
                                  "maine-scoredat-recreate-v580",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
                                  "op-regist-menu-v556",
@@ -662,6 +663,12 @@ def validate(
                     or producer_start != OP_CFG_SAVE_EXIT_PRODUCER
                     or producer_size != 0xD53):
                 raise ValueError(f"{ident}: OP cfg-save-exit backend does not compile this producer")
+        elif backend == "op-game-init-op-v671":
+            if (artifact != "th04-op"
+                    or source_name != "src/shared/core/game_init_op.cpp"
+                    or producer_start != OP_GAME_INIT_OP_PRODUCER
+                    or producer_size != 0x82):
+                raise ValueError(f"{ident}: OP game-init-op backend does not compile this producer")
         elif backend == "op-menu-sel-update-v664":
             if (artifact != "th04-op"
                     or source_name != "src/op/main/menu_sel_update.cpp"
@@ -1050,6 +1057,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-cfg-save-exit-v668":
         return [sys.executable, "scripts/probes/replay_th04_op_cfg_save_exit.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-game-init-op-v671":
+        return [sys.executable, "scripts/probes/replay_th04_op_game_init_op.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-menu-sel-update-v664":
         return [sys.executable, "scripts/probes/replay_th04_op_menu_sel_update.py",
