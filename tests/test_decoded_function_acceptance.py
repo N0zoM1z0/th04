@@ -599,6 +599,19 @@ class DecodedAcceptanceTests(unittest.TestCase):
         self.assertEqual(command[1], "scripts/probes/replay_th04_maine_scoredat_recreate.py")
         self.assertIn("--retain-candidates", command)
 
+    def test_maine_hiscore_save_backend_is_artifact_and_source_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-hiscore-save-v682")
+        owner["source"] = "src/maine/score/load_for.cpp"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        command = acceptance.backend_command(
+            "maine-hiscore-save-v682", ROOT / ".analysis/reconstruction/probes/test"
+        )
+        self.assertEqual(command[1], "scripts/probes/replay_th04_maine_hiscore_save.py")
+
     def test_maine_box_animate_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

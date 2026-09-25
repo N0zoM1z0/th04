@@ -492,11 +492,11 @@ artifact = "th04-maine"
 payload_offset = 0xC316
 origin = "authored"
 source_form = "candidate-cpp"
-source_ref = "candidate:th04/hi_end.cpp"
+source_ref = "src/maine/score/hisave.cpp"
 expected_body_span = 0x9C
 reviewed_body_size = 0x9C
-review_evidence_id = "ev-th04-maine-score-hiscore-boundaries-v541"
-notes = "hiscore_scoredat_save target boundary reviewed by v541; candidate source provenance remains decompilation."
+review_evidence_id = "ev-th04-maine-hiscore-save-boundary-v682"
+notes = "Target Ghidra closes one contiguous 156-byte near body at 1A05:22C6 with one caller and seven callees. Raw target and MAP bind rank/playchar/hi, GENSOU.SCR, 196-byte sections, the current-section write, the 10-section read/decode/encode/rewrite loop, and FILE_CLOSE. Maintained natural C++ is verified independently from the surrounding nonexact codecs."
 
 # v542 OP hi_view target review. rank_render has a Ghidra-truncated 0x3C-byte
 # body: its branch at 0xCA54 reaches the omitted 0xCA56..0xCA93 tail, so the

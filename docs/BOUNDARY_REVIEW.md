@@ -15,12 +15,12 @@ remaining candidate boundaries or source to exact.
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `th04-op` | 492 | 93 | 63 | 0 | 30 | 16 | 383 |
 | `th04-main` | 1,040 | 495 | 492 | 3 | 0 | 73 | 472 |
-| `th04-maine` | 442 | 72 | 40 | 0 | 32 | 15 | 355 |
+| `th04-maine` | 442 | 72 | 41 | 0 | 31 | 15 | 355 |
 | `th04-zun` | 146 | 13 | 0 | 2 | 11 | 4 | 129 |
-| **Total** | **2,120** | **673** | **595** | **5** | **73** | **108** | **1,339** |
+| **Total** | **2,120** | **673** | **596** | **5** | **72** | **108** | **1,339** |
 
-The remaining reconstruction queue is **78 nonexact authored candidates**:
-73 are unreviewed; 5 known
+The remaining reconstruction queue is **77 nonexact authored candidates**:
+72 are unreviewed; 5 known
 `MAIN.EXE` functions remain blocked.
 Compiler startup, Borland runtime, MASTER.LIB, embedded library code, data/BSS
 false positives, and Ghidra switch-case artifacts are excluded from that queue.
@@ -32,7 +32,7 @@ The 108 original-style ASM observations remain a separate attestation queue.
 | --- | ---: | ---: | ---: | ---: |
 | `th04-op` | 4 | 26 | 0 | 0 |
 | `th04-main` | 0 | 0 | 0 | 0 |
-| `th04-maine` | 18 | 13 | 0 | 1 |
+| `th04-maine` | 18 | 12 | 0 | 1 |
 | `th04-zun` | 11 | 0 | 0 | 0 |
 
 `target-derived-asm` means an IDA/ReC98 assembly body identifies a likely game

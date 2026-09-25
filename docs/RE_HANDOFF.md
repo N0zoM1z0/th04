@@ -27,22 +27,43 @@ bytes before any new target observation. Keep one writable Borland session.
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 69 / 16 / 8 | 63 | 30 / 0 | 6,098 |
-| MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
+| MAINE.EXE | 47 / 20 / 5 | 41 | 31 / 0 | 4,037 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
 OP's 6,098 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes), the 76-byte nonexact `snd_se_update`,
 the 57-byte nonexact `SND_SE_PLAY`, and the 30-byte nonexact
-`nopoly_B_put` candidate; 5,661 bytes are in the 63 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+`nopoly_B_put` candidate; 5,661 bytes are in the 63 accepted exact functions. MAINE has 41 decoded-function exact functions (3,662 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
-candidate; total decoded source-owner bytes are 3,881.
+candidate; total decoded source-owner bytes are 4,037.
 These are decoded-function extents, not packed-file byte totals. No honest
 packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: MAINE high-score save wrapper
+
+v682 reconstructs the 156-byte `hiscore_scoredat_save()` helper at payload
+`0xC316` (`1A05:22C6`) inside `SCORE_TEXT`. Target Ghidra closes
+one contiguous near body with one caller and seven callees. Raw target and MAP
+evidence bind rank/playchar selection, `GENSOU.SCR`, 196-byte score sections,
+the current-section write, the ten-section read/decode/encode/rewrite loop, and
+`FILE_CLOSE`.
+
+Maintained natural source is `src/maine/score/hisave.cpp`. TC86 emits exactly
+156 `SCORE_TEXT` bytes; the only standalone/group CODE differences are the
+three ordinary near-call fixup words for the existing score codecs. Focused
+A/B replay raw-matches the complete function while preserving the entire
+grouped `SCORE_TEXT` owner, full MAINE EXE/MAP identity, and all 559 ordered
+relocations. An independent focused recheck also passes. The v683 MAINE
+aggregate passes 41/41 registered decoded slices raw-zero, receipt SHA-256
+`fd272880c0b8bb3f750398cc5aa1883e5492fbaa4c2a57c5880812e91ea82823`.
+Exact credit is local to `hiscore_scoredat_save`; `scoredat_decode` and
+`scoredat_encode` remain source-present/nonexact. No packed-file or
+whole-MAINE exactness is claimed.
 
 ## Latest verified cohort: OP configuration loader
 
@@ -1179,8 +1200,8 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v681, tracked reconstruction state is **OP 63 decoded-exact / 30
-pending**, **MAINE 40 / 32**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
+After v683, tracked reconstruction state is **OP 63 decoded-exact / 30
+pending**, **MAINE 41 / 31**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
 

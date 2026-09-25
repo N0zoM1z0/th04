@@ -81,6 +81,7 @@ MAINE_GAME_INIT_MAIN_PRODUCER = 0xD43C
 MAINE_END_ANIMATE_PRODUCER = 0xA059
 MAINE_SCORE_LOAD_FOR_PRODUCER = 0xC2AD
 MAINE_SCORE_RECREATE_PRODUCER = 0xC206
+MAINE_HISCORE_SAVE_PRODUCER = 0xC316
 MAINE_STAGE_PUT_PRODUCER = 0xC5EC
 MAINE_NAME_CURSOR_PRODUCER = 0xC665
 MAINE_PLACE_ROW_PRODUCER = 0xC711
@@ -279,7 +280,7 @@ def validate(
                                  "maine-game-exit-exec-v608", "maine-game-exit-v654", "maine-game-init-main-v656",
                                  "maine-end-animate-v616",
                                  "maine-score-load-for-v557", "op-start-extra-v662", "op-start-game-v666", "op-cfg-save-exit-v668", "op-cfg-save-v673", "op-cfg-load-v680", "op-game-init-op-v671", "op-menu-sel-update-v664", "op-stage-put-v545",
-                                 "maine-scoredat-recreate-v580",
+                                 "maine-scoredat-recreate-v580", "maine-hiscore-save-v682",
                                  "op-place-put-v552", "op-rank-render-v553", "op-clear-sprites-v554",
                                  "op-regist-menu-v556",
                                  "maine-stage-put-v547", "maine-name-cursor-v548", "maine-place-row-v549",
@@ -434,6 +435,12 @@ def validate(
                     or producer_start != MAINE_SCORE_RECREATE_PRODUCER
                     or producer_size != 0xA7):
                 raise ValueError(f"{ident}: MAINE score-file regeneration backend does not compile this producer")
+        elif backend == "maine-hiscore-save-v682":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/score/hisave.cpp"
+                    or producer_start != MAINE_HISCORE_SAVE_PRODUCER
+                    or producer_size != 0x9C):
+                raise ValueError(f"{ident}: MAINE hiscore-save backend does not compile this producer")
         elif backend == "maine-stage-put-v547":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/score/stage.cpp"
@@ -1069,6 +1076,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
     if backend_id == "maine-scoredat-recreate-v580":
         return [sys.executable, "scripts/probes/replay_th04_maine_scoredat_recreate.py",
                 "--retain-candidates", "--output-dir", str(saved)]
+    if backend_id == "maine-hiscore-save-v682":
+        return [sys.executable, "scripts/probes/replay_th04_maine_hiscore_save.py",
+                "--output-dir", str(saved)]
     if backend_id == "maine-stage-put-v547":
         return [sys.executable, "scripts/probes/replay_th04_maine_stage_put.py",
                 "--output-dir", str(saved)]
