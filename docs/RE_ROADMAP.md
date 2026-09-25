@@ -83,9 +83,9 @@ source-present/nonexact SCORE candidates, `scoredat_decode` (88 bytes) and
 `box_1_to_0_masked` and 52-byte nonexact `egc_start_copy`, for 3,881 decoded
 source-owner bytes; OP has
 60 decoded-exact functions / 5,241 exact source-owner bytes, with two separate
-codec candidates (274 bytes), `snd_se_update` (76 bytes), and
-`nopoly_B_put` (30 bytes) still source-present and nonexact, for 5,490
-decoded source-owner bytes total.
+codec candidates (274 bytes), `snd_se_update` (76 bytes), `SND_SE_PLAY`
+(57 bytes), and `nopoly_B_put` (30 bytes) still source-present and
+nonexact, for 5,678 decoded source-owner bytes total.
 MMD keeps its 47-byte natural-C body separate from the following target 0x90
 padding, and MAINE delay keeps target 0xD077 linker fill outside its authored
 extent. These accepted functions now need replay maintenance and later
@@ -479,6 +479,13 @@ write. Natural maintained C++ is exactly 131 CODE bytes modulo eight ordinary
 fixups; focused replay raw-matches the complete function and 0xD53-byte
 `OP_MAIN_TEXT` owner, and the v674 OP aggregate passes 60/60 decoded slices
 with all 804 ordered relocations preserved.
+v675 then target-reviews the remaining 57-byte `SND_SE_PLAY` leaf and
+makes its codegen gap reproducible. Ordinary Pascal C++ direct/register-int
+forms are deterministic at 60 bytes, while byte-local forms are 64. Target
+uses no BP frame and forces `BX=SP` stack access plus `BL/BH` table
+index construction; the cross-game source uses explicit pseudoregisters for
+those shapes and is kept as provenance evidence only. No exact credit is
+granted.
 Choose subsequent units from current OP/MAINE/ZUN evidence and unfinished
 boundary/authored-review queues; do not treat C206 as pending or restart MAIN
 by default.

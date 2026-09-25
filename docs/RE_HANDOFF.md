@@ -26,14 +26,14 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 65 / 20 / 8 | 60 | 33 / 0 | 5,621 |
+| OP.EXE | 66 / 19 / 8 | 60 | 33 / 0 | 5,678 |
 | MAINE.EXE | 47 / 20 / 5 | 40 | 32 / 0 | 3,881 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 5,621 source-owner bytes include two source-present but nonexact SCORE
+OP's 5,678 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes), the 76-byte nonexact `snd_se_update`,
-and the 30-byte nonexact `nopoly_B_put` candidate; 5,241 bytes are in
-the 60 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
+the 57-byte nonexact `SND_SE_PLAY`, and the 30-byte nonexact
+`nopoly_B_put` candidate; 5,241 bytes are in the 60 accepted exact functions. MAINE has 40 decoded-function exact functions (3,506 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -1138,11 +1138,14 @@ Five small-looking candidates were deliberately **not** promoted:
   before AX=value; the target reverses those loads. The historical `outport2`
   that forces target order is explicit `_asm` in `decomp.hpp`, so it is
   provenance evidence only and grants no exact credit.
-- OP `SND_SE_PLAY` at payload `0xE2F2` (57 bytes): ordinary Pascal C++ produces
-  a 60-byte BP-framed function. The target uses the old `snd_get_param`
-  register/peek parameter mechanism and `_BL/_BH` indexing shape. Do not claim
-  natural-source exactness by importing those decompilation helpers without
-  first resolving source/ABI authority.
+- OP `SND_SE_PLAY` at payload `0xE2F2` (57 bytes): v675 now makes the
+  gap repeatable. Direct/register-int ordinary Pascal C++ is deterministic at
+  60 bytes and uses a BP frame plus normal AL/AH zero-extension; byte-local
+  variants are 64 bytes. The target instead uses `BX=SP`/`SS:[BX+4]`
+  parameter access and `BL/BH` current-index construction. The cross-game
+  source explicitly forces those shapes with pseudoregisters and even comments
+  that modders should replace them, so it remains provenance evidence only.
+  Receipt SHA-256 `d20aca4815c2cb3eb8a6f7c138de4478c52ae84ebee99879faaa2da7f43d8cfe`.
 - OP `_snd_se_update` at payload `0xE32C` (76 bytes): target-first review is
   complete, and maintained natural C++ deterministically compiles to 77 bytes.
   The only structural gap is one extra byte in ordinary unsigned-byte array

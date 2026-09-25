@@ -1300,3 +1300,15 @@ expected_body_span = 0x83
 reviewed_body_size = 0x83
 review_evidence_id = "ev-th04-op-cfg-save-boundary-v673"
 notes = "Target Ghidra closes one contiguous 131-byte near body at 1A74:00B0 with three callers and four callees. Target binds MIKO.CFG, FILE_APPEND/SEEK/WRITE/CLOSE, six resident option bytes, a 6-byte options write, seek to offset 9, one-byte checksum write, and RET."
+
+# v675: target-first review for SND_SE_PLAY; ordinary Pascal C++ remains nonexact.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xE2F2
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/shared/sound/se_play.cpp"
+expected_body_span = 0x39
+reviewed_body_size = 0x39
+review_evidence_id = "ev-th04-op-snd-se-play-boundary-v675"
+notes = "Target Ghidra closes one contiguous 57-byte FAR Pascal leaf at 1DA1:08E2 with five callers and no callees. Raw target and MAP bind snd_se_mode, snd_se_playing, snd_se_frame, snd_se_priorities, BX=SP/SS:[BX+4] parameter access, BL/BH current-index construction, priority comparison, and RETF 2. Ordinary Pascal C++ is deterministic at 60 bytes with a BP frame and ordinary zero-extension; byte-local variants are 64 bytes. Cross-game pseudoregister forcing is reference evidence only and is not accepted for exact credit."
