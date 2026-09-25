@@ -1942,3 +1942,27 @@ expected_body_span = 0x26F
 reviewed_body_size = 0x26F
 review_evidence_id = "ev-th04-op-zunsoft-animate-boundary-v753"
 notes = "Ghidra reports 522 reachable bytes across the correct 0x26F body span. Target terminal bytes, current C++ MAP ownership, TC86 -S and v753 cold replay close the 623-byte PROC body. The following 0x31 bytes are one alignment byte plus the compiler sparse-switch value/jump tables. v755 canonical aggregate passes 85/85."
+
+
+# v757: physical-boundary review for the final OP egcrect producer.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xE378
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hardware/egcrect.cpp"
+expected_body_span = 0x6F
+reviewed_body_size = 0x6F
+review_evidence_id = "ev-th04-op-egcrect-copy-boundary-v757"
+notes = "Target Ghidra, MAP ownership, target terminal bytes, TC86 -S PROC/ENDP, and v757 diagnostic replay close the 0x6F body. The following byte at 0xE3E7 is compiler/code-shape NOP data. Source remains nonexact because it relies on inline ASM, pseudo-registers, and codestring."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xE3E8
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "candidate:th04/hardware/egcrect.cpp"
+expected_body_span = 0x3F
+reviewed_body_size = 0x3F
+review_evidence_id = "ev-th04-op-egcrect-start-boundary-v757"
+notes = "Target Ghidra, current producer ownership, target terminal RET, TC86 -S PROC/ENDP, and v757 diagnostic replay close the 0x3F internal helper despite no TLINK public. The following byte at 0xE427 is compiler/code-shape NOP data. Source remains nonexact."

@@ -41,7 +41,7 @@ inputs are independently proven pristine release media.
 
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 91 / 1 / 1 | 85 | 8 / 0 | 14,284 |
+| OP.EXE | 93 / 0 / 0 | 85 | 8 / 0 | 14,284 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
@@ -262,9 +262,22 @@ The final current-ledger OP aggregate is v755: 85 unique registered slices, all
 SHA-256:
 14a85e9330db6b1728bf7264ab5e8eebf608deb54a5d9dc427d6c17fd2a146f2
 
-OP now has 85/93 accepted functions. Only one provisional and one corroborated
-authored OP boundary remain; continue with those physical owners plus the
-reviewed leaf/codegen blockers.
+v757 then closes the final two non-reviewed OP physical boundaries in the
+0xB0 egcrect SHARED producer:
+
+- egc_copy_rect_1_to_0_16 at 0xE378: 111-byte body;
+- one compiler/code-shape NOP at 0xE3E7;
+- internal egc_start_copy at 0xE3E8: 63-byte body;
+- one compiler/code-shape NOP at 0xE427.
+
+TC86 generated PROC/ENDP structure supplies the missing ownership evidence for
+the internal helper. The current source deliberately uses inline ASM,
+pseudo-registers, and codestring NOPs, so v757 is diagnostic boundary evidence
+only and does not increase exactness.
+
+OP now has all 93/93 authored physical boundaries reviewed and 85/93 accepted
+functions. The remaining eight are source/codegen/provenance blockers rather
+than unresolved boundary problems.
 
 ## Analysis/worktree hygiene
 
