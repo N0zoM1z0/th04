@@ -709,6 +709,22 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
         )
 
+    def test_maine_score_rect_natural_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        rect = next(row for row in entries
+                    if row["boundary_id"] == "th04-maine-boundary-0cbf3")
+        rect["source"] = "src/maine/score/not_score_rect_copy.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-score-rect-natural-v723",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_score_rect_natural.py",
+        )
+
     def test_maine_verdict_owner_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         bb = next(row for row in entries

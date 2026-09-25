@@ -50,6 +50,7 @@ contain residual counts that were correct only at that packet.
 - [MAINE sub_B81D exact replay](op-maine/TH04_MAINE_SUB_B81D_EXACT_V711.md)
 - [MAINE sub_B9F2 physical ownership and exact replay](op-maine/TH04_MAINE_SUB_B9F2_EXACT_V714.md)
 - [MAINE verdict owner exact replay and BB81 boundary correction](op-maine/TH04_MAINE_VERDICT_OWNER_EXACT_V717.md)
+- [MAINE SCORE tail boundary/source-admissibility review](op-maine/TH04_MAINE_SCORE_TAIL_SOURCE_REVIEW_V720.md)
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [OP/MAINE score codec boundary / provenance review](op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md)

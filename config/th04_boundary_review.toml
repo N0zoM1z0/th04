@@ -1575,3 +1575,41 @@ expected_body_span = 0x51
 reviewed_body_size = 0x51
 review_evidence_id = "ev-th04-maine-verdict-animate-boundary-v717"
 notes = "Expanded TASM, Ghidra, and MAP agree on one contiguous 0x51-byte verdict_animate body at payload 0xC0F8 immediately before SCORE_TEXT at 0xC149. v717 natural C++ reproduces all 81 bytes as the final function of the exact 0x5C8 vb.cpp producer; v719 canonical aggregate passes 56/56."
+
+# v720: target-reviewed regist_menu boundary; raw equality is diagnostic only.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC814
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/regist_menu.inl"
+expected_tasm_proc = "@regist_menu$qv"
+reviewed_body_size = 0x39C
+review_evidence_id = "ev-th04-maine-regist-menu-boundary-v720"
+notes = "Ghidra merges five ranges across a 0xC392 span and is rejected as physical ownership. Expanded TASM PROC/ENDP closes regist_menu at local SCORE_TEXT 0x7FE, yielding a 0x39C-byte body ending exactly at _egc_start_copy_inlined. v720/v722 raw equality requires decomp.hpp::optimization_barrier(), explicitly documented as an optimization-circumvention helper for recreating code layout. Boundary is reviewed; no authored-source exact credit."
+
+# v720: target-reviewed SCORE EGC-start boundary; raw equality is diagnostic only.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xCBB0
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/score_egc_start_copy.inl"
+expected_tasm_proc = "_egc_start_copy_inlined"
+expected_body_span = 0x43
+reviewed_body_size = 0x43
+review_evidence_id = "ev-th04-maine-score-egc-start-boundary-v720"
+notes = "Expanded TASM and Ghidra close one contiguous 0x43-byte SCORE EGC setup helper at payload 0xCBB0. v720/v722 raw equality requires decomp.hpp::keep_0(0), explicitly documented as an anti-peephole helper for recreating code layout. Boundary is reviewed; no authored-source exact credit."
+
+# v720/v723: target-reviewed and independently focused natural SCORE rectangle-copy helper.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xCBF3
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/score/score_rect_copy.inl"
+expected_tasm_proc = "sub_CBF3"
+expected_body_span = 0x86
+reviewed_body_size = 0x86
+review_evidence_id = "ev-th04-maine-score-rect-copy-boundary-v720"
+notes = "Expanded TASM and Ghidra close one contiguous 0x86-byte rectangle-copy helper at payload 0xCBF3 through the end of SCORE_TEXT. v723 replaces only this maintained function in the current pinned SCORE TU; surrounding regist_menu and EGC-start remain uncredited scaffold. Both cold rounds reproduce all 134 bytes, the full 0xB30 producer, and all 559 ordered relocations; v724 canonical aggregate passes 57/57."
