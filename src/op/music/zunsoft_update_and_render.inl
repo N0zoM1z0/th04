@@ -1,0 +1,60 @@
+extern "C" void pascal near zunsoft_update_and_render(void)
+{
+	register pyro_t near *pyro = pyros;
+	register int i = 0;
+	int anim_sprite;
+	int draw_x;
+	int draw_y;
+	int patnum;
+
+	for(; i < 256; i++, pyro++) {
+		if(pyro->alive == true) {
+			pyro->age++;
+			anim_sprite = (pyro->age / 4);
+			patnum = (pyro->patnum_base + anim_sprite);
+			if(pyro->age >= 40) {
+				pyro->alive = false;
+				pyro->age = 0;
+				continue;
+			}
+			if(pyro->age < 16) {
+				super_put_rect(
+					(pyro->origin.x.v / 16) - 8,
+					(pyro->origin.y.v / 16) - 8,
+					patnum
+				);
+			} else if(pyro->age < 32) {
+				if(pyro->age == 16) {
+					snd_se_play(15);
+				}
+				pyro->distance_prev.v = pyro->distance.v;
+				pyro->distance.v += pyro->speed.v;
+				draw_x = polar(
+					pyro->origin.x.v,
+					pyro->distance.v,
+					CosTable8[pyro->angle]
+				) - 128;
+				draw_y = polar(
+					pyro->origin.y.v,
+					pyro->distance.v,
+					SinTable8[pyro->angle]
+				) - 128;
+				super_put_rect(draw_x / 16, draw_y / 16, patnum);
+			} else {
+				pyro->distance_prev.v = pyro->distance.v;
+				pyro->distance.v += pyro->speed.v;
+				draw_x = polar(
+					pyro->origin.x.v,
+					pyro->distance.v,
+					CosTable8[pyro->angle]
+				) - 256;
+				draw_y = polar(
+					pyro->origin.y.v,
+					pyro->distance.v,
+					SinTable8[pyro->angle]
+				) - 256;
+				super_put_rect(draw_x / 16, draw_y / 16, patnum);
+			}
+		}
+	}
+}
