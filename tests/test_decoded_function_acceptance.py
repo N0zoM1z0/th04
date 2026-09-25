@@ -1048,6 +1048,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_op_setup_submenus.py",
         )
 
+    def test_op_zunsoft_natural_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "op-zunsoft-natural-v753")
+        owner["source"] = "src/op/music/not_zunsoft.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "op-zunsoft-natural-v753")
+        owner["producer_size"] = "0x48F"
+        with self.assertRaisesRegex(ValueError, "OP ZUNSOFT natural backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "op-zunsoft-natural-v753",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_op_zunsoft_natural.py",
+        )
+
     def test_op_music_remaining_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

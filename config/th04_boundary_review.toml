@@ -1894,3 +1894,51 @@ expected_body_span = 0x1C3
 reviewed_body_size = 0x1C3
 review_evidence_id = "ev-th04-op-musicroom-menu-boundary-v748"
 notes = "Fresh target Ghidra, MAP ownership, TC86 generated PROC/ENDP and v748 cold replay agree on the complete contiguous 0x1C3 body ending at the OP_MUSIC_TEXT producer boundary. v751 canonical aggregate passes 81/81."
+
+
+# v753: replace historical ZUNSOFT ASM attribution with current natural C++ ownership.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xBA45
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/zunsoft_pyro_new.inl"
+expected_body_span = 0x84
+reviewed_body_size = 0x84
+review_evidence_id = "ev-th04-op-zunsoft-pyro-boundary-v753"
+notes = "Current MAP gives th04/zunsoft.cpp a nonempty 0x490 OP_MUSIC_TEXT contribution. Fresh Ghidra, TC86 -S and v753 cold replay close the contiguous 0x84 zunsoft_pyro_new body; v755 canonical aggregate passes 85/85."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xBAC9
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/zunsoft_update_and_render.inl"
+expected_body_span = 0x12B
+reviewed_body_size = 0x12B
+review_evidence_id = "ev-th04-op-zunsoft-update-boundary-v753"
+notes = "Fresh Ghidra, current C++ MAP ownership, TC86 -S and v753 cold replay close the contiguous 0x12B zunsoft_update_and_render body; v755 canonical aggregate passes 85/85."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xBBF4
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/zunsoft_palette_update_and_show.inl"
+expected_tasm_proc = "zunsoft_palette_update_and_show"
+expected_body_span = 0x41
+reviewed_body_size = 0x41
+review_evidence_id = "ev-th04-op-zunsoft-palette-boundary-v753"
+notes = "Fresh Ghidra, current C++ MAP ownership, TC86 -S and v753 cold replay close the contiguous 0x41 palette helper; v755 canonical aggregate passes 85/85."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xBC35
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/zunsoft_animate.inl"
+expected_tasm_proc = "@zunsoft_animate$qv"
+expected_body_span = 0x26F
+reviewed_body_size = 0x26F
+review_evidence_id = "ev-th04-op-zunsoft-animate-boundary-v753"
+notes = "Ghidra reports 522 reachable bytes across the correct 0x26F body span. Target terminal bytes, current C++ MAP ownership, TC86 -S and v753 cold replay close the 623-byte PROC body. The following 0x31 bytes are one alignment byte plus the compiler sparse-switch value/jump tables. v755 canonical aggregate passes 85/85."

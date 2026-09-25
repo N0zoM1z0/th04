@@ -41,7 +41,7 @@ inputs are independently proven pristine release media.
 
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 87 / 4 / 2 | 81 | 12 / 0 | 13,165 |
+| OP.EXE | 91 / 1 / 1 | 85 | 8 / 0 | 14,284 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
@@ -50,7 +50,7 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-12,728 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
+13,847 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
@@ -239,9 +239,32 @@ The final current-ledger OP aggregate is v751: 81 unique registered slices, all
 SHA-256:
 47cd2eb24d5318e826f65ed2ad971c257bf4935f160e4fb89417a659f1bda448
 
-OP now has 81/93 accepted functions. Only two provisional authored OP
-boundaries remain; continue mixing the remaining large owners with leaf/codegen
-blockers rather than selecting only short functions.
+The sixth OP promotion replaces a stale source-ownership assumption for the
+complete ZUNSOFT block. The current MAP has a zero-sized historical th04_op.asm
+contribution and a real 0x490-byte th04/zunsoft.cpp owner at the same address.
+Current natural C++ is independently cold-replayed for:
+
+- ZUNSOFT_PYRO_NEW at 0xBA45: 132 bytes;
+- ZUNSOFT_UPDATE_AND_RENDER at 0xBAC9: 299 bytes;
+- ZUNSOFT_PALETTE_UPDATE_AND_SHOW at 0xBBF4: 65 bytes;
+- zunsoft_animate at 0xBC35: corrected 623-byte body, followed by a 0x31-byte
+  compiler-owned alignment/sparse-switch extent.
+
+v753 preserves the complete 0x490 linked ZUNSOFT producer, current OP image,
+and all 804 ordered relocations in two cold rounds. Legacy TASM PROC metadata
+is retained only as boundary corroboration for the entries where it exists.
+
+The final current-ledger OP aggregate is v755: 85 unique registered slices, all
+85 raw-zero. Preserved receipt:
+
+.analysis/reconstruction/receipt-archive/v755-op-zunsoft-natural-canonical-receipt.json
+
+SHA-256:
+14a85e9330db6b1728bf7264ab5e8eebf608deb54a5d9dc427d6c17fd2a146f2
+
+OP now has 85/93 accepted functions. Only one provisional and one corroborated
+authored OP boundary remain; continue with those physical owners plus the
+reviewed leaf/codegen blockers.
 
 ## Analysis/worktree hygiene
 

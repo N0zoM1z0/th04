@@ -57,6 +57,7 @@ contain residual counts that were correct only at that packet.
 - [OP main-menu producer boundary correction and exact replay](op-maine/TH04_OP_MAIN_REMAINING_EXACT_V742.md)
 - [OP setup submenu exact replay](op-maine/TH04_OP_SETUP_SUBMENUS_EXACT_V745.md)
 - [OP Music Room remaining exact replay](op-maine/TH04_OP_MUSIC_REMAINING_EXACT_V748.md)
+- [OP ZUNSOFT current natural-C++ owner exact replay](op-maine/TH04_OP_ZUNSOFT_NATURAL_EXACT_V753.md)
 - [OP op_main.cpp remaining functions exact replay](op-maine/TH04_OP_MAIN_REMAINING_EXACT_V742.md)
 - [OP remaining m_char.cpp exact replay](op-maine/TH04_OP_MCHAR_REMAINING_EXACT_V738.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
