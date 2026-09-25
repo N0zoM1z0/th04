@@ -1,0 +1,32 @@
+void pascal near graph_3_digit_put(
+	screen_x_t left, screen_y_t top, uint16_t num
+)
+{
+	register int digit_seen = 0;
+	char g_str[4];
+	int digit;
+
+	g_str[0] = g_EMPTY;
+	digit = (num / 100);
+	num %= 100;
+	if(!graph_3_digit_put_as_fixed_2_digit) {
+		digit_seen |= digit;
+		if(digit_seen) {
+			g_str[0] = (gb_0 + digit);
+		} else {
+			g_str[0] = g_EMPTY;
+		}
+	}
+	digit = (num / 10);
+	num %= 10;
+	digit_seen |= digit;
+	digit_seen |= graph_3_digit_put_as_fixed_2_digit;
+	if(digit_seen) {
+		g_str[1] = (gb_0 + digit);
+	} else {
+		g_str[1] = g_EMPTY;
+	}
+	g_str[2] = (gb_0 + num);
+	g_str[3] = 0;
+	graph_gaiji_puts(left, top, GAIJI_W, g_str, 14);
+}
