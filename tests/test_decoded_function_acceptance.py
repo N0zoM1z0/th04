@@ -686,6 +686,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_box_bg_snap.py",
         )
 
+    def test_maine_staffroll_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-staffroll-animate-v702")
+        owner["source"] = "src/maine/end/not_staffroll.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-staffroll-animate-v702")
+        owner["producer_size"] = "0x8B6"
+        with self.assertRaisesRegex(ValueError, "physical decoded ownership mismatch"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-staffroll-animate-v702",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_staffroll_animate.py",
+        )
+
     def test_maine_staff_bg_helper_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

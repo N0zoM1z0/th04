@@ -1473,3 +1473,16 @@ expected_body_span = 0x36
 reviewed_body_size = 0x36
 review_evidence_id = "ev-th04-maine-staff-bg-helper-boundary-v700"
 notes = "Fresh target Ghidra closes one contiguous 54-byte body at 1A05:120B with three callers and one callee. The maintained reconstruction label is staffroll_bgimage_expand_put; original ZUN symbol spelling is not claimed. v700 natural C++ reproduces the body and complete 0x8B7 staffall MAINE_01_TEXT producer raw-zero in two cold rounds."
+
+
+# v702: target-first review and exact replay for staffroll_animate.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB44D
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staffroll_animate.inl"
+expected_body_span = 0x33A
+reviewed_body_size = 0x33A
+review_evidence_id = "ev-th04-maine-staffroll-boundary-v702"
+notes = "Fresh target Ghidra closes one contiguous 826-byte body at 1A05:13FD with one caller and 20 callees. The MAP public and pinned candidate source corroborate the staffroll_animate label; v702 maintained natural C++ reproduces the complete body and complete 0x8B7-byte staffall MAINE_01_TEXT producer in two cold rounds."

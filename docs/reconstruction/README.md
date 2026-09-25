@@ -102,3 +102,5 @@ milestones are retained evidence; do not scan them during routine handoff.
 - [MAINE sound-effect function boundaries](op-maine/TH04_MAINE_SND_SE_BOUNDARIES_V699.md)
 
 - [MAINE staff background expansion helper natural-C++ exact replay](op-maine/TH04_MAINE_STAFF_BG_HELPER_EXACT_V700.md)
+
+- [MAINE staffroll animation exact replay](op-maine/TH04_MAINE_STAFFROLL_ANIMATE_EXACT_V702.md)
