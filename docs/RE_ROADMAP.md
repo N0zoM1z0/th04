@@ -1,130 +1,100 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-25. This is a current plan, not a chronological experiment log.
-Historical versioned experiments live in `config/evidence.csv`,
-`config/knowledge.csv`, and `docs/reconstruction/`. Current counts always come
-from `python3 scripts/status.py`.
+Updated 2026-09-25 after the MAINE cleanup pass. This is a current plan, not a
+chronological experiment log. Historical packets live in config/evidence.csv,
+config/knowledge.csv, and docs/reconstruction/. Numeric truth always comes from
+python3 scripts/status.py and the generated progress report.
 
 ## 1. Current baseline
-
-Active non-MAIN state:
 
 | Artifact | Exact functions | Pending / blocked | Boundary reviewed / corroborated / provisional |
 | --- | ---: | ---: | ---: |
 | OP.EXE | 64 | 29 / 0 | 70 / 15 / 8 |
-| MAINE.EXE | 41 | 31 / 0 | 47 / 20 / 5 |
+| MAINE.EXE | 52 | 20 / 0 | 59 / 10 / 3 |
 | ZUN.COM | 0 | 11 / 2 | 13 / 0 / 0 |
 
-OP has 6,277 decoded source-owner bytes, of which 5,840 are in exact accepted
-functions. MAINE has 4,037 decoded source-owner bytes, of which 3,662 are exact.
-No packed-file authored-source denominator is currently honest for OP, MAINE,
-or ZUN.
+MAINE currently has 8,129 tracked decoded source-owner bytes, of which 7,754
+are in accepted exact functions. OP has 6,277 tracked source-owner bytes, of
+which 5,840 are exact. These are not packed-file denominators.
 
-MAIN remains a side lane unless materially new evidence requires reopening it.
+The active reconstruction order is **MAINE.EXE → OP.EXE → ZUN.COM**.
+MAIN.EXE is outside this campaign.
 
-## 2. Finish small and medium natural-source functions
+## 2. Finish MAINE deliberately
 
-Select work by reviewed physical `body_span`, evidence maturity, and producer
-isolation. Do not sort by Ghidra auto-function size alone.
+Keep both boss-sized and leaf-sized work active. For every candidate:
 
-For each candidate:
+1. re-check physical ownership against the target;
+2. independently re-check source/origin rather than trusting an old label;
+3. use natural C/C++ source, not target-derived instruction transcription;
+4. cold-build the complete producer in two isolated rounds;
+5. require full function raw equality, producer equality, OMF/layout checks,
+   and ordered relocation equality;
+6. bind the replay backend fail-closed;
+7. run one current-ledger aggregate before exact promotion.
 
-1. target-first boundary/control-flow review;
-2. source/origin review independent of candidate names;
-3. natural C/C++ codegen probe;
-4. focused A/B cold build;
-5. complete function raw-byte comparison;
-6. complete producer/OMF/layout/ordered-relocation comparison;
-7. fail-closed acceptance backend binding;
-8. full artifact aggregate replay before exact promotion.
+Good next source-led targets include the 105-byte sub_B81D candidate in the
+pinned gv.cpp producer. The natural sub_B9F2 candidate is also visible there,
+but its physical owner is still provisional/non-contiguous and must be reviewed
+before source promotion.
 
-Known small low-level gaps are already recorded and should not consume routine
-retry cycles: MAINE `egc_start_copy`, MAINE `box_1_to_0_masked`, OP
-`SND_SE_PLAY`, OP `_snd_se_update`, and OP `nopoly_B_put`.
+Do not spend routine cycles on known low-level blockers (egc_start_copy,
+box_1_to_0_masked, SCORE rotate codegen, sound pseudo-register shapes) without
+a materially new mechanism.
 
-The OP SCORE codecs and MAINE SCORE codecs remain maintained/source-present but
-nonexact. Do not make them exact by transcribing target rotate/register forms.
+## 3. Continue resolving ownership in parallel
 
-## 3. Transition deliberately into large owners
+MAINE still has 10 corroborated and 3 provisional authored boundaries. Some
+rows marked target-derived-asm now have independently located natural candidate
+source in retained producers; update source ownership only after the target
+boundary is re-reviewed.
 
-Once the remaining small/medium natural-source queue is exhausted, large
-functions become the primary work rather than a reason to stop.
+Keep authored C/C++ reconstruction separate from ASM attestation. Raw-equal ASM
+does not become authored-source progress without provenance.
 
-Large-owner workflow:
+## 4. Then OP.EXE
 
-1. close the full physical extent, including shared tails and interleaved data;
-2. identify jump tables, tables, embedded data and indirect targets;
-3. partition the function into independently understood semantic regions;
-4. reconstruct natural source region by region without claiming partial exact
-   credit for the whole function;
-5. build focused codegen probes for difficult regions;
-6. only after the complete function closes, run producer/link/relocation/raw
-   exactness and the aggregate gate.
+After the MAINE queue is materially reduced, apply the same target-first and
+producer-complete process to OP. The OP SCORE codecs, SND_SE_PLAY,
+_snd_se_update, and nopoly_B_put remain useful codegen blockers, not targets to
+force exact with pseudo-registers or copied instructions.
 
-MAINE payload `0xA847..0xADBB` demonstrates this workflow end to end. v571
-closed the `0x575`-byte physical owner and adjacent 16-entry CS-relative table
-despite Ghidra's truncated two-range auto-function; v685 then reproduced the
-complete body, table, `CUTSCENE_TEXT` producer, and all 559 ordered relocations
-from maintained natural C++. The reconstruction label `script_op(unsigned char)`
-is retained, without claiming recovery of ZUN's original symbol spelling.
+Continue correcting corroborated/provisional OP boundaries before estimating
+work from automatic analysis spans.
 
-Current reconstruction order is **MAINE.EXE → OP.EXE → ZUN.COM**. `MAIN.EXE`
-is outside the current campaign; progress there should not distract from the
-remaining packed-artifact work.
+## 5. Then ZUN.COM
 
-## 4. Boundary, origin and ASM ownership continue in parallel
-
-OP still has corroborated/provisional boundaries and four origin-open authored
-candidates. MAINE still has corroborated/provisional boundaries and 18
-origin-open candidates. Continue boundary/source-origin review alongside code
-reconstruction; do not wait until the end to resolve ownership.
-
-Keep authored C/C++ reconstruction separate from ASM attestation. A raw-equal
-ASM slice does not become authored C/C++ progress without independent source
-ownership.
-
-## 5. ZUN provenance/component work
-
-All 13 current authored physical ZUN boundaries are reviewed. The remaining
-problem is not routine disassembly:
+All 13 current authored physical ZUN boundaries are reviewed. The hard part is
+source/component provenance:
 
 - 11 candidates still lack accepted source/origin ownership;
 - two C++ items remain blocked;
-- generated/disassembler-derived assembly is provenance evidence only;
-- the 36-byte graph-clear/library-origin result is support evidence, not
-  authored-function exact credit.
+- generated/disassembler-derived assembly remains zero-credit provenance for
+  authored-source exactness;
+- support-library/component replacement evidence must remain separate from
+  authored-function credit.
 
-Resolve ZUNINIT/MEMCHK provenance, runtime/library component ownership, and the
-two blocked C++ items before exact promotion. Do not use generated assembly as
-a substitute for source authority.
+Resolve provenance and component ownership first; exactness follows only after
+a source-authoritative cold replay.
 
-## 6. Artifact closure
+## 6. Artifact closure comes last
 
-After function queues close:
+Function exactness is not whole-file exactness. After the function queues close:
 
-1. cold replay all accepted producers from maintained source;
-2. verify OMF identity, segment/group ownership and ordered MZ relocations;
+1. cold replay all maintained producers;
+2. verify segment/group topology and ordered relocations;
 3. establish an honest file-backed authored-source coverage denominator;
-4. evaluate DIET-packed reconstruction separately from decoded-function
-   exactness;
-5. run runtime invariants under the pinned PC-98 environment;
-6. add cross-emulator evidence only when a separately pinned secondary runtime
-   exists.
+4. evaluate DIET packing separately from decoded-function exactness;
+5. run runtime invariants in the pinned PC-98 environment.
 
-Function exactness is not whole-program exactness. Packed bytes, runtime
-behavior, component provenance and source coverage remain distinct claims.
+## 7. Hygiene
 
-## 7. Hygiene rules
+docs/RE_HANDOFF.md is the current resume document. docs/PROGRESS.md and
+docs/BOUNDARY_REVIEW.md are generated current-state views. Versioned
+reconstruction notes are historical unless explicitly listed as active.
 
-`docs/RE_HANDOFF.md` is the concise current-state resume file. Do not append
-chronological “latest cohort” sections indefinitely. Put bounded historical
-findings in reconstruction notes and evidence ledgers.
-
-`.analysis/reconstruction/probes/` is scratch output unless a checked-in script
-or retention config explicitly depends on a directory. Use
-`scripts/prune_analysis.py` to review and prune ignored outputs. Preserve pinned
-targets, toolchains, runtime images, Ghidra inputs/exports, retained source
-snapshots and explicitly configured dependencies. Literal paths embedded in
-historical evidence or diagnostic scripts are provenance records, not a promise
-that the old expanded worktree still exists; rebuild or restore those snapshots
-before intentionally rerunning an old diagnostic.
+Probe worktrees under .analysis/reconstruction/probes/ are scratch output.
+Archive receipts and digests, then prune them with scripts/prune_analysis.py.
+Do not delete pinned targets, toolchains, Ghidra databases/exports, retained
+source snapshots, runtime images, or DIET inputs merely because they are
+ignored by Git.

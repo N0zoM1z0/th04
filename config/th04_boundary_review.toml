@@ -1512,3 +1512,16 @@ expected_body_span = 0xF5
 reviewed_body_size = 0xF5
 review_evidence_id = "ev-th04-maine-skill-percentage-boundary-v706"
 notes = "Fresh target Ghidra closes one contiguous 245-byte body at 1A05:1836 with one caller and two callees. The MAP public and pinned gv.cpp candidate corroborate the skill percentage owner; v706 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds."
+
+
+# v708: target-first review and exact replay for million fraction owner.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB97B
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/graph_fraction_of_million_put.inl"
+expected_body_span = 0x77
+reviewed_body_size = 0x77
+review_evidence_id = "ev-th04-maine-million-fraction-boundary-v708"
+notes = "Fresh target Ghidra closes one contiguous 119-byte body at 1A05:192B with two callers and two callees. The MAP public and pinned gv.cpp candidate corroborate the million-fraction renderer; v708 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds, and v710 is the canonical 52-slice current-ledger aggregate."

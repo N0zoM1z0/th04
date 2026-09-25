@@ -1,3 +1,8 @@
+> **Historical packet.** This note records the v477 state. Its statements about
+> functions that "remain" are superseded by the live ledgers and the v700/v702+
+> exact replays. Use docs/RE_HANDOFF.md and docs/PROGRESS.md for the current
+> queue.
+
 # TH04 MAINE staff-roll C++ frontier (v477)
 
 ## Scope

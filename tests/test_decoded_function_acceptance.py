@@ -709,6 +709,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
         )
 
+    def test_maine_million_fraction_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-million-fraction-v708")
+        owner["source"] = "src/maine/end/not_million_fraction.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-million-fraction-v708")
+        owner["producer_offset"] = "0xB788"
+        with self.assertRaisesRegex(ValueError, "million-fraction backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-million-fraction-v708",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_graph_fraction.py",
+        )
+
     def test_maine_skill_percentage_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

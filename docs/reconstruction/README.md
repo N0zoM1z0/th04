@@ -4,13 +4,20 @@ These notes explain bounded target observations, compiler experiments, replay
 receipts, and unresolved producer questions. They support the ledgers; they do
 not define current progress or exactness by themselves.
 
+Versioned notes are historical snapshots unless explicitly listed as active.
+Historical .analysis/reconstruction/probes/... paths record where evidence was
+produced; the expanded worktree may have been pruned after its receipt and
+digests were archived. Re-run the checked-in command or restore the private
+receipt archive rather than treating a missing probe directory as missing
+source evidence.
+
 ## Active frontiers
 
 Only the links in this section and `docs/RE_HANDOFF.md` describe the current
 frontier. Versioned notes outside this list are historical snapshots and may
 contain residual counts that were correct only at that packet.
 
-### MAIN.EXE
+### MAIN.EXE (reference only; not current campaign)
 
 - [Checkerboard counted-LOOP blocker](main/TH04_MAIN_CHECKERBOARD_V396.md)
 - [Stage 4 carpet low-level producer blocker](main/TH04_MAIN_KURUMI_CARPET_V174.md)
@@ -35,6 +42,11 @@ contain residual counts that were correct only at that packet.
 - [MAINE indirect-dispatch function boundary at payload 0xA847](op-maine/TH04_MAINE_SCRIPT_OP_BOUNDARY_V571.md)
 - [MAINE script dispatcher natural-C++ exact replay](op-maine/TH04_MAINE_SCRIPT_OP_EXACT_V685.md)
 - [MAINE cutscene animation natural-C++ exact replay](op-maine/TH04_MAINE_CUTSCENE_ANIMATE_EXACT_V687.md)
+- [MAINE sound-effect function boundaries](op-maine/TH04_MAINE_SND_SE_BOUNDARIES_V699.md)
+- [MAINE staff background expansion helper natural-C++ exact replay](op-maine/TH04_MAINE_STAFF_BG_HELPER_EXACT_V700.md)
+- [MAINE staffroll animation exact replay](op-maine/TH04_MAINE_STAFFROLL_ANIMATE_EXACT_V702.md)
+- [MAINE skill percentage exact replay](op-maine/TH04_MAINE_SKILL_PERCENTAGE_EXACT_V706.md)
+- [MAINE million-fraction renderer exact replay](op-maine/TH04_MAINE_MILLION_FRACTION_EXACT_V708.md)
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [OP/MAINE score codec boundary / provenance review](op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md)
@@ -68,7 +80,6 @@ contain residual counts that were correct only at that packet.
 - [ZUN compact local MASTER archive](zun/TH04_ZUN_COMPACT_MASTER_V536.md)
 - [ZUN Borland runtime inventory / EMU-MATHS removal](zun/TH04_ZUN_RUNTIME_INVENTORY_V537.md)
 - [ZUN resident six-byte layout cascade diagnostic](zun/TH04_ZUN_RESIDENT_SHIFT_V546.md)
-
 ## Recent MAIN milestones
 
 - [Accepted MAIN cohort and durable exact summary](main/TH04_MAIN_EXACT_BATCH.md)
@@ -98,11 +109,3 @@ negative result, or replay boundary. Keep live priorities in
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) and live counts in the CSV ledgers and
 generated progress reports. Notes not listed under active frontiers or recent
 milestones are retained evidence; do not scan them during routine handoff.
-
-- [MAINE sound-effect function boundaries](op-maine/TH04_MAINE_SND_SE_BOUNDARIES_V699.md)
-
-- [MAINE staff background expansion helper natural-C++ exact replay](op-maine/TH04_MAINE_STAFF_BG_HELPER_EXACT_V700.md)
-
-- [MAINE staffroll animation exact replay](op-maine/TH04_MAINE_STAFFROLL_ANIMATE_EXACT_V702.md)
-
-- [MAINE skill percentage exact replay](op-maine/TH04_MAINE_SKILL_PERCENTAGE_EXACT_V706.md)

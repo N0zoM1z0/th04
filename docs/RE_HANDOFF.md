@@ -1,194 +1,191 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-25. This file is the concise resume index. Do not infer current
-progress from historical experiment directories, old receipt paths, candidate
-source names, or previous session prose. Live counts come from:
+Updated 2026-09-25 after the MAINE cleanup pass. This file is the concise
+resume index. Do not infer current progress from historical experiment
+directories, old probe paths, candidate source names, or previous session
+prose.
 
-- `config/units.csv`
-- `config/th04_function_boundaries.csv`
-- `config/th04_decoded_function_acceptance.csv`
-- `config/th04_main_authored_functions.csv`
-- `python3 scripts/status.py`
+Authoritative live state comes from:
 
-The active plan is [RE_ROADMAP.md](RE_ROADMAP.md). Bounded historical evidence
-and reusable negative results are routed through
-[reconstruction/README.md](reconstruction/README.md) and the evidence ledger.
+- config/th04_function_boundaries.csv
+- config/th04_decoded_function_acceptance.csv
+- config/units.csv
+- config/evidence.csv
+- python3 scripts/status.py
+- generated docs/PROGRESS.md and docs/BOUNDARY_REVIEW.md
+
+The active campaign order is **MAINE.EXE → OP.EXE → ZUN.COM**. Do not spend
+reconstruction time on MAIN.EXE in this campaign unless materially new
+evidence requires reopening it.
 
 ## Resume checks
 
 Before target-dependent work:
 
-```sh
+~~~sh
 git status --short
 python3 scripts/preflight.py
 python3 scripts/status.py
 python3 scripts/audit_compat_dependencies.py --check
-python3 scripts/decoded_function_acceptance.py
 python3 scripts/boundary_review/validate_function_boundary_ledger.py
-```
+~~~
 
-Current target canonicality is `candidate-local-attested`: size, SHA-256, MZ
-structure, tracking, function-boundary ledgers, and decoded acceptance validate,
-but this is not proof of an official pristine release. Re-attest the active
-Ghidra database before making new target observations. Keep one writable
-Borland/Wine reconstruction session at a time.
+Run a cold decoded-function aggregate only when promoting a function; it is too
+expensive to use as a routine status command.
+
+Current target canonicality is candidate-local-attested. This validates the
+local target identity and reconstruction surfaces; it is not a claim that the
+inputs are independently proven pristine release media.
 
 ## Current non-MAIN state
 
-| Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
+| Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 70 / 15 / 8 | 64 | 29 / 0 | 6,277 |
-| MAINE.EXE | 47 / 20 / 5 | 41 | 31 / 0 | 4,037 |
+| MAINE.EXE | 59 / 10 / 3 | 52 | 20 / 0 | 8,129 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-These are decoded-function/source-owner extents, not packed-file coverage.
+These are decoded-function/source-owner counts, not packed-file coverage.
 There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
-OP has 5,840 exact source-owner bytes. Its maintained but nonexact decoded
-candidates are:
+The accepted decoded-source bytes represented by the acceptance ledger are
+5,840 for OP and 7,754 for MAINE. The remaining tracked MAINE source-owner
+bytes are source-present/nonexact diagnostics, not partial exact credit.
 
-- SCORE `scoredat_decode` + `scoredat_encode`: 274 bytes total;
-- `_snd_se_update`: 76 bytes;
-- `SND_SE_PLAY`: 57 bytes;
-- `nopoly_B_put`: 30 bytes.
+## What changed in the MAINE campaign
 
-MAINE has 3,662 exact source-owner bytes. Its maintained but nonexact decoded
-candidates are:
+The campaign started this pass at 41/72 accepted MAINE functions and now sits
+at 52/72. The following natural-source owners were independently re-reviewed,
+cold-built, producer-checked, relocation-checked, aggregate-gated, and accepted:
 
-- SCORE `scoredat_decode`: 88 bytes;
-- SCORE `scoredat_encode`: 101 bytes;
-- `box_1_to_0_masked`: 134 bytes;
-- `egc_start_copy`: 52 bytes.
+- script_op at 0xA847: 1,397-byte body plus adjacent compiler switch table;
+- cutscene_animate at 0xADFC: 212 bytes;
+- box_bg_allocate_and_snap at 0xA4AE: 209 bytes;
+- pic_put_both_masked at 0xA37F: 303 bytes;
+- pi_put_quarter_8 at 0xCDAB: 177 bytes;
+- MAINE _main at 0xA102: 400 bytes;
+- staff background expansion helper at 0xB25B: 54 bytes;
+- staffroll_animate at 0xB44D: 826 bytes;
+- graph_3_digit_put at 0xB787: 150 bytes;
+- skill-percentage owner at 0xB886: 245 bytes;
+- graph_fraction_of_million_put at 0xB97B: 119 bytes.
 
-MAIN remains an evidence-triggered side lane, not the active reconstruction
-queue. ZUN's 13 physical authored boundaries are reviewed, but 11 still lack
-accepted source/origin ownership and two C++ items remain blocked.
+The final current-ledger MAINE aggregate is v710: 52 unique registered slices,
+all 52 raw-zero. Its preserved private receipt is:
 
-## Most recent accepted work
+.analysis/reconstruction/receipt-archive/v710-maine-million-fraction-canonical-receipt.json
 
-The newest accepted OP function is `playchar_titles_put(int)` at payload
-`0xD285`, 179 bytes. The v685 OP aggregate passes 64/64 registered decoded
-slices raw-zero with all 804 target-ordered relocations preserved. Receipt
-SHA-256: `07faf8423c08e345939042856be69bf98a6a583e4f3aa45e9576600e98a91ba9`.
+SHA-256:
+913f17cffc4e8c35d77c994a4bcf902239799d67a1516e7e069fb009151bbe22
 
-The newest accepted MAINE function is `hiscore_scoredat_save()` at payload
-`0xC316`, 156 bytes. The v683 MAINE aggregate passes 41/41 registered decoded
-slices raw-zero with all 559 target-ordered relocations preserved. Exact credit
-is local to the save wrapper; the surrounding SCORE codecs remain nonexact.
-Receipt SHA-256:
-`fd272880c0b8bb3f750398cc5aa1883e5492fbaa4c2a57c5880812e91ea82823`.
+The earlier v709 pre-acceptance output was later overwritten by a duplicate-row
+diagnostic and must not be used as canonical evidence.
 
-Other recent accepted OP work includes `cfg_load()` at `0xA74C` and
-`polygon_build(...)` at `0xBFC5`. Their function-level exactness is already
-represented in the acceptance/evidence ledgers; do not reopen them without new
-contradictory evidence.
+## Important remaining MAINE work
 
-## Known low-level codegen gaps
+Do not treat the remaining queue as an ASM-only queue merely because old rows
+say target-derived-asm. Re-check source ownership first.
 
-Do not promote these by copying target instructions, using decompilation helper
-assembly, or forcing pseudo-registers merely to obtain byte equality.
+- sub_B81D at 0xB81D is a 105-byte corroborated owner. The pinned th04/gv.cpp
+  candidate contains natural C++ for it, but it has not yet been promoted to
+  maintained source or accepted.
+- sub_B9F2 at 0xB9F2 also has natural candidate C++ in the pinned th04/gv.cpp
+  producer, but the current Ghidra body is non-contiguous and the ledger
+  boundary remains provisional. Close physical ownership before any
+  source/exactness promotion.
+- SND_SE_PLAY (0xD5A0, 57 bytes) and _snd_se_update (0xD5DA, 76 bytes) now
+  have reviewed physical boundaries. Their historical candidate source uses
+  code-shape forcing and has no natural exact credit.
+- SND_LOAD at 0xD112 is reviewed and 234 bytes but remains nonexact.
+- egc_start_copy (52 bytes), box_1_to_0_masked (134 bytes), and the
+  88/101-byte SCORE codecs remain natural-source codegen blockers.
 
-- MAINE `egc_start_copy()` (`0xA2D6`, 52 bytes): ordinary `outport()` produces
-  DX-before-AX loads and a different zero-value form; the historical
-  `outport2` route is decompilation-oriented inline assembly.
-- MAINE `box_1_to_0_masked()` (`0xA78F`, 134 bytes): after natural-codegen
-  tuning, the remaining differences are the EGC setup write ordering; the
-  known byte-forcing helper is again decompilation support.
-- OP `SND_SE_PLAY` (`0xE2F2`, 57 bytes): natural Pascal C++ uses a BP frame and
-  ordinary extension/indexing; target uses SP-relative access and forced BL/BH
-  register shapes.
-- OP `_snd_se_update` (`0xE32C`, 76 bytes): natural C++ is one byte longer due
-  to ordinary unsigned-byte indexing; register-specific forcing is diagnostic
-  only.
-- OP `nopoly_B_put` (`0xBFA7`, 30 bytes): intrinsic `memcpy` naturally reaches
-  the same 30-byte `REP MOVSW` strategy but orders source/destination segment
-  setup differently. Cross-game pseudo-register/`__memcpy__` code is not
-  authored-source evidence.
+Continue mixing large/medium owners with leaf functions. Select by physical
+ownership and producer structure, not by whichever function looks easiest.
 
-These negative results are reusable. Do not repeatedly retry them without a
-new compiler mechanism or materially new provenance.
+## Reusable negative results
+
+Do not retry these without a materially new compiler mechanism or provenance:
+
+- egc_start_copy: ordinary C/C++ forms still fail to reproduce the target
+  AX/DX port-write ordering. Reversed inline-helper arguments collapse back to
+  the direct form; assignment-expression variants add variable-preservation
+  instructions.
+- SCORE codecs: shift/or rotate expressions stay expanded; tested Borland
+  rotate-intrinsic variants did not produce the target byte-memory ROR form.
+- MAINE/OP sound-effect code: pseudo-register forcing is diagnostic evidence,
+  not acceptable authored-source provenance.
+- box_1_to_0_masked still differs in low-level EGC setup ordering under
+  natural source.
+
+Target-derived assembly, decompiler helper assembly, pseudo-register forcing,
+or copying target instructions never earns authored C/C++ exact credit by
+itself.
 
 ## Boundary and ownership hazards
 
-Use reviewed physical ownership, not raw Ghidra auto-function size, when
-prioritizing work. MAINE payload `0xA847..0xADBB` is the resolved example:
-v571 proved one `0x575`-byte owner even though Ghidra exposed only two small
-ranges; v685 then reproduced the complete 1,397-byte body, the adjacent
-64-byte compiler switch table, the complete `0xC3E` `CUTSCENE_TEXT` producer,
-and all 559 ordered relocations with maintained natural C++.
+Use reviewed physical ownership, not raw auto-function spans. The resolved
+script_op case is the reference example: Ghidra exposed incomplete ranges,
+while target-first review closed one 0x575-byte owner and later natural C++
+reproduced the complete body, switch table, producer, and all ordered
+relocations.
 
-The maintained reconstruction label is `script_op(unsigned char)`. Exact code
-generation supports that source body and semantics, but it does not recover an
-original ZUN debug symbol or comment spelling. Candidate history remains
-corroboration; target boundary evidence, maintained source ownership, compiler
-replay, and exact acceptance stay separate claims.
-
-## Next work order
-
-1. Current campaign order is **MAINE.EXE → OP.EXE → ZUN.COM**. Do not spend
-   reconstruction time on `MAIN.EXE` in this campaign.
-   v687 closes `cutscene_animate` at `0xADFC` (212 bytes), bringing MAINE to 43/72 function-level exact.
-2. Continue MAINE with both large/medium owners and leaf functions. Select by
-   reviewed physical spans and producer structure, not by Ghidra auto-size or
-   by whichever candidate looks easiest.
-3. For each promotion, independently re-check the target boundary and source
-   assumption, then require natural-source codegen, complete producer bytes,
-   ordered relocations, raw function equality, and the aggregate gate.
-4. After the MAINE queue is materially reduced, apply the same process to OP.
-   Only then move to ZUN source/origin and component ownership.
-5. For ZUN, IDA-/disassembler-generated initial-state code and raw-equal
-   generated assembly remain zero-credit provenance unless independent source
-   ownership is established.
+The same caution applies to sub_B9F2: its current automated body is
+non-contiguous, so the apparent span to the next MAP public is not yet a valid
+function extent.
 
 ## Analysis/worktree hygiene
 
-Ignored analysis output is disposable unless a checked-in script/config names
-it as a required input. Current long-lived inputs include:
+Private probe worktrees are disposable after durable evidence and digests are
+recorded. A path under .analysis/reconstruction/probes/ in historical evidence
+is a provenance path, not a promise that the directory still exists.
 
-- `.analysis/targets/`;
-- `.analysis/toolchain/`;
-- `.analysis/ghidra/`, especially boundary exports/attestations;
-- `.analysis/runtime/images/zun.hdi`;
-- `.analysis/gpt-web/v401-master-vs-object-replay-001`;
-- `.analysis/gpt-web/v402-opmusic-hybrid-replay-001`;
-- `.analysis/gpt-web/v489-bgimage-hybrid-replay-003`;
-- `.analysis/reconstruction/diet-replay/`;
-- `.analysis/reconstruction/v218-th04-*-diet/`;
-- `.analysis/reconstruction/probes/v546-zun-runtime-inventory-001`.
+Long-lived private inputs currently required by checked-in tooling include:
 
-Some historical MAIN diagnostics still contain literal references to the old
-`gptweb-v213-dialog-reloc-diagnostic-001` and
-`gptweb-v214-demo-fixupp-diagnostic-001` exact-unit replay trees. Those expanded
-worktrees are not present in the current analysis state and are not resume
-prerequisites. Treat the command strings as historical provenance; intentionally
-revisiting those diagnostics requires rebuilding or restoring the old snapshot
-first.
+- .analysis/targets/
+- .analysis/toolchain/
+- .analysis/ghidra/
+- .analysis/runtime/images/zun.hdi
+- .analysis/gpt-web/v401-master-vs-object-replay-001
+- .analysis/gpt-web/v402-opmusic-hybrid-replay-001
+- .analysis/gpt-web/v489-bgimage-hybrid-replay-003
+- .analysis/reconstruction/diet-replay/
+- .analysis/reconstruction/v218-th04-*-diet/
+- .analysis/reconstruction/probes/v546-zun-runtime-inventory-001
 
-Focused replay worktrees under `.analysis/reconstruction/probes/` are
-rebuildable outputs unless explicitly retained above. Evidence paths are
-provenance strings, not promises that expanded worktrees remain on disk. Use
-`scripts/prune_analysis.py` in dry-run mode before applying cleanup.
+The 2026-09-25 final cleanup archived 39 current probe receipt.json files to:
 
-The 2026-09-25 cleanup archived 1,699 probe `receipt.json` files before pruning
-to `.analysis/reconstruction/receipt-archive/probes-cleanup-20260925.tar.zst`
-(SHA-256
-`2980355ea7a47db8fc7e6234900d7257b3998a93a9582b35caca3f515d32057f`).
-It then removed 186 rebuildable probe worktrees plus interpreter caches. The
-live probe root now retains only `v546-zun-runtime-inventory-001`; observed
-`.analysis` usage fell from about 3.4 GiB to about 1.6 GiB. Pinned targets,
-toolchains, Ghidra inputs/exports, runtime image, v401/v402/v489 snapshots, and
-DIET inputs were preserved.
+.analysis/reconstruction/receipt-archive/probes-cleanup-20260925-final.tar.zst
 
-Finish a work session with:
+Archive SHA-256:
+55d36ec2f03e92462f84783189af87b5b72c8b8238cb9ebc031dc18aed605b42
 
-```sh
+The v708 focused and v710 canonical receipts are also retained directly in the
+receipt archive. The cleanup then removed 51 rebuildable probe directories and
+five Python cache directories. Only v546-zun-runtime-inventory-001 remains
+expanded under .analysis/reconstruction/probes/. Observed .analysis usage after
+pruning is about 1.6 GiB.
+
+Use the following in dry-run mode before future cleanup:
+
+~~~sh
+python3 scripts/prune_analysis.py --compact-referenced --prune-probes --prune-caches
+~~~
+
+Add --apply only after reviewing the plan.
+
+## End-of-session checks
+
+~~~sh
 python3 scripts/status.py
+python3 scripts/preflight.py
+python3 scripts/boundary_review/report_function_boundaries.py --check
+python3 scripts/progress.py --check
 python3 scripts/ci.py
 git diff --check
 git status --short
-```
+~~~
 
-Leave no untracked candidate source behind. If a candidate has not reached a
-reusable probe/evidence checkpoint, delete it rather than letting a future
-agent mistake it for maintained source.
+Leave no untracked candidate source or stale generated documentation behind.
+Checkpoint commits in this campaign use the gpt-web: ... subject format.

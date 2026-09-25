@@ -168,11 +168,12 @@ also rejects missing source/address/replay data and unequal raw slice hashes.
 
 Update source, ledgers, focused notes, reusable probes, and the handoff. Put
 failed experiments in a concise durable note when they eliminate a plausible
-path. Keep bulky raw output only temporarily below `.analysis/`; after the
-checked-in evidence/knowledge row and required digests validate, prune old
-cold-build trees, probe matrices, logs, and disassemblies. Preserve pinned
-inputs, active databases, current boundary-review inputs, and the latest
-focused/aggregate receipts.
+path. Keep bulky raw output only temporarily below .analysis/; after the
+checked-in evidence/knowledge row and required digests validate, archive the
+small receipt.json records needed for provenance and prune old cold-build
+trees, probe matrices, logs, and disassemblies. Preserve pinned inputs, active
+databases, current boundary-review inputs, and configured replay dependencies.
+The expanded focused/aggregate worktree itself does not need to remain live.
 
 Continue the existing focused note when work advances the same producer,
 boundary, or blocker. Create a new note only for a distinct ownership decision,
