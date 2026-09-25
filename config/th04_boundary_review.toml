@@ -1778,3 +1778,71 @@ expected_body_span = 0xBB
 reviewed_body_size = 0xBB
 review_evidence_id = "ev-th04-op-shottype-title-box-boundary-v738"
 notes = "Fresh Ghidra and MAP review close one contiguous 187-byte body. v738 maintained natural C++ reproduces it inside the exact 0xAB3 m_char.cpp producer in two cold rounds; v740 canonical aggregate passes 71/71."
+
+
+# v742: current TC86-generated ASM plus target bytes correct the six remaining op_main.cpp physical bodies.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xA9C9
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/main/start_demo.inl"
+expected_body_span = 0x4AB7
+reviewed_body_size = 0xE4
+review_evidence_id = "ev-th04-op-start-demo-boundary-v742"
+notes = "Ghidra merges four ranges across 0x4AB7 and is rejected as physical ownership. TC86 -S PROC/ENDP, MAP adjacency, target bytes, and v742 cold replay close a 0xE4 body followed by a four-word switch table through the next public."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xAAB5
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/main/main_unput_and_put.inl"
+expected_body_span = 0x115
+reviewed_body_size = 0x115
+review_evidence_id = "ev-th04-op-main-unput-boundary-v742"
+notes = "Ghidra sees two reachable ranges across the correct 0x115 physical body. TC86 -S and target bytes close the body at RET 4, followed by one compiler pad byte and a six-word switch table."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xABD7
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/main/option_unput_and_put.inl"
+expected_body_span = 0x1EBD
+reviewed_body_size = 0x240
+review_evidence_id = "ev-th04-op-option-unput-boundary-v742"
+notes = "Ghidra merges three ranges across 0x1EBD and is rejected as physical ownership. TC86 -S, target bytes, and MAP adjacency close a 0x240 body followed by one compiler pad byte and an eight-word switch table."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xAE96
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/main/main_update_and_render.inl"
+expected_body_span = 0xAA45
+reviewed_body_size = 0x1B0
+review_evidence_id = "ev-th04-op-main-update-boundary-v742"
+notes = "Ghidra merges five ranges across 0xAA45 and is rejected as physical ownership. Target bytes close a 0x1B0 body ending in RET, followed immediately by a six-word switch table. TC86 -S also exposes an uninitialized pad directive, but it is not a file-backed target byte."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB052
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/main/option_update_and_render.inl"
+expected_body_span = 0x4D3F
+reviewed_body_size = 0x30C
+review_evidence_id = "ev-th04-op-option-update-boundary-v742"
+notes = "Ghidra merges six ranges across 0x4D3F and is rejected as physical ownership. TC86 -S, target bytes, and MAP adjacency close a 0x30C body followed by one compiler pad byte and two six-word switch tables."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xB377
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/main/main.inl"
+expected_body_span = 0x128
+reviewed_body_size = 0x128
+review_evidence_id = "ev-th04-op-op-main-boundary-v742"
+notes = "Fresh Ghidra, MAP adjacency, target terminal RETF, TC86 -S PROC/ENDP, and v742 cold replay agree on the complete contiguous 0x128 _main body ending exactly at the 0xD53 op_main.cpp producer boundary."

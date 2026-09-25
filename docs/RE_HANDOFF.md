@@ -41,7 +41,7 @@ inputs are independently proven pristine release media.
 
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 77 / 8 / 8 | 71 | 22 / 0 | 9,053 |
+| OP.EXE | 83 / 7 / 3 | 77 | 16 / 0 | 11,642 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
@@ -50,7 +50,7 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-8,616 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
+11,205 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
@@ -185,17 +185,30 @@ v738 replaces only those five bodies and preserves the complete 0xAB3
 m_char.cpp producer, full linked OP program image, and all 804 ordered
 relocations in two cold rounds.
 
-The final current-ledger OP aggregate is v740: 71 unique registered slices, all
-71 raw-zero. Preserved receipt:
+The third OP promotion closes the six remaining op_main.cpp functions and
+corrects five old provisional multi-range boundaries using TC86-generated
+PROC/ENDP plus target switch-table ownership:
 
-.analysis/reconstruction/receipt-archive/v740-op-mchar-remaining-canonical-receipt.json
+- start_demo at 0xA9C9: 228-byte body plus 8 compiler table bytes;
+- main_unput_and_put at 0xAAB5: 277-byte body plus 13 compiler bytes;
+- option_unput_and_put at 0xABD7: 576-byte body plus 17 compiler bytes;
+- main_update_and_render at 0xAE96: 432-byte body plus 12 compiler table bytes;
+- option_update_and_render at 0xB052: 780-byte body plus 25 compiler bytes;
+- OP _main at 0xB377: 296 bytes.
+
+v742 preserves the complete 0xD53 OP_MAIN_TEXT producer, full linked OP image,
+and all 804 ordered relocations in two cold rounds. The final current-ledger OP
+aggregate is v744: 77 unique registered slices, all 77 raw-zero. Preserved
+receipt:
+
+.analysis/reconstruction/receipt-archive/v744-op-main-remaining-canonical-receipt.json
 
 SHA-256:
-61f06b7a708ad3f205d844a50effc3c3d4d0fbc8b9378453b3aaf7735afdb05b
+e24181d3572c50ff6948e7db0fd761b867ff4a8251ae299d3ae0c204f16a3b7f
 
-OP now has 71/93 accepted functions. Continue mixing large menu/title/setup and
-Music Room owners with leaf/codegen blockers rather than selecting only short
-functions.
+OP now has 77/93 accepted functions. Only three provisional authored OP
+boundaries remain; continue mixing the remaining large Music Room/setup owners
+with leaf/codegen blockers rather than selecting only short functions.
 
 ## Analysis/worktree hygiene
 
