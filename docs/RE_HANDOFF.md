@@ -128,6 +128,7 @@ replay, and exact acceptance stay separate claims.
 
 1. Current campaign order is **MAINE.EXE → OP.EXE → ZUN.COM**. Do not spend
    reconstruction time on `MAIN.EXE` in this campaign.
+   v687 closes `cutscene_animate` at `0xADFC` (212 bytes), bringing MAINE to 43/72 function-level exact.
 2. Continue MAINE with both large/medium owners and leaf functions. Select by
    reviewed physical spans and producer structure, not by Ghidra auto-size or
    by whichever candidate looks easiest.

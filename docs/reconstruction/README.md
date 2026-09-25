@@ -34,6 +34,7 @@ contain residual counts that were correct only at that packet.
 - [MAINE 50-byte cutscene helper boundary at payload 0xA815](op-maine/TH04_MAINE_BOX_ANIMATE_BOUNDARY_V572.md)
 - [MAINE indirect-dispatch function boundary at payload 0xA847](op-maine/TH04_MAINE_SCRIPT_OP_BOUNDARY_V571.md)
 - [MAINE script dispatcher natural-C++ exact replay](op-maine/TH04_MAINE_SCRIPT_OP_EXACT_V685.md)
+- [MAINE cutscene animation natural-C++ exact replay](op-maine/TH04_MAINE_CUTSCENE_ANIMATE_EXACT_V687.md)
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [OP/MAINE score codec boundary / provenance review](op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md)
