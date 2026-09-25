@@ -1048,6 +1048,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_op_setup_submenus.py",
         )
 
+    def test_op_music_remaining_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "op-music-remaining-v748")
+        owner["source"] = "src/op/music/not_music.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "op-music-remaining-v748")
+        owner["producer_size"] = "0x6A4"
+        with self.assertRaisesRegex(ValueError, "OP music remaining backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "op-music-remaining-v748",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_op_music_remaining.py",
+        )
+
     def test_op_main_remaining_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

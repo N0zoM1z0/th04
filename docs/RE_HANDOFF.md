@@ -41,7 +41,7 @@ inputs are independently proven pristine release media.
 
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 85 / 5 / 3 | 79 | 14 / 0 | 12,212 |
+| OP.EXE | 87 / 4 / 2 | 81 | 12 / 0 | 13,165 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
@@ -50,7 +50,7 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-11,775 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
+12,728 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
@@ -222,8 +222,26 @@ The final current-ledger OP aggregate is v747: 79 unique registered slices, all
 SHA-256:
 30294667ce38d0a1aef1871ffd0b36128dfcea4858fbe5553e5b399e022ec910
 
-OP now has 79/93 accepted functions. Three provisional authored OP boundaries
-remain; continue mixing large Music Room owners with leaf/codegen blockers.
+The fifth OP promotion closes two large Music Room functions:
+
+- polygons_update_and_render at 0xC04E: corrected 502-byte physical body
+  (Ghidra had only 397 reachable bytes across the same span);
+- musicroom_menu at 0xC3B7: 451 bytes.
+
+v748 preserves the complete 0x6A5 OP_MUSIC_TEXT producer, full linked OP image,
+and all 804 ordered relocations in two cold rounds.
+
+The final current-ledger OP aggregate is v751: 81 unique registered slices, all
+81 raw-zero. Preserved receipt:
+
+.analysis/reconstruction/receipt-archive/v751-op-music-remaining-canonical-receipt.json
+
+SHA-256:
+47cd2eb24d5318e826f65ed2ad971c257bf4935f160e4fb89417a659f1bda448
+
+OP now has 81/93 accepted functions. Only two provisional authored OP
+boundaries remain; continue mixing the remaining large owners with leaf/codegen
+blockers rather than selecting only short functions.
 
 ## Analysis/worktree hygiene
 

@@ -263,7 +263,7 @@ def validate(
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "op-main-cdg-free-v583", "op-main-cdg-load-v602", "op-nopoly-free-v584",
                                  "op-nopoly-snap-v606",
-                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-big-menu-title-v735", "op-mchar-remaining-v738", "op-main-remaining-v742", "op-playchar-title-box-v638", "op-playchar-titles-v684", "op-pic-darken-v640", "op-shottype-menu-initial-v660", "op-playchar-menu-initial-v658",
+                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-big-menu-title-v735", "op-mchar-remaining-v738", "op-main-remaining-v742", "op-music-remaining-v748", "op-playchar-title-box-v638", "op-playchar-titles-v684", "op-pic-darken-v640", "op-shottype-menu-initial-v660", "op-playchar-menu-initial-v658",
                                  "op-game-exit-to-dos-v592", "op-game-exit-v654",
                                  "op-tracklist-put-both-v594",
                                  "op-track-put-both-v636", "op-polygon-build-v678",
@@ -677,6 +677,16 @@ def validate(
                     or producer_start != 0xA74C
                     or producer_size != 0xD53):
                 raise ValueError(f"{ident}: OP main remaining backend does not compile this producer")
+        elif backend == "op-music-remaining-v748":
+            expected = {
+                "src/op/music/polygons_update_and_render.inl",
+                "src/op/music/musicroom_menu.inl",
+            }
+            if (artifact != "th04-op"
+                    or source_name not in expected
+                    or producer_start != 0xBED5
+                    or producer_size != 0x6A5):
+                raise ValueError(f"{ident}: OP music remaining backend does not compile this producer")
         elif backend == "op-playchar-title-box-v638":
             if (artifact != "th04-op"
                     or source_name != "src/op/menu/playchar_title_box_put.cpp"
@@ -1126,6 +1136,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-main-remaining-v742":
         return [sys.executable, "scripts/probes/replay_th04_op_main_remaining.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-music-remaining-v748":
+        return [sys.executable, "scripts/probes/replay_th04_op_music_remaining.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-playchar-title-box-v638":
         return [sys.executable, "scripts/probes/replay_th04_op_playchar_title_box_put.py",

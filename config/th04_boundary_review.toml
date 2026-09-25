@@ -1870,3 +1870,27 @@ expected_body_span = 0x11D
 reviewed_body_size = 0x11D
 review_evidence_id = "ev-th04-op-setup-se-boundary-v745"
 notes = "Fresh target Ghidra and MAP close one contiguous 285-byte setup_se_menu body. v745 maintained natural C++ reproduces the body and complete 0x5A6 OP_SETUP_TEXT producer in two cold rounds; v747 canonical aggregate passes 79/79."
+
+
+# v748: target-reviewed natural OP Music Room functions.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC04E
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/polygons_update_and_render.inl"
+expected_body_span = 0x1F6
+reviewed_body_size = 0x1F6
+review_evidence_id = "ev-th04-op-polygons-update-boundary-v748"
+notes = "Ghidra exposes 397 reachable bytes across a 0x1F6 span. Target bytes, MAP ownership, TC86 generated PROC/ENDP and v748 cold replay close the full 0x1F6 physical body with no adjacent switch table. v751 canonical aggregate passes 81/81."
+
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xC3B7
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/music/musicroom_menu.inl"
+expected_body_span = 0x1C3
+reviewed_body_size = 0x1C3
+review_evidence_id = "ev-th04-op-musicroom-menu-boundary-v748"
+notes = "Fresh target Ghidra, MAP ownership, TC86 generated PROC/ENDP and v748 cold replay agree on the complete contiguous 0x1C3 body ending at the OP_MUSIC_TEXT producer boundary. v751 canonical aggregate passes 81/81."
