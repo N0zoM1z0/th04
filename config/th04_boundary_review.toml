@@ -1423,3 +1423,16 @@ expected_body_span = 0xB1
 reviewed_body_size = 0xB1
 review_evidence_id = "ev-th04-maine-pi-put-quarter-boundary-v695"
 notes = "Fresh target Ghidra closes one contiguous 177-byte body at 1CC7:013B with one callee; Ghidra reports zero callers, while raw target payload 0xACEB encodes a FAR call to 0CC7:013B from the reviewed script dispatcher. v695 maintained natural C++ rebuilds the complete SHARED object contribution and linked MAINE raw-zero."
+
+
+# v697: target-first review and exact replay for MAINE _main.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA102
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/main.inl"
+expected_body_span = 0x190
+reviewed_body_size = 0x190
+review_evidence_id = "ev-th04-maine-main-boundary-v697"
+notes = "Fresh target Ghidra closes one contiguous 400-byte _main body at 1A05:00B2 with one caller and 22 callees. v697 maintained natural C++ rebuilds the complete 0x239-byte MAINE_E_TEXT producer and relinks the full MAINE program raw-zero in two cold rounds."
