@@ -263,7 +263,7 @@ def validate(
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
                                  "op-main-cdg-free-v583", "op-main-cdg-load-v602", "op-nopoly-free-v584",
                                  "op-nopoly-snap-v606",
-                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-playchar-title-box-v638", "op-playchar-titles-v684", "op-pic-darken-v640", "op-shottype-menu-initial-v660", "op-playchar-menu-initial-v658",
+                                 "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-big-menu-title-v735", "op-playchar-title-box-v638", "op-playchar-titles-v684", "op-pic-darken-v640", "op-shottype-menu-initial-v660", "op-playchar-menu-initial-v658",
                                  "op-game-exit-to-dos-v592", "op-game-exit-v654",
                                  "op-tracklist-put-both-v594",
                                  "op-track-put-both-v636", "op-polygon-build-v678",
@@ -641,6 +641,15 @@ def validate(
                     or producer_start != OP_RAISE_BG_FREE_PRODUCER
                     or producer_size != 0xAB3):
                 raise ValueError(f"{ident}: OP raise-bg-free backend does not compile this producer")
+        elif backend == "op-big-menu-title-v735":
+            expected = {
+                "src/op/title/op_animate.inl": (0xCC97, 0x2C7),
+                "src/op/menu/playchar_menu.inl": (0xCF5E, 0xAB3),
+            }
+            if (artifact != "th04-op"
+                    or source_name not in expected
+                    or (producer_start, producer_size) != expected[source_name]):
+                raise ValueError(f"{ident}: OP big-menu-title backend does not compile this producer")
         elif backend == "op-playchar-title-box-v638":
             if (artifact != "th04-op"
                     or source_name != "src/op/menu/playchar_title_box_put.cpp"
@@ -1071,6 +1080,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--retain-candidates", "--output-dir", str(saved)]
     if backend_id == "op-raise-bg-free-v588":
         return [sys.executable, "scripts/probes/replay_th04_op_raise_bg_free.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-big-menu-title-v735":
+        return [sys.executable, "scripts/probes/replay_th04_op_big_menu_title.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-playchar-title-box-v638":
         return [sys.executable, "scripts/probes/replay_th04_op_playchar_title_box_put.py",

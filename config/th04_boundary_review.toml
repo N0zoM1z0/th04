@@ -1696,3 +1696,28 @@ expected_body_span = 0xA1
 reviewed_body_size = 0xA1
 review_evidence_id = "ev-th04-maine-staff-two-boundary-v725"
 notes = "Fresh Ghidra, expanded TASM PROC/ENDP, and MAP public agree on the complete physical body. v725 maintained natural C++ reproduces this helper inside the exact 0x8B7 staffall.cpp producer in two cold rounds; v727 canonical aggregate passes 63/63."
+
+
+# v735: target-reviewed natural OP title animation.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xCCD2
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/title/op_animate.inl"
+expected_body_span = 0x28C
+reviewed_body_size = 0x28C
+review_evidence_id = "ev-th04-op-op-animate-boundary-v735"
+notes = "Fresh target Ghidra and MAP review close one contiguous 652-byte op_animate body at 1A74:2592. The function ends exactly at the 0x2C7 OP_TITLE_TEXT module contribution boundary. v735 maintained natural C++ reproduces the complete body and producer in two cold rounds while preserving all 804 ordered relocations; v737 canonical aggregate passes 66/66."
+
+# v735: target-reviewed natural OP character-selection menu.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xD708
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/menu/playchar_menu.inl"
+expected_body_span = 0x309
+reviewed_body_size = 0x309
+review_evidence_id = "ev-th04-op-playchar-menu-boundary-v735"
+notes = "Fresh target Ghidra and MAP review close one contiguous 777-byte playchar_menu body at 1A74:2FC8. The function ends exactly at the 0xAB3 OP_01_TEXT m_char.cpp module contribution boundary. v735 maintained natural C++ reproduces the complete body and producer in two cold rounds while preserving all 804 ordered relocations; v737 canonical aggregate passes 66/66."

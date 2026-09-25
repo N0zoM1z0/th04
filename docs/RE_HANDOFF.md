@@ -41,7 +41,7 @@ inputs are independently proven pristine release media.
 
 | Artifact | Boundary reviewed / corroborated / provisional | Function exact | Pending / blocked | Tracked decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 70 / 15 / 8 | 64 | 29 / 0 | 6,277 |
+| OP.EXE | 72 / 13 / 8 | 66 | 27 / 0 | 7,706 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
@@ -50,7 +50,7 @@ There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-5,840 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
+7,269 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
@@ -150,9 +150,39 @@ while target-first review closed one 0x575-byte owner and later natural C++
 reproduced the complete body, switch table, producer, and all ordered
 relocations.
 
-The same caution applies to sub_B9F2: its current automated body is
-non-contiguous, so the apparent span to the next MAP public is not yet a valid
-function extent.
+The historical sub_B9F2 auto-function was another example: Ghidra exposed two
+ranges, but target-first TASM review closed the real 0x182-byte function body
+plus a separate 0x0D compiler switch-table extent before sub_BB81. Do not
+reopen that resolved boundary from the old auto-function span.
+
+
+## OP campaign after the MAINE strict frontier
+
+MAINE remains at the strict-source frontier of 63/72: its remaining nine
+functions all have reviewed physical boundaries but are blocked on natural
+source/codegen/provenance. OP work has therefore resumed without lowering the
+MAINE acceptance bar.
+
+The first current OP promotion takes two large natural-source functions:
+
+- op_animate at 0xCCD2: 652 bytes;
+- playchar_menu at 0xD708: 777 bytes.
+
+Both functions end exactly at their own TLINK producer boundaries. v735
+replaces only their maintained bodies inside the pinned current OP translation
+units and reproduces the complete bodies, producers, linked program image, and
+all 804 ordered relocations in two cold rounds.
+
+The final current-ledger OP aggregate is v737: 66 unique registered slices, all
+66 raw-zero. Preserved receipt:
+
+.analysis/reconstruction/receipt-archive/v737-op-big-menu-title-canonical-receipt.json
+
+SHA-256:
+ad310c10e6eea4bd68b232010e83b2100181f5674eb17ad4e8f2fc1293c1ac37
+
+OP now has 66/93 accepted functions. Continue mixing large menu/title/setup
+owners with leaf/codegen blockers rather than selecting only short functions.
 
 ## Analysis/worktree hygiene
 

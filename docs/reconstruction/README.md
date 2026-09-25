@@ -53,6 +53,7 @@ contain residual counts that were correct only at that packet.
 - [MAINE SCORE tail boundary/source-admissibility review](op-maine/TH04_MAINE_SCORE_TAIL_SOURCE_REVIEW_V720.md)
 - [MAINE strict-source frontier after v730-v732](op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md)
 - [BGIMAGE hybrid producer / relocation closure](op-maine/TH04_BGIMAGE_HYBRID_V489.md)
+- [OP big menu/title exact replay](op-maine/TH04_OP_BIG_MENU_TITLE_EXACT_V735.md)
 - [OP historical SCORE_TEXT producer](op-maine/TH04_OP_SCORE_GROUP_V488.md)
 - [OP/MAINE score codec boundary / provenance review](op-maine/TH04_SCORE_CODEC_BOUNDARIES_V540.md)
 - [OP/MAINE SCORE high-score boundary / provenance review](op-maine/TH04_SCORE_HISCORE_BOUNDARIES_V541.md)

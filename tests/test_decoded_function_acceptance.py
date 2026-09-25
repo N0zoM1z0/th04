@@ -1025,6 +1025,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_script_param_first.py",
         )
 
+    def test_op_big_menu_title_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        title = next(row for row in entries
+                     if row["boundary_id"] == "th04-op-boundary-0ccd2")
+        title["source"] = "src/op/title/not_op_animate.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        menu = next(row for row in entries
+                    if row["boundary_id"] == "th04-op-boundary-0d708")
+        menu["producer_size"] = "0xAB2"
+        with self.assertRaisesRegex(ValueError, "physical decoded ownership mismatch"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "op-big-menu-title-v735",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_op_big_menu_title.py",
+        )
+
     def test_op_stage_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         stage = next(row for row in entries if row["replay_backend"] == "op-stage-put-v545")
