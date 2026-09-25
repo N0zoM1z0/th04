@@ -1550,3 +1550,28 @@ expected_body_span = 0x182
 reviewed_body_size = 0x182
 review_evidence_id = "ev-th04-maine-sub-b9f2-boundary-v714"
 notes = "Fresh ownership review reconciles Ghidra's two-range body with the expanded TASM PROC: sub_B9F2 spans payload 0xB9F2..0xBB73 (0x182 bytes), then TC86-owned alignment plus a six-word switch table spans 0xBB74..0xBB80, and the next PROC/public sub_BB81 begins at 0xBB81. v714 maintained natural C++ reproduces the body, all 13 auxiliary compiler bytes, the complete 0x3FA-byte gv producer, and all 559 ordered relocations in two cold rounds; v716 canonical aggregate passes 54/54."
+
+# v717: replace the false sub_BB81 Ghidra auto-span with the physical TASM PROC extent.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xBB81
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/sub_BB81.inl"
+expected_tasm_proc = "sub_BB81"
+reviewed_body_size = 0x560
+review_evidence_id = "ev-th04-maine-sub-bb81-boundary-v717"
+notes = "Ghidra merges seven ranges across a 0xA9CE span and is rejected as physical ownership. Expanded TASM PROC/ENDP closes the function at payload 0xC0E1, yielding a 0x560-byte body. The following 0x17 bytes are compiler alignment plus two switch tables; verdict_animate starts at 0xC0F8. v717 maintained natural C++ reproduces the body, auxiliary tables, complete 0x5C8 vb.cpp producer and all 559 ordered relocations raw-zero; v719 canonical aggregate passes 56/56."
+
+# v717: target-reviewed verdict_animate inside the same fused vb.cpp producer.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xC0F8
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/verdict_animate.inl"
+expected_tasm_proc = "@verdict_animate$qv"
+expected_body_span = 0x51
+reviewed_body_size = 0x51
+review_evidence_id = "ev-th04-maine-verdict-animate-boundary-v717"
+notes = "Expanded TASM, Ghidra, and MAP agree on one contiguous 0x51-byte verdict_animate body at payload 0xC0F8 immediately before SCORE_TEXT at 0xC149. v717 natural C++ reproduces all 81 bytes as the final function of the exact 0x5C8 vb.cpp producer; v719 canonical aggregate passes 56/56."

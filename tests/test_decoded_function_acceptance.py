@@ -709,6 +709,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
         )
 
+    def test_maine_verdict_owner_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        bb = next(row for row in entries
+                  if row["boundary_id"] == "th04-maine-boundary-0bb81")
+        bb["source"] = "src/maine/end/not_sub_bb81.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        anim = next(row for row in entries
+                    if row["boundary_id"] == "th04-maine-boundary-0c0f8")
+        anim["producer_size"] = "0x5C7"
+        with self.assertRaisesRegex(ValueError, "physical decoded ownership mismatch"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-verdict-owner-v717",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_verdict_owner.py",
+        )
+
     def test_maine_sub_b9f2_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries
