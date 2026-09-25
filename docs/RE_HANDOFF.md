@@ -111,33 +111,34 @@ new compiler mechanism or materially new provenance.
 
 ## Boundary and ownership hazards
 
-Use reviewed `body_span`, not raw Ghidra `body_size`, when prioritizing work.
-The clearest example is MAINE payload `0xA847..0xADBB`: the reviewed owner is
-`0x575` bytes and includes a 16-entry CS-relative dispatcher. Ghidra's small
-two-range auto-function is not the physical authored-function extent. The
-candidate name `script_op(unsigned char)` is still a hypothesis.
+Use reviewed physical ownership, not raw Ghidra auto-function size, when
+prioritizing work. MAINE payload `0xA847..0xADBB` is the resolved example:
+v571 proved one `0x575`-byte owner even though Ghidra exposed only two small
+ranges; v685 then reproduced the complete 1,397-byte body, the adjacent
+64-byte compiler switch table, the complete `0xC3E` `CUTSCENE_TEXT` producer,
+and all 559 ordered relocations with maintained natural C++.
 
-Candidate source names and ReC98 history are corroboration only. A successful
-candidate build does not establish original TH04 source provenance or exactness.
-Keep boundary review, source/origin ownership, toolchain replay, and exact
-acceptance as separate claims.
+The maintained reconstruction label is `script_op(unsigned char)`. Exact code
+generation supports that source body and semantics, but it does not recover an
+original ZUN debug symbol or comment spelling. Candidate history remains
+corroboration; target boundary evidence, maintained source ownership, compiler
+replay, and exact acceptance stay separate claims.
 
 ## Next work order
 
-1. Re-run `scripts/status.py` and select from the smallest **reviewed physical
-   spans**, not from Ghidra auto-function sizes or address order.
-2. Prefer natural C/C++ functions with bounded producers. Continue medium-sized
-   wrappers once the remaining small functions are either exact or recorded
-   codegen/provenance gaps.
-3. When the small/medium queue is exhausted, attack large owners in explicit
-   phases: physical extent, jump/data tables, per-case semantics, natural
-   source/codegen, focused cold replay, then aggregate acceptance. The MAINE
-   `0xA847..0xADBB` dispatcher is the canonical example.
-4. For ZUN, resolve source/origin authority and component ownership before
-   exact credit. IDA-/disassembler-generated initial-state code and raw-equal
-   generated assembly remain zero-credit provenance.
-5. Preserve complete producer bytes, ordered relocations, OMF identity, and
-   fail-closed backend/source bindings on every exact promotion.
+1. Current campaign order is **MAINE.EXE → OP.EXE → ZUN.COM**. Do not spend
+   reconstruction time on `MAIN.EXE` in this campaign.
+2. Continue MAINE with both large/medium owners and leaf functions. Select by
+   reviewed physical spans and producer structure, not by Ghidra auto-size or
+   by whichever candidate looks easiest.
+3. For each promotion, independently re-check the target boundary and source
+   assumption, then require natural-source codegen, complete producer bytes,
+   ordered relocations, raw function equality, and the aggregate gate.
+4. After the MAINE queue is materially reduced, apply the same process to OP.
+   Only then move to ZUN source/origin and component ownership.
+5. For ZUN, IDA-/disassembler-generated initial-state code and raw-equal
+   generated assembly remain zero-credit provenance unless independent source
+   ownership is established.
 
 ## Analysis/worktree hygiene
 

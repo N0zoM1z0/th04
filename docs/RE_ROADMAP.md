@@ -61,11 +61,16 @@ Large-owner workflow:
 6. only after the complete function closes, run producer/link/relocation/raw
    exactness and the aggregate gate.
 
-MAINE payload `0xA847..0xADBB` is the main known example. Its reviewed extent is
-`0x575` bytes and includes a 16-entry CS-relative dispatcher at `0xADBC`.
-Ghidra's small two-range auto-function is not the authored physical extent.
-Treat the candidate `script_op(unsigned char)` name and semantics as untrusted
-until independently supported.
+MAINE payload `0xA847..0xADBB` demonstrates this workflow end to end. v571
+closed the `0x575`-byte physical owner and adjacent 16-entry CS-relative table
+despite Ghidra's truncated two-range auto-function; v685 then reproduced the
+complete body, table, `CUTSCENE_TEXT` producer, and all 559 ordered relocations
+from maintained natural C++. The reconstruction label `script_op(unsigned char)`
+is retained, without claiming recovery of ZUN's original symbol spelling.
+
+Current reconstruction order is **MAINE.EXE → OP.EXE → ZUN.COM**. `MAIN.EXE`
+is outside the current campaign; progress there should not distract from the
+remaining packed-artifact work.
 
 ## 4. Boundary, origin and ASM ownership continue in parallel
 

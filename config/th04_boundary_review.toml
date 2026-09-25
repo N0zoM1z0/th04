@@ -1360,3 +1360,15 @@ expected_body_span = 0xB3
 reviewed_body_size = 0xB3
 review_evidence_id = "ev-th04-op-playchar-titles-boundary-v684"
 notes = "Target Ghidra closes one contiguous 179-byte near Pascal body at 1A74:2B45 with one caller and one callee. Target operands bind Reimu/Marisa title-left geometry, top 312, selected/unselected colors 15/3, PLAYCHAR_TITLE far-string table, four GRAPH_PUTSA_FX calls, other-character selection, and RET 2."
+
+# v685: source/exactness follow-up for the v571-reviewed large cutscene dispatcher.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xA847
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/cutscene/script_op.inl"
+expected_body_span = 0x575
+reviewed_body_size = 0x575
+review_evidence_id = "ev-th04-maine-script-op-boundary-v571"
+notes = "v571 independently closes the physical 0x575-byte owner despite Ghidra's truncated two-range auto-function. v685 maintained natural C++ cold-replays the complete body, adjacent 0x40-byte compiler switch table, CUTSCENE_TEXT producer, and all 559 ordered relocations raw-zero."
