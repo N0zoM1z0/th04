@@ -1240,3 +1240,15 @@ expected_body_span = 0x6E
 reviewed_body_size = 0x6E
 review_evidence_id = "ev-th04-op-menu-sel-update-boundary-v664"
 notes = "Target Ghidra closes one contiguous 110-byte near Pascal body at 1A74:06E8 with two callers and three direct callees. Raw target and MAP bind signed menu_sel wrapping, max/direction parameters, menu_unput_and_put near-Pascal function pointer, Extra-lock skip using extra_unlocked/in_option, inactive/active colors 1/8, and snd_se_play_force(1) expansion through reset/play/update."
+
+# v666: target-first review for start_game.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xA8F1
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/start/start_game.cpp"
+expected_body_span = 0x7B
+reviewed_body_size = 0x7B
+review_evidence_id = "ev-th04-op-start-game-boundary-v666"
+notes = "Target Ghidra closes one contiguous 123-byte near body at 1A74:01B1 with no direct callers and seven callees. Raw target and MAP bind resident stage/cfg-life/cfg-bomb/ascii/demo fields, cancellable playchar menu, cleanup/save/gaiji/KAJA/game_exit chain, debug flag at resident+0x1A, and main/deb executable strings. Maintained natural C++ reproduces the complete body and OP_MAIN_TEXT owner in focused cold replay; aggregate acceptance pending."
