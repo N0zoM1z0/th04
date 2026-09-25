@@ -1336,3 +1336,15 @@ expected_body_span = 0x89
 reviewed_body_size = 0x89
 review_evidence_id = "ev-th04-op-polygon-build-boundary-v678"
 notes = "Target Ghidra closes one contiguous 137-byte near Pascal body at 1A74:1885 with one caller and one callee. Target and MAP bind polar at 0DA1:01A8, CosTable8/SinTable8, 4-bit center-y subpixel shift, 8-bit angle formula, point array writes, closure copy, and RET 0x0C."
+
+# v680: target-first review for cfg_load.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xA74C
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/op/config/cfg_load.cpp"
+expected_body_span = 0xA4
+reviewed_body_size = 0xA4
+review_evidence_id = "ev-th04-op-cfg-load-boundary-v680"
+notes = "Target Ghidra closes one contiguous 164-byte near body at 1A74:000C with one caller and three callees. Raw target and MAP bind MIKO.CFG, FILE_ROPEN/READ/CLOSE, the 10-byte cfg read, resident segment restoration, six option fields, and lives/bombs/BGM/SE range correction."
