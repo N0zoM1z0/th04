@@ -686,6 +686,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_box_bg_snap.py",
         )
 
+    def test_maine_staff_bg_helper_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-staff-bg-helper-v700")
+        owner["source"] = "src/maine/end/not_staff_helper.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-staff-bg-helper-v700")
+        owner["producer_size"] = "0x8B6"
+        with self.assertRaisesRegex(ValueError, "staff-bg-helper backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-staff-bg-helper-v700",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_staff_bgimage_expand_put.py",
+        )
+
     def test_maine_main_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries

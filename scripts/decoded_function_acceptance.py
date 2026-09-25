@@ -72,6 +72,7 @@ MAINE_BOX_BG_SNAP_PRODUCER = 0xA292
 MAINE_PIC_PUT_BOTH_MASKED_PRODUCER = 0xA292
 MAINE_PI_PUT_QUARTER_PRODUCER = 0xCDAB
 MAINE_MAIN_PRODUCER = 0xA059
+MAINE_STAFF_BG_HELPER_PRODUCER = 0xAED0
 MAINE_PIC_COPY_TO_OTHER_PRODUCER = 0xA292
 MAINE_CURSOR_ADVANCE_PRODUCER = 0xA292
 MAINE_BOX_BG_PUT_PRODUCER = 0xA292
@@ -280,7 +281,7 @@ def validate(
                                  "op-dropdown-v630",
                                  "op-setup-menu-v676",
                                  "maine-score-insert-v543", "maine-score-put-v544",
-                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-put-both-masked-v691", "maine-pi-put-quarter-v695", "maine-main-v697", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
+                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-put-both-masked-v691", "maine-pi-put-quarter-v695", "maine-main-v697", "maine-staff-bg-helper-v700", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
@@ -388,6 +389,12 @@ def validate(
                     or producer_start != MAINE_MAIN_PRODUCER
                     or producer_size != 0x239):
                 raise ValueError(f"{ident}: MAINE main backend does not compile this producer")
+        elif backend == "maine-staff-bg-helper-v700":
+            if (artifact != "th04-maine"
+                    or source_name != "src/maine/end/staff_bgimage_expand_put.inl"
+                    or producer_start != MAINE_STAFF_BG_HELPER_PRODUCER
+                    or producer_size != 0x8B7):
+                raise ValueError(f"{ident}: MAINE staff-bg-helper backend does not compile this producer")
         elif backend == "maine-pic-copy-to-other-v651":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/cutscene/pic_copy_to_other.cpp"
@@ -1097,6 +1104,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-main-v697":
         return [sys.executable, "scripts/probes/replay_th04_maine_main.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-staff-bg-helper-v700":
+        return [sys.executable, "scripts/probes/replay_th04_maine_staff_bgimage_expand_put.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-pic-copy-to-other-v651":
         return [sys.executable, "scripts/probes/replay_th04_maine_pic_copy_to_other.py",

@@ -1460,3 +1460,16 @@ expected_no_ghidra = true
 reviewed_body_size = 0x4C
 review_evidence_id = "ev-th04-maine-snd-se-update-boundary-v699"
 notes = "TLINK public 0CC7:096A has no Ghidra entry. Raw target closes _snd_se_update as 76 bytes through RETF at payload 0xD625; the next SHARED module begins at 0CC7:09B6 / payload 0xD626."
+
+
+# v700: target-first review and exact replay for staffroll_bgimage_expand_put.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB25B
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/staff_bgimage_expand_put.inl"
+expected_body_span = 0x36
+reviewed_body_size = 0x36
+review_evidence_id = "ev-th04-maine-staff-bg-helper-boundary-v700"
+notes = "Fresh target Ghidra closes one contiguous 54-byte body at 1A05:120B with three callers and one callee. The maintained reconstruction label is staffroll_bgimage_expand_put; original ZUN symbol spelling is not claimed. v700 natural C++ reproduces the body and complete 0x8B7 staffall MAINE_01_TEXT producer raw-zero in two cold rounds."
