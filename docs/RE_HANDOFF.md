@@ -26,14 +26,14 @@ bytes before any new target observation. Keep one writable Borland session.
 
 | Artifact | Candidate boundaries: reviewed / corroborated / provisional | Function exact | Pending / blocked | Decoded source-owner bytes |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 69 / 16 / 8 | 63 | 30 / 0 | 6,098 |
+| OP.EXE | 70 / 15 / 8 | 64 | 29 / 0 | 6,277 |
 | MAINE.EXE | 47 / 20 / 5 | 41 | 31 / 0 | 4,037 |
 | ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
 
-OP's 6,098 source-owner bytes include two source-present but nonexact SCORE
+OP's 6,277 source-owner bytes include two source-present but nonexact SCORE
 codec candidates (274 bytes), the 76-byte nonexact `snd_se_update`,
 the 57-byte nonexact `SND_SE_PLAY`, and the 30-byte nonexact
-`nopoly_B_put` candidate; 5,661 bytes are in the 63 accepted exact functions. MAINE has 41 decoded-function exact functions (3,662 bytes), plus
+`nopoly_B_put` candidate; 5,840 bytes are in the 64 accepted exact functions. MAINE has 41 decoded-function exact functions (3,662 bytes), plus
 two source-present/nonexact SCORE codec candidates (`scoredat_decode` 88 bytes,
 `scoredat_encode` 101 bytes), the 134-byte nonexact
 `box_1_to_0_masked` candidate, and the 52-byte nonexact `egc_start_copy`
@@ -43,6 +43,26 @@ packed-file denominator exists yet for OP, MAINE, or ZUN. MAIN is not on the
 active reconstruction path: its 492/495
 accepted authored functions and 27 file-backed authored bytes remain an
 evidence-triggered side lane.
+
+## Latest verified cohort: OP playchar title renderer
+
+v684 reconstructs the 179-byte `playchar_titles_put(int)` helper at payload
+`0xD285` (`1A74:2B45`) inside `OP_01_TEXT`. Target Ghidra closes
+one contiguous near Pascal body with one caller and one callee. Target operands
+and MAP evidence bind the Reimu/Marisa title-left geometry, top 312, selected
+and unselected colors 15/3, the `PLAYCHAR_TITLE` far-string table, four
+`GRAPH_PUTSA_FX` calls, the `1-sel` other-character transition, and
+`RET 2`.
+
+Maintained natural source is `src/op/menu/playchar_titles_put.cpp`. TC86
+emits exactly 179 `OP_01_TEXT` bytes; masking eight ordinary table/FAR-call
+fixups on both streams leaves byte-identical instruction code. Focused A/B
+cold replay raw-matches the complete function and the full 0xAB3-byte
+`OP_01_TEXT` owner while preserving grouped OMF, complete OP EXE/MAP
+identity, and all 804 ordered relocations. The v685 OP aggregate passes 64/64
+registered decoded slices raw-zero, receipt SHA-256
+`07faf8423c08e345939042856be69bf98a6a583e4f3aa45e9576600e98a91ba9`.
+No DIET-packed offset or whole-OP exactness is claimed.
 
 ## Latest verified cohort: MAINE high-score save wrapper
 
@@ -1200,7 +1220,7 @@ name remains an open hypothesis. See
 
 ## Cleanup checkpoint and paused low-level candidates
 
-After v683, tracked reconstruction state is **OP 63 decoded-exact / 30
+After v685, tracked reconstruction state is **OP 64 decoded-exact / 29
 pending**, **MAINE 41 / 31**, and **ZUN 0 / 11 pending plus 2 blocked**. There is no unfinished tracked source edit or bootstrap acceptance
 left in the worktree. Resume only from a fresh boundary/origin review, not from
 ignored cache contents or address order.
