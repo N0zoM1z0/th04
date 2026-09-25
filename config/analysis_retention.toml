@@ -23,6 +23,29 @@ superseded_compact_dirs = [
   "v488-op-score-group-replay-002",
 ]
 
+# Focused cold-build/probe worktrees are rebuildable scratch output. Keep only
+# directories that a checked-in script reads as an input rather than creates as
+# an output.
+probe_root = ".analysis/reconstruction/probes"
+probe_keep_dirs = [
+  "v546-zun-runtime-inventory-001",
+]
+
+# Explicit repository-local interpreter/build caches safe to remove. Keep this
+# list narrow; never replace it with a generic recursive ignored-file delete.
+cache_dirs = [
+  "scripts/__pycache__",
+  "scripts/probes/__pycache__",
+  "scripts/lib/__pycache__",
+  "scripts/boundary_review/__pycache__",
+  "tests/__pycache__",
+  ".pytest_cache",
+  ".mypy_cache",
+  "build",
+  "dist",
+  "out",
+]
+
 # Extra files required by current replay commands when a referenced experiment
 # directory is compacted. `receipt.json` is always retained automatically.
 [compact_keep_files]

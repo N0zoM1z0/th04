@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-"""Safely prune private `.analysis/gpt-web` experiment trees.
+"""Safely prune rebuildable private analysis and repository cache output.
 
-The default mode is a dry run. `--apply` removes only unreferenced top-level
-experiment directories. With `--compact-referenced`, the script additionally
-shrinks referenced expanded replay trees when every tracked path reference is
-only the directory itself, `receipt.json`, or an explicitly configured small
-keep-file.
+Default mode is a dry run.
 
-Full source snapshots listed in `config/analysis_retention.toml` are never
-removed or compacted. Targets, toolchains, runtime images, Ghidra data, and all
-other `.analysis` subtrees are outside this script's deletion scope.
+- Existing `.analysis/gpt-web` retention behavior is always reviewed. With
+  `--compact-referenced`, referenced replay trees that are safe to compact are
+  reduced to `receipt.json` plus configured keep files.
+- `--prune-probes` removes direct children of the configured
+  `.analysis/reconstruction/probes` root except explicit keep directories.
+- `--prune-caches` removes only explicit repository-local cache/build
+  directories listed in `config/analysis_retention.toml`.
+
+Pinned targets, toolchains, runtime images, Ghidra data, retained source
+snapshots, and configured probe dependencies are never generic prune targets.
 """
 from __future__ import annotations
 
@@ -46,8 +49,6 @@ def tracked_reference_map() -> dict[str, set[str]]:
             top, sep, rest = tail.partition("/")
             if top:
                 result[top].add(rest if sep else "")
-        # Keep the simpler top-level scan as a guard for unusual punctuation
-        # that terminates FULL_REFERENCE_RE early.
         for match in TOP_REFERENCE_RE.finditer(text):
             result.setdefault(match.group(1), set())
     return result
@@ -76,7 +77,7 @@ def compact_plan(
         if not path.is_dir() or path.is_symlink() or path.name in protected:
             continue
         if path.name not in refs:
-            continue  # unreferenced deletion is handled separately
+            continue
         receipt = path / "receipt.json"
         if not receipt.is_file():
             continue
@@ -88,7 +89,9 @@ def compact_plan(
             continue
         missing = [rel for rel in keep if not (path / rel).is_file()]
         if missing:
-            raise SystemExit(f"refusing to compact {path}: configured keep files missing: {missing}")
+            raise SystemExit(
+                f"refusing to compact {path}: configured keep files missing: {missing}"
+            )
         current = tree_bytes(path)
         kept = sum((path / rel).stat().st_size for rel in keep)
         if current > kept:
@@ -111,71 +114,151 @@ def compact_directory(path: Path, keep: set[str]) -> None:
                 pass
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--apply", action="store_true", help="perform deletions; default is dry-run")
-    parser.add_argument(
-        "--compact-referenced",
-        action="store_true",
-        help="also shrink safe referenced replay dirs to receipt/configured keep files",
-    )
-    args = parser.parse_args()
-
-    cfg = tomllib.loads(CONFIG.read_text())
-    root = (ROOT / cfg["gpt_web_root"]).resolve()
-    analysis = (ROOT / ".analysis").resolve()
-    if not root.is_relative_to(analysis) or root == analysis:
-        raise SystemExit(f"unsafe configured prune root: {root}")
+def direct_child_delete_plan(root: Path, keep: set[str]) -> list[tuple[Path, int]]:
+    result: list[tuple[Path, int]] = []
     if not root.is_dir():
-        print(f"analysis prune: nothing to do; missing {root.relative_to(ROOT)}")
-        return 0
-
-    protected = set(cfg.get("full_keep_dirs", []))
-    extra_keep = {str(k): list(v) for k, v in cfg.get("compact_keep_files", {}).items()}
-    superseded = set(cfg.get("superseded_compact_dirs", []))
-    overlap = protected & superseded
-    if overlap:
-        raise SystemExit(f"retention config conflict: protected and superseded: {sorted(overlap)}")
-    refs = tracked_reference_map()
-
-    delete_candidates: list[tuple[Path, int]] = []
+        return result
     for path in sorted(root.iterdir(), key=lambda p: p.name):
-        if not path.is_dir() or path.is_symlink():
-            continue
-        if path.name in protected or path.name in refs:
+        if not path.is_dir() or path.is_symlink() or path.name in keep:
             continue
         resolved = path.resolve()
         if resolved.parent != root:
             raise SystemExit(f"refusing non-child prune candidate: {resolved}")
-        delete_candidates.append((path, tree_bytes(path)))
+        result.append((path, tree_bytes(path)))
+    return result
 
-    compact_candidates = (
-        compact_plan(root, refs, protected, extra_keep, superseded)
-        if args.compact_referenced else []
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="perform deletions; default is dry-run",
     )
-    delete_total = sum(size for _, size in delete_candidates)
-    compact_total = sum(size for _, size, _, _ in compact_candidates)
+    parser.add_argument(
+        "--compact-referenced",
+        action="store_true",
+        help="shrink safe referenced gpt-web replay dirs to configured keep files",
+    )
+    parser.add_argument(
+        "--prune-probes",
+        action="store_true",
+        help="remove rebuildable probe worktrees except configured keep directories",
+    )
+    parser.add_argument(
+        "--prune-caches",
+        action="store_true",
+        help="remove only configured repository-local cache/build directories",
+    )
+    args = parser.parse_args()
+
+    cfg = tomllib.loads(CONFIG.read_text())
+    analysis = (ROOT / ".analysis").resolve()
+    if not analysis.is_dir():
+        print("analysis prune: nothing to do; missing .analysis")
+        return 0
+
+    # .analysis/gpt-web retention.
+    gpt_root = (ROOT / cfg["gpt_web_root"]).resolve()
+    if not gpt_root.is_relative_to(analysis) or gpt_root == analysis:
+        raise SystemExit(f"unsafe configured prune root: {gpt_root}")
+    protected = set(cfg.get("full_keep_dirs", []))
+    extra_keep = {
+        str(k): list(v) for k, v in cfg.get("compact_keep_files", {}).items()
+    }
+    superseded = set(cfg.get("superseded_compact_dirs", []))
+    overlap = protected & superseded
+    if overlap:
+        raise SystemExit(
+            f"retention config conflict: protected and superseded: {sorted(overlap)}"
+        )
+    refs = tracked_reference_map()
+
+    gpt_delete: list[tuple[Path, int]] = []
+    gpt_compact: list[tuple[Path, int, set[str], bool]] = []
+    if gpt_root.is_dir():
+        for path in sorted(gpt_root.iterdir(), key=lambda p: p.name):
+            if not path.is_dir() or path.is_symlink():
+                continue
+            if path.name in protected or path.name in refs:
+                continue
+            resolved = path.resolve()
+            if resolved.parent != gpt_root:
+                raise SystemExit(f"refusing non-child prune candidate: {resolved}")
+            gpt_delete.append((path, tree_bytes(path)))
+        if args.compact_referenced:
+            gpt_compact = compact_plan(
+                gpt_root, refs, protected, extra_keep, superseded
+            )
+
+    # Rebuildable focused probe worktrees.
+    probe_delete: list[tuple[Path, int]] = []
+    if args.prune_probes:
+        probe_root = (ROOT / cfg.get(
+            "probe_root", ".analysis/reconstruction/probes"
+        )).resolve()
+        if not probe_root.is_relative_to(analysis) or probe_root == analysis:
+            raise SystemExit(f"unsafe configured probe root: {probe_root}")
+        probe_delete = direct_child_delete_plan(
+            probe_root, set(cfg.get("probe_keep_dirs", []))
+        )
+
+    # Explicit repository-local caches/build outputs only.
+    cache_delete: list[tuple[Path, int]] = []
+    if args.prune_caches:
+        repo = ROOT.resolve()
+        for rel in cfg.get("cache_dirs", []):
+            path = (ROOT / rel).resolve()
+            if not path.is_relative_to(repo):
+                raise SystemExit(f"unsafe configured cache path: {path}")
+            if path.is_dir() and not path.is_symlink():
+                cache_delete.append((path, tree_bytes(path)))
+
+    gpt_delete_total = sum(size for _, size in gpt_delete)
+    gpt_compact_total = sum(size for _, size, _, _ in gpt_compact)
+    probe_total = sum(size for _, size in probe_delete)
+    cache_total = sum(size for _, size in cache_delete)
     mode = "APPLY" if args.apply else "DRY-RUN"
     print(
-        f"analysis prune [{mode}]: delete {len(delete_candidates)} dirs / "
-        f"{delete_total / (1024 ** 3):.2f} GiB; compact "
-        f"{len(compact_candidates)} dirs / {compact_total / (1024 ** 3):.2f} GiB"
+        f"analysis prune [{mode}]: "
+        f"gpt-web delete {len(gpt_delete)} dirs / "
+        f"{gpt_delete_total / (1024 ** 3):.2f} GiB; "
+        f"compact {len(gpt_compact)} dirs / "
+        f"{gpt_compact_total / (1024 ** 3):.2f} GiB; "
+        f"probes {len(probe_delete)} dirs / {probe_total / (1024 ** 3):.2f} GiB; "
+        f"caches {len(cache_delete)} dirs / {cache_total / (1024 ** 3):.2f} GiB"
     )
-    for path, size in sorted(delete_candidates, key=lambda item: item[1], reverse=True):
-        print(f"  DELETE  {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
-    for path, size, keep, forced in sorted(compact_candidates, key=lambda item: item[1], reverse=True):
+
+    for path, size in sorted(gpt_delete, key=lambda item: item[1], reverse=True):
+        print(f"  DELETE   {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
+    for path, size, keep, forced in sorted(
+        gpt_compact, key=lambda item: item[1], reverse=True
+    ):
         kept = ", ".join(sorted(keep))
-        mode = "SUPERSEDED" if forced else "COMPACT"
-        print(f"  {mode:10s} {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}  keep=[{kept}]")
+        label = "SUPERSEDED" if forced else "COMPACT"
+        print(
+            f"  {label:10s} {size / (1024 ** 2):8.1f} MiB  "
+            f"{path.relative_to(ROOT)}  keep=[{kept}]"
+        )
+    for path, size in sorted(probe_delete, key=lambda item: item[1], reverse=True):
+        print(f"  PROBE    {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
+    for path, size in sorted(cache_delete, key=lambda item: item[1], reverse=True):
+        print(f"  CACHE    {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
 
     if args.apply:
-        for path, _ in delete_candidates:
+        for path, _ in gpt_delete:
             shutil.rmtree(path)
-        for path, _, keep, _ in compact_candidates:
+        for path, _, keep, _ in gpt_compact:
             compact_directory(path, keep)
+        for path, _ in probe_delete:
+            shutil.rmtree(path)
+        for path, _ in cache_delete:
+            shutil.rmtree(path)
         print(
-            f"analysis prune: removed {len(delete_candidates)} dirs; "
-            f"compacted {len(compact_candidates)} dirs"
+            f"analysis prune: removed {len(gpt_delete)} gpt-web dirs; "
+            f"compacted {len(gpt_compact)} dirs; "
+            f"removed {len(probe_delete)} probe dirs and "
+            f"{len(cache_delete)} cache dirs"
         )
     else:
         print("analysis prune: no files deleted; rerun with --apply after review")
