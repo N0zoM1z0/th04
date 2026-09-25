@@ -35,6 +35,8 @@ RELOCATIONS = prior.RELOCATIONS
 TARGET_SHA = "371a715332cd353be0d47df96cf8099f9da02460d1ae4b8be63b38afb9bd1b23"
 RUNNER = ROOT / "_reference/ReC98/bin/msdos.exe"
 RUNNER_SHA = prior.RUNNER_SHA
+RAW_CALLER = 0xACEB
+RAW_CALL = bytes.fromhex("9A 3B 01 C7 0C")
 
 
 def sha(data: bytes) -> str:
@@ -69,7 +71,7 @@ def contribution(map_path: Path) -> tuple[int, int, str]:
     return matches[0]
 
 
-def target_boundary(body: bytes, map_text: str) -> dict[str, object]:
+def target_boundary(program: bytes, body: bytes, map_text: str) -> dict[str, object]:
     actual_sha = sha(body)
     if len(body) != SIZE or actual_sha != TARGET_SHA:
         raise RuntimeError("MAINE pi_put_quarter_8 target identity drift")
@@ -93,6 +95,8 @@ def target_boundary(body: bytes, map_text: str) -> dict[str, object]:
         raise RuntimeError(f"MAINE pi_put_quarter_8 Ghidra extent drift: {row!r}")
     if "0CC7:013B       pi_put_quarter_8(int,int,int,int)" not in map_text:
         raise RuntimeError("MAINE pi_put_quarter_8 MAP symbol drift")
+    if program[RAW_CALLER:RAW_CALLER + len(RAW_CALL)] != RAW_CALL:
+        raise RuntimeError("MAINE raw pi_put_quarter_8 caller drift")
     if "0CC7:01EC 001E C=CODE   S=SHARED" not in map_text:
         raise RuntimeError("MAINE pi_put_quarter_8 next contribution drift")
     return {
@@ -103,6 +107,8 @@ def target_boundary(body: bytes, map_text: str) -> dict[str, object]:
         "target_sha256": actual_sha,
         "ghidra_caller_count": int(row["caller_count"]),
         "ghidra_callee_count": int(row["callee_count"]),
+        "raw_caller_payload_offset": hex(RAW_CALLER),
+        "raw_caller_target": "0CC7:013B",
         "next_contribution": "1CC7:01EC hfliplut.asm",
     }
 
@@ -132,7 +138,7 @@ def main() -> int:
         raise RuntimeError("invalid MAINE target/baseline")
     body = target.program_image[START:NEXT]
     map_text = baseline_map.read_text(encoding="cp437")
-    boundary = target_boundary(body, map_text)
+    boundary = target_boundary(target.program_image, body, map_text)
     if baseline.program_image[START:NEXT] != body:
         raise RuntimeError("baseline pi_put_quarter_8 differs from target")
     target_relocs = [item.linear for item in target.relocations]

@@ -70,6 +70,7 @@ MAINE_SCRIPT_OP_PRODUCER = 0xA292
 MAINE_CUTSCENE_ANIMATE_PRODUCER = 0xA292
 MAINE_BOX_BG_SNAP_PRODUCER = 0xA292
 MAINE_PIC_PUT_BOTH_MASKED_PRODUCER = 0xA292
+MAINE_PI_PUT_QUARTER_PRODUCER = 0xCDAB
 MAINE_PIC_COPY_TO_OTHER_PRODUCER = 0xA292
 MAINE_CURSOR_ADVANCE_PRODUCER = 0xA292
 MAINE_BOX_BG_PUT_PRODUCER = 0xA292
@@ -278,7 +279,7 @@ def validate(
                                  "op-dropdown-v630",
                                  "op-setup-menu-v676",
                                  "maine-score-insert-v543", "maine-score-put-v544",
-                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-put-both-masked-v691", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
+                                 "maine-box-animate-v573", "maine-script-op-v685", "maine-cutscene-animate-v687", "maine-box-bg-snap-v689", "maine-pic-put-both-masked-v691", "maine-pi-put-quarter-v695", "maine-pic-copy-to-other-v651", "maine-cursor-advance-v643", "maine-box-bg-put-v647", "maine-cutscene-script-free-v582", "maine-box-bg-free-v585",
                                  "maine-script-param-first-v649", "maine-script-param-second-v590",
                                  "maine-cutscene-script-load-v614",
                                  "maine-cfg-resident-v604",
@@ -374,6 +375,12 @@ def validate(
                     or producer_start != MAINE_PIC_PUT_BOTH_MASKED_PRODUCER
                     or producer_size != 0xC3E):
                 raise ValueError(f"{ident}: MAINE masked-picture backend does not compile this producer")
+        elif backend == "maine-pi-put-quarter-v695":
+            if (artifact != "th04-maine"
+                    or source_name != "src/shared/formats/pi_put_quarter.cpp"
+                    or producer_start != MAINE_PI_PUT_QUARTER_PRODUCER
+                    or producer_size != 0xB1):
+                raise ValueError(f"{ident}: MAINE PI-quarter backend does not compile this producer")
         elif backend == "maine-pic-copy-to-other-v651":
             if (artifact != "th04-maine"
                     or source_name != "src/maine/cutscene/pic_copy_to_other.cpp"
@@ -1077,6 +1084,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "maine-pic-put-both-masked-v691":
         return [sys.executable, "scripts/probes/replay_th04_maine_pic_put_both_masked.py",
+                "--output-dir", str(saved)]
+    if backend_id == "maine-pi-put-quarter-v695":
+        return [sys.executable, "scripts/probes/replay_th04_maine_pi_put_quarter.py",
                 "--output-dir", str(saved)]
     if backend_id == "maine-pic-copy-to-other-v651":
         return [sys.executable, "scripts/probes/replay_th04_maine_pic_copy_to_other.py",
