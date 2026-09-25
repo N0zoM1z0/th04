@@ -1486,3 +1486,16 @@ expected_body_span = 0x33A
 reviewed_body_size = 0x33A
 review_evidence_id = "ev-th04-maine-staffroll-boundary-v702"
 notes = "Fresh target Ghidra closes one contiguous 826-byte body at 1A05:13FD with one caller and 20 callees. The MAP public and pinned candidate source corroborate the staffroll_animate label; v702 maintained natural C++ reproduces the complete body and complete 0x8B7-byte staffall MAINE_01_TEXT producer in two cold rounds."
+
+
+# v704: target-first review and exact replay for graph_3_digit_put.
+[[function_overrides]]
+artifact = "th04-maine"
+payload_offset = 0xB787
+origin = "authored"
+source_form = "candidate-cpp"
+source_ref = "src/maine/end/graph_3_digit_put.inl"
+expected_body_span = 0x96
+reviewed_body_size = 0x96
+review_evidence_id = "ev-th04-maine-graph-3-digit-boundary-v704"
+notes = "Fresh target Ghidra closes one contiguous 150-byte body at 1A05:1737 with three callers and one callee. The MAP public and pinned gv.cpp candidate corroborate the graph_3_digit_put label; v704 maintained natural C++ reproduces the complete body and complete 0x3FA-byte gv MAINE_01_TEXT producer in two cold rounds."

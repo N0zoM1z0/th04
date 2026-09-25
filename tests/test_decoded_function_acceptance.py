@@ -686,6 +686,29 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_maine_box_bg_snap.py",
         )
 
+    def test_maine_graph_3_digit_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-graph-3-digit-v704")
+        owner["source"] = "src/maine/end/not_graph3.inl"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        owner = next(row for row in entries
+                     if row["replay_backend"] == "maine-graph-3-digit-v704")
+        owner["producer_size"] = "0x3F9"
+        with self.assertRaisesRegex(ValueError, "graph-3-digit backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "maine-graph-3-digit-v704",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
+        )
+
     def test_maine_staffroll_backend_is_artifact_source_and_producer_bound(self) -> None:
         entries = deepcopy(self.entries)
         owner = next(row for row in entries
