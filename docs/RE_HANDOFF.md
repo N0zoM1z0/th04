@@ -28,7 +28,7 @@ target observations. Run only one writable Borland/Wine replay at a time.
 | --- | ---: | ---: | ---: | ---: | ---: |
 | OP.EXE | 93 / 93 | 85 | 8 / 0 | 14,284 | 13,847 |
 | MAINE.EXE | 72 / 72 | 63 | 9 / 0 | 12,553 | 11,187 |
-| ZUN.COM | 11 / 11 | 1 | 8 / 2 | 442 | 38 |
+| ZUN.COM | 9 / 9 | 1 | 6 / 2 | 442 | 38 |
 
 MAIN.EXE has 492 / 495 authored candidate functions exact. Its reviewed
 file-backed authored C/C++ extent is 83,442 / 83,469 exact bytes; the remaining
@@ -38,7 +38,7 @@ changes these provenance/codegen blockers.
 
 OP, MAINE, and ZUN counts refer to decoded function owners. No honest packed
 file authored-source denominator or whole-artifact exact claim exists for
-these DIET MZ containers. The separate original-ASM attestation queue has 108
+these DIET MZ containers. The separate original-ASM attestation queue has 110
 observations and is not part of the authored C/C++ denominator.
 
 The current canonical cold-aggregate receipts are:
@@ -61,15 +61,19 @@ cold-links raw-identically with maintained shared `DOS_PUTS2` and
 function credit. The evidence and source-owner decision are in
 `docs/reconstruction/zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md`.
 
-Eight reviewed ZUNINIT entries still lack accepted source/origin authority.
+Six reviewed ZUNINIT entries still lack accepted source/origin authority.
 Historical IDA-generated assembly is a candidate, not original-source proof.
 The 18-byte helper at payload `0x7B0` is now runtime-observed to convert all
 6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs
-show the scope limit. This resolves semantics, not source or exactness; see
+show the scope limit. This establishes the target semantics; see
 `docs/reconstruction/zun/TH04_ZUNINIT_SJIS_V777.md`.
 The adjacent 59-byte helper at `0x7C2` also matches the expected character and
 attribute VRAM writes for all seven embedded messages at all three UI row
 offsets (21 scenarios); see `docs/reconstruction/zun/TH04_ZUNINIT_TEXT_VRAM_V778.md`.
+These two entries now share a 77-byte maintained symbolic original-style ASM
+owner. Two cold TASM objects and their complete CODE agree with the target;
+the unit remains source-present pending a complete ZUNINIT link and aggregate
+acceptance. See `docs/reconstruction/zun/TH04_ZUNINIT_TEXT_SUPPORT_ASM_V779.md`.
 Resident `cfg_init` at payload `0xDCF` and resident `_main` at `0xE67` remain
 blocked: natural `_main` is six bytes short; `cfg_init` retains linked fixup
 differences downstream of that layout shift. Prior compiler and barrier
