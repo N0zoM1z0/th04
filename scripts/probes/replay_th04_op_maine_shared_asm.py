@@ -40,9 +40,11 @@ MODULES = {
     "cdg_p_nc": ("src/op/formats/cdg_p_nc.asm", 0x52, {"op": 0xDC92}),
     "cdg_load": ("src/shared/formats/cdg_load.asm", 0x164, {"op": 0xE57A, "maine": 0xD778}),
     "cdg_put": ("src/shared/formats/cdg_put.asm", 0x9E, {"op": 0xE00E, "maine": 0xD356}),
+    "grppsafx": ("src/op/hardware/graph_putsa_fx.asm", 0x15A, {"op": 0xDEB4}),
     "hfliplut": ("src/shared/hardware/hflip_lut.asm", 0x1E, {"op": 0xDB44}),
     "input_s": ("src/shared/hardware/input_s.asm", 0x10A, {"op": 0xE1DC, "maine": 0xD48A}),
 }
+DATA_EXTENTS = {"grppsafx": {"op": (0xFD40, 0x40)}}
 
 
 def sha(data: bytes) -> str:
@@ -68,10 +70,12 @@ def run(command: list[str], cwd: Path, log: Path, env: dict[str, str]) -> None:
         raise RuntimeError(f"command failed: {log}")
 
 
-def contribution(path: Path, module: str, namespace: str) -> tuple[int, int, str]:
+def contribution(path: Path, module: str, namespace: str,
+                 segment: str = "SHARED", segment_class: str = "CODE") -> tuple[int, int, str]:
     pattern = re.compile(
-        r"^\s*([0-9A-F]{4}):([0-9A-F]{4})\s+([0-9A-F]{4})\s+C=CODE.*"
-        r"\bS=SHARED\b.*\bM=" + re.escape(fr"{namespace}\{module}.asm") + r"(?:\s|$)", re.I,
+        r"^\s*([0-9A-F]{4}):([0-9A-F]{4})\s+([0-9A-F]{4})\s+C="
+        + re.escape(segment_class) + r".*\bS=" + re.escape(segment)
+        + r"\b.*\bM=" + re.escape(fr"{namespace}\{module}.asm") + r"(?:\s|$)", re.I,
     )
     matches = []
     for line in path.read_text(encoding="cp437").splitlines():
@@ -171,6 +175,24 @@ def main() -> int:
             differences = [index for index, (a, b) in enumerate(zip(expected, actual)) if a != b]
             if differences or overlapping(image, start, size) != overlapping(target, start, size):
                 raise RuntimeError(f"{label}/{name}: {module} bytes or relocations differ")
+            data_result = None
+            if name in DATA_EXTENTS.get(module, {}):
+                data_start, data_size = DATA_EXTENTS[module][name]
+                got_start, got_size, data_map_line = contribution(
+                    map_path, module, namespace, "_DATA", "DATA")
+                if (got_start, got_size) != (data_start, data_size):
+                    raise RuntimeError(f"{label}/{name}: {module} DATA moved or changed size")
+                expected_data = target.program_image[data_start:data_start + data_size]
+                actual_data = image.program_image[data_start:data_start + data_size]
+                if len(expected_data) != data_size or actual_data != expected_data:
+                    raise RuntimeError(f"{label}/{name}: {module} DATA bytes differ")
+                if overlapping(image, data_start, data_size) != overlapping(target, data_start, data_size):
+                    raise RuntimeError(f"{label}/{name}: {module} DATA relocations differ")
+                data_result = {"map_contribution": data_map_line,
+                               "target_extent_sha256": sha(expected_data),
+                               "candidate_extent_sha256": sha(actual_data),
+                               "raw_difference_count": 0,
+                               "overlapping_relocations": overlapping(image, data_start, data_size)}
             if image.program_image != baseline.program_image or sha(exe.read_bytes()) != baseline_sha:
                 raise RuntimeError(f"{label}/{name}: relink differs from retained snapshot")
             builds[label][name] = {
@@ -183,6 +205,8 @@ def main() -> int:
                 "overlapping_relocations": overlapping(image, start, size),
                 "ordered_relocations": len(candidate_relocs),
             }
+            if data_result is not None:
+                builds[label][name]["data_contribution"] = data_result
     if builds["a"] != builds["b"] or sha(source.read_bytes()) != source_sha:
         raise RuntimeError("cold builds or source changed")
     receipt = {

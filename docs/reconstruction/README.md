@@ -34,6 +34,7 @@ contain residual counts that were correct only at that packet.
 - [OP CDG alpha-only renderer reviewed boundary and cold module replay](op-maine/TH04_OP_CDG_NOCOLORS_V806.md)
 - [OP CDG no-alpha renderer shared source and cold module replay](op-maine/TH04_OP_CDG_NOALPHA_V807.md)
 - [OP horizontal-flip lookup generator boundary and shared source replay](op-maine/TH04_OP_HFLIP_LUT_V808.md)
+- [OP font-effects renderer code/data and internal boundaries](op-maine/TH04_OP_GRAPH_PUTSA_FX_V809.md)
 - [OP/MAINE/ZUN decoded-function acceptance plane](packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md)
 - [Three-artifact cold function smoke and acceptance limits](packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
 - [OP/MAINE shared frame-delay decoded acceptance](packed/TH04_SHARED_FRAME_DELAY_V510.md)

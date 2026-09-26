@@ -14,6 +14,9 @@ maintained source against each TH04 target independently.
 
 The Ghidra function body is 0x81 bytes; one final byte belongs to assembler
 alignment. The complete 0x82-byte module has no overlapping relocation site.
+The v811 OP target-first review confirms its FAR body ends `RETF 8` at
+`0DA1:0B68`; `0B69` is the source-owned alignment NOP, so the OP function
+boundary is now reviewed.
 The probe cold-assembles the checked-in source with pinned TASM32 5.0 and
 links independent OP/MAINE worktrees. Both full program images remain
 identical to the retained link scaffolds, all ordered relocations match the

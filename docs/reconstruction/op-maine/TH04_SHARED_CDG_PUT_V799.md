@@ -19,6 +19,9 @@ within the contribution. The OP/MAINE probe checks all ordered relocations
 for each linked artifact and exact identity with the retained full candidate
 program, while comparing the complete module to independent, hash-attested
 decoded targets. The candidate build supplies link scaffolding only.
+The v811 OP target-first boundary review confirms `0DA1:05FE..069A` ends
+`RETF 6` and assigns the `069B` NOP to module alignment; OP's function
+boundary is now reviewed.
 
 Focused replay:
 

@@ -4,6 +4,13 @@ All 93 authored OP function candidates now have reviewed physical boundaries.
 85/93 have accepted natural-source decoded exactness. The remaining eight are
 not unresolved boundary problems.
 
+After the OP original-ASM source and boundary campaign, all 16 separate
+original-ASM observations have reviewed target bounds and raw-matching
+decoded source modules. The eight authored entries below are now marked
+`blocked` in the boundary ledger pending new source-provenance or compiler
+evidence. This state records a concrete missing prerequisite; it does not
+assert that exact reconstruction is impossible.
+
 This checkpoint consolidates the current compiler/provenance frontier rather
 than lowering the acceptance bar.
 
@@ -64,5 +71,5 @@ compiler behavior, independently sourced historical code, or stronger
 provenance for a low-level source mechanism. Repeating equivalent C++ spellings
 is not useful.
 
-Per the reconstruction roadmap, work can now proceed to ZUN.COM while these
-eight OP blockers remain explicitly tracked.
+The current artifact order can advance once this OP frontier is recorded;
+these eight blockers remain the OP exactness queue when new evidence arrives.

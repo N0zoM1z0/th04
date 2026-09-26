@@ -1,0 +1,41 @@
+# OP font-effects renderer, v809
+
+The attested OP target MAP assigns `th04/grppsafx.asm` two contributions:
+`SHARED` code at `0DA1:04A4` (decoded payload `0xDEB4`, `0x15A` bytes) and
+`DGROUP:_DATA` at `0F34:0A00` (decoded payload `0xFD40`, `0x40` bytes).
+Neither contribution overlaps an MZ relocation site. The function and its
+tables must be compared together because the renderer patches its own call
+displacements and spacing/mask operands from those tables.
+
+Target disassembly confirms `GRAPH_PUTSA_FX` from `04A4..05CE` (`0x12B`
+bytes). Its `RETF 0Ah` at `0599` is followed by a reachable halfwidth path
+through `05CE`, so that branch is still part of the function. The `05CF`
+NOP is source-owned alignment. Internal glyph-weight helpers occupy
+`05D0..05FD`; the Ghidra entry at `05DD..05ED` is a near bold-weight helper
+with a `RETN`, reached by two calls and by fallthrough from the black-weight
+helper. It is a label inside the assembler owner, not an independent source
+translation unit.
+
+The maintained `src/op/hardware/graph_putsa_fx.asm` is a bounded
+original-style TASM candidate. Its starting algorithm came from pinned
+ReC98 material, then its PC-98/GRCG constants and macros were localized so
+product source has no other-game or library include path. Historical
+original-source spelling remains open. The v809 OP-only probe assembled
+this source in two isolated worktrees with pinned TASM32 5.0 and linked it
+against the retained OP scaffold. Both complete linked program images agree
+with the scaffold controls; all 804 ordered relocations agree. Both code
+contributions and both data contributions have zero raw differences against
+the hash-attested v228 OP restore. Receipt:
+`.analysis/reconstruction/probes/v809-op-grppsafx-001/receipt.json`.
+
+Replay:
+
+```sh
+taskset -c 0,1 nice -n 10 python3 scripts/probes/replay_th04_op_maine_shared_asm.py \
+  --module grppsafx --output-dir .analysis/reconstruction/probes/NEW-OP-GRPP-SAFX
+```
+
+The decoded code and data owners are `source-present`; both listed function
+boundaries are reviewed. Their original packed-file offsets are unknown, so
+the result does not claim whole OP.EXE exactness or add authored C/C++
+function credit.

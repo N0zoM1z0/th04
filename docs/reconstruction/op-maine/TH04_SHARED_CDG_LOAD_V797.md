@@ -30,9 +30,32 @@ The generalized probe's default `cdg_load` mode was rechecked after the
 `cdg_put` extension in v801 (receipt SHA-256
 `04bfa2bad5f5cde580651b9ac9e5dd0520b19401b94da1f3270958c89d9dd9df`).
 This proves the decoded module
-extent, while several internal Ghidra function cuts remain provisional and
+extent, while several MAINE internal Ghidra function cuts remain provisional and
 the packed-file offsets and complete product builds remain unresolved. The
 function-exact C/C++ denominators do not include this original-ASM module.
+
+## OP internal boundaries, v810
+
+The attested OP target bytes and MAP tile `0DA1:0B6A..0CCD` without gaps:
+
+| OP offset | Entry | Source-owned extent |
+| --- | --- | ---: |
+| `0B6A` | `CDG_LOAD_SINGLE_NOALPHA` flag-setting entry, falls through | `0x06` |
+| `0B70` | `CDG_LOAD_SINGLE`, ends `RETF 8` | `0x5F` |
+| `0BCF` | alignment NOP | `0x01` |
+| `0BD0` | internal near single-image reader, ends `RETN` | `0x58` |
+| `0C28` | `CDG_LOAD_ALL_NOALPHA` flag-setting entry, falls through | `0x06` |
+| `0C2E` | `CDG_LOAD_ALL`, ends `RETF 6` | `0x5C` |
+| `0C8A` | `CDG_FREE`, ends `RETF 2` | `0x35` |
+| `0CBF` | alignment NOP | `0x01` |
+| `0CC0` | `CDG_FREE_ALL`, ends `RETF` | `0x0E` |
+
+The two `NOALPHA` labels are shared-entry prefixes, not standalone return
+paths. Ghidra omitted those entry functions; the target byte stream, MAP
+publics, and complete cold-linked module delimit them. All seven OP
+function-like observations now have reviewed entry extents. This boundary
+review does not change the accepted decoded module state or authored C/C++
+exact count.
 
 Replay:
 

@@ -26,7 +26,7 @@ target observations. Run only one writable Borland/Wine replay at a time.
 
 | Artifact | Reviewed authored boundaries | Function exact | Pending / blocked | Tracked decoded source-owner bytes | Accepted decoded bytes |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| OP.EXE | 93 / 93 | 85 | 8 / 0 | 14,284 | 13,847 |
+| OP.EXE | 93 / 93 | 85 | 0 / 8 | 14,284 | 13,847 |
 | MAINE.EXE | 72 / 72 | 63 | 9 / 0 | 12,553 | 11,187 |
 | ZUN.COM | 3 / 3 | 1 | 0 / 2 | 442 | 38 |
 
@@ -135,8 +135,9 @@ two complete cold exact-unit builds after the source move. OP `0DA1:0B6A`
 isolated cold source builds with zero raw differences and 14/14 module
 relocations. All ordered artifact relocations agree. The two packed artifacts
 record decoded `source-present` module units because their original-file
-offsets are unknown. The internal ASM function cuts remain partly
-provisional; no authored C/C++ function count changes. See
+offsets are unknown. OP's seven entry/helper observations are now target-first
+reviewed, including two shared-entry `NOALPHA` prefixes; MAINE's internal
+cuts remain partly provisional. No authored C/C++ function count changes. See
 `docs/reconstruction/op-maine/TH04_SHARED_CDG_LOAD_V797.md` and the v797/v798
 evidence rows.
 
@@ -187,6 +188,29 @@ symbolic TASM source moved to `src/shared/hardware/hflip_lut.asm`; OP A/B
 cold links raw-match the complete module, and the affected MAIN exact unit
 passes focused cold replay after the source move. See
 `docs/reconstruction/op-maine/TH04_OP_HFLIP_LUT_V808.md`.
+
+OP `GRAPH_PUTSA_FX` at `0DA1:04A4` (payload `0xDEB4`) now has a reviewed
+0x12B-byte FAR boundary, with the `05CF` alignment and internal glyph-weight
+helpers separately accounted for inside its 0x15A-byte code owner. The same
+source owns a 0x40-byte `DGROUP:_DATA` contribution at `0F34:0A00`. Localized
+OP TASM source cold-links both complete extents raw-zero in A/B builds while
+preserving all 804 ordered OP relocations. The internal bold-weight helper at
+`05DD` is also reviewed; see
+`docs/reconstruction/op-maine/TH04_OP_GRAPH_PUTSA_FX_V809.md`.
+
+All 16 OP original-ASM function-like observations now have reviewed target
+boundaries. The final v811 review closes `CDG_PUT_8`, the two `INPUT_S`
+entries, and `BGIMAGE_PUT_RECT_16` using their target returns/fallthroughs
+and source-owned alignment bytes. Their complete modules already pass
+artifact-local A/B cold raw comparisons; their DIET packed-file offsets are
+still unknown.
+
+The eight remaining OP authored entries are now explicitly `blocked` in the
+boundary ledger. Their physical boundaries are reviewed, but current natural
+source and compiler probes fail strict byte equality; exact-looking
+diagnostics requiring unproven inline ASM, explicit register forcing, or
+inert padding do not qualify. The blocker mechanisms and replay receipts are
+in `docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md`.
 
 All current authored OP and MAINE physical boundaries are reviewed. OP's eight
 nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,

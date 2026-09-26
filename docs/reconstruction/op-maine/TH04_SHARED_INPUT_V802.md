@@ -21,6 +21,9 @@ module-overlapping relocation is preserved. MAIN passes the accepted-unit
 complete cold replay after the source move. These are three artifact-local
 claims; source identity in one artifact does not transfer raw equality to
 another.
+The v811 OP target-first review confirms the 8-byte reset entry falls through
+to the `0x101`-byte sense body, which ends `RETF` at `0DA1:08D4`; the final
+`08D5` byte is alignment. Both OP function boundaries are now reviewed.
 
 The packed OP/MAINE original-file offsets and standalone product builds
 remain open. Their ledger state is decoded `source-present`, not file-backed
