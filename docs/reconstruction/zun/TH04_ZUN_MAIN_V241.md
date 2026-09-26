@@ -214,3 +214,26 @@ Accepted receipt v538-zun-main-pragma-optimizer-001/receipt.json has SHA-256
 This closes the available pragma jump-optimization scope route only. _main
 remains source-present at 246/252 bytes and must not gain inert barriers,
 codestrings, or target-derived assembly for equality.
+
+## v792 local speed-pragma scope negative
+
+`#pragma option -G` is a legitimate Borland source-level compiler control,
+and full-function `-G` was already known to retain too many error-print calls.
+A new isolated source-only probe places the pragma before `_main`, before the
+bad-option print with a restore after the already-resident branch, before that
+print without a restore, and around only the bad-option branch. The source
+contains the same operations and returns in all four variants.
+
+Two pinned low-priority, two-core TC4J cold builds per variant agree on OMF and
+CODE. Function-wide `-G` and the inner unrestored form each emit 280 bytes and
+four direct print CALLs. Both restored inner forms emit the 246-byte baseline
+and retain the excessive `jmp / jmp / jmp / call` tail merge. The target remains
+252 bytes with `jmp / call / call / call`. A local `-G` spelling therefore does
+not selectively restore the two missing calls. No maintained source or exact
+state changes.
+
+Run `taskset -c 0,1 nice -n 10 python3
+scripts/probes/probe_th04_zun_main_pragma_speed_scope.py --output-dir
+.analysis/reconstruction/probes/NEW-UNIQUE-NAME`. Focused receipt:
+`.analysis/reconstruction/probes/v792-zun-main-pragma-speed-001/receipt.json`,
+SHA-256 `2c2f79c0a38e3a245f01ce402342b2f067fc7bd27bd7a37144401bac6a80c7a3`.
