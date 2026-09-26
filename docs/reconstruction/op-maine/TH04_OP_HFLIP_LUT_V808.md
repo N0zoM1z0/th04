@@ -27,3 +27,13 @@ taskset -c 0,1 nice -n 10 python3 scripts/probes/replay_th04_op_maine_shared_asm
 The OP decoded module is `source-present` with a reviewed function boundary.
 Its original packed-file offset remains unknown. This does not change the
 authored C/C++ function count of 85/93 exact.
+
+## MAINE owner, v812
+
+MAINE independently preserves a `0x1E`-byte `SHARED` contribution at
+`0CC7:01EC`, decoded payload `0xCE5C`. Target disassembly ends `RETF` at
+`0209`; the next owner begins at `020A`. The same maintained shared source
+cold-links the complete MAINE contribution with zero raw differences in two
+isolated rounds and all 559 ordered relocations preserved. Receipt:
+`.analysis/reconstruction/probes/v812-maine-hfliplut-001/receipt.json`.
+The MAINE packed-file offset and historical source spelling remain open.

@@ -3,6 +3,12 @@
 The live MAINE ledger is 63/72 exact with all 72 authored-function physical
 boundaries reviewed. Nine functions remain source/codegen/provenance blockers.
 
+After the original-ASM source and boundary campaign, all 15 separate MAINE
+original-ASM observations have reviewed target bounds and raw-matching
+decoded source modules. The nine authored entries below are marked
+`blocked` in the boundary ledger pending new source-provenance or compiler
+evidence. This records a concrete missing prerequisite, not impossibility.
+
 This note records three new compiler-mechanism probes that do not change exact
 counts, but close previously untested routes.
 

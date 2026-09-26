@@ -27,7 +27,7 @@ target observations. Run only one writable Borland/Wine replay at a time.
 | Artifact | Reviewed authored boundaries | Function exact | Pending / blocked | Tracked decoded source-owner bytes | Accepted decoded bytes |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | OP.EXE | 93 / 93 | 85 | 0 / 8 | 14,284 | 13,847 |
-| MAINE.EXE | 72 / 72 | 63 | 9 / 0 | 12,553 | 11,187 |
+| MAINE.EXE | 72 / 72 | 63 | 0 / 9 | 12,553 | 11,187 |
 | ZUN.COM | 3 / 3 | 1 | 0 / 2 | 442 | 38 |
 
 MAIN.EXE has 492 / 495 authored candidate functions exact. Its reviewed
@@ -120,12 +120,16 @@ negatives, including the v792 local `-G` pragma scope, are in the ZUN focused
 notes and `config/knowledge.csv`. Continue
 source/component ownership review before exact promotion.
 
-## Active OP frontier and MAINE retained state
+## OP/MAINE retained state and ZUN active frontier
 
-The active work order now stays on OP until its remaining function candidates
-have been pushed as far as evidence permits. The eight authored OP blockers
-below remain after the v806 original-ASM progress; their count does not
-change merely because a shared or original-ASM module cold-links raw-zero.
+The OP source and boundary campaign is complete under current evidence:
+85/93 authored functions are decoded exact, eight are explicitly blocked on
+source/codegen provenance, and all 16 original-ASM observations have reviewed
+bounds and cold-linked source modules. MAINE is similarly 63/72 authored
+decoded exact with nine source/codegen blockers and all 15 original-ASM
+observations reviewed and source-backed. The active work order now moves to
+ZUN.COM until its remaining resident functions are pushed as far as the
+evidence permits.
 
 The shared CDG loader now has one maintained TH04-local TASM source at
 `src/shared/formats/cdg_load.asm`. MAIN `130E:0858` (load `0x13938+0x164`,
@@ -197,6 +201,31 @@ OP TASM source cold-links both complete extents raw-zero in A/B builds while
 preserving all 804 ordered OP relocations. The internal bold-weight helper at
 `05DD` is also reviewed; see
 `docs/reconstruction/op-maine/TH04_OP_GRAPH_PUTSA_FX_V809.md`.
+
+MAINE `_hflip_lut_generate` at `0CC7:01EC` (payload `0xCE5C`) independently
+cold-links the shared TASM source raw-zero across its full 0x1E-byte module.
+MAINE `GRAPH_PUTSA_FX` at `0CC7:058C` (payload `0xD1FC`) cold-links the same
+now-shared symbolic source as OP: its complete 0x15A-byte code and separate
+0x40-byte `DGROUP:_DATA` contributions are raw-zero in A/B builds. The source
+move also passed an OP A/B revalidation; all ordered artifact relocations
+agree. MAINE `CDG_PUT_PLANE` at `0CC7:0408` (payload `0xD078`) has a
+maintained MAINE-local symbolic source that cold-links all 0x9A bytes raw-zero
+in A/B builds. Each module has a reviewed function boundary and an unknown
+packed-file offset; see the v812-v814 focused notes.
+
+All 15 MAINE original-ASM function-like observations now have reviewed target
+boundaries. The v815 pass closes `CDG_LOAD` shared-entry prefixes and reader,
+`CDG_PUT_8`, both `INPUT_S` entries, and `BGIMAGE_PUT_RECT_16` against
+MAINE-local return/fallthrough bytes and alignment. Their complete modules
+already pass artifact-local A/B source cold comparisons. None supplies
+authored C/C++ exact credit or a packed-file offset.
+
+The nine remaining MAINE authored entries are now explicitly `blocked` in the
+boundary ledger. All physical boundaries are reviewed; the recorded natural
+source, compiler, and source-provenance tests still leave strict byte or
+admissibility failures. `docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`
+lists each mechanism. This state records missing prerequisites, not an
+impossibility claim.
 
 All 16 OP original-ASM function-like observations now have reviewed target
 boundaries. The final v811 review closes `CDG_PUT_8`, the two `INPUT_S`

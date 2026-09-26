@@ -57,6 +57,17 @@ function-like observations now have reviewed entry extents. This boundary
 review does not change the accepted decoded module state or authored C/C++
 exact count.
 
+## MAINE internal boundaries, v815
+
+MAINE's independently attested `0CC7:0B08..0C6B` module has the same
+source-owned partition under its own link addresses: `0B08+6` NOALPHA
+prefix, `0B0E+0x5F` SINGLE body, `0B6D` alignment, `0B6E+0x58`
+internal near reader, `0BC6+6` ALL_NOALPHA prefix, `0BCC+0x5C` ALL body,
+`0C28+0x35` FREE body, `0C5D` alignment, and `0C5E+0x0E` FREE_ALL body.
+Target return opcodes and fallthroughs close all seven MAINE observations;
+the complete MAINE module already passed its own v797 A/B cold raw and
+relocation comparison. Its packed-file offset remains unknown.
+
 Replay:
 
 ```sh

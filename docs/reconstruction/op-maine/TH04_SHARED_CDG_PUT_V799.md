@@ -22,6 +22,8 @@ decoded targets. The candidate build supplies link scaffolding only.
 The v811 OP target-first boundary review confirms `0DA1:05FE..069A` ends
 `RETF 6` and assigns the `069B` NOP to module alignment; OP's function
 boundary is now reviewed.
+The v815 MAINE review independently confirms its `0CC7:06E6..0782` FAR
+body and separate `0783` alignment NOP; MAINE's boundary is now reviewed.
 
 Focused replay:
 

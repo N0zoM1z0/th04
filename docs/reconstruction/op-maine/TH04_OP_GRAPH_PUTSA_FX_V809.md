@@ -16,7 +16,7 @@ with a `RETN`, reached by two calls and by fallthrough from the black-weight
 helper. It is a label inside the assembler owner, not an independent source
 translation unit.
 
-The maintained `src/op/hardware/graph_putsa_fx.asm` is a bounded
+The maintained `src/shared/hardware/graph_putsa_fx.asm` is a bounded
 original-style TASM candidate. Its starting algorithm came from pinned
 ReC98 material, then its PC-98/GRCG constants and macros were localized so
 product source has no other-game or library include path. Historical
@@ -39,3 +39,21 @@ The decoded code and data owners are `source-present`; both listed function
 boundaries are reviewed. Their original packed-file offsets are unknown, so
 the result does not claim whole OP.EXE exactness or add authored C/C++
 function credit.
+
+## MAINE owner and shared source, v813
+
+The unchanged source moved from `src/op/hardware/` to `src/shared/hardware/`
+after MAINE target review. MAINE independently owns `0x15A` bytes of
+`SHARED` code at `0CC7:058C` (decoded `0xD1FC`) and `0x40` bytes of
+`DGROUP:_DATA` at `0E53:05C0` (decoded `0xEAF0`). Its FAR renderer body is
+`058C..06B6`; `06B7` is alignment. The internal bold-weight helper is
+`06C5..06D5` and ends `RETN`.
+
+The v813 replay assembled the shared source and linked both OP and MAINE in
+isolated A/B rounds. Both artifacts retain zero raw differences for their
+complete code and data contributions and preserve their own ordered
+relocations (804 OP, 559 MAINE). This also revalidates OP after the path
+move. Receipt:
+`.analysis/reconstruction/probes/v813-op-maine-grppsafx-001/receipt.json`.
+MAINE's two listed function boundaries are reviewed; both decoded module
+extents are `source-present`. Their packed-file offsets remain unknown.

@@ -24,6 +24,9 @@ another.
 The v811 OP target-first review confirms the 8-byte reset entry falls through
 to the `0x101`-byte sense body, which ends `RETF` at `0DA1:08D4`; the final
 `08D5` byte is alignment. Both OP function boundaries are now reviewed.
+The v815 MAINE review independently confirms its `0CC7:081A+8` reset
+prefix, `0822+0x101` sense body ending `RETF` at `0922`, and `0923`
+alignment. Both MAINE boundaries are now reviewed.
 
 The packed OP/MAINE original-file offsets and standalone product builds
 remain open. Their ledger state is decoded `source-present`, not file-backed

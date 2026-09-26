@@ -36,15 +36,17 @@ ARTIFACTS = {
 }
 MODULES = {
     "bgimager": ("src/shared/hardware/bgimager.asm", 0x82, {"op": 0xE4F8, "maine": 0xD6F6}),
+    "cdg_p_pl": ("src/maine/formats/cdg_put_plane.asm", 0x9A, {"maine": 0xD078}),
     "cdg_p_na": ("src/shared/formats/cdg_put_noalpha_8.asm", 0x66, {"op": 0xE176}),
     "cdg_p_nc": ("src/op/formats/cdg_p_nc.asm", 0x52, {"op": 0xDC92}),
     "cdg_load": ("src/shared/formats/cdg_load.asm", 0x164, {"op": 0xE57A, "maine": 0xD778}),
     "cdg_put": ("src/shared/formats/cdg_put.asm", 0x9E, {"op": 0xE00E, "maine": 0xD356}),
-    "grppsafx": ("src/op/hardware/graph_putsa_fx.asm", 0x15A, {"op": 0xDEB4}),
-    "hfliplut": ("src/shared/hardware/hflip_lut.asm", 0x1E, {"op": 0xDB44}),
+    "grppsafx": ("src/shared/hardware/graph_putsa_fx.asm", 0x15A,
+                 {"op": 0xDEB4, "maine": 0xD1FC}),
+    "hfliplut": ("src/shared/hardware/hflip_lut.asm", 0x1E, {"op": 0xDB44, "maine": 0xCE5C}),
     "input_s": ("src/shared/hardware/input_s.asm", 0x10A, {"op": 0xE1DC, "maine": 0xD48A}),
 }
-DATA_EXTENTS = {"grppsafx": {"op": (0xFD40, 0x40)}}
+DATA_EXTENTS = {"grppsafx": {"op": (0xFD40, 0x40), "maine": (0xEAF0, 0x40)}}
 
 
 def sha(data: bytes) -> str:
@@ -96,13 +98,18 @@ def overlapping(image, start: int, size: int) -> list[int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--module", choices=sorted(MODULES), default="cdg_load")
+    parser.add_argument("--artifact", choices=sorted(ARTIFACTS),
+                        help="replay only one owning artifact")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     module = args.module
     namespace = "th03" if module == "hfliplut" else "th04"
     source_rel, size, starts = MODULES[module]
     source = ROOT / source_rel
-    selected = {name: ARTIFACTS[name] for name in starts}
+    selected = {name: ARTIFACTS[name] for name in starts
+                if args.artifact is None or name == args.artifact}
+    if not selected:
+        parser.error(f"{module} has no {args.artifact} owner")
     output = args.output_dir.resolve()
     private = (ROOT / ".analysis/reconstruction/probes").resolve()
     if output.exists() or output == private or not output.is_relative_to(private):
