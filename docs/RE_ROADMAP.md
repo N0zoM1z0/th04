@@ -1,6 +1,6 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26 after the v824 OP EGC-start hybrid closure. This is the
+Updated 2026-09-26 after the v825 OP EGC rectangle-copy hybrid closure. This is the
 current next-work map. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and
@@ -10,12 +10,12 @@ experiments and rejected approaches remain in `docs/reconstruction/` and
 
 | Artifact | Exact authored functions | Remaining | Reviewed boundaries |
 | --- | ---: | ---: | ---: |
-| OP.EXE | 88 / 93 | 5 | 93 / 93 |
+| OP.EXE | 89 / 93 | 4 | 93 / 93 |
 | MAIN.EXE | 492 / 495 | 3 blocked | 495 / 495 |
 | MAINE.EXE | 63 / 72 | 9 | 72 / 72 |
 | ZUN.COM | 3 / 3 | 0 | 3 / 3 |
 
-OP has 14,184 accepted decoded source-owner bytes out of 14,347 tracked;
+OP has 14,295 accepted decoded source-owner bytes out of 14,458 tracked;
 MAINE has 11,187 out of 12,553; ZUN has 442 out of 442. These are not
 packed-file coverage denominators. MAIN's 83,442 / 83,469 exact authored C/C++
 bytes cover only its reviewed file-backed owner extents.
@@ -26,15 +26,14 @@ negative for the ordinary TC4J / `-B` compiler paths, but v821 adds independent
 TH03 OP/MAINL machine-code provenance for the SCORE byte-rotate primitive.
 Keeping only that irreducible 8-bit ROR symbolic closes OP `scoredat_decode`
 and `scoredat_encode`; focused replay and the canonical current-ledger replay
-are raw-zero. v824 then closes the internal 63-byte `egc_start_copy` helper
-with a deliberately narrow hybrid boundary: independently restored TH05 OP and
-MAINE targets each contain the complete helper verbatim, while maintained
-source restricts non-ordinary code to two corroborated hardware/compiler
-primitives totaling 34 bytes. Two cold OP links preserve the complete `0xB0`
-`egcrect.cpp` producer and all 804 relocations, and canonical replay passes
-88/88 accepted OP slices. OP is therefore 88/93 with five blockers. Do not
-reopen the SCORE codecs or EGC helper without evidence that changes these
-accepted boundaries.
+are raw-zero. v824 closes the internal 63-byte `egc_start_copy` helper,
+and v825 closes the adjacent 111-byte `egc_copy_rect_1_to_0_16` outer body.
+Both use narrow hybrid boundaries backed by independently restored release
+targets rather than wholesale decompilation spelling. Two cold v825 OP links
+preserve the complete `0xB0` `egcrect.cpp` producer and all 804 relocations,
+and canonical replay passes 89/89 accepted OP slices. OP is therefore 89/93
+with four blockers. Do not reopen the SCORE codecs or either accepted EGC
+function without evidence that changes these accepted boundaries.
 
 v822 then revisits `SND_SE_PLAY` and `_snd_se_update` without promoting them.
 MAIN and OP independently share the complete 0x86 `th04/snd_se.cpp` fixed
@@ -56,11 +55,11 @@ ReC98 [Decompilation] commit. Thus SND_LOAD is now a source-provenance-only
 blocker: the exact compiler mechanism is known, but no independent ZUN source
 witness justifies adopting that spelling.
 
-The next bounded work should stay on one artifact at a time: pursue the 111-byte
-`egc_copy_rect_1_to_0_16` outer function or materially new OP
-source/compiler/provenance evidence for the five remaining blockers, or
-move to MAINE if no such OP hypothesis exists. MAIN remains a side lane unless
-shared source changes require replay.
+The next bounded work should stay on one artifact at a time: pursue materially
+new OP source/compiler/provenance evidence for the four remaining blockers
+(`nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`, `_snd_se_update`), or move to
+MAINE if no such OP hypothesis exists. MAIN remains a side lane unless shared
+source changes require replay.
 
 ## ZUN.COM: authored-function source authority closed
 
@@ -127,10 +126,11 @@ Its ReC98 source origin remains candidate provenance; the local v805 replay
 establishes artifact-specific bytes and layout. It does not change the C++
 BGIMAGE producer or its accepted function count.
 
-All authored candidate boundaries in both artifacts are reviewed. OP has five
-nonexact functions: `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
-`_snd_se_update`, and `egc_copy_rect_1_to_0_16`. The internal
-`egc_start_copy` at payload `0xE3E8` is decoded-exact as of v824. MAINE has nine: `regist_menu`,
+All authored candidate boundaries in both artifacts are reviewed. OP has four
+nonexact functions: `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`, and
+`_snd_se_update`. The internal `egc_start_copy` at payload `0xE3E8` is
+decoded-exact as of v824, and `egc_copy_rect_1_to_0_16` is decoded-exact as
+of v825. MAINE has nine: `regist_menu`,
 `SND_LOAD`, `box_1_to_0_masked`, both SCORE codecs, `_snd_se_update`, the SCORE
 EGC-start helper, `SND_SE_PLAY`, and `egc_start_copy`.
 
@@ -138,10 +138,11 @@ For OP, v820 still proves that the ZUN-successful TC4J `-B`/TASM32 path by
 itself does not alter `nopoly_b_put`, the SCORE natural bodies, `SND_SE_PLAY`,
 or `_snd_se_update`. v821 supersedes only the OP SCORE acceptance decision by
 adding independent TH03 codec-machine-code corroboration and restricting
-symbolic low-level source to the irreducible byte ROR. v824 applies the same
-strict hybrid rule to OP's internal EGC-start helper using complete 63-byte
-identity in independently restored TH05 OP and MAINE targets; the adjacent
-111-byte rectangle-copy function remains blocked. v822 adds materially new
+symbolic low-level source to the irreducible byte ROR. v824 applies the same strict hybrid rule to OP's internal EGC-start helper
+using complete 63-byte identity in independently restored TH05 OP and MAINE
+targets. v825 then narrows and accepts the adjacent 111-byte rectangle-copy
+function using TH05 descendant outer-body evidence plus bounded release-target
+lineage for the retained x86/PC-98 primitives. v822 adds materially new
 same-game producer evidence for `SND_SE_PLAY` and `_snd_se_update`: their exact
 machine-code shape is now reproducible, but the required helper spelling is
 target-derived decompilation provenance, so both remain blocked. The remaining OP blockers now need new independent source provenance or materially
@@ -152,6 +153,7 @@ materially new compiler mechanism or source-origin observation. See
 `docs/reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md`,
 `docs/reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md`,
 `docs/reconstruction/op-maine/TH04_OP_EGC_START_HYBRID_V824.md`,
+`docs/reconstruction/op-maine/TH04_OP_EGC_COPY_HYBRID_V825.md`,
 docs/reconstruction/op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md,
 `docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md`, and
 `docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`.

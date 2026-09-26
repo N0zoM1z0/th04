@@ -83,6 +83,7 @@ counts, file paths, and proposals do not supersede the current ledgers.
 - [OP SCORE codec cross-game hybrid closure](op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md)
 - [OP shared-sound producer provenance bound](op-maine/TH04_OP_SND_SE_SHARED_V822.md)
 - [OP internal EGC-start hybrid closure](op-maine/TH04_OP_EGC_START_HYBRID_V824.md)
+- [OP EGC rectangle-copy hybrid closure](op-maine/TH04_OP_EGC_COPY_HYBRID_V825.md)
 - [OP SND_LOAD complete-producer provenance bound](op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md)
 - [OP strict natural-source frontier](op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
 - [OP egcrect physical-boundary closure](op-maine/TH04_OP_EGCRECT_BOUNDARIES_V757.md)

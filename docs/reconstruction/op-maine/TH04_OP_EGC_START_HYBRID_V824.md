@@ -6,7 +6,7 @@ The internal `egc_start_copy()` helper at OP decoded payload `0xE3E8`
 (size `0x3F`, 63 bytes) is now decoded-exact from maintained hybrid source.
 
 This moves OP from **87/93** to **88/93** accepted authored functions. The
-adjacent 111-byte `egc_copy_rect_1_to_0_16()` at `0xE378` remains blocked.
+adjacent 111-byte `egc_copy_rect_1_to_0_16()` at `0xE378` remained blocked at v824 and is subsequently decoded-exact in v825.
 Nothing here establishes a packed-file offset or whole-`OP.EXE` exactness.
 
 ## Why v757 was not enough

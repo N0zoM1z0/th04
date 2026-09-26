@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after the v824 OP EGC-start hybrid closure. This is the
+Updated 2026-09-26 after the v825 OP EGC rectangle-copy hybrid closure. This is the
 current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
@@ -27,19 +27,19 @@ use; this host's focused replays use `taskset -c 0,1 nice -n 10`.
 
 | Artifact | Reviewed authored boundaries | Exact authored functions | Blocked | Original-ASM observations |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 93 / 93 | 88 | 5 | 16 reviewed |
+| OP.EXE | 93 / 93 | 89 | 4 | 16 reviewed |
 | MAIN.EXE | 495 / 495 | 492 | 3 | 73 attestation entries; 6 provisional |
 | MAINE.EXE | 72 / 72 | 63 | 9 | 15 reviewed |
 | ZUN.COM | 3 / 3 | 3 | 0 | 12 reviewed |
 
 MAIN's reviewed file-backed authored extent has 83,442 / 83,469 exact bytes.
 Its 27-byte remainder belongs to `carpet_lighting_put_new` (23), checkerboard
-(2), and `snd_load` (2). OP has 14,184 accepted decoded source-owner bytes of
-14,347 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
+(2), and `snd_load` (2). OP has 14,295 accepted decoded source-owner bytes of
+14,458 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
 counts do not give a packed-file byte denominator or whole-artifact exactness.
 Original-ASM observations are outside the authored C/C++ counts.
 
-OP's six blocked functions and MAINE's nine blocked functions have reviewed
+OP's four blocked functions and MAINE's nine blocked functions have reviewed
 physical boundaries. v821 closes OP `scoredat_decode` and `scoredat_encode`
 with maintained hybrid source: all control/data flow stays C++, while the
 single 8-bit ROR primitive is independently corroborated by pre-decompilation
@@ -58,18 +58,17 @@ provenance, so the two functions remain blocked. The v822 diagnostic receipt is
 `v822-op-snd-se-shared-diagnostic-receipt.json`, SHA-256
 `2509adb3b0153514025544f0b2b55aa399ddca52c0a4e5e884e28ca19f0696ef`.
 
-v824 closes the internal 63-byte OP `egc_start_copy` helper. Independently
-restored TH05 OP and MAINE release targets each contain the complete helper
-verbatim. Maintained hybrid source limits non-ordinary source to a 28-byte
-GRCG/EGC-enable hardware block and a 6-byte TC4J pseudoregister address-zero
-write; the other 29 bytes remain ordinary C++/compiler return code. Two cold
-links reproduce the complete `0xB0` `egcrect.cpp` producer, accepted OP EXE/MAP,
-and all 804 relocations. Canonical v824 checks all 88 accepted OP slices
-raw-zero. The adjacent 111-byte `egc_copy_rect_1_to_0_16` remains blocked.
-Focused receipt SHA-256
-`d1c675b3741b734e1e24780495b6cc8b99f929c80b2f3fed1bfce23a15d0680c`;
+v824 closes the internal 63-byte OP `egc_start_copy` helper. v825 then closes
+the adjacent 111-byte `egc_copy_rect_1_to_0_16` outer body with a narrowed
+hybrid source: ordinary TC4J owns parameter loads and rectangle arithmetic,
+while only bounded CLD/SHL/immediate-page-OUT/STOSW/LOOP primitives remain
+symbolic. TH05 OP/MAINE descendant bodies and earlier release-target machine
+code provide independent mechanism evidence. Two cold v825 links reproduce the
+complete `0xB0` producer, accepted OP EXE/MAP, and all 804 relocations.
+Canonical v825 checks all 89 accepted OP slices raw-zero. v825 focused receipt
+SHA-256 `984291bce653fe242c33003e85eedd1572c71e062f7e0cec02c3840a52ec649d`;
 canonical receipt SHA-256
-`e2655248ab4426fabce88c5f1ed1c0c3d663de3d551e60fe9f2707773fdd5da5`.
+`5df5f441a94e5ce3aadfdd102b84abdba1ffcb4730e92bcdd329b91429b65eca`.
 
 v823 then closes the code-generation mechanism for 234-byte SND_LOAD without
 granting source credit. Two cold wrapper builds replacing only _BX=_AX with
@@ -85,13 +84,14 @@ v823-op-snd-load-provenance-receipt.json, SHA-256
 b958943a35c7916ab4a8bc80a9f2dd97bcc25a968ff4a315547f71d6dc37f161.
 
 The remaining OP blockers are `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
-`_snd_se_update`, and `egc_copy_rect_1_to_0_16`.
+and `_snd_se_update`.
 v820's compiler-path negative remains valid for ordinary TC4J / `-B` lowering;
 only the SCORE acceptance decision is superseded by v821's new provenance.
 See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md),
 [v822 shared-sound provenance bound](reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md),
 [v823 SND_LOAD provenance bound](reconstruction/op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md),
 [v824 EGC-start hybrid closure](reconstruction/op-maine/TH04_OP_EGC_START_HYBRID_V824.md),
+[v825 EGC rectangle-copy hybrid closure](reconstruction/op-maine/TH04_OP_EGC_COPY_HYBRID_V825.md),
 [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md),
 and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
 Do not substitute target-derived inline ASM, explicit register forcing, or
@@ -152,7 +152,7 @@ The canonical cold aggregate receipts in
 
 | Artifact | Receipt | SHA-256 |
 | --- | --- | --- |
-| OP | `v824-op-egc-start-canonical-receipt.json` | `e2655248ab4426fabce88c5f1ed1c0c3d663de3d551e60fe9f2707773fdd5da5` |
+| OP | `v825-op-egc-copy-canonical-receipt.json` | `5df5f441a94e5ce3aadfdd102b84abdba1ffcb4730e92bcdd329b91429b65eca` |
 | MAINE | `v727-maine-staff-dissolves-canonical-receipt.json` | `d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287` |
 | ZUN | v819-zun-resident-canonical-receipt.json | fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508 |
 
