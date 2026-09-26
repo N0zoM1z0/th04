@@ -33,7 +33,7 @@ int main(int argc, const unsigned char **argv)
         if(arg_is(argv[1], 'R', 'r')) {
             if(!seg) {
                 dos_puts2(ERROR_NOT_RESIDENT "\n\n");
-                return 1;
+                goto failure;
             }
             dos_free(seg);
             dos_puts2(REMOVED "\n\n");
@@ -54,6 +54,7 @@ int main(int argc, const unsigned char **argv)
     seg = ResData<resident_t>::create_with_id_from_pointer(res_id);
     if(!seg) {
         dos_puts2("作れません、わたしの居場所がないの！\n\n");
+failure:
         return 1;
     }
 
