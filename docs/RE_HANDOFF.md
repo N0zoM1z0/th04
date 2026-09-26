@@ -89,8 +89,11 @@ from actual component sizes. A/B mixed-input integration builds reproduce the
 directory and all 13,422 decoded payload bytes; a one-byte component-length
 mutation fails both raw comparators. The 926-byte embedded ONGCHK third-party
 library component now cold-links raw-identically from maintained symbolic ASM
-in two isolated rounds, and new A/B mixed flats use those outputs. Usage text
-remains an external asset, while RES_HUMA comes from a ReC98 candidate with
+in two isolated rounds. The v793 serial replay now cold-builds selector,
+launcher tails, ONGCHK, ZUNINIT, and MEMCHK from current maintained source
+before composing A/B raw-identical flat payloads; it no longer needs cached
+component outputs. Usage text remains an external asset, while RES_HUMA comes
+from a ReC98 candidate with
 inert barriers. The maintained natural resident `_main` remains six bytes
 short. The new flats have the same full digest as the earlier inputs that
 pinned DIET 1.45f repacked to the exact 7,754-byte MZ target; no repeat pack is
@@ -113,7 +116,8 @@ the independent helper provenance and assembler probe.
 Resident `cfg_init` at payload `0xDCF` and resident `_main` at `0xE67` remain
 blocked: natural `_main` is six bytes short; `cfg_init` retains linked fixup
 differences downstream of that layout shift. Prior compiler and barrier
-negatives are in the ZUN focused notes and `config/knowledge.csv`. Continue
+negatives, including the v792 local `-G` pragma scope, are in the ZUN focused
+notes and `config/knowledge.csv`. Continue
 source/component ownership review before exact promotion.
 
 ## OP and MAINE strict frontiers

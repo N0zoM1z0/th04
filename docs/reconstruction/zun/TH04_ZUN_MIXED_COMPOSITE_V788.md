@@ -128,3 +128,35 @@ Receipt:
 `.analysis/reconstruction/probes/v791-zun-ongchk-boundaries-001/receipt.json`,
 SHA-256 `9ca58c207f49296f07edcb0ad36775b64475b26e65d1d6a0aecdb55b5c5805f8`.
 The two exclusions change no authored ZUN function count or exactness state.
+
+## v793 fresh maintained-component source replay
+
+`scripts/probes/replay_th04_zun_source_composite.py` now rebuilds the five
+maintained component groups from checked-in source in serial isolated A/B
+rounds: selector, launcher tails, ONGCHK, ZUNINIT, and MEMCHK. It checks each
+child probe receipt and complete component digest before composing the flat
+payload. Usage text and resident RES_HUMA remain explicit hash-checked external
+inputs; the command accepts alternate paths with the same pinned identities.
+No historical component build output is required.
+
+```sh
+taskset -c 0,1 nice -n 10 python3 scripts/probes/replay_th04_zun_source_composite.py \
+  --output-dir .analysis/reconstruction/probes/NEW-UNIQUE-NAME
+```
+
+The first serial source replay produces two independently rebuilt 13,422-byte
+flat payloads identical to the decoded ZUN target, SHA-256
+`baf5a58b333af1135d67c7dd7a4f86e2c828ae149c8219d5d1f589073b0bde9e`.
+The derived 327-byte directory is identical in both rounds, SHA-256
+`34f8cc401b162e16c8fbc45a2227fa877157b25e71c0edb45eacb9b232e9cb33`.
+A one-byte ZUNINIT length mutation invalidates both comparisons. The full flat
+digest is the same as the earlier pinned DIET input, so the v789 packaging
+result remains applicable to that byte stream without another pack run.
+
+Receipt:
+`.analysis/reconstruction/probes/v793-zun-source-composite-001/receipt.json`,
+SHA-256 `78540261673cadd11b087d38af97034f4a81534a7db64bb726f89f7ebf0ed208`.
+Its child receipts record each current source build and toolchain replay.
+This closes the cached-output dependency for the maintained portion of the
+mixed build. The external usage asset and nonadmissible resident candidate
+still prevent whole-product source or packed-file exact acceptance.

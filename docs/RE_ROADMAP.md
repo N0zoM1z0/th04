@@ -40,8 +40,10 @@ ASM. The embedded 926-byte ONGCHK third-party library component now cold-links
 raw-identically from maintained symbolic ASM. The generated selector directory,
 external usage asset, resident source gap, and DIET product build remain on the
 artifact-closure path. The checked-in composite builder reproduces the
-directory and complete decoded flat payload with maintained ONGCHK, but the
-usage asset and resident candidate keep that integration diagnostic. Pinned
+directory and complete decoded flat payload with maintained ONGCHK. A serial
+source-driven replay now rebuilds all five maintained component groups before
+the same raw-identical flat comparison; the usage asset and resident candidate
+keep that integration diagnostic. Pinned
 DIET 1.45f repacked the earlier mixed flats to byte-identical MZ targets; its
 source-acceptance verdict remains none. Treat historical
 disassembler-generated assembly as a candidate, not original-source evidence.
