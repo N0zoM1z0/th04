@@ -67,6 +67,9 @@ The 18-byte helper at payload `0x7B0` is now runtime-observed to convert all
 6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs
 show the scope limit. This resolves semantics, not source or exactness; see
 `docs/reconstruction/zun/TH04_ZUNINIT_SJIS_V777.md`.
+The adjacent 59-byte helper at `0x7C2` also matches the expected character and
+attribute VRAM writes for all seven embedded messages at all three UI row
+offsets (21 scenarios); see `docs/reconstruction/zun/TH04_ZUNINIT_TEXT_VRAM_V778.md`.
 Resident `cfg_init` at payload `0xDCF` and resident `_main` at `0xE67` remain
 blocked: natural `_main` is six bytes short; `cfg_init` retains linked fixup
 differences downstream of that layout shift. Prior compiler and barrier
