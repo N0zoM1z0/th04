@@ -14,7 +14,7 @@ source evidence.
 
 ## Current open questions
 
-Reconstruction is paused for cleanup. Use the live ledgers and
+Reconstruction is paused for repository maintenance. Use the live ledgers and
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) for current counts and acceptance. These
 notes explain the remaining source and container gaps:
 

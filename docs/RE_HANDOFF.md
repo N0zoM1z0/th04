@@ -20,8 +20,8 @@ python3 scripts/boundary_review/validate_function_boundary_ledger.py
 The four local targets pass size, SHA-256, format, and MZ-structure checks.
 Their provenance is still `candidate-local-attested`, not proof of pristine
 release media. Re-attest the active Ghidra database before new target
-observations. Run only one writable Borland/Wine replay at a time, with builds
-constrained to CPUs 0-1.
+observations. Run only one writable Borland/Wine replay at a time and limit CPU
+use; this host's focused replays use `taskset -c 0,1 nice -n 10`.
 
 ## Accepted state and remaining blockers
 
@@ -105,11 +105,15 @@ The canonical cold aggregate receipts in
 Preserve `.analysis/targets/`, `.analysis/toolchain/`, `.analysis/ghidra/`,
 `.analysis/runtime/images/zun.hdi`, the v401/v402/v489 source snapshots,
 DIET replay inputs, and the configured v546 ZUN runtime inventory. Expanded
-focused probes and exact-unit build worktrees were archived as top-level
-results/receipts in `focused-probe-heads-v817-20260926.tar.zst`, with an
-adjacent per-file SHA-256 manifest, then pruned. Historical paths into those
+focused probes and exact-unit build worktrees had 1,947 available top-level
+results/receipts archived in `focused-probe-heads-v817-20260926.tar.zst`, with
+an adjacent per-file SHA-256 manifest, then were pruned. Eight directories
+had no top-level file; their nested scratch contents were not archived. This
+private archive is ignored and exists only on this workspace; a fresh clone
+must regenerate receipts from checked-in commands. Historical paths into those
 worktrees are provenance, not live input promises. Use
-`scripts/prune_analysis.py` in dry-run mode before future cleanup.
+`scripts/prune_analysis.py` in dry-run mode before future cleanup; its
+probe/exact-replay apply paths check archive coverage.
 
 Finish future changes with the focused comparison, `python3 scripts/ci.py`,
 `git diff --check`, and an updated handoff when phase or blockers change.

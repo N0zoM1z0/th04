@@ -186,7 +186,12 @@ exact-unit replay receipts are periodically moved into verified `tar.zst`
 archives under `.analysis/reconstruction/receipt-archive/`. Adjacent
 SHA-256 manifests list every retained file. Restore archived material only for
 real archaeology; the live handoff names the small set of replay trees that
-should remain expanded.
+should remain expanded. Before applying `scripts/prune_analysis.py` to focused
+probes or exact-unit replay trees, archive their top-level results and receipts
+and update `prune_archive` and `prune_archive_manifest` in
+`config/analysis_retention.toml`. Apply mode verifies the archive bytes and
+each result it would delete. These private archives are ignored local state;
+a fresh clone must rerun checked-in commands to recreate them.
 
 Finish with:
 

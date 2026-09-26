@@ -1,6 +1,6 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26. Reconstruction is paused for repository cleanup. This is
+Updated 2026-09-26. Reconstruction is paused for repository maintenance. This is
 the next-work map when reconstruction resumes. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and

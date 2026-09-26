@@ -37,6 +37,12 @@ probe_keep_dirs = [
 exact_replay_root = ".analysis/reconstruction/exact-unit-replay"
 exact_replay_keep_dirs = []
 
+# Pruning expanded replay trees requires a verified local archive of their
+# top-level results and any receipt.json files. Update both paths after making
+# the next private archive; unarchived new results make --apply refuse deletion.
+prune_archive = ".analysis/reconstruction/receipt-archive/focused-probe-heads-v817-20260926.tar.zst"
+prune_archive_manifest = ".analysis/reconstruction/receipt-archive/focused-probe-heads-v817-20260926.files.sha256"
+
 # Explicit repository-local interpreter/build caches safe to remove. Keep this
 # list narrow; never replace it with a generic recursive ignored-file delete.
 cache_dirs = [
