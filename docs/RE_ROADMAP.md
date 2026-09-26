@@ -1,6 +1,6 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26 after the v819 ZUN resident exact closure. This is the
+Updated 2026-09-26 after the v821 OP SCORE codec closure. This is the
 current next-work map. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and
@@ -10,25 +10,28 @@ experiments and rejected approaches remain in `docs/reconstruction/` and
 
 | Artifact | Exact authored functions | Remaining | Reviewed boundaries |
 | --- | ---: | ---: | ---: |
-| OP.EXE | 85 / 93 | 8 | 93 / 93 |
+| OP.EXE | 87 / 93 | 6 | 93 / 93 |
 | MAIN.EXE | 492 / 495 | 3 blocked | 495 / 495 |
 | MAINE.EXE | 63 / 72 | 9 | 72 / 72 |
 | ZUN.COM | 3 / 3 | 0 | 3 / 3 |
 
-OP has 13,847 accepted decoded source-owner bytes out of 14,284 tracked;
+OP has 14,121 accepted decoded source-owner bytes out of 14,284 tracked;
 MAINE has 11,187 out of 12,553; ZUN has 442 out of 442. These are not
 packed-file coverage denominators. MAIN's 83,442 / 83,469 exact authored C/C++
 bytes cover only its reviewed file-backed owner extents.
 
 ZUN now has all three reviewed authored functions decoded-exact. OP and MAINE
-have completed their current original-ASM boundary reviews; their remaining
-authored functions are explicitly blocked by recorded source or code-generation
-gaps. v820 exhausts one materially new OP compiler hypothesis introduced by the ZUN
-closure: TC4J -B plus pinned TASM32 leaves five maintained natural OP blocker
-bodies byte-identical to their nonexact direct-TC4J output. OP therefore remains
-85/93 pending genuinely new source/provenance or compiler evidence. The next
-bounded reconstruction focus is **MAINE.EXE**, one artifact at a time. MAIN
-remains a side lane unless shared source changes require replay.
+have completed their current original-ASM boundary reviews. v820 remains a valid
+negative for the ordinary TC4J / `-B` compiler paths, but v821 adds independent
+TH03 OP/MAINL machine-code provenance for the SCORE byte-rotate primitive.
+Keeping only that irreducible 8-bit ROR symbolic closes OP `scoredat_decode`
+and `scoredat_encode`; focused replay and the canonical current-ledger replay
+are raw-zero. OP is therefore 87/93 with six blockers. Do not reopen the SCORE
+codecs without evidence that changes this accepted boundary. The next bounded
+work should stay on one artifact at a time: pursue a materially new OP source or
+compiler hypothesis for the six remaining blockers, or move to MAINE if no such
+OP hypothesis exists. MAIN remains a side lane unless shared source changes
+require replay.
 
 ## ZUN.COM: authored-function source authority closed
 
@@ -95,23 +98,24 @@ Its ReC98 source origin remains candidate provenance; the local v805 replay
 establishes artifact-specific bytes and layout. It does not change the C++
 BGIMAGE producer or its accepted function count.
 
-All authored candidate boundaries in both artifacts are reviewed. OP has eight
-nonexact functions: `nopoly_b_put`, both SCORE codecs, `SND_LOAD`,
-`SND_SE_PLAY`, `_snd_se_update`, `egc_copy_rect_1_to_0_16`, and the internal
+All authored candidate boundaries in both artifacts are reviewed. OP has six
+nonexact functions: `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
+`_snd_se_update`, `egc_copy_rect_1_to_0_16`, and the internal
 `egc_start_copy` candidate at payload `0xE3E8`. MAINE has nine: `regist_menu`,
 `SND_LOAD`, `box_1_to_0_masked`, both SCORE codecs, `_snd_se_update`, the SCORE
 EGC-start helper, `SND_SE_PLAY`, and `egc_start_copy`.
 
-Current natural-source and compiler-profile probes do not close their recorded
-register, segment-order, rotate, port-write, or optimizer shapes. OP v820 also
-shows that the ZUN-successful TC4J -B/TASM32 producer path leaves nopoly_b_put,
-both SCORE codecs, SND_SE_PLAY, and _snd_se_update unchanged from their
-nonexact direct-TC4J forms. Do not
-promote byte-forcing inline assembly, pseudo-registers, copied instructions,
-or inert optimizer barriers as authored C/C++ without independent source
-provenance. Resume a blocker only with a materially new compiler mechanism or
-source-origin observation. See
-`docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md` and
+For OP, v820 still proves that the ZUN-successful TC4J `-B`/TASM32 path by
+itself does not alter `nopoly_b_put`, the SCORE natural bodies, `SND_SE_PLAY`,
+or `_snd_se_update`. v821 supersedes only the OP SCORE acceptance decision by
+adding independent TH03 codec-machine-code corroboration and restricting
+symbolic low-level source to the irreducible byte ROR. The remaining six OP
+blockers still lack comparable source/compiler evidence. Do not promote
+byte-forcing inline assembly, pseudo-registers, copied instructions, or inert
+optimizer barriers without independent provenance. Resume a blocker only with
+a materially new compiler mechanism or source-origin observation. See
+`docs/reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md`,
+`docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md`, and
 `docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`.
 
 For a new exact function, review the complete physical owner, build its

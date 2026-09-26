@@ -1252,6 +1252,31 @@ class DecodedAcceptanceTests(unittest.TestCase):
             "scripts/probes/replay_th04_op_scoredat_recreate.py",
         )
 
+    def test_op_score_codecs_hybrid_backend_is_artifact_source_and_producer_bound(self) -> None:
+        entries = deepcopy(self.entries)
+        decode = next(row for row in entries
+                      if row["replay_backend"] == "op-score-codecs-hybrid-v821"
+                      and row["source"] == "src/op/score/scoredec.cpp")
+        decode["source"] = "src/op/score/stage.cpp"
+        with self.assertRaisesRegex(ValueError, "missing or mismatched maintained source"):
+            self.check(entries)
+
+        entries = deepcopy(self.entries)
+        encode = next(row for row in entries
+                      if row["replay_backend"] == "op-score-codecs-hybrid-v821"
+                      and row["source"] == "src/op/score/scoreenc.cpp")
+        encode["producer_size"] = "0x71C"
+        with self.assertRaisesRegex(ValueError, "score-codecs hybrid backend does not compile"):
+            self.check(entries)
+
+        self.assertEqual(
+            acceptance.backend_command(
+                "op-score-codecs-hybrid-v821",
+                ROOT / ".analysis/reconstruction/probes/test",
+            )[1],
+            "scripts/probes/replay_th04_op_score_codecs_hybrid.py",
+        )
+
     def test_op_place_backend_is_artifact_and_source_bound(self) -> None:
         entries = deepcopy(self.entries)
         place = next(row for row in entries if row["replay_backend"] == "op-place-put-v552")

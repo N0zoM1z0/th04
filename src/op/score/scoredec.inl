@@ -3,8 +3,10 @@
             (i) < (sizeof(op_scoredat_section_t) - 1); (i)++) { \
         unsigned char tmp; \
         tmp = ((unsigned char *)&(section))[(i) + 1]; \
-        tmp = (tmp >> 3) | (tmp << 5); \
-        tmp ^= (section).key2; \
+        _AL = (section).key2; \
+        /* TC4J has no 8-bit rotate intrinsic; TH03 OP/MAINL independently corroborate this primitive. */ \
+        asm { ror tmp, 3; } \
+        tmp ^= _AL; \
         ((unsigned char *)&(section))[(i)] = \
                 (section).key1 + tmp + ((unsigned char *)&(section))[(i)]; \
     } \

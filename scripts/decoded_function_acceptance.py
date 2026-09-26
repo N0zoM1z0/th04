@@ -110,6 +110,8 @@ OP_CLEAR_SPRITES_PRODUCER = 0xCBE3
 OP_HISCORE_LOAD_BOTH_PRODUCER = 0xC733
 OP_SCORES_PUT_PRODUCER = 0xC79E
 OP_SCOREDAT_RECREATE_PRODUCER = 0xC68C
+OP_SCORE_CODECS_PRODUCER = 0xC57A
+OP_SCORE_CODECS_SIZE = 0x71D
 OP_MAIN_CDG_FREE_PRODUCER = 0xCC97
 OP_MAIN_CDG_LOAD_PRODUCER = 0xCC97
 OP_NOPOLY_FREE_PRODUCER = 0xBED5
@@ -261,6 +263,7 @@ def validate(
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
                                  "op-maine-input-wait-v565", "op-maine-se-reset-v581", "op-maine-vector-math-v570",
                                  "op-score-load-both-v558", "op-scores-put-v559", "op-scoredat-recreate-v561",
+                                 "op-score-codecs-hybrid-v821",
                                  "op-main-cdg-free-v583", "op-main-cdg-load-v602", "op-nopoly-free-v584",
                                  "op-nopoly-snap-v606",
                                  "op-frame-delay-2-v587", "op-raise-bg-free-v588", "op-big-menu-title-v735", "op-mchar-remaining-v738", "op-main-remaining-v742", "op-music-remaining-v748", "op-zunsoft-natural-v753", "op-playchar-title-box-v638", "op-playchar-titles-v684", "op-pic-darken-v640", "op-shottype-menu-initial-v660", "op-playchar-menu-initial-v658",
@@ -936,6 +939,12 @@ def validate(
                     or producer_start != OP_CLEAR_SPRITES_PRODUCER
                     or producer_size != 0xB4):
                 raise ValueError(f"{ident}: OP clear-sprites backend does not compile this producer")
+        elif backend == "op-score-codecs-hybrid-v821":
+            if (artifact != "th04-op"
+                    or source_name not in {"src/op/score/scoredec.cpp", "src/op/score/scoreenc.cpp"}
+                    or producer_start != OP_SCORE_CODECS_PRODUCER
+                    or producer_size != OP_SCORE_CODECS_SIZE):
+                raise ValueError(f"{ident}: OP score-codecs hybrid backend does not compile this producer")
         elif backend == "op-maine-input-wait-v565":
             if (source_name != "src/shared/hardware/input_wait.cpp"
                     or producer_start != INPUT_WAIT_PRODUCERS[artifact]
@@ -1129,6 +1138,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
                 "--output-dir", str(saved)]
     if backend_id == "op-scoredat-recreate-v561":
         return [sys.executable, "scripts/probes/replay_th04_op_scoredat_recreate.py",
+                "--output-dir", str(saved)]
+    if backend_id == "op-score-codecs-hybrid-v821":
+        return [sys.executable, "scripts/probes/replay_th04_op_score_codecs_hybrid.py",
                 "--output-dir", str(saved)]
     if backend_id == "op-main-cdg-free-v583":
         return [sys.executable, "scripts/probes/replay_th04_op_main_cdg_free.py",

@@ -310,11 +310,14 @@ attestation, ReC98 cold-build calibration, and optional PC-98 startup smoke
 are operational. The current MAIN reviewed authored C/C++ extent is
 83,442 / 83,469 bytes exact; 492 / 495 authored candidate functions are exact
 (492 / 494 in the separate MAIN file-backed function ledger). Its remaining
-27 bytes are a side lane. OP has 85 / 93 and MAINE 63 / 72 authored decoded
+27 bytes are a side lane. OP has 87 / 93 and MAINE 63 / 72 authored decoded
 functions exact, plus reviewed original-ASM boundaries and source-backed
 raw-identical modules; neither has an honest packed-file authored-byte
-denominator. ZUN has 1 / 3 authored decoded functions exact and a reproducible
-source-driven decoded composite diagnostic, not an accepted whole-product link.
+denominator. OP v821 closes both SCORE codecs through a narrowly scoped,
+cross-game-corroborated 8-bit rotate primitive; the canonical OP replay checks
+87 / 87 accepted decoded slices raw-zero. ZUN has 3 / 3 authored decoded
+functions exact and a reproducible source-driven decoded composite diagnostic,
+not an accepted whole-product link.
 The OP/MAINE/ZUN decoded-function ledger and cold comparison are now checked
 by preflight and CI; they do not confer packed-file exactness. None is a
 standalone TH04 game build yet, and no calibrated deterministic TH04 runtime

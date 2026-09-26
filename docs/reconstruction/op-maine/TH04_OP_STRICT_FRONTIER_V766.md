@@ -1,20 +1,21 @@
-# OP strict natural-source frontier (v766)
+# OP strict natural-source frontier (v766, current-state addendum v821)
 
-All 93 authored OP function candidates now have reviewed physical boundaries.
-85/93 have accepted natural-source decoded exactness. The remaining eight are
-not unresolved boundary problems.
+All 93 authored OP function candidates have reviewed physical boundaries. At
+v766, 85/93 had accepted decoded exactness and eight entries were blocked.
 
-After the OP original-ASM source and boundary campaign, all 16 separate
-original-ASM observations have reviewed target bounds and raw-matching
-decoded source modules. The eight authored entries below are now marked
-`blocked` in the boundary ledger pending new source-provenance or compiler
-evidence. This state records a concrete missing prerequisite; it does not
-assert that exact reconstruction is impossible.
+**Current-state addendum (v821):** `scoredat_decode` and `scoredat_encode` are
+now decoded-exact through the narrowly scoped cross-game-corroborated hybrid
+producer documented in `TH04_OP_SCORE_CODECS_HYBRID_V821.md`. Current OP state
+is **87/93 exact with six blockers**. The SCORE entries and v820 compiler
+negatives below remain historical evidence about failed natural compiler paths;
+they are no longer current blockers.
 
-This checkpoint consolidates the current compiler/provenance frontier rather
-than lowering the acceptance bar.
+The 16 original-ASM observations still have reviewed target bounds and
+raw-matching decoded source modules. The current six authored blockers remain
+`blocked` in the ledger pending materially new source-provenance or compiler
+evidence.
 
-## Remaining eight
+## Historical v766 blocker list
 
 - nopoly_b_put, payload 0xBFA7, 30 bytes. The ordinary intrinsic memcpy path is
   already the correct size and uses REP MOVSW, but TC86 evaluates/loads the
@@ -103,6 +104,22 @@ existing compiler/TASM controls. The EGC pair remains a source-provenance
 problem: its exact-looking ReC98 low-level form originates in a decompilation
 commit, so v820 does not use it as authored source.
 
+### v821 SCORE codec hybrid closure
+
+v820 remains correct that direct TC4J and TC4J `-B`/TASM32 do not naturally
+produce the target SCORE byte-memory rotations. v821 adds independent TH03
+OP/MAINL machine-code corroboration for the same byte-local ROR primitive.
+Only that irreducible ROR remains symbolic; the rest of the codec logic stays
+in maintained C++. Focused replay reproduces the complete `0x71D` SCORE_TEXT
+producer and all 804 ordered relocations, and the archived canonical replay
+checks all 87 accepted OP decoded slices raw-zero.
+
+Focused receipt SHA-256: `d2d1c802a0d5393c04266714049532182251d3dd88044561d4a549ab83a25fba`.
+Canonical receipt SHA-256: `99e8403129f6ba3b13c6801523bd344bcb745d84b55daeea679b024e64096dfd`.
+
+This closes only the two OP SCORE blockers. It does not prove original-source
+spelling, packed OP.EXE exactness, or justify broader low-level forcing.
+
 The result is a strict frontier, not a claim that the historical spellings are
 impossible in principle. Further OP progress should require materially new
 compiler behavior, independently sourced historical code, or stronger
@@ -110,4 +127,4 @@ provenance for a low-level source mechanism. Repeating equivalent C++ spellings
 is not useful.
 
 The current artifact order can advance once this OP frontier is recorded;
-these eight blockers remain the OP exactness queue when new evidence arrives.
+the six current blockers remain the OP exactness queue when new evidence arrives.

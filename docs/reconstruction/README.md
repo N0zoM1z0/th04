@@ -80,6 +80,7 @@ counts, file paths, and proposals do not supersede the current ledgers.
 - [OP setup submenu exact replay](op-maine/TH04_OP_SETUP_SUBMENUS_EXACT_V745.md)
 - [OP Music Room remaining exact replay](op-maine/TH04_OP_MUSIC_REMAINING_EXACT_V748.md)
 - [OP ZUNSOFT current natural-C++ owner exact replay](op-maine/TH04_OP_ZUNSOFT_NATURAL_EXACT_V753.md)
+- [OP SCORE codec cross-game hybrid closure](op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md)
 - [OP strict natural-source frontier](op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
 - [OP egcrect physical-boundary closure](op-maine/TH04_OP_EGCRECT_BOUNDARIES_V757.md)
 - [OP op_main.cpp remaining functions exact replay](op-maine/TH04_OP_MAIN_REMAINING_EXACT_V742.md)

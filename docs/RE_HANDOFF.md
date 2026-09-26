@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after the v819 ZUN resident exact closure. This is the
+Updated 2026-09-26 after the v821 OP SCORE codec closure and repository cleanup. This is the
 current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
@@ -27,24 +27,32 @@ use; this host's focused replays use `taskset -c 0,1 nice -n 10`.
 
 | Artifact | Reviewed authored boundaries | Exact authored functions | Blocked | Original-ASM observations |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 93 / 93 | 85 | 8 | 16 reviewed |
+| OP.EXE | 93 / 93 | 87 | 6 | 16 reviewed |
 | MAIN.EXE | 495 / 495 | 492 | 3 | 73 attestation entries; 6 provisional |
 | MAINE.EXE | 72 / 72 | 63 | 9 | 15 reviewed |
 | ZUN.COM | 3 / 3 | 3 | 0 | 12 reviewed |
 
 MAIN's reviewed file-backed authored extent has 83,442 / 83,469 exact bytes.
 Its 27-byte remainder belongs to `carpet_lighting_put_new` (23), checkerboard
-(2), and `snd_load` (2). OP has 13,847 accepted decoded source-owner bytes of
+(2), and `snd_load` (2). OP has 14,121 accepted decoded source-owner bytes of
 14,284 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
 counts do not give a packed-file byte denominator or whole-artifact exactness.
 Original-ASM observations are outside the authored C/C++ counts.
 
-OP's eight blocked functions and MAINE's nine blocked functions have reviewed
-physical boundaries. Current natural-source/compiler probes do not close their
-byte or admissibility gaps. v820 specifically retests the ZUN-discovered TC4J
--B/TASM32 producer path on five maintained OP blockers; all five remain
-byte-identical to their nonexact direct-TC4J candidates. The exact names,
-decoded payload offsets, and negative probes are in the [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
+OP's six blocked functions and MAINE's nine blocked functions have reviewed
+physical boundaries. v821 closes OP `scoredat_decode` and `scoredat_encode`
+with maintained hybrid source: all control/data flow stays C++, while the
+single 8-bit ROR primitive is independently corroborated by pre-decompilation
+TH03 OP/MAINL codec bodies. Focused v821 replay and the archived canonical
+current-ledger replay are raw-zero; the latter checks all 87 accepted OP slices.
+This does not establish original-source spelling or packed-file exactness.
+
+The remaining OP blockers are `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
+`_snd_se_update`, `egc_copy_rect_1_to_0_16`, and internal `egc_start_copy`.
+v820's compiler-path negative remains valid for ordinary TC4J / `-B` lowering;
+only the SCORE acceptance decision is superseded by v821's new provenance.
+See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md),
+[OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md),
 and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
 Do not substitute target-derived inline ASM, explicit register forcing, or
 inert optimizer barriers without independent provenance. All 16 OP and 15
@@ -104,22 +112,23 @@ The canonical cold aggregate receipts in
 
 | Artifact | Receipt | SHA-256 |
 | --- | --- | --- |
-| OP | `v755-op-zunsoft-natural-canonical-receipt.json` | `14a85e9330db6b1728bf7264ab5e8eebf608deb54a5d9dc427d6c17fd2a146f2` |
+| OP | `v821-op-score-codecs-canonical-receipt.json` | `99e8403129f6ba3b13c6801523bd344bcb745d84b55daeea679b024e64096dfd` |
 | MAINE | `v727-maine-staff-dissolves-canonical-receipt.json` | `d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287` |
 | ZUN | v819-zun-resident-canonical-receipt.json | fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508 |
 
 Preserve `.analysis/targets/`, `.analysis/toolchain/`, `.analysis/ghidra/`,
 `.analysis/runtime/images/zun.hdi`, the v401/v402/v489 source snapshots,
-DIET replay inputs, and the configured v546 ZUN runtime inventory. Expanded
-focused probes and exact-unit build worktrees had 1,947 available top-level
-results/receipts archived in `focused-probe-heads-v817-20260926.tar.zst`, with
-an adjacent per-file SHA-256 manifest, then were pruned. Eight directories
-had no top-level file; their nested scratch contents were not archived. This
-private archive is ignored and exists only on this workspace; a fresh clone
-must regenerate receipts from checked-in commands. Historical paths into those
-worktrees are provenance, not live input promises. Use
+DIET replay inputs, and the configured v546 ZUN runtime inventory. Expanded focused probe worktrees have been pruned again after v821. Before
+deletion, 1,860 top-level result/receipt files were checksum-verified into
+`focused-probe-heads-v821-20260926.tar.zst` with an adjacent manifest and
+archive checksum. Probe scratch now retains only the configured
+`v546-zun-runtime-inventory-001` input. The stable v821 focused and canonical
+receipts live directly under `.analysis/reconstruction/receipt-archive/`.
+These private archives are ignored and exist only on this workspace; a fresh
+clone must regenerate evidence from checked-in commands. Historical paths into
+pruned worktrees are provenance, not live input promises. Use
 `scripts/prune_analysis.py` in dry-run mode before future cleanup; its
-probe/exact-replay apply paths check archive coverage.
+probe/exact-replay apply paths verify archive coverage before deletion.
 
 Finish future changes with the focused comparison, `python3 scripts/ci.py`,
 `git diff --check`, and an updated handoff when phase or blockers change.
