@@ -43,7 +43,7 @@ inputs are independently proven pristine release media.
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 93 / 0 / 0 | 85 | 8 / 0 | 14,284 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
-| ZUN.COM | 13 / 0 / 0 | 0 | 11 / 2 | 404 |
+| ZUN.COM | 12 / 0 / 0 | 0 | 10 / 2 | 404 |
 
 These are decoded-function/source-owner counts, not packed-file coverage.
 There is still no honest packed-file authored-source denominator for OP, MAINE,
@@ -292,6 +292,20 @@ docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md.
 Do not spend more cycles on equivalent C++ spellings for these eight without a
 materially new compiler/provenance mechanism. The roadmap can now proceed to
 ZUN.COM while the OP blockers remain tracked.
+
+## ZUN.COM campaign start
+
+ZUN work has begun after recording the strict MAINE and OP frontiers. v769 proves that MEMCHK payload 0x26CE..0x26F4 is shared DOS_PUTS2 library code, not an independent game-authored target-derived-ASM function. The 39-byte body and following 0x90 are identical to the resident DOS_PUTS2 instance and to two independent builds of src/shared/dos/dos_puts2.asm.
+
+The old sub_38E entry is therefore reclassified as library support. The historical th04_memchk.asm MAP/TASM symbol remains boundary corroboration only; no authored exactness is claimed.
+
+Current authored ZUN queue: 12 reviewed candidates, 0 exact, 2 blocked natural C++ functions (cfg_init and resident _main), and 10 unresolved target-derived-ASM source/origin candidates.
+
+Receipt: .analysis/reconstruction/receipt-archive/v769-zun-memchk-dos-puts2-receipt.json
+
+SHA-256: b2a26f0a595bfa5410c43809ea0971003cff163767bd8b65d318f39b65b7ab8f
+
+Next ZUN work should continue ownership review of MEMCHK _main/sub_3B6 and the eight ZUNINIT functions while keeping the resident _main six-byte natural-source blocker explicit.
 
 ## Analysis/worktree hygiene
 

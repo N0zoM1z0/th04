@@ -358,13 +358,13 @@ notes = "Target _main closes at RET; following payload 0x26CD byte 0x00 is exter
 [[function_overrides]]
 artifact = "th04-zun"
 payload_offset = 0x26CE
-origin = "authored"
-source_form = "target-derived-asm"
-source_ref = "candidate:th04_memchk.asm"
+origin = "library"
+source_form = "maintained-shared-asm"
+source_ref = "src/shared/dos/dos_puts2.asm"
 expected_tasm_proc = "sub_38E"
 reviewed_body_size = 0x27
-review_evidence_id = "ev-th04-zun-memchk-boundaries-v521"
-notes = "Target helper closes at RET 2; following payload 0x26F5 byte 0x90 is external padding."
+review_evidence_id = "ev-th04-zun-memchk-dos-puts2-owner-v769"
+notes = "v769 proves this 39-byte MEMCHK body plus its following 0x90 are byte-identical to the resident DOS_PUTS2 module and to two independent builds of maintained src/shared/dos/dos_puts2.asm. The historical candidate MAP/TASM label sub_38E remains boundary corroboration only; this is shared-library support, not game-authored source."
 
 [[function_overrides]]
 artifact = "th04-zun"
