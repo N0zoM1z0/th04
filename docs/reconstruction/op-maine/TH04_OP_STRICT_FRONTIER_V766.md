@@ -3,15 +3,19 @@
 All 93 authored OP function candidates have reviewed physical boundaries. At
 v766, 85/93 had accepted decoded exactness and eight entries were blocked.
 
-**Current-state addendum (v821):** `scoredat_decode` and `scoredat_encode` are
-now decoded-exact through the narrowly scoped cross-game-corroborated hybrid
-producer documented in `TH04_OP_SCORE_CODECS_HYBRID_V821.md`. Current OP state
-is **87/93 exact with six blockers**. The SCORE entries and v820 compiler
-negatives below remain historical evidence about failed natural compiler paths;
-they are no longer current blockers.
+**Current-state addendum (v824):** `scoredat_decode` and `scoredat_encode`
+remain decoded-exact through the narrowly scoped v821 cross-game-corroborated
+hybrid producer. v824 additionally promotes the internal 63-byte
+`egc_start_copy`: independently restored TH05 OP and MAINE release targets
+contain the complete helper verbatim, and maintained source restricts
+non-ordinary code to two corroborated hardware/compiler primitives totaling
+34 bytes. Canonical v824 passes 88/88 accepted OP slices raw-zero.
+
+Current OP state is **88/93 exact with five blockers**. The historical v766/v820
+negative compiler results remain valid for the source forms they tested.
 
 The 16 original-ASM observations still have reviewed target bounds and
-raw-matching decoded source modules. The current six authored blockers remain
+raw-matching decoded source modules. The current five authored blockers remain
 `blocked` in the ledger pending materially new source-provenance or compiler
 evidence.
 
@@ -154,3 +158,17 @@ witness or other provenance-bearing TH04 producer.
 
 Focused diagnostic receipt SHA-256:
 b958943a35c7916ab4a8bc80a9f2dd97bcc25a968ff4a315547f71d6dc37f161.
+
+
+### v824 EGC-start hybrid closure
+
+v824 supersedes only the internal `egc_start_copy` acceptance decision from the
+historical blocker list above. The complete 63-byte helper is present
+byte-for-byte in independently restored TH05 OP and MAINE targets. Maintained
+source avoids `__emit__`, opcode arrays, codestrings, and post-link patching;
+non-ordinary source is limited to a 28-byte PC-98 hardware block and a 6-byte
+TC4J pseudoregister primitive. The surrounding `0xB0` producer and all 804 OP
+relocations remain unchanged in two cold links.
+
+The 111-byte `egc_copy_rect_1_to_0_16` entry remains blocked. See
+`TH04_OP_EGC_START_HYBRID_V824.md`.

@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after the v823 OP SND_LOAD provenance bound. This is the
+Updated 2026-09-26 after the v824 OP EGC-start hybrid closure. This is the
 current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
@@ -27,15 +27,15 @@ use; this host's focused replays use `taskset -c 0,1 nice -n 10`.
 
 | Artifact | Reviewed authored boundaries | Exact authored functions | Blocked | Original-ASM observations |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 93 / 93 | 87 | 6 | 16 reviewed |
+| OP.EXE | 93 / 93 | 88 | 5 | 16 reviewed |
 | MAIN.EXE | 495 / 495 | 492 | 3 | 73 attestation entries; 6 provisional |
 | MAINE.EXE | 72 / 72 | 63 | 9 | 15 reviewed |
 | ZUN.COM | 3 / 3 | 3 | 0 | 12 reviewed |
 
 MAIN's reviewed file-backed authored extent has 83,442 / 83,469 exact bytes.
 Its 27-byte remainder belongs to `carpet_lighting_put_new` (23), checkerboard
-(2), and `snd_load` (2). OP has 14,121 accepted decoded source-owner bytes of
-14,284 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
+(2), and `snd_load` (2). OP has 14,184 accepted decoded source-owner bytes of
+14,347 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
 counts do not give a packed-file byte denominator or whole-artifact exactness.
 Original-ASM observations are outside the authored C/C++ counts.
 
@@ -58,6 +58,19 @@ provenance, so the two functions remain blocked. The v822 diagnostic receipt is
 `v822-op-snd-se-shared-diagnostic-receipt.json`, SHA-256
 `2509adb3b0153514025544f0b2b55aa399ddca52c0a4e5e884e28ca19f0696ef`.
 
+v824 closes the internal 63-byte OP `egc_start_copy` helper. Independently
+restored TH05 OP and MAINE release targets each contain the complete helper
+verbatim. Maintained hybrid source limits non-ordinary source to a 28-byte
+GRCG/EGC-enable hardware block and a 6-byte TC4J pseudoregister address-zero
+write; the other 29 bytes remain ordinary C++/compiler return code. Two cold
+links reproduce the complete `0xB0` `egcrect.cpp` producer, accepted OP EXE/MAP,
+and all 804 relocations. Canonical v824 checks all 88 accepted OP slices
+raw-zero. The adjacent 111-byte `egc_copy_rect_1_to_0_16` remains blocked.
+Focused receipt SHA-256
+`d1c675b3741b734e1e24780495b6cc8b99f929c80b2f3fed1bfce23a15d0680c`;
+canonical receipt SHA-256
+`e2655248ab4426fabce88c5f1ed1c0c3d663de3d551e60fe9f2707773fdd5da5`.
+
 v823 then closes the code-generation mechanism for 234-byte SND_LOAD without
 granting source credit. Two cold wrapper builds replacing only _BX=_AX with
 TC4J integrated inline asm reproduce the complete reviewed function raw-zero;
@@ -72,12 +85,13 @@ v823-op-snd-load-provenance-receipt.json, SHA-256
 b958943a35c7916ab4a8bc80a9f2dd97bcc25a968ff4a315547f71d6dc37f161.
 
 The remaining OP blockers are `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
-`_snd_se_update`, `egc_copy_rect_1_to_0_16`, and internal `egc_start_copy`.
+`_snd_se_update`, and `egc_copy_rect_1_to_0_16`.
 v820's compiler-path negative remains valid for ordinary TC4J / `-B` lowering;
 only the SCORE acceptance decision is superseded by v821's new provenance.
 See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md),
 [v822 shared-sound provenance bound](reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md),
 [v823 SND_LOAD provenance bound](reconstruction/op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md),
+[v824 EGC-start hybrid closure](reconstruction/op-maine/TH04_OP_EGC_START_HYBRID_V824.md),
 [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md),
 and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
 Do not substitute target-derived inline ASM, explicit register forcing, or
@@ -138,7 +152,7 @@ The canonical cold aggregate receipts in
 
 | Artifact | Receipt | SHA-256 |
 | --- | --- | --- |
-| OP | `v821-op-score-codecs-canonical-receipt.json` | `99e8403129f6ba3b13c6801523bd344bcb745d84b55daeea679b024e64096dfd` |
+| OP | `v824-op-egc-start-canonical-receipt.json` | `e2655248ab4426fabce88c5f1ed1c0c3d663de3d551e60fe9f2707773fdd5da5` |
 | MAINE | `v727-maine-staff-dissolves-canonical-receipt.json` | `d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287` |
 | ZUN | v819-zun-resident-canonical-receipt.json | fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508 |
 
@@ -148,7 +162,7 @@ DIET replay inputs, and the configured v546 ZUN runtime inventory. Expanded focu
 deletion, 1,860 top-level result/receipt files were checksum-verified into
 `focused-probe-heads-v821-20260926.tar.zst` with an adjacent manifest and
 archive checksum. Probe scratch now retains only the configured
-`v546-zun-runtime-inventory-001` input. The stable v821 focused and canonical
+`v546-zun-runtime-inventory-001` input. The stable v824 EGC-start focused/canonical receipts and earlier accepted
 receipts live directly under `.analysis/reconstruction/receipt-archive/`.
 These private archives are ignored and exist only on this workspace; a fresh
 clone must regenerate evidence from checked-in commands. Historical paths into
