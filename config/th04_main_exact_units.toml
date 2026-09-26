@@ -885,7 +885,7 @@ object_path = "obj/th04/vector.obj"
 
 [[units]]
 id = "th04-main-module-th04-cdg-put-asm-13580"
-repo_source = "src/main/formats/cdg_put.asm"
+repo_source = "src/shared/formats/cdg_put.asm"
 overlay_path = "th04/cdg_put.asm"
 map_module = "th04\\cdg_put.asm"
 object_path = "obj/th04/cdg_put.obj"

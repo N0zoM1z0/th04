@@ -123,7 +123,8 @@ source/component ownership review before exact promotion.
 ## OP and MAINE strict frontiers
 
 The shared CDG loader now has one maintained TH04-local TASM source at
-`src/shared/formats/cdg_load.asm`. MAIN `130E:0858` (`0x15138+0x164`) passes
+`src/shared/formats/cdg_load.asm`. MAIN `130E:0858` (load `0x13938+0x164`,
+file `0x15138+0x164`) passes
 two complete cold exact-unit builds after the source move. OP `0DA1:0B6A`
 (`0xE57A+0x164`) and MAINE `0CC7:0B08` (`0xD778+0x164`) each pass two
 isolated cold source builds with zero raw differences and 14/14 module
@@ -133,6 +134,15 @@ offsets are unknown. The internal ASM function cuts remain partly
 provisional; no authored C/C++ function count changes. See
 `docs/reconstruction/op-maine/TH04_SHARED_CDG_LOAD_V797.md` and the v797/v798
 evidence rows.
+
+The adjacent `CDG_PUT_8` renderer is also maintained under
+`src/shared/formats/cdg_put.asm`. MAIN `130E:04A0` (load `0x13580+0x9E`, file
+`0x14D80+0x9E`) passes the v800 complete cold replay. OP `0DA1:05FE`
+(`0xE00E+0x9E`) and MAINE `0CC7:06E6` (`0xD356+0x9E`) pass source A/B
+replays with zero differences and all artifact relocations equal. The module
+includes a final alignment byte after the 0x9D-byte function. Keep its
+self-modifying segment load and PC-98 GRCG/VRAM semantics in exact source;
+see `docs/reconstruction/op-maine/TH04_SHARED_CDG_PUT_V799.md`.
 
 All current authored OP and MAINE physical boundaries are reviewed. OP's eight
 nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,

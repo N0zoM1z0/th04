@@ -80,6 +80,30 @@ origin = "original-asm"
 source_form = "maintained-asm"
 source_ref = "src/shared/formats/cdg_load.asm"
 
+[[module_overrides]]
+artifact = "th04-main"
+module = "th04/cdg_put.asm"
+segment = "SHARED"
+origin = "original-asm"
+source_form = "maintained-asm"
+source_ref = "src/shared/formats/cdg_put.asm"
+
+[[module_overrides]]
+artifact = "th04-op"
+module = "th04/cdg_put.asm"
+segment = "SHARED"
+origin = "original-asm"
+source_form = "maintained-asm"
+source_ref = "src/shared/formats/cdg_put.asm"
+
+[[module_overrides]]
+artifact = "th04-maine"
+module = "th04/cdg_put.asm"
+segment = "SHARED"
+origin = "original-asm"
+source_form = "maintained-asm"
+source_ref = "src/shared/formats/cdg_put.asm"
+
 # th04_main.asm places this game-owned MPN renderer between MASTER.LIB
 # includes.  The expanded TASM listing closes the FAR PROC at 0x3680..0x36f4,
 # and the target Ghidra body independently agrees with that contiguous span.

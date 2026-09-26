@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cold-replay the maintained CDG loader ASM in OP and MAINE.
+"""Cold-replay a maintained shared CDG ASM module in OP and MAINE.
 
 The shared linker contribution is accepted only against each artifact's own
 attested decoded target. The retained ReC98 snapshot supplies link inputs,
@@ -26,14 +26,17 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from lib.omf import describe_omf, parse_omf  # noqa: E402
 from lib.pc98 import parse_mz  # noqa: E402
 
-SOURCE = ROOT / "src/shared/formats/cdg_load.asm"
 SNAPSHOT = ROOT / ".analysis/gpt-web/v489-bgimage-hybrid-replay-003/a"
 RESTORED = ROOT / ".analysis/reconstruction/diet-replay"
 RUNNER = ROOT / "_reference/ReC98/bin/msdos.exe"
 RUNNER_SHA256 = "f7f6cb0a3e816c5edb13112d327c1bddbf7463fe7bf9a005ca1eb5317751bd02"
 ARTIFACTS = {
-    "op": (0xE57A, 0x164, 804, "40a981a671657ea49c2f916058f27ab14ab53553f555f1be843b1c8e3e50695d", "c32633e0b679e8d8bd97f55b9280bb1a9beae82a4530fd33f4cbcc9d1f421274"),
-    "maine": (0xD778, 0x164, 559, "6b4547182b9d53d069c0e4efc33bdabb69065cb544bb187ced7b0f51918aa533", "d3bdc485782a9fb953823155426ca7f0e6e8212d6bc0cdffaaa32f91df2dc90c"),
+    "op": (804, "40a981a671657ea49c2f916058f27ab14ab53553f555f1be843b1c8e3e50695d", "c32633e0b679e8d8bd97f55b9280bb1a9beae82a4530fd33f4cbcc9d1f421274"),
+    "maine": (559, "6b4547182b9d53d069c0e4efc33bdabb69065cb544bb187ced7b0f51918aa533", "d3bdc485782a9fb953823155426ca7f0e6e8212d6bc0cdffaaa32f91df2dc90c"),
+}
+MODULES = {
+    "cdg_load": (0x164, {"op": 0xE57A, "maine": 0xD778}),
+    "cdg_put": (0x9E, {"op": 0xE00E, "maine": 0xD356}),
 }
 
 
@@ -60,10 +63,10 @@ def run(command: list[str], cwd: Path, log: Path, env: dict[str, str]) -> None:
         raise RuntimeError(f"command failed: {log}")
 
 
-def contribution(path: Path) -> tuple[int, int, str]:
+def contribution(path: Path, module: str) -> tuple[int, int, str]:
     pattern = re.compile(
         r"^\s*([0-9A-F]{4}):([0-9A-F]{4})\s+([0-9A-F]{4})\s+C=CODE.*"
-        r"\bS=SHARED\b.*\bM=th04\\cdg_load\.asm(?:\s|$)", re.I,
+        r"\bS=SHARED\b.*\bM=" + re.escape(fr"th04\{module}.asm") + r"(?:\s|$)", re.I,
     )
     matches = []
     for line in path.read_text(encoding="cp437").splitlines():
@@ -72,7 +75,7 @@ def contribution(path: Path) -> tuple[int, int, str]:
             matches.append((int(found[1], 16) * 16 + int(found[2], 16),
                             int(found[3], 16), line.strip()))
     if len(matches) != 1:
-        raise RuntimeError(f"expected one CDG loader contribution: {path}")
+        raise RuntimeError(f"expected one {module} contribution: {path}")
     return matches[0]
 
 
@@ -83,8 +86,12 @@ def overlapping(image, start: int, size: int) -> list[int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--module", choices=sorted(MODULES), default="cdg_load")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
+    module = args.module
+    size, starts = MODULES[module]
+    source = ROOT / "src/shared/formats" / f"{module}.asm"
     output = args.output_dir.resolve()
     private = (ROOT / ".analysis/reconstruction/probes").resolve()
     if output.exists() or output == private or not output.is_relative_to(private):
@@ -93,14 +100,15 @@ def main() -> int:
                    check=True, capture_output=True, text=True)
     if sha(RUNNER.read_bytes()) != RUNNER_SHA256:
         raise RuntimeError("pinned DOS runner changed")
-    source_sha = sha(SOURCE.read_bytes())
+    source_sha = sha(source.read_bytes())
     output.mkdir()
     env = os.environ.copy()
     env.update(WINEPREFIX=str(ROOT / ".analysis/toolchain/wineprefix"),
                WINEDEBUG="-all", MSDOS_PATH=r"C:\TC4\BIN;C:\TASM50\BIN")
 
     controls = {}
-    for name, (start, size, relocation_count, target_sha, baseline_sha) in ARTIFACTS.items():
+    for name, (relocation_count, target_sha, baseline_sha) in ARTIFACTS.items():
+        start = starts[name]
         target_bytes = (RESTORED / f"v228-{name}-target-roundtrip/a/restored.bin").read_bytes()
         baseline_bytes = (SNAPSHOT / name / "source/bin/th04" / f"{name}.exe").read_bytes()
         if sha(target_bytes) != target_sha or sha(baseline_bytes) != baseline_sha:
@@ -115,16 +123,17 @@ def main() -> int:
     builds = {}
     for label in ("a", "b"):
         builds[label] = {}
-        for name, (start, size, relocation_count, _, baseline_sha) in ARTIFACTS.items():
+        for name, (relocation_count, _, baseline_sha) in ARTIFACTS.items():
+            start = starts[name]
             work = output / label / name / "source"
             work.parent.mkdir(parents=True)
             copy_compact_snapshot(SNAPSHOT / name / "source", work, name)
-            dest = work / "th04/cdg_load.asm"
-            shutil.copy2(SOURCE, dest)
-            obj = work / "obj/th04/cdg_load.obj"
+            dest = work / "th04" / f"{module}.asm"
+            shutil.copy2(source, dest)
+            obj = work / "obj/th04" / f"{module}.obj"
             obj.unlink()
             run(["wine", r"C:\TASM50\bin\TASM32.EXE", "/m", "/mx", "/kh32768",
-                 "/dGAME=4", r"th04\cdg_load.asm,obj\th04\cdg_load.obj"],
+                 "/dGAME=4", fr"th04\{module}.asm,obj\th04\{module}.obj"],
                 work, output / f"assemble-{label}-{name}.log", env)
             if not obj.is_file():
                 raise RuntimeError(f"{label}/{name}: assembler omitted object")
@@ -143,9 +152,9 @@ def main() -> int:
             target, baseline = controls[name]
             if not image.valid or len(image.relocations) != relocation_count:
                 raise RuntimeError(f"{label}/{name}: linked MZ integrity drift")
-            map_start, map_size, map_line = contribution(map_path)
+            map_start, map_size, map_line = contribution(map_path, module)
             if (map_start, map_size) != (start, size):
-                raise RuntimeError(f"{label}/{name}: CDG loader moved or changed size")
+                raise RuntimeError(f"{label}/{name}: {module} moved or changed size")
             target_relocs = [r.linear for r in target.relocations]
             candidate_relocs = [r.linear for r in image.relocations]
             if candidate_relocs != target_relocs:
@@ -154,7 +163,7 @@ def main() -> int:
             actual = image.program_image[start:start + size]
             differences = [index for index, (a, b) in enumerate(zip(expected, actual)) if a != b]
             if differences or overlapping(image, start, size) != overlapping(target, start, size):
-                raise RuntimeError(f"{label}/{name}: CDG loader bytes or relocations differ")
+                raise RuntimeError(f"{label}/{name}: {module} bytes or relocations differ")
             if image.program_image != baseline.program_image or sha(exe.read_bytes()) != baseline_sha:
                 raise RuntimeError(f"{label}/{name}: relink differs from retained snapshot")
             builds[label][name] = {
@@ -167,13 +176,14 @@ def main() -> int:
                 "overlapping_relocations": overlapping(image, start, size),
                 "ordered_relocations": len(candidate_relocs),
             }
-    if builds["a"] != builds["b"] or sha(SOURCE.read_bytes()) != source_sha:
+    if builds["a"] != builds["b"] or sha(source.read_bytes()) != source_sha:
         raise RuntimeError("cold builds or source changed")
     receipt = {
         "schema_version": 1,
         "observed_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "claim_scope": "OP and MAINE complete CDG_LOAD ASM module cold replay",
-        "source": str(SOURCE.relative_to(ROOT)),
+        "claim_scope": f"OP and MAINE complete {module} ASM module cold replay",
+        "module": module,
+        "source": str(source.relative_to(ROOT)),
         "source_sha256": source_sha,
         "builds": builds,
         "limit": "Decoded module exactness only; no packed-file claim.",

@@ -57,14 +57,14 @@ equality separate.
 
 ## OP.EXE and MAINE.EXE: strict source frontiers
 
-The complete `CDG_LOAD` original-ASM contribution is now backed by one
-maintained source under `src/shared/formats/`. MAIN, OP, and MAINE cold-link
-the same 0x164-byte module raw-identically, with all ordered relocation
-positions preserved. OP/MAINE have decoded `source-present` units; this does
-not alter their authored-function counts or prove packed-file offsets. See
-`docs/reconstruction/op-maine/TH04_SHARED_CDG_LOAD_V797.md`. Continue the
-remaining original-ASM boundary/ownership queue separately from the C++
-blockers below.
+The complete `CDG_LOAD` and `CDG_PUT_8` original-ASM contributions are now
+backed by maintained sources under `src/shared/formats/`. MAIN, OP, and MAINE
+cold-link the respective 0x164-byte loader and 0x9E-byte renderer raw-identically,
+with all ordered relocation positions preserved. OP/MAINE have decoded
+`source-present` units; this does not alter authored-function counts or prove
+packed-file offsets. See the v797 and v799 focused CDG notes under
+`docs/reconstruction/op-maine/`. Continue the remaining original-ASM
+boundary/ownership queue separately from the C++ blockers below.
 
 All authored candidate boundaries in both artifacts are reviewed. OP has eight
 nonexact functions: `nopoly_b_put`, both SCORE codecs, `SND_LOAD`,

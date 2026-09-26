@@ -7,7 +7,7 @@ TH03 paths.
 
 | Artifact | Target load-module extent | TLINK contribution | Raw result | Module relocations |
 | --- | --- | --- | --- | ---: |
-| MAIN.EXE | `0x15138..0x1529B` | `130E:0858`, `0x164` | zero differences in focused MAIN cold replay | checked by MAIN replay |
+| MAIN.EXE | `0x13938..0x13A9B` (file `0x15138..0x1529B`) | `130E:0858`, `0x164` | zero differences in focused MAIN cold replay | checked by MAIN replay |
 | OP.EXE | `0xE57A..0xE6DD` | `0DA1:0B6A`, `0x164` | zero differences in two isolated source builds | 14/14 ordered overlap |
 | MAINE.EXE | `0xD778..0xD8DB` | `0CC7:0B08`, `0x164` | zero differences in two isolated source builds | 14/14 ordered overlap |
 
@@ -26,6 +26,9 @@ are replay inputs. The v798 accepted-unit replay passes A/B cold builds with
 receipt SHA-256 `ff7a7b0b5b49031c60f4ddf46e5e99abd3dc71572eac7fdd1d7f7f338fa33379`.
 The OP/MAINE receipt SHA-256 is
 `527cd555ff07457bbed2b16cfa5dad7bc41193b6e47720b26770ac425785d2c8`.
+The generalized probe's default `cdg_load` mode was rechecked after the
+`cdg_put` extension in v801 (receipt SHA-256
+`04bfa2bad5f5cde580651b9ac9e5dd0520b19401b94da1f3270958c89d9dd9df`).
 This proves the decoded module
 extent, while several internal Ghidra function cuts remain provisional and
 the packed-file offsets and complete product builds remain unresolved. The

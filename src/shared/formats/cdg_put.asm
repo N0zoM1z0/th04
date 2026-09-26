@@ -2,9 +2,43 @@
 	.model use16 large SHARED
 	locals
 
-include pc98.inc
-include libs/master.lib/macros.inc
-include th03/formats/cdg.inc
+; TH04 640-pixel PC-98 planar VRAM and CDG slot layout. The complete linked
+; module is checked independently against MAIN, OP, and MAINE targets.
+ROW_SIZE = 80
+SEG_PLANE_B = 0A800h
+SEG_PLANE_G = 0B800h
+SEG_PLANE_E = 0E000h
+SEG_PLANE_DIST_BRG = 800h
+SEG_PLANE_DIST_E = 2800h
+GC_RMW = 0C0h
+CDG_SLOT_COUNT = 64
+
+cdg_t struc
+	CDG_plane_size dw ?
+	pixel_w dw ?
+	pixel_h dw ?
+	offset_at_bottom_left dw ?
+	vram_dword_w dw ?
+	image_count db ?
+	plane_layout db ?
+	seg_alpha dw ?
+	seg_colors dw ?
+cdg_t ends
+
+cdg_slot_offset macro retval:req, slot:req
+	mov retval, slot
+	shl retval, 4
+	add retval, offset _cdg_slots
+endm
+
+cdg_dst_segment macro retval:req, top:req, tmp:req
+	mov ax, top
+	mov tmp, ax
+	shl ax, 2
+	add ax, tmp
+	add ax, SEG_PLANE_B
+	mov retval, ax
+endm
 
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
@@ -26,7 +60,8 @@ cdg_put_8 proc far
 	cli
 
 	; grcg_setcolor(GC_RMW, 0);
-	GRCG_SETMODE_VIA_MOV	al, GC_RMW
+	mov	al, GC_RMW
+	out	7Ch, al
 	mov	dx, 7Eh
 	xor	al, al
 	out	dx, al
@@ -91,7 +126,8 @@ endif
 if GAME eq 5
 	mov	ds, ax
 endif
-	GRCG_OFF_VIA_XOR	al
+	xor	al, al
+	out	7Ch, al
 
 	xor	si, si
 if GAME eq 5
