@@ -84,6 +84,14 @@ The adjacent selected-COM mover at `0x3422+0x8` and outer customization stub
 at `0x342A+0x44` also have maintained symbolic ASM and two-round raw-identical
 focused links; see `docs/reconstruction/zun/TH04_ZUN_LAUNCHER_TAILS_V787.md`.
 
+The checked-in flat composite builder derives the 327-byte selector directory
+from actual component sizes. A/B mixed-input integration builds reproduce the
+directory and all 13,422 decoded payload bytes; a one-byte component-length
+mutation fails both raw comparators. This is diagnostic because the usage text
+and ONGCHK remain external and RES_HUMA comes from a ReC98 candidate with
+inert barriers. The maintained natural resident `_main` remains six bytes
+short. See `docs/reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md`.
+
 The 18-byte helper at payload `0x7B0` is runtime-observed to convert all
 6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs
 show the scope limit. This establishes the target semantics; see
