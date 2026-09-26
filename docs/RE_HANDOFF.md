@@ -153,6 +153,15 @@ single relocation. The 8-byte reset entry, 0x101-byte sense entry, and one
 alignment byte remain distinct in the boundary ledger; see
 `docs/reconstruction/op-maine/TH04_SHARED_INPUT_V802.md`.
 
+The separate OP/MAINE `BGIMAGE_PUT_RECT_16` original-style ASM candidate is
+now maintained at `src/shared/hardware/bgimager.asm`. OP `0DA1:0AE8`
+(`0xE4F8+0x82`) and MAINE `0CC7:0A86` (`0xD6F6+0x82`) each pass v805 A/B
+cold source replay against their own decoded targets with zero byte
+differences, including final alignment. Its ReC98 starting source remains
+candidate provenance, and this rect renderer is separate from the accepted
+C++ BGIMAGE snap/put/free producer. See
+`docs/reconstruction/op-maine/TH04_SHARED_BGIMAGER_V805.md`.
+
 All current authored OP and MAINE physical boundaries are reviewed. OP's eight
 nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,
 `0xDDCA`, `0xE2F2`, `0xE32C`, `0xE378`, and `0xE3E8`. MAINE's nine are at

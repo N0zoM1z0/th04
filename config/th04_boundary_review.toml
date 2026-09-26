@@ -128,6 +128,22 @@ origin = "original-asm"
 source_form = "maintained-asm"
 source_ref = "src/shared/hardware/input_s.asm"
 
+[[module_overrides]]
+artifact = "th04-op"
+module = "th04/bgimager.asm"
+segment = "SHARED"
+origin = "original-asm"
+source_form = "maintained-asm"
+source_ref = "src/shared/hardware/bgimager.asm"
+
+[[module_overrides]]
+artifact = "th04-maine"
+module = "th04/bgimager.asm"
+segment = "SHARED"
+origin = "original-asm"
+source_form = "maintained-asm"
+source_ref = "src/shared/hardware/bgimager.asm"
+
 # th04_main.asm places this game-owned MPN renderer between MASTER.LIB
 # includes.  The expanded TASM listing closes the FAR PROC at 0x3680..0x36f4,
 # and the target Ghidra body independently agrees with that contiguous span.

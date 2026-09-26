@@ -35,6 +35,7 @@ ARTIFACTS = {
     "maine": (559, "6b4547182b9d53d069c0e4efc33bdabb69065cb544bb187ced7b0f51918aa533", "d3bdc485782a9fb953823155426ca7f0e6e8212d6bc0cdffaaa32f91df2dc90c"),
 }
 MODULES = {
+    "bgimager": ("hardware", 0x82, {"op": 0xE4F8, "maine": 0xD6F6}),
     "cdg_load": ("formats", 0x164, {"op": 0xE57A, "maine": 0xD778}),
     "cdg_put": ("formats", 0x9E, {"op": 0xE00E, "maine": 0xD356}),
     "input_s": ("hardware", 0x10A, {"op": 0xE1DC, "maine": 0xD48A}),

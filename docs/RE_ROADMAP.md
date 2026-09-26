@@ -71,6 +71,12 @@ raw-identically across MAIN, OP, and MAINE from
 `src/shared/hardware/input_s.asm`; see the v802 input note in the same
 directory. The OP/MAINE rows remain decoded `source-present` units.
 
+The separate 0x82-byte `BGIMAGE_PUT_RECT_16` ASM contribution now cold-links
+raw-identically in OP and MAINE from `src/shared/hardware/bgimager.asm`.
+Its ReC98 source origin remains candidate provenance; the local v805 replay
+establishes artifact-specific bytes and layout. It does not change the C++
+BGIMAGE producer or its accepted function count.
+
 All authored candidate boundaries in both artifacts are reviewed. OP has eight
 nonexact functions: `nopoly_b_put`, both SCORE codecs, `SND_LOAD`,
 `SND_SE_PLAY`, `_snd_se_update`, `egc_copy_rect_1_to_0_16`, and the internal
