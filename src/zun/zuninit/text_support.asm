@@ -12,8 +12,8 @@
 ;                       Shift-JIS string.
 
 	.8086
-	.model tiny
-	.code
+_TEXT segment byte public 'CODE' use16
+assume cs:_TEXT
 
 public ZUNINIT_SJIS_TO_JIS
 public ZUNINIT_TEXT_PUT
@@ -75,4 +75,5 @@ ZUNINIT_TEXT_PUT proc near
 	retn
 ZUNINIT_TEXT_PUT endp
 
-	end
+_TEXT ends
+end

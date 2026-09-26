@@ -81,6 +81,7 @@ contain residual counts that were correct only at that packet.
 - [ZUNINIT Shift-JIS converter semantic Oracle](zun/TH04_ZUNINIT_SJIS_V777.md)
 - [ZUNINIT text VRAM writer runtime Oracle](zun/TH04_ZUNINIT_TEXT_VRAM_V778.md)
 - [ZUNINIT text support symbolic ASM owner](zun/TH04_ZUNINIT_TEXT_SUPPORT_ASM_V779.md)
+- [ZUNINIT complete symbolic component cold link](zun/TH04_ZUNINIT_SYMBOLIC_COMPONENT_V785.md)
 - [MEMCHK physical boundary review](zun/TH04_MEMCHK_BOUNDARIES_V521.md)
 - [ZUN MEMCHK DOS_PUTS2 source-owner correction](zun/TH04_ZUN_MEMCHK_DOS_PUTS2_OWNER_V769.md)
 - [ZUN MEMCHK natural source ownership and first authored exact function](zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md)
