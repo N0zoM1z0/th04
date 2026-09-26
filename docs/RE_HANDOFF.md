@@ -281,6 +281,18 @@ OP now has all 93/93 authored physical boundaries reviewed and 85/93 accepted
 functions. The remaining eight are source/codegen/provenance blockers rather
 than unresolved boundary problems.
 
+v760 closes the previously untested TC4.02 SCORE rotate-intrinsic path: _crotr
+and _rotr remain RTL calls, direct __rotr__ is 16-bit ROR AX,3, and no tested
+surface emits the target byte-memory ROR. v766 further confirms that direct
+__memcpy__ does not change nopoly_b_put segment setup order and that natural
+register-local variants do not produce _snd_se_update's target BL/BH index
+lowering. The strict OP frontier is documented in
+docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md.
+
+Do not spend more cycles on equivalent C++ spellings for these eight without a
+materially new compiler/provenance mechanism. The roadmap can now proceed to
+ZUN.COM while the OP blockers remain tracked.
+
 ## Analysis/worktree hygiene
 
 Private probe worktrees are disposable after durable evidence and digests are
