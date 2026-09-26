@@ -149,6 +149,17 @@ def parse_function_overrides(
                 raise BoundaryLedgerError(
                     f"function override for {key[0]} at {key[1]:#x} lacks {field}"
                 )
+        if rule.get("reject_nonentry", False):
+            if "reviewed_body_size" in rule or "expected_body_span" not in rule:
+                raise BoundaryLedgerError(
+                    f"rejected function override for {key[0]} at {key[1]:#x} "
+                    "needs a Ghidra span and cannot also review a function body"
+                )
+            if not str(rule.get("review_evidence_id", "")).strip():
+                raise BoundaryLedgerError(
+                    f"rejected function override for {key[0]} at {key[1]:#x} "
+                    "lacks review_evidence_id"
+                )
         if "reviewed_body_size" in rule:
             reviewed_size = int(rule["reviewed_body_size"])
             if reviewed_size <= 0:
@@ -378,6 +389,16 @@ def function_row(
                     "lacks a corroborating TLINK public"
                 )
             notes.append("Reviewed override explicitly expects no Ghidra function entry.")
+        if function_override.get("reject_nonentry", False):
+            if ghidra is None or public_names or tasm is not None:
+                raise BoundaryLedgerError(
+                    f"rejected function override for {artifact} at {offset:#x} "
+                    "requires a Ghidra-only entry"
+                )
+            notes.append(
+                f"Target control-flow review {function_override['review_evidence_id']} "
+                "rejects this Ghidra-only entry."
+            )
         if "reviewed_body_size" in function_override:
             target_reviewed_size = int(function_override["reviewed_body_size"])
             owner_end = (
@@ -402,6 +423,8 @@ def function_row(
             notes.append(str(function_override["notes"]))
 
     false_function = bool(ghidra and is_ghidra_switch_artifact(ghidra))
+    if function_override and function_override.get("reject_nonentry", False):
+        false_function = True
     if contribution is None and not (region and region.kind == "code"):
         false_function = True
     if (
@@ -428,7 +451,10 @@ def function_row(
         boundary_state = "excluded"
         work_queue = "exclude"
         accepted_state = "excluded"
-        notes.append("Ghidra entry is a switch/data/non-code artifact, not an accepted function boundary.")
+        if function_override and function_override.get("reject_nonentry", False):
+            notes.append("Target-reviewed shared tail is not an independent function entry.")
+        else:
+            notes.append("Ghidra entry is a switch/data/non-code artifact, not an accepted function boundary.")
     else:
         body_fits = bool(
             ghidra

@@ -102,5 +102,29 @@ SHA-256 `9605007ca6ba2f0a32f8eb3e0c6ad7f18d19436d50e01e280461025d199ae22e`.
 ONGCHK is third-party library code, so this closes one external binary input
 without adding a ZUN authored-function exact claim. Usage text is still an
 external asset and RES_HUMA still comes from a diagnostic ReC98 candidate.
-The earlier v789 DIET receipt used the binary ONGCHK input; repacking the new
-maintained-input flat outputs remains a separate verification step.
+The new flats have the same complete SHA-256 as the v789 DIET inputs, so the
+existing DIET result applies to these identical bytes. The v789 receipt itself
+still records its original external-ONGCHK provenance; the v790 mixed receipt
+records the updated maintained source chain.
+
+## v791 ONGCHK shared-tail boundary correction
+
+An independent static target probe decodes 390 contiguous instructions from
+ONGCHK COM `0x100..0x47B`, checks every direct branch/call destination against
+an instruction start, and confirms the initialized-data seam at `0x47C`.
+Direct near CALLs enter only COM `0x127`, `0x1A0`, `0x247`, `0x2E4`, `0x2FB`,
+`0x3A8`, `0x428`, `0x449`, and `0x455`. COM `0x2C2` and `0x2DD` receive three
+and five branch edges respectively, but no CALL. They are shared success and
+failure tails within the port probe, so Ghidra's corresponding ZUN payload
+`0x517` and `0x532` function candidates are excluded in the boundary ledger.
+Their physical bytes remain owned by the same complete ONGCHK component.
+
+```sh
+python3 scripts/probes/probe_th04_zun_ongchk_boundaries.py \
+  --output-dir .analysis/reconstruction/probes/NEW-UNIQUE-NAME
+```
+
+Receipt:
+`.analysis/reconstruction/probes/v791-zun-ongchk-boundaries-001/receipt.json`,
+SHA-256 `9ca58c207f49296f07edcb0ad36775b64475b26e65d1d6a0aecdb55b5c5805f8`.
+The two exclusions change no authored ZUN function count or exactness state.

@@ -194,6 +194,31 @@ kind = "embedded-com"
 origin = "library"
 entry_offsets = [0]
 
+# Target-direct near-CALL census confirms both apparent Ghidra functions are
+# branch-only shared tails inside the ONGCHK probe; neither is a callable entry.
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x0517
+origin = "library"
+source_form = "maintained-asm"
+source_ref = "src/zun/ongchk/ongchk.asm"
+expected_body_span = 0x1B
+reject_nonentry = true
+review_evidence_id = "ev-th04-zun-ongchk-shared-tails-v791"
+notes = "COM 0x2C2 records four detected I/O ports and returns; three branch edges enter this shared tail, with no CALL."
+
+[[function_overrides]]
+artifact = "th04-zun"
+payload_offset = 0x0532
+origin = "library"
+source_form = "maintained-asm"
+source_ref = "src/zun/ongchk/ongchk.asm"
+expected_body_span = 0x7
+reject_nonentry = true
+review_evidence_id = "ev-th04-zun-ongchk-shared-tails-v791"
+notes = "COM 0x2DD records probe failure and returns; five branch edges enter this shared tail, with no CALL."
+
 [[com_regions]]
 artifact = "th04-zun"
 name = "zuninit.com"

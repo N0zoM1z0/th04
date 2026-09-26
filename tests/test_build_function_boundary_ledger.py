@@ -96,6 +96,42 @@ Program entry point at 0000:00100
         self.assertEqual(rules[("th04-main", 0x3680)]["origin"], "authored")
         self.assertNotIn(("th04-main", 0x367F), rules)
 
+    def test_target_rejected_shared_tail_requires_ghidra_only_entry(self) -> None:
+        override = {
+            "artifact": "th04-zun", "payload_offset": 0x517,
+            "origin": "library", "source_form": "maintained-asm",
+            "source_ref": "src/zun/ongchk/ongchk.asm",
+            "expected_body_span": 0x1B, "reject_nonentry": True,
+            "review_evidence_id": "ev-target-shared-tail",
+        }
+        parse_function_overrides({"function_overrides": [override]})
+        with self.assertRaises(BoundaryLedgerError):
+            parse_function_overrides({"function_overrides": [
+                {**override, "reviewed_body_size": 0x1B}
+            ]})
+        contribution = Contribution(
+            "th04-zun", 0x355, 0x6F3, "ongchk.com", "", "library",
+            "embedded-library", "config:com-region:ongchk.com", "target",
+        )
+        ghidra = {
+            "name": "FUN_1000_0517", "body_addresses": "27", "body_span": "27",
+            "body_min_linear": "0x10517", "body_max_linear": "0x10531",
+            "contiguous": "true", "body_range_count": "1",
+            "caller_count": "2", "callee_count": "0", "symbol_source": "DEFAULT",
+        }
+        row = function_row(
+            "th04-zun", 0x517, 0x10000, ghidra, [], contribution,
+            None, None, None, False, override,
+        )
+        self.assertEqual(row["boundary_state"], "excluded")
+        self.assertEqual(row["source_ref"], override["source_ref"])
+        self.assertIn("shared tail", row["notes"])
+        with self.assertRaises(BoundaryLedgerError):
+            function_row(
+                "th04-zun", 0x517, 0x10000, ghidra, ["public"],
+                contribution, None, None, None, False, override,
+            )
+
 
 
     def test_target_reviewed_override_requires_evidence_and_boundary_oracle(self) -> None:

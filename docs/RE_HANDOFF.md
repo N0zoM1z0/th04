@@ -92,9 +92,11 @@ library component now cold-links raw-identically from maintained symbolic ASM
 in two isolated rounds, and new A/B mixed flats use those outputs. Usage text
 remains an external asset, while RES_HUMA comes from a ReC98 candidate with
 inert barriers. The maintained natural resident `_main` remains six bytes
-short. The earlier mixed flats repacked with pinned DIET 1.45f to the exact
-7,754-byte MZ target; repacking the new maintained-ONGCHK flats is pending.
-No whole-product source acceptance follows. See
+short. The new flats have the same full digest as the earlier inputs that
+pinned DIET 1.45f repacked to the exact 7,754-byte MZ target; no repeat pack is
+needed for byte identity. No whole-product source acceptance follows. Two
+Ghidra ONGCHK starts at payload `0x517` and `0x532` are now excluded as
+branch-only shared tails after target control-flow review. See
 `docs/reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md`.
 
 The 18-byte helper at payload `0x7B0` is runtime-observed to convert all

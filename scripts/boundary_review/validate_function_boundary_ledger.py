@@ -48,6 +48,19 @@ def validate_reviewed_overrides(
         for row in rows
     }
     for key, rule in review_rules.items():
+        if rule.get("reject_nonentry", False):
+            row = indexed.get(key)
+            evidence = evidence_by_id.get(str(rule["review_evidence_id"]))
+            if row is None or row["boundary_state"] != "excluded":
+                raise ValidationError(f"rejected nonentry remains active: {key}")
+            if evidence is None or evidence["artifact"] != key[0] or (
+                evidence["oracle"], evidence["result"], evidence["evidence_class"]
+            ) != ("boundary-ownership", "pass", "target-analysis"):
+                raise ValidationError(f"rejected nonentry lacks target evidence: {key}")
+            start = int(evidence["extent_start"], 0)
+            size = int(evidence["extent_size"], 0)
+            if start > key[1] or start + size < key[1] + int(row["body_span"], 0):
+                raise ValidationError(f"rejected nonentry escapes evidence extent: {key}")
         if "reviewed_body_size" not in rule:
             continue
         row = indexed.get(key)
