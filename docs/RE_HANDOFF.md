@@ -41,8 +41,10 @@ Original-ASM observations are outside the authored C/C++ counts.
 
 OP's eight blocked functions and MAINE's nine blocked functions have reviewed
 physical boundaries. Current natural-source/compiler probes do not close their
-byte or admissibility gaps. The exact names, decoded payload offsets, and
-negative probes are in the [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
+byte or admissibility gaps. v820 specifically retests the ZUN-discovered TC4J
+-B/TASM32 producer path on five maintained OP blockers; all five remain
+byte-identical to their nonexact direct-TC4J candidates. The exact names,
+decoded payload offsets, and negative probes are in the [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
 and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
 Do not substitute target-derived inline ASM, explicit register forcing, or
 inert optimizer barriers without independent provenance. All 16 OP and 15
@@ -69,8 +71,8 @@ packed-file offsets remain unknown. The shared CDG and input modules also
 passed focused MAIN cold replay; source placement and include composition are
 replay inputs, so changes require affected-unit cold replay.
 
-ZUN's natural Tiny-model MEMCHK `_main` at COM payload `0x26A7` is its one exact
-authored function (38 bytes). Its complete 4,066-byte component cold-links
+ZUN's natural Tiny-model MEMCHK `_main` at COM payload `0x26A7` was its first
+exact authored function (38 bytes). Its complete 4,066-byte component cold-links
 raw-identically with maintained `DOS_PUTS2` and `DOS_MAXFREE`; those helpers are
 library support, not authored-function credit. See the [MEMCHK note](reconstruction/zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md).
 

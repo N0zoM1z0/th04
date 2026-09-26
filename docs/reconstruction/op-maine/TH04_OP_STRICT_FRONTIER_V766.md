@@ -65,6 +65,44 @@ surface experiments together with the existing blocker evidence:
 SHA-256:
 b56646240cd6946cda850686aae0d029b38924b0e4fbc8d33aa05c3dc807aac3
 
+### v820 TC4J assembly-backend control
+
+ZUN resident _main invalidated one earlier assumption: direct TC4J and the
+compiler's -B assembly-output path are not always interchangeable. v820
+therefore retests that producer mechanism rather than treating the old OP
+direct-compiler negatives as exhaustive.
+
+probe_th04_op_assembly_backend_frontier.py builds maintained source twice per
+case with direct TC4J and with TC4J -B followed by pinned TASM32 5.0. Short,
+byte-identical source aliases avoid DOS 8.3 generated-ASM naming artifacts. The
+five results are deterministic:
+
+| Function | Target | -B / TASM32 | Raw differing bytes |
+| --- | ---: | ---: | ---: |
+| nopoly_b_put | 30 | 30 | 17 |
+| scoredat_decode | 173 | 197 | 180 |
+| scoredat_encode | 101 | 111 | 52 |
+| SND_SE_PLAY | 57 | 60 | 48 |
+| _snd_se_update | 76 | 77 | 43 |
+
+In every case, the -B / TASM32 CODE is byte-identical to that function's
+established direct-TC4J natural candidate. Thus the ZUN producer mechanism does
+not change the segment-order, byte-rotate, BP-frame/index, or BL/BH lowering
+that blocks these five OP functions. This is a bounded negative, not a general
+claim about all TC4J source.
+
+Retained receipt:
+
+.analysis/reconstruction/receipt-archive/v820-op-assembly-backend-frontier-receipt.json
+
+SHA-256:
+a3ecaa4e360d384d219ce853ca2ba198e7a34e5c95e1ac60c1a4776e005208e1
+
+SND_LOAD remains separately bounded by its TH04-only 89 C3 encoding and
+existing compiler/TASM controls. The EGC pair remains a source-provenance
+problem: its exact-looking ReC98 low-level form originates in a decompilation
+commit, so v820 does not use it as authored source.
+
 The result is a strict frontier, not a claim that the historical spellings are
 impossible in principle. Further OP progress should require materially new
 compiler behavior, independently sourced historical code, or stronger

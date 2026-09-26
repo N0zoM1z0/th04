@@ -23,10 +23,12 @@ bytes cover only its reviewed file-backed owner extents.
 ZUN now has all three reviewed authored functions decoded-exact. OP and MAINE
 have completed their current original-ASM boundary reviews; their remaining
 authored functions are explicitly blocked by recorded source or code-generation
-gaps. The next bounded reconstruction focus is **OP.EXE**. Work one artifact at
-a time: exhaust a materially new OP source/compiler hypothesis, checkpoint real
-progress, then move to MAINE rather than interleaving both. MAIN remains a side
-lane unless shared source changes require replay.
+gaps. v820 exhausts one materially new OP compiler hypothesis introduced by the ZUN
+closure: TC4J -B plus pinned TASM32 leaves five maintained natural OP blocker
+bodies byte-identical to their nonexact direct-TC4J output. OP therefore remains
+85/93 pending genuinely new source/provenance or compiler evidence. The next
+bounded reconstruction focus is **MAINE.EXE**, one artifact at a time. MAIN
+remains a side lane unless shared source changes require replay.
 
 ## ZUN.COM: authored-function source authority closed
 
@@ -101,7 +103,10 @@ nonexact functions: `nopoly_b_put`, both SCORE codecs, `SND_LOAD`,
 EGC-start helper, `SND_SE_PLAY`, and `egc_start_copy`.
 
 Current natural-source and compiler-profile probes do not close their recorded
-register, segment-order, rotate, port-write, or optimizer shapes. Do not
+register, segment-order, rotate, port-write, or optimizer shapes. OP v820 also
+shows that the ZUN-successful TC4J -B/TASM32 producer path leaves nopoly_b_put,
+both SCORE codecs, SND_SE_PLAY, and _snd_se_update unchanged from their
+nonexact direct-TC4J forms. Do not
 promote byte-forcing inline assembly, pseudo-registers, copied instructions,
 or inert optimizer barriers as authored C/C++ without independent source
 provenance. Resume a blocker only with a materially new compiler mechanism or
