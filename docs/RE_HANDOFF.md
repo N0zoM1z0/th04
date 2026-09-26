@@ -72,6 +72,14 @@ original-source proof, and the packed outer `ZUN.COM` remains nonexact. The
 current receipt and layout are in
 `docs/reconstruction/zun/TH04_ZUNINIT_SYMBOLIC_COMPONENT_V785.md`.
 
+The outer launcher selector at decoded payload `0x12F..0x20D` now has a
+223-byte maintained symbolic ASM source. Two low-priority, two-core cold
+TASM/TLINK rounds reproduce the full target selector with zero raw differences.
+The reviewed dispatch body is `0x146+0xC8`; Ghidra's former range crossing the
+generated directory at `0x20E` is rejected. The separate 327-byte directory,
+other COM components, and packed MZ are not included in this selector claim.
+See `docs/reconstruction/zun/TH04_ZUN_SELECTOR_V786.md`.
+
 The 18-byte helper at payload `0x7B0` is runtime-observed to convert all
 6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs
 show the scope limit. This establishes the target semantics; see

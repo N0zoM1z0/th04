@@ -12,7 +12,7 @@ experiments and rejected approaches remain in `docs/reconstruction/` and
 | OP.EXE | 85 / 93 | 8 | 93 / 93 |
 | MAIN.EXE | 492 / 495 | 3 blocked | 495 / 495 |
 | MAINE.EXE | 63 / 72 | 9 | 72 / 72 |
-| ZUN.COM | 1 / 11 | 8 pending, 2 blocked | 11 / 11 |
+| ZUN.COM | 1 / 3 | 2 blocked | 3 / 3 |
 
 OP has 13,847 accepted decoded source-owner bytes out of 14,284 tracked;
 MAINE has 11,187 out of 12,553; ZUN has 38 out of 442. These are not
@@ -31,10 +31,13 @@ ZUN authored function. Together with maintained shared `DOS_PUTS2` and
 helpers are library support, not authored-function credit. See
 `docs/reconstruction/zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md`.
 
-Eight reviewed ZUNINIT entries still have unresolved source/origin authority.
-Treat historical disassembler-generated assembly as a candidate, not original
-source evidence. Resolve physical component ownership and natural or justified
-assembly provenance before exact promotion.
+The complete 1,141-byte ZUNINIT component now cold-links raw-identically from
+six maintained symbolic original-style ASM units. The 223-byte launcher
+selector also cold-links raw-identically from maintained ASM. These decoded
+component results do not grant packed `ZUN.COM` exactness. The generated
+selector directory, remaining external component ownership, and DIET product
+build remain on the artifact-closure path. Treat historical disassembler-
+generated assembly as a candidate, not original-source evidence.
 
 Resident `cfg_init` and `_main` remain blocked. The natural `_main` is six bytes
 short of the target selective print-call shape; `cfg_init` still has linked
