@@ -80,6 +80,10 @@ generated directory at `0x20E` is rejected. The separate 327-byte directory,
 other COM components, and packed MZ are not included in this selector claim.
 See `docs/reconstruction/zun/TH04_ZUN_SELECTOR_V786.md`.
 
+The adjacent selected-COM mover at `0x3422+0x8` and outer customization stub
+at `0x342A+0x44` also have maintained symbolic ASM and two-round raw-identical
+focused links; see `docs/reconstruction/zun/TH04_ZUN_LAUNCHER_TAILS_V787.md`.
+
 The 18-byte helper at payload `0x7B0` is runtime-observed to convert all
 6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs
 show the scope limit. This establishes the target semantics; see
@@ -90,6 +94,7 @@ offsets (21 scenarios); see `docs/reconstruction/zun/TH04_ZUNINIT_TEXT_VRAM_V778
 These two entries share a 77-byte maintained symbolic original-style ASM
 owner included in the complete component link. See the v779 focused note for
 the independent helper provenance and assembler probe.
+
 Resident `cfg_init` at payload `0xDCF` and resident `_main` at `0xE67` remain
 blocked: natural `_main` is six bytes short; `cfg_init` retains linked fixup
 differences downstream of that layout shift. Prior compiler and barrier

@@ -34,10 +34,11 @@ helpers are library support, not authored-function credit. See
 The complete 1,141-byte ZUNINIT component now cold-links raw-identically from
 six maintained symbolic original-style ASM units. The 223-byte launcher
 selector also cold-links raw-identically from maintained ASM. These decoded
-component results do not grant packed `ZUN.COM` exactness. The generated
-selector directory, remaining external component ownership, and DIET product
-build remain on the artifact-closure path. Treat historical disassembler-
-generated assembly as a candidate, not original-source evidence.
+component results do not grant packed `ZUN.COM` exactness. The 8-byte selector
+mover and 68-byte outer customization stub also have raw-identical maintained
+ASM. The generated selector directory, remaining external component ownership,
+and DIET product build remain on the artifact-closure path. Treat historical
+disassembler-generated assembly as a candidate, not original-source evidence.
 
 Resident `cfg_init` and `_main` remain blocked. The natural `_main` is six bytes
 short of the target selective print-call shape; `cfg_init` still has linked

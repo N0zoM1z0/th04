@@ -76,6 +76,7 @@ contain residual counts that were correct only at that packet.
 ### ZUN.COM
 
 - [ZUN launcher selector symbolic source and boundary](zun/TH04_ZUN_SELECTOR_V786.md)
+- [ZUN launcher mover and customization tail sources](zun/TH04_ZUN_LAUNCHER_TAILS_V787.md)
 - [ZUN resident main](zun/TH04_ZUN_MAIN_V241.md)
 - [ZUN standalone component link](zun/TH04_ZUN_COMPONENT_LINK_V317.md)
 - [ZUNINIT physical boundary review](zun/TH04_ZUNINIT_BOUNDARIES_V520.md)
