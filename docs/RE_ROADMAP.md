@@ -1,6 +1,6 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26 after the v826 OP nopoly_B_put hybrid closure. This is the
+Updated 2026-09-26 after the v827 OP shared-sound cross-game hybrid closure. This is the
 current next-work map. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and
@@ -10,12 +10,12 @@ experiments and rejected approaches remain in `docs/reconstruction/` and
 
 | Artifact | Exact authored functions | Remaining | Reviewed boundaries |
 | --- | ---: | ---: | ---: |
-| OP.EXE | 90 / 93 | 3 | 93 / 93 |
+| OP.EXE | 92 / 93 | 1 | 93 / 93 |
 | MAIN.EXE | 492 / 495 | 3 blocked | 495 / 495 |
 | MAINE.EXE | 63 / 72 | 9 | 72 / 72 |
 | ZUN.COM | 3 / 3 | 0 | 3 / 3 |
 
-OP has 14,325 accepted decoded source-owner bytes out of 14,458 tracked;
+OP has 14,458 accepted decoded source-owner bytes out of 14,458 tracked;
 MAINE has 11,187 out of 12,553; ZUN has 442 out of 442. These are not
 packed-file coverage denominators. MAIN's 83,442 / 83,469 exact authored C/C++
 bytes cover only its reviewed file-backed owner extents.
@@ -35,18 +35,16 @@ and canonical replay passes 89/89 accepted OP slices. v826 then closes
 `nopoly_b_put`: TH03/TH04/TH05 OP release targets share the complete normalized
 30-byte GAME>=3 body, while maintained source restricts symbolic code to the
 cross-game DS-save/XOR/REP-MOVSW primitive. Canonical v826 passes 90/90
-accepted OP slices. OP is therefore 90/93 with three blockers. Do not reopen
-the SCORE codecs, accepted EGC functions, or nopoly producer without evidence
-that changes these accepted boundaries.
-
-v822 then revisits `SND_SE_PLAY` and `_snd_se_update` without promoting them.
-MAIN and OP independently share the complete 0x86 `th04/snd_se.cpp` fixed
-producer, and a decompilation-shaped helper candidate reproduces both target
-functions plus the full OP link raw-zero in two cold rounds. However the exact
-frame-free parameter and BL/BH helper spelling first appears in a pinned ReC98
-`[Decompilation]` commit and is explicitly marked as modder-facing bloat.
-Those two functions are therefore narrowed to source-provenance blockers, not
-decoded-exact functions.
+accepted OP slices. v827 then supersedes v822's sound-source acceptance
+decision: restored TH05 OP and MAINE each contain exactly one complete fixed
+0x86 th04/snd_se.cpp producer after masking the same 20 legal OMF link operands.
+This independently corroborates the frame-free parameter and BL/XOR-BH
+current-index compiler primitives while the surrounding selection and frame
+logic remains maintained C++. Two cold TH04 links reproduce both sound
+functions, the complete producer, accepted EXE/MAP, and all 804 relocations;
+canonical v827 passes 92/92 accepted OP slices. OP is therefore 92/93 with only
+SND_LOAD blocked. Do not reopen the SCORE codecs, accepted EGC functions,
+nopoly producer, or accepted sound producer without materially new evidence.
 
 v823 similarly closes the machine-code mechanism for the much larger 234-byte
 SND_LOAD blocker without promoting it. Two cold wrapper builds that change only
@@ -59,11 +57,12 @@ ReC98 [Decompilation] commit. Thus SND_LOAD is now a source-provenance-only
 blocker: the exact compiler mechanism is known, but no independent ZUN source
 witness justifies adopting that spelling.
 
-The next bounded work should stay on one artifact at a time: pursue materially
-new OP source/compiler/provenance evidence for the three remaining blockers
-(`SND_LOAD`, `SND_SE_PLAY`, `_snd_se_update`), or move to MAINE if no such OP
-hypothesis exists. MAIN remains a side lane unless shared
-source changes require replay.
+The next bounded OP work is singular: pursue materially new historical source
+or producer provenance for the 234-byte SND_LOAD blocker. Its machine code is
+already bounded to the 89 C3 versus 8B D8 encoding choice, so do not repeat
+closed casts, aliases, register-pressure, or -B experiments without a new
+source-origin fact. If no such OP hypothesis exists, move to MAINE. MAIN remains
+a side lane unless shared source changes require replay.
 
 ## ZUN.COM: authored-function source authority closed
 
@@ -130,10 +129,10 @@ Its ReC98 source origin remains candidate provenance; the local v805 replay
 establishes artifact-specific bytes and layout. It does not change the C++
 BGIMAGE producer or its accepted function count.
 
-All authored candidate boundaries in both artifacts are reviewed. OP has three
-nonexact functions: `SND_LOAD`, `SND_SE_PLAY`, and `_snd_se_update`. The internal `egc_start_copy` at payload `0xE3E8` is
-decoded-exact as of v824, and `egc_copy_rect_1_to_0_16` is decoded-exact as
-of v825. MAINE has nine: `regist_menu`,
+All authored candidate boundaries in both artifacts are reviewed. OP has one
+nonexact function: SND_LOAD. SND_SE_PLAY and _snd_se_update are decoded-exact
+as of v827; the internal egc_start_copy is decoded-exact as of v824, and
+egc_copy_rect_1_to_0_16 is decoded-exact as of v825. MAINE has nine: `regist_menu`,
 `SND_LOAD`, `box_1_to_0_masked`, both SCORE codecs, `_snd_se_update`, the SCORE
 EGC-start helper, `SND_SE_PLAY`, and `egc_start_copy`.
 
@@ -149,15 +148,18 @@ lineage for the retained x86/PC-98 primitives. v826 supersedes the old nopoly
 compiler negative only at the acceptance decision: TH03/TH04/TH05 release
 targets independently bind the complete normalized 30-byte GAME>=3 producer,
 so the remaining DS-save/XOR/REP-MOVSW symbolic primitive is narrowly
-cross-game-corroborated. v822 adds materially new same-game producer evidence for `SND_SE_PLAY` and `_snd_se_update`: their exact
-machine-code shape is now reproducible, but the required helper spelling is
-target-derived decompilation provenance, so both remain blocked. The remaining OP blockers now need new independent source provenance or materially
-new compiler evidence. Do not promote byte-forcing
-inline assembly, pseudo-registers, copied instructions, or inert optimizer
-barriers without independent provenance. Resume a blocker only with a
-materially new compiler mechanism or source-origin observation. See
+cross-game-corroborated. v827 supersedes v822's conservative sound acceptance
+decision with independent TH05 release-target evidence for the complete fixed
+producer and the two bounded compiler/register primitives. Both sound functions
+are now decoded-exact without claiming literal original-source spelling. The
+remaining OP blocker is SND_LOAD and still needs independent source provenance.
+Do not promote byte-forcing inline assembly, pseudo-registers, copied
+instructions, or inert optimizer barriers without independent provenance.
+Resume SND_LOAD only with a materially new compiler mechanism or source-origin
+observation. See
 `docs/reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md`,
 `docs/reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md`,
+docs/reconstruction/op-maine/TH04_OP_SND_SE_CROSSGAME_V827.md`,
 `docs/reconstruction/op-maine/TH04_OP_EGC_START_HYBRID_V824.md`,
 `docs/reconstruction/op-maine/TH04_OP_EGC_COPY_HYBRID_V825.md`,
 `docs/reconstruction/op-maine/TH04_OP_NOPOLY_HYBRID_V826.md`,

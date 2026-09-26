@@ -10,6 +10,12 @@ extern unsigned char snd_se_priorities[];
 extern unsigned char snd_se_priority_frames[];
 extern unsigned char snd_se_frame;
 
+inline uint16_t snd_se_current_index() {
+	_BL = snd_se_playing;
+	_BH ^= _BH;
+	return _BX;
+}
+
 // ZUN bloat: Just use [new_se] directly.
 inline int16_t snd_get_param(int16_t &param) {
 #if (GAME >= 4)

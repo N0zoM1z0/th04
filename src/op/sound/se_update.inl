@@ -14,7 +14,7 @@ void far snd_se_update(void)
 		}
 	}
 	snd_se_frame++;
-	if(snd_se_priority_frames[(unsigned int)snd_se_playing] < snd_se_frame) {
+	if(snd_se_priority_frames[snd_se_current_index()] < snd_se_frame) {
 		snd_se_frame = 0;
 		snd_se_playing = SE_NONE;
 	}
