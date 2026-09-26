@@ -29,6 +29,7 @@ contain residual counts that were correct only at that packet.
 
 - [Shared CDG loader source and complete module replay across MAIN, OP, and MAINE](op-maine/TH04_SHARED_CDG_LOAD_V797.md)
 - [Shared CDG renderer source and complete module replay across MAIN, OP, and MAINE](op-maine/TH04_SHARED_CDG_PUT_V799.md)
+- [Shared PC-98 input sensing source across MAIN, OP, and MAINE](op-maine/TH04_SHARED_INPUT_V802.md)
 - [OP/MAINE/ZUN decoded-function acceptance plane](packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md)
 - [Three-artifact cold function smoke and acceptance limits](packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
 - [OP/MAINE shared frame-delay decoded acceptance](packed/TH04_SHARED_FRAME_DELAY_V510.md)

@@ -144,6 +144,15 @@ includes a final alignment byte after the 0x9D-byte function. Keep its
 self-modifying segment load and PC-98 GRCG/VRAM semantics in exact source;
 see `docs/reconstruction/op-maine/TH04_SHARED_CDG_PUT_V799.md`.
 
+The `INPUT_S` keyboard/joystick sensing TU is now maintained at
+`src/shared/hardware/input_s.asm` with TH04-local PC-98 constants. MAIN
+`130E:06BC` (load `0x1379C+0x10A`, file `0x14F9C+0x10A`) passes complete
+v803 cold replay. OP `0DA1:07CC` (`0xE1DC+0x10A`) and MAINE `0CC7:081A`
+(`0xD48A+0x10A`) pass A/B raw comparison in v804, including the module's
+single relocation. The 8-byte reset entry, 0x101-byte sense entry, and one
+alignment byte remain distinct in the boundary ledger; see
+`docs/reconstruction/op-maine/TH04_SHARED_INPUT_V802.md`.
+
 All current authored OP and MAINE physical boundaries are reviewed. OP's eight
 nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,
 `0xDDCA`, `0xE2F2`, `0xE32C`, `0xE378`, and `0xE3E8`. MAINE's nine are at

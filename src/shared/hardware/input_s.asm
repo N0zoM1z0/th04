@@ -2,9 +2,49 @@
 	.model use16 large SHARED
 	locals
 
-include twobyte.inc
-include platform/x86real/pc98/keyboard.inc
-include th04/hardware/input.inc
+; TH04 PC-98 BIOS key bitmap addresses and input flags used by this unit.
+; The complete linked module is independently compared in MAIN, OP, MAINE.
+KEYGROUP_0 = 52Ah
+KEYGROUP_2 = 52Ch
+KEYGROUP_3 = 52Dh
+KEYGROUP_5 = 52Fh
+KEYGROUP_6 = 530h
+KEYGROUP_7 = 531h
+KEYGROUP_8 = 532h
+KEYGROUP_9 = 533h
+
+K0_ESC = 01h
+K2_Q = 01h
+K3_RETURN = 10h
+K5_Z = 02h
+K5_X = 04h
+K6_SPACE = 10h
+K7_ARROW_UP = 04h
+K7_ARROW_LEFT = 08h
+K7_ARROW_RIGHT = 10h
+K7_ARROW_DOWN = 20h
+K8_NUM_7 = 04h
+K8_NUM_8 = 08h
+K8_NUM_9 = 10h
+K8_NUM_4 = 40h
+K9_NUM_6 = 01h
+K9_NUM_1 = 04h
+K9_NUM_2 = 08h
+K9_NUM_3 = 10h
+
+INPUT_UP = 1
+INPUT_DOWN = 2
+INPUT_LEFT = 4
+INPUT_RIGHT = 8
+INPUT_BOMB = 10h
+INPUT_SHOT = 20h
+INPUT_UP_LEFT = 100h
+INPUT_UP_RIGHT = 200h
+INPUT_DOWN_LEFT = 400h
+INPUT_DOWN_RIGHT = 800h
+INPUT_CANCEL = 1000h
+INPUT_OK = 2000h
+INPUT_Q = 4000h
 
 	extrn _key_det:word
 	extrn _shiftkey:byte

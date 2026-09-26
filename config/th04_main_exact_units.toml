@@ -899,7 +899,7 @@ object_path = "obj/th04/cdg_p_pr.obj"
 
 [[units]]
 id = "th04-main-module-th04-input-s-asm-1379c"
-repo_source = "src/main/hardware/input.asm"
+repo_source = "src/shared/hardware/input_s.asm"
 overlay_path = "th04/input_s.asm"
 map_module = "th04\\input_s.asm"
 object_path = "obj/th04/input_s.obj"

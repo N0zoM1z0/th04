@@ -66,6 +66,11 @@ packed-file offsets. See the v797 and v799 focused CDG notes under
 `docs/reconstruction/op-maine/`. Continue the remaining original-ASM
 boundary/ownership queue separately from the C++ blockers below.
 
+The 0x10A-byte `INPUT_S` shared original-ASM contribution also cold-links
+raw-identically across MAIN, OP, and MAINE from
+`src/shared/hardware/input_s.asm`; see the v802 input note in the same
+directory. The OP/MAINE rows remain decoded `source-present` units.
+
 All authored candidate boundaries in both artifacts are reviewed. OP has eight
 nonexact functions: `nopoly_b_put`, both SCORE codecs, `SND_LOAD`,
 `SND_SE_PLAY`, `_snd_se_update`, `egc_copy_rect_1_to_0_16`, and the internal
