@@ -166,12 +166,12 @@ installations. `ghidra-project/` contains ignored private headless databases,
 following TH095's non-dot-prefixed project layout. `.analysis/` contains
 targets, disk images, compiler installations, Ghidra XDG state and exports,
 emulator images, DIET payload observations, TASM listings, probes, traces, and
-reports. None is committed. It is a working cache, not an archive: keep pinned
-inputs/toolchains, active databases, current boundary-review inputs, and the
-latest focused/aggregate replay receipts; prune superseded A/B source trees,
-old probe matrices, and stale disassemblies after their commands, outcomes, and
-digests are durable. A historical `.analysis` path in `config/evidence.csv` is
-provenance, not a promise that the cache still exists.
+reports. None is committed. Keep pinned inputs/toolchains, active databases,
+current boundary-review inputs, and the private receipt archive; prune
+expanded A/B source trees, old probe matrices, and stale disassemblies after
+their commands, outcomes, and digests are durable. A historical `.analysis`
+path in `config/evidence.csv` is provenance, not a promise that the expanded
+worktree still exists.
 
 Reusable boundary tooling is grouped under `scripts/boundary_review/`; only
 its private outputs stay ignored. A durable conclusion moves into source, a

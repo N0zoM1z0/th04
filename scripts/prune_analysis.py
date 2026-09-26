@@ -8,6 +8,8 @@ Default mode is a dry run.
   reduced to `receipt.json` plus configured keep files.
 - `--prune-probes` removes direct children of the configured
   `.analysis/reconstruction/probes` root except explicit keep directories.
+- `--prune-exact-replays` removes expanded MAIN exact-unit replay worktrees
+  after their receipts have been archived.
 - `--prune-caches` removes only explicit repository-local cache/build
   directories listed in `config/analysis_retention.toml`.
 
@@ -146,6 +148,11 @@ def main() -> int:
         help="remove rebuildable probe worktrees except configured keep directories",
     )
     parser.add_argument(
+        "--prune-exact-replays",
+        action="store_true",
+        help="remove expanded exact-unit replay worktrees after receipt archival",
+    )
+    parser.add_argument(
         "--prune-caches",
         action="store_true",
         help="remove only configured repository-local cache/build directories",
@@ -203,6 +210,17 @@ def main() -> int:
             probe_root, set(cfg.get("probe_keep_dirs", []))
         )
 
+    exact_replay_delete: list[tuple[Path, int]] = []
+    if args.prune_exact_replays:
+        exact_replay_root = (ROOT / cfg.get(
+            "exact_replay_root", ".analysis/reconstruction/exact-unit-replay"
+        )).resolve()
+        if not exact_replay_root.is_relative_to(analysis) or exact_replay_root == analysis:
+            raise SystemExit(f"unsafe configured exact replay root: {exact_replay_root}")
+        exact_replay_delete = direct_child_delete_plan(
+            exact_replay_root, set(cfg.get("exact_replay_keep_dirs", []))
+        )
+
     # Explicit repository-local caches/build outputs only.
     cache_delete: list[tuple[Path, int]] = []
     if args.prune_caches:
@@ -217,6 +235,7 @@ def main() -> int:
     gpt_delete_total = sum(size for _, size in gpt_delete)
     gpt_compact_total = sum(size for _, size, _, _ in gpt_compact)
     probe_total = sum(size for _, size in probe_delete)
+    exact_replay_total = sum(size for _, size in exact_replay_delete)
     cache_total = sum(size for _, size in cache_delete)
     mode = "APPLY" if args.apply else "DRY-RUN"
     print(
@@ -226,6 +245,8 @@ def main() -> int:
         f"compact {len(gpt_compact)} dirs / "
         f"{gpt_compact_total / (1024 ** 3):.2f} GiB; "
         f"probes {len(probe_delete)} dirs / {probe_total / (1024 ** 3):.2f} GiB; "
+        f"exact replays {len(exact_replay_delete)} dirs / "
+        f"{exact_replay_total / (1024 ** 3):.2f} GiB; "
         f"caches {len(cache_delete)} dirs / {cache_total / (1024 ** 3):.2f} GiB"
     )
 
@@ -242,6 +263,8 @@ def main() -> int:
         )
     for path, size in sorted(probe_delete, key=lambda item: item[1], reverse=True):
         print(f"  PROBE    {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
+    for path, size in sorted(exact_replay_delete, key=lambda item: item[1], reverse=True):
+        print(f"  EXACT    {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
     for path, size in sorted(cache_delete, key=lambda item: item[1], reverse=True):
         print(f"  CACHE    {size / (1024 ** 2):8.1f} MiB  {path.relative_to(ROOT)}")
 
@@ -252,12 +275,15 @@ def main() -> int:
             compact_directory(path, keep)
         for path, _ in probe_delete:
             shutil.rmtree(path)
+        for path, _ in exact_replay_delete:
+            shutil.rmtree(path)
         for path, _ in cache_delete:
             shutil.rmtree(path)
         print(
             f"analysis prune: removed {len(gpt_delete)} gpt-web dirs; "
             f"compacted {len(gpt_compact)} dirs; "
-            f"removed {len(probe_delete)} probe dirs and "
+            f"removed {len(probe_delete)} probe dirs, "
+            f"{len(exact_replay_delete)} exact replay dirs, and "
             f"{len(cache_delete)} cache dirs"
         )
     else:

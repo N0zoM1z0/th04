@@ -1,7 +1,7 @@
 	.386
 	.model use16 large SHARED
 
-; OP-local source candidate for the PC-98 font-effects renderer.
+; Shared OP/MAINE source candidate for the PC-98 font-effects renderer.
 ; These small hardware definitions replace dependencies on other games and
 ; ReC98 library include paths. Historical source spelling remains unknown.
 GRAM_400 = 0A800h

@@ -46,11 +46,11 @@ a candidate build exactly matches the pinned bytes.
 ## Source layout
 
 As in the TH08 reconstruction, `src/` is organized as product code rather than
-as a progress report. Current maintained code is under `src/main/`, `src/zun/`,
-and `src/shared/`; future OP/MAINE-owned translation units belong under
-`src/op/` and `src/maine/`. Code proved shared between TH04 artifacts belongs
-under `src/shared/`. Exact, structural, and source-present state is tracked in
-the CSV ledgers, never with `exact/`, `partials/`, or `modules/` directories.
+as a progress report. Current maintained code is under `src/main/`, `src/op/`,
+`src/maine/`, `src/zun/`, and `src/shared/`. Code proved shared between TH04
+artifacts belongs under `src/shared/`. Exact, structural, and source-present
+state is tracked in the CSV ledgers, never with `exact/`, `partials/`, or
+`modules/` directories.
 
 The intended build consumes checked-in TH04 source and headers plus the pinned
 Borland/TASM/TLINK environment and documented libraries. Direct ReC98 and
@@ -287,7 +287,7 @@ failure recovery, loader limitations, and the TH01/TH04 calibration results.
 - `docs/RE_WORKFLOW.md` — bounded agent loop.
 - `docs/PROGRESS.md` — generated four-artifact boundary/function routing and
   MAIN-only file-backed authored-byte totals.
-- `docs/RE_ROADMAP.md` — current non-MAIN work sequence and acceptance gaps.
+- `docs/RE_ROADMAP.md` — next-work map and acceptance gaps.
 - `docs/BOUNDARY_REVIEW.md` — reviewed OP/MAIN/MAINE/ZUN boundary inventory and
   the reproducible DIET/Ghidra/MAP/TASM workflow.
 - `docs/reconstruction/README.md` — focused evidence notes grouped by artifact
@@ -308,12 +308,13 @@ The control plane, target ingestion, locally attested Borland build chain, OMF
 integrity Oracle, pinned headless Ghidra workflow, strict PC-98 MZ database
 attestation, ReC98 cold-build calibration, and optional PC-98 startup smoke
 are operational. The current MAIN reviewed authored C/C++ extent is
-83,442 / 83,469 bytes exact; 492 / 494 reviewed authored functions are exact.
-Its remaining 27 bytes are a side lane. OP and MAINE each have three
-decoded/link-exact BGIMAGE functions and target-exact ordered relocations in
-the retained aggregate replay, but no honest packed-file authored-byte
-denominator. ZUN has bounded maintained source and a reproducible source-only
-compile and resident component link, not an accepted whole-product link.
+83,442 / 83,469 bytes exact; 492 / 495 authored candidate functions are exact
+(492 / 494 in the separate MAIN file-backed function ledger). Its remaining
+27 bytes are a side lane. OP has 85 / 93 and MAINE 63 / 72 authored decoded
+functions exact, plus reviewed original-ASM boundaries and source-backed
+raw-identical modules; neither has an honest packed-file authored-byte
+denominator. ZUN has 1 / 3 authored decoded functions exact and a reproducible
+source-driven decoded composite diagnostic, not an accepted whole-product link.
 The OP/MAINE/ZUN decoded-function ledger and cold comparison are now checked
 by preflight and CI; they do not confer packed-file exactness. None is a
 standalone TH04 game build yet, and no calibrated deterministic TH04 runtime

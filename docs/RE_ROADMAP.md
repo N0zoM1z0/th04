@@ -1,6 +1,7 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26. This is the current work order. Use
+Updated 2026-09-26. Reconstruction is paused for repository cleanup. This is
+the next-work map when reconstruction resumes. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and
 `config/evidence.csv`.
@@ -19,10 +20,12 @@ MAINE has 11,187 out of 12,553; ZUN has 38 out of 442. These are not
 packed-file coverage denominators. MAIN's 83,442 / 83,469 exact authored C/C++
 bytes cover only its reviewed file-backed owner extents.
 
-The active reconstruction queue is **OP.EXE**, following the user's requested
-one-artifact focus. Work through its remaining authored functions and
-original-ASM boundary queue before moving to MAINE or ZUN. MAIN remains a
-side lane unless a shared-source change requires replay.
+OP and MAINE have completed their current original-ASM boundary reviews; their
+remaining authored functions are explicitly blocked by recorded source or
+code-generation gaps. The next bounded reconstruction focus is **ZUN.COM**,
+starting with resident `cfg_init` and `_main` only when a materially new source
+or compiler hypothesis appears. MAIN remains a side lane unless shared source
+changes require replay.
 
 ## ZUN.COM: establish source authority
 
@@ -69,8 +72,9 @@ cold-link the respective 0x164-byte loader and 0x9E-byte renderer raw-identicall
 with all ordered relocation positions preserved. OP/MAINE have decoded
 `source-present` units; this does not alter authored-function counts or prove
 packed-file offsets. See the v797 and v799 focused CDG notes under
-`docs/reconstruction/op-maine/`. Continue the remaining original-ASM
-boundary/ownership queue separately from the C++ blockers below.
+`docs/reconstruction/op-maine/`. All 16 OP and 15 MAINE original-ASM
+function-like observations now have reviewed boundaries and source-backed
+modules; this does not grant authored C++ or packed-file credit.
 
 The 0x10A-byte `INPUT_S` shared original-ASM contribution also cold-links
 raw-identically across MAIN, OP, and MAINE from

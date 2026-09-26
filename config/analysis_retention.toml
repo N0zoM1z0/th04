@@ -31,6 +31,12 @@ probe_keep_dirs = [
   "v546-zun-runtime-inventory-001",
 ]
 
+# Expanded exact-unit builds are disposable once their top-level receipts are
+# archived. Current replay commands regenerate these worktrees from retained
+# snapshots and checked-in source.
+exact_replay_root = ".analysis/reconstruction/exact-unit-replay"
+exact_replay_keep_dirs = []
+
 # Explicit repository-local interpreter/build caches safe to remove. Keep this
 # list narrow; never replace it with a generic recursive ignored-file delete.
 cache_dirs = [

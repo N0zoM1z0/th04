@@ -1,11 +1,11 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26. This is the current resume index. Live counts come from
-`config/units.csv`, `config/th04_function_boundaries.csv`,
-`config/th04_decoded_function_acceptance.csv`, and `python3 scripts/status.py`.
-Use `docs/RE_ROADMAP.md` for work order and `docs/reconstruction/README.md`
-for focused evidence. Historical receipt paths and candidate names are not
-current acceptance claims.
+Updated 2026-09-26 after repository cleanup. Reconstruction is paused at the
+v816 ZUN resident-source negative. This is the current resume index; use
+`python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
+decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
+work order; `docs/reconstruction/README.md` routes focused evidence. Versioned
+notes and historical receipt paths are snapshots, not current acceptance.
 
 ## Resume checks
 
@@ -17,260 +17,99 @@ python3 scripts/audit_compat_dependencies.py --check
 python3 scripts/boundary_review/validate_function_boundary_ledger.py
 ```
 
-All four local targets currently pass size, SHA-256, format, and MZ-structure
-checks. Their canonicality remains `candidate-local-attested`, not independent
-proof of pristine release media. Re-attest an active Ghidra database before new
-target observations. Run only one writable Borland/Wine replay at a time.
+The four local targets pass size, SHA-256, format, and MZ-structure checks.
+Their provenance is still `candidate-local-attested`, not proof of pristine
+release media. Re-attest the active Ghidra database before new target
+observations. Run only one writable Borland/Wine replay at a time, with builds
+constrained to CPUs 0-1.
 
-## Accepted function state
+## Accepted state and remaining blockers
 
-| Artifact | Reviewed authored boundaries | Function exact | Pending / blocked | Tracked decoded source-owner bytes | Accepted decoded bytes |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| OP.EXE | 93 / 93 | 85 | 0 / 8 | 14,284 | 13,847 |
-| MAINE.EXE | 72 / 72 | 63 | 0 / 9 | 12,553 | 11,187 |
-| ZUN.COM | 3 / 3 | 1 | 0 / 2 | 442 | 38 |
+| Artifact | Reviewed authored boundaries | Exact authored functions | Blocked | Original-ASM observations |
+| --- | ---: | ---: | ---: | ---: |
+| OP.EXE | 93 / 93 | 85 | 8 | 16 reviewed |
+| MAIN.EXE | 495 / 495 | 492 | 3 | 73 attestation entries; 6 provisional |
+| MAINE.EXE | 72 / 72 | 63 | 9 | 15 reviewed |
+| ZUN.COM | 3 / 3 | 1 | 2 | 12 reviewed |
 
-MAIN.EXE has 492 / 495 authored candidate functions exact. Its reviewed
-file-backed authored C/C++ extent is 83,442 / 83,469 exact bytes; the remaining
-27 bytes belong to `carpet_lighting_put_new` (23), checkerboard drawing (2),
-and `snd_load` (2). MAIN is outside the active campaign unless new evidence
-changes these provenance/codegen blockers.
+MAIN's reviewed file-backed authored extent has 83,442 / 83,469 exact bytes.
+Its 27-byte remainder belongs to `carpet_lighting_put_new` (23), checkerboard
+(2), and `snd_load` (2). OP has 13,847 accepted decoded source-owner bytes of
+14,284 tracked; MAINE has 11,187 / 12,553; ZUN has 38 / 442. These decoded
+counts do not give a packed-file byte denominator or whole-artifact exactness.
+Original-ASM observations are outside the authored C/C++ counts.
 
-OP, MAINE, and ZUN counts refer to decoded function owners. No honest packed
-file authored-source denominator or whole-artifact exact claim exists for
-these DIET MZ containers. The separate original-ASM attestation queue has 116
-observations and is not part of the authored C/C++ denominator.
+OP's eight blocked functions and MAINE's nine blocked functions have reviewed
+physical boundaries. Current natural-source/compiler probes do not close their
+byte or admissibility gaps. The exact names, decoded payload offsets, and
+negative probes are in the [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
+and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
+Do not substitute target-derived inline ASM, explicit register forcing, or
+inert optimizer barriers without independent provenance. All 16 OP and 15
+MAINE original-ASM function-like entries now have reviewed boundaries and
+source-backed raw-identical modules; the prior MAINE provisional-cut statement
+is superseded by v815.
 
-The current canonical cold-aggregate receipts are:
-
-| Artifact | Receipt under `.analysis/reconstruction/receipt-archive/` | SHA-256 | Verdict |
+| Shared/original-style ASM source | OP load segment:offset | MAINE load segment:offset | Focused evidence |
 | --- | --- | --- | --- |
-| OP | `v755-op-zunsoft-natural-canonical-receipt.json` | `14a85e9330db6b1728bf7264ab5e8eebf608deb54a5d9dc427d6c17fd2a146f2` | 85/85 decoded-exact slices raw-zero |
-| MAINE | `v727-maine-staff-dissolves-canonical-receipt.json` | `d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287` | 63/63 decoded-exact slices raw-zero |
-| ZUN | `v776-zun-memchk-canonical-receipt.json` | `809e567a3b1822b9865522e9d8e89e3f016d62036f29c339c073bdafd83dd1b7` | MEMCHK `_main` raw-zero; two resident C++ rows remain diagnostic |
+| `CDG_LOAD`, `0x164` | `0DA1:0B6A` | `0CC7:0B08` | [v797 and v815](reconstruction/op-maine/TH04_SHARED_CDG_LOAD_V797.md) |
+| `CDG_PUT_8`, `0x9E` | `0DA1:05FE` | `0CC7:06E6` | [v799](reconstruction/op-maine/TH04_SHARED_CDG_PUT_V799.md) |
+| `INPUT_S`, `0x10A` | `0DA1:07CC` | `0CC7:081A` | [v802](reconstruction/op-maine/TH04_SHARED_INPUT_V802.md) |
+| `BGIMAGE_PUT_RECT_16`, `0x82` | `0DA1:0AE8` | `0CC7:0A86` | [v805](reconstruction/op-maine/TH04_SHARED_BGIMAGER_V805.md) |
+| `_hflip_lut_generate`, `0x1E` | `0DA1:0134` | `0CC7:01EC` | [v808 and v812](reconstruction/op-maine/TH04_OP_HFLIP_LUT_V808.md) |
+| `GRAPH_PUTSA_FX`, `0x15A` code + `0x40` data | `0DA1:04A4`, data `0F34:0A00` | `0CC7:058C` | [v809 and v813](reconstruction/op-maine/TH04_OP_GRAPH_PUTSA_FX_V809.md) |
 
-A receipt for one decoded slice cannot confer exactness on a packed file,
-another function, or a complete standalone product build.
+OP also has its local `CDG_PUT_NOCOLORS_8` (`0DA1:0282`, 0x52-byte module)
+and shared `CDG_PUT_NOALPHA_8` (`0DA1:0766`, 0x66-byte module). MAINE has local
+`CDG_PUT_PLANE` (`0CC7:0408`, 0x9A-byte module). Their [v806](reconstruction/op-maine/TH04_OP_CDG_NOCOLORS_V806.md),
+[v807](reconstruction/op-maine/TH04_OP_CDG_NOALPHA_V807.md), and
+[v814](reconstruction/op-maine/TH04_MAINE_CDG_PLANE_V814.md) focused A/B links
+match complete decoded module bytes and ordered relocations. All OP/MAINE
+packed-file offsets remain unknown. The shared CDG and input modules also
+passed focused MAIN cold replay; source placement and include composition are
+replay inputs, so changes require affected-unit cold replay.
 
-## ZUN retained state
+ZUN's natural Tiny-model MEMCHK `_main` at COM payload `0x26A7` is its one exact
+authored function (38 bytes). Its complete 4,066-byte component cold-links
+raw-identically with maintained `DOS_PUTS2` and `DOS_MAXFREE`; those helpers are
+library support, not authored-function credit. See the [MEMCHK note](reconstruction/zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md).
 
-The natural Tiny-model MEMCHK `_main` at COM payload `0x26A7` is the first exact
-ZUN authored function (38 bytes). Its complete 4,066-byte MEMCHK component
-cold-links raw-identically with maintained shared `DOS_PUTS2` and
-`DOS_MAXFREE`. Those helpers are library support, excluded from authored
-function credit. The evidence and source-owner decision are in
-`docs/reconstruction/zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md`.
+Maintained symbolic original-style ASM cold-links the 1,141-byte ZUNINIT
+component at decoded `0x6F3..0xB67`, 223-byte launcher selector, 8-byte mover,
+68-byte outer stub, and 926-byte ONGCHK component. The source-driven composite
+replay rebuilds these groups and reproduces the 13,422-byte decoded flat
+payload. It still uses an external usage asset and a resident ReC98 candidate
+with inert barriers, so this is a diagnostic flat comparison, not complete
+source acceptance. Earlier mixed flats repacked with pinned DIET 1.45f to a
+byte-identical 7,754-byte MZ target; that does not make the product source
+exact. See [ZUNINIT](reconstruction/zun/TH04_ZUNINIT_SYMBOLIC_COMPONENT_V785.md)
+and the [composite note](reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md).
 
-The six maintained symbolic original-style ASM modules under
-`src/zun/zuninit/` cold-link into the complete 1,141-byte ZUNINIT.COM
-component at decoded payload `0x6F3..0xB67`. Two isolated TASM/TLINK builds
-agree on OMF, MAP, and COM, and both complete COM outputs have zero raw
-differences against the attested target component. This covers all eight
-reviewed ZUNINIT code entries and both data islands; six physical owners are
-`source-present` in the unit ledger. Historical IDA-generated assembly is not
-original-source proof, and the packed outer `ZUN.COM` remains nonexact. The
-current receipt and layout are in
-`docs/reconstruction/zun/TH04_ZUNINIT_SYMBOLIC_COMPONENT_V785.md`.
+Resident `cfg_init` at COM payload `0xDCF` and `_main` at `0xE67` remain blocked.
+Natural `_main` is six bytes short of the target print-call shape; `cfg_init`
+retains linked fixup differences downstream. The v816 genuine-inline-helper
+probe also failed; see [ZUN resident notes](reconstruction/zun/TH04_ZUN_MAIN_V241.md).
+A new source-origin observation or compiler mechanism is needed before retry.
 
-The outer launcher selector at decoded payload `0x12F..0x20D` now has a
-223-byte maintained symbolic ASM source. Two low-priority, two-core cold
-TASM/TLINK rounds reproduce the full target selector with zero raw differences.
-The reviewed dispatch body is `0x146+0xC8`; Ghidra's former range crossing the
-generated directory at `0x20E` is rejected. The separate 327-byte directory,
-other COM components, and packed MZ are not included in this selector claim.
-See `docs/reconstruction/zun/TH04_ZUN_SELECTOR_V786.md`.
+## Private inputs and cleanup
 
-The adjacent selected-COM mover at `0x3422+0x8` and outer customization stub
-at `0x342A+0x44` also have maintained symbolic ASM and two-round raw-identical
-focused links; see `docs/reconstruction/zun/TH04_ZUN_LAUNCHER_TAILS_V787.md`.
+The canonical cold aggregate receipts in
+`.analysis/reconstruction/receipt-archive/` remain verified:
 
-The checked-in flat composite builder derives the 327-byte selector directory
-from actual component sizes. A/B mixed-input integration builds reproduce the
-directory and all 13,422 decoded payload bytes; a one-byte component-length
-mutation fails both raw comparators. The 926-byte embedded ONGCHK third-party
-library component now cold-links raw-identically from maintained symbolic ASM
-in two isolated rounds. The v793 serial replay now cold-builds selector,
-launcher tails, ONGCHK, ZUNINIT, and MEMCHK from current maintained source
-before composing A/B raw-identical flat payloads; it no longer needs cached
-component outputs. Usage text remains an external asset, while RES_HUMA comes
-from a ReC98 candidate with
-inert barriers. The maintained natural resident `_main` remains six bytes
-short. The new flats have the same full digest as the earlier inputs that
-pinned DIET 1.45f repacked to the exact 7,754-byte MZ target; no repeat pack is
-needed for byte identity. No whole-product source acceptance follows. Two
-Ghidra ONGCHK starts at payload `0x517` and `0x532` are now excluded as
-branch-only shared tails after target control-flow review. See
-`docs/reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md`.
-
-The 18-byte helper at payload `0x7B0` is runtime-observed to convert all
-6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs
-show the scope limit. This establishes the target semantics; see
-`docs/reconstruction/zun/TH04_ZUNINIT_SJIS_V777.md`.
-The adjacent 59-byte helper at `0x7C2` also matches the expected character and
-attribute VRAM writes for all seven embedded messages at all three UI row
-offsets (21 scenarios); see `docs/reconstruction/zun/TH04_ZUNINIT_TEXT_VRAM_V778.md`.
-These two entries share a 77-byte maintained symbolic original-style ASM
-owner included in the complete component link. See the v779 focused note for
-the independent helper provenance and assembler probe.
-
-Resident `cfg_init` at payload `0xDCF` and resident `_main` at `0xE67` remain
-blocked: natural `_main` is six bytes short; `cfg_init` retains linked fixup
-differences downstream of that layout shift. Prior compiler and barrier
-negatives, including the v792 local `-G` pragma scope and v816 genuine inline
-error-helper probe, are in the ZUN focused
-notes and `config/knowledge.csv`. Continue
-source/component ownership review before exact promotion.
-
-## OP/MAINE retained state and ZUN active frontier
-
-The OP source and boundary campaign is complete under current evidence:
-85/93 authored functions are decoded exact, eight are explicitly blocked on
-source/codegen provenance, and all 16 original-ASM observations have reviewed
-bounds and cold-linked source modules. MAINE is similarly 63/72 authored
-decoded exact with nine source/codegen blockers and all 15 original-ASM
-observations reviewed and source-backed. The active work order now moves to
-ZUN.COM until its remaining resident functions are pushed as far as the
-evidence permits.
-
-The shared CDG loader now has one maintained TH04-local TASM source at
-`src/shared/formats/cdg_load.asm`. MAIN `130E:0858` (load `0x13938+0x164`,
-file `0x15138+0x164`) passes
-two complete cold exact-unit builds after the source move. OP `0DA1:0B6A`
-(`0xE57A+0x164`) and MAINE `0CC7:0B08` (`0xD778+0x164`) each pass two
-isolated cold source builds with zero raw differences and 14/14 module
-relocations. All ordered artifact relocations agree. The two packed artifacts
-record decoded `source-present` module units because their original-file
-offsets are unknown. OP's seven entry/helper observations are now target-first
-reviewed, including two shared-entry `NOALPHA` prefixes; MAINE's internal
-cuts remain partly provisional. No authored C/C++ function count changes. See
-`docs/reconstruction/op-maine/TH04_SHARED_CDG_LOAD_V797.md` and the v797/v798
-evidence rows.
-
-The adjacent `CDG_PUT_8` renderer is also maintained under
-`src/shared/formats/cdg_put.asm`. MAIN `130E:04A0` (load `0x13580+0x9E`, file
-`0x14D80+0x9E`) passes the v800 complete cold replay. OP `0DA1:05FE`
-(`0xE00E+0x9E`) and MAINE `0CC7:06E6` (`0xD356+0x9E`) pass source A/B
-replays with zero differences and all artifact relocations equal. The module
-includes a final alignment byte after the 0x9D-byte function. Keep its
-self-modifying segment load and PC-98 GRCG/VRAM semantics in exact source;
-see `docs/reconstruction/op-maine/TH04_SHARED_CDG_PUT_V799.md`.
-
-The `INPUT_S` keyboard/joystick sensing TU is now maintained at
-`src/shared/hardware/input_s.asm` with TH04-local PC-98 constants. MAIN
-`130E:06BC` (load `0x1379C+0x10A`, file `0x14F9C+0x10A`) passes complete
-v803 cold replay. OP `0DA1:07CC` (`0xE1DC+0x10A`) and MAINE `0CC7:081A`
-(`0xD48A+0x10A`) pass A/B raw comparison in v804, including the module's
-single relocation. The 8-byte reset entry, 0x101-byte sense entry, and one
-alignment byte remain distinct in the boundary ledger; see
-`docs/reconstruction/op-maine/TH04_SHARED_INPUT_V802.md`.
-
-The separate OP/MAINE `BGIMAGE_PUT_RECT_16` original-style ASM candidate is
-now maintained at `src/shared/hardware/bgimager.asm`. OP `0DA1:0AE8`
-(`0xE4F8+0x82`) and MAINE `0CC7:0A86` (`0xD6F6+0x82`) each pass v805 A/B
-cold source replay against their own decoded targets with zero byte
-differences, including final alignment. Its ReC98 starting source remains
-candidate provenance, and this rect renderer is separate from the accepted
-C++ BGIMAGE snap/put/free producer. See
-`docs/reconstruction/op-maine/TH04_SHARED_BGIMAGER_V805.md`.
-
-OP `CDG_PUT_NOCOLORS_8` now has a reviewed 0x51-byte FAR boundary at
-`0DA1:0282` (payload `0xDC92`) and a maintained OP-local original-style ASM
-source. A/B cold links reproduce the full 0x52-byte contribution including
-the final alignment byte, with zero raw differences and all 804 ordered OP
-relocations preserved. The ReC98 source remains candidate provenance; see
-`docs/reconstruction/op-maine/TH04_OP_CDG_NOCOLORS_V806.md`.
-
-OP `CDG_PUT_NOALPHA_8` at `0DA1:0766` (payload `0xE176`) now has a reviewed
-0x65-byte FAR boundary and independently replayed shared symbolic ASM source.
-Two OP-only cold links reproduce the complete 0x66-byte contribution, including
-its final alignment byte, with zero raw differences and all 804 ordered
-relocations preserved. The OP packed-file offset remains unknown; see
-`docs/reconstruction/op-maine/TH04_OP_CDG_NOALPHA_V807.md`.
-
-OP `_hflip_lut_generate` at `0DA1:0134` (payload `0xDB44`) now has a reviewed
-0x1E-byte FAR boundary despite Ghidra omitting the entry. Its unchanged
-symbolic TASM source moved to `src/shared/hardware/hflip_lut.asm`; OP A/B
-cold links raw-match the complete module, and the affected MAIN exact unit
-passes focused cold replay after the source move. See
-`docs/reconstruction/op-maine/TH04_OP_HFLIP_LUT_V808.md`.
-
-OP `GRAPH_PUTSA_FX` at `0DA1:04A4` (payload `0xDEB4`) now has a reviewed
-0x12B-byte FAR boundary, with the `05CF` alignment and internal glyph-weight
-helpers separately accounted for inside its 0x15A-byte code owner. The same
-source owns a 0x40-byte `DGROUP:_DATA` contribution at `0F34:0A00`. Localized
-OP TASM source cold-links both complete extents raw-zero in A/B builds while
-preserving all 804 ordered OP relocations. The internal bold-weight helper at
-`05DD` is also reviewed; see
-`docs/reconstruction/op-maine/TH04_OP_GRAPH_PUTSA_FX_V809.md`.
-
-MAINE `_hflip_lut_generate` at `0CC7:01EC` (payload `0xCE5C`) independently
-cold-links the shared TASM source raw-zero across its full 0x1E-byte module.
-MAINE `GRAPH_PUTSA_FX` at `0CC7:058C` (payload `0xD1FC`) cold-links the same
-now-shared symbolic source as OP: its complete 0x15A-byte code and separate
-0x40-byte `DGROUP:_DATA` contributions are raw-zero in A/B builds. The source
-move also passed an OP A/B revalidation; all ordered artifact relocations
-agree. MAINE `CDG_PUT_PLANE` at `0CC7:0408` (payload `0xD078`) has a
-maintained MAINE-local symbolic source that cold-links all 0x9A bytes raw-zero
-in A/B builds. Each module has a reviewed function boundary and an unknown
-packed-file offset; see the v812-v814 focused notes.
-
-All 15 MAINE original-ASM function-like observations now have reviewed target
-boundaries. The v815 pass closes `CDG_LOAD` shared-entry prefixes and reader,
-`CDG_PUT_8`, both `INPUT_S` entries, and `BGIMAGE_PUT_RECT_16` against
-MAINE-local return/fallthrough bytes and alignment. Their complete modules
-already pass artifact-local A/B source cold comparisons. None supplies
-authored C/C++ exact credit or a packed-file offset.
-
-The nine remaining MAINE authored entries are now explicitly `blocked` in the
-boundary ledger. All physical boundaries are reviewed; the recorded natural
-source, compiler, and source-provenance tests still leave strict byte or
-admissibility failures. `docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`
-lists each mechanism. This state records missing prerequisites, not an
-impossibility claim.
-
-All 16 OP original-ASM function-like observations now have reviewed target
-boundaries. The final v811 review closes `CDG_PUT_8`, the two `INPUT_S`
-entries, and `BGIMAGE_PUT_RECT_16` using their target returns/fallthroughs
-and source-owned alignment bytes. Their complete modules already pass
-artifact-local A/B cold raw comparisons; their DIET packed-file offsets are
-still unknown.
-
-The eight remaining OP authored entries are now explicitly `blocked` in the
-boundary ledger. Their physical boundaries are reviewed, but current natural
-source and compiler probes fail strict byte equality; exact-looking
-diagnostics requiring unproven inline ASM, explicit register forcing, or
-inert padding do not qualify. The blocker mechanisms and replay receipts are
-in `docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md`.
-
-All current authored OP and MAINE physical boundaries are reviewed. OP's eight
-nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,
-`0xDDCA`, `0xE2F2`, `0xE32C`, `0xE378`, and `0xE3E8`. MAINE's nine are at
-`0xA2D6`, `0xA78F`, `0xC149`, `0xC1A1`, `0xC814`, `0xCBB0`, `0xD112`,
-`0xD5A0`, and `0xD5DA`. Names and exact blocker details are in the boundary
-ledger and the focused strict-frontier notes:
-
-- `docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md`;
-- `docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`.
-
-Do not retry equivalent C++ spellings or promote target-derived inline ASM,
-pseudo-register forcing, or inert optimizer barriers without materially new
-compiler or source-provenance evidence. Any shared header, flag, layout, or
-link-order change requires cold replay of every affected accepted owner.
-
-## Private inputs and finish checks
+| Artifact | Receipt | SHA-256 |
+| --- | --- | --- |
+| OP | `v755-op-zunsoft-natural-canonical-receipt.json` | `14a85e9330db6b1728bf7264ab5e8eebf608deb54a5d9dc427d6c17fd2a146f2` |
+| MAINE | `v727-maine-staff-dissolves-canonical-receipt.json` | `d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287` |
+| ZUN | `v776-zun-memchk-canonical-receipt.json` | `809e567a3b1822b9865522e9d8e89e3f016d62036f29c339c073bdafd83dd1b7` |
 
 Preserve `.analysis/targets/`, `.analysis/toolchain/`, `.analysis/ghidra/`,
-`.analysis/runtime/images/zun.hdi`, retained v401/v402/v489 source snapshots,
-DIET replay inputs, and the configured v546 ZUN runtime inventory. Historical
-`.analysis/reconstruction/probes/` paths in evidence rows are replay provenance,
-not retention promises; `scripts/prune_analysis.py` supports dry-run cleanup.
+`.analysis/runtime/images/zun.hdi`, the v401/v402/v489 source snapshots,
+DIET replay inputs, and the configured v546 ZUN runtime inventory. Expanded
+focused probes and exact-unit build worktrees were archived as top-level
+results/receipts in `focused-probe-heads-v817-20260926.tar.zst`, with an
+adjacent per-file SHA-256 manifest, then pruned. Historical paths into those
+worktrees are provenance, not live input promises. Use
+`scripts/prune_analysis.py` in dry-run mode before future cleanup.
 
-```sh
-python3 scripts/status.py
-python3 scripts/preflight.py
-python3 scripts/boundary_review/report_function_boundaries.py --check
-python3 scripts/progress.py --check
-python3 scripts/ci.py
-git diff --check
-git status --short
-```
+Finish future changes with the focused comparison, `python3 scripts/ci.py`,
+`git diff --check`, and an updated handoff when phase or blockers change.

@@ -4,20 +4,32 @@ These notes explain bounded target observations, compiler experiments, replay
 receipts, and unresolved producer questions. They support the ledgers; they do
 not define current progress or exactness by themselves.
 
-Versioned notes are historical snapshots unless explicitly listed as active.
+Versioned notes are historical snapshots unless a current-state document
+explicitly reaffirms a claim.
 Historical .analysis/reconstruction/probes/... paths record where evidence was
 produced; the expanded worktree may have been pruned after its receipt and
 digests were archived. Re-run the checked-in command or restore the private
 receipt archive rather than treating a missing probe directory as missing
 source evidence.
 
-## Active frontiers
+## Current open questions
 
-Only the links in this section and `docs/RE_HANDOFF.md` describe the current
-frontier. Versioned notes outside this list are historical snapshots and may
-contain residual counts that were correct only at that packet.
+Reconstruction is paused for cleanup. Use the live ledgers and
+[`RE_HANDOFF.md`](../RE_HANDOFF.md) for current counts and acceptance. These
+notes explain the remaining source and container gaps:
 
-### MAIN.EXE (reference only; not current campaign)
+- [OP strict source blockers](op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
+- [MAINE strict source blockers](op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md)
+- [ZUN resident `_main` and `cfg_init` blockers](zun/TH04_ZUN_MAIN_V241.md)
+- [ZUN mixed flat build and source limits](zun/TH04_ZUN_MIXED_COMPOSITE_V788.md)
+- [DIET MZ partition and packing limits](packed/TH04_DIET145F_MZ_PARTITION_V231.md)
+
+## Evidence catalog
+
+The links below route to historical proofs and experiments. Their per-packet
+counts, file paths, and proposals do not supersede the current ledgers.
+
+### MAIN.EXE
 
 - [Checkerboard counted-LOOP blocker](main/TH04_MAIN_CHECKERBOARD_V396.md)
 - [Stage 4 carpet low-level producer blocker](main/TH04_MAIN_KURUMI_CARPET_V174.md)
@@ -135,10 +147,10 @@ and Git history instead of remaining in the routine documentation surface.
 | [`zun/`](zun/) | ZUN.COM resident, configuration, and support code |
 
 Version suffixes remain in filenames so old evidence and Git history stay
-addressable. Treat every versioned note as state-at-that-packet unless it is
-listed under Active frontiers above. Continue an existing subject note when an experiment advances the
-same claim. Add a new note only for a distinct ownership decision, reusable
-negative result, or replay boundary. Keep live priorities in
+addressable. Treat every versioned note as state-at-that-packet. Continue an
+existing subject note when an experiment advances the same claim. Add a new
+note only for a distinct ownership decision, reusable negative result, or
+replay boundary. Keep live priorities in
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) and live counts in the CSV ledgers and
-generated progress reports. Notes not listed under active frontiers or recent
-milestones are retained evidence; do not scan them during routine handoff.
+generated progress reports. Notes outside current open questions are retained
+evidence; do not scan them during routine handoff.
