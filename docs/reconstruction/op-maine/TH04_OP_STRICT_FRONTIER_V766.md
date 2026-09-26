@@ -1,4 +1,4 @@
-# OP strict natural-source frontier (v766, current-state addendum v821)
+# OP strict natural-source frontier (v766, current-state addenda v821-v823)
 
 All 93 authored OP function candidates have reviewed physical boundaries. At
 v766, 85/93 had accepted decoded exactness and eight entries were blocked.
@@ -99,8 +99,9 @@ Retained receipt:
 SHA-256:
 a3ecaa4e360d384d219ce853ca2ba198e7a34e5c95e1ac60c1a4776e005208e1
 
-SND_LOAD remains separately bounded by its TH04-only 89 C3 encoding and
-existing compiler/TASM controls. The EGC pair remains a source-provenance
+SND_LOAD is now bounded more tightly by v823: TC4J integrated inline assembly
+reproduces its TH04-only 89 C3 encoding with no other decoded-program or
+relocation change, while the available source witnesses remain decompilation-derived. The EGC pair remains a source-provenance
 problem: its exact-looking ReC98 low-level form originates in a decompilation
 commit, so v820 does not use it as authored source.
 
@@ -128,3 +129,28 @@ is not useful.
 
 The current artifact order can advance once this OP frontier is recorded;
 the six current blockers remain the OP exactness queue when new evidence arrives.
+
+### v823 SND_LOAD complete-producer provenance bound
+
+v823 reopens the 234-byte SND_LOAD blocker at full-function scale rather than
+testing another small source spelling. Two natural cold wrapper builds retain
+8B D8 and the established baseline. Two diagnostic cold wrapper builds change
+only the candidate _BX=_AX line to TC4J integrated inline asm { mov bx, ax; };
+the complete 234-byte function then matches the target raw-zero. Comparing the
+natural and diagnostic decoded OP images yields exactly two changed offsets,
+0xDE8B and 0xDE8C. MAP ownership remains th04/snd_load.cpp and all 804 ordered
+MZ relocations remain identical.
+
+The provenance check is intentionally stricter than the codegen check. The
+pinned v401 snapshot contains 345 unique TC86 4.02 objects and exactly one
+other CODE occurrence of 89 C3. That object is th02/player_b.obj, and its source
+explicitly contains asm { mov bx, ax; }; Git history binds the line to a
+[Decompilation] commit. The TH04 snd_load candidate _BX=_AX line is likewise
+introduced by [Decompilation] [th04] snd_load().
+
+Therefore v823 closes the machine-code mechanism but does not grant authored
+source credit. SND_LOAD stays blocked pending an independent historical source
+witness or other provenance-bearing TH04 producer.
+
+Focused diagnostic receipt SHA-256:
+b958943a35c7916ab4a8bc80a9f2dd97bcc25a968ff4a315547f71d6dc37f161.

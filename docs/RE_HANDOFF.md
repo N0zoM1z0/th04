@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after the v822 OP shared-sound provenance bound. This is the
+Updated 2026-09-26 after the v823 OP SND_LOAD provenance bound. This is the
 current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
@@ -58,12 +58,26 @@ provenance, so the two functions remain blocked. The v822 diagnostic receipt is
 `v822-op-snd-se-shared-diagnostic-receipt.json`, SHA-256
 `2509adb3b0153514025544f0b2b55aa399ddca52c0a4e5e884e28ca19f0696ef`.
 
+v823 then closes the code-generation mechanism for 234-byte SND_LOAD without
+granting source credit. Two cold wrapper builds replacing only _BX=_AX with
+TC4J integrated inline asm reproduce the complete reviewed function raw-zero;
+natural versus diagnostic OP program images differ only at 0xDE8B..0xDE8C,
+while the MAP owner and all 804 ordered relocations stay identical. The pinned
+v401 snapshot contains 345 unique TC86 4.02 objects and exactly one other
+89 C3; its source explicitly uses asm { mov bx, ax; } and comes from a ReC98
+[Decompilation] commit. The TH04 candidate line itself also comes from
+[Decompilation] [th04] snd_load(). SND_LOAD therefore remains blocked solely
+on independent authored-source provenance. Diagnostic receipt
+v823-op-snd-load-provenance-receipt.json, SHA-256
+b958943a35c7916ab4a8bc80a9f2dd97bcc25a968ff4a315547f71d6dc37f161.
+
 The remaining OP blockers are `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
 `_snd_se_update`, `egc_copy_rect_1_to_0_16`, and internal `egc_start_copy`.
 v820's compiler-path negative remains valid for ordinary TC4J / `-B` lowering;
 only the SCORE acceptance decision is superseded by v821's new provenance.
 See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md),
 [v822 shared-sound provenance bound](reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md),
+[v823 SND_LOAD provenance bound](reconstruction/op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md),
 [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md),
 and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
 Do not substitute target-derived inline ASM, explicit register forcing, or

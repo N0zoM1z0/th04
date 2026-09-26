@@ -1,6 +1,6 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26 after the v822 OP shared-sound provenance bound. This is the
+Updated 2026-09-26 after the v823 OP SND_LOAD provenance bound. This is the
 current next-work map. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and
@@ -37,6 +37,17 @@ frame-free parameter and BL/BH helper spelling first appears in a pinned ReC98
 `[Decompilation]` commit and is explicitly marked as modder-facing bloat.
 Those two functions are therefore narrowed to source-provenance blockers, not
 decoded-exact functions.
+
+v823 similarly closes the machine-code mechanism for the much larger 234-byte
+SND_LOAD blocker without promoting it. Two cold wrapper builds that change only
+the decompilation candidate _BX=_AX to TC4J integrated inline assembly reproduce
+the complete target function raw-zero; relative to the natural OP baseline,
+exactly the two bytes at 0xDE8B..0xDE8C change and all 804 ordered relocations
+plus MAP ownership remain unchanged. A scan of 345 unique TC86 objects in the
+pinned v401 snapshot finds only one other 89 C3, also from explicit asm in a
+ReC98 [Decompilation] commit. Thus SND_LOAD is now a source-provenance-only
+blocker: the exact compiler mechanism is known, but no independent ZUN source
+witness justifies adopting that spelling.
 
 The next bounded work should stay on one artifact at a time: pursue materially
 new OP source/compiler/provenance evidence for the six remaining blockers, or
@@ -122,13 +133,14 @@ adding independent TH03 codec-machine-code corroboration and restricting
 symbolic low-level source to the irreducible byte ROR. v822 adds materially new
 same-game producer evidence for `SND_SE_PLAY` and `_snd_se_update`: their exact
 machine-code shape is now reproducible, but the required helper spelling is
-target-derived decompilation provenance, so both remain blocked. The other four
-OP blockers still need new source/compiler evidence. Do not promote byte-forcing
+target-derived decompilation provenance, so both remain blocked. The remaining OP blockers now need new independent source provenance or materially
+new compiler evidence. Do not promote byte-forcing
 inline assembly, pseudo-registers, copied instructions, or inert optimizer
 barriers without independent provenance. Resume a blocker only with a
 materially new compiler mechanism or source-origin observation. See
 `docs/reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md`,
 `docs/reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md`,
+docs/reconstruction/op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md,
 `docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md`, and
 `docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`.
 

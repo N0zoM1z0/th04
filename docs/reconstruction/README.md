@@ -82,6 +82,7 @@ counts, file paths, and proposals do not supersede the current ledgers.
 - [OP ZUNSOFT current natural-C++ owner exact replay](op-maine/TH04_OP_ZUNSOFT_NATURAL_EXACT_V753.md)
 - [OP SCORE codec cross-game hybrid closure](op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md)
 - [OP shared-sound producer provenance bound](op-maine/TH04_OP_SND_SE_SHARED_V822.md)
+- [OP SND_LOAD complete-producer provenance bound](op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md)
 - [OP strict natural-source frontier](op-maine/TH04_OP_STRICT_FRONTIER_V766.md)
 - [OP egcrect physical-boundary closure](op-maine/TH04_OP_EGCRECT_BOUNDARIES_V757.md)
 - [OP op_main.cpp remaining functions exact replay](op-maine/TH04_OP_MAIN_REMAINING_EXACT_V742.md)
