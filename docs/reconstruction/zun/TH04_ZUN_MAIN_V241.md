@@ -237,3 +237,31 @@ scripts/probes/probe_th04_zun_main_pragma_speed_scope.py --output-dir
 .analysis/reconstruction/probes/NEW-UNIQUE-NAME`. Focused receipt:
 `.analysis/reconstruction/probes/v792-zun-main-pragma-speed-001/receipt.json`,
 SHA-256 `2c2f79c0a38e3a245f01ce402342b2f067fc7bd27bd7a37144401bac6a80c7a3`.
+
+## v816 genuine inline error-helper negative
+
+The new bounded probe tests a materially different C++ mechanism: a real
+inline helper that prints an error, either returning `1` itself or leaving
+the branch to return `1`. It is used for both the bad-option and
+already-resident paths, or for one path at a time. These helpers perform
+the required operation; they are not inert optimizer barriers.
+
+All four variants compile deterministically in A/B pinned TC4J rounds to
+246 bytes of `_main` CODE against the target's 252 bytes. The `void` helper
+variant is byte-identical to the maintained 246-byte baseline. The three
+`int` variants change CODE bytes but keep the 246-byte size. A focused
+`ndisasm -b 16` count finds nine CALL instructions in every candidate
+versus eleven in the target. None restores the target's two separate error
+prints, so `_main` and downstream `cfg_init` remain blocked.
+
+Replay:
+
+```sh
+taskset -c 0,1 nice -n 10 python3 scripts/probes/probe_th04_zun_main_inline_error_helper.py \
+  --output-dir .analysis/reconstruction/probes/NEW-ZUN-INLINE-HELPER
+```
+
+Receipt:
+`.analysis/reconstruction/probes/v816-zun-inline-error-helper-001/receipt.json`
+(SHA-256 `e828665da116375a217376b2b6c66450ed36a90662d8f45a85d6b9a39f6a5cc3`).
+The maintained source and accepted states are unchanged.

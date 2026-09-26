@@ -116,7 +116,8 @@ the independent helper provenance and assembler probe.
 Resident `cfg_init` at payload `0xDCF` and resident `_main` at `0xE67` remain
 blocked: natural `_main` is six bytes short; `cfg_init` retains linked fixup
 differences downstream of that layout shift. Prior compiler and barrier
-negatives, including the v792 local `-G` pragma scope, are in the ZUN focused
+negatives, including the v792 local `-G` pragma scope and v816 genuine inline
+error-helper probe, are in the ZUN focused
 notes and `config/knowledge.csv`. Continue
 source/component ownership review before exact promotion.
 
