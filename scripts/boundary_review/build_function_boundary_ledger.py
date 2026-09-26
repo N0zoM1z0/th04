@@ -203,7 +203,8 @@ def classify_module(
             continue
         if "segment" in rule and str(rule["segment"]).lower() != segment.lower():
             continue
-        return str(rule["origin"]), str(rule["source_form"]), f"candidate:{normalized}"
+        return (str(rule["origin"]), str(rule["source_form"]),
+                str(rule.get("source_ref", f"candidate:{normalized}")))
 
     lower = normalized.lower()
     suffix = Path(lower).suffix

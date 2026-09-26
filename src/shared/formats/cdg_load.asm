@@ -2,8 +2,29 @@
 	.model use16 large SHARED
 	locals
 
-include th03/arg_bx.inc
-include th03/formats/cdg.inc
+; TH04 CDG slots are 16 bytes each, with 64 entries. These field offsets and
+; layout values are checked by the cold-linked MAIN/OP/MAINE module replays.
+CDG_COLORS = 0
+CDG_ALPHA = 2
+CDG_SLOT_COUNT = 64
+
+cdg_t struc
+	CDG_plane_size dw ?
+	pixel_w dw ?
+	pixel_h dw ?
+	offset_at_bottom_left dw ?
+	vram_dword_w dw ?
+	image_count db ?
+	plane_layout db ?
+	seg_alpha dw ?
+	seg_colors dw ?
+cdg_t ends
+
+cdg_slot_offset macro retval:req, slot:req
+	mov retval, slot
+	shl retval, 4
+	add retval, offset _cdg_slots
+endm
 
 	extrn FILE_ROPEN:proc
 	extrn FILE_READ:proc
@@ -153,10 +174,10 @@ cdg_load_all endp
 
 public CDG_FREE
 cdg_free proc far
-arg_bx	far, @slot:word
+	mov	bx, sp
 
 	push	di
-	mov	di, @slot
+	mov	di, word ptr ss:[bx+4]
 	shl	di, 4	; *= size cdg_t
 	add	di, offset _cdg_slots.seg_alpha
 	cmp	word ptr [di], 0
@@ -173,7 +194,7 @@ arg_bx	far, @slot:word
 
 @@ret:
 	pop	di
-	ret_bx
+	retf	2
 cdg_free endp
 	align 2
 

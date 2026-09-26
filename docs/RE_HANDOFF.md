@@ -122,6 +122,18 @@ source/component ownership review before exact promotion.
 
 ## OP and MAINE strict frontiers
 
+The shared CDG loader now has one maintained TH04-local TASM source at
+`src/shared/formats/cdg_load.asm`. MAIN `130E:0858` (`0x15138+0x164`) passes
+two complete cold exact-unit builds after the source move. OP `0DA1:0B6A`
+(`0xE57A+0x164`) and MAINE `0CC7:0B08` (`0xD778+0x164`) each pass two
+isolated cold source builds with zero raw differences and 14/14 module
+relocations. All ordered artifact relocations agree. The two packed artifacts
+record decoded `source-present` module units because their original-file
+offsets are unknown. The internal ASM function cuts remain partly
+provisional; no authored C/C++ function count changes. See
+`docs/reconstruction/op-maine/TH04_SHARED_CDG_LOAD_V797.md` and the v797/v798
+evidence rows.
+
 All current authored OP and MAINE physical boundaries are reviewed. OP's eight
 nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,
 `0xDDCA`, `0xE2F2`, `0xE32C`, `0xE378`, and `0xE3E8`. MAINE's nine are at

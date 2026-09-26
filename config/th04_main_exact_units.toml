@@ -906,7 +906,7 @@ object_path = "obj/th04/input_s.obj"
 
 [[units]]
 id = "th04-main-module-th04-cdg-load-asm-13938"
-repo_source = "src/main/formats/cdg_load.asm"
+repo_source = "src/shared/formats/cdg_load.asm"
 overlay_path = "th04/cdg_load.asm"
 map_module = "th04\\cdg_load.asm"
 object_path = "obj/th04/cdg_load.obj"
