@@ -19,6 +19,15 @@ cover the default options, resident segment, debug flag, and stored checksum.
 The newly created-file path writes an uninitialized checksum byte; the source
 preserves that observed behavior.
 
+## Current status (v819)
+
+`cfg_init` is now **decoded-exact**. Its 152-byte direct TC4J CODE had
+already been closed outside OMF FIXUPP fields; v817 closes the actual link
+context by pairing it with the exact resident `_main` producer. Both
+complete resident component rounds are byte-identical to target, so every
+formerly shifted `cfg_init` fixup resolves to the target value. Canonical
+v819 acceptance reports zero raw differences across the complete function.
+
 ## Maintained source and replay
 
 [Source](../../../src/zun/config/cfg_init.cpp) is a complete natural C++
@@ -57,7 +66,7 @@ The checked-in diagnostic replay is
 A/B rerun passed with receipt SHA-256
 `ffa2e671a54c71d91df1abdc13cabfdab8edd052c855cd4f4a804e28fdfdf525`.
 
-## Acceptance boundary
+## v239 acceptance boundary (historical; superseded by v819)
 
 This promotes one ZUN unit to **source-present** and its target function
 boundary to reviewed. It does not promote unit or artifact exactness. The
@@ -127,7 +136,7 @@ Run:
 Accepted receipt v539-zun-cfg-current-link-001/receipt.json has SHA-256
 25b880efe3580b1ab0461babf96dfd7332a1537eba574a3529a294defd642ca5.
 
-The current linked cfg_init still has exactly 13 raw differing bytes. The
+The v539 linked cfg_init still had exactly 13 raw differing bytes. The
 15 FIXUPP words split cleanly:
 
 - offsets 0x06, 0x0F, and 0x81 already equal target;
@@ -138,6 +147,33 @@ Those twelve shifted words produce exactly the 13 differing byte offsets
 and 0x94. No linked difference escapes these fields.
 
 This directly ties the current cfg_init residual to the six-byte short _main
-layout. It does not waive the raw gate: cfg_init remains source-present and
-blocked until an artifact-local natural link is raw-zero. Do not patch or
+layout. It does not waive the raw gate: at v539 cfg_init remained source-present and
+blocked until an artifact-local natural link became raw-zero. Do not patch or
 normalize relocation values to claim exactness.
+
+## v817-v819 link-context closure
+
+The old v519/v539 diagnosis was correct about *where* the remaining differences
+lived but not a permanent blocker. Once resident `_main` is generated
+through the exact TC4J `-B` + pinned TASM32 path, the six-byte downstream
+layout shift disappears. No `cfg_init` source change is needed.
+
+The checked-in `scripts/probes/replay_th04_zun_resident_bmode.py` compiles
+`cfg_init` directly with pinned TC4J, generates/assembles the exact
+252-byte `_main`, rebuilds the maintained compact resident support, and
+links the complete 6,360-byte `RES_HUMA.COM` twice. Both outputs are
+raw-identical to target SHA-256
+`cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c151c95110`.
+The linked `cfg_init` slice at component `0x267..0x2FE` / payload
+`0xDCF..0xE66` is therefore raw-identical to target SHA-256
+`8fc23f22f653db2afd65ad4cdab19776f5e9f1cdbbfa9de2dd407426fed9bfa2`.
+
+v818 preacceptance and canonical v819 acceptance both compare the complete
+152-byte function at zero differences. The canonical receipt is
+`.analysis/reconstruction/receipt-archive/v819-zun-resident-canonical-receipt.json`,
+SHA-256
+`fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508`.
+
+This promotes decoded function acceptance only. The unit remains
+`source-present` in the packed-file ledger because no honest direct packed
+`ZUN.COM` file offset has been established.

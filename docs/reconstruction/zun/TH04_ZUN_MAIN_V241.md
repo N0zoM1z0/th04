@@ -19,6 +19,17 @@ physical boundary. The target body checks resident existence, prints and
 handles `/R` and `/D`, creates the resident block, clears its tail, writes
 configuration, then sets the debug byte when requested.
 
+## Current status (v819)
+
+The current acceptance supersedes the old 246/252 blocker described in the
+historical sections below. Maintained `_main` is now **decoded-exact**. The
+source expresses a real shared failure path (`/R` not-resident jumps to the
+no-space failure return), and TC4J's assembly backend (`-B`) followed by
+pinned TASM32 emits the exact 252-byte target body. No inert self-assignment
+barrier, inline target bytes, or target-derived assembly is used. The complete
+resident component cold-links raw-identically in two rounds, and canonical
+v819 decoded acceptance reports zero differences for `_main`.
+
 ## Maintained source and diagnostic replay
 
 [Maintained source](../../../src/zun/resident/main.cpp) expresses the complete
@@ -55,7 +66,7 @@ the inert statements are absent. ReC98's `seg = seg` and `argv = argv` suppress
 that merge, but those statements are not accepted reconstruction source. The
 linked component is therefore different, despite identical A/B output.
 
-## Acceptance boundary
+## v241 acceptance boundary (historical; superseded by v819)
 
 This packet reviews the `_main` function boundary and adds one **source-present**
 ZUN unit. It does not claim exactness. The natural source differs by six CODE
@@ -265,3 +276,53 @@ Receipt:
 `.analysis/reconstruction/probes/v816-zun-inline-error-helper-001/receipt.json`
 (SHA-256 `e828665da116375a217376b2b6c66450ed36a90662d8f45a85d6b9a39f6a5cc3`).
 The maintained source and accepted states are unchanged.
+
+## v817-v819 exact resident closure
+
+The missing mechanism turned out to be a combination of source control-flow
+shape and the compiler's assembly-output path, not a new optimizer switch.
+
+The maintained source now spells the `/R` not-resident error as
+`goto failure`, with `failure:` at the failure return immediately after
+the no-space print. This is semantically active control flow: those two paths
+really share the same failure return. Bad-option and already-resident remain
+ordinary `return 1` branches. Direct pinned TC4J still emits the known
+246-byte `jmp / jmp / jmp / call` negative control, so the source spelling
+alone is not a byte-forcing trick.
+
+With `tcc -B`, TC4J emits assembly before its direct-object tail-folding
+path. Pinned TASM32 assembles that generated source to 252 bytes of `_main`
+CODE, SHA-256
+`293401ac19a4d186a6a7e4bb3ae51959443bc4706afe148af0a1660a6df03f0a`.
+The resulting linked function is byte-identical to target SHA-256
+`db04398b52ca5780c734f839e2cf3768718f7f7c65705a9cdb9e88e34aa64871`.
+The target fingerprint is reproduced exactly: not-resident shares the later
+no-space call/return path, while bad-option and already-resident retain their
+own `DOS_PUTS2` calls.
+
+The checked-in focused replay is:
+
+    taskset -c 0,1 nice -n 10 python3 scripts/probes/replay_th04_zun_resident_bmode.py --output-dir .analysis/reconstruction/probes/NEW-ZUN-RESIDENT
+
+v817 runs two isolated source-closure rounds, keeps the direct 246-byte build
+as a negative control, compares generated ASM and link-relevant OMF, assembles
+with pinned TASM32, rebuilds the checked-in compact support archive, and links
+with pinned `c0t.obj` + `CT.LIB`. TASM's complete OBJ differs between
+rounds only in its DOS-time COMENT metadata; generated ASM, link-relevant OMF,
+CODE, MAP, and linked bytes are deterministic. Both 6,360-byte
+`RES_HUMA.COM` outputs equal target SHA-256
+`cdcb949b8b0353ebe5e83f4cd6e580d93cc5383b35b8cb9db3f820c151c95110`.
+The deterministic MAP SHA-256 is
+`4a0c1878500bde29db8d8d0696a63a9c4cb011868b58ec67d5a6b62a0e2b4ac6`.
+
+v818 then injected the two resident rows as exact only in memory and replayed
+all three ZUN authored functions; every slice was raw-zero. v819 repeated the
+same check from the checked-in acceptance ledger. Its canonical receipt is
+`.analysis/reconstruction/receipt-archive/v819-zun-resident-canonical-receipt.json`,
+SHA-256
+`fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508`.
+
+This supersedes the *current-state* conclusions of the v518, v538, v792, and
+v816 negative sections while preserving them as useful evidence about rejected
+mechanisms. It establishes decoded resident/function exactness, not a packed
+`ZUN.COM` byte coordinate or a standalone whole-product build.

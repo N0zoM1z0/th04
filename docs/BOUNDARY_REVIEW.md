@@ -16,11 +16,11 @@ remaining candidate boundaries or source to exact.
 | `th04-op` | 492 | 93 | 85 | 8 | 0 | 16 | 383 |
 | `th04-main` | 1,040 | 495 | 492 | 3 | 0 | 73 | 472 |
 | `th04-maine` | 442 | 72 | 63 | 9 | 0 | 15 | 355 |
-| `th04-zun` | 146 | 3 | 1 | 2 | 0 | 12 | 131 |
-| **Total** | **2,120** | **663** | **641** | **22** | **0** | **116** | **1,341** |
+| `th04-zun` | 146 | 3 | 3 | 0 | 0 | 12 | 131 |
+| **Total** | **2,120** | **663** | **643** | **20** | **0** | **116** | **1,341** |
 
-The remaining reconstruction queue is **22 nonexact authored candidates**:
-0 are unreviewed; 22 known
+The remaining reconstruction queue is **20 nonexact authored candidates**:
+0 are unreviewed; 20 known
 `MAIN.EXE` functions remain blocked.
 Compiler startup, Borland runtime, MASTER.LIB, embedded library code, data/BSS
 false positives, and Ghidra switch-case artifacts are excluded from that queue.

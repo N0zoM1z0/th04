@@ -1074,7 +1074,7 @@ def verified_target(artifact: str) -> tuple[bytes, str, str]:
 def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None) -> list[str]:
     """Return the exact cold replay command for one accepted backend ID."""
     if backend_id == "zun-resident-link":
-        return [sys.executable, "scripts/probes/replay_th04_zun_separate_link.py",
+        return [sys.executable, "scripts/probes/replay_th04_zun_resident_bmode.py",
                 "--output-dir", str(saved)]
     if backend_id == "zun-memchk-natural-v773":
         return [sys.executable, "scripts/probes/replay_th04_zun_memchk_natural.py",

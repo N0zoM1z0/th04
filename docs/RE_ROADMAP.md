@@ -1,7 +1,7 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26. Reconstruction is paused for repository maintenance. This is
-the next-work map when reconstruction resumes. Use
+Updated 2026-09-26 after the v819 ZUN resident exact closure. This is the
+current next-work map. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and
 `config/evidence.csv`.
@@ -13,21 +13,22 @@ experiments and rejected approaches remain in `docs/reconstruction/` and
 | OP.EXE | 85 / 93 | 8 | 93 / 93 |
 | MAIN.EXE | 492 / 495 | 3 blocked | 495 / 495 |
 | MAINE.EXE | 63 / 72 | 9 | 72 / 72 |
-| ZUN.COM | 1 / 3 | 2 blocked | 3 / 3 |
+| ZUN.COM | 3 / 3 | 0 | 3 / 3 |
 
 OP has 13,847 accepted decoded source-owner bytes out of 14,284 tracked;
-MAINE has 11,187 out of 12,553; ZUN has 38 out of 442. These are not
+MAINE has 11,187 out of 12,553; ZUN has 442 out of 442. These are not
 packed-file coverage denominators. MAIN's 83,442 / 83,469 exact authored C/C++
 bytes cover only its reviewed file-backed owner extents.
 
-OP and MAINE have completed their current original-ASM boundary reviews; their
-remaining authored functions are explicitly blocked by recorded source or
-code-generation gaps. The next bounded reconstruction focus is **ZUN.COM**,
-starting with resident `cfg_init` and `_main` only when a materially new source
-or compiler hypothesis appears. MAIN remains a side lane unless shared source
-changes require replay.
+ZUN now has all three reviewed authored functions decoded-exact. OP and MAINE
+have completed their current original-ASM boundary reviews; their remaining
+authored functions are explicitly blocked by recorded source or code-generation
+gaps. The next bounded reconstruction focus is **OP.EXE**. Work one artifact at
+a time: exhaust a materially new OP source/compiler hypothesis, checkpoint real
+progress, then move to MAINE rather than interleaving both. MAIN remains a side
+lane unless shared source changes require replay.
 
-## ZUN.COM: establish source authority
+## ZUN.COM: authored-function source authority closed
 
 The natural Tiny-model MEMCHK `_main` at payload `0x26A7` is the first exact
 ZUN authored function. Together with maintained shared `DOS_PUTS2` and
@@ -42,22 +43,27 @@ component results do not grant packed `ZUN.COM` exactness. The 8-byte selector
 mover and 68-byte outer customization stub also have raw-identical maintained
 ASM. The embedded 926-byte ONGCHK third-party library component now cold-links
 raw-identically from maintained symbolic ASM. The generated selector directory,
-external usage asset, resident source gap, and DIET product build remain on the
+external usage asset and DIET product build remain on the
 artifact-closure path. The checked-in composite builder reproduces the
 directory and complete decoded flat payload with maintained ONGCHK. A serial
 source-driven replay now rebuilds all five maintained component groups before
-the same raw-identical flat comparison; the usage asset and resident candidate
-keep that integration diagnostic. Pinned
+the same raw-identical flat comparison; the external usage asset and older
+resident-candidate integration path keep that composite replay diagnostic. Pinned
 DIET 1.45f repacked the earlier mixed flats to byte-identical MZ targets; its
 source-acceptance verdict remains none. Treat historical
 disassembler-generated assembly as a candidate, not original-source evidence.
 
-Resident `cfg_init` and `_main` remain blocked. The natural `_main` is six bytes
-short of the target selective print-call shape; `cfg_init` still has linked
-fixup differences downstream of that layout shift. Continue from the recorded
-compiler and provenance negatives rather than importing inert optimizer
-barriers. Keep component equality, function equality, and whole ZUN.COM file
-equality separate.
+Resident cfg_init and _main are now decoded-exact. v817 found the missing
+producer mechanism without importing inert barriers: maintained _main makes
+the real /R not-resident path jump to the no-space failure return, and TC4J's
+-B assembly backend followed by pinned TASM32 emits the target 252-byte
+selective-tail body. Direct TC4J remains a 246-byte negative control. Two cold
+v817 rounds link the complete 6,360-byte resident component raw-identically,
+which also resolves every cfg_init FIXUPP value. v819 canonical decoded
+acceptance raw-compares cfg_init, resident _main, and MEMCHK _main at zero
+differences. This closes ZUN's authored-function queue, not whole ZUN.COM:
+packed byte ownership, the composite product route, DIET closure, and runtime
+validation remain separate artifact-closure work.
 
 ## OP.EXE and MAINE.EXE: strict source frontiers
 

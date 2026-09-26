@@ -152,8 +152,8 @@ def main() -> int:
     args = ap.parse_args()
     output = args.output_dir.resolve()
     private = (ROOT / ".analysis/reconstruction/probes").resolve()
-    if output.exists() or output.parent != private:
-        ap.error("output directory must be new directly below .analysis/reconstruction/probes")
+    if output.exists() or output == private or not output.is_relative_to(private):
+        ap.error("output directory must be new below .analysis/reconstruction/probes")
 
     subprocess.run(
         [sys.executable, "scripts/preflight.py"],

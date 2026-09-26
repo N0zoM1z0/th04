@@ -149,8 +149,12 @@ class DecodedAcceptanceTests(unittest.TestCase):
             acceptance.compare_extent(entry, b"_abc_", b"_ab")
 
     def test_zun_diagnostic_mismatch_never_counts_as_acceptance(self) -> None:
+        # ZUN currently has no source-present authored rows, so synthesize the
+        # diagnostic state from a real ZUN acceptance row. The invariant under
+        # test is that diagnostic mismatches never enter the exact raw gate.
         entry = deepcopy(next(row for row in self.entries
-                              if row["artifact"] == "th04-zun" and row["decoded_state"] == "source-present"))
+                              if row["artifact"] == "th04-zun"))
+        entry["decoded_state"] = "source-present"
         entry["payload_offset"] = "0x1"
         entry["size"] = "0x3"
         entry["target_sha256"] = acceptance.sha(b"abc")
@@ -261,6 +265,10 @@ class DecodedAcceptanceTests(unittest.TestCase):
 
     def test_backend_dispatch_is_explicit_and_fail_closed(self) -> None:
         saved = ROOT / ".analysis/reconstruction/probes/unit-dispatch"
+        self.assertEqual(
+            acceptance.backend_command("zun-resident-link", saved)[1],
+            "scripts/probes/replay_th04_zun_resident_bmode.py",
+        )
         self.assertEqual(
             acceptance.backend_command("op-maine-pi-put-v511", saved)[1],
             "scripts/probes/replay_th04_shared_pi_put.py",

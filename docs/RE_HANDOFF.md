@@ -1,7 +1,7 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after repository cleanup. Reconstruction is paused at the
-v816 ZUN resident-source negative. This is the current resume index; use
+Updated 2026-09-26 after the v819 ZUN resident exact closure. This is the
+current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
 work order; `docs/reconstruction/README.md` routes focused evidence. Versioned
@@ -30,12 +30,12 @@ use; this host's focused replays use `taskset -c 0,1 nice -n 10`.
 | OP.EXE | 93 / 93 | 85 | 8 | 16 reviewed |
 | MAIN.EXE | 495 / 495 | 492 | 3 | 73 attestation entries; 6 provisional |
 | MAINE.EXE | 72 / 72 | 63 | 9 | 15 reviewed |
-| ZUN.COM | 3 / 3 | 1 | 2 | 12 reviewed |
+| ZUN.COM | 3 / 3 | 3 | 0 | 12 reviewed |
 
 MAIN's reviewed file-backed authored extent has 83,442 / 83,469 exact bytes.
 Its 27-byte remainder belongs to `carpet_lighting_put_new` (23), checkerboard
 (2), and `snd_load` (2). OP has 13,847 accepted decoded source-owner bytes of
-14,284 tracked; MAINE has 11,187 / 12,553; ZUN has 38 / 442. These decoded
+14,284 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
 counts do not give a packed-file byte denominator or whole-artifact exactness.
 Original-ASM observations are outside the authored C/C++ counts.
 
@@ -78,18 +78,22 @@ Maintained symbolic original-style ASM cold-links the 1,141-byte ZUNINIT
 component at decoded `0x6F3..0xB67`, 223-byte launcher selector, 8-byte mover,
 68-byte outer stub, and 926-byte ONGCHK component. The source-driven composite
 replay rebuilds these groups and reproduces the 13,422-byte decoded flat
-payload. It still uses an external usage asset and a resident ReC98 candidate
-with inert barriers, so this is a diagnostic flat comparison, not complete
-source acceptance. Earlier mixed flats repacked with pinned DIET 1.45f to a
+payload. That older composite integration still uses an external usage asset and a
+resident-candidate path, so it remains a diagnostic flat comparison even
+though the resident component is independently exact now. Earlier mixed flats repacked with pinned DIET 1.45f to a
 byte-identical 7,754-byte MZ target; that does not make the product source
 exact. See [ZUNINIT](reconstruction/zun/TH04_ZUNINIT_SYMBOLIC_COMPONENT_V785.md)
 and the [composite note](reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md).
 
-Resident `cfg_init` at COM payload `0xDCF` and `_main` at `0xE67` remain blocked.
-Natural `_main` is six bytes short of the target print-call shape; `cfg_init`
-retains linked fixup differences downstream. The v816 genuine-inline-helper
-probe also failed; see [ZUN resident notes](reconstruction/zun/TH04_ZUN_MAIN_V241.md).
-A new source-origin observation or compiler mechanism is needed before retry.
+Resident cfg_init at COM payload 0xDCF and _main at 0xE67 are now
+decoded-exact. v817 found a real compiler/source mechanism rather than an inert
+barrier: the maintained /R not-resident branch jumps to the no-space failure
+return, while TC4J -B plus pinned TASM32 emits the target 252-byte selective
+tail. Direct TC4J still emits 246 bytes and remains the negative control. Two
+cold resident links produce the target-identical 6,360-byte component, so
+cfg_init also links raw-zero. v819 canonical acceptance then raw-compares all
+three ZUN authored functions at zero differences. The ZUN resident notes carry
+the focused producer and canonical receipt details.
 
 ## Private inputs and cleanup
 
@@ -100,7 +104,7 @@ The canonical cold aggregate receipts in
 | --- | --- | --- |
 | OP | `v755-op-zunsoft-natural-canonical-receipt.json` | `14a85e9330db6b1728bf7264ab5e8eebf608deb54a5d9dc427d6c17fd2a146f2` |
 | MAINE | `v727-maine-staff-dissolves-canonical-receipt.json` | `d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287` |
-| ZUN | `v776-zun-memchk-canonical-receipt.json` | `809e567a3b1822b9865522e9d8e89e3f016d62036f29c339c073bdafd83dd1b7` |
+| ZUN | v819-zun-resident-canonical-receipt.json | fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508 |
 
 Preserve `.analysis/targets/`, `.analysis/toolchain/`, `.analysis/ghidra/`,
 `.analysis/runtime/images/zun.hdi`, the v401/v402/v489 source snapshots,
