@@ -68,3 +68,39 @@ SHA-256 `d2093ff4382f7e2c13a2657fcabafd1ba8765219de1f9d48ac5579c76ff9ed95`.
 This establishes that DIET packaging is reproducible for the mixed-input flat
 payload. It does not resolve the external inputs or the natural resident
 `_main` gap; the receipt explicitly grants no source acceptance.
+
+## v790 ONGCHK library component closure
+
+`src/zun/ongchk/ongchk.asm` now describes the embedded PMD ADPCM RAM diagnostic
+as one symbolic original-style Tiny-model assembly translation unit. The
+runtime code occupies COM `0x100..0x47B`, the initialized diagnostic pattern
+and two state bytes occupy `0x47C..0x49D`, and the subsequent port variables
+and 32-byte readback buffer are BSS. These boundaries correspond to ZUN decoded
+payload `0x355..0x6F2`; the selector directory supplies the complete 926-byte
+component extent. The maintained source uses named control-flow and data
+symbols, not an embedded copy of the COM file. Its historical source spelling
+and original assembler provenance remain inferred.
+
+```sh
+taskset -c 0,1 nice -n 10 python3 scripts/probes/replay_th04_zun_ongchk.py \
+  --output-dir .analysis/reconstruction/probes/NEW-UNIQUE-NAME
+```
+
+Two isolated TASM 5.0/TLINK 6.10 cold builds produce identical checksum-valid
+OMF, MAP and 926-byte COM outputs. Both complete COM outputs have zero raw
+differences from the hash-attested target component, SHA-256
+`4f9a9451f19bdd8d3ea8949a5ea75df6c2f92a9a84dcf39e1d7cf13421acc8a0`.
+Focused receipt:
+`.analysis/reconstruction/probes/v790-zun-ongchk-symbolic-002/receipt.json`,
+SHA-256 `feb10c6deb6cad68f8304ad8707805936c24d359b7db45b8cf3806c80f92c1c0`.
+
+The mixed flat builder now takes its ONGCHK input from these A/B maintained
+outputs. Both 13,422-byte flat outputs and the generated directory remain
+raw-identical; receipt
+`.analysis/reconstruction/probes/v790-zun-mixed-ongchk-001/receipt.json`,
+SHA-256 `9605007ca6ba2f0a32f8eb3e0c6ad7f18d19436d50e01e280461025d199ae22e`.
+ONGCHK is third-party library code, so this closes one external binary input
+without adding a ZUN authored-function exact claim. Usage text is still an
+external asset and RES_HUMA still comes from a diagnostic ReC98 candidate.
+The earlier v789 DIET receipt used the binary ONGCHK input; repacking the new
+maintained-input flat outputs remains a separate verification step.

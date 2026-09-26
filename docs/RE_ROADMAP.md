@@ -36,13 +36,14 @@ six maintained symbolic original-style ASM units. The 223-byte launcher
 selector also cold-links raw-identically from maintained ASM. These decoded
 component results do not grant packed `ZUN.COM` exactness. The 8-byte selector
 mover and 68-byte outer customization stub also have raw-identical maintained
-ASM. The generated selector directory, remaining external component ownership,
-and DIET product build remain on the artifact-closure path. The checked-in
-composite builder reproduces the directory and complete decoded flat payload
-with explicitly mixed maintained/external inputs; this is a diagnostic
-integration Oracle, not product-source closure. Pinned DIET 1.45f also repacks
-those mixed flats to byte-identical MZ targets; its source-acceptance verdict
-remains none. Treat historical
+ASM. The embedded 926-byte ONGCHK third-party library component now cold-links
+raw-identically from maintained symbolic ASM. The generated selector directory,
+external usage asset, resident source gap, and DIET product build remain on the
+artifact-closure path. The checked-in composite builder reproduces the
+directory and complete decoded flat payload with maintained ONGCHK, but the
+usage asset and resident candidate keep that integration diagnostic. Pinned
+DIET 1.45f repacked the earlier mixed flats to byte-identical MZ targets; its
+source-acceptance verdict remains none. Treat historical
 disassembler-generated assembly as a candidate, not original-source evidence.
 
 Resident `cfg_init` and `_main` remain blocked. The natural `_main` is six bytes

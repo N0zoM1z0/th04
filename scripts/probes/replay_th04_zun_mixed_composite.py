@@ -24,7 +24,7 @@ INPUTS = {
               "46a342303388a468c5d13c3c00f800d85aa98f84a9ed11b45e03d87a32737498"),
     "selector": ("maintained", "{probes}/v786-zun-selector-focused-001/{round}/selector.bin", 223,
                  "cda3d3f38031f14988d236cc6725109d2f162e65224509101ca55c6dcb05fcfc"),
-    "ongchk": ("external-library", "{snapshot}/libs/kaja/ongchk.com", 926,
+    "ongchk": ("maintained-library", "{probes}/v790-zun-ongchk-symbolic-002/{round}/ongchk.com", 926,
                 "4f9a9451f19bdd8d3ea8949a5ea75df6c2f92a9a84dcf39e1d7cf13421acc8a0"),
     "zuninit": ("maintained", "{probes}/v785-zuninit-symbolic-final-001/{round}/zuninit.com", 1141,
                 "692b1e056d907a9649bd1effa6e83239f71039d17de3569464067d0b42b7aa5e"),
@@ -111,7 +111,7 @@ def main() -> int:
         "component_length_mutation_rejected": True,
         "limit": (
             "This is diagnostic integration, not a product-source or packed-file exact claim. "
-            "Usage text and ONGCHK are external; the resident component comes from a ReC98 "
+            "Usage text remains external; the resident component comes from a ReC98 "
             "candidate with optimizer barriers, not maintained natural TH04 source."
         ),
     }

@@ -87,12 +87,15 @@ focused links; see `docs/reconstruction/zun/TH04_ZUN_LAUNCHER_TAILS_V787.md`.
 The checked-in flat composite builder derives the 327-byte selector directory
 from actual component sizes. A/B mixed-input integration builds reproduce the
 directory and all 13,422 decoded payload bytes; a one-byte component-length
-mutation fails both raw comparators. This is diagnostic because the usage text
-and ONGCHK remain external and RES_HUMA comes from a ReC98 candidate with
+mutation fails both raw comparators. The 926-byte embedded ONGCHK third-party
+library component now cold-links raw-identically from maintained symbolic ASM
+in two isolated rounds, and new A/B mixed flats use those outputs. Usage text
+remains an external asset, while RES_HUMA comes from a ReC98 candidate with
 inert barriers. The maintained natural resident `_main` remains six bytes
-short. The two mixed flat outputs also repack with pinned DIET 1.45f to the
-exact 7,754-byte MZ target in low-priority, two-core A/B runs; source acceptance
-remains none. See `docs/reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md`.
+short. The earlier mixed flats repacked with pinned DIET 1.45f to the exact
+7,754-byte MZ target; repacking the new maintained-ONGCHK flats is pending.
+No whole-product source acceptance follows. See
+`docs/reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md`.
 
 The 18-byte helper at payload `0x7B0` is runtime-observed to convert all
 6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs
