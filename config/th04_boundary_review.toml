@@ -144,6 +144,27 @@ origin = "original-asm"
 source_form = "maintained-asm"
 source_ref = "src/shared/hardware/bgimager.asm"
 
+[[module_overrides]]
+artifact = "th04-op"
+module = "th04/cdg_p_nc.asm"
+segment = "SHARED"
+origin = "original-asm"
+source_form = "maintained-asm"
+source_ref = "src/op/formats/cdg_p_nc.asm"
+
+# The target FAR return closes 0x51 code bytes; the final 0x90 is assembler
+# alignment owned by the same 0x52-byte translation unit.
+[[function_overrides]]
+artifact = "th04-op"
+payload_offset = 0xDC92
+origin = "original-asm"
+source_form = "maintained-asm"
+source_ref = "src/op/formats/cdg_p_nc.asm"
+expected_body_span = 0x51
+reviewed_body_size = 0x51
+review_evidence_id = "ev-th04-op-cdg-nocolors-boundary-v806"
+notes = "Target Ghidra gives one contiguous 0x51-byte FAR body ending RETF 6; the following 0x90 is module alignment. OP-only maintained original-style ASM cold-links the complete 0x52-byte contribution raw-zero."
+
 # th04_main.asm places this game-owned MPN renderer between MASTER.LIB
 # includes.  The expanded TASM listing closes the FAR PROC at 0x3680..0x36f4,
 # and the target Ghidra body independently agrees with that contiguous span.

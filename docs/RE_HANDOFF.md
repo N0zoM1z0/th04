@@ -52,7 +52,7 @@ The current canonical cold-aggregate receipts are:
 A receipt for one decoded slice cannot confer exactness on a packed file,
 another function, or a complete standalone product build.
 
-## Active ZUN work
+## ZUN retained state
 
 The natural Tiny-model MEMCHK `_main` at COM payload `0x26A7` is the first exact
 ZUN authored function (38 bytes). Its complete 4,066-byte MEMCHK component
@@ -120,7 +120,12 @@ negatives, including the v792 local `-G` pragma scope, are in the ZUN focused
 notes and `config/knowledge.csv`. Continue
 source/component ownership review before exact promotion.
 
-## OP and MAINE strict frontiers
+## Active OP frontier and MAINE retained state
+
+The active work order now stays on OP until its remaining function candidates
+have been pushed as far as evidence permits. The eight authored OP blockers
+below remain after the v806 original-ASM progress; their count does not
+change merely because a shared or original-ASM module cold-links raw-zero.
 
 The shared CDG loader now has one maintained TH04-local TASM source at
 `src/shared/formats/cdg_load.asm`. MAIN `130E:0858` (load `0x13938+0x164`,
@@ -161,6 +166,13 @@ differences, including final alignment. Its ReC98 starting source remains
 candidate provenance, and this rect renderer is separate from the accepted
 C++ BGIMAGE snap/put/free producer. See
 `docs/reconstruction/op-maine/TH04_SHARED_BGIMAGER_V805.md`.
+
+OP `CDG_PUT_NOCOLORS_8` now has a reviewed 0x51-byte FAR boundary at
+`0DA1:0282` (payload `0xDC92`) and a maintained OP-local original-style ASM
+source. A/B cold links reproduce the full 0x52-byte contribution including
+the final alignment byte, with zero raw differences and all 804 ordered OP
+relocations preserved. The ReC98 source remains candidate provenance; see
+`docs/reconstruction/op-maine/TH04_OP_CDG_NOCOLORS_V806.md`.
 
 All current authored OP and MAINE physical boundaries are reviewed. OP's eight
 nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,

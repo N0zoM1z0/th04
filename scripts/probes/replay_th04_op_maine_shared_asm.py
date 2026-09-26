@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cold-replay a maintained shared ASM module in OP and MAINE.
+"""Cold-replay a maintained ASM module in its OP/MAINE artifact owners.
 
 The shared linker contribution is accepted only against each artifact's own
 attested decoded target. The retained ReC98 snapshot supplies link inputs,
@@ -35,10 +35,11 @@ ARTIFACTS = {
     "maine": (559, "6b4547182b9d53d069c0e4efc33bdabb69065cb544bb187ced7b0f51918aa533", "d3bdc485782a9fb953823155426ca7f0e6e8212d6bc0cdffaaa32f91df2dc90c"),
 }
 MODULES = {
-    "bgimager": ("hardware", 0x82, {"op": 0xE4F8, "maine": 0xD6F6}),
-    "cdg_load": ("formats", 0x164, {"op": 0xE57A, "maine": 0xD778}),
-    "cdg_put": ("formats", 0x9E, {"op": 0xE00E, "maine": 0xD356}),
-    "input_s": ("hardware", 0x10A, {"op": 0xE1DC, "maine": 0xD48A}),
+    "bgimager": ("src/shared/hardware/bgimager.asm", 0x82, {"op": 0xE4F8, "maine": 0xD6F6}),
+    "cdg_p_nc": ("src/op/formats/cdg_p_nc.asm", 0x52, {"op": 0xDC92}),
+    "cdg_load": ("src/shared/formats/cdg_load.asm", 0x164, {"op": 0xE57A, "maine": 0xD778}),
+    "cdg_put": ("src/shared/formats/cdg_put.asm", 0x9E, {"op": 0xE00E, "maine": 0xD356}),
+    "input_s": ("src/shared/hardware/input_s.asm", 0x10A, {"op": 0xE1DC, "maine": 0xD48A}),
 }
 
 
@@ -92,8 +93,9 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     module = args.module
-    subsystem, size, starts = MODULES[module]
-    source = ROOT / "src/shared" / subsystem / f"{module}.asm"
+    source_rel, size, starts = MODULES[module]
+    source = ROOT / source_rel
+    selected = {name: ARTIFACTS[name] for name in starts}
     output = args.output_dir.resolve()
     private = (ROOT / ".analysis/reconstruction/probes").resolve()
     if output.exists() or output == private or not output.is_relative_to(private):
@@ -109,7 +111,7 @@ def main() -> int:
                WINEDEBUG="-all", MSDOS_PATH=r"C:\TC4\BIN;C:\TASM50\BIN")
 
     controls = {}
-    for name, (relocation_count, target_sha, baseline_sha) in ARTIFACTS.items():
+    for name, (relocation_count, target_sha, baseline_sha) in selected.items():
         start = starts[name]
         target_bytes = (RESTORED / f"v228-{name}-target-roundtrip/a/restored.bin").read_bytes()
         baseline_bytes = (SNAPSHOT / name / "source/bin/th04" / f"{name}.exe").read_bytes()
@@ -125,7 +127,7 @@ def main() -> int:
     builds = {}
     for label in ("a", "b"):
         builds[label] = {}
-        for name, (relocation_count, _, baseline_sha) in ARTIFACTS.items():
+        for name, (relocation_count, _, baseline_sha) in selected.items():
             start = starts[name]
             work = output / label / name / "source"
             work.parent.mkdir(parents=True)
@@ -183,7 +185,7 @@ def main() -> int:
     receipt = {
         "schema_version": 1,
         "observed_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "claim_scope": f"OP and MAINE complete {module} ASM module cold replay",
+        "claim_scope": f"{', '.join(selected)} complete {module} ASM module cold replay",
         "module": module,
         "source": str(source.relative_to(ROOT)),
         "source_sha256": source_sha,
@@ -192,7 +194,7 @@ def main() -> int:
     }
     (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({name: builds["a"][name]["raw_difference_count"]
-                      for name in ARTIFACTS}))
+                      for name in selected}))
     return 0
 
 

@@ -19,9 +19,10 @@ MAINE has 11,187 out of 12,553; ZUN has 38 out of 442. These are not
 packed-file coverage denominators. MAIN's 83,442 / 83,469 exact authored C/C++
 bytes cover only its reviewed file-backed owner extents.
 
-The active reconstruction queue is **ZUN.COM source and component ownership**.
-The remaining OP and MAINE functions are reviewed source/codegen frontiers;
-MAIN remains a side lane unless new evidence changes a blocker.
+The active reconstruction queue is **OP.EXE**, following the user's requested
+one-artifact focus. Work through its remaining authored functions and
+original-ASM boundary queue before moving to MAINE or ZUN. MAIN remains a
+side lane unless a shared-source change requires replay.
 
 ## ZUN.COM: establish source authority
 
@@ -56,6 +57,11 @@ barriers. Keep component equality, function equality, and whole ZUN.COM file
 equality separate.
 
 ## OP.EXE and MAINE.EXE: strict source frontiers
+
+OP's `CDG_PUT_NOCOLORS_8` now has a target-reviewed 0x51-byte FAR body and
+an OP-local maintained original-style ASM unit whose complete 0x52-byte
+contribution cold-links raw-zero. Its final byte is alignment and its ReC98
+starting source retains candidate provenance. See the v806 focused note.
 
 The complete `CDG_LOAD` and `CDG_PUT_8` original-ASM contributions are now
 backed by maintained sources under `src/shared/formats/`. MAIN, OP, and MAINE
