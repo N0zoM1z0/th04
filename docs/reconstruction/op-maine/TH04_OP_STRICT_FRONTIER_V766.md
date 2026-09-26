@@ -1,9 +1,9 @@
-# OP strict natural-source frontier (v766, current-state addenda v821-v826)
+# OP strict natural-source frontier (v766, current-state addenda v821-v827)
 
 All 93 authored OP function candidates have reviewed physical boundaries. At
 v766, 85/93 had accepted decoded exactness and eight entries were blocked.
 
-**Current-state addendum (v826):** `scoredat_decode` and `scoredat_encode`
+**Current-state addendum (v827):** `scoredat_decode` and `scoredat_encode`
 remain decoded-exact through the narrowly scoped v821 cross-game-corroborated
 hybrid producer. v824 additionally promotes the internal 63-byte
 `egc_start_copy`: independently restored TH05 OP and MAINE release targets
@@ -14,14 +14,17 @@ non-ordinary code to two corroborated hardware/compiler primitives totaling
 `nopoly_b_put`: independently restored TH03/TH04/TH05 OP release targets share
 the complete normalized 30-byte GAME>=3 producer, and canonical v826 passes
 90/90 accepted OP slices raw-zero.
+v827 additionally closes `SND_SE_PLAY` and `_snd_se_update`: restored TH05
+OP and MAINE each contain exactly one complete fixed 0x86 `th04/snd_se.cpp`
+producer after masking the same 20 legal OMF link operands. Canonical v827
+passes 92/92 accepted OP slices raw-zero.
 
-Current OP state is **90/93 exact with three blockers**. The historical v766/v820
+Current OP state is **92/93 exact with one blocker**. The historical v766/v820
 negative compiler results remain valid for the source forms they tested.
 
 The 16 original-ASM observations still have reviewed target bounds and
-raw-matching decoded source modules. The current three authored blockers remain
-`blocked` in the ledger pending materially new source-provenance or compiler
-evidence.
+raw-matching decoded source modules. The current authored blocker is
+`SND_LOAD`, pending materially new source-provenance evidence.
 
 ## Historical v766 blocker list
 
@@ -133,8 +136,30 @@ compiler behavior, independently sourced historical code, or stronger
 provenance for a low-level source mechanism. Repeating equivalent C++ spellings
 is not useful.
 
-The current OP exactness queue is now the three provenance-only sound blockers:
-`SND_LOAD`, `SND_SE_PLAY`, and `_snd_se_update`.
+The current OP exactness queue now contains only the provenance-only 234-byte
+`SND_LOAD` blocker. `SND_SE_PLAY` and `_snd_se_update` are decoded-exact as of
+v827.
+
+### v827 shared-sound cross-game hybrid closure
+
+v827 supersedes the old v822 acceptance verdict for `SND_SE_PLAY` and
+`_snd_se_update`. Restored TH05 OP and MAINE release targets each contain
+exactly one complete fixed 0x86 `th04/snd_se.cpp` producer after masking the
+same 20 legal OMF link operands. The maintained hybrid source limits
+non-ordinary code to the frame-free parameter and BL/XOR-BH current-index
+compiler/register primitives; selection, priority, driver, and frame logic
+remain C++.
+
+Two cold TH04 links reproduce both reviewed functions, the complete producer,
+the accepted EXE/MAP, and all 804 relocations raw-zero. Canonical v827 passes
+92/92 accepted OP slices. Literal original-source spelling and packed-file
+exactness remain unclaimed.
+
+Focused receipt SHA-256:
+`33962357744f6b3e3983c37622de9f474bc283f67710a9dd0fa77549f898c002`.
+
+Canonical receipt SHA-256:
+`c0d1684341c87dcf156907e2b8304a4d1918ce8c2b69da6f3f4827471aa2aa98`.
 
 ### v823 SND_LOAD complete-producer provenance bound
 

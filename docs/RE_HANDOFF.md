@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after the v826 OP nopoly_B_put hybrid closure. This is the
+Updated 2026-09-26 after the v827 OP shared-sound cross-game hybrid closure. This is the
 current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
@@ -27,19 +27,19 @@ use; this host's focused replays use `taskset -c 0,1 nice -n 10`.
 
 | Artifact | Reviewed authored boundaries | Exact authored functions | Blocked | Original-ASM observations |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 93 / 93 | 90 | 3 | 16 reviewed |
+| OP.EXE | 93 / 93 | 92 | 1 | 16 reviewed |
 | MAIN.EXE | 495 / 495 | 492 | 3 | 73 attestation entries; 6 provisional |
 | MAINE.EXE | 72 / 72 | 63 | 9 | 15 reviewed |
 | ZUN.COM | 3 / 3 | 3 | 0 | 12 reviewed |
 
 MAIN's reviewed file-backed authored extent has 83,442 / 83,469 exact bytes.
 Its 27-byte remainder belongs to `carpet_lighting_put_new` (23), checkerboard
-(2), and `snd_load` (2). OP has 14,325 accepted decoded source-owner bytes of
+(2), and `snd_load` (2). OP has 14,458 accepted decoded source-owner bytes of
 14,458 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
 counts do not give a packed-file byte denominator or whole-artifact exactness.
 Original-ASM observations are outside the authored C/C++ counts.
 
-OP's four blocked functions and MAINE's nine blocked functions have reviewed
+OP's one blocked function and MAINE's nine blocked functions have reviewed
 physical boundaries. v821 closes OP `scoredat_decode` and `scoredat_encode`
 with maintained hybrid source: all control/data flow stays C++, while the
 single 8-bit ROR primitive is independently corroborated by pre-decompilation
@@ -47,16 +47,20 @@ TH03 OP/MAINL codec bodies. Focused v821 replay and the archived canonical
 current-ledger replay are raw-zero; the latter checks all 87 accepted OP slices.
 This does not establish original-source spelling or packed-file exactness.
 
-v822 materially narrows `SND_SE_PLAY` and `_snd_se_update` without promoting
-either function. MAIN and OP share the complete 0x86 `th04/snd_se.cpp` fixed
-producer, and a temporary helper-shaped candidate reproduces both function
-bodies, the full producer, the OP EXE/MAP, and all 804 relocations in two cold
-rounds. The required `BX=SP` and BL/BH helper spelling, however, first appears
-in pinned ReC98 commit `c85f444b...` whose subject is `[Decompilation]` and
-whose own comments tell modders to replace those forms. This is target-derived
-provenance, so the two functions remain blocked. The v822 diagnostic receipt is
-`v822-op-snd-se-shared-diagnostic-receipt.json`, SHA-256
-`2509adb3b0153514025544f0b2b55aa399ddca52c0a4e5e884e28ca19f0696ef`.
+v827 closes `SND_SE_PLAY` and `_snd_se_update`, superseding v822's conservative
+source-acceptance verdict while retaining its provenance warning. Restored TH05
+OP and MAINE release targets each contain exactly one complete fixed 0x86
+`th04/snd_se.cpp` producer after masking only the same 20 legal OMF link operands.
+This independently corroborates the frame-free parameter primitive and both
+BL/XOR-BH current-index sites. The surrounding selection/update logic remains
+maintained C++, and no emitted target bytes or post-build patching is used. Two
+cold TH04 links reproduce both function bodies, the full producer, accepted OP
+EXE/MAP, and all 804 relocations. Canonical v827 checks all 92 accepted OP
+slices raw-zero. Focused receipt SHA-256
+`33962357744f6b3e3983c37622de9f474bc283f67710a9dd0fa77549f898c002`;
+canonical receipt SHA-256
+`c0d1684341c87dcf156907e2b8304a4d1918ce8c2b69da6f3f4827471aa2aa98`.
+Literal original-source spelling and packed-file exactness are not claimed.
 
 v824 closes the internal 63-byte OP `egc_start_copy` helper. v825 then closes
 the adjacent 111-byte `egc_copy_rect_1_to_0_16` outer body with a narrowed
@@ -95,12 +99,13 @@ on independent authored-source provenance. Diagnostic receipt
 v823-op-snd-load-provenance-receipt.json, SHA-256
 b958943a35c7916ab4a8bc80a9f2dd97bcc25a968ff4a315547f71d6dc37f161.
 
-The remaining OP blockers are `SND_LOAD`, `SND_SE_PLAY`, and
-`_snd_se_update`.
-v820's compiler-path negative remains valid for ordinary TC4J / `-B` lowering;
-only the SCORE acceptance decision is superseded by v821's new provenance.
+The only remaining OP blocker is `SND_LOAD`.
+v820's ordinary TC4J / `-B` negatives remain useful historical controls, but
+v821 and v824-v827 supersede older acceptance decisions where independent
+release-target provenance now supports narrowly bounded hybrid primitives.
 See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md),
 [v822 shared-sound provenance bound](reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md),
+[v827 shared-sound cross-game hybrid closure](reconstruction/op-maine/TH04_OP_SND_SE_CROSSGAME_V827.md),
 [v823 SND_LOAD provenance bound](reconstruction/op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md),
 [v824 EGC-start hybrid closure](reconstruction/op-maine/TH04_OP_EGC_START_HYBRID_V824.md),
 [v825 EGC rectangle-copy hybrid closure](reconstruction/op-maine/TH04_OP_EGC_COPY_HYBRID_V825.md),
