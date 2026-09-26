@@ -1,6 +1,6 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-26 after the v821 OP SCORE codec closure. This is the
+Updated 2026-09-26 after the v822 OP shared-sound provenance bound. This is the
 current next-work map. Use
 `python3 scripts/status.py` and the live ledgers for counts; versioned
 experiments and rejected approaches remain in `docs/reconstruction/` and
@@ -27,11 +27,21 @@ TH03 OP/MAINL machine-code provenance for the SCORE byte-rotate primitive.
 Keeping only that irreducible 8-bit ROR symbolic closes OP `scoredat_decode`
 and `scoredat_encode`; focused replay and the canonical current-ledger replay
 are raw-zero. OP is therefore 87/93 with six blockers. Do not reopen the SCORE
-codecs without evidence that changes this accepted boundary. The next bounded
-work should stay on one artifact at a time: pursue a materially new OP source or
-compiler hypothesis for the six remaining blockers, or move to MAINE if no such
-OP hypothesis exists. MAIN remains a side lane unless shared source changes
-require replay.
+codecs without evidence that changes this accepted boundary.
+
+v822 then revisits `SND_SE_PLAY` and `_snd_se_update` without promoting them.
+MAIN and OP independently share the complete 0x86 `th04/snd_se.cpp` fixed
+producer, and a decompilation-shaped helper candidate reproduces both target
+functions plus the full OP link raw-zero in two cold rounds. However the exact
+frame-free parameter and BL/BH helper spelling first appears in a pinned ReC98
+`[Decompilation]` commit and is explicitly marked as modder-facing bloat.
+Those two functions are therefore narrowed to source-provenance blockers, not
+decoded-exact functions.
+
+The next bounded work should stay on one artifact at a time: pursue materially
+new OP source/compiler/provenance evidence for the six remaining blockers, or
+move to MAINE if no such OP hypothesis exists. MAIN remains a side lane unless
+shared source changes require replay.
 
 ## ZUN.COM: authored-function source authority closed
 
@@ -109,12 +119,16 @@ For OP, v820 still proves that the ZUN-successful TC4J `-B`/TASM32 path by
 itself does not alter `nopoly_b_put`, the SCORE natural bodies, `SND_SE_PLAY`,
 or `_snd_se_update`. v821 supersedes only the OP SCORE acceptance decision by
 adding independent TH03 codec-machine-code corroboration and restricting
-symbolic low-level source to the irreducible byte ROR. The remaining six OP
-blockers still lack comparable source/compiler evidence. Do not promote
-byte-forcing inline assembly, pseudo-registers, copied instructions, or inert
-optimizer barriers without independent provenance. Resume a blocker only with
-a materially new compiler mechanism or source-origin observation. See
+symbolic low-level source to the irreducible byte ROR. v822 adds materially new
+same-game producer evidence for `SND_SE_PLAY` and `_snd_se_update`: their exact
+machine-code shape is now reproducible, but the required helper spelling is
+target-derived decompilation provenance, so both remain blocked. The other four
+OP blockers still need new source/compiler evidence. Do not promote byte-forcing
+inline assembly, pseudo-registers, copied instructions, or inert optimizer
+barriers without independent provenance. Resume a blocker only with a
+materially new compiler mechanism or source-origin observation. See
 `docs/reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md`,
+`docs/reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md`,
 `docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md`, and
 `docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`.
 

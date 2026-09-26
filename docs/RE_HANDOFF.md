@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after the v821 OP SCORE codec closure and repository cleanup. This is the
+Updated 2026-09-26 after the v822 OP shared-sound provenance bound. This is the
 current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
@@ -47,11 +47,23 @@ TH03 OP/MAINL codec bodies. Focused v821 replay and the archived canonical
 current-ledger replay are raw-zero; the latter checks all 87 accepted OP slices.
 This does not establish original-source spelling or packed-file exactness.
 
+v822 materially narrows `SND_SE_PLAY` and `_snd_se_update` without promoting
+either function. MAIN and OP share the complete 0x86 `th04/snd_se.cpp` fixed
+producer, and a temporary helper-shaped candidate reproduces both function
+bodies, the full producer, the OP EXE/MAP, and all 804 relocations in two cold
+rounds. The required `BX=SP` and BL/BH helper spelling, however, first appears
+in pinned ReC98 commit `c85f444b...` whose subject is `[Decompilation]` and
+whose own comments tell modders to replace those forms. This is target-derived
+provenance, so the two functions remain blocked. The v822 diagnostic receipt is
+`v822-op-snd-se-shared-diagnostic-receipt.json`, SHA-256
+`2509adb3b0153514025544f0b2b55aa399ddca52c0a4e5e884e28ca19f0696ef`.
+
 The remaining OP blockers are `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
 `_snd_se_update`, `egc_copy_rect_1_to_0_16`, and internal `egc_start_copy`.
 v820's compiler-path negative remains valid for ordinary TC4J / `-B` lowering;
 only the SCORE acceptance decision is superseded by v821's new provenance.
 See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md),
+[v822 shared-sound provenance bound](reconstruction/op-maine/TH04_OP_SND_SE_SHARED_V822.md),
 [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md),
 and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
 Do not substitute target-derived inline ASM, explicit register forcing, or
