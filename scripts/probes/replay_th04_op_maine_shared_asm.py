@@ -36,9 +36,11 @@ ARTIFACTS = {
 }
 MODULES = {
     "bgimager": ("src/shared/hardware/bgimager.asm", 0x82, {"op": 0xE4F8, "maine": 0xD6F6}),
+    "cdg_p_na": ("src/shared/formats/cdg_put_noalpha_8.asm", 0x66, {"op": 0xE176}),
     "cdg_p_nc": ("src/op/formats/cdg_p_nc.asm", 0x52, {"op": 0xDC92}),
     "cdg_load": ("src/shared/formats/cdg_load.asm", 0x164, {"op": 0xE57A, "maine": 0xD778}),
     "cdg_put": ("src/shared/formats/cdg_put.asm", 0x9E, {"op": 0xE00E, "maine": 0xD356}),
+    "hfliplut": ("src/shared/hardware/hflip_lut.asm", 0x1E, {"op": 0xDB44}),
     "input_s": ("src/shared/hardware/input_s.asm", 0x10A, {"op": 0xE1DC, "maine": 0xD48A}),
 }
 
@@ -66,10 +68,10 @@ def run(command: list[str], cwd: Path, log: Path, env: dict[str, str]) -> None:
         raise RuntimeError(f"command failed: {log}")
 
 
-def contribution(path: Path, module: str) -> tuple[int, int, str]:
+def contribution(path: Path, module: str, namespace: str) -> tuple[int, int, str]:
     pattern = re.compile(
         r"^\s*([0-9A-F]{4}):([0-9A-F]{4})\s+([0-9A-F]{4})\s+C=CODE.*"
-        r"\bS=SHARED\b.*\bM=" + re.escape(fr"th04\{module}.asm") + r"(?:\s|$)", re.I,
+        r"\bS=SHARED\b.*\bM=" + re.escape(fr"{namespace}\{module}.asm") + r"(?:\s|$)", re.I,
     )
     matches = []
     for line in path.read_text(encoding="cp437").splitlines():
@@ -93,6 +95,7 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     module = args.module
+    namespace = "th03" if module == "hfliplut" else "th04"
     source_rel, size, starts = MODULES[module]
     source = ROOT / source_rel
     selected = {name: ARTIFACTS[name] for name in starts}
@@ -132,12 +135,12 @@ def main() -> int:
             work = output / label / name / "source"
             work.parent.mkdir(parents=True)
             copy_compact_snapshot(SNAPSHOT / name / "source", work, name)
-            dest = work / "th04" / f"{module}.asm"
+            dest = work / namespace / f"{module}.asm"
             shutil.copy2(source, dest)
-            obj = work / "obj/th04" / f"{module}.obj"
+            obj = work / "obj" / namespace / f"{module}.obj"
             obj.unlink()
             run(["wine", r"C:\TASM50\bin\TASM32.EXE", "/m", "/mx", "/kh32768",
-                 "/dGAME=4", fr"th04\{module}.asm,obj\th04\{module}.obj"],
+                 "/dGAME=4", fr"{namespace}\{module}.asm,obj\{namespace}\{module}.obj"],
                 work, output / f"assemble-{label}-{name}.log", env)
             if not obj.is_file():
                 raise RuntimeError(f"{label}/{name}: assembler omitted object")
@@ -156,7 +159,7 @@ def main() -> int:
             target, baseline = controls[name]
             if not image.valid or len(image.relocations) != relocation_count:
                 raise RuntimeError(f"{label}/{name}: linked MZ integrity drift")
-            map_start, map_size, map_line = contribution(map_path, module)
+            map_start, map_size, map_line = contribution(map_path, module, namespace)
             if (map_start, map_size) != (start, size):
                 raise RuntimeError(f"{label}/{name}: {module} moved or changed size")
             target_relocs = [r.linear for r in target.relocations]

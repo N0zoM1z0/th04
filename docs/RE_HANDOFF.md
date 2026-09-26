@@ -174,6 +174,20 @@ the final alignment byte, with zero raw differences and all 804 ordered OP
 relocations preserved. The ReC98 source remains candidate provenance; see
 `docs/reconstruction/op-maine/TH04_OP_CDG_NOCOLORS_V806.md`.
 
+OP `CDG_PUT_NOALPHA_8` at `0DA1:0766` (payload `0xE176`) now has a reviewed
+0x65-byte FAR boundary and independently replayed shared symbolic ASM source.
+Two OP-only cold links reproduce the complete 0x66-byte contribution, including
+its final alignment byte, with zero raw differences and all 804 ordered
+relocations preserved. The OP packed-file offset remains unknown; see
+`docs/reconstruction/op-maine/TH04_OP_CDG_NOALPHA_V807.md`.
+
+OP `_hflip_lut_generate` at `0DA1:0134` (payload `0xDB44`) now has a reviewed
+0x1E-byte FAR boundary despite Ghidra omitting the entry. Its unchanged
+symbolic TASM source moved to `src/shared/hardware/hflip_lut.asm`; OP A/B
+cold links raw-match the complete module, and the affected MAIN exact unit
+passes focused cold replay after the source move. See
+`docs/reconstruction/op-maine/TH04_OP_HFLIP_LUT_V808.md`.
+
 All current authored OP and MAINE physical boundaries are reviewed. OP's eight
 nonexact entries are at decoded payload `0xBFA7`, `0xC57A`, `0xC627`,
 `0xDDCA`, `0xE2F2`, `0xE32C`, `0xE378`, and `0xE3E8`. MAINE's nine are at

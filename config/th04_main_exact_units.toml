@@ -864,7 +864,7 @@ object_path = "obj/th04/score_rm.obj"
 
 [[units]]
 id = "th04-main-module-th03-hfliplut-asm-131cc"
-repo_source = "src/main/hardware/hflip_lut.asm"
+repo_source = "src/shared/hardware/hflip_lut.asm"
 overlay_path = "th03/hfliplut.asm"
 map_module = "th03\\hfliplut.asm"
 object_path = "obj/th03/hfliplut.obj"

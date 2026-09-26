@@ -32,6 +32,8 @@ contain residual counts that were correct only at that packet.
 - [Shared PC-98 input sensing source across MAIN, OP, and MAINE](op-maine/TH04_SHARED_INPUT_V802.md)
 - [Shared BGIMAGE rectangle ASM module in OP and MAINE](op-maine/TH04_SHARED_BGIMAGER_V805.md)
 - [OP CDG alpha-only renderer reviewed boundary and cold module replay](op-maine/TH04_OP_CDG_NOCOLORS_V806.md)
+- [OP CDG no-alpha renderer shared source and cold module replay](op-maine/TH04_OP_CDG_NOALPHA_V807.md)
+- [OP horizontal-flip lookup generator boundary and shared source replay](op-maine/TH04_OP_HFLIP_LUT_V808.md)
 - [OP/MAINE/ZUN decoded-function acceptance plane](packed/TH04_DECODED_FUNCTION_ACCEPTANCE_V508.md)
 - [Three-artifact cold function smoke and acceptance limits](packed/TH04_THREE_ARTIFACT_SMOKE_V509.md)
 - [OP/MAINE shared frame-delay decoded acceptance](packed/TH04_SHARED_FRAME_DELAY_V510.md)
