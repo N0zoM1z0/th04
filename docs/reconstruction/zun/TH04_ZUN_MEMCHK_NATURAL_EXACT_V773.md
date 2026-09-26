@@ -64,10 +64,10 @@ differences, while MEMCHK _main is decoded-exact with zero raw differences.
 Only decoded-exact rows are raw-zero acceptance gates.
 
 Canonical receipt:
-.analysis/reconstruction/receipt-archive/v776-zun-memchk-main-canonical-receipt.json
+.analysis/reconstruction/receipt-archive/v776-zun-memchk-canonical-receipt.json
 
 Canonical receipt SHA-256:
-9d8f9e15e968b8fb93641915fe296db3cb2c0dd7dda63dca0a9dae63789609d6
+809e567a3b1822b9865522e9d8e89e3f016d62036f29c339c073bdafd83dd1b7
 
 ## Ledger consequence
 
