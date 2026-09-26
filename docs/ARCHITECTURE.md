@@ -128,7 +128,7 @@ The intended end state is a clean checkout whose TH04 source builds with the
 pinned compiler, assembler, linker, and documented external libraries without
 using `_reference/ReC98` as a source or header search path. Product source must
 not directly include `libs/`, `platform/`, `th01/`, `th02/`, `th03/`, or
-`th05/` paths. The current unlocalized dependencies are routed through
+`th05/` paths. Any unlocalized dependencies are routed through
 `compat/rec98/<upstream-path>`, a repository-owned forwarding boundary that is
 materialized and attested by exact replay. Direct upstream paths are permitted
 only inside that compatibility directory.
@@ -144,10 +144,10 @@ calibration scaffold rather than the TH04 product layout. See
 `compat/rec98/README.md`.
 
 The current tree is not yet a complete standalone game build. It has many
-accepted MAIN owners, decoded/link-exact BGIMAGE and VRAM functions in OP/MAINE,
-maintained shared source used by their diagnostic replays, and bounded ZUN
-source/components; OP/MAINE artifact-owned product trees are not yet populated.
-Several exact Oracles still compile through pinned ReC98 scaffolding. Do not
+accepted MAIN owners, artifact-owned and shared source for OP/MAINE decoded
+functions, and bounded ZUN source/components. The compatibility audit currently
+finds no product include dependency on `compat/rec98/`, but several exact
+Oracles still compile through pinned ReC98 scaffolding. Do not
 conceal that gap with copied declarations or a bulk import. Recover bounded
 TH04 units from the verified target, using ReC98 and adjacent games as
 corroboration. Keep each artifact's build/link and acceptance ownership

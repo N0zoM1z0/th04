@@ -1,100 +1,92 @@
 # TH04 reconstruction roadmap
 
-Updated 2026-09-25 after the MAINE cleanup pass. This is a current plan, not a
-chronological experiment log. Historical packets live in config/evidence.csv,
-config/knowledge.csv, and docs/reconstruction/. Numeric truth always comes from
-python3 scripts/status.py and the generated progress report.
+Updated 2026-09-26. This is the current work order. Use
+`python3 scripts/status.py` and the live ledgers for counts; versioned
+experiments and rejected approaches remain in `docs/reconstruction/` and
+`config/evidence.csv`.
 
-## 1. Current baseline
+## Current baseline
 
-| Artifact | Exact functions | Pending / blocked | Boundary reviewed / corroborated / provisional |
+| Artifact | Exact authored functions | Remaining | Reviewed boundaries |
 | --- | ---: | ---: | ---: |
-| OP.EXE | 64 | 29 / 0 | 70 / 15 / 8 |
-| MAINE.EXE | 52 | 20 / 0 | 59 / 10 / 3 |
-| ZUN.COM | 0 | 11 / 2 | 13 / 0 / 0 |
+| OP.EXE | 85 / 93 | 8 | 93 / 93 |
+| MAIN.EXE | 492 / 495 | 3 blocked | 495 / 495 |
+| MAINE.EXE | 63 / 72 | 9 | 72 / 72 |
+| ZUN.COM | 1 / 11 | 8 pending, 2 blocked | 11 / 11 |
 
-MAINE currently has 8,129 tracked decoded source-owner bytes, of which 7,754
-are in accepted exact functions. OP has 6,277 tracked source-owner bytes, of
-which 5,840 are exact. These are not packed-file denominators.
+OP has 13,847 accepted decoded source-owner bytes out of 14,284 tracked;
+MAINE has 11,187 out of 12,553; ZUN has 38 out of 442. These are not
+packed-file coverage denominators. MAIN's 83,442 / 83,469 exact authored C/C++
+bytes cover only its reviewed file-backed owner extents.
 
-The active reconstruction order is **MAINE.EXE → OP.EXE → ZUN.COM**.
-MAIN.EXE is outside this campaign.
+The active reconstruction queue is **ZUN.COM source and component ownership**.
+The remaining OP and MAINE functions are reviewed source/codegen frontiers;
+MAIN remains a side lane unless new evidence changes a blocker.
 
-## 2. Finish MAINE deliberately
+## ZUN.COM: establish source authority
 
-Keep both boss-sized and leaf-sized work active. For every candidate:
+The natural Tiny-model MEMCHK `_main` at payload `0x26A7` is the first exact
+ZUN authored function. Together with maintained shared `DOS_PUTS2` and
+`DOS_MAXFREE`, it cold-links a raw-identical 4,066-byte MEMCHK component. The
+helpers are library support, not authored-function credit. See
+`docs/reconstruction/zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md`.
 
-1. re-check physical ownership against the target;
-2. independently re-check source/origin rather than trusting an old label;
-3. use natural C/C++ source, not target-derived instruction transcription;
-4. cold-build the complete producer in two isolated rounds;
-5. require full function raw equality, producer equality, OMF/layout checks,
-   and ordered relocation equality;
-6. bind the replay backend fail-closed;
-7. run one current-ledger aggregate before exact promotion.
+Eight reviewed ZUNINIT entries still have unresolved source/origin authority.
+Treat historical disassembler-generated assembly as a candidate, not original
+source evidence. Resolve physical component ownership and natural or justified
+assembly provenance before exact promotion.
 
-Good next source-led targets include the 105-byte sub_B81D candidate in the
-pinned gv.cpp producer. The natural sub_B9F2 candidate is also visible there,
-but its physical owner is still provisional/non-contiguous and must be reviewed
-before source promotion.
+Resident `cfg_init` and `_main` remain blocked. The natural `_main` is six bytes
+short of the target selective print-call shape; `cfg_init` still has linked
+fixup differences downstream of that layout shift. Continue from the recorded
+compiler and provenance negatives rather than importing inert optimizer
+barriers. Keep component equality, function equality, and whole ZUN.COM file
+equality separate.
 
-Do not spend routine cycles on known low-level blockers (egc_start_copy,
-box_1_to_0_masked, SCORE rotate codegen, sound pseudo-register shapes) without
-a materially new mechanism.
+## OP.EXE and MAINE.EXE: strict source frontiers
 
-## 3. Continue resolving ownership in parallel
+All authored candidate boundaries in both artifacts are reviewed. OP has eight
+nonexact functions: `nopoly_b_put`, both SCORE codecs, `SND_LOAD`,
+`SND_SE_PLAY`, `_snd_se_update`, `egc_copy_rect_1_to_0_16`, and the internal
+`egc_start_copy` candidate at payload `0xE3E8`. MAINE has nine: `regist_menu`,
+`SND_LOAD`, `box_1_to_0_masked`, both SCORE codecs, `_snd_se_update`, the SCORE
+EGC-start helper, `SND_SE_PLAY`, and `egc_start_copy`.
 
-MAINE still has 10 corroborated and 3 provisional authored boundaries. Some
-rows marked target-derived-asm now have independently located natural candidate
-source in retained producers; update source ownership only after the target
-boundary is re-reviewed.
+Current natural-source and compiler-profile probes do not close their recorded
+register, segment-order, rotate, port-write, or optimizer shapes. Do not
+promote byte-forcing inline assembly, pseudo-registers, copied instructions,
+or inert optimizer barriers as authored C/C++ without independent source
+provenance. Resume a blocker only with a materially new compiler mechanism or
+source-origin observation. See
+`docs/reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md` and
+`docs/reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md`.
 
-Keep authored C/C++ reconstruction separate from ASM attestation. Raw-equal ASM
-does not become authored-source progress without provenance.
+For a new exact function, review the complete physical owner, build its
+natural source in isolated cold rounds, compare producer OMF/layout/ordered
+relocations and every raw byte, bind the backend to the maintained source,
+then replay the affected aggregate. A decoded match is not a packed-file match.
 
-## 4. Then OP.EXE
+## Artifact closure
 
-After the MAINE queue is materially reduced, apply the same target-first and
-producer-complete process to OP. The OP SCORE codecs, SND_SE_PLAY,
-_snd_se_update, and nopoly_B_put remain useful codegen blockers, not targets to
-force exact with pseudo-registers or copied instructions.
+After source ownership and function queues close:
 
-Continue correcting corroborated/provisional OP boundaries before estimating
-work from automatic analysis spans.
+1. Cold-replay all maintained producers and affected shared dependencies.
+2. Establish honest file-backed authored-source coverage for packed artifacts.
+3. Reconstruct and compare complete MZ containers, DIET packing, relocation
+   order, runtime/library bytes, padding, and overlays.
+4. Check deterministic PC-98 runtime invariants under pinned scenarios.
+5. Remove remaining calibration-scaffold build dependencies before claiming a
+   standalone TH04 build.
 
-## 5. Then ZUN.COM
+The four original files and toolchain are locally attested candidates, not
+independently proven pristine release media. Function exactness never implies
+whole-artifact exactness.
 
-All 13 current authored physical ZUN boundaries are reviewed. The hard part is
-source/component provenance:
+## Handoff and hygiene
 
-- 11 candidates still lack accepted source/origin ownership;
-- two C++ items remain blocked;
-- generated/disassembler-derived assembly remains zero-credit provenance for
-  authored-source exactness;
-- support-library/component replacement evidence must remain separate from
-  authored-function credit.
-
-Resolve provenance and component ownership first; exactness follows only after
-a source-authoritative cold replay.
-
-## 6. Artifact closure comes last
-
-Function exactness is not whole-file exactness. After the function queues close:
-
-1. cold replay all maintained producers;
-2. verify segment/group topology and ordered relocations;
-3. establish an honest file-backed authored-source coverage denominator;
-4. evaluate DIET packing separately from decoded-function exactness;
-5. run runtime invariants in the pinned PC-98 environment.
-
-## 7. Hygiene
-
-docs/RE_HANDOFF.md is the current resume document. docs/PROGRESS.md and
-docs/BOUNDARY_REVIEW.md are generated current-state views. Versioned
-reconstruction notes are historical unless explicitly listed as active.
-
-Probe worktrees under .analysis/reconstruction/probes/ are scratch output.
-Archive receipts and digests, then prune them with scripts/prune_analysis.py.
-Do not delete pinned targets, toolchains, Ghidra databases/exports, retained
-source snapshots, runtime images, or DIET inputs merely because they are
-ignored by Git.
+`docs/RE_HANDOFF.md` is the concise current-state index.
+`docs/PROGRESS.md` and `docs/BOUNDARY_REVIEW.md` are generated views.
+`docs/reconstruction/README.md` routes bounded historical evidence and
+negative results. Private probe worktrees are disposable after required
+receipts and digests are retained; preserve pinned targets, tools, databases,
+runtime images, and configured replay inputs.
