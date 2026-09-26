@@ -13,14 +13,14 @@ remaining candidate boundaries or source to exact.
 
 | Artifact | Observations | Author candidates | Exact | Blocked | Unreviewed | ASM attestation | Excluded |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `th04-op` | 492 | 93 | 89 | 4 | 0 | 16 | 383 |
+| `th04-op` | 492 | 93 | 90 | 3 | 0 | 16 | 383 |
 | `th04-main` | 1,040 | 495 | 492 | 3 | 0 | 73 | 472 |
 | `th04-maine` | 442 | 72 | 63 | 9 | 0 | 15 | 355 |
 | `th04-zun` | 146 | 3 | 3 | 0 | 0 | 12 | 131 |
-| **Total** | **2,120** | **663** | **647** | **16** | **0** | **116** | **1,341** |
+| **Total** | **2,120** | **663** | **648** | **15** | **0** | **116** | **1,341** |
 
-The remaining reconstruction queue is **16 nonexact authored candidates**:
-0 are unreviewed; 16 known
+The remaining reconstruction queue is **15 nonexact authored candidates**:
+0 are unreviewed; 15 known
 `MAIN.EXE` functions remain blocked.
 Compiler startup, Borland runtime, MASTER.LIB, embedded library code, data/BSS
 false positives, and Ghidra switch-case artifacts are excluded from that queue.

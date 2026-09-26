@@ -1,6 +1,5 @@
-#include <mem.h>
-
-#pragma intrinsic memcpy
+#include "src/shared/platform/x86.hpp"
+#include "src/shared/platform/pc98.hpp"
 
 extern unsigned char __seg *nopoly_B;
 

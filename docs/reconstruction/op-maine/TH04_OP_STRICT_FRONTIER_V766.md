@@ -1,21 +1,25 @@
-# OP strict natural-source frontier (v766, current-state addenda v821-v825)
+# OP strict natural-source frontier (v766, current-state addenda v821-v826)
 
 All 93 authored OP function candidates have reviewed physical boundaries. At
 v766, 85/93 had accepted decoded exactness and eight entries were blocked.
 
-**Current-state addendum (v825):** `scoredat_decode` and `scoredat_encode`
+**Current-state addendum (v826):** `scoredat_decode` and `scoredat_encode`
 remain decoded-exact through the narrowly scoped v821 cross-game-corroborated
 hybrid producer. v824 additionally promotes the internal 63-byte
 `egc_start_copy`: independently restored TH05 OP and MAINE release targets
 contain the complete helper verbatim, and maintained source restricts
 non-ordinary code to two corroborated hardware/compiler primitives totaling
-34 bytes. Canonical v825 passes 89/89 accepted OP slices raw-zero after the adjacent 111-byte rectangle-copy closure described below.
+34 bytes. Canonical v825 passes 89/89 accepted OP slices raw-zero after the adjacent
+111-byte rectangle-copy closure described below. v826 additionally closes
+`nopoly_b_put`: independently restored TH03/TH04/TH05 OP release targets share
+the complete normalized 30-byte GAME>=3 producer, and canonical v826 passes
+90/90 accepted OP slices raw-zero.
 
-Current OP state is **89/93 exact with four blockers**. The historical v766/v820
+Current OP state is **90/93 exact with three blockers**. The historical v766/v820
 negative compiler results remain valid for the source forms they tested.
 
 The 16 original-ASM observations still have reviewed target bounds and
-raw-matching decoded source modules. The current four authored blockers remain
+raw-matching decoded source modules. The current three authored blockers remain
 `blocked` in the ledger pending materially new source-provenance or compiler
 evidence.
 
@@ -129,8 +133,8 @@ compiler behavior, independently sourced historical code, or stronger
 provenance for a low-level source mechanism. Repeating equivalent C++ spellings
 is not useful.
 
-The current artifact order can advance once this OP frontier is recorded;
-the six current blockers remain the OP exactness queue when new evidence arrives.
+The current OP exactness queue is now the three provenance-only sound blockers:
+`SND_LOAD`, `SND_SE_PLAY`, and `_snd_se_update`.
 
 ### v823 SND_LOAD complete-producer provenance bound
 
@@ -189,3 +193,23 @@ Original-source spelling and packed-file exactness remain separate claims.
 
 Focused receipt SHA-256: `984291bce653fe242c33003e85eedd1572c71e062f7e0cec02c3840a52ec649d`.
 Canonical receipt SHA-256: `5df5f441a94e5ce3aadfdd102b84abdba1ffcb4730e92bcdd329b91429b65eca`.
+
+### v826 nopoly_B_put cross-game hybrid closure
+
+v826 supersedes only the nopoly_b_put acceptance decision from the historical
+v766 blocker list. TH03, TH04, and TH05 OP release targets each contain exactly
+one normalized 30-byte GAME>=3 body after masking only the linked _nopoly_B
+word; TH02 is a nonmatching GAME<3 control. Maintained source removes the
+decompilation __memcpy__ helper and keeps segment values/count in ordinary
+TC4J. Symbolic source is limited to DS save/restore, the release-target XOR
+encoding direction, and REP MOVSW.
+
+Two cold TC4.02/TLINK rounds reproduce the complete 0x6A5 OP_MUSIC_TEXT
+producer, OP EXE/MAP, the 30-byte body, and all 804 ordered relocations.
+Canonical replay checks 90/90 accepted OP slices raw-zero.
+
+Focused receipt SHA-256:
+26405281b33c09142e3eec074fe62791614717bd25ef12e27178c4a5232102ca.
+
+Canonical receipt SHA-256:
+cab1b089612158f70a983e9f277e3c9146b9b937c6d5c515785257fcd70adcde.

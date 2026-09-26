@@ -1,6 +1,6 @@
 # TH04 reconstruction handoff
 
-Updated 2026-09-26 after the v825 OP EGC rectangle-copy hybrid closure. This is the
+Updated 2026-09-26 after the v826 OP nopoly_B_put hybrid closure. This is the
 current resume index; use
 `python3 scripts/status.py`, `config/units.csv`, and the function-boundary and
 decoded-acceptance ledgers for live counts. `docs/RE_ROADMAP.md` gives the next
@@ -27,14 +27,14 @@ use; this host's focused replays use `taskset -c 0,1 nice -n 10`.
 
 | Artifact | Reviewed authored boundaries | Exact authored functions | Blocked | Original-ASM observations |
 | --- | ---: | ---: | ---: | ---: |
-| OP.EXE | 93 / 93 | 89 | 4 | 16 reviewed |
+| OP.EXE | 93 / 93 | 90 | 3 | 16 reviewed |
 | MAIN.EXE | 495 / 495 | 492 | 3 | 73 attestation entries; 6 provisional |
 | MAINE.EXE | 72 / 72 | 63 | 9 | 15 reviewed |
 | ZUN.COM | 3 / 3 | 3 | 0 | 12 reviewed |
 
 MAIN's reviewed file-backed authored extent has 83,442 / 83,469 exact bytes.
 Its 27-byte remainder belongs to `carpet_lighting_put_new` (23), checkerboard
-(2), and `snd_load` (2). OP has 14,295 accepted decoded source-owner bytes of
+(2), and `snd_load` (2). OP has 14,325 accepted decoded source-owner bytes of
 14,458 tracked; MAINE has 11,187 / 12,553; ZUN has 442 / 442. These decoded
 counts do not give a packed-file byte denominator or whole-artifact exactness.
 Original-ASM observations are outside the authored C/C++ counts.
@@ -70,6 +70,18 @@ SHA-256 `984291bce653fe242c33003e85eedd1572c71e062f7e0cec02c3840a52ec649d`;
 canonical receipt SHA-256
 `5df5f441a94e5ce3aadfdd102b84abdba1ffcb4730e92bcdd329b91429b65eca`.
 
+v826 closes `nopoly_b_put`. TH03, TH04, and TH05 OP release targets each
+contain exactly one copy of the same normalized 30-byte GAME>=3 body after
+masking only the linked `_nopoly_B` word; TH02 is a nonmatching GAME<3 control.
+The maintained hybrid keeps segment values/count in ordinary TC4J and limits
+symbolic source to DS save/restore, the cross-game XOR encoding direction, and
+REP MOVSW. Two cold links preserve the complete OP_MUSIC_TEXT producer and all
+804 relocations. Canonical v826 checks all 90 accepted OP slices raw-zero.
+Focused receipt SHA-256
+`26405281b33c09142e3eec074fe62791614717bd25ef12e27178c4a5232102ca`;
+canonical receipt SHA-256
+`cab1b089612158f70a983e9f277e3c9146b9b937c6d5c515785257fcd70adcde`.
+
 v823 then closes the code-generation mechanism for 234-byte SND_LOAD without
 granting source credit. Two cold wrapper builds replacing only _BX=_AX with
 TC4J integrated inline asm reproduce the complete reviewed function raw-zero;
@@ -83,8 +95,8 @@ on independent authored-source provenance. Diagnostic receipt
 v823-op-snd-load-provenance-receipt.json, SHA-256
 b958943a35c7916ab4a8bc80a9f2dd97bcc25a968ff4a315547f71d6dc37f161.
 
-The remaining OP blockers are `nopoly_b_put`, `SND_LOAD`, `SND_SE_PLAY`,
-and `_snd_se_update`.
+The remaining OP blockers are `SND_LOAD`, `SND_SE_PLAY`, and
+`_snd_se_update`.
 v820's compiler-path negative remains valid for ordinary TC4J / `-B` lowering;
 only the SCORE acceptance decision is superseded by v821's new provenance.
 See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_HYBRID_V821.md),
@@ -92,6 +104,7 @@ See the [v821 SCORE codec closure](reconstruction/op-maine/TH04_OP_SCORE_CODECS_
 [v823 SND_LOAD provenance bound](reconstruction/op-maine/TH04_OP_SND_LOAD_PROVENANCE_V823.md),
 [v824 EGC-start hybrid closure](reconstruction/op-maine/TH04_OP_EGC_START_HYBRID_V824.md),
 [v825 EGC rectangle-copy hybrid closure](reconstruction/op-maine/TH04_OP_EGC_COPY_HYBRID_V825.md),
+[v826 nopoly_B_put hybrid closure](reconstruction/op-maine/TH04_OP_NOPOLY_HYBRID_V826.md),
 [OP strict frontier](reconstruction/op-maine/TH04_OP_STRICT_FRONTIER_V766.md),
 and [MAINE strict frontier](reconstruction/op-maine/TH04_MAINE_STRICT_FRONTIER_V732.md).
 Do not substitute target-derived inline ASM, explicit register forcing, or
