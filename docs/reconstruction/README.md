@@ -80,6 +80,7 @@ contain residual counts that were correct only at that packet.
 - [ZUNINIT physical boundary review](zun/TH04_ZUNINIT_BOUNDARIES_V520.md)
 - [MEMCHK physical boundary review](zun/TH04_MEMCHK_BOUNDARIES_V521.md)
 - [ZUN MEMCHK DOS_PUTS2 source-owner correction](zun/TH04_ZUN_MEMCHK_DOS_PUTS2_OWNER_V769.md)
+- [ZUN MEMCHK natural source ownership and first authored exact function](zun/TH04_ZUN_MEMCHK_NATURAL_EXACT_V773.md)
 - [ZUNINIT/MEMCHK generated-assembly provenance](zun/TH04_ZUN_GENERATED_ASM_PROVENANCE_V522.md)
 - [ZUN DOS_FREE library replacement](zun/TH04_ZUN_DOS_FREE_V524.md)
 - [ZUN DOS_AXDX library replacement](zun/TH04_ZUN_DOS_AXDX_V525.md)

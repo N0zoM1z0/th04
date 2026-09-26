@@ -216,8 +216,8 @@ def main() -> int:
     args = parser.parse_args()
     output = args.output_dir.resolve()
     private = (ROOT / ".analysis/reconstruction/probes").resolve()
-    if output.exists() or output.parent != private:
-        parser.error("output must be new directly below .analysis/reconstruction/probes")
+    if output.exists() or output == private or not output.is_relative_to(private):
+        parser.error("output must be new below .analysis/reconstruction/probes")
 
     if sha_file(MAIN_SOURCE) != MAIN_SOURCE_SHA256:
         raise RuntimeError("MEMCHK main source identity drift")

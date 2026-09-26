@@ -255,7 +255,7 @@ def validate(
         if not valid_digest(digest):
             raise ValueError(f"{ident}: invalid target slice SHA-256")
         backend = entry["replay_backend"]
-        allowed_backend = ({"zun-resident-link"} if artifact == "th04-zun"
+        allowed_backend = ({"zun-resident-link", "zun-memchk-natural-v773"} if artifact == "th04-zun"
                            else {"op-maine-bgimage-v489", "op-maine-vram-v509", "op-maine-frame-delay-v510",
                                  "op-maine-pi-put-v511", "op-maine-pi-load-v511", "op-maine-pmd-v512",
                                  "op-maine-mmd-v513", "op-maine-kaja-v514", "op-maine-mode-v515", "op-maine-delay-v516",
@@ -298,9 +298,14 @@ def validate(
         if backend not in allowed_backend:
             raise ValueError(f"{ident}: wrong artifact replay backend")
         if artifact == "th04-zun":
-            if (source_name not in ZUN_LINKED_SOURCES
-                    or producer_start != ZUN_COMPONENT_OFFSET or producer_size != 0x18D8):
-                raise ValueError(f"{ident}: ZUN backend does not compile this producer")
+            if backend == "zun-resident-link":
+                if (source_name not in ZUN_LINKED_SOURCES
+                        or producer_start != ZUN_COMPONENT_OFFSET or producer_size != 0x18D8):
+                    raise ValueError(f"{ident}: ZUN resident backend does not compile this producer")
+            elif backend == "zun-memchk-natural-v773":
+                if (source_name != "src/zun/memchk/main.cpp"
+                        or producer_start != 0x2440 or producer_size != 0x0FE2):
+                    raise ValueError(f"{ident}: ZUN MEMCHK natural backend does not compile this producer")
         elif backend == "op-maine-bgimage-v489":
             if (source_name != "src/shared/hardware/bgimage.cpp"
                     or producer_start != BGIMAGE_PRODUCERS[artifact] or producer_size != 0xD0):
@@ -1071,6 +1076,9 @@ def backend_command(backend_id: str, saved: Path, *, artifact: str | None = None
     if backend_id == "zun-resident-link":
         return [sys.executable, "scripts/probes/replay_th04_zun_separate_link.py",
                 "--output-dir", str(saved)]
+    if backend_id == "zun-memchk-natural-v773":
+        return [sys.executable, "scripts/probes/replay_th04_zun_memchk_natural.py",
+                "--output-dir", str(saved)]
     if backend_id == "op-maine-vram-v509":
         return [sys.executable, "scripts/probes/replay_th04_shared_vram.py",
                 "--output-dir", str(saved)]
@@ -1454,6 +1462,26 @@ def backend(artifact: str, backend_id: str, output: Path) -> tuple[list[bytes], 
         origin = ZUN_COMPONENT_OFFSET
         layout = {"component_size": len(candidate[0]), "component_sha256": sha(candidate[0]),
                   "target_component_sha256": sha(target)}
+    elif backend_id == "zun-memchk-natural-v773":
+        candidate = [
+            (saved / label / "work/bin/th04/memchk.com").read_bytes()
+            for label in ("a", "b")
+        ]
+        if candidate[0] != candidate[1]:
+            raise RuntimeError("ZUN MEMCHK cold component links disagree")
+        if len(candidate[0]) != 0x0FE2:
+            raise RuntimeError("ZUN MEMCHK component size drift")
+        target = ZUN_PAYLOAD.read_bytes()[0x2440:0x2440 + 0x0FE2]
+        if sha(target) != "2531795670b5cafb65bf261f499d5d77b71aeaf26015f8481000cdbb96272dfc":
+            raise RuntimeError("ZUN MEMCHK target component identity drift")
+        if candidate[0] != target:
+            raise RuntimeError("ZUN MEMCHK backend component is not target-exact")
+        origin = 0x2440
+        layout = {
+            "component_size": len(candidate[0]),
+            "component_sha256": sha(candidate[0]),
+            "target_component_sha256": sha(target),
+        }
     elif backend_id in {"op-maine-input-wait-v565", "op-maine-se-reset-v581", "op-maine-vector-math-v570"}:
         name = "op" if artifact == "th04-op" else "maine"
         target_mz = parse_mz(RESTORED[artifact].read_bytes())
@@ -1517,7 +1545,11 @@ def replay(artifact: str, entries: list[dict[str, str]], output: Path,
         ]
         if rounds[0] != rounds[1]:
             raise RuntimeError(f"{artifact}/{backend_id}: cold function comparisons disagree")
-        require_exact_zero(rounds[0])
+        exact_results = [
+            result for entry, result in zip(group, rounds[0])
+            if entry.get("decoded_state", "decoded-exact") == "decoded-exact"
+        ]
+        require_exact_zero(exact_results)
         if any(sha((ROOT / entry["source"]).read_bytes()) != source_hashes[entry["source"]]
                for entry in group):
             raise RuntimeError(f"{artifact}/{backend_id}: maintained source changed during replay")
@@ -1539,7 +1571,7 @@ def replay(artifact: str, entries: list[dict[str, str]], output: Path,
         "candidate_round_sha256": candidates,
         "backends": builds,
         "functions": compared,
-        "limit": "Decoded artifact-local function comparison only; no raw packed-file byte or standalone product acceptance.",
+        "limit": "Decoded artifact-local function comparison only; decoded-exact rows are raw-zero gated while source-present rows remain diagnostics. No raw packed-file byte or standalone product acceptance.",
     }
     path = output / "receipt.json"
     path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")

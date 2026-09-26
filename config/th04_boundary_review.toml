@@ -348,12 +348,12 @@ notes = "Target main body terminates with DOS INT 21h/AH=4Ch at runtime 0x40B; t
 artifact = "th04-zun"
 payload_offset = 0x26A7
 origin = "authored"
-source_form = "target-derived-asm"
-source_ref = "candidate:th04_memchk.asm"
+source_form = "candidate-cpp"
+source_ref = "src/zun/memchk/main.cpp"
 expected_tasm_proc = "_main"
 reviewed_body_size = 0x26
-review_evidence_id = "ev-th04-zun-memchk-boundaries-v521"
-notes = "Target _main closes at RET; following payload 0x26CD byte 0x00 is external padding."
+review_evidence_id = "ev-th04-zun-memchk-main-boundary-v773"
+notes = "v773 proves natural Tiny-model C++ reproduces the complete 38-byte MEMCHK _main when linked with shared DOS_PUTS2 and DOS_MAXFREE. The following payload 0x26CD byte 0x00 is linker alignment outside the function. The historical th04_memchk.asm PROC remains boundary corroboration only. v776 canonical decoded acceptance keeps the function raw-zero."
 
 [[function_overrides]]
 artifact = "th04-zun"
@@ -369,13 +369,13 @@ notes = "v769 proves this 39-byte MEMCHK body plus its following 0x90 are byte-i
 [[function_overrides]]
 artifact = "th04-zun"
 payload_offset = 0x26F6
-origin = "authored"
-source_form = "target-derived-asm"
-source_ref = "candidate:th04_memchk.asm"
+origin = "library"
+source_form = "maintained-shared-asm"
+source_ref = "src/shared/dos/dos_maxfree.asm"
 expected_tasm_proc = "sub_3B6"
 reviewed_body_size = 0x14
-review_evidence_id = "ev-th04-zun-memchk-boundaries-v521"
-notes = "Target memory query helper closes at RET at the end of the authored MEMCHK CODE contribution."
+review_evidence_id = "ev-th04-zun-memchk-dos-maxfree-owner-v773"
+notes = "v773 binds the 20-byte MEMCHK helper to MASTER archive member DOSMAXFR.ASM/public DOS_MAXFREE and to maintained src/shared/dos/dos_maxfree.asm, which emits identical CODE in two TASM rounds. Historical sub_3B6 naming remains boundary corroboration only; this is shared library support."
 
 # v540 target-reviewed SCORE codec C++ boundaries. Unlike target-derived ASM,
 # these entries use exact target Ghidra body spans rather than TASM PROC

@@ -43,14 +43,14 @@ inputs are independently proven pristine release media.
 | --- | ---: | ---: | ---: | ---: |
 | OP.EXE | 93 / 0 / 0 | 85 | 8 / 0 | 14,284 |
 | MAINE.EXE | 72 / 0 / 0 | 63 | 9 / 0 | 12,553 |
-| ZUN.COM | 12 / 0 / 0 | 0 | 10 / 2 | 404 |
+| ZUN.COM | 11 / 0 / 0 | 1 | 8 / 2 | 442 |
 
 These are decoded-function/source-owner counts, not packed-file coverage.
 There is still no honest packed-file authored-source denominator for OP, MAINE,
 or ZUN.
 
 The accepted decoded-source bytes represented by the acceptance ledger are
-13,847 for OP and 11,187 for MAINE. The remaining tracked MAINE source-owner
+13,847 for OP, 11,187 for MAINE, and 38 for ZUN. The remaining tracked MAINE source-owner
 bytes are source-present/nonexact diagnostics, not partial exact credit.
 
 ## What changed in the MAINE campaign
@@ -295,17 +295,40 @@ ZUN.COM while the OP blockers remain tracked.
 
 ## ZUN.COM campaign start
 
-ZUN work has begun after recording the strict MAINE and OP frontiers. v769 proves that MEMCHK payload 0x26CE..0x26F4 is shared DOS_PUTS2 library code, not an independent game-authored target-derived-ASM function. The 39-byte body and following 0x90 are identical to the resident DOS_PUTS2 instance and to two independent builds of src/shared/dos/dos_puts2.asm.
+ZUN work has begun after recording the strict MAINE and OP frontiers. Two old
+MEMCHK authored-owner assumptions have now been disproven:
 
-The old sub_38E entry is therefore reclassified as library support. The historical th04_memchk.asm MAP/TASM symbol remains boundary corroboration only; no authored exactness is claimed.
+- v769 proves historical sub_38E at 0x26CE is shared DOS_PUTS2;
+- v773 proves historical sub_3B6 at 0x26F6 is shared DOS_MAXFREE, matching both
+  maintained symbolic TASM and the historical MASTER DOSMAXFR.ASM member.
 
-Current authored ZUN queue: 12 reviewed candidates, 0 exact, 2 blocked natural C++ functions (cfg_init and resident _main), and 10 unresolved target-derived-ASM source/origin candidates.
+The remaining authored MEMCHK _main at 0x26A7 has been reconstructed as natural
+Tiny-model C++. v773 links it with maintained DOS_PUTS2 and DOS_MAXFREE into the
+complete 0xFE2 / 4,066-byte MEMCHK component, raw-identical to the target in two
+cold rounds.
 
-Receipt: .analysis/reconstruction/receipt-archive/v769-zun-memchk-dos-puts2-receipt.json
+The first authored ZUN decoded-function acceptance is therefore:
 
-SHA-256: b2a26f0a595bfa5410c43809ea0971003cff163767bd8b65d318f39b65b7ab8f
+- MEMCHK _main at 0x26A7: 38 bytes exact.
 
-Next ZUN work should continue ownership review of MEMCHK _main/sub_3B6 and the eight ZUNINIT functions while keeping the resident _main six-byte natural-source blocker explicit.
+The final current-ledger ZUN aggregate is v776. It checks three ZUN slices:
+MEMCHK _main is decoded-exact and raw-zero; cfg_init and resident _main remain
+source-present diagnostics with their known mismatches.
+
+Canonical receipt:
+.analysis/reconstruction/receipt-archive/v776-zun-memchk-canonical-receipt.json
+
+SHA-256:
+809e567a3b1822b9865522e9d8e89e3f016d62036f29c339c073bdafd83dd1b7
+
+Current authored ZUN queue: 11 reviewed candidates, 1 exact, 2 blocked natural
+C++ functions (cfg_init and resident _main), and 8 unresolved ZUNINIT
+target-derived-ASM source/origin candidates.
+
+Next ZUN work should focus on the resident _main six-byte natural-codegen
+frontier because cfg_init's remaining linked differences are downstream of that
+layout shift, while independently re-checking ZUNINIT source ownership rather
+than assuming the historical generated-ASM candidate is original source.
 
 ## Analysis/worktree hygiene
 
