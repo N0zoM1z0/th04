@@ -90,7 +90,9 @@ directory and all 13,422 decoded payload bytes; a one-byte component-length
 mutation fails both raw comparators. This is diagnostic because the usage text
 and ONGCHK remain external and RES_HUMA comes from a ReC98 candidate with
 inert barriers. The maintained natural resident `_main` remains six bytes
-short. See `docs/reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md`.
+short. The two mixed flat outputs also repack with pinned DIET 1.45f to the
+exact 7,754-byte MZ target in low-priority, two-core A/B runs; source acceptance
+remains none. See `docs/reconstruction/zun/TH04_ZUN_MIXED_COMPOSITE_V788.md`.
 
 The 18-byte helper at payload `0x7B0` is runtime-observed to convert all
 6,879 mapped strict Shift-JIS pairs to JIS row/cell; ten CP932 extension pairs

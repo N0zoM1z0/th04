@@ -47,3 +47,24 @@ This is a **mixed-input integration Oracle**. It closes the directory formula
 and demonstrates that the maintained components fit the outer flat layout.
 It does not close the external usage/ONGCHK ownership, resident natural-source
 gap, DIET-packed MZ generation, or whole `ZUN.COM` exact acceptance.
+
+## v789 pinned DIET packaging continuation
+
+The two v788 flat outputs were passed to the existing pinned DIET 1.45f
+replay under low priority and a two-core CPU affinity:
+
+```sh
+taskset -c 0,1 nice -n 10 python3 scripts/probes/replay_diet145f.py th04-zun \
+  --candidate-a .analysis/reconstruction/probes/v788-zun-mixed-flat-final-001/a.flat.bin \
+  --candidate-b .analysis/reconstruction/probes/v788-zun-mixed-flat-final-001/b.flat.bin \
+  --output-dir .analysis/reconstruction/probes/NEW-UNIQUE-NAME --require-exact
+```
+
+Both independent DIET runs emit the same valid 7,754-byte MZ and raw-match the
+pinned `ZUN.COM` SHA-256
+`0a12e9a489d3b704a77cf04ca3062ee48f298a9df6d237dc7dad46986e2d116e`.
+Receipt: `.analysis/reconstruction/probes/v789-zun-mixed-diet-001/receipt.json`,
+SHA-256 `d2093ff4382f7e2c13a2657fcabafd1ba8765219de1f9d48ac5579c76ff9ed95`.
+This establishes that DIET packaging is reproducible for the mixed-input flat
+payload. It does not resolve the external inputs or the natural resident
+`_main` gap; the receipt explicitly grants no source acceptance.

@@ -40,7 +40,9 @@ ASM. The generated selector directory, remaining external component ownership,
 and DIET product build remain on the artifact-closure path. The checked-in
 composite builder reproduces the directory and complete decoded flat payload
 with explicitly mixed maintained/external inputs; this is a diagnostic
-integration Oracle, not product-source closure. Treat historical
+integration Oracle, not product-source closure. Pinned DIET 1.45f also repacks
+those mixed flats to byte-identical MZ targets; its source-acceptance verdict
+remains none. Treat historical
 disassembler-generated assembly as a candidate, not original-source evidence.
 
 Resident `cfg_init` and `_main` remain blocked. The natural `_main` is six bytes
