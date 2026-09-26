@@ -1,21 +1,21 @@
-# OP strict natural-source frontier (v766, current-state addenda v821-v823)
+# OP strict natural-source frontier (v766, current-state addenda v821-v825)
 
 All 93 authored OP function candidates have reviewed physical boundaries. At
 v766, 85/93 had accepted decoded exactness and eight entries were blocked.
 
-**Current-state addendum (v824):** `scoredat_decode` and `scoredat_encode`
+**Current-state addendum (v825):** `scoredat_decode` and `scoredat_encode`
 remain decoded-exact through the narrowly scoped v821 cross-game-corroborated
 hybrid producer. v824 additionally promotes the internal 63-byte
 `egc_start_copy`: independently restored TH05 OP and MAINE release targets
 contain the complete helper verbatim, and maintained source restricts
 non-ordinary code to two corroborated hardware/compiler primitives totaling
-34 bytes. Canonical v824 passes 88/88 accepted OP slices raw-zero.
+34 bytes. Canonical v825 passes 89/89 accepted OP slices raw-zero after the adjacent 111-byte rectangle-copy closure described below.
 
-Current OP state is **88/93 exact with five blockers**. The historical v766/v820
+Current OP state is **89/93 exact with four blockers**. The historical v766/v820
 negative compiler results remain valid for the source forms they tested.
 
 The 16 original-ASM observations still have reviewed target bounds and
-raw-matching decoded source modules. The current five authored blockers remain
+raw-matching decoded source modules. The current four authored blockers remain
 `blocked` in the ledger pending materially new source-provenance or compiler
 evidence.
 
@@ -105,9 +105,7 @@ a3ecaa4e360d384d219ce853ca2ba198e7a34e5c95e1ac60c1a4776e005208e1
 
 SND_LOAD is now bounded more tightly by v823: TC4J integrated inline assembly
 reproduces its TH04-only 89 C3 encoding with no other decoded-program or
-relocation change, while the available source witnesses remain decompilation-derived. The EGC pair remains a source-provenance
-problem: its exact-looking ReC98 low-level form originates in a decompilation
-commit, so v820 does not use it as authored source.
+relocation change, while the available source witnesses remain decompilation-derived. The historical EGC decompilation source is no longer the accepted boundary: v824/v825 replace it with narrowed hybrids backed by independent release-target machine-code evidence.
 
 ### v821 SCORE codec hybrid closure
 
@@ -170,5 +168,24 @@ non-ordinary source is limited to a 28-byte PC-98 hardware block and a 6-byte
 TC4J pseudoregister primitive. The surrounding `0xB0` producer and all 804 OP
 relocations remain unchanged in two cold links.
 
-The 111-byte `egc_copy_rect_1_to_0_16` entry remains blocked. See
+The 111-byte `egc_copy_rect_1_to_0_16` entry is decoded-exact as of v825. See
 `TH04_OP_EGC_START_HYBRID_V824.md`.
+
+
+### v825 EGC rectangle-copy hybrid closure
+
+v825 extends the v824 EGC work to the complete 111-byte
+`egc_copy_rect_1_to_0_16` outer body. TH05 OP and MAINE independently preserve
+the same descendant register/allocation and rectangle-arithmetic architecture.
+The maintained source removes decompilation-only parameter-load assembly and
+keeps symbolic source only for bounded x86/PC-98 primitives: CLD, two SHL-by-one
+instructions, immediate page-select OUTs, and STOSW/LOOP. It contains no
+`__emit__`, codestring, target-byte array, object patch, or post-link patch.
+
+Two cold TC4.02/TLINK rounds reproduce the 111-byte function, the already
+accepted 63-byte helper, the complete 0xB0 producer, OP EXE/MAP, and all 804
+ordered relocations. Canonical replay checks 89/89 accepted OP slices raw-zero.
+Original-source spelling and packed-file exactness remain separate claims.
+
+Focused receipt SHA-256: `984291bce653fe242c33003e85eedd1572c71e062f7e0cec02c3840a52ec649d`.
+Canonical receipt SHA-256: `5df5f441a94e5ce3aadfdd102b84abdba1ffcb4730e92bcdd329b91429b65eca`.
