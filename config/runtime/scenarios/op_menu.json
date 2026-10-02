@@ -1,0 +1,22 @@
+{
+  "description": "Normal GAME.BAT menu, options, Music Room, scores and DOS exit. Early Right taps reset title idle without changing selection. Start from option bytes 020302020101; Extra is locked.",
+  "expected_config_options_hex": "030401020101",
+  "settings": {
+    "frame_second": 190,
+    "time_limit": 1000,
+    "key_delay_ms": 300,
+    "audio": true,
+    "stop_after_frame": true,
+    "checkpoint_second": [55, 75, 95, 115, 145, 165],
+    "input_event": [
+      "Right@20", "Right@25", "Right@30", "Right@35", "Right@40",
+      "Right@45", "Right@50", "Right@54",
+      "Down@58", "Down@61", "Down@64", "z@67",
+      "Right@78", "Down@82", "Right@85", "Down@89", "Left@92",
+      "Escape@100", "Up@104", "z@108", "F12+w@112", "z@118",
+      "Down@122", "z@125", "F12+w@128", "Escape@130",
+      "Down@134", "z@138", "Escape@160", "Down@164",
+      "Down@167", "Down@170", "z@173"
+    ]
+  }
+}

@@ -44,19 +44,27 @@ def decode_scores(data: bytes) -> list[dict]:
     return sections
 
 
-def inspect_score_save(run: Path, receipt: dict, executed: bytes) -> dict:
+def prepared_baseline(run: Path, receipt: dict) -> bytes:
     prepared_receipt = (run.parent / "receipt.json").read_bytes()
     prepared = (run.parent / "diagnostic.hdi").read_bytes()
     if (hashlib.sha256(prepared_receipt).hexdigest() != receipt["prepared_receipt_sha256"]
             or hashlib.sha256(prepared).hexdigest() != receipt["prepared_hdi_sha256"]):
-        raise ValueError("prepared score baseline identity drift")
-    def score_file(image: bytes) -> bytes:
-        fs = Fat12(bytearray(image))
-        folder = fs.find_entry([fs.root], b"GENSO      ")
-        directory = [fs.cluster_offset(c) for c in fs.chain(u16(fs.image, folder + 26))]
-        entry = fs.find_entry(directory, b"GENSOU  SCR")
-        return fs.file_bytes(u16(fs.image, entry + 26), u32(fs.image, entry + 28))
-    before, after = score_file(prepared), score_file(executed)
+        raise ValueError("prepared baseline identity drift")
+    return prepared
+
+
+def game_file(image: bytes, short_name: bytes) -> bytes:
+    fs = Fat12(bytearray(image))
+    folder = fs.find_entry([fs.root], b"GENSO      ")
+    directory = [fs.cluster_offset(c) for c in fs.chain(u16(fs.image, folder + 26))]
+    entry = fs.find_entry(directory, short_name)
+    return fs.file_bytes(u16(fs.image, entry + 26), u32(fs.image, entry + 28))
+
+
+def inspect_score_save(run: Path, receipt: dict, executed: bytes) -> dict:
+    prepared = prepared_baseline(run, receipt)
+    before = game_file(prepared, b"GENSOU  SCR")
+    after = game_file(executed, b"GENSOU  SCR")
     old, new = decode_scores(before), decode_scores(after)
     if not all(section["checksum_valid"] for section in old):
         raise ValueError("score baseline checksum failed")
@@ -65,6 +73,37 @@ def inspect_score_save(run: Path, receipt: dict, executed: bytes) -> dict:
     return dict(before_sha256=hashlib.sha256(before).hexdigest(),
                 after_sha256=hashlib.sha256(after).hexdigest(), sections=new,
                 changed_sections=changed, valid=valid, saved=bool(changed) and valid)
+
+
+def decode_config(data: bytes) -> dict:
+    if len(data) != 10:
+        raise ValueError("invalid MIKO.CFG length")
+    rank, lives, bombs, bgm, se, turbo = data[:6]
+    return dict(options_hex=data[:6].hex(), rank=rank, lives=lives, bombs=bombs,
+                bgm_mode=bgm, se_mode=se, turbo_mode=turbo,
+                resident_segment=int.from_bytes(data[6:8], "little"), debug=data[8],
+                checksum_valid=(sum(data[:6]) & 255) == data[9],
+                options_valid=(rank <= 3 and 1 <= lives <= 6 and bombs <= 2
+                               and bgm <= 2 and se <= 2 and turbo <= 1))
+
+
+def reduce_config_save(before: bytes, after: bytes) -> dict:
+    old, new = decode_config(before), decode_config(after)
+    if not old["checksum_valid"]:
+        raise ValueError("config baseline checksum failed")
+    valid = (new["checksum_valid"] and new["options_valid"]
+             and new["resident_segment"] == 0 and new["debug"] == 0)
+    changed = before[:6] != after[:6]
+    return dict(before=old, after=new, changed_options=changed, valid=valid,
+                saved=changed and valid,
+                before_sha256=hashlib.sha256(before).hexdigest(),
+                after_sha256=hashlib.sha256(after).hexdigest())
+
+
+def inspect_config_save(run: Path, receipt: dict, executed: bytes) -> dict:
+    before = game_file(prepared_baseline(run, receipt), b"MIKO    CFG")
+    after = game_file(executed, b"MIKO    CFG")
+    return reduce_config_save(before, after)
 
 
 def reduce_checkpoints(files: dict[str, bytes]) -> dict:
@@ -101,7 +140,18 @@ def main() -> int:
     parser.add_argument("--require-maine-initialized", action="store_true")
     parser.add_argument("--inspect-score", action="store_true")
     parser.add_argument("--require-score-saved", action="store_true")
+    parser.add_argument("--inspect-config", action="store_true")
+    parser.add_argument("--require-config-options", metavar="HEX",
+                        help="require changed, valid, saved six-byte options matching HEX")
     args = parser.parse_args()
+    if args.require_config_options is not None:
+        try:
+            expected = bytes.fromhex(args.require_config_options)
+        except ValueError:
+            parser.error("config options must be six hexadecimal bytes")
+        if len(expected) != 6:
+            parser.error("config options must be six hexadecimal bytes")
+        args.require_config_options = expected.hex()
     run = args.run_dir.resolve()
     if not run.is_relative_to(ROOT / ".analysis"):
         parser.error("run directory must be private")
@@ -126,11 +176,20 @@ def main() -> int:
     result = reduce_checkpoints(files)
     if args.inspect_score or args.require_score_saved:
         result["score_save"] = inspect_score_save(run, receipt, image)
+    if args.inspect_config or args.require_config_options is not None:
+        result["config_save"] = inspect_config_save(run, receipt, image)
+        if args.require_config_options is not None:
+            result["config_save"]["expected_options_hex"] = args.require_config_options
+            result["config_save"]["matches_expected"] = (
+                result["config_save"]["after"]["options_hex"] == args.require_config_options)
     result["run_receipt_sha256"] = hashlib.sha256(receipt_data).hexdigest()
     (run / "handoff-state.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, sort_keys=True))
     return int((args.require_maine_initialized and not result["maine_initialized"])
-               or (args.require_score_saved and not result["score_save"]["saved"]))
+               or (args.require_score_saved and not result["score_save"]["saved"])
+               or (args.require_config_options is not None
+                   and not (result["config_save"]["saved"]
+                            and result["config_save"]["matches_expected"])))
 
 
 if __name__ == "__main__":

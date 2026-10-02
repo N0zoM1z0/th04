@@ -33,6 +33,7 @@ RENDERER_ENTRIES = {
     "src/shared/hardware/graph_putsa_fx.asm": "GRAPH_PUTSA_FX",
     "src/shared/hardware/super_roll_put.asm": "SUPER_ROLL_PUT",
     "src/shared/hardware/super_roll_put_1plane.asm": "SUPER_ROLL_PUT_1PLANE",
+    "src/op/formats/cdg_p_nc.asm": "CDG_PUT_NOCOLORS_8",
 }
 
 
@@ -92,6 +93,7 @@ def main() -> int:
     if not complete:
         raise ValueError("requires a complete native link")
     artifact = receipt["artifact"].removeprefix("th04-")
+    renderer_sources = SELF_MODIFYING | ({"src/op/formats/cdg_p_nc.asm"} if artifact == "op" else set())
     work = receipt_path.parent / "source"
     exe = work / f"bin/{artifact}-native.exe"
     maps = list(work.glob(f"obj/**/{artifact}-native.map"))
@@ -146,7 +148,7 @@ def main() -> int:
     seen_sources = set()
     for line in map_text.splitlines():
         match = re.match(r"\s*([0-9A-F]{4}):([0-9A-F]{4})\s+([0-9A-F]{4})\s+C=CODE\b.*\bM=(\S+)", line)
-        if not match or match[4].replace("\\", "/") not in SELF_MODIFYING or not int(match[3], 16):
+        if not match or match[4].replace("\\", "/") not in renderer_sources or not int(match[3], 16):
             continue
         source = match[4].replace("\\", "/")
         seen_sources.add(source)
@@ -177,7 +179,7 @@ def main() -> int:
                                         instruction_offset=instruction.address,
                                         destination_load_address=destination,
                                         pass_operand=start <= destination and destination + operand.size <= start + size))
-    if seen_sources != SELF_MODIFYING or not patches:
+    if seen_sources != renderer_sources or not patches:
         raise ValueError("self-modifying providers are missing from the native MAP")
     result = dict(scope="linked native IRQ vectors and CS-relative renderer operands; not complete runtime acceptance",
                   executable_sha256=hashlib.sha256(image).hexdigest(),

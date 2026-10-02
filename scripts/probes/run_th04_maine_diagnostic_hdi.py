@@ -25,8 +25,25 @@ ROOT = Path(__file__).resolve().parents[2]
 PRIVATE = (ROOT / ".analysis/runtime/candidates").resolve()
 
 
+def scenario_defaults(path: Path) -> dict:
+    settings = json.loads(path.read_text())["settings"]
+    types = {"frame_second": int, "time_limit": int, "key_delay_ms": int,
+             "audio": bool, "stop_after_frame": bool,
+             "checkpoint_second": list, "input_event": list}
+    if not isinstance(settings, dict) or any(
+            key not in types or type(value) is not types[key]
+            for key, value in settings.items()):
+        raise ValueError("invalid runtime scenario settings")
+    if (any(type(value) is not int for value in settings.get("checkpoint_second", []))
+            or any(type(value) is not str for value in settings.get("input_event", []))):
+        raise ValueError("invalid runtime scenario timeline")
+    return settings
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--scenario", type=Path,
+                        help="JSON defaults; CLI scalars override and input/checkpoint lists append")
     parser.add_argument("--prepared-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--frame-second", type=int, default=10)
@@ -55,6 +72,11 @@ def main() -> int:
     )
     parser.add_argument("--key-delay-ms", type=int, default=150,
                         help="xdotool tap duration; held down/up events are unchanged")
+    scenario_parser = argparse.ArgumentParser(add_help=False)
+    scenario_parser.add_argument("--scenario", type=Path)
+    scenario_path = scenario_parser.parse_known_args()[0].scenario
+    if scenario_path is not None:
+        parser.set_defaults(**scenario_defaults(scenario_path))
     args = parser.parse_args()
     if not 1 <= args.key_delay_ms <= 1000:
         parser.error("key delay must be between 1 and 1000 milliseconds")
@@ -346,6 +368,8 @@ def main() -> int:
         "schema_version": 1,
         "observed_utc": datetime.now(timezone.utc).isoformat(),
         "scope": "diagnostic PC-98 boot frame; product execution needs a separate checkpoint",
+        "scenario": ({"file": str(scenario_path.resolve()),
+                      "sha256": sha(scenario_path.read_bytes())} if scenario_path else None),
         "artifact": artifact,
         "prepared_receipt_sha256": sha(prep_receipt_path.read_bytes()),
         "prepared_hdi_sha256": prep["diagnostic_hdi_sha256"],

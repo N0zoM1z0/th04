@@ -10,7 +10,7 @@ upstream exactness claims are not inherited. Current phase: runtime integration.
 
 | Artifact | Accepted authored functions | Native build/runtime |
 | --- | ---: | --- |
-| OP | 93/93 | Complete standalone build; enters MAIN and receives MAINE return; menu labels still differ from original |
+| OP | 93/93 | Standalone build; normal options/Music Room/scores/DOS exit and saved config pass |
 | MAIN | 493/495 | Complete standalone build; stage-0 graphics, audio and private movement/shot/Bomb/death checks pass |
 | MAINE | 72/72 | Complete standalone build; uninstrumented score/name registration saves 39,300 and returns to OP |
 | ZUN | 3/3 | Source-only cold packed build; four-product GAME.BAT startup passes |
@@ -25,7 +25,9 @@ owners and four generated sprite owners without `masters.lib`. All four products
 build through `scripts/build.py`. A fresh four-product build and subsequent
 source/dependency-validated MAIN/OP/MAINE relink pass; the final MAINE matches its
 fresh build. ZUN is cold-deterministic. Current inventory:
-`.analysis/reconstruction/probes/product-20261002-090618-400c84b6-build.json`.
+`.analysis/reconstruction/probes/product-20261002-092346-adc55999-build.json`.
+The latest OP cold build compiles 111 C/C++ and 53 ASM roots, links without
+warnings, and equals the preceding dependency-validated cached native build.
 
 Verified integration fixes:
 - MAIN EGC tile copy uses 3100h, observed at MAI_TEXT 0AAF:212C (file E41Ch).
@@ -35,19 +37,29 @@ Verified integration fixes:
   paragraph block split free memory and made `execl` return ENOMEM=8.
 - MAINE's C++ code group changed the CS frame for SHARED assembly. Independent
   native IRQ/PAR and self-modifying renderer segments repair four vectors and
-  38 CS-relative operands. The build now checks these destinations, including
+  38 CS-relative operands (39 for OP, including its monochrome CDG helper).
+  The build checks these destinations, including
   observed direct-call CS frames. The default renderer branch retains its
   previous complete link-relevant OMF output in cold compiler comparisons.
+- OP labels use monochrome CDG masks and description color 15, observed in
+  OP_MAIN_TEXT 0A74:0375/0497. Native call composition and FAR Pascal RETF6
+  checks pass; historical accepted inline bodies remain unchanged.
 
 The uninstrumented v1178 normal route reaches stage 0, Game Over, Continue,
 MAINE name entry, score persistence and the OP title menu. Ten saved-score
 section checksums and digit ranges pass. Private v1176 separately records all
 MAINE initialization call completions. Pinned originals under the same emulator
 also show pale score colors and previous CONTINUE/stage-image remnants; do not
-attribute these to reconstruction without another control. Native OP menu labels
-separately differ from original. Candidate `src/op/main/menu.cpp` uses colored
-`cdg_put_8` for labels where the upstream composition uses `cdg_put_nocolors_8`;
-OP target attestation is required before correcting that native composition.
+attribute these to reconstruction without another control.
+
+The uninstrumented v1181 normal-menu scenario passes on native and original
+products. Options frames 75/95 and returned-menu frame 165 are raw-identical.
+Both enter Music Room, emit non-silent stereo audio, view scores, exit to DOS
+and save the same valid configuration `0304010201010000000c` (Lunatic, four
+lives, one Bomb). Startup/loading and polygon-animation phases differ;
+waveform or general timing equality is not claimed.
+The native v1182 reboot loads those saved options into the menu and exits to
+DOS with the complete ten-byte configuration unchanged.
 
 Current runtime receipts:
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/receipt.json`
@@ -55,6 +67,9 @@ Current runtime receipts:
 - `.analysis/runtime/candidates/native-maine-render-v1176-20261002/run/handoff-state.json`
 - `.analysis/runtime/candidates/original-score-baseline-v1177-20261002/run/receipt.json`
 - `.analysis/runtime/candidates/native-actions-v1170-20261002/run/play-state.json`
+- `.analysis/runtime/candidates/native-op-menu-v1181-20261002/run/handoff-state.json`
+- `.analysis/runtime/candidates/original-op-menu-v1181-20261002/run/handoff-state.json`
+- `.analysis/runtime/candidates/native-op-reload-v1182-20261002/run/handoff-state.json`
 
 ## Build and validation
 
@@ -79,13 +94,15 @@ image. Runtime `--checkpoint-second` captures intermediate frames; held keys use
 adequate duration. Always use new output paths. Private state probes do not
 replace uninstrumented runs. `inspect_th04_handoff_trace.py --require-score-saved`
 checks executed-image identity and changed decoded score sections.
+Use `--scenario config/runtime/scenarios/op_menu.json` for the normal menu
+regression and `inspect_th04_handoff_trace.py --require-config-options
+030401020101` to check persistence. `prepare_product_hdi.py --config-from-run
+RUN_DIR` seeds a fresh disposable image with a verified saved configuration.
 
 ## Next work
 
-1. Attest and correct the OP menu label call composition; verify options,
-   Music Room, score viewing and config persistence.
-2. Validate bosses, later stages, endings, Extra and character/rank variants.
-3. Compare rendering/audio under another PC-98 emulator before assigning
+1. Validate bosses, later stages, endings, Extra and character/rank variants.
+2. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
 
 ## Navigation

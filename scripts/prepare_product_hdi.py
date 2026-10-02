@@ -12,6 +12,7 @@ import tomllib
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts/probes"))
 from prepare_th04_maine_diagnostic_hdi import AUTOEXEC_PREFIX, Fat12, sha, u16, u32
+from inspect_th04_handoff_trace import decode_config, game_file
 from lib.pc98 import parse_mz
 
 PRODUCTS = {"main": "MAIN.EXE", "op": "OP.EXE", "maine": "MAINE.EXE", "zun": "ZUN.COM"}
@@ -51,6 +52,8 @@ def main() -> int:
                         help="starting configuration lives in this disposable image")
     parser.add_argument("--bombs", type=int, choices=range(3),
                         help="starting configuration bombs in this disposable image")
+    parser.add_argument("--config-from-run", type=Path,
+                        help="start with the saved configuration from an attested completed run")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     output = args.output_dir.resolve()
@@ -91,19 +94,40 @@ def main() -> int:
         replace_file(fs, entry, data)
         installed[product] = record
     starting_options = None
-    if args.lives is not None or args.bombs is not None:
+    if args.lives is not None or args.bombs is not None or args.config_from_run is not None:
         entry = fs.find_entry(offsets, b"MIKO    CFG")
         config = fs.file_bytes(u16(fs.image, entry + 26), u32(fs.image, entry + 28))
         if len(config) != 10:
             raise ValueError("expected ten-byte TH04 configuration")
         updated = bytearray(config)
+        config_source = None
+        if args.config_from_run is not None:
+            run = args.config_from_run.resolve()
+            if not run.is_relative_to(ROOT / ".analysis/runtime/candidates"):
+                parser.error("configuration source must be a private runtime run")
+            run_receipt_data = (run / "receipt.json").read_bytes()
+            run_receipt = json.loads(run_receipt_data)
+            executed = (run / "execution.hdi").read_bytes()
+            if sha(executed) != run_receipt["executed_hdi_sha256"]:
+                raise ValueError("configuration source image identity drift")
+            saved = game_file(executed, b"MIKO    CFG")
+            decoded = decode_config(saved)
+            if (not decoded["checksum_valid"] or not decoded["options_valid"]
+                    or decoded["resident_segment"] != 0 or decoded["debug"] != 0
+                    or b"EXIT" not in bytes.fromhex(run_receipt["diagnostic_marker_hex"] or "")):
+                raise ValueError("configuration source is not a valid saved DOS-exit config")
+            updated = bytearray(saved)
+            config_source = {"run": str(run), "receipt_sha256": sha(run_receipt_data),
+                             "executed_hdi_sha256": sha(executed), "config_sha256": sha(saved)}
         if args.lives is not None:
             updated[1] = args.lives
         if args.bombs is not None:
             updated[2] = args.bombs
         updated[9] = sum(updated[:6]) & 255
         replace_file(fs, entry, updated)
-        starting_options = {"lives": updated[1], "bombs": updated[2],
+        starting_options = {"options_hex": bytes(updated[:6]).hex(),
+                            "lives": updated[1], "bombs": updated[2],
+                            "config_source": config_source,
                             "before_sha256": sha(config), "after_sha256": sha(updated)}
     autoexec = AUTOEXEC_PREFIX + b"CALL GAME.BAT\r\nECHO EXIT >> A:\\DIAG.TXT\r\n\x1a"
     replace_file(fs, fs.find_entry([fs.root], b"AUTOEXECBAT"), autoexec)

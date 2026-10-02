@@ -6,7 +6,9 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts/probes"))
-from inspect_th04_handoff_trace import decode_scores, reduce_checkpoints
+from inspect_th04_handoff_trace import (
+    decode_config, decode_scores, reduce_checkpoints, reduce_config_save,
+)
 
 
 def checkpoint(marker: int, detail: int = 0) -> bytes:
@@ -47,6 +49,31 @@ class HandoffTraceTests(unittest.TestCase):
         decoded = decode_scores(bytes(1960))
         self.assertTrue(all(section["checksum_valid"] for section in decoded))
         self.assertTrue(all(None in section["scores"] for section in decoded))
+
+    def test_config_change_requires_checksum_and_valid_options(self) -> None:
+        before = bytes.fromhex("020302020101ef9f000b")
+        after = bytes.fromhex("0304010201010000000c")
+        self.assertTrue(reduce_config_save(before, after)["saved"])
+        self.assertFalse(reduce_config_save(before, after[:-1] + b"\x0b")["saved"])
+        # A checksum-correct seven-life configuration is still invalid.
+        invalid = bytes.fromhex("0307010201010000000f")
+        self.assertFalse(reduce_config_save(before, invalid)["saved"])
+
+    def test_saved_config_must_clear_resident_pointer(self) -> None:
+        before = bytes.fromhex("020302020101ef9f000b")
+        stale = bytes.fromhex("030401020101ef9f000c")
+        self.assertFalse(reduce_config_save(before, stale)["saved"])
+
+    def test_cleared_pointer_alone_is_not_changed_options(self) -> None:
+        before = bytes.fromhex("020302020101ef9f000b")
+        after = bytes.fromhex("0203020201010000000b")
+        result = reduce_config_save(before, after)
+        self.assertTrue(result["valid"])
+        self.assertFalse(result["saved"])
+
+    def test_truncated_config_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            decode_config(bytes(9))
 
 
 if __name__ == "__main__":

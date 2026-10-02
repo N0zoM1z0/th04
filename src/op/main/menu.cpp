@@ -4,6 +4,7 @@
 #include "src/shared/config/resident.hpp"
 #include "src/shared/formats/cdg.hpp"
 #include "src/shared/formats/pi.hpp"
+#include "src/op/formats/cdg_put_nocolors.hpp"
 #include "src/shared/hardware/graphics.hpp"
 #include "src/shared/hardware/input.hpp"
 #include "src/shared/hardware/putsa.hpp"
@@ -62,7 +63,7 @@ static const int DESC_TOP = RES_Y - GLYPH_H;
 static const vc2 COL_INACTIVE = 1;
 static const vc2 COL_ACTIVE = 8;
 static const vc2 COL_LOCKED = 12;
-static const vc2 COL_DESC = 9;
+static const vc2 COL_DESC = 15;
 static const char MENU_MAIN_BG_FN[] = "op1.pi";
 static const char BGM_MENU_MAIN_FN[] = "op";
 
@@ -73,11 +74,11 @@ inline screen_y_t option_choice_top(option_choice_t sel) {
         : MENU_TOP + sel * LABEL_H;
 }
 
-#define command_put(top, slot) cdg_put_8(COMMAND_LEFT, top, slot)
+#define command_put(top, slot) cdg_put_nocolors_8(COMMAND_LEFT, top, slot)
 #define option_label_put(sel, slot) \
-    cdg_put_8(OPTION_LABEL_LEFT, option_choice_top(sel), slot)
+    cdg_put_nocolors_8(OPTION_LABEL_LEFT, option_choice_top(sel), slot)
 #define option_value_put(sel, slot) \
-    cdg_put_8(OPTION_VALUE_LEFT, option_choice_top(sel), slot)
+    cdg_put_nocolors_8(OPTION_VALUE_LEFT, option_choice_top(sel), slot)
 #define desc_unput_and_put(desc_id) { \
     egc_copy_rect_1_to_0_16(0, DESC_TOP, RES_X, GLYPH_H); \
     graph_putsa_fx_func = FX_WEIGHT_BOLD; \
