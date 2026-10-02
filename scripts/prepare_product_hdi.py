@@ -47,6 +47,10 @@ def main() -> int:
     parser.add_argument("--products", nargs="+", choices=PRODUCTS, default=list(PRODUCTS))
     parser.add_argument("--original", action="store_true",
                         help="prepare the pinned original executables as a runtime baseline")
+    parser.add_argument("--lives", type=int, choices=range(1, 7),
+                        help="starting configuration lives in this disposable image")
+    parser.add_argument("--bombs", type=int, choices=range(3),
+                        help="starting configuration bombs in this disposable image")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     output = args.output_dir.resolve()
@@ -66,22 +70,41 @@ def main() -> int:
     directory = fs.find_entry([fs.root], b"GENSO      ")
     offsets = [fs.cluster_offset(k) for k in fs.chain(u16(fs.image, directory + 26))]
     installed = {}
-    for product in (() if args.original else dict.fromkeys(args.products)):
+    for product in dict.fromkeys(args.products):
         name = PRODUCTS[product]
-        data = (build / name).read_bytes()
-        record = manifest["products"][product]
-        if sha(data) != record["sha256"] or len(data) != record["size"]:
-            raise ValueError(f"{name} differs from build receipt")
-        if not parse_mz(data).valid:
-            raise ValueError(f"{name} is not a valid executable")
         base, ext = name.split(".")
         entry = fs.find_entry(offsets, f"{base:<8}{ext}".encode("ascii"))
         target = targets["th04-" + product]
         old = fs.file_bytes(u16(fs.image, entry + 26), u32(fs.image, entry + 28))
         if len(old) != target["size"] or sha(old) != target["sha256"]:
             raise ValueError(f"original image {name} does not match pinned target")
+        if not parse_mz(old).valid:
+            raise ValueError(f"original image {name} format failed")
+        if args.original:
+            continue
+        data = (build / name).read_bytes()
+        record = manifest["products"][product]
+        if sha(data) != record["sha256"] or len(data) != record["size"]:
+            raise ValueError(f"{name} differs from build receipt")
+        if not parse_mz(data).valid:
+            raise ValueError(f"{name} is not a valid executable")
         replace_file(fs, entry, data)
         installed[product] = record
+    starting_options = None
+    if args.lives is not None or args.bombs is not None:
+        entry = fs.find_entry(offsets, b"MIKO    CFG")
+        config = fs.file_bytes(u16(fs.image, entry + 26), u32(fs.image, entry + 28))
+        if len(config) != 10:
+            raise ValueError("expected ten-byte TH04 configuration")
+        updated = bytearray(config)
+        if args.lives is not None:
+            updated[1] = args.lives
+        if args.bombs is not None:
+            updated[2] = args.bombs
+        updated[9] = sum(updated[:6]) & 255
+        replace_file(fs, entry, updated)
+        starting_options = {"lives": updated[1], "bombs": updated[2],
+                            "before_sha256": sha(config), "after_sha256": sha(updated)}
     autoexec = AUTOEXEC_PREFIX + b"CALL GAME.BAT\r\nECHO EXIT >> A:\\DIAG.TXT\r\n\x1a"
     replace_file(fs, fs.find_entry([fs.root], b"AUTOEXECBAT"), autoexec)
     if sha(image_path.read_bytes()) != runtime["image"]["sha256"]:
@@ -92,8 +115,10 @@ def main() -> int:
         "schema_version": 1, "artifact": "th04-game", "startup": "game-bat",
         "scope": ("pinned original game runtime baseline" if args.original else
                   "rebuilt products with pinned original game data"),
-        "artifact_source": "pinned originals" if args.original else "TH04 maintained source",
+        "artifact_source": ("pinned originals" if args.original else
+                            manifest.get("artifact_source", "TH04 maintained source")),
         "products": installed,
+        "starting_options": starting_options,
         "original_hdi_sha256": runtime["image"]["sha256"],
         "diagnostic_hdi_sha256": sha(fs.image),
     }, indent=2) + "\n")

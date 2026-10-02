@@ -11,7 +11,12 @@ SEG_PLANE_E = 0E000h
 
 	extrn _bgimage:word:PLANE_COUNT
 
-	.code SHARED
+	; Native CS-relative self-modification needs an ungrouped code segment.
+ifdef TH04_LARGE_PRODUCT
+.code TH04_BGIMAGER_TEXT
+else
+.code SHARED
+endif
 
 public BGIMAGE_PUT_RECT_16
 bgimage_put_rect_16 proc far

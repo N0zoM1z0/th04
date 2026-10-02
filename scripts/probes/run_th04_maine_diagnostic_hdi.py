@@ -53,7 +53,11 @@ def main() -> int:
         metavar="KEY@SECOND",
         help="KEY@SECOND, down:KEY@SECOND or up:KEY@SECOND; repeat for a timeline",
     )
+    parser.add_argument("--key-delay-ms", type=int, default=150,
+                        help="xdotool tap duration; held down/up events are unchanged")
     args = parser.parse_args()
+    if not 1 <= args.key_delay_ms <= 1000:
+        parser.error("key delay must be between 1 and 1000 milliseconds")
     input_specs = list(args.input_event)
     if (args.input_key is not None) != (args.input_second is not None):
         parser.error("--input-key and --input-second must be supplied together")
@@ -174,8 +178,9 @@ def main() -> int:
                     input_failure = f"DOSBox-X window missing at input {input_key}@{requested_second}"
                     break
                 for window in windows:
+                    delay = ["--delay", str(args.key_delay_ms)] if action == "key" else []
                     subprocess.run(
-                        [xdotool, action, "--window", window, key],
+                        [xdotool, action, *delay, "--window", window, key],
                         check=True, capture_output=True, text=True,
                     )
                 input_events.append({
@@ -357,6 +362,7 @@ def main() -> int:
         "frame_second": args.frame_second,
         "input_events": input_events,
         "input_failure": input_failure,
+        "key_delay_ms": args.key_delay_ms,
         "early_exit_second": early_exit_second,
         "stop_after_frame": args.stop_after_frame,
         "checkpoint_frames": checkpoint_frames,

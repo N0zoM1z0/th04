@@ -173,6 +173,137 @@ def materialize_body_wrappers(sources: list[Path], work: Path) -> dict[str, Path
     return wrappers
 
 
+def apply_exit_trace_overlay(work: Path) -> dict[str, object]:
+    path = work / "src/main/core/gameexecl.cpp"
+    original = path.read_text(encoding="utf-8")
+    helper = r'''
+static void native_exit_trace(unsigned marker, unsigned detail)
+{
+    const char hex[] = "0123456789ABCDEF";
+    char name[] = "MX00.BIN";
+    name[2] = hex[marker >> 4]; name[3] = hex[marker & 15];
+    unsigned sample[4] = {marker, detail, _psp,
+        *(unsigned far *)MK_FP(_psp - 1, 3)};
+    int handle; unsigned written;
+    if(!_dos_creat(name, 0, &handle)) {
+        _dos_write(handle, sample, sizeof(sample), &written);
+        _dos_close(handle);
+    }
+}
+'''
+    anchor = "int pascal GameExecl(const char *binary_fn)\n{\n"
+    if original.count(anchor) != 1:
+        raise RuntimeError("MAIN exit trace entry anchor is not unique")
+    patched = original.replace('#include <process.h>', '#include <dos.h>\n#include <errno.h>\n#include <process.h>', 1)
+    patched = patched.replace(anchor, helper + "\n" + anchor + "    native_exit_trace(0, 0);\n", 1)
+    calls = ["game_state_save_score();", "bb_txt_free();", "cdg_free_all();",
+             "bb_boss_free();", "dialog_free();", "bb_playchar_free();", "std_free();",
+             "map_free();", "super_free();", "graph_hide();", "text_clear();",
+             "gaiji_restore();", "game_exit();"]
+    for marker, call in enumerate(calls, 1):
+        statement = "    " + call + "\n"
+        if patched.count(statement) != 1:
+            raise RuntimeError(f"MAIN exit trace call anchor is not unique: {call}")
+        patched = patched.replace(statement, statement + f"    native_exit_trace({marker}, 0);\n", 1)
+    statement = "    return execl((char *)binary_fn, (char *)binary_fn, NULL);"
+    if patched.count(statement) != 1:
+        raise RuntimeError("MAIN execl trace anchor is not unique")
+    patched = patched.replace(statement, "    native_exit_trace(0x1E, 0);\n"
+                              "    int result = execl((char *)binary_fn, (char *)binary_fn, NULL);\n"
+                              "    native_exit_trace(0x1F, errno);\n    return result;", 1)
+    path.write_text(patched, encoding="utf-8")
+    return {"path": path.relative_to(work).as_posix(),
+            "original_sha256": hashlib.sha256(original.encode()).hexdigest(),
+            "overlay_sha256": sha256(path), "after_calls": calls}
+
+
+def apply_state_trace_overlay(work: Path) -> dict[str, object]:
+    """Record sparse gameplay states in copied source, without product changes."""
+    path = work / "src/main/core/gameplay_loop.cpp"
+    original = path.read_text(encoding="utf-8")
+    anchor = "void near gameplay_loop(void)\n{\n"
+    checkpoint = "        bomb_update_and_render();\n"
+    if original.count(anchor) != 1 or original.count(checkpoint) != 1:
+        raise RuntimeError("state trace overlay anchors are not unique")
+    helper = r'''
+// Private state recorder: 24 little-endian 16-bit words per PLAY.BIN record.
+extern unsigned char miss_time;
+static void native_play_state(void)
+{
+    static unsigned previous_bombs = 0xFFFF;
+    static unsigned previous_misses = 0xFFFF;
+    static unsigned history[64][24];
+    static unsigned count;
+    if(count == 64) return;
+    if((stage_frame & 63) && resident->bombs_used == previous_bombs &&
+       resident->miss_count == previous_misses) return;
+    previous_bombs = resident->bombs_used;
+    previous_misses = resident->miss_count;
+    unsigned sample[24];
+    sample[0] = 1;
+    sample[1] = stage_frame;
+    sample[2] = key_det;
+    sample[3] = stage_id;
+    sample[4] = player_pos.cur.x.v;
+    sample[5] = player_pos.cur.y.v;
+    sample[6] = shot_time;
+    sample[7] = 0;
+    for(int i = 0; i < SHOT_COUNT; i++) {
+        if(shots[i].flag == SF_ALIVE) sample[7]++;
+    }
+    sample[8] = bombing;
+    sample[9] = resident->rem_lives;
+    sample[10] = resident->rem_bombs;
+    sample[11] = resident->miss_count;
+    sample[12] = resident->bombs_used;
+    sample[13] = miss_time;
+    sample[14] = resident->rank;
+    sample[15] = resident->playchar_ascii;
+    for(int d = 0; d < SCORE_DIGITS; d++) sample[16 + d] = score.digits[d];
+    for(int column = 0; column < 24; column++) history[count][column] = sample[column];
+    count++;
+    int handle;
+    unsigned written;
+    if(_dos_creat("PLAY.BIN", 0, &handle)) return;
+    _dos_write(handle, history, count * sizeof(history[0]), &written);
+    _dos_close(handle);
+}
+'''
+    patched = original.replace(
+        '#include "src/shared/runtime/api.hpp"\n',
+        '#include "src/main/player/shot.hpp"\n'
+        '#include "src/main/stage/stage.hpp"\n'
+        '#include "src/shared/runtime/api.hpp"\n', 1,
+    ).replace(anchor, helper + "\n" + anchor, 1).replace(
+        checkpoint, checkpoint + "        native_play_state();\n", 1,
+    )
+    path.write_text(patched, encoding="utf-8")
+    # main.cpp precedes gameplay_loop.cpp in the fused DEMO_TEXT producer.
+    # DOS declarations must precede the maintained subset in platform.h.
+    entry = work / "src/main/core/main.cpp"
+    entry_original = entry.read_text(encoding="utf-8")
+    entry_anchor = '#include "platform.h"\n'
+    if entry_original.count(entry_anchor) != 1:
+        raise RuntimeError("state trace entry include anchor is not unique")
+    entry.write_text(entry_original.replace(
+        entry_anchor, '#include <dos.h>\n' + entry_anchor, 1), encoding="utf-8")
+    originals = {path.relative_to(work).as_posix(): original,
+                 entry.relative_to(work).as_posix(): entry_original}
+    return {"paths": list(originals),
+            "original_sha256": {p: hashlib.sha256(s.encode()).hexdigest()
+                                for p, s in originals.items()},
+            "overlay_sha256": {p: sha256(work / p) for p in originals},
+            "record_words": 24,
+            "max_records": 64, "record_mode": "bounded full-buffer snapshots",
+            "interval_frames": 64,
+            "exit_trace": apply_exit_trace_overlay(work),
+            "fields": ["version", "stage_frame", "key_det", "stage_id",
+                       "player_x_subpixel", "player_y_subpixel", "shot_time",
+                       "active_shots", "bombing", "rem_lives", "rem_bombs",
+                       "miss_count", "bombs_used", "miss_time", "rank",
+                       "playchar_ascii", *[f"score_digit_{i}" for i in range(8)]]}
+
+
 def apply_input_trace_overlay(
     work: Path,
     stage_override: int | None = None,
@@ -1059,6 +1190,8 @@ def main() -> int:
                         help="reuse ASM objects when source and assembly includes are unchanged")
     parser.add_argument("--graphics-trace", action="store_true",
                         help="private MPN/cache/initial-VRAM file checkpoints")
+    parser.add_argument("--state-trace", action="store_true",
+                        help="private sparse input/player/shot/bomb/score records")
     parser.add_argument(
         "--input-trace",
         action="store_true",
@@ -1074,7 +1207,7 @@ def main() -> int:
     if args.check_manifest:
         if (args.output_dir or args.without_support or args.require_link
                 or args.input_trace or args.force_stage is not None
-                or args.graphics_trace
+                or args.graphics_trace or args.state_trace
                 or args.reuse_cpp_from or args.reuse_asm_from):
             parser.error("--check-manifest cannot be combined with build options")
         result = audit()
@@ -1107,6 +1240,7 @@ def main() -> int:
         else None
     )
     graphics_trace = apply_graphics_trace_overlay(work) if args.graphics_trace else None
+    state_trace = apply_state_trace_overlay(work) if args.state_trace else None
     cpp_cache = {}
     if args.reuse_cpp_from:
         previous = args.reuse_cpp_from.resolve()
@@ -1280,6 +1414,7 @@ def main() -> int:
         "body_only_context_sources": sorted(BODY_ONLY_SOURCES),
         "input_trace": input_trace,
         "graphics_trace": graphics_trace,
+        "state_trace": state_trace,
         "stage_override": args.force_stage,
         "sprite_asset_records": sprite_asset_records,
         "sprite_sources": sprite_records,

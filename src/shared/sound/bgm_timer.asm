@@ -12,8 +12,12 @@ timer_hooked db 0
 timer_old_mask db 0
 timer_old_vect dd 0
 
+    ; BGM_TICK belongs to the C++ SHARED segment, not the IRQ segment.
     .code SHARED
 extrn BGM_TICK:far
+
+    ; The installed CS:offset IRQ vector needs this segment's own base.
+    .code TH04_BGM_TIMER_TEXT
 public BGM_TIMER_START, BGM_TIMER_STOP
 
 BGM_TIMER_START proc far

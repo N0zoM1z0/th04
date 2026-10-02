@@ -7,7 +7,12 @@ RETSIZE equ 2
 .data
 extrn super_patsize:word, super_patdata:word
 BYTE_MASK db 0FFh,7Fh,3Fh,1Fh,0Fh,7,3,1
+; Native CS-relative self-modification needs an ungrouped code segment.
+ifdef TH04_LARGE_PRODUCT
+.code TH04_SUPER_ROLL1_TEXT
+else
 .code SHARED
+endif
 
 public SUPER_ROLL_PUT_1PLANE
 SUPER_ROLL_PUT_1PLANE proc far

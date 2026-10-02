@@ -54,6 +54,9 @@ def build_product(artifact: str, work: Path, cache: Path | None) -> Path:
         complete = receipt.get("link_complete")
     if not complete:
         raise RuntimeError(f"{PRODUCTS[artifact]} failed; inspect {work / 'link.log'}")
+    subprocess.run([sys.executable,
+                    str(ROOT / "scripts/probes/audit_th04_native_irq_vectors.py"),
+                    "--link-receipt", str(work / "receipt.json")], cwd=ROOT, check=True)
     return work / f"source/bin/{artifact}-native.exe"
 
 

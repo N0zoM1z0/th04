@@ -36,7 +36,12 @@ GRCG_OFF_VIA_XOR macro value_reg:req
     out 7Ch, value_reg
 endm
 
-	.code SHARED
+	; Native CS-relative self-modification needs an ungrouped code segment.
+ifdef TH04_LARGE_PRODUCT
+.code TH04_FONT_FX_TEXT
+else
+.code SHARED
+endif
 
 public GRAPH_PUTSA_FX
 graph_putsa_fx	proc far

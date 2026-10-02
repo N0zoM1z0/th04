@@ -4,10 +4,13 @@
     .8086
     .model use16 large SHARED
 
-extrn PF_DISPATCH:far
 extrn _bbufsiz:word
 
     .code SHARED
+extrn PF_DISPATCH:far
+
+    ; Keep the DOS vector and CS-resident hook state outside C++ code groups.
+    .code TH04_PF_INT21_TEXT
 public PF_HOOK_INSTALL, PF_HOOK_REMOVE
 
 PF_HOOK_INSTALL proc far

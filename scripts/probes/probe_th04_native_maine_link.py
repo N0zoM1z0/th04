@@ -80,6 +80,69 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def maine_handoff_trace_overlay(work: Path) -> dict:
+    """Attest MAINE startup/score checkpoints in a private copied source tree."""
+    modified = {}
+    entry = work / "src/maine/end/entry.cpp"
+    before = entry.read_text()
+    helper = r'''
+extern "C" void far maine_handoff_trace(unsigned marker, unsigned detail)
+{
+    const char hex[] = "0123456789ABCDEF";
+    char name[] = "ME00.BIN";
+    name[2] = hex[marker >> 4]; name[3] = hex[marker & 15];
+    unsigned sample[4] = {marker, detail, _psp,
+        *(unsigned far *)MK_FP(_psp - 1, 3)};
+    int handle; unsigned written;
+    if(!_dos_creat(name, 0, &handle)) {
+        _dos_write(handle, sample, sizeof(sample), &written);
+        _dos_close(handle);
+    }
+}
+'''
+    anchor = '#include "src/maine/end/main.inl"'
+    if before.count(anchor) != 1:
+        raise ValueError("MAINE handoff helper anchor changed")
+    after = ('#include <dos.h>\nextern "C" void far maine_handoff_trace(unsigned, unsigned);\n'
+             + before.replace(anchor, helper + '\n' + anchor))
+    after = after.replace("    frame_delay(100);", "    maine_handoff_trace(0x90, 0);\n    frame_delay(100);\n    maine_handoff_trace(0x91, 0);")
+    after = after.replace("    regist_menu();", "    regist_menu();\n    maine_handoff_trace(0x92, 0);")
+    entry.write_text(after)
+    modified[str(entry.relative_to(work))] = {"original_sha256": hashlib.sha256(before.encode()).hexdigest(),
+                                            "overlay_sha256": sha(entry)}
+    path = work / "src/maine/end/main.inl"
+    before = path.read_text()
+    after = before.replace("void main(void)\n{", "void main(void)\n{\n\tmaine_handoff_trace(0, 0);", 1)
+    calls = ["mem_assign_paras = (336000 >> 4);", "game_init_main(OP_AND_END_PF_FN);",
+             "gaiji_backup();", "gaiji_entry_bfnt(GAIJI_FN);",
+             "snd_determine_modes(resident->bgm_mode, resident->se_mode);", "graph_show();"]
+    for marker, call in enumerate(calls, 1):
+        after = after.replace("\t" + call, "\t" + call + f"\n\tmaine_handoff_trace({marker}, resident->end_sequence);", 1)
+    path.write_text(after)
+    modified[str(path.relative_to(work))] = {"original_sha256": hashlib.sha256(before.encode()).hexdigest(),
+                                           "overlay_sha256": sha(path)}
+    path = work / "src/shared/core/game_init_main.cpp"
+    before = path.read_text()
+    after = before.replace('#include <stddef.h>', '#include <stddef.h>\nextern "C" void far maine_handoff_trace(unsigned, unsigned);', 1)
+    anchor = "\tif(mem_assign_dos(mem_assign_paras)) {"
+    if after.count(anchor) != 1:
+        raise ValueError("MAINE memory assignment trace anchor changed")
+    after = after.replace(anchor, "\tmaine_handoff_trace(0x20, mem_assign_paras);\n"
+                          "\tint assigned = mem_assign_dos(mem_assign_paras);\n"
+                          "\tmaine_handoff_trace(0x21, assigned);\n\tif(assigned) {", 1)
+    for marker, call in enumerate(["pfsetbufsiz(4096);", "vram_planes_set();",
+                                   "vsync_start();", "egc_start();", "graph_400line();",
+                                   "js_start();", "pfstart(pf_fn);", "bgm_init(2048);"], 0x22):
+        anchor = "\t" + call
+        if after.count(anchor) != 1:
+            raise ValueError(f"MAINE initialization trace anchor changed: {call}")
+        after = after.replace(anchor, anchor + f"\n\tmaine_handoff_trace({marker}, 0);", 1)
+    path.write_text(after)
+    modified[str(path.relative_to(work))] = {"original_sha256": hashlib.sha256(before.encode()).hexdigest(),
+                                           "overlay_sha256": sha(path)}
+    return modified
+
+
 def handoff_trace_overlay(work: Path) -> dict:
     """Record OP menu/cleanup/exec checkpoints only in the private build tree."""
     modified = {}
@@ -194,10 +257,8 @@ def main(artifact: str = "maine") -> int:
     parser.add_argument("--reuse-from", type=Path,
                         help="reuse verified objects with unchanged source and recorded dependencies")
     parser.add_argument("--handoff-trace", action="store_true",
-                        help="private OP menu/cleanup/exec file checkpoints")
+                        help="private OP cleanup/exec or MAINE startup/score checkpoints")
     args = parser.parse_args()
-    if args.handoff_trace and artifact != "op":
-        parser.error("--handoff-trace requires the OP probe")
     if args.check_manifest:
         if args.output_dir or args.without_support or args.reuse_from or args.handoff_trace:
             parser.error("--check-manifest cannot be combined with build options")
@@ -227,7 +288,9 @@ def main(artifact: str = "maine") -> int:
     output.mkdir(parents=True)
     work = output / "source"
     shutil.copytree(ROOT / "src", work / "src")
-    handoff_trace = handoff_trace_overlay(work) if args.handoff_trace else None
+    source_hashes = {source.as_posix(): sha(work / source) for source in sources + asm_sources}
+    handoff_trace = ((handoff_trace_overlay(work) if artifact == "op"
+                      else maine_handoff_trace_overlay(work)) if args.handoff_trace else None)
     (work / "bin").mkdir()
     if not args.without_support:
         shutil.copy2(SUPPORT_LIB, work / "bin/masters.lib")
@@ -335,7 +398,7 @@ def main(artifact: str = "maine") -> int:
         if not any(producer in comment for comment in omf["translator_comments"]):
             raise RuntimeError(f"unexpected OMF producer: {source}")
         object_paths.append(obj)
-        records.append({"source": source.as_posix(), "source_sha256": sha(ROOT / source),
+        records.append({"source": source.as_posix(), "source_sha256": source_hashes[source.as_posix()],
                         "object": obj.relative_to(work).as_posix(), "object_sha256": sha(obj),
                         "link_relevant_sha256": link_relevant_sha(obj)})
         checkpoint()
@@ -357,7 +420,7 @@ def main(artifact: str = "maine") -> int:
         if not any("Turbo Assembler  Version 5.0" in comment for comment in omf["translator_comments"]):
             raise RuntimeError(f"unexpected ASM OMF producer: {source}")
         object_paths.append(obj)
-        records.append({"source": source.as_posix(), "source_sha256": sha(ROOT / source),
+        records.append({"source": source.as_posix(), "source_sha256": source_hashes[source.as_posix()],
                         "object": obj.relative_to(work).as_posix(), "object_sha256": sha(obj),
                         "link_relevant_sha256": link_relevant_sha(obj)})
         checkpoint()

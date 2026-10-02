@@ -14,7 +14,9 @@ vsync_delay_count   dw 0
 vsync_old_mask      db 0
 vsync_old_vect      dd 0
 
-    .code SHARED
+    ; CS-relative vector offsets and the saved BIOS pointer must share the
+    ; entry's segment base. SHARED can be folded into a larger C++ code group.
+    .code TH04_VSYNC_TEXT
 public VSYNC_START, VSYNC_END
 
 VSYNC_START proc far
