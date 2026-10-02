@@ -27,7 +27,7 @@ def sha(data: bytes) -> str:
 def decode_packets(log: str) -> list[dict]:
     faults = []
     for line in log.splitlines():
-        if not line.startswith("TH04_CPUFAULT"):
+        if not line.startswith("TH04_CPUFAULT "):
             continue
         words = line.split()
         if (len(words) != 17 or words[0] != "TH04_CPUFAULT"
@@ -146,6 +146,10 @@ def main() -> int:
                 raise ValueError("incomplete CPU snapshot")
             snapshots[name] = dict(file=path.name, sha256=sha(data), size=size)
         fault["snapshots"] = snapshots
+        memory = run / f'cpu-fault-{fault["id"]:02d}-memory.json'
+        if memory.exists():
+            fault["memory_context"] = dict(sha256=sha(memory.read_bytes()),
+                                            **json.loads(memory.read_text()))
         if "code" not in snapshots:
             continue
         code = (run / snapshots["code"]["file"]).read_bytes()
@@ -163,7 +167,12 @@ def main() -> int:
         state = {}
         for name, relative, size in (("_stage_id", 0, 1), ("_rank", 0, 1),
                                     ("_stage_frame", 0, 2), ("_boss", 15, 1),
-                                    ("_boss", 16, 2), ("_boss_statebyte", 0, 1)):
+                                    ("_boss", 16, 2), ("_boss_statebyte", 0, 1),
+                                    ("_playperf", 0, 1), ("_playperf_min", 0, 1),
+                                    ("_playperf_max", 0, 1),
+                                    ("_bullet_template", 10, 1),
+                                    ("_bullet_template", 13, 1),
+                                    ("_bullet_template_tune", 0, 2)):
             locations = set(re.findall(r"(?m)^\s*([0-9A-F]{4}):([0-9A-F]{4})\s+"
                                        + re.escape(name) + r"\s*$", map_data.decode("ascii")))
             if len(locations) != 1:

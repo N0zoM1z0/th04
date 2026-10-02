@@ -11,7 +11,7 @@ upstream exactness claims are not inherited. Current phase: runtime integration.
 | Artifact | Accepted authored functions | Native build/runtime |
 | --- | ---: | --- |
 | OP | 93/93 | Standalone build; normal options/Music Room/scores/DOS exit and saved config pass |
-| MAIN | 493/495 | Standalone build; Orange clear and stage 2 entry pass; Divide error during Kurumi battle remains |
+| MAIN | 493/495 | Standalone build; Orange/Kurumi clear and stage 3 entry pass; later gameplay remains unverified |
 | MAINE | 72/72 | Complete standalone build; uninstrumented score/name registration saves 39,300 and returns to OP |
 | ZUN | 3/3 | Source-only cold packed build; four-product GAME.BAT startup passes |
 
@@ -25,11 +25,12 @@ owners and four generated sprite owners without `masters.lib`. All four products
 build through `scripts/build.py`. A fresh four-product build and subsequent
 source/dependency-validated MAIN/OP/MAINE relink pass; the final MAINE matches its
 fresh build. ZUN is cold-deterministic. Current inventory:
-`.analysis/reconstruction/probes/product-20261002-110652-9ee543c1-build.json`.
+`.analysis/reconstruction/probes/product-20261002-131432-413046f1-build.json`.
 The latest OP cold build compiles 111 C/C++ and 53 ASM roots, links without
 warnings, and equals the preceding dependency-validated cached native build.
-The current MAIN cold build (`product-20261002-110750-9ecf496d-main`) rebuilds
-all 193 C/C++ roots and equals the published explicit-group repair.
+The current MAIN cold build (`product-20261002-131432-413046f1-main`) rebuilds
+all roots and equals the published empty-ring repair: 191,663 bytes, SHA-256
+`f88e7e4187f39a759ad78fe2a7eb47a9df799101283dec668658af4af2d4e135`.
 
 Verified integration fixes:
 - MAIN EGC tile copy uses 3100h, observed at MAI_TEXT 0AAF:212C (file E41Ch).
@@ -84,12 +85,24 @@ cpu-only v1207 MAIN also reaches stage 3, with a valid observer arm but no
 exception. Neither result repairs the ordinary native failure. A private
 source-built emulator likewise changes progression and does not reproduce it.
 
-The unchanged primary DOSBox-X now has a calibrated GDB exception observer.
-Ubuntu debug symbols share its ELF build ID; the independent DIV-zero fixture
-reproduces the vector, registers, 27 instruction bytes and complete RAM snapshots.
-The observer preserves guest bytes and forwards normal exception handling.
-Use it to obtain CS:IP before selecting a repair. Calibration:
-`.analysis/runtime/emulators/primary-observer-v1213/calibration/receipt.json`.
+The primary VM86 observer confirms vector 0 at `24FB:9780`, MAIN load `10FC`,
+MAIN_03 `13FF:9780`: all 64 relocated code bytes match the ring-count IDIV in
+`bullet_velocity_and_angle_set()`. DS `334F` has Easy rank, performance/min/max
+4/4/16, ring-aimed group 2Ch and count zero. The BP chain and actual near-call
+instructions identify Kurumi dual spawnrays, fixed regular generation and the
+Easy wrapper. Pinned target file `1E612h` has the same cumulative reductions:
+six shots minus two minus four becomes zero, then Easy halves zero.
+The native `TH04P` clip branch now skips empty rings; the original replay branch
+retains its bytes. The isolated x86 Oracle rejects the old native build and
+accepts both empty-ring cases plus nonempty-ring/single negative controls.
+The ordinary repaired v1217 run clears Kurumi and explicitly enters STAGE 3 at
+635 seconds. All four executed product identities pass; the black final frame
+is unaccepted. Native cold-build equality and the generated-code Oracle pass.
+Two default-branch cold replays preserve the complete 2,139-byte bullet owner:
+raw bytes, MAP and relocations pass (`empty-ring-v1219/receipt.json`).
+The read-only observer passes real-mode and DOS/EMM386 VM86 DIV fixtures,
+including 27 instruction bytes and complete RAM snapshots. Calibration:
+`.analysis/runtime/emulators/primary-observer-v1215b/calibration-vm86/receipt.json`.
 
 Current runtime receipts:
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/receipt.json`
@@ -101,6 +114,9 @@ Current runtime receipts:
 - `.analysis/runtime/candidates/native-bullet-group-v1199-20261002/run-repeat-v1208/receipt.json`
 - `.analysis/runtime/candidates/original-progression-v1204-20261002/run/receipt.json`
 - `.analysis/runtime/candidates/native-cpu-state-v1207-20261002/run/cpu-fault.json`
+- `.analysis/runtime/candidates/native-bullet-group-v1199-20261002/run-primary-gdb-v1214/emulator-cpu-fault.json`
+- `.analysis/runtime/candidates/native-bullet-group-v1199-20261002/run-primary-vm86-v1216/emulator-cpu-fault.json`
+- `.analysis/runtime/candidates/native-empty-ring-v1217-20261002/run/handoff-state.json`
 
 ## Build and validation
 
@@ -137,16 +153,17 @@ bullet and decimal DIV checkpoints plus chained CPU exception frames;
 `--debug-port-e9` captures them without losing boot-log smoke markers.
 `main_progression.json` adds frequent shot-release gaps and balanced movement
 for longer ordinary-game runs. It does not force stages or change product code.
-`--cpu-debugger-receipt .analysis/runtime/emulators/primary-observer-v1213/receipt.json`
+`--cpu-debugger-receipt .analysis/runtime/emulators/primary-observer-v1215b/receipt.json`
 uses the calibrated primary-emulator exception observer. After the completed
 run, `inspect_th04_emulator_cpu_fault.py --run-dir RUN --require-fault` verifies
 all executed products and locates captured code against the relocated MAIN/MAP.
 
 ## Next work
 
-1. Localize the stage 2 Kurumi Divide error under the ordinary progression
-   scenario using the primary-emulator observer. Then
-   validate later stages, endings, Extra and character/rank variants.
+1. Finish the live 1800-second ordinary route at
+   `.analysis/runtime/candidates/native-empty-ring-v1217-20261002/run-long-v1220`.
+   Scenario: `.analysis/runtime/scenarios/main_progression_long_v1220.json`.
+   Validate later stages, endings, Extra and character/rank variants.
 2. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
 

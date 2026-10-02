@@ -53,6 +53,20 @@ def prepared_baseline(run: Path, receipt: dict) -> bytes:
     return prepared
 
 
+def inspect_products(run: Path, receipt: dict, image: bytes) -> dict:
+    prepared_baseline(run, receipt)
+    products = json.loads((run.parent / "receipt.json").read_text())["products"]
+    observed = {}
+    for artifact, expected in products.items():
+        stem, extension = expected["file"].upper().split(".")
+        data = game_file(image, (stem.ljust(8) + extension.ljust(3)).encode("ascii"))
+        digest = hashlib.sha256(data).hexdigest()
+        if len(data) != expected["size"] or digest != expected["sha256"]:
+            raise ValueError(f"executed {artifact} identity drift")
+        observed[artifact] = dict(size=len(data), sha256=digest)
+    return observed
+
+
 def game_file(image: bytes, short_name: bytes) -> bytes:
     fs = Fat12(bytearray(image))
     folder = fs.find_entry([fs.root], b"GENSO      ")
@@ -138,6 +152,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--require-maine-initialized", action="store_true")
+    parser.add_argument("--inspect-products", action="store_true")
     parser.add_argument("--inspect-score", action="store_true")
     parser.add_argument("--require-score-saved", action="store_true")
     parser.add_argument("--inspect-config", action="store_true")
@@ -174,6 +189,8 @@ def main() -> int:
                 files[name.decode()] = fs.file_bytes(u16(fs.image, entry + 26),
                                                      u32(fs.image, entry + 28))
     result = reduce_checkpoints(files)
+    if args.inspect_products:
+        result["executed_products"] = inspect_products(run, receipt, image)
     if args.inspect_score or args.require_score_saved:
         result["score_save"] = inspect_score_save(run, receipt, image)
     if args.inspect_config or args.require_config_options is not None:

@@ -449,6 +449,17 @@ unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 
 bool near bullet_template_clip(void)
 {
+#ifdef TH04P
+	// The original Easy/performance tuning can turn Kurumi's six-shot ring
+	// into an empty group (6 - 2 - 4). An empty ring has no angles to divide.
+	if(
+		(bullet_template.count == 0) &&
+		((bullet_template.group == BG_RING) ||
+		 (bullet_template.group == BG_RING_AIMED))
+	) {
+		return true;
+	}
+#endif
 	if(
 		(bullet_clear_time > 0) &&
 		// If a newly spawned bullet wouldn't fully decay during the remaining
