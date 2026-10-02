@@ -35,6 +35,13 @@ def render_config(reference: bytes) -> bytes:
     return text.replace(old, "imgmount c play.hdi", 1).encode("ascii")
 
 
+def performance_config(reference: bytes) -> bytes:
+    old = b"cycles=15000"
+    if reference.count(old) != 1:
+        raise ValueError("Windows TH04 JP CPU setting changed")
+    return reference.replace(old, b"cycles=24000", 1)
+
+
 def write_atomic(path: Path, data: bytes) -> None:
     temporary = path.with_name(path.name + ".tmp-" + uuid.uuid4().hex[:8])
     temporary.write_bytes(data)
@@ -114,19 +121,26 @@ def main() -> int:
     if emulator is not None:
         exe = (emulator / "dosbox-x.exe").read_bytes()
         font = (emulator / "font_jp.bmp").read_bytes()
-        config = render_config((emulator / "th04_jp.conf").read_bytes())
+        reference_config = render_config((emulator / "th04_jp.conf").read_bytes())
     elif prior is not None:
         exe = (output / "dosbox-x.exe").read_bytes()
         font = (output / "FREECG98.bmp").read_bytes()
         config = (output / "th04.conf").read_bytes()
+        reference_config = ((output / "th04-reference.conf").read_bytes()
+                            if (output / "th04-reference.conf").is_file() else config)
         if (sha(exe) != prior["dosbox_x_sha256"]
                 or sha(font) != prior["font_sha256"]
-                or sha(config) != prior["config_sha256"]):
+                or sha(config) != prior["config_sha256"]
+                or ("reference_config_sha256" in prior and
+                    sha(reference_config) != prior["reference_config_sha256"])):
             raise ValueError("existing DOSBox-X files differ from package receipt")
     else:
         parser.error("a new package requires --emulator-dir")
+    config = performance_config(reference_config)
     launcher = (b'@echo off\r\ncd /d "%~dp0"\r\n'
                 b'start "" "%~dp0dosbox-x.exe" -conf "%~dp0th04.conf"\r\n')
+    reference_launcher = (b'@echo off\r\ncd /d "%~dp0"\r\n'
+                          b'start "" "%~dp0dosbox-x.exe" -conf "%~dp0th04-reference.conf"\r\n')
     builder_template = (ROOT / "scripts/windows/Build-TH04.ps1").read_text(encoding="utf-8")
     if builder_template.count("@REPO_PATH@") != 1:
         raise ValueError("Windows builder template has no unique repository placeholder")
@@ -142,7 +156,9 @@ def main() -> int:
     write_atomic(output / "dosbox-x.exe", exe)
     write_atomic(output / "FREECG98.bmp", font)
     write_atomic(output / "th04.conf", config)
+    write_atomic(output / "th04-reference.conf", reference_config)
     write_atomic(output / "start-th04.bat", launcher)
+    write_atomic(output / "start-th04-reference.bat", reference_launcher)
     write_atomic(output / "Build-TH04.ps1", builder_bytes)
     write_atomic(output / "build-th04.cmd", builder_cmd)
     write_atomic(output / "README-build.txt", builder_readme)
@@ -157,6 +173,7 @@ def main() -> int:
         "dosbox_x_sha256": sha(exe),
         "font_sha256": sha(font),
         "config_sha256": sha(config),
+        "reference_config_sha256": sha(reference_config),
         "build_script_sha256": sha(builder_bytes),
         "build_cmd_sha256": sha(builder_cmd),
         "build_readme_sha256": sha(builder_readme),

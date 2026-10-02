@@ -27,7 +27,8 @@ RUNNER_SHA256 = "f7f6cb0a3e816c5edb13112d327c1bddbf7463fe7bf9a005ca1eb5317751bd0
 SUPPORT = ROOT / "_reference/ReC98/bin/masters.lib"
 SUPPORT_SHA256 = "6be41dbcfcf4504977165ccc44443525a29a01f85a1580e6ad0c620bf802faf6"
 PRODUCT = ("src/shared/formats/pi_decode.cpp", "src/shared/formats/pf_archive.cpp",
-           "src/shared/memory/heap.cpp", "src/shared/hardware/graph_pi_free.cpp")
+           "src/shared/memory/heap.cpp", "src/shared/hardware/graph_pi_free.cpp",
+           "src/shared/formats/pi_load.cpp", "src/shared/formats/pi_state.cpp")
 ASSEMBLY = ("src/shared/formats/pf_state.asm", "src/shared/formats/pf_int21.asm")
 FLAGS = ("-c", "-I.", "-O", "-b-", "-3", "-Z", "-d", "-DGAME=4", "-DTH04P")
 MEMBERS = ("CONG10.PI", "CONG14.PI")
@@ -67,6 +68,7 @@ int main(void)
 PRODUCT_TEST = r'''#include <stdio.h>
 #include <dos.h>
 #include "src/shared/hardware/graphics.hpp"
+#include "src/shared/formats/pi.hpp"
 #include "src/shared/runtime/api.hpp"
 extern "C" unsigned pferrno;
 static PiHeader header;
@@ -110,6 +112,12 @@ int main(void)
     if (graph_pi_load_pack("ABSENT.PI", &header, &image) != -2 || image) return 21;
     pfend();
     if (check("RAW10.PI", 0x@HASH10@UL, 22)) return 22;
+    if (pi_load(0, "RAW10.PI") != 0 || !pi_buffers[0]) return 24;
+    pi_free(0);
+    if (pi_buffers[0]) return 25;
+    if (pi_load(0, "RAW14.PI") != 0 || !pi_buffers[0]) return 26;
+    pi_free(0);
+    if (pi_buffers[0]) return 27;
     if (mem_unassign() != 1) return 23;
     puts("PI_PASS");
     return 0;

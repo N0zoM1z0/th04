@@ -27,3 +27,7 @@ four executable products.
 
 The source checkout and pinned compiler tools must remain available in WSL.
 Close DOSBox-X before building so the playable disk image can be refreshed.
+
+Use start-th04.bat for the 24,000-cycle gameplay profile. To compare against
+the collection's original 15,000-cycle setting, use
+start-th04-reference.bat. Both launchers use the same saved play.hdi.
