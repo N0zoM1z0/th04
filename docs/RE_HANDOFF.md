@@ -133,6 +133,22 @@ fingerprint and package/product hash checks. All four final product hashes
 equaled the cold build. The saved `MIKO.CFG` and `GENSOU.SCR` SHA-256 values
 were unchanged across both exports. The Windows package is ready for a new
 playtest; these build checks do not establish its frame rate.
+The next bounded shared `SUPER_PUT` optimization composes each destination
+byte once, directly overwrites fully opaque bytes, and clips row/byte
+intervals before the drawing loops. DOS fake-VRAM replay still has screen hash
+`0BE615EA`; randomized planar and clipping controls pass. Under the pinned
+Linux DOSBox-X, the updated OP has passed the moving-title phase at 24 seconds
+while the preceding renderer remains in it; both reach the same title frame by
+30 seconds. The current Windows invincible package is
+`product-20261002-170340-a2c73afa` (MAIN `0ab01082…`, OP `a698f374…`,
+MAINE `e692690d…`, unchanged ZUN `d6043dce…`). It was produced by the default
+Windows fast command; shared-source drift triggered a conservative ZUN cold
+rebuild, making that run 383.44 seconds. An unchanged-input Windows fast replay
+`product-20261002-171134-3e4f9547` then passed in 92.36 seconds with all
+four product SHA-256 values unchanged and ZUN explicitly marked `REUSED`.
+Current `MIKO.CFG` and `GENSOU.SCR`
+SHA-256 values `64d6b41f…` and `bdc984e7…` survived export. Windows boss
+explosion and stage-5 frame pacing remain to be playtested.
 The Linux emulator aborts after PC-98 reset with dynamic core, so its
 private launcher uses normal/Pentium/15000/32 MB. Neither playable profile is
 normal-game acceptance evidence. A long native v1220 route reached Game Over

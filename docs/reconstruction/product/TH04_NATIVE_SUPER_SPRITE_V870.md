@@ -74,6 +74,37 @@ Private receipts are under
 This is a bounded wall-clock observation under one emulator configuration,
 not a full-game timing or Windows-host acceptance claim.
 
+## Destination-byte pass
+
+The next native product iteration composes each destination byte from the
+current and preceding BFNT source bytes. The earlier byte-sized renderer could
+read and write the same destination twice at an unaligned X coordinate. The
+new renderer computes the visible row/byte interval once, then writes every
+visible destination byte at most once. A fully opaque mask overwrites the four
+planes directly without first reading VRAM. The GRCG-off port write still
+occurs even when the sprite is entirely clipped.
+
+The isolated PC-98 fake-VRAM replay passes the same `0BE615EA` screen hash
+with 260 valid MZ relocation sites at
+`.analysis/reconstruction/probes/super-clipped-20261003-a/receipt.json`.
+Independent Python checks cover 500 randomized planar compositions and 10,000
+randomized clipping intervals, including negative and right/bottom positions.
+These checks support pixel equivalence for the tested cases, not target byte
+equality. OP's cache-validated build passes the native link/IRQ audit and is
+77,836 bytes (SHA-256
+`a698f3749118d2c71e42997012629384a6d60a9147d26717fff7828dfb24f745`).
+
+Four private startup runs compared the previous renderer, destination-byte
+composition, opaque overwrite, and preclipped intervals with the same pinned
+Linux DOSBox-X binary (SHA-256 `30a5fdf8…`), disk-data source, and
+18/20/22/24/26/28/30/32-second checkpoints. At 24 seconds the previous
+renderer still displays the moving title text, while the final variant has
+already reached the following blank transition; all variants display the same
+title menu at 30 seconds. Receipts are under
+`.analysis/runtime/candidates/super-{dstbyte-before,dstbyte-after,opaque-after,clipped-after}-20261003/run-logo/receipt.json`.
+This is a bounded timing observation; Windows-host frame pacing, boss defeat
+and stage-5 Yuuka combat still need replay.
+
 Replay the focused runtime gate with a fresh private directory:
 
 ```text

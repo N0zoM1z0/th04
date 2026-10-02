@@ -195,53 +195,95 @@ extern "C" void TH04_PASCAL super_put(int x, int y, int num)
 	unsigned char far *planes[4] = {
 		VRAM_PLANE_B, VRAM_PLANE_R, VRAM_PLANE_G, VRAM_PLANE_E
 	};
-	// Compose whole VRAM bytes instead of touching each opaque pixel in all
-	// four planes. Keep the mask separate so transparent pixels stay unchanged.
+	const unsigned char far *colors[4] = {
+		data + plane_bytes, data + (plane_bytes * 2u),
+		data + (plane_bytes * 3u), data + (plane_bytes * 4u)
+	};
+	// Each destination byte is composed once, including the carry from the
+	// preceding source byte at unaligned X positions.
 	const unsigned shift = (unsigned)x & 7u;
 	const int first_dst_byte = (x - (int)shift) / 8;
 	outportb(0x7C, 0);
-	for (unsigned py = 0; py < height; py++) {
-		int sy = y + (int)py;
-		if ((sy < 0) || (sy >= 400)) {
-			continue;
+	const int byte_count = (int)bytes_per_row + (shift != 0u);
+	int bx_first = (first_dst_byte < 0) ? -first_dst_byte : 0;
+	int bx_end = 80 - first_dst_byte;
+	if (bx_end > byte_count) {
+		bx_end = byte_count;
+	}
+	if (bx_first >= bx_end) {
+		return;
+	}
+	unsigned py_first = 0;
+	unsigned py_end = height;
+	if (y < 0) {
+		if (y <= -(int)height) {
+			return;
 		}
+		py_first = (unsigned)-y;
+	} else if (y > (400 - (int)height)) {
+		if (y >= 400) {
+			return;
+		}
+		py_end = (unsigned)(400 - y);
+	}
+	for (unsigned py = py_first; py < py_end; py++) {
+		const unsigned sy = (unsigned)(y + (int)py);
 		const unsigned src_row = py * bytes_per_row;
-		const unsigned dst_row = (unsigned)sy * 80u;
-		for (unsigned bx = 0; bx < bytes_per_row; bx++) {
-			const unsigned src_at = src_row + bx;
-			const unsigned char mask = data[src_at];
-			if (!mask) {
-				continue;
-			}
-			const int dst_byte = first_dst_byte + (int)bx;
-			const unsigned char left_mask = (unsigned char)(mask >> shift);
-			const unsigned char right_mask =
-				(unsigned char)((unsigned)mask << (8u - shift));
-			if (left_mask && (dst_byte >= 0) && (dst_byte < 80)) {
+		const unsigned dst_row = sy * 80u;
+		if (!shift) {
+			for (unsigned bx = (unsigned)bx_first; bx < (unsigned)bx_end; bx++) {
+				const int dst_byte = first_dst_byte + (int)bx;
+				const unsigned src_at = src_row + bx;
+				const unsigned char mask = data[src_at];
+				if (!mask) {
+					continue;
+				}
 				const unsigned dst_at = dst_row + (unsigned)dst_byte;
-				for (unsigned plane = 0; plane < 4u; plane++) {
-					unsigned char far *pixel = planes[plane] + dst_at;
-					const unsigned char color = (unsigned char)(
-						data[(plane + 1u) * plane_bytes + src_at] >> shift
-					);
-					*pixel = (unsigned char)(
-						(*pixel & (unsigned char)~left_mask) |
-						(color & left_mask)
-					);
+				if (mask == 0xFFu) {
+					for (unsigned plane = 0; plane < 4u; plane++) {
+						planes[plane][dst_at] = colors[plane][src_at];
+					}
+				} else {
+					for (unsigned plane = 0; plane < 4u; plane++) {
+						unsigned char far *pixel = planes[plane] + dst_at;
+						*pixel = (unsigned char)(
+							(*pixel & (unsigned char)~mask) |
+							(colors[plane][src_at] & mask)
+						);
+					}
 				}
 			}
-			if (right_mask && (dst_byte >= -1) && (dst_byte < 79)) {
-				const unsigned dst_at = dst_row + (unsigned)(dst_byte + 1);
-				for (unsigned plane = 0; plane < 4u; plane++) {
-					unsigned char far *pixel = planes[plane] + dst_at;
-					const unsigned char color = (unsigned char)(
-						(unsigned)data[(plane + 1u) * plane_bytes + src_at]
-						<< (8u - shift)
-					);
-					*pixel = (unsigned char)(
-						(*pixel & (unsigned char)~right_mask) |
-						(color & right_mask)
-					);
+		} else {
+			for (unsigned bx = (unsigned)bx_first; bx < (unsigned)bx_end; bx++) {
+				const int dst_byte = first_dst_byte + (int)bx;
+				const unsigned src_at = src_row + bx;
+				const unsigned char mask = (unsigned char)(
+					((bx < bytes_per_row) ? (data[src_at] >> shift) : 0u) |
+					((bx > 0u) ? ((unsigned)data[src_at - 1u] << (8u - shift)) : 0u)
+				);
+				if (!mask) {
+					continue;
+				}
+				const unsigned dst_at = dst_row + (unsigned)dst_byte;
+				if (mask == 0xFFu) {
+					for (unsigned plane = 0; plane < 4u; plane++) {
+						const unsigned char color = (unsigned char)(
+							((bx < bytes_per_row) ? (colors[plane][src_at] >> shift) : 0u) |
+							((bx > 0u) ? ((unsigned)colors[plane][src_at - 1u] << (8u - shift)) : 0u)
+						);
+						planes[plane][dst_at] = color;
+					}
+				} else {
+					for (unsigned plane = 0; plane < 4u; plane++) {
+						unsigned char far *pixel = planes[plane] + dst_at;
+						const unsigned char color = (unsigned char)(
+							((bx < bytes_per_row) ? (colors[plane][src_at] >> shift) : 0u) |
+							((bx > 0u) ? ((unsigned)colors[plane][src_at - 1u] << (8u - shift)) : 0u)
+						);
+						*pixel = (unsigned char)(
+							(*pixel & (unsigned char)~mask) | (color & mask)
+						);
+					}
 				}
 			}
 		}
