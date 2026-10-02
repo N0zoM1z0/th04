@@ -53,6 +53,11 @@ def main() -> int:
                         help="enable the mixer; host-key+W input events toggle WAV capture")
     parser.add_argument("--debug-port-e9", action="store_true",
                         help="record private guest checkpoints emitted through Bochs port E9")
+    observer = parser.add_mutually_exclusive_group()
+    observer.add_argument("--emulator-receipt", type=Path,
+                        help="explicit private CPU-observer emulator attestation")
+    observer.add_argument("--cpu-debugger-receipt", type=Path,
+                         help="attested exception debugger for the unchanged primary emulator")
     parser.add_argument("--stop-after-frame", action="store_true",
                         help="close DOSBox-X through Ctrl+F9 after the final checkpoint")
     parser.add_argument("--time-limit", type=int, default=20)
@@ -120,12 +125,36 @@ def main() -> int:
         raise ValueError("prepared HDI identity drift")
 
     runtime = tomllib.loads((ROOT / "config/runtime.toml").read_text(encoding="utf-8"))
-    executable_name = shutil.which(runtime["primary"]["command"])
+    emulator_override = None
+    cpu_debugger = None
+    emulator_command = runtime["primary"]["command"]
+    expected_emulator_sha = runtime["primary"]["binary_sha256"]
+    if args.emulator_receipt is not None:
+        from build_th04_cpu_fault_emulator import attest
+        attestation = args.emulator_receipt.resolve()
+        if not attestation.is_relative_to(ROOT / ".analysis/runtime/emulators"):
+            parser.error("emulator attestation must be private")
+        record_bytes = attestation.read_bytes()
+        record = attest(attestation)
+        private_binary = Path(record["binary"]).resolve()
+        emulator_command = str(private_binary)
+        expected_emulator_sha = record["binary_sha256"]
+        emulator_override = dict(receipt=str(attestation), receipt_sha256=sha(record_bytes),
+                                 scope=record["scope"], source_commit=record["source_commit"])
+    executable_name = shutil.which(emulator_command)
     if executable_name is None:
         raise ValueError("pinned DOSBox-X is unavailable")
     executable = Path(executable_name).resolve()
-    if not executable.is_file() or sha(executable.read_bytes()) != runtime["primary"]["binary_sha256"]:
+    if not executable.is_file() or sha(executable.read_bytes()) != expected_emulator_sha:
         raise ValueError("DOSBox-X binary identity drift")
+    if args.cpu_debugger_receipt is not None:
+        from prepare_th04_primary_cpu_debugger import attest_debugger, command_prefix
+        debugger_path = args.cpu_debugger_receipt.resolve()
+        debugger_record = attest_debugger(debugger_path)
+        if debugger_record["binary_sha256"] != expected_emulator_sha:
+            raise ValueError("CPU debugger does not attest the active emulator")
+        cpu_debugger = dict(receipt=str(debugger_path), receipt_sha256=sha(debugger_path.read_bytes()),
+                            scope=debugger_record["scope"])
     source_conf = ROOT / runtime["primary"]["config"]
     conf_bytes = source_conf.read_bytes()
     if sha(conf_bytes) != runtime["primary"]["config_sha256"]:
@@ -165,6 +194,11 @@ def main() -> int:
         "XDG_CONFIG_HOME": str(output / "config"),
         "XDG_DATA_HOME": str(output / "data"),
     })
+    if emulator_override is not None:
+        env["TH04_CPU_FAULT_DIR"] = str(output)
+    if cpu_debugger is not None:
+        command = command_prefix(debugger_record) + command
+        env.update(TH04_CPU_FAULT_DIR=str(output), TH04_CPU_DEBUG_FILE=debugger_record["debug_file"])
     # Font-ROM diagnostics can fill a pipe while we collect timed frames.
     # Stream directly to disk so observation cannot suspend the emulator.
     boot_log = output / "boot.log"
@@ -389,7 +423,9 @@ def main() -> int:
         "executed_hdi_sha256": sha(image.read_bytes()),
         "artifact_source": prep.get("artifact_source", prep.get("maine_source")),
         "startup": prep["startup"],
-        "emulator_sha256": runtime["primary"]["binary_sha256"],
+        "emulator_sha256": expected_emulator_sha,
+        "emulator_override": emulator_override,
+        "cpu_debugger": cpu_debugger,
         "x11_config_sha256": sha(config.read_bytes()),
         "audio_enabled": args.audio,
         "audio_captures": [{"file": str(path.relative_to(output)), "size": path.stat().st_size,

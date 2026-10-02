@@ -2,6 +2,9 @@
 ; Arm after Borland startup so its divide handler is the preserved INT 0 chain.
 ; All guest register/flag state is restored before forwarding the exception.
 
+extrn _stage_id:byte, _rank:byte, _stage_frame:word
+extrn _boss:byte, _boss_statebyte:byte
+
 FAULT_TRACE_TEXT segment word public 'CODE' use16
 assume cs:FAULT_TRACE_TEXT
 
@@ -70,6 +73,39 @@ code_loop:
  add di,2
  dec dx
  jnz code_loop
+ mov al,10
+ out 0E9h,al
+ ; A read-only snapshot using the incoming DS, also recorded explicitly.
+ ; boss_stuff_t has phase at15 and phase_frame at16 in the current TH04 ABI.
+ mov al,'M'
+ out 0E9h,al
+ mov ax,ds
+ call fault_cpu_hex
+ xor ax,ax
+ mov al,ds:[_stage_id]
+ call fault_cpu_hex
+ xor ax,ax
+ mov al,ds:[_rank]
+ call fault_cpu_hex
+ mov ax,ds:[_stage_frame]
+ call fault_cpu_hex
+ xor ax,ax
+ mov al,ds:[_boss+15]
+ call fault_cpu_hex
+ mov ax,word ptr ds:[_boss+16]
+ call fault_cpu_hex
+ xor ax,ax
+ mov al,ds:[_boss_statebyte]
+ call fault_cpu_hex
+ xor ax,ax
+ mov al,ds:[_boss_statebyte+13]
+ call fault_cpu_hex
+ xor ax,ax
+ mov al,ds:[_boss_statebyte+14]
+ call fault_cpu_hex
+ xor ax,ax
+ mov al,ds:[_boss_statebyte+15]
+ call fault_cpu_hex
  mov al,10
  out 0E9h,al
  pop di

@@ -68,42 +68,39 @@ waveform or general timing equality is not claimed.
 The native v1182 reboot loads those saved options into the menu and exits to
 DOS with the complete ten-byte configuration unchanged.
 
-The former first-stage STOP has a bounded repair: the same ordinary Easy/
-six-life/two-Bomb v1199 scenario passes midboss defeat and reaches Orange dialogue
-at 185/215 seconds. The uninstrumented v1201 extension reaches Orange combat
-at 335/365/395/425 and post-boss dialogue at 450. Stage switching and later
-gameplay are outside that receipt. Old private layouts showed
-STOP/COPY/Divide error; the post-startup v1194 observer instead captured INT 6
-at damaged CS:IP after `bullets_update()`. v1197 stopped at its entry before any
-bullet iteration. Native static inspection rejects both old switch frames and
-accepts the explicit-group build. Digit divisors remain 1000/100/10. The v1195
-fixture changed byte 5 (Turbo), despite its misleading private SE label; it does
-not exclude sound effects. Preserve the old diagnostics as observations.
+The explicit bullet-group repair passes ordinary Orange clear and stage 2
+entry. Both old switch frames fail the static gate; the published and cold
+repaired builds pass. Historical private fault layouts remain in the ledgers.
 
-The ordinary v1203 `main_progression.json` run finishes its 650-second host
-capture with all four product hashes verified. Frequent shot-release gaps
-advance dialogue: Orange combat at 215..305, stage clear/new background at
-335/365, and Kurumi combat at 455/485/515/545. At 575 the guest displays Divide
-error and returns to DOS with the battle screen behind it; 605/635/650 retain
-the DOS prompt. Host exit 0 and successful input delivery do not accept this
-guest failure. This advances the frontier to stage 2, without accepting its
-completion, rendering equivalence, later stages or full gameplay. The fault's
-CS:IP and initiating operation are not yet observed.
+The ordinary v1203 `main_progression.json` run reaches Kurumi combat but
+displays Divide error/DOS return by 575 seconds. The same-image v1208 repeat
+still fights Kurumi at 605 and displays the same guest failure at 635. All four
+executed product identities pass in both runs. Host exit 0 does not accept the
+guest failure; the repeat's black final frame is also unaccepted.
+
+The pinned-original v1204 control reaches third-stage Elly dialogue at 635;
+its final 650 frame is black and is not an accepted checkpoint. The private
+cpu-only v1207 MAIN also reaches stage 3, with a valid observer arm but no
+exception. Neither result repairs the ordinary native failure. A private
+source-built emulator likewise changes progression and does not reproduce it.
+
+The unchanged primary DOSBox-X now has a calibrated GDB exception observer.
+Ubuntu debug symbols share its ELF build ID; the independent DIV-zero fixture
+reproduces the vector, registers, 27 instruction bytes and complete RAM snapshots.
+The observer preserves guest bytes and forwards normal exception handling.
+Use it to obtain CS:IP before selecting a repair. Calibration:
+`.analysis/runtime/emulators/primary-observer-v1213/calibration/receipt.json`.
 
 Current runtime receipts:
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/receipt.json`
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/handoff-state.json`
-- `.analysis/runtime/candidates/native-maine-render-v1176-20261002/run/handoff-state.json`
-- `.analysis/runtime/candidates/original-score-baseline-v1177-20261002/run/receipt.json`
-- `.analysis/runtime/candidates/native-actions-v1170-20261002/run/play-state.json`
 - `.analysis/runtime/candidates/native-op-menu-v1181-20261002/run/handoff-state.json`
 - `.analysis/runtime/candidates/original-op-menu-v1181-20261002/run/handoff-state.json`
 - `.analysis/runtime/candidates/native-op-reload-v1182-20261002/run/handoff-state.json`
-- `.analysis/runtime/candidates/native-first-boss-nochord-v1184-20261002/run/receipt.json`
-- `.analysis/runtime/candidates/native-fault-calls-v1188-20261002/fault6.log`
-- `.analysis/runtime/candidates/native-bullet-group-v1199-20261002/run/receipt.json`
-- `.analysis/runtime/candidates/native-bullet-group-v1199-20261002/run-long/receipt.json`
 - `.analysis/runtime/candidates/native-bullet-group-v1199-20261002/run-progress/receipt.json`
+- `.analysis/runtime/candidates/native-bullet-group-v1199-20261002/run-repeat-v1208/receipt.json`
+- `.analysis/runtime/candidates/original-progression-v1204-20261002/run/receipt.json`
+- `.analysis/runtime/candidates/native-cpu-state-v1207-20261002/run/cpu-fault.json`
 
 ## Build and validation
 
@@ -140,11 +137,15 @@ bullet and decimal DIV checkpoints plus chained CPU exception frames;
 `--debug-port-e9` captures them without losing boot-log smoke markers.
 `main_progression.json` adds frequent shot-release gaps and balanced movement
 for longer ordinary-game runs. It does not force stages or change product code.
+`--cpu-debugger-receipt .analysis/runtime/emulators/primary-observer-v1213/receipt.json`
+uses the calibrated primary-emulator exception observer. After the completed
+run, `inspect_th04_emulator_cpu_fault.py --run-dir RUN --require-fault` verifies
+all executed products and locates captured code against the relocated MAIN/MAP.
 
 ## Next work
 
 1. Localize the stage 2 Kurumi Divide error under the ordinary progression
-   scenario, with an original control and private chained CPU frames. Then
+   scenario using the primary-emulator observer. Then
    validate later stages, endings, Extra and character/rank variants.
 2. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.

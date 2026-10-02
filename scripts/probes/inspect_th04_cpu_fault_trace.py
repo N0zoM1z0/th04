@@ -8,11 +8,14 @@ import json
 from pathlib import Path
 import re
 
-from inspect_th04_handoff_trace import game_file
+from inspect_th04_handoff_trace import game_file, prepared_baseline
 
 ROOT = Path(__file__).resolve().parents[2]
 FIELDS = ("vector", "cs", "ip", "ss", "frame_sp", "ds", "ax", "dx",
           "bx", "cx", "si", "es", "flags")
+STATE_FIELDS = ("ds", "stage_id", "rank", "stage_frame", "boss_phase",
+                "boss_phase_frame", "boss_statebyte0", "boss_statebyte13",
+                "boss_statebyte14", "boss_statebyte15")
 
 
 def sha(data: bytes) -> str:
@@ -53,6 +56,13 @@ def decode_lines(log: str, names: list[str]) -> dict:
             record.update(stack_words=values[13:29], code_words=values[29:],
                           last_call=last_call, last_bullet=last_bullet, arm=arm)
             faults.append(record)
+        elif re.match(r"M[0-9A-F]{4}(?: |$)", payload):
+            if not faults or "state" in faults[-1]:
+                raise ValueError("unpaired CPU state snapshot")
+            values = [int(word, 16) for word in payload[1:].split()]
+            if len(values) != len(STATE_FIELDS) or values[0] != faults[-1]["ds"]:
+                raise ValueError("malformed or inconsistent CPU state snapshot")
+            faults[-1]["state"] = dict(zip(STATE_FIELDS, values))
     return dict(arm=arm, last_call=last_call, last_bullet=last_bullet, faults=faults)
 
 
@@ -68,6 +78,7 @@ def main() -> int:
     image = (run / "execution.hdi").read_bytes()
     if sha(image) != runtime["executed_hdi_sha256"]:
         raise ValueError("executed image identity drift")
+    prepared_baseline(run, runtime)
     prepared = json.loads((run.parent / "receipt.json").read_text())
     product = prepared["products"]["main"]
     if sha(game_file(image, b"MAIN    EXE")) != product["sha256"]:
@@ -95,12 +106,26 @@ def main() -> int:
         raise ValueError("CPU observer has no unique linked frame or runtime arm")
     setup_segment = int(next(iter(entries))[0], 16)
     load_segment = (result["arm"]["cs"] - setup_segment) & 0xFFFF
+    state_symbols = {}
+    if any("state" in fault for fault in result["faults"]):
+        for name in ("_stage_id", "_rank", "_stage_frame", "_boss", "_boss_statebyte"):
+            locations = set(re.findall(r"(?m)^\s*([0-9A-F]{4}):([0-9A-F]{4})\s+"
+                                       + re.escape(name) + r"\s*$", map_data.decode("ascii")))
+            if len(locations) != 1:
+                raise ValueError(f"CPU state has no unique MAP owner: {name}")
+            segment, offset = next(iter(locations))
+            state_symbols[name] = dict(segment=int(segment, 16), offset=int(offset, 16))
     for fault in result["faults"]:
         fault["main_load_segment"] = load_segment
         fault["relative_load_address"] = ((fault["cs"] - load_segment) & 0xFFFF) * 16 + fault["ip"]
+        if "state" in fault:
+            fault["state"]["ds_matches_owners"] = all(
+                fault["state"]["ds"] == ((load_segment + owner["segment"]) & 0xFFFF)
+                for owner in state_symbols.values())
     result.update(scope="private linked MAIN exception observations; no normal-game acceptance",
                   executed_main_sha256=product["sha256"], log_sha256=sha(log),
-                  map_sha256=sha(map_data), main_load_segment=load_segment)
+                  map_sha256=sha(map_data), main_load_segment=load_segment,
+                  state_symbols=state_symbols)
     output = run / "cpu-fault.json"
     output.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(dict(report=str(output), fault_count=len(result["faults"]),

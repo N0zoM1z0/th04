@@ -8,6 +8,44 @@ import hashlib
 import re
 from pathlib import Path
 
+def apply_cpu_fault_overlay(work: Path) -> dict:
+    """Arm chained exceptions once, without per-frame or per-bullet output."""
+    private = Path(__file__).resolve().parents[2] / ".analysis"
+    if not work.resolve().is_relative_to(private):
+        raise ValueError("CPU observer requires a private staged source tree")
+    path = work / "src/main/core/gameplay_loop.cpp"
+    original = path.read_text()
+    entry = "void near gameplay_loop(void)"
+    loop = "    do {"
+    if original.count(entry) != 1 or original.count(loop) != 1:
+        raise ValueError("gameplay CPU observer entry changed")
+    changed = original.replace(entry,
+        'extern "C" void pascal far FAULT_TRACE_SETUP(void);\n' + entry)
+    changed = changed.replace(loop, "    FAULT_TRACE_SETUP();\n" + loop)
+    digits = work / "src/main/pointnum/digits.asm"
+    original_digits = digits.read_text()
+    ending = "MAIN_033_TEXT ends\nend"
+    if original_digits.count(ending) != 1:
+        raise ValueError("CPU observer assembly owner changed")
+    handler_source = Path(__file__).with_name("th04_fault_handlers.inc")
+    handlers = handler_source.read_text()
+    path.write_text(changed)
+    digits.write_text(original_digits.replace(ending,
+        "MAIN_033_TEXT ends\n" + handlers + "\nend"))
+    return {
+        "scope": "private chained CPU exceptions only; no gameplay acceptance",
+        "mode": "cpu-only",
+        "path": str(path),
+        "before_sha256": hashlib.sha256(original.encode()).hexdigest(),
+        "after_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "decimal_source_before_sha256": hashlib.sha256(original_digits.encode()).hexdigest(),
+        "decimal_source_after_sha256": hashlib.sha256(digits.read_bytes()).hexdigest(),
+        "calls": [],
+        "cpu_handler_source_sha256": hashlib.sha256(handler_source.read_bytes()).hexdigest(),
+        "cpu_fault_fields": ["vector", "cs", "ip", "ss", "frame_sp", "ds", "ax",
+                             "dx", "bx", "cx", "si", "es", "flags"],
+    }
+
 def apply_fault_trace_overlay(work: Path) -> dict:
     private = Path(__file__).resolve().parents[2] / ".analysis"
     if not work.resolve().is_relative_to(private):
