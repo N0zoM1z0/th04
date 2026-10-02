@@ -30,6 +30,12 @@ def main() -> int:
     parser.add_argument("--prepared-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--frame-second", type=int, default=10)
+    parser.add_argument("--checkpoint-second", type=int, action="append", default=[],
+                        help="capture an additional frame before the final frame; repeatable")
+    parser.add_argument("--audio", action="store_true",
+                        help="enable the mixer; host-key+W input events toggle WAV capture")
+    parser.add_argument("--stop-after-frame", action="store_true",
+                        help="close DOSBox-X through Ctrl+F9 after the final checkpoint")
     parser.add_argument("--time-limit", type=int, default=20)
     parser.add_argument(
         "--input-key",
@@ -45,7 +51,7 @@ def main() -> int:
         action="append",
         default=[],
         metavar="KEY@SECOND",
-        help="send a key at a host-second offset; repeat for a timeline",
+        help="KEY@SECOND, down:KEY@SECOND or up:KEY@SECOND; repeat for a timeline",
     )
     args = parser.parse_args()
     input_specs = list(args.input_event)
@@ -66,6 +72,9 @@ def main() -> int:
             parser.error("input events must be nonempty and before the frame")
         parsed_inputs.append((second, key))
     parsed_inputs.sort()
+    checkpoints = sorted(set(args.checkpoint_second))
+    if any(second < 1 or second >= args.frame_second for second in checkpoints):
+        parser.error("checkpoints must be positive and before the final frame")
     prepared = args.prepared_dir.resolve()
     output = args.output_dir.resolve()
     if (not prepared.is_relative_to(PRIVATE) or not output.is_relative_to(PRIVATE)
@@ -76,7 +85,7 @@ def main() -> int:
     prep_receipt_path = prepared / "receipt.json"
     prep = json.loads(prep_receipt_path.read_text(encoding="utf-8"))
     artifact = prep.get("artifact", "th04-maine")
-    if artifact not in {"th04-main", "th04-maine", "th04-op", "th04-zun"}:
+    if artifact not in {"th04-main", "th04-maine", "th04-op", "th04-zun", "th04-game"}:
         raise ValueError(f"unsupported prepared artifact: {artifact}")
     source_image = prepared / "diagnostic.hdi"
     if sha(source_image.read_bytes()) != prep["diagnostic_hdi_sha256"]:
@@ -101,7 +110,14 @@ def main() -> int:
     image = output / "execution.hdi"
     shutil.copyfile(source_image, image)
     config = output / "dosbox-x-x11.conf"
-    config.write_bytes(conf_bytes.replace(old, b"videodriver       = x11"))
+    runtime_conf = conf_bytes.replace(old, b"videodriver       = x11")
+    runtime_conf = runtime_conf.replace(b"[dosbox]\n", b"[dosbox]\nquit warning = false\n")
+    if args.audio:
+        runtime_conf = runtime_conf.replace(b"nosound = true", b"nosound = false")
+        runtime_conf = runtime_conf.replace(b"[dosbox]\n", b"[dosbox]\ncaptures = "
+                                           + str(output / "captures").encode() + b"\n")
+        (output / "captures").mkdir()
+    config.write_bytes(runtime_conf)
     command = [
         str(executable), "-defaultconf", "-defaultmapper", "-conf", str(config),
         "-fastlaunch", "-nogui", "-nomenu", "-exit", "-time-limit",
@@ -115,20 +131,38 @@ def main() -> int:
         "XDG_CONFIG_HOME": str(output / "config"),
         "XDG_DATA_HOME": str(output / "data"),
     })
-    process = subprocess.Popen(command, cwd=ROOT, env=env, stdout=subprocess.PIPE,
+    # Font-ROM diagnostics can fill a pipe while we collect timed frames.
+    # Stream directly to disk so observation cannot suspend the emulator.
+    boot_log = output / "boot.log"
+    log_stream = boot_log.open("w", encoding="utf-8")
+    process = subprocess.Popen(command, cwd=ROOT, env=env, stdout=log_stream,
                                stderr=subprocess.STDOUT, text=True,
                                start_new_session=True)
     screenshot = output / "frame.png"
     host_timeout = False
     input_events = []
+    input_failure = None
+    early_exit_second = None
     next_input = 0
+    checkpoint_frames = []
+    next_checkpoint = 0
     try:
         started = time.monotonic()
         while True:
             elapsed = time.monotonic() - started
+            if process.poll() is not None:
+                early_exit_second = elapsed
+                break
             if (next_input < len(parsed_inputs)
                     and elapsed >= parsed_inputs[next_input][0]):
                 requested_second, input_key = parsed_inputs[next_input]
+                action = "key"
+                key = input_key
+                if input_key.startswith(("down:", "up:")):
+                    prefix, key = input_key.split(":", 1)
+                    action = "keydown" if prefix == "down" else "keyup"
+                    if not key:
+                        raise ValueError("input event has no key")
                 xdotool = shutil.which("xdotool")
                 if xdotool is None:
                     raise ValueError("input events require xdotool")
@@ -137,28 +171,47 @@ def main() -> int:
                     check=False, capture_output=True, text=True,
                 ).stdout.split()
                 if not windows:
-                    raise ValueError("DOSBox-X window not found for --input-key")
+                    input_failure = f"DOSBox-X window missing at input {input_key}@{requested_second}"
+                    break
                 for window in windows:
                     subprocess.run(
-                        [xdotool, "key", "--window", window, input_key],
+                        [xdotool, action, "--window", window, key],
                         check=True, capture_output=True, text=True,
                     )
                 input_events.append({
                     "key": input_key,
+                    "action": action,
                     "requested_second": requested_second,
                     "observed_second": elapsed,
                     "window_ids": windows,
                 })
                 next_input += 1
+            if (next_checkpoint < len(checkpoints)
+                    and elapsed >= checkpoints[next_checkpoint]):
+                second = checkpoints[next_checkpoint]
+                frame = output / f"frame-{second:03d}s.png"
+                subprocess.run(["import", "-window", "root", str(frame)], check=True,
+                               timeout=10, capture_output=True)
+                checkpoint_frames.append({"requested_second": second,
+                    "observed_second": time.monotonic() - started,
+                    "file": frame.name, "sha256": sha(frame.read_bytes())})
+                next_checkpoint += 1
             remaining = args.frame_second - elapsed
             if remaining <= 0:
                 break
             time.sleep(min(0.05, remaining))
         subprocess.run(["import", "-window", "root", str(screenshot)], check=True,
                        timeout=10, capture_output=True)
+        if args.stop_after_frame and process.poll() is None:
+            windows = subprocess.run(["xdotool", "search", "--onlyvisible", "--name", "DOSBox-X"],
+                                     capture_output=True, text=True).stdout.split()
+            for window in windows:
+                subprocess.run(["xdotool", "key", "--window", window, "ctrl+F9"], check=False,
+                               capture_output=True)
         try:
             log, _ = process.communicate(
-                timeout=max(10, args.time_limit - args.frame_second + 10)
+                timeout=(10 if args.stop_after_frame else
+                         max(10, args.time_limit - args.frame_second + 10))
             )
         except subprocess.TimeoutExpired:
             host_timeout = True
@@ -168,7 +221,8 @@ def main() -> int:
         if process.poll() is None:
             os.killpg(process.pid, signal.SIGKILL)
             process.communicate(timeout=10)
-    (output / "boot.log").write_text(log, encoding="utf-8")
+        log_stream.close()
+    log = boot_log.read_text(encoding="utf-8", errors="replace")
     if sha(source_image.read_bytes()) != prep["diagnostic_hdi_sha256"]:
         raise ValueError("prepared source HDI was modified")
     fs = Fat12(bytearray(image.read_bytes()))
@@ -231,6 +285,57 @@ def main() -> int:
                                   u32(fs.image, ems_trace_entry + 28))
     except ValueError:
         ems_trace = None
+    stage_trace_files = {}
+    try:
+        game_dir = fs.find_entry([fs.root], b"GENSO      ")
+        game_offsets = [fs.cluster_offset(cluster) for cluster in
+                        fs.chain(u16(fs.image, game_dir + 26))]
+        for stage_marker in range(256):
+            name = (f"STG{stage_marker:02X}".ljust(8) + "BIN").encode("ascii")
+            try:
+                stage_entry = fs.find_entry(game_offsets, name)
+            except ValueError:
+                continue
+            stage_trace_files[f"{stage_marker:02X}"] = fs.file_bytes(
+                u16(fs.image, stage_entry + 26),
+                u32(fs.image, stage_entry + 28),
+            ).hex()
+    except ValueError:
+        stage_trace_files = {}
+    game_trace_files = {}
+    try:
+        game_dir = fs.find_entry([fs.root], b"GENSO      ")
+        game_offsets = [fs.cluster_offset(cluster) for cluster in
+                        fs.chain(u16(fs.image, game_dir + 26))]
+        for game_marker in range(256):
+            name = (f"GAM{game_marker:02X}".ljust(8) + "BIN").encode("ascii")
+            try:
+                game_entry = fs.find_entry(game_offsets, name)
+            except ValueError:
+                continue
+            game_trace_files[f"{game_marker:02X}"] = fs.file_bytes(
+                u16(fs.image, game_entry + 26),
+                u32(fs.image, game_entry + 28),
+            ).hex()
+    except ValueError:
+        game_trace_files = {}
+    player_trace_files = {}
+    try:
+        game_dir = fs.find_entry([fs.root], b"GENSO      ")
+        game_offsets = [fs.cluster_offset(cluster) for cluster in
+                        fs.chain(u16(fs.image, game_dir + 26))]
+        for player_marker in range(256):
+            name = (f"PLY{player_marker:02X}".ljust(8) + "BIN").encode("ascii")
+            try:
+                player_entry = fs.find_entry(game_offsets, name)
+            except ValueError:
+                continue
+            player_trace_files[f"{player_marker:02X}"] = fs.file_bytes(
+                u16(fs.image, player_entry + 26),
+                u32(fs.image, player_entry + 28),
+            ).hex()
+    except ValueError:
+        player_trace_files = {}
     expected_boot = runtime["primary"]["execution"]["boot_required_log_markers"]
     receipt = {
         "schema_version": 1,
@@ -244,9 +349,17 @@ def main() -> int:
         "startup": prep["startup"],
         "emulator_sha256": runtime["primary"]["binary_sha256"],
         "x11_config_sha256": sha(config.read_bytes()),
+        "audio_enabled": args.audio,
+        "audio_captures": [{"file": str(path.relative_to(output)), "size": path.stat().st_size,
+                            "sha256": sha(path.read_bytes())}
+                           for path in sorted((output / "captures").glob("*.wav"))],
         "command": command,
         "frame_second": args.frame_second,
         "input_events": input_events,
+        "input_failure": input_failure,
+        "early_exit_second": early_exit_second,
+        "stop_after_frame": args.stop_after_frame,
+        "checkpoint_frames": checkpoint_frames,
         "host_timeout": host_timeout,
         "returncode": process.returncode,
         "missing_boot_markers": [item for item in expected_boot if item not in log],
@@ -257,6 +370,9 @@ def main() -> int:
         "input_trace_hex": input_trace.hex() if input_trace is not None else None,
         "main_trace_hex": main_trace.hex() if main_trace is not None else None,
         "ems_trace_hex": ems_trace.hex() if ems_trace is not None else None,
+        "stage_trace_files_hex": stage_trace_files,
+        "game_trace_files_hex": game_trace_files,
+        "player_trace_files_hex": player_trace_files,
         "boot_log_sha256": sha(log.encode()),
         "frame_sha256": sha(screenshot.read_bytes()),
     }
@@ -268,7 +384,8 @@ def main() -> int:
                       "marker_hex": receipt["diagnostic_marker_hex"]}, sort_keys=True))
     # A frame probe may stop the emulator after its checkpoint. The receipt
     # records this separately from an emulator crash or missing boot marker.
-    if (process.returncode and not host_timeout) or receipt["missing_boot_markers"]:
+    if (input_failure or early_exit_second is not None
+            or (process.returncode and not host_timeout) or receipt["missing_boot_markers"]):
         raise ValueError("diagnostic boot did not pass host smoke markers")
     return 0
 

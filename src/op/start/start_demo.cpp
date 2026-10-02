@@ -1,6 +1,9 @@
 #include <process.h>
 
 #include "src/shared/platform/types.hpp"
+#ifdef TH04P
+#include "src/shared/runtime/api.hpp"
+#endif
 #include "src/shared/config/resident.hpp"
 #include "src/shared/formats/pi.hpp"
 #include "src/shared/hardware/graphics.hpp"
@@ -29,6 +32,10 @@ inline void op_exit_into_main(bool fade_out_bgm, bool allow_debug) {
     if(fade_out_bgm) {
         snd_kaja_func(KAJA_SONG_FADE, 10);
     }
+#ifdef TH04P
+    // The native palette block belongs to OP; release it before DOS overlay.
+    respal_free();
+#endif
     game_exit();
     if(!allow_debug || !resident->debug) {
         execl(BINARY_MAIN, BINARY_MAIN, nullptr);

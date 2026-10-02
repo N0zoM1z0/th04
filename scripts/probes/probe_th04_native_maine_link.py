@@ -80,6 +80,79 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def handoff_trace_overlay(work: Path) -> dict:
+    """Record OP menu/cleanup/exec checkpoints only in the private build tree."""
+    modified = {}
+    entry = work / "src/op/main/entry.cpp"
+    before = entry.read_text()
+    helper = r'''
+extern "C" void far op_handoff_trace(unsigned marker, int detail)
+{
+    static const char hex[] = "0123456789ABCDEF";
+    char filename[] = "OPH00.BIN";
+    unsigned sample[8];
+    int handle;
+    unsigned done;
+    filename[3] = hex[(marker >> 4) & 15];
+    filename[4] = hex[marker & 15];
+    sample[0] = marker;
+    sample[1] = detail;
+    unsigned largest = 0;
+    _dos_allocmem(0xFFFFu, &largest);
+    sample[2] = largest;
+    sample[3] = _psp;
+    sample[4] = *reinterpret_cast<unsigned far *>(MK_FP(_psp - 1u, 3));
+    unsigned next_mcb = _psp + sample[4];
+    sample[5] = *reinterpret_cast<unsigned far *>(MK_FP(next_mcb, 1));
+    sample[6] = *reinterpret_cast<unsigned far *>(MK_FP(next_mcb, 3));
+    sample[7] = *reinterpret_cast<unsigned char far *>(MK_FP(next_mcb, 0));
+    if(_dos_creat(filename, 0, &handle) == 0) {
+        _dos_write(handle, sample, sizeof(sample), &done);
+        _dos_close(handle);
+    }
+}
+'''
+    anchor = '#include "src/op/main/main.inl"'
+    if before.count(anchor) != 1:
+        raise ValueError("OP handoff helper anchor changed")
+    after = '#include <dos.h>\n' + before.replace(anchor, helper + '\n' + anchor)
+    entry.write_text(after)
+    modified[str(entry.relative_to(work))] = {"original_sha256": hashlib.sha256(before.encode()).hexdigest(),
+                                            "overlay_sha256": sha(entry)}
+    for source in ("src/op/start/start_demo.cpp", "src/op/start/start_game.cpp",
+                   "src/op/start/start_extra.cpp"):
+        path = work / source
+        before = path.read_text()
+        after = '#include <errno.h>\nextern "C" void far op_handoff_trace(unsigned, int);\n' + before
+        if source.endswith("start_demo.cpp"):
+            after = after.replace('    main_cdg_free();', '    op_handoff_trace(0x10, 0);\n    main_cdg_free();\n    op_handoff_trace(0x11, 0);')
+            after = after.replace('    cfg_save();', '    cfg_save();\n    op_handoff_trace(0x12, 0);')
+            after = after.replace('    gaiji_restore();', '    gaiji_restore();\n    op_handoff_trace(0x13, 0);')
+            after = after.replace('    game_exit();', '    op_handoff_trace(0x14, 0);\n    game_exit();\n    op_handoff_trace(0x15, 0);')
+            for binary in ("BINARY_MAIN", "BINARY_DEB"):
+                statement = f'execl({binary}, {binary}, nullptr);'
+                after = after.replace(statement, 'op_handoff_trace(0x16, 0);\n        ' + statement
+                                      + '\n        op_handoff_trace(0x17, errno);')
+        path.write_text(after)
+        modified[source] = {"original_sha256": hashlib.sha256(before.encode()).hexdigest(),
+                            "overlay_sha256": sha(path)}
+    for source in ("src/op/start/start_game.inl", "src/op/start/start_extra.inl"):
+        path = work / source
+        before = path.read_text()
+        after = before.replace('{\n', '{\n\top_handoff_trace(0x20, 0);\n', 1)
+        after = after.replace('\tmain_cdg_free();', '\top_handoff_trace(0x21, 0);\n\tmain_cdg_free();\n\top_handoff_trace(0x22, 0);')
+        for marker, statement in ((0x23, 'cfg_save();'), (0x24, 'gaiji_restore();'), (0x25, 'game_exit();')):
+            after = after.replace(statement, statement + f'\n\top_handoff_trace(0x{marker:02X}, 0);')
+        for binary in ("BINARY_MAIN", "BINARY_DEB"):
+            statement = f'execl({binary}, {binary}, nullptr);'
+            after = after.replace(statement, 'op_handoff_trace(0x26, 0);\n\t\t' + statement
+                                  + '\n\t\top_handoff_trace(0x27, errno);')
+        path.write_text(after)
+        modified[source] = {"original_sha256": hashlib.sha256(before.encode()).hexdigest(),
+                            "overlay_sha256": sha(path)}
+    return modified
+
+
 def link_relevant_sha(path: Path) -> str:
     digest = hashlib.sha256()
     for record in parse_omf(path.read_bytes()):
@@ -118,9 +191,15 @@ def main(artifact: str = "maine") -> int:
                         help="check the TH04 source graph without running Wine")
     parser.add_argument("--without-support", action="store_true",
                         help="link only TH04 source plus pinned Borland system libraries")
+    parser.add_argument("--reuse-from", type=Path,
+                        help="reuse verified objects with unchanged source and recorded dependencies")
+    parser.add_argument("--handoff-trace", action="store_true",
+                        help="private OP menu/cleanup/exec file checkpoints")
     args = parser.parse_args()
+    if args.handoff_trace and artifact != "op":
+        parser.error("--handoff-trace requires the OP probe")
     if args.check_manifest:
-        if args.output_dir or args.without_support:
+        if args.output_dir or args.without_support or args.reuse_from or args.handoff_trace:
             parser.error("--check-manifest cannot be combined with build options")
         sources, asm_sources = load_sources(artifact)
         print(json.dumps({"artifact": f"th04-{artifact}", "c_sources": len(sources),
@@ -148,6 +227,7 @@ def main(artifact: str = "maine") -> int:
     output.mkdir(parents=True)
     work = output / "source"
     shutil.copytree(ROOT / "src", work / "src")
+    handoff_trace = handoff_trace_overlay(work) if args.handoff_trace else None
     (work / "bin").mkdir()
     if not args.without_support:
         shutil.copy2(SUPPORT_LIB, work / "bin/masters.lib")
@@ -156,12 +236,81 @@ def main(artifact: str = "maine") -> int:
     env.update(WINEPREFIX=str(ROOT / ".analysis/toolchain/wineprefix"),
                WINEDEBUG="-all", MSDOS_PATH=r"C:\TC4\BIN;C:\TASM50\BIN")
 
+    cache = {}
+    if args.reuse_from:
+        previous = args.reuse_from.resolve()
+        if not previous.is_relative_to(private) or previous == output:
+            parser.error("use an earlier private build as the object cache")
+        prior = json.loads((previous / "receipt.json").read_text())
+        if (prior["artifact"] != f"th04-{artifact}" or prior["compiler_flags"] != list(FLAGS)
+                or prior["runner_sha256"] != RUNNER_SHA256
+                or prior["support_lib_sha256"] != (None if args.without_support else SUPPORT_SHA256)):
+            raise RuntimeError("object cache artifact/toolchain/options differ")
+        for record in prior["objects"]:
+            current = work / record["source"]
+            # Generated BGIMAGE assembly records cannot attest its C++ headers.
+            if (record["source"] == "src/shared/hardware/bgimage.cpp"
+                    or not current.is_file() or sha(current) != record["source_sha256"]):
+                continue
+            obj = previous / "source" / record["object"]
+            if sha(obj) != record["object_sha256"]:
+                raise RuntimeError("object cache identity drift")
+            description = describe_omf(obj.read_bytes())
+            dependencies = description["dependency_paths"]
+            unchanged = bool(dependencies)
+            for dependency in dependencies:
+                dependency = re.sub(r"/+", "/", dependency.replace("\\", "/"))
+                if dependency.upper().startswith("C:/TC4/"):
+                    continue  # Vendor headers are covered by toolchain attestation.
+                old = previous / "source" / dependency
+                new = work / dependency
+                # The pinned DOS runner gives long compilation roots an 8.3
+                # alias. The recorded compiler input and its hash already
+                # bind that module to the logical source. Resolve only that
+                # module's own dependency; every included file still needs
+                # a real, hash-equal path in both staged trees.
+                logical = Path(record["source"])
+                module = (description["module_name"] or "").replace("\\", "/")
+                alias = Path(dependency)
+                if (not old.is_file() and dependency == module
+                        and alias.parent == logical.parent
+                        and alias.suffix == logical.suffix
+                        and re.fullmatch(re.escape(logical.stem[:4]) + r"~[a-z0-9]{3}", alias.stem)):
+                    old = previous / "source" / logical
+                    new = work / logical
+                if not old.is_file() or not new.is_file() or sha(old) != sha(new):
+                    unchanged = False
+                    break
+            if unchanged:
+                cache[record["source"]] = (record, obj)
+
     object_paths: list[Path] = []
     records: list[dict[str, str]] = []
+    def checkpoint() -> None:
+        # Preserve independently validated objects if a later source fails.
+        # This incomplete receipt is a cache input, never a publishable build.
+        (output / "receipt.json").write_text(json.dumps({
+            "artifact": f"th04-{artifact}", "runner_sha256": RUNNER_SHA256,
+            "compiler_flags": list(FLAGS),
+            "support_lib_sha256": None if args.without_support else SUPPORT_SHA256,
+            "scope": "incomplete compiler/assembler checkpoint",
+            "objects": records, "link_complete": False, "link_exit": None,
+            "link_errors": ["build incomplete"], "mz_header": None,
+        }, indent=2) + "\n")
+    checkpoint()
     for index, source in enumerate(sources):
         group = source.parts[1]
         obj_dir = work / "obj" / group / f"{index:03d}"
         obj_dir.mkdir(parents=True)
+        if source.as_posix() in cache:
+            prior_record, previous_obj = cache[source.as_posix()]
+            obj = obj_dir / previous_obj.name
+            shutil.copy2(previous_obj, obj)
+            object_paths.append(obj)
+            records.append(dict(prior_record, object=obj.relative_to(work).as_posix(),
+                                reused_from=str(args.reuse_from)))
+            checkpoint()
+            continue
         extra = ["-B"] if source.as_posix() == "src/shared/hardware/bgimage.cpp" else []
         if group == artifact:
             extra.append(f"-DBINARY='{'E' if artifact == 'maine' else 'O'}'")
@@ -189,11 +338,20 @@ def main(artifact: str = "maine") -> int:
         records.append({"source": source.as_posix(), "source_sha256": sha(ROOT / source),
                         "object": obj.relative_to(work).as_posix(), "object_sha256": sha(obj),
                         "link_relevant_sha256": link_relevant_sha(obj)})
+        checkpoint()
 
     for index, source in enumerate(asm_sources):
         obj_dir = work / "obj/asm" / f"{index:03d}"
         obj_dir.mkdir(parents=True)
         obj = obj_dir / "unit.obj"
+        if source.as_posix() in cache:
+            prior_record, previous_obj = cache[source.as_posix()]
+            shutil.copy2(previous_obj, obj)
+            object_paths.append(obj)
+            records.append(dict(prior_record, object=obj.relative_to(work).as_posix(),
+                                reused_from=str(args.reuse_from)))
+            checkpoint()
+            continue
         assemble(work / source, obj, work, env, output / f"assemble-{index:03d}.log")
         omf = describe_omf(obj.read_bytes())
         if not any("Turbo Assembler  Version 5.0" in comment for comment in omf["translator_comments"]):
@@ -202,6 +360,7 @@ def main(artifact: str = "maine") -> int:
         records.append({"source": source.as_posix(), "source_sha256": sha(ROOT / source),
                         "object": obj.relative_to(work).as_posix(), "object_sha256": sha(obj),
                         "link_relevant_sha256": link_relevant_sha(obj)})
+        checkpoint()
 
     objlist = " ".join(str(path.relative_to(work)).replace("/", "\\") for path in object_paths)
     response = work / f"obj/product/{artifact}.@l"
@@ -226,6 +385,7 @@ def main(artifact: str = "maine") -> int:
                   if args.without_support else
                   f"TH04-owned {artifact.upper()} source graph and diagnostic support-library link"),
         "artifact": f"th04-{artifact}",
+        "handoff_trace": handoff_trace,
         "runner_sha256": RUNNER_SHA256,
         "support_lib_sha256": None if args.without_support else SUPPORT_SHA256,
         "source_manifest_sha256": sha(source_manifest),
@@ -233,6 +393,7 @@ def main(artifact: str = "maine") -> int:
         "assembler_flags": ["/m", "/mx", "/kh32768", "/t", "/dGAME=4",
                             "/dTH04_LARGE_PRODUCT=1"],
         "objects": records,
+        "reused_object_count": sum("reused_from" in record for record in records),
         "response_sha256": sha(response),
         "link_log_sha256": sha(link_log),
         "link_exit": link.returncode,

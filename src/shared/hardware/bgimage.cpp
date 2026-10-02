@@ -4,7 +4,9 @@
 
 
 #define FLAGS_ZERO (_FLAGS & 0x40)
+#ifndef TH04P
 #include "decomp.hpp"
+#endif
 #include "src/shared/hardware/bgimage.hpp"
 #include "src/shared/memory/hmem.hpp"
 
@@ -31,12 +33,23 @@ enum {
     push word ptr [bgimage.B]; \
 }
 
+#ifdef TH04P
+// TC4J has no MOVSD mnemonic. The architectural operand-size prefix makes
+// the symbolic string copy use DWORD operands, as in the shared 386 routine.
+#define bgimage_copy_plane() { \
+    _SI = 0; \
+    _DI = 0; \
+    _CX = (BGIMAGE_PLANE_SIZE / sizeof(unsigned long)); \
+    asm { db 66h; rep movsw; } \
+}
+#else
 inline void bgimage_copy_plane(void) {
     _SI = 0;
     _DI = 0;
     _CX = (BGIMAGE_PLANE_SIZE / sizeof(unsigned long));
     REP MOVSD;
 }
+#endif
 
 void bgimage_snap(void)
 {

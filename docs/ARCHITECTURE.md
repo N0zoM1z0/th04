@@ -2,7 +2,12 @@
 
 ## Scope
 
-The exact branch reconstructs four TH04 artifacts independently:
+The active product goal is to build these four artifacts from maintained TH04
+source and run the complete PC-98 game. Native executable bytes may differ from
+the originals. Historical exact reconstruction remains a separate ledger;
+MAIN's two remaining exactness cases are deferred.
+
+The four artifacts have distinct responsibilities:
 
 | Artifact | Responsibility | Target format |
 | --- | --- | --- |
@@ -143,10 +148,9 @@ linker-map evidence, and focused notes because those fields describe the pinned
 calibration scaffold rather than the TH04 product layout. See
 `compat/rec98/README.md`.
 
-The current tree is not yet a complete standalone game build. It has many
-accepted MAIN owners, artifact-owned and shared source for OP/MAINE decoded
-functions, and bounded ZUN source/components. The compatibility audit currently
-finds no product include dependency on `compat/rec98/`, but several exact
+All four products now build from maintained TH04 source without `masters.lib`.
+Complete normal gameplay is still under runtime validation. The compatibility
+audit finds no product include dependency on `compat/rec98/`, but several exact
 Oracles still compile through pinned ReC98 scaffolding. Do not
 conceal that gap with copied declarations or a bulk import. Recover bounded
 TH04 units from the verified target, using ReC98 and adjacent games as

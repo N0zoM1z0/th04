@@ -1,206 +1,64 @@
-# Agent reconstruction workflow
+# Working on TH04
 
-## 1. Preflight
+The active goal is standalone builds and normal PC-98 gameplay. Native builds
+need not match original executable bytes. Do not reopen MAIN's carpet or
+checkerboard exactness cases. Adapt necessary ReC98 shared implementation into
+local TH04 source; preserve functional ABI and hardware behavior.
 
-```bash
-git status --short --branch
+## Start
+
+```sh
+git status --short
 python3 scripts/preflight.py
+python3 scripts/status.py
 ```
 
-If target verification or database attestation fails, target-dependent RE is
-blocked.  Public tooling/documentation work may continue without inventing
-target claims.
+Read [RE_HANDOFF.md](RE_HANDOFF.md) for current blockers and build commands.
+For raw target/database work, run `python3 scripts/ghidra.py ARTIFACT check`
+before using its observations. Pinned targets identify the supplied Japanese
+copy; provenance remains `candidate-local-attested`.
 
-When a Ghidra database will be used, also run its fresh headless read-only
-attestation in the same session:
+## Implement and build
 
-```bash
-python3 scripts/ghidra.py th04-main check
-```
+- Work on one coherent runtime or build problem. Prefer code and executable
+  checks to additional narrative documents.
+- Keep source under `src/main`, `src/op`, `src/maine`, `src/zun` or shared TH04
+  subsystems. Eliminate external source/header dependencies as they migrate.
+- Respect near/far calls, Pascal stack cleanup, DGROUP, register ABIs, segment
+  groups and 64 KiB bounds. Successful TLINK output alone does not verify them.
+- Run only one Borland/Wine build at a time. Worktrees and generated code/data
+  belong below ignored `.analysis/`; never change pinned executable bytes.
+- `python3 scripts/build.py` builds the four products without historical
+  master.lib and publishes them only after every requested build succeeds.
+  Build success and runtime acceptance remain separate.
+- Use `--only main` and the verified C++ cache for bounded MAIN ASM iterations.
+  Finish a source migration with a fresh build before calling it complete.
 
-This verifies the pinned `.tools/` installation and the saved
-`ghidra-project/` database before exporting a nonce-bound private receipt.
-Ghidra auto-analysis results remain provisional even when this check passes.
-The project itself is disposable host-local state and is not tree-hashed;
-strictness is applied to the freshly exported target bytes, MZ mapping,
-relocations, and entry point.
+## Run
 
-## 2. Select one bounded problem
+`prepare_product_hdi.py` installs build outputs into a copy of the pinned
+original-data image. The normal route is GAME.BAT, through ZUN and OP into
+MAIN and later MAINE. Directly launching MAINE omits resident setup.
 
-Run `python3 scripts/status.py --json` and select one artifact plus one bounded
-unit.  Prefer a unit whose entry, exits, callers, and adjacent ownership can be
-reviewed in one session.  Large dispatchers and shared segment changes need an
-explicit sub-plan.
+Use recorded input and state checkpoints to validate gameplay progression,
+resources, sound and saves. Instrumentation changes timing/layout, so compare
+with an uninstrumented build. A screenshot or one marker is a bounded result.
+Keep original data and the prepared source image unchanged.
 
-Use `docs/PROGRESS.md`, `docs/BOUNDARY_REVIEW.md`, `docs/RE_HANDOFF.md`, and the
-live ledgers as the current queue. Use `docs/reconstruction/README.md` to find
-the focused evidence behind a current blocker. `config/th04_function_boundaries.csv` is the
-all-artifact inventory: select only `work_queue=reconstruct`; runtime/library/
-data exclusions must not re-enter authored progress. Prefer a corroborated
-entry. A provisional entry first needs a focused return/tail/table and adjacent
-ownership review. Historical evidence rows and stable IDs with `module` or
-`partial` wording preserve old receipts only; never reconstruct their former
-directory layout or treat an old routing snapshot as current progress.
+## Historical exact acceptance
 
-Create the `candidate` row in `config/units.csv` only after recording how the
-candidate was found.  Use artifact plus segment:offset; never rely on a naked
-linear address.
+The CSV ledgers and [ORACLES.md](ORACLES.md) retain the exact reconstruction
+contract. Upstream source, native build success and runtime observations never
+promote a historical unit to exact. Only invoke the strict matching workflow
+when an exact claim is explicitly in scope; preserve deferred nonexact states.
 
-## 3. Reconcile ownership before semantics
+## Finish
 
-Inspect raw bytes, MZ relocations, disassembly, all control-flow exits, callers,
-callees, shared tails, jump tables, alignment, embedded data, and adjacent
-entries.  Classify authored, compiler, library, asset, padding, or original ASM
-ownership.  A disassembler's function extent is only a proposal.
-
-Promote to `boundary-reviewed` when the compared extent is complete and does
-not steal or omit bytes.
-
-For a full inventory refresh, use the scripts under
-`scripts/boundary_review/` in the order documented by
-`docs/BOUNDARY_REVIEW.md`. In particular, the pinned TASM expanded-listing
-export recovers local `PROC` entries omitted by TLINK MAP files and sometimes
-missed by Ghidra. These candidate listings are compiler observations, not an
-exactness Oracle and not proof of original handwritten assembly.
-The target-stub DIET Oracle requires and checks Python `unicorn==1.0.2`; its
-installation command is in `scripts/boundary_review/README.md`.
-
-## 4. State a falsifiable hypothesis
-
-Add a row to `config/hypotheses.csv` for an uncertain name, type, width,
-calling convention, field offset, branch meaning, or source shape.  Link each
-claim to independent evidence rows.  Keep unresolved contradictions explicit.
-
-Evidence priority when claims conflict:
-
-1. hash-attested target bytes and target-local control/data flow;
-2. pinned Borland/TASM/TLINK probes;
-3. target-local deterministic runtime observations;
-4. multiple target-local callers/callees/xrefs;
-5. ReC98, adjacent Touhou games, hardware docs, and historical material;
-6. database names, decompiler syntax, and intuition.
-
-## 5. Implement natural source
-
-Recover behavior, ABI, segmentation, and ownership before tuning code shape.
-Do not mechanically translate pseudocode.  Keep unknown meaning neutral.
-Promote to `source-present` only when the body and its material side effects are
-implemented, not when a stub compiles.
-
-Place the result under the owning TH04 artifact and subsystem in `src/`.
-Build/acceptance state never appears in a directory name: do not add
-`exact/`, `partial(s)/`, or `module(s)/`. Use `.inl` only when a bounded body is
-genuinely included by a semantic translation unit. Product source must not
-directly include another game's source tree, `libs/`, or `platform/`. If a
-required declaration has not yet been localized, route it through the matching
-one-line `compat/rec98/<upstream-path>` forwarder and include that directory in
-the build receipt. Then recover and attest a TH04-local or proved
-`src/shared/` declaration before removing the compatibility dependency.
-
-Follow `docs/SOURCE_LAYOUT.md` when choosing a new path. Do not relocate an
-accepted translation unit only to make the tree look tidier: its path, split,
-and include composition are replay inputs and require affected focused and
-aggregate revalidation.
-
-The independent-build target is the checked-in TH04 source plus the pinned
-toolchain and documented libraries. A successful replay that overlays source
-into `_reference/ReC98` is an exactness Oracle, not proof that the repository
-already has a standalone product build.
-
-## 6. Probe and compare smallest-first
-
-Compile the smallest truthful unit with explicit flags and immutable tool/input
-digests.  Compare object/map structure, relocations, instructions, CFG, stack,
-registers, segments, x87, and then raw bytes.  Diagnose mismatches by Oracle
-dimension before changing source.
-
-Use:
-
-```bash
-python3 scripts/compare_artifacts.py TARGET CANDIDATE --json
-```
-
-For a locally cold-built pinned ReC98 control, run
-`scripts/survey_rec98_outputs.py SOURCE` first.  Its default exact gate rejects
-any raw mismatch; `--gate calibration` only proves that the known 20-output
-failure/pass vector, per-game OMF identities, and source/build receipts were
-reproduced.  The compact vector exposes objective size, header, relocation,
-program, and overlay counts so the next experiment can be routed without
-mistaking similarity for acceptance.  Add `--compact` for the normal agent
-view; omit it only when the verbose per-byte comparison receipt is needed.
-
-The current comparator covers whole MZ/COM artifacts; the OMF adapter validates
-record integrity and exposes producer/dependency metadata plus raw and narrowly
-timestamp-normalized identities. MAIN has accepted file-backed unit replay;
-OP/MAINE and ZUN now have a common decoded-function ledger and cold replay
-entrypoint (`scripts/decoded_function_acceptance.py`). Current backends compile
-maintained source for 85 OP and 63 MAINE decoded-exact authored functions.
-ZUN's MEMCHK `_main` is decoded exact; resident `cfg_init` and `_main` remain
-blocked. For any new packed-artifact function,
-review physical ownership, add a backend that really compiles its source, and
-bind artifact-local raw bytes/evidence before claiming decoded acceptance.
-Do not synthesize packed file offsets for decompressed bodies. See
-`docs/RE_ROADMAP.md` and the v508 acceptance note.
-
-## 7. Validate semantics independently
-
-Use a compiler probe for ABI-visible claims.  When runtime infrastructure is
-available, add a deterministic scenario with state/VRAM/palette/event
-checkpoints.  Use cross-game source only as corroboration and confirm it
-against TH04.
-
-Upstream reconstructions follow the same path as any other hypothesis.  Record
-their provenance with an `upstream` evidence row, re-review boundaries against
-the selected artifact, and rerun every required local Oracle.  Never import an
-upstream `exact` or `finalized` state into `config/units.csv`.
-
-## 8. Promote without rounding
-
-`structural` records strong non-byte evidence.  `exact` requires raw zero
-differences, replay metadata, required evidence, and cold affected-unit replay.
-Near matches remain non-exact regardless of their percentage.
-
-For exact promotion, only target/format evidence is reusable across one
-artifact and only the manifest's two global Oracles may omit it. Every other
-required row must carry the unit ID and exact file extent. The ledger validator
-also rejects missing source/address/replay data and unequal raw slice hashes.
-
-## 9. Preserve durable memory
-
-Update source, ledgers, focused notes, reusable probes, and the handoff. Put
-failed experiments in a concise durable note when they eliminate a plausible
-path. Keep bulky raw output only temporarily below .analysis/; after the
-checked-in evidence/knowledge row and required digests validate, archive the
-small receipt.json records needed for provenance and prune old cold-build
-trees, probe matrices, logs, and disassemblies. Preserve pinned inputs, active
-databases, current boundary-review inputs, and configured replay dependencies.
-The expanded focused/aggregate worktree itself does not need to remain live.
-
-Continue the existing focused note when work advances the same producer,
-boundary, or blocker. Create a new note only for a distinct ownership decision,
-reusable negative result, or replay surface, and add it to the reconstruction
-index. Keep chronological session narration out of durable documentation.
-
-On this workspace, older `.analysis/gpt-web/` outputs and superseded
-exact-unit replay receipts are periodically moved into verified `tar.zst`
-archives under `.analysis/reconstruction/receipt-archive/`. Adjacent
-SHA-256 manifests list every retained file. Restore archived material only for
-real archaeology; the live handoff names the small set of replay trees that
-should remain expanded. Before applying `scripts/prune_analysis.py` to focused
-probes or exact-unit replay trees, archive their top-level results and receipts
-and update `prune_archive` and `prune_archive_manifest` in
-`config/analysis_retention.toml`. Active investigation families can be
-protected with `probe_keep_prefixes` while they are active (for example a
-current `vNNN-*` investigation family) so cleanup never races the live frontier. Apply mode
-verifies the archive bytes and each result it would delete. These private
-archives are ignored local state;
-a fresh clone must rerun checked-in commands to recreate them.
-
-Finish with:
-
-```bash
-python3 scripts/boundary_review/validate_function_boundary_ledger.py
-python3 scripts/boundary_review/report_function_boundaries.py --check
+```sh
 python3 scripts/ci.py
 git diff --check
 ```
+
+Update the concise handoff when the verified runtime frontier changes. Reusable
+findings belong in the evidence/knowledge ledgers; chronological detail is in
+Git and private receipts. Commit messages use `gpt-6.1-sol: ...`.

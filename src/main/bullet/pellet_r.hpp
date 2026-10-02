@@ -24,7 +24,12 @@ extern bullet_t near *pellet_clouds_render[PELLET_COUNT];
 extern int pellets_render_count;
 extern pellet_render_t pellets_render[PELLET_COUNT];
 
+#ifdef TH04P
+void far pellets_render_top();
+void far pellets_render_bottom();
+#else
 void near pellets_render_top();
 void near pellets_render_bottom();
+#endif
 
 #endif

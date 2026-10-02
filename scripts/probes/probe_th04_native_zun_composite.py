@@ -24,9 +24,9 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def invoke(script: str, directory: Path, output: Path) -> dict[str, object]:
+def invoke(script: str, directory: Path, output: Path, *arguments: str) -> dict[str, object]:
     command = [sys.executable, str(ROOT / "scripts/probes" / script),
-               "--output-dir", str(directory)]
+               "--output-dir", str(directory), *arguments]
     done = subprocess.run(command, cwd=ROOT, capture_output=True,
                           text=True, timeout=1200)
     log = output / (directory.name + ".log")
@@ -65,8 +65,9 @@ def main() -> int:
 
     output.mkdir(parents=True)
     builds = {}
-    for name, script in BUILDERS:
-        builds[name] = invoke(script, children[name], output)
+    for name, _script in BUILDERS:
+        builds[name] = invoke("probe_th04_native_zun_parts.py", children[name], output,
+                              "--component", name)
     for label in ("a", "b"):
         builds["resident_" + label] = invoke(
             "probe_th04_native_zun_resident.py", children[label], output

@@ -11,6 +11,12 @@
 	locals
 	option casemap:none
 
+; C++ producers name the native code group MAIN_01. With casemap:none,
+; a lower-case group creates a second frame for the same physical segments.
+ifdef TH04_LARGE_PRODUCT
+main_01 textequ <MAIN_01>
+endif
+
 SHOT_LEVEL_MAX = 9
 
 	extrn _VELOCITY_192_AT_ANGLE:dword

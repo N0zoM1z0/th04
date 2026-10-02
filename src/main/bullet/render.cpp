@@ -11,8 +11,13 @@
 #include "th04/main/scroll.hpp"
 #include "th04/sprites/main_pat.h"
 
+#ifdef TH04P
+extern "C" void far pellets_render_top(void);
+extern "C" void far pellets_render_bottom(void);
+#else
 extern "C" void near pellets_render_top(void);
 extern "C" void near pellets_render_bottom(void);
+#endif
 
 extern "C" void pascal near bullets_render(void)
 {

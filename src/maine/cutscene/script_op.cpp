@@ -18,7 +18,9 @@ static const pixel_t CUTSCENE_PIC_W = 320;
 static const pixel_t CUTSCENE_PIC_H = 200;
 static const int CUTSCENE_PIC_SLOT = 0;
 static const int TEXT_INTERVAL_DEFAULT = 1;
+#ifndef PF_FN_LEN
 static const int PF_FN_LEN = 13;
+#endif
 static const int PI_MASK_COUNT = 4;
 static const int WEIGHT_BOLD = 2;
 

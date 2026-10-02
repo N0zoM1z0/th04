@@ -15,6 +15,9 @@ void near start_extra(void)
 	cfg_save();
 	gaiji_restore();
 	snd_kaja_func(KAJA_SONG_FADE, 10);
+#ifdef TH04P
+	respal_free();
+#endif
 	game_exit();
 	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 }

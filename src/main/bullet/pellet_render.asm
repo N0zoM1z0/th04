@@ -8,12 +8,24 @@ PELLET_TOP_H = 6
 PELLET_BOTTOM_H = 4
 PELLET_BOTTOM_Y = (PELLET_H - PELLET_BOTTOM_H)
 
+ifdef TH04_LARGE_PRODUCT
+PELLET_PROC_DISTANCE textequ <far>
+PELLET_RETURN macro
+    retf
+endm
+else
+PELLET_PROC_DISTANCE textequ <near>
+PELLET_RETURN macro
+    retn
+endm
+endif
+
 public _pellets_render_top
-_pellets_render_top proc near
+_pellets_render_top proc PELLET_PROC_DISTANCE
 	mov	ax, _pellets_render_count
 	or	ax, ax
 	jnz	short @@at_least_one_alive
-	retn
+	PELLET_RETURN
 
 @@at_least_one_alive:
 	push	bp
@@ -91,18 +103,18 @@ _pellets_render_top proc near
 	pop	di
 	pop	si
 	pop	bp
-	retn
+	PELLET_RETURN
 _pellets_render_top endp
 	even
 
 public _pellets_render_bottom
-_pellets_render_bottom proc near
+_pellets_render_bottom proc PELLET_PROC_DISTANCE
 @@rows_after_roll equ <dx>
 
 	mov	ax, _pellets_render_count
 	or	ax, ax
 	jnz	short @@at_least_one_alive
-	retn
+	PELLET_RETURN
 
 @@at_least_one_alive:
 	push	bp
@@ -168,5 +180,5 @@ _pellets_render_bottom proc near
 	pop	di
 	pop	si
 	pop	bp
-	retn
+	PELLET_RETURN
 _pellets_render_bottom endp

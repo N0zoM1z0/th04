@@ -43,6 +43,7 @@ STATE_SOURCES = (
 )
 SOURCE_SUFFIXES = {".c", ".cpp"}
 SOURCE_ROOTS = (ROOT / "src/main", ROOT / "src/shared")
+ASM_CACHE: dict[str, tuple[dict[str, object], Path]] = {}
 LAYOUT_ANCHOR = Path("src/main/layout/main_code_order_anchor.asm")
 
 # These are physical alternatives with duplicate publics.  The manifest's
@@ -61,7 +62,6 @@ SOURCE_EXCLUSIONS = {
 # far display-control owner is still used by OP/MAINE, but linking it here
 # shadows masters.lib and creates unavoidable near-call fixup overflows.
 ASM_EXCLUSIONS = {
-    "src/shared/hardware/display_control.asm",
     # MAIN is large-model: its runtime declaration passes a far string.
     # Keep the near implementation for ZUN/small-model consumers and link the
     # MAIN-owned far ABI implementation instead.
@@ -73,7 +73,6 @@ ASM_EXCLUSIONS = {
 # private context wrapper while keeping the current checked-in body as the
 # source of emitted bytes.  The historical prefix/suffix are context only and
 # never enter product source or exactness credit.
-BODY_ONLY_CONTEXT_REVISION = "0b398a0"
 BODY_ONLY_SOURCES = frozenset({
     "src/main/boss/yuuka5_backdrop.asm",
     "src/main/bullet/invalidate.asm",
@@ -132,34 +131,14 @@ def body_wrapper(source: Path, work: Path, index: int) -> Path:
     if relative not in BODY_ONLY_SOURCES:
         return source
     current = source.read_text(encoding="utf-8")
-    try:
-        historical = subprocess.check_output(
-            ["git", "show", f"{BODY_ONLY_CONTEXT_REVISION}:{relative}"],
-            cwd=ROOT,
-            text=True,
-        )
-    except subprocess.CalledProcessError as exc:
-        raise RuntimeError(
-            f"cannot recover diagnostic context for body-only source {relative}"
-        ) from exc
+    context = (work / relative).with_suffix(".context.inc")
+    prefix, suffix = context.read_text(encoding="utf-8").split("; TH04_NATIVE_BODY\n")
     current_public = re.search(r"(?m)^public\s+", current)
-    historical_public = re.search(r"(?m)^public\s+", historical)
-    if current_public is None or historical_public is None:
+    if current_public is None:
         raise RuntimeError(f"body-only source has no public boundary: {relative}")
-
-    historical_lines = historical.splitlines(keepends=True)
-    suffix_start = None
-    cursor = 0
-    for line in historical_lines:
-        if re.match(r"^\s*[^;\s].*\bendp\s*$", line, re.IGNORECASE):
-            suffix_start = cursor + len(line)
-        cursor += len(line)
-    if suffix_start is None:
-        raise RuntimeError(f"historical wrapper has no endp boundary: {relative}")
 
     # Keep current symbolic constants (notably PLAYFIELD_VRAM_W=48) while
     # recovering only the removed historical context declarations.
-    prefix = historical[:historical_public.start()]
     current_prefix = current[:current_public.start()]
     for line in current_prefix.splitlines():
         match = re.match(r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*.*$", line)
@@ -174,7 +153,7 @@ def body_wrapper(source: Path, work: Path, index: int) -> Path:
             raise RuntimeError(
                 f"diagnostic context lost current constant {name} in {relative}"
             )
-    wrapper_text = prefix + current[current_public.start():] + historical[suffix_start:]
+    wrapper_text = prefix + current[current_public.start():] + suffix
     # TASM's .MODEL derives an implicit segment name from the basename; keep
     # the generated basename alphabetic so a numeric index is not parsed as a
     # label prefix (for example, ``006_YUUK_TEXT``).
@@ -194,7 +173,10 @@ def materialize_body_wrappers(sources: list[Path], work: Path) -> dict[str, Path
     return wrappers
 
 
-def apply_input_trace_overlay(work: Path) -> dict[str, str]:
+def apply_input_trace_overlay(
+    work: Path,
+    stage_override: int | None = None,
+) -> dict[str, object]:
     """Inject private MAIN/EMS/first-frame state recorders into the cold tree.
 
     The recorders are deliberately overlays on copied translation units. They
@@ -224,22 +206,247 @@ static void native_input_trace_once(void)
     sample[5] = static_cast<unsigned char>(js_stat[0] & 0xFF);
     sample[6] = static_cast<unsigned char>(js_stat[0] >> 8);
     sample[7] = static_cast<unsigned char>(stage_frame & 0xFF);
-    int handle = dos_create(trace_fn, 0);
-    if(handle >= 0) {
-        dos_write(handle, sample, sizeof(sample));
-        dos_close(handle);
+    int handle;
+    unsigned done;
+    if(_dos_creat(trace_fn, 0, &handle) == 0) {
+        _dos_write(handle, sample, sizeof(sample), &done);
+        _dos_close(handle);
+    }
+}
+static void native_game_trace(unsigned char marker)
+{
+    static const char hex[] = "0123456789ABCDEF";
+    char trace_fn[] = "GAM00.BIN";
+    int handle;
+    unsigned done;
+    trace_fn[3] = hex[(marker >> 4) & 0x0F];
+    trace_fn[4] = hex[marker & 0x0F];
+    if(_dos_creat(trace_fn, 0, &handle) == 0) {
+        _dos_write(handle, &marker, 1, &done);
+        _dos_close(handle);
     }
 }
 '''
-    patched = original.replace(function_anchor, trace_function + "\n" + function_anchor, 1)
+    patched = original.replace(
+        '#include "src/shared/runtime/api.hpp"\n',
+        '#include <dos.h>\n#include "src/shared/runtime/api.hpp"\n',
+        1,
+    )
+    patched = patched.replace(
+        function_anchor,
+        trace_function + "\n" + function_anchor + "    native_game_trace(0x01);\n",
+        1,
+    )
+    patched = patched.replace(
+        "    frame_delay(1);\n",
+        "    frame_delay(1);\n    native_game_trace(0x02);\n",
+        1,
+    )
+    patched = patched.replace(
+        "    input_reset_sense();\n",
+        "    input_reset_sense();\n    native_game_trace(0x03);\n",
+        1,
+    )
     patched = patched.replace(
         sense_anchor,
-        sense_anchor + "        if(stage_frame == 0) {\n"
+        sense_anchor + "        native_game_trace(0x04);\n"
+        "        if(stage_frame == 0) {\n"
         "            native_input_trace_once();\n"
         "        }\n",
         1,
     )
+    patched = patched.replace(
+        "        stage_vm();\n",
+        "        native_game_trace(0x05);\n"
+        "        stage_vm();\n"
+        "        native_game_trace(0x06);\n",
+        1,
+    )
+    gameplay_markers = (
+        (
+            "        if(bombing == false) {\n",
+            "        native_game_trace(0x10);\n"
+            "        if(bombing == false) {\n",
+        ),
+        (
+            "            bg_render_not_bombing();\n",
+            "            bg_render_not_bombing();\n"
+            "            native_game_trace(0x11);\n",
+        ),
+        (
+            "            bg_render_bombing();\n",
+            "            bg_render_bombing();\n"
+            "            native_game_trace(0x11);\n",
+        ),
+        (
+            "        pointnums_update();\n",
+            "        native_game_trace(0x12);\n"
+            "        pointnums_update();\n",
+        ),
+        (
+            "        gather_update();\n",
+            "        gather_update();\n"
+            "        native_game_trace(0x13);\n",
+        ),
+        (
+            "        stage_render();\n",
+            "        native_game_trace(0x20);\n"
+            "        stage_render();\n"
+            "        native_game_trace(0x21);\n",
+        ),
+        (
+            "        bomb_update_and_render();\n",
+            "        native_game_trace(0x23);\n"
+            "        bomb_update_and_render();\n"
+            "        native_game_trace(0x24);\n",
+        ),
+        (
+            "        boss_fg_render();\n",
+            "        native_game_trace(0x25);\n"
+            "        boss_fg_render();\n"
+            "        native_game_trace(0x26);\n",
+        ),
+        (
+            "        midboss_render();\n",
+            "        native_game_trace(0x27);\n"
+            "        midboss_render();\n"
+            "        native_game_trace(0x28);\n",
+        ),
+        (
+            "        enemies_render();\n",
+            "        native_game_trace(0x29);\n"
+            "        enemies_render();\n"
+            "        native_game_trace(0x2A);\n",
+        ),
+        (
+            "        shots_render();\n",
+            "        native_game_trace(0x2B);\n"
+            "        shots_render();\n"
+            "        native_game_trace(0x2C);\n",
+        ),
+        (
+            "        player_render();\n",
+            "        native_game_trace(0x2D);\n"
+            "        player_render();\n"
+            "        native_game_trace(0x2E);\n",
+        ),
+        (
+            "        grcg_setmode_rmw();\n",
+            "        native_game_trace(0x30);\n"
+            "        grcg_setmode_rmw();\n",
+        ),
+        (
+            "        grcg_off();\n",
+            "        grcg_off();\n"
+            "        native_game_trace(0x31);\n",
+        ),
+        (
+            "        overlay1();\n",
+            "        native_game_trace(0x40);\n"
+            "        overlay1();\n",
+        ),
+        (
+            "        overlay2();\n",
+            "        overlay2();\n"
+            "        native_game_trace(0x41);\n",
+        ),
+        (
+            "        playfield_shake_update_and_render();\n",
+            "        native_game_trace(0x42);\n"
+            "        playfield_shake_update_and_render();\n"
+            "        native_game_trace(0x43);\n",
+        ),
+        (
+            "        graph_accesspage(page_front);\n",
+            "        native_game_trace(0x50);\n"
+            "        graph_accesspage(page_front);\n",
+        ),
+    )
+    for before, after in gameplay_markers:
+        if patched.count(before) != 1:
+            raise RuntimeError(f"gameplay trace overlay anchor is not unique: {before!r}")
+        patched = patched.replace(before, after, 1)
+    patched = patched.replace(
+        "        graph_showpage(page_back);\n",
+        "        native_game_trace(0x07);\n"
+        "        graph_showpage(page_back);\n"
+        "        native_game_trace(0x08);\n",
+        1,
+    )
+    patched = patched.replace(
+        "        score_update_and_render();\n",
+        "        score_update_and_render();\n"
+        "        native_game_trace(0x09);\n",
+        1,
+    )
     path.write_text(patched, encoding="utf-8")
+
+    player_path = work / "src/main/player/render.cpp"
+    player_original = player_path.read_text(encoding="utf-8")
+    player_anchor = "void pascal near player_render(void)\n{\n"
+    if player_original.count(player_anchor) != 1:
+        raise RuntimeError("player trace overlay anchor is not unique")
+    player_trace_function = r'''
+
+// Private diagnostic overlay; this block is never part of maintained source.
+static void native_player_trace(unsigned char marker)
+{
+    static const char hex[] = "0123456789ABCDEF";
+    char trace_fn[] = "PLY00.BIN";
+    int handle;
+    unsigned done;
+    unsigned char sample[2];
+    trace_fn[3] = hex[(marker >> 4) & 0x0F];
+    trace_fn[4] = hex[marker & 0x0F];
+    sample[0] = marker;
+    sample[1] = miss_time;
+    if(_dos_creat(trace_fn, 0, &handle) == 0) {
+        _dos_write(handle, sample, sizeof(sample), &done);
+        _dos_close(handle);
+    }
+}
+'''
+    player_patched = player_original.replace(
+        '#include "x86real.h"\n',
+        '#include <dos.h>\n#include "x86real.h"\n',
+        1,
+    )
+    player_patched = player_patched.replace(
+        player_anchor,
+        player_trace_function + "\n" + player_anchor + "    native_player_trace(0x01);\n",
+        1,
+    )
+    player_replacements = (
+        (
+            "            super_roll_put(left, screen_y, patnum);\n",
+            "            native_player_trace(0x02);\n"
+            "            super_roll_put(left, screen_y, patnum);\n"
+            "            native_player_trace(0x03);\n",
+        ),
+        (
+            "        grcg_setmode_rmw();\n",
+            "        native_player_trace(0x04);\n"
+            "        grcg_setmode_rmw();\n"
+            "        native_player_trace(0x05);\n",
+        ),
+        (
+            "        z_super_roll_put_tiny_16x16_raw(player_option_patnum);\n",
+            "        native_player_trace(0x06);\n"
+            "        z_super_roll_put_tiny_16x16_raw(player_option_patnum);\n"
+            "        native_player_trace(0x07);\n",
+        ),
+        (
+            "        super_roll_put(left, screen_y, 3);\n",
+            "        native_player_trace(0x10);\n"
+            "        super_roll_put(left, screen_y, 3);\n"
+            "        native_player_trace(0x11);\n",
+        ),
+    )
+    for before, after in player_replacements:
+        if player_patched.count(before) == 0:
+            raise RuntimeError(f"player trace overlay anchor is missing: {before!r}")
+        player_patched = player_patched.replace(before, after, 1)
+    player_path.write_text(player_patched, encoding="utf-8")
 
     main_path = work / "src/main/core/main.cpp"
     main_original = main_path.read_text(encoding="utf-8")
@@ -272,6 +479,13 @@ static void native_main_trace(unsigned char marker)
         main_trace_function + "\n" + main_anchor + "    native_main_trace(0);\n",
         1,
     )
+    stage_override_source = ""
+    if stage_override is not None:
+        stage_override_source = (
+            f"        resident->stage = {stage_override};\n"
+            f"        resident->stage_ascii = ('0' + {stage_override});\n"
+            "        resident->demo_num = 0;\n"
+        )
     main_replacements = (
         ("    if(!cfg_load_resident_ptr()) {\n", "    if(!cfg_load_resident_ptr()) {\n"),
         ("        return;\n", "        native_main_trace(0xF0);\n        return;\n"),
@@ -299,7 +513,12 @@ static void native_main_trace(unsigned char marker)
             "    native_main_trace(5);\n",
         ),
         ("    for(;;) {\n", "    native_main_trace(6);\n    for(;;) {\n"),
-        ("        stage_session_init();\n", "        stage_session_init();\n        native_main_trace(7);\n"),
+        (
+            "        stage_session_init();\n",
+            stage_override_source
+            + "        stage_session_init();\n"
+            "        native_main_trace(7);\n",
+        ),
         ("        gameplay_loop();\n", "        native_main_trace(8);\n        gameplay_loop();\n        native_main_trace(9);\n"),
         ("    GameExecl(op_fn);\n", "    native_main_trace(0xA0);\n    GameExecl(op_fn);\n"),
     )
@@ -361,9 +580,12 @@ static void native_ems_trace(unsigned char marker)
 // Private diagnostic overlay; this block is never part of maintained source.
 static void native_stage_trace(unsigned char marker)
 {
-    const char trace_fn[] = "MAIN.BIN";
+    static const char hex[] = "0123456789ABCDEF";
+    char trace_fn[] = "STG00.BIN";
     int handle;
     unsigned done;
+    trace_fn[3] = hex[(marker >> 4) & 0x0F];
+    trace_fn[4] = hex[marker & 0x0F];
     if(_dos_creat(trace_fn, 0, &handle) == 0) {
         _dos_write(handle, &marker, 1, &done);
         _dos_close(handle);
@@ -391,6 +613,28 @@ static void native_stage_trace(unsigned char marker)
         1,
     )
     stage_replacements = (
+        (
+            "    if(load_playchar_resources != 0) {\n",
+            "    if(load_playchar_resources != 0) {\n"
+            "        native_stage_trace(0x70);\n",
+        ),
+        (
+            "        super_entry_bfnt(miko16_bft);\n",
+            "        super_entry_bfnt(miko16_bft);\n"
+            "        native_stage_trace(0x71);\n",
+        ),
+        (
+            "        for(int i = 20; i < 120; i++) {\n"
+            "            super_convert_tiny(i);\n"
+            "        }\n",
+            "        native_stage_trace(0x72);\n"
+            "        for(int i = 20; i < 120; i++) {\n"
+            "            if(super_convert_tiny(i) != 0) {\n"
+            "                native_stage_trace(0x81);\n"
+            "            }\n"
+            "        }\n"
+            "        native_stage_trace(0x73);\n",
+        ),
         (
             "    native_stage_trace(0x64);\n    graph_accesspage(0);\n",
             "    native_stage_trace(0x64);\n"
@@ -448,20 +692,82 @@ static void native_stage_trace(unsigned char marker)
             "src/main/core/main.cpp",
             "src/main/ems.cpp",
             "src/main/stage/session_init.cpp",
+            "src/main/player/render.cpp",
         ],
         "original_sha256": {
             "src/main/core/gameplay_loop.cpp": sha256_bytes(original.encode("utf-8")),
             "src/main/core/main.cpp": sha256_bytes(main_original.encode("utf-8")),
             "src/main/ems.cpp": sha256_bytes(ems_original.encode("utf-8")),
             "src/main/stage/session_init.cpp": sha256_bytes(stage_original.encode("utf-8")),
+            "src/main/player/render.cpp": sha256_bytes(player_original.encode("utf-8")),
         },
         "overlay_sha256": {
             "src/main/core/gameplay_loop.cpp": sha256(path),
             "src/main/core/main.cpp": sha256(main_path),
             "src/main/ems.cpp": sha256(ems_path),
             "src/main/stage/session_init.cpp": sha256(stage_path),
+            "src/main/player/render.cpp": sha256(player_path),
         },
+        "stage_override": stage_override,
     }
+
+
+def apply_graphics_trace_overlay(work: Path) -> dict[str, object]:
+    """Record loaded MPN bytes and the cache/initial rendered VRAM planes."""
+    helper = r'''
+#include <dos.h>
+static void native_dump_vram(const char *filename)
+{
+    int handle;
+    unsigned written;
+    if(_dos_creat(filename, 0, &handle)) return;
+    _dos_write(handle, (void far *)MK_FP(0xA800, 0), 32000, &written);
+    _dos_write(handle, (void far *)MK_FP(0xB000, 0), 32000, &written);
+    _dos_write(handle, (void far *)MK_FP(0xB800, 0), 32000, &written);
+    _dos_write(handle, (void far *)MK_FP(0xE000, 0), 32000, &written);
+    _dos_close(handle);
+}
+'''
+    replacements = {
+        "src/main/formats/mpn_load.cpp": (
+            "\tfile_read(mpn.images, mpn_size);",
+            r'''
+    int native_dump_handle;
+    unsigned native_dump_written;
+    if(!_dos_creat("MPNDUMP.BIN", 0, &native_dump_handle)) {
+        _dos_write(native_dump_handle, &mpn, sizeof(mpn), &native_dump_written);
+        _dos_write(native_dump_handle, mpn.images, 128, &native_dump_written);
+        _dos_write(native_dump_handle, &Palettes, sizeof(Palettes), &native_dump_written);
+        _dos_close(native_dump_handle);
+    }
+''', "#include <dos.h>\n"),
+        "src/main/formats/mpn_upload.cpp": (
+            "\tmpn_free(0);", '\n\tnative_dump_vram("VRAMC.BIN");\n', helper),
+        "src/main/stage/session_init.cpp": (
+            "    graph_showpage(0);\n    tiles_render_all();",
+            '\n    native_dump_vram("VRAMT.BIN");\n', helper),
+    }
+    records = {}
+    for relative, (anchor, insertion, prefix) in replacements.items():
+        path = work / relative
+        original = path.read_text(encoding="utf-8")
+        if original.count(anchor) != 1:
+            raise RuntimeError(f"graphics trace anchor is not unique: {relative}")
+        position = original.index(anchor)
+        if relative.endswith("mpn_upload.cpp"):
+            patched = original[:position] + insertion + original[position:]
+        else:
+            position += len(anchor)
+            patched = original[:position] + insertion + original[position:]
+        # TC4J's segment option pragmas must precede any header declarations.
+        include = re.search(r"(?m)^#include\s", patched)
+        if include is None:
+            raise RuntimeError(f"graphics trace source has no include boundary: {relative}")
+        patched = patched[:include.start()] + prefix + patched[include.start():]
+        path.write_text(patched, encoding="utf-8")
+        records[relative] = {"original_sha256": sha256_bytes(original.encode()),
+                             "overlay_sha256": sha256(path)}
+    return records
 
 
 def index_value(data: bytes, cursor: int) -> tuple[int, int]:
@@ -628,6 +934,21 @@ def assemble_asm(source: Path, index: int, work: Path, output: Path,
         relative = source.relative_to(ROOT).as_posix()
     obj = work / "obj" / subdir / f"{index:03d}.obj"
     obj.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        logical_relative = logical_source.relative_to(ROOT).as_posix()
+    except ValueError:
+        logical_relative = logical_source.relative_to(work).as_posix()
+    staged_source = work / relative
+    if logical_relative in ASM_CACHE:
+        cached, previous_obj = ASM_CACHE[logical_relative]
+        if (cached["assembly_source"] == relative
+                and cached["assembly_source_sha256"] == sha256(staged_source)
+                and cached["source_sha256"] == sha256(logical_source)):
+            shutil.copy2(previous_obj, obj)
+            record = dict(cached)
+            record.update(index=index, object=obj.relative_to(work).as_posix(),
+                          reused_from=str(previous_obj), log=None)
+            return record
     source_win = relative.replace("/", "\\")
     object_win = obj.relative_to(work).as_posix().replace("/", "\\")
     command = [
@@ -732,14 +1053,29 @@ def main() -> int:
                         help="audit the frozen MAIN routing manifest without building")
     parser.add_argument("--require-link", action="store_true",
                         help="return failure unless TLINK exits zero with no errors")
+    parser.add_argument("--reuse-cpp-from", type=Path,
+                        help="reuse C++ objects when the staged C/C++ include tree is unchanged")
+    parser.add_argument("--reuse-asm-from", type=Path,
+                        help="reuse ASM objects when source and assembly includes are unchanged")
+    parser.add_argument("--graphics-trace", action="store_true",
+                        help="private MPN/cache/initial-VRAM file checkpoints")
     parser.add_argument(
         "--input-trace",
         action="store_true",
         help="inject a private first-frame INPUT.BIN state recorder",
     )
+    parser.add_argument(
+        "--force-stage",
+        type=int,
+        choices=range(7),
+        help="private diagnostic overlay: force resident stage 0..6",
+    )
     args = parser.parse_args()
     if args.check_manifest:
-        if args.output_dir or args.without_support or args.require_link:
+        if (args.output_dir or args.without_support or args.require_link
+                or args.input_trace or args.force_stage is not None
+                or args.graphics_trace
+                or args.reuse_cpp_from or args.reuse_asm_from):
             parser.error("--check-manifest cannot be combined with build options")
         result = audit()
         print(json.dumps({"artifact": "th04-main", "manifest": result}, sort_keys=True))
@@ -765,10 +1101,73 @@ def main() -> int:
     output.mkdir(parents=True)
     work = output / "source"
     shutil.copytree(ROOT / "src", work / "src")
-    input_trace = apply_input_trace_overlay(work) if args.input_trace else None
+    input_trace = (
+        apply_input_trace_overlay(work, args.force_stage)
+        if args.input_trace or args.force_stage is not None
+        else None
+    )
+    graphics_trace = apply_graphics_trace_overlay(work) if args.graphics_trace else None
+    cpp_cache = {}
+    if args.reuse_cpp_from:
+        previous = args.reuse_cpp_from.resolve()
+        if not previous.is_relative_to(PRIVATE) or previous == output:
+            parser.error("C++ cache must be an earlier private build directory")
+        prior = json.loads((previous / "receipt.json").read_text(encoding="utf-8"))
+        if prior["compiler_flags"] != list(FLAGS) or prior["runner_sha256"] != RUNNER_SHA256:
+            raise RuntimeError("C++ cache toolchain/options differ")
+        for record in prior["root_records"]:
+            staged = work / record["source"]
+            if (record["compile_exit"] != 0 or not record["omf_valid"]
+                    or not staged.is_file() or sha256(staged) != record["source_sha256"]):
+                continue
+            obj = previous / "source" / record["objects"][0]
+            if sha256(obj) != record["object_sha256"]:
+                raise RuntimeError("C++ cache object identity drift")
+            dependencies = describe_omf(obj.read_bytes())["dependency_paths"]
+            unchanged = bool(dependencies)
+            for dependency in dependencies:
+                dependency = dependency.replace("\\", "/")
+                # Vendor include files are covered by the toolchain attestation.
+                if dependency.upper().startswith("C:/TC4/"):
+                    continue
+                old = previous / "source" / dependency
+                current = (staged if dependency == record["compile_alias"]
+                           else work / dependency)
+                if (not old.is_file() or not current.is_file()
+                        or sha256(old) != sha256(current)):
+                    unchanged = False
+                    break
+            if unchanged:
+                cpp_cache[record["source"]] = (record, obj)
     sprite_sources, sprite_asset_records = generate_sprite_sources(
         ROOT, work / "generated/sprites"
     )
+    body_wrappers = materialize_body_wrappers(assembly_sources, work)
+    if args.reuse_asm_from:
+        previous = args.reuse_asm_from.resolve()
+        if not previous.is_relative_to(PRIVATE) or previous == output:
+            parser.error("ASM cache must be an earlier private build directory")
+        prior = json.loads((previous / "receipt.json").read_text(encoding="utf-8"))
+        if prior["runner_sha256"] != RUNNER_SHA256 or prior["compiler_flags"] != list(FLAGS):
+            raise RuntimeError("ASM cache toolchain/options differ")
+        for record in prior["asm_records"] + prior["state_records"]:
+            if record["assemble_exit"] != 0 or not record["omf_valid"]:
+                continue
+            obj = previous / "source" / record["object"]
+            if sha256(obj) != record["object_sha256"]:
+                raise RuntimeError("ASM cache object identity drift")
+            dependencies = describe_omf(obj.read_bytes())["dependency_paths"]
+            unchanged = bool(dependencies)
+            for dependency in dependencies:
+                dependency = dependency.replace("\\", "/")
+                old = previous / "source" / dependency
+                current = work / dependency
+                if (not old.is_file() or not current.is_file()
+                        or sha256(old) != sha256(current)):
+                    unchanged = False
+                    break
+            if unchanged:
+                ASM_CACHE[record["source"]] = (record, obj)
     env = os.environ.copy()
     env.update(WINEPREFIX=str(ROOT / ".analysis/toolchain/wineprefix"),
                WINEDEBUG="-all", MSDOS_PATH=r"C:\TC4\BIN;C:\TASM50\BIN")
@@ -780,10 +1179,22 @@ def main() -> int:
         relative = source.relative_to(ROOT).as_posix()
         alias = aliases.get(relative, EXTRA_ALIASES.get(
             relative, f"th04/u{index:03d}{source.suffix.lower()}"))
-        root_records.append(compile_cpp(source, alias, index, work, output, env))
+        if relative in cpp_cache:
+            record, cached = cpp_cache[relative]
+            record = dict(record)
+            obj = work / f"obj/cpp/{index:03d}" / cached.name
+            obj.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(cached, obj)
+            compile_alias = work / str(record["compile_alias"])
+            compile_alias.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(work / relative, compile_alias)
+            record.update(index=index, objects=[obj.relative_to(work).as_posix()],
+                          reused_from=str(args.reuse_cpp_from), log=None)
+            root_records.append(record)
+        else:
+            root_records.append(compile_cpp(source, alias, index, work, output, env))
     state_records = [assemble_state(source, index, work, output, env)
                      for index, source in enumerate(STATE_SOURCES)]
-    body_wrappers = materialize_body_wrappers(assembly_sources, work)
     asm_records = [
         assemble_asm(
             body_wrappers.get(source.relative_to(ROOT).as_posix(), source),
@@ -845,6 +1256,7 @@ def main() -> int:
             "sha256": SUPPORT_SHA256,
         },
         "compiler_flags": list(FLAGS),
+        "reused_cpp_count": len(cpp_cache),
         "source_tree_sha256": source_tree_digest(roots),
         "assembly_tree_sha256": source_tree_digest(assembly_sources),
         "root_count": len(roots),
@@ -860,9 +1272,15 @@ def main() -> int:
         "asm_assemble_pass": len(valid_asm),
         "asm_assemble_fail": len(asm_records) - len(valid_asm),
         "asm_state_exclusions": sorted(state_source_names),
-        "body_only_context_revision": BODY_ONLY_CONTEXT_REVISION,
+        "body_only_contexts": {
+            source: {"path": str(Path(source).with_suffix(".context.inc")),
+                     "sha256": sha256((work / source).with_suffix(".context.inc"))}
+            for source in sorted(BODY_ONLY_SOURCES)
+        },
         "body_only_context_sources": sorted(BODY_ONLY_SOURCES),
         "input_trace": input_trace,
+        "graphics_trace": graphics_trace,
+        "stage_override": args.force_stage,
         "sprite_asset_records": sprite_asset_records,
         "sprite_sources": sprite_records,
         "sprite_assemble_pass": len(valid_sprites),
@@ -876,12 +1294,10 @@ def main() -> int:
         },
         "link": link_result,
         "limit": (
-            "Diagnostic only: scaffold th04_main.asm, final MZ/layout, relocation "
-            "agreement, and PC-98 startup remain open. Twelve body-only ASM "
-            "owners use private historical context wrappers; the checked-in "
-            "current bodies remain the emitted source and wrappers earn no "
-            "exactness credit. Sprite inputs are locally supplied reference BMPs "
-            "replayed in a private tree; support-library symbols are calibration."
+            "Native product build; runtime validation is separate. Twelve "
+            "body-only ASM owners use checked-in declaration contexts. Sprite "
+            "inputs are locally supplied reference BMPs. This build makes no "
+            "byte-exactness claim; optional support-library mode is calibration."
         ),
     }
     (output / "receipt.json").write_text(
@@ -901,7 +1317,13 @@ def main() -> int:
         "mz": bool(link_result["mz"]),
     }, sort_keys=True))
     if args.require_link:
-        return 0 if link_result["exit"] == 0 and not link_result["errors"] else 1
+        complete = (len(valid_cpp) == len(root_records)
+                    and len(valid_state) == len(state_records)
+                    and len(valid_asm) == len(asm_records)
+                    and len(valid_sprites) == len(sprite_records)
+                    and link_result["exit"] == 0 and not link_result["errors"]
+                    and link_result["mz"] and "error" not in link_result["mz"])
+        return 0 if complete else 1
     return 0
 
 

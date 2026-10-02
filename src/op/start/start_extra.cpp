@@ -1,6 +1,9 @@
 #include <process.h>
 
 #include "src/shared/platform/types.hpp"
+#ifdef TH04P
+#include "src/shared/runtime/api.hpp"
+#endif
 #include "src/shared/config/resident.hpp"
 #include "src/shared/hardware/graphics.hpp"
 #include "src/shared/sound/api.hpp"

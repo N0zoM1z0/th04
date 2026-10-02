@@ -22,7 +22,7 @@ extrn _tile_ring:word
 extrn EGC_OFF:far
 
 EGC_START_COPY_INLINED macro
-	xor	al, al
+	mov	al, 0
 	out	7Ch, al
 	mov	al, 7
 	out	6Ah, al
@@ -38,13 +38,14 @@ EGC_START_COPY_INLINED macro
 	mov	ax, 00FFh
 	mov	dx, 4A2h
 	out	dx, ax
-	mov	ax, 2300h
+	; Copy all four latched VRAM planes, rather than broadcast CPU data.
+	mov	ax, 3100h
 	mov	dx, 4A4h
 	out	dx, ax
 	mov	ax, 0FFFFh
 	mov	dx, 4A8h
 	out	dx, ax
-	xor	ax, ax
+	mov	ax, 0
 	mov	dx, 4ACh
 	out	dx, ax
 	mov	ax, 0Fh
