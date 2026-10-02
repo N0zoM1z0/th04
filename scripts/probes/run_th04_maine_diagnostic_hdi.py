@@ -51,6 +51,8 @@ def main() -> int:
                         help="capture an additional frame before the final frame; repeatable")
     parser.add_argument("--audio", action="store_true",
                         help="enable the mixer; host-key+W input events toggle WAV capture")
+    parser.add_argument("--debug-port-e9", action="store_true",
+                        help="record private guest checkpoints emitted through Bochs port E9")
     parser.add_argument("--stop-after-frame", action="store_true",
                         help="close DOSBox-X through Ctrl+F9 after the final checkpoint")
     parser.add_argument("--time-limit", type=int, default=20)
@@ -138,6 +140,9 @@ def main() -> int:
     config = output / "dosbox-x-x11.conf"
     runtime_conf = conf_bytes.replace(old, b"videodriver       = x11")
     runtime_conf = runtime_conf.replace(b"[dosbox]\n", b"[dosbox]\nquit warning = false\n")
+    if args.debug_port_e9:
+        runtime_conf = runtime_conf.replace(
+            b"[dosbox]\n", b"[dosbox]\nbochs debug port e9 = true\n")
     if args.audio:
         runtime_conf = runtime_conf.replace(b"nosound = true", b"nosound = false")
         runtime_conf = runtime_conf.replace(b"[dosbox]\n", b"[dosbox]\ncaptures = "
@@ -150,6 +155,9 @@ def main() -> int:
         str(args.time_limit), "-c", f'imgmount 2 "{image}" -t hdd -fs none',
         "-c", "boot -l c",
     ]
+    debug_log = output / "debug-port-e9.log"
+    if args.debug_port_e9:
+        command.extend(["-set", f"log logfile={debug_log}"])
     env = os.environ.copy()
     env.update({
         "SDL_VIDEODRIVER": "x11", "SDL_AUDIODRIVER": "dummy",
@@ -250,6 +258,11 @@ def main() -> int:
             process.communicate(timeout=10)
         log_stream.close()
     log = boot_log.read_text(encoding="utf-8", errors="replace")
+    if args.debug_port_e9:
+        if not debug_log.is_file():
+            raise ValueError("Bochs debug port logging did not produce a log")
+        log += debug_log.read_text(encoding="utf-8", errors="replace")
+        boot_log.write_text(log, encoding="utf-8")
     if sha(source_image.read_bytes()) != prep["diagnostic_hdi_sha256"]:
         raise ValueError("prepared source HDI was modified")
     fs = Fat12(bytearray(image.read_bytes()))
@@ -404,6 +417,7 @@ def main() -> int:
         "game_trace_files_hex": game_trace_files,
         "player_trace_files_hex": player_trace_files,
         "boot_log_sha256": sha(log.encode()),
+        "debug_port_e9": args.debug_port_e9,
         "frame_sha256": sha(screenshot.read_bytes()),
     }
     if artifact == "th04-maine":

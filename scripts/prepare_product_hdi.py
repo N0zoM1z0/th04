@@ -50,6 +50,8 @@ def main() -> int:
                         help="prepare the pinned original executables as a runtime baseline")
     parser.add_argument("--lives", type=int, choices=range(1, 7),
                         help="starting configuration lives in this disposable image")
+    parser.add_argument("--rank", type=int, choices=range(4),
+                        help="starting configuration rank: Easy=0 through Lunatic=3")
     parser.add_argument("--bombs", type=int, choices=range(3),
                         help="starting configuration bombs in this disposable image")
     parser.add_argument("--config-from-run", type=Path,
@@ -94,7 +96,8 @@ def main() -> int:
         replace_file(fs, entry, data)
         installed[product] = record
     starting_options = None
-    if args.lives is not None or args.bombs is not None or args.config_from_run is not None:
+    if any(value is not None for value in (
+            args.rank, args.lives, args.bombs, args.config_from_run)):
         entry = fs.find_entry(offsets, b"MIKO    CFG")
         config = fs.file_bytes(u16(fs.image, entry + 26), u32(fs.image, entry + 28))
         if len(config) != 10:
@@ -119,6 +122,8 @@ def main() -> int:
             updated = bytearray(saved)
             config_source = {"run": str(run), "receipt_sha256": sha(run_receipt_data),
                              "executed_hdi_sha256": sha(executed), "config_sha256": sha(saved)}
+        if args.rank is not None:
+            updated[0] = args.rank
         if args.lives is not None:
             updated[1] = args.lives
         if args.bombs is not None:
@@ -126,7 +131,7 @@ def main() -> int:
         updated[9] = sum(updated[:6]) & 255
         replace_file(fs, entry, updated)
         starting_options = {"options_hex": bytes(updated[:6]).hex(),
-                            "lives": updated[1], "bombs": updated[2],
+                            "rank": updated[0], "lives": updated[1], "bombs": updated[2],
                             "config_source": config_source,
                             "before_sha256": sha(config), "after_sha256": sha(updated)}
     autoexec = AUTOEXEC_PREFIX + b"CALL GAME.BAT\r\nECHO EXIT >> A:\\DIAG.TXT\r\n\x1a"

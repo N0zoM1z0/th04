@@ -1192,6 +1192,8 @@ def main() -> int:
                         help="private MPN/cache/initial-VRAM file checkpoints")
     parser.add_argument("--state-trace", action="store_true",
                         help="private sparse input/player/shot/bomb/score records")
+    parser.add_argument("--fault-trace", action="store_true",
+                        help="private gameplay call and decimal DIV checkpoints to port E9")
     parser.add_argument(
         "--input-trace",
         action="store_true",
@@ -1207,7 +1209,7 @@ def main() -> int:
     if args.check_manifest:
         if (args.output_dir or args.without_support or args.require_link
                 or args.input_trace or args.force_stage is not None
-                or args.graphics_trace or args.state_trace
+                or args.graphics_trace or args.state_trace or args.fault_trace
                 or args.reuse_cpp_from or args.reuse_asm_from):
             parser.error("--check-manifest cannot be combined with build options")
         result = audit()
@@ -1241,6 +1243,10 @@ def main() -> int:
     )
     graphics_trace = apply_graphics_trace_overlay(work) if args.graphics_trace else None
     state_trace = apply_state_trace_overlay(work) if args.state_trace else None
+    fault_trace = None
+    if args.fault_trace:
+        from th04_main_fault_trace import apply_fault_trace_overlay
+        fault_trace = apply_fault_trace_overlay(work)
     cpp_cache = {}
     if args.reuse_cpp_from:
         previous = args.reuse_cpp_from.resolve()
@@ -1415,6 +1421,7 @@ def main() -> int:
         "input_trace": input_trace,
         "graphics_trace": graphics_trace,
         "state_trace": state_trace,
+        "fault_trace": fault_trace,
         "stage_override": args.force_stage,
         "sprite_asset_records": sprite_asset_records,
         "sprite_sources": sprite_records,

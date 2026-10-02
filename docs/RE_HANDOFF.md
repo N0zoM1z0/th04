@@ -61,6 +61,17 @@ waveform or general timing equality is not claimed.
 The native v1182 reboot loads those saved options into the menu and exits to
 DOS with the complete ten-byte configuration unchanged.
 
+The first-stage regression is currently failing. With ordinary Easy/six-life/
+two-Bomb options and recorded shots, uninstrumented native v1183 stops in ZUN's
+STOP modal by checkpoint 155; originals continue to Orange's dialogue and fight.
+Removing only host WAV-capture chords still reproduces the native stop (v1184).
+Private call checkpoints reach `bullets_update()` at stage_frame 3996 before a
+Divide error (v1188); adding decimal checkpoints changes the last frame to 3958
+but again exits there. The observed digit divisors remain 1000/100/10. Extra
+observer layouts can instead reach COPY/STOP modals. The initial damaged call
+or memory write is unresolved; do not equate these secondary symptoms with a
+confirmed arithmetic bug or accept first-boss gameplay.
+
 Current runtime receipts:
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/receipt.json`
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/handoff-state.json`
@@ -70,6 +81,8 @@ Current runtime receipts:
 - `.analysis/runtime/candidates/native-op-menu-v1181-20261002/run/handoff-state.json`
 - `.analysis/runtime/candidates/original-op-menu-v1181-20261002/run/handoff-state.json`
 - `.analysis/runtime/candidates/native-op-reload-v1182-20261002/run/handoff-state.json`
+- `.analysis/runtime/candidates/native-first-boss-nochord-v1184-20261002/run/receipt.json`
+- `.analysis/runtime/candidates/native-fault-calls-v1188-20261002/fault6.log`
 
 ## Build and validation
 
@@ -89,7 +102,8 @@ Only one Borland/Wine build may run at a time. `--only main` selects one product
 `--main-cpp-cache`, `--op-cache` and `--maine-cache` reuse only verified inputs.
 `prepare_product_hdi.py --original` creates an attested original baseline;
 `--lives 1 --bombs 0` sets an ordinary configuration fixture in the disposable
-image. Runtime `--checkpoint-second` captures intermediate frames; held keys use
+image; `--rank 0` selects Easy. Runtime `--checkpoint-second` captures
+intermediate frames; held keys use
 `--input-event down:z@SECOND` / `up:z@SECOND`. `--key-delay-ms 300` gives menu taps
 adequate duration. Always use new output paths. Private state probes do not
 replace uninstrumented runs. `inspect_th04_handoff_trace.py --require-score-saved`
@@ -98,10 +112,15 @@ Use `--scenario config/runtime/scenarios/op_menu.json` for the normal menu
 regression and `inspect_th04_handoff_trace.py --require-config-options
 030401020101` to check persistence. `prepare_product_hdi.py --config-from-run
 RUN_DIR` seeds a fresh disposable image with a verified saved configuration.
+Use `--scenario config/runtime/scenarios/main_stage1.json` with Easy/six-life/
+two-Bomb options to reproduce the current first-stage failure. Private MAIN
+`--fault-trace` emits gameplay call and decimal DIV checkpoints; the runtime
+runner's `--debug-port-e9` captures them without losing boot-log smoke markers.
 
 ## Next work
 
-1. Validate bosses, later stages, endings, Extra and character/rank variants.
+1. Fix the first-stage `bullets_update()` failure, then validate bosses, later
+   stages, endings, Extra and character/rank variants.
 2. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
 
