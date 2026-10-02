@@ -17,14 +17,14 @@ reproducible, evidence-backed source reconstruction of `OP.EXE`, `MAIN.EXE`,
 `MAINE.EXE`, and `ZUN.COM`.  Original executables and game data are supplied
 locally by the owner and are never committed.
 
-The framework deliberately does not copy ReC98's workflow.  ReC98 is an
-important source of PC-98, Borland, and game-specific knowledge; N0zoM1z0's
-TH08/TH095/TH105 repositories are useful control-plane references.  This
-project combines those lessons with stricter machine-readable evidence and a
-multi-dimensional Oracle stack designed for short, resumable agent sessions.
-Nothing from an upstream reconstruction is accepted on reputation: imported
-source must pass this repository's own target, build, layout, relocation, raw-
-byte, and replay gates.
+The current goal is **standalone builds and normal PC-98 gameplay**. Native
+builds need not reproduce original executable bytes. The historical per-function
+matching ledgers remain available; MAIN's last two exactness cases are deferred.
+ReC98 is a migration reference for local shared implementations.
+
+Start with [the current build handoff](docs/RE_HANDOFF.md). It contains the
+commands, verified runtime frontier and remaining work. Historical focused
+notes are indexed separately and are not a current task list.
 
 ## Exact targets
 
@@ -52,15 +52,12 @@ artifacts belongs under `src/shared/`. Exact, structural, and source-present
 state is tracked in the CSV ledgers, never with `exact/`, `partials/`, or
 `modules/` directories.
 
-The intended build consumes checked-in TH04 source and headers plus the pinned
-Borland/TASM/TLINK environment and documented libraries. Direct ReC98 and
-TH01/TH02/TH03/TH05 includes are quarantined behind the reusable
-[`compat/rec98/`](compat/rec98/) forwarding layer and are never authored
-progress. The current reconstruction is not yet a complete standalone build:
-the strict exact replay still uses pinned ReC98 as clean build scaffolding for
-bounded recovered units. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for
-the ownership and migration rules, and
-[`docs/SOURCE_LAYOUT.md`](docs/SOURCE_LAYOUT.md) for the source placement map.
+The product build uses local TH04 source/headers and the pinned Borland tools.
+The compatibility include audit currently has zero remaining forwarders. OP,
+MAINE and ZUN have source-only native builds; MAIN link/runtime integration
+remains active. Historical byte-match replay uses a separate ReC98 scaffold.
+See [architecture](docs/ARCHITECTURE.md) for ABI ownership and
+[source layout](docs/SOURCE_LAYOUT.md) for placement.
 
 ## Fresh machine setup
 
