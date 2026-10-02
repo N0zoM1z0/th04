@@ -107,10 +107,17 @@ including 27 instruction bytes and complete RAM snapshots. Calibration:
 For interactive testing, the separate `--invincible-main` build clears pending
 player hits before miss processing in a private staged source overlay. Its four
 products build and pass MZ/link audits; the normal published MAIN is unchanged.
-`scripts/play_invincible.py` launches the prepared image in a persistent X11
-DOSBox-X window with PulseAudio. The window booted into visible gameplay. This
-cheat build is not evidence for normal-game completion. A long native v1220
-route reached Game Over after Continues and was stopped at 1250 seconds; a
+`scripts/export_windows_play.py` packages the four verified products, saved HDI,
+Windows DOSBox-X and `start-th04.bat` at
+`D:\Entertainment\Game\Touhou\th04-reconstruct`. The Windows 2023.05.01
+emulator reached OP with the user's dynamic/Pentium/15000/32 MB profile; Z/X
+worked after switching Windows input to English. The splash remains slow.
+`super_put_rect()` currently calls a per-pixel C++ planar renderer inside the
+logo's 256-object loop; this is a performance hypothesis, not yet a measured
+cause. The Linux emulator aborts after PC-98 reset with dynamic core, so its
+private launcher uses normal/Pentium/15000/32 MB. Neither playable profile is
+normal-game acceptance evidence. A long native v1220 route reached Game Over
+after Continues and was stopped at 1250 seconds; a
 pinned-original v1221 control showed a guest interrupt/reset screen at 455.
 Neither provides a later-stage acceptance checkpoint.
 
@@ -170,11 +177,14 @@ all executed products and locates captured code against the relocated MAIN/MAP.
 
 ## Next work
 
-1. Inspect the ordinary sweep at
+1. Profile the Windows splash against the same emulator's original-game run,
+   then optimize the TH04-local sprite renderer if the per-pixel path is the
+   cause. Preserve the current player's Windows HDI until the session ends.
+2. Inspect the completed ordinary sweep at
    `.analysis/runtime/candidates/native-empty-ring-v1217-20261002/run-sweep-v1222`.
    Validate later stages, endings, Extra and character/rank variants; the
    independent playable invincible image can expose additional integration bugs.
-2. Compare rendering/audio under another PC-98 emulator before assigning
+3. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
 
 ## Navigation

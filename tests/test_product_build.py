@@ -12,11 +12,26 @@ SPEC = importlib.util.spec_from_file_location(
     "th04_product_build", Path(__file__).resolve().parents[1] / "scripts/build.py")
 BUILD = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(BUILD)
+PLAY_SPEC = importlib.util.spec_from_file_location(
+    "th04_play_invincible", Path(__file__).resolve().parents[1] / "scripts/play_invincible.py")
+PLAY = importlib.util.module_from_spec(PLAY_SPEC)
+PLAY_SPEC.loader.exec_module(PLAY)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import prepare_product_hdi as IMAGE
 
 
 class ProductBuildTests(unittest.TestCase):
+    def test_private_linux_play_profile_uses_bootable_speed_settings(self):
+        baseline = (Path(__file__).resolve().parents[1] /
+                    "config/runtime/dosbox-x-headless.conf").read_bytes()
+        profile = PLAY.play_config(baseline)
+        for setting in (b"core    = normal", b"cputype = pentium",
+                        b"cycles  = fixed 15000", b"memsize                  = 32",
+                        b"videodriver       = x11", b"nosound = false"):
+            self.assertIn(setting, profile)
+        with self.assertRaisesRegex(ValueError, "videodriver"):
+            PLAY.play_config(profile)
+
     def test_invincible_variant_cannot_publish_over_normal_build(self):
         with patch.object(sys, "argv", ["build.py", "--invincible-main"]):
             with self.assertRaises(SystemExit) as failure:

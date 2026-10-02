@@ -33,6 +33,27 @@ def live_dosbox(pid: int, image: Path) -> bool:
         return False
 
 
+def play_config(pinned: bytes) -> bytes:
+    """Use the Windows TH04 JP speed settings that boot on this DOSBox-X host."""
+    # Linux DOSBox-X 2024.03.01 aborts after the PC-98 reset with dynamic core;
+    # normal core plus the other three Windows CPU settings passed a boot probe.
+    changes = (
+        (b"videodriver       = dummy", b"videodriver       = x11"),
+        (b"nosound = true", b"nosound = false"),
+        (b"memsize                  = 16", b"memsize                  = 32"),
+        (b"cputype = auto", b"cputype = pentium"),
+        (b"cycles  = fixed 8000", b"cycles  = fixed 15000"),
+    )
+    for old, new in changes:
+        if pinned.count(old) != 1:
+            raise ValueError(f"unexpected DOSBox-X configuration setting: {old!r}")
+        pinned = pinned.replace(old, new, 1)
+    section = b"[dosbox]\n"
+    if pinned.count(section) != 1:
+        raise ValueError("unexpected DOSBox-X dosbox section")
+    return pinned.replace(section, section + b"quit warning = false\n", 1)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepared-dir", type=Path, default=DEFAULT_PREPARED)
@@ -60,8 +81,14 @@ def main() -> int:
     if manifest.get("variant") != "invincible-main":
         raise ValueError("build is not the invincible MAIN variant")
     source_receipt = json.loads((prepared / "receipt.json").read_text(encoding="utf-8"))
-    if source_receipt.get("products") != manifest["products"]:
-        raise ValueError("prepared image was made from a different build")
+    prepared_products = source_receipt.get("products", {})
+    if set(prepared_products) != set(manifest["products"]):
+        raise ValueError("prepared image has a different product inventory")
+    for artifact, current in manifest["products"].items():
+        previous = prepared_products[artifact]
+        if any(previous.get(field) != current[field]
+               for field in ("file", "size", "sha256")):
+            raise ValueError(f"prepared image has a different {artifact} product")
     base = prepared / "diagnostic.hdi"
     if sha256(base) != source_receipt["diagnostic_hdi_sha256"]:
         raise ValueError("prepared image identity drift")
@@ -73,15 +100,8 @@ def main() -> int:
     config_bytes = config_source.read_bytes()
     if hashlib.sha256(config_bytes).hexdigest() != runtime["primary"]["config_sha256"]:
         raise ValueError("pinned emulator configuration identity drift")
-    old_video = b"videodriver       = dummy"
-    old_sound = b"nosound = true"
-    if config_bytes.count(old_video) != 1 or config_bytes.count(old_sound) != 1:
-        raise ValueError("unexpected DOSBox-X configuration format")
-    config_bytes = config_bytes.replace(old_video, b"videodriver       = x11")
-    config_bytes = config_bytes.replace(old_sound, b"nosound = false")
-    config_bytes = config_bytes.replace(b"[dosbox]\n", b"[dosbox]\nquit warning = false\n", 1)
     config = prepared / "dosbox-x-play.conf"
-    config.write_bytes(config_bytes)
+    config.write_bytes(play_config(config_bytes))
 
     executable = shutil.which("dosbox-x")
     if not executable:
