@@ -209,6 +209,14 @@ item claim. See the
 [item semantic note](reconstruction/main/TH04_MAIN_ITEM_SEMANTICS_V1248.md).
 
 
+The separate `port/modern-64` branch has an initial native resource/PI decoder
+slice under `port64/`. Linux ELF64 and Windows PE32+ x64 builds both run on the
+attested HDI; the Windows build also ran under the Windows host command line.
+`CONG10.PI`/`CONG14.PI` packed pixel hashes match the 16-bit DOS probe, and
+Linux/Windows BMP output is byte-identical. This is a resource-port milestone,
+not a playable native game. See `port64/README.md` for replay commands and
+the remaining hardware/runtime boundaries.
+
 ## Current state
 
 | Artifact | Accepted authored functions | Native build/runtime |

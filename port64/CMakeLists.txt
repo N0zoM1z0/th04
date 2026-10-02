@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.16)
+project(th04_port64 LANGUAGES CXX)
+
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+  message(FATAL_ERROR "TH04 port64 requires a 64-bit compiler")
+endif()
+
+add_executable(th04-port64 main.cpp)
+target_compile_features(th04-port64 PRIVATE cxx_std_17)
+if(MSVC)
+  target_compile_options(th04-port64 PRIVATE /W4)
+else()
+  target_compile_options(th04-port64 PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+if(MINGW)
+  target_link_options(th04-port64 PRIVATE -static -static-libgcc -static-libstdc++)
+endif()
