@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+import tomllib
 
 from prepare_th04_maine_diagnostic_hdi import Fat12, u16, u32
 
@@ -55,7 +56,19 @@ def prepared_baseline(run: Path, receipt: dict) -> bytes:
 
 def inspect_products(run: Path, receipt: dict, image: bytes) -> dict:
     prepared_baseline(run, receipt)
-    products = json.loads((run.parent / "receipt.json").read_text())["products"]
+    prepared = json.loads((run.parent / "receipt.json").read_text())
+    products = prepared["products"]
+    if not products and prepared["artifact_source"] == "pinned originals":
+        targets = tomllib.loads((ROOT / "config/targets.toml").read_text())["artifacts"]
+        products = {
+            target["id"].removeprefix("th04-"):
+                dict(file=target["dos_path"].rsplit("/", 1)[-1],
+                     size=target["size"], sha256=target["sha256"])
+            for target in targets
+            if target["id"] in {"th04-main", "th04-op", "th04-maine", "th04-zun"}
+        }
+    if set(products) != {"main", "op", "maine", "zun"}:
+        raise ValueError("a four-product game run is required for product inspection")
     observed = {}
     for artifact, expected in products.items():
         stem, extension = expected["file"].upper().split(".")
