@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / "scripts/probes"))
 from inspect_th04_handoff_trace import game_file  # noqa: E402
 from prepare_product_hdi import Fat12, PRODUCTS, replace_file, u16  # noqa: E402
 from lib.pc98 import parse_mz  # noqa: E402
+from product_input_fingerprint import source_fingerprint  # noqa: E402
 
 
 def sha(data: bytes) -> str:
@@ -45,8 +46,8 @@ def write_atomic(path: Path, data: bytes) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--emulator-dir", type=Path, required=True,
-                        help="Windows collection's dosbox-x directory")
+    parser.add_argument("--emulator-dir", type=Path,
+                        help="Windows collection's dosbox-x directory; existing packages can reuse their verified copy")
     parser.add_argument("--build-dir", type=Path,
                         default=ROOT / ".analysis/build/th04-invincible")
     parser.add_argument("--image", type=Path, default=ROOT /
@@ -55,11 +56,15 @@ def main() -> int:
                         help="refresh an existing package while preserving its saves")
     args = parser.parse_args()
     output = args.output_dir.resolve()
-    emulator = args.emulator_dir.resolve()
+    emulator = args.emulator_dir.resolve() if args.emulator_dir else None
     build = args.build_dir.resolve()
     manifest = json.loads((build / "build.json").read_text(encoding="utf-8"))
     if manifest.get("variant") != "invincible-main" or set(manifest["products"]) != set(PRODUCTS):
         raise ValueError("expected a complete invincible four-product build")
+    current_fingerprint = source_fingerprint()
+    if (manifest.get("source_fingerprint") is not None
+            and manifest["source_fingerprint"] != current_fingerprint):
+        raise ValueError("product inputs changed after the build")
     product_bytes = {}
     records = {}
     for artifact, name in PRODUCTS.items():
@@ -72,6 +77,7 @@ def main() -> int:
         records[artifact] = {"file": name, "size": len(data), "sha256": sha(data)}
 
     prior_receipt = output / "package.json"
+    prior = None
     if output.exists() and any(output.iterdir()):
         if not args.update or not prior_receipt.is_file():
             parser.error("nonempty package requires --update and its prior package.json")
@@ -105,11 +111,29 @@ def main() -> int:
         if game_file(image, product_name(name)) != product_bytes[artifact]:
             raise ValueError(f"image readback failed: {name}")
 
-    exe = (emulator / "dosbox-x.exe").read_bytes()
-    font = (emulator / "font_jp.bmp").read_bytes()
-    config = render_config((emulator / "th04_jp.conf").read_bytes())
+    if emulator is not None:
+        exe = (emulator / "dosbox-x.exe").read_bytes()
+        font = (emulator / "font_jp.bmp").read_bytes()
+        config = render_config((emulator / "th04_jp.conf").read_bytes())
+    elif prior is not None:
+        exe = (output / "dosbox-x.exe").read_bytes()
+        font = (output / "FREECG98.bmp").read_bytes()
+        config = (output / "th04.conf").read_bytes()
+        if (sha(exe) != prior["dosbox_x_sha256"]
+                or sha(font) != prior["font_sha256"]
+                or sha(config) != prior["config_sha256"]):
+            raise ValueError("existing DOSBox-X files differ from package receipt")
+    else:
+        parser.error("a new package requires --emulator-dir")
     launcher = (b'@echo off\r\ncd /d "%~dp0"\r\n'
                 b'start "" "%~dp0dosbox-x.exe" -conf "%~dp0th04.conf"\r\n')
+    builder_template = (ROOT / "scripts/windows/Build-TH04.ps1").read_text(encoding="utf-8")
+    if builder_template.count("@REPO_PATH@") != 1:
+        raise ValueError("Windows builder template has no unique repository placeholder")
+    builder = builder_template.replace("@REPO_PATH@", str(ROOT).replace("'", "''"))
+    builder_bytes = builder.encode("utf-8")
+    builder_cmd = (ROOT / "scripts/windows/build-th04.cmd").read_bytes()
+    builder_readme = (ROOT / "scripts/windows/README-build.txt").read_bytes()
     output.mkdir(parents=True, exist_ok=True)
     (output / "bin").mkdir(exist_ok=True)
     for artifact, name in PRODUCTS.items():
@@ -119,16 +143,23 @@ def main() -> int:
     write_atomic(output / "FREECG98.bmp", font)
     write_atomic(output / "th04.conf", config)
     write_atomic(output / "start-th04.bat", launcher)
+    write_atomic(output / "Build-TH04.ps1", builder_bytes)
+    write_atomic(output / "build-th04.cmd", builder_cmd)
+    write_atomic(output / "README-build.txt", builder_readme)
     receipt = {
         "schema_version": 1,
         "variant": "invincible-main",
         "build_run_id": manifest["run_id"],
+        "source_fingerprint": current_fingerprint,
         "products": records,
         "source_hdi_sha256": sha(source),
         "play_hdi_sha256_at_export": sha(image),
         "dosbox_x_sha256": sha(exe),
         "font_sha256": sha(font),
         "config_sha256": sha(config),
+        "build_script_sha256": sha(builder_bytes),
+        "build_cmd_sha256": sha(builder_cmd),
+        "build_readme_sha256": sha(builder_readme),
         "launch": "start-th04.bat",
     }
     write_atomic(prior_receipt, (json.dumps(receipt, indent=2) + "\n").encode("utf-8"))

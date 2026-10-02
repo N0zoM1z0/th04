@@ -44,12 +44,35 @@ The historical library is only a diagnostic input to this MZ.
 
 The historical BFNT loader is near/small-model; its isolated harness is a
 behavioral data Oracle, not a product link input. The local `SUPER_PUT`
-implements the final four-plane pixel result through direct planar writes and
-leaves GRCG off. Its fake-VRAM test establishes the pixel transformation,
-while real PC-98 page selection, timing, and display remain untested. Pinned
+implements the final four-plane pixel result through masked byte-sized planar writes and
+leaves GRCG off. Its fake-VRAM test establishes the pixel transformation;
+the OP animation scenario below covers one real-emulator path, while MAINE
+page selection and ending display remain untested. Pinned
 BFNT files have zero extension length; nonzero extension metadata and
 transparent colors other than zero need separate coverage before reuse. The
 historical `super_charfree` callback is outside this MAINE BFNT path.
+
+## Byte-sized rendering and animation timing
+
+The first standalone `SUPER_PUT` updated all four VRAM planes once per opaque
+pixel. OP's ZUN Soft animation can issue 256 calls and visit 154,624 candidate
+pixels in one frame; MAIN's big boss explosion can issue 16 calls over a
+48×48 BFNT pattern. The maintained renderer now composes transparent masks
+and colors per destination byte, including unaligned and clipped placements.
+The DOS fake-VRAM test still produces screen hash `0BE615EA`; an independent
+48×48 randomized comparison passed 45 clipped and unaligned positions. This
+is a native product performance change, not a historical exactness promotion.
+
+An isolated old/new OP startup comparison used the same pinned DOSBox-X
+binary (SHA-256 `30a5fdf8fa95abaf7bae1a9e624ccfc9e26e5357a19cc567bf3a2ac659699258`),
+disk-data source, and 10/20/30-second checkpoints. The old build remained in
+the ZUN Soft fireworks at 30 seconds (`frame.png` SHA-256
+`325fead5e24d9508531a2b1e1483e538169025e193e0ed2e9620938d27c52c48`);
+the changed build reached the title menu (`7c1babb62b297a462173ed7428416af138059fa1d5e3d25bf84f10c3de029356`).
+Private receipts are under
+`.analysis/runtime/candidates/super-perf-{before,after}-20261002/run-logo/receipt.json`.
+This is a bounded wall-clock observation under one emulator configuration,
+not a full-game timing or Windows-host acceptance claim.
 
 Replay the focused runtime gate with a fresh private directory:
 

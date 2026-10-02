@@ -1,6 +1,6 @@
 # TH04 current handoff
 
-Updated 2026-10-02. The active goal is a standalone PC-98 game: checked-in
+Updated 2026-10-03. The active goal is a standalone PC-98 game: checked-in
 TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
@@ -11,7 +11,7 @@ upstream exactness claims are not inherited. Current phase: runtime integration.
 | Artifact | Accepted authored functions | Native build/runtime |
 | --- | ---: | --- |
 | OP | 93/93 | Standalone build; normal options/Music Room/scores/DOS exit and saved config pass |
-| MAIN | 493/495 | Standalone build; Orange/Kurumi clear and stage 3 entry pass; later gameplay remains unverified |
+| MAIN | 493/495 | Standalone build; bounded ordinary route reaches stage 3; user completed the invincible Easy route through the ending |
 | MAINE | 72/72 | Complete standalone build; uninstrumented score/name registration saves 39,300 and returns to OP |
 | ZUN | 3/3 | Source-only cold packed build; four-product GAME.BAT startup passes |
 
@@ -25,12 +25,12 @@ owners and four generated sprite owners without `masters.lib`. All four products
 build through `scripts/build.py`. A fresh four-product build and subsequent
 source/dependency-validated MAIN/OP/MAINE relink pass; the final MAINE matches its
 fresh build. ZUN is cold-deterministic. Current inventory:
-`.analysis/reconstruction/probes/product-20261002-131432-413046f1-build.json`.
+`.analysis/reconstruction/probes/product-20261002-151920-831649d8-build.json`.
 The latest OP cold build compiles 111 C/C++ and 53 ASM roots, links without
 warnings, and equals the preceding dependency-validated cached native build.
-The current MAIN cold build (`product-20261002-131432-413046f1-main`) rebuilds
-all roots and equals the published empty-ring repair: 191,663 bytes, SHA-256
-`f88e7e4187f39a759ad78fe2a7eb47a9df799101283dec668658af4af2d4e135`.
+The current normal MAIN cold build (`product-20261002-151920-831649d8-main`)
+rebuilds all roots with the shared byte-sized sprite renderer: 191,823 bytes,
+SHA-256 `cd9aedb58cd9e7fbbc16f590f5199fa918c815fad2183ff9d9a1de335f4d16cd`.
 
 Verified integration fixes:
 - MAIN EGC tile copy uses 3100h, observed at MAI_TEXT 0AAF:212C (file E41Ch).
@@ -111,10 +111,29 @@ products build and pass MZ/link audits; the normal published MAIN is unchanged.
 Windows DOSBox-X and `start-th04.bat` at
 `D:\Entertainment\Game\Touhou\th04-reconstruct`. The Windows 2023.05.01
 emulator reached OP with the user's dynamic/Pentium/15000/32 MB profile; Z/X
-worked after switching Windows input to English. The splash remains slow.
-`super_put_rect()` currently calls a per-pixel C++ planar renderer inside the
-logo's 256-object loop; this is a performance hypothesis, not yet a measured
-cause. The Linux emulator aborts after PC-98 reset with dynamic core, so its
+worked after switching Windows input to English. The user completed the
+invincible Easy route through the ending, with slow OP fireworks, boss defeat
+explosions and some stage-5 Yuuka barrages but no other reported faults. Their
+saved Easy config has turbo mode enabled, so the explicit bullet-count slow-
+down branch is inactive. This is user runtime observation, not an instrumented
+ordinary-build acceptance. The shared `SUPER_PUT` now uses masked byte-sized
+planar writes. Fake-VRAM output and 45 randomized placements match the prior
+renderer. Under pinned Linux DOSBox-X, the old OP was still in fireworks at
+30 seconds; the changed OP reached the title menu at 30 seconds. Receipts:
+`.analysis/runtime/candidates/super-perf-{before,after}-20261002/run-logo/receipt.json`.
+Windows-host and stage-5 performance need fresh playtest. The Windows builder
+is `build-th04.cmd`: it shows English progress, hashes, and uses validated
+incremental object reuse by default; `-Cold` forces a four-product source build.
+The complete invincible Windows run
+`product-20261002-155156-92d1f35a` passed all four source/link audits and
+refreshed the saved package. The following default Windows CLI run
+`product-20261002-162226-4cebef25` passed in 98.8 seconds: MAIN reused 192
+C++ objects, OP 163 objects, MAINE 137 objects, and ZUN passed unchanged-input
+fingerprint and package/product hash checks. All four final product hashes
+equaled the cold build. The saved `MIKO.CFG` and `GENSOU.SCR` SHA-256 values
+were unchanged across both exports. The Windows package is ready for a new
+playtest; these build checks do not establish its frame rate.
+The Linux emulator aborts after PC-98 reset with dynamic core, so its
 private launcher uses normal/Pentium/15000/32 MB. Neither playable profile is
 normal-game acceptance evidence. A long native v1220 route reached Game Over
 after Continues and was stopped at 1250 seconds; a
@@ -177,9 +196,8 @@ all executed products and locates captured code against the relocated MAIN/MAP.
 
 ## Next work
 
-1. Profile the Windows splash against the same emulator's original-game run,
-   then optimize the TH04-local sprite renderer if the per-pixel path is the
-   cause. Preserve the current player's Windows HDI until the session ends.
+1. Have the user replay OP fireworks, boss defeat and Yuuka stage 5 with the
+   updated Windows package. Profile any remaining slowdown under that host.
 2. Inspect the completed ordinary sweep at
    `.analysis/runtime/candidates/native-empty-ring-v1217-20261002/run-sweep-v1222`.
    Validate later stages, endings, Extra and character/rank variants; the
