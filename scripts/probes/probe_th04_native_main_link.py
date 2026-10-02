@@ -107,6 +107,24 @@ def sha256(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
 
 
+def apply_invincible_overlay(work: Path) -> dict[str, str]:
+    """Keep the playable cheat in the private build, outside accepted source."""
+    relative = "src/main/player/update.cpp"
+    source = work / relative
+    original = source.read_text(encoding="utf-8")
+    anchor = "    if(player_is_hit) {\n"
+    if original.count(anchor) != 1:
+        raise RuntimeError("invincible overlay lost its player-hit anchor")
+    patched = original.replace(anchor, "    player_is_hit = false;\n" + anchor, 1)
+    source.write_text(patched, encoding="utf-8")
+    return {
+        "source": relative,
+        "original_sha256": sha256_bytes(original.encode("utf-8")),
+        "patched_sha256": sha256(source),
+        "effect": "clear pending collision before player miss processing",
+    }
+
+
 def run(command: list[str], cwd: Path, env: dict[str, str], log: Path) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(command, cwd=cwd, env=env, capture_output=True,
                             text=True, timeout=300)
@@ -1188,6 +1206,8 @@ def main() -> int:
                         help="reuse C++ objects when the staged C/C++ include tree is unchanged")
     parser.add_argument("--reuse-asm-from", type=Path,
                         help="reuse ASM objects when source and assembly includes are unchanged")
+    parser.add_argument("--invincible", action="store_true",
+                        help="private playable variant: clear pending player hits")
     parser.add_argument("--graphics-trace", action="store_true",
                         help="private MPN/cache/initial-VRAM file checkpoints")
     parser.add_argument("--state-trace", action="store_true",
@@ -1213,7 +1233,7 @@ def main() -> int:
         if (args.output_dir or args.without_support or args.require_link
                 or args.input_trace or args.force_stage is not None
                 or args.graphics_trace or args.state_trace or args.fault_trace
-                or args.cpu_fault_trace
+                or args.cpu_fault_trace or args.invincible
                 or args.reuse_cpp_from or args.reuse_asm_from):
             parser.error("--check-manifest cannot be combined with build options")
         result = audit()
@@ -1240,6 +1260,7 @@ def main() -> int:
     output.mkdir(parents=True)
     work = output / "source"
     shutil.copytree(ROOT / "src", work / "src")
+    invincible_overlay = apply_invincible_overlay(work) if args.invincible else None
     input_trace = (
         apply_input_trace_overlay(work, args.force_stage)
         if args.input_trace or args.force_stage is not None
@@ -1425,6 +1446,7 @@ def main() -> int:
             for source in sorted(BODY_ONLY_SOURCES)
         },
         "body_only_context_sources": sorted(BODY_ONLY_SOURCES),
+        "invincible_overlay": invincible_overlay,
         "input_trace": input_trace,
         "graphics_trace": graphics_trace,
         "state_trace": state_trace,

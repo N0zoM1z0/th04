@@ -17,6 +17,12 @@ import prepare_product_hdi as IMAGE
 
 
 class ProductBuildTests(unittest.TestCase):
+    def test_invincible_variant_cannot_publish_over_normal_build(self):
+        with patch.object(sys, "argv", ["build.py", "--invincible-main"]):
+            with self.assertRaises(SystemExit) as failure:
+                BUILD.main()
+        self.assertEqual(failure.exception.code, 2)
+
     def test_single_product_rebuild_keeps_verified_other_products(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

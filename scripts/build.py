@@ -26,7 +26,8 @@ def invoke(script: str, output: Path, *arguments: str) -> dict:
     return json.loads((output / "receipt.json").read_text(encoding="utf-8"))
 
 
-def build_product(artifact: str, work: Path, cache: Path | None) -> Path:
+def build_product(artifact: str, work: Path, cache: Path | None,
+                  invincible_main: bool = False) -> Path:
     if artifact == "zun":
         source = invoke("probe_th04_native_zun_composite.py", work)
         if not source.get("cold_equal"):
@@ -39,6 +40,8 @@ def build_product(artifact: str, work: Path, cache: Path | None) -> Path:
     arguments = ["--without-support"]
     if artifact == "main":
         arguments.append("--require-link")
+        if invincible_main:
+            arguments.append("--invincible")
         if cache:
             arguments.extend(["--reuse-cpp-from", str(cache.resolve()),
                               "--reuse-asm-from", str(cache.resolve())])
@@ -72,7 +75,13 @@ def main() -> int:
                         help="previous MAIN build; objects are reused only for unchanged inputs")
     parser.add_argument("--op-cache", type=Path, help="previous OP build with verified objects")
     parser.add_argument("--maine-cache", type=Path, help="previous MAINE build with verified objects")
+    parser.add_argument("--invincible-main", action="store_true",
+                        help="build a separately labeled playable MAIN with collision damage disabled")
     args = parser.parse_args()
+    if args.invincible_main and "main" not in args.only:
+        parser.error("--invincible-main requires MAIN in --only")
+    if args.invincible_main and args.output_dir.resolve() == (ROOT / ".analysis/build/th04"):
+        parser.error("--invincible-main requires a separate --output-dir")
     output = args.output_dir.resolve()
     lock_path = ROOT / ".analysis/native-build.lock"
     lock_path.parent.mkdir(parents=True, exist_ok=True)
@@ -88,7 +97,8 @@ def main() -> int:
         for artifact in dict.fromkeys(args.only):
             work = PROBES / (run_id + "-" + artifact)
             print(f"Building {PRODUCTS[artifact]}...", flush=True)
-            product = build_product(artifact, work, caches.get(artifact))
+            product = build_product(artifact, work, caches.get(artifact),
+                                    args.invincible_main and artifact == "main")
             products[artifact] = product
             records[artifact] = {
                 "file": PRODUCTS[artifact], "size": product.stat().st_size,
@@ -122,6 +132,7 @@ def main() -> int:
             temporary.replace(output / PRODUCTS[artifact])
         manifest_text = json.dumps({
             "schema_version": 1, "run_id": run_id, "products": records,
+            "variant": "invincible-main" if args.invincible_main else "normal",
             "acceptance": "standalone build; runtime validation is separate; no byte equality required",
         }, indent=2) + "\n"
         PROBES.mkdir(parents=True, exist_ok=True)

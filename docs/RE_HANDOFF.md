@@ -104,6 +104,16 @@ The read-only observer passes real-mode and DOS/EMM386 VM86 DIV fixtures,
 including 27 instruction bytes and complete RAM snapshots. Calibration:
 `.analysis/runtime/emulators/primary-observer-v1215b/calibration-vm86/receipt.json`.
 
+For interactive testing, the separate `--invincible-main` build clears pending
+player hits before miss processing in a private staged source overlay. Its four
+products build and pass MZ/link audits; the normal published MAIN is unchanged.
+`scripts/play_invincible.py` launches the prepared image in a persistent X11
+DOSBox-X window with PulseAudio. The window booted into visible gameplay. This
+cheat build is not evidence for normal-game completion. A long native v1220
+route reached Game Over after Continues and was stopped at 1250 seconds; a
+pinned-original v1221 control showed a guest interrupt/reset screen at 455.
+Neither provides a later-stage acceptance checkpoint.
+
 Current runtime receipts:
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/receipt.json`
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/handoff-state.json`
@@ -160,10 +170,10 @@ all executed products and locates captured code against the relocated MAIN/MAP.
 
 ## Next work
 
-1. Finish the live 1800-second ordinary route at
-   `.analysis/runtime/candidates/native-empty-ring-v1217-20261002/run-long-v1220`.
-   Scenario: `.analysis/runtime/scenarios/main_progression_long_v1220.json`.
-   Validate later stages, endings, Extra and character/rank variants.
+1. Inspect the ordinary sweep at
+   `.analysis/runtime/candidates/native-empty-ring-v1217-20261002/run-sweep-v1222`.
+   Validate later stages, endings, Extra and character/rank variants; the
+   independent playable invincible image can expose additional integration bugs.
 2. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
 
