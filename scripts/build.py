@@ -57,6 +57,10 @@ def build_product(artifact: str, work: Path, cache: Path | None) -> Path:
     subprocess.run([sys.executable,
                     str(ROOT / "scripts/probes/audit_th04_native_irq_vectors.py"),
                     "--link-receipt", str(work / "receipt.json")], cwd=ROOT, check=True)
+    if artifact == "main":
+        subprocess.run([sys.executable,
+                        str(ROOT / "scripts/probes/audit_th04_native_bullet_switches.py"),
+                        "--link-receipt", str(work / "receipt.json")], cwd=ROOT, check=True)
     return work / f"source/bin/{artifact}-native.exe"
 
 

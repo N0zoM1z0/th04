@@ -14,7 +14,8 @@ def apply_fault_trace_overlay(work: Path) -> dict:
         raise ValueError("fault checkpoints require a private staged source tree")
     path = work / "src/main/core/gameplay_loop.cpp"
     original = path.read_text()
-    helper = r'''static void near fault_hex(unsigned int value) {
+    helper = r'''extern "C" void pascal far FAULT_TRACE_SETUP(void);
+static void near fault_hex(unsigned int value) {
     for(int shift = 12; shift >= 0; shift -= 4) {
         unsigned char digit = (value >> shift) & 15;
         outportb(0xE9, (digit < 10) ? (digit + '0') : (digit - 10 + 'A'));
@@ -83,6 +84,7 @@ static void near fault_checkpoint(unsigned int id) {
     changed = changed.replace(
         "void near gameplay_loop(void)", helper + "\nvoid near gameplay_loop(void)"
     )
+    changed = changed.replace("    do {", "    FAULT_TRACE_SETUP();\n    do {", 1)
     path.write_text(changed)
     digits = work / "src/main/pointnum/digits.asm"
     original_digits = digits.read_text()
@@ -150,15 +152,61 @@ fault_hex_digits endp
     ending = "MAIN_033_TEXT ends\nend"
     if original_digits.count(division) != 1 or original_digits.count(ending) != 1:
         raise ValueError("decimal checkpoint producer changed")
+    handler_source = Path(__file__).with_name("th04_fault_handlers.inc")
+    handlers = handler_source.read_text()
     digits.write_text(original_digits.replace(
         division, "call fault_digits\n\t" + division
-    ).replace(ending, helper + "\n" + ending))
+    ).replace(ending, helper + "\nMAIN_033_TEXT ends\n" + handlers + "\nend"))
+    bullet_path = work / "src/main/bullet/update_body.inl"
+    original_bullets = bullet_path.read_text()
+    bullet_helper = r'''static void near fault_bullet_hex(unsigned int value) {
+    for(int shift = 12; shift >= 0; shift -= 4) {
+        unsigned char digit = (value >> shift) & 15;
+        outportb(0xE9, (digit < 10) ? (digit + '0') : (digit - 10 + 'A'));
+    }
+    outportb(0xE9, ' ');
+}
+static void near fault_bullet_step(unsigned int step, unsigned int index,
+    bullet_t near *bullet) {
+    if(stage_frame < 3500) { return; }
+    outportb(0xE9, 'B'); outportb(0xE9, 'V'); outportb(0xE9, ' ');
+    fault_bullet_hex(stage_frame); fault_bullet_hex(step);
+    fault_bullet_hex(index); fault_bullet_hex((unsigned int)bullet);
+    fault_bullet_hex(_SS); fault_bullet_hex(_SP); fault_bullet_hex(_DS);
+    outportb(0xE9, '\n');
+}
+'''
+    bullet_source = original_bullets.replace("void bullets_update(void)",
+                                           bullet_helper + "\nvoid bullets_update(void)")
+    loop = "for(i = 0; i < BULLET_COUNT; i++, bullet--) {"
+    if bullet_source.count(loop) != 2:
+        raise ValueError("bullet iteration producer changed")
+    bullet_source = bullet_source.replace(loop, loop + "\n fault_bullet_step(0, i, bullet);")
+    bullet_source = bullet_source.replace("bullet->pos.update_seg3();",
+        "fault_bullet_step(1, i, bullet); bullet->pos.update_seg3();")
+    bullet_source = bullet_source.replace("bullet_update_special(*bullet);",
+        "fault_bullet_step(2, i, bullet); bullet_update_special(*bullet); fault_bullet_step(3, i, bullet);")
+    for name, before, after in [("sparks_add_random", 4, 5), ("hud_graze_put", 6, 7),
+                                ("pointnums_add_white", 8, 9)]:
+        pattern = r"\b" + name + r"\([^;]*?\);"
+        matches = list(re.finditer(pattern, bullet_source, re.S))
+        if len(matches) != 1:
+            raise ValueError(f"bullet call checkpoint changed: {name}")
+        bullet_source = re.sub(pattern, lambda match:
+            f"fault_bullet_step({before}, i, bullet); " + match[0]
+            + f" fault_bullet_step({after}, i, bullet);", bullet_source, flags=re.S)
+    bullet_path.write_text(bullet_source)
     return {
-        "scope": "private gameplay call and decimal DIV checkpoints; no gameplay acceptance",
+        "scope": "private gameplay/bullet/DIV checkpoints and chained CPU exceptions; no gameplay acceptance",
         "path": str(path),
         "decimal_source_before_sha256": hashlib.sha256(original_digits.encode()).hexdigest(),
         "decimal_source_after_sha256": hashlib.sha256(digits.read_bytes()).hexdigest(),
         "before_sha256": hashlib.sha256(original.encode()).hexdigest(),
         "after_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "calls": names,
+        "cpu_handler_source_sha256": hashlib.sha256(handler_source.read_bytes()).hexdigest(),
+        "cpu_fault_fields": ["vector", "cs", "ip", "ss", "frame_sp", "ds", "ax",
+                             "dx", "bx", "cx", "si", "es", "flags"],
+        "bullet_source_before_sha256": hashlib.sha256(original_bullets.encode()).hexdigest(),
+        "bullet_source_after_sha256": hashlib.sha256(bullet_path.read_bytes()).hexdigest(),
     }
