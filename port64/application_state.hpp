@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "menu_state.hpp"
+#include "random_lcg.hpp"
 
 namespace th04::portable::application {
 
@@ -67,7 +68,9 @@ struct ResidentState {
     std::uint8_t resource_stage = 0;
     Playchar playchar = Playchar::reimu;
     ShotType shot_type = ShotType::a;
-    std::uint32_t random_seed = 0;
+    // Persistent OP menu-time accumulator. This seeds MAIN but never aliases
+    // any executable generation's process-local LCG.
+    std::uint32_t random_seed_source = 0;
     std::array<std::uint8_t, 8> score_digits{};
     EndSequence end_sequence = EndSequence::score;
     char end_type_ascii = '0';
@@ -86,8 +89,10 @@ public:
     Program program() const { return program_; }
     std::uint32_t generation() const { return generation_; }
     const ResidentState& resident() const { return resident_; }
+    std::uint32_t process_random_state() const { return process_random_.state(); }
 
     void apply_options(const menu::Options& options);
+    void advance_op_menu_frame();
     void start_normal(Playchar playchar, ShotType shot_type);
     void start_extra(Playchar playchar, ShotType shot_type);
     void start_next_demo();
@@ -97,8 +102,10 @@ public:
         const RunStatistics& statistics, EndSequence end_sequence
     );
     MaineRoute maine_route() const;
+    void seed_maine_verdict_random();
     void finish_maine();
     void exit_from_op();
+    std::uint16_t next_process_random();
 
 private:
     void require_program(Program expected) const;
@@ -113,6 +120,7 @@ private:
     Program program_ = Program::op;
     std::uint32_t generation_ = 1;
     ResidentState resident_{};
+    rng::Lcg32 process_random_{};
 };
 
 } // namespace th04::portable::application

@@ -19,7 +19,15 @@ score-only MAINE routing; direct MAIN-to-OP return; and MAINE-to-OP retention.
 This state is ready to connect to future gameplay/Ending implementations; the
 current menu still reports those destinations as unported.
 
-`SharedRandomRing` is the first portable gameplay-state owner. It preserves
+`Lcg32` is the fixed-width process-local generator underneath portable random
+state. It reproduces the unsigned modulo-2^32 update and 15-bit result on both
+Linux and Windows, including signed-boundary vectors. The application state
+keeps OP's menu-frame accumulator in the resident object, resets local state to
+1 at each modeled executable transition, copies the resident seed on MAIN
+entry, applies the demo seed 318, and exposes MAINE's verdict re-seed as an
+explicit event so route ordering stays visible.
+
+`SharedRandomRing` preserves
 the single stream shared by both historical accessor families, the descending
 256-call fill, overlapping little-endian samples, byte-sized cursor advance,
 AND/MOD reduction order and the layout-defined `0xFF00` boundary sample. The
@@ -78,14 +86,17 @@ width, byte-sized angles/group codes, spread/ring geometry, aim and template
 rotation wrapping, half-turn directional-sprite reuse, and OP menu/config
 transitions. It additionally checks the complete portable process-handoff
 contract and rejects invalid cross-phase transitions. The contract output also
-reports `randring=SHARED_OVERLAP` after checking all 256 cursor positions and
-the consuming zero-divisor failure path.
+reports `randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32` after checking LCG
+vectors, executable/resident seed lifetimes, an LCG-backed 256-call fill, all
+256 cursor positions and the consuming zero-divisor failure path.
 
 A GNU x86-64 debug build also passes these contracts with
-`-fsanitize=undefined,bounds`.
+`-fsanitize=undefined,bounds`, including unsigned wrap, process resets and the
+full LCG-backed random-ring fill.
 
 Next runtime boundaries are description text, character selection, input
 timing, audio, configuration persistence, and replacement of DOS file/heap
 interfaces. UI destinations can then enter the portable handoff state while
-MAIN bullet entity and rendering state build on the shared angle/group
-contract. A completed TH04 native game has not yet been demonstrated.
+MAIN bullet entity and rendering state consume the shared process LCG and
+random ring before building on the angle/group contract. A completed TH04
+native game has not yet been demonstrated.

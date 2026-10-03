@@ -1,6 +1,7 @@
 #include "application_state.hpp"
 #include "bullet_geometry.hpp"
 #include "menu_state.hpp"
+#include "random_lcg.hpp"
 #include "random_ring.hpp"
 
 #include <array>
@@ -11,6 +12,7 @@
 namespace bullet = th04::portable::bullet;
 namespace menu = th04::portable::menu;
 namespace application = th04::portable::application;
+namespace rng = th04::portable::rng;
 namespace randring = th04::portable::randring;
 
 namespace {
@@ -81,6 +83,32 @@ int main() {
     }
     require(rejected, "portable ring must reject count zero");
 
+    static_assert(sizeof(std::uint32_t) == 4, "LCG state must be 32-bit");
+    rng::Lcg32 default_lcg;
+    struct LcgVector {
+        std::uint32_t state;
+        std::uint16_t result;
+    };
+    const std::array<LcgVector, 3> default_vectors{{
+        {0x015a4e36u, 346},
+        {0x8082a52fu, 130},
+        {0xaae684bcu, 10982},
+    }};
+    for (const auto& vector : default_vectors) {
+        require(default_lcg.next15() == vector.result, "default LCG result mismatch");
+        require(default_lcg.state() == vector.state, "default LCG state mismatch");
+    }
+
+    rng::Lcg32 demo_lcg(rng::Lcg32::demo_seed);
+    require(demo_lcg.next15() == 11821, "demo LCG first result mismatch");
+    require(demo_lcg.state() == 0xae2d25d7u, "demo LCG first state mismatch");
+    require(demo_lcg.next15() == 30070, "demo LCG second result mismatch");
+    require(demo_lcg.state() == 0xf5765784u, "demo LCG second state mismatch");
+
+    rng::Lcg32 wrapping_lcg(UINT32_MAX);
+    require(wrapping_lcg.next15() == 32421, "LCG wrap result mismatch");
+    require(wrapping_lcg.state() == 0xfea5b1ccu, "LCG wrap state mismatch");
+
     randring::SharedRandomRing shared_random_ring;
     std::uint16_t generated_byte = 0;
     const auto fill_shared_random_ring = [&]() {
@@ -137,6 +165,14 @@ int main() {
     require(zero_divisor_rejected, "random-ring zero divisor must fail");
     require(shared_random_ring.cursor() == 1,
             "random-ring zero divisor must consume its sample first");
+
+    rng::Lcg32 ring_lcg;
+    randring::SharedRandomRing generated_random_ring;
+    generated_random_ring.fill(ring_lcg);
+    require(ring_lcg.state() == 0x97493301u,
+            "random-ring fill must consume 256 LCG states");
+    require(generated_random_ring.next16() == 0x4649,
+            "LCG-backed descending random-ring fill mismatch");
 
     menu::State locked_menu;
     locked_menu.handle(menu::Input::down);
@@ -204,6 +240,44 @@ int main() {
     );
     const auto quit = option_menu.handle(menu::Input::cancel);
     require(quit.kind == menu::ResultKind::quit, "main Cancel must quit");
+
+    application::State random_app;
+    require(random_app.process_random_state() == rng::Lcg32::default_seed,
+            "OP process LCG must begin at one");
+    random_app.advance_op_menu_frame();
+    random_app.advance_op_menu_frame();
+    random_app.advance_op_menu_frame();
+    require(random_app.resident().random_seed_source == 3,
+            "OP menu frames must advance only the resident seed source");
+    require(random_app.process_random_state() == rng::Lcg32::default_seed,
+            "OP menu frames must not advance OP's process LCG");
+    require(random_app.next_process_random() == 346,
+            "OP process LCG must remain independent of the resident seed");
+    require(random_app.resident().random_seed_source == 3,
+            "OP process LCG must not publish into resident state");
+
+    random_app.start_normal(
+        application::Playchar::reimu, application::ShotType::a
+    );
+    require(random_app.process_random_state() == 3,
+            "MAIN must copy the resident seed source once");
+    require(random_app.next_process_random() == 1038,
+            "MAIN resident-derived LCG sequence mismatch");
+    random_app.finish_main({}, application::EndSequence::score);
+    require(random_app.process_random_state() == rng::Lcg32::default_seed,
+            "fresh MAINE must begin at one before verdict");
+    random_app.seed_maine_verdict_random();
+    require(random_app.process_random_state() == 3,
+            "MAINE verdict must re-seed from resident state");
+    random_app.finish_maine();
+    require(random_app.process_random_state() == rng::Lcg32::default_seed,
+            "fresh OP after MAINE must restore the process default");
+    require(random_app.resident().random_seed_source == 3,
+            "process transitions must retain the resident seed source");
+    random_app.start_next_demo();
+    require(random_app.process_random_state() == rng::Lcg32::demo_seed,
+            "recorded demo must override the resident-derived MAIN seed");
+    random_app.return_from_main({});
 
     application::State app;
     require(
@@ -359,6 +433,6 @@ int main() {
     std::cout << "TH04 portable contracts: PASS pointer_bits="
               << sizeof(void*) * 8 << " angle_bits=" << sizeof(bullet::Angle) * 8
               << " menu_state=OP handoff_state=OP_MAIN_MAINE"
-              << " randring=SHARED_OVERLAP" << std::endl;
+              << " randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32" << std::endl;
     return 0;
 }

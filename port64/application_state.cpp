@@ -30,11 +30,19 @@ void State::require_program(Program expected) const {
 void State::enter(Program next) {
     program_ = next;
     ++generation_;
+    // DOS execl() loaded a fresh initialized data image for every transition.
+    process_random_.reseed(rng::Lcg32::default_seed);
 }
 
 void State::apply_options(const menu::Options& options) {
     require_program(Program::op);
     resident_.config = options;
+}
+
+void State::advance_op_menu_frame() {
+    require_program(Program::op);
+    // uint32_t gives the resident accumulator its historical wrap semantics.
+    ++resident_.random_seed_source;
 }
 
 void State::begin_main(
@@ -53,6 +61,14 @@ void State::begin_main(
     resident_.demo_stage = resource_stage;
     resident_.end_sequence = EndSequence::in_game;
     enter(Program::main);
+
+    // MAIN copies the resident value once after process startup. Recorded demos
+    // replace it before their first Stage runtime initialization.
+    process_random_.reseed(
+        (demo_number == 0)
+            ? resident_.random_seed_source
+            : rng::Lcg32::demo_seed
+    );
 }
 
 void State::start_normal(Playchar playchar, ShotType shot_type) {
@@ -125,6 +141,13 @@ MaineRoute State::maine_route() const {
     throw std::logic_error("invalid MAINE resident end state");
 }
 
+void State::seed_maine_verdict_random() {
+    require_program(Program::maine);
+    // This is an explicit verdict event rather than an MAINE entry action:
+    // Extra and score-only routes save while the new process is still at 1.
+    process_random_.reseed(resident_.random_seed_source);
+}
+
 void State::finish_maine() {
     require_program(Program::maine);
     enter(Program::op);
@@ -133,6 +156,13 @@ void State::finish_maine() {
 void State::exit_from_op() {
     require_program(Program::op);
     enter(Program::exited);
+}
+
+std::uint16_t State::next_process_random() {
+    if (program_ == Program::exited) {
+        throw std::logic_error("exited product has no process-local random state");
+    }
+    return process_random_.next15();
 }
 
 } // namespace th04::portable::application

@@ -4,6 +4,10 @@
 
 namespace th04::portable::randring {
 
+void SharedRandomRing::fill(rng::Lcg32& generator) {
+    fill([&generator]() { return generator.next_byte(); });
+}
+
 std::uint16_t SharedRandomRing::sample_and_advance() {
     const auto index = static_cast<std::uint8_t>(cursor_);
     const auto low = bytes_[index];

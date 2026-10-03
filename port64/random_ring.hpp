@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "random_lcg.hpp"
+
 namespace th04::portable::randring {
 
 // Portable owner of the one random ring shared by the historical randring1_*
@@ -22,6 +24,10 @@ public:
         }
         cursor_ = 0;
     }
+
+    // Production path for the process-local generator. Keeping the callback
+    // overload above also permits independent deterministic fixtures.
+    void fill(rng::Lcg32& generator);
 
     std::uint16_t next16();
     std::uint16_t next16_and(std::uint16_t mask);

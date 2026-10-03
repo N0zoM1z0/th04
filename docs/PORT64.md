@@ -42,16 +42,25 @@ Deterministic tests cover odd/even spread order, accumulator wrapping, rings,
 aim plus template rotation, directional sprite cels and rejection of a zero
 ring count. Speed state remains outside this bounded slice.
 
-`port64/random_ring.cpp` now owns the first portable random-state boundary.
-One `SharedRandomRing` replaces both historical accessor copies and preserves
+`port64/random_lcg.cpp` owns the process-local 32-bit generator. Its unsigned
+update reproduces TC4J's modulo arithmetic and 15-bit result without depending
+on host `long` width or signed overflow. `application_state.cpp` separately
+stores the resident OP menu-frame accumulator, resets local state to 1 for a
+new modeled executable, copies the resident seed into MAIN, applies demo seed
+318, and re-seeds MAINE only when verdict calculation begins. This retains the
+Bad/Good versus Extra/score-only save-order distinction.
+
+`port64/random_ring.cpp` owns the following random-state boundary. One
+`SharedRandomRing` replaces both historical accessor copies and preserves
 their shared call order. Its contract covers the descending 256-byte fill,
 overlapping little-endian word samples, low-byte-only cursor increment,
 AND/MOD reduction after consumption and the index-255 sample whose high byte
 is the pre-increment cursor value `0xFF`. The implementation synthesizes that
 boundary value without an out-of-bounds C++ load. A zero MOD divisor throws
 after consuming the sample, providing a defined host failure at the same state
-boundary as the original 8086 `DIV` exception. Porting the underlying `IRand`
-generator and connecting gameplay call sites remain separate work.
+boundary as the original 8086 `DIV` exception. Its production fill now consumes
+`Lcg32` directly. Connecting direct spark/item calls and the remaining gameplay
+sites stays separate work.
 
 ## Verified builds
 
@@ -63,9 +72,18 @@ Both also produce the same default Options BMP, SHA-256
 `a064338b0cfb89f7e418a85ab6bc84a7ea5ef835e4ca995b68772e0aef368185`.
 Both portable contract executables report `pointer_bits=64`, `angle_bits=8`,
 `menu_state=OP`, `handoff_state=OP_MAIN_MAINE` and
-`randring=SHARED_OVERLAP`.
+`randring=SHARED_OVERLAP` and `lcg=PROCESS_LOCAL32`.
 A separate GNU x86-64 build passes the same contract with undefined-behavior
 and array-bounds instrumentation enabled.
+
+The LCG verification receipt is
+`.analysis/port64/verification-lcg-v1247/receipt.json` (SHA-256
+`ee8a22a6168a973dca802294dc7b0b28e5a4a49e941bd61189f3827cb0ce8f33`),
+with source manifest
+`ccf2472280ed988d4e11c98aac84933a4184762e538b75ef323637449d4923e8`.
+The UBSan/bounds receipt is
+`.analysis/port64/ubsan-lcg-v1247/receipt.json` (SHA-256
+`76e1e001e466eb7e14038afa5682185caf2143fc08557855b8602b44a7387cbe`).
 
 Replay the complete cross-build check with:
 
@@ -89,8 +107,8 @@ repository.
    to the portable main/options state and framebuffer backend.
 3. Connect the verified process-transition contract to UI destinations, then
    add audio and saved configuration adapters.
-4. Port MAIN entity pools around fixed-width state, routing all gameplay
-   consumers through the shared random ring before bullet generation and
-   rendering controls.
+4. Port MAIN entity pools around fixed-width state, preserving the single LCG
+   call order across direct gameplay draws and shared-ring fills before bullet
+   generation and rendering controls.
 5. Add route-level differential checkpoints for gameplay, Ending and score
    persistence on Linux and Windows.
