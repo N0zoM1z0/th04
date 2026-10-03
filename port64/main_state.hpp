@@ -6,18 +6,20 @@
 #include "enemy_system.hpp"
 #include "enemy_bullets.hpp"
 #include "effects.hpp"
+#include "midboss.hpp"
+#include "stage_background.hpp"
 #include <memory>
 
 namespace th04::portable::gameplay {
 // Live MAIN owns STD waves, enemies, player motion, shots, bullets,
-// sparks, gather circles and items.
+// sparks, gather circles, items and the Stage 1 midboss.
 // Bombs, player death and HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
 public:
     explicit State(application::State& application);
     void update(std::uint16_t held_input, bool shift, bool pull_items = false,
-                motion::Subpixel scroll_delta = 0);
+                motion::Subpixel scroll_delta = 0,stage::Background* background=nullptr);
     void load_stage(const stage::Program::Bytes& standard);
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
@@ -26,6 +28,8 @@ public:
     const bullet::System& bullets() const { return bullets_; }
     const spark::System& sparks() const { return sparks_; }
     const gather::System& gathers() const { return gathers_; }
+    const midboss::System& midboss() const { return midboss_; }
+    const std::vector<midboss::Event>& midboss_events() const { return midboss_events_; }
     const std::vector<bullet::Event>& bullet_events() const { return bullet_events_; }
     const enemy::System& enemies() const { return enemies_; }
     const std::vector<enemy::Event>& enemy_events() const { return enemy_events_; }
@@ -42,6 +46,9 @@ private:
     bullet::System bullets_{};
     spark::System sparks_{};
     gather::System gathers_{};
+    midboss::System midboss_{};
+    std::vector<midboss::Event> midboss_events_;
+    std::optional<motion::Point> homing_target_{};
     std::vector<bullet::Event> bullet_events_;
     bool turbo_=true;
     std::unique_ptr<stage::Program> stage_;

@@ -11,6 +11,21 @@ item-lifecycle batches; semantic work is paused unless it blocks a port slice.
 
 On `port/modern-64`, semantic work is paused at the user's stopping condition:
 sufficient clarity for the current x64 slice, then implement and verify it.
+Current x64 slice now includes Stage 1 midboss activation, emergence tiles,
+unfolding, paired bullets, real shot hits, defeat and timeout. Seven contracts,
+699 original MAIN state/render cases and450 complete tile-ring controls pass
+on Linux ELF64, Wine/Win32 PE32+ and GNU UBSan/bounds. Four4500-frame live
+Stage 1 scenarios (both characters, shot/idle) agree on24 BMPs and counters.
+Original stage setup confirms twelve64x32 ST00.BMT sprites appended at140,
+after ST00.BFT's twelve32x32 sprites, and palette0 R/G=FF with B=70.
+The MAIN fixture is now `4cbbe895...`; the earlier hash below is historical.
+Scope/limitations/commands: [Stage 1 midboss](PORT64.md#stage-1-midboss).
+Receipts: `.analysis/port64/verification-midboss-v1257-final/receipt.json` and
+`.analysis/port64/midboss-v1257/cpu-{linux,windows,ubsan}-final/receipt.json`.
+Next port Stage 1 Orange/progression; sound/HUD/shake/point requests are
+retained but their adapters, death/Bomb and full Ending/save remain absent.
+No DOS source or exact acceptance state changes; native Windows pacing is
+untested. Resume semantic only for a concrete blocking ambiguity.
 The native product is rebased through the latest item semantics. Linux ELF64
 and Wine-hosted Windows PE32+ pass the existing OP/resource/process/random
 contracts and a new live MAIN slice. Game confirmation now starts a timed

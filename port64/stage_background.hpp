@@ -21,6 +21,8 @@ class Background {
 public:
     Background(const Bytes& map, const Bytes& standard);
     void update(bool scroll_active = true);
+    void set_speed(std::uint8_t speed) { speed_=speed; }
+    void set_tile(std::int16_t x,std::int16_t y,unsigned image);
     unsigned image_at(unsigned screen_x, unsigned screen_y) const;
     unsigned row_pixel(unsigned screen_y) const { return (screen_y + display_line_) % 16; }
     unsigned scroll_line() const { return scroll_line_; }

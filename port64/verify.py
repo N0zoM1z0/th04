@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/midboss.hpp",
+    "port64/midboss.cpp",
+    "port64/midboss_contracts.cpp",
+    "port64/verify_midboss.py",
     "port64/CMakeLists.txt",
     "port64/application_state.cpp",
     "port64/application_state.hpp",
@@ -157,9 +161,11 @@ def main() -> int:
     windows_bullets = windows_dir / "th04-port64-bullet-contracts.exe"
     linux_effects = linux_dir / "th04-port64-effect-contracts"
     windows_effects = windows_dir / "th04-port64-effect-contracts.exe"
-    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects):
+    linux_midboss = linux_dir / "th04-port64-midboss-contracts"
+    windows_midboss = windows_dir / "th04-port64-midboss-contracts.exe"
+    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects):
+    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -209,6 +215,11 @@ def main() -> int:
     windows_effect_output = run([args.windows_runner,str(windows_effects)],env=runner_env)
     if linux_effect_output != expected_effects or windows_effect_output != expected_effects:
         raise ValueError("effect contracts did not pass on both hosts")
+    expected_midboss = "Stage 1 midboss contracts PASS"
+    linux_midboss_output = run([str(linux_midboss)])
+    windows_midboss_output = run([args.windows_runner,str(windows_midboss)],env=runner_env)
+    if linux_midboss_output != expected_midboss or windows_midboss_output != expected_midboss:
+        raise ValueError("midboss contracts did not pass on both hosts")
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -249,6 +260,20 @@ def main() -> int:
     if combat_hashes["linux"] != combat_hashes["windows"] or combat_outputs["linux"] != combat_outputs["windows"]:
         raise ValueError("combat images or gameplay counters differ between hosts")
 
+    midboss_hashes = {}
+    midboss_outputs = {}
+    for host, command in (("linux",[str(linux_main)]),
+                          ("windows",[args.windows_runner,str(windows_main)])):
+        images = output.parent / ("midboss-"+host)
+        images.mkdir(parents=True,exist_ok=True)
+        result = run(command+["--hdi",str(hdi),"--midboss-screenshots",str(images)],env=runner_env)
+        if result.count("MAIN midboss case=") != 24:
+            raise ValueError("midboss fixture did not reach all four scenarios/checkpoints")
+        midboss_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+        midboss_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN midboss")]
+    if midboss_hashes["linux"] != midboss_hashes["windows"] or midboss_outputs["linux"] != midboss_outputs["windows"]:
+        raise ValueError("midboss images or gameplay counters differ between hosts")
+
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
         "schema_version": 1,
@@ -273,6 +298,8 @@ def main() -> int:
                 "bullet_contracts_sha256": sha256(linux_bullets),
                 "effect_contract_output": linux_effect_output,
                 "effect_contracts_sha256": sha256(linux_effects),
+                "midboss_contract_output": linux_midboss_output,
+                "midboss_contracts_sha256": sha256(linux_midboss),
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -290,6 +317,8 @@ def main() -> int:
                 "bullet_contracts_sha256": sha256(windows_bullets),
                 "effect_contract_output": windows_effect_output,
                 "effect_contracts_sha256": sha256(windows_effects),
+                "midboss_contract_output": windows_midboss_output,
+                "midboss_contracts_sha256": sha256(windows_midboss),
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -309,12 +338,14 @@ def main() -> int:
             "0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5"
         ),
         "main_fixture_bmp_sha256": (
-            "a6341ebde93ab5424a263f3b9393e6654bbada0e215dc119e324529e4f7a3524"
+            "4cbbe895725e39fc1fb9b5c6271579833ab69c975824e0c91d20275066317f52"
         ),
         "passed": True,
         "shooting_fixture_bmp_sha256": shooting_hashes["linux"],
         "combat_fixture_bmp_sha256": combat_hashes["linux"],
         "combat_fixture_counters": combat_outputs["linux"],
+        "midboss_fixture_bmp_sha256": midboss_hashes["linux"],
+        "midboss_fixture_counters": midboss_outputs["linux"],
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
             "OP menu-state transitions, resident process handoff, process-local LCG and shared "
@@ -322,7 +353,8 @@ def main() -> int:
             "BFNT sprites, Stage 1 MPN/MAP/STD background rendering/scrolling and "
             "four-route player shots/lasers, all-seven STD wave schedules, enemy VM, 32-slot enemy lifecycle/hit/drop integration and original enemy BFNT sprites, enemy bullet tune/spawn/9 motions/graze/collision/clear/zap and cloud/pellet rendering; "
             "spark allocation/motion and gather release with synchronous shared RNG; "
-            "midboss/bosses, bombs, player death, HUD, later-stage backgrounds, "
+            "Stage 1 midboss activation/tile animation/pattern/defeat; "
+            "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),

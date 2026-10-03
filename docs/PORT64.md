@@ -247,7 +247,7 @@ pass. Cross-host receipt:
 `.analysis/port64/bullets-v1255/cpu-{linux-final3,windows-final,ubsan-final}/receipt.json`.
 
 Gather/spark allocation and random-call boundaries are now connected below.
-Next port the Stage 1 control/midboss boundary, then bosses, stage
+The Stage 1 midboss boundary is connected below. Next port bosses, stage
 transitions/visuals, player death/Bomb, HUD/audio and Ending/save screens. Semantic work remains paused until a concrete
 ambiguity blocks these tasks. The native game is still incomplete; the DOS
 product and its exact acceptance remain unchanged.
@@ -389,6 +389,81 @@ The private receipt records executable format and hashes, the source manifest,
 resource outputs and the HDI digest. It never copies game assets into the
 repository.
 
+## Stage 1 midboss
+
+`midboss` owns fixed-width Stage 1 state, activation at frame3100, the four
+emergence-tile writes, the two invulnerable unfolding phases, the paired
+special-bullet pattern, shot damage, five-unit score bonus, scroll timeout and
+the common defeat lifecycle. It preserves HP800 versus displayed HP maximum620,
+signed frame/HP wrap, retained damage bytes, and the second bullet's reuse of
+the once-tuned shared template. The phase-zero Y compensation adds the prior
+frame's subpixel scroll delta, not the physical scroll origin. STD dispatch
+uses the previous active flag before activation, matching the original loop.
+Enemy homing selection is overridden by the midboss after enemy updates;
+next-frame shots consume that result. Hit sparks consume one shared sample
+per free attempt with radius128/count1 at the original call boundary.
+
+`prepare_render` caches normal/white split sprites and the 16-sprite expanding
+defeat ring once per simulation frame. Refreshing the host window does not
+clear damage twice or advance the defeat angle. `stage1_setup` appends twelve
+64x32 `ST00.BMT` patterns at global140 after twelve 32x32 `ST00.BFT` patterns
+at128. The host now loads both sheets. Original setup installs BMT's palette
+and overrides color zero's R/G to FF; native RGB is FF/FF/70 before DAC
+quantization. Earlier MAIN fixture `a6341ebd...` becomes `4cbbe895...` for this
+specific correction. Four earlier combat BMPs change only their80/85 color-zero
+pixels; their geometry and counters are unchanged. OP/selection/handoff hashes
+remain unchanged. This supersedes the earlier incomplete Stage 1 palette.
+
+The prior-image delta probe is replayable from the private v1256 baseline
+and the new cross-host receipt's `combat-linux` directory:
+
+```python
+import hashlib, json
+from pathlib import Path
+old = Path('.analysis/port64/verification-effects-v1256-final2/combat-linux')
+new = Path('.analysis/port64/verification-midboss-v1257-final/combat-linux')
+baseline = json.loads((old.parent / 'receipt.json').read_text())
+for path in sorted(old.glob('*.bmp')):
+    before, after = path.read_bytes(), (new / path.name).read_bytes()
+    assert hashlib.sha256(before).hexdigest() == baseline['combat_fixture_bmp_sha256'][path.stem]
+    expected = bytearray(before)
+    for at in range(54, len(before), 3):
+        if before[at:at+3] == bytes((170, 204, 170)):
+            expected[at:at+3] = bytes((119, 255, 255))
+    assert expected == after, path.name
+```
+
+The new independent CPU oracle executes pinned original MAIN at load2000,
+DS8000, checking699 isolated update/activation/reset/render cases, including
+all440 packed26-byte bullet records, the22-byte midboss state, full scratch,
+HP/animation globals, random cursor and ordered effects/draw coordinates.
+An additional450 controls execute original tile initialization, scroll driver
+and the actual tile setter at six checkpoints, comparing the complete25x24
+ring. A separate original `stage1_setup` call verifies initial state, the BMT
+filename and palette overrides with an explicit file-palette adapter. Scope:
+main_03 13A9:0522/0587/642C/6454/6486/64DE/65B7/A55F;
+main_01 0AAF:1C88/6FAA/0B92/0FB2/21E6. Ghidra database attestation and
+target identity pass; canonicality remains candidate-local-attested.
+
+Midboss CPU controls inject damage at the hittest boundary and intercept
+tile/circle/point-number/audio/HP-pixel calls. Tune/add/bonus and defeat
+geometry execute; independent tile controls execute the setter itself.
+These are bounded runtime observations, not byte equality or full-route
+original video comparison. MAIN retains pending sound, point, HP and shake
+requests in `midboss_events`; audio, point-number rendering, HUD and screen
+shake remain to be connected. Host redraw does not yet emulate the exact
+PC-98 page/dirty-tile publication schedule or every edge-roll case.
+
+Linux ELF64, Wine-hosted Windows PE32+ and GNU UBSan/bounds pass seven
+contract targets. The four4500-frame scenarios reach phases0/1/2/3 and leave
+the scene; shooting kills the midboss while idle runs exercise timeout.
+All24 BMPs and gameplay counters agree across hosts. Original CPU receipts:
+`.analysis/port64/midboss-v1257/cpu-{linux,windows,ubsan}-final/receipt.json`.
+Cross-host receipt:
+`.analysis/port64/verification-midboss-v1257-final/receipt.json`.
+No original executable/assets are embedded, and no DOS source or acceptance
+state changes. Native Windows pacing and a complete game remain unverified.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -396,8 +471,9 @@ verify. Motion/items/background/shots/enemies required no further DOS-source edi
 For each next module, stop readability work once state ownership, arithmetic,
 control flow and hardware boundaries support an independently checked native
 implementation. Resume only for a concrete ambiguity exposed by integration.
-Enemy bullets, gathers and sparks now use that synchronous boundary. Next
-connect Stage 1 control/midboss, then bosses, later-stage scrolling/tile maps, HUD, death/Bomb transitions
+Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous boundary. Next
+connect Stage 1 Orange and stage progression, then later bosses/midbosses,
+later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those
 systems become runnable. Full gameplay is the completion condition, not an

@@ -19,7 +19,10 @@ to player shots, drops, scoring and original BFNT sprites. Enemy bullets now
 use separate 240-pellet/200-large pools, clouds, nine special motions and
 graze/collision/clear/zap contracts. A 96-slot spark ring and 16-slot gather
 pool now connect real hit/graze/kill effects, shared random draws and delayed
-bullet release. Bosses, bombs and player death remain
+bullet release. Stage 1's midboss now activates at frame 3100, writes its
+emergence tiles, unfolds, fires paired special bullets, receives real shot
+damage and exits through defeat or scroll timeout. Bosses, later midbosses,
+bombs and player death remain
 to be connected. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
@@ -105,11 +108,23 @@ with SHA-256 `b52ea861...` and `a064338b...`.
 stages; their shared cross-host hashes are `c1a795a3...` and `12aa7616...`.
 `--handoff-screenshot` retains the static handoff fixture (`0b2c0f8c...`).
 `--main-screenshot` requires an HDI and drives a 60-frame movement/item scene
-with seven explicitly injected item types (`a6341ebd...`); these fixture items
+with seven explicitly injected item types (`4cbbe895...`); these fixture items
 are not injected into ordinary interactive sessions.
 `--shooting-screenshots DIR` writes all four full-power shooting fixtures to
 an existing directory. Each fixture collects an explicitly injected full-power
 item and holds Z for 66 frames; ordinary windows start at power 1.
+`--midboss-screenshots DIR` runs four 4500-frame Stage 1 fixtures (both
+characters, held Z or no shot) and saves six checkpoints each. They use actual
+STD waves, background, shots and effects; player death is still unported.
+Independent original-CPU state/render/tile/setup controls:
+
+```sh
+python3 port64/verify_midboss.py --target .analysis/targets/th04/main.exe \
+  --hdi .analysis/runtime/images/zun.hdi \
+  --exe .analysis/port64/linux/th04-port64-midboss-contracts \
+  --output-dir .analysis/port64/midboss-control
+```
+
 The portable contract target
 also consumes `src/main/bullet/group_types.hpp` and checks 64-bit pointer
 width, byte-sized angles/group codes, spread/ring geometry, aim and template

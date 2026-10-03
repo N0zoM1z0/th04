@@ -591,22 +591,26 @@ void write_bmp(const std::string& path, const Frame& frame) {
 }
 
 struct MainSprites {
-    sprite::Sheet reimu, marisa, items, stage_tiles, enemies;
+    sprite::Sheet reimu, marisa, items, stage_tiles, boss_tiles, enemies;
     Bytes standard;
     PiImage palette;
     stage::TileImages reimu_tiles, marisa_tiles;
     stage::Background background;
     explicit MainSprites(const MainAssets& assets)
         : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles),
-          enemies(assets.enemies), standard(assets.standard),
+          boss_tiles(assets.boss_tiles),enemies(assets.enemies), standard(assets.standard),
           reimu_tiles(assets.reimu_map_tiles), marisa_tiles(assets.marisa_map_tiles),
           background(assets.map, assets.standard) {
         require_view(background.required_image_count() <= reimu_tiles.count() &&
                      background.required_image_count() <= marisa_tiles.count(), "MAP references absent MPN tile");
-        // Stage 1's sprite load replaces the eyecatch palette before normal
-        // rendering. EYE.RGB belongs to the earlier startup transition.
-        require_view(stage_tiles.has_palette(), "ST00.BFT must supply the stage palette");
-        palette.palette = stage_tiles.palette();
+        // stage1_setup appends ST00.BMT after the 12 ST00.BFT slots, installs
+        // its palette, then sets color zero's red/green components to FF.
+        // The two sheets have different widths (32 and 64 pixels).
+        require_view(stage_tiles.count()==12 && boss_tiles.count()==12 &&
+                     boss_tiles.width()==64 && boss_tiles.height()==32 && boss_tiles.has_palette(),
+                     "Stage 1 BFNT append contract changed");
+        palette.palette = boss_tiles.palette();
+        palette.palette[0]=255;palette.palette[1]=255;
         require_view(reimu.width() == 32 && reimu.height() == 48 && reimu.count() >= 3 &&
                      marisa.width() == 32 && marisa.height() == 48 && marisa.count() >= 3 &&
                      items.width() == 16 && items.height() == 16 && items.count() == 100 &&
@@ -643,6 +647,16 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     const auto pixels = [](std::int16_t coordinate) {
         return coordinate >= 0 ? coordinate / 16 : -((-int(coordinate)+15)/16);
     };
+    if (state.midboss().snapshot().active) for (const auto& draw:state.midboss().draws()) {
+        if (draw.pattern>=128 && draw.pattern<140) {
+            put_sprite(frame,sprites.palette,sprites.stage_tiles,draw.pattern-128,draw.left,draw.top,draw.white);
+        } else if (draw.pattern>=140) {
+            put_sprite(frame,sprites.palette,sprites.boss_tiles,draw.pattern-140,draw.left,draw.top,draw.white);
+        } else {
+            require_view(draw.pattern>=4 && draw.pattern<28,"midboss references absent defeat sprite");
+            put_sprite(frame,sprites.palette,sprites.enemies,draw.pattern-4,draw.left,draw.top,draw.white);
+        }
+    }
     for (const auto& draw:state.enemies().render_sprites()) {
         if (!draw.visible) continue;
         if (draw.pattern>=4 && draw.pattern<28) {
@@ -761,7 +775,7 @@ public:
     unsigned slowdown() const { return main_ ? main_->bullets().snapshot().slowdown : 1; }
     void advance(std::uint16_t held_input, bool shift) {
         if (live_main()) {
-            main_->update(held_input, shift, false, sprites_->background.last_delta());
+            main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
             sprites_->background.update();
             frame_ = render();
         }
@@ -1156,7 +1170,7 @@ void run_title(
     const std::string& shot_screenshot,
     const std::string& handoff_screenshot,
     const std::string& main_screenshot, const std::string& shooting_screenshots,
-    const std::string& combat_screenshots, bool window
+    const std::string& combat_screenshots,const std::string& midboss_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1301,6 +1315,33 @@ void run_title(
             write_bmp(bullet_path,barrage.frame());
             std::cout << "MAIN barrage rank=Lunatic frames=900 bullets=" << alive
                       << " screenshot=" << bullet_path << '\n';
+        }
+    }
+    if (!midboss_screenshots.empty()) {
+        for (unsigned character=0;character<2;++character) for (unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            scene.input(menu::Input::confirm);
+            if (character) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            bool appeared=false,unfolded=false,attacked=false,finished=false;
+            for (unsigned frame=0;frame<4500;++frame) {
+                scene.advance(shooting ? shot::input_shot : 0,false);
+                const auto& state=scene.main_state();const auto& boss=state.midboss().snapshot();
+                appeared|=boss.active;unfolded|=boss.active && boss.phase==1;
+                attacked|=boss.active && boss.phase==3;finished|=appeared && !boss.active;
+                if (frame==3100 || frame==3387 || frame==3483 || frame==3516 || frame==3999 || frame==4499) {
+                    const auto name=std::string(character ? "marisa" : "reimu")+(shooting ? "-shot-" : "-idle-")+std::to_string(frame+1);
+                    const auto path=midboss_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    unsigned alive=0;for (const auto& bullet:state.bullets().snapshot().entities) alive+=bullet.flag==1;
+                    std::cout << "MAIN midboss case=" << name << " active=" << boss.active << " phase=" << +boss.phase
+                              << " hp=" << boss.hp << " bullets=" << alive << " score=" << state.score().score_delta
+                              << " screenshot=" << path << '\n';
+                }
+            }
+            require_view(appeared && unfolded && attacked,"Stage 1 midboss progression was not reached");
+            require_view(finished,"Stage 1 midboss did not leave the scene");
+            require_view(scene.main_state().midboss().score_delta()==(shooting ? 6400u : 0u),
+                         "Stage 1 shooting/timeout outcome differs");
         }
     }
     if (window) {

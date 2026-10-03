@@ -18,6 +18,7 @@ Native product-build investigation is active. Use the live ledgers and
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) for current counts and acceptance. These
 notes explain the remaining source and container gaps:
 
+- [Native x64 migration and independently checked Stage 1 midboss](../PORT64.md#stage-1-midboss)
 - [Native DOS product build readiness and source-graph gaps](product/TH04_NATIVE_BUILD_READINESS_V1.md)
 - [Native MAINE far-call ABI trap and repair](product/TH04_NATIVE_FAR_CALL_ABI_V856.md)
 - [Native PC-98 scroll and GRCG rectangle owners](product/TH04_NATIVE_SCROLL_BOX_V858.md)

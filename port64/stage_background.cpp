@@ -123,4 +123,18 @@ unsigned Background::image_at(unsigned screen_x, unsigned screen_y) const {
     if (screen_x >= 384 || screen_y >= 400) throw std::out_of_range("background pixel coordinate");
     return ring_[((screen_y+display_line_)%400)/16][screen_x/16];
 }
+void Background::set_tile(std::int16_t x,std::int16_t y,unsigned image) {
+    const auto pixels=[](int value) { return value>=0 ? value/16 : -((-value+15)/16); };
+    const int col=pixels(x)/16;
+    // tile_ring_set_vo forces scrolling on while converting Y+16 pixels.
+    const unsigned wrapped=static_cast<std::uint16_t>(int(y)+256);
+    const int signed_y=wrapped<32768 ? int(wrapped) : int(wrapped)-65536;
+    int top=pixels(signed_y)+int(scroll_line_);
+    if (top<0) top+=400;
+    else if (top>=400) top-=400;
+    const int row=top/16;
+    if (row<0 || row>=25 || col<0 || col>=24) throw std::out_of_range("stage tile write");
+    ring_[row][col]=image;
+    required_image_count_=std::max(required_image_count_,image+1);
+}
 } // namespace th04::portable::stage

@@ -350,7 +350,7 @@ int main(int argc, char** argv) {
     try {
         std::string hdi, archive, member, output, title_screenshot;
         std::string options_screenshot, character_screenshot, shot_screenshot;
-        std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots;
+        std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots;
         bool title_window = false;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
@@ -369,19 +369,20 @@ int main(int argc, char** argv) {
             else if (arg == "--main-screenshot") main_screenshot = value;
             else if (arg == "--shooting-screenshots") shooting_screenshots = value;
             else if (arg == "--combat-screenshots") combat_screenshots = value;
+            else if (arg == "--midboss-screenshots") midboss_screenshots = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
         const bool title = title_window || !title_screenshot.empty() ||
             !options_screenshot.empty() || !character_screenshot.empty() ||
             !shot_screenshot.empty() || !handoff_screenshot.empty() || !main_screenshot.empty() ||
-            !shooting_screenshots.empty() || !combat_screenshots.empty();
+            !shooting_screenshots.empty() || !combat_screenshots.empty() || !midboss_screenshots.empty();
         require((!hdi.empty()) != (!archive.empty()) && (title || !member.empty()) &&
                 !(title && (!member.empty() || !output.empty())),
                 "usage: th04-port64 (--hdi FILE | --archive FILE) "
                 "[--member NAME --output BMP | --title "
                 "[--title-screenshot BMP] [--options-screenshot BMP] "
                 "[--character-screenshot BMP] [--shot-screenshot BMP] "
-                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR]]");
+                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         if (title) {
             MainAssets main_assets;
@@ -393,12 +394,13 @@ int main(int argc, char** argv) {
                 main_assets.items = archive_member(game, "MIKO16.BFT");
                 main_assets.enemies = archive_member(game, "MIKO32.BFT");
                 main_assets.stage_tiles = archive_member(game, "ST00.BFT");
+                main_assets.boss_tiles = archive_member(game, "ST00.BMT");
                 main_assets.reimu_map_tiles = archive_member(game, "ST00.MPN");
                 main_assets.marisa_map_tiles = archive_member(game, "ST10.MPN");
                 main_assets.map = archive_member(game, "ST00.MAP");
                 main_assets.standard = archive_member(game, "ST00.STD");
             }
-            require((main_screenshot.empty() && shooting_screenshots.empty() && combat_screenshots.empty()) || !main_assets.reimu.empty(),
+            require((main_screenshot.empty() && shooting_screenshots.empty() && combat_screenshots.empty() && midboss_screenshots.empty()) || !main_assets.reimu.empty(),
                     "MAIN screenshots require a complete TH04 HDI");
             const auto bg = decode_pi(archive_member(par, "OP1.PI"));
             run_title(
@@ -408,7 +410,7 @@ int main(int argc, char** argv) {
                 decode_pi(archive_member(par, "SLB1.PI")),
                 archive_member(par, "SL.CD2"), main_assets, title_screenshot,
                 options_screenshot, character_screenshot, shot_screenshot,
-                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, title_window
+                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots, title_window
             );
             return 0;
         }

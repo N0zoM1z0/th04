@@ -52,6 +52,7 @@ class System {
 public:
     explicit System(Snapshot initial={}):state_(initial) {}
     const Snapshot& snapshot() const { return state_; }
+    Template& scratch() { return state_.scratch; }
     void fire(const enemy::Event& event,Context context,randring::SharedRandomRing& random,const Sink& sink={});
     void release(const Template& saved,Context context,randring::SharedRandomRing& random,const Sink& sink={});
     void add(Template& bullet,Context context,randring::SharedRandomRing& random,
