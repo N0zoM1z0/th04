@@ -82,3 +82,43 @@ python3 scripts/probes/probe_th04_native_maine_link.py --output-dir .analysis/re
 python3 scripts/probes/audit_th04_native_maine_mz.py --link-receipt .analysis/reconstruction/probes/maine-heap-lib/receipt.json --output-dir .analysis/reconstruction/probes/maine-heap-mz
 python3 scripts/probes/audit_th04_native_maine_call_abi.py --link-receipt .analysis/reconstruction/probes/maine-heap-lib/receipt.json --output-dir .analysis/reconstruction/probes/maine-heap-call
 ```
+
+## Semantic preservation on semantic/readable
+
+The 2026-10-03 pass names header segments, the exclusive region sentinel,
+the lowest linked block, first-fit hole reuse, paragraph counts and DOS
+ownership in `src/shared/memory/heap.cpp`. Comments distinguish the six-byte
+header struct from its reserved 16-byte paragraph, explain the minimum useful
+split, both-neighbor coalescing and reclamation of the leading free prefix.
+Public names, far Pascal signatures, declaration order and expression order
+are retained. The single successful allocation return is retained because of
+the previously reproduced TC4J double-increment counterexample.
+
+`MEM_ASSIGN` binds caller-owned memory and does not reject rebinding;
+`MEM_ASSIGN_DOS` rejects a bound/empty region with -8. `MEM_UNASSIGN` clears
+local ownership before DOS release, including when that release fails. A free
+requires the exact payload segment; the reserved header ID is always zero,
+so a stale handle can alias a later allocation at the same segment. These
+are source contracts to consider explicitly in a native port, not changes
+made by the readability pass.
+
+Dependency-validated fast build `product-20261003-040353-7d7e1b7e` preserves
+all complete MAIN/OP/MAINE bytes and ordered relocations against the preceding
+BFNT batch: 192,351/77,740/70,614 bytes, 1,178/814/660 relocation entries,
+SHA-256 `dbbfa404…`, `c8ac4d73…`, `0a2d3ce8…`. Comparator receipts:
+`.analysis/ARTIFACT.EXE.semantic-heap-compare.json`.
+
+The existing independent DOS lifecycle harness returns `HEAP_PASS`, checking
+assignment, distinct handles and writes, exact reuse of a freed handle, split
+tail reuse, coalescing/duplicate free, an 8,000-byte allocation and reassignment.
+Receipt: `.analysis/reconstruction/probes/semantic-heap-runtime-20261003/receipt.json`.
+This is source-to-source compiler preservation plus bounded allocator runtime
+coverage. It is not original library byte equality or a PC-98 ending replay.
+
+```text
+python3 scripts/build.py --only main op maine --output-dir .analysis/build/semantic-heap-readable --main-cpp-cache .analysis/reconstruction/probes/product-20261003-035054-8c7fc31c-main --op-cache .analysis/reconstruction/probes/product-20261003-035054-8c7fc31c-op --maine-cache .analysis/reconstruction/probes/product-20261003-035054-8c7fc31c-maine --progress
+python3 scripts/compare_artifacts.py .analysis/build/semantic-super-readable/MAIN.EXE .analysis/build/semantic-heap-readable/MAIN.EXE --json
+python3 scripts/probes/probe_th04_native_heap_runtime.py --output-dir .analysis/reconstruction/probes/semantic-heap-runtime-20261003
+```
+
+Repeat the complete comparator for OP and MAINE.

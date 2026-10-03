@@ -26,11 +26,15 @@ The BFNT semantic batch likewise preserves all three complete DOS files and
 ordered relocations. Historical pattern/palette hashes and fake-VRAM screen
 hash `0BE615EA` pass with lifecycle and clipped-placement controls; see the
 [BFNT note](reconstruction/product/TH04_NATIVE_SUPER_SPRITE_V870.md).
+The segmented-heap semantic batch passes the same three-file fast-build byte
+and ordered-relocation equality plus the existing exact-handle reuse, split,
+coalescing and DOS reassignment harness. See the
+[heap note](reconstruction/product/TH04_NATIVE_HEAP_V863.md).
 Ending source repair and Windows deployment are deferred while the user plays.
 Private CPU replay has reproduced MAINE CDG self-modifying CS writes into the
 PI decoder (`.analysis/ending-analysis-20261003/ANALYSIS.md`); a complete
 repaired ending-to-registration replay is still required. The newly reported
-stage-4 top stripe disappears after Marisa's bomb; shared backdrop filling
+stage-4/late-Yuuka top stripe disappears after Marisa's bomb; shared backdrop filling
 matches its target body, while display-scroll transition state remains under
 investigation. Do not interpret either report as completed runtime acceptance.
 

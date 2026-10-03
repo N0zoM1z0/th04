@@ -37,6 +37,7 @@ or replacing assembly before its observable contract is understood.
 | PI image decoding | Commands, pixel packing, adaptive history, allocation and returned-pointer ownership | First bounded batch completed; independent DOS decoder and cold before/after equality pass |
 | PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | PAR and CDG contracts clarified; three full DOS products remain byte-identical; BFNT names, packed pixels, mask/color planes, clipping and lifecycle clarified; independent DOS hashes pass |
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | Existing bounded scenarios; complete Good Ending visual issue remains open |
+| Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Semantic pass pending |
 | Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Semantic pass pending |
 
@@ -50,3 +51,5 @@ The first result and replay commands are recorded in
 The PAR/CDG batch and its limits are recorded in [the archive note](reconstruction/product/TH04_NATIVE_PF_ARCHIVE_V867.md) and the existing shared CDG ownership notes.
 
 The BFNT batch and its bounded coverage are recorded in [the sprite note](reconstruction/product/TH04_NATIVE_SUPER_SPRITE_V870.md).
+
+The allocator batch is recorded in [the native heap note](reconstruction/product/TH04_NATIVE_HEAP_V863.md).
