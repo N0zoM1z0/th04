@@ -76,13 +76,20 @@ public:
     }
 
     Bytes op_archive() const {
+        return game_file(std::string("\x8c\xb6\x91\x7a\x8b\xbd" "EDDAT", 11));
+    }
+
+    Bytes main_archive() const {
+        return game_file(std::string("\x93\x8c\x95\xfb\x8c\xb6\x91\x7a\x8b\xbd ", 11));
+    }
+
+    Bytes game_file(const std::string& name) const {
         const size_t dir = find({root}, "GENSO      ");
         const auto dirs = chain(le16(b, dir + 26));
         std::vector<size_t> offsets;
         for (auto c : dirs) offsets.push_back(cluster_offset(c));
         // CP932 short name of the original OP/ending resource archive.
-        const std::string op_name("\x8c\xb6\x91\x7a\x8b\xbd" "EDDAT", 11);
-        const size_t file = find(offsets, op_name);
+        const size_t file = find(offsets, name);
         return file_bytes(le16(b, file + 26), le32(b, file + 28));
     }
 
@@ -343,7 +350,7 @@ int main(int argc, char** argv) {
     try {
         std::string hdi, archive, member, output, title_screenshot;
         std::string options_screenshot, character_screenshot, shot_screenshot;
-        std::string handoff_screenshot;
+        std::string handoff_screenshot, main_screenshot;
         bool title_window = false;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
@@ -359,29 +366,41 @@ int main(int argc, char** argv) {
             else if (arg == "--character-screenshot") character_screenshot = value;
             else if (arg == "--shot-screenshot") shot_screenshot = value;
             else if (arg == "--handoff-screenshot") handoff_screenshot = value;
+            else if (arg == "--main-screenshot") main_screenshot = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
         const bool title = title_window || !title_screenshot.empty() ||
             !options_screenshot.empty() || !character_screenshot.empty() ||
-            !shot_screenshot.empty() || !handoff_screenshot.empty();
+            !shot_screenshot.empty() || !handoff_screenshot.empty() || !main_screenshot.empty();
         require((!hdi.empty()) != (!archive.empty()) && (title || !member.empty()) &&
                 !(title && (!member.empty() || !output.empty())),
                 "usage: th04-port64 (--hdi FILE | --archive FILE) "
                 "[--member NAME --output BMP | --title "
                 "[--title-screenshot BMP] [--options-screenshot BMP] "
                 "[--character-screenshot BMP] [--shot-screenshot BMP] "
-                "[--handoff-screenshot BMP]]");
+                "[--handoff-screenshot BMP] [--main-screenshot BMP]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         if (title) {
+            MainAssets main_assets;
+            if (!hdi.empty()) {
+                const auto image = read_file(hdi);
+                const auto game = Fat12(image).main_archive();
+                main_assets.reimu = archive_member(game, "MIKO.BFT");
+                main_assets.marisa = archive_member(game, "MARI.BFT");
+                main_assets.items = archive_member(game, "MIKO16.BFT");
+                main_assets.stage_tiles = archive_member(game, "ST00.BFT");
+            }
+            require(main_screenshot.empty() || !main_assets.reimu.empty(),
+                    "--main-screenshot requires a complete TH04 HDI");
             const auto bg = decode_pi(archive_member(par, "OP1.PI"));
             run_title(
                 bg, archive_member(par, "SFT1.CD2"),
                 archive_member(par, "SFT2.CD2"),
                 archive_member(par, "CAR.CD2"),
                 decode_pi(archive_member(par, "SLB1.PI")),
-                archive_member(par, "SL.CD2"), title_screenshot,
+                archive_member(par, "SL.CD2"), main_assets, title_screenshot,
                 options_screenshot, character_screenshot, shot_screenshot,
-                handoff_screenshot, title_window
+                handoff_screenshot, main_screenshot, title_window
             );
             return 0;
         }

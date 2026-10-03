@@ -10,6 +10,11 @@ add_library(
   application_state.cpp
   bullet_geometry.cpp
   item_system.cpp
+  item_pool.cpp
+  motion.cpp
+  player_motion.cpp
+  main_state.cpp
+  sprite_sheet.cpp
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp
@@ -25,8 +30,10 @@ target_link_libraries(th04-port64 PRIVATE th04-portable-core)
 
 add_executable(th04-port64-contracts contracts.cpp)
 target_link_libraries(th04-port64-contracts PRIVATE th04-portable-core)
+add_executable(th04-port64-live-contracts live_contracts.cpp)
+target_link_libraries(th04-port64-live-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-portable-core th04-port64 th04-port64-contracts)
+foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -34,7 +41,7 @@ foreach(target th04-portable-core th04-port64 th04-port64-contracts)
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64 th04-port64-contracts)
+  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts)
     target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
   endforeach()
 endif()
@@ -48,3 +55,4 @@ endif()
 
 enable_testing()
 add_test(NAME portable-contracts COMMAND th04-port64-contracts)
+add_test(NAME live-main-contracts COMMAND th04-port64-live-contracts)

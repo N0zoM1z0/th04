@@ -10,26 +10,22 @@ three-executable process-handoff, shared-random-ring, process-local-LCG and
 item-lifecycle batches; Windows
 retesting continues.
 
-On `port/modern-64`, the separate native product is now rebased through the
-latest semantic LCG batch. Linux ELF64 and Windows PE32+ builds both
-read a user-supplied TH04 HDI, reproduce the two established PI pixel hashes, and
-compose the same 640x400 OP title BMP (`b52ea861...`) from OP1.PI, SFT2.CD2 and
-CAR.CD2, plus the same default Options BMP (`a064338b...`) using SFT1.CD2.
-Game now enters a portable character/shot state machine, renders `SLB1.PI` and
-`SL.CD2` to identical character (`c1a795a3...`) and shot (`12aa7616...`)
-screens on both hosts, and a confirmed choice reaches a visible MAIN handoff
-with the resident generation advanced. GNU UBSan/bounds also passes this path.
-SDL2 and Win32/GDI call one portable main/options state machine with the
-source-observed locked-Extra skip, option wrap order, reset defaults and return
-selection. A shared platform-independent group/angle header and portable
-bullet geometry contract pass on both x86-64 products. A second fixed-width
-state machine replaces the DOS OP/MAIN/MAINE `execl()` chain: both hosts pass
-normal/Extra/demo initialization, MAIN publication, MAINE route selection,
-return-to-OP retention and invalid-transition controls. The portable LCG uses
-explicit 32-bit state and preserves resident/OP/MAIN/demo/MAINE seed lifetimes;
-both hosts and a GNU UBSan/bounds build pass the LCG-backed ring contract.
-Gameplay, sound, Ending rendering and saved-data I/O are not ported yet.
-See [the x64 port handoff](PORT64.md).
+On `port/modern-64`, semantic work is paused at the user's stopping condition:
+sufficient clarity for the current x64 slice, then implement and verify it.
+The native product is rebased through the latest item semantics. Linux ELF64
+and Wine-hosted Windows PE32+ pass the existing OP/resource/process/random
+contracts and a new live MAIN slice. Game confirmation now starts a timed
+window with the original player sprite, held arrows and Shift slowdown.
+The 32-slot item pool preserves movement, attraction, pickup/scoring and
+next-frame release. Seven item types appear only in the explicit headless
+60-frame fixture; both hosts produce `0fe4fac7...` with player Q12.4 position
+5232,2960. Independent original MAIN `main_01 0AAF:5DA8` CPU replay agrees
+with native movement across 256 masks; this is a bounded primitive comparison,
+not full gameplay or original timing. GNU UBSan/bounds also passes. Private
+receipts: `.analysis/port64/verification-live-v1251/receipt.json` and
+`.analysis/port64/live-v1251/`. No DOS source or acceptance state changes.
+Stage VM, shots, enemies, scrolling/tiles, HUD, Bomb/death, sound, Ending and
+saved-data I/O remain to be connected. See [the x64 port handoff](PORT64.md).
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -247,8 +243,8 @@ the route-dependent verdict re-seed explicit. The first MAIN item contract now
 preserves automatic/miss drop random consumption, fixed-pool truncation,
 fixed-width score/performance state and wrapped pickup tests. Linux and Windows
 x64 agree, and UBSan/bounds passes the historical above-cap big-power case
-without an out-of-range host access. Item rendering/motion integration and the
-remaining direct gameplay call sites remain unported. A playable native game
+without an out-of-range host access. The live motion/item-pool slice now renders original BFNT player/item cels;
+remaining gameplay call sites stay unported. A playable native game
 still requires the remaining
 hardware and runtime boundaries described in `port64/README.md`.
 

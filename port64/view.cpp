@@ -2,13 +2,17 @@
 #include "application_state.hpp"
 #include "menu_state.hpp"
 #include "selection_state.hpp"
+#include "main_state.hpp"
+#include "sprite_sheet.hpp"
 
 #include <algorithm>
 #include <cstddef>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
+#include <memory>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -22,6 +26,14 @@ namespace {
 namespace menu = th04::portable::menu;
 namespace application = th04::portable::application;
 namespace selection = th04::portable::selection;
+namespace gameplay = th04::portable::gameplay;
+namespace sprite = th04::portable::sprite;
+namespace player = th04::portable::player;
+
+using Clock = std::chrono::steady_clock;
+// PC-98 640x400 cadence. Advance simulation independently of host redraw or
+// key-repeat delivery. At most four overdue ticks are run before resync.
+constexpr auto frame_period = std::chrono::nanoseconds(17730496);
 
 constexpr unsigned choice_count = 6;
 constexpr unsigned option_count = 8;
@@ -572,22 +584,86 @@ void write_bmp(const std::string& path, const Frame& frame) {
     require_view(bool(output), "cannot write title screenshot");
 }
 
+struct MainSprites {
+    sprite::Sheet reimu, marisa, items, stage_tiles;
+    PiImage palette;
+    explicit MainSprites(const MainAssets& assets)
+        : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles) {
+        // Stage 1's sprite load replaces the eyecatch palette before normal
+        // rendering. EYE.RGB belongs to the earlier startup transition.
+        require_view(stage_tiles.has_palette(), "ST00.BFT must supply the stage palette");
+        palette.palette = stage_tiles.palette();
+        require_view(reimu.width() == 32 && reimu.height() == 48 && reimu.count() >= 3 &&
+                     marisa.width() == 32 && marisa.height() == 48 && marisa.count() >= 3 &&
+                     items.width() == 16 && items.height() == 16 && items.count() == 100,
+                     "MAIN sprite resource geometry changed");
+    }
+};
+
+void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet,
+                unsigned image, int left, int top, bool white = false) {
+    for (unsigned y = 0; y < sheet.height(); ++y) {
+        for (unsigned x = 0; x < sheet.width(); ++x) {
+            const auto color = sheet.pixel(image, x, y);
+            if (!color) continue;
+            put_indexed_pixel(frame, palette, left, top, x, y, white ? 15 : color);
+        }
+    }
+}
+
+Frame render_main(const MainSprites& sprites, const gameplay::State& state,
+                  application::Playchar playchar) {
+    Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
+    const auto& position = state.player().position();
+    const unsigned cel = position.velocity.x < 0 ? 1 : (position.velocity.x > 0 ? 2 : 0);
+    const bool white = state.frames() < 64 && state.frames() % 4 == 0;
+    put_sprite(frame, sprites.palette,
+               playchar == application::Playchar::reimu ? sprites.reimu : sprites.marisa,
+               cel, 32 + position.current.x / 16 - 16,
+               16 + position.current.y / 16 - 24, white);
+    for (const auto& entity : state.items().entities()) {
+        if (entity.flag != th04::portable::item::Flag::alive) continue;
+        const auto point = entity.position.current;
+        const int x = point.x >= 0 ? point.x / 16 : -((-int(point.x) + 15) / 16);
+        const int y = point.y >= 0 ? point.y / 16 : -((-int(point.y) + 15) / 16);
+        // 3 player + 1 death + 24 MIKO32 patterns put MIKO16 at global
+        // slot 28. IT_POWER is global slot 44, hence local index 16.
+        put_sprite(frame, sprites.palette, sprites.items,
+                   16u + static_cast<unsigned>(entity.type), 32 + x - 8, 16 + y - 8);
+    }
+    return frame;
+}
+
 class FrontEnd {
 public:
     FrontEnd(
         const PiImage& title_background, const CdgSheet& numerals,
         const CdgSheet& labels, const CdgSheet& cursors,
-        const PiImage& selection_background, const CdgSheet& portraits
+        const PiImage& selection_background, const CdgSheet& portraits,
+        const MainAssets* main_assets = nullptr
     ) : title_background_(title_background), numerals_(numerals), labels_(labels),
         cursors_(cursors), selection_background_(selection_background),
-        portraits_(portraits), frame_(render()) {}
+        portraits_(portraits), frame_(render()) {
+        if (main_assets && !main_assets->reimu.empty()) {
+            sprites_ = std::make_unique<MainSprites>(*main_assets);
+        }
+    }
 
     const Frame& frame() const { return frame_; }
+    bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
+    void advance(std::uint16_t held_input, bool shift) {
+        if (live_main()) {
+            main_->update(held_input, shift);
+            frame_ = render();
+        }
+        else if (screen_ == Screen::menu) application_.advance_op_menu_frame();
+    }
+    gameplay::State& main_state() {
+        require_view(bool(main_), "MAIN scene is not active");
+        return *main_;
+    }
 
     bool input(menu::Input pressed) {
-        if (application_.program() == application::Program::op) {
-            application_.advance_op_menu_frame();
-        }
         bool close = false;
         switch (screen_) {
         case Screen::menu: {
@@ -620,6 +696,7 @@ public:
                     application_.start_normal(result.playchar, result.shot_type);
                 }
                 screen_ = Screen::main_handoff;
+                if (sprites_) main_ = std::make_unique<gameplay::State>(application_);
                 std::cout << "MAIN handoff playchar="
                           << unsigned(result.playchar)
                           << " shot=" << unsigned(result.shot_type)
@@ -656,6 +733,7 @@ private:
                     selection_background_, portraits_, selection_
                 );
         case Screen::main_handoff:
+            if (main_) return render_main(*sprites_, *main_, application_.resident().playchar);
             return render_main_handoff(
                 selection_background_, portraits_, application_
             );
@@ -674,6 +752,8 @@ private:
     application::State application_;
     Screen screen_ = Screen::menu;
     bool extra_ = false;
+    std::unique_ptr<MainSprites> sprites_;
+    std::unique_ptr<gameplay::State> main_;
     Frame frame_;
 };
 
@@ -681,13 +761,15 @@ private:
 
 struct Win32Title {
     FrontEnd front_end;
+    Clock::time_point next_tick = Clock::now() + frame_period;
 
     Win32Title(
         const PiImage& background_, const CdgSheet& numerals_,
         const CdgSheet& labels_, const CdgSheet& cursors_,
-        const PiImage& selection_background_, const CdgSheet& portraits_
+        const PiImage& selection_background_, const CdgSheet& portraits_,
+        const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_) {}
+                  selection_background_, portraits_, &main_assets) {}
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -706,15 +788,36 @@ LRESULT CALLBACK title_window_proc(
         SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(title));
     }
     switch (message) {
+    case WM_TIMER:
+        if (title) {
+            const auto now = Clock::now();
+            unsigned ticks = 0;
+            while (now >= title->next_tick && ticks < 4) {
+                std::uint16_t held = 0;
+                const bool active = GetForegroundWindow() == window;
+                if (active && GetAsyncKeyState(VK_UP) & 0x8000) held |= player::up;
+                if (active && GetAsyncKeyState(VK_DOWN) & 0x8000) held |= player::down;
+                if (active && GetAsyncKeyState(VK_LEFT) & 0x8000) held |= player::left;
+                if (active && GetAsyncKeyState(VK_RIGHT) & 0x8000) held |= player::right;
+                title->front_end.advance(held, active && (GetAsyncKeyState(VK_SHIFT) & 0x8000));
+                title->next_tick += frame_period;
+                ++ticks;
+            }
+            if (ticks == 4 && now >= title->next_tick) title->next_tick = now + frame_period;
+            if (ticks && title->front_end.live_main()) InvalidateRect(window, nullptr, FALSE);
+            return 0;
+        }
+        break;
     case WM_KEYDOWN: {
         if (!title) break;
+        if (lparam & (LPARAM(1) << 30)) return 0;
         bool handled = true;
         bool close = false;
         if (wparam == VK_UP) title->input(menu::Input::up);
         else if (wparam == VK_DOWN) title->input(menu::Input::down);
         else if (wparam == VK_LEFT) title->input(menu::Input::left);
         else if (wparam == VK_RIGHT) title->input(menu::Input::right);
-        else if (wparam == VK_RETURN) close = title->input(menu::Input::confirm);
+        else if (wparam == VK_RETURN || wparam == 'Z') close = title->input(menu::Input::confirm);
         else if (wparam == VK_ESCAPE) close = title->input(menu::Input::cancel);
         else handled = false;
         if (!handled) break;
@@ -759,10 +862,11 @@ LRESULT CALLBACK title_window_proc(
 void show_window(
     const PiImage& background, const CdgSheet& numerals,
     const CdgSheet& labels, const CdgSheet& cursors,
-    const PiImage& selection_background, const CdgSheet& portraits
+    const PiImage& selection_background, const CdgSheet& portraits,
+    const MainAssets& main_assets
 ) {
     Win32Title title(
-        background, numerals, labels, cursors, selection_background, portraits
+        background, numerals, labels, cursors, selection_background, portraits, main_assets
     );
     const HINSTANCE instance = GetModuleHandleW(nullptr);
     const wchar_t class_name[] = L"TH04Port64Title";
@@ -784,6 +888,7 @@ void show_window(
         nullptr, nullptr, instance, &title
     );
     require_view(window != nullptr, "cannot create Win32 title window");
+    require_view(SetTimer(window, 1, 4, nullptr) != 0, "cannot create MAIN frame timer");
     MSG message{};
     while (GetMessageW(&message, nullptr, 0, 0) > 0) {
         TranslateMessage(&message);
@@ -796,7 +901,8 @@ void show_window(
 void show_window(
     const PiImage& background, const CdgSheet& numerals,
     const CdgSheet& labels, const CdgSheet& cursors,
-    const PiImage& selection_background, const CdgSheet& portraits
+    const PiImage& selection_background, const CdgSheet& portraits,
+    const MainAssets& main_assets
 ) {
     require_view(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0, SDL_GetError());
     struct SdlQuit { ~SdlQuit() { SDL_Quit(); } } quit;
@@ -831,17 +937,19 @@ void show_window(
     } texture_owner{texture};
 
     FrontEnd front_end(
-        background, numerals, labels, cursors, selection_background, portraits
+        background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
+    auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
     Frame frame;
     while (running) {
         SDL_Event event{};
-        if (!dirty && SDL_WaitEvent(&event)) {
-            SDL_PushEvent(&event);
-        }
-        while (SDL_PollEvent(&event)) {
+        // Process the waited event in place. Pushing it back would move it
+        // behind later key events and could invert rapid menu confirmations.
+        for (bool available = SDL_PollEvent(&event) ||
+                 (!dirty && SDL_WaitEventTimeout(&event, 4));
+             available; available = SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
             if (event.type != SDL_KEYDOWN || event.key.repeat) continue;
             switch (event.key.keysym.sym) {
@@ -863,6 +971,7 @@ void show_window(
                 break;
             case SDLK_RETURN:
             case SDLK_KP_ENTER:
+            case SDLK_z:
                 if (front_end.input(menu::Input::confirm)) running = false;
                 dirty = true;
                 break;
@@ -875,6 +984,24 @@ void show_window(
             }
         }
         if (!running) break;
+        const auto now = Clock::now();
+        unsigned ticks = 0;
+        while (now >= next_tick && ticks < 4) {
+            const auto* keys = SDL_GetKeyboardState(nullptr);
+            std::uint16_t held = 0;
+            if (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) {
+                if (keys[SDL_SCANCODE_UP]) held |= player::up;
+                if (keys[SDL_SCANCODE_DOWN]) held |= player::down;
+                if (keys[SDL_SCANCODE_LEFT]) held |= player::left;
+                if (keys[SDL_SCANCODE_RIGHT]) held |= player::right;
+            }
+            const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
+            front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
+            dirty |= front_end.live_main();
+            next_tick += frame_period;
+            ++ticks;
+        }
+        if (ticks == 4 && now >= next_tick) next_tick = now + frame_period;
         if (dirty) {
             frame = front_end.frame();
             SDL_UpdateTexture(
@@ -909,10 +1036,12 @@ void run_title(
     const PiImage& background, const Bytes& numeral_bytes,
     const Bytes& label_bytes, const Bytes& cursor_bytes,
     const PiImage& selection_background, const Bytes& portrait_bytes,
+    const MainAssets& main_assets,
     const std::string& screenshot, const std::string& options_screenshot,
     const std::string& character_screenshot,
     const std::string& shot_screenshot,
-    const std::string& handoff_screenshot, bool window
+    const std::string& handoff_screenshot,
+    const std::string& main_screenshot, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -975,10 +1104,32 @@ void run_title(
         std::cout << "MAIN handoff 640x400 screenshot="
                   << handoff_screenshot << std::endl;
     }
+    if (!main_screenshot.empty()) {
+        FrontEnd front_end(background, numerals, labels, cursors,
+                           selection_background, portraits, &main_assets);
+        front_end.input(menu::Input::confirm);
+        front_end.input(menu::Input::confirm);
+        front_end.input(menu::Input::confirm);
+        // Only this explicitly requested inspection fixture injects items.
+        // Interactive MAIN has no substitute enemy or drop schedule.
+        for (unsigned i = 0; i < 7; ++i) {
+            front_end.main_state().add_item(
+                {static_cast<std::int16_t>((64 + i * 40) * 16), 160 * 16},
+                static_cast<th04::portable::item::Type>(i)
+            );
+        }
+        for (unsigned frame = 0; frame < 60; ++frame) {
+            front_end.advance(player::right | player::up, frame >= 30);
+        }
+        write_bmp(main_screenshot, front_end.frame());
+        const auto& position = front_end.main_state().player().position().current;
+        std::cout << "MAIN scene frames=60 player=" << position.x << ',' << position.y
+                  << " screenshot=" << main_screenshot << std::endl;
+    }
     if (window) {
         show_window(
             background, numerals, labels, cursors,
-            selection_background, portraits
+            selection_background, portraits, main_assets
         );
     }
 }

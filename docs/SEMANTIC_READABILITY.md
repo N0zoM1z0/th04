@@ -41,9 +41,12 @@ or replacing assembly before its observable contract is understood.
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
 | Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime, player-shot lifecycle/damage, shared random-ring and process-local LCG ownership, and item drop/motion/scoring batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay remains |
 
-This queue describes work to do, not a new completion percentage. Begin the
-next native-port slice once its own source contracts and regression probes
-are adequate; other subsystems can continue on this branch independently.
+This queue is a map of remaining source topics, not a prerequisite checklist.
+The user's stopping condition is sufficient clarity to implement and verify the
+current x64 subsystem. Pause semantic work once that condition holds. Return
+only for a concrete portability ambiguity that blocks the next native slice,
+and preserve the DOS build with the existing regression gates. Do not continue
+renaming or commenting unrelated owners merely to exhaust this table.
 
 The first result and replay commands are recorded in
 [the PI decoder note](reconstruction/product/TH04_NATIVE_PI_DECODE_V869.md).

@@ -6,12 +6,14 @@ archive), decodes PAR, PI and CD2 data, writes inspection BMPs, and presents
 the resource-derived OP main menu through SDL2 on Linux or Win32/GDI on
 Windows. Game now enters the two-step character/shot menu rendered from
 `SLB1.PI` and `SL.CD2`; a completed choice updates the portable resident
-contract and reaches a visible MAIN handoff frame. The portable state machine skips locked Extra, enters the complete
+contract and starts a live MAIN player scene. The portable state machine skips locked Extra, enters the complete
 Options list, wraps every stored option in the original direction, restores
 the original defaults, and returns to the Option command on Cancel/Option
 Quit. Other main commands whose screens are not ported yet print their index and
-leave the window open; main Quit/Esc closes it. The MAIN handoff does not yet
-run gameplay. No original executables or game data are embedded in the binary. Unlike
+leave the window open; main Quit/Esc closes it. In that scene, arrow keys move the original character sprite and Shift halves
+speed. The fixed 32-slot item pool handles drops, motion, attraction and scoring;
+its seven-type scene fixture is headless-only. The interactive scene currently
+has a black playfield without stage scripts, shots, enemies, bombs or death. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
 The portable core also models the DOS executable chain as guarded in-process
@@ -94,8 +96,10 @@ default Options state. Linux and Windows x64 produce the same 640x400 BMPs
 with SHA-256 `b52ea861...` and `a064338b...`.
 `--character-screenshot` and `--shot-screenshot` render the two selection
 stages; their shared cross-host hashes are `c1a795a3...` and `12aa7616...`.
-`--handoff-screenshot` drives Game through both confirmations and verifies the
-resulting MAIN frame (`0b2c0f8c...`) without opening a window.
+`--handoff-screenshot` retains the static handoff fixture (`0b2c0f8c...`).
+`--main-screenshot` requires an HDI and drives a 60-frame movement/item scene
+with seven explicitly injected item types (`0fe4fac7...`); these fixture items
+are not injected into ordinary interactive sessions.
 The portable contract target
 also consumes `src/main/bullet/group_types.hpp` and checks 64-bit pointer
 width, byte-sized angles/group codes, spread/ring geometry, aim and template
@@ -113,8 +117,29 @@ A GNU x86-64 debug build also passes these contracts with
 `-fsanitize=undefined,bounds`, including unsigned wrap, process resets, the
 full LCG-backed random-ring fill and the above-cap big-power scoring case.
 
-Next runtime boundaries are explicit frame timing, audio, configuration
-persistence, and replacement of DOS file/heap interfaces. MAIN item
-rendering/pool motion and bullet entity state can now consume the shared
-process LCG and random ring before building on the angle/group contract. A
-completed TH04 native game has not yet been demonstrated.
+The live MAIN contracts additionally cover Q12.4 wrapping, negative arithmetic
+shifts, angle/polar motion, conflicting input priority, Shift speed, clamping,
+item gravity, attraction, deferred release, pickup/miss ordering and BFNT
+palette/row decoding. `verify_movement.py` independently executes the pinned
+original MAIN player-move body under Unicorn for all 256 direction masks and
+compares the native vectors. This validates the isolated primitive; it does
+not establish full player update or original frame timing.
+
+Optional window integration replay (requires Xvfb, xdotool, ImageMagick and Pillow):
+
+```sh
+xvfb-run -a -s '-screen 0 1600x1000x24' python3 port64/verify_window.py \
+  --exe .analysis/port64/linux/th04-port64 \
+  --hdi .analysis/runtime/images/zun.hdi \
+  --output-dir .analysis/port64/window-linux
+```
+
+For Wine/Win32 use `--runner wine` and the Windows executable. This checks
+actual held keys, visible movement, slower Shift movement and Esc exit with
+loose time bounds; native Windows pacing remains a separate observation.
+
+The next gameplay slice is stage VM/entity integration, followed by shots,
+enemy bullets, scrolling/tile maps, HUD, death/Bomb transitions and audio.
+Saved configuration and Ending/score persistence also remain. Semantic work
+is paused unless a concrete ambiguity blocks one of these slices; a completed
+TH04 native game has not yet been demonstrated.

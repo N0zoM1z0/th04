@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a 64-bit port build against independently verified PI pixel hashes."""
+"""Check independent PI hashes and deterministic cross-host UI/MAIN fixtures."""
 
 import argparse
 import hashlib
@@ -23,6 +23,10 @@ EXPECTED_SHOT_BMP_SHA256 = (
 )
 EXPECTED_HANDOFF_BMP_SHA256 = (
     "0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5"
+)
+
+EXPECTED_MAIN_BMP_SHA256 = (
+    "0fe4fac7633580ec1efb85ad3a72f1f7dc6d5d9e0e34703083c21d6ba9076351"
 )
 
 
@@ -52,15 +56,18 @@ def main() -> None:
         character = Path(work) / "character.bmp"
         shot = Path(work) / "shot.bmp"
         handoff = Path(work) / "handoff.bmp"
+        main_scene = Path(work) / "main.bmp"
         result = subprocess.run(
             prefix + [str(args.exe.resolve()), "--hdi", str(args.hdi.resolve()),
                       "--title-screenshot", str(title),
                       "--options-screenshot", str(options),
                       "--character-screenshot", str(character),
                       "--shot-screenshot", str(shot),
-                      "--handoff-screenshot", str(handoff)],
+                      "--handoff-screenshot", str(handoff),
+                      "--main-screenshot", str(main_scene)],
             capture_output=True, text=True, check=True,
         )
+        assert "MAIN scene frames=60 player=5232,2960" in result.stdout, result.stdout
         digest = hashlib.sha256(title.read_bytes()).hexdigest()
         assert digest == EXPECTED_TITLE_BMP_SHA256, digest
         print(f"title 640x400 SHA256={digest}")
@@ -76,6 +83,9 @@ def main() -> None:
         handoff_digest = hashlib.sha256(handoff.read_bytes()).hexdigest()
         assert handoff_digest == EXPECTED_HANDOFF_BMP_SHA256, handoff_digest
         print(f"MAIN handoff 640x400 SHA256={handoff_digest}")
+        main_digest = hashlib.sha256(main_scene.read_bytes()).hexdigest()
+        assert main_digest == EXPECTED_MAIN_BMP_SHA256, main_digest
+        print(f"MAIN live fixture 640x400 SHA256={main_digest}")
     print("port64 smoke: PASS")
 
 

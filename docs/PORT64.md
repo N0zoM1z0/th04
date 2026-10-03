@@ -74,8 +74,24 @@ dream, point totals and performance accumulators. The full-power big-item path
 branches before table access while retaining the historical final cap of 42,
 2,560-point reward and yellow popup, so x64 never reproduces the DOS
 pre-clamp out-of-range read. The pickup helper performs the historical wrapped
-unsigned 16-bit rectangle test without host signed overflow. Rendering, sprite
-pool motion and HUD/audio adapters remain outside this bounded contract.
+unsigned 16-bit rectangle test without host signed overflow. The live `item_pool` now connects that scorer to 32 entities, preserving
+move-before-gravity, pull cancellation, previous positions, pre-clamp collision
+coordinates and next-frame reclamation. Per-slot effects retain pickup order;
+HUD/audio adapters remain separate.
+
+`main_state` joins player-before-item updates to the existing process LCG and
+shared ring. Q12.4 motion uses explicit signed wrap and arithmetic floor shift;
+`player_motion` preserves aligned/diagonal speed, Shift division, the opposing
+chord retry latch and playfield bounds. BFNT decoding loads MIKO/MARI player
+cels and item cels from MIKO16, using the ST00 stage palette. The sprite base
+is 16 within MIKO16, because the preceding MIKO32 sheet owns 24 patterns.
+A completed HDI-backed Game selection now starts a timed SDL/Win32 MAIN scene
+with held-key input. Host timers update at a nominal 17,730,496 ns step and
+limit catch-up to four frames; this is a chosen bring-up cadence, not an
+independent original-timing measurement. The scene is a black playfield with a
+movable player; stage VM, shots, enemies, Bomb/death, tiles and HUD remain absent.
+`--main-screenshot` alone injects seven item types for a deterministic 60-frame
+fixture, preserving an honest distinction from ordinary interactive gameplay.
 
 ## Verified builds
 
@@ -94,17 +110,29 @@ Both portable contract executables report `pointer_bits=64`, `angle_bits=8`,
 `menu_state=OP`, `handoff_state=OP_MAIN_MAINE`, `selection=OP` and
 `randring=SHARED_OVERLAP`, `lcg=PROCESS_LOCAL32` and
 `items=FIXED_WIDTH_SAFE`.
-A separate GNU x86-64 build passes the same contract with undefined-behavior
-and array-bounds instrumentation enabled.
+Both live contracts also report `motion=Q12.4 player=HELD_KEYS items=32
+sprites=BFNT pointer_bits=64`. Their live fixture agrees across both products:
+`0fe4fac7633580ec1efb85ad3a72f1f7dc6d5d9e0e34703083c21d6ba9076351`.
+A separate GNU x86-64 build passes both contracts and the full resource smoke
+with undefined-behavior and array-bounds instrumentation enabled.
+
+An independent Unicorn replay of original MAIN `main_01 0AAF:5DA8`
+(load segment 2000, file 0x12098, 131 bytes) agrees with both native products
+for all 256 direction masks. This is target CPU evidence for isolated
+`player_move`, with initially zero velocity, not full `player_update`.
+The 321 independently generated trig constants separately agree with the
+maintained DOS source tables. Actual SDL and Wine/Win32 window probes check
+held Right, Shift slowdown and Esc; they do not measure native Windows FPS.
 
 The current verification receipt is
-`.analysis/port64/verification-selection-v1250/receipt.json` (SHA-256
-`9504590395e273dbc482934c2c1c54c8a7e7310b3a592b4294134e42051ee462`),
+`.analysis/port64/verification-live-v1251/receipt.json` (SHA-256
+`efab4b04f99dbd71e2a80070bb531fd3b053edfd40643f51acb65b8a967337a6`),
 with source manifest
-`762ded25d68355dad001eca2f9a7a7f983b77a5215b934d36426c4f97ac3faf5`.
-The UBSan/bounds receipt is
-`.analysis/port64/ubsan-selection-v1250/receipt.json` (SHA-256
-`1bab14afb6c15105b568f93cdd53c94d485db71c9ac0870d6bd4a2d17c2daaec`).
+`94739f8afd56f471b0435f4134d3860dafbff9b992482d830520ff3ebc1f90b5`.
+Bounded target-movement receipts and window observations are under
+`.analysis/port64/live-v1251/`; sanitizer evidence is under
+`.analysis/port64/ubsan-live-v1251/`. These private receipts record their own
+product hashes and scope limits. The source manifest is recorded by `verify.py`.
 
 Replay the complete cross-build check with:
 
@@ -122,14 +150,10 @@ repository.
 
 ## Migration order
 
-1. Split the resource services behind reusable host interfaces while retaining
-   the verified byte/pixel controls.
-2. Add description text and explicit frame/input timing to the portable
-   framebuffer backend.
-3. Add audio and saved configuration adapters.
-4. Connect the now-visible MAIN handoff and fixed-width item contract to an
-   entity pool and rendering,
-   then port the remaining direct spark/bullet random call sites without
-   splitting the process LCG or shared ring sequence.
-5. Add route-level differential checkpoints for gameplay, Ending and score
-   persistence on Linux and Windows.
+Semantic work stops when the current subsystem is clear enough to port and
+verify. The completed motion/item slice required no further DOS-source edits.
+Next, connect stage VM and enemy entities to the frame loop, then port shots,
+bullets, scrolling/tile maps, HUD, death/Bomb transitions and audio. Add saved
+configuration and route-level gameplay/Ending/score checkpoints as those
+systems become runnable. Full gameplay is the completion condition, not an
+exhaustive source-renaming pass.

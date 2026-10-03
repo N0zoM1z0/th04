@@ -20,6 +20,20 @@ PORT_FILES = (
     "port64/bullet_geometry.cpp",
     "port64/bullet_geometry.hpp",
     "port64/contracts.cpp",
+    "port64/item_pool.cpp",
+    "port64/item_pool.hpp",
+    "port64/live_contracts.cpp",
+    "port64/main_state.cpp",
+    "port64/main_state.hpp",
+    "port64/motion.cpp",
+    "port64/motion.hpp",
+    "port64/motion_tables.hpp",
+    "port64/player_motion.cpp",
+    "port64/player_motion.hpp",
+    "port64/sprite_sheet.cpp",
+    "port64/sprite_sheet.hpp",
+    "port64/verify_movement.py",
+    "port64/verify_window.py",
     "port64/item_system.cpp",
     "port64/item_system.hpp",
     "port64/main.cpp",
@@ -109,11 +123,13 @@ def main() -> int:
     output = args.output.resolve()
     linux_main = linux_dir / "th04-port64"
     linux_contracts = linux_dir / "th04-port64-contracts"
+    linux_live = linux_dir / "th04-port64-live-contracts"
+    windows_live = windows_dir / "th04-port64-live-contracts.exe"
     windows_main = windows_dir / "th04-port64.exe"
     windows_contracts = windows_dir / "th04-port64-contracts.exe"
-    for path in (linux_main, linux_contracts):
+    for path in (linux_main, linux_contracts, linux_live):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts):
+    for path in (windows_main, windows_contracts, windows_live):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -132,6 +148,15 @@ def main() -> int:
         raise ValueError("Linux portable contract did not pass")
     if windows_contract_output != expected_contract_output:
         raise ValueError("Windows portable contract did not pass")
+
+    linux_live_output = run([str(linux_live)])
+    windows_live_output = run([args.windows_runner, str(windows_live)], env=runner_env)
+    expected_live = (
+        "TH04 live MAIN contracts: PASS motion=Q12.4 player=HELD_KEYS "
+        "items=32 sprites=BFNT pointer_bits=64"
+    )
+    if linux_live_output != expected_live or windows_live_output != expected_live:
+        raise ValueError("live MAIN contracts did not pass on both hosts")
 
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
@@ -161,6 +186,8 @@ def main() -> int:
                 "main_sha256": sha256(linux_main),
                 "contracts_sha256": sha256(linux_contracts),
                 "contract_output": linux_contract_output,
+                "live_contracts_sha256": sha256(linux_live),
+                "live_contract_output": linux_live_output,
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -168,6 +195,8 @@ def main() -> int:
                 "main_sha256": sha256(windows_main),
                 "contracts_sha256": sha256(windows_contracts),
                 "contract_output": windows_contract_output,
+                "live_contracts_sha256": sha256(windows_live),
+                "live_contract_output": windows_live_output,
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -186,12 +215,16 @@ def main() -> int:
         "handoff_bmp_sha256": (
             "0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5"
         ),
+        "main_fixture_bmp_sha256": (
+            "0fe4fac7633580ec1efb85ad3a72f1f7dc6d5d9e0e34703083c21d6ba9076351"
+        ),
         "passed": True,
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
             "OP menu-state transitions, resident process handoff, process-local LCG and shared "
-            "random-ring contracts, and bounded item drop/scoring semantics "
-            "only; gameplay, audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
+            "random-ring contracts, live player movement, item entity motion/pickup and "
+            "BFNT scene rendering only; stage VM, shots, enemies, bombs, death, scrolling, "
+            "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),
     }
