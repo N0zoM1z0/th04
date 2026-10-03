@@ -161,7 +161,7 @@ def main() -> int:
     args = parser.parse_args()
     if args.invincible_main and "main" not in args.only:
         parser.error("--invincible-main requires MAIN in --only")
-    if args.invincible_main and args.output_dir.resolve() == (ROOT / ".analysis/build/th04"):
+    if args.invincible_main and args.output_dir.resolve() == (ROOT / ".analysis/build/th04").resolve():
         parser.error("--invincible-main requires a separate --output-dir")
     output = args.output_dir.resolve()
     lock_path = ROOT / ".analysis/native-build.lock"
