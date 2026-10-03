@@ -55,6 +55,10 @@ notes explain the remaining source and container gaps:
 The links below route to historical proofs and experiments. Their per-packet
 counts, file paths, and proposals do not supersede the current ledgers.
 
+### Cross-artifact semantic contracts
+
+- [Shared process-local LCG and resident seed lifecycle](product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md)
+
 ### MAIN.EXE
 
 - [Checkerboard counted-LOOP blocker](main/TH04_MAIN_CHECKERBOARD_V396.md)

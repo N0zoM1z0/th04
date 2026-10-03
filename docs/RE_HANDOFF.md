@@ -6,7 +6,8 @@ equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: semantic readability
 after the native bullet-performance, scroll-pipeline, MAINE registration,
-three-executable process-handoff and shared-random-ring batches; Windows
+three-executable process-handoff, shared-random-ring and process-local-LCG
+batches; Windows
 retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
@@ -177,6 +178,20 @@ link-relevant records. Complete MAIN stays 199,455 bytes at SHA-256
 `cb4c5b66...`, with identical header, program image and all 1,181 ordered
 relocations. No fresh cold target replay or exact-state change is claimed. See
 the [random-ring note](reconstruction/main/TH04_MAIN_RANDRING_SEMANTICS_V1244.md).
+
+The shared-LCG semantic batch documents `random_seed` as initialized,
+process-local 32-bit state and resident `rand` as a persistent seed source. The
+update performs unsigned modulo-2^32 arithmetic and returns new-state bits
+16..30. OP increments the resident seed once per menu frame while keeping its
+own LCG separate; MAIN copies the resident value once, overrides it with 318
+for demos, and continues one stream across direct draws, ring fills and Stage
+transitions; MAINE re-seeds during verdict calculation, so verdict/save order
+also selects the score-key stream. Three changed/control objects in each of
+MAIN, OP and MAINE have identical normalized and link-relevant OMF, and the
+complete 199,455/79,372/72,246-byte products plus all 1,181/817/663 ordered
+relocations equal the pre-edit baseline. This is incremental source-to-source
+preservation, with no fresh cold target or runtime-randomness claim. See the
+[shared-LCG note](reconstruction/product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md).
 
 
 ## Current state

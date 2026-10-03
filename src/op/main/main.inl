@@ -102,6 +102,8 @@ void main(void)
 			idle_frame = 0;
 		}
 
+		// This resident field is the menu-time seed accumulator consumed by a
+		// later MAIN process. OP's own irand() uses separate process-local state.
 		resident->rand++;
 		frame_delay(1);
 	}

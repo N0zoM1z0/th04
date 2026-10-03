@@ -39,7 +39,7 @@ or replacing assembly before its observable contract is understood.
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | MAINE score pipeline and the OP -> MAIN -> MAINE -> OP process/resident handoff are clarified and byte-preserved; user confirms Normal Ending/save and optimized seeded registration/save passes |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
-| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime, player-shot lifecycle/damage and shared random-ring ownership batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay remains |
+| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime, player-shot lifecycle/damage, shared random-ring ownership and process-local LCG/seed lifecycle batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay remains |
 
 This queue describes work to do, not a new completion percentage. Begin the
 next native-port slice once its own source contracts and regression probes
@@ -138,3 +138,13 @@ the absence of a zero-divisor guard. The header dependency closure recompiles
 streams and link-relevant records agree with the pre-edit build. The complete
 199,455-byte MAIN and all 1,181 ordered relocations also remain identical. See
 [the random-ring note](reconstruction/main/TH04_MAIN_RANDRING_SEMANTICS_V1244.md).
+
+The shared-LCG batch separates each executable's initialized `random_seed`
+from the persistent resident `rand` seed source. It records TC4J's unsigned
+32-bit modulo update and 15-bit result, OP's menu-frame accumulator, MAIN's
+single startup copy and demo override, cross-Stage call-stream continuity, and
+MAINE's route-dependent verdict/save ordering. The portable contract uses
+explicit `uint32_t` state so Linux and Windows x64 agree despite their different
+`long` widths. Nine changed/control OMF objects and the complete MAIN, OP and
+MAINE executables remain identical to the pre-edit semantic build. See
+[the shared-LCG note](reconstruction/product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md).

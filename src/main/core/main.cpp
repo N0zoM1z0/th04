@@ -36,6 +36,9 @@ void main(void)
 
     mem_assign_paras = (320000 >> 4);
     game_init_main(main_pf_fn);
+	// Seed MAIN's process-local LCG from the menu-time accumulator. Every later
+	// IRand() call, including ring fills and direct gameplay draws, advances this
+	// state; ordinary stage changes do not copy the resident value again.
     random_seed = resident->rand;
     ems_allocate_and_preload_eyecatch();
     text_clear();
