@@ -5,8 +5,9 @@ TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: semantic readability
-after the native bullet-performance, scroll-pipeline, MAINE registration and
-three-executable process-handoff batches; Windows retesting continues.
+after the native bullet-performance, scroll-pipeline, MAINE registration,
+three-executable process-handoff and shared-random-ring batches; Windows
+retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -164,6 +165,18 @@ retain all 1,181/817/663 ordered relocations. Existing user route results
 continue to corroborate the ordinary handoff; v1242 adds no new runtime or cold
 target claim. See the
 [process-handoff note](reconstruction/product/TH04_SEMANTIC_PROCESS_HANDOFF_V1242.md).
+
+The random-ring semantic batch confirms one shared 256-byte ring and word
+cursor behind both `randring1_*` and `randring2_*` families. Accessors take
+overlapping little-endian words, increment only the cursor's low byte, and at
+index 255 read the adjacent pre-increment cursor byte (`0xFF`) as the sample's
+high byte. The descending `IRand()` fill and unchecked AND/MOD range behavior
+are now explicit. The dependency closure recompiles 53 C++ roots and three ASM
+objects; all 56 pre/post streams have identical timestamp-normalized OMF and
+link-relevant records. Complete MAIN stays 199,455 bytes at SHA-256
+`cb4c5b66...`, with identical header, program image and all 1,181 ordered
+relocations. No fresh cold target replay or exact-state change is claimed. See
+the [random-ring note](reconstruction/main/TH04_MAIN_RANDRING_SEMANTICS_V1244.md).
 
 
 ## Current state

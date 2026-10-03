@@ -19,9 +19,12 @@ assume cs:main_03
 
 public @RANDRING2_NEXT16_MOD$QUI
 @randring2_next16_mod$qui proc near
+	; This accessor family shares _randring and _randring_p with randring1.
+	; The unaligned word sample precedes the low-byte cursor increment.
 	mov	bx, _randring_p
 	mov	ax, word ptr _randring[bx]
 	inc	byte ptr _randring_p
+	; Return the unsigned remainder in AX. No zero-divisor guard exists.
 	xor	dx, dx
 	mov	bx, sp
 	div	word ptr ss:[bx+2]

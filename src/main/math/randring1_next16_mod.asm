@@ -24,9 +24,13 @@ assume cs:main_01
 
 public @RANDRING1_NEXT16_MOD$QUI
 @randring1_next16_mod$qui proc near
+	; Sample before advancing. At BX=255, the high byte is the adjacent
+	; _randring_p low byte (0FFh), not _randring[0].
 	mov	bx, _randring_p
 	mov	ax, word ptr _randring[bx]
 	inc	byte ptr _randring_p
+	; Unsigned reduction happens after the shared cursor has advanced. A zero
+	; divisor reaches the 8086 DIV unchanged and raises its divide exception.
 	xor	dx, dx
 	mov	bx, sp
 	div	word ptr ss:[bx+2]

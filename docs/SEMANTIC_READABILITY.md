@@ -39,7 +39,7 @@ or replacing assembly before its observable contract is understood.
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | MAINE score pipeline and the OP -> MAIN -> MAINE -> OP process/resident handoff are clarified and byte-preserved; user confirms Normal Ending/save and optimized seeded registration/save passes |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
-| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime and player-shot lifecycle/damage batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay and RNG ownership remain |
+| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime, player-shot lifecycle/damage and shared random-ring ownership batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay remains |
 
 This queue describes work to do, not a new completion percentage. Begin the
 next native-port slice once its own source contracts and regression probes
@@ -126,3 +126,15 @@ link-relevant records. Complete MAIN/OP/MAINE files, headers, program images
 and all 1,181/817/663 ordered relocations remain identical to the pre-edit
 baseline. This is incremental source-to-source preservation, with no fresh
 cold target claim. See [the process-handoff note](reconstruction/product/TH04_SEMANTIC_PROCESS_HANDOFF_V1242.md).
+
+The random-ring batch establishes that `randring1_*` and `randring2_*` are two
+code-segment-local accessor families over one 256-byte ring and one shared
+word cursor. Samples are overlapping little-endian words and advance only the
+cursor's low byte. The index-255 sample deliberately crosses into the adjacent
+cursor byte and therefore has `0xFF` as its high byte before wrapping to zero.
+The source now records descending fill order, AND/MOD range preconditions and
+the absence of a zero-divisor guard. The header dependency closure recompiles
+53 C++ roots plus three edited ASM objects; all 56 timestamp-normalized OMF
+streams and link-relevant records agree with the pre-edit build. The complete
+199,455-byte MAIN and all 1,181 ordered relocations also remain identical. See
+[the random-ring note](reconstruction/main/TH04_MAIN_RANDRING_SEMANTICS_V1244.md).
