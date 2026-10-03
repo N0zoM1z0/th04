@@ -42,3 +42,11 @@ play.hdi saves; subsequent builds preserve each variant's own saves.
 Invincibility is compiled into the test MAIN.EXE using a private build-time
 source overlay. The normal MAIN.EXE has no such overlay; launchers do not
 patch memory or modify executables at runtime.
+
+For dense-bullet CPU headroom, try start-th04-normal-highcpu.bat (normal) or
+start-th04-highcpu.bat (invincible). These use the same respective disk images
+and saves at 36,000 cycles; they do not enable fast-forward or change game code.
+Close any existing TH04 instance first. The standard launchers remain at
+24,000 cycles. More host CPU cores cannot parallelize DOSBox-X's guest CPU;
+the dynamic core and sufficient fixed cycles matter. A higher cycle setting
+needs Windows gameplay/audio testing and may not help when the host is busy.

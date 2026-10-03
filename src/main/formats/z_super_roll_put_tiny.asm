@@ -25,6 +25,112 @@ GRCG_SETCOLOR_DIRECT macro reg
     endm
 endm
 
+; The native product targets a 386+ emulator. Fixed-size, nonrolling sprites
+; can draw all rows without per-row CALL/RET or loop bookkeeping. Each macro
+; retains the original mask arithmetic and ordered byte/word VRAM writes.
+; The historical producer does not emit these paths.
+ifdef TH04_LARGE_PRODUCT
+Z32_EVEN_NATIVE_ROW macro
+    local word1_blank, word2_blank, carry_blank
+    xor bl, bl
+    lodsd
+    ror ax, cl
+    mov dh, al
+    and al, dl
+    xor dh, al
+    or al, bl
+    mov bl, dh
+    or ax, ax
+    jz short word1_blank
+    mov es:[di], ax
+word1_blank:
+    add di, 2
+    shr eax, 16
+    ror ax, cl
+    mov dh, al
+    and al, dl
+    xor dh, al
+    or al, bl
+    mov bl, dh
+    or ax, ax
+    jz short word2_blank
+    mov es:[di], ax
+word2_blank:
+    add di, 2
+    shr eax, 16
+    or bl, bl
+    jz short carry_blank
+    mov es:[di], bl
+carry_blank:
+    add di, (ROW_SIZE - 4)
+endm
+
+Z32_ODD_NATIVE_ROW macro
+    local first_blank, word1_blank, word2_blank
+    lodsd
+    ror al, cl
+    mov bl, al
+    and al, dl
+    jz short first_blank
+    mov es:[di], al
+first_blank:
+    xor bl, al
+    inc di
+    shr eax, 8
+    ror ax, cl
+    mov dh, al
+    and al, dl
+    xor dh, al
+    or al, bl
+    mov bl, dh
+    or ax, ax
+    jz short word1_blank
+    mov es:[di], ax
+word1_blank:
+    add di, 2
+    shr eax, 16
+    ror ax, cl
+    mov dh, al
+    and al, dl
+    xor dh, al
+    or al, bl
+    mov bl, dh
+    or ax, ax
+    jz short word2_blank
+    mov es:[di], ax
+word2_blank:
+    add di, 2
+    shr eax, 16
+    add di, (ROW_SIZE - 5)
+endm
+
+Z16_EVEN_NATIVE_ROW macro
+    local carry_blank
+    lodsw
+    ror ax, cl
+    mov dh, al
+    and al, dl
+    mov es:[di], ax
+    xor al, dh
+    jz short carry_blank
+    mov es:[di+2], al
+carry_blank:
+    add di, ROW_SIZE
+endm
+
+Z16_ODD_NATIVE_ROW macro
+    lodsw
+    ror ax, cl
+    mov dh, al
+    and al, dl
+    mov es:[di], al
+    xor al, dh
+    xchg ah, al
+    mov es:[di+1], ax
+    add di, ROW_SIZE
+endm
+endif
+
 CIRCLE_TEXT segment word public 'CODE' use16
 CIRCLE_TEXT ends
 main_01 group CIRCLE_TEXT
@@ -67,7 +173,13 @@ z32_even_color_loop:
     mov ch, 32
     mov di, cs:srpt32x32_vram_topleft
     cmp di, (SCREEN_HEIGHT - 32 + 1) * ROW_SIZE
+ifdef TH04_LARGE_PRODUCT
+    jnb short z32_even_roll
+    jmp z32_even_native
+z32_even_roll:
+else
     jb short z32_even_yloop2
+endif
 z32_even_yloop1:
     call z32_put_even
     cmp di, PLANE_SIZE
@@ -88,7 +200,13 @@ z32_odd_color_loop:
     mov ch, 32
     mov di, cs:srpt32x32_vram_topleft
     cmp di, (SCREEN_HEIGHT - 32 + 1) * ROW_SIZE
+ifdef TH04_LARGE_PRODUCT
+    jnb short z32_odd_roll
+    jmp z32_odd_native
+z32_odd_roll:
+else
     jb short z32_odd_yloop2
+endif
 z32_odd_yloop1:
     call z32_put_odd
     cmp di, PLANE_SIZE
@@ -166,6 +284,34 @@ z32_odd_skip_blank_word:
     add di, (ROW_SIZE - 5)
     dec ch
     ret
+
+ifdef TH04_LARGE_PRODUCT
+z32_even_native:
+    rept 32
+        Z32_EVEN_NATIVE_ROW
+    endm
+    xor bh, bh
+    xor ch, ch
+    lodsw
+    cmp al, 80h
+    jne short z32_even_native_return
+    jmp z32_even_color_loop
+z32_even_native_return:
+    MRETURN
+
+z32_odd_native:
+    rept 32
+        Z32_ODD_NATIVE_ROW
+    endm
+    xor bh, bh
+    xor ch, ch
+    lodsw
+    cmp al, 80h
+    jne short z32_odd_native_return
+    jmp z32_odd_color_loop
+z32_odd_native_return:
+    MRETURN
+endif
 Z_SUPER_ROLL_PUT_TINY_32X32_RAW endp
 
 public Z_SUPER_ROLL_PUT_TINY_16X16_RAW
@@ -200,7 +346,13 @@ z16_even_color_loop:
     mov ch, 16
     mov di, bx
     cmp di, (SCREEN_HEIGHT - 16 + 1) * ROW_SIZE
+ifdef TH04_LARGE_PRODUCT
+    jnb short z16_even_roll
+    jmp z16_even_native
+z16_even_roll:
+else
     jb short z16_even_yloop2
+endif
     even
 z16_even_yloop1:
     lodsw
@@ -242,7 +394,13 @@ z16_odd_color_loop:
     mov ch, 16
     mov di, bx
     cmp di, (SCREEN_HEIGHT - 16 + 1) * ROW_SIZE
+ifdef TH04_LARGE_PRODUCT
+    jnb short z16_odd_roll
+    jmp z16_odd_native
+z16_odd_roll:
+else
     jb short z16_odd_yloop2
+endif
     even
 z16_odd_yloop1:
     lodsw
@@ -275,6 +433,32 @@ z16_odd_yloop2:
     cmp al, 80h
     je short z16_odd_color_loop
     MRETURN
+
+ifdef TH04_LARGE_PRODUCT
+z16_even_native:
+    rept 16
+        Z16_EVEN_NATIVE_ROW
+    endm
+    xor ch, ch
+    lodsw
+    cmp al, 80h
+    jne short z16_even_native_return
+    jmp z16_even_color_loop
+z16_even_native_return:
+    MRETURN
+
+z16_odd_native:
+    rept 16
+        Z16_ODD_NATIVE_ROW
+    endm
+    xor ch, ch
+    lodsw
+    cmp al, 80h
+    jne short z16_odd_native_return
+    jmp z16_odd_color_loop
+z16_odd_native_return:
+    MRETURN
+endif
 Z_SUPER_ROLL_PUT_TINY_16X16_RAW endp
 
 CIRCLE_TEXT ends

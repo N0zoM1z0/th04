@@ -21,6 +21,26 @@ endm
 endif
 
 public _pellets_render_top
+ifdef TH04_LARGE_PRODUCT
+; Keep this macro within the body exported by the standalone context wrapper.
+; The bottom pass deliberately writes its first source word twice.
+PELLET_BOTTOM_NATIVE_ROW macro
+    local byte2, byte1, next_row
+    or al, al
+    jz short byte2
+    or ah, ah
+    jz short byte1
+    mov es:[di], ax
+    jmp short next_row
+byte1:
+    mov es:[di], al
+    jmp short next_row
+byte2:
+    mov es:[di+1], ah
+next_row:
+    add di, ROW_SIZE
+endm
+endif
 _pellets_render_top proc PELLET_PROC_DISTANCE
 	mov	ax, _pellets_render_count
 	or	ax, ax
@@ -52,7 +72,13 @@ _pellets_render_top proc PELLET_PROC_DISTANCE
 	or	ax, ax
 	jz	short @@bytealigned
 	cmp	di, ((RES_Y - PELLET_TOP_H + 1) * ROW_SIZE)
+ifdef TH04_LARGE_PRODUCT
+	jnb	short @@shifted_roll
+	jmp	@@shifted_native
+@@shifted_roll:
+else
 	jb	short @@shifted_yloop2
+endif
 
 @@shifted_yloop1:
 	movsw
@@ -71,7 +97,13 @@ _pellets_render_top proc PELLET_PROC_DISTANCE
 
 @@bytealigned:
 	cmp	di, ((RES_Y - PELLET_TOP_H + 1) * ROW_SIZE)
+ifdef TH04_LARGE_PRODUCT
+	jnb	short @@bytealigned_roll
+	jmp	@@bytealigned_native
+@@bytealigned_roll:
+else
 	jb	short @@bytealigned_yloop2
+endif
 
 @@bytealigned_yloop1:
 	movsb
@@ -99,11 +131,34 @@ _pellets_render_top proc PELLET_PROC_DISTANCE
 	mov	word ptr [bx+PRB_sprite_offset], ax
 	add	bx, size pellet_render_t
 	dec	bp
+ifdef TH04_LARGE_PRODUCT
+	jz	short @@top_done
+	jmp	@@pellet_loop
+@@top_done:
+else
 	jnz	short @@pellet_loop
+endif
 	pop	di
 	pop	si
 	pop	bp
 	PELLET_RETURN
+ifdef TH04_LARGE_PRODUCT
+@@shifted_native:
+	rept PELLET_TOP_H
+		movsw
+		add di, (ROW_SIZE - word)
+	endm
+	xor cx, cx
+	jmp @@pellet_next
+@@bytealigned_native:
+	rept PELLET_TOP_H
+		movsb
+		inc si
+		add di, (ROW_SIZE - byte)
+	endm
+	xor cx, cx
+	jmp @@pellet_next
+endif
 _pellets_render_top endp
 	even
 
@@ -128,7 +183,12 @@ _pellets_render_bottom proc PELLET_PROC_DISTANCE
 	mov	si, word ptr [bx+PRB_sprite_offset]
 	xor	@@rows_after_roll, @@rows_after_roll
 	cmp	di, ((RES_Y - PELLET_BOTTOM_H - 1) * ROW_SIZE)
+ifdef TH04_LARGE_PRODUCT
 	jnb	short @@roll_needed
+	jmp	@@bottom_native
+else
+	jnb	short @@roll_needed
+endif
 	even
 	mov	cx, (PELLET_BOTTOM_H + 1)
 	jmp	short @@no_roll
@@ -181,4 +241,15 @@ _pellets_render_bottom proc PELLET_PROC_DISTANCE
 	pop	si
 	pop	bp
 	PELLET_RETURN
+ifdef TH04_LARGE_PRODUCT
+@@bottom_native:
+	mov ax, [si]
+	PELLET_BOTTOM_NATIVE_ROW
+	rept PELLET_BOTTOM_H
+		lodsw
+		PELLET_BOTTOM_NATIVE_ROW
+	endm
+	xor cx, cx
+	jmp @@pellet_next
+endif
 _pellets_render_bottom endp

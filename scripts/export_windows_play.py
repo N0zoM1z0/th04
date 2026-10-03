@@ -75,6 +75,7 @@ def main() -> int:
     reference_name = "th04-normal-reference.conf" if normal else "th04-reference.conf"
     launcher_name = "start-th04-normal.bat" if normal else "start-th04.bat"
     reference_launcher_name = "start-th04-normal-reference.bat" if normal else "start-th04-reference.bat"
+    highcpu_launcher_name = "start-th04-normal-highcpu.bat" if normal else "start-th04-highcpu.bat"
     bin_name = "bin-normal" if normal else "bin"
     current_fingerprint = source_fingerprint()
     if (manifest.get("source_fingerprint") is not None
@@ -93,6 +94,8 @@ def main() -> int:
             if (main_receipt["link"]["mz"]["sha256"] != sha(data)
                     or bool(main_receipt.get("invincible_overlay")) != (not normal)):
                 raise ValueError("MAIN compiler receipt does not match the advertised gameplay variant")
+            if main_receipt.get("bullet_load_trace"):
+                raise ValueError("a private full-pool diagnostic cannot be exported as a playable game")
         product_bytes[artifact] = data
         records[artifact] = {"file": name, "size": len(data), "sha256": sha(data)}
 
@@ -174,6 +177,10 @@ def main() -> int:
                 f'start "" "%~dp0dosbox-x.exe" -conf "%~dp0{config_name}"\r\n').encode("ascii")
     reference_launcher = ('@echo off\r\ncd /d "%~dp0"\r\n'
                           f'start "" "%~dp0dosbox-x.exe" -conf "%~dp0{reference_name}"\r\n').encode("ascii")
+    highcpu_launcher = ('@echo off\r\ncd /d "%~dp0"\r\n'
+                        'echo TH04: 36,000-cycle CPU profile. Close other TH04 instances first.\r\n'
+                        f'start "" "%~dp0dosbox-x.exe" -conf "%~dp0{config_name}" '
+                        '-set "cpu cycles=36000"\r\n').encode("ascii")
     builder_template = (ROOT / "scripts/windows/Build-TH04.ps1").read_text(encoding="utf-8")
     if builder_template.count("@REPO_PATH@") != 1:
         raise ValueError("Windows builder template has no unique repository placeholder")
@@ -192,6 +199,7 @@ def main() -> int:
     write_atomic(output / reference_name, reference_config)
     write_atomic(output / launcher_name, launcher)
     write_atomic(output / reference_launcher_name, reference_launcher)
+    write_atomic(output / highcpu_launcher_name, highcpu_launcher)
     write_atomic(output / "Build-TH04.ps1", builder_bytes)
     write_atomic(output / "build-th04.cmd", builder_cmd)
     write_atomic(output / "README-build.txt", builder_readme)
@@ -211,6 +219,9 @@ def main() -> int:
         "build_cmd_sha256": sha(builder_cmd),
         "build_readme_sha256": sha(builder_readme),
         "launch": launcher_name,
+        "highcpu_launch": highcpu_launcher_name,
+        "highcpu_cycles": 36000,
+        "highcpu_launcher_sha256": sha(highcpu_launcher),
         "image": image_name,
         "bin_dir": bin_name,
     }

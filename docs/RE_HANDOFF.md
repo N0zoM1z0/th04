@@ -4,8 +4,8 @@ Updated 2026-10-03. The active goal is a standalone PC-98 game: checked-in
 TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
-upstream exactness claims are not inherited. Current phase: semantic readability;
-the user continues Windows runtime testing.
+upstream exactness claims are not inherited. Current phase: semantic readability
+with an authorized native bullet-performance batch; Windows retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -39,8 +39,8 @@ TC4J enum substitution changed polling instructions; literal macros preserve
 them. No new acceptance is promoted; the old OP/MAINE decoded scaffolds remain
 absent. See the [input/timing note](reconstruction/packed/TH04_SHARED_INPUT_WAIT_V565.md).
 Fetch/rebase confirms `main` is still `8d20492` and already an ancestor.
-The semantic-only build is `.analysis/build/semantic-input-readable-final`;
-the user's Windows package and saves are unchanged during this batch.
+The semantic-only baseline is `.analysis/build/semantic-input-readable-final`;
+the following native performance batch updates the Windows package separately.
 The authorized native Ending/scroll repair is built and deployed. MAINE's two
 CDG renderers now own independent CS frames; the expanded build auditor rejects
 their former writes into the PI decoder. Real staff-image CPU controls complete
@@ -60,10 +60,11 @@ stripe's connection to that defect remains inferred; the user now confirms
 the Stage 6 top stripe is absent.
 The original/native bullet-count slowdown agrees across 96 CPU controls;
 the user's latest Normal saved configuration has Turbo enabled, so deliberate
-count-based slowdown is inactive if those options were loaded. Yuuka cross
-frame pacing remains open. That attack has no direct player-speed or special
-half-speed write; a timed Stage 6 trace must distinguish rendering load, Shift
-and generic slowdown in the user's session. See the
+count-based slowdown is inactive if those options were loaded. The user reports
+Yuuka crosses and Ending are smoother after the planar batch, the title is
+smooth, and Extra has little slowdown. That attack has no direct player-speed
+or special half-speed write; natural Lunatic/Windows frame pacing remains
+separate from the bounded full-pool timing control below. See the
 [scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
 
 The remaining upper-left pellet is confirmed as native state-clear corruption:
@@ -78,8 +79,23 @@ pair lookup. Three source reviews, 460 scalar-pixel/ABI controls and the DOS
 loader/packed-row harnesses pass. A complete 31-cross renderer control uses
 68% fewer instructions with identical pixels; this is not Windows FPS.
 Ordinary gameplay and seeded Marisa/Normal Ending/save still pass after the
-change. Windows retest and timed Yuuka pacing remain open. See the
+change. The user subsequently reports no gameplay bugs. See the
 [planar performance controls](reconstruction/product/TH04_NATIVE_SUPER_SPRITE_V870.md).
+
+Native fixed-row pellet/tiny-sprite paths now reduce full-pool drawing
+instructions by 13.40% (regular) and 21.72% (200 clouds). All 3,604 independent
+pixel/ordered-I/O/pool controls, seeded volatile-register controls and 96
+original/native slowdown cases pass. In pinned Linux DOSBox-X, the stationary
+Lunatic/Turbo 440-bullet fixture averages one refresh period for ordinary
+bullets; its artificial all-cloud phase improves from 1.742 to 1.452 periods
+at 24,000 cycles. At 36,000, all six phases average one period. This is a
+bounded instrumented control, not a complete natural Lunatic route or Windows
+FPS claim. Two cold default assemblies preserve both complete link-relevant
+OMF owners; full historical replay remains blocked before compilation by the
+existing items-invalidate scaffold digest drift. No exact state is promoted.
+The uninstrumented final normal product reaches a visible Lunatic combat
+checkpoint at 125 seconds with all four executed product hashes verified.
+See the [bullet performance note](reconstruction/product/TH04_NATIVE_BULLET_LOAD_V1235.md).
 
 
 ## Current state
@@ -98,12 +114,13 @@ compatibility forwarders and forbidden ReC98 edges.
 
 The full native build compiles 193 MAIN C/C++ roots, 155 ASM roots, eight state
 owners and four generated sprite owners without `masters.lib`. All four products
-build through `scripts/build.py`. The planar batch uses dependency-validated
-fast MAIN/OP/MAINE builds and a freshly cold-replayed unchanged ZUN. Current
+build through `scripts/build.py`. The bullet batch uses dependency-validated
+fast MAIN/OP/MAINE builds and rechecks the preceding cold ZUN source/packing
+receipts and 37 unchanged component-source/build-driver hashes. Current
 normal/invincible inventories are `.analysis/build/th04-{normal,invincible}/build.json`.
-Normal products are MAIN 193,983 bytes (`149c1e77…`), OP 79,372 (`ef37e6e8…`),
+Normal products are MAIN 199,455 bytes (`cb4c5b66…`), OP 79,372 (`ef37e6e8…`),
 MAINE 72,246 (`7bfd7fd5…`) and ZUN 7,723 (`d6043dce…`). Invincible MAIN is
-also 193,983 bytes (`c649514d…`); the other three products are identical.
+also 199,455 bytes (`0d99bc5a…`); the other three products are identical.
 
 Verified integration fixes:
 - MAIN EGC tile copy uses 3100h, observed at MAI_TEXT 0AAF:212C (file E41Ch).
@@ -223,23 +240,26 @@ vector and MZ audits pass; this fixes a verified stale-pointer hazard, but a
 ordinary gameplay-to-Good-Ending handoff remains separate from seeded replays. See
 [`TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md`](reconstruction/product/TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md).
 The Windows package at `D:\Entertainment\Game\Touhou\th04-reconstruct`
-contains optimized normal `product-20261003-065425-02e7e387` and invincible
-`product-20261003-065757-d2c168ee` variants. `start-th04-normal.bat` mounts ordinary
+contains optimized normal `product-20261003-082645-59909a08` and invincible
+`product-20261003-083233-dcc0bfe1` variants. `start-th04-normal.bat` mounts ordinary
 collision damage in `play-normal.hdi`; `start-th04.bat` mounts the separately
 source-compiled invincible MAIN in `play.hdi`. Invincibility remains a private
 staged source overlay, not a maintained player change or launcher memory patch.
 OP/MAINE/ZUN are identical between variants. Both launchers use 24,000 cycles;
-reference launchers use 15,000. Each export preserves its own MIKO.CFG and
-GENSOU.SCR. Actual Windows fast builds display English progress, verify object
-reuse, relink the three EXEs and reuse the unchanged verified ZUN. Both actual
-Windows commands pass and image/bin hashes equal the tested products; both
-variants retain their preceding save/config hashes. Control:
+reference launchers use 15,000. Optional `start-th04-normal-highcpu.bat` and
+`start-th04-highcpu.bat` set only 36,000 cycles for those same respective images.
+The latest serial fast builds and Windows readback pass; only MAIN.EXE changed
+in either saved image, with every nonproduct GENSO file retained byte-for-byte.
+Control: `.analysis/bullet-v1235/windows-export-receipt.json`. Windows CLI builds
+retain their English progress and validated object reuse; actual Windows CLI
+controls for the preceding batch remain at
 `.analysis/render-corner-20261003/windows-fast-control.json`.
 
 The user confirms normal death-to-registration/save and subsequently full
-Normal routes/Endings before the planar batch. Optimized bounded ordinary
-and seeded Ending/save replays pass; full Windows routes and frame pacing
-still need the user's next test. The Linux emulator aborts after PC-98 reset
+Normal routes/Endings before the planar batch, then improved title/cross/Ending
+performance and little Extra slowdown. Optimized bounded ordinary and seeded
+Ending/save replays pass; full Lunatic and the optional Windows 36,000-cycle
+profile still need a user test. The Linux emulator aborts after PC-98 reset
 with dynamic core; Linux runtime controls use normal/Pentium. Old damaged
 Ending and Divide-error reports are superseded by the bounded repairs above;
 private fault layouts remain replay evidence in the ledgers.
@@ -300,14 +320,16 @@ all executed products and locates captured code against the relocated MAIN/MAP.
 
 ## Next work
 
-1. Have the user replay OP fireworks, boss defeat and Yuuka stage 5 with the
-   updated Windows package. Profile any remaining slowdown under that host.
+1. Retest dense Lunatic/Extra and the optional 36,000-cycle Windows profile;
+   separate natural-route timing/audio from the completed synthetic pool control.
 2. Inspect the completed ordinary sweep at
    `.analysis/runtime/candidates/native-empty-ring-v1217-20261002/run-sweep-v1222`.
    Validate later stages, endings, Extra and character/rank variants; the
    independent playable invincible image can expose additional integration bugs.
 3. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
+4. Continue the semantic queue; repair the historical scaffold digest/replay
+   surface separately before claiming a new cold historical exact replay.
 
 ## Navigation
 

@@ -1,0 +1,16 @@
+{
+  "description": "Private --bullet-load-trace MAIN fixture only: six 32-frame stationary loads, Lunatic/Turbo, 0/120/340/440 bullets, 440 with 200 clouds, and 440 decay sprites. Actual loaded game sprites and PC-98 IRQ/GRCG; reseeding and collision suppression are synthetic. Compare identical prepared images and fixed-cycle controls. Not a complete natural Lunatic route or Windows FPS claim.",
+  "settings": {
+    "frame_second": 110,
+    "time_limit": 200,
+    "key_delay_ms": 300,
+    "audio": true,
+    "stop_after_frame": true,
+    "checkpoint_second": [55, 75, 90, 105],
+    "input_event": [
+      "Right@20", "Right@25", "Right@30", "Right@35",
+      "z@40", "z@43", "z@46", "z@49", "z@52", "z@55",
+      "z@58", "z@61", "z@64", "z@67", "z@70"
+    ]
+  }
+}
