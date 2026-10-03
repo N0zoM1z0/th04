@@ -7,6 +7,12 @@
 ; loops instead of the target DS/ES stack and REP MOVSD architecture. Keep this
 ; as evidence-backed irreducible/original-style symbolic assembly; this is not
 ; a claim that the historical source text had this exact spelling.
+;
+; This entry overwrites all four color planes, including zero bits. It uses
+; no mask and leaves GRCG alone; the caller must arrange ordinary VRAM access.
+; File rows are bottom-to-top and colors are contiguous B,R,G,E plane blocks.
+; Row width is stored in dwords, so source geometry is 32-pixel based. This
+; routine does not clip arbitrary rectangles or provide per-pixel alpha.
 
 .386
 
@@ -60,10 +66,13 @@ arg_left = word ptr 0Ah
 	mov	bx, [bp+arg_left]
 	sar	bx, 3
 	add	bx, [si+CDG_OFFSET_AT_BOTTOM_LEFT]
+	; Begin at the image's bottom-left screen byte. SAR rounds left/8 down;
+	; the masked renderer's SHR expression has different negative-x behavior.
 	mov	ax, [si+CDG_VRAM_DWORD_W]
 	; BP is free after all three arguments have been consumed.
 	mov	bp, ax
 	shl	ax, 2
+	; Compensate for REP MOVSD's row advance, then move one row up (80 bytes).
 	add	ax, ROW_SIZE
 	mov	dx, ax
 	mov	ax, [si+CDG_SEG_COLORS]
@@ -74,6 +83,8 @@ arg_left = word ptr 0Ah
 	even
 
 plane_start:
+	; Reset only destination DI at each plane boundary. SI keeps advancing
+	; through the next source plane in the same allocation.
 	mov	di, bx
 row_start:
 	mov	cx, bp

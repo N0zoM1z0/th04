@@ -15,6 +15,13 @@ Independent historical pixel hashes and slot load/free controls also pass.
 This proves a source-to-source regression result for the service harness;
 it is not original-target equality or a complete Good Ending visual replay.
 See [semantic readability](SEMANTIC_READABILITY.md) for the remaining queue.
+The PAR/CDG semantic batch also passes dependency-validated incremental builds:
+complete MAIN/OP/MAINE files and ordered relocations equal their preceding
+source builds (192,351/77,740/70,614 bytes; SHA-256 `dbbfa404…`,
+`c8ac4d73…`, `0a2d3ce8…`). Nine real PAR-member controls pass. Historical
+CDG replay could not complete: the old OP/MAINE private snapshot is absent,
+and the current MAIN driver rejects a scaffold-transform digest before
+building. No target acceptance or ledger state is promoted by this batch.
 
 ## Current state
 
@@ -167,7 +174,11 @@ collection's original 15,000-cycle setting for comparison. The saved
 `MIKO.CFG` and `GENSOU.SCR` hashes `64d6b41f…` and `d4037728…` were preserved
 byte-for-byte during export. Windows playtesting must establish whether the
 registration page and Yuuka frame pacing improved; a successful build cannot
-make that runtime claim.
+make that runtime claim. The latest user Reimu/Lunatic playtest reports that
+Yuuka is now smooth, but the full Ending route still shows damaged graphics
+and never reaches registration; sound continues and Esc has no visible effect.
+This rejects treating the PI slot fix as a complete Ending repair. The second
+provided image is a PC-98 STOP pause notice, not registration.
 The Linux emulator aborts after PC-98 reset with dynamic core, so its
 private launcher uses normal/Pentium/15000/32 MB. Neither playable profile is
 normal-game acceptance evidence. A long native v1220 route reached Game Over

@@ -21,9 +21,10 @@ Each batch should make one subsystem easier to understand in its source:
   checks, and runtime coverage. A plausible name is not a verified contract.
 
 The validation baseline is the preceding DOS source, not the x64 prototype.
-Use the smallest existing probe that can reject a regression. For naming and
-constant changes, cold compilation and complete linked byte/relocation
-equality provide a strong check. For structural rewrites, also exercise the
+Use the smallest existing probe that can reject a regression. For each naming/comment/constant batch, use dependency-validated incremental
+compilation and compare the complete linked bytes and ordered relocations
+against the preceding source build. Reserve cold builds for cache uncertainty,
+ABI/layout changes, historical acceptance gates, and stronger replay claims. For structural rewrites, also exercise the
 relevant runtime transitions; build success alone is insufficient. If a
 shared ABI/layout or an accepted historical owner changes, replay all affected
 owners under the repository's Oracle policy. Avoid a repository-wide rename
@@ -34,7 +35,7 @@ or replacing assembly before its observable contract is understood.
 | Area | Readability objective | Current coverage |
 | --- | --- | --- |
 | PI image decoding | Commands, pixel packing, adaptive history, allocation and returned-pointer ownership | First bounded batch completed; independent DOS decoder and cold before/after equality pass |
-| PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | Existing probes available; semantic pass pending |
+| PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | PAR and CDG contracts clarified; three full DOS products remain byte-identical; BFNT pending |
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | Existing bounded scenarios; complete Good Ending visual issue remains open |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Semantic pass pending |
 | Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Semantic pass pending |
@@ -45,3 +46,5 @@ are adequate; other subsystems can continue on this branch independently.
 
 The first result and replay commands are recorded in
 [the PI decoder note](reconstruction/product/TH04_NATIVE_PI_DECODE_V869.md).
+
+The PAR/CDG batch and its limits are recorded in [the archive note](reconstruction/product/TH04_NATIVE_PF_ARCHIVE_V867.md) and the existing shared CDG ownership notes.

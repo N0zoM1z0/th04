@@ -44,3 +44,17 @@ The OP/MAINE A/B receipt is
 (SHA-256 `735d59e171b1ab4e98e7c8351505c0e6c63bc4a60c0acd22dfabe73d80f3f6be`).
 The MAIN v800 accepted-unit replay also passes with receipt SHA-256
 `134599553ac15921071abd6b75a6ae950d2f0187beb5f6f6bce836fb3d9afe58`.
+
+## Semantic annotations, v1226
+
+Comments now explain bottom-up source rows, B/R/G/E plane order, mask-based background clearing followed by color OR, required zero source color bits outside the mask, CS-relative self-modification and GRCG side effects.
+
+This batch changes comments only in the assembler units. Complete standalone
+MAIN/OP/MAINE MZ files remain raw-identical to their preceding source builds;
+see [the PAR regression record](../product/TH04_NATIVE_PF_ARCHIVE_V867.md).
+A new historical replay did not complete: the OP/MAINE driver requires the
+removed private v228 restore/v489 snapshot, and the current MAIN replay rejects
+`th04-main-items-invalidate-v185-layout` scaffold digest drift before compilation.
+Those are replay-environment/control-plane failures, not evidence of changed
+CDG instructions. Existing accepted states remain untouched; this result
+adds no new target-exact claim.
