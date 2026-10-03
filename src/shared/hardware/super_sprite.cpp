@@ -7,6 +7,10 @@
 #include "src/shared/hardware/vram_planes.hpp"
 #include "src/shared/runtime/api.hpp"
 
+extern "C" void far pascal th04_sprite_unclipped(
+	int left, int top, unsigned packed_size, unsigned pattern_segment
+);
+
 // Dimension and pattern-range fields are little-endian words. File pattern
 // numbers describe an inclusive count; registration appends to the slot table.
 static const unsigned BFNT_HEADER_BYTES = 32u;
@@ -228,6 +232,16 @@ extern "C" void TH04_PASCAL super_put(int left, int top, int pattern_slot)
 	// High byte: row width in bytes of ONE plane. Low byte: height in rows.
 	unsigned bytes_per_row = packed_size >> 8;
 	unsigned height = packed_size & 255u;
+	// Preserve GRCG-off even for a fully clipped call. Dispatch the ordinary
+	// case before constructing the far-pointer arrays needed by clipping.
+	outportb(0x7C, 0);
+	if (bytes_per_row && height && (bytes_per_row <= 32u) &&
+	    (left >= 0) && (top >= 0) &&
+	    (left <= (640 - (int)(bytes_per_row * 8u))) &&
+	    (top <= (400 - (int)height))) {
+		th04_sprite_unclipped(left, top, packed_size, super_patdata[pattern_slot]);
+		return;
+	}
 	unsigned plane_bytes = bytes_per_row * height;
 	const unsigned char far *pattern_planes =
 		(const unsigned char far *)MK_FP(super_patdata[pattern_slot], 0);
@@ -243,9 +257,6 @@ extern "C" void TH04_PASCAL super_put(int left, int top, int pattern_slot)
 	// Keep the original 16-bit expression order at extreme integer bounds.
 	const unsigned pixel_shift = (unsigned)left & 7u;
 	const int first_dst_byte = (left - (int)pixel_shift) / 8;
-	// Preserve this device side effect even when the clipping checks below
-	// reject the entire sprite: later direct plane writers need GRCG off.
-	outportb(0x7C, 0);
 	// Unaligned placement adds one carry byte. span_first/span_end form a
 	// half-open interval of destination-span indices, not screen X pixels.
 	const int destination_byte_count = (int)bytes_per_row + (pixel_shift != 0u);

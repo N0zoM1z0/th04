@@ -164,3 +164,89 @@ python3 scripts/probes/probe_th04_native_super_runtime.py --output-dir .analysis
 Repeat the comparator for OP and MAINE. These are source-to-source compiler
 preservation and bounded DOS service observations; no target state is promoted,
 and this batch does not validate the ending screen or stage-4 top-edge graphics.
+
+## Native planar performance batch, 2026-10-03
+
+The user confirms full Normal Windows routes and their Ending/save handoff,
+and that the Stage 6 top stripe is absent. The remaining performance reports
+concern the opening, late Yuuka chase crosses and Ending dialogue. These are
+manual observations, not a timed cross-emulator comparison.
+
+`src/shared/hardware/planar_blit.asm` owns two semantic native kernels in an
+independent CS, without writable code operands. `TH04_COPY_WORDS` replaces
+the page copy's two C word loops with REP MOVSD and an odd-word tail. It retains
+the existing allocation, four plane order, source/destination page switches,
+GRCG-off side effect and free. SI, DI, DS, ES and the caller's direction flag
+are preserved; the far Pascal call returns with RETF 10.
+
+`TH04_SPRITE_UNCLIPPED` handles validated full-screen-enclosed sprites of
+1..32 bytes by 1..255 rows. The caller turns GRCG off and dispatches before
+constructing clipping-only far-pointer arrays. One shifted alpha row is reused
+for all four planes, and empty rows skip those planes. Even row widths compose
+two destination bytes at a time with swapped words and SHRD. The final unaligned
+carry stays a single-byte write, including at physical column 79. Odd widths
+use the byte path. Both paths preserve the same alpha mask, plane order and
+background bits; edge placements retain the preceding C clipping algorithm.
+The far Pascal entry preserves SI, DI, DS, ES and BP and returns with RETF 8.
+
+Packed PI rows now use a format-derived 256-entry pair table. Each lookup
+expands two high-nibble-first pixels into B/R/G/E bytes; four lookups make an
+eight-pixel group. Horizontal clipping and the cutscene's hidden VRAM row 400
+retain the preceding behavior. No game pixels or target bytes supply the table.
+These native service bodies have no historical exact unit acceptance; the
+historically accepted MAIN state-clear helper retains its default byte extent.
+
+Three successive source reviews covered register/stack ownership and caller
+side effects, shifted masks and row carry, and transparent/physical-boundary
+cases. The final independent scalar-pixel CPU replay passes 460 controls:
+168 regular sprite cases, 14 size/clipping/boundary cases, 262 packed row cases,
+four complete Yuuka entity-render calls and 12 word-copy cases. The maximum
+255-row unaligned baseline exceeds the initial two-million-instruction budget;
+that rejected run is not a pixel mismatch. Raising only the diagnostic budget
+to ten million permits the complete call and all physical-corner guards pass.
+
+The actual native Yuuka near renderer with 31 synthetic live crosses executes
+1,063,853 instructions before versus 343,020 after, with identical complete
+four-plane buffers. The eight ordinary 32-by-32 shifted random-mask calls use
+67.89% fewer instructions in aggregate. Packed rows use 75.18% fewer across
+the 262 controls; a complete 640-pixel hidden-row call drops from 23,951 to
+4,997. These are bounded CPU instruction costs, not measured Windows FPS.
+
+The final DOS BFNT loader/lifecycle harness still reproduces the historical
+pattern/palette hashes A24A77B5/81529745 and fake-VRAM hash 0BE615EA. The packed
+DOS harness independently exercises all 256 pair values in every source-byte
+position against scalar pixels, in addition to clipping controls. Both pass.
+
+```text
+python3 scripts/probes/probe_th04_native_planar_kernels.py --build-dir .analysis/build/th04-normal --baseline-manifest .analysis/render-corner-20261003/before-build.json --baseline-exe .analysis/render-corner-20261003/before-MAIN.EXE --output-dir .analysis/reconstruction/probes/planar-kernels-v1233-boundaries-ready
+python3 scripts/probes/probe_th04_native_super_runtime.py --output-dir .analysis/reconstruction/probes/planar-super-v1233-final
+python3 scripts/probes/probe_th04_native_pack_put_runtime.py --output-dir .analysis/reconstruction/probes/planar-packed-v1233-final
+```
+
+Uninstrumented ordinary Normal gameplay is visible and its former corner
+pellet is absent at seven checkpoints. A seeded Marisa/Normal Good Ending
+still reaches registration, accepts input and persists 12,345,678 in section 6
+only. All ten checksums pass, changed-section digits are valid and the other
+nine encoded sections are unchanged. The fixture bypasses gameplay/OP and
+uses zero resident sound; its final black frame does not accept return to OP.
+Runtime receipts:
+
+```text
+.analysis/runtime/candidates/planar-v1233-normal/run/{receipt,corner-control}.json
+.analysis/runtime/candidates/planar-v1233-ending/run/{receipt,score-save-control}.json
+```
+
+The batch preserves game update logic, Shift movement and configured slowdown
+policy. The user's actual late-attack Turbo/Shift/frame-time state and Windows
+flow after this optimization still need the next playtest. No native whole-MZ
+equality or new historical exact promotion is claimed.
+
+Actual Windows `build-th04.cmd -Normal` and default `build-th04.cmd` both pass
+in fast mode, with English progress and verified object/ZUN reuse. Final run IDs
+are `product-20261003-065425-02e7e387` (normal) and
+`product-20261003-065757-d2c168ee` (invincible). Complete image/bin products equal
+the already tested export; both variants retain their preceding GENSOU.SCR and
+MIKO.CFG byte hashes. Publication control:
+`.analysis/render-corner-20261003/windows-fast-control.json`. The commands build
+through the existing Windows-to-WSL toolchain bridge; a native Windows compiler
+migration is not claimed.

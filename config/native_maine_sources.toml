@@ -130,6 +130,7 @@ asm_sources = [
   "src/shared/hardware/joystick.asm",
   "src/shared/hardware/palette_state.asm",
   "src/shared/hardware/super_state.asm",
+  "src/shared/hardware/planar_blit.asm",
   "src/shared/hardware/super_roll_put.asm",
   "src/shared/hardware/super_roll_put_1plane.asm",
   "src/shared/hardware/text_control.asm",

@@ -38,18 +38,37 @@ Reimu/Lunatic and Marisa/Normal Good Ending replays reach registration, accept
 names and save 12,345,678 in the expected score sections. Other sections remain
 byte-identical and all ten checksums pass. Their final black frames do not
 accept return to OP. These private fixtures bypass gameplay/OP initialization
-and use zero resident sound mode/frame-based waits; Windows full-route and
-cross-emulator validation remain separate. See the
+and use zero resident sound mode/frame-based waits. The user subsequently
+confirms all Normal Windows routes and their Endings/save handoff; automated
+full-route and cross-emulator validation remain separate. See the
 [Ending CDG note](reconstruction/product/TH04_NATIVE_ENDING_CDG_CS_V1230.md).
 Native readable scroll names now label the driver's existing storage; seeded
 initialization clears all three actual fields. Historical branches preserve
 their complete link-relevant OMF in cold source-to-source controls. The top
-stripe's connection to that defect still needs the user's visual replay.
+stripe's connection to that defect remains inferred; the user now confirms
+the Stage 6 top stripe is absent.
 The original/native bullet-count slowdown agrees across 96 CPU controls;
 the user's latest Normal saved configuration has Turbo enabled, so deliberate
 count-based slowdown is inactive if those options were loaded. Yuuka cross
-frame pacing remains open. See the
+frame pacing remains open. That attack has no direct player-speed or special
+half-speed write; a timed Stage 6 trace must distinguish rendering load, Shift
+and generic slowdown in the user's session. See the
 [scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
+
+The remaining upper-left pellet is confirmed as native state-clear corruption:
+at load 1100h, CLEAR_DWORDS (0708:1178; guest 1808:1187) stores EAX=000E0000
+through the complete bullet array, making 220 flags nonzero and queuing 120
+coincident pellets. Native full-EAX clearing now passes 54 complete-call CPU
+controls; two cold default objects preserve all 22 accepted target bytes.
+The old corner mark is absent at seven ordinary Normal checkpoints. See the
+[state-clear note](reconstruction/product/TH04_NATIVE_STATE_CLEAR_V1231.md).
+The coherent planar batch adds native word sprite/copy kernels and packed PI
+pair lookup. Three source reviews, 460 scalar-pixel/ABI controls and the DOS
+loader/packed-row harnesses pass. A complete 31-cross renderer control uses
+68% fewer instructions with identical pixels; this is not Windows FPS.
+Ordinary gameplay and seeded Marisa/Normal Ending/save still pass after the
+change. Windows retest and timed Yuuka pacing remain open. See the
+[planar performance controls](reconstruction/product/TH04_NATIVE_SUPER_SPRITE_V870.md).
 
 
 ## Current state
@@ -57,8 +76,8 @@ frame pacing remains open. See the
 | Artifact | Accepted authored functions | Native build/runtime |
 | --- | ---: | --- |
 | OP | 93/93 | Standalone build; normal options/Music Room/scores/DOS exit and saved config pass |
-| MAIN | 493/495 | Standalone build; bounded ordinary route reaches stage 3; user completed invincible Easy and Lunatic routes |
-| MAINE | 72/72 | Standalone build; ordinary registration passes; seeded Good Endings register/save; user confirms normal Windows death registration |
+| MAIN | 493/495 | Standalone build; user completed invincible Easy/Lunatic and all normal Windows Normal routes; optimized bounded ordinary replay passes |
+| MAINE | 72/72 | Standalone build; seeded Good Endings register/save; user confirms full Normal Windows Ending/save before the planar batch |
 | ZUN | 3/3 | Source-only cold packed build; four-product GAME.BAT startup passes |
 
 These counts describe historical function acceptance, not whole executable or
@@ -66,17 +85,14 @@ normal-game completion. `python3 scripts/status.py` reports the live ledgers.
 Targets remain `candidate-local-attested`. Product include checks have zero
 compatibility forwarders and forbidden ReC98 edges.
 
-The full native build compiles 193 MAIN C/C++ roots, 154 ASM roots, eight state
+The full native build compiles 193 MAIN C/C++ roots, 155 ASM roots, eight state
 owners and four generated sprite owners without `masters.lib`. All four products
-build through `scripts/build.py`. A fresh four-product build and subsequent
-source/dependency-validated MAIN/OP/MAINE relink pass; the final MAINE matches its
-fresh build. ZUN is cold-deterministic. Current inventory:
-`.analysis/reconstruction/probes/product-20261002-151920-831649d8-build.json`.
-The latest OP cold build compiles 111 C/C++ and 53 ASM roots, links without
-warnings, and equals the preceding dependency-validated cached native build.
-The current normal MAIN cold build (`product-20261002-151920-831649d8-main`)
-rebuilds all roots with the shared byte-sized sprite renderer: 191,823 bytes,
-SHA-256 `cd9aedb58cd9e7fbbc16f590f5199fa918c815fad2183ff9d9a1de335f4d16cd`.
+build through `scripts/build.py`. The planar batch uses dependency-validated
+fast MAIN/OP/MAINE builds and a freshly cold-replayed unchanged ZUN. Current
+normal/invincible inventories are `.analysis/build/th04-{normal,invincible}/build.json`.
+Normal products are MAIN 193,983 bytes (`149c1e77…`), OP 79,372 (`ef37e6e8…`),
+MAINE 72,246 (`7bfd7fd5…`) and ZUN 7,723 (`d6043dce…`). Invincible MAIN is
+also 193,983 bytes (`c649514d…`); the other three products are identical.
 
 Verified integration fixes:
 - MAIN EGC tile copy uses 3100h, observed at MAI_TEXT 0AAF:212C (file E41Ch).
@@ -196,33 +212,26 @@ vector and MZ audits pass; this fixes a verified stale-pointer hazard, but a
 ordinary gameplay-to-Good-Ending handoff remains separate from seeded replays. See
 [`TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md`](reconstruction/product/TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md).
 The Windows package at `D:\Entertainment\Game\Touhou\th04-reconstruct`
-now contains normal `product-20261003-045432-5e3ed8fc` and invincible
-`product-20261003-045623-451cb20a`. Both include the Ending/scroll repairs.
-`start-th04.bat` keeps the invincible MAIN (SHA-256 `26aef449…`), while
-`start-th04-normal.bat` mounts a separate `play-normal.hdi` with ordinary
-collision damage (MAIN SHA-256 `1b10fdef…`). OP/MAINE/ZUN are identical between
-variants. Invincibility is compiled into a private staged source overlay,
-not installed in maintained player source or patched in memory by a launcher.
-Both launchers use 24,000 cycles; reference launchers use 15,000. Initial
-normal export copied the user's current saves; later exports preserve each
-variant's own saves. `MIKO.CFG`/`GENSOU.SCR` hashes `073cde50…`/`d4037728…`
-were unchanged at export; subsequent normal changes belong to the user's
-playtest. The user confirms death-to-registration/save works in the new
-normal Windows package. `build-th04.cmd -Normal` passed an actual Windows
-incremental build with English progress, verified object reuse and unchanged
-ZUN reuse; default `build-th04.cmd` remains invincible. Windows full Ending
-handoff, top stripe and Yuuka frame pacing still need the user's replay.
-The preceding user Reimu/Lunatic playtest reported that
-Yuuka is now smooth, but the full Ending route still shows damaged graphics
-and never reaches registration; sound continues and Esc has no visible effect.
-This rejects treating the PI slot fix as a complete Ending repair. The second
-provided image is a PC-98 STOP pause notice, not registration.
-The Linux emulator aborts after PC-98 reset with dynamic core, so its
-private launcher uses normal/Pentium/15000/32 MB. Neither playable profile is
-normal-game acceptance evidence. A long native v1220 route reached Game Over
-after Continues and was stopped at 1250 seconds; a
-pinned-original v1221 control showed a guest interrupt/reset screen at 455.
-Neither provides a later-stage acceptance checkpoint.
+contains optimized normal `product-20261003-065425-02e7e387` and invincible
+`product-20261003-065757-d2c168ee` variants. `start-th04-normal.bat` mounts ordinary
+collision damage in `play-normal.hdi`; `start-th04.bat` mounts the separately
+source-compiled invincible MAIN in `play.hdi`. Invincibility remains a private
+staged source overlay, not a maintained player change or launcher memory patch.
+OP/MAINE/ZUN are identical between variants. Both launchers use 24,000 cycles;
+reference launchers use 15,000. Each export preserves its own MIKO.CFG and
+GENSOU.SCR. Actual Windows fast builds display English progress, verify object
+reuse, relink the three EXEs and reuse the unchanged verified ZUN. Both actual
+Windows commands pass and image/bin hashes equal the tested products; both
+variants retain their preceding save/config hashes. Control:
+`.analysis/render-corner-20261003/windows-fast-control.json`.
+
+The user confirms normal death-to-registration/save and subsequently full
+Normal routes/Endings before the planar batch. Optimized bounded ordinary
+and seeded Ending/save replays pass; full Windows routes and frame pacing
+still need the user's next test. The Linux emulator aborts after PC-98 reset
+with dynamic core; Linux runtime controls use normal/Pentium. Old damaged
+Ending and Divide-error reports are superseded by the bounded repairs above;
+private fault layouts remain replay evidence in the ledgers.
 
 Current runtime receipts:
 - `.analysis/runtime/candidates/native-four-cs-v1178-20261002/run/receipt.json`

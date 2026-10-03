@@ -22,7 +22,13 @@ CLEAR_DWORDS proc near
     mov cx, ss:[bx+2]
     push ds
     pop es
+ifdef TH04_LARGE_PRODUCT
+    ; Native callers may leave nonzero upper EAX bits. STOSD consumes all
+    ; 32 bits, so the product initializer must clear the complete register.
+    xor eax, eax
+else
     xor ax, ax
+endif
     rep stosd
     pop di
     ret 4

@@ -25,8 +25,8 @@ PRODUCTS = {"main": "MAIN.EXE", "op": "OP.EXE", "maine": "MAINE.EXE", "zun": "ZU
 
 def object_total(artifact: str) -> int:
     if artifact == "main":
-        # Native MAIN currently owns 193 C/C++, 154 ASM, 8 state and 4 sprite objects.
-        return 193 + 154 + 8 + 4
+        # Native MAIN owns 193 C/C++, 155 ASM, 8 state and 4 sprite objects.
+        return 193 + 155 + 8 + 4
     if artifact in ("op", "maine"):
         manifest = tomllib.loads((ROOT / "config" / f"native_{artifact}_sources.toml")
                                  .read_text(encoding="utf-8"))

@@ -86,5 +86,7 @@ OP. The user independently confirms death registration/save in the new
 normal Windows package; that scenario skips the Ending/Staff Roll path.
 
 None of these seeded scenarios establish full ordinary gameplay, Windows
-frame pacing or cross-emulator agreement. The user's next Windows playtest
-must cover the actual gameplay-to-Ending handoff.
+frame pacing or cross-emulator agreement. On 2026-10-03 the user subsequently
+reported that all Normal routes and their Endings work in the normal Windows
+package. This supplies a manual full-route confirmation of the handoff; no
+automated complete-route recording or cross-emulator acceptance is implied.

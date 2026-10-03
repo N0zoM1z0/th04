@@ -24,6 +24,7 @@ notes explain the remaining source and container gaps:
 - [Native PI cleanup owner and segment-pointer compiler probe](product/TH04_NATIVE_PI_FREE_V859.md)
 - [Standalone PI slot lifetime after the ending](product/TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md)
 - [Native Ending CDG instruction ownership](product/TH04_NATIVE_ENDING_CDG_CS_V1230.md)
+- [Native state-clear contamination and corner pellet](product/TH04_NATIVE_STATE_CLEAR_V1231.md)
 - [Native text VRAM gaiji writers](product/TH04_NATIVE_GAIJI_TEXT_V860.md)
 - [Native graphics gaiji writers](product/TH04_NATIVE_GRAPH_GAIJI_V861.md)
 - [Native graphics page copy and TC4J loop scope](product/TH04_NATIVE_GRAPH_COPY_V862.md)
