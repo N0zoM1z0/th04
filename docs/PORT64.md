@@ -90,8 +90,8 @@ with held-key input. Host timers update at a nominal 17,730,496 ns step and
 limit catch-up to four frames; this is a chosen bring-up cadence, not an
 independent original-timing measurement. The scene now has a
 movable, shooting player and real STD-scheduled enemies over the original Stage 1
-scrolling background; enemy bullets, bosses, Bomb/death, later-stage visuals and
-HUD remain absent.
+scrolling background, including enemy bullets. Bosses, Bomb/death, later-stage
+visuals and HUD remain absent.
 `--main-screenshot` alone injects seven item types for a deterministic 60-frame
 fixture, preserving an honest distinction from ordinary interactive gameplay.
 
@@ -113,7 +113,8 @@ laser damage, unsigned rectangle bounds and spark phase. Sparks are requests
 to a future adapter, so this slice does not consume their random draws or
 render them. Sound and spark effects remain absent.
 
-MAIN now dispatches STD waves, then updates player/shots/enemies/items in original order. SDL and Win32 sample
+MAIN now dispatches STD waves, then updates player/shots/bullets/enemies/items
+in original order. SDL and Win32 sample
 held Z; rendering uses original MIKO16 shot/options/ring cels and laser masks,
 with reverse pool drawing over the Stage 1 background. The explicit
 `--shooting-screenshots DIR` fixture collects a full-power item before firing
@@ -154,10 +155,10 @@ of host repaint messages. Original MIKO32 and ST00 BFNT cels draw before shots.
 The scroll owner now publishes the preceding update's Q12.4 delta even when
 its helper stops the stream in that call; enemy scroll movement consumes it.
 
-Fire, sound, tile-ring and spark requests dispatch synchronously. Only item
-drops are connected to the live pool in this slice. Bullet tuning/allocation,
-spark random draws and sound are not modeled yet, so natural shared RNG will
-change when those adapters are added. Player collision records a hit but
+Fire, sound, tile-ring and spark requests dispatch synchronously. Item drops
+and enemy bullet tuning/allocation are connected to their live pools. Spark
+random draws and sound are not modeled yet, so natural shared RNG will change
+when those adapters are added. Player collision records a hit but
 player death is still absent. This is a runnable Stage 1 enemy/shot slice,
 not a complete or invulnerable patched version of the native game.
 
@@ -190,6 +191,67 @@ raw register silently misses it. Receipt:
 `.analysis/port64/enemies-v1254/hook-ip-negative.json`. This is an emulator API
 observation, not evidence of a TH04 VM defect. The corrected CPU comparisons
 above run the original callees and record the actual intercepted boundaries.
+
+## Enemy bullets
+
+`enemy_bullets` connects script FIRE and enemy autofire synchronously to the
+same random ring, preserving the partially assigned process-wide scratch
+versus full-template transfer. It models separate descending 240-pellet and
+200-large pools, rank/performance tuning, all 14 groups, cloud phases and nine
+special motions. Explicit byte stores retain wrapped count/speed arithmetic,
+initial deceleration, velocity-before-speed changes, signed angle division
+and double corner bounces. Graze precedes collision on a fresh bullet;
+invincibility blocks both. Clear/zap contracts retain their timers, pattern
+changes, age rewards and capped ordered bonuses. Death/Bomb owners have not
+yet been connected to the exposed hit/clear/zap state.
+
+The original count policy sets delay 2 on even frames when Turbo is disabled
+and the active count reaches `24 + performance + rank * 8`. Both host timers
+apply that flag to their chosen simulation cadence. This is original deliberate
+slowdown policy, not a measurement of original frame timing or host performance.
+Extra forces Turbo, as in the original launch contract.
+
+Normal pellets use a procedural 8x8 white/purple glyph; large bullets, clouds
+and decay use the original MIKO16/MIKO32 BFNT assets. Independent original
+`main_01 0AAF:1EAC/1F3E` CPU execution with a GRCG write-mask shadow compares
+all 64 glyph pixels across 72 alignment/Y-roll controls. The lower pass starts
+at Y+3 after six white rows and repeats its first row. A Y+4/nine-row reading
+was rejected by these controls. Indexed-pixel SHA-256:
+`a46af7a156407770ad1074cfd03659acc4efc2f3bb7129812f766c8dae478c35`.
+This checks the glyph, not full host edge clipping or every cloud sprite.
+
+Original relocated MAIN CPU replay agrees on 36,216 checkpoints (18,900 tuning,
+10,160 allocation and 7,156 update cases) for Linux, Wine/Win32 and GNU
+UBSan/bounds. It compares the template, FNV32 fingerprints of all 440 packed
+26-byte records, scalars, ring cursor and ordered intercepted requests. Joint
+STD/enemy/bullet replay also agrees on 1,200 Normal and 1,200 Lunatic frames.
+Scope: `MAIN.EXE main_03 13A9`, tune `9435/9440/9448/9453`, regular wrappers
+`945E/9486/94A2`, special wrappers `94BE/94DA/94F6`, group `9538`, special
+motion `8CA6`, update `8E38`; load `2000`, DS `8000`, pool DS:5A22.
+Spark, HUD graze, point-number and gather callees are intercepted. Their effects,
+spark random draws, gather lifecycle, complete routes and natural timing are
+excluded; these are bounded semantic comparisons, not byte-exact acceptance.
+
+Separate count-zero ring controls reach original `IDIV BX` exceptions at
+loaded CS:IP `33A9:9648` and `33A9:9669`. The port retains the already repaired
+playable DOS product's skip guard; undefined original zero-count behavior is
+excluded from the agreement claim.
+
+`--combat-screenshots DIR` additionally selects Lunatic through OP and advances
+900 real Stage 1 frames without firing for each character. Each scene has five
+live enemy bullets; no entities or score are injected. Both bullet BMPs and the
+previous held-Z combat fixtures agree across Linux, Wine/Win32 and UBSan. This
+is a drawing/integration fixture, not a dense-barrage performance benchmark.
+All five x64 contract executables and prior resource/UI/player-shot fixtures
+pass. Cross-host receipt:
+`.analysis/port64/verification-bullets-v1255/receipt.json`; CPU receipts:
+`.analysis/port64/bullets-v1255/cpu-{linux-final3,windows-final,ubsan-final}/receipt.json`.
+
+Next port the gather/spark owners to close deferred allocation and random-call
+boundaries, then midboss/bosses, stage transitions/visuals, player death/Bomb,
+HUD/audio and Ending/save screens. Semantic work remains paused until a concrete
+ambiguity blocks these tasks. The native game is still incomplete; the DOS
+product and its exact acceptance remain unchanged.
 
 ## Verified builds
 

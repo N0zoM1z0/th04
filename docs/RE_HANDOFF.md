@@ -52,12 +52,27 @@ Both x64 products run real 1,200-frame shooting/enemy/drop fixtures with no
 injected entities: 26 kills, score delta 5,761, power 7; BMPs/counters agree.
 Cross-host receipt: `.analysis/port64/verification-enemies-v1254/receipt.json`;
 CPU receipts: `.analysis/port64/enemies-v1254/cpu-{linux,windows,ubsan}-final/receipt.json`.
-DOS source and acceptance states are unchanged. Fire/sound/tile/spark requests
-are synchronous, with item drops connected; bullet/spark effects and their
-RNG consumption are still intercepted in the CPU fixture and absent live.
-Next connect enemy bullet tune/add/update at this boundary, then midboss/bosses,
-later-stage visuals, HUD, Bomb/player death, sound, Ending and saved-data I/O.
-Semantic readability remains paused until a concrete native ambiguity. See [the x64 port handoff](PORT64.md).
+The latest bounded slice connects enemy FIRE/autofire immediately to the same
+ring and separate 240-pellet/200-large pools. Rank/performance tuning, 14 groups,
+nine special motions, cloud phases, graze/collision, clear/zap and original
+optional count-based delay are portable fixed-width state. Both products show
+natural Lunatic Stage 1 bullets and retain earlier fixture hashes/counters.
+Original MAIN CPU replay agrees on 36,216 tune/add/update cases, 2,400 joint
+Normal/Lunatic STD/enemy/bullet frames and 72 pellet glyph alignment/Y-roll
+controls. A repeated lower row starts at Y+3, producing an 8x8 white/purple
+glyph. Original zero-count rings independently fault at loaded 33A9:9648/9669;
+the host keeps the playable DOS skip guard. Scope: MAIN main_03 13A9,
+update 8E38, tune/wrappers 9435..94F6, pool DS:5A22, load2000 DS8000;
+glyph main_01 0AAF:1EAC/1F3E. Spark/HUD/point-number/gather callees are intercepted;
+their effects/RNG, complete routes and natural timing remain excluded.
+Cross-host receipt: `.analysis/port64/verification-bullets-v1255/receipt.json`;
+CPU receipts under `.analysis/port64/bullets-v1255/`. Five contracts and
+UBSan/bounds pass. Windows execution is under Wine; native Windows pacing is
+untested. Player hits are exposed but death is still absent.
+DOS source and exact acceptance states are unchanged. Next connect gather and
+spark owners, then midboss/bosses, stage transitions/visuals, HUD,
+Bomb/player death, audio, Ending and saved-data I/O. Semantic readability
+remains paused until a concrete native ambiguity. See [the x64 port handoff](PORT64.md).
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -510,8 +525,9 @@ all executed products and locates captured code against the relocated MAIN/MAP.
    independent playable invincible image can expose additional integration bugs.
 3. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
-4. Continue the semantic queue; repair the historical scaffold digest/replay
-   surface separately before claiming a new cold historical exact replay.
+4. Keep semantic work paused unless a native ambiguity requires a bounded
+   clarification; continue the native gameplay queue above. Repair the historical
+   scaffold digest/replay surface separately before a new cold exact claim.
 
 ## Navigation
 

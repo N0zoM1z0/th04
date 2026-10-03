@@ -10,6 +10,7 @@ State::State(application::State& application) {
     score_.power = 1;
     playchar_ = application.resident().playchar;
     shot_type_ = application.resident().shot_type;
+    turbo_ = application.resident().stage == 6 || application.resident().config.turbo;
     rank_ = application.resident().stage == 6 ? 4 : application.resident().config.rank;
     performance_ = rank_ == 2 ? 20 : (rank_ == 3 ? 22 : 16);
     score_.remaining_lives = application.resident().credit_lives;
@@ -27,9 +28,11 @@ State::State(application::State& application) {
 void State::load_stage(const stage::Program::Bytes& standard) {
     stage_ = std::make_unique<stage::Program>(standard);
     enemies_ = enemy::System{};
+    bullets_ = bullet::System{};
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta) {
     enemy_events_.clear();
+    bullet_events_.clear();
     enemy::Context context;
     context.player = player_.position().current;context.rank = rank_;context.performance = performance_;
     context.scroll_delta = scroll_delta;context.frame_mod2 = frames_%2;context.frame_mod4 = frames_%4;
@@ -44,10 +47,22 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     shots_.update((held_input & shot::input_shot) != 0, playchar_, shot_type_, score_.power,
                   player_.position(), ring_, enemies_.snapshot().homing_target);
     context.player = player_.position().current;
+    bullet::Context bullet_context;
+    bullet_context.player=context.player;bullet_context.rank=rank_;bullet_context.performance=performance_;
+    bullet_context.frame_mod2=context.frame_mod2;bullet_context.turbo=turbo_;
+    constexpr std::uint16_t graze_scores[]{100,250,400,500,2560};
+    bullet_context.graze_score=graze_scores[rank_];
+    const auto bullet_sink=[this](const bullet::Event& event) { bullet_events_.push_back(event); };
+    const auto score_before=bullets_.snapshot().score_delta;
+    bullets_.begin_frame();bullets_.update(bullet_context,bullet_sink);
+    score_.score_delta+=bullets_.snapshot().score_delta-score_before;
     if (stage_) {
         const auto before = enemies_.snapshot().score_delta;
-        enemies_.update(*stage_,context,ring_,shots_,[this](const enemy::Event& event) {
+        enemies_.update(*stage_,context,ring_,shots_,[this,&bullet_context,&bullet_sink](const enemy::Event& event) {
             enemy_events_.push_back(event);
+            // Tune/add consumes the shared ring immediately, before another
+            // enemy or another immediate opcode can draw from it.
+            if (event.type==enemy::EventType::fire) bullets_.fire(event,bullet_context,ring_,bullet_sink);
             if (event.type==enemy::EventType::drop) {
                 if (event.value==255) items_.add_enemy_drop(event.position,drops_);
                 else if (event.value<=6) items_.add(event.position,static_cast<item::Type>(event.value));

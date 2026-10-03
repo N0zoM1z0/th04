@@ -4,11 +4,12 @@
 #include "player_motion.hpp"
 #include "player_shots.hpp"
 #include "enemy_system.hpp"
+#include "enemy_bullets.hpp"
 #include <memory>
 
 namespace th04::portable::gameplay {
 // Live MAIN owns STD waves, enemies, player motion, shots and items.
-// Enemy bullets, bombs, player death and HUD will join this same owner;
+// Bombs, player death and HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
 public:
@@ -20,6 +21,8 @@ public:
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
     const shot::System& shots() const { return shots_; }
+    const bullet::System& bullets() const { return bullets_; }
+    const std::vector<bullet::Event>& bullet_events() const { return bullet_events_; }
     const enemy::System& enemies() const { return enemies_; }
     const std::vector<enemy::Event>& enemy_events() const { return enemy_events_; }
     const item::UpdateResult& item_events() const { return item_events_; }
@@ -32,6 +35,9 @@ private:
     player::Movement player_{};
     shot::System shots_{};
     enemy::System enemies_{};
+    bullet::System bullets_{};
+    std::vector<bullet::Event> bullet_events_;
+    bool turbo_=true;
     std::unique_ptr<stage::Program> stage_;
     std::vector<enemy::Event> enemy_events_;
     std::uint8_t rank_ = 1, performance_ = 16;

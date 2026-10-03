@@ -32,6 +32,7 @@ namespace sprite = th04::portable::sprite;
 namespace player = th04::portable::player;
 namespace stage = th04::portable::stage;
 namespace shot = th04::portable::shot;
+namespace bullet = th04::portable::bullet;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -698,6 +699,30 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         put_sprite(frame, sprites.palette, sprites.items,
                    16u + static_cast<unsigned>(entity.type), 32 + x - 8, 16 + y - 8);
     }
+    // Original foreground order puts enemy bullets after player and items.
+    const auto& bullets=state.bullets().snapshot();
+    for (unsigned index=bullet::pool_size;index;) {
+        --index;const auto& b=bullets.entities[index];if (b.flag!=1) continue;
+        const auto p=b.position.current;
+        if (index<bullet::pellet_count && !bullets.clear_time && !bullets.zap_frame) {
+            if (!bullets.pellet_visible[index]) continue;
+            const int left=28+pixels(p.x),top=12+pixels(p.y);
+            // The white top is an eight-pixel disk; the purple lower pass
+            // repeats its first row at Y+3, overlapping the six white rows
+            // and producing eight output rows without a bitmap array.
+            for (unsigned y=0;y<8;++y) for (unsigned x=0;x<8;++x) {
+                const auto color=bullet::pellet_pixel(x,y);
+                if (color) put_indexed_pixel(frame,sprites.palette,left,top,x,y,color);
+            }
+        } else if (index<bullet::pellet_count || b.phase<=bullet::Phase::cloud_backward) {
+            require_view(b.pattern>=28 && unsigned(b.pattern-28)<sprites.items.count(),"bullet references absent 16px sprite");
+            put_sprite(frame,sprites.palette,sprites.items,b.pattern-28,24+pixels(p.x),8+pixels(p.y));
+        } else if (p.x>=0 && p.x<6144 && p.y>=0 && p.y<5888) {
+            const bool blue=b.pattern==54 || b.pattern==55 || b.pattern==57 || (b.pattern>=76 && b.pattern<92);
+            const unsigned pattern=(blue ? 19 : 23)+unsigned(b.phase)/4;
+            put_sprite(frame,sprites.palette,sprites.enemies,pattern-4,16+pixels(p.x),pixels(p.y));
+        }
+    }
     return frame;
 }
 
@@ -718,6 +743,7 @@ public:
 
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
+    unsigned slowdown() const { return main_ ? main_->bullets().snapshot().slowdown : 1; }
     void advance(std::uint16_t held_input, bool shift) {
         if (live_main()) {
             main_->update(held_input, shift, false, sprites_->background.last_delta());
@@ -872,7 +898,7 @@ LRESULT CALLBACK title_window_proc(
                 if (active && GetAsyncKeyState(VK_RIGHT) & 0x8000) held |= player::right;
                 if (active && GetAsyncKeyState('Z') & 0x8000) held |= shot::input_shot;
                 title->front_end.advance(held, active && (GetAsyncKeyState(VK_SHIFT) & 0x8000));
-                title->next_tick += frame_period;
+                title->next_tick += frame_period*title->front_end.slowdown();
                 ++ticks;
             }
             if (ticks == 4 && now >= title->next_tick) title->next_tick = now + frame_period;
@@ -1071,7 +1097,7 @@ void show_window(
             const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
             front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
             dirty |= front_end.live_main();
-            next_tick += frame_period;
+            next_tick += frame_period*front_end.slowdown();
             ++ticks;
         }
         if (ticks == 4 && now >= next_tick) next_tick = now + frame_period;
@@ -1240,6 +1266,26 @@ void run_title(
             std::cout << "MAIN combat frames=1200 killed=" << state.enemies().snapshot().killed_count
                       << " score=" << state.score().score_delta << " power=" << +state.score().power
                       << " screenshot=" << path << '\n';
+            FrontEnd barrage(background,numerals,labels,cursors,
+                             selection_background,portraits,&main_assets);
+            for (unsigned i=0;i<3;++i) barrage.input(menu::Input::down);
+            barrage.input(menu::Input::confirm);
+            barrage.input(menu::Input::right);barrage.input(menu::Input::right);
+            barrage.input(menu::Input::cancel);
+            for (unsigned i=0;i<3;++i) barrage.input(menu::Input::up);
+            barrage.input(menu::Input::confirm);
+            if (character) barrage.input(menu::Input::right);
+            barrage.input(menu::Input::confirm);barrage.input(menu::Input::confirm);
+            // Select Lunatic through OP, then let real enemies fire. No
+            // shooting or injected entities suppresses this barrage fixture.
+            for (unsigned frame=0;frame<900;++frame) barrage.advance(0,false);
+            unsigned alive=0;
+            for (const auto& b:barrage.main_state().bullets().snapshot().entities) alive+=b.flag==1;
+            require_view(alive>0,"Lunatic STD fixture produced no bullets");
+            const auto bullet_path=combat_screenshots+"/"+(character ? "marisa-bullets.bmp" : "reimu-bullets.bmp");
+            write_bmp(bullet_path,barrage.frame());
+            std::cout << "MAIN barrage rank=Lunatic frames=900 bullets=" << alive
+                      << " screenshot=" << bullet_path << '\n';
         }
     }
     if (window) {

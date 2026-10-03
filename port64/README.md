@@ -15,8 +15,10 @@ speed; hold Z to shoot. All four shot routes have ten power levels, a 68-slot
 pool, hit-state contracts and Marisa option lasers. The fixed 32-slot item pool handles drops, motion, attraction and scoring;
 its seven-type scene fixture is headless-only. The interactive scene now renders and scrolls the original Stage 1 MAP/MPN
 background, selecting ST00 or ST10 tiles for the character. Real STD waves, the 52-opcode enemy VM and a 32-slot enemy pool are connected
-to player shots, drops, scoring and original BFNT sprites. Enemy bullets,
-bosses, bombs and player death remain to be connected. No original executables or game data are embedded in the binary. Unlike
+to player shots, drops, scoring and original BFNT sprites. Enemy bullets now
+use separate 240-pellet/200-large pools, clouds, nine special motions and
+graze/collision/clear/zap contracts. Bosses, bombs and player death remain
+to be connected. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
 The portable core also models the DOS executable chain as guarded in-process
@@ -190,8 +192,8 @@ the original allocation overrun; the host boundary is tested with sanitizers.
 Both character windows pass held-Z firing and release against original sprite
 pixels. Windows validation runs under Wine; native Windows pacing is untested.
 
-The next gameplay slice is enemy bullet tune/add/update, followed by
-midboss/bosses, later-stage backgrounds, HUD, death/Bomb transitions and audio.
+The next gameplay slice is gather/spark lifecycle and random consumption,
+followed by midboss/bosses, later-stage backgrounds, HUD, death/Bomb transitions and audio.
 Saved configuration and Ending/score persistence also remain. Semantic work
 is paused unless a concrete ambiguity blocks one of these slices; a completed
 TH04 native game has not yet been demonstrated.
@@ -201,8 +203,8 @@ consume the wave. `enemy_system` preserves inclusive timed movement, immediate
 setup chains, script loops, clipping, Lunatic autofire, performance intervals,
 shot damage, homing, kill/drop scoring and animation. Render-state mutations
 occur once per simulation frame. Synchronous fire/sound/tile/spark requests
-retain the original call boundaries for later adapters; only item drops are
-connected now. Intercepted bullet/spark RNG and player death remain absent.
+retain the original call boundaries; item drops and bullet tune/add are
+connected synchronously now. Spark RNG/effects and player death remain absent.
 
 ```sh
 python3 port64/verify_enemy.py --target .analysis/targets/th04/main.exe \
@@ -221,3 +223,30 @@ and renderer coordinates/cels, not complete graphics pixels or gameplay.
 The combat fixture holds Z for 1,200 original Stage 1 frames per character,
 with normal initial power and no injected entities/items/score. Both host
 products kill 26 enemies and reach power 7; their images and counters agree.
+
+
+`enemy_bullets` retains rank/performance byte arithmetic, descending separate
+pools, cloud timing, first-close-frame graze, collision, clear decay, zap
+bonuses and the original optional count-based slowdown. Enemy firing consumes
+the same ring immediately; gather requests and spark draws remain deferred.
+The host draws small pellets procedurally and other bullets from original BFNT.
+
+```sh
+python3 port64/verify_bullets.py --target .analysis/targets/th04/main.exe \
+  --hdi .analysis/runtime/images/zun.hdi \
+  --exe .analysis/port64/linux/th04-port64-bullet-contracts \
+  --output-dir .analysis/port64/bullets-cpu
+```
+
+Use `--runner wine` for the PE32+ contract executable. Scoped original CPU
+comparison covers 36,216 tune/add/update checkpoints and 2,400 joint
+STD/enemy/bullet frames. A separate 72-case original GRCG shadow checks the
+procedural 8x8 pellet glyph, including the repeated lower row and Y roll.
+Two negative controls retain original zero-count ring IDIV exceptions; the
+native product skips those rings as the playable DOS repair does.
+`--combat-screenshots DIR` now also writes `reimu-bullets.bmp` and
+`marisa-bullets.bmp`: OP-selected Lunatic, 900 frames without Z, five live
+bullets per image. These are natural Stage 1 fixtures without injected
+entities. They are not dense-barrage timing measurements. Five contracts,
+cross-host BMPs/counters and UBSan/bounds pass. Full routes, player death,
+gather/spark effects and their RNG remain outside the accepted slice.
