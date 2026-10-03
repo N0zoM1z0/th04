@@ -32,6 +32,10 @@ PORT_FILES = (
     "port64/player_motion.hpp",
     "port64/sprite_sheet.cpp",
     "port64/sprite_sheet.hpp",
+    "port64/stage_background.cpp",
+    "port64/stage_background.hpp",
+    "port64/probe_assets.py",
+    "port64/verify_background.py",
     "port64/verify_movement.py",
     "port64/verify_window.py",
     "port64/item_system.cpp",
@@ -216,14 +220,15 @@ def main() -> int:
             "0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5"
         ),
         "main_fixture_bmp_sha256": (
-            "0fe4fac7633580ec1efb85ad3a72f1f7dc6d5d9e0e34703083c21d6ba9076351"
+            "a6341ebde93ab5424a263f3b9393e6654bbada0e215dc119e324529e4f7a3524"
         ),
         "passed": True,
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
             "OP menu-state transitions, resident process handoff, process-local LCG and shared "
             "random-ring contracts, live player movement, item entity motion/pickup and "
-            "BFNT scene rendering only; stage VM, shots, enemies, bombs, death, scrolling, "
+            "BFNT sprites and Stage 1 MPN/MAP/STD background rendering/scrolling only; "
+            "stage VM, shots, enemies, bombs, death, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),

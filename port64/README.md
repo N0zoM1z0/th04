@@ -12,8 +12,9 @@ the original defaults, and returns to the Option command on Cancel/Option
 Quit. Other main commands whose screens are not ported yet print their index and
 leave the window open; main Quit/Esc closes it. In that scene, arrow keys move the original character sprite and Shift halves
 speed. The fixed 32-slot item pool handles drops, motion, attraction and scoring;
-its seven-type scene fixture is headless-only. The interactive scene currently
-has a black playfield without stage scripts, shots, enemies, bombs or death. No original executables or game data are embedded in the binary. Unlike
+its seven-type scene fixture is headless-only. The interactive scene now renders and scrolls the original Stage 1 MAP/MPN
+background, selecting ST00 or ST10 tiles for the character. Stage scripts,
+shots, enemies, bombs and death remain to be connected. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
 The portable core also models the DOS executable chain as guarded in-process
@@ -98,7 +99,7 @@ with SHA-256 `b52ea861...` and `a064338b...`.
 stages; their shared cross-host hashes are `c1a795a3...` and `12aa7616...`.
 `--handoff-screenshot` retains the static handoff fixture (`0b2c0f8c...`).
 `--main-screenshot` requires an HDI and drives a 60-frame movement/item scene
-with seven explicitly injected item types (`0fe4fac7...`); these fixture items
+with seven explicitly injected item types (`a6341ebd...`); these fixture items
 are not injected into ordinary interactive sessions.
 The portable contract target
 also consumes `src/main/bullet/group_types.hpp` and checks 64-bit pointer
@@ -138,8 +139,31 @@ For Wine/Win32 use `--runner wine` and the Windows executable. This checks
 actual held keys, visible movement, slower Shift movement and Esc exit with
 loose time bounds; native Windows pacing remains a separate observation.
 
+`stage_background` decodes the MPN last-image index and B/R/G/I planes once,
+translates MAP VRAM addresses into portable tile IDs, initializes the 25-row
+ring in STD order, and preserves the byte scroll accumulator, initial chunk
+length speed and pre-advance display origin. The host redraws the playfield
+from this ring while retaining the original Stage 1 scroll state sequence.
+The independent original-CPU oracle covers initial fill and 6,715 frames
+through termination, including 64 stopped frames. Original MPN renderer calls
+also match all 32,768 indexed pixels of both character tile sets.
+
+```sh
+python3 port64/verify_background.py --target .analysis/targets/th04/main.exe \
+  --hdi .analysis/runtime/images/zun.hdi \
+  --exe .analysis/port64/linux/th04-port64-live-contracts \
+  --output-dir .analysis/port64/background-cpu
+```
+
+Use `--runner wine` for the PE32+ contract executable. Scroll EGC copies and
+graphics calls are intercepted in this oracle; it proves bounded software
+state and MPN pixels rather than complete PC-98 video or gameplay.
+`verify_window.py --playchar marisa` covers the other character. Its visible
+movement check now matches nontransparent original BFNT sprite pixels against
+the scrolling window, rather than assuming a black background.
+
 The next gameplay slice is stage VM/entity integration, followed by shots,
-enemy bullets, scrolling/tile maps, HUD, death/Bomb transitions and audio.
+enemy bullets, later-stage backgrounds, HUD, death/Bomb transitions and audio.
 Saved configuration and Ending/score persistence also remain. Semantic work
 is paused unless a concrete ambiguity blocks one of these slices; a completed
 TH04 native game has not yet been demonstrated.

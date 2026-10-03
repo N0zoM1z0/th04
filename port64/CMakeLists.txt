@@ -15,6 +15,7 @@ add_library(
   player_motion.cpp
   main_state.cpp
   sprite_sheet.cpp
+  stage_background.cpp
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp

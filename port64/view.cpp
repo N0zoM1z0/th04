@@ -4,6 +4,7 @@
 #include "selection_state.hpp"
 #include "main_state.hpp"
 #include "sprite_sheet.hpp"
+#include "stage_background.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -29,6 +30,7 @@ namespace selection = th04::portable::selection;
 namespace gameplay = th04::portable::gameplay;
 namespace sprite = th04::portable::sprite;
 namespace player = th04::portable::player;
+namespace stage = th04::portable::stage;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -587,8 +589,14 @@ void write_bmp(const std::string& path, const Frame& frame) {
 struct MainSprites {
     sprite::Sheet reimu, marisa, items, stage_tiles;
     PiImage palette;
+    stage::TileImages reimu_tiles, marisa_tiles;
+    stage::Background background;
     explicit MainSprites(const MainAssets& assets)
-        : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles) {
+        : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles),
+          reimu_tiles(assets.reimu_map_tiles), marisa_tiles(assets.marisa_map_tiles),
+          background(assets.map, assets.standard) {
+        require_view(background.required_image_count() <= reimu_tiles.count() &&
+                     background.required_image_count() <= marisa_tiles.count(), "MAP references absent MPN tile");
         // Stage 1's sprite load replaces the eyecatch palette before normal
         // rendering. EYE.RGB belongs to the earlier startup transition.
         require_view(stage_tiles.has_palette(), "ST00.BFT must supply the stage palette");
@@ -614,6 +622,16 @@ void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet
 Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                   application::Playchar playchar) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
+    const auto& tiles = playchar == application::Playchar::reimu ? sprites.reimu_tiles : sprites.marisa_tiles;
+    // Full host redraw replaces PC-98 dirty tile/EGC copies. Clip to the
+    // original playfield; the scroll ring owns all 400 physical rows.
+    for (unsigned y=16; y<384; ++y) {
+        for (unsigned x=0; x<384; ++x) {
+            const auto image = sprites.background.image_at(x,y);
+            put_indexed_pixel(frame,sprites.palette,32,0,x,y,
+                tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
+        }
+    }
     const auto& position = state.player().position();
     const unsigned cel = position.velocity.x < 0 ? 1 : (position.velocity.x > 0 ? 2 : 0);
     const bool white = state.frames() < 64 && state.frames() % 4 == 0;
@@ -654,6 +672,7 @@ public:
     void advance(std::uint16_t held_input, bool shift) {
         if (live_main()) {
             main_->update(held_input, shift);
+            sprites_->background.update();
             frame_ = render();
         }
         else if (screen_ == Screen::menu) application_.advance_op_menu_frame();

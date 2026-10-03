@@ -18,6 +18,7 @@ struct MainAssets {
     Bytes marisa;
     Bytes items;
     Bytes stage_tiles;
+    Bytes reimu_map_tiles, marisa_map_tiles, map, standard;
 };
 
 // Renders the source-derived OP main/options layout with original PI/CD2

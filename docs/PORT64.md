@@ -88,10 +88,19 @@ is 16 within MIKO16, because the preceding MIKO32 sheet owns 24 patterns.
 A completed HDI-backed Game selection now starts a timed SDL/Win32 MAIN scene
 with held-key input. Host timers update at a nominal 17,730,496 ns step and
 limit catch-up to four frames; this is a chosen bring-up cadence, not an
-independent original-timing measurement. The scene is a black playfield with a
-movable player; stage VM, shots, enemies, Bomb/death, tiles and HUD remain absent.
+independent original-timing measurement. The scene now has a
+movable player over the original Stage 1 scrolling background; stage VM, shots,
+enemies, Bomb/death, later-stage visuals and HUD remain absent.
 `--main-screenshot` alone injects seven item types for a deterministic 60-frame
 fixture, preserving an honest distinction from ordinary interactive gameplay.
+
+`stage_background` owns the MPN planar tiles, MAP section rows and STD order/
+speed streams. It expands MPN pixels once instead of re-reading four planes
+per frame, translates the original image VRAM addresses into host tile IDs,
+and owns the 25x24 visible ring. Initial STD sections are filled bottom-first;
+the pre-advance display origin and byte fractional accumulator retain DOS
+ordering, including the initial speed-chunk length and the zero terminator.
+The host redraws this software background instead of emulating EGC copies.
 
 ## Verified builds
 
@@ -112,7 +121,7 @@ Both portable contract executables report `pointer_bits=64`, `angle_bits=8`,
 `items=FIXED_WIDTH_SAFE`.
 Both live contracts also report `motion=Q12.4 player=HELD_KEYS items=32
 sprites=BFNT pointer_bits=64`. Their live fixture agrees across both products:
-`0fe4fac7633580ec1efb85ad3a72f1f7dc6d5d9e0e34703083c21d6ba9076351`.
+`a6341ebde93ab5424a263f3b9393e6654bbada0e215dc119e324529e4f7a3524`.
 A separate GNU x86-64 build passes both contracts and the full resource smoke
 with undefined-behavior and array-bounds instrumentation enabled.
 
@@ -123,16 +132,24 @@ for all 256 direction masks. This is target CPU evidence for isolated
 The 321 independently generated trig constants separately agree with the
 maintained DOS source tables. Actual SDL and Wine/Win32 window probes check
 held Right, Shift slowdown and Esc; they do not measure native Windows FPS.
+Both characters also pass window
+checks over the scrolling background using independent original BFNT pixel
+matching. The separate background oracle executes original initial fill
+`main_01 0AAF:0FB2` (load 0xBAA2), scroll driver `21E6` (load 0xCCD6) and
+helper `0D45` (load 0xB835): all 6,715 software-state/ring frames agree,
+including termination and 64 stopped frames. It intercepts graphics/EGC calls.
+The original `_TEXT 0000:3680` MPN renderer independently agrees on 32,768
+indexed pixels across all 128 character-specific tiles. This is bounded
+original CPU evidence, not full gameplay or Windows pacing.
 
 The current verification receipt is
-`.analysis/port64/verification-live-v1251/receipt.json` (SHA-256
-`efab4b04f99dbd71e2a80070bb531fd3b053edfd40643f51acb65b8a967337a6`),
-with source manifest
-`94739f8afd56f471b0435f4134d3860dafbff9b992482d830520ff3ebc1f90b5`.
-Bounded target-movement receipts and window observations are under
-`.analysis/port64/live-v1251/`; sanitizer evidence is under
-`.analysis/port64/ubsan-live-v1251/`. These private receipts record their own
-product hashes and scope limits. The source manifest is recorded by `verify.py`.
+`.analysis/port64/verification-background-v1252/receipt.json` (SHA-256
+`b672ceef52c024b9fd5ddd5e6b5b3d756980ccc953a91964c473abce201a669c`), with source manifest
+`7da5c6540a1e28c07886ec5c3db9cf37bc46fa93903f1a4fc7158fcc7a87267e`.
+Original CPU, native-window and sanitizer receipts for the background slice
+are under `.analysis/port64/background-v1252/`. The earlier movement-only
+receipts remain under `.analysis/port64/live-v1251/`. Each records product
+hashes and scope limits; `verify.py` records the source manifest.
 
 Replay the complete cross-build check with:
 
@@ -153,7 +170,7 @@ repository.
 Semantic work stops when the current subsystem is clear enough to port and
 verify. The completed motion/item slice required no further DOS-source edits.
 Next, connect stage VM and enemy entities to the frame loop, then port shots,
-bullets, scrolling/tile maps, HUD, death/Bomb transitions and audio. Add saved
+bullets, later-stage scrolling/tile maps, HUD, death/Bomb transitions and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those
 systems become runnable. Full gameplay is the completion condition, not an
 exhaustive source-renaming pass.

@@ -389,6 +389,10 @@ int main(int argc, char** argv) {
                 main_assets.marisa = archive_member(game, "MARI.BFT");
                 main_assets.items = archive_member(game, "MIKO16.BFT");
                 main_assets.stage_tiles = archive_member(game, "ST00.BFT");
+                main_assets.reimu_map_tiles = archive_member(game, "ST00.MPN");
+                main_assets.marisa_map_tiles = archive_member(game, "ST10.MPN");
+                main_assets.map = archive_member(game, "ST00.MAP");
+                main_assets.standard = archive_member(game, "ST00.STD");
             }
             require(main_screenshot.empty() || !main_assets.reimu.empty(),
                     "--main-screenshot requires a complete TH04 HDI");

@@ -1,6 +1,9 @@
 #include "main_state.hpp"
 #include "motion_tables.hpp"
 #include "sprite_sheet.hpp"
+#include "stage_background.hpp"
+#include <fstream>
+#include <iterator>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -106,6 +109,18 @@ void main_contracts() {
     const auto drops = scene.add_miss_items();
     require(drops.count == 5 && scene.items().spawned() == 6, "live miss spawns use pool and shared ring");
 }
+void tile_contracts() {
+    std::vector<std::uint8_t> bytes(54+128,0);
+    bytes[0]='M';bytes[1]='P';bytes[2]='T';bytes[3]='N';
+    bytes[54]=0x80;bytes[54+32]=0x40;bytes[54+64]=0x80;bytes[54+96]=0x40;
+    th04::portable::stage::TileImages tile(bytes);
+    require(tile.count()==1 && tile.pixel(0,0,0)==5 && tile.pixel(0,1,0)==10 && tile.pixel(0,8,0)==0,
+            "MPN inclusive image count, BRGI planes and left bit order");
+    bytes.pop_back();
+    bool rejected=false;
+    try { th04::portable::stage::TileImages invalid(bytes); } catch(const std::invalid_argument&) { rejected=true; }
+    require(rejected,"truncated MPN rejected");
+}
 void sprite_contracts() {
     std::vector<std::uint8_t> bytes(80+8*2/2,0);
     bytes[0]='B';bytes[1]='F';bytes[2]='N';bytes[3]='T';bytes[4]=26;bytes[5]=0x83;
@@ -125,6 +140,41 @@ void sprite_contracts() {
 } // namespace
 int main(int argc, char** argv) {
     static_assert(sizeof(void*)==8,"native MAIN requires x64");
+    if (argc == 4 && std::string(argv[1]) == "--tile-pixels") {
+        std::ifstream file(argv[2],std::ios::binary);
+        if (!file) throw std::runtime_error("cannot read tile fixture");
+        const std::vector<std::uint8_t> bytes(std::istreambuf_iterator<char>(file),{});
+        th04::portable::stage::TileImages tiles(bytes);
+        std::ofstream output(argv[3],std::ios::binary);
+        if (!output) throw std::runtime_error("cannot write tile pixels");
+        for (unsigned image=0; image<tiles.count(); ++image) for (unsigned y=0; y<16; ++y) {
+            for (unsigned x=0; x<16; ++x) output.put(static_cast<char>(tiles.pixel(image,x,y)));
+        }
+        if (!output) throw std::runtime_error("tile pixel write failed");
+        return 0;
+    }
+    if (argc == 4 && std::string(argv[1]) == "--background-trace") {
+        const auto read = [](const char* path) {
+            std::ifstream file(path,std::ios::binary);
+            if (!file) throw std::runtime_error("cannot read background fixture");
+            return std::vector<std::uint8_t>(std::istreambuf_iterator<char>(file),{});
+        };
+        th04::portable::stage::Background bg(read(argv[2]),read(argv[3]));
+        unsigned stopped_frames = 0;
+        for (unsigned frame=0; frame<20000; ++frame) {
+            std::uint32_t hash = 2166136261u;
+            for (const auto& row : bg.ring()) for (const auto tile : row) {
+                hash = (hash ^ (tile & 255u))*16777619u;
+                hash = (hash ^ (tile >> 8))*16777619u;
+            }
+            std::cout << frame << ' ' << bg.scroll_line() << ' ' << bg.display_line()
+                      << ' ' << bg.speed() << ' ' << bg.section_cursor() << ' '
+                      << bg.row_in_section() << ' ' << hash << '\n';
+            if (bg.stopped() && ++stopped_frames == 64) return 0;
+            bg.update();
+        }
+        throw std::runtime_error("background failed to reach STD terminator");
+    }
     if (argc == 2 && std::string(argv[1]) == "--movement-vectors") {
         for (unsigned high = 0; high < 16; ++high) {
             for (unsigned low = 0; low < 16; ++low) {
@@ -137,6 +187,6 @@ int main(int argc, char** argv) {
         }
         return 0;
     }
-    motion_contracts();pool_contracts();main_contracts();sprite_contracts();
+    motion_contracts();pool_contracts();main_contracts();sprite_contracts();tile_contracts();
     std::cout << "TH04 live MAIN contracts: PASS motion=Q12.4 player=HELD_KEYS items=32 sprites=BFNT pointer_bits=64\n";
 }

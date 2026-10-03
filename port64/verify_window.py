@@ -9,7 +9,8 @@ from pathlib import Path
 import subprocess
 import time
 
-from PIL import Image, ImageChops
+from PIL import Image
+from probe_assets import main_assets
 
 
 def main():
@@ -17,6 +18,7 @@ def main():
     parser.add_argument('--exe', type=Path, required=True)
     parser.add_argument('--hdi', type=Path, required=True)
     parser.add_argument('--runner')
+    parser.add_argument('--playchar',choices=['reimu','marisa'],default='reimu')
     parser.add_argument('--output-dir', type=Path, required=True)
     args = parser.parse_args()
     output = args.output_dir.resolve()
@@ -24,6 +26,20 @@ def main():
     env = os.environ.copy()
     env.setdefault('WINEDEBUG', '-all')
     command = ([args.runner] if args.runner else []) + [str(args.exe.resolve()), '--hdi', str(args.hdi.resolve()), '--title']
+    assets = main_assets(args.hdi)
+    sheet, colors = assets['MIKO.BFT' if args.playchar=='reimu' else 'MARI.BFT'], assets['ST00.BFT']
+    word = lambda b,at:int.from_bytes(b[at:at+2],'little')
+    at = 32+word(sheet,28)+(48 if sheet[5]&128 else 0)
+    palette_at = 32+word(colors,28)
+    palette = [tuple((colors[palette_at+i*3+j]>>4)*17 for j in (1,2,0)) for i in range(16)]
+    samples = []
+    for y in range(48):
+        for x in range(32):
+            packed = sheet[at+y*16+x//2]
+            color = (packed&15) if x%2 else packed>>4
+            if color: samples.append((x,y,palette[color]))
+    samples = samples[::max(1,len(samples)//64)]
+    previous_left, previous_top = [416], [624]
     log = (output/'window.log').open('w')
     process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, env=env)
     held = []
@@ -43,7 +59,10 @@ def main():
         # initial event pump to establish focus before sending menu keys.
         time.sleep(1.0)
         subprocess.run(['xdotool','windowfocus','--sync',window],check=True)
-        for _ in range(3):
+        for step in range(3):
+            if step==1 and args.playchar=='marisa':
+                subprocess.run(['xdotool','key','Right'],check=True)
+                time.sleep(0.2)
             subprocess.run(['xdotool','key','Return'],check=True)
             time.sleep(0.3)
         time.sleep(1.5)  # Let the startup white-flash interval expire.
@@ -52,14 +71,21 @@ def main():
             path = output/(name+'.png')
             subprocess.run(['import','-window',window,str(path)],check=True)
             image = Image.open(path).convert('RGB')
-            # Exclude Win32's non-client frame/title bar. The MAIN scene is
-            # otherwise black, so the remaining nonblack extent is the player.
-            crop = image.crop((20,60,image.width-20,image.height-12))
-            box = ImageChops.difference(crop,Image.new('RGB',crop.size)).getbbox()
-            if box is None: raise RuntimeError('player sprite was not visible')
-            if box[2]-box[0] > 80 or box[3]-box[1] > 110:
-                raise RuntimeError('MAIN scene not reached or unexpected rendering')
-            return (box[0]+box[2])/2 + 20
+            if image.size != (1280,800): raise RuntimeError('window probe requires 2x client capture')
+            # Match nontransparent pixels of the ORIGINAL idle player cel.
+            # The scrolling background cannot be treated as black or masked
+            # by a single color. This independent BFNT interpretation also
+            # checks the renderer's orientation, palette and transparency.
+            pixels = image.load()
+            low = previous_left[0]-10
+            high = previous_left[0]+(10 if name=='initial' else 330)
+            for top in range(previous_top[0]-8,previous_top[0]+9):
+                for left in range(low,min(high,image.width-64)+1):
+                    if all(pixels[left+2*x,top+2*y]==rgb for x,y,rgb in samples):
+                        previous_left[0], previous_top[0] = left,top
+                        return left+32
+            raise RuntimeError('original player sprite was not found in MAIN scene')
+
 
         initial = snapshot('initial')
         subprocess.run(['xdotool','keydown','Right'],check=True); held.append('Right')
@@ -81,7 +107,7 @@ def main():
         receipt = {
             'passed':True,'observed_utc':datetime.now(timezone.utc).isoformat(timespec='seconds'),
             'exe_sha256':hashlib.sha256(args.exe.read_bytes()).hexdigest(),
-            'runner':args.runner,'normal_delta_display_pixels':normal_delta,
+            'runner':args.runner,'playchar':args.playchar,'normal_delta_display_pixels':normal_delta,
             'shift_delta_display_pixels':slow_delta,
             'limits':'Real X11 held keys through SDL or Wine/Win32; loose wall-clock bounds verify direction and Shift response, not exact frame cadence or native Windows host pacing.'
         }

@@ -1,14 +1,13 @@
 # TH04 current handoff
 
-Updated 2026-10-03. The active goal is a standalone PC-98 game: checked-in
-TH04 source, successful builds, and normal gameplay. Native whole-build byte
+Updated 2026-10-04. The standalone PC-98 game is the behavioral reference:
+checked-in TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
-upstream exactness claims are not inherited. Current phase: semantic readability
-after the native bullet-performance, scroll-pipeline, MAINE registration,
+upstream exactness claims are not inherited. Current phase: native x64 integration after bounded semantic readability and
+the native bullet-performance, scroll-pipeline, MAINE registration,
 three-executable process-handoff, shared-random-ring, process-local-LCG and
-item-lifecycle batches; Windows
-retesting continues.
+item-lifecycle batches; semantic work is paused unless it blocks a port slice.
 
 On `port/modern-64`, semantic work is paused at the user's stopping condition:
 sufficient clarity for the current x64 slice, then implement and verify it.
@@ -18,13 +17,18 @@ contracts and a new live MAIN slice. Game confirmation now starts a timed
 window with the original player sprite, held arrows and Shift slowdown.
 The 32-slot item pool preserves movement, attraction, pickup/scoring and
 next-frame release. Seven item types appear only in the explicit headless
-60-frame fixture; both hosts produce `0fe4fac7...` with player Q12.4 position
+60-frame fixture; both hosts now produce `a6341ebd...` with player Q12.4 position
 5232,2960. Independent original MAIN `main_01 0AAF:5DA8` CPU replay agrees
 with native movement across 256 masks; this is a bounded primitive comparison,
 not full gameplay or original timing. GNU UBSan/bounds also passes. Private
-receipts: `.analysis/port64/verification-live-v1251/receipt.json` and
-`.analysis/port64/live-v1251/`. No DOS source or acceptance state changes.
-Stage VM, shots, enemies, scrolling/tiles, HUD, Bomb/death, sound, Ending and
+receipts: `.analysis/port64/verification-background-v1252/receipt.json` and
+`.analysis/port64/background-v1252/`. Original initial tile fill and scroll
+CPU code agree with the host 25x24 ring and state across 6,715 frames through
+termination; all 128 MPN tiles match 32,768 original-renderer indexed pixels.
+Both character windows pass held-key/Shift tests over the real Stage 1 scrolling
+background. Scroll graphics calls/EGC are intercepted, not a complete video
+replay. No DOS source or acceptance state changes.
+Stage VM, shots, enemies, later-stage visuals, HUD, Bomb/death, sound, Ending and
 saved-data I/O remain to be connected. See [the x64 port handoff](PORT64.md).
 
 The `semantic/readable` branch now prepares the DOS source for the native
