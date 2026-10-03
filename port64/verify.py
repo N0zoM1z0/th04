@@ -15,6 +15,8 @@ import sys
 
 PORT_FILES = (
     "port64/CMakeLists.txt",
+    "port64/application_state.cpp",
+    "port64/application_state.hpp",
     "port64/bullet_geometry.cpp",
     "port64/bullet_geometry.hpp",
     "port64/contracts.cpp",
@@ -114,7 +116,7 @@ def main() -> int:
     )
     expected_contract_output = (
         "TH04 portable contracts: PASS pointer_bits=64 "
-        "angle_bits=8 menu_state=OP"
+        "angle_bits=8 menu_state=OP handoff_state=OP_MAIN_MAINE"
     )
     if linux_contract_output != expected_contract_output:
         raise ValueError("Linux portable contract did not pass")
@@ -168,8 +170,8 @@ def main() -> int:
         "passed": True,
         "limit": (
             "Resource decoding, main/options composition, deterministic OP menu-state "
-            "and bullet-geometry contracts only; gameplay, audio, saved data and "
-            "complete OP/MAIN/MAINE state machines are not yet ported."
+            "and resident process-handoff contracts only; gameplay, audio, saved-data "
+            "I/O and complete OP/MAIN/MAINE behavior are not yet ported."
         ),
     }
     output.parent.mkdir(parents=True, exist_ok=True)

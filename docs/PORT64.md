@@ -20,7 +20,19 @@ selection, rank/lives/bombs/BGM/SE wrap directions, Turbo toggle and reset
 defaults. Host key events call this state instead of embedding transitions in
 SDL or Win32 code. Main commands beyond Options and Quit still report that
 their destination is unported. Descriptions, character selection, idle demos,
-sound, configuration persistence and executable handoff remain to be migrated.
+sound and configuration persistence remain to be migrated.
+
+`port64/application_state.cpp` now owns the first executable-handoff boundary.
+It replaces DOS process/segment mechanics with one fixed-width resident object
+and guarded `OP -> MAIN -> MAINE -> OP` state transitions. Normal and Extra
+starts preserve their configurable/fixed resources; demos retain the original
+four stage/character/shot contracts and the split live/resource stage fields.
+MAIN publishes score and run counters before either returning to OP or entering
+MAINE. MAINE classifies Good/Bad, Extra and score-only routes from the original
+one-byte sentinel values, retaining the Good/Bad script selector, before
+returning to OP. A generation counter marks each fresh executable-local
+resource lifetime. No gameplay or score-file I/O is implied by this
+control-plane slice.
 
 The first gameplay contract is separated into
 `src/main/bullet/group_types.hpp` and `port64/bullet_geometry.cpp`. Both DOS
@@ -39,7 +51,7 @@ x86-64. Both decode the attested HDI fixtures with packed-pixel FNV32 values
 Both also produce the same default Options BMP, SHA-256
 `a064338b0cfb89f7e418a85ab6bc84a7ea5ef835e4ca995b68772e0aef368185`.
 Both portable contract executables report
-`pointer_bits=64 angle_bits=8 menu_state=OP`.
+`pointer_bits=64 angle_bits=8 menu_state=OP handoff_state=OP_MAIN_MAINE`.
 
 Replay the complete cross-build check with:
 
@@ -61,8 +73,8 @@ repository.
    the verified byte/pixel controls.
 2. Add description text, character selection and explicit frame/input timing
    to the portable main/options state and framebuffer backend.
-3. Add audio and saved configuration adapters, then OP-to-MAIN/MAINE process
-   transitions.
+3. Connect the verified process-transition contract to UI destinations, then
+   add audio and saved configuration adapters.
 4. Port MAIN entity pools around fixed-width state, beginning with bullet
    generation and rendering controls.
 5. Add route-level differential checkpoints for gameplay, Ending and score

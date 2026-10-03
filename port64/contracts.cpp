@@ -1,3 +1,4 @@
+#include "application_state.hpp"
 #include "bullet_geometry.hpp"
 #include "menu_state.hpp"
 
@@ -8,6 +9,7 @@
 
 namespace bullet = th04::portable::bullet;
 namespace menu = th04::portable::menu;
+namespace application = th04::portable::application;
 
 namespace {
 
@@ -144,8 +146,159 @@ int main() {
     const auto quit = option_menu.handle(menu::Input::cancel);
     require(quit.kind == menu::ResultKind::quit, "main Cancel must quit");
 
+    application::State app;
+    require(
+        app.program() == application::Program::op && app.generation() == 1,
+        "portable application must begin in OP"
+    );
+    menu::Options custom_options;
+    custom_options.lives = 5;
+    custom_options.bombs = 1;
+    custom_options.rank = 3;
+    app.apply_options(custom_options);
+    app.start_normal(
+        application::Playchar::marisa, application::ShotType::b
+    );
+    require(
+        app.program() == application::Program::main &&
+            app.generation() == 2 && app.resident().stage == 0 &&
+            app.resident().resource_stage == 0 &&
+            app.resident().credit_lives == 5 &&
+            app.resident().credit_bombs == 1 &&
+            app.resident().playchar == application::Playchar::marisa &&
+            app.resident().shot_type == application::ShotType::b &&
+            app.resident().demo_number == 0 &&
+            app.resident().end_sequence == application::EndSequence::in_game,
+        "normal OP-to-MAIN resident contract mismatch"
+    );
+
+    bool invalid_transition_rejected = false;
+    try {
+        app.start_normal(
+            application::Playchar::reimu, application::ShotType::a
+        );
+    } catch (const std::logic_error&) {
+        invalid_transition_rejected = true;
+    }
+    require(
+        invalid_transition_rejected,
+        "MAIN must reject an OP-only launch transition"
+    );
+
+    application::RunStatistics statistics;
+    statistics.score_digits = {1, 2, 3, 4, 5, 6, 7, 8};
+    statistics.std_frames = 111;
+    statistics.items_spawned = 222;
+    statistics.items_collected = 123;
+    statistics.point_items_collected = 77;
+    statistics.max_valued_point_items_collected = 44;
+    statistics.enemies_gone = 33;
+    statistics.enemies_killed = 22;
+    statistics.slow_frames = 0x12345678u;
+    statistics.frames = 0x23456789u;
+    app.finish_main(statistics, application::EndSequence::good);
+    require(
+        app.program() == application::Program::maine &&
+            app.generation() == 3 &&
+            app.maine_route() == application::MaineRoute::ending &&
+            app.resident().end_type_ascii == '0' &&
+            app.resident().score_digits == statistics.score_digits &&
+            app.resident().statistics.frames == statistics.frames &&
+            app.resident().statistics.slow_frames == statistics.slow_frames,
+        "MAIN-to-MAINE publication contract mismatch"
+    );
+    app.finish_maine();
+    require(
+        app.program() == application::Program::op && app.generation() == 4 &&
+            app.resident().score_digits == statistics.score_digits,
+        "MAINE-to-OP resident retention mismatch"
+    );
+
+    app.start_normal(
+        application::Playchar::marisa, application::ShotType::a
+    );
+    app.finish_main(statistics, application::EndSequence::bad);
+    require(
+        app.maine_route() == application::MaineRoute::ending &&
+            app.resident().end_type_ascii == '1',
+        "Bad Ending MAINE variant mismatch"
+    );
+    app.finish_maine();
+
+    app.start_extra(
+        application::Playchar::reimu, application::ShotType::a
+    );
+    require(
+        app.resident().stage == 6 && app.resident().resource_stage == 6 &&
+            app.resident().credit_lives == 3 &&
+            app.resident().credit_bombs == 2,
+        "Extra fixed-resource contract mismatch"
+    );
+    app.finish_main(statistics, application::EndSequence::extra);
+    require(
+        app.maine_route() == application::MaineRoute::extra,
+        "Extra MAINE route mismatch"
+    );
+    app.finish_maine();
+
+    app.start_normal(
+        application::Playchar::reimu, application::ShotType::a
+    );
+    app.finish_main(statistics, application::EndSequence::score);
+    require(
+        app.maine_route() == application::MaineRoute::score_registration,
+        "score-only MAINE route mismatch"
+    );
+    app.finish_maine();
+
+    const std::array<std::uint8_t, 4> demo_stages{3, 0, 2, 1};
+    const std::array<application::Playchar, 4> demo_characters{
+        application::Playchar::reimu,
+        application::Playchar::marisa,
+        application::Playchar::reimu,
+        application::Playchar::marisa,
+    };
+    const std::array<application::ShotType, 4> demo_shots{
+        application::ShotType::a,
+        application::ShotType::a,
+        application::ShotType::b,
+        application::ShotType::b,
+    };
+    for (std::size_t i = 0; i < demo_stages.size(); ++i) {
+        app.start_next_demo();
+        require(
+            app.program() == application::Program::main &&
+                app.resident().stage == 0 &&
+                app.resident().resource_stage == demo_stages[i] &&
+                app.resident().demo_stage == demo_stages[i] &&
+                app.resident().demo_number == i + 1 &&
+                app.resident().playchar == demo_characters[i] &&
+                app.resident().shot_type == demo_shots[i] &&
+                app.resident().credit_lives == 3 &&
+                app.resident().credit_bombs == 3,
+            "demo resident contract mismatch"
+        );
+        app.return_from_main(statistics);
+        require(
+            app.program() == application::Program::op,
+            "demo completion must return directly to OP"
+        );
+    }
+    app.start_next_demo();
+    require(
+        app.resident().demo_number == 1 &&
+            app.resident().resource_stage == 3,
+        "demo cycle must wrap from four to one"
+    );
+    app.return_from_main(statistics);
+    app.exit_from_op();
+    require(
+        app.program() == application::Program::exited,
+        "OP exit transition mismatch"
+    );
+
     std::cout << "TH04 portable contracts: PASS pointer_bits="
               << sizeof(void*) * 8 << " angle_bits=" << sizeof(bullet::Angle) * 8
-              << " menu_state=OP" << std::endl;
+              << " menu_state=OP handoff_state=OP_MAIN_MAINE" << std::endl;
     return 0;
 }

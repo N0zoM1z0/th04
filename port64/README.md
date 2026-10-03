@@ -12,6 +12,13 @@ leave the window open; main Quit/Esc closes it. It does **not** start gameplay
 yet. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
+The portable core also models the DOS executable chain as guarded in-process
+states over one fixed-width resident object. Contracts cover normal, Extra and
+the four demo launches; MAIN statistics publication; Good/Bad, Extra and
+score-only MAINE routing; direct MAIN-to-OP return; and MAINE-to-OP retention.
+This state is ready to connect to future gameplay/Ending implementations; the
+current menu still reports those destinations as unported.
+
 The architecture follows the separation used by TH08's modern port: the
 historic compiler/link path remains the reconstruction baseline, while CMake
 builds a new host product. TH08's current modern product is still 32-bit;
@@ -61,10 +68,11 @@ with SHA-256 `b52ea861...` and `a064338b...`. The portable contract target
 also consumes `src/main/bullet/group_types.hpp` and checks 64-bit pointer
 width, byte-sized angles/group codes, spread/ring geometry, aim and template
 rotation wrapping, half-turn directional-sprite reuse, and OP menu/config
-transitions.
+transitions. It additionally checks the complete portable process-handoff
+contract and rejects invalid cross-phase transitions.
 
 Next runtime boundaries are description text, character selection, input
-timing, audio, MIKO.CFG persistence, and replacement of DOS file/heap
-interfaces. MAIN bullet entity and rendering state can then build on the
-shared angle/group contract. A completed TH04 native game has not yet been
-demonstrated.
+timing, audio, configuration persistence, and replacement of DOS file/heap
+interfaces. UI destinations can then enter the portable handoff state while
+MAIN bullet entity and rendering state build on the shared angle/group
+contract. A completed TH04 native game has not yet been demonstrated.

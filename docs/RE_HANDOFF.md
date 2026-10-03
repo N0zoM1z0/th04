@@ -11,15 +11,18 @@ item-lifecycle batches; Windows
 retesting continues.
 
 On `port/modern-64`, the separate native product is now rebased through the
-latest semantic enemy-script batch. Linux ELF64 and Windows PE32+ builds both
+latest semantic process-handoff batch. Linux ELF64 and Windows PE32+ builds both
 read a user-supplied TH04 HDI, reproduce the two established PI pixel hashes, and
 compose the same 640x400 OP title BMP (`b52ea861...`) from OP1.PI, SFT2.CD2 and
 CAR.CD2, plus the same default Options BMP (`a064338b...`) using SFT1.CD2.
 SDL2 and Win32/GDI call one portable main/options state machine with the
 source-observed locked-Extra skip, option wrap order, reset defaults and return
 selection. A shared platform-independent group/angle header and portable
-bullet geometry contract pass on both x86-64 products. Gameplay, sound,
-character selection, process handoff, Ending and saved data are not ported yet.
+bullet geometry contract pass on both x86-64 products. A second fixed-width
+state machine replaces the DOS OP/MAIN/MAINE `execl()` chain: both hosts pass
+normal/Extra/demo initialization, MAIN publication, MAINE route selection,
+return-to-OP retention and invalid-transition controls. Gameplay, sound,
+character selection, Ending rendering and saved-data I/O are not ported yet.
 See [the x64 port handoff](PORT64.md).
 
 The `semantic/readable` branch now prepares the DOS source for the native
@@ -226,9 +229,9 @@ slice under `port64/`. Linux ELF64 and Windows PE32+ x64 builds both run on the
 attested HDI; the Windows build also ran under the Windows host command line.
 `CONG10.PI`/`CONG14.PI` packed pixel hashes match the 16-bit DOS probe, and
 Linux/Windows main and Options BMP outputs are byte-identical. The portable
-menu/config transition contract passes on both hosts. This is an OP-state
-milestone, not a playable native game. See `port64/README.md` for replay
-commands and the remaining hardware/runtime boundaries.
+menu/config and resident process-handoff contracts pass on both hosts. This is
+a control-plane milestone, not a playable native game. See `port64/README.md`
+for replay commands and the remaining hardware/runtime boundaries.
 
 ## Current state
 
