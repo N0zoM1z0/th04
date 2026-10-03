@@ -19,6 +19,8 @@ PORT_FILES = (
     "port64/bullet_geometry.hpp",
     "port64/contracts.cpp",
     "port64/main.cpp",
+    "port64/menu_state.cpp",
+    "port64/menu_state.hpp",
     "port64/mingw64-toolchain.cmake",
     "port64/smoke.py",
     "port64/verify.py",
@@ -110,9 +112,13 @@ def main() -> int:
     windows_contract_output = run(
         [args.windows_runner, str(windows_contracts)], env=runner_env
     )
-    if "PASS pointer_bits=64 angle_bits=8" not in linux_contract_output:
+    expected_contract_output = (
+        "TH04 portable contracts: PASS pointer_bits=64 "
+        "angle_bits=8 menu_state=OP"
+    )
+    if linux_contract_output != expected_contract_output:
         raise ValueError("Linux portable contract did not pass")
-    if "PASS pointer_bits=64 angle_bits=8" not in windows_contract_output:
+    if windows_contract_output != expected_contract_output:
         raise ValueError("Windows portable contract did not pass")
 
     smoke = root / "port64/smoke.py"
@@ -156,11 +162,14 @@ def main() -> int:
         "title_bmp_sha256": (
             "b52ea8615865bfc11945fbe23828b7c391d8424c998062a8abfb5d62b4b31d2a"
         ),
+        "options_bmp_sha256": (
+            "a064338b0cfb89f7e418a85ab6bc84a7ea5ef835e4ca995b68772e0aef368185"
+        ),
         "passed": True,
         "limit": (
-            "Resource decoding, title composition and deterministic bullet-geometry "
-            "contracts only; gameplay, audio, saved data and complete OP/MAIN/MAINE "
-            "state machines are not yet ported."
+            "Resource decoding, main/options composition, deterministic OP menu-state "
+            "and bullet-geometry contracts only; gameplay, audio, saved data and "
+            "complete OP/MAIN/MAINE state machines are not yet ported."
         ),
     }
     output.parent.mkdir(parents=True, exist_ok=True)

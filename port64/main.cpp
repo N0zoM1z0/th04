@@ -342,6 +342,7 @@ static Bytes bmp24(const PiImage& img) {
 int main(int argc, char** argv) {
     try {
         std::string hdi, archive, member, output, title_screenshot;
+        std::string options_screenshot;
         bool title_window = false;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
@@ -353,19 +354,25 @@ int main(int argc, char** argv) {
             else if (arg == "--member") member = value;
             else if (arg == "--output") output = value;
             else if (arg == "--title-screenshot") title_screenshot = value;
+            else if (arg == "--options-screenshot") options_screenshot = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
-        const bool title = title_window || !title_screenshot.empty();
+        const bool title = title_window || !title_screenshot.empty() ||
+            !options_screenshot.empty();
         require((!hdi.empty()) != (!archive.empty()) && (title || !member.empty()) &&
                 !(title && (!member.empty() || !output.empty())),
                 "usage: th04-port64 (--hdi FILE | --archive FILE) "
-                "[--member NAME --output BMP | --title [--title-screenshot BMP]]");
+                "[--member NAME --output BMP | --title "
+                "[--title-screenshot BMP] [--options-screenshot BMP]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         if (title) {
             const auto bg = decode_pi(archive_member(par, "OP1.PI"));
-            run_title(bg, archive_member(par, "SFT2.CD2"),
-                      archive_member(par, "CAR.CD2"), title_screenshot,
-                      title_window);
+            run_title(
+                bg, archive_member(par, "SFT1.CD2"),
+                archive_member(par, "SFT2.CD2"),
+                archive_member(par, "CAR.CD2"), title_screenshot,
+                options_screenshot, title_window
+            );
             return 0;
         }
         const auto pi = decode_pi(archive_member(par, member));

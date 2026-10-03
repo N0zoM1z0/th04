@@ -5,13 +5,14 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
   message(FATAL_ERROR "TH04 port64 requires a 64-bit compiler")
 endif()
 
-add_library(th04-portable-core STATIC bullet_geometry.cpp)
+add_library(th04-portable-core STATIC bullet_geometry.cpp menu_state.cpp)
 target_compile_features(th04-portable-core PUBLIC cxx_std_17)
 target_compile_definitions(th04-portable-core PUBLIC GAME=4)
 target_include_directories(th04-portable-core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 add_executable(th04-port64 main.cpp view.cpp)
 target_compile_features(th04-port64 PRIVATE cxx_std_17)
+target_link_libraries(th04-port64 PRIVATE th04-portable-core)
 
 add_executable(th04-port64-contracts contracts.cpp)
 target_link_libraries(th04-port64-contracts PRIVATE th04-portable-core)

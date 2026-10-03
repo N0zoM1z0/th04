@@ -13,8 +13,10 @@ struct PiImage {
     Bytes pixels;
 };
 
-// Renders the source-derived OP main-menu layout with original PI/CD2 assets.
-// A screenshot is deterministic; a window also accepts Up/Down/Enter/Esc.
-void run_title(const PiImage& background, const Bytes& labels,
-               const Bytes& cursors, const std::string& screenshot,
-               bool window);
+// Renders the source-derived OP main/options layout with original PI/CD2
+// assets. Screenshots are deterministic; the window accepts arrows,
+// Enter and Esc through the platform-independent menu state machine.
+void run_title(const PiImage& background, const Bytes& numerals,
+               const Bytes& labels, const Bytes& cursors,
+               const std::string& screenshot,
+               const std::string& options_screenshot, bool window);

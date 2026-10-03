@@ -4,10 +4,13 @@ This branch keeps the playable PC-98 DOS build intact and develops a separate
 native port. The current slice reads a user-supplied TH04 HDI (or loose OP
 archive), decodes PAR, PI and CD2 data, writes inspection BMPs, and presents
 the resource-derived OP main menu through SDL2 on Linux or Win32/GDI on
-Windows. Up/Down changes the selection; Enter prints its index and exits; Esc
-closes the window. It does **not** start gameplay yet. No original executables
-or game data are embedded in the binary. Unlike the DOS reconstruction, this
-port makes no byte-exact claim.
+Windows. The portable state machine skips locked Extra, enters the complete
+Options list, wraps every stored option in the original direction, restores
+the original defaults, and returns to the Option command on Cancel/Option
+Quit. Main commands whose screens are not ported yet print their index and
+leave the window open; main Quit/Esc closes it. It does **not** start gameplay
+yet. No original executables or game data are embedded in the binary. Unlike
+the DOS reconstruction, this port makes no byte-exact claim.
 
 The architecture follows the separation used by TH08's modern port: the
 historic compiler/link path remains the reconstruction baseline, while CMake
@@ -51,13 +54,17 @@ inspection artifact and is never written into the HDI. This slice supports
 PI images with embedded palettes, as used by these fixtures.
 
 `--title-screenshot FILE.bmp` performs the complete OP1.PI + SFT2.CD2 +
-CAR.CD2 composition without opening a window. Linux and Windows x64 produce
-the same 640x400 BMP with SHA-256 `b52ea861...`. The portable contract target
+CAR.CD2 main-menu composition without opening a window.
+`--options-screenshot FILE.bmp` adds the SFT1.CD2 numerals and renders the
+default Options state. Linux and Windows x64 produce the same 640x400 BMPs
+with SHA-256 `b52ea861...` and `a064338b...`. The portable contract target
 also consumes `src/main/bullet/group_types.hpp` and checks 64-bit pointer
 width, byte-sized angles/group codes, spread/ring geometry, aim and template
-rotation wrapping, and half-turn directional-sprite reuse.
+rotation wrapping, half-turn directional-sprite reuse, and OP menu/config
+transitions.
 
-Next runtime boundaries are the complete OP menu state machine, input/timing,
-audio, and replacement of DOS file/heap interfaces. MAIN bullet entity and
-rendering state can then build on the shared angle/group contract. A completed
-TH04 native game has not yet been demonstrated.
+Next runtime boundaries are description text, character selection, input
+timing, audio, MIKO.CFG persistence, and replacement of DOS file/heap
+interfaces. MAIN bullet entity and rendering state can then build on the
+shared angle/group contract. A completed TH04 native game has not yet been
+demonstrated.
