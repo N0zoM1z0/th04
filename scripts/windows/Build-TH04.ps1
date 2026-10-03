@@ -2,12 +2,21 @@ param(
     [string]$RepoPath = '@REPO_PATH@',
     [switch]$CheckOnly,
     [switch]$Launch,
-    [switch]$Cold
+    [switch]$Cold,
+    [switch]$Normal
 )
 
 $ErrorActionPreference = 'Stop'
 $PackagePath = Split-Path -Parent $MyInvocation.MyCommand.Path
-$BuildDir = '.analysis/build/th04-invincible'
+if ($Normal) {
+    $BuildDir = '.analysis/build/th04-normal'
+    $ReceiptName = 'normal-package.json'
+    $LauncherName = 'start-th04-normal.bat'
+} else {
+    $BuildDir = '.analysis/build/th04-invincible'
+    $ReceiptName = 'package.json'
+    $LauncherName = 'start-th04.bat'
+}
 
 function Invoke-TH04Step {
     param([string]$Label, [string[]]$Arguments, [switch]$Brief)
@@ -48,7 +57,8 @@ if (-not (Get-Command wsl.exe -ErrorAction SilentlyContinue)) {
 Write-Host 'TH04 Reconstruction | Windows source build' -ForegroundColor Green
 Write-Host 'Sources: src/main, src/op, src/maine, src/zun, src/shared'
 Write-Host 'Tools: attested Turbo C++ 4.0J, TASM, TLINK, and DIET'
-Write-Host 'Mode: invincible gameplay test build; the original game data is preserved'
+if ($Normal) { Write-Host 'Mode: normal gameplay; collision damage and lives are enabled' }
+else { Write-Host 'Mode: invincible gameplay test build' }
 if ($Cold) { Write-Host 'Build: complete cold source build' }
 else { Write-Host 'Build: verified incremental source build (cold on first run)' }
 Write-Host "Repository: $RepoPath"
@@ -74,11 +84,12 @@ if ($LASTEXITCODE -ne 0 -or -not $PackageLinux) {
     throw 'Could not resolve the Windows package path in WSL.'
 }
 
-$BuildArgs = @('python3', 'scripts/build.py', '--invincible-main', '--progress',
+$BuildArgs = @('python3', 'scripts/build.py', '--progress',
                '--output-dir', $BuildDir)
-$ExistingReceipt = Join-Path $PackagePath 'package.json'
+if (-not $Normal) { $BuildArgs += '--invincible-main' }
+$ExistingReceipt = Join-Path $PackagePath $ReceiptName
 if (-not $Cold -and (Test-Path $ExistingReceipt)) {
-    $BuildArgs += @('--incremental-from', ($PackageLinux + '/package.json'))
+    $BuildArgs += @('--incremental-from', ($PackageLinux + '/' + $ReceiptName))
 }
 Invoke-TH04Step '2/3  Compile, assemble, link, and audit four source products' $BuildArgs
 Invoke-TH04Step '3/3  Verify executables and refresh the saved Windows image' @(
@@ -88,7 +99,7 @@ Invoke-TH04Step '3/3  Verify executables and refresh the saved Windows image' @(
 
 Write-Host "`nTH04 source build: PASS" -ForegroundColor Green
 Write-Host "Playable package: $PackagePath"
-Write-Host 'Launch with start-th04.bat.'
+Write-Host "Launch with $LauncherName."
 if ($Launch) {
-    Start-Process -FilePath (Join-Path $PackagePath 'start-th04.bat')
+    Start-Process -FilePath (Join-Path $PackagePath $LauncherName)
 }

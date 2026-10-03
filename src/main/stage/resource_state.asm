@@ -84,12 +84,16 @@ _player_state_unknown_1 dw ?
 _player_state_unknown_2 dw ?
 _player_state_unknown_3 dw ?
 
+; The native scroll owner exports these as aliases of its actual driver
+; fields. Retain the historical standalone owner for default replay inputs.
+ifndef TH04_LARGE_PRODUCT
 public _scroll_row_advance_previous, _scroll_row_advance_current
 _scroll_row_advance_previous db ?
 _scroll_row_advance_current  db ?
 
 public _tile_ring_scroll_row_prev
 _tile_ring_scroll_row_prev dw ?
+endif
 
 public _stage5_star_center_y
 _stage5_star_center_y dw 3 dup(?)

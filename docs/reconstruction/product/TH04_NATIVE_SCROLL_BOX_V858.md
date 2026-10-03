@@ -54,7 +54,7 @@ behavior or a confirmed cause. The bomb path explicitly calls
 frame 177, and changes background rendering during that interval. A display
 origin mismatch and incomplete redraw remain distinguishable hypotheses.
 
-A separate defect is confirmed in the current product. Three initialization
+A separate defect is confirmed in the pre-repair product. Three initialization
 names and driver names own different native storage, although the target
 uses one field for each pair:
 
@@ -105,3 +105,24 @@ engine digest. It copies unrelocated modules at load segment 2000 and executes
 only prefixes/branches without used relocation operands, with synthetic DS=8000
 and SS=7000. No PC-98 launch, actual in-game state, or full visual acceptance
 is claimed; all target/unit acceptance states remain unchanged.
+
+## Native ownership repair
+
+The `TH04_LARGE_PRODUCT` branch now publishes the readable initialization
+names as labels at the driver's existing physical fields in
+`src/main/scroll/state.asm`. `src/main/stage/resource_state.asm` allocates
+their former separate storage only in the historical branch. The repaired
+CPU control resets all three seeded driver fields to zero and reports
+`confirmed_native_duplicate_state=false`; the original target control still
+passes. Receipt:
+`.analysis/reconstruction/probes/render-policy-fixed-20261003/receipt.json`.
+Cold historical-branch OMF controls preserve all link-relevant records after
+source timestamp normalization; see the [Ending CDG repair](TH04_NATIVE_ENDING_CDG_CS_V1230.md).
+
+The user's latest Normal saved `MIKO.CFG` has options `010602020101`, with
+Turbo=1. Therefore the preserved bullet-count slowdown policy cannot explain
+this reported cross-pattern lag if the running resident loaded those options.
+No phase-specific Windows performance improvement is claimed for the storage
+repair. The reported top stripe still needs the user's stage-4/late-Yuuka
+visual replay; the isolated backdrop test does not prove GDC display origin
+or full page behavior.

@@ -15,8 +15,21 @@ _scroll_speed         db ?
 _scroll_line          dw ?
 _scroll_last_delta    dw ?
 _scroll_active        db ?
+; Native initialization uses the readable names; the recovered driver still
+; uses address-derived names. Both names must refer to one physical field.
+ifdef TH04_LARGE_PRODUCT
+public _scroll_row_advance_previous, _scroll_row_advance_current
+public _tile_ring_scroll_row_prev
+_scroll_row_advance_previous label byte
+endif
 _byte_250FE           db ?
+ifdef TH04_LARGE_PRODUCT
+_scroll_row_advance_current label byte
+endif
 _byte_25104           db ?
+ifdef TH04_LARGE_PRODUCT
+_tile_ring_scroll_row_prev label word
+endif
 _word_25100           dw ?
 evendata
 _BSS ends

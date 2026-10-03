@@ -48,7 +48,13 @@ endm
 
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
+; A far caller enters with the linked public's CS. Keep native code outside
+; SHARED's group so the writable instruction label uses that same CS base.
+ifdef TH04_LARGE_PRODUCT
+	.code TH04_CDG_PUT_TEXT
+else
 	.code SHARED
+endif
 
 public CDG_PUT_8
 cdg_put_8 proc far

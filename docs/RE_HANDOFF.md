@@ -30,20 +30,26 @@ The segmented-heap semantic batch passes the same three-file fast-build byte
 and ordered-relocation equality plus the existing exact-handle reuse, split,
 coalescing and DOS reassignment harness. See the
 [heap note](reconstruction/product/TH04_NATIVE_HEAP_V863.md).
-Ending source repair and Windows deployment are deferred while the user plays.
-Private CPU replay has reproduced MAINE CDG self-modifying CS writes into the
-PI decoder (`.analysis/ending-analysis-20261003/ANALYSIS.md`); a complete
-repaired ending-to-registration replay is still required. The newly reported
-stage-4/late-Yuuka top stripe disappears after Marisa's bomb; shared backdrop filling
-matches its target body and writes the top playfield rows in a CPU address
-control. Native initialization and the scroll driver provably use duplicate
-storage for three fields; original initialization clears the driver's fields,
-while native initialization leaves seeded old values intact. This is a confirmed
-separate ownership defect; its connection to the stripe still needs a full
-visual replay. The original/native bullet-count slowdown agrees across 96
-CPU controls (Normal threshold 32 + playperf, Turbo off, alternate two-vsync
-waits). See the [scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
-Do not interpret these reports as completed runtime acceptance.
+The authorized native Ending/scroll repair is built and deployed. MAINE's two
+CDG renderers now own independent CS frames; the expanded build auditor rejects
+their former writes into the PI decoder. Real staff-image CPU controls complete
+both far calls at load 2000/6000 and preserve aligned plane bytes. Seeded
+Reimu/Lunatic and Marisa/Normal Good Ending replays reach registration, accept
+names and save 12,345,678 in the expected score sections. Other sections remain
+byte-identical and all ten checksums pass. Their final black frames do not
+accept return to OP. These private fixtures bypass gameplay/OP initialization
+and use zero resident sound mode/frame-based waits; Windows full-route and
+cross-emulator validation remain separate. See the
+[Ending CDG note](reconstruction/product/TH04_NATIVE_ENDING_CDG_CS_V1230.md).
+Native readable scroll names now label the driver's existing storage; seeded
+initialization clears all three actual fields. Historical branches preserve
+their complete link-relevant OMF in cold source-to-source controls. The top
+stripe's connection to that defect still needs the user's visual replay.
+The original/native bullet-count slowdown agrees across 96 CPU controls;
+the user's latest Normal saved configuration has Turbo enabled, so deliberate
+count-based slowdown is inactive if those options were loaded. Yuuka cross
+frame pacing remains open. See the
+[scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
 
 
 ## Current state
@@ -51,8 +57,8 @@ Do not interpret these reports as completed runtime acceptance.
 | Artifact | Accepted authored functions | Native build/runtime |
 | --- | ---: | --- |
 | OP | 93/93 | Standalone build; normal options/Music Room/scores/DOS exit and saved config pass |
-| MAIN | 493/495 | Standalone build; bounded ordinary route reaches stage 3; user completed the invincible Easy route through the ending |
-| MAINE | 72/72 | Complete standalone build; uninstrumented score/name registration saves 39,300 and returns to OP |
+| MAIN | 493/495 | Standalone build; bounded ordinary route reaches stage 3; user completed invincible Easy and Lunatic routes |
+| MAINE | 72/72 | Standalone build; ordinary registration passes; seeded Good Endings register/save; user confirms normal Windows death registration |
 | ZUN | 3/3 | Source-only cold packed build; four-product GAME.BAT startup passes |
 
 These counts describe historical function acceptance, not whole executable or
@@ -80,7 +86,7 @@ Verified integration fixes:
   paragraph block split free memory and made `execl` return ENOMEM=8.
 - MAINE's C++ code group changed the CS frame for SHARED assembly. Independent
   native IRQ/PAR and self-modifying renderer segments repair four vectors and
-  38 CS-relative operands (39 for OP, including its monochrome CDG helper).
+  42 MAINE CS-relative operands (40 for OP, 39 for MAIN, including their CDG entries).
   The build checks these destinations, including
   observed direct-call CS frames. The default renderer branch retains its
   previous complete link-relevant OMF output in cold compiler comparisons.
@@ -187,17 +193,26 @@ inferred to be render/CPU load pending a phase-specific trace.
 The product PI slot free path now clears its owner pointer before the next
 load. A bounded DOS load/free/load/free probe passes and the product far-call,
 vector and MZ audits pass; this fixes a verified stale-pointer hazard, but a
-complete Good Ending-to-registration visual replay is still open. See
+ordinary gameplay-to-Good-Ending handoff remains separate from seeded replays. See
 [`TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md`](reconstruction/product/TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md).
-The current Windows fast-build package is
-`product-20261002-183722-150a02ad` at
-`D:\Entertainment\Game\Touhou\th04-reconstruct`. `start-th04.bat` uses
-24,000 DOSBox-X cycles for heavy scenes; `start-th04-reference.bat` uses the
-collection's original 15,000-cycle setting for comparison. The saved
-`MIKO.CFG` and `GENSOU.SCR` hashes `64d6b41f…` and `d4037728…` were preserved
-byte-for-byte during export. Windows playtesting must establish whether the
-registration page and Yuuka frame pacing improved; a successful build cannot
-make that runtime claim. The latest user Reimu/Lunatic playtest reports that
+The Windows package at `D:\Entertainment\Game\Touhou\th04-reconstruct`
+now contains normal `product-20261003-045432-5e3ed8fc` and invincible
+`product-20261003-045623-451cb20a`. Both include the Ending/scroll repairs.
+`start-th04.bat` keeps the invincible MAIN (SHA-256 `26aef449…`), while
+`start-th04-normal.bat` mounts a separate `play-normal.hdi` with ordinary
+collision damage (MAIN SHA-256 `1b10fdef…`). OP/MAINE/ZUN are identical between
+variants. Invincibility is compiled into a private staged source overlay,
+not installed in maintained player source or patched in memory by a launcher.
+Both launchers use 24,000 cycles; reference launchers use 15,000. Initial
+normal export copied the user's current saves; later exports preserve each
+variant's own saves. `MIKO.CFG`/`GENSOU.SCR` hashes `073cde50…`/`d4037728…`
+were unchanged at export; subsequent normal changes belong to the user's
+playtest. The user confirms death-to-registration/save works in the new
+normal Windows package. `build-th04.cmd -Normal` passed an actual Windows
+incremental build with English progress, verified object reuse and unchanged
+ZUN reuse; default `build-th04.cmd` remains invincible. Windows full Ending
+handoff, top stripe and Yuuka frame pacing still need the user's replay.
+The preceding user Reimu/Lunatic playtest reported that
 Yuuka is now smooth, but the full Ending route still shows damaged graphics
 and never reaches registration; sound continues and Esc has no visible effect.
 This rejects treating the PI slot fix as a complete Ending repair. The second

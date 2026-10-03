@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package the maintained-source TH04 invincible build for Windows DOSBox-X."""
+"""Package a maintained-source TH04 build for Windows DOSBox-X."""
 
 from __future__ import annotations
 
@@ -66,8 +66,16 @@ def main() -> int:
     emulator = args.emulator_dir.resolve() if args.emulator_dir else None
     build = args.build_dir.resolve()
     manifest = json.loads((build / "build.json").read_text(encoding="utf-8"))
-    if manifest.get("variant") != "invincible-main" or set(manifest["products"]) != set(PRODUCTS):
-        raise ValueError("expected a complete invincible four-product build")
+    variant = manifest.get("variant")
+    if variant not in {"invincible-main", "normal"} or set(manifest["products"]) != set(PRODUCTS):
+        raise ValueError("expected a complete normal or invincible four-product build")
+    normal = variant == "normal"
+    image_name = "play-normal.hdi" if normal else "play.hdi"
+    config_name = "th04-normal.conf" if normal else "th04.conf"
+    reference_name = "th04-normal-reference.conf" if normal else "th04-reference.conf"
+    launcher_name = "start-th04-normal.bat" if normal else "start-th04.bat"
+    reference_launcher_name = "start-th04-normal-reference.bat" if normal else "start-th04-reference.bat"
+    bin_name = "bin-normal" if normal else "bin"
     current_fingerprint = source_fingerprint()
     if (manifest.get("source_fingerprint") is not None
             and manifest["source_fingerprint"] != current_fingerprint):
@@ -80,19 +88,36 @@ def main() -> int:
         if (record["file"] != name or record["size"] != len(data)
                 or record["sha256"] != sha(data) or not parse_mz(data).valid):
             raise ValueError(f"unverified product: {name}")
+        if artifact == "main":
+            main_receipt = json.loads(Path(record["build_receipt"]).read_text(encoding="utf-8"))
+            if (main_receipt["link"]["mz"]["sha256"] != sha(data)
+                    or bool(main_receipt.get("invincible_overlay")) != (not normal)):
+                raise ValueError("MAIN compiler receipt does not match the advertised gameplay variant")
         product_bytes[artifact] = data
         records[artifact] = {"file": name, "size": len(data), "sha256": sha(data)}
 
-    prior_receipt = output / "package.json"
+    prior_receipt = output / ("normal-package.json" if normal else "package.json")
     prior = None
+    source_receipt = None
     if output.exists() and any(output.iterdir()):
-        if not args.update or not prior_receipt.is_file():
-            parser.error("nonempty package requires --update and its prior package.json")
-        prior = json.loads(prior_receipt.read_text(encoding="utf-8"))
-        if prior.get("variant") != "invincible-main":
-            raise ValueError("existing package is not the invincible variant")
-        source = (output / "play.hdi").read_bytes()
-        expected = prior["products"]
+        if not args.update:
+            parser.error("nonempty package requires --update")
+        if prior_receipt.is_file():
+            prior = json.loads(prior_receipt.read_text(encoding="utf-8"))
+            if prior.get("variant") != variant:
+                raise ValueError("existing package variant does not match the build")
+            source_receipt = prior
+            source = (output / image_name).read_bytes()
+        elif normal and (output / "package.json").is_file():
+            # The first normal image inherits the user's current saves. Later
+            # normal updates preserve its own image rather than recloning it.
+            source_receipt = json.loads((output / "package.json").read_text(encoding="utf-8"))
+            if source_receipt.get("variant") != "invincible-main":
+                raise ValueError("normal image seed is not a verified invincible package")
+            source = (output / "play.hdi").read_bytes()
+        else:
+            parser.error("existing package requires its matching prior receipt")
+        expected = source_receipt["products"]
     else:
         source = args.image.resolve().read_bytes()
         expected = records
@@ -122,25 +147,33 @@ def main() -> int:
         exe = (emulator / "dosbox-x.exe").read_bytes()
         font = (emulator / "font_jp.bmp").read_bytes()
         reference_config = render_config((emulator / "th04_jp.conf").read_bytes())
-    elif prior is not None:
+    elif source_receipt is not None:
         exe = (output / "dosbox-x.exe").read_bytes()
         font = (output / "FREECG98.bmp").read_bytes()
-        config = (output / "th04.conf").read_bytes()
-        reference_config = ((output / "th04-reference.conf").read_bytes()
-                            if (output / "th04-reference.conf").is_file() else config)
-        if (sha(exe) != prior["dosbox_x_sha256"]
-                or sha(font) != prior["font_sha256"]
-                or sha(config) != prior["config_sha256"]
-                or ("reference_config_sha256" in prior and
-                    sha(reference_config) != prior["reference_config_sha256"])):
+        seed_normal = source_receipt["variant"] == "normal"
+        seed_config_name = "th04-normal.conf" if seed_normal else "th04.conf"
+        seed_reference_name = "th04-normal-reference.conf" if seed_normal else "th04-reference.conf"
+        config = (output / seed_config_name).read_bytes()
+        reference_config = ((output / seed_reference_name).read_bytes()
+                            if (output / seed_reference_name).is_file() else config)
+        if (sha(exe) != source_receipt["dosbox_x_sha256"]
+                or sha(font) != source_receipt["font_sha256"]
+                or sha(config) != source_receipt["config_sha256"]
+                or ("reference_config_sha256" in source_receipt and
+                    sha(reference_config) != source_receipt["reference_config_sha256"])):
             raise ValueError("existing DOSBox-X files differ from package receipt")
     else:
         parser.error("a new package requires --emulator-dir")
+    if normal:
+        if reference_config.count(b"imgmount c play.hdi") == 1:
+            reference_config = reference_config.replace(b"imgmount c play.hdi", b"imgmount c play-normal.hdi", 1)
+        elif reference_config.count(b"imgmount c play-normal.hdi") != 1:
+            raise ValueError("normal configuration has no unique image mount")
     config = performance_config(reference_config)
-    launcher = (b'@echo off\r\ncd /d "%~dp0"\r\n'
-                b'start "" "%~dp0dosbox-x.exe" -conf "%~dp0th04.conf"\r\n')
-    reference_launcher = (b'@echo off\r\ncd /d "%~dp0"\r\n'
-                          b'start "" "%~dp0dosbox-x.exe" -conf "%~dp0th04-reference.conf"\r\n')
+    launcher = ('@echo off\r\ncd /d "%~dp0"\r\n'
+                f'start "" "%~dp0dosbox-x.exe" -conf "%~dp0{config_name}"\r\n').encode("ascii")
+    reference_launcher = ('@echo off\r\ncd /d "%~dp0"\r\n'
+                          f'start "" "%~dp0dosbox-x.exe" -conf "%~dp0{reference_name}"\r\n').encode("ascii")
     builder_template = (ROOT / "scripts/windows/Build-TH04.ps1").read_text(encoding="utf-8")
     if builder_template.count("@REPO_PATH@") != 1:
         raise ValueError("Windows builder template has no unique repository placeholder")
@@ -149,22 +182,22 @@ def main() -> int:
     builder_cmd = (ROOT / "scripts/windows/build-th04.cmd").read_bytes()
     builder_readme = (ROOT / "scripts/windows/README-build.txt").read_bytes()
     output.mkdir(parents=True, exist_ok=True)
-    (output / "bin").mkdir(exist_ok=True)
+    (output / bin_name).mkdir(exist_ok=True)
     for artifact, name in PRODUCTS.items():
-        write_atomic(output / "bin" / name, product_bytes[artifact])
-    write_atomic(output / "play.hdi", image)
+        write_atomic(output / bin_name / name, product_bytes[artifact])
+    write_atomic(output / image_name, image)
     write_atomic(output / "dosbox-x.exe", exe)
     write_atomic(output / "FREECG98.bmp", font)
-    write_atomic(output / "th04.conf", config)
-    write_atomic(output / "th04-reference.conf", reference_config)
-    write_atomic(output / "start-th04.bat", launcher)
-    write_atomic(output / "start-th04-reference.bat", reference_launcher)
+    write_atomic(output / config_name, config)
+    write_atomic(output / reference_name, reference_config)
+    write_atomic(output / launcher_name, launcher)
+    write_atomic(output / reference_launcher_name, reference_launcher)
     write_atomic(output / "Build-TH04.ps1", builder_bytes)
     write_atomic(output / "build-th04.cmd", builder_cmd)
     write_atomic(output / "README-build.txt", builder_readme)
     receipt = {
         "schema_version": 1,
-        "variant": "invincible-main",
+        "variant": variant,
         "build_run_id": manifest["run_id"],
         "source_fingerprint": current_fingerprint,
         "products": records,
@@ -177,7 +210,9 @@ def main() -> int:
         "build_script_sha256": sha(builder_bytes),
         "build_cmd_sha256": sha(builder_cmd),
         "build_readme_sha256": sha(builder_readme),
-        "launch": "start-th04.bat",
+        "launch": launcher_name,
+        "image": image_name,
+        "bin_dir": bin_name,
     }
     write_atomic(prior_receipt, (json.dumps(receipt, indent=2) + "\n").encode("utf-8"))
     print(f"Packaged {', '.join(PRODUCTS.values())} in {output}")

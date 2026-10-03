@@ -27,8 +27,11 @@ PROVIDERS = {
 SELF_MODIFYING = {
     "src/shared/hardware/bgimager.asm", "src/shared/hardware/graph_putsa_fx.asm",
     "src/shared/hardware/super_roll_put.asm", "src/shared/hardware/super_roll_put_1plane.asm",
+    "src/shared/formats/cdg_put.asm",
 }
 RENDERER_ENTRIES = {
+    "src/shared/formats/cdg_put.asm": "CDG_PUT_8",
+    "src/maine/formats/cdg_put_plane.asm": "CDG_PUT_PLANE",
     "src/shared/hardware/bgimager.asm": "BGIMAGE_PUT_RECT_16",
     "src/shared/hardware/graph_putsa_fx.asm": "GRAPH_PUTSA_FX",
     "src/shared/hardware/super_roll_put.asm": "SUPER_ROLL_PUT",
@@ -94,6 +97,8 @@ def main() -> int:
         raise ValueError("requires a complete native link")
     artifact = receipt["artifact"].removeprefix("th04-")
     renderer_sources = SELF_MODIFYING | ({"src/op/formats/cdg_p_nc.asm"} if artifact == "op" else set())
+    if artifact == "maine":
+        renderer_sources.add("src/maine/formats/cdg_put_plane.asm")
     work = receipt_path.parent / "source"
     exe = work / f"bin/{artifact}-native.exe"
     maps = list(work.glob(f"obj/**/{artifact}-native.map"))

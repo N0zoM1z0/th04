@@ -178,8 +178,8 @@ def main() -> int:
         caches = {"main": args.main_cpp_cache, "op": args.op_cache, "maine": args.maine_cache}
         requested = list(dict.fromkeys(args.only))
         if args.incremental_from:
-            if not args.invincible_main or requested != list(PRODUCTS):
-                parser.error("--incremental-from requires the complete invincible build request")
+            if requested != list(PRODUCTS):
+                parser.error("--incremental-from requires a complete four-product build request")
             previous_path = output / "build.json"
             package_path = args.incremental_from.resolve()
             if not previous_path.is_file() or not package_path.is_file():
@@ -187,8 +187,9 @@ def main() -> int:
             else:
                 package = json.loads(package_path.read_text(encoding="utf-8"))
                 previous = json.loads(previous_path.read_text(encoding="utf-8"))
-                if previous.get("variant") != "invincible-main":
-                    raise ValueError("incremental cache is not an invincible product build")
+                variant = "invincible-main" if args.invincible_main else "normal"
+                if previous.get("variant") != variant or package.get("variant") != variant:
+                    raise ValueError("incremental cache/package variant does not match the requested build")
                 for artifact in ("main", "op", "maine"):
                     receipt = Path(previous["products"][artifact]["build_receipt"])
                     if not receipt.is_file():
