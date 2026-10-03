@@ -4,12 +4,14 @@ This branch keeps the playable PC-98 DOS build intact and develops a separate
 native port. The current slice reads a user-supplied TH04 HDI (or loose OP
 archive), decodes PAR, PI and CD2 data, writes inspection BMPs, and presents
 the resource-derived OP main menu through SDL2 on Linux or Win32/GDI on
-Windows. The portable state machine skips locked Extra, enters the complete
+Windows. Game now enters the two-step character/shot menu rendered from
+`SLB1.PI` and `SL.CD2`; a completed choice updates the portable resident
+contract and reaches a visible MAIN handoff frame. The portable state machine skips locked Extra, enters the complete
 Options list, wraps every stored option in the original direction, restores
 the original defaults, and returns to the Option command on Cancel/Option
-Quit. Main commands whose screens are not ported yet print their index and
-leave the window open; main Quit/Esc closes it. It does **not** start gameplay
-yet. No original executables or game data are embedded in the binary. Unlike
+Quit. Other main commands whose screens are not ported yet print their index and
+leave the window open; main Quit/Esc closes it. The MAIN handoff does not yet
+run gameplay. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
 The portable core also models the DOS executable chain as guarded in-process
@@ -89,7 +91,12 @@ PI images with embedded palettes, as used by these fixtures.
 CAR.CD2 main-menu composition without opening a window.
 `--options-screenshot FILE.bmp` adds the SFT1.CD2 numerals and renders the
 default Options state. Linux and Windows x64 produce the same 640x400 BMPs
-with SHA-256 `b52ea861...` and `a064338b...`. The portable contract target
+with SHA-256 `b52ea861...` and `a064338b...`.
+`--character-screenshot` and `--shot-screenshot` render the two selection
+stages; their shared cross-host hashes are `c1a795a3...` and `12aa7616...`.
+`--handoff-screenshot` drives Game through both confirmations and verifies the
+resulting MAIN frame (`0b2c0f8c...`) without opening a window.
+The portable contract target
 also consumes `src/main/bullet/group_types.hpp` and checks 64-bit pointer
 width, byte-sized angles/group codes, spread/ring geometry, aim and template
 rotation wrapping, half-turn directional-sprite reuse, and OP menu/config
@@ -106,9 +113,8 @@ A GNU x86-64 debug build also passes these contracts with
 `-fsanitize=undefined,bounds`, including unsigned wrap, process resets, the
 full LCG-backed random-ring fill and the above-cap big-power scoring case.
 
-Next runtime boundaries are description text, character selection, input
-timing, audio, configuration persistence, and replacement of DOS file/heap
-interfaces. UI destinations can then enter the portable handoff state while
-MAIN item rendering/pool motion and bullet entity state consume the shared
+Next runtime boundaries are explicit frame timing, audio, configuration
+persistence, and replacement of DOS file/heap interfaces. MAIN item
+rendering/pool motion and bullet entity state can now consume the shared
 process LCG and random ring before building on the angle/group contract. A
 completed TH04 native game has not yet been demonstrated.

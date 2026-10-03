@@ -342,7 +342,8 @@ static Bytes bmp24(const PiImage& img) {
 int main(int argc, char** argv) {
     try {
         std::string hdi, archive, member, output, title_screenshot;
-        std::string options_screenshot;
+        std::string options_screenshot, character_screenshot, shot_screenshot;
+        std::string handoff_screenshot;
         bool title_window = false;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
@@ -355,23 +356,32 @@ int main(int argc, char** argv) {
             else if (arg == "--output") output = value;
             else if (arg == "--title-screenshot") title_screenshot = value;
             else if (arg == "--options-screenshot") options_screenshot = value;
+            else if (arg == "--character-screenshot") character_screenshot = value;
+            else if (arg == "--shot-screenshot") shot_screenshot = value;
+            else if (arg == "--handoff-screenshot") handoff_screenshot = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
         const bool title = title_window || !title_screenshot.empty() ||
-            !options_screenshot.empty();
+            !options_screenshot.empty() || !character_screenshot.empty() ||
+            !shot_screenshot.empty() || !handoff_screenshot.empty();
         require((!hdi.empty()) != (!archive.empty()) && (title || !member.empty()) &&
                 !(title && (!member.empty() || !output.empty())),
                 "usage: th04-port64 (--hdi FILE | --archive FILE) "
                 "[--member NAME --output BMP | --title "
-                "[--title-screenshot BMP] [--options-screenshot BMP]]");
+                "[--title-screenshot BMP] [--options-screenshot BMP] "
+                "[--character-screenshot BMP] [--shot-screenshot BMP] "
+                "[--handoff-screenshot BMP]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         if (title) {
             const auto bg = decode_pi(archive_member(par, "OP1.PI"));
             run_title(
                 bg, archive_member(par, "SFT1.CD2"),
                 archive_member(par, "SFT2.CD2"),
-                archive_member(par, "CAR.CD2"), title_screenshot,
-                options_screenshot, title_window
+                archive_member(par, "CAR.CD2"),
+                decode_pi(archive_member(par, "SLB1.PI")),
+                archive_member(par, "SL.CD2"), title_screenshot,
+                options_screenshot, character_screenshot, shot_screenshot,
+                handoff_screenshot, title_window
             );
             return 0;
         }

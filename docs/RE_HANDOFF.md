@@ -15,6 +15,10 @@ latest semantic LCG batch. Linux ELF64 and Windows PE32+ builds both
 read a user-supplied TH04 HDI, reproduce the two established PI pixel hashes, and
 compose the same 640x400 OP title BMP (`b52ea861...`) from OP1.PI, SFT2.CD2 and
 CAR.CD2, plus the same default Options BMP (`a064338b...`) using SFT1.CD2.
+Game now enters a portable character/shot state machine, renders `SLB1.PI` and
+`SL.CD2` to identical character (`c1a795a3...`) and shot (`12aa7616...`)
+screens on both hosts, and a confirmed choice reaches a visible MAIN handoff
+with the resident generation advanced. GNU UBSan/bounds also passes this path.
 SDL2 and Win32/GDI call one portable main/options state machine with the
 source-observed locked-Extra skip, option wrap order, reset defaults and return
 selection. A shared platform-independent group/angle header and portable
@@ -24,8 +28,7 @@ normal/Extra/demo initialization, MAIN publication, MAINE route selection,
 return-to-OP retention and invalid-transition controls. The portable LCG uses
 explicit 32-bit state and preserves resident/OP/MAIN/demo/MAINE seed lifetimes;
 both hosts and a GNU UBSan/bounds build pass the LCG-backed ring contract.
-Gameplay, sound,
-character selection, Ending rendering and saved-data I/O are not ported yet.
+Gameplay, sound, Ending rendering and saved-data I/O are not ported yet.
 See [the x64 port handoff](PORT64.md).
 
 The `semantic/readable` branch now prepares the DOS source for the native

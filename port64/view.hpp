@@ -18,5 +18,10 @@ struct PiImage {
 // Enter and Esc through the platform-independent menu state machine.
 void run_title(const PiImage& background, const Bytes& numerals,
                const Bytes& labels, const Bytes& cursors,
+               const PiImage& selection_background,
+               const Bytes& portraits,
                const std::string& screenshot,
-               const std::string& options_screenshot, bool window);
+               const std::string& options_screenshot,
+               const std::string& character_screenshot,
+               const std::string& shot_screenshot,
+               const std::string& handoff_screenshot, bool window);

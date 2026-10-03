@@ -13,6 +13,7 @@ add_library(
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp
+  selection_state.cpp
 )
 target_compile_features(th04-portable-core PUBLIC cxx_std_17)
 target_compile_definitions(th04-portable-core PUBLIC GAME=4)

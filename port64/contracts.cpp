@@ -4,6 +4,7 @@
 #include "menu_state.hpp"
 #include "random_lcg.hpp"
 #include "random_ring.hpp"
+#include "selection_state.hpp"
 
 #include <array>
 #include <cstdint>
@@ -16,6 +17,7 @@ namespace application = th04::portable::application;
 namespace item = th04::portable::item;
 namespace rng = th04::portable::rng;
 namespace randring = th04::portable::randring;
+namespace selection = th04::portable::selection;
 
 namespace {
 
@@ -418,6 +420,66 @@ int main() {
     const auto quit = option_menu.handle(menu::Input::cancel);
     require(quit.kind == menu::ResultKind::quit, "main Cancel must quit");
 
+    selection::State normal_selection;
+    normal_selection.handle(menu::Input::right);
+    require(
+        normal_selection.playchar() == application::Playchar::marisa,
+        "character selection right transition mismatch"
+    );
+    normal_selection.handle(menu::Input::confirm);
+    require(
+        normal_selection.screen() == selection::Screen::shot_type &&
+            normal_selection.shot_type() == application::ShotType::a,
+        "shot selection entry mismatch"
+    );
+    normal_selection.handle(menu::Input::down);
+    require(
+        normal_selection.shot_type() == application::ShotType::b,
+        "shot selection toggle mismatch"
+    );
+    const auto chosen_selection = normal_selection.handle(menu::Input::confirm);
+    require(
+        chosen_selection.kind == selection::ResultKind::chosen &&
+            chosen_selection.playchar == application::Playchar::marisa &&
+            chosen_selection.shot_type == application::ShotType::b,
+        "character/shot result mismatch"
+    );
+
+    selection::Availability extra_availability{{
+        {{false, true}},
+        {{false, false}},
+    }};
+    selection::State extra_selection(extra_availability);
+    extra_selection.handle(menu::Input::right);
+    require(
+        extra_selection.playchar() == application::Playchar::reimu,
+        "locked Extra character must be skipped"
+    );
+    extra_selection.handle(menu::Input::confirm);
+    require(
+        extra_selection.shot_type() == application::ShotType::b,
+        "Extra must enter on its first unlocked shot type"
+    );
+    extra_selection.handle(menu::Input::cancel);
+    require(
+        extra_selection.screen() == selection::Screen::playchar,
+        "shot Cancel must return to character selection"
+    );
+    require(
+        extra_selection.handle(menu::Input::cancel).kind ==
+            selection::ResultKind::canceled,
+        "character Cancel must return to title"
+    );
+
+    bool empty_selection_rejected = false;
+    try {
+        selection::State empty_selection({{{false, false}, {false, false}}});
+        (void)empty_selection;
+    } catch (const std::invalid_argument&) {
+        empty_selection_rejected = true;
+    }
+    require(empty_selection_rejected, "empty selection mask must fail");
+
     application::State random_app;
     require(random_app.process_random_state() == rng::Lcg32::default_seed,
             "OP process LCG must begin at one");
@@ -610,6 +672,7 @@ int main() {
     std::cout << "TH04 portable contracts: PASS pointer_bits="
               << sizeof(void*) * 8 << " angle_bits=" << sizeof(bullet::Angle) * 8
               << " menu_state=OP handoff_state=OP_MAIN_MAINE"
+              << " selection=OP"
               << " randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32"
               << " items=FIXED_WIDTH_SAFE" << std::endl;
     return 0;

@@ -30,6 +30,8 @@ PORT_FILES = (
     "port64/random_lcg.hpp",
     "port64/random_ring.cpp",
     "port64/random_ring.hpp",
+    "port64/selection_state.cpp",
+    "port64/selection_state.hpp",
     "port64/smoke.py",
     "port64/verify.py",
     "port64/view.cpp",
@@ -123,7 +125,8 @@ def main() -> int:
     expected_contract_output = (
         "TH04 portable contracts: PASS pointer_bits=64 "
         "angle_bits=8 menu_state=OP handoff_state=OP_MAIN_MAINE "
-        "randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32 items=FIXED_WIDTH_SAFE"
+        "selection=OP randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32 "
+        "items=FIXED_WIDTH_SAFE"
     )
     if linux_contract_output != expected_contract_output:
         raise ValueError("Linux portable contract did not pass")
@@ -174,10 +177,19 @@ def main() -> int:
         "options_bmp_sha256": (
             "a064338b0cfb89f7e418a85ab6bc84a7ea5ef835e4ca995b68772e0aef368185"
         ),
+        "character_bmp_sha256": (
+            "c1a795a36c2603004fed9309200af833ff8718434b4ba8de2c0977eb2acda199"
+        ),
+        "shot_bmp_sha256": (
+            "12aa7616f49283462bb7c9dd41c3198fd66865a758da79ad24cf63de817ee438"
+        ),
+        "handoff_bmp_sha256": (
+            "0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5"
+        ),
         "passed": True,
         "limit": (
-            "Resource decoding, main/options composition, deterministic OP menu-state "
-            "transitions, resident process handoff, process-local LCG and shared "
+            "Resource decoding, main/options/character/shot composition, deterministic "
+            "OP menu-state transitions, resident process handoff, process-local LCG and shared "
             "random-ring contracts, and bounded item drop/scoring semantics "
             "only; gameplay, audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

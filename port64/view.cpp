@@ -1,5 +1,7 @@
 #include "view.hpp"
+#include "application_state.hpp"
 #include "menu_state.hpp"
+#include "selection_state.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -18,6 +20,8 @@
 namespace {
 
 namespace menu = th04::portable::menu;
+namespace application = th04::portable::application;
+namespace selection = th04::portable::selection;
 
 constexpr unsigned choice_count = 6;
 constexpr unsigned option_count = 8;
@@ -35,6 +39,12 @@ constexpr int option_cursor_right = option_value_left + label_width - cursor_wid
 constexpr unsigned color_inactive = 1;
 constexpr unsigned color_active = 8;
 constexpr unsigned color_locked = 12;
+constexpr int portrait_width = 256;
+constexpr int portrait_height = 244;
+constexpr int portrait_top = 52;
+constexpr int reimu_left = 48;
+constexpr int marisa_left = 336;
+constexpr int raised = 8;
 
 void require_view(bool condition, const char* reason) {
     if (!condition) {
@@ -208,6 +218,94 @@ void put_combined(
     }
 }
 
+void put_opaque(
+    Frame& frame, const PiImage& palette, const CdgSheet& sheet,
+    unsigned image, int left, int top
+) {
+    require_view(sheet.layout == CdgSheet::colors_only,
+                 "CD2 is not an opaque color sheet");
+    for (unsigned y = 0; y < sheet.height; ++y) {
+        for (unsigned x = 0; x < sheet.width; ++x) {
+            unsigned color = 0;
+            for (unsigned plane = 0; plane < 4; ++plane) {
+                if (sheet.bit(image, plane, x, y)) {
+                    color |= (1u << plane);
+                }
+            }
+            put_indexed_pixel(frame, palette, left, top, x, y, color);
+        }
+    }
+}
+
+void fill_rect(
+    Frame& frame, const PiImage& palette, int left, int top,
+    int width, int height, unsigned color
+) {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            put_indexed_pixel(frame, palette, left, top, unsigned(x), unsigned(y), color);
+        }
+    }
+}
+
+std::array<std::uint8_t, 7> glyph(char ch) {
+    switch (ch) {
+    case 'A': return {14, 17, 17, 31, 17, 17, 17};
+    case 'B': return {30, 17, 17, 30, 17, 17, 30};
+    case 'C': return {14, 17, 16, 16, 16, 17, 14};
+    case 'D': return {30, 17, 17, 17, 17, 17, 30};
+    case 'E': return {31, 16, 16, 30, 16, 16, 31};
+    case 'F': return {31, 16, 16, 30, 16, 16, 16};
+    case 'H': return {17, 17, 17, 31, 17, 17, 17};
+    case 'I': return {14, 4, 4, 4, 4, 4, 14};
+    case 'L': return {16, 16, 16, 16, 16, 16, 31};
+    case 'M': return {17, 27, 21, 21, 17, 17, 17};
+    case 'N': return {17, 25, 21, 19, 17, 17, 17};
+    case 'O': return {14, 17, 17, 17, 17, 17, 14};
+    case 'P': return {30, 17, 17, 30, 16, 16, 16};
+    case 'R': return {30, 17, 17, 30, 20, 18, 17};
+    case 'S': return {15, 16, 16, 14, 1, 1, 30};
+    case 'T': return {31, 4, 4, 4, 4, 4, 4};
+    case 'U': return {17, 17, 17, 17, 17, 17, 14};
+    case 'Y': return {17, 17, 10, 4, 4, 4, 4};
+    default: return {0, 0, 0, 0, 0, 0, 0};
+    }
+}
+
+void put_text(
+    Frame& frame, const PiImage& palette, int left, int top,
+    const char* text, unsigned color, int scale = 2
+) {
+    for (const char* p = text; *p; ++p, left += 6 * scale) {
+        const auto rows = glyph(*p);
+        for (unsigned y = 0; y < rows.size(); ++y) {
+            for (unsigned x = 0; x < 5; ++x) {
+                if ((rows[y] & (1u << (4 - x))) == 0) continue;
+                fill_rect(frame, palette, left + int(x) * scale,
+                          top + int(y) * scale, scale, scale, color);
+            }
+        }
+    }
+}
+
+void put_shadow(Frame& frame, const PiImage& palette, int left, int top) {
+    fill_rect(frame, palette, left + portrait_width, top + raised,
+              raised, portrait_height, 1);
+    fill_rect(frame, palette, left + raised, top + portrait_height,
+              portrait_width, raised, 1);
+}
+
+void darken_portrait(
+    Frame& frame, const PiImage& palette, int left, int top
+) {
+    for (int y = 0; y < portrait_height; ++y) {
+        for (int x = (y & 1); x < portrait_width; x += 2) {
+            put_indexed_pixel(frame, palette, left, top,
+                              unsigned(x), unsigned(y), 1);
+        }
+    }
+}
+
 int option_top(unsigned choice) {
     return (choice >= unsigned(menu::OptionChoice::quit))
         ? menu_top + int(menu::OptionChoice::reset) * label_height +
@@ -355,6 +453,93 @@ Frame render_menu(
         : render_options(background, numerals, labels, cursors, state);
 }
 
+int portrait_left(application::Playchar playchar) {
+    return (playchar == application::Playchar::reimu) ? reimu_left : marisa_left;
+}
+
+unsigned portrait_image(application::Playchar playchar) {
+    return (playchar == application::Playchar::reimu) ? 0u : 1u;
+}
+
+Frame render_character_selection(
+    const PiImage& background, const CdgSheet& portraits,
+    const selection::State& state
+) {
+    require_view(background.width == 640 && background.height == 400,
+                 "SLB1.PI is not a 640x400 selection background");
+    require_view(portraits.width == portrait_width &&
+                     portraits.height == portrait_height &&
+                     portraits.image_count >= 2,
+                 "SL.CD2 lacks character portraits");
+    Frame frame = background_frame(background);
+    const auto selected = state.playchar();
+    const auto other = (selected == application::Playchar::reimu)
+        ? application::Playchar::marisa
+        : application::Playchar::reimu;
+    const int selected_left = portrait_left(selected) - raised;
+    const int selected_top = portrait_top - raised;
+    put_opaque(frame, background, portraits, portrait_image(selected),
+               selected_left, selected_top);
+    put_opaque(frame, background, portraits, portrait_image(other),
+               portrait_left(other), portrait_top);
+    darken_portrait(frame, background, portrait_left(other), portrait_top);
+    put_shadow(frame, background, selected_left, selected_top);
+
+    fill_rect(frame, background, 80, 312, 200, 64, 2);
+    fill_rect(frame, background, 368, 312, 200, 64, 2);
+    put_text(frame, background, 132, 332, "REIMU",
+             selected == application::Playchar::reimu ? 15 : 3);
+    put_text(frame, background, 414, 332, "MARISA",
+             selected == application::Playchar::marisa ? 15 : 3);
+    put_text(frame, background, 230, 16, "SELECT PLAYER", 15);
+    return frame;
+}
+
+Frame render_shot_selection(
+    const PiImage& background, const CdgSheet& portraits,
+    const selection::State& state
+) {
+    Frame frame = background_frame(background);
+    constexpr int left = 184;
+    constexpr int top = 44;
+    put_opaque(frame, background, portraits, portrait_image(state.playchar()),
+               left, top);
+    put_shadow(frame, background, left, top);
+    put_text(frame, background, 230, 16, "SELECT SHOT TYPE", 15);
+
+    constexpr int box_left = 320;
+    constexpr int box_top = 312;
+    constexpr int box_width = 192;
+    constexpr int box_height = 24;
+    for (unsigned shot = 0; shot < 2; ++shot) {
+        const auto shot_type = shot == 0
+            ? application::ShotType::a : application::ShotType::b;
+        const int top_at = box_top + int(shot) * 24;
+        fill_rect(frame, background, box_left + 8, top_at + 8,
+                  box_width, box_height, 1);
+        fill_rect(frame, background, box_left, top_at,
+                  box_width, box_height, 2);
+        const unsigned color = !state.available(state.playchar(), shot_type)
+            ? color_locked
+            : (state.shot_type() == shot_type ? 15 : 3);
+        put_text(frame, background, box_left + 52, top_at + 5,
+                 shot == 0 ? "TYPE A" : "TYPE B", color);
+    }
+    return frame;
+}
+
+Frame render_main_handoff(
+    const PiImage& background, const CdgSheet& portraits,
+    const application::State& application_state
+) {
+    Frame frame = background_frame(background);
+    const auto playchar = application_state.resident().playchar;
+    put_opaque(frame, background, portraits, portrait_image(playchar), 192, 52);
+    fill_rect(frame, background, 128, 320, 384, 48, 2);
+    put_text(frame, background, 200, 330, "MAIN HANDOFF READY", 15);
+    return frame;
+}
+
 void write_bmp(const std::string& path, const Frame& frame) {
     const size_t stride = (size_t(frame.width) * 3 + 3) & ~size_t(3);
     require_view(
@@ -387,32 +572,125 @@ void write_bmp(const std::string& path, const Frame& frame) {
     require_view(bool(output), "cannot write title screenshot");
 }
 
+class FrontEnd {
+public:
+    FrontEnd(
+        const PiImage& title_background, const CdgSheet& numerals,
+        const CdgSheet& labels, const CdgSheet& cursors,
+        const PiImage& selection_background, const CdgSheet& portraits
+    ) : title_background_(title_background), numerals_(numerals), labels_(labels),
+        cursors_(cursors), selection_background_(selection_background),
+        portraits_(portraits), frame_(render()) {}
+
+    const Frame& frame() const { return frame_; }
+
+    bool input(menu::Input pressed) {
+        if (application_.program() == application::Program::op) {
+            application_.advance_op_menu_frame();
+        }
+        bool close = false;
+        switch (screen_) {
+        case Screen::menu: {
+            const menu::Result result = menu_.handle(pressed);
+            if (result.kind == menu::ResultKind::quit) {
+                application_.exit_from_op();
+                close = true;
+            } else if (result.kind == menu::ResultKind::choose_main) {
+                if (result.choice == menu::MainChoice::game ||
+                    result.choice == menu::MainChoice::extra) {
+                    extra_ = result.choice == menu::MainChoice::extra;
+                    selection_ = selection::State{};
+                    screen_ = Screen::selection;
+                } else {
+                    std::cout << "title selection=" << unsigned(result.choice)
+                              << " (not ported yet)" << std::endl;
+                }
+            }
+            break;
+        }
+        case Screen::selection: {
+            const selection::Result result = selection_.handle(pressed);
+            if (result.kind == selection::ResultKind::canceled) {
+                screen_ = Screen::menu;
+            } else if (result.kind == selection::ResultKind::chosen) {
+                application_.apply_options(menu_.options());
+                if (extra_) {
+                    application_.start_extra(result.playchar, result.shot_type);
+                } else {
+                    application_.start_normal(result.playchar, result.shot_type);
+                }
+                screen_ = Screen::main_handoff;
+                std::cout << "MAIN handoff playchar="
+                          << unsigned(result.playchar)
+                          << " shot=" << unsigned(result.shot_type)
+                          << " generation=" << application_.generation()
+                          << std::endl;
+            }
+            break;
+        }
+        case Screen::main_handoff:
+            if (pressed == menu::Input::cancel) {
+                close = true;
+            }
+            break;
+        }
+        frame_ = render();
+        return close;
+    }
+
+private:
+    enum class Screen { menu, selection, main_handoff };
+
+    Frame render() const {
+        switch (screen_) {
+        case Screen::menu:
+            return render_menu(
+                title_background_, numerals_, labels_, cursors_, menu_
+            );
+        case Screen::selection:
+            return (selection_.screen() == selection::Screen::playchar)
+                ? render_character_selection(
+                    selection_background_, portraits_, selection_
+                )
+                : render_shot_selection(
+                    selection_background_, portraits_, selection_
+                );
+        case Screen::main_handoff:
+            return render_main_handoff(
+                selection_background_, portraits_, application_
+            );
+        }
+        throw std::logic_error("invalid portable front-end screen");
+    }
+
+    const PiImage& title_background_;
+    const CdgSheet& numerals_;
+    const CdgSheet& labels_;
+    const CdgSheet& cursors_;
+    const PiImage& selection_background_;
+    const CdgSheet& portraits_;
+    menu::State menu_;
+    selection::State selection_;
+    application::State application_;
+    Screen screen_ = Screen::menu;
+    bool extra_ = false;
+    Frame frame_;
+};
+
 #ifdef _WIN32
 
 struct Win32Title {
-    const PiImage& background;
-    const CdgSheet& numerals;
-    const CdgSheet& labels;
-    const CdgSheet& cursors;
-    menu::State state;
-    Frame frame;
+    FrontEnd front_end;
 
     Win32Title(
         const PiImage& background_, const CdgSheet& numerals_,
-        const CdgSheet& labels_, const CdgSheet& cursors_
-    ) : background(background_), numerals(numerals_), labels(labels_),
-        cursors(cursors_), frame(render_menu(
-            background, numerals, labels, cursors, state
-        )) {}
+        const CdgSheet& labels_, const CdgSheet& cursors_,
+        const PiImage& selection_background_, const CdgSheet& portraits_
+    ) : front_end(background_, numerals_, labels_, cursors_,
+                  selection_background_, portraits_) {}
 
     bool input(menu::Input pressed) {
-        const menu::Result result = state.handle(pressed);
-        if (result.kind == menu::ResultKind::choose_main) {
-            std::cout << "title selection=" << unsigned(result.choice)
-                      << " (not ported yet)" << std::endl;
-        }
-        frame = render_menu(background, numerals, labels, cursors, state);
-        return result.kind == menu::ResultKind::quit;
+        return front_end.input(pressed);
     }
 };
 
@@ -455,16 +733,17 @@ LRESULT CALLBACK title_window_proc(
             GetClientRect(window, &client);
             BITMAPINFO info{};
             info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-            info.bmiHeader.biWidth = LONG(title->frame.width);
-            info.bmiHeader.biHeight = -LONG(title->frame.height);
+            const Frame& frame = title->front_end.frame();
+            info.bmiHeader.biWidth = LONG(frame.width);
+            info.bmiHeader.biHeight = -LONG(frame.height);
             info.bmiHeader.biPlanes = 1;
             info.bmiHeader.biBitCount = 32;
             info.bmiHeader.biCompression = BI_RGB;
             SetStretchBltMode(dc, COLORONCOLOR);
             StretchDIBits(
                 dc, 0, 0, client.right, client.bottom,
-                0, 0, int(title->frame.width), int(title->frame.height),
-                title->frame.pixels.data(), &info, DIB_RGB_COLORS, SRCCOPY
+                0, 0, int(frame.width), int(frame.height),
+                frame.pixels.data(), &info, DIB_RGB_COLORS, SRCCOPY
             );
             EndPaint(window, &paint);
             return 0;
@@ -479,9 +758,12 @@ LRESULT CALLBACK title_window_proc(
 
 void show_window(
     const PiImage& background, const CdgSheet& numerals,
-    const CdgSheet& labels, const CdgSheet& cursors
+    const CdgSheet& labels, const CdgSheet& cursors,
+    const PiImage& selection_background, const CdgSheet& portraits
 ) {
-    Win32Title title(background, numerals, labels, cursors);
+    Win32Title title(
+        background, numerals, labels, cursors, selection_background, portraits
+    );
     const HINSTANCE instance = GetModuleHandleW(nullptr);
     const wchar_t class_name[] = L"TH04Port64Title";
     WNDCLASSW window_class{};
@@ -513,7 +795,8 @@ void show_window(
 
 void show_window(
     const PiImage& background, const CdgSheet& numerals,
-    const CdgSheet& labels, const CdgSheet& cursors
+    const CdgSheet& labels, const CdgSheet& cursors,
+    const PiImage& selection_background, const CdgSheet& portraits
 ) {
     require_view(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0, SDL_GetError());
     struct SdlQuit { ~SdlQuit() { SDL_Quit(); } } quit;
@@ -547,7 +830,9 @@ void show_window(
         ~TextureOwner() { SDL_DestroyTexture(value); }
     } texture_owner{texture};
 
-    menu::State state;
+    FrontEnd front_end(
+        background, numerals, labels, cursors, selection_background, portraits
+    );
     bool running = true;
     bool dirty = true;
     Frame frame;
@@ -561,37 +846,28 @@ void show_window(
             if (event.type != SDL_KEYDOWN || event.key.repeat) continue;
             switch (event.key.keysym.sym) {
             case SDLK_UP:
-                state.handle(menu::Input::up);
+                front_end.input(menu::Input::up);
                 dirty = true;
                 break;
             case SDLK_DOWN:
-                state.handle(menu::Input::down);
+                front_end.input(menu::Input::down);
                 dirty = true;
                 break;
             case SDLK_LEFT:
-                state.handle(menu::Input::left);
+                front_end.input(menu::Input::left);
                 dirty = true;
                 break;
             case SDLK_RIGHT:
-                state.handle(menu::Input::right);
+                front_end.input(menu::Input::right);
                 dirty = true;
                 break;
             case SDLK_RETURN:
             case SDLK_KP_ENTER:
-                {
-                    const menu::Result result = state.handle(menu::Input::confirm);
-                    if (result.kind == menu::ResultKind::choose_main) {
-                        std::cout << "title selection=" << unsigned(result.choice)
-                                  << " (not ported yet)" << std::endl;
-                    }
-                    if (result.kind == menu::ResultKind::quit) running = false;
-                    dirty = true;
-                }
+                if (front_end.input(menu::Input::confirm)) running = false;
+                dirty = true;
                 break;
             case SDLK_ESCAPE:
-                if (state.handle(menu::Input::cancel).kind == menu::ResultKind::quit) {
-                    running = false;
-                }
+                if (front_end.input(menu::Input::cancel)) running = false;
                 dirty = true;
                 break;
             default:
@@ -600,7 +876,7 @@ void show_window(
         }
         if (!running) break;
         if (dirty) {
-            frame = render_menu(background, numerals, labels, cursors, state);
+            frame = front_end.frame();
             SDL_UpdateTexture(
                 texture, nullptr, frame.pixels.data(), int(frame.width * 4)
             );
@@ -632,12 +908,16 @@ void show_window(
 void run_title(
     const PiImage& background, const Bytes& numeral_bytes,
     const Bytes& label_bytes, const Bytes& cursor_bytes,
+    const PiImage& selection_background, const Bytes& portrait_bytes,
     const std::string& screenshot, const std::string& options_screenshot,
-    bool window
+    const std::string& character_screenshot,
+    const std::string& shot_screenshot,
+    const std::string& handoff_screenshot, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
     const CdgSheet cursors(cursor_bytes);
+    const CdgSheet portraits(portrait_bytes);
     menu::State initial_state;
     const Frame initial = render_menu(
         background, numerals, labels, cursors, initial_state
@@ -659,7 +939,46 @@ void run_title(
         std::cout << "options 640x400 screenshot=" << options_screenshot
                   << std::endl;
     }
+    if (!character_screenshot.empty() || !shot_screenshot.empty()) {
+        selection::State selection_state;
+        if (!character_screenshot.empty()) {
+            write_bmp(
+                character_screenshot,
+                render_character_selection(
+                    selection_background, portraits, selection_state
+                )
+            );
+            std::cout << "character selection 640x400 screenshot="
+                      << character_screenshot << std::endl;
+        }
+        if (!shot_screenshot.empty()) {
+            selection_state.handle(menu::Input::confirm);
+            write_bmp(
+                shot_screenshot,
+                render_shot_selection(
+                    selection_background, portraits, selection_state
+                )
+            );
+            std::cout << "shot selection 640x400 screenshot="
+                      << shot_screenshot << std::endl;
+        }
+    }
+    if (!handoff_screenshot.empty()) {
+        FrontEnd front_end(
+            background, numerals, labels, cursors,
+            selection_background, portraits
+        );
+        front_end.input(menu::Input::confirm);
+        front_end.input(menu::Input::confirm);
+        front_end.input(menu::Input::confirm);
+        write_bmp(handoff_screenshot, front_end.frame());
+        std::cout << "MAIN handoff 640x400 screenshot="
+                  << handoff_screenshot << std::endl;
+    }
     if (window) {
-        show_window(background, numerals, labels, cursors);
+        show_window(
+            background, numerals, labels, cursors,
+            selection_background, portraits
+        );
     }
 }

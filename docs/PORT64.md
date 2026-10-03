@@ -9,8 +9,8 @@ pointers and host backends; it does not claim byte equality with PC-98 code.
 
 `port64/main.cpp` currently owns the read-only resource path: TH04 HDI FAT12,
 PAR directory/decompression and 16-color PI decoding. `port64/view.cpp` owns
-the first graphics boundary. It decodes mask-only and combined CD2 sheets,
-composes the recovered OP main and Options layouts at 640x400, writes
+the first graphics boundary. It decodes mask-only, combined and opaque CD2 sheets,
+composes the recovered OP main, Options and character/shot layouts at 640x400, writes
 deterministic BMPs, and opens an SDL2/Linux or Win32/GDI window. The user
 supplies the original HDI or loose OP archive at runtime.
 
@@ -18,9 +18,12 @@ supplies the original HDI or loose OP archive at runtime.
 and eight option rows. It preserves the locked-Extra skip, main/options return
 selection, rank/lives/bombs/BGM/SE wrap directions, Turbo toggle and reset
 defaults. Host key events call this state instead of embedding transitions in
-SDL or Win32 code. Main commands beyond Options and Quit still report that
-their destination is unported. Descriptions, character selection, idle demos,
-sound and configuration persistence remain to be migrated.
+SDL or Win32 code. `port64/selection_state.cpp` implements the source-observed
+two-stage character/shot choice, including per-combination Extra availability.
+Game enters it, renders the original selection background and portraits, and
+publishes a confirmed choice through the portable OP-to-MAIN contract. Scores,
+Music Room, Extra unlock data, descriptions, idle demos, sound and configuration
+persistence remain to be migrated.
 
 `port64/application_state.cpp` now owns the first executable-handoff boundary.
 It replaces DOS process/segment mechanics with one fixed-width resident object
@@ -82,21 +85,26 @@ x86-64. Both decode the attested HDI fixtures with packed-pixel FNV32 values
 `b52ea8615865bfc11945fbe23828b7c391d8424c998062a8abfb5d62b4b31d2a`.
 Both also produce the same default Options BMP, SHA-256
 `a064338b0cfb89f7e418a85ab6bc84a7ea5ef835e4ca995b68772e0aef368185`.
+The character and shot-stage BMPs are respectively
+`c1a795a36c2603004fed9309200af833ff8718434b4ba8de2c0977eb2acda199`
+and `12aa7616f49283462bb7c9dd41c3198fd66865a758da79ad24cf63de817ee438`.
+The automated Game/character/shot path then produces the MAIN handoff frame
+`0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5`.
 Both portable contract executables report `pointer_bits=64`, `angle_bits=8`,
-`menu_state=OP`, `handoff_state=OP_MAIN_MAINE` and
+`menu_state=OP`, `handoff_state=OP_MAIN_MAINE`, `selection=OP` and
 `randring=SHARED_OVERLAP`, `lcg=PROCESS_LOCAL32` and
 `items=FIXED_WIDTH_SAFE`.
 A separate GNU x86-64 build passes the same contract with undefined-behavior
 and array-bounds instrumentation enabled.
 
-The item-contract verification receipt is
-`.analysis/port64/verification-items-v1249/receipt.json` (SHA-256
-`e6dfefcb396735ae7a42c2bf7a641c728bed907ab5cf9185c4eea1dd1f2f9aee`),
+The current verification receipt is
+`.analysis/port64/verification-selection-v1250/receipt.json` (SHA-256
+`9504590395e273dbc482934c2c1c54c8a7e7310b3a592b4294134e42051ee462`),
 with source manifest
-`b28fdc6701bb4d14d497d1263cf4ec0eee349a33a67b03057929453bcb21579f`.
+`762ded25d68355dad001eca2f9a7a7f983b77a5215b934d36426c4f97ac3faf5`.
 The UBSan/bounds receipt is
-`.analysis/port64/ubsan-items-v1249/receipt.json` (SHA-256
-`eb0551c7c51a148d493a7b9f9fe6f398abc1a3b3983b2ed84f34fe81cf8ef6ce`).
+`.analysis/port64/ubsan-selection-v1250/receipt.json` (SHA-256
+`1bab14afb6c15105b568f93cdd53c94d485db71c9ac0870d6bd4a2d17c2daaec`).
 
 Replay the complete cross-build check with:
 
@@ -116,11 +124,11 @@ repository.
 
 1. Split the resource services behind reusable host interfaces while retaining
    the verified byte/pixel controls.
-2. Add description text, character selection and explicit frame/input timing
-   to the portable main/options state and framebuffer backend.
-3. Connect the verified process-transition contract to UI destinations, then
-   add audio and saved configuration adapters.
-4. Connect the fixed-width item contract to a MAIN entity pool and rendering,
+2. Add description text and explicit frame/input timing to the portable
+   framebuffer backend.
+3. Add audio and saved configuration adapters.
+4. Connect the now-visible MAIN handoff and fixed-width item contract to an
+   entity pool and rendering,
    then port the remaining direct spark/bullet random call sites without
    splitting the process LCG or shared ring sequence.
 5. Add route-level differential checkpoints for gameplay, Ending and score
