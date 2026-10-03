@@ -106,6 +106,23 @@ void main_contracts() {
     scene.update(p::right,false);
     require(scene.score().power == 2 && scene.item_events().events[0].collected,
             "MAIN updates player before item pickup");
+    require(scene.score().score_delta==0 && scene.scoreboard().digits[1]==1 &&
+            scene.awarded_score_units()==1,"item award drained at the end of its actual frame");
+    a::State score_application;score_application.start_normal(a::Playchar::reimu,a::ShotType::a);
+    g::State scored(score_application);std::uint32_t awarded=0;unsigned sounds=0;
+    for(unsigned frame=0;frame<900;++frame) {
+        if(frame<120 && frame%2==0) for(unsigned i=0;i<32;++i)
+            require(scored.add_item({192*16,323*16},i::Type::point),"point fixture pool capacity");
+        scored.update(0,false);
+        for(const auto& e:scored.item_events().events) if(e.collected) awarded+=e.collection.awarded_points;
+        require(scored.awarded_score_units()==awarded,"live awards conserved across decimal drain");
+        for(const auto& e:scored.score_events()) if(e.kind==th04::portable::score::Kind::sound) {
+            ++sounds;require(e.value==7 && scored.bullets().snapshot().clear_time==20,
+                             "extend propagates its sound request and same-frame clear timer");
+        }
+    }
+    require(scored.score().score_delta==0 && scored.score().remaining_lives==5 && sounds==2,
+            "two actual score extends drain once and publish the live resources");
     const auto drops = scene.add_miss_items();
     require(drops.count == 5 && scene.items().spawned() == 6, "live miss spawns use pool and shared ring");
 }

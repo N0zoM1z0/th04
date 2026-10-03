@@ -11,13 +11,14 @@
 #include "circles.hpp"
 #include "dialog.hpp"
 #include "stage_bonus.hpp"
+#include "score.hpp"
 #include "stage_background.hpp"
 #include <memory>
 
 namespace th04::portable::gameplay {
 // Live MAIN owns STD waves, enemies, player motion, shots, bullets,
 // sparks, gather circles, items and the Stage 1 midboss.
-// Bombs, player death and HUD will join this same owner;
+// Bombs, player death and the remaining HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
 public:
@@ -28,6 +29,9 @@ public:
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
+    const score::Snapshot& scoreboard() const { return scoreboard_; }
+    const std::vector<score::Event>& score_events() const { return score_events_; }
+    std::uint32_t awarded_score_units() const { return score::numeric_units(scoreboard_.digits)+score_.score_delta; }
     const shot::System& shots() const { return shots_; }
     const bullet::System& bullets() const { return bullets_; }
     const spark::System& sparks() const { return sparks_; }
@@ -93,6 +97,8 @@ private:
     application::ShotType shot_type_ = application::ShotType::a;
     item::Pool items_{};
     item::ScoreState score_{};
+    score::Snapshot scoreboard_{};
+    std::vector<score::Event> score_events_;
     randring::SharedRandomRing ring_{};
     item::EnemyDropSequence drops_{};
     item::UpdateResult item_events_{};

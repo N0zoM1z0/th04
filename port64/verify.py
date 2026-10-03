@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/score.hpp",
+    "port64/score.cpp",
+    "port64/score_contracts.cpp",
+    "port64/verify_score.py",
     "port64/stage_bonus.hpp",
     "port64/stage_bonus.cpp",
     "port64/bonus_text.hpp",
@@ -189,9 +193,11 @@ def main() -> int:
     windows_dialog = windows_dir / "th04-port64-dialog-contracts.exe"
     linux_bonus = linux_dir / "th04-port64-bonus-contracts"
     windows_bonus = windows_dir / "th04-port64-bonus-contracts.exe"
-    for path in (linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    linux_score = linux_dir / "th04-port64-score-contracts"
+    windows_score = windows_dir / "th04-port64-score-contracts.exe"
+    for path in (linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -259,6 +265,11 @@ def main() -> int:
     windows_bonus_output = run([args.windows_runner,str(windows_bonus)],env=runner_env)
     if linux_bonus_output != expected_bonus or windows_bonus_output != expected_bonus:
         raise ValueError("stage-bonus contracts did not pass on both hosts")
+    expected_score="score=DECIMAL_BYTES_LOW_WORD_DRAIN extend=DIGIT_PREDICATES high_digit=UNNORMALIZED pointer_bits=64"
+    linux_score_output=run([str(linux_score)])
+    windows_score_output=run([args.windows_runner,str(windows_score)],env=runner_env)
+    if linux_score_output!=expected_score or windows_score_output!=expected_score:
+        raise ValueError("score contracts did not pass on both hosts")
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -376,6 +387,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(linux_orange),
                 "dialog_contract_output": linux_dialog_output,
                 "dialog_contracts_sha256": sha256(linux_dialog),
+                "score_contract_output": linux_score_output,
+                "score_contracts_sha256": sha256(linux_score),
                 "bonus_contract_output": linux_bonus_output,
                 "bonus_contracts_sha256": sha256(linux_bonus),
                 "smoke_output": linux_smoke_output.splitlines(),
@@ -401,6 +414,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(windows_orange),
                 "dialog_contract_output": windows_dialog_output,
                 "dialog_contracts_sha256": sha256(windows_dialog),
+                "score_contract_output": windows_score_output,
+                "score_contracts_sha256": sha256(windows_score),
                 "bonus_contract_output": windows_bonus_output,
                 "bonus_contracts_sha256": sha256(windows_bonus),
                 "smoke_output": windows_smoke_output.splitlines(),
@@ -422,7 +437,7 @@ def main() -> int:
             "0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5"
         ),
         "main_fixture_bmp_sha256": (
-            "4cbbe895725e39fc1fb9b5c6271579833ab69c975824e0c91d20275066317f52"
+            "b7f8850e7c96649f44af3753ded16a03be0f45a7aeb75977734a81bc5c2a40b7"
         ),
         "passed": True,
         "shooting_fixture_bmp_sha256": shooting_hashes["linux"],

@@ -12,9 +12,26 @@ item-lifecycle batches; semantic work is paused unless it blocks a port slice.
 On `port/modern-64`, semantic work is paused at the user's stopping condition:
 sufficient clarity for the current x64 slice, then implement and verify it.
 The native slice runs ordinary Stage1 through midboss, pre-dialog, Orange,
-post-dialog and the actual clear-bonus screen. Semantic remains stopped; next
-port score drain, stage-leave overlay and resource-stage handoff. The preview
-freezes after awarding the bonus exactly once; this is not a full transition.
+post-dialog and the actual clear-bonus screen. Ordinary completed frames now
+consume original score drain/high-score/extends and render score gaiji; live
+extends feed performance, life count and bullet clear. Semantic remains stopped.
+The preview still freezes after awarding the clear bonus exactly once; the
+post-dialog frame continuation, score-drain/leave clocks and Stage2 resource
+handoff remain the next integration batch.
+Current score scope: [Score drain and extends](PORT64.md#score-drain-and-extends).
+MAIN main01 0AAF:6BD4/6BA2/4316, actual1874 raise and DATA2134:4349
+ownership agree4,690 original CPU transitions on Linux/Wine/UBSan, including
+926 retained-state steps. Continue aliases score digit0 in the target; highest
+byte carry, low-word frame-delta write and direct extend-digit predicates remain
+intact. Saved high-score data, life-HUD/audio/popup consumers remain absent.
+Eleven contracts and eight natural Stage1 scenarios/40 BMPs agree across
+Linux/Wine/UBSan and actual Windows headless execution. The60-frame image
+changes only960 score/hiscore pixels in TRAM56 rows4/6; its other pixels remain
+identical to v1261. Windows package is `port64-preview/v1262`; the DOS products
+and normal/invincible launchers stay separate.
+Current receipts: `.analysis/port64/score-v1262/cpu-{linux,windows,ubsan}-attested/receipt.json`,
+`integration-review.json`, `native-windows-receipt.json` and
+`.analysis/port64/verification-score-v1262-attested/receipt.json`.
 Current bonus owner and scope: [Stage-clear bonus](PORT64.md#stage-clear-and-all-clear-bonus).
 Original MAIN main03 13A9:9C31/9E06 and99FE/9A89/9AFF/9B59, plus actual
 main01 0AAF:1874/188E performance arithmetic, agree1,837 complete ordinary /
@@ -26,7 +43,7 @@ only by isolated CPU controls; later-stage live consumers remain unported.
 CPU receipts: `.analysis/port64/bonus-v1261/cpu-{linux,windows,ubsan}-attested/receipt.json`.
 Current cross-product manifest/receipt:
 `.analysis/port64/verification-bonus-v1261-final/receipt.json`.
-Ten contracts and40 natural BMPs/counters agree Linux/Wine/UBSan and actual
+The preceding bonus batch passed ten contracts and40 natural BMPs/counters across Linux/Wine/UBSan and actual
 native Windows headless execution; prior combat/midboss/Orange snapshots and
 first four dialog checkpoints remain unchanged. Bonus updates delta/Bomb once
 and its colored TRAM remains bright over graphics tone60. Native death/Bomb/

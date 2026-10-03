@@ -834,24 +834,24 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     return frame;
 }
 
-// Bonus TRAM stays bright over the dimmed graphics palette. Writes replace
+// TRAM stays bright over the dimmed graphics palette. Writes replace
 // entire character cells; blank gaiji also erase preceding text in that cell.
-void put_bonus_text(Frame& frame,const MainSprites& sprites,const th04::portable::bonus::Result& result) {
+void put_text_requests(Frame& frame,const MainSprites& sprites,const std::vector<th04::portable::bonus::Event>& events) {
     namespace bonus=th04::portable::bonus;
-    require_view(sprites.font.present(),"Clear bonus requires the PC-98 font bitmap");
     std::vector<std::uint32_t> layer(640*400,0);
     const auto gaiji_pixel=[&](unsigned glyph,unsigned x,unsigned y) {
         const auto base=32u+unsigned(sprites.gaiji.at(28))+(unsigned(sprites.gaiji.at(29))<<8);
         return (sprites.gaiji.at(base+glyph*32+y*2+x/8)&(0x80u>>(x&7)))!=0;
     };
-    for(const auto& e:result.events) {
+    for(const auto& e:events) {
         if(e.kind!=bonus::Kind::text && e.kind!=bonus::Kind::gaiji) continue;
         const unsigned color=0xff000000u|((e.color&0x40) ? 0xff0000u : 0)|((e.color&0x80) ? 0xff00u : 0)|((e.color&0x20) ? 0xffu : 0);
         int left=e.left*8;const int top=e.row*16;
         for(unsigned at=0;at<e.bytes.size();) {
             const auto first=static_cast<unsigned char>(e.bytes[at++]);unsigned glyph=first;
             if(e.kind==bonus::Kind::text) {
-                require_view(at<e.bytes.size(),"Truncated bonus SJIS text");glyph=(glyph<<8)|static_cast<unsigned char>(e.bytes[at++]);
+                require_view(sprites.font.present(),"Text requires the PC-98 font bitmap");
+                require_view(at<e.bytes.size(),"Truncated SJIS text");glyph=(glyph<<8)|static_cast<unsigned char>(e.bytes[at++]);
             }
             for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x) {
                 const bool set=e.kind==bonus::Kind::text ? sprites.font.pixel(static_cast<std::uint16_t>(glyph),x,y) : gaiji_pixel(glyph,x,y);
@@ -862,6 +862,16 @@ void put_bonus_text(Frame& frame,const MainSprites& sprites,const th04::portable
         }
     }
     for(unsigned i=0;i<layer.size();++i) if(layer[i]) frame.pixels[i]=layer[i];
+}
+
+void put_score_text(Frame& frame,const MainSprites& sprites,const gameplay::State& state) {
+    namespace score=th04::portable::score;
+    namespace bonus=th04::portable::bonus;
+    auto snapshot=state.scoreboard();
+    std::vector<bonus::Event> requests;
+    for(const auto& e:score::render(snapshot))
+        requests.push_back({bonus::Kind::gaiji,int(e.left),int(e.row),int(e.value),0,e.bytes});
+    put_text_requests(frame,sprites,requests);
 }
 
 class DialogScene {
@@ -1087,7 +1097,7 @@ private:
                     selection_background_, portraits_, selection_
                 );
         case Screen::main_handoff:
-            if(dialog_scene_) return dialog_scene_->render();
+            if(dialog_scene_) { auto frame=dialog_scene_->render();put_score_text(frame,*sprites_,*main_);return frame; }
             if(main_) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
                 if(main_->clear_bonus()) {
@@ -1096,8 +1106,9 @@ private:
                         const unsigned red=((pixel>>16)&255)/17,green=((pixel>>8)&255)/17,blue=(pixel&255)/17;
                         pixel=0xff000000u|((red*60/100*17)<<16)|((green*60/100*17)<<8)|(blue*60/100*17);
                     }
-                    put_bonus_text(frame,*sprites_,*main_->clear_bonus());
+                    put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
                 }
+                put_score_text(frame,*sprites_,*main_);
                 return frame;
             }
             return render_main_handoff(
@@ -1543,7 +1554,7 @@ void run_title(
             write_bmp(path,front_end.frame());
             require_view(state.enemies().snapshot().killed_count>0,"combat fixture killed no enemies");
             std::cout << "MAIN combat frames=1200 killed=" << state.enemies().snapshot().killed_count
-                      << " score=" << state.score().score_delta << " power=" << +state.score().power
+                      << " score=" << state.awarded_score_units() << " power=" << +state.score().power
                       << " screenshot=" << path << '\n';
             FrontEnd barrage(background,numerals,labels,cursors,
                              selection_background,portraits,&main_assets);
@@ -1584,7 +1595,7 @@ void run_title(
                     const auto path=midboss_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
                     unsigned alive=0;for (const auto& bullet:state.bullets().snapshot().entities) alive+=bullet.flag==1;
                     std::cout << "MAIN midboss case=" << name << " active=" << boss.active << " phase=" << +boss.phase
-                              << " hp=" << boss.hp << " bullets=" << alive << " score=" << state.score().score_delta
+                              << " hp=" << boss.hp << " bullets=" << alive << " score=" << state.awarded_score_units()
                               << " screenshot=" << path << '\n';
                 }
             }

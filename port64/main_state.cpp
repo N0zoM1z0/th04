@@ -20,6 +20,13 @@ State::State(application::State& application) {
     performance_ = rank_ == 2 ? 20 : (rank_ == 3 ? 22 : 16);
     score_.remaining_lives = application.resident().credit_lives;
     score_.remaining_bombs = application.resident().credit_bombs;
+    scoreboard_.digits=application.resident().score_digits;
+    scoreboard_.lives=score_.remaining_lives;
+    constexpr std::uint8_t minimum[]{4,11,20,22,16},maximum[]{16,24,32,34,20};
+    scoreboard_.performance=performance_;scoreboard_.minimum=minimum[rank_];scoreboard_.maximum=maximum[rank_];
+    // Saved high-score loading is a separate OP/persistence boundary. Until
+    // it joins, the preview starts with the original zero-valued HUD state.
+    score_events_=score::render(scoreboard_);
     // Consume the SAME process generator used by the rest of MAIN. Creating
     // a second LCG at this boundary would repeat the first stage sequence.
     ring_.fill([&application]() {
@@ -65,6 +72,7 @@ void State::finish_post_boss_dialog() {
     // keep simulation frozen until those actual consumers are implemented.
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
+    score_events_.clear();
     if (orange_active_ && orange_.snapshot().phase==255 && orange_.snapshot().phase_frame==0) {
         // The front end consumes dialog and bonus once. Score drain and
         // stage-leave/progression remain a separate integration boundary.
@@ -194,6 +202,14 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     const unsigned interval=score_.remaining_lives>=10 ? 1000 : 6000-score_.remaining_lives*500;
     if (static_cast<std::uint16_t>(frames_)%interval==0) performance_=std::min(
         static_cast<std::uint8_t>(performance_+1),maximum[rank_]);
+    // Original MAIN drains score AFTER the frame counter and periodic rank
+    // raise. All actor/item awards above feed this same pending accumulator.
+    scoreboard_.delta=score_.score_delta;scoreboard_.lives=score_.remaining_lives;
+    scoreboard_.performance=performance_;scoreboard_.bullet_clear=bullets_.snapshot().clear_time;
+    score_events_=score::update(scoreboard_);
+    score_.score_delta=scoreboard_.delta;score_.remaining_lives=scoreboard_.lives;
+    performance_=scoreboard_.performance;
+    if(scoreboard_.bullet_clear>bullets_.snapshot().clear_time) bullets_.clear();
 }
 
 item::MissSpawnResult State::add_miss_items() {

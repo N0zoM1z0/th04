@@ -833,6 +833,77 @@ adapter control checks that a Unicorn callback exception cannot silently pass.
 Semantic remains stopped; next implement score drain and actual stage leave /
 resource transition, not additional naming work.
 
+## Score drain and extends
+
+The current native MAIN ends each ordinary simulation frame with the original
+score owner, after its frame counter and periodic performance raise. Actor/item
+awards enter one pending accumulator. Score update transfers that amount into
+eight little-endian decimal bytes, preserves continues in digit0, compares the
+complete high score and dispatches extends. Life/performance changes and the
+20-frame bullet-clear minimum feed the actual simulation; sound, life-HUD and
+popup remain requests pending their consumers. HUD score rows56:4/6 now use
+the original game gaiji and remain bright over dimmed graphics.
+
+Pinned MAIN main01 0AAF:6BD4..6CA2 (update),6BA2..6BD3 (HUD),4316..43B5
+(extend) and actual1874 performance raise are independently executed at load2000,
+CS2AAF, isolated DS8000 copied from target DATA2134, resident9000:0000.
+All4,690 transitions agree Linux GCC8.4, MinGW13 PE32+ under Wine and optimized
+UBSan/bounds:3,759 isolated controls plus five retained-state sequences926 steps
+and their five initial calls. Subsequent awards are injected into each owner's
+retained state; target outputs are not reseeded into native after each tick.
+Complete decimal/high-score/temp/HUD bytes, pending/frame dwords, life/clear/
+performance/extend/popup state and ordered requests agree. The rejection control
+also proves a failed Unicorn callback cannot silently pass. Identity remains
+candidate-local-attested; no DOS exact claim follows from portable equality.
+
+Keep the target's low-word-only frame-delta assignment even when a fixture's
+high word is nonzero. Preserve the five temporary-digit writes and six AAA
+iterations, including nondecimal AF/two-byte carry controls. The highest score
+byte remains unnormalized. Extend predicates compare digit6/7 directly rather
+than a total integer threshold, then raise performance/increment extends before
+the life-cap check. Granting a life from99 produces100; the next grant is
+suppressed. Continue and score digit0 share target DATA2134:4349 (confirmed by
+0AAF:3CDA increment and43C0 reset skipping digit0). Maintained DOS storage
+places a separate `_continues_used` byte before `_score`; that candidate layout
+cannot establish the native ownership contract. DOS source is unchanged.
+
+The live900-frame pickup/drain control conserves all awards, grants two extends
+once, emits SE7 requests and publishes a20-frame clear timer. Eleven contracts
+pass Linux/UBSan/Wine/native Windows. Forty natural Normal/Lunatic character/
+shot-idle snapshots and counters agree Linux/Wine/UBSan/native Windows. The
+old60-frame BMP is independently recreated with the saved v1261 PE; exactly960
+pixels change inside the two new HUD rows, with every other pixel retained.
+This pixel mask justifies the new MAIN fixture hash; other fixture changes may
+also reflect real extends/performance changes, not just HUD.
+
+This remains a Stage1 preview. The post-dialog continuation and leave clocks
+still freeze at the clear-bonus screen; its pending bonus is not yet drained.
+Saved high-score loading, life-HUD, popup/audio, death/Bomb/Continue lifecycle,
+resident publication and later resources/Ending/save remain separate work.
+Current source/build receipts and English native launcher are packaged under
+Windows `port64-preview/v1262`; the root native executable is refreshed only
+after delivered hash checks. DOS products/launchers/assets are unchanged.
+No full-route, original TRAM/palette composition or GUI frame-pacing claim.
+
+```bash
+python3 port64/verify_score.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-score-contracts \
+  --output-dir .analysis/port64/score-v1262/cpu-linux-attested
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-score-v1262-attested/receipt.json
+```
+
+Receipts: `score-v1262/cpu-{linux,windows,ubsan}-attested/receipt.json`,
+`target-owners.json`, `render-review/receipt.json`, `integration-review.json`,
+`native-windows-receipt.json`, and `verification-score-v1262-attested/receipt.json`.
+Stop naming work here; next resume the actual boss-update frame after blocking
+dialog, then port the416/488 leave/next-stage handoff without skipping it.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -843,7 +914,8 @@ implementation. Resume only for a concrete ambiguity exposed by integration.
 Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous boundary.
 Orange state/attacks/foreground and pre/post-boss dialog now run in ordinary Stage1.
 Ordinary Stage1 now also consumes the actual clear bonus and displays its tally.
-Next connect score drain, stage-leave overlay and resource progression, then later bosses/midbosses,
+Ordinary frame score drain and extends now join MAIN.
+Next connect post-dialog frame continuation, stage-leave overlay and resource progression, then later bosses/midbosses,
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those
