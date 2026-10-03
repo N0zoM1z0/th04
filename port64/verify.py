@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/stage_transition.hpp",
+    "port64/stage_transition.cpp",
+    "port64/transition_contracts.cpp",
+    "port64/verify_transition.py",
     "port64/score.hpp",
     "port64/score.cpp",
     "port64/score_contracts.cpp",
@@ -195,9 +199,11 @@ def main() -> int:
     windows_bonus = windows_dir / "th04-port64-bonus-contracts.exe"
     linux_score = linux_dir / "th04-port64-score-contracts"
     windows_score = windows_dir / "th04-port64-score-contracts.exe"
-    for path in (linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    linux_transition=linux_dir / "th04-port64-transition-contracts"
+    windows_transition=windows_dir / "th04-port64-transition-contracts.exe"
+    for path in (linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -270,6 +276,11 @@ def main() -> int:
     windows_score_output=run([args.windows_runner,str(windows_score)],env=runner_env)
     if linux_score_output!=expected_score or windows_score_output!=expected_score:
         raise ValueError("score contracts did not pass on both hosts")
+    expected_transition="stage_transition=SHARED_BYTE_72 departure=DIALOG_416_488 pending_score=CARRIES pointer_bits=64"
+    linux_transition_output=run([str(linux_transition)])
+    windows_transition_output=run([args.windows_runner,str(windows_transition)],env=runner_env)
+    if linux_transition_output!=expected_transition or windows_transition_output!=expected_transition:
+        raise ValueError("stage-transition contracts did not pass on both hosts")
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -348,10 +359,10 @@ def main() -> int:
             images = output.parent / ("dialog-"+host)
             images.mkdir(parents=True,exist_ok=True)
             result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--dialog-screenshots",str(images)],env=runner_env)
-            if result.count("MAIN dialog fixture=") != 40 or result.count("MAIN dialog stopped ") != 8:
+            if result.count("MAIN dialog fixture=") != 64 or result.count("MAIN dialog stopped ") != 8:
                 raise ValueError("ordinary Stage 1 dialog fixture missed progression")
             dialog_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
-            if len(dialog_hashes[host]) != 40:
+            if len(dialog_hashes[host]) != 64:
                 raise ValueError("dialog fixture has unexpected image files")
             dialog_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN dialog")]
         if dialog_hashes["linux"] != dialog_hashes["windows"] or dialog_outputs["linux"] != dialog_outputs["windows"]:
@@ -387,6 +398,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(linux_orange),
                 "dialog_contract_output": linux_dialog_output,
                 "dialog_contracts_sha256": sha256(linux_dialog),
+                "transition_contract_output": linux_transition_output,
+                "transition_contracts_sha256": sha256(linux_transition),
                 "score_contract_output": linux_score_output,
                 "score_contracts_sha256": sha256(linux_score),
                 "bonus_contract_output": linux_bonus_output,
@@ -414,6 +427,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(windows_orange),
                 "dialog_contract_output": windows_dialog_output,
                 "dialog_contracts_sha256": sha256(windows_dialog),
+                "transition_contract_output": windows_transition_output,
+                "transition_contracts_sha256": sha256(windows_transition),
                 "score_contract_output": windows_score_output,
                 "score_contracts_sha256": sha256(windows_score),
                 "bonus_contract_output": windows_bonus_output,
@@ -437,7 +452,7 @@ def main() -> int:
             "0b2c0f8cebb9e1c0e600de3bee29feb8f225efb5b798cb3a387b6c5538bb55c5"
         ),
         "main_fixture_bmp_sha256": (
-            "b7f8850e7c96649f44af3753ded16a03be0f45a7aeb75977734a81bc5c2a40b7"
+            "c87c0242836cc3408ced95cf7fdba20f4ae6ca8d0d20b03d9b30d8c2b80c9eab"
         ),
         "passed": True,
         "shooting_fixture_bmp_sha256": shooting_hashes["linux"],
@@ -463,7 +478,10 @@ def main() -> int:
             "Stage 1 ordinary pre/post-boss dialog and sprite-bank replacement is checked when font-bmp is supplied; "
             "ordinary stage-clear bonus state/colored text is consumed exactly once; "
             "all-clear/Extra bonus math has separate CPU controls; "
-            "score drain, stage-leave overlay and next-stage progression, "
+            "ordinary completed frames drain score and feed extends into lives/performance/clear; "
+            "post-dialog continuation completes its already entered actor frame, then enter/leave TRAM "
+            "and416/488 departure reach the unloaded Stage2 resource request; "
+            "Stage2 session/resources and final/Extra departure, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

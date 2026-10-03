@@ -4,7 +4,7 @@ cd /d "%~dp0"
 echo TH04 native x64 - Stage 1 preview
 echo Controls: arrows to move, Z to shoot, Shift to slow down.
 echo Dialogue: release the key, then press Enter or Z to continue.
-echo Preview ends at the Stage 1 clear-bonus screen. Later stages are not ready.
+echo Preview completes Stage 1 and its departure. Stage 2 resources are not ready.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.
   pause

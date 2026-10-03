@@ -1,5 +1,6 @@
 #pragma once
 #include "effects.hpp"
+#include "stage_transition.hpp"
 
 namespace th04::portable::orange {
 struct Explosion {
@@ -63,6 +64,7 @@ public:
                 randring::SharedRandomRing&,const Sink& sink={});
     // Exactly once per simulated frame. Host repaints read this cached list.
     void prepare_render(std::uint16_t frame);
+    void apply_departure(const transition::Departure&);
     const std::vector<Draw>& draws() const { return draws_; }
 private:
     Snapshot state_{};

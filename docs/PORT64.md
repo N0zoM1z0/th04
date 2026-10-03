@@ -876,8 +876,8 @@ pixels change inside the two new HUD rows, with every other pixel retained.
 This pixel mask justifies the new MAIN fixture hash; other fixture changes may
 also reflect real extends/performance changes, not just HUD.
 
-This remains a Stage1 preview. The post-dialog continuation and leave clocks
-still freeze at the clear-bonus screen; its pending bonus is not yet drained.
+At the end of the score batch this Stage1 preview still froze at the bonus;
+the following departure batch connects its same-frame continuation and clocks.
 Saved high-score loading, life-HUD, popup/audio, death/Bomb/Continue lifecycle,
 resident publication and later resources/Ending/save remain separate work.
 Current source/build receipts and English native launcher are packaged under
@@ -904,6 +904,100 @@ Receipts: `score-v1262/cpu-{linux,windows,ubsan}-attested/receipt.json`,
 Stop naming work here; next resume the actual boss-update frame after blocking
 dialog, then port the416/488 leave/next-stage handoff without skipping it.
 
+## Stage enter and departure
+
+Ordinary Stage1 now enters through the original black TRAM gaiji mask, completes
+its blocked post-boss dialog inside the same actor frame, awards/drains its
+bonus, and executes the416/488 leave sequence. The actor prefix runs once;
+paused dialog ticks do not move actors or consume RNG. On continuation the
+saved contexts feed items/gathers/render, overlay, frame/periodic performance
+and score. Deferred tone60 is applied when that frame completes; the dialog
+snapshot retains the palette previously displayed. Removing the former extra
+front-end dim prevents the bonus scene from being dimmed twice.
+
+Observed pinned MAIN owners at load2000: main01 CS2AAF, unloaded0AAF:
+enter62B3..6348, leave6349..63B4, black6287..62B2; main03 CS33A9,
+unloaded13A9: common defeatACB3..AE86. Isolated DS8000 is copied from
+relocated DATA2134; resident9000:0000. Gameplay-loop0AAF:0098..0212/fileC388
+places player/shots/bullets/enemies before the far boss callback at0105,
+items/gathers after it, overlay0148 before clock01A8 and score0204. Database
+attestation is the root `.analysis/ghidra/database-attestations/th04-main.json`.
+These are target/runtime observations, not a new DOS exact promotion; pinned
+target provenance remains candidate-local-attested.
+
+Enter/leave share DATA2134:1B62. Enter draws at nonzero multiples of8 using
+byte gaiji64-time/8 and retains72 when it changes callback to titles. Leave
+decrements first; at416 it starts72→71, at488 zero-time black fill clears the
+callback. TRAM is replaced across24×23 gaiji cells, not blended over retained
+bonus letters; the score rows outside the playfield remain bright. Actual
+GAMEFT gaiji57 independently explains all8,726 changed pixels in the60-frame
+fixture relative to the saved v1262 PE; all other pixels remain identical.
+Title/BGM/demo overlay consumers and original complete video timing are separate.
+
+Common defeat adds wrapped stage graze before dialog, then calls bonus exactly
+once. At416 it requests sound fade10; at488 it increments resident stage/ascii,
+sets quit2 and requests one delay frame before finishing the ordinary frame.
+TH04 ordinary leave does not flush pending score; remaining score carries into
+the next session. The live application publishes graze/lives/Bombs/stage/ascii
+without replacing MAIN, reseeding its LCG or falsely loading Stage2 resources.
+Further input is held at that unloaded request. The current preview ends with
+black playfield and bright score, pending the actual Stage2 loader and actors.
+
+Independent original CPU controls cover all256 timer bytes, interval/wrap
+boundaries and1,929 departure cases. Original machine context pauses at the
+far dialog callee and resumes at its actual return address; held ticks preserve
+the caller state. Three retained489-tick original departure→leave→score sequences
+exercise pending1,20,000,000 and2,000,000,000, including nonzero pending at
+stage advance. In total4,331 input commands/7,265 complete state and ordered
+request records match GCC8.4 Linux, MinGW13 PE32+ under Wine, optimized
+UBSan/bounds and actual Windows PE execution. A rejecting callback remains a
+required negative control. Forty focused original Orange phase255 snapshots
+also preserve the prior serialized boss/pool/global/RNG contract.
+
+The first fixture was rejected at frame1 because Python native-aligned Bh
+inserted a padding byte, writing256 to target53DA. Explicit packed little-endian
+<Bh restores the intended phase/frame bytes. Keep the rejecting observation;
+an adapter packing error is not permission to change target semantics.
+
+Twelve contracts pass Linux/UBSan/Wine/native Windows. Eight natural Normal/
+Lunatic character/shot-idle Stage1 routes produce64 identical BMPs and72
+counters across all hosts, through bonus,416 fade, late mask and488 request.
+Controls check actors/RNG do not repeat on dialog resume, bonus/fade/next-stage
+requests occur once, and the unloaded Stage2 request freezes further updates.
+These are headless behavior/picture controls, not measured GUI frame pacing.
+Windows package `port64-preview/v1263` and root native launcher are refreshed
+after delivered hashes; DOS products/assets and normal/invincible launchers
+are unchanged.
+
+Stage2 session/resource initialization, midboss/Kurumi, final/Extra Ending
+dispatch, saved high score/life HUD/popup/audio/death/Bomb/Continue/Ending/save
+remain outside this slice. Later run initialization must reset accumulated
+resident graze at its actual owner; these scenarios start a fresh application.
+When loading Stage2, preserve global pending score while resetting only the
+proved stage-owned counters/pools, then activate the correct resources/boss.
+Do not merely relabel Stage1 or reuse Orange as a placeholder.
+
+```bash
+python3 port64/verify_transition.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-transition-contracts \
+  --output-dir .analysis/port64/leave-v1263/cpu-linux-attested-final
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-leave-v1263-final/receipt.json
+```
+
+Receipts: `leave-v1263/cpu-linux-attested-final/receipt.json`,
+`cpu-{windows,ubsan}-attested-final/receipt.json`, `target-owners.json`,
+`gameplay-loop-owner.json`, `render-review/receipt.json`,
+`orange-departure-cpu-linux/receipt.json`, `integration-review.json`,
+`native-windows-cpu.json`, `native-windows-receipt.json`, and
+`verification-leave-v1263-final/receipt.json`. Semantic remains stopped;
+next port the actual Stage2 session/resource/actor boundary.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -915,7 +1009,8 @@ Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous 
 Orange state/attacks/foreground and pre/post-boss dialog now run in ordinary Stage1.
 Ordinary Stage1 now also consumes the actual clear bonus and displays its tally.
 Ordinary frame score drain and extends now join MAIN.
-Next connect post-dialog frame continuation, stage-leave overlay and resource progression, then later bosses/midbosses,
+Post-dialog frame continuation and stage-leave overlay now reach the next-stage
+request. Next connect Stage2 session/resources and its bosses/midbosses, then
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

@@ -217,14 +217,27 @@ void System::update(const Context& c,bullet::System& bullets,gather::System& gat
                 if (s.sprite>=12) { ++s.phase;s.phase_frame=0;s.bombing_disabled=1; }
             }
         } else {
-            s.palette_tone=60;s.palette_changed=1;emit(sink,EventType::tone,{},60);
-            if (s.phase_frame==0) { emit(sink,EventType::dialog);emit(sink,EventType::stage_bonus); }
-            else if (s.phase_frame==416) emit(sink,EventType::fade,{},10);
-            else if (s.phase_frame==488) { emit(sink,EventType::next_stage);emit(sink,EventType::delay,{},1); }
-            increment();s.homing={-15984,-15984}; // DOS Subpixel::None() = -999 pixels.
+            transition::Departure departure;
+            departure.frame=s.phase_frame;departure.homing=s.homing;
+            transition::Overlay overlay;
+            transition::update_departure(departure,overlay,false,[&](const transition::Event& e) {
+                switch(e.kind) {
+                case transition::Kind::tone:emit(sink,EventType::tone,{},e.value);break;
+                case transition::Kind::dialog:emit(sink,EventType::dialog);break;
+                case transition::Kind::bonus:emit(sink,EventType::stage_bonus);break;
+                case transition::Kind::fade:emit(sink,EventType::fade,{},e.value);break;
+                case transition::Kind::next_stage:emit(sink,EventType::next_stage);break;
+                case transition::Kind::delay:emit(sink,EventType::delay,{},e.value);break;
+                }
+            });
+            apply_departure(departure);
         }
         return;
     }
     s.homing=center();emit(sink,EventType::hp,{},static_cast<std::uint16_t>(s.hp),3050);
+}
+void System::apply_departure(const transition::Departure& departure) {
+    state_.phase_frame=departure.frame;state_.homing=departure.homing;
+    state_.palette_tone=departure.palette_tone;state_.palette_changed=departure.palette_changed;
 }
 } // namespace th04::portable::orange

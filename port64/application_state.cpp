@@ -52,6 +52,7 @@ void State::begin_main(
 ) {
     require_program(Program::op);
     resident_.stage = stage;
+    resident_.stage_ascii=static_cast<std::uint8_t>('0'+stage);
     resident_.resource_stage = resource_stage;
     resident_.credit_lives = lives;
     resident_.credit_bombs = bombs;
@@ -97,6 +98,20 @@ void State::start_next_demo() {
     );
 }
 
+void State::publish_main_resources(std::uint8_t lives,std::uint8_t bombs) {
+    require_program(Program::main);
+    resident_.remaining_lives=lives;resident_.remaining_bombs=bombs;
+}
+void State::add_stage_graze(std::uint16_t amount) {
+    require_program(Program::main);
+    resident_.graze=static_cast<std::uint16_t>(resident_.graze+amount);
+}
+void State::advance_main_stage() {
+    require_program(Program::main);
+    ++resident_.stage;++resident_.stage_ascii;
+    // Stage-owned resources join only when the next session loads. This
+    // request neither replaces MAIN nor reseeds its process-local generator.
+}
 void State::publish_statistics(const RunStatistics& statistics) {
     resident_.score_digits = statistics.score_digits;
     resident_.statistics = statistics;

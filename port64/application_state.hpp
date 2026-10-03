@@ -64,7 +64,8 @@ struct ResidentState {
     std::uint8_t credit_lives = 0;
     std::uint8_t remaining_bombs = 0;
     std::uint8_t credit_bombs = 0;
-    std::uint8_t stage = 0;
+    std::uint8_t stage = 0,stage_ascii = '0';
+    std::uint16_t graze = 0;
     std::uint8_t resource_stage = 0;
     Playchar playchar = Playchar::reimu;
     ShotType shot_type = ShotType::a;
@@ -97,6 +98,9 @@ public:
     void start_extra(Playchar playchar, ShotType shot_type);
     void start_next_demo();
 
+    void publish_main_resources(std::uint8_t lives,std::uint8_t bombs);
+    void add_stage_graze(std::uint16_t);
+    void advance_main_stage();
     void return_from_main(const RunStatistics& statistics);
     void finish_main(
         const RunStatistics& statistics, EndSequence end_sequence

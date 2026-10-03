@@ -45,6 +45,7 @@ public:
         return boss>bullets_.snapshot().slowdown ? boss : bullets_.snapshot().slowdown;
     }
     bool post_boss_dialog_pending() const { return post_boss_dialog_pending_; }
+    std::int16_t palette_tone_before_frame() const { return palette_tone_before_frame_; }
     std::uint8_t orange_background_phase() const { return orange_background_phase_; }
     std::int16_t orange_background_frame() const { return orange_background_frame_; }
     bool stage1_dialog_ready(const stage::Background& background) const {
@@ -57,6 +58,10 @@ public:
     // Caller completes the blocking pre-boss dialog before this handoff.
     void start_orange_after_dialog();
     void finish_post_boss_dialog();
+    bool next_stage_requested() const { return next_stage_requested_; }
+    const transition::Overlay& overlay() const { return overlay_; }
+    const transition::Text& overlay_cell() const { return overlay_cell_; }
+    bool bonus_text_visible() const { return clear_bonus_.has_value() && !leave_text_replaced_; }
     const std::optional<bonus::Result>& clear_bonus() const { return clear_bonus_; }
     const std::vector<orange::Event>& orange_events() const { return orange_events_; }
     const std::vector<midboss::Event>& midboss_events() const { return midboss_events_; }
@@ -70,6 +75,15 @@ public:
     item::MissSpawnResult add_miss_items();
 
 private:
+    void apply_clear_bonus();
+    application::State* application_;
+    transition::Overlay overlay_{};
+    transition::Text overlay_cell_{transition::TextKind::character,4,1,32,5};
+    std::optional<transition::Departure> departure_;
+    bool frame_suspended_=false,dialog_finished_=false,next_stage_requested_=false,leave_text_replaced_=false;
+    enemy::Context suspended_context_{};
+    bullet::Context suspended_bullets_{};
+    bool suspended_pull_items_=false;
     player::Movement player_{};
     shot::System shots_{};
     enemy::System enemies_{};
@@ -82,6 +96,7 @@ private:
     bool orange_active_=false,post_boss_dialog_pending_=false;
     bonus::Context bonus_context_{};
     std::optional<bonus::Result> clear_bonus_;
+    std::int16_t palette_tone_before_frame_=100;
     std::uint8_t orange_background_phase_=0;
     std::int16_t orange_background_frame_=0;
     std::vector<orange::Event> orange_events_;

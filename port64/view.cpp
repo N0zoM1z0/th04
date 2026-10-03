@@ -665,13 +665,13 @@ void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet
 }
 
 Frame render_main(const MainSprites& sprites, const gameplay::State& state,
-                  application::Playchar playchar) {
+                  application::Playchar playchar,std::optional<int> displayed_tone={}) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
     PiImage palette=sprites.palette;
     if (state.orange_active()) {
         const auto& boss=state.orange().snapshot();
         for (unsigned i=0;i<3;++i) palette.palette[i]=boss.palette_zero[i];
-        const int tone=std::clamp(int(boss.palette_tone),0,200);
+        const int tone=std::clamp(displayed_tone.value_or(boss.palette_tone),0,200);
         for (auto& component:palette.palette) {
             const int base=component>>4;
             const int nibble=tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100;
@@ -874,6 +874,18 @@ void put_score_text(Frame& frame,const MainSprites& sprites,const gameplay::Stat
     put_text_requests(frame,sprites,requests);
 }
 
+
+void put_stage_overlay(Frame& frame,const MainSprites& sprites,const gameplay::State& state) {
+    const auto& cell=state.overlay_cell();
+    const bool black=cell.kind==th04::portable::transition::TextKind::character && (cell.attribute&4);
+    if(cell.kind==th04::portable::transition::TextKind::character && !black) return;
+    const auto base=32u+unsigned(sprites.gaiji.at(28))+(unsigned(sprites.gaiji.at(29))<<8);
+    for(unsigned top=16;top<384;top+=16) for(unsigned left=32;left<416;left+=16)
+        for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x)
+            if(black || (sprites.gaiji.at(base+cell.value*32+y*2+x/8)&(0x80u>>(x&7))))
+                frame.pixels[(top+y)*640+left+x]=0xff000000u;
+}
+
 class DialogScene {
 public:
     DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character)
@@ -983,6 +995,8 @@ public:
     bool dialog_active() const { return bool(dialog_scene_); }
     bool post_dialog_complete() const { return post_finished_; }
     bool post_dialog() const { return post_started_; }
+    const application::ResidentState& resident() const { return application_.resident(); }
+    std::uint32_t process_random_state() const { return application_.process_random_state(); }
     unsigned dialog_glyphs() const { return dialog_scene_ ? dialog_scene_->glyph_count() : 0; }
     dialog::Status dialog_status() const { return dialog_scene_ ? dialog_scene_->status() : dialog::Status::idle; }
     std::size_t dialog_offset() const { return script_ ? script_->offset() : 0; }
@@ -1005,7 +1019,7 @@ public:
                 } else { if(repaint) frame_=render();return; }
             }
             main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
-            sprites_->background.update();
+            if(!main_->next_stage_requested()) sprites_->background.update();
             if (repaint) frame_ = render();
         }
         else if (screen_ == Screen::menu) application_.advance_op_menu_frame();
@@ -1078,7 +1092,7 @@ public:
 
 private:
     void begin_dialog(bool post) {
-        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar),unsigned(application_.resident().playchar));
+        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar,main_->palette_tone_before_frame()),unsigned(application_.resident().playchar));
     }
     enum class Screen { menu, selection, main_handoff };
 
@@ -1101,13 +1115,10 @@ private:
             if(main_) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
                 if(main_->clear_bonus()) {
-                    // palette_show(60) changes GRAM; colored TRAM stays bright.
-                    for(auto& pixel:frame.pixels) {
-                        const unsigned red=((pixel>>16)&255)/17,green=((pixel>>8)&255)/17,blue=(pixel&255)/17;
-                        pixel=0xff000000u|((red*60/100*17)<<16)|((green*60/100*17)<<8)|(blue*60/100*17);
-                    }
-                    put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
+                    // Departure already publishes graphics tone60 once; TRAM stays bright.
+                    if(main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
                 }
+                put_stage_overlay(frame,*sprites_,*main_);
                 put_score_text(frame,*sprites_,*main_);
                 return frame;
             }
@@ -1669,37 +1680,57 @@ void run_title(
             }
             scene.input(menu::Input::confirm);if(character) scene.input(menu::Input::right);
             scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
-            std::array<bool,5> seen{};std::uint32_t start_frame=0;unsigned frozen_ticks=0;
+            std::array<bool,8> seen{};std::uint32_t start_frame=0,clear_frame=0;unsigned frozen_ticks=0,bonuses=0,fades=0,next=0;
+            const auto process_random=scene.process_random_state();
+            const auto actor_stamp=[&]() {
+                const auto& state=scene.main_state();const auto& shots=state.shots().snapshot();
+                std::vector<int> stamp{state.player().position().current.x,state.player().position().current.y,shots.time,shots.reimu_cycle,shots.laser.time,shots.laser.bottom.current.x,shots.laser.bottom.current.y};
+                for(const auto& e:shots.entities) { stamp.push_back(e.flag);stamp.push_back(e.age);stamp.push_back(e.position.current.x);stamp.push_back(e.position.current.y); }
+                return stamp;
+            };
             for(unsigned tick=0;tick<20000;++tick) {
-                const bool blocked=scene.dialog_active();const auto before=scene.main_state().frames();const auto random=scene.main_state().random_cursor();
+                const bool blocked=scene.dialog_active();const auto before=scene.main_state().frames();const auto random=scene.main_state().random_cursor();const auto actors=actor_stamp();const bool post=scene.post_dialog();
                 const std::uint16_t input=blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : (shooting ? shot::input_shot : 0);
                 scene.advance(input,false,false);
                 if(blocked && scene.dialog_active()) {
-                    require_view(scene.main_state().frames()==before && scene.main_state().random_cursor()==random,"dialog advanced game frame or shared RNG");++frozen_ticks;
+                    require_view(scene.main_state().frames()==before && scene.main_state().random_cursor()==random,"dialog advanced game frame or shared RNG");require_view(actor_stamp()==actors,"dialog updated player or shot actors");++frozen_ticks;
                 }
+                if(blocked && post && !scene.dialog_active()) require_view(actor_stamp()==actors,"resumed post-dialog frame repeated its actor prefix");
                 const auto& state=scene.main_state();int checkpoint=-1;
+                if(state.frames()!=before) for(const auto& e:state.orange_events()) {
+                    if(e.type==orange::EventType::stage_bonus) ++bonuses;
+                    if(e.type==orange::EventType::fade) { ++fades;require_view(state.orange().snapshot().phase_frame==417 && state.overlay().time==71,"fade did not start at416 before overlay decrement"); }
+                    if(e.type==orange::EventType::next_stage) { ++next;require_view(state.orange().snapshot().phase_frame==489,"next-stage request did not complete frame488"); }
+                }
                 if(!seen[0] && scene.dialog_active() && !scene.post_dialog() && scene.dialog_status()==dialog::Status::release) { checkpoint=0;start_frame=state.frames(); }
                 else if(!seen[1] && state.orange_active()) { checkpoint=1;require_view(seen[0] && scene.battle_resources_valid(),"ordinary Boss activated before dialog/resources completed"); }
                 else if(!seen[2] && state.orange_active() && state.orange().snapshot().phase==2) checkpoint=2;
                 else if(!seen[3] && scene.dialog_active() && scene.post_dialog() && scene.dialog_status()==dialog::Status::release) checkpoint=3;
-                else if(!seen[4] && scene.post_dialog_complete()) checkpoint=4;
+                else if(!seen[4] && scene.post_dialog_complete()) { checkpoint=4;clear_frame=state.frames(); }
+                else if(!seen[5] && scene.post_dialog_complete() && state.orange().snapshot().phase==255 && state.orange().snapshot().phase_frame==417) checkpoint=5;
+                else if(!seen[6] && scene.post_dialog_complete() && state.orange().snapshot().phase==255 && state.orange().snapshot().phase_frame==481) checkpoint=6;
+                else if(!seen[7] && state.next_stage_requested()) checkpoint=7;
                 if(checkpoint>=0) {
                     seen[unsigned(checkpoint)]=true;scene.repaint();
                     const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
                     const auto path=dialog_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
                     std::cout<<"MAIN dialog fixture="<<name<<" frame="<<state.frames()<<" offset="<<scene.dialog_offset()<<" power="<<+state.score().power<<" bonus="<<state.orange().snapshot().score_delta<<" screenshot="<<path<<'\n';
                 }
-                if(scene.post_dialog_complete()) break;
+                if(state.next_stage_requested()) break;
             }
             for(bool capture:seen) require_view(capture,"natural Stage 1 dialog fixture missed progression");
             require_view(start_frame>4500 && !(start_frame&1) && frozen_ticks>100,"dialog was not naturally gated by stopped scroll/back page");
             require_view(bool(scene.main_state().clear_bonus()),"Post-dialog did not consume stage-clear bonus");
-            const auto delta=scene.main_state().score().score_delta;
-            const auto bombs=scene.main_state().score().remaining_bombs;
-            const auto stopped=scene.main_state().frames();for(unsigned i=0;i<3;++i) scene.advance(0,false,false);
-            require_view(scene.main_state().score().score_delta==delta && scene.main_state().score().remaining_bombs==bombs,"Clear bonus consumed more than once");
-            require_view(scene.main_state().frames()==stopped,"unported score-drain/stage-leave consumer silently advanced");
-            std::cout<<"MAIN dialog stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" entry_frame="<<start_frame<<" frames="<<stopped<<" frozen_ticks="<<frozen_ticks<<" stage_clear=bonus_complete awarded="<<scene.main_state().clear_bonus()->awarded<<" bombs="<<+scene.main_state().score().remaining_bombs<<" progression=pending\n";
+            require_view(bonuses==1 && fades==1 && next==1,"departure callback consumed more than once");
+            const auto stopped=scene.main_state().frames();const auto actors=actor_stamp();const auto random=scene.main_state().random_cursor();
+            const auto pending=scene.main_state().score().score_delta;
+            for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
+            require_view(scene.main_state().frames()==stopped && actor_stamp()==actors && scene.main_state().random_cursor()==random && scene.main_state().score().score_delta==pending,"unloaded Stage2 request repeated simulation");
+            require_view(stopped-clear_frame==488 && scene.resident().stage==1 && scene.resident().stage_ascii=='1',"departure frame or resident stage/ascii differs");
+            require_view(scene.resident().resource_stage==0 && scene.process_random_state()==process_random,"next-stage request replaced resources or reseeded MAIN early");
+            require_view(scene.main_state().overlay().callback==th04::portable::transition::Callback::none && !scene.main_state().bonus_text_visible(),"final leave did not replace bonus TRAM with black cells");
+            require_view(scene.resident().remaining_lives==scene.main_state().score().remaining_lives && scene.resident().remaining_bombs==scene.main_state().score().remaining_bombs,"resident resources did not follow completed-frame awards");
+            std::cout<<"MAIN dialog stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" entry_frame="<<start_frame<<" frames="<<stopped<<" frozen_ticks="<<frozen_ticks<<" stage_clear=bonus_complete awarded="<<scene.main_state().clear_bonus()->awarded<<" bombs="<<+scene.main_state().score().remaining_bombs<<" departure_frames="<<stopped-clear_frame<<" pending="<<pending<<" stage="<<+scene.resident().stage<<" graze="<<scene.resident().graze<<" progression=next_stage_resources_pending\n";
         }
     }
     if (window) {

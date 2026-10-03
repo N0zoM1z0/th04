@@ -14,7 +14,7 @@ if (Test-Path -LiteralPath $OutputDirectory) {
 $outDir = (New-Item -ItemType Directory -Path $OutputDirectory).FullName
 $names = @('contracts', 'live-contracts', 'shot-contracts', 'enemy-contracts',
            'bullet-contracts', 'effect-contracts', 'midboss-contracts',
-           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts')
+           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts')
 $contracts = @()
 foreach ($name in $names) {
     $exe = Join-Path $exeDir ("th04-port64-$name.exe")
@@ -34,9 +34,9 @@ $images = @{}
 Get-ChildItem -LiteralPath $framesDir -Filter '*.bmp' | ForEach-Object {
     $images[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
 }
-if ($images.Count -ne 40) { throw "Expected 40 checkpoints, got $($images.Count)." }
+if ($images.Count -ne 64) { throw "Expected 64 checkpoints, got $($images.Count)." }
 $counters = @($lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN dialog *' })
-if ($counters.Count -ne 48) { throw 'Missing Stage 1 scenario counters.' }
+if ($counters.Count -ne 72) { throw 'Missing Stage 1 scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -47,4 +47,4 @@ $receipt = @{
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host 'PASS: eleven contracts and 40 natural dialogue checkpoints.'
+Write-Host 'PASS: twelve contracts and 64 natural dialogue checkpoints.'

@@ -12,24 +12,40 @@ item-lifecycle batches; semantic work is paused unless it blocks a port slice.
 On `port/modern-64`, semantic work is paused at the user's stopping condition:
 sufficient clarity for the current x64 slice, then implement and verify it.
 The native slice runs ordinary Stage1 through midboss, pre-dialog, Orange,
-post-dialog and the actual clear-bonus screen. Ordinary completed frames now
-consume original score drain/high-score/extends and render score gaiji; live
-extends feed performance, life count and bullet clear. Semantic remains stopped.
-The preview still freezes after awarding the clear bonus exactly once; the
-post-dialog frame continuation, score-drain/leave clocks and Stage2 resource
-handoff remain the next integration batch.
+post-dialog, clear bonus and the416/488 departure. Dialog resumes inside the
+already entered frame; actors/RNG are not updated twice. Bonus drains through
+the ordinary score owner. The shared enter/leave byte remains72 after enter,
+then leave replaces bonus TRAM and clears the callback after reaching zero.
+Graze/lives/Bombs and resident stage/ascii are published. Semantic remains stopped.
+The current frontier is the unloaded Stage2 resource request; simulation freezes
+there until the real session/resource/midboss/Kurumi owners are implemented.
+Current scope: [Stage enter and departure](PORT64.md#stage-enter-and-departure).
+MAIN main01 0AAF:62B3/6349/6287 and main03 13A9:ACB3..AE86 agree4,331
+controls/7,265 trace records on Linux/Wine/UBSan and actual Windows. Three
+retained489-tick leave+score sequences preserve pending score at stage advance;
+TH04 ordinary leave has no forced flush. Original gameplay-loop 0AAF:0098..0212
+places actor prefix before boss callback, items/gathers/overlay/clock/score after it.
+Twelve contracts and eight natural Stage1 scenarios/64 BMPs/72 counters agree
+across Linux/Wine/UBSan/native Windows. Windows package is `port64-preview/v1263`.
+Current receipts: `.analysis/port64/leave-v1263/cpu-linux-attested-final/receipt.json`,
+`cpu-{windows,ubsan}-attested-final/receipt.json`, `integration-review.json`,
+`native-windows-cpu.json`, `native-windows-receipt.json`, and
+`.analysis/port64/verification-leave-v1263-final/receipt.json`.
+The initial CPU fixture's native-aligned Bh pack wrote frame1 as256; explicit
+little-endian packed <Bh fixes the adapter. Do not modernize target arithmetic
+to fit malformed fixtures. New60-frame BMP differs only by8,726 actual enter
+gaiji57 mask pixels; every other pixel including HUD is unchanged from v1262.
 Current score scope: [Score drain and extends](PORT64.md#score-drain-and-extends).
 MAIN main01 0AAF:6BD4/6BA2/4316, actual1874 raise and DATA2134:4349
 ownership agree4,690 original CPU transitions on Linux/Wine/UBSan, including
 926 retained-state steps. Continue aliases score digit0 in the target; highest
 byte carry, low-word frame-delta write and direct extend-digit predicates remain
 intact. Saved high-score data, life-HUD/audio/popup consumers remain absent.
-Eleven contracts and eight natural Stage1 scenarios/40 BMPs agree across
-Linux/Wine/UBSan and actual Windows headless execution. The60-frame image
+The preceding score batch passed eleven contracts and40 natural BMPs across
+Linux/Wine/UBSan and actual Windows headless execution. Its60-frame image
 changes only960 score/hiscore pixels in TRAM56 rows4/6; its other pixels remain
-identical to v1261. Windows package is `port64-preview/v1262`; the DOS products
-and normal/invincible launchers stay separate.
-Current receipts: `.analysis/port64/score-v1262/cpu-{linux,windows,ubsan}-attested/receipt.json`,
+identical to v1261. DOS products and normal/invincible launchers stay separate.
+Score receipts: `.analysis/port64/score-v1262/cpu-{linux,windows,ubsan}-attested/receipt.json`,
 `integration-review.json`, `native-windows-receipt.json` and
 `.analysis/port64/verification-score-v1262-attested/receipt.json`.
 Current bonus owner and scope: [Stage-clear bonus](PORT64.md#stage-clear-and-all-clear-bonus).
@@ -59,8 +75,9 @@ frames/RNG. Earlier48 cases/76 scenes/18,768 events/768 activation controls
 remain under `.analysis/port64/dialog-v1260/`. Actual pre-dialog clean/load of
 ST00.BB1/BB2 fixes the former diagnostic's wrong battle sprite bank.
 No DOS source or exact state changes. Original complete color/page/fade pacing,
-GUI pacing, audio/HUD/death/Bomb, persistent resident graze, score drain,
-leave/progression, later stages and Ending/save remain outside this x64 slice.
+GUI pacing, audio/HUD/death/Bomb, later-stage resources and Ending/save remain
+outside this x64 slice. Later new-run initialization must reset accumulated graze
+at its actual owner; the current controls start with a fresh application state.
 The native product is rebased through the latest item semantics. Linux ELF64
 and Wine-hosted Windows PE32+ pass the existing OP/resource/process/random
 contracts and a new live MAIN slice. Game confirmation now starts a timed
