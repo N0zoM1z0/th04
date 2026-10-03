@@ -24,6 +24,8 @@ PORT_FILES = (
     "port64/menu_state.cpp",
     "port64/menu_state.hpp",
     "port64/mingw64-toolchain.cmake",
+    "port64/random_ring.cpp",
+    "port64/random_ring.hpp",
     "port64/smoke.py",
     "port64/verify.py",
     "port64/view.cpp",
@@ -116,7 +118,8 @@ def main() -> int:
     )
     expected_contract_output = (
         "TH04 portable contracts: PASS pointer_bits=64 "
-        "angle_bits=8 menu_state=OP handoff_state=OP_MAIN_MAINE"
+        "angle_bits=8 menu_state=OP handoff_state=OP_MAIN_MAINE "
+        "randring=SHARED_OVERLAP"
     )
     if linux_contract_output != expected_contract_output:
         raise ValueError("Linux portable contract did not pass")
@@ -170,8 +173,9 @@ def main() -> int:
         "passed": True,
         "limit": (
             "Resource decoding, main/options composition, deterministic OP menu-state "
-            "and resident process-handoff contracts only; gameplay, audio, saved-data "
-            "I/O and complete OP/MAIN/MAINE behavior are not yet ported."
+            "transitions, resident process handoff and shared random-ring contracts "
+            "only; gameplay, audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
+            "are not yet ported."
         ),
     }
     output.parent.mkdir(parents=True, exist_ok=True)

@@ -40,7 +40,18 @@ and portable sources share the numeric group and 8-bit clockwise angle
 definitions. Portable persistent group storage is explicitly one byte.
 Deterministic tests cover odd/even spread order, accumulator wrapping, rings,
 aim plus template rotation, directional sprite cels and rejection of a zero
-ring count. Random-number and speed state remain outside this bounded slice.
+ring count. Speed state remains outside this bounded slice.
+
+`port64/random_ring.cpp` now owns the first portable random-state boundary.
+One `SharedRandomRing` replaces both historical accessor copies and preserves
+their shared call order. Its contract covers the descending 256-byte fill,
+overlapping little-endian word samples, low-byte-only cursor increment,
+AND/MOD reduction after consumption and the index-255 sample whose high byte
+is the pre-increment cursor value `0xFF`. The implementation synthesizes that
+boundary value without an out-of-bounds C++ load. A zero MOD divisor throws
+after consuming the sample, providing a defined host failure at the same state
+boundary as the original 8086 `DIV` exception. Porting the underlying `IRand`
+generator and connecting gameplay call sites remain separate work.
 
 ## Verified builds
 
@@ -50,8 +61,11 @@ x86-64. Both decode the attested HDI fixtures with packed-pixel FNV32 values
 `b52ea8615865bfc11945fbe23828b7c391d8424c998062a8abfb5d62b4b31d2a`.
 Both also produce the same default Options BMP, SHA-256
 `a064338b0cfb89f7e418a85ab6bc84a7ea5ef835e4ca995b68772e0aef368185`.
-Both portable contract executables report
-`pointer_bits=64 angle_bits=8 menu_state=OP handoff_state=OP_MAIN_MAINE`.
+Both portable contract executables report `pointer_bits=64`, `angle_bits=8`,
+`menu_state=OP`, `handoff_state=OP_MAIN_MAINE` and
+`randring=SHARED_OVERLAP`.
+A separate GNU x86-64 build passes the same contract with undefined-behavior
+and array-bounds instrumentation enabled.
 
 Replay the complete cross-build check with:
 
@@ -75,7 +89,8 @@ repository.
    to the portable main/options state and framebuffer backend.
 3. Connect the verified process-transition contract to UI destinations, then
    add audio and saved configuration adapters.
-4. Port MAIN entity pools around fixed-width state, beginning with bullet
-   generation and rendering controls.
+4. Port MAIN entity pools around fixed-width state, routing all gameplay
+   consumers through the shared random ring before bullet generation and
+   rendering controls.
 5. Add route-level differential checkpoints for gameplay, Ending and score
    persistence on Linux and Windows.

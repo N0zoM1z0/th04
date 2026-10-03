@@ -229,9 +229,14 @@ slice under `port64/`. Linux ELF64 and Windows PE32+ x64 builds both run on the
 attested HDI; the Windows build also ran under the Windows host command line.
 `CONG10.PI`/`CONG14.PI` packed pixel hashes match the 16-bit DOS probe, and
 Linux/Windows main and Options BMP outputs are byte-identical. The portable
-menu/config and resident process-handoff contracts pass on both hosts. This is
-a control-plane milestone, not a playable native game. See `port64/README.md`
-for replay commands and the remaining hardware/runtime boundaries.
+menu/config and resident process-handoff contracts pass on both hosts. The x64
+core also implements one `SharedRandomRing` rather than reproducing the two
+historical accessor copies. Both hosts verify the descending 256-call fill,
+overlapping samples, shared cursor, AND/MOD consumption order, all cursor
+positions, explicit `0xFF00` boundary sample and a defined zero-divisor
+exception after cursor advance. The portable `IRand` generator and gameplay
+call sites remain unported. A playable native game still requires the remaining
+hardware and runtime boundaries described in `port64/README.md`.
 
 ## Current state
 

@@ -10,6 +10,7 @@ add_library(
   application_state.cpp
   bullet_geometry.cpp
   menu_state.cpp
+  random_ring.cpp
 )
 target_compile_features(th04-portable-core PUBLIC cxx_std_17)
 target_compile_definitions(th04-portable-core PUBLIC GAME=4)
