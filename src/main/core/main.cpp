@@ -19,6 +19,7 @@ void near gameplay_loop(void);
 extern "C" void near stage_session_free(void);
 int pascal GameExecl(const char *binary_fn);
 #pragma samecodeseg GameExecl
+#define handoff_to_program GameExecl
 
 extern const unsigned char main_pf_fn[];
 extern const char gaiji_fn[];
@@ -27,6 +28,8 @@ extern const char op_fn[];
 
 void main(void)
 {
+	// MAIN is entered as a new DOS process. MIKO.CFG supplies the segment of the
+	// ZUN.COM resident block that OP populated before replacing itself.
     if(!cfg_load_resident_ptr()) {
         return;
     }
@@ -41,6 +44,9 @@ void main(void)
     snd_determine_modes(resident->bgm_mode, resident->se_mode);
     snd_load(se_fn, SND_LOAD_SE);
 
+	// A stage transition releases only stage-owned state and starts another
+	// session in this process. Every other quit reason leaves the loop so the
+	// complete process handoff below can publish statistics and free all state.
     for(;;) {
         stage_session_init();
         gameplay_loop();
@@ -50,5 +56,7 @@ void main(void)
         stage_session_free();
     }
 
-    GameExecl(op_fn);
+	// Demo completion and non-ending exits return to a newly started OP.EXE.
+	// Ending/game-over paths call the same handoff routine with MAINE instead.
+	handoff_to_program(op_fn);
 }

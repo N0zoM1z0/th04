@@ -36,7 +36,7 @@ or replacing assembly before its observable contract is understood.
 | --- | --- | --- |
 | PI image decoding | Commands, pixel packing, adaptive history, allocation and returned-pointer ownership | First bounded batch completed; independent DOS decoder and cold before/after equality pass |
 | PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | PAR and CDG contracts clarified; three full DOS products remain byte-identical; BFNT names, packed pixels, mask/color planes, clipping and lifecycle clarified; independent DOS hashes pass |
-| OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | MAINE load/insert/name-entry/save pipeline clarified and byte-preserved; user confirms Normal Ending/save and optimized seeded registration/save passes; OP/MAIN process handoff remains |
+| OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | MAINE score pipeline and the OP -> MAIN -> MAINE -> OP process/resident handoff are clarified and byte-preserved; user confirms Normal Ending/save and optimized seeded registration/save passes |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
 | Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime and player-shot lifecycle/damage batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay and RNG ownership remain |
@@ -114,3 +114,15 @@ five timestamp-normalized OMF objects remain byte-identical. The complete
 all 663 ordered relocations also remain identical. This incremental replay
 preserves the existing decoded-exact evidence for the four core owners without
 making a new cold target claim. See [the MAINE score note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md).
+
+The process-handoff batch documents the ZUN.COM-owned resident block and the
+fresh-process lifecycle of OP, MAIN and MAINE. OP seeds the run contract and
+tears down before `execl()`; MAIN reloads the resident segment, publishes score
+and run counters before cleanup, and selects OP or MAINE; MAINE dispatches the
+Ending route, saves, and starts a fresh OP. Readable private aliases preprocess
+to the historical binary/function symbols. Twelve recompiled/control objects
+across the three products have identical timestamp-normalized OMF and
+link-relevant records. Complete MAIN/OP/MAINE files, headers, program images
+and all 1,181/817/663 ordered relocations remain identical to the pre-edit
+baseline. This is incremental source-to-source preservation, with no fresh
+cold target claim. See [the process-handoff note](reconstruction/product/TH04_SEMANTIC_PROCESS_HANDOFF_V1242.md).

@@ -1,5 +1,7 @@
 void near start_extra(void)
 {
+	// Extra is represented as stage 6 in the resident contract. Its fixed
+	// starting resources are written before the shared character/shot menu.
 	resident->stage = STAGE_EXTRA;
 	resident->credit_lives = 3;
 	resident->credit_bombs = 2;
@@ -11,6 +13,8 @@ void near start_extra(void)
 	}
 
 	resident->demo_num = 0;
+	// Match the normal-game overlay teardown. The successful DOS exec transfers
+	// control directly to MAIN; no caller in OP resumes afterward.
 	main_cdg_free();
 	cfg_save();
 	gaiji_restore();
@@ -19,5 +23,5 @@ void near start_extra(void)
 	respal_free();
 #endif
 	game_exit();
-	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
+	execl(GAMEPLAY_BINARY, GAMEPLAY_BINARY, nullptr);
 }

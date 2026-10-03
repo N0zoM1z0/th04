@@ -17,6 +17,7 @@ void near cfg_save(void);
 void game_exit(void);
 
 static char BINARY_MAIN[] = "main";
+#define GAMEPLAY_BINARY BINARY_MAIN
 
 #ifdef TH04P
 #pragma codeseg OP_NATIVE_TEXT OP_NATIVE_01

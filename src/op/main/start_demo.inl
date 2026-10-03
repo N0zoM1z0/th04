@@ -13,6 +13,8 @@ void near start_demo(void)
 		resident->demo_num = 1;
 	}
 
+	// The resident demo number rotates through four fixed stage/character/shot
+	// contracts. MAIN later derives the DEMO?.REC filename from the same value.
 	switch(resident->demo_num) {
 	case 1:
 		resident_set_demo(3, PLAYCHAR_REIMU, SHOTTYPE_A);
@@ -30,5 +32,7 @@ void near start_demo(void)
 	palette_black_out(1);
 	super_free();
 	pi_free(0); // ZUN bloat: OP.EXE doesn't leave any .PI image in memory.
+	// Demo music is allowed to continue across the overlay; normal gameplay
+	// requests a fade before executing MAIN.
 	op_exit_into_main(false, false);
 }

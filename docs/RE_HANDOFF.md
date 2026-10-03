@@ -5,8 +5,8 @@ TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: semantic readability
-after the native bullet-performance, scroll-pipeline and MAINE registration
-batches; Windows retesting continues.
+after the native bullet-performance, scroll-pipeline, MAINE registration and
+three-executable process-handoff batches; Windows retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -153,6 +153,17 @@ relocations. This is incremental source-to-source preservation. The existing
 decoded-exact states of load, insert, save and registration-menu owners are
 unchanged; no fresh cold target replay or promotion is claimed. See the
 [MAINE score note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md).
+
+The process-handoff semantic batch documents the shared ZUN.COM resident block,
+the segment pointer persisted through `MIKO.CFG`, successful `execl()`'s
+non-returning behavior, and each executable's publish/cleanup boundary. The
+semantic build recompiles 3 MAIN, 5 OP and 4 MAINE roots/control owners; all 12
+pre/post OMF streams are timestamp-normalized and link-relevant identical.
+Complete MAIN/OP/MAINE stay raw-identical at 199,455/79,372/72,246 bytes and
+retain all 1,181/817/663 ordered relocations. Existing user route results
+continue to corroborate the ordinary handoff; v1242 adds no new runtime or cold
+target claim. See the
+[process-handoff note](reconstruction/product/TH04_SEMANTIC_PROCESS_HANDOFF_V1242.md).
 
 
 ## Current state
