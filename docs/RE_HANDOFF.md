@@ -6,8 +6,8 @@ equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: semantic readability
 after the native bullet-performance, scroll-pipeline, MAINE registration,
-three-executable process-handoff, shared-random-ring and process-local-LCG
-batches; Windows
+three-executable process-handoff, shared-random-ring, process-local-LCG and
+item-lifecycle batches; Windows
 retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
@@ -192,6 +192,21 @@ complete 199,455/79,372/72,246-byte products plus all 1,181/817/663 ordered
 relocations equal the pre-edit baseline. This is incremental source-to-source
 preservation, with no fresh cold target or runtime-randomness claim. See the
 [shared-LCG note](reconstruction/product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md).
+
+The item-lifecycle semantic batch covers `th04-main-items-update-v154` without
+changing its accepted extent. Automatic drops emit on every second request;
+miss drops retain their discarded distinct-slot draw and conditional per-item
+ring consumption; scoring names the Bomb multiplier, dream saturation,
+inclusive power-overflow table and performance carries. Motion comments record
+pull cancellation, deferred removal and the unsigned pickup rectangle. The
+big-power path reads its bonus before clamping but overwrites above-cap results
+with 2,560; the portable implementation must preserve the final result without
+an out-of-bounds access. All 21 recompiled dependency objects have identical
+normalized and link-relevant OMF. Complete MAIN remains 199,455 bytes at
+`cb4c5b66...`, with all 1,181 ordered relocations unchanged. This is
+incremental source-to-source preservation, with no fresh cold target or runtime
+item claim. See the
+[item semantic note](reconstruction/main/TH04_MAIN_ITEM_SEMANTICS_V1248.md).
 
 
 ## Current state

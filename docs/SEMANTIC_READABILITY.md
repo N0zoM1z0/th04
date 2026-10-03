@@ -39,7 +39,7 @@ or replacing assembly before its observable contract is understood.
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | MAINE score pipeline and the OP -> MAIN -> MAINE -> OP process/resident handoff are clarified and byte-preserved; user confirms Normal Ending/save and optimized seeded registration/save passes |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
-| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime, player-shot lifecycle/damage, shared random-ring ownership and process-local LCG/seed lifecycle batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay remains |
+| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime, player-shot lifecycle/damage, shared random-ring and process-local LCG ownership, and item drop/motion/scoring batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay remains |
 
 This queue describes work to do, not a new completion percentage. Begin the
 next native-port slice once its own source contracts and regression probes
@@ -148,3 +148,15 @@ explicit `uint32_t` state so Linux and Windows x64 agree despite their different
 `long` widths. Nine changed/control OMF objects and the complete MAIN, OP and
 MAINE executables remain identical to the pre-edit semantic build. See
 [the shared-LCG note](reconstruction/product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md).
+
+The item-lifecycle batch names miss-drop slots, velocity fields, pool indices,
+base score values, popup color selection and attraction angle. It records the
+automatic-drop half-rate table, the miss routine's discarded but observable
+random draw, last-life override ordering, inclusive overflow table, dream-score
+saturation, Bomb multiplier, asymmetric performance accumulators, deferred
+removal and unsigned pickup rectangle. The portable contract calls out the
+full-power big-item table read that precedes clamping and must be represented
+without an out-of-bounds host access. Twenty C++ dependency roots and one ASM
+owner retain identical normalized/link-relevant OMF, and the complete
+199,455-byte MAIN plus all 1,181 ordered relocations remain identical. See
+[the item semantic note](reconstruction/main/TH04_MAIN_ITEM_SEMANTICS_V1248.md).

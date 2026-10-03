@@ -61,6 +61,7 @@ counts, file paths, and proposals do not supersede the current ledgers.
 
 ### MAIN.EXE
 
+- [Item drop, collection, motion and scoring semantics](main/TH04_MAIN_ITEM_SEMANTICS_V1248.md)
 - [Checkerboard counted-LOOP blocker](main/TH04_MAIN_CHECKERBOARD_V396.md)
 - [Stage 4 carpet low-level producer blocker](main/TH04_MAIN_KURUMI_CARPET_V174.md)
 - [snd_load DS/MOV analysis (historical; superseded by v836)](main/TH04_SND_LOAD_DS_V391.md)

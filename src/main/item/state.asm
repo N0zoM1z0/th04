@@ -23,6 +23,7 @@ _item_playperf_lower db 0
 
 public _POWER_OVERFLOW_BONUS
 _POWER_OVERFLOW_BONUS label word
+; Inclusive overflow-score table: indices 0..42.
 dw 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 dw 20, 30, 40, 50, 60, 70, 80, 90, 100
 dw 150, 200, 250, 300, 350, 400, 450, 500, 550, 600
@@ -40,6 +41,8 @@ dw ( 0 shl 4), ( 0 shl 4) - 12, (-1 shl 4) - 8, (-2 shl 4) - 4, (-3 shl 4)
 
 public _ENEMY_DROPS
 _ENEMY_DROPS label byte
+; items_add advances a byte counter for every automatic-drop request, emits
+; only on even values, and indexes this table with (counter / 2) modulo 64.
 db 0, 1, 0, 0, 1, 1, 0, 1
 db 0, 1, 1, 1, 0, 0, 0, 2
 db 1, 0, 1, 1, 0, 0, 1, 0
