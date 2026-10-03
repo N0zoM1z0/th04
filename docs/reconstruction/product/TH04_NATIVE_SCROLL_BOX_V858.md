@@ -126,3 +126,46 @@ No phase-specific Windows performance improvement is claimed for the storage
 repair. The reported top stripe still needs the user's stage-4/late-Yuuka
 visual replay; the isolated backdrop test does not prove GDC display origin
 or full page behavior.
+
+## Semantic scroll-pipeline pass
+
+The 2026-10-03 readability pass keeps the address-derived external publics
+needed by historical OMF replay, then gives their uses the same meanings as
+the native initialization labels: previous/current row advance and previous
+tile-ring row. It also names the parallel STD map-section and speed cursors and
+the EGC row-copy entry. Comments now record the complete pipeline:
+
+- `scroll_subpixel_line` accumulates speed in sixteenth-scanline units. Its
+  quotient moves the 400-line display origin and its remainder survives for
+  the next frame.
+- A ring row is 32 words / 64 bytes, while each visible refill copies 24 tile
+  words. Five rows consume one map section before both STD cursors advance.
+- The current row advance becomes next frame's previous request. The EGC copy
+  consumes their sum, while `scroll_active == 0` keeps the ring/request state
+  current but suppresses graphics-RAM writes.
+
+The change deliberately preserves statement order, integer widths, near/far
+calls, inline assembler and all historic linker symbols. A dependency-validated
+TC86 build recompiles both owners. After dependency timestamp normalization,
+`driver.cpp` OMF remains SHA-256
+`0ac3fc5ac66fdb1b64c4d6ac4d378d04a8bba1c2f3580130e8ecbc0e97802133`
+at 642 bytes, and `tile_ring_update.cpp` remains
+`2abddc5c26eaed7a22b8c267778d9d3a7ddd52e0321bac92d81dc154728f0b73`
+at 1,009 bytes. The complete pre/post native MAIN images are raw-identical:
+199,455 bytes, SHA-256
+`cb4c5b667f9a2d5a5c3ef62865fdc926a74a100155068c63e5dfbd019362b70c`,
+including the header, program image and 1,181 ordered relocations.
+
+This is compiler-observed source-to-source preservation. No cold target replay
+was needed for this naming/comment-only batch, and no exact state is promoted.
+The accepted v383 driver and v393 tile-ring evidence remains the historical
+target claim.
+
+```text
+python3 scripts/build.py --only main \
+  --output-dir .analysis/build/semantic-scroll-readable-v1240-v2 \
+  --main-cpp-cache .analysis/reconstruction/probes/product-20261003-103004-cf1d2236-main
+python3 scripts/compare_artifacts.py \
+  .analysis/build/semantic-shots-readable-v1239-v3/MAIN.EXE \
+  .analysis/build/semantic-scroll-readable-v1240-v2/MAIN.EXE --json
+```

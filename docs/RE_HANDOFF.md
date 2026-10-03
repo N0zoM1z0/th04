@@ -5,7 +5,8 @@ TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: semantic readability
-after the native bullet-performance batch; Windows retesting continues.
+after the native bullet-performance and scroll-pipeline batches; Windows
+retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -129,6 +130,17 @@ old dependency staging first omits the semantic bullet header and, when that
 owner is selected, duplicates two point-number assembly constants. Existing
 v177 exact evidence remains unchanged. See the
 [player-shot note](reconstruction/main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md).
+
+The scroll semantic batch makes the Q12.4 accumulator, 400-line wrap,
+five-row map-section traversal, 24-word ring refill and two-frame row-copy
+request handoff explicit. Historical public names remain the OMF ABI while
+source expressions use their already established native initialization names.
+The two changed C++ owners have byte-identical timestamp-normalized OMF before
+and after the edit. The dependency-validated 199,455-byte MAIN remains
+SHA-256 `cb4c5b66...`, with identical headers, program image and all 1,181
+ordered relocations. This is source-to-source preservation; no fresh cold
+target replay or acceptance promotion is claimed. See the
+[scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
 
 
 ## Current state

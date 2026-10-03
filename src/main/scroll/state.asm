@@ -15,8 +15,10 @@ _scroll_speed         db ?
 _scroll_line          dw ?
 _scroll_last_delta    dw ?
 _scroll_active        db ?
-; Native initialization uses the readable names; the recovered driver still
-; uses address-derived names. Both names must refer to one physical field.
+; The driver and tile-ring source retain these address-derived publics as the
+; historical OMF ABI, but use readable preprocessor aliases in expressions.
+; Native initialization uses the readable labels below. Both naming surfaces
+; therefore refer to one physical three-field request state.
 ifdef TH04_LARGE_PRODUCT
 public _scroll_row_advance_previous, _scroll_row_advance_current
 public _tile_ring_scroll_row_prev

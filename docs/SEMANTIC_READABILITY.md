@@ -38,7 +38,7 @@ or replacing assembly before its observable contract is understood.
 | PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | PAR and CDG contracts clarified; three full DOS products remain byte-identical; BFNT names, packed pixels, mask/color planes, clipping and lifecycle clarified; independent DOS hashes pass |
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | Existing bounded scenarios; user confirms Normal Ending/save before the planar batch, and optimized seeded registration/save passes; source readability pass remains pending |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
-| Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; remaining graphics and sound pending |
+| Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
 | Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime and player-shot lifecycle/damage batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay and RNG ownership remain |
 
 This queue describes work to do, not a new completion percentage. Begin the
@@ -91,3 +91,14 @@ complete native MAIN plus all 1,181 ordered relocations remain identical. A
 fresh target replay is blocked by stale cross-unit staging in the historical
 dependency closure, so the existing v177 exact evidence is retained without a
 new exact claim. See [the player-shot note](reconstruction/main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md).
+
+The scroll batch names the previous/current row-advance slots, previous ring
+row, parallel STD map/speed cursors and graphics-row copy entry while retaining
+their historical external symbols. It explains the Q12.4 scroll accumulator,
+400-scanline wrap, five-row map sections, 24-word visible ring refill and the
+two-frame request handoff around suspended display scrolling. Both changed C++
+owners compile to byte-identical timestamp-normalized OMF, and the complete
+native MAIN plus all 1,181 ordered relocations remain identical. This batch
+uses dependency-validated incremental compilation because no ABI, layout or
+accepted extent changed; the prior exact states remain historical evidence
+rather than a fresh cold-replay claim. See [the scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
