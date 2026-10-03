@@ -5,8 +5,8 @@ TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: semantic readability
-after the native bullet-performance and scroll-pipeline batches; Windows
-retesting continues.
+after the native bullet-performance, scroll-pipeline and MAINE registration
+batches; Windows retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -141,6 +141,18 @@ SHA-256 `cb4c5b66...`, with identical headers, program image and all 1,181
 ordered relocations. This is source-to-source preservation; no fresh cold
 target replay or acceptance promotion is claimed. See the
 [scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
+
+The MAINE score-registration semantic batch makes the single-section work
+buffer, two-character/five-rank file offsets, table insertion order, unsigned
+no-entry sentinel, gaiji keyboard repeat, clear-mask update and all-section
+re-key/save pass explicit. The build recompiles the four edited SCORE roots
+plus its BGIMAGE control owner; all five pre/post objects have identical timestamp-normalized OMF and
+link-relevant records. The complete 72,246-byte MAINE remains SHA-256
+`7bfd7fd5...`, with identical header, program image and all 663 ordered
+relocations. This is incremental source-to-source preservation. The existing
+decoded-exact states of load, insert, save and registration-menu owners are
+unchanged; no fresh cold target replay or promotion is claimed. See the
+[MAINE score note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md).
 
 
 ## Current state

@@ -36,7 +36,7 @@ or replacing assembly before its observable contract is understood.
 | --- | --- | --- |
 | PI image decoding | Commands, pixel packing, adaptive history, allocation and returned-pointer ownership | First bounded batch completed; independent DOS decoder and cold before/after equality pass |
 | PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | PAR and CDG contracts clarified; three full DOS products remain byte-identical; BFNT names, packed pixels, mask/color planes, clipping and lifecycle clarified; independent DOS hashes pass |
-| OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | Existing bounded scenarios; user confirms Normal Ending/save before the planar batch, and optimized seeded registration/save passes; source readability pass remains pending |
+| OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | MAINE load/insert/name-entry/save pipeline clarified and byte-preserved; user confirms Normal Ending/save and optimized seeded registration/save passes; OP/MAIN process handoff remains |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
 | Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime and player-shot lifecycle/damage batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay and RNG ownership remain |
@@ -102,3 +102,15 @@ native MAIN plus all 1,181 ordered relocations remain identical. This batch
 uses dependency-validated incremental compilation because no ABI, layout or
 accepted extent changed; the prior exact states remain historical evidence
 rather than a fresh cold-replay claim. See [the scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
+
+The MAINE score-registration batch explains the two-character/five-rank file
+layout, single decoded `hi` work buffer, bottom-up score insertion, no-entry
+sentinel, name-keyboard repeat/confirm behavior, clear-bit persistence and the
+ten-section re-key pass performed by every save. Historical DGROUP names remain
+the external ABI; readable aliases preprocess to those same symbols. The build
+recompiled the four edited SCORE roots plus its BGIMAGE control owner, and all
+five timestamp-normalized OMF objects remain byte-identical. The complete
+72,246-byte native MAINE and
+all 663 ordered relocations also remain identical. This incremental replay
+preserves the existing decoded-exact evidence for the four core owners without
+making a new cold target claim. See [the MAINE score note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md).

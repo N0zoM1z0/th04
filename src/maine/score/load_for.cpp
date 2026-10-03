@@ -3,6 +3,12 @@
 #include "src/shared/runtime/api.hpp"
 
 extern unsigned char rank;
+#define registration_rank rank
+#define loaded_score_section hi
+
+enum {
+    SCOREDAT_RANKS_PER_PLAYCHAR = 5,
+};
 extern const char SCOREDAT_FN_0[];
 extern const char SCOREDAT_FN_1[];
 unsigned char pascal near scoredat_decode(void);
