@@ -22,8 +22,24 @@ The MAIN fixture is now `4cbbe895...`; the earlier hash below is historical.
 Scope/limitations/commands: [Stage 1 midboss](PORT64.md#stage-1-midboss).
 Receipts: `.analysis/port64/verification-midboss-v1257-final/receipt.json` and
 `.analysis/port64/midboss-v1257/cpu-{linux,windows,ubsan}-final/receipt.json`.
-Next port Stage 1 Orange/progression; sound/HUD/shake/point requests are
-retained but their adapters, death/Bomb and full Ending/save remain absent.
+Orange now has an isolated fixed-width state/attack owner (`port64/orange.*`).
+Original MAIN main03 13A9:6013/5B54..6012 and common hit/phase/defeat/bonus
+helpers agree on36,600 complete state checkpoints:2,805 single controls,
+ten whole-Boss sequences through the next-stage request and twenty full
+attack-mode controls on five ranks. Linux, Wine/Windows PE32+ and optimized
+UBSan/bounds replay the same original traces; eight native contracts pass.
+Receipts: `.analysis/port64/orange-v1258/replay-{linux,windows,ubsan}/receipt.json`
+and `pattern-{linux,windows,ubsan}-final/receipt.json`; original CPU producers
+are `cpu-linux` and `pattern-linux`. See [Orange](PORT64.md#stage-1-orange-state-and-attacks).
+Cross-product receipt: `.analysis/port64/verification-orange-v1258-final/receipt.json`,
+frozen source manifest`717f96b9...`; existing24 midboss BMPs/counters still agree.
+This owner is not yet wired to live MAIN. Next connect pre-boss dialog, Orange
+foreground/background/explosion aging and Stage1 progression. Target main01
+0AAF:2454 activates Boss only after zero scroll speed/back page1 and a
+returned blocking dialog. Do not replace this with STD exhaustion. Sound/HUD/
+circle/item/point/post-boss dialog/bonus requests use explicit control adapters;
+resident graze and actual stage-clear consumers, death/Bomb and Ending/save
+remain to port.
 No DOS source or exact acceptance state changes; native Windows pacing is
 untested. Resume semantic only for a concrete blocking ambiguity.
 The native product is rebased through the latest item semantics. Linux ELF64

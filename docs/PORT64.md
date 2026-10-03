@@ -464,6 +464,92 @@ Cross-host receipt:
 No original executable/assets are embedded, and no DOS source or acceptance
 state changes. Native Windows pacing and a complete game remain unverified.
 
+## Stage 1 Orange state and attacks
+
+`orange` now owns the fixed-width Stage 1 main Boss state: entrance,
+four random movement/attack modes, horizontal bounce attacks, escalating
+multi-direction bursts, HP thresholds, timeout, small/big explosion creation,
+the final explosion animation clock, and Stage 1 clear/next-stage requests.
+It uses the existing bullet, gather, spark and shared random-ring owners
+synchronously. The scratch templates retain unused bytes and the second shot
+of a paired producer uses the first shot's tuning. The regular random rings
+intentionally do not tune. Multi-bursts use the verified fixed-speed wrapper.
+
+This is a verified logic owner, **not yet connected to ordinary live MAIN**.
+Orange foreground, background transition, explosion drawing/aging, circle
+rendering, dialog, HUD/audio and the stage-clear consumer remain to connect.
+The current live window still ends at the previous Stage 1 frontier. Original
+`MAIN main_01 0AAF:2454` activates Boss callbacks only after scroll speed is
+zero, the back page is 1 and the blocking pre-boss dialog has returned;
+exhausting the STD wave program is insufficient. Keep that barrier when
+connecting this owner. Post-boss dialog/bonus/next-stage events are ordered
+requests: the progression consumer must account for resident graze before
+dialog, complete the dialog before stage bonus and honor the quit/delay
+boundary. These unported consumers are explicit adapters in the CPU controls.
+
+The independent original-CPU comparator executes `MAIN main_03
+13A9:6013` (complete 0x403-byte Orange update, followed by two switch tables),
+its attack callees at `5B54..6012`, common hit/phase/defeat helpers
+`AB48/ABBE/AC02/AC63/ACB3`, bonus `6548`, typed explosion adds `21EC/226C`,
+and actual bullet/gather/spark callees. Load segment 2000, DS 8000 is recorded;
+loaded code is 33A9. The local target remains candidate-local-attested,
+MAIN SHA `077440a3...`, header 6144, 1136 relocations. Current Ghidra attestation
+is checked separately; the database is not an independent behavioral oracle.
+
+Two receipts supply 36,600 complete state checkpoints: 2,805 isolated controls,
+ten whole-Boss sequences (five ranks, zero/19 injected damage,5,117/1,130
+frames), and twenty 128-frame complete pattern controls (all four modes on
+five ranks). Every sequence reaches phases 0/1/2/3/4/5/254/255 and the next-stage
+request. The fixed ring does not choose aimed-cloud mode 2 in the whole-Boss
+sequences; the separate full-pattern controls cover that gap explicitly.
+These sequences advance Boss only; bullet/gather/spark pools deliberately
+retain occupancy, so they are not natural gameplay or renderer tests.
+
+Each checkpoint compares the full 24-byte Boss, 16 additional state bytes,
+440x26-byte bullet pool,16x42-byte gather pool,96x16-byte spark pool, both
+scratch templates, 48 explosion bytes, scalar globals, shared RNG cursor and
+ordered hit/sound/circle/item/point/HP/progression requests. Full fields are
+compared before hashing; gzip is only private trace storage. Target controls
+inject damage at the actual hittest boundary and check that the against-Boss
+flag is set then restored. They intercept circle geometry, item/point
+allocation, HP pixels, audio, dialog/bonus and host delay, without claiming
+those adapters have been migrated.
+
+Preserved target details include damage-word-to-byte truncation before HP
+subtraction (even 256 damage can play a hit sound but remove zero HP),
+wrapped 16-bit target subtraction before movement division, retained velocity
+inside the center dead band, phase 4's second 600-frame test **after** hittest
+increments the clock, and assigning the final bonus byte directly to zap
+(including zero). `Subpixel::None()` is `-15984` (−999 pixels), not INT16_MIN.
+Small explosion creation selects slot 1 whenever slot 0 is alive, overwriting
+slot 1 if necessary; its unused byte survives. Explosion drawing is not part
+of this owner, so repeated calls to it do not invent render-side aging.
+
+Reproduce the complete current control set from this worktree:
+
+```bash
+cmake --build .analysis/port64/linux-live-v1251 --parallel 4
+python3 port64/verify_orange.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-orange-contracts \
+  --output-dir .analysis/port64/orange-v1258/regenerated
+```
+
+Historical original traces are under `orange-v1258/cpu-linux` (34,040
+checkpoints) and `pattern-linux` (2,560). The final Linux, Wine/Windows PE32+
+and optimized GNU UBSan/bounds executables replay both original traces with
+`--native-only --reference-dir`; these host replays do not reexecute the CPU.
+Receipts are`orange-v1258/replay-{linux,windows,ubsan}/receipt.json` and
+`pattern-{linux,windows,ubsan}-final/receipt.json`. Both trace digests agree
+on every host: `ebfb2fd4...` and `6e80f57d...`. Native product formats and
+the existing OP/resource/player/shot/enemy/midboss image regressions are
+independently replayed by `port64/verify.py`; eight contract targets pass.
+The current cross-product receipt is
+`.analysis/port64/verification-orange-v1258-final/receipt.json`, source
+manifest`717f96b9...`.
+No DOS source or exact-acceptance state changes. Native Windows pacing,
+Orange video and complete game routes remain unverified.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -471,8 +557,9 @@ verify. Motion/items/background/shots/enemies required no further DOS-source edi
 For each next module, stop readability work once state ownership, arithmetic,
 control flow and hardware boundaries support an independently checked native
 implementation. Resume only for a concrete ambiguity exposed by integration.
-Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous boundary. Next
-connect Stage 1 Orange and stage progression, then later bosses/midbosses,
+Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous boundary.
+Orange state/attacks have an independent native owner. Next connect Stage 1
+dialog and Boss rendering/progression, then later bosses/midbosses,
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

@@ -57,6 +57,7 @@ class System {
 public:
     explicit System(Snapshot initial={}):state_(initial) {}
     const Snapshot& snapshot() const { return state_; }
+    Template& scratch() { return state_.scratch; }
     bool add(const Template& shape,const bullet::Template& bullet,bool only=false);
     bool request(const bullet::Event& event);
     void update(const std::function<void(const bullet::Template&)>& release);

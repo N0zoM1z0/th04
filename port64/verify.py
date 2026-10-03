@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/orange.hpp",
+    "port64/orange.cpp",
+    "port64/orange_contracts.cpp",
+    "port64/verify_orange.py",
     "port64/midboss.hpp",
     "port64/midboss.cpp",
     "port64/midboss_contracts.cpp",
@@ -163,9 +167,11 @@ def main() -> int:
     windows_effects = windows_dir / "th04-port64-effect-contracts.exe"
     linux_midboss = linux_dir / "th04-port64-midboss-contracts"
     windows_midboss = windows_dir / "th04-port64-midboss-contracts.exe"
-    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss):
+    linux_orange = linux_dir / "th04-port64-orange-contracts"
+    windows_orange = windows_dir / "th04-port64-orange-contracts.exe"
+    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss):
+    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -220,6 +226,10 @@ def main() -> int:
     windows_midboss_output = run([args.windows_runner,str(windows_midboss)],env=runner_env)
     if linux_midboss_output != expected_midboss or windows_midboss_output != expected_midboss:
         raise ValueError("midboss contracts did not pass on both hosts")
+    linux_orange_output = run([str(linux_orange)])
+    windows_orange_output = run([args.windows_runner,str(windows_orange)],env=runner_env)
+    if linux_orange_output != "Stage 1 Orange contracts PASS" or windows_orange_output != linux_orange_output:
+        raise ValueError("Orange contracts did not pass on both hosts")
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -300,6 +310,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(linux_effects),
                 "midboss_contract_output": linux_midboss_output,
                 "midboss_contracts_sha256": sha256(linux_midboss),
+                "orange_contract_output": linux_orange_output,
+                "orange_contracts_sha256": sha256(linux_orange),
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -319,6 +331,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(windows_effects),
                 "midboss_contract_output": windows_midboss_output,
                 "midboss_contracts_sha256": sha256(windows_midboss),
+                "orange_contract_output": windows_orange_output,
+                "orange_contracts_sha256": sha256(windows_orange),
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -354,6 +368,7 @@ def main() -> int:
             "four-route player shots/lasers, all-seven STD wave schedules, enemy VM, 32-slot enemy lifecycle/hit/drop integration and original enemy BFNT sprites, enemy bullet tune/spawn/9 motions/graze/collision/clear/zap and cloud/pellet rendering; "
             "spark allocation/motion and gather release with synchronous shared RNG; "
             "Stage 1 midboss activation/tile animation/pattern/defeat; "
+            "Orange initial-state contract (its independent CPU comparison is a separate receipt); "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

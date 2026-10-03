@@ -60,6 +60,7 @@ public:
     void update(Context context,const Sink& sink={});
     void clear() { if (state_.clear_time<20) state_.clear_time=20; }
     void zap() { state_.zap_frame=1; } // Active flag and timer are the same byte.
+    void set_zap(std::uint8_t value) { state_.zap_frame=value; }
     void begin_frame() { state_.slowdown=1; }
 private:
     void update_special(Entity& bullet,Context context);
