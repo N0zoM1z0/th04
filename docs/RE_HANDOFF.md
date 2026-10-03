@@ -6,6 +6,16 @@ equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: runtime integration.
 
+The `semantic/readable` branch now prepares the DOS source for the native
+x64 port; it starts at current local `main` commit `8d20492`. The first bounded
+batch clarifies the shared PI decoder's command names, units, history, DOS
+allocation and ownership. Two cold isolated DOS builds remain raw-identical:
+38,050 bytes, SHA-256 `9cc4e7ad…`, 254 relocation entries, zero differences.
+Independent historical pixel hashes and slot load/free controls also pass.
+This proves a source-to-source regression result for the service harness;
+it is not original-target equality or a complete Good Ending visual replay.
+See [semantic readability](SEMANTIC_READABILITY.md) for the remaining queue.
+
 ## Current state
 
 | Artifact | Accepted authored functions | Native build/runtime |

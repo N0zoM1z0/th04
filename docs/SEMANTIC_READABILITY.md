@@ -1,0 +1,47 @@
+# Semantic readability before the native port
+
+The `semantic/readable` branch starts from the latest local DOS `main`,
+commit `8d20492`. It improves the maintained source while retaining a DOS
+build as the behavioral baseline for future Linux/Windows x64 work. The
+native port remains a separate product; this branch does not require every
+historical exactness gap to be closed first.
+
+Each batch should make one subsystem easier to understand in its source:
+
+- Name values by meaning and unit: pixel coordinates, packed-byte offsets,
+  paragraph segments, frame ticks, or fixed-point velocities.
+- Explain the state transition, input/output ownership, failure behavior,
+  and visible side effects at the point where they matter.
+- Replace unexplained selectors with named constants and expose algorithm
+  stages without changing their order or translation-unit composition.
+- Preserve 16-bit promotions, signedness, truncation, near/far calls,
+  segment ownership, global layout, and hardware timing. Record surprising
+  behavior before deciding whether the native port should change it.
+- Separate source-derived explanations from target observations, compiler
+  checks, and runtime coverage. A plausible name is not a verified contract.
+
+The validation baseline is the preceding DOS source, not the x64 prototype.
+Use the smallest existing probe that can reject a regression. For naming and
+constant changes, cold compilation and complete linked byte/relocation
+equality provide a strong check. For structural rewrites, also exercise the
+relevant runtime transitions; build success alone is insufficient. If a
+shared ABI/layout or an accepted historical owner changes, replay all affected
+owners under the repository's Oracle policy. Avoid a repository-wide rename
+or replacing assembly before its observable contract is understood.
+
+## Queue
+
+| Area | Readability objective | Current coverage |
+| --- | --- | --- |
+| PI image decoding | Commands, pixel packing, adaptive history, allocation and returned-pointer ownership | First bounded batch completed; independent DOS decoder and cold before/after equality pass |
+| PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | Existing probes available; semantic pass pending |
+| OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | Existing bounded scenarios; complete Good Ending visual issue remains open |
+| Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Semantic pass pending |
+| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Semantic pass pending |
+
+This queue describes work to do, not a new completion percentage. Begin the
+next native-port slice once its own source contracts and regression probes
+are adequate; other subsystems can continue on this branch independently.
+
+The first result and replay commands are recorded in
+[the PI decoder note](reconstruction/product/TH04_NATIVE_PI_DECODE_V869.md).

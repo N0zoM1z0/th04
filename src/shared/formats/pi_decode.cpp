@@ -1,5 +1,10 @@
-// TH04 packed PI reader. Each image is one paragraph-allocated block; the
-// returned pointer skips the two reference rows at the front of that block.
+// TH04 packed PI reader: MSB-first commands produce two 4-bit pixels per
+// byte (left pixel in the high nibble). The DOS allocation begins with two
+// seeded reference rows; the returned image pointer skips those rows.
+//
+// This service has one static input stream and is not reentrant. Retain the
+// 16-bit unsigned fields, 32-bit unsigned long offsets, far/Pascal API, and
+// paragraph allocation until the portable backend replaces them explicitly.
 #pragma option -zCSHARED -3
 
 #include <dos.h>
@@ -7,52 +12,72 @@
 #include "src/shared/hardware/graphics.hpp"
 #include "src/shared/runtime/api.hpp"
 
+// Copy selectors describe where packed bytes come from. Repeating the
+// preceding selector instead starts an adaptive-color literal run.
+enum PiCopyMode {
+	PI_COPY_PATTERN = 0,
+	PI_COPY_PREVIOUS_ROW = 1,
+	PI_COPY_TWO_ROWS_BACK = 2,
+	PI_COPY_PREVIOUS_ROW_NEXT_PIXEL = 3,
+	PI_COPY_PREVIOUS_ROW_PREVIOUS_PIXEL = 4,
+	PI_COPY_NONE = -1,
+};
+
+static const unsigned PI_PIXELS_PER_BYTE = 2u;
+static const unsigned PI_REFERENCE_ROWS = 2u;
+static const unsigned PI_PARAGRAPH_SHIFT = 4u;
+static const unsigned PI_PARAGRAPH_MASK = 15u;
+static const unsigned PI_MAX_RUN_SUFFIX_BITS = 19u;
+// Twice the guarded packed allocation: 65,534 paragraphs of 16 bytes.
+static const unsigned long PI_MAX_STORAGE_PIXELS = 2097088UL;
+
 struct PiInput {
 	int handle;
-	unsigned fill, next;
-	unsigned char bytes[512];
-	unsigned char bits;
-	unsigned remaining;
-	int failed;
-	unsigned char colors[16][16];
+	unsigned buffer_size, buffer_cursor;
+	unsigned char file_buffer[512];
+	unsigned char bit_window;
+	unsigned bits_remaining;
+	int had_error; // Sticky: a zero result from pi_read_bits() can also mean EOF.
+	unsigned char color_history[16][16];
 };
-static PiInput input;
+static PiInput pi_input;
 
-static int pi_byte(void)
+static int pi_read_byte(void)
 {
-	if (input.next == input.fill) {
-		unsigned got = 0;
-		if (_dos_read(input.handle, input.bytes, sizeof(input.bytes), &got) || !got) {
-			input.failed = 1;
+	if (pi_input.buffer_cursor == pi_input.buffer_size) {
+		unsigned bytes_read = 0;
+		if (_dos_read(pi_input.handle, pi_input.file_buffer,
+			sizeof(pi_input.file_buffer), &bytes_read) || !bytes_read) {
+			pi_input.had_error = 1;
 			return -1;
 		}
-		input.fill = got;
-		input.next = 0;
+		pi_input.buffer_size = bytes_read;
+		pi_input.buffer_cursor = 0;
 	}
-	return input.bytes[input.next++];
+	return pi_input.file_buffer[pi_input.buffer_cursor++];
 }
 
-static int pi_bit(void)
+static int pi_read_bit(void)
 {
-	if (!input.remaining) {
-		int value = pi_byte();
+	if (!pi_input.bits_remaining) {
+		int value = pi_read_byte();
 		if (value < 0) {
 			return -1;
 		}
-		input.bits = (unsigned char)value;
-		input.remaining = 8;
+		pi_input.bit_window = (unsigned char)value;
+		pi_input.bits_remaining = 8;
 	}
-	int bit = (input.bits >> 7) & 1;
-	input.bits <<= 1;
-	input.remaining--;
+	int bit = (pi_input.bit_window >> 7) & 1;
+	pi_input.bit_window <<= 1;
+	pi_input.bits_remaining--;
 	return bit;
 }
 
-static unsigned long pi_bits(unsigned count)
+static unsigned long pi_read_bits(unsigned count)
 {
 	unsigned long value = 0;
 	while (count--) {
-		int bit = pi_bit();
+		int bit = pi_read_bit();
 		if (bit < 0) {
 			return 0;
 		}
@@ -61,308 +86,366 @@ static unsigned long pi_bits(unsigned count)
 	return value;
 }
 
-static int pi_word_be(void)
+static int pi_read_be16(void)
 {
-	int high = pi_byte();
-	int low = pi_byte();
+	// Keep the signed 16-bit return and the caller's negative-result checks.
+	// Widening it during a port would change which header values are accepted.
+	int high = pi_read_byte();
+	int low = pi_read_byte();
 	if ((high < 0) || (low < 0)) {
 		return -1;
 	}
 	return (high << 8) | low;
 }
 
-static int pi_color(unsigned context)
+static int pi_decode_color(unsigned previous_color)
 {
-	int first = pi_bit();
-	unsigned base, width;
-	if (first < 0) {
+	// Prefix groups select 2, 2, 4, or 8 entries of the previous color's
+	// history. Index 15 is most recent; move the decoded color to that end.
+	int first_bit = pi_read_bit();
+	unsigned index_base, index_bit_count;
+	if (first_bit < 0) {
 		return -1;
 	}
-	if (first) {
-		base = 0;
-		width = 1;
+	if (first_bit) {
+		index_base = 0;
+		index_bit_count = 1;
 	} else {
-		int second = pi_bit();
-		if (second < 0) {
+		int second_bit = pi_read_bit();
+		if (second_bit < 0) {
 			return -1;
 		}
-		if (!second) {
-			base = 2;
-			width = 1;
+		if (!second_bit) {
+			index_base = 2;
+			index_bit_count = 1;
 		} else {
-			int third = pi_bit();
-			if (third < 0) {
+			int third_bit = pi_read_bit();
+			if (third_bit < 0) {
 				return -1;
 			}
-			base = third ? 8 : 4;
-			width = third ? 3 : 2;
+			index_base = third_bit ? 8 : 4;
+			index_bit_count = third_bit ? 3 : 2;
 		}
 	}
-	unsigned index = (base + (unsigned)pi_bits(width)) ^ 15u;
-	unsigned char value = input.colors[context][index];
-	for (unsigned at = index; at < 15u; at++) {
-		input.colors[context][at] = input.colors[context][at + 1u];
+	unsigned history_index =
+		(index_base + (unsigned)pi_read_bits(index_bit_count)) ^ 15u;
+	unsigned char decoded_color =
+		pi_input.color_history[previous_color][history_index];
+	for (unsigned history_slot = history_index; history_slot < 15u; history_slot++) {
+		pi_input.color_history[previous_color][history_slot] =
+			pi_input.color_history[previous_color][history_slot + 1u];
 	}
-	input.colors[context][15] = value;
-	return input.failed ? -1 : value;
+	pi_input.color_history[previous_color][15] = decoded_color;
+	return pi_input.had_error ? -1 : decoded_color;
 }
 
-static unsigned char pi_image_byte(unsigned base, unsigned long at)
+// Normalize each access independently so a packed image can cross 64 KiB.
+// byte_offset is relative to the allocation, including its reference rows.
+static unsigned char pi_get_packed_byte(
+	unsigned allocation_segment, unsigned long byte_offset
+)
 {
-	unsigned segment = base + (unsigned)(at >> 4);
-	return *(unsigned char far *)MK_FP(segment, (unsigned)(at & 15u));
+	unsigned segment = allocation_segment +
+		(unsigned)(byte_offset >> PI_PARAGRAPH_SHIFT);
+	return *(unsigned char far *)MK_FP(segment,
+		(unsigned)(byte_offset & PI_PARAGRAPH_MASK));
 }
 
-static void pi_image_put(unsigned base, unsigned long at, unsigned char value)
+static void pi_set_packed_byte(
+	unsigned allocation_segment, unsigned long byte_offset, unsigned char value
+)
 {
-	unsigned segment = base + (unsigned)(at >> 4);
-	*(unsigned char far *)MK_FP(segment, (unsigned)(at & 15u)) = value;
+	unsigned segment = allocation_segment +
+		(unsigned)(byte_offset >> PI_PARAGRAPH_SHIFT);
+	*(unsigned char far *)MK_FP(segment,
+		(unsigned)(byte_offset & PI_PARAGRAPH_MASK)) = value;
 }
 
-static int pi_unpack(unsigned base, unsigned width, unsigned long total)
+static int pi_decode_pixels(
+	unsigned allocation_segment, unsigned width_pixels,
+	unsigned long allocation_bytes
+)
 {
-	unsigned ctx, at;
-	for (ctx = 0; ctx < 16u; ctx++) {
-		for (at = 0; at < 16u; at++) {
-			input.colors[ctx][at] = (unsigned char)((ctx + at + 1u) & 15u);
+	unsigned previous_color, history_slot;
+	for (previous_color = 0; previous_color < 16u; previous_color++) {
+		for (history_slot = 0; history_slot < 16u; history_slot++) {
+			pi_input.color_history[previous_color][history_slot] =
+				(unsigned char)((previous_color + history_slot + 1u) & 15u);
 		}
 	}
-	input.remaining = 0;
-	int first = pi_color(0);
-	int second = first < 0 ? -1 : pi_color((unsigned)first);
-	if (second < 0) {
+	pi_input.bits_remaining = 0;
+	int first_color = pi_decode_color(0);
+	int second_color = first_color < 0 ? -1 : pi_decode_color((unsigned)first_color);
+	if (second_color < 0) {
 		return 0;
 	}
-	unsigned char initial = (unsigned char)((first << 4) | second);
-	for (at = 0; at < width; at++) {
-		pi_image_put(base, at, initial);
+	unsigned char seed_pair = (unsigned char)((first_color << 4) | second_color);
+	// For even-width images, two reference rows occupy width_pixels bytes.
+	// Keep the historical byte formula for odd widths as well.
+	for (history_slot = 0; history_slot < width_pixels; history_slot++) {
+		pi_set_packed_byte(allocation_segment, history_slot, seed_pair);
 	}
-	unsigned long cursor = width;
-	int previous_position = -1;
-	while (cursor < total) {
-		unsigned position = (unsigned)pi_bits(2);
-		if (input.failed) {
+	unsigned long write_offset = width_pixels;
+	int previous_copy_mode = PI_COPY_NONE;
+	while (write_offset < allocation_bytes) {
+		unsigned copy_mode = (unsigned)pi_read_bits(2);
+		if (pi_input.had_error) {
 			return 0;
 		}
-		if (position == 3u) {
-			int extension = pi_bit();
+		if (copy_mode == PI_COPY_PREVIOUS_ROW_NEXT_PIXEL) {
+			int extension = pi_read_bit();
 			if (extension < 0) {
 				return 0;
 			}
-			position += (unsigned)extension;
+			copy_mode += (unsigned)extension;
 		}
-		if (position == (unsigned)previous_position) {
-			int continued;
+		if (copy_mode == (unsigned)previous_copy_mode) {
+			// A repeated selector emits literal pairs instead of a copy run.
+			// Preserve the read order even at the end of the allocation.
+			int more_literals;
 			do {
-				int high = pi_color(pi_image_byte(base, cursor - 1u) & 15u);
-				int low = high < 0 ? -1 : pi_color((unsigned)high);
-				if ((low < 0) || (cursor == total)) {
+				int left_color = pi_decode_color(pi_get_packed_byte(
+					allocation_segment, write_offset - 1u) & 15u);
+				int right_color = left_color < 0 ? -1 :
+					pi_decode_color((unsigned)left_color);
+				if ((right_color < 0) || (write_offset == allocation_bytes)) {
 					return 0;
 				}
-				pi_image_put(base, cursor++, (unsigned char)((high << 4) | low));
-				continued = pi_bit();
-				if (continued < 0) {
+				pi_set_packed_byte(allocation_segment, write_offset++,
+					(unsigned char)((left_color << 4) | right_color));
+				more_literals = pi_read_bit();
+				if (more_literals < 0) {
 					return 0;
 				}
-			} while (continued);
-			previous_position = -1;
+			} while (more_literals);
+			previous_copy_mode = PI_COPY_NONE;
 			continue;
 		}
 
-		unsigned length_bits = 0;
-		int unary;
-		while ((unary = pi_bit()) == 1) {
-			if (++length_bits > 19u) {
+		// k one-bits followed by zero, then k suffix bits, encode a byte
+		// count of 2^k + suffix. All copy commands operate on packed pairs.
+		unsigned run_suffix_bits = 0;
+		int run_prefix_bit;
+		while ((run_prefix_bit = pi_read_bit()) == 1) {
+			if (++run_suffix_bits > PI_MAX_RUN_SUFFIX_BITS) {
 				return 0;
 			}
 		}
-		if (unary < 0) {
+		if (run_prefix_bit < 0) {
 			return 0;
 		}
-		unsigned long length = (1UL << length_bits) | pi_bits(length_bits);
-		if (input.failed || (length > total - cursor)) {
+		unsigned long run_bytes =
+			(1UL << run_suffix_bits) | pi_read_bits(run_suffix_bits);
+		if (pi_input.had_error || (run_bytes > allocation_bytes - write_offset)) {
 			return 0;
 		}
-		if (position == 0u) {
-			unsigned char last = pi_image_byte(base, cursor - 1u);
-			if ((last >> 4) == (last & 15u)) {
-				while (length--) {
-					pi_image_put(base, cursor++, last);
+		if (copy_mode == PI_COPY_PATTERN) {
+			unsigned char last_pair = pi_get_packed_byte(
+				allocation_segment, write_offset - 1u);
+			if ((last_pair >> 4) == (last_pair & 15u)) {
+				while (run_bytes--) {
+					pi_set_packed_byte(allocation_segment, write_offset++, last_pair);
 				}
 			} else {
-				unsigned char before = pi_image_byte(base, cursor - 2u);
-				unsigned phase = 0;
-				while (length--) {
-					pi_image_put(base, cursor++, phase ? last : before);
-					phase ^= 1u;
+				// Unequal colors repeat the preceding two packed bytes,
+				// starting with the older byte rather than the last one.
+				unsigned char penultimate_pair = pi_get_packed_byte(
+					allocation_segment, write_offset - 2u);
+				unsigned pair_phase = 0;
+				while (run_bytes--) {
+					pi_set_packed_byte(allocation_segment, write_offset++,
+						pair_phase ? last_pair : penultimate_pair);
+					pair_phase ^= 1u;
 				}
 			}
-		} else if ((position == 1u) || (position == 2u)) {
-			unsigned distance = position == 1u ? width / 2u : width;
-			if ((distance == 0) || (cursor < distance)) {
+		} else if ((copy_mode == PI_COPY_PREVIOUS_ROW) ||
+			(copy_mode == PI_COPY_TWO_ROWS_BACK)) {
+			unsigned distance_bytes = copy_mode == PI_COPY_PREVIOUS_ROW ?
+				width_pixels / PI_PIXELS_PER_BYTE : width_pixels;
+			if ((distance_bytes == 0) || (write_offset < distance_bytes)) {
 				return 0;
 			}
-			while (length--) {
-				pi_image_put(base, cursor, pi_image_byte(base, cursor - distance));
-				cursor++;
+			while (run_bytes--) {
+				// Read each byte as the run advances: source and destination
+				// may overlap. A snapshot copy would change the result.
+				pi_set_packed_byte(allocation_segment, write_offset,
+					pi_get_packed_byte(allocation_segment,
+						write_offset - distance_bytes));
+				write_offset++;
 			}
 		} else {
-			unsigned long pixels = position == 3u ?
-				(unsigned long)width - 1UL : (unsigned long)width + 1UL;
-			unsigned distance = (unsigned)((pixels + 1UL) / 2UL);
-			if ((width < 3u) || (cursor < distance)) {
+			// For even widths, selectors 3/4 sample the previous row at
+			// x+1/x-1 respectively, joining nibbles of adjacent bytes.
+			unsigned long distance_pixels =
+				copy_mode == PI_COPY_PREVIOUS_ROW_NEXT_PIXEL ?
+				(unsigned long)width_pixels - 1UL : (unsigned long)width_pixels + 1UL;
+			unsigned distance_bytes =
+				(unsigned)((distance_pixels + 1UL) / 2UL);
+			if ((width_pixels < 3u) || (write_offset < distance_bytes)) {
 				return 0;
 			}
-			while (length--) {
-				unsigned char left = pi_image_byte(base, cursor - distance);
-				unsigned char right = pi_image_byte(base, cursor - distance + 1u);
-				pi_image_put(base, cursor++, (unsigned char)((left << 4) | (right >> 4)));
+			while (run_bytes--) {
+				unsigned char source_pair = pi_get_packed_byte(
+					allocation_segment, write_offset - distance_bytes);
+				unsigned char next_source_pair = pi_get_packed_byte(
+					allocation_segment, write_offset - distance_bytes + 1u);
+				pi_set_packed_byte(allocation_segment, write_offset++,
+					(unsigned char)((source_pair << 4) | (next_source_pair >> 4)));
 			}
 		}
-		previous_position = (int)position;
+		previous_copy_mode = (int)copy_mode;
 	}
-	return !input.failed;
+	return !pi_input.had_error;
 }
 
 extern "C" int TH04_PASCAL graph_pi_load_pack(
-	const char far *filename, PiHeader far *header, void far *far *bufptr
+	const char far *filename, PiHeader far *header, void far *far *image_out
 )
 {
 	int handle;
-	unsigned base = 0;
-	unsigned char __seg *extension = 0;
-	unsigned comment_length = 0;
-	unsigned width, height;
-	unsigned long total;
-	unsigned i;
-	int value, aspect_n, aspect_m, plane;
+	unsigned pixel_segment = 0;
+	unsigned char __seg *machine_extension = 0;
+	unsigned comment_bytes = 0;
+	unsigned width_pixels, height_pixels;
+	unsigned long allocation_bytes;
+	unsigned field_index;
+	int field_value, aspect_n, aspect_m, plane;
 	unsigned char far *palette;
-	if (!header || !bufptr) {
+	if (!header || !image_out) {
 		return -13;
 	}
 	header->comment = 0;
 	header->commentlen = 0;
 	header->maex = 0;
 	header->maexlen = 0;
-	*bufptr = 0;
+	*image_out = 0;
 	if (_dos_open(filename, 0, &handle)) {
 		return -2;
 	}
-	input.handle = handle;
-	input.fill = input.next = input.remaining = 0;
-	input.failed = 0;
-	if ((pi_byte() != 'P') || (pi_byte() != 'i')) {
+	pi_input.handle = handle;
+	pi_input.buffer_size = pi_input.buffer_cursor = pi_input.bits_remaining = 0;
+	pi_input.had_error = 0;
+	if ((pi_read_byte() != 'P') || (pi_read_byte() != 'i')) {
 		goto invalid;
 	}
-	while ((value = pi_byte()) >= 0 && value != 26) {
-		if (comment_length == 65535u) {
+	while ((field_value = pi_read_byte()) >= 0 && field_value != 26) {
+		if (comment_bytes == 65535u) {
 			goto invalid;
 		}
-		comment_length++;
+		comment_bytes++;
 	}
-	if (value < 0) {
+	if (field_value < 0) {
 		goto invalid;
 	}
-	header->commentlen = comment_length;
-	while ((value = pi_byte()) > 0) { }
-	if (value < 0) {
+	header->commentlen = comment_bytes;
+	// Comment text is counted, not allocated. Skip the following zero-
+	// terminated dummy field before reading the binary PI header.
+	while ((field_value = pi_read_byte()) > 0) { }
+	if (field_value < 0) {
 		goto invalid;
 	}
-	value = pi_byte();
-	if (value < 0) {
+	field_value = pi_read_byte();
+	if (field_value < 0) {
 		goto invalid;
 	}
-	header->mode = (unsigned char)value;
-	aspect_n = pi_byte();
-	aspect_m = pi_byte();
-	plane = pi_byte();
+	header->mode = (unsigned char)field_value;
+	aspect_n = pi_read_byte();
+	aspect_m = pi_read_byte();
+	plane = pi_read_byte();
 	if ((aspect_n != 0) || (aspect_m != 0) || (plane != 4)) {
 		goto invalid;
 	}
 	header->n = (unsigned char)aspect_n;
 	header->m = (unsigned char)aspect_m;
 	header->plane = (unsigned char)plane;
-	for (i = 0; i < 4u; i++) {
-		value = pi_byte();
-		if (value < 0) {
+	for (field_index = 0; field_index < 4u; field_index++) {
+		field_value = pi_read_byte();
+		if (field_value < 0) {
 			goto invalid;
 		}
-		header->machine[i] = (char)value;
+		header->machine[field_index] = (char)field_value;
 	}
-	value = pi_word_be();
-	if (value < 0) {
+	field_value = pi_read_be16();
+	if (field_value < 0) {
 		goto invalid;
 	}
-	header->maexlen = (unsigned)value;
+	header->maexlen = (unsigned)field_value;
 	if (header->maexlen) {
-		extension = (unsigned char __seg *)hmem_allocbyte(header->maexlen);
-		if (!extension) {
+		machine_extension = (unsigned char __seg *)hmem_allocbyte(header->maexlen);
+		if (!machine_extension) {
 			goto no_memory;
 		}
-		header->maex = (void far *)extension;
-		for (i = 0; i < header->maexlen; i++) {
-			value = pi_byte();
-			if (value < 0) {
+		header->maex = (void far *)machine_extension;
+		for (field_index = 0; field_index < header->maexlen; field_index++) {
+			field_value = pi_read_byte();
+			if (field_value < 0) {
 				goto invalid;
 			}
-			extension[i] = (unsigned char)value;
+			machine_extension[field_index] = (unsigned char)field_value;
 		}
 	}
-	value = pi_word_be();
-	if (value < 0) {
+	field_value = pi_read_be16();
+	if (field_value < 0) {
 		goto invalid;
 	}
-	width = (unsigned)value;
-	value = pi_word_be();
-	if (value < 0) {
+	width_pixels = (unsigned)field_value;
+	field_value = pi_read_be16();
+	if (field_value < 0) {
 		goto invalid;
 	}
-	height = (unsigned)value;
-	if ((width < 3u) || (height == 0) ||
-		((unsigned long)height + 2UL > 2097088UL / (unsigned long)width)) {
+	height_pixels = (unsigned)field_value;
+	if ((width_pixels < 3u) || (height_pixels == 0) ||
+		((unsigned long)height_pixels + PI_REFERENCE_ROWS >
+			PI_MAX_STORAGE_PIXELS / (unsigned long)width_pixels)) {
 		goto invalid;
 	}
-	header->xsize = width;
-	header->ysize = height;
+	header->xsize = width_pixels;
+	header->ysize = height_pixels;
 	if (!(header->mode & 0x80u)) {
+		// Preserve the raw RGB triplets; PC-98 palette application uses
+		// each component's high nibble. Palette omission leaves it intact.
 		palette = (unsigned char far *)&header->palette;
-		for (i = 0; i < 48u; i++) {
-			value = pi_byte();
-			if (value < 0) {
+		for (field_index = 0; field_index < 48u; field_index++) {
+			field_value = pi_read_byte();
+			if (field_value < 0) {
 				goto invalid;
 			}
-			palette[i] = (unsigned char)value;
+			palette[field_index] = (unsigned char)field_value;
 		}
 	}
-	total = (unsigned long)width * ((unsigned long)height + 2UL) / 2UL;
-	base = (unsigned)hmem_alloc((unsigned)((total + 15UL) >> 4));
-	if (!base) {
+	allocation_bytes = (unsigned long)width_pixels *
+		((unsigned long)height_pixels + PI_REFERENCE_ROWS) / PI_PIXELS_PER_BYTE;
+	pixel_segment = (unsigned)hmem_alloc((unsigned)(
+		(allocation_bytes + 15UL) >> PI_PARAGRAPH_SHIFT));
+	if (!pixel_segment) {
 		goto no_memory;
 	}
-	if (!pi_unpack(base, width, total)) {
+	if (!pi_decode_pixels(pixel_segment, width_pixels, allocation_bytes)) {
 		goto invalid;
 	}
-	*bufptr = MK_FP(base, width);
+	*image_out = MK_FP(pixel_segment, width_pixels);
+	// Ownership transfers only here. graph_pi_free() uses this pointer's
+	// segment to free the entire allocation, including the reference rows.
 	_dos_close(handle);
 	return 0;
 
 invalid:
-	if (base) {
-		hmem_free((void __seg *)base);
+	if (pixel_segment) {
+		hmem_free((void __seg *)pixel_segment);
 	}
-	if (extension) {
-		hmem_free(extension);
+	if (machine_extension) {
+		hmem_free(machine_extension);
 		header->maex = 0;
 		header->maexlen = 0;
 	}
 	_dos_close(handle);
 	return -13;
 no_memory:
-	if (base) {
-		hmem_free((void __seg *)base);
+	if (pixel_segment) {
+		hmem_free((void __seg *)pixel_segment);
 	}
-	if (extension) {
-		hmem_free(extension);
+	if (machine_extension) {
+		hmem_free(machine_extension);
 		header->maex = 0;
 		header->maexlen = 0;
 	}
