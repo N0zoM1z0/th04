@@ -17,6 +17,8 @@ add_library(
   main_state.cpp
   sprite_sheet.cpp
   stage_background.cpp
+  stage_program.cpp
+  enemy_system.cpp
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp
@@ -36,8 +38,10 @@ add_executable(th04-port64-live-contracts live_contracts.cpp)
 target_link_libraries(th04-port64-live-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-shot-contracts shot_contracts.cpp)
 target_link_libraries(th04-port64-shot-contracts PRIVATE th04-portable-core)
+add_executable(th04-port64-enemy-contracts enemy_contracts.cpp)
+target_link_libraries(th04-port64-enemy-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts)
+foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -45,7 +49,7 @@ foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts)
+  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts)
     target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
   endforeach()
 endif()
@@ -61,3 +65,4 @@ enable_testing()
 add_test(NAME portable-contracts COMMAND th04-port64-contracts)
 add_test(NAME live-main-contracts COMMAND th04-port64-live-contracts)
 add_test(NAME player-shot-contracts COMMAND th04-port64-shot-contracts)
+add_test(NAME stage-enemy-contracts COMMAND th04-port64-enemy-contracts)

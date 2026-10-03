@@ -95,6 +95,9 @@ void Background::update(bool scroll_active) {
         scroll_line_ = (scroll_line_+400-advance)%400;
         fraction_ &= 15;
     }
+    // This remains published even if the tile helper stops the stream on
+    // the same call. Enemy MOVE_WITH_SCROLL consumes it next frame.
+    last_delta_ = static_cast<std::int16_t>(advance*16);
     if ((advance == 0 && previous_advance_ == 0) || speed_ == 0) return;
     const auto ring_row = scroll_line_/16;
     if (ring_row != ring_row_previous_) {

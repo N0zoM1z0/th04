@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
             }
             std::cout << frame << ' ' << bg.scroll_line() << ' ' << bg.display_line()
                       << ' ' << bg.speed() << ' ' << bg.section_cursor() << ' '
-                      << bg.row_in_section() << ' ' << hash << '\n';
+                      << bg.row_in_section() << ' ' << hash << ' ' << bg.last_delta() << '\n';
             if (bg.stopped() && ++stopped_frames == 64) return 0;
             bg.update();
         }

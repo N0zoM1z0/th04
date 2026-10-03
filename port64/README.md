@@ -14,8 +14,9 @@ leave the window open; main Quit/Esc closes it. In that scene, arrow keys move t
 speed; hold Z to shoot. All four shot routes have ten power levels, a 68-slot
 pool, hit-state contracts and Marisa option lasers. The fixed 32-slot item pool handles drops, motion, attraction and scoring;
 its seven-type scene fixture is headless-only. The interactive scene now renders and scrolls the original Stage 1 MAP/MPN
-background, selecting ST00 or ST10 tiles for the character. Stage scripts,
-enemies, bombs and death remain to be connected. No original executables or game data are embedded in the binary. Unlike
+background, selecting ST00 or ST10 tiles for the character. Real STD waves, the 52-opcode enemy VM and a 32-slot enemy pool are connected
+to player shots, drops, scoring and original BFNT sprites. Enemy bullets,
+bosses, bombs and player death remain to be connected. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
 The portable core also models the DOS executable chain as guarded in-process
@@ -189,8 +190,34 @@ the original allocation overrun; the host boundary is tested with sanitizers.
 Both character windows pass held-Z firing and release against original sprite
 pixels. Windows validation runs under Wine; native Windows pacing is untested.
 
-The next gameplay slice is stage VM/entity integration, followed by
-enemy bullets, later-stage backgrounds, HUD, death/Bomb transitions and audio.
+The next gameplay slice is enemy bullet tune/add/update, followed by
+midboss/bosses, later-stage backgrounds, HUD, death/Bomb transitions and audio.
 Saved configuration and Ending/score persistence also remain. Semantic work
 is paused unless a concrete ambiguity blocks one of these slices; a completed
 TH04 native game has not yet been demonstrated.
+
+`stage_program` dispatches original STD waves without catch-up; midboss skips
+consume the wave. `enemy_system` preserves inclusive timed movement, immediate
+setup chains, script loops, clipping, Lunatic autofire, performance intervals,
+shot damage, homing, kill/drop scoring and animation. Render-state mutations
+occur once per simulation frame. Synchronous fire/sound/tile/spark requests
+retain the original call boundaries for later adapters; only item drops are
+connected now. Intercepted bullet/spark RNG and player death remain absent.
+
+```sh
+python3 port64/verify_enemy.py --target .analysis/targets/th04/main.exe \
+  --hdi .analysis/runtime/images/zun.hdi \
+  --exe .analysis/port64/linux/th04-port64-enemy-contracts \
+  --output-dir .analysis/port64/enemies-cpu
+mkdir -p .analysis/port64/combat
+.analysis/port64/linux/th04-port64 --hdi .analysis/runtime/images/zun.hdi \
+  --combat-screenshots .analysis/port64/combat
+```
+
+Use `--runner wine` with the PE32+ contract executable. The CPU oracle compares
+9,414 VM vectors, 896 hit/lifecycle cases, all seven schedules and 12,600 actual
+Stage 1 enemy update/render frames. It records ordered intercepted requests
+and renderer coordinates/cels, not complete graphics pixels or gameplay.
+The combat fixture holds Z for 1,200 original Stage 1 frames per character,
+with normal initial power and no injected entities/items/score. Both host
+products kill 26 enemies and reach power 7; their images and counters agree.

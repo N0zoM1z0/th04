@@ -17,6 +17,7 @@ struct MainAssets {
     Bytes reimu;
     Bytes marisa;
     Bytes items;
+    Bytes enemies;
     Bytes stage_tiles;
     Bytes reimu_map_tiles, marisa_map_tiles, map, standard;
 };
@@ -35,4 +36,5 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& shot_screenshot,
                const std::string& handoff_screenshot,
                const std::string& main_screenshot,
-               const std::string& shooting_screenshots, bool window);
+               const std::string& shooting_screenshots,
+               const std::string& combat_screenshots, bool window);

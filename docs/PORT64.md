@@ -89,8 +89,9 @@ A completed HDI-backed Game selection now starts a timed SDL/Win32 MAIN scene
 with held-key input. Host timers update at a nominal 17,730,496 ns step and
 limit catch-up to four frames; this is a chosen bring-up cadence, not an
 independent original-timing measurement. The scene now has a
-movable, shooting player over the original Stage 1 scrolling background; stage VM,
-enemies, Bomb/death, later-stage visuals and HUD remain absent.
+movable, shooting player and real STD-scheduled enemies over the original Stage 1
+scrolling background; enemy bullets, bosses, Bomb/death, later-stage visuals and
+HUD remain absent.
 `--main-screenshot` alone injects seven item types for a deterministic 60-frame
 fixture, preserving an honest distinction from ordinary interactive gameplay.
 
@@ -110,9 +111,9 @@ animation and the per-frame collision cache. Hit processing retains signed
 velocity division, progressively reduced damage, Bomb/boss division before
 laser damage, unsigned rectangle bounds and spark phase. Sparks are requests
 to a future adapter, so this slice does not consume their random draws or
-render them. Sound and enemy integration remain absent.
+render them. Sound and spark effects remain absent.
 
-MAIN now updates player/shots/items in original order. SDL and Win32 sample
+MAIN now dispatches STD waves, then updates player/shots/enemies/items in original order. SDL and Win32 sample
 held Z; rendering uses original MIKO16 shot/options/ring cels and laser masks,
 with reverse pool drawing over the Stage 1 background. The explicit
 `--shooting-screenshots DIR` fixture collects a full-power item before firing
@@ -136,6 +137,59 @@ Wine/Win32 and GNU UBSan/bounds; all four full-power BMP hashes agree across
 hosts. Original BFNT pixel matching in both character windows confirms multiple
 held-Z volleys and complete departure after release. Earlier UI/movement/item
 fixtures retain their hashes. Native Windows host pacing remains untested.
+
+`stage_program` parses all seven original STD script/wave chunks, replacing
+near pointers with checked script handles. Waves dispatch only on their exact
+16-bit frame; midboss suppression still advances the original cursor. Opaque
+marker bytes vary between stages and are skipped without a magic-value check.
+Zero-count and out-of-extent malformed records are rejected instead of
+reproducing DOS underflow/out-of-range paths.
+
+`enemy_system` implements the 52 valid opcodes with explicit names and widths,
+same-frame setup chains, inclusive N+1 timed movement, loops, clipping,
+performance-dependent autofire, shared-ring spawn randomness, the 32-slot pool,
+shot/cache damage, kill scoring/drops, homing selection and collision requests.
+Damage flash and animation advance once per simulation frame, independently
+of host repaint messages. Original MIKO32 and ST00 BFNT cels draw before shots.
+The scroll owner now publishes the preceding update's Q12.4 delta even when
+its helper stops the stream in that call; enemy scroll movement consumes it.
+
+Fire, sound, tile-ring and spark requests dispatch synchronously. Only item
+drops are connected to the live pool in this slice. Bullet tuning/allocation,
+spark random draws and sound are not modeled yet, so natural shared RNG will
+change when those adapters are added. Player collision records a hit but
+player death is still absent. This is a runnable Stage 1 enemy/shot slice,
+not a complete or invulnerable patched version of the native game.
+
+Original relocated MAIN CPU comparison covers 9,414 VM vectors, 896 enemy
+hit/lifecycle/render cases, all seven STD schedules (1,188 waves, with explicit
+midboss skip controls), and 12,600 Stage 1 enemy update/render frames across
+Easy, Normal and Lunatic. It executes VM/motion/RNG, spawn, scheduler, enemy
+update, shot hittest and enemy renderer code. Near script pointers are
+normalized to handles; ordered intercepted requests and draw coordinates/cels
+are compared. Graphics pixels, intercepted callees' effects/RNG, route-level
+boss behavior and natural host timing are excluded. Entries: `MAIN.EXE
+main_03 13A9:1B4D` VM, `4263` spawn, `4341` STD, `43C9` update, and
+`main_01 0AAF:5C23` renderer; load segment `2000`, DS `8000`, ES `9000`.
+
+`--combat-screenshots DIR` runs 1,200 actual Stage 1 frames with held Z and
+normal initial power for each character. It injects no enemies/items/score;
+each run kills 26 enemies, accumulates score delta 5,761 and reaches power 7.
+Linux and Wine-hosted Windows BMPs/counters agree. The prior fixtures retain
+their hashes; GNU UBSan/bounds also passes. The background CPU oracle now
+compares the published scroll delta across all 6,715 frames, including stopping.
+Cross-host receipt: `.analysis/port64/verification-enemies-v1254/receipt.json`.
+Scoped CPU receipts: `.analysis/port64/enemies-v1254/cpu-{linux,windows,ubsan}-final/receipt.json`.
+No DOS source, exact acceptance state or target bytes changed.
+
+The oracle derives hook offsets from `address - CS*16`. A Unicorn 1.0.2
+negative control executes one NOP at load address `33B90` with CS `33A9`:
+inside the hook, `UC_X86_REG_IP` reports `3B90`, while the CS-relative offset
+is `0100`; after execution IP is `0101`. Dispatching a callee hook by that
+raw register silently misses it. Receipt:
+`.analysis/port64/enemies-v1254/hook-ip-negative.json`. This is an emulator API
+observation, not evidence of a TH04 VM defect. The corrected CPU comparisons
+above run the original callees and record the actual intercepted boundaries.
 
 ## Verified builds
 
@@ -185,7 +239,7 @@ Original CPU, native-window and sanitizer receipts for the background slice
 are under `.analysis/port64/background-v1252/`. The earlier movement-only
 receipts remain under `.analysis/port64/live-v1251/`. Each records product
 hashes and scope limits; `verify.py` records the source manifest.
-Current shooting receipt:
+Earlier shooting receipt:
 `.analysis/port64/verification-shots-v1253-final/receipt.json`. Original CPU
 receipts are `.analysis/port64/shots-v1253/cpu-{linux,windows,ubsan}-final/receipt.json`;
 window receipts use `window-{linux,windows}` and `window-marisa-{linux,windows}`.
@@ -207,12 +261,13 @@ repository.
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
-verify. Motion/items/background/shots required no further DOS-source edits.
+verify. Motion/items/background/shots/enemies required no further DOS-source edits.
 For each next module, stop readability work once state ownership, arithmetic,
 control flow and hardware boundaries support an independently checked native
 implementation. Resume only for a concrete ambiguity exposed by integration.
-Next, connect stage VM and enemy entities to the frame loop, then port
-bullets, later-stage scrolling/tile maps, HUD, death/Bomb transitions and audio. Add saved
+Next, connect enemy bullet tune/add/update to the synchronous event boundary,
+then midboss/bosses, later-stage scrolling/tile maps, HUD, death/Bomb transitions
+and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those
 systems become runnable. Full gameplay is the completion condition, not an
 exhaustive source-renaming pass.

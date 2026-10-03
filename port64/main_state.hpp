@@ -3,19 +3,25 @@
 #include "item_pool.hpp"
 #include "player_motion.hpp"
 #include "player_shots.hpp"
+#include "enemy_system.hpp"
+#include <memory>
 
 namespace th04::portable::gameplay {
-// Live MAIN owns player motion, shots and items. The
-// stage VM, bombs, collision/death and HUD will join this same owner;
+// Live MAIN owns STD waves, enemies, player motion, shots and items.
+// Enemy bullets, bombs, player death and HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
 public:
     explicit State(application::State& application);
-    void update(std::uint16_t held_input, bool shift, bool pull_items = false);
+    void update(std::uint16_t held_input, bool shift, bool pull_items = false,
+                motion::Subpixel scroll_delta = 0);
+    void load_stage(const stage::Program::Bytes& standard);
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
     const shot::System& shots() const { return shots_; }
+    const enemy::System& enemies() const { return enemies_; }
+    const std::vector<enemy::Event>& enemy_events() const { return enemy_events_; }
     const item::UpdateResult& item_events() const { return item_events_; }
     std::uint32_t frames() const { return frames_; }
     bool add_item(motion::Point position, item::Type type) { return items_.add(position, type); }
@@ -25,6 +31,10 @@ public:
 private:
     player::Movement player_{};
     shot::System shots_{};
+    enemy::System enemies_{};
+    std::unique_ptr<stage::Program> stage_;
+    std::vector<enemy::Event> enemy_events_;
+    std::uint8_t rank_ = 1, performance_ = 16;
     application::Playchar playchar_ = application::Playchar::reimu;
     application::ShotType shot_type_ = application::ShotType::a;
     item::Pool items_{};

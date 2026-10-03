@@ -41,8 +41,23 @@ full-power BMPs agree across hosts. Cross-host receipt is
 `.analysis/port64/verification-shots-v1253-final/receipt.json`; CPU/window
 receipts are under `.analysis/port64/shots-v1253/`. Sanitizer replay passes.
 No DOS source or exact acceptance changes were needed.
-Stage VM, enemies, later-stage visuals, HUD, Bomb/death, sound, Ending and
-saved-data I/O remain to be connected. See [the x64 port handoff](PORT64.md).
+The current bounded slice adds all-seven STD wave parsing and the complete
+52-opcode enemy VM, 32 enemy slots, shot damage, collision requests, homing,
+kill scoring/drops and MIKO32/ST00 sprites. Independent original CPU comparison
+passes 9,414 VM vectors, 896 hit/lifecycle cases, all seven wave schedules and
+12,600 Easy/Normal/Lunatic Stage 1 update/render frames. Enemy animation/flash
+advances once per simulation frame. The 6,715-frame background oracle also
+compares the published prior-frame scroll delta, including the stop boundary.
+Both x64 products run real 1,200-frame shooting/enemy/drop fixtures with no
+injected entities: 26 kills, score delta 5,761, power 7; BMPs/counters agree.
+Cross-host receipt: `.analysis/port64/verification-enemies-v1254/receipt.json`;
+CPU receipts: `.analysis/port64/enemies-v1254/cpu-{linux,windows,ubsan}-final/receipt.json`.
+DOS source and acceptance states are unchanged. Fire/sound/tile/spark requests
+are synchronous, with item drops connected; bullet/spark effects and their
+RNG consumption are still intercepted in the CPU fixture and absent live.
+Next connect enemy bullet tune/add/update at this boundary, then midboss/bosses,
+later-stage visuals, HUD, Bomb/player death, sound, Ending and saved-data I/O.
+Semantic readability remains paused until a concrete native ambiguity. See [the x64 port handoff](PORT64.md).
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded

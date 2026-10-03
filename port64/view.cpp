@@ -588,12 +588,14 @@ void write_bmp(const std::string& path, const Frame& frame) {
 }
 
 struct MainSprites {
-    sprite::Sheet reimu, marisa, items, stage_tiles;
+    sprite::Sheet reimu, marisa, items, stage_tiles, enemies;
+    Bytes standard;
     PiImage palette;
     stage::TileImages reimu_tiles, marisa_tiles;
     stage::Background background;
     explicit MainSprites(const MainAssets& assets)
         : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles),
+          enemies(assets.enemies), standard(assets.standard),
           reimu_tiles(assets.reimu_map_tiles), marisa_tiles(assets.marisa_map_tiles),
           background(assets.map, assets.standard) {
         require_view(background.required_image_count() <= reimu_tiles.count() &&
@@ -604,7 +606,8 @@ struct MainSprites {
         palette.palette = stage_tiles.palette();
         require_view(reimu.width() == 32 && reimu.height() == 48 && reimu.count() >= 3 &&
                      marisa.width() == 32 && marisa.height() == 48 && marisa.count() >= 3 &&
-                     items.width() == 16 && items.height() == 16 && items.count() == 100,
+                     items.width() == 16 && items.height() == 16 && items.count() == 100 &&
+                     enemies.width() == 32 && enemies.height() == 32 && enemies.count() == 24,
                      "MAIN sprite resource geometry changed");
     }
 };
@@ -637,6 +640,17 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     const auto pixels = [](std::int16_t coordinate) {
         return coordinate >= 0 ? coordinate / 16 : -((-int(coordinate)+15)/16);
     };
+    for (const auto& draw:state.enemies().render_sprites()) {
+        if (!draw.visible) continue;
+        if (draw.pattern>=4 && draw.pattern<28) {
+            put_sprite(frame,sprites.palette,sprites.enemies,draw.pattern-4,
+                       16+pixels(draw.position.x),pixels(draw.position.y),draw.white);
+        } else if (draw.pattern>=128) {
+            require_view(unsigned(draw.pattern-128)<sprites.stage_tiles.count(),"enemy references absent stage sprite");
+            put_sprite(frame,sprites.palette,sprites.stage_tiles,draw.pattern-128,
+                       16+pixels(draw.position.x),pixels(draw.position.y),draw.white);
+        } else throw std::runtime_error("enemy references unsupported sprite sheet");
+    }
     if (shots.laser.time > 32) {
         const auto dots = shots.laser.dots();
         const auto bottom = shots.laser.bottom.current;
@@ -706,7 +720,7 @@ public:
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
     void advance(std::uint16_t held_input, bool shift) {
         if (live_main()) {
-            main_->update(held_input, shift);
+            main_->update(held_input, shift, false, sprites_->background.last_delta());
             sprites_->background.update();
             frame_ = render();
         }
@@ -750,7 +764,10 @@ public:
                     application_.start_normal(result.playchar, result.shot_type);
                 }
                 screen_ = Screen::main_handoff;
-                if (sprites_) main_ = std::make_unique<gameplay::State>(application_);
+                if (sprites_) {
+                    main_ = std::make_unique<gameplay::State>(application_);
+                    main_->load_stage(sprites_->standard);
+                }
                 std::cout << "MAIN handoff playchar="
                           << unsigned(result.playchar)
                           << " shot=" << unsigned(result.shot_type)
@@ -1097,7 +1114,8 @@ void run_title(
     const std::string& character_screenshot,
     const std::string& shot_screenshot,
     const std::string& handoff_screenshot,
-    const std::string& main_screenshot, const std::string& shooting_screenshots, bool window
+    const std::string& main_screenshot, const std::string& shooting_screenshots,
+    const std::string& combat_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1201,6 +1219,26 @@ void run_title(
                 (std::string(character ? "marisa-" : "reimu-")+(type ? "b.bmp" : "a.bmp"));
             write_bmp(path,front_end.frame());
             std::cout << "MAIN shooting power=" << +front_end.main_state().score().power
+                      << " screenshot=" << path << '\n';
+        }
+    }
+    if (!combat_screenshots.empty()) {
+        for (unsigned character=0;character<2;++character) {
+            FrontEnd front_end(background,numerals,labels,cursors,
+                               selection_background,portraits,&main_assets);
+            front_end.input(menu::Input::confirm);
+            if (character) front_end.input(menu::Input::right);
+            front_end.input(menu::Input::confirm);
+            front_end.input(menu::Input::confirm);
+            // Original Stage 1 waves and normal initial power; no injected
+            // enemies, pickups or score. Exercise the complete native chain.
+            for (unsigned frame=0;frame<1200;++frame) front_end.advance(shot::input_shot,false);
+            const auto& state=front_end.main_state();
+            const auto path=combat_screenshots+"/"+(character ? "marisa.bmp" : "reimu.bmp");
+            write_bmp(path,front_end.frame());
+            require_view(state.enemies().snapshot().killed_count>0,"combat fixture killed no enemies");
+            std::cout << "MAIN combat frames=1200 killed=" << state.enemies().snapshot().killed_count
+                      << " score=" << state.score().score_delta << " power=" << +state.score().power
                       << " screenshot=" << path << '\n';
         }
     }

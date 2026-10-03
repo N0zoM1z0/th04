@@ -20,6 +20,12 @@ PORT_FILES = (
     "port64/bullet_geometry.cpp",
     "port64/bullet_geometry.hpp",
     "port64/contracts.cpp",
+    "port64/enemy_contracts.cpp",
+    "port64/enemy_system.cpp",
+    "port64/enemy_system.hpp",
+    "port64/stage_program.cpp",
+    "port64/stage_program.hpp",
+    "port64/verify_enemy.py",
     "port64/item_pool.cpp",
     "port64/item_pool.hpp",
     "port64/live_contracts.cpp",
@@ -137,9 +143,11 @@ def main() -> int:
     windows_contracts = windows_dir / "th04-port64-contracts.exe"
     linux_shots = linux_dir / "th04-port64-shot-contracts"
     windows_shots = windows_dir / "th04-port64-shot-contracts.exe"
-    for path in (linux_main, linux_contracts, linux_live, linux_shots):
+    linux_enemies = linux_dir / "th04-port64-enemy-contracts"
+    windows_enemies = windows_dir / "th04-port64-enemy-contracts.exe"
+    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts, windows_live, windows_shots):
+    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -173,6 +181,12 @@ def main() -> int:
     if linux_shot_output != expected_shots or windows_shot_output != expected_shots:
         raise ValueError("player shot contracts did not pass on both hosts")
 
+    expected_enemies = "TH04 stage/enemy contracts: PASS pool=32 opcodes=52 pointer_bits=64"
+    linux_enemy_output = run([str(linux_enemies)])
+    windows_enemy_output = run([args.windows_runner,str(windows_enemies)],env=runner_env)
+    if linux_enemy_output != expected_enemies or windows_enemy_output != expected_enemies:
+        raise ValueError("stage enemy contracts did not pass on both hosts")
+
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -199,6 +213,20 @@ def main() -> int:
     if shooting_hashes["linux"] != shooting_hashes["windows"]:
         raise ValueError("shooting BMPs differ between Linux and Windows")
 
+    combat_hashes = {}
+    combat_outputs = {}
+    for host, command in (("linux",[str(linux_main)]),
+                          ("windows",[args.windows_runner,str(windows_main)])):
+        images = output.parent / ("combat-"+host)
+        images.mkdir(parents=True,exist_ok=True)
+        result = run(command+["--hdi",str(hdi),"--combat-screenshots",str(images)],env=runner_env)
+        if result.count("MAIN combat frames=1200 killed=") != 2:
+            raise ValueError("combat fixture did not exercise both characters")
+        combat_hashes[host] = {name:sha256(images/(name+".bmp")) for name in ("reimu","marisa")}
+        combat_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN combat")]
+    if combat_hashes["linux"] != combat_hashes["windows"] or combat_outputs["linux"] != combat_outputs["windows"]:
+        raise ValueError("combat images or gameplay counters differ between hosts")
+
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
         "schema_version": 1,
@@ -217,6 +245,8 @@ def main() -> int:
                 "live_contract_output": linux_live_output,
                 "shot_contracts_sha256": sha256(linux_shots),
                 "shot_contract_output": linux_shot_output,
+                "enemy_contracts_sha256": sha256(linux_enemies),
+                "enemy_contract_output": linux_enemy_output,
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -228,6 +258,8 @@ def main() -> int:
                 "live_contract_output": windows_live_output,
                 "shot_contracts_sha256": sha256(windows_shots),
                 "shot_contract_output": windows_shot_output,
+                "enemy_contracts_sha256": sha256(windows_enemies),
+                "enemy_contract_output": windows_enemy_output,
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -251,13 +283,15 @@ def main() -> int:
         ),
         "passed": True,
         "shooting_fixture_bmp_sha256": shooting_hashes["linux"],
+        "combat_fixture_bmp_sha256": combat_hashes["linux"],
+        "combat_fixture_counters": combat_outputs["linux"],
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
             "OP menu-state transitions, resident process handoff, process-local LCG and shared "
             "random-ring contracts, live player movement, item entity motion/pickup and "
             "BFNT sprites, Stage 1 MPN/MAP/STD background rendering/scrolling and "
-            "four-route player shots/lasers only; "
-            "stage VM, enemies, bombs, death, later-stage backgrounds, "
+            "four-route player shots/lasers, all-seven STD wave schedules, enemy VM, 32-slot enemy lifecycle/hit/drop integration and original enemy BFNT sprites; "
+            "Enemy bullets, midboss/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),

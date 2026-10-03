@@ -73,7 +73,7 @@ def main():
                 normalized+=struct.pack('<H',image)
         hash=2166136261
         for value in normalized:hash=((hash^value)*16777619)&0xffffffff
-        expected.append(f'{frame} {readword(0x4278)} {display[0]} {readbyte(0x4277)} {readword(0x5380)} {readbyte(0x5382)} {hash}')
+        expected.append(f'{frame} {readword(0x4278)} {display[0]} {readbyte(0x4277)} {readword(0x5380)} {readbyte(0x5382)} {hash} {readword(0x427a)}')
         if readbyte(0x4277)==0:
             stopped+=1
             if stopped==64:break

@@ -26,6 +26,7 @@ public:
     unsigned scroll_line() const { return scroll_line_; }
     unsigned display_line() const { return display_line_; }
     unsigned speed() const { return speed_; }
+    std::int16_t last_delta() const { return last_delta_; }
     unsigned section_cursor() const { return section_cursor_; }
     unsigned row_in_section() const { return row_in_section_; }
     unsigned required_image_count() const { return required_image_count_; }
@@ -40,5 +41,6 @@ private:
     unsigned section_cursor_ = 4, speed_cursor_ = 4, row_in_section_ = 0;
     unsigned scroll_line_ = 0, display_line_ = 0, ring_row_previous_ = 0;
     std::uint8_t fraction_ = 0, speed_ = 0, previous_advance_ = 0;
+    std::int16_t last_delta_ = 0;
 };
 } // namespace th04::portable::stage
