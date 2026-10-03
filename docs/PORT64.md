@@ -643,6 +643,110 @@ shot/combat/midboss images/counters, UBSan image agreement and a negative
 control that deliberately rejects an original-CPU hook. The callback wrapper
 stops Unicorn explicitly and rethrows; callback errors cannot silently pass.
 
+## Dialog VM and natural Stage 1 Boss flow
+
+Native Stage 1 now reaches Orange through the real stopped-scroll/back-page
+activation gate, blocking pre-boss dialog and resource reload. Defeat/timeout
+then resumes the same script cursor for the post-boss dialog. This replaces
+the v1259 ordinary-flow limitation above. The stage-clear bonus/transition
+consumer is still absent, so simulation stays frozen after the post-dialog.
+
+`port64/dialog.*` owns the immutable script buffer, retained consumed offset,
+16-bit cursor/side/default parameter, command events and asynchronous waits.
+An inner `#` exits a text box; the outer `#` ends the scene. `$` waits for key
+release followed by a new press before stopping its current command level.
+Held input speeds text but cannot dismiss a wait. Three-digit optional numbers
+and inherited second-argument defaults preserve original consumption. Filenames
+consume their separator and are limited to12 bytes. Fades retain six-unit tone
+steps; palette TRAM text remains a separate white layer. Full host fade/input
+latency is not inferred from the intercepted CPU wait/fade controls.
+
+An independent original CPU Oracle executes pinned MAIN at load2000, DS8000,
+CS2AAF (unloaded main01 0AAF), including2A7C dialog parse,26CC commands,
+25DA/26A3 parameters and2454 activation. All16 actual dialog files and8
+synthetic controls are tested with held/released input:48 cases,76 complete
+scenes and18,768 ordered events agree, including final consumed offsets and
+cursor/side/default state. Another768 speed/page controls compare the actual
+dialog call and STD counter side effect, including invalid/nonactivating page2.
+Input, rendering, file/CDG, audio, waits and fades are explicit boundary adapters;
+this is command/state equivalence, not original complete-video equality.
+The receipt attests both target and Unicorn engine. Hook failures explicitly
+stop/reject the CPU; the native consumer does not generate expected traces.
+
+This uncovered an integration error in the v1259 diagnostic. Actual `_DM00`
+pre-boss commands clean slots128..255, loadST00.BB1 thenST00.BB2 and draw128.
+The old diagnostic incorrectly retained midboss sprites (ST00.BFT/BMT). Native
+ordinary flow now executes these commands and the diagnostic explicitly
+installs the same battle bank. The BFNT headers describe four32x48 sprites
+at128..131 and eight64x80 at132..139. Each file updates the active palette;
+BB2 color0 is black. Previous geometry/state proofs remain valid, but the old
+120 images did not establish original battle-sprite/palette correctness.
+
+The scene composes blue stipple boxes, CDG portraits, actual script sprite
+commands and Japanese text from a user-supplied2048x2048 monochrome PC-98 font
+BMP. The supplied emulator font stays private. Six independent Python
+SJIS-to-ISO2022JP/PIL pixel controls compare1,536 glyph pixels with the native
+lookup. The Stage1 scene supports its actual resources; other routes' parsed
+CDG-free/scroll/audio requests still need consumers when those routes are ported.
+
+Eight natural scenarios start from the real OP/menu handoff at frame0:
+Normal/Lunatic × Reimu/Marisa × shooting/idle. They inject no enemies, damage,
+scroll stop or Boss entry. Five snapshots each cover the pre-dialog first wait,
+correct battle bank, attack, post-dialog first wait and final scene. Gameplay
+frames and RNG freeze throughout dialog; key release/press is explicit.
+Pre-dialog starts at6652 idle or6548 shooting, both back-page1. Reimu/Marisa
+retained pre/post offsets are1081/1257 and707/857. Three additional ticks after
+post-dialog keep the pending stage-clear state frozen. Linux/Wine/optimized
+UBSan agree40 BMPs/counters. Earlier shot/combat/midboss images are unchanged;
+120 diagnostic Boss images now use the corrected battle bank. The current
+Windows Orange binary was relinked, so it independently reruns1,818 original
+render/circle controls and36,600 retained original state/pattern checkpoints
+rather than inheriting a stale executable SHA. UBSan also reruns these gates;
+Linux's unchanged Orange contract SHA permits its prior bounded CPU evidence.
+
+Actual Windows PowerShell execution now passes all nine contracts and the40
+natural BMPs/48 counters, equal to Linux/Wine. This is headless execution and
+does not measure GUI pacing or Windows compiler availability. The PE32+ product
+was cross-built with MinGW. No DOS source, executable, launcher or exact ledger
+state changed. A versioned native package is installed at
+`D:\Entertainment\Game\Touhou\th04-reconstruct\port64-preview\v1260`,
+and the root `start-th04-port64.bat` opens the Stage1 preview with explicit
+private font/HDI paths. The previous root native executable is backed up in
+that package. No game/font assets are checked in.
+
+Reproduce the focused original CPU and cross-product checks:
+
+```bash
+python3 port64/verify_dialog.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-dialog-contracts \
+  --output-dir .analysis/port64/dialog-v1260/cpu-linux-final
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-dialog-v1260-final/receipt.json
+```
+
+Native Windows replay (requires a fresh output directory):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File port64/verify_windows.ps1 `
+  -ExecutableDirectory .analysis/port64/windows-live-v1251 `
+  -Hdi D:\Entertainment\Game\Touhou\th04-reconstruct\play-normal.hdi `
+  -FontBitmap D:\Entertainment\Game\Touhou\th04-reconstruct\FREECG98.bmp `
+  -OutputDirectory .analysis/port64/windows-dialog-check
+```
+
+Receipts are `dialog-v1260/cpu-{linux,windows,ubsan}-final/receipt.json`,
+`integration-review.json`, `native-windows-receipt.json` and
+`verification-dialog-v1260-final/receipt.json`. Whole-game progression,
+resident graze/clear bonus, later stages, death/Bomb/HUD/audio and Ending/save
+remain unported. Stop general semantic work; port the next actual consumer.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -651,8 +755,8 @@ For each next module, stop readability work once state ownership, arithmetic,
 control flow and hardware boundaries support an independently checked native
 implementation. Resume only for a concrete ambiguity exposed by integration.
 Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous boundary.
-Orange state/attacks/foreground are integrated through explicit diagnostics.
-Next connect Stage 1 dialog and ordinary Boss activation/progression, then later bosses/midbosses,
+Orange state/attacks/foreground and pre/post-boss dialog now run in ordinary Stage1.
+Next connect the actual stage-clear bonus/progression consumer, then later bosses/midbosses,
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

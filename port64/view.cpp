@@ -37,6 +37,7 @@ namespace spark = th04::portable::spark;
 namespace gather = th04::portable::gather;
 namespace orange = th04::portable::orange;
 namespace circle = th04::portable::circle;
+namespace dialog = th04::portable::dialog;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -596,6 +597,15 @@ struct MainSprites {
     sprite::Sheet reimu, marisa, items, stage_tiles, boss_tiles, enemies,explosion;
     Bytes backdrop_bytes,transition;
     CdgSheet backdrop;
+    std::array<Bytes,2> scripts,face_bytes;
+    Bytes boss_face_bytes,gaiji;
+    CdgSheet reimu_faces,marisa_faces,boss_faces;
+    dialog::Font font;
+    std::map<std::string,Bytes> dialog_files;
+    struct Slot { const sprite::Sheet* sheet=nullptr;unsigned image=0; };
+    std::array<Slot,256> stage_slots{};
+    std::vector<std::unique_ptr<sprite::Sheet>> loaded_sheets;
+    unsigned stage_end=152;
     Bytes standard;
     PiImage palette;
     stage::TileImages reimu_tiles, marisa_tiles;
@@ -603,7 +613,9 @@ struct MainSprites {
     explicit MainSprites(const MainAssets& assets)
         : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles),
           boss_tiles(assets.boss_tiles),enemies(assets.enemies),explosion(assets.explosion_sprite),
-          backdrop_bytes(assets.orange_background),transition(assets.orange_transition),backdrop(backdrop_bytes),standard(assets.standard),
+          backdrop_bytes(assets.orange_background),transition(assets.orange_transition),backdrop(backdrop_bytes),
+          scripts(assets.dialog_scripts),face_bytes(assets.player_faces),boss_face_bytes(assets.boss_faces),gaiji(assets.gaiji),
+          reimu_faces(face_bytes[0]),marisa_faces(face_bytes[1]),boss_faces(boss_face_bytes),font(assets.font_bitmap),dialog_files(assets.dialog_sprites),standard(assets.standard),
           reimu_tiles(assets.reimu_map_tiles), marisa_tiles(assets.marisa_map_tiles),
           background(assets.map, assets.standard) {
         require_view(background.required_image_count() <= reimu_tiles.count() &&
@@ -616,6 +628,7 @@ struct MainSprites {
                      "Stage 1 BFNT append contract changed");
         palette.palette = boss_tiles.palette();
         palette.palette[0]=255;palette.palette[1]=255;
+        for(unsigned i=0;i<12;++i) { stage_slots[128+i]={&stage_tiles,i};stage_slots[140+i]={&boss_tiles,i}; }
         require_view(explosion.width()==48 && explosion.height()==48 && explosion.count()==1 &&
                      backdrop.width==384 && backdrop.height==128 && backdrop.image_count==1 &&
                      backdrop.layout==CdgSheet::colors_only && transition.size()==2048,
@@ -626,6 +639,17 @@ struct MainSprites {
                      enemies.width() == 32 && enemies.height() == 32 && enemies.count() == 24,
                      "MAIN sprite resource geometry changed");
     }
+    void clean_stage() { for(unsigned i=128;i<256;++i) stage_slots[i]={};loaded_sheets.clear();stage_end=128; }
+    void load_dialog_sprites(std::string name) {
+        for(auto& c:name) if(c>='a' && c<='z') c=static_cast<char>(c-'a'+'A');
+        const auto it=dialog_files.find(name);require_view(it!=dialog_files.end(),"dialog references absent sprite file");
+        auto sheet=std::make_unique<sprite::Sheet>(it->second);
+        require_view(sheet->count()<=256-stage_end,"dialog sprite bank overflow");
+        for(unsigned i=0;i<sheet->count();++i) stage_slots[stage_end++]={sheet.get(),i};
+        if(sheet->has_palette()) palette.palette=sheet->palette();
+        loaded_sheets.push_back(std::move(sheet));
+    }
+    void diagnostic_boss_sprites() { clean_stage();load_dialog_sprites("ST00.BB1");load_dialog_sprites("ST00.BB2"); }
 };
 
 void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet,
@@ -688,8 +712,10 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         const auto pattern=draw.pattern_or_radius;
         if (draw.kind==orange::DrawKind::circle) {
             for (auto p:circle::raster({draw.left,draw.top},pattern)) put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
-        } else if (pattern>=128 && pattern<140) put_sprite(frame,palette,sprites.stage_tiles,pattern-128,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
-        else if (pattern>=140 && pattern<152) put_sprite(frame,palette,sprites.boss_tiles,pattern-140,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
+        } else if (pattern>=128 && pattern<256) {
+            const auto& slot=sprites.stage_slots[pattern];require_view(slot.sheet,"Orange references an empty dynamic stage slot");
+            put_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
+        }
         else if (pattern==3) put_sprite(frame,palette,sprites.explosion,0,draw.left,draw.top);
         else if (pattern>=4 && pattern<28) put_sprite(frame,palette,sprites.enemies,pattern-4,draw.left,draw.top,false,draw.kind==orange::DrawKind::large_sprite ? 2 : 1);
         else if (pattern>=28 && pattern<128) put_sprite(frame,palette,sprites.items,pattern-28,draw.left,draw.top);
@@ -808,6 +834,94 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     return frame;
 }
 
+class DialogScene {
+public:
+    DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character)
+        : sprites_(sprites),script_(script),character_(character),indices_(640*400,255) {
+        require_view(sprites_.font.present(),"Dialog requires --font-bmp FILE or a local FREECG98.bmp");
+        for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x) {
+            const auto pixel=frame.pixels[y*640+x];
+            if(pixel==0xff000000u && (x<32 || x>=416 || y<16 || y>=384)) continue;
+            bool found=false;
+            for(unsigned color=0;color<16;++color) if(pixel==palette_color(sprites_.palette,color)) { indices_[y*640+x]=static_cast<std::uint8_t>(color);found=true;break; }
+            require_view(found,"dialog snapshot pixel is outside the active palette");
+        }
+    }
+    void advance(std::uint16_t held) {
+        if(intro_<36) {
+            boxes(intro_/12);++intro_;
+            if(intro_==36) { back_=indices_;script_.begin(); }
+            return;
+        }
+        script_.advance(held,[&](const dialog::Event& event) { events_.push_back(event);apply(event); });
+    }
+    bool finished() const { return intro_==36 && script_.status()==dialog::Status::stopped; }
+    dialog::Status status() const { return intro_==36 ? script_.status() : dialog::Status::delay; }
+    unsigned glyph_count() const { return static_cast<unsigned>(glyphs_.size()); }
+    const std::vector<dialog::Event>& events() const { return events_; }
+    Frame render() const {
+        Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
+        PiImage palette=sprites_.palette;const int tone=script_.tone();
+        for(auto& component:palette.palette) {
+            const int base=component>>4;
+            component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
+        }
+        for(unsigned i=0;i<indices_.size();++i) if(indices_[i]!=255) frame.pixels[i]=palette_color(palette,indices_[i]);
+        // PC-98 TRAM text is a separate layer and does not follow the analog
+        // graphics palette fade. All script text/gaiji uses TX_WHITE.
+        for(const auto& glyph:glyphs_) for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x) {
+            bool set=false;
+            if(glyph.kind==dialog::Kind::text) set=sprites_.font.pixel(static_cast<std::uint16_t>(glyph.c),x,y);
+            else {
+                const auto& bytes=sprites_.gaiji;
+                const unsigned base=32u+unsigned(bytes.at(28))+(unsigned(bytes.at(29))<<8);
+                if(glyph.c>=0 && glyph.c<256) set=(bytes.at(base+unsigned(glyph.c)*32+y*2+x/8)&(0x80u>>(x&7)))!=0;
+            }
+            if(set && glyph.a+int(x)>=0 && glyph.a+int(x)<640 && glyph.b+int(y)>=0 && glyph.b+int(y)<400)
+                frame.pixels[unsigned(glyph.b+int(y))*640+unsigned(glyph.a+int(x))]=0xffffffffu;
+        }
+        return frame;
+    }
+private:
+    void pixel(int x,int y,unsigned color) { if(x>=0 && x<640 && y>=0 && y<400) indices_[unsigned(y)*640+unsigned(x)]=static_cast<std::uint8_t>(color); }
+    void boxes(unsigned density) {
+        for(auto origin:{std::pair<int,int>{48,192},{80,320}}) for(unsigned y=0;y<48;++y) for(unsigned x=0;x<320;++x)
+            if(((x-y)&3u)<=density) pixel(origin.first+int(x),origin.second+int(y),1);
+    }
+    void apply(const dialog::Event& e) {
+        switch(e.kind) {
+        case dialog::Kind::box:
+            glyphs_.erase(std::remove_if(glyphs_.begin(),glyphs_.end(),[&](const dialog::Event& glyph) { return glyph.a>=e.a && glyph.a<e.a+240 && glyph.b>=e.b && glyph.b<e.b+48; }),glyphs_.end());break;
+        case dialog::Kind::text:case dialog::Kind::gaiji:glyphs_.push_back(e);break;
+        case dialog::Kind::face_clear: {
+            for(unsigned y=0;y<128;++y) for(unsigned x=0;x<128;++x) pixel(e.a+int(x),e.b+int(y),back_.at(unsigned(e.b+int(y))*640+unsigned(e.a+int(x))));
+            break;
+        }
+        case dialog::Kind::face: {
+            const auto& sheet=e.a==32 ? (character_ ? sprites_.marisa_faces : sprites_.reimu_faces) : sprites_.boss_faces;
+            const unsigned image=static_cast<unsigned>(e.c-(e.a==32 ? 2 : 8));
+            require_view(image<sheet.image_count,"dialog references absent portrait");
+            for(unsigned y=0;y<128;++y) for(unsigned x=0;x<128;++x) if(sheet.bit(image,0,x,y)) {
+                unsigned color=0;for(unsigned plane=0;plane<4;++plane) if(sheet.bit(image,plane+1,x,y)) color|=1u<<plane;
+                pixel(e.a+int(x),e.b+int(y),color);
+            }break;
+        }
+        case dialog::Kind::sprite: {
+            require_view(e.c>=128 && e.c<256,"dialog sprite is outside the current stage bank");const auto& slot=sprites_.stage_slots[unsigned(e.c)];require_view(slot.sheet,"dialog references absent sprite");
+            for(unsigned y=0;y<slot.sheet->height();++y) for(unsigned x=0;x<slot.sheet->width();++x) {
+                const auto color=slot.sheet->pixel(slot.image,x,y);if(color) pixel(e.a+int(x),(e.b+int(y))%400,color);
+            }break;
+        }
+        case dialog::Kind::clean:sprites_.clean_stage();break;
+        case dialog::Kind::sprite_load:sprites_.load_dialog_sprites(e.name);break;
+        case dialog::Kind::cdg_free:throw std::runtime_error("Stage 1 dialog unexpectedly frees a CDG slot");
+        default:break; // Timing/palette is Script-owned; audio/overlay requests are retained.
+        }
+    }
+    MainSprites& sprites_;dialog::Script& script_;unsigned character_,intro_=0;
+    Bytes indices_,back_;std::vector<dialog::Event> glyphs_,events_;
+};
+
 class FrontEnd {
 public:
     FrontEnd(
@@ -825,9 +939,31 @@ public:
 
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
-    unsigned slowdown() const { return main_ ? main_->slowdown() : 1; }
+    unsigned slowdown() const { return main_ && !dialog_scene_ ? main_->slowdown() : 1; }
+    bool dialog_active() const { return bool(dialog_scene_); }
+    bool post_dialog_complete() const { return post_finished_; }
+    bool post_dialog() const { return post_started_; }
+    unsigned dialog_glyphs() const { return dialog_scene_ ? dialog_scene_->glyph_count() : 0; }
+    dialog::Status dialog_status() const { return dialog_scene_ ? dialog_scene_->status() : dialog::Status::idle; }
+    std::size_t dialog_offset() const { return script_ ? script_->offset() : 0; }
+    bool battle_resources_valid() const {
+        const auto first=sprites_->stage_slots[128],second=sprites_->stage_slots[132];
+        return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
+    }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         if (live_main()) {
+            if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
+            if(!diagnostic_ && !dialog_scene_ && !post_started_ && main_->orange_active() && main_->orange().snapshot().phase==255 && main_->orange().snapshot().phase_frame==0) {
+                main_->update(held_input,shift,false,0,&sprites_->background);begin_dialog(true);
+            }
+            if(dialog_scene_) {
+                dialog_scene_->advance(held_input);
+                if(dialog_scene_->finished()) {
+                    if(post_started_) post_finished_=true;
+                    else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
+                    dialog_scene_.reset();
+                } else { if(repaint) frame_=render();return; }
+            }
             main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
             sprites_->background.update();
             if (repaint) frame_ = render();
@@ -837,7 +973,7 @@ public:
     void repaint() { frame_=render(); }
     void diagnostic_start_orange() {
         require_view(live_main(),"Orange fixture requires MAIN");
-        sprites_->background.set_speed(0);main_->start_orange_after_dialog();
+        diagnostic_=true;sprites_->diagnostic_boss_sprites();sprites_->background.set_speed(0);main_->start_orange_after_dialog();
     }
     gameplay::State& main_state() {
         require_view(bool(main_), "MAIN scene is not active");
@@ -880,6 +1016,7 @@ public:
                 if (sprites_) {
                     main_ = std::make_unique<gameplay::State>(application_);
                     main_->load_stage(sprites_->standard);
+                    script_=std::make_unique<dialog::Script>(sprites_->scripts[unsigned(result.playchar)]);
                 }
                 std::cout << "MAIN handoff playchar="
                           << unsigned(result.playchar)
@@ -890,7 +1027,7 @@ public:
             break;
         }
         case Screen::main_handoff:
-            if (pressed == menu::Input::cancel) {
+            if (pressed == menu::Input::cancel && !dialog_scene_) {
                 close = true;
             }
             break;
@@ -900,6 +1037,9 @@ public:
     }
 
 private:
+    void begin_dialog(bool post) {
+        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar),unsigned(application_.resident().playchar));
+    }
     enum class Screen { menu, selection, main_handoff };
 
     Frame render() const {
@@ -917,6 +1057,7 @@ private:
                     selection_background_, portraits_, selection_
                 );
         case Screen::main_handoff:
+            if(dialog_scene_) return dialog_scene_->render();
             if (main_) return render_main(*sprites_, *main_, application_.resident().playchar);
             return render_main_handoff(
                 selection_background_, portraits_, application_
@@ -938,6 +1079,9 @@ private:
     bool extra_ = false;
     std::unique_ptr<MainSprites> sprites_;
     std::unique_ptr<gameplay::State> main_;
+    std::unique_ptr<dialog::Script> script_;
+    std::unique_ptr<DialogScene> dialog_scene_;
+    bool diagnostic_=false,post_started_=false,post_finished_=false;
     Frame frame_;
 };
 
@@ -984,6 +1128,9 @@ LRESULT CALLBACK title_window_proc(
                 if (active && GetAsyncKeyState(VK_LEFT) & 0x8000) held |= player::left;
                 if (active && GetAsyncKeyState(VK_RIGHT) & 0x8000) held |= player::right;
                 if (active && GetAsyncKeyState('Z') & 0x8000) held |= shot::input_shot;
+                if (active && GetAsyncKeyState(VK_RETURN) & 0x8000) held |= 0x1000;
+                if (active && GetAsyncKeyState('X') & 0x8000) held |= 0x800;
+                if (active && GetAsyncKeyState(VK_ESCAPE) & 0x8000) held |= 0x2000;
                 title->front_end.advance(held, active && (GetAsyncKeyState(VK_SHIFT) & 0x8000));
                 title->next_tick += frame_period*title->front_end.slowdown();
                 ++ticks;
@@ -1180,6 +1327,9 @@ void show_window(
                 if (keys[SDL_SCANCODE_LEFT]) held |= player::left;
                 if (keys[SDL_SCANCODE_RIGHT]) held |= player::right;
                 if (keys[SDL_SCANCODE_Z]) held |= shot::input_shot;
+                if (keys[SDL_SCANCODE_RETURN]) held |= 0x1000;
+                if (keys[SDL_SCANCODE_X]) held |= 0x800;
+                if (keys[SDL_SCANCODE_ESCAPE]) held |= 0x2000;
             }
             const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
             front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
@@ -1229,7 +1379,7 @@ void run_title(
     const std::string& handoff_screenshot,
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
-    const std::string& orange_screenshots, bool window
+    const std::string& orange_screenshots,const std::string& dialog_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1455,6 +1605,45 @@ void run_title(
                          "pending post-boss dialog advanced simulation");
             std::cout << "MAIN Orange stopped rank=" << (lunatic ? "Lunatic" : "Normal") << " character=" << character
                       << " shooting=" << shooting << " frames=" << scene.main_state().frames() << " bonus=" << bonus << " dialog=pending\n";
+        }
+    }
+    if (!dialog_screenshots.empty()) {
+        for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            if(lunatic) {
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);scene.input(menu::Input::cancel);
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);if(character) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            std::array<bool,5> seen{};std::uint32_t start_frame=0;unsigned frozen_ticks=0;
+            for(unsigned tick=0;tick<20000;++tick) {
+                const bool blocked=scene.dialog_active();const auto before=scene.main_state().frames();const auto random=scene.main_state().random_cursor();
+                const std::uint16_t input=blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : (shooting ? shot::input_shot : 0);
+                scene.advance(input,false,false);
+                if(blocked && scene.dialog_active()) {
+                    require_view(scene.main_state().frames()==before && scene.main_state().random_cursor()==random,"dialog advanced game frame or shared RNG");++frozen_ticks;
+                }
+                const auto& state=scene.main_state();int checkpoint=-1;
+                if(!seen[0] && scene.dialog_active() && !scene.post_dialog() && scene.dialog_status()==dialog::Status::release) { checkpoint=0;start_frame=state.frames(); }
+                else if(!seen[1] && state.orange_active()) { checkpoint=1;require_view(seen[0] && scene.battle_resources_valid(),"ordinary Boss activated before dialog/resources completed"); }
+                else if(!seen[2] && state.orange_active() && state.orange().snapshot().phase==2) checkpoint=2;
+                else if(!seen[3] && scene.dialog_active() && scene.post_dialog() && scene.dialog_status()==dialog::Status::release) checkpoint=3;
+                else if(!seen[4] && scene.post_dialog_complete()) checkpoint=4;
+                if(checkpoint>=0) {
+                    seen[unsigned(checkpoint)]=true;scene.repaint();
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
+                    const auto path=dialog_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    std::cout<<"MAIN dialog fixture="<<name<<" frame="<<state.frames()<<" offset="<<scene.dialog_offset()<<" power="<<+state.score().power<<" bonus="<<state.orange().snapshot().score_delta<<" screenshot="<<path<<'\n';
+                }
+                if(scene.post_dialog_complete()) break;
+            }
+            for(bool capture:seen) require_view(capture,"natural Stage 1 dialog fixture missed progression");
+            require_view(start_frame>4500 && !(start_frame&1) && frozen_ticks>100,"dialog was not naturally gated by stopped scroll/back page");
+            const auto stopped=scene.main_state().frames();for(unsigned i=0;i<3;++i) scene.advance(0,false,false);
+            require_view(scene.main_state().frames()==stopped,"unported stage-clear consumer silently advanced");
+            std::cout<<"MAIN dialog stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" entry_frame="<<start_frame<<" frames="<<stopped<<" frozen_ticks="<<frozen_ticks<<" stage_clear=pending\n";
         }
     }
     if (window) {

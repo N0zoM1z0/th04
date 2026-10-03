@@ -25,6 +25,7 @@ add_library(
   orange.cpp
   orange_render.cpp
   circles.cpp
+  dialog.cpp
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp
@@ -57,8 +58,10 @@ target_link_libraries(th04-port64-midboss-contracts PRIVATE th04-portable-core)
 
 add_executable(th04-port64-orange-contracts orange_contracts.cpp)
 target_link_libraries(th04-port64-orange-contracts PRIVATE th04-portable-core)
+add_executable(th04-port64-dialog-contracts dialog_contracts.cpp)
+target_link_libraries(th04-port64-dialog-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts)
+foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -66,7 +69,7 @@ foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts)
+  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts)
     target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
   endforeach()
 endif()
@@ -90,3 +93,4 @@ add_test(NAME gameplay-effect-contracts COMMAND th04-port64-effect-contracts)
 add_test(NAME stage1-midboss-contracts COMMAND th04-port64-midboss-contracts)
 
 add_test(NAME stage1-orange-contracts COMMAND th04-port64-orange-contracts)
+add_test(NAME dialog-contracts COMMAND th04-port64-dialog-contracts)

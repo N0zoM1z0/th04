@@ -14,6 +14,12 @@ import sys
 
 
 PORT_FILES = (
+    "port64/start-th04-port64.bat",
+    "port64/verify_windows.ps1",
+    "port64/dialog.hpp",
+    "port64/dialog.cpp",
+    "port64/dialog_contracts.cpp",
+    "port64/verify_dialog.py",
     "port64/orange.hpp",
     "port64/orange.cpp",
     "port64/orange_render.cpp",
@@ -148,6 +154,7 @@ def main() -> int:
     parser.add_argument("--hdi", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--windows-runner", default="wine")
+    parser.add_argument("--font-bmp", type=Path)
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parents[1]
@@ -173,9 +180,11 @@ def main() -> int:
     windows_midboss = windows_dir / "th04-port64-midboss-contracts.exe"
     linux_orange = linux_dir / "th04-port64-orange-contracts"
     windows_orange = windows_dir / "th04-port64-orange-contracts.exe"
-    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange):
+    linux_dialog = linux_dir / "th04-port64-dialog-contracts"
+    windows_dialog = windows_dir / "th04-port64-dialog-contracts.exe"
+    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange):
+    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -234,6 +243,10 @@ def main() -> int:
     windows_orange_output = run([args.windows_runner,str(windows_orange)],env=runner_env)
     if linux_orange_output != "Stage 1 Orange contracts PASS" or windows_orange_output != linux_orange_output:
         raise ValueError("Orange contracts did not pass on both hosts")
+    linux_dialog_output = run([str(linux_dialog)])
+    windows_dialog_output = run([args.windows_runner,str(windows_dialog)],env=runner_env)
+    if linux_dialog_output != "Dialog contracts PASS" or windows_dialog_output != linux_dialog_output:
+        raise ValueError("dialog contracts did not pass on both hosts")
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -304,6 +317,23 @@ def main() -> int:
     if orange_hashes["linux"] != orange_hashes["windows"] or orange_outputs["linux"] != orange_outputs["windows"]:
         raise ValueError("Orange images or gameplay counters differ between hosts")
 
+    dialog_hashes = {}
+    dialog_outputs = {}
+    if args.font_bmp:
+        for host, command in (("linux",[str(linux_main)]),
+                              ("windows",[args.windows_runner,str(windows_main)])):
+            images = output.parent / ("dialog-"+host)
+            images.mkdir(parents=True,exist_ok=True)
+            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--dialog-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN dialog fixture=") != 40 or result.count("MAIN dialog stopped ") != 8:
+                raise ValueError("ordinary Stage 1 dialog fixture missed progression")
+            dialog_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(dialog_hashes[host]) != 40:
+                raise ValueError("dialog fixture has unexpected image files")
+            dialog_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN dialog")]
+        if dialog_hashes["linux"] != dialog_hashes["windows"] or dialog_outputs["linux"] != dialog_outputs["windows"]:
+            raise ValueError("ordinary dialog images or counters differ between hosts")
+
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
         "schema_version": 1,
@@ -332,6 +362,8 @@ def main() -> int:
                 "midboss_contracts_sha256": sha256(linux_midboss),
                 "orange_contract_output": linux_orange_output,
                 "orange_contracts_sha256": sha256(linux_orange),
+                "dialog_contract_output": linux_dialog_output,
+                "dialog_contracts_sha256": sha256(linux_dialog),
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -353,6 +385,8 @@ def main() -> int:
                 "midboss_contracts_sha256": sha256(windows_midboss),
                 "orange_contract_output": windows_orange_output,
                 "orange_contracts_sha256": sha256(windows_orange),
+                "dialog_contract_output": windows_dialog_output,
+                "dialog_contracts_sha256": sha256(windows_dialog),
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -382,6 +416,9 @@ def main() -> int:
         "midboss_fixture_counters": midboss_outputs["linux"],
         "orange_fixture_bmp_sha256": orange_hashes["linux"],
         "orange_fixture_counters": orange_outputs["linux"],
+        "dialog_fixture_bmp_sha256": dialog_hashes.get("linux",{}),
+        "dialog_fixture_counters": dialog_outputs.get("linux",[]),
+        "font_bmp_sha256": sha256(args.font_bmp) if args.font_bmp else None,
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
             "OP menu-state transitions, resident process handoff, process-local LCG and shared "
@@ -392,7 +429,8 @@ def main() -> int:
             "Stage 1 midboss activation/tile animation/pattern/defeat; "
             "explicit Stage 1 Orange fixtures with actual shots/items/bullets, foreground/explosions/circles and host backdrop composition "
             "stop at the pending post-boss dialog (independent CPU comparisons are separate receipts); "
-            "ordinary pre/post-boss dialog and stage-clear progression, "
+            "Stage 1 ordinary pre/post-boss dialog and sprite-bank replacement is checked when font-bmp is supplied; "
+            "stage-clear bonus/progression, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

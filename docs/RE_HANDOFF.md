@@ -11,52 +11,39 @@ item-lifecycle batches; semantic work is paused unless it blocks a port slice.
 
 On `port/modern-64`, semantic work is paused at the user's stopping condition:
 sufficient clarity for the current x64 slice, then implement and verify it.
-Current x64 slice now includes Stage 1 midboss activation, emergence tiles,
-unfolding, paired bullets, real shot hits, defeat and timeout. Seven contracts,
-699 original MAIN state/render cases and450 complete tile-ring controls pass
-on Linux ELF64, Wine/Win32 PE32+ and GNU UBSan/bounds. Four4500-frame live
-Stage 1 scenarios (both characters, shot/idle) agree on24 BMPs and counters.
-Original stage setup confirms twelve64x32 ST00.BMT sprites appended at140,
-after ST00.BFT's twelve32x32 sprites, and palette0 R/G=FF with B=70.
-The MAIN fixture is now `4cbbe895...`; the earlier hash below is historical.
-Scope/limitations/commands: [Stage 1 midboss](PORT64.md#stage-1-midboss).
-Receipts: `.analysis/port64/verification-midboss-v1257-final/receipt.json` and
-`.analysis/port64/midboss-v1257/cpu-{linux,windows,ubsan}-final/receipt.json`.
-Orange now has an isolated fixed-width state/attack owner (`port64/orange.*`).
-Original MAIN main03 13A9:6013/5B54..6012 and common hit/phase/defeat/bonus
-helpers agree on36,600 complete state checkpoints:2,805 single controls,
-ten whole-Boss sequences through the next-stage request and twenty full
-attack-mode controls on five ranks. Linux, Wine/Windows PE32+ and optimized
-UBSan/bounds replay the same original traces; eight native contracts pass.
-Receipts: `.analysis/port64/orange-v1258/replay-{linux,windows,ubsan}/receipt.json`
-and `pattern-{linux,windows,ubsan}-final/receipt.json`; original CPU producers
-are `cpu-linux` and `pattern-linux`. See [Orange](PORT64.md#stage-1-orange-state-and-attacks).
-Cross-product receipt: `.analysis/port64/verification-orange-v1258-final/receipt.json`,
-frozen source manifest`717f96b9...`; existing24 midboss BMPs/counters still agree.
-Orange foreground/explosion aging/circles now connect to native MAIN through
-an explicit diagnostic entry, including real shot hits, homing, bullets,
-items and shared RNG. Original CPU900 foreground/explosion and918 circle
-controls (150 actual GRCG pixel masks) pass Linux/Wine/optimized UBSan.
-Scope MAIN main01 0AAF:6E7B/2D9C/2E65/1B5A/1BA6/1BF2/1C28,
-library0000:11EC; load2000 CS2AAF DS8000. Eight shot/idle character/rank
-scenarios agree on120 native BMPs/counters. Native repeated repaints do not
-advance clocks; phase255/frame0 freezes at the pending post-boss dialog.
-Current receipts: `.analysis/port64/orange-render-v1259/cpu-{linux,windows,ubsan}-final/receipt.json`,
-`regression-{state,pattern}-{linux,windows,ubsan}/receipt.json` (earlier36600
-checkpoints retained), `integration-review.json`, and
-`.analysis/port64/verification-orange-render-v1259/receipt.json` (source
-manifest1e1e0fbe...). Eight UBSan contracts/resource smoke pass; earlier
-shot/combat/midboss fixtures are unchanged. Full original scene/page/palette
-equality is not claimed; native backdrop/BB/palette composition is a separate
-host adapter. Details/commands: [Orange foreground](PORT64.md#stage-1-orange-foreground-and-native-integration).
-Next connect pre/post-boss dialog and ordinary Stage1 progression. Target main01
-0AAF:2454 activates Boss only after zero scroll speed/back page1 and a
-returned blocking dialog. Do not replace this with STD exhaustion. Sound/HUD/
-point/post-boss dialog/clear-bonus requests still need consumers;
-resident graze and actual stage-clear consumers, death/Bomb and Ending/save
-remain to port.
-No DOS source or exact acceptance state changes; native Windows pacing is
-untested. Resume semantic only for a concrete blocking ambiguity.
+The current native slice runs ordinary Stage 1 through midboss, stopped-scroll
+pre-boss dialog, Orange combat and post-boss dialog. The dialog owns its input
+waits and retained script cursor while gameplay frames/RNG remain frozen.
+Semantic stays paused; next port the actual stage-clear bonus/progression.
+MAIN main01 0AAF:2A7C/26CC/25DA/26A3 and2454 agree on48 script/input
+controls,76 original scenes,18,768 ordered events and768 activation controls.
+Linux ELF64, MinGW PE32+/Wine and optimized UBSan/bounds pass nine contracts;
+8 natural character/rank/shot-idle scenarios agree40 BMPs/counters, alongside
+120 diagnostic Boss snapshots and prior shot/combat/midboss fixtures.
+The previous diagnostic's missing battle-resource reload is corrected:
+ST00.BB1 four32x48 sprites at128, ST00.BB2 eight64x80 sprites at132 replace
+ST00.BFT/BMT after the real dialog clean/load commands. Earlier geometry/state
+Oracles remain valid; their images did not prove the correct original bank.
+Current source manifest and cross-product receipt:
+`.analysis/port64/verification-dialog-v1260-final/receipt.json`.
+Independent CPU receipts: `.analysis/port64/dialog-v1260/cpu-{linux,windows,ubsan}-final/receipt.json`.
+Boss regressions retain36,600 checkpoints plus1,818 render/circle controls;
+current Windows/UBSan reruns and unchanged Linux contract identity are recorded
+in `.analysis/port64/dialog-v1260/integration-review.json`.
+Native Windows headless execution now also passes nine contracts and the same
+40 natural BMPs/48 counters (not a frame-pacing measurement):
+`.analysis/port64/dialog-v1260/native-windows-receipt.json`.
+The Windows native executable and English `start-th04-port64.bat` are installed
+in `D:\Entertainment\Game\Touhou\th04-reconstruct`; versioned checks live
+under `port64-preview/v1260`. The launcher uses the existing private
+`play-normal.hdi` and `FREECG98.bmp`; DOS builds/launchers are unchanged.
+Dialog Japanese font lookup passes6 independent codec/image controls
+(1,536 pixels). Full original VRAM/page/fade pacing, audio/HUD, death/Bomb,
+resident graze, stage-clear bonus/transition, later stages and Ending/save
+remain outside this native slice. Stage-clear stays frozen after post-dialog;
+do not treat the prototype as a complete playable game. Details/commands:
+[Stage 1 dialog](PORT64.md#dialog-vm-and-natural-stage-1-boss-flow).
+No DOS source or exact acceptance state changes.
 The native product is rebased through the latest item semantics. Linux ELF64
 and Wine-hosted Windows PE32+ pass the existing OP/resource/process/random
 contracts and a new live MAIN slice. Game confirmation now starts a timed

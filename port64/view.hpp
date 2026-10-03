@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <map>
 
 using Bytes = std::vector<uint8_t>;
 
@@ -20,6 +21,9 @@ struct MainAssets {
     Bytes enemies;
     Bytes stage_tiles,boss_tiles;
     Bytes explosion_sprite,orange_background,orange_transition;
+    std::array<Bytes,2> dialog_scripts,player_faces;
+    Bytes boss_faces,gaiji,font_bitmap;
+    std::map<std::string,Bytes> dialog_sprites;
     Bytes reimu_map_tiles, marisa_map_tiles, map, standard;
 };
 
@@ -40,4 +44,5 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& shooting_screenshots,
                const std::string& combat_screenshots,
                const std::string& midboss_screenshots,
-               const std::string& orange_screenshots, bool window);
+               const std::string& orange_screenshots,
+               const std::string& dialog_screenshots, bool window);

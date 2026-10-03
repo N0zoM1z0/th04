@@ -9,6 +9,7 @@
 #include "midboss.hpp"
 #include "orange.hpp"
 #include "circles.hpp"
+#include "dialog.hpp"
 #include "stage_background.hpp"
 #include <memory>
 
@@ -41,8 +42,14 @@ public:
     bool post_boss_dialog_pending() const { return post_boss_dialog_pending_; }
     std::uint8_t orange_background_phase() const { return orange_background_phase_; }
     std::int16_t orange_background_frame() const { return orange_background_frame_; }
-    // A completed pre-boss dialog is a required caller contract. Current
-    // headless Orange fixtures invoke it explicitly; ordinary STD does not.
+    bool stage1_dialog_ready(const stage::Background& background) const {
+        // Session init sets back page1; every completed gameplay frame flips
+        // it. Blocking dialog ticks do not increment this simulation clock.
+        return stage_id_==0 && stage_ && stage_->stopped() && !orange_active_ &&
+            dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
+    }
+    std::uint16_t random_cursor() const { return ring_.cursor(); }
+    // Caller completes the blocking pre-boss dialog before this handoff.
     void start_orange_after_dialog();
     const std::vector<orange::Event>& orange_events() const { return orange_events_; }
     const std::vector<midboss::Event>& midboss_events() const { return midboss_events_; }
@@ -76,6 +83,7 @@ private:
     std::unique_ptr<stage::Program> stage_;
     std::vector<enemy::Event> enemy_events_;
     std::uint8_t rank_ = 1, performance_ = 16;
+    std::uint8_t stage_id_=0;
     application::Playchar playchar_ = application::Playchar::reimu;
     application::ShotType shot_type_ = application::ShotType::a;
     item::Pool items_{};

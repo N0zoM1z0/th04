@@ -10,6 +10,7 @@ State::State(application::State& application) {
     score_.power = 1;
     playchar_ = application.resident().playchar;
     shot_type_ = application.resident().shot_type;
+    stage_id_=application.resident().resource_stage;
     turbo_ = application.resident().stage == 6 || application.resident().config.turbo;
     rank_ = application.resident().stage == 6 ? 4 : application.resident().config.rank;
     performance_ = rank_ == 2 ? 20 : (rank_ == 3 ? 22 : 16);
