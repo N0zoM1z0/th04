@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/stage_bonus.hpp",
+    "port64/stage_bonus.cpp",
+    "port64/bonus_text.hpp",
+    "port64/bonus_contracts.cpp",
+    "port64/verify_bonus.py",
     "port64/start-th04-port64.bat",
     "port64/verify_windows.ps1",
     "port64/dialog.hpp",
@@ -182,9 +187,11 @@ def main() -> int:
     windows_orange = windows_dir / "th04-port64-orange-contracts.exe"
     linux_dialog = linux_dir / "th04-port64-dialog-contracts"
     windows_dialog = windows_dir / "th04-port64-dialog-contracts.exe"
-    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    linux_bonus = linux_dir / "th04-port64-bonus-contracts"
+    windows_bonus = windows_dir / "th04-port64-bonus-contracts.exe"
+    for path in (linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -247,6 +254,11 @@ def main() -> int:
     windows_dialog_output = run([args.windows_runner,str(windows_dialog)],env=runner_env)
     if linux_dialog_output != "Dialog contracts PASS" or windows_dialog_output != linux_dialog_output:
         raise ValueError("dialog contracts did not pass on both hosts")
+    expected_bonus = "stage_bonus=WORD_COMPONENTS_STEPWISE32 timeout=ZERO_WITH_BOMB allclear=EXTENDS_DISABLED pointer_bits=64"
+    linux_bonus_output = run([str(linux_bonus)])
+    windows_bonus_output = run([args.windows_runner,str(windows_bonus)],env=runner_env)
+    if linux_bonus_output != expected_bonus or windows_bonus_output != expected_bonus:
+        raise ValueError("stage-bonus contracts did not pass on both hosts")
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -364,6 +376,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(linux_orange),
                 "dialog_contract_output": linux_dialog_output,
                 "dialog_contracts_sha256": sha256(linux_dialog),
+                "bonus_contract_output": linux_bonus_output,
+                "bonus_contracts_sha256": sha256(linux_bonus),
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -387,6 +401,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(windows_orange),
                 "dialog_contract_output": windows_dialog_output,
                 "dialog_contracts_sha256": sha256(windows_dialog),
+                "bonus_contract_output": windows_bonus_output,
+                "bonus_contracts_sha256": sha256(windows_bonus),
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -430,7 +446,9 @@ def main() -> int:
             "explicit Stage 1 Orange fixtures with actual shots/items/bullets, foreground/explosions/circles and host backdrop composition "
             "stop at the pending post-boss dialog (independent CPU comparisons are separate receipts); "
             "Stage 1 ordinary pre/post-boss dialog and sprite-bank replacement is checked when font-bmp is supplied; "
-            "stage-clear bonus/progression, "
+            "ordinary stage-clear bonus state/colored text is consumed exactly once; "
+            "all-clear/Extra bonus math has separate CPU controls; "
+            "score drain, stage-leave overlay and next-stage progression, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

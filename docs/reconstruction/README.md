@@ -22,6 +22,7 @@ notes explain the remaining source and container gaps:
 - [Native Stage 1 Orange state/attacks and dialog activation barrier](../PORT64.md#stage-1-orange-state-and-attacks)
 - [Native Orange foreground, explosion aging, circle masks and diagnostic integration](../PORT64.md#stage-1-orange-foreground-and-native-integration)
 - [Dialog VM, battle-resource reload and natural native Stage 1 flow](../PORT64.md#dialog-vm-and-natural-stage-1-boss-flow)
+- [Native Stage/all-clear bonus math, ordered TRAM and single-award integration](../PORT64.md#stage-clear-and-all-clear-bonus)
 - [Native DOS product build readiness and source-graph gaps](product/TH04_NATIVE_BUILD_READINESS_V1.md)
 - [Native MAINE far-call ABI trap and repair](product/TH04_NATIVE_FAR_CALL_ABI_V856.md)
 - [Native PC-98 scroll and GRCG rectangle owners](product/TH04_NATIVE_SCROLL_BOX_V858.md)

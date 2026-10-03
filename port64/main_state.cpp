@@ -11,8 +11,12 @@ State::State(application::State& application) {
     playchar_ = application.resident().playchar;
     shot_type_ = application.resident().shot_type;
     stage_id_=application.resident().resource_stage;
+    bonus_context_.stage=application.resident().stage;
+    bonus_context_.resource_stage=stage_id_;
+    bonus_context_.credit_lives=application.resident().credit_lives;
     turbo_ = application.resident().stage == 6 || application.resident().config.turbo;
     rank_ = application.resident().stage == 6 ? 4 : application.resident().config.rank;
+    bonus_context_.rank=rank_;
     performance_ = rank_ == 2 ? 20 : (rank_ == 3 ? 22 : 16);
     score_.remaining_lives = application.resident().credit_lives;
     score_.remaining_bombs = application.resident().credit_bombs;
@@ -37,16 +41,33 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     midboss_ = midboss::System{};
     orange_=orange::System{};circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
+    clear_bonus_.reset();
     homing_target_.reset();
 }
 void State::start_orange_after_dialog() {
     if (!stage_ || orange_active_ || midboss_.snapshot().active) throw std::logic_error("invalid Orange dialog handoff");
     orange_active_=true;
 }
+void State::finish_post_boss_dialog() {
+    if(!post_boss_dialog_pending_ || clear_bonus_) throw std::logic_error("invalid stage-clear bonus handoff");
+    bonus_context_.power=score_.power;bonus_context_.dream=score_.dream_score;
+    bonus_context_.graze=bullets_.snapshot().graze;
+    bonus_context_.point_items=score_.stage_point_items_collected;
+    bonus_context_.remaining_lives=score_.remaining_lives;
+    bonus_context_.defeated_in_time=orange_.snapshot().patterns_or_bonus;
+    constexpr std::uint8_t minimum[]{4,11,20,22,16},maximum[]{16,24,32,34,20};
+    bonus::State state;state.score_delta=score_.score_delta;state.bombs=score_.remaining_bombs;
+    state.performance=performance_;state.minimum=minimum[rank_];state.maximum=maximum[rank_];
+    clear_bonus_=bonus::apply(bonus_context_,state);
+    score_.score_delta=state.score_delta;score_.remaining_bombs=state.bombs;performance_=state.performance;
+    // Bonus is consumed exactly once after the blocking scene. The next
+    // frontier is score drain / leave overlay / resource-stage transition;
+    // keep simulation frozen until those actual consumers are implemented.
+}
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     if (orange_active_ && orange_.snapshot().phase==255 && orange_.snapshot().phase_frame==0) {
-        // The actual dialog/stage-clear consumer is not implemented yet.
-        // Freeze at its entry instead of silently skipping it each frame.
+        // The front end consumes dialog and bonus once. Score drain and
+        // stage-leave/progression remain a separate integration boundary.
         post_boss_dialog_pending_=true;return;
     }
     enemy_events_.clear();

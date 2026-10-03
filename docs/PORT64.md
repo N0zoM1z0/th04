@@ -747,6 +747,92 @@ Receipts are `dialog-v1260/cpu-{linux,windows,ubsan}-final/receipt.json`,
 resident graze/clear bonus, later stages, death/Bomb/HUD/audio and Ending/save
 remain unported. Stop general semantic work; port the next actual consumer.
 
+## Stage-clear and all-clear bonus
+
+`port64/stage_bonus.*` now owns both original reward calculations, the ordered
+text/gaiji/performance/HUD requests, Bomb increment and all-clear extend-disable
+side effect. Ordinary native Stage1 consumes this owner exactly once after its
+post-boss dialog and shows a colored bonus TRAM layer over graphics tone60.
+This advances the v1260 frontier above: the preview now stops on the actual
+bonus screen. Score drain, leave overlay, persistent resident statistics and
+next-stage resource handoff remain the next integration work; freezing there
+does not establish a complete stage transition.
+
+Independent original MAIN CPU controls execute main03 13A9:9C31 (ordinary),
+9E06 (all clear),99FE/9A89 formatters,9AFF/9B59 multiplier helpers and actual
+main01 0AAF:1874/188E performance arithmetic. At load2000, CS33A9/2AAF,
+DS8000 copied from relocated DATA, all1,837 cases agree on complete score delta,
+Bomb count, performance, extends and palette tone, plus ordered text/gaiji
+bytes/coordinates/colors and performance/HUD calls. There are986 ordinary and
+851 all-clear controls, including the complete modifier matrix, five ranks,
+Extra, unhandled byte values, word component wrapping, byte Bomb/performance
+wrapping, life underflow, pre-modifier threshold neighbors and score-delta
+overflow. Linux ELF64, Wine/MinGW PE32+ and optimized GNU UBSan/bounds all
+execute the same original CPU producer independently. Video consumers are
+intercepted; these controls prove math/state/requests, not complete rendering.
+
+Preserve these original details:
+
+- Reward units are ten points; value gaiji append the final zero. Component
+  values first wrap as unsigned16-bit values, then widen. This includes
+  graze×5 and `(remaining_lives-1)×1000/3000`; zero lives is not clamped.
+- Life-credit, Continue and rank multipliers each perform their own unsigned
+  multiply/divide-by10 and truncate. Extra has no rank multiplier. A zero final
+  defeat-bonus byte applies a zero multiplier and skips the other descriptions.
+- Ordinary performance thresholds use the unmodified subtotal, even when
+  timeout zeros the award. The Bomb byte increments on every ordinary clear,
+  including timeout/zero point items; then no-miss/low-Bomb performance raises
+  run in order. All clear sets extends10 and does not grant a Bomb or change
+  performance.
+- Raise performs wrapped byte addition plus unsigned upper clipping; lower
+  performs wrapped byte subtraction plus signed lower comparison. The target
+  arithmetic executes, rather than being replaced by an Oracle adapter.
+
+`bonus_text.hpp` localizes the maintained MAIN DATA strings with readable
+Japanese comments. The CPU Oracle found the candidate timeout description at
+`src/main/stage/bonus_state.asm` has eight full-width spaces before ×; pinned
+MAIN DATA2134:1F79 has seven. The portable table corrects this one character.
+The DOS owner is unchanged because changing its data extent would require
+separate layout/build validation. Candidate DATA observations are not inherited
+as original facts. Negative receipt: `bonus-v1261/candidate-text-mismatch.json`.
+
+Native fixtures still start eight natural Stage1 routes from the OP handoff
+with real gameplay and no injected reward or Boss start. Their final snapshot
+now includes the actual bonus; the first four images/counters and all prior
+shot/combat/midboss/diagnostic Orange images remain unchanged. Three extra ticks
+leave delta/Bomb unchanged, proving the front end does not award repeatedly.
+The current native prototype has no death/Bomb/Continue consumers, so those
+live counters remain zero; only the isolated original CPU cases cover their
+nonzero reward effects. Colored TRAM uses actual font/game gaiji and cell
+replacement, including blank glyphs. Blink and complete original color/page
+composition are not established by the snapshot controls.
+
+Ten contracts and40 natural checkpoints agree Linux/Wine/UBSan. Native Windows
+headless replay also passes ten contracts and the40 BMPs/48 counters. The
+Windows root native executable and English launcher are refreshed with a
+versioned backup under `port64-preview/v1261`; DOS files/launchers/assets are
+unchanged. No native Windows GUI pacing or original full-route claim.
+
+```bash
+python3 port64/verify_bonus.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-bonus-contracts \
+  --output-dir .analysis/port64/bonus-v1261/cpu-linux-attested
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-bonus-v1261-final/receipt.json
+```
+
+Receipts: `bonus-v1261/cpu-{linux,windows,ubsan}-attested/receipt.json`,
+`integration-review.json`, `native-windows-receipt.json` and
+`verification-bonus-v1261-final/receipt.json`. The same independent rejecting
+adapter control checks that a Unicorn callback exception cannot silently pass.
+Semantic remains stopped; next implement score drain and actual stage leave /
+resource transition, not additional naming work.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -756,7 +842,8 @@ control flow and hardware boundaries support an independently checked native
 implementation. Resume only for a concrete ambiguity exposed by integration.
 Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous boundary.
 Orange state/attacks/foreground and pre/post-boss dialog now run in ordinary Stage1.
-Next connect the actual stage-clear bonus/progression consumer, then later bosses/midbosses,
+Ordinary Stage1 now also consumes the actual clear bonus and displays its tally.
+Next connect score drain, stage-leave overlay and resource progression, then later bosses/midbosses,
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

@@ -11,39 +11,39 @@ item-lifecycle batches; semantic work is paused unless it blocks a port slice.
 
 On `port/modern-64`, semantic work is paused at the user's stopping condition:
 sufficient clarity for the current x64 slice, then implement and verify it.
-The current native slice runs ordinary Stage 1 through midboss, stopped-scroll
-pre-boss dialog, Orange combat and post-boss dialog. The dialog owns its input
-waits and retained script cursor while gameplay frames/RNG remain frozen.
-Semantic stays paused; next port the actual stage-clear bonus/progression.
-MAIN main01 0AAF:2A7C/26CC/25DA/26A3 and2454 agree on48 script/input
-controls,76 original scenes,18,768 ordered events and768 activation controls.
-Linux ELF64, MinGW PE32+/Wine and optimized UBSan/bounds pass nine contracts;
-8 natural character/rank/shot-idle scenarios agree40 BMPs/counters, alongside
-120 diagnostic Boss snapshots and prior shot/combat/midboss fixtures.
-The previous diagnostic's missing battle-resource reload is corrected:
-ST00.BB1 four32x48 sprites at128, ST00.BB2 eight64x80 sprites at132 replace
-ST00.BFT/BMT after the real dialog clean/load commands. Earlier geometry/state
-Oracles remain valid; their images did not prove the correct original bank.
-Current source manifest and cross-product receipt:
-`.analysis/port64/verification-dialog-v1260-final/receipt.json`.
-Independent CPU receipts: `.analysis/port64/dialog-v1260/cpu-{linux,windows,ubsan}-final/receipt.json`.
-Boss regressions retain36,600 checkpoints plus1,818 render/circle controls;
-current Windows/UBSan reruns and unchanged Linux contract identity are recorded
-in `.analysis/port64/dialog-v1260/integration-review.json`.
-Native Windows headless execution now also passes nine contracts and the same
-40 natural BMPs/48 counters (not a frame-pacing measurement):
-`.analysis/port64/dialog-v1260/native-windows-receipt.json`.
-The Windows native executable and English `start-th04-port64.bat` are installed
-in `D:\Entertainment\Game\Touhou\th04-reconstruct`; versioned checks live
-under `port64-preview/v1260`. The launcher uses the existing private
-`play-normal.hdi` and `FREECG98.bmp`; DOS builds/launchers are unchanged.
-Dialog Japanese font lookup passes6 independent codec/image controls
-(1,536 pixels). Full original VRAM/page/fade pacing, audio/HUD, death/Bomb,
-resident graze, stage-clear bonus/transition, later stages and Ending/save
-remain outside this native slice. Stage-clear stays frozen after post-dialog;
-do not treat the prototype as a complete playable game. Details/commands:
-[Stage 1 dialog](PORT64.md#dialog-vm-and-natural-stage-1-boss-flow).
-No DOS source or exact acceptance state changes.
+The native slice runs ordinary Stage1 through midboss, pre-dialog, Orange,
+post-dialog and the actual clear-bonus screen. Semantic remains stopped; next
+port score drain, stage-leave overlay and resource-stage handoff. The preview
+freezes after awarding the bonus exactly once; this is not a full transition.
+Current bonus owner and scope: [Stage-clear bonus](PORT64.md#stage-clear-and-all-clear-bonus).
+Original MAIN main03 13A9:9C31/9E06 and99FE/9A89/9AFF/9B59, plus actual
+main01 0AAF:1874/188E performance arithmetic, agree1,837 complete ordinary /
+all-clear state and ordered text/gaiji/HUD controls on Linux, Wine-PE32+ and
+optimized UBSan/bounds. Preserve unsigned16 components, ten-point units,
+separate truncated factors, timeout-zero/Bomb increment and unmodified
+performance thresholds. Extra life scaling and zero-life wrapping are covered
+only by isolated CPU controls; later-stage live consumers remain unported.
+CPU receipts: `.analysis/port64/bonus-v1261/cpu-{linux,windows,ubsan}-attested/receipt.json`.
+Current cross-product manifest/receipt:
+`.analysis/port64/verification-bonus-v1261-final/receipt.json`.
+Ten contracts and40 natural BMPs/counters agree Linux/Wine/UBSan and actual
+native Windows headless execution; prior combat/midboss/Orange snapshots and
+first four dialog checkpoints remain unchanged. Bonus updates delta/Bomb once
+and its colored TRAM remains bright over graphics tone60. Native death/Bomb/
+Continue counters are still absent/zero; their effects have CPU controls only.
+Review/native-Windows receipts: `.analysis/port64/bonus-v1261/integration-review.json`
+and `native-windows-receipt.json`. Windows package `port64-preview/v1261` and
+root `start-th04-port64.bat` use private `play-normal.hdi`/`FREECG98.bmp`.
+The timeout DATA candidate has one extra full-width space at pinned
+DATA2134:1F79; portable text is corrected. DOS source/link layout is unchanged,
+recorded at `.analysis/port64/bonus-v1261/candidate-text-mismatch.json`.
+Dialog still preserves script cursor, waits release/new press and freezes game
+frames/RNG. Earlier48 cases/76 scenes/18,768 events/768 activation controls
+remain under `.analysis/port64/dialog-v1260/`. Actual pre-dialog clean/load of
+ST00.BB1/BB2 fixes the former diagnostic's wrong battle sprite bank.
+No DOS source or exact state changes. Original complete color/page/fade pacing,
+GUI pacing, audio/HUD/death/Bomb, persistent resident graze, score drain,
+leave/progression, later stages and Ending/save remain outside this x64 slice.
 The native product is rebased through the latest item semantics. Linux ELF64
 and Wine-hosted Windows PE32+ pass the existing OP/resource/process/random
 contracts and a new live MAIN slice. Game confirmation now starts a timed

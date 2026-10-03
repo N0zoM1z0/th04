@@ -834,6 +834,36 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     return frame;
 }
 
+// Bonus TRAM stays bright over the dimmed graphics palette. Writes replace
+// entire character cells; blank gaiji also erase preceding text in that cell.
+void put_bonus_text(Frame& frame,const MainSprites& sprites,const th04::portable::bonus::Result& result) {
+    namespace bonus=th04::portable::bonus;
+    require_view(sprites.font.present(),"Clear bonus requires the PC-98 font bitmap");
+    std::vector<std::uint32_t> layer(640*400,0);
+    const auto gaiji_pixel=[&](unsigned glyph,unsigned x,unsigned y) {
+        const auto base=32u+unsigned(sprites.gaiji.at(28))+(unsigned(sprites.gaiji.at(29))<<8);
+        return (sprites.gaiji.at(base+glyph*32+y*2+x/8)&(0x80u>>(x&7)))!=0;
+    };
+    for(const auto& e:result.events) {
+        if(e.kind!=bonus::Kind::text && e.kind!=bonus::Kind::gaiji) continue;
+        const unsigned color=0xff000000u|((e.color&0x40) ? 0xff0000u : 0)|((e.color&0x80) ? 0xff00u : 0)|((e.color&0x20) ? 0xffu : 0);
+        int left=e.left*8;const int top=e.row*16;
+        for(unsigned at=0;at<e.bytes.size();) {
+            const auto first=static_cast<unsigned char>(e.bytes[at++]);unsigned glyph=first;
+            if(e.kind==bonus::Kind::text) {
+                require_view(at<e.bytes.size(),"Truncated bonus SJIS text");glyph=(glyph<<8)|static_cast<unsigned char>(e.bytes[at++]);
+            }
+            for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x) {
+                const bool set=e.kind==bonus::Kind::text ? sprites.font.pixel(static_cast<std::uint16_t>(glyph),x,y) : gaiji_pixel(glyph,x,y);
+                if(left+int(x)>=0 && left+int(x)<640 && top+int(y)>=0 && top+int(y)<400)
+                    layer[unsigned(top+int(y))*640+unsigned(left+int(x))]=set ? color : 0;
+            }
+            left+=16;
+        }
+    }
+    for(unsigned i=0;i<layer.size();++i) if(layer[i]) frame.pixels[i]=layer[i];
+}
+
 class DialogScene {
 public:
     DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character)
@@ -959,7 +989,7 @@ public:
             if(dialog_scene_) {
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
-                    if(post_started_) post_finished_=true;
+                    if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
                     else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
                     dialog_scene_.reset();
                 } else { if(repaint) frame_=render();return; }
@@ -1058,7 +1088,18 @@ private:
                 );
         case Screen::main_handoff:
             if(dialog_scene_) return dialog_scene_->render();
-            if (main_) return render_main(*sprites_, *main_, application_.resident().playchar);
+            if(main_) {
+                auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
+                if(main_->clear_bonus()) {
+                    // palette_show(60) changes GRAM; colored TRAM stays bright.
+                    for(auto& pixel:frame.pixels) {
+                        const unsigned red=((pixel>>16)&255)/17,green=((pixel>>8)&255)/17,blue=(pixel&255)/17;
+                        pixel=0xff000000u|((red*60/100*17)<<16)|((green*60/100*17)<<8)|(blue*60/100*17);
+                    }
+                    put_bonus_text(frame,*sprites_,*main_->clear_bonus());
+                }
+                return frame;
+            }
             return render_main_handoff(
                 selection_background_, portraits_, application_
             );
@@ -1641,9 +1682,13 @@ void run_title(
             }
             for(bool capture:seen) require_view(capture,"natural Stage 1 dialog fixture missed progression");
             require_view(start_frame>4500 && !(start_frame&1) && frozen_ticks>100,"dialog was not naturally gated by stopped scroll/back page");
+            require_view(bool(scene.main_state().clear_bonus()),"Post-dialog did not consume stage-clear bonus");
+            const auto delta=scene.main_state().score().score_delta;
+            const auto bombs=scene.main_state().score().remaining_bombs;
             const auto stopped=scene.main_state().frames();for(unsigned i=0;i<3;++i) scene.advance(0,false,false);
-            require_view(scene.main_state().frames()==stopped,"unported stage-clear consumer silently advanced");
-            std::cout<<"MAIN dialog stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" entry_frame="<<start_frame<<" frames="<<stopped<<" frozen_ticks="<<frozen_ticks<<" stage_clear=pending\n";
+            require_view(scene.main_state().score().score_delta==delta && scene.main_state().score().remaining_bombs==bombs,"Clear bonus consumed more than once");
+            require_view(scene.main_state().frames()==stopped,"unported score-drain/stage-leave consumer silently advanced");
+            std::cout<<"MAIN dialog stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" entry_frame="<<start_frame<<" frames="<<stopped<<" frozen_ticks="<<frozen_ticks<<" stage_clear=bonus_complete awarded="<<scene.main_state().clear_bonus()->awarded<<" bombs="<<+scene.main_state().score().remaining_bombs<<" progression=pending\n";
         }
     }
     if (window) {

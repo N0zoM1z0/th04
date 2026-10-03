@@ -10,6 +10,7 @@
 #include "orange.hpp"
 #include "circles.hpp"
 #include "dialog.hpp"
+#include "stage_bonus.hpp"
 #include "stage_background.hpp"
 #include <memory>
 
@@ -51,6 +52,8 @@ public:
     std::uint16_t random_cursor() const { return ring_.cursor(); }
     // Caller completes the blocking pre-boss dialog before this handoff.
     void start_orange_after_dialog();
+    void finish_post_boss_dialog();
+    const std::optional<bonus::Result>& clear_bonus() const { return clear_bonus_; }
     const std::vector<orange::Event>& orange_events() const { return orange_events_; }
     const std::vector<midboss::Event>& midboss_events() const { return midboss_events_; }
     const std::vector<bullet::Event>& bullet_events() const { return bullet_events_; }
@@ -73,6 +76,8 @@ private:
     orange::System orange_{};
     circle::System circles_{};
     bool orange_active_=false,post_boss_dialog_pending_=false;
+    bonus::Context bonus_context_{};
+    std::optional<bonus::Result> clear_bonus_;
     std::uint8_t orange_background_phase_=0;
     std::int16_t orange_background_frame_=0;
     std::vector<orange::Event> orange_events_;
