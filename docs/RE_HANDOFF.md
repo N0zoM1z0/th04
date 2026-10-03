@@ -28,7 +28,20 @@ termination; all 128 MPN tiles match 32,768 original-renderer indexed pixels.
 Both character windows pass held-key/Shift tests over the real Stage 1 scrolling
 background. Scroll graphics calls/EGC are intercepted, not a complete video
 replay. No DOS source or acceptance state changes.
-Stage VM, shots, enemies, later-stage visuals, HUD, Bomb/death, sound, Ending and
+The next bounded slice now adds all four player-shot routes and ten power
+levels, the 68-slot pool, original trigger cadence, hit animation/damage and
+Marisa option lasers. MAIN updates player/shots/items in original order and
+samples held Z on both host backends. Independent original CPU replay agrees
+on 4,072 checkpoints: 2,216 firing, 512 trigger, 64 update, 640 hit and 640
+repeated-hit cases. Spark requests are recorded, with spark RNG/rendering and
+sound deferred. A negative control observes original allocator reads past
+slot 67; the host safely stops at the actual capacity. Both character windows
+pass held-Z firing/release against original BFNT pixels; all four headless
+full-power BMPs agree across hosts. Cross-host receipt is
+`.analysis/port64/verification-shots-v1253-final/receipt.json`; CPU/window
+receipts are under `.analysis/port64/shots-v1253/`. Sanitizer replay passes.
+No DOS source or exact acceptance changes were needed.
+Stage VM, enemies, later-stage visuals, HUD, Bomb/death, sound, Ending and
 saved-data I/O remain to be connected. See [the x64 port handoff](PORT64.md).
 
 The `semantic/readable` branch now prepares the DOS source for the native

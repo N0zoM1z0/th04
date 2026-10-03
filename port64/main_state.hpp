@@ -2,10 +2,11 @@
 #include "application_state.hpp"
 #include "item_pool.hpp"
 #include "player_motion.hpp"
+#include "player_shots.hpp"
 
 namespace th04::portable::gameplay {
-// The first live MAIN slice: player movement and the complete item pool. The
-// stage VM, shots, bombs, collision/death and HUD will join this same owner;
+// Live MAIN owns player motion, shots and items. The
+// stage VM, bombs, collision/death and HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
 public:
@@ -14,6 +15,7 @@ public:
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
+    const shot::System& shots() const { return shots_; }
     const item::UpdateResult& item_events() const { return item_events_; }
     std::uint32_t frames() const { return frames_; }
     bool add_item(motion::Point position, item::Type type) { return items_.add(position, type); }
@@ -22,6 +24,9 @@ public:
 
 private:
     player::Movement player_{};
+    shot::System shots_{};
+    application::Playchar playchar_ = application::Playchar::reimu;
+    application::ShotType shot_type_ = application::ShotType::a;
     item::Pool items_{};
     item::ScoreState score_{};
     randring::SharedRandomRing ring_{};

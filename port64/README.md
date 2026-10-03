@@ -11,10 +11,11 @@ Options list, wraps every stored option in the original direction, restores
 the original defaults, and returns to the Option command on Cancel/Option
 Quit. Other main commands whose screens are not ported yet print their index and
 leave the window open; main Quit/Esc closes it. In that scene, arrow keys move the original character sprite and Shift halves
-speed. The fixed 32-slot item pool handles drops, motion, attraction and scoring;
+speed; hold Z to shoot. All four shot routes have ten power levels, a 68-slot
+pool, hit-state contracts and Marisa option lasers. The fixed 32-slot item pool handles drops, motion, attraction and scoring;
 its seven-type scene fixture is headless-only. The interactive scene now renders and scrolls the original Stage 1 MAP/MPN
 background, selecting ST00 or ST10 tiles for the character. Stage scripts,
-shots, enemies, bombs and death remain to be connected. No original executables or game data are embedded in the binary. Unlike
+enemies, bombs and death remain to be connected. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
 The portable core also models the DOS executable chain as guarded in-process
@@ -101,6 +102,9 @@ stages; their shared cross-host hashes are `c1a795a3...` and `12aa7616...`.
 `--main-screenshot` requires an HDI and drives a 60-frame movement/item scene
 with seven explicitly injected item types (`a6341ebd...`); these fixture items
 are not injected into ordinary interactive sessions.
+`--shooting-screenshots DIR` writes all four full-power shooting fixtures to
+an existing directory. Each fixture collects an explicitly injected full-power
+item and holds Z for 66 frames; ordinary windows start at power 1.
 The portable contract target
 also consumes `src/main/bullet/group_types.hpp` and checks 64-bit pointer
 width, byte-sized angles/group codes, spread/ring geometry, aim and template
@@ -162,7 +166,30 @@ state and MPN pixels rather than complete PC-98 video or gameplay.
 movement check now matches nontransparent original BFNT sprite pixels against
 the scrolling window, rather than assuming a black background.
 
-The next gameplay slice is stage VM/entity integration, followed by shots,
+`player_shots` preserves descending volley allocation order, all four routes
+and ten power levels, cycle resets, allocation-dependent random consumption,
+old option coordinates at laser startup, hit-animation countdown and the
+frame collision cache. Releasing Z finishes the remaining volleys of the
+18-frame cycle. Hit tests retain diminishing damage, Bomb/boss division order,
+odd-frame laser damage and spark phase. Spark requests are exposed to a future
+adapter; spark RNG/rendering and sound are not yet connected. The host stops
+at 68 slots rather than importing the original allocator's observed overrun.
+
+```sh
+python3 port64/verify_shots.py --target .analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux/th04-port64-shot-contracts \
+  --output-dir .analysis/port64/shots-cpu
+```
+
+The relocated original CPU agrees on 4,072 trigger/producer/update/hit
+checkpoints, including all timer bytes, both characters/shot types, all levels,
+homing targets, sparse/full pools, laser phases, hit edges and repeated calls.
+Spark calls are recorded and intercepted. A separate negative control observes
+the original allocation overrun; the host boundary is tested with sanitizers.
+Both character windows pass held-Z firing and release against original sprite
+pixels. Windows validation runs under Wine; native Windows pacing is untested.
+
+The next gameplay slice is stage VM/entity integration, followed by
 enemy bullets, later-stage backgrounds, HUD, death/Bomb transitions and audio.
 Saved configuration and Ending/score persistence also remain. Semantic work
 is paused unless a concrete ambiguity blocks one of these slices; a completed

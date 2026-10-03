@@ -89,7 +89,7 @@ A completed HDI-backed Game selection now starts a timed SDL/Win32 MAIN scene
 with held-key input. Host timers update at a nominal 17,730,496 ns step and
 limit catch-up to four frames; this is a chosen bring-up cadence, not an
 independent original-timing measurement. The scene now has a
-movable player over the original Stage 1 scrolling background; stage VM, shots,
+movable, shooting player over the original Stage 1 scrolling background; stage VM,
 enemies, Bomb/death, later-stage visuals and HUD remain absent.
 `--main-screenshot` alone injects seven item types for a deterministic 60-frame
 fixture, preserving an honest distinction from ordinary interactive gameplay.
@@ -101,6 +101,41 @@ and owns the 25x24 visible ring. Initial STD sections are filled bottom-first;
 the pre-advance display origin and byte fractional accumulator retain DOS
 ordering, including the initial speed-chunk length and the zero terminator.
 The host redraws this software background instead of emulating EGC copies.
+
+`player_shots` adds all four routes and ten power levels using fixed 8/16-bit
+state and a 68-slot pool. It retains trigger/release cadence, Reimu volley
+cycle resets and homing, Marisa option-laser startup/ring order, descending
+allocation, allocation-dependent shared-ring draws, delayed reclamation, hit
+animation and the per-frame collision cache. Hit processing retains signed
+velocity division, progressively reduced damage, Bomb/boss division before
+laser damage, unsigned rectangle bounds and spark phase. Sparks are requests
+to a future adapter, so this slice does not consume their random draws or
+render them. Sound and enemy integration remain absent.
+
+MAIN now updates player/shots/items in original order. SDL and Win32 sample
+held Z; rendering uses original MIKO16 shot/options/ring cels and laser masks,
+with reverse pool drawing over the Stage 1 background. The explicit
+`--shooting-screenshots DIR` fixture collects a full-power item before firing
+66 frames on each route, then writes four BMPs to an existing directory.
+Ordinary windows start at power 1 and do not inject items/enemies.
+
+Independent relocated original MAIN CPU replay covers 4,072 checkpoints:
+2,216 producer cases, 512 trigger decisions (every timer byte and both key
+states), 64 lifecycle states, 640 hit tests and 640 repeated-hit tests against
+the same cache. It executes the original math/random callees; only spark calls
+are intercepted and their arguments compared. Scope is `main_01 0AAF`, load
+segment 2000 with isolated initialized DGROUP at DS 8000. Trigger code spans
+`6092..60D6` and stops before dispatch; update is `59C6`, hittest `5AC9`, shot
+producers start at `2F5F` (Marisa) and `487C` (Reimu). The pinned target retains
+its `candidate-local-attested` provenance gap. No new byte-exact claim follows.
+
+A separate negative control observes reads beyond the original 68-slot pool
+when the last free slot is followed by another allocation request. Host
+allocation instead stops at capacity. All valid scoped controls agree on Linux,
+Wine/Win32 and GNU UBSan/bounds; all four full-power BMP hashes agree across
+hosts. Original BFNT pixel matching in both character windows confirms multiple
+held-Z volleys and complete departure after release. Earlier UI/movement/item
+fixtures retain their hashes. Native Windows host pacing remains untested.
 
 ## Verified builds
 
@@ -142,7 +177,7 @@ The original `_TEXT 0000:3680` MPN renderer independently agrees on 32,768
 indexed pixels across all 128 character-specific tiles. This is bounded
 original CPU evidence, not full gameplay or Windows pacing.
 
-The current verification receipt is
+The earlier background verification receipt is
 `.analysis/port64/verification-background-v1252/receipt.json` (SHA-256
 `b672ceef52c024b9fd5ddd5e6b5b3d756980ccc953a91964c473abce201a669c`), with source manifest
 `7da5c6540a1e28c07886ec5c3db9cf37bc46fa93903f1a4fc7158fcc7a87267e`.
@@ -150,6 +185,10 @@ Original CPU, native-window and sanitizer receipts for the background slice
 are under `.analysis/port64/background-v1252/`. The earlier movement-only
 receipts remain under `.analysis/port64/live-v1251/`. Each records product
 hashes and scope limits; `verify.py` records the source manifest.
+Current shooting receipt:
+`.analysis/port64/verification-shots-v1253-final/receipt.json`. Original CPU
+receipts are `.analysis/port64/shots-v1253/cpu-{linux,windows,ubsan}-final/receipt.json`;
+window receipts use `window-{linux,windows}` and `window-marisa-{linux,windows}`.
 
 Replay the complete cross-build check with:
 
@@ -168,8 +207,11 @@ repository.
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
-verify. The completed motion/item slice required no further DOS-source edits.
-Next, connect stage VM and enemy entities to the frame loop, then port shots,
+verify. Motion/items/background/shots required no further DOS-source edits.
+For each next module, stop readability work once state ownership, arithmetic,
+control flow and hardware boundaries support an independently checked native
+implementation. Resume only for a concrete ambiguity exposed by integration.
+Next, connect stage VM and enemy entities to the frame loop, then port
 bullets, later-stage scrolling/tile maps, HUD, death/Bomb transitions and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those
 systems become runnable. Full gameplay is the completion condition, not an

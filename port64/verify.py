@@ -30,6 +30,10 @@ PORT_FILES = (
     "port64/motion_tables.hpp",
     "port64/player_motion.cpp",
     "port64/player_motion.hpp",
+    "port64/player_shots.cpp",
+    "port64/player_shots.hpp",
+    "port64/shot_contracts.cpp",
+    "port64/verify_shots.py",
     "port64/sprite_sheet.cpp",
     "port64/sprite_sheet.hpp",
     "port64/stage_background.cpp",
@@ -131,9 +135,11 @@ def main() -> int:
     windows_live = windows_dir / "th04-port64-live-contracts.exe"
     windows_main = windows_dir / "th04-port64.exe"
     windows_contracts = windows_dir / "th04-port64-contracts.exe"
-    for path in (linux_main, linux_contracts, linux_live):
+    linux_shots = linux_dir / "th04-port64-shot-contracts"
+    windows_shots = windows_dir / "th04-port64-shot-contracts.exe"
+    for path in (linux_main, linux_contracts, linux_live, linux_shots):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts, windows_live):
+    for path in (windows_main, windows_contracts, windows_live, windows_shots):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -161,6 +167,11 @@ def main() -> int:
     )
     if linux_live_output != expected_live or windows_live_output != expected_live:
         raise ValueError("live MAIN contracts did not pass on both hosts")
+    expected_shots = "TH04 player shots: PASS routes=4 levels=10 pool=68 pointer_bits=64"
+    linux_shot_output = run([str(linux_shots)])
+    windows_shot_output = run([args.windows_runner,str(windows_shots)],env=runner_env)
+    if linux_shot_output != expected_shots or windows_shot_output != expected_shots:
+        raise ValueError("player shot contracts did not pass on both hosts")
 
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
@@ -175,6 +186,18 @@ def main() -> int:
         raise ValueError("Linux resource smoke did not pass")
     if "port64 smoke: PASS" not in windows_smoke_output:
         raise ValueError("Windows resource smoke did not pass")
+    shooting_hashes = {}
+    for host, command in (("linux",[str(linux_main)]),
+                          ("windows",[args.windows_runner,str(windows_main)])):
+        images = output.parent / ("shooting-"+host)
+        images.mkdir(parents=True,exist_ok=True)
+        result = run(command+["--hdi",str(hdi),"--shooting-screenshots",str(images)],env=runner_env)
+        if result.count("MAIN shooting power=128") != 4:
+            raise ValueError("shooting fixture did not collect full power on every route")
+        shooting_hashes[host] = {name:sha256(images/(name+".bmp"))
+                                for name in ("reimu-a","reimu-b","marisa-a","marisa-b")}
+    if shooting_hashes["linux"] != shooting_hashes["windows"]:
+        raise ValueError("shooting BMPs differ between Linux and Windows")
 
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
@@ -192,6 +215,8 @@ def main() -> int:
                 "contract_output": linux_contract_output,
                 "live_contracts_sha256": sha256(linux_live),
                 "live_contract_output": linux_live_output,
+                "shot_contracts_sha256": sha256(linux_shots),
+                "shot_contract_output": linux_shot_output,
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -201,6 +226,8 @@ def main() -> int:
                 "contract_output": windows_contract_output,
                 "live_contracts_sha256": sha256(windows_live),
                 "live_contract_output": windows_live_output,
+                "shot_contracts_sha256": sha256(windows_shots),
+                "shot_contract_output": windows_shot_output,
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -223,12 +250,14 @@ def main() -> int:
             "a6341ebde93ab5424a263f3b9393e6654bbada0e215dc119e324529e4f7a3524"
         ),
         "passed": True,
+        "shooting_fixture_bmp_sha256": shooting_hashes["linux"],
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
             "OP menu-state transitions, resident process handoff, process-local LCG and shared "
             "random-ring contracts, live player movement, item entity motion/pickup and "
-            "BFNT sprites and Stage 1 MPN/MAP/STD background rendering/scrolling only; "
-            "stage VM, shots, enemies, bombs, death, later-stage backgrounds, "
+            "BFNT sprites, Stage 1 MPN/MAP/STD background rendering/scrolling and "
+            "four-route player shots/lasers only; "
+            "stage VM, enemies, bombs, death, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),

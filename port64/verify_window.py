@@ -101,6 +101,38 @@ def main():
         normal_delta, slow_delta = normal-initial, slow-normal
         if not (150 < normal_delta < 310 and 50 < slow_delta < normal_delta*0.8):
             raise RuntimeError(f'held-key movement failed: {normal_delta}, {slow_delta}')
+        # Match the original low-power shot's two BFNT cels. Holding Z must
+        # emit multiple moving volleys; after release and a full travel time,
+        # every one must leave the field. Background motion alone cannot pass.
+        small=assets['MIKO16.BFT'];small_at=32+word(small,28)+(48 if small[5]&128 else 0)
+        shot_masks=[]
+        for cel in (0,1) if args.playchar=='reimu' else (6,7):
+            mask=[]
+            for y in range(16):
+                for x in range(16):
+                    packed=small[small_at+cel*128+y*8+x//2]
+                    color=packed&15 if x%2 else packed>>4
+                    if color:mask.append((x,y,palette[color]))
+            shot_masks.append(mask)
+        def shot_snapshot(name):
+            path=output/(name+'.png')
+            subprocess.run(['import','-window',window,str(path)],check=True)
+            image=Image.open(path).convert('RGB');pixels=image.load();tops=[]
+            for top in range(16,620):
+                for left in range(previous_left[0]+14,previous_left[0]+19):
+                    if any(all(pixels[left+x*2,top+y*2]==color for x,y,color in mask)
+                           for mask in shot_masks):
+                        if not tops or top>tops[-1]+2:tops.append(top)
+                        break
+            return tops
+        subprocess.run(['xdotool','keydown','z'],check=True);held.append('z')
+        time.sleep(0.5)
+        shot_tops=shot_snapshot('shooting')
+        subprocess.run(['xdotool','keyup','z'],check=True);held.remove('z')
+        time.sleep(0.8)
+        released_tops=shot_snapshot('released')
+        if len(shot_tops)<2 or released_tops:
+            raise RuntimeError(f'held Z firing/release failed: {shot_tops}, {released_tops}')
         subprocess.run(['xdotool','key','Escape'],check=True)
         process.wait(timeout=10)
         if process.returncode != 0: raise RuntimeError('window exit failed')
@@ -109,6 +141,7 @@ def main():
             'exe_sha256':hashlib.sha256(args.exe.read_bytes()).hexdigest(),
             'runner':args.runner,'playchar':args.playchar,'normal_delta_display_pixels':normal_delta,
             'shift_delta_display_pixels':slow_delta,
+            'held_z_shot_tops':shot_tops,'released_shot_tops':released_tops,
             'limits':'Real X11 held keys through SDL or Wine/Win32; loose wall-clock bounds verify direction and Shift response, not exact frame cadence or native Windows host pacing.'
         }
         (output/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')

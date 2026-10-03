@@ -34,4 +34,5 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& character_screenshot,
                const std::string& shot_screenshot,
                const std::string& handoff_screenshot,
-               const std::string& main_screenshot, bool window);
+               const std::string& main_screenshot,
+               const std::string& shooting_screenshots, bool window);

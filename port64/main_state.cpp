@@ -7,6 +7,8 @@ State::State(application::State& application) {
         throw std::logic_error("live MAIN requires a completed OP handoff");
     }
     score_.power = 1;
+    playchar_ = application.resident().playchar;
+    shot_type_ = application.resident().shot_type;
     score_.remaining_lives = application.resident().credit_lives;
     score_.remaining_bombs = application.resident().credit_bombs;
     // Consume the SAME process generator used by the rest of MAIN. Creating
@@ -23,6 +25,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items) {
     // MAIN's loop calls player_update before items_update. A pickup therefore
     // sees the player's new position for this frame, not the preceding one.
     player_.update(held_input, shift);
+    shots_.update((held_input & shot::input_shot) != 0, playchar_, shot_type_, score_.power,
+                  player_.position(), ring_);
     item_events_ = items_.update(score_, player_.position().current, pull_items, 0);
     ++frames_;
 }

@@ -31,6 +31,7 @@ namespace gameplay = th04::portable::gameplay;
 namespace sprite = th04::portable::sprite;
 namespace player = th04::portable::player;
 namespace stage = th04::portable::stage;
+namespace shot = th04::portable::shot;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -632,6 +633,33 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
         }
     }
+    const auto& shots = state.shots().snapshot();
+    const auto pixels = [](std::int16_t coordinate) {
+        return coordinate >= 0 ? coordinate / 16 : -((-int(coordinate)+15)/16);
+    };
+    if (shots.laser.time > 32) {
+        const auto dots = shots.laser.dots();
+        const auto bottom = shots.laser.bottom.current;
+        for (int side : {-24,24}) {
+            const int left = 32+pixels(bottom.x)+side-4;
+            for (int y=0;y<pixels(bottom.y);++y) for (unsigned x=0;x<8;++x) {
+                if (dots & (0x80u >> x)) {
+                    put_indexed_pixel(frame,sprites.palette,left,16,x,unsigned(y),8+state.frames()%2);
+                }
+            }
+        }
+    }
+    // Target shots_render draws the highest slot first, with the laser
+    // underneath. Convert global patterns into the original MIKO16 sheet.
+    for (unsigned i=shot::pool_size;i-- > 0;) {
+        const auto& entity = shots.entities[i];
+        if (entity.flag==shot::free || entity.flag>=shot::remove) continue;
+        const auto pattern = static_cast<std::uint8_t>(entity.pattern+
+            (entity.flag==shot::alive ? entity.age&1u : 0u));
+        require_view(pattern>=28 && pattern<128,"shot references absent MIKO16 pattern");
+        put_sprite(frame,sprites.palette,sprites.items,pattern-28,
+            32+pixels(entity.position.current.x)-8,16+pixels(entity.position.current.y)-8);
+    }
     const auto& position = state.player().position();
     const unsigned cel = position.velocity.x < 0 ? 1 : (position.velocity.x > 0 ? 2 : 0);
     const bool white = state.frames() < 64 && state.frames() % 4 == 0;
@@ -639,6 +667,13 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                playchar == application::Playchar::reimu ? sprites.reimu : sprites.marisa,
                cel, 32 + position.current.x / 16 - 16,
                16 + position.current.y / 16 - 24, white);
+    if (shot::level_for_power(state.score().power)>=2) {
+        for (int side : {0,48}) {
+            put_sprite(frame,sprites.palette,sprites.items,
+                playchar==application::Playchar::reimu ? 10 : 11,
+                pixels(shots.options.x)+side,16+pixels(shots.options.y)-8);
+        }
+    }
     for (const auto& entity : state.items().entities()) {
         if (entity.flag != th04::portable::item::Flag::alive) continue;
         const auto point = entity.position.current;
@@ -818,6 +853,7 @@ LRESULT CALLBACK title_window_proc(
                 if (active && GetAsyncKeyState(VK_DOWN) & 0x8000) held |= player::down;
                 if (active && GetAsyncKeyState(VK_LEFT) & 0x8000) held |= player::left;
                 if (active && GetAsyncKeyState(VK_RIGHT) & 0x8000) held |= player::right;
+                if (active && GetAsyncKeyState('Z') & 0x8000) held |= shot::input_shot;
                 title->front_end.advance(held, active && (GetAsyncKeyState(VK_SHIFT) & 0x8000));
                 title->next_tick += frame_period;
                 ++ticks;
@@ -1013,6 +1049,7 @@ void show_window(
                 if (keys[SDL_SCANCODE_DOWN]) held |= player::down;
                 if (keys[SDL_SCANCODE_LEFT]) held |= player::left;
                 if (keys[SDL_SCANCODE_RIGHT]) held |= player::right;
+                if (keys[SDL_SCANCODE_Z]) held |= shot::input_shot;
             }
             const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
             front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
@@ -1060,7 +1097,7 @@ void run_title(
     const std::string& character_screenshot,
     const std::string& shot_screenshot,
     const std::string& handoff_screenshot,
-    const std::string& main_screenshot, bool window
+    const std::string& main_screenshot, const std::string& shooting_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1144,6 +1181,28 @@ void run_title(
         const auto& position = front_end.main_state().player().position().current;
         std::cout << "MAIN scene frames=60 player=" << position.x << ',' << position.y
                   << " screenshot=" << main_screenshot << std::endl;
+    }
+    if (!shooting_screenshots.empty()) {
+        for (unsigned character=0;character<2;++character) for (unsigned type=0;type<2;++type) {
+            FrontEnd front_end(background,numerals,labels,cursors,
+                               selection_background,portraits,&main_assets);
+            front_end.input(menu::Input::confirm);
+            if (character) front_end.input(menu::Input::right);
+            front_end.input(menu::Input::confirm);
+            if (type) front_end.input(menu::Input::down);
+            front_end.input(menu::Input::confirm);
+            // Explicit inspection fixture: collect an actual full-power
+            // item, then fire. Ordinary gameplay does not inject this item.
+            front_end.main_state().add_item(front_end.main_state().player().position().current,
+                                           th04::portable::item::Type::full_power);
+            front_end.advance(0,false);
+            for (unsigned frame=0;frame<66;++frame) front_end.advance(shot::input_shot,false);
+            const auto path = shooting_screenshots+"/"+
+                (std::string(character ? "marisa-" : "reimu-")+(type ? "b.bmp" : "a.bmp"));
+            write_bmp(path,front_end.frame());
+            std::cout << "MAIN shooting power=" << +front_end.main_state().score().power
+                      << " screenshot=" << path << '\n';
+        }
     }
     if (window) {
         show_window(
