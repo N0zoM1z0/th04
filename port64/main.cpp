@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-using Bytes = std::vector<uint8_t>;
+#include "view.hpp"
 
 static void require(bool ok, const char* reason) {
     if (!ok) throw std::runtime_error(reason);
@@ -290,8 +290,6 @@ private:
     std::array<std::array<uint8_t, 16>, 16> colors{};
 };
 
-struct PiImage { unsigned width{}, height{}; std::array<uint8_t, 48> palette{}; Bytes pixels; };
-
 static PiImage decode_pi(const Bytes& data) {
     PiReader r(data);
     require(r.byte() == 'P' && r.byte() == 'i', "PI magic missing");
@@ -343,20 +341,33 @@ static Bytes bmp24(const PiImage& img) {
 
 int main(int argc, char** argv) {
     try {
-        std::string hdi, archive, member, output;
+        std::string hdi, archive, member, output, title_screenshot;
+        bool title_window = false;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
+            if (arg == "--title") { title_window = true; continue; }
             require(i + 1 < argc, "each option needs a value");
             const std::string value = argv[++i];
             if (arg == "--hdi") hdi = value;
             else if (arg == "--archive") archive = value;
             else if (arg == "--member") member = value;
             else if (arg == "--output") output = value;
+            else if (arg == "--title-screenshot") title_screenshot = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
-        require((!hdi.empty()) != (!archive.empty()) && !member.empty(),
-                "usage: th04-port64 (--hdi FILE | --archive FILE) --member NAME [--output BMP]");
+        const bool title = title_window || !title_screenshot.empty();
+        require((!hdi.empty()) != (!archive.empty()) && (title || !member.empty()) &&
+                !(title && (!member.empty() || !output.empty())),
+                "usage: th04-port64 (--hdi FILE | --archive FILE) "
+                "[--member NAME --output BMP | --title [--title-screenshot BMP]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
+        if (title) {
+            const auto bg = decode_pi(archive_member(par, "OP1.PI"));
+            run_title(bg, archive_member(par, "SFT2.CD2"),
+                      archive_member(par, "CAR.CD2"), title_screenshot,
+                      title_window);
+            return 0;
+        }
         const auto pi = decode_pi(archive_member(par, member));
         if (!output.empty()) write_file(output, bmp24(pi));
         std::cout << member << " " << pi.width << "x" << pi.height << " FNV32="

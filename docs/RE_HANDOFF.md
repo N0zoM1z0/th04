@@ -10,6 +10,16 @@ three-executable process-handoff, shared-random-ring, process-local-LCG and
 item-lifecycle batches; Windows
 retesting continues.
 
+On `port/modern-64`, the separate native product is now rebased through the
+latest semantic bullet batch. Linux ELF64 and Windows PE32+ builds both read a
+user-supplied TH04 HDI, reproduce the two established PI pixel hashes, and
+compose the same 640x400 OP title BMP (`b52ea861...`) from OP1.PI, SFT2.CD2 and
+CAR.CD2. SDL2 and Win32/GDI provide interactive Up/Down/Enter/Esc title
+windows. A shared platform-independent group/angle header and portable bullet
+geometry contract pass on both x86-64 products. Gameplay, sound, options,
+process handoff, Ending and saved data are not ported yet. See
+[the x64 port handoff](PORT64.md).
+
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
 batch clarifies the shared PI decoder's command names, units, history, DOS
