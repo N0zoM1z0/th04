@@ -22,6 +22,18 @@ source builds (192,351/77,740/70,614 bytes; SHA-256 `dbbfa404…`,
 CDG replay could not complete: the old OP/MAINE private snapshot is absent,
 and the current MAIN driver rejects a scaffold-transform digest before
 building. No target acceptance or ledger state is promoted by this batch.
+The BFNT semantic batch likewise preserves all three complete DOS files and
+ordered relocations. Historical pattern/palette hashes and fake-VRAM screen
+hash `0BE615EA` pass with lifecycle and clipped-placement controls; see the
+[BFNT note](reconstruction/product/TH04_NATIVE_SUPER_SPRITE_V870.md).
+Ending source repair and Windows deployment are deferred while the user plays.
+Private CPU replay has reproduced MAINE CDG self-modifying CS writes into the
+PI decoder (`.analysis/ending-analysis-20261003/ANALYSIS.md`); a complete
+repaired ending-to-registration replay is still required. The newly reported
+stage-4 top stripe disappears after Marisa's bomb; shared backdrop filling
+matches its target body, while display-scroll transition state remains under
+investigation. Do not interpret either report as completed runtime acceptance.
+
 
 ## Current state
 

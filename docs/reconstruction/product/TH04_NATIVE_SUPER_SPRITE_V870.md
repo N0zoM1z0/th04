@@ -129,3 +129,38 @@ is the same 8,284-byte beeper-effect input in both PAR archives (SHA-256
 Its parser, sound buffers, timer/vector ownership, and PC-98 beeper output require a separate
 bounded batch. Native MAINE still needs a TH04-only successful link, complete
 relocation and ABI checks, and a game-entry PC-98 runtime scenario.
+
+## Semantic preservation on semantic/readable
+
+The 2026-10-03 batch names BFNT header fields, packed pixel pairs, appended
+pattern slots, mask/color planes, allocation rollback and destination-byte
+clipping in `src/shared/hardware/super_sprite.cpp`. It retains declaration
+order, integer widths, expression order, exported ABI and rendering behavior.
+Comments distinguish raw BRG palette bytes from DAC updates, clarify that
+transparent color zero generates the mask, and document clipped/opaque writes
+and the GRCG-off effect even for fully clipped calls.
+
+Dependency-validated fast builds of MAIN, OP and MAINE remain identical to
+the preceding PAR/CDG source build in every MZ byte and ordered relocation:
+192,351/77,740/70,614 bytes; SHA-256 `dbbfa404…`, `c8ac4d73…`, `0a2d3ce8…`;
+1,178/814/660 relocation entries. Build inventory:
+`.analysis/build/semantic-super-readable/build.json`. Each comparator receipt
+is `.analysis/ARTIFACT.EXE.semantic-super-compare.json`.
+
+The independent historical-library BFNT reference retains pattern hash
+`A24A77B5` and palette hash `81529745`; the product fake-VRAM renderer retains
+screen hash `0BE615EA` for unaligned, negative and lower-right placements.
+Trailing cancellation, free/reload, malformed/missing files and PAR/loose-file
+controls pass. The probe audits 260 MZ relocations at load segments 0x2000
+and 0x6000. Receipt:
+`.analysis/reconstruction/probes/semantic-super-runtime-20261003/receipt.json`.
+
+```text
+python3 scripts/build.py --only main op maine --output-dir .analysis/build/semantic-super-readable --main-cpp-cache .analysis/reconstruction/probes/product-20261003-032654-4e1e8830-main --op-cache .analysis/reconstruction/probes/product-20261003-032654-4e1e8830-op --maine-cache .analysis/reconstruction/probes/product-20261003-032654-4e1e8830-maine --progress
+python3 scripts/compare_artifacts.py .analysis/build/semantic-resource-readable/MAIN.EXE .analysis/build/semantic-super-readable/MAIN.EXE --json
+python3 scripts/probes/probe_th04_native_super_runtime.py --output-dir .analysis/reconstruction/probes/semantic-super-runtime-20261003
+```
+
+Repeat the comparator for OP and MAINE. These are source-to-source compiler
+preservation and bounded DOS service observations; no target state is promoted,
+and this batch does not validate the ending screen or stage-4 top-edge graphics.
