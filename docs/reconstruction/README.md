@@ -172,6 +172,7 @@ counts, file paths, and proposals do not supersede the current ledgers.
 - [Dialog ownership / relocation history](main/TH04_MAIN_DIALOG_BOUNDARY_V180.md)
 - [Dialog render producer evidence](main/TH04_MAIN_DIALOG_RENDER_V182.md)
 - [Thick-laser producer](main/TH04_MAIN_THICKLASER_UPDATE_V181.md)
+- [Player-shot lifecycle and damage semantics](main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md)
 - [Gather-point renderer](main/TH04_MAIN_GATHER_POINT_RENDER_V326.md)
 - [Native MAIN EMS-stage startup differential](product/TH04_NATIVE_MAIN_EMS_STARTUP_V1080.md)
 

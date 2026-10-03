@@ -120,6 +120,16 @@ the dependency closure rejects the current `th04_main.asm` at the older v148
 boss-background transform. This batch therefore changes no exact state. See the
 [enemy-script note](reconstruction/main/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md).
 
+The player-shot semantic batch makes the collision cache, hit animation,
+laser render/test, shared spark phase and damage/score ordering explicit. Its
+pre/post shot objects have identical timestamp-normalized OMF; the complete
+199,455-byte MAIN and all 1,181 ordered relocations remain identical. Focused
+historical replay currently cannot reach the target comparison because its
+old dependency staging first omits the semantic bullet header and, when that
+owner is selected, duplicates two point-number assembly constants. Existing
+v177 exact evidence remains unchanged. See the
+[player-shot note](reconstruction/main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md).
+
 
 ## Current state
 

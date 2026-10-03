@@ -39,7 +39,7 @@ or replacing assembly before its observable contract is understood.
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | Existing bounded scenarios; user confirms Normal Ending/save before the planar batch, and optimized seeded registration/save passes; source readability pass remains pending |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; remaining graphics and sound pending |
-| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime batch completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay and RNG ownership remain |
+| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime and player-shot lifecycle/damage batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay and RNG ownership remain |
 
 This queue describes work to do, not a new completion percentage. Begin the
 next native-port slice once its own source contracts and regression probes
@@ -81,3 +81,13 @@ the target's 1,680-byte body/table topology. The historical exact replay is
 currently stopped before compilation by an unrelated stale v148 scaffold
 digest, so this batch records source-to-source preservation rather than a fresh
 cold target replay. See [the enemy-script note](reconstruction/main/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md).
+
+The player-shot batch names the collision cache, laser renderer, hit-spark
+phase, hitbox bounds, hit count and total damage. It documents hit-animation
+lifetime, unsigned rectangle tests, per-hit integer damage reduction, Bomb
+ordering, two-column laser eligibility and score-delta ownership. The semantic
+and preceding sources compile to identical timestamp-normalized OMF, and the
+complete native MAIN plus all 1,181 ordered relocations remain identical. A
+fresh target replay is blocked by stale cross-unit staging in the historical
+dependency closure, so the existing v177 exact evidence is retained without a
+new exact claim. See [the player-shot note](reconstruction/main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md).
