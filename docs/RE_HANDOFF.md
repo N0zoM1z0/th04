@@ -5,7 +5,7 @@ TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
 upstream exactness claims are not inherited. Current phase: semantic readability
-with an authorized native bullet-performance batch; Windows retesting continues.
+after the native bullet-performance batch; Windows retesting continues.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -107,6 +107,18 @@ target/MAP/relocation/raw replays. A rejected signed `% 0x80` replacement grew
 TC4J output by five bytes, so the directional-sprite half-turn period remains
 explicitly unsigned. No acceptance state changes. See the
 [semantic bullet note](reconstruction/product/TH04_SEMANTIC_BULLET_GENERATION_V1236.md).
+
+The enemy-script VM semantic batch names all 49 opcode destinations while
+preserving their compiler-sensitive physical `case` order. Source comments now
+record ES-relative unaligned operands, same-frame setup chains, the timed
+instruction's inclusive final update, absolute/backward loops, FIRE template
+transfer and performance-scaled autofire. The pre-batch and semantic sources
+produce identical timestamp-normalized OMF in one recorded TC4J context; the
+complete 199,455-byte native MAIN and all 1,181 ordered relocations also remain
+identical. A fresh historical target replay stopped before compilation because
+the dependency closure rejects the current `th04_main.asm` at the older v148
+boss-background transform. This batch therefore changes no exact state. See the
+[enemy-script note](reconstruction/main/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md).
 
 
 ## Current state

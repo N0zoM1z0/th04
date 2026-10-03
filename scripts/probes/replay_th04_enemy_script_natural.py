@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import hashlib
 import json
 import os
@@ -16,7 +17,7 @@ import tomllib
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/probes"), *sys.path]
-from lib.omf import parse_omf  # noqa: E402
+from lib.omf import normalize_dependency_timestamps, parse_omf  # noqa: E402
 from inspect_dialog_fixup_order import code_ledata  # noqa: E402
 
 SOURCE = ROOT / "src/main/enemy/script_update.cpp"
@@ -29,16 +30,22 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def snapshot_sha256() -> str:
+def tree_sha256(root: Path, exclude_generated: bool = False) -> str:
     digest = hashlib.sha256()
-    paths = sorted(SNAPSHOT.rglob("*"))
+    paths = sorted(root.rglob("*"))
     if any(path.is_symlink() for path in paths):
-        raise ValueError("frozen compiler snapshot contains a symlink")
+        raise ValueError("compiler context contains a symlink")
     for path in paths:
         if not path.is_file():
             continue
+        relative = path.relative_to(root)
+        if exclude_generated and (
+            relative.parts[0] in {"bin", "obj", ".tup"}
+            or relative.as_posix() == "th04/escript.cpp"
+        ):
+            continue
         data = path.read_bytes()
-        digest.update(path.relative_to(SNAPSHOT).as_posix().encode() + b"\0")
+        digest.update(relative.as_posix().encode() + b"\0")
         digest.update(str(len(data)).encode() + b"\0")
         digest.update(hashlib.sha256(data).digest())
     return digest.hexdigest()
@@ -76,6 +83,16 @@ def switch_block_sizes(table: bytes, body_size: int, linked_base: int) -> tuple[
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument(
+        "--source-root", type=Path,
+        help=("materialized exact-replay compiler context; defaults to the "
+              "historical frozen snapshot"),
+    )
+    parser.add_argument(
+        "--baseline-ref",
+        help=("also compile this Git revision's script_update.cpp in the same "
+              "context and require identical timestamp-normalized OMF"),
+    )
     args = parser.parse_args()
     private = (ROOT / ".analysis").resolve()
     if args.output_dir is None:
@@ -88,14 +105,23 @@ def main() -> int:
             parser.error("output directory must be new and below .analysis")
         output.mkdir(parents=True)
 
+    source_root = (args.source_root.resolve() if args.source_root else SNAPSHOT)
+    if not source_root.is_dir() or source_root.is_symlink():
+        raise ValueError(f"compiler context is unavailable: {source_root}")
+    if args.source_root and not source_root.is_relative_to(private):
+        raise ValueError("custom compiler context must remain below .analysis")
+    context_sha256 = tree_sha256(source_root, exclude_generated=bool(args.source_root))
+
     manifest = tomllib.loads((ROOT / "config/targets.toml").read_text())
     target_info = next(a for a in manifest["artifacts"] if a["id"] == "th04-main")
     target = (ROOT / target_info["private_path"]).read_bytes()
     if len(target) != target_info["size"] or sha(target) != target_info["sha256"]:
         raise ValueError("MAIN target identity failed")
     header_size = int.from_bytes(target[8:10], "little") * 16
-    if header_size != 6144 or snapshot_sha256() != SNAPSHOT_SHA256:
-        raise ValueError("MZ header or compiler snapshot identity failed")
+    if header_size != 6144:
+        raise ValueError("MAIN MZ header identity failed")
+    if not args.source_root and context_sha256 != SNAPSHOT_SHA256:
+        raise ValueError("frozen compiler snapshot identity failed")
     target_body = target[header_size + 0x155DD:header_size + 0x15C6D]
     if len(target_body) != 1680:
         raise ValueError("target VM physical extent changed")
@@ -108,20 +134,46 @@ def main() -> int:
     env = os.environ.copy()
     env.update(WINEPREFIX=str(ROOT / ".analysis/toolchain/wineprefix"),
                WINEDEBUG="-all", MSDOS_PATH=r"C:\TC4\BIN;C:\TASM50\BIN")
+    source_variants = [("candidate", SOURCE.read_bytes())]
+    baseline_revision = None
+    if args.baseline_ref:
+        baseline_revision = subprocess.check_output(
+            ["git", "rev-parse", args.baseline_ref], cwd=ROOT, text=True
+        ).strip()
+        baseline = subprocess.check_output(
+            ["git", "show", f"{baseline_revision}:src/main/enemy/script_update.cpp"],
+            cwd=ROOT,
+        )
+        source_variants.insert(0, ("baseline", baseline))
+    compiled: dict[str, bytes] = {}
+    logs: list[str] = []
+    command = ["wine", str(runner), "-e", "-x", "tcc", *FLAGS, "th04/escript.cpp"]
     with tempfile.TemporaryDirectory(prefix="work-", dir=output) as scratch:
-        work = Path(scratch) / "source"
-        shutil.copytree(SNAPSHOT, work, symlinks=True)
-        (work / "th04/escript.cpp").write_bytes(SOURCE.read_bytes())
-        object_path = work / "obj/th04/escript.obj"
-        command = ["wine", str(runner), "-e", "-x", "tcc", *FLAGS, "th04/escript.cpp"]
-        done = subprocess.run(command, cwd=work, env=env, capture_output=True,
-                              text=True, timeout=120)
-        (output / "compile.log").write_text(json.dumps(command) + "\n" +
-                                            f"exit={done.returncode}\n" +
-                                            done.stdout + done.stderr)
-        if done.returncode or not object_path.is_file():
-            raise ValueError("natural enemy VM compilation failed")
-        obj = object_path.read_bytes()
+        for label, source_bytes in source_variants:
+            work = Path(scratch) / label / "source"
+            shutil.copytree(
+                source_root,
+                work,
+                ignore=shutil.ignore_patterns("obj", "bin", ".tup", "*.OBJ", "*.obj"),
+            )
+            (work / "th04/escript.cpp").write_bytes(source_bytes)
+            object_path = work / "obj/th04/escript.obj"
+            object_path.parent.mkdir(parents=True, exist_ok=True)
+            done = subprocess.run(command, cwd=work, env=env, capture_output=True,
+                                  text=True, timeout=120)
+            logs.append(
+                f"[{label}]\n" + json.dumps(command) + "\n" +
+                f"exit={done.returncode}\n" + done.stdout + done.stderr
+            )
+            if done.returncode or not object_path.is_file():
+                raise ValueError(f"{label} enemy VM compilation failed")
+            compiled[label] = object_path.read_bytes()
+            (output / f"enemy_vm_{label}.obj").write_bytes(compiled[label])
+    (output / "compile.log").write_text("\n".join(logs))
+    obj = compiled["candidate"]
+    if "baseline" in compiled:
+        if normalize_dependency_timestamps(compiled["baseline"]) != normalize_dependency_timestamps(obj):
+            raise ValueError("semantic source changed timestamp-normalized OMF")
 
     records = parse_omf(obj)
     groups = code_ledata(records, "B4M_UPDATE_TEXT")
@@ -158,15 +210,37 @@ def main() -> int:
     (output / "enemy_vm.code").write_bytes(code)
 
     receipt = {"schema_version": 1,
+               "observed_utc": datetime.now(timezone.utc).isoformat(),
                "claim_scope": "MAIN B4M_UPDATE_TEXT 13A9:1B4D..21DC natural C++ VM; no exact promotion",
+               "script_sha256": sha(Path(__file__).read_bytes()),
                "target_sha256": target_info["sha256"],
                "target_extent_file_offset": hex(header_size + 0x155DD),
                "target_extent_size": len(target_body),
                "target_extent_sha256": sha(target_body),
                "source_sha256": sha(SOURCE.read_bytes()),
-               "snapshot_sha256": SNAPSHOT_SHA256,
+               "compiler_context": str(source_root),
+               "compiler_context_sha256": context_sha256,
+               "frozen_snapshot_sha256": (SNAPSHOT_SHA256 if not args.source_root else None),
                "tcc_sha256": tcc["sha256"], "runner_sha256": sha(runner.read_bytes()),
                "flags": list(FLAGS), "object_sha256": sha(obj),
+               "object_dependency_normalized_sha256": sha(normalize_dependency_timestamps(obj)),
+               "baseline_ref": args.baseline_ref,
+               "baseline_revision": baseline_revision,
+               "baseline_source_sha256": (
+                   sha(source_variants[0][1]) if args.baseline_ref else None
+               ),
+               "baseline_object_sha256": (
+                   sha(compiled["baseline"]) if "baseline" in compiled else None
+               ),
+               "baseline_object_dependency_normalized_sha256": (
+                   sha(normalize_dependency_timestamps(compiled["baseline"]))
+                   if "baseline" in compiled else None
+               ),
+               "baseline_candidate_omf_equal": (
+                   normalize_dependency_timestamps(compiled["baseline"]) ==
+                   normalize_dependency_timestamps(obj)
+                   if "baseline" in compiled else None
+               ),
                "omf_record_count": len(records),
                "omf_ledata": [[start, end, record_number] for start, end, record_number, _ in groups],
                "code_size": len(code), "code_sha256": sha(code),
@@ -180,7 +254,9 @@ def main() -> int:
                "entry_42_byte_opcode_shape_equal_after_four_word_mask": True,
                "handwritten_abi_preservation": "opcode 0x20 explicitly saves/restores ES across two indirect calls; TH04/TH05 target patterns and the TH03 enemy-source idiom corroborate this low-level construct",
                "result": "C++ plus classified handwritten ES preservation compiles to the target 1680-byte physical size; all 49 physical switch blocks retain target size and order.",
-               "limit": "No linked raw, MAP, ordered relocation, runtime, or aggregate exactness gate passed."}
+               "limit": ("No linked raw, MAP, ordered relocation, runtime, or aggregate "
+                         "exactness gate passed. A custom source root is recorded as an "
+                         "input context rather than treated as target evidence.")}
     receipt_path = output / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"receipt": str(receipt_path), "result": receipt["result"]}))
