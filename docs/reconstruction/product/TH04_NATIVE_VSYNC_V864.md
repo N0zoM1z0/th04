@@ -53,3 +53,49 @@ contains historical support and has not reached MAINE under PC-98 runtime.
 Before treating VSYNC as runtime-accepted, use an actual PC-98 scenario that
 checks counter cadence, optional callback behavior, BIOS INT 18h gaiji calls,
 and vector/PIC restoration on exit.
+
+## Semantic timing and joystick contracts
+
+The semantic/readable input/timing batch names the existing PIC ports and mask
+bits, DOS vector requests, PC-9821 mode selectors and the unsigned fractional
+cadence accumulator. Repeated START resets both counters and cadence state
+before checking whether it already owns the hooks. The saved mask stores the
+original VSync bit with ones in other positions, so END's AND preserves the
+current other mask bits; it also serves as a nonzero ownership sentinel.
+An accumulator carry skips both logical counters and the callback but still
+acknowledges and rearms the interrupt. A callback with segment zero is disabled
+regardless of its offset. These explanations follow the maintained native
+owner; the physical 31 kHz timing path remains separately unobserved.
+
+frame_delay resets volatile unsigned Count1 and spins against a signed 16-bit
+argument using the original DOS promotion rules. GDC polling instead finishes
+an active blank and waits for the next blank, without resetting either IRQ
+counter. The two services must stay distinct in a portable implementation.
+
+The adjacent joystick owner now names register selection, busy polling,
+controller action bits and the bounded 256-attempt board detection. JS_SENSE
+returns a fresh active-low sample in AX; it neither tests js_bexist nor stores
+js_stat. The input sampler owns the presence check and action merge. JS_END
+flushes DOS keyboard input and leaves the presence word unchanged.
+
+Baseline and two fresh assemblies preserve complete link-relevant OMF records
+for input_s.asm, joystick.asm and vsync_irq.asm. Control:
+`.analysis/reconstruction/probes/semantic-input-default-v1234/receipt.json`.
+This is compiler preservation; its COMENT exclusion is not raw object equality
+or a new target-exact claim. The existing DOS VSync lifecycle probe is the
+bounded callback/counter/vector control, separate from PC-98 cadence.
+
+A rejected TC4J control replaced the GDC status literals with function-local
+enum constants. It omitted two `mov ah,0` instructions, reducing VSYNC_WAIT
+from 25 to 21 bytes and shifting later CS/relocation layout in all three native
+products. Naming those values with literal macros retains the preceding
+expression form. Do not assume an enum substitution is byte-neutral just
+because its numeric value and C++ behavior agree. Reports:
+`.analysis/semantic-input-v1234/enum-negative-control.json` and the three
+`ARTIFACT.EXE-compare.json` files. This rejection does not promote normalized
+or semantic equivalence to raw equality.
+
+The final existing DOS lifecycle replay passes at
+`.analysis/reconstruction/probes/semantic-vsync-runtime-v1234/receipt.json`.
+The literal-macro build preserves all three complete native MZs and their
+ordered relocations; see the [input/timing result](../packed/TH04_SHARED_INPUT_WAIT_V565.md).

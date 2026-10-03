@@ -66,3 +66,72 @@ before using it for a TASM source build.
 This does not transfer exactness to MAIN, another artifact, or a packed file.
 Use `config/th04_decoded_function_acceptance.csv` and `config/evidence.csv` for
 the live ownership and replay records.
+
+## Semantic input/timing batch on semantic/readable
+
+The 2026-10-03 batch starts from `33875da`, after the native planar fixes.
+Names now identify the press timeout and elapsed press frames. The local
+`REPEATING_PRESS_WAIT` constant describes the existing 9999 sentinel; it
+introduces no new state. The MAIN and OP/MAINE source owners remain separate,
+with their include order, scalar widths and Pascal signatures preserved.
+
+Input sampling has two deliberately different entries. Reset clears key_det
+and the first js_stat word, then falls through into sense. Plain sense ORs
+BIOS keyboard actions and optional joystick actions into key_det, while Shift
+is a fresh, separately sampled modifier. Keypad diagonals occupy independent
+high-byte action bits; they are not the OR of two arrow bits. Replay remains
+one byte and therefore has a different declaration surface from live input.
+
+The wait first requires release, without a timeout, then counts press-wait
+frames. Each iteration samples at reset before the frame and senses again
+after it. A release is accepted only when both observations are clear: a
+key released on the tick is still latched from the preceding observation.
+Zero and an explicit 9999 both repeat indefinitely; negative arguments skip
+only the press phase after release. These are preserved contracts, rather
+than modernization choices for the x64 port.
+
+The independent CPU fixture executes the complete relocated MAIN, including
+its real input_sense, JS_SENSE and frame_delay bodies. It passes 240 keyboard,
+Shift, reset/accumulation and joystick combinations plus 12 wait scenarios.
+Those include press events after 9999 frames, a press on the deadline and
+release lasting beyond the requested press timeout. Its BIOS bitmap, modifier
+replies, active-low controller ports and logical IRQ ticks are synthetic;
+this is not a physical PC-98 timing or full-route Oracle. The initial model
+incorrectly treated release as one post-frame sample; the held-release
+control rejected it. Correcting only the fixture to require a complete clear
+interval makes all 252 pre-change controls pass.
+
+Historical MAIN cold replay passes both rounds for all three affected owners:
+
+| Owner | Relative target CS:offset | File offset | Bytes |
+| --- | --- | --- | ---: |
+| frame_delay | `130E:00D7` (SHARED) | `149B7h` | 21 |
+| input_wait_for_change | `130E:0133` (SHARED) | `14A13h` | 86 |
+| input_s.asm | `130E:06BC` (SHARED) | `14F9Ch` | 266 |
+
+The complete accepted extents, MAP placement and overlapping relocations
+remain raw-zero against the pinned MAIN. Source/header edits during an earlier
+staged run were correctly rejected by the snapshot check; only the fresh
+`semantic-input-v1234-final` two-round receipt is accepted. The old OP/MAINE
+decoded replay scaffold and restored files are absent locally; no new decoded
+target replay or acceptance promotion is claimed for them.
+
+Replay commands (serialize all Borland/Wine commands):
+
+```text
+python3 scripts/replay_th04_main_exact_units.py --unit th04-main-frame-delay --unit th04-main-input-wait-for-change --unit th04-main-module-th04-input-s-asm-1379c --run-id NEW-input-timing
+python3 scripts/probes/probe_th04_native_input_timing.py --build-dir .analysis/build/semantic-input-readable-final --output-dir .analysis/reconstruction/probes/NEW-input-timing
+```
+
+Receipts:
+`.analysis/reconstruction/exact-unit-replay/semantic-input-v1234-final/receipt.json`
+and `.analysis/reconstruction/probes/input-timing-v1234-{baseline,final}/receipt.json`.
+
+The final dependency-validated fast build `product-20261003-072525-caaf425d`
+preserves every physical byte and ordered relocation in MAIN/OP/MAINE against
+the preceding source build: 193,983/79,372/72,246 bytes, SHA-256
+`149c1e77…`/`ef37e6e8…`/`7bfd7fd5…`. Complete comparisons are
+`.analysis/semantic-input-v1234/ARTIFACT.EXE-final-compare.json`. ZUN source is
+unchanged and was not rebuilt in this bounded batch. The final 252 input
+fixture results also equal the pre-change results. This proves source-to-source
+compiler preservation, not native whole-target equality or a new route test.

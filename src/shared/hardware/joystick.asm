@@ -6,6 +6,17 @@
     .8086
     .model use16 large SHARED
 
+; Register selectors and status masks describe the existing I/O protocol.
+YM2203_ADDRESS_PORT = 188h
+YM2203_DATA_PORT_DELTA = 2
+YM2203_BUSY = 80h
+YM2203_IO_DIRECTION_REGISTER = 7
+YM2203_JOYSTICK_DATA_REGISTER = 0Eh
+YM2203_JOYSTICK_SELECT_REGISTER = 0Fh
+FIRST_JOYSTICK_SELECT = 80h
+JOYSTICK_ACTION_BITS = 003Fh
+BOARD_DETECTION_ATTEMPTS = 256
+
     .data
 public js_bexist, _js_bexist, js_stat, _js_stat
 js_bexist label word
@@ -20,8 +31,10 @@ JS_START proc far
     push bx
     push cx
     push dx
-    mov cx, 256
-    mov dx, 188h
+    ; Probe absent-board FFh at most 256 times. Presence is latched until
+    ; the next start; JS_END only flushes DOS keyboard input.
+    mov cx, BOARD_DETECTION_ATTEMPTS
+    mov dx, YM2203_ADDRESS_PORT
 detect_board:
     in al, dx
     inc al
@@ -33,12 +46,12 @@ detect_board:
 board_present:
     pushf
     cli
-    mov bh, 7
-    call sound_read
-    and al, 3Fh
-    or al, 80h
+    mov bh, YM2203_IO_DIRECTION_REGISTER
+    call ym2203_read_register
+    and al, 3Fh               ; preserve mixer enables, clear port A direction
+    or al, 80h                ; select input direction for port B
     mov bl, al
-    call sound_write
+    call ym2203_write_register
     popf
     mov ax, 1
 start_done:
@@ -55,21 +68,23 @@ JS_END proc far
     retf
 JS_END endp
 
+; Return the fresh active-low controller sample in AX. The caller ORs it
+; into key_det; this entry neither checks js_bexist nor writes js_stat.
 JS_SENSE proc far
     push bx
     push dx
     pushf
     cli
-    mov bh, 0Fh              ; select sound register 15
-    mov bl, 80h              ; first joystick
-    call sound_write
-    mov dx, 188h
-    mov al, 0Eh              ; select sound register 14
+    mov bh, YM2203_JOYSTICK_SELECT_REGISTER
+    mov bl, FIRST_JOYSTICK_SELECT
+    call ym2203_write_register
+    mov dx, YM2203_ADDRESS_PORT
+    mov al, YM2203_JOYSTICK_DATA_REGISTER
     out dx, al
-    add dx, 2
+    add dx, YM2203_DATA_PORT_DELTA
     in al, dx
     not al                   ; active-low buttons and directions
-    and ax, 003Fh
+    and ax, JOYSTICK_ACTION_BITS
     popf
     pop dx
     pop bx
@@ -77,34 +92,34 @@ JS_SENSE proc far
 JS_SENSE endp
 
 ; YM2203's busy flag is status port 188h bit 7.
-sound_ready proc near
-    mov dx, 188h
+ym2203_wait_ready proc near
+    mov dx, YM2203_ADDRESS_PORT
 ready_loop:
     in al, dx
-    test al, 80h
+    test al, YM2203_BUSY
     jnz ready_loop
     ret
-sound_ready endp
+ym2203_wait_ready endp
 
-sound_write proc near
-    call sound_ready
+ym2203_write_register proc near
+    call ym2203_wait_ready
     mov al, bh
     out dx, al
-    call sound_ready
-    add dx, 2
+    call ym2203_wait_ready
+    add dx, YM2203_DATA_PORT_DELTA
     mov al, bl
     out dx, al
     ret
-sound_write endp
+ym2203_write_register endp
 
-sound_read proc near
-    call sound_ready
+ym2203_read_register proc near
+    call ym2203_wait_ready
     mov al, bh
     out dx, al
-    call sound_ready
-    add dx, 2
+    call ym2203_wait_ready
+    add dx, YM2203_DATA_PORT_DELTA
     in al, dx
     ret
-sound_read endp
+ym2203_read_register endp
 
 end

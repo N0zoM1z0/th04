@@ -3,11 +3,15 @@
 
 typedef unsigned short input_t;
 
+// Latched action bits, rather than BIOS scan codes. input_sense() accumulates
+// them; input_reset_sense() clears the word and immediately takes a new sample.
 extern input_t key_det;
 
 void input_reset_sense(void);
 void input_sense(void);
-void pascal input_wait_for_change(int frames);
+// Wait for release, then press. Only the press phase has a finite timeout;
+// zero or 9999 repeats indefinitely, while a negative value skips that phase.
+void pascal input_wait_for_change(int press_timeout_frames);
 
 enum {
     INPUT_NONE = 0,

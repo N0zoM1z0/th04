@@ -55,7 +55,8 @@ INPUT_Q = 4000h
 
 	.code SHARED
 
-; TH05 insists on only updating the affected byte, so...
+; Preserve the historical GAME-specific write width. TH04 updates a word;
+; the compatibility branch updates only the selected byte.
 if GAME eq 4
 	OR_INPUT_LOW macro value
 		or	_key_det, value
@@ -72,12 +73,17 @@ else
 	endm
 endif
 
+; Reset is an alternate far entry with no separate return. It clears the
+; two action latches, then falls through to the ordinary sampling body.
 public @input_reset_sense$qv
 @input_reset_sense$qv label proc
 	xor	ax, ax
 	mov	_key_det, ax
 	mov	js_stat, ax
 
+; Plain sense accumulates actions in _key_det; it does not clear old bits.
+; ES=0 addresses the BIOS bitmap. Keypad diagonals are independent high-byte
+; actions, not the OR of two arrow actions. Keep the bitmap read order.
 public @input_sense$qv
 @input_sense$qv proc far
 	xor	ax, ax
@@ -179,11 +185,13 @@ public @input_sense$qv
 	jz	short @@shift?
 	OR_INPUT_LOW	INPUT_SHOT
 
+; Shift is a fresh BIOS modifier sample, not a latched action bit.
 @@shift?:
 	mov	ah, 2
 	int	18h
 	and	al, 1
 	mov	_shiftkey, al
+	; Optional joystick returns the same six low action bits in AX.
 	cmp	js_bexist, 0
 	jz	short @@ret
 	call	js_sense

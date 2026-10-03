@@ -4,7 +4,8 @@ Updated 2026-10-03. The active goal is a standalone PC-98 game: checked-in
 TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
-upstream exactness claims are not inherited. Current phase: runtime integration.
+upstream exactness claims are not inherited. Current phase: semantic readability;
+the user continues Windows runtime testing.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -30,6 +31,16 @@ The segmented-heap semantic batch passes the same three-file fast-build byte
 and ordered-relocation equality plus the existing exact-handle reuse, split,
 coalescing and DOS reassignment harness. See the
 [heap note](reconstruction/product/TH04_NATIVE_HEAP_V863.md).
+The input/timing batch names press budgets, action latches, joystick registers,
+IRQ cadence and GDC polling. MAIN/OP/MAINE remain complete-file raw-identical
+to `33875da`; three accepted MAIN owners pass two cold target/MAP/relocation
+replays, and 252 pre/post CPU controls plus DOS VSync lifecycle pass. A rejected
+TC4J enum substitution changed polling instructions; literal macros preserve
+them. No new acceptance is promoted; the old OP/MAINE decoded scaffolds remain
+absent. See the [input/timing note](reconstruction/packed/TH04_SHARED_INPUT_WAIT_V565.md).
+Fetch/rebase confirms `main` is still `8d20492` and already an ancestor.
+The semantic-only build is `.analysis/build/semantic-input-readable-final`;
+the user's Windows package and saves are unchanged during this batch.
 The authorized native Ending/scroll repair is built and deployed. MAINE's two
 CDG renderers now own independent CS frames; the expanded build auditor rejects
 their former writes into the PI decoder. Real staff-image CPU controls complete

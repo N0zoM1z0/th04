@@ -6,6 +6,8 @@
 // Keep the declaration order of the historical inputvar.h/input.h pair:
 // globals precede the entry points so TC4J emits the same EXTDEF ordering.
 typedef uint16_t input_t;
+// Replay stores only the low-byte actions. Live input also carries keypad
+// diagonals and menu/Q bits in the high byte; do not widen replay storage.
 typedef uint8_t input_replay_t;
 
 static const input_replay_t INPUT_NONE = 0x0000;
@@ -29,11 +31,15 @@ static const input_t INPUT_MOVEMENT = (
 );
 
 extern input_t key_det;
+// BIOS modifier state is sampled separately from the latched action word.
 extern bool shiftkey;
 
+// Reset clears keyboard/joystick action latches, then falls through to sense.
+// Plain sense ORs new actions into key_det, preserving earlier samples.
 void input_reset_sense(void);
 void input_sense(void);
-void pascal input_wait_for_change(int frames);
+// Release is unbounded. Press timeout 0 or 9999 repeats; negatives skip press.
+void pascal input_wait_for_change(int press_timeout_frames);
 
 // The interface alias is part of the historical TH04 header and is used by
 // UI code that intentionally ignores held-key distinctions.
