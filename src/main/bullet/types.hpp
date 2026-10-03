@@ -3,8 +3,15 @@
 
 #include "src/main/math/subpixel.hpp"
 
+// TH04 stores one full clockwise turn in an 8-bit angle: 00h points right,
+// 40h points down, 80h points left, and C0h points up. Arithmetic wraps at
+// 100h by assignment back to an unsigned byte.
+typedef unsigned char bullet_angle_t;
+#define BULLET_ANGLE_FULL_TURN 0x100
+#define BULLET_ANGLE_HALF_TURN 0x80
+
 typedef union {
-	unsigned char spread_angle;
+	bullet_angle_t spread_angle;
 	SubpixelLength8 stack_speed;
 } bullet_template_delta_t;
 

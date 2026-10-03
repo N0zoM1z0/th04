@@ -39,6 +39,7 @@ notes explain the remaining source and container gaps:
 - [Native OP source graph, segment grouping, and link frontier](product/TH04_NATIVE_OP_LINK_V875.md)
 - [Native MAIN local header and composite-source closure](product/TH04_NATIVE_MAIN_SOURCE_CLOSURE_V882.md)
 - [Native bullet drawing, maximum-pool stress and CPU budget](product/TH04_NATIVE_BULLET_LOAD_V1235.md)
+- [Semantic bullet angles, group generation and TC4J signed-modulo hazard](product/TH04_SEMANTIC_BULLET_GENERATION_V1236.md)
 - [Native MAIN product-source and DATA/BSS compiler frontier](product/TH04_NATIVE_MAIN_PRODUCT_FRONTIER_V1025.md)
 - [Native MAIN normal-route runtime differential and input-layout lead](product/TH04_NATIVE_MAIN_STARTUP_V1074.md)
 - [Native MAIN large-model far-runtime owners and v1131 frontier](product/TH04_NATIVE_MAIN_FAR_RUNTIME_V1131.md)

@@ -32,7 +32,7 @@ bullet_t struc
 	flag db ?
 	age db ?
 	pos motion_t <?>
-	from_group db ?
+	spawn_group db ?
 	unused db ?
 	speed_cur db ?
 	angle db ?

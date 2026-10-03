@@ -60,7 +60,7 @@ inline void bullet_update_patnum(bullet_t near &bullet) {
 void pascal near bullet_turn_x(bullet_t near &bullet)
 {
 	bullet.u1.turns_done++;
-	bullet.angle = (0x80 - bullet.angle);
+	bullet.angle = (BULLET_ANGLE_HALF_TURN - bullet.angle);
 	if(bullet.u1.turns_done >= bullet_special.turns_max) {
 		bullet.move_flag = BMF_REGULAR;
 	}

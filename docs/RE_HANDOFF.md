@@ -97,6 +97,17 @@ The uninstrumented final normal product reaches a visible Lunatic combat
 checkpoint at 125 seconds with all four executed product hashes verified.
 See the [bullet performance note](reconstruction/product/TH04_NATIVE_BULLET_LOAD_V1235.md).
 
+The semantic bullet-generation batch now names the 8-bit clockwise angle
+unit, spread/ring member index and offsets, aim/template rotation stages,
+final spawn angle, byte-sized source group and synchronous scratch lifetime.
+The final 199,455-byte native MAIN remains raw-identical at SHA-256
+`cb4c5b66...`; equivalent old/new header harnesses have identical semantic
+OMF, and the accepted 2,139-byte `bullet_a.cpp` owner passes two isolated cold
+target/MAP/relocation/raw replays. A rejected signed `% 0x80` replacement grew
+TC4J output by five bytes, so the directional-sprite half-turn period remains
+explicitly unsigned. No acceptance state changes. See the
+[semantic bullet note](reconstruction/product/TH04_SEMANTIC_BULLET_GENERATION_V1236.md).
+
 
 ## Current state
 

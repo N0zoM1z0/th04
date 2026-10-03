@@ -39,7 +39,7 @@ or replacing assembly before its observable contract is understood.
 | OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | Existing bounded scenarios; user confirms Normal Ending/save before the planar batch, and optimized seeded registration/save passes; source readability pass remains pending |
 | Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
 | Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; remaining graphics and sound pending |
-| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Semantic pass pending |
+| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime batch completed; broader gameplay and RNG ownership remain |
 
 This queue describes work to do, not a new completion percentage. Begin the
 next native-port slice once its own source contracts and regression probes
@@ -61,3 +61,11 @@ surfaces. The 2026-10-03 fetch/rebase confirms local `main` at `8d20492` is
 already an ancestor; no remote main update or commit rewrite was needed.
 Existing runtime fixes on `semantic/readable` remain in place. This batch
 does not replace the Windows package while the user tests it.
+
+The first bullet-generation batch records the one-byte clockwise angle unit,
+group-member angle pipeline, synchronous spawn scratch state, byte-sized group
+provenance and half-turn directional-sprite period. The complete native MAIN
+remains byte-identical, the header ABI probe is OMF-equivalent, and the accepted
+2,139-byte `bullet_a.cpp` owner passes two cold exact replays. A rejected signed
+`% 0x80` form grew TC4J output by five bytes; the retained period constant is
+explicitly unsigned. See [the bullet semantic note](reconstruction/product/TH04_SEMANTIC_BULLET_GENERATION_V1236.md).
