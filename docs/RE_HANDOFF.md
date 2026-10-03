@@ -240,8 +240,13 @@ positions, explicit `0xFF00` boundary sample and a defined zero-divisor
 exception after cursor advance. `Lcg32` now supplies the exact unsigned 32-bit
 update, 15-bit output, default/demo vectors and production ring fill. The
 application model keeps resident, OP, MAIN and MAINE state separate and makes
-the route-dependent verdict re-seed explicit. Direct gameplay call sites remain
-unported. A playable native game still requires the remaining
+the route-dependent verdict re-seed explicit. The first MAIN item contract now
+preserves automatic/miss drop random consumption, fixed-pool truncation,
+fixed-width score/performance state and wrapped pickup tests. Linux and Windows
+x64 agree, and UBSan/bounds passes the historical above-cap big-power case
+without an out-of-range host access. Item rendering/motion integration and the
+remaining direct gameplay call sites remain unported. A playable native game
+still requires the remaining
 hardware and runtime boundaries described in `port64/README.md`.
 
 ## Current state

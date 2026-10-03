@@ -20,6 +20,8 @@ PORT_FILES = (
     "port64/bullet_geometry.cpp",
     "port64/bullet_geometry.hpp",
     "port64/contracts.cpp",
+    "port64/item_system.cpp",
+    "port64/item_system.hpp",
     "port64/main.cpp",
     "port64/menu_state.cpp",
     "port64/menu_state.hpp",
@@ -121,7 +123,7 @@ def main() -> int:
     expected_contract_output = (
         "TH04 portable contracts: PASS pointer_bits=64 "
         "angle_bits=8 menu_state=OP handoff_state=OP_MAIN_MAINE "
-        "randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32"
+        "randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32 items=FIXED_WIDTH_SAFE"
     )
     if linux_contract_output != expected_contract_output:
         raise ValueError("Linux portable contract did not pass")
@@ -176,7 +178,7 @@ def main() -> int:
         "limit": (
             "Resource decoding, main/options composition, deterministic OP menu-state "
             "transitions, resident process handoff, process-local LCG and shared "
-            "random-ring contracts "
+            "random-ring contracts, and bounded item drop/scoring semantics "
             "only; gameplay, audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),

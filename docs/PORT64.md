@@ -62,6 +62,18 @@ boundary as the original 8086 `DIV` exception. Its production fill now consumes
 `Lcg32` directly. Connecting direct spark/item calls and the remaining gameplay
 sites stays separate work.
 
+`port64/item_system.cpp` is the first fixed-pool gameplay state built on those
+random contracts. It preserves the byte automatic-drop counter, every-second
+64-entry table lookup, first-free pool allocation, miss-drop spread selection,
+the discarded distinct-slot draw, conditional per-item type draws and the
+last-life override order. Its scorer uses explicit 8/16/32-bit state for power,
+dream, point totals and performance accumulators. The full-power big-item path
+branches before table access while retaining the historical final cap of 42,
+2,560-point reward and yellow popup, so x64 never reproduces the DOS
+pre-clamp out-of-range read. The pickup helper performs the historical wrapped
+unsigned 16-bit rectangle test without host signed overflow. Rendering, sprite
+pool motion and HUD/audio adapters remain outside this bounded contract.
+
 ## Verified builds
 
 The same source builds and runs as Linux ELF64 x86-64 and Windows PE32+
@@ -72,18 +84,19 @@ Both also produce the same default Options BMP, SHA-256
 `a064338b0cfb89f7e418a85ab6bc84a7ea5ef835e4ca995b68772e0aef368185`.
 Both portable contract executables report `pointer_bits=64`, `angle_bits=8`,
 `menu_state=OP`, `handoff_state=OP_MAIN_MAINE` and
-`randring=SHARED_OVERLAP` and `lcg=PROCESS_LOCAL32`.
+`randring=SHARED_OVERLAP`, `lcg=PROCESS_LOCAL32` and
+`items=FIXED_WIDTH_SAFE`.
 A separate GNU x86-64 build passes the same contract with undefined-behavior
 and array-bounds instrumentation enabled.
 
-The LCG verification receipt is
-`.analysis/port64/verification-lcg-v1247/receipt.json` (SHA-256
-`ee8a22a6168a973dca802294dc7b0b28e5a4a49e941bd61189f3827cb0ce8f33`),
+The item-contract verification receipt is
+`.analysis/port64/verification-items-v1249/receipt.json` (SHA-256
+`e6dfefcb396735ae7a42c2bf7a641c728bed907ab5cf9185c4eea1dd1f2f9aee`),
 with source manifest
-`ccf2472280ed988d4e11c98aac84933a4184762e538b75ef323637449d4923e8`.
+`b28fdc6701bb4d14d497d1263cf4ec0eee349a33a67b03057929453bcb21579f`.
 The UBSan/bounds receipt is
-`.analysis/port64/ubsan-lcg-v1247/receipt.json` (SHA-256
-`76e1e001e466eb7e14038afa5682185caf2143fc08557855b8602b44a7387cbe`).
+`.analysis/port64/ubsan-items-v1249/receipt.json` (SHA-256
+`eb0551c7c51a148d493a7b9f9fe6f398abc1a3b3983b2ed84f34fe81cf8ef6ce`).
 
 Replay the complete cross-build check with:
 
@@ -107,8 +120,8 @@ repository.
    to the portable main/options state and framebuffer backend.
 3. Connect the verified process-transition contract to UI destinations, then
    add audio and saved configuration adapters.
-4. Port MAIN entity pools around fixed-width state, preserving the single LCG
-   call order across direct gameplay draws and shared-ring fills before bullet
-   generation and rendering controls.
+4. Connect the fixed-width item contract to a MAIN entity pool and rendering,
+   then port the remaining direct spark/bullet random call sites without
+   splitting the process LCG or shared ring sequence.
 5. Add route-level differential checkpoints for gameplay, Ending and score
    persistence on Linux and Windows.

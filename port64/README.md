@@ -35,6 +35,15 @@ boundary is synthesized explicitly, so the x64 implementation never reads
 outside its array. A zero MOD divisor becomes a defined host exception after
 the sample has advanced, matching the original state order around 8086 `DIV`.
 
+`item_system` builds the first MAIN gameplay contract on that stream. It
+models the 32-slot fixed pool's miss-drop allocation, three velocity fields,
+big-item slot, unused distinct draw, per-item power/point draw and one-life
+full-power override. Fixed-width score state covers the point/dream tables,
+Bomb multiplier, power overflow, collection/miss performance carries and the
+wrapped unsigned pickup rectangle. The big-power cap is evaluated before the
+portable table lookup, yielding the same cap/reward without the DOS source's
+transient out-of-range access.
+
 The architecture follows the separation used by TH08's modern port: the
 historic compiler/link path remains the reconstruction baseline, while CMake
 builds a new host product. TH08's current modern product is still 32-bit;
@@ -88,15 +97,18 @@ transitions. It additionally checks the complete portable process-handoff
 contract and rejects invalid cross-phase transitions. The contract output also
 reports `randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32` after checking LCG
 vectors, executable/resident seed lifetimes, an LCG-backed 256-call fill, all
-256 cursor positions and the consuming zero-divisor failure path.
+256 cursor positions and the consuming zero-divisor failure path. It also
+reports `items=FIXED_WIDTH_SAFE` after checking enemy-drop cadence, shared-ring
+consumption, full/sparse pool allocation, one-life override, scoring caps,
+performance carries and pickup boundaries.
 
 A GNU x86-64 debug build also passes these contracts with
-`-fsanitize=undefined,bounds`, including unsigned wrap, process resets and the
-full LCG-backed random-ring fill.
+`-fsanitize=undefined,bounds`, including unsigned wrap, process resets, the
+full LCG-backed random-ring fill and the above-cap big-power scoring case.
 
 Next runtime boundaries are description text, character selection, input
 timing, audio, configuration persistence, and replacement of DOS file/heap
 interfaces. UI destinations can then enter the portable handoff state while
-MAIN bullet entity and rendering state consume the shared process LCG and
-random ring before building on the angle/group contract. A completed TH04
-native game has not yet been demonstrated.
+MAIN item rendering/pool motion and bullet entity state consume the shared
+process LCG and random ring before building on the angle/group contract. A
+completed TH04 native game has not yet been demonstrated.

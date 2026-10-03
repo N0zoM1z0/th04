@@ -9,6 +9,7 @@ add_library(
   th04-portable-core STATIC
   application_state.cpp
   bullet_geometry.cpp
+  item_system.cpp
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp

@@ -1,5 +1,6 @@
 #include "application_state.hpp"
 #include "bullet_geometry.hpp"
+#include "item_system.hpp"
 #include "menu_state.hpp"
 #include "random_lcg.hpp"
 #include "random_ring.hpp"
@@ -12,6 +13,7 @@
 namespace bullet = th04::portable::bullet;
 namespace menu = th04::portable::menu;
 namespace application = th04::portable::application;
+namespace item = th04::portable::item;
 namespace rng = th04::portable::rng;
 namespace randring = th04::portable::randring;
 
@@ -173,6 +175,181 @@ int main() {
             "random-ring fill must consume 256 LCG states");
     require(generated_random_ring.next16() == 0x4649,
             "LCG-backed descending random-ring fill mismatch");
+
+    static_assert(sizeof(item::Subpixel) == 2, "item subpixels must be 16-bit");
+    static_assert(sizeof(item::Type) == 1, "item type must be byte-sized");
+
+    item::EnemyDropSequence enemy_drop_sequence;
+    enemy_drop_sequence.initialize(ring_lcg);
+    require(enemy_drop_sequence.cycle() == 11,
+            "item drop seed must follow the 256-byte LCG ring fill");
+    const auto first_enemy_drop = enemy_drop_sequence.next();
+    require(first_enemy_drop && *first_enemy_drop == item::Type::power,
+            "first seeded automatic enemy drop mismatch");
+    require(!enemy_drop_sequence.next(),
+            "automatic enemy drop must skip every odd counter value");
+    item::EnemyDropSequence final_drop_entry(125);
+    require(final_drop_entry.next() == item::Type::big_power,
+            "automatic enemy drop table final entry mismatch");
+    require(!final_drop_entry.next(),
+            "automatic enemy drop table must retain half-rate cadence");
+
+    randring::SharedRandomRing item_random_ring;
+    const auto fill_item_random_ring = [&]() {
+        std::uint16_t generated = 0;
+        item_random_ring.fill([&]() {
+            return static_cast<std::uint8_t>(generated++);
+        });
+        require(generated == 256, "item random-ring fill count mismatch");
+    };
+    std::bitset<item::pool_size> all_item_slots_free;
+    all_item_slots_free.set();
+    fill_item_random_ring();
+    const auto miss_drop = item::spawn_miss_items(
+        item_random_ring, item::to_subpixel(192), 3, all_item_slots_free
+    );
+    require(miss_drop.count == 5 && miss_drop.big_power_slot == 4 &&
+                miss_drop.discarded_distinct_slot == 2 &&
+                miss_drop.ring_samples_consumed == 6 &&
+                item_random_ring.cursor() == 6,
+            "miss-drop selection and random consumption mismatch");
+    const std::array<item::Type, 5> miss_types{{
+        item::Type::point,
+        item::Type::power,
+        item::Type::point,
+        item::Type::power,
+        item::Type::big_power,
+    }};
+    const std::array<item::Velocity, 5> center_velocities{{
+        {-24, -48}, {-12, -56}, {0, -64}, {12, -56}, {24, -48},
+    }};
+    for (std::size_t i = 0; i < miss_types.size(); ++i) {
+        require(miss_drop.spawns[i].pool_index == i &&
+                    miss_drop.spawns[i].drop_slot == i &&
+                    miss_drop.spawns[i].type == miss_types[i] &&
+                    miss_drop.spawns[i].velocity.x == center_velocities[i].x &&
+                    miss_drop.spawns[i].velocity.y == center_velocities[i].y,
+                "miss-drop slot/type/velocity mismatch");
+    }
+
+    fill_item_random_ring();
+    const auto last_life_drop = item::spawn_miss_items(
+        item_random_ring, item::to_subpixel(192), 1, all_item_slots_free
+    );
+    require(last_life_drop.ring_samples_consumed == 6,
+            "last-life override must preserve random consumption");
+    for (std::size_t i = 0; i < last_life_drop.count; ++i) {
+        require(last_life_drop.spawns[i].type == item::Type::full_power,
+                "last-life miss drop must become full power");
+    }
+
+    std::bitset<item::pool_size> sparse_item_slots;
+    sparse_item_slots.set(3);
+    sparse_item_slots.set(31);
+    fill_item_random_ring();
+    const auto truncated_drop = item::spawn_miss_items(
+        item_random_ring, item::to_subpixel(192), 3, sparse_item_slots
+    );
+    require(truncated_drop.count == 2 &&
+                truncated_drop.spawns[0].pool_index == 3 &&
+                truncated_drop.spawns[1].pool_index == 31 &&
+                truncated_drop.ring_samples_consumed == 4 &&
+                item_random_ring.cursor() == 4,
+            "full item pool must truncate without displacing live entries");
+
+    item::ScoreState ordinary_overflow;
+    ordinary_overflow.power = item::power_max;
+    ordinary_overflow.power_overflow = 41;
+    const auto ordinary_overflow_effect = item::collect(
+        ordinary_overflow, item::Type::power, item::to_subpixel(100), false
+    );
+    require(ordinary_overflow.power_overflow == 42 &&
+                ordinary_overflow_effect.base_points == 1280 &&
+                ordinary_overflow_effect.yellow_point_number,
+            "ordinary power overflow cap mismatch");
+
+    item::ScoreState big_overflow;
+    big_overflow.power = item::power_max;
+    big_overflow.power_overflow = 41;
+    const auto big_overflow_effect = item::collect(
+        big_overflow, item::Type::big_power, item::to_subpixel(100), false
+    );
+    require(big_overflow.power_overflow == 42 &&
+                big_overflow_effect.base_points == 2560 &&
+                big_overflow_effect.awarded_points == 2560 &&
+                big_overflow_effect.yellow_point_number,
+            "safe above-cap big-power reward mismatch");
+
+    bool invalid_item_state_rejected = false;
+    try {
+        item::ScoreState invalid_item_state;
+        invalid_item_state.power_overflow = 43;
+        (void)item::collect(
+            invalid_item_state, item::Type::big_power,
+            item::to_subpixel(100), false
+        );
+    } catch (const std::logic_error&) {
+        invalid_item_state_rejected = true;
+    }
+    require(invalid_item_state_rejected,
+            "portable item scorer must reject an invalid table index");
+
+    item::ScoreState point_score;
+    point_score.dream_score = 1280;
+    point_score.item_playperf_raise = 24;
+    const auto point_effect = item::collect(
+        point_score, item::Type::point, item::to_subpixel(52), true
+    );
+    require(point_effect.base_points == 6400 &&
+                point_effect.awarded_points == 12800 &&
+                point_effect.yellow_point_number &&
+                point_effect.playperf_raised == 1 &&
+                point_score.item_playperf_raise == 0 &&
+                point_score.score_delta == 12800 &&
+                point_score.max_valued_point_items == 1 &&
+                point_score.total_point_items_collected == 1 &&
+                point_score.stage_point_items_collected == 1,
+            "maximum point item/dream/Bomb multiplier mismatch");
+
+    item::ScoreState dream_score;
+    dream_score.dream_items_collected = 6;
+    auto dream_effect = item::collect(
+        dream_score, item::Type::dream, item::to_subpixel(100), false
+    );
+    require(dream_score.dream_items_collected == 7 &&
+                dream_score.dream_score == 1280 &&
+                dream_effect.base_points == 1280,
+            "dream score final entry mismatch");
+    dream_effect = item::collect(
+        dream_score, item::Type::dream, item::to_subpixel(100), false
+    );
+    require(dream_score.dream_items_collected == 7 &&
+                dream_effect.base_points == 1280,
+            "dream score saturation mismatch");
+
+    item::ScoreState missed_item;
+    missed_item.item_playperf_lower = 63;
+    const auto miss_effect = item::miss(missed_item, item::Type::power);
+    require(miss_effect.playperf_lowered == 1 &&
+                missed_item.item_playperf_lower == 16,
+            "missed-item 64-minus-48 performance carry mismatch");
+
+    constexpr auto player_x = item::to_subpixel(192);
+    constexpr auto player_y = item::to_subpixel(320);
+    require(item::overlaps_player_pickup_box(
+                player_x, player_y,
+                static_cast<item::Subpixel>(player_x + item::to_subpixel(24)),
+                static_cast<item::Subpixel>(player_y - item::to_subpixel(14))),
+            "pickup rectangle included corner mismatch");
+    require(!item::overlaps_player_pickup_box(
+                player_x, player_y,
+                static_cast<item::Subpixel>(player_x + item::to_subpixel(25)),
+                player_y),
+            "pickup rectangle positive-X wrap rejection mismatch");
+    require(!item::overlaps_player_pickup_box(
+                player_x, player_y, player_x,
+                static_cast<item::Subpixel>(player_y - item::to_subpixel(15))),
+            "pickup rectangle asymmetric-Y rejection mismatch");
 
     menu::State locked_menu;
     locked_menu.handle(menu::Input::down);
@@ -433,6 +610,7 @@ int main() {
     std::cout << "TH04 portable contracts: PASS pointer_bits="
               << sizeof(void*) * 8 << " angle_bits=" << sizeof(bullet::Angle) * 8
               << " menu_state=OP handoff_state=OP_MAIN_MAINE"
-              << " randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32" << std::endl;
+              << " randring=SHARED_OVERLAP lcg=PROCESS_LOCAL32"
+              << " items=FIXED_WIDTH_SAFE" << std::endl;
     return 0;
 }
