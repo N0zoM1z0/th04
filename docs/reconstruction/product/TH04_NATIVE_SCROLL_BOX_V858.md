@@ -42,3 +42,66 @@ runnable TH04-only product. The original MAINE entry still needs a valid
 OP→MAIN→MAINE scenario; the no-archive link still needs 28 local support
 names. For TH05, keep graphics state ownership, far ABI, GDC FIFO timing,
 and VRAM write semantics as separately testable surfaces.
+
+## MAIN integration: top stripe and explicit slowdown
+
+The 2026-10-03 user reports show a top stripe during Marisa/Normal versus
+Reimu, the corresponding Reimu versus Marisa background, and late Yuuka's
+checkerboard background. Marisa's bomb removes it in both tested fights.
+These are user observations; the screenshots do not establish an original
+behavior or a confirmed cause. The bomb path explicitly calls
+`graph_scrollup(0)` at frame 48, restores `graph_scrollup(scroll_line)` at
+frame 177, and changes background rendering during that interval. A display
+origin mismatch and incomplete redraw remain distinguishable hypotheses.
+
+A separate defect is confirmed in the current product. Three initialization
+names and driver names own different native storage, although the target
+uses one field for each pair:
+
+| State | Target DS offset | Native driver symbol at DGROUP | Native initialization symbol at DGROUP |
+| --- | --- | --- | --- |
+| Previous row-copy request | 3DBE | `_byte_250FE`, 227F:C767 | `_scroll_row_advance_previous`, 227F:B56D |
+| Current row advance | 3DC4 | `_byte_25104`, 227F:C768 | `_scroll_row_advance_current`, 227F:B56E |
+| Previous tile-ring row | 3DC0 | `_word_25100`, 227F:C769 | `_tile_ring_scroll_row_prev`, 227F:B56F |
+
+The native addresses belong to build `product-20261003-040353-7d7e1b7e` and
+must be rediscovered from a later MAP. The original target initialization
+slice at load B1D6..B207 clears all three driver fields. Native initialization
+at MAIN 0708:03BA..03EB clears only the separate semantic fields. A Unicorn
+CPU control seeds the fields with A5/A5/CAFE and reproduces original zeros
+versus retained native A5/A5/CAFE. The historical source-transform aliases
+`alias-scroll-row-{prev,current,previous}-v166` already describe single-field
+ownership. Their historical acceptance is not transferred to this native link.
+This proves an initialization/ownership defect; it does not yet prove the
+reported stripe's visual cause. Source repair and Windows replacement are
+postponed while the user tests. Unify the product owners and then replay
+stage transitions, both pages and the original/native display-scroll state.
+
+The Reimu/Marisa backdrop body at original load BEDA..BF14 and native MAIN
+0708:1490..14CA has identical 59-byte code. An ordinary-RAM write-address
+control observes 9,472 written bytes, including every playfield byte in rows
+16..31. This rejects a simple missing-top-row loop hypothesis for that producer.
+It does not emulate GRCG tile colors, page selection, or GDC display origins.
+
+The late Yuuka cross-pattern report also needs timing separation. In the
+attested original MAIN target, load 1CB04..1CB40 implements the existing
+bullet-count slowdown: when Turbo is off, threshold = 24 + playperf + rank*8;
+on even stage frames at/above that threshold, `slowdown_factor` becomes 2.
+`slowdown_frame_delay()` waits for that many vertical-sync ticks. Normal's
+threshold is 32 + playperf. A bounded original/native CPU replay checks 96
+combinations of Turbo, rank, performance value, threshold boundaries and frame
+parity; all results agree. The cross-spawn phase has no separate explicit
+slowdown assignment in its source. These controls prove the preserved policy,
+not the user's active Turbo/count state or adequate Windows frame pacing.
+
+```text
+python3 scripts/probes/probe_th04_native_scroll_and_slowdown.py --build-dir .analysis/build/semantic-heap-readable --output-dir .analysis/reconstruction/probes/NEW-render-policy
+```
+
+Attested replay receipt:
+`.analysis/reconstruction/probes/render-policy-v1229-clean/receipt.json`.
+The probe verifies full MZ identities/integrity, MAP identity and the Unicorn
+engine digest. It copies unrelocated modules at load segment 2000 and executes
+only prefixes/branches without used relocation operands, with synthetic DS=8000
+and SS=7000. No PC-98 launch, actual in-game state, or full visual acceptance
+is claimed; all target/unit acceptance states remain unchanged.

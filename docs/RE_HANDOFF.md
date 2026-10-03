@@ -35,8 +35,15 @@ Private CPU replay has reproduced MAINE CDG self-modifying CS writes into the
 PI decoder (`.analysis/ending-analysis-20261003/ANALYSIS.md`); a complete
 repaired ending-to-registration replay is still required. The newly reported
 stage-4/late-Yuuka top stripe disappears after Marisa's bomb; shared backdrop filling
-matches its target body, while display-scroll transition state remains under
-investigation. Do not interpret either report as completed runtime acceptance.
+matches its target body and writes the top playfield rows in a CPU address
+control. Native initialization and the scroll driver provably use duplicate
+storage for three fields; original initialization clears the driver's fields,
+while native initialization leaves seeded old values intact. This is a confirmed
+separate ownership defect; its connection to the stripe still needs a full
+visual replay. The original/native bullet-count slowdown agrees across 96
+CPU controls (Normal threshold 32 + playperf, Turbo off, alternate two-vsync
+waits). See the [scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
+Do not interpret these reports as completed runtime acceptance.
 
 
 ## Current state
