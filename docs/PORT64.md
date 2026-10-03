@@ -62,8 +62,8 @@ is the pre-increment cursor value `0xFF`. The implementation synthesizes that
 boundary value without an out-of-bounds C++ load. A zero MOD divisor throws
 after consuming the sample, providing a defined host failure at the same state
 boundary as the original 8086 `DIV` exception. Its production fill now consumes
-`Lcg32` directly. Connecting direct spark/item calls and the remaining gameplay
-sites stays separate work.
+`Lcg32` directly. Direct spark initialization and live spark draws now use these same owners;
+remaining boss/player-transition sites are still separate work.
 
 `port64/item_system.cpp` is the first fixed-pool gameplay state built on those
 random contracts. It preserves the byte automatic-drop counter, every-second
@@ -109,9 +109,9 @@ cycle resets and homing, Marisa option-laser startup/ring order, descending
 allocation, allocation-dependent shared-ring draws, delayed reclamation, hit
 animation and the per-frame collision cache. Hit processing retains signed
 velocity division, progressively reduced damage, Bomb/boss division before
-laser damage, unsigned rectangle bounds and spark phase. Sparks are requests
-to a future adapter, so this slice does not consume their random draws or
-render them. Sound and spark effects remain absent.
+laser damage, unsigned rectangle bounds and spark phase. The shot owner emits spark requests; the live MAIN adapter now allocates them
+synchronously using the shared ring. Sound remains absent. The earlier isolated
+shot CPU oracle below deliberately intercepts spark callees.
 
 MAIN now dispatches STD waves, then updates player/shots/bullets/enemies/items
 in original order. SDL and Win32 sample
@@ -156,9 +156,8 @@ The scroll owner now publishes the preceding update's Q12.4 delta even when
 its helper stops the stream in that call; enemy scroll movement consumes it.
 
 Fire, sound, tile-ring and spark requests dispatch synchronously. Item drops
-and enemy bullet tuning/allocation are connected to their live pools. Spark
-random draws and sound are not modeled yet, so natural shared RNG will change
-when those adapters are added. Player collision records a hit but
+and enemy bullet tuning/allocation are connected to their live pools. Spark allocation and its random draws now run synchronously as well; audio
+and remaining boss/player-transition adapters stay separate. Player collision records a hit but
 player death is still absent. This is a runnable Stage 1 enemy/shot slice,
 not a complete or invulnerable patched version of the native game.
 
@@ -247,11 +246,81 @@ pass. Cross-host receipt:
 `.analysis/port64/verification-bullets-v1255/receipt.json`; CPU receipts:
 `.analysis/port64/bullets-v1255/cpu-{linux-final3,windows-final,ubsan-final}/receipt.json`.
 
-Next port the gather/spark owners to close deferred allocation and random-call
-boundaries, then midboss/bosses, stage transitions/visuals, player death/Bomb,
-HUD/audio and Ending/save screens. Semantic work remains paused until a concrete
+Gather/spark allocation and random-call boundaries are now connected below.
+Next port the Stage 1 control/midboss boundary, then bosses, stage
+transitions/visuals, player death/Bomb, HUD/audio and Ending/save screens. Semantic work remains paused until a concrete
 ambiguity blocks these tasks. The native game is still incomplete; the DOS
 product and its exact acceptance remain unchanged.
+
+## Sparks and gather circles
+
+`effects` owns a 96-slot spark attempt ring and 16 first-free gather slots.
+MAIN initializes the low byte of each spark angle with 96 direct process-LCG
+calls after ring fill and item-drop initialization. Initialization preserves
+high angle/offset bytes; stage clearing normally makes them zero. Spark
+requests advance the attempt offset even over occupied slots, consuming one
+shared sample only on an actual free slot. Circular bursts retain the wrapped
+16-bit premultiplied numerator, including counts above 255. Spark updates run
+before player movement, retain move-before-gravity and byte age wrapping, and
+reclaim removed slots on the following frame.
+
+Gather requests capture the already tuned full 18-byte bullet template and
+reset the gather shape to the original defaults. Ascending updates move the
+center, save/subtract signed radius, advance byte angle, and release when the
+radius becomes smaller than 2 pixels. Release restores the full process-wide
+bullet scratch and calls the regular wrapper without retuning. Gather-only
+allocation changes just the saved spawn byte. Gather updates run after items;
+fresh enemy-created circles therefore shrink in the same frame. Immediate
+shot-hit, enemy-kill and bullet-graze spark requests retain their shared-ring
+ordering.
+
+The host paints gathers and eight spark cels procedurally from disks/lines,
+in original foreground order: player, gathers, sparks, items, then bullets.
+No original bitmap arrays are embedded. Original renderer GRCG-mask shadows
+agree on 648 glyph controls (nine masks, eight alignments, nine Y/roll positions),
+SHA-256 `d5c8419022abe60572035dc8285014f950ae164eac11c8bcfd238e27221fb3a3`.
+Original render-coordinate/cel/color controls additionally cover 120 spark
+and 216 gather states, including signed-word point-angle multiplication.
+Glyph checks exclude full host edge clipping.
+
+The independent CPU oracle agrees on 3,075 cases: 54 initialization, 497 random
+spark adds, 496 circular adds, 1,080 spark updates, 120 spark draws, 54 gather
+adds, 54 gather-only adds, 504 gather updates and 216 gather draws. It compares
+complete serialized 96x16-byte spark or 16x42-byte gather records, process
+LCG/ring/attempt cursors, and full restored release templates. Entries:
+`MAIN main_01 0AAF:1824/1776/17C2/1710` (spark init/update/render/glyph),
+`main_03 13A9:039A/03FC` (random/circle), `0027/0091/013E/01CC/1008`
+(gather add/only/update/render/glyph); load `2000`, DS `8000`. Storage:
+DS:53E2 sparks, DS:41F4 attempt byte offset, DS:9292 gathers, DS:9586 template.
+The isolated gather-update oracle intercepts the regular wrapper to compare
+its complete input; the joint oracle executes that wrapper.
+
+Normal/Lunatic joint controls agree on 2,400 frames while executing original
+STD/enemy, spark, gather, bullet and shot-hit callees. These private controls
+inject one targeted shot-cache entry per frame and a gather producer every
+96 frames. They compare canonical wire fingerprints for all four pools, ring
+and spark cursors, graze, hit/kill/score state and scratch template. This is a
+controlled integration test, not ordinary gameplay or complete routes.
+Drops, HUD, audio and graphics effects outside these glyphs are intercepted.
+
+Separate negative controls reproduce original zero-count spark-circle `DIV`
+at loaded `33A9:043A`; the host throws a defined exception. Random spark count
+zero retains its 65,536-attempt word decrement behavior. Corrupted spark offsets
+are rejected before host array access. These out-of-domain cases must not be
+conflated with normal boss burst counts or universal original equality.
+
+Linux ELF64, Wine-hosted PE32+ and GNU UBSan/bounds pass all six contracts,
+resource/UI/player-shot regression fixtures and the scoped CPU controls. Real
+1200-frame Stage 1 held-Z scenes now yield 24 kills, score delta 5,720 and power
+6 per character; the 900-frame Lunatic scenes have six live bullets. Their four
+BMPs/counters agree across hosts and sanitizers. Earlier enemy-only 26-kill
+results above remain historical: adding real spark random consumption changes
+the shared sequence. Cross-host receipt:
+`.analysis/port64/verification-effects-v1256-final2/receipt.json`; CPU receipts:
+`.analysis/port64/effects-v1256/cpu-{linux,windows,ubsan}-final/receipt.json`.
+The DOS source and acceptance ledgers are unchanged. Native player death,
+Bomb, bosses, progression, HUD/audio and Ending/save remain incomplete; native
+Windows pacing still needs an actual Windows host observation.
 
 ## Verified builds
 
@@ -327,8 +396,8 @@ verify. Motion/items/background/shots/enemies required no further DOS-source edi
 For each next module, stop readability work once state ownership, arithmetic,
 control flow and hardware boundaries support an independently checked native
 implementation. Resume only for a concrete ambiguity exposed by integration.
-Next, connect enemy bullet tune/add/update to the synchronous event boundary,
-then midboss/bosses, later-stage scrolling/tile maps, HUD, death/Bomb transitions
+Enemy bullets, gathers and sparks now use that synchronous boundary. Next
+connect Stage 1 control/midboss, then bosses, later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those
 systems become runnable. Full gameplay is the completion condition, not an

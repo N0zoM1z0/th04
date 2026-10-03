@@ -1,4 +1,5 @@
 #include "enemy_bullets.hpp"
+#include "effects.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -100,28 +101,75 @@ std::uint32_t enemy_hash(const enemy::System& pool) {
     for (const auto& e:pool.snapshot().entities) for (const auto v:enemy_encode(e)) hash=(hash^v)*16777619u;
     return hash;
 }
-void joint_stage(const char* path,unsigned rank,unsigned frames) {
+void joint_stage(const char* path,unsigned rank,unsigned frames,bool effects=false) {
     std::ifstream file(path,std::ios::binary);require(bool(file),"cannot read joint STD");
     const stage::Program program_template(Bytes(std::istreambuf_iterator<char>(file),{}));
     auto program=program_template;enemy::System enemies;b::System bullets;
+    th04::portable::spark::System sparks;th04::portable::gather::System gathers;
+    th04::portable::rng::Lcg32 generator(0x1234);
+    if (effects) sparks.initialize([&] { return generator.next_byte(); });
     th04::portable::shot::System shots;r::SharedRandomRing ring;unsigned draw=0;
     ring.fill([&] { return static_cast<std::uint8_t>(draw++*73u+19u); });
     for (unsigned frame=0;frame<frames;++frame) {
         enemy::Context ec;ec.player={3072,5120};ec.rank=static_cast<std::uint8_t>(rank);ec.performance=rank==3 ? 22 : 16;
         ec.scroll_delta=frame%3==0 ? 16 : 0;ec.frame_mod2=frame%2;ec.frame_mod4=frame%4;
         b::Context bc;bc.player=ec.player;bc.rank=ec.rank;bc.performance=static_cast<std::uint8_t>(ec.performance);
-        bc.frame_mod2=ec.frame_mod2;bc.invincibility=1;bc.turbo=true;
+        bc.frame_mod2=ec.frame_mod2;bc.invincibility=effects ? 0 : 1;bc.turbo=true;
         for (const auto& spawn:program.run(static_cast<std::uint16_t>(frame))) enemies.add(spawn,ec,ring);
-        bullets.begin_frame();bullets.update(bc);
+        const auto sink=[&](const b::Event& event) {
+            if (!effects) return;
+            if (event.type==b::EventType::sparks) sparks.add_random(event.position,event.value,event.count,ring);
+            if (event.type==b::EventType::gather) gathers.request(event);
+        };
+        if (effects) {
+            // Private integration fixture: one cache entry targets the first
+            // active enemy; every 96 frames a real gather producer is called.
+            // No such injection is present in ordinary gameplay.
+            sparks.update();
+            th04::portable::shot::Snapshot ss;ss.spark_cycle=shots.snapshot().spark_cycle;
+            for (const auto& e:enemies.snapshot().entities) if (e.flag==enemy::alive) {
+                ss.entities[0].flag=1;ss.entities[0].position.current=e.position.current;ss.entities[0].damage=2;
+                ss.collision_cache[0]={e.position.current,0};ss.alive_count=1;break;
+            }
+            shots=th04::portable::shot::System(ss);
+            if (frame%96==0) {
+                enemy::Event event;event.type=enemy::EventType::fire;event.value=1;
+                event.bullet.spawn_type=3;event.bullet.pattern=52;event.bullet.origin={2048,1024};
+                event.bullet.group=BG_RANDOM_ANGLE;event.bullet.angle=129;event.bullet.speed=42;event.bullet.count=6;event.bullet.delta=6;
+                bullets.fire(event,bc,ring,sink);
+            }
+        }
+        bullets.begin_frame();bullets.update(bc,sink);
         enemies.update(program,ec,ring,shots,[&](const enemy::Event& event) {
-            if (event.type==enemy::EventType::fire) bullets.fire(event,bc,ring);
+            if (event.type==enemy::EventType::fire) bullets.fire(event,bc,ring,sink);
+            if (effects && event.type==enemy::EventType::sparks) sparks.add_random(event.position,event.value,event.count,ring);
         });
+        if (effects) gathers.update([&](const b::Template& saved) { bullets.release(saved,bc,ring,sink); });
         enemies.prepare_render();
         const auto& state=enemies.snapshot();
         std::cout << frame << ' ' << enemy_hash(enemies) << ' ' << entity_hash(bullets) << ' ' << ring.cursor() << ' '
             << state.gone << ' ' << state.killed_count << ' ' << state.score_delta+bullets.snapshot().score_delta << ' '
             << (state.player_hit || bullets.snapshot().player_hit) << ' ';
-        print_template(bullets.snapshot().scratch);std::cout << '\n';
+        print_template(bullets.snapshot().scratch);
+        if (effects) {
+            // Canonical little-endian wire hashes, independent of host packing.
+            std::uint32_t sh=2166136261u,gh=2166136261u;
+            const auto push=[](std::uint32_t& hash,unsigned v) { hash=(hash^static_cast<std::uint8_t>(v))*16777619u; };
+            const auto word=[&](std::uint32_t& h,unsigned v) { push(h,v);push(h,v>>8); };
+            const auto point=[&](std::uint32_t& h,m::Point p) { word(h,static_cast<std::uint16_t>(p.x));word(h,static_cast<std::uint16_t>(p.y)); };
+            for (const auto& e:sparks.snapshot().entities) {
+                push(sh,e.flag);push(sh,e.age);point(sh,e.center.current);point(sh,e.center.previous);point(sh,e.center.velocity);word(sh,e.angle);
+            }
+            for (const auto& e:gathers.snapshot().entities) {
+                push(gh,e.flag);push(gh,e.color);point(gh,e.center.current);point(gh,e.center.previous);point(gh,e.center.velocity);
+                word(gh,static_cast<std::uint16_t>(e.radius));word(gh,static_cast<std::uint16_t>(e.ring_points));push(gh,e.angle);push(gh,e.angle_delta);
+                push(gh,e.bullet.spawn_type);push(gh,e.bullet.pattern);point(gh,e.bullet.origin);point(gh,e.bullet.velocity);
+                for (auto v:{e.bullet.group,e.bullet.angle,e.bullet.speed,e.bullet.count,e.bullet.delta,e.bullet.unused_1,e.bullet.special_motion,e.bullet.unused_2}) push(gh,v);
+                word(gh,static_cast<std::uint16_t>(e.previous_radius));word(gh,static_cast<std::uint16_t>(e.radius_delta));
+            }
+            std::cout << sh << ' ' << gh << ' ' << sparks.snapshot().ring_offset << ' ' << bullets.snapshot().graze << ' ' << +shots.snapshot().spark_cycle << ' ';
+        }
+        std::cout << '\n';
     }
 }
 void contracts() {
@@ -143,7 +191,7 @@ int main(int argc,char** argv) {
             std::cout << '\n';return 0;
         }
         if (argc==3 && std::string(argv[1])=="--vectors") { vectors(argv[2]);return 0; }
-        if (argc==5 && std::string(argv[1])=="--stage") { joint_stage(argv[2],static_cast<unsigned>(std::stoul(argv[3])),static_cast<unsigned>(std::stoul(argv[4])));return 0; }
+        if (argc==5 && (std::string(argv[1])=="--stage" || std::string(argv[1])=="--stage-effects")) { joint_stage(argv[2],static_cast<unsigned>(std::stoul(argv[3])),static_cast<unsigned>(std::stoul(argv[4])),std::string(argv[1])=="--stage-effects");return 0; }
         require(argc==1,"usage: th04-port64-bullet-contracts [--vectors FILE]");contracts();
         std::cout << "TH04 enemy bullets: PASS pellets=240 large=200 motions=9 pointer_bits=64\n";
     } catch (const std::exception& error) { std::cerr << error.what() << '\n';return 1; }

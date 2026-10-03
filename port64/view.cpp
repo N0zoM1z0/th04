@@ -33,6 +33,8 @@ namespace player = th04::portable::player;
 namespace stage = th04::portable::stage;
 namespace shot = th04::portable::shot;
 namespace bullet = th04::portable::bullet;
+namespace spark = th04::portable::spark;
+namespace gather = th04::portable::gather;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -687,6 +689,19 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             put_sprite(frame,sprites.palette,sprites.items,
                 playchar==application::Playchar::reimu ? 10 : 11,
                 pixels(shots.options.x)+side,16+pixels(shots.options.y)-8);
+        }
+    }
+    for (const auto& point:state.gathers().points()) {
+        const int left=28+pixels(point.position.x),top=12+pixels(point.position.y);
+        for (unsigned y=0;y<8;++y) for (unsigned x=0;x<8;++x) {
+            if (gather::pixel(x,y)) put_indexed_pixel(frame,sprites.palette,left,top,x,y,point.color);
+        }
+    }
+    for (const auto& entity:state.sparks().snapshot().entities) {
+        if (entity.flag!=1) continue;
+        const int left=28+pixels(entity.center.current.x),top=12+pixels(entity.center.current.y);
+        for (unsigned y=0;y<8;++y) for (unsigned x=0;x<8;++x) {
+            if (spark::pixel(entity.age&7u,x,y)) put_indexed_pixel(frame,sprites.palette,left,top,x,y,12);
         }
     }
     for (const auto& entity : state.items().entities()) {

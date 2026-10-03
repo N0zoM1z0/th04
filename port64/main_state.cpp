@@ -23,12 +23,16 @@ State::State(application::State& application) {
     drops_ = item::EnemyDropSequence(static_cast<std::uint8_t>(
         application.next_process_random() & 15u
     ));
+    sparks_.initialize([&application]() {
+        return static_cast<std::uint8_t>(application.next_process_random());
+    });
 }
 
 void State::load_stage(const stage::Program::Bytes& standard) {
     stage_ = std::make_unique<stage::Program>(standard);
     enemies_ = enemy::System{};
     bullets_ = bullet::System{};
+    gathers_ = gather::System{};
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta) {
     enemy_events_.clear();
@@ -43,6 +47,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     }
     // MAIN's loop calls player_update before items_update. A pickup therefore
     // sees the player's new position for this frame, not the preceding one.
+    sparks_.update();
     player_.update(held_input, shift);
     shots_.update((held_input & shot::input_shot) != 0, playchar_, shot_type_, score_.power,
                   player_.position(), ring_, enemies_.snapshot().homing_target);
@@ -52,7 +57,11 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     bullet_context.frame_mod2=context.frame_mod2;bullet_context.turbo=turbo_;
     constexpr std::uint16_t graze_scores[]{100,250,400,500,2560};
     bullet_context.graze_score=graze_scores[rank_];
-    const auto bullet_sink=[this](const bullet::Event& event) { bullet_events_.push_back(event); };
+    const auto bullet_sink=[this](const bullet::Event& event) {
+        bullet_events_.push_back(event);
+        if (event.type==bullet::EventType::sparks) sparks_.add_random(event.position,event.value,event.count,ring_);
+        if (event.type==bullet::EventType::gather) gathers_.request(event);
+    };
     const auto score_before=bullets_.snapshot().score_delta;
     bullets_.begin_frame();bullets_.update(bullet_context,bullet_sink);
     score_.score_delta+=bullets_.snapshot().score_delta-score_before;
@@ -63,6 +72,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             // Tune/add consumes the shared ring immediately, before another
             // enemy or another immediate opcode can draw from it.
             if (event.type==enemy::EventType::fire) bullets_.fire(event,bullet_context,ring_,bullet_sink);
+            if (event.type==enemy::EventType::sparks) sparks_.add_random(event.position,event.value,event.count,ring_);
             if (event.type==enemy::EventType::drop) {
                 if (event.value==255) items_.add_enemy_drop(event.position,drops_);
                 else if (event.value<=6) items_.add(event.position,static_cast<item::Type>(event.value));
@@ -71,6 +81,9 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         score_.score_delta += enemies_.snapshot().score_delta-before;
     }
     item_events_ = items_.update(score_, player_.position().current, pull_items, 0);
+    gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
+        bullets_.release(saved,bullet_context,ring_,bullet_sink);
+    });
     enemies_.prepare_render();
     // Item scoring already exposes performance events; apply their byte
     // clamps before the next frame's autofire interval decisions.

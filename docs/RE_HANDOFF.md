@@ -69,8 +69,26 @@ Cross-host receipt: `.analysis/port64/verification-bullets-v1255/receipt.json`;
 CPU receipts under `.analysis/port64/bullets-v1255/`. Five contracts and
 UBSan/bounds pass. Windows execution is under Wine; native Windows pacing is
 untested. Player hits are exposed but death is still absent.
-DOS source and exact acceptance states are unchanged. Next connect gather and
-spark owners, then midboss/bosses, stage transitions/visuals, HUD,
+The next completed slice adds 96 sparks and 16 gather circles, same-process
+spark-angle initialization, immediate free-slot random draws, wrapped circular
+bursts, gravity/age/reclaim ordering, saved templates and delayed regular
+release without retuning. Original foreground order now includes procedural
+gather/spark masks. Independent original CPU comparison agrees on 3,075 full
+state/render cases, 648 aligned/Y-roll glyph controls and 2,400 Normal/Lunatic
+joint frames with explicitly injected shot/gather inputs. Original effect and
+shot-hit/bullet callees execute in the joint test; drops/HUD/audio/graphics
+remain intercepted. Scope: MAIN main_01 0AAF:1824/1776/17C2/1710; main_03
+13A9:039A/03FC and gather0027/0091/013E/01CC/1008, load2000 DS8000.
+Spark/gather pools are DS:53E2/9292; spark attempt offset DS:41F4. Original
+zero-circle DIV faults at loaded33A9:043A; host guard is explicit.
+Linux, Wine/Win32 and UBSan/bounds pass six contracts and matching fixtures.
+Real Stage 1 held-Z now produces24 kills/score5720/power6; natural Lunatic
+900-frame fixtures contain6 live bullets per character. Earlier counts are
+historical partial-RNG results. Cross-host receipt:
+`.analysis/port64/verification-effects-v1256-final2/receipt.json`; scoped CPU
+receipts under `.analysis/port64/effects-v1256/cpu-{linux,windows,ubsan}-final/`.
+DOS source and exact acceptance states are unchanged. Next connect the Stage 1
+control/midboss boundary, then bosses, stage transitions/visuals, HUD,
 Bomb/player death, audio, Ending and saved-data I/O. Semantic readability
 remains paused until a concrete native ambiguity. See [the x64 port handoff](PORT64.md).
 

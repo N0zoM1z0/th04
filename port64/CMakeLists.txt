@@ -20,6 +20,7 @@ add_library(
   stage_program.cpp
   enemy_system.cpp
   enemy_bullets.cpp
+  effects.cpp
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp
@@ -45,7 +46,10 @@ target_link_libraries(th04-port64-enemy-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-bullet-contracts bullet_contracts.cpp)
 target_link_libraries(th04-port64-bullet-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts)
+add_executable(th04-port64-effect-contracts effect_contracts.cpp)
+target_link_libraries(th04-port64-effect-contracts PRIVATE th04-portable-core)
+
+foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -53,7 +57,7 @@ foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts)
+  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts)
     target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
   endforeach()
 endif()
@@ -72,3 +76,5 @@ add_test(NAME player-shot-contracts COMMAND th04-port64-shot-contracts)
 add_test(NAME stage-enemy-contracts COMMAND th04-port64-enemy-contracts)
 
 add_test(NAME enemy-bullet-contracts COMMAND th04-port64-bullet-contracts)
+
+add_test(NAME gameplay-effect-contracts COMMAND th04-port64-effect-contracts)

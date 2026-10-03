@@ -17,7 +17,9 @@ its seven-type scene fixture is headless-only. The interactive scene now renders
 background, selecting ST00 or ST10 tiles for the character. Real STD waves, the 52-opcode enemy VM and a 32-slot enemy pool are connected
 to player shots, drops, scoring and original BFNT sprites. Enemy bullets now
 use separate 240-pellet/200-large pools, clouds, nine special motions and
-graze/collision/clear/zap contracts. Bosses, bombs and player death remain
+graze/collision/clear/zap contracts. A 96-slot spark ring and 16-slot gather
+pool now connect real hit/graze/kill effects, shared random draws and delayed
+bullet release. Bosses, bombs and player death remain
 to be connected. No original executables or game data are embedded in the binary. Unlike
 the DOS reconstruction, this port makes no byte-exact claim.
 
@@ -174,8 +176,8 @@ and ten power levels, cycle resets, allocation-dependent random consumption,
 old option coordinates at laser startup, hit-animation countdown and the
 frame collision cache. Releasing Z finishes the remaining volleys of the
 18-frame cycle. Hit tests retain diminishing damage, Bomb/boss division order,
-odd-frame laser damage and spark phase. Spark requests are exposed to a future
-adapter; spark RNG/rendering and sound are not yet connected. The host stops
+odd-frame laser damage and spark phase. Spark requests now dispatch through the live effect adapter; the isolated
+shot CPU oracle still intercepts them. Sound remains separate. The host stops
 at 68 slots rather than importing the original allocator's observed overrun.
 
 ```sh
@@ -192,8 +194,8 @@ the original allocation overrun; the host boundary is tested with sanitizers.
 Both character windows pass held-Z firing and release against original sprite
 pixels. Windows validation runs under Wine; native Windows pacing is untested.
 
-The next gameplay slice is gather/spark lifecycle and random consumption,
-followed by midboss/bosses, later-stage backgrounds, HUD, death/Bomb transitions and audio.
+The next gameplay slice is Stage 1 control and midboss activation/update,
+followed by bosses, later-stage backgrounds, HUD, death/Bomb transitions and audio.
 Saved configuration and Ending/score persistence also remain. Semantic work
 is paused unless a concrete ambiguity blocks one of these slices; a completed
 TH04 native game has not yet been demonstrated.
@@ -204,7 +206,7 @@ setup chains, script loops, clipping, Lunatic autofire, performance intervals,
 shot damage, homing, kill/drop scoring and animation. Render-state mutations
 occur once per simulation frame. Synchronous fire/sound/tile/spark requests
 retain the original call boundaries; item drops and bullet tune/add are
-connected synchronously now. Spark RNG/effects and player death remain absent.
+connected synchronously now. Spark RNG/effects now dispatch synchronously too; player death remains absent.
 
 ```sh
 python3 port64/verify_enemy.py --target .analysis/targets/th04/main.exe \
@@ -227,8 +229,8 @@ products kill 26 enemies and reach power 7; their images and counters agree.
 
 `enemy_bullets` retains rank/performance byte arithmetic, descending separate
 pools, cloud timing, first-close-frame graze, collision, clear decay, zap
-bonuses and the original optional count-based slowdown. Enemy firing consumes
-the same ring immediately; gather requests and spark draws remain deferred.
+bonuses and the original optional count-based slowdown. Enemy firing and spark requests consume
+the same ring immediately; gather requests capture templates for later release.
 The host draws small pellets procedurally and other bullets from original BFNT.
 
 ```sh
@@ -248,5 +250,34 @@ native product skips those rings as the playable DOS repair does.
 `marisa-bullets.bmp`: OP-selected Lunatic, 900 frames without Z, five live
 bullets per image. These are natural Stage 1 fixtures without injected
 entities. They are not dense-barrage timing measurements. Five contracts,
-cross-host BMPs/counters and UBSan/bounds pass. Full routes, player death,
-gather/spark effects and their RNG remain outside the accepted slice.
+cross-host BMPs/counters and UBSan/bounds pass. This earlier bullet-only oracle
+excludes gather/spark callees; their next integration is covered below. Full
+routes and player death remain incomplete.
+
+
+`effects` initializes spark angles with the same process generator after the
+256-call ring fill and item initialization. Only free spark attempts consume
+random samples; occupied attempts still advance the offset. Circular bursts
+preserve word numerator wrapping. Gather circles move/shrink after items and
+restore the already tuned full bullet scratch on release without retuning.
+Both effects render from procedural geometry, without embedded original sprites.
+
+```sh
+python3 port64/verify_effects.py --target .analysis/targets/th04/main.exe \
+  --hdi .analysis/runtime/images/zun.hdi \
+  --exe .analysis/port64/linux/th04-port64-effect-contracts \
+  --bullet-exe .analysis/port64/linux/th04-port64-bullet-contracts \
+  --output-dir .analysis/port64/effects-cpu
+```
+
+Use `--runner wine` with both PE32+ executables. The independent original CPU
+oracle compares 3,075 complete-state/render controls, 648 spark/gather glyph
+controls and 2,400 controlled Normal/Lunatic integration frames. The latter
+inject targeted shot-cache/gather inputs to exercise real original callee
+chains; ordinary windows do not inject these. Six contracts, cross-host
+fixtures and GNU UBSan/bounds pass. The original zero-count circle division
+fault is a separate negative control; the host throws a defined exception.
+The real 1200-frame Stage 1 shooting scenes now yield 24 kills/score5,720/power6,
+and the Lunatic 900-frame scenes contain six live bullets per character. Spark
+RNG integration changes the earlier partial fixture's sequence. Full routes,
+bosses, death/Bomb, HUD/audio and Ending/save remain to be migrated.

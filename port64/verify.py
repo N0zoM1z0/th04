@@ -23,6 +23,10 @@ PORT_FILES = (
     "port64/enemy_contracts.cpp",
     "port64/enemy_bullets.cpp",
     "port64/enemy_bullets.hpp",
+    "port64/effects.hpp",
+    "port64/effects.cpp",
+    "port64/effect_contracts.cpp",
+    "port64/verify_effects.py",
     "port64/bullet_contracts.cpp",
     "port64/verify_bullets.py",
     "port64/enemy_system.cpp",
@@ -151,9 +155,11 @@ def main() -> int:
     windows_enemies = windows_dir / "th04-port64-enemy-contracts.exe"
     linux_bullets = linux_dir / "th04-port64-bullet-contracts"
     windows_bullets = windows_dir / "th04-port64-bullet-contracts.exe"
-    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets):
+    linux_effects = linux_dir / "th04-port64-effect-contracts"
+    windows_effects = windows_dir / "th04-port64-effect-contracts.exe"
+    for path in (linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects):
         require_elf_x86_64(path)
-    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets):
+    for path in (windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -198,6 +204,11 @@ def main() -> int:
     windows_bullet_output = run([args.windows_runner,str(windows_bullets)],env=runner_env)
     if linux_bullet_output != expected_bullets or windows_bullet_output != expected_bullets:
         raise ValueError("enemy bullet contracts did not pass on both hosts")
+    expected_effects = "TH04 effects: PASS sparks=96 gathers=16 pointer_bits=64"
+    linux_effect_output = run([str(linux_effects)])
+    windows_effect_output = run([args.windows_runner,str(windows_effects)],env=runner_env)
+    if linux_effect_output != expected_effects or windows_effect_output != expected_effects:
+        raise ValueError("effect contracts did not pass on both hosts")
     smoke = root / "port64/smoke.py"
     linux_smoke_output = run([
         sys.executable, str(smoke), "--exe", str(linux_main),
@@ -260,6 +271,8 @@ def main() -> int:
                 "enemy_contract_output": linux_enemy_output,
                 "bullet_contract_output": linux_bullet_output,
                 "bullet_contracts_sha256": sha256(linux_bullets),
+                "effect_contract_output": linux_effect_output,
+                "effect_contracts_sha256": sha256(linux_effects),
                 "smoke_output": linux_smoke_output.splitlines(),
             },
             "windows": {
@@ -275,6 +288,8 @@ def main() -> int:
                 "enemy_contract_output": windows_enemy_output,
                 "bullet_contract_output": windows_bullet_output,
                 "bullet_contracts_sha256": sha256(windows_bullets),
+                "effect_contract_output": windows_effect_output,
+                "effect_contracts_sha256": sha256(windows_effects),
                 "smoke_output": windows_smoke_output.splitlines(),
             },
         },
@@ -306,7 +321,8 @@ def main() -> int:
             "random-ring contracts, live player movement, item entity motion/pickup and "
             "BFNT sprites, Stage 1 MPN/MAP/STD background rendering/scrolling and "
             "four-route player shots/lasers, all-seven STD wave schedules, enemy VM, 32-slot enemy lifecycle/hit/drop integration and original enemy BFNT sprites, enemy bullet tune/spawn/9 motions/graze/collision/clear/zap and cloud/pellet rendering; "
-            "Gather lifecycle, midboss/bosses, bombs, player death, HUD, later-stage backgrounds, spark effects/RNG, "
+            "spark allocation/motion and gather release with synchronous shared RNG; "
+            "midboss/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),

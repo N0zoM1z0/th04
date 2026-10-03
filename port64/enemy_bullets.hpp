@@ -53,6 +53,7 @@ public:
     explicit System(Snapshot initial={}):state_(initial) {}
     const Snapshot& snapshot() const { return state_; }
     void fire(const enemy::Event& event,Context context,randring::SharedRandomRing& random,const Sink& sink={});
+    void release(const Template& saved,Context context,randring::SharedRandomRing& random,const Sink& sink={});
     void add(Template& bullet,Context context,randring::SharedRandomRing& random,
              bool special=false,bool fixed_speed=false,const Sink& sink={});
     void update(Context context,const Sink& sink={});

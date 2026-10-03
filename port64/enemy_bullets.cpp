@@ -153,6 +153,11 @@ void System::add(Template& b,Context c,randring::SharedRandomRing& random,bool s
     b.speed=saved_speed;
     if (!special && c.rank==0) b.count=saved_count;
 }
+void System::release(const Template& saved,Context c,randring::SharedRandomRing& random,const Sink& sink) {
+    // Gather stored the already rank-tuned template. Restore it wholesale
+    // and run only the regular add wrapper, without applying rank twice.
+    state_.scratch=saved;add(state_.scratch,c,random,false,false,sink);
+}
 void System::update_special(Entity& b,Context c) {
     const auto turn_done=[&] {
         b.speed=b.final_speed;
