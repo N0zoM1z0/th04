@@ -476,8 +476,9 @@ of a paired producer uses the first shot's tuning. The regular random rings
 intentionally do not tune. Multi-bursts use the verified fixed-speed wrapper.
 
 This is a verified logic owner, **not yet connected to ordinary live MAIN**.
-Orange foreground, background transition, explosion drawing/aging, circle
-rendering, dialog, HUD/audio and the stage-clear consumer remain to connect.
+Foreground, explosion aging, circles and host background composition now
+connect through the explicit diagnostic entry described below. Ordinary
+pre/post-boss dialog, HUD/audio and the stage-clear consumer remain to connect.
 The current live window still ends at the previous Stage 1 frontier. Original
 `MAIN main_01 0AAF:2454` activates Boss callbacks only after scroll speed is
 zero, the back page is 1 and the blocking pre-boss dialog has returned;
@@ -522,8 +523,8 @@ inside the center dead band, phase 4's second 600-frame test **after** hittest
 increments the clock, and assigning the final bonus byte directly to zap
 (including zero). `Subpixel::None()` is `-15984` (−999 pixels), not INT16_MIN.
 Small explosion creation selects slot 1 whenever slot 0 is alive, overwriting
-slot 1 if necessary; its unused byte survives. Explosion drawing is not part
-of this owner, so repeated calls to it do not invent render-side aging.
+slot 1 if necessary; its unused byte survives. State updates do not age these
+explosions; the separate `prepare_render()` step below owns render-side aging.
 
 Reproduce the complete current control set from this worktree:
 
@@ -548,7 +549,99 @@ The current cross-product receipt is
 `.analysis/port64/verification-orange-v1258-final/receipt.json`, source
 manifest`717f96b9...`.
 No DOS source or exact-acceptance state changes. Native Windows pacing,
-Orange video and complete game routes remain unverified.
+complete original-scene video equality and game routes remain unverified.
+
+## Stage 1 Orange foreground and native integration
+
+`orange_render.cpp` adds the cached foreground plan and two small/one big
+explosion lifecycles. `circles` owns the sixteen ten-byte logical records and
+the default PC-98 midpoint circle outline. `State::update()` advances these
+once per simulation frame; host repaints only read cached draws. Circle updates
+precede sparks/player updates, Boss shot hits and immediate effects precede
+items/gathers, and Boss foreground precedes midboss/enemies. Outline circles
+render after enemy bullets. Background selection uses the **pre-update** Boss
+phase/frame, matching the original loop order.
+
+Independent original CPU execution compares 900 foreground/explosion controls
+and 918 circle controls on GNU Linux, MinGW PE32+ under Wine and optimized GNU
+UBSan/bounds. Scope is `MAIN main_01 0AAF:6E7B` foreground, `2D9C/2E65`
+explosion render, `1B5A/1BA6` circle add, `1BF2` update and `1C28` render;
+load2000 gives CS2AAF, DS8000. Draw adapters capture ordered sprite/circle
+geometry, white-plane arguments and scale requests. All 48 explosion bytes,
+160 circle bytes, damage retention, palette tone/change flag and big-explosion
+clock are compared. Of the circle controls, 150 execute the actual library
+`0000:11EC` GRCG circle routine and compare its 32,000-byte write mask, including
+default-rectangle edges, zero radius and row399. This is independent pixel-mask
+evidence; it is not a hardware color/page/timing claim.
+
+Preserve these observed quirks:
+
+- Circle center division uses signed IDIV (negative fractions truncate toward
+  zero), while sprite coordinates use SAR (floor). Age17 sets flag2 and is
+  absent from rendering, despite an older DOS source comment suggesting it draws.
+- Small explosions use 64 points at angle increments4 and strict screen
+  bounds; the big explosion uses16 points/increments16 and inclusive bounds.
+  MIKOD is actually48x48 although the target clips/transforms it as64x64.
+- The final Boss explosion sprite uses the library's real twofold enlargement;
+  it is distinct from the48x48 MIKOD sheet. Damage flashing does not clear the
+  Boss damage byte. White-plane arguments are FFC0/mask0.
+- Big-explosion flash advances its retained signed clock only while alive,
+  resets the clock on an inactive render, and preserves tone until another
+  palette action. Repainting does not age explosions or change this clock.
+
+Native MAIN now consumes real shot hits, homing, bullet/gather/spark effects,
+item allocations, circle requests and Boss bonus deltas. Private MIKOD.BFT,
+ST00BK.CDG and ST00.BB are decoded with explicit geometry checks. The host
+composes entrance masks, backdrop/color-zero changes, white damage sprites,
+explosions and palette tone. Background BB/palette composition follows the
+maintained DOS owners; this batch does not independently compare complete
+original background/color VRAM or PC-98 dirty-page behavior. It uses full host
+redraw rather than EGC copies and invalidated tiles.
+
+`--orange-screenshots DIR` is an **explicit diagnostic start**, bypassing the
+unported blocking pre-boss dialog with stopped scrolling. It retains normal
+initial power1, actual shots/items and the shared RNG. Eight scenarios cover
+Normal/Lunatic, Reimu/Marisa and shot/idle. Fifteen screenshots per scenario
+include all eight phases, entrance circles/mask, active attack snapshots and
+explosion frames8/16. Linux/Wine/UBSan agree on all120 BMPs and gameplay
+counters. Idle reaches the pending dialog at frame4628 with Boss bonus0;
+shots reach it at4225 Normal/4231 Lunatic with bonus12800. Repaint and three
+additional pending-dialog ticks leave simulation clocks unchanged.
+
+Ordinary STD still does not activate Orange: its original stopped-scroll,
+back-page and completed-dialog contract must be implemented first. The native
+diagnostic stops at phase255/frame0 before the post-boss dialog instead of
+silently skipping it. Resident graze, dialog, clear bonus, stage progression,
+audio/HUD/point numbers and player death/Bomb remain unported. Invincibility
+requests reach the bullet context but the player countdown consumer is still
+absent. These fixtures establish native integration, not a complete playable
+Stage1 or original full-scene equality. Windows execution is via Wine, not
+native Windows pacing validation. Semantic remains paused.
+
+Reproduce from this worktree (create the screenshot directory first):
+
+```bash
+cmake --build .analysis/port64/linux-live-v1251 --parallel 4
+python3 port64/verify_orange_render.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-orange-contracts \
+  --output-dir .analysis/port64/orange-render-v1259/cpu-linux-final
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --output .analysis/port64/verification-orange-render-v1259/receipt.json
+```
+
+CPU receipts: `orange-render-v1259/cpu-{linux,windows,ubsan}-final/receipt.json`.
+Render trace SHA`bb6b250a...`; circle trace SHA`d46f3ed2...`. The current
+executables also retain all36,600 earlier Boss state/pattern checkpoints:
+`regression-{state,pattern}-{linux,windows,ubsan}/receipt.json` under that
+directory. Cross-product receipt: `verification-orange-render-v1259/receipt.json`,
+source manifest`1e1e0fbe...`. `integration-review.json` records unchanged prior
+shot/combat/midboss images/counters, UBSan image agreement and a negative
+control that deliberately rejects an original-CPU hook. The callback wrapper
+stops Unicorn explicitly and rethrows; callback errors cannot silently pass.
 
 ## Migration order
 
@@ -558,8 +651,8 @@ For each next module, stop readability work once state ownership, arithmetic,
 control flow and hardware boundaries support an independently checked native
 implementation. Resume only for a concrete ambiguity exposed by integration.
 Enemy bullets, gathers, sparks and the Stage 1 midboss now use that synchronous boundary.
-Orange state/attacks have an independent native owner. Next connect Stage 1
-dialog and Boss rendering/progression, then later bosses/midbosses,
+Orange state/attacks/foreground are integrated through explicit diagnostics.
+Next connect Stage 1 dialog and ordinary Boss activation/progression, then later bosses/midbosses,
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

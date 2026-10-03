@@ -19,6 +19,7 @@ struct MainAssets {
     Bytes items;
     Bytes enemies;
     Bytes stage_tiles,boss_tiles;
+    Bytes explosion_sprite,orange_background,orange_transition;
     Bytes reimu_map_tiles, marisa_map_tiles, map, standard;
 };
 
@@ -38,4 +39,5 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& main_screenshot,
                const std::string& shooting_screenshots,
                const std::string& combat_screenshots,
-               const std::string& midboss_screenshots, bool window);
+               const std::string& midboss_screenshots,
+               const std::string& orange_screenshots, bool window);

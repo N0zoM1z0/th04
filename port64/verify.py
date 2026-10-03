@@ -16,8 +16,12 @@ import sys
 PORT_FILES = (
     "port64/orange.hpp",
     "port64/orange.cpp",
+    "port64/orange_render.cpp",
+    "port64/circles.hpp",
+    "port64/circles.cpp",
     "port64/orange_contracts.cpp",
     "port64/verify_orange.py",
+    "port64/verify_orange_render.py",
     "port64/midboss.hpp",
     "port64/midboss.cpp",
     "port64/midboss_contracts.cpp",
@@ -284,6 +288,22 @@ def main() -> int:
     if midboss_hashes["linux"] != midboss_hashes["windows"] or midboss_outputs["linux"] != midboss_outputs["windows"]:
         raise ValueError("midboss images or gameplay counters differ between hosts")
 
+    orange_hashes = {}
+    orange_outputs = {}
+    for host, command in (("linux",[str(linux_main)]),
+                          ("windows",[args.windows_runner,str(windows_main)])):
+        images = output.parent / ("orange-"+host)
+        images.mkdir(parents=True,exist_ok=True)
+        result = run(command+["--hdi",str(hdi),"--orange-screenshots",str(images)],env=runner_env)
+        if result.count("MAIN Orange fixture=") != 120 or result.count("MAIN Orange stopped ") != 8:
+            raise ValueError("Orange fixture missed a character/rank/outcome/checkpoint")
+        orange_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+        if len(orange_hashes[host]) != 120:
+            raise ValueError("Orange fixture has unexpected image files")
+        orange_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Orange")]
+    if orange_hashes["linux"] != orange_hashes["windows"] or orange_outputs["linux"] != orange_outputs["windows"]:
+        raise ValueError("Orange images or gameplay counters differ between hosts")
+
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
         "schema_version": 1,
@@ -360,6 +380,8 @@ def main() -> int:
         "combat_fixture_counters": combat_outputs["linux"],
         "midboss_fixture_bmp_sha256": midboss_hashes["linux"],
         "midboss_fixture_counters": midboss_outputs["linux"],
+        "orange_fixture_bmp_sha256": orange_hashes["linux"],
+        "orange_fixture_counters": orange_outputs["linux"],
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
             "OP menu-state transitions, resident process handoff, process-local LCG and shared "
@@ -368,7 +390,9 @@ def main() -> int:
             "four-route player shots/lasers, all-seven STD wave schedules, enemy VM, 32-slot enemy lifecycle/hit/drop integration and original enemy BFNT sprites, enemy bullet tune/spawn/9 motions/graze/collision/clear/zap and cloud/pellet rendering; "
             "spark allocation/motion and gather release with synchronous shared RNG; "
             "Stage 1 midboss activation/tile animation/pattern/defeat; "
-            "Orange initial-state contract (its independent CPU comparison is a separate receipt); "
+            "explicit Stage 1 Orange fixtures with actual shots/items/bullets, foreground/explosions/circles and host backdrop composition "
+            "stop at the pending post-boss dialog (independent CPU comparisons are separate receipts); "
+            "ordinary pre/post-boss dialog and stage-clear progression, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

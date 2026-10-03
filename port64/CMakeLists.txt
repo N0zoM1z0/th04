@@ -23,6 +23,8 @@ add_library(
   effects.cpp
   midboss.cpp
   orange.cpp
+  orange_render.cpp
+  circles.cpp
   menu_state.cpp
   random_lcg.cpp
   random_ring.cpp

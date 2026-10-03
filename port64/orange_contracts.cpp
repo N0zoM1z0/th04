@@ -1,4 +1,5 @@
 #include "orange.hpp"
+#include "circles.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -9,6 +10,7 @@ namespace g=th04::portable::gather;
 namespace sp=th04::portable::spark;
 namespace m=th04::portable::motion;
 namespace r=th04::portable::randring;
+namespace ci=th04::portable::circle;
 using Bytes=std::vector<std::uint8_t>;
 namespace {
 void require(bool condition,const char* why) { if (!condition) throw std::runtime_error(why); }
@@ -105,10 +107,59 @@ void vectors(const char* path) {
         }
     }
 }
+void render_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open render fixtures");int frame;
+    while (in>>frame) {
+        const auto big_frame=m::wrap(number(in)),tone=m::wrap(number(in));const auto changed=number(in);
+        auto initial=read(in);initial.big_frame=big_frame;initial.palette_tone=tone;initial.palette_changed=static_cast<std::uint8_t>(changed);
+        for (auto* e:{&initial.small[0],&initial.small[1],&initial.big}) {
+            Wire w;for (unsigned i=0;i<16;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+            e->alive=static_cast<std::uint8_t>(w.byte());e->age=static_cast<std::uint8_t>(w.byte());
+            e->center=w.point();e->radius=w.point();e->delta=w.point();
+            const auto unused=w.byte();e->unused=static_cast<std::int8_t>(unused<128 ? int(unused) : int(unused)-256);
+            e->angle_offset=static_cast<std::uint8_t>(w.byte());
+        }
+        o::System system(initial);system.prepare_render(static_cast<std::uint16_t>(frame));const auto& s=system.snapshot();
+        Bytes bytes;for (const auto& e:s.small) explosion(bytes,e);explosion(bytes,s.big);hex(bytes);
+        std::cout << s.big_frame << ' ' << s.palette_tone << ' ' << +s.palette_changed << ' ' << +s.damage << ' ' << system.draws().size() << ' ';
+        for (const auto& d:system.draws()) std::cout << int(d.kind) << ' ' << d.left << ' ' << d.top << ' ' << d.pattern_or_radius << ' ' << +d.color << ' ';
+        std::cout << '\n';
+    }
+}
+void circle_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open circle fixtures");char op;
+    while (in>>op) {
+        const auto x=m::wrap(number(in)),y=m::wrap(number(in)),radius=m::wrap(number(in));
+        if (op=='P') {
+            Bytes bits(32000);
+            for (auto p:ci::raster({x,y},static_cast<std::uint16_t>(radius))) bits[unsigned(p.y)*80+unsigned(p.x)/8]|=static_cast<std::uint8_t>(0x80u>>(p.x&7));
+            hex(bits);std::cout << '\n';continue;
+        }
+        const auto color=number(in),density=number(in),slot=number(in);
+        Wire w;for (unsigned i=0;i<10;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+        ci::Entity entity;entity.flag=static_cast<std::uint8_t>(w.byte());entity.age=static_cast<std::uint8_t>(w.byte());entity.center=w.point();entity.radius=m::wrap(w.word());entity.delta=m::wrap(w.word());
+        ci::Snapshot initial;initial.color=static_cast<std::uint8_t>(color);
+        for (unsigned i=0;i<initial.entities.size();++i) { initial.entities[i]=entity;initial.entities[i].flag=static_cast<std::uint8_t>(density==1 || (density==2 && i%2)); }
+        initial.entities.at(unsigned(slot))=entity;ci::System system(initial);
+        if (op=='G' || op=='S') system.add({x,y},op=='G');
+        else if (op=='U') system.update();
+        else require(op=='R',"unknown circle fixture");
+        Bytes bytes;for (const auto& e:system.snapshot().entities) {
+            bytes.push_back(e.flag);bytes.push_back(e.age);point(bytes,e.center);word(bytes,static_cast<std::uint16_t>(e.radius));word(bytes,static_cast<std::uint16_t>(e.delta));
+        }
+        hex(bytes);std::cout << +system.snapshot().color << ' ';unsigned count=0;
+        if (op=='R') for (const auto& e:system.snapshot().entities) count+=e.flag==1;
+        std::cout << count << ' ';
+        if (op=='R') for (const auto& e:system.snapshot().entities) if (e.flag==1) std::cout << e.center.x << ' ' << e.center.y << ' ' << static_cast<std::uint16_t>(e.radius) << ' ' << +system.snapshot().color << ' ';
+        std::cout << '\n';
+    }
+}
 } // namespace
 int main(int argc,char** argv) {
     try {
         if (argc==3 && std::string(argv[1])=="--vectors") { vectors(argv[2]);return 0; }
+        if (argc==3 && std::string(argv[1])=="--render-vectors") { render_vectors(argv[2]);return 0; }
+        if (argc==3 && std::string(argv[1])=="--circle-vectors") { circle_vectors(argv[2]);return 0; }
         o::System s;require(s.snapshot().position.current.x==3072 && s.snapshot().position.current.y==640,"Orange initial center");
         require(s.snapshot().sprite==128 && s.snapshot().hitbox_radius.x==384,"Orange initial sprite/hitbox");
         std::cout << "Stage 1 Orange contracts PASS\n";return 0;

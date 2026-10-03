@@ -7,6 +7,8 @@
 #include "enemy_bullets.hpp"
 #include "effects.hpp"
 #include "midboss.hpp"
+#include "orange.hpp"
+#include "circles.hpp"
 #include "stage_background.hpp"
 #include <memory>
 
@@ -29,6 +31,20 @@ public:
     const spark::System& sparks() const { return sparks_; }
     const gather::System& gathers() const { return gathers_; }
     const midboss::System& midboss() const { return midboss_; }
+    const orange::System& orange() const { return orange_; }
+    const circle::System& circles() const { return circles_; }
+    bool orange_active() const { return orange_active_; }
+    unsigned slowdown() const {
+        const unsigned boss=orange_active_ ? orange_.snapshot().slowdown : 1;
+        return boss>bullets_.snapshot().slowdown ? boss : bullets_.snapshot().slowdown;
+    }
+    bool post_boss_dialog_pending() const { return post_boss_dialog_pending_; }
+    std::uint8_t orange_background_phase() const { return orange_background_phase_; }
+    std::int16_t orange_background_frame() const { return orange_background_frame_; }
+    // A completed pre-boss dialog is a required caller contract. Current
+    // headless Orange fixtures invoke it explicitly; ordinary STD does not.
+    void start_orange_after_dialog();
+    const std::vector<orange::Event>& orange_events() const { return orange_events_; }
     const std::vector<midboss::Event>& midboss_events() const { return midboss_events_; }
     const std::vector<bullet::Event>& bullet_events() const { return bullet_events_; }
     const enemy::System& enemies() const { return enemies_; }
@@ -47,6 +63,12 @@ private:
     spark::System sparks_{};
     gather::System gathers_{};
     midboss::System midboss_{};
+    orange::System orange_{};
+    circle::System circles_{};
+    bool orange_active_=false,post_boss_dialog_pending_=false;
+    std::uint8_t orange_background_phase_=0;
+    std::int16_t orange_background_frame_=0;
+    std::vector<orange::Event> orange_events_;
     std::vector<midboss::Event> midboss_events_;
     std::optional<motion::Point> homing_target_{};
     std::vector<bullet::Event> bullet_events_;

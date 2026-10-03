@@ -217,7 +217,7 @@ void System::update(const Context& c,bullet::System& bullets,gather::System& gat
                 if (s.sprite>=12) { ++s.phase;s.phase_frame=0;s.bombing_disabled=1; }
             }
         } else {
-            s.palette_changed=1;emit(sink,EventType::tone,{},60);
+            s.palette_tone=60;s.palette_changed=1;emit(sink,EventType::tone,{},60);
             if (s.phase_frame==0) { emit(sink,EventType::dialog);emit(sink,EventType::stage_bonus); }
             else if (s.phase_frame==416) emit(sink,EventType::fade,{},10);
             else if (s.phase_frame==488) { emit(sink,EventType::next_stage);emit(sink,EventType::delay,{},1); }

@@ -35,6 +35,8 @@ namespace shot = th04::portable::shot;
 namespace bullet = th04::portable::bullet;
 namespace spark = th04::portable::spark;
 namespace gather = th04::portable::gather;
+namespace orange = th04::portable::orange;
+namespace circle = th04::portable::circle;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -591,14 +593,17 @@ void write_bmp(const std::string& path, const Frame& frame) {
 }
 
 struct MainSprites {
-    sprite::Sheet reimu, marisa, items, stage_tiles, boss_tiles, enemies;
+    sprite::Sheet reimu, marisa, items, stage_tiles, boss_tiles, enemies,explosion;
+    Bytes backdrop_bytes,transition;
+    CdgSheet backdrop;
     Bytes standard;
     PiImage palette;
     stage::TileImages reimu_tiles, marisa_tiles;
     stage::Background background;
     explicit MainSprites(const MainAssets& assets)
         : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles),
-          boss_tiles(assets.boss_tiles),enemies(assets.enemies), standard(assets.standard),
+          boss_tiles(assets.boss_tiles),enemies(assets.enemies),explosion(assets.explosion_sprite),
+          backdrop_bytes(assets.orange_background),transition(assets.orange_transition),backdrop(backdrop_bytes),standard(assets.standard),
           reimu_tiles(assets.reimu_map_tiles), marisa_tiles(assets.marisa_map_tiles),
           background(assets.map, assets.standard) {
         require_view(background.required_image_count() <= reimu_tiles.count() &&
@@ -611,6 +616,10 @@ struct MainSprites {
                      "Stage 1 BFNT append contract changed");
         palette.palette = boss_tiles.palette();
         palette.palette[0]=255;palette.palette[1]=255;
+        require_view(explosion.width()==48 && explosion.height()==48 && explosion.count()==1 &&
+                     backdrop.width==384 && backdrop.height==128 && backdrop.image_count==1 &&
+                     backdrop.layout==CdgSheet::colors_only && transition.size()==2048,
+                     "Orange resource geometry changed");
         require_view(reimu.width() == 32 && reimu.height() == 48 && reimu.count() >= 3 &&
                      marisa.width() == 32 && marisa.height() == 48 && marisa.count() >= 3 &&
                      items.width() == 16 && items.height() == 16 && items.count() == 100 &&
@@ -620,12 +629,13 @@ struct MainSprites {
 };
 
 void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet,
-                unsigned image, int left, int top, bool white = false) {
+                unsigned image, int left, int top, bool white = false,unsigned scale=1) {
     for (unsigned y = 0; y < sheet.height(); ++y) {
         for (unsigned x = 0; x < sheet.width(); ++x) {
             const auto color = sheet.pixel(image, x, y);
             if (!color) continue;
-            put_indexed_pixel(frame, palette, left, top, x, y, white ? 15 : color);
+            for (unsigned dy=0;dy<scale;++dy) for (unsigned dx=0;dx<scale;++dx)
+                put_indexed_pixel(frame, palette, left, top, x*scale+dx, y*scale+dy, white ? 15 : color);
         }
     }
 }
@@ -633,13 +643,40 @@ void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet
 Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                   application::Playchar playchar) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
+    PiImage palette=sprites.palette;
+    if (state.orange_active()) {
+        const auto& boss=state.orange().snapshot();
+        for (unsigned i=0;i<3;++i) palette.palette[i]=boss.palette_zero[i];
+        const int tone=std::clamp(int(boss.palette_tone),0,200);
+        for (auto& component:palette.palette) {
+            const int base=component>>4;
+            const int nibble=tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100;
+            component=static_cast<std::uint8_t>(nibble*16);
+        }
+    }
+    const auto background_phase=state.orange_background_phase();
+    const bool backdrop=state.orange_active() && background_phase>=1 && background_phase<254;
+    if (backdrop) {
+        fill_rect(frame,palette,32,16,384,120,1);
+        fill_rect(frame,palette,32,264,384,120,0);
+        put_opaque(frame,palette,sprites.backdrop,0,32,136);
+    }
     const auto& tiles = playchar == application::Playchar::reimu ? sprites.reimu_tiles : sprites.marisa_tiles;
     // Full host redraw replaces PC-98 dirty tile/EGC copies. Clip to the
     // original playfield; the scroll ring owns all 400 physical rows.
     for (unsigned y=16; y<384; ++y) {
         for (unsigned x=0; x<384; ++x) {
+            if (backdrop) {
+                if (background_phase!=1) continue;
+                const int cel=state.orange_background_frame()/2;
+                require_view(cel>=0 && cel<16,"Orange BB cel outside resource");
+                const unsigned column=x/16,row=(y-16)/16;
+                // The actual invalidator redraws stage tiles for ZERO bits.
+                // A BB cel is32x32 tiles (four bytes/row); only24x23 show.
+                if (sprites.transition[unsigned(cel)*128+row*4+column/8]&(0x80u>>(column&7))) continue;
+            }
             const auto image = sprites.background.image_at(x,y);
-            put_indexed_pixel(frame,sprites.palette,32,0,x,y,
+            put_indexed_pixel(frame,palette,32,0,x,y,
                 tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
         }
     }
@@ -647,24 +684,35 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     const auto pixels = [](std::int16_t coordinate) {
         return coordinate >= 0 ? coordinate / 16 : -((-int(coordinate)+15)/16);
     };
+    if (state.orange_active()) for (const auto& draw:state.orange().draws()) {
+        const auto pattern=draw.pattern_or_radius;
+        if (draw.kind==orange::DrawKind::circle) {
+            for (auto p:circle::raster({draw.left,draw.top},pattern)) put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
+        } else if (pattern>=128 && pattern<140) put_sprite(frame,palette,sprites.stage_tiles,pattern-128,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
+        else if (pattern>=140 && pattern<152) put_sprite(frame,palette,sprites.boss_tiles,pattern-140,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
+        else if (pattern==3) put_sprite(frame,palette,sprites.explosion,0,draw.left,draw.top);
+        else if (pattern>=4 && pattern<28) put_sprite(frame,palette,sprites.enemies,pattern-4,draw.left,draw.top,false,draw.kind==orange::DrawKind::large_sprite ? 2 : 1);
+        else if (pattern>=28 && pattern<128) put_sprite(frame,palette,sprites.items,pattern-28,draw.left,draw.top);
+        else throw std::runtime_error("Orange references absent sprite");
+    }
     if (state.midboss().snapshot().active) for (const auto& draw:state.midboss().draws()) {
         if (draw.pattern>=128 && draw.pattern<140) {
-            put_sprite(frame,sprites.palette,sprites.stage_tiles,draw.pattern-128,draw.left,draw.top,draw.white);
+            put_sprite(frame,palette,sprites.stage_tiles,draw.pattern-128,draw.left,draw.top,draw.white);
         } else if (draw.pattern>=140) {
-            put_sprite(frame,sprites.palette,sprites.boss_tiles,draw.pattern-140,draw.left,draw.top,draw.white);
+            put_sprite(frame,palette,sprites.boss_tiles,draw.pattern-140,draw.left,draw.top,draw.white);
         } else {
             require_view(draw.pattern>=4 && draw.pattern<28,"midboss references absent defeat sprite");
-            put_sprite(frame,sprites.palette,sprites.enemies,draw.pattern-4,draw.left,draw.top,draw.white);
+            put_sprite(frame,palette,sprites.enemies,draw.pattern-4,draw.left,draw.top,draw.white);
         }
     }
     for (const auto& draw:state.enemies().render_sprites()) {
         if (!draw.visible) continue;
         if (draw.pattern>=4 && draw.pattern<28) {
-            put_sprite(frame,sprites.palette,sprites.enemies,draw.pattern-4,
+            put_sprite(frame,palette,sprites.enemies,draw.pattern-4,
                        16+pixels(draw.position.x),pixels(draw.position.y),draw.white);
         } else if (draw.pattern>=128) {
             require_view(unsigned(draw.pattern-128)<sprites.stage_tiles.count(),"enemy references absent stage sprite");
-            put_sprite(frame,sprites.palette,sprites.stage_tiles,draw.pattern-128,
+            put_sprite(frame,palette,sprites.stage_tiles,draw.pattern-128,
                        16+pixels(draw.position.x),pixels(draw.position.y),draw.white);
         } else throw std::runtime_error("enemy references unsupported sprite sheet");
     }
@@ -675,7 +723,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             const int left = 32+pixels(bottom.x)+side-4;
             for (int y=0;y<pixels(bottom.y);++y) for (unsigned x=0;x<8;++x) {
                 if (dots & (0x80u >> x)) {
-                    put_indexed_pixel(frame,sprites.palette,left,16,x,unsigned(y),8+state.frames()%2);
+                    put_indexed_pixel(frame,palette,left,16,x,unsigned(y),8+state.frames()%2);
                 }
             }
         }
@@ -688,19 +736,19 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         const auto pattern = static_cast<std::uint8_t>(entity.pattern+
             (entity.flag==shot::alive ? entity.age&1u : 0u));
         require_view(pattern>=28 && pattern<128,"shot references absent MIKO16 pattern");
-        put_sprite(frame,sprites.palette,sprites.items,pattern-28,
+        put_sprite(frame,palette,sprites.items,pattern-28,
             32+pixels(entity.position.current.x)-8,16+pixels(entity.position.current.y)-8);
     }
     const auto& position = state.player().position();
     const unsigned cel = position.velocity.x < 0 ? 1 : (position.velocity.x > 0 ? 2 : 0);
     const bool white = state.frames() < 64 && state.frames() % 4 == 0;
-    put_sprite(frame, sprites.palette,
+    put_sprite(frame, palette,
                playchar == application::Playchar::reimu ? sprites.reimu : sprites.marisa,
                cel, 32 + position.current.x / 16 - 16,
                16 + position.current.y / 16 - 24, white);
     if (shot::level_for_power(state.score().power)>=2) {
         for (int side : {0,48}) {
-            put_sprite(frame,sprites.palette,sprites.items,
+            put_sprite(frame,palette,sprites.items,
                 playchar==application::Playchar::reimu ? 10 : 11,
                 pixels(shots.options.x)+side,16+pixels(shots.options.y)-8);
         }
@@ -708,14 +756,14 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     for (const auto& point:state.gathers().points()) {
         const int left=28+pixels(point.position.x),top=12+pixels(point.position.y);
         for (unsigned y=0;y<8;++y) for (unsigned x=0;x<8;++x) {
-            if (gather::pixel(x,y)) put_indexed_pixel(frame,sprites.palette,left,top,x,y,point.color);
+            if (gather::pixel(x,y)) put_indexed_pixel(frame,palette,left,top,x,y,point.color);
         }
     }
     for (const auto& entity:state.sparks().snapshot().entities) {
         if (entity.flag!=1) continue;
         const int left=28+pixels(entity.center.current.x),top=12+pixels(entity.center.current.y);
         for (unsigned y=0;y<8;++y) for (unsigned x=0;x<8;++x) {
-            if (spark::pixel(entity.age&7u,x,y)) put_indexed_pixel(frame,sprites.palette,left,top,x,y,12);
+            if (spark::pixel(entity.age&7u,x,y)) put_indexed_pixel(frame,palette,left,top,x,y,12);
         }
     }
     for (const auto& entity : state.items().entities()) {
@@ -725,7 +773,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         const int y = point.y >= 0 ? point.y / 16 : -((-int(point.y) + 15) / 16);
         // 3 player + 1 death + 24 MIKO32 patterns put MIKO16 at global
         // slot 28. IT_POWER is global slot 44, hence local index 16.
-        put_sprite(frame, sprites.palette, sprites.items,
+        put_sprite(frame, palette, sprites.items,
                    16u + static_cast<unsigned>(entity.type), 32 + x - 8, 16 + y - 8);
     }
     // Original foreground order puts enemy bullets after player and items.
@@ -741,16 +789,21 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             // and producing eight output rows without a bitmap array.
             for (unsigned y=0;y<8;++y) for (unsigned x=0;x<8;++x) {
                 const auto color=bullet::pellet_pixel(x,y);
-                if (color) put_indexed_pixel(frame,sprites.palette,left,top,x,y,color);
+                if (color) put_indexed_pixel(frame,palette,left,top,x,y,color);
             }
         } else if (index<bullet::pellet_count || b.phase<=bullet::Phase::cloud_backward) {
             require_view(b.pattern>=28 && unsigned(b.pattern-28)<sprites.items.count(),"bullet references absent 16px sprite");
-            put_sprite(frame,sprites.palette,sprites.items,b.pattern-28,24+pixels(p.x),8+pixels(p.y));
+            put_sprite(frame,palette,sprites.items,b.pattern-28,24+pixels(p.x),8+pixels(p.y));
         } else if (p.x>=0 && p.x<6144 && p.y>=0 && p.y<5888) {
             const bool blue=b.pattern==54 || b.pattern==55 || b.pattern==57 || (b.pattern>=76 && b.pattern<92);
             const unsigned pattern=(blue ? 19 : 23)+unsigned(b.phase)/4;
-            put_sprite(frame,sprites.palette,sprites.enemies,pattern-4,16+pixels(p.x),pixels(p.y));
+            put_sprite(frame,palette,sprites.enemies,pattern-4,16+pixels(p.x),pixels(p.y));
         }
+    }
+    for (const auto& e:state.circles().snapshot().entities) {
+        if (e.flag!=1) continue;
+        for (auto p:circle::raster(e.center,static_cast<std::uint16_t>(e.radius)))
+            put_indexed_pixel(frame,palette,p.x,p.y,0,0,state.circles().snapshot().color);
     }
     return frame;
 }
@@ -772,14 +825,19 @@ public:
 
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
-    unsigned slowdown() const { return main_ ? main_->bullets().snapshot().slowdown : 1; }
-    void advance(std::uint16_t held_input, bool shift) {
+    unsigned slowdown() const { return main_ ? main_->slowdown() : 1; }
+    void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         if (live_main()) {
             main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
             sprites_->background.update();
-            frame_ = render();
+            if (repaint) frame_ = render();
         }
         else if (screen_ == Screen::menu) application_.advance_op_menu_frame();
+    }
+    void repaint() { frame_=render(); }
+    void diagnostic_start_orange() {
+        require_view(live_main(),"Orange fixture requires MAIN");
+        sprites_->background.set_speed(0);main_->start_orange_after_dialog();
     }
     gameplay::State& main_state() {
         require_view(bool(main_), "MAIN scene is not active");
@@ -1170,7 +1228,8 @@ void run_title(
     const std::string& shot_screenshot,
     const std::string& handoff_screenshot,
     const std::string& main_screenshot, const std::string& shooting_screenshots,
-    const std::string& combat_screenshots,const std::string& midboss_screenshots, bool window
+    const std::string& combat_screenshots,const std::string& midboss_screenshots,
+    const std::string& orange_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1342,6 +1401,60 @@ void run_title(
             require_view(finished,"Stage 1 midboss did not leave the scene");
             require_view(scene.main_state().midboss().score_delta()==(shooting ? 6400u : 0u),
                          "Stage 1 shooting/timeout outcome differs");
+        }
+    }
+    if (!orange_screenshots.empty()) {
+        for (unsigned lunatic=0;lunatic<2;++lunatic) for (unsigned character=0;character<2;++character) for (unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            if (lunatic) {
+                for (unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
+                scene.input(menu::Input::cancel);
+                for (unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);
+            if (character) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            // Explicit diagnostic boundary: no ordinary pre-boss dialog is
+            // claimed. Keep normal initial power, real shots/items/RNG, and
+            // stopped scrolling; only bypass the unported dialog consumer.
+            scene.diagnostic_start_orange();std::array<bool,256> seen{};
+            const std::array<std::pair<unsigned,int>,7> checkpoints{{{0,192},{1,16},{2,96},{3,256},{4,160},{254,8},{254,16}}};
+            std::array<bool,7> captured{};
+            for (unsigned frame=0;frame<6000;++frame) {
+                scene.advance(shooting ? shot::input_shot : 0,false,false);
+                const auto& state=scene.main_state();const auto& boss=state.orange().snapshot();
+                const bool first=!seen[boss.phase];
+                int checkpoint=-1;
+                for (unsigned i=0;i<checkpoints.size();++i) {
+                    if (!captured[i] && boss.phase==checkpoints[i].first && boss.phase_frame==checkpoints[i].second) {
+                        checkpoint=static_cast<int>(i);captured[i]=true;break;
+                    }
+                }
+                if (first || checkpoint>=0) {
+                    seen[boss.phase]=true;
+                    const auto age=boss.big.age;const auto clock=boss.big_frame;const auto simulation=state.frames();
+                    scene.repaint();scene.repaint();
+                    require_view(age==state.orange().snapshot().big.age && clock==state.orange().snapshot().big_frame && simulation==state.frames(),"repaint advanced Orange simulation");
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(boss.phase)+(first ? "" : "-at-"+std::to_string(boss.phase_frame));
+                    const auto path=orange_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    unsigned alive=0;for (const auto& b:state.bullets().snapshot().entities) alive+=b.flag==1;
+                    std::cout << "MAIN Orange fixture=" << name << " frame=" << state.frames() << " hp=" << boss.hp
+                              << " bullets=" << alive << " bonus=" << boss.score_delta << " screenshot=" << path << '\n';
+                }
+                if (state.post_boss_dialog_pending()) break;
+            }
+            for (unsigned phase:{0,1,2,3,4,5,254,255}) require_view(seen[phase],"Orange fixture missed a Boss phase");
+            for (bool capture:captured) require_view(capture,"Orange fixture missed an attack/explosion checkpoint");
+            require_view(scene.main_state().post_boss_dialog_pending(),"Orange fixture did not stop at post-boss dialog");
+            const auto bonus=scene.main_state().orange().snapshot().score_delta;
+            require_view(shooting ? bonus>0 : bonus==0,"Orange shot/timeout reward differs");
+            const auto stopped_frame=scene.main_state().frames();
+            for (unsigned i=0;i<3;++i) scene.advance(shot::input_shot,false,false);
+            require_view(scene.main_state().frames()==stopped_frame && scene.main_state().orange().snapshot().phase_frame==0,
+                         "pending post-boss dialog advanced simulation");
+            std::cout << "MAIN Orange stopped rank=" << (lunatic ? "Lunatic" : "Normal") << " character=" << character
+                      << " shooting=" << shooting << " frames=" << scene.main_state().frames() << " bonus=" << bonus << " dialog=pending\n";
         }
     }
     if (window) {

@@ -34,24 +34,40 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
     midboss_ = midboss::System{};
+    orange_=orange::System{};circles_=circle::System{};
+    orange_active_=false;post_boss_dialog_pending_=false;
     homing_target_.reset();
 }
+void State::start_orange_after_dialog() {
+    if (!stage_ || orange_active_ || midboss_.snapshot().active) throw std::logic_error("invalid Orange dialog handoff");
+    orange_active_=true;
+}
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
+    if (orange_active_ && orange_.snapshot().phase==255 && orange_.snapshot().phase_frame==0) {
+        // The actual dialog/stage-clear consumer is not implemented yet.
+        // Freeze at its entry instead of silently skipping it each frame.
+        post_boss_dialog_pending_=true;return;
+    }
     enemy_events_.clear();
     bullet_events_.clear();
     midboss_events_.clear();
+    orange_events_.clear();
+    if (orange_active_) {
+        orange_background_phase_=orange_.snapshot().phase;
+        orange_background_frame_=orange_.snapshot().phase_frame;
+    }
     enemy::Context context;
     context.player = player_.position().current;context.rank = rank_;context.performance = performance_;
     context.scroll_delta = scroll_delta;context.frame_mod2 = frames_%2;context.frame_mod4 = frames_%4;
     // STD dispatch precedes player movement; enemies created here can run
     // their first setup/move instructions later in this same frame.
-    if (stage_) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_.snapshot().active)) {
+    if (stage_ && !orange_active_) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_.snapshot().active)) {
         enemies_.add(spawn,context,ring_);
     }
-    if (stage_) midboss_.activate(static_cast<std::uint16_t>(frames_));
+    if (stage_ && !orange_active_) midboss_.activate(static_cast<std::uint16_t>(frames_));
     // MAIN's loop calls player_update before items_update. A pickup therefore
     // sees the player's new position for this frame, not the preceding one.
-    sparks_.update();
+    circles_.update();sparks_.update();
     player_.update(held_input, shift);
     shots_.update((held_input & shot::input_shot) != 0, playchar_, shot_type_, score_.power,
                   player_.position(), ring_, homing_target_);
@@ -59,6 +75,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     bullet::Context bullet_context;
     bullet_context.player=context.player;bullet_context.rank=rank_;bullet_context.performance=performance_;
     bullet_context.frame_mod2=context.frame_mod2;bullet_context.turbo=turbo_;
+    if (orange_active_) bullet_context.invincibility=orange_.snapshot().invincibility;
     constexpr std::uint16_t graze_scores[]{100,250,400,500,2560};
     bullet_context.graze_score=graze_scores[rank_];
     const auto bullet_sink=[this](const bullet::Event& event) {
@@ -109,10 +126,32 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         });
         score_.score_delta+=midboss_.score_delta()-before;
     }
+    if (orange_active_) {
+        orange::Context boss_context;boss_context.frame=static_cast<std::uint16_t>(frames_);
+        boss_context.bullets=bullet_context;boss_context.power=score_.power;
+        boss_context.hit=[&](motion::Point center,motion::Point radius) {
+            const auto before=shots_.snapshot().score_delta;
+            const auto result=shots_.hittest(center,radius,{false,true,context.frame_mod2,context.frame_mod4});
+            score_.score_delta+=shots_.snapshot().score_delta-before;
+            for (unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
+            return result.damage;
+        };
+        const auto before=orange_.snapshot().score_delta;
+        orange_.update(boss_context,bullets_,gathers_,sparks_,ring_,[&](const orange::Event& event) {
+            orange_events_.push_back(event);
+            if (event.type==orange::EventType::circle) circles_.add(event.position);
+            if (event.type==orange::EventType::item) items_.add(event.position,static_cast<item::Type>(event.value));
+        });
+        circles_.set_color(orange_.snapshot().circle_color);
+        score_.score_delta+=orange_.snapshot().score_delta-before;
+        const auto target=orange_.snapshot().homing;
+        if (target.x==-15984 && target.y==-15984) homing_target_.reset();else homing_target_=target;
+    }
     item_events_ = items_.update(score_, player_.position().current, pull_items, 0);
     gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
+    if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
     if (midboss_.snapshot().active) midboss_.prepare_render(midboss_context);
     enemies_.prepare_render();
     // Item scoring already exposes performance events; apply their byte

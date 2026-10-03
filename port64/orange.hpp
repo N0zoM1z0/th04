@@ -28,6 +28,14 @@ struct Snapshot {
     std::uint16_t slowdown=1;
     std::uint8_t bombing_disabled=0,point_times_two=0;
     std::uint32_t score_delta=0;
+    std::int16_t big_frame=0,palette_tone=100;
+};
+enum class DrawKind { sprite,white_sprite,large_sprite,tiny_sprite,circle };
+struct Draw {
+    DrawKind kind{};
+    std::int16_t left=0,top=0;
+    std::uint16_t pattern_or_radius=0;
+    std::uint8_t color=0;
 };
 enum class EventType { sound,hit,circle,point,item,hp,dialog,stage_bonus,fade,next_stage,delay,tone };
 struct Event {
@@ -53,7 +61,11 @@ public:
     // STD exhaustion alone does not authorize skipping that blocking boundary.
     void update(const Context&,bullet::System&,gather::System&,spark::System&,
                 randring::SharedRandomRing&,const Sink& sink={});
+    // Exactly once per simulated frame. Host repaints read this cached list.
+    void prepare_render(std::uint16_t frame);
+    const std::vector<Draw>& draws() const { return draws_; }
 private:
     Snapshot state_{};
+    std::vector<Draw> draws_;
 };
 } // namespace th04::portable::orange

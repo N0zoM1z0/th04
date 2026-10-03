@@ -33,11 +33,26 @@ and `pattern-{linux,windows,ubsan}-final/receipt.json`; original CPU producers
 are `cpu-linux` and `pattern-linux`. See [Orange](PORT64.md#stage-1-orange-state-and-attacks).
 Cross-product receipt: `.analysis/port64/verification-orange-v1258-final/receipt.json`,
 frozen source manifest`717f96b9...`; existing24 midboss BMPs/counters still agree.
-This owner is not yet wired to live MAIN. Next connect pre-boss dialog, Orange
-foreground/background/explosion aging and Stage1 progression. Target main01
+Orange foreground/explosion aging/circles now connect to native MAIN through
+an explicit diagnostic entry, including real shot hits, homing, bullets,
+items and shared RNG. Original CPU900 foreground/explosion and918 circle
+controls (150 actual GRCG pixel masks) pass Linux/Wine/optimized UBSan.
+Scope MAIN main01 0AAF:6E7B/2D9C/2E65/1B5A/1BA6/1BF2/1C28,
+library0000:11EC; load2000 CS2AAF DS8000. Eight shot/idle character/rank
+scenarios agree on120 native BMPs/counters. Native repeated repaints do not
+advance clocks; phase255/frame0 freezes at the pending post-boss dialog.
+Current receipts: `.analysis/port64/orange-render-v1259/cpu-{linux,windows,ubsan}-final/receipt.json`,
+`regression-{state,pattern}-{linux,windows,ubsan}/receipt.json` (earlier36600
+checkpoints retained), `integration-review.json`, and
+`.analysis/port64/verification-orange-render-v1259/receipt.json` (source
+manifest1e1e0fbe...). Eight UBSan contracts/resource smoke pass; earlier
+shot/combat/midboss fixtures are unchanged. Full original scene/page/palette
+equality is not claimed; native backdrop/BB/palette composition is a separate
+host adapter. Details/commands: [Orange foreground](PORT64.md#stage-1-orange-foreground-and-native-integration).
+Next connect pre/post-boss dialog and ordinary Stage1 progression. Target main01
 0AAF:2454 activates Boss only after zero scroll speed/back page1 and a
 returned blocking dialog. Do not replace this with STD exhaustion. Sound/HUD/
-circle/item/point/post-boss dialog/bonus requests use explicit control adapters;
+point/post-boss dialog/clear-bonus requests still need consumers;
 resident graze and actual stage-clear consumers, death/Bomb and Ending/save
 remain to port.
 No DOS source or exact acceptance state changes; native Windows pacing is
