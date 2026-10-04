@@ -48,7 +48,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
     midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();
-    orange_=orange::System{};kurumi_.reset();kurumi_active_=false;player_invincibility_=64;circles_=circle::System{};
+    orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;player_invincibility_=64;circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
@@ -64,6 +64,11 @@ void State::start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero) {
         throw std::logic_error("invalid Kurumi dialog handoff");
     // Stage2 BFNT palette loading replaces the preceding boss color0.
     kurumi_->set_palette_zero(palette_zero);kurumi_active_=true;
+}
+void State::start_elly_after_dialog(std::array<std::uint8_t,3> palette_zero) {
+    if(stage_id_!=2 || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !elly_)
+        throw std::logic_error("invalid Elly dialog handoff");
+    elly_->set_palette_zero(palette_zero);elly_active_=true;
 }
 void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     if(!next_stage_requested_ || stage_id_>1 || application_->resident().stage!=stage_id_+1)
@@ -88,10 +93,13 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     } else {
         midboss3::Snapshot next_midboss;next_midboss.actor=session::prepare_stage3_midboss(preceding_midboss);
         midboss3_.emplace(next_midboss);midboss2_.reset();
-        // Keep preceding Kurumi metadata for the future Elly boss handoff.
-        // No unimplemented boss update runs before its genuine dialog gate.
+        if(!kurumi_) throw std::logic_error("Stage3 requires preceding Kurumi metadata");
+        auto next_boss=elly::prepare_stage3(kurumi_->snapshot().boss);
+        next_boss.boss.background=orange::Background::tiles;next_boss.boss.slowdown=1;
+        next_boss.boss.shake_x=next_boss.boss.shake_y=0;next_boss.boss.bombing_disabled=0;
+        next_boss.boss.palette_tone=100;next_boss.boss.invincibility=64;elly_.emplace(next_boss);
     }
-    player_invincibility_=64;kurumi_active_=false;
+    player_invincibility_=64;kurumi_active_=false;elly_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
@@ -231,7 +239,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         }
     } // Prefix executes once even if the dialog suspends this frame.
     if(boss_active()) {
-        if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
+        if(elly_active_) elly_->set_invincibility(player_invincibility_);else if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
     }
     if(boss_active() && boss_snapshot().phase==255) {
         if(!departure_) {
@@ -254,29 +262,32 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             case transition::Kind::delay:orange_events_.push_back({orange::EventType::delay,{},1,0});break;
             }
         });
-        if(kurumi_active_) kurumi_->apply_departure(*departure_);else orange_.apply_departure(*departure_);
+        if(elly_active_) elly_->apply_departure(*departure_);else if(kurumi_active_) kurumi_->apply_departure(*departure_);else orange_.apply_departure(*departure_);
         if(departure_->blocked) {
             suspended_context_=context;suspended_bullets_=bullet_context;suspended_pull_items_=pull_items;
             frame_suspended_=true;post_boss_dialog_pending_=true;return;
         }
         frame_suspended_=false;dialog_finished_=false;homing_target_.reset();
     } else if (boss_active()) {
-        orange::Context boss_context;boss_context.frame=static_cast<std::uint16_t>(frames_);
+        elly::Context boss_context;boss_context.frame=static_cast<std::uint16_t>(frames_);
         boss_context.bullets=bullet_context;boss_context.power=score_.power;
-        boss_context.hit=[&](motion::Point center,motion::Point radius) {
+        const auto shot_hit=[&](motion::Point center,motion::Point radius,bool against_boss) {
             const auto before=shots_.snapshot().score_delta;
-            const auto result=shots_.hittest(center,radius,{false,true,context.frame_mod2,context.frame_mod4});
+            const auto result=shots_.hittest(center,radius,{false,against_boss,context.frame_mod2,context.frame_mod4});
             score_.score_delta+=shots_.snapshot().score_delta-before;
-            for (unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
+            for(unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
             return result.damage;
         };
+        boss_context.hit=[&](motion::Point center,motion::Point radius) { return shot_hit(center,radius,true); };
+        boss_context.scythe_hit=[&](motion::Point center,motion::Point radius) { return shot_hit(center,radius,false); };
         const auto before=boss_snapshot().score_delta;
         const auto sink=[&](const orange::Event& event) {
             orange_events_.push_back(event);
             if (event.type==orange::EventType::circle) circles_.add(event.position,event.count!=0);
             if (event.type==orange::EventType::item) items_.add(event.position,static_cast<item::Type>(event.value));
         };
-        if(kurumi_active_) kurumi_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
+        if(elly_active_) elly_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
+        else if(kurumi_active_) kurumi_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
         else orange_.update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
         player_invincibility_=boss_snapshot().invincibility;
         circles_.set_color(boss_snapshot().circle_color);
@@ -288,7 +299,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
-    if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
+    if(elly_active_) elly_->prepare_render(static_cast<std::uint16_t>(frames_));
+    else if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
     if (midboss_state().active) {
         if(midboss3_) midboss3_->prepare_render(midboss_context);else if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);

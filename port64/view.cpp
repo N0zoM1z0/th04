@@ -713,9 +713,13 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         }
     }
     const auto background_phase=state.orange_background_phase();
-    const bool backdrop=state.boss_active() && background_phase>=1 && background_phase<254;
+    const bool backdrop=state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254;
     if (backdrop) {
-        if(state.kurumi_active()) {
+        if(state.elly_active()) {
+            require_view(bool(sprites.second),"Elly backdrop has no Stage3 owner");
+            fill_rect(frame,palette,32,128,384,256,0);
+            put_opaque(frame,palette,sprites.second->backdrop,0,32,16);
+        } else if(state.kurumi_active()) {
             require_view(bool(sprites.second),"Kurumi backdrop has no Stage2 owner");
             fill_rect(frame,palette,32,16,384,80,0);
             fill_rect(frame,palette,32,208,384,192,0);
@@ -733,13 +737,13 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     for (unsigned y=16; y<384; ++y) {
         for (unsigned x=0; x<384; ++x) {
             if (backdrop) {
-                if (background_phase!=1) continue;
+                if (background_phase!=(state.elly_active() ? 2 : 1)) continue;
                 const int cel=state.orange_background_frame()/2;
                 require_view(cel>=0 && cel<16,"Orange BB cel outside resource");
                 const unsigned column=x/16,row=(y-16)/16;
                 // The actual invalidator redraws stage tiles for ZERO bits.
                 // A BB cel is32x32 tiles (four bytes/row); only24x23 show.
-                if ((state.kurumi_active() ? sprites.second->assets.transition : sprites.transition)[unsigned(cel)*128+row*4+column/8]&(0x80u>>(column&7))) continue;
+                if (((state.kurumi_active() || state.elly_active()) ? sprites.second->assets.transition : sprites.transition)[unsigned(cel)*128+row*4+column/8]&(0x80u>>(column&7))) continue;
             }
             const auto image = sprites.background.image_at(x,y);
             put_indexed_pixel(frame,palette,32,0,x,y,
@@ -1043,6 +1047,7 @@ public:
     void enable_stage2() { continue_stage2_=true; }
     void enable_kurumi() { continue_stage2_=true;continue_kurumi_=true; }
     void enable_stage3() { enable_kurumi();continue_stage3_=true; }
+    void enable_elly() { enable_stage3();continue_elly_=true; }
     bool stage3_dialog_complete() const { return third_pre_finished_; }
     unsigned resource_stage() const { return loaded_stage_; }
     bool stage2_dialog_complete() const { return second_pre_finished_; }
@@ -1102,7 +1107,7 @@ public:
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
-                    else if(loaded_stage_==2) { third_pre_finished_=true; }
+                    else if(loaded_stage_==2) { third_pre_finished_=true;if(continue_elly_) main_->start_elly_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else if(loaded_stage_==1) { second_pre_finished_=true;if(continue_kurumi_) main_->start_kurumi_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
                     dialog_scene_.reset();
@@ -1222,7 +1227,7 @@ private:
 
     const MainAssets* assets_=nullptr;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
-    bool continue_stage3_=false,third_pre_finished_=false;
+    bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1255,7 +1260,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_stage3(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_elly(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1429,7 +1434,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_stage3();
+    front_end.enable_elly();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1539,7 +1544,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -2032,6 +2037,81 @@ void run_title(
             require_view(state.frames()==frames && actor_stamp()==actors && state.random_cursor()==random && scene.dialog_offset()==offset && scene.process_random_state()==process && !state.boss_active(),"unported Elly frontier advanced gameplay");
             require_view(scene.resident().stage==2 && scene.resident().resource_stage==2 && scene.generation()==generation,"Stage3 resident/resource identity differs");
             std::cout<<"MAIN Stage3 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" frames="<<frames<<" frozen_ticks="<<frozen<<" loads="<<loads<<" midboss_draws="<<draws<<" generation="<<generation<<" progression=elly_battle_pending\n";
+        }
+    }
+    if (!elly_screenshots.empty()) {
+        for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            scene.enable_elly();
+            if(lunatic) {
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
+                scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);if(character) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            std::array<bool,12> seen{};unsigned frozen=0,bonuses=0,fades=0,next=0,ray_frames=0;
+            std::uint32_t clear_frame=0;
+            const auto generation=scene.generation();
+            const auto actor_stamp=[&]() {
+                const auto& state=scene.main_state();const auto& shots=state.shots().snapshot();
+                std::vector<int> result{state.player().position().current.x,state.player().position().current.y,shots.time,shots.reimu_cycle,shots.laser.time,state.invincibility()};
+                for(const auto& e:shots.entities) { result.push_back(e.flag);result.push_back(e.age);result.push_back(e.position.current.x);result.push_back(e.position.current.y); }
+                return result;
+            };
+            for(unsigned tick=0;tick<65000;++tick) {
+                const auto before=scene.main_state().frames();const auto random=scene.main_state().random_cursor();
+                const auto actors=actor_stamp();const bool blocked=scene.dialog_active(),post=scene.post_dialog();
+                const bool shoot=scene.resource_stage()<2 || !scene.main_state().elly_active() || shooting;
+                scene.advance(blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : (shoot ? shot::input_shot : 0),false,false);
+                const auto& state=scene.main_state();
+                if(scene.resource_stage()!=2) continue;
+                if(blocked && scene.dialog_active()) {
+                    require_view(state.frames()==before && state.random_cursor()==random && actor_stamp()==actors,"Elly dialog changed game actors/clock/RNG");++frozen;
+                }
+                if(blocked && post && !scene.dialog_active()) require_view(actor_stamp()==actors,"Elly post-dialog repeated actor prefix");
+                if(!state.elly_active()) continue;
+                const auto& boss=state.boss_snapshot();
+                if(state.frames()!=before) for(const auto& e:state.orange_events()) {
+                    if(e.type==orange::EventType::stage_bonus) ++bonuses;
+                    if(e.type==orange::EventType::fade) { ++fades;require_view(boss.phase_frame==417 && state.overlay().time==71,"Elly fade did not start at416"); }
+                    if(e.type==orange::EventType::next_stage) { ++next;require_view(boss.phase_frame==489,"Elly departure did not complete frame488"); }
+                }
+                const auto& elly=state.elly()->snapshot();
+                if(elly.scythe.flag==1) ++ray_frames;
+                int checkpoint=-1;
+                if(!seen[0] && boss.phase==1 && boss.phase_frame==0) checkpoint=0;
+                else if(!seen[1] && boss.phase==1 && elly.scythe.mode==1 && elly.scythe.frame==16) checkpoint=1;
+                else if(!seen[2] && boss.phase==2 && boss.phase_frame==16) checkpoint=2;
+                else if(!seen[3] && boss.phase==3 && boss.mode==0 && boss.phase_frame==16) checkpoint=3;
+                else if(!seen[4] && boss.phase==3 && elly.scythe.mode==2 && elly.scythe.flag==1) checkpoint=4;
+                else if(!seen[5] && boss.phase==3 && elly.pattern_group>=1) checkpoint=5;
+                else if(!seen[6] && boss.phase==3 && elly.pattern_group>=2) checkpoint=6;
+                else if(!seen[7] && boss.phase==254 && boss.phase_frame==8) checkpoint=7;
+                else if(!seen[8] && scene.dialog_active() && scene.post_dialog() && scene.dialog_status()==dialog::Status::release) checkpoint=8;
+                else if(!seen[9] && scene.post_dialog_complete()) { checkpoint=9;clear_frame=state.frames(); }
+                else if(!seen[10] && scene.post_dialog_complete() && boss.phase_frame==417) checkpoint=10;
+                else if(!seen[11] && state.next_stage_requested()) checkpoint=11;
+                if(checkpoint>=0) {
+                    seen[unsigned(checkpoint)]=true;scene.repaint();
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
+                    const auto path=elly_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    std::cout<<"MAIN Elly fixture="<<name<<" frame="<<state.frames()<<" phase="<<+boss.phase<<" clock="<<boss.phase_frame<<" group="<<+elly.pattern_group<<" scythe="<<+elly.scythe.mode<<" flag="<<+elly.scythe.flag<<" hit="<<+elly.player_hit<<" offset="<<scene.dialog_offset()<<" hp="<<boss.hp<<" pending="<<state.score().score_delta<<" ring="<<state.random_cursor()<<" screenshot="<<path<<'\n';
+                }
+                if(state.next_stage_requested()) break;
+            }
+            for(bool capture:seen) require_view(capture,"natural Elly fixture missed a progression checkpoint");
+            const auto& state=scene.main_state();
+            require_view(bonuses==1 && fades==1 && next==1 && frozen>100,"Elly dialog/departure consumers differ");
+            require_view(shooting || ray_frames>100,"Elly timeout did not exercise the scythe");
+            require_view(state.frames()-clear_frame==488 && scene.resident().stage==3 && scene.resident().stage_ascii=='3' && scene.resident().resource_stage==2,"Elly departure/resident stage differs");
+            require_view(scene.generation()==generation && state.clear_bonus(),"Elly clear restarted MAIN or omitted bonus");
+            require_view(state.overlay().callback==th04::portable::transition::Callback::none && !state.bonus_text_visible(),"Elly final leave retained bonus text");
+            const auto actors=actor_stamp();const auto random=state.random_cursor();const auto pending=state.score().score_delta;
+            const auto process=scene.process_random_state(),stopped=state.frames();
+            for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
+            require_view(state.frames()==stopped && actor_stamp()==actors && state.random_cursor()==random && state.score().score_delta==pending && scene.process_random_state()==process,"pending Stage4 request repeated simulation");
+            std::cout<<"MAIN Elly stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" frames="<<stopped<<" frozen_ticks="<<frozen<<" ray_frames="<<ray_frames<<" generation="<<generation<<" departure_frames="<<stopped-clear_frame<<" awarded="<<state.clear_bonus()->awarded<<" pending="<<pending<<" progression=stage4_resources_pending\n";
         }
     }
     if (window) {

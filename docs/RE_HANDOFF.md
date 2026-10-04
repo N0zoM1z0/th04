@@ -12,55 +12,49 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Stage3 midboss and pre-Elly integration](PORT64.md#stage3-midboss-and-pre-elly-integration).
-The GUI runs title/options/character/shot selection, ordinary Stage1 through
-Orange and Stage2 through Kurumi/post-dialog/bonus/departure. Stage3 now loads
-its real resources/STD/MAP, runs the midboss and finishes the Elly pre-dialog.
-Elly battle, later stages, player death/Bomb, complete HUD/audio, Ending/save
-remain unported. Semantic stays stopped unless a concrete port ambiguity arises.
+Current native scope: [Elly battle and departure integration](PORT64.md#elly-battle-and-departure-integration).
+The GUI runs title/options/character/shot selection, Stage1 through Orange,
+Stage2 through Kurumi and Stage3 through Elly/post-dialog/clear/departure.
+It holds at the actual Stage4 resource request. Stage4 onward, player death/Bomb,
+complete HUD/audio and Ending/save remain unported. Semantic stays stopped unless
+a concrete port ambiguity arises.
 
-Observed MAIN13A9:0861..0C1E owns four Stage3 attacks and the dispatcher;
-0AAF:1D95..1E59 owns the renderer;13A9:A6F6..A7B4 owns setup. Activation1600,
-entry20 ticks, HP850 and twelve mirrored flight directions are preserved.
-Boundary exit still performs shot collision; a lethal hit on that frame earns
-its original rewards. Native rejects a corrupt new-dash index>=12; ordinary
-retained timeout routes exit after the twelfth dash. No corrupt-state equivalence
-or DOS exactness is claimed.1280 original retained setup controls preserve the
-22-byte actor's untouched fields, shared HP-bar and defeat angle.
+Observed MAIN13A9:7ECC..8C3D owns scythe/helpers/dispatcher;0AAF:7322..73DA owns
+foreground,7757..777E invalidation and777F..77E6 background. Stage3 setup at
+13A9:A6F6..A7B4 retains preceding Boss metadata and does not reset private scythe,
+orbit or pattern-group fields. Native first-load private state is fresh MAIN BSS.
+Preserve independent unsigned scythe clock, raw shot deflection with against-boss
+false, double entrance clock, previous.x orbit radius and gather-only allocation.
+Original08F6:2F6C fill establishes the32,128,384,256 CPU-write rectangle.
 
-Eight natural Normal/Lunatic Reimu/Marisa shot/idle routes reach the Elly dialog
-at Stage3 frame9202. Stage load consumes353 process draws without changing
-MAIN generation2; dialog freezes actors/invincibility/RNG. Pre-dialog swaps the
-sprite bank to six32x32 plus twelve64x64 images and the BB2 palette. Independent
-archive decoding checks106,880 opaque Elly portrait pixels across eight routes.
-Native16 contracts,240 BMPs/268 counters agree Linux/Wine/optimized UBSan and
-actual Windows. Prior168 BMPs/188 counters stay identical to v1269.9,792
-original CPU controls produce15,886 complete state/event/draw records, including
-eight retained sequences; all current builds and actual Windows replay them.
-Original CPU reexecuted before the test-target static-link repair; current Linux
-contract bytes are unchanged. This is selected CPU/asset and native integration
-validation, not original full-route VRAM, physical hardware or frame pacing.
+9,329 independent original controls produce39,297 state/event records, including
+all four ordinary ranks with shot/timeout Boss-only sequences. Final native
+builds replay separately attested original expectations; the initial gather
+mismatch remains recorded and is not a pass. Original CPU reexecutes for256
+retained setups,5,316 foreground and11,264 background controls on three builds.
+17 contracts,336 BMPs/372 counters agree Linux/Wine/optimized UBSan/bounds and
+actual Windows; prior240/268 stay identical. Eight natural Normal/Lunatic
+Reimu/Marisa shot/idle routes reach the Stage4 request, retain MAIN generation2,
+and consume post-dialog/bonus/416-and488-frame departure without repeated work.
+This is selected CPU/asset/native integration validation, not original full-route
+VRAM, physical hardware, GUI frame pacing or DOS exactness.
 
 Windows `D:\Entertainment\Game\Touhou\th04-reconstruct\start-th04-port64.bat`
-uses v1270 through the Elly pre-dialog. Package `port64-preview/v1270` contains17
-checked x64 PE executables. Only the root native EXE/launcher changed;21 other
-DOS/HDI/config/font/build files remain identical. No GUI was launched.
+uses v1271 through the Stage3 clear. Package `port64-preview/v1271` contains18
+checked static x64 PE executables. Only root native EXE/launcher change;21 other
+DOS/HDI/config/font/build files remain identical. No GUI launched.
 
-Receipts: `.analysis/port64/midboss3-v1270/{target-live,integration-review,negative-live,native-windows-receipt,native-windows-setup,native-windows-core,windows-export-receipt}.json`,
-`core-linux-final/receipt.json`, `core-{linux,windows,ubsan}-replay-final/receipt.json`,
-`setup-{linux,windows,ubsan}-replay-final/receipt.json`, and
-`.analysis/port64/verification-stage3-v1270-final/receipt.json`.
-Runtime batch manifest: `416e8079931e7754318f7abc2176762951a3d22212a2590fd965518b9de922e7`.
-Current manifest after a CTest-only registration correction: `322e213a739262231351902ee294c0bdd582b84f6abd1f88d93cb3dafb0c0a2e`.
-`control-review.json` confirms all51 executable bytes are unchanged and the
-16 CTest contracts pass Linux/UBSan; the runtime receipts keep their original
-batch manifest above. No gameplay source changed in that correction.
+Receipts: `.analysis/port64/elly-v1271/{target-live,integration-review,negative-live,native-windows-receipt,native-windows-core,native-windows-setup,native-windows-render,native-windows-background,windows-export-receipt}.json`,
+`{core,setup,render}-{linux,windows,ubsan}-final/receipt.json`, and
+`.analysis/port64/verification-elly-v1271/receipt.json`.
+Manifest: `464f6e89661d8adf112ef12645b6c5ae01d1d00f8f7141d686e828853bd7641b`.
+Root preflight and live database attestation pass pinned candidate-local-attested
+MAIN; native worktree CI/ledger/diff checks pass. DOS acceptance is unchanged.
 
-
-Next bounded work: Elly setup/foreground/battle, retaining preceding Boss metadata
-and establishing her backdrop/tile callbacks before post-dialog/departure.
-Continue ordinary stages and player-death/Bomb/HUD/audio/Ending/persistence;
-keep semantic paused. PC-98 reconstruction/exact ledgers remain unchanged.
+Next bounded work: Stage4 resources/retained actor setup/midboss and the
+character-dependent pre-boss gate, then later stages and player-death/Bomb/HUD/
+audio/Ending/persistence. Keep semantic stopped unless that work exposes a
+concrete ambiguity. Complete gameplay is the stopping condition for the port.
 
 ## Current state
 

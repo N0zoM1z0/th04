@@ -14,7 +14,7 @@ if (Test-Path -LiteralPath $OutputDirectory) {
 $outDir = (New-Item -ItemType Directory -Path $OutputDirectory).FullName
 $names = @('contracts', 'live-contracts', 'shot-contracts', 'enemy-contracts',
            'bullet-contracts', 'effect-contracts', 'midboss-contracts',
-           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts', 'midboss3-contracts')
+           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts', 'midboss3-contracts', 'elly-contracts')
 $contracts = @()
 foreach ($name in $names) {
     $exe = Join-Path $exeDir ("th04-port64-$name.exe")
@@ -73,6 +73,18 @@ Get-ChildItem -LiteralPath $stage3Dir -Filter '*.bmp' | ForEach-Object {
 if ($stage3Images.Count -ne 72) { throw 'Missing Stage 3 visual checkpoints.' }
 $stage3Counters = @($stage3Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Stage3 *' })
 if ($stage3Counters.Count -ne 80) { throw 'Missing Stage 3 scenario counters.' }
+$ellyDir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'elly-frames')).FullName
+Write-Host 'Running eight natural Elly battle and departure scenarios...'
+$ellyLines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --elly-screenshots $ellyDir 2>&1)
+if ($LASTEXITCODE -ne 0) { throw "Elly scenarios failed: $ellyLines" }
+$ellyLines | Set-Content -LiteralPath (Join-Path $outDir 'elly.log')
+$ellyImages = @{}
+Get-ChildItem -LiteralPath $ellyDir -Filter '*.bmp' | ForEach-Object {
+    $ellyImages[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+if ($ellyImages.Count -ne 96) { throw 'Missing Elly visual checkpoints.' }
+$ellyCounters = @($ellyLines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Elly *' })
+if ($ellyCounters.Count -ne 104) { throw 'Missing Elly scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -82,8 +94,9 @@ $receipt = @{
     stage2_fixture_bmp_sha256=$stage2Images; stage2_fixture_counters=$stage2Counters
     kurumi_fixture_bmp_sha256=$kurumiImages; kurumi_fixture_counters=$kurumiCounters
     stage3_fixture_bmp_sha256=$stage3Images; stage3_fixture_counters=$stage3Counters
+    elly_fixture_bmp_sha256=$ellyImages; elly_fixture_counters=$ellyCounters
     observed_utc=[DateTime]::UtcNow.ToString('o')
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count))
+Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count + $ellyImages.Count))
