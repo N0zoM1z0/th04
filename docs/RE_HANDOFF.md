@@ -1,14 +1,12 @@
 # TH04 current handoff
 
-Updated 2026-10-03. The active goal is a standalone PC-98 game: checked-in
+Updated 2026-10-05. The active goal is a standalone PC-98 game: checked-in
 TH04 source, successful builds, and normal gameplay. Native whole-build byte
 equality is not required. The two remaining MAIN exactness cases are deferred
 and retain their nonexact states. ReC98 implementations are adaptation inputs;
-upstream exactness claims are not inherited. Current phase: semantic readability
-after the native bullet-performance, scroll-pipeline, MAINE registration,
-three-executable process-handoff, shared-random-ring, process-local-LCG and
-item-lifecycle batches; Windows
-retesting continues.
+upstream exactness claims are not inherited. Current phase: native x64 implementation
+in `port/modern-64`; semantic work stops at the clarity needed for a concrete
+port owner. Completed DOS semantic and runtime results remain below.
 
 The `semantic/readable` branch now prepares the DOS source for the native
 x64 port; it starts at current local `main` commit `8d20492`. The first bounded
@@ -210,6 +208,19 @@ item claim. See the
 
 
 ## Current state
+
+Native x64 work is isolated in `port/modern-64`; semantic expansion stays
+stopped unless a concrete port ambiguity requires it. Native commit `434c91b`
+contains the v1291 MAINE cutscene
+component now preserves script requests, two graphics pages, PI masks and font
+effects. Eight scripts/72 controls/86,614 requests,192 complete page checkpoints
+and264 original font controls pass GNU/Wine/UBSan/actualWindows;31 AMD64 products
+and30CTest pass per build. Original packed target670de6ba and newly recovered
+DIET payload7495ae43 remain candidate-local-attested. The ordinary native GUI
+still holds at the Ending transfer; resident score/run-counter integration,
+Staff Roll, verdict and registration are next. Windows GUI remains v1290.
+No DOS source, unit/exact ledger or source-to-source semantic baseline changes.
+Native receipt root: `.analysis/worktrees/port-modern-64/.analysis/port64/maine-ending-v1291/`.
 
 The follow-up 2026-10-05 cleanup retires 173 historical runtime image archives,
 42,362 completed native screenshot archives and 30 superseded Windows preview
@@ -464,8 +475,9 @@ all executed products and locates captured code against the relocated MAIN/MAP.
    independent playable invincible image can expose additional integration bugs.
 3. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
-4. Continue the semantic queue; repair the historical scaffold digest/replay
-   surface separately before claiming a new cold historical exact replay.
+4. Keep semantic expansion stopped unless it blocks a concrete native owner.
+   Join MAIN-to-MAINE state/lifetime, then native Staff Roll/verdict/registration;
+   repair historical scaffold replay separately from native progress.
 
 ## Navigation
 
