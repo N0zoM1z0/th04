@@ -1,30 +1,20 @@
 # TH04 native 64-bit bring-up
 
 This branch keeps the playable PC-98 DOS build intact and develops a separate
-native port. The current slice reads a user-supplied TH04 HDI (or loose OP
-archive), decodes PAR, PI and CD2 data, writes inspection BMPs, and presents
-the resource-derived OP main menu through SDL2 on Linux or Win32/GDI on
-Windows. Game now enters the two-step character/shot menu rendered from
-`SLB1.PI` and `SL.CD2`; a completed choice updates the portable resident
-contract and starts a live MAIN player scene. The portable state machine skips locked Extra, enters the complete
-Options list, wraps every stored option in the original direction, restores
-the original defaults, and returns to the Option command on Cancel/Option
-Quit. Other main commands whose screens are not ported yet print their index and
-leave the window open; main Quit/Esc closes it. In that scene, arrow keys move the original character sprite and Shift halves
-speed; hold Z to shoot. All four shot routes have ten power levels, a 68-slot
-pool, hit-state contracts and Marisa option lasers. The fixed 32-slot item pool handles drops, motion, attraction and scoring;
-its seven-type scene fixture is headless-only. The interactive scene now renders and scrolls the original Stage 1 MAP/MPN
-background, selecting ST00 or ST10 tiles for the character. Real STD waves, the 52-opcode enemy VM and a 32-slot enemy pool are connected
-to player shots, drops, scoring and original BFNT sprites. Enemy bullets now
-use separate 240-pellet/200-large pools, clouds, nine special motions and
-graze/collision/clear/zap contracts. A 96-slot spark ring and 16-slot gather
-pool now connect real hit/graze/kill effects, shared random draws and delayed
-bullet release. Stage 1's midboss now activates at frame 3100, writes its
-emergence tiles, unfolds, fires paired special bullets, receives real shot
-damage and exits through defeat or scroll timeout. Bosses, later midbosses,
-bombs and player death remain
-to be connected. No original executables or game data are embedded in the binary. Unlike
-the DOS reconstruction, this port makes no byte-exact claim.
+native port. The current GUI reads a user-supplied TH04 HDI, decodes the original
+assets and runs the title/options, character/shot selection, Stage1 and Stage2.
+Both stages include their actual STD waves, midboss, pre-dialog, ordinary boss,
+post-dialog, clear bonus and departure. Stage3 resource loading is the current
+held frontier. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
+Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
+to advance dialogue. Player death, Bomb, complete HUD/audio, later stages,
+Ending and save are not implemented yet. The native preview does not embed
+original executables or assets and makes no DOS byte-exact claim.
+
+Semantic readability work stays paused once sufficient for the next port slice;
+only a concrete ambiguity reopens a bounded clarification. Current evidence
+and limitations live in [PORT64.md](../docs/PORT64.md), while the older subsystem
+sections below retain their bounded historical scope.
 
 The portable core also models the DOS executable chain as guarded in-process
 states over one fixed-width resident object. Contracts cover normal, Extra and

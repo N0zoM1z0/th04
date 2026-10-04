@@ -4,8 +4,8 @@ cd /d "%~dp0"
 echo TH04 native x64 reconstruction - Stage 1 and Stage 2 preview
 echo Controls: arrows to move, Z to shoot, Shift to slow down.
 echo Dialogue: release the key, then press Enter or Z to continue.
-echo Preview continues through Stage 2 and its midboss to Kurumi's dialogue.
-echo Kurumi's battle and later stages are still in development.
+echo Preview continues through Kurumi's battle, dialogue and Stage 2 clear.
+echo Stage 3 onward, player death, Bombs and audio are still in development.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.
   pause

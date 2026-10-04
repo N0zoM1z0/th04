@@ -702,8 +702,8 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                   application::Playchar playchar,std::optional<int> displayed_tone={}) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
     PiImage palette=sprites.palette;
-    if (state.orange_active()) {
-        const auto& boss=state.orange().snapshot();
+    if (state.boss_active()) {
+        const auto& boss=state.boss_snapshot();
         for (unsigned i=0;i<3;++i) palette.palette[i]=boss.palette_zero[i];
         const int tone=std::clamp(displayed_tone.value_or(boss.palette_tone),0,200);
         for (auto& component:palette.palette) {
@@ -713,11 +713,18 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         }
     }
     const auto background_phase=state.orange_background_phase();
-    const bool backdrop=state.orange_active() && background_phase>=1 && background_phase<254;
+    const bool backdrop=state.boss_active() && background_phase>=1 && background_phase<254;
     if (backdrop) {
-        fill_rect(frame,palette,32,16,384,120,1);
-        fill_rect(frame,palette,32,264,384,120,0);
-        put_opaque(frame,palette,sprites.backdrop,0,32,136);
+        if(state.kurumi_active()) {
+            require_view(bool(sprites.second),"Kurumi backdrop has no Stage2 owner");
+            fill_rect(frame,palette,32,16,384,80,0);
+            fill_rect(frame,palette,32,208,384,192,0);
+            put_opaque(frame,palette,sprites.second->backdrop,0,32,96);
+        } else {
+            fill_rect(frame,palette,32,16,384,120,1);
+            fill_rect(frame,palette,32,264,384,120,0);
+            put_opaque(frame,palette,sprites.backdrop,0,32,136);
+        }
     }
     const auto& tiles = sprites.second ? sprites.second->tiles :
         (playchar == application::Playchar::reimu ? sprites.reimu_tiles : sprites.marisa_tiles);
@@ -732,7 +739,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 const unsigned column=x/16,row=(y-16)/16;
                 // The actual invalidator redraws stage tiles for ZERO bits.
                 // A BB cel is32x32 tiles (four bytes/row); only24x23 show.
-                if (sprites.transition[unsigned(cel)*128+row*4+column/8]&(0x80u>>(column&7))) continue;
+                if ((state.kurumi_active() ? sprites.second->assets.transition : sprites.transition)[unsigned(cel)*128+row*4+column/8]&(0x80u>>(column&7))) continue;
             }
             const auto image = sprites.background.image_at(x,y);
             put_indexed_pixel(frame,palette,32,0,x,y,
@@ -743,9 +750,12 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     const auto pixels = [](std::int16_t coordinate) {
         return coordinate >= 0 ? coordinate / 16 : -((-int(coordinate)+15)/16);
     };
-    if (state.orange_active()) for (const auto& draw:state.orange().draws()) {
+    if (state.boss_active()) for (const auto& draw:state.boss_draws()) {
         const auto pattern=draw.pattern_or_radius;
-        if (draw.kind==orange::DrawKind::circle) {
+        if(draw.kind==orange::DrawKind::line) {
+            for(auto p:th04::portable::kurumi::ray_pixels({draw.left,draw.top},{draw.end_left,draw.end_top}))
+                put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
+        } else if (draw.kind==orange::DrawKind::circle) {
             for (auto p:circle::raster({draw.left,draw.top},pattern)) put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
         } else if (pattern>=128 && pattern<256) {
             const auto& slot=sprites.stage_slots[pattern];require_view(slot.sheet,"Orange references an empty dynamic stage slot");
@@ -1031,6 +1041,7 @@ public:
     }
 
     void enable_stage2() { continue_stage2_=true; }
+    void enable_kurumi() { continue_stage2_=true;continue_kurumi_=true; }
     unsigned resource_stage() const { return loaded_stage_; }
     bool stage2_dialog_complete() const { return second_pre_finished_; }
     bool boss_portrait_visible() const { return dialog_scene_ && dialog_scene_->boss_portrait_visible(); }
@@ -1069,14 +1080,14 @@ public:
             }
             if(loaded_stage_==1 && !dialog_scene_ && !second_pre_finished_ && main_->stage2_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
-            if(!diagnostic_ && !dialog_scene_ && !post_started_ && main_->orange_active() && main_->orange().snapshot().phase==255 && main_->orange().snapshot().phase_frame==0) {
+            if(!diagnostic_ && !dialog_scene_ && !post_started_ && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
                 main_->update(held_input,shift,false,0,&sprites_->background);begin_dialog(true);
             }
             if(dialog_scene_) {
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
-                    else if(loaded_stage_==1) { second_pre_finished_=true; }
+                    else if(loaded_stage_==1) { second_pre_finished_=true;if(continue_kurumi_) main_->start_kurumi_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
                     dialog_scene_.reset();
                 } else { if(repaint) frame_=render();return; }
@@ -1194,7 +1205,7 @@ private:
     }
 
     const MainAssets* assets_=nullptr;
-    bool continue_stage2_=false,second_pre_finished_=false;
+    bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1227,7 +1238,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_stage2(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_kurumi(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1401,7 +1412,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_stage2();
+    front_end.enable_kurumi();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1511,7 +1522,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1705,7 +1716,7 @@ void run_title(
             std::array<bool,7> captured{};
             for (unsigned frame=0;frame<6000;++frame) {
                 scene.advance(shooting ? shot::input_shot : 0,false,false);
-                const auto& state=scene.main_state();const auto& boss=state.orange().snapshot();
+                const auto& state=scene.main_state();const auto& boss=state.boss_snapshot();
                 const bool first=!seen[boss.phase];
                 int checkpoint=-1;
                 for (unsigned i=0;i<checkpoints.size();++i) {
@@ -1717,7 +1728,7 @@ void run_title(
                     seen[boss.phase]=true;
                     const auto age=boss.big.age;const auto clock=boss.big_frame;const auto simulation=state.frames();
                     scene.repaint();scene.repaint();
-                    require_view(age==state.orange().snapshot().big.age && clock==state.orange().snapshot().big_frame && simulation==state.frames(),"repaint advanced Orange simulation");
+                    require_view(age==state.boss_snapshot().big.age && clock==state.boss_snapshot().big_frame && simulation==state.frames(),"repaint advanced Orange simulation");
                     const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(boss.phase)+(first ? "" : "-at-"+std::to_string(boss.phase_frame));
                     const auto path=orange_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
                     unsigned alive=0;for (const auto& b:state.bullets().snapshot().entities) alive+=b.flag==1;
@@ -1768,22 +1779,22 @@ void run_title(
                 const auto& state=scene.main_state();int checkpoint=-1;
                 if(state.frames()!=before) for(const auto& e:state.orange_events()) {
                     if(e.type==orange::EventType::stage_bonus) ++bonuses;
-                    if(e.type==orange::EventType::fade) { ++fades;require_view(state.orange().snapshot().phase_frame==417 && state.overlay().time==71,"fade did not start at416 before overlay decrement"); }
-                    if(e.type==orange::EventType::next_stage) { ++next;require_view(state.orange().snapshot().phase_frame==489,"next-stage request did not complete frame488"); }
+                    if(e.type==orange::EventType::fade) { ++fades;require_view(state.boss_snapshot().phase_frame==417 && state.overlay().time==71,"fade did not start at416 before overlay decrement"); }
+                    if(e.type==orange::EventType::next_stage) { ++next;require_view(state.boss_snapshot().phase_frame==489,"next-stage request did not complete frame488"); }
                 }
                 if(!seen[0] && scene.dialog_active() && !scene.post_dialog() && scene.dialog_status()==dialog::Status::release) { checkpoint=0;start_frame=state.frames(); }
-                else if(!seen[1] && state.orange_active()) { checkpoint=1;require_view(seen[0] && scene.battle_resources_valid(),"ordinary Boss activated before dialog/resources completed"); }
-                else if(!seen[2] && state.orange_active() && state.orange().snapshot().phase==2) checkpoint=2;
+                else if(!seen[1] && state.boss_active()) { checkpoint=1;require_view(seen[0] && scene.battle_resources_valid(),"ordinary Boss activated before dialog/resources completed"); }
+                else if(!seen[2] && state.boss_active() && state.boss_snapshot().phase==2) checkpoint=2;
                 else if(!seen[3] && scene.dialog_active() && scene.post_dialog() && scene.dialog_status()==dialog::Status::release) checkpoint=3;
                 else if(!seen[4] && scene.post_dialog_complete()) { checkpoint=4;clear_frame=state.frames(); }
-                else if(!seen[5] && scene.post_dialog_complete() && state.orange().snapshot().phase==255 && state.orange().snapshot().phase_frame==417) checkpoint=5;
-                else if(!seen[6] && scene.post_dialog_complete() && state.orange().snapshot().phase==255 && state.orange().snapshot().phase_frame==481) checkpoint=6;
+                else if(!seen[5] && scene.post_dialog_complete() && state.boss_snapshot().phase==255 && state.boss_snapshot().phase_frame==417) checkpoint=5;
+                else if(!seen[6] && scene.post_dialog_complete() && state.boss_snapshot().phase==255 && state.boss_snapshot().phase_frame==481) checkpoint=6;
                 else if(!seen[7] && state.next_stage_requested()) checkpoint=7;
                 if(checkpoint>=0) {
                     seen[unsigned(checkpoint)]=true;scene.repaint();
                     const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
                     const auto path=dialog_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
-                    std::cout<<"MAIN dialog fixture="<<name<<" frame="<<state.frames()<<" offset="<<scene.dialog_offset()<<" power="<<+state.score().power<<" bonus="<<state.orange().snapshot().score_delta<<" screenshot="<<path<<'\n';
+                    std::cout<<"MAIN dialog fixture="<<name<<" frame="<<state.frames()<<" offset="<<scene.dialog_offset()<<" power="<<+state.score().power<<" bonus="<<state.boss_snapshot().score_delta<<" screenshot="<<path<<'\n';
                 }
                 if(state.next_stage_requested()) break;
             }
@@ -1868,6 +1879,78 @@ void run_title(
             std::cout<<"MAIN Stage2 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" frames="<<frames
                      <<" frozen_ticks="<<frozen<<" loads="<<loads<<" midboss_draws="<<draws<<" generation="<<scene.generation()
                      <<" sprite_end=162 progression=kurumi_battle_pending\n";
+        }
+    }
+    if (!kurumi_screenshots.empty()) {
+        for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            scene.enable_kurumi();
+            if(lunatic) {
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
+                scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);if(character) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            std::array<bool,9> seen{};unsigned frozen=0,bonuses=0,fades=0,next=0,ray_frames=0;
+            std::uint32_t clear_frame=0;
+            const auto generation=scene.generation();
+            const auto actor_stamp=[&]() {
+                const auto& state=scene.main_state();const auto& shots=state.shots().snapshot();
+                std::vector<int> result{state.player().position().current.x,state.player().position().current.y,shots.time,shots.reimu_cycle,shots.laser.time,state.invincibility()};
+                for(const auto& e:shots.entities) { result.push_back(e.flag);result.push_back(e.age);result.push_back(e.position.current.x);result.push_back(e.position.current.y); }
+                return result;
+            };
+            for(unsigned tick=0;tick<45000;++tick) {
+                const auto before=scene.main_state().frames();const auto random=scene.main_state().random_cursor();
+                const auto actors=actor_stamp();const bool blocked=scene.dialog_active(),post=scene.post_dialog();
+                const bool shoot=scene.resource_stage()==0 || !scene.main_state().kurumi_active() || shooting;
+                scene.advance(blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : (shoot ? shot::input_shot : 0),false,false);
+                const auto& state=scene.main_state();
+                if(scene.resource_stage()!=1) continue;
+                if(blocked && scene.dialog_active()) {
+                    require_view(state.frames()==before && state.random_cursor()==random && actor_stamp()==actors,"Kurumi dialog changed game actors/clock/RNG");++frozen;
+                }
+                if(blocked && post && !scene.dialog_active()) require_view(actor_stamp()==actors,"Kurumi post-dialog repeated actor prefix");
+                if(!state.kurumi_active()) continue;
+                const auto& boss=state.boss_snapshot();
+                if(state.frames()!=before) for(const auto& e:state.orange_events()) {
+                    if(e.type==orange::EventType::stage_bonus) ++bonuses;
+                    if(e.type==orange::EventType::fade) { ++fades;require_view(boss.phase_frame==417 && state.overlay().time==71,"Kurumi fade did not start at416"); }
+                    if(e.type==orange::EventType::next_stage) { ++next;require_view(boss.phase_frame==489,"Kurumi departure did not complete frame488"); }
+                }
+                bool rays=false;for(const auto& ray:state.kurumi()->snapshot().rays) rays|=ray.flag!=0;
+                if(rays) ++ray_frames;
+                int checkpoint=-1;
+                if(!seen[0] && boss.phase==0) checkpoint=0;
+                else if(!seen[1] && boss.phase==1 && boss.phase_frame==16) checkpoint=1;
+                else if(!seen[2] && boss.phase==2) checkpoint=2;
+                else if(!seen[3] && (rays || (shooting && boss.phase==3))) checkpoint=3;
+                else if(!seen[4] && (boss.phase==254 || boss.phase==255)) checkpoint=4;
+                else if(!seen[5] && scene.dialog_active() && scene.post_dialog() && scene.dialog_status()==dialog::Status::release) checkpoint=5;
+                else if(!seen[6] && scene.post_dialog_complete()) { checkpoint=6;clear_frame=state.frames(); }
+                else if(!seen[7] && scene.post_dialog_complete() && boss.phase_frame==417) checkpoint=7;
+                else if(!seen[8] && state.next_stage_requested()) checkpoint=8;
+                if(checkpoint>=0) {
+                    seen[unsigned(checkpoint)]=true;scene.repaint();
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
+                    const auto path=kurumi_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    std::cout<<"MAIN Kurumi fixture="<<name<<" frame="<<state.frames()<<" phase="<<+boss.phase<<" clock="<<boss.phase_frame<<" offset="<<scene.dialog_offset()<<" hp="<<boss.hp<<" pending="<<state.score().score_delta<<" ring="<<state.random_cursor()<<" screenshot="<<path<<'\n';
+                }
+                if(state.next_stage_requested()) break;
+            }
+            for(bool capture:seen) require_view(capture,"natural Kurumi fixture missed a progression checkpoint");
+            const auto& state=scene.main_state();
+            require_view(bonuses==1 && fades==1 && next==1 && frozen>100,"Kurumi dialog/departure consumers differ");
+            require_view(shooting || ray_frames>100,"Kurumi timeout did not exercise spawnrays");
+            require_view(state.frames()-clear_frame==488 && scene.resident().stage==2 && scene.resident().stage_ascii=='2' && scene.resident().resource_stage==1,"Kurumi departure/resident stage differs");
+            require_view(scene.generation()==generation && state.clear_bonus(),"Kurumi clear restarted MAIN or omitted bonus");
+            require_view(state.overlay().callback==th04::portable::transition::Callback::none && !state.bonus_text_visible(),"Kurumi final leave retained bonus text");
+            const auto actors=actor_stamp();const auto random=state.random_cursor();const auto pending=state.score().score_delta;
+            const auto process=scene.process_random_state(),stopped=state.frames();
+            for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
+            require_view(state.frames()==stopped && actor_stamp()==actors && state.random_cursor()==random && state.score().score_delta==pending && scene.process_random_state()==process,"pending Stage3 request repeated simulation");
+            std::cout<<"MAIN Kurumi stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" frames="<<stopped<<" frozen_ticks="<<frozen<<" ray_frames="<<ray_frames<<" generation="<<generation<<" departure_frames="<<stopped-clear_frame<<" awarded="<<state.clear_bonus()->awarded<<" pending="<<pending<<" progression=stage3_resources_pending\n";
         }
     }
     if (window) {

@@ -14,6 +14,7 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_kurumi_setup.py",
     "port64/kurumi.hpp",
     "port64/kurumi.cpp",
     "port64/kurumi_render.cpp",
@@ -389,6 +390,8 @@ def main() -> int:
     dialog_outputs = {}
     stage2_hashes = {}
     stage2_outputs = {}
+    kurumi_hashes = {}
+    kurumi_outputs = {}
     if args.font_bmp:
         for host, command in (("linux",[str(linux_main)]),
                               ("windows",[args.windows_runner,str(windows_main)])):
@@ -416,6 +419,20 @@ def main() -> int:
             stage2_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage2")]
         if stage2_hashes["linux"] != stage2_hashes["windows"] or stage2_outputs["linux"] != stage2_outputs["windows"]:
             raise ValueError("Stage2 images or counters differ between hosts")
+
+        for host, command in (("linux",[str(linux_main)]),
+                              ("windows",[args.windows_runner,str(windows_main)])):
+            images = output.parent / ("kurumi-"+host)
+            images.mkdir(parents=True,exist_ok=True)
+            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--kurumi-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Kurumi fixture=") != 72 or result.count("MAIN Kurumi stopped ") != 8:
+                raise ValueError("natural Kurumi fixture missed progression")
+            kurumi_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(kurumi_hashes[host]) != 72:
+                raise ValueError("Kurumi fixture has unexpected image files")
+            kurumi_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Kurumi")]
+        if kurumi_hashes["linux"] != kurumi_hashes["windows"] or kurumi_outputs["linux"] != kurumi_outputs["windows"]:
+            raise ValueError("Kurumi images or counters differ between hosts")
 
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
@@ -527,6 +544,8 @@ def main() -> int:
         "dialog_fixture_counters": dialog_outputs.get("linux",[]),
         "stage2_fixture_bmp_sha256": stage2_hashes.get("linux",{}),
         "stage2_fixture_counters": stage2_outputs.get("linux",[]),
+        "kurumi_fixture_bmp_sha256": kurumi_hashes.get("linux",{}),
+        "kurumi_fixture_counters": kurumi_outputs.get("linux",[]),
         "font_bmp_sha256": sha256(args.font_bmp) if args.font_bmp else None,
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
@@ -547,8 +566,9 @@ def main() -> int:
             "Stage2 actor initialization and pre-midboss STD/MAP integration have separate CPU/native controls; "
             "Stage2 midboss behavior/geometry has separate selected CPU controls; "
             "Stage2 visual resources, natural midboss and pre-Kurumi dialog join the native GUI; "
-            "four character/Normal-Lunatic routes reach the held Kurumi battle frontier; "
-            "Kurumi state/attacks have separate CPU controls but its rendering and GUI battle integration, final/Extra departure, "
+            "eight character/Normal-Lunatic shot/timeout routes complete Kurumi battle/post-dialog/bonus/departure, "
+            "then hold at Stage3 resource loading; "
+            "Kurumi state/attacks/render have separate selected CPU controls; final/Extra departure, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

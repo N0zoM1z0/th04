@@ -9,6 +9,7 @@
 #include "midboss.hpp"
 #include "midboss2.hpp"
 #include "orange.hpp"
+#include "kurumi.hpp"
 #include "circles.hpp"
 #include "dialog.hpp"
 #include "stage_bonus.hpp"
@@ -31,7 +32,7 @@ public:
     // must still replace its sprite/map/palette owners before consuming this.
     void prepare_next_stage_actors(const stage::Program::Bytes& standard);
     bool stage2_dialog_ready(const stage::Background& background) const {
-        return stage_id_==1 && stage_ && stage_->stopped() && !midboss_state().active &&
+        return stage_id_==1 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
     const midboss::Snapshot& midboss_state() const { return midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot(); }
@@ -50,8 +51,14 @@ public:
     const orange::System& orange() const { return orange_; }
     const circle::System& circles() const { return circles_; }
     bool orange_active() const { return orange_active_; }
+    bool kurumi_active() const { return kurumi_active_; }
+    bool boss_active() const { return orange_active_ || kurumi_active_; }
+    const orange::Snapshot& boss_snapshot() const { return kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot(); }
+    const std::vector<orange::Draw>& boss_draws() const { return kurumi_active_ ? kurumi_->draws() : orange_.draws(); }
+    const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
+    std::uint8_t invincibility() const { return player_invincibility_; }
     unsigned slowdown() const {
-        const unsigned boss=orange_active_ ? orange_.snapshot().slowdown : 1;
+        const unsigned boss=boss_active() ? boss_snapshot().slowdown : 1;
         return boss>bullets_.snapshot().slowdown ? boss : bullets_.snapshot().slowdown;
     }
     bool post_boss_dialog_pending() const { return post_boss_dialog_pending_; }
@@ -67,6 +74,7 @@ public:
     std::uint16_t random_cursor() const { return ring_.cursor(); }
     // Caller completes the blocking pre-boss dialog before this handoff.
     void start_orange_after_dialog();
+    void start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void finish_post_boss_dialog();
     bool next_stage_requested() const { return next_stage_requested_; }
     const transition::Overlay& overlay() const { return overlay_; }
@@ -103,8 +111,11 @@ private:
     midboss::System midboss_{};
     std::optional<midboss2::System> midboss2_;
     orange::System orange_{};
+    std::optional<kurumi::System> kurumi_;
     circle::System circles_{};
     bool orange_active_=false,post_boss_dialog_pending_=false;
+    bool kurumi_active_=false;
+    std::uint8_t player_invincibility_=64;
     bonus::Context bonus_context_{};
     std::optional<bonus::Result> clear_bonus_;
     std::int16_t palette_tone_before_frame_=100;

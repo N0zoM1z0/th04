@@ -15,13 +15,24 @@ void explode(orange::Explosion& e,motion::Point center,unsigned type) {
     // Unused byte and the unselected small-explosion slot survive allocation.
 }
 }
-System::System(unsigned rank) {
+Snapshot prepare_stage2(orange::Snapshot previous,unsigned rank) {
     if(rank>3) throw std::invalid_argument("Kurumi belongs to the ordinary four-rank route");
-    auto& s=state_.boss;s.position.current=s.position.previous={3072,1296};
+    Snapshot next;next.boss=previous;auto& s=next.boss;
+    s.phase=0;s.mode=0;s.patterns_or_bonus=0;s.phase_frame=0;s.damage=0;
+    s.position.velocity={};s.small[0].alive=s.small[1].alive=0;s.timed_out=1;
+    s.position.current=s.position.previous={3072,1296};
     s.sprite=0;s.hitbox_radius={384,384};
     // Actual rank_select stack order: Easy255, Normal128, Hard32, Lunatic8.
     // Extra never loads this ordinary Stage2 boss and is not a fifth entry.
     constexpr std::uint8_t periods[]{255,128,32,8};s.additional[0]=periods[rank];
+    // HP, angle, end HP, other additional bytes and explosion metadata
+    // survive boss_reset. The separate stage actor clear owns ray records.
+    return next;
+}
+System::System(unsigned rank):state_(prepare_stage2({},rank)) {}
+void System::apply_departure(const transition::Departure& d) {
+    auto& s=state_.boss;s.phase_frame=d.frame;s.homing=d.homing;
+    s.palette_tone=d.palette_tone;s.palette_changed=d.palette_changed;
 }
 void System::update(const Context& c,bullet::System& bullets,gather::System& gathers,
                     spark::System& sparks,randring::SharedRandomRing& random,const Sink& sink) {

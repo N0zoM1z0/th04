@@ -2,6 +2,10 @@
 #include "motion.hpp"
 
 namespace th04::portable::player {
+// Original player_update decrements this byte before collision handling.
+inline std::uint8_t invincibility_after_tick(std::uint8_t time) {
+    return time ? static_cast<std::uint8_t>(time-1) : 0;
+}
 inline constexpr std::uint16_t up = 0x0001;
 inline constexpr std::uint16_t down = 0x0002;
 inline constexpr std::uint16_t left = 0x0004;

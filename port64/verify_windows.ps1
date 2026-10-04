@@ -49,6 +49,18 @@ Get-ChildItem -LiteralPath $stage2Dir -Filter '*.bmp' | ForEach-Object {
 if ($stage2Images.Count -ne 32) { throw 'Missing Stage 2 visual checkpoints.' }
 $stage2Counters = @($stage2Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Stage2 *' })
 if ($stage2Counters.Count -ne 36) { throw 'Missing Stage 2 scenario counters.' }
+$kurumiDir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'kurumi-frames')).FullName
+Write-Host 'Running eight natural Kurumi battle and departure scenarios...'
+$kurumiLines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --kurumi-screenshots $kurumiDir 2>&1)
+if ($LASTEXITCODE -ne 0) { throw "Kurumi scenarios failed: $kurumiLines" }
+$kurumiLines | Set-Content -LiteralPath (Join-Path $outDir 'kurumi.log')
+$kurumiImages = @{}
+Get-ChildItem -LiteralPath $kurumiDir -Filter '*.bmp' | ForEach-Object {
+    $kurumiImages[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+if ($kurumiImages.Count -ne 72) { throw 'Missing Kurumi visual checkpoints.' }
+$kurumiCounters = @($kurumiLines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Kurumi *' })
+if ($kurumiCounters.Count -ne 80) { throw 'Missing Kurumi scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -56,8 +68,9 @@ $receipt = @{
     font_sha256=(Get-FileHash -LiteralPath $fontFile -Algorithm SHA256).Hash.ToLowerInvariant()
     dialog_fixture_bmp_sha256=$images; dialog_fixture_counters=$counters
     stage2_fixture_bmp_sha256=$stage2Images; stage2_fixture_counters=$stage2Counters
+    kurumi_fixture_bmp_sha256=$kurumiImages; kurumi_fixture_counters=$kurumiCounters
     observed_utc=[DateTime]::UtcNow.ToString('o')
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count))
+Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count))

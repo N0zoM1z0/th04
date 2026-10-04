@@ -28,6 +28,9 @@ struct Backdrop {
     std::int16_t mask_cel=0;
 };
 Backdrop backdrop(const orange::Snapshot&);
+// Stage2 setup resets the selected BOSS fields and two small alive flags.
+// Process-global palette/clock resets belong to stage session initialization.
+Snapshot prepare_stage2(orange::Snapshot previous,unsigned rank);
 // Actual rays stay within the default640x400 clip. This raster uses the
 // original16-bit fixed-point line stepping; generalized clipping is separate.
 std::vector<motion::Point> ray_pixels(motion::Point target,motion::Point origin);
@@ -39,6 +42,9 @@ public:
     void update(const Context&,bullet::System&,gather::System&,spark::System&,
                 randring::SharedRandomRing&,const Sink& sink={});
     void prepare_render(std::uint16_t frame);
+    void apply_departure(const transition::Departure&);
+    void set_palette_zero(std::array<std::uint8_t,3> value) { state_.boss.palette_zero=value; }
+    void set_invincibility(std::uint8_t value) { state_.boss.invincibility=value; }
     const std::vector<Draw>& draws() const { return draws_; }
 private:
     Snapshot state_{};

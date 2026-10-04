@@ -48,7 +48,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
     midboss_ = midboss::System{};midboss2_.reset();
-    orange_=orange::System{};circles_=circle::System{};
+    orange_=orange::System{};kurumi_.reset();kurumi_active_=false;player_invincibility_=64;circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
@@ -59,11 +59,18 @@ void State::start_orange_after_dialog() {
     if (!stage_ || orange_active_ || midboss_.snapshot().active) throw std::logic_error("invalid Orange dialog handoff");
     orange_active_=true;
 }
+void State::start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero) {
+    if(stage_id_!=1 || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !kurumi_)
+        throw std::logic_error("invalid Kurumi dialog handoff");
+    // Stage2 BFNT palette loading replaces the preceding boss color0.
+    kurumi_->set_palette_zero(palette_zero);kurumi_active_=true;
+}
 void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     if(!next_stage_requested_ || stage_id_!=0 || application_->resident().stage!=1)
         throw std::logic_error("Stage2 actor preparation requires its actual departure request");
     // Validate before changing the live owners or consuming process random.
     auto next=std::make_unique<stage::Program>(standard);
+    auto boss=kurumi::prepare_stage2(orange_.snapshot(),rank_);
     session::initialize_actors({player_,shots_,enemies_,bullets_,sparks_,gathers_,
         circles_,items_,score_,scoreboard_,ring_,drops_},[this] {
             return static_cast<std::uint8_t>(application_->next_process_random());
@@ -71,6 +78,12 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     stage_=std::move(next);stage_id_=1;frames_=0;
     midboss2::Snapshot next_midboss;next_midboss.actor=session::prepare_stage2_midboss(midboss_.snapshot());
     midboss2_.emplace(next_midboss);
+    // These globals are reset by stage_runtime_init/common stage setup,
+    // outside boss_reset. Palette loading finishes at tone100.
+    boss.boss.background=orange::Background::tiles;boss.boss.slowdown=1;
+    boss.boss.shake_x=boss.boss.shake_y=0;boss.boss.bombing_disabled=0;
+    boss.boss.palette_tone=100;boss.boss.invincibility=64;
+    player_invincibility_=64;kurumi_.emplace(boss);kurumi_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
@@ -80,7 +93,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     score_events_.clear();enemy_events_.clear();bullet_events_.clear();
     midboss_events_.clear();orange_events_.clear();item_events_={};
     // Score/power/performance/resident statistics and MAIN generation/seed
-    // persist. Asset replacement and Kurumi are separate consumers;
+    // persist. Asset replacement has a separate owner;
     // never run the Stage1 midboss callback under the new stage identity.
 }
 void State::finish_post_boss_dialog() {
@@ -93,7 +106,7 @@ void State::apply_clear_bonus() {
     bonus_context_.graze=bullets_.snapshot().graze;
     bonus_context_.point_items=score_.stage_point_items_collected;
     bonus_context_.remaining_lives=score_.remaining_lives;
-    bonus_context_.defeated_in_time=orange_.snapshot().patterns_or_bonus;
+    bonus_context_.defeated_in_time=boss_snapshot().patterns_or_bonus;
     constexpr std::uint8_t minimum[]{4,11,20,22,16},maximum[]{16,24,32,34,20};
     bonus::State state;state.score_delta=score_.score_delta;state.bombs=score_.remaining_bombs;
     state.performance=performance_;state.minimum=minimum[rank_];state.maximum=maximum[rank_];
@@ -116,10 +129,10 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         context=suspended_context_;bullet_context=suspended_bullets_;pull_items=suspended_pull_items_;
     } else {
         enemy_events_.clear();bullet_events_.clear();midboss_events_.clear();orange_events_.clear();
-        if(orange_active_) {
-            palette_tone_before_frame_=orange_.snapshot().palette_tone;
-            orange_background_phase_=orange_.snapshot().phase;
-            orange_background_frame_=orange_.snapshot().phase_frame;
+        if(boss_active()) {
+            palette_tone_before_frame_=boss_snapshot().palette_tone;
+            orange_background_phase_=boss_snapshot().phase;
+            orange_background_frame_=boss_snapshot().phase_frame;
         }
         context.player=player_.position().current;context.rank=rank_;context.performance=performance_;
         context.scroll_delta=scroll_delta;context.frame_mod2=frames_%2;context.frame_mod4=frames_%4;
@@ -133,23 +146,24 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     if(!resumed) {
         // STD dispatch precedes player movement; enemies created here can run
         // their first setup/move instructions later in this same frame.
-        if (stage_ && !orange_active_) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_state().active)) {
+        if (stage_ && !boss_active()) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_state().active)) {
             enemies_.add(spawn,context,ring_);
         }
-        if (stage_ && !orange_active_) {
+        if (stage_ && !boss_active()) {
             if(midboss2_) midboss2_->activate(static_cast<std::uint16_t>(frames_));
             else midboss_.activate(static_cast<std::uint16_t>(frames_));
         }
         // MAIN's loop calls player_update before items_update. A pickup therefore
         // sees the player's new position for this frame, not the preceding one.
         circles_.update();sparks_.update();
+        player_invincibility_=player::invincibility_after_tick(player_invincibility_);
         player_.update(held_input, shift);
         shots_.update((held_input & shot::input_shot) != 0, playchar_, shot_type_, score_.power,
                       player_.position(), ring_, homing_target_);
         context.player = player_.position().current;
         bullet_context.player=context.player;bullet_context.rank=rank_;bullet_context.performance=performance_;
         bullet_context.frame_mod2=context.frame_mod2;bullet_context.turbo=turbo_;
-        if (orange_active_) bullet_context.invincibility=orange_.snapshot().invincibility;
+        bullet_context.invincibility=player_invincibility_;
         constexpr std::uint16_t graze_scores[]{100,250,400,500,2560};
         bullet_context.graze_score=graze_scores[rank_];
         const auto score_before=bullets_.snapshot().score_delta;
@@ -203,12 +217,15 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             }
         }
     } // Prefix executes once even if the dialog suspends this frame.
-    if(orange_active_ && orange_.snapshot().phase==255) {
+    if(boss_active()) {
+        if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
+    }
+    if(boss_active() && boss_snapshot().phase==255) {
         if(!departure_) {
-            transition::Departure d;d.frame=orange_.snapshot().phase_frame;
+            transition::Departure d;d.frame=boss_snapshot().phase_frame;
             d.stage=application_->resident().stage;d.stage_ascii=application_->resident().stage_ascii;
             d.graze=application_->resident().graze;d.stage_graze=bullets_.snapshot().graze;
-            d.homing=orange_.snapshot().homing;departure_=d;
+            d.homing=boss_snapshot().homing;departure_=d;
         }
         transition::update_departure(*departure_,overlay_,!resumed && !clear_bonus_,[&](const transition::Event& e) {
             switch(e.kind) {
@@ -224,13 +241,13 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             case transition::Kind::delay:orange_events_.push_back({orange::EventType::delay,{},1,0});break;
             }
         });
-        orange_.apply_departure(*departure_);
+        if(kurumi_active_) kurumi_->apply_departure(*departure_);else orange_.apply_departure(*departure_);
         if(departure_->blocked) {
             suspended_context_=context;suspended_bullets_=bullet_context;suspended_pull_items_=pull_items;
             frame_suspended_=true;post_boss_dialog_pending_=true;return;
         }
         frame_suspended_=false;dialog_finished_=false;homing_target_.reset();
-    } else if (orange_active_) {
+    } else if (boss_active()) {
         orange::Context boss_context;boss_context.frame=static_cast<std::uint16_t>(frames_);
         boss_context.bullets=bullet_context;boss_context.power=score_.power;
         boss_context.hit=[&](motion::Point center,motion::Point radius) {
@@ -240,22 +257,26 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             for (unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
             return result.damage;
         };
-        const auto before=orange_.snapshot().score_delta;
-        orange_.update(boss_context,bullets_,gathers_,sparks_,ring_,[&](const orange::Event& event) {
+        const auto before=boss_snapshot().score_delta;
+        const auto sink=[&](const orange::Event& event) {
             orange_events_.push_back(event);
-            if (event.type==orange::EventType::circle) circles_.add(event.position);
+            if (event.type==orange::EventType::circle) circles_.add(event.position,event.count!=0);
             if (event.type==orange::EventType::item) items_.add(event.position,static_cast<item::Type>(event.value));
-        });
-        circles_.set_color(orange_.snapshot().circle_color);
-        score_.score_delta+=orange_.snapshot().score_delta-before;
-        const auto target=orange_.snapshot().homing;
+        };
+        if(kurumi_active_) kurumi_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
+        else orange_.update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
+        player_invincibility_=boss_snapshot().invincibility;
+        circles_.set_color(boss_snapshot().circle_color);
+        score_.score_delta+=boss_snapshot().score_delta-before;
+        const auto target=boss_snapshot().homing;
         if (target.x==-15984 && target.y==-15984) homing_target_.reset();else homing_target_=target;
     }
     item_events_ = items_.update(score_, player_.position().current, pull_items, 0);
     gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
-    if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
+    if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
+    else if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
     if (midboss_state().active) {
         if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
     }

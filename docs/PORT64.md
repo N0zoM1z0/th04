@@ -1376,3 +1376,95 @@ and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those
 systems become runnable. Full gameplay is the completion condition, not an
 exhaustive source-renaming pass.
+
+
+## Kurumi battle and departure integration
+
+The native GUI now continues from the actual Stage2 pre-dialog gate through
+Kurumi battle, post-dialog, clear bonus and departure. Previously it held after
+the pre-dialog despite the separately verified boss and renderer. The next held
+frontier is Stage3 resource loading. This is a native integration slice; player
+death/Bomb, full HUD/audio, later stages, Ending and saving remain incomplete.
+Semantic stays paused unless a specific port ambiguity needs clarification.
+
+Original MAIN13A9:A4D1..A517 `boss_reset` clears phase/mode/pattern/frame,
+velocity, damage and the two small explosion alive flags. HP/angle/endHP,
+other additional bytes and all remaining explosion metadata survive, including
+the big alive flag. Stage2 setupA623..A6F5 installs current/previous3072,1296,
+sprite0, hitbox384,384 and rank periods255,128,32,8. The portable factory retains
+these owners from Orange, while the separately observed stage runtime resets
+slowdown1, shake0, bombing-disabled0 and invincibility64. Common stage0675
+stores palette tone100 after loading. The new BFNT palette replaces color0
+before Kurumi activates; at clock320 Kurumi itself sets96,0,0 as the existing
+independent core controls attest. Copying all preceding globals would retain
+Orange's defeat slowdown/invincibility/palette rather than the new stage values.
+
+1,024 original CPU retained-marker setup controls compare complete24-byte Boss,
+16 additional and48 explosion bytes plus hitbox/timeout.256 controls execute
+only the original player countdown prefix0AAF:5FD4..5FDE, ending before hit/death
+handling. They agree Linux/Wine/UBSan/actual Windows. A separate predecessor
+control actually executes stage_runtime06E0 from speed3/shake17,-19/Bomb255/
+invincibility255 and observes1,0,0,0,64. File/BFNT/CDG/hardware requests remain
+adapters. A private source-built driver also checks the new retained metadata
+and reset globals after four natural Stage1 departures; it is an integration
+check, not another independent original Oracle.
+
+The gameplay owner now dispatches the active ordinary boss, uses real shots,
+bullets/gathers/sparks/items/score and prepares the foreground exactly once per
+simulation frame. Player invincibility decrements once in the frame prefix and
+is shared with boss/bullet owners; a suspended post-dialog frame does not repeat
+that prefix. Rendering composes Stage2's opaque picture at32,96, its own BB mask,
+the TDW color0 rectangles through physical row399, actual stage sprites and the
+fixed-point ray pixels already checked in the previous slice. Full host redraw
+continues to replace PC-98 dirty-tile/VRAM hardware operations.
+
+Eight natural Reimu/Marisa Normal/Lunatic routes vary held shooting during the
+Kurumi battle, exercising both defeat and timeout. Neither phase/RNG/actor pools
+are forced. Each records nine checkpoints and asserts frozen dialog actors/RNG/
+invincibility, post-dialog continuation, exactly one bonus/fade/next request,
+416/488 departure and three inert advances at the Stage3 frontier. Resident
+stage/ascii become2 but resource stage remains1; MAIN generation remains2.
+Timeout receives no timely-clear award. Rendering and counters agree across
+Linux GNU8.4, cross-built MinGW13 PE32+ under Wine, optimized GNU UBSan/bounds
+and native Windows. All15 contracts pass. Total168 BMPs/188 counters include
+72 new Kurumi images/80 counters; prior96 BMPs/108 counters are unchanged.
+
+Independent Python FAT/PAR decoding verifies57,188 opaque portrait pixels and
+86,016 selected unobstructed opaque-CDG/colorfill pixels across the new battle
+checkpoints. The latter uses the original phase2 red color0, lower picture side
+bands, bottom physical rows384..399 and idle-route upper rows. Shooting can
+cover upper rows, so those are excluded from shot controls. This checks selected
+asset/palette composition, not full original VRAM. A disposable BOSS output byte
+mutation and one selected backdrop pixel mutation both fail their comparators;
+injected original-hook failures also propagate.
+
+Current Linux reexecutes all7,204 foreground/2,816 backdrop/620 complete line
+mask controls, matching v1268. Three current builds replay the41,488 independently
+recorded original core states with identical digests; that regression does not
+reexecute original updates. Actual Windows additionally runs the new setup/
+countdown controls and every native visual scenario. No original full Stage2,
+physical GRCG, GUI frame pacing, native Windows compiler or DOS exact claim.
+
+```sh
+python3 port64/verify_kurumi_setup.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-kurumi-contracts \
+  --output-dir .analysis/port64/kurumi-live-v1269/setup-linux-final
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-kurumi-live-v1269-final/receipt.json
+```
+
+Source manifest:
+`1fcba424ea85e628b7f7df71e3183bd861f0a5e920645fabccf0cc60d0df52d1`.
+Receipts: `.analysis/port64/kurumi-live-v1269/{target-live,integration-review,resources-live,negative-live,native-windows-receipt,native-windows-setup,windows-export-receipt}.json`,
+`setup-{linux,windows,ubsan}-final/receipt.json`,
+`core-{linux,windows,ubsan}-final/receipt.json`, `render-linux/receipt.json`,
+and `.analysis/port64/verification-kurumi-live-v1269-final/receipt.json`.
+Windows root `start-th04-port64.bat` and native EXE now use this v1269 preview;
+21 other existing files remain unchanged. No window launched. Native builds
+use incremental CMake; the DOS product did not require rebuilding. Next connect
+Stage3 resources/actors/midboss, then Elly and its dialogs.

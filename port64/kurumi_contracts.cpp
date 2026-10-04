@@ -1,4 +1,5 @@
 #include "kurumi.hpp"
+#include "player_motion.hpp"
 #include <algorithm>
 namespace k=th04::portable::kurumi;
 #include "circles.hpp"
@@ -168,9 +169,34 @@ void line_vectors(const char* path) {
     }
 }
 
+void setup_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open retained Kurumi setup fixtures");int rank;
+    while(in>>rank) {
+        auto previous=read(in);
+        for(auto* e:{&previous.small[0],&previous.small[1],&previous.big}) {
+            Wire w;for(unsigned i=0;i<16;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+            e->alive=static_cast<std::uint8_t>(w.byte());e->age=static_cast<std::uint8_t>(w.byte());
+            e->center=w.point();e->radius=w.point();e->delta=w.point();
+            const auto unused=w.byte();e->unused=static_cast<std::int8_t>(unused<128 ? int(unused) : int(unused)-256);
+            e->angle_offset=static_cast<std::uint8_t>(w.byte());
+        }
+        const auto state=k::prepare_stage2(previous,unsigned(rank));const auto& s=state.boss;Bytes v;
+        motion(v,s.position);word(v,static_cast<std::uint16_t>(s.hp));v.push_back(s.sprite);v.push_back(s.phase);
+        word(v,static_cast<std::uint16_t>(s.phase_frame));for(auto n:{s.damage,s.mode,s.angle,s.patterns_or_bonus}) v.push_back(n);
+        word(v,static_cast<std::uint16_t>(s.end_hp));hex(v);hex(Bytes(s.additional.begin(),s.additional.end()));
+        v.clear();for(const auto& e:s.small) explosion(v,e);explosion(v,s.big);hex(v);
+        std::cout<<s.hitbox_radius.x<<' '<<s.hitbox_radius.y<<' '<<+s.timed_out<<'\n';
+    }
+}
+
 }
 int main(int argc,char** argv) {
     try {
+        if(argc==3 && std::string(argv[1])=="--setup-vectors") { setup_vectors(argv[2]);return 0; }
+        if(argc==2 && std::string(argv[1])=="--invincibility-vectors") {
+            for(unsigned i=0;i<256;++i) std::cout<<+th04::portable::player::invincibility_after_tick(static_cast<std::uint8_t>(i))<<'\n';
+            return 0;
+        }
         if(argc==2 && std::string(argv[1])=="--setup") {
             for(unsigned rank=0;rank<4;++rank) {
                 k::System system(rank);const auto& s=system.snapshot().boss;Bytes v;

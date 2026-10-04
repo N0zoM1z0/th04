@@ -8,6 +8,7 @@ palette composition; this is not a complete original-game screenshot Oracle.
 import argparse
 from datetime import datetime, timezone
 import hashlib
+import itertools
 import json
 from pathlib import Path
 import struct
@@ -112,15 +113,58 @@ def verify(hdi, frames, target):
                 limits='Original BFNT/CDG/BB loader requests intercepted. Native composition checked against asset pixels, not original VRAM; no full Stage2 route, hardware timing, GUI pacing or DOS exact claim.')
 
 
+def verify_battle_backdrop(hdi, frames):
+    assets = main_assets(hdi)
+    body, bmt = assets['ST01BK.CDG'], assets['ST01.BMT']
+    plane, width, height = struct.unpack_from('<3H', body)
+    if (plane, width, height, body[10], body[11], len(body)) != (5376, 384, 112, 1, 0, 21520):
+        raise ValueError('Stage2 backdrop archive geometry changed')
+    start = 32 + struct.unpack_from('<H', bmt, 28)[0]
+    raw = bmt[start:start+48]
+    palette = [tuple((raw[i+c] >> 4)*17 for c in (1, 2, 0)) for i in range(0, 48, 3)]
+    # Original Kurumi entry sets color0 to96,0,0 at clock320; the
+    # independent state CPU controls attest this before these phase2 frames.
+    palette[0] = (102,0,0)
+    checks = []
+    for rank in ('normal', 'lunatic'):
+        for character in ('reimu', 'marisa'):
+            for shooting in ('shot', 'idle'):
+                path = frames / f'{rank}-{character}-{shooting}-3.bmp'
+                with Image.open(path) as image:
+                    image = image.convert('RGB'); checked = 0
+                    # At the first live spawnray checkpoint the lower eight
+                    # picture side bands have no foreground actors. Decode original
+                    # archive planes directly, including color-zero pixels.
+                    for y in range(104, 112):
+                        for x in itertools.chain(range(96),range(288,384)):
+                            offset = (111-y)*48+x//8; mask = 0x80>>(x%8)
+                            color = sum(1<<p for p in range(4) if body[16+p*5376+offset]&mask)
+                            if image.getpixel((32+x,96+y)) != palette[color]:
+                                raise ValueError(f'Kurumi opaque backdrop differs: {path.name} {x},{y}')
+                            checked += 1
+                    # Original TDW footprint extends to physical row399,
+                    # beyond the ordinary playfield bottom383.
+                    for y in itertools.chain(range(16,32) if shooting=='idle' else (),range(384,400)):
+                        for x in range(32,416):
+                            if image.getpixel((x,y)) != palette[0]:
+                                raise ValueError(f'Kurumi colorfill differs: {path.name} {x},{y}')
+                            checked += 1
+                    checks.append(dict(image=path.name, checked_pixels=checked,bmp_sha256=sha(path.read_bytes())))
+    return dict(checks=checks,checked_pixels=sum(c['checked_pixels'] for c in checks),scope='Selected unobstructed opaque-CDG lower-row side bands and TDW color0 side bands in eight natural native battle checkpoints; independent archive decode, not original VRAM.')
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--target', type=Path, required=True)
     p.add_argument('--hdi', type=Path, required=True)
     p.add_argument('--frames', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--kurumi-frames', type=Path)
     a = p.parse_args()
     manifest, _ = source_manifest(Path(__file__).resolve().parents[1])
     receipt = verify(a.hdi, a.frames, a.target)
+    if a.kurumi_frames:
+        receipt['battle_backdrop'] = verify_battle_backdrop(a.hdi, a.kurumi_frames)
     after, _ = source_manifest(Path(__file__).resolve().parents[1])
     if manifest != after:
         raise ValueError('source changed during resource verification')
@@ -130,6 +174,8 @@ def main():
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(receipt, indent=2, sort_keys=True)+'\n')
     print('Stage2 resource requests and 57,188 native portrait pixels: PASS')
+    if a.kurumi_frames:
+        print(f"Kurumi selected backdrop/colorfill pixels: {receipt['battle_backdrop']['checked_pixels']} PASS")
 
 
 if __name__ == '__main__':
