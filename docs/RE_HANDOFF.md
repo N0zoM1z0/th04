@@ -211,6 +211,20 @@ item claim. See the
 
 ## Current state
 
+The follow-up 2026-10-05 cleanup retires 173 historical runtime image archives,
+42,362 completed native screenshot archives and 30 superseded Windows preview
+directories (v1260--v1289). Three lossless tar/zstd archives pass every member's
+SHA-256 readback before removal; 1,980 active build/input/package files retain
+their hashes. Net allocated space released is approximately 2.08 GiB, including
+archive and receipt overhead; Windows removes 624 MiB of old file contents.
+Current DOS products, all three x64 incremental caches, the published launchers,
+saves and v1290 Windows preview remain available. Archive manifests, hashes and
+restore commands are in
+`.analysis/cleanup/superseded-artifacts-20261005/receipt.json`. Historical disk
+and screenshot `.gz` paths now require tar restoration before the existing
+`gzip -d` step. Earlier archived Windows executables remain in their separate
+archive described below. Original CPU reference streams remain at their paths.
+
 The 2026-10-05 cleanup losslessly compresses 12 historical x64 rendering
 traces and archives 49 superseded Windows preview executables (v1281 and
 earlier), reclaiming 745 MiB net across Linux and Windows. Every archived
