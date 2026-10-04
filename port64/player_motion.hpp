@@ -14,6 +14,9 @@ public:
     const motion::Motion& position() const { return position_; }
     std::uint16_t previous_input() const { return previous_input_; }
     void update(std::uint16_t held_input, bool shift);
+    // stage_runtime_init writes four position words; velocity/input latch
+    // belong to player_update and are deliberately retained across stages.
+    void reset_stage_position();
 
 private:
     motion::Motion position_{};

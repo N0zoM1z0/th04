@@ -26,6 +26,10 @@ public:
     void update(std::uint16_t held_input, bool shift, bool pull_items = false,
                 motion::Subpixel scroll_delta = 0,stage::Background* background=nullptr);
     void load_stage(const stage::Program::Bytes& standard);
+    // Actor/STD preparation for the already requested Stage2. The front end
+    // must still replace its sprite/map/palette owners before consuming this.
+    void prepare_next_stage_actors(const stage::Program::Bytes& standard);
+    bool awaiting_stage2_midboss() const { return stage_id_==1 && frames_==2600; }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }

@@ -998,6 +998,82 @@ Receipts: `leave-v1263/cpu-linux-attested-final/receipt.json`,
 `verification-leave-v1263-final/receipt.json`. Semantic remains stopped;
 next port the actual Stage2 session/resource/actor boundary.
 
+## Stage actor-session preparation
+
+The next-stage actor API now operates on the existing MAIN owners instead of
+creating a new gameplay session. It clears the seven implemented entity pools,
+resets player current/previous position, firing time/style, stage point/dream
+counts, graze/zap and gather/circle setup. It preserves process-wide score/
+pending score, power/overflow/performance, input latch/velocity, shot volley and
+hit-spark cycles, bullet clear timer/template/counters, gather center and spark
+ring-offset high byte. Score HUD refresh does not drain pending awards.
+
+The original random call order is ring256 → item drop1 → spark angles96,
+all from the existing process LCG. Twenty-four double resets retain the same
+original machine and native owners between calls:706 draws, with no reseeding
+from target output. Stage2 preparation validates its STD before mutating owners
+or consuming RNG. The actual departure request is required; MAIN generation,
+resident statistics and score remain in the same application.
+
+Observed pinned MAIN load2000/isolated DS8000 owners: main01 unloaded0AAF
+runtime06E0..07AD, stage-state73DB..74A5, shots-reset593A..5953,
+ring1168..117F and sparks1824..1841; main03 unloaded13A9
+items9F8B..9FA7, midboss-reset642C..6453 and Stage2 setupA623..A6F5.
+Actual library IRand2000:2172 and score HUD6BA2 execute. Original stage-state
+clears nine complete physical extents, checked independently with upper EAX0
+on entry to the register-ABI REP STOSD helper. Native custom-entity/point-popup
+owners are absent; these target clear checks do not claim their implementation.
+Clipping/hardware, shot-level dispatch, item splashes, Bomb, thick lasers,
+point numbers and remaining HUD callees use explicit adapters.
+
+The Stage2 midboss seed changes start2600, HP750, sprite0, current/previous
+position3072,-512 and velocity0,16; inactive phase/frame/damage metadata stays.
+All256 phase-byte controls execute actual original midboss_reset and stage2_setup
+and compare the22-byte midboss state plus active flag. Boss/Kurumi callbacks,
+rank-dependent boss fields and resource consumers are not ported by this seed.
+Native MAIN holds before frame2600 so it cannot invoke the Stage1 callback
+under a Stage2 identity.
+
+All928 selected original CPU controls agree Linux GCC8.4, Wine-hosted MinGW13
+PE32+, optimized UBSan/bounds and actual Windows x64. There are648 isolated
+actor resets,24 retained double resets and256 midboss seeds. The checkpoints
+include selected persistent metadata, all96 spark angles, all256 ring samples,
+post-clear actor flag/position emptiness and score/HUD bytes. Rejected callback
+control remains mandatory; these are bounded state claims, not whole-session
+or DOS exactness claims. Identity remains candidate-local-attested.
+
+Four controlled native Normal/Lunatic character routes finish natural Stage1,
+retain its actual awards and then load original ST01.STD/ST01.MAP. They execute
+10,400 total Stage2 frames, reject invalid STD before mutation and stop at2600
+with midboss2 pending. Their counters agree Linux/Wine/UBSan/native Windows.
+This is actor/STD/background-state integration without Stage2 visual resources,
+full original gameplay or GUI pacing comparison. Thirteen contracts and the
+previous64 Stage1 BMPs/72 counters agree all hosts and remain identical to v1263.
+
+The GUI still ends at the unloaded Stage2 request. The new actor API is used
+only by controlled integration until its caller replaces stage-owned sprites,
+MAP/MPN/palette/portraits/dialog state and joins midboss2/Kurumi. Shared player
+resources remain resident. Test package `port64-preview/v1264` contains current
+x64 executables, native Windows verification and private stage fixtures; the
+root GUI executable remains v1263. DOS source/assets/launchers are unchanged.
+Do not advertise full Stage2 gameplay based on this preparation API.
+
+```bash
+python3 port64/verify_session.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-session-contracts \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --output-dir .analysis/port64/session-v1264/cpu-linux-final
+```
+
+Receipts: `session-v1264/target-owners.json`,
+`cpu-{linux,windows,ubsan}-final/receipt.json`, `native-windows-session.json`,
+`native-windows-receipt.json`, `integration-review.json`, and
+`verification-session-v1264-final/receipt.json`. Initial invalid-style fixtures
+were rejected by the existing shot-checkpoint guard; valid styles are now seeded
+explicitly. The target/native actor code was not weakened to accept corruption.
+Semantic remains stopped. Next implement Stage2 resources and midboss2.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -1010,7 +1086,8 @@ Orange state/attacks/foreground and pre/post-boss dialog now run in ordinary Sta
 Ordinary Stage1 now also consumes the actual clear bonus and displays its tally.
 Ordinary frame score drain and extends now join MAIN.
 Post-dialog frame continuation and stage-leave overlay now reach the next-stage
-request. Next connect Stage2 session/resources and its bosses/midbosses, then
+request. Actor-session preparation and pre-midboss Stage2 STD/MAP integration
+are checked separately. Next connect Stage2 visual resources and midboss2/Kurumi, then
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

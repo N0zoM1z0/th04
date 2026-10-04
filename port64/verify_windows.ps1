@@ -14,7 +14,7 @@ if (Test-Path -LiteralPath $OutputDirectory) {
 $outDir = (New-Item -ItemType Directory -Path $OutputDirectory).FullName
 $names = @('contracts', 'live-contracts', 'shot-contracts', 'enemy-contracts',
            'bullet-contracts', 'effect-contracts', 'midboss-contracts',
-           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts')
+           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts')
 $contracts = @()
 foreach ($name in $names) {
     $exe = Join-Path $exeDir ("th04-port64-$name.exe")
@@ -47,4 +47,4 @@ $receipt = @{
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host 'PASS: twelve contracts and 64 natural dialogue checkpoints.'
+Write-Host 'PASS: thirteen contracts and 64 natural dialogue checkpoints.'

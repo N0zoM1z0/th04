@@ -1,4 +1,5 @@
 #include "main_state.hpp"
+#include "stage_session.hpp"
 #include <stdexcept>
 #include <algorithm>
 
@@ -58,6 +59,29 @@ void State::start_orange_after_dialog() {
     if (!stage_ || orange_active_ || midboss_.snapshot().active) throw std::logic_error("invalid Orange dialog handoff");
     orange_active_=true;
 }
+void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
+    if(!next_stage_requested_ || stage_id_!=0 || application_->resident().stage!=1)
+        throw std::logic_error("Stage2 actor preparation requires its actual departure request");
+    // Validate before changing the live owners or consuming process random.
+    auto next=std::make_unique<stage::Program>(standard);
+    session::initialize_actors({player_,shots_,enemies_,bullets_,sparks_,gathers_,
+        circles_,items_,score_,scoreboard_,ring_,drops_},[this] {
+            return static_cast<std::uint8_t>(application_->next_process_random());
+        });
+    stage_=std::move(next);stage_id_=1;frames_=0;
+    midboss_=midboss::System(session::prepare_stage2_midboss(midboss_.snapshot()));
+    orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
+    overlay_cell_={transition::TextKind::character,4,1,32,5};
+    frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
+    next_stage_requested_=false;leave_text_replaced_=false;
+    palette_tone_before_frame_=100;
+    bonus_context_.stage=1;bonus_context_.resource_stage=1;
+    score_events_.clear();enemy_events_.clear();bullet_events_.clear();
+    midboss_events_.clear();orange_events_.clear();item_events_={};
+    // Score/power/performance/resident statistics and MAIN generation/seed
+    // persist. Asset replacement and midboss2/Kurumi are separate consumers;
+    // never run the Stage1 midboss callback under the new stage identity.
+}
 void State::finish_post_boss_dialog() {
     if(!post_boss_dialog_pending_ || clear_bonus_) throw std::logic_error("invalid stage-clear bonus handoff");
     dialog_finished_=true;post_boss_dialog_pending_=false;
@@ -80,6 +104,7 @@ void State::apply_clear_bonus() {
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     score_events_.clear();
     if(next_stage_requested_) return; // Stage2 resources have a separate owner.
+    if(awaiting_stage2_midboss()) return;
     const bool resumed=frame_suspended_;
     if(resumed && !dialog_finished_) return;
     enemy::Context context;

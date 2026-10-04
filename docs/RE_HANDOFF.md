@@ -19,6 +19,28 @@ then leave replaces bonus TRAM and clears the callback after reaching zero.
 Graze/lives/Bombs and resident stage/ascii are published. Semantic remains stopped.
 The current frontier is the unloaded Stage2 resource request; simulation freezes
 there until the real session/resource/midboss/Kurumi owners are implemented.
+Stage actor preparation is now implemented behind `prepare_next_stage_actors()`:
+seven existing actor pools reset while pending/decimal score, power/performance,
+input/velocity and process metadata persist. The same MAIN LCG supplies ring256,
+drop1 and spark96 draws. Four controlled native routes continue natural Stage1
+through real Stage2 STD/MAP to frame2600, where the unported midboss2 callback
+is held. The GUI does not call this API yet: replace stage sprite/map/palette/
+dialog owners and join midboss2 before changing the current Stage1 preview.
+MAIN 0AAF:06E0/73DB/593A/1168/1824 and13A9:9F8B/642C/A623 selected
+reset/seed fields agree928 original CPU controls on Linux/Wine/UBSan and actual
+Windows, including24 retained double resets. Original nine raw clear extents
+are checked with EAX upper word0; custom/popup/hardware/Bomb/other callees
+remain outside native actor scope. Thirteen contracts and previous64 natural
+BMPs remain unchanged. Source/build test package: `port64-preview/v1264`;
+root GUI executable remains the v1263 preview.
+Actor receipts: `.analysis/port64/session-v1264/cpu-{linux,windows,ubsan}-final/receipt.json`,
+`native-windows-session.json`, `native-windows-receipt.json`,
+`integration-review.json` and `.analysis/port64/verification-session-v1264-final/receipt.json`.
+Next join Stage2 visual resources and midboss2, then Kurumi. Preserve scalar
+metadata outside cleared pools; reconstructing whole owners from defaults would
+incorrectly reset Reimu volley/hit-spark cycles, bullet clear/template metadata,
+gather center and spark ring-offset high byte. Current scope:
+[Stage actor-session preparation](PORT64.md#stage-actor-session-preparation).
 Current scope: [Stage enter and departure](PORT64.md#stage-enter-and-departure).
 MAIN main01 0AAF:62B3/6349/6287 and main03 13A9:ACB3..AE86 agree4,331
 controls/7,265 trace records on Linux/Wine/UBSan and actual Windows. Three

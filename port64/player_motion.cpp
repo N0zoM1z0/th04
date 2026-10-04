@@ -27,6 +27,9 @@ Movement::Movement() {
     position_.current = {192 * 16, 320 * 16};
     position_.previous = position_.current;
 }
+void Movement::reset_stage_position() {
+    position_.current=position_.previous={192*16,320*16};
+}
 
 void Movement::update(std::uint16_t held_input, bool shift) {
     auto input = static_cast<std::uint16_t>(held_input & movement_mask);

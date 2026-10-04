@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/stage_session.hpp",
+    "port64/stage_session.cpp",
+    "port64/session_contracts.cpp",
+    "port64/verify_session.py",
     "port64/stage_transition.hpp",
     "port64/stage_transition.cpp",
     "port64/transition_contracts.cpp",
@@ -201,13 +205,20 @@ def main() -> int:
     windows_score = windows_dir / "th04-port64-score-contracts.exe"
     linux_transition=linux_dir / "th04-port64-transition-contracts"
     windows_transition=windows_dir / "th04-port64-transition-contracts.exe"
-    for path in (linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    linux_session=linux_dir / "th04-port64-session-contracts"
+    windows_session=windows_dir / "th04-port64-session-contracts.exe"
+    for path in (linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_session_output=run([str(linux_session)])
+    windows_session_output=run([args.windows_runner,str(windows_session)],env=runner_env)
+    expected_session="stage_actors=REINITIALIZED pending_score=PRESERVED rng_draws=353 stage2_midboss=2600 pointer_bits=64"
+    if linux_session_output!=expected_session or windows_session_output!=expected_session:
+        raise ValueError("stage session actor contracts did not pass on both hosts")
     linux_contract_output = run([str(linux_contracts)])
     windows_contract_output = run(
         [args.windows_runner, str(windows_contracts)], env=runner_env
@@ -398,6 +409,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(linux_orange),
                 "dialog_contract_output": linux_dialog_output,
                 "dialog_contracts_sha256": sha256(linux_dialog),
+                "session_contract_output": linux_session_output,
+                "session_contracts_sha256": sha256(linux_session),
                 "transition_contract_output": linux_transition_output,
                 "transition_contracts_sha256": sha256(linux_transition),
                 "score_contract_output": linux_score_output,
@@ -427,6 +440,8 @@ def main() -> int:
                 "orange_contracts_sha256": sha256(windows_orange),
                 "dialog_contract_output": windows_dialog_output,
                 "dialog_contracts_sha256": sha256(windows_dialog),
+                "session_contract_output": windows_session_output,
+                "session_contracts_sha256": sha256(windows_session),
                 "transition_contract_output": windows_transition_output,
                 "transition_contracts_sha256": sha256(windows_transition),
                 "score_contract_output": windows_score_output,
@@ -481,7 +496,8 @@ def main() -> int:
             "ordinary completed frames drain score and feed extends into lives/performance/clear; "
             "post-dialog continuation completes its already entered actor frame, then enter/leave TRAM "
             "and416/488 departure reach the unloaded Stage2 resource request; "
-            "Stage2 session/resources and final/Extra departure, "
+            "Stage2 actor initialization and pre-midboss STD/MAP integration have separate CPU/native controls; "
+            "Stage2 visual resource integration, midboss2/Kurumi and final/Extra departure, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
