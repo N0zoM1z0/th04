@@ -1287,6 +1287,73 @@ backdrop, GUI battle and post-dialog continuation are the next bounded slice;
 the live preview still holds after the pre-Kurumi dialog. No new DOS exactness
 or complete original Stage2/gameplay claim follows. Semantic remains stopped.
 
+## Kurumi foreground and ray raster
+
+`port64/kurumi_render.cpp` now implements the original foreground at MAIN
+main01 `0AAF:6CA3..6E7A` and the backdrop request plan at `76FB..7756`.
+The next byte starts Orange's foreground. Shared explosion rendering is
+extracted into `orange::prepare_explosions`; both bosses retain their own
+foreground, sprite bank and circle geometry.
+
+Boss sprite coordinates use signed arithmetic shifts, while ray coordinates
+truncate signed division by16 before adding playfield32/16. Flag0 suppresses
+a ray; every other flag draws, including values the updater does not advance.
+Sprites0/12 animate with frame-mod16; sprites4/6 use frame-mod8; other sprites
+remain fixed. Damage selects white rendering and is retained. The phase254
+register expression pushes the calculated top before loading the sprite byte,
+so its Y is defined. Phase0 circles begin only after clock128, with color7
+and two color6 rings.
+
+The native ray raster orders endpoints byX and accumulates a slope quantized
+to16 fractional bits from8000h. Actual ray endpoints stay within the default
+640x400 screen clip; generalized clipped endpoints are outside this helper's
+scope and are rejected. Independent original CPU line controls execute
+`0000:1562..16FE` with in-screen endpoints and compare all32,000 mask bytes.
+Memory writes model RMW masks, not physical GRCG color/page/scroll state.
+Only this default-clip path is selected; adjacent alignment at16FF, the next
+function at1700 and the clipping helper are separate ownership.
+
+Background phase0/254 and early departure request all tiles. Phase1 requests
+the picture at32/96 with fill color0, copies the actual BB segment and requests
+mask cel from the arithmetic phase-clock shift. Later battle phases request
+the picture; later departure requests dirty tiles. The original colorfill
+`0AAF:3F80..3F98` and row kernel `7578..7584` write384x192 pixels from32/208
+and384x80 from32/16, covering104,448 pixels. This is a TDW address-footprint
+observation: that mode ignores CPU value bits. Using the RMW mask collector
+for this fill was rejected by the footprint comparison. Host background
+composition has not yet consumed this geometry.
+
+Across Linux GCC8.4, MinGW13 PE32+ under Wine, optimized GNU UBSan/bounds and
+actual Windows,7,204 foreground controls,2,816 backdrop request controls and
+620 line masks agree with the original. Compare complete48-byte explosions,
+156 ray bytes including retained padding, flash/aging/tone clocks and ordered
+sprite/circle/ray geometry. Original BOSS/additional-byte invariance is also
+asserted; native comparisons cover damage and the listed render state.
+Sprite/CDG/tile/color consumers remain adapters. A disposable one-bit change
+in a native ray mask fails immediately, and original hook rejection propagates.
+The shared extraction also passes900 original Orange foreground controls.
+Kurumi's41,488-record prior state trace replays on current Linux. Fifteen
+contracts and the previous96 BMPs/108 counters remain identical across hosts.
+
+```sh
+python3 port64/verify_kurumi_render.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-kurumi-contracts \
+  --output-dir .analysis/port64/kurumi-render-v1268/cpu-linux-full
+```
+
+Source manifest:
+`e0bf7972efdead82ba50d555011c9c873f47afc7ea75c690cfb2b97bd6ef0a02`.
+Receipts: `.analysis/port64/kurumi-render-v1268/target-render.json`,
+`cpu-{linux,windows,ubsan}-full/receipt.json`, `native-windows-render.json`,
+`negative-line.json`, `orange-render-linux/receipt.json`, `integration-review.json`
+and `.analysis/port64/verification-kurumi-render-v1268/receipt.json`.
+Windows package `port64-preview/v1268` contains the checked core. Root Windows
+files remain on v1266. Next account for preceding-stage retained Boss metadata,
+compose the Stage2 backdrop and connect Kurumi battle/post-dialog/departure.
+No new DOS exactness, physical GRCG or full Stage2/gameplay/FPS claim follows.
+Semantic remains stopped; the existing DOS source was sufficient for this slice.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -1302,7 +1369,8 @@ Post-dialog frame continuation and stage-leave overlay now reach the next-stage
 request. Actor-session preparation and Stage2 midboss/STD/MAP integration through the
 pre-Kurumi dialog gate are checked separately. Stage2 visual resources and its
 pre-battle dialog now join the live window. Kurumi state/attacks have independent
-CPU controls; next implement its rendering and join the battle/post-dialog, then
+CPU controls. Foreground/explosion/ray raster and backdrop requests now have
+independent controls; next join their composition and battle/post-dialog, then
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

@@ -117,6 +117,57 @@ void vectors(const char* path) {
         }
     }
 }
+void render_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Kurumi render fixtures");int frame;
+    while(in>>frame) {
+        const auto big_frame=m::wrap(number(in)),tone=m::wrap(number(in));const auto changed=number(in);
+        k::Snapshot initial;initial.boss=read(in);auto& s=initial.boss;
+        s.big_frame=big_frame;s.palette_tone=tone;s.palette_changed=static_cast<std::uint8_t>(changed);
+        for(auto* e:{&s.small[0],&s.small[1],&s.big}) {
+            Wire w;for(unsigned i=0;i<16;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+            e->alive=static_cast<std::uint8_t>(w.byte());e->age=static_cast<std::uint8_t>(w.byte());
+            e->center=w.point();e->radius=w.point();e->delta=w.point();
+            e->unused=static_cast<std::int8_t>(w.byte());e->angle_offset=static_cast<std::uint8_t>(w.byte());
+        }
+        for(auto& ray:initial.rays) {
+            Wire w;for(unsigned i=0;i<26;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+            ray.flag=static_cast<std::uint8_t>(w.byte());ray.unused=static_cast<std::uint8_t>(w.byte());
+            ray.target=w.point();ray.origin=w.point();ray.velocity=w.point();
+            for(auto& x:ray.padding) x=static_cast<std::uint8_t>(w.byte());
+        }
+        k::System system(initial);system.prepare_render(static_cast<std::uint16_t>(frame));const auto& state=system.snapshot();
+        Bytes bytes;for(const auto& e:state.boss.small) explosion(bytes,e);explosion(bytes,state.boss.big);hex(bytes);
+        std::cout<<state.boss.big_frame<<' '<<state.boss.palette_tone<<' '<<+state.boss.palette_changed<<' '<<+state.boss.damage<<' ';
+        bytes.clear();for(const auto& ray:state.rays) {
+            bytes.push_back(ray.flag);bytes.push_back(ray.unused);point(bytes,ray.target);point(bytes,ray.origin);point(bytes,ray.velocity);
+            bytes.insert(bytes.end(),ray.padding.begin(),ray.padding.end());
+        }
+        hex(bytes);std::cout<<system.draws().size()<<' ';
+        for(const auto& d:system.draws()) std::cout<<int(d.kind)<<' '<<d.left<<' '<<d.top<<' '<<d.pattern_or_radius<<' '<<+d.color<<' '<<d.end_left<<' '<<d.end_top<<' ';
+        std::cout<<'\n';
+    }
+}
+void background_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Kurumi background fixtures");int phase;
+    while(in>>phase) {
+        o::Snapshot s;s.phase=static_cast<std::uint8_t>(phase);s.phase_frame=m::wrap(number(in));const auto plan=k::backdrop(s);
+        const auto event=[](int kind,int x=0,int y=0,int value=0) { std::cout<<kind<<' '<<x<<' '<<y<<' '<<value<<' '; };
+        if(plan.kind==k::BackdropKind::all_tiles) { std::cout<<1<<' ';event(0); }
+        else if(plan.kind==k::BackdropKind::dirty_tiles) { std::cout<<1<<' ';event(1); }
+        else if(plan.kind==k::BackdropKind::picture) { std::cout<<1<<' ';event(2,32,96,0); }
+        else { std::cout<<3<<' ';event(2,32,96,0);event(3,plan.mask_cel);event(4); }
+        std::cout<<'\n';
+    }
+}
+void line_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Kurumi line fixtures");int x;
+    while(in>>x) {
+        const auto y=m::wrap(number(in)),end_x=m::wrap(number(in)),end_y=m::wrap(number(in));Bytes bits(32000);
+        for(auto pixel:k::ray_pixels({m::wrap(x),y},{end_x,end_y})) bits[unsigned(pixel.y)*80+unsigned(pixel.x)/8]|=static_cast<std::uint8_t>(0x80u>>(pixel.x&7));
+        hex(bits);std::cout<<'\n';
+    }
+}
+
 }
 int main(int argc,char** argv) {
     try {
@@ -130,6 +181,9 @@ int main(int argc,char** argv) {
             }
             return 0;
         }
+        if(argc==3 && std::string(argv[1])=="--render-vectors") { render_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--background-vectors") { background_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--line-vectors") { line_vectors(argv[2]);return 0; }
         if(argc==3 && std::string(argv[1])=="--vectors") { vectors(argv[2]);return 0; }
         require(argc==1,"usage: th04-port64-kurumi-contracts [--vectors FILE]");
         for(unsigned rank=0;rank<4;++rank) {

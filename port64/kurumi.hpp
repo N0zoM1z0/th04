@@ -20,6 +20,17 @@ using Context=orange::Context;
 using Event=orange::Event;
 using EventType=orange::EventType;
 using Sink=orange::Sink;
+using Draw=orange::Draw;
+using DrawKind=orange::DrawKind;
+enum class BackdropKind { all_tiles,dirty_tiles,picture,picture_and_tiles };
+struct Backdrop {
+    BackdropKind kind=BackdropKind::all_tiles;
+    std::int16_t mask_cel=0;
+};
+Backdrop backdrop(const orange::Snapshot&);
+// Actual rays stay within the default640x400 clip. This raster uses the
+// original16-bit fixed-point line stepping; generalized clipping is separate.
+std::vector<motion::Point> ray_pixels(motion::Point target,motion::Point origin);
 class System {
 public:
     explicit System(unsigned rank=1);
@@ -27,7 +38,10 @@ public:
     const Snapshot& snapshot() const { return state_; }
     void update(const Context&,bullet::System&,gather::System&,spark::System&,
                 randring::SharedRandomRing&,const Sink& sink={});
+    void prepare_render(std::uint16_t frame);
+    const std::vector<Draw>& draws() const { return draws_; }
 private:
     Snapshot state_{};
+    std::vector<Draw> draws_;
 };
 } // namespace th04::portable::kurumi

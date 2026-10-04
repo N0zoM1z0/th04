@@ -47,10 +47,28 @@ seeds and all48 dialog controls/76 scenes have independent CPU checks with
 graphics/file/audio consumers intercepted;57,188 opaque Kurumi portrait pixels
 agree with independently decoded archive pixels. Root Windows preview and
 `port64-preview/v1266` use this Stage1/Stage2 slice. Kurumi's state/attack core is
-now implemented separately; next join rendering/battle/post-dialog, then later
+now implemented separately; next join render composition/battle/post-dialog, then later
 stages/death/Bomb/HUD/audio/save/Ending.
 Semantic remains stopped unless a concrete port ambiguity requires it.
-Current core scope: [Kurumi state and attacks](PORT64.md#kurumi-state-and-attack-core).
+Current render scope: [Kurumi foreground and rays](PORT64.md#kurumi-foreground-and-ray-raster).
+MAIN 0AAF:6CA3..6E7A foreground,76FB..7756 backdrop requests and shared
+explosions agree on 7,204 foreground / 2,816 backdrop controls across Linux,
+Wine,UBSan and actual Windows.620 original 0000:1562 default-clip line controls
+agree on complete 32,000-byte masks,including quantized16-bit slope/ties. Ray IDIV truncation
+differs from sprite SAR; flash is read without clearing. Native raster rejects
+endpoints outside the default screen,which actual rays stay inside. Original
+colorfill3F80/7578 covers104,448 pixels:384x192 at(32,208),384x80 at(32,16).
+TDW needs address coverage; CPU value masks apply to RMW. Color/sprite/CDG/tile
+consumers remain adapters; no physical GRCG/VRAM/pacing/full Stage2/exact claim.
+Shared explosion extraction passes900 original Orange controls; prior Kurumi
+41,488 state records replay current Linux. Fifteen contracts,96 BMPs and108
+counters remain equal. Package v1268 verifies the core; all23 root Windows files
+remain v1266. Next join preceding Boss metadata,backdrop composition,Kurumi
+battle/post-dialog/departure. Semantic stays stopped.
+Receipts: `.analysis/port64/kurumi-render-v1268/{target-render,integration-review,native-windows-render,negative-line}.json`,
+`cpu-{linux,windows,ubsan}-full/receipt.json`, and
+`.analysis/port64/verification-kurumi-render-v1268/receipt.json`.
+Previous core scope: [Kurumi state and attacks](PORT64.md#kurumi-state-and-attack-core).
 MAIN13A9:4F84..56CC/56CD..5B32 helpers/update and5B34..5B53 switch data
 are selected observed ownership. Four fresh setup controls,3,436 boundary
 controls and eight retained boss-only sequences agree41,488 records on

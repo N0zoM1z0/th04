@@ -31,12 +31,13 @@ struct Snapshot {
     std::uint32_t score_delta=0;
     std::int16_t big_frame=0,palette_tone=100;
 };
-enum class DrawKind { sprite,white_sprite,large_sprite,tiny_sprite,circle };
+enum class DrawKind { sprite,white_sprite,large_sprite,tiny_sprite,circle,line };
 struct Draw {
     DrawKind kind{};
     std::int16_t left=0,top=0;
     std::uint16_t pattern_or_radius=0;
     std::uint8_t color=0;
+    std::int16_t end_left=0,end_top=0;
 };
 enum class EventType { sound,hit,circle,point,item,hp,dialog,stage_bonus,fade,next_stage,delay,tone };
 struct Event {
@@ -56,6 +57,8 @@ struct Context {
 // The original boss_defeat_update is shared by ordinary bosses. Keep it
 // separate from Orange's pattern-specific gather-template writes.
 void update_defeat(Snapshot&,const Context&,const Sink& sink={});
+// Original ordinary bosses call the same small/big explosion render owners.
+void prepare_explosions(Snapshot&,std::vector<Draw>&);
 class System {
 public:
     System();

@@ -16,6 +16,8 @@ import sys
 PORT_FILES = (
     "port64/kurumi.hpp",
     "port64/kurumi.cpp",
+    "port64/kurumi_render.cpp",
+    "port64/verify_kurumi_render.py",
     "port64/kurumi_contracts.cpp",
     "port64/verify_kurumi.py",
     "port64/verify_stage2_resources.py",

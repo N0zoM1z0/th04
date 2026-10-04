@@ -27,6 +27,12 @@ void System::prepare_render(std::uint16_t frame) {
         draw(s.damage ? DrawKind::white_sprite : DrawKind::sprite,x,y-24,s.sprite+(frame%16)/4);
         // The original does not consume/reset the damage byte in this draw.
     } else if (s.phase==254) draw(DrawKind::large_sprite,x,y-16,s.sprite);
+    prepare_explosions(s,draws_);
+}
+void prepare_explosions(Snapshot& s,std::vector<Draw>& draws) {
+    const auto draw=[&](DrawKind kind,int x,int y,unsigned pattern,unsigned color=0) {
+        draws.push_back({kind,motion::wrap(x),motion::wrap(y),static_cast<std::uint16_t>(pattern),static_cast<std::uint8_t>(color)});
+    };
     for (auto& e:s.small) {
         if (!e.alive) continue;
         for (unsigned angle=0;angle<256;angle+=4) {

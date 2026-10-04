@@ -24,6 +24,7 @@ add_library(
   midboss.cpp
   midboss2.cpp
   kurumi.cpp
+  kurumi_render.cpp
   orange.cpp
   orange_render.cpp
   circles.cpp
