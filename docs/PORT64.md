@@ -1927,3 +1927,83 @@ v1273 CPU references are retained. Before reusing a compressed historical
 private file, restore it with `gzip -d -- FILE.gz`. Native changes do not promote
 or invalidate DOS exact acceptance. Semantic stays stopped; next port slice is
 the distinct Stage4 Marisa Boss.
+
+## Stage4 Marisa core
+
+v1275 ports the Reimu-player Stage4 Marisa Boss core, four auxiliary bits,
+all ten attacks, movement, body/bit collision, HP rewards and defeat/departure.
+It is a separate native owner; the GUI still holds at the pre-dialog frontier
+until its foreground and backdrop are connected. The root Windows playable
+EXE/launcher remain v1274. Broad semantic work stays stopped.
+
+Fresh hash-attested MAIN review covers segment13A9:2F8A..422E, including
+20 code extents and three dispatcher tables, and DATA:1A5E..1A65 HP values
+220,400,280,450.32 retained26-byte custom records are explicit; Marisa owns
+only the first four. Private DATA:432E..4347 fields and retained templates
+are separate from common BOSS state. Code addresses become explicit dispatch
+tokens, with an unknown active callback rejected instead of cast to a host
+pointer. Pinned target SHA-256 is
+077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b;
+provenance remains candidate-local-attested.
+
+Body damage truncates to BYTE before division by the previous update's
+alive-bit count plus one. Bit damage retains WORD signed-wrap behavior and
+uses the raw against-Boss=false consumer. Body hits, pattern selection and
+firing occur before current bit destruction/movement and packed center writes.
+Dead bit records still receive the original all-four distance/angle mutations.
+Mode7 calls the phase-entry helper twice, including duplicate clock64 sounds.
+Once-tuned templates retain the original angle/origin mutation order.
+
+The original flystep13A9:30F5..3174 has IDIV divide-by-zero and quotient
+overflow cases. Four independent original CPU failures and native contracts
+cover both axes and sequential writes: a Y failure can leave the X velocity
+committed. Controlled attack1/2 states with last-alive clock148 and current
+clock152 reach duration12 and IDIV at3117. This is a controlled-state hazard,
+not a reproduced natural player route. The core reports that original failure;
+GUI integration must choose and test an explicit portable runtime policy.
+
+7,759 original CPU cases compare87,031 complete state/event records across
+four ranks, empty/full/sparse pools, retained bytes, signed boundaries, all
+ten seeded attacks, and eight complete boss-only sequences. Without damage,
+each rank reaches departure after15,411 updates; damage19 uses1,080 updates.
+The traces include full440-bullet/16-gather/96-spark pools, templates, RNG,
+common BOSS/explosions and private bit state. Actual original shared helpers
+execute; damage/audio/video/item/point consumers are bounded adapters.
+Initial CPU production is archived separately from final hash-guarded native
+reference replay. Each final replay also executes the four original divide
+controls afresh. GNU, MinGW under Wine, optimized UBSan and actual Windows
+agree on every record.1,024 original retained setup controls per build verify
+common BOSS, callbacks and retained private26/template26/pool832/initializer
+bytes. Setup itself does not reset those records; native private defaults
+require a first encounter or explicit caller seeding.
+
+20 contracts pass, and576 existing natural BMPs/628 counters agree across
+Linux, Wine and actual Windows with every v1274 checkpoint unchanged.
+The Linux GUI binary is unchanged; all23 Windows root files are unchanged.
+21 static PE validation products live in `port64-preview/v1275`. Windows
+execution is observed; Windows-host compilation and GUI pacing are not claimed.
+No DOS source, exact acceptance, physical hardware or complete game claim changes.
+
+Replay `port64/verify_marisa.py --target TARGET --exe CONTRACT --output-dir
+NEW` for original CPU production. Only after that succeeds, use
+`--reference-dir ORIGINAL_DIR` for a complete identity-checked native replay.
+`port64/verify_marisa_setup.py` uses the same three required options.
+`--runner wine` selects PE execution. Default Marisa contracts additionally
+exercise callback rejection and original divide failure behavior.
+
+Receipts under `.analysis/port64/marisa-v1275/`: `boundary-review.json`,
+`original-divide-failures.json`, `original-caller-divide-failures.json`,
+`producer-attestation.json`, `core-linux-full/original-reference.json`,
+`core-{linux,windows,ubsan}-accepted/receipt.json`,
+`setup-{linux,windows,ubsan}-accepted/receipt.json`,
+`native-windows-{core,setup,receipt}.json`, and `integration-review.json`.
+Cross receipt: `.analysis/port64/verification-marisa-v1275-accepted/receipt.json`.
+Native source manifest:
+c7619d2c5e51200ff508ebd6057bea44b2e8c309462f668da931594a6c43cb91.
+Next connect Marisa rendering and actual pre/post-dialog gates, then Stage5.
+Player death/Bomb/full HUD/audio/Ending/save remain pending.
+
+After recording the final comparisons,4,064 v1275 validation BMPs are archived
+with verified gzip readback, reclaiming another2.83 GiB. Receipts and CPU
+fixtures remain live; `media-archive-receipt.json` records every original and
+compressed SHA. Restore a private BMP path with `gzip -d -- FILE.bmp.gz`.

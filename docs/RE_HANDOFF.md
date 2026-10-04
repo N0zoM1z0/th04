@@ -12,66 +12,64 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Stage4 Reimu battle and rendering](PORT64.md#stage4-reimu-battle-and-rendering).
-The GUI runs title/options/character/shot selection, Stage1 through Orange,
-Stage2 through Kurumi, Stage3 through Elly/clear/departure, and Stage4 waves,
-carpet lighting, two midbosses and character-dependent NPC dialogue. Playing
-Marisa now continues through the Reimu Boss battle, post-dialog, clear bonus
-and departure; Stage5 is held at its real pending-resource request. Playing
-Reimu still holds after Stage4 pre-dialog until the Marisa Boss owner joins.
+Current native core scope: [Stage4 Marisa core](PORT64.md#stage4-marisa-core).
+The GUI remains the verified v1274 [Reimu battle/rendering](PORT64.md#stage4-reimu-battle-and-rendering):
+title/options/character/shot, Stage1 Orange, Stage2 Kurumi, Stage3 Elly/clear/
+departure, Stage4 waves/carpet/two midbosses/NPC dialogue. Marisa-player
+continues through Reimu/post-dialog/bonus/departure to a real Stage5 pending
+resource request. Reimu-player holds after pre-dialog until Marisa drawing
+and GUI gates join. Root Windows EXE/launcher remain v1274; no GUI launched.
 
-MAIN0AAF:8347..846E foreground/orbs,77E7..7873 NPC backdrop and7667..768D
-picture owner are reviewed. Preserve trail B/I writes (destination index OR9),
-raw sprite versus136 animation, damage reset,32 ordered orbs and shared
-explosion updates once per simulated frame. Negative source rows are outside
-visible VRAM; bottom overflow rolls to row0. RGB duplicate colors cannot
-recover plane identity, so Reimu keeps indexed pixels. Filler13EA..1424
-write-footprint agrees on75,776 pixels; BB paints one bits, unlike earlier
-Boss zero-bit tile invalidation. Physical hardware/page/scroll/timing excluded.
+Marisa MAIN13A9:2F8A..422E fresh review covers20code extents/three tables;
+DATA:1A5E..1A65 HP220,400,280,450. Four bits own slots0..3 of32retained26-byte
+records; private432E..4347/templates remain explicit. Ten attacks, body/bit
+hits, previous-frame alive count, rewards and shared defeat are implemented.
+Mode7 phase-entry calls twice; body BYTE truncation precedes damage division;
+raw bit hits retain WORD damage. Fresh setup13A9:A7B5..A931 retains private26/
+template26/pool832/initializer bytes; owner defaults require first encounter
+or explicit caller seeding. Do not infer a generic stage reset from this setup.
 
-9,188 original foreground and5,888 background controls pass.640 original
-SUPER1PLANE/rolling controls compare163,840,000 indexed pixels across every
-Reimu/orb asset and eight X alignments, with retained colors and Y edges.
-GNU/Wine/optimized UBSan/actual Windows replay those complete expectations.
-Original CPU production and native-only reference replays remain separate.
-The earlier6,678 core controls/62,514 full records still agree on all four
-hosts;1,024 setup controls pass. Original constants/retention negatives remain
-in the v1273 ledgers; no new DOS exact promotion.
+7,759 original CPU controls/87,031 complete state-event records pass GNU,
+MinGW/Wine, optimized UBSan and actual Windows. Eight boss-only sequences
+cover four ranks:15,411 no-damage updates or1,080 damage19 updates to departure.
+1,024 original retained setup controls pass each build. Original producer and
+final native reference consumers are separate, with target/fixture/trace hashes
+checked. Four original IDIV failures are reexecuted in each final core replay.
+Controlled modes1/2 clock152/last-alive148 reach duration12 and IDIV13A9:3117;
+Y-overflow preserves already-written X velocity. No natural-route hazard
+reproduction yet; GUI integration needs an explicit tested portable policy.
 
-Eight natural Normal/Lunatic A/B shot/idle Marisa-player routes capture144
-new BMPs/152 counters, freeze post-dialog simulation/RNG and request Stage5.
-19 contracts and576 total natural BMPs/628 counters agree Linux/Wine/actual
-Windows; old432 BMPs/476 counters are identical. Optimized UBSan19contracts,
-Reimu routes and pixel/state controls pass. Windows native EXE/launcher are
-v1274;20 static PE validation products live in `port64-preview/v1274`.
-Only native EXE/launcher are published;21 DOS/HDI/config/font/build files stay
-identical. No GUI launched and no Windows-host compiler claim.
+20contracts and576 existing natural BMPs/628 counters agree Linux/Wine/actual
+Windows, all v1274 checkpoints and Linux GUI binary unchanged. All23Windows
+root file hashes remain identical.21static PE products in port64-preview/v1275
+are validation only. MinGW cross-compilation and Windows execution are distinct;
+GUI FPS/full-game/physical-hardware/DOS exact claims are excluded. Root preflight
+and fresh Ghidra MAIN target/header/entry/relocation/loaded-byte attestation pass.
+DOS source, exact unit ledgers and authored acceptance remain unchanged.
 
-Cleanup reclaims18.53 GiB from obsolete CMake/Windows native builds and
-losslessly archived historical BMP/large-text outputs. Every archive is
-read back against its original SHA-256; all23 Windows root files remain
-unchanged before native publication. Current three native build directories,
-targets/database/toolchains/DOS images/fonts and v1273 CPU references remain.
-Restore archived files with `gzip -d -- FILE.gz` before replaying an old
-private path. Additional current validation media may also be compressed
-after their hashes/counters are recorded; receipts are retained.
+User-requested cleanup already reclaimed18.53GiB from obsolete CMake/Windows
+native builds and losslessly archived historical BMP/large-text outputs.
+Another2.83GiB is reclaimed from4,064 v1275 validation BMPs via verified gzip;
+media-archive-receipt.json records every original/compressed SHA.
+Archived data were read back against SHA-256. Current three native build dirs,
+targets/database/toolchains/DOS images/fonts and live CPU references remain.
+Restore historical private media with `gzip -d -- FILE.gz` before replay.
 
-Receipts: `.analysis/port64/reimu-render-v1274/` contains
-`target-ranges.json`, `filler-footprint.json`, `producer-attestation.json`,
-`render-linux-full/receipt.json`, `pixels-linux-full/receipt.json`,
-`core-{linux,windows,ubsan}-final/receipt.json`,
-`render-{linux,windows,ubsan}-final/receipt.json`,
-`pixels-{linux,windows,ubsan}-final/receipt.json`,
-`native-windows-{core,setup,render,background,pixels,receipt}.json`,
-`integration-review.json`, `cleanup-receipt.json`, `windows-export-receipt.json`.
-Cross receipt: `.analysis/port64/verification-reimu-render-v1274/receipt.json`.
-Manifest: `10c0073624a213552cdf27bf6ee58ac663f27a8f7a77646232cdf63a4fe35127`.
-Root preflight/database attestation passes; DOS source/exact ledgers unchanged.
+Receipts: `.analysis/port64/marisa-v1275/` contains boundary-review.json,
+original-divide-failures.json, original-caller-divide-failures.json,
+producer-attestation.json, core-linux-full/original-reference.json,
+core-{linux,windows,ubsan}-accepted/receipt.json,
+setup-{linux,windows,ubsan}-accepted/receipt.json,
+native-windows-{core,setup,receipt}.json and integration-review.json.
+Cross receipt: `.analysis/port64/verification-marisa-v1275-accepted/receipt.json`.
+Manifest: c7619d2c5e51200ff508ebd6057bea44b2e8c309462f668da931594a6c43cb91.
+Prior v1274 rendering/pixel/cleanup/publication receipts remain under
+`.analysis/port64/reimu-render-v1274/` and its focused PORT64 note.
 
-Next bounded work: Stage4 Marisa Boss, then Stage5 resources/midboss/boss.
-Player death/Bomb/full HUD/audio/Ending/save still need native implementation.
-Semantic remains stopped except for concrete port ambiguities. Complete native
-gameplay is the port stopping condition.
+Next bounded work: Marisa foreground/backdrop and actual GUI entry/departure,
+then Stage5 resources/midboss/boss. Player death/Bomb/full HUD/audio/Ending/save
+still need native implementation. Semantic stays stopped except concrete port
+ambiguities. Complete native gameplay is the port stopping condition.
 
 ## Current state
 

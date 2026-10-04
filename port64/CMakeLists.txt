@@ -26,6 +26,7 @@ add_library(
   midboss3.cpp
   midboss4.cpp
   stage4.cpp
+  marisa.cpp
   reimu.cpp
   reimu_render.cpp
   elly.cpp
@@ -103,7 +104,10 @@ target_link_libraries(th04-port64-midboss4-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-reimu-contracts reimu_contracts.cpp)
 target_link_libraries(th04-port64-reimu-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts)
+add_executable(th04-port64-marisa-contracts marisa_contracts.cpp)
+target_link_libraries(th04-port64-marisa-contracts PRIVATE th04-portable-core)
+
+foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -111,7 +115,7 @@ foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts)
+  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts)
     target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
   endforeach()
 endif()
@@ -152,6 +156,8 @@ add_test(NAME stage3-midboss-contracts COMMAND th04-port64-midboss3-contracts)
 
 add_test(NAME stage3-elly-contracts COMMAND th04-port64-elly-contracts)
 
-add_test(NAME stage4-midboss-contracts COMMAND th04-port64-midboss4-contracts th04-port64-reimu-contracts)
+add_test(NAME stage4-midboss-contracts COMMAND th04-port64-midboss4-contracts)
 
 add_test(NAME stage4-reimu-contracts COMMAND th04-port64-reimu-contracts)
+
+add_test(NAME marisa-core-contracts COMMAND th04-port64-marisa-contracts)

@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/marisa.hpp",
+    "port64/marisa.cpp",
+    "port64/marisa_contracts.cpp",
+    "port64/verify_marisa.py",
+    "port64/verify_marisa_setup.py",
     "port64/reimu.cpp",
     "port64/reimu_render.cpp",
     "port64/verify_reimu_render.py",
@@ -250,6 +255,8 @@ def main() -> int:
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
     linux_midboss3=linux_dir / "th04-port64-midboss3-contracts"
     windows_midboss3=windows_dir / "th04-port64-midboss3-contracts.exe"
+    linux_marisa=linux_dir / "th04-port64-marisa-contracts"
+    windows_marisa=windows_dir / "th04-port64-marisa-contracts.exe"
     linux_reimu=linux_dir / "th04-port64-reimu-contracts"
     windows_reimu=windows_dir / "th04-port64-reimu-contracts.exe"
     linux_midboss4=linux_dir / "th04-port64-midboss4-contracts"
@@ -258,13 +265,16 @@ def main() -> int:
     windows_elly=windows_dir / "th04-port64-elly-contracts.exe"
     linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
     windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
-    for path in (linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_marisa_output=run([str(linux_marisa)])
+    windows_marisa_output=run([args.windows_runner,str(windows_marisa)],env=runner_env)
+    if linux_marisa_output!="Stage 4 Marisa core contracts PASS" or windows_marisa_output!=linux_marisa_output:raise ValueError("Marisa core contracts failed")
     linux_reimu_output=run([str(linux_reimu)])
     windows_reimu_output=run([args.windows_runner,str(windows_reimu)],env=runner_env)
     if linux_reimu_output!="Stage 4 Reimu core contracts PASS" or windows_reimu_output!=linux_reimu_output:raise ValueError("Reimu core contracts failed")
@@ -556,6 +566,8 @@ def main() -> int:
                 "midboss_contract_output": linux_midboss_output,
                 "midboss_contracts_sha256": sha256(linux_midboss),
                 "midboss4_contract_output": linux_midboss4_output,
+                "marisa_contracts_sha256": sha256(linux_marisa),
+                "marisa_contracts_output": linux_marisa_output,
                 "reimu_contracts_sha256": sha256(linux_reimu),
                 "reimu_contracts_output": linux_reimu_output,
                 "midboss4_contracts_sha256": sha256(linux_midboss4),
@@ -599,6 +611,8 @@ def main() -> int:
                 "midboss_contract_output": windows_midboss_output,
                 "midboss_contracts_sha256": sha256(windows_midboss),
                 "midboss4_contract_output": windows_midboss4_output,
+                "marisa_contracts_sha256": sha256(windows_marisa),
+                "marisa_contracts_output": windows_marisa_output,
                 "reimu_contracts_sha256": sha256(windows_reimu),
                 "reimu_contracts_output": windows_reimu_output,
                 "midboss4_contracts_sha256": sha256(windows_midboss4),
