@@ -222,6 +222,18 @@ Staff Roll, verdict and registration are next. Windows GUI remains v1290.
 No DOS source, unit/exact ledger or source-to-source semantic baseline changes.
 Native receipt root: `.analysis/worktrees/port-modern-64/.analysis/port64/maine-ending-v1291/`.
 
+The latest cleanup compresses 32 completed pre-v1290 generated fixture files
+and shares storage for 16 byte-identical historical gzip archives. SHA-256
+readback passes for every compressed fixture and all 38,563 protected files;
+both worktrees retain their prior source states, including unfinished v1292
+native work. Net allocated space released is approximately 263 MiB. Current
+DOS products, all three native incremental caches, original CPU reference
+streams, targets, toolchains, databases and the Windows package/saves stay live.
+Receipt: `.analysis/cleanup/historical-fixtures-20261005/receipt.json`.
+Restore historical fixture paths with `gzip -d -- PATH.txt.gz`. Shared gzip
+archives are immutable: restore or replace them rather than overwriting in
+place. Historical reference digests and archive paths are unchanged.
+
 The follow-up 2026-10-05 cleanup retires 173 historical runtime image archives,
 42,362 completed native screenshot archives and 30 superseded Windows preview
 directories (v1260--v1289). Three lossless tar/zstd archives pass every member's
