@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/midboss2.hpp",
+    "port64/midboss2.cpp",
+    "port64/midboss2_contracts.cpp",
+    "port64/verify_midboss2.py",
     "port64/stage_session.hpp",
     "port64/stage_session.cpp",
     "port64/session_contracts.cpp",
@@ -205,11 +209,13 @@ def main() -> int:
     windows_score = windows_dir / "th04-port64-score-contracts.exe"
     linux_transition=linux_dir / "th04-port64-transition-contracts"
     windows_transition=windows_dir / "th04-port64-transition-contracts.exe"
+    linux_midboss2=linux_dir / "th04-port64-midboss2-contracts"
+    windows_midboss2=windows_dir / "th04-port64-midboss2-contracts.exe"
     linux_session=linux_dir / "th04-port64-session-contracts"
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
-    for path in (linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -264,6 +270,10 @@ def main() -> int:
     windows_effect_output = run([args.windows_runner,str(windows_effects)],env=runner_env)
     if linux_effect_output != expected_effects or windows_effect_output != expected_effects:
         raise ValueError("effect contracts did not pass on both hosts")
+    linux_midboss2_output=run([str(linux_midboss2)])
+    windows_midboss2_output=run([args.windows_runner,str(windows_midboss2)],env=runner_env)
+    if linux_midboss2_output!="Stage 2 midboss contracts PASS" or windows_midboss2_output!=linux_midboss2_output:
+        raise ValueError("Stage2 midboss contracts did not pass on both hosts")
     expected_midboss = "Stage 1 midboss contracts PASS"
     linux_midboss_output = run([str(linux_midboss)])
     windows_midboss_output = run([args.windows_runner,str(windows_midboss)],env=runner_env)
@@ -405,6 +415,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(linux_effects),
                 "midboss_contract_output": linux_midboss_output,
                 "midboss_contracts_sha256": sha256(linux_midboss),
+                "midboss2_contract_output": linux_midboss2_output,
+                "midboss2_contracts_sha256": sha256(linux_midboss2),
                 "orange_contract_output": linux_orange_output,
                 "orange_contracts_sha256": sha256(linux_orange),
                 "dialog_contract_output": linux_dialog_output,
@@ -436,6 +448,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(windows_effects),
                 "midboss_contract_output": windows_midboss_output,
                 "midboss_contracts_sha256": sha256(windows_midboss),
+                "midboss2_contract_output": windows_midboss2_output,
+                "midboss2_contracts_sha256": sha256(windows_midboss2),
                 "orange_contract_output": windows_orange_output,
                 "orange_contracts_sha256": sha256(windows_orange),
                 "dialog_contract_output": windows_dialog_output,
@@ -497,7 +511,8 @@ def main() -> int:
             "post-dialog continuation completes its already entered actor frame, then enter/leave TRAM "
             "and416/488 departure reach the unloaded Stage2 resource request; "
             "Stage2 actor initialization and pre-midboss STD/MAP integration have separate CPU/native controls; "
-            "Stage2 visual resource integration, midboss2/Kurumi and final/Extra departure, "
+            "Stage2 midboss behavior/geometry has separate selected CPU controls; "
+            "Stage2 visual resource integration, Kurumi and final/Extra departure, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

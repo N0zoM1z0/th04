@@ -47,7 +47,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     enemies_ = enemy::System{};
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
-    midboss_ = midboss::System{};
+    midboss_ = midboss::System{};midboss2_.reset();
     orange_=orange::System{};circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
@@ -69,7 +69,8 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
             return static_cast<std::uint8_t>(application_->next_process_random());
         });
     stage_=std::move(next);stage_id_=1;frames_=0;
-    midboss_=midboss::System(session::prepare_stage2_midboss(midboss_.snapshot()));
+    midboss2::Snapshot next_midboss;next_midboss.actor=session::prepare_stage2_midboss(midboss_.snapshot());
+    midboss2_.emplace(next_midboss);
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
@@ -79,7 +80,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     score_events_.clear();enemy_events_.clear();bullet_events_.clear();
     midboss_events_.clear();orange_events_.clear();item_events_={};
     // Score/power/performance/resident statistics and MAIN generation/seed
-    // persist. Asset replacement and midboss2/Kurumi are separate consumers;
+    // persist. Asset replacement and Kurumi are separate consumers;
     // never run the Stage1 midboss callback under the new stage identity.
 }
 void State::finish_post_boss_dialog() {
@@ -104,7 +105,9 @@ void State::apply_clear_bonus() {
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     score_events_.clear();
     if(next_stage_requested_) return; // Stage2 resources have a separate owner.
-    if(awaiting_stage2_midboss()) return;
+    // Hold at the genuine pre-Kurumi dialog gate until its dialog/boss owner
+    // joins. STD and Stage2 midboss callbacks execute normally before it.
+    if(background && stage2_dialog_ready(*background)) return;
     const bool resumed=frame_suspended_;
     if(resumed && !dialog_finished_) return;
     enemy::Context context;
@@ -130,10 +133,13 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     if(!resumed) {
         // STD dispatch precedes player movement; enemies created here can run
         // their first setup/move instructions later in this same frame.
-        if (stage_ && !orange_active_) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_.snapshot().active)) {
+        if (stage_ && !orange_active_) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_state().active)) {
             enemies_.add(spawn,context,ring_);
         }
-        if (stage_ && !orange_active_) midboss_.activate(static_cast<std::uint16_t>(frames_));
+        if (stage_ && !orange_active_) {
+            if(midboss2_) midboss2_->activate(static_cast<std::uint16_t>(frames_));
+            else midboss_.activate(static_cast<std::uint16_t>(frames_));
+        }
         // MAIN's loop calls player_update before items_update. A pickup therefore
         // sees the player's new position for this frame, not the preceding one.
         circles_.update();sparks_.update();
@@ -177,16 +183,24 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             for (unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
             return result.damage;
         };
-        if (midboss_.snapshot().active) {
-            const auto before=midboss_.score_delta();
-            midboss_.update(midboss_context,bullets_,ring_,[&](const midboss::Event& event) {
+        if (midboss_state().active) {
+            const auto sink=[&](const midboss::Event& event) {
                 midboss_events_.push_back(event);
                 if (event.type==midboss::EventType::circle) sparks_.add_circle(event.position,event.value,event.count);
                 if (event.type==midboss::EventType::homing) homing_target_=event.position;
+                if (event.type==midboss::EventType::item) items_.add(event.position,static_cast<item::Type>(event.value));
                 if (background && event.type==midboss::EventType::tile) background->set_tile(event.position.x,event.position.y,event.value);
                 if (background && event.type==midboss::EventType::scroll) background->set_speed(static_cast<std::uint8_t>(event.value));
-            });
-            score_.score_delta+=midboss_.score_delta()-before;
+            };
+            if(midboss2_) {
+                const auto before=midboss2_->score_delta();
+                midboss2_->update(midboss_context,bullets_,gathers_,ring_,sink);
+                score_.score_delta+=midboss2_->score_delta()-before;
+            } else {
+                const auto before=midboss_.score_delta();
+                midboss_.update(midboss_context,bullets_,ring_,sink);
+                score_.score_delta+=midboss_.score_delta()-before;
+            }
         }
     } // Prefix executes once even if the dialog suspends this frame.
     if(orange_active_ && orange_.snapshot().phase==255) {
@@ -242,7 +256,9 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
     if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
-    if (midboss_.snapshot().active) midboss_.prepare_render(midboss_context);
+    if (midboss_state().active) {
+        if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
+    }
     enemies_.prepare_render();
     // Item scoring already exposes performance events; apply their byte
     // clamps before the next frame's autofire interval decisions.

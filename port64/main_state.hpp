@@ -7,6 +7,7 @@
 #include "enemy_bullets.hpp"
 #include "effects.hpp"
 #include "midboss.hpp"
+#include "midboss2.hpp"
 #include "orange.hpp"
 #include "circles.hpp"
 #include "dialog.hpp"
@@ -17,7 +18,7 @@
 
 namespace th04::portable::gameplay {
 // Live MAIN owns STD waves, enemies, player motion, shots, bullets,
-// sparks, gather circles, items and the Stage 1 midboss.
+// sparks, gather circles, items and the Stage1/Stage2 midbosses.
 // Bombs, player death and the remaining HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
@@ -29,7 +30,12 @@ public:
     // Actor/STD preparation for the already requested Stage2. The front end
     // must still replace its sprite/map/palette owners before consuming this.
     void prepare_next_stage_actors(const stage::Program::Bytes& standard);
-    bool awaiting_stage2_midboss() const { return stage_id_==1 && frames_==2600; }
+    bool stage2_dialog_ready(const stage::Background& background) const {
+        return stage_id_==1 && stage_ && stage_->stopped() && !midboss_state().active &&
+            dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
+    }
+    const midboss::Snapshot& midboss_state() const { return midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot(); }
+    const std::vector<midboss::Draw>& midboss_draws() const { return midboss2_ ? midboss2_->draws() : midboss_.draws(); }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
@@ -95,6 +101,7 @@ private:
     spark::System sparks_{};
     gather::System gathers_{};
     midboss::System midboss_{};
+    std::optional<midboss2::System> midboss2_;
     orange::System orange_{};
     circle::System circles_{};
     bool orange_active_=false,post_boss_dialog_pending_=false;

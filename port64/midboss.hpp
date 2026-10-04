@@ -15,7 +15,7 @@ struct Snapshot {
     std::int16_t hp_bar=0,vram_y=0;
     std::uint8_t pattern_angle=0,defeat_angle=0;
 };
-enum class EventType { tile,sound,circle,homing,hit,hp,point,scroll,shake,zap,fire };
+enum class EventType { tile,sound,circle,homing,hit,hp,point,scroll,shake,zap,fire,item,gather };
 struct Event {
     EventType type{};
     motion::Point position{};

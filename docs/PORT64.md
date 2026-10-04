@@ -1000,6 +1000,9 @@ next port the actual Stage2 session/resource/actor boundary.
 
 ## Stage actor-session preparation
 
+This section records the v1264 preparation frontier. The following Stage2
+midboss section advances that actor integration beyond2600 to the Kurumi gate.
+
 The next-stage actor API now operates on the existing MAIN owners instead of
 creating a new gameplay session. It clears the seven implemented entity pools,
 resets player current/previous position, firing time/style, stage point/dream
@@ -1074,6 +1077,68 @@ were rejected by the existing shot-checkpoint guard; valid styles are now seeded
 explicitly. The target/native actor code was not weakened to accept corruption.
 Semantic remains stopped. Next implement Stage2 resources and midboss2.
 
+## Stage2 midboss and actor integration
+
+The native Stage2 owner now implements all four attack patterns, the96-frame
+entry, three direction bytes,52-frame movement/gather gaps, damage rewards,
+timeout and upward retreat. It retains the same shared bullet scratch and
+random ring. The four quad directions tune only the first producer; later
+shots inherit the adjusted group/count. The hit wrapper's10 argument is a
+sound ID, not a damage cap. Entry consumes colliding shots but remains
+invulnerable. Timeout after17 patterns branches before collision/rewards;
+actual defeat adds the unsigned16 bonus product, point requests, a Bomb,
+zap/shake and48 sparks. Retreat uses private phase2 and16-frame spark requests.
+
+Rendering follows original0AAF:214A: Y<=0 or phase>2 produces no sprite;
+otherwise idle146..149, left150..151 or right152..153 is drawn at the
+actual signed/rolled position. Damage flash is consumed only when the sprite
+call runs. Invalid sprite>2 leaves the target's SI undefined; native rejects
+that state explicitly and excludes it from gameplay equivalence claims.
+The Stage2 BFNT bank still needs to join the GUI.
+
+Pinned MAIN13A9:1062..14E7 owns four patterns, the far126D dispatcher and
+compiler switch data. Actual original tuning/regular-special producers,
+gather3stack/only, shot-hit wrapper, score bonus/random, HP, activation/reset
+and sprite geometry execute in the CPU comparator. There are9,282 controls
+and13,512 records:2,542 updates,6,720 render cases,16 activation/reset cases,
+and four retained Normal/Lunatic timeout/defeat update+render sequences.
+These retained sequences preserve all midboss/bullet/gather owners and ring
+between steps; ordinary other-actor updates are deliberately omitted.
+Full22-byte state, three private bytes,440 bullet records,16 gather records,
+both templates, RNG cursor, pending awards and ordered requests/draws compare.
+Shot damage is injected at the real collision boundary. Spark requests,
+point popups, Bomb requests, audio, HP pixels and sprite pixels are adapters.
+No full original Stage2 route, GUI timing or DOS exactness claim follows.
+The callback-rejection control prevents ctypes exceptions from being swallowed:
+store the error, stop Unicorn and rethrow after the emulation call.
+
+MAIN now chooses the actual Stage2 callback at2600. STD pauses scheduled waves
+while that midboss is active. Shot collisions, gathers, sparks, items, score
+drain and native drawing requests join the existing owners in frame order.
+Four native Reimu/Marisa Normal/Lunatic routes continue natural Stage1 into
+real ST01.STD/MAP, defeat the Stage2 midboss and reach the pre-Kurumi dialog
+gate at6982. They hold there until dialog/Kurumi join. These are native actor
+routes, separate from the selected original CPU comparisons.
+
+The GUI remains Stage1 because stage sprites/map/palette/portrait/dialog
+resources have not been replaced yet. `port64-preview/v1265` is the build/
+verification package; the root GUI remains v1263 and DOS launchers/assets stay
+unchanged. General semantic work remains stopped. Next connect Stage2 resource
+ownership and dialog, then Kurumi; do not call this full Stage2 gameplay yet.
+
+```bash
+python3 port64/verify_midboss2.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-midboss2-contracts \
+  --output-dir .analysis/port64/midboss2-v1265/cpu-linux-final
+```
+
+Receipts: `.analysis/port64/midboss2-v1265/target-owners.json`,
+`cpu-{linux,windows,ubsan}-final/receipt.json`,
+`session-{linux,windows,ubsan}-final/receipt.json`, `native-windows-midboss2.json`,
+`native-windows-receipt.json`, `integration-review.json`, and
+`.analysis/port64/verification-midboss2-v1265-final/receipt.json`.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -1086,8 +1151,9 @@ Orange state/attacks/foreground and pre/post-boss dialog now run in ordinary Sta
 Ordinary Stage1 now also consumes the actual clear bonus and displays its tally.
 Ordinary frame score drain and extends now join MAIN.
 Post-dialog frame continuation and stage-leave overlay now reach the next-stage
-request. Actor-session preparation and pre-midboss Stage2 STD/MAP integration
-are checked separately. Next connect Stage2 visual resources and midboss2/Kurumi, then
+request. Actor-session preparation and Stage2 midboss/STD/MAP integration through the
+pre-Kurumi dialog gate are checked separately. Next connect Stage2 visual resources
+and dialog/Kurumi, then
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

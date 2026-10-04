@@ -87,13 +87,27 @@ void replay(char** paths) {
         if(application.generation()!=generation || application.process_random_state()!=expected.state() || main.frames()!=0 || main.random_cursor()!=0) throw std::runtime_error("stage2 replaced MAIN or reseeded/refilled RNG incorrectly");
         if(main.score().power!=awards.power || main.score().power_overflow!=awards.power_overflow || main.score().score_delta!=awards.score_delta || main.scoreboard().digits!=board.digits || main.scoreboard().hiscore!=board.hiscore || main.scoreboard().performance!=board.performance) throw std::runtime_error("stage2 reset persistent gameplay awards");
         if(main.score().stage_point_items_collected || main.score().dream_items_collected || main.score().dream_score || main.bullets().snapshot().graze || main.orange_active()) throw std::runtime_error("stage2 retained old stage owners");
-        if(main.player().position().current.x!=3072 || main.player().position().current.y!=5120 || main.midboss().snapshot().hp!=750 || main.midboss().snapshot().start_frame!=2600 || main.midboss().snapshot().position.current.y!=-512) throw std::runtime_error("stage2 position/midboss seed differs");
+        if(main.player().position().current.x!=3072 || main.player().position().current.y!=5120 || main.midboss_state().hp!=750 || main.midboss_state().start_frame!=2600 || main.midboss_state().position.current.y!=-512) throw std::runtime_error("stage2 position/midboss seed differs");
         stage::Background next_background(map1,second);
-        for(unsigned i=0;i<2600;++i) { main.update(shot::input_shot,false,false,next_background.last_delta(),&next_background);next_background.update(); }
+        bool activated=false,completed=false;unsigned draws=0,gather_requests=0,bomb_requests=0;
+        for(unsigned tick=0;tick<20000 && !main.stage2_dialog_ready(next_background);++tick) {
+            const auto frame=main.frames();main.update(shot::input_shot,false,false,next_background.last_delta(),&next_background);
+            if(frame==2600) {
+                if(!main.midboss_state().active || main.midboss_state().phase_frame!=1) throw std::runtime_error("Stage2 midboss activation did not enter actual callback");
+                activated=true;
+            }
+            if(activated && !main.midboss_state().active) completed=true;
+            if(main.midboss_state().active) draws+=main.midboss_draws().size();
+            for(const auto& event:main.midboss_events()) {
+                gather_requests+=event.type==midboss::EventType::gather;
+                bomb_requests+=event.type==midboss::EventType::item;
+            }
+            if(main.frames()!=frame) next_background.update();
+        }
         const auto stopped=main.frames();const auto cursor=main.random_cursor();const auto score=main.awarded_score_units();
         for(unsigned i=0;i<3;++i) main.update(shot::input_shot|player::left,false,false,0,&next_background);
-        if(!main.awaiting_stage2_midboss() || stopped!=2600 || main.frames()!=stopped || main.random_cursor()!=cursor || main.awarded_score_units()!=score || main.midboss().snapshot().active) throw std::runtime_error("unported Stage2 midboss used Stage1 callback");
-        std::cout<<"Stage2 actors character="<<character<<" rank="<<rank<<" frame="<<stopped<<" power="<<+main.score().power<<" pending="<<main.score().score_delta<<" score="<<score<<" rng="<<application.process_random_state()<<" generation="<<generation<<" boundary=midboss2_pending\n";
+        if(!activated || !completed || !draws || !main.stage2_dialog_ready(next_background) || main.frames()!=stopped || main.random_cursor()!=cursor || main.awarded_score_units()!=score || main.midboss_state().active || main.midboss().snapshot().active) throw std::runtime_error("Stage2 midboss or pre-Kurumi dialog frontier differs");
+        std::cout<<"Stage2 actors character="<<character<<" rank="<<rank<<" frame="<<stopped<<" power="<<+main.score().power<<" pending="<<main.score().score_delta<<" score="<<score<<" rng="<<application.process_random_state()<<" generation="<<generation<<" midboss_draws="<<draws<<" gather_requests="<<gather_requests<<" bomb_requests="<<bomb_requests<<" boundary=kurumi_dialog_pending\n";
     }
 }
 }

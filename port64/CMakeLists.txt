@@ -22,6 +22,7 @@ add_library(
   enemy_bullets.cpp
   effects.cpp
   midboss.cpp
+  midboss2.cpp
   orange.cpp
   orange_render.cpp
   circles.cpp
@@ -76,7 +77,10 @@ target_link_libraries(th04-port64-transition-contracts PRIVATE th04-portable-cor
 add_executable(th04-port64-session-contracts session_contracts.cpp)
 target_link_libraries(th04-port64-session-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts)
+add_executable(th04-port64-midboss2-contracts midboss2_contracts.cpp)
+target_link_libraries(th04-port64-midboss2-contracts PRIVATE th04-portable-core)
+
+foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -84,7 +88,7 @@ foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts)
+  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts)
     target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
   endforeach()
 endif()
@@ -116,3 +120,5 @@ add_test(NAME score-contracts COMMAND th04-port64-score-contracts)
 add_test(NAME stage-transition-contracts COMMAND th04-port64-transition-contracts)
 
 add_test(NAME stage-session-contracts COMMAND th04-port64-session-contracts)
+
+add_test(NAME stage2-midboss-contracts COMMAND th04-port64-midboss2-contracts)
