@@ -114,6 +114,16 @@ Restore individual historical images/traces with `gzip -d -- FILE.gz`; complete
 old source/object/result trees are recoverable from the SHA-verified
 `expanded-builds-20261004-cleanup.tar.zst` in root receipt-archive.
 
+Stage5 laser dependency is now portable: initialization/full 24-byte copy/
+first-free allocation/lifecycle/collision plus ordered drawing requests.
+8,464 original CPU cases/13,975 checkpoints agree Linux/Wine/UBSan/actualWindows;
+22 contracts pass all three builds. Existing 22 Linux/UBSan products remain
+raw-identical; MinGW differs only COFF timestamp/checksum. Root Windows stays
+v1277; only new validation files are exported to v1278-laser-controls.
+See [laser owner](PORT64.md#thick-laser-state-and-graphics-producer) and
+`.analysis/port64/yuuka5-v1278/`. Graphics call equivalence excludes pixel
+consumers/physical VRAM. Native source manifest 05e8bd69.
+
 Next bounded work: Stage5 ordinary Yuuka Boss state/attacks, then rendering. Player death/Bomb/full HUD/
 audio/later stages/Ending/save still need native implementation. Semantic stays
 stopped except concrete port ambiguities. Complete native gameplay is the port

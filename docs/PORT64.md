@@ -2194,3 +2194,73 @@ After final readback, 3,078 private validation BMPs are losslessly archived,
 reclaiming 2.15 GiB. `media-archive-receipt.json` records every original and
 compressed hash; restore the historical image paths with `gzip -d -- FILE.gz`
 before replaying image comparisons. Original CPU references remain live.
+
+## Thick-laser state and graphics producer
+
+The v1278 dependency batch ports the complete two-slot laser owner into
+`port64/thick_lasers.{hpp,cpp}`. MAIN 13A9:22E4..243D supplies initialization,
+24-byte template transfer, first-free allocation, lifecycle and collision;
+0AAF:37D3..3970 supplies the ordered graphics producer. Original target identity,
+fresh database attestation and raw instruction review precede the CPU controls.
+The DOS sources and accepted exact extents are unchanged. Target provenance
+remains `candidate-local-attested`.
+
+The native record explicitly names Q12.4 origins, pixel radii, signed WORD
+clocks and all retained bytes. Initialization clears only the two actor flags
+and scratch flag/clock/radius/speed. Template transfer retains the four bytes
+after the origin and all other metadata. A full pool makes no allocation or
+sound request. Transitions reset the clock and then increment it; the final
+shrinking frame also increments after becoming free. Unknown nonzero BYTE
+states preserve the original unsigned collision gate. The hit latch is retained
+until the owning game frame clears it, and invincibility is consumed elsewhere.
+Each shift/add/sub wraps before signed comparisons. Collision is narrower than
+the displayed radius and begins below half the rounded cap.
+
+The graphics producer preserves SAR4 coordinate flooring, signed IDIV width
+rounding, upper-only quarter-width clamp, original outer/middle/white layer
+ordering and unconditional GRCG disable. The outline successor is a WORD;
+color 255 requests 256. Draw commands record the original FAR callee arguments,
+including signed edge requests. This establishes command equivalence, not
+circle/box/vline pixel equivalence, physical VRAM or frame pacing. Pixel
+consumers and Yuuka foreground/background require separate controls when the
+battle is joined.
+
+Independent original CPU execution passes 8,464 cases and 13,975 checkpoints:
+64 retained initializations, 64 full template copies, 144 allocations, 4,851
+state/collision controls, 3,332 draw controls and nine retained lifecycle
+sequences. Each checkpoint compares all 72 storage bytes, hit latch and ordered
+sound/graphics requests. GNU Linux, static MinGW under Wine, optimized
+UBSan/bounds and an actual PowerShell Windows process agree. Original callback
+rejection and independent fixture-identity/trace-byte/extra-record negatives
+are required and pass. The final source manifest is
+`05e8bd69c1dc36bee294f661affce9e49db3ed5fbfa02c78c1d833dddea060be`.
+
+All three incremental builds pass 22 CTests. Their 22 preceding Linux and UBSan
+executables are raw-identical; all 22 preceding MinGW executables differ only
+at their COFF timestamp and associated checksum. No previous GUI scenario is
+relabelled as a new run, and no byte-exact DOS claim is made. Aggregate Linux/
+Windows verification now requires the 23rd product and new laser contracts.
+Root Windows game/launcher/saves/HDIs remain v1277. Only the new laser validation
+program, fixtures, frozen manifest and verifier are exported under
+`port64-preview/v1278-laser-controls`; no GUI launched.
+
+Replay from the native worktree root:
+
+```sh
+cmake --build .analysis/port64/linux-live-v1251 --parallel 4
+cmake --build .analysis/port64/windows-live-v1251 --parallel 4
+python3 port64/verify_lasers.py \
+  --target ../../targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-laser-contracts \
+  --output-dir .analysis/port64/yuuka5-v1278/laser-linux-final
+```
+
+Receipts live under `.analysis/port64/yuuka5-v1278/`: `target-review.json`,
+`producer-source/manifest.json`, `laser-{linux,windows,ubsan}-final/receipt.json`,
+`native-windows-receipt.json`, `oracle-negative-controls.json`,
+`windows-link-continuity.json`, `previous-binary-continuity.json`,
+`integration-review.json` and `windows-test-export.json`. The raw continuity
+receipt deliberately reports Windows differences; the separate full-file
+comparison proves their exact header-only locations. Original references and
+current builds remain expanded. Next: Yuuka's phase/attack dispatch, then its
+rendering and ordinary Stage5 battle join. The GUI still stops after pre-dialog.
