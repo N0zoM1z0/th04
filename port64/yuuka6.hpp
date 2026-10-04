@@ -39,6 +39,12 @@ class System {
 public:
     explicit System(Snapshot initial):state_(initial) {}
     const Snapshot& snapshot() const { return state_; }
+    void set_invincibility(std::uint8_t value) { state_.boss.invincibility=value; }
+    void set_palette_zero(std::array<std::uint8_t,3> value) { state_.boss.palette_zero=value; }
+    void apply_departure(const transition::Departure& departure) {
+        state_.boss.phase_frame=departure.frame;state_.boss.homing=departure.homing;
+        state_.boss.palette_tone=departure.palette_tone;state_.boss.palette_changed=departure.palette_changed;
+    }
     bool animate(Animation);
     // These helpers do not advance phase_frame. The dispatcher/hit-test owns
     // that increment; the completion cases reset it and increment the BYTE

@@ -2,16 +2,19 @@
 
 This branch keeps the playable PC-98 DOS build intact and develops a separate
 native port. The current GUI reads a user-supplied TH04 HDI, decodes the original
-assets and runs the title/options, character/shot selection, Stages1 through5.
+assets and runs the title/options, character/shot selection, Stages1 through6.
 Stages1 and2 include their actual STD waves, midboss, pre-dialog, ordinary boss,
 post-dialog, clear bonus and departure. Stage3 continues its STD waves and
 midboss, Elly battle, post-dialog, clear bonus and departure. Stage4 runs its
 STD waves, carpet lighting, two midboss encounters and character-dependent
 NPC dialogue. Both characters continue through their respective Reimu/Marisa
 Boss battle, post-dialog, clear bonus and departure into Stage5 STD waves, scrolling stars and Yuuka pre-dialogue.
-Stage5 has no midboss; its ordinary boss is the next implementation boundary. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
+Stage5 has no midboss; it includes Yuuka's battle, post-dialogue and departure.
+Normal/Lunatic continue through Stage6 waves, dialogue and Yuuka's final
+battle, then all-clear and the Ending entry. Easy stops at Bad Ending entry.
+On Linux the window uses SDL2; on Windows it uses Win32/GDI.
 Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
-to advance dialogue. Player death, Bomb, complete HUD/audio, later stages,
+to advance dialogue. Player death, Bomb, complete HUD/audio, Extra,
 Ending and save are not implemented yet. The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
 
@@ -210,8 +213,8 @@ the original allocation overrun; the host boundary is tested with sanitizers.
 Both character windows pass held-Z firing and release against original sprite
 pixels. Windows validation runs under Wine; native Windows pacing is untested.
 
-The next gameplay slice is Stage 1 control and midboss activation/update,
-followed by bosses, later-stage backgrounds, HUD, death/Bomb transitions and audio.
+Stages1..6 now connect their ordinary waves, bosses and clear transitions.
+Remaining gameplay owners include Extra, HUD, death/Bomb transitions and audio.
 Saved configuration and Ending/score persistence also remain. Semantic work
 is paused unless a concrete ambiguity blocks one of these slices; a completed
 TH04 native game has not yet been demonstrated.

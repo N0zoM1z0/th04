@@ -43,6 +43,8 @@ State::State(application::State& application):application_(&application) {
 }
 
 void State::load_stage(const stage::Program::Bytes& standard) {
+    yuuka6_.reset();yuuka6_active_=false;good_ending_requested_=false;
+    yuuka6_background_=yuuka6::Background{};yuuka6_foreground_=yuuka6::Foreground{};yuuka6_entities_=yuuka6::Entities{};
     stage6_battle_pending_=false;
     stage_ = std::make_unique<stage::Program>(standard);
     enemies_ = enemy::System{};
@@ -95,6 +97,15 @@ void State::start_yuuka5_after_dialog(std::array<std::uint8_t,3> palette_zero) {
 void State::begin_stage6_dialog(stage::Background& background) {
     if(!stage6_dialog_ready(background)) throw std::logic_error("invalid Stage6 dialogue gate");
     background.release_finished_streams();stage_.reset();stage6_battle_pending_=true;
+}
+void State::start_yuuka6_after_dialog(std::array<std::uint8_t,3> palette_zero) {
+    if(stage_id_!=5 || !stage6_ || !stage6_battle_pending_ || stage_ || boss_active() || midboss_state().active)
+        throw std::logic_error("invalid Yuuka6 dialog handoff");
+    // Stage6 setup has already retained/reset the original common boss fields.
+    // Do not repeat stage initialization, random-ring fill or laser reset here.
+    yuuka6::Snapshot initial;initial.boss=stage6_->boss;initial.boss.palette_zero=palette_zero;
+    yuuka6_.emplace(initial);yuuka6::BackgroundState bg;bg.palette_zero=palette_zero;
+    yuuka6_background_=yuuka6::Background(bg);yuuka6_active_=true;stage6_battle_pending_=false;
 }
 void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     if(!next_stage_requested_ || stage_id_>4 || application_->resident().stage!=stage_id_+1)
@@ -181,7 +192,7 @@ void State::finish_post_boss_dialog() {
     // exists. Do not manufacture MAINE statistics or run its unported script.
     if(bad_yuuka5_dialog()) bad_ending_requested_=true;
 }
-void State::apply_clear_bonus() {
+void State::apply_clear_bonus(bool all_clear) {
     if(clear_bonus_) throw std::logic_error("repeated stage-clear bonus");
     bonus_context_.power=score_.power;bonus_context_.dream=score_.dream_score;
     bonus_context_.graze=bullets_.snapshot().graze;
@@ -191,14 +202,15 @@ void State::apply_clear_bonus() {
     constexpr std::uint8_t minimum[]{4,11,20,22,16},maximum[]{16,24,32,34,20};
     bonus::State state;state.score_delta=score_.score_delta;state.bombs=score_.remaining_bombs;
     state.performance=performance_;state.minimum=minimum[rank_];state.maximum=maximum[rank_];
-    clear_bonus_=bonus::apply(bonus_context_,state);
+    clear_bonus_=bonus::apply(bonus_context_,state,all_clear);
+    if(all_clear) scoreboard_.extends=state.extends;
     score_.score_delta=state.score_delta;score_.remaining_bombs=state.bombs;performance_=state.performance;
     // Called at the original bonus position when the blocked frame resumes,
     // before items/gathers/render/clock/score drain complete that same frame.
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     score_events_.clear();
-    if(next_stage_requested_ || bad_ending_requested_ || stage6_battle_pending_) return; // Next owner has not joined.
+    if(next_stage_requested_ || bad_ending_requested_ || good_ending_requested_ || stage6_battle_pending_) return;
     // Hold at the genuine next-boss dialog gate until its battle owner joins.
     // STD and the stage midboss callbacks execute normally before it.
     if(background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background) || stage4_dialog_ready(*background) || stage5_dialog_ready(*background) || stage6_dialog_ready(*background))) return;
@@ -247,7 +259,14 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         // Bullet spawn/update and thick lasers alias the original BYTE hit
         // latch. A blocked dialogue resumes below this prefix: clear once
         // per simulation frame, never once per host repaint or resumed suffix.
-        if(yuuka5_active_) { bullets_.set_player_hit(false);thick_lasers_.set_player_hit(0); }
+        if(yuuka6_active_) {
+            // gameplay_loop renders the background BEFORE player, shots,
+            // bullets and boss. Initialization/scatter consumes the same
+            // ring; a cached host repaint must never repeat this prefix.
+            yuuka6_background_.prepare_render(orange_background_phase_,orange_background_frame_,ring_);
+            yuuka6_->set_palette_zero(yuuka6_background_.state().palette_zero);
+        }
+        if(yuuka5_active_ || yuuka6_active_) { bullets_.set_player_hit(false);thick_lasers_.set_player_hit(0); }
         circles_.update();sparks_.update();
         player_invincibility_=player::invincibility_after_tick(player_invincibility_);
         player_.update(held_input, shift);
@@ -319,9 +338,26 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         }
     } // Prefix executes once even if the dialog suspends this frame.
     if(boss_active()) {
-        if(yuuka5_active_) yuuka5_->set_invincibility(player_invincibility_);else if(marisa_active_) marisa_->set_invincibility(player_invincibility_);else if(reimu_active_) reimu_->set_invincibility(player_invincibility_);else if(elly_active_) elly_->set_invincibility(player_invincibility_);else if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
+        if(yuuka6_active_) yuuka6_->set_invincibility(player_invincibility_);else if(yuuka5_active_) yuuka5_->set_invincibility(player_invincibility_);else if(marisa_active_) marisa_->set_invincibility(player_invincibility_);else if(reimu_active_) reimu_->set_invincibility(player_invincibility_);else if(elly_active_) elly_->set_invincibility(player_invincibility_);else if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
     }
-    if(boss_active() && boss_snapshot().phase==255) {
+    if(yuuka6_active_ && boss_snapshot().phase==255) {
+        // Final Stage has no post-boss dialogue or next-stage departure. The
+        // all-clear award runs at clock0; end_game is called at416 before the
+        // frame tail. Keep its still-unported MAINE handoff as an explicit
+        // request, preserving pending score rather than committing it early.
+        transition::Departure d;d.frame=boss_snapshot().phase_frame;d.homing=boss_snapshot().homing;
+        d.graze=application_->resident().graze;d.stage_graze=bullets_.snapshot().graze;
+        const bool ending=transition::update_final_departure(d,[&](const transition::Event& e) {
+            if(e.kind==transition::Kind::tone) orange_events_.push_back({orange::EventType::tone,{},60,0});
+            else if(e.kind==transition::Kind::all_clear) {
+                application_->add_stage_graze(d.stage_graze);apply_clear_bonus(true);
+                orange_events_.push_back({orange::EventType::stage_bonus,{},0,0});
+            }
+        });
+        yuuka6_->apply_departure(d);
+        if(ending) { good_ending_requested_=true;return; }
+        homing_target_.reset();
+    } else if(boss_active() && boss_snapshot().phase==255) {
         if(!departure_) {
             transition::Departure d;d.frame=boss_snapshot().phase_frame;
             d.stage=application_->resident().stage;d.stage_ascii=application_->resident().stage_ascii;
@@ -340,6 +376,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
                 application_->advance_main_stage();next_stage_requested_=true;
                 orange_events_.push_back({orange::EventType::next_stage,{},0,0});break;
             case transition::Kind::delay:orange_events_.push_back({orange::EventType::delay,{},1,0});break;
+            case transition::Kind::all_clear:case transition::Kind::end_game:
+                throw std::logic_error("final-stage callback in ordinary departure");
             }
         });
         if(yuuka5_active_) yuuka5_->apply_departure(*departure_);else if(marisa_active_) marisa_->apply_departure(*departure_);else if(reimu_active_) reimu_->apply_departure(*departure_);else if(elly_active_) elly_->apply_departure(*departure_);else if(kurumi_active_) kurumi_->apply_departure(*departure_);else orange_.apply_departure(*departure_);
@@ -366,7 +404,13 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             if (event.type==orange::EventType::circle) circles_.add(event.position,event.count!=0);
             if (event.type==orange::EventType::item) items_.add(event.position,static_cast<item::Type>(event.value));
         };
-        if(yuuka5_active_) {
+        if(yuuka6_active_) {
+            th04::portable::yuuka6::Context final_context;static_cast<orange::Context&>(final_context)=boss_context;
+            final_context.ordinary_hit=[&](motion::Point center,motion::Point radius) { return shot_hit(center,radius,false); };
+            if(bullets_.snapshot().player_hit) thick_lasers_.set_player_hit(1);
+            yuuka6_->update(final_context,bullets_,gathers_,sparks_,thick_lasers_,yuuka6_entities_,ring_,sink);
+            if(thick_lasers_.snapshot().player_hit) bullets_.set_player_hit(true);
+        } else if(yuuka5_active_) {
             if(bullets_.snapshot().player_hit) thick_lasers_.set_player_hit(1);
             yuuka5_->update(boss_context,bullets_,gathers_,thick_lasers_,ring_,sink);
             if(thick_lasers_.snapshot().player_hit) bullets_.set_player_hit(true);
@@ -392,7 +436,10 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
-    if(yuuka5_active_) {
+    if(yuuka6_active_) {
+        if(bullets_.snapshot().player_hit) thick_lasers_.set_player_hit(1);
+        yuuka6_foreground_.prepare_render(*yuuka6_,static_cast<std::uint16_t>(frames_),thick_lasers_,yuuka6_entities_);
+    } else if(yuuka5_active_) {
         // Gather releases occur after boss update and can also set the shared
         // spawn-contact latch. Death consumption remains a separate owner.
         if(bullets_.snapshot().player_hit) thick_lasers_.set_player_hit(1);

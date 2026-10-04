@@ -39,6 +39,21 @@ void joint(transition::Departure& d,transition::Overlay& o,score::Snapshot& s) {
 }
 int main(int argc,char** argv) {
     try {
+        if(argc==3 && std::string(argv[1])=="--final-vectors") {
+            std::ifstream file(argv[2]);if(!file)throw std::runtime_error("cannot read final-stage vectors");
+            int frame,x,y;unsigned graze,stage_graze,tone,changed;
+            while(file>>frame>>graze>>stage_graze>>tone>>changed>>x>>y) {
+                transition::Departure d;d.frame=motion::wrap(frame);d.graze=graze;d.stage_graze=stage_graze;
+                d.palette_tone=motion::wrap(tone);d.palette_changed=changed;d.homing={motion::wrap(x),motion::wrap(y)};
+                std::vector<transition::Event> events;
+                const bool ending=transition::update_final_departure(d,[&](const auto& e){events.push_back(e);});
+                std::cout<<"F "<<d.frame<<' '<<d.graze<<' '<<d.stage_graze<<' '<<d.palette_tone<<' '<<+d.palette_changed<<' '<<d.homing.x<<' '<<d.homing.y<<' '<<ending;
+                for(const auto& e:events)std::cout<<'|'<<int(e.kind)<<' '<<e.value;
+                std::cout<<'\n';
+            }
+            if(!file.eof())throw std::runtime_error("invalid final-stage vector");
+            return 0;
+        }
         if(argc==3 && std::string(argv[1])=="--vectors") {
             std::ifstream file(argv[2]);if(!file) throw std::runtime_error("cannot read transition vectors");
             std::string line;transition::Overlay o;transition::Departure d;score::Snapshot score;
@@ -68,6 +83,17 @@ int main(int argc,char** argv) {
         if(d.frame || d.graze!=1) throw std::runtime_error("blocked frame replayed its prefix");
         transition::update_departure(d,o,false);
         if(d.frame!=1 || d.blocked || d.graze!=1) throw std::runtime_error("dialog continuation replayed entry");
+        transition::Departure final;final.graze=65535;final.stage_graze=2;final.homing={123,-456};
+        unsigned clears=0,endings=0;
+        const auto sink=[&](const transition::Event& e) {
+            if(e.kind==transition::Kind::all_clear)++clears;
+            else if(e.kind==transition::Kind::end_game)++endings;
+            else if(e.kind!=transition::Kind::tone)throw std::runtime_error("Final Stage requested dialogue/fade/next stage");
+        };
+        for(unsigned frame=0;frame<416;++frame)
+            if(transition::update_final_departure(final,sink))throw std::runtime_error("Final Stage ended before416");
+        if(!transition::update_final_departure(final,sink) || final.frame!=416 || final.graze!=1 || clears!=1 || endings!=1 || final.palette_tone!=60)
+            throw std::runtime_error("Final Stage repeated all-clear or advanced the nonreturning Ending call");
         std::cout<<"stage_transition=SHARED_BYTE_72 departure=DIALOG_416_488 pending_score=CARRIES pointer_bits=64\n";
         return 0;
     } catch(const std::exception& e) { std::cerr<<e.what()<<'\n';return 1; }

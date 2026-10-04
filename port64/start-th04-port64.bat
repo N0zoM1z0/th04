@@ -7,8 +7,8 @@ echo Dialogue: release the key, then press Enter or Z to continue.
 echo Preview includes Stage 4 waves, two midboss encounters and NPC dialogue.
 echo Both characters continue through their Stage 4 boss, dialogue and clear.
 echo Stage 5 includes Yuuka attacks, thick lasers, defeat and post-dialogue.
-echo Normal and Lunatic reach Stage 6 waves and the first Yuuka dialogue.
-echo Yuuka's final battle is in development; Easy stops before Bad Ending.
+echo Normal and Lunatic include Stage 6 waves, Yuuka's final battle and all-clear.
+echo The preview stops at the Ending entry; Easy stops before Bad Ending.
 echo Endings, player death, Bombs and audio are in development.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.

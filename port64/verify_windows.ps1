@@ -146,7 +146,7 @@ if ($yuuka5Images.Count -ne 698) { throw 'Missing Yuuka Stage 5 visual checkpoin
 $yuuka5Counters = @($yuuka5Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Yuuka5 *' })
 if ($yuuka5Counters.Count -ne 716) { throw 'Missing Yuuka Stage 5 scenario counters.' }
 $stage6Dir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'stage6-frames')).FullName
-Write-Host 'Running sixteen natural Stage 6 resource and first-dialogue scenarios...'
+Write-Host 'Running sixteen natural Stage 6 waves, dialogue, final-battle and all-clear scenarios...'
 $stage6Lines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --stage6-screenshots $stage6Dir 2>&1)
 if ($LASTEXITCODE -ne 0) { throw "Stage 6 scenarios failed: $stage6Lines" }
 $stage6Lines | Set-Content -LiteralPath (Join-Path $outDir 'stage6.log')
@@ -154,9 +154,9 @@ $stage6Images = @{}
 Get-ChildItem -LiteralPath $stage6Dir -Filter '*.bmp' | ForEach-Object {
     $stage6Images[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
 }
-if ($stage6Images.Count -ne 112) { throw 'Missing Stage 6 visual checkpoints.' }
+if ($stage6Images.Count -ne 512) { throw 'Missing Stage 6 visual checkpoints.' }
 $stage6Counters = @($stage6Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Stage6 *' })
-if ($stage6Counters.Count -ne 128) { throw 'Missing Stage 6 scenario counters.' }
+if ($stage6Counters.Count -ne 528) { throw 'Missing Stage 6 scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()

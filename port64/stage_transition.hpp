@@ -22,11 +22,15 @@ struct Departure {
     motion::Point homing{};
     bool blocked=false;
 };
-enum class Kind { tone,dialog,bonus,fade,next_stage,delay };
+enum class Kind { tone,dialog,bonus,fade,next_stage,delay,all_clear,end_game };
 struct Event { Kind kind{};unsigned value=0; };
 using Sink=std::function<void(const Event&)>;
 // Ordinary Stage1 departure. Caller can suspend at the actual dialog call.
 // Resuming continues AFTER that call, without repeating tone/graze/prefix.
 // Final/Extra Ending dispatch is a distinct owner, not handled here.
 void update_departure(Departure&,Overlay&,bool suspend_dialog=false,const Sink& sink={});
+// Final Stage (stage_id5) uses all-clear at0 and the nonreturning end_game
+// call at416. Return true at that call boundary: no frame increment, homing
+// reset, leave fade, next-stage publication or actor-frame suffix follows it.
+bool update_final_departure(Departure&,const Sink& sink={});
 } // namespace th04::portable::transition

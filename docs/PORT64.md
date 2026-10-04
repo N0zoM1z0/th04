@@ -5,20 +5,20 @@ DOS build remains the behavioral reference and keeps its own Borland/TASM
 acceptance rules. The portable product uses fixed-width state, ordinary host
 pointers and host backends; it does not claim byte equality with PC-98 code.
 
-The current preview runs Stages1 through5 including their waves, bosses,
+The current preview runs Stages1 through6 including their waves, bosses,
 dialogues and departures. Stage4 has both character-dependent NPC battles;
 Stage5 joins Yuuka's seven attacks and thick lasers. Normal/Lunatic continue
-through Stage6 waves and the complete pre-battle dialogue, stopping before
-Yuuka6's first update. Easy runs the separate bad dialogue and stops before
+through Stage6 waves, the complete pre-battle dialogue and Yuuka's final
+battle, then all-clear and the Ending entry. Easy runs the separate bad dialogue and stops before
 the native Ending implementation. See
-[Stage6 integration](#stage6-resources-waves-and-pre-battle-dialogue)
+[final-battle integration](#yuuka6-ordinary-battle-and-final-stage-departure)
 for the current acceptance scope; earlier slices below retain their historical
 boundaries.
 The final-boss [animation/motion helpers](#yuuka6-animation-and-motion-helpers)
 and [cross/safety-circle entities](#yuuka6-cross-and-safety-circle-entities)
 plus [gathering/attack helpers](#yuuka6-gathering-and-attack-helpers) and
 [mirror/core dispatch](#yuuka6-mirror-and-core-dispatch) are
-independently ported, but are not yet joined to the ordinary game loop.
+independently ported and now joined to the ordinary game loop.
 
 ## Current executable slice
 
@@ -3068,3 +3068,85 @@ through streaming gzip. Root/native CI and diff-check pass; fresh root Ghidra
 READY, native private database replay skips. Next: ordinary final-battle join
 with the accepted core, entities, foreground and background owners, then the
 remaining complete-game owners. Semantic remains limited to concrete ambiguity.
+
+## Yuuka6 ordinary battle and Final Stage departure
+
+v1290 connects the already controlled motion, attacks, entities, core,
+foreground and background to the normal Stage6 dialogue completion. No stage
+skip, seeded boss phase, forced HP or synthetic damage is used by the live
+route matrix. The common Stage6 boss metadata and the same process/random
+ring continue into combat; dialogue does not refill the ring or reset lasers.
+
+The observed MAIN loop0AAF:0098..0212 calls the background before player,
+shots, bullets and boss, with foreground after items/gather. The native join
+keeps that order: background initialization/scatter draws from the shared
+ring in the frame prefix; foreground consumes body/mirror hit flashes and
+ages dying crosses once in the suffix. Host repaints consume cached draws.
+The byte contact latch is bridged across bullet, laser and cross owners;
+body hits use boss shots and mirror/cross hits use ordinary shots.
+
+The host consumes the actual62-image battle bank, MIKO16 mono masks,
+checkerboard stores and BB transition. BB0AAF:1426..14A2 uses DATA:BA8A color
+and one-bit cells, not a freed CDG16 image. Normal/white/red/death zoom use
+accepted sprite kernels; circle/disc and common explosion requests reuse the
+existing native primitives. Complete physical PC98 page/alias/scroll/palette
+composition is not independently proved by this live join.
+
+The first natural run rejected `released MAP/STD streams updated`: dialogue
+had freed those streams, but the frontend still advanced the map after the
+first boss update. Keeping the release guard and skipping the released owner
+repairs the real path. Every live matrix route now reaches the actual final
+battle, including checker/particle updates, safety circles, crosses, mirrored
+attacks, thick lasers and both death phases.
+
+`update_final_departure()` owns the stage_id5 arm of13A9:ACB3..AE86. Tone60
+precedes clock0 graze publication and all-clear9E06. All-clear disables score
+extends; no post-dialogue is opened. At416 the original calls0AAF:0CC9
+`end_game()` before the actor-frame suffix, leave fade and clock/homing
+increment. The native frontend exposes a Good Ending request and holds there
+until MAINE is ported; it does not flush pending score early or synthesize
+MAINE statistics. The independent departure controls stop at that original
+nonreturning call. A preliminary injected488 fixture followed the generic
+next-stage arm, which is unreachable after that call; it is outside this
+Final Stage natural-path contract, not accepted native equality.
+
+Validation:
+
+- Three incremental builds pass29CTest/30AMD64 products each. GNU retains19
+  complete previous products; restoring only eight recorded PE metadata bytes
+  recovers19 previous PE hashes. UBSan retains15 raw products; changed core and
+  foreground consumers also replay their independent references below.
+- Sixteen Normal/Lunatic, Reimu/Marisa, A/B, idle/real-shot routes cover
+  phases0..17,254,255, the attacks and all-clear. The512 Stage6 images and528
+  complete counters agree GNU, Wine, optimizedUBSan and actualWindows.
+  Repaint controls guard frame/RNG, background particles/checker/palette,
+  body/mirror flash, custom death ages and laser clocks.
+- The public GNU/Wine verifier preserves all28 earlier v1282 image/counter
+  groups. ActualWindows executes29 contracts and2,060 ordinary route images;
+  its22 image/counter groups agree with the public replay.
+- Fresh hash-attested original departure execution passes2,052 bounded calls
+  on GNU, Wine and UBSan; actualWindows consumes those original records.
+  Callback rejection and Ending-versus-fade mutation fail closed. All-clear
+  math, full MAINE and original whole-route comparisons remain separate.
+- Changed GNU/UBSan core products pass3,137 fixtures/90,702 complete retained
+  original records; the original v1286 producer identity remains distinct.
+  Changed UBSan foreground passes3,522 fixtures/4,458 retained v1287 records.
+
+Manifest: `bbe0e09ba94269e1d659d25a83aa261f0e8130fc3903230cec82fc7ad4eba7a3`.
+Receipts: `.analysis/port64/yuuka6-join-v1290/`, including target-review,
+source-freeze, integration-final, previous-route-review, native-windows-review,
+departure-{linux,wine,ubsan}, departure-native-windows-review, core-{linux,ubsan},
+render-ubsan, build-review and deploy-receipt. Reusable CPU replay:
+
+```sh
+python3 port64/verify_yuuka6_departure.py --target MAIN --exe TRANSITION_CONTRACT \
+  --output-dir NEW
+```
+
+Add `--runner wine` for PE. `--stage6-screenshots DIR` exercises the whole live
+route through the Ending request; supplied HDI/font and recorded binary hashes
+are required. Completed generated BMPs are archived losslessly with SHA
+readback to keep the earlier cleanup effective. No FPS, complete-game, original
+whole-route or DOS exact claim is made. Next owners are native Ending/save,
+Extra, death/Continue/Bomb, remaining HUD/audio/config persistence. Semantic
+work remains limited to an ambiguity that blocks one of those owners.

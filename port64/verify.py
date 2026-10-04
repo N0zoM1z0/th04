@@ -14,6 +14,7 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_yuuka6_departure.py",
     "port64/yuuka6_pixels.cpp",
     "port64/verify_yuuka6_pixels.py",
     "port64/yuuka6_background.cpp",
@@ -671,9 +672,9 @@ def main() -> int:
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images=output.parent/("stage6-"+host);images.mkdir(parents=True,exist_ok=True)
             result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage6-screenshots",str(images)],env=runner_env)
-            if result.count("MAIN Stage6 fixture=")!=112 or result.count("MAIN Stage6 stopped ")!=16:raise ValueError("natural Stage6 fixture missed progression")
+            if result.count("MAIN Stage6 fixture=")!=112 or result.count("MAIN Stage6 battle fixture=")!=400 or result.count("MAIN Stage6 stopped ")!=16 or result.count("progression=good_ending_pending")!=16:raise ValueError("natural Stage6 fixture missed progression")
             stage6_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
-            if len(stage6_hashes[host])!=112:raise ValueError("unexpected Stage6 image files")
+            if len(stage6_hashes[host])!=512:raise ValueError("unexpected Stage6 image files")
             stage6_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage6")]
         if stage6_hashes["linux"]!=stage6_hashes["windows"] or stage6_outputs["linux"]!=stage6_outputs["windows"]:raise ValueError("Stage6 images/counters differ between hosts")
 
@@ -886,8 +887,9 @@ def main() -> int:
             "Stage5 has sixteen Normal/Lunatic character/A-B shot/idle routes requesting Stage6 "
             "and two Easy bad-dialogue routes stopping before MAINE. Separate original CPU "
             "component controls support selected semantics; these host scenarios are not "
-            "original whole-route or physical PC-98 hardware comparisons. Stage6 waves and full "
-            "pre-battle dialogue additionally have sixteen natural host routes. Yuuka6 battle/Extra, "
+            "original whole-route or physical PC-98 hardware comparisons. Stage6 waves, full "
+            "pre-battle dialogue, all Yuuka6 battle phases, defeat and all-clear additionally "
+            "have sixteen natural host routes stopping at the nonreturning Ending entry. Extra, "
             "Bombs, player death/Continue, remaining HUD, audio, Ending and save I/O "
             "still need native implementation. No whole-game, FPS or DOS exact claim."
         ),

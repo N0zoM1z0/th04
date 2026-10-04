@@ -4,7 +4,7 @@ Updated 2026-10-05. The standalone PC-98 reconstruction remains the behavioral
 reference; native x64 has a separate nonexact branch. Target provenance remains
 `candidate-local-attested`, not proof of an official pristine dump. The two
 remaining MAIN exactness cases stay deferred. Portable changes do not alter DOS
-source or exact acceptance. Root `semantic/readable` stays at `ce68815`;
+source or exact acceptance. Root `semantic/readable` stays at `f8a7bde`;
 `port/modern-64` is the active native worktree.
 
 Semantic readability is paused at the user's stopping condition: enough clarity
@@ -12,15 +12,31 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Stage6 resources/waves/pre-battle dialogue](PORT64.md#stage6-resources-waves-and-pre-battle-dialogue).
-Normal/Lunatic naturally traverse Stage1..5, then Stage6 waves and the complete
-pre-battle scene at frame5198. Native releases STD/MAP streams at the original
-speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
-62 battle sprites128..189 are loaded; simulation holds before unported
-Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
-frontier. Semantic remains stopped except for concrete port ambiguities.
+Current native scope: [Yuuka6 ordinary battle and final departure](PORT64.md#yuuka6-ordinary-battle-and-final-stage-departure).
+v1290 joins Stage6 dialogue to the actual core/background/foreground/custom
+owners and all-clear. The background consumes the shared ring before actors;
+repaints reuse cached requests. A natural-route failure exposed the released
+MAP/STD updater still running; the frontend now respects stream ownership.
+Final Stage has no post-dialogue or ordinary clear/fade/next-stage branch:
+all-clear runs once at clock0 and holds at the nonreturning Ending entry416.
+MAINE rendering/Extra/death/Bomb/full HUD/audio/persistence still remain.
+Semantic remains stopped except for concrete port ambiguities.
 
-New v1289 final-boss dependency: foreground sprite pixels now have a native
+Sixteen Normal/Lunatic character/A-B shot/idle routes produce512 Stage6 images
+and528 counters, identical GNU/Wine/optimizedUBSan/actualWindows. All28 earlier
+image/counter groups retain their v1282 results. ActualWindows checks29contracts
+and2,060 natural images; each build passes29CTest/30AMD64 products. Fresh original
+MAIN13A9:ACB3 controls match2,052 final-departure records across four native hosts;
+bonus math and MAINE execution are separate. Changed GNU/UBSan core products
+match90,702 retained independent records, preserving the v1286 producer identity.
+UBSan foreground also matches4,458 old records. Source manifest bbe0e09b;
+receipts .analysis/port64/yuuka6-join-v1290. No DOS source/acceptance promotion.
+Windows native GUI/English launcher are published as v1290;21other DOS/config/
+save/font/image root files retain their hashes. This batch's7,508 generated
+BMPs are losslessly archived with readback, reclaiming5.23GiB. Restore with
+`gzip -d -- PATH.bmp.gz`; media-archive and deploy receipts record the files.
+
+Historical v1289 final-boss dependency: foreground sprite pixels now have a native
 consumer. MAIN0000:2838 FFCD merges destination|2 on alpha; purecolor2 would
 lose B/G/I planes. Normal/white/zoom reuse controlled kernels with actual sheets.
 One fresh original producer passes2,405full640x400screens/615,680,000pixel bytes:

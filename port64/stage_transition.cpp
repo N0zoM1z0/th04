@@ -46,4 +46,15 @@ void update_departure(Departure& s,Overlay& overlay,bool suspend_dialog,const Si
     }
     s.frame=motion::wrap(int(s.frame)+1);s.homing={-15984,-15984};
 }
+bool update_final_departure(Departure& s,const Sink& sink) {
+    const auto emit=[&](Kind kind,unsigned value=0) { if(sink) sink({kind,value}); };
+    s.palette_tone=60;s.palette_changed=1;emit(Kind::tone,60);
+    if(s.frame==0) {
+        s.graze=static_cast<std::uint16_t>(s.graze+s.stage_graze);
+        emit(Kind::all_clear);
+    } else if(s.frame==416) {
+        emit(Kind::end_game);return true;
+    }
+    s.frame=motion::wrap(int(s.frame)+1);s.homing={-15984,-15984};return false;
+}
 } // namespace th04::portable::transition
