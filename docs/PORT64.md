@@ -16,7 +16,8 @@ for the current acceptance scope; earlier slices below retain their historical
 boundaries.
 The final-boss [animation/motion helpers](#yuuka6-animation-and-motion-helpers)
 and [cross/safety-circle entities](#yuuka6-cross-and-safety-circle-entities)
-are independently ported, but are not yet joined to the ordinary game loop.
+plus [gathering/attack helpers](#yuuka6-gathering-and-attack-helpers) are
+independently ported, but are not yet joined to the ordinary game loop.
 
 ## Current executable slice
 
@@ -2724,3 +2725,96 @@ to consume the independently produced fixtures/trace.
 Next: gather and attack helpers, then final-boss core and foreground/checkerboard
 integration. Extra, player death/Continue/Bomb, HUD, audio, Ending and save I/O
 remain required. Reopen semantic only for a concrete port ambiguity.
+
+## Yuuka6 gathering and attack helpers
+
+v1285 ports17 bounded entries at MAIN13A9:6E77..7951: five gathering entries
+and twelve attack entries, including four sparse compare/jump tables. The
+existing `yuuka6::System` owns the methods in `port64/yuuka6_attacks.cpp`;
+`Gathering` and `Attack` select explicit behaviors without changing its stored
+layout. DOS source and acceptance remain unchanged. The ordinary preview still
+holds before Yuuka6's first update; this dependency batch does not publish a
+new playable battle or launch a GUI.
+
+The same gather and bullet scratch templates persist across calls. Gather-only
+allocation retains the saved bullet fields except spawn_type0, and retained
+velocity/spare bytes survive even on a full pool. Side gathering ends at the
+left center; dual gathering ends at the mirror center. Later circles use the
+original shrinking entry0AAF:1BA6, with ordered requests and color publication.
+The helpers do not advance the attack clock or update allocated entities.
+Animation executes before later branch/gather tests; a terminal attack may
+reset phase_frame before the final gather call. Cached repaints cannot replay
+these calls.
+
+Attack comments explain special/fixed-speed spawning, distinct mirrored origin
+and heading, two laser origins, retained speed growth, random consumption even
+when cross allocation is full, and the BYTE rotation's outward/return ordering.
+The rotating-ring initializer aims boss-minus-player, opposite ordinary aim,
+before its16-unit rotation. The spin attack changes the second origin angle
+without replacing the retained template heading. BYTE count/speed/angle and
+signed WORD quotients preserve their original widths. New spawn contact writes
+the shared player-hit BYTE1, including over an incoming127; the future core
+must bridge it with the entity/laser/frame owners.
+
+One independent original-CPU producer passes5,305 fixtures/39,757 checkpoints:
+375 gather fixtures,4,822 isolated attacks and108 retained320-frame sequences.
+The comparator includes35 boss/animation/mirror bytes,16 additional bytes,
+circle color, hit/RNG/special globals, both templates, complete440-bullet,
+16-gather, two-laser plus scratch and32-custom pools, and ordered requests.
+Actual animations, vector/atan, RNG/tune/regular/special spawn, gather and
+laser/cross/safety-circle allocation execute. Circle and sound consumers are
+request adapters; spark/ordinary-shot ownership is also checked unchanged.
+Sequences do not advance ordinary actors, pool updates, pixels or the battle
+dispatcher. Five ranks, density, performance, clear/zap, raw flag/angle and
+signed clock/coordinate boundaries are covered within the recorded domain.
+
+The first control omitted BCC2, the special producer callback, despite setting
+regular BCC0 and tune BCC4. Guarded execution rejected the resulting unrelated
+code path at fixture388; this was an Oracle context defect. The corrected
+five-rank switch-tail probe executes MAIN0AAF:0312..03D1 and checks all three
+callbacks. A one-field BCC2 mutation reproduces the rejection. A separate zero
+dual-spread-range control reaches original MAIN13A9:02F6 DIV WORD SS:[BX+2]
+after two random samples; GNU/Wine/UBSan explicitly reject the zero divisor.
+Native partial state is not exposed or compared on that exception. Existing
+INT16_MIN atan and count-zero ring fault/portable-repair limits remain separate.
+
+The fresh full CPU producer retains manifest8b4343e0. Final685c4c37 names
+pattern constants, explains reverse aim and splits a terminal return to remove
+a warning; its final header comment distinguishes attack completion from
+`animate()` alone. All27 GNU/UBSan products match the already-passing ff96
+files raw, and all27 PEs preserve every nonmetadata byte. The no-font smoke
+keeps its ff96 producer identity, linked through `comment-continuity`; the
+complete new GNU contract remains raw-identical to the8b43 producer. Final GNU,
+Wine and optimizedUBSan consume the independently produced reference, each
+also executing a fresh three-callback rank probe. Actual Windows consumes the
+fixtures and agrees on all39,757 records. Original CPU is not executed on
+Windows; do not relabel the retained producer as three fresh full replays.
+
+Three incremental builds provide27 x64 products and pass26 CTests each.
+All26 preceding GNU products are raw-identical; all26 preceding PEs retain
+every byte outside the eight timestamp/checksum bytes. Of26 preceding UBSan
+products,25 are raw-identical; the rebuilt motion contract differs and passes
+the full retained independent20,463-case/36,045-record motion control. No
+raw or debug-only equality is claimed for that changed file. The initial
+all-products raw assertion rejects and remains retained. GNU/Wine no-font
+integration smoke passes; the published v1282 GUI/launcher and21 protected
+DOS/config/save files remain unchanged. The actual-Windows private package
+copies only the new attack contract, fixtures and streaming gzip control.
+Root and native CI pass; the root also freshly attests the MAIN Ghidra database.
+All304 completed smoke BMPs are losslessly gzip-compressed after receipt-hash
+and decompressed SHA-256 checks, reclaiming229,971,858 bytes. Current builds,
+CPU references and protected files remain available; see `bmp-compression.json`.
+No whole-battle, original pixels, physical timing, FPS or DOS exact claim.
+
+Receipts: `.analysis/port64/yuuka6-attacks-v1285/`, including `target-review`,
+`root-ghidra-attestation`, `development-linux-full`, `accepted-{linux,windows,ubsan}`,
+`producer-continuity`, `native-windows-review`, `missing-special-context`,
+`zero-angle-range`, `build-receipt`, `product-continuity`,
+`motion-ubsan-regression` and `integration-smoke`. Source manifest:
+685c4c37b677e42dfe0ae5105ac4c1e28437730bf38c4c47b1ac7536fae772c3.
+Replay with `python3 port64/verify_yuuka6_attacks.py --target TARGET --exe EXE
+--output-dir NEW`; use `--runner wine` or `--reference-dir REFERENCE` as needed.
+
+Next: mirror hit-test and final-boss core/phase dispatch, then foreground and
+checkerboard integration. Extra, player death/Continue/Bomb, HUD, audio, Ending
+and save I/O remain required. Semantic stays bounded to concrete port ambiguities.

@@ -20,7 +20,29 @@ speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
 Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
 frontier. Semantic remains stopped except for concrete port ambiguities.
 
-New v1284 final-boss dependency: cross allocation/circle initialization/update
+New v1285 final-boss dependency: five gather/twelve attack entries at
+MAIN13A9:6E77..7951 are ported, including sparse tables and retained shared
+templates. One fresh original CPU producer matches5,305cases/39,757records,
+with108 retained320-frame sequences. Final GNU/Wine/optimizedUBSan consume
+that independent reference; actualWindows agrees. Each Python control freshly
+checks all regular/special/tune callbacks through the original rank-switch tail.
+Initial missing-BCC2 Oracle context rejects under a one-field mutation;
+zero spread range reaches actual DIV after RNG consumption and native rejects.
+Producer manifest8b4343e0; final685c4c37 adds readable constants/comments and
+removes a warning, with complete new GNU contract raw-identical. Three builds
+pass26CTests/27products each. All26 old GNU and25 oldUBSan files are raw-identical;
+all26 oldPEs change only eight timestamp/checksum bytes. The sole changed
+UBSan motion contract passes20,463cases/36,045 retained independent records;
+no raw/debug-only equality claimed. No-font integration smoke passes.
+GUI/launcher remain v1282;21 protected DOS/config/save files unchanged.
+Root/native CI pass. Lossless compression of304 completed smoke BMPs reclaims
+229,971,858 bytes after hash readback; builds and independent references retained.
+Receipts:.analysis/port64/yuuka6-attacks-v1285.
+See [Yuuka6 attacks](PORT64.md#yuuka6-gathering-and-attack-helpers).
+Next: mirror hit-test/core/phase dispatch and foreground/checkerboard join.
+Complete native gameplay is still unfinished; semantic only resolves port ambiguity.
+
+Historical v1284 final-boss dependency: cross allocation/circle initialization/update
 at MAIN13A9:65F7..6932 and render requests at MAIN0AAF:7054..7129 are ported.
 The32x26 pool retains its final-slot circle alias and reserved bytes. Raw hit
 BYTE, shot WORD/score DWORD, offscreen continuation, death-render clock and
@@ -39,9 +61,8 @@ fixtures and streaming gzip control.21 DOS/config/save root files unchanged.
 See [Yuuka6 entities](PORT64.md#yuuka6-cross-and-safety-circle-entities).
 Earlier v1283 animation/motion20,463cases/36,045records remain accepted, with
 the preceding helper products unchanged in this batch.
-Next: gather/attack helpers, then core
-and foreground/checkerboard integration. Remaining complete-game owners below
-are still required; semantic remains limited to concrete port ambiguities.
+Remaining complete-game owners below are still required; semantic remains
+limited to concrete port ambiguities.
 
 Historical v1282 acceptance:
 v1282 passes three incremental builds/23 CTests/24 products each. Independent
