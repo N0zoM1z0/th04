@@ -68,6 +68,13 @@ def sprites():
     for name,image,left,top,kind in itertools.product(('ST04.BB1','ST04.BB2'),(0,),(-33,31,32,414,415,416),(0,16,383),(0,1,10)):
         yield [name,image,left,top,kind,(left+top)%16]
 
+def defeat_zoom():
+    # The real phase254 consumer uses MIKO32 death patterns4..11. Earlier
+    # v1280 controls covered factor3 on entrance/idle sheets only; this is a
+    # separate, explicit asset expansion, not a relabel of those observations.
+    for image,left,top in itertools.product(range(8),(31,32,97,414),(15,16,128,383)):
+        yield ['MIKO32.BFT',image,left,top,10,(image+left+top)%16]
+
 def rasters():
     edges=(-32768,-1,0,15,16,17,31,32,33,127,128,383,384,414,415,416,639,640,32767)
     for x,y,ex,ey in itertools.product(edges,edges,edges[::3],edges[::4]):
@@ -106,7 +113,7 @@ def expected(o,row,assets):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('target','exe','hdi','output-dir'):p.add_argument('--'+n,type=Path,required=True)
-    p.add_argument('--runner');refs=p.add_mutually_exclusive_group();refs.add_argument('--reference-dir',type=Path);refs.add_argument('--pixel-reference-dir',type=Path);p.add_argument('--only',choices=('pixel','raster'));p.add_argument('--limit',type=int)
+    p.add_argument('--runner');refs=p.add_mutually_exclusive_group();refs.add_argument('--reference-dir',type=Path);refs.add_argument('--pixel-reference-dir',type=Path);p.add_argument('--only',choices=('pixel','raster'));p.add_argument('--limit',type=int);p.add_argument('--defeat-zoom-only',action='store_true')
     a=p.parse_args();out=a.output_dir.resolve();out.mkdir(parents=True,exist_ok=True)
     o=Original(a.target.read_bytes());assets=main_assets(a.hdi);manifest=source_manifest(Path(__file__).resolve().parents[1])[0]
     class Rejecting(Original):
@@ -118,14 +125,14 @@ def main():
     except RuntimeError as e:
         if not isinstance(e.__cause__,ValueError):raise
     else:raise ValueError('Yuuka pixel callback rejection swallowed')
-    files={name:out/name for name in ('ST04.BB1','ST04.BB2')}
+    files={name:out/name for name in (('MIKO32.BFT',) if a.defeat_zoom_only else ('ST04.BB1','ST04.BB2'))}
     for name,path in files.items():path.write_bytes(assets[name])
     ref=json.loads((a.reference_dir/'receipt.json').read_text()) if a.reference_dir else None
     pixel_ref=json.loads((a.pixel_reference_dir/'receipt.json').read_text()) if a.pixel_reference_dir else None
     for source in (ref,pixel_ref):
         if source and (not source['passed'] or source['target_sha256']!=sha(o.target) or source['hdi_sha256']!=sha(a.hdi.read_bytes())):raise ValueError('Yuuka pixel reference identity differs')
     controls={}
-    for mode,rows in [('pixel',sprites()),('raster',rasters())]:
+    for mode,rows in ([('pixel',defeat_zoom())] if a.defeat_zoom_only else [('pixel',sprites()),('raster',rasters())]):
         if a.only and a.only!=mode:continue
         rows=list(itertools.islice(rows,a.limit) if a.limit else rows)
         logical='\n'.join(' '.join(map(str,r)) for r in rows)+'\n'

@@ -14,6 +14,7 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_yuuka5_departure.py",
     "port64/yuuka5_render.cpp",
     "port64/verify_yuuka5_render.py",
     "port64/verify_yuuka5_pixels.py",
@@ -237,6 +238,7 @@ def main() -> int:
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parents[1]
+    initial_manifest_sha256 = source_manifest(root)[0]
     linux_dir = args.linux_dir.resolve()
     windows_dir = args.windows_dir.resolve()
     hdi = args.hdi.resolve()
@@ -490,6 +492,8 @@ def main() -> int:
     stage4_outputs = {}
     stage5_hashes = {}
     stage5_outputs = {}
+    yuuka5_hashes = {}
+    yuuka5_outputs = {}
     marisa_hashes = {}
     marisa_outputs = {}
     reimu_hashes = {}
@@ -594,7 +598,18 @@ def main() -> int:
             stage5_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage5")]
         if stage5_hashes["linux"]!=stage5_hashes["windows"] or stage5_outputs["linux"]!=stage5_outputs["windows"]:raise ValueError("Stage5 images/counters differ between hosts")
 
+        for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
+            images=output.parent/("yuuka5-"+host);images.mkdir(parents=True,exist_ok=True)
+            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--yuuka5-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Yuuka5 fixture=")!=698 or result.count("MAIN Yuuka5 stopped ")!=18:raise ValueError("natural Yuuka5 fixture missed progression")
+            yuuka5_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(yuuka5_hashes[host])!=698:raise ValueError("unexpected Yuuka5 image files")
+            yuuka5_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Yuuka5")]
+        if yuuka5_hashes["linux"]!=yuuka5_hashes["windows"] or yuuka5_outputs["linux"]!=yuuka5_outputs["windows"]:raise ValueError("Yuuka5 images/counters differ between hosts")
+
     manifest_sha256, source_files = source_manifest(root)
+    if manifest_sha256 != initial_manifest_sha256:
+        raise ValueError("portable sources changed during verification")
     receipt = {
         "schema_version": 1,
         "observed_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -742,6 +757,8 @@ def main() -> int:
         "marisa_fixture_counters": marisa_outputs.get("linux",[]),
         "reimu_fixture_bmp_sha256": reimu_hashes.get("linux",{}),
         "reimu_fixture_counters": reimu_outputs.get("linux",[]),
+        "yuuka5_fixture_bmp_sha256": yuuka5_hashes.get("linux",{}),
+        "yuuka5_fixture_counters": yuuka5_outputs.get("linux",[]),
         "stage5_fixture_bmp_sha256": stage5_hashes.get("linux",{}),
         "stage5_fixture_counters": stage5_outputs.get("linux",[]),
         "stage4_fixture_bmp_sha256": stage4_hashes.get("linux",{}),
@@ -769,13 +786,13 @@ def main() -> int:
             "and416/488 departure reach the unloaded Stage2 resource request; "
             "Stage2 actor initialization and pre-midboss STD/MAP integration have separate CPU/native controls; "
             "Stage2 midboss behavior/geometry has separate selected CPU controls; "
-            "Stage2 visual resources, natural midboss and pre-Kurumi dialog join the native GUI; "
-            "eight character/Normal-Lunatic shot/timeout routes complete Kurumi battle/post-dialog/bonus/departure, "
-            "then Stage3 resource/STD/midboss/pre-Elly dialog joins across eight shot/idle routes and holds before Elly battle; "
-            "Kurumi state/attacks/render have separate selected CPU controls; final/Extra departure, "
-            "Elly and later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
-            "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
-            "are not yet ported."
+            "Stages1..5 now join natural waves/midbosses/bosses/dialogue/clear/departure. "
+            "Stage5 has sixteen Normal/Lunatic character/A-B shot/idle routes requesting Stage6 "
+            "and two Easy bad-dialogue routes stopping before MAINE. Separate original CPU "
+            "component controls support selected semantics; these host scenarios are not "
+            "original whole-route or physical PC-98 hardware comparisons. Stage6/Extra, "
+            "Bombs, player death/Continue, remaining HUD, audio, Ending and save I/O "
+            "still need native implementation. No whole-game, FPS or DOS exact claim."
         ),
     }
     output.parent.mkdir(parents=True, exist_ok=True)

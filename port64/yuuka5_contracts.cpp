@@ -199,6 +199,14 @@ void pixel_vectors(const char* path) {
     }
     require(in.eof(),"malformed Yuuka sprite fixture");
 }
+void ending_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Yuuka ending fixtures");unsigned stage;
+    while(in>>stage) {
+        const auto rank=number(in),continues=number(in);
+        std::cout<<"B "<<k::bad_ending_after_defeat(static_cast<std::uint8_t>(stage),static_cast<std::uint8_t>(rank),static_cast<std::uint8_t>(continues))<<'\n';
+    }
+    require(in.eof(),"malformed Yuuka ending fixture");
+}
 void raster_vectors(const char* path) {
     std::ifstream in(path);require(bool(in),"cannot open Yuuka raster fixtures");char kind;
     while(in>>kind) {
@@ -227,6 +235,7 @@ int main(int argc,char** argv) {
         if(argc==3 && std::string(argv[1])=="--disc-vectors") { disc_vectors(argv[2]);return 0; }
         if(argc==3 && std::string(argv[1])=="--pixel-vectors") { pixel_vectors(argv[2]);return 0; }
         if(argc==3 && std::string(argv[1])=="--raster-vectors") { raster_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--ending-vectors") { ending_vectors(argv[2]);return 0; }
         require(argc==1,"unknown Yuuka arguments");
         k::Snapshot state;state.boss.phase=3;state.boss.phase_frame=7;state.move_state=3;
         k::System owner(state);b::System bullets;g::System gathers;l::System lasers;r::SharedRandomRing random;o::Context context;

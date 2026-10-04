@@ -5,13 +5,14 @@ DOS build remains the behavioral reference and keeps its own Borland/TASM
 acceptance rules. The portable product uses fixed-width state, ordinary host
 pointers and host backends; it does not claim byte equality with PC-98 code.
 
-The current preview runs Stages1 through3 including their bosses and departures,
-then Stage4 waves, carpet lighting, two midbosses and character-dependent NPC
-pre-dialog. Marisa-player routes now continue through the Reimu battle,
-post-dialog, clear bonus and departure to the Stage5 resource gate. Reimu-player
-routes hold before the Marisa Boss. See
-[Reimu integration](#stage4-reimu-battle-and-rendering) for the current
-acceptance scope; earlier slices below retain their historical boundaries.
+The current preview runs Stages1 through5 including their waves, bosses,
+dialogues and departures. Stage4 has both character-dependent NPC battles;
+Stage5 joins Yuuka's seven attacks and thick lasers. Normal/Lunatic request
+Stage6 resources, while Easy runs the separate bad dialogue and stops before
+the native Ending implementation. See
+[Yuuka integration](#stage5-yuuka-ordinary-battle-and-route-specific-departure)
+for the current acceptance scope; earlier slices below retain their historical
+boundaries.
 
 ## Current executable slice
 
@@ -2440,3 +2441,65 @@ windows-link-continuity.json, integration-review.json and windows-test-export.js
 Large redundant native outputs are gzip-archived with complete readback; current
 original pixel/reference buffers stay live. Restore archived private output paths
 with `gzip -d -- FILE.gz` before replay.
+
+
+## Stage5 Yuuka ordinary battle and route-specific departure
+
+The v1281 join activates the existing Yuuka owner only after the actual Stage5
+pre-dialogue has installed the nine battle sprites. MAIN now owns its retained
+boss metadata, two thick-laser records, shared bullet/laser contact latch,
+shot damage, gather releases, homing, explosions and cached draw requests.
+Background selection uses the pre-update phase/clock; palette0 and deferred
+WORD tone come from the live Yuuka snapshot rather than the setup copy.
+Phase1 uses signed clock/4 BB cels, white one-bit cells and the original
+filler/CDG order. Ordinary battle freezes the stage star centers. Host full
+redraw remains the replacement for dirty tile/EGC copies.
+
+The first ordinary Easy route exposed a missing integration call: a default
+laser scratch record has flag0, so add() copied inactive records and no laser
+was drawn. Calling the original-shaped initialize() at stage initialization
+arms LINE/radius/clock while retaining the other beam/scratch fields. The
+rejected capture/log remains under development-routes; later routes observe
+both line and wide lasers and transient contact writes. At each new simulation
+frame, clear both representations of the shared player-hit latch; preserve it
+through boss update and post-boss gather releases. Blocking dialogue resumes
+the existing frame suffix, and repaint cannot clear the latch or age effects.
+Player death remains a separate unimplemented consumer.
+
+A correction to the preceding graphics discussion: phase254 actually resolves
+patterns4..11 to MIKO32.BFT's eight32x32 death images. The64x64 entrance image128
+is used in entrance/movement, not as the ordinary defeat zoom source. The v1280
+factor3 pixel controls used the nine entrance/idle assets and therefore did
+not independently cover this real death sheet. New --defeat-zoom-only controls
+execute original31A2 with the eight32x32 images at16 edge/offset combinations,
+comparing128 retained640x400 screens (32,768,000 indexed pixels). Historical
+v1280 evidence remains scoped to its original asset set.
+
+Original MAIN13A9:AD4D..AD6C tests stage_id4, continues-used BYTE DS4349 and
+rank BYTE DS4348. Easy or any nonzero continues-used loads a separate bad
+script, animates it and calls end_game_bad before normal clear bonus. Actual
+0AAF:2411..242D mutates character offset3 of _DM04B.txt;0AAF:0CF4..0D1E writes
+resident sequenceFE/type ASCII1, fades sound/palette and transfers to MAINE.
+The independent stage/rank/continues/character matrix (96 invocations) executes these branches,
+filename writes and resident publication; I/O/dialog/audio/video consumers are
+explicit adapters and the transfer stops at GameExecl. Native comparison is
+of the branch predicate. The natural Easy routes separately check the loaded
+character-specific script, no normal bonus and no Stage6 request. Continue
+statistics and actual native MAINE/Ending rendering have not joined yet, so the
+GUI deliberately holds before that Ending call instead of inventing a result.
+
+--yuuka5-screenshots traverses Stage1..4 naturally, then records18 Stage5
+routes: sixteen Reimu/Marisa Normal/Lunatic A/B-shot/idle runs, plus both Easy
+A-shot routes. It checks phases0..18/254/255, movement states, laser lifecycle,
+all eight death frames, post-dialogue, bonus, fade417 and departure489, plus
+simulation/RNG/resource/star invariants. The18 routes produce698 BMPs and716
+counter lines; the16 ordinary routes request Stage6 while retaining resource
+stage4 until that owner joins. Easy stops before Bad Ending. These are native
+host scenarios, not independent original full-game or FPS evidence.
+
+Receipts and source manifests live in .analysis/port64/yuuka5-join-v1281.
+The Windows launcher remains English and describes the Stage6/Ending frontier.
+DOS source, exact units and authored acceptance do not change. Semantic
+readability remains stopped except for specific port ambiguities; Stage6 and
+Extra, player death/Continue/Bomb, remaining HUD, audio, Ending and saved-data
+I/O are still required for a complete native game.

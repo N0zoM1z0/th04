@@ -159,8 +159,9 @@ void raster_sprite(const sprite::Sheet& sheet,unsigned image,int left,int top,Dr
     if(kind!=DrawKind::zoom_sprite) throw std::invalid_argument("unsupported Yuuka sprite raster kind");
     // Yuuka's phase254 requests SUPER_ZOOM_PUT with factor3. It reads four
     // color planes (not the alpha plane), skips color0 and paints an inclusive
-    // clipped3x3 rectangle for each source pixel. Idle sheets are48x96, while
-    // the entrance/zoom sheet is64x64; never infer either size from the ID.
+    // clipped3x3 rectangle for each source pixel. Phase254 uses MIKO32
+    // death patterns4..11 (32x32); entrance128 is64x64 and idle129..136 is
+    //48x96. Resolve the actual pattern's sheet rather than reusing entrance128.
     for(unsigned y=0;y<sheet.height();++y) for(unsigned x=0;x<sheet.width();++x) {
         const auto color=sheet.pixel(image,x,y);if(!color) continue;
         const motion::Point at{motion::wrap(left+int(x)*3),motion::wrap(top+int(y)*3)};

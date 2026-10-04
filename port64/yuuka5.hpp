@@ -3,6 +3,11 @@
 #include "thick_lasers.hpp"
 #include "sprite_sheet.hpp"
 namespace th04::portable::yuuka5 {
+// MAIN13A9:AD4D..AD6C: Stage5 Easy or any Continue-used byte enters
+// the separately loaded bad dialogue, then end_game_bad before clear bonus.
+constexpr bool bad_ending_after_defeat(std::uint8_t stage_id,std::uint8_t rank,std::uint8_t continues_used) {
+    return stage_id==4 && (continues_used!=0 || rank==0);
+}
 enum class Attack : std::uint8_t { sweep,clouds,gather,speedup_ring,aimed_spread,laser_burst,mirrored_streams };
 struct Snapshot {
     orange::Snapshot boss{};

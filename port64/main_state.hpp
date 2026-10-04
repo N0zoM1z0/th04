@@ -16,6 +16,7 @@
 #include "reimu.hpp"
 #include "marisa.hpp"
 #include "stage5.hpp"
+#include "yuuka5.hpp"
 #include "circles.hpp"
 #include "dialog.hpp"
 #include "stage_bonus.hpp"
@@ -77,8 +78,15 @@ public:
     const reimu::System* reimu() const { return reimu_ ? &*reimu_ : nullptr; }
     bool marisa_active() const { return marisa_active_; }
     const marisa::System* marisa() const { return marisa_ ? &*marisa_ : nullptr; }
-    bool boss_active() const { return marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
-    const orange::Snapshot& boss_snapshot() const { return stage5_ ? stage5_->boss : (marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot())))); }
+    bool yuuka5_active() const { return yuuka5_active_; }
+    const yuuka5::System* yuuka5() const { return yuuka5_ ? &*yuuka5_ : nullptr; }
+    const laser::System& thick_lasers() const { return thick_lasers_; }
+    // Ending rendering has not joined yet. This holds at the actual bad
+    // Ending call boundary, before the normal clear bonus or Stage6 request.
+    bool bad_ending_requested() const { return bad_ending_requested_; }
+    bool bad_yuuka5_dialog() const { return yuuka5_active_ && th04::portable::yuuka5::bad_ending_after_defeat(stage_id_,rank_,0); }
+    bool boss_active() const { return yuuka5_active_ || marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
+    const orange::Snapshot& boss_snapshot() const { return yuuka5_active_ ? yuuka5_->snapshot().boss : (stage5_ ? stage5_->boss : (marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot()))))); }
     const std::vector<orange::Draw>& boss_draws() const { return marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }
     const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
     std::uint8_t invincibility() const { return player_invincibility_; }
@@ -103,6 +111,7 @@ public:
     void start_elly_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void start_marisa_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void start_reimu_after_dialog(std::array<std::uint8_t,3> palette_zero);
+    void start_yuuka5_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void finish_post_boss_dialog();
     bool next_stage_requested() const { return next_stage_requested_; }
     const transition::Overlay& overlay() const { return overlay_; }
@@ -141,6 +150,9 @@ private:
     std::optional<midboss3::System> midboss3_;
     std::optional<midboss4::System> midboss4_;
     std::optional<stage5::Setup> stage5_;
+    std::optional<yuuka5::System> yuuka5_;
+    laser::System thick_lasers_{};
+    bool yuuka5_active_=false,bad_ending_requested_=false;
     // A null original renderer emits no requests, including at frame60000.
     std::vector<midboss::Draw> stage5_midboss_draws_;
     orange::System orange_{};

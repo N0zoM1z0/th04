@@ -745,9 +745,19 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     const auto background_phase=state.orange_background_phase();
     const auto npc_background=th04::portable::reimu::backdrop(background_phase,state.orange_background_frame());
     const bool npc_picture=npc_active && (npc_background.kind==th04::portable::reimu::BackdropKind::picture || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask);
-    const bool backdrop=npc_picture || (!npc_active && state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254);
+    const auto yuuka_background=th04::portable::yuuka5::backdrop(background_phase,state.orange_background_frame());
+    const bool yuuka_picture=state.yuuka5_active() && (yuuka_background.kind==th04::portable::yuuka5::BackdropKind::picture || yuuka_background.kind==th04::portable::yuuka5::BackdropKind::picture_and_mask);
+    const bool backdrop=yuuka_picture || npc_picture || (!state.yuuka5_active() && !npc_active && state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254);
     if (backdrop) {
-        if(npc_active) {
+        if(state.yuuka5_active()) {
+            require_view(bool(sprites.second),"Yuuka5 backdrop has no Stage5 owner");
+            // Preserve the original phase-specific filler/CDG call order.
+            for(const auto d:th04::portable::yuuka5::backdrop_requests(background_phase,state.orange_background_frame())) {
+                if(d.kind==2) put_opaque(frame,palette,sprites.second->backdrop,0,d.x,d.y);
+                else if(d.kind==4) for(auto at:th04::portable::yuuka5::filler_pixels())
+                    put_indexed_pixel(frame,palette,at.x,at.y,0,0,0);
+            }
+        } else if(npc_active) {
             require_view(bool(sprites.second),"NPC backdrop has no Stage4 owner");
             fill_rect(frame,palette,32,16,384,56,1);fill_rect(frame,palette,32,328,384,56,1);
             fill_rect(frame,palette,32,72,64,256,1);fill_rect(frame,palette,352,72,64,256,1);
@@ -774,7 +784,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     for (unsigned y=16; y<384; ++y) {
         for (unsigned x=0; x<384; ++x) {
             if (backdrop) {
-                if(npc_active) continue;
+                if(npc_active || state.yuuka5_active()) continue;
                 if (background_phase!=(state.elly_active() ? 2 : 1)) continue;
                 const int cel=state.orange_background_frame()/2;
                 require_view(cel>=0 && cel<16,"Orange BB cel outside resource");
@@ -802,11 +812,17 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             if(sprites.second->assets.transition[cel*128+row*4+column/8]&(0x80u>>(column&7)))
                 fill_rect(frame,palette,32+int(column*16),16+int(row*16),16,16,15);
     }
+    if(state.yuuka5_active() && (yuuka_background.kind==th04::portable::yuuka5::BackdropKind::tiles_and_mask || yuuka_background.kind==th04::portable::yuuka5::BackdropKind::picture_and_mask)) {
+        const unsigned cel=yuuka_background.cel;require_view(cel<16,"Yuuka5 BB cel outside resource");
+        for(unsigned row=0;row<23;++row) for(unsigned column=0;column<24;++column)
+            if(sprites.second->assets.transition[cel*128+row*4+column/8]&(0x80u>>(column&7)))
+                fill_rect(frame,palette,32+int(column*16),16+int(row*16),16,16,15);
+    }
     const auto& shots = state.shots().snapshot();
     const auto pixels = [](std::int16_t coordinate) {
         return coordinate >= 0 ? coordinate / 16 : -((-int(coordinate)+15)/16);
     };
-    if (state.boss_active()) for (const auto& draw:state.boss_draws()) {
+    if (state.boss_active() && !state.yuuka5_active()) for (const auto& draw:state.boss_draws()) {
         const auto pattern=draw.pattern_or_radius;
         if(draw.kind==orange::DrawKind::line) {
             const auto points=state.marisa_active() ? th04::portable::marisa::line_pixels({draw.left,draw.top},{draw.end_left,draw.end_top}) : th04::portable::kurumi::ray_pixels({draw.left,draw.top},{draw.end_left,draw.end_top});
@@ -828,6 +844,31 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         else if (pattern>=4 && pattern<28) put_sprite(frame,palette,sprites.enemies,pattern-4,draw.left,draw.top,draw.kind==orange::DrawKind::white_rolling_sprite,draw.kind==orange::DrawKind::large_sprite ? 2 : 1);
         else if (pattern>=28 && pattern<128) put_sprite(frame,palette,sprites.items,pattern-28,draw.left,draw.top);
         else throw std::runtime_error("Orange references absent sprite");
+    }
+    if(state.yuuka5_active()) for(const auto& d:state.yuuka5()->draws()) {
+        using Kind=th04::portable::yuuka5::DrawKind;
+        const auto pixel=[&](th04::portable::motion::Point at) { put_indexed_pixel(frame,palette,at.x,at.y,0,0,static_cast<std::uint8_t>(d.color&15)); };
+        if(d.kind==Kind::color || d.kind==Kind::disable) continue;
+        if(d.kind==Kind::circle) { for(auto at:circle::raster({d.x,d.y},d.value)) pixel(at); }
+        else if(d.kind==Kind::disc) { for(auto at:th04::portable::yuuka5::disc_pixels({d.x,d.y},d.value)) pixel(at); }
+        else if(d.kind==Kind::rectangle) { for(auto at:th04::portable::yuuka5::rectangle_pixels({d.x,d.y},{d.end_x,d.end_y})) pixel(at); }
+        else if(d.kind==Kind::vertical_line) { for(auto at:th04::portable::yuuka5::vertical_line_pixels(d.x,d.y,d.end_y)) pixel(at); }
+        else {
+            const sprite::Sheet* sheet=nullptr;unsigned image=0;
+            if(d.value>=128 && d.value<256) { const auto slot=sprites.stage_slots[d.value];sheet=slot.sheet;image=slot.image; }
+            else if(d.value==3) sheet=&sprites.explosion;
+            else if(d.value>=4 && d.value<28) {sheet=&sprites.enemies;image=d.value-4;}
+            else if(d.value>=28 && d.value<128) {sheet=&sprites.items;image=d.value-28;}
+            require_view(sheet,"Yuuka5 references absent sprite");
+            if(d.kind==Kind::large_sprite || d.kind==Kind::tiny_sprite)
+                put_sprite(frame,palette,*sheet,image,d.x,d.y,false,d.kind==Kind::large_sprite ? 2 : 1);
+            else {
+                // In defeat this resolves4..11 to32x32 MIKO32, not entrance128.
+                th04::portable::yuuka5::raster_sprite(*sheet,image,d.x,d.y,d.kind,
+                    [&](int x,int y) {return frame.indices[unsigned(y)*frame.width+unsigned(x)];},
+                    [&](int x,int y,std::uint8_t color) {put_indexed_pixel(frame,palette,x,y,0,0,color);});
+            }
+        }
     }
     if (state.midboss_state().active) for (const auto& draw:state.midboss_draws()) {
         if (draw.pattern>=128) {
@@ -1112,6 +1153,7 @@ public:
     void enable_reimu() { enable_stage4();continue_reimu_=true; }
     void enable_marisa() { enable_stage4();continue_marisa_=true; }
     void enable_stage5() { enable_reimu();enable_marisa();continue_stage5_=true; }
+    void enable_yuuka5() { enable_stage5();continue_yuuka5_=true; }
     bool stage5_dialog_complete() const { return fifth_pre_finished_; }
     const th04::portable::stage5::Stars& stage5_stars() const { require_view(bool(sprites_->second) && bool(sprites_->second->star_plane),"Stage5 stars are absent");return sprites_->second->stars; }
     bool stage5_resources_valid() const {
@@ -1200,7 +1242,10 @@ public:
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
-                    else if(loaded_stage_==4) { fifth_pre_finished_=true;require_view(stage5_battle_resources_valid(),"Stage5 dialog battle bank invalid"); }
+                    else if(loaded_stage_==4) {
+                        fifth_pre_finished_=true;require_view(stage5_battle_resources_valid(),"Stage5 dialog battle bank invalid");
+                        if(continue_yuuka5_) main_->start_yuuka5_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
+                    }
                     else if(loaded_stage_==3) { fourth_pre_finished_=true;if(continue_reimu_ && application_.resident().playchar==application::Playchar::marisa) {
                         require_view(stage4_battle_resources_valid(),"Reimu battle sprite bank invalid");
                         main_->start_reimu_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
@@ -1294,6 +1339,12 @@ public:
 
 private:
     void begin_dialog(bool post) {
+        // Easy uses a newly loaded _DM04B/_DM14B script, not the normal
+        // post-dialogue tail retained after the pre-boss '#' terminator.
+        if(post && main_->bad_yuuka5_dialog()) {
+            require_view(assets_ && !assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)].empty(),"Yuuka5 bad dialogue missing");
+            script_=std::make_unique<dialog::Script>(assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)]);
+        }
         post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar,main_->palette_tone_before_frame()),unsigned(application_.resident().playchar));
     }
     enum class Screen { menu, selection, main_handoff };
@@ -1335,7 +1386,7 @@ private:
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
     bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
     bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false,continue_marisa_=false;
-    bool continue_stage5_=false,fifth_pre_finished_=false;
+    bool continue_stage5_=false,fifth_pre_finished_=false,continue_yuuka5_=false;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1368,7 +1419,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_stage5(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_yuuka5(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1542,7 +1593,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_stage5();
+    front_end.enable_yuuka5();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1652,7 +1703,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -2483,6 +2534,92 @@ void run_title(
             require_view(state.frames()==frames && state.score().score_delta==pending && state.random_cursor()==ring && scene.process_random_state()==process && scene.stage5_stars().centers==centers,"Stage5 unimplemented battle frontier repeated simulation");
             require_view(scene.resident().stage==4 && scene.resident().resource_stage==4 && scene.generation()==generation,"Stage5 resource publication restarted MAIN");
             std::cout<<"MAIN Stage5 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shot_type="<<shot_type<<" shooting="<<shooting<<" frames="<<frames<<" frozen_ticks="<<frozen<<" star_updates="<<stars_updated<<" generation="<<generation<<" progression=yuuka5_battle_pending\n";
+        }
+    }
+    if(!yuuka5_screenshots.empty()) {
+        // These inputs traverse the preceding stages and dialogue normally.
+        // No seeded boss phase, forced HP, synthetic score or stage skip.
+        for(unsigned character=0;character<2;++character) for(unsigned difficulty:{0u,1u,3u}) for(unsigned shot_type=0;shot_type<2;++shot_type) for(bool shooting:{false,true}) {
+            if(difficulty==0 && (shot_type || !shooting)) continue;
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);scene.enable_yuuka5();
+            if(difficulty!=1) {
+                for(unsigned i=0;i<3;++i)scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);
+                if(difficulty==0) scene.input(menu::Input::left);
+                else {scene.input(menu::Input::right);scene.input(menu::Input::right);}
+                scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i)scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);if(character)scene.input(menu::Input::right);scene.input(menu::Input::confirm);
+            if(shot_type)scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);
+            const auto generation=scene.generation();std::vector<std::string> seen;
+            const auto prefix=std::string(difficulty==0 ? "easy-" : (difficulty==3 ? "lunatic-" : "normal-"))+(character ? "marisa-" : "reimu-")+(shot_type ? "b-" : "a-")+(shooting ? "shot-" : "idle-");
+            unsigned battle=0,frozen=0,hits=0,hit_clears=0,laser_frames=0,bonuses=0,fades=0,next=0;bool last_hit=false;
+            const auto captured=[&](const std::string& name) {return std::find(seen.begin(),seen.end(),name)!=seen.end();};
+            const auto capture=[&](const std::string& tag) {
+                if(captured(tag))return;
+                seen.push_back(tag);
+                const auto& state=scene.main_state();const auto& y=state.yuuka5()->snapshot();
+                const auto frames=state.frames(),process=scene.process_random_state();const auto ring=state.random_cursor();
+                const auto centers=scene.stage5_stars().centers;const auto clock=y.boss.phase_frame;const auto age=y.boss.big.age;
+                const auto beam_clock=state.thick_lasers().snapshot().beams[0].phase_frame;
+                scene.repaint();scene.repaint();
+                require_view(state.frames()==frames && scene.process_random_state()==process && state.random_cursor()==ring && scene.stage5_stars().centers==centers && y.boss.phase_frame==clock && y.boss.big.age==age && state.thick_lasers().snapshot().beams[0].phase_frame==beam_clock,"Yuuka5 repaint advanced simulation");
+                const auto name=prefix+tag,path=yuuka5_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                std::cout<<"MAIN Yuuka5 fixture="<<name<<" frame="<<frames<<" phase="<<+y.boss.phase<<" clock="<<clock<<" mode="<<+y.boss.mode<<" move="<<+y.move_state<<" hp="<<y.boss.hp<<" sprite="<<+y.boss.sprite<<" hit="<<+state.thick_lasers().snapshot().player_hit<<" bullets_hit="<<state.bullets().snapshot().player_hit<<" stars="<<centers[0]<<','<<centers[1]<<','<<centers[2]<<" ring="<<ring<<" rng="<<process<<" offset="<<scene.dialog_offset()<<" score="<<state.awarded_score_units()<<" screenshot="<<path<<'\n';
+            };
+            for(unsigned tick=0;tick<300000;++tick) {
+                const auto& old=scene.main_state();const auto before=old.frames(),process=scene.process_random_state();const auto ring=old.random_cursor();
+                const bool blocked=scene.dialog_active();const bool was_yuuka=old.yuuka5_active();const auto centers=scene.resource_stage()==4 ? scene.stage5_stars().centers : std::array<std::int16_t,3>{};
+                std::uint16_t held=blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : shot::input_shot;
+                if(!blocked && was_yuuka)held=shooting ? shot::input_shot : 0;
+                if(!blocked && old.boss_active() && (scene.resource_stage()<4 || shooting)) {
+                    const int dx=old.boss_snapshot().position.current.x-old.player().position().current.x;
+                    if(dx>64)held|=player::right;else if(dx<-64)held|=player::left;
+                }
+                scene.advance(held,false,false);const auto& state=scene.main_state();
+                if(!state.yuuka5_active())continue;
+                require_view(scene.resource_stage()==4 && scene.stage5_battle_resources_valid() && !state.midboss_state().active && scene.generation()==generation,"Yuuka5 resource/actor ownership");
+                const auto& y=state.yuuka5()->snapshot();const auto& beams=state.thick_lasers().snapshot();
+                require_view(y.stage_vm_disabled && y.midboss_frames_until==0,"Yuuka5 entrance retained STD callback");
+                if(blocked && scene.dialog_active()) {
+                    require_view(state.frames()==before && state.random_cursor()==ring && scene.process_random_state()==process && scene.stage5_stars().centers==centers,"Yuuka5 blocked dialogue advanced simulation/RNG");++frozen;
+                }
+                if(was_yuuka && state.frames()!=before && !scene.post_dialog()) {
+                    ++battle;require_view(beams.player_hit<=1 && bool(beams.player_hit)==state.bullets().snapshot().player_hit,"Yuuka5 shared player-hit latch diverged");
+                    if(beams.player_hit)++hits;
+                    if(last_hit && !beams.player_hit)++hit_clears;
+                    last_hit=beams.player_hit!=0;
+                    if(y.boss.phase>=1 && y.boss.phase<254 && old.frames()!=before)
+                        require_view(scene.stage5_stars().centers==centers,"Yuuka5 battle advanced frozen star centers");
+                }
+                if(!scene.dialog_active()) {
+                    for(const auto& e:state.orange_events()) {
+                        if(e.type==orange::EventType::stage_bonus)++bonuses;
+                        if(e.type==orange::EventType::fade)++fades;
+                        if(e.type==orange::EventType::next_stage)++next;
+                    }
+                }
+                capture("phase-"+std::to_string(y.boss.phase));
+                if(y.boss.phase>=2 && y.boss.phase<254)capture("move-"+std::to_string(y.move_state));
+                for(const auto& b:beams.beams)if(b.flag) {++laser_frames;capture(b.flag==1 ? "laser-line" : "laser-wide");}
+                if(y.boss.phase==254)capture("death-"+std::to_string(y.boss.sprite));
+                if(scene.post_dialog() && scene.dialog_active() && scene.dialog_glyphs() && scene.dialog_status()==dialog::Status::press)capture("post-text");
+                if(state.clear_bonus())capture("bonus");
+                if(scene.post_dialog_complete() && y.boss.phase_frame==417)capture("fade");
+                if(state.next_stage_requested() || state.bad_ending_requested())break;
+            }
+            const auto& state=scene.main_state();
+            for(const auto* tag:{"phase-0","phase-1","phase-2","phase-13","phase-16","phase-17","phase-18","phase-254","phase-255","move-1","move-2","move-3","laser-line","laser-wide","death-4","death-11","post-text"})
+                require_view(captured(tag),"Yuuka5 route missed a required battle checkpoint");
+            require_view(battle>1000 && frozen>100 && hits && hit_clears && laser_frames,"Yuuka5 actor/dialog/contact lifecycle incomplete");
+            if(difficulty==0) require_view(state.bad_ending_requested() && !state.next_stage_requested() && !state.clear_bonus() && bonuses==0 && fades==0 && next==0 && scene.resident().stage==4,"Easy followed normal stage-clear departure");
+            else require_view(state.next_stage_requested() && !state.bad_ending_requested() && state.clear_bonus() && bonuses==1 && fades==1 && next==1 && scene.resident().stage==5 && scene.resident().resource_stage==4,"Yuuka5 did not request actual Stage6 resources");
+            capture(difficulty==0 ? "bad-ending-pending" : "stage6-pending");
+            const auto frames=state.frames(),process=scene.process_random_state(),score=state.awarded_score_units();const auto ring=state.random_cursor();const auto centers=scene.stage5_stars().centers;
+            for(unsigned i=0;i<5;++i)scene.advance(shot::input_shot|player::left,false,false);
+            require_view(state.frames()==frames && scene.process_random_state()==process && state.random_cursor()==ring && state.awarded_score_units()==score && scene.stage5_stars().centers==centers,"Yuuka5 pending resource/Ending frontier advanced simulation");
+            std::cout<<"MAIN Yuuka5 stopped fixture="<<prefix<<" frames="<<frames<<" battle="<<battle<<" frozen="<<frozen<<" hits="<<hits<<" hit_clears="<<hit_clears<<" lasers="<<laser_frames<<" bonus="<<bonuses<<" fades="<<fades<<" next="<<next<<" captures="<<seen.size()<<" generation="<<generation<<" progression="<<(difficulty==0 ? "bad_ending_pending" : "stage6_pending")<<'\n';
         }
     }
     if (window) {

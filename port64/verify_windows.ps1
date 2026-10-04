@@ -133,12 +133,25 @@ Get-ChildItem -LiteralPath $stage5Dir -Filter '*.bmp' | ForEach-Object {
 if ($stage5Images.Count -ne 112) { throw 'Missing Stage 5 visual checkpoints.' }
 $stage5Counters = @($stage5Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Stage5 *' })
 if ($stage5Counters.Count -ne 128) { throw 'Missing Stage 5 scenario counters.' }
+$yuuka5Dir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'yuuka5-frames')).FullName
+Write-Host 'Running eighteen natural Yuuka Stage 5 battle and departure scenarios...'
+$yuuka5Lines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --yuuka5-screenshots $yuuka5Dir 2>&1)
+if ($LASTEXITCODE -ne 0) { throw "Yuuka Stage 5 scenarios failed: $yuuka5Lines" }
+$yuuka5Lines | Set-Content -LiteralPath (Join-Path $outDir 'yuuka5.log')
+$yuuka5Images = @{}
+Get-ChildItem -LiteralPath $yuuka5Dir -Filter '*.bmp' | ForEach-Object {
+    $yuuka5Images[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+if ($yuuka5Images.Count -ne 698) { throw 'Missing Yuuka Stage 5 visual checkpoints.' }
+$yuuka5Counters = @($yuuka5Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Yuuka5 *' })
+if ($yuuka5Counters.Count -ne 716) { throw 'Missing Yuuka Stage 5 scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
     hdi_sha256=(Get-FileHash -LiteralPath $hdiFile -Algorithm SHA256).Hash.ToLowerInvariant()
     font_sha256=(Get-FileHash -LiteralPath $fontFile -Algorithm SHA256).Hash.ToLowerInvariant()
     dialog_fixture_bmp_sha256=$images; dialog_fixture_counters=$counters
+    yuuka5_fixture_bmp_sha256=$yuuka5Images; yuuka5_fixture_counters=$yuuka5Counters
     stage5_fixture_bmp_sha256=$stage5Images; stage5_fixture_counters=$stage5Counters
     stage2_fixture_bmp_sha256=$stage2Images; stage2_fixture_counters=$stage2Counters
     kurumi_fixture_bmp_sha256=$kurumiImages; kurumi_fixture_counters=$kurumiCounters
@@ -152,4 +165,4 @@ $receipt = @{
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count + $ellyImages.Count + $stage4Images.Count + $reimuImages.Count + $marisaImages.Count + $stage5Images.Count))
+Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count + $ellyImages.Count + $stage4Images.Count + $reimuImages.Count + $marisaImages.Count + $stage5Images.Count + $yuuka5Images.Count))

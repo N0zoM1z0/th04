@@ -12,16 +12,49 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Stage5 resources/stars/pre-dialog](PORT64.md#stage5-resources-stars-and-yuuka-pre-dialogue).
-The GUI runs title/options/character/shot, Stage1 Orange, Stage2 Kurumi,
-Stage3 Elly/clear/departure, Stage4 waves/carpet/two midbosses/NPC dialogue.
-Both characters now continue through their respective Reimu/Marisa Boss,
-post-dialog/bonus/departure into Stage5 STD waves, scrolling stars and Yuuka
-pre-dialogue. Sixteen Normal/Lunatic Reimu/Marisa A/B-shot/idle routes complete
-6,080 Stage5 frames each, then freeze at the ordinary Yuuka battle boundary.
-Root Windows native EXE/English launcher are v1277; no GUI launched.
+Current native scope: [Stage5 Yuuka ordinary battle](PORT64.md#stage5-yuuka-ordinary-battle-and-route-specific-departure).
+The GUI runs title/options/character/shot and ordinary Stage1 through Stage5
+waves/midbosses/bosses/dialogues. Yuuka now joins actual shot damage, seven
+attacks, thick lasers, indexed foreground/background/palette, all eight32x32
+factor3 death frames and route-specific post-dialogue. Sixteen Reimu/Marisa
+Normal/Lunatic A/B-shot/idle routes request Stage6; both Easy A-shot routes
+load the independent bad dialogue and hold before unported Bad Ending.
+Root Windows native EXE/English launcher are v1281; no GUI launched. Previous
+v1277 is retained in port64-preview/v1281-yuuka-battle/previous-v1277.
 
-Stage5 has no BMT or midboss callback; actual setup retains BOSS/midboss metadata
+Final native source manifest c81d775741f2d836c456aa76bbab5c30c4de746d695f620639ab5083603e8ea6.
+Three incremental builds each pass23CTests/24ELF64-staticPE products. Full
+GNU/Wine/actualWindows1548 route images agree;32 preceding image/counter groups
+remain unchanged. New698Yuuka BMPs/716counters also agree optimizedUBSan.
+Fresh original128death-zoom screens compare32,768,000 pixels;96original Ending
+branch invocations execute actual bad filenames/FE/type1 publication before
+GameExecl. Native branch comparison is predicate-only; I/O/dialog/audio/palette
+are CPU adapters. Retained independent9936graphics and7330core/69652checkpoint
+references pass current GNU and actualWindows consumers; optimizedUBSan core
+also passes. Original full-route/physical-hardware/FPS/DOS exactness remain
+separate. All21 nonnative Windows root files are unchanged.
+
+The initial ordinary route exposed missing laser initialize(): scratchflag0
+created inactive beams. Stage initialization now arms LINE/radius/clock while
+retaining other fields. Clear/bridge the bullet bool and laser BYTE contact
+once per new simulation frame, including gather releases; blocking dialogue
+and cached repaint preserve simulation/RNG/explosion/laser/star state. Player
+death/Continue remains an unported consumer. The previous zoom-sheet comment
+is corrected: entrance128 is64x64;phase254 uses MIKO32 patterns4..11,32x32.
+v1280 zoom controls covered entrance/idle assets only; retain their scope.
+Receipts:.analysis/port64/yuuka5-join-v1281/ (integration-accepted/receipt,
+integration-review,native-windows-controls-receipt,death-zoom-final/receipt,
+departure-final/receipt,target-review,source-manifest-final,Windows export).
+
+The completed v1281 validation BMPs are losslessly gzip-archived after comparison:
+media-archive-receipt and accepted-media-archive-receipt reclaim10.73GiB with
+original/compressed hashes and readback. Three redundant native pixel outputs
+are also archived; root .analysis/cleanup/port64-duplicate-pixels-20261004/receipt
+confirms93.0MiB reclaimed and5,117 protected files unchanged. Original CPU pixel
+buffers, current builds, DOS fast caches and Windows saves remain live. Restore
+private archived outputs with gzip -d before replay; root/native CI pass.
+
+Historical v1277 resource controls: Stage5 has no BMT or midboss callback; actual setup retains BOSS/midboss metadata
 and null callbacks have start frame60000. Original setup1,024/star1,820/rolling
 OR-plane504 controls pass;16 archive portrait checks compare197,728 pixels.
 Linux/Wine/actualWindows21contracts/850BMP/926counters agree;optimizedUBSan
@@ -134,7 +167,7 @@ until a new contact. VM is a null/retained token; the FAR address is not a host
 pointer. All23 GNU predecessors are raw-identical; MinGW differences are only
 COFF timestamp/checksum.14UBSan predecessors differ, so fresh16Stage5 routes
 compare112BMP/128counters instead of claiming raw equality. Media are verified
-and gzipped. Root Windows remainsv1277; only v1279-yuuka-controls diagnostics
+and gzipped. At v1279 root Windows remainedv1277; only v1279-yuuka-controls diagnostics
 exported. See [Yuuka core](PORT64.md#stage5-yuuka-core-and-seven-attacks) and
 `.analysis/port64/yuuka5-v1279/`. Source manifest ce458897. These are boss-only
 controls with injected shots/downstream consumers, not a GUI battle join.
@@ -149,7 +182,7 @@ helper-byte continuity. Final832primitive screens and allrequests reexecute
 original CPU. The initial rejected consumer remains failed. Core7330/69652
 regression passes GNU/actualWindows.23CTest/24products pass each build;23prior
 GNU/UBSan products are raw-identical and23MinGW differ only header timestamps/
-checksums. Only v1280diagnostics are exported; GUI/rootWindows remainv1277.
+checksums. At v1280 only diagnostics were exported; GUI/rootWindows remainedv1277.
 See [Yuuka graphics](PORT64.md#stage5-yuuka-foreground-and-raster-controls),
 `.analysis/port64/yuuka5-render-v1280/`; final manifest7e410b8e. No whole-game/
 physical-hardware/FPS/DOS-exact claim.
@@ -158,9 +191,9 @@ The latest requested cleanup additionally archives97historical files with
 verified gzip readback, reclaiming1.21GiB while119,965retained files keep their
 hashes. Root receipt:`.analysis/cleanup/historical-media-followup-20261004/`.
 
-Next bounded work: ordinary Stage5 battle join and post-dialog/bonus/departure.
-Player death/Bomb/full HUD/
-audio/later stages/Ending/save still need native implementation. Semantic stays
+Next bounded work: actual Stage6 resource/setup/STD and Yuuka6 dialogue/battle.
+Extra, player death/Continue/Bomb, remaining HUD, audio, Ending/save still need
+native implementation. Semantic stays
 stopped except concrete port ambiguities. Complete native gameplay is the port
 stopping condition.
 
