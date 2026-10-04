@@ -184,7 +184,9 @@ def main():
                     at=next(i for i,(a,b) in enumerate(zip(actual,want)) if a!=b)
                     raise ValueError(f'{name} checkpoint{event_index} page{page} differs at {at%640},{at//640}')
                 route_records.append(dict(event=event_index,page=page,sha256=sha(want)))
-            palette=(np.frombuffer(raster.palette,dtype=np.uint8).reshape(16,3)[:,[1,2,0]]>>4).astype(np.int32)
+            # PI bytes are RGB. Original palette_show sends byte0 to redAC,
+            # byte1 to greenAA and byte2 to blueAE; port order is not RGB order.
+            palette=(np.frombuffer(raster.palette,dtype=np.uint8).reshape(16,3)>>4).astype(np.int32)
             tone=raster.tone
             rgb=(palette*tone//100 if tone<=100 else 15-(15-palette)*(200-tone)//100).astype(np.uint8)*17
             Image.fromarray(rgb[raster.pages[raster.shown]]).save(route/f'{event_index}.png')

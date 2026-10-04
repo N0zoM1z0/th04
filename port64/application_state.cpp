@@ -130,7 +130,8 @@ void State::return_from_main(const RunStatistics& statistics) {
 }
 
 void State::finish_main(
-    const RunStatistics& statistics, EndSequence end_sequence
+    const RunStatistics& statistics, EndSequence end_sequence,
+    const std::function<void()>& release_main
 ) {
     require_program(Program::main);
     if (end_sequence == EndSequence::in_game) {
@@ -143,7 +144,18 @@ void State::finish_main(
     } else if (end_sequence == EndSequence::bad) {
         resident_.end_type_ascii = '1';
     }
+    if(release_main) release_main();
     enter(Program::maine);
+}
+
+void State::prepare_main_ending(EndSequence sequence) {
+    require_program(Program::main);
+    if(sequence!=EndSequence::good && sequence!=EndSequence::bad)
+        throw std::invalid_argument("Ending requires a Good or Bad completion");
+    // end_game_* writes these before fade16. MAIN storage and generator still
+    // live until GameExecl publishes statistics and replaces the process.
+    resident_.end_sequence=sequence;
+    resident_.end_type_ascii=sequence==EndSequence::good ? '0' : '1';
 }
 
 MaineRoute State::maine_route() const {

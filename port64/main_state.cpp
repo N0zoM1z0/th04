@@ -237,6 +237,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     };
     midboss::Context midboss_context;
     if(!resumed) {
+        if(stage_ && !boss_active()) run_frames_.standard_tick();
         // STD dispatch precedes player movement; enemies created here can run
         // their first setup/move instructions later in this same frame.
         if (stage_ && !boss_active()) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_state().active)) {
@@ -470,6 +471,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     const bool leaving=overlay_.callback==transition::Callback::leave;
     const auto writes=transition::update_overlay(overlay_);
     if(!writes.empty()) { overlay_cell_=writes.back();if(leaving) leave_text_replaced_=true; }
+    run_frames_.complete(0,static_cast<std::uint16_t>(slowdown()));
     ++frames_;
     const unsigned interval=score_.remaining_lives>=10 ? 1000 : 6000-score_.remaining_lives*500;
     if (static_cast<std::uint16_t>(frames_)%interval==0) performance_=std::min(
@@ -487,5 +489,15 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
 
 item::MissSpawnResult State::add_miss_items() {
     return items_.add_miss(ring_, player_.position().current, score_.remaining_lives);
+}
+
+application::RunStatistics State::run_statistics() const {
+    return gameplay::run_statistics(scoreboard_,score_,items_.spawned(),
+        enemies_.snapshot().gone,enemies_.snapshot().killed_count,run_frames_);
+}
+void State::observe_refreshes(std::uint16_t elapsed) {
+    if(observed_frame_==run_frames_.total) return;
+    run_frames_.slow+=elapsed>=slowdown();
+    observed_frame_=run_frames_.total;
 }
 } // namespace th04::portable::gameplay

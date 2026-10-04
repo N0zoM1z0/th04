@@ -1,5 +1,6 @@
 #include "view.hpp"
 #include "application_state.hpp"
+#include "maine_ending.hpp"
 #include "menu_state.hpp"
 #include "selection_state.hpp"
 #include "main_state.hpp"
@@ -40,6 +41,8 @@ namespace gather = th04::portable::gather;
 namespace orange = th04::portable::orange;
 namespace circle = th04::portable::circle;
 namespace dialog = th04::portable::dialog;
+namespace cutscene = th04::portable::cutscene;
+namespace maine = th04::portable::maine;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -1205,6 +1208,11 @@ public:
         }
     }
 
+    void enable_ending() { enable_stage6();continue_ending_=true; }
+    void enable_host_timing() { host_timing_=true; }
+    void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
+    const maine::Ending* ending() const { return ending_.get(); }
+    bool animated() const { return live_main() || bool(ending_); }
     void enable_stage2() { continue_stage2_=true; }
     void enable_kurumi() { continue_stage2_=true;continue_kurumi_=true; }
     void enable_stage3() { enable_kurumi();continue_stage3_=true; }
@@ -1286,13 +1294,15 @@ public:
     }
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
-    unsigned slowdown() const { return main_ && !dialog_scene_ ? main_->slowdown() : 1; }
+    unsigned slowdown() const { return main_ && !dialog_scene_ && !ending_ ? main_->slowdown() : 1; }
     bool dialog_active() const { return bool(dialog_scene_); }
     bool post_dialog_complete() const { return post_finished_; }
     bool post_dialog() const { return post_started_; }
     const application::ResidentState& resident() const { return application_.resident(); }
     std::uint32_t process_random_state() const { return application_.process_random_state(); }
     unsigned generation() const { return application_.generation(); }
+    application::Program program() const { return application_.program(); }
+    bool main_resources_alive() const { return bool(main_) && bool(sprites_); }
     unsigned dialog_glyphs() const { return dialog_scene_ ? dialog_scene_->glyph_count() : 0; }
     dialog::Status dialog_status() const { return dialog_scene_ ? dialog_scene_->status() : dialog::Status::idle; }
     std::size_t dialog_offset() const { return script_ ? script_->offset() : 0; }
@@ -1301,6 +1311,12 @@ public:
         return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
+        if(ending_) {
+            ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
+            if(repaint) frame_=render();
+            return;
+        }
+        const auto host_start=Clock::now();
         if (live_main()) {
             if(main_->next_stage_requested() && ((continue_stage2_ && loaded_stage_==0) || (continue_stage3_ && loaded_stage_==1) || (continue_stage4_ && loaded_stage_==2) || (continue_stage5_ && loaded_stage_==3) || (continue_stage6_ && loaded_stage_==4))) {
                 const auto next_id=loaded_stage_+1;
@@ -1363,7 +1379,20 @@ public:
                 // map must never be advanced or reconstructed on repaint.
                 if(!sprites_->background.streams_released()) sprites_->background.update();
             }
+            if(continue_ending_ && (main_->good_ending_requested() || main_->bad_ending_requested())) {
+                const auto sequence=main_->good_ending_requested() ? application::EndSequence::good : application::EndSequence::bad;
+                require_view(assets_ && !assets_->ending.scripts.empty(),"MAINE resources missing");
+                ending_=std::make_unique<maine::Ending>(application_,main_->run_statistics(),sequence,
+                    assets_->ending,[this] {
+                        dialog_scene_.reset();script_.reset();main_.reset();sprites_.reset();
+                    });
+                screen_=Screen::maine;
+            }
             if (repaint) frame_ = render();
+            if(host_timing_ && main_ && main_->frames()!=before) {
+                const auto elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now()-host_start).count();
+                main_->observe_refreshes(static_cast<std::uint16_t>(elapsed/frame_period.count()));
+            }
         }
         else if (screen_ == Screen::menu) application_.advance_op_menu_frame();
     }
@@ -1423,6 +1452,7 @@ public:
             }
             break;
         }
+        case Screen::maine:break; // Held keys belong to MAINE's blocking clock.
         case Screen::main_handoff:
             if (pressed == menu::Input::cancel && !dialog_scene_) {
                 close = true;
@@ -1443,7 +1473,7 @@ private:
         }
         post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar,main_->palette_tone_before_frame()),unsigned(application_.resident().playchar));
     }
-    enum class Screen { menu, selection, main_handoff };
+    enum class Screen { menu, selection, main_handoff, maine };
 
     Frame render() const {
         switch (screen_) {
@@ -1459,6 +1489,27 @@ private:
                 : render_shot_selection(
                     selection_background_, portraits_, selection_
                 );
+        case Screen::maine:
+            if(ending_->phase()==maine::Phase::main_fade) {
+                auto frame=render_main(*sprites_,*main_,application_.resident().playchar,ending_->main_tone());
+                if(main_->clear_bonus() && main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
+                put_stage_overlay(frame,*sprites_,*main_);put_score_text(frame,*sprites_,*main_);
+                return frame;
+            } else {
+                const auto& scene=*ending_->scene();
+                Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
+                PiImage palette;palette.palette=scene.palette();
+                const int tone=std::clamp(scene.script().tone(),0,200);
+                for(auto& component:palette.palette) {
+                    const int base=component>>4;
+                    component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
+                }
+                const auto& page=scene.page(scene.shown_page());
+                const unsigned scroll=(unsigned(scene.scroll())%400);
+                for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x)
+                    frame.pixels[y*640+x]=palette_color(palette,page[((y+scroll)%400)*640+x]);
+                return frame;
+            }
         case Screen::main_handoff:
             if(dialog_scene_) { auto frame=dialog_scene_->render();put_score_text(frame,*sprites_,*main_);return frame; }
             if(main_) {
@@ -1479,6 +1530,9 @@ private:
     }
 
     const MainAssets* assets_=nullptr;
+    bool continue_ending_=false,host_timing_=false;
+    std::unique_ptr<maine::Ending> ending_;
+    cutscene::Sink ending_observer_;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
     bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
     bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false,continue_marisa_=false;
@@ -1516,7 +1570,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_stage6(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_ending();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1555,7 +1609,7 @@ LRESULT CALLBACK title_window_proc(
                 ++ticks;
             }
             if (ticks == 4 && now >= title->next_tick) title->next_tick = now + frame_period;
-            if (ticks && title->front_end.live_main()) InvalidateRect(window, nullptr, FALSE);
+            if (ticks && title->front_end.animated()) InvalidateRect(window, nullptr, FALSE);
             return 0;
         }
         break;
@@ -1690,7 +1744,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_stage6();
+    front_end.enable_ending();front_end.enable_host_timing();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1753,7 +1807,7 @@ void show_window(
             }
             const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
             front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
-            dirty |= front_end.live_main();
+            dirty |= front_end.animated();
             next_tick += frame_period*front_end.slowdown();
             ++ticks;
         }
@@ -1800,7 +1854,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1810,6 +1864,75 @@ void run_title(
     const Frame initial = render_menu(
         background, numerals, labels, cursors, initial_state
     );
+    const auto continue_ending=[&](FrontEnd& scene,const std::string& prefix) {
+        const auto stats=scene.main_state().run_statistics();
+        const auto generation=scene.generation();
+        const auto process=scene.process_random_state();
+        const bool bad=scene.main_state().bad_ending_requested();
+        const auto script=cutscene::script_name(unsigned(scene.resident().playchar),unsigned(scene.resident().shot_type),bad);
+        std::ifstream positions(ending_screenshots+"/"+script+"-checkpoints.txt");
+        require_view(bool(positions),"Ending route checkpoints missing");
+        std::vector<unsigned> captures;unsigned index;
+        while(positions>>index)captures.push_back(index);
+        require_view(captures.size()==12,"Ending route requires twelve independent page checkpoints");
+        std::ofstream states(ending_screenshots+"/"+prefix+"states.txt");
+        require_view(bool(states),"Ending route state output cannot open");
+        const auto write_bytes=[&](const std::string& suffix,const cutscene::Bytes& bytes) {
+            std::ofstream output(ending_screenshots+"/"+prefix+suffix,std::ios::binary);
+            require_view(bool(output),"Ending route byte output cannot open");
+            output.write(reinterpret_cast<const char*>(bytes.data()),static_cast<std::streamsize>(bytes.size()));
+            require_view(bool(output),"Ending route byte output failed");
+        };
+        unsigned captured=0;
+        scene.set_ending_observer([&](const cutscene::Event&) {
+            const auto& current=*scene.ending()->scene();
+            const auto event=unsigned(current.event_count()-1);
+            if(std::find(captures.begin(),captures.end(),event)==captures.end())return;
+            const auto stem=std::to_string(event);
+            write_bytes(stem+"-0.bin",current.page(0));write_bytes(stem+"-1.bin",current.page(1));
+            write_bytes(stem+".pal",cutscene::Bytes(current.palette().begin(),current.palette().end()));
+            states<<event<<' '<<current.shown_page()<<' '<<current.access_page()<<' '<<current.scroll()<<' '<<current.script().tone()<<'\n';
+            scene.repaint();const auto once=scene.frame().pixels;scene.repaint();
+            require_view(scene.frame().pixels==once && current.event_count()==event+1,
+                "Ending repaint advanced script or graphics state");
+            write_bmp(ending_screenshots+"/"+prefix+stem+".bmp",scene.frame());
+            ++captured;
+        });
+        scene.enable_ending();scene.advance(0,false,false);
+        require_view(scene.ending() && scene.program()==application::Program::main &&
+            scene.generation()==generation && scene.process_random_state()==process,"Ending replaced MAIN before fade");
+        for(unsigned tick=1;tick<=273;++tick) {
+            scene.advance(0x2000,false,false);
+            if(tick<273)require_view(scene.main_resources_alive() && scene.generation()==generation &&
+                scene.process_random_state()==process,"MAIN fade freed resources or advanced RNG early");
+        }
+        const auto& published=scene.resident().statistics;
+        require_view(!scene.main_resources_alive() && scene.program()==application::Program::maine &&
+            scene.generation()==generation+1 && scene.process_random_state()==1 &&
+            published.score_digits==stats.score_digits && scene.resident().score_digits==stats.score_digits &&
+            published.std_frames==stats.std_frames && published.items_spawned==stats.items_spawned &&
+            published.items_collected==stats.items_collected && published.point_items_collected==stats.point_items_collected &&
+            published.max_valued_point_items_collected==stats.max_valued_point_items_collected &&
+            published.enemies_gone==stats.enemies_gone && published.enemies_killed==stats.enemies_killed &&
+            published.slow_frames==stats.slow_frames && published.frames==stats.frames,"MAIN-to-MAINE publication/lifetime differs");
+        unsigned ticks=0;
+        while(scene.ending()->phase()!=maine::Phase::staff_roll_pending && ++ticks<100000) {
+            const auto status=scene.ending()->scene()->script().status();
+            scene.advance(status==cutscene::Status::press ? 0x1000 : 0,false,false);
+        }
+        require_view(scene.ending()->phase()==maine::Phase::staff_roll_pending && captured==captures.size(),
+            "ordinary Ending did not reach all page checkpoints and Staff Roll");
+        scene.set_ending_observer({});
+        for(unsigned i=0;i<5;++i)scene.advance(0x2010,false,false);
+        require_view(scene.generation()==generation+1 && scene.process_random_state()==1,
+            "completed Ending repeated process replacement or random draws");
+        std::cout<<"MAINE Ending route="<<prefix<<" script="<<script<<" ticks="<<ticks<<" fade="<<scene.ending()->fade_ticks()
+            <<" captures="<<captured<<" generation="<<scene.generation()<<" std="<<stats.std_frames<<" spawned="<<stats.items_spawned
+            <<" collected="<<stats.items_collected<<" point="<<stats.point_items_collected<<" max_point="<<stats.max_valued_point_items_collected
+            <<" gone="<<stats.enemies_gone<<" killed="<<stats.enemies_killed<<" slow="<<stats.slow_frames<<" total="<<stats.frames<<" digits=";
+        for(auto digit:stats.score_digits)std::cout<<unsigned(digit)<<',';
+        std::cout<<" progression=staff_roll_pending\n";
+    };
     if (!screenshot.empty()) {
         write_bmp(screenshot, initial);
         std::cout << "title 640x400 screenshot=" << screenshot << std::endl;
@@ -2450,7 +2573,7 @@ void run_title(
                 scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
             }
             scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::confirm);
-            if(shot_type) scene.input(menu::Input::right);
+            if(shot_type) scene.input(menu::Input::down);
             scene.input(menu::Input::confirm);
             const auto generation=scene.generation();std::array<bool,18> seen{};unsigned frozen=0,bonus=0,fades=0,next=0,orb_checks=0;
             for(unsigned tick=0;tick<150000;++tick) {
@@ -2514,7 +2637,7 @@ void run_title(
                 scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
             }
             scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
-            if(shot_type) scene.input(menu::Input::right);
+            if(shot_type) scene.input(menu::Input::down);
             scene.input(menu::Input::confirm);
             const auto generation=scene.generation();std::array<bool,21> seen{};unsigned frozen=0,bonus=0,fades=0,next=0,bit_checks=0;
             for(unsigned tick=0;tick<150000;++tick) {
@@ -2583,7 +2706,7 @@ void run_title(
                 scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
             }
             scene.input(menu::Input::confirm);if(character)scene.input(menu::Input::right);scene.input(menu::Input::confirm);
-            if(shot_type)scene.input(menu::Input::right);
+            if(shot_type)scene.input(menu::Input::down);
             scene.input(menu::Input::confirm);
             const auto generation=scene.generation();std::array<bool,7> seen{};unsigned loads=0,frozen=0,stars_updated=0,enemy_frames=0,bullet_frames=0;
             for(unsigned tick=0;tick<200000 && !scene.stage5_dialog_complete();++tick) {
@@ -2633,12 +2756,12 @@ void run_title(
             std::cout<<"MAIN Stage5 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shot_type="<<shot_type<<" shooting="<<shooting<<" frames="<<frames<<" frozen_ticks="<<frozen<<" star_updates="<<stars_updated<<" generation="<<generation<<" progression=yuuka5_battle_pending\n";
         }
     }
-    if(!yuuka5_screenshots.empty() || !stage6_screenshots.empty()) {
-        const bool sixth_route=!stage6_screenshots.empty();
+    if(!yuuka5_screenshots.empty() || !stage6_screenshots.empty() || !ending_screenshots.empty()) {
+        const bool sixth_route=!stage6_screenshots.empty() || !ending_screenshots.empty();
         // These inputs traverse the preceding stages and dialogue normally.
         // No seeded boss phase, forced HP, synthetic score or stage skip.
         for(unsigned character=0;character<2;++character) for(unsigned difficulty:{0u,1u,3u}) for(unsigned shot_type=0;shot_type<2;++shot_type) for(bool shooting:{false,true}) {
-            if(difficulty==0 && (sixth_route || shot_type || !shooting)) continue;
+            if(difficulty==0 && ending_screenshots.empty() && (sixth_route || shot_type || !shooting)) continue;
             FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);scene.enable_yuuka5();if(sixth_route)scene.enable_stage6();
             if(difficulty!=1) {
                 for(unsigned i=0;i<3;++i)scene.input(menu::Input::down);
@@ -2648,8 +2771,9 @@ void run_title(
                 scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i)scene.input(menu::Input::up);
             }
             scene.input(menu::Input::confirm);if(character)scene.input(menu::Input::right);scene.input(menu::Input::confirm);
-            if(shot_type)scene.input(menu::Input::right);
+            if(shot_type)scene.input(menu::Input::down);
             scene.input(menu::Input::confirm);
+            require_view(unsigned(scene.resident().playchar)==character && unsigned(scene.resident().shot_type)==shot_type,"route menu did not select its declared character/shot");
             const auto generation=scene.generation();std::vector<std::string> seen;
             const auto prefix=std::string(difficulty==0 ? "easy-" : (difficulty==3 ? "lunatic-" : "normal-"))+(character ? "marisa-" : "reimu-")+(shot_type ? "b-" : "a-")+(shooting ? "shot-" : "idle-");
             unsigned battle=0,frozen=0,hits=0,hit_clears=0,laser_frames=0,bonuses=0,fades=0,next=0;bool last_hit=false;
@@ -2715,7 +2839,7 @@ void run_title(
             if(difficulty==0) require_view(state.bad_ending_requested() && !state.next_stage_requested() && !state.clear_bonus() && bonuses==0 && fades==0 && next==0 && scene.resident().stage==4,"Easy followed normal stage-clear departure");
             else require_view(state.next_stage_requested() && !state.bad_ending_requested() && state.clear_bonus() && bonuses==1 && fades==1 && next==1 && scene.resident().stage==5 && scene.resident().resource_stage==4,"Yuuka5 did not request actual Stage6 resources");
             capture(difficulty==0 ? "bad-ending-pending" : "stage6-pending");
-            if(sixth_route) {
+            if(sixth_route && difficulty!=0) {
                 std::array<bool,7> checkpoints{};unsigned loads=0,blocked_ticks=0,enemy_frames=0,bullet_frames=0;
                 // The first tick replaces resources and resets actors inside
                 // this same MAIN process. Reset consumes353 process LCG draws.
@@ -2745,8 +2869,8 @@ void run_title(
                         const auto clock=current.frames(),process=scene.process_random_state();const auto cursor=current.random_cursor();
                         scene.repaint();const auto once=scene.frame().pixels;scene.repaint();
                         require_view(scene.frame().pixels==once && current.frames()==clock && scene.process_random_state()==process && current.random_cursor()==cursor,"Stage6 repaint changed simulation/pixels");
-                        const auto name=prefix+std::to_string(at),path=stage6_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
-                        std::cout<<"MAIN Stage6 fixture="<<name<<" frame="<<clock<<" glyphs="<<scene.dialog_glyphs()<<" offset="<<scene.dialog_offset()<<" pending="<<current.score().score_delta<<" ring="<<cursor<<" rng="<<process<<" score="<<current.awarded_score_units()<<" screenshot="<<path<<'\n';
+                        const auto name=prefix+std::to_string(at),path=stage6_screenshots+"/"+name+".bmp";if(!stage6_screenshots.empty())write_bmp(path,scene.frame());
+                        if(!stage6_screenshots.empty())std::cout<<"MAIN Stage6 fixture="<<name<<" frame="<<clock<<" glyphs="<<scene.dialog_glyphs()<<" offset="<<scene.dialog_offset()<<" pending="<<current.score().score_delta<<" ring="<<cursor<<" rng="<<process<<" score="<<current.awarded_score_units()<<" screenshot="<<path<<'\n';
                     }
                 }
                 for(auto observed:checkpoints)require_view(observed,"Stage6 route missed a required checkpoint");
@@ -2780,8 +2904,8 @@ void run_title(
                         require_view(a.flag==b.flag && a.age==b.age && a.hp==b.hp && a.damage==b.damage && a.filled_radius==b.filled_radius && a.ring_distance==b.ring_distance,"Yuuka6 repaint aged custom entities");
                     }
                     for(unsigned i=0;i<beams.beams.size();++i)require_view(current.thick_lasers().snapshot().beams[i].phase_frame==beams.beams[i].phase_frame,"Yuuka6 repaint advanced lasers");
-                    const auto name=prefix+tag,path=stage6_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
-                    std::cout<<"MAIN Stage6 battle fixture="<<name<<" frame="<<frames<<" phase="<<+boss.boss.phase<<" clock="<<boss.boss.phase_frame<<" hp="<<boss.boss.hp<<" sprite="<<+boss.boss.sprite<<" mirror="<<+boss.mirror_state<<" bg="<<+bg.state<<" fade="<<+bg.fade<<" hit="<<+beams.player_hit<<" ring="<<ring<<" rng="<<process<<" pending="<<current.score().score_delta<<" score="<<current.awarded_score_units()<<" screenshot="<<path<<'\n';
+                    const auto name=prefix+tag,path=stage6_screenshots+"/"+name+".bmp";if(!stage6_screenshots.empty())write_bmp(path,scene.frame());
+                    if(!stage6_screenshots.empty())std::cout<<"MAIN Stage6 battle fixture="<<name<<" frame="<<frames<<" phase="<<+boss.boss.phase<<" clock="<<boss.boss.phase_frame<<" hp="<<boss.boss.hp<<" sprite="<<+boss.boss.sprite<<" mirror="<<+boss.mirror_state<<" bg="<<+bg.state<<" fade="<<+bg.fade<<" hit="<<+beams.player_hit<<" ring="<<ring<<" rng="<<process<<" pending="<<current.score().score_delta<<" score="<<current.awarded_score_units()<<" screenshot="<<path<<'\n';
                 };
                 capture_final("phase-0");
                 // Continue ordinary input through every final-boss phase. The
@@ -2820,12 +2944,14 @@ void run_title(
                 for(unsigned i=0;i<5;++i)scene.advance(shot::input_shot|player::left,false,false);
                 require_view(current.frames()==clock && current.random_cursor()==ring && scene.process_random_state()==process && current.awarded_score_units()==score && scene.dialog_offset()==offset && !current.next_stage_requested() && !current.bad_ending_requested(),"Yuuka6 pending Ending advanced its frame tail");
                 std::cout<<"MAIN Stage6 stopped fixture="<<prefix<<" frames="<<clock<<" blocked_ticks="<<blocked_ticks<<" enemy_frames="<<enemy_frames<<" bullet_frames="<<bullet_frames<<" battle="<<final_ticks<<" hits="<<final_hits<<" hit_clears="<<final_hit_clears<<" crosses="<<cross_frames<<" safety_circle="<<circle_frames<<" mirror="<<mirror_frames<<" red="<<red_frames<<" wide_lasers="<<wide_frames<<" all_clear="<<all_clear_awards<<" captures="<<final_captures.size()+checkpoints.size()<<" generation="<<generation<<" progression=good_ending_pending\n";
+                if(!ending_screenshots.empty())continue_ending(scene,prefix);
                 continue;
             }
             const auto frames=state.frames(),process=scene.process_random_state(),score=state.awarded_score_units();const auto ring=state.random_cursor();const auto centers=scene.stage5_stars().centers;
             for(unsigned i=0;i<5;++i)scene.advance(shot::input_shot|player::left,false,false);
             require_view(state.frames()==frames && scene.process_random_state()==process && state.random_cursor()==ring && state.awarded_score_units()==score && scene.stage5_stars().centers==centers,"Yuuka5 pending resource/Ending frontier advanced simulation");
             std::cout<<"MAIN Yuuka5 stopped fixture="<<prefix<<" frames="<<frames<<" battle="<<battle<<" frozen="<<frozen<<" hits="<<hits<<" hit_clears="<<hit_clears<<" lasers="<<laser_frames<<" bonus="<<bonuses<<" fades="<<fades<<" next="<<next<<" captures="<<seen.size()<<" generation="<<generation<<" progression="<<(difficulty==0 ? "bad_ending_pending" : "stage6_pending")<<'\n';
+            if(!ending_screenshots.empty())continue_ending(scene,prefix);
         }
     }
     if (window) {

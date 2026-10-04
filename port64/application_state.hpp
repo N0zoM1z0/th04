@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <functional>
 
 #include "menu_state.hpp"
 #include "random_lcg.hpp"
@@ -105,8 +106,10 @@ public:
     void publish_main_resource_stage(std::uint8_t stage);
     void return_from_main(const RunStatistics& statistics);
     void finish_main(
-        const RunStatistics& statistics, EndSequence end_sequence
+        const RunStatistics& statistics, EndSequence end_sequence,
+        const std::function<void()>& release_main={}
     );
+    void prepare_main_ending(EndSequence);
     MaineRoute maine_route() const;
     void seed_maine_verdict_random();
     void finish_maine();

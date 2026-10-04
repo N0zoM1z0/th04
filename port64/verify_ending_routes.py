@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+"""Traverse native MAIN normally, then compare eight Ending scripts' graphics.
+
+The reference gallery is produced by verify_cutscene_pixels.py from original
+CPU requests/font kernels. This consumer checks integration and RGB display;
+it is not an independent new physical PC-98 capture or an audio Oracle.
+"""
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import itertools
+import json
+import os
+from pathlib import Path
+import subprocess
+
+import numpy as np
+from PIL import Image
+from verify import source_manifest
+
+sha = lambda data: hashlib.sha256(data).hexdigest()
+
+def equal(actual, expected, label):
+    if actual != expected:
+        raise ValueError(label+' differs')
+
+def verify(reference, output, lines):
+    receipt = json.loads((reference/'receipt.json').read_text())
+    if not receipt['passed'] or len(receipt['cases']) != 8:
+        raise ValueError('original Ending gallery is incomplete')
+    events = {c['name']: c for c in receipt['cases']}
+    routes = {}
+    for line in lines:
+        if not line.startswith('MAINE Ending route='):
+            continue
+        fields = dict(word.split('=', 1) for word in line.split() if '=' in word)
+        if fields['route'] in routes:
+            raise ValueError('duplicate Ending route')
+        routes[fields['route']] = fields
+    matrices = list(itertools.product(('easy', 'normal', 'lunatic'), ('reimu', 'marisa'), ('a', 'b'), ('idle', 'shot')))
+    if set(routes) != {'-'.join(m)+'-' for m in matrices}:
+        raise ValueError('expected 24 natural character/rank/shot/input routes')
+    records = []
+    for rank, character, shot, shooting in matrices:
+        prefix = '-'.join((rank, character, shot, shooting))+'-'
+        script = f'_ED{int(character=="marisa")}{int(shot=="b")}{int(rank=="easy")}.TXT'
+        route = routes[prefix]
+        if (route['script'] != script or route['progression'] != 'staff_roll_pending'
+                or route['generation'] != '3' or route['fade'] != '273' or route['captures'] != '12'):
+            raise ValueError('route selection or MAIN/MAINE lifecycle differs: '+prefix)
+        if int(route['total']) <= int(route['std']) or int(route['spawned']) < int(route['collected']) or route['slow'] != '0':
+            raise ValueError('headless run statistics invariant differs: '+prefix)
+        reference_route = reference/script
+        states = {int(s.split()[0]): tuple(map(int, s.split()[1:])) for s in (reference_route/'states.txt').read_text().splitlines()}
+        actual_states = {int(s.split()[0]): tuple(map(int, s.split()[1:])) for s in (output/(prefix+'states.txt')).read_text().splitlines()}
+        if actual_states != states:
+            raise ValueError('integration page/access/scroll/tone state differs: '+prefix)
+        controls = []
+        expected_hashes = {(c['event'], c['page']): c['sha256'] for c in events[script]['checkpoints']}
+        for event, (shown, access, scroll, tone) in states.items():
+            pages = []
+            for page in (0, 1):
+                expected = (reference_route/f'{event}-{page}.bin').read_bytes()
+                if sha(expected) != expected_hashes[(event, page)]:
+                    raise ValueError('retained original page changed')
+                equal((output/f'{prefix}{event}-{page}.bin').read_bytes(), expected, prefix+'page'+str(page))
+                pages.append(expected)
+            palette = (reference_route/f'{event}.pal').read_bytes()
+            equal((output/f'{prefix}{event}.pal').read_bytes(), palette, prefix+'palette')
+            rgb = (np.frombuffer(palette, dtype=np.uint8).reshape(16, 3)>>4).astype(np.int32)
+            t = max(0, min(200, tone))
+            rgb = ((rgb*t//100 if t <= 100 else 15-(15-rgb)*(200-t)//100)*17).astype(np.uint8)
+            indexed = np.frombuffer(pages[shown], dtype=np.uint8).reshape(400, 640)
+            expected_rgb = rgb[np.roll(indexed, -scroll, axis=0)].tobytes()
+            image = Image.open(output/f'{prefix}{event}.bmp').convert('RGB')
+            if image.size != (640, 400):
+                raise ValueError('Ending display dimensions differ')
+            equal(image.tobytes(), expected_rgb, prefix+'display RGB')
+            controls.append(dict(event=event, page0_sha256=sha(pages[0]), page1_sha256=sha(pages[1]),
+                                 palette_sha256=sha(palette), rgb_sha256=sha(expected_rgb)))
+        records.append(dict(route=prefix, counters=route, checkpoints=controls))
+    changed = bytearray(pages[0]); changed[80+320*640] ^= 1
+    try:
+        equal(bytes(changed), pages[0], 'injected changed pixel')
+    except ValueError:
+        pass
+    else:
+        raise ValueError('complete pixel comparator accepted its negative control')
+    return records
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    for name in ('exe', 'hdi', 'font-bmp', 'gallery-dir', 'output-dir'):
+        p.add_argument('--'+name, type=Path, required=True)
+    p.add_argument('--runner'); p.add_argument('--existing-log', type=Path)
+    args = p.parse_args(); out = args.output_dir.resolve(); out.mkdir(parents=True, exist_ok=True)
+    manifest, _ = source_manifest(Path(__file__).resolve().parents[1])
+    if sha(args.hdi.read_bytes()) != '0d5ea773a9e4f3e28f473b6deeedb6a7cdaccbb5b940a97983c4e3597dd4ebfd':
+        raise ValueError('original HDI identity differs')
+    for reference in args.gallery_dir.glob('_ED*.TXT'):
+        (out/(reference.name+'-checkpoints.txt')).write_bytes((reference/'checkpoints.txt').read_bytes())
+    command = ([args.runner] if args.runner else [])+[str(args.exe.resolve()), '--hdi', str(args.hdi.resolve()),
+        '--font-bmp', str(args.font_bmp.resolve()), '--ending-screenshots', str(out)]
+    if args.existing_log:
+        log = args.existing_log.read_text()
+    else:
+        env = os.environ.copy(); env.setdefault('WINEDEBUG', '-all')
+        completed = subprocess.run(command, env=env, capture_output=True, text=True)
+        log = completed.stdout
+        (out/'stdout.log').write_text(log); (out/'stderr.log').write_text(completed.stderr)
+        completed.check_returncode()
+    records = verify(args.gallery_dir, out, log.splitlines())
+    after, _ = source_manifest(Path(__file__).resolve().parents[1]); assert after == manifest
+    receipt = dict(passed=True, observed_utc=datetime.now(timezone.utc).isoformat(), command=command,
+                   executable_sha256=sha(args.exe.read_bytes()), source_manifest_sha256=manifest,
+                   gallery_receipt_sha256=sha((args.gallery_dir/'receipt.json').read_bytes()),
+                   hdi_sha256=sha(args.hdi.read_bytes()), font_sha256=sha(args.font_bmp.read_bytes()),
+                   natural_routes=len(records), complete_pages=576, palette_states=288, rgb_frames=288,
+                   negative_pixel_rejected=True, routes=records,
+                   scope='Natural menu/STD/dialogue/boss traversal through Good or Bad Ending and its MAIN/MAINE lifetime. Player death, Bomb, Continue, Extra and audio remain outside this path. Original gallery uses CPU script/font controls and a separately regressed PI dependency; RGB is computed presentation, not physical PC-98 capture. Staff Roll/verdict/save are subsequent owners.')
+    (out/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
+    print(json.dumps({k: receipt[k] for k in ('passed', 'natural_routes', 'complete_pages', 'palette_states', 'rgb_frames')}, indent=2))
+
+if __name__ == '__main__':
+    main()

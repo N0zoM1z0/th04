@@ -4,7 +4,7 @@ Updated 2026-10-05. The standalone PC-98 reconstruction remains the behavioral
 reference; native x64 has a separate nonexact branch. Target provenance remains
 `candidate-local-attested`, not proof of an official pristine dump. The two
 remaining MAIN exactness cases stay deferred. Portable changes do not alter DOS
-source or exact acceptance. Root `semantic/readable` stays at `1eb3f93`;
+source or exact acceptance. Root `semantic/readable` retains its DOS source baseline;
 `port/modern-64` is the active native worktree.
 
 Semantic readability is paused at the user's stopping condition: enough clarity
@@ -22,38 +22,45 @@ available. Root receipt:
 tar/zstd archive before using historical screenshot/disk gzip paths. Root/native
 CI pass after removal. Product source and the native runtime frontier are unchanged.
 
-Current native scope: [MAINE Ending script/graphics owner](PORT64.md#maine-ending-script-and-graphics-owner).
-v1291 implements native script dispatch, asynchronous waits/fades, two graphics
-pages, saved text-box background, PI quarters/EGC masks, graphics font effects
-and gaiji. Fresh original MAINE0A05:07F7/0DAC controls execute the recovered
-payload at load1000/2000:72cases/86,614 requests. Eight actual Endings produce
-192 complete page checkpoints/96 palettes;264 independent original font
-controls and1,025 per-route glyph controls include ANK weight spill quirks.
-GNU/Wine/optimizedUBSan/actualWindows agree. Three builds pass30CTest/31AMD64
-executables each.28GNU prior executables are raw-identical;28PE bodies differ
-only in timestamp/checksum.26UBSan prior executables are raw-identical.
-Changed dialogue passes its original activation/script/font oracle; existing
-PI/UI/MAIN smoke hashes remain unchanged. Complete PI decoder body is preserved.
-Manifest df9ce765 binds196 source files. Completed1,368 non-GNU pixel/font
-outputs are losslessly gzip-archived with readback (320.3MiB released);116 active
-binary/Windows-root hashes are unchanged. GNU references remain expanded; use
-`gzip -d -- PATH.bin.gz` for the archived outputs.
+Current native scope: [MAIN-to-MAINE Ending integration](PORT64.md#main-to-maine-ending-integration).
+v1292 joins Good/Bad Ending to ordinary MAIN. Run counters survive Stage
+replacement, GameExecl publishes current HUD digits without draining pending
+score, and MAIN's palette blackout takes273 refreshes. MAIN owners release
+after publication; MAINE starts a fresh generation/LCG and selects the actual
+character/shot/Ending script. Escape is translated from MAIN actions to
+MAINE0010. The currently inactive audio backend uses original fallback-frame
+waits; active music waits require a reported measure, not fabricated progress.
 
-Receipt root: .analysis/port64/maine-ending-v1291. Target provenance remains
-candidate-local-attested; the active database attests the packed wrapper, and
-fresh decoded raw observations bind to DIET payload7495ae43. This component
-oracle intercepts input/sound/physical consumers; it is not whole-game video,
-original PI decoding, natural host pacing or DOS exact promotion. MAINE picture
-left is160, Escape bit0010 and text uses graphics page1 without per-character
-waits; do not inherit wrong standalone candidate constants or MAIN input masks.
+The original MAIN0AAF:0CC9/0CF4/3CEE/3D0D control executes72 Good/Bad transfers
+with/without EMS, including explicit execl-failure stack controls. Its actual
+0000:0666 fade makes18 palette calls/273 VSync waits;378 completed-frame
+counter vectors cover unsigned thresholds and32-bit wraps. At MAINE loads1000/
+2000,120 sound-mode/fallback/measure and24 palette controls pass. Palette bytes
+are RGB (redAC/greenAA/blueAE). The old diagnostic PNG swizzle was wrong;
+complete indexed pages and raw palette comparisons remain valid.
 
-Ordinary native frontend still runs Stages1..6 including final battle/all-clear
-and holds at Good Ending entry416; Easy holds at Bad Ending transfer. v1290
-Windows GUI/English launcher remain published. Next join resident score/run
-counters and MAIN-to-MAINE lifetime to the new owner, then Staff Roll/verdict/
-registration. Extra/death/Bomb/full HUD/audio/config persistence remain too.
-Semantic work stays stopped except for a concrete port ambiguity. v1290 natural
-route/component receipts and media restoration instructions remain in PORT64.md.
+Linux/Wine/optimizedUBSan each pass30CTest and24 natural menu/STD/dialogue/boss/
+Ending routes:576 complete indexed pages,288 palette/states and288 RGB frames
+per host. Actual Windows consumes the same references; state text compares
+integer records because Windows streams useCRLF, while binary hashes stay
+strict. Source manifest0f846245 binds203 files. Stage-reset442 original CPU
+controls and four native Stage1-to-Stage2 resource routes verify the retained
+item-spawn counter; original complete nine clear regions remain independently
+checked. Original CPU instruction controls are not physical hardware captures,
+whole-original-game routes, music synthesis, host FPS or DOS exact promotion.
+
+The previous Stage4/5/6 fixture B labels used Right instead of Down at shot
+selection and actually ran A. Do not treat those historical labels as B evidence.
+Current24-route inputs select A/B correctly and assert the resident selection.
+The v1291 cutscene/font/PI component controls remain the independent graphics
+reference; their GNU gallery stays expanded. Receipts:
+.analysis/port64/maine-join-v1292 and .analysis/port64/maine-ending-v1291.
+Semantic expansion stays stopped. Next implement Staff Roll, verdict and
+score registration/persistence; Extra/death/Bomb/full HUD/audio/config remain.
+Windows v1292 preview/English root launcher are published; DOS products/scripts/
+config/saves are unchanged. Previousv1290 is retained. Completed v1292 media
+is gzip-archived after readback (3.21GiB released);553 protected hashes stay
+unchanged. Restore .bin/.bmp paths with gzip -d before historical direct replay.
 
 Historical v1289 final-boss dependency: foreground sprite pixels now have a native
 consumer. MAIN0000:2838 FFCD merges destination|2 on alpha; purecolor2 would

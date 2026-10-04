@@ -14,6 +14,13 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_maine_join_windows.ps1",
+    "port64/verify_ending_routes.py",
+    "port64/verify_maine_join.py",
+    "port64/run_statistics.hpp",
+    "port64/run_statistics.cpp",
+    "port64/maine_ending.hpp",
+    "port64/maine_ending.cpp",
     "port64/cutscene.hpp",
     "port64/cutscene.cpp",
     "port64/cutscene_scene.hpp",

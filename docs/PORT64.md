@@ -9,12 +9,13 @@ The current preview runs Stages1 through6 including their waves, bosses,
 dialogues and departures. Stage4 has both character-dependent NPC battles;
 Stage5 joins Yuuka's seven attacks and thick lasers. Normal/Lunatic continue
 through Stage6 waves, the complete pre-battle dialogue and Yuuka's final
-battle, then all-clear and the Ending entry. Easy runs the separate bad dialogue
-and holds at the Bad Ending transfer. The MAINE cutscene component now has
-independent script/page/font controls; it is not yet joined to this live route. See
-[final-battle integration](#yuuka6-ordinary-battle-and-final-stage-departure)
-for the current acceptance scope; earlier slices below retain their historical
-boundaries.
+battle, then all-clear and the appropriate Good Ending. Easy runs its separate
+bad dialogue and Bad Ending. The native frontend now joins MAIN's score/run
+statistics, mandatory fade, resource release and fresh MAINE lifecycle to all
+eight Ending script/graphics routes. It currently reaches the Staff Roll owner;
+Staff Roll, verdict and registration remain next. See
+[MAIN-to-MAINE integration](#main-to-maine-ending-integration) for the current
+acceptance scope. Earlier slices below retain their historical boundaries.
 The final-boss [animation/motion helpers](#yuuka6-animation-and-motion-helpers)
 and [cross/safety-circle entities](#yuuka6-cross-and-safety-circle-entities)
 plus [gathering/attack helpers](#yuuka6-gathering-and-attack-helpers) and
@@ -3250,3 +3251,89 @@ losslessly gzip-archived, reclaiming320.3MiB;116 active executable/Windows-root
 hashes are unchanged. The current GNU reference gallery remains expanded.
 `output-archive-receipt.json` records every member and readback. Restore an
 archived output with `gzip -d -- PATH.bin.gz` before direct historical comparison.
+
+## MAIN-to-MAINE Ending integration
+
+The v1292 frontend continues ordinary MAIN into all eight Good/Bad Ending
+scripts. The preceding v1291 component supplies the script/page/font owner;
+this batch supplies the executable lifetime, resident publication and host
+presentation. Staff Roll, verdict and registration are subsequent owners.
+
+`run_statistics` copies the eight displayed HUD digits and cumulative run
+counters. It deliberately excludes pending score, as MAIN0AAF:3CEE saves those
+existing bytes before GameExecl0AAF:3D0D. Completed-frame statistics increment
+at the actual tail, so the nonreturning Ending call excludes that suffix. STD
+counts stop at the boss callback and survive Stage replacement. Stage reset now
+clears item entities while retaining items_spawned; the target's complete nine
+clear regions do not own MAIN DATA:2398. Headless checks use no host clock;
+interactive slow-frame statistics sample host work in17,730,496ns periods.
+That host sample is a backend approximation, not measured original PC-98 timing.
+
+`maine::Ending` writes GOOD/FF/type0 or BAD/FE/type1 before song fade4 and the
+mandatory MAIN blackout. The observed0000:0666 loop makes eighteen palette
+calls over273 VSync waits; Escape cannot bypass it. Publication precedes the
+native resource-release callback, which runs while the old MAIN generation and
+LCG still exist. Entering MAINE then creates a fresh process-local LCG at1.
+The original additionally frees an optional EMS handle after score publication
+and before its other counters; native EMS storage is absent. Original release
+order and execl's explicit failure return/stack path are checked separately;
+those adapters do not execute a full DOS replacement.
+
+MAIN host actions translate cancellation explicitly to MAINE key_det0010;
+other held actions become a wait key. MAINE's unsigned song-measure comparison
+requires actual reported progress when audio is active. The current inactive
+backend executes the original minimum-frame fallback instead. Story graphics
+use their shown/access pages, palette tone and scroll; old MAIN/TRAM resources
+are gone. Window and headless frontends use the same owner.
+
+Validation at `.analysis/port64/maine-join-v1292` includes:
+
+- Original MAIN72 Good/Bad/EMS publication and cleanup-order controls;
+ 378 frame-counter wrap/unsigned-threshold vectors; the full fade loop.
+- At decoded MAINE loads1000/2000,120 sound-mode/fallback/measure controls and
+ 24 palette-output controls. Palette bytes are RGB: redAC, greenAA, blueAE.
+- Three fast incremental builds,31 AMD64 products and30CTest per host.
+ Linux, Wine and optimizedUBSan each traverse24 natural menu/STD/dialogue/boss
+ routes, covering two characters, actual A/B choices, Easy/Normal/Lunatic and
+ idle/shot final battles. Each compares576 complete pages,288 palette/state
+ checkpoints and288 RGB frames against the independently checked v1291 gallery.
+ Actual Windows consumes the same resident/counter/fade and route references.
+-442 original stage-reset/midboss seed controls and four native Stage1-to-Stage2
+ routes. The reset consumer's executable bytes remain identical through the
+ final GUI-only diagnostic-log edit. The complete9 original clear regions,
+ retained353 process draws and cumulative item-spawn sentinel are checked.
+
+The old fixture drivers pressed Right on the shot screen, which only responds
+to Up/Down. Their B-labelled Stage4/5/6 paths were actually A; retain their
+pixel/phase evidence with that narrowed input scope. This batch fixes all four
+such drivers and asserts the real resident character/shot selection for the
+new matrix. A separate negative finding corrects the v1291 PNG-only RGB
+swizzle; its indexed pages/palette bytes and original font controls are intact.
+The original indexed references and the new CPU palette controls drive current
+RGB comparisons directly. Windows state streams useCRLF; compare their integer
+records, while complete page/palette/BMP hashes remain strict. A source-snapshot
+mutation guard also rejected development checks that spanned adding verifier
+files; accepted frozen controls are stored separately.
+
+No DOS source or exact ledger changes. Original targets remain
+candidate-local-attested; decoded MAINE binds payload7495ae43, while its active
+Ghidra database attests the packed wrapper. The reference PI decoder is a
+separately regressed dependency. No physical PC-98 capture, full original-game
+route, music synthesis, player-death/Bomb/Continue/Extra behavior, host FPS or
+saved-score completion is claimed by this Ending batch.
+
+The validated v1292 Windows preview is published under
+`D:\Entertainment\Game\Touhou\th04-reconstruct\port64-preview\v1292-ending-join`;
+root `start-th04-port64.bat` uses the new GUI. The versioned launcher uses its
+own original HDI/font, while the root launcher retains the user's normal image.
+Both English launchers state the Staff Roll frontier. Previousv1290 GUI/launcher
+are retained and2,169 pre-existing Windows files outside the two authorized
+native replacements keep their hashes. DOS launchers/products/config/saves are
+unchanged; publication does not auto-launch the GUI.
+After full readback,8,640 completed render buffers/BMPs are gzip-archived,
+reclaiming3.21GiB;553 protected original-reference/active-binary/Windows-root
+hashes stay unchanged. Original CPU traces and v1291 raw indexed references
+remain expanded. Restore v1292 media using `gzip -d -- PATH.bin.gz` or
+`PATH.bmp.gz` before direct historical consumers; the archive receipt records
+every original/compressed digest.96 derived v1291 PNGs have correctedRGB
+presentation with original indexed/palette hashes retained in a separate receipt.

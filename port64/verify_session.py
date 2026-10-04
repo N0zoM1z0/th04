@@ -41,9 +41,11 @@ class Original(Base):
         for at,count in CLEAR:self.u.mem_write(0x80000+at,bytes([255])*count*4)
         for at,fmt,values in ((0x3e2,'<I',[seed]),(0x464e,'<6h',[123,-456,123,-456,-64,0]),(0x4666,'B',[marker]),(0x4362,'B',[marker]),(0x4640,'B',[marker]),(0x42c8,'<H',[marker*257]),(0x42ca,'B',[marker%5]),(0xbcba,'B',[clear]),(0xbcb9,'B',[marker]),(0xbcbc,'<H',[65535]),(0x4252,'B',[marker]),(0x9586,'<4h',[123,-456,123,-456]),(0x41f4,'<H',[offset]),(0x4664,'B',[marker]),(0x466b,'B',[marker]),(0x4676,'B',[marker]),(0xbccc,'<H',[65535]),(0x435a,'<I',[pending]),(0x5395,'B',[marker])):self.write(at,fmt,*values)
         self.u.mem_write(0x84349,bytes([marker])*8);self.u.mem_write(0x84351,bytes([(marker+1)&255])*8);self.u.mem_write(0x81ece,b'\0')
+        self.write(0x2398,'<H',0xa537)
         for stage in range(repeats):
             self.u.reg_write(UC_X86_REG_EAX,0);self.call_args(0x6e0,cs=0x2aaf)
         if self.error:raise RuntimeError('original actor reset adapter rejected') from self.error
+        if self.read(0x2398,'<H')[0]!=0xa537:raise ValueError('stage reset erased cumulative items_spawned')
         if self.clears!=list(CLEAR)*repeats or self.random_calls!=353*repeats:raise ValueError('original stage clear/random ownership changed')
         # Complete raw target clear extents must now be zero except the96
         # freshly generated spark angle low bytes. This is independent of the

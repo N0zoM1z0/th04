@@ -33,6 +33,8 @@ void reset(std::uint32_t seed,unsigned marker,std::uint32_t pending,unsigned cle
     for(unsigned stage=0;stage<repeats;++stage) session::initialize_actors({p,shots,enemies,bullets,sparks,gathers,circles,items,awards,score,random,drops},[&]{return process.next_byte();});
     if(p.previous_input()!=latch || awards.score_delta!=pending || awards.power!=marker)
         throw std::runtime_error("stage reset changed process-wide input/score/power");
+    if(items.spawned()!=1)
+        throw std::runtime_error("stage reset erased the run's cumulative item count");
     if(!print) return;
     point(p.position().current);point(p.position().previous);point(p.position().velocity);
     const auto& s=shots.snapshot();out(s.time);out(s.laser.time);out(unsigned(s.laser.style));out(s.reimu_cycle);out(s.spark_cycle);

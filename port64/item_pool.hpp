@@ -28,6 +28,8 @@ class Pool {
 public:
     const std::array<Entity, pool_size>& entities() const { return entities_; }
     std::uint16_t spawned() const { return spawned_; }
+    // Stage initialization clears entity storage, but not this run's counter.
+    void reset_stage() { entities_={}; }
     bool add(motion::Point position, Type type);
     bool add_enemy_drop(motion::Point position, EnemyDropSequence& sequence);
     MissSpawnResult add_miss(

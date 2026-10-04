@@ -50,6 +50,8 @@ add_library(
   circles.cpp
   dialog.cpp
   cutscene.cpp
+  maine_ending.cpp
+  run_statistics.cpp
   cutscene_scene.cpp
   pi_image.cpp
   stage_bonus.cpp

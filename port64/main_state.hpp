@@ -27,6 +27,7 @@
 #include "stage_bonus.hpp"
 #include "score.hpp"
 #include "stage_background.hpp"
+#include "run_statistics.hpp"
 #include <memory>
 
 namespace th04::portable::gameplay {
@@ -143,11 +144,17 @@ public:
     const std::vector<enemy::Event>& enemy_events() const { return enemy_events_; }
     const item::UpdateResult& item_events() const { return item_events_; }
     std::uint32_t frames() const { return frames_; }
+    application::RunStatistics run_statistics() const;
+    // GUI calls once after a completed simulation/render tick. Headless
+    // controls supply no clock sample; slowdown is never inferred from bullets.
+    void observe_refreshes(std::uint16_t elapsed);
     bool add_item(motion::Point position, item::Type type) { return items_.add(position, type); }
     bool add_enemy_drop(motion::Point position) { return items_.add_enemy_drop(position, drops_); }
     item::MissSpawnResult add_miss_items();
 
 private:
+    FrameCounts run_frames_;
+    std::uint32_t observed_frame_=0;
     void apply_clear_bonus(bool all_clear=false);
     application::State* application_;
     transition::Overlay overlay_{};

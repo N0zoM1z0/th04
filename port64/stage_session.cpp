@@ -21,7 +21,7 @@ void initialize_actors(Actors o,const std::function<std::uint8_t()>& next_byte) 
     gathers.scratch.ring_points=8;gathers.scratch.color=9;gathers.scratch.angle_delta=2;
     o.gathers=gather::System(gathers);
     auto circles=o.circles.snapshot();circles.entities={};circles.color=13;
-    o.circles=circle::System(circles);o.items=item::Pool{};
+    o.circles=circle::System(circles);o.items.reset_stage();
     o.awards.stage_point_items_collected=0;o.awards.dream_items_collected=0;
     o.awards.dream_score=0;
     o.random.fill(next_byte);
