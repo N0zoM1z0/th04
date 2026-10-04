@@ -2342,3 +2342,101 @@ Use a new output path when repeating a producer. Receipts under
 `windows-test-export.json`. The non-Windows raw comparison deliberately records
 UBSan differences; its fresh scenario receipt is separate evidence. No physical
 PC-98 timing/pixels, GUI FPS, full-game or DOS exact claim is made here.
+
+## Stage5 Yuuka foreground and raster controls
+
+`yuuka5_render.cpp` now owns MAIN0AAF:3DB3..3F7E foreground requests and
+0AAF:7874..7900 backdrop decisions. Target review records11 complete physical
+spans/1,535 bytes, including the rectangle's separate1076 shared return and
+zoom31A2's self-modified immediates. Root preflight and fresh root Ghidra
+header/entry/relocation/full-byte checks pass. Targets retain the local provenance
+gap; portable results do not promote DOS source or exact acceptance.
+
+Idle Yuuka draws two48x96 images separated by48 pixels. The64x64 entrance image
+is also used during the three movement-disc transitions. Phase254 requests
+factor3 zoom, distinct from the earlier shared large-sprite path. Damage resets
+only in the visible entrance/idle white branches. Shared explosions advance
+once after body requests; lasers draw afterward only below phase255. Cached
+requests separate simulation/render ownership from subsequent repaints.
+
+Backdrop phase1 divides the signed clock by4, then tests only unsigned AL.
+Its picture branch clears the uncovered regions before CDG; stable phases use
+common7667, which puts CDG before calling the retained filler. Filler1508/7578
+covers X32..127/Y128..383 plus X32..415/Y16..127. The288x256 CDG at128,128
+occupies the remaining region. BB/CDG/tile consumers remain their existing
+separate owners; this batch compares their ordered requests and filler pixels.
+
+An initial original CPU comparison rejects native sprite case864: normal SUPER
+uses unsigned X SHR3 and a WORD row address. Negative X can produce a different
+flat visible VRAM location, whereas host coordinate clipping drops those stores.
+The corrected Yuuka normal/white raster preserves that address arithmetic.
+Zoom reads the four color planes, skips color0 and paints clipped inclusive3x3
+rectangles. Rectangle/vline endpoints are signed-sorted, then clip-origin
+subtraction wraps as WORD; an ordinary host min/max clamp differs on extreme
+inputs. Filled circles use the original midpoint horizontal spans and actual
+stage clip32..415/16..383. Native disc raster rejects radii above512; pixel
+controls cover0..180, while arbitrary WORD radii remain request-only evidence.
+
+Final comparison passes9,936 request controls:4,446 foreground,5,120 backdrop,
+370 original disc write masks. Another1,804 controls compare461,824,000 indexed
+pixels:972 normal/white/factor3 sprite cases across all nine real BFNT images,
+eight alignments, signed Y edges and selected negative X;832 rectangle/vline/
+disc/filler cases retain16-color backgrounds and WORD color256. GRCG ports and
+visible A800 writes use an explicit software shadow. General physical page/
+alias/scroll/timing, GUI rendering and full Stage5 gameplay remain separate.
+
+The initial frozen Oracle completed all972 original sprite screens before its
+native mismatch. `original-pixel-production.json` records that production only;
+it does not pass the rejected initial consumer. Final native consumers replay
+those unchanged screens after the address fix. `producer-continuity.json`
+proves identical ASTs for Original/Shadow/input/expected producer components and
+identical bytes for five base/staging helpers. Final832 primitive screens and
+all9,936 requests freshly execute original code. Each receipt records per-control
+fresh-production/reference provenance; no old native pass is relabelled.
+
+GNU Linux, static MinGW under Wine, optimized UBSan/bounds and an actual
+PowerShell/native Windows process agree. The unchanged preceding Yuuka core
+also replays7,330 fixtures/69,652 independent original checkpoints on final GNU
+and actual Windows. Seven reference/output/native rejection controls plus
+fresh callback rejection pass. Three incremental builds each pass23 CTests and
+validate24 ELF64/staticPE products. All23 preceding GNU and23 UBSan programs
+remain raw-identical;23 preceding MinGW files differ only at timestamp/checksum.
+No prior GUI screenshot run is relabelled as a new run.
+
+Final source manifest:
+`7e410b8eff20d4f912f2c9e895a5c25e9e80e4c95ef18e388794d97810d91778`.
+The root Windows GUI/launcher/saves/HDIs stay at v1277. Only diagnostic executable,
+fixtures, assets, manifest and PowerShell/results are exported under
+`port64-preview/v1280-yuuka-render-controls`; no GUI launched. Next is the ordinary
+Stage5 battle join, including hit-latch clearing, palette/background phase
+ownership and post-dialog/bonus/departure. Player death/Bomb/HUD/audio/Stage6/
+Extra/Ending/save are still pending native work. Semantic work stays stopped
+unless a concrete ambiguity prevents that implementation.
+
+Replay from the native worktree root, using new output directories:
+
+```sh
+cmake --build .analysis/port64/linux-live-v1251 --parallel 4
+cmake --build .analysis/port64/windows-live-v1251 --parallel 4
+python3 port64/verify_yuuka5_render.py \
+  --target ../../targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-yuuka5-contracts \
+  --output-dir .analysis/port64/yuuka5-render-v1280/NEW-render
+python3 port64/verify_yuuka5_pixels.py \
+  --target ../../targets/th04/main.exe --hdi ../../runtime/images/zun.hdi \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-yuuka5-contracts \
+  --output-dir .analysis/port64/yuuka5-render-v1280/NEW-pixels
+```
+
+Receipts under `.analysis/port64/yuuka5-render-v1280/` include target-review.json,
+producer-source-initial/manifest.json, producer-source/manifest.json,
+original-pixel-production.json, producer-continuity.json,
+render-{linux,windows,ubsan}-accepted/receipt.json,
+pixels-{linux,windows,ubsan}-accepted/receipt.json,
+core-linux-accepted/receipt.json, native-windows-receipt.json,
+oracle-negative-controls.json, previous-nonwindows-continuity.json,
+windows-link-continuity.json, integration-review.json and windows-test-export.json.
+`pixels-linux-final/pixel-mismatch.json` retains the rejecting initial observation.
+Large redundant native outputs are gzip-archived with complete readback; current
+original pixel/reference buffers stay live. Restore archived private output paths
+with `gzip -d -- FILE.gz` before replay.

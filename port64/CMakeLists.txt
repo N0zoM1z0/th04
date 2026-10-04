@@ -29,6 +29,7 @@ add_library(
   stage5.cpp
   thick_lasers.cpp
   yuuka5.cpp
+  yuuka5_render.cpp
   marisa.cpp
   marisa_render.cpp
   reimu.cpp

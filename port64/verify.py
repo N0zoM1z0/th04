@@ -14,6 +14,9 @@ import sys
 
 
 PORT_FILES = (
+    "port64/yuuka5_render.cpp",
+    "port64/verify_yuuka5_render.py",
+    "port64/verify_yuuka5_pixels.py",
     "port64/yuuka5.hpp",
     "port64/yuuka5.cpp",
     "port64/yuuka5_contracts.cpp",

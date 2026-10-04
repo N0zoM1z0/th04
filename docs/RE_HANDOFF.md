@@ -139,8 +139,27 @@ exported. See [Yuuka core](PORT64.md#stage5-yuuka-core-and-seven-attacks) and
 `.analysis/port64/yuuka5-v1279/`. Source manifest ce458897. These are boss-only
 controls with injected shots/downstream consumers, not a GUI battle join.
 
-Next bounded work: Stage5 Yuuka foreground/backdrop and laser raster controls,
-then the ordinary battle join. Player death/Bomb/full HUD/
+Stage5 Yuuka foreground/background and sprite/laser/filler rasters now pass
+9,936request controls and1,804full640x400 pixel controls across GNU/Wine/UBSan/
+actualWindows. Normal/white SUPER preserves unsigned-X/WORD flat addresses;
+zoom is3x, idle sheets48x96. Rectangle/vline clipping wraps before comparison.
+Initial original972sprite screens were complete before native case864 failed;
+final consumers replay those unchanged references with explicit producer AST/
+helper-byte continuity. Final832primitive screens and allrequests reexecute
+original CPU. The initial rejected consumer remains failed. Core7330/69652
+regression passes GNU/actualWindows.23CTest/24products pass each build;23prior
+GNU/UBSan products are raw-identical and23MinGW differ only header timestamps/
+checksums. Only v1280diagnostics are exported; GUI/rootWindows remainv1277.
+See [Yuuka graphics](PORT64.md#stage5-yuuka-foreground-and-raster-controls),
+`.analysis/port64/yuuka5-render-v1280/`; final manifest7e410b8e. No whole-game/
+physical-hardware/FPS/DOS-exact claim.
+
+The latest requested cleanup additionally archives97historical files with
+verified gzip readback, reclaiming1.21GiB while119,965retained files keep their
+hashes. Root receipt:`.analysis/cleanup/historical-media-followup-20261004/`.
+
+Next bounded work: ordinary Stage5 battle join and post-dialog/bonus/departure.
+Player death/Bomb/full HUD/
 audio/later stages/Ending/save still need native implementation. Semantic stays
 stopped except concrete port ambiguities. Complete native gameplay is the port
 stopping condition.

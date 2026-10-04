@@ -141,6 +141,80 @@ void vectors(const char* path) {
     }
     require(in.eof(),"malformed Yuuka fixture");
 }
+void render_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Yuuka render fixtures");int frame;
+    while(in>>frame) {
+        const auto big_frame=m::wrap(number(in)),tone=m::wrap(number(in));const auto changed=number(in);
+        k::Snapshot state;state.boss=read(in);state.boss.big_frame=big_frame;state.boss.palette_tone=tone;state.boss.palette_changed=static_cast<std::uint8_t>(changed);
+        for(auto* e:{&state.boss.small[0],&state.boss.small[1],&state.boss.big}) {
+            Wire w;for(unsigned i=0;i<16;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+            e->alive=w.byte();e->age=w.byte();e->center=w.point();e->radius=w.point();e->delta=w.point();
+            const auto n=w.byte();e->unused=static_cast<std::int8_t>(n<128 ? int(n) : int(n)-256);e->angle_offset=w.byte();
+        }
+        Wire private_bytes;for(unsigned i=0;i<6;++i) private_bytes.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+        state.sweep_x=m::wrap(private_bytes.word());state.cloud_step=private_bytes.byte();state.cloud_accumulator=private_bytes.byte();state.palette_tone=private_bytes.byte();state.move_state=private_bytes.byte();
+        l::Snapshot ls;ls.scratch=read_beam(in);for(auto& q:ls.beams) q=read_beam(in);ls.player_hit=static_cast<std::uint8_t>(number(in));
+        k::System owner(state);l::System lasers(ls);owner.prepare_render(static_cast<std::uint16_t>(frame),lasers);const auto& result=owner.snapshot();const auto& b=result.boss;
+        Bytes bytes;motion(bytes,b.position);word(bytes,b.hp);bytes.push_back(b.sprite);bytes.push_back(b.phase);word(bytes,b.phase_frame);
+        for(auto n:{b.damage,b.mode,b.angle,b.patterns_or_bonus}) bytes.push_back(n);
+        word(bytes,b.end_hp);hex(bytes);hex(Bytes(b.additional.begin(),b.additional.end()));bytes.clear();
+        for(const auto& e:b.small) explosion(bytes,e);
+        explosion(bytes,b.big);hex(bytes);bytes.clear();word(bytes,result.sweep_x);
+        for(auto n:{result.cloud_step,result.cloud_accumulator,result.palette_tone,result.move_state}) bytes.push_back(n);
+        hex(bytes);bytes.clear();beam(bytes,lasers.snapshot().scratch);for(const auto& q:lasers.snapshot().beams) beam(bytes,q);hex(bytes);
+        std::cout<<+lasers.snapshot().player_hit<<' '<<b.big_frame<<' '<<b.palette_tone<<' '<<+b.palette_changed<<' '<<owner.draws().size()<<' ';
+        for(const auto& d:owner.draws()) std::cout<<unsigned(d.kind)<<' '<<d.x<<' '<<d.y<<' '<<d.value<<' '<<d.color<<' '<<d.end_x<<' '<<d.end_y<<' '<<d.mode<<' ';
+        std::cout<<'\n';
+    }
+    require(in.eof(),"malformed Yuuka render fixture");
+}
+void background_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Yuuka background fixtures");int phase,clock;
+    while(in>>phase>>clock) {
+        const auto draws=k::backdrop_requests(static_cast<std::uint8_t>(phase),m::wrap(clock));std::cout<<draws.size()<<' ';
+        for(const auto& d:draws) std::cout<<d.kind<<' '<<d.x<<' '<<d.y<<' '<<d.value<<' ';
+        std::cout<<'\n';
+    }
+    require(in.eof(),"malformed Yuuka backdrop fixture");
+}
+void disc_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open disc fixtures");int x,y,radius;
+    while(in>>x>>y>>radius) {
+        Bytes mask(32000);for(auto p:k::disc_pixels({m::wrap(x),m::wrap(y)},static_cast<std::uint16_t>(radius))) mask[unsigned(p.y)*80+unsigned(p.x)/8]|=static_cast<std::uint8_t>(128>>(p.x&7));
+        hex(mask);std::cout<<'\n';
+    }
+    require(in.eof(),"malformed disc fixture");
+}
+void pixel_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Yuuka pixel fixtures");std::string file;
+    while(in>>file) {
+        const auto image=static_cast<unsigned>(number(in));const auto left=number(in),top=number(in),kind=number(in),seed=number(in);
+        std::ifstream asset(file,std::ios::binary);require(bool(asset),"cannot open Yuuka BFNT");
+        const Bytes bytes{std::istreambuf_iterator<char>(asset),{}};th04::portable::sprite::Sheet sheet(bytes);
+        Bytes pixels(640*400);for(unsigned i=0;i<pixels.size();++i) pixels[i]=static_cast<std::uint8_t>((i*73+unsigned(seed))&15);
+        k::raster_sprite(sheet,image,left,top,static_cast<k::DrawKind>(kind),
+            [&](int x,int y){return pixels[unsigned(y)*640+unsigned(x)];},
+            [&](int x,int y,std::uint8_t color){pixels[unsigned(y)*640+unsigned(x)]=color;});
+        std::cout.write(reinterpret_cast<const char*>(pixels.data()),static_cast<std::streamsize>(pixels.size()));
+    }
+    require(in.eof(),"malformed Yuuka sprite fixture");
+}
+void raster_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Yuuka raster fixtures");char kind;
+    while(in>>kind) {
+        const auto x=m::wrap(number(in)),y=m::wrap(number(in)),ex=m::wrap(number(in)),ey=m::wrap(number(in));
+        const auto color=static_cast<std::uint16_t>(number(in));const auto seed=number(in);std::vector<m::Point> points;
+        if(kind=='R') points=k::rectangle_pixels({x,y},{ex,ey});
+        else if(kind=='V') points=k::vertical_line_pixels(x,y,ey);
+        else if(kind=='D') points=k::disc_pixels({x,y},static_cast<std::uint16_t>(ex));
+        else if(kind=='F') points=k::filler_pixels();
+        else throw std::invalid_argument("unknown Yuuka raster operation");
+        Bytes pixels(640*400);for(unsigned i=0;i<pixels.size();++i) pixels[i]=static_cast<std::uint8_t>((i*73+unsigned(seed))&15);
+        for(auto p:points) pixels[unsigned(p.y)*640+unsigned(p.x)]=static_cast<std::uint8_t>(color&15);
+        std::cout.write(reinterpret_cast<const char*>(pixels.data()),static_cast<std::streamsize>(pixels.size()));
+    }
+    require(in.eof(),"malformed Yuuka raster fixture");
+}
 } // namespace
 int main(int argc,char** argv) {
     try {
@@ -148,6 +222,11 @@ int main(int argc,char** argv) {
         _setmode(_fileno(stdout),_O_BINARY);
 #endif
         if(argc==3 && std::string(argv[1])=="--vectors") { vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--render-vectors") { render_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--background-vectors") { background_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--disc-vectors") { disc_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--pixel-vectors") { pixel_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--raster-vectors") { raster_vectors(argv[2]);return 0; }
         require(argc==1,"unknown Yuuka arguments");
         k::Snapshot state;state.boss.phase=3;state.boss.phase_frame=7;state.move_state=3;
         k::System owner(state);b::System bullets;g::System gathers;l::System lasers;r::SharedRandomRing random;o::Context context;
