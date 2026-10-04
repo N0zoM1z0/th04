@@ -15,6 +15,7 @@
 #include "elly.hpp"
 #include "reimu.hpp"
 #include "marisa.hpp"
+#include "stage5.hpp"
 #include "circles.hpp"
 #include "dialog.hpp"
 #include "stage_bonus.hpp"
@@ -48,8 +49,13 @@ public:
         return stage_id_==3 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
-    const midboss::Snapshot& midboss_state() const { return midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot())); }
-    const std::vector<midboss::Draw>& midboss_draws() const { return midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws())); }
+    bool stage5_dialog_ready(const stage::Background& background) const {
+        return stage_id_==4 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
+            dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
+    }
+    const stage5::Setup* stage5_setup() const { return stage5_ ? &*stage5_ : nullptr; }
+    const midboss::Snapshot& midboss_state() const { return stage5_ ? stage5_->midboss : (midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot()))); }
+    const std::vector<midboss::Draw>& midboss_draws() const { return stage5_ ? stage5_midboss_draws_ : (midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws()))); }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
@@ -72,7 +78,7 @@ public:
     bool marisa_active() const { return marisa_active_; }
     const marisa::System* marisa() const { return marisa_ ? &*marisa_ : nullptr; }
     bool boss_active() const { return marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
-    const orange::Snapshot& boss_snapshot() const { return marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot()))); }
+    const orange::Snapshot& boss_snapshot() const { return stage5_ ? stage5_->boss : (marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot())))); }
     const std::vector<orange::Draw>& boss_draws() const { return marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }
     const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
     std::uint8_t invincibility() const { return player_invincibility_; }
@@ -134,6 +140,9 @@ private:
     std::optional<midboss2::System> midboss2_;
     std::optional<midboss3::System> midboss3_;
     std::optional<midboss4::System> midboss4_;
+    std::optional<stage5::Setup> stage5_;
+    // A null original renderer emits no requests, including at frame60000.
+    std::vector<midboss::Draw> stage5_midboss_draws_;
     orange::System orange_{};
     std::optional<kurumi::System> kurumi_;
     std::optional<elly::System> elly_;

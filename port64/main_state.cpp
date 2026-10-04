@@ -47,7 +47,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     enemies_ = enemy::System{};
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
-    midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();midboss4_.reset();
+    midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();midboss4_.reset();stage5_.reset();stage5_midboss_draws_.clear();
     marisa_.reset();marisa_active_=false;reimu_.reset();reimu_active_=false;orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;player_invincibility_=64;circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
@@ -81,12 +81,13 @@ void State::start_reimu_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     reimu_->set_palette_zero(palette_zero);reimu_active_=true;
 }
 void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
-    if(!next_stage_requested_ || stage_id_>2 || application_->resident().stage!=stage_id_+1)
+    if(!next_stage_requested_ || stage_id_>3 || application_->resident().stage!=stage_id_+1)
         throw std::logic_error("actor preparation requires the actual next-stage departure request");
     // Validate before changing the live owners or consuming process random.
     auto next=std::make_unique<stage::Program>(standard);
     const auto next_id=static_cast<std::uint8_t>(stage_id_+1);
     const auto preceding_midboss=midboss_state();
+    const auto preceding_boss=boss_snapshot();
     auto boss=next_id==1 ? kurumi::prepare_stage2(orange_.snapshot(),rank_) : kurumi::Snapshot{};
     session::initialize_actors({player_,shots_,enemies_,bullets_,sparks_,gathers_,
         circles_,items_,score_,scoreboard_,ring_,drops_},[this] {
@@ -108,7 +109,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
         next_boss.boss.background=orange::Background::tiles;next_boss.boss.slowdown=1;
         next_boss.boss.shake_x=next_boss.boss.shake_y=0;next_boss.boss.bombing_disabled=0;
         next_boss.boss.palette_tone=100;next_boss.boss.invincibility=64;elly_.emplace(next_boss);
-    } else {
+    } else if(next_id==3) {
         midboss4::Snapshot next_midboss;next_midboss.actor=session::prepare_stage4_midboss(preceding_midboss);
         midboss4_.emplace(next_midboss);midboss3_.reset();midboss2_.reset();
         if(playchar_==application::Playchar::marisa) {
@@ -127,6 +128,11 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
             npc.boss.shake_x=npc.boss.shake_y=0;npc.boss.bombing_disabled=0;
             npc.boss.palette_tone=100;npc.boss.invincibility=64;marisa_.emplace(npc);
         }
+    } else {
+        stage5_=stage5::prepare(preceding_boss,preceding_midboss,rank_);
+        auto& b=stage5_->boss;b.background=orange::Background::tiles;b.slowdown=1;
+        b.shake_x=b.shake_y=0;b.bombing_disabled=0;b.palette_tone=100;b.invincibility=64;
+        midboss4_.reset();midboss3_.reset();midboss2_.reset();stage5_midboss_draws_.clear();
     }
     player_invincibility_=64;kurumi_active_=false;elly_active_=false;reimu_active_=false;marisa_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
@@ -165,7 +171,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     if(next_stage_requested_) return; // Next-stage resources have a separate owner.
     // Hold at the genuine next-boss dialog gate until its battle owner joins.
     // STD and the stage midboss callbacks execute normally before it.
-    if(background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background) || stage4_dialog_ready(*background))) return;
+    if(background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background) || stage4_dialog_ready(*background) || stage5_dialog_ready(*background))) return;
     const bool resumed=frame_suspended_;
     if(resumed && !dialog_finished_) return;
     enemy::Context context;
@@ -195,7 +201,13 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             enemies_.add(spawn,context,ring_);
         }
         if (stage_ && !boss_active()) {
-            if(midboss4_) midboss4_->activate(static_cast<std::uint16_t>(frames_));
+            if(stage5_) {
+                // The original still activates the null callback set at60000.
+                // Retain that metadata write; never dispatch a previous boss.
+                auto& actor=stage5_->midboss;
+                if(static_cast<std::uint16_t>(frames_)==actor.start_frame) { actor.phase=0;actor.phase_frame=0;actor.active=true; }
+            }
+            else if(midboss4_) midboss4_->activate(static_cast<std::uint16_t>(frames_));
             else if(midboss3_) midboss3_->activate(static_cast<std::uint16_t>(frames_));
             else if(midboss2_) midboss2_->activate(static_cast<std::uint16_t>(frames_));
             else midboss_.activate(static_cast<std::uint16_t>(frames_));
@@ -244,7 +256,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             for (unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
             return result.damage;
         };
-        if (midboss_state().active) {
+        if (midboss_state().active && !stage5_) {
             const auto sink=[&](const midboss::Event& event) {
                 midboss_events_.push_back(event);
                 if (event.type==midboss::EventType::circle) sparks_.add_circle(event.position,event.value,event.count);
@@ -347,7 +359,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     else if(elly_active_) elly_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
-    if (midboss_state().active) {
+    if (midboss_state().active && !stage5_) {
         if(midboss4_) midboss4_->prepare_render(midboss_context);else if(midboss3_) midboss3_->prepare_render(midboss_context);else if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
     }
     enemies_.prepare_render();

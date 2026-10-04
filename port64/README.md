@@ -2,14 +2,14 @@
 
 This branch keeps the playable PC-98 DOS build intact and develops a separate
 native port. The current GUI reads a user-supplied TH04 HDI, decodes the original
-assets and runs the title/options, character/shot selection, Stages1 through4.
+assets and runs the title/options, character/shot selection, Stages1 through5.
 Stages1 and2 include their actual STD waves, midboss, pre-dialog, ordinary boss,
 post-dialog, clear bonus and departure. Stage3 continues its STD waves and
 midboss, Elly battle, post-dialog, clear bonus and departure. Stage4 runs its
 STD waves, carpet lighting, two midboss encounters and character-dependent
 NPC dialogue. Both characters continue through their respective Reimu/Marisa
-Boss battle, post-dialog, clear bonus and departure to the Stage5 pending
-resource request. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
+Boss battle, post-dialog, clear bonus and departure into Stage5 STD waves, scrolling stars and Yuuka pre-dialogue.
+Stage5 has no midboss; its ordinary boss is the next implementation boundary. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
 Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
 to advance dialogue. Player death, Bomb, complete HUD/audio, later stages,
 Ending and save are not implemented yet. The native preview does not embed

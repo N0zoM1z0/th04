@@ -2112,3 +2112,85 @@ are losslessly archived after hash/counter readback, reclaiming3.66 GiB.
 `media-archive-receipt.json` records all original/compressed SHA-256 values;
 original CPU pixel references, fixtures and current builds remain live.
 Restore private media with `gzip -d -- FILE.gz` before an old-path replay.
+
+
+## Stage5 resources, stars and Yuuka pre-dialogue
+
+The native GUI now consumes the actual Stage4 departure request and continues
+through Stage5 STD waves, the scrolling star layer and both characters' Yuuka
+pre-dialogue. Sixteen Normal/Lunatic, Reimu/Marisa, A/B-shot, shooting/idle
+routes run 6,080 Stage5 simulation frames each. The GUI then holds at the
+ordinary Yuuka battle boundary; that Boss owner is the next implementation.
+Semantic work remains limited to concrete port ambiguities.
+
+MAIN `13A9:A932..A9EB` disables the midboss callbacks and sets start frame 60000.
+Its `boss_reset` retains HP/endHP/angle, additional bytes 1..15 and explosion
+metadata; setup overwrites only position/sprite/hitbox, interval byte0 and
+three star centers. Actual `midboss_reset` also clears HP and active; it retains
+other actor metadata. 1,024 original CPU controls compare complete 24-byte boss storage,
+16 additional bytes, 48 explosion bytes and 22-byte midboss storage. Five separate original
+activation controls confirm the null callback set still becomes active at 60000;
+this is a metadata probe, not a natural route reaching that frame.
+
+The bounded original session case4 arm `0AAF:05E4..0653` independently confirms
+BSS4.CD2, ST04.BFT, ST04BK.CDG, ST04.BB, ST04.CDG and ST04.MPN request order.
+There is no BMT append. Stage5 initially owns 12 sprites at 128..139 and its BFT
+palette; dialogue replaces them with ST04.BB1's one 64x64 sprite and BB2's
+eight 48x96 sprites, ending at 137. Sixteen independent archive portrait/palette
+checks compare 197,728 opaque pixels after the dialogue resource replacement.
+File and hardware consumers are bounded adapters; the session arm is entered
+after bootstrap, not a complete original session execution claim.
+
+Stars start at Q12.4 centers at 320/40/190 pixels, move 4 pixels per completed frame,
+and wrap once at 400. `0AAF:40FE..4168` skips updates during phases 1..253.
+Signed WORD addition/SAR and one-row correction preserve malformed-state edge
+requests; the physical raster accepts ordinary placements only. The invalidator
+`4169..419D` records 96x80 boxes at the preceding center. 1,820 actual CPU star/
+invalidation controls include signed edges and 800 trajectory checkpoints.
+
+Original `130E:063A..06BB` ORs CDG source plane B into destination plane I/E000,
+with bottom-up rows and physical 400-row wrapping. It preserves other colors;
+a four-plane opaque sprite replacement is wrong. 504 actual CPU controls compare
+16,128,000 complete plane bytes across aligned left edges, wrap points, display
+origins and retained color backgrounds. Native lower-color/OR invariants also
+pass. This flat visible VRAM model does not prove physical aliases/pages/scroll
+hardware or frame pacing. Host redraw replaces the original dirty rectangles.
+Cached star requests make repaint and blocking dialogue side-effect free.
+
+Linux/Wine/actual Windows pass 21 contracts, 850 total natural BMP checkpoints and
+926 counters. The 112 new Stage5 BMPs / 128 counters also agree under optimized
+UBSan/bounds; all 30 preceding image/counter groups remain identical. Dialogue
+and the pending Boss boundary freeze simulation, both RNG owners, score and
+star centers. This is a bounded native frontier, not full-game or DOS exactness.
+
+Receipts are under `.analysis/port64/stage5-v1277/`; `final-linux/receipt.json`
+contains the fresh original producer and independent portrait checks.
+`session-arm.json`, `null-midboss-activation.json`, `target-review.json`,
+`integration-review.json`, and native reference-consumer receipts retain their
+scopes. `test-config-continuity.json` records a final CTest-only argument fix:
+all 22 products stayed byte-identical after three incremental rebuilds, and the
+proper 21 test invocations passed. Earlier scenario/reference receipts keep their
+original source manifest; the explicit continuity receipt bridges to the final
+manifest 581547d4f74da59a984ad83f6a247bdc38735b923820e9765b8621a31b9a2115.
+No historical receipt is relabeled as a new run.
+
+Replay the component claim with:
+
+```sh
+python3 port64/verify_stage5.py --target /path/to/pinned/MAIN.EXE \
+  --hdi /path/to/legal/zun.hdi --exe /path/to/th04-port64-stage5-contracts \
+  --output-dir .analysis/port64/stage5-controls
+```
+
+Optional `--frames` names the 112 Stage5 BMP directory and enables independent
+portrait checks. `--stage5-screenshots DIR` on the main executable generates
+sixteen natural routes from the title; no injected phase/damage/spawn/RNG.
+Windows v1277 exports only the GUI/English launcher and retains v1276 backup;
+21 root DOS/HDI/config/font/build files stay unchanged. The native preview
+still lacks player death, Bomb, complete HUD/audio, subsequent Bosses/stages,
+Ending and save. DOS exact ledgers and maintained DOS source stay unchanged.
+
+After final readback, 3,078 private validation BMPs are losslessly archived,
+reclaiming 2.15 GiB. `media-archive-receipt.json` records every original and
+compressed hash; restore the historical image paths with `gzip -d -- FILE.gz`
+before replaying image comparisons. Original CPU references remain live.

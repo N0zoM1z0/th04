@@ -6,7 +6,8 @@ echo Controls: arrows to move, Z to shoot, Shift to slow down.
 echo Dialogue: release the key, then press Enter or Z to continue.
 echo Preview includes Stage 4 waves, two midboss encounters and NPC dialogue.
 echo Both characters continue through their Stage 4 boss, dialogue and clear.
-echo Stage 5 onward, player death, Bombs and audio are in development.
+echo Stage 5 waves, scrolling stars and Yuuka dialogue are now playable.
+echo Stage 5 boss onward, player death, Bombs and audio are in development.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.
   pause

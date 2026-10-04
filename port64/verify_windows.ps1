@@ -14,7 +14,7 @@ if (Test-Path -LiteralPath $OutputDirectory) {
 $outDir = (New-Item -ItemType Directory -Path $OutputDirectory).FullName
 $names = @('contracts', 'live-contracts', 'shot-contracts', 'enemy-contracts',
            'bullet-contracts', 'effect-contracts', 'midboss-contracts',
-           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts', 'midboss3-contracts', 'elly-contracts', 'midboss4-contracts', 'reimu-contracts', 'marisa-contracts')
+           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts', 'midboss3-contracts', 'elly-contracts', 'midboss4-contracts', 'reimu-contracts', 'marisa-contracts', 'stage5-contracts')
 $contracts = @()
 foreach ($name in $names) {
     $exe = Join-Path $exeDir ("th04-port64-$name.exe")
@@ -121,12 +121,25 @@ Get-ChildItem -LiteralPath $marisaDir -Filter '*.bmp' | ForEach-Object {
 if ($marisaImages.Count -ne 162) { throw 'Missing Marisa visual checkpoints.' }
 $marisaCounters = @($marisaLines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Marisa *' })
 if ($marisaCounters.Count -ne 170) { throw 'Missing Marisa scenario counters.' }
+$stage5Dir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'stage5-frames')).FullName
+Write-Host 'Running sixteen natural Stage 5 waves and dialogue scenarios...'
+$stage5Lines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --stage5-screenshots $stage5Dir 2>&1)
+if ($LASTEXITCODE -ne 0) { throw "Stage 5 scenarios failed: $stage5Lines" }
+$stage5Lines | Set-Content -LiteralPath (Join-Path $outDir 'stage5.log')
+$stage5Images = @{}
+Get-ChildItem -LiteralPath $stage5Dir -Filter '*.bmp' | ForEach-Object {
+    $stage5Images[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+if ($stage5Images.Count -ne 112) { throw 'Missing Stage 5 visual checkpoints.' }
+$stage5Counters = @($stage5Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Stage5 *' })
+if ($stage5Counters.Count -ne 128) { throw 'Missing Stage 5 scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
     hdi_sha256=(Get-FileHash -LiteralPath $hdiFile -Algorithm SHA256).Hash.ToLowerInvariant()
     font_sha256=(Get-FileHash -LiteralPath $fontFile -Algorithm SHA256).Hash.ToLowerInvariant()
     dialog_fixture_bmp_sha256=$images; dialog_fixture_counters=$counters
+    stage5_fixture_bmp_sha256=$stage5Images; stage5_fixture_counters=$stage5Counters
     stage2_fixture_bmp_sha256=$stage2Images; stage2_fixture_counters=$stage2Counters
     kurumi_fixture_bmp_sha256=$kurumiImages; kurumi_fixture_counters=$kurumiCounters
     stage3_fixture_bmp_sha256=$stage3Images; stage3_fixture_counters=$stage3Counters
@@ -139,4 +152,4 @@ $receipt = @{
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count + $ellyImages.Count + $stage4Images.Count + $reimuImages.Count + $marisaImages.Count))
+Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count + $ellyImages.Count + $stage4Images.Count + $reimuImages.Count + $marisaImages.Count + $stage5Images.Count))

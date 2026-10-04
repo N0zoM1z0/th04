@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/stage5.cpp",
+    "port64/stage5.hpp",
+    "port64/stage5_contracts.cpp",
+    "port64/verify_stage5.py",
     "port64/marisa_render.cpp",
     "port64/verify_marisa_render.py",
     "port64/verify_marisa_pixels.py",
@@ -258,6 +262,8 @@ def main() -> int:
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
     linux_midboss3=linux_dir / "th04-port64-midboss3-contracts"
     windows_midboss3=windows_dir / "th04-port64-midboss3-contracts.exe"
+    linux_stage5=linux_dir / "th04-port64-stage5-contracts"
+    windows_stage5=windows_dir / "th04-port64-stage5-contracts.exe"
     linux_marisa=linux_dir / "th04-port64-marisa-contracts"
     windows_marisa=windows_dir / "th04-port64-marisa-contracts.exe"
     linux_reimu=linux_dir / "th04-port64-reimu-contracts"
@@ -268,13 +274,16 @@ def main() -> int:
     windows_elly=windows_dir / "th04-port64-elly-contracts.exe"
     linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
     windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
-    for path in (linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_stage5,linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_stage5,windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_stage5_output=run([str(linux_stage5)])
+    windows_stage5_output=run([args.windows_runner,str(windows_stage5)],env=runner_env)
+    if linux_stage5_output!="Stage5 retained setup and star ownership: PASS" or windows_stage5_output!=linux_stage5_output:raise ValueError("Stage5 contracts failed")
     linux_marisa_output=run([str(linux_marisa)])
     windows_marisa_output=run([args.windows_runner,str(windows_marisa)],env=runner_env)
     if linux_marisa_output!="Stage 4 Marisa core contracts PASS" or windows_marisa_output!=linux_marisa_output:raise ValueError("Marisa core contracts failed")
@@ -458,6 +467,8 @@ def main() -> int:
     stage3_outputs = {}
     stage4_hashes = {}
     stage4_outputs = {}
+    stage5_hashes = {}
+    stage5_outputs = {}
     marisa_hashes = {}
     marisa_outputs = {}
     reimu_hashes = {}
@@ -553,6 +564,15 @@ def main() -> int:
             marisa_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Marisa")]
         if marisa_hashes["linux"]!=marisa_hashes["windows"] or marisa_outputs["linux"]!=marisa_outputs["windows"]:raise ValueError("Marisa images/counters differ between hosts")
 
+        for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
+            images=output.parent/("stage5-"+host);images.mkdir(parents=True,exist_ok=True)
+            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage5-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Stage5 fixture=")!=112 or result.count("MAIN Stage5 stopped ")!=16:raise ValueError("natural Stage5 fixture missed progression")
+            stage5_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(stage5_hashes[host])!=112:raise ValueError("unexpected Stage5 image files")
+            stage5_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage5")]
+        if stage5_hashes["linux"]!=stage5_hashes["windows"] or stage5_outputs["linux"]!=stage5_outputs["windows"]:raise ValueError("Stage5 images/counters differ between hosts")
+
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
         "schema_version": 1,
@@ -564,6 +584,8 @@ def main() -> int:
         "products": {
             "linux": {
                 "format": "ELF64 x86-64",
+                "stage5_contracts_sha256": sha256(linux_stage5),
+                "stage5_contract_output": linux_stage5_output,
                 "main_sha256": sha256(linux_main),
                 "contracts_sha256": sha256(linux_contracts),
                 "contract_output": linux_contract_output,
@@ -609,6 +631,8 @@ def main() -> int:
             },
             "windows": {
                 "format": "PE32+ x86-64",
+                "stage5_contracts_sha256": sha256(windows_stage5),
+                "stage5_contract_output": windows_stage5_output,
                 "main_sha256": sha256(windows_main),
                 "contracts_sha256": sha256(windows_contracts),
                 "contract_output": windows_contract_output,
@@ -689,6 +713,8 @@ def main() -> int:
         "marisa_fixture_counters": marisa_outputs.get("linux",[]),
         "reimu_fixture_bmp_sha256": reimu_hashes.get("linux",{}),
         "reimu_fixture_counters": reimu_outputs.get("linux",[]),
+        "stage5_fixture_bmp_sha256": stage5_hashes.get("linux",{}),
+        "stage5_fixture_counters": stage5_outputs.get("linux",[]),
         "stage4_fixture_bmp_sha256": stage4_hashes.get("linux",{}),
         "stage4_fixture_counters": stage4_outputs.get("linux",[]),
         "elly_fixture_bmp_sha256": elly_hashes.get("linux",{}),

@@ -12,12 +12,24 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Stage4 Marisa battle/rendering](PORT64.md#stage4-marisa-battle-and-rendering).
+Current native scope: [Stage5 resources/stars/pre-dialog](PORT64.md#stage5-resources-stars-and-yuuka-pre-dialogue).
 The GUI runs title/options/character/shot, Stage1 Orange, Stage2 Kurumi,
 Stage3 Elly/clear/departure, Stage4 waves/carpet/two midbosses/NPC dialogue.
 Both characters now continue through their respective Reimu/Marisa Boss,
-post-dialog/bonus/departure to the actual Stage5 pending-resource request.
-Root Windows native EXE/English launcher are v1276; no GUI launched.
+post-dialog/bonus/departure into Stage5 STD waves, scrolling stars and Yuuka
+pre-dialogue. Sixteen Normal/Lunatic Reimu/Marisa A/B-shot/idle routes complete
+6,080 Stage5 frames each, then freeze at the ordinary Yuuka battle boundary.
+Root Windows native EXE/English launcher are v1277; no GUI launched.
+
+Stage5 has no BMT or midboss callback; actual setup retains BOSS/midboss metadata
+and null callbacks have start frame60000. Original setup1,024/star1,820/rolling
+OR-plane504 controls pass;16 archive portrait checks compare197,728 pixels.
+Linux/Wine/actualWindows21contracts/850BMP/926counters agree;optimizedUBSan
+Stage5 routes and controls agree, all30preceding image/counter groups unchanged.
+Receipts:`.analysis/port64/stage5-v1277/`; final native source manifest
+581547d4f74da59a984ad83f6a247bdc38735b923820e9765b8621a31b9a2115.
+CTest-only correction preserves all22product hashes; an explicit continuity
+receipt bridges earlier source manifests without relabeling their receipts.
 
 Fresh MAIN0AAF:419E..4280/4281..42F0 bits/body review preserves raw sprites,
 color9 packed-center line chains, visible WORD damage reset and hidden-slot
@@ -87,7 +99,11 @@ Cross: `.analysis/port64/verification-marisa-render-v1276-accepted/receipt.json`
 Manifest:3adf253ed25e0a48be20efd71e94d70ad0de70864755b752b156cd0d003bc000.
 Prior v1274/v1275 original references and focused PORT64 notes stay available.
 
-Next bounded work: Stage5 resources/midboss/boss. Player death/Bomb/full HUD/
+v1277 validation media are archived after readback: 3,078 BMPs reclaim 2.15 GiB.
+`stage5-v1277/media-archive-receipt.json` records hashes; original CPU references
+and current builds remain expanded. Restore private BMPs with `gzip -d`.
+
+Next bounded work: Stage5 ordinary Yuuka Boss state/attacks, then rendering. Player death/Bomb/full HUD/
 audio/later stages/Ending/save still need native implementation. Semantic stays
 stopped except concrete port ambiguities. Complete native gameplay is the port
 stopping condition.
