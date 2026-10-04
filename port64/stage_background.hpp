@@ -21,6 +21,8 @@ class Background {
 public:
     Background(const Bytes& map, const Bytes& standard);
     void update(bool scroll_active = true);
+    void release_finished_streams();
+    bool streams_released() const { return streams_released_; }
     void set_speed(std::uint8_t speed) { speed_=speed; }
     void set_tile(std::int16_t x,std::int16_t y,unsigned image);
     unsigned image_at(unsigned screen_x, unsigned screen_y) const;
@@ -45,5 +47,6 @@ private:
     unsigned scroll_line_ = 0, display_line_ = 0, ring_row_previous_ = 0;
     std::uint8_t fraction_ = 0, speed_ = 0, previous_advance_ = 0;
     std::int16_t last_delta_ = 0;
+    bool streams_released_ = false;
 };
 } // namespace th04::portable::stage

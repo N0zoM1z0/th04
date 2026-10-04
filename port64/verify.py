@@ -14,6 +14,9 @@ import sys
 
 
 PORT_FILES = (
+    "port64/stage6.cpp",
+    "port64/stage6.hpp",
+    "port64/verify_stage6.py",
     "port64/verify_yuuka5_departure.py",
     "port64/yuuka5_render.cpp",
     "port64/verify_yuuka5_render.py",
@@ -494,6 +497,8 @@ def main() -> int:
     stage5_outputs = {}
     yuuka5_hashes = {}
     yuuka5_outputs = {}
+    stage6_hashes = {}
+    stage6_outputs = {}
     marisa_hashes = {}
     marisa_outputs = {}
     reimu_hashes = {}
@@ -606,6 +611,15 @@ def main() -> int:
             if len(yuuka5_hashes[host])!=698:raise ValueError("unexpected Yuuka5 image files")
             yuuka5_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Yuuka5")]
         if yuuka5_hashes["linux"]!=yuuka5_hashes["windows"] or yuuka5_outputs["linux"]!=yuuka5_outputs["windows"]:raise ValueError("Yuuka5 images/counters differ between hosts")
+
+        for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
+            images=output.parent/("stage6-"+host);images.mkdir(parents=True,exist_ok=True)
+            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage6-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Stage6 fixture=")!=112 or result.count("MAIN Stage6 stopped ")!=16:raise ValueError("natural Stage6 fixture missed progression")
+            stage6_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(stage6_hashes[host])!=112:raise ValueError("unexpected Stage6 image files")
+            stage6_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage6")]
+        if stage6_hashes["linux"]!=stage6_hashes["windows"] or stage6_outputs["linux"]!=stage6_outputs["windows"]:raise ValueError("Stage6 images/counters differ between hosts")
 
     manifest_sha256, source_files = source_manifest(root)
     if manifest_sha256 != initial_manifest_sha256:
@@ -759,6 +773,8 @@ def main() -> int:
         "reimu_fixture_counters": reimu_outputs.get("linux",[]),
         "yuuka5_fixture_bmp_sha256": yuuka5_hashes.get("linux",{}),
         "yuuka5_fixture_counters": yuuka5_outputs.get("linux",[]),
+        "stage6_fixture_bmp_sha256": stage6_hashes.get("linux",{}),
+        "stage6_fixture_counters": stage6_outputs.get("linux",[]),
         "stage5_fixture_bmp_sha256": stage5_hashes.get("linux",{}),
         "stage5_fixture_counters": stage5_outputs.get("linux",[]),
         "stage4_fixture_bmp_sha256": stage4_hashes.get("linux",{}),
@@ -790,7 +806,8 @@ def main() -> int:
             "Stage5 has sixteen Normal/Lunatic character/A-B shot/idle routes requesting Stage6 "
             "and two Easy bad-dialogue routes stopping before MAINE. Separate original CPU "
             "component controls support selected semantics; these host scenarios are not "
-            "original whole-route or physical PC-98 hardware comparisons. Stage6/Extra, "
+            "original whole-route or physical PC-98 hardware comparisons. Stage6 waves and full "
+            "pre-battle dialogue additionally have sixteen natural host routes. Yuuka6 battle/Extra, "
             "Bombs, player death/Continue, remaining HUD, audio, Ending and save I/O "
             "still need native implementation. No whole-game, FPS or DOS exact claim."
         ),

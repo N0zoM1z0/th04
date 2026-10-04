@@ -86,6 +86,7 @@ void Background::refill(unsigned ring_row, unsigned section, unsigned row) {
 }
 
 void Background::update(bool scroll_active) {
+    if(streams_released_) throw std::logic_error("released MAP/STD streams updated");
     // Publish the hardware origin BEFORE advancing the ring for this frame.
     if (previous_advance_ && scroll_active) display_line_ = scroll_line_;
     fraction_ = static_cast<std::uint8_t>(unsigned(fraction_)+speed_);
@@ -117,6 +118,15 @@ void Background::update(bool scroll_active) {
         refill(ring_row,order_[section_cursor_],row_in_section_);
     }
     previous_advance_ = static_cast<std::uint8_t>(advance);
+}
+
+void Background::release_finished_streams() {
+    if(!stopped() || streams_released_) throw std::logic_error("invalid MAP/STD release");
+    // Stage6 frees MAP/STD before dialogue. The displayed tile ring and MPN
+    // image bank survive, so rendering the retained background needs no file
+    // stream. Swap rather than clear to return the stream allocations.
+    decltype(sections_){}.swap(sections_);Bytes{}.swap(order_);Bytes{}.swap(speeds_);
+    streams_released_=true;
 }
 
 unsigned Background::image_at(unsigned screen_x, unsigned screen_y) const {

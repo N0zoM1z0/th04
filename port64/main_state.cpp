@@ -43,11 +43,12 @@ State::State(application::State& application):application_(&application) {
 }
 
 void State::load_stage(const stage::Program::Bytes& standard) {
+    stage6_battle_pending_=false;
     stage_ = std::make_unique<stage::Program>(standard);
     enemies_ = enemy::System{};
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
-    midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();midboss4_.reset();stage5_.reset();stage5_midboss_draws_.clear();
+    midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();midboss4_.reset();stage5_.reset();stage6_.reset();stage5_midboss_draws_.clear();
     yuuka5_.reset();yuuka5_active_=false;bad_ending_requested_=false;thick_lasers_=laser::System{};thick_lasers_.initialize();
     marisa_.reset();marisa_active_=false;reimu_.reset();reimu_active_=false;orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;player_invincibility_=64;circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
@@ -91,8 +92,12 @@ void State::start_yuuka5_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     initial.boss.palette_zero=palette_zero;initial.midboss_frames_until=60000-65536;
     yuuka5_.emplace(initial);yuuka5_active_=true;
 }
+void State::begin_stage6_dialog(stage::Background& background) {
+    if(!stage6_dialog_ready(background)) throw std::logic_error("invalid Stage6 dialogue gate");
+    background.release_finished_streams();stage_.reset();stage6_battle_pending_=true;
+}
 void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
-    if(!next_stage_requested_ || stage_id_>3 || application_->resident().stage!=stage_id_+1)
+    if(!next_stage_requested_ || stage_id_>4 || application_->resident().stage!=stage_id_+1)
         throw std::logic_error("actor preparation requires the actual next-stage departure request");
     // Validate before changing the live owners or consuming process random.
     auto next=std::make_unique<stage::Program>(standard);
@@ -142,13 +147,19 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
             npc.boss.shake_x=npc.boss.shake_y=0;npc.boss.bombing_disabled=0;
             npc.boss.palette_tone=100;npc.boss.invincibility=64;marisa_.emplace(npc);
         }
-    } else {
+    } else if(next_id==4) {
         stage5_=stage5::prepare(preceding_boss,preceding_midboss,rank_);
         auto& b=stage5_->boss;b.background=orange::Background::tiles;b.slowdown=1;
         b.shake_x=b.shake_y=0;b.bombing_disabled=0;b.palette_tone=100;b.invincibility=64;
         midboss4_.reset();midboss3_.reset();midboss2_.reset();stage5_midboss_draws_.clear();
+    } else {
+        stage6_=stage6::prepare(preceding_boss,preceding_midboss,rank_);
+        auto& b=stage6_->boss;b.background=orange::Background::tiles;b.slowdown=1;
+        b.shake_x=b.shake_y=0;b.bombing_disabled=0;b.palette_tone=100;b.invincibility=64;
+        stage5_.reset();midboss4_.reset();midboss3_.reset();midboss2_.reset();stage5_midboss_draws_.clear();
     }
     yuuka5_active_=false;bad_ending_requested_=false;
+    stage6_battle_pending_=false;
     player_invincibility_=64;kurumi_active_=false;elly_active_=false;reimu_active_=false;marisa_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
@@ -187,10 +198,10 @@ void State::apply_clear_bonus() {
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     score_events_.clear();
-    if(next_stage_requested_ || bad_ending_requested_) return; // Next-stage resources have a separate owner.
+    if(next_stage_requested_ || bad_ending_requested_ || stage6_battle_pending_) return; // Next owner has not joined.
     // Hold at the genuine next-boss dialog gate until its battle owner joins.
     // STD and the stage midboss callbacks execute normally before it.
-    if(background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background) || stage4_dialog_ready(*background) || stage5_dialog_ready(*background))) return;
+    if(background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background) || stage4_dialog_ready(*background) || stage5_dialog_ready(*background) || stage6_dialog_ready(*background))) return;
     const bool resumed=frame_suspended_;
     if(resumed && !dialog_finished_) return;
     enemy::Context context;
@@ -220,10 +231,10 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             enemies_.add(spawn,context,ring_);
         }
         if (stage_ && !boss_active()) {
-            if(stage5_) {
+            if(stage5_ || stage6_) {
                 // The original still activates the null callback set at60000.
                 // Retain that metadata write; never dispatch a previous boss.
-                auto& actor=stage5_->midboss;
+                auto& actor=stage6_ ? stage6_->midboss : stage5_->midboss;
                 if(static_cast<std::uint16_t>(frames_)==actor.start_frame) { actor.phase=0;actor.phase_frame=0;actor.active=true; }
             }
             else if(midboss4_) midboss4_->activate(static_cast<std::uint16_t>(frames_));
@@ -279,7 +290,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             for (unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
             return result.damage;
         };
-        if (midboss_state().active && !stage5_) {
+        if (midboss_state().active && !stage5_ && !stage6_) {
             const auto sink=[&](const midboss::Event& event) {
                 midboss_events_.push_back(event);
                 if (event.type==midboss::EventType::circle) sparks_.add_circle(event.position,event.value,event.count);
@@ -391,7 +402,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     else if(elly_active_) elly_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
-    if (midboss_state().active && !stage5_) {
+    if (midboss_state().active && !stage5_ && !stage6_) {
         if(midboss4_) midboss4_->prepare_render(midboss_context);else if(midboss3_) midboss3_->prepare_render(midboss_context);else if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
     }
     enemies_.prepare_render();

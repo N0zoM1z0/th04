@@ -1,4 +1,5 @@
 #include "stage5.hpp"
+#include "stage6.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -43,14 +44,17 @@ void print_boss(const o::Snapshot& b) {
         v.push_back(e->alive);v.push_back(e->age);point(v,e->center);point(v,e->radius);point(v,e->delta);v.push_back(static_cast<std::uint8_t>(e->unused));v.push_back(e->angle_offset);
     }hex(v);
 }
-void setup_vectors(const char* path) {
+void setup_vectors(const char* path,bool sixth=false) {
     std::ifstream in(path);require(bool(in),"cannot read Stage5 setups");unsigned rank;
     while(in>>rank) {
         const auto boss=read_boss(in);Wire w(in,22);mb::Snapshot mid;mid.position=w.motion();mid.start_frame=w.word();mid.hp=m::wrap(w.word());mid.sprite=w.byte();mid.phase=w.byte();mid.phase_frame=m::wrap(w.word());mid.damaged=w.byte();mid.unused_angle=w.byte();
         mid.active=number(in)!=0;mid.hp_bar=m::wrap(number(in));mid.pattern_angle=static_cast<std::uint8_t>(number(in));
-        const auto next=s::prepare(boss,mid,rank);print_boss(next.boss);Bytes v;motion(v,next.midboss.position);word(v,next.midboss.start_frame);word(v,next.midboss.hp);v.push_back(next.midboss.sprite);v.push_back(next.midboss.phase);word(v,next.midboss.phase_frame);v.push_back(next.midboss.damaged);v.push_back(next.midboss.unused_angle);hex(v);
-        std::cout<<next.midboss.active<<' '<<next.midboss.hp_bar<<' '<<+next.midboss.pattern_angle<<' '<<next.boss.hitbox_radius.x<<' '<<next.boss.hitbox_radius.y<<' '<<+next.boss.timed_out;
-        for(auto c:next.centers) { std::cout<<' '<<c; }
+        auto next_boss=boss;auto next_mid=mid;std::array<m::Subpixel,3> centers{};
+        if(sixth) {const auto next=th04::portable::stage6::prepare(boss,mid,rank);next_boss=next.boss;next_mid=next.midboss;}
+        else {const auto next=s::prepare(boss,mid,rank);next_boss=next.boss;next_mid=next.midboss;centers=next.centers;}
+        print_boss(next_boss);Bytes v;motion(v,next_mid.position);word(v,next_mid.start_frame);word(v,next_mid.hp);v.push_back(next_mid.sprite);v.push_back(next_mid.phase);word(v,next_mid.phase_frame);v.push_back(next_mid.damaged);v.push_back(next_mid.unused_angle);hex(v);
+        std::cout<<next_mid.active<<' '<<next_mid.hp_bar<<' '<<+next_mid.pattern_angle<<' '<<next_boss.hitbox_radius.x<<' '<<next_boss.hitbox_radius.y<<' '<<+next_boss.timed_out;
+        if(!sixth) for(auto c:centers) { std::cout<<' '<<c; }
         std::cout<<'\n';
     }
 }
@@ -84,7 +88,7 @@ void pixels(const char* path) {
 int main(int argc,char** argv) {
  try {
     if(argc==3) {
-        const std::string op=argv[1];if(op=="--setup-vectors")setup_vectors(argv[2]);else if(op=="--star-vectors")star_vectors(argv[2]);else if(op=="--pixel-vectors") {
+        const std::string op=argv[1];if(op=="--setup-vectors")setup_vectors(argv[2]);else if(op=="--stage6-setup-vectors")setup_vectors(argv[2],true);else if(op=="--star-vectors")star_vectors(argv[2]);else if(op=="--pixel-vectors") {
 #ifdef _WIN32
             require(_setmode(_fileno(stdout),_O_BINARY)!=-1,"cannot set binary star stream");
 #endif
@@ -96,6 +100,8 @@ int main(int argc,char** argv) {
     require(stars.update(0,399,true).size()==3,"ordinary phase failed to draw stars");
     o::Snapshot boss;boss.hp=123;boss.additional[7]=99;mb::Snapshot mid;mid.hp=1200;mid.phase=7;mid.active=true;
     const auto next=s::prepare(boss,mid,3);require(next.boss.hp==123 && next.boss.additional[7]==99 && next.boss.additional[0]==180 && !next.midboss.active && next.midboss.hp==0 && next.midboss.phase==7 && next.midboss.start_frame==60000,"Stage5 retained setup");
+    const auto final=th04::portable::stage6::prepare(next.boss,next.midboss,3);
+    require(final.boss.hp==123 && final.boss.additional[7]==99 && final.boss.additional[0]==96 && final.boss.additional[1]==4 && final.boss.position.current.y==1280 && final.boss.hitbox_radius.y==768 && final.midboss.phase==7 && !final.midboss.active && final.midboss.start_frame==60000,"Stage6 retained setup");
     std::cout<<"Stage5 retained setup and star ownership: PASS\n";return 0;
  } catch(const std::exception& e) {std::cerr<<e.what()<<'\n';return 1;}
 }

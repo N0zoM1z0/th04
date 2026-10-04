@@ -7,10 +7,11 @@ pointers and host backends; it does not claim byte equality with PC-98 code.
 
 The current preview runs Stages1 through5 including their waves, bosses,
 dialogues and departures. Stage4 has both character-dependent NPC battles;
-Stage5 joins Yuuka's seven attacks and thick lasers. Normal/Lunatic request
-Stage6 resources, while Easy runs the separate bad dialogue and stops before
+Stage5 joins Yuuka's seven attacks and thick lasers. Normal/Lunatic continue
+through Stage6 waves and the complete pre-battle dialogue, stopping before
+Yuuka6's first update. Easy runs the separate bad dialogue and stops before
 the native Ending implementation. See
-[Yuuka integration](#stage5-yuuka-ordinary-battle-and-route-specific-departure)
+[Stage6 integration](#stage6-resources-waves-and-pre-battle-dialogue)
 for the current acceptance scope; earlier slices below retain their historical
 boundaries.
 
@@ -2503,3 +2504,68 @@ DOS source, exact units and authored acceptance do not change. Semantic
 readability remains stopped except for specific port ambiguities; Stage6 and
 Extra, player death/Continue/Bomb, remaining HUD, audio, Ending and saved-data
 I/O are still required for a complete native game.
+
+## Stage6 resources, waves and pre-battle dialogue
+
+The v1282 join carries a normal Stage5 departure into ST05.MPN/MAP/STD/BFT,
+BSS5.CD2 and the character-specific _DM05/_DM15 script, without restarting
+MAIN or replacing its process LCG. Stage6 has16 initial32x32 BFT images and14
+MPN tiles. Actual MAIN13A9:A9EC..AA87 loads only ST05.BB: there is no BMT,
+new CDG picture or stage/midboss callback. CDG16 and the colorfill pointer
+retain their preceding Stage5 ownership. Boss HP/endHP/angle, most additional
+bytes, big explosion and midboss motion/phase metadata survive reset; the
+new position is192x80 and hitbox radii24x48. Rank0..3 replace additional[0/1]
+with48/64/80/96 and1/1/2/4. Native rejects rank4 here; Extra uses stagex_setup.
+The original18A6 rank selector indexes stack arguments unchecked, and rank4
+reads the far return CS instead of providing a Normal fallback. The rejected
+initial assumption is retained in setup-linux.log; it does not describe the
+final executable.
+
+Before dialogue, actual0AAF:2454..24CD releases CDG31, STD and MAP for stage5/6
+only when speed0/back-page1. Native frees the STD actor program and MAP/order/
+speed streams, retaining the displayed tile ring and MPN bank. A released
+background stream rejects updates; a pending Yuuka6 owner freezes simulation.
+The original complete scene consumes cursor1044/910, rather than stopping at
+the first inner '#'. Both scripts load BB1/2/3, close boxes, release CDG1..31,
+load BB4/5/6/7/9 and request ST05B music before the final outer '#'. Native
+invalidates live CDG handles and guards future portrait/backdrop use; cached
+read-only archive bytes are not treated as live handles. The final sprite bank
+is128..189: seven48x96 sheets plus eight32x32 BB9 images. No inert free callback
+or prematurely activated boss substitutes for these requests.
+
+Independent original CPU controls cover1,024 retained setups,42 resource gate
+cases and four complete dialogue traces (two characters x held/released,
+1,895 ordered events). Linux/Wine/optimized UBSan agree; actual Windows consumes
+the retained setup/four dialogue references. Independent archive pixels check
+217,744 opaque portrait pixels in16 native captures. File, video, waits, audio
+and free consumers are explicit original-CPU adapters. These controls do not
+prove original whole-route video or physical PC-98 timing.
+
+--stage6-screenshots traverses Stage1..5 naturally and then16 Stage6 routes
+(two characters x Normal/Lunatic x A/B x shot/idle). All reach frame5198's
+stopped scroll/dialog gate and complete the pre-battle scene.112BMP/128counter
+records agree GNU/Wine/actualWindows/optimizedUBSan, including353 LCG reset
+draws, resource generation, callback ownership and dialogue/repaint/frontier
+freeze. The full cross-host GUI passes with all34 preceding image/counter
+groups unchanged; actual Windows checks23 contracts/1,660 route BMPs. Three
+incremental builds each pass23 CTests/24 products. This is native integration
+evidence, not an original full-route or FPS claim.
+The changed Stage5-contract consumer also replays the retained v1277 original
+reference:1,024 setups/1,820 stars/504 rolling-plane cases pass GNU/Wine/UBSan.
+Only CRT CRLF is normalized in text;16,128,000 pixel bytes compare raw per
+host. This reuses the independent reference without reexecuting original CPU.
+
+Receipts are under .analysis/port64/stage6-v1282. Producer manifest68eda7fd;
+final manifest08a9891b differs only in verify.py receipt.limit prose. The
+reporter-continuity receipt verifies the otherwise identical AST and all24
+complete products per host unchanged; completed producer receipts keep their
+original manifest. Windows publishes native EXE c2542286 and the English
+launcher, retains previous-v1281 and leaves21 DOS/HDI/config/font/build files
+unchanged. No GUI is launched. Completed validation BMPs are losslessly gzip
+archived after readback; restore private images with gzip -d before replay.
+
+Next: port Yuuka6's actual core, attack helpers, animation/entities and
+checkerboard/background/foreground, then join the ordinary battle. Extra,
+player death/Continue/Bomb, remaining HUD, audio, Ending and save I/O also
+remain required. Semantic work stays bounded to ambiguities needed by those
+owners; the complete native game is not finished.

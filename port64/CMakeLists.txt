@@ -27,6 +27,7 @@ add_library(
   midboss4.cpp
   stage4.cpp
   stage5.cpp
+  stage6.cpp
   thick_lasers.cpp
   yuuka5.cpp
   yuuka5_render.cpp

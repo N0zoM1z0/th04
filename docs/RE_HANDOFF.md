@@ -12,14 +12,47 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Stage5 Yuuka ordinary battle](PORT64.md#stage5-yuuka-ordinary-battle-and-route-specific-departure).
+Current native scope: [Stage6 resources/waves/pre-battle dialogue](PORT64.md#stage6-resources-waves-and-pre-battle-dialogue).
+Normal/Lunatic naturally traverse Stage1..5, then Stage6 waves and the complete
+pre-battle scene at frame5198. Native releases STD/MAP streams at the original
+speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
+62 battle sprites128..189 are loaded; simulation holds before unported
+Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
+frontier. Semantic remains stopped except for concrete port ambiguities.
+
+v1282 passes three incremental builds/23 CTests/24 products each. Independent
+original CPU1,024 setups/42 gates/four dialogue traces (1,895 ordered requests)
+agree GNU/Wine/optimizedUBSan; actualWindows consumes the retained references.
+Independent archive217,744 portrait pixels pass16 captures. New16 Stage6
+routes112BMP/128counters agree four hosts; full GUI preserves34 preceding
+image/counter groups and actualWindows checks1,660 route images. Original
+whole-route/physical-hardware/FPS/DOS exactness are separate, unproved claims.
+Changed Stage5 contracts retain1,024 setup/1,820 star/504 pixel controls on
+GNU/Wine/UBSan against v1277 independent references; original CPU not rerun.
+Producer manifest68eda7fd; final08a9891b only corrects verifier.limit prose.
+reporter-continuity proves the otherwise identical AST/all24 products per host
+unchanged; producer receipts keep their original manifest.
+
+Root Windows EXE c2542286/English launcher are now v1282, no GUI launched.
+previous-v1281 is retained; all21 DOS/HDI/config/font/build root files unchanged.
+Receipts:.analysis/port64/stage6-v1282/ (target-review,root-ghidra-attestation,
+setup-{linux,wine,ubsan}-final,original-dialog-review,integration-final,
+integration-review,native-windows-controls-receipt,reporter-continuity,
+source-manifest-final,stage5-reference-replay,Windows export).5514 completed validation BMPs are
+gzip-archived with SHA readback, reclaiming3.84GiB; current builds/fonts/saves
+and original CPU references remain expanded. Restore private BMPs with gzip -d.
+Next: Yuuka6 core/attack/animation/entity/foreground/checkerboard owners and
+ordinary battle join; then Extra, player death/Continue/Bomb, remaining HUD,
+audio, Ending and save I/O. The complete native game remains unfinished.
+
+Historical v1281 acceptance:
 The GUI runs title/options/character/shot and ordinary Stage1 through Stage5
 waves/midbosses/bosses/dialogues. Yuuka now joins actual shot damage, seven
 attacks, thick lasers, indexed foreground/background/palette, all eight32x32
 factor3 death frames and route-specific post-dialogue. Sixteen Reimu/Marisa
 Normal/Lunatic A/B-shot/idle routes request Stage6; both Easy A-shot routes
 load the independent bad dialogue and hold before unported Bad Ending.
-Root Windows native EXE/English launcher are v1281; no GUI launched. Previous
+That batch published v1281 native EXE/English launcher without launching GUI. Previous
 v1277 is retained in port64-preview/v1281-yuuka-battle/previous-v1277.
 
 Final native source manifest c81d775741f2d836c456aa76bbab5c30c4de746d695f620639ab5083603e8ea6.

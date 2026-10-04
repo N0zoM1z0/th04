@@ -617,21 +617,22 @@ struct StageSprites {
     StageSprites& operator=(const StageSprites&)=delete;
     explicit StageSprites(const StageAssets& source,unsigned resource_stage=1):assets(source),stage(assets.stage_tiles),
         backdrop(assets.backdrop),faces(assets.boss_faces),tiles(assets.map_tiles),background(assets.map,assets.standard) {
-        require_view(resource_stage>=1 && resource_stage<=4,"unsupported stage resource identity");
-        const bool fifth=resource_stage==4;
-        if(!fifth) boss=std::make_unique<sprite::Sheet>(assets.boss_tiles);
+        require_view(resource_stage>=1 && resource_stage<=5,"unsupported stage resource identity");
+        const bool fifth=resource_stage==4,sixth=resource_stage==5;
+        if(!fifth && !sixth) boss=std::make_unique<sprite::Sheet>(assets.boss_tiles);
         else {
-            require_view(assets.boss_tiles.empty(),"Stage5 must not append a BMT bank");
-            star_plane=std::make_unique<th04::portable::stage5::StarPlane>(assets.stars);
+            require_view(assets.boss_tiles.empty(),"Stage5/6 must not append a BMT bank");
+            if(fifth) star_plane=std::make_unique<th04::portable::stage5::StarPlane>(assets.stars);
+            else require_view(assets.stars.empty(),"Stage6 has null stage render/invalidate callbacks");
         }
-        require_view(stage.count()==(fifth ? 12u : (resource_stage==1 ? 18u : (resource_stage==2 ? 16u : 28u))) && stage.width()==32 && stage.height()==32,
+        require_view(stage.count()==(sixth ? 16u : (fifth ? 12u : (resource_stage==1 ? 18u : (resource_stage==2 ? 16u : 28u)))) && stage.width()==32 && stage.height()==32,
                      "stage BFT append contract changed");
-        require_view(fifth ? stage.has_palette() : (boss && boss->count()==(resource_stage==1 ? 16u : (resource_stage==2 ? 4u : 8u)) && boss->width()==64 && boss->height()==64 && boss->has_palette()),
+        require_view((fifth || sixth) ? stage.has_palette() : (boss && boss->count()==(resource_stage==1 ? 16u : (resource_stage==2 ? 4u : 8u)) && boss->width()==64 && boss->height()==64 && boss->has_palette()),
                      "stage palette/BMT append contract changed");
-        require_view(tiles.count()==(fifth ? 84u : (resource_stage==1 ? 75u : (resource_stage==2 ? 84u : 89u))) && background.required_image_count()<=tiles.count(),"stage MAP references absent MPN tile");
-        require_view(backdrop.width==(fifth ? 288u : (resource_stage==3 ? 256u : 384u)) && backdrop.height==((fifth || resource_stage==3) ? 256u : 112u) && backdrop.image_count==1 &&
+        require_view(tiles.count()==(sixth ? 14u : (fifth ? 84u : (resource_stage==1 ? 75u : (resource_stage==2 ? 84u : 89u)))) && background.required_image_count()<=tiles.count(),"stage MAP references absent MPN tile");
+        require_view(backdrop.width==((fifth || sixth) ? 288u : (resource_stage==3 ? 256u : 384u)) && backdrop.height==((fifth || sixth || resource_stage==3) ? 256u : 112u) && backdrop.image_count==1 &&
                      backdrop.layout==CdgSheet::colors_only && assets.transition.size()==2048 &&
-                     faces.width==128 && faces.height==128 && (faces.image_count==4 || (resource_stage==3 && faces.image_count==3)) && faces.layout==CdgSheet::alpha_and_colors,
+                     faces.width==128 && faces.height==128 && (faces.image_count==(sixth ? 2u : 4u) || (resource_stage==3 && faces.image_count==3)) && faces.layout==CdgSheet::alpha_and_colors,
                      "stage backdrop/portrait contract changed");
         require_view(!assets.dialog_scripts[0].empty() && !assets.dialog_scripts[1].empty(),"Stage2 dialog script missing");
     }
@@ -650,6 +651,9 @@ struct MainSprites {
     std::array<Slot,256> stage_slots{};
     std::vector<std::unique_ptr<sprite::Sheet>> loaded_sheets;
     unsigned stage_end=152;
+    // Archive bytes may stay cached, but a released original CDG handle is
+    // unusable. This prevents host pointers from reviving freed portraits.
+    std::array<bool,32> cdg_released{};
     Bytes standard;
     std::unique_ptr<StageSprites> second;
     PiImage palette;
@@ -686,6 +690,7 @@ struct MainSprites {
     }
     void install_stage(std::unique_ptr<StageSprites> next) {
         clean_stage(); // Clears every stage slot and first-stage dialog sheets.
+        cdg_released.fill(false);
         palette.palette=next->boss ? next->boss->palette() : next->stage.palette(); // Stage5 has BFT palette, no BMT.
         background=std::move(next->background);
         second=std::move(next);
@@ -693,6 +698,9 @@ struct MainSprites {
         if(second->boss) for(unsigned i=0;i<second->boss->count();++i) stage_slots[stage_end++]={second->boss.get(),i};
     }
     const CdgSheet& boss_portraits() const { return second ? second->faces : boss_faces; }
+    void free_cdg(unsigned slot) { require_view(slot<cdg_released.size(),"invalid CDG release slot");cdg_released[slot]=true; }
+    void require_cdg(unsigned slot) const { require_view(slot<cdg_released.size() && !cdg_released[slot],"released CDG handle used"); }
+    const CdgSheet& boss_backdrop() const { require_cdg(16);return second ? second->backdrop : backdrop; }
     void clean_stage() { for(unsigned i=128;i<256;++i) stage_slots[i]={};loaded_sheets.clear();stage_end=128; }
     void load_dialog_sprites(std::string name) {
         for(auto& c:name) if(c>='a' && c<='z') c=static_cast<char>(c-'a'+'A');
@@ -753,7 +761,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             require_view(bool(sprites.second),"Yuuka5 backdrop has no Stage5 owner");
             // Preserve the original phase-specific filler/CDG call order.
             for(const auto d:th04::portable::yuuka5::backdrop_requests(background_phase,state.orange_background_frame())) {
-                if(d.kind==2) put_opaque(frame,palette,sprites.second->backdrop,0,d.x,d.y);
+                if(d.kind==2) put_opaque(frame,palette,sprites.boss_backdrop(),0,d.x,d.y);
                 else if(d.kind==4) for(auto at:th04::portable::yuuka5::filler_pixels())
                     put_indexed_pixel(frame,palette,at.x,at.y,0,0,0);
             }
@@ -761,16 +769,16 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             require_view(bool(sprites.second),"NPC backdrop has no Stage4 owner");
             fill_rect(frame,palette,32,16,384,56,1);fill_rect(frame,palette,32,328,384,56,1);
             fill_rect(frame,palette,32,72,64,256,1);fill_rect(frame,palette,352,72,64,256,1);
-            put_opaque(frame,palette,sprites.second->backdrop,0,96,72);
+            put_opaque(frame,palette,sprites.boss_backdrop(),0,96,72);
         } else if(state.elly_active()) {
             require_view(bool(sprites.second),"Elly backdrop has no Stage3 owner");
             fill_rect(frame,palette,32,128,384,256,0);
-            put_opaque(frame,palette,sprites.second->backdrop,0,32,16);
+            put_opaque(frame,palette,sprites.boss_backdrop(),0,32,16);
         } else if(state.kurumi_active()) {
             require_view(bool(sprites.second),"Kurumi backdrop has no Stage2 owner");
             fill_rect(frame,palette,32,16,384,80,0);
             fill_rect(frame,palette,32,208,384,192,0);
-            put_opaque(frame,palette,sprites.second->backdrop,0,32,96);
+            put_opaque(frame,palette,sprites.boss_backdrop(),0,32,96);
         } else {
             fill_rect(frame,palette,32,16,384,120,1);
             fill_rect(frame,palette,32,264,384,120,0);
@@ -1108,6 +1116,7 @@ private:
             const auto& sheet=e.a==32 ? (character_ ? sprites_.marisa_faces : sprites_.reimu_faces) : sprites_.boss_portraits();
             const unsigned image=static_cast<unsigned>(e.c-(e.a==32 ? 2 : 8));
             require_view(image<sheet.image_count,"dialog references absent portrait");
+            sprites_.require_cdg((e.a==32 ? 2u : 8u)+image);
             for(unsigned y=0;y<128;++y) for(unsigned x=0;x<128;++x) if(sheet.bit(image,0,x,y)) {
                 unsigned color=0;for(unsigned plane=0;plane<4;++plane) if(sheet.bit(image,plane+1,x,y)) color|=1u<<plane;
                 pixel(e.a+int(x),e.b+int(y),color);
@@ -1121,7 +1130,7 @@ private:
         }
         case dialog::Kind::clean:sprites_.clean_stage();break;
         case dialog::Kind::sprite_load:sprites_.load_dialog_sprites(e.name);break;
-        case dialog::Kind::cdg_free:throw std::runtime_error("Stage 1 dialog unexpectedly frees a CDG slot");
+        case dialog::Kind::cdg_free:sprites_.free_cdg(static_cast<unsigned>(e.a));break;
         default:break; // Timing/palette is Script-owned; audio/overlay requests are retained.
         }
     }
@@ -1154,6 +1163,29 @@ public:
     void enable_marisa() { enable_stage4();continue_marisa_=true; }
     void enable_stage5() { enable_reimu();enable_marisa();continue_stage5_=true; }
     void enable_yuuka5() { enable_stage5();continue_yuuka5_=true; }
+    void enable_stage6() { enable_yuuka5();continue_stage6_=true; }
+    bool stage6_dialog_complete() const { return sixth_pre_finished_; }
+    bool stage6_resources_valid() const {
+        if(!sprites_->second || sprites_->second->star_plane || sprites_->second->boss || sprites_->stage_end!=144 || application_.resident().resource_stage!=5) return false;
+        for(unsigned i=128;i<144;++i) if(!sprites_->stage_slots[i].sheet) return false;
+        for(unsigned i=144;i<256;++i) if(sprites_->stage_slots[i].sheet) return false;
+        return sprites_->second->faces.image_count==2;
+    }
+    bool stage6_battle_resources_valid() const {
+        // Inner '#' closes a box. The same pre-battle scene continues through
+        // CDG releases and BB4/5/6/7/9; only the final outer '#' stops it.
+        const auto a=sprites_->stage_slots[128],b=sprites_->stage_slots[136],c=sprites_->stage_slots[142];
+        if(!(sprites_->stage_end==190 && a.sheet && b.sheet && c.sheet &&
+            a.sheet->count()==8 && b.sheet->count()==6 && c.sheet->count()==8 &&
+            a.sheet->width()==48 && b.sheet->width()==48 && c.sheet->width()==48 &&
+            a.sheet->height()==96 && b.sheet->height()==96 && c.sheet->height()==96))return false;
+        for(unsigned slot:{150u,158u,166u,174u,182u}) {
+            const auto sheet=sprites_->stage_slots[slot].sheet;
+            if(!sheet || sheet->count()!=8 || sheet->width()!=(slot==182 ? 32u : 48u) || sheet->height()!=(slot==182 ? 32u : 96u))return false;
+        }
+        for(unsigned slot=1;slot<32;++slot)if(!sprites_->cdg_released[slot])return false;
+        return true;
+    }
     bool stage5_dialog_complete() const { return fifth_pre_finished_; }
     const th04::portable::stage5::Stars& stage5_stars() const { require_view(bool(sprites_->second) && bool(sprites_->second->star_plane),"Stage5 stars are absent");return sprites_->second->stars; }
     bool stage5_resources_valid() const {
@@ -1219,16 +1251,22 @@ public:
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         if (live_main()) {
-            if(main_->next_stage_requested() && ((continue_stage2_ && loaded_stage_==0) || (continue_stage3_ && loaded_stage_==1) || (continue_stage4_ && loaded_stage_==2) || (continue_stage5_ && loaded_stage_==3))) {
+            if(main_->next_stage_requested() && ((continue_stage2_ && loaded_stage_==0) || (continue_stage3_ && loaded_stage_==1) || (continue_stage4_ && loaded_stage_==2) || (continue_stage5_ && loaded_stage_==3) || (continue_stage6_ && loaded_stage_==4))) {
                 const auto next_id=loaded_stage_+1;
                 require_view(bool(assets_),"next-stage resources missing");
-                const auto& resources=next_id==1 ? assets_->stage2 : (next_id==2 ? assets_->stage3 : (next_id==3 ? assets_->stage4[unsigned(application_.resident().playchar)] : assets_->stage5));
+                auto resources=next_id==1 ? assets_->stage2 : (next_id==2 ? assets_->stage3 : (next_id==3 ? assets_->stage4[unsigned(application_.resident().playchar)] : (next_id==4 ? assets_->stage5 : assets_->stage6)));
+                // Stage6 setup loads only ST05.BB; CDG slot16 retains Stage5's
+                // picture. Carry its owned bytes before freeing the old bank.
+                if(next_id==5) resources.backdrop=sprites_->second->assets.backdrop;
                 auto next=std::make_unique<StageSprites>(resources,next_id);
                 auto script=std::make_unique<dialog::Script>(next->assets.dialog_scripts[unsigned(application_.resident().playchar)]);
                 main_->prepare_next_stage_actors(next->assets.standard);
                 sprites_->install_stage(std::move(next));script_=std::move(script);
                 loaded_stage_=next_id;post_started_=post_finished_=false;
                 application_.publish_main_resource_stage(static_cast<std::uint8_t>(next_id));
+            }
+            if(loaded_stage_==5 && !dialog_scene_ && !sixth_pre_finished_ && main_->stage6_dialog_ready(sprites_->background)) {
+                sprites_->free_cdg(31);main_->begin_stage6_dialog(sprites_->background);begin_dialog(false);
             }
             if(loaded_stage_==4 && !dialog_scene_ && !fifth_pre_finished_ && main_->stage5_dialog_ready(sprites_->background)) begin_dialog(false);
             if(loaded_stage_==3 && !dialog_scene_ && !fourth_pre_finished_ && main_->stage4_dialog_ready(sprites_->background)) begin_dialog(false);
@@ -1242,6 +1280,11 @@ public:
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
+                    else if(loaded_stage_==5) {
+                        sixth_pre_finished_=true;require_view(stage6_battle_resources_valid(),"Stage6 dialog battle bank invalid");
+                        // All pre-battle text is consumed. Yuuka6's first
+                        // update owns the next simulation step.
+                    }
                     else if(loaded_stage_==4) {
                         fifth_pre_finished_=true;require_view(stage5_battle_resources_valid(),"Stage5 dialog battle bank invalid");
                         if(continue_yuuka5_) main_->start_yuuka5_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
@@ -1387,6 +1430,7 @@ private:
     bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
     bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false,continue_marisa_=false;
     bool continue_stage5_=false,fifth_pre_finished_=false,continue_yuuka5_=false;
+    bool continue_stage6_=false,sixth_pre_finished_=false;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1419,7 +1463,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_yuuka5(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_stage6(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1593,7 +1637,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_yuuka5();
+    front_end.enable_stage6();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1703,7 +1747,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -2536,12 +2580,13 @@ void run_title(
             std::cout<<"MAIN Stage5 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shot_type="<<shot_type<<" shooting="<<shooting<<" frames="<<frames<<" frozen_ticks="<<frozen<<" star_updates="<<stars_updated<<" generation="<<generation<<" progression=yuuka5_battle_pending\n";
         }
     }
-    if(!yuuka5_screenshots.empty()) {
+    if(!yuuka5_screenshots.empty() || !stage6_screenshots.empty()) {
+        const bool sixth_route=!stage6_screenshots.empty();
         // These inputs traverse the preceding stages and dialogue normally.
         // No seeded boss phase, forced HP, synthetic score or stage skip.
         for(unsigned character=0;character<2;++character) for(unsigned difficulty:{0u,1u,3u}) for(unsigned shot_type=0;shot_type<2;++shot_type) for(bool shooting:{false,true}) {
-            if(difficulty==0 && (shot_type || !shooting)) continue;
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);scene.enable_yuuka5();
+            if(difficulty==0 && (sixth_route || shot_type || !shooting)) continue;
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);scene.enable_yuuka5();if(sixth_route)scene.enable_stage6();
             if(difficulty!=1) {
                 for(unsigned i=0;i<3;++i)scene.input(menu::Input::down);
                 scene.input(menu::Input::confirm);
@@ -2559,6 +2604,7 @@ void run_title(
             const auto capture=[&](const std::string& tag) {
                 if(captured(tag))return;
                 seen.push_back(tag);
+                if(sixth_route)return; // Retain Stage5 route invariants without duplicate BMPs.
                 const auto& state=scene.main_state();const auto& y=state.yuuka5()->snapshot();
                 const auto frames=state.frames(),process=scene.process_random_state();const auto ring=state.random_cursor();
                 const auto centers=scene.stage5_stars().centers;const auto clock=y.boss.phase_frame;const auto age=y.boss.big.age;
@@ -2616,6 +2662,48 @@ void run_title(
             if(difficulty==0) require_view(state.bad_ending_requested() && !state.next_stage_requested() && !state.clear_bonus() && bonuses==0 && fades==0 && next==0 && scene.resident().stage==4,"Easy followed normal stage-clear departure");
             else require_view(state.next_stage_requested() && !state.bad_ending_requested() && state.clear_bonus() && bonuses==1 && fades==1 && next==1 && scene.resident().stage==5 && scene.resident().resource_stage==4,"Yuuka5 did not request actual Stage6 resources");
             capture(difficulty==0 ? "bad-ending-pending" : "stage6-pending");
+            if(sixth_route) {
+                std::array<bool,7> checkpoints{};unsigned loads=0,blocked_ticks=0,enemy_frames=0,bullet_frames=0;
+                // The first tick replaces resources and resets actors inside
+                // this same MAIN process. Reset consumes353 process LCG draws.
+                th04::portable::rng::Lcg32 expected_random(scene.process_random_state());
+                for(unsigned i=0;i<353;++i)expected_random.next15();
+                for(unsigned tick=0;tick<30000 && !checkpoints[6];++tick) {
+                    const bool blocked=scene.dialog_active();const auto before=scene.main_state().frames();
+                    const auto rng=scene.process_random_state();const auto ring=scene.main_state().random_cursor();
+                    const auto held=blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000u : 0u) : (shooting ? shot::input_shot : 0u);
+                    scene.advance(static_cast<std::uint16_t>(held),false,false);const auto& current=scene.main_state();
+                    if(!loads) {
+                        require_view(scene.resource_stage()==5 && scene.stage6_resources_valid() && current.frames()==1 && scene.process_random_state()==expected_random.state(),"Stage6 resource/reset/process-LCG handoff failed");++loads;
+                    }
+                    require_view(scene.resident().stage==5 && scene.resident().resource_stage==5 && scene.generation()==generation && !current.boss_active() && !current.yuuka5_active() && !current.midboss_state().active && current.midboss_draws().empty(),"Stage6 dispatched a stale boss/midboss callback");
+                    if(blocked) {
+                        require_view(current.frames()==before && scene.process_random_state()==rng && current.random_cursor()==ring,"Stage6 blocking dialog repeated simulation/RNG");++blocked_ticks;
+                    }
+                    if(std::any_of(current.enemies().snapshot().entities.begin(),current.enemies().snapshot().entities.end(),[](const auto& e){return e.flag!=0;}))++enemy_frames;
+                    if(std::any_of(current.bullets().snapshot().entities.begin(),current.bullets().snapshot().entities.end(),[](const auto& e){return e.flag!=0;}))++bullet_frames;
+                    int at=-1;
+                    for(unsigned i=0;i<4;++i) if(current.frames()==std::array<unsigned,4>{1,100,400,800}[i] && !checkpoints[i])at=int(i);
+                    if(at<0 && !checkpoints[4] && scene.dialog_active() && scene.dialog_glyphs() && !scene.boss_portrait_visible() && scene.dialog_status()==dialog::Status::press)at=4;
+                    if(at<0 && !checkpoints[5] && scene.dialog_active() && scene.boss_portrait_visible() && scene.dialog_status()==dialog::Status::release)at=5;
+                    if(at<0 && !checkpoints[6] && scene.stage6_dialog_complete())at=6;
+                    if(at>=0) {
+                        checkpoints[unsigned(at)]=true;if(at==6)require_view(scene.stage6_battle_resources_valid() && current.stage6_battle_pending(),"Stage6 dialog omitted its complete battle bank");
+                        const auto clock=current.frames(),process=scene.process_random_state();const auto cursor=current.random_cursor();
+                        scene.repaint();const auto once=scene.frame().pixels;scene.repaint();
+                        require_view(scene.frame().pixels==once && current.frames()==clock && scene.process_random_state()==process && current.random_cursor()==cursor,"Stage6 repaint changed simulation/pixels");
+                        const auto name=prefix+std::to_string(at),path=stage6_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                        std::cout<<"MAIN Stage6 fixture="<<name<<" frame="<<clock<<" glyphs="<<scene.dialog_glyphs()<<" offset="<<scene.dialog_offset()<<" pending="<<current.score().score_delta<<" ring="<<cursor<<" rng="<<process<<" score="<<current.awarded_score_units()<<" screenshot="<<path<<'\n';
+                    }
+                }
+                for(auto observed:checkpoints)require_view(observed,"Stage6 route missed a required checkpoint");
+                require_view(loads==1 && blocked_ticks>100 && enemy_frames && bullet_frames && scene.stage6_dialog_complete(),"Stage6 STD/dialog lifecycle incomplete");
+                const auto& current=scene.main_state();const auto clock=current.frames(),process=scene.process_random_state(),score=current.awarded_score_units();const auto ring=current.random_cursor();const auto offset=scene.dialog_offset();
+                for(unsigned i=0;i<5;++i)scene.advance(shot::input_shot|player::left,false,false);
+                require_view(current.frames()==clock && current.random_cursor()==ring && scene.process_random_state()==process && current.awarded_score_units()==score && scene.dialog_offset()==offset && !current.next_stage_requested() && !current.bad_ending_requested(),"Stage6 pending Yuuka6 owner advanced past its first update");
+                std::cout<<"MAIN Stage6 stopped fixture="<<prefix<<" frames="<<clock<<" blocked_ticks="<<blocked_ticks<<" enemy_frames="<<enemy_frames<<" bullet_frames="<<bullet_frames<<" generation="<<generation<<" progression=yuuka6_battle_pending\n";
+                continue;
+            }
             const auto frames=state.frames(),process=scene.process_random_state(),score=state.awarded_score_units();const auto ring=state.random_cursor();const auto centers=scene.stage5_stars().centers;
             for(unsigned i=0;i<5;++i)scene.advance(shot::input_shot|player::left,false,false);
             require_view(state.frames()==frames && scene.process_random_state()==process && state.random_cursor()==ring && state.awarded_score_units()==score && scene.stage5_stars().centers==centers,"Yuuka5 pending resource/Ending frontier advanced simulation");

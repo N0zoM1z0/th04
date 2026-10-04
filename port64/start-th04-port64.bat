@@ -1,14 +1,15 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-echo TH04 native x64 reconstruction - Stages 1 through 5 preview
+echo TH04 native x64 reconstruction - Stages 1 through 6 preview
 echo Controls: arrows to move, Z to shoot, Shift to slow down.
 echo Dialogue: release the key, then press Enter or Z to continue.
 echo Preview includes Stage 4 waves, two midboss encounters and NPC dialogue.
 echo Both characters continue through their Stage 4 boss, dialogue and clear.
 echo Stage 5 includes Yuuka attacks, thick lasers, defeat and post-dialogue.
-echo Normal and Lunatic stop at Stage 6; Easy stops before Bad Ending.
-echo Stage 6, Endings, player death, Bombs and audio are in development.
+echo Normal and Lunatic reach Stage 6 waves and the first Yuuka dialogue.
+echo Yuuka's final battle is in development; Easy stops before Bad Ending.
+echo Endings, player death, Bombs and audio are in development.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.
   pause

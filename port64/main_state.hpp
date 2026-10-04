@@ -16,6 +16,7 @@
 #include "reimu.hpp"
 #include "marisa.hpp"
 #include "stage5.hpp"
+#include "stage6.hpp"
 #include "yuuka5.hpp"
 #include "circles.hpp"
 #include "dialog.hpp"
@@ -54,9 +55,15 @@ public:
         return stage_id_==4 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
+    bool stage6_dialog_ready(const stage::Background& background) const {
+        return stage_id_==5 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
+            dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
+    }
+    void begin_stage6_dialog(stage::Background& background);
+    bool stage6_battle_pending() const { return stage6_battle_pending_; }
     const stage5::Setup* stage5_setup() const { return stage5_ ? &*stage5_ : nullptr; }
-    const midboss::Snapshot& midboss_state() const { return stage5_ ? stage5_->midboss : (midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot()))); }
-    const std::vector<midboss::Draw>& midboss_draws() const { return stage5_ ? stage5_midboss_draws_ : (midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws()))); }
+    const midboss::Snapshot& midboss_state() const { return stage6_ ? stage6_->midboss : (stage5_ ? stage5_->midboss : (midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot())))); }
+    const std::vector<midboss::Draw>& midboss_draws() const { return (stage5_ || stage6_) ? stage5_midboss_draws_ : (midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws()))); }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
@@ -86,7 +93,7 @@ public:
     bool bad_ending_requested() const { return bad_ending_requested_; }
     bool bad_yuuka5_dialog() const { return yuuka5_active_ && th04::portable::yuuka5::bad_ending_after_defeat(stage_id_,rank_,0); }
     bool boss_active() const { return yuuka5_active_ || marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
-    const orange::Snapshot& boss_snapshot() const { return yuuka5_active_ ? yuuka5_->snapshot().boss : (stage5_ ? stage5_->boss : (marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot()))))); }
+    const orange::Snapshot& boss_snapshot() const { return stage6_ ? stage6_->boss : (yuuka5_active_ ? yuuka5_->snapshot().boss : (stage5_ ? stage5_->boss : (marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot())))))); }
     const std::vector<orange::Draw>& boss_draws() const { return marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }
     const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
     std::uint8_t invincibility() const { return player_invincibility_; }
@@ -150,6 +157,8 @@ private:
     std::optional<midboss3::System> midboss3_;
     std::optional<midboss4::System> midboss4_;
     std::optional<stage5::Setup> stage5_;
+    std::optional<stage6::Setup> stage6_;
+    bool stage6_battle_pending_=false;
     std::optional<yuuka5::System> yuuka5_;
     laser::System thick_lasers_{};
     bool yuuka5_active_=false,bad_ending_requested_=false;
