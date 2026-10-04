@@ -17,7 +17,7 @@ already entered frame; actors/RNG are not updated twice. Bonus drains through
 the ordinary score owner. The shared enter/leave byte remains72 after enter,
 then leave replaces bonus TRAM and clears the callback after reaching zero.
 Graze/lives/Bombs and resident stage/ascii are published. Semantic remains stopped.
-The GUI frontier remains the unloaded Stage2 resource request. Controlled MAIN
+The GUI now replaces Stage2 resources at the actual next-stage request. Controlled MAIN
 actor integration now continues through real Stage2 STD/MAP and its own midboss
 to the pre-Kurumi dialog gate at6982. Stage2 chooses its actual four-pattern
 callback at2600; do not reuse Stage1 behavior. Entry is96 frames, private phase2
@@ -36,11 +36,23 @@ Linux/Wine/optimized UBSan, including four retained update/render sequences.
 Spark/popups/Bomb/HP/video/audio consumers remain intercepted in CPU controls;
 retained sequences omit ordinary other-actor updates. Native four-route
 integration joins those implemented actor consumers and holds at Kurumi's gate.
-No full original Stage2 or GUI pacing/exactness claim. Fourteen contracts and
-previous64 natural Stage1 BMPs are the cross-host regression surface.
-GUI stillStage1: replace stage sprite/map/palette/portrait/dialog owners before
-exposing Stage2. `port64-preview/v1265` is a build/test package; root GUI stays
-v1263. Next Stage2 visual resources/dialog, then Kurumi. Semantic remains stopped.
+No full original Stage2 or GUI pacing/exactness claim. Fourteen contracts,
+previous64 natural Stage1 BMPs and32 Stage2 BMPs/36 counters agree on Linux,
+Wine-hosted PE32+ and native Windows; optimized UBSan also agrees on Stage2.
+Stage2 releases dynamic slots128..255, installs18 BFT/16 BMT sprites at128..161,
+uses ST01 MPN/MAP for both characters and replaces palette/portrait/script owners.
+Its pre-Kurumi dialog holds frame6982 and gameplay actors/RNG, then explicitly
+holds the unported battle frontier. Original setup requests across five rank
+seeds and all48 dialog controls/76 scenes have independent CPU checks with
+graphics/file/audio consumers intercepted;57,188 opaque Kurumi portrait pixels
+agree with independently decoded archive pixels. Root Windows preview and
+`port64-preview/v1266` use this Stage1/Stage2 slice. Next implement Kurumi's
+state/attacks/render, then later stages/death/Bomb/HUD/audio/save/Ending.
+Semantic remains stopped unless a concrete port ambiguity requires it.
+Current scope: [Stage2 visual resources and dialog](PORT64.md#stage2-visual-resources-and-dialog).
+Receipts: `.analysis/port64/stage2-v1266/{resources-final,integration-review,native-windows-receipt}.json`,
+`dialog-cpu-{linux,windows}/receipt.json`, `windows-export-receipt.json`, and
+`.analysis/port64/verification-stage2-v1266/receipt.json`.
 Current scope: [Stage2 midboss and actor integration](PORT64.md#stage2-midboss-and-actor-integration).
 Receipts: `.analysis/port64/midboss2-v1265/cpu-{linux,windows,ubsan}-final/receipt.json`,
 `session-{linux,windows,ubsan}-final/receipt.json`, `native-windows-midboss2.json`,

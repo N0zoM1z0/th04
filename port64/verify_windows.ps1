@@ -37,14 +37,27 @@ Get-ChildItem -LiteralPath $framesDir -Filter '*.bmp' | ForEach-Object {
 if ($images.Count -ne 64) { throw "Expected 64 checkpoints, got $($images.Count)." }
 $counters = @($lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN dialog *' })
 if ($counters.Count -ne 72) { throw 'Missing Stage 1 scenario counters.' }
+$stage2Dir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'stage2-frames')).FullName
+Write-Host 'Running four natural Stage 2 resource and dialogue scenarios...'
+$stage2Lines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --stage2-screenshots $stage2Dir 2>&1)
+if ($LASTEXITCODE -ne 0) { throw "Stage 2 scenarios failed: $stage2Lines" }
+$stage2Lines | Set-Content -LiteralPath (Join-Path $outDir 'stage2.log')
+$stage2Images = @{}
+Get-ChildItem -LiteralPath $stage2Dir -Filter '*.bmp' | ForEach-Object {
+    $stage2Images[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+if ($stage2Images.Count -ne 32) { throw 'Missing Stage 2 visual checkpoints.' }
+$stage2Counters = @($stage2Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Stage2 *' })
+if ($stage2Counters.Count -ne 36) { throw 'Missing Stage 2 scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
     hdi_sha256=(Get-FileHash -LiteralPath $hdiFile -Algorithm SHA256).Hash.ToLowerInvariant()
     font_sha256=(Get-FileHash -LiteralPath $fontFile -Algorithm SHA256).Hash.ToLowerInvariant()
     dialog_fixture_bmp_sha256=$images; dialog_fixture_counters=$counters
+    stage2_fixture_bmp_sha256=$stage2Images; stage2_fixture_counters=$stage2Counters
     observed_utc=[DateTime]::UtcNow.ToString('o')
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host ("PASS: {0} contracts and {1} natural dialogue checkpoints." -f $names.Count, $images.Count)
+Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count))

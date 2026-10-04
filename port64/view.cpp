@@ -593,6 +593,30 @@ void write_bmp(const std::string& path, const Frame& frame) {
     require_view(bool(output), "cannot write title screenshot");
 }
 
+// Heap-owned stage resources keep CDG references and sprite-slot pointers
+// stable. Validate a complete candidate before changing MAIN's live actors.
+struct StageSprites {
+    StageAssets assets;
+    sprite::Sheet stage,boss;
+    CdgSheet backdrop,faces;
+    stage::TileImages tiles;
+    stage::Background background;
+    StageSprites(const StageSprites&)=delete;
+    StageSprites& operator=(const StageSprites&)=delete;
+    explicit StageSprites(const StageAssets& source):assets(source),stage(assets.stage_tiles),boss(assets.boss_tiles),
+        backdrop(assets.backdrop),faces(assets.boss_faces),tiles(assets.map_tiles),background(assets.map,assets.standard) {
+        require_view(stage.count()==18 && stage.width()==32 && stage.height()==32 &&
+                     boss.count()==16 && boss.width()==64 && boss.height()==64 && boss.has_palette(),
+                     "Stage2 BFNT append contract changed");
+        require_view(tiles.count()==75 && background.required_image_count()<=tiles.count(),"Stage2 MAP references absent MPN tile");
+        require_view(backdrop.width==384 && backdrop.height==112 && backdrop.image_count==1 &&
+                     backdrop.layout==CdgSheet::colors_only && assets.transition.size()==2048 &&
+                     faces.width==128 && faces.height==128 && faces.image_count==4 && faces.layout==CdgSheet::alpha_and_colors,
+                     "Stage2 backdrop/portrait contract changed");
+        require_view(!assets.dialog_scripts[0].empty() && !assets.dialog_scripts[1].empty(),"Stage2 dialog script missing");
+    }
+};
+
 struct MainSprites {
     sprite::Sheet reimu, marisa, items, stage_tiles, boss_tiles, enemies,explosion;
     Bytes backdrop_bytes,transition;
@@ -607,6 +631,7 @@ struct MainSprites {
     std::vector<std::unique_ptr<sprite::Sheet>> loaded_sheets;
     unsigned stage_end=152;
     Bytes standard;
+    std::unique_ptr<StageSprites> second;
     PiImage palette;
     stage::TileImages reimu_tiles, marisa_tiles;
     stage::Background background;
@@ -639,6 +664,15 @@ struct MainSprites {
                      enemies.width() == 32 && enemies.height() == 32 && enemies.count() == 24,
                      "MAIN sprite resource geometry changed");
     }
+    void install_stage2(std::unique_ptr<StageSprites> next) {
+        clean_stage(); // Clears every stage slot and first-stage dialog sheets.
+        palette.palette=next->boss.palette(); // Stage2 has no Stage1 color-zero override.
+        background=std::move(next->background);
+        second=std::move(next);
+        for(unsigned i=0;i<18;++i) stage_slots[stage_end++]={&second->stage,i};
+        for(unsigned i=0;i<16;++i) stage_slots[stage_end++]={&second->boss,i};
+    }
+    const CdgSheet& boss_portraits() const { return second ? second->faces : boss_faces; }
     void clean_stage() { for(unsigned i=128;i<256;++i) stage_slots[i]={};loaded_sheets.clear();stage_end=128; }
     void load_dialog_sprites(std::string name) {
         for(auto& c:name) if(c>='a' && c<='z') c=static_cast<char>(c-'a'+'A');
@@ -685,7 +719,8 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         fill_rect(frame,palette,32,264,384,120,0);
         put_opaque(frame,palette,sprites.backdrop,0,32,136);
     }
-    const auto& tiles = playchar == application::Playchar::reimu ? sprites.reimu_tiles : sprites.marisa_tiles;
+    const auto& tiles = sprites.second ? sprites.second->tiles :
+        (playchar == application::Playchar::reimu ? sprites.reimu_tiles : sprites.marisa_tiles);
     // Full host redraw replaces PC-98 dirty tile/EGC copies. Clip to the
     // original playfield; the scroll ring owns all 400 physical rows.
     for (unsigned y=16; y<384; ++y) {
@@ -721,11 +756,11 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         else if (pattern>=28 && pattern<128) put_sprite(frame,palette,sprites.items,pattern-28,draw.left,draw.top);
         else throw std::runtime_error("Orange references absent sprite");
     }
-    if (state.midboss().snapshot().active) for (const auto& draw:state.midboss().draws()) {
-        if (draw.pattern>=128 && draw.pattern<140) {
-            put_sprite(frame,palette,sprites.stage_tiles,draw.pattern-128,draw.left,draw.top,draw.white);
-        } else if (draw.pattern>=140) {
-            put_sprite(frame,palette,sprites.boss_tiles,draw.pattern-140,draw.left,draw.top,draw.white);
+    if (state.midboss_state().active) for (const auto& draw:state.midboss_draws()) {
+        if (draw.pattern>=128) {
+            require_view(draw.pattern<256,"midboss pattern outside stage bank");
+            const auto& slot=sprites.stage_slots[draw.pattern];require_view(slot.sheet,"midboss references absent stage sprite");
+            put_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.white);
         } else {
             require_view(draw.pattern>=4 && draw.pattern<28,"midboss references absent defeat sprite");
             put_sprite(frame,palette,sprites.enemies,draw.pattern-4,draw.left,draw.top,draw.white);
@@ -737,8 +772,8 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             put_sprite(frame,palette,sprites.enemies,draw.pattern-4,
                        16+pixels(draw.position.x),pixels(draw.position.y),draw.white);
         } else if (draw.pattern>=128) {
-            require_view(unsigned(draw.pattern-128)<sprites.stage_tiles.count(),"enemy references absent stage sprite");
-            put_sprite(frame,palette,sprites.stage_tiles,draw.pattern-128,
+            const auto& slot=sprites.stage_slots[draw.pattern];require_view(slot.sheet,"enemy references absent stage sprite");
+            put_sprite(frame,palette,*slot.sheet,slot.image,
                        16+pixels(draw.position.x),pixels(draw.position.y),draw.white);
         } else throw std::runtime_error("enemy references unsupported sprite sheet");
     }
@@ -911,6 +946,11 @@ public:
     dialog::Status status() const { return intro_==36 ? script_.status() : dialog::Status::delay; }
     unsigned glyph_count() const { return static_cast<unsigned>(glyphs_.size()); }
     const std::vector<dialog::Event>& events() const { return events_; }
+    bool boss_portrait_visible() const {
+        return std::any_of(events_.begin(),events_.end(),[](const dialog::Event& e) {
+            return e.kind==dialog::Kind::face && e.a==288;
+        });
+    }
     Frame render() const {
         Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
         PiImage palette=sprites_.palette;const int tone=script_.tone();
@@ -950,7 +990,7 @@ private:
             break;
         }
         case dialog::Kind::face: {
-            const auto& sheet=e.a==32 ? (character_ ? sprites_.marisa_faces : sprites_.reimu_faces) : sprites_.boss_faces;
+            const auto& sheet=e.a==32 ? (character_ ? sprites_.marisa_faces : sprites_.reimu_faces) : sprites_.boss_portraits();
             const unsigned image=static_cast<unsigned>(e.c-(e.a==32 ? 2 : 8));
             require_view(image<sheet.image_count,"dialog references absent portrait");
             for(unsigned y=0;y<128;++y) for(unsigned x=0;x<128;++x) if(sheet.bit(image,0,x,y)) {
@@ -984,11 +1024,22 @@ public:
     ) : title_background_(title_background), numerals_(numerals), labels_(labels),
         cursors_(cursors), selection_background_(selection_background),
         portraits_(portraits), frame_(render()) {
+        assets_=main_assets;
         if (main_assets && !main_assets->reimu.empty()) {
             sprites_ = std::make_unique<MainSprites>(*main_assets);
         }
     }
 
+    void enable_stage2() { continue_stage2_=true; }
+    unsigned resource_stage() const { return loaded_stage_; }
+    bool stage2_dialog_complete() const { return second_pre_finished_; }
+    bool boss_portrait_visible() const { return dialog_scene_ && dialog_scene_->boss_portrait_visible(); }
+    bool stage2_resources_valid() const {
+        if(!sprites_->second || sprites_->stage_end!=162 || application_.resident().resource_stage!=1) return false;
+        for(unsigned i=128;i<162;++i) if(!sprites_->stage_slots[i].sheet) return false;
+        for(unsigned i=162;i<256;++i) if(sprites_->stage_slots[i].sheet) return false;
+        return true;
+    }
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
     unsigned slowdown() const { return main_ && !dialog_scene_ ? main_->slowdown() : 1; }
@@ -997,6 +1048,7 @@ public:
     bool post_dialog() const { return post_started_; }
     const application::ResidentState& resident() const { return application_.resident(); }
     std::uint32_t process_random_state() const { return application_.process_random_state(); }
+    unsigned generation() const { return application_.generation(); }
     unsigned dialog_glyphs() const { return dialog_scene_ ? dialog_scene_->glyph_count() : 0; }
     dialog::Status dialog_status() const { return dialog_scene_ ? dialog_scene_->status() : dialog::Status::idle; }
     std::size_t dialog_offset() const { return script_ ? script_->offset() : 0; }
@@ -1006,6 +1058,16 @@ public:
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         if (live_main()) {
+            if(continue_stage2_ && main_->next_stage_requested() && loaded_stage_==0) {
+                require_view(assets_ && !assets_->stage2.standard.empty(),"Stage2 resources missing");
+                auto next=std::make_unique<StageSprites>(assets_->stage2);
+                auto script=std::make_unique<dialog::Script>(next->assets.dialog_scripts[unsigned(application_.resident().playchar)]);
+                main_->prepare_next_stage_actors(next->assets.standard);
+                sprites_->install_stage2(std::move(next));script_=std::move(script);
+                loaded_stage_=1;post_started_=post_finished_=false;
+                application_.publish_main_resource_stage(1);
+            }
+            if(loaded_stage_==1 && !dialog_scene_ && !second_pre_finished_ && main_->stage2_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && !post_started_ && main_->orange_active() && main_->orange().snapshot().phase==255 && main_->orange().snapshot().phase_frame==0) {
                 main_->update(held_input,shift,false,0,&sprites_->background);begin_dialog(true);
@@ -1014,12 +1076,14 @@ public:
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
+                    else if(loaded_stage_==1) { second_pre_finished_=true; }
                     else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
                     dialog_scene_.reset();
                 } else { if(repaint) frame_=render();return; }
             }
+            const auto before=main_->frames();
             main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
-            if(!main_->next_stage_requested()) sprites_->background.update();
+            if(main_->frames()!=before && !main_->next_stage_requested()) sprites_->background.update();
             if (repaint) frame_ = render();
         }
         else if (screen_ == Screen::menu) application_.advance_op_menu_frame();
@@ -1129,6 +1193,9 @@ private:
         throw std::logic_error("invalid portable front-end screen");
     }
 
+    const MainAssets* assets_=nullptr;
+    bool continue_stage2_=false,second_pre_finished_=false;
+    unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
     const CdgSheet& labels_;
@@ -1160,7 +1227,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) {}
+                  selection_background_, portraits_, &main_assets) { front_end.enable_stage2(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1277,7 +1344,7 @@ void show_window(
     RECT rectangle{0, 0, 1280, 800};
     AdjustWindowRect(&rectangle, WS_OVERLAPPEDWINDOW, FALSE);
     HWND window = CreateWindowExW(
-        0, class_name, L"TH04 native x64 title bring-up",
+        0, class_name, L"TH04 native x64 reconstruction - Stage1/Stage2 preview",
         WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT,
         rectangle.right - rectangle.left, rectangle.bottom - rectangle.top,
         nullptr, nullptr, instance, &title
@@ -1302,7 +1369,7 @@ void show_window(
     require_view(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0, SDL_GetError());
     struct SdlQuit { ~SdlQuit() { SDL_Quit(); } } quit;
     SDL_Window* window = SDL_CreateWindow(
-        "TH04 native x64 title bring-up", SDL_WINDOWPOS_CENTERED,
+        "TH04 native x64 reconstruction - Stage1/Stage2 preview", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, 1280, 800, SDL_WINDOW_RESIZABLE
     );
     require_view(window != nullptr, SDL_GetError());
@@ -1334,6 +1401,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
+    front_end.enable_stage2();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1442,7 +1510,8 @@ void run_title(
     const std::string& handoff_screenshot,
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
-    const std::string& orange_screenshots,const std::string& dialog_screenshots, bool window
+    const std::string& orange_screenshots,const std::string& dialog_screenshots,
+    const std::string& stage2_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1731,6 +1800,74 @@ void run_title(
             require_view(scene.main_state().overlay().callback==th04::portable::transition::Callback::none && !scene.main_state().bonus_text_visible(),"final leave did not replace bonus TRAM with black cells");
             require_view(scene.resident().remaining_lives==scene.main_state().score().remaining_lives && scene.resident().remaining_bombs==scene.main_state().score().remaining_bombs,"resident resources did not follow completed-frame awards");
             std::cout<<"MAIN dialog stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" entry_frame="<<start_frame<<" frames="<<stopped<<" frozen_ticks="<<frozen_ticks<<" stage_clear=bonus_complete awarded="<<scene.main_state().clear_bonus()->awarded<<" bombs="<<+scene.main_state().score().remaining_bombs<<" departure_frames="<<stopped-clear_frame<<" pending="<<pending<<" stage="<<+scene.resident().stage<<" graze="<<scene.resident().graze<<" progression=next_stage_resources_pending\n";
+        }
+    }
+    if (!stage2_screenshots.empty()) {
+        for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            scene.enable_stage2();
+            if(lunatic) {
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
+                scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);if(character) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            std::array<bool,8> seen{};unsigned frozen=0,loads=0,draws=0;
+            const auto generation=scene.generation();
+            const auto actor_stamp=[&]() {
+                const auto& state=scene.main_state();const auto& shots=state.shots().snapshot();
+                std::vector<int> result{state.player().position().current.x,state.player().position().current.y,shots.time,shots.reimu_cycle,shots.laser.time};
+                for(const auto& s:shots.entities) { result.push_back(s.flag);result.push_back(s.age);result.push_back(s.position.current.x);result.push_back(s.position.current.y); }
+                return result;
+            };
+            for(unsigned tick=0;tick<30000 && !scene.stage2_dialog_complete();++tick) {
+                const auto resource=scene.resource_stage();const auto before=scene.main_state().frames();
+                const auto random=scene.main_state().random_cursor();const auto actors=actor_stamp();
+                const auto process=scene.process_random_state();const bool blocked=scene.dialog_active();
+                scene.advance(blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : shot::input_shot,false,false);
+                const auto& state=scene.main_state();
+                if(blocked && (scene.dialog_active() || scene.stage2_dialog_complete())) {
+                    require_view(state.frames()==before && state.random_cursor()==random && actor_stamp()==actors,"Stage2 dialog changed gameplay actors/clock/RNG");++frozen;
+                }
+                if(resource==0 && scene.resource_stage()==1) {
+                    ++loads;th04::portable::rng::Lcg32 expected(process);
+                    for(unsigned i=0;i<353;++i) expected.next_byte();
+                    require_view(scene.process_random_state()==expected.state() && scene.generation()==generation,
+                                 "Stage2 resource installation restarted MAIN or consumed the wrong process RNG draws");
+                }
+                if(scene.resource_stage()!=1) continue;
+                require_view(scene.stage2_resources_valid(),"Stage2 retained old sprite slots or published inconsistent resources");
+                if(state.frames()!=before && state.midboss_state().active) draws+=static_cast<unsigned>(state.midboss_draws().size());
+                const auto& boss=state.midboss_state();int checkpoint=-1;
+                if(!seen[0] && state.frames()==1) checkpoint=0;
+                else if(!seen[1] && state.frames()==80) checkpoint=1;
+                else if(!seen[2] && boss.active && boss.phase==0 && boss.phase_frame==64) checkpoint=2;
+                else if(!seen[3] && boss.active && boss.phase==1 && boss.phase_frame==32) checkpoint=3;
+                else if(!seen[4] && boss.active && boss.phase==2 && boss.phase_frame==8) checkpoint=4;
+                else if(!seen[5] && scene.dialog_active() && scene.dialog_status()==dialog::Status::release) checkpoint=5;
+                else if(!seen[6] && scene.dialog_active() && scene.dialog_status()==dialog::Status::release && scene.boss_portrait_visible()) checkpoint=6;
+                else if(!seen[7] && scene.stage2_dialog_complete()) checkpoint=7;
+                if(checkpoint>=0) {
+                    seen[unsigned(checkpoint)]=true;scene.repaint();
+                    if(checkpoint>=5) require_view(state.frames()==6982u,"Stage2 dialog did not stop at its natural STD gate");
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+std::to_string(checkpoint);
+                    const auto path=stage2_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    std::cout<<"MAIN Stage2 fixture="<<name<<" frame="<<state.frames()<<" phase="<<+boss.phase<<" hp="<<boss.hp
+                             <<" offset="<<scene.dialog_offset()<<" power="<<+state.score().power<<" pending="<<state.score().score_delta
+                             <<" rng="<<scene.process_random_state()<<" screenshot="<<path<<'\n';
+                }
+            }
+            for(bool capture:seen) require_view(capture,"natural Stage2 fixture missed a visual progression checkpoint");
+            require_view(loads==1 && draws>500 && frozen>100 && scene.stage2_dialog_complete(),"Stage2 load/midboss/dialog progression missing");
+            const auto frames=scene.main_state().frames();const auto random=scene.main_state().random_cursor();
+            const auto actors=actor_stamp();const auto offset=scene.dialog_offset();
+            for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
+            require_view(scene.main_state().frames()==frames && scene.main_state().random_cursor()==random && actor_stamp()==actors &&
+                         scene.dialog_offset()==offset && !scene.dialog_active(),"unported Kurumi frontier restarted dialog or gameplay");
+            std::cout<<"MAIN Stage2 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" frames="<<frames
+                     <<" frozen_ticks="<<frozen<<" loads="<<loads<<" midboss_draws="<<draws<<" generation="<<scene.generation()
+                     <<" sprite_end=162 progression=kurumi_battle_pending\n";
         }
     }
     if (window) {

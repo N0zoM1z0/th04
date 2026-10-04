@@ -14,6 +14,7 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_stage2_resources.py",
     "port64/midboss2.hpp",
     "port64/midboss2.cpp",
     "port64/midboss2_contracts.cpp",
@@ -374,6 +375,8 @@ def main() -> int:
 
     dialog_hashes = {}
     dialog_outputs = {}
+    stage2_hashes = {}
+    stage2_outputs = {}
     if args.font_bmp:
         for host, command in (("linux",[str(linux_main)]),
                               ("windows",[args.windows_runner,str(windows_main)])):
@@ -388,6 +391,19 @@ def main() -> int:
             dialog_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN dialog")]
         if dialog_hashes["linux"] != dialog_hashes["windows"] or dialog_outputs["linux"] != dialog_outputs["windows"]:
             raise ValueError("ordinary dialog images or counters differ between hosts")
+        for host, command in (("linux",[str(linux_main)]),
+                              ("windows",[args.windows_runner,str(windows_main)])):
+            images = output.parent / ("stage2-"+host)
+            images.mkdir(parents=True,exist_ok=True)
+            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage2-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Stage2 fixture=") != 32 or result.count("MAIN Stage2 stopped ") != 4:
+                raise ValueError("natural Stage2 resource/dialog fixture missed progression")
+            stage2_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(stage2_hashes[host]) != 32:
+                raise ValueError("Stage2 fixture has unexpected image files")
+            stage2_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage2")]
+        if stage2_hashes["linux"] != stage2_hashes["windows"] or stage2_outputs["linux"] != stage2_outputs["windows"]:
+            raise ValueError("Stage2 images or counters differ between hosts")
 
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
@@ -493,6 +509,8 @@ def main() -> int:
         "orange_fixture_counters": orange_outputs["linux"],
         "dialog_fixture_bmp_sha256": dialog_hashes.get("linux",{}),
         "dialog_fixture_counters": dialog_outputs.get("linux",[]),
+        "stage2_fixture_bmp_sha256": stage2_hashes.get("linux",{}),
+        "stage2_fixture_counters": stage2_outputs.get("linux",[]),
         "font_bmp_sha256": sha256(args.font_bmp) if args.font_bmp else None,
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
@@ -512,7 +530,9 @@ def main() -> int:
             "and416/488 departure reach the unloaded Stage2 resource request; "
             "Stage2 actor initialization and pre-midboss STD/MAP integration have separate CPU/native controls; "
             "Stage2 midboss behavior/geometry has separate selected CPU controls; "
-            "Stage2 visual resource integration, Kurumi and final/Extra departure, "
+            "Stage2 visual resources, natural midboss and pre-Kurumi dialog join the native GUI; "
+            "four character/Normal-Lunatic routes reach the held Kurumi battle frontier; "
+            "Kurumi and final/Extra departure, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

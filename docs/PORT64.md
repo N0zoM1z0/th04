@@ -1139,6 +1139,81 @@ Receipts: `.analysis/port64/midboss2-v1265/target-owners.json`,
 `native-windows-receipt.json`, `integration-review.json`, and
 `.analysis/port64/verification-midboss2-v1265-final/receipt.json`.
 
+## Stage2 visual resources and dialog
+
+This advances the preceding backend-only slice. Both SDL and Win32 windows now
+consume the actual Stage1 departure request, validate Stage2 assets before actor
+mutation and continue through real Stage2 STD/MAP, its midboss and pre-Kurumi
+dialog. The preview holds after that dialog; Kurumi battle remains unported.
+Semantic readability stays paused at the user's stopping condition.
+
+Pinned target observations: MAIN main01 `0AAF:055B..0580` is the second case in
+the seven-word switch at `0AAF:06D2`. It requests `BSS1.CD2` at slot8,
+`ST01.BFT`, actual `13A9:A623` setup and `ST01.MPN` without a character-dependent
+map branch. The setup requests `ST01.BMT`, `ST01BK.CDG` image0/slot16 and
+`ST01.BB`; five rank seeds execute these original requests through adapters.
+`0AAF:07AE..07DE` frees stage sprites128..255 and CDG slots8..30. These are
+selected relocated target observations with load2000/isolated DS8000, not new
+whole-function exactness claims. Asset headers establish18 32x32 BFT images,
+16 64x64 BMT images,75 MPN tiles and four128x128 boss portraits. Thus native
+stage slots128..145 belong to BFT and146..161 to BMT. The Stage2 BMT palette
+replaces the Stage1 palette without its color-zero override.
+
+The native stage resource object owns its byte vectors on the heap. CDG views
+reference these vectors and sprite slots reference its sheets; disable whole
+object copying and move only the owning pointer. Clear every dynamic stage slot
+before destroying Stage1 dialog sheets. Common player/items/enemy sheets remain
+owned. Allocate and validate the next background/script before preparing actors,
+then publish resident resource_stage1 only after installing the resource bank.
+The same MAIN generation continues and initialization consumes353 LCG draws.
+
+Four native character/Normal-Lunatic routes run natural Stage1, enter Stage2,
+render its map/midboss/retreat and reach the pre-Kurumi gate at6982. Dialog holds
+gameplay frames, player/shot actors and shared RNG; its completion holds the
+unported battle frontier without restarting the script. Script offsets end at
+566 for Reimu and585 for Marisa. Eight checkpoints per route give32 BMPs and36
+counters, identical on Linux GCC8.4, MinGW13 PE32+ under Wine, actual Windows
+and optimized GNU UBSan/bounds. Fourteen contracts pass; the previous64 natural
+Stage1 BMPs/72 counters remain identical to v1265 across Linux/Wine/Windows.
+The Windows verification script includes both stage suites and reports96 images.
+
+Independent checks execute all48 existing original dialog controls/76 scenes /
+18,768 events on Linux and Wine, including both Stage2 scripts with held and
+released input. Font decoding uses the supplied FREECG98 bitmap. Original
+graphics/file/audio/wait consumers remain intercepted; the native frame pacing
+is not an original-game timing claim. A separate Python FAT/PAR/CDG/BFNT path
+checks57,188 opaque Kurumi portrait pixels against the native screenshots and
+Stage2 palette. It rejects a disposable BMP with one opaque pixel changed at
+(298,112); transparent background lies outside this portrait-only comparator.
+Original hook rejection also has an explicit negative control. These checks do
+not compare complete original VRAM or establish full Stage2 gameplay/FPS.
+
+```sh
+cmake --build .analysis/port64/linux-live-v1251 --parallel 4
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-stage2-v1266/receipt.json
+python3 port64/verify_stage2_resources.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --frames .analysis/port64/verification-stage2-v1266/stage2-linux \
+  --output .analysis/port64/stage2-v1266/resources-final.json
+```
+
+Source manifest:
+`3e229f60bb2e8095508ee7da56b469b39f67908b035aabfda30f3124fabcd7f3`.
+Receipts: `.analysis/port64/stage2-v1266/target-resources.json`,
+`resources-final.json`, `negative-pixel.json`, `dialog-cpu-{linux,windows}/receipt.json`,
+`native-windows-receipt.json`, `integration-review.json`, `windows-export-receipt.json`,
+and `.analysis/port64/verification-stage2-v1266/receipt.json`.
+Windows package `port64-preview/v1266` and root native launcher use this preview,
+with a versioned backup. DOS executables, normal/invincible launchers, assets and
+saved files are retained. Next implement Kurumi state/attacks/render and connect
+the post-dialog continuation before expanding later-stage gameplay.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -1152,8 +1227,8 @@ Ordinary Stage1 now also consumes the actual clear bonus and displays its tally.
 Ordinary frame score drain and extends now join MAIN.
 Post-dialog frame continuation and stage-leave overlay now reach the next-stage
 request. Actor-session preparation and Stage2 midboss/STD/MAP integration through the
-pre-Kurumi dialog gate are checked separately. Next connect Stage2 visual resources
-and dialog/Kurumi, then
+pre-Kurumi dialog gate are checked separately. Stage2 visual resources and its
+pre-battle dialog now join the live window. Next implement Kurumi, then
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

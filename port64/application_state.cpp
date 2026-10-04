@@ -106,6 +106,12 @@ void State::add_stage_graze(std::uint16_t amount) {
     require_program(Program::main);
     resident_.graze=static_cast<std::uint16_t>(resident_.graze+amount);
 }
+void State::publish_main_resource_stage(std::uint8_t stage) {
+    require_program(Program::main);
+    if(stage!=resident_.stage) throw std::logic_error("resource stage does not match requested MAIN stage");
+    resident_.resource_stage=stage;
+}
+
 void State::advance_main_stage() {
     require_program(Program::main);
     ++resident_.stage;++resident_.stage_ascii;
