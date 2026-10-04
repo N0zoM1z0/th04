@@ -20,7 +20,24 @@ speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
 Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
 frontier. Semantic remains stopped except for concrete port ambiguities.
 
-New v1288 final-boss dependency: checker7586, center/wrap7901/7937,
+New v1289 final-boss dependency: foreground sprite pixels now have a native
+consumer. MAIN0000:2838 FFCD merges destination|2 on alpha; purecolor2 would
+lose B/G/I planes. Normal/white/zoom reuse controlled kernels with actual sheets.
+One fresh original producer passes2,405full640x400screens/615,680,000pixel bytes:
+all62Stage6images,8alignments/edges,128deathzoom,96six-draw overlaps and62normal-
+then-red frames. GNU/Wine/UBSan and actualWindows agree; target-only red/white
+control, guarded callback and byte mutations reject. Changed foreground also
+matches4,458complete v1287state/request records per host with old producer preserved.
+All30products/29CTest per host pass;29otherGNU/UBSan raw-identical and29other
+PEs metadata-only. Manifest81b816fd; receipts.analysis/port64/yuuka6-pixels-v1289.
+Root/native CI and diff-check pass; fresh root Ghidra READY. GUI staysv1282;
+23root Windows files unchanged. Bounded visible sprite composition only; no
+ordinary update/dispatch join, physical VRAM/page/palette hardware/FPS or DOS
+exact claim. See [foreground pixels](PORT64.md#yuuka6-foreground-sprite-pixels).
+Next: ordinary final-battle join with accepted core/entities/foreground/background,
+then remaining complete-game owners. Semantic remains limited to ambiguity.
+
+Historical v1288 final-boss dependency: checker7586, center/wrap7901/7937,
 particle7971 and prefix7DC9 now have a separate background owner. Preserve shared
 RNG, entry-only clip selection, double fade increments, retained palette latch
 and numeric WORD-offset writes. Fresh original2,220fixtures/5,711state-request

@@ -34,6 +34,7 @@ add_library(
   yuuka6_attacks.cpp
   yuuka6_background.cpp
   yuuka6_foreground.cpp
+  yuuka6_pixels.cpp
   yuuka6_core.cpp
   yuuka6_entities.cpp
   yuuka5_render.cpp

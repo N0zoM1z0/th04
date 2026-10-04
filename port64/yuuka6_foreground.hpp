@@ -1,8 +1,10 @@
 #pragma once
 #include "motion.hpp"
 #include <cstdint>
+#include <functional>
 #include <vector>
 
+namespace th04::portable::sprite { class Sheet; }
 namespace th04::portable::laser { class System; }
 namespace th04::portable::yuuka6 {
 class System;
@@ -24,6 +26,11 @@ struct Draw {
     std::int16_t end_x=0,end_y=0;
     std::uint16_t mode=0;
 };
+// Resolve the requested pattern to its actual sheet before drawing. Red
+// preserves all destination planes except the enabled red plane (FFCD).
+void raster_sprite(const sprite::Sheet&,unsigned image,int left,int top,DrawKind,
+                   const std::function<std::uint8_t(int,int)>& read,
+                   const std::function<void(int,int,std::uint8_t)>& write);
 class Foreground {
 public:
     explicit Foreground(ForegroundState initial={}):state_(initial) {}

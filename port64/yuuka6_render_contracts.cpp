@@ -2,10 +2,17 @@
 #include "yuuka6_foreground.hpp"
 #include "yuuka6_entities.hpp"
 #include "thick_lasers.hpp"
+#include "sprite_sheet.hpp"
 #include <fstream>
 #include <iostream>
+#include <map>
+#include <memory>
 #include <stdexcept>
 #include <string>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 namespace y=th04::portable::yuuka6;
 namespace m=th04::portable::motion;
 namespace b=th04::portable::bullet;
@@ -102,10 +109,43 @@ void contracts() {
     fg.prepare_render(system,1,lasers,entities);
     require(fg.draws().size()==1 && fg.draws()[0].kind==y::DrawKind::zoom_sprite && system.snapshot().boss.damage==19 && system.snapshot().boss.small[0].age==0 && entities.snapshot().slots[0].flag==17,"death phase advanced an ordinary render owner");
 }
+void pixels(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Yuuka6 pixel fixtures");
+    const std::string fixture_path(path);
+    const auto split=fixture_path.find_last_of("/\\");
+    const auto directory=split==std::string::npos ? std::string{} : fixture_path.substr(0,split+1);
+    std::map<std::string,std::unique_ptr<th04::portable::sprite::Sheet>> sheets;
+    unsigned seed=0,count=0;
+    while(in>>seed>>count) {
+        require(seed<16 && count<=8,"invalid Yuuka6 screen fixture bounds");
+        Bytes screen(640*400);
+        for(unsigned i=0;i<screen.size();++i) screen[i]=static_cast<std::uint8_t>((i*73+seed)&15);
+        for(unsigned i=0;i<count;++i) {
+            std::string name;unsigned image=0,kind=0;int x=0,yy=0;
+            require(bool(in>>name>>image>>x>>yy>>kind),"short Yuuka6 sprite fixture");
+            if(!sheets.count(name)) {
+                std::ifstream file(directory+name,std::ios::binary);require(bool(file),"cannot open Yuuka6 sprite asset");
+                const Bytes raw{std::istreambuf_iterator<char>(file),{}};
+                sheets.emplace(name,std::make_unique<th04::portable::sprite::Sheet>(raw));
+            }
+            y::raster_sprite(*sheets.at(name),image,m::wrap(x),m::wrap(yy),static_cast<y::DrawKind>(kind),
+                [&](int px,int py){return screen[unsigned(py)*640+unsigned(px)];},
+                [&](int px,int py,std::uint8_t color){screen[unsigned(py)*640+unsigned(px)]=color;});
+        }
+        std::cout.write(reinterpret_cast<const char*>(screen.data()),static_cast<std::streamsize>(screen.size()));
+    }
+    require(in.eof(),"malformed Yuuka6 pixel fixture");
+}
 } // namespace
 int main(int argc,char** argv) {
     try {
         if(argc==3 && std::string(argv[1])=="--vectors") { vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--pixels") {
+#ifdef _WIN32
+            _setmode(_fileno(stdout),_O_BINARY);
+#endif
+            pixels(argv[2]);return 0;
+        }
         require(argc==1,"usage: Yuuka6 foreground contracts [--vectors FILE]");contracts();std::cout << "Stage 6 Yuuka foreground contracts PASS\n";return 0;
     } catch(const std::exception& e) { std::cerr << "Yuuka6 foreground: " << e.what() << '\n';return 1; }
 }

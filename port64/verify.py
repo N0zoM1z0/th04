@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/yuuka6_pixels.cpp",
+    "port64/verify_yuuka6_pixels.py",
     "port64/yuuka6_background.cpp",
     "port64/yuuka6_background.hpp",
     "port64/yuuka6_background_contracts.cpp",

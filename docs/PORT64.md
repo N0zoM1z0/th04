@@ -3011,3 +3011,60 @@ Root/native CI and diff-check pass.
 Next: actual foreground red/white/zoom pixels and ordinary final-battle join,
 then remaining complete-game owners. Semantic stays stopped except for a
 concrete native ambiguity; this dependency batch does not complete the port.
+
+## Yuuka6 foreground sprite pixels
+
+v1289 supplies `yuuka6::raster_sprite()` for the foreground requests accepted
+in v1287. Normal, white and phase254 factor3 use the already controlled Yuuka5
+kernel. Red reuses its alpha/WORD-offset walk and merges only destination bit1.
+Observed MAIN0000:2838 takes planeWORD FFCD and emits GRCG modeCD/tileFF;
+PC98 plane order B/R/G/I therefore enables red while retaining blue, green and
+intensity. Filling indexed color2 would erase those three bits. The new source
+comments make this ownership explicit; no DOS source or exact ledger changes.
+Resolve each pattern to its actual sheet before drawing: all62 Stage6 body,
+auxiliary and cross patterns128..189 come from ST05.BB1/2/3/4/5/6/7/9, while
+phase254 death4..11 uses32x32 MIKO32 instead of the48x96 body sheet.
+
+One fresh original CPU producer matches2,405 complete640x400 indexed screens,
+615,680,000 compared pixel bytes. Controls cover all62 Stage6 images in normal,
+white and red modes at all eight X alignments, selected vertical and signed
+WORD edges, all eight actual death images at16 selected factor3 positions,
+96 ordered six-sprite body/mirror/aux/cross overlap frames and62 retained
+normal-then-red frames. Each screen retains destination pixels across its
+ordered draw sequence; the original SUPER/ONEPLANE/ZOOM and downstream
+color/rectangle kernels execute. BFNT alpha/four-plane staging is an explicit
+input adapter; an independent GRCG shadow produces the reference, never the
+portable raster. A target-only red/white pair proves destination color5 becomes
+7 for red versus15 for white, and rejects a swapped screen. Fresh guarded
+callback and one-byte comparator rejection also pass. GNU, Wine PE, optimized
+UBSan/bounds and actual Windows consume the same independent reference.
+
+The changed foreground contract also replays the existing3,522fixtures/4,458
+complete state/request records on GNU/Wine/UBSan and actual Windows; the v1287
+producer manifest remains attached to that reference. All three builds pass
+29CTests/30 AMD64 products each. The other29 GNU/UBSan products are raw-identical;
+restoring eight retained PE metadata bytes recovers all29 previous PE hashes.
+No debug-only equality or cold DOS exactness claim. GUI remainsv1282 and all23
+published Windows root game/config/save/script files remain hash-identical.
+Only a private pixel-contract package is added.
+
+Screens attest bounded visible kernel composition, not ordinary boss update/
+foreground dispatch integration, safety-circle pixels, BB/background composition,
+physical VRAM page/alias/scroll/palette hardware or host pacing/FPS. Selected
+negative-X WORD offsets remain flat visible writes; factor3 uses original stage
+clipping. Historical library exclusion/provisional zoom-boundary states remain
+unchanged; a fresh raw view reaches zoom RETF8 at327A..327C inclusive.
+Target provenance stays candidate-local-attested.
+
+Source manifest: `81b816fd7b8c096832d304d615c50729fb096e037986c9f57569adcc1ff3ca9c`.
+Receipts: `.analysis/port64/yuuka6-pixels-v1289/`, including original-linux,
+accepted-{windows,ubsan},foreground-{linux,windows,ubsan},native-windows-review,
+target-review,build-review and root-ghidra-attestation. Replay:
+`python3 port64/verify_yuuka6_pixels.py --target MAIN --hdi HDI --exe CONTRACT
+--output-dir OUT`; add `--reference-dir ORIGINAL_DIR` for a hash-checked consumer
+or `--runner wine` for PE. Actual Windows uses private
+`port64-preview/v1289-yuuka6-pixels/verify-pixels.ps1` and captures binary stdout
+through streaming gzip. Root/native CI and diff-check pass; fresh root Ghidra
+READY, native private database replay skips. Next: ordinary final-battle join
+with the accepted core, entities, foreground and background owners, then the
+remaining complete-game owners. Semantic remains limited to concrete ambiguity.
