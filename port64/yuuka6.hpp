@@ -22,6 +22,17 @@ struct Snapshot {
     std::int16_t animation_frame=0;
     motion::Point mirror{};
     std::uint8_t mirror_state=0;
+    // Process-owned dispatch and ordinary-shot scratch, separate from the
+    // boss hitbox. The mirror's stored damage is a BYTE, not the shot WORD.
+    std::uint8_t mirror_damage=0,pattern_previous=0;
+    std::int16_t midboss_frames_until=0;
+    bool stage_vm_disabled=false;
+    motion::Point shot_center{},shot_radius{};
+};
+struct Context : orange::Context {
+    // Ordinary shots do not set against-boss or add Bomb damage. Both the
+    // mirror and custom crosses use this callback; the main body uses hit.
+    std::function<std::uint16_t(motion::Point,motion::Point)> ordinary_hit;
 };
 class System {
 public:
@@ -42,6 +53,12 @@ public:
     void gathering(Gathering,gather::System&,const bullet::Template&,
                    const orange::Sink& sink={});
     void attack(Attack,const orange::Context&,bullet::System&,gather::System&,
+                laser::System&,Entities&,randring::SharedRandomRing&,
+                const orange::Sink& sink={});
+    bool mirror_hittest(const Context&,const orange::Sink& sink={});
+    void phase_next(unsigned explosion_type,std::int16_t end_hp,
+                    bullet::System&,const orange::Sink& sink={});
+    void update(const Context&,bullet::System&,gather::System&,spark::System&,
                 laser::System&,Entities&,randring::SharedRandomRing&,
                 const orange::Sink& sink={});
 private:

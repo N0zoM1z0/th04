@@ -16,7 +16,8 @@ for the current acceptance scope; earlier slices below retain their historical
 boundaries.
 The final-boss [animation/motion helpers](#yuuka6-animation-and-motion-helpers)
 and [cross/safety-circle entities](#yuuka6-cross-and-safety-circle-entities)
-plus [gathering/attack helpers](#yuuka6-gathering-and-attack-helpers) are
+plus [gathering/attack helpers](#yuuka6-gathering-and-attack-helpers) and
+[mirror/core dispatch](#yuuka6-mirror-and-core-dispatch) are
 independently ported, but are not yet joined to the ordinary game loop.
 
 ## Current executable slice
@@ -2818,3 +2819,73 @@ Replay with `python3 port64/verify_yuuka6_attacks.py --target TARGET --exe EXE
 Next: mirror hit-test and final-boss core/phase dispatch, then foreground and
 checkerboard integration. Extra, player death/Continue/Bomb, HUD, audio, Ending
 and save I/O remain required. Semantic stays bounded to concrete port ambiguities.
+
+## Yuuka6 mirror and core dispatch
+
+v1286 ports MAIN13A9:7952..799E mirror hit-test,799F..79EB phase transition,
+and79EE..7ECB FAR dispatcher. The latter owns executable code through7E77,
+three sparse four-case tables and one18-entry phase table;79EC..79ED is
+alignment. `port64/yuuka6_core.cpp` calls the existing twelve attacks,
+animations, movement, shared explosion/defeat, lasers and custom entities.
+Ordinary GUI still holds before Yuuka6 update; no new GUI is published.
+
+Mirror state2 uses ordinary shots with384x768-subpixel half-radii, stores the
+returned AL as a BYTE and tests HP<0. Main-body AB48 checks the whole shot WORD
+for audio, then ABBE truncates before damage/HP. Thus WORD256 sounds on the
+main body but subtracts zero HP, while the mirror does not sound. A retained
+wrong BYTE-conditioned native variant rejects against the actual original
+complete record; corrected native matches. Shot/Bomb and ordinary callbacks
+are separate. Neither callback's injected damage proves real shot consumption.
+
+The dispatcher has no shared clock increment. Hit wrappers, hidden branches
+and explicit transition arms each advance their own clock; an attack can
+reset it before a hit. Random movement destinations are sampled on every call,
+including frames without teleport. Dual-mode selection rejects repeats with
+the same RNG. Phase transitions clamp bullet clear to20, restore the preceding
+end HP and reset attack/animation state. Entity tail bridges raw player-hit,
+pending-score DWORD and shot scratch around the existing owner; shared defeat
+returns before laser/custom/HUD tail. Drawing and death-flag aging remain
+separate and must occur once per simulated frame in the future join.
+
+One fresh independent original producer matches3,137fixtures/90,702records:
+252 mirror,960 phase transitions,1,917 isolated core and eight retained
+Easy/Normal/Hard/Lunatic win/timeout sequences. Each traverses phases0..17
+and stops on entry to254; zero-damage sequences take19,654/19,639/19,664/19,800
+frames, damage19 sequences2,204. Checkpoints include35 boss/animation/mirror
+bytes,16 additional bytes, complete bullet/gather/laser/custom/spark pools,
+templates, explosions48, shot scratch, homing, VM/background tokens, HP,
+palette/score/hit/RNG globals and ordered requests. Actual callees execute;
+shots and sound/circle/HUD/point/item consumers are adapters. `stage_id=0`
+is the recorded owner-only fixture context; short default255 clocks stop at63,
+before the stage-dependent Ending branch. No whole-route or Ending I/O claim.
+
+Initial Original adapter inheritance rejected a `super()` type check; the
+correct MRO includes both attack and boss adapters. This is a control-context
+failure, distinct from the native sound bug. Final verifier adds a one-byte
+comparator rejection. Exact AST checks preserve Original/fixture/fixtures/seed/
+execute from producer fcf45d46, and all28 products per host remain raw-identical.
+Final GNU/Wine/optimizedUBSan consume that independent reference and freshly
+check five-rank regular/special/tune callbacks. Actual Windows agrees all90,702
+records under the retained fcf producer identity. Final source manifest:
+2d4df41ae2fbe6c094723e8c0491291de7acf9f0271999ee69abdc343e6e0b54.
+
+Three incremental builds pass27CTests/28x64 products each.25 preceding GNU/
+UBSan products are raw-identical;25 preceding PEs preserve all nonmetadata
+bytes. Two changed animation/motion and attack contracts pass their independent
+36,045 and39,757 retained records on all three hosts. Those receipts keep the
+fcf manifest, linked by verifier-only continuity. GUI/launcher remainv1282;
+21 protected Windows DOS/config/save files remain unchanged. No pixel, physical
+hardware/pacing/FPS, original whole-route or DOS byte-exactness claim.
+Root/native CI pass. Two verified duplicate native outputs are removed,
+reclaiming185,082,796 bytes; the original reference and WSL actual-Windows
+records remain. `duplicate-cleanup.json` records hashes and the Windows restore
+path. `build-review-final.json` checks all28 product architectures and hashes.
+
+Receipts:.analysis/port64/yuuka6-core-v1286, including target-review,
+root-ghidra-attestation,development-linux-full-callbacks,accepted-{linux,windows,ubsan},
+native-windows-review,verifier-continuity,sound-word-negative,
+build-review-producer and motion/attacks-{linux,windows,ubsan}.
+Replay `python3 port64/verify_yuuka6_core.py --target TARGET --exe EXE
+--output-dir NEW`; add `--runner wine` or `--reference-dir REFERENCE` as needed.
+Next: foreground/checkerboard and ordinary final-battle join, then remaining
+Extra/death/Continue/Bomb/HUD/audio/Ending/save owners. Semantic stays bounded.

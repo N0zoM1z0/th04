@@ -14,6 +14,9 @@ import sys
 
 
 PORT_FILES = (
+    "port64/yuuka6_core.cpp",
+    "port64/yuuka6_core_contracts.cpp",
+    "port64/verify_yuuka6_core.py",
     "port64/yuuka6_attacks.cpp",
     "port64/yuuka6_attack_contracts.cpp",
     "port64/verify_yuuka6_attacks.py",
@@ -289,6 +292,8 @@ def main() -> int:
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
     linux_midboss3=linux_dir / "th04-port64-midboss3-contracts"
     windows_midboss3=windows_dir / "th04-port64-midboss3-contracts.exe"
+    linux_yuuka6_core=linux_dir / "th04-port64-yuuka6-core-contracts"
+    windows_yuuka6_core=windows_dir / "th04-port64-yuuka6-core-contracts.exe"
     linux_yuuka6_attacks=linux_dir / "th04-port64-yuuka6-attack-contracts"
     windows_yuuka6_attacks=windows_dir / "th04-port64-yuuka6-attack-contracts.exe"
     linux_yuuka6_entities=linux_dir / "th04-port64-yuuka6-entity-contracts"
@@ -311,13 +316,16 @@ def main() -> int:
     windows_elly=windows_dir / "th04-port64-elly-contracts.exe"
     linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
     windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
-    for path in (linux_yuuka6_attacks,linux_yuuka6_entities,linux_yuuka6,linux_yuuka,linux_lasers,linux_stage5,linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_yuuka6_core,linux_yuuka6_attacks,linux_yuuka6_entities,linux_yuuka6,linux_yuuka,linux_lasers,linux_stage5,linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_yuuka6_attacks,windows_yuuka6_entities,windows_yuuka6,windows_yuuka,windows_lasers,windows_stage5,windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_yuuka6_core,windows_yuuka6_attacks,windows_yuuka6_entities,windows_yuuka6,windows_yuuka,windows_lasers,windows_stage5,windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_yuuka6_core_output=run([str(linux_yuuka6_core)])
+    windows_yuuka6_core_output=run([args.windows_runner,str(windows_yuuka6_core)],env=runner_env)
+    if linux_yuuka6_core_output!="Stage 6 Yuuka core contracts PASS" or windows_yuuka6_core_output!=linux_yuuka6_core_output:raise ValueError("Yuuka6 core contracts failed")
     linux_yuuka6_attacks_output=run([str(linux_yuuka6_attacks)])
     windows_yuuka6_attacks_output=run([args.windows_runner,str(windows_yuuka6_attacks)],env=runner_env)
     if linux_yuuka6_attacks_output!="Stage 6 Yuuka attack contracts PASS" or windows_yuuka6_attacks_output!=linux_yuuka6_attacks_output:raise ValueError("Yuuka6 attack contracts failed")
@@ -660,6 +668,8 @@ def main() -> int:
         "products": {
             "linux": {
                 "format": "ELF64 x86-64",
+                "yuuka6_core_contracts_sha256": sha256(linux_yuuka6_core),
+                "yuuka6_core_contract_output": linux_yuuka6_core_output,
                 "yuuka6_attacks_contracts_sha256": sha256(linux_yuuka6_attacks),
                 "yuuka6_attacks_contract_output": linux_yuuka6_attacks_output,
                 "yuuka6_entities_contracts_sha256": sha256(linux_yuuka6_entities),
@@ -717,6 +727,8 @@ def main() -> int:
             },
             "windows": {
                 "format": "PE32+ x86-64",
+                "yuuka6_core_contracts_sha256": sha256(windows_yuuka6_core),
+                "yuuka6_core_contract_output": windows_yuuka6_core_output,
                 "yuuka6_attacks_contracts_sha256": sha256(windows_yuuka6_attacks),
                 "yuuka6_attacks_contract_output": windows_yuuka6_attacks_output,
                 "yuuka6_entities_contracts_sha256": sha256(windows_yuuka6_entities),

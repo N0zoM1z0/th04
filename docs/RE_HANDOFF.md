@@ -1,6 +1,6 @@
 # TH04 current handoff
 
-Updated 2026-10-04. The standalone PC-98 reconstruction remains the behavioral
+Updated 2026-10-05. The standalone PC-98 reconstruction remains the behavioral
 reference; native x64 has a separate nonexact branch. Target provenance remains
 `candidate-local-attested`, not proof of an official pristine dump. The two
 remaining MAIN exactness cases stay deferred. Portable changes do not alter DOS
@@ -20,7 +20,27 @@ speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
 Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
 frontier. Semantic remains stopped except for concrete port ambiguities.
 
-New v1285 final-boss dependency: five gather/twelve attack entries at
+New v1286 final-boss dependency: MAIN13A9:7952/799F/79EE mirror/transition/core
+now calls the existing attacks, movement, lasers and custom entities. Main
+sounds for full shot WORD before BYTE truncation; mirror truncates first and
+uses ordinary shots. Initial wrong native audio rejects a WORD256 control;
+corrected complete record agrees. Original adapter MRO failure is separate.
+One fresh original producer matches3,137fixtures/90,702records, including eight
+Easy..Lunatic retained win/timeout sequences through0..17 into254. Final GNU/
+Wine/UBSan reference consumers and actualWindows agree. Producerfcf45d46 stays
+recorded; final2d4df41a only adds comparator rejection, with original producer
+AST and all28products per host unchanged.27CTests per build pass;25 preceding
+GNU/UBSan files raw-identical and25 oldPEs preserve nonmetadata bytes. Two
+changed helpers pass36,045motion/39,757attack independent records per host.
+Owner fixtures retain stage_id0 and stop before the stage-dependent Ending
+branch; no whole-route/Ending/pixel/FPS/DOS exact claim. GUI remainsv1282;
+21 protected Windows files unchanged. See [core dispatch](PORT64.md#yuuka6-mirror-and-core-dispatch).
+Root/native CI pass; two verified duplicates removed,185,082,796 bytes reclaimed.
+Original and WSL actual-Windows references plus current builds remain.
+Receipts:.analysis/port64/yuuka6-core-v1286. Next: foreground/checkerboard and
+ordinary final-battle join, then remaining complete-game owners. Semantic bounded.
+
+Historical v1285 final-boss dependency: five gather/twelve attack entries at
 MAIN13A9:6E77..7951 are ported, including sparse tables and retained shared
 templates. One fresh original CPU producer matches5,305cases/39,757records,
 with108 retained320-frame sequences. Final GNU/Wine/optimizedUBSan consume
