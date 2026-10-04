@@ -2945,3 +2945,69 @@ control. GUI staysv1282; all23 published root game/config/save/script files
 remain hash-identical. Next: actual foreground pixels, checkerboard/particle
 background and ordinary final-battle join, followed by remaining complete-game
 owners. Semantic remains stopped except for a concrete port ambiguity.
+
+## Yuuka6 checkerboard and particle background
+
+v1288 ports MAIN0AAF:7586..7632 checkerboard, 7901..7934 center clip,
+7937..7970 wrap clip, 7971..7D8B particles and 7DC9..7E88 background prefix.
+7D8D..7DC8 is jump-table data; adjacent alignment bytes remain separate.
+No DOS source, authored-unit ledger or exact acceptance changes. The original
+Japanese target remains candidate-local-attested.
+
+`Background` owns 56 active Q12.4 shapes and a retained sentinel, BYTE state,
+fade and palette latch, WORD pattern/flyout speed, symbolic clip callback and
+opaque 16-bit BB resource tokens. It receives the existing shared random ring;
+a private RNG would change subsequent combat. Initialization only occurs at
+phase0 clock2 and consumes112 samples. Entry fade0 selects wrap for states0/8/12
+and center for6/10; a same-frame transition retains that entry callback.
+Transition arms may increment fade before their threshold and again in the
+common tail. Incoming255 wraps before the comparison, while transition reset255
+becomes0 at the tail. Palette-zero parity retains untouched components; the
+late-state latch retains the previous palette after it sets.
+
+The checkerboard preserves paragraph arithmetic, WORD offsets, BYTE pass count,
+partial top rows and alternating dark columns. Its numeric store addresses never
+become host pointers. Original flat visible writes include row384 below the
+playfield: host playfield clipping would reject the independent pixel controls.
+The mono16 kernel preserves unsigned X shift, WORD row offsets and visible-byte
+filtering rather than host XY clipping. Every background update advances once;
+cached requests and checker stores can repaint without consuming RNG or state.
+
+One fresh original CPU producer passes2,220fixtures/5,711 complete state/request
+records. These include two retained1,571-step caller-driven phase sequences,
+clip boundaries, fade parity/threshold/wrap, palette latch, initialization,
+negative entrance clocks, RNG cursor wrap and retained sentinel/resource tokens.
+Actual RNG, atan/vector, clip and checker owners execute; state fixtures adapt
+fill, BB and mono calls into ordered requests. Separately114 pixel fixtures
+execute actual checker/mono/color kernels through an independent GRCG shadow:
+80 retained checker frames and107 mono frames, including the eight actual
+MIKO16 particle masks, all eight X alignments and selected signed WORD edges.
+All187 full640x400 screen buffers agree byte-for-byte (47,872,000 pixel bytes
+plus640 checker descriptor bytes). GNU, Wine PE, optimized UBSan/bounds and
+actual Windows consume the same independent original reference. Each Python
+control rechecks callback rejection; a one-byte comparator mutation rejects.
+A fresh two-input incoming fade0/1 control changes the selected clip callback;
+correct native records agree and swapping them rejects.
+
+These controls do not prove combined BB/fill/particle composition, physical
+PC98 VRAM alias/page/palette hardware, frame pacing, whole combat or DOS exactness.
+Checker inputs are bounded to visible-layout paragraphs A850..AF6C; stored pass0
+means256 passes in the implementation but is outside this pixel matrix. Existing
+atan INT16_MIN displacement remains an explicit excluded/rejected input.
+
+Three incremental builds pass29CTests/30 AMD64 products each. All29 previous
+GNU and UBSan products remain raw-identical; restoring eight retained PE
+metadata bytes recovers all29 previous PE full hashes. No cold DOS exact claim.
+GUI/launcher stayv1282 and all23 published Windows root files are unchanged.
+Only the private background contract package is added. Source manifest:
+`aea4d05ef79705449c5883fe582861003528177a6cee6784b8a98c8ea8d0bf8f`.
+Receipts: `.analysis/port64/yuuka6-background-v1288/`. Replay:
+`python3 port64/verify_yuuka6_background.py --target MAIN --hdi HDI --exe CONTRACT
+--output-dir OUT`; add `--reference-dir ORIGINAL_DIR` for a hash-checked consumer
+or `--runner wine` for PE. Actual Windows uses private
+`port64-preview/v1288-yuuka6-background/verify-background.ps1` with binary-stream
+gzip capture. Root fresh Ghidra is READY; native private database replay skips.
+Root/native CI and diff-check pass.
+Next: actual foreground red/white/zoom pixels and ordinary final-battle join,
+then remaining complete-game owners. Semantic stays stopped except for a
+concrete native ambiguity; this dependency batch does not complete the port.

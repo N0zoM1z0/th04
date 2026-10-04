@@ -20,7 +20,24 @@ speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
 Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
 frontier. Semantic remains stopped except for concrete port ambiguities.
 
-New v1287 final-boss dependency: foreground MAIN0AAF:712A..72A5 now has a
+New v1288 final-boss dependency: checker7586, center/wrap7901/7937,
+particle7971 and prefix7DC9 now have a separate background owner. Preserve shared
+RNG, entry-only clip selection, double fade increments, retained palette latch
+and numeric WORD-offset writes. Fresh original2,220fixtures/5,711state-request
+records include2x1,571retained sequences. Separate114pixel fixtures/187full
+screens (80checker/107mono) match47,872,000pixel bytes plus640descriptor bytes.
+GNU/Wine/optimizedUBSan and actualWindows agree; an incomingfade0/1 original
+clip-selector negative and byte/callback guards reject. All30products/29CTest
+per host pass;29oldGNU/UBSan raw-identical and29oldPE metadata-only changes.
+Manifestaea4d05e; receipts.analysis/port64/yuuka6-background-v1288.
+Root/native CI and diff-check pass; fresh root Ghidra READY. GUI remainsv1282;
+23root Windows files unchanged. No combined BB/fill/particle composition,
+physical VRAM/page/palette hardware/FPS/whole battle or DOS exact claim.
+See [background kernels](PORT64.md#yuuka6-checkerboard-and-particle-background).
+Next: actual foreground red/white/zoom pixels and ordinary final-battle join,
+then remaining complete-game owners. Semantic remains limited to ambiguity.
+
+Historical v1287 final-boss dependency: foreground MAIN0AAF:712A..72A5 now has a
 separate render owner. Body/mirror BYTE parity, hidden hit retention, redFFCD
 versus whiteFFC0 requests and phase254/255 early returns preserve original
 ownership. Ordinary tail ages common explosions/custom deaths once; cached
