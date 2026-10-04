@@ -9,8 +9,9 @@ The current preview runs Stages1 through6 including their waves, bosses,
 dialogues and departures. Stage4 has both character-dependent NPC battles;
 Stage5 joins Yuuka's seven attacks and thick lasers. Normal/Lunatic continue
 through Stage6 waves, the complete pre-battle dialogue and Yuuka's final
-battle, then all-clear and the Ending entry. Easy runs the separate bad dialogue and stops before
-the native Ending implementation. See
+battle, then all-clear and the Ending entry. Easy runs the separate bad dialogue
+and holds at the Bad Ending transfer. The MAINE cutscene component now has
+independent script/page/font controls; it is not yet joined to this live route. See
 [final-battle integration](#yuuka6-ordinary-battle-and-final-stage-departure)
 for the current acceptance scope; earlier slices below retain their historical
 boundaries.
@@ -23,7 +24,8 @@ independently ported and now joined to the ordinary game loop.
 ## Current executable slice
 
 `port64/main.cpp` currently owns the read-only resource path: TH04 HDI FAT12,
-PAR directory/decompression and 16-color PI decoding. `port64/view.cpp` owns
+PAR directory/decompression. `port64/pi_image.cpp` shares the unchanged
+16-color PI decoder with the MAINE cutscene owner. `port64/view.cpp` owns
 the first graphics boundary. It decodes mask-only, combined and opaque CD2 sheets,
 composes the recovered OP main, Options and character/shot layouts at 640x400, writes
 deterministic BMPs, and opens an SDL2/Linux or Win32/GDI window. The user
@@ -3150,3 +3152,101 @@ readback to keep the earlier cleanup effective. No FPS, complete-game, original
 whole-route or DOS exact claim is made. Next owners are native Ending/save,
 Extra, death/Continue/Bomb, remaining HUD/audio/config persistence. Semantic
 work remains limited to an ambiguity that blocks one of those owners.
+
+## MAINE Ending script and graphics owner
+
+v1291 adds `cutscene::Script` and `cutscene::Scene` as native C++ owners.
+`Script` preserves the three-digit/default parser, twelve-byte filenames,
+WORD cursor wrap, mask order, Escape sampling and graphics/page/palette/audio
+requests. Its clock separates release/press waits, explicit frame delays,
+non-skippable palette fades and song-measure waits. A sound owner must explicitly
+complete a measure wait; key input cannot stand in for song progress.
+`Scene` owns both640x400 indexed graphics pages, the saved480x64 text-box
+background, palette and current PI slot. It decodes supplied resources at
+runtime and performs quarter selection, EGC mask copies, graphics-font effects
+and gaiji drawing. The asset collection must outlive the Scene: its loaded PI
+slot borrows a stable picture-map entry. No original font, picture, script or
+executable is embedded.
+
+Fresh execution of the pinned MAINE DIET wrapper at load1000/2000 recovers the
+same62,414-byte payload and559 relocation sites. Packed SHA is670de6ba;
+payload SHA is7495ae43. The active Ghidra database attests the packed wrapper;
+the decoded function observations below use the hash-bound raw payload, not an
+invented decoded-database attestation. Provenance remains
+`candidate-local-attested`. Original0A05:07F7 dispatcher and0A05:0DAC animation
+execute their own instructions in the control oracle. External consumers are
+intercepted; original0CC7:058C font/effect kernels additionally execute against
+an explicit supplied CGROM adapter in the pixel oracle.
+
+Important target-specific behavior:
+
+- The picture rectangle is160,64,320,200. The standalone DOS dispatcher
+  candidate's left-zero constant cannot supply this native owner; a source name
+  or historical acceptance is insufficient to attest its include context.
+- MAINE samples key_det bit0010 for Escape. Frontend MAIN action masks require
+  explicit translation. Ending text uses graphics page1, with no per-character
+  delay; the interval controls the text-box mask passes.
+- `k` waits without publishing the box; `@` clears both pages without replacing
+  the saved background. Preserve both quirks when composing later flows.
+- `_ED000.TXT` supplies the two-byte string ",4" too. Original halfwidth font
+  effects operate on AL with WORD weights and a little-endian rotated store;
+  aligned heavy/bold/black spill dots differ from fullwidth text. Native keeps
+  these dots rather than correcting the original renderer.
+
+Validation at `.analysis/port64/maine-ending-v1291/`:
+
+- Eight actual scripts and ten synthetic controls at four held-input states
+  produce72cases/86,614 complete ordered records, invariant across two original
+  load segments and identical GNU, Wine and optimizedUBSan consumers.
+- An independent NumPy raster consumes original requests and target mask words.
+  Eight routes have twelve checkpoints each:192 complete indexed pages and96
+  palettes/page-selection/scroll/tone states match on all three builds.
+-264 full-frame font controls cover six fullwidth/ANK/space/kana strings,
+  four weights, eight alignments and additional positions/colors. Both original
+  relocation loads agree with each native consumer. The route gallery executes
+  another1,025 per-route string/weight/align controls.
+- Three incremental builds pass30CTest each and produce31AMD64 executables.
+ 28 prior GNU products are raw-identical;28 prior PE products differ only in
+  timestamp/checksum.26 prior UBSan products remain raw-identical. The changed
+  dialogue owner passes its independent original script/activation/font oracle;
+  eight existing PI/UI/MAIN smoke fixtures retain their prior hashes.
+
+`verify_cutscene_windows.ps1` executes the same binaries on actual Windows,
+including all30 contracts,72 script streams,17 PI decodes,264 font controls
+and192 pages/96 palettes. It compares complete bytes against the attested GNU
+references and preserves the original producer receipts separately.
+
+Replay from the native worktree:
+
+```sh
+python3 port64/verify_cutscene.py --target ../../targets/th04/maine.exe \
+  --decoded-dir ../../port64/maine-ending-v1291/decoded-original \
+  --hdi ../../runtime/images/zun.hdi \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-cutscene-contracts \
+  --output-dir NEW-control
+python3 port64/verify_cutscene_pixels.py --target ../../targets/th04/maine.exe \
+  --decoded-dir ../../port64/maine-ending-v1291/decoded-original \
+  --hdi ../../runtime/images/zun.hdi --font-bmp SUPPLIED-FONT \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-cutscene-contracts \
+  --reference-dir NEW-control --output-dir NEW-gallery
+```
+
+PI decode is a separately regressed dependency: the complete decoder body is
+unchanged except for external ownership. This gallery is not independent
+validation of the original PI decoder or a physical PC-98 video capture.
+Mask/font acceptance covers actual Ending inputs and the stated font matrix;
+arbitrary hardware clipping, all unused font effects and real audio timing are
+separate. No DOS source, exact/unit/function ledger or published Windows GUI is
+changed. Next join MAIN's score/run counters and MAINE resource lifetime to this
+owner, then implement Staff Roll, verdict and registration. The ordinary native
+preview still holds at the Ending transfer; component success is not full-game
+completion. Semantic work stays limited to concrete port ambiguities.
+
+Final source manifest: `df9ce765c305847b34fd3eb3e0dd8bcfe9029d0a923d4ea8937d3f6cd3125262`
+(196 files). `source-freeze.json` and `build-review.json` bind current sources,
+all31 executables per build and the actual-Windows reference identities.
+After verification,1,368 completed Wine/UBSan/Windows pixel/font files are
+losslessly gzip-archived, reclaiming320.3MiB;116 active executable/Windows-root
+hashes are unchanged. The current GNU reference gallery remains expanded.
+`output-archive-receipt.json` records every member and readback. Restore an
+archived output with `gzip -d -- PATH.bin.gz` before direct historical comparison.

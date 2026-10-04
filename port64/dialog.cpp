@@ -157,4 +157,10 @@ bool Font::pixel(std::uint16_t sjis,unsigned x,unsigned y) const {
     const auto byte=bytes_[offset_+(2047-py)*256+px/8];
     return (byte&(0x80u>>(px&7)))==0; // Font BMP uses white for blank pixels.
 }
+bool Font::ank_pixel(std::uint8_t character,unsigned x,unsigned y) const {
+    if(bytes_.empty() || x>=8 || y>=16) return false;
+    // Anex86's first sixteen bitmap rows hold 256 single-width glyphs.
+    const auto byte=bytes_[offset_+(2047-y)*256+character];
+    return (byte&(0x80u>>x))==0;
+}
 } // namespace th04::portable::dialog

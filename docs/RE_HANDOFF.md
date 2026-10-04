@@ -22,29 +22,38 @@ available. Root receipt:
 tar/zstd archive before using historical screenshot/disk gzip paths. Root/native
 CI pass after removal. Product source and the native runtime frontier are unchanged.
 
-Current native scope: [Yuuka6 ordinary battle and final departure](PORT64.md#yuuka6-ordinary-battle-and-final-stage-departure).
-v1290 joins Stage6 dialogue to the actual core/background/foreground/custom
-owners and all-clear. The background consumes the shared ring before actors;
-repaints reuse cached requests. A natural-route failure exposed the released
-MAP/STD updater still running; the frontend now respects stream ownership.
-Final Stage has no post-dialogue or ordinary clear/fade/next-stage branch:
-all-clear runs once at clock0 and holds at the nonreturning Ending entry416.
-MAINE rendering/Extra/death/Bomb/full HUD/audio/persistence still remain.
-Semantic remains stopped except for concrete port ambiguities.
+Current native scope: [MAINE Ending script/graphics owner](PORT64.md#maine-ending-script-and-graphics-owner).
+v1291 implements native script dispatch, asynchronous waits/fades, two graphics
+pages, saved text-box background, PI quarters/EGC masks, graphics font effects
+and gaiji. Fresh original MAINE0A05:07F7/0DAC controls execute the recovered
+payload at load1000/2000:72cases/86,614 requests. Eight actual Endings produce
+192 complete page checkpoints/96 palettes;264 independent original font
+controls and1,025 per-route glyph controls include ANK weight spill quirks.
+GNU/Wine/optimizedUBSan/actualWindows agree. Three builds pass30CTest/31AMD64
+executables each.28GNU prior executables are raw-identical;28PE bodies differ
+only in timestamp/checksum.26UBSan prior executables are raw-identical.
+Changed dialogue passes its original activation/script/font oracle; existing
+PI/UI/MAIN smoke hashes remain unchanged. Complete PI decoder body is preserved.
+Manifest df9ce765 binds196 source files. Completed1,368 non-GNU pixel/font
+outputs are losslessly gzip-archived with readback (320.3MiB released);116 active
+binary/Windows-root hashes are unchanged. GNU references remain expanded; use
+`gzip -d -- PATH.bin.gz` for the archived outputs.
 
-Sixteen Normal/Lunatic character/A-B shot/idle routes produce512 Stage6 images
-and528 counters, identical GNU/Wine/optimizedUBSan/actualWindows. All28 earlier
-image/counter groups retain their v1282 results. ActualWindows checks29contracts
-and2,060 natural images; each build passes29CTest/30AMD64 products. Fresh original
-MAIN13A9:ACB3 controls match2,052 final-departure records across four native hosts;
-bonus math and MAINE execution are separate. Changed GNU/UBSan core products
-match90,702 retained independent records, preserving the v1286 producer identity.
-UBSan foreground also matches4,458 old records. Source manifest bbe0e09b;
-receipts .analysis/port64/yuuka6-join-v1290. No DOS source/acceptance promotion.
-Windows native GUI/English launcher are published as v1290;21other DOS/config/
-save/font/image root files retain their hashes. This batch's7,508 generated
-BMPs are losslessly archived with readback, reclaiming5.23GiB. Restore with
-`gzip -d -- PATH.bmp.gz`; media-archive and deploy receipts record the files.
+Receipt root: .analysis/port64/maine-ending-v1291. Target provenance remains
+candidate-local-attested; the active database attests the packed wrapper, and
+fresh decoded raw observations bind to DIET payload7495ae43. This component
+oracle intercepts input/sound/physical consumers; it is not whole-game video,
+original PI decoding, natural host pacing or DOS exact promotion. MAINE picture
+left is160, Escape bit0010 and text uses graphics page1 without per-character
+waits; do not inherit wrong standalone candidate constants or MAIN input masks.
+
+Ordinary native frontend still runs Stages1..6 including final battle/all-clear
+and holds at Good Ending entry416; Easy holds at Bad Ending transfer. v1290
+Windows GUI/English launcher remain published. Next join resident score/run
+counters and MAIN-to-MAINE lifetime to the new owner, then Staff Roll/verdict/
+registration. Extra/death/Bomb/full HUD/audio/config persistence remain too.
+Semantic work stays stopped except for a concrete port ambiguity. v1290 natural
+route/component receipts and media restoration instructions remain in PORT64.md.
 
 Historical v1289 final-boss dependency: foreground sprite pixels now have a native
 consumer. MAIN0000:2838 FFCD merges destination|2 on alpha; purecolor2 would

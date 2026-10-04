@@ -5,14 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
-
-using Bytes = std::vector<uint8_t>;
-
-struct PiImage {
-    unsigned width{}, height{};
-    std::array<uint8_t, 48> palette{};
-    Bytes pixels;
-};
+#include "pi_image.hpp"
 
 struct StageAssets {
     Bytes stage_tiles,boss_tiles,backdrop,transition,boss_faces,map_tiles,map,standard,stars;

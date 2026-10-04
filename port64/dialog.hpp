@@ -52,6 +52,7 @@ class Font {
 public:
     explicit Font(const Bytes& bitmap);
     bool pixel(std::uint16_t sjis,unsigned x,unsigned y) const;
+    bool ank_pixel(std::uint8_t character,unsigned x,unsigned y) const;
     bool present() const { return !bytes_.empty(); }
 private:
     Bytes bytes_;unsigned offset_=0;

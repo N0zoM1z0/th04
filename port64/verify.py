@@ -14,6 +14,16 @@ import sys
 
 
 PORT_FILES = (
+    "port64/cutscene.hpp",
+    "port64/cutscene.cpp",
+    "port64/cutscene_scene.hpp",
+    "port64/cutscene_scene.cpp",
+    "port64/cutscene_contracts.cpp",
+    "port64/pi_image.hpp",
+    "port64/pi_image.cpp",
+    "port64/verify_cutscene.py",
+    "port64/verify_cutscene_pixels.py",
+    "port64/verify_cutscene_windows.ps1",
     "port64/verify_yuuka6_departure.py",
     "port64/yuuka6_pixels.cpp",
     "port64/verify_yuuka6_pixels.py",
@@ -289,6 +299,8 @@ def main() -> int:
     windows_midboss = windows_dir / "th04-port64-midboss-contracts.exe"
     linux_orange = linux_dir / "th04-port64-orange-contracts"
     windows_orange = windows_dir / "th04-port64-orange-contracts.exe"
+    linux_cutscene = linux_dir / "th04-port64-cutscene-contracts"
+    windows_cutscene = windows_dir / "th04-port64-cutscene-contracts.exe"
     linux_dialog = linux_dir / "th04-port64-dialog-contracts"
     windows_dialog = windows_dir / "th04-port64-dialog-contracts.exe"
     linux_bonus = linux_dir / "th04-port64-bonus-contracts"
@@ -331,13 +343,17 @@ def main() -> int:
     windows_elly=windows_dir / "th04-port64-elly-contracts.exe"
     linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
     windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
-    for path in (linux_yuuka6_background,linux_yuuka6_render,linux_yuuka6_core,linux_yuuka6_attacks,linux_yuuka6_entities,linux_yuuka6,linux_yuuka,linux_lasers,linux_stage5,linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_cutscene,linux_yuuka6_background,linux_yuuka6_render,linux_yuuka6_core,linux_yuuka6_attacks,linux_yuuka6_entities,linux_yuuka6,linux_yuuka,linux_lasers,linux_stage5,linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_yuuka6_background,windows_yuuka6_render,windows_yuuka6_core,windows_yuuka6_attacks,windows_yuuka6_entities,windows_yuuka6,windows_yuuka,windows_lasers,windows_stage5,windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_cutscene,windows_yuuka6_background,windows_yuuka6_render,windows_yuuka6_core,windows_yuuka6_attacks,windows_yuuka6_entities,windows_yuuka6,windows_yuuka,windows_lasers,windows_stage5,windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_cutscene_output = run([str(linux_cutscene)])
+    windows_cutscene_output = run([args.windows_runner,str(windows_cutscene)],env=runner_env)
+    if linux_cutscene_output != "MAINE cutscene lifecycle contracts: PASS" or windows_cutscene_output != linux_cutscene_output:
+        raise ValueError("MAINE cutscene lifecycle contracts failed")
     linux_yuuka6_background_output=run([str(linux_yuuka6_background)])
     windows_yuuka6_background_output=run([args.windows_runner,str(windows_yuuka6_background)],env=runner_env)
     if linux_yuuka6_background_output!="Stage 6 Yuuka background contracts PASS" or windows_yuuka6_background_output!=linux_yuuka6_background_output:
@@ -740,6 +756,8 @@ def main() -> int:
                 "kurumi_contracts_sha256": sha256(linux_kurumi),
                 "orange_contract_output": linux_orange_output,
                 "orange_contracts_sha256": sha256(linux_orange),
+                "cutscene_contract_output": linux_cutscene_output,
+                "cutscene_contracts_sha256": sha256(linux_cutscene),
                 "dialog_contract_output": linux_dialog_output,
                 "dialog_contracts_sha256": sha256(linux_dialog),
                 "session_contract_output": linux_session_output,
@@ -803,6 +821,8 @@ def main() -> int:
                 "kurumi_contracts_sha256": sha256(windows_kurumi),
                 "orange_contract_output": windows_orange_output,
                 "orange_contracts_sha256": sha256(windows_orange),
+                "cutscene_contract_output": windows_cutscene_output,
+                "cutscene_contracts_sha256": sha256(windows_cutscene),
                 "dialog_contract_output": windows_dialog_output,
                 "dialog_contracts_sha256": sha256(windows_dialog),
                 "session_contract_output": windows_session_output,
