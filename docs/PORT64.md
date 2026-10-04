@@ -14,6 +14,8 @@ the native Ending implementation. See
 [Stage6 integration](#stage6-resources-waves-and-pre-battle-dialogue)
 for the current acceptance scope; earlier slices below retain their historical
 boundaries.
+The final-boss [animation/motion helpers](#yuuka6-animation-and-motion-helpers)
+are independently ported, but are not yet joined to the ordinary game loop.
 
 ## Current executable slice
 
@@ -2569,3 +2571,65 @@ checkerboard/background/foreground, then join the ordinary battle. Extra,
 player death/Continue/Bomb, remaining HUD, audio, Ending and save I/O also
 remain required. Semantic work stays bounded to ambiguities needed by those
 owners; the complete native game is not finished.
+
+## Yuuka6 animation and motion helpers
+
+v1283 recovers the eight animation entries and four movement entries at
+MAIN13A9:6933..6E76 into port64/yuuka6.hpp/.cpp. This is the next dependency
+for the final boss; the ordinary GUI still stops before its first update.
+No DOS source or accepted extent changes. Semantic work only clarifies the
+specific state ownership needed by this native slice.
+
+All animation entries share the signed16-bit animation_frame. They increment
+before testing cels and retain the incoming sprite on a terminal frame;
+close/open stamp flags1/2 on every call, while the other six only replace the
+flag on completion. A switch of animation does not implicitly reset its clock.
+The caller separately owns phase_frame. Teleport animation executes before
+clock64's position/mirror publication and clock128's completion. Mirror X is
+wrapped6144-X, enabled for any nonzero mirror state, then the state becomes2.
+Flight uses two actual five-node BYTE angle paths; every sixth patterns residue
+returns to the center through the teleport helper. The112 completion does not
+also move. Only legitimate paths0/1 are accepted when the table is accessed;
+malformed native snapshots reject instead of reading adjacent original DATA.
+
+Horizontal motion adds wrapped velocity before inclusive48/336-pixel reversal,
+never clamps, evaluates the actual integer sine/polar displacement and advances
+its BYTE angle by2. Centering accepts the subpixel interval[3072,3088); entering
+that interval by a step still returns false. A just-completed appearance also
+returns false and retains aux_flag until the following call. Source comments
+explain these timing and retention boundaries for the later battle owner.
+
+Three fresh original-CPU producers each pass20,463 fixtures/36,045 full state
+records against GNU, Wine and optimizedUBSan. The comparator includes all24
+boss bytes,10 contiguous animation/mirror bytes, the mirror-state BYTE and
+return BYTE. Every patterns BYTE, both valid flight tables, all256 wave angles,
+animation cels/negative/overflow clocks, mirror modes and retained helper
+sequences are covered. Actual vector/polar callees execute; no downstream
+file/video/shot/audio/timing consumer is invoked. DS writes outside these
+owners fail closed. Callback exceptions and a one-variable return mutation
+are rejected. Actual Windows consumes the independent reference and matches
+all36,045 records; it does not execute the original CPU producer.
+
+The three incremental builds each provide25 products and pass24 CTests.
+All24 preceding GNU and optimizedUBSan executables are raw-identical to v1282.
+All24 preceding MinGW products differ only in COFF timestamp/PE checksum
+bytes; the complete remaining bytes agree. The no-font GNU/Wine integration
+smoke passes the updated verifier, including the new contract. This does not
+repeat the previously accepted full dialogue/route image matrix or prove
+whole-battle rendering, physical PC-98 timing, FPS or DOS exactness.
+
+Receipts live in .analysis/port64/yuuka6-motion-v1283; final source manifest
+269abf2dc769c274edd4b4c847b0f52700ea67653ddf44729789d14634823134.
+accepted-{linux,windows,ubsan} retains original fixtures/compressed traces;
+native-windows-review,product-continuity,build-receipt and integration-smoke
+record the distinct checks. The initial CTest configuration mistakenly passed
+the new executable name to the old Yuuka5 contract; ctest-linux.log retains
+the failure, and all three accepted CTest replays pass after fixing that
+registration. Initial producer9479b49b is retained without relabeling it.
+The Windows v1283-yuuka6-motion package contains only the new private contract,
+fixtures, manifest and control script, avoiding25 duplicate full executables.
+The published GUI/launcher and protected DOS/config/saves remain untouched.
+
+Next: chase-cross/safety-circle entity ownership, gathering and attack helpers,
+then the dispatcher and foreground/checkerboard join. Extra, player death,
+Continue, Bomb, HUD, audio, native Ending and score save remain unfinished.

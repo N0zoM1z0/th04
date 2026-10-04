@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/yuuka6.cpp",
+    "port64/yuuka6.hpp",
+    "port64/yuuka6_contracts.cpp",
+    "port64/verify_yuuka6_motion.py",
     "port64/stage6.cpp",
     "port64/stage6.hpp",
     "port64/verify_stage6.py",
@@ -278,6 +282,8 @@ def main() -> int:
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
     linux_midboss3=linux_dir / "th04-port64-midboss3-contracts"
     windows_midboss3=windows_dir / "th04-port64-midboss3-contracts.exe"
+    linux_yuuka6=linux_dir / "th04-port64-yuuka6-contracts"
+    windows_yuuka6=windows_dir / "th04-port64-yuuka6-contracts.exe"
     linux_yuuka=linux_dir / "th04-port64-yuuka5-contracts"
     windows_yuuka=windows_dir / "th04-port64-yuuka5-contracts.exe"
     linux_lasers=linux_dir / "th04-port64-laser-contracts"
@@ -294,13 +300,16 @@ def main() -> int:
     windows_elly=windows_dir / "th04-port64-elly-contracts.exe"
     linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
     windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
-    for path in (linux_yuuka,linux_lasers,linux_stage5,linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_yuuka6,linux_yuuka,linux_lasers,linux_stage5,linux_marisa,linux_reimu,linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_yuuka,windows_lasers,windows_stage5,windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_yuuka6,windows_yuuka,windows_lasers,windows_stage5,windows_marisa,windows_reimu,windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_yuuka6_output=run([str(linux_yuuka6)])
+    windows_yuuka6_output=run([args.windows_runner,str(windows_yuuka6)],env=runner_env)
+    if linux_yuuka6_output!="Stage 6 Yuuka movement contracts PASS" or windows_yuuka6_output!=linux_yuuka6_output:raise ValueError("Yuuka6 movement contracts failed")
     linux_yuuka_output=run([str(linux_yuuka)])
     windows_yuuka_output=run([args.windows_runner,str(windows_yuuka)],env=runner_env)
     if linux_yuuka_output!="Stage 5 Yuuka contracts PASS" or windows_yuuka_output!=linux_yuuka_output:raise ValueError("Yuuka contracts failed")
@@ -634,6 +643,8 @@ def main() -> int:
         "products": {
             "linux": {
                 "format": "ELF64 x86-64",
+                "yuuka6_contracts_sha256": sha256(linux_yuuka6),
+                "yuuka6_contract_output": linux_yuuka6_output,
                 "yuuka5_contracts_sha256": sha256(linux_yuuka),
                 "yuuka5_contract_output": linux_yuuka_output,
                 "laser_contracts_sha256": sha256(linux_lasers),
@@ -685,6 +696,8 @@ def main() -> int:
             },
             "windows": {
                 "format": "PE32+ x86-64",
+                "yuuka6_contracts_sha256": sha256(windows_yuuka6),
+                "yuuka6_contract_output": windows_yuuka6_output,
                 "yuuka5_contracts_sha256": sha256(windows_yuuka),
                 "yuuka5_contract_output": windows_yuuka_output,
                 "laser_contracts_sha256": sha256(windows_lasers),

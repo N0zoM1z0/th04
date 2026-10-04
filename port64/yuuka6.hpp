@@ -1,0 +1,33 @@
+#pragma once
+#include "orange.hpp"
+
+namespace th04::portable::yuuka6 {
+// One clock is shared by every animation. Callers choose when to change an
+// animation; choosing one does not itself reset the counter or sprite flag.
+// MAIN13A9:6AAD..6E76 owns these eight animation entries.
+enum class Animation : std::uint8_t {
+    close,open,pull_forward,pull_left,spin_back,vanish,appear,shield
+};
+struct Snapshot {
+    orange::Snapshot boss{};
+    std::uint8_t sprite_flag=0,fly_path=0,aux_flag=0,unused_animation=0;
+    std::int16_t animation_frame=0;
+    motion::Point mirror{};
+    std::uint8_t mirror_state=0;
+};
+class System {
+public:
+    explicit System(Snapshot initial):state_(initial) {}
+    const Snapshot& snapshot() const { return state_; }
+    bool animate(Animation);
+    // These helpers do not advance phase_frame. The dispatcher/hit-test owns
+    // that increment; the completion cases reset it and increment the BYTE
+    // patterns counter. Both clocks retain explicit signed 16-bit wrapping.
+    bool phase2_fly();
+    bool move_towards(motion::Point destination);
+    void horizontal_wave();
+    bool move_to_center();
+private:
+    Snapshot state_{};
+};
+} // namespace th04::portable::yuuka6

@@ -20,6 +20,22 @@ speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
 Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
 frontier. Semantic remains stopped except for concrete port ambiguities.
 
+New v1283 final-boss dependency: eight animations/four motion helpers at
+MAIN13A9:6933..6E76 are ported with explicit shared-clock/flag/mirror ownership.
+Three fresh original CPU producers match20,463 cases/36,045 full state records
+on GNU/Wine/optimizedUBSan; actualWindows consumes the reference and agrees.
+Three incremental builds pass24CTests/25products each. The preceding24 GNU/
+UBSan products are raw-identical; preceding24PEs differ only COFF timestamp/
+checksum. No-font GUI integration smoke passes; ordinary battle is not yet
+joined. Current source manifest269abf2d; receipts:.analysis/port64/yuuka6-motion-v1283.
+GUI/launcher remain the verified v1282 files; the Windows v1283 private package
+adds only the new contract/control fixtures. No GUI launched or DOS change.
+See [Yuuka6 helpers](PORT64.md#yuuka6-animation-and-motion-helpers).
+Next: chase-cross/safety-circle entities and gather/attack helpers, then core
+and foreground/checkerboard integration. Remaining complete-game owners below
+are still required; semantic remains limited to concrete port ambiguities.
+
+Historical v1282 acceptance:
 v1282 passes three incremental builds/23 CTests/24 products each. Independent
 original CPU1,024 setups/42 gates/four dialogue traces (1,895 ordered requests)
 agree GNU/Wine/optimizedUBSan; actualWindows consumes the retained references.
@@ -41,7 +57,7 @@ integration-review,native-windows-controls-receipt,reporter-continuity,
 source-manifest-final,stage5-reference-replay,Windows export).5514 completed validation BMPs are
 gzip-archived with SHA readback, reclaiming3.84GiB; current builds/fonts/saves
 and original CPU references remain expanded. Restore private BMPs with gzip -d.
-Next: Yuuka6 core/attack/animation/entity/foreground/checkerboard owners and
+Remaining Yuuka6 core/attack/entity/foreground/checkerboard owners and
 ordinary battle join; then Extra, player death/Continue/Bomb, remaining HUD,
 audio, Ending and save I/O. The complete native game remains unfinished.
 
