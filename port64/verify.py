@@ -14,6 +14,9 @@ import sys
 
 
 PORT_FILES = (
+    "port64/marisa_render.cpp",
+    "port64/verify_marisa_render.py",
+    "port64/verify_marisa_pixels.py",
     "port64/marisa.hpp",
     "port64/marisa.cpp",
     "port64/marisa_contracts.cpp",
@@ -455,6 +458,8 @@ def main() -> int:
     stage3_outputs = {}
     stage4_hashes = {}
     stage4_outputs = {}
+    marisa_hashes = {}
+    marisa_outputs = {}
     reimu_hashes = {}
     reimu_outputs = {}
     elly_hashes = {}
@@ -538,6 +543,15 @@ def main() -> int:
             if len(reimu_hashes[host])!=144:raise ValueError("unexpected Reimu image files")
             reimu_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Reimu")]
         if reimu_hashes["linux"]!=reimu_hashes["windows"] or reimu_outputs["linux"]!=reimu_outputs["windows"]:raise ValueError("Reimu images/counters differ between hosts")
+
+        for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
+            images=output.parent/("marisa-"+host);images.mkdir(parents=True,exist_ok=True)
+            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--marisa-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Marisa fixture=")!=162 or result.count("MAIN Marisa stopped ")!=8:raise ValueError("natural Marisa fixture missed progression")
+            marisa_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(marisa_hashes[host])!=162:raise ValueError("unexpected Marisa image files")
+            marisa_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Marisa")]
+        if marisa_hashes["linux"]!=marisa_hashes["windows"] or marisa_outputs["linux"]!=marisa_outputs["windows"]:raise ValueError("Marisa images/counters differ between hosts")
 
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
@@ -671,6 +685,8 @@ def main() -> int:
         "stage2_fixture_counters": stage2_outputs.get("linux",[]),
         "kurumi_fixture_bmp_sha256": kurumi_hashes.get("linux",{}),
         "kurumi_fixture_counters": kurumi_outputs.get("linux",[]),
+        "marisa_fixture_bmp_sha256": marisa_hashes.get("linux",{}),
+        "marisa_fixture_counters": marisa_outputs.get("linux",[]),
         "reimu_fixture_bmp_sha256": reimu_hashes.get("linux",{}),
         "reimu_fixture_counters": reimu_outputs.get("linux",[]),
         "stage4_fixture_bmp_sha256": stage4_hashes.get("linux",{}),

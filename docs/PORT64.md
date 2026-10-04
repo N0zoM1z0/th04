@@ -2007,3 +2007,108 @@ After recording the final comparisons,4,064 v1275 validation BMPs are archived
 with verified gzip readback, reclaiming another2.83 GiB. Receipts and CPU
 fixtures remain live; `media-archive-receipt.json` records every original and
 compressed SHA. Restore a private BMP path with `gzip -d -- FILE.bmp.gz`.
+
+## Stage4 Marisa battle and rendering
+
+v1276 connects the Marisa owner to the actual Reimu-player Stage4 pre-dialog
+handoff. Both characters now play their respective NPC battle, post-dialog,
+clear bonus and departure, then hold at the Stage5 pending-resource request.
+Main state owns raw bit shots with against-Boss=false and body hits with true.
+Shared gathers, score, frame prefix and explosion updates run once per simulated
+frame; repainting consumes cached requests and cannot clear damage or age
+explosions again. The native preview still lacks player death, Bomb, complete
+HUD/audio, later stages, Ending and save.
+
+Fresh MAIN0AAF:419E..4280/4281..42F0 review and original CPU controls prove the
+ordered body, line, four bit and shared explosion requests. The body uses the
+raw sprite without an animation offset; damage selects white FFC0/alpha plane0
+and is consumed only below phase254. The packed alive centers form an open
+chain for two bits and close for three/four, color9, before drawing the slots.
+Bits require nonzero flag and signed centerX>-256,<6144 and centerY>-256,<5888.
+Visible nonzero WORD damage selects rolling white and resets that WORD; hidden
+slots retain damage. Slots4..31 and all private26 bytes stay untouched.
+
+Expansion can move line endpoints outside the viewport. The shared older ray
+consumer required in-screen endpoints, so direct reuse could fail during an
+ordinary GUI repaint. Marisa now follows original0000:079A..080C clipping and
+1562..16FE line rasterization: the actual stage rectangle is32..415/16..383,
+inclusive. Clip X before Y, signed IDIV toward zero, then draw the existing
+16.16 accumulator line from the clipped endpoints. Clipping the finished raster
+instead changes boundary rounding.1,522 original CPU write-mask controls cover
+both directions, corners, edge points and wholly rejected lines. These are
+selected controls within ordinary coordinate bounds, not a general extreme
+16-bit coordinate or physical GRCG color/aliasing claim.
+
+13,606 original foreground controls compare ordered requests, complete
+private26/pool832 retention, visible damage consumption and shared explosion/
+flash clocks;5,888 shared NPC backdrop controls verify signed eight-frame cels,
+BB pointer copies and call order. All eight64x64 Marisa BFNT images from
+ST03B21.BBT and four32x32 bit images from ST03B22.BBT execute original normal
+and white SUPER/rolling put routines0000:2F54/2838/2D3E/2B78.1,344 controls
+compare344,064,000 complete indexed pixels across eight X alignments, retained
+16-color backgrounds and seven signed top/bottom positions. Normal body does
+not roll; bit puts do, with white coming from alpha plane0. Negative rows are
+outside visible VRAM and only bottom overflow rolls. GRCG ports and visible
+A800 plane writes use a bounded software shadow; page/scroll/timing and aliases
+outside the visible surface are excluded.
+
+Independent original producers are frozen separately from final native-only
+reference replays. Linux GNU, MinGW under Wine, optimized UBSan and actual
+Windows agree on all state/draw/background/line/pixel expectations. Final render
+replays also regenerate all1,522 original line controls; final core replays
+regenerate four original divide failures.7,759 Marisa core controls/87,031
+records and1,024 retained setup controls still pass on every host.
+
+Four fresh stage_state_init0AAF:73DB..74A5 controls execute actual REP STOSD:
+all832 custom bytes clear while private DATA432E..4347 is retained. Initial
+loaded private26 bytes are zero. Stage4 setup remains a separate common BOSS
+reset, retaining Elly metadata. Native first encounter uses those initial
+private defaults; do not generalize this to later reentry without explicit
+retained owner state. Gameplay enables an explicit portable policy for attack1/
+2 flystep durations12/13: extend them to14 to avoid the original zero divisor.
+Default core comparisons leave this disabled, and native policy contracts
+verify both callers separately. Every other duration and strict flystep error
+behavior stays unchanged; no natural original-route fault reproduction claim.
+
+Eight natural Normal/Lunatic Reimu-player A/B shot/idle routes start from title
+selection and traverse all preceding stages, actual Marisa attacks/bit pool,
+post-dialog, bonus, fade417 and next-stage489 without injecting damage, phases,
+spawns or RNG.162 new BMPs/170 counters agree across Linux/Wine/UBSan/actual
+Windows.20 contracts and738 total natural BMPs/798 counters agree across hosts;
+all preceding576 BMPs/628 counters and earlier menu/shooting captures remain
+identical. Dialog and the Stage5 frontier freeze simulation/RNG. This headless
+coverage is separate from GUI frame pacing and original ordinary-route equality.
+
+21 static PE validation products are in `port64-preview/v1276`. After complete
+readback, the native GUI EXE/English launcher alone replace the root Windows
+preview;21 DOS/HDI/config/font/build files remain identical. No GUI is launched.
+Windows execution and MinGW cross-compilation are separate observations.
+DOS source and exact acceptance are untouched. Semantic remains stopped.
+
+Replay `port64/verify_marisa_render.py --target TARGET --exe CONTRACT
+--output-dir NEW` for original foreground/backdrop/line controls; only after
+that succeeds use `--reference-dir ORIGINAL_DIR` for complete guarded draw/
+backdrop replay (line controls still execute the original CPU).
+`port64/verify_marisa_pixels.py` takes the same options plus `--hdi HDI`.
+`--runner wine` selects PE execution. GUI natural routes use
+`--marisa-screenshots DIR`; aggregate drivers include both NPC routes.
+
+Receipts under `.analysis/port64/marisa-render-v1276/`: target-review.json,
+stage-reset-controls.json, producer-source/manifest.json,
+line-producer-source/manifest.json, render-linux-full/receipt.json,
+pixels-linux-full/receipt.json, render-{linux,windows,ubsan}-accepted/receipt.json,
+pixels-{linux,windows,ubsan}-final/receipt.json,
+core-{linux,windows,ubsan}-accepted/receipt.json,
+setup-{linux,windows,ubsan}-accepted/receipt.json,
+native-windows-{core,setup,render,background,line,pixels,receipt}.json,
+integration-review.json and windows-export-receipt.json.
+Cross receipt: `.analysis/port64/verification-marisa-render-v1276-accepted/receipt.json`.
+Native manifest:3adf253ed25e0a48be20efd71e94d70ad0de70864755b752b156cd0d003bc000.
+Next port Stage5 resources/midboss/boss; reopen semantic only for concrete
+ambiguities needed by that implementation.
+
+Final validation media (4,785 files: BMPs and the redundant native pixel stream)
+are losslessly archived after hash/counter readback, reclaiming3.66 GiB.
+`media-archive-receipt.json` records all original/compressed SHA-256 values;
+original CPU pixel references, fixtures and current builds remain live.
+Restore private media with `gzip -d -- FILE.gz` before an old-path replay.

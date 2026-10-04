@@ -142,6 +142,13 @@ void System::pattern(const Context& c,bullet::System& bullets,gather::System& ga
     const auto tune=[&] { bullet::tune(t,c.bullets.rank,c.bullets.performance); };
     const auto fire=[&](bool special=false,bool fixed=false) { bullets.add(t,c.bullets,random,special,fixed); };
     const auto bits=[&] { fire_bits(c,bullets,random); };
+    const auto fly_without_bits=[&] {
+        auto duration=static_cast<std::int16_t>(160-s.additional[15]);
+        // Explicit portable gameplay policy. Preserve every other duration
+        // and the strict flystep API's divide/overflow failure behavior.
+        if(c.repair_flystep_zero_divisor && (duration==12 || duration==13)) duration=14;
+        return flystep(duration);
+    };
     const auto finish=[&] { s.phase_frame=0;s.mode=255;s.sprite=129; };
     const auto reverse=[&](unsigned step) { for(unsigned i=0;i<4;i+=step) state_.bits[i].angle_speed=signed_byte(-int(state_.bits[i].angle_speed)); };
     const auto stack=[&](bool aimed) { t.spawn_type=4;t.pattern=57;t.group=aimed ? BG_STACK_AIMED : BG_STACK;t.count=16;t.delta=5;t.speed=16;tune();fire(false,true); };
@@ -179,7 +186,7 @@ void System::pattern(const Context& c,bullet::System& bullets,gather::System& ga
         if(s.phase_frame%4==0) {
             if(state_.alive) { bits();s.additional[15]=byte(s.phase_frame); }
             else {
-                flystep(static_cast<std::int16_t>(160-s.additional[15]));t.spawn_type=2;t.pattern=76;t.speed=52;t.group=BG_SPREAD;t.count=3;t.delta=6;t.angle=byte(t.angle+6);tune();
+                fly_without_bits();t.spawn_type=2;t.pattern=76;t.speed=52;t.group=BG_SPREAD;t.count=3;t.delta=6;t.angle=byte(t.angle+6);tune();
                 for(unsigned i=0;i<4;++i) { fire();if(i<3) t.angle=byte(t.angle+64); }
             }
             sound(9);
@@ -189,7 +196,7 @@ void System::pattern(const Context& c,bullet::System& bullets,gather::System& ga
         if(s.phase_frame%4==0) {
             t.angle=motion::angle_to(s.position.current,c.bullets.player);
             if(state_.alive) { bits();s.additional[15]=byte(s.phase_frame); }
-            else { flystep(static_cast<std::int16_t>(160-s.additional[15]));t.spawn_type=2;t.pattern=56;t.group=BG_SPREAD_AIMED;t.count=3;t.delta=12;t.angle=0;tune();fire(); }
+            else { fly_without_bits();t.spawn_type=2;t.pattern=56;t.group=BG_SPREAD_AIMED;t.count=3;t.delta=12;t.angle=0;tune();fire(); }
             t.speed=byte(t.speed+4);sound(9);
         }
         if(s.phase_frame>=160) {

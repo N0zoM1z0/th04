@@ -716,7 +716,8 @@ void put_reimu_sprite(Frame& frame,const PiImage& palette,const sprite::Sheet& s
 Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                   application::Playchar playchar,std::optional<int> displayed_tone={}) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
-    if(state.reimu_active()) frame.indices.assign(640*400,0);
+    const bool npc_active=state.reimu_active() || state.marisa_active();
+    if(npc_active) frame.indices.assign(640*400,0);
     PiImage palette=sprites.palette;
     if (state.boss_active()) {
         const auto& boss=state.boss_snapshot();
@@ -730,11 +731,11 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     }
     const auto background_phase=state.orange_background_phase();
     const auto npc_background=th04::portable::reimu::backdrop(background_phase,state.orange_background_frame());
-    const bool npc_picture=state.reimu_active() && (npc_background.kind==th04::portable::reimu::BackdropKind::picture || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask);
-    const bool backdrop=npc_picture || (!state.reimu_active() && state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254);
+    const bool npc_picture=npc_active && (npc_background.kind==th04::portable::reimu::BackdropKind::picture || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask);
+    const bool backdrop=npc_picture || (!npc_active && state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254);
     if (backdrop) {
-        if(state.reimu_active()) {
-            require_view(bool(sprites.second),"Reimu backdrop has no Stage4 owner");
+        if(npc_active) {
+            require_view(bool(sprites.second),"NPC backdrop has no Stage4 owner");
             fill_rect(frame,palette,32,16,384,56,1);fill_rect(frame,palette,32,328,384,56,1);
             fill_rect(frame,palette,32,72,64,256,1);fill_rect(frame,palette,352,72,64,256,1);
             put_opaque(frame,palette,sprites.second->backdrop,0,96,72);
@@ -760,7 +761,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     for (unsigned y=16; y<384; ++y) {
         for (unsigned x=0; x<384; ++x) {
             if (backdrop) {
-                if(state.reimu_active()) continue;
+                if(npc_active) continue;
                 if (background_phase!=(state.elly_active() ? 2 : 1)) continue;
                 const int cel=state.orange_background_frame()/2;
                 require_view(cel>=0 && cel<16,"Orange BB cel outside resource");
@@ -774,7 +775,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
         }
     }
-    if(state.reimu_active() && (npc_background.kind==th04::portable::reimu::BackdropKind::tiles_and_mask || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask)) {
+    if(npc_active && (npc_background.kind==th04::portable::reimu::BackdropKind::tiles_and_mask || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask)) {
         const unsigned cel=npc_background.cel;require_view(cel<16,"NPC BB cel outside resource");
         for(unsigned row=0;row<23;++row) for(unsigned column=0;column<24;++column)
             if(sprites.second->assets.transition[cel*128+row*4+column/8]&(0x80u>>(column&7)))
@@ -787,18 +788,23 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     if (state.boss_active()) for (const auto& draw:state.boss_draws()) {
         const auto pattern=draw.pattern_or_radius;
         if(draw.kind==orange::DrawKind::line) {
-            for(auto p:th04::portable::kurumi::ray_pixels({draw.left,draw.top},{draw.end_left,draw.end_top}))
+            const auto points=state.marisa_active() ? th04::portable::marisa::line_pixels({draw.left,draw.top},{draw.end_left,draw.end_top}) : th04::portable::kurumi::ray_pixels({draw.left,draw.top},{draw.end_left,draw.end_top});
+            for(auto p:points)
                 put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
         } else if (draw.kind==orange::DrawKind::circle) {
             for (auto p:circle::raster({draw.left,draw.top},pattern)) put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
         } else if (pattern>=128 && pattern<256) {
             const auto& slot=sprites.stage_slots[pattern];require_view(slot.sheet,"Orange references an empty dynamic stage slot");
-            if(draw.kind==orange::DrawKind::plane_sprite || draw.kind==orange::DrawKind::rolling_sprite)
+            if(state.marisa_active() && (draw.kind==orange::DrawKind::rolling_sprite || draw.kind==orange::DrawKind::white_rolling_sprite))
+                th04::portable::marisa::raster_sprite(*slot.sheet,slot.image,draw.left,draw.top,draw.kind,
+                    [&](int x,int y) {return frame.indices[unsigned(y)*frame.width+unsigned(x)];},
+                    [&](int x,int y,std::uint8_t color) {put_indexed_pixel(frame,palette,x,y,0,0,color);});
+            else if(draw.kind==orange::DrawKind::plane_sprite || draw.kind==orange::DrawKind::rolling_sprite)
                 put_reimu_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind);
             else put_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
         }
         else if (pattern==3) put_sprite(frame,palette,sprites.explosion,0,draw.left,draw.top);
-        else if (pattern>=4 && pattern<28) put_sprite(frame,palette,sprites.enemies,pattern-4,draw.left,draw.top,false,draw.kind==orange::DrawKind::large_sprite ? 2 : 1);
+        else if (pattern>=4 && pattern<28) put_sprite(frame,palette,sprites.enemies,pattern-4,draw.left,draw.top,draw.kind==orange::DrawKind::white_rolling_sprite,draw.kind==orange::DrawKind::large_sprite ? 2 : 1);
         else if (pattern>=28 && pattern<128) put_sprite(frame,palette,sprites.items,pattern-28,draw.left,draw.top);
         else throw std::runtime_error("Orange references absent sprite");
     }
@@ -1083,6 +1089,7 @@ public:
     void enable_elly() { enable_stage3();continue_elly_=true; }
     void enable_stage4() { enable_elly();continue_stage4_=true; }
     void enable_reimu() { enable_stage4();continue_reimu_=true; }
+    void enable_marisa() { enable_stage4();continue_marisa_=true; }
     bool stage4_dialog_complete() const { return fourth_pre_finished_; }
     bool stage3_dialog_complete() const { return third_pre_finished_; }
     unsigned resource_stage() const { return loaded_stage_; }
@@ -1161,6 +1168,9 @@ public:
                     else if(loaded_stage_==3) { fourth_pre_finished_=true;if(continue_reimu_ && application_.resident().playchar==application::Playchar::marisa) {
                         require_view(stage4_battle_resources_valid(),"Reimu battle sprite bank invalid");
                         main_->start_reimu_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
+                    } else if(continue_marisa_ && application_.resident().playchar==application::Playchar::reimu) {
+                        require_view(stage4_battle_resources_valid(),"Marisa battle sprite bank invalid");
+                        main_->start_marisa_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
                     } }
                     else if(loaded_stage_==2) { third_pre_finished_=true;if(continue_elly_) main_->start_elly_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else if(loaded_stage_==1) { second_pre_finished_=true;if(continue_kurumi_) main_->start_kurumi_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
@@ -1287,7 +1297,7 @@ private:
     const MainAssets* assets_=nullptr;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
     bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
-    bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false;
+    bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false,continue_marisa_=false;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1320,7 +1330,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_reimu(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_reimu();front_end.enable_marisa(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1494,7 +1504,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_reimu();
+    front_end.enable_reimu();front_end.enable_marisa();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1604,7 +1614,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -2306,6 +2316,76 @@ void run_title(
             for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
             require_view(state.frames()==frame && state.random_cursor()==random && state.score().score_delta==pending,"Stage5 frontier repeated simulation");
             std::cout<<"MAIN Reimu stopped rank="<<(lunatic ? "Lunatic" : "Normal")<<" shot_type="<<shot_type<<" shooting="<<shooting<<" frames="<<frame<<" frozen_ticks="<<frozen<<" orb_checks="<<orb_checks<<" generation="<<generation<<" progression=stage5_pending\n";
+        }
+    }
+    if(!marisa_screenshots.empty()) {
+        for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned shot_type=0;shot_type<2;++shot_type) for(unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            scene.enable_marisa();
+            if(lunatic) {
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
+                scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            if(shot_type) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);
+            const auto generation=scene.generation();std::array<bool,21> seen{};unsigned frozen=0,bonus=0,fades=0,next=0,bit_checks=0;
+            for(unsigned tick=0;tick<150000;++tick) {
+                const auto before=scene.main_state().frames();const auto random=scene.main_state().random_cursor();
+                const auto process=scene.process_random_state();const bool blocked=scene.dialog_active();
+                std::uint16_t held=blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : shot::input_shot;
+                if(!blocked && scene.resource_stage()==3) {
+                    held=shooting ? shot::input_shot : 0;
+                    if(shooting && scene.main_state().boss_active()) {
+                        const int dx=scene.main_state().boss_snapshot().position.current.x-scene.main_state().player().position().current.x;
+                        if(dx>64) held|=player::right;else if(dx<-64) held|=player::left;
+                    }
+                }
+                scene.advance(held,false,false);const auto& state=scene.main_state();
+                if(scene.resource_stage()!=3 || !state.marisa_active()) continue;
+                require_view(scene.stage4_battle_resources_valid(),"Marisa battle resources lost");
+                const auto& npc=state.marisa()->snapshot();const auto& boss=npc.boss;
+                if(blocked && scene.dialog_active()) {
+                    require_view(state.frames()==before && state.random_cursor()==random && scene.process_random_state()==process,"Marisa dialog advanced simulation/RNG");++frozen;
+                }
+                if(state.frames()!=before) for(const auto& e:state.orange_events()) {
+                    if(e.type==orange::EventType::stage_bonus) ++bonus;
+                    if(e.type==orange::EventType::fade) { ++fades;require_view(boss.phase_frame==417,"Marisa fade did not start at416"); }
+                    if(e.type==orange::EventType::next_stage) { ++next;require_view(boss.phase_frame==489,"Marisa departure did not complete frame488"); }
+                    if(e.type==orange::EventType::hit && e.value==192 && e.count==192) ++bit_checks;
+                }
+                int checkpoint=-1;
+                if(boss.phase<=3 && !seen[boss.phase]) checkpoint=boss.phase;
+                else if(!seen[4] && boss.phase==254 && boss.phase_frame==8) checkpoint=4;
+                else if(!seen[5] && scene.post_dialog() && scene.dialog_active() && scene.boss_portrait_visible() && scene.dialog_status()==dialog::Status::release) checkpoint=5;
+                else if(!seen[6] && state.clear_bonus() && state.bonus_text_visible()) checkpoint=6;
+                else if(!seen[7] && scene.post_dialog_complete() && boss.phase_frame==417) checkpoint=7;
+                else if(!seen[8] && state.next_stage_requested()) checkpoint=8;
+                else if(boss.phase==2) {
+                    const unsigned attack=boss.mode<=7 ? boss.mode : (boss.mode==10 ? 8 : (boss.mode==11 ? 9 : 10));
+                    if(attack<10 && !seen[9+attack]) checkpoint=int(9+attack);
+                    else if(npc.alive==4 && !seen[19]) checkpoint=19;
+                    else if(npc.alive==0 && !seen[20]) checkpoint=20;
+                }
+                if(checkpoint>=0) {
+                    seen[unsigned(checkpoint)]=true;scene.repaint();
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(shot_type ? "b-" : "a-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
+                    const auto path=marisa_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    unsigned bits=0;for(const auto& q:npc.bits) bits+=q.flag!=0;
+                    std::cout<<"MAIN Marisa fixture="<<name<<" frame="<<state.frames()<<" phase="<<+boss.phase<<" clock="<<boss.phase_frame<<" hp="<<boss.hp<<" mode="<<+boss.mode<<" alive="<<+npc.alive<<" bits="<<bits<<" pending="<<state.score().score_delta<<" ring="<<state.random_cursor()<<" screenshot="<<path<<'\n';
+                }
+                if(state.next_stage_requested()) break;
+            }
+            const auto& state=scene.main_state();
+            for(unsigned i:{0u,1u,2u,3u,4u,5u,6u,7u,8u}) require_view(seen[i],"natural Marisa route missed a required checkpoint");
+            if(!shooting) require_view(seen[19] && seen[20],"idle Marisa route missed bit ownership transitions");
+            require_view(bonus==1 && fades==1 && next==1 && frozen>100 && scene.post_dialog_complete(),"Marisa clear/dialog/departure lifecycle incomplete");
+            require_view(scene.generation()==generation && scene.resident().stage==4 && scene.resident().resource_stage==3,"Marisa departure lost MAIN or resource identity");
+            const auto frame=state.frames();const auto random=state.random_cursor();const auto pending=state.score().score_delta;
+            for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
+            require_view(state.frames()==frame && state.random_cursor()==random && state.score().score_delta==pending,"Stage5 frontier repeated simulation");
+            std::cout<<"MAIN Marisa stopped rank="<<(lunatic ? "Lunatic" : "Normal")<<" shot_type="<<shot_type<<" shooting="<<shooting<<" frames="<<frame<<" frozen_ticks="<<frozen<<" bit_checks="<<bit_checks<<" generation="<<generation<<" progression=stage5_pending\n";
         }
     }
     if (window) {

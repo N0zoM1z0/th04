@@ -109,6 +109,18 @@ Get-ChildItem -LiteralPath $reimuDir -Filter '*.bmp' | ForEach-Object {
 if ($reimuImages.Count -ne 144) { throw 'Missing Reimu visual checkpoints.' }
 $reimuCounters = @($reimuLines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Reimu *' })
 if ($reimuCounters.Count -ne 152) { throw 'Missing Reimu scenario counters.' }
+$marisaDir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'marisa-frames')).FullName
+Write-Host 'Running eight natural Marisa battle and departure scenarios...'
+$marisaLines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --marisa-screenshots $marisaDir 2>&1)
+if ($LASTEXITCODE -ne 0) { throw "Marisa scenarios failed: $marisaLines" }
+$marisaLines | Set-Content -LiteralPath (Join-Path $outDir 'marisa.log')
+$marisaImages = @{}
+Get-ChildItem -LiteralPath $marisaDir -Filter '*.bmp' | ForEach-Object {
+    $marisaImages[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+if ($marisaImages.Count -ne 162) { throw 'Missing Marisa visual checkpoints.' }
+$marisaCounters = @($marisaLines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Marisa *' })
+if ($marisaCounters.Count -ne 170) { throw 'Missing Marisa scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -118,6 +130,7 @@ $receipt = @{
     stage2_fixture_bmp_sha256=$stage2Images; stage2_fixture_counters=$stage2Counters
     kurumi_fixture_bmp_sha256=$kurumiImages; kurumi_fixture_counters=$kurumiCounters
     stage3_fixture_bmp_sha256=$stage3Images; stage3_fixture_counters=$stage3Counters
+    marisa_fixture_bmp_sha256=$marisaImages; marisa_fixture_counters=$marisaCounters
     reimu_fixture_bmp_sha256=$reimuImages; reimu_fixture_counters=$reimuCounters
     stage4_fixture_bmp_sha256=$stage4Images
     stage4_fixture_counters=$stage4Counters
@@ -126,4 +139,4 @@ $receipt = @{
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count + $ellyImages.Count + $stage4Images.Count + $reimuImages.Count))
+Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count + $ellyImages.Count + $stage4Images.Count + $reimuImages.Count + $marisaImages.Count))

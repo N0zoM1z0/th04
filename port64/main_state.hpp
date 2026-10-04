@@ -14,6 +14,7 @@
 #include "kurumi.hpp"
 #include "elly.hpp"
 #include "reimu.hpp"
+#include "marisa.hpp"
 #include "circles.hpp"
 #include "dialog.hpp"
 #include "stage_bonus.hpp"
@@ -68,9 +69,11 @@ public:
     const elly::System* elly() const { return elly_ ? &*elly_ : nullptr; }
     bool reimu_active() const { return reimu_active_; }
     const reimu::System* reimu() const { return reimu_ ? &*reimu_ : nullptr; }
-    bool boss_active() const { return reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
-    const orange::Snapshot& boss_snapshot() const { return reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot())); }
-    const std::vector<orange::Draw>& boss_draws() const { return reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws())); }
+    bool marisa_active() const { return marisa_active_; }
+    const marisa::System* marisa() const { return marisa_ ? &*marisa_ : nullptr; }
+    bool boss_active() const { return marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
+    const orange::Snapshot& boss_snapshot() const { return marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot()))); }
+    const std::vector<orange::Draw>& boss_draws() const { return marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }
     const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
     std::uint8_t invincibility() const { return player_invincibility_; }
     unsigned slowdown() const {
@@ -92,6 +95,7 @@ public:
     void start_orange_after_dialog();
     void start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void start_elly_after_dialog(std::array<std::uint8_t,3> palette_zero);
+    void start_marisa_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void start_reimu_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void finish_post_boss_dialog();
     bool next_stage_requested() const { return next_stage_requested_; }
@@ -134,6 +138,8 @@ private:
     std::optional<kurumi::System> kurumi_;
     std::optional<elly::System> elly_;
     bool elly_active_=false;
+    std::optional<marisa::System> marisa_;
+    bool marisa_active_=false;
     std::optional<reimu::System> reimu_;
     bool reimu_active_=false;
     circle::System circles_{};

@@ -12,40 +12,53 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native core scope: [Stage4 Marisa core](PORT64.md#stage4-marisa-core).
-The GUI remains the verified v1274 [Reimu battle/rendering](PORT64.md#stage4-reimu-battle-and-rendering):
-title/options/character/shot, Stage1 Orange, Stage2 Kurumi, Stage3 Elly/clear/
-departure, Stage4 waves/carpet/two midbosses/NPC dialogue. Marisa-player
-continues through Reimu/post-dialog/bonus/departure to a real Stage5 pending
-resource request. Reimu-player holds after pre-dialog until Marisa drawing
-and GUI gates join. Root Windows EXE/launcher remain v1274; no GUI launched.
+Current native scope: [Stage4 Marisa battle/rendering](PORT64.md#stage4-marisa-battle-and-rendering).
+The GUI runs title/options/character/shot, Stage1 Orange, Stage2 Kurumi,
+Stage3 Elly/clear/departure, Stage4 waves/carpet/two midbosses/NPC dialogue.
+Both characters now continue through their respective Reimu/Marisa Boss,
+post-dialog/bonus/departure to the actual Stage5 pending-resource request.
+Root Windows native EXE/English launcher are v1276; no GUI launched.
 
-Marisa MAIN13A9:2F8A..422E fresh review covers20code extents/three tables;
-DATA:1A5E..1A65 HP220,400,280,450. Four bits own slots0..3 of32retained26-byte
-records; private432E..4347/templates remain explicit. Ten attacks, body/bit
-hits, previous-frame alive count, rewards and shared defeat are implemented.
-Mode7 phase-entry calls twice; body BYTE truncation precedes damage division;
-raw bit hits retain WORD damage. Fresh setup13A9:A7B5..A931 retains private26/
-template26/pool832/initializer bytes; owner defaults require first encounter
-or explicit caller seeding. Do not infer a generic stage reset from this setup.
+Fresh MAIN0AAF:419E..4280/4281..42F0 bits/body review preserves raw sprites,
+color9 packed-center line chains, visible WORD damage reset and hidden-slot
+retention. Only slots0..3 are Marisa-owned; private26 and slots4..31 stay intact.
+13,606 original foreground/5,888 shared NPC backdrop controls agree GNU/Wine/
+optimized UBSan/actual Windows.1,344 original body/bit normal-white SUPER/
+rolling controls compare344,064,000 indexed pixels across all12BFNTimages,
+eight alignments and signed Y edges. Hardware ports/visible VRAM use a bounded
+shadow; physical alias/page/scroll/pacing remain separate.
 
-7,759 original CPU controls/87,031 complete state-event records pass GNU,
-MinGW/Wine, optimized UBSan and actual Windows. Eight boss-only sequences
-cover four ranks:15,411 no-damage updates or1,080 damage19 updates to departure.
-1,024 original retained setup controls pass each build. Original producer and
-final native reference consumers are separate, with target/fixture/trace hashes
-checked. Four original IDIV failures are reexecuted in each final core replay.
-Controlled modes1/2 clock152/last-alive148 reach duration12 and IDIV13A9:3117;
-Y-overflow preserves already-written X velocity. No natural-route hazard
-reproduction yet; GUI integration needs an explicit tested portable policy.
+Expansion can move line endpoints offscreen. Marisa uses original0000:079A..
+080C clip and1562..16FE raster: actual stage32..415/16..383 inclusive, X before
+Y, signed IDIV towardzero, then16.16 accumulator.1,522 original CPU write-mask
+controls agree all four hosts; selected ordinary coordinate cases, not an
+extreme16-bit/general physical-line equivalence claim. Clipping completed
+raster changes boundary rounding; direct old in-screen-only ray reuse can fail.
 
-20contracts and576 existing natural BMPs/628 counters agree Linux/Wine/actual
-Windows, all v1274 checkpoints and Linux GUI binary unchanged. All23Windows
-root file hashes remain identical.21static PE products in port64-preview/v1275
-are validation only. MinGW cross-compilation and Windows execution are distinct;
-GUI FPS/full-game/physical-hardware/DOS exact claims are excluded. Root preflight
-and fresh Ghidra MAIN target/header/entry/relocation/loaded-byte attestation pass.
-DOS source, exact unit ledgers and authored acceptance remain unchanged.
+7,759 Marisa core controls/87,031 full records and1,024 retained setups still
+pass all hosts. Original draw/pixel producers and final native reference
+consumers are separately frozen; final line controls reexecute the CPU, and
+core consumers freshly execute four IDIV failures. Actual stage_state_init
+0AAF:73DB..74A5 clears custom832 bytes but retains private26; initial loaded
+private bytes are zero. Stage4 setup retains preceding Elly metadata. Private
+defaults are first-encounter assumptions, not a generic reentry reset.
+
+GUI alone enables an explicit portable flystep repair: attack1/2 durations12/
+13 extend to14, avoiding the original zero divisor. Both policy callers have
+separate native contracts; original-state comparisons keep the policy disabled.
+No natural original-route divide fault reproduction claim.
+
+Eight natural Reimu-player Normal/Lunatic A/B shot/idle routes162BMP/170counters
+reach attacks/bit lifecycles/post-dialog/bonus/fade417/departure489/Stage5 request.
+20contracts/738totalBMP/798counters agree Linux/Wine/actualWindows; optimized
+UBSan contracts/routes/state/draw/line/pixels pass. All preceding576BMP/628
+counters plus earlier menu/shooting captures are identical. Blocking dialogue
+and pending Stage5 resources freeze simulation/RNG.21staticPE validation
+products live in port64-preview/v1276; only GUI EXE/launcher are published,
+21DOS/HDI/config/font/build root files stay unchanged. MinGW cross-build and
+Windows execution are distinct. No GUI FPS/fullgame/physical hardware/DOS exact
+claim. Root preflight/fresh Ghidra header/entry/relocations/bytes attestation pass;
+DOS source/exact units/authored acceptance stay unchanged.
 
 User-requested cleanup already reclaimed18.53GiB from obsolete CMake/Windows
 native builds and losslessly archived historical BMP/large-text outputs.
@@ -53,23 +66,27 @@ Another2.83GiB is reclaimed from4,064 v1275 validation BMPs via verified gzip;
 media-archive-receipt.json records every original/compressed SHA.
 Archived data were read back against SHA-256. Current three native build dirs,
 targets/database/toolchains/DOS images/fonts and live CPU references remain.
+v1276 validation BMPs/redundant native pixel stream archive reclaims another3.66GiB;
+media-archive-receipt.json stores readback hashes. Original CPU references stay live.
 Restore historical private media with `gzip -d -- FILE.gz` before replay.
 
-Receipts: `.analysis/port64/marisa-v1275/` contains boundary-review.json,
-original-divide-failures.json, original-caller-divide-failures.json,
-producer-attestation.json, core-linux-full/original-reference.json,
+Receipts: `.analysis/port64/marisa-render-v1276/` contains target-review.json,
+stage-reset-controls.json, producer-source/manifest.json,
+line-producer-source/manifest.json, render-linux-full/receipt.json,
+pixels-linux-full/receipt.json, render-{linux,windows,ubsan}-accepted/receipt.json,
+pixels-{linux,windows,ubsan}-final/receipt.json,
 core-{linux,windows,ubsan}-accepted/receipt.json,
 setup-{linux,windows,ubsan}-accepted/receipt.json,
-native-windows-{core,setup,receipt}.json and integration-review.json.
-Cross receipt: `.analysis/port64/verification-marisa-v1275-accepted/receipt.json`.
-Manifest: c7619d2c5e51200ff508ebd6057bea44b2e8c309462f668da931594a6c43cb91.
-Prior v1274 rendering/pixel/cleanup/publication receipts remain under
-`.analysis/port64/reimu-render-v1274/` and its focused PORT64 note.
+native-windows-{core,setup,render,background,line,pixels,receipt}.json,
+integration-review.json and windows-export-receipt.json.
+Cross: `.analysis/port64/verification-marisa-render-v1276-accepted/receipt.json`.
+Manifest:3adf253ed25e0a48be20efd71e94d70ad0de70864755b752b156cd0d003bc000.
+Prior v1274/v1275 original references and focused PORT64 notes stay available.
 
-Next bounded work: Marisa foreground/backdrop and actual GUI entry/departure,
-then Stage5 resources/midboss/boss. Player death/Bomb/full HUD/audio/Ending/save
-still need native implementation. Semantic stays stopped except concrete port
-ambiguities. Complete native gameplay is the port stopping condition.
+Next bounded work: Stage5 resources/midboss/boss. Player death/Bomb/full HUD/
+audio/later stages/Ending/save still need native implementation. Semantic stays
+stopped except concrete port ambiguities. Complete native gameplay is the port
+stopping condition.
 
 ## Current state
 

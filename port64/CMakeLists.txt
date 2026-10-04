@@ -27,6 +27,7 @@ add_library(
   midboss4.cpp
   stage4.cpp
   marisa.cpp
+  marisa_render.cpp
   reimu.cpp
   reimu_render.cpp
   elly.cpp

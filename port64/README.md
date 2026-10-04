@@ -5,17 +5,22 @@ native port. The current GUI reads a user-supplied TH04 HDI, decodes the origina
 assets and runs the title/options, character/shot selection, Stages1 through4.
 Stages1 and2 include their actual STD waves, midboss, pre-dialog, ordinary boss,
 post-dialog, clear bonus and departure. Stage3 continues its STD waves and
-midboss, Elly battle, post-dialog, clear bonus and departure. Stage4 runs its STD waves, carpet lighting, two midboss encounters and character-
-dependent NPC dialogue. The current held frontier is the Stage4 NPC battle. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
+midboss, Elly battle, post-dialog, clear bonus and departure. Stage4 runs its
+STD waves, carpet lighting, two midboss encounters and character-dependent
+NPC dialogue. Both characters continue through their respective Reimu/Marisa
+Boss battle, post-dialog, clear bonus and departure to the Stage5 pending
+resource request. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
 Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
-to advance dialogue. Stage4 NPC battles, player death, Bomb, complete HUD/audio, later stages,
+to advance dialogue. Player death, Bomb, complete HUD/audio, later stages,
 Ending and save are not implemented yet. The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
 
-The Reimu Boss core now implements its state, ten attacks, fixed32-slot orb
-pool and palette pulse, with independent original CPU state/event controls.
-It is not yet connected to GUI battle/rendering; the playable frontier above
-remains unchanged. See the current [core evidence](../docs/PORT64.md#stage4-reimu-state-and-orb-core).
+The two Stage4 Boss owners have independent original CPU state/event,
+foreground/backdrop and indexed-pixel controls. Marisa additionally owns four
+bits, ten attacks and the target's signed line clipping rules. Gameplay uses
+an explicit native repair for the original variable-duration flystep zero
+divisor; original-state controls keep that repair disabled. See the bounded
+[Stage4 render evidence](../docs/PORT64.md#stage4-marisa-battle-and-rendering).
 
 Semantic readability work stays paused once sufficient for the next port slice;
 only a concrete ambiguity reopens a bounded clarification. Current evidence

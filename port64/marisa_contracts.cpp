@@ -1,4 +1,5 @@
 #include "marisa.hpp"
+#include "reimu.hpp"
 #include "player_motion.hpp"
 #include <algorithm>
 namespace k=th04::portable::marisa;
@@ -151,6 +152,68 @@ void read_explosions(std::istream& in,o::Snapshot& s) {
         e->unused=signed_byte(w.byte());e->angle_offset=static_cast<std::uint8_t>(w.byte());
     }
 }
+
+Bytes private_bytes(const k::Snapshot& a,std::uint8_t padding) {
+    Bytes v;for(auto n:{a.previous_mode,a.previous_alive,a.palette_direction,a.angle_speed,a.alive,a.bitless_cycle,a.variant,padding}) v.push_back(n);
+    word(v,static_cast<std::uint16_t>(a.fire));for(auto n:a.center_x) word(v,n);for(auto n:a.center_y) word(v,n);return v;
+}
+void render_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Marisa render fixtures");int frame;
+    while(in>>frame) {
+        (void)frame;const auto clock=m::wrap(number(in)),tone=m::wrap(number(in));const auto changed=static_cast<std::uint8_t>(number(in));
+        k::Snapshot initial;initial.boss=read(in);read_explosions(in,initial.boss);
+        initial.boss.big_frame=clock;initial.boss.palette_tone=tone;initial.boss.palette_changed=changed;
+        for(auto* n:{&initial.previous_mode,&initial.previous_alive,&initial.palette_direction,&initial.angle_speed,&initial.alive,&initial.bitless_cycle,&initial.variant}) *n=static_cast<std::uint8_t>(number(in));
+        const auto padding=static_cast<std::uint8_t>(number(in));Wire w;for(unsigned i=0;i<18;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+        initial.fire=static_cast<k::Fire>(w.word());for(auto& n:initial.center_x) n=m::wrap(w.word());for(auto& n:initial.center_y) n=m::wrap(w.word());
+        for(auto& q:initial.bits) q=read_bit(in);
+        k::System system(initial);system.prepare_render();const auto& a=system.snapshot();const auto& b=a.boss;Bytes v;
+        for(const auto& e:b.small) explosion(v,e);
+        explosion(v,b.big);hex(v);
+        std::cout<<b.big_frame<<' '<<b.palette_tone<<' '<<+b.palette_changed<<' '<<+b.damage<<' ';
+        hex(private_bytes(a,padding));v.clear();for(const auto& q:a.bits) bit(v,q);hex(v);
+        std::cout<<system.draws().size()<<' ';for(const auto& d:system.draws()) std::cout<<int(d.kind)<<' '<<d.left<<' '<<d.top<<' '<<d.pattern_or_radius<<' '<<+d.color<<' '<<d.end_left<<' '<<d.end_top<<' ';
+        std::cout<<'\n';
+    }
+}
+void line_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Marisa line fixtures");int x;
+    while(in>>x) {
+        const auto y=number(in),ex=number(in),ey=number(in);Bytes mask(32000);
+        for(auto p:k::line_pixels({m::wrap(x),m::wrap(y)},{m::wrap(ex),m::wrap(ey)})) {
+            const unsigned at=unsigned(p.y)*640+unsigned(p.x);mask[at/8]|=static_cast<std::uint8_t>(128>>(at%8));
+        }
+        hex(mask);std::cout<<'\n';
+    }
+}
+void background_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open NPC backdrop fixtures");int phase;
+    while(in>>phase) {
+        const auto plan=th04::portable::reimu::backdrop(static_cast<std::uint8_t>(phase),m::wrap(number(in)));
+        std::vector<std::array<int,4>> events;
+        using Kind=th04::portable::reimu::BackdropKind;
+        if(plan.kind==Kind::all_tiles || plan.kind==Kind::tiles_and_mask) events.push_back({0,0,0,0});
+        if(plan.kind==Kind::dirty_tiles) events.push_back({1,0,0,0});
+        if(plan.kind==Kind::picture_and_mask) events.push_back({4,1,0,0});
+        if(plan.kind==Kind::picture || plan.kind==Kind::picture_and_mask) events.push_back({2,96,72,16});
+        if(plan.kind==Kind::picture) events.push_back({4,1,0,0});
+        if(plan.kind==Kind::tiles_and_mask || plan.kind==Kind::picture_and_mask) events.push_back({3,plan.cel,0,0});
+        std::cout<<events.size()<<' ';for(const auto& e:events) for(auto n:e) std::cout<<n<<' ';std::cout<<'\n';
+    }
+}
+void pixel_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Marisa pixel fixtures");std::string file;
+    while(in>>file) {
+        const auto image=static_cast<unsigned>(number(in));const auto left=number(in),top=number(in),rolling=number(in),seed=number(in);
+        std::ifstream asset(file,std::ios::binary);require(bool(asset),"cannot open pixel fixture BFNT");
+        const Bytes bytes{std::istreambuf_iterator<char>(asset),{}};th04::portable::sprite::Sheet sheet(bytes);
+        Bytes pixels(640*400);for(unsigned i=0;i<pixels.size();++i) pixels[i]=static_cast<std::uint8_t>((i*73+unsigned(seed))&15);
+        k::raster_sprite(sheet,image,left,top,static_cast<o::DrawKind>(rolling),
+            [&](int x,int y) { return pixels[unsigned(y)*640+unsigned(x)]; },
+            [&](int x,int y,std::uint8_t color) { pixels[unsigned(y)*640+unsigned(x)]=color; });
+        std::cout.write(reinterpret_cast<const char*>(pixels.data()),static_cast<std::streamsize>(pixels.size()));
+    }
+}
 void setup_vectors(const char* path) {
     std::ifstream in(path);require(bool(in),"cannot open retained Marisa setup fixtures");int marker;
     while(in>>marker) {
@@ -166,6 +229,15 @@ void setup_vectors(const char* path) {
 } // namespace
 int main(int argc,char** argv) {
     try {
+        if(argc==3 && std::string(argv[1])=="--line-vectors") {line_vectors(argv[2]);return 0;}
+        if(argc==3 && std::string(argv[1])=="--pixel-vectors") {
+#ifdef _WIN32
+            _setmode(_fileno(stdout),_O_BINARY);
+#endif
+            pixel_vectors(argv[2]);return 0;
+        }
+        if(argc==3 && std::string(argv[1])=="--render-vectors") {render_vectors(argv[2]);return 0;}
+        if(argc==3 && std::string(argv[1])=="--background-vectors") {background_vectors(argv[2]);return 0;}
         if(argc==3 && std::string(argv[1])=="--setup-vectors") {setup_vectors(argv[2]);return 0;}
         if(argc==3 && std::string(argv[1])=="--vectors") {vectors(argv[2]);return 0;}
         k::Snapshot initial;k::System system(initial);r::SharedRandomRing random;system.initialize_bits(random);
@@ -182,6 +254,16 @@ int main(int argc,char** argv) {
             overflow.boss.position.velocity={17,-19};k::System bad(overflow);
             try {bad.flystep(10);throw std::runtime_error("flystep quotient overflow swallowed");} catch(const std::domain_error&) {}
             require(bad.snapshot().boss.position.velocity.x==(index ? 0 : 17) && bad.snapshot().boss.position.velocity.y==-19 && bad.snapshot().boss.additional[13]==0,"flystep sequential pre-overflow writes");
+        }
+        // Native-only policy controls are deliberately separate from original
+        // equality fixtures. Both attack callers must survive the known gap.
+        for(unsigned mode:{1u,2u}) {
+            k::Snapshot gap;gap.boss.mode=static_cast<std::uint8_t>(mode);gap.boss.phase_frame=152;
+            gap.boss.additional[15]=148;gap.boss.position.current={3000,1700};
+            b::System gap_bullets;g::System gap_gathers;k::Context portable;
+            portable.repair_flystep_zero_divisor=true;k::System repaired(gap);
+            repaired.pattern(portable,gap_bullets,gap_gathers,random);
+            require(repaired.snapshot().boss.additional[13]==1 && repaired.snapshot().boss.position.current.x==3072 && repaired.snapshot().boss.position.current.y==1792,"portable gap repair is explicit duration14");
         }
         b::System bullets;g::System gathers;sp::System sparks;
         k::Snapshot empty;empty.fire=static_cast<k::Fire>(65535);k::System no_callback(empty);no_callback.fire_bits(c,bullets,random);

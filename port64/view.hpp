@@ -53,4 +53,4 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& midboss_screenshots,
                const std::string& orange_screenshots,
                const std::string& dialog_screenshots,
-               const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots, bool window);
+               const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots, bool window);
