@@ -53,6 +53,9 @@ struct Context {
     // and publish sparks/shot-score effects before returning the damage word.
     std::function<std::uint16_t(motion::Point,motion::Point)> hit;
 };
+// The original boss_defeat_update is shared by ordinary bosses. Keep it
+// separate from Orange's pattern-specific gather-template writes.
+void update_defeat(Snapshot&,const Context&,const Sink& sink={});
 class System {
 public:
     System();

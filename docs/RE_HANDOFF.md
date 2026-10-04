@@ -46,9 +46,27 @@ holds the unported battle frontier. Original setup requests across five rank
 seeds and all48 dialog controls/76 scenes have independent CPU checks with
 graphics/file/audio consumers intercepted;57,188 opaque Kurumi portrait pixels
 agree with independently decoded archive pixels. Root Windows preview and
-`port64-preview/v1266` use this Stage1/Stage2 slice. Next implement Kurumi's
-state/attacks/render, then later stages/death/Bomb/HUD/audio/save/Ending.
+`port64-preview/v1266` use this Stage1/Stage2 slice. Kurumi's state/attack core is
+now implemented separately; next join rendering/battle/post-dialog, then later
+stages/death/Bomb/HUD/audio/save/Ending.
 Semantic remains stopped unless a concrete port ambiguity requires it.
+Current core scope: [Kurumi state and attacks](PORT64.md#kurumi-state-and-attack-core).
+MAIN13A9:4F84..56CC/56CD..5B32 helpers/update and5B34..5B53 switch data
+are selected observed ownership. Four fresh setup controls,3,436 boundary
+controls and eight retained boss-only sequences agree41,488 records on
+Linux/Wine/optimizedUBSan/actualWindows. Compare all boss/ray/pool bytes,
+retained padding,special controls,RNG and ordered requests; shot damage and
+graphics/audio/HUD/item/point/dialog/delay consumers are adapters. Fresh setup
+does not establish preceding-stage retained metadata. Spawnray release retains
+other bytes, counts free at entry, and invokes regular fixed-speed bullets despite
+writing SPEEDUP. Final stack periods255/128/32/8; ordinary rank4 is rejected.
+Shared defeat extraction retains Orange's specific gather write; its34,040-record
+regression passes Linux/Wine/UBSan. Fifteen contracts and prior96 BMPs/108 counters
+agree across hosts. Package `port64-preview/v1267` checks the core; all root Windows
+files stay on v1266 and Kurumi GUI battle remains held. No full Stage2/FPS/exact claim.
+Receipts: `.analysis/port64/kurumi-v1267/{target-state,integration-review,native-windows-kurumi,negative-trace}.json`,
+`cpu-linux-complete/receipt.json`, `cpu-{windows,ubsan}-final/receipt.json`, and
+`.analysis/port64/verification-kurumi-v1267/receipt.json`.
 Current scope: [Stage2 visual resources and dialog](PORT64.md#stage2-visual-resources-and-dialog).
 Receipts: `.analysis/port64/stage2-v1266/{resources-final,integration-review,native-windows-receipt}.json`,
 `dialog-cpu-{linux,windows}/receipt.json`, `windows-export-receipt.json`, and

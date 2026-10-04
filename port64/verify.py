@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/kurumi.hpp",
+    "port64/kurumi.cpp",
+    "port64/kurumi_contracts.cpp",
+    "port64/verify_kurumi.py",
     "port64/verify_stage2_resources.py",
     "port64/midboss2.hpp",
     "port64/midboss2.cpp",
@@ -214,9 +218,11 @@ def main() -> int:
     windows_midboss2=windows_dir / "th04-port64-midboss2-contracts.exe"
     linux_session=linux_dir / "th04-port64-session-contracts"
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
-    for path in (linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
+    windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
+    for path in (linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
@@ -275,6 +281,10 @@ def main() -> int:
     windows_midboss2_output=run([args.windows_runner,str(windows_midboss2)],env=runner_env)
     if linux_midboss2_output!="Stage 2 midboss contracts PASS" or windows_midboss2_output!=linux_midboss2_output:
         raise ValueError("Stage2 midboss contracts did not pass on both hosts")
+    linux_kurumi_output=run([str(linux_kurumi)])
+    windows_kurumi_output=run([args.windows_runner,str(windows_kurumi)],env=runner_env)
+    if linux_kurumi_output!="Stage 2 Kurumi contracts PASS" or windows_kurumi_output!=linux_kurumi_output:
+        raise ValueError("Stage2 Kurumi contracts did not pass on both hosts")
     expected_midboss = "Stage 1 midboss contracts PASS"
     linux_midboss_output = run([str(linux_midboss)])
     windows_midboss_output = run([args.windows_runner,str(windows_midboss)],env=runner_env)
@@ -433,6 +443,8 @@ def main() -> int:
                 "midboss_contracts_sha256": sha256(linux_midboss),
                 "midboss2_contract_output": linux_midboss2_output,
                 "midboss2_contracts_sha256": sha256(linux_midboss2),
+                "kurumi_contract_output": linux_kurumi_output,
+                "kurumi_contracts_sha256": sha256(linux_kurumi),
                 "orange_contract_output": linux_orange_output,
                 "orange_contracts_sha256": sha256(linux_orange),
                 "dialog_contract_output": linux_dialog_output,
@@ -466,6 +478,8 @@ def main() -> int:
                 "midboss_contracts_sha256": sha256(windows_midboss),
                 "midboss2_contract_output": windows_midboss2_output,
                 "midboss2_contracts_sha256": sha256(windows_midboss2),
+                "kurumi_contract_output": windows_kurumi_output,
+                "kurumi_contracts_sha256": sha256(windows_kurumi),
                 "orange_contract_output": windows_orange_output,
                 "orange_contracts_sha256": sha256(windows_orange),
                 "dialog_contract_output": windows_dialog_output,
@@ -532,7 +546,7 @@ def main() -> int:
             "Stage2 midboss behavior/geometry has separate selected CPU controls; "
             "Stage2 visual resources, natural midboss and pre-Kurumi dialog join the native GUI; "
             "four character/Normal-Lunatic routes reach the held Kurumi battle frontier; "
-            "Kurumi and final/Extra departure, "
+            "Kurumi state/attacks have separate CPU controls but its rendering and GUI battle integration, final/Extra departure, "
             "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."

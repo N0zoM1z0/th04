@@ -209,32 +209,36 @@ void System::update(const Context& c,bullet::System& bullets,gather::System& gat
         }
         break;
     default:
-        if (s.phase==254) {
-            if (s.phase_frame<12) { s.shake_x=(c.frame&1) ? 4 : -4;s.shake_y=(c.frame&3)<=1 ? -4 : 4; }
-            s.background=Background::tiles;s.slowdown=2;increment();
-            if (s.phase_frame%8==0) {
-                ++s.sprite;
-                if (s.sprite>=12) { ++s.phase;s.phase_frame=0;s.bombing_disabled=1; }
-            }
-        } else {
-            transition::Departure departure;
-            departure.frame=s.phase_frame;departure.homing=s.homing;
-            transition::Overlay overlay;
-            transition::update_departure(departure,overlay,false,[&](const transition::Event& e) {
-                switch(e.kind) {
-                case transition::Kind::tone:emit(sink,EventType::tone,{},e.value);break;
-                case transition::Kind::dialog:emit(sink,EventType::dialog);break;
-                case transition::Kind::bonus:emit(sink,EventType::stage_bonus);break;
-                case transition::Kind::fade:emit(sink,EventType::fade,{},e.value);break;
-                case transition::Kind::next_stage:emit(sink,EventType::next_stage);break;
-                case transition::Kind::delay:emit(sink,EventType::delay,{},e.value);break;
-                }
-            });
-            apply_departure(departure);
-        }
+        update_defeat(s,c,sink);
         return;
     }
     s.homing=center();emit(sink,EventType::hp,{},static_cast<std::uint16_t>(s.hp),3050);
+}
+void update_defeat(Snapshot& s,const Context& c,const Sink& sink) {
+    if (s.phase==254) {
+        if (s.phase_frame<12) { s.shake_x=(c.frame&1) ? 4 : -4;s.shake_y=(c.frame&3)<=1 ? -4 : 4; }
+        s.background=Background::tiles;s.slowdown=2;s.phase_frame=motion::wrap(int(s.phase_frame)+1);
+        if (s.phase_frame%8==0) {
+            ++s.sprite;
+            if (s.sprite>=12) { ++s.phase;s.phase_frame=0;s.bombing_disabled=1; }
+        }
+    } else {
+        transition::Departure departure;
+        departure.frame=s.phase_frame;departure.homing=s.homing;
+        transition::Overlay overlay;
+        transition::update_departure(departure,overlay,false,[&](const transition::Event& e) {
+            switch(e.kind) {
+            case transition::Kind::tone:emit(sink,EventType::tone,{},e.value);break;
+            case transition::Kind::dialog:emit(sink,EventType::dialog);break;
+            case transition::Kind::bonus:emit(sink,EventType::stage_bonus);break;
+            case transition::Kind::fade:emit(sink,EventType::fade,{},e.value);break;
+            case transition::Kind::next_stage:emit(sink,EventType::next_stage);break;
+            case transition::Kind::delay:emit(sink,EventType::delay,{},e.value);break;
+            }
+        });
+        s.phase_frame=departure.frame;s.homing=departure.homing;
+        s.palette_tone=departure.palette_tone;s.palette_changed=departure.palette_changed;
+    }
 }
 void System::apply_departure(const transition::Departure& departure) {
     state_.phase_frame=departure.frame;state_.homing=departure.homing;

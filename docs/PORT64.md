@@ -1214,6 +1214,79 @@ with a versioned backup. DOS executables, normal/invincible launchers, assets an
 saved files are retained. Next implement Kurumi state/attacks/render and connect
 the post-dialog continuation before expanding later-stage gameplay.
 
+## Kurumi state and attack core
+
+The Stage2 Kurumi logic is now a portable owner in `port64/kurumi.cpp` and
+`kurumi.hpp`. Original MAIN main03 `13A9:4F84..56CC` owns the spawnray,
+orbit and attack helpers; `56CD..5B32` owns the far update. Byte `5B33`
+precedes three switch-word tables at `5B34..5B53`; these are data, not more
+instructions. Selected relocated slices, setup `A623..A6F5`, boss reset
+`A4D1..A517` and shared defeat `ACB3..AE86` are recorded separately from
+runtime comparisons. Provenance remains candidate-local-attested.
+
+Kurumi uses six 26-byte records at original DATA2134:B204. The byte flag owns
+allocation; the other byte and twelve-byte tail survive reuse. Phase0 clears
+only flags. The ray updater counts free entries before updating, so a newly
+freed ray delays the all-free result until the next call. It writes SPEEDUP
+into the bullet template but invokes the regular fixed-speed producer; preserve
+that original call and its retained group. Orbit writes current coordinates
+without moving previous coordinates or velocity. Seeking retains velocity
+inside its dead band. Phase0 tests the old clock before invulnerable hit advances
+it. Later hit damage is truncated to a byte after the clock increments.
+
+The process-local turning toggle at46B0, unknown byte at46B1 and bullet special
+controls BCB7/BCB8 remain explicit state. The final stack periods are255,128,32,8
+for Easy,Normal,Hard,Lunatic. Extra does not load this ordinary boss; the native
+fresh constructor rejects rank4. A zero period reaches original signed division
+at13A9:5695; native code throws after the preceding cloud producers instead of
+executing host undefined behavior. The zero-period guard is a native contract
+and static target observation, not an original CPU exception replay.
+
+Boss defeat is shared with Orange, but Orange's unconditional gather-center
+write is specific to its update and must not leak into Kurumi. The extracted
+helper preserves that distinction. Boss reset retains HP, angle, end HP and
+additional state. Four fresh-DS setup controls compare only the24-byte boss,
+hitbox384/384 and rank period; preceding-stage retained metadata remains an
+integration requirement.
+
+Original CPU execution supplies3,436 boundary controls and eight retained
+boss-only sequences. Each difficulty has an8,323-frame timeout and1,190-frame
+damage19 sequence, both reaching departure. All41,488 records agree on Linux
+GCC8.4, MinGW13 PE32+ under Wine, optimized GNU UBSan/bounds and actual Windows.
+Comparisons include the24-byte boss,16 additional bytes, every ray including
+padding, all440 bullets/16 gathers/96 sparks,48 explosion bytes, templates,
+global special controls, shared RNG cursor and ordered requests. Actual original
+bullet/effect/bonus/departure callees execute; shots inject damage and
+graphics/audio/HUD/item/point/dialog/delay consumers remain adapters. Retained
+sequences advance only this owner and retain pool occupancy. They do not replay
+ordinary actor motion, GUI rendering or frame pacing.
+
+The comparator rejects a disposable first-checkpoint BOSS byte mutation and
+propagates an injected original hook rejection. Fifteen contracts pass on all
+build variants and actual Windows. Orange's prior34,040-record state trace
+including ten retained sequences remains identical on Linux/Wine/UBSan after
+the shared-helper extraction. The previous64 Stage1 and32 Stage2 BMPs and
+108 counters remain unchanged across Linux/Wine/UBSan/actual Windows.
+
+```sh
+python3 port64/verify_kurumi.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-kurumi-contracts \
+  --output-dir .analysis/port64/kurumi-v1267/cpu-linux-complete
+```
+
+Source manifest:
+`803e9fbbab64f3b3edd1ac30043aa9b475dfb52c277eef44f4a47afdfeeb0c76`.
+Receipts: `.analysis/port64/kurumi-v1267/target-state.json`,
+`cpu-linux-complete/receipt.json`, `cpu-{windows,ubsan}-final/receipt.json`,
+`native-windows-kurumi.json`, `negative-trace.json`, `integration-review.json`
+and `.analysis/port64/verification-kurumi-v1267/receipt.json`.
+Windows package `port64-preview/v1267` contains the checked core and15 contract
+executables. Root Windows files remain byte-for-byte on v1266. Kurumi foreground,
+backdrop, GUI battle and post-dialog continuation are the next bounded slice;
+the live preview still holds after the pre-Kurumi dialog. No new DOS exactness
+or complete original Stage2/gameplay claim follows. Semantic remains stopped.
+
 ## Migration order
 
 Semantic work stops when the current subsystem is clear enough to port and
@@ -1228,7 +1301,8 @@ Ordinary frame score drain and extends now join MAIN.
 Post-dialog frame continuation and stage-leave overlay now reach the next-stage
 request. Actor-session preparation and Stage2 midboss/STD/MAP integration through the
 pre-Kurumi dialog gate are checked separately. Stage2 visual resources and its
-pre-battle dialog now join the live window. Next implement Kurumi, then
+pre-battle dialog now join the live window. Kurumi state/attacks have independent
+CPU controls; next implement its rendering and join the battle/post-dialog, then
 later-stage scrolling/tile maps, HUD, death/Bomb transitions
 and audio. Add saved
 configuration and route-level gameplay/Ending/score checkpoints as those

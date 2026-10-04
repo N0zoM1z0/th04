@@ -61,6 +61,10 @@ public:
     void clear() { if (state_.clear_time<20) state_.clear_time=20; }
     void zap() { state_.zap_frame=1; } // Active flag and timer are the same byte.
     void set_zap(std::uint8_t value) { state_.zap_frame=value; }
+    // Process-wide special-motion controls survive producer changes. Boss
+    // patterns write these separately from the shared 18-byte template.
+    void set_special_parameter(std::uint8_t value) { state_.special_parameter=value; }
+    void set_special_angle(std::uint8_t value) { state_.special_angle=value; }
     void begin_frame() { state_.slowdown=1; }
 private:
     void update_special(Entity& bullet,Context context);
