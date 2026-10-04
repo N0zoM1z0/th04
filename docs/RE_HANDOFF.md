@@ -210,7 +210,21 @@ item claim. See the
 ## Current state
 
 Native x64 work is isolated in `port/modern-64`; general semantic expansion
-stays stopped unless a concrete port ambiguity requires it. Native commit `85049b8` (v1293) now
+stays stopped unless a concrete port ambiguity requires it. Latest native code
+commit `46d6406` (v1294) ports MAINE verdict arithmetic, complete consumer
+requests and the input/palette clock.916 original CPU cases at loads1000/2000
+cover all26 commentary rows and integer-width/score/slowdown edges;10 further
+controls execute original fade and keyboard waits. GNU/Wine/UBSan/actualWindows
+agree. Three fast x64 builds each31 products/30CTests pass;30GNU/30UBSan
+products, including GUI, stay raw-identical to v1293.213-file manifest6c846b7f.
+DATA0E53:071A is independent of BB81's toggled BSS3F9C; completion is not
+subtracted. Wait release ORs samples before/after refresh. Next implement a
+real graphics canvas/full-string verdict rendering, original font/page controls
+and resident STD/LCG publication, then congratulations and score registration.
+No GUI join, Windows publication, DOS source or exact acceptance changes.
+Receipt:.analysis/worktrees/port-modern-64/.analysis/port64/verdict-v1294.
+
+Published preview baseline commit `85049b8` (v1293)
 continues both Good/Bad Ending through the complete Staff Roll and holds at
 verdict entry. MAIN score/run-counter publication, resource release, fresh
 MAINE generation and LCG stay checked. Staff Roll transfers/releases the old
@@ -281,8 +295,9 @@ directories (v1260--v1289). Three lossless tar/zstd archives pass every member's
 SHA-256 readback before removal; 1,980 active build/input/package files retain
 their hashes. Net allocated space released is approximately 2.08 GiB, including
 archive and receipt overhead; Windows removes 624 MiB of old file contents.
-Current DOS products, all three x64 incremental caches, the published launchers,
-saves and v1290 Windows preview remain available. Archive manifests, hashes and
+DOS products, x64 incremental caches, published launchers and saves remain
+available; the former v1290 package is now archived by the later cleanup below.
+Archive manifests, hashes and
 restore commands are in
 `.analysis/cleanup/superseded-artifacts-20261005/receipt.json`. Historical disk
 and screenshot `.gz` paths now require tar restoration before the existing
@@ -299,6 +314,14 @@ available. Restore commands and digests are in
 `.analysis/cleanup/historical-port-builds-20261005/receipt.json`; old trace
 paths require `gzip -d -- PATH.gz` before replay. Windows scripts, assets and
 replay observations remain at their original paths.
+
+Latest cleanup keeps all three incrementally built x64 caches and Windowsv1293
+with its previousv1292 rollback executable, and moves oldv1290/v1292 packages
+to a verified WSL tar/zstd archive.20,142 identical historical gzip outputs
+share hard-linked storage with all original paths preserved.6,522 protected
+hashes agree; net space released is513MiB on WSL and237MiB on D:.
+Receipt:.analysis/cleanup/build-followup-20261005/receipt.json. Replace shared
+gzip paths atomically; do not edit a hard-linked compressed inode in place.
 
 | Artifact | Accepted authored functions | Native build/runtime |
 | --- | ---: | --- |
