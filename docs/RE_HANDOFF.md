@@ -4,13 +4,23 @@ Updated 2026-10-05. The standalone PC-98 reconstruction remains the behavioral
 reference; native x64 has a separate nonexact branch. Target provenance remains
 `candidate-local-attested`, not proof of an official pristine dump. The two
 remaining MAIN exactness cases stay deferred. Portable changes do not alter DOS
-source or exact acceptance. Root `semantic/readable` stays at `f8a7bde`;
+source or exact acceptance. Root `semantic/readable` stays at `1eb3f93`;
 `port/modern-64` is the active native worktree.
 
 Semantic readability is paused at the user's stopping condition: enough clarity
 for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
+
+Follow-up cleanup archives 173 historical runtime images, 42,362 completed
+screenshot gzip files and 30 Windows previews through v1289, with complete SHA-256
+readback. Net space released is 2.08 GiB; 1,980 active build/input/package hashes
+remain unchanged. The v1290 Windows package, current DOS products and all three
+x64 incremental caches remain expanded; original CPU reference streams stay
+available. Root receipt:
+.analysis/cleanup/superseded-artifacts-20261005/receipt.json. Restore the relevant
+tar/zstd archive before using historical screenshot/disk gzip paths. Root/native
+CI pass after removal. Product source and the native runtime frontier are unchanged.
 
 Current native scope: [Yuuka6 ordinary battle and final departure](PORT64.md#yuuka6-ordinary-battle-and-final-stage-departure).
 v1290 joins Stage6 dialogue to the actual core/background/foreground/custom
