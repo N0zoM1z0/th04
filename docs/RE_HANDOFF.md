@@ -210,22 +210,51 @@ item claim. See the
 ## Current state
 
 Native x64 work is isolated in `port/modern-64`; semantic expansion stays
-stopped unless a concrete port ambiguity requires it. Native commit `434c91b`
-contains the v1291 MAINE cutscene
-component now preserves script requests, two graphics pages, PI masks and font
-effects. Eight scripts/72 controls/86,614 requests,192 complete page checkpoints
-and264 original font controls pass GNU/Wine/UBSan/actualWindows;31 AMD64 products
-and30CTest pass per build. Original packed target670de6ba and newly recovered
-DIET payload7495ae43 remain candidate-local-attested. The ordinary native GUI
-still holds at the Ending transfer; resident score/run-counter integration,
-Staff Roll, verdict and registration are next. Windows GUI remains v1290.
-No DOS source, unit/exact ledger or source-to-source semantic baseline changes.
-Native receipt root: `.analysis/worktrees/port-modern-64/.analysis/port64/maine-ending-v1291/`.
+stopped unless a concrete port ambiguity requires it. Native commit `b174bdc`
+joins MAIN statistics, resource release and fresh MAINE lifetime to the v1291
+Ending component. The ordinary native GUI now runs Good and Bad Ending scripts
+and holds at Staff Roll entry; both Ending types require Staff Roll. The
+current Windows launcher `start-th04-port64.bat` and versioned package
+`port64-preview/v1292-ending-join` contain this preview. Staff Roll, verdict,
+congratulations, score registration/save and the remaining whole-game systems
+are still pending; this is not a complete native port.
 
-The latest cleanup compresses 32 completed pre-v1290 generated fixture files
+Target controls execute original MAIN handoffs at `0AAF:0CC9/0CF4`, counters at
+`0AAF:0158..0174`, and fade at `0000:0666`; decoded MAINE sound waits at
+`0CC7:03D6` and palette output at `0000:19EC`. All 72 handoff, 378 counter,
+120 sound-wait and 24 palette controls pass GNU/Wine/UBSan/actual Windows.
+Each host also passes 24 natural character/rank/actual-shot routes, comparing
+576 complete indexed pages, 288 palette/state checkpoints and 288 RGB frames
+against the retained original-CPU-derived gallery. Three fast builds produce
+31 AMD64 products each; all 30 CTests pass per host. The final 203-file native
+source manifest is `0f84624546a97abc23872514db68d451de2b191ad25e49293e5832eea6b63471`.
+The packed MAINE target `670de6ba...` and decoded payload `7495ae43...` remain
+candidate-local-attested; the attested MAINE database covers the packed wrapper.
+No DOS source, unit/exact ledger or source-to-source semantic baseline changes.
+Native receipt root: `.analysis/worktrees/port-modern-64/.analysis/port64/maine-join-v1292/`;
+bounded implementation and limitations: `docs/PORT64.md` on `port/modern-64`,
+section `main-to-maine-ending-integration`.
+
+Earlier native GUI fixtures labelled shot B actually selected A using Right
+instead of Down; their B coverage claim is invalid. The new matrix asserts the
+selected shot and covers all eight scripts. The v1291 diagnostic PNG exporter
+also swapped RGB channels; only derived PNGs were corrected, leaving indexed
+page/palette reference bytes unchanged. Host frame timing remains a backend
+approximation, and inactive audio uses the original fallback waits rather than
+claiming physical PC-98 timing or completed audio playback.
+
+Completed v1292 render outputs are losslessly gzip-compressed: 8,640 files pass
+SHA-256 readback before removal, releasing approximately 3.21 GiB. All 553
+protected original graphics references, active executables and published
+Windows inputs retain their hashes. Restore historical direct consumers with
+`gzip -d -- PATH.bin.gz` or `PATH.bmp.gz`; see `media-archive-receipt.json` under
+the native receipt root. Current incremental caches, DOS products and saves
+remain available.
+
+The historical-fixture cleanup compresses 32 completed pre-v1290 generated fixture files
 and shares storage for 16 byte-identical historical gzip archives. SHA-256
 readback passes for every compressed fixture and all 38,563 protected files;
-both worktrees retain their prior source states, including unfinished v1292
+both worktrees retain their prior source states, including then-unfinished v1292
 native work. Net allocated space released is approximately 263 MiB. Current
 DOS products, all three native incremental caches, original CPU reference
 streams, targets, toolchains, databases and the Windows package/saves stay live.
@@ -488,7 +517,7 @@ all executed products and locates captured code against the relocated MAIN/MAP.
 3. Compare rendering/audio under another PC-98 emulator before assigning
    original-and-native shared display artifacts to source bugs.
 4. Keep semantic expansion stopped unless it blocks a concrete native owner.
-   Join MAIN-to-MAINE state/lifetime, then native Staff Roll/verdict/registration;
+   Continue native Staff Roll, verdict, congratulations and registration/save;
    repair historical scaffold replay separately from native progress.
 
 ## Navigation
