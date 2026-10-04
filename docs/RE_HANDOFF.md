@@ -103,6 +103,17 @@ v1277 validation media are archived after readback: 3,078 BMPs reclaim 2.15 GiB.
 `stage5-v1277/media-archive-receipt.json` records hashes; original CPU references
 and current builds remain expanded. Restore private BMPs with `gzip -d`.
 
+User-requested build cleanup archives/removes 325 obsolete expanded builds,
+compresses 173 historical generated HDIs and 32 duplicate consumer traces, and
+removes 42 superseded v1275/v1276 Windows PEs. About 3.9 GiB of file allocation is
+reclaimed; 112,131 retained files have identical pre/post hashes. All extant DOS
+build inventories and their referenced object caches, three current native
+builds, Windows root/saves and v1277 including previous-v1276 rollback remain.
+Receipt: root `.analysis/cleanup/build-artifacts-20261004/receipt.json`.
+Restore individual historical images/traces with `gzip -d -- FILE.gz`; complete
+old source/object/result trees are recoverable from the SHA-verified
+`expanded-builds-20261004-cleanup.tar.zst` in root receipt-archive.
+
 Next bounded work: Stage5 ordinary Yuuka Boss state/attacks, then rendering. Player death/Bomb/full HUD/
 audio/later stages/Ending/save still need native implementation. Semantic stays
 stopped except concrete port ambiguities. Complete native gameplay is the port
