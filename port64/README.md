@@ -2,13 +2,13 @@
 
 This branch keeps the playable PC-98 DOS build intact and develops a separate
 native port. The current GUI reads a user-supplied TH04 HDI, decodes the original
-assets and runs the title/options, character/shot selection, Stages1 through3.
+assets and runs the title/options, character/shot selection, Stages1 through4.
 Stages1 and2 include their actual STD waves, midboss, pre-dialog, ordinary boss,
 post-dialog, clear bonus and departure. Stage3 continues its STD waves and
-midboss, Elly battle, post-dialog, clear bonus and departure. The current held
-frontier is the Stage4 resource request. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
+midboss, Elly battle, post-dialog, clear bonus and departure. Stage4 runs its STD waves, carpet lighting, two midboss encounters and character-
+dependent NPC dialogue. The current held frontier is the Stage4 NPC battle. On Linux the window uses SDL2; on Windows it uses Win32/GDI.
 Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
-to advance dialogue. Player death, Bomb, complete HUD/audio, later stages,
+to advance dialogue. Stage4 NPC battles, player death, Bomb, complete HUD/audio, later stages,
 Ending and save are not implemented yet. The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
 

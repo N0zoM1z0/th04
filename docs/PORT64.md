@@ -5,6 +5,12 @@ DOS build remains the behavioral reference and keeps its own Borland/TASM
 acceptance rules. The portable product uses fixed-width state, ordinary host
 pointers and host backends; it does not claim byte equality with PC-98 code.
 
+The current preview runs Stages1 through3 including their bosses and departures,
+then Stage4 waves, carpet lighting, two midbosses and character-dependent NPC
+pre-dialog. The held frontier is the Stage4 Reimu/Marisa battle. See
+[Stage4 integration](#stage4-resources-midboss-and-npc-dialogue) for the current
+acceptance scope; earlier slices below retain their historical boundaries.
+
 ## Current executable slice
 
 `port64/main.cpp` currently owns the read-only resource path: TH04 HDI FAT12,
@@ -1671,3 +1677,87 @@ Win32/GDI. No native Windows compiler or GUI frame-pacing claim is made.
 Stage4 onward, player death/Bomb, complete HUD/audio and Ending/save remain
 unported. Next bounded work is Stage4 resources/actor reset/midboss and its
 character-dependent pre-boss gate.
+
+## Stage4 resources, midboss and NPC dialogue
+
+The v1272 native batch advances the preceding Elly frontier. Stage4 loads only
+after the actual Stage3 departure request, preserves MAIN generation2, consumes
+the common353 process draws, installs ST03's28x32x32 plus8x64x64 sprites,89 MPN
+tiles and STD/MAP streams, and runs to the genuine pre-boss dialog at frame12808.
+The first route uses KAO3/Marisa and ST03BK2; the second KAO2/Reimu and ST03BK.
+The dialog clears the stage sprite bank, loads the character-dependent BBT
+sheets/palette and holds after completion. Reimu/Marisa Boss battles remain the
+next owner; the port does not manufacture a replacement fight or completion.
+
+Observed MAIN ownership is13A9:14E8..1ABE (four pattern helpers and dispatcher),
+0AAF:2316..23A2 (foreground) and13A9:A7B5..A931 (retained setup). The dispatcher
+ends with RETF at1AA9;1AAA is alignment and1AAB..1ABE is its phase table. Stage4
+midboss starts2800 at144,-32 with4,2 pixel velocity and1200HP. Entrance takes48
+updates and clears only its selected private counters. Fresh DATA2134:185E has
+an aim-toggle value1; setup does not reset it. The shared HP bar, flash, angle
+and other untouched22-byte actor fields retain preceding-stage state.
+
+First termination, whether defeat or timeout, re-arms the same actor for5600 at
+240,-32 with-4,2 velocity,1200HP and frame0. Second termination clears active/HP
+without rearming. Defeat rewards30 minus completed patterns, emits shake before
+explosion setup, and dropsBomb first/one-up second. All four pattern helpers
+preserve signed clock IDIV, byte wrap, tune-before-fixed-shot overrides,
+retained aim state and separate shot requests. Homing precedes movement; a
+lethal hit after a bounds exit still wins. Foreground preserves small-point
+clipping,64x64 append slots156..163 and read/clear flash ownership.
+
+Carpet0AAF:3F9A..3FF3 is a near RET4 helper; its last two bytes are the RET
+operand, not alignment. Callback3FF4..40FD owns ring corrections, lighting
+columns/dirty flags, initial full invalidation and final callback disable.
+Target DATA2134:190C..199B supplies image offsets and199C..1A5B the8x24 mask.
+The lower seams use columns18/20, unlike the quarantined DOS source candidate's
+19/21. Cel5 leaves only left column2 already lit; right column21 stays2. Native
+source derives the meaningful tile IDs/masks with explicit asymmetry, and an
+independent full-table comparison checks every entry before CPU controls.
+This batch does not change or reopen the deferred DOS carpet exactness unit.
+Native full redraw consumes the same25x24 ring; physical dirty-page transients
+remain outside the accepted rendering scope.
+
+12,362 independent original CPU controls produce31,410 complete actor/private/
+HP/RNG/score/template/440-bullet/16-gather state and ordered event/draw records.
+16 retained sequences cover Normal/Lunatic, injected damage0/10, ring cursors
+0/255 and first/second encounter starts. Original expectations are preserved
+before native reference replay; each replay explicitly reports no original
+reexecution. Each of the three builds independently reexecutes436 carpet
+controls/4,012 records and256 retained setup controls. Original callback
+rejections propagate. Independent archive pixels verify NPC portrait0 and the
+active character-dependent palette in all eight native routes.
+
+The initial carpet checkpoint0 mismatch disproved regularized seam columns.
+A separate core control588 failure exposed an observer counting9512 and its
+inner regular wrapper twice; the native pool/template was already correct.
+Only the observer was corrected, retaining the failed comparison. Neither
+failure is relabeled a pass. These findings stay separate from the selected
+original CPU and native integration results.
+
+18 contracts and432 BMPs/476 counters agree Linux, Wine, optimized UBSan/bounds
+and actual Windows. All preceding336 BMPs/372 counters stay identical to v1271.
+Eight natural Normal/Lunatic Reimu/Marisa shot/idle routes exercise actual STD
+waves, both activations and two defeats or timeouts, carpet disable, NPC resource
+selection and dialog freeze. Recorded player keys track the midboss on shooting
+routes; no hit, phase, score or spawn is injected there. Dialog and final hold
+do not repeat simulation. Native screenshots are independently guarded by
+assets/state, not treated as complete original-game VRAM equivalence.
+
+Replay with `port64/verify_midboss4.py`, `port64/verify_carpet.py` and
+`port64/verify_stage4_resources.py`; each accepts the pinned `--target` and
+`--exe`, plus `--runner wine` for the Windows cross-build. Resource checks also
+need `--hdi` and `--frames` from `--stage4-screenshots`. The midboss reference
+replay uses `--reference-dir` only after a complete original run passes.
+`port64/verify.py` and `port64/verify_windows.ps1` include all six natural suites.
+Receipts live below `.analysis/port64/midboss4-v1272/` and
+`.analysis/port64/verification-stage4-v1272/receipt.json`.
+Manifest: `0bae5caad45928c0ca67c3420ee9fff3dcd2c34b8a411dc8a7a992b83ab55888`.
+
+Windows root native EXE/launcher use v1272. The versioned package contains19
+checked static x64 PE executables;21 other root DOS/HDI/config/font/build files
+remain identical. No GUI launched. Windows executes a MinGW cross-build;
+Windows-host compilation, physical hardware and GUI pacing are not claimed.
+Stage4 NPC Bosses onward, player death/Bomb, complete HUD/audio, Ending and
+persistence remain unported. Semantic stays stopped unless a concrete ambiguity
+requires a bounded clarification. Next implement the actual NPC Boss owners.

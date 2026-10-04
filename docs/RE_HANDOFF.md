@@ -12,49 +12,53 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Elly battle and departure integration](PORT64.md#elly-battle-and-departure-integration).
+Current native scope: [Stage4 resources, midboss and NPC dialogue](PORT64.md#stage4-resources-midboss-and-npc-dialogue).
 The GUI runs title/options/character/shot selection, Stage1 through Orange,
-Stage2 through Kurumi and Stage3 through Elly/post-dialog/clear/departure.
-It holds at the actual Stage4 resource request. Stage4 onward, player death/Bomb,
-complete HUD/audio and Ending/save remain unported. Semantic stays stopped unless
-a concrete port ambiguity arises.
+Stage2 through Kurumi, Stage3 through Elly/clear/departure, and Stage4 STD waves,
+carpet lighting, two midboss encounters and character-dependent pre-boss dialog.
+It holds after that actual dialog at frame12808. Stage4 NPC Boss battles onward,
+player death/Bomb, complete HUD/audio and Ending/save remain unported.
 
-Observed MAIN13A9:7ECC..8C3D owns scythe/helpers/dispatcher;0AAF:7322..73DA owns
-foreground,7757..777E invalidation and777F..77E6 background. Stage3 setup at
-13A9:A6F6..A7B4 retains preceding Boss metadata and does not reset private scythe,
-orbit or pattern-group fields. Native first-load private state is fresh MAIN BSS.
-Preserve independent unsigned scythe clock, raw shot deflection with against-boss
-false, double entrance clock, previous.x orbit radius and gather-only allocation.
-Original08F6:2F6C fill establishes the32,128,384,256 CPU-write rectangle.
+Observed MAIN13A9:14E8..1ABE owns the midboss helpers/dispatcher, with executable
+code through1AA9, alignment1AAA and phase tables1AAB..1ABE. Foreground is
+0AAF:2316..23A2; retained setup13A9:A7B5..A931. First encounter starts2800;
+reset re-arms5600 with reversed entrance velocity, retaining private aim and
+shared metadata. First defeat dropsBomb, second one-up. Fresh MAIN DATA185E is1.
+Carpet0AAF:3F9A..3FF3 ends with RET4;3FF2..3FF3 are its operand, not padding.
+Callback3FF4..40FD reads DATA2134:190C..1A5B. Image seams are columns18/20;
+cel5 leaves column2 already lit while column21 remains2. Preserve asymmetry.
 
-9,329 independent original controls produce39,297 state/event records, including
-all four ordinary ranks with shot/timeout Boss-only sequences. Final native
-builds replay separately attested original expectations; the initial gather
-mismatch remains recorded and is not a pass. Original CPU reexecutes for256
-retained setups,5,316 foreground and11,264 background controls on three builds.
-17 contracts,336 BMPs/372 counters agree Linux/Wine/optimized UBSan/bounds and
-actual Windows; prior240/268 stay identical. Eight natural Normal/Lunatic
-Reimu/Marisa shot/idle routes reach the Stage4 request, retain MAIN generation2,
-and consume post-dialog/bonus/416-and488-frame departure without repeated work.
-This is selected CPU/asset/native integration validation, not original full-route
-VRAM, physical hardware, GUI frame pacing or DOS exactness.
+12,362 independent original controls produce31,410 midboss states/events,
+including16 retained Normal/Lunatic damage/timeout/first/second sequences.
+Native builds replay the attested expectations without claiming reexecution.
+436 carpet controls/4,012 records and256 retained setups execute original CPU
+for each Linux/Wine/optimized UBSan build. Independent NPC portrait/palette
+pixels pass eight routes. Initial carpet and observer mismatches remain failures.
+18 contracts,432 BMPs/476 counters agree Linux/Wine/UBSan/actual Windows;
+prior336/372 stay identical. MAIN generation2 and resident/resource stage3
+persist; dialog and final hold do not repeat simulation. This is bounded CPU/
+asset/native integration, not full original VRAM, hardware timing or DOS exactness.
 
 Windows `D:\Entertainment\Game\Touhou\th04-reconstruct\start-th04-port64.bat`
-uses v1271 through the Stage3 clear. Package `port64-preview/v1271` contains18
+uses v1272 through Stage4 pre-boss dialog. `port64-preview/v1272` contains19
 checked static x64 PE executables. Only root native EXE/launcher change;21 other
 DOS/HDI/config/font/build files remain identical. No GUI launched.
 
-Receipts: `.analysis/port64/elly-v1271/{target-live,integration-review,negative-live,native-windows-receipt,native-windows-core,native-windows-setup,native-windows-render,native-windows-background,windows-export-receipt}.json`,
-`{core,setup,render}-{linux,windows,ubsan}-final/receipt.json`, and
-`.analysis/port64/verification-elly-v1271/receipt.json`.
-Manifest: `464f6e89661d8adf112ef12645b6c5ae01d1d00f8f7141d686e828853bd7641b`.
-Root preflight and live database attestation pass pinned candidate-local-attested
-MAIN; native worktree CI/ledger/diff checks pass. DOS acceptance is unchanged.
+Receipts below `.analysis/port64/midboss4-v1272/`: `target-live.json`,
+`core-linux-final/receipt.json` (original reexecution),
+`core-linux-replay/receipt.json`, `core-{windows,ubsan}-final/receipt.json`,
+`{carpet,setup}-{linux,windows,ubsan}-final/receipt.json`,
+`native-windows-{receipt,core,carpet,setup}.json`, `negative-live.json`,
+`integration-review.json`, and `windows-export-receipt.json`.
+Cross receipt: `.analysis/port64/verification-stage4-v1272/receipt.json`.
+Manifest: `0bae5caad45928c0ca67c3420ee9fff3dcd2c34b8a411dc8a7a992b83ab55888`.
+Root preflight/database attestation and native CI/ledgers/diff checks pass;
+DOS source and acceptance remain unchanged.
 
-Next bounded work: Stage4 resources/retained actor setup/midboss and the
-character-dependent pre-boss gate, then later stages and player-death/Bomb/HUD/
-audio/Ending/persistence. Keep semantic stopped unless that work exposes a
-concrete ambiguity. Complete gameplay is the stopping condition for the port.
+Next bounded work: character-dependent Stage4 Reimu/Marisa Boss setup,
+state/attacks/render and post-dialog/departure, then later stages and the other
+missing gameplay consumers above. Semantic remains stopped except for concrete
+port ambiguities. Complete native gameplay is the port stopping condition.
 
 ## Current state
 

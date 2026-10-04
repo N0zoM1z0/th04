@@ -34,4 +34,5 @@ void initialize_actors(Actors,const std::function<std::uint8_t()>& next_byte);
 // owned position/start/HP/sprite fields change; inactive animation metadata stays.
 midboss::Snapshot prepare_stage2_midboss(midboss::Snapshot previous);
 midboss::Snapshot prepare_stage3_midboss(midboss::Snapshot previous);
+midboss::Snapshot prepare_stage4_midboss(midboss::Snapshot previous);
 } // namespace th04::portable::session

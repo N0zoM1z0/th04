@@ -34,6 +34,7 @@ public:
     unsigned required_image_count() const { return required_image_count_; }
     bool stopped() const { return speed_ == 0; }
     const std::array<std::array<unsigned,24>,25>& ring() const { return ring_; }
+    std::array<std::array<unsigned,24>,25>& mutable_ring() { return ring_; }
 private:
     void refill(unsigned ring_row, unsigned section, unsigned row);
     std::vector<std::array<std::array<unsigned,24>,5>> sections_;

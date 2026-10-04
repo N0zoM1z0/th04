@@ -9,6 +9,7 @@
 #include "midboss.hpp"
 #include "midboss2.hpp"
 #include "midboss3.hpp"
+#include "midboss4.hpp"
 #include "orange.hpp"
 #include "kurumi.hpp"
 #include "elly.hpp"
@@ -21,7 +22,7 @@
 
 namespace th04::portable::gameplay {
 // Live MAIN owns STD waves, enemies, player motion, shots, bullets,
-// sparks, gather circles, items and the Stage1/Stage2/Stage3 midbosses.
+// sparks, gather circles, items and the Stage1 through Stage4 midbosses.
 // Bombs, player death and the remaining HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
@@ -41,8 +42,12 @@ public:
         return stage_id_==2 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
-    const midboss::Snapshot& midboss_state() const { return midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot()); }
-    const std::vector<midboss::Draw>& midboss_draws() const { return midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws()); }
+    bool stage4_dialog_ready(const stage::Background& background) const {
+        return stage_id_==3 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
+            dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
+    }
+    const midboss::Snapshot& midboss_state() const { return midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot())); }
+    const std::vector<midboss::Draw>& midboss_draws() const { return midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws())); }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
@@ -120,6 +125,7 @@ private:
     midboss::System midboss_{};
     std::optional<midboss2::System> midboss2_;
     std::optional<midboss3::System> midboss3_;
+    std::optional<midboss4::System> midboss4_;
     orange::System orange_{};
     std::optional<kurumi::System> kurumi_;
     std::optional<elly::System> elly_;

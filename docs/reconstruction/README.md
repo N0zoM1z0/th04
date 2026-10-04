@@ -19,6 +19,7 @@ Native product-build investigation is active. Use the live ledgers and
 notes explain the remaining source and container gaps:
 
 - [Native x64 migration and independently checked Stage 1 midboss](../PORT64.md#stage-1-midboss)
+- [Native Stage4 resources, two midboss encounters and NPC dialogue](../PORT64.md#stage4-resources-midboss-and-npc-dialogue)
 - [Native Stage3 resources, midboss and Elly pre-dialog](../PORT64.md#stage3-midboss-and-pre-elly-integration)
 - [Native Stage 1 Orange state/attacks and dialog activation barrier](../PORT64.md#stage-1-orange-state-and-attacks)
 - [Native Orange foreground, explosion aging, circle masks and diagnostic integration](../PORT64.md#stage-1-orange-foreground-and-native-integration)

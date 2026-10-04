@@ -14,6 +14,14 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_stage4_resources.py",
+    "port64/stage4.cpp",
+    "port64/stage4.hpp",
+    "port64/verify_carpet.py",
+    "port64/midboss4.cpp",
+    "port64/midboss4.hpp",
+    "port64/midboss4_contracts.cpp",
+    "port64/verify_midboss4.py",
     "port64/verify_elly_render.py",
     "port64/verify_elly_setup.py",
     "port64/verify_elly.py",
@@ -234,17 +242,22 @@ def main() -> int:
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
     linux_midboss3=linux_dir / "th04-port64-midboss3-contracts"
     windows_midboss3=windows_dir / "th04-port64-midboss3-contracts.exe"
+    linux_midboss4=linux_dir / "th04-port64-midboss4-contracts"
+    windows_midboss4=windows_dir / "th04-port64-midboss4-contracts.exe"
     linux_elly=linux_dir / "th04-port64-elly-contracts"
     windows_elly=windows_dir / "th04-port64-elly-contracts.exe"
     linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
     windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
-    for path in (linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_midboss4,linux_elly,linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_midboss4,windows_elly,windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_midboss4_output=run([str(linux_midboss4)])
+    windows_midboss4_output=run([args.windows_runner,str(windows_midboss4)],env=runner_env)
+    if linux_midboss4_output!="Stage 4 midboss contracts PASS" or windows_midboss4_output!=linux_midboss4_output:raise ValueError("Stage4 midboss contracts failed")
     linux_elly_output=run([str(linux_elly)])
     windows_elly_output=run([args.windows_runner,str(windows_elly)],env=runner_env)
     if linux_elly_output!="Stage 3 Elly contracts PASS" or windows_elly_output!=linux_elly_output:
@@ -417,6 +430,8 @@ def main() -> int:
     kurumi_outputs = {}
     stage3_hashes = {}
     stage3_outputs = {}
+    stage4_hashes = {}
+    stage4_outputs = {}
     elly_hashes = {}
     elly_outputs = {}
     if args.font_bmp:
@@ -481,6 +496,14 @@ def main() -> int:
             if len(elly_hashes[host])!=96:raise ValueError("unexpected Elly image files")
             elly_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Elly")]
         if elly_hashes["linux"]!=elly_hashes["windows"] or elly_outputs["linux"]!=elly_outputs["windows"]:raise ValueError("Elly images/counters differ between hosts")
+        for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
+            images = output.parent / ("stage4-"+host);images.mkdir(parents=True,exist_ok=True)
+            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage4-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Stage4 fixture=")!=96 or result.count("MAIN Stage4 stopped ")!=8:raise ValueError("natural Stage4 fixture missed progression")
+            stage4_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(stage4_hashes[host])!=96:raise ValueError("unexpected Stage4 image files")
+            stage4_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage4")]
+        if stage4_hashes["linux"]!=stage4_hashes["windows"] or stage4_outputs["linux"]!=stage4_outputs["windows"]:raise ValueError("Stage4 images/counters differ between hosts")
 
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
@@ -508,6 +531,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(linux_effects),
                 "midboss_contract_output": linux_midboss_output,
                 "midboss_contracts_sha256": sha256(linux_midboss),
+                "midboss4_contract_output": linux_midboss4_output,
+                "midboss4_contracts_sha256": sha256(linux_midboss4),
                 "elly_contract_output": linux_elly_output,
                 "elly_contracts_sha256": sha256(linux_elly),
                 "midboss3_contract_output": linux_midboss3_output,
@@ -547,6 +572,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(windows_effects),
                 "midboss_contract_output": windows_midboss_output,
                 "midboss_contracts_sha256": sha256(windows_midboss),
+                "midboss4_contract_output": windows_midboss4_output,
+                "midboss4_contracts_sha256": sha256(windows_midboss4),
                 "elly_contract_output": windows_elly_output,
                 "elly_contracts_sha256": sha256(windows_elly),
                 "midboss3_contract_output": windows_midboss3_output,
@@ -602,6 +629,8 @@ def main() -> int:
         "stage2_fixture_counters": stage2_outputs.get("linux",[]),
         "kurumi_fixture_bmp_sha256": kurumi_hashes.get("linux",{}),
         "kurumi_fixture_counters": kurumi_outputs.get("linux",[]),
+        "stage4_fixture_bmp_sha256": stage4_hashes.get("linux",{}),
+        "stage4_fixture_counters": stage4_outputs.get("linux",[]),
         "elly_fixture_bmp_sha256": elly_hashes.get("linux",{}),
         "elly_fixture_counters": elly_outputs.get("linux",[]),
         "stage3_fixture_bmp_sha256": stage3_hashes.get("linux",{}),

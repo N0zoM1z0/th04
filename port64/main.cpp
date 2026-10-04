@@ -350,7 +350,7 @@ int main(int argc, char** argv) {
     try {
         std::string hdi, archive, member, output, title_screenshot;
         std::string options_screenshot, character_screenshot, shot_screenshot;
-        std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,font_bitmap;
+        std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,font_bitmap;
         bool title_window = false;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
@@ -373,6 +373,7 @@ int main(int argc, char** argv) {
             else if (arg == "--orange-screenshots") orange_screenshots = value;
             else if (arg == "--dialog-screenshots") dialog_screenshots = value;
             else if (arg == "--stage2-screenshots") stage2_screenshots = value;
+            else if (arg == "--stage4-screenshots") stage4_screenshots = value;
             else if (arg == "--elly-screenshots") elly_screenshots = value;
             else if (arg == "--stage3-screenshots") stage3_screenshots = value;
             else if (arg == "--kurumi-screenshots") kurumi_screenshots = value;
@@ -382,14 +383,14 @@ int main(int argc, char** argv) {
         const bool title = title_window || !title_screenshot.empty() ||
             !options_screenshot.empty() || !character_screenshot.empty() ||
             !shot_screenshot.empty() || !handoff_screenshot.empty() || !main_screenshot.empty() ||
-            !shooting_screenshots.empty() || !combat_screenshots.empty() || !midboss_screenshots.empty() || !orange_screenshots.empty() || !dialog_screenshots.empty() || !stage2_screenshots.empty() || !kurumi_screenshots.empty() || !stage3_screenshots.empty() || !elly_screenshots.empty();
+            !shooting_screenshots.empty() || !combat_screenshots.empty() || !midboss_screenshots.empty() || !orange_screenshots.empty() || !dialog_screenshots.empty() || !stage2_screenshots.empty() || !kurumi_screenshots.empty() || !stage3_screenshots.empty() || !elly_screenshots.empty() || !stage4_screenshots.empty();
         require((!hdi.empty()) != (!archive.empty()) && (title || !member.empty()) &&
                 !(title && (!member.empty() || !output.empty())),
                 "usage: th04-port64 (--hdi FILE | --archive FILE) "
                 "[--member NAME --output BMP | --title "
                 "[--title-screenshot BMP] [--options-screenshot BMP] "
                 "[--character-screenshot BMP] [--shot-screenshot BMP] "
-                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--font-bmp FILE]]");
+                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--font-bmp FILE]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         if (title) {
             MainAssets main_assets;
@@ -408,7 +409,7 @@ int main(int argc, char** argv) {
                 main_assets.dialog_scripts={archive_member(game,"_DM00.TXT"),archive_member(game,"_DM10.TXT")};
                 main_assets.player_faces={archive_member(game,"KAO0.CD2"),archive_member(game,"KAO1.CD2")};
                 main_assets.boss_faces=archive_member(game,"BSS0.CD2");main_assets.gaiji=archive_member(game,"GAMEFT.BFT");
-                for(const std::string name:{"ST00.BB1","ST00.BB2","ST02.BB1","ST02.BB2"}) main_assets.dialog_sprites.emplace(name,archive_member(game,name));
+                for(const std::string name:{"ST00.BB1","ST00.BB2","ST02.BB1","ST02.BB2","ST03.BBT","ST03B.BBT","ST03B21.BBT","ST03B22.BBT"}) main_assets.dialog_sprites.emplace(name,archive_member(game,name));
                 if(!font_bitmap.empty()) main_assets.font_bitmap=read_file(font_bitmap);
                 else { std::ifstream font("FREECG98.bmp",std::ios::binary);if(font) main_assets.font_bitmap={std::istreambuf_iterator<char>(font),{}}; }
                 main_assets.reimu_map_tiles = archive_member(game, "ST00.MPN");
@@ -427,8 +428,17 @@ int main(int argc, char** argv) {
                 third.boss_faces=archive_member(game,"BSS2.CD2");third.map_tiles=archive_member(game,"ST02.MPN");
                 third.map=archive_member(game,"ST02.MAP");third.standard=archive_member(game,"ST02.STD");
                 third.dialog_scripts={archive_member(game,"_DM02.TXT"),archive_member(game,"_DM12.TXT")};
+                for(unsigned character=0;character<2;++character) {
+                    auto& fourth=main_assets.stage4[character];
+                    fourth.stage_tiles=archive_member(game,"ST03.BFT");fourth.boss_tiles=archive_member(game,"ST03.BMT");
+                    fourth.backdrop=archive_member(game,character==0 ? "ST03BK2.CDG" : "ST03BK.CDG");
+                    fourth.boss_faces=archive_member(game,character==0 ? "KAO3.CD2" : "KAO2.CD2");
+                    fourth.transition=archive_member(game,"ST03.BB");fourth.map_tiles=archive_member(game,"ST03.MPN");
+                    fourth.map=archive_member(game,"ST03.MAP");fourth.standard=archive_member(game,"ST03.STD");
+                    fourth.dialog_scripts={archive_member(game,"_DM03.TXT"),archive_member(game,"_DM13.TXT")};
+                }
             }
-            require((main_screenshot.empty() && shooting_screenshots.empty() && combat_screenshots.empty() && midboss_screenshots.empty() && orange_screenshots.empty() && dialog_screenshots.empty() && stage2_screenshots.empty() && kurumi_screenshots.empty() && stage3_screenshots.empty() && elly_screenshots.empty()) || !main_assets.reimu.empty(),
+            require((main_screenshot.empty() && shooting_screenshots.empty() && combat_screenshots.empty() && midboss_screenshots.empty() && orange_screenshots.empty() && dialog_screenshots.empty() && stage2_screenshots.empty() && kurumi_screenshots.empty() && stage3_screenshots.empty() && elly_screenshots.empty() && stage4_screenshots.empty()) || !main_assets.reimu.empty(),
                     "MAIN screenshots require a complete TH04 HDI");
             const auto bg = decode_pi(archive_member(par, "OP1.PI"));
             run_title(
@@ -438,7 +448,7 @@ int main(int argc, char** argv) {
                 decode_pi(archive_member(par, "SLB1.PI")),
                 archive_member(par, "SL.CD2"), main_assets, title_screenshot,
                 options_screenshot, character_screenshot, shot_screenshot,
-                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots, title_window
+                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots, title_window
             );
             return 0;
         }
