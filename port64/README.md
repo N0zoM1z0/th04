@@ -12,6 +12,11 @@ to advance dialogue. Stage4 NPC battles, player death, Bomb, complete HUD/audio,
 Ending and save are not implemented yet. The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
 
+The Reimu Boss core now implements its state, ten attacks, fixed32-slot orb
+pool and palette pulse, with independent original CPU state/event controls.
+It is not yet connected to GUI battle/rendering; the playable frontier above
+remains unchanged. See the current [core evidence](../docs/PORT64.md#stage4-reimu-state-and-orb-core).
+
 Semantic readability work stays paused once sufficient for the next port slice;
 only a concrete ambiguity reopens a bounded clarification. Current evidence
 and limitations live in [PORT64.md](../docs/PORT64.md), while the older subsystem

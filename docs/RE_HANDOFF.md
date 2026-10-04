@@ -19,46 +19,42 @@ carpet lighting, two midboss encounters and character-dependent pre-boss dialog.
 It holds after that actual dialog at frame12808. Stage4 NPC Boss battles onward,
 player death/Bomb, complete HUD/audio and Ending/save remain unported.
 
-Observed MAIN13A9:14E8..1ABE owns the midboss helpers/dispatcher, with executable
-code through1AA9, alignment1AAA and phase tables1AAB..1ABE. Foreground is
-0AAF:2316..23A2; retained setup13A9:A7B5..A931. First encounter starts2800;
-reset re-arms5600 with reversed entrance velocity, retaining private aim and
-shared metadata. First defeat dropsBomb, second one-up. Fresh MAIN DATA185E is1.
-Carpet0AAF:3F9A..3FF3 ends with RET4;3FF2..3FF3 are its operand, not padding.
-Callback3FF4..40FD reads DATA2134:190C..1A5B. Image seams are columns18/20;
-cel5 leaves column2 already lit while column21 remains2. Preserve asymmetry.
+Current v1273 native core: [Stage4 Reimu state and orb core](PORT64.md#stage4-reimu-state-and-orb-core).
+MAIN13A9:AE87..BE5D attack/movement/gather/orb/pulse/dispatcher ownership is
+reviewed, with code and inline tables separated. DATA2134:BCFC is one aliased
+trail byte; B204 is32x26 orb pool and BCFE its template. Preserve allocation
+retention, release-frame raw collisions, discarded RNG draws and double
+entrance clock. Original blue/red ball IDs57/61, aimed-deceleration128 and
+no-special255 reject the first native constants. Failure records are retained.
 
-12,362 independent original controls produce31,410 midboss states/events,
-including16 retained Normal/Lunatic damage/timeout/first/second sequences.
-Native builds replay the attested expectations without claiming reexecution.
-436 carpet controls/4,012 records and256 retained setups execute original CPU
-for each Linux/Wine/optimized UBSan build. Independent NPC portrait/palette
-pixels pass eight routes. Initial carpet and observer mismatches remain failures.
-18 contracts,432 BMPs/476 counters agree Linux/Wine/UBSan/actual Windows;
-prior336/372 stay identical. MAIN generation2 and resident/resource stage3
-persist; dialog and final hold do not repeat simulation. This is bounded CPU/
-asset/native integration, not full original VRAM, hardware timing or DOS exactness.
+6,678 original controls produce62,514 complete state/event records. Eight
+retained damage0/19 routes visit all phases across four ranks and request
+departure in12,716/1,245 updates. GNU/Wine/optimized UBSan/actual Windows
+replay every field; original reexecution is separate.1,024 retained setups
+pass for each build and actual Windows; callback fields BCD8/BCDA/BCDC are
+update/segment/foreground. First native setup assumes fresh private MAIN state.
+Shots/audio/video/point/item consumers remain bounded adapters, and Boss-only
+sequences omit ordinary stage updates/render. No full-game or exact claim.
 
-Windows `D:\Entertainment\Game\Touhou\th04-reconstruct\start-th04-port64.bat`
-uses v1272 through Stage4 pre-boss dialog. `port64-preview/v1272` contains19
-checked static x64 PE executables. Only root native EXE/launcher change;21 other
-DOS/HDI/config/font/build files remain identical. No GUI launched.
+19 contracts and432 existing BMPs/476 counters agree Linux/Wine/actual Windows;
+all old checkpoints unchanged. Windows root launcher/EXE remain v1272 at the
+Stage4 pre-battle GUI gate;20 static PE validation products are separately in
+`port64-preview/v1273`. All23 recorded root files remain identical. No GUI
+launched and no Windows-host compiler claim.
 
-Receipts below `.analysis/port64/midboss4-v1272/`: `target-live.json`,
-`core-linux-final/receipt.json` (original reexecution),
-`core-linux-replay/receipt.json`, `core-{windows,ubsan}-final/receipt.json`,
-`{carpet,setup}-{linux,windows,ubsan}-final/receipt.json`,
-`native-windows-{receipt,core,carpet,setup}.json`, `negative-live.json`,
-`integration-review.json`, and `windows-export-receipt.json`.
-Cross receipt: `.analysis/port64/verification-stage4-v1272/receipt.json`.
-Manifest: `0bae5caad45928c0ca67c3420ee9fff3dcd2c34b8a411dc8a7a992b83ab55888`.
-Root preflight/database attestation and native CI/ledgers/diff checks pass;
-DOS source and acceptance remain unchanged.
+Receipts: `.analysis/port64/reimu-v1273/target-live.json`,
+`core-full-first/original-reference.json`, `core-{linux,windows,ubsan}-final/receipt.json`,
+`setup-{linux,windows,ubsan}-frozen/receipt.json`, `zero-div-original.json`,
+`native-windows-{core,setup,receipt}.json`, `integration-review.json`.
+Cross receipt: `.analysis/port64/verification-reimu-v1273/receipt.json`.
+Manifest: `38e0289f882c6867b0f4849b32cf84091fa6236481318892009a99db92d24abe`.
+Root preflight/database attestation passes; DOS source/exact ledgers unchanged.
 
-Next bounded work: character-dependent Stage4 Reimu/Marisa Boss setup,
-state/attacks/render and post-dialog/departure, then later stages and the other
-missing gameplay consumers above. Semantic remains stopped except for concrete
-port ambiguities. Complete native gameplay is the port stopping condition.
+Next bounded work: Reimu foreground/trail/rolling-orb rendering, shared NPC
+backdrop and actual Marisa-player battle gate; Marisa Boss follows. Later
+stages/player death/Bomb/full HUD/audio/Ending/save still need implementation.
+Semantic remains stopped except for concrete port ambiguities. Complete native
+gameplay is the port stopping condition.
 
 ## Current state
 

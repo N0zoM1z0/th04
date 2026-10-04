@@ -1761,3 +1761,78 @@ Windows-host compilation, physical hardware and GUI pacing are not claimed.
 Stage4 NPC Bosses onward, player death/Bomb, complete HUD/audio, Ending and
 persistence remain unported. Semantic stays stopped unless a concrete ambiguity
 requires a bounded clarification. Next implement the actual NPC Boss owners.
+
+
+## Stage4 Reimu state and orb core
+
+v1273 ports MAIN Reimu dispatcher13A9:B91B..BE2F, ten attack producers,
+AE87/AF21 movement, AFBB gather intro, B0A1/B0FC orb allocation, B163 orb
+update and B8E8 palette pulse. It adds a native core owner; GUI rendering and
+activation remain the next batch. The GUI still holds after Stage4 pre-dialog
+at frame12808, and the Marisa Boss owner remains unported.
+
+Fresh target review separates AFBB..B077 code, B078 alignment, B079..B0A0
+case keys/destinations, and B91B..BE2F code from BE30..BE43 mode tables and
+BE44..BE5D phase destinations. DATA2134:BCFA is signed angle delta, BCFB orb
+pattern and BCFC the single trail flag aliased by both old visibility names.
+BCFD is alignment; BCFE..BD17 is the26-byte template. B204..B543 holds32
+records. DATA24B6/24B7 start at0 and hold the alternate angle/pulse direction.
+
+Native records use explicit fixed widths, wrap and signed shifts. Moving
+allocation retains spin time, angle speed and padding; spinning allocation
+retains velocity and padding. Released or unknown nonzero orb flags still run
+raw shot/player collision that update. The raw shot adapter is independent of
+against-Boss damage. Unsigned wrapped rectangles preserve boundary behavior.
+The entrance has a double clock increment; hit wrappers own ordinary phase
+increments, while defeat staging advances separately. Score/drop/clear and
+shared RNG consumption order remain guarded, including discarded angle draws.
+
+6,678 original CPU controls produce62,514 complete state/event records.
+Eight retained sequences cover four ranks with injected damage0/19, visit
+phases0..12/254/255 and reach departure in12,716/1,245 updates respectively.
+Native GNU, Wine, optimized nonrecovering UBSan/bounds and actual Windows PE
+execution compare every recorded field against those independently generated
+expectations. Reference replay explicitly reports no original reexecution.
+Original shot/video/audio/item/point consumers are bounded adapters; retained
+sequences advance this Boss only and exclude complete stage/render/pacing.
+
+1,024 retained Stage4 setups independently execute the original across four
+ranks and256 markers for each of the three builds. Complete BOSS24/additional16/
+explosions48/hitbox/timeout and private3/template26/pool832/initialized2-byte
+retention are checked; callback fields are BCD8 update, BCDA segment and BCDC
+foreground. Native preparation currently assumes the first fresh MAIN Reimu
+encounter; it does not promise repeated-setup private-state retention.
+
+The first native short comparison fails at2402 field24: candidate blue ball76
+and special129 differ from original57/128. Original also supplies red ball61
+and no-special255. The repaired full comparison passes; the original failure
+remains failed. An initial scratch setup used wrong character/rank addresses,
+then a candidate pointer check confused segment and offset fields; only those
+observers changed. An original zero-divisor control confirms flag/spinTime and
+other selected writes precede IDIV; native throws after those writes and retains
+the angle. A full pool does not execute the division. The initial aggregate
+comparison also rejects source drift while candidates are repaired; its
+separate target-only reference remains valid. Final frozen-source replays pass.
+
+19 contracts and432 existing BMPs/476 counters agree Linux/Wine/actual Windows;
+all preceding checkpoints remain identical to v1272. A versioned20-static-PE
+validation package lives in `port64-preview/v1273`; all23 recorded root files,
+including existing native EXE/launcher and21 DOS/HDI/config/font/build files,
+remain unchanged. No GUI launched. Windows executes a MinGW cross-build;
+Windows-host compilation, physical hardware, full game and DOS exactness are
+not claimed.
+
+Replay `port64/verify_reimu.py --target TARGET --exe CONTRACT --output-dir NEW`
+and `port64/verify_reimu_setup.py` with the same options. Use `--runner wine`
+for the PE build. A full original run produces `original-reference.json`; only
+then use `--reference-dir` for a hash-checked complete native replay. Receipts
+live below `.analysis/port64/reimu-v1273/`: `target-live.json`,
+`core-full-first/original-reference.json`, `core-{linux,windows,ubsan}-final/receipt.json`,
+`setup-{linux,windows,ubsan}-frozen/receipt.json`, `zero-div-original.json`,
+`native-windows-{core,setup,receipt}.json` and `integration-review.json`.
+Cross receipt: `.analysis/port64/verification-reimu-v1273/receipt.json`.
+Manifest: `38e0289f882c6867b0f4849b32cf84091fa6236481318892009a99db92d24abe`.
+
+Next connect Reimu foreground/trail/rolling-orb rendering, the shared NPC
+backdrop and actual Marisa-player battle gate; then port the Marisa Boss and
+later stages. Semantic remains stopped unless a concrete ambiguity arises.

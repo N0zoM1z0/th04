@@ -9,7 +9,7 @@ struct Explosion {
     std::int8_t unused=0;
     std::uint8_t angle_offset=0;
 };
-enum class Background : std::uint8_t { unchanged,orange,tiles,elly };
+enum class Background : std::uint8_t { unchanged,orange,tiles,elly,npc };
 struct Snapshot {
     motion::Motion position{};
     std::int16_t hp=0;
