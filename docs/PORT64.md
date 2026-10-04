@@ -15,6 +15,7 @@ the native Ending implementation. See
 for the current acceptance scope; earlier slices below retain their historical
 boundaries.
 The final-boss [animation/motion helpers](#yuuka6-animation-and-motion-helpers)
+and [cross/safety-circle entities](#yuuka6-cross-and-safety-circle-entities)
 are independently ported, but are not yet joined to the ordinary game loop.
 
 ## Current executable slice
@@ -2633,3 +2634,93 @@ The published GUI/launcher and protected DOS/config/saves remain untouched.
 Next: chase-cross/safety-circle entity ownership, gathering and attack helpers,
 then the dispatcher and foreground/checkerboard join. Extra, player death,
 Continue, Bomb, HUD, audio, native Ending and score save remain unfinished.
+
+## Yuuka6 cross and safety-circle entities
+
+v1284 ports four bounded owners at MAIN13A9:65F7..6932 and
+MAIN0AAF:7054..7129 into `port64/yuuka6_entities.hpp/.cpp`: cross allocation,
+safety-circle initialization, update and drawing requests. The final-boss
+dispatcher has not yet joined these owners to the ordinary GUI. DOS source,
+acceptance and the published v1282 preview remain unchanged.
+
+The original DATA:B204 pool contains32 records of26 bytes. Cross allocation
+scans all32, but update and render scan31 and reinterpret the last record as
+the circle. Allocation retains spare words, previous-position bytes and
+padding; a last-slot cross must not acquire a separate native lifetime.
+Circle centers use screen pixels, while cross centers use subpixels. Its
+polar position subtracts literal32/16 from the pixel intermediate before
+scaling by16. Converting those offsets into2/1 pixels changes the attack.
+
+Cross motion precedes its inclusive offscreen flag clear. The iteration still
+executes contact, homing and ordinary-shot damage after that clear; a kill
+can replace flag0 with death flag16. Age below56 turns one BYTE step toward
+the player, including+1 when already aimed exactly. WORD damage and signed
+HP subtraction wrap, score accumulation wraps as DWORD, and kill requests
+consume the actual shared spark/RNG owners before a BigPower item request.
+These are ordinary shots, with against-boss=false; a boss damage callback
+would incorrectly add Bomb damage. The raw player-hit BYTE is retained until
+new cross or spawned-bullet contact writes1. The eventual live caller must
+bridge that shared process state with the bullet/boss owners each frame.
+
+Circle growth reaches136 before a separate frame switches to shrink, retaining
+the shrink clock. Shrink emits the original paired stack/spread pellets and
+tuned aimed rings, including rank/performance, pool saturation and clear/zap
+branches. Death flags advance during rendering, so `prepare_render()` runs
+once per simulated frame and `draws()` can serve cached repaints. The growth
+draw deliberately leaves GRCG enabled; the ring draw disables it. The native
+API publishes ordered graphics requests here, rather than claiming actual
+sprite/circle pixels or physical video timing.
+
+One fresh original-CPU producer passes6,089 fixtures/9,031 checkpoints against
+GNU. Wine and optimizedUBSan consume its independently produced reference;
+all three also execute a fresh five-rank MAIN0AAF:0312..03D1 switch-tail
+probe. This verifies the actual indirect add/tune callbacks, including the
+shared Normal/Extra tail, without running the preceding resident/file/score
+initialization. Actual Windows consumes the same fixtures and agrees on all
+9,031 full state/request records. It does not execute the original CPU.
+Checks include832 custom bytes, complete440-bullet/96-spark pools, scratch
+template, RNG/score/hit globals, ordered events and draws. Allocation793,
+circle initialization112, update2,131, render3,041 and12 retained224-frame
+sequences cover dense pools, signed/unsigned wrap and all raw flag BYTEs.
+Actual polar/atan, spark/RNG, tune and bullet-spawn callees execute; ordinary
+shot damage, graphics, item and sound consumers are explicit request adapters.
+Callback exceptions and a one-variable comparator mutation reject. Existing
+atan excludes INT16_MIN displacement; extreme movement fixtures use age>=56.
+These controls do not establish whole-battle behavior, frame pacing or exactness.
+
+Two rejecting runs are retained. The initial reference used Normal callbacks
+for an Easy fixture; its checkpoint2393 bullet-count mismatch was an Oracle
+context error, not evidence of a native gameplay bug. After fixing the context,
+checkpoint2830 found a native shared-state defect: spawned-bullet contact
+left an incoming hit BYTE127 instead of writing1. The repaired bridge detects
+each spawn's new contact before restoring the bullet bool. The rejected
+f40959a5 source closure and GNU product are retained together in
+`contact-negative-source-and-product.tar.gz`, with their hashes recorded in
+`contact-negative-identity.json`; the passing product has a distinct identity.
+
+All three incremental builds provide26 x64 products and pass25 CTests each.
+All25 preceding GNU/optimizedUBSan products are raw-identical. For all25
+preceding PEs, restoring only the retained eight COFF timestamp/checksum bytes
+recovers the complete previous SHA-256; no other byte changes. GNU/Wine
+no-font integration smoke passes; the full preceding font/route image matrix
+is not repeated. The actual-Windows private package contains only the new
+entity contract, fixtures, manifest and streaming gzip control, avoiding
+duplicated old executables or expanded250MB state traces. The published GUI,
+launcher and21 protected DOS/config/save files remain unchanged; no GUI launched.
+Root and native `scripts/ci.py`, tracking validation and `git diff --check`
+pass. Native CI skips its absent private Ghidra project; the fresh root MAIN
+database attestation is retained separately. The304 completed no-font BMPs
+are losslessly gzip-archived with SHA-256 readback, reclaiming218MiB; current
+builds, caches, original CPU references and user saves remain available.
+
+Receipts: `.analysis/port64/yuuka6-entities-v1284/`, including `target-review`,
+`root-ghidra-attestation`, `accepted-{linux,windows,ubsan}`, `native-windows-review`,
+`build-receipt`, `product-continuity` and `integration-smoke`. Source manifest:
+dce4e3835be08c885c02b928fe21831183c069f3b18fcda62c4f0fa5c0c517f6.
+Replay with `python3 port64/verify_yuuka6_entities.py --target TARGET --exe EXE
+--output-dir NEW`; add `--runner wine` for MinGW or `--reference-dir REFERENCE`
+to consume the independently produced fixtures/trace.
+
+Next: gather and attack helpers, then final-boss core and foreground/checkerboard
+integration. Extra, player death/Continue/Bomb, HUD, audio, Ending and save I/O
+remain required. Reopen semantic only for a concrete port ambiguity.

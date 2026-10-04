@@ -20,18 +20,26 @@ speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
 Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
 frontier. Semantic remains stopped except for concrete port ambiguities.
 
-New v1283 final-boss dependency: eight animations/four motion helpers at
-MAIN13A9:6933..6E76 are ported with explicit shared-clock/flag/mirror ownership.
-Three fresh original CPU producers match20,463 cases/36,045 full state records
-on GNU/Wine/optimizedUBSan; actualWindows consumes the reference and agrees.
-Three incremental builds pass24CTests/25products each. The preceding24 GNU/
-UBSan products are raw-identical; preceding24PEs differ only COFF timestamp/
-checksum. No-font GUI integration smoke passes; ordinary battle is not yet
-joined. Current source manifest269abf2d; receipts:.analysis/port64/yuuka6-motion-v1283.
-GUI/launcher remain the verified v1282 files; the Windows v1283 private package
-adds only the new contract/control fixtures. No GUI launched or DOS change.
-See [Yuuka6 helpers](PORT64.md#yuuka6-animation-and-motion-helpers).
-Next: chase-cross/safety-circle entities and gather/attack helpers, then core
+New v1284 final-boss dependency: cross allocation/circle initialization/update
+at MAIN13A9:65F7..6932 and render requests at MAIN0AAF:7054..7129 are ported.
+The32x26 pool retains its final-slot circle alias and reserved bytes. Raw hit
+BYTE, shot WORD/score DWORD, offscreen continuation, death-render clock and
+pixel/subpixel circle arithmetic preserve original ownership. One fresh CPU
+producer matches6,089cases/9,031records on GNU; Wine/optimizedUBSan and actual
+Windows consume the independent reference. All three Python controls freshly
+execute the original five-rank callback switch tail. Two negatives distinguish
+an initial wrong-rank Oracle context from a repaired spawn-contact BYTE bridge;
+the rejected source/product closure is retained. Three builds pass25CTests/
+26products each. The preceding25 GNU/UBSan products are raw-identical; restoring
+eight retained PE timestamp/checksum bytes recovers all25 previous full hashes.
+No-font integration smoke passes; ordinary final battle is not yet joined.
+Manifest dce4e383; receipts:.analysis/port64/yuuka6-entities-v1284.
+GUI/launcher remain v1282; the v1284 Windows package adds only the new contract,
+fixtures and streaming gzip control.21 DOS/config/save root files unchanged.
+See [Yuuka6 entities](PORT64.md#yuuka6-cross-and-safety-circle-entities).
+Earlier v1283 animation/motion20,463cases/36,045records remain accepted, with
+the preceding helper products unchanged in this batch.
+Next: gather/attack helpers, then core
 and foreground/checkerboard integration. Remaining complete-game owners below
 are still required; semantic remains limited to concrete port ambiguities.
 
