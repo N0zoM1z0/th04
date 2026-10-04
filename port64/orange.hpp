@@ -31,7 +31,7 @@ struct Snapshot {
     std::uint32_t score_delta=0;
     std::int16_t big_frame=0,palette_tone=100;
 };
-enum class DrawKind { sprite,white_sprite,large_sprite,tiny_sprite,circle,line };
+enum class DrawKind { sprite,white_sprite,large_sprite,tiny_sprite,circle,line,plane_sprite,rolling_sprite };
 struct Draw {
     DrawKind kind{};
     std::int16_t left=0,top=0;

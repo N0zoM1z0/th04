@@ -7,6 +7,10 @@ namespace k=th04::portable::reimu;
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 namespace o=th04::portable::orange;
 namespace b=th04::portable::bullet;
 namespace g=th04::portable::gather;
@@ -138,6 +142,61 @@ void vectors(const char* path) {
         }
     }
 }
+void read_explosions(std::istream& in,o::Snapshot& s) {
+    for(auto* e:{&s.small[0],&s.small[1],&s.big}) {
+        Wire w;for(unsigned i=0;i<16;++i) w.bytes.push_back(static_cast<std::uint8_t>(number(in)));
+        e->alive=static_cast<std::uint8_t>(w.byte());e->age=static_cast<std::uint8_t>(w.byte());
+        e->center=w.point();e->radius=w.point();e->delta=w.point();
+        e->unused=signed_byte(w.byte());e->angle_offset=static_cast<std::uint8_t>(w.byte());
+    }
+}
+void render_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Reimu render fixtures");int frame;
+    while(in>>frame) {
+        const auto clock=m::wrap(number(in)),tone=m::wrap(number(in));const auto changed=static_cast<std::uint8_t>(number(in));
+        k::Snapshot initial;initial.boss=read(in);read_explosions(in,initial.boss);
+        initial.boss.big_frame=clock;initial.boss.palette_tone=tone;initial.boss.palette_changed=changed;
+        initial.angle_delta=signed_byte(static_cast<unsigned>(number(in)));initial.orb_pattern=static_cast<std::uint8_t>(number(in));initial.trail_visible=static_cast<std::uint8_t>(number(in));
+        initial.scratch=read_orb(in);for(auto& q:initial.orbs) q=read_orb(in);
+        k::System system(initial);system.prepare_render(static_cast<std::uint16_t>(frame));const auto& s=system.snapshot();Bytes v;
+        for(const auto& e:s.boss.small) explosion(v,e);
+        explosion(v,s.boss.big);hex(v);
+        std::cout<<s.boss.big_frame<<' '<<s.boss.palette_tone<<' '<<+s.boss.palette_changed<<' '<<+s.boss.damage<<' ';
+        v.clear();v.push_back(static_cast<std::uint8_t>(s.angle_delta));v.push_back(s.orb_pattern);v.push_back(s.trail_visible);hex(v);
+        v.clear();orb(v,s.scratch);hex(v);v.clear();for(const auto& q:s.orbs) orb(v,q);hex(v);
+        std::cout<<system.draws().size()<<' ';
+        for(const auto& d:system.draws()) std::cout<<int(d.kind)<<' '<<d.left<<' '<<d.top<<' '<<d.pattern_or_radius<<' '<<+d.color<<' ';
+        std::cout<<'\n';
+    }
+}
+void background_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open NPC backdrop fixtures");int phase;
+    while(in>>phase) {
+        const auto plan=k::backdrop(static_cast<std::uint8_t>(phase),m::wrap(number(in)));
+        std::vector<std::array<int,4>> events;
+        using Kind=k::BackdropKind;
+        if(plan.kind==Kind::all_tiles || plan.kind==Kind::tiles_and_mask) events.push_back({0,0,0,0});
+        if(plan.kind==Kind::dirty_tiles) events.push_back({1,0,0,0});
+        if(plan.kind==Kind::picture_and_mask) events.push_back({4,1,0,0});
+        if(plan.kind==Kind::picture || plan.kind==Kind::picture_and_mask) events.push_back({2,96,72,16});
+        if(plan.kind==Kind::picture) events.push_back({4,1,0,0});
+        if(plan.kind==Kind::tiles_and_mask || plan.kind==Kind::picture_and_mask) events.push_back({3,plan.cel,0,0});
+        std::cout<<events.size()<<' ';for(const auto& e:events) for(auto n:e) std::cout<<n<<' ';std::cout<<'\n';
+    }
+}
+void pixel_vectors(const char* path) {
+    std::ifstream in(path);require(bool(in),"cannot open Reimu pixel fixtures");std::string file;
+    while(in>>file) {
+        const auto image=static_cast<unsigned>(number(in));const auto left=number(in),top=number(in),rolling=number(in),seed=number(in);
+        std::ifstream asset(file,std::ios::binary);require(bool(asset),"cannot open pixel fixture BFNT");
+        const Bytes bytes{std::istreambuf_iterator<char>(asset),{}};th04::portable::sprite::Sheet sheet(bytes);
+        Bytes pixels(640*400);for(unsigned i=0;i<pixels.size();++i) pixels[i]=static_cast<std::uint8_t>((i*73+unsigned(seed))&15);
+        k::raster_sprite(sheet,image,left,top,rolling ? o::DrawKind::rolling_sprite : o::DrawKind::plane_sprite,
+            [&](int x,int y) { return pixels[unsigned(y)*640+unsigned(x)]; },
+            [&](int x,int y,std::uint8_t color) { pixels[unsigned(y)*640+unsigned(x)]=color; });
+        std::cout.write(reinterpret_cast<const char*>(pixels.data()),static_cast<std::streamsize>(pixels.size()));
+    }
+}
 void setup_vectors(const char* path) {
     std::ifstream in(path);require(bool(in),"cannot open retained Reimu setup fixtures");int marker;
     while(in>>marker) {
@@ -161,6 +220,14 @@ void setup_vectors(const char* path) {
 } // namespace
 int main(int argc,char** argv) {
     try {
+        if(argc==3 && std::string(argv[1])=="--pixel-vectors") {
+#ifdef _WIN32
+            _setmode(_fileno(stdout),_O_BINARY);
+#endif
+            pixel_vectors(argv[2]);return 0;
+        }
+        if(argc==3 && std::string(argv[1])=="--render-vectors") { render_vectors(argv[2]);return 0; }
+        if(argc==3 && std::string(argv[1])=="--background-vectors") { background_vectors(argv[2]);return 0; }
         if(argc==3 && std::string(argv[1])=="--setup-vectors") { setup_vectors(argv[2]);return 0; }
         if(argc==3 && std::string(argv[1])=="--vectors") { vectors(argv[2]);return 0; }
         auto initial=k::prepare_stage4({},3);require(initial.boss.additional[0]==12 && initial.boss.additional[1]==6,"Reimu Lunatic setup");

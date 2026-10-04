@@ -96,6 +96,10 @@ struct Frame {
     unsigned width{};
     unsigned height{};
     std::vector<uint32_t> pixels;
+    // Kept for partial-plane sprite writes; RGB cannot recover duplicate colors.
+    Bytes indices;
+    Frame()=default;
+    Frame(unsigned w,unsigned h,std::vector<uint32_t> p):width(w),height(h),pixels(std::move(p)) {}
 };
 
 struct CdgSheet {
@@ -197,8 +201,9 @@ void put_indexed_pixel(
         screen_x >= 0 && screen_y >= 0 &&
         screen_x < int(frame.width) && screen_y < int(frame.height)
     ) {
-        frame.pixels[size_t(screen_y) * frame.width + screen_x] =
-            palette_color(palette, color);
+        const auto at=size_t(screen_y)*frame.width+screen_x;
+        frame.pixels[at]=palette_color(palette,color);
+        if(!frame.indices.empty()) frame.indices[at]=static_cast<std::uint8_t>(color);
     }
 }
 
@@ -700,9 +705,18 @@ void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet
     }
 }
 
+void put_reimu_sprite(Frame& frame,const PiImage& palette,const sprite::Sheet& sheet,
+                      unsigned image,int left,int top,orange::DrawKind kind) {
+    require_view(!frame.indices.empty(),"Reimu sprite requires palette indices");
+    th04::portable::reimu::raster_sprite(sheet,image,left,top,kind,
+        [&](int x,int y) { return frame.indices[unsigned(y)*frame.width+unsigned(x)]; },
+        [&](int x,int y,std::uint8_t color) { put_indexed_pixel(frame,palette,x,y,0,0,color); });
+}
+
 Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                   application::Playchar playchar,std::optional<int> displayed_tone={}) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
+    if(state.reimu_active()) frame.indices.assign(640*400,0);
     PiImage palette=sprites.palette;
     if (state.boss_active()) {
         const auto& boss=state.boss_snapshot();
@@ -715,9 +729,16 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         }
     }
     const auto background_phase=state.orange_background_phase();
-    const bool backdrop=state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254;
+    const auto npc_background=th04::portable::reimu::backdrop(background_phase,state.orange_background_frame());
+    const bool npc_picture=state.reimu_active() && (npc_background.kind==th04::portable::reimu::BackdropKind::picture || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask);
+    const bool backdrop=npc_picture || (!state.reimu_active() && state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254);
     if (backdrop) {
-        if(state.elly_active()) {
+        if(state.reimu_active()) {
+            require_view(bool(sprites.second),"Reimu backdrop has no Stage4 owner");
+            fill_rect(frame,palette,32,16,384,56,1);fill_rect(frame,palette,32,328,384,56,1);
+            fill_rect(frame,palette,32,72,64,256,1);fill_rect(frame,palette,352,72,64,256,1);
+            put_opaque(frame,palette,sprites.second->backdrop,0,96,72);
+        } else if(state.elly_active()) {
             require_view(bool(sprites.second),"Elly backdrop has no Stage3 owner");
             fill_rect(frame,palette,32,128,384,256,0);
             put_opaque(frame,palette,sprites.second->backdrop,0,32,16);
@@ -739,6 +760,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     for (unsigned y=16; y<384; ++y) {
         for (unsigned x=0; x<384; ++x) {
             if (backdrop) {
+                if(state.reimu_active()) continue;
                 if (background_phase!=(state.elly_active() ? 2 : 1)) continue;
                 const int cel=state.orange_background_frame()/2;
                 require_view(cel>=0 && cel<16,"Orange BB cel outside resource");
@@ -751,6 +773,12 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             put_indexed_pixel(frame,palette,32,0,x,y,
                 tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
         }
+    }
+    if(state.reimu_active() && (npc_background.kind==th04::portable::reimu::BackdropKind::tiles_and_mask || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask)) {
+        const unsigned cel=npc_background.cel;require_view(cel<16,"NPC BB cel outside resource");
+        for(unsigned row=0;row<23;++row) for(unsigned column=0;column<24;++column)
+            if(sprites.second->assets.transition[cel*128+row*4+column/8]&(0x80u>>(column&7)))
+                fill_rect(frame,palette,32+int(column*16),16+int(row*16),16,16,15);
     }
     const auto& shots = state.shots().snapshot();
     const auto pixels = [](std::int16_t coordinate) {
@@ -765,7 +793,9 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             for (auto p:circle::raster({draw.left,draw.top},pattern)) put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
         } else if (pattern>=128 && pattern<256) {
             const auto& slot=sprites.stage_slots[pattern];require_view(slot.sheet,"Orange references an empty dynamic stage slot");
-            put_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
+            if(draw.kind==orange::DrawKind::plane_sprite || draw.kind==orange::DrawKind::rolling_sprite)
+                put_reimu_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind);
+            else put_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
         }
         else if (pattern==3) put_sprite(frame,palette,sprites.explosion,0,draw.left,draw.top);
         else if (pattern>=4 && pattern<28) put_sprite(frame,palette,sprites.enemies,pattern-4,draw.left,draw.top,false,draw.kind==orange::DrawKind::large_sprite ? 2 : 1);
@@ -945,6 +975,7 @@ public:
         for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x) {
             const auto pixel=frame.pixels[y*640+x];
             if(pixel==0xff000000u && (x<32 || x>=416 || y<16 || y>=384)) continue;
+            if(!frame.indices.empty()) { indices_[y*640+x]=frame.indices[y*640+x];continue; }
             bool found=false;
             for(unsigned color=0;color<16;++color) if(pixel==palette_color(sprites_.palette,color)) { indices_[y*640+x]=static_cast<std::uint8_t>(color);found=true;break; }
             require_view(found,"dialog snapshot pixel is outside the active palette");
@@ -1051,6 +1082,7 @@ public:
     void enable_stage3() { enable_kurumi();continue_stage3_=true; }
     void enable_elly() { enable_stage3();continue_elly_=true; }
     void enable_stage4() { enable_elly();continue_stage4_=true; }
+    void enable_reimu() { enable_stage4();continue_reimu_=true; }
     bool stage4_dialog_complete() const { return fourth_pre_finished_; }
     bool stage3_dialog_complete() const { return third_pre_finished_; }
     unsigned resource_stage() const { return loaded_stage_; }
@@ -1126,7 +1158,10 @@ public:
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
-                    else if(loaded_stage_==3) { fourth_pre_finished_=true; }
+                    else if(loaded_stage_==3) { fourth_pre_finished_=true;if(continue_reimu_ && application_.resident().playchar==application::Playchar::marisa) {
+                        require_view(stage4_battle_resources_valid(),"Reimu battle sprite bank invalid");
+                        main_->start_reimu_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
+                    } }
                     else if(loaded_stage_==2) { third_pre_finished_=true;if(continue_elly_) main_->start_elly_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else if(loaded_stage_==1) { second_pre_finished_=true;if(continue_kurumi_) main_->start_kurumi_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
@@ -1252,7 +1287,7 @@ private:
     const MainAssets* assets_=nullptr;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
     bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
-    bool continue_stage4_=false,fourth_pre_finished_=false;
+    bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1285,7 +1320,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_stage4(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_reimu(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1459,7 +1494,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_stage4();
+    front_end.enable_reimu();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1569,7 +1604,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -2207,6 +2242,70 @@ void run_title(
             for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
             require_view(state.frames()==frame && state.random_cursor()==random && state.score().score_delta==pending,"Stage4 frontier repeated simulation");
             std::cout<<"MAIN Stage4 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" frames="<<frame<<" activations="<<activations<<" awards="<<awards<<" frozen_ticks="<<frozen<<" generation="<<generation<<" progression=npc_battle_pending\n";
+        }
+    }
+    if(!reimu_screenshots.empty()) {
+        for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned shot_type=0;shot_type<2;++shot_type) for(unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            scene.enable_reimu();
+            if(lunatic) {
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
+                scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::confirm);
+            if(shot_type) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);
+            const auto generation=scene.generation();std::array<bool,18> seen{};unsigned frozen=0,bonus=0,fades=0,next=0,orb_checks=0;
+            for(unsigned tick=0;tick<150000;++tick) {
+                const auto before=scene.main_state().frames();const auto random=scene.main_state().random_cursor();
+                const auto process=scene.process_random_state();const bool blocked=scene.dialog_active();
+                std::uint16_t held=blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : shot::input_shot;
+                if(!blocked && scene.resource_stage()==3) {
+                    held=shooting ? shot::input_shot : 0;
+                    if(shooting && scene.main_state().boss_active()) {
+                        const int dx=scene.main_state().boss_snapshot().position.current.x-scene.main_state().player().position().current.x;
+                        if(dx>64) held|=player::right;else if(dx<-64) held|=player::left;
+                    }
+                }
+                scene.advance(held,false,false);const auto& state=scene.main_state();
+                if(scene.resource_stage()!=3 || !state.reimu_active()) continue;
+                require_view(scene.stage4_battle_resources_valid(),"Reimu battle resources lost");
+                const auto& npc=state.reimu()->snapshot();const auto& boss=npc.boss;
+                if(blocked && scene.dialog_active()) {
+                    require_view(state.frames()==before && state.random_cursor()==random && scene.process_random_state()==process,"Reimu dialog advanced simulation/RNG");++frozen;
+                }
+                if(state.frames()!=before) for(const auto& e:state.orange_events()) {
+                    if(e.type==orange::EventType::stage_bonus) ++bonus;
+                    if(e.type==orange::EventType::fade) { ++fades;require_view(boss.phase_frame==417,"Reimu fade did not start at416"); }
+                    if(e.type==orange::EventType::next_stage) { ++next;require_view(boss.phase_frame==489,"Reimu departure did not complete frame488"); }
+                    if(e.type==orange::EventType::hit && e.value==192 && e.count==192) ++orb_checks;
+                }
+                int checkpoint=-1;
+                if(boss.phase<=12 && !seen[boss.phase]) checkpoint=boss.phase;
+                else if(!seen[13] && boss.phase==254 && boss.phase_frame==8) checkpoint=13;
+                else if(!seen[14] && scene.post_dialog() && scene.dialog_active() && scene.boss_portrait_visible() && scene.dialog_status()==dialog::Status::release) checkpoint=14;
+                else if(!seen[15] && state.clear_bonus() && state.bonus_text_visible()) checkpoint=15;
+                else if(!seen[16] && scene.post_dialog_complete() && boss.phase_frame==417) checkpoint=16;
+                else if(!seen[17] && state.next_stage_requested()) checkpoint=17;
+                if(checkpoint>=0) {
+                    seen[unsigned(checkpoint)]=true;scene.repaint();
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(shot_type ? "b-" : "a-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
+                    const auto path=reimu_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    unsigned orbs=0;for(const auto& q:npc.orbs) orbs+=q.flag!=0;
+                    std::cout<<"MAIN Reimu fixture="<<name<<" frame="<<state.frames()<<" phase="<<+boss.phase<<" clock="<<boss.phase_frame<<" hp="<<boss.hp<<" orbs="<<orbs<<" pending="<<state.score().score_delta<<" ring="<<state.random_cursor()<<" screenshot="<<path<<'\n';
+                }
+                if(state.next_stage_requested()) break;
+            }
+            const auto& state=scene.main_state();
+            for(unsigned i:{0u,1u,2u,13u,14u,15u,16u,17u}) require_view(seen[i],"natural Reimu route missed a required checkpoint");
+            if(!shooting) for(unsigned i=0;i<=12;++i) require_view(seen[i],"idle Reimu route skipped an attack phase");
+            require_view(bonus==1 && fades==1 && next==1 && frozen>100 && scene.post_dialog_complete(),"Reimu clear/dialog/departure lifecycle incomplete");
+            require_view(scene.generation()==generation && scene.resident().stage==4 && scene.resident().resource_stage==3,"Reimu departure lost MAIN or resource identity");
+            const auto frame=state.frames();const auto random=state.random_cursor();const auto pending=state.score().score_delta;
+            for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
+            require_view(state.frames()==frame && state.random_cursor()==random && state.score().score_delta==pending,"Stage5 frontier repeated simulation");
+            std::cout<<"MAIN Reimu stopped rank="<<(lunatic ? "Lunatic" : "Normal")<<" shot_type="<<shot_type<<" shooting="<<shooting<<" frames="<<frame<<" frozen_ticks="<<frozen<<" orb_checks="<<orb_checks<<" generation="<<generation<<" progression=stage5_pending\n";
         }
     }
     if (window) {

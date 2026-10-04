@@ -27,6 +27,7 @@ add_library(
   midboss4.cpp
   stage4.cpp
   reimu.cpp
+  reimu_render.cpp
   elly.cpp
   kurumi.cpp
   kurumi_render.cpp

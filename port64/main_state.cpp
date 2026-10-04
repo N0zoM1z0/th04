@@ -48,7 +48,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
     midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();midboss4_.reset();
-    orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;player_invincibility_=64;circles_=circle::System{};
+    reimu_.reset();reimu_active_=false;orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;player_invincibility_=64;circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
@@ -69,6 +69,11 @@ void State::start_elly_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     if(stage_id_!=2 || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !elly_)
         throw std::logic_error("invalid Elly dialog handoff");
     elly_->set_palette_zero(palette_zero);elly_active_=true;
+}
+void State::start_reimu_after_dialog(std::array<std::uint8_t,3> palette_zero) {
+    if(stage_id_!=3 || playchar_!=application::Playchar::marisa || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !reimu_)
+        throw std::logic_error("invalid Reimu dialog handoff");
+    reimu_->set_palette_zero(palette_zero);reimu_active_=true;
 }
 void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     if(!next_stage_requested_ || stage_id_>2 || application_->resident().stage!=stage_id_+1)
@@ -101,10 +106,17 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     } else {
         midboss4::Snapshot next_midboss;next_midboss.actor=session::prepare_stage4_midboss(preceding_midboss);
         midboss4_.emplace(next_midboss);midboss3_.reset();midboss2_.reset();
-        // Keep Elly metadata until the separately owned NPC Boss setup joins.
-        // The current frontier holds after the genuine Stage4 pre-boss dialog.
+        if(playchar_==application::Playchar::marisa) {
+            if(!elly_) throw std::logic_error("Stage4 requires preceding Elly metadata");
+            auto npc=reimu::prepare_stage4(elly_->snapshot().boss,rank_);
+            npc.boss.background=orange::Background::tiles;npc.boss.slowdown=1;
+            npc.boss.shake_x=npc.boss.shake_y=0;npc.boss.bombing_disabled=0;
+            npc.boss.palette_tone=100;npc.boss.invincibility=64;reimu_.emplace(npc);
+        }
+        // The Reimu-player/Marisa-Boss route remains at its genuine dialog
+        // gate until that distinct owner is implemented.
     }
-    player_invincibility_=64;kurumi_active_=false;elly_active_=false;
+    player_invincibility_=64;kurumi_active_=false;elly_active_=false;reimu_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
@@ -249,7 +261,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         }
     } // Prefix executes once even if the dialog suspends this frame.
     if(boss_active()) {
-        if(elly_active_) elly_->set_invincibility(player_invincibility_);else if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
+        if(reimu_active_) reimu_->set_invincibility(player_invincibility_);else if(elly_active_) elly_->set_invincibility(player_invincibility_);else if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
     }
     if(boss_active() && boss_snapshot().phase==255) {
         if(!departure_) {
@@ -272,7 +284,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             case transition::Kind::delay:orange_events_.push_back({orange::EventType::delay,{},1,0});break;
             }
         });
-        if(elly_active_) elly_->apply_departure(*departure_);else if(kurumi_active_) kurumi_->apply_departure(*departure_);else orange_.apply_departure(*departure_);
+        if(reimu_active_) reimu_->apply_departure(*departure_);else if(elly_active_) elly_->apply_departure(*departure_);else if(kurumi_active_) kurumi_->apply_departure(*departure_);else orange_.apply_departure(*departure_);
         if(departure_->blocked) {
             suspended_context_=context;suspended_bullets_=bullet_context;suspended_pull_items_=pull_items;
             frame_suspended_=true;post_boss_dialog_pending_=true;return;
@@ -296,7 +308,11 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             if (event.type==orange::EventType::circle) circles_.add(event.position,event.count!=0);
             if (event.type==orange::EventType::item) items_.add(event.position,static_cast<item::Type>(event.value));
         };
-        if(elly_active_) elly_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
+        if(reimu_active_) {
+            reimu::Context npc;static_cast<orange::Context&>(npc)=boss_context;
+            npc.orb_hit=[&](motion::Point center,motion::Point radius) { return shot_hit(center,radius,false); };
+            reimu_->update(npc,bullets_,gathers_,sparks_,ring_,sink);
+        } else if(elly_active_) elly_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
         else if(kurumi_active_) kurumi_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
         else orange_.update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
         player_invincibility_=boss_snapshot().invincibility;
@@ -309,7 +325,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
-    if(elly_active_) elly_->prepare_render(static_cast<std::uint16_t>(frames_));
+    if(reimu_active_) reimu_->prepare_render(static_cast<std::uint16_t>(frames_));
+    else if(elly_active_) elly_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
     if (midboss_state().active) {

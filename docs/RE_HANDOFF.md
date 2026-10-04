@@ -12,47 +12,64 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Stage4 resources, midboss and NPC dialogue](PORT64.md#stage4-resources-midboss-and-npc-dialogue).
+Current native scope: [Stage4 Reimu battle and rendering](PORT64.md#stage4-reimu-battle-and-rendering).
 The GUI runs title/options/character/shot selection, Stage1 through Orange,
-Stage2 through Kurumi, Stage3 through Elly/clear/departure, and Stage4 STD waves,
-carpet lighting, two midboss encounters and character-dependent pre-boss dialog.
-It holds after that actual dialog at frame12808. Stage4 NPC Boss battles onward,
-player death/Bomb, complete HUD/audio and Ending/save remain unported.
+Stage2 through Kurumi, Stage3 through Elly/clear/departure, and Stage4 waves,
+carpet lighting, two midbosses and character-dependent NPC dialogue. Playing
+Marisa now continues through the Reimu Boss battle, post-dialog, clear bonus
+and departure; Stage5 is held at its real pending-resource request. Playing
+Reimu still holds after Stage4 pre-dialog until the Marisa Boss owner joins.
 
-Current v1273 native core: [Stage4 Reimu state and orb core](PORT64.md#stage4-reimu-state-and-orb-core).
-MAIN13A9:AE87..BE5D attack/movement/gather/orb/pulse/dispatcher ownership is
-reviewed, with code and inline tables separated. DATA2134:BCFC is one aliased
-trail byte; B204 is32x26 orb pool and BCFE its template. Preserve allocation
-retention, release-frame raw collisions, discarded RNG draws and double
-entrance clock. Original blue/red ball IDs57/61, aimed-deceleration128 and
-no-special255 reject the first native constants. Failure records are retained.
+MAIN0AAF:8347..846E foreground/orbs,77E7..7873 NPC backdrop and7667..768D
+picture owner are reviewed. Preserve trail B/I writes (destination index OR9),
+raw sprite versus136 animation, damage reset,32 ordered orbs and shared
+explosion updates once per simulated frame. Negative source rows are outside
+visible VRAM; bottom overflow rolls to row0. RGB duplicate colors cannot
+recover plane identity, so Reimu keeps indexed pixels. Filler13EA..1424
+write-footprint agrees on75,776 pixels; BB paints one bits, unlike earlier
+Boss zero-bit tile invalidation. Physical hardware/page/scroll/timing excluded.
 
-6,678 original controls produce62,514 complete state/event records. Eight
-retained damage0/19 routes visit all phases across four ranks and request
-departure in12,716/1,245 updates. GNU/Wine/optimized UBSan/actual Windows
-replay every field; original reexecution is separate.1,024 retained setups
-pass for each build and actual Windows; callback fields BCD8/BCDA/BCDC are
-update/segment/foreground. First native setup assumes fresh private MAIN state.
-Shots/audio/video/point/item consumers remain bounded adapters, and Boss-only
-sequences omit ordinary stage updates/render. No full-game or exact claim.
+9,188 original foreground and5,888 background controls pass.640 original
+SUPER1PLANE/rolling controls compare163,840,000 indexed pixels across every
+Reimu/orb asset and eight X alignments, with retained colors and Y edges.
+GNU/Wine/optimized UBSan/actual Windows replay those complete expectations.
+Original CPU production and native-only reference replays remain separate.
+The earlier6,678 core controls/62,514 full records still agree on all four
+hosts;1,024 setup controls pass. Original constants/retention negatives remain
+in the v1273 ledgers; no new DOS exact promotion.
 
-19 contracts and432 existing BMPs/476 counters agree Linux/Wine/actual Windows;
-all old checkpoints unchanged. Windows root launcher/EXE remain v1272 at the
-Stage4 pre-battle GUI gate;20 static PE validation products are separately in
-`port64-preview/v1273`. All23 recorded root files remain identical. No GUI
-launched and no Windows-host compiler claim.
+Eight natural Normal/Lunatic A/B shot/idle Marisa-player routes capture144
+new BMPs/152 counters, freeze post-dialog simulation/RNG and request Stage5.
+19 contracts and576 total natural BMPs/628 counters agree Linux/Wine/actual
+Windows; old432 BMPs/476 counters are identical. Optimized UBSan19contracts,
+Reimu routes and pixel/state controls pass. Windows native EXE/launcher are
+v1274;20 static PE validation products live in `port64-preview/v1274`.
+Only native EXE/launcher are published;21 DOS/HDI/config/font/build files stay
+identical. No GUI launched and no Windows-host compiler claim.
 
-Receipts: `.analysis/port64/reimu-v1273/target-live.json`,
-`core-full-first/original-reference.json`, `core-{linux,windows,ubsan}-final/receipt.json`,
-`setup-{linux,windows,ubsan}-frozen/receipt.json`, `zero-div-original.json`,
-`native-windows-{core,setup,receipt}.json`, `integration-review.json`.
-Cross receipt: `.analysis/port64/verification-reimu-v1273/receipt.json`.
-Manifest: `38e0289f882c6867b0f4849b32cf84091fa6236481318892009a99db92d24abe`.
+Cleanup reclaims18.53 GiB from obsolete CMake/Windows native builds and
+losslessly archived historical BMP/large-text outputs. Every archive is
+read back against its original SHA-256; all23 Windows root files remain
+unchanged before native publication. Current three native build directories,
+targets/database/toolchains/DOS images/fonts and v1273 CPU references remain.
+Restore archived files with `gzip -d -- FILE.gz` before replaying an old
+private path. Additional current validation media may also be compressed
+after their hashes/counters are recorded; receipts are retained.
+
+Receipts: `.analysis/port64/reimu-render-v1274/` contains
+`target-ranges.json`, `filler-footprint.json`, `producer-attestation.json`,
+`render-linux-full/receipt.json`, `pixels-linux-full/receipt.json`,
+`core-{linux,windows,ubsan}-final/receipt.json`,
+`render-{linux,windows,ubsan}-final/receipt.json`,
+`pixels-{linux,windows,ubsan}-final/receipt.json`,
+`native-windows-{core,setup,render,background,pixels,receipt}.json`,
+`integration-review.json`, `cleanup-receipt.json`, `windows-export-receipt.json`.
+Cross receipt: `.analysis/port64/verification-reimu-render-v1274/receipt.json`.
+Manifest: `10c0073624a213552cdf27bf6ee58ac663f27a8f7a77646232cdf63a4fe35127`.
 Root preflight/database attestation passes; DOS source/exact ledgers unchanged.
 
-Next bounded work: Reimu foreground/trail/rolling-orb rendering, shared NPC
-backdrop and actual Marisa-player battle gate; Marisa Boss follows. Later
-stages/player death/Bomb/full HUD/audio/Ending/save still need implementation.
+Next bounded work: Stage4 Marisa Boss, then Stage5 resources/midboss/boss.
+Player death/Bomb/full HUD/audio/Ending/save still need native implementation.
 Semantic remains stopped except for concrete port ambiguities. Complete native
 gameplay is the port stopping condition.
 

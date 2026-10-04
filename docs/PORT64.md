@@ -7,8 +7,10 @@ pointers and host backends; it does not claim byte equality with PC-98 code.
 
 The current preview runs Stages1 through3 including their bosses and departures,
 then Stage4 waves, carpet lighting, two midbosses and character-dependent NPC
-pre-dialog. The held frontier is the Stage4 Reimu/Marisa battle. See
-[Stage4 integration](#stage4-resources-midboss-and-npc-dialogue) for the current
+pre-dialog. Marisa-player routes now continue through the Reimu battle,
+post-dialog, clear bonus and departure to the Stage5 resource gate. Reimu-player
+routes hold before the Marisa Boss. See
+[Reimu integration](#stage4-reimu-battle-and-rendering) for the current
 acceptance scope; earlier slices below retain their historical boundaries.
 
 ## Current executable slice
@@ -1836,3 +1838,92 @@ Manifest: `38e0289f882c6867b0f4849b32cf84091fa6236481318892009a99db92d24abe`.
 Next connect Reimu foreground/trail/rolling-orb rendering, the shared NPC
 backdrop and actual Marisa-player battle gate; then port the Marisa Boss and
 later stages. Semantic remains stopped unless a concrete ambiguity arises.
+
+
+## Stage4 Reimu battle and rendering
+
+v1274 connects the verified Reimu core to the actual Stage4 Marisa-player
+pre-dialog handoff. Boss setup consumes the retained Elly metadata and four
+rank parameters; there is no substituted Marisa Boss. The GUI's other character
+stays at its real pre-battle gate. Main state owns body shots with
+against-Boss=true and orb shots with against-Boss=false. Orb damage is discarded
+while ordinary shot consumption/score/sparks still execute. Shared frame prefix,
+gathers, explosions and score drain run once per simulated frame. A repaint
+reads cached draw requests and cannot age explosions or clear damage twice.
+
+Observed MAIN0AAF:8347..83A2 draws32 orb slots in ascending order, accepting
+nonzero flags and signed centerY>-256. Absolute screen coordinates are
+SAR(centerX,4)+16 and SAR(centerY,4); sprite base plus
+`((stage_frame+slot)&7)>>1` uses the original rolling call. Foreground
+83A3..846E draws the previous raw Boss sprite in B/I planes with flagsFFC6,
+then the current sprite.136 alone animates with frameMod16/4. Damage selects
+the white FFC0 draw and is consumed below phase254; phase254 uses the large
+sprite and255 has no body/orb draw. Shared small/big explosions follow.
+
+The B/I trail writes alpha-covered pixels as destination index OR9, retaining
+R/G. Reversing RGB loses plane identity when palette colors duplicate, so the
+Reimu frame keeps palette indices through composition and post-dialog capture.
+Actual original SUPER1PLANE0000:2838 and rolling0000:2D3E execute against
+all12 64x64 Reimu and eight32x32 orb BFNT images, eight X alignments, retained
+16-color backgrounds and seven negative/top/bottom Y positions.640 controls
+compare complete640x400 indexed surfaces:163,840,000 pixels. The shadow models
+GRCG output ports and visible A800:0000..7CFF writes; it does not emulate physical
+page/scroll timing or aliasing outside that visible plane. Negative rows are
+outside visible VRAM; only bottom overflow rolls to row0. Invalid extreme
+coordinates remain outside this pixel claim.
+
+Observed shared NPC backdrop0AAF:77E7..7873 divides signed phase clock by8,
+truncates toward zero and stores AL as the BB cel. Phase1 cels0..7 use stage
+tiles plus BB, later cels use the256x256 CDG at(96,72), color1 filler and BB.
+Phases2..253 use the picture and filler. The BB consumer paints one bits with
+color15 instead of invalidating zero-bit tiles. Filler13EA..1424 writes top and
+bottom384x56 borders and left/right64x256 borders; actual CPU write addresses
+match75,776 pixels. Phase0/255 signed clocks and254 retain their tile behavior.
+Host full redraw replaces the original dirty-copy hardware.
+
+9,188 original foreground controls compare ordered body/trail/orb/explosion
+requests, damage consumption, complete private/template/pool retention and
+explosion aging/flash clocks.5,888 original backdrop controls compare call
+order, signed clocks, byte cels and BB pointer copies. GNU, Wine, optimized
+UBSan and actual Windows native builds reproduce the full original expectations.
+Original production and hash-guarded native-only reference replay are labeled
+separately. Earlier6,678 Reimu core controls/62,514 records still pass all four
+hosts;1,024 retained setups pass Linux and actual Windows.
+
+Eight natural Normal/Lunatic Marisa-player A/B shot/idle scenarios enter through
+title selection and the complete preceding stages. They capture phases0..12,
+defeat, post-dialog, clear bonus, fade417 and next-stage489 without injecting
+damage/phases/spawns/RNG. Idle routes visit every attack. Post-dialog freezes
+simulation and RNG, bonus/fade/departure occur once, resident stage advances to4
+while loaded resource stage remains3, and the Stage5 request freezes pending
+actors/RNG/score until its resource owner exists.144 new BMPs/152 counters agree
+Linux/Wine/optimized UBSan/actual Windows.19 contracts and576 total BMPs/628
+counters agree Linux/Wine/actual Windows; all old432 BMPs/476 counters remain
+identical. This is headless deterministic coverage, not GUI pacing or an
+original ordinary-route equivalence claim.
+
+The versioned20-static-PE package is `port64-preview/v1274`. Root Windows
+`th04-port64.exe` and `start-th04-port64.bat` are refreshed after comparison,
+with21 DOS/HDI/config/font/build file hashes unchanged. No GUI is launched;
+MinGW cross-building and actual Windows execution are distinct observations.
+Death/Bomb/full HUD/audio/Ending/save and later stages remain unported.
+
+Replay foreground/background using `port64/verify_reimu_render.py --target
+TARGET --exe CONTRACT --output-dir NEW`; only after an original run succeeds,
+use `--reference-dir ORIGINAL_DIR` for a complete hash-checked native replay.
+Use `port64/verify_reimu_pixels.py` with the same three options plus `--hdi HDI`;
+`--runner wine` selects PE execution. `--reimu-screenshots DIR` runs the eight
+natural routes. `port64/verify.py` and `verify_windows.ps1` include those routes.
+Receipts are under `.analysis/port64/reimu-render-v1274/`; the cross-platform
+receipt is `.analysis/port64/verification-reimu-render-v1274/receipt.json`.
+Native source manifest: 10c0073624a213552cdf27bf6ee58ac663f27a8f7a77646232cdf63a4fe35127.
+
+The user-requested cleanup removes superseded CMake and native Windows build
+outputs and archives old BMP/large text with verified lossless gzip.18.53 GiB
+was reclaimed before this batch's final validation. Original and compressed
+hashes and removed build identities are in `cleanup-receipt.json`; current
+builds, original targets, databases, toolchains, fonts, DOS products/images and
+v1273 CPU references are retained. Before reusing a compressed historical
+private file, restore it with `gzip -d -- FILE.gz`. Native changes do not promote
+or invalidate DOS exact acceptance. Semantic stays stopped; next port slice is
+the distinct Stage4 Marisa Boss.

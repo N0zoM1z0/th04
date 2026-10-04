@@ -15,6 +15,9 @@ import sys
 
 PORT_FILES = (
     "port64/reimu.cpp",
+    "port64/reimu_render.cpp",
+    "port64/verify_reimu_render.py",
+    "port64/verify_reimu_pixels.py",
     "port64/reimu.hpp",
     "port64/reimu_contracts.cpp",
     "port64/verify_reimu.py",
@@ -442,6 +445,8 @@ def main() -> int:
     stage3_outputs = {}
     stage4_hashes = {}
     stage4_outputs = {}
+    reimu_hashes = {}
+    reimu_outputs = {}
     elly_hashes = {}
     elly_outputs = {}
     if args.font_bmp:
@@ -514,6 +519,15 @@ def main() -> int:
             if len(stage4_hashes[host])!=96:raise ValueError("unexpected Stage4 image files")
             stage4_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage4")]
         if stage4_hashes["linux"]!=stage4_hashes["windows"] or stage4_outputs["linux"]!=stage4_outputs["windows"]:raise ValueError("Stage4 images/counters differ between hosts")
+
+        for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
+            images=output.parent/("reimu-"+host);images.mkdir(parents=True,exist_ok=True)
+            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--reimu-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Reimu fixture=")!=144 or result.count("MAIN Reimu stopped ")!=8:raise ValueError("natural Reimu fixture missed progression")
+            reimu_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(reimu_hashes[host])!=144:raise ValueError("unexpected Reimu image files")
+            reimu_outputs[host]=[line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Reimu")]
+        if reimu_hashes["linux"]!=reimu_hashes["windows"] or reimu_outputs["linux"]!=reimu_outputs["windows"]:raise ValueError("Reimu images/counters differ between hosts")
 
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
@@ -643,6 +657,8 @@ def main() -> int:
         "stage2_fixture_counters": stage2_outputs.get("linux",[]),
         "kurumi_fixture_bmp_sha256": kurumi_hashes.get("linux",{}),
         "kurumi_fixture_counters": kurumi_outputs.get("linux",[]),
+        "reimu_fixture_bmp_sha256": reimu_hashes.get("linux",{}),
+        "reimu_fixture_counters": reimu_outputs.get("linux",[]),
         "stage4_fixture_bmp_sha256": stage4_hashes.get("linux",{}),
         "stage4_fixture_counters": stage4_outputs.get("linux",[]),
         "elly_fixture_bmp_sha256": elly_hashes.get("linux",{}),
