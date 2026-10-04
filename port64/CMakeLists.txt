@@ -28,6 +28,7 @@ add_library(
   stage4.cpp
   stage5.cpp
   thick_lasers.cpp
+  yuuka5.cpp
   marisa.cpp
   marisa_render.cpp
   reimu.cpp
@@ -110,13 +111,16 @@ target_link_libraries(th04-port64-reimu-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-marisa-contracts marisa_contracts.cpp)
 target_link_libraries(th04-port64-marisa-contracts PRIVATE th04-portable-core)
 
+add_executable(th04-port64-yuuka5-contracts yuuka5_contracts.cpp)
+target_link_libraries(th04-port64-yuuka5-contracts PRIVATE th04-portable-core)
+
 add_executable(th04-port64-laser-contracts laser_contracts.cpp)
 target_link_libraries(th04-port64-laser-contracts PRIVATE th04-portable-core)
 
 add_executable(th04-port64-stage5-contracts stage5_contracts.cpp)
 target_link_libraries(th04-port64-stage5-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts th04-port64-stage5-contracts th04-port64-laser-contracts)
+foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts th04-port64-stage5-contracts th04-port64-laser-contracts th04-port64-yuuka5-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -124,7 +128,7 @@ foreach(target th04-portable-core th04-port64 th04-port64-contracts th04-port64-
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts th04-port64-stage5-contracts th04-port64-laser-contracts)
+  foreach(target th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts th04-port64-stage5-contracts th04-port64-laser-contracts th04-port64-yuuka5-contracts)
     target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
   endforeach()
 endif()
@@ -174,3 +178,5 @@ add_test(NAME marisa-core-contracts COMMAND th04-port64-marisa-contracts)
 add_test(NAME stage5-contracts COMMAND th04-port64-stage5-contracts)
 
 add_test(NAME thick-laser-contracts COMMAND th04-port64-laser-contracts)
+
+add_test(NAME stage5-yuuka-contracts COMMAND th04-port64-yuuka5-contracts)

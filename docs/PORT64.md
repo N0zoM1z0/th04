@@ -2264,3 +2264,81 @@ receipt deliberately reports Windows differences; the separate full-file
 comparison proves their exact header-only locations. Original references and
 current builds remain expanded. Next: Yuuka's phase/attack dispatch, then its
 rendering and ordinary Stage5 battle join. The GUI still stops after pre-dialog.
+
+## Stage5 Yuuka core and seven attacks
+
+The native `yuuka5` owner now implements MAIN13A9:243E..2F89: the movement
+transition, sweep/cloud/gather/speedup-ring/aimed-spread/laser-burst/mirrored
+attacks and ordinary boss phase dispatch. The original extent includes two
+alignment bytes, four gather cases, twenty laser cases, two mode tables and
+nineteen phase destinations. Target/header/relocations and a fresh root Ghidra
+attestation precede execution. DOS product source and exact acceptance remain
+unchanged; provenance stays `candidate-local-attested`.
+
+Named attack/state fields expose retained ownership. Movement wraps the WORD
+coordinate difference before signed division by64; its caller advances the
+clock and skips shot damage during movement. Entry refreshes only bullet
+origin before motion. Early pair exits subtract800 from the next threshold;
+late pairs retain it. Gather timeout bypasses the hit wrapper, whereas the
+final phase advances/hits before evaluating its1000-frame bonus cutoff.
+Default defeat dispatch omits the laser/HUD tail. The VM callback is represented
+as a null/retained dispatch token, without treating a16-bit FAR pointer as a
+native address. Phase0 writes that token and clears the midboss countdown.
+
+Original shrinking-circle calls use0AAF:1BA6, not the adjacent growing entry;
+mirrored-stream setup writes special-motionFF. Cloud counters and private tone
+wrap as BYTEs; published palette tone remains a WORD. Bullet spawn contact and
+laser contact share a player-hit BYTE: new contact writes1 even over a retained
+127. The native join preserves that write while retaining the bullet owner's
+separate bool. The game frame must clear both representations at its boundary.
+
+Fresh original CPU production and GNU Linux comparison pass7,330 fixtures and
+69,652 checkpoints:1,620 isolated moves,2,408 helper edges,3,259 dispatcher
+edges,35 complete attack sequences across five rank settings and eight retained
+whole-boss controls. Each Easy/Normal/Hard/Lunatic win/timeout control visits
+phases0..18/254/255 and reaches the departure request. Timeout controls traverse
+both pair attacks and all four mode tokens. These controls retain all boss,
+additional/private, template, bullet/gather/spark/explosion/laser storage,
+shared counters, VM classification and ordered requests. Injected shot damage
+and downstream circle/HUD/item/point/dialog/audio/delay consumers are explicit
+adapters; ordinary actor updates, render and actual stage loading are absent.
+This is not a completed native Stage5 gameplay claim.
+
+Static MinGW under Wine, optimized UBSan/bounds and an actual PowerShell Windows
+process match the independently produced records. Three comparator mutation
+controls, callback rejection and invalid native argument checks pass. All three
+incremental builds pass23 CTests and validate24 ELF64/staticPE products each.
+All23 GNU predecessors remain raw-identical. All23 preceding MinGW programs
+differ only in COFF timestamp/checksum. Nine UBSan predecessors are identical;
+fourteen differ after recompilation, so no raw continuity is claimed for those.
+Fresh UBSan execution of sixteen preceding Stage5 routes preserves112 image
+hashes and128 counters; their media are losslessly gzipped with readback checks.
+
+The final source manifest is
+`ce458897179e6fb05588a575119e651d07ca067d3bdcfaee7cbf3468fdef523a`.
+Root Windows game/launcher/saves/HDIs remain v1277. Only validation PE, fixtures,
+manifest and PowerShell/results are exported under
+`port64-preview/v1279-yuuka-controls`; no GUI launched. Next is Yuuka foreground,
+backdrop and laser raster validation followed by the ordinary Stage5 battle
+join. Semantic work remains stopped except a concrete port ambiguity.
+
+Replay from the native worktree root:
+
+```sh
+cmake --build .analysis/port64/linux-live-v1251 --parallel 4
+cmake --build .analysis/port64/windows-live-v1251 --parallel 4
+python3 port64/verify_yuuka5.py \
+  --target ../../targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-yuuka5-contracts \
+  --output-dir .analysis/port64/yuuka5-v1279/yuuka-linux-final
+```
+
+Use a new output path when repeating a producer. Receipts under
+`.analysis/port64/yuuka5-v1279/` include `target-review.json`, frozen
+`producer-source/manifest.json`, `yuuka-{linux,windows,ubsan}-final/receipt.json`,
+`native-windows-receipt.json`, `oracle-negative-controls.json`,
+`previous-nonwindows-continuity.json`, `windows-link-continuity.json`,
+`preceding-stage5-ubsan-review.json`, `integration-review.json` and
+`windows-test-export.json`. The non-Windows raw comparison deliberately records
+UBSan differences; its fresh scenario receipt is separate evidence. No physical
+PC-98 timing/pixels, GUI FPS, full-game or DOS exact claim is made here.

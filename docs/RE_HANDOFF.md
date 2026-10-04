@@ -124,7 +124,23 @@ See [laser owner](PORT64.md#thick-laser-state-and-graphics-producer) and
 `.analysis/port64/yuuka5-v1278/`. Graphics call equivalence excludes pixel
 consumers/physical VRAM. Native source manifest 05e8bd69.
 
-Next bounded work: Stage5 ordinary Yuuka Boss state/attacks, then rendering. Player death/Bomb/full HUD/
+Stage5 Yuuka core/seven attacks/movement are now portable. Fresh original CPU
+production passes7,330cases/69,652checkpoints including8retained win/timeout
+controls spanning phases0..18/254/255 at four difficulties. Linux/Wine/UBSan/
+actualWindows agree; three incremental builds pass23CTest/24products each.
+The original circle entry is1BA6 and mirror special-motion tokenFF. Spawn and
+laser contact now share the BYTE hit latch without treating its retained127 as1
+until a new contact. VM is a null/retained token; the FAR address is not a host
+pointer. All23 GNU predecessors are raw-identical; MinGW differences are only
+COFF timestamp/checksum.14UBSan predecessors differ, so fresh16Stage5 routes
+compare112BMP/128counters instead of claiming raw equality. Media are verified
+and gzipped. Root Windows remainsv1277; only v1279-yuuka-controls diagnostics
+exported. See [Yuuka core](PORT64.md#stage5-yuuka-core-and-seven-attacks) and
+`.analysis/port64/yuuka5-v1279/`. Source manifest ce458897. These are boss-only
+controls with injected shots/downstream consumers, not a GUI battle join.
+
+Next bounded work: Stage5 Yuuka foreground/backdrop and laser raster controls,
+then the ordinary battle join. Player death/Bomb/full HUD/
 audio/later stages/Ending/save still need native implementation. Semantic stays
 stopped except concrete port ambiguities. Complete native gameplay is the port
 stopping condition.

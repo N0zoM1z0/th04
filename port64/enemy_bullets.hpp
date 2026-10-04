@@ -65,6 +65,7 @@ public:
     // patterns write these separately from the shared 18-byte template.
     void set_special_parameter(std::uint8_t value) { state_.special_parameter=value; }
     void set_special_angle(std::uint8_t value) { state_.special_angle=value; }
+    void set_player_hit(bool value) { state_.player_hit=value; }
     void begin_frame() { state_.slowdown=1; }
 private:
     void update_special(Entity& bullet,Context context);
