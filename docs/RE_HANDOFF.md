@@ -211,6 +211,17 @@ item claim. See the
 
 ## Current state
 
+The 2026-10-05 cleanup losslessly compresses 12 historical x64 rendering
+traces and archives 49 superseded Windows preview executables (v1281 and
+earlier), reclaiming 745 MiB net across Linux and Windows. Every archived
+file passes SHA-256 readback; 2,028 protected current build/input/package
+files and both worktrees' source states remain unchanged. Current DOS builds,
+the three native x64 build caches, published Windows GUI and saves remain
+available. Restore commands and digests are in
+`.analysis/cleanup/historical-port-builds-20261005/receipt.json`; old trace
+paths require `gzip -d -- PATH.gz` before replay. Windows scripts, assets and
+replay observations remain at their original paths.
+
 | Artifact | Accepted authored functions | Native build/runtime |
 | --- | ---: | --- |
 | OP | 93/93 | Standalone build; normal options/Music Room/scores/DOS exit and saved config pass |
