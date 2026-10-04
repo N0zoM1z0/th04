@@ -14,7 +14,7 @@ if (Test-Path -LiteralPath $OutputDirectory) {
 $outDir = (New-Item -ItemType Directory -Path $OutputDirectory).FullName
 $names = @('contracts', 'live-contracts', 'shot-contracts', 'enemy-contracts',
            'bullet-contracts', 'effect-contracts', 'midboss-contracts',
-           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts')
+           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts', 'midboss3-contracts')
 $contracts = @()
 foreach ($name in $names) {
     $exe = Join-Path $exeDir ("th04-port64-$name.exe")
@@ -61,6 +61,18 @@ Get-ChildItem -LiteralPath $kurumiDir -Filter '*.bmp' | ForEach-Object {
 if ($kurumiImages.Count -ne 72) { throw 'Missing Kurumi visual checkpoints.' }
 $kurumiCounters = @($kurumiLines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Kurumi *' })
 if ($kurumiCounters.Count -ne 80) { throw 'Missing Kurumi scenario counters.' }
+$stage3Dir = (New-Item -ItemType Directory -Path (Join-Path $outDir 'stage3-frames')).FullName
+Write-Host 'Running eight natural Stage 3 midboss and dialogue scenarios...'
+$stage3Lines = @(& $mainExe --hdi $hdiFile --font-bmp $fontFile --stage3-screenshots $stage3Dir 2>&1)
+if ($LASTEXITCODE -ne 0) { throw "Stage 3 scenarios failed: $stage3Lines" }
+$stage3Lines | Set-Content -LiteralPath (Join-Path $outDir 'stage3.log')
+$stage3Images = @{}
+Get-ChildItem -LiteralPath $stage3Dir -Filter '*.bmp' | ForEach-Object {
+    $stage3Images[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+if ($stage3Images.Count -ne 72) { throw 'Missing Stage 3 visual checkpoints.' }
+$stage3Counters = @($stage3Lines | ForEach-Object { "$_" -replace ' screenshot=.*$', '' } | Where-Object { $_ -like 'MAIN Stage3 *' })
+if ($stage3Counters.Count -ne 80) { throw 'Missing Stage 3 scenario counters.' }
 $receipt = @{
     passed=$true; host='native Windows'; contracts=$contracts
     native_sha256=(Get-FileHash -LiteralPath $mainExe -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -69,8 +81,9 @@ $receipt = @{
     dialog_fixture_bmp_sha256=$images; dialog_fixture_counters=$counters
     stage2_fixture_bmp_sha256=$stage2Images; stage2_fixture_counters=$stage2Counters
     kurumi_fixture_bmp_sha256=$kurumiImages; kurumi_fixture_counters=$kurumiCounters
+    stage3_fixture_bmp_sha256=$stage3Images; stage3_fixture_counters=$stage3Counters
     observed_utc=[DateTime]::UtcNow.ToString('o')
     limits='Headless contract/scenario execution; no GUI frame pacing or complete game claim.'
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $outDir 'receipt.json')
-Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count))
+Write-Host ("PASS: {0} contracts and {1} natural visual checkpoints." -f $names.Count, ($images.Count + $stage2Images.Count + $kurumiImages.Count + $stage3Images.Count))

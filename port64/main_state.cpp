@@ -47,7 +47,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     enemies_ = enemy::System{};
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
-    midboss_ = midboss::System{};midboss2_.reset();
+    midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();
     orange_=orange::System{};kurumi_.reset();kurumi_active_=false;player_invincibility_=64;circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
@@ -66,30 +66,38 @@ void State::start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     kurumi_->set_palette_zero(palette_zero);kurumi_active_=true;
 }
 void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
-    if(!next_stage_requested_ || stage_id_!=0 || application_->resident().stage!=1)
-        throw std::logic_error("Stage2 actor preparation requires its actual departure request");
+    if(!next_stage_requested_ || stage_id_>1 || application_->resident().stage!=stage_id_+1)
+        throw std::logic_error("actor preparation requires the actual next-stage departure request");
     // Validate before changing the live owners or consuming process random.
     auto next=std::make_unique<stage::Program>(standard);
-    auto boss=kurumi::prepare_stage2(orange_.snapshot(),rank_);
+    const auto next_id=static_cast<std::uint8_t>(stage_id_+1);
+    const auto preceding_midboss=midboss_state();
+    auto boss=next_id==1 ? kurumi::prepare_stage2(orange_.snapshot(),rank_) : kurumi::Snapshot{};
     session::initialize_actors({player_,shots_,enemies_,bullets_,sparks_,gathers_,
         circles_,items_,score_,scoreboard_,ring_,drops_},[this] {
             return static_cast<std::uint8_t>(application_->next_process_random());
         });
-    stage_=std::move(next);stage_id_=1;frames_=0;
-    midboss2::Snapshot next_midboss;next_midboss.actor=session::prepare_stage2_midboss(midboss_.snapshot());
-    midboss2_.emplace(next_midboss);
-    // These globals are reset by stage_runtime_init/common stage setup,
-    // outside boss_reset. Palette loading finishes at tone100.
-    boss.boss.background=orange::Background::tiles;boss.boss.slowdown=1;
-    boss.boss.shake_x=boss.boss.shake_y=0;boss.boss.bombing_disabled=0;
-    boss.boss.palette_tone=100;boss.boss.invincibility=64;
-    player_invincibility_=64;kurumi_.emplace(boss);kurumi_active_=false;
+    stage_=std::move(next);stage_id_=next_id;frames_=0;
+    if(next_id==1) {
+        midboss2::Snapshot next_midboss;next_midboss.actor=session::prepare_stage2_midboss(preceding_midboss);
+        midboss2_.emplace(next_midboss);
+        // Stage-common globals have different reset ownership than boss_reset.
+        boss.boss.background=orange::Background::tiles;boss.boss.slowdown=1;
+        boss.boss.shake_x=boss.boss.shake_y=0;boss.boss.bombing_disabled=0;
+        boss.boss.palette_tone=100;boss.boss.invincibility=64;kurumi_.emplace(boss);
+    } else {
+        midboss3::Snapshot next_midboss;next_midboss.actor=session::prepare_stage3_midboss(preceding_midboss);
+        midboss3_.emplace(next_midboss);midboss2_.reset();
+        // Keep preceding Kurumi metadata for the future Elly boss handoff.
+        // No unimplemented boss update runs before its genuine dialog gate.
+    }
+    player_invincibility_=64;kurumi_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
     next_stage_requested_=false;leave_text_replaced_=false;
     palette_tone_before_frame_=100;
-    bonus_context_.stage=1;bonus_context_.resource_stage=1;
+    bonus_context_.stage=next_id;bonus_context_.resource_stage=next_id;
     score_events_.clear();enemy_events_.clear();bullet_events_.clear();
     midboss_events_.clear();orange_events_.clear();item_events_={};
     // Score/power/performance/resident statistics and MAIN generation/seed
@@ -117,10 +125,10 @@ void State::apply_clear_bonus() {
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     score_events_.clear();
-    if(next_stage_requested_) return; // Stage2 resources have a separate owner.
-    // Hold at the genuine pre-Kurumi dialog gate until its dialog/boss owner
-    // joins. STD and Stage2 midboss callbacks execute normally before it.
-    if(background && stage2_dialog_ready(*background)) return;
+    if(next_stage_requested_) return; // Next-stage resources have a separate owner.
+    // Hold at the genuine next-boss dialog gate until its battle owner joins.
+    // STD and the stage midboss callbacks execute normally before it.
+    if(background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background))) return;
     const bool resumed=frame_suspended_;
     if(resumed && !dialog_finished_) return;
     enemy::Context context;
@@ -150,7 +158,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             enemies_.add(spawn,context,ring_);
         }
         if (stage_ && !boss_active()) {
-            if(midboss2_) midboss2_->activate(static_cast<std::uint16_t>(frames_));
+            if(midboss3_) midboss3_->activate(static_cast<std::uint16_t>(frames_));
+            else if(midboss2_) midboss2_->activate(static_cast<std::uint16_t>(frames_));
             else midboss_.activate(static_cast<std::uint16_t>(frames_));
         }
         // MAIN's loop calls player_update before items_update. A pickup therefore
@@ -206,7 +215,11 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
                 if (background && event.type==midboss::EventType::tile) background->set_tile(event.position.x,event.position.y,event.value);
                 if (background && event.type==midboss::EventType::scroll) background->set_speed(static_cast<std::uint8_t>(event.value));
             };
-            if(midboss2_) {
+            if(midboss3_) {
+                const auto before=midboss3_->score_delta();
+                midboss3_->update(midboss_context,bullets_,gathers_,ring_,sink);
+                score_.score_delta+=midboss3_->score_delta()-before;
+            } else if(midboss2_) {
                 const auto before=midboss2_->score_delta();
                 midboss2_->update(midboss_context,bullets_,gathers_,ring_,sink);
                 score_.score_delta+=midboss2_->score_delta()-before;
@@ -278,7 +291,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
     if (midboss_state().active) {
-        if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
+        if(midboss3_) midboss3_->prepare_render(midboss_context);else if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
     }
     enemies_.prepare_render();
     // Item scoring already exposes performance events; apply their byte

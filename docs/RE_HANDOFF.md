@@ -12,46 +12,55 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Current native scope: [Kurumi battle and departure integration](PORT64.md#kurumi-battle-and-departure-integration).
+Current native scope: [Stage3 midboss and pre-Elly integration](PORT64.md#stage3-midboss-and-pre-elly-integration).
 The GUI runs title/options/character/shot selection, ordinary Stage1 through
-Orange and Stage2 through its midboss, pre-dialog, Kurumi, post-dialog, clear
-bonus and the416/488 departure. Stage3 resources are the held frontier. Player
-death/Bomb, complete HUD/audio, later stages, Ending/save remain unported.
+Orange and Stage2 through Kurumi/post-dialog/bonus/departure. Stage3 now loads
+its real resources/STD/MAP, runs the midboss and finishes the Elly pre-dialog.
+Elly battle, later stages, player death/Bomb, complete HUD/audio, Ending/save
+remain unported. Semantic stays stopped unless a concrete port ambiguity arises.
 
-MAIN13A9:A4D1..A517/A623..A6F5 reset/setup retains HP/angle/endHP,
-additional1..15 and explosion metadata; only two small alive flags clear,
-including retention of the big alive flag.1,024 original CPU setup controls and
-256 countdown controls0AAF:5FD4..5FDE agree Linux/Wine/UBSan/actual Windows.
-Stage runtime06E0 independently resets slowdown1/shake0/Bomb-disabled0/invincibility64;
-common stage0675 ends palette tone100. Loaded Stage2 palette color0 joins the
-boss at pre-dialog completion; Kurumi later sets its observed red color0 itself.
+Observed MAIN13A9:0861..0C1E owns four Stage3 attacks and the dispatcher;
+0AAF:1D95..1E59 owns the renderer;13A9:A6F6..A7B4 owns setup. Activation1600,
+entry20 ticks, HP850 and twelve mirrored flight directions are preserved.
+Boundary exit still performs shot collision; a lethal hit on that frame earns
+its original rewards. Native rejects a corrupt new-dash index>=12; ordinary
+retained timeout routes exit after the twelfth dash. No corrupt-state equivalence
+or DOS exactness is claimed.1280 original retained setup controls preserve the
+22-byte actor's untouched fields, shared HP-bar and defeat angle.
 
-Eight natural Normal/Lunatic Reimu/Marisa shot/timeout routes reach Stage3's
-request. Dialog suspends actors/invincibility/RNG; post-dialog resumes the
-already-entered frame without repeating the prefix. Bonus/fade/next each execute
-once. Main generation2 and the process seed persist. Departure489 completes
-frame488; resident stage/ascii become2 while resource stage stays1 until load.
-Fifteen contracts,168 BMPs/188 counters agree Linux/Wine/optimized UBSan/actual
-Windows. Previous96 BMPs/108 counters remain identical to v1268. Current Linux
-reexecutes10,640 original render controls;41,488 original state records replay
-on Linux/Wine/UBSan. Independent archive decode checks57,188 portrait and86,016
-selected unobstructed battle-background/colorfill pixels. Native host agreement
-is not original full-route VRAM, physical hardware, frame pacing or DOS exactness.
+Eight natural Normal/Lunatic Reimu/Marisa shot/idle routes reach the Elly dialog
+at Stage3 frame9202. Stage load consumes353 process draws without changing
+MAIN generation2; dialog freezes actors/invincibility/RNG. Pre-dialog swaps the
+sprite bank to six32x32 plus twelve64x64 images and the BB2 palette. Independent
+archive decoding checks106,880 opaque Elly portrait pixels across eight routes.
+Native16 contracts,240 BMPs/268 counters agree Linux/Wine/optimized UBSan and
+actual Windows. Prior168 BMPs/188 counters stay identical to v1269.9,792
+original CPU controls produce15,886 complete state/event/draw records, including
+eight retained sequences; all current builds and actual Windows replay them.
+Original CPU reexecuted before the test-target static-link repair; current Linux
+contract bytes are unchanged. This is selected CPU/asset and native integration
+validation, not original full-route VRAM, physical hardware or frame pacing.
 
 Windows `D:\Entertainment\Game\Touhou\th04-reconstruct\start-th04-port64.bat`
-now uses v1269 through Kurumi clear; no GUI was launched. Package
-`port64-preview/v1269` contains16 checked x64 PE executables. Only root native
-EXE/launcher changed;21 existing DOS/HDI/config/font/build files remain identical.
+uses v1270 through the Elly pre-dialog. Package `port64-preview/v1270` contains17
+checked x64 PE executables. Only the root native EXE/launcher changed;21 other
+DOS/HDI/config/font/build files remain identical. No GUI was launched.
 
-Receipts: `.analysis/port64/kurumi-live-v1269/{target-live,integration-review,resources-live,negative-live,native-windows-receipt,native-windows-setup,windows-export-receipt}.json`,
-`setup-{linux,windows,ubsan}-final/receipt.json`,
-`core-{linux,windows,ubsan}-final/receipt.json`, `render-linux/receipt.json`, and
-`.analysis/port64/verification-kurumi-live-v1269-final/receipt.json`.
-Source manifest: `1fcba424ea85e628b7f7df71e3183bd861f0a5e920645fabccf0cc60d0df52d1`.
+Receipts: `.analysis/port64/midboss3-v1270/{target-live,integration-review,negative-live,native-windows-receipt,native-windows-setup,native-windows-core,windows-export-receipt}.json`,
+`core-linux-final/receipt.json`, `core-{linux,windows,ubsan}-replay-final/receipt.json`,
+`setup-{linux,windows,ubsan}-replay-final/receipt.json`, and
+`.analysis/port64/verification-stage3-v1270-final/receipt.json`.
+Runtime batch manifest: `416e8079931e7754318f7abc2176762951a3d22212a2590fd965518b9de922e7`.
+Current manifest after a CTest-only registration correction: `322e213a739262231351902ee294c0bdd582b84f6abd1f88d93cb3dafb0c0a2e`.
+`control-review.json` confirms all51 executable bytes are unchanged and the
+16 CTest contracts pass Linux/UBSan; the runtime receipts keep their original
+batch manifest above. No gameplay source changed in that correction.
 
-Next bounded native work: establish Stage3 resource/STD/MAP/midboss ownership,
-then Elly render/battle/dialog. Continue stage coverage and later player-death/
-Bomb, complete HUD/audio/Ending/persistence work. Keep semantic stopped.
+
+Next bounded work: Elly setup/foreground/battle, retaining preceding Boss metadata
+and establishing her backdrop/tile callbacks before post-dialog/departure.
+Continue ordinary stages and player-death/Bomb/HUD/audio/Ending/persistence;
+keep semantic paused. PC-98 reconstruction/exact ledgers remain unchanged.
 
 ## Current state
 

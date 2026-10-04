@@ -34,4 +34,9 @@ midboss::Snapshot prepare_stage2_midboss(midboss::Snapshot s) {
     s.position.current=s.position.previous={3072,-512};s.position.velocity={0,16};
     return s;
 }
+midboss::Snapshot prepare_stage3_midboss(midboss::Snapshot s) {
+    s.active=false;s.start_frame=1600;s.hp=850;s.sprite=0;
+    s.position.current=s.position.previous={3072,-512};s.position.velocity={0,64};
+    return s;
+}
 } // namespace th04::portable::session

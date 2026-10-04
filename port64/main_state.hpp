@@ -8,6 +8,7 @@
 #include "effects.hpp"
 #include "midboss.hpp"
 #include "midboss2.hpp"
+#include "midboss3.hpp"
 #include "orange.hpp"
 #include "kurumi.hpp"
 #include "circles.hpp"
@@ -19,7 +20,7 @@
 
 namespace th04::portable::gameplay {
 // Live MAIN owns STD waves, enemies, player motion, shots, bullets,
-// sparks, gather circles, items and the Stage1/Stage2 midbosses.
+// sparks, gather circles, items and the Stage1/Stage2/Stage3 midbosses.
 // Bombs, player death and the remaining HUD will join this same owner;
 // absent systems do not generate substitute enemies or scripted fake scores.
 class State {
@@ -28,15 +29,19 @@ public:
     void update(std::uint16_t held_input, bool shift, bool pull_items = false,
                 motion::Subpixel scroll_delta = 0,stage::Background* background=nullptr);
     void load_stage(const stage::Program::Bytes& standard);
-    // Actor/STD preparation for the already requested Stage2. The front end
+    // Actor/STD preparation for the already requested next stage. The front end
     // must still replace its sprite/map/palette owners before consuming this.
     void prepare_next_stage_actors(const stage::Program::Bytes& standard);
     bool stage2_dialog_ready(const stage::Background& background) const {
         return stage_id_==1 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
-    const midboss::Snapshot& midboss_state() const { return midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot(); }
-    const std::vector<midboss::Draw>& midboss_draws() const { return midboss2_ ? midboss2_->draws() : midboss_.draws(); }
+    bool stage3_dialog_ready(const stage::Background& background) const {
+        return stage_id_==2 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
+            dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
+    }
+    const midboss::Snapshot& midboss_state() const { return midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot()); }
+    const std::vector<midboss::Draw>& midboss_draws() const { return midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws()); }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
@@ -110,6 +115,7 @@ private:
     gather::System gathers_{};
     midboss::System midboss_{};
     std::optional<midboss2::System> midboss2_;
+    std::optional<midboss3::System> midboss3_;
     orange::System orange_{};
     std::optional<kurumi::System> kurumi_;
     circle::System circles_{};

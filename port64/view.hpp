@@ -20,7 +20,7 @@ struct StageAssets {
 };
 
 struct MainAssets {
-    StageAssets stage2;
+    StageAssets stage2,stage3;
     Bytes reimu;
     Bytes marisa;
     Bytes items;
@@ -52,4 +52,4 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& midboss_screenshots,
                const std::string& orange_screenshots,
                const std::string& dialog_screenshots,
-               const std::string& stage2_screenshots,const std::string& kurumi_screenshots, bool window);
+               const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots, bool window);

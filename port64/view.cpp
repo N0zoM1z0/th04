@@ -603,12 +603,12 @@ struct StageSprites {
     stage::Background background;
     StageSprites(const StageSprites&)=delete;
     StageSprites& operator=(const StageSprites&)=delete;
-    explicit StageSprites(const StageAssets& source):assets(source),stage(assets.stage_tiles),boss(assets.boss_tiles),
+    explicit StageSprites(const StageAssets& source,unsigned resource_stage=1):assets(source),stage(assets.stage_tiles),boss(assets.boss_tiles),
         backdrop(assets.backdrop),faces(assets.boss_faces),tiles(assets.map_tiles),background(assets.map,assets.standard) {
-        require_view(stage.count()==18 && stage.width()==32 && stage.height()==32 &&
-                     boss.count()==16 && boss.width()==64 && boss.height()==64 && boss.has_palette(),
-                     "Stage2 BFNT append contract changed");
-        require_view(tiles.count()==75 && background.required_image_count()<=tiles.count(),"Stage2 MAP references absent MPN tile");
+        require_view(stage.count()==(resource_stage==1 ? 18u : 16u) && stage.width()==32 && stage.height()==32 &&
+                     boss.count()==(resource_stage==1 ? 16u : 4u) && boss.width()==64 && boss.height()==64 && boss.has_palette(),
+                     "stage BFNT append contract changed");
+        require_view(tiles.count()==(resource_stage==1 ? 75u : 84u) && background.required_image_count()<=tiles.count(),"stage MAP references absent MPN tile");
         require_view(backdrop.width==384 && backdrop.height==112 && backdrop.image_count==1 &&
                      backdrop.layout==CdgSheet::colors_only && assets.transition.size()==2048 &&
                      faces.width==128 && faces.height==128 && faces.image_count==4 && faces.layout==CdgSheet::alpha_and_colors,
@@ -664,13 +664,13 @@ struct MainSprites {
                      enemies.width() == 32 && enemies.height() == 32 && enemies.count() == 24,
                      "MAIN sprite resource geometry changed");
     }
-    void install_stage2(std::unique_ptr<StageSprites> next) {
+    void install_stage(std::unique_ptr<StageSprites> next) {
         clean_stage(); // Clears every stage slot and first-stage dialog sheets.
-        palette.palette=next->boss.palette(); // Stage2 has no Stage1 color-zero override.
+        palette.palette=next->boss.palette(); // Later stages have no Stage1 color-zero override.
         background=std::move(next->background);
         second=std::move(next);
-        for(unsigned i=0;i<18;++i) stage_slots[stage_end++]={&second->stage,i};
-        for(unsigned i=0;i<16;++i) stage_slots[stage_end++]={&second->boss,i};
+        for(unsigned i=0;i<second->stage.count();++i) stage_slots[stage_end++]={&second->stage,i};
+        for(unsigned i=0;i<second->boss.count();++i) stage_slots[stage_end++]={&second->boss,i};
     }
     const CdgSheet& boss_portraits() const { return second ? second->faces : boss_faces; }
     void clean_stage() { for(unsigned i=128;i<256;++i) stage_slots[i]={};loaded_sheets.clear();stage_end=128; }
@@ -1042,6 +1042,8 @@ public:
 
     void enable_stage2() { continue_stage2_=true; }
     void enable_kurumi() { continue_stage2_=true;continue_kurumi_=true; }
+    void enable_stage3() { enable_kurumi();continue_stage3_=true; }
+    bool stage3_dialog_complete() const { return third_pre_finished_; }
     unsigned resource_stage() const { return loaded_stage_; }
     bool stage2_dialog_complete() const { return second_pre_finished_; }
     bool boss_portrait_visible() const { return dialog_scene_ && dialog_scene_->boss_portrait_visible(); }
@@ -1050,6 +1052,16 @@ public:
         for(unsigned i=128;i<162;++i) if(!sprites_->stage_slots[i].sheet) return false;
         for(unsigned i=162;i<256;++i) if(sprites_->stage_slots[i].sheet) return false;
         return true;
+    }
+    bool stage3_resources_valid() const {
+        if(!sprites_->second || sprites_->stage_end!=148 || application_.resident().resource_stage!=2) return false;
+        for(unsigned i=128;i<148;++i) if(!sprites_->stage_slots[i].sheet) return false;
+        for(unsigned i=148;i<256;++i) if(sprites_->stage_slots[i].sheet) return false;
+        return true;
+    }
+    bool stage3_battle_resources_valid() const {
+        const auto first=sprites_->stage_slots[128],second=sprites_->stage_slots[134];
+        return sprites_->stage_end==146 && first.sheet && second.sheet && first.sheet->count()==6 && first.sheet->width()==32 && first.sheet->height()==32 && second.sheet->count()==12 && second.sheet->width()==64 && second.sheet->height()==64;
     }
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
@@ -1069,15 +1081,18 @@ public:
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         if (live_main()) {
-            if(continue_stage2_ && main_->next_stage_requested() && loaded_stage_==0) {
-                require_view(assets_ && !assets_->stage2.standard.empty(),"Stage2 resources missing");
-                auto next=std::make_unique<StageSprites>(assets_->stage2);
+            if(main_->next_stage_requested() && ((continue_stage2_ && loaded_stage_==0) || (continue_stage3_ && loaded_stage_==1))) {
+                const auto next_id=loaded_stage_+1;
+                require_view(bool(assets_),"next-stage resources missing");
+                const auto& resources=next_id==1 ? assets_->stage2 : assets_->stage3;
+                auto next=std::make_unique<StageSprites>(resources,next_id);
                 auto script=std::make_unique<dialog::Script>(next->assets.dialog_scripts[unsigned(application_.resident().playchar)]);
                 main_->prepare_next_stage_actors(next->assets.standard);
-                sprites_->install_stage2(std::move(next));script_=std::move(script);
-                loaded_stage_=1;post_started_=post_finished_=false;
-                application_.publish_main_resource_stage(1);
+                sprites_->install_stage(std::move(next));script_=std::move(script);
+                loaded_stage_=next_id;post_started_=post_finished_=false;
+                application_.publish_main_resource_stage(static_cast<std::uint8_t>(next_id));
             }
+            if(loaded_stage_==2 && !dialog_scene_ && !third_pre_finished_ && main_->stage3_dialog_ready(sprites_->background)) begin_dialog(false);
             if(loaded_stage_==1 && !dialog_scene_ && !second_pre_finished_ && main_->stage2_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && !post_started_ && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
@@ -1087,6 +1102,7 @@ public:
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
+                    else if(loaded_stage_==2) { third_pre_finished_=true; }
                     else if(loaded_stage_==1) { second_pre_finished_=true;if(continue_kurumi_) main_->start_kurumi_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
                     dialog_scene_.reset();
@@ -1206,6 +1222,7 @@ private:
 
     const MainAssets* assets_=nullptr;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
+    bool continue_stage3_=false,third_pre_finished_=false;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1238,7 +1255,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_kurumi(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_stage3(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1412,7 +1429,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_kurumi();
+    front_end.enable_stage3();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1522,7 +1539,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1951,6 +1968,70 @@ void run_title(
             for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
             require_view(state.frames()==stopped && actor_stamp()==actors && state.random_cursor()==random && state.score().score_delta==pending && scene.process_random_state()==process,"pending Stage3 request repeated simulation");
             std::cout<<"MAIN Kurumi stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" frames="<<stopped<<" frozen_ticks="<<frozen<<" ray_frames="<<ray_frames<<" generation="<<generation<<" departure_frames="<<stopped-clear_frame<<" awarded="<<state.clear_bonus()->awarded<<" pending="<<pending<<" progression=stage3_resources_pending\n";
+        }
+    }
+    if (!stage3_screenshots.empty()) {
+        for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            scene.enable_stage3();
+            if(lunatic) {
+                for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
+                scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
+                scene.input(menu::Input::cancel);for(unsigned i=0;i<3;++i) scene.input(menu::Input::up);
+            }
+            scene.input(menu::Input::confirm);if(character) scene.input(menu::Input::right);
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            std::array<bool,9> seen{};unsigned frozen=0,loads=0,draws=0;bool activated=false;
+            const auto generation=scene.generation();
+            const auto actor_stamp=[&]() {
+                const auto& state=scene.main_state();const auto& shots=state.shots().snapshot();
+                std::vector<int> result{state.player().position().current.x,state.player().position().current.y,shots.time,shots.reimu_cycle,shots.laser.time,state.invincibility()};
+                for(const auto& e:shots.entities) { result.push_back(e.flag);result.push_back(e.age);result.push_back(e.position.current.x);result.push_back(e.position.current.y); }
+                return result;
+            };
+            for(unsigned tick=0;tick<60000 && !scene.stage3_dialog_complete();++tick) {
+                const auto resource=scene.resource_stage();const auto before=scene.main_state().frames();
+                const auto random=scene.main_state().random_cursor();const auto actors=actor_stamp();
+                const auto process=scene.process_random_state();const bool blocked=scene.dialog_active();
+                const bool shoot=resource<2 || shooting;
+                scene.advance(blocked ? (scene.dialog_status()==dialog::Status::press ? 0x1000 : 0) : (shoot ? shot::input_shot : 0),false,false);
+                const auto& state=scene.main_state();
+                if(scene.resource_stage()!=2) continue;
+                if(resource==1) {
+                    require_view(scene.stage3_resources_valid(),"Stage3 retained preceding sprite bank");
+                    ++loads;th04::portable::rng::Lcg32 expected(process);for(unsigned i=0;i<353;++i) expected.next_byte();
+                    require_view(scene.process_random_state()==expected.state() && scene.generation()==generation && state.invincibility()==63,"Stage3 changed MAIN generation/RNG or reset invincibility incorrectly");
+                }
+                if(blocked && (scene.dialog_active() || scene.stage3_dialog_complete())) {
+                    require_view(state.frames()==before && state.random_cursor()==random && actor_stamp()==actors,"Stage3 dialog changed actors/clock/RNG");++frozen;
+                }
+                const auto& boss=state.midboss_state();if(boss.active) { activated=true;draws+=static_cast<unsigned>(state.midboss_draws().size()); }
+                int checkpoint=-1;
+                if(!seen[0] && state.frames()==1) checkpoint=0;
+                else if(!seen[1] && state.frames()==80) checkpoint=1;
+                else if(!seen[2] && boss.active && boss.phase==0 && boss.phase_frame==12) checkpoint=2;
+                else if(!seen[3] && boss.active && boss.phase==1 && boss.phase_frame==8) checkpoint=3;
+                else if(!seen[4] && boss.active && ((shooting && boss.phase==254 && boss.phase_frame==8) || (!shooting && boss.phase==1 && boss.sprite==1 && boss.phase_frame==16))) checkpoint=4;
+                else if(!seen[5] && activated && !boss.active) checkpoint=5;
+                else if(!seen[6] && scene.dialog_active() && scene.dialog_status()==dialog::Status::release) checkpoint=6;
+                else if(!seen[7] && scene.dialog_active() && scene.dialog_status()==dialog::Status::release && scene.boss_portrait_visible()) checkpoint=7;
+                else if(!seen[8] && scene.stage3_dialog_complete()) checkpoint=8;
+                if(checkpoint>=0) {
+                    seen[unsigned(checkpoint)]=true;scene.repaint();
+                    if(checkpoint>=7) require_view(scene.stage3_battle_resources_valid(),"Stage3 dialog did not install its eighteen battle slots");
+                    const auto name=std::string(lunatic ? "lunatic-" : "normal-")+(character ? "marisa-" : "reimu-")+(shooting ? "shot-" : "idle-")+std::to_string(checkpoint);
+                    const auto path=stage3_screenshots+"/"+name+".bmp";write_bmp(path,scene.frame());
+                    std::cout<<"MAIN Stage3 fixture="<<name<<" frame="<<state.frames()<<" phase="<<+boss.phase<<" clock="<<boss.phase_frame<<" hp="<<boss.hp<<" offset="<<scene.dialog_offset()<<" power="<<+state.score().power<<" pending="<<state.score().score_delta<<" rng="<<scene.process_random_state()<<" screenshot="<<path<<'\n';
+                }
+            }
+            for(bool capture:seen) require_view(capture,"natural Stage3 fixture missed progression");
+            require_view(loads==1 && draws>100 && frozen>100,"Stage3 reset/midboss/dialog missing");
+            const auto& state=scene.main_state();const auto frames=state.frames(),process=scene.process_random_state();
+            const auto actors=actor_stamp();const auto random=state.random_cursor();const auto offset=scene.dialog_offset();
+            for(unsigned i=0;i<3;++i) scene.advance(shot::input_shot|player::left,false,false);
+            require_view(state.frames()==frames && actor_stamp()==actors && state.random_cursor()==random && scene.dialog_offset()==offset && scene.process_random_state()==process && !state.boss_active(),"unported Elly frontier advanced gameplay");
+            require_view(scene.resident().stage==2 && scene.resident().resource_stage==2 && scene.generation()==generation,"Stage3 resident/resource identity differs");
+            std::cout<<"MAIN Stage3 stopped character="<<character<<" rank="<<(lunatic ? "Lunatic" : "Normal")<<" shooting="<<shooting<<" frames="<<frames<<" frozen_ticks="<<frozen<<" loads="<<loads<<" midboss_draws="<<draws<<" generation="<<generation<<" progression=elly_battle_pending\n";
         }
     }
     if (window) {

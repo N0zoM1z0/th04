@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_stage3_resources.py",
+    "port64/midboss3.hpp",
+    "port64/midboss3.cpp",
+    "port64/midboss3_contracts.cpp",
+    "port64/verify_midboss3.py",
     "port64/verify_kurumi_setup.py",
     "port64/kurumi.hpp",
     "port64/kurumi.cpp",
@@ -221,15 +226,21 @@ def main() -> int:
     windows_midboss2=windows_dir / "th04-port64-midboss2-contracts.exe"
     linux_session=linux_dir / "th04-port64-session-contracts"
     windows_session=windows_dir / "th04-port64-session-contracts.exe"
+    linux_midboss3=linux_dir / "th04-port64-midboss3-contracts"
+    windows_midboss3=windows_dir / "th04-port64-midboss3-contracts.exe"
     linux_kurumi=linux_dir / "th04-port64-kurumi-contracts"
     windows_kurumi=windows_dir / "th04-port64-kurumi-contracts.exe"
-    for path in (linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
+    for path in (linux_midboss3,linux_kurumi,linux_midboss2,linux_session,linux_transition,linux_score,linux_bonus, linux_main, linux_contracts, linux_live, linux_shots, linux_enemies, linux_bullets, linux_effects, linux_midboss, linux_orange, linux_dialog):
         require_elf_x86_64(path)
-    for path in (windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
+    for path in (windows_midboss3,windows_kurumi,windows_midboss2,windows_session,windows_transition,windows_score,windows_bonus, windows_main, windows_contracts, windows_live, windows_shots, windows_enemies, windows_bullets, windows_effects, windows_midboss, windows_orange, windows_dialog):
         require_pe_x86_64(path)
 
     runner_env = os.environ.copy()
     runner_env.setdefault("WINEDEBUG", "-all")
+    linux_midboss3_output=run([str(linux_midboss3)])
+    windows_midboss3_output=run([args.windows_runner,str(windows_midboss3)],env=runner_env)
+    if linux_midboss3_output!="Stage 3 midboss contracts PASS" or windows_midboss3_output!="Stage 3 midboss contracts PASS":
+        raise ValueError("Stage3 midboss contracts failed")
     linux_session_output=run([str(linux_session)])
     windows_session_output=run([args.windows_runner,str(windows_session)],env=runner_env)
     expected_session="stage_actors=REINITIALIZED pending_score=PRESERVED rng_draws=353 stage2_midboss=2600 pointer_bits=64"
@@ -392,6 +403,8 @@ def main() -> int:
     stage2_outputs = {}
     kurumi_hashes = {}
     kurumi_outputs = {}
+    stage3_hashes = {}
+    stage3_outputs = {}
     if args.font_bmp:
         for host, command in (("linux",[str(linux_main)]),
                               ("windows",[args.windows_runner,str(windows_main)])):
@@ -434,6 +447,18 @@ def main() -> int:
         if kurumi_hashes["linux"] != kurumi_hashes["windows"] or kurumi_outputs["linux"] != kurumi_outputs["windows"]:
             raise ValueError("Kurumi images or counters differ between hosts")
 
+        for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
+            images = output.parent / ("stage3-"+host); images.mkdir(parents=True,exist_ok=True)
+            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage3-screenshots",str(images)],env=runner_env)
+            if result.count("MAIN Stage3 fixture=") != 72 or result.count("MAIN Stage3 stopped ") != 8:
+                raise ValueError("natural Stage3 fixture missed progression")
+            stage3_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
+            if len(stage3_hashes[host]) != 72: raise ValueError("unexpected Stage3 image files")
+            stage3_outputs[host] = [line.split(" screenshot=")[0] for line in result.splitlines() if line.startswith("MAIN Stage3")]
+        if len(stage3_outputs["linux"])!=80 or len(stage3_outputs["windows"])!=80: raise ValueError("missing Stage3 scenario counters")
+        if stage3_hashes["linux"] != stage3_hashes["windows"] or stage3_outputs["linux"] != stage3_outputs["windows"]:
+            raise ValueError("Stage3 images or counters differ between hosts")
+
     manifest_sha256, source_files = source_manifest(root)
     receipt = {
         "schema_version": 1,
@@ -460,6 +485,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(linux_effects),
                 "midboss_contract_output": linux_midboss_output,
                 "midboss_contracts_sha256": sha256(linux_midboss),
+                "midboss3_contract_output": linux_midboss3_output,
+                "midboss3_contracts_sha256": sha256(linux_midboss3),
                 "midboss2_contract_output": linux_midboss2_output,
                 "midboss2_contracts_sha256": sha256(linux_midboss2),
                 "kurumi_contract_output": linux_kurumi_output,
@@ -495,6 +522,8 @@ def main() -> int:
                 "effect_contracts_sha256": sha256(windows_effects),
                 "midboss_contract_output": windows_midboss_output,
                 "midboss_contracts_sha256": sha256(windows_midboss),
+                "midboss3_contract_output": windows_midboss3_output,
+                "midboss3_contracts_sha256": sha256(windows_midboss3),
                 "midboss2_contract_output": windows_midboss2_output,
                 "midboss2_contracts_sha256": sha256(windows_midboss2),
                 "kurumi_contract_output": windows_kurumi_output,
@@ -546,6 +575,8 @@ def main() -> int:
         "stage2_fixture_counters": stage2_outputs.get("linux",[]),
         "kurumi_fixture_bmp_sha256": kurumi_hashes.get("linux",{}),
         "kurumi_fixture_counters": kurumi_outputs.get("linux",[]),
+        "stage3_fixture_bmp_sha256": stage3_hashes.get("linux",{}),
+        "stage3_fixture_counters": stage3_outputs.get("linux",[]),
         "font_bmp_sha256": sha256(args.font_bmp) if args.font_bmp else None,
         "limit": (
             "Resource decoding, main/options/character/shot composition, deterministic "
@@ -567,9 +598,9 @@ def main() -> int:
             "Stage2 midboss behavior/geometry has separate selected CPU controls; "
             "Stage2 visual resources, natural midboss and pre-Kurumi dialog join the native GUI; "
             "eight character/Normal-Lunatic shot/timeout routes complete Kurumi battle/post-dialog/bonus/departure, "
-            "then hold at Stage3 resource loading; "
+            "then Stage3 resource/STD/midboss/pre-Elly dialog joins across eight shot/idle routes and holds before Elly battle; "
             "Kurumi state/attacks/render have separate selected CPU controls; final/Extra departure, "
-            "later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
+            "Elly and later midbosses/bosses, bombs, player death, HUD, later-stage backgrounds, "
             "audio, saved-data I/O and complete OP/MAIN/MAINE behavior "
             "are not yet ported."
         ),
