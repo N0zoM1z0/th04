@@ -69,6 +69,10 @@ targets/database/toolchains/DOS images/fonts and live CPU references remain.
 v1276 validation BMPs/redundant native pixel stream archive reclaims another3.66GiB;
 media-archive-receipt.json stores readback hashes. Original CPU references stay live.
 Restore historical private media with `gzip -d -- FILE.gz` before replay.
+Follow-up cleanup reclaims 3.33 GiB: 4,353 obsolete validation files are archived
+with verified readback and 59 superseded v1272-v1274 Windows executables removed.
+`.analysis/port64/cleanup-20261004/receipt.json` records hashes and confirms
+1,255 current build/Windows files unchanged. CI and diff checks pass.
 
 Receipts: `.analysis/port64/marisa-render-v1276/` contains target-review.json,
 stage-reset-controls.json, producer-source/manifest.json,
