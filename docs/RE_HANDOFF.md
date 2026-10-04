@@ -20,7 +20,28 @@ speed0/back-page1 gate and invalidates CDG1..31 handles during dialogue. The
 Yuuka6's first update. Easy retains its separate Stage5 bad-dialogue/Ending
 frontier. Semantic remains stopped except for concrete port ambiguities.
 
-New v1286 final-boss dependency: MAIN13A9:7952/799F/79EE mirror/transition/core
+New v1287 final-boss dependency: foreground MAIN0AAF:712A..72A5 now has a
+separate render owner. Body/mirror BYTE parity, hidden hit retention, redFFCD
+versus whiteFFC0 requests and phase254/255 early returns preserve original
+ownership. Ordinary tail ages common explosions/custom deaths once; cached
+repaint only reads requests. Fresh original3,522fixtures/4,458complete records
+agree GNU/Wine/optimizedUBSan and actualWindows. All29products/28CTest per host
+pass.28oldGNU products raw-identical;28oldPE hashes recover after8metadata bytes
+restore;25oldUBSan raw-identical and3changed helpers replay36,045/39,757/90,702
+independent records. No-font resource smoke passes. Manifest0b47d197; receipts
+.analysis/port64/yuuka6-render-v1287. Root/native CI and diff-check pass. Native private-database replay skips;
+fresh root Ghidra is READY.
+GUI remainsv1282;23root Windows files unchanged. This verifies state and ordered
+graphics requests, not actual pixels/physical hardware/FPS/ordinary battle.
+See [foreground dispatch](PORT64.md#yuuka6-foreground-dispatch).
+Next: foreground pixels/checkerboard/particle background and ordinary final-battle
+join, then remaining complete-game owners. Semantic stays limited to ambiguity.
+User-requested cleanup separately archives65superseded DOS build caches with
+complete hash readback, releasing326MiB. Current DOS fast and x64 caches remain
+expanded; restore historical caches before old inventory reuse. Root receipt:
+.analysis/cleanup/build-cache-20261005/receipt.json. No published products changed.
+
+Historical v1286 final-boss dependency: MAIN13A9:7952/799F/79EE mirror/transition/core
 now calls the existing attacks, movement, lasers and custom entities. Main
 sounds for full shot WORD before BYTE truncation; mirror truncates first and
 uses ordinary shots. Initial wrong native audio rejects a WORD256 control;

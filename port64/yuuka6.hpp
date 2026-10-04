@@ -4,6 +4,7 @@
 namespace th04::portable::laser { class System; }
 namespace th04::portable::yuuka6 {
 class Entities;
+class Foreground;
 // One clock is shared by every animation. Callers choose when to change an
 // animation; choosing one does not itself reset the counter or sprite flag.
 // MAIN13A9:6AAD..6E76 owns these eight animation entries.
@@ -62,6 +63,7 @@ public:
                 laser::System&,Entities&,randring::SharedRandomRing&,
                 const orange::Sink& sink={});
 private:
+    friend class Foreground; // Rendering consumes visible hit bytes in the core state.
     Snapshot state_{};
 };
 } // namespace th04::portable::yuuka6

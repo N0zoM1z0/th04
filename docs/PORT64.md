@@ -2889,3 +2889,59 @@ Replay `python3 port64/verify_yuuka6_core.py --target TARGET --exe EXE
 --output-dir NEW`; add `--runner wine` or `--reference-dir REFERENCE` as needed.
 Next: foreground/checkerboard and ordinary final-battle join, then remaining
 Extra/death/Continue/Bomb/HUD/audio/Ending/save owners. Semantic stays bounded.
+
+## Yuuka6 foreground dispatch
+
+v1287 ports MAIN0AAF:712A..72A5 (380 bytes) as a separate `Foreground`
+owner. The original DATA46C3/46C4 flash counters are independent of the core
+update dispatcher. A visible hit uses red on even parity, normal on odd parity,
+then increments its BYTE counter and clears that body's damage. A frame without
+hits retains parity. Hidden sprite0 preserves both damage bytes and both
+counters, even with an active mirror. The optional auxiliary sprite precedes
+the two body halves and the mirror. Sprite255's second half remains WORD256;
+negative subpixel positions use signed SAR4 rounding rather than host division.
+Red requests attest the original erase-mask0/planeFFCD arguments, distinct
+from the custom crosses' white planeFFC0. Actual plane pixels remain separate.
+
+Phase255 returns immediately. Phase254 emits only zoom factor3 and returns;
+neither branch ages common explosions or dying crosses. Ordinary phases retain
+small-explosion2D9C, big-explosion2E65, thick-laser37D3, custom7054 order.
+`prepare_render()` consumes hit bytes and advances those render-owned states
+once per simulation frame; cached `draws()` repaints do not advance them again.
+Safety-circle GROW's mode/color/disc requests deliberately omit disable, while
+its ring path includes disable. A separate render owner preserves the existing
+core Snapshot layout and update ABI. These comments name original ownership
+and widths without reopening general semantic work or changing DOS source.
+
+One fresh original CPU producer matches3,522fixtures/4,458 complete records,
+covering phase/hidden/aux/mirror combinations, flash BYTE parity/wrap, signed WORD
+positions, original explosion controls, laser modes, all31 simultaneous custom
+slots and24 retained40-frame sequences. Records include boss35/additional16,
+explosion48, laser72, custom832 bytes, flash/damage/palette/hit globals and the
+ordered8-field graphics requests. Original foreground and all four rendering
+owners execute; sprite/zoom/circle/color callees are explicit request adapters.
+Fresh callback rejection, one-byte comparator rejection and an actual two-input
+body-parity control distinguish red from normal while mirror parity stays red.
+The original reference is produced before native comparison and retains its
+source manifest. Wine, optimized GNU UBSan/bounds and actual Windows consume
+and match that independent reference. Windows does not claim original CPU
+execution. Full raster pixels, physical PC98 page/alias/VRAM, frame pacing,
+ordinary final battle and Ending remain separate requirements.
+
+The three incremental builds pass28CTests/29products each. All28 preceding GNU
+products remain raw-identical. Restoring eight retained timestamp/checksum
+bytes recovers all28 preceding PE hashes.25 oldUBSan products are raw-identical;
+the three changed motion/attack/core contracts pass36,045/39,757/90,702 retained
+independent records. No debug-only or raw equality is claimed for those changed
+products. All product architectures and compiler/cache identities are checked.
+The no-font Linux resource smoke also passes. No DOS exact acceptance changes.
+Source manifest: `0b47d197a1899f132dc4e2594b56c16670674d5493d629095df0419b07d6d2eb`.
+Receipts: `.analysis/port64/yuuka6-render-v1287/`. Replay with
+`port64/verify_yuuka6_render.py --target MAIN --exe CONTRACT --output-dir OUT`;
+add `--reference-dir ORIGINAL_DIR` for a hash-checked consumer or `--runner wine`
+for PE execution. Actual Windows uses the private
+`port64-preview/v1287-yuuka6-foreground/verify-foreground.ps1` streaming gzip
+control. GUI staysv1282; all23 published root game/config/save/script files
+remain hash-identical. Next: actual foreground pixels, checkerboard/particle
+background and ordinary final-battle join, followed by remaining complete-game
+owners. Semantic remains stopped except for a concrete port ambiguity.

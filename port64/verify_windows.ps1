@@ -14,7 +14,7 @@ if (Test-Path -LiteralPath $OutputDirectory) {
 $outDir = (New-Item -ItemType Directory -Path $OutputDirectory).FullName
 $names = @('contracts', 'live-contracts', 'shot-contracts', 'enemy-contracts',
            'bullet-contracts', 'effect-contracts', 'midboss-contracts',
-           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts', 'midboss3-contracts', 'elly-contracts', 'midboss4-contracts', 'reimu-contracts', 'marisa-contracts', 'stage5-contracts', 'laser-contracts', 'yuuka5-contracts', 'yuuka6-contracts', 'yuuka6-entity-contracts', 'yuuka6-attack-contracts', 'yuuka6-core-contracts')
+           'orange-contracts', 'dialog-contracts', 'bonus-contracts', 'score-contracts', 'transition-contracts', 'session-contracts', 'midboss2-contracts', 'kurumi-contracts', 'midboss3-contracts', 'elly-contracts', 'midboss4-contracts', 'reimu-contracts', 'marisa-contracts', 'stage5-contracts', 'laser-contracts', 'yuuka5-contracts', 'yuuka6-contracts', 'yuuka6-entity-contracts', 'yuuka6-attack-contracts', 'yuuka6-core-contracts', 'yuuka6-render-contracts')
 $contracts = @()
 foreach ($name in $names) {
     $exe = Join-Path $exeDir ("th04-port64-$name.exe")
