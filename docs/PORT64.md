@@ -12,8 +12,10 @@ through Stage6 waves, the complete pre-battle dialogue and Yuuka's final
 battle, then all-clear and the appropriate Good Ending. Easy runs its separate
 bad dialogue and Bad Ending. The native frontend now joins MAIN's score/run
 statistics, mandatory fade, resource release and fresh MAINE lifecycle to all
-eight Ending script/graphics routes. It currently reaches the Staff Roll owner;
-Staff Roll, verdict and registration remain next. See
+eight Ending script/graphics routes. Staff Roll now completes its two backgrounds
+and three dissolve families, with the preview holding at verdict entry. Verdict,
+congratulations and score registration/save remain next. See
+[Staff Roll](#staff-roll-integration) and
 [MAIN-to-MAINE integration](#main-to-maine-ending-integration) for the current
 acceptance scope. Earlier slices below retain their historical boundaries.
 The final-boss [animation/motion helpers](#yuuka6-animation-and-motion-helpers)
@@ -3337,3 +3339,101 @@ remain expanded. Restore v1292 media using `gzip -d -- PATH.bin.gz` or
 `PATH.bmp.gz` before direct historical consumers; the archive receipt records
 every original/compressed digest.96 derived v1291 PNGs have correctedRGB
 presentation with original indexed/palette hashes retained in a separate receipt.
+
+
+## Staff Roll integration
+
+The v1293 native MAINE owner runs the complete `staffroll_animate` sequence
+for both Good and Bad Ending. `staff_roll` separates the ordered graphics/file/
+sound requests from their host consumers; both the GUI and deterministic route
+runner use the same owner. The preceding Ending graphics pages transfer once,
+then its script/PI/text-box owner releases. MAINE generation, resident counters
+and process RNG remain unchanged. Staff Roll releases its background snapshot
+and six CDG slots, completes the final blackout and holds at verdict entry.
+
+The dissolve producer preserves radial, diagonal and axis displacements,
+unsigned angle wrapping, signed polar/SAR rounding and the original 63-frame
+alternation. Fade and music waits remain blocking. Keys never skip Staff Roll;
+active music requires a real reported measure, while the inactive backend uses
+64/160-frame fallbacks. The resulting deterministic inactive-audio run contains
+10,396 requests and 3,967 ticks. These are native scheduling counters, not
+measured physical PC-98 timing or synthesized audio.
+
+Two hardware details matter: `graph_copy_page(destination)` copies the opposite
+page and leaves access on the destination; `BGIMAGER` restores WORD-aligned
+rectangles with TH04's inclusive `h+1` row loop. The last SFF7 expansion touches
+row400, so full-page comparisons cover visible rows0..399 and do not claim the
+heap/offscreen allocation tail. CDG opaque draws clear the mask then OR color
+planes, while the displaced plane helper uses white GRCG masks. The shared
+read-only `cdg_image.hpp` replaces the GUI's private CDG/CD2 parser without
+embedding original files or turning DOS segment fields into host pointers.
+
+Verification at `.analysis/port64/staff-roll-v1293` binds the 208-file source
+manifest `830f7c96cca70b471124d408cbad3ece832d94f7964d62a18604338d7cc487b9`:
+
+- Eight original CPU request controls execute all eight bodies at decoded
+  MAINE_01 `0A05:0E80..1736`, using loads1000/2000 and initial angles0/7/64/255.
+  The complete producer digest is independently checked against the recovered
+  payload; original polar at `0CC7:0260` executes its signed multiply/SAR.
+  File, sound, graphics and VSync consumers are explicit adapters.
+- 268 direct original CPU graphics controls execute `0CC7:0408` plane drawing,
+  `0CC7:06E6` opaque CDG and `0CC7:0A86` background restore. They cover all18
+  CDG assets, four color planes, alignments0/7/15, varying seeded backgrounds,
+  zero-height inclusive copies and the visible portion of the row400 write.
+  A supplied GRCG adapter applies masks; ordinary target OR/copy instructions
+  execute. Unsupported requests fail closed.
+- An independent original-request-driven raster compares332 complete indexed
+  pages and166 palette/page/lifetime checkpoints. CDG planes are independently
+  unpacked; the two PI backgrounds use a recorded v1292 decoder regression
+  dependency, not an original-CPU PI decoding claim. A whole-page byte mutation
+  is rejected. GNU, Wine and optimized UBSan pass all controls.
+- Three fast incremental builds each produce31 AMD64 executables and pass all
+  30 CTests.29 GNU and29 UBSan executables remain raw-identical to v1292. The
+  changed GUI and cutscene consumer pass full original-controlled regressions;
+  there is no PE body equality claim from the prior hash-only snapshot.
+- Each host runs24 natural menu/STD/dialogue/boss/Good-or-Bad-Ending routes,
+  then the entire Staff Roll to verdict entry. The preceding576 Ending pages,
+  288 palette/state and288 RGB checks remain intact;48 final Staff Roll pages
+  and24 palettes agree with the independently controlled component gallery.
+  Resident publication, resource release and fresh MAINE lifetime stay checked.
+
+The actual-Windows consumer is `verify_maine_join_windows.ps1 -StaffDirectory
+CONTROLS`; it also checks the original handoff/counter/fade controls and all30
+contracts. Its original/reference producer scope stays separate from Windows
+execution. Source snapshots and original CPU streams remain immutable; only
+completed derived media may be archived after full SHA-256 readback.
+
+Target provenance remains candidate-local-attested, including the recovered
+MAINE payload7495ae43. The Ghidra MAINE database attests its packed wrapper,
+not a distinct recovered-payload semantics Oracle. No DOS source or acceptance
+ledger changes. Verdict, congratulations, score persistence, Extra/death/Bomb/
+Continue/full HUD/audio/config and a complete original-game video comparison
+remain outside this batch. General semantic work stays stopped.
+
+Actual Windows passes all30 contracts, eight original request streams,268
+kernel controls,332 complete component pages and24 natural Ending/Staff Roll
+routes. The route consumer compares1,248 binary/state files; independent Python
+readback checks the original Ending/RGB reference and final Staff Roll pages.
+Native and root CI pass. The validated preview is published at
+`D:\Entertainment\Game\Touhou\th04-reconstruct\port64-preview\v1293-staff-roll`;
+root `start-th04-port64.bat` is updated and previousv1292 is backed up. All2,206
+pre-existing Windows files outside the two authorized native replacements keep
+their hashes. The versioned launcher uses its own verified original HDI/font;
+publication does not launch the GUI or change DOS products/scripts/config/saves.
+
+A focused follow-up reads all eight original Ending request streams: every
+copy0 has access1 beforehand and an explicit access0 immediately afterward.
+Their visible-page regressions remain valid under the existing request-adapter
+state convention. Do not reuse that convention as generic graph_copy_page
+semantics for new owners; Staff Roll uses the independently reviewed destination
+semantics. `ending-copy-caller-review.json` preserves this narrowed caller proof.
+
+After all consumers finish,6,977 completed v1293 render buffers/BMPs are losslessly
+gzip-archived, releasing1.98GiB. Seven explicit inputs retain hashes; supplementary
+post-archive verification checks93 current native executables and456 expanded
+original-controlled Ending/font reference buffers against accepted pre-archive
+receipts. Two final GNU Staff Roll pages, original request/fixture streams,
+PI decoder baseline, current build caches and Windows inputs remain available.
+Restore archived direct-consumer paths with `gzip -d -- PATH.bin.gz` or
+`PATH.bmp.gz`; `media-archive-receipt.json` and `archive-readback.json` retain
+member/readback and protected-product/reference digests.

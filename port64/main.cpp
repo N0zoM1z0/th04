@@ -317,6 +317,14 @@ int main(int argc, char** argv) {
                         std::ostringstream name;name<<"ED"<<std::setw(2)<<std::setfill('0')<<i<<".PI";
                         ending.pictures.emplace(name.str(),decode_pi(archive_member(par,name.str())));
                     }
+                    for(unsigned i=1;i<=2;++i) {
+                        const auto name="SFF"+std::to_string(i)+".PI";
+                        main_assets.staff_roll.pictures.emplace(name,decode_pi(archive_member(par,name)));
+                    }
+                    for(unsigned i=1;i<=9;++i)for(const auto suffix:{".CDG","B.CDG"}) {
+                        const auto name="SFF"+std::to_string(i)+suffix;
+                        main_assets.staff_roll.sprites.emplace(name,archive_member(par,name));
+                    }
                 }
                 main_assets.reimu_map_tiles = archive_member(game, "ST00.MPN");
                 main_assets.marisa_map_tiles = archive_member(game, "ST10.MPN");

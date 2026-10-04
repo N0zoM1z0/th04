@@ -7,7 +7,7 @@ remaining MAIN exactness cases stay deferred. Portable changes do not alter DOS
 source or exact acceptance. Root `semantic/readable` retains its DOS source baseline;
 `port/modern-64` is the active native worktree.
 
-Semantic readability is paused at the user's stopping condition: enough clarity
+General semantic expansion has stopped at the user's condition: enough clarity
 for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
@@ -22,45 +22,60 @@ available. Root receipt:
 tar/zstd archive before using historical screenshot/disk gzip paths. Root/native
 CI pass after removal. Product source and the native runtime frontier are unchanged.
 
-Current native scope: [MAIN-to-MAINE Ending integration](PORT64.md#main-to-maine-ending-integration).
-v1292 joins Good/Bad Ending to ordinary MAIN. Run counters survive Stage
-replacement, GameExecl publishes current HUD digits without draining pending
-score, and MAIN's palette blackout takes273 refreshes. MAIN owners release
-after publication; MAINE starts a fresh generation/LCG and selects the actual
-character/shot/Ending script. Escape is translated from MAIN actions to
-MAINE0010. The currently inactive audio backend uses original fallback-frame
-waits; active music waits require a reported measure, not fabricated progress.
+Current native scope: [Staff Roll integration](PORT64.md#staff-roll-integration).
+v1293 continues both Good/Bad Ending through the entire Staff Roll and holds
+at verdict entry. MAIN publication/fade/release and the fresh MAINE generation
+remain from v1292. Staff Roll transfers and releases the old Ending graphics
+owner, runs both backgrounds and three dissolve families, frees its background
+and CDG slots, and completes its final blackout. Resident statistics and MAINE
+LCG remain unchanged. Verdict, congratulations and registration/save are next;
+Extra/death/Bomb/Continue/full HUD/audio/config remain incomplete.
 
-The original MAIN0AAF:0CC9/0CF4/3CEE/3D0D control executes72 Good/Bad transfers
-with/without EMS, including explicit execl-failure stack controls. Its actual
-0000:0666 fade makes18 palette calls/273 VSync waits;378 completed-frame
-counter vectors cover unsigned thresholds and32-bit wraps. At MAINE loads1000/
-2000,120 sound-mode/fallback/measure and24 palette controls pass. Palette bytes
-are RGB (redAC/greenAA/blueAE). The old diagnostic PNG swizzle was wrong;
-complete indexed pages and raw palette comparisons remain valid.
+At recovered MAINE `0A05:0E80..1736`, eight original CPU controls cover complete
+requests at loads1000/2000 and initial angles0/7/64/255; original polar0260
+executes its signed multiply/SAR. Native produces10,396 requests/3,967 inactive-
+audio scheduler ticks.268 original pixel-kernel controls at `0CC7:0408/06E6/0A86`
+cover all18 CDGs, four planes, alignments0/7/15 and background rectangle quirks.
+Three native consumers agree on332 complete pages and166 palette/page/lifetime
+checkpoints. PI decoding is a recorded v1292 regression dependency; GRCG,
+VSync/file/audio are explicit adapters, not physical hardware or audio synthesis.
+Visible-row coverage excludes the offscreen allocation tail at row400.
 
-Linux/Wine/optimizedUBSan each pass30CTest and24 natural menu/STD/dialogue/boss/
-Ending routes:576 complete indexed pages,288 palette/states and288 RGB frames
-per host. Actual Windows consumes the same references; state text compares
-integer records because Windows streams useCRLF, while binary hashes stay
-strict. Source manifest0f846245 binds203 files. Stage-reset442 original CPU
-controls and four native Stage1-to-Stage2 resource routes verify the retained
-item-spawn counter; original complete nine clear regions remain independently
-checked. Original CPU instruction controls are not physical hardware captures,
-whole-original-game routes, music synthesis, host FPS or DOS exact promotion.
+`graph_copy_page(destination)` copies its opposite page and leaves access on
+the destination. BGIMAGER restores WORD-aligned rectangles for h+1 rows. Keep
+these details when implementing verdict graphics; do not replace them with
+current-access copies or exclusive-height rectangles. MAINE's active audio
+waits require reported unsigned measures; keys do not skip Staff Roll. Current
+inactive audio uses original64/160-frame fallbacks.
 
-The previous Stage4/5/6 fixture B labels used Right instead of Down at shot
-selection and actually ran A. Do not treat those historical labels as B evidence.
-Current24-route inputs select A/B correctly and assert the resident selection.
-The v1291 cutscene/font/PI component controls remain the independent graphics
-reference; their GNU gallery stays expanded. Receipts:
-.analysis/port64/maine-join-v1292 and .analysis/port64/maine-ending-v1291.
-Semantic expansion stays stopped. Next implement Staff Roll, verdict and
-score registration/persistence; Extra/death/Bomb/full HUD/audio/config remain.
-Windows v1292 preview/English root launcher are published; DOS products/scripts/
-config/saves are unchanged. Previousv1290 is retained. Completed v1292 media
-is gzip-archived after readback (3.21GiB released);553 protected hashes stay
-unchanged. Restore .bin/.bmp paths with gzip -d before historical direct replay.
+Three fast builds each produce31 AMD64 executables and pass30CTest.29 GNU and
+29 UBSan products remain raw-identical to v1292. All three native hosts also
+pass24 complete natural menu/STD/dialogue/boss/Ending/Staff Roll routes:576
+Ending pages,288 palette/states,288 RGB frames and48 final Staff Roll pages per
+host. Full preceding lifetime/score/shot-choice invariants stay checked. Source
+manifest830f7c96 binds208 files. Current receipts:
+.analysis/port64/staff-roll-v1293; original Ending graphics reference:
+.analysis/port64/maine-ending-v1291/pixels-linux. Targets remain candidate-local-
+attested, including recovered MAINE7495ae43; its attested Ghidra database covers
+the packed wrapper. No DOS source or exact/unit/function acceptance changes.
+
+Actual Windows passes all component controls and24 natural Ending/Staff Roll
+routes;1,248 binary/state comparisons and independent RGB readback pass. The
+validated v1293 Windows preview and English root launcher are published under
+port64-preview/v1293-staff-roll, with previousv1292 backed up. All2,206 preexisting
+Windows files outside the two native replacements retain hashes; DOS products,
+scripts, config and saves are unchanged. General semantic work
+stays stopped unless a concrete native ambiguity needs clarification. Historical
+B-labelled GUI fixtures before v1292 selectedA; their original labels are not
+B evidence. v1291 indexed/palette references are intact despite the corrected
+PNG-only RGB swizzle. Historical v1292 media is gzip-archived after readback
+(3.21GiB released); restore .bin/.bmp paths before direct historical replay.
+
+Completed v1293 render buffers are gzip-archived after readback:6,977 files
+release1.98GiB. Seven explicit inputs and supplementary93 active products/456
+original-controlled reference buffers retain accepted hashes. Both final GNU
+Staff pages and original CPU streams remain expanded; restore historical
+.bin/.bmp paths before direct replay. See media-archive-receipt/archive-readback.
 
 Historical v1289 final-boss dependency: foreground sprite pixels now have a native
 consumer. MAIN0000:2838 FFCD merges destination|2 on alpha; purecolor2 would

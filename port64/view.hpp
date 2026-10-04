@@ -7,6 +7,7 @@
 #include <map>
 #include "pi_image.hpp"
 #include "cutscene_scene.hpp"
+#include "staff_roll.hpp"
 
 struct StageAssets {
     Bytes stage_tiles,boss_tiles,backdrop,transition,boss_faces,map_tiles,map,standard,stars;
@@ -15,6 +16,7 @@ struct StageAssets {
 
 struct MainAssets {
     th04::portable::cutscene::Assets ending;
+    th04::portable::staff::Assets staff_roll;
     StageAssets stage2,stage3,stage5,stage6;
     std::array<StageAssets,2> stage4;
     Bytes reimu;

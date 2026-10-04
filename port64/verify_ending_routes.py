@@ -93,6 +93,7 @@ def main():
     for name in ('exe', 'hdi', 'font-bmp', 'gallery-dir', 'output-dir'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--runner'); p.add_argument('--existing-log', type=Path)
+    p.add_argument('--staff-gallery',type=Path)
     args = p.parse_args(); out = args.output_dir.resolve(); out.mkdir(parents=True, exist_ok=True)
     manifest, _ = source_manifest(Path(__file__).resolve().parents[1])
     if sha(args.hdi.read_bytes()) != '0d5ea773a9e4f3e28f473b6deeedb6a7cdaccbb5b940a97983c4e3597dd4ebfd':
@@ -110,14 +111,30 @@ def main():
         (out/'stdout.log').write_text(log); (out/'stderr.log').write_text(completed.stderr)
         completed.check_returncode()
     records = verify(args.gallery_dir, out, log.splitlines())
+    staff_routes=[]
+    if args.staff_gallery:
+        proof=json.loads((args.staff_gallery/'receipt.json').read_text())
+        assert proof['passed'] and len(proof['cases'])==8 and len(proof['kernel_controls'])>=240
+        final=max(c['event'] for c in proof['pages'])
+        final_hashes={c['page']:c['sha256'] for c in proof['pages'] if c['event']==final}
+        palette=(args.staff_gallery/'pages'/f'{final}.pal').read_bytes()
+        for line in log.splitlines():
+            if not line.startswith('MAINE Staff Roll route='):continue
+            fields=dict(word.split('=',1) for word in line.split() if '=' in word)
+            assert fields['progression']=='verdict_pending' and int(fields['events'])==proof['cases'][0]['requests']
+            for page in (0,1):assert sha((out/(fields['route']+f'staff-final-{page}.bin')).read_bytes())==final_hashes[page]
+            assert (out/(fields['route']+'staff-final.pal')).read_bytes()==palette
+            staff_routes.append(fields)
+        assert len(staff_routes)==24 and len({r['route'] for r in staff_routes})==24
     after, _ = source_manifest(Path(__file__).resolve().parents[1]); assert after == manifest
     receipt = dict(passed=True, observed_utc=datetime.now(timezone.utc).isoformat(), command=command,
                    executable_sha256=sha(args.exe.read_bytes()), source_manifest_sha256=manifest,
                    gallery_receipt_sha256=sha((args.gallery_dir/'receipt.json').read_bytes()),
                    hdi_sha256=sha(args.hdi.read_bytes()), font_sha256=sha(args.font_bmp.read_bytes()),
                    natural_routes=len(records), complete_pages=576, palette_states=288, rgb_frames=288,
+                   staff_routes=staff_routes,staff_complete_pages=2*len(staff_routes),
                    negative_pixel_rejected=True, routes=records,
-                   scope='Natural menu/STD/dialogue/boss traversal through Good or Bad Ending and its MAIN/MAINE lifetime. Player death, Bomb, Continue, Extra and audio remain outside this path. Original gallery uses CPU script/font controls and a separately regressed PI dependency; RGB is computed presentation, not physical PC-98 capture. Staff Roll/verdict/save are subsequent owners.')
+                   scope='Natural menu/STD/dialogue/boss traversal through Good or Bad Ending and its MAIN/MAINE lifetime. Optional Staff Roll checks compare its final two pages to the original-request/kernel gallery. Player death, Bomb, Continue, Extra, audio, verdict and save remain outside this path. RGB is computed presentation, not physical PC-98 capture.')
     (out/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
     print(json.dumps({k: receipt[k] for k in ('passed', 'natural_routes', 'complete_pages', 'palette_states', 'rgb_frames')}, indent=2))
 

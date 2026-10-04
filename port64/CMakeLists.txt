@@ -51,6 +51,7 @@ add_library(
   dialog.cpp
   cutscene.cpp
   maine_ending.cpp
+  staff_roll.cpp
   run_statistics.cpp
   cutscene_scene.cpp
   pi_image.cpp
@@ -92,7 +93,7 @@ add_executable(th04-port64-orange-contracts orange_contracts.cpp)
 target_link_libraries(th04-port64-orange-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-dialog-contracts dialog_contracts.cpp)
 target_link_libraries(th04-port64-dialog-contracts PRIVATE th04-portable-core)
-add_executable(th04-port64-cutscene-contracts cutscene_contracts.cpp)
+add_executable(th04-port64-cutscene-contracts cutscene_contracts.cpp staff_roll_contracts.cpp)
 target_link_libraries(th04-port64-cutscene-contracts PRIVATE th04-portable-core)
 
 add_executable(th04-port64-bonus-contracts bonus_contracts.cpp)

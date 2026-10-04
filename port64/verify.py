@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/cdg_image.hpp",
+    "port64/staff_roll.hpp",
+    "port64/staff_roll.cpp",
+    "port64/staff_roll_contracts.cpp",
+    "port64/verify_staff_roll.py",
     "port64/verify_maine_join_windows.ps1",
     "port64/verify_ending_routes.py",
     "port64/verify_maine_join.py",

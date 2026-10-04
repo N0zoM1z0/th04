@@ -15,6 +15,12 @@ Ending::Ending(application::State& app,application::RunStatistics statistics,
     main_sound_requests_.emplace_back(cutscene::Kind::bgm_control,0x204);
 }
 void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
+    if(phase_==Phase::verdict_pending)return;
+    if(phase_==Phase::staff_roll) {
+        staff_->advance();
+        if(staff_->status()==staff::Status::stopped)phase_=Phase::verdict_pending;
+        return;
+    }
     if(phase_==Phase::staff_roll_pending) return;
     if(phase_==Phase::main_fade) {
         // end_game_* always performs palette_black_out(16): initial VSync,
@@ -56,5 +62,13 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         scene_->script().complete_measure_wait();
     }
     if(script.status()==cutscene::Status::stopped) phase_=Phase::staff_roll_pending;
+}
+void Ending::start_staff_roll(const staff::Assets& assets) {
+    if(phase_!=Phase::staff_roll_pending || !scene_)throw std::logic_error("Staff Roll requires a completed Ending");
+    staff_=std::make_unique<staff::Scene>(assets,std::array<Bytes,2>{scene_->page(0),scene_->page(1)},scene_->shown_page());
+    staff_->set_audio_active(bgm_active_);
+    // A new song owns measure progress; the previous Ending song cannot
+    // satisfy STAFF's waits. Its PI/script/text-box owner is now released.
+    song_measure_.reset();scene_.reset();phase_=Phase::staff_roll;
 }
 } // namespace th04::portable::maine

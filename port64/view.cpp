@@ -1,6 +1,7 @@
 #include "view.hpp"
 #include "application_state.hpp"
 #include "maine_ending.hpp"
+#include "cdg_image.hpp"
 #include "menu_state.hpp"
 #include "selection_state.hpp"
 #include "main_state.hpp"
@@ -106,67 +107,6 @@ struct Frame {
     Frame(unsigned w,unsigned h,std::vector<uint32_t> p):width(w),height(h),pixels(std::move(p)) {}
 };
 
-struct CdgSheet {
-    enum Layout : uint8_t {
-        colors_only = 0,
-        alpha_and_colors = 1,
-        alpha_only = 2,
-    };
-
-    explicit CdgSheet(const Bytes& source) : bytes(source) {
-        require_view(bytes.size() >= 16, "short CD2 file");
-        plane_size = le16(bytes, 0);
-        width = le16(bytes, 2);
-        height = le16(bytes, 4);
-        row_dwords = le16(bytes, 8);
-        image_count = bytes[10];
-        layout = bytes[11];
-        require_view(
-            width && height && image_count && row_dwords &&
-                size_t(row_dwords) * 4 * height == plane_size,
-            "invalid CD2 geometry"
-        );
-        require_view(
-            size_t(row_dwords) * 4 == (size_t(width) + 7) / 8,
-            "unsupported CD2 row padding"
-        );
-        require_view(layout <= alpha_only, "unknown CD2 plane layout");
-        planes_per_image = (layout == colors_only) ? 4 :
-            ((layout == alpha_only) ? 1 : 5);
-        image_size = size_t(plane_size) * planes_per_image;
-        require_view(
-            image_size <= bytes.size() - 16 &&
-                size_t(image_count) <= (bytes.size() - 16) / image_size &&
-                16 + size_t(image_count) * image_size == bytes.size(),
-            "CD2 file size disagrees with header"
-        );
-    }
-
-    bool bit(unsigned image, unsigned plane, unsigned x, unsigned y) const {
-        require_view(
-            image < image_count && plane < planes_per_image &&
-                x < width && y < height,
-            "CD2 pixel outside image"
-        );
-        // CD2 rows are stored from the bottom of the image toward the top,
-        // matching the original renderer's decreasing PC-98 VRAM address.
-        const size_t file_y = height - y - 1;
-        const size_t offset = 16 + size_t(image) * image_size +
-            size_t(plane) * plane_size +
-            file_y * row_dwords * 4 + x / 8;
-        return (bytes[offset] & (0x80u >> (x & 7))) != 0;
-    }
-
-    const Bytes& bytes;
-    unsigned plane_size{};
-    unsigned width{};
-    unsigned height{};
-    unsigned row_dwords{};
-    unsigned image_count{};
-    unsigned layout{};
-    unsigned planes_per_image{};
-    size_t image_size{};
-};
 
 uint32_t palette_color(const PiImage& image, unsigned index) {
     require_view(index < 16, "palette index outside image");
@@ -1209,6 +1149,7 @@ public:
     }
 
     void enable_ending() { enable_stage6();continue_ending_=true; }
+    void enable_staff_roll() { enable_ending();continue_staff_=true; }
     void enable_host_timing() { host_timing_=true; }
     void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
     const maine::Ending* ending() const { return ending_.get(); }
@@ -1312,6 +1253,10 @@ public:
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         if(ending_) {
+            if(continue_staff_ && ending_->phase()==maine::Phase::staff_roll_pending) {
+                require_view(assets_ && !assets_->staff_roll.sprites.empty(),"Staff Roll assets missing");
+                ending_->start_staff_roll(assets_->staff_roll);
+            }
             ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
             if(repaint) frame_=render();
             return;
@@ -1496,16 +1441,17 @@ private:
                 put_stage_overlay(frame,*sprites_,*main_);put_score_text(frame,*sprites_,*main_);
                 return frame;
             } else {
-                const auto& scene=*ending_->scene();
+                const auto* staff=ending_->staff_scene();
+                const auto* scene=ending_->scene();
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
-                PiImage palette;palette.palette=scene.palette();
-                const int tone=std::clamp(scene.script().tone(),0,200);
+                PiImage palette;palette.palette=staff ? staff->palette() : scene->palette();
+                const int tone=std::clamp(staff ? staff->tone() : scene->script().tone(),0,200);
                 for(auto& component:palette.palette) {
                     const int base=component>>4;
                     component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
                 }
-                const auto& page=scene.page(scene.shown_page());
-                const unsigned scroll=(unsigned(scene.scroll())%400);
+                const auto& page=staff ? staff->page(staff->shown_page()) : scene->page(scene->shown_page());
+                const unsigned scroll=staff ? 0 : (unsigned(scene->scroll())%400);
                 for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x)
                     frame.pixels[y*640+x]=palette_color(palette,page[((y+scroll)%400)*640+x]);
                 return frame;
@@ -1530,7 +1476,7 @@ private:
     }
 
     const MainAssets* assets_=nullptr;
-    bool continue_ending_=false,host_timing_=false;
+    bool continue_ending_=false,continue_staff_=false,host_timing_=false;
     std::unique_ptr<maine::Ending> ending_;
     cutscene::Sink ending_observer_;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
@@ -1570,7 +1516,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_ending();front_end.enable_host_timing(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_staff_roll();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1744,7 +1690,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_ending();front_end.enable_host_timing();
+    front_end.enable_staff_roll();front_end.enable_host_timing();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1932,6 +1878,25 @@ void run_title(
             <<" gone="<<stats.enemies_gone<<" killed="<<stats.enemies_killed<<" slow="<<stats.slow_frames<<" total="<<stats.frames<<" digits=";
         for(auto digit:stats.score_digits)std::cout<<unsigned(digit)<<',';
         std::cout<<" progression=staff_roll_pending\n";
+        scene.enable_staff_roll();
+        unsigned staff_ticks=0;
+        while(scene.ending()->phase()!=maine::Phase::verdict_pending && ++staff_ticks<10000)
+            scene.advance(0x2000,false,false);
+        require_view(scene.ending()->phase()==maine::Phase::verdict_pending &&
+            !scene.ending()->scene() && scene.generation()==generation+1 && scene.process_random_state()==1,
+            "Staff Roll failed to reach verdict or retained the Ending owner");
+        const auto& staff=*scene.ending()->staff_scene();
+        require_view(!staff.background_alive() && !staff.live_slots() && staff.tone()==0,
+            "Staff Roll retained background/sprite slots or incomplete fade");
+        write_bytes("staff-final-0.bin",staff.page(0));write_bytes("staff-final-1.bin",staff.page(1));
+        write_bytes("staff-final.pal",Bytes(staff.palette().begin(),staff.palette().end()));
+        scene.repaint();const auto completed=scene.frame().pixels;
+        for(unsigned i=0;i<5;++i)scene.advance(0x2010,false,false);
+        scene.repaint();require_view(scene.frame().pixels==completed && scene.generation()==generation+1,
+            "verdict frontier advanced the completed Staff Roll or replaced MAINE");
+        std::cout<<"MAINE Staff Roll route="<<prefix<<" ticks="<<staff_ticks<<" events="<<staff.event_count()
+            <<" generation="<<scene.generation()<<" progression=verdict_pending\n";
+
     };
     if (!screenshot.empty()) {
         write_bmp(screenshot, initial);
