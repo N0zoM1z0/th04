@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verdict.hpp",
+    "port64/verdict.cpp",
+    "port64/verdict_contracts.cpp",
+    "port64/verify_verdict.py",
+    "port64/verify_verdict_windows.ps1",
     "port64/cdg_image.hpp",
     "port64/staff_roll.hpp",
     "port64/staff_roll.cpp",

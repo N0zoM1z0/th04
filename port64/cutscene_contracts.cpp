@@ -11,6 +11,9 @@
 #include <set>
 
 void staff_contracts();
+void verdict_contracts();
+void verdict_trace(const char*,const char*);
+void verdict_clock(const char*);
 void staff_trace(const char*,unsigned);
 void staff_render(const char*,const char*,const char*);
 void staff_kernels(const char*,const char*,const char*);
@@ -259,7 +262,9 @@ int main(int argc,char** argv) {
         else if(argc==4 && std::string(argv[1])=="--staff-trace") staff_trace(argv[2],std::stoul(argv[3]));
         else if(argc==5 && std::string(argv[1])=="--staff-render") staff_render(argv[2],argv[3],argv[4]);
         else if(argc==5 && std::string(argv[1])=="--staff-kernels") staff_kernels(argv[2],argv[3],argv[4]);
-        else if(argc==1) { contracts();staff_contracts(); }
+        else if(argc==4 && std::string(argv[1])=="--verdict-trace") verdict_trace(argv[2],argv[3]);
+        else if(argc==3 && std::string(argv[1])=="--verdict-clock") verdict_clock(argv[2]);
+        else if(argc==1) { contracts();staff_contracts();verdict_contracts(); }
         else throw std::invalid_argument("usage: cutscene-contracts [--trace SCRIPT HELD | --render ASSETS SCRIPT HELD FONT CHECKPOINTS OUTPUT]");
         return 0;
     } catch(const std::exception& error) { std::cerr<<error.what()<<'\n';return 1; }

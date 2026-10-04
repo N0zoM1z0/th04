@@ -13,8 +13,10 @@ battle, then all-clear and the appropriate Good Ending. Easy runs its separate
 bad dialogue and Bad Ending. The native frontend now joins MAIN's score/run
 statistics, mandatory fade, resource release and fresh MAINE lifecycle to all
 eight Ending script/graphics routes. Staff Roll now completes its two backgrounds
-and three dissolve families, with the preview holding at verdict entry. Verdict,
-congratulations and score registration/save remain next. See
+and three dissolve families, with the preview holding at verdict entry. The
+verdict calculation/request/clock component now passes original CPU controls;
+its graphics and GUI integration, congratulations and score registration/save
+remain next. See [verdict component](#verdict-calculation-and-clock),
 [Staff Roll](#staff-roll-integration) and
 [MAIN-to-MAINE integration](#main-to-maine-ending-integration) for the current
 acceptance scope. Earlier slices below retain their historical boundaries.
@@ -3437,3 +3439,64 @@ PI decoder baseline, current build caches and Windows inputs remain available.
 Restore archived direct-consumer paths with `gzip -d -- PATH.bin.gz` or
 `PATH.bmp.gz`; `media-archive-receipt.json` and `archive-readback.json` retain
 member/readback and protected-product/reference digests.
+
+## Verdict calculation and clock
+
+v1294 ports the complete recovered MAINE0A05:1737..20F8 owner to
+`port64/verdict.cpp`. `Plan` computes the assessment and owns the ordered
+graphics/file/palette/wait requests. `Script` consumes them with explicit
+refresh and key waits. These are native components; the GUI still holds at
+the v1293 verdict-entry frontier. No synthetic cutscene script, copied
+instruction array, DOS pointer alias or host floating-point rate is used.
+
+Source comments retain the operations affecting results: percentages divide
+before multiplying, accumulation wraps as DWORD, signed division truncates
+toward zero, frame rates narrow to WORD after division by10, and graze doubling
+wraps AX before zero extension. Completion overrides STD to44000 for Good
+and12000 for completed Extra. Chance bonus re-seeds MAINE LCG from resident
+menu-time rand and draws once only if item penalty is nonzero. Result exposes
+the continued LCG and changed STD for later publication at calculation time;
+it does not itself mutate application resident state or replace a process.
+
+Original DATA0E53:071A is the initialized-zero subtraction flag. The separate
+BSS0E53:3F9C completion toggle does not feed that helper: fresh percentages
+all add, including completion and slowdown. Fixed-two-digit mode is initialized
+DATA0743. Skill/rank are3F9E/3FA2. The30-byte commentary buffer starts3FA3;
+its byte28 terminator is3FBF. CP932 file records retain30-byte stride. Assessment
+is hidden if `(frames>>1)<=slow_frames`, without opening commentary. Valid
+scores cover26 rows, including line0/no seek for skill at least1500000.
+
+`verify_verdict.py` executes all original bodies/switch tables and
+irand0000:1C5A..1C83.916 fixtures at both load1000/2000 compare complete
+consumer requests, CP932/gaiji strings, skill/cap/rank, resident STD, RNG,
+independent subtraction/fixed/toggle globals and file lifetime. Coverage includes
+legal rank/life/bomb/end/Turbo combinations, all26 commentary records, miss15
+and Bomb30 edges, BCD thresholds, invalid slowdown, WORD/DWORD wrap, equal/zero
+denominators and wrapped hundreds glyphs terminating a gaiji string.
+
+Ten further controls execute original black-in0000:0622, black-out0666,
+frame_delay0CC7:0033 and input_wait0CC7:020A. Only VSync, keyboard samples
+and palette-display consumers are adapted. Ordered request refresh times,
+changed palette tones and completion times match native scheduling at both
+loads. Release combines previous/current samples; a fresh press resumes requests
+in the same scheduler call. Zero wait budget never expires. Profiles include
+initially-held Enter, one-refresh release, a press during release and a
+one-refresh fresh press. These are bounded modeled-refresh controls, not
+physical PC-98 pacing, audio synthesis or rendered-pixel evidence.
+
+GNU8.4Release, MinGW13-posix AMD64 and optimized GNU UBSan/bounds fast builds
+each produce31 products and pass30CTests. Three native consumers match916
+cases and10 clocks. `verify_verdict_windows.ps1` also runs30 contracts and
+the same comparisons on actual Windows; independent Python output readback
+checks original hashes.213-file manifest:
+6c846b7fb01bfa03c11a2a9d5f7c0e896d7da3c69c5c8b6c98a77dcffd707268.
+Receipts:.analysis/port64/verdict-v1294.30GNU/30UBSan products, including
+the game executable, are raw-identical to v1293. PE metadata changes on relink;
+no preceding PE body equality is claimed. Native/root CI pass.
+
+Next join a graphics canvas, full-string text/gaiji drawing and UDE.PI, compare
+complete pages with original font kernels, then attach verdict to Staff Roll
+and publish resident STD/RNG in the correct phase. Preserve the independently
+reviewed destination/opposite-page copy semantics. Congratulations and score
+registration/save follow. Windows preview, DOS source, original targets and
+exact acceptance remain unchanged. General semantic expansion stays stopped.
