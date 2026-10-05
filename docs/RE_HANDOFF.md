@@ -211,22 +211,28 @@ item claim. See the
 
 Native x64 work is isolated in `port/modern-64`; general semantic expansion
 stays stopped unless a concrete port ambiguity requires it. Latest native
-commit `03b6043` (v1297) implements the ten-section MAINE score-file engine.
-All1,288 original CPU operation/RNG/byte-store controls at loads1000/2000 and
-15 original append/read-wrapper cases pass GNU/Wine/optimized UBSan/actual
-Windows. Three fast builds32 AMD64 products/31 CTests each bind228-file
-manifest b9b003db. All62 preceding GNU/UBSan products remain raw-identical;
-31 prior Windows products change only permitted PE timestamp/checksum bytes.
+commit `2495c17` (v1298) implements the complete logical registration menu.
+Whole924-byte original MAINE0A05:27C4..2B60, alphabet helper, score-file bodies
+and LCG execute at loads1000/2000.382 cases agree GNU/Wine/optimizedUBSan/
+actualWindows on table/input/file/RNG state. Graphics, palette timing, sound,
+wait0 and successful file services are guarded adapters;actual registration
+pixels/text, host persistence and fresh OP return remain next. No complete
+integrated saving claim. Existing1288 original score controls still pass3hosts.
 
-Missing/bad selected score checksums recreate/write all ten tables immediately
-(20 RNG draws), contrary to the old DOS load_for comment. Save rekeys all ten
-(22 draws), leaving encoded section9 in the shared buffer;retain selected name
-rendering state before saving. The engine currently models successful in-memory
-file operations. Registration graphics/input, host persistence and fresh OP
-remain next;this does not claim complete gameplay saving. DOS source/targets/
-unit/function acceptance unchanged. Current native receipts:
-`.analysis/worktrees/port-modern-64/.analysis/port64/score-file-v1297/` and
-native `docs/PORT64.md#score-file-engine`. Both CI/diff checks pass.
+Three fast builds33AMD64 products/32CTests each bind233-file manifest2f21eb00.
+64 preceding GNU/UBSan products raw-identical;31 preceding Windows products
+metadata-only. The remaining prior score-file PE lacks retained metadata/bytes,
+so its complete binary continuity is unproved;current1288 controls pass instead.
+All99 products and actualWindows32contracts/382traces have independent readback.
+Esc saves a partial name;changed nonzero input retains old lock;BYTE repeat
+survives accepted repeats/wrap. Preserve pre-save rendering snapshots because
+save leaves encodedsection9. DOS source/targets/unit/function acceptance unchanged.
+Current native receipts:
+`.analysis/worktrees/port-modern-64/.analysis/port64/registration-v1298/`;
+see native `docs/PORT64.md#registration-menu-control-owner`. Both CI/diff checks
+pass. Completed byte-identical score/menu text streams now share storage after
+independent production/readback, reclaiming104MiB with all paths/hashes retained;
+use new output paths/atomic replacement rather than modifying shared inodes.
 
 The current playable Windows GUI/launcher remain verifiedv1296.
 Good/Easy Bad show congratulations, other Bad ranks skip it. Speed1-in,
