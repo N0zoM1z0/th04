@@ -15,8 +15,10 @@ statistics, mandatory fade, resource release and fresh MAINE lifecycle to all
 eight Ending script/graphics routes. Staff Roll now completes its two backgrounds
 and three dissolve families. The assessment screen now renders its original
 grades and commentary, preserves the held-key release/press wait, then fades
-to the congratulations frontier. Congratulations and score registration/save
-remain next. See [verdict graphics](#verdict-graphics-and-integration),
+to the original congratulations picture and its release/press wait. After its
+blackout, the original100-refresh delay reaches score registration entry.
+Registration/save remain next. See [congratulations](#congratulations-and-registration-entry),
+[verdict graphics](#verdict-graphics-and-integration),
 [Staff Roll](#staff-roll-integration) and
 [MAIN-to-MAINE integration](#main-to-maine-ending-integration) for the current
 acceptance scope. Earlier slices below retain their historical boundaries.
@@ -3579,3 +3581,81 @@ Next implement congratulations and registration/save against the original
 control flow. General semantic expansion remains stopped unless a concrete
 port ambiguity requires it. Native whole-build exactness is not required;
 DOS source, original targets and historical acceptance remain separate.
+
+
+## Congratulations and registration entry
+
+v1296 joins `maine::Congratulations` after verdict. It selects `CONGxy.pi` by
+resident character/rank, accesses page1, loads/applies/puts/frees the real PI
+slot0, copies page1 to0, fades in at speed1, waits for a full key release and a
+fresh press, then fades out at speed4. It transfers both pages and releases the
+verdict owner without starting another MAINE generation or changing resident
+counters/LCG. `maine::Animation` owns the existing verdict refresh/key/fade
+algorithm independently of score calculation, so congratulations needs no
+dummy score Plan or fabricated Ending script. Source comments explain the
+before/after-refresh key OR and independent repaint behavior.
+
+Good Ending and Easy Bad Ending display the picture. Other Bad ranks skip it.
+Both paths request song fade4 and consume exactly100 further refreshes before
+`registration_pending`, including while Enter stays held. The preview holds
+there because registration/save is still unported. Native seeded branches
+check this distinction, the100th-refresh boundary, one sound request and a
+stable frontier; a non-Easy Bad fixture has its congratulations asset removed.
+
+`verify_congratulations.py` attests all400 bytes of recovered `_main` at
+MAINE`0A05:00B2..0241` (payload`A102..A292`, SHA-256`9a44bbf5...`). Original
+instructions select filenames and branches; full original fade/key/counter
+loops execute at load segments1000/2000. Thirty-two distinct Good/Bad/Extra/
+score-only entry fixtures and missing-CFG controls preserve all256 resident
+bytes. Extra's registration-before-congratulations-before-verdict order stays
+separate from Normal; this is original branch evidence, not Extra integration.
+Ending/Staff/verdict/register, initialization, PI calls, sound and process
+execution are explicit guarded adapters. The PI palette wrapper and original
+far memcpy run rather than discarding the wrapper's initial palette_show.
+An early adapter omission caused a first-tone clock mismatch and is retained
+as a rejected development experiment, not a native game defect.
+
+Ten character/rank pictures pass50 original fade/key profiles and20 complete
+native pages,10 palettes and page/access/tone/request states. Original picture
+bytes and a retained v1294 native PI decoder provide the pixel dependency;
+these controls do not claim original CPU PI decoding or physical PC-98 VRAM.
+All three hosts freshly rerun the full original main/clock producer. Previously
+verified verdict916 state/request fixtures and10 clocks remain unchanged;
+80 original-controlled verdict graphics cases still execute527 original font
+kernels at two loads and match160 pages. All24 natural menu/STD/dialogue/boss/
+Ending/Staff/verdict/congratulations paths pass on GNU, Wine, optimized UBSan
+and actual Windows. Each preserves previous576 Ending pages,48 final Staff
+pages,48 verdict pages and adds48 congratulations pages/24 palettes/24 RGB.
+MAINE generation3, resident statistics and continued RNG remain stable through
+held input, repaint, confirmation and the registration delay.
+
+Three fast builds produce31 AMD64 executables and pass30CTests each. Frozen
+222-file manifest`4c872c8aa01bad662f7c43367a2055cc5a6b2e0a3441ad859a74789b4a4dd1a5`
+binds all93 products and the English launcher before testing. Actual Windows
+checks1,440 route files,50 clocks,20 component pages and preceding Staff/
+verdict controls. Python independently rechecks actual Windows indexed/RGB
+outputs and original scoring/font kernels; pixel/palette/state/request/clock
+mutations reject. The older numeric PowerShell receipt's source field describes
+its original reference producer; candidate executable hashes are independently
+bound to the new build inventory. No physical timing/audio or saved-score claim.
+
+GNU8.4 requires its separate `stdc++fs` archive. The current newer host shared
+libstdc++ exports filesystem symbols but its path lifetime crashes with this
+compiler ABI; the same isolated probe crashes without the archive and exits0
+with it. CMake links the active archive for GNU versions below9. This is a
+compiler-observed current-host compatibility result, separate from TH04
+semantics; all native products/contract controls pass after the correction.
+Windows versioned package is `D:\Entertainment\Game\Touhou\th04-reconstruct\port64-preview\v1296-congratulations`;
+root `start-th04-port64.bat` launches the updated native GUI. All31 products,
+owned original HDI/font and previousv1295 GUI/launcher rollback are retained.
+All106 unrelated existing Windows files keep hashes; no GUI auto-launch.
+Receipts and exact commands live at `.analysis/port64/post-verdict-v1296`.
+Completed5,564 generated buffers are losslessly tar/zstd-archived with every
+member's full size/hash readback. Net2,094MiB reclaimed includes598 temporary
+Staff raw expansions;12,025 protected files remain identical. GNU80-case
+verdict and10-picture congratulations references stay expanded for the next
+Windows consumer, alongside all three fast caches. Restore other captures
+before direct replay;`media-archive-receipt.json` records exact commands.
+DOS source and exact/unit/function acceptance are unchanged. General semantic
+work remains stopped; next port registration, score-file persistence and the
+fresh OP return, followed by remaining complete-game owners.

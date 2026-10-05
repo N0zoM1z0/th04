@@ -20,48 +20,43 @@ with its previousv1292 rollback executable remain expanded. Root receipt:
 .analysis/cleanup/build-followup-20261005/receipt.json. Historical gzip files
 share storage: replace them atomically rather than modifying an inode in place.
 
-Current code batch: [verdict graphics and integration](PORT64.md#verdict-graphics-and-integration).
-v1295 joins a real graphics canvas to the existing verdict Plan/Script; no
-dummy cutscene owns `_UDE.TXT`. Staff Roll transfers both pages once and is
-released. STD and the real MAINE LCG are published at their calculation requests,
-after the background fade; a resident-rand3/STD123 fixture catches premature or
-repeated writes. Held keys/repaint leave the wait and pixels stable. Fresh
-confirmation completes the original final fade to `congratulations_pending`.
+Current native batch: [congratulations and registration entry](PORT64.md#congratulations-and-registration-entry).
+v1296 transfers both verdict pages once to a real congratulations owner and
+releases verdict without replacing MAINE or mutating resident counters/LCG.
+Character/rank select CONGxy.pi; Good/Easy Bad show it, other Bad ranks skip it.
+Original speed1-in/release/fresh-press/speed4-out precedes song fade4 and exactly
+100 refreshes to registration entry. Held input/repaint cannot skip the wait or
+repeat state writes. The preview holds there; score registration/save is next.
 
-Original recovered0A05:1737..20F8 scoring still passes916 cases/10 clock controls
-at loads1000/2000. Original full-string text0CC7:058C..06EB and gaiji0000:36B6..375E
-execute527 kernels at both loads;80 cases cover all26 commentary rows, invalid
-assessment and all5 rank labels, matching160 complete pages/80 palette/states.
-PI decode is a preceding-v1294 native regression, while CGROM/GRCG/VSync/audio
-remain explicit adapters. GNU/Wine/UBSan/actualWindows agree; each fast build
-produces31 AMD64 products and passes30CTests. All four hosts pass24 natural
-menu/boss/Ending/Staff/verdict routes with48 verdict pages/24 RGB frames and
-unchanged576 Ending pages/48 final Staff pages. Actual Windows additionally
-compares1,344 route files, then independent Python rechecks original pixels and
-scoring. No physical video/audio, congratulations or score-save claim.
+Original recovered _main0A05:00B2..0241, payloadA102..A292 (400bytes9a44bbf5)
+passes32 unique branch fixtures and missingCFG at loads1000/2000;50 actual
+fade/key clocks preserve256 resident bytes. Child routines/PI/sound/exec are
+guarded adapters; PI palette wrapper/far memcpy execute fully. Extra order is
+registration->congratulations->verdict;this is original branch evidence, not
+Extra game integration.10 real pictures match20 native pages/10 palettes/states
+against pinned pictures and a preceding-native PI decoder dependency.
 
-Runtime-tested216-file manifestfef77a46; release manifest501137c4 differs only
-in the English launcher's scope text. All executable/verifier/build inputs
-and93 product hashes remain bound to the tested source. Receipts:
-`.analysis/port64/verdict-v1295/{platform-review.json,release-source-binding.json}`.
-The Windows `v1295-verdict` package/root launcher is published without
-auto-launch; previousv1293 GUI/launcher are retained for rollback. Only the two
-native root files change; DOS products/scripts/config/saves remain protected.
-Latest development-media cleanup releases416MiB net, with a verified archive
-and restoration commands at root `.analysis/cleanup/development-media-20261005/`.
-Finished v1295 captures are also archived:5,176 members re-read by full size/
-SHA-256, releasing1,808MiB net before removing598 temporary Staff raw expansions.
-The80-case GNU verdict pages remain expanded for the next Windows consumer;
-other direct capture consumers must restore first. Current build caches and
-12,048 protected source/assets/reference/Windows hashes remain unchanged.
-See `.analysis/port64/verdict-v1295/media-archive-receipt.json` for restoration.
+Previous verdict916 request/state fixtures/10 clocks and80 graphic cases/527
+original full-string kernels/160pages still pass. GNU/Wine/optimizedUBSan and
+actualWindows pass24 natural menu/boss/Ending/Staff/verdict/congratulations
+routes with48 new congratulations pages/24 RGB and prior complete outputs.
+ActualWindows1440 route files and component pages/clocks have independent
+Python readback, original scoring/font and mutation checks. Three fast builds
+31AMD64products/30CTest each bind93 products to222-file source manifest4c872c8a.
+GNU8.4 filesystem path ABI crashes without its matchingstdc++fs archive and
+survives with it;CMake links the active archive. No DOS/exact acceptance changes.
 
-Next implement congratulations and score registration/save. Extra/death/Bomb/
-Continue/full HUD/audio/config remain incomplete. General semantic expansion
-stays stopped unless it resolves a concrete port ambiguity. DATA0E53:071A is
-independent of BB81's BSS3F9C, so completion is not subtracted. input_wait ORs
-samples before/after one refresh; one clear sample cannot release a held key.
-The previous [Staff Roll](PORT64.md#staff-roll-integration) controls remain valid.
+Windowsv1296-congratulations/root GUI/English start-th04-port64.bat are published;
+previousv1295 rollback retained,106 unrelated Windows hashes unchanged. No GUI
+auto-launch. Current receipts:.analysis/port64/post-verdict-v1296. Finished5564 capture files
+are losslessly archived after full member readback;net2094MiB reclaimed including
+598 temporaryStaff expansions.12025 protected hashes agree. CurrentGNU80-case
+verdict and10-picture congratulations references and all three fast caches
+remain expanded;restore other captures before direct replay. See
+media-archive-receipt.json for restore commands. General semantic stays stopped;
+continue concrete registration/save/freshOP, then remaining Extra/death/Bomb/
+Continue/fullHUD/audio/config owners. Full native goal unfinished.
+
 
 At recovered MAINE `0A05:0E80..1736`, eight original CPU controls cover complete
 requests at loads1000/2000 and initial angles0/7/64/255; original polar0260

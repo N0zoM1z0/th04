@@ -3,12 +3,13 @@
 #include "cutscene_scene.hpp"
 #include "staff_roll.hpp"
 #include "verdict_scene.hpp"
+#include "congratulations.hpp"
 #include <memory>
 #include <optional>
 
 namespace th04::portable::maine {
 enum class Phase { main_fade,cutscene,staff_roll_pending,staff_roll,verdict_pending,
-                   verdict,congratulations_pending,registration_pending };
+                   verdict,congratulations_pending,congratulations,registration_delay,registration_pending };
 inline std::uint16_t input_from_main_actions(std::uint16_t input) {
     // MAIN's host Z/Enter masks can overlap MAINE's Escape bit. Translate
     // cancellation explicitly; all other held actions only affect wait input.
@@ -27,12 +28,15 @@ public:
     }
     void start_staff_roll(const staff::Assets&);
     void start_verdict();
+    void start_congratulations();
     void set_verdict_observer(verdict::Sink sink) { verdict_observer_=std::move(sink); }
     Phase phase() const { return phase_; }
     int main_tone() const { return tone_; }
     const cutscene::Scene* scene() const { return scene_.get(); }
     const staff::Scene* staff_scene() const { return staff_.get(); }
     const verdict::Scene* verdict_scene() const { return verdict_.get(); }
+    const Congratulations* congratulations_scene() const { return congratulations_.get(); }
+    const std::vector<cutscene::Event>& maine_sound_requests() const { return maine_sound_requests_; }
     const std::string& script_name() const { return name_; }
     unsigned fade_ticks() const { return fade_ticks_; }
     const std::vector<cutscene::Event>& main_sound_requests() const { return main_sound_requests_; }
@@ -45,8 +49,11 @@ private:
     std::unique_ptr<cutscene::Scene> scene_;
     std::unique_ptr<staff::Scene> staff_;
     std::unique_ptr<verdict::Scene> verdict_;
+    std::unique_ptr<Congratulations> congratulations_;
     verdict::Sink verdict_observer_;
     bool completion_published_=false,random_published_=false;
+    unsigned registration_delay_left_=0;
+    void begin_registration_delay();
     std::string name_;
     Phase phase_=Phase::main_fade;
     int tone_=100,fade_left_=17,measure_left_=0;
@@ -56,5 +63,6 @@ private:
     // The current host audio backend is inactive, but preserve the request
     // issued before MAIN's fade so a real backend can consume it later.
     std::vector<cutscene::Event> main_sound_requests_;
+    std::vector<cutscene::Event> maine_sound_requests_;
 };
 } // namespace th04::portable::maine

@@ -12,8 +12,9 @@ echo Normal and Lunatic continue through Good Ending; Easy runs Bad Ending.
 echo Staff Roll includes both backgrounds and the original dissolve transitions.
 echo The assessment screen includes the original grades and commentary.
 echo Assessment: release the key, then press Enter or Z to confirm.
-echo After assessment confirmation the preview holds before congratulations.
-echo Congratulations, score saving, player death, Bombs and audio are in development.
+echo Congratulations: release the key, then press Enter or Z to continue.
+echo After congratulations the preview holds at score registration entry.
+echo Score saving, player death, Bombs and audio are in development.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.
   pause

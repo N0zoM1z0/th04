@@ -1,21 +1,15 @@
 #pragma once
 #include "application_state.hpp"
 #include "cutscene.hpp"
+#include "maine_animation.hpp"
 #include <vector>
 
 namespace th04::portable::verdict {
 using Bytes=cutscene::Bytes;
-enum class Kind {
-    tone,access,show,pi_load,pi_palette,pi_put,pi_free,copy_page,fade,
-    text,gaiji,file_open,file_seek,file_read,file_close,delay,wait
-};
-struct Event {
-    Kind kind;
-    int a=0,b=0,c=0,d=0,e=0;
-    std::string data;
-};
+using Kind=maine::RequestKind;
+using Event=maine::Request;
 const char* kind_name(Kind);
-using Sink=std::function<void(const Event&)>;
+using Sink=maine::RequestSink;
 
 struct Input {
     application::ResidentState resident;
@@ -55,24 +49,14 @@ private:
     std::vector<Event> events_;
 };
 
-enum class Status { running,delay,release,press,stopped };
+using Status=maine::AnimationStatus;
 // Palette and key waits remain independent of repaint and wall-clock time.
 // wait(0) releases held keys first, then waits indefinitely for a fresh press.
-class Script {
+class Script:public maine::Animation {
 public:
-    explicit Script(Plan plan):plan_(std::move(plan)) {}
-    void advance(std::uint16_t held,const Sink& sink={});
-    Status status() const { return status_; }
-    int tone() const { return tone_; }
-    unsigned ticks() const { return ticks_; }
-    std::size_t event_count() const { return at_; }
-    const Result& result() const { return plan_.result(); }
+    explicit Script(Plan plan):Animation(plan.requests()),result_(plan.result()) {}
+    const Result& result() const { return result_; }
 private:
-    Plan plan_;
-    Status status_=Status::running;
-    std::size_t at_=0;
-    unsigned ticks_=0;
-    std::uint16_t previous_keys_=0;
-    int tone_=0,left_=0,fade_step_=0,fade_end_=0,fade_speed_=0;
+    Result result_;
 };
 } // namespace th04::portable::verdict

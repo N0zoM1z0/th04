@@ -6,7 +6,8 @@ param(
     [Parameter(Mandatory=$true)][string]$FontBitmap,
     [Parameter(Mandatory=$true)][string]$OutputDirectory,
     [string]$StaffDirectory,
-    [string]$VerdictDirectory
+    [string]$VerdictDirectory,
+    [string]$CongratulationsDirectory
 )
 # Actual Windows consumer of independently checked GNU/original CPU receipts.
 # The Python consumer verifies the resulting complete indexed/RGB frames again.
@@ -105,6 +106,51 @@ if ($VerdictDirectory) {
     }
     Write-Host 'PASS: 80 original verdict graphics cases and 160 complete pages.'
 }
+if ($CongratulationsDirectory) {
+    $congratulations = (Resolve-Path -LiteralPath $CongratulationsDirectory).ProviderPath
+    $congratulationsReceipt = Get-Content -Raw -LiteralPath (Join-Path $congratulations 'receipt.json') | ConvertFrom-Json
+    if (!$congratulationsReceipt.passed -or $congratulationsReceipt.complete_pages -ne 20 -or $congratulationsReceipt.clock_controls -ne 50) {
+        throw 'Original congratulations controls are incomplete.'
+    }
+    # The component emits ordered requests, then palette samples/STOP inside
+    # each clock group. Preserve all values and reorder only these observations
+    # exactly as canonical_clock does in the independent Python Oracle.
+    $lines = @(& $exe --congratulations-trace 2>&1)
+    if ($LASTEXITCODE -ne 0) { throw 'Congratulations clock consumer failed.' }
+    $groups = New-Object 'System.Collections.Generic.List[object]'
+    $current = New-Object 'System.Collections.Generic.List[string]'
+    foreach ($line in $lines) {
+        if ($line.StartsWith('CLOCK ') -and $current.Count -gt 0) { $groups.Add($current.ToArray()); $current.Clear() }
+        $current.Add($line)
+    }
+    if ($current.Count -gt 0) { $groups.Add($current.ToArray()) }
+    $canonical = New-Object 'System.Collections.Generic.List[string]'
+    foreach ($group in $groups) {
+        foreach ($line in $group) { if (!$line.StartsWith('PALETTE ') -and !$line.StartsWith('STOP ')) { $canonical.Add($line) } }
+        foreach ($line in $group) { if ($line.StartsWith('PALETTE ')) { $canonical.Add($line) } }
+        foreach ($line in $group) { if ($line.StartsWith('STOP ')) { $canonical.Add($line) } }
+    }
+    $expected = (Get-Content -Raw -LiteralPath (Join-Path $congratulations 'native.txt')) -replace "`r", ''
+    if (($lines -join "`n").TrimEnd() -cne $expected.TrimEnd()) { throw 'Congratulations requests/clock differ from accepted GNU.' }
+    $utf8 = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::WriteAllText((Join-Path $out 'congratulations-native-canonical.txt'), (($canonical.ToArray() -join "`n") + "`n"), $utf8)
+    if ((Get-FileHash -LiteralPath (Join-Path $out 'congratulations-native-canonical.txt') -Algorithm SHA256).Hash.ToLowerInvariant() -cne
+        $congratulationsReceipt.native_canonical_sha256) { throw 'Canonical original congratulations clock differs.' }
+    $destination = (New-Item -ItemType Directory -Path (Join-Path $out 'congratulations-pages')).FullName
+    & $exe --congratulations-render (Join-Path $congratulations 'assets') $font $destination
+    if ($LASTEXITCODE -ne 0) { throw 'Congratulations renderer failed.' }
+    $referenceFiles = @(Get-ChildItem -LiteralPath (Join-Path $congratulations 'pages') -File | Where-Object { $_.Extension -in @('.bin', '.pal', '.txt') })
+    if ($referenceFiles.Count -ne 31) { throw 'Expected twenty pages, ten palettes and one state file.' }
+    foreach ($file in $referenceFiles) {
+        $actual = Join-Path $destination $file.Name
+        if ($file.Extension -eq '.txt') {
+            if (((Get-Content -Raw -LiteralPath $actual) -replace "`r", '') -cne
+                ((Get-Content -Raw -LiteralPath $file.FullName) -replace "`r", '')) { throw 'Congratulations page state differs.' }
+        } elseif ((Get-FileHash -LiteralPath $actual -Algorithm SHA256).Hash -cne
+                  (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash) { throw 'Congratulations page/palette differs.' }
+    }
+    Write-Host 'PASS: 50 original congratulations clocks and 20 complete pages.'
+}
 Get-ChildItem -LiteralPath $routes -Filter '*-checkpoints.txt' | ForEach-Object {
     Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $routeOut $_.Name)
 }
@@ -143,7 +189,12 @@ if ($VerdictDirectory) {
     $expectedVerdicts = @(Get-Content -LiteralPath (Join-Path $routes 'stdout.log') | Where-Object { $_ -like 'MAINE Verdict route=*' })
     if ($actualVerdicts.Count -ne 24 -or ($actualVerdicts -join "`n") -cne ($expectedVerdicts -join "`n")) { throw 'Verdict route state differs.' }
 }
-$expectedCount = if ($VerdictDirectory) { 1344 } elseif ($StaffDirectory) { 1248 } else { 1176 }
+if ($CongratulationsDirectory) {
+    $actualCongratulations = @($lines | Where-Object { "$_" -like 'MAINE Congratulations route=*' })
+    $expectedCongratulations = @(Get-Content -LiteralPath (Join-Path $routes 'stdout.log') | Where-Object { $_ -like 'MAINE Congratulations route=*' })
+    if ($actualCongratulations.Count -ne 24 -or ($actualCongratulations -join "`n") -cne ($expectedCongratulations -join "`n")) { throw 'Congratulations registration-entry state differs.' }
+}
+$expectedCount = if ($CongratulationsDirectory) { 1440 } elseif ($VerdictDirectory) { 1344 } elseif ($StaffDirectory) { 1248 } else { 1176 }
 if ($files.Count -ne $expectedCount) { throw 'Incomplete page/palette/RGB/state comparisons.' }
 $receipt = @{
     passed=$true; observed_utc=[DateTime]::UtcNow.ToString('o'); host='actual-Windows-AMD64';
@@ -157,7 +208,9 @@ $receipt = @{
     staff_routes=$(if ($StaffDirectory) { 24 } else { 0 });
     verdict_graphics_cases=$(if ($VerdictDirectory) { 80 } else { 0 });
     verdict_routes=$(if ($VerdictDirectory) { 24 } else { 0 });
-    scope='Actual Windows consumer of original/GNU controls; natural MAIN-to-MAINE Ending and optional Staff Roll/verdict graphics. No physical PC-98 capture, audio synthesis, congratulations or saved-score claim.'
+    congratulations_routes=$(if ($CongratulationsDirectory) { 24 } else { 0 });
+    congratulations_clock_cases=$(if ($CongratulationsDirectory) { 50 } else { 0 });
+    scope='Actual Windows consumer of original/GNU controls; natural MAIN-to-MAINE Ending and optional Staff Roll/verdict/congratulations graphics and registration-entry delay. No physical PC-98 capture, audio synthesis or saved-score claim.'
 }
 $receipt | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $out 'receipt.json') -Encoding UTF8
 Write-Host 'PASS: 24 routes, 576 complete indexed pages, 288 palettes and 288 RGB frames.'

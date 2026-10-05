@@ -14,6 +14,12 @@ import sys
 
 
 PORT_FILES = (
+    "port64/maine_animation.hpp",
+    "port64/maine_animation.cpp",
+    "port64/congratulations.hpp",
+    "port64/congratulations.cpp",
+    "port64/congratulations_contracts.cpp",
+    "port64/verify_congratulations.py",
     "port64/verdict_scene.hpp",
     "port64/verdict_scene.cpp",
     "port64/verify_verdict_pixels.py",

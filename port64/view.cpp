@@ -1144,6 +1144,7 @@ public:
     void enable_ending() { enable_stage6();continue_ending_=true; }
     void enable_staff_roll() { enable_ending();continue_staff_=true; }
     void enable_verdict() { enable_staff_roll();continue_verdict_=true; }
+    void enable_congratulations() { enable_verdict();continue_congratulations_=true; }
     void enable_host_timing() { host_timing_=true; }
     void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
     const maine::Ending* ending() const { return ending_.get(); }
@@ -1252,6 +1253,7 @@ public:
                 ending_->start_staff_roll(assets_->staff_roll);
             }
             if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
+            if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
             ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
             if(repaint) frame_=render();
             return;
@@ -1439,10 +1441,11 @@ private:
                 const auto* staff=ending_->staff_scene();
                 const auto* scene=ending_->scene();
                 const auto* verdict=ending_->verdict_scene();
-                const auto* canvas=verdict ? &verdict->canvas() : static_cast<const cutscene::Canvas*>(scene);
+                const auto* congratulations=ending_->congratulations_scene();
+                const auto* canvas=congratulations ? &congratulations->canvas() : verdict ? &verdict->canvas() : static_cast<const cutscene::Canvas*>(scene);
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
                 PiImage palette;palette.palette=staff ? staff->palette() : canvas->palette();
-                const int tone=std::clamp(staff ? staff->tone() : verdict ? verdict->tone() : scene->script().tone(),0,200);
+                const int tone=std::clamp(staff ? staff->tone() : congratulations ? congratulations->animation().tone() : verdict ? verdict->tone() : scene->script().tone(),0,200);
                 for(auto& component:palette.palette) {
                     const int base=component>>4;
                     component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
@@ -1473,7 +1476,7 @@ private:
     }
 
     const MainAssets* assets_=nullptr;
-    bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,host_timing_=false;
+    bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
     std::unique_ptr<maine::Ending> ending_;
     cutscene::Sink ending_observer_;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
@@ -1513,7 +1516,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_verdict();front_end.enable_host_timing(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_congratulations();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1687,7 +1690,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_verdict();front_end.enable_host_timing();
+    front_end.enable_congratulations();front_end.enable_host_timing();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1948,6 +1951,49 @@ void run_title(
             <<" std="<<assessment.result().std_frames<<" random="<<assessment.result().random_state
             <<" line="<<assessment.result().commentary_line<<" generation="<<scene.generation()
             <<" progression=congratulations_pending\n";
+
+        // Preserve the preceding verdict outputs before releasing that owner.
+        // Congratulations borrows the same immutable assets but owns its pages
+        // and refresh/key clock; registration's100-refresh delay is separate.
+        const auto random_before_congratulations=scene.process_random_state();
+        const auto counters_before_congratulations=scene.resident().statistics;
+        scene.enable_congratulations();scene.advance(0x1000,false,false);
+        require_view(scene.ending()->congratulations_scene() && !scene.ending()->verdict_scene(),
+            "congratulations did not transfer and release the verdict owner");
+        const auto& congratulations=*scene.ending()->congratulations_scene();
+        while(congratulations.animation().status()!=maine::AnimationStatus::release && congratulations.animation().ticks()<1000)
+            scene.advance(0x1000,false,false);
+        require_view(congratulations.animation().status()==maine::AnimationStatus::release && congratulations.animation().tone()==100,
+            "congratulations did not reach its visible wait");
+        const auto& congratulation_canvas=congratulations.canvas();
+        write_bytes("congratulations-0.bin",congratulation_canvas.page(0));
+        write_bytes("congratulations-1.bin",congratulation_canvas.page(1));
+        write_bytes("congratulations.pal",Bytes(congratulation_canvas.palette().begin(),congratulation_canvas.palette().end()));
+        scene.repaint();write_bmp(ending_screenshots+"/"+prefix+"congratulations.bmp",scene.frame());
+        const auto congratulations_pixels=scene.frame().pixels;
+        for(unsigned i=0;i<10;++i) {scene.advance(0x1000,false,false);scene.repaint();}
+        require_view(scene.frame().pixels==congratulations_pixels && congratulations.animation().status()==maine::AnimationStatus::release,
+            "congratulations held input or repaint changed its picture/wait");
+        scene.advance(0,false,false);scene.advance(0,false,false);scene.advance(0x1000,false,false);
+        while(scene.ending()->phase()==maine::Phase::congratulations && congratulations.animation().ticks()<1000)
+            scene.advance(0x1000,false,false);
+        require_view(scene.ending()->phase()==maine::Phase::registration_delay && congratulations.animation().tone()==0,
+            "congratulations did not finish its blackout before registration delay");
+        for(unsigned i=0;i<99;++i)scene.advance(0x1000,false,false);
+        require_view(scene.ending()->phase()==maine::Phase::registration_delay,"registration started before100 refreshes");
+        scene.advance(0x1000,false,false);
+        const auto& counters_after_congratulations=scene.resident().statistics;
+        require_view(scene.ending()->phase()==maine::Phase::registration_pending && scene.generation()==generation+1 &&
+            scene.process_random_state()==random_before_congratulations &&
+            counters_after_congratulations.score_digits==counters_before_congratulations.score_digits &&
+            counters_after_congratulations.std_frames==counters_before_congratulations.std_frames &&
+            counters_after_congratulations.frames==counters_before_congratulations.frames &&
+            counters_after_congratulations.slow_frames==counters_before_congratulations.slow_frames &&
+            scene.ending()->maine_sound_requests().size()==1 && scene.ending()->maine_sound_requests().front().a==0x204,
+            "congratulations/delay changed MAINE state or skipped the original sound request");
+        std::cout<<"MAINE Congratulations route="<<prefix<<" picture="<<congratulations.picture_name()
+            <<" ticks="<<congratulations.animation().ticks()<<" delay=100 generation="<<scene.generation()
+            <<" progression=registration_pending\n";
 
     };
     if (!screenshot.empty()) {

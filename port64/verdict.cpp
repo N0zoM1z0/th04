@@ -175,40 +175,4 @@ const char* kind_name(Kind k) {
         "text","gaiji","file_open","file_seek","file_read","file_close","delay","wait"};
     return names[static_cast<unsigned>(k)];
 }
-void Script::advance(std::uint16_t held,const Sink& sink) {
-    if(status_==Status::stopped)return;
-    ++ticks_;
-    if(status_==Status::release || status_==Status::press) {
-        // input_reset_sense samples before frame_delay(1); input_sense then
-        // ORs the post-refresh sample. A one-refresh release between two
-        // held samples cannot satisfy the original release loop.
-        const auto sampled=static_cast<std::uint16_t>(previous_keys_|held);
-        previous_keys_=held;
-        if(status_==Status::release) { if(!sampled)status_=Status::press;return; }
-        if(!sampled)return;
-        status_=Status::running;
-    }
-    if(status_==Status::delay) {
-        if(left_>0 && --left_>0)return;
-        if(fade_step_) {
-            tone_+=fade_step_;
-            if((fade_step_>0 && tone_>=fade_end_) || (fade_step_<0 && tone_<=fade_end_)) {
-                tone_=fade_end_;fade_step_=0;
-            } else { left_=fade_speed_;return; }
-        }
-        status_=Status::running;
-    }
-    while(at_<plan_.requests().size()) {
-        const auto& e=plan_.requests()[at_++];
-        if(e.kind==Kind::tone)tone_=e.a;
-        else if(e.kind==Kind::fade) {
-            tone_=e.b ? 0 : 100;fade_end_=e.b ? 100 : 0;
-            fade_step_=e.b ? 6 : -6;fade_speed_=e.c;left_=1+fade_speed_;status_=Status::delay;
-        } else if(e.kind==Kind::delay) { left_=e.a;status_=Status::delay; }
-        else if(e.kind==Kind::wait) { previous_keys_=held;status_=Status::release; }
-        if(sink)sink(e);
-        if(status_!=Status::running)return;
-    }
-    status_=Status::stopped;
-}
 } // namespace th04::portable::verdict

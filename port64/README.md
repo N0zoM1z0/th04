@@ -11,11 +11,13 @@ NPC dialogue. Both characters continue through their respective Reimu/Marisa
 Boss battle, post-dialog, clear bonus and departure into Stage5 STD waves, scrolling stars and Yuuka pre-dialogue.
 Stage5 has no midboss; it includes Yuuka's battle, post-dialogue and departure.
 Normal/Lunatic continue through Stage6 waves, dialogue and Yuuka's final
-battle, then all-clear and the Ending entry. Easy stops at Bad Ending entry.
+battle, then all-clear, Good Ending, Staff Roll, assessment and congratulations.
+Easy follows its Bad Ending through the same post-Ending owners.
 On Linux the window uses SDL2; on Windows it uses Win32/GDI.
 Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
 to advance dialogue. Player death, Bomb, complete HUD/audio, Extra,
-Ending and save are not implemented yet. The native preview does not embed
+score registration and save are not implemented yet. After congratulations
+the preview holds at registration entry after the original100-refresh delay. The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
 
 The two Stage4 Boss owners have independent original CPU state/event,

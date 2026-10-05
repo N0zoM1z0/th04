@@ -54,6 +54,8 @@ add_library(
   staff_roll.cpp
   verdict.cpp
   verdict_scene.cpp
+  maine_animation.cpp
+  congratulations.cpp
   run_statistics.cpp
   cutscene_scene.cpp
   pi_image.cpp
@@ -69,6 +71,12 @@ add_library(
 target_compile_features(th04-portable-core PUBLIC cxx_std_17)
 target_compile_definitions(th04-portable-core PUBLIC GAME=4)
 target_include_directories(th04-portable-core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
+  # GCC8's filesystem implementation is separate. A newer host libstdc++
+  # exports similarly named functions but does not supply its matching ABI.
+  # Link the active compiler's archive before using C++17 filesystem paths.
+  target_link_libraries(th04-portable-core PUBLIC stdc++fs)
+endif()
 
 add_executable(th04-port64 main.cpp view.cpp)
 target_compile_features(th04-port64 PRIVATE cxx_std_17)
@@ -95,7 +103,7 @@ add_executable(th04-port64-orange-contracts orange_contracts.cpp)
 target_link_libraries(th04-port64-orange-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-dialog-contracts dialog_contracts.cpp)
 target_link_libraries(th04-port64-dialog-contracts PRIVATE th04-portable-core)
-add_executable(th04-port64-cutscene-contracts cutscene_contracts.cpp staff_roll_contracts.cpp verdict_contracts.cpp)
+add_executable(th04-port64-cutscene-contracts cutscene_contracts.cpp staff_roll_contracts.cpp verdict_contracts.cpp congratulations_contracts.cpp)
 target_link_libraries(th04-port64-cutscene-contracts PRIVATE th04-portable-core)
 
 add_executable(th04-port64-bonus-contracts bonus_contracts.cpp)

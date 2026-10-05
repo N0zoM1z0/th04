@@ -16,6 +16,15 @@ Ending::Ending(application::State& app,application::RunStatistics statistics,
 }
 void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
     if(phase_==Phase::verdict_pending || phase_==Phase::congratulations_pending || phase_==Phase::registration_pending)return;
+    if(phase_==Phase::registration_delay) {
+        if(--registration_delay_left_==0)phase_=Phase::registration_pending;
+        return;
+    }
+    if(phase_==Phase::congratulations) {
+        congratulations_->advance(keys);
+        if(congratulations_->animation().status()==AnimationStatus::stopped)begin_registration_delay();
+        return;
+    }
     if(phase_==Phase::verdict) {
         verdict_->advance(keys,[&](const verdict::Event& e) {
             const auto& result=verdict_->result();
@@ -37,8 +46,9 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         });
         if(verdict_->status()==verdict::Status::stopped) {
             const auto& r=application_->resident();
-            phase_=r.end_sequence==application::EndSequence::good || r.config.rank==0 ?
-                Phase::congratulations_pending : Phase::registration_pending;
+            if(r.end_sequence==application::EndSequence::good || r.config.rank==0)
+                phase_=Phase::congratulations_pending;
+            else begin_registration_delay();
         }
         return;
     }
@@ -106,5 +116,21 @@ void Ending::start_verdict() {
     // Transfer both pages once, then release the whole Staff Roll graphics
     // owner. A new process is not entered; the MAINE RNG remains untouched.
     staff_.reset();song_measure_.reset();phase_=Phase::verdict;
+}
+void Ending::start_congratulations() {
+    if(phase_!=Phase::congratulations_pending || !verdict_)
+        throw std::logic_error("congratulations requires a completed verdict");
+    const auto& r=application_->resident();const auto& old=verdict_->canvas();
+    congratulations_=std::make_unique<Congratulations>(*assets_,unsigned(r.playchar),r.config.rank,
+        std::array<Bytes,2>{old.page(0),old.page(1)},old.shown_page());
+    // Retain pages, not the old scoring/clock owner. MAINE and its continued
+    // LCG remain the same process while this picture waits for a fresh press.
+    verdict_.reset();phase_=Phase::congratulations;
+}
+void Ending::begin_registration_delay() {
+    // Recovered _main requests song fade(4), then frame_delay(100), before
+    // regist_menu. This delay consumes refreshes even when Enter stays held.
+    maine_sound_requests_.push_back({cutscene::Kind::bgm_control,0x204});
+    registration_delay_left_=100;phase_=Phase::registration_delay;
 }
 } // namespace th04::portable::maine

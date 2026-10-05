@@ -95,6 +95,7 @@ def main():
     p.add_argument('--runner'); p.add_argument('--existing-log', type=Path)
     p.add_argument('--staff-gallery',type=Path)
     p.add_argument('--verdict-gallery',type=Path)
+    p.add_argument('--congratulations-gallery',type=Path)
     p.add_argument('--target',type=Path);p.add_argument('--decoded-dir',type=Path)
     args = p.parse_args(); out = args.output_dir.resolve(); out.mkdir(parents=True, exist_ok=True)
     manifest, _ = source_manifest(Path(__file__).resolve().parents[1])
@@ -160,6 +161,38 @@ def main():
             equal(Image.open(out/(prefix+'verdict.bmp')).convert('RGB').tobytes(),rgb,prefix+'verdict RGB')
             verdict_routes.append(dict(route=prefix,fields=fields,page_sha256=hashes,palette_sha256=sha(palette),rgb_sha256=sha(rgb)))
         assert len(verdict_routes)==24 and len({r['route'] for r in verdict_routes})==24
+    congratulations_routes=[]
+    if args.congratulations_gallery:
+        proof=json.loads((args.congratulations_gallery/'receipt.json').read_text())
+        assert proof['passed'] and proof['complete_pages']==20 and proof['clock_controls']==50
+        from verify_cutscene import ending_assets
+        assets=ending_assets(args.hdi)
+        pictures={row['name']:row for row in proof['picture_cases']}
+        expected_routes={r['route'] for r in records}
+        for line in log.splitlines():
+            if not line.startswith('MAINE Congratulations route='):continue
+            fields=dict(w.split('=',1) for w in line.split() if '=' in w);prefix=fields['route']
+            rank,character,*_=prefix.split('-');rank_index={'easy':0,'normal':1,'lunatic':3}[rank]
+            name=f'CONG{int(character=="marisa")}{rank_index}.PI';picture=pictures[name]
+            assert fields['picture'].upper()==name and fields['generation']=='3'
+            assert fields['delay']=='100' and fields['progression']=='registration_pending'
+            assert sha(assets[name])==picture['picture_sha256']
+            data=(args.congratulations_gallery/(name+'.raw')).read_bytes()
+            assert sha(data)==picture['decoded_sha256']
+            indexed=bytes(v for b in data[56:] for v in (b>>4,b&15));palette=data[8:56]
+            hashes=[]
+            for page in (0,1):
+                assert sha(indexed)==picture['page_sha256'][page]
+                equal((out/(prefix+f'congratulations-{page}.bin')).read_bytes(),indexed,prefix+'congratulations page')
+                hashes.append(sha(indexed))
+            equal((out/(prefix+'congratulations.pal')).read_bytes(),palette,prefix+'congratulations palette')
+            rgb=((np.frombuffer(palette,dtype=np.uint8).reshape(16,3)>>4)*17)[np.frombuffer(indexed,dtype=np.uint8)].tobytes()
+            image=Image.open(out/(prefix+'congratulations.bmp')).convert('RGB')
+            assert image.size==(640,400)
+            equal(image.tobytes(),rgb,prefix+'congratulations RGB')
+            congratulations_routes.append(dict(route=prefix,fields=fields,page_sha256=hashes,
+                palette_sha256=sha(palette),rgb_sha256=sha(rgb)))
+        assert len(congratulations_routes)==24 and {r['route'] for r in congratulations_routes}==expected_routes
     after, _ = source_manifest(Path(__file__).resolve().parents[1]); assert after == manifest
     receipt = dict(passed=True, observed_utc=datetime.now(timezone.utc).isoformat(), command=command,
                    executable_sha256=sha(args.exe.read_bytes()), source_manifest_sha256=manifest,
@@ -168,8 +201,9 @@ def main():
                    natural_routes=len(records), complete_pages=576, palette_states=288, rgb_frames=288,
                    staff_routes=staff_routes,staff_complete_pages=2*len(staff_routes),
                    verdict_routes=verdict_routes,verdict_complete_pages=2*len(verdict_routes),verdict_rgb_frames=len(verdict_routes),
-                   negative_pixel_rejected=True, routes=records,
-                   scope='Natural menu/STD/dialogue/boss traversal through Good or Bad Ending, Staff Roll and optional verdict. Verdict uses fresh original CPU on published resident values and original full-string font kernels; STD/LCG ownership and complete indexed/RGB pages checked. Player death, Bomb, Continue, Extra, audio, congratulations and save remain outside this path. RGB is computed presentation, not physical PC-98 capture.')
+                   congratulations_routes=congratulations_routes,congratulations_complete_pages=2*len(congratulations_routes),
+                   congratulations_rgb_frames=len(congratulations_routes),negative_pixel_rejected=True, routes=records,
+                   scope='Natural menu/STD/dialogue/boss traversal through Good or Bad Ending, Staff Roll and optional verdict/congratulations. Congratulations reuses original main clocks and pinned PI decoder regression with complete pages/RGB;holds at registration entry after100 refreshes. Verdict uses fresh original CPU on published resident values and original full-string font kernels; STD/LCG ownership and complete indexed/RGB pages checked. Player death, Bomb, Continue, Extra, audio and save remain outside this path. RGB is computed presentation, not physical PC-98 capture.')
     (out/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
     print(json.dumps({k: receipt[k] for k in ('passed', 'natural_routes', 'complete_pages', 'palette_states', 'rgb_frames')}, indent=2))
 

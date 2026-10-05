@@ -15,6 +15,8 @@ void verdict_contracts();
 void verdict_trace(const char*,const char*);
 void verdict_clock(const char*);
 void verdict_render(const char*,const char*,const char*,const char*);
+void congratulations_trace();
+void congratulations_render(const char*,const char*,const char*);
 void staff_trace(const char*,unsigned);
 void staff_render(const char*,const char*,const char*);
 void staff_kernels(const char*,const char*,const char*);
@@ -242,6 +244,8 @@ void contracts() {
     end_assets.scripts.emplace("_UDE.TXT",cutscene::Bytes(780,' '));
     PiImage picture;picture.width=640;picture.height=400;picture.pixels.resize(128000,0x22);
     end_assets.pictures.emplace("UDE.PI",picture);
+    end_assets.pictures.emplace("CONG00.PI",picture);
+    end_assets.pictures.emplace("CONG01.PI",picture);
     staff::Assets staff_assets;staff_assets.pictures.emplace("SFF1.PI",picture);staff_assets.pictures.emplace("SFF2.PI",picture);
     cutscene::Bytes sprite(16+4*32*5,0xff);
     const auto word=[&](unsigned at,unsigned n) { sprite[at]=n&255;sprite[at+1]=(n>>8)&255; };
@@ -270,6 +274,63 @@ void contracts() {
     for(unsigned i=0;i<100 && ending.phase()==maine::Phase::verdict;++i)ending.advance(0x20);
     require(ending.phase()==maine::Phase::congratulations_pending && state.process_random_state()==expected.state(),
         "verdict continuation advanced the random stream twice");
+    ending.start_congratulations();
+    require(!ending.verdict_scene() && ending.congratulations_scene() && state.generation()==3,
+        "congratulations retained the verdict owner or restarted MAINE");
+    for(unsigned i=0;i<100 && ending.congratulations_scene()->animation().status()!=maine::AnimationStatus::release;++i)
+        ending.advance(0x20);
+    require(ending.congratulations_scene()->animation().status()==maine::AnimationStatus::release,
+        "congratulations did not reach its visible wait");
+    for(unsigned i=0;i<10;++i)ending.advance(0x20);
+    require(state.process_random_state()==expected.state() && state.resident().statistics.std_frames==44000 &&
+        ending.maine_sound_requests().empty(),"congratulations changed state or started registration early");
+    ending.advance(0);ending.advance(0);ending.advance(0x20);
+    for(unsigned i=0;i<100 && ending.phase()==maine::Phase::congratulations;++i)ending.advance(0x20);
+    require(ending.phase()==maine::Phase::registration_delay && ending.maine_sound_requests().size()==1 &&
+        ending.maine_sound_requests().front().a==0x204,"registration skipped its sound-fade/delay boundary");
+    for(unsigned i=0;i<99;++i)ending.advance(0x20);
+    require(ending.phase()==maine::Phase::registration_delay,"registration delay was shorter than100 refreshes");
+    ending.advance(0x20);
+    require(ending.phase()==maine::Phase::registration_pending && state.generation()==3 &&
+        state.process_random_state()==expected.state() && state.resident().statistics.std_frames==44000,
+        "registration delay changed process/RNG/resident state");
+    // Bad Ending on Easy still shows congratulations; other ranks skip the
+    // picture and enter the same sound-fade/100-refresh registration delay.
+    // Check this independent branch with no CONG01 asset available, so a
+    // mistaken unconditional picture load cannot silently pass.
+    for(unsigned rank:{0u,1u}) {
+        application::State bad_state;menu::Options options;options.rank=rank;
+        bad_state.apply_options(options);bad_state.start_normal(application::Playchar::reimu,application::ShotType::a);
+        for(unsigned i=0;i<4;++i)bad_state.advance_main_stage();
+        cutscene::Assets bad_assets=end_assets;bad_assets.pictures.erase("CONG01.PI");
+        bad_assets.scripts.emplace("_ED001.TXT",cutscene::Bytes{'\\','$'});
+        maine::Ending bad_ending(bad_state,statistics,application::EndSequence::bad,bad_assets);
+        for(unsigned i=0;i<1000 && bad_ending.phase()!=maine::Phase::staff_roll_pending;++i)bad_ending.advance(0);
+        require(bad_ending.phase()==maine::Phase::staff_roll_pending,"Bad Ending did not finish");
+        bad_ending.start_staff_roll(staff_assets);
+        for(unsigned i=0;i<10000 && bad_ending.phase()!=maine::Phase::verdict_pending;++i)bad_ending.advance(0);
+        require(bad_ending.phase()==maine::Phase::verdict_pending,"Bad Ending Staff Roll did not finish");
+        bad_ending.start_verdict();
+        for(unsigned i=0;i<500 && bad_ending.verdict_scene()->status()!=verdict::Status::release;++i)bad_ending.advance(0x20);
+        require(bad_ending.verdict_scene()->status()==verdict::Status::release,"Bad Ending verdict did not reach wait");
+        bad_ending.advance(0);bad_ending.advance(0);bad_ending.advance(0x20);
+        for(unsigned i=0;i<100 && bad_ending.phase()==maine::Phase::verdict;++i)bad_ending.advance(0x20);
+        if(rank==0) {
+            require(bad_ending.phase()==maine::Phase::congratulations_pending,"Easy Bad Ending skipped congratulations");
+            bad_ending.start_congratulations();
+            require(bad_ending.congratulations_scene()->picture_name()=="CONG00.pi","Easy congratulations rank differs");
+        } else {
+            require(bad_ending.phase()==maine::Phase::registration_delay && !bad_ending.congratulations_scene(),
+                "non-Easy Bad Ending displayed congratulations");
+            const auto random=bad_state.process_random_state();
+            for(unsigned i=0;i<99;++i)bad_ending.advance(0x20);
+            require(bad_ending.phase()==maine::Phase::registration_delay,"Bad Ending registration delay finished early");
+            bad_ending.advance(0x20);
+            for(unsigned i=0;i<10;++i)bad_ending.advance(0x20);
+            require(bad_ending.phase()==maine::Phase::registration_pending && bad_state.process_random_state()==random &&
+                bad_ending.maine_sound_requests().size()==1,"Bad Ending frontier repeated delay/sound/RNG writes");
+        }
+    }
     require(cutscene::script_name(0,0,false)=="_ED000.TXT","Reimu A good route");
     require(cutscene::script_name(1,1,true)=="_ED111.TXT","Marisa B bad route");
     cutscene::Script script({'\\','k','2','\\','$'});script.begin();
@@ -312,6 +373,8 @@ int main(int argc,char** argv) {
         else if(argc==4 && std::string(argv[1])=="--verdict-trace") verdict_trace(argv[2],argv[3]);
         else if(argc==3 && std::string(argv[1])=="--verdict-clock") verdict_clock(argv[2]);
         else if(argc==6 && std::string(argv[1])=="--verdict-render") verdict_render(argv[2],argv[3],argv[4],argv[5]);
+        else if(argc==2 && std::string(argv[1])=="--congratulations-trace") congratulations_trace();
+        else if(argc==5 && std::string(argv[1])=="--congratulations-render") congratulations_render(argv[2],argv[3],argv[4]);
         else if(argc==1) { contracts();staff_contracts();verdict_contracts(); }
         else throw std::invalid_argument("usage: cutscene-contracts [--trace SCRIPT HELD | --render ASSETS SCRIPT HELD FONT CHECKPOINTS OUTPUT]");
         return 0;

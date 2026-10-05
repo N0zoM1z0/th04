@@ -319,6 +319,10 @@ int main(int argc, char** argv) {
                     }
                     ending.pictures.emplace("UDE.PI",decode_pi(archive_member(par,"UDE.PI")));
                     ending.scripts.emplace("_UDE.TXT",archive_member(par,"_UDE.TXT"));
+                    for(unsigned character=0;character<2;++character)for(unsigned rank=0;rank<5;++rank) {
+                        const auto name="CONG"+std::to_string(character)+std::to_string(rank)+".PI";
+                        ending.pictures.emplace(name,decode_pi(archive_member(par,name)));
+                    }
                     for(unsigned i=1;i<=2;++i) {
                         const auto name="SFF"+std::to_string(i)+".PI";
                         main_assets.staff_roll.pictures.emplace(name,decode_pi(archive_member(par,name)));
