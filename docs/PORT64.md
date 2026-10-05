@@ -3670,7 +3670,7 @@ read. It currently models successful file operations in memory. Registration
 rendering/input, host disk persistence and the fresh OP return are still next;
 the playable Windows GUI remains v1296, with no save-completion claim.
 
-The six recovered MAINE bodies at `0A05:20F9..2506` cover decode, encode,
+The six recovered MAINE bodies at `0A05:20F9..24B6` cover decode, encode,
 recreate, load, save and insert. All complete extents are hash-attested in
 `verify_score_file.py`; full original LCG instructions run at `0000:1C5A`.
 The original producer executes 1,288 distinct cases at load segments1000/2000:
