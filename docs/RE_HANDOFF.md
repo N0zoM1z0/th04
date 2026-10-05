@@ -210,37 +210,51 @@ item claim. See the
 ## Current state
 
 Native x64 work is isolated in `port/modern-64`; general semantic expansion
-stays stopped unless a concrete port ambiguity requires it. Latest native code
-commit `56520f8` (v1295) joins full verdict graphics and MAINE's resident STD/LCG
-publication after the background fade. Staff graphics transfer once, then
-release their old owner; held keys/repaint preserve the wait and pages. A fresh
-confirmation completes the final fade to the congratulations frontier. Original
-scoring/clock controls remain916/10 at loads1000/2000. The original complete
-text0CC7:058C..06EB and gaiji0000:36B6..375E kernels cover527 full-string requests
-and80 assessment cases/all26 commentary rows/all5 ranks/invalid assessment,
-matching160 full pages/80 palette-state outputs. GNU/Wine/UBSan/actualWindows
-agree. All four also pass24 natural menu/boss/Ending/Staff/verdict routes with
-48 verdict pages/24 RGB frames and unchanged576 Ending/48 final Staff pages.
-Actual Windows compares1,344 route files; independent Python rechecks original
-font/scoring outputs. Three fast builds each31 AMD64 products/30CTests pass.
-Runtime-tested216-file manifestfef77a46; release501137c4 differs only in English
-launcher scope text, with executable/verifier/build inputs and93 products bound
-to the tested source. PI decoding is a preceding-v1294 native regression;
-CGROM/GRCG/VSync/audio remain explicit adapters, not physical captures.
+stays stopped unless a concrete port ambiguity requires it. Latest native
+commit `b5ec7fc` (v1296) joins congratulations after verdict. Character/rank
+selects the real CONGxy.pi image; Good/Easy Bad show it, other Bad ranks skip it.
+Speed1-in, held-key release/fresh press, speed4-out then song fade4 and exactly
+100 further refreshes reach score registration entry. The preview holds there;
+registration/save/fresh OP return is next. MAINE generation3, resident counters
+and continued LCG remain unchanged through picture transfer/release and waits.
 
-Windows `v1295-verdict` package/root GUI and `start-th04-port64.bat` are published;
-previousv1293 GUI/launcher rollback remains.69 unrelated Windows file hashes
-agree. No auto-launch, DOS source/acceptance/config/save changes. Next implement
-congratulations and score registration/save; Extra/death/Bomb/Continue/full HUD/
-audio/config remain incomplete. Receipt:
-`.analysis/worktrees/port-modern-64/.analysis/port64/verdict-v1295/`.
-The requested development cleanup releases416MiB net; completed new captures
-are also losslessly archived after full member hash readback, releasing1,808MiB
-net plus598 temporary Staff raw expansions. Current GNU80-case page reference
-and all three fast-build caches remain expanded; other capture consumers must
-restore from the documented archives. Root cleanup receipt:
-`.analysis/cleanup/development-media-20261005/receipt.json`; native capture
-restoration: `verdict-v1295/media-archive-receipt.json`.
+Attested recovered _main0A05:00B2..0241 (400bytes9a44bbf5) passes32 distinct
+branch fixtures plus missingCFG at loads1000/2000.50 original fade/key clock
+profiles and10 pictures/20 complete pages pass;PI palette wrapper/far memcpy
+execute fully. Child routines/PI/sound/init/exec remain explicit adapters;
+pixels use pinned picture bytes and retainedv1294 native decoder regression.
+Original Extra registration->congratulations->verdict order is observed by
+bounded CPU fixtures;Extra gameplay is still unported. Previous verdict916/10,
+80 graphic cases/527 original font kernels/160 pages remain valid.
+
+GNU/Wine/optimizedUBSan/actualWindows pass24 natural menu/boss/Ending/Staff/
+verdict/congratulations routes, adding48 congratulations pages/24 RGB frames
+per host while preserving prior576 Ending/48 Staff/48 verdict pages. Actual
+Windows1440 route files and component pages/clocks pass independent Python
+readback and mutations. Three fast builds31AMD64 products/30CTests each bind
+all93 products to222-file source manifest4c872c8a. Current GNU8.4 filesystem ABI
+requires its matchingstdc++fs archive;isolated failure/repaired probes and
+CMake linkage correction pass. No physical VRAM/audio/saved-score/exact claim.
+
+Windowsv1296-congratulations/root native GUI/English start-th04-port64.bat are
+published without auto-launch;previousv1295 GUI/launcher rollback retained.
+106 unrelated Windows hashes remain unchanged. DOS scripts/products/config/
+saves/source/unit/function acceptance unchanged. Root/native CI and diff-check
+pass. Current native receipts and focused handoff:
+`.analysis/worktrees/port-modern-64/.analysis/port64/post-verdict-v1296/` and
+native branch `docs/PORT64.md#congratulations-and-registration-entry`.
+Full native game still lacks registration/save, Extra/death/Bomb/Continue/full
+HUD/audio/config. Keep the full objective active and port the next concrete owner.
+
+Finished5564 generated buffers are losslessly archived after full member
+hash/size readback;net2094MiB reclaimed including598 temporaryStaff expansions.
+12025 protected files retain hashes. GNU80-case verdict/10-picture congratulations
+references and all three fast caches remain expanded;restore other captures
+before direct replay. See native `post-verdict-v1296/media-archive-receipt.json`.
+Earlier requested development cleanup receipt remains at
+`.analysis/cleanup/development-media-20261005/receipt.json`;older v1295 captures
+use `verdict-v1295/media-archive-receipt.json`. Original images/toolchains/saves
+are protected;do not delete active caches to save space at the cost of fast builds.
 
 The preceding Staff Roll baseline commit `85049b8` (v1293)
 continues both Good/Bad Ending through the complete Staff Roll and holds at
