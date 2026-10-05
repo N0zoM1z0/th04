@@ -256,6 +256,15 @@ Earlier requested development cleanup receipt remains at
 use `verdict-v1295/media-archive-receipt.json`. Original images/toolchains/saves
 are protected;do not delete active caches to save space at the cost of fast builds.
 
+Additional requested cleanup retires the superseded Windows v1293/v1295
+preview packages after full archive-member SHA-256 readback, freeing204MiB
+on D:. Ten historical trace expansions are gzip-verified and compressed;
+combined net space reclaimed is178MiB including the retained Windows archive.
+All25002 protected file hashes and both worktree Git states were unchanged
+through cleanup. Currentv1296/previous-v1295 rollback, DOS products/saves,
+three fast caches and pendingv1297 outputs remain expanded. Receipt and restore
+commands: `.analysis/cleanup/retired-previews-20261005/receipt.json`.
+
 The preceding Staff Roll baseline commit `85049b8` (v1293)
 continues both Good/Bad Ending through the complete Staff Roll and holds at
 verdict entry. MAIN score/run-counter publication, resource release, fresh
