@@ -32,6 +32,17 @@ OVERRIDES = {
     'product_input_fingerprint.py': ('build', 'Compute validated product/cache input identities.'),
     'check_default_repair_omf.py': ('matching', 'Compare complete default-branch OMF across native repair revisions.'),
     'index.py': ('tracking', 'Browse or check this catalog; no target/probe is executed.'),
+    'bootstrap_analysis_toolchain.sh': ('setup', 'Download/install the pinned Ghidra/JDK pair into ignored private tools.'),
+    'bootstrap_toolchain.sh': ('setup', 'Acquire/install calibrated Borland candidate tools below ignored private state.'),
+    'ExportFunctionInventory.java': ('support', 'Export a read-only Ghidra function inventory for physical boundary review.'),
+    'ExportMzAttestation.java': ('support', 'Export loaded MZ bytes/mappings for independent database attestation.'),
+    'SeedCodeEntries.java': ('support', 'Seed the DOS entry before headless auto-analysis; this is an analysis aid.'),
+    'th04_cpu_fault_fixture.asm': ('runtime', 'Private real-mode DIV-zero observer calibration; never install in game media.'),
+    'th04_primary_cpu_fault.gdb': ('runtime', 'Run the primary-emulator fault observer with configured symbols/event inputs.'),
+    'good_ending.asm': ('runtime', 'Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization.'),
+    'tool-env.sh': ('setup', 'Source pinned Ghidra/JDK environment paths into the current shell.'),
+    'Build-TH04.ps1': ('build', 'English Windows-to-WSL DOS build progress, validated fast reuse, normal/cold/launch options.'),
+    'build-th04.cmd': ('build', 'Forward command-line arguments and exit status to Build-TH04.ps1.'),
 }
 
 
@@ -81,7 +92,7 @@ def inventory(root: Path = ROOT) -> list[dict[str, str]]:
         origin = 'maintained-description' if file.name in OVERRIDES else ('source-docstring' if summary else 'filename-routing')
         if not summary:
             summary = file.stem.replace('_', ' ').replace('-', ' ') + ' (filename-derived; inspect source before use).'
-        role = 'command' if cli else 'support'
+        role = 'command' if cli and file.name != 'tool-env.sh' else 'support'
         if file.suffix in {'.asm', '.gdb', '.java'}:
             role = 'fixture' if file.suffix != '.java' else 'tool-script'
         entries.append({'path': rel.as_posix(), 'category': category(rel), 'role': role,

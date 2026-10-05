@@ -1,0 +1,2 @@
+# Public instruction-decoder tests; private assets/tools are not CI inputs.
+capstone==5.0.6

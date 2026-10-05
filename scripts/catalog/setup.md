@@ -9,9 +9,9 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | --- | --- | --- |
 | [attest_analysis_toolchain.py](../attest_analysis_toolchain.py) | command | Fail-closed identity and execution attestation for pinned Ghidra and JDK. |
 | [attest_toolchain.py](../attest_toolchain.py) | command | Fail-closed Borland identity, execution, OMF, MZ, and replay attestation. |
-| [bootstrap_analysis_toolchain.sh](../bootstrap_analysis_toolchain.sh) | command | bootstrap analysis toolchain (filename-derived; inspect source before use). |
-| [bootstrap_toolchain.sh](../bootstrap_toolchain.sh) | command | bootstrap toolchain (filename-derived; inspect source before use). |
+| [bootstrap_analysis_toolchain.sh](../bootstrap_analysis_toolchain.sh) | command | Download/install the pinned Ghidra/JDK pair into ignored private tools. |
+| [bootstrap_toolchain.sh](../bootstrap_toolchain.sh) | command | Acquire/install calibrated Borland candidate tools below ignored private state. |
 | [check_environment.py](../check_environment.py) | command | Report available ingestion, analysis, build, and runtime tools. |
 | [import_targets.py](../import_targets.py) | command | Import pinned TH04 (and optional TH01 smoke) targets from the legal RAR. |
-| [tool-env.sh](../tool-env.sh) | command | tool env (filename-derived; inspect source before use). |
+| [tool-env.sh](../tool-env.sh) | support | Source pinned Ghidra/JDK environment paths into the current shell. |
 | [verify_targets.py](../verify_targets.py) | command | Verify private targets against the checked-in manifest and MZ invariants. |

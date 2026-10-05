@@ -36,7 +36,8 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/run_th04_maine_diagnostic_hdi.py](../probes/run_th04_maine_diagnostic_hdi.py) | command | Replay a private OP or MAINE HDI probe under pinned DOSBox-X. |
 | [probes/run_th04_op_diagnostic_hdi.py](../probes/run_th04_op_diagnostic_hdi.py) | command | Run a private TH04 OP HDI probe under the pinned DOSBox-X emulator. |
 | [probes/run_th04_zun_diagnostic_hdi.py](../probes/run_th04_zun_diagnostic_hdi.py) | command | Run the disposable TH04-only packed ZUN candidate under PC-98 DOSBox-X. |
-| [probes/th04_cpu_fault_fixture.asm](../probes/th04_cpu_fault_fixture.asm) | fixture | th04 cpu fault fixture (filename-derived; inspect source before use). |
-| [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | th04 primary cpu fault (filename-derived; inspect source before use). |
+| [probes/th04_cpu_fault_fixture.asm](../probes/th04_cpu_fault_fixture.asm) | fixture | Private real-mode DIV-zero observer calibration; never install in game media. |
+| [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
+| [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [smoke_oracles.py](../smoke_oracles.py) | command | Exercise Oracle dimensions with private TH01-TH05 positive/negative controls. |
 | [smoke_runtime.py](../smoke_runtime.py) | command | Attest and smoke-test the pinned headless DOSBox-X PC-98 baseline. |

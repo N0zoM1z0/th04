@@ -31,15 +31,15 @@
     "path": "scripts/bootstrap_analysis_toolchain.sh",
     "category": "setup",
     "role": "command",
-    "purpose": "bootstrap analysis toolchain (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Download/install the pinned Ghidra/JDK pair into ignored private tools.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/bootstrap_toolchain.sh",
     "category": "setup",
     "role": "command",
-    "purpose": "bootstrap toolchain (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Acquire/install calibrated Borland candidate tools below ignored private state.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/boundary_review/__init__.py",
@@ -192,22 +192,22 @@
     "path": "scripts/ghidra/ExportFunctionInventory.java",
     "category": "support",
     "role": "tool-script",
-    "purpose": "ExportFunctionInventory (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Export a read-only Ghidra function inventory for physical boundary review.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/ghidra/ExportMzAttestation.java",
     "category": "support",
     "role": "tool-script",
-    "purpose": "ExportMzAttestation (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Export loaded MZ bytes/mappings for independent database attestation.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/ghidra/SeedCodeEntries.java",
     "category": "support",
     "role": "tool-script",
-    "purpose": "SeedCodeEntries (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Seed the DOS entry before headless auto-analysis; this is an analysis aid.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/ghidra.py",
@@ -3293,8 +3293,8 @@
     "path": "scripts/probes/th04_cpu_fault_fixture.asm",
     "category": "runtime",
     "role": "fixture",
-    "purpose": "th04 cpu fault fixture (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Private real-mode DIV-zero observer calibration; never install in game media.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/th04_main_fault_trace.py",
@@ -3307,8 +3307,8 @@
     "path": "scripts/probes/th04_primary_cpu_fault.gdb",
     "category": "runtime",
     "role": "fixture",
-    "purpose": "th04 primary cpu fault (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Run the primary-emulator fault observer with configured symbols/event inputs.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/product_input_fingerprint.py",
@@ -3347,10 +3347,10 @@
   },
   {
     "path": "scripts/runtime/fixtures/good_ending.asm",
-    "category": "support",
+    "category": "runtime",
     "role": "fixture",
-    "purpose": "good ending (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/smoke_ghidra_oracle.py",
@@ -3390,9 +3390,9 @@
   {
     "path": "scripts/tool-env.sh",
     "category": "setup",
-    "role": "command",
-    "purpose": "tool env (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "role": "support",
+    "purpose": "Source pinned Ghidra/JDK environment paths into the current shell.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/validate_tracking.py",
@@ -3412,14 +3412,14 @@
     "path": "scripts/windows/Build-TH04.ps1",
     "category": "build",
     "role": "command",
-    "purpose": "Build TH04 (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "English Windows-to-WSL DOS build progress, validated fast reuse, normal/cold/launch options.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/windows/build-th04.cmd",
     "category": "build",
     "role": "command",
-    "purpose": "build th04 (filename-derived; inspect source before use).",
-    "purpose_source": "filename-routing"
+    "purpose": "Forward command-line arguments and exit status to Build-TH04.ps1.",
+    "purpose_source": "maintained-description"
   }
 ]

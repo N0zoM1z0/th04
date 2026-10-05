@@ -77,5 +77,5 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/probe_th04_native_source_compile.py](../probes/probe_th04_native_source_compile.py) | command | Compile the current TH04 OP, MAINE, and shared C/C++ source without ReC98 headers. |
 | [probes/probe_th04_native_zun_parts.py](../probes/probe_th04_native_zun_parts.py) | command | Build ZUN's maintained COM parts without historical target/snapshot inputs. |
 | [product_input_fingerprint.py](../product_input_fingerprint.py) | support | Compute validated product/cache input identities. |
-| [windows/Build-TH04.ps1](../windows/Build-TH04.ps1) | command | Build TH04 (filename-derived; inspect source before use). |
-| [windows/build-th04.cmd](../windows/build-th04.cmd) | command | build th04 (filename-derived; inspect source before use). |
+| [windows/Build-TH04.ps1](../windows/Build-TH04.ps1) | command | English Windows-to-WSL DOS build progress, validated fast reuse, normal/cold/launch options. |
+| [windows/build-th04.cmd](../windows/build-th04.cmd) | command | Forward command-line arguments and exit status to Build-TH04.ps1. |

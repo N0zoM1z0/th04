@@ -8,9 +8,9 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | Path | Kind | Purpose |
 | --- | --- | --- |
 | [boundary_review/__init__.py](../boundary_review/__init__.py) | support | Tracked TH04 multi-artifact boundary-review tools. |
-| [ghidra/ExportFunctionInventory.java](../ghidra/ExportFunctionInventory.java) | tool-script | ExportFunctionInventory (filename-derived; inspect source before use). |
-| [ghidra/ExportMzAttestation.java](../ghidra/ExportMzAttestation.java) | tool-script | ExportMzAttestation (filename-derived; inspect source before use). |
-| [ghidra/SeedCodeEntries.java](../ghidra/SeedCodeEntries.java) | tool-script | SeedCodeEntries (filename-derived; inspect source before use). |
+| [ghidra/ExportFunctionInventory.java](../ghidra/ExportFunctionInventory.java) | tool-script | Export a read-only Ghidra function inventory for physical boundary review. |
+| [ghidra/ExportMzAttestation.java](../ghidra/ExportMzAttestation.java) | tool-script | Export loaded MZ bytes/mappings for independent database attestation. |
+| [ghidra/SeedCodeEntries.java](../ghidra/SeedCodeEntries.java) | tool-script | Seed the DOS entry before headless auto-analysis; this is an analysis aid. |
 | [lib/__init__.py](../lib/__init__.py) | support | Shared helpers for TH04 reconstruction tooling. |
 | [lib/analysis.py](../lib/analysis.py) | support | Pinned analysis-tool identities and private Ghidra path policy. |
 | [lib/ghidra.py](../lib/ghidra.py) | support | Independent validation of private Ghidra MZ attestation exports. |
@@ -20,4 +20,3 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [lib/targets.py](../lib/targets.py) | support | Read hash-pinned private target artifacts without weakening provenance checks. |
 | [lib/th04_sprites.py](../lib/th04_sprites.py) | support | Generate the four TH04 MAIN sprite owners for a bounded link diagnostic. |
 | [lib/toolchain.py](../lib/toolchain.py) | support | Deterministic identities for private toolchain files and directory trees. |
-| [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | good ending (filename-derived; inspect source before use). |

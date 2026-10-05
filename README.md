@@ -103,7 +103,9 @@ Source belongs under `src/main/`, `src/op/`, `src/maine/`, `src/zun/` and
 and [ARCHITECTURE.md](docs/ARCHITECTURE.md). ReC98 implementations are migration
 inputs; their progress and exactness claims do not transfer automatically.
 
-Use [RE_WORKFLOW.md](docs/RE_WORKFLOW.md) for implementation work. Finish with:
+Use [RE_WORKFLOW.md](docs/RE_WORKFLOW.md) for implementation work. Install public
+validation dependencies with `python3 -m pip install -r requirements-ci.txt`;
+private CPU/runtime Oracles additionally require their documented local tools. Finish with:
 
 ```sh
 python3 scripts/ci.py
