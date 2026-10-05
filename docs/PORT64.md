@@ -3659,3 +3659,62 @@ before direct replay;`media-archive-receipt.json` records exact commands.
 DOS source and exact/unit/function acceptance are unchanged. General semantic
 work remains stopped; next port registration, score-file persistence and the
 fresh OP return, followed by remaining complete-game owners.
+
+## Score-file engine
+
+v1297 implements the MAINE score-file owner as byte sections, with English
+comments explaining the cipher, layout, ranking and shared-buffer lifetime.
+`score_file::File` owns the ten encoded 196-byte sections and an ordered I/O
+trace; it preserves trailing bytes and the unread buffer suffix after a short
+read. It currently models successful file operations in memory. Registration
+rendering/input, host disk persistence and the fresh OP return are still next;
+the playable Windows GUI remains v1296, with no save-completion claim.
+
+The six recovered MAINE bodies at `0A05:20F9..2506` cover decode, encode,
+recreate, load, save and insert. All complete extents are hash-attested in
+`verify_score_file.py`; full original LCG instructions run at `0000:1C5A`.
+The original producer executes 1,288 distinct cases at load segments1000/2000:
+35 encode,245 decode,28 recreate,140 load,140 save and700 insertion cases.
+Guards check resident bytes, surrounding HI storage, stack cleanup, selection,
+RNG state/draw count and closed-file state. File calls use explicit successful
+byte-store adapters, so this does not prove physical DOS filesystem behavior.
+The native GNU/Wine/optimized UBSan/actual Windows consumers reproduce the full
+ordered operation/data/result streams. One-byte stream mutations reject.
+
+Important observed semantics for the registration caller:
+
+- Decode validates only the low checksum byte, while encode stores a full
+  16-bit sum. The ascending decoder reads the next still-encoded byte.
+- A missing file or bad selected checksum recreates and writes all ten
+  sections immediately, consuming20 RNG draws. This contradicts the older
+  DOS `load_for.inl` comment saying only the in-memory table is replaced.
+  Recreate preserves eleven unused payload bytes from the decoded buffer.
+- Save consumes22 RNG draws and rekeys all ten sections. It ignores decode
+  failures in other sections and ends with section9 encoded in the shared HI
+  buffer. Keep editable rendering state before saving; do not render that
+  final buffer as the selected table.
+- Equal scores insert before existing equals. Stored gaiji-minus-A0 is signed;
+  only eight name bytes, eight digits and stage shift, while each row's ninth
+  name byte, cleared mask and unused storage retain their original positions.
+
+A separate wrapper probe executes real `file_append` and `file_read` under
+successful INT21 open/seek/read adapters:15 cases at both loads cover DWORD
+append positions and direct/buffered short reads. Append seeks to EOF; reads
+leave unread HI bytes intact. Original internal buffer cursors can remain stale
+when valid-count becomes zero; no complete internal buffer equivalence is
+claimed. Native seek-created holes use zero bytes as an explicit byte-store
+adapter convention, not a claim about DOS unallocated file contents.
+
+Three fast builds produce32 AMD64 executables and pass31 CTests each. All62
+preceding GNU/UBSan products stay raw-identical;31 prior Windows products differ
+only in eight allowed PE timestamp/checksum bytes. The new Windows contract
+initially missed static runtime flags because it followed CMake's policy loops;
+that failed interop run is retained. Moving the declaration before the loops
+and adding it to both policy lists fixes it; imports are only KERNEL32/msvcrt.
+Actual Windows reruns all31 contracts and the1,288-case full trace. The frozen
+228-file source manifest is
+`b9b003db4aded7d257c5f70e43721a5fc04c26fb5761bf21012ab8cef2320766`.
+Receipts and exact commands: `.analysis/port64/score-file-v1297`.
+The current GUI/launcher hashes are unchanged. DOS source, target inputs and
+historical unit/function exactness are unchanged. Continue the concrete
+registration owner rather than expanding general semantic work.

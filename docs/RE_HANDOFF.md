@@ -12,15 +12,33 @@ for the next port slice. Reopen only a concrete native ambiguity, then return to
 implementation. Historical semantic results and bounded replay limits are in
 [SEMANTIC_READABILITY.md](SEMANTIC_READABILITY.md).
 
-Latest cleanup retires Windows v1290/v1292 to a verified WSL tar/zstd archive
-and hard-links20,142 identical historical gzip outputs, keeping their paths.
-Net WSL space released513MiB; D:237MiB.6,522 protected file hashes agree.
-All three x64 incremental caches, current DOS products/saves and Windowsv1293
-with its previousv1292 rollback executable remain expanded. Root receipt:
-.analysis/cleanup/build-followup-20261005/receipt.json. Historical gzip files
-share storage: replace them atomically rather than modifying an inode in place.
+Latest cleanup retires Windows v1293/v1295 previews after full archive-member
+readback, reclaiming204MiB on D: and178MiB combined net including the archive.
+All25002 protected hashes and both worktree states were unchanged during cleanup;
+currentv1296/previous-v1295 rollback, DOS products/saves, three fast caches and
+pendingv1297 outputs remain expanded. Root receipt and restore commands:
+`.analysis/cleanup/retired-previews-20261005/receipt.json`.
+Historical gzip files may share storage; replace atomically, never in place.
 
-Current native batch: [congratulations and registration entry](PORT64.md#congratulations-and-registration-entry).
+Current implementation batch: [score-file engine](PORT64.md#score-file-engine).
+v1297 adds the196-byte ten-section cipher/load/recreate/save/ranking owner.
+All1288 independent original CPU cases at loads1000/2000 agree on GNU/Wine/
+optimizedUBSan/actualWindows;15 real file-wrapper controls cover append EOF
+and direct/buffered short reads.31 CTests/32 AMD64 products per fast build,
+96 products bound to228-file manifest b9b003db. All62 earlierGNU/UBSan products
+raw-identical;31 Windows products change only allowed PE metadata. A new target
+missed static runtime flags initially; repaired policy placement yields system
+DLL imports only and allWindows tests pass. No DOS source/exact acceptance change.
+
+Missing/bad selected checksum recreates/writes all ten tables immediately,
+20 RNG draws, contradicting the old DOS load_for comment. Save uses22 draws,
+rekeys all tables and leaves encoded section9 in the shared work buffer.
+Retain editable render state before save. Current File models successful
+in-memory operations;registration graphics/input/host persistence/fresh OP are
+still next. Receipts: `.analysis/port64/score-file-v1297/`.
+GUI and Windows root launcher remain the verifiedv1296 preview below.
+
+Current playable baseline: [congratulations and registration entry](PORT64.md#congratulations-and-registration-entry).
 v1296 transfers both verdict pages once to a real congratulations owner and
 releases verdict without replacing MAINE or mutating resident counters/LCG.
 Character/rank select CONGxy.pi; Good/Easy Bad show it, other Bad ranks skip it.

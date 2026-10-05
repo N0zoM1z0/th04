@@ -14,6 +14,12 @@ import sys
 
 
 PORT_FILES = (
+    "port64/score_file.hpp",
+    "port64/score_file.cpp",
+    "port64/score_file_contracts.cpp",
+    "port64/verify_score_file.py",
+    "port64/verify_score_file_windows.ps1",
+    "port64/verify_score_file_wrappers.py",
     "port64/maine_animation.hpp",
     "port64/maine_animation.cpp",
     "port64/congratulations.hpp",
