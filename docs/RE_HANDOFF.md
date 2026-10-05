@@ -211,12 +211,27 @@ item claim. See the
 
 Native x64 work is isolated in `port/modern-64`; general semantic expansion
 stays stopped unless a concrete port ambiguity requires it. Latest native
-commit `b5ec7fc` (v1296) joins congratulations after verdict. Character/rank
-selects the real CONGxy.pi image; Good/Easy Bad show it, other Bad ranks skip it.
-Speed1-in, held-key release/fresh press, speed4-out then song fade4 and exactly
-100 further refreshes reach score registration entry. The preview holds there;
-registration/save/fresh OP return is next. MAINE generation3, resident counters
-and continued LCG remain unchanged through picture transfer/release and waits.
+commit `03b6043` (v1297) implements the ten-section MAINE score-file engine.
+All1,288 original CPU operation/RNG/byte-store controls at loads1000/2000 and
+15 original append/read-wrapper cases pass GNU/Wine/optimized UBSan/actual
+Windows. Three fast builds32 AMD64 products/31 CTests each bind228-file
+manifest b9b003db. All62 preceding GNU/UBSan products remain raw-identical;
+31 prior Windows products change only permitted PE timestamp/checksum bytes.
+
+Missing/bad selected score checksums recreate/write all ten tables immediately
+(20 RNG draws), contrary to the old DOS load_for comment. Save rekeys all ten
+(22 draws), leaving encoded section9 in the shared buffer;retain selected name
+rendering state before saving. The engine currently models successful in-memory
+file operations. Registration graphics/input, host persistence and fresh OP
+remain next;this does not claim complete gameplay saving. DOS source/targets/
+unit/function acceptance unchanged. Current native receipts:
+`.analysis/worktrees/port-modern-64/.analysis/port64/score-file-v1297/` and
+native `docs/PORT64.md#score-file-engine`. Both CI/diff checks pass.
+
+The current playable Windows GUI/launcher remain verifiedv1296.
+Good/Easy Bad show congratulations, other Bad ranks skip it. Speed1-in,
+held-key release/fresh press,speed4-out then songfade4 and100 further refreshes
+hold at registration_pending. MAINE generation/resident/LCG remain unchanged.
 
 Attested recovered _main0A05:00B2..0241 (400bytes9a44bbf5) passes32 distinct
 branch fixtures plus missingCFG at loads1000/2000.50 original fade/key clock
