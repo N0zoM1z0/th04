@@ -1,0 +1,335 @@
+# Stage Lifecycle evidence
+
+Historical bounded results, preserved from `docs/PORT64.md`. Current state is
+[the port overview](../../PORT64.md). Original CPU execution and adapter scope
+remain explicit; successful component controls do not accept complete gameplay.
+
+## Stage-clear and all-clear bonus
+
+`port64/stage_bonus.*` now owns both original reward calculations, the ordered
+text/gaiji/performance/HUD requests, Bomb increment and all-clear extend-disable
+side effect. Ordinary native Stage1 consumes this owner exactly once after its
+post-boss dialog and shows a colored bonus TRAM layer over graphics tone60.
+This advances the v1260 frontier above: the preview now stops on the actual
+bonus screen. Score drain, leave overlay, persistent resident statistics and
+next-stage resource handoff remain the next integration work; freezing there
+does not establish a complete stage transition.
+
+Independent original MAIN CPU controls execute main03 13A9:9C31 (ordinary),
+9E06 (all clear),99FE/9A89 formatters,9AFF/9B59 multiplier helpers and actual
+main01 0AAF:1874/188E performance arithmetic. At load2000, CS33A9/2AAF,
+DS8000 copied from relocated DATA, all1,837 cases agree on complete score delta,
+Bomb count, performance, extends and palette tone, plus ordered text/gaiji
+bytes/coordinates/colors and performance/HUD calls. There are986 ordinary and
+851 all-clear controls, including the complete modifier matrix, five ranks,
+Extra, unhandled byte values, word component wrapping, byte Bomb/performance
+wrapping, life underflow, pre-modifier threshold neighbors and score-delta
+overflow. Linux ELF64, Wine/MinGW PE32+ and optimized GNU UBSan/bounds all
+execute the same original CPU producer independently. Video consumers are
+intercepted; these controls prove math/state/requests, not complete rendering.
+
+Preserve these original details:
+
+- Reward units are ten points; value gaiji append the final zero. Component
+  values first wrap as unsigned16-bit values, then widen. This includes
+  graze×5 and `(remaining_lives-1)×1000/3000`; zero lives is not clamped.
+- Life-credit, Continue and rank multipliers each perform their own unsigned
+  multiply/divide-by10 and truncate. Extra has no rank multiplier. A zero final
+  defeat-bonus byte applies a zero multiplier and skips the other descriptions.
+- Ordinary performance thresholds use the unmodified subtotal, even when
+  timeout zeros the award. The Bomb byte increments on every ordinary clear,
+  including timeout/zero point items; then no-miss/low-Bomb performance raises
+  run in order. All clear sets extends10 and does not grant a Bomb or change
+  performance.
+- Raise performs wrapped byte addition plus unsigned upper clipping; lower
+  performs wrapped byte subtraction plus signed lower comparison. The target
+  arithmetic executes, rather than being replaced by an Oracle adapter.
+
+`bonus_text.hpp` localizes the maintained MAIN DATA strings with readable
+Japanese comments. The CPU Oracle found the candidate timeout description at
+`src/main/stage/bonus_state.asm` has eight full-width spaces before ×; pinned
+MAIN DATA2134:1F79 has seven. The portable table corrects this one character.
+The DOS owner is unchanged because changing its data extent would require
+separate layout/build validation. Candidate DATA observations are not inherited
+as original facts. Negative receipt: `bonus-v1261/candidate-text-mismatch.json`.
+
+Native fixtures still start eight natural Stage1 routes from the OP handoff
+with real gameplay and no injected reward or Boss start. Their final snapshot
+now includes the actual bonus; the first four images/counters and all prior
+shot/combat/midboss/diagnostic Orange images remain unchanged. Three extra ticks
+leave delta/Bomb unchanged, proving the front end does not award repeatedly.
+The current native prototype has no death/Bomb/Continue consumers, so those
+live counters remain zero; only the isolated original CPU cases cover their
+nonzero reward effects. Colored TRAM uses actual font/game gaiji and cell
+replacement, including blank glyphs. Blink and complete original color/page
+composition are not established by the snapshot controls.
+
+Ten contracts and40 natural checkpoints agree Linux/Wine/UBSan. Native Windows
+headless replay also passes ten contracts and the40 BMPs/48 counters. The
+Windows root native executable and English launcher are refreshed with a
+versioned backup under `port64-preview/v1261`; DOS files/launchers/assets are
+unchanged. No native Windows GUI pacing or original full-route claim.
+
+```bash
+python3 port64/verify_bonus.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-bonus-contracts \
+  --output-dir .analysis/port64/bonus-v1261/cpu-linux-attested
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-bonus-v1261-final/receipt.json
+```
+
+Receipts: `bonus-v1261/cpu-{linux,windows,ubsan}-attested/receipt.json`,
+`integration-review.json`, `native-windows-receipt.json` and
+`verification-bonus-v1261-final/receipt.json`. The same independent rejecting
+adapter control checks that a Unicorn callback exception cannot silently pass.
+Semantic remains stopped; next implement score drain and actual stage leave /
+resource transition, not additional naming work.
+
+## Score drain and extends
+
+The current native MAIN ends each ordinary simulation frame with the original
+score owner, after its frame counter and periodic performance raise. Actor/item
+awards enter one pending accumulator. Score update transfers that amount into
+eight little-endian decimal bytes, preserves continues in digit0, compares the
+complete high score and dispatches extends. Life/performance changes and the
+20-frame bullet-clear minimum feed the actual simulation; sound, life-HUD and
+popup remain requests pending their consumers. HUD score rows56:4/6 now use
+the original game gaiji and remain bright over dimmed graphics.
+
+Pinned MAIN main01 0AAF:6BD4..6CA2 (update),6BA2..6BD3 (HUD),4316..43B5
+(extend) and actual1874 performance raise are independently executed at load2000,
+CS2AAF, isolated DS8000 copied from target DATA2134, resident9000:0000.
+All4,690 transitions agree Linux GCC8.4, MinGW13 PE32+ under Wine and optimized
+UBSan/bounds:3,759 isolated controls plus five retained-state sequences926 steps
+and their five initial calls. Subsequent awards are injected into each owner's
+retained state; target outputs are not reseeded into native after each tick.
+Complete decimal/high-score/temp/HUD bytes, pending/frame dwords, life/clear/
+performance/extend/popup state and ordered requests agree. The rejection control
+also proves a failed Unicorn callback cannot silently pass. Identity remains
+candidate-local-attested; no DOS exact claim follows from portable equality.
+
+Keep the target's low-word-only frame-delta assignment even when a fixture's
+high word is nonzero. Preserve the five temporary-digit writes and six AAA
+iterations, including nondecimal AF/two-byte carry controls. The highest score
+byte remains unnormalized. Extend predicates compare digit6/7 directly rather
+than a total integer threshold, then raise performance/increment extends before
+the life-cap check. Granting a life from99 produces100; the next grant is
+suppressed. Continue and score digit0 share target DATA2134:4349 (confirmed by
+0AAF:3CDA increment and43C0 reset skipping digit0). Maintained DOS storage
+places a separate `_continues_used` byte before `_score`; that candidate layout
+cannot establish the native ownership contract. DOS source is unchanged.
+
+The live900-frame pickup/drain control conserves all awards, grants two extends
+once, emits SE7 requests and publishes a20-frame clear timer. Eleven contracts
+pass Linux/UBSan/Wine/native Windows. Forty natural Normal/Lunatic character/
+shot-idle snapshots and counters agree Linux/Wine/UBSan/native Windows. The
+old60-frame BMP is independently recreated with the saved v1261 PE; exactly960
+pixels change inside the two new HUD rows, with every other pixel retained.
+This pixel mask justifies the new MAIN fixture hash; other fixture changes may
+also reflect real extends/performance changes, not just HUD.
+
+At the end of the score batch this Stage1 preview still froze at the bonus;
+the following departure batch connects its same-frame continuation and clocks.
+Saved high-score loading, life-HUD, popup/audio, death/Bomb/Continue lifecycle,
+resident publication and later resources/Ending/save remain separate work.
+Current source/build receipts and English native launcher are packaged under
+Windows `port64-preview/v1262`; the root native executable is refreshed only
+after delivered hash checks. DOS products/launchers/assets are unchanged.
+No full-route, original TRAM/palette composition or GUI frame-pacing claim.
+
+```bash
+python3 port64/verify_score.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-score-contracts \
+  --output-dir .analysis/port64/score-v1262/cpu-linux-attested
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-score-v1262-attested/receipt.json
+```
+
+Receipts: `score-v1262/cpu-{linux,windows,ubsan}-attested/receipt.json`,
+`target-owners.json`, `render-review/receipt.json`, `integration-review.json`,
+`native-windows-receipt.json`, and `verification-score-v1262-attested/receipt.json`.
+Stop naming work here; next resume the actual boss-update frame after blocking
+dialog, then port the416/488 leave/next-stage handoff without skipping it.
+
+## Stage enter and departure
+
+Ordinary Stage1 now enters through the original black TRAM gaiji mask, completes
+its blocked post-boss dialog inside the same actor frame, awards/drains its
+bonus, and executes the416/488 leave sequence. The actor prefix runs once;
+paused dialog ticks do not move actors or consume RNG. On continuation the
+saved contexts feed items/gathers/render, overlay, frame/periodic performance
+and score. Deferred tone60 is applied when that frame completes; the dialog
+snapshot retains the palette previously displayed. Removing the former extra
+front-end dim prevents the bonus scene from being dimmed twice.
+
+Observed pinned MAIN owners at load2000: main01 CS2AAF, unloaded0AAF:
+enter62B3..6348, leave6349..63B4, black6287..62B2; main03 CS33A9,
+unloaded13A9: common defeatACB3..AE86. Isolated DS8000 is copied from
+relocated DATA2134; resident9000:0000. Gameplay-loop0AAF:0098..0212/fileC388
+places player/shots/bullets/enemies before the far boss callback at0105,
+items/gathers after it, overlay0148 before clock01A8 and score0204. Database
+attestation is the root `.analysis/ghidra/database-attestations/th04-main.json`.
+These are target/runtime observations, not a new DOS exact promotion; pinned
+target provenance remains candidate-local-attested.
+
+Enter/leave share DATA2134:1B62. Enter draws at nonzero multiples of8 using
+byte gaiji64-time/8 and retains72 when it changes callback to titles. Leave
+decrements first; at416 it starts72→71, at488 zero-time black fill clears the
+callback. TRAM is replaced across24×23 gaiji cells, not blended over retained
+bonus letters; the score rows outside the playfield remain bright. Actual
+GAMEFT gaiji57 independently explains all8,726 changed pixels in the60-frame
+fixture relative to the saved v1262 PE; all other pixels remain identical.
+Title/BGM/demo overlay consumers and original complete video timing are separate.
+
+Common defeat adds wrapped stage graze before dialog, then calls bonus exactly
+once. At416 it requests sound fade10; at488 it increments resident stage/ascii,
+sets quit2 and requests one delay frame before finishing the ordinary frame.
+TH04 ordinary leave does not flush pending score; remaining score carries into
+the next session. The live application publishes graze/lives/Bombs/stage/ascii
+without replacing MAIN, reseeding its LCG or falsely loading Stage2 resources.
+Further input is held at that unloaded request. The current preview ends with
+black playfield and bright score, pending the actual Stage2 loader and actors.
+
+Independent original CPU controls cover all256 timer bytes, interval/wrap
+boundaries and1,929 departure cases. Original machine context pauses at the
+far dialog callee and resumes at its actual return address; held ticks preserve
+the caller state. Three retained489-tick original departure→leave→score sequences
+exercise pending1,20,000,000 and2,000,000,000, including nonzero pending at
+stage advance. In total4,331 input commands/7,265 complete state and ordered
+request records match GCC8.4 Linux, MinGW13 PE32+ under Wine, optimized
+UBSan/bounds and actual Windows PE execution. A rejecting callback remains a
+required negative control. Forty focused original Orange phase255 snapshots
+also preserve the prior serialized boss/pool/global/RNG contract.
+
+The first fixture was rejected at frame1 because Python native-aligned Bh
+inserted a padding byte, writing256 to target53DA. Explicit packed little-endian
+<Bh restores the intended phase/frame bytes. Keep the rejecting observation;
+an adapter packing error is not permission to change target semantics.
+
+Twelve contracts pass Linux/UBSan/Wine/native Windows. Eight natural Normal/
+Lunatic character/shot-idle Stage1 routes produce64 identical BMPs and72
+counters across all hosts, through bonus,416 fade, late mask and488 request.
+Controls check actors/RNG do not repeat on dialog resume, bonus/fade/next-stage
+requests occur once, and the unloaded Stage2 request freezes further updates.
+These are headless behavior/picture controls, not measured GUI frame pacing.
+Windows package `port64-preview/v1263` and root native launcher are refreshed
+after delivered hashes; DOS products/assets and normal/invincible launchers
+are unchanged.
+
+Stage2 session/resource initialization, midboss/Kurumi, final/Extra Ending
+dispatch, saved high score/life HUD/popup/audio/death/Bomb/Continue/Ending/save
+remain outside this slice. Later run initialization must reset accumulated
+resident graze at its actual owner; these scenarios start a fresh application.
+When loading Stage2, preserve global pending score while resetting only the
+proved stage-owned counters/pools, then activate the correct resources/boss.
+Do not merely relabel Stage1 or reuse Orange as a placeholder.
+
+```bash
+python3 port64/verify_transition.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-transition-contracts \
+  --output-dir .analysis/port64/leave-v1263/cpu-linux-attested-final
+python3 port64/verify.py \
+  --linux-dir .analysis/port64/linux-live-v1251 \
+  --windows-dir .analysis/port64/windows-live-v1251 \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --font-bmp .analysis/port64/dialog-v1260/FREECG98.bmp \
+  --output .analysis/port64/verification-leave-v1263-final/receipt.json
+```
+
+Receipts: `leave-v1263/cpu-linux-attested-final/receipt.json`,
+`cpu-{windows,ubsan}-attested-final/receipt.json`, `target-owners.json`,
+`gameplay-loop-owner.json`, `render-review/receipt.json`,
+`orange-departure-cpu-linux/receipt.json`, `integration-review.json`,
+`native-windows-cpu.json`, `native-windows-receipt.json`, and
+`verification-leave-v1263-final/receipt.json`. Semantic remains stopped;
+next port the actual Stage2 session/resource/actor boundary.
+
+## Stage actor-session preparation
+
+This section records the v1264 preparation frontier. The following Stage2
+midboss section advances that actor integration beyond2600 to the Kurumi gate.
+
+The next-stage actor API now operates on the existing MAIN owners instead of
+creating a new gameplay session. It clears the seven implemented entity pools,
+resets player current/previous position, firing time/style, stage point/dream
+counts, graze/zap and gather/circle setup. It preserves process-wide score/
+pending score, power/overflow/performance, input latch/velocity, shot volley and
+hit-spark cycles, bullet clear timer/template/counters, gather center and spark
+ring-offset high byte. Score HUD refresh does not drain pending awards.
+
+The original random call order is ring256 → item drop1 → spark angles96,
+all from the existing process LCG. Twenty-four double resets retain the same
+original machine and native owners between calls:706 draws, with no reseeding
+from target output. Stage2 preparation validates its STD before mutating owners
+or consuming RNG. The actual departure request is required; MAIN generation,
+resident statistics and score remain in the same application.
+
+Observed pinned MAIN load2000/isolated DS8000 owners: main01 unloaded0AAF
+runtime06E0..07AD, stage-state73DB..74A5, shots-reset593A..5953,
+ring1168..117F and sparks1824..1841; main03 unloaded13A9
+items9F8B..9FA7, midboss-reset642C..6453 and Stage2 setupA623..A6F5.
+Actual library IRand2000:2172 and score HUD6BA2 execute. Original stage-state
+clears nine complete physical extents, checked independently with upper EAX0
+on entry to the register-ABI REP STOSD helper. Native custom-entity/point-popup
+owners are absent; these target clear checks do not claim their implementation.
+Clipping/hardware, shot-level dispatch, item splashes, Bomb, thick lasers,
+point numbers and remaining HUD callees use explicit adapters.
+
+The Stage2 midboss seed changes start2600, HP750, sprite0, current/previous
+position3072,-512 and velocity0,16; inactive phase/frame/damage metadata stays.
+All256 phase-byte controls execute actual original midboss_reset and stage2_setup
+and compare the22-byte midboss state plus active flag. Boss/Kurumi callbacks,
+rank-dependent boss fields and resource consumers are not ported by this seed.
+Native MAIN holds before frame2600 so it cannot invoke the Stage1 callback
+under a Stage2 identity.
+
+All928 selected original CPU controls agree Linux GCC8.4, Wine-hosted MinGW13
+PE32+, optimized UBSan/bounds and actual Windows x64. There are648 isolated
+actor resets,24 retained double resets and256 midboss seeds. The checkpoints
+include selected persistent metadata, all96 spark angles, all256 ring samples,
+post-clear actor flag/position emptiness and score/HUD bytes. Rejected callback
+control remains mandatory; these are bounded state claims, not whole-session
+or DOS exactness claims. Identity remains candidate-local-attested.
+
+Four controlled native Normal/Lunatic character routes finish natural Stage1,
+retain its actual awards and then load original ST01.STD/ST01.MAP. They execute
+10,400 total Stage2 frames, reject invalid STD before mutation and stop at2600
+with midboss2 pending. Their counters agree Linux/Wine/UBSan/native Windows.
+This is actor/STD/background-state integration without Stage2 visual resources,
+full original gameplay or GUI pacing comparison. Thirteen contracts and the
+previous64 Stage1 BMPs/72 counters agree all hosts and remain identical to v1263.
+
+The GUI still ends at the unloaded Stage2 request. The new actor API is used
+only by controlled integration until its caller replaces stage-owned sprites,
+MAP/MPN/palette/portraits/dialog state and joins midboss2/Kurumi. Shared player
+resources remain resident. Test package `port64-preview/v1264` contains current
+x64 executables, native Windows verification and private stage fixtures; the
+root GUI executable remains v1263. DOS source/assets/launchers are unchanged.
+Do not advertise full Stage2 gameplay based on this preparation API.
+
+```bash
+python3 port64/verify_session.py \
+  --target /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/targets/th04/main.exe \
+  --exe .analysis/port64/linux-live-v1251/th04-port64-session-contracts \
+  --hdi /home/pentester/coding/codex_ida/th04-reconstruction/th04/.analysis/runtime/images/zun.hdi \
+  --output-dir .analysis/port64/session-v1264/cpu-linux-final
+```
+
+Receipts: `session-v1264/target-owners.json`,
+`cpu-{linux,windows,ubsan}-final/receipt.json`, `native-windows-session.json`,
+`native-windows-receipt.json`, `integration-review.json`, and
+`verification-session-v1264-final/receipt.json`. Initial invalid-style fixtures
+were rejected by the existing shot-checkpoint guard; valid styles are now seeded
+explicitly. The target/native actor code was not weakened to accept corruption.
+Semantic remains stopped. Next implement Stage2 resources and midboss2.
