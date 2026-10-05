@@ -20,26 +20,31 @@ pendingv1297 outputs remain expanded. Root receipt and restore commands:
 `.analysis/cleanup/retired-previews-20261005/receipt.json`.
 Historical gzip files may share storage; replace atomically, never in place.
 
-Current implementation batch: [registration menu control](PORT64.md#registration-menu-control-owner).
-v1298 owns the logical menu's two tables, insertion/clear flags,51-cell keyboard,
-eight-glyph editing, lock/BYTE-repeat and full save/acknowledgement/cleanup order.
-Whole924-byte original menu0A05:27C4..2B60, alphabet helper, score bodies andLCG
-execute at loads1000/2000;382 cases agree GNU/Wine/optimizedUBSan/actualWindows.
-Graphics/palette/sound/wait/file services remain guarded successful adapters;
-no pixels, fade clocks, host persistence or integrated saving claim.32 CTests/
-33 AMD64 products per fast build bind233-file manifest2f21eb00.64 preceding
-GNU/UBSan files raw-identical;31 Windows files metadata-only. The remaining
-old score-file Windows PE lacks retained metadata/bytes, so its binary continuity
-is unproved;current1288 original controls pass all three consumers instead.
+Current implementation batch: [registration graphics/text](PORT64.md#registration-graphics-and-text-plane).
+v1299 consumes v1298 decoded snapshots into graph page0 plus an independent
+WORD text/attribute bank; clean HI01 page1 restores edited names. Original
+MAINE0A05:24B6..2793/2B60..2C29 and0000:0FC4/1008 stores execute at loads1000/2000;
+separate actual SUPER/full-font kernels supply pixels under explicit video/ROM/
+BFNT/PI/RETF ABI adapters.158 complete page/palette/TRAM/RGB captures agree
+GNU/Wine/optimizedUBSan/actualWindows. RGB policy is pinned emulator-source
+corroboration, not physical video. Preserve byte-rounded name-strip copies,
+selected bank10 numerals and separate reverse text masks/bright colors.
 
-Input lock retains a changed nonzero chord;complete release clears it. BYTE
-repeat survives accepted repeats/wrap. Esc saves partial name;Shot/Bomb can
-both act in the same iteration. Table/name requests retain pre-save snapshots;
-save leaves encoded section9. Next join actual registration graphics/text,
-host score persistence and fresh OP. GUI/launcher remainv1296, DOS source/
-targets/unit/function acceptance unchanged. Current receipts:
-`.analysis/port64/registration-v1298/`;v1297 engine proof remains below
-`.analysis/port64/score-file-v1297/`. General semantic expansion stays stopped.
+Three fast builds33AMD64 products/32CTests bind238-file manifeste4c55fe9.
+32 preceding GNU files raw-identical;32 PEs metadata-only;30 UBSan raw-identical.
+Changed UBSan GUI/cutscene pass32 contracts plus80 original verdict/527font/
+160page controls; no complete ELF continuity claim. Existing382 logical menu
+and1288 score controls still pass3consumers. ActualWindows32contracts/158captures
+and all99 products have independent readback;all71 Windows files unchanged.
+Current receipts:.analysis/port64/registration-render-v1299/platform-review.json.
+
+Scene fades/waits, audio, host score persistence and fresh OP remain next;
+the published GUI/launcher remainv1296. DOS source/targets/unit/function
+acceptance unchanged. General semantic remains stopped at concrete port needs.
+After independent tests,33 duplicate capture/trace files share storage and the
+earlier90-snapshot pair is readback-archived, reclaiming2.22GiB;all3921 protected
+hashes agree. Current158-original reference/fast caches stay expanded.
+Restore commands and immutable-inode rules: capture-storage-receipt.json.
 
 Current playable baseline: [congratulations and registration entry](PORT64.md#congratulations-and-registration-entry).
 v1296 transfers both verdict pages once to a real congratulations owner and

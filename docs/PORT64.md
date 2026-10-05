@@ -3797,3 +3797,87 @@ path/hash. Independent producers ran before deduplication; this does not create
 reference equality. Use fresh output directories or atomic replacement rather
 than modifying shared trace inodes. `trace-dedup-receipt.json` records every link
 and post-dedup full platform readback passes.
+
+## Registration graphics and text plane
+
+v1299 adds `registration_render.hpp/.cpp`: a graphics consumer of the v1298
+menu's retained decoded snapshots, a separate PC-98 WORD text/attribute bank,
+and SCNUM2 numeral sprites. The logical menu, score cipher and DOS source are
+unchanged. Scene fades/waits, audio, host score persistence and fresh OP return
+still need integration; the published Windows GUI remains v1296.
+
+Original MAINE `0A05:24B6..2793` executes score/stage/name/row/table helpers;
+`0A05:2B60..2C29` executes EGC setup and the complete name-strip copy loop.
+Original `0000:0FC4..105E` executes character/attribute stores, and separate
+actual `0000:275E..2910` SUPER and `0000:36B6..37F3` graphics-font kernels supply
+pixels. The pinned packed target/payload/559 relocations remain attested; the
+Ghidra check covers its packed wrapper, not invented payload database topology.
+GRCG/EGC/CGROM, planar BFNT staging, console clear and guarded text RETF ABI
+returns are explicit adapters. PI pixels retain preceding-decoder regression.
+
+Preserve these rendering rules:
+
+- Both tables draw onto page0; page1 retains clean HI01. Name edits copy page1
+  to page0, leave access0, then redraw the graphics shadow and text cursor.
+  X is shifted by3 and width divided by16: the caller's X+2 rounds down to its
+  byte column. Height is exactly16; this helper differs from BGIMAGER's h+1.
+- Names use color14 shadows and color12 ordinary foreground. Selected names
+  use TRAM attribute41; the selected half-cell pair becomes45. Score sprites
+  use bank10 for the selected row; the most significant stored byte may hold
+  two decimal digits. Stage foreground is7 when selected, otherwise12.
+- Keyboard attributes E1/85 and name attributes41/45 belong to a separate text
+  plane. Pinned DOSBox-X video-source corroboration uses an inverted glyph mask
+  for reverse, with transparent holes and fixed bright text colors. It is not
+  a physical-video observation. Low-byte 56/57 codes with zero high byte take
+  the supplied ANK font; preserve these gaiji0/128 encoding edge cases.
+- Non-Turbo graphics text inherits the graph-font weight; all four effects
+  are controlled. SCNUM2 and HI01 have identical RGB palettes in the attested
+  assets. An unexpected palette or undefined numeral pattern is rejected;
+  malformed-score pattern-table reads are outside the defined pixel claim.
+
+At loads1000/2000, 2,256 helper calls, 976 sprite sites and 400 font sites per
+load produce158 snapshots. Each contains two complete indexed pages,48 palette
+bytes,8,000 raw TRAM bytes and a complete RGB frame:203,511,584 bytes per native
+consumer. Original stores/copy loops and explicit software-video adapters agree
+with GNU, Wine, optimized UBSan and actual Windows. Cases cover both characters,
+all ten selected positions/no-entry, all256 gaiji codes/four registration
+attributes, eight numeral alignments, inherited font weights, byte-rounded
+restore windows, real menu-generated sections/input/name edits and clear/tone
+checkpoints. RGB composition is separately emulator-source corroborated.
+
+Three fast builds each retain33 AMD64 products and pass32 CTests. Thirty-two
+preceding GNU products remain raw-identical;32 PEs differ only in timestamp/
+checksum metadata after independent normalized digest comparison. Thirty
+preceding UBSan products remain raw-identical; changed GUI/cutscene products
+are checked with32 contracts and80 original verdict cases/527 full-string
+kernels/160 pages, without a complete ELF continuity claim. Existing382 menu
+and1,288 score cases still agree on all three native consumers. Actual Windows
+runs32 contracts and158 full captures; Python independently reads every output
+and all99 product hashes. All71 Windows package/save/asset files are unchanged.
+
+The mixed hooked/real original TRAM RETF path reports inconsistent CS:IP in the
+initial Unicorn control. Its exact register/stack trace is retained; the
+repaired control guards original RETF8/10 immediates and applies their return
+ABI after all original stores. This limits the return claim, not the recorded
+text RAM bytes. The first CLI compile rejected a wrong namespace for decode_pi;
+the reference-consumer receipt initially rejected a wrong nested-field lookup.
+Both development errors were corrected before final readback. Page0/page1,
+palette/TRAM/RGB comparator mutations all reject.
+
+Final238-file manifest:
+`e4c55fe9b3c8b02f426349cecac47c976d4a26276d3821cdc7712aba92f6177b`.
+Receipts: `.analysis/port64/registration-render-v1299/platform-review.json` and
+`build-products-bound.json`; the original producer is `controls-linux-final`,
+and the final native consumers are `consumer-{linux,wine,ubsan}-bound` and
+`actual-windows-bound`. Use the checked-in Python/PowerShell verifiers with
+fresh output directories. No DOS/exact/unit/function acceptance changes.
+Next implement the ordered registration scene, persist the separate host score
+file at its save boundary, and enter fresh OP; keep general semantic stopped.
+
+After independent production and full readback,33 completed duplicate capture/
+trace files share verified storage. The earlier90-snapshot development pair is
+archived with full member readback; net2,385,702,912 bytes are reclaimed.
+Current158-snapshot original reference and all three fast caches remain
+expanded. Restore old development paths before use, and never modify shared
+capture inodes in place. `capture-storage-receipt.json` records the archive,
+restore command, every shared path/hash and3,921 protected file hashes.

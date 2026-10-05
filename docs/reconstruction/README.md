@@ -18,6 +18,7 @@ Native product-build investigation is active. Use the live ledgers and
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) for current counts and acceptance. These
 notes explain the remaining source and container gaps:
 
+- [Native score registration graphics, text RAM and original-kernel controls](../PORT64.md#registration-graphics-and-text-plane)
 - [Native Stage5 resource order, scrolling stars and Yuuka pre-dialogue](../PORT64.md#stage5-resources-stars-and-yuuka-pre-dialogue)
 - [Native x64 migration and independently checked Stage 1 midboss](../PORT64.md#stage-1-midboss)
 - [Native Stage4 resources, two midboss encounters and NPC dialogue](../PORT64.md#stage4-resources-midboss-and-npc-dialogue)

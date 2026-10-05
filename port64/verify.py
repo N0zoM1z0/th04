@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/registration_render.hpp",
+    "port64/registration_render.cpp",
+    "port64/registration_render_contracts.cpp",
+    "port64/verify_registration_render.py",
+    "port64/verify_registration_render_windows.ps1",
     "port64/registration.hpp",
     "port64/registration.cpp",
     "port64/registration_contracts.cpp",

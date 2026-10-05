@@ -58,6 +58,7 @@ add_library(
   congratulations.cpp
   score_file.cpp
   registration.cpp
+  registration_render.cpp
   run_statistics.cpp
   cutscene_scene.cpp
   pi_image.cpp
@@ -167,7 +168,7 @@ target_link_libraries(th04-port64-yuuka6-render-contracts PRIVATE th04-portable-
 add_executable(th04-port64-yuuka6-background-contracts yuuka6_background_contracts.cpp)
 target_link_libraries(th04-port64-yuuka6-background-contracts PRIVATE th04-portable-core)
 
-add_executable(th04-port64-registration-contracts registration_contracts.cpp)
+add_executable(th04-port64-registration-contracts registration_contracts.cpp registration_render_contracts.cpp)
 target_link_libraries(th04-port64-registration-contracts PRIVATE th04-portable-core)
 
 add_executable(th04-port64-score-file-contracts score_file_contracts.cpp)

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+bool registration_render_cli(int,char**);
 namespace reg=th04::portable::registration;
 namespace sf=th04::portable::score_file;
 namespace rng=th04::portable::rng;
@@ -78,6 +79,7 @@ void contracts() {
 }
 int main(int argc,char** argv) {
     try {
+        if(registration_render_cli(argc,argv))return 0;
         if(argc==1)contracts();else if(argc==3 && std::string(argv[1])=="--trace")trace(argv[2]);
         else throw std::runtime_error("usage: th04-port64-registration-contracts [--trace FIXTURES]");
         return 0;

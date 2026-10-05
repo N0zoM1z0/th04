@@ -44,6 +44,12 @@ private:
     int scroll_=0;
     std::size_t event_count_=0;
     std::vector<Event> sound_requests_;
+public:
+    // Pixel/rectangle consumers share page ownership without const-casting.
+    Bytes& drawing_page() { return pages_.at(accessed_); }
+    void copy_rectangle(unsigned source,unsigned dest,int x,int y,unsigned w,unsigned h) {
+        rect_copy(source,dest,x,y,w,h,0xffff);
+    }
 };
 // Script lifetime is distinct from graphics lifetime. Verdict can reuse the
 // original PI/font/page consumer without manufacturing a cutscene script.
