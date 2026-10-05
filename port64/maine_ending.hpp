@@ -2,11 +2,13 @@
 #include "application_state.hpp"
 #include "cutscene_scene.hpp"
 #include "staff_roll.hpp"
+#include "verdict_scene.hpp"
 #include <memory>
 #include <optional>
 
 namespace th04::portable::maine {
-enum class Phase { main_fade,cutscene,staff_roll_pending,staff_roll,verdict_pending };
+enum class Phase { main_fade,cutscene,staff_roll_pending,staff_roll,verdict_pending,
+                   verdict,congratulations_pending,registration_pending };
 inline std::uint16_t input_from_main_actions(std::uint16_t input) {
     // MAIN's host Z/Enter masks can overlap MAINE's Escape bit. Translate
     // cancellation explicitly; all other held actions only affect wait input.
@@ -24,10 +26,13 @@ public:
         if(staff_)staff_->report_song_measure(measure);else song_measure_=measure;
     }
     void start_staff_roll(const staff::Assets&);
+    void start_verdict();
+    void set_verdict_observer(verdict::Sink sink) { verdict_observer_=std::move(sink); }
     Phase phase() const { return phase_; }
     int main_tone() const { return tone_; }
     const cutscene::Scene* scene() const { return scene_.get(); }
     const staff::Scene* staff_scene() const { return staff_.get(); }
+    const verdict::Scene* verdict_scene() const { return verdict_.get(); }
     const std::string& script_name() const { return name_; }
     unsigned fade_ticks() const { return fade_ticks_; }
     const std::vector<cutscene::Event>& main_sound_requests() const { return main_sound_requests_; }
@@ -39,6 +44,9 @@ private:
     std::function<void()> release_main_;
     std::unique_ptr<cutscene::Scene> scene_;
     std::unique_ptr<staff::Scene> staff_;
+    std::unique_ptr<verdict::Scene> verdict_;
+    verdict::Sink verdict_observer_;
+    bool completion_published_=false,random_published_=false;
     std::string name_;
     Phase phase_=Phase::main_fade;
     int tone_=100,fade_left_=17,measure_left_=0;

@@ -14,6 +14,9 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verdict_scene.hpp",
+    "port64/verdict_scene.cpp",
+    "port64/verify_verdict_pixels.py",
     "port64/verdict.hpp",
     "port64/verdict.cpp",
     "port64/verdict_contracts.cpp",

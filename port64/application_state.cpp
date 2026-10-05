@@ -61,6 +61,7 @@ void State::begin_main(
     resident_.demo_number = demo_number;
     resident_.demo_stage = resource_stage;
     resident_.end_sequence = EndSequence::in_game;
+    resident_.miss_count=0;resident_.bombs_used=0;
     enter(Program::main);
 
     // MAIN copies the resident value once after process startup. Recorded demos
@@ -179,6 +180,12 @@ void State::seed_maine_verdict_random() {
     // This is an explicit verdict event rather than an MAINE entry action:
     // Extra and score-only routes save while the new process is still at 1.
     process_random_.reseed(resident_.random_seed_source);
+}
+void State::publish_maine_verdict_completion(std::uint16_t frames) {
+    require_program(Program::maine);
+    // Good/Extra completion changes only the resident STD counter. Score,
+    // cumulative frame counts and the resident menu seed stay unchanged.
+    resident_.statistics.std_frames=frames;
 }
 
 void State::finish_maine() {

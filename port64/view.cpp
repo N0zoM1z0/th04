@@ -44,6 +44,7 @@ namespace circle = th04::portable::circle;
 namespace dialog = th04::portable::dialog;
 namespace cutscene = th04::portable::cutscene;
 namespace maine = th04::portable::maine;
+namespace verdict = th04::portable::verdict;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -77,14 +78,6 @@ void require_view(bool condition, const char* reason) {
     if (!condition) {
         throw std::runtime_error(reason);
     }
-}
-
-uint16_t le16(const Bytes& bytes, size_t offset) {
-    require_view(
-        offset <= bytes.size() && bytes.size() - offset >= 2,
-        "short CD2 header"
-    );
-    return uint16_t(bytes[offset] | (uint16_t(bytes[offset + 1]) << 8));
 }
 
 void put16(Bytes& bytes, size_t offset, uint16_t value) {
@@ -1150,6 +1143,7 @@ public:
 
     void enable_ending() { enable_stage6();continue_ending_=true; }
     void enable_staff_roll() { enable_ending();continue_staff_=true; }
+    void enable_verdict() { enable_staff_roll();continue_verdict_=true; }
     void enable_host_timing() { host_timing_=true; }
     void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
     const maine::Ending* ending() const { return ending_.get(); }
@@ -1257,6 +1251,7 @@ public:
                 require_view(assets_ && !assets_->staff_roll.sprites.empty(),"Staff Roll assets missing");
                 ending_->start_staff_roll(assets_->staff_roll);
             }
+            if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
             ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
             if(repaint) frame_=render();
             return;
@@ -1443,15 +1438,17 @@ private:
             } else {
                 const auto* staff=ending_->staff_scene();
                 const auto* scene=ending_->scene();
+                const auto* verdict=ending_->verdict_scene();
+                const auto* canvas=verdict ? &verdict->canvas() : static_cast<const cutscene::Canvas*>(scene);
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
-                PiImage palette;palette.palette=staff ? staff->palette() : scene->palette();
-                const int tone=std::clamp(staff ? staff->tone() : scene->script().tone(),0,200);
+                PiImage palette;palette.palette=staff ? staff->palette() : canvas->palette();
+                const int tone=std::clamp(staff ? staff->tone() : verdict ? verdict->tone() : scene->script().tone(),0,200);
                 for(auto& component:palette.palette) {
                     const int base=component>>4;
                     component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
                 }
-                const auto& page=staff ? staff->page(staff->shown_page()) : scene->page(scene->shown_page());
-                const unsigned scroll=staff ? 0 : (unsigned(scene->scroll())%400);
+                const auto& page=staff ? staff->page(staff->shown_page()) : canvas->page(canvas->shown_page());
+                const unsigned scroll=staff ? 0 : (unsigned(canvas->scroll())%400);
                 for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x)
                     frame.pixels[y*640+x]=palette_color(palette,page[((y+scroll)%400)*640+x]);
                 return frame;
@@ -1476,7 +1473,7 @@ private:
     }
 
     const MainAssets* assets_=nullptr;
-    bool continue_ending_=false,continue_staff_=false,host_timing_=false;
+    bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,host_timing_=false;
     std::unique_ptr<maine::Ending> ending_;
     cutscene::Sink ending_observer_;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
@@ -1516,7 +1513,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_staff_roll();front_end.enable_host_timing(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_verdict();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1690,7 +1687,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_staff_roll();front_end.enable_host_timing();
+    front_end.enable_verdict();front_end.enable_host_timing();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1896,6 +1893,61 @@ void run_title(
             "verdict frontier advanced the completed Staff Roll or replaced MAINE");
         std::cout<<"MAINE Staff Roll route="<<prefix<<" ticks="<<staff_ticks<<" events="<<staff.event_count()
             <<" generation="<<scene.generation()<<" progression=verdict_pending\n";
+
+        const auto before_verdict=scene.resident();
+        std::ofstream verdict_input(ending_screenshots+"/"+prefix+"verdict-input.txt");
+        require_view(bool(verdict_input),"verdict route input output missing");
+        const auto& vs=before_verdict.statistics;
+        verdict_input<<unsigned(before_verdict.config.rank)<<' '<<unsigned(before_verdict.stage)<<' '
+            <<unsigned(before_verdict.end_sequence)<<' '<<unsigned(before_verdict.credit_lives)<<' '
+            <<unsigned(before_verdict.credit_bombs)<<' '<<before_verdict.config.turbo<<' '
+            <<before_verdict.graze<<' '<<before_verdict.random_seed_source<<' '<<vs.std_frames<<' '
+            <<vs.items_spawned<<' '<<vs.items_collected<<' '<<vs.point_items_collected<<' '
+            <<vs.max_valued_point_items_collected<<' '<<vs.enemies_gone<<' '<<vs.enemies_killed<<' '
+            <<vs.slow_frames<<' '<<vs.frames<<' '<<unsigned(before_verdict.miss_count)<<' '
+            <<unsigned(before_verdict.bombs_used)<<" 0 0";
+        for(auto digit:before_verdict.score_digits)verdict_input<<' '<<unsigned(digit);
+        verdict_input<<'\n';verdict_input.close();
+        scene.enable_verdict();scene.advance(0x1000,false,false);
+        require_view(scene.ending()->verdict_scene() && !scene.ending()->staff_scene() &&
+            scene.process_random_state()==1,"verdict failed to transfer Staff Roll or seeded too early");
+        const auto& assessment=*scene.ending()->verdict_scene();
+        while(assessment.status()!=verdict::Status::release && assessment.ticks()<1000) {
+            scene.advance(0x1000,false,false);
+            if(assessment.ticks()<70)require_view(scene.process_random_state()==1 &&
+                scene.resident().statistics.std_frames==vs.std_frames,"verdict published state during background fade");
+        }
+        require_view(assessment.status()==verdict::Status::release && assessment.tone()==100 &&
+            scene.generation()==generation+1 && scene.resident().statistics.std_frames==assessment.result().std_frames &&
+            scene.process_random_state()==assessment.result().random_state,
+            "verdict graphics/wait/resident/random publication differs");
+        const auto& canvas=assessment.canvas();
+        write_bytes("verdict-0.bin",canvas.page(0));write_bytes("verdict-1.bin",canvas.page(1));
+        write_bytes("verdict.pal",Bytes(canvas.palette().begin(),canvas.palette().end()));
+        scene.repaint();write_bmp(ending_screenshots+"/"+prefix+"verdict.bmp",scene.frame());
+        const auto ready_pixels=scene.frame().pixels;const auto ready_events=assessment.event_count();
+        for(unsigned i=0;i<10;++i) { scene.repaint();scene.advance(0x1000,false,false); }
+        scene.repaint();require_view(scene.frame().pixels==ready_pixels && assessment.event_count()==ready_events,
+            "verdict held key or repaint advanced its graphics/wait");
+        scene.advance(0,false,false);scene.advance(0,false,false);
+        require_view(assessment.status()==verdict::Status::press,"verdict did not release the held route key");
+        scene.advance(0x1000,false,false);
+        while(scene.ending()->phase()==maine::Phase::verdict && assessment.ticks()<1000)scene.advance(0x1000,false,false);
+        require_view(scene.ending()->phase()==maine::Phase::congratulations_pending && assessment.tone()==0 &&
+            scene.process_random_state()==assessment.result().random_state && scene.generation()==generation+1,
+            "verdict completion restarted MAINE/random or failed congratulations handoff");
+        const auto& after_verdict=scene.resident().statistics;
+        require_view(after_verdict.score_digits==vs.score_digits && after_verdict.items_spawned==vs.items_spawned &&
+            after_verdict.items_collected==vs.items_collected && after_verdict.point_items_collected==vs.point_items_collected &&
+            after_verdict.max_valued_point_items_collected==vs.max_valued_point_items_collected &&
+            after_verdict.enemies_gone==vs.enemies_gone && after_verdict.enemies_killed==vs.enemies_killed &&
+            after_verdict.slow_frames==vs.slow_frames && after_verdict.frames==vs.frames &&
+            scene.resident().random_seed_source==before_verdict.random_seed_source,
+            "verdict overwrote unrelated resident counters or menu seed");
+        std::cout<<"MAINE Verdict route="<<prefix<<" ticks="<<assessment.ticks()<<" skill="<<assessment.result().skill
+            <<" std="<<assessment.result().std_frames<<" random="<<assessment.result().random_state
+            <<" line="<<assessment.result().commentary_line<<" generation="<<scene.generation()
+            <<" progression=congratulations_pending\n";
 
     };
     if (!screenshot.empty()) {

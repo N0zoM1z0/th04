@@ -14,6 +14,7 @@ void staff_contracts();
 void verdict_contracts();
 void verdict_trace(const char*,const char*);
 void verdict_clock(const char*);
+void verdict_render(const char*,const char*,const char*,const char*);
 void staff_trace(const char*,unsigned);
 void staff_render(const char*,const char*,const char*);
 void staff_kernels(const char*,const char*,const char*);
@@ -223,6 +224,52 @@ void fade_trace() {
 }
 void contracts() {
     ending_contracts();
+    cutscene::Assets canvas_assets;canvas_assets.font_bitmap=blank_test_font();
+    cutscene::Canvas canvas(canvas_assets,{cutscene::Bytes(640*400,3),cutscene::Bytes(640*400,9)});
+    canvas.apply({cutscene::Kind::access,0});canvas.apply({cutscene::Kind::copy_page,0});
+    require(canvas.page(0)==canvas.page(1) && canvas.page(0).front()==9 && canvas.access_page()==0,
+        "page copy must select destination and copy its opposite, even when destination was already accessed");
+    // A nonzero OP seed makes early or repeated MAINE reseeding observable;
+    // ordinary headless routes enter Game immediately and keep menu seed0.
+    application::State state;
+    for(unsigned i=0;i<3;++i)state.advance_op_menu_frame();
+    state.start_normal(application::Playchar::reimu,application::ShotType::a);
+    while(state.resident().stage<5)state.advance_main_stage();
+    application::RunStatistics statistics;statistics.std_frames=123;statistics.items_spawned=4;
+    statistics.items_collected=2;statistics.frames=1000;
+    cutscene::Assets end_assets;end_assets.font_bitmap=blank_test_font();end_assets.gaiji.resize(32+256*32);
+    end_assets.scripts.emplace("_ED000.TXT",cutscene::Bytes{'\\','$'});
+    end_assets.scripts.emplace("_UDE.TXT",cutscene::Bytes(780,' '));
+    PiImage picture;picture.width=640;picture.height=400;picture.pixels.resize(128000,0x22);
+    end_assets.pictures.emplace("UDE.PI",picture);
+    staff::Assets staff_assets;staff_assets.pictures.emplace("SFF1.PI",picture);staff_assets.pictures.emplace("SFF2.PI",picture);
+    cutscene::Bytes sprite(16+4*32*5,0xff);
+    const auto word=[&](unsigned at,unsigned n) { sprite[at]=n&255;sprite[at+1]=(n>>8)&255; };
+    word(0,128);word(2,32);word(4,32);word(6,31*80);word(8,1);sprite[10]=1;sprite[11]=1;
+    for(unsigned i=1;i<=9;++i)for(const auto suffix:{".CDG","B.CDG"})staff_assets.sprites.emplace("SFF"+std::to_string(i)+suffix,sprite);
+    maine::Ending ending(state,statistics,application::EndSequence::good,end_assets);
+    for(unsigned i=0;i<1000 && ending.phase()!=maine::Phase::staff_roll_pending;++i)ending.advance(0);
+    require(ending.phase()==maine::Phase::staff_roll_pending,"seeded Ending did not finish");
+    ending.start_staff_roll(staff_assets);
+    for(unsigned i=0;i<10000 && ending.phase()!=maine::Phase::verdict_pending;++i)ending.advance(0);
+    ending.start_verdict();
+    require(!ending.staff_scene() && !ending.scene() && state.process_random_state()==1 &&
+        state.resident().statistics.std_frames==123,"verdict construction changed process/resident state");
+    for(unsigned i=0;i<69;++i) {
+        ending.advance(0x20);
+        require(state.process_random_state()==1 && state.resident().statistics.std_frames==123,
+            "verdict published state before its UDE fade finished");
+    }
+    ending.advance(0x20);
+    rng::Lcg32 expected(3);expected.next15();
+    require(state.resident().statistics.std_frames==44000 && state.process_random_state()==expected.state() &&
+        state.generation()==3,"verdict STD/RNG publication or generation differs");
+    for(unsigned i=0;i<100 && ending.verdict_scene()->status()!=th04::portable::verdict::Status::release;++i)ending.advance(0x20);
+    require(ending.verdict_scene()->status()==th04::portable::verdict::Status::release,"seeded verdict did not reach key wait");
+    ending.advance(0);ending.advance(0);ending.advance(0x20);
+    for(unsigned i=0;i<100 && ending.phase()==maine::Phase::verdict;++i)ending.advance(0x20);
+    require(ending.phase()==maine::Phase::congratulations_pending && state.process_random_state()==expected.state(),
+        "verdict continuation advanced the random stream twice");
     require(cutscene::script_name(0,0,false)=="_ED000.TXT","Reimu A good route");
     require(cutscene::script_name(1,1,true)=="_ED111.TXT","Marisa B bad route");
     cutscene::Script script({'\\','k','2','\\','$'});script.begin();
@@ -264,6 +311,7 @@ int main(int argc,char** argv) {
         else if(argc==5 && std::string(argv[1])=="--staff-kernels") staff_kernels(argv[2],argv[3],argv[4]);
         else if(argc==4 && std::string(argv[1])=="--verdict-trace") verdict_trace(argv[2],argv[3]);
         else if(argc==3 && std::string(argv[1])=="--verdict-clock") verdict_clock(argv[2]);
+        else if(argc==6 && std::string(argv[1])=="--verdict-render") verdict_render(argv[2],argv[3],argv[4],argv[5]);
         else if(argc==1) { contracts();staff_contracts();verdict_contracts(); }
         else throw std::invalid_argument("usage: cutscene-contracts [--trace SCRIPT HELD | --render ASSETS SCRIPT HELD FONT CHECKPOINTS OUTPUT]");
         return 0;

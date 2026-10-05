@@ -74,7 +74,8 @@ class Raster:
         elif kind == 'restore': self.pages[self.access,320:384,80:560] = self.saved
         elif kind == 'bg_free': self.saved = None
         elif kind == 'clear': self.pages[self.access].fill(0)
-        elif kind == 'copy_page': self.pages[a&1] = self.pages[self.access]
+        elif kind == 'copy_page':
+            self.access=a&1;self.pages[self.access]=self.pages[1-self.access]
         elif kind == 'text': self.glyph(a,b,c,d,e)
         elif kind == 'gaiji':
             base = 32 + int.from_bytes(self.gaiji[28:30], 'little') + c*32

@@ -31,16 +31,22 @@ std::uint16_t bold(std::uint16_t row) {
 }
 }
 
-Scene::Scene(const Assets& assets,const std::string& name)
-    :assets_(&assets),script_(assets.scripts.at(uppercase(name))),font_(assets.font_bitmap),
-     pages_{Bytes(width*height),Bytes(width*height)} {
+Canvas::Canvas(const Assets& assets,std::array<Bytes,2> pages,unsigned shown)
+    :assets_(&assets),font_(assets.font_bitmap),pages_(std::move(pages)),shown_(shown&1u) {
     if(!font_.present()) throw std::invalid_argument("MAINE requires a supplied PC-98 font bitmap");
+    for(auto& page:pages_) {
+        if(page.empty())page.resize(width*height);
+        if(page.size()!=width*height)throw std::invalid_argument("MAINE graphics page is incomplete");
+    }
+}
+Scene::Scene(const Assets& assets,const std::string& name)
+    :Canvas(assets),script_(assets.scripts.at(uppercase(name))) {
     script_.begin();
 }
 void Scene::advance(std::uint16_t held,const Sink& observer) {
     script_.advance(held,[&](const Event& event) { apply(event);if(observer) observer(event); });
 }
-void Scene::rect_copy(unsigned source,unsigned dest,int left,int top,unsigned w,unsigned h,unsigned mask) {
+void Canvas::rect_copy(unsigned source,unsigned dest,int left,int top,unsigned w,unsigned h,unsigned mask) {
     if(source>1 || dest>1) throw std::invalid_argument("invalid MAINE page copy");
     for(unsigned y=0;y<h;++y) for(unsigned x=0;x<w;++x) {
         const int px=left+int(x),py=top+int(y);
@@ -48,7 +54,7 @@ void Scene::rect_copy(unsigned source,unsigned dest,int left,int top,unsigned w,
         if(selected(mask,x)) pages_[dest][unsigned(py)*width+unsigned(px)]=pages_[source][unsigned(py)*width+unsigned(px)];
     }
 }
-void Scene::draw_picture(int left,int top,int quarter,unsigned mask,bool full) {
+void Canvas::draw_picture(int left,int top,int quarter,unsigned mask,bool full) {
     if(!loaded_) throw std::logic_error("MAINE picture slot is empty");
     if(loaded_->pixels.size()!=std::size_t(loaded_->width)*loaded_->height/2)
         throw std::invalid_argument("invalid MAINE packed picture");
@@ -67,7 +73,7 @@ void Scene::draw_picture(int left,int top,int quarter,unsigned mask,bool full) {
         pages_[accessed_][unsigned(py)*width+unsigned(px)]=static_cast<std::uint8_t>((x&1) ? packed&15 : packed>>4);
     }
 }
-void Scene::glyph(const Event& e,bool gaiji) {
+void Canvas::glyph(const Event& e,bool gaiji) {
     if(!gaiji && e.e>3) throw std::invalid_argument("unsupported MAINE glyph effect");
     unsigned base=0;
     if(gaiji) {
@@ -125,7 +131,26 @@ void Scene::glyph(const Event& e,bool gaiji) {
         left+=full ? 16 : 8;
     }
 }
-void Scene::apply(const Event& e) {
+void Canvas::put_text(int left,int top,const std::string& text,unsigned color,unsigned weight) {
+    for(std::size_t at=0;at<text.size() && text[at];) {
+        const unsigned first=static_cast<unsigned char>(text[at++]);
+        const bool full=(first&0xe0u)==0x80u || (first&0xe0u)==0xe0u;
+        unsigned second=0;
+        if(full) {
+            if(at>=text.size() || !text[at])throw std::invalid_argument("MAINE text has a truncated Shift-JIS character");
+            second=static_cast<unsigned char>(text[at++]);
+        }
+        glyph({Kind::text,left,top,int((first<<8)|second),int(color),int(weight)},false);
+        left+=full ? 16 : 8;
+    }
+}
+void Canvas::put_gaiji(int left,int top,const std::string& text,int step,unsigned color) {
+    for(unsigned char c:text) {
+        if(!c)break;
+        glyph({Kind::gaiji,left,top,c,int(color)},true);left+=step;
+    }
+}
+void Canvas::apply(const Event& e) {
     ++event_count_;
     switch(e.kind) {
     case Kind::show:shown_=unsigned(e.a)&1u;break;
@@ -140,7 +165,10 @@ void Scene::apply(const Event& e) {
         break;
     case Kind::bg_free:box_background_.clear();break;
     case Kind::clear:std::fill(pages_[accessed_].begin(),pages_[accessed_].end(),0);break;
-    case Kind::copy_page:pages_[unsigned(e.a)&1u]=pages_[accessed_];break;
+    case Kind::copy_page:
+        // graph_copy_page selects the destination and copies its opposite
+        // page. It does not copy whichever page happened to be accessed.
+        accessed_=unsigned(e.a)&1u;pages_[accessed_]=pages_[1-accessed_];break;
     case Kind::text:glyph(e,false);break;
     case Kind::gaiji:glyph(e,true);break;
     case Kind::box_mask:

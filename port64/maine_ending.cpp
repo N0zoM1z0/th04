@@ -15,7 +15,33 @@ Ending::Ending(application::State& app,application::RunStatistics statistics,
     main_sound_requests_.emplace_back(cutscene::Kind::bgm_control,0x204);
 }
 void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
-    if(phase_==Phase::verdict_pending)return;
+    if(phase_==Phase::verdict_pending || phase_==Phase::congratulations_pending || phase_==Phase::registration_pending)return;
+    if(phase_==Phase::verdict) {
+        verdict_->advance(keys,[&](const verdict::Event& e) {
+            const auto& result=verdict_->result();
+            // STD and LCG writes occur at different points in the original
+            // nonblocking calculation. Publish each at its first digit
+            // request, after the complete UDE background fade has finished.
+            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==168 && !completion_published_) {
+                application_->publish_maine_verdict_completion(result.std_frames);
+                completion_published_=true;
+            }
+            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==264 && !random_published_) {
+                application_->seed_maine_verdict_random();
+                if(result.random_drawn)application_->next_process_random();
+                if(application_->process_random_state()!=result.random_state)
+                    throw std::logic_error("verdict process RNG differs from its original-controlled calculation");
+                random_published_=true;
+            }
+            if(verdict_observer_)verdict_observer_(e);
+        });
+        if(verdict_->status()==verdict::Status::stopped) {
+            const auto& r=application_->resident();
+            phase_=r.end_sequence==application::EndSequence::good || r.config.rank==0 ?
+                Phase::congratulations_pending : Phase::registration_pending;
+        }
+        return;
+    }
     if(phase_==Phase::staff_roll) {
         staff_->advance();
         if(staff_->status()==staff::Status::stopped)phase_=Phase::verdict_pending;
@@ -70,5 +96,15 @@ void Ending::start_staff_roll(const staff::Assets& assets) {
     // A new song owns measure progress; the previous Ending song cannot
     // satisfy STAFF's waits. Its PI/script/text-box owner is now released.
     song_measure_.reset();scene_.reset();phase_=Phase::staff_roll;
+}
+void Ending::start_verdict() {
+    if(phase_!=Phase::verdict_pending || !staff_)throw std::logic_error("verdict requires a completed Staff Roll");
+    const auto& resident=application_->resident();
+    verdict::Input input;input.resident=resident;input.misses=resident.miss_count;input.bombs_used=resident.bombs_used;
+    verdict_=std::make_unique<verdict::Scene>(*assets_,input,
+        std::array<Bytes,2>{staff_->page(0),staff_->page(1)},staff_->shown_page());
+    // Transfer both pages once, then release the whole Staff Roll graphics
+    // owner. A new process is not entered; the MAINE RNG remains untouched.
+    staff_.reset();song_measure_.reset();phase_=Phase::verdict;
 }
 } // namespace th04::portable::maine

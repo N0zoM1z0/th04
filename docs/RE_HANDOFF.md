@@ -20,35 +20,48 @@ with its previousv1292 rollback executable remain expanded. Root receipt:
 .analysis/cleanup/build-followup-20261005/receipt.json. Historical gzip files
 share storage: replace them atomically rather than modifying an inode in place.
 
-Current code batch: [verdict calculation and clock](PORT64.md#verdict-calculation-and-clock).
-v1294 ports complete recovered0A05:1737..20F8 arithmetic, BCD/percentage
-formatting, rank/resource switches, commentary I/O and consumer requests, plus
-the input/palette scheduler.916 original CPU cases at loads1000/2000 cover all
-26 commentary rows, signed division, DWORD wrap, low-WORD rate arguments and
-16-bit graze doubling.10 clock/input controls execute original fades and
-both keyboard loops with explicit VSync/keyboard/palette adapters. GNU, Wine,
-UBSan and actual Windows agree.213-file manifest6c846b7f; three fast builds
-each31 executables/30CTests.30GNU/30UBSan products, including GUI, remain
-raw-identical to v1293. Receipt:.analysis/port64/verdict-v1294.
+Current code batch: [verdict graphics and integration](PORT64.md#verdict-graphics-and-integration).
+v1295 joins a real graphics canvas to the existing verdict Plan/Script; no
+dummy cutscene owns `_UDE.TXT`. Staff Roll transfers both pages once and is
+released. STD and the real MAINE LCG are published at their calculation requests,
+after the background fade; a resident-rand3/STD123 fixture catches premature or
+repeated writes. Held keys/repaint leave the wait and pixels stable. Fresh
+confirmation completes the original final fade to `congratulations_pending`.
 
-Verdict Plan/Script are not joined to the GUI yet. Next extract a reusable
-graphics canvas from Ending Scene without a dummy cutscene script, implement
-full-string graphics/PI rendering, compare original font kernels/pages, then
-join Staff Roll->verdict with resident STD/RNG publication at calculation.
-DATA0E53:071A is the percentage subtraction flag; BB81's toggled BSS3F9C is
-different storage. Do not infer that completion is subtracted. input_wait
-ORs samples before/after one refresh; a single clear sample cannot release.
-Continue congratulations and registration/save afterward. No new Windows
-preview publication or DOS source/acceptance changes in v1294.
+Original recovered0A05:1737..20F8 scoring still passes916 cases/10 clock controls
+at loads1000/2000. Original full-string text0CC7:058C..06EB and gaiji0000:36B6..375E
+execute527 kernels at both loads;80 cases cover all26 commentary rows, invalid
+assessment and all5 rank labels, matching160 complete pages/80 palette/states.
+PI decode is a preceding-v1294 native regression, while CGROM/GRCG/VSync/audio
+remain explicit adapters. GNU/Wine/UBSan/actualWindows agree; each fast build
+produces31 AMD64 products and passes30CTests. All four hosts pass24 natural
+menu/boss/Ending/Staff/verdict routes with48 verdict pages/24 RGB frames and
+unchanged576 Ending pages/48 final Staff pages. Actual Windows additionally
+compares1,344 route files, then independent Python rechecks original pixels and
+scoring. No physical video/audio, congratulations or score-save claim.
 
-Current native scope: [Staff Roll integration](PORT64.md#staff-roll-integration).
-v1293 continues both Good/Bad Ending through the entire Staff Roll and holds
-at verdict entry. MAIN publication/fade/release and the fresh MAINE generation
-remain from v1292. Staff Roll transfers and releases the old Ending graphics
-owner, runs both backgrounds and three dissolve families, frees its background
-and CDG slots, and completes its final blackout. Resident statistics and MAINE
-LCG remain unchanged. Verdict graphics/integration and score saving are next;
-Extra/death/Bomb/Continue/full HUD/audio/config remain incomplete.
+Runtime-tested216-file manifestfef77a46; release manifest501137c4 differs only
+in the English launcher's scope text. All executable/verifier/build inputs
+and93 product hashes remain bound to the tested source. Receipts:
+`.analysis/port64/verdict-v1295/{platform-review.json,release-source-binding.json}`.
+The Windows `v1295-verdict` package/root launcher is published without
+auto-launch; previousv1293 GUI/launcher are retained for rollback. Only the two
+native root files change; DOS products/scripts/config/saves remain protected.
+Latest development-media cleanup releases416MiB net, with a verified archive
+and restoration commands at root `.analysis/cleanup/development-media-20261005/`.
+Finished v1295 captures are also archived:5,176 members re-read by full size/
+SHA-256, releasing1,808MiB net before removing598 temporary Staff raw expansions.
+The80-case GNU verdict pages remain expanded for the next Windows consumer;
+other direct capture consumers must restore first. Current build caches and
+12,048 protected source/assets/reference/Windows hashes remain unchanged.
+See `.analysis/port64/verdict-v1295/media-archive-receipt.json` for restoration.
+
+Next implement congratulations and score registration/save. Extra/death/Bomb/
+Continue/full HUD/audio/config remain incomplete. General semantic expansion
+stays stopped unless it resolves a concrete port ambiguity. DATA0E53:071A is
+independent of BB81's BSS3F9C, so completion is not subtracted. input_wait ORs
+samples before/after one refresh; one clear sample cannot release a held key.
+The previous [Staff Roll](PORT64.md#staff-roll-integration) controls remain valid.
 
 At recovered MAINE `0A05:0E80..1736`, eight original CPU controls cover complete
 requests at loads1000/2000 and initial angles0/7/64/255; original polar0260

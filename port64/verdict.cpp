@@ -104,6 +104,7 @@ Plan::Plan(const Input& input,const Bytes& commentary) {
     if(s.items_spawned!=s.items_collected)
         recovered_items=(s.items_spawned ? recovered_items/s.items_spawned : 0)*s.items_collected;
     const std::uint32_t penalty=(million-recovered_items)/100;
+    result_.random_drawn=penalty!=0;
     if(penalty)bonus+=random.next15()%penalty;
     bonus*=100;
     bonus=std::min(bonus,million);

@@ -32,6 +32,7 @@ struct Result {
     std::uint8_t rank=0;
     int commentary_line=-1;
     bool score_visible=false;
+    bool random_drawn=false;
 };
 
 // Full recovered MAINE0A05:1737..20F8 calculation and consumer requests.

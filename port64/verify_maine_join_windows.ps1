@@ -5,7 +5,8 @@ param(
     [Parameter(Mandatory=$true)][string]$Hdi,
     [Parameter(Mandatory=$true)][string]$FontBitmap,
     [Parameter(Mandatory=$true)][string]$OutputDirectory,
-    [string]$StaffDirectory
+    [string]$StaffDirectory,
+    [string]$VerdictDirectory
 )
 # Actual Windows consumer of independently checked GNU/original CPU receipts.
 # The Python consumer verifies the resulting complete indexed/RGB frames again.
@@ -66,7 +67,12 @@ if ($StaffDirectory) {
         if ($kind -eq 'pages') { & $exe --staff-render $assets (Join-Path $staff 'checkpoints.txt') $destination }
         else { & $exe --staff-kernels $assets (Join-Path $staff 'kernel-fixtures.txt') $destination }
         if ($LASTEXITCODE -ne 0) { throw 'Staff Roll renderer/kernel consumer failed.' }
-        foreach ($file in Get-ChildItem -LiteralPath (Join-Path $staff $kind) -File) {
+        # Restored reference pages may retain their lossless .gz archives.
+        # Compare the renderer's actual outputs, not the archive siblings.
+        $referenceFiles = @(Get-ChildItem -LiteralPath (Join-Path $staff $kind) -File | Where-Object { $_.Extension -in @('.bin', '.pal', '.txt') })
+        $expectedFiles = if ($kind -eq 'pages') { 499 } else { 268 }
+        if ($referenceFiles.Count -ne $expectedFiles) { throw 'Restore all Staff Roll reference files before comparison.' }
+        foreach ($file in $referenceFiles) {
             $actual = Join-Path $destination $file.Name
             if ($file.Extension -eq '.txt') {
                 $actualText = (Get-Content -Raw -LiteralPath $actual) -replace "`r", ''
@@ -79,6 +85,25 @@ if ($StaffDirectory) {
         }
     }
     Write-Host 'PASS: eight original Staff Roll request controls and complete graphics/kernel outputs.'
+}
+if ($VerdictDirectory) {
+    $verdict = (Resolve-Path -LiteralPath $VerdictDirectory).ProviderPath
+    $verdictReceipt = Get-Content -Raw -LiteralPath (Join-Path $verdict 'receipt.json') | ConvertFrom-Json
+    if (!$verdictReceipt.passed -or $verdictReceipt.cases.Count -ne 80 -or $verdictReceipt.complete_pages -ne 160) {
+        throw 'Original verdict graphics are incomplete.'
+    }
+    $destination = (New-Item -ItemType Directory -Path (Join-Path $out 'verdict-pages')).FullName
+    & $exe --verdict-render (Join-Path $verdict 'assets') $font (Join-Path $verdict 'fixtures.txt') $destination
+    if ($LASTEXITCODE -ne 0) { throw 'Verdict renderer failed.' }
+    foreach ($file in Get-ChildItem -LiteralPath (Join-Path $verdict 'pages') -File) {
+        $actual = Join-Path $destination $file.Name
+        if ($file.Extension -eq '.txt') {
+            if (((Get-Content -Raw -LiteralPath $actual) -replace "`r", '') -cne
+                ((Get-Content -Raw -LiteralPath $file.FullName) -replace "`r", '')) { throw 'Verdict state differs.' }
+        } elseif ((Get-FileHash -LiteralPath $actual -Algorithm SHA256).Hash -cne
+                  (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash) { throw 'Verdict page differs.' }
+    }
+    Write-Host 'PASS: 80 original verdict graphics cases and 160 complete pages.'
 }
 Get-ChildItem -LiteralPath $routes -Filter '*-checkpoints.txt' | ForEach-Object {
     Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $routeOut $_.Name)
@@ -113,7 +138,12 @@ if ($StaffDirectory) {
     $expectedStaffRoutes = @(Get-Content -LiteralPath (Join-Path $routes 'stdout.log') | Where-Object { $_ -like 'MAINE Staff Roll route=*' })
     if ($staffRoutes.Count -ne 24 -or ($staffRoutes -join "`n") -cne ($expectedStaffRoutes -join "`n")) { throw 'Staff Roll route state differs.' }
 }
-$expectedCount = if ($StaffDirectory) { 1248 } else { 1176 }
+if ($VerdictDirectory) {
+    $actualVerdicts = @($lines | Where-Object { "$_" -like 'MAINE Verdict route=*' })
+    $expectedVerdicts = @(Get-Content -LiteralPath (Join-Path $routes 'stdout.log') | Where-Object { $_ -like 'MAINE Verdict route=*' })
+    if ($actualVerdicts.Count -ne 24 -or ($actualVerdicts -join "`n") -cne ($expectedVerdicts -join "`n")) { throw 'Verdict route state differs.' }
+}
+$expectedCount = if ($VerdictDirectory) { 1344 } elseif ($StaffDirectory) { 1248 } else { 1176 }
 if ($files.Count -ne $expectedCount) { throw 'Incomplete page/palette/RGB/state comparisons.' }
 $receipt = @{
     passed=$true; observed_utc=[DateTime]::UtcNow.ToString('o'); host='actual-Windows-AMD64';
@@ -125,7 +155,9 @@ $receipt = @{
     staff_control_cases=$(if ($StaffDirectory) { 8 } else { 0 });
     staff_kernel_cases=$(if ($StaffDirectory) { $staffReceipt.kernel_controls.Count } else { 0 });
     staff_routes=$(if ($StaffDirectory) { 24 } else { 0 });
-    scope='Actual Windows consumer of original/GNU controls; natural MAIN-to-MAINE Ending and optional Staff Roll; no physical PC-98 capture, audio synthesis, verdict or saved-score claim.'
+    verdict_graphics_cases=$(if ($VerdictDirectory) { 80 } else { 0 });
+    verdict_routes=$(if ($VerdictDirectory) { 24 } else { 0 });
+    scope='Actual Windows consumer of original/GNU controls; natural MAIN-to-MAINE Ending and optional Staff Roll/verdict graphics. No physical PC-98 capture, audio synthesis, congratulations or saved-score claim.'
 }
 $receipt | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $out 'receipt.json') -Encoding UTF8
 Write-Host 'PASS: 24 routes, 576 complete indexed pages, 288 palettes and 288 RGB frames.'

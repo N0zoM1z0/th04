@@ -13,10 +13,10 @@ battle, then all-clear and the appropriate Good Ending. Easy runs its separate
 bad dialogue and Bad Ending. The native frontend now joins MAIN's score/run
 statistics, mandatory fade, resource release and fresh MAINE lifecycle to all
 eight Ending script/graphics routes. Staff Roll now completes its two backgrounds
-and three dissolve families, with the preview holding at verdict entry. The
-verdict calculation/request/clock component now passes original CPU controls;
-its graphics and GUI integration, congratulations and score registration/save
-remain next. See [verdict component](#verdict-calculation-and-clock),
+and three dissolve families. The assessment screen now renders its original
+grades and commentary, preserves the held-key release/press wait, then fades
+to the congratulations frontier. Congratulations and score registration/save
+remain next. See [verdict graphics](#verdict-graphics-and-integration),
 [Staff Roll](#staff-roll-integration) and
 [MAIN-to-MAINE integration](#main-to-maine-ending-integration) for the current
 acceptance scope. Earlier slices below retain their historical boundaries.
@@ -3494,9 +3494,88 @@ Receipts:.analysis/port64/verdict-v1294.30GNU/30UBSan products, including
 the game executable, are raw-identical to v1293. PE metadata changes on relink;
 no preceding PE body equality is claimed. Native/root CI pass.
 
-Next join a graphics canvas, full-string text/gaiji drawing and UDE.PI, compare
-complete pages with original font kernels, then attach verdict to Staff Roll
-and publish resident STD/RNG in the correct phase. Preserve the independently
-reviewed destination/opposite-page copy semantics. Congratulations and score
-registration/save follow. Windows preview, DOS source, original targets and
-exact acceptance remain unchanged. General semantic expansion stays stopped.
+v1294 validates the calculation/clock component only. Its Windows preview,
+DOS source, original targets and exact acceptance remain unchanged. The
+graphics and application-state publication are verified separately below.
+
+## Verdict graphics and integration
+
+v1295 extracts `cutscene::Canvas` from Ending's script owner. The canvas owns
+two indexed pages, the PI slot, saved text-box pixels and palette, borrowing
+only immutable assets. `verdict::Scene` composes this canvas with the verified
+Plan/Script; `_UDE.TXT` supplies fixed-width commentary records and is never
+parsed as a fabricated cutscene. Full-string CP932 and gaiji rendering preserve
+ANK/SJIS advances, weight, color and NUL termination. Page copying now implements
+the original destination/opposite-page contract, including the selected access
+page. The eight old Ending callers explicitly use access1/copy0/access0, so
+their complete visible-page references remain valid after this correction.
+
+MAINE transfers both completed Staff Roll pages once, then releases the Staff
+owner. Verdict construction and the complete UDE background fade leave resident
+STD and the MAINE LCG untouched. At the first completion digit request it
+publishes STD; at the chance digit request it re-seeds the real MAINE LCG and
+consumes exactly the original conditional draw. No new process or generation
+is created. A seeded contract uses resident rand3 and previous STD123 to make
+early or repeated publication observable, independently of headless routes
+whose immediate menu confirmation leaves resident rand0. Holding a key and
+host repaint do not repeat calculation or alter pixels. After release and a
+fresh press, the original final blackout completes. Good/Easy Bad route to
+`congratulations_pending`; other Bad ranks route to `registration_pending`.
+These are explicit unfinished owners, not score-save completion.
+
+`verify_verdict_pixels.py` uses complete original verdict requests and executes
+the full original FAR Pascal text kernel at recovered `0CC7:058C..06EB` and
+gaiji-string kernel at `0000:36B6..375E`. Eighty assessment fixtures exercise
+all26 commentary rows, the invalid assessment, all5 rank labels and width/
+truncation/termination boundaries. The527 distinct full-string drawing calls
+agree at loads1000/2000; all160 complete indexed pages,80 palettes and page/
+tone/request states agree with the native canvas. CGROM and GRCG are explicit
+supplied-font/write adapters. UDE.PI decoding is regressed against the retained
+v1294 executable, not claimed as original CPU PI decoding or physical video.
+
+Fast GNU8.4Release, MinGW13-posix AMD64 and optimized UBSan/bounds builds each
+produce31 executables and pass30CTests. All three execute the previous916
+calculation and10 clock controls and the80 complete-page cases. Each also
+passes24 natural menu/STD/dialogue/boss/Ending/Staff Roll/verdict routes: the
+preceding576 Ending pages,288 palettes/states and288 RGB frames remain equal;
+the48 final Staff pages remain equal; fresh original scoring on the actual
+published resident inputs plus original full-string kernels validates48
+verdict pages,24 palettes and24 computed RGB frames per host. This route has
+no player death/Bomb/Continue/Extra or audio implementation.
+
+Runtime-tested216-file manifest is
+`fef77a46355aba231a0c02ed2dd6d3d0da3f092066bbd0131510cd1ef143707c`.
+The English launcher description was then corrected; only
+`port64/start-th04-port64.bat` differs in release manifest
+`501137c49beedd70be9eedf6c30bb3712a207deeaa780afa3bbbada58ff200a8`.
+The source-binding receipt verifies all executable, verifier and build inputs
+remain identical to the tested manifest. Receipts are below
+`.analysis/port64/verdict-v1295`; generated development media are losslessly
+archived with restoration instructions in the root
+`.analysis/cleanup/development-media-20261005/receipt.json`.
+
+Actual Windows executes the30 contracts,916 calculation/10 clock controls,
+80 graphics cases,8 Staff Roll request streams and268 Staff graphics kernels.
+Its24 natural routes agree on1,344 complete page/palette/RGB/state files.
+Independent Python readback rechecks the retained outputs and original font/
+scoring controls, with CRLF normalization restricted to text streams. The
+Windows reference consumer requires all499 expanded Staff page/palette/state
+files and268 expanded kernel files; archived `.gz` siblings are excluded,
+but a missing expanded reference fails rather than silently reducing coverage.
+
+Windows preview is `D:\Entertainment\Game\Touhou\th04-reconstruct\port64-preview\v1295-verdict`;
+the root `start-th04-port64.bat` selects the updated GUI. The versioned package
+contains31 verified AMD64 products and its own attested original HDI/font.
+Previousv1293 GUI/launcher remain in `previous-v1293`;69 unrelated existing
+Windows files retain their complete hashes. No GUI is launched automatically.
+Finished generated buffers are losslessly archived after all consumers finish;
+the80-case GNU page reference remains expanded. All other archived captures
+require restoration before direct replay, including the598 temporarily expanded
+Staff references. The archive/member manifests and restoration commands live
+in `media-archive-receipt.json`; it records the diagnosed self-log false positive
+in the first final protection check and the independent full successful reread.
+
+Next implement congratulations and registration/save against the original
+control flow. General semantic expansion remains stopped unless a concrete
+port ambiguity requires it. Native whole-build exactness is not required;
+DOS source, original targets and historical acceptance remain separate.

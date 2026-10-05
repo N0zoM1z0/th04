@@ -8,8 +8,12 @@ echo Preview includes Stage 4 waves, two midboss encounters and NPC dialogue.
 echo Both characters continue through their Stage 4 boss, dialogue and clear.
 echo Stage 5 includes Yuuka attacks, thick lasers, defeat and post-dialogue.
 echo Normal and Lunatic include Stage 6 waves, Yuuka's final battle and all-clear.
-echo The preview stops at the Ending entry; Easy stops before Bad Ending.
-echo Endings, player death, Bombs and audio are in development.
+echo Normal and Lunatic continue through Good Ending; Easy runs Bad Ending.
+echo Staff Roll includes both backgrounds and the original dissolve transitions.
+echo The assessment screen includes the original grades and commentary.
+echo Assessment: release the key, then press Enter or Z to confirm.
+echo After assessment confirmation the preview holds before congratulations.
+echo Congratulations, score saving, player death, Bombs and audio are in development.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.
   pause

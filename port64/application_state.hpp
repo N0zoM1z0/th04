@@ -67,6 +67,9 @@ struct ResidentState {
     std::uint8_t credit_bombs = 0;
     std::uint8_t stage = 0,stage_ascii = '0';
     std::uint16_t graze = 0;
+    // These resident counters span Stages and are cleared for a new MAIN run.
+    // Death/Bomb owners will increment them when those actions are migrated.
+    std::uint8_t miss_count = 0,bombs_used = 0;
     std::uint8_t resource_stage = 0;
     Playchar playchar = Playchar::reimu;
     ShotType shot_type = ShotType::a;
@@ -112,6 +115,7 @@ public:
     void prepare_main_ending(EndSequence);
     MaineRoute maine_route() const;
     void seed_maine_verdict_random();
+    void publish_maine_verdict_completion(std::uint16_t standard_frames);
     void finish_maine();
     void exit_from_op();
     std::uint16_t next_process_random();

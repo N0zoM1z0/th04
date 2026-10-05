@@ -94,6 +94,8 @@ def main():
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--runner'); p.add_argument('--existing-log', type=Path)
     p.add_argument('--staff-gallery',type=Path)
+    p.add_argument('--verdict-gallery',type=Path)
+    p.add_argument('--target',type=Path);p.add_argument('--decoded-dir',type=Path)
     args = p.parse_args(); out = args.output_dir.resolve(); out.mkdir(parents=True, exist_ok=True)
     manifest, _ = source_manifest(Path(__file__).resolve().parents[1])
     if sha(args.hdi.read_bytes()) != '0d5ea773a9e4f3e28f473b6deeedb6a7cdaccbb5b940a97983c4e3597dd4ebfd':
@@ -126,6 +128,38 @@ def main():
             assert (out/(fields['route']+'staff-final.pal')).read_bytes()==palette
             staff_routes.append(fields)
         assert len(staff_routes)==24 and len({r['route'] for r in staff_routes})==24
+    verdict_routes=[]
+    if args.verdict_gallery:
+        if not args.target or not args.decoded_dir:raise ValueError('verdict target/recovery inputs required')
+        from verify_cutscene import ending_assets
+        from verify_verdict import Original
+        from verify_verdict_pixels import VerdictRaster
+        proof=json.loads((args.verdict_gallery/'receipt.json').read_text())
+        assert proof['passed'] and proof['complete_pages']==160 and proof['full_string_kernels']>=500
+        decoded=(args.verdict_gallery/'UDE.raw').read_bytes();assert sha(decoded)==proof['pi_decoder']['decoded_sha256']
+        assets=ending_assets(args.hdi)
+        assert proof['font_sha256']==sha(args.font_bmp.read_bytes()) and proof['gaiji_sha256']==sha(assets['GAMEFT.BFT'])
+        original=Original(args.target,args.decoded_dir,assets['_UDE.TXT'],0x2000)
+        raster=VerdictRaster(args.target,args.decoded_dir,args.font_bmp,assets['GAMEFT.BFT'],decoded)
+        for line in log.splitlines():
+            if not line.startswith('MAINE Verdict route='):continue
+            fields=dict(w.split('=',1) for w in line.split() if '=' in w);prefix=fields['route']
+            assert fields['progression']=='congratulations_pending' and fields['generation']=='3'
+            values=list(map(int,(out/(prefix+'verdict-input.txt')).read_text().split()));assert len(values)==29
+            assert values[1]==(4 if prefix.startswith('easy-') else 5),'natural route published the wrong stage'
+            trace=original.run(values);end=trace[-1].split()
+            assert [int(fields[k]) for k in ('skill','std','random','line')]==[int(end[i]) for i in (1,4,3,6)]
+            canvas,palette,state=raster.render(trace);hashes=[]
+            assert state[:3]==[0,0,100]
+            for page in (0,1):
+                expected=canvas[page].tobytes()
+                equal((out/(prefix+f'verdict-{page}.bin')).read_bytes(),expected,prefix+'verdict page')
+                hashes.append(sha(expected))
+            equal((out/(prefix+'verdict.pal')).read_bytes(),palette,prefix+'verdict palette')
+            rgb=((np.frombuffer(palette,dtype=np.uint8).reshape(16,3)>>4)*17)[canvas[0]].tobytes()
+            equal(Image.open(out/(prefix+'verdict.bmp')).convert('RGB').tobytes(),rgb,prefix+'verdict RGB')
+            verdict_routes.append(dict(route=prefix,fields=fields,page_sha256=hashes,palette_sha256=sha(palette),rgb_sha256=sha(rgb)))
+        assert len(verdict_routes)==24 and len({r['route'] for r in verdict_routes})==24
     after, _ = source_manifest(Path(__file__).resolve().parents[1]); assert after == manifest
     receipt = dict(passed=True, observed_utc=datetime.now(timezone.utc).isoformat(), command=command,
                    executable_sha256=sha(args.exe.read_bytes()), source_manifest_sha256=manifest,
@@ -133,8 +167,9 @@ def main():
                    hdi_sha256=sha(args.hdi.read_bytes()), font_sha256=sha(args.font_bmp.read_bytes()),
                    natural_routes=len(records), complete_pages=576, palette_states=288, rgb_frames=288,
                    staff_routes=staff_routes,staff_complete_pages=2*len(staff_routes),
+                   verdict_routes=verdict_routes,verdict_complete_pages=2*len(verdict_routes),verdict_rgb_frames=len(verdict_routes),
                    negative_pixel_rejected=True, routes=records,
-                   scope='Natural menu/STD/dialogue/boss traversal through Good or Bad Ending and its MAIN/MAINE lifetime. Optional Staff Roll checks compare its final two pages to the original-request/kernel gallery. Player death, Bomb, Continue, Extra, audio, verdict and save remain outside this path. RGB is computed presentation, not physical PC-98 capture.')
+                   scope='Natural menu/STD/dialogue/boss traversal through Good or Bad Ending, Staff Roll and optional verdict. Verdict uses fresh original CPU on published resident values and original full-string font kernels; STD/LCG ownership and complete indexed/RGB pages checked. Player death, Bomb, Continue, Extra, audio, congratulations and save remain outside this path. RGB is computed presentation, not physical PC-98 capture.')
     (out/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
     print(json.dumps({k: receipt[k] for k in ('passed', 'natural_routes', 'complete_pages', 'palette_states', 'rgb_frames')}, indent=2))
 

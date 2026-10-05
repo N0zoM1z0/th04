@@ -53,6 +53,7 @@ add_library(
   maine_ending.cpp
   staff_roll.cpp
   verdict.cpp
+  verdict_scene.cpp
   run_statistics.cpp
   cutscene_scene.cpp
   pi_image.cpp

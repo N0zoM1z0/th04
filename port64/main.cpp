@@ -317,6 +317,8 @@ int main(int argc, char** argv) {
                         std::ostringstream name;name<<"ED"<<std::setw(2)<<std::setfill('0')<<i<<".PI";
                         ending.pictures.emplace(name.str(),decode_pi(archive_member(par,name.str())));
                     }
+                    ending.pictures.emplace("UDE.PI",decode_pi(archive_member(par,"UDE.PI")));
+                    ending.scripts.emplace("_UDE.TXT",archive_member(par,"_UDE.TXT"));
                     for(unsigned i=1;i<=2;++i) {
                         const auto name="SFF"+std::to_string(i)+".PI";
                         main_assets.staff_roll.pictures.emplace(name,decode_pi(archive_member(par,name)));
