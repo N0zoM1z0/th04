@@ -93,7 +93,9 @@ inputs; their progress and exactness claims do not transfer automatically.
 
 Use [RE_WORKFLOW.md](docs/RE_WORKFLOW.md) for implementation work. Install public
 validation dependencies with `python3 -m pip install -r requirements-ci.txt`;
-private CPU/runtime Oracles additionally require their documented local tools. Finish with:
+CI also checks out the pinned ReC98 source-routing reference used by the manifest
+audit; this is a validation input, not a product include dependency. Private
+CPU/runtime Oracles additionally require their documented local tools. Finish with:
 
 ```sh
 python3 scripts/ci.py
