@@ -32,3 +32,17 @@ This is an OP decoded `source-present` original-ASM unit with a reviewed
 function boundary. Its original packed-file offset is unknown, so this is
 not a whole OP.EXE or packed-file exact claim. The authored C/C++ function
 count remains 85/93 exact.
+
+## Semantic annotations, v1226
+
+Comments now explain the four-plane overwrite, bottom-up rows, signed SAR coordinate behavior, continuing source pointer between planes, lack of general clipping and caller-owned GRCG state.
+
+This batch changes comments only in the assembler units. Complete standalone
+MAIN/OP/MAINE MZ files remain raw-identical to their preceding source builds;
+see [the PAR regression record](../product/TH04_NATIVE_PF_ARCHIVE_V867.md).
+A new historical replay did not complete: the OP/MAINE driver requires the
+removed private v228 restore/v489 snapshot, and the current MAIN replay rejects
+`th04-main-items-invalidate-v185-layout` scaffold digest drift before compilation.
+Those are replay-environment/control-plane failures, not evidence of changed
+CDG instructions. Existing accepted states remain untouched; this result
+adds no new target-exact claim.

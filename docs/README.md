@@ -4,6 +4,14 @@ Start with the smallest document that answers the current question. For a new
 work session, read the handoff and only the focused note it links for that task.
 The CSV ledgers remain authoritative when prose and generated reports disagree.
 
+## Current operation and reuse
+
+- [PC-98 hardware reuse](PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
+- [DOS build/testing](DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
+- [Semantic/native status and TODO](PORTING_STATUS.md) — paused work, components versus published GUI.
+- [Script catalog](../scripts/README.md) — all tools grouped by task.
+- [Private artifact retention](ANALYSIS_RETENTION.md) — protected tools/cache/input and archive recovery.
+
 ## Continue reconstruction
 
 - [Current handoff](RE_HANDOFF.md) — present state, blockers, and next action.

@@ -83,7 +83,7 @@ void probe_bullet_state(void)
     bullet.age = 1;
     bullet.pos.cur.x.v = TO_SP(4);
     bullet.pos.velocity.y.v = TO_SP(1);
-    bullet.from_group = BG_SINGLE;
+    bullet.spawn_group = BG_SINGLE;
     bullet.speed_cur.v = 2;
     bullet.angle = 0x10;
     bullet.spawn_flag = BSF_ACTIVE;
@@ -113,7 +113,7 @@ int probe_bullet_layout(void)
         + sizeof(bullet_special)
         + sizeof(bullets)
         + BULLET_KILLBOX_W + BULLET_KILLBOX_H
-        + ANGLE_PER_SPRITE
+        + BULLET_DIRECTION_SPRITE_ANGLE_STEP
         + PELLET_COUNT + BULLET16_COUNT + BULLET_COUNT
     );
 }
@@ -144,10 +144,15 @@ def semantic_omf_sha256(data: bytes) -> str:
 
 
 def compile_variant(
-    label: str, root: Path, includes: tuple[str, ...], env: dict[str, str], output: Path
+    label: str,
+    root: Path,
+    includes: tuple[str, ...],
+    env: dict[str, str],
+    output: Path,
+    test_source: str,
 ) -> dict[str, object]:
     (root / "obj").mkdir(parents=True)
-    (root / "test.cpp").write_text(TEST, encoding="ascii")
+    (root / "test.cpp").write_text(test_source, encoding="ascii")
     command = [
         "wine", str(RUNNER), "-e", "-x", "tcc", *FLAGS,
         *(f"-I{include}" for include in includes),
@@ -169,6 +174,7 @@ def compile_variant(
     if not omf["valid"] or omf["module_name"] != "test.cpp":
         raise RuntimeError(f"unexpected {label} OMF structure")
     return {
+        "harness_sha256": hashlib.sha256(test_source.encode("ascii")).hexdigest(),
         "object_sha256": hashlib.sha256(data).hexdigest(),
         "semantic_omf_sha256": semantic_omf_sha256(data),
         "record_counts": omf["record_counts"],
@@ -223,21 +229,29 @@ def main() -> int:
         WINEDEBUG="-all",
         MSDOS_PATH=r"C:\TC4\BIN;C:\TASM50\BIN",
     )
-    reference_result = compile_variant("reference", reference, ("tree",), env, output)
+    # The maintained header deliberately gives two fields/constants semantic
+    # names. Compile equivalent source spellings against the pinned historical
+    # header so this probe keeps testing generated ABI rather than source-level
+    # identifier compatibility.
+    reference_test = TEST.replace("spawn_group", "from_group").replace(
+        "BULLET_DIRECTION_SPRITE_ANGLE_STEP", "ANGLE_PER_SPRITE"
+    )
+    reference_result = compile_variant(
+        "reference", reference, ("tree",), env, output, reference_test
+    )
     local_result = compile_variant(
-        "local", local, ("src/main/include", "."), env, output
+        "local", local, ("src/main/include", "."), env, output, TEST
     )
     passed = (
         reference_result["semantic_omf_sha256"]
         == local_result["semantic_omf_sha256"]
     )
     receipt = {
-        "schema_version": 1,
+        "schema_version": 2,
         "observed_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "scope": "TH04 MAIN product-owned bullet header ABI",
         "runner_sha256": RUNNER_SHA256,
         "compiler_flags": FLAGS,
-        "harness_sha256": hashlib.sha256(TEST.encode("ascii")).hexdigest(),
         "local_header_sha256": sha(LOCAL_HEADER),
         "local_types_sha256": sha(LOCAL_TYPES),
         "local_motion_sha256": sha(LOCAL_MOTION),

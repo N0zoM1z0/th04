@@ -18,6 +18,11 @@ void game_exit(void);
 static char BINARY_MAIN[] = "main";
 static char BINARY_DEB[] = "deb";
 
+// Keep the historical private data symbols while naming their roles at each
+// use site. These aliases preprocess away and do not change the OMF surface.
+#define GAMEPLAY_BINARY BINARY_MAIN
+#define DEBUG_GAMEPLAY_BINARY BINARY_DEB
+
 #ifdef TH04P
 #pragma codeseg OP_NATIVE_TEXT OP_NATIVE_01
 #else

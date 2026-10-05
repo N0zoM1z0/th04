@@ -146,6 +146,8 @@ void near stage_session_init(void)
             power = POWER_MAX;
             resident->stage_ascii = ('0' + stage_id);
             fp_23D90 = DemoPlay;
+			// Recorded demos use one fixed LCG sequence regardless of how long
+			// the title menu waited before launching them.
             random_seed = 318;
         }
     }

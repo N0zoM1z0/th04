@@ -28,8 +28,15 @@ int PI_CALL pi_load(int slot, const char TH04_PTR *fn);
 
 void PI_CALL pi_palette_apply(int slot);
 
+#if defined(TH04P)
+// The standalone loader reuses PI slots across the ending, staff roll,
+// verdict, and score screen. Clear the owner pointer after releasing it so
+// the next pi_load() cannot free the same DOS block a second time.
+void PI_CALL pi_free(int slot);
+#else
 #define pi_free(slot) \
 	graph_pi_free(&pi_headers[slot], pi_buffers[slot]);
+#endif
 
 // Displays the PI image in slot #[slot] at (floor(left/8)*8, top).
 // Horizontally, the image is cut off at 640 pixels; vertically, it is wrapped

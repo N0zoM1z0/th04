@@ -63,6 +63,7 @@ void game_exit(void);
 
 int pascal GameExecl(const char *binary_fn);
 #pragma samecodeseg GameExecl
+#define next_program_fn binary_fn
 
 static const unsigned int GAMEOVER_GLYPH_G = 0xB0;
 static const unsigned char POWER_MIN_VALUE = 1;
@@ -74,6 +75,9 @@ void near game_state_save_score(void);
 
 int pascal GameExecl(const char *binary_fn)
 {
+	// The resident block outlives MAIN. Publish the score and run counters before
+	// freeing any gameplay storage so MAINE can render its verdict and OP can
+	// retain the next random seed/configuration state.
     game_state_save_score();
     if(Ems) {
         ems_free(Ems);
@@ -87,6 +91,10 @@ int pascal GameExecl(const char *binary_fn)
     resident->enemies_killed = enemies_killed;
     resident->slow_frames = total_slow_frames;
     resident->frames = total_frames;
+
+	// Release owners from the most specific gameplay allocations out to the
+	// process-wide archive, display and input/sound services. In particular, do
+	// not release the resident segment: ZUN.COM owns it across DOS overlays.
     bb_txt_free();
     cdg_free_all();
     bb_boss_free();
@@ -99,5 +107,10 @@ int pascal GameExecl(const char *binary_fn)
     text_clear();
     gaiji_restore();
     game_exit();
-    return execl((char *)binary_fn, (char *)binary_fn, NULL);
+
+	// On success DOS replaces this process, so the return value exists only for
+	// execl() failure. Both argv[0] and the executable path use the same name.
+    return execl(
+		(char *)next_program_fn, (char *)next_program_fn, NULL
+	);
 }

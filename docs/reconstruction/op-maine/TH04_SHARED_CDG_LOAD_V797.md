@@ -76,3 +76,17 @@ taskset -c 0,1 nice -n 10 python3 scripts/probes/replay_th04_op_maine_cdg_load.p
 taskset -c 0,1 nice -n 10 python3 scripts/replay_th04_main_exact_units.py \
   --unit th04-main-module-th04-cdg-load-asm-13938 --run-id NEW-MAIN-CDG-REPLAY
 ```
+
+## Semantic annotations, v1226
+
+Comments now document the 16-byte record, first 12 file-owned metadata bytes, runtime segment owners, layout selectors, noalpha handling and the retained 16-bit image-stride multiplication before DOS seek.
+
+This batch changes comments only in the assembler units. Complete standalone
+MAIN/OP/MAINE MZ files remain raw-identical to their preceding source builds;
+see [the PAR regression record](../product/TH04_NATIVE_PF_ARCHIVE_V867.md).
+A new historical replay did not complete: the OP/MAINE driver requires the
+removed private v228 restore/v489 snapshot, and the current MAIN replay rejects
+`th04-main-items-invalidate-v185-layout` scaffold digest drift before compilation.
+Those are replay-environment/control-plane failures, not evidence of changed
+CDG instructions. Existing accepted states remain untouched; this result
+adds no new target-exact claim.

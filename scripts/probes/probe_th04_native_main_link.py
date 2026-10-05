@@ -148,7 +148,7 @@ def body_wrapper(source: Path, work: Path, index: int) -> Path:
     relative = source.relative_to(ROOT).as_posix()
     if relative not in BODY_ONLY_SOURCES:
         return source
-    current = source.read_text(encoding="utf-8")
+    current = (work / relative).read_text(encoding="utf-8")
     context = (work / relative).with_suffix(".context.inc")
     prefix, suffix = context.read_text(encoding="utf-8").split("; TH04_NATIVE_BODY\n")
     current_public = re.search(r"(?m)^public\s+", current)
@@ -1088,11 +1088,13 @@ def assemble_asm(source: Path, index: int, work: Path, output: Path,
     except ValueError:
         logical_relative = logical_source.relative_to(work).as_posix()
     staged_source = work / relative
+    staged_logical_source = (logical_source if logical_source.is_relative_to(work)
+                             else work / logical_relative)
     if logical_relative in ASM_CACHE:
         cached, previous_obj = ASM_CACHE[logical_relative]
         if (cached["assembly_source"] == relative
                 and cached["assembly_source_sha256"] == sha256(staged_source)
-                and cached["source_sha256"] == sha256(logical_source)):
+                and cached["source_sha256"] == sha256(staged_logical_source)):
             shutil.copy2(previous_obj, obj)
             record = dict(cached)
             record.update(index=index, object=obj.relative_to(work).as_posix(),
@@ -1117,8 +1119,8 @@ def assemble_asm(source: Path, index: int, work: Path, output: Path,
         "index": index,
         "source": logical_relative,
         "assembly_source": relative,
-        "source_sha256": sha256(logical_source),
-        "assembly_source_sha256": sha256(source),
+        "source_sha256": sha256(staged_logical_source),
+        "assembly_source_sha256": sha256(staged_source),
         "object": obj.relative_to(work).as_posix() if obj.is_file() else None,
         "object_sha256": sha256(obj) if obj.is_file() else None,
         "assemble_exit": result.returncode,
@@ -1212,6 +1214,10 @@ def main() -> int:
                         help="private MPN/cache/initial-VRAM file checkpoints")
     parser.add_argument("--state-trace", action="store_true",
                         help="private sparse input/player/shot/bomb/score records")
+    parser.add_argument("--bullet-load-trace", action="store_true",
+                        help="private real-PC-98 Lunatic/full-pool IRQ-counter fixture")
+    parser.add_argument("--bullet-load-baseline-revision",
+                        help="old renderer source revision for the private load fixture only")
     faults = parser.add_mutually_exclusive_group()
     faults.add_argument("--fault-trace", action="store_true",
                         help="private gameplay call and decimal DIV checkpoints to port E9")
@@ -1233,6 +1239,7 @@ def main() -> int:
         if (args.output_dir or args.without_support or args.require_link
                 or args.input_trace or args.force_stage is not None
                 or args.graphics_trace or args.state_trace or args.fault_trace
+                or args.bullet_load_trace or args.bullet_load_baseline_revision
                 or args.cpu_fault_trace or args.invincible
                 or args.reuse_cpp_from or args.reuse_asm_from):
             parser.error("--check-manifest cannot be combined with build options")
@@ -1241,6 +1248,8 @@ def main() -> int:
         return 0
     if args.output_dir is None:
         parser.error("--output-dir is required for a link diagnostic")
+    if args.bullet_load_baseline_revision and not args.bullet_load_trace:
+        parser.error("--bullet-load-baseline-revision requires --bullet-load-trace")
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(PRIVATE):
         parser.error("output must be a new private directory")
@@ -1268,6 +1277,10 @@ def main() -> int:
     )
     graphics_trace = apply_graphics_trace_overlay(work) if args.graphics_trace else None
     state_trace = apply_state_trace_overlay(work) if args.state_trace else None
+    bullet_load_trace = None
+    if args.bullet_load_trace:
+        from th04_bullet_load_trace import apply as apply_bullet_load_trace
+        bullet_load_trace = apply_bullet_load_trace(work, ROOT, args.bullet_load_baseline_revision)
     fault_trace = None
     if args.fault_trace:
         from th04_main_fault_trace import apply_fault_trace_overlay
@@ -1450,6 +1463,7 @@ def main() -> int:
         "input_trace": input_trace,
         "graphics_trace": graphics_trace,
         "state_trace": state_trace,
+        "bullet_load_trace": bullet_load_trace,
         "fault_trace": fault_trace,
         "stage_override": args.force_stage,
         "sprite_asset_records": sprite_asset_records,

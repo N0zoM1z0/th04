@@ -18,18 +18,18 @@
 void pascal near bullets_add_regular_raw(void);
 void pascal near bullets_add_special_raw(void);
 
-/// Per-spawn state
-/// ---------------
-/// Has no reason to be global.
-
+// Scratch state shared by one synchronous group spawn. These globals exist to
+// preserve the original near-call ABI; no value survives as entity state.
 extern bool group_fixedspeed;
+#define bullet_group_fixed_speed group_fixedspeed
 
-// "(group_i * bullet_template.delta.spread_angle) is probably too expensive,
-// let's rather do an addition for each additional spawned bullet :zunpet:"
-extern unsigned char group_i_spread_angle;
+// Accumulated instead of multiplying the group index by the spread step.
+extern bullet_angle_t group_i_spread_angle;
+#define bullet_group_spread_angle_offset group_i_spread_angle
 
-extern unsigned char group_i_absolute_angle;
-/// ---------------
+// Final absolute angle produced for the bullet currently being initialized.
+extern bullet_angle_t group_i_absolute_angle;
+#define bullet_spawn_angle group_i_absolute_angle
 
 #define tmpl bullet_template
 
@@ -266,33 +266,34 @@ void pascal near bullets_add_special_hard_lunatic(void)
 
 void near bullets_add_regular_fixedspeed(void)
 {
-	group_fixedspeed = true;
+	bullet_group_fixed_speed = true;
 	bullets_add_regular();
-	group_fixedspeed = false;
+	bullet_group_fixed_speed = false;
 }
 
 void near bullets_add_special_fixedspeed(void)
 {
-	group_fixedspeed = true;
+	bullet_group_fixed_speed = true;
 	bullets_add_special();
-	group_fixedspeed = false;
+	bullet_group_fixed_speed = false;
 }
 
-#define last_bullet_in_group(group_i) \
-	(group_i >= (bullet_template.count - 1))
+#define is_last_bullet_in_group(group_bullet_index) \
+	(group_bullet_index >= (bullet_template.count - 1))
 
 // Necessary to compile the switch statement in bullet_velocity_and_angle_set()
 // to a binary search. Strangely, it's not used for the functions above?
 #pragma option -G
 
-// Sets the bullet template's velocity for bullet #[group_i] in the template's
-// current group, as well as [group_i_absolute_angle]. Returns true if this
-// was the last bullet for this group.
-bool16 pascal near bullet_velocity_and_angle_set(int group_i)
+// Resolves one group member into the template velocity and [bullet_spawn_angle].
+// [bullet_template.angle] rotates the entire pattern after its relative
+// spread/ring angle and optional player aim have been calculated. Returns true
+// once this member completes the requested group.
+bool16 pascal near bullet_velocity_and_angle_set(int group_bullet_index)
 {
-	int angle = 0x00;
+	int group_angle_offset = 0x00;
 	subpixel_length_8_t speed;
-	bool done;
+	bool group_complete;
 
 	// Due to this default, invalid group values lead to the spawn functions
 	// repeatedly calling this function, until they completely filled the
@@ -300,7 +301,7 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 	// angle and speed.
 	// (Not really a ZUN bug until we can discover a game state where this can
 	// actually happen.)
-	done = false;
+	group_complete = false;
 	speed = bullet_template.speed.v;
 
 	switch(bullet_template.group) {
@@ -308,15 +309,17 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 	case BG_SPREAD_AIMED:
 		if(bullet_template.count & 1) {
 			// Odd-numbered spreads always contain a bullet in the center.
-			if(group_i == 0) {
-				group_i_spread_angle = 0x00;
-				angle = 0x00;
-			} else if(group_i & 1) {
+			if(group_bullet_index == 0) {
+				bullet_group_spread_angle_offset = 0x00;
+				group_angle_offset = 0x00;
+			} else if(group_bullet_index & 1) {
 				// Symmetric version of even-numbered bullets
-				group_i_spread_angle += bullet_template.delta.spread_angle;
-				angle = (0x100 - group_i_spread_angle);
+				bullet_group_spread_angle_offset += bullet_template.delta.spread_angle;
+				group_angle_offset = (
+					BULLET_ANGLE_FULL_TURN - bullet_group_spread_angle_offset
+				);
 			} else {
-				angle = group_i_spread_angle;
+				group_angle_offset = bullet_group_spread_angle_offset;
 			}
 		} else {
 			// Even-numbered spreads are aimed around the 0° point, and
@@ -327,19 +330,23 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 			// at that one branch and using the same code for odd- and
 			// even-numbered spreads beyond the first bullet would have been
 			// better. (He did the latter in TH05.)
-			if(group_i == 0) {
-				group_i_spread_angle = (bullet_template.delta.spread_angle / 2);
-				angle = group_i_spread_angle;
-			} else if(group_i & 1) {
+			if(group_bullet_index == 0) {
+				bullet_group_spread_angle_offset = (
+					bullet_template.delta.spread_angle / 2
+				);
+				group_angle_offset = bullet_group_spread_angle_offset;
+			} else if(group_bullet_index & 1) {
 				// Symmetric version of even-numbered bullets
-				angle = (0x100 - group_i_spread_angle);
+				group_angle_offset = (
+					BULLET_ANGLE_FULL_TURN - bullet_group_spread_angle_offset
+				);
 			} else {
-				group_i_spread_angle += bullet_template.delta.spread_angle;
-				angle = group_i_spread_angle;
+				bullet_group_spread_angle_offset += bullet_template.delta.spread_angle;
+				group_angle_offset = bullet_group_spread_angle_offset;
 			}
 		}
-		if(last_bullet_in_group(group_i)) {
-			done = true;
+		if(is_last_bullet_in_group(group_bullet_index)) {
+			group_complete = true;
 		}
 		if(bullet_template.group == BG_SPREAD) {
 			goto no_aim;
@@ -348,60 +355,64 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 
 	case BG_RING:
 		bullet_group_ring_impl(
-			angle, done, group_i, bullet_template.count, no_aim
+			group_angle_offset, group_complete, group_bullet_index,
+			bullet_template.count, no_aim
 		);
 
 	case BG_RING_AIMED:
 		bullet_group_ring_impl(
-			angle, done, group_i, bullet_template.count, aim
+			group_angle_offset, group_complete, group_bullet_index,
+			bullet_template.count, aim
 		);
 
 	// All these 16-bit randring operations seem to waste 8 bits of randomness,
 	// but each next16 call only advances the pointer by one byte anyway.
 	case BG_FORCESINGLE_RANDOM_ANGLE:
-		angle = randring2_next16();
-		done = true;
+		group_angle_offset = randring2_next16();
+		group_complete = true;
 		goto no_aim;
 
 	case BG_FORCESINGLE:
 	case BG_SINGLE:
-		done = true;
+		group_complete = true;
 		goto no_aim;
 
 	case BG_RANDOM_ANGLE:
-		angle = randring2_next16();
-		if(last_bullet_in_group(group_i)) {
-			done = true;
+		group_angle_offset = randring2_next16();
+		if(is_last_bullet_in_group(group_bullet_index)) {
+			group_complete = true;
 		}
 		goto no_aim;
 	case BG_RANDOM_ANGLE_AND_SPEED:
-		angle = randring2_next16();
+		group_angle_offset = randring2_next16();
 		speed += randring2_next8_ge_lt_sp(0.0f, 2.0f);
-		if(last_bullet_in_group(group_i)) {
-			done = true;
+		if(is_last_bullet_in_group(group_bullet_index)) {
+			group_complete = true;
 		}
 		goto no_aim;
 	case BG_RANDOM_CONSTRAINED_ANGLE_AIMED:
-		angle = randring2_next16_ge_lt(0x00, 0x20);
-		angle -= 0x10;
-		if(last_bullet_in_group(group_i)) {
-			done = true;
+		group_angle_offset = randring2_next16_ge_lt(0x00, 0x20);
+		group_angle_offset -= 0x10;
+		if(is_last_bullet_in_group(group_bullet_index)) {
+			group_complete = true;
 		}
 		goto aim;
 
 	case BG_FORCESINGLE_AIMED:
 	case BG_SINGLE_AIMED:
-		done = true;
+		group_complete = true;
 		goto aim;
 
 	case BG_STACK:
 	case BG_STACK_AIMED:
-		speed += (bullet_template.delta.stack_speed * group_i);
+		speed += (
+			bullet_template.delta.stack_speed * group_bullet_index
+		);
 		if(
-			last_bullet_in_group(group_i) ||
+			is_last_bullet_in_group(group_bullet_index) ||
 			(bullet_template.speed >= to_sp8(10.0f))
 		) {
-			done = true;
+			group_complete = true;
 		}
 		if(bullet_template.group == BG_STACK) {
 			goto no_aim;
@@ -409,17 +420,19 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 		goto aim;
 	}
 aim:
-	angle += iatan2(
+	group_angle_offset += iatan2(
 		(player_pos.cur.y - bullet_template.origin.y),
 		(player_pos.cur.x - bullet_template.origin.x)
 	);
 
 no_aim:
 	vector2_near(
-		bullet_template.velocity, (angle + bullet_template.angle), speed
+		bullet_template.velocity,
+		(group_angle_offset + bullet_template.angle),
+		speed
 	);
-	group_i_absolute_angle = (angle + bullet_template.angle);
-	return done;
+	bullet_spawn_angle = (group_angle_offset + bullet_template.angle);
+	return group_complete;
 }
 
 void near bullet_template_speedtune_for_playperf(void)
@@ -442,8 +455,10 @@ unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 	// ZUN bloat: The `static_cast` is not needed and generates an integer
 	// division rather than a bitshift.
 	return (
-		static_cast<int>((angle + (ANGLE_PER_SPRITE / 2) - 1) % 0x80u) /
-		ANGLE_PER_SPRITE
+		static_cast<int>(
+			(angle + (BULLET_DIRECTION_SPRITE_ANGLE_STEP / 2) - 1) %
+			BULLET_DIRECTION_SPRITE_ANGLE_PERIOD
+		) / BULLET_DIRECTION_SPRITE_ANGLE_STEP
 	);
 }
 
@@ -485,7 +500,7 @@ bool near bullet_template_clip(void)
 		player_is_hit = true;
 		return true;
 	}
-	if(!group_fixedspeed) {
+	if(!bullet_group_fixed_speed) {
 		bullet_template_speedtune_for_playperf();
 	}
 	return false;
@@ -511,31 +526,33 @@ bool near bullet_template_clip(void)
 		break; \
 	}
 
-#define bullet_init_from_template(bullet, group_done, group_i, spawn_flag) \
+#define bullet_init_from_template( \
+	bullet, group_complete, group_bullet_index, spawn_flag \
+) \
 	bullet->age = 0; \
 	bullet->pos.cur = bullet_template.origin; \
-	bullet->from_group = bullet_template.group; \
+	bullet->spawn_group = bullet_template.group; \
 	bullet->patnum = bullet_template.patnum; \
 	bullet->spawn_flag = static_cast<bullet_spawn_flag_t>(spawn_flag); \
 	\
-	group_done = bullet_velocity_and_angle_set(group_i); \
+	group_complete = bullet_velocity_and_angle_set(group_bullet_index); \
 	\
 	if(bullet_template.patnum >= PAT_BULLET16_D) { \
-		bullet->patnum += bullet_patnum_for_angle(group_i_absolute_angle); \
+		bullet->patnum += bullet_patnum_for_angle(bullet_spawn_angle); \
 	} \
 	\
 	bullet->pos.velocity = bullet_template.velocity; \
-	bullet->angle = group_i_absolute_angle; \
+	bullet->angle = bullet_spawn_angle; \
 	bullet->speed_final = bullet_template.speed; \
 	bullet->speed_cur = bullet_template.speed; \
 
 void pascal near bullets_add_regular_raw(void)
 {
 	bullet_t near *bullet;
-	int group_i;
+	int group_bullet_index;
 	int bullets_available;
 	unsigned char move_flag;
-	bool group_done;
+	bool group_complete;
 	unsigned char spawn_flag; // MODDERS: Should be bullet_spawn_flag_t
 
 	if(bullet_template.spawn_type == BST_GATHER_PELLET) {
@@ -570,7 +587,7 @@ void pascal near bullets_add_regular_raw(void)
 		}
 	}
 
-	group_i = 0;
+	group_bullet_index = 0;
 	while(bullets_available > 0) {
 		if(bullet->flag == F_FREE) {
 			bullet->flag = F_ALIVE;
@@ -579,11 +596,13 @@ void pascal near bullets_add_regular_raw(void)
 			bullet->u2.decelerate_speed_delta.v = (
 				to_sp8(BMF_DECELERATE_BASE_SPEED) - bullet_template.speed
 			);
-			bullet_init_from_template(bullet, group_done, group_i, spawn_flag);
-			if(group_done) {
+			bullet_init_from_template(
+				bullet, group_complete, group_bullet_index, spawn_flag
+			);
+			if(group_complete) {
 				break;
 			}
-			group_i++;
+			group_bullet_index++;
 		}
 		bullets_available--;
 		bullet--;
@@ -593,9 +612,9 @@ void pascal near bullets_add_regular_raw(void)
 void pascal near bullets_add_special_raw(void)
 {
 	bullet_t near *bullet;
-	int group_i;
+	int group_bullet_index;
 	int bullets_available;
-	bool group_done;
+	bool group_complete;
 	bullet_spawn_flag_t spawn_flag;
 
 	if(bullet_template_clip()) {
@@ -605,7 +624,7 @@ void pascal near bullets_add_special_raw(void)
 	bullet_set_spawn_vars(
 		bullet, bullets_available, spawn_flag, bullet_template.spawn_type
 	);
-	group_i = 0;
+	group_bullet_index = 0;
 	while(bullets_available > 0) {
 		if(bullet->flag == F_FREE) {
 			bullet->flag = F_ALIVE;
@@ -613,11 +632,13 @@ void pascal near bullets_add_special_raw(void)
 			bullet->special_motion = bullet_template.special_motion;
 			bullet->u1.turns_done = 0;
 			bullet->u2.angle.v = bullet_template_special_angle.v;
-			bullet_init_from_template(bullet, group_done, group_i, spawn_flag);
-			if(group_done) {
+			bullet_init_from_template(
+				bullet, group_complete, group_bullet_index, spawn_flag
+			);
+			if(group_complete) {
 				break;
 			}
-			group_i++;
+			group_bullet_index++;
 		}
 		bullets_available--;
 		bullet--;

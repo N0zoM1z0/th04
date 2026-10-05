@@ -26,6 +26,7 @@ from scripts.probes.probe_th04_native_pi_decode_runtime import (  # noqa: E402
 PRODUCT = ("src/shared/hardware/super_sprite.cpp", "src/shared/memory/heap.cpp",
            "src/shared/formats/pf_archive.cpp")
 ASSEMBLY = ("src/shared/hardware/super_state.asm", "src/shared/hardware/vram_state.asm",
+            "src/shared/hardware/planar_blit.asm",
             "src/shared/hardware/palette_state.asm", "src/shared/formats/pf_state.asm",
             "src/shared/formats/pf_int21.asm")
 MEMBER = "SCNUM2.BFT"

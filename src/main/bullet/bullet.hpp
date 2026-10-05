@@ -67,10 +67,11 @@ struct bullet_t {
 	entity_flag_t flag;
 	char age;
 	PlayfieldMotion pos;
-	unsigned char from_group;
+	// Stored as a byte even though [bullet_group_t] is compiler-sized.
+	unsigned char spawn_group;
 	int8_t unused;
 	SubpixelLength8 speed_cur;
-	unsigned char angle;
+	bullet_angle_t angle;
 	bullet_spawn_flag_t spawn_flag;
 	bullet_move_flag_t move_flag;
 	bullet_special_motion_t special_motion;
@@ -93,7 +94,12 @@ struct bullet_t {
 
 static const subpixel_t BULLET_KILLBOX_W = TO_SP(8);
 static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
-static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
+// Directional bullet cels repeat after half a turn because opposite travel
+// directions use the same unoriented sprite axis.
+#define BULLET_DIRECTION_SPRITE_ANGLE_PERIOD 0x80u
+static const bullet_angle_t BULLET_DIRECTION_SPRITE_ANGLE_STEP = (
+	BULLET_DIRECTION_SPRITE_ANGLE_PERIOD / BULLET_D_CELS
+);
 
 #if (GAME == 5)
 #define PELLET_COUNT 180
@@ -131,7 +137,7 @@ struct BulletTemplate {
 	unsigned char spread_angle_delta;
 	unsigned char stack;
 	SubpixelLength8 stack_speed_delta;
-	unsigned char angle;
+	bullet_angle_t angle;
 	SubpixelLength8 speed;
 
 private:

@@ -21,6 +21,18 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
+## Current products and navigation
+
+Development is paused. The standalone DOS game, historical exact acceptance and
+unfinished native x64 port have separate validation scopes. Native source stays
+on `port/modern-64`; the published x64 preview still waits for registration.
+
+- [Done and remaining semantic/x64 work](docs/PORTING_STATUS.md).
+- [DOS build and normal/invincible Windows testing](docs/DOS_BUILD.md).
+- [Reusable PC-98 hardware fixes and measured optimizations](docs/PC98_HARDWARE_REUSE.md).
+- [Script purposes and categorized indexes](scripts/README.md).
+- [Private tools, caches and cleanup recovery](docs/ANALYSIS_RETENTION.md).
+
 ## Build and run
 
 With local inputs and the toolchain installed:
@@ -91,7 +103,11 @@ Source belongs under `src/main/`, `src/op/`, `src/maine/`, `src/zun/` and
 and [ARCHITECTURE.md](docs/ARCHITECTURE.md). ReC98 implementations are migration
 inputs; their progress and exactness claims do not transfer automatically.
 
-Use [RE_WORKFLOW.md](docs/RE_WORKFLOW.md) for implementation work. Finish with:
+Use [RE_WORKFLOW.md](docs/RE_WORKFLOW.md) for implementation work. Install public
+validation dependencies with `python3 -m pip install -r requirements-ci.txt`;
+CI also checks out the pinned ReC98 source-routing reference used by the manifest
+audit; this is a validation input, not a product include dependency. Private
+CPU/runtime Oracles additionally require their documented local tools. Finish with:
 
 ```sh
 python3 scripts/ci.py

@@ -83,3 +83,49 @@ native MAINE still needed the sprite and BGM providers; the
 names. Larger or odd-width PI
 resources and an actual PC-98 display scenario remain separate runtime
 coverage.
+
+## DOS semantic readability batch
+
+The `semantic/readable` branch renames private decoder helpers, input state
+and locals by their meaning, introduces named copy selectors and storage
+constants, and explains the existing packing, adaptive history, overlapping
+copy runs, error checks and ownership transfer. The translation unit,
+external far/Pascal entry, field order, integer widths and evaluation order
+are preserved. These explanations describe the maintained implementation;
+they do not establish additional original-target semantics.
+
+For even-width images, selectors 1 and 2 copy from one and two rows back.
+Selectors 3 and 4 sample the preceding row one pixel ahead or behind,
+joining adjacent bytes' nibbles. The comments explicitly restrict this
+geometric interpretation to even widths; the original odd-width arithmetic
+is retained. Other port hazards are the sticky input-error flag, signed
+16-bit return from the header-word reader, and the image pointer's
+nonzero offset into a paragraph-owned allocation. Palette bytes pass
+through unchanged; PC-98 application uses the components' high nibbles.
+
+Two fresh executions of the existing DOS probe compile source snapshots
+before and after the readability edit. Both pass the independent historical
+image hashes, PAR/loose file paths, invalid/missing file controls and repeated
+slot load/free checks. The complete linked service test is byte-identical:
+38,050 bytes, SHA-256
+`9cc4e7adcd287c590f78373042352137f18d0145be13039cd9f3e19c087ef9fa`,
+254 relocations, zero raw differences, equal MZ fields and ordered
+relocations. Its `GRAPH_PI_LOAD_PACK` is at candidate `SHARED 0629:05A7`
+(relative load-module address); this is not a target MAINE address.
+
+Replay the existing runtime probe from `8d20492` and from this branch with
+separate fresh output directories, then compare the two generated
+`product/bin/pitest.exe` files:
+
+```sh
+python3 scripts/probes/probe_th04_native_pi_decode_runtime.py \
+  --output-dir .analysis/reconstruction/probes/NEW-semantic-pi
+python3 scripts/compare_artifacts.py BEFORE/product/bin/pitest.exe \
+  AFTER/product/bin/pitest.exe
+```
+
+The current receipts are
+`.analysis/reconstruction/probes/semantic-pi-{baseline,readable}-20261003/receipt.json`.
+This is compiler-observed source-regression equality plus bounded DOS
+runtime coverage. No historical exact ledger is promoted, and the user's
+complete Good Ending-to-registration visual regression remains open.

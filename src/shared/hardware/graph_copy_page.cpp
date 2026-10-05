@@ -6,6 +6,9 @@
 #include "src/shared/memory/hmem.hpp"
 
 extern "C" unsigned __cdecl graph_VramWords;
+extern "C" void far pascal th04_copy_words(
+    void far *destination, const void far *source, unsigned words
+);
 
 static void graph_plane_copy(
 	unsigned segment, unsigned words, unsigned source_page,
@@ -13,15 +16,10 @@ static void graph_plane_copy(
 )
 {
 	unsigned far *vram = (unsigned far *)MK_FP(segment, 0);
-	unsigned i;
 	outportb(0xA6, (unsigned char)source_page);
-	for(i = 0; i < words; i++) {
-		scratch[i] = vram[i];
-	}
+	th04_copy_words(scratch, vram, words);
 	outportb(0xA6, (unsigned char)destination_page);
-	for(i = 0; i < words; i++) {
-		vram[i] = scratch[i];
-	}
+	th04_copy_words(vram, scratch, words);
 }
 
 extern "C" int TH04_PASCAL graph_copy_page(int to_page)

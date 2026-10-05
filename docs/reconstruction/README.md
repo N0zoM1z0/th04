@@ -12,6 +12,14 @@ digests were archived. Re-run the checked-in command or restore the private
 receipt archive rather than treating a missing probe directory as missing
 source evidence.
 
+## Current operation and reuse
+
+- [PC-98 hardware reuse](../PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
+- [DOS build/testing](../DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
+- [Semantic/native status and TODO](../PORTING_STATUS.md) — paused work, components versus published GUI.
+- [Script catalog](../../scripts/README.md) — all tools grouped by task.
+- [Private artifact retention](../ANALYSIS_RETENTION.md) — protected tools/cache/input and archive recovery.
+
 ## Current open questions
 
 Native product-build investigation is active. Use the live ledgers and
@@ -22,6 +30,9 @@ notes explain the remaining source and container gaps:
 - [Native MAINE far-call ABI trap and repair](product/TH04_NATIVE_FAR_CALL_ABI_V856.md)
 - [Native PC-98 scroll and GRCG rectangle owners](product/TH04_NATIVE_SCROLL_BOX_V858.md)
 - [Native PI cleanup owner and segment-pointer compiler probe](product/TH04_NATIVE_PI_FREE_V859.md)
+- [Standalone PI slot lifetime after the ending](product/TH04_NATIVE_PI_SLOT_LIFETIME_V1224.md)
+- [Native Ending CDG instruction ownership](product/TH04_NATIVE_ENDING_CDG_CS_V1230.md)
+- [Native state-clear contamination and corner pellet](product/TH04_NATIVE_STATE_CLEAR_V1231.md)
 - [Native text VRAM gaiji writers](product/TH04_NATIVE_GAIJI_TEXT_V860.md)
 - [Native graphics gaiji writers](product/TH04_NATIVE_GRAPH_GAIJI_V861.md)
 - [Native graphics page copy and TC4J loop scope](product/TH04_NATIVE_GRAPH_COPY_V862.md)
@@ -35,6 +46,8 @@ notes explain the remaining source and container gaps:
 - [Native BGM beeper service, standalone MAINE link, and IRQ far-call fixup](product/TH04_NATIVE_BGM_V871.md)
 - [Native OP source graph, segment grouping, and link frontier](product/TH04_NATIVE_OP_LINK_V875.md)
 - [Native MAIN local header and composite-source closure](product/TH04_NATIVE_MAIN_SOURCE_CLOSURE_V882.md)
+- [Native bullet drawing, maximum-pool stress and CPU budget](product/TH04_NATIVE_BULLET_LOAD_V1235.md)
+- [Semantic bullet angles, group generation and TC4J signed-modulo hazard](product/TH04_SEMANTIC_BULLET_GENERATION_V1236.md)
 - [Native MAIN product-source and DATA/BSS compiler frontier](product/TH04_NATIVE_MAIN_PRODUCT_FRONTIER_V1025.md)
 - [Native MAIN normal-route runtime differential and input-layout lead](product/TH04_NATIVE_MAIN_STARTUP_V1074.md)
 - [Native MAIN large-model far-runtime owners and v1131 frontier](product/TH04_NATIVE_MAIN_FAR_RUNTIME_V1131.md)
@@ -50,8 +63,13 @@ notes explain the remaining source and container gaps:
 The links below route to historical proofs and experiments. Their per-packet
 counts, file paths, and proposals do not supersede the current ledgers.
 
+### Cross-artifact semantic contracts
+
+- [Shared process-local LCG and resident seed lifecycle](product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md)
+
 ### MAIN.EXE
 
+- [Item drop, collection, motion and scoring semantics](main/TH04_MAIN_ITEM_SEMANTICS_V1248.md)
 - [Checkerboard counted-LOOP blocker](main/TH04_MAIN_CHECKERBOARD_V396.md)
 - [Stage 4 carpet low-level producer blocker](main/TH04_MAIN_KURUMI_CARPET_V174.md)
 - [snd_load DS/MOV analysis (historical; superseded by v836)](main/TH04_SND_LOAD_DS_V391.md)
@@ -167,6 +185,7 @@ counts, file paths, and proposals do not supersede the current ledgers.
 - [Dialog ownership / relocation history](main/TH04_MAIN_DIALOG_BOUNDARY_V180.md)
 - [Dialog render producer evidence](main/TH04_MAIN_DIALOG_RENDER_V182.md)
 - [Thick-laser producer](main/TH04_MAIN_THICKLASER_UPDATE_V181.md)
+- [Player-shot lifecycle and damage semantics](main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md)
 - [Gather-point renderer](main/TH04_MAIN_GATHER_POINT_RENDER_V326.md)
 - [Native MAIN EMS-stage startup differential](product/TH04_NATIVE_MAIN_EMS_STARTUP_V1080.md)
 

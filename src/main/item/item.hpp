@@ -21,9 +21,13 @@ enum item_type_t {
 
 struct item_t {
 	entity_flag_t flag;
+	// No recovered TH04 item path reads this byte. Keep it because the target
+	// ABI places PlayfieldMotion at offset 2 and each pool entry is 20 bytes.
 	char unused;
 	PlayfieldMotion pos;
 	unsigned char type;
+	// Spawn paths clear this byte, but no accepted TH04 item path reads it yet.
+	// Its meaning therefore remains unknown rather than being guessed.
 	char unknown;
 	int patnum;
 	bool16 pulled_to_player;

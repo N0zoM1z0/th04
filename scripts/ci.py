@@ -42,6 +42,7 @@ def main() -> int:
         )
         run("Decoded function acceptance", [python, "scripts/decoded_function_acceptance.py"])
         run("Python syntax", [python, "-m", "compileall", "-q", "scripts", "tests"])
+        run("Script catalog coverage", [python, "scripts/catalog/index.py", "--check"])
         run("Regenerate progress artifacts", [python, "scripts/progress.py"])
         run("Check generated progress", [python, "scripts/progress.py", "--check"])
         run(

@@ -4,6 +4,11 @@
 
 ; TH04 CDG slots are 16 bytes each, with 64 entries. These field offsets and
 ; layout values are checked by the cold-linked MAIN/OP/MAINE module replays.
+; A CDG/CD2 file has one 16-byte header followed by fixed-size images.
+; plane_layout 0 stores four color planes (B,R,G,E), layout 2 stores just a
+; monochrome mask, and layout 1 stores mask followed by four color planes.
+; CDG_plane_size is bytes in ONE plane. The last two header words become
+; runtime DOS allocation segments; they are not host pointers to file data.
 CDG_COLORS = 0
 CDG_ALPHA = 2
 CDG_SLOT_COUNT = 64
@@ -12,12 +17,12 @@ cdg_t struc
 	CDG_plane_size dw ?
 	pixel_w dw ?
 	pixel_h dw ?
-	offset_at_bottom_left dw ?
-	vram_dword_w dw ?
+	offset_at_bottom_left dw ? ; Relative VRAM byte offset of final image row.
+	vram_dword_w dw ?          ; Row width in four-byte groups, not pixels.
 	image_count db ?
 	plane_layout db ?
-	seg_alpha dw ?
-	seg_colors dw ?
+	seg_alpha dw ?             ; One heap-owned mask plane, or zero.
+	seg_colors dw ?            ; One allocation containing four color planes.
 cdg_t ends
 
 cdg_slot_offset macro retval:req, slot:req
@@ -57,7 +62,7 @@ cdg_load_single	proc far
 	push	di
 	mov	di, [bp+@@slot]
 	push	di
-	nop	; This was definitely compiled from C...
+	nop	; Source-owned instruction retained by the accepted raw-byte replay.
 	call	cdg_free
 	shl	di, 4	; *= size cdg_t
 	add	di, offset _cdg_slots
@@ -65,6 +70,7 @@ cdg_load_single	proc far
 	call	file_read pascal, ds, di, size cdg_t
 	mov	ax, [di+cdg_t.CDG_plane_size]
 	mov	dx, ax
+	; Select one, four, or five planes per file image before skipping [n].
 	cmp	[di+cdg_t.plane_layout], CDG_COLORS
 	jz	short @@read
 	shl	ax, 2
@@ -73,6 +79,8 @@ cdg_load_single	proc far
 	add	ax, dx
 
 @@read:
+	; Retain the 16-bit image-size/index product in AX. Widening it would
+	; change overflow behavior even though FILE_SEEK receives a 32-bit value.
 	mul	[bp+@@n]
 	movzx	eax, ax
 	call	file_seek pascal, eax, 1
@@ -89,6 +97,8 @@ cdg_load_single endp
 ; Reads a single CDG image from the master.lib file, which previously has been
 ; positioned at the beginning of the image data, into the slot in DI.
 cdg_read_single proc near
+	; DI addresses the destination slot in DGROUP. Each retained plane group
+	; is separately paragraph-allocated; colors share one four-plane block.
 	mov	al, [di+cdg_t.plane_layout]
 	or	al, al	; AL == CDG_COLORS?
 	jz	short @@colors
@@ -104,6 +114,8 @@ cdg_read_single proc near
 	jmp	short @@colors
 
 @@skip_alpha:
+	; "noalpha" skips file mask bytes for a combined image. A mask-only
+	; layout still follows @@alpha, because it has no color planes to retain.
 	movzx	eax, [di+cdg_t.CDG_plane_size]
 	call	file_seek pascal, eax, 1
 
@@ -160,6 +172,8 @@ ifdef TH04_LARGE_PRODUCT
 	push	ds
 	pop	es
 endif
+	; Copy the first 12 header bytes to each slot. Do not copy the two
+	; allocation-segment words: cdg_read_single owns their replacement.
 	mov	cx, (cdg_t.seg_alpha / dword)
 	rep movsd
 	sub	si, cdg_t.seg_alpha
@@ -186,6 +200,8 @@ cdg_free proc far
 	mov	di, word ptr ss:[bx+4]
 	shl	di, 4	; *= size cdg_t
 	add	di, offset _cdg_slots.seg_alpha
+	; Each nonzero word is a heap owner. Clear it after release so repeated
+	; free calls are harmless; geometry/header metadata deliberately remains.
 	cmp	word ptr [di], 0
 	jz	short @@colors
 	call	hmem_free pascal, word ptr [di]

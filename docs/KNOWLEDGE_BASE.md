@@ -5,6 +5,14 @@ short: individual discoveries live in `config/knowledge.csv`, observations in
 `config/evidence.csv`, and current reconstruction state in the ledgers. Do not
 append batch diaries or duplicate the current work queue here.
 
+## Current operation and reuse
+
+- [PC-98 hardware reuse](PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
+- [DOS build/testing](DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
+- [Semantic/native status and TODO](PORTING_STATUS.md) — paused work, components versus published GUI.
+- [Script catalog](../scripts/README.md) — all tools grouped by task.
+- [Private artifact retention](ANALYSIS_RETENTION.md) — protected tools/cache/input and archive recovery.
+
 ## Authority and routing
 
 Use these sources in order:

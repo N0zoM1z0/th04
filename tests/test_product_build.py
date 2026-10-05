@@ -38,6 +38,20 @@ class ProductBuildTests(unittest.TestCase):
                 BUILD.main()
         self.assertEqual(failure.exception.code, 2)
 
+    def test_invincible_guard_resolves_worktree_analysis_alias(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            private = root / "private-builds"
+            private.mkdir()
+            (root / ".analysis").symlink_to(private, target_is_directory=True)
+            with patch.object(BUILD, "ROOT", root), \
+                    patch.object(BUILD, "build_product") as build_product, \
+                    patch.object(sys, "argv", ["build.py", "--invincible-main"]):
+                with self.assertRaises(SystemExit) as failure:
+                    BUILD.main()
+            self.assertEqual(failure.exception.code, 2)
+            build_product.assert_not_called()
+
     def test_single_product_rebuild_keeps_verified_other_products(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

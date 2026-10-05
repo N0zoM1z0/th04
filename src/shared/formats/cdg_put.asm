@@ -4,6 +4,12 @@
 
 ; TH04 640-pixel PC-98 planar VRAM and CDG slot layout. The complete linked
 ; module is checked independently against MAIN, OP, and MAINE targets.
+; File rows run bottom-to-top; each row is copied left-to-right in dwords.
+; The mask clears destination bits through GRCG, then B/R/G/E source planes
+; are ORed into those cleared positions. Color zero can therefore be opaque.
+; Color bits outside the mask must already be zero in the source asset.
+; The caller must provide a combined mask/color slot, valid placement and
+; 32-pixel row geometry. This routine has no general rectangle clipping.
 ROW_SIZE = 80
 SEG_PLANE_B = 0A800h
 SEG_PLANE_G = 0B800h
@@ -42,7 +48,13 @@ endm
 
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
+; A far caller enters with the linked public's CS. Keep native code outside
+; SHARED's group so the writable instruction label uses that same CS base.
+ifdef TH04_LARGE_PRODUCT
+	.code TH04_CDG_PUT_TEXT
+else
 	.code SHARED
+endif
 
 public CDG_PUT_8
 cdg_put_8 proc far
@@ -60,6 +72,8 @@ cdg_put_8 proc far
 	cli
 
 	; grcg_setcolor(GC_RMW, 0);
+	; One GRCG tile color covers all four destination planes. Its zero tile
+	; clears only pixels whose mask bit is set; other pixels remain unchanged.
 	mov	al, GC_RMW
 	out	7Ch, al
 	mov	dx, 7Eh
@@ -87,6 +101,7 @@ else
 	mov	es, ax
 endif
 	push	0	; (sentinel)
+	; Start on B and stack the following segment order as R, G, E, sentinel.
 	add	ax, (SEG_PLANE_E - SEG_PLANE_B)	; AX == SEG_PLANE_E
 	push	ax
 	sub	ax, SEG_PLANE_DIST_E	; AX == SEG_PLANE_G
@@ -104,6 +119,8 @@ endif
 	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	@@vram_dword_w, ax
 	shl	ax, 2	; *= size dword
+	; REP MOVSD advances DI by row_bytes. Subtract row_bytes+80 afterward
+	; to move to the preceding screen row while SI advances through the file.
 	add	ax, ROW_SIZE
 	mov	@@stride, ax
 if GAME eq 4
@@ -128,6 +145,8 @@ if GAME eq 5
 endif
 	xor	al, al
 	out	7Ch, al
+	; Disable GRCG before direct color writes. The caller's earlier GRCG
+	; mode/color is not restored by this entry.
 
 	xor	si, si
 if GAME eq 5
@@ -136,6 +155,8 @@ endif
 
 if GAME eq 4
 	@@seg_colors = word ptr $+1
+	; TH04 patches this instruction's segment immediate for the loaded slot.
+	; This CS-relative write is a real self-modifying ownership surface.
 	mov	ax, 1234h
 	mov	ds, ax
 endif

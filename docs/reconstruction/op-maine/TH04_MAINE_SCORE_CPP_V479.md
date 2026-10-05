@@ -812,3 +812,54 @@ including the separately documented 105-byte high-score loader. Seven of the
 accepted SCORE_TEXT owners remain the natural C++ cohort described here; the
 eighth newly accepted MAINE SCORE/high-score function belongs to the earlier
 `score_hi` area, not this grouped SCORE_TEXT translation unit.
+
+## 2026-10-03 semantic registration pass
+
+The current readable source now records the complete registration data flow
+without changing its historical SCORE_TEXT ABI:
+
+- `GENSOU.SCR` consists of five rank sections for Reimu followed by five for
+  Marisa. `hiscore_scoredat_load_for()` selects one 196-byte section into the
+  single shared `hi` buffer and recreates defaults in memory after a missing
+  file or checksum failure.
+- `regist_menu()` renders the other character before replacing `hi` with the
+  current character's section. That current section then survives through
+  insertion, clear-mask update, name editing and saving.
+- `score_insert()` compares resident numeric score digits against stored gaiji
+  digits from the lowest row upward. Equal scores move above existing equals;
+  a score below row 9 publishes the unsigned `0xFF` no-entry sentinel.
+- Cancel confirms the partial name. Held input repeats after 30 frames and then
+  every second held frame. A no-entry result still saves completion state and
+  waits for acknowledgement.
+- `hiscore_scoredat_save()` first writes the selected decoded section, then
+  decodes and re-encodes all ten sections. This recomputes checksums and chooses
+  fresh key bytes while preserving every decoded payload.
+
+The source keeps `rank`, `playchar`, `entered_place`, `gALPHABET`, and `hi` as
+the public/DGROUP spellings required by historical replay. Preprocessor aliases
+express their registration meanings and disappear before TC86 sees the token
+stream. Local names and labels describe cursors, glyphs, compared rows and
+section indices; comments preserve the observed I/O and input order.
+
+A dependency-validated incremental build recompiles the four edited SCORE
+roots plus the BGIMAGE control owner. Every pre/post object has identical dependency-timestamp-
+normalized OMF and identical link-relevant records; their normalized manifest
+SHA-256 is
+`eed289edca3fc196776015590c49f1d49e51c829a7ceff890cd2c77e29680350`.
+The complete native MAINE files are also raw-identical: 72,246 bytes, SHA-256
+`7bfd7fd594377d03c070c4be8335feb9d3451f2b8dcb8bfbe9dafa95915b542f`,
+with equal MZ headers, program images and 663 ordered relocations.
+
+This is compiler-observed source-to-source preservation. The earlier
+decoded-exact evidence for the 105-byte loader, 156-byte saver, 340-byte
+inserter and 924-byte menu remains valid, but this batch does not add a cold
+target replay or packed-file exactness claim.
+
+```text
+python3 scripts/build.py --only maine \
+  --output-dir .analysis/build/semantic-score-registration-readable-v1241-v2 \
+  --maine-cache .analysis/reconstruction/probes/product-20261003-083233-dcc0bfe1-maine
+python3 scripts/compare_artifacts.py \
+  .analysis/build/th04-normal/MAINE.EXE \
+  .analysis/build/semantic-score-registration-readable-v1241-v2/MAINE.EXE --json
+```

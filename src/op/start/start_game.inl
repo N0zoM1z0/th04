@@ -1,5 +1,7 @@
 void near start_game(void)
 {
+	// Seed the resident run contract before the character menu fills in the
+	// final character and shot type. MAIN reads this same block after execl().
 	resident->stage = 0;
 	resident->credit_lives = resident->cfg_lives;
 	resident->credit_bombs = resident->cfg_bombs;
@@ -11,6 +13,10 @@ void near start_game(void)
 	}
 
 	resident->demo_num = 0;
+
+	// The following order is part of the overlay handoff: discard OP assets,
+	// persist the resident segment/options, restore the text font, request the
+	// music fade, and only then release OP's hardware/runtime ownership.
 	main_cdg_free();
 	cfg_save();
 	gaiji_restore();
@@ -20,9 +26,11 @@ void near start_game(void)
 #endif
 	game_exit();
 
+	// Successful execl() replaces OP and never returns. A failure falls through
+	// with OP already torn down; the original has no recovery path here.
 	if(!resident->debug) {
-		execl(BINARY_MAIN, BINARY_MAIN, nullptr);
+		execl(GAMEPLAY_BINARY, GAMEPLAY_BINARY, nullptr);
 	} else {
-		execl(BINARY_DEB, BINARY_DEB, nullptr);
+		execl(DEBUG_GAMEPLAY_BINARY, DEBUG_GAMEPLAY_BINARY, nullptr);
 	}
 }

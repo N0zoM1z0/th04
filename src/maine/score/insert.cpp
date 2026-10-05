@@ -4,6 +4,11 @@
 
 extern unsigned char entered_place;
 
+// Readable source aliases; the historical symbols remain the external OMF
+// contract used by the grouped SCORE_TEXT replay.
+#define registration_place entered_place
+#define loaded_score_section hi
+
 #if defined(TH04P)
 #pragma codeseg SCORE_TEXT GROUP_01
 #else

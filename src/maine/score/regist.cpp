@@ -12,9 +12,18 @@
 #include "src/shared/sound/api.hpp"
 
 extern unsigned char rank;
+#define registration_rank rank
 extern playchar_t playchar;
+#define registration_playchar playchar
 extern unsigned char entered_place;
+#define registration_place entered_place
 extern unsigned char gALPHABET[51];
+#define name_entry_alphabet gALPHABET
+
+// Keep the historical external names above for the grouped SCORE_TEXT OMF.
+// The registration body uses these aliases to state which cross-function
+// values they carry; all aliases preprocess back to the same DGROUP symbols.
+#define loaded_score_section hi
 
 // MAINE score-registration immediates from the accepted body and 51-byte
 // alphabet. Keep this scope separate from the unrelated MAIN rank system.
@@ -29,6 +38,8 @@ enum {
     ALPHABET_COLS = 17,
     ALPHABET_ENTER_ROW = ALPHABET_ROWS - 1,
     ALPHABET_ENTER_COL = ALPHABET_COLS - 1,
+    NAME_REPEAT_DELAY_FRAMES = 30,
+    SCOREDAT_NO_ENTRY = 0xFF,
 };
 
 extern "C" {

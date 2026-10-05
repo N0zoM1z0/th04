@@ -68,7 +68,7 @@ pf_int21 proc far
     cmp ah, 4Ch
     je pf_terminate
 
-    ; SS:BP points to a 24-byte PfFrame, followed by IP, CS, FLAGS.
+    ; SS:BP points to a 24-byte PfFrame INCLUDING the final IP, CS, FLAGS.
     ; Offsets: ES 0, DS 2, BP 4, DI 6, SI 8, DX 10, CX 12,
     ; BX 14, AX 16, IP 18, CS 20, FLAGS 22.
     push ax
@@ -85,6 +85,8 @@ pf_int21 proc far
     mov ax, seg _bbufsiz
     mov ds, ax
     inc byte ptr cs:pf_busy
+    ; Re-entered DOS calls made by PF_DISPATCH see pf_busy and go directly
+    ; to the old vector, so a backing-archive read cannot intercept itself.
     push word ptr [bp+22]
     popf
     push ss
@@ -92,6 +94,9 @@ pf_int21 proc far
     call PF_DISPATCH
     or ax, ax
     jz short pf_forward
+
+    ; Handled call: restore the callback's edited register frame. IRET loads
+    ; its saved FLAGS, including the carry bit used for DOS success/error.
 
     dec byte ptr cs:pf_busy
     pop es
@@ -106,6 +111,7 @@ pf_int21 proc far
     iret
 
 pf_forward:
+    ; Unhandled call: preserve the caller's DOS request and chain the vector.
     dec byte ptr cs:pf_busy
     push word ptr [bp+22]
     popf

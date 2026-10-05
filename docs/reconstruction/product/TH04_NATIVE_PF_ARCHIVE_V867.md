@@ -137,3 +137,42 @@ from the rewritten path; use a repository-root include under the existing
 `-I.` flag. `_dos_open()` takes `int *` for its output handle under this
 toolchain, even when the stored handle is later an unsigned DOS word. These
 constraints are worth preserving for TH05's first native build.
+
+## Semantic readability and regression, v1226
+
+`semantic/readable` renames the private member stream and its fields without
+changing their types/order, and names directory offsets and intercepted DOS
+functions. Source comments explain encoded bytes fetched versus buffered bytes
+consumed versus decoded bytes delivered, repeat counts after two equal
+literals, the saved AX/carry frame, recursive DOS forwarding, rewind/discard
+seek behavior and teardown ownership. Keep the unsigned-16 narrowing before
+the seek-discard clamp; seeking directly to 65536 remains an untested boundary
+hazard, rather than a correction authorized by this readability batch.
+
+The preceding source build `product-20261003-032057-0eb9ceea` and readable
+build `product-20261003-032654-4e1e8830` use dependency-validated object caches.
+The latter reuses 191 MAIN C++ objects, 158 OP objects and 132 MAINE objects;
+changed inputs rebuild. All three complete MZ files, headers, program images
+and ordered relocation tables have zero differences:
+
+| Product | Bytes | Relocations | Complete file SHA-256 |
+| --- | ---: | ---: | --- |
+| MAIN | 192351 | 1178 | `dbbfa404292022e47142c4c14951f24b1bf2017ab4d2168b4b7464871a4fc615` |
+| OP | 77740 | 814 | `c8ac4d73ea0deee10a2d26665cfe1e5a043e69c2e9b16ebac1dbb4521acaf357` |
+| MAINE | 70614 | 660 | `0a2d3ce89e7663265b4c498a66b78225e14ea75af9a59a40066928ea6d18afba` |
+
+These are compiler-observed source-to-source results, not original-target
+exactness. Replay with `scripts/build.py --only main op maine --progress`,
+using the preceding run's `--main-cpp-cache`, `--op-cache`, `--maine-cache`
+receipts, then `scripts/compare_artifacts.py BEFORE.EXE AFTER.EXE --json`
+for each product. Private manifests are under
+`.analysis/build/semantic-resource-{baseline,readable}/build.json`.
+
+The fresh nine-member DOS probe passes compressed/stored/XOR resources,
+loose-file forwarding, buffered reads, backward/end seek, all five extra-byte
+expansion cases and interrupt-vector restoration. Receipt:
+`.analysis/reconstruction/probes/semantic-pf-runtime-20261003/receipt.json`;
+MZ SHA-256 `200f139cfe83d142efac18e33b86657c2541dd99c7eed2aae2e3bf540fa50268`,
+272 relocation sites checked at load segments 0x2000 and 0x6000. Runtime
+coverage remains a bounded DOS service check; full Good Ending rendering is
+still failing in the latest user playtest.

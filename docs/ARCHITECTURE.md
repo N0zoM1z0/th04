@@ -149,7 +149,8 @@ calibration scaffold rather than the TH04 product layout. See
 `compat/rec98/README.md`.
 
 All four products now build from maintained TH04 source without `masters.lib`.
-Complete normal gameplay is still under runtime validation. The compatibility
+The user reports complete Normal Windows routes; automated full-route and
+cross-emulator validation remain separate. See [current status](RE_HANDOFF.md). The compatibility
 audit finds no product include dependency on `compat/rec98/`, but several exact
 Oracles still compile through pinned ReC98 scaffolding. Do not
 conceal that gap with copied declarations or a bulk import. Recover bounded

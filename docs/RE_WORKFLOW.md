@@ -1,6 +1,8 @@
 # Working on TH04
 
-The active goal is standalone builds and normal PC-98 gameplay. Native builds
+Development is paused; see [current handoff](RE_HANDOFF.md) and
+[porting TODO](PORTING_STATUS.md). The DOS goal is standalone builds and normal
+PC-98 gameplay. Native builds
 need not match original executable bytes. Do not reopen MAIN's carpet or
 checkerboard exactness cases. Adapt necessary ReC98 shared implementation into
 local TH04 source; preserve functional ABI and hardware behavior.

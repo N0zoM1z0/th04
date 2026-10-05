@@ -56,6 +56,26 @@ int main(void)
     graph_pack_put_8(632, 0, row, 16);
     if(b[79] != 0xAA || r[79] != 0x66 || g[79] != 0x1E || e[79] != 1)
         return fail(5);
+    // Exercise every packed byte in every position against a scalar pixel
+    // interpretation, independent of the product's pair lookup table.
+    unsigned char varied[8];
+    for(unsigned seed = 0; seed < 256u; seed++) {
+        for(unsigned at = 0; at < 8u; at++) varied[at] = (unsigned char)(seed + at * 37u);
+        graph_pack_put_8(0, 0, varied, 16);
+        for(unsigned byte_x = 0; byte_x < 2u; byte_x++) {
+            for(unsigned plane = 0; plane < 4u; plane++) {
+                unsigned char expected = 0;
+                for(unsigned pixel = 0; pixel < 8u; pixel++) {
+                    unsigned char pair = varied[byte_x * 4u + pixel / 2u];
+                    unsigned char color = ((pixel & 1u) ? (pair & 15u) : (pair >> 4));
+                    if(color & (1u << plane)) expected |= (0x80u >> pixel);
+                }
+                unsigned char actual = (plane == 0) ? b[byte_x] :
+                    ((plane == 1) ? r[byte_x] : ((plane == 2) ? g[byte_x] : e[byte_x]));
+                if(actual != expected) return fail(6);
+            }
+        }
+    }
     puts("PACK_PUT_PASS");
     return 0;
 }

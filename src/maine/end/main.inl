@@ -4,6 +4,8 @@ void main(void)
 	char* congratulations_pic_fn = "CONG00.pi";
 #endif
 
+	// Like MAIN, MAINE starts as a fresh process and recovers the ZUN.COM
+	// resident segment from MIKO.CFG. MAIN already wrote the final run state.
 	if(!cfg_load_resident_ptr()) {
 		return;
 	}
@@ -28,6 +30,9 @@ void main(void)
 	graph_show();
 #endif
 
+	// The high unsigned sentinel values intentionally make Bad and Good share
+	// this first branch. Extra (0xFD) and score-only registration use the two
+	// later branches, whose animation order differs.
 	static_assert(ES_GOOD > ES_BAD);
 	if(resident->end_sequence >= ES_BAD) {
 		end_animate();
@@ -68,5 +73,8 @@ void main(void)
 		verdict_animate();
 	}
 	snd_kaja_func(KAJA_SONG_FADE, 4);
-	game_exit_and_exec(BINARY_OP);
+
+	// Registration/save has completed. Tear down MAINE and start a fresh OP;
+	// the resident block keeps the logo flag, options and updated run state.
+	game_exit_and_exec(MENU_BINARY);
 }

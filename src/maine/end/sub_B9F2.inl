@@ -2,6 +2,10 @@ void near sub_B9F2(void)
 {
 	uint32_t bonus;
 	uint32_t item_penalty;
+	// Re-seed this MAINE calculation from the resident menu-time value. MAIN's
+	// process-local LCG advances are not published back into the resident block.
+	// On Bad/Good routes, the later score-file re-keying continues this MAINE
+	// stream. Extra and score-only routes save first and still start from 1.
 	random_seed = resident->rand;
 	switch(resident->credit_lives) {
 	case 1: bonus = 2500; break;

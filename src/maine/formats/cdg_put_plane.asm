@@ -37,8 +37,15 @@ endm
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 	extern DOTS16_MASK_UNALIGNED:word:16
 
+; Native SHARED is grouped with other code. These CS-relative instruction
+; patches must instead use the same ungrouped frame as this far entry.
+ifdef TH04_LARGE_PRODUCT
+TH04_CDG_PLANE_TEXT segment word public 'CODE' use16
+	assume cs:TH04_CDG_PLANE_TEXT
+else
 SHARED	segment word public 'CODE' use16
 	assume cs:SHARED
+endif
 
 public CDG_PUT_PLANE
 cdg_put_plane proc far
@@ -129,6 +136,10 @@ cdg_put_plane proc far
 	pop	bp
 	retf	8
 cdg_put_plane endp
+ifdef TH04_LARGE_PRODUCT
+TH04_CDG_PLANE_TEXT ends
+else
 SHARED	ends
+endif
 
 	end

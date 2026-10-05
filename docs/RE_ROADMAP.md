@@ -1,5 +1,9 @@
 # TH04 build roadmap
 
+Current development is paused; see [handoff](RE_HANDOFF.md) and
+[semantic/native status](PORTING_STATUS.md) for current work and TODO. Historical
+exact cases are deferred. Resume only a concrete missing behavior.
+
 Current goal: independently build and run the Japanese PC-98 game from the
 checked-in source. Built executables need not be byte-identical to originals.
 MAIN's carpet and checkerboard exactness cases are deferred indefinitely;

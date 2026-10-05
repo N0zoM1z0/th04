@@ -51,6 +51,12 @@ def main() -> int:
                         help="capture an additional frame before the final frame; repeatable")
     parser.add_argument("--audio", action="store_true",
                         help="enable the mixer; host-key+W input events toggle WAV capture")
+    parser.add_argument("--builtin-dos", action="store_true",
+                        help="run GAME.BAT in DOSBox's built-in DOS instead of booting the HDI")
+    parser.add_argument("--cycles", type=int,
+                        help="override the pinned fixed CPU cycles for an explicitly recorded control")
+    parser.add_argument("--font-bmp", type=Path,
+                        help="private PC-98 bitmap font copied into the emulator working directory")
     parser.add_argument("--debug-port-e9", action="store_true",
                         help="record private guest checkpoints emitted through Bochs port E9")
     observer = parser.add_mutually_exclusive_group()
@@ -85,6 +91,8 @@ def main() -> int:
     if scenario_path is not None:
         parser.set_defaults(**scenario_defaults(scenario_path))
     args = parser.parse_args()
+    if args.cycles is not None and not 1000 <= args.cycles <= 100000:
+        parser.error("CPU cycles must be between 1000 and 100000")
     if not 1 <= args.key_delay_ms <= 1000:
         parser.error("key delay must be between 1 and 1000 milliseconds")
     input_specs = list(args.input_event)
@@ -168,6 +176,12 @@ def main() -> int:
     shutil.copyfile(source_image, image)
     config = output / "dosbox-x-x11.conf"
     runtime_conf = conf_bytes.replace(old, b"videodriver       = x11")
+    if args.cycles is not None:
+        import re
+        runtime_conf, count = re.subn(rb"(?m)^cycles\s*=.*$",
+                                     f"cycles = fixed {args.cycles}".encode(), runtime_conf)
+        if count != 1:
+            raise ValueError("expected one pinned CPU cycles setting")
     runtime_conf = runtime_conf.replace(b"[dosbox]\n", b"[dosbox]\nquit warning = false\n")
     if args.debug_port_e9:
         runtime_conf = runtime_conf.replace(
@@ -178,12 +192,24 @@ def main() -> int:
                                            + str(output / "captures").encode() + b"\n")
         (output / "captures").mkdir()
     config.write_bytes(runtime_conf)
+    font_sha256 = None
+    if args.font_bmp is not None:
+        font_bytes = args.font_bmp.resolve().read_bytes()
+        if font_bytes[:2] != b"BM":
+            raise ValueError("PC-98 font must be a bitmap")
+        (output / "FREECG98.BMP").write_bytes(font_bytes)
+        font_sha256 = sha(font_bytes)
     command = [
         str(executable), "-defaultconf", "-defaultmapper", "-conf", str(config),
         "-fastlaunch", "-nogui", "-nomenu", "-exit", "-time-limit",
-        str(args.time_limit), "-c", f'imgmount 2 "{image}" -t hdd -fs none',
-        "-c", "boot -l c",
+        str(args.time_limit),
     ]
+    if args.builtin_dos:
+        command.extend(["-c", f'imgmount c "{image}"', "-c", "c:",
+                        "-c", "cd genso", "-c", "game.bat"])
+    else:
+        command.extend(["-c", f'imgmount 2 "{image}" -t hdd -fs none',
+                        "-c", "boot -l c"])
     debug_log = output / "debug-port-e9.log"
     if args.debug_port_e9:
         command.extend(["-set", f"log logfile={debug_log}"])
@@ -203,7 +229,7 @@ def main() -> int:
     # Stream directly to disk so observation cannot suspend the emulator.
     boot_log = output / "boot.log"
     log_stream = boot_log.open("w", encoding="utf-8")
-    process = subprocess.Popen(command, cwd=ROOT, env=env, stdout=log_stream,
+    process = subprocess.Popen(command, cwd=output if font_sha256 else ROOT, env=env, stdout=log_stream,
                                stderr=subprocess.STDOUT, text=True,
                                start_new_session=True)
     screenshot = output / "frame.png"
@@ -410,7 +436,9 @@ def main() -> int:
             ).hex()
     except ValueError:
         player_trace_files = {}
-    expected_boot = runtime["primary"]["execution"]["boot_required_log_markers"]
+    expected_boot = (["Image file has .HDI extension, assuming HDI image",
+                      "PC-98 PIT master clock rate 2457600Hz"] if args.builtin_dos else
+                     runtime["primary"]["execution"]["boot_required_log_markers"])
     receipt = {
         "schema_version": 1,
         "observed_utc": datetime.now(timezone.utc).isoformat(),
@@ -428,6 +456,9 @@ def main() -> int:
         "cpu_debugger": cpu_debugger,
         "x11_config_sha256": sha(config.read_bytes()),
         "audio_enabled": args.audio,
+        "builtin_dos": args.builtin_dos,
+        "cycles_override": args.cycles,
+        "font_sha256": font_sha256,
         "audio_captures": [{"file": str(path.relative_to(output)), "size": path.stat().st_size,
                             "sha256": sha(path.read_bytes())}
                            for path in sorted((output / "captures").glob("*.wav"))],

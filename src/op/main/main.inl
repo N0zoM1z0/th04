@@ -2,6 +2,10 @@ void main(void)
 {
 	int idle_frame = 0;
 
+	// OP is a fresh DOS process every time MAIN or MAINE chains back to it.
+	// Device state and conventional-memory ownership therefore have to be
+	// rebuilt here, while the ZUN.COM resident block survives across all three
+	// executables and carries the selected options and run state.
 	text_clear();
 	respal_create(); // ZUN bloat: These games don't use resident palettes.
 	mem_assign_paras = (336000 >> 4);
@@ -15,6 +19,8 @@ void main(void)
 	gaiji_entry_bfnt(GAIJI_FN);
 #endif
 
+	// MIKO.CFG contains the segment of that resident block in addition to the
+	// persisted options. cfg_load() installs the process-local far pointer.
 	cfg_load();
 	if(resident->rank == RANK_SHOW_SETUP_MENU) {
 		setup_menu();
@@ -22,6 +28,8 @@ void main(void)
 	}
 	snd_redetermine_modes_and_reload_se();
 
+	// This flag belongs to the resident block, so the logo is shown only once
+	// even though returning from gameplay starts another OP.EXE process.
 	if(!resident->zunsoft_shown) {
 		zunsoft_animate();
 		resident->zunsoft_shown = true;
@@ -94,9 +102,15 @@ void main(void)
 			idle_frame = 0;
 		}
 
+		// This resident field is the menu-time seed accumulator consumed by a
+		// later MAIN process. OP's own irand() uses separate process-local state.
 		resident->rand++;
 		frame_delay(1);
 	}
+
+	// Reaching here means the user chose the DOS exit path. Game/demo starts
+	// call execl() from their own handlers and replace this process on success,
+	// so they do not unwind through this menu cleanup.
 	main_cdg_free();
 	cfg_save_exit();
 #if (GAME == 4)

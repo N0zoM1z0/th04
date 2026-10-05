@@ -79,3 +79,58 @@ receipt SHA-256 is
 `8addd30b7e420cab0bf1709fc3d275310c80fd4e5b4eed2debd8317813f17898`.
 The complete 0x690 owner is therefore exact. Runtime validation of the
 target-preserved uninitialized default path remains open.
+
+## Semantic readability replay v1237
+
+The maintained VM now gives every used opcode a source-level `ESOP_*` name
+while retaining literal macro values and the target-required physical `case`
+order. The local names distinguish the current enemy, ES instruction pointer,
+byte-sized instruction length, inclusive duration counter and volatile
+arithmetic scratch. `SCRIPT_U16_AT()` makes the unaligned little-endian ES load
+explicit. Comments at the relevant control-flow joins document these contracts:
+
+- Immediate setup opcodes advance the instruction pointer and continue parsing
+  in the same gameplay update.
+- Timed movement applies its visible update before checking the counter, so a
+  duration operand of `N` performs `N+1` updates.
+- Loop opcode `80h` replaces `script_ip` with an absolute byte offset, while
+  `81h` subtracts a byte distance; both refetch the ES pointer.
+- `FIRE` copies the per-enemy bullet template into the shared synchronous spawn
+  scratch object and adds the enemy position to its relative origin.
+- Autofire interval opcode `2Ch` treats performance 16 as neutral, clamps the
+  adjusted delay to 16..255, and forces the longest delay on Easy.
+- The unknown-opcode path still reaches the timed tail with uninitialized
+  locals. This target behavior remains documented rather than modernized.
+
+The final source SHA-256 is
+`6a916a833bcb1644b37a8b72c3a3399aadb3d23f7fb22dfd38406f4f5c805fe0`.
+A dependency-validated MAIN build produced the same complete 199,455-byte MZ,
+SHA-256 `cb4c5b667f9a2d5a5c3ef62865fdc926a74a100155068c63e5dfbd019362b70c`,
+with the same 1,181 ordered relocation entries as the preceding source build.
+The strict comparison is
+`.analysis/build/semantic-enemy-script-readable-v1237-published/compare-vs-cb4c5b66.json`.
+
+The repaired compiler probe accepts a materialized exact-replay context and a
+baseline Git revision:
+
+    python3 scripts/probes/replay_th04_enemy_script_natural.py \
+      --source-root .analysis/reconstruction/exact-unit-replay/gpt-6-1-sol-semantic-enemy-script-v1237/a/source \
+      --baseline-ref 3de021c45363791facceaf705a9a9f7f1a875b86 \
+      --output-dir .analysis/reconstruction/probes/semantic-enemy-script-v1237-natural-v3
+
+Both sources compile to valid `TC86 Borland C++ 4.02` OMF with identical
+timestamp-normalized SHA-256
+`4b9512c99ccaf69e4fa1520f883811b4d9c9f615411711e27fb554790080bebe`.
+The candidate retains the 1,680-byte CODE size, 144 switch words, 49 destination
+groups, all 49 physical block sizes, the duration/size BP-local layout and the
+masked 42-byte entry shape. Receipt SHA-256:
+`62b65b86bb193334abc40574c9a2e68f43f8e91d147d5694bdc82707843d9bdc`.
+
+A requested strict replay of `th04-main-enemy-script-dispatch-v328` stopped
+before compilation. Dependency closure reached source transform
+`th04-main-boss-bg-v148-natural` with `th04_main.asm` SHA-256
+`aeeedc73c56697f7277a3b4455ea6bfb54d6c4711632b3bf3ff7318ad62b7b75`,
+which is absent from that transform's two allowed scaffold digests. No target
+or candidate byte comparison ran. The successful complete native comparison
+and identical before/after OMF are regression evidence; they do not replace a
+fresh target-linked cold replay or change the owner's existing exact state.

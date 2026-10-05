@@ -24,6 +24,7 @@ void pascal near game_exit_and_exec(char far *fn);
 static const unsigned char OP_AND_END_PF_FN[] = "\x8c\xb6\x91z\x8b\xbd" "ed.dat";
 static const char GAIJI_FN[] = "GAMEFT.bft";
 static char BINARY_OP[] = "op";
+#define MENU_BINARY BINARY_OP
 
 enum {
     RANK_EASY = 0,

@@ -1,0 +1,3425 @@
+[
+  {
+    "path": "scripts/attest_analysis_toolchain.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Fail-closed identity and execution attestation for pinned Ghidra and JDK.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/attest_ghidra_database.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Independently attest a private Ghidra MZ export against one pinned target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/attest_toolchain.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Fail-closed Borland identity, execution, OMF, MZ, and replay attestation.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/audit_compat_dependencies.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Inventory and validate the temporary compat/rec98 migration boundary.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/bootstrap_analysis_toolchain.sh",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Download/install the pinned Ghidra/JDK pair into ignored private tools.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/bootstrap_toolchain.sh",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Acquire/install calibrated Borland candidate tools below ignored private state.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/boundary_review/__init__.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Tracked TH04 multi-artifact boundary-review tools.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/boundary_review/build_function_boundary_ledger.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Build the all-artifact TH04 function-boundary review ledger.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/boundary_review/export_ghidra_inventory.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Create or check a headless Ghidra database for a private boundary-review image.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/boundary_review/export_tasm_function_boundaries.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Export local PROC boundaries from attested TASM listings.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/boundary_review/prepare_analysis_images.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Compare unpacked TH04 targets with a cold candidate and prepare Ghidra views.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/boundary_review/report_function_boundaries.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Generate the human-readable TH04 boundary-review report from its ledger.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/boundary_review/unpack_diet.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Deterministically unpack a pinned TH04 DIET target into private analysis output.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/boundary_review/validate_function_boundary_ledger.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Validate the tracked all-artifact TH04 function-boundary ledger.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/build.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Build/publish local-source DOS products after all requested build and link audits.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/build_zun_composite.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Build the local-source ZUN container and embedded resident components.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/catalog/index.py",
+    "category": "tracking",
+    "role": "command",
+    "purpose": "Browse or check this catalog; no target/probe is executed.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/check_default_repair_omf.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare complete default-branch OMF across native repair revisions.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/check_environment.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Report available ingestion, analysis, build, and runtime tools.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/ci.py",
+    "category": "tracking",
+    "role": "command",
+    "purpose": "Run public control-plane tests and private target checks when available.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/cold_build_rec98.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Cold-build a pinned ReC98 snapshot as an untrusted calibration candidate.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/compare_artifacts.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare two DOS MZ/COM artifacts and report independent dimensions.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/compare_rec98_th01.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare a local ReC98 TH01 build against pinned targets, without trust.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/compile_tc4j_pc98_ide.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compile one frozen ReC98-overlay source with TC4J's original PC-98 IDE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/decoded_function_acceptance.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Validate and cold-replay artifact-local decoded TH04 function acceptance.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/export_analysis_bundle.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Export a private, reproducible address/relocation bundle for one MZ target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/export_windows_play.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Package verified DOS products and launchers while retaining nonproduct image files.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/ghidra/ExportFunctionInventory.java",
+    "category": "support",
+    "role": "tool-script",
+    "purpose": "Export a read-only Ghidra function inventory for physical boundary review.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/ghidra/ExportMzAttestation.java",
+    "category": "support",
+    "role": "tool-script",
+    "purpose": "Export loaded MZ bytes/mappings for independent database attestation.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/ghidra/SeedCodeEntries.java",
+    "category": "support",
+    "role": "tool-script",
+    "purpose": "Seed the DOS entry before headless auto-analysis; this is an analysis aid.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/ghidra.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Run the pinned, target-attested TH04 Ghidra workflow.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/import_targets.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Import pinned TH04 (and optional TH01 smoke) targets from the legal RAR.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/inspect_omf.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Validate an Intel OMF object and emit a machine-readable record inventory.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/__init__.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Shared helpers for TH04 reconstruction tooling.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/analysis.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Pinned analysis-tool identities and private Ghidra path policy.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/ghidra.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Independent validation of private Ghidra MZ attestation exports.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/omf.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Strict, dependency-free Intel OMF record validation.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/pc98.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Small, dependency-free PC-98 target and DOS MZ helpers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/reconstruction.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Shared strict and diagnostic views for reconstruction candidates.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/targets.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Read hash-pinned private target artifacts without weakening provenance checks.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/th04_sprites.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Generate the four TH04 MAIN sprite owners for a bounded link diagnostic.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/lib/toolchain.py",
+    "category": "support",
+    "role": "support",
+    "purpose": "Deterministic identities for private toolchain files and directory trees.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/mine_shared_blocks.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Mine relocation-normalized cross-game byte blocks as routing candidates only.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/play_invincible.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Build/package the separately staged invincible MAIN variant for testing.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/preflight.py",
+    "category": "tracking",
+    "role": "command",
+    "purpose": "Run the fail-closed checks required before target-dependent work.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/prepare_product_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Prepare a disposable original-data image with verified source or original products.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probe_tc4j_pc98_ide.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Replay the TC4J PC-98 IDE integrated-compiler MOV-direction probe.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/analyze_dialog_relocation_runs.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Inspect complete dialog.cpp MZ relocation order and candidate OMF records.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/analyze_diet_relocation_owners.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Compare OP/MAINE candidate and target-restored relocation order by MAP owner.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/audit_th04_native_bullet_switches.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Check MAIN bullet switch tables in the CS frame used by its far caller.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/audit_th04_native_irq_vectors.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Check native CS-relative vectors and self-modifying renderer operands.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/audit_th04_native_maine_call_abi.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Check native TH04 far calls, returns, and relocation sites for ASM owners.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/audit_th04_native_maine_mz.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Audit a successful native TH04 MZ at two DOS load segments.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/audit_th04_native_op_call_abi.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Check OP's linked far ASM entries and relocated call sites.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/audit_th04_native_op_mz.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Audit a successful standalone TH04 OP MZ and every relocation site.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/audit_th04_op_menu_calls.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compare bounded OP menu drawing calls with the attested decoded target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/build_th04_cpu_fault_emulator.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Build a private, pinned DOSBox-X observer without changing game bytes.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/calibrate_th04_cpu_fault_emulator.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Falsify a private emulator observer using an independent DIV-zero COM.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/check_th04_bullet_default_objects.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-check complete default bullet renderer OMF against a source revision.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/check_th04_renderer_default_objects.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-check that native renderer segment branches leave default OMF unchanged.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/compact_op_maine_snapshot.py",
+    "category": "source-review",
+    "role": "support",
+    "purpose": "Materialize the OP/MAINE replay inputs without cloning all of ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/compare_diet_payloads.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Compare a cold TH04 candidate with the independently unpacked target payload.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/compare_th04_native_maine_link.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare two cold TH04 native-link diagnostic receipts.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/compare_th04_native_op_link.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare two cold standalone TH04 OP link receipts.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/compare_th04_native_source_compile.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare two TH04-only compile receipts and all their OMF objects.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_dialog_fixup_order.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Relate a TH04 replay's far-call FIXUPP locations to MZ relocations.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_th04_bullet_load_trace.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Reduce attested real-PC-98 full-pool IRQ counters; not a natural-route/FPS claim.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_th04_cpu_fault_trace.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Decode private MAIN exception frames without claiming normal gameplay.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_th04_emulator_cpu_fault.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Locate emulator-side CPU faults in attested, unmodified native MAIN code.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_th04_handoff_trace.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Inspect private MAIN cleanup and MAINE initialization checkpoints.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_th04_main_graphics_trace.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Check MPN and four-plane VRAM checkpoints from a private MAIN run.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_th04_play_trace.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Reduce private MAIN state records; this is bounded gameplay evidence.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inventory_th04_maine_support.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Map native MAINE unresolved names to a pinned historical archive inventory.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inventory_th04_native_main.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Report missing quoted includes in maintained MAIN source and inlines.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/maine_score_function_harness.py",
+    "category": "formats",
+    "role": "support",
+    "purpose": "Shared cold source/OMF/link gate for one MAINE SCORE_TEXT function.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/op_score_function_harness.py",
+    "category": "formats",
+    "role": "support",
+    "purpose": "Cold source/OMF/link gate for one OP SCORE_TEXT decoded function.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/partition_diet_mz_residual.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Partition OP/MAINE DIET packed residual among three MZ input surfaces.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/prepare_th04_good_ending.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Prepare a private seeded Good Ending, with source-built MAINE/OP/ZUN.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/prepare_th04_main_diagnostic_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Prepare a native MAIN candidate in a disposable PC-98 HDI.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/prepare_th04_maine_diagnostic_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Prepare a native OP or MAINE candidate in a disposable PC-98 HDI.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/prepare_th04_native_zun_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Place source-only packed ZUN.COM in a disposable pinned TH04 PC-98 HDI.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/prepare_th04_op_diagnostic_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Place a statically audited native OP.EXE in a disposable TH04 HDI.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/prepare_th04_op_phase_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Add reversible GAME.BAT phase markers to an attested private OP HDI.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/prepare_th04_primary_cpu_debugger.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest a CPU exception debugger for the unchanged primary DOSBox-X.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_diet145f_internal_metadata.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Read DIET 1.45f's hidden -^ metadata from TH04 packed executables.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_diet145f_relocation_order_roundtrip.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Test whether DIET 1.45f preserves arbitrary MZ relocation-table order.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_carpet_asm_fingerprint.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare TC4J integrated-assembler and TASM encodings for carpet residuals.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_carpet_inline_helpers_v503.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J inline-helper effects on the remaining TH04 carpet codegen forms.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_checkerboard_inline_loop_v502.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J inline-expansion effects on the TH04 checkerboard counted loop.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_checkerboard_loop_forms.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe legal TC4J C++ countdown spellings for the TH04 checkerboard core.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_debug_final_blocker_surface_v505.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J debug/line-info modes on representative final TH04 blockers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_dosv_backend_intake_v506.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Bind the same-media TC4J DOS/V integrated compiler as a distinct backend.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_inline_return_register_v501.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe whether TC4J inline pseudo-register returns alter AX->BX encoding.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_intrinsic_surface.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe hidden TC4J intrinsic/string-op surfaces relevant to final MAIN blockers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_language_mode_final_blocker_surface_v499.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J C/C++ language modes on representative final TH04 blocker shapes.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_lodsb_segment_surface.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe remaining natural TC4J LODSB and DS->ES setup source surfaces.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_mov_bx_ax_encoding.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J's two producer paths for MOV BX,AX encoding.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_optimizer_suboptions.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe hidden Borland-style optimizer suboptions on pinned Turbo C++ 4.0J.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_processor_final_blocker_surface_v498.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J 16-bit processor targets on the remaining TH04 MAIN blockers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_register_encoding_surface.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J register-register opcode selection across attested front ends.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_score_rotate_intrinsics.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Bounded TC4.02 probe for SCORE codec rotate intrinsics; negative exactness evidence.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_unsigned_mul_forms.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J signedness/width source forms for TH04 carpet MUL BX.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4_wx_final_blocker_surface_v497.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe TC4J -WX/DPMI16 codegen on the remaining TH04 MAIN blocker shapes.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_tc4j_pc98_ide_optimizer_surface.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Probe the same-media TC4J PC-98 IDE optimizer/project surface.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_bgimage_copy_intrinsic.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Test whether TC4J's __memcpy__ emits the target BGIMAGE REP MOVSD loops.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_bgimage_hybrid_v489.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Promote TH04 OP/MAINE BGIMAGE using cross-game-corroborated hybrid C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_bgm_bss_fileback_v492.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Reproduce TH04 packed T extent by file-backing the shared MASTER BGM BSS.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_bgm_bss_reduction172_v494.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay the 2014 ReC98 Reduction #172 BGM-BSS binary-preserving form.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_carpet_natural_context.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile TH04 stages.cpp and inspect natural carpet register directions.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_carpet_semantic_lineage.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Scan every registered TH01-TH05 target for a semantic carpet-column analogue.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_checkerboard_semantic_lineage.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Scan registered TH01-TH05 target images for checkerboard-like LOOP cores.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_current_target_relocation_topology.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare the current OP/MAINE topology candidates with the real v228 target restore.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_demo_link_order.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Relink the attested v214 MAIN snapshot with two DEMO object-order controls.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_demo_midfunction_segment.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test TC4J code-segment controls inside the MAIN pause() function.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_demo_pause_split.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test a source-level pause split and byte-aligned DEMO code segments.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_demo_tlink_switches.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test whether active TLINK switches reorder MAIN stage-session relocations.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_dialog_line_info.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Check whether TC4J -y changes DIALOG_TEXT FIXUPP batching without code drift.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_dialog_segment_flush.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test whether a source-level code-segment switch flushes TC4J OMF FIXUPP.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_end_scroll_copy.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Probe natural TC4J far-to-near copy code for END_TEXT scroll helper.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_enemy_es_save_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Test bounded TC4J source-level ES-save forms for the MAIN aim helper.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_enemy_script_es_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Test natural TC4J producers for the MAIN enemy-script ES:DI entry.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_final_blocker_crossartifact.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Scan every registered TH01-TH05 target image for final TH04 blocker motifs.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_final_blocker_upstream_provenance_v495.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Audit pinned ReC98 history and the MAGNet2010 leak for final-blocker provenance.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_gameplay_conditional.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Probe TC4J zero-distance jumps for two MAIN gameplay conditionals.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_gameplay_increment.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test natural TC4J frame-increment spellings in the MAIN gameplay loop.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_gameplay_ternary.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test a target-motivated conditional-expression producer in gameplay_loop.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_hdi_active_dev_remnants.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Audit active files/archives in pinned HDI for TH04 development remnants.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_hdi_allocated_slack.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Scan allocated FAT12 file/directory slack for final TH04 blocker remnants.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_hdi_deleted_builds.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Forensically check the pinned TH01-TH05 HDI for recoverable alternate TH04 builds.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_hdi_partial_trial_remnants.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Scan every FAT-free run in the pinned HDI for partial TH04 trial remnants.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_hdi_raw_code_remnants.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Scan FAT-free HDI runs for anonymous raw-code remnants of final TH04 blockers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_historical_bdata_extent_v491.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test real historical MASTER b_data.OBJ as the TH04 T-extent mechanism.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_laser_count.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test whether natural length expressions change TC4J's laser copy setup.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_magnet_transcription_provenance_v496.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Audit every pinned TH04 commit that changes [MAGNet2010] provenance tags.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_bb81_cpp_v475.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover TH04 MAINE sub_BB81() as natural TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_box_masked_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Diagnose natural-C++ codegen for MAINE box_1_to_0_masked without exact credit.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_box_masks.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Attest MAINE's five semantic cutscene EGC masks in the decoded target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_cutscene_data.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Check TH04 MAINE cutscene masks against the attested target and TC4J OMF.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_egc_start_copy_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Diagnose natural-C++ codegen for MAINE egc_start_copy without exact credit.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_egc_tail_cpp_v485.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Recover TH04 MAINE SCORE_TEXT EGC start + rectangle copy as one natural TC86 tail.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_end_resources.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Attest MAINE staffroll and verdict filenames in the decoded TH04 target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_fraction_cpp_v473.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover TH04 MAINE graph_fraction_of_million_put() as natural TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_graph3_cpp_v471.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover TH04 MAINE graph_3_digit_put() as natural TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_master_relocation_order.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Replay a natural MAINE master-object link order on the v401 topology candidate.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_regist_frontier_v483.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Replay the v483 TH04 MAINE regist_menu() natural-C++ compiler frontier.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_regist_frontier_v831.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Revalidate the MAINE regist_menu compiler frontier on the retained v489 baseline.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_regist_resources.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Attest MAINE score-registration filenames and warning text in the target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_cdg_data.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Attest TH04 MAINE's score keyboard, filename, and CDG bit-mask data.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_full_cpp_v486.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Recover the complete TH04 MAINE SCORE_TEXT CODE body as one TC86 C++ TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_insert_cpp_v479.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Recover TH04 MAINE SCORE_TEXT score insertion helper as natural TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_prefix_cpp_v480.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Recover first three TH04 MAINE SCORE_TEXT helpers as one natural TC86 owner.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_prefix_cpp_v481.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Extend TH04 MAINE SCORE_TEXT natural TC86 prefix through name cursor rendering.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_prefix_cpp_v482.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Extend TH04 MAINE SCORE_TEXT natural TC86 prefix through row/cursor helpers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_producers_v468.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Replay natural TH04 MAINE SND_LOAD_EXT and score/end TC86 producers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_rect_cpp_v484.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Recover TH04 MAINE SCORE_TEXT EGC rectangle copy as natural TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_score_super_cpp_v487.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Recover the historical TH04 MAINE SCORE_TEXT physical TC86 producer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_segment_topology_v470.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover the TH04 MAINE monolith as natural segment-level physical owners.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_skill_cpp_v472.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover TH04 MAINE skill_apply_and_graph_percentage_put() as TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_snd_se_boundaries.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Target-first physical boundary review for MAINE SND_SE_PLAY / snd_se_update.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_sound_state.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Attest the TH04 MAINE SE tables and initial sound state in the decoded target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_staff_dissolve_cpp_v477.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover the first four TH04 MAINE staff-roll helpers as one TC86 C++ TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_staff_full_cpp_v478.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover the complete TH04 MAINE staff-roll MAINE_01 owner as TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_verdict_animate_cpp_v476.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Fuse TH04 MAINE sub_BB81() + verdict_animate() into one natural TC86 TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_verdict_cpp_v474.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover the first TH04 MAINE verdict owner as one natural TC86 C++ TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_verdict_resource_omf.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compare compiled verdict resource LEDATA with named decoded MAINE data.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_maine_verdict_resources.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Attest the bounded MAINE verdict display data block in the decoded target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_master_bgm_archive_order.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Inspect independent historical MASTER.LIB BGM object boundaries and FIXUPP.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_master_bgm_bss_archive.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Test whether historical MASTER.LIB BGM BSS explains the v228 restored MZ tail.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_master_object_split.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay the OP/MAINE master.lib OMF-boundary hypothesis on a frozen v214 overlay.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_master_vs_object.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay the TH04 MASTER.LIB VS.OBJ data-owner hypothesis on v400 topology.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_memchk_boundaries.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Review TH04 MEMCHK authored-function boundaries on target bytes.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_mz_minalloc_stack_v490.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Show that TH04 DOS-MZ minalloc is derived from file extent and initial stack end.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_bgm_runtime.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay pinned EFS parsing and TH04-local PC-98 beeper scheduling in DOS.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_bullet_load.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Bounded bullet-pool CPU and GRCG stress controls, not a complete Lunatic route.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_cdg_cs.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay native MAINE CDG instruction patches with real, pinned staff assets.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_clear_dwords.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay CLEAR_DWORDS with independently seeded upper EAX bits.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_empty_ring.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Execute native MAIN ring tuning and clipping in an isolated x86 Oracle.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_gaiji_storage_runtime.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Run BFNT and backup lifecycle checks against TH04-local gaiji storage.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_heap_runtime.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run a small DOS heap lifecycle program against the TH04-local owner.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_input_timing.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Exercise compiled input latches and release/press waits with synthetic I/O.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_backdrop_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN boss-backdrop API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_bb_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN BB tile API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_bg_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN background API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_bosses_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN boss declarations with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_bullet.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN bullet API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_checkerb_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN checkerboard API with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_circle.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN circle API with the pinned header.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_combat_headers.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN combat/HUD/CDG headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_common.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN common macros with the pinned header.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_compile_frontier.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compile mapped TH04 MAIN owners in a pinned scaffold tree.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_custom.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN custom-entity API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_decomp_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare TH04 MAIN's local decompilation helpers with pinned ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_demo_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN demo API header with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_dialog_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN dialog API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_dialog_storage.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Probe the maintained TH04 MAIN dialog DATA/BSS storage owners.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_drawpoint_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN drawpoint API with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_ems_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN EMS/CDG API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_end_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN end API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_enemy_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN enemy API header with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_frames.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compile and execute a DOS ABI probe for MAIN frame-counter storage.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_gaiji_header.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN gaiji API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_gather.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN gather API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_hiscore_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN hiscore API with the pinned header.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_input_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN input API header with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_inputvar_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN inputvar API with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_item.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN item API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_link.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Link the maintained TH04 MAIN physical roots and report the frontier.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_manifest.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Audit the ordered TH04 MAIN native-link frontier without linking it.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_midboss.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN midboss API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_mpn_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN MPN format API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_null.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN null-callback API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_overlay_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN overlay API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_pattern_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN pattern table with the pinned header.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_pellet_r_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN pellet-render API with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_phase.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN phase constants with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_planar_header.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN planar API with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_platform_x86.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare product-owned TH04 platform/x86 real-mode headers with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_playchar.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN play-character API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_player.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN player API with the pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_player_combat_headers.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare product-owned TH04 MAIN player/combat format headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_player_move_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN player-move API with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_playfld.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN playfield API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_playperf_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN playperf API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_pointnum_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN point-number API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_product_sources.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compile every maintained TH04 MAIN C/C++ source in a product-only tree.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_quit.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compile and execute a DOS ABI probe for MAIN quit state.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_rank.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN rank API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_score.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN score API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_scoredat_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN scoredat header with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_scroll.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Validate the product-owned TH04 MAIN scroll API and BSS owners.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_shiftjis_fns.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 Shift-JIS filename macro surface.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_shiftjis_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN Shift-JIS header with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_slowdown.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compile and execute a DOS ABI probe for MAIN slowdown state.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_sound_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 sound header ABI with the pinned scaffold.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_spark.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN spark API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_splash_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN item-splash API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_stage.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN stage callback API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_stage_bonus_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN stage-bonus API with its pinned header.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_stage_stages_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN stage-render API with ReC98.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_state_owners.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Assemble the maintained TH04 MAIN DATA/BSS state owners.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_std_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN stage-format API with the pinned header.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_tile.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN tile API with pinned headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_main_vector_header.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compare the product-owned TH04 MAIN vector API with the pinned header.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_maine_link.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compile TH04-owned OP or MAINE sources and report the native link frontier.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_op_link.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Build the TH04-only OP source graph with the native product link probe.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_pack_put_runtime.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Exercise clipped TH04 packed-pixel rows with four fake VRAM planes.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_pf_hook_runtime.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run the TH04-local PAR INT 21h service on pinned real members.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_pi_decode_runtime.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare TH04-local packed PI decoding with a pinned historical DOS oracle.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_planar_kernels.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Compare complete planar draw calls with independent scalar pixel models.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_scroll_and_slowdown.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay bounded MAIN initialization, backdrop addresses and slowdown policy.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_source_compile.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Compile the current TH04 OP, MAINE, and shared C/C++ source without ReC98 headers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_super_runtime.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run a TH04-only BFNT sprite lifecycle and fake-VRAM DOS differential.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_vsync_runtime.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Exercise TH04's interrupt-vector lifecycle in a pinned DOS runner.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_zun_composite.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Build TH04 ZUN's flat COM payload from maintained source components.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_zun_parts.py",
+    "category": "build",
+    "role": "command",
+    "purpose": "Build ZUN's maintained COM parts without historical target/snapshot inputs.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_native_zun_resident.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-link TH04's source-only Tiny-model ZUN resident COM component.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_assembly_backend_frontier.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Bound TC4J's -B/TASM32 producer path on the remaining natural OP blockers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_hi_view_boundaries.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Review five OP hi_view physical functions, including Ghidra's truncated rank_render.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_music_segment_order.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TH04 OP's OP_MUSIC_TEXT as a separate OMF contribution.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_nopoly_b_put_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Diagnose natural-C++ codegen for OP nopoly_B_put without exact credit.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_relocation_topology_v461.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Replay the v461 TH04 OP physical/FIXUPP topology without editing MZ bytes.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_score_group_v488.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Recover the historical TH04 OP score_db + score_e + hi_view TC86 producer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_scoredat_decode_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Replay or record the pinned natural-C++ codegen result for OP scoredat_decode.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_scoredat_encode_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Record the pinned natural-C++ codegen limit for OP scoredat_encode.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_snd_load_provenance_v823.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Bound TH04 OP SND_LOAD to one two-byte source-provenance question.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_snd_se_play_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Diagnose natural-C++ codegen for OP SND_SE_PLAY without exact credit.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_snd_se_shared.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Bound the TH04 OP sound blockers with same-game producer evidence.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_snd_se_update_codegen.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Diagnose natural-C++ codegen for OP snd_se_update without granting exactness.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_sound_state.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Attest OP's shared TH04 sound tables and initial SE state.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_op_title_trace.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-build an OP title trace overlay and restore every product input.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_opmusic_nopoly_hybrid.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay the cross-game-corroborated TH04 OP nopoly_B_put copy core.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_packed_fixupp_record_order.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Project target-constrained packed relocation order onto current OMF FIXUPP records.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_pf_archive.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Validate TH04's pinned PAR archives and extract private decoder fixtures.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_score_codec_boundaries.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Target-review TH04 OP/MAINE score codec boundaries without accepting decompiled source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_score_hiscore_boundaries.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Target-review selected TH04 OP/MAINE SCORE hiscore boundaries without accepting decompiled C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_snd_load_th03.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cross-check TH03's homologous snd_load against the TH04 89 C3 blocker.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_tasm5_fixupp_option_surface.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Bound TASM32 5.0 option/version-emulation effects on TH04 FIXUPP order.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_tasm_even_context.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TASM 5.0 EVEN fill control from checked-in symbolic source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_tlink_switch_surface_v441.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Bound the remaining active-TLINK switch surface on current OP/MAINE candidates.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_tlink_uninitialized_segments.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TLINK /i against the current TH04 OP/MAINE packed frontier.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_trial_intake_v500.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Fail-closed intake for a candidate TH04 1998-07-02 trial self-extractor.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_trial_upstream_history_v504.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Audit pinned ReC98 mainline history for TH04 trial/prototype provenance.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_cfg_current_link.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Revalidate TH04 ZUN cfg_init against the current reduced-runtime resident link.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_cfg_function_local.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Validate maintained ZUN cfg_init codegen independently of resident link layout.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_generated_asm_provenance.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Pin negative source provenance for TH04 ZUNINIT/MEMCHK candidate assembly.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_barrier_provenance.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Audit pinned ReC98 history for the ZUN resident self-assignment barriers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_branch_shapes.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test semantic C++ branch shapes against the pinned ZUN _main CODE extent.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_inline_error_helper.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test genuine error-print helper inlining in the ZUN resident main.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_local_barrier_surface.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Close bounded natural-local and non-optimizer profile routes for ZUN _main.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_optimizer_profile.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Bound the supported TC4J optimizer/debug profile surface for TH04 ZUN _main.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_pragma_optimizer_scope.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Close the #pragma option -O- scope route for TH04 ZUN resident _main.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_pragma_speed_scope.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Probe function and inner-statement #pragma option -G scope in ZUN _main.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_main_structural_if.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Test semantically equivalent if/else organizations for TH04 ZUN _main.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_master_patch_v493.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Prove that TH04/TH05 use ZUN-modified MASTER code, not masters.lib verbatim.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_memchk_dos_puts2.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Prove MEMCHK sub_38E is the maintained shared DOS_PUTS2 source instance.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_ongchk_boundaries.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Review ONGCHK call entries and two Ghidra-split shared tails from target bytes.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zun_resident_shift.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Diagnose ZUN resident layout displacement without mutating either binary.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zuninit_boundaries.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Review the complete TH04 ZUNINIT physical function/data partition.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zuninit_crossgame_lineage.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Pin cross-game release-target lineage for shared TH02/TH04/TH05 ZUNINIT helpers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zuninit_sjis_to_jis.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Check ZUNINIT's 18-byte character converter against independent codecs.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zuninit_text_support_asm.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-assemble symbolic ZUNINIT SJIS/VRAM text support against release targets.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zuninit_text_vram.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay ZUNINIT's target text writer on its seven embedded messages.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zunsoft_animate_cpp_v466.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay the complete TH04 OP ZUNSOFT owner as natural TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zunsoft_palette_cpp_v465.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover TH04 OP zunsoft_palette_update_and_show() as natural TC86 C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zunsoft_pyro_cpp_v463.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover TH04 OP zunsoft_pyro_new() as natural TC86 C++ and relink it exact.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_zunsoft_update_cpp_v464.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Recover TH04 OP zunsoft_update_and_render() as natural TC86 C++ and relink it exact.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_diet145f.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Cold A/B replay of the pinned DIET 1.45f packaging step.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_bgimage_natural.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Replay maintained OP/MAINE BGIMAGE source as a bounded nonexact control.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_enemy_helpers_natural.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compile the three MAIN enemy-script helpers without exact promotion.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_enemy_script_natural.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compile the MAIN enemy VM and compare its complete switch topology.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_item_splashes_init_natural.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compile the maintained natural item_splashes_init() source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_alphabet_cursor.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Accept the bounded natural MAINE SCORE_TEXT alphabet cursor renderer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_box_animate.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile one maintained MAINE cutscene helper and relink CUTSCENE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_box_bg_free.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained TH04 box_bg_free and relink MAINE CUTSCENE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_box_bg_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained MAINE box_bg_put and relink CUTSCENE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_box_bg_snap.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE box_bg_allocate_and_snap.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_cfg_resident_ptr.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained MAINE cfg_load_resident_ptr and relink MAINE_E_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_cursor_advance.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained MAINE cursor_advance_and_animate and relink CUTSCENE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_cutscene_animate.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE cutscene_animate.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_cutscene_egc_hybrid_v833.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay MAINE cutscene EGC setup + masked box copy from maintained hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_cutscene_script_free.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile the maintained TH04 cutscene-script no-op and relink MAINE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_end_animate.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained MAINE end_animate and relink MAINE_E_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_game_exit_and_exec.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained MAINE game_exit_and_exec and relink MAINE_E_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_game_init_main.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained MAINE game_init_main and verify TLINK same-segment call optimization.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_graph_3_digit_put.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE graph_3_digit_put.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_graph_fraction.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE graph_fraction_of_million_put.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_hiscore_save.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile and raw-compare MAINE's high-score save wrapper.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_main.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE's 400-byte _main.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_name_cursor.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Accept the bounded natural MAINE SCORE_TEXT name cursor renderer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_pi_put_quarter.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-rebuild MAINE's complete SHARED pi_put_quarter_8 producer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_pic_copy_to_other.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained MAINE pic_copy_to_other and relink CUTSCENE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_pic_put_both_masked.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE pic_put_both_masked.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_place_row.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Accept the bounded natural MAINE SCORE_TEXT score-entry row renderer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_places.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Accept the bounded natural MAINE SCORE_TEXT row dispatcher.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_regist_ternary_v835.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Replay MAINE regist_menu from ordinary conditional-expression C++.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_score_codecs_hybrid_v832.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replay MAINE SCORE codecs with the v821 byte-ROR provenance.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_score_egc_hybrid_v834.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay only MAINE SCORE EGC-start from maintained release-backed hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_score_insert.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile the maintained MAINE score-insertion body and relink SCORE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_score_load_for.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile and raw-compare MAINE's bounded high-score loader.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_score_put.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile the maintained MAINE score renderer and relink SCORE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_score_rect_natural.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replay only the maintained natural-C++ MAINE SCORE rectangle helper.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_score_tail.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replay maintained MAINE regist_menu and final SCORE EGC helpers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_scoredat_decode.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile and raw-compare MAINE's natural score-data decoder.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_scoredat_encode.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile and raw-compare MAINE's target-derived natural score encoder.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_scoredat_recreate.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile and raw-compare MAINE's target-derived SCORE initializer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_script_load.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained TH04 cutscene_script_load and relink MAINE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_script_op.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE's large script dispatcher.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_script_param_first.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained TH04 script_param_read_number_first and relink MAINE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_script_param_second.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained TH04 script_param_read_number_second and relink MAINE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_skill_percentage.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE skill_apply_and_graph_percentage_put.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_snd_load_hybrid_v829.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TH04 MAINE SND_LOAD from the maintained v828 hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_snd_se_crossgame_v830.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TH04 MAINE shared sound functions from maintained cross-game hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_staff_bgimage_expand_put.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE staffroll_bgimage_expand_put.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_staff_dissolves.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay six maintained natural-C++ MAINE staff dissolve helpers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_staffroll_animate.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE staffroll_animate.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_stage_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Accept the bounded natural MAINE SCORE_TEXT stage renderer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_sub_b81d.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE sub_B81D.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_sub_b9f2.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE sub_B9F2 and its switch table.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_maine_verdict_owner.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for MAINE sub_BB81 + verdict_animate.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_bgm_choice_put.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP bgm_choice_put and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_big_menu_title.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for OP op_animate and playchar_menu.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cfg_load.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cfg_load and relink OP_MAIN_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cfg_save.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cfg_save and relink OP_MAIN_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cfg_save_exit.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cfg_save_exit and relink OP_MAIN_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_clear_sprites.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Probe OP's bounded natural registration-view clear/sprite initializer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cmt_fadein_both_animate.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cmt_fadein_both_animate and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cmt_load.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cmt_load and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cmt_load_unput_and_put_both_animate.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cmt_load_unput_and_put_both_animate and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cmt_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cmt_put and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_cmt_unput_both_animate.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP cmt_unput_both_animate and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_dropdown.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP dropdown animation and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_egc_copy_rect_hybrid_v825.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay TH04 OP egc_copy_rect_1_to_0_16() from a narrowed hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_egc_start_copy_hybrid_v824.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Replay the TH04 OP internal egc_start_copy() hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_frame_delay_2.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-relink OP with the maintained second frame-delay producer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_game_exit_to_dos.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP game_exit_to_dos and verify TLINK call optimization.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_game_init_op.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP game_init_op and verify TLINK same-segment call optimization.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_help_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP BGM/SE help renderers and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_main_cdg_free.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP main_cdg_free and relink OP_TITLE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_main_cdg_load.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP main_cdg_load and relink OP_TITLE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_main_remaining.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay six maintained natural-C++ OP_MAIN_TEXT bodies with TC86 -S boundary evidence.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_maine_cdg_load.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compatibility entry point for historical CDG module replay commands.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_maine_game_exit.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained shared game_exit and relink OP or MAINE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_maine_shared_asm.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay a maintained ASM module in its OP/MAINE artifact owners.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_mchar_remaining.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay five maintained natural-C++ OP m_char.cpp function bodies.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_menu_sel_update.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP menu_sel_update_and_render and relink OP_MAIN_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_music_remaining.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay natural-C++ OP polygons_update_and_render + musicroom_menu.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_music_update_render_and_flip.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP music_update_render_and_flip and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_nopoly_b_put_hybrid_v826.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TH04 OP nopoly_B_put() from a narrowed cross-game hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_nopoly_free.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP nopoly_B_free and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_nopoly_snap.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP nopoly_B_snap and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_pic_darken.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP pic_darken and relink OP_01_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_place_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Accept the bounded natural OP SCORE_TEXT two-column row renderer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_playchar_menu_initial.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP playchar_menu_put_initial and relink OP_01_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_playchar_title_box_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP playchar_title_box_put and relink OP_01_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_playchar_titles_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP playchar_titles_put and relink OP_01_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_polygon_build.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP polygon_build and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_raise_bg_free.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP raise_bg_free and relink OP_01_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_rank_render.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Accept the bounded natural OP SCORE_TEXT rank renderer with its reachable tail.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_regist_view_menu.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Probe OP's target-reviewed 335-byte registration-view menu function.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_rollup.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP rollup and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_score_codecs_hybrid.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replay OP SCORE codecs with the cross-game-corroborated byte-ROR primitive.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_score_load_both.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile OP's target-reviewed two-column score loader.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_scoredat_recreate.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile OP's target-reviewed SCORE file regeneration function.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_scores_put.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-compile OP's target-reviewed two-column score renderer.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_se_choice_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP se_choice_put and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_setup_menu.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP setup_menu and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_setup_submenus.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay maintained natural C++ for OP setup_bgm_menu + setup_se_menu.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_shottype_menu_initial.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP shottype_menu_put_initial and relink OP_01_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_singleline.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP singleline and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_snd_load_hybrid_v828.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TH04 OP SND_LOAD from complete maintained hybrid source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_snd_se_crossgame_v827.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Replay TH04 OP shared sound functions with TH05 release-target provenance.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_stage_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile OP's maintained high-score stage renderer and relink SCORE_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_start_extra.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP start_extra and relink OP_MAIN_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_start_game.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP start_game and relink OP_MAIN_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_track_put_both.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP track_put_both and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_tracklist_put_both.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP tracklist_put_both and relink OP_MUSIC_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_window_dropdown_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP window_dropdown_put and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_window_rollup_put.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-compile maintained OP window_rollup_put and relink OP_SETUP_TEXT.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_op_zunsoft_natural.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay the four maintained natural-C++ TH04 OP ZUNSOFT functions.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_scroll_driver_natural.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compile the maintained MAI_TEXT scroll driver without ReC98 source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_scroll_tile_ring_natural.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compile the maintained END_TEXT tile-ring helper from checked-in source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_delay_measure.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared delay-until-measure TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_frame_delay.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared frame-delay TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_input_wait.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-relink the maintained shared input-wait TU into OP and MAINE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_kaja.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared KAJA interrupt TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_mmd.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with maintained MMD source plus zero-code alignment.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_mode.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared sound-mode detection TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_pi_load.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared PI load TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_pi_put.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared PI put TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_pmd.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared PMD resident TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_se_reset.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-relink the maintained shared sound-effect reset producer into OP/MAINE.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_vector_math.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-relink the maintained OP/MAINE polar and vector2_at translation unit.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_shared_vram.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-relink OP and MAINE with the maintained shared VRAM-plane TU.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_cfg_init.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Diagnostic A/B ZUN.COM replay with maintained cfg_init source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_compact_master.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-link the TH04 ZUN resident without the external 640-member masters.lib.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_dos_axdx.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's DOS_AXDX library member after local DOS_FREE support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_dos_free.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's DOS_FREE library member after local FILE_READ support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_dos_puts2.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's DOS_PUTS2 library member after local DOS_AXDX support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_append.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FILE_APPEND library member after local FILE_SEEK support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_close.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FILE_FLUSH/FILE_CLOSE library member after local FILE_APPEND support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_create.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FILE_CREATE library member after local DOS_PUTS2 support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_read.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FILE_READ library member with checked-in TASM source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_ropen.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FILE_ROPEN library member after local FILE_CREATE support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_seek.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FILE_SEEK/FILE_TELL library member after local FILE_WRITE support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_state.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FIL data/BSS library member after local VERSION/GRP support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_file_write.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FILE_WRITE library member after local FILE_ROPEN support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_fontopen.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's FONTFILE_OPEN/DOS_ROPEN library member after local file helpers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_graph_clear.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's graph clear library member with checked-in TASM source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_launcher_tails.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-link the two short ZUN launcher tail stubs from maintained ASM.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_main.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Diagnose maintained ZUN resident main source in two isolated TC4J builds.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_memchk_natural.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-build TH04 MEMCHK from natural C++ main plus shared DOS support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_mixed_composite.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Check the local flat ZUN builder with mixed maintained and external inputs.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_ongchk.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-link the maintained ONGCHK library component against TH04 ZUN.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_resdata.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's resident-data library member with checked-in TASM source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_resident_bmode.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replay the TH04 ZUN resident through TC4J's assembly backend.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_runtime_inventory.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Drop unused EMU/MATHS from TH04 ZUN resident and inventory pulled CT modules.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_selector.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-link the maintained 223-byte ZUN launcher selector stub.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_separate_link.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-link the two checked-in ZUN C++ units with pinned external support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_source_composite.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-build maintained ZUN COM parts and verify their mixed flat composite.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_source_only.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Compile maintained ZUN C++ units using only checked-in TH04 source/header text.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zun_version_grp.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-replace ZUN's VERSION and GRP pure-data library members after local FONTOPEN support.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/replay_th04_zuninit_symbolic.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Cold-link the complete ZUNINIT COM component from maintained symbolic ASM.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/review_th04_enemy_es_preservation.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Attest TH04 enemy ES-save sites and independent TH05 analogues.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/review_th04_enemy_script_boundary.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Review the complete MAIN B4M enemy-script code and jump-table boundary.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/review_th04_op_egcrect_boundaries.py",
+    "category": "hardware",
+    "role": "command",
+    "purpose": "Review OP egcrect physical boundaries without granting source exactness.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/roundtrip_diet_target.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Calibrate DIET restore/repack on private copies of pinned packed targets.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/run_th04_maine_diagnostic_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Replay a private OP or MAINE HDI probe under pinned DOSBox-X.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/run_th04_op_diagnostic_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run a private TH04 OP HDI probe under the pinned DOSBox-X emulator.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/run_th04_zun_diagnostic_hdi.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run the disposable TH04-only packed ZUN candidate under PC-98 DOSBox-X.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_bullet_load_trace.py",
+    "category": "hardware",
+    "role": "support",
+    "purpose": "Private real-PC-98 full-pool timing fixture; never part of product source.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_cpu_fault_fixture.asm",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Private real-mode DIV-zero observer calibration; never install in game media.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_main_fault_trace.py",
+    "category": "source-review",
+    "role": "support",
+    "purpose": "Private MAIN gameplay-call and decimal DIV checkpoints to Bochs port E9.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_primary_cpu_fault.gdb",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Run the primary-emulator fault observer with configured symbols/event inputs.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/product_input_fingerprint.py",
+    "category": "build",
+    "role": "support",
+    "purpose": "Compute validated product/cache input identities.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/progress.py",
+    "category": "tracking",
+    "role": "command",
+    "purpose": "Generate the conservative TH04 reconstruction progress snapshot.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/prune_analysis.py",
+    "category": "tracking",
+    "role": "command",
+    "purpose": "Review private retention; default dry run, explicit apply after archive verification.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/replay_th04_main_exact_units.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Cold-replay maintained TH04 MAIN authored units against the pinned target.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/review_th04_main_functions.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Conservatively review TH04 MAIN authored functions against exact byte owners.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/runtime/fixtures/good_ending.asm",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/smoke_ghidra_oracle.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Calibrate the Ghidra database Oracle with independent negative mutations.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/smoke_oracles.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Exercise Oracle dimensions with private TH01-TH05 positive/negative controls.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/smoke_runtime.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest and smoke-test the pinned headless DOSBox-X PC-98 baseline.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/status.py",
+    "category": "tracking",
+    "role": "command",
+    "purpose": "Derive reconstruction status from machine-readable ledgers.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/survey_rec98_outputs.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Survey every locally built ReC98 PC-98 output under strict local policy.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/tool-env.sh",
+    "category": "setup",
+    "role": "support",
+    "purpose": "Source pinned Ghidra/JDK environment paths into the current shell.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/validate_tracking.py",
+    "category": "tracking",
+    "role": "command",
+    "purpose": "Fail closed on malformed reconstruction ledgers and exact claims.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/verify_targets.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Verify private targets against the checked-in manifest and MZ invariants.",
+    "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/windows/Build-TH04.ps1",
+    "category": "build",
+    "role": "command",
+    "purpose": "English Windows-to-WSL DOS build progress, validated fast reuse, normal/cold/launch options.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/windows/build-th04.cmd",
+    "category": "build",
+    "role": "command",
+    "purpose": "Forward command-line arguments and exit status to Build-TH04.ps1.",
+    "purpose_source": "maintained-description"
+  }
+]
