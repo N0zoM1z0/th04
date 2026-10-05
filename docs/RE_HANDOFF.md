@@ -286,6 +286,15 @@ through cleanup. Currentv1296/previous-v1295 rollback, DOS products/saves,
 three fast caches and pendingv1297 outputs remain expanded. Receipt and restore
 commands: `.analysis/cleanup/retired-previews-20261005/receipt.json`.
 
+The follow-up cleanup archives 15 completed `product-20261002/03` probe
+source/build subtrees (18,287 files), with full archive-member SHA-256 readback.
+Net allocated space reclaimed is 79 MiB; parent receipts and logs remain in
+place. All 13,370 protected files retain hashes, including current DOS builds,
+all three x64 fast caches, pending registration rendering, Windows preview and
+rollback, assets and saves. Restore these historical subtrees before consuming
+their old paths. Receipt, archive digest and restore command:
+`.analysis/cleanup/old-product-snapshots-20261005/receipt.json`.
+
 The preceding Staff Roll baseline commit `85049b8` (v1293)
 continues both Good/Bad Ending through the complete Staff Roll and holds at
 verdict entry. MAIN score/run-counter publication, resource release, fresh
