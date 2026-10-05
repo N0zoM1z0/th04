@@ -12,6 +12,14 @@ digests were archived. Re-run the checked-in command or restore the private
 receipt archive rather than treating a missing probe directory as missing
 source evidence.
 
+## Current operation and reuse
+
+- [PC-98 hardware reuse](../PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
+- [DOS build/testing](../DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
+- [Semantic/native status and TODO](../PORTING_STATUS.md) — paused work, components versus published GUI.
+- [Script catalog](../../scripts/README.md) — all tools grouped by task.
+- [Private artifact retention](../ANALYSIS_RETENTION.md) — protected tools/cache/input and archive recovery.
+
 ## Current open questions
 
 Native product-build investigation is active. Use the live ledgers and

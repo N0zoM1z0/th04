@@ -1,162 +1,60 @@
 # Semantic readability before the native port
 
-The `semantic/readable` branch starts from the latest local DOS `main`,
-commit `8d20492`. It improves the maintained source while retaining a DOS
-build as the behavioral baseline for future Linux/Windows x64 work. The
-native port remains a separate product; this branch does not require every
-historical exactness gap to be closed first.
+The DOS `semantic/readable` branch began at `8d20492`. Its purpose was to
+make contracts clear enough for Linux/Windows x64 porting while retaining the
+preceding DOS source as the regression baseline. That stopping condition is
+met for the implemented native owners. General semantic work is paused;
+clarify another bounded owner only when it blocks the port.
 
-Each batch should make one subsystem easier to understand in its source:
+## Completed contracts and evidence
 
-- Name values by meaning and unit: pixel coordinates, packed-byte offsets,
-  paragraph segments, frame ticks, or fixed-point velocities.
-- Explain the state transition, input/output ownership, failure behavior,
-  and visible side effects at the point where they matter.
-- Replace unexplained selectors with named constants and expose algorithm
-  stages without changing their order or translation-unit composition.
-- Preserve 16-bit promotions, signedness, truncation, near/far calls,
-  segment ownership, global layout, and hardware timing. Record surprising
-  behavior before deciding whether the native port should change it.
-- Separate source-derived explanations from target observations, compiler
-  checks, and runtime coverage. A plausible name is not a verified contract.
-
-The validation baseline is the preceding DOS source, not the x64 prototype.
-Use the smallest existing probe that can reject a regression. For each
-naming/comment/constant batch, use dependency-validated incremental compilation and compare the complete linked bytes and ordered relocations
-against the preceding source build. Reserve cold builds for cache uncertainty,
-ABI/layout changes, historical acceptance gates, and stronger replay claims.
-For structural rewrites, also exercise the relevant runtime transitions; build success alone is insufficient. If a
-shared ABI/layout or an accepted historical owner changes, replay all affected
-owners under the repository's Oracle policy. Avoid a repository-wide rename
-or replacing assembly before its observable contract is understood.
-
-## Queue
-
-| Area | Readability objective | Current coverage |
+| Area | Clarified behavior | Focused evidence |
 | --- | --- | --- |
-| PI image decoding | Commands, pixel packing, adaptive history, allocation and returned-pointer ownership | First bounded batch completed; independent DOS decoder and cold before/after equality pass |
-| PAR and CDG/BFNT assets | Archive offsets, compression, plane order, masks, row direction and palette units | PAR and CDG contracts clarified; three full DOS products remain byte-identical; BFNT names, packed pixels, mask/color planes, clipping and lifecycle clarified; independent DOS hashes pass |
-| OP/MAIN/MAINE handoff and score registration | Resident-state transfer, resource lifecycle, page/palette transitions and saved-file writes | MAINE score pipeline and the OP -> MAIN -> MAINE -> OP process/resident handoff are clarified and byte-preserved; user confirms Normal Ending/save and optimized seeded registration/save passes |
-| Segmented memory | Paragraph headers, exact segment handles, hole splitting, coalescing and DOS ownership | Names and lifecycle comments clarified; full fast DOS equality and handle-reuse runtime controls pass |
-| Graphics, input, timing and sound | Separate software state from device/interrupt side effects and preserve update ordering | Input latch/release/press budgets, joystick register protocol and IRQ-versus-polling waits clarified; scroll accumulation, tile-ring refill and two-frame copy handoff clarified; remaining graphics and sound pending |
-| Gameplay and bullet generation | Fixed-point arithmetic, RNG updates, pattern parameters and entity lifetimes | Bullet angle/group/spawn-lifetime, player-shot lifecycle/damage, shared random-ring and process-local LCG ownership, and item drop/motion/scoring batches completed; enemy-script VM opcode, timing, loop, ES operand and template-transfer contracts clarified; broader gameplay remains |
+| PI | Command units, packed pixels/history, DOS allocation, returned-pointer lifetime | [PI](reconstruction/product/TH04_NATIVE_PI_DECODE_V869.md) |
+| PAR/CDG | Archive offsets, compression, plane/mask order and hardware ownership | [PAR](reconstruction/product/TH04_NATIVE_PF_ARCHIVE_V867.md), [CDG](reconstruction/op-maine/TH04_SHARED_CDG_PUT_V799.md) |
+| BFNT | Header, pattern ownership/rollback, packed pixels, clipping and palette units | [Sprites](reconstruction/product/TH04_NATIVE_SUPER_SPRITE_V870.md) |
+| Heap | Paragraph headers, exact handles, splitting/coalescing and DOS reassignment | [Heap](reconstruction/product/TH04_NATIVE_HEAP_V863.md) |
+| Input/timing | Latches, release/press budgets, joystick I/O, IRQ versus polling | [Wait](reconstruction/packed/TH04_SHARED_INPUT_WAIT_V565.md), [VSync](reconstruction/product/TH04_NATIVE_VSYNC_V864.md) |
+| Scroll | Q12.4 accumulation, 400-line wrap, map/tile ring, two-frame copy handoff | [Scroll](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md) |
+| Bullet groups | Byte-angle units, spread/ring member order, synchronous spawn scratch | [Bullets](reconstruction/product/TH04_SEMANTIC_BULLET_GENERATION_V1236.md) |
+| Enemy VM | 49 destinations, compiler-sensitive case order, ES operands, timing/loops/fire | [VM](reconstruction/main/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md) |
+| Shots/items | Lifetime, collision/damage/score ordering, drop/RNG order and overflow | [Shots](reconstruction/main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md), [Items](reconstruction/main/TH04_MAIN_ITEM_SEMANTICS_V1248.md) |
+| Random ring | One 256-byte ring/shared cursor, overlapping words and index-255 boundary | [Ring](reconstruction/main/TH04_MAIN_RANDRING_SEMANTICS_V1244.md) |
+| LCG | Unsigned 32-bit update, process-local stream versus persistent resident seed | [LCG](reconstruction/product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md) |
+| Ranking | Ten sections, insertion/no-entry, name repeat/confirm, clear bits and re-key | [Score](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md) |
+| Process handoff | ZUN resident lifetime, config segment, publish/cleanup and fresh executable | [Handoff](reconstruction/product/TH04_SEMANTIC_PROCESS_HANDOFF_V1242.md) |
 
-This queue describes work to do, not a new completion percentage. Begin the
-next native-port slice once its own source contracts and regression probes
-are adequate; other subsystems can continue on this branch independently.
+Naming/comments/constants retain 16-bit promotions, signedness/truncation,
+near/far ABI, physical case order, translation-unit composition and external
+symbols. Native host arithmetic uses explicit widths; Linux and Windows have
+different `long` widths. Record undefined source behavior before choosing a
+safe representation (for example, big-power's pre-clamp table read).
 
-The first result and replay commands are recorded in
-[the PI decoder note](reconstruction/product/TH04_NATIVE_PI_DECODE_V869.md).
+## What validation establishes
 
-The PAR/CDG batch and its limits are recorded in [the archive note](reconstruction/product/TH04_NATIVE_PF_ARCHIVE_V867.md) and the existing shared CDG ownership notes.
+Each subject note records its own producer and baseline. Dependency-validated
+incremental DOS builds compare complete files and ordered relocations to the
+preceding source. Changed/control objects compare timestamp-normalized and
+link-relevant OMF. PI also has two isolated cold service-harness comparisons;
+input and bullet owners have bounded cold target replays. Runtime service
+probes add pixel, lifecycle or state confidence where recorded.
 
-The BFNT batch and its bounded coverage are recorded in [the sprite note](reconstruction/product/TH04_NATIVE_SUPER_SPRITE_V870.md).
+These are distinct claims: a before/after source comparison is not original
+whole-file exactness. Historical replay attempts for CDG, VM, shots and bullet
+performance encountered missing snapshots or stale scaffold/dependency staging.
+Their rejection is recorded; prior exact states are not promoted or silently
+re-attested. See the notes and `config/evidence.csv` for the failed commands.
 
-The allocator batch is recorded in [the native heap note](reconstruction/product/TH04_NATIVE_HEAP_V863.md).
+## Remaining work
 
-The input/timing batch continues [the input-wait note](reconstruction/packed/TH04_SHARED_INPUT_WAIT_V565.md)
-and [the native VSync note](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
-It retains separate MAIN and OP/MAINE translation units and declaration
-surfaces. The 2026-10-03 fetch/rebase confirms local `main` at `8d20492` is
-already an ancestor; no remote main update or commit rewrite was needed.
-Existing runtime fixes on `semantic/readable` remain in place. This batch
-does not replace the Windows package while the user tests it.
+- Resolve only ambiguities needed for registration scene/persistence, Bomb/
+  death/Continue, Extra, full HUD/audio/config or another specific native owner.
+- Repair old exact replay staging separately if fresh exact acceptance is in
+  scope; do not make it a gate for native functionality.
+- Keep bounded runtime validation for structural rewrites and ABI/layout
+  changes. A successful build or readable name alone proves neither behavior
+  nor original bytes.
 
-The first bullet-generation batch records the one-byte clockwise angle unit,
-group-member angle pipeline, synchronous spawn scratch state, byte-sized group
-provenance and half-turn directional-sprite period. The complete native MAIN
-remains byte-identical, the header ABI probe is OMF-equivalent, and the accepted
-2,139-byte `bullet_a.cpp` owner passes two cold exact replays. A rejected signed
-`% 0x80` form grew TC4J output by five bytes; the retained period constant is
-explicitly unsigned. See [the bullet semantic note](reconstruction/product/TH04_SEMANTIC_BULLET_GENERATION_V1236.md).
-
-The enemy-script VM batch names all 49 switch destinations without changing
-their physical case order. It explains ES-relative unaligned word operands,
-same-frame setup chains, the timed instruction's inclusive final update,
-absolute/backward loops, template transfer and performance-scaled autofire.
-The final complete native MAIN and all ordered relocations equal the preceding
-source build. In one identical compiler context, the pre-batch exact source and
-the semantic source produce byte-identical timestamp-normalized OMF and retain
-the target's 1,680-byte body/table topology. The historical exact replay is
-currently stopped before compilation by an unrelated stale v148 scaffold
-digest, so this batch records source-to-source preservation rather than a fresh
-cold target replay. See [the enemy-script note](reconstruction/main/TH04_MAIN_ENEMY_SCRIPT_NATURAL_V330.md).
-
-The player-shot batch names the collision cache, laser renderer, hit-spark
-phase, hitbox bounds, hit count and total damage. It documents hit-animation
-lifetime, unsigned rectangle tests, per-hit integer damage reduction, Bomb
-ordering, two-column laser eligibility and score-delta ownership. The semantic
-and preceding sources compile to identical timestamp-normalized OMF, and the
-complete native MAIN plus all 1,181 ordered relocations remain identical. A
-fresh target replay is blocked by stale cross-unit staging in the historical
-dependency closure, so the existing v177 exact evidence is retained without a
-new exact claim. See [the player-shot note](reconstruction/main/TH04_MAIN_SHOTS_SEMANTIC_V1239.md).
-
-The scroll batch names the previous/current row-advance slots, previous ring
-row, parallel STD map/speed cursors and graphics-row copy entry while retaining
-their historical external symbols. It explains the Q12.4 scroll accumulator,
-400-scanline wrap, five-row map sections, 24-word visible ring refill and the
-two-frame request handoff around suspended display scrolling. Both changed C++
-owners compile to byte-identical timestamp-normalized OMF, and the complete
-native MAIN plus all 1,181 ordered relocations remain identical. This batch
-uses dependency-validated incremental compilation because no ABI, layout or
-accepted extent changed; the prior exact states remain historical evidence
-rather than a fresh cold-replay claim. See [the scroll integration note](reconstruction/product/TH04_NATIVE_SCROLL_BOX_V858.md).
-
-The MAINE score-registration batch explains the two-character/five-rank file
-layout, single decoded `hi` work buffer, bottom-up score insertion, no-entry
-sentinel, name-keyboard repeat/confirm behavior, clear-bit persistence and the
-ten-section re-key pass performed by every save. Historical DGROUP names remain
-the external ABI; readable aliases preprocess to those same symbols. The build
-recompiled the four edited SCORE roots plus its BGIMAGE control owner, and all
-five timestamp-normalized OMF objects remain byte-identical. The complete
-72,246-byte native MAINE and
-all 663 ordered relocations also remain identical. This incremental replay
-preserves the existing decoded-exact evidence for the four core owners without
-making a new cold target claim. See [the MAINE score note](reconstruction/op-maine/TH04_MAINE_SCORE_CPP_V479.md).
-
-The process-handoff batch documents the ZUN.COM-owned resident block and the
-fresh-process lifecycle of OP, MAIN and MAINE. OP seeds the run contract and
-tears down before `execl()`; MAIN reloads the resident segment, publishes score
-and run counters before cleanup, and selects OP or MAINE; MAINE dispatches the
-Ending route, saves, and starts a fresh OP. Readable private aliases preprocess
-to the historical binary/function symbols. Twelve recompiled/control objects
-across the three products have identical timestamp-normalized OMF and
-link-relevant records. Complete MAIN/OP/MAINE files, headers, program images
-and all 1,181/817/663 ordered relocations remain identical to the pre-edit
-baseline. This is incremental source-to-source preservation, with no fresh
-cold target claim. See [the process-handoff note](reconstruction/product/TH04_SEMANTIC_PROCESS_HANDOFF_V1242.md).
-
-The random-ring batch establishes that `randring1_*` and `randring2_*` are two
-code-segment-local accessor families over one 256-byte ring and one shared
-word cursor. Samples are overlapping little-endian words and advance only the
-cursor's low byte. The index-255 sample deliberately crosses into the adjacent
-cursor byte and therefore has `0xFF` as its high byte before wrapping to zero.
-The source now records descending fill order, AND/MOD range preconditions and
-the absence of a zero-divisor guard. The header dependency closure recompiles
-53 C++ roots plus three edited ASM objects; all 56 timestamp-normalized OMF
-streams and link-relevant records agree with the pre-edit build. The complete
-199,455-byte MAIN and all 1,181 ordered relocations also remain identical. See
-[the random-ring note](reconstruction/main/TH04_MAIN_RANDRING_SEMANTICS_V1244.md).
-
-The shared-LCG batch separates each executable's initialized `random_seed`
-from the persistent resident `rand` seed source. It records TC4J's unsigned
-32-bit modulo update and 15-bit result, OP's menu-frame accumulator, MAIN's
-single startup copy and demo override, cross-Stage call-stream continuity, and
-MAINE's route-dependent verdict/save ordering. The portable contract uses
-explicit `uint32_t` state so Linux and Windows x64 agree despite their different
-`long` widths. Nine changed/control OMF objects and the complete MAIN, OP and
-MAINE executables remain identical to the pre-edit semantic build. See
-[the shared-LCG note](reconstruction/product/TH04_SHARED_RANDOM_LCG_SEMANTICS_V1246.md).
-
-The item-lifecycle batch names miss-drop slots, velocity fields, pool indices,
-base score values, popup color selection and attraction angle. It records the
-automatic-drop half-rate table, the miss routine's discarded but observable
-random draw, last-life override ordering, inclusive overflow table, dream-score
-saturation, Bomb multiplier, asymmetric performance accumulators, deferred
-removal and unsigned pickup rectangle. The portable contract calls out the
-full-power big-item table read that precedes clamping and must be represented
-without an out-of-bounds host access. Twenty C++ dependency roots and one ASM
-owner retain identical normalized/link-relevant OMF, and the complete
-199,455-byte MAIN plus all 1,181 ordered relocations remain identical. See
-[the item semantic note](reconstruction/main/TH04_MAIN_ITEM_SEMANTICS_V1248.md).
+The native done/TODO and currently published preview are in
+[porting status](PORTING_STATUS.md). Detailed batch history remains in subject
+notes, ledgers and Git; it is not an endless semantic queue.

@@ -21,6 +21,18 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
+## Current products and navigation
+
+Development is paused. The standalone DOS game, historical exact acceptance and
+unfinished native x64 port have separate validation scopes. Native source stays
+on `port/modern-64`; the published x64 preview still waits for registration.
+
+- [Done and remaining semantic/x64 work](docs/PORTING_STATUS.md).
+- [DOS build and normal/invincible Windows testing](docs/DOS_BUILD.md).
+- [Reusable PC-98 hardware fixes and measured optimizations](docs/PC98_HARDWARE_REUSE.md).
+- [Script purposes and categorized indexes](scripts/README.md).
+- [Private tools, caches and cleanup recovery](docs/ANALYSIS_RETENTION.md).
+
 ## Build and run
 
 With local inputs and the toolchain installed:
