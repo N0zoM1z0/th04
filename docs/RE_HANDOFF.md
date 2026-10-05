@@ -211,25 +211,43 @@ item claim. See the
 
 Native x64 work is isolated in `port/modern-64`; general semantic expansion
 stays stopped unless a concrete port ambiguity requires it. Latest native code
-commit `46d6406` (v1294) ports MAINE verdict arithmetic, complete consumer
-requests and the input/palette clock.916 original CPU cases at loads1000/2000
-cover all26 commentary rows and integer-width/score/slowdown edges;10 further
-controls execute original fade and keyboard waits. GNU/Wine/UBSan/actualWindows
-agree. Three fast x64 builds each31 products/30CTests pass;30GNU/30UBSan
-products, including GUI, stay raw-identical to v1293.213-file manifest6c846b7f.
-DATA0E53:071A is independent of BB81's toggled BSS3F9C; completion is not
-subtracted. Wait release ORs samples before/after refresh. Next implement a
-real graphics canvas/full-string verdict rendering, original font/page controls
-and resident STD/LCG publication, then congratulations and score registration.
-No GUI join, Windows publication, DOS source or exact acceptance changes.
-Receipt:.analysis/worktrees/port-modern-64/.analysis/port64/verdict-v1294.
+commit `56520f8` (v1295) joins full verdict graphics and MAINE's resident STD/LCG
+publication after the background fade. Staff graphics transfer once, then
+release their old owner; held keys/repaint preserve the wait and pages. A fresh
+confirmation completes the final fade to the congratulations frontier. Original
+scoring/clock controls remain916/10 at loads1000/2000. The original complete
+text0CC7:058C..06EB and gaiji0000:36B6..375E kernels cover527 full-string requests
+and80 assessment cases/all26 commentary rows/all5 ranks/invalid assessment,
+matching160 full pages/80 palette-state outputs. GNU/Wine/UBSan/actualWindows
+agree. All four also pass24 natural menu/boss/Ending/Staff/verdict routes with
+48 verdict pages/24 RGB frames and unchanged576 Ending/48 final Staff pages.
+Actual Windows compares1,344 route files; independent Python rechecks original
+font/scoring outputs. Three fast builds each31 AMD64 products/30CTests pass.
+Runtime-tested216-file manifestfef77a46; release501137c4 differs only in English
+launcher scope text, with executable/verifier/build inputs and93 products bound
+to the tested source. PI decoding is a preceding-v1294 native regression;
+CGROM/GRCG/VSync/audio remain explicit adapters, not physical captures.
 
-Published preview baseline commit `85049b8` (v1293)
+Windows `v1295-verdict` package/root GUI and `start-th04-port64.bat` are published;
+previousv1293 GUI/launcher rollback remains.69 unrelated Windows file hashes
+agree. No auto-launch, DOS source/acceptance/config/save changes. Next implement
+congratulations and score registration/save; Extra/death/Bomb/Continue/full HUD/
+audio/config remain incomplete. Receipt:
+`.analysis/worktrees/port-modern-64/.analysis/port64/verdict-v1295/`.
+The requested development cleanup releases416MiB net; completed new captures
+are also losslessly archived after full member hash readback, releasing1,808MiB
+net plus598 temporary Staff raw expansions. Current GNU80-case page reference
+and all three fast-build caches remain expanded; other capture consumers must
+restore from the documented archives. Root cleanup receipt:
+`.analysis/cleanup/development-media-20261005/receipt.json`; native capture
+restoration: `verdict-v1295/media-archive-receipt.json`.
+
+The preceding Staff Roll baseline commit `85049b8` (v1293)
 continues both Good/Bad Ending through the complete Staff Roll and holds at
 verdict entry. MAIN score/run-counter publication, resource release, fresh
 MAINE generation and LCG stay checked. Staff Roll transfers/releases the old
 Ending owner, runs both backgrounds and radial/diagonal/axis dissolves, frees
-its background/CDG slots and completes its blackout. Verdict, congratulations,
+its background/CDG slots and completes its blackout. At that checkpoint verdict, congratulations,
 registration/save and Extra/death/Bomb/Continue/full HUD/audio/config remain
 incomplete; this is not a complete native port.
 
