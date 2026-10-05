@@ -33,8 +33,8 @@ foreach ($program in Get-ChildItem -LiteralPath $exeDir -Filter '*contracts.exe'
     if ($LASTEXITCODE -ne 0) { throw "Contract failed: $($program.Name): $lines" }
     $contracts += @{ name=$program.Name; sha256=(Get-FileHash -LiteralPath $program.FullName -Algorithm SHA256).Hash.ToLowerInvariant() }
 }
-if ($contracts.Count -ne 31) { throw 'Expected thirty-one native contracts.' }
-Write-Host 'PASS: 31 native AMD64 contracts.'
+if ($contracts.Count -ne 32) { throw 'Expected thirty-two native contracts.' }
+Write-Host 'PASS: 32 native AMD64 contracts.'
 foreach ($kind in @('handoff', 'frame', 'fade')) {
     $expected = (Get-Content -Raw -LiteralPath (Join-Path $control ($kind+'-trace.txt'))) -replace "`r", ''
     if ($kind -eq 'fade') { $lines = @(& $exe --fade 2>&1) }

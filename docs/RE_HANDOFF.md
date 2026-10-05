@@ -20,23 +20,26 @@ pendingv1297 outputs remain expanded. Root receipt and restore commands:
 `.analysis/cleanup/retired-previews-20261005/receipt.json`.
 Historical gzip files may share storage; replace atomically, never in place.
 
-Current implementation batch: [score-file engine](PORT64.md#score-file-engine).
-v1297 adds the196-byte ten-section cipher/load/recreate/save/ranking owner.
-All1288 independent original CPU cases at loads1000/2000 agree on GNU/Wine/
-optimizedUBSan/actualWindows;15 real file-wrapper controls cover append EOF
-and direct/buffered short reads.31 CTests/32 AMD64 products per fast build,
-96 products bound to228-file manifest b9b003db. All62 earlierGNU/UBSan products
-raw-identical;31 Windows products change only allowed PE metadata. A new target
-missed static runtime flags initially; repaired policy placement yields system
-DLL imports only and allWindows tests pass. No DOS source/exact acceptance change.
+Current implementation batch: [registration menu control](PORT64.md#registration-menu-control-owner).
+v1298 owns the logical menu's two tables, insertion/clear flags,51-cell keyboard,
+eight-glyph editing, lock/BYTE-repeat and full save/acknowledgement/cleanup order.
+Whole924-byte original menu0A05:27C4..2B60, alphabet helper, score bodies andLCG
+execute at loads1000/2000;382 cases agree GNU/Wine/optimizedUBSan/actualWindows.
+Graphics/palette/sound/wait/file services remain guarded successful adapters;
+no pixels, fade clocks, host persistence or integrated saving claim.32 CTests/
+33 AMD64 products per fast build bind233-file manifest2f21eb00.64 preceding
+GNU/UBSan files raw-identical;31 Windows files metadata-only. The remaining
+old score-file Windows PE lacks retained metadata/bytes, so its binary continuity
+is unproved;current1288 original controls pass all three consumers instead.
 
-Missing/bad selected checksum recreates/writes all ten tables immediately,
-20 RNG draws, contradicting the old DOS load_for comment. Save uses22 draws,
-rekeys all tables and leaves encoded section9 in the shared work buffer.
-Retain editable render state before save. Current File models successful
-in-memory operations;registration graphics/input/host persistence/fresh OP are
-still next. Receipts: `.analysis/port64/score-file-v1297/`.
-GUI and Windows root launcher remain the verifiedv1296 preview below.
+Input lock retains a changed nonzero chord;complete release clears it. BYTE
+repeat survives accepted repeats/wrap. Esc saves partial name;Shot/Bomb can
+both act in the same iteration. Table/name requests retain pre-save snapshots;
+save leaves encoded section9. Next join actual registration graphics/text,
+host score persistence and fresh OP. GUI/launcher remainv1296, DOS source/
+targets/unit/function acceptance unchanged. Current receipts:
+`.analysis/port64/registration-v1298/`;v1297 engine proof remains below
+`.analysis/port64/score-file-v1297/`. General semantic expansion stays stopped.
 
 Current playable baseline: [congratulations and registration entry](PORT64.md#congratulations-and-registration-entry).
 v1296 transfers both verdict pages once to a real congratulations owner and

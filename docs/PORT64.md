@@ -3718,3 +3718,82 @@ Receipts and exact commands: `.analysis/port64/score-file-v1297`.
 The current GUI/launcher hashes are unchanged. DOS source, target inputs and
 historical unit/function exactness are unchanged. Continue the concrete
 registration owner rather than expanding general semantic work.
+
+## Registration menu control owner
+
+v1298 implements the complete logical registration menu in `registration::Menu`.
+It owns character/rank selection, other/current table snapshots, insertion and
+clear-mask updates, the51-cell gaiji keyboard, eight-character editing, input
+lock/repeat and the save/acknowledgement/resource-release request sequence.
+English source comments explain these lifetimes and the distinction between
+TH04 gaiji codes and host text. Graphics, palette timing, sound, wait0 and host
+persistence still need a scene/backend. The Windows GUI remains v1296 at
+registration entry; no rendered or integrated save-completion claim follows.
+
+`verify_registration.py` attests the whole924-byte original menu at
+MAINE`0A05:27C4..2B60` (payload`C814..CBB0`, SHA-256`7bef6c89...`), including its
+18-byte switch table, and the51-byte keyboard at recovered DGROUP`0E53:082C`.
+Original menu, alphabet-cursor helper, all six score-file bodies and the actual
+LCG execute at loads1000/2000. Table/name drawing, PI/BFNT, sound, palette fades,
+wait0 and successful file calls are guarded adapters. The controls cover the
+logical command/input/file order; they do not prove pixels or fade/wait clocks.
+
+All382 cases agree on GNU, Wine, optimized UBSan and actual Windows. They cover
+three resident character bytes, five ranks, both shots and Turbo settings,
+Good/Bad/Extra/score-only end values, missing/empty/short/trailing files, every
+clear-mask branch, below-table scores, held/inherited/changing/chord input,
+330-refresh navigation holds, eight-glyph entry and all keyboard commands.
+Per-iteration cursor/row/column/lock/BYTE-repeat and complete HI snapshots match;
+full ordered file/data requests and final RNG/draw count/table match. Original
+resident bytes, HI preceding guard and near stack cleanup are checked.
+
+Preserve these original input details when joining the host keyboard:
+
+- A reset sample is ORed with the next sense sample. One released sample can
+  still contain the previous held key. Lock starts at1; a complete release
+  clears it. A different nonzero chord leaves the previous lock in place.
+- The repeat counter is a BYTE, not reset on accepted repeated actions. It
+  unlocks on even values above30 and retains its wrap behavior.
+- Direction bits act independently before Shot/OK, then Bomb, then Cancel.
+  Combined Shot/Bomb can type and erase the next cell in one iteration.
+- Space writes gaiji2; left erases the current cell then moves back, right
+  only moves forward. Typing the eighth glyph selects the explicit Enter cell.
+  Escape saves the partial name; it does not discard the ranking entry.
+
+The non-entry path saves then emits wait0 before resource release/blackout1.
+Rendering requests carry pre-save snapshots because the final work buffer is
+encoded section9. A future scene must consume fades/waits in order and persist
+at the save boundary; calling the logical owner alone does not implement those
+physical effects. Preserve clean page1 for name-background restoration, use a
+separate PC-98 text overlay for reverse attributes, and translate all host
+registration actions explicitly rather than the Ending any-key bridge.
+
+Three incremental fast builds produce33 AMD64 products and pass32 CTests each.
+All64 preceding GNU/UBSan files are raw-identical;31 prior Windows products
+compare to retained v1296 bytes with only allowed PE metadata differences.
+Old PE bytes/metadata for the new v1297 score-file contract were not retained,
+so no complete binary-continuity claim is made for that one executable; all
+three current consumers pass its retained1,288-case original reference instead.
+The new registration Windows contract imports only KERNEL32/msvcrt. Actual
+Windows runs all32 contracts and382 full menu traces; independent Python
+readback checks every output and all99 product/source hashes.
+
+The initial Oracle duplicated an access-page event through its instruction
+observer and inherited OUT hook; a first-case probe reproduces that negative.
+Only the identified development verifier was stopped; removing the duplicate
+observer repairs it. An initial CTest command accidentally passed the new
+contract name as an argument to the old score contract; its usage rejection is
+retained and the focused CMake repair passes all32 tests. Neither negative is a
+game defect. Final233-file manifest:
+`2f21eb008e01c618532aec465e6c5010cb32039bf6d8e502d71b6b7922facca3`.
+Receipts: `.analysis/port64/registration-v1298`. DOS source, targets and historical
+exact/unit/function acceptance are unchanged. Next implement registration
+pixels/text overlay, host score-file persistence and the fresh OP return;
+keep general semantic expansion stopped.
+
+After all consumers pass,30 byte-identical completed score/menu text streams
+share verified hard-linked storage, reclaiming104MiB while retaining every
+path/hash. Independent producers ran before deduplication; this does not create
+reference equality. Use fresh output directories or atomic replacement rather
+than modifying shared trace inodes. `trace-dedup-receipt.json` records every link
+and post-dedup full platform readback passes.

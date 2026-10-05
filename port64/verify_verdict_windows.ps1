@@ -26,7 +26,7 @@ foreach ($pair in @(
     if ((Hash (Join-Path $reference $pair[0])) -ne $pair[1]) { throw "Reference differs: $($pair[0])" }
 }
 $contracts = @(Get-ChildItem -LiteralPath $exeDirectory -Filter 'th04-port64*contracts.exe' | Sort-Object Name)
-if ($contracts.Count -ne 31) { throw "Expected 31 contract executables; found $($contracts.Count)" }
+if ($contracts.Count -ne 32) { throw "Expected 32 contract executables; found $($contracts.Count)" }
 $products = @{}
 foreach ($contract in $contracts) {
     Run $contract.FullName @() (Join-Path $output ($contract.BaseName + '.txt'))
@@ -70,4 +70,4 @@ $result = @{
     platform = 'Actual Windows AMD64 execution'; utc = [DateTime]::UtcNow.ToString('o')
 }
 [IO.File]::WriteAllText((Join-Path $output 'receipt.json'), ($result | ConvertTo-Json -Depth 6), $utf8)
-Write-Host 'Actual Windows verdict: 916 original state/request cases, 10 input/palette clocks and 30 contracts PASS'
+Write-Host 'Actual Windows verdict: 916 original state/request cases, 10 input/palette clocks and 32 contracts PASS'
