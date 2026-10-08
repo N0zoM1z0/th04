@@ -45,6 +45,21 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1307 joins frozen Game Over graphics/TRAM, keyboard ownership and refresh
+pacing to ordinary MAIN. Actual OP selection and authored finite STD enemy
+contact drive20 scenes per GNU/optimized UBSan/actual Windows. Two-load
+original scene/TRAM/score-HUD controls agree on322 complete displays
+(332,304,000 bytes);151 output files agree and34 contracts pass per host.
+105 AMD64 products bind277 current files; original producer and current
+consumer manifests remain distinct. A missing score consumer mutant is
+rejected in60 snapshots. Windows CRLF-only journal differences are repaired
+with explicit binary LF, then fully rechecked.123,744,256 allocated bytes are
+reclaimed with3,926 protected files unchanged. Initial native display/CGROM/
+hardware and life/bomb HUD/audio/DOS score-I/O adapters remain explicit.
+Quit registration→verdict→fresh OP, Bomb pixels/shared palette and complete
+ordinary routes remain; no GUI publication or exact promotion follows.
+Native code/evidence commits `065b56d`/`73dfdec` are on `port/modern-64`.
+
 v1306 adds player death/invincibility rendering and retained MAIN draw requests
 consumed by frontend source. Original relative `0AAF:610D..625B`, helpers and
 rolling kernels at loads1000/2000 agree with GNU/optimized UBSan/actual Windows

@@ -9,6 +9,16 @@ cannot be represented safely. Native executable bytes need not be exact.
 
 ## Completed
 
+- v1307 joins frozen Game Over indexed/TRAM display, held input and its own
+  refresh clock to ordinary MAIN. Actual OP selection and authored finite STD
+  contact drive20 scenes per GNU/optimized UBSan/actual Windows. Two-load
+  original scene/TRAM/score-HUD controls agree on322 complete displays and151
+  host files;34 contracts pass per host.105 products bind277 current files.
+  A missing score consumer mutant is rejected in60 snapshots. Quit score-only
+  MAINE, Bomb pixels/shared palette and full HUD remain; no full-route or GUI
+  publication acceptance follows. Native commits `065b56d`/`73dfdec` retain
+  the code and evidence. This batch reclaims123,744,256 allocated bytes with
+  3,926 protected files unchanged.
 - Semantic contracts: PI/PAR/CDG/BFNT, segmented heap, input/IRQ timing,
   scroll/tile ring, bullet angles/groups, enemy script VM, shots/items,
   process handoff, ranking, random ring and process-local LCG. See
@@ -81,6 +91,8 @@ Native code/evidence commits `a7c096d`/`6945f69` are pushed.
   return to fresh OP. Cover no-entry, Esc, full name, corrupt/missing file,
   both characters and all score sections. Do not overwrite DOS saves.
 - [ ] Complete Bomb, hit/death/lives, game-over and Continue transitions.
+  Core lifecycle and frozen Game Over frontend are joined; finish Bomb
+  graphics/shared palette and Quit registration→verdict→fresh OP.
 - [ ] Port Extra gameplay/boss; a tested Extra postgame dispatch is not Extra play.
 - [ ] Complete HUD, OP score/Music Room/demo/unlock flows, audio, configuration
   and refresh/input integration. Account for deliberate slowdown separately.
