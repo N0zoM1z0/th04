@@ -11,6 +11,7 @@ std::uint16_t input_from_host_actions(std::uint16_t keys) {
         (keys&0x1000u ? 0x2000u : 0) | (keys&0x2000u ? 0x1000u : 0));
 }
 void Lifecycle::update(std::uint16_t keys,bool shift,LifeContext& c) {
+    if(suspended_)throw std::logic_error("player update resumed before Game Over returned");
     auto& s=state_;auto& p=c.movement.mutable_position();
     if(s.invincibility)--s.invincibility;
     if(s.hit) {
@@ -83,7 +84,17 @@ void Lifecycle::miss_update(LifeContext& c) {
     }
     emit(c,LifeKind::game_over);
     if(!c.game_over)throw std::logic_error("last-life path requires game-over scene");
-    s.quit=c.game_over();
+    const auto result=c.game_over();
+    if(result)s.quit=*result;else suspended_=true;
+}
+void Lifecycle::resolve_game_over(std::uint8_t quit) {
+    if(!suspended_)throw std::logic_error("Game Over result has no suspended player call");
+    state_.quit=quit;suspended_=false;
+}
+void Lifecycle::prepare_stage() {
+    if(suspended_)throw std::logic_error("stage change during Game Over");
+    state_.miss_time=0;state_.hit=0;state_.invincibility=64;
+    state_.bombing_disabled=0;state_.scroll_active=1;state_.bombing=0;state_.background=0;
 }
 void Lifecycle::render_bomb(LifeContext& c) {
     auto& s=state_;if(!s.bombing)return;
@@ -96,6 +107,7 @@ void Lifecycle::render_bomb(LifeContext& c) {
             s.palette_backup=s.palette14;s.palette14={240,176,192};
         }
         emit(c,LifeKind::character_bomb);
+        if(c.character_bomb)c.character_bomb(s);
     } else if(frame<226) {
         if(frame==176) {
             emit(c,LifeKind::sound,15);s.scroll_active=1;s.pull_items=0;

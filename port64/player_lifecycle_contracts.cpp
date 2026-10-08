@@ -52,7 +52,7 @@ std::string execute(char op,Fixture& f) {
     s::System shots(shot);p::Lifecycle life(f.life);
     std::vector<p::LifeEvent> events;
     p::LifeContext c{f.score,movement,shots,f.performance,f.minimum,f.credit,f.scroll_line,
-        [&](const auto& e){events.push_back(e);},[&] {return f.game_over;}};
+        [&](const auto& e){events.push_back(e);},[&] {return std::optional<std::uint8_t>(f.game_over);},{}};
     if(op=='U')life.update(f.keys,f.shift,c);
     else if(op=='M')life.miss_update(c);
     else if(op=='B')life.bomb(c);

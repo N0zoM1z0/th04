@@ -3,6 +3,7 @@
 #include "player_shots.hpp"
 #include "item_system.hpp"
 #include <functional>
+#include <optional>
 
 namespace th04::portable::player {
 // The host frontend's X/Enter/Esc masks differ from original MAIN key_det.
@@ -32,9 +33,10 @@ struct LifeContext {
     std::uint8_t minimum=11, credit_bombs=2;
     std::uint16_t scroll_line=0;
     LifeSink sink;
-    // A blocking native scene will join here. Required on the last-life path;
+    // nullopt suspends the caller until resolve_game_over(). Required on the last-life path;
     // a missing consumer must never pretend that game-over completed.
-    std::function<std::uint8_t()> game_over;
+    std::function<std::optional<std::uint8_t>()> game_over;
+    std::function<void(LifeState&)> character_bomb;
 };
 // Original player_update prefix and miss/Bomb state producer. The fire and
 // graphics requests are consumed at their actual call boundaries; shot entity
@@ -43,11 +45,21 @@ class Lifecycle {
 public:
     explicit Lifecycle(LifeState state={}):state_(state) {}
     const LifeState& state() const {return state_;}
+    bool suspended() const {return suspended_;}
+    void resolve_game_over(std::uint8_t quit);
+    void latch_hit(bool hit) {if(hit)state_.hit=1;}
+    void set_invincibility(std::uint8_t value) {state_.invincibility=value;}
+    void set_bombing_disabled(std::uint8_t value) {state_.bombing_disabled=value;}
+    void set_palette14(std::array<std::uint8_t,3> value) {state_.palette14=value;}
+    void set_clear_time(std::uint8_t value) {state_.clear_time=value;}
+    void synchronize_graphics(std::uint16_t tone,std::uint8_t color) {state_.palette_tone=tone;state_.circle_color=color;}
+    void prepare_stage();
     void update(std::uint16_t key_det,bool shift,LifeContext&);
     void miss_update(LifeContext&);
     void bomb(LifeContext&);
     void render_bomb(LifeContext&);
 private:
     LifeState state_;
+    bool suspended_=false;
 };
 } // namespace th04::portable::player

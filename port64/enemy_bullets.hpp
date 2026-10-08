@@ -59,6 +59,7 @@ public:
              bool special=false,bool fixed_speed=false,const Sink& sink={});
     void update(Context context,const Sink& sink={});
     void clear() { if (state_.clear_time<20) state_.clear_time=20; }
+    void set_clear_time(std::uint8_t value) {state_.clear_time=value;}
     void zap() { state_.zap_frame=1; } // Active flag and timer are the same byte.
     void set_zap(std::uint8_t value) { state_.zap_frame=value; }
     // Process-wide special-motion controls survive producer changes. Boss

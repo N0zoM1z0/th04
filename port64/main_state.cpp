@@ -4,7 +4,8 @@
 #include <algorithm>
 
 namespace th04::portable::gameplay {
-State::State(application::State& application):application_(&application) {
+State::State(application::State& application,Mode mode,player::LifeState checkpoint)
+    :application_(&application),life_(checkpoint),mode_(mode) {
     if (application.program() != application::Program::main) {
         throw std::logic_error("live MAIN requires a completed OP handoff");
     }
@@ -52,7 +53,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     gathers_ = gather::System{};
     midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();midboss4_.reset();stage5_.reset();stage6_.reset();stage5_midboss_draws_.clear();
     yuuka5_.reset();yuuka5_active_=false;bad_ending_requested_=false;thick_lasers_=laser::System{};thick_lasers_.initialize();
-    marisa_.reset();marisa_active_=false;reimu_.reset();reimu_active_=false;orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;player_invincibility_=64;circles_=circle::System{};
+    marisa_.reset();marisa_active_=false;reimu_.reset();reimu_active_=false;orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;life_.prepare_stage();circles_=circle::System{};
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
@@ -171,7 +172,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     }
     yuuka5_active_=false;bad_ending_requested_=false;
     stage6_battle_pending_=false;
-    player_invincibility_=64;kurumi_active_=false;elly_active_=false;reimu_active_=false;marisa_active_=false;
+    life_.prepare_stage();kurumi_active_=false;elly_active_=false;reimu_active_=false;marisa_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
@@ -208,20 +209,74 @@ void State::apply_clear_bonus(bool all_clear) {
     // Called at the original bonus position when the blocked frame resumes,
     // before items/gathers/render/clock/score drain complete that same frame.
 }
+void State::publish_boss_graphics() {
+    const auto tone=life_.state().palette_tone;const auto color=life_.state().circle_color;
+    if(yuuka6_active_)yuuka6_->set_graphics(tone,color);
+    else if(yuuka5_active_)yuuka5_->set_graphics(tone,color);
+    else if(marisa_active_)marisa_->set_graphics(tone,color);
+    else if(reimu_active_)reimu_->set_graphics(tone,color);
+    else if(elly_active_)elly_->set_graphics(tone,color);
+    else if(kurumi_active_)kurumi_->set_graphics(tone,color);
+    else if(orange_active_)orange_.set_graphics(tone,color);
+}
+player::LifeContext State::life_context() {
+    constexpr std::uint8_t minimum[]{4,11,20,22,16};
+    player::LifeContext context{score_,player_,shots_,performance_};
+    context.scroll_line=scroll_line_;context.minimum=minimum[rank_];context.credit_bombs=application_->resident().credit_bombs;
+    context.sink=[this](const player::LifeEvent& event) {
+        life_events_.push_back(event);
+        if(event.kind==player::LifeKind::fire)
+            shots_.fire(playchar_,shot_type_,shot::level_for_power(score_.power),player_.position().current,ring_,homing_target_);
+        else if(event.kind==player::LifeKind::miss_items)add_miss_items();
+    };
+    context.game_over=[this]() -> std::optional<std::uint8_t> {
+        if(gameover_)throw std::logic_error("duplicate Game Over call");
+        const auto& resident=application_->resident();
+        gameover_context_.emplace(gameover::Context{score_,scoreboard_,stage_id_,resident.credit_lives,resident.credit_bombs,
+            [this](const gameover::Event& event) {
+                gameover_events_.push_back(event);
+                if(event.kind==gameover::Kind::score_sequence)application_->prepare_main_score();
+                else if(event.kind==gameover::Kind::maine)score_registration_requested_=true;
+                else if(event.kind==gameover::Kind::bad_ending)bad_ending_requested_=true;
+            },[this] {
+                if(!continue_save_)throw std::logic_error("Continue requires a real score store");
+                continue_save_(scoreboard_.digits);
+            }});
+        gameover_=std::make_unique<gameover::Scene>(*gameover_context_,last_input_);
+        return std::nullopt;
+    };
+    context.character_bomb=[this](player::LifeState& state) {
+        bomb::Context context{state,ring_,circles_,std::uint16_t(frames_),std::uint8_t(frames_%4)};
+        bomb_effect_.render(playchar_,context);
+    };
+    return context;
+}
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
-    score_events_.clear();
-    if(next_stage_requested_ || bad_ending_requested_ || good_ending_requested_ || stage6_battle_pending_) return;
+    if(background)scroll_line_=background->scroll_line();
+    score_events_.clear();gameover_events_.clear();last_input_=player::input_from_host_actions(held_input);
+    if(gameover_) {
+        gameover_->advance(player::input_from_host_actions(held_input));
+        if(!gameover_->finished())return;
+        if(gameover_->phase()!=gameover::Phase::continue_run) {
+            if(life_.suspended())life_.resolve_game_over(1);
+            return;
+        }
+        life_.resolve_game_over(0);gameover_.reset();gameover_context_.reset();
+    }
+    if(next_stage_requested_ || bad_ending_requested_ || good_ending_requested_ ||
+       score_registration_requested_ || stage6_battle_pending_) return;
+    const bool resumed_player=player_frame_suspended_;
     // Hold at the genuine next-boss dialog gate until its battle owner joins.
     // STD and the stage midboss callbacks execute normally before it.
-    if(background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background) || stage4_dialog_ready(*background) || stage5_dialog_ready(*background) || stage6_dialog_ready(*background))) return;
+    if(!resumed_player && background && (stage2_dialog_ready(*background) || stage3_dialog_ready(*background) || stage4_dialog_ready(*background) || stage5_dialog_ready(*background) || stage6_dialog_ready(*background))) return;
     const bool resumed=frame_suspended_;
     if(resumed && !dialog_finished_) return;
     enemy::Context context;
     bullet::Context bullet_context;
-    if(resumed) {
+    if(resumed || resumed_player) {
         context=suspended_context_;bullet_context=suspended_bullets_;pull_items=suspended_pull_items_;
     } else {
-        enemy_events_.clear();bullet_events_.clear();midboss_events_.clear();orange_events_.clear();
+        enemy_events_.clear();bullet_events_.clear();midboss_events_.clear();orange_events_.clear();life_events_.clear();
         if(boss_active()) {
             palette_tone_before_frame_=boss_snapshot().palette_tone;
             orange_background_phase_=boss_snapshot().phase;
@@ -237,6 +292,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     };
     midboss::Context midboss_context;
     if(!resumed) {
+        if(!resumed_player) {
         if(stage_ && !boss_active()) run_frames_.standard_tick();
         // STD dispatch precedes player movement; enemies created here can run
         // their first setup/move instructions later in this same frame.
@@ -267,16 +323,35 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             yuuka6_background_.prepare_render(orange_background_phase_,orange_background_frame_,ring_);
             yuuka6_->set_palette_zero(yuuka6_background_.state().palette_zero);
         }
-        if(yuuka5_active_ || yuuka6_active_) { bullets_.set_player_hit(false);thick_lasers_.set_player_hit(0); }
         circles_.update();sparks_.update();
-        player_invincibility_=player::invincibility_after_tick(player_invincibility_);
-        player_.update(held_input, shift);
-        shots_.update((held_input & shot::input_shot) != 0, playchar_, shot_type_, score_.power,
-                      player_.position(), ring_, homing_target_);
-        context.player = player_.position().current;
+        life_.set_clear_time(bullets_.snapshot().clear_time);
+        life_.set_bombing_disabled(boss_active() ? boss_snapshot().bombing_disabled : 0);
+        const bool hit=bullets_.snapshot().player_hit || enemies_.snapshot().player_hit ||
+            thick_lasers_.snapshot().player_hit || (reimu_active_ && reimu_->snapshot().player_hit) ||
+            (marisa_active_ && marisa_->snapshot().player_hit);
+        life_.latch_hit(mode_==Mode::ordinary && hit);
+        bullets_.set_player_hit(false);enemies_.set_player_hit(false);thick_lasers_.set_player_hit(0);
+        if(reimu_active_)reimu_->set_player_hit(0);
+        if(marisa_active_)marisa_->set_player_hit(0);
+        if(boss_active())life_.synchronize_graphics(boss_snapshot().palette_tone,boss_snapshot().circle_color);
+        auto player_context=life_context();
+        life_.update(player::input_from_host_actions(held_input),shift,player_context);
+        bullets_.set_clear_time(life_.state().clear_time);
+        application_->publish_player_statistics(life_.state().misses,life_.state().bombs_used);
+        application_->publish_main_resources(score_.remaining_lives,score_.remaining_bombs);
+        if(life_.suspended()) {
+            suspended_context_=context;suspended_pull_items_=pull_items;
+            player_frame_suspended_=true;return;
+        }
+        }
+        player_frame_suspended_=false;
+        shots_.update_entities(life_.state().options);
+        context.player = player_.position().current;context.performance=performance_;
+        context.bombing=life_.state().bombing!=0;
+        pull_items=pull_items || life_.state().pull_items;
         bullet_context.player=context.player;bullet_context.rank=rank_;bullet_context.performance=performance_;
         bullet_context.frame_mod2=context.frame_mod2;bullet_context.turbo=turbo_;
-        bullet_context.invincibility=player_invincibility_;
+        bullet_context.invincibility=life_.state().invincibility;
         constexpr std::uint16_t graze_scores[]{100,250,400,500,2560};
         bullet_context.graze_score=graze_scores[rank_];
         const auto score_before=bullets_.snapshot().score_delta;
@@ -305,7 +380,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         midboss_context.bullets=bullet_context;
         midboss_context.hit=[&](motion::Point center,motion::Point radius) {
             const auto before=shots_.snapshot().score_delta;
-            const auto result=shots_.hittest(center,radius,{false,false,context.frame_mod2,context.frame_mod4});
+            const auto result=shots_.hittest(center,radius,{life_.state().bombing!=0,false,context.frame_mod2,context.frame_mod4});
             score_.score_delta+=shots_.snapshot().score_delta-before;
             for (unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
             return result.damage;
@@ -339,7 +414,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         }
     } // Prefix executes once even if the dialog suspends this frame.
     if(boss_active()) {
-        if(yuuka6_active_) yuuka6_->set_invincibility(player_invincibility_);else if(yuuka5_active_) yuuka5_->set_invincibility(player_invincibility_);else if(marisa_active_) marisa_->set_invincibility(player_invincibility_);else if(reimu_active_) reimu_->set_invincibility(player_invincibility_);else if(elly_active_) elly_->set_invincibility(player_invincibility_);else if(kurumi_active_) kurumi_->set_invincibility(player_invincibility_);else orange_.set_invincibility(player_invincibility_);
+        publish_boss_graphics();
+        if(yuuka6_active_) yuuka6_->set_invincibility(life_.state().invincibility);else if(yuuka5_active_) yuuka5_->set_invincibility(life_.state().invincibility);else if(marisa_active_) marisa_->set_invincibility(life_.state().invincibility);else if(reimu_active_) reimu_->set_invincibility(life_.state().invincibility);else if(elly_active_) elly_->set_invincibility(life_.state().invincibility);else if(kurumi_active_) kurumi_->set_invincibility(life_.state().invincibility);else orange_.set_invincibility(life_.state().invincibility);
     }
     if(yuuka6_active_ && boss_snapshot().phase==255) {
         // Final Stage has no post-boss dialogue or next-stage departure. The
@@ -392,7 +468,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         boss_context.bullets=bullet_context;boss_context.power=score_.power;
         const auto shot_hit=[&](motion::Point center,motion::Point radius,bool against_boss) {
             const auto before=shots_.snapshot().score_delta;
-            const auto result=shots_.hittest(center,radius,{false,against_boss,context.frame_mod2,context.frame_mod4});
+            const auto result=shots_.hittest(center,radius,{life_.state().bombing!=0,against_boss,context.frame_mod2,context.frame_mod4});
             score_.score_delta+=shots_.snapshot().score_delta-before;
             for(unsigned i=0;i<result.spark_count;++i) sparks_.add_random(result.sparks[i],128,1,ring_);
             return result.damage;
@@ -427,16 +503,20 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         } else if(elly_active_) elly_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
         else if(kurumi_active_) kurumi_->update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
         else orange_.update(boss_context,bullets_,gathers_,sparks_,ring_,sink);
-        player_invincibility_=boss_snapshot().invincibility;
+        life_.set_invincibility(boss_snapshot().invincibility);
         circles_.set_color(boss_snapshot().circle_color);
         score_.score_delta+=boss_snapshot().score_delta-before;
         const auto target=boss_snapshot().homing;
         if (target.x==-15984 && target.y==-15984) homing_target_.reset();else homing_target_=target;
     }
-    item_events_ = items_.update(score_, player_.position().current, pull_items, 0);
+    item_events_ = items_.update(score_, player_.position().current, pull_items, life_.state().miss_time);
     gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
+    if(boss_active())life_.synchronize_graphics(boss_snapshot().palette_tone,boss_snapshot().circle_color);
+    auto bomb_context=life_context();life_.render_bomb(bomb_context);
+    publish_boss_graphics();
+    circles_.set_color(life_.state().circle_color);
     if(yuuka6_active_) {
         if(bullets_.snapshot().player_hit) thick_lasers_.set_player_hit(1);
         yuuka6_foreground_.prepare_render(*yuuka6_,static_cast<std::uint16_t>(frames_),thick_lasers_,yuuka6_entities_);
@@ -484,6 +564,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     score_.score_delta=scoreboard_.delta;score_.remaining_lives=scoreboard_.lives;
     performance_=scoreboard_.performance;
     if(scoreboard_.bullet_clear>bullets_.snapshot().clear_time) bullets_.clear();
+    life_.set_clear_time(bullets_.snapshot().clear_time);
     application_->publish_main_resources(score_.remaining_lives,score_.remaining_bombs);
 }
 

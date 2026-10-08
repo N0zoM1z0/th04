@@ -72,7 +72,7 @@ void replay(char** paths) {
     for(unsigned character=0;character<2;++character) for(unsigned rank:{1u,3u}) {
         application::State application;auto options=application.resident().config;options.rank=rank;
         application.apply_options(options);application.start_normal(static_cast<application::Playchar>(character),application::ShotType::a);
-        gameplay::State main(application);main.load_stage(first);stage::Background background(map0,first);
+        gameplay::State main(application,gameplay::Mode::actor_control);main.load_stage(first);stage::Background background(map0,first);
         for(unsigned tick=0;tick<20000 && !main.next_stage_requested();++tick) {
             if(main.stage1_dialog_ready(background)) main.start_orange_after_dialog();
             if(main.post_boss_dialog_pending()) main.finish_post_boss_dialog();

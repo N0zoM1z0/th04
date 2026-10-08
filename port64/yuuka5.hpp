@@ -52,6 +52,7 @@ public:
     const std::vector<Draw>& draws() const { return draws_; }
     void apply_departure(const transition::Departure& departure);
     void set_invincibility(std::uint8_t value) { state_.boss.invincibility=value; }
+    void set_graphics(std::uint16_t tone,std::uint8_t color) { state_.boss.palette_tone=tone;state_.boss.circle_color=color; }
 private:
     Snapshot state_{};
     std::vector<Draw> draws_;

@@ -2,6 +2,10 @@
 #include "motion_tables.hpp"
 #include "sprite_sheet.hpp"
 #include "stage_background.hpp"
+#include "host_score.hpp"
+#include <filesystem>
+#include <chrono>
+#include <sstream>
 #include <fstream>
 #include <iterator>
 #include <iostream>
@@ -126,6 +130,168 @@ void main_contracts() {
     const auto drops = scene.add_miss_items();
     require(drops.count == 5 && scene.items().spawned() == 6, "live miss spawns use pool and shared ring");
 }
+std::string suspended_fingerprint(const g::State& scene,const a::State& app) {
+    std::ostringstream out;
+    const auto& life=scene.life();const auto& player=scene.player().position();
+    out<<scene.frames()<<' '<<scene.run_statistics().std_frames<<' '<<scene.random_cursor()<<' '
+       <<app.process_random_state()<<' '<<+life.invincibility<<' '<<+life.respawn_time<<' '
+       <<player.current.x<<' '<<player.current.y<<' '<<player.velocity.x<<' '<<player.velocity.y<<' '
+       <<+scene.shots().snapshot().time<<' '<<scene.items().spawned()<<' '
+       <<+scene.bullets().snapshot().clear_time;
+    return out.str();
+}
+void lifecycle_join_contracts(const std::filesystem::path& directory,bool report) {
+    namespace fs=std::filesystem;namespace sf=th04::portable::score_file;
+    namespace go=th04::portable::gameover;
+    // These are explicit player checkpoints. They exercise the real MAIN
+    // suffix and blocking scene, not a claim that a natural route reached it.
+    for(unsigned character=0;character<2;++character) {
+        a::State app;auto options=app.resident().config;options.lives=2;
+        app.apply_options(options);app.start_normal(a::Playchar(character),a::ShotType::a);
+        p::LifeState checkpoint;checkpoint.invincibility=0;checkpoint.hit=1;
+        g::State scene(app,g::Mode::ordinary,checkpoint);
+        scene.add_item({192*16,323*16},i::Type::power);
+        scene.update(0,false);
+        require(scene.life().miss_time==39 && scene.life().respawn_time==71,
+                "ordinary hit arms and advances the real miss prefix");
+        // An item still moves during a miss, but cannot be collected.
+        require(scene.score().items_collected==0,"miss animation blocks item pickup in live MAIN");
+        for(unsigned frame=1;frame<40;++frame)scene.update(0,false);
+        require(scene.life().miss_time==0 && scene.score().remaining_lives==1 &&
+                scene.life().misses==1 && app.resident().miss_count==1 &&
+                scene.player().position().current.y==368*16,"miss decrements lives and publishes counters");
+        require(scene.bullets().snapshot().clear_time==31,"respawn clear advances once in the bullet suffix");
+        for(unsigned frame=0;frame<32;++frame)scene.update(0,false);
+        require(scene.player().position().current.y==304*16 && scene.life().respawn_time==0,
+                "respawn movement completes across real MAIN frames");
+        if(report)std::cout<<"miss character="<<character<<" frames="<<scene.frames()
+            <<" misses="<<+app.resident().miss_count<<" lives="<<+scene.score().remaining_lives<<'\n';
+
+        a::State bomb_app;bomb_app.start_normal(a::Playchar(character),a::ShotType::b);
+        g::State bomb_scene(bomb_app);bomb_scene.set_player_palette({32,64,96});
+        bomb_scene.update(0x800,false);
+        require(bomb_scene.life().bomb_frame==1 && bomb_scene.score().remaining_bombs==1 &&
+                bomb_app.resident().bombs_used==1,"host X invokes Bomb and publishes its real resource use");
+        for(unsigned frame=1;frame<=226;++frame) {
+            const auto before=bomb_scene.random_cursor();bomb_scene.update(0x800,false);
+            if(frame==48)require(bomb_scene.life().scroll_active==0 && bomb_scene.life().background==2 &&
+                bomb_scene.life().palette14==std::array<std::uint8_t,3>{240,176,192} &&
+                !bomb_scene.bomb_effect().draws().empty() && bomb_scene.random_cursor()!=before,
+                "character Bomb dispatch consumes the shared ring at its render boundary");
+            if(frame==176)require(bomb_scene.life().scroll_active==1 && !bomb_scene.life().pull_items &&
+                bomb_scene.life().palette14==std::array<std::uint8_t,3>{32,64,96},
+                "Bomb restores palette and scrolling at frame176");
+        }
+        require(!bomb_scene.life().bombing && bomb_scene.life().palette_tone==100 &&
+                bomb_scene.life().circle_color==13 && bomb_scene.life().bombs_used==1,
+                "held X cannot restart an active Bomb; frame226 restores final state");
+        if(report)std::cout<<"bomb character="<<character<<" frames="<<bomb_scene.frames()
+            <<" used="<<+bomb_app.resident().bombs_used<<" cursor="<<bomb_scene.random_cursor()<<'\n';
+    }
+    for(bool fail:{false,true}) {
+        a::State app;auto options=app.resident().config;options.lives=1;
+        app.apply_options(options);app.start_normal(a::Playchar::reimu,a::ShotType::a);
+        p::LifeState checkpoint;checkpoint.invincibility=0;checkpoint.hit=1;
+        g::State scene(app,g::Mode::ordinary,checkpoint);
+        const auto location=directory/(fail ? "failed" : "continued");
+        sf::HostStore store(location);
+        if(fail) {std::ofstream blocker(location);blocker<<"not a directory";}
+        unsigned calls=0;
+        scene.set_continue_save([&](const th04::portable::score::Digits& old) {
+            ++calls;
+            require(old[0]==0 && scene.score().remaining_lives==1 && scene.life().misses==1,
+                    "Continue persists old score before resetting resources");
+            store.save_continue(0,options.rank,app.resident().stage,options.turbo,old,
+                                [&]{return app.next_process_random();});
+        });
+        for(unsigned frame=0;frame<40;++frame)scene.update(0,false);
+        require(scene.game_over() && scene.frames()==39,"last life suspends inside player_update before its suffix");
+        const auto frozen=suspended_fingerprint(scene,app);
+        for(unsigned tick=0;tick<1000 && scene.game_over()->phase()!=go::Phase::press;++tick) {
+            scene.update(0x20,false);
+            require(frozen==suspended_fingerprint(scene,app),"Game Over held-key clocks cannot advance MAIN state");
+            if(scene.game_over()->phase()==go::Phase::release)break;
+        }
+        require(scene.game_over()->phase()==go::Phase::release,"held acknowledgement waits for release");
+        scene.update(0,false);scene.update(0,false);
+        require(scene.game_over()->phase()==go::Phase::press,"two-sample release reaches fresh press");
+        scene.update(0x20,false);scene.update(0,false);scene.update(0,false);
+        require(scene.game_over()->phase()==go::Phase::menu,"fresh acknowledgement enters Continue menu");
+        bool rejected=false;
+        try {scene.update(0x1000,false);}catch(const fs::filesystem_error&) {rejected=true;}
+        require(calls==1,"Continue consumer called exactly once");
+        if(fail) {
+            require(rejected && scene.frames()==39 && scene.scoreboard().digits[0]==0 &&
+                    store.commits()==0 && !fs::exists(location/"GENSOU.SCR"),
+                    "failed host write rejects Continue before resource and frame reset");
+        } else {
+            require(!rejected && store.commits()==1 && scene.scoreboard().digits[0]==1,
+                    "missing score file is committed at the original writer close");
+            // Save is the sole process-RNG operation while MAIN is blocked.
+            const auto saved_rng=app.process_random_state();const auto saved_ring=scene.random_cursor();
+            while(scene.game_over()) {
+                scene.update(0,false);
+                require(app.process_random_state()==saved_rng && scene.random_cursor()==saved_ring,
+                        "Continue fade/resumed suffix does not repeat miss-drop RNG");
+            }
+            if(report)std::cout<<"resume "<<suspended_fingerprint(scene,app)<<'\n';
+            require(scene.frames()==40 && scene.player().position().current.y==368*16 &&
+                    scene.life().respawn_time==32 && scene.life().invincibility==153 &&
+                    scene.shots().snapshot().time==0,"Continue resumes exactly the interrupted frame suffix");
+            scene.update(0,false);
+            require(scene.frames()==41 && scene.player().position().current.y==366*16 &&
+                    scene.life().respawn_time==31,"the next frame performs the next player prefix once");
+            sf::HostStore restarted(location);
+            require(restarted.file().bytes()==store.file().bytes(),"fresh host instance reads the actual committed file");
+        }
+        if(report)std::cout<<"continue failed="<<fail<<" calls="<<calls<<" commits="<<store.commits()
+            <<" frames="<<scene.frames()<<" credit_digit="<<+scene.scoreboard().digits[0]<<'\n';
+    }
+    // The host wrapper uses MAIN's single-draw cipher, and changes only the
+    // selected section after a complete file already exists.
+    const auto ranked=directory/"ranked";sf::HostStore store(ranked);
+    unsigned draws=0;auto next=[&]() {++draws;return std::uint16_t(draws*257);};
+    th04::portable::score::Digits digits{};digits[7]=9;
+    for(unsigned character=0;character<2;++character)for(unsigned rank=0;rank<5;++rank) {
+        const auto previous=store.file().bytes();const auto before=draws;
+        require(store.save_continue(character,rank,rank==4 ? 6 : 2,true,digits,next)==0,
+                "ranked Continue enters the selected section");
+        require(draws-before==(previous.empty() ? 11u : 1u),"MAIN recreate/save retains one RNG word per key");
+        sf::Section section{};const auto section_index=character*5+rank;
+        std::copy_n(store.file().bytes().begin()+section_index*sf::section_size,sf::section_size,section.begin());
+        require(sf::decode(section)==0,"fresh host Continue section checksum");
+        const std::array<std::uint8_t,8> name{0xac,0xb8,0xb7,0xbd,0xb2,0xb7,0xbe,0xae};
+        require(std::equal(name.begin(),name.end(),section.begin()+sf::names_offset) &&
+                section[sf::digits_offset+7]==0xa9,"saved Continue name and pre-reset digits survive decoding");
+        if(!previous.empty())for(unsigned at=0;at<previous.size();++at)
+            if(at/sf::section_size!=section_index)require(previous[at]==store.file().bytes()[at],
+                "Continue does not re-key an unrelated section");
+    }
+    require(store.commits()==11,"ten ranked saves plus one recreate close");
+    const auto before=store.file().bytes();const auto before_draws=draws;
+    require(store.save_continue(0,1,0,false,digits,next)==sf::no_entry &&
+            store.file().bytes()==before && store.commits()==11 && draws==before_draws,
+            "non-Turbo loads without saving an existing complete score file");
+    if(report)std::cout<<"sections=10 commits="<<store.commits()<<" rng_draws="<<draws<<" non_turbo=read_only\n";
+
+    p::LifeState final_checkpoint;final_checkpoint.miss_time=1;final_checkpoint.respawn_time=33;
+    // One-credit Final Stage checkpoint bypasses Game Over entirely.
+    a::State bad_app;auto options=bad_app.resident().config;options.lives=1;
+    bad_app.apply_options(options);bad_app.start_normal(a::Playchar::marisa,a::ShotType::b);
+    for(unsigned stage=0;stage<5;++stage)bad_app.advance_main_stage();
+    bad_app.publish_main_resource_stage(5);
+    g::State bad(bad_app,g::Mode::ordinary,final_checkpoint);bad.update(0,false);
+    require(bad.bad_ending_requested() && bad.frames()==0 && bad.game_over()->ticks()==0,
+            "Final Stage last life requests Bad Ending without menu or frame tail");
+    a::State quit_app;quit_app.apply_options(options);quit_app.start_normal(a::Playchar::reimu,a::ShotType::a);
+    g::State quit(quit_app,g::Mode::ordinary,final_checkpoint);quit.update(0,false);
+    while(quit.game_over()->phase()!=go::Phase::press)quit.update(0,false);
+    quit.update(0x20,false);quit.update(0,false);quit.update(0,false);quit.update(0x2000,false);
+    for(unsigned tick=0;tick<1000 && !quit.score_registration_requested();++tick)quit.update(0,false);
+    require(quit.score_registration_requested() && quit.frames()==0 &&
+            quit_app.resident().end_sequence==a::EndSequence::score,"Quit publishes score route after blackout without MAIN suffix");
+    if(report)std::cout<<"quit score_route=1 final_stage_bad=1 main_frames=0\n";
+}
 void tile_contracts() {
     std::vector<std::uint8_t> bytes(54+128,0);
     bytes[0]='M';bytes[1]='P';bytes[2]='T';bytes[3]='N';
@@ -204,6 +370,16 @@ int main(int argc, char** argv) {
         }
         return 0;
     }
+    if(argc==3 && std::string(argv[1])=="--lifecycle-join") {
+        const std::filesystem::path directory(argv[2]);
+        if(std::filesystem::exists(directory))throw std::runtime_error("lifecycle output must be fresh");
+        std::filesystem::create_directories(directory);lifecycle_join_contracts(directory,true);return 0;
+    }
+    const auto temporary=std::filesystem::temp_directory_path()/
+        ("th04-lifecycle-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+    if(!std::filesystem::create_directory(temporary))throw std::runtime_error("cannot reserve lifecycle contract directory");
+    struct Cleanup {std::filesystem::path path;~Cleanup(){std::error_code error;std::filesystem::remove_all(path,error);}} cleanup{temporary};
+    lifecycle_join_contracts(temporary,false);
     motion_contracts();pool_contracts();main_contracts();sprite_contracts();tile_contracts();
     std::cout << "TH04 live MAIN contracts: PASS motion=Q12.4 player=HELD_KEYS items=32 sprites=BFNT pointer_bits=64\n";
 }

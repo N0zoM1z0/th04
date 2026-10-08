@@ -103,6 +103,12 @@ void State::publish_main_resources(std::uint8_t lives,std::uint8_t bombs) {
     require_program(Program::main);
     resident_.remaining_lives=lives;resident_.remaining_bombs=bombs;
 }
+void State::publish_player_statistics(std::uint8_t misses,std::uint8_t bombs) {
+    require_program(Program::main);resident_.miss_count=misses;resident_.bombs_used=bombs;
+}
+void State::prepare_main_score() {
+    require_program(Program::main);resident_.end_sequence=EndSequence::score;
+}
 void State::add_stage_graze(std::uint16_t amount) {
     require_program(Program::main);
     resident_.graze=static_cast<std::uint16_t>(resident_.graze+amount);

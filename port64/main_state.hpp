@@ -28,16 +28,24 @@
 #include "score.hpp"
 #include "stage_background.hpp"
 #include "run_statistics.hpp"
+#include "player_bomb.hpp"
+#include "gameover.hpp"
 #include <memory>
 
 namespace th04::portable::gameplay {
+// Older actor-only controls intentionally omit hit consumption. Ordinary
+// gameplay always uses the real lifecycle; this mode is explicit in probes.
+enum class Mode {ordinary,actor_control};
 // Live MAIN owns STD waves, enemies, player motion, shots, bullets,
 // sparks, gather circles, items and the Stage1 through Stage4 midbosses.
-// Bombs, player death and the remaining HUD will join this same owner;
-// absent systems do not generate substitute enemies or scripted fake scores.
+// Player lifecycle and blocking Game Over share this owner; graphics and
+// the remaining HUD are separate frontend consumers.
+// Absent systems do not generate substitute enemies or scripted fake scores.
 class State {
 public:
-    explicit State(application::State& application);
+    // Explicit replay checkpoint; ordinary launches use the default.
+    explicit State(application::State& application,Mode mode=Mode::ordinary,
+                   player::LifeState player_checkpoint={});
     void update(std::uint16_t held_input, bool shift, bool pull_items = false,
                 motion::Subpixel scroll_delta = 0,stage::Background* background=nullptr);
     void load_stage(const stage::Program::Bytes& standard);
@@ -107,7 +115,16 @@ public:
     const orange::Snapshot& boss_snapshot() const { return yuuka6_active_ ? yuuka6_->snapshot().boss : (stage6_ ? stage6_->boss : (yuuka5_active_ ? yuuka5_->snapshot().boss : (stage5_ ? stage5_->boss : (marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot()))))))); }
     const std::vector<orange::Draw>& boss_draws() const { return marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }
     const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
-    std::uint8_t invincibility() const { return player_invincibility_; }
+    std::uint8_t invincibility() const { return life_.state().invincibility; }
+    const player::LifeState& life() const {return life_.state();}
+    const bomb::Effect& bomb_effect() const {return bomb_effect_;}
+    const std::vector<player::LifeEvent>& life_events() const {return life_events_;}
+    const std::vector<gameover::Event>& gameover_events() const {return gameover_events_;}
+    const gameover::Scene* game_over() const {return gameover_.get();}
+    bool score_registration_requested() const {return score_registration_requested_;}
+    void set_continue_save(std::function<void(const score::Digits&)> save) {continue_save_=std::move(save);}
+    void set_player_palette(std::array<std::uint8_t,3> color) {life_.set_palette14(color);}
+    Mode mode() const {return mode_;}
     unsigned slowdown() const {
         const unsigned boss=boss_active() ? boss_snapshot().slowdown : 1;
         return boss>bullets_.snapshot().slowdown ? boss : bullets_.snapshot().slowdown;
@@ -153,6 +170,9 @@ public:
     item::MissSpawnResult add_miss_items();
 
 private:
+    player::LifeContext life_context();
+    void publish_boss_graphics();
+    std::uint16_t scroll_line_=0;
     FrameCounts run_frames_;
     std::uint32_t observed_frame_=0;
     void apply_clear_bonus(bool all_clear=false);
@@ -198,7 +218,14 @@ private:
     circle::System circles_{};
     bool orange_active_=false,post_boss_dialog_pending_=false;
     bool kurumi_active_=false;
-    std::uint8_t player_invincibility_=64;
+    player::Lifecycle life_{};
+    bomb::Effect bomb_effect_{};
+    Mode mode_=Mode::ordinary;
+    std::uint16_t last_input_=0;
+    bool player_frame_suspended_=false,score_registration_requested_=false;
+    std::vector<player::LifeEvent> life_events_;
+    std::vector<gameover::Event> gameover_events_;
+    std::function<void(const score::Digits&)> continue_save_;
     bonus::Context bonus_context_{};
     std::optional<bonus::Result> clear_bonus_;
     std::int16_t palette_tone_before_frame_=100;
@@ -223,5 +250,7 @@ private:
     item::EnemyDropSequence drops_{};
     item::UpdateResult item_events_{};
     std::uint32_t frames_ = 0;
+    std::optional<gameover::Context> gameover_context_;
+    std::unique_ptr<gameover::Scene> gameover_;
 };
 } // namespace th04::portable::gameplay

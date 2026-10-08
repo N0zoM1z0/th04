@@ -45,6 +45,7 @@ public:
     void apply_departure(const transition::Departure&);
     void set_palette_zero(std::array<std::uint8_t,3> value) { state_.boss.palette_zero=value; }
     void set_invincibility(std::uint8_t value) { state_.boss.invincibility=value; }
+    void set_graphics(std::uint16_t tone,std::uint8_t color) { state_.boss.palette_tone=tone;state_.boss.circle_color=color; }
     const std::vector<Draw>& draws() const { return draws_; }
 private:
     Snapshot state_{};

@@ -103,6 +103,8 @@ public:
     void start_next_demo();
 
     void publish_main_resources(std::uint8_t lives,std::uint8_t bombs);
+    void publish_player_statistics(std::uint8_t misses,std::uint8_t bombs);
+    void prepare_main_score();
     void add_stage_graze(std::uint16_t);
     void advance_main_stage();
     // Resource replacement happens inside the current MAIN process.

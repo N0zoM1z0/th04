@@ -1134,11 +1134,13 @@ public:
         const PiImage& title_background, const CdgSheet& numerals,
         const CdgSheet& labels, const CdgSheet& cursors,
         const PiImage& selection_background, const CdgSheet& portraits,
-        const MainAssets* main_assets = nullptr
+        const MainAssets* main_assets = nullptr,
+        gameplay::Mode mode=gameplay::Mode::ordinary
     ) : title_background_(title_background), numerals_(numerals), labels_(labels),
         cursors_(cursors), selection_background_(selection_background),
         portraits_(portraits), frame_(render()) {
-        assets_=main_assets;
+        assets_=main_assets;mode_=mode;
+        if(mode_==gameplay::Mode::actor_control)std::cout<<"MAIN fixture mode=actor-control (hit consumption disabled)\n";
         if (main_assets && !main_assets->reimu.empty()) {
             sprites_ = std::make_unique<MainSprites>(*main_assets);
         }
@@ -1320,6 +1322,7 @@ public:
                 auto script=std::make_unique<dialog::Script>(next->assets.dialog_scripts[unsigned(application_.resident().playchar)]);
                 main_->prepare_next_stage_actors(next->assets.standard);
                 sprites_->install_stage(std::move(next));script_=std::move(script);
+                main_->set_player_palette({sprites_->palette.palette[42],sprites_->palette.palette[43],sprites_->palette.palette[44]});
                 loaded_stage_=next_id;post_started_=post_finished_=false;
                 application_.publish_main_resource_stage(static_cast<std::uint8_t>(next_id));
             }
@@ -1368,7 +1371,7 @@ public:
                 // Stage6 frees MAP/STD before the final battle. Its boss
                 // background owns subsequent updates; a stopped, released
                 // map must never be advanced or reconstructed on repaint.
-                if(!sprites_->background.streams_released()) sprites_->background.update();
+                if(!sprites_->background.streams_released()) sprites_->background.update(main_->life().scroll_active!=0);
             }
             if(continue_ending_ && (main_->good_ending_requested() || main_->bad_ending_requested())) {
                 const auto sequence=main_->good_ending_requested() ? application::EndSequence::good : application::EndSequence::bad;
@@ -1433,8 +1436,15 @@ public:
                 if(!sprites_ && assets_ && !assets_->reimu.empty())
                     sprites_=std::make_unique<MainSprites>(*assets_);
                 if (sprites_) {
-                    main_ = std::make_unique<gameplay::State>(application_);
+                    main_ = std::make_unique<gameplay::State>(application_,mode_);
+                    if(score_store_)main_->set_continue_save([this](const auto& digits) {
+                        const auto& r=application_.resident();
+                        score_store_->save_continue(std::uint8_t(r.playchar),r.stage==6 ? 4 : r.config.rank,
+                            r.stage,r.stage==6 || r.config.turbo,digits,
+                            [this] {return application_.next_process_random();});
+                    });
                     main_->load_stage(sprites_->standard);
+                    main_->set_player_palette({sprites_->palette.palette[42],sprites_->palette.palette[43],sprites_->palette.palette[44]});
                     script_=std::make_unique<dialog::Script>(sprites_->scripts[unsigned(result.playchar)]);
                 }
                 std::cout << "MAIN handoff playchar="
@@ -1548,6 +1558,7 @@ private:
     }
 
     const MainAssets* assets_=nullptr;
+    gameplay::Mode mode_=gameplay::Mode::ordinary;
     bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
     std::unique_ptr<maine::Ending> ending_;
     std::unique_ptr<registration::Scene> registration_;
@@ -2177,7 +2188,7 @@ void run_title(
     }
     if (!main_screenshot.empty()) {
         FrontEnd front_end(background, numerals, labels, cursors,
-                           selection_background, portraits, &main_assets);
+                           selection_background, portraits, &main_assets,gameplay::Mode::actor_control);
         front_end.input(menu::Input::confirm);
         front_end.input(menu::Input::confirm);
         front_end.input(menu::Input::confirm);
@@ -2200,7 +2211,7 @@ void run_title(
     if (!shooting_screenshots.empty()) {
         for (unsigned character=0;character<2;++character) for (unsigned type=0;type<2;++type) {
             FrontEnd front_end(background,numerals,labels,cursors,
-                               selection_background,portraits,&main_assets);
+                               selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             front_end.input(menu::Input::confirm);
             if (character) front_end.input(menu::Input::right);
             front_end.input(menu::Input::confirm);
@@ -2222,7 +2233,7 @@ void run_title(
     if (!combat_screenshots.empty()) {
         for (unsigned character=0;character<2;++character) {
             FrontEnd front_end(background,numerals,labels,cursors,
-                               selection_background,portraits,&main_assets);
+                               selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             front_end.input(menu::Input::confirm);
             if (character) front_end.input(menu::Input::right);
             front_end.input(menu::Input::confirm);
@@ -2238,7 +2249,7 @@ void run_title(
                       << " score=" << state.awarded_score_units() << " power=" << +state.score().power
                       << " screenshot=" << path << '\n';
             FrontEnd barrage(background,numerals,labels,cursors,
-                             selection_background,portraits,&main_assets);
+                             selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             for (unsigned i=0;i<3;++i) barrage.input(menu::Input::down);
             barrage.input(menu::Input::confirm);
             barrage.input(menu::Input::right);barrage.input(menu::Input::right);
@@ -2261,7 +2272,7 @@ void run_title(
     }
     if (!midboss_screenshots.empty()) {
         for (unsigned character=0;character<2;++character) for (unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.input(menu::Input::confirm);
             if (character) scene.input(menu::Input::right);
             scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
@@ -2288,7 +2299,7 @@ void run_title(
     }
     if (!orange_screenshots.empty()) {
         for (unsigned lunatic=0;lunatic<2;++lunatic) for (unsigned character=0;character<2;++character) for (unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             if (lunatic) {
                 for (unsigned i=0;i<3;++i) scene.input(menu::Input::down);
                 scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
@@ -2342,7 +2353,7 @@ void run_title(
     }
     if (!dialog_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
                 scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);scene.input(menu::Input::cancel);
@@ -2405,7 +2416,7 @@ void run_title(
     }
     if (!stage2_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.enable_stage2();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
@@ -2473,7 +2484,7 @@ void run_title(
     }
     if (!kurumi_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.enable_kurumi();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
@@ -2545,7 +2556,7 @@ void run_title(
     }
     if (!stage3_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.enable_stage3();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
@@ -2609,7 +2620,7 @@ void run_title(
     }
     if (!elly_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.enable_elly();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
@@ -2684,7 +2695,7 @@ void run_title(
     }
     if (!stage4_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned character=0;character<2;++character) for(unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.enable_stage4();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
@@ -2754,7 +2765,7 @@ void run_title(
     }
     if(!reimu_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned shot_type=0;shot_type<2;++shot_type) for(unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.enable_reimu();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
@@ -2818,7 +2829,7 @@ void run_title(
     }
     if(!marisa_screenshots.empty()) {
         for(unsigned lunatic=0;lunatic<2;++lunatic) for(unsigned shot_type=0;shot_type<2;++shot_type) for(unsigned shooting=0;shooting<2;++shooting) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);
             scene.enable_marisa();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
@@ -2888,7 +2899,7 @@ void run_title(
     }
     if(!stage5_screenshots.empty()) {
         for(unsigned character=0;character<2;++character) for(bool lunatic:{false,true}) for(unsigned shot_type=0;shot_type<2;++shot_type) for(bool shooting:{false,true}) {
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);scene.enable_stage5();
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);scene.enable_stage5();
             if(lunatic) {
                 for(unsigned i=0;i<3;++i) scene.input(menu::Input::down);
                 scene.input(menu::Input::confirm);scene.input(menu::Input::right);scene.input(menu::Input::right);
@@ -2951,7 +2962,7 @@ void run_title(
         // No seeded boss phase, forced HP, synthetic score or stage skip.
         for(unsigned character=0;character<2;++character) for(unsigned difficulty:{0u,1u,3u}) for(unsigned shot_type=0;shot_type<2;++shot_type) for(bool shooting:{false,true}) {
             if(difficulty==0 && ending_screenshots.empty() && (sixth_route || shot_type || !shooting)) continue;
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets);scene.enable_yuuka5();if(sixth_route)scene.enable_stage6();
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);scene.enable_yuuka5();if(sixth_route)scene.enable_stage6();
             if(difficulty!=1) {
                 for(unsigned i=0;i<3;++i)scene.input(menu::Input::down);
                 scene.input(menu::Input::confirm);

@@ -116,6 +116,7 @@ class System {
 public:
     explicit System(Snapshot initial={}):state_(initial) {}
     const Snapshot& snapshot() const { return state_; }
+    void set_player_hit(bool value) {state_.player_hit=value;}
     bool add(stage::Spawn spawn,Context context,randring::SharedRandomRing& random);
     void update(const stage::Program& program,Context context,randring::SharedRandomRing& random,
                 shot::System& shots,const Sink& sink);

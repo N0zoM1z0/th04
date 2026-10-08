@@ -71,6 +71,14 @@ void HostStore::apply(const Operation& op) {
         opened_=false;dirty_=false;break;
     }
 }
+Byte HostStore::save_continue(Byte character,Byte rank,Byte stage,bool turbo,
+                              const score::Digits& digits,const Random& random) {
+    const auto start=file_.operations().size();
+    Section section{};
+    const auto place=continue_main(section,file_,character,rank,stage,turbo,digits,random);
+    for(auto at=start;at<file_.operations().size();++at)apply(file_.operations()[at]);
+    return place;
+}
 void HostStore::commit() {
     fs::create_directories(path_.parent_path());
     // create_directory reserves our temporary namespace atomically. Never
@@ -90,8 +98,9 @@ void HostStore::commit() {
         output.flush();require(bool(output),"cannot write native score temporary file");
         output.close();require(bool(output),"cannot close native score temporary file");
 #ifdef _WIN32
-        require(MoveFileExW(data.c_str(),path_.c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH)!=0,
-                "cannot replace native score file");
+        if(!MoveFileExW(data.c_str(),path_.c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH))
+            throw std::runtime_error("cannot replace native score file (Win32 error "+
+                                     std::to_string(GetLastError())+")");
 #else
         fs::rename(data,path_);
 #endif

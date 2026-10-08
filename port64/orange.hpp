@@ -72,6 +72,7 @@ public:
     void prepare_render(std::uint16_t frame);
     void apply_departure(const transition::Departure&);
     void set_invincibility(std::uint8_t value) { state_.invincibility=value; }
+    void set_graphics(std::uint16_t tone,std::uint8_t color) { state_.palette_tone=tone;state_.circle_color=color; }
     const std::vector<Draw>& draws() const { return draws_; }
 private:
     Snapshot state_{};
