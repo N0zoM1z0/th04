@@ -6,6 +6,12 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Verified frontier
 
+- v1304 adds Game Over TRAM rendering. Actual gaiji/ANK/wipe/black stores at
+  original loads1000/2000 agree with GNU/optimized UBSan/actual Windows on200
+  complete indexed/TRAM/RGB snapshots. All158 prior registration snapshots
+  still agree on all three hosts;34 contracts pass per host.105 AMD64 products
+  bind267 files. Graphics/palette/CGROM/video-policy adapters remain explicit;
+  live MAIN lifecycle, suspension and Continue host saving are the next join.
 - v1303 adds character Bomb pictures, BB tiles and retained48-star effects.
   Original MAIN at loads1000/2000 agrees with GNU/optimized UBSan/actual Windows:
   1,236 state cases/2,252 records and294 pixel cases/548 complete screens.
@@ -39,8 +45,8 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Next owners
 
-1. Add Game Over TRAM rendering, then join the verified Bomb graphics and
-   tested player lifecycle, scene and MAIN Continue save to live MAIN. Suspend
+1. Join the verified Game Over TRAM and Bomb graphics with the tested player
+   lifecycle, scene and MAIN Continue save to live MAIN. Suspend
    at the last-life call and resume its suffix once; publish real counters.
 2. Extra, full HUD, OP auxiliary flows, unlocks, audio/configuration.
 3. Actual Linux/Windows complete routes, persistence/restart and dense Lunatic
@@ -80,6 +86,16 @@ star-only fixture omitted caller GRCG setup; actual1666/1672 restores equality.
 Final pixels are compressed, and Windows hashes binary stdout without a raw dump.
 This batch retires8 superseded streams, reclaiming13,643,776 allocated bytes;
 2,379 protected source/cache/input/final-reference files remain unchanged.
+
+Latest Game Over graphics root: `.analysis/port64/gameover-render-v1304/`;
+`platform-review.json` binds267 files to manifest
+`7a25a243535773ce3a5bd9eb22cf898511e87cb3daafec96ace8deaae8ab6345`.
+Use `verify_gameover_render.py` / `verify_gameover_render_windows.ps1` with fresh
+outputs. All original TRAM stores and FAR returns execute; RGB uses pinned
+emulator video policy. Retained v1302 scene requests are dependency/hash-bound.
+Registration captures are gzip/readback-compacted before removing raw outputs.
+`cleanup-receipt.json` distinguishes GNU/UBSan allocated reclamation from
+Windows retired logical bytes. Final references and three active caches stay.
 
 Completed captures share immutable hard-linked storage after independent
 production/full readback. The early 90-snapshot development pair is archived;

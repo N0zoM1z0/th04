@@ -13,7 +13,7 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
 - Live source frontier: v1300 ordered registration scene and separate host score save,
   fresh OP/second MAIN. 30 seeded frontend fixtures on GNU/optimized UBSan/actual
   Windows produce 112 identical files. Each host passes 33 contracts.
-- Three fast builds have 34 AMD64 products each. Source manifest
+- v1300 acceptance had 34 AMD64 products per fast build. Source manifest
   `635698a758e590316b03ebd4d4e45ee222bff3b90cb649e651a2df2af1aa1f58`
   binds 245 implementation/verifier/launcher files. Original score (1,288), menu
   (382), graphics (158 full snapshots) and fade (35+18 refreshes) controls pass.
@@ -38,6 +38,12 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
   actual Windows. Current105 products bind263 files, manifest
   `c0fbe950be3e6f7a4bf794ea357d0c92d6d1859e8c4684296e77137b47d11751`.
   Live MAIN still needs lifecycle/Bomb/Game Over/Continue integration.
+- v1304 adds the Game Over text renderer:200 complete indexed/TRAM/RGB
+  snapshots agree against actual original TRAM instructions at two loads;
+  GNU/optimized UBSan/actual Windows retain all158 registration captures and
+  pass34 contracts each.105 current products bind267 files, manifest
+  `7a25a243535773ce3a5bd9eb22cf898511e87cb3daafec96ace8deaae8ab6345`.
+  Live MAIN suspension, lifecycle/Bomb dispatch and Continue saving remain.
 
 ## Remaining owners
 
@@ -62,6 +68,7 @@ Current caches: `.analysis/port64/{linux,windows,ubsan}-live-v1251`.
 Current readback: `.analysis/port64/registration-join-v1300/platform-review.json`.
 Latest component readback: `.analysis/port64/gameover-v1302/platform-review.json`.
 Latest Bomb readback: `.analysis/port64/bomb-v1303/platform-review.json`.
+Latest Game Over graphics: `.analysis/port64/gameover-render-v1304/platform-review.json`.
 Use fresh outputs. Keep DOS images/saves, pinned inputs, tools and cache closures.
 Periodic cleanup now retires failed/superseded streams and deduplicates verified
 immutable captures. v1302 reclaimed 980,566,016 allocated bytes with full hash

@@ -542,3 +542,75 @@ then suspend live MAIN at its actual last-life boundary, save Continue before
 resetting resources, and resume the remaining frame once. Extra, full HUD/OP,
 audio/configuration and complete natural route/performance validation remain
 in the full goal; all launches remain muted.
+
+## Game Over TRAM rendering
+
+v1304 adds `gameover::Renderer` and extends the existing registration TextPlane
+with retained initial WORD banks and bounded ANK writes. Game Over owns no new
+actor update: the renderer receives frozen indexed graphics/palette, applies
+ordered TRAM requests and composes the scene's tone. Repainting consumes const
+state and does not advance its clock or any RNG. This remains a component;
+its scene, player lifecycle, Bomb dispatch and Continue host save have not
+joined live MAIN. All runs are silent and open no audio device.
+
+Pinned MAIN target/file/MZ checks and the root live database attestation pass;
+canonicality remains candidate-local-attested. Original relative
+`0000:1B0C..1BA6` (gaiji putc/puts), `229E..2368` (ANK putc/puts) and
+`0AAF:625B..62B3` (playfield wipe/black) execute at loads1000/2000, with explicit
+DS8000/SS7000 and DATA0768=A000 text segment adapters. Every character and
+attribute store and the original FAR return instructions execute. No return
+adapter or target code patch is used by this new TRAM control.
+
+Wipe and black cover rows1..23 and columns4..51 only; they preserve margins and
+HUD cells. Both write character0020, paired respectively with attribute00E1
+and0005. Gaiji retains both half-cell codes/attributes, including column79
+spill and overlapping pairs. Game Over's two-space ANK erasure is a separate
+operation. Text colors/reverse masks are independent of analog graphics tone.
+RGB composition uses hash-pinned DOSBox-X video policy and supplied FREECG98;
+frozen graphics/palette and CGROM are explicit adapters, not original physical
+video. General Shift-JIS console conversion is outside this bounded owner.
+
+There are200 complete640x400 indexed/TRAM/RGB snapshots,206,400,000 compared
+bytes per host. Each original load performs105,210 text calls and511,500 TRAM
+stores. The controls cover256 gaiji, ASCII1..127, zero/single glyph behavior,
+NUL-terminated strings, half-cell overlap/spill, eight attributes, tones0..200,
+playfield-only wipe/black and seven retained scene request sequences. These
+scene requests consume the earlier64-case/two-load v1302 original clock trace;
+its target, trace, fixtures and unchanged scene/producer dependencies are
+hash-bound. This does not re-execute full scene clocks in the new graphics
+producer or widen v1302's input/IRQ/sound/process adapters.
+
+GNU8.4, optimized undefined/bounds UBSan and actual Windows AMD64 agree on the
+complete stream. All158 prior independent registration snapshots still agree
+on every host, including both graphics pages, palette, raw TRAM and RGB;
+this guards the shared TextPlane change. All34 contracts pass per host.
+105 current AMD64 products bind267 files to manifest
+`7a25a243535773ce3a5bd9eb22cf898511e87cb3daafec96ace8deaae8ab6345`.
+An input-only W→B mutation is rejected at snapshot7, raw byte260168:
+original attributeE1 versus native05. The unchanged original reference and
+source are retained; the negative proves the raw TRAM comparison can reject a
+wrong erase policy before relying on screen similarity.
+
+Replay `verify_gameover_render.py --target ../../targets/th04/main.exe --hdi
+../../runtime/images/zun.hdi --font-bmp FONT --exe CACHE/CONTRACT
+--scene-reference .analysis/port64/gameover-v1302/scene-linux-final
+--output-dir FRESH`. The Windows verifier consumes that current-source two-load
+reference and the retained158-snapshot registration reference. Current receipts,
+commands and full readback are under `.analysis/port64/gameover-render-v1304/`;
+`review_results.py` binds all105 products and consumes every native gzip stream.
+No live GUI, complete route, physical pacing/audio or DOS exact claim follows.
+
+Storage cleanup gzip/readback-compacts the two new GNU/UBSan registration
+captures and retires two superseded46-snapshot development streams after
+checking their complete original prefix against the new reference. This
+reclaims398,381,056 allocated bytes with4,167 protected source/cache/target/HDI/
+final-reference files unchanged. Actual Windows separately retires203,511,584
+logical raw bytes after compressed readback; its allocation is not added to
+that total. Final references and active caches remain. Use fresh output paths,
+never overwrite an existing hard-linked capture or rerun a destructive cleanup
+against a completed batch.
+
+Next suspend live MAIN at the actual last-life boundary, join this TRAM and
+Bomb renderer, save Continue before resetting resources and resume the frame
+suffix once. Extra/full HUD/OP/audio/configuration and complete natural routes/
+restart/dense Lunatic validation remain required by the full goal.
