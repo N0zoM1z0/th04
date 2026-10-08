@@ -21,6 +21,11 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
   `registration_pending`; current GUI source integrates registration, while this
   batch's actual Windows controls use headless child-scene fixtures.
 - No physical PC-98, full-route persistence/audio or whole-game acceptance.
+- v1301 next-owner component: original player/miss/Bomb producers agree on
+  10,319 state/request records at two loads; GNU/optimized UBSan/actual Windows
+  pass 34 contracts each. 105 AMD64 products bind 250 source files, manifest
+  `dc88a3e9e12c79f7f64b1b8561a7c2455af4dbe12f6e177dbf49ddf1a7b13496`.
+  Live death/Bomb and blocking Game Over/Continue are still pending.
 
 ## Remaining owners
 
@@ -92,6 +97,10 @@ receipts. Historical version boundaries do not supersede the current state.
 ## Score drain and extends
 
 [Detailed evidence](port64/evidence/stage-lifecycle.md#score-drain-and-extends).
+
+## Player hit, death and Bomb state producer
+
+[Detailed evidence](port64/evidence/stage-lifecycle.md#player-hit-death-and-bomb-state-producer).
 
 ## Stage enter and departure
 

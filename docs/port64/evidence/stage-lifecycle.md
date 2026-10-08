@@ -333,3 +333,65 @@ Receipts: `session-v1264/target-owners.json`,
 were rejected by the existing shot-checkpoint guard; valid styles are now seeded
 explicitly. The target/native actor code was not weakened to accept corruption.
 Semantic remains stopped. Next implement Stage2 resources and midboss2.
+
+## Player hit, death and Bomb state producer
+
+v1301 introduces `player::Lifecycle`, using the existing movement and shot
+trigger owners. It implements original player-update, miss-update, Bomb entry
+and Bomb render-state dispatch. This is a component, not live MAIN integration:
+character Bomb graphics and the blocking Game Over/Continue scene must join
+before gameplay consumes the hit latch. Fire, miss-item, HUD and sound requests
+retain order; a missing last-life consumer throws instead of accepting a fake
+Game Over return. All verification remains silent.
+
+Original MAIN relative `0AAF:54C4..553A` (player_bomb), `571A..581D` (Bomb
+render-state dispatch), and `5E98..610D` (miss/player update) execute at loads
+1000/2000, with explicit DS8000/SS7000/resident9000 adapters. Actual movement,
+position clamp, point motion, trigger branches and performance-lower instructions
+execute. Fire/items/HUD/sound/Game Over/character-graphics calls have guarded
+ABI adapters and do not accept those consumers. Header/file identity and root
+live MAIN Ghidra attestation pass. Targets remain candidate-local-attested.
+Use the boundary ledger's payload offset or authored ledger's file_offset;
+analysis_linear/address fields include the analysis load base and are not file
+positions. An early scratch disassembly read the wrong region through that
+confusion; no state, name or source claim was accepted from it.
+
+The original decrements invincibility before checking the retained hit byte.
+A newly accepted hit limits the laser clock to33 before the separate shots
+update, arms miss40/invincibility192/respawn72 and clears velocity. The same
+player update advances respawn and decrements miss, giving eight opportunities
+to deathbomb before the miss32 loss. Shot-trigger time stays frozen during
+respawn. At miss32, item drops precede power loss, dream loss, HUD/shot-level,
+sound2, performance cap/lower and wrapped resident miss count. At miss0, position
+becomes192,368 with velocity0,-32; remaining lives>1 decrements lives, resets
+bomb stock and arms clear32. The remainder of the72-refresh motion reaches y304.
+Valid dream indices0..7 are controlled; invalid host death indices are rejected.
+
+Bomb entry rejects bombing, no stock, disabled and miss<=32. A deathbomb clears
+miss/hit/respawn; stock/HUD precede bombing/frame0/invincibility255/background,
+clear192/sound13/pull/used count. Render dispatch preserves BB cel0..15, frame48
+scroll-off/palette14 backup and replacement, frame176 restore/sound15/scroll-on,
+frame177 hardware scroll request, tone recovery through225 and cleanup at226.
+There are227 render updates from frame0 through226. All byte/word wraps and
+retained option/palette fields are explicit; host X is translated to MAIN Bomb
+bit10 rather than its old dialog bit800/keypad movement meaning.
+
+8,235 isolated controls and four retained260-refresh sequences produce10,319
+complete state/request records at each original load. GNU/optimized UBSan/actual
+Windows agree byte-for-byte with the same reference. These include corrupt-but-
+representable byte flags, timer/stock/counter wraps, movement/trigger boundaries,
+all256 Bomb frames, invincibility1-hit behavior, same-refresh deathbomb, last-life
+call boundaries and full respawn/Bomb cleanup. An altered Shot fixture changes
+clock/requests and is rejected by the untouched original comparison.
+
+Three builds retain35 AMD64 products each and pass34 contracts. The250-file
+manifest is `dc88a3e9e12c79f7f64b1b8561a7c2455af4dbe12f6e177dbf49ddf1a7b13496`.
+Receipts are under `.analysis/port64/player-lifecycle-v1301/`:
+`original-linux-final/receipt.json`, `actual-windows-final/receipt.json`,
+`platform-review.json`, native traces, CTest logs and `comparator-mutation.json`.
+Replay `verify_player_lifecycle.py --target ../../targets/th04/main.exe --exe
+.analysis/port64/linux-live-v1251/th04-port64-player-lifecycle-contracts
+--output-dir FRESH`; the Windows verifier consumes that pinned two-load reference
+and runs all34 contracts. No physical timing/audio, live player death/Bomb,
+Continue, pixel or DOS exact claim. Next implement the missing graphics and
+blocking scene, then join this producer and real hit/stock/ranking publication.

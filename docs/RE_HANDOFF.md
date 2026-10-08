@@ -6,6 +6,12 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Verified frontier
 
+- v1301 adds the player/miss/Bomb CPU producer component. Original MAIN relative
+  `0AAF:54C4..553A`, `571A..581D`, `5E98..610D` executes at loads1000/2000,
+  DS8000. 8,235 isolated cases plus retained sequences produce 10,319 records
+  agreeing GNU/optimized UBSan/actual Windows; each host passes 34 contracts.
+  Fire/items/HUD/sound/game-over/character graphics are explicit adapters.
+  The new component has not joined live MAIN; GUI death/Bomb remains pending.
 - v1300 joins registration timing/input/rendering, ordered host score commits,
   fresh OP and a second MAIN launch. Missing/corrupt/short files, all ten sections,
   partial/full names, no-entry acknowledgement and failed writes have controls.
@@ -23,7 +29,8 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Next owners
 
-1. Complete Bomb/death/lives/game-over/Continue against the pinned MAIN target.
+1. Add Bomb character graphics and the blocking Game Over/Continue scene, then
+   join the tested player lifecycle to live MAIN and its hit latch.
 2. Extra, full HUD, OP auxiliary flows, unlocks, audio/configuration.
 3. Actual Linux/Windows complete routes, persistence/restart and dense Lunatic
    timing/performance. All runs stay muted; audio requests are retained only.
@@ -47,6 +54,9 @@ Its `platform-review.json`, source manifest, fade/reference consumers and actual
 Windows receipts establish the scope above. Replay `review_results.py` there.
 Root MAINE Ghidra attestation passes independently of this worktree's missing
 `.tools`; target provenance remains `candidate-local-attested`.
+Latest component root: `.analysis/port64/player-lifecycle-v1301/`;
+`platform-review.json` binds 105 AMD64 products to 250 files. Root MAIN database
+attestation passes. Reuse the checked-in player lifecycle Python/Windows probes.
 
 Completed captures share immutable hard-linked storage after independent
 production/full readback. The early 90-snapshot development pair is archived;
