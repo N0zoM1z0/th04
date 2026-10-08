@@ -225,3 +225,71 @@ Current158-snapshot original reference and all three fast caches remain
 expanded. Restore old development paths before use, and never modify shared
 capture inodes in place. `capture-storage-receipt.json` records the archive,
 restore command, every shared path/hash and3,921 protected file hashes.
+
+## Registration scene and host save
+
+v1300 resumes the native port and resolves the v1299 scene-integration question.
+`registration::Scene` consumes drawing, I/O, song/sound, wait and fade requests
+in order. Startup stops at black-in; only after its35th refresh are the initial
+input sample and keyboard/no-entry save evaluated. Menu input retains the
+original two-sample release, repeat lock and direction/Shot/OK/Bomb/Esc order.
+The renderer receives each decoded snapshot before save re-encodes HI. The
+inherited graphics text weight is retained across Ending/Staff/verdict.
+
+`verify_registration_scene.py` executes the original MAINE decoded-relative
+`0000:0622..06A3` palette-black-in/out bodies at loads1000 and2000. VBlank and
+palette output are explicit adapters: black-in(2) takes35 refreshes and
+black-out(1)18. This establishes a refresh schedule, not physical PC-98 timing.
+The previously attested packed target and decoded payload remain pinned;
+`candidate-local-attested` is still a provenance gap. Root `ghidra.py th04-maine
+check` passes full bytes/header/entry/relocations/samples. The native worktree's
+missing `.tools` prevents a local database check and is not counted as a pass.
+
+`score_file::HostStore` replays each ordered operation into a pending file,
+committing only at a dirty writer close. A uniquely reserved temporary directory
+prevents truncating another file. Replacement uses same-filesystem rename on
+Linux and `MoveFileExW(REPLACE_EXISTING|WRITE_THROUGH)` on Windows. Failure
+propagates before fresh OP. This does not claim power-loss durability on Linux.
+Scores are separate from the read-only HDI, using the documented host data
+folder or `--save-dir`. An explicit native repair treats files shorter than
+1960bytes as absent: original unchecked short reads can accidentally pass an
+all-zero checksum and later address an undefined numeral. The core File's
+original short-read semantics and1288 original cases remain unchanged. Larger
+files retain their trailing bytes.
+
+Sixteen scene controls cover all ten partitions, partial/full names, inherited
+held keys, missing/truncated/deterministically bad-checksum files, no-entry
+acknowledgement, retained tails, failed replacement and render/RNG isolation.
+They run with public synthetic assets and separately the original PI/BFNT/font.
+`--registration-checks DIR` drives30 seeded child scenes through real resident
+and process ownership, save/reload, blackout, fresh OP(gen+1/LCG1), release of
+MAINE resources and a second actual MAIN handoff(gen+2). These are integration
+controls, not natural full-game routes. Linux, optimized UBSan and actual
+Windows generate112 identical BMP/score files. Both GUI source backends join
+this owner; the published GUI remains v1296 until later route acceptance.
+All runs use `--mute`; no audio device is opened and ordered requests remain.
+
+Each host passes33 contracts. The245-file manifest
+`635698a758e590316b03ebd4d4e45ee222bff3b90cb649e651a2df2af1aa1f58`
+binds102 AMD64 products. Final-source original consumers pass1288 file cases,
+382 menu cases and158 complete graphics/text/palette/RGB snapshots
+(203511584bytes each); GNU/optimized UBSan/actual Windows graphics agree.
+Private receipts live in `.analysis/port64/registration-join-v1300/`:
+`source-manifest.json`, `platform-review.json`, `fades-original-source-final`,
+`score-source-final`, `menu-source-final`, `render-source-final`,
+`render-ubsan-source-final`, `render-windows-source-final`, and
+`actual-windows-source-final`. `review_results.py` independently reads outputs,
+source/product hashes and source-HDI identity. PowerShell commands are recorded
+as structured argument arrays. An initial collector failed because an enclosing
+JavaScript string consumed a backslash; the checked-in collector now uses
+`[char]92/[char]47`, and final Windows readback passes. That failure is a host
+verification-script issue, not target evidence.
+
+Replay the checked-in scene verifier with `--target`, `--decoded-dir`, `--exe`
+and a fresh `--output-dir`; use `verify_registration_join_windows.ps1` with the
+current executable directory, HDI/font, v1299 graphics reference, manifest and
+fresh output. Existing score/menu/graphics verifier commands retain their
+original references. Final closure uses `scripts/ci.py` and `git diff --check`.
+No historical exact/unit/function acceptance changes. Next implement the actual
+MAIN Bomb, hit/death/lives/game-over/Continue owners, then Extra/HUD/OP auxiliary
+flows/audio/config and full Linux/Windows route/performance acceptance.

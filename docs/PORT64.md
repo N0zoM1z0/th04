@@ -2,7 +2,7 @@
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 
-Updated 2026-10-05. Development is paused. `port/modern-64` remains separate
+Updated 2026-10-08. Development has resumed. `port/modern-64` remains separate
 from the DOS branch; portable code does not claim PC-98 executable exactness.
 
 ## Current state
@@ -10,20 +10,22 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
 - Normal Stages 1–6 waves/bosses/dialogues/departures and MAINE Ending/Staff/
   verdict/congratulations are implemented with bounded original CPU and native
   integration controls. Complete natural route validation remains pending.
-- Latest source component: v1299 registration graphics/text; 158 full snapshots
-  agree GNU/Wine/optimized UBSan/actual Windows under explicit hardware/ROM/PI/
-  far-return adapters. Score core (1,288 cases) and logical menu (382) are retained.
-- Three fast builds have 33 AMD64 products and 32 passing contracts each. Source
-  manifest `e4c55fe9b3c8b02f426349cecac47c976d4a26276d3821cdc7712aba92f6177b`
-  binds 238 implementation/verifier files; documentation moves do not change it.
+- Latest source: v1300 ordered registration scene and separate host score save,
+  fresh OP/second MAIN. 30 seeded frontend fixtures on GNU/optimized UBSan/actual
+  Windows produce 112 identical files. Each host passes 33 contracts.
+- Three fast builds have 34 AMD64 products each. Source manifest
+  `635698a758e590316b03ebd4d4e45ee222bff3b90cb649e651a2df2af1aa1f58`
+  binds 245 implementation/verifier/launcher files. Original score (1,288), menu
+  (382), graphics (158 full snapshots) and fade (35+18 refreshes) controls pass.
 - Published Windows GUI/launcher remain **v1296-congratulations**, ending at
-  `registration_pending`; v1297–v1299 are tested components awaiting integration.
-- No physical PC-98, complete native persistence/audio or whole-game acceptance.
+  `registration_pending`; current GUI source integrates registration, while this
+  batch's actual Windows controls use headless child-scene fixtures.
+- No physical PC-98, full-route persistence/audio or whole-game acceptance.
 
-## Next owners when resumed
+## Remaining owners
 
-- [ ] Ordered registration scene: wait/fade/audio boundaries, explicit host input,
-  retained pre-save decoded sections, separate host score persistence, fresh OP.
+- [x] Ordered registration wait/fade/input/rendering, retained pre-save sections,
+  separate host score commits and fresh OP. Audio requests retained; backend pending.
 - [ ] Bomb, hit/death/lives, game-over and Continue.
 - [ ] Extra gameplay/boss and complete HUD.
 - [ ] OP score/Music Room/demo/unlocks, audio/configuration and pacing.
@@ -40,7 +42,7 @@ component `verify_*.py` / `verify_*_windows.ps1` scripts. Detailed invocation
 and private-input hashes remain in the component evidence below; do not execute
 a historical writer against an existing hard-linked capture directory.
 Current caches: `.analysis/port64/{linux,windows,ubsan}-live-v1251`.
-Current readback: `.analysis/port64/registration-render-v1299/platform-review.json`.
+Current readback: `.analysis/port64/registration-join-v1300/platform-review.json`.
 Use fresh outputs. Keep DOS images/saves, pinned inputs, tools and cache closures.
 
 ## Evidence index
