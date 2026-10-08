@@ -29,6 +29,7 @@
 #include "stage_background.hpp"
 #include "run_statistics.hpp"
 #include "player_bomb.hpp"
+#include "player_render.hpp"
 #include "gameover.hpp"
 #include <memory>
 
@@ -117,6 +118,7 @@ public:
     const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
     std::uint8_t invincibility() const { return life_.state().invincibility; }
     const player::LifeState& life() const {return life_.state();}
+    const std::vector<player::RenderDraw>& player_draws() const {return player_draws_;}
     const bomb::Effect& bomb_effect() const {return bomb_effect_;}
     const std::vector<player::LifeEvent>& life_events() const {return life_events_;}
     const std::vector<gameover::Event>& gameover_events() const {return gameover_events_;}
@@ -219,6 +221,7 @@ private:
     bool orange_active_=false,post_boss_dialog_pending_=false;
     bool kurumi_active_=false;
     player::Lifecycle life_{};
+    std::vector<player::RenderDraw> player_draws_;
     bomb::Effect bomb_effect_{};
     Mode mode_=Mode::ordinary;
     std::uint16_t last_input_=0;

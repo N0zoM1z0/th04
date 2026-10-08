@@ -9,6 +9,8 @@ bool gameover_render_cli(int argc,char** argv);
 void gameover_contracts();
 bool bomb_cli(int argc,char** argv);
 void bomb_contracts();
+bool player_render_cli(int argc,char** argv);
+void player_render_contracts();
 
 namespace p=th04::portable::player;
 namespace s=th04::portable::shot;
@@ -83,6 +85,7 @@ int main(int argc,char** argv) {
         if(gameover_cli(argc,argv))return 0;
         if(gameover_render_cli(argc,argv))return 0;
         if(bomb_cli(argc,argv))return 0;
+        if(player_render_cli(argc,argv))return 0;
         if(argc==3 && std::string(argv[1])=="--vectors") {
             std::ifstream input(argv[2]);require(bool(input),"lifecycle fixture file missing");
             Fixture f;char op;
@@ -96,6 +99,7 @@ int main(int argc,char** argv) {
         }
         gameover_contracts();
         bomb_contracts();
+        player_render_contracts();
         require(p::input_from_host_actions(0x800)==0x10 &&
             p::input_from_host_actions(0x1000)==0x2000 &&
             p::input_from_host_actions(0x2000)==0x1000,"MAIN host masks differ");

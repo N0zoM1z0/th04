@@ -14,6 +14,13 @@ import sys
 
 
 PORT_FILES = (
+    "port64/player_render.hpp",
+    "port64/player_render.cpp",
+    "port64/player_render_contracts.cpp",
+    "port64/verify_player_render.py",
+    "port64/verify_player_render_windows.ps1",
+    "port64/verify_lifecycle_join.py",
+    "port64/verify_lifecycle_join_windows.ps1",
     "port64/verify_gameover_render.py",
     "port64/verify_gameover_render_windows.ps1",
     "port64/gameover_render.hpp",

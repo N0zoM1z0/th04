@@ -41,6 +41,8 @@ State::State(application::State& application,Mode mode,player::LifeState checkpo
     sparks_.initialize([&application]() {
         return static_cast<std::uint8_t>(application.next_process_random());
     });
+    player_draws_=player::render_requests(life_.state(),player_.position(),
+        shot::level_for_power(score_.power),playchar_==application::Playchar::reimu ? 38 : 39,0,0);
 }
 
 void State::load_stage(const stage::Program::Bytes& standard) {
@@ -59,6 +61,9 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     frame_suspended_=false;dialog_finished_=false;next_stage_requested_=false;leave_text_replaced_=false;
     homing_target_.reset();
+    player_draws_=player::render_requests(life_.state(),player_.position(),
+        shot::level_for_power(score_.power),playchar_==application::Playchar::reimu ? 38 : 39,
+        static_cast<std::uint8_t>(frames_&3u),scroll_line_);
 }
 void State::start_orange_after_dialog() {
     if (!stage_ || orange_active_ || midboss_.snapshot().active) throw std::logic_error("invalid Orange dialog handoff");
@@ -181,6 +186,9 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     bonus_context_.stage=next_id;bonus_context_.resource_stage=next_id;
     score_events_.clear();enemy_events_.clear();bullet_events_.clear();
     midboss_events_.clear();orange_events_.clear();item_events_={};
+    player_draws_=player::render_requests(life_.state(),player_.position(),
+        shot::level_for_power(score_.power),playchar_==application::Playchar::reimu ? 38 : 39,
+        static_cast<std::uint8_t>(frames_&3u),scroll_line_);
     // Score/power/performance/resident statistics and MAIN generation/seed
     // persist. Asset replacement has a separate owner;
     // never run the Stage1 midboss callback under the new stage identity.
@@ -221,7 +229,7 @@ void State::publish_boss_graphics() {
 }
 player::LifeContext State::life_context() {
     constexpr std::uint8_t minimum[]{4,11,20,22,16};
-    player::LifeContext context{score_,player_,shots_,performance_};
+    player::LifeContext context{score_,player_,shots_,performance_,11,2,0,{},{},{}};
     context.scroll_line=scroll_line_;context.minimum=minimum[rank_];context.credit_bombs=application_->resident().credit_bombs;
     context.sink=[this](const player::LifeEvent& event) {
         life_events_.push_back(event);
@@ -534,6 +542,11 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         if(midboss4_) midboss4_->prepare_render(midboss_context);else if(midboss3_) midboss3_->prepare_render(midboss_context);else if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
     }
     enemies_.prepare_render();
+    // Retain the actual pre-increment rendering phase. Blocking scenes and
+    // repeated host paints consume this cache without advancing the player.
+    player_draws_=player::render_requests(life_.state(),player_.position(),
+        shot::level_for_power(score_.power),playchar_==application::Playchar::reimu ? 38 : 39,
+        static_cast<std::uint8_t>(frames_&3u),scroll_line_);
     // Item scoring already exposes performance events; apply their byte
     // clamps before the next frame's autofire interval decisions.
     constexpr std::uint8_t minimum[]{4,11,20,22,16},maximum[]{16,24,32,34,20};

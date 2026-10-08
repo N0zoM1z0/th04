@@ -138,6 +138,7 @@ std::string suspended_fingerprint(const g::State& scene,const a::State& app) {
        <<player.current.x<<' '<<player.current.y<<' '<<player.velocity.x<<' '<<player.velocity.y<<' '
        <<+scene.shots().snapshot().time<<' '<<scene.items().spawned()<<' '
        <<+scene.bullets().snapshot().clear_time;
+    for(const auto& draw:scene.player_draws())out<<' '<<int(draw.kind)<<' '<<draw.left<<' '<<draw.top<<' '<<draw.pattern;
     return out.str();
 }
 void lifecycle_join_contracts(const std::filesystem::path& directory,bool report) {
@@ -156,7 +157,19 @@ void lifecycle_join_contracts(const std::filesystem::path& directory,bool report
                 "ordinary hit arms and advances the real miss prefix");
         // An item still moves during a miss, but cannot be collected.
         require(scene.score().items_collected==0,"miss animation blocks item pickup in live MAIN");
-        for(unsigned frame=1;frame<40;++frame)scene.update(0,false);
+        for(unsigned frame=1;frame<40;++frame) {
+            scene.update(0,false);
+            if(scene.life().miss_time==1)require(scene.player_draws().empty(),"death frame1 must remain blank in the cached frontend requests");
+            if(scene.life().miss_time>=2 && scene.life().miss_time<=32) {
+                require(!scene.player_draws().empty() && scene.player_draws().size()<=8,"live death lost its clipped explosion rings");
+                // Independent original render controls for this stationary
+                // center/radius/angle sequence:8 at32,6 at16,4 at2.
+                if(scene.life().miss_time==32)require(scene.player_draws().size()==8,"initial explosion rings differ");
+                if(scene.life().miss_time==16)require(scene.player_draws().size()==6,"middle explosion clipping differs");
+                if(scene.life().miss_time==2)require(scene.player_draws().size()==4,"late explosion clipping differs");
+                for(const auto& draw:scene.player_draws())require(draw.pattern==3,"live death still drew the player/options");
+            }
+        }
         require(scene.life().miss_time==0 && scene.score().remaining_lives==1 &&
                 scene.life().misses==1 && app.resident().miss_count==1 &&
                 scene.player().position().current.y==368*16,"miss decrements lives and publishes counters");
@@ -170,6 +183,8 @@ void lifecycle_join_contracts(const std::filesystem::path& directory,bool report
         a::State bomb_app;bomb_app.start_normal(a::Playchar(character),a::ShotType::b);
         g::State bomb_scene(bomb_app);bomb_scene.set_player_palette({32,64,96});
         bomb_scene.update(0x800,false);
+        require(bomb_scene.frames()==1 && bomb_scene.player_draws().front().kind==p::RenderKind::white,
+                "first rendered Bomb frame lost its pre-increment invincible phase");
         require(bomb_scene.life().bomb_frame==1 && bomb_scene.score().remaining_bombs==1 &&
                 bomb_app.resident().bombs_used==1,"host X invokes Bomb and publishes its real resource use");
         for(unsigned frame=1;frame<=226;++frame) {

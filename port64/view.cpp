@@ -677,7 +677,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                   application::Playchar playchar,std::optional<int> displayed_tone={}) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
     const bool npc_active=state.reimu_active() || state.marisa_active();
-    if(state.yuuka6_active() || npc_active || (sprites.second && sprites.second->star_plane)) frame.indices.assign(640*400,0);
+    frame.indices.assign(640*400,0);
     PiImage palette=sprites.palette;
     if (state.boss_active()) {
         const auto& boss=state.boss_snapshot();
@@ -912,18 +912,16 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         put_sprite(frame,palette,sprites.items,pattern-28,
             32+pixels(entity.position.current.x)-8,16+pixels(entity.position.current.y)-8);
     }
-    const auto& position = state.player().position();
-    const unsigned cel = position.velocity.x < 0 ? 1 : (position.velocity.x > 0 ? 2 : 0);
-    const bool white = state.frames() < 64 && state.frames() % 4 == 0;
-    put_sprite(frame, palette,
-               playchar == application::Playchar::reimu ? sprites.reimu : sprites.marisa,
-               cel, 32 + position.current.x / 16 - 16,
-               16 + position.current.y / 16 - 24, white);
-    if (shot::level_for_power(state.score().power)>=2) {
-        for (int side : {0,48}) {
-            put_sprite(frame,palette,sprites.items,
-                playchar==application::Playchar::reimu ? 10 : 11,
-                pixels(shots.options.x)+side,16+pixels(shots.options.y)-8);
+    for(const auto& draw:state.player_draws()) {
+        const sprite::Sheet* sheet=playchar==application::Playchar::reimu ? &sprites.reimu : &sprites.marisa;
+        unsigned image=draw.pattern;
+        if(draw.kind==player::RenderKind::option) {sheet=&sprites.items;image=draw.pattern-28;}
+        else if(draw.pattern==3) {sheet=&sprites.explosion;image=0;}
+        for(unsigned y=0;y<sheet->height();++y)for(unsigned x=0;x<sheet->width();++x) {
+            auto color=sheet->pixel(image,x,y);if(!color)continue;
+            if(draw.kind==player::RenderKind::white)color=15;
+            const auto row=(unsigned(draw.top)+y+400-sprites.background.display_line())%400;
+            put_indexed_pixel(frame,palette,draw.left,int(row),x,0,color);
         }
     }
     for (const auto& point:state.gathers().points()) {
