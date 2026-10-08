@@ -11,6 +11,7 @@ public:
     Renderer(const Bytes& gaiji,const Bytes& font_bitmap,Bytes indexed,
              std::array<std::uint8_t,48> palette,registration::TextPlane text={});
     void apply(const Event&);
+    void update_score(const score::Snapshot&);
     const Bytes& indexed() const {return indexed_;}
     const std::array<std::uint8_t,48>& palette() const {return palette_;}
     const registration::TextPlane& text() const {return text_;}

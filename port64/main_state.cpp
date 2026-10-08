@@ -246,6 +246,7 @@ player::LifeContext State::life_context() {
                 if(event.kind==gameover::Kind::score_sequence)application_->prepare_main_score();
                 else if(event.kind==gameover::Kind::maine)score_registration_requested_=true;
                 else if(event.kind==gameover::Kind::bad_ending)bad_ending_requested_=true;
+                if(gameover_sink_)gameover_sink_(event);
             },[this] {
                 if(!continue_save_)throw std::logic_error("Continue requires a real score store");
                 continue_save_(scoreboard_.digits);

@@ -14,6 +14,9 @@ import sys
 
 
 PORT_FILES = (
+    "port64/gameover_frontend_checks.inl",
+    "port64/verify_gameover_join.py",
+    "port64/verify_gameover_join_windows.ps1",
     "port64/player_render.hpp",
     "port64/player_render.cpp",
     "port64/player_render_contracts.cpp",

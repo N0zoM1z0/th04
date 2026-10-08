@@ -38,4 +38,10 @@ Renderer::Bytes Renderer::rgb(int tone) const {
     }
     text_.overlay(result,*gaiji_,font_);return result;
 }
+void Renderer::update_score(const score::Snapshot& snapshot) {
+    auto board=snapshot;
+    for(const auto& event:score::render(board))
+        if(event.kind==score::Kind::gaiji)
+            text_.put_string(int(event.left),int(event.row),event.bytes,std::uint16_t(event.value));
+}
 } // namespace th04::portable::gameover

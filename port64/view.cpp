@@ -10,6 +10,7 @@
 #include "sprite_sheet.hpp"
 #include "stage_background.hpp"
 #include "host_score.hpp"
+#include "gameover_render.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -19,10 +20,14 @@
 #include <stdexcept>
 #include <utility>
 #include <memory>
+#include <sstream>
+#include <iomanip>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <fcntl.h>
+#include <io.h>
 #else
 #include <SDL.h>
 #endif
@@ -48,6 +53,7 @@ namespace maine = th04::portable::maine;
 namespace verdict = th04::portable::verdict;
 namespace registration = th04::portable::registration;
 namespace score_file = th04::portable::score_file;
+namespace gameover = th04::portable::gameover;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -1031,6 +1037,22 @@ void put_stage_overlay(Frame& frame,const MainSprites& sprites,const gameplay::S
                 frame.pixels[(top+y)*640+left+x]=0xff000000u;
 }
 
+registration::TextPlane main_text_plane(const gameplay::State& state) {
+    registration::TextPlane text;
+    const auto& cell=state.overlay_cell();
+    for(unsigned row=1;row<24;++row)for(unsigned col=4;col<52;col+=2) {
+        if(cell.kind==th04::portable::transition::TextKind::gaiji)
+            text.put(int(col),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
+        else for(unsigned half=0;half<2;++half)
+            text.put_ank(int(col+half),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
+    }
+    auto board=state.scoreboard();
+    for(const auto& e:th04::portable::score::render(board))
+        if(e.kind==th04::portable::score::Kind::gaiji)
+            text.put_string(int(e.left),int(e.row),e.bytes,std::uint16_t(e.value));
+    return text;
+}
+
 class DialogScene {
 public:
     DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character)
@@ -1259,7 +1281,9 @@ public:
     }
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
-    unsigned slowdown() const { return main_ && !dialog_scene_ && !ending_ ? main_->slowdown() : 1; }
+    unsigned slowdown() const { return main_ && !main_->game_over() && !dialog_scene_ && !ending_ ? main_->slowdown() : 1; }
+    const gameover::Renderer* gameover_renderer() const {return gameover_renderer_.get();}
+    void set_gameover_observer(gameover::Sink sink) {gameover_observer_=std::move(sink);}
     bool dialog_active() const { return bool(dialog_scene_); }
     bool post_dialog_complete() const { return post_finished_; }
     bool post_dialog() const { return post_started_; }
@@ -1309,6 +1333,10 @@ public:
         }
         const auto host_start=Clock::now();
         if (live_main()) {
+            bool gameover_started_in_gate=false;
+            // A blocking Game Over owns input and refreshes before any stage
+            // transition or dialog gate can inspect the suspended MAIN frame.
+            if(!main_->game_over()) {
             if(main_->next_stage_requested() && ((continue_stage2_ && loaded_stage_==0) || (continue_stage3_ && loaded_stage_==1) || (continue_stage4_ && loaded_stage_==2) || (continue_stage5_ && loaded_stage_==3) || (continue_stage6_ && loaded_stage_==4))) {
                 const auto next_id=loaded_stage_+1;
                 require_view(bool(assets_),"next-stage resources missing");
@@ -1333,7 +1361,10 @@ public:
             if(loaded_stage_==1 && !dialog_scene_ && !second_pre_finished_ && main_->stage2_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && !post_started_ && !main_->yuuka6_active() && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
-                main_->update(held_input,shift,false,0,&sprites_->background);begin_dialog(true);
+                capture_gameover_graphics();
+                main_->update(held_input,shift,false,0,&sprites_->background);
+                gameover_started_in_gate=bool(main_->game_over());
+                if(!gameover_started_in_gate)begin_dialog(true);
             }
             if(dialog_scene_) {
                 dialog_scene_->advance(held_input);
@@ -1360,8 +1391,12 @@ public:
                     dialog_scene_.reset();
                 } else { if(repaint) frame_=render();return; }
             }
+            }
             const auto before=main_->frames();
-            main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
+            capture_gameover_graphics();
+            if(!gameover_started_in_gate)
+                main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
+            if(gameover_renderer_ && !main_->game_over())gameover_renderer_.reset();
             if(main_->frames()!=before && !main_->next_stage_requested()) {
                 if(loaded_stage_==3) th04::portable::stage4::update_carpet(sprites_->second->carpet,
                     sprites_->background.mutable_ring(),static_cast<std::uint16_t>(before),sprites_->background.scroll_line());
@@ -1376,7 +1411,7 @@ public:
                 require_view(assets_ && !assets_->ending.scripts.empty(),"MAINE resources missing");
                 ending_=std::make_unique<maine::Ending>(application_,main_->run_statistics(),sequence,
                     assets_->ending,[this] {
-                        dialog_scene_.reset();script_.reset();main_.reset();sprites_.reset();
+                        gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();sprites_.reset();
                     });
                 screen_=Screen::maine;
             }
@@ -1435,6 +1470,13 @@ public:
                     sprites_=std::make_unique<MainSprites>(*assets_);
                 if (sprites_) {
                     main_ = std::make_unique<gameplay::State>(application_,mode_);
+                    main_->set_gameover_sink([this](const gameover::Event& event) {
+                        if(gameover_renderer_) {
+                            gameover_renderer_->apply(event);
+                            if(event.kind==gameover::Kind::hud_score)gameover_renderer_->update_score(main_->scoreboard());
+                        }
+                        if(gameover_observer_)gameover_observer_(event);
+                    });
                     if(score_store_)main_->set_continue_save([this](const auto& digits) {
                         const auto& r=application_.resident();
                         score_store_->save_continue(std::uint8_t(r.playchar),r.stage==6 ? 4 : r.config.rank,
@@ -1455,7 +1497,7 @@ public:
         }
         case Screen::maine:break; // Held keys belong to MAINE's blocking clock.
         case Screen::main_handoff:
-            if (pressed == menu::Input::cancel && !dialog_scene_) {
+            if (pressed == menu::Input::cancel && !dialog_scene_ && !(main_ && main_->game_over())) {
                 close = true;
             }
             break;
@@ -1465,6 +1507,18 @@ public:
     }
 
 private:
+    void capture_gameover_graphics() {
+        if(gameover_renderer_ || main_->life().miss_time!=1 || main_->score().remaining_lives!=1)return;
+        // Last completed software display, independently of repaint cadence,
+        // before the player/STD prefix advances. Keep graphics and TRAM apart.
+        auto frozen=render_main(*sprites_,*main_,application_.resident().playchar);
+        auto palette=sprites_->palette.palette;
+        if(main_->boss_active())for(unsigned channel=0;channel<3;++channel)
+            palette[channel]=main_->boss_snapshot().palette_zero[channel];
+        for(unsigned channel=0;channel<3;++channel)palette[42+channel]=main_->life().palette14[channel];
+        gameover_renderer_=std::make_unique<gameover::Renderer>(sprites_->gaiji,assets_->font_bitmap,
+            std::move(frozen.indices),palette,main_text_plane(*main_));
+    }
     void begin_registration(std::uint16_t held,unsigned weight) {
         require_view(application_.program()==application::Program::maine && bool(score_store_),
                      "registration requires MAINE and native storage");
@@ -1537,6 +1591,14 @@ private:
                 return frame;
             }
         case Screen::main_handoff:
+            if(gameover_renderer_ && main_ && main_->game_over()) {
+                const auto rgb=gameover_renderer_->rgb(main_->game_over()->tone());
+                Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
+                frame.indices=gameover_renderer_->indexed();
+                for(unsigned at=0;at<frame.pixels.size();++at)
+                    frame.pixels[at]=0xff000000u|(unsigned(rgb[at*3])<<16)|(unsigned(rgb[at*3+1])<<8)|rgb[at*3+2];
+                return frame;
+            }
             if(dialog_scene_) { auto frame=dialog_scene_->render();put_score_text(frame,*sprites_,*main_);return frame; }
             if(main_) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
@@ -1583,11 +1645,15 @@ private:
     bool extra_ = false;
     std::unique_ptr<MainSprites> sprites_;
     std::unique_ptr<gameplay::State> main_;
+    std::unique_ptr<gameover::Renderer> gameover_renderer_;
+    gameover::Sink gameover_observer_;
     std::unique_ptr<dialog::Script> script_;
     std::unique_ptr<DialogScene> dialog_scene_;
     bool diagnostic_=false,post_started_=false,post_finished_=false;
     Frame frame_;
 };
+
+#include "gameover_frontend_checks.inl"
 
 #ifdef _WIN32
 
@@ -1885,7 +1951,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks,const std::string& gameover_checks, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1895,6 +1961,11 @@ void run_title(
     const Frame initial = render_menu(
         background, numerals, labels, cursors, initial_state
     );
+    if(!gameover_checks.empty()) {
+        require_view(!window,"Game Over controls require a headless run");
+        run_gameover_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,gameover_checks);
+        return;
+    }
     if(!registration_checks.empty()) {
         namespace fs=std::filesystem;
         const fs::path directory(registration_checks);

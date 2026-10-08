@@ -125,6 +125,7 @@ public:
     const gameover::Scene* game_over() const {return gameover_.get();}
     bool score_registration_requested() const {return score_registration_requested_;}
     void set_continue_save(std::function<void(const score::Digits&)> save) {continue_save_=std::move(save);}
+    void set_gameover_sink(gameover::Sink sink) {gameover_sink_=std::move(sink);}
     void set_player_palette(std::array<std::uint8_t,3> color) {life_.set_palette14(color);}
     Mode mode() const {return mode_;}
     unsigned slowdown() const {
@@ -228,6 +229,7 @@ private:
     bool player_frame_suspended_=false,score_registration_requested_=false;
     std::vector<player::LifeEvent> life_events_;
     std::vector<gameover::Event> gameover_events_;
+    gameover::Sink gameover_sink_;
     std::function<void(const score::Digits&)> continue_save_;
     bonus::Context bonus_context_{};
     std::optional<bonus::Result> clear_bonus_;
