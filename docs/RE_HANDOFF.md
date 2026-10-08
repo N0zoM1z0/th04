@@ -1,7 +1,7 @@
 # TH04 current handoff
 
-Updated 2026-10-08. Current focus: DOS demo preparation; x64 implementation
-remains paused. This handoff
+Updated 2026-10-08. Current focus: resumed x64 implementation on its separate
+branch; DOS demo state is retained. This handoff
 indexes verified state; detailed experiments belong in focused notes and CSV
 ledgers. General semantic work has reached its stopping condition: resume it
 only for an ambiguity that blocks a concrete native port owner.
@@ -38,7 +38,7 @@ native fixes or this documentation cleanup. Targets remain
   all-cloud phase. It is not a natural full Lunatic route or Windows FPS test.
 - Full natural dense Lunatic timing/audio, the optional Windows 36,000-cycle
   profile and a second PC-98 emulator remain validation TODOs. No new
-  performance work is scheduled while development is paused.
+  DOS performance work is not part of the current native batch.
 
 See [reusable hardware contracts and limits](PC98_HARDWARE_REUSE.md) for each
 repair, replay entrypoint and evidence/knowledge routing.
@@ -47,16 +47,19 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 The last Windows x64 GUI was v1296 (now archived outside the DOS demo folder): normal stage flow proceeds through Ending,
 Staff Roll, verdict and congratulations to `registration_pending`. Later
-score-file, registration-control and registration-render components are tested
-but have not been joined to that GUI. v1299 has 158 complete graphics/text
-snapshots agreeing on GNU, Wine, optimized UBSan and actual Windows; each
-build has 33 AMD64 products and 32 passing contracts. This does not accept
-physical video/audio or complete native saving/gameplay.
+v1300 source now joins the ordered registration scene, separate host score
+commits, fresh OP and second MAIN. GNU/optimized UBSan/actual Windows each
+pass 33 contracts and 30 seeded child scenes; 112 output files agree. Prior
+1,288 score/382 menu/158 full graphics comparisons pass; original MAINE fades
+at decoded-relative `0000:0622..06A3` agree at two loads (35/18 refreshes).
+This does not accept full natural routes, physical timing or audio. Native
+commits `43946c3`/`6c90c1a` are pushed on `port/modern-64`; its ledgers and
+handoff own the detailed evidence.
 
-Next native owner, when resumed: ordered registration scene (waits/fades and
-explicit input), separate host score persistence, then fresh OP. Bomb/death/
-lives/Continue, Extra, complete HUD/audio/config and end-to-end route validation
-remain. Keep native source on its separate branch.
+Next native owner: Bomb/hit/death/lives/game-over/Continue, then Extra, complete
+HUD/OP auxiliary flows/audio/config and full route/dense Lunatic validation.
+Keep native source separate and every launch muted. MAIN database attestation
+passes before the next target-dependent batch.
 
 ## Windows DOS demo package
 

@@ -2,7 +2,7 @@
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 
-Updated 2026-10-05. Development is paused. DOS semantic work merges with the
+Updated 2026-10-08. Native development has resumed. DOS semantic work merges with the
 DOS baseline; unfinished native source remains on `port/modern-64`.
 General readability expansion stops here unless a specific port contract
 cannot be represented safely. Native executable bytes need not be exact.
@@ -21,21 +21,25 @@ cannot be represented safely. Native executable bytes need not be exact.
 - All eight Ending script/graphics routes; Staff Roll, verdict and
   congratulations integrated into normal-route preview controls (v1296).
 - Score-file core (v1297): 1,288 original CPU cases, including ten-section
-  recreate/re-key and retained RNG/unused-byte behavior. Host persistence pending.
+  recreate/re-key and retained RNG/unused-byte behavior.
 - Registration logical owner (v1298): 382 original CPU cases, input repeat/lock,
   partial-name Esc save and retained decoded render requests.
 - Registration graphics/text (v1299): 158 complete two-page/palette/TRAM/RGB
   captures agree on GNU, Wine, optimized UBSan and actual Windows. Explicit
   hardware/ROM/PI/return adapters limit the original-execution claim.
-- Current native builds: 33 AMD64 products and 32 contracts per GNU/MinGW/
+- Registration scene/save (v1300): ordered refresh/input/render/I-O boundaries,
+  separate host score commits and fresh OP/second MAIN. Thirty seeded fixtures
+  per GNU/optimized UBSan/actual Windows produce 112 identical output files;
+  original fades agree at two loads (35-refresh in/18-refresh out).
+- Current native builds: 34 AMD64 products and 33 contracts per GNU/MinGW/
   optimized-UBSan build. Actual Windows contracts and current component captures
   also pass. This is not full routes, physical hardware, audio or DOS exactness.
 
 ## Remaining, in order
 
-- [ ] Join registration requests to the scene with original ordered waits,
+- [x] Join registration requests to the scene with original ordered waits,
   fades and explicit keyboard actions; retain pre-save decoded snapshots.
-- [ ] Persist a separate host score file at the real save boundary, then
+- [x] Persist a separate host score file at the real save boundary, then
   return to fresh OP. Cover no-entry, Esc, full name, corrupt/missing file,
   both characters and all score sections. Do not overwrite DOS saves.
 - [ ] Complete Bomb, hit/death/lives, game-over and Continue transitions.
@@ -53,8 +57,10 @@ cannot be represented safely. Native executable bytes need not be exact.
 The last published Windows `th04-port64.exe` and launcher were
 **v1296-congratulations**, with `previous-v1295` rollback. Those packages were
 archived outside the DOS demo directory on 2026-10-08. That GUI reaches
-`registration_pending`; v1297–v1299 components are retained source/test
-products, not a newer published full game. DOS testing scripts/saves are separate.
+`registration_pending`; current v1300 source joins registration/save with
+seeded child-scene controls. Full natural routes and a new published GUI remain
+pending. Native commits `43946c3` and `6c90c1a` are pushed on `port/modern-64`.
+DOS testing scripts/saves are separate. All new launches stay muted.
 
 The native branch's [PORT64.md](https://github.com/N0zoM1z0/th04/blob/port/modern-64/docs/PORT64.md)
 routes detailed component contracts and replay receipts. Its evidence and
