@@ -51,6 +51,18 @@ cannot be represented safely. Native executable bytes need not be exact.
   This completes the renderer component; live MAIN and Continue saving remain.
   Code/evidence commits `a789b80`/`5ca7995` are pushed on `port/modern-64`.
 
+v1306 adds player death/invincibility rendering and retained MAIN draw requests
+consumed by frontend source. Original relative `0AAF:610D..625B`, helpers and
+rolling kernels at loads1000/2000 agree with GNU/optimized UBSan/actual Windows
+on6,637 requests and259 complete indexed screens (66,304,000 pixels);34
+contracts pass per host.105 AMD64 products bind274 listed files. Continue
+save files remain unchanged; cached draws freeze during Game Over. A changed
+blink phase is rejected in269 original request cases.2,662,400 allocatedbytes
+are reclaimed with2,795 protected files unchanged. Frozen Game Over TRAM/input,
+Bomb graphics/shared lifecycle palette and Quit registration→verdict→fresh OP
+remain; no GUI publication or complete natural route is accepted.
+Native code/evidence commits `78fb017`/`64d8973` are pushed on `port/modern-64`.
+
 v1305 core integration now covers live lifecycle/Game Over suspension, character
 Bomb dispatch, miss pickup suppression and real Continue host commits. GNU/
 optimized UBSan/actual Windows pass34 contracts and agree on checkpoint
