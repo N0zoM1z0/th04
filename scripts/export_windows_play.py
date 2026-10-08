@@ -42,6 +42,15 @@ def performance_config(reference: bytes) -> bytes:
     return reference.replace(old, b"cycles=24000", 1)
 
 
+def package_reference_config(path: Path, config: bytes) -> bytes:
+    """Recover the reference budget when a demo package omits that profile."""
+    if path.is_file():
+        return path.read_bytes()
+    if config.count(b"cycles=24000") != 1:
+        raise ValueError("Windows TH04 performance CPU setting changed")
+    return config.replace(b"cycles=24000", b"cycles=15000", 1)
+
+
 def write_atomic(path: Path, data: bytes) -> None:
     temporary = path.with_name(path.name + ".tmp-" + uuid.uuid4().hex[:8])
     temporary.write_bytes(data)
@@ -157,8 +166,7 @@ def main() -> int:
         seed_config_name = "th04-normal.conf" if seed_normal else "th04.conf"
         seed_reference_name = "th04-normal-reference.conf" if seed_normal else "th04-reference.conf"
         config = (output / seed_config_name).read_bytes()
-        reference_config = ((output / seed_reference_name).read_bytes()
-                            if (output / seed_reference_name).is_file() else config)
+        reference_config = package_reference_config(output / seed_reference_name, config)
         if (sha(exe) != source_receipt["dosbox_x_sha256"]
                 or sha(font) != source_receipt["font_sha256"]
                 or sha(config) != source_receipt["config_sha256"]

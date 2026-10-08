@@ -1,6 +1,7 @@
 # TH04 current handoff
 
-Updated 2026-10-05. Development is paused at the user's request. This handoff
+Updated 2026-10-08. Current focus: DOS demo preparation; x64 implementation
+remains paused. This handoff
 indexes verified state; detailed experiments belong in focused notes and CSV
 ledgers. General semantic work has reached its stopping condition: resume it
 only for an ambiguity that blocks a concrete native port owner.
@@ -44,7 +45,7 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-The retained Windows GUI is v1296: normal stage flow proceeds through Ending,
+The last Windows x64 GUI was v1296 (now archived outside the DOS demo folder): normal stage flow proceeds through Ending,
 Staff Roll, verdict and congratulations to `registration_pending`. Later
 score-file, registration-control and registration-render components are tested
 but have not been joined to that GUI. v1299 has 158 complete graphics/text
@@ -56,6 +57,16 @@ Next native owner, when resumed: ordered registration scene (waits/fades and
 explicit input), separate host score persistence, then fresh OP. Bomb/death/
 lives/Continue, Extra, complete HUD/audio/config and end-to-end route validation
 remain. Keep native source on its separate branch.
+
+## Windows DOS demo package
+
+The demo directory retains `start-th04-normal.bat` (ordinary damage) and
+`start-th04.bat` (separately compiled invincible MAIN), plus their two unchanged
+images/products, standard 24,000-cycle profiles, emulator/font and English
+source builder. Independent saves are preserved by full-image hash readback.
+Native previews and optional launchers are archived outside that directory.
+Windows `Build-TH04.ps1 -CheckOnly -Normal` passes; no rebuild or game launch
+was performed. See [retention](ANALYSIS_RETENTION.md) for recovery.
 
 ## Working commands
 

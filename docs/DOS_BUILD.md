@@ -35,6 +35,13 @@ This is not a native Windows Borland compiler migration.
 | `start-th04-normal-highcpu.bat` | Same ordinary image | 36,000 |
 | `start-th04-highcpu.bat` | Same invincible image | 36,000 |
 
+For the 2026-10-08 demo, only the two standard launchers/profiles remain in the
+Windows folder. Optional highcpu/reference launchers and x64 previews are
+archived outside it. The installed English README covers demo commands. A
+standard later export recreates optional profiles; missing reference settings
+are derived from the verified standard profile, preserving its 24,000-cycle
+runtime config. Current products/images/saves were not rebuilt or modified.
+
 Invincibility is compiled through a private staged source overlay that clears
 pending player hits; it is not a launcher-time memory patch or a maintained
 player source change. OP/MAINE/ZUN agree between the two variants. Export

@@ -50,8 +50,9 @@ cannot be represented safely. Native executable bytes need not be exact.
 
 ## Published preview versus retained source
 
-The installed Windows `th04-port64.exe` and `start-th04-port64.bat` remain
-**v1296-congratulations**, with `previous-v1295` rollback. That GUI reaches
+The last published Windows `th04-port64.exe` and launcher were
+**v1296-congratulations**, with `previous-v1295` rollback. Those packages were
+archived outside the DOS demo directory on 2026-10-08. That GUI reaches
 `registration_pending`; v1297–v1299 components are retained source/test
 products, not a newer published full game. DOS testing scripts/saves are separate.
 

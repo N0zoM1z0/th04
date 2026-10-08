@@ -16,7 +16,7 @@ A verified private archive supplies recovery where the input cannot be rebuilt.
 | `port-modern-64/.analysis/port64/{linux,windows,ubsan}-live-v1251` | Current native incremental caches; deleting them makes the next build cold |
 | Current original CPU references and component inputs | Independent Oracle provenance, not disposable duplicates |
 | `.analysis/reconstruction/receipt-archive/` and manifests | Recovery of archived captures/snapshots |
-| Installed Windows DOS/port64 package, launchers, assets, saves and rollback | Current user testing state |
+| Installed Windows DOS package, two launchers, assets and independent save images | Current demo state; x64 previews are archived |
 
 Worktree paths in the table are below `.analysis/worktrees/`. Keep native work
 on its independent branch. Never use blanket `git clean -fdx`, `rm -rf .analysis`
@@ -56,6 +56,23 @@ original inputs, databases and Windows files remain live. Restore archived
 `protected-before.json` lists before re-running an older private cleanup script;
 its original path is still recorded in the older receipt. Restore commands are
 in the organization receipt above.
+
+## Windows DOS demo cleanup, 2026-10-08
+
+User-authorized cleanup retains only the normal/invincible DOS versions and
+necessary runtime/build files at `D:\Entertainment\Game\Touhou\th04-reconstruct`.
+53 removed/modified files pass archive-member hash/size readback before deletion.
+The archive includes x64 v1296/rollback, optional profile launchers/configs and
+prior package metadata/README. All 18 protected files remain byte-identical,
+including both complete save images and all eight product binaries.
+
+About 112 MiB of file contents are removed from Windows; a 31 MiB recovery
+archive remains under `.analysis/reconstruction/receipt-archive/`.
+Receipt, member manifest and restore command:
+`.analysis/cleanup/windows-dos-demo-20261008/receipt.json`.
+Only README/package metadata is updated; removed optional profile fields no
+longer advertise absent files. Export reconstructs a missing reference budget
+from the verified standard profile. Native source/tools/caches stay retained.
 
 ## Safe cleanup procedure
 
