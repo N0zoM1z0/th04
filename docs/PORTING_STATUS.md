@@ -2,7 +2,7 @@
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 
-Updated 2026-10-08. Native development has resumed. DOS semantic work merges with the
+Updated 2026-10-09. Native development has resumed. DOS semantic work merges with the
 DOS baseline; unfinished native source remains on `port/modern-64`.
 General readability expansion stops here unless a specific port contract
 cannot be represented safely. Native executable bytes need not be exact.
@@ -38,6 +38,10 @@ cannot be represented safely. Native executable bytes need not be exact.
   has its own single-RNG-word cipher and selected-section writer. Live MAIN
   suspension, Game Over TRAM, Bomb character graphics and Continue host save
   still require integration.
+- Character Bomb graphics (v1303): 1,236 original state cases/2,252 records and
+  294 pixel cases/548 complete screens agree across two loads, GNU/optimized
+  UBSan/actual Windows. BB tiles, character CDG and48 retained stars are tested;
+  the component still needs live MAIN lifecycle/render dispatch.
 - Current native builds: 35 AMD64 products and 34 contracts per GNU/MinGW/
   optimized-UBSan build. Actual Windows contracts and current component captures
   also pass. This is not full routes, physical hardware, audio or DOS exactness.
@@ -72,6 +76,10 @@ Latest Game Over code commit `1610726` is pushed on the native branch. Periodic
 cleanup now retires superseded generated streams and deduplicates only verified
 immutable captures; this batch reclaimed 980,566,016 allocated bytes. Targets,
 source, final receipts and three current build caches remain available.
+Latest Bomb code commit `9a50588` adds the validated component. This batch retires
+8 superseded generated streams, reclaiming13,643,776 allocated bytes with source,
+active cache/input and final-reference hash readback. Final pixels are compressed;
+actual Windows hashes the full binary stream without a second raw dump.
 
 The native branch's [PORT64.md](https://github.com/N0zoM1z0/th04/blob/port/modern-64/docs/PORT64.md)
 routes detailed component contracts and replay receipts. Its evidence and

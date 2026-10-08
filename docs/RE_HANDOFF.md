@@ -1,6 +1,6 @@
 # TH04 current handoff
 
-Updated 2026-10-08. Current focus: resumed x64 implementation on its separate
+Updated 2026-10-09. Current focus: resumed x64 implementation on its separate
 branch; DOS demo state is retained. This handoff
 indexes verified state; detailed experiments belong in focused notes and CSV
 ledgers. General semantic work has reached its stopping condition: resume it
@@ -37,8 +37,8 @@ native fixes or this documentation cleanup. Targets remain
   440-bullet Lunatic/Turbo fixture measures improvement, including the extreme
   all-cloud phase. It is not a natural full Lunatic route or Windows FPS test.
 - Full natural dense Lunatic timing/audio, the optional Windows 36,000-cycle
-  profile and a second PC-98 emulator remain validation TODOs. No new
-  DOS performance work is not part of the current native batch.
+  profile and a second PC-98 emulator remain validation TODOs. New DOS
+  performance work is outside the current native batch.
 
 See [reusable hardware contracts and limits](PC98_HARDWARE_REUSE.md) for each
 repair, replay entrypoint and evidence/knowledge routing.
@@ -59,7 +59,12 @@ handoff own the detailed evidence.
 v1301 player lifecycle and v1302 Game Over/Continue file components now pass
 bounded original CPU/GNU/UBSan/actual Windows comparisons. Current builds have
 35 AMD64 products and 34 contracts each; native code commit `1610726` is pushed.
-Next join Bomb character graphics, Game Over TRAM and real MAIN suspension/
+v1303 character Bomb graphics now agree on1,236 original CPU state cases/
+2,252 records and294 pixel cases/548 screens at two loads, GNU/optimized UBSan/
+actual Windows.105 current products bind263 files;34 contracts pass per host.
+The source remains a component awaiting live dispatch; no GUI death or full-route
+claim follows. Code commit `9a50588` is saved on the native branch.
+Next join Game Over TRAM, verified Bomb graphics and real MAIN suspension/
 Continue saving, then Extra, full HUD/OP/audio/config and full-route validation.
 Keep native source separate and every launch muted. MAIN database attestation
 passes before the next target-dependent batch.
