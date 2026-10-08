@@ -45,6 +45,11 @@ cannot be represented safely. Native executable bytes need not be exact.
 - Current native builds: 35 AMD64 products and 34 contracts per GNU/MinGW/
   optimized-UBSan build. Actual Windows contracts and current component captures
   also pass. This is not full routes, physical hardware, audio or DOS exactness.
+- Game Over graphics (v1304):200 complete indexed/TRAM/RGB snapshots agree
+  with actual original gaiji/ANK/wipe/black instructions at two loads and
+  GNU/optimized UBSan/actual Windows. All158 registration snapshots still pass.
+  This completes the renderer component; live MAIN and Continue saving remain.
+  Code/evidence commits `a789b80`/`5ca7995` are pushed on `port/modern-64`.
 
 ## Remaining, in order
 

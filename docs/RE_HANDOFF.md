@@ -64,7 +64,15 @@ v1303 character Bomb graphics now agree on1,236 original CPU state cases/
 actual Windows.105 current products bind263 files;34 contracts pass per host.
 The source remains a component awaiting live dispatch; no GUI death or full-route
 claim follows. Code commit `9a50588` is saved on the native branch.
-Next join Game Over TRAM, verified Bomb graphics and real MAIN suspension/
+v1304 Game Over TRAM now agrees on200 complete indexed/text/RGB snapshots at
+two original loads and GNU/optimized UBSan/actual Windows. All158 registration
+snapshots still agree;34 contracts pass per host.105 products bind267 files.
+Text stores and FAR returns execute original instructions; graphics, CGROM and
+video-policy adapters remain explicit. This is still a component.
+Native code/evidence commits `a789b80`/`5ca7995` are pushed; v1304 cleanup
+reclaims398,381,056 allocated bytes. Windows raw retirement is reported
+separately as203,511,584 logical bytes; final references/caches remain.
+Next join verified Game Over TRAM, Bomb graphics and real MAIN suspension/
 Continue saving, then Extra, full HUD/OP/audio/config and full-route validation.
 Keep native source separate and every launch muted. MAIN database attestation
 passes before the next target-dependent batch.
