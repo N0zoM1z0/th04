@@ -27,7 +27,7 @@ foreach ($name in @('HI01.PI','SCNUM2.BFT','GAMEFT.BFT')) {
 }
 $imageBefore = Hash $image
 $contracts = @(Get-ChildItem -LiteralPath $executables -Filter '*contracts.exe' | Sort-Object Name)
-if ($contracts.Count -ne 33) { throw "Expected 33 contracts; found $($contracts.Count)" }
+if ($contracts.Count -ne 34) { throw "Expected 34 contracts; found $($contracts.Count)" }
 $products = @{}
 foreach ($contract in $contracts) {
     $lines = @(& $contract.FullName 2>&1)
@@ -58,9 +58,9 @@ foreach ($file in @(Get-ChildItem -LiteralPath $front -Recurse -File)) {
 }
 @{
     passed=$true; observed_utc=[DateTime]::UtcNow.ToString('o'); host='actual-Windows-AMD64';
-    contracts=33; source_manifest=$SourceManifest; products=$products;
+    contracts=34; source_manifest=$SourceManifest; products=$products;
     game_sha256=(Hash $game); scene_sha256=(Hash $scene); captures=$captures;
     hdi_sha256=$imageBefore; font_sha256=(Hash $font);
     scope='Seeded child registration/save/reload/fresh OP/second MAIN; explicit mute. No natural full-game route or audio acceptance.'
 } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $out 'receipt.json') -Encoding UTF8
-Write-Host 'PASS: 33 contracts, real assets, 30 seeded frontend saves/restarts; muted.'
+Write-Host 'PASS: 34 contracts, real assets, 30 seeded frontend saves/restarts; muted.'

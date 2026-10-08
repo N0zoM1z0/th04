@@ -52,6 +52,10 @@ class System {
 public:
     explicit System(Snapshot initial = {});
     const Snapshot& snapshot() const { return state_; }
+    void limit_laser_time(std::uint16_t maximum) {
+        if(state_.laser.time>maximum)state_.laser.time=maximum;
+    }
+    void set_options(motion::Point options) {state_.options=options;}
     bool advance_trigger(bool pressed);
     void fire(application::Playchar character, application::ShotType type,
               unsigned level, motion::Point player,

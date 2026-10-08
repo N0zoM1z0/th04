@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_player_lifecycle_windows.ps1",
+    "port64/player_lifecycle_contracts.cpp",
+    "port64/verify_player_lifecycle.py",
+    "port64/player_lifecycle.hpp",
+    "port64/player_lifecycle.cpp",
     "port64/host_score.hpp",
     "port64/host_score.cpp",
     "port64/registration_scene.hpp",

@@ -15,7 +15,10 @@ inline constexpr std::uint16_t movement_mask = 0x0f0f;
 class Movement {
 public:
     Movement();
+    Movement(motion::Motion position,std::uint16_t previous_input)
+        :position_(position),previous_input_(previous_input) {}
     const motion::Motion& position() const { return position_; }
+    motion::Motion& mutable_position() { return position_; }
     std::uint16_t previous_input() const { return previous_input_; }
     void update(std::uint16_t held_input, bool shift);
     // stage_runtime_init writes four position words; velocity/input latch
