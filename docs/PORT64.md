@@ -7,6 +7,13 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
 
 ## Current state
 
+- v1307 joins frozen Game Over indexed/TRAM rendering, held keyboard ownership
+  and independent refresh pacing to ordinary MAIN. Actual OP selection and
+  authored finite STD contact drive20 scenes per GNU/optimized UBSan/actual
+  Windows. Two-load original requests/TRAM/score-HUD agree on322 complete
+  displays;151 host files agree and34 contracts pass per host.105 AMD64 products
+  bind277 files. Quit score-only MAINE, Bomb pixels/shared palette and full HUD
+  remain. See [frontend evidence](port64/evidence/stage-lifecycle.md#live-game-over-frontend).
 - Normal Stages 1–6 waves/bosses/dialogues/departures and MAINE Ending/Staff/
   verdict/congratulations are implemented with bounded original CPU and native
   integration controls. Complete natural route validation remains pending.
@@ -74,6 +81,8 @@ See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-li
 - [x] Ordered registration wait/fade/input/rendering, retained pre-save sections,
   separate host score commits and fresh OP. Audio requests retained; backend pending.
 - [ ] Bomb, hit/death/lives, game-over and Continue.
+  Core lifecycle and frozen Game Over frontend are joined; Bomb graphics/shared
+  palette and Quit registration→verdict→fresh OP remain.
 - [ ] Extra gameplay/boss and complete HUD.
 - [ ] OP score/Music Room/demo/unlocks, audio/configuration and pacing.
 - [ ] Actual Linux/Windows full-route/save/config tests across characters/ranks;

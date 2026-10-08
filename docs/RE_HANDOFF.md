@@ -6,6 +6,15 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Verified frontier
 
+- v1307 joins frozen Game Over graphics/TRAM, held keyboard ownership and
+  refresh pacing to ordinary MAIN. Actual OP selection and authored finite STD
+  enemy contact drive20 last-life scenes per GNU/optimized UBSan/actual Windows.
+  Two-load original scene/TRAM/score-HUD controls agree on322 complete displays
+  (332,304,000 bytes);151 host files agree and34 contracts pass per host.
+  A missing score consumer mutant is rejected in60 snapshots.105 AMD64 products
+  bind277 files. Initial native display/CGROM/hardware and life/bomb HUD/audio/
+  DOS score-I/O adapters remain explicit. Quit still stops at score-only MAINE
+  pending; no complete natural route or GUI publication is accepted.
 - v1304 adds Game Over TRAM rendering. Actual gaiji/ANK/wipe/black stores at
   original loads1000/2000 agree with GNU/optimized UBSan/actual Windows on200
   complete indexed/TRAM/RGB snapshots. All158 prior registration snapshots
@@ -69,8 +78,9 @@ See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-li
 
 ## Next owners
 
-1. Finish frontend Game Over frozen indexed/TRAM rendering and keyboard ownership,
-   Bomb graphics and shared lifecycle palette, and Quit registration followed by verdict/fresh OP.
+1. Finish Bomb graphics and shared lifecycle palette, and Quit registration
+   followed by verdict/fresh OP. Frozen Game Over rendering/input now has a
+   verified finite-STD frontend join.
    Validate live ordinary hit/Bomb/Continue with original frame/render controls.
 2. Extra, full HUD, OP auxiliary flows, unlocks, audio/configuration.
 3. Actual Linux/Windows complete routes, persistence/restart and dense Lunatic
@@ -82,6 +92,19 @@ See [port overview and stable evidence anchors](PORT64.md), branch-local
 Detailed history no longer accumulates in this handoff.
 
 ## Commands and private state
+
+Latest Game Over frontend evidence: `.analysis/port64/gameover-join-v1307/`.
+`platform-review.json` / `readback.py` bind277 files to105 products, original
+producer manifest `05b9e17e7ea6194e18fa82dc3e072baa9291b631ffd5edabce684481bd360ff1`
+and current consumer manifest
+`cf916d8658c50a70ac87d278bdaff72e924187158b724049eb1467f084fce30e`.
+Original observations remain independent of the later LF journal fix; all
+captured inputs, requests, host files and complete displays are unchanged.
+Use `verify_gameover_join.py` / `verify_gameover_join_windows.ps1` with fresh
+outputs. `cleanup-receipt.json` records123,744,256 allocated bytes reclaimed
+with3,926 protected files unchanged. Complete scene files share immutable
+hardlinks after independent production/readback. Keep both original producer
+references, current receipts/caches and pinned inputs. All runs stay muted.
 
 ```sh
 python3 scripts/preflight.py

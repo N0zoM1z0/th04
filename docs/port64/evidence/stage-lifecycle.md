@@ -740,3 +740,85 @@ negative executable and Python caches are retired. Independently generated,
 byte-readback verified request streams share immutable hardlinks. Current
 original inputs, final references, pinned tools and three active caches stay.
 All runs are muted; no audio backend/device is opened.
+
+
+## Live Game Over frontend
+
+v1307 joins the Game Over renderer, held input and refresh clock to ordinary
+MAIN. The frontend captures its last completed indexed display before the
+last-life prefix, retains graphics and a separate text plane, and consumes
+scene requests synchronously. The final Continue wipe is captured before the
+interrupted MAIN suffix resumes and releases this graphics owner. Discrete Esc
+cannot close or advance an active Game Over scene; held sampling owns it.
+Dialog/resource gates cannot intercept its keys. Game Over uses one refresh
+per clock even when the suspended gameplay requested deliberate slowdown.
+
+Actual OP options/character selection and an authored finite STD script drive
+real enemy contact, not an injected hit or forced death. Two characters,
+repaint-every-frame versus delayed repaint, held acknowledgement, Continue,
+Esc Quit, direction-selected Quit, three consumed credits and the fourth
+Game Over, and a real failed writer produce20 scenes per host. MAIN first
+suspends at frame104/STD105; subsequent deaths occur at340/341,540/541,740/741.
+Actor/STD/player/shared-ring state freezes during the scene. Continue commits
+the separate host file before reset, reopens/checks it, resumes one suffix,
+and advances STD only on the following frame. Quit remains at the pending
+score-only MAINE request; registration/verdict/fresh OP are the next owner.
+
+Original MAIN Game Over/menu/fade/input-loop instructions execute at loads1000
+and2000 with each captured initial state and exact held-key timeline. The
+native complete event sequence and final state agree; failed host writes
+compare the original request prefix through the attempted save, with native
+fail-before-reset assertions. Original TRAM gaiji/ANK/wipe/black stores execute
+separately over those independently compared requests. The new score consumer
+executes original relative `0AAF:6BA2..6BD4`, including its near return and calls
+to original gaiji puts, using original reset digits/high score. DATA:1ECE's NUL
+is asserted from the original initialized data rather than manufactured.
+Each load performs280,614 text calls and1,340,784 TRAM stores.
+
+There are322 complete indexed/TRAM/RGB displays,332,304,000 bytes per host.
+GNU8.4, optimized undefined/bounds UBSan and actual Windows agree on every
+byte and all151 output files. All34 contracts pass per host; the200 preceding
+Game Over renderer controls also pass on current GNU/UBSan products.
+105 AMD64 products bind277 files to current consumer manifest
+`cf916d8658c50a70ac87d278bdaff72e924187158b724049eb1467f084fce30e`.
+The independent two-load producer retains manifest
+`05b9e17e7ea6194e18fa82dc3e072baa9291b631ffd5edabce684481bd360ff1`.
+Later consumers verify target/data/font identity, that producer manifest, all
+scenario/host output hashes and every display byte. They do not relabel old
+original observations with the new candidate's manifest or claim reexecution.
+
+Two rejected development approaches are retained. A direction pulse too close
+to acknowledgement/confirmation either failed to finish or selected Continue;
+the final fixture requires the intended Quit route and two released samples
+at each boundary. Windows initially differed only by CRLF in82 journal files,
+after its full display stream already agreed. Journals now explicitly write
+LF in binary mode; comparison never normalizes away those file differences.
+A private source-only omission of the score TRAM consumer is rejected in60
+snapshots, first at clock114/byte257089. Product source remains unchanged by
+the mutation; its source/commands/producer/difference receipts remain private.
+
+The initial last-completed native graphics, palette and currently maintained
+overlay/score text are supplied input adapters. This does not establish the
+original interrupted MAIN physical page/display, full HUD, or shared lifecycle
+palette behavior. CGROM and emulator RGB policy are explicit adapters; life/
+bomb HUD, audio, DOS ranking I/O and process execution remain request adapters.
+Real native host commits are a separate observed path. No GUI publication,
+complete natural route, physical PC-98 timing/audio or DOS exact promotion
+follows. Bomb pixels/shared palette and score-only MAINE remain next.
+
+Replay into fresh directories only:
+
+```sh
+python3 port64/verify_gameover_join.py --target ../../targets/th04/main.exe --hdi ../../runtime/images/zun.hdi --font-bmp PRIVATE_FONT --exe .analysis/port64/linux-live-v1251/th04-port64 --output-dir FRESH_ORIGINAL
+python3 port64/verify_gameover_join.py --target ../../targets/th04/main.exe --hdi ../../runtime/images/zun.hdi --font-bmp PRIVATE_FONT --exe .analysis/port64/ubsan-live-v1251/th04-port64 --reference-dir FRESH_ORIGINAL --output-dir FRESH_CONSUMER
+# Actual Windows: verify_gameover_join_windows.ps1 with fresh output,
+# -ExecutableDirectory, -ReferenceDirectory, -Hdi, -FontBitmap, -SourceManifest.
+python3 .analysis/port64/gameover-join-v1307/readback.py
+```
+
+The private evidence root retains original/current consumer receipts, manifests,
+compressed streams, Windows commands, negative controls and diagnostic journals.
+Cleanup reclaims123,744,256 allocated bytes with3,926 protected files unchanged.
+Completed independent scene files share immutable hardlinks after byte readback;
+never replay a writer in place. Pinned inputs, original references, receipts and
+three active caches remain. Every launch is muted and opens no audio device.

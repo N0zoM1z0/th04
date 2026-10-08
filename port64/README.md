@@ -17,7 +17,9 @@ On Linux the window uses SDL2; on Windows it uses Win32/GDI.
 Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
 to advance dialogue. After congratulations and the original100-refresh delay,
 registration accepts arrows, Z/Enter, X to erase and Esc to save, then returns
-to fresh OP. Player death, Bomb, complete HUD/audio and Extra remain pending.
+to fresh OP. Player death and frozen Game Over/Continue are joined with bounded
+frontend controls. Quit's score-only MAINE route, Bomb graphics/shared palette,
+complete HUD/audio and Extra remain pending.
 The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
 
