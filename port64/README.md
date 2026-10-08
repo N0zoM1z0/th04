@@ -15,10 +15,24 @@ battle, then all-clear, Good Ending, Staff Roll, assessment and congratulations.
 Easy follows its Bad Ending through the same post-Ending owners.
 On Linux the window uses SDL2; on Windows it uses Win32/GDI.
 Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
-to advance dialogue. Player death, Bomb, complete HUD/audio, Extra,
-score registration and save are not implemented yet. After congratulations
-the preview holds at registration entry after the original100-refresh delay. The native preview does not embed
+to advance dialogue. After congratulations and the original100-refresh delay,
+registration accepts arrows, Z/Enter, X to erase and Esc to save, then returns
+to fresh OP. Player death, Bomb, complete HUD/audio and Extra remain pending.
+The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
+
+All launches stay muted (`--mute` is also explicit in the Windows launcher).
+Scores use a separate `GENSOU.SCR` under `$XDG_DATA_HOME/th04` or
+`$HOME/.local/share/th04` on Linux, `%LOCALAPPDATA%\TH04` on Windows; override
+with `--save-dir DIR`. Original writer closes commit through a temporary file
+and atomic replacement. An I/O failure blocks the return to OP. Files shorter
+than ten196-byte sections are recreated by an explicit host repair; score-core
+short-read behavior remains unchanged. HDI inputs stay read-only.
+
+`--registration-checks DIR` runs30 seeded child-scene fixtures, including all
+ten sections, both name exits, save/reload, fresh OP and second MAIN. This
+does not exercise a complete natural gameplay route. See the
+[registration evidence](../docs/port64/evidence/score-registration.md#registration-scene-and-host-save).
 
 The two Stage4 Boss owners have independent original CPU state/event,
 foreground/backdrop and indexed-pixel controls. Marisa additionally owns four

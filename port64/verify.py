@@ -14,6 +14,13 @@ import sys
 
 
 PORT_FILES = (
+    "port64/host_score.hpp",
+    "port64/host_score.cpp",
+    "port64/registration_scene.hpp",
+    "port64/registration_scene.cpp",
+    "port64/registration_scene_contracts.cpp",
+    "port64/verify_registration_scene.py",
+    "port64/verify_registration_join_windows.ps1",
     "port64/registration_render.hpp",
     "port64/registration_render.cpp",
     "port64/registration_render_contracts.cpp",

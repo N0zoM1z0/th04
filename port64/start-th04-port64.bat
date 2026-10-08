@@ -13,8 +13,9 @@ echo Staff Roll includes both backgrounds and the original dissolve transitions.
 echo The assessment screen includes the original grades and commentary.
 echo Assessment: release the key, then press Enter or Z to confirm.
 echo Congratulations: release the key, then press Enter or Z to continue.
-echo After congratulations the preview holds at score registration entry.
-echo Score saving, player death, Bombs and audio are in development.
+echo Registration: arrows select, Z or Enter enters, X erases, Esc saves.
+echo Scores save separately under LOCALAPPDATA\TH04 and return to the title.
+echo Player death and Bombs are in development. This launcher stays muted.
 if not exist "th04-port64.exe" (
   echo ERROR: th04-port64.exe is missing.
   pause
@@ -30,7 +31,7 @@ if not exist "FREECG98.bmp" (
   pause
   exit /b 1
 )
-th04-port64.exe --hdi "play-normal.hdi" --font-bmp "FREECG98.bmp" --title
+th04-port64.exe --hdi "play-normal.hdi" --font-bmp "FREECG98.bmp" --title --mute
 if errorlevel 1 (
   pause
   exit /b 1

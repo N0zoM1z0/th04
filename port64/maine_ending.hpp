@@ -31,6 +31,7 @@ public:
     void start_congratulations();
     void set_verdict_observer(verdict::Sink sink) { verdict_observer_=std::move(sink); }
     Phase phase() const { return phase_; }
+    unsigned registration_text_weight() const { return text_weight_; }
     int main_tone() const { return tone_; }
     const cutscene::Scene* scene() const { return scene_.get(); }
     const staff::Scene* staff_scene() const { return staff_.get(); }
@@ -59,6 +60,7 @@ private:
     int tone_=100,fade_left_=17,measure_left_=0;
     unsigned fade_ticks_=0;
     bool bgm_active_;
+    unsigned text_weight_=2;
     std::optional<std::uint16_t> song_measure_;
     // The current host audio backend is inactive, but preserve the request
     // issued before MAIN's fade so a real backend can consume it later.

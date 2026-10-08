@@ -21,7 +21,7 @@ bool Options::operator==(const Options& other) const {
         se_mode == other.se_mode && turbo == other.turbo;
 }
 
-State::State(bool extra_unlocked) : extra_unlocked_(extra_unlocked) {}
+State::State(bool extra_unlocked,Options options) : extra_unlocked_(extra_unlocked),options_(options) {}
 
 void State::move_vertical(int direction) {
     const int count = (screen_ == Screen::main)

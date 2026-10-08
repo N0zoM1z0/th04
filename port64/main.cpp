@@ -237,13 +237,17 @@ int main(int argc, char** argv) {
         std::string hdi, archive, member, output, title_screenshot;
         std::string options_screenshot, character_screenshot, shot_screenshot;
         std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots,ending_screenshots,font_bitmap;
-        bool title_window = false;
+        bool title_window = false,muted=true;
+        std::string save_directory,registration_checks;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
             if (arg == "--title") { title_window = true; continue; }
+            if (arg == "--mute") { muted=true;continue; }
             require(i + 1 < argc, "each option needs a value");
             const std::string value = argv[++i];
             if (arg == "--hdi") hdi = value;
+            else if(arg=="--save-dir")save_directory=value;
+            else if(arg=="--registration-checks")registration_checks=value;
             else if (arg == "--archive") archive = value;
             else if (arg == "--member") member = value;
             else if (arg == "--output") output = value;
@@ -272,7 +276,7 @@ int main(int argc, char** argv) {
             else if (arg == "--font-bmp") font_bitmap = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
-        const bool title = title_window || !title_screenshot.empty() ||
+        const bool title = title_window || !registration_checks.empty() || !title_screenshot.empty() ||
             !options_screenshot.empty() || !character_screenshot.empty() ||
             !shot_screenshot.empty() || !handoff_screenshot.empty() || !main_screenshot.empty() ||
             !shooting_screenshots.empty() || !combat_screenshots.empty() || !midboss_screenshots.empty() || !orange_screenshots.empty() || !dialog_screenshots.empty() || !stage2_screenshots.empty() || !kurumi_screenshots.empty() || !stage3_screenshots.empty() || !elly_screenshots.empty() || !stage4_screenshots.empty() || !reimu_screenshots.empty() || !marisa_screenshots.empty() || !stage5_screenshots.empty() || !yuuka5_screenshots.empty() || !stage6_screenshots.empty() || !ending_screenshots.empty();
@@ -282,10 +286,11 @@ int main(int argc, char** argv) {
                 "[--member NAME --output BMP | --title "
                 "[--title-screenshot BMP] [--options-screenshot BMP] "
                 "[--character-screenshot BMP] [--shot-screenshot BMP] "
-                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE]]");
+                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE] [--save-dir DIR] [--registration-checks DIR] [--mute]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         if (title) {
             MainAssets main_assets;
+            main_assets.save_directory=save_directory;main_assets.muted=muted;
             if (!hdi.empty()) {
                 const auto image = read_file(hdi);
                 const auto game = Fat12(image).main_archive();
@@ -304,10 +309,21 @@ int main(int argc, char** argv) {
                 for(const std::string name:{"ST00.BB1","ST00.BB2","ST02.BB1","ST02.BB2","ST03.BBT","ST03B.BBT","ST03B21.BBT","ST03B22.BBT","ST04.BB1","ST04.BB2","ST05.BB1","ST05.BB2","ST05.BB3","ST05.BB4","ST05.BB5","ST05.BB6","ST05.BB7","ST05.BB9"}) main_assets.dialog_sprites.emplace(name,archive_member(game,name));
                 if(!font_bitmap.empty()) main_assets.font_bitmap=read_file(font_bitmap);
                 else { std::ifstream font("FREECG98.bmp",std::ios::binary);if(font) main_assets.font_bitmap={std::istreambuf_iterator<char>(font),{}}; }
-                if(title_window || !ending_screenshots.empty()) {
+                if(title_window || !ending_screenshots.empty() || !registration_checks.empty()) {
                     auto& ending=main_assets.ending;
                     ending.font_bitmap=main_assets.font_bitmap;
                     ending.gaiji=archive_member(par,"GAMEFT.BFT");
+                    auto& registration=main_assets.registration;
+                    registration.graphics.font_bitmap=main_assets.font_bitmap;
+                    registration.graphics.gaiji=ending.gaiji;
+                    registration.graphics.pictures.emplace("HI01.PI",decode_pi(archive_member(par,"HI01.PI")));
+                    registration.numerals=archive_member(par,"SCNUM2.BFT");
+                    // Attested MAINE registration notice; preserve Shift-JIS
+                    // bytes instead of translating the original graphics.
+                    registration.non_turbo_message=
+                        "\x83\x58\x83\x8D\x81\x5B\x83\x82\x81\x5B\x83\x68\x82\xC5\x82\xCC"
+                        "\x83\x76\x83\x8C\x83\x43\x82\xC5\x82\xCD\x81\x41\x83\x58\x83\x52"
+                        "\x83\x41\x82\xCD\x8B\x4C\x98\x5E\x82\xB3\x82\xEA\x82\xDC\x82\xB9\x82\xF1";
                     for(unsigned character=0;character<2;++character) for(unsigned shot=0;shot<2;++shot)
                         for(bool bad:{false,true}) {
                             const auto name=th04::portable::cutscene::script_name(character,shot,bad);
@@ -380,7 +396,7 @@ int main(int argc, char** argv) {
                 decode_pi(archive_member(par, "SLB1.PI")),
                 archive_member(par, "SL.CD2"), main_assets, title_screenshot,
                 options_screenshot, character_screenshot, shot_screenshot,
-                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots, ending_screenshots, title_window
+                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots, ending_screenshots, registration_checks, title_window
             );
             return 0;
         }

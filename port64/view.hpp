@@ -8,6 +8,7 @@
 #include "pi_image.hpp"
 #include "cutscene_scene.hpp"
 #include "staff_roll.hpp"
+#include "registration_scene.hpp"
 
 struct StageAssets {
     Bytes stage_tiles,boss_tiles,backdrop,transition,boss_faces,map_tiles,map,standard,stars;
@@ -17,6 +18,9 @@ struct StageAssets {
 struct MainAssets {
     th04::portable::cutscene::Assets ending;
     th04::portable::staff::Assets staff_roll;
+    th04::portable::registration::GraphicsAssets registration;
+    std::string save_directory;
+    bool muted=true;
     StageAssets stage2,stage3,stage5,stage6;
     std::array<StageAssets,2> stage4;
     Bytes reimu;
@@ -50,4 +54,4 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& midboss_screenshots,
                const std::string& orange_screenshots,
                const std::string& dialog_screenshots,
-               const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots, bool window);
+               const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks, bool window);

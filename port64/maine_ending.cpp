@@ -105,6 +105,7 @@ void Ending::start_staff_roll(const staff::Assets& assets) {
     staff_->set_audio_active(bgm_active_);
     // A new song owns measure progress; the previous Ending song cannot
     // satisfy STAFF's waits. Its PI/script/text-box owner is now released.
+    text_weight_=scene_->text_weight();
     song_measure_.reset();scene_.reset();phase_=Phase::staff_roll;
 }
 void Ending::start_verdict() {
@@ -121,6 +122,7 @@ void Ending::start_congratulations() {
     if(phase_!=Phase::congratulations_pending || !verdict_)
         throw std::logic_error("congratulations requires a completed verdict");
     const auto& r=application_->resident();const auto& old=verdict_->canvas();
+    text_weight_=old.text_weight();
     congratulations_=std::make_unique<Congratulations>(*assets_,unsigned(r.playchar),r.config.rank,
         std::array<Bytes,2>{old.page(0),old.page(1)},old.shown_page());
     // Retain pages, not the old scoring/clock owner. MAINE and its continued

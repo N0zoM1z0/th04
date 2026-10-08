@@ -9,6 +9,7 @@
 #include "stage5.hpp"
 #include "sprite_sheet.hpp"
 #include "stage_background.hpp"
+#include "host_score.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -45,6 +46,8 @@ namespace dialog = th04::portable::dialog;
 namespace cutscene = th04::portable::cutscene;
 namespace maine = th04::portable::maine;
 namespace verdict = th04::portable::verdict;
+namespace registration = th04::portable::registration;
+namespace score_file = th04::portable::score_file;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -1145,10 +1148,36 @@ public:
     void enable_staff_roll() { enable_ending();continue_staff_=true; }
     void enable_verdict() { enable_staff_roll();continue_verdict_=true; }
     void enable_congratulations() { enable_verdict();continue_congratulations_=true; }
+    void enable_registration() {
+        require_view(assets_ && !assets_->registration.numerals.empty(),"registration assets missing");
+        const auto directory=assets_->save_directory.empty() ?
+            score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
+        score_store_=std::make_unique<score_file::HostStore>(directory);
+        enable_congratulations();continue_registration_=true;
+    }
+    const registration::Scene* registration_scene() const { return registration_.get(); }
+    // Explicit headless child-scene fixture. This publishes seeded run state
+    // through the real process owner; it is not a natural gameplay route.
+    void seed_registration_fixture(unsigned character,unsigned rank,unsigned mode) {
+        require_view(continue_registration_ && application_.program()==application::Program::op,
+                     "registration fixture requires fresh OP");
+        menu::Options options;options.rank=std::uint8_t(rank==4 ? 1 : rank);options.turbo=mode!=2;
+        application_.apply_options(options);
+        for(unsigned i=0;i<318;++i)application_.advance_op_menu_frame();
+        if(rank==4)application_.start_extra(application::Playchar(character),application::ShotType(character));
+        else {
+            application_.start_normal(application::Playchar(character),application::ShotType(character));
+            for(unsigned stage=0;stage<5;++stage)application_.advance_main_stage();
+        }
+        application::RunStatistics statistics;statistics.score_digits[6]=1;
+        application_.finish_main(statistics,rank==4 ? application::EndSequence::extra : application::EndSequence::good);
+        begin_registration(0,2);
+        frame_=render();
+    }
     void enable_host_timing() { host_timing_=true; }
     void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
     const maine::Ending* ending() const { return ending_.get(); }
-    bool animated() const { return live_main() || bool(ending_); }
+    bool animated() const { return live_main() || bool(ending_) || bool(registration_); }
     void enable_stage2() { continue_stage2_=true; }
     void enable_kurumi() { continue_stage2_=true;continue_kurumi_=true; }
     void enable_stage3() { enable_kurumi();continue_stage3_=true; }
@@ -1247,7 +1276,27 @@ public:
         return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
+        if(registration_) {
+            registration_->advance(registration::input_from_main_actions(held_input));
+            if(registration_->finished()) {
+                // All writer closes and blackout completed successfully.
+                // Enter fresh OP with retained resident config and a new LCG.
+                application_.finish_maine();
+                registration_.reset();ending_.reset();sprites_.reset();
+                menu_=menu::State(false,application_.resident().config);
+                selection_=selection::State{};screen_=Screen::menu;loaded_stage_=0;
+                post_started_=post_finished_=second_pre_finished_=third_pre_finished_=false;
+                fourth_pre_finished_=fifth_pre_finished_=sixth_pre_finished_=false;
+            }
+            if(repaint)frame_=render();
+            return;
+        }
         if(ending_) {
+            if(continue_registration_ && ending_->phase()==maine::Phase::registration_pending) {
+                begin_registration(held_input,ending_->registration_text_weight());
+                if(repaint)frame_=render();
+                return;
+            }
             if(continue_staff_ && ending_->phase()==maine::Phase::staff_roll_pending) {
                 require_view(assets_ && !assets_->staff_roll.sprites.empty(),"Staff Roll assets missing");
                 ending_->start_staff_roll(assets_->staff_roll);
@@ -1381,6 +1430,8 @@ public:
                     application_.start_normal(result.playchar, result.shot_type);
                 }
                 screen_ = Screen::main_handoff;
+                if(!sprites_ && assets_ && !assets_->reimu.empty())
+                    sprites_=std::make_unique<MainSprites>(*assets_);
                 if (sprites_) {
                     main_ = std::make_unique<gameplay::State>(application_);
                     main_->load_stage(sprites_->standard);
@@ -1406,6 +1457,20 @@ public:
     }
 
 private:
+    void begin_registration(std::uint16_t held,unsigned weight) {
+        require_view(application_.program()==application::Program::maine && bool(score_store_),
+                     "registration requires MAINE and native storage");
+        const auto& resident=application_.resident();
+        registration::Run run{resident.stage,resident.config.rank,
+            std::uint8_t('0'+unsigned(resident.playchar)),std::uint8_t(resident.shot_type),
+            std::uint8_t(resident.config.turbo),std::uint8_t(resident.end_sequence),resident.score_digits};
+        registration_assets_=assets_->registration;registration_assets_.text_weight=weight;
+        registration_=std::make_unique<registration::Scene>(registration_assets_,run,
+            score_store_->file(),[this] {return application_.next_process_random();},
+            registration::input_from_main_actions(held),
+            [this](const score_file::Operation& operation) {score_store_->apply(operation);});
+        screen_=Screen::maine;
+    }
     void begin_dialog(bool post) {
         // Easy uses a newly loaded _DM04B/_DM14B script, not the normal
         // post-dialogue tail retained after the pre-boss '#' terminator.
@@ -1432,6 +1497,13 @@ private:
                     selection_background_, portraits_, selection_
                 );
         case Screen::maine:
+            if(registration_) {
+                const auto rgb=registration_->renderer().rgb(0,registration_->tone());
+                Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
+                for(unsigned i=0;i<frame.pixels.size();++i)
+                    frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
+                return frame;
+            }
             if(ending_->phase()==maine::Phase::main_fade) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar,ending_->main_tone());
                 if(main_->clear_bonus() && main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
@@ -1478,6 +1550,10 @@ private:
     const MainAssets* assets_=nullptr;
     bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
     std::unique_ptr<maine::Ending> ending_;
+    std::unique_ptr<registration::Scene> registration_;
+    registration::GraphicsAssets registration_assets_;
+    std::unique_ptr<score_file::HostStore> score_store_;
+    bool continue_registration_=false;
     cutscene::Sink ending_observer_;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
     bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
@@ -1516,7 +1592,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_congratulations();front_end.enable_host_timing(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_registration();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1690,7 +1766,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_congratulations();front_end.enable_host_timing();
+    front_end.enable_registration();front_end.enable_host_timing();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1800,7 +1876,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1810,6 +1886,56 @@ void run_title(
     const Frame initial = render_menu(
         background, numerals, labels, cursors, initial_state
     );
+    if(!registration_checks.empty()) {
+        namespace fs=std::filesystem;
+        const fs::path directory(registration_checks);
+        require_view(!fs::exists(directory),"registration checks need a fresh output directory");
+        fs::create_directories(directory);
+        for(unsigned character=0;character<2;++character)for(unsigned rank=0;rank<5;++rank)
+            for(unsigned mode=0;mode<3;++mode) {
+                const auto name=std::to_string(character)+"-"+std::to_string(rank)+"-"+std::to_string(mode);
+                MainAssets assets=main_assets;assets.save_directory=(directory/name).string();
+                FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets);
+                scene.enable_registration();scene.seed_registration_fixture(character,rank,mode);
+                const auto generation=scene.generation();
+                for(unsigned tick=0;tick<35;++tick)scene.advance(0,false,false);
+                scene.repaint();write_bmp((directory/(name+"-table.bmp")).string(),scene.frame());
+                const auto press=[&](std::uint16_t held) {
+                    scene.advance(0,false,false);scene.advance(0,false,false);scene.advance(held,false,false);
+                };
+                if(scene.registration_scene()->status()==registration::Status::editing) {
+                    for(unsigned i=0;i<(mode==1 ? 8u : 1u);++i)press(shot::input_shot);
+                    scene.repaint();write_bmp((directory/(name+"-name.bmp")).string(),scene.frame());
+                    press(mode==1 ? shot::input_shot : 0x2000);
+                } else {
+                    require_view(scene.registration_scene()->status()==registration::Status::release,
+                                 "non-entry scene did not wait for acknowledgement");
+                    press(0x1000);
+                }
+                require_view(scene.registration_scene()->status()==registration::Status::fade_out,
+                             "fixture did not save and start final blackout");
+                for(unsigned i=0;i<17;++i)scene.advance(0,false,false);
+                require_view(scene.program()==application::Program::maine,"fresh OP entered before blackout");
+                scene.advance(0,false,false);
+                require_view(scene.program()==application::Program::op && scene.generation()==generation+1 &&
+                    scene.process_random_state()==1 && !scene.registration_scene() && !scene.main_resources_alive(),
+                    "registration did not release owners and enter fresh OP");
+                write_bmp((directory/(name+"-op.bmp")).string(),scene.frame());
+                score_file::HostStore restart(directory/name);score_file::Section section{};
+                th04::portable::rng::Lcg32 random;
+                require_view(!score_file::load_for(section,restart.file(),std::uint8_t(character),std::uint8_t(rank),
+                    [&] {return random.next15();}),"host score failed checksum on independent reopen");
+                if(mode!=2 || rank==4)require_view(section[score_file::names_offset]==0xaa,
+                    "partial/full name missing after host reopen");
+                // Start a second run through the actual menu/selection path.
+                scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+                require_view(scene.live_main() && scene.main_resources_alive() &&
+                    scene.generation()==generation+2 && scene.resource_stage()==0,
+                    "fresh OP could not start a new MAIN with fresh resources");
+                std::cout<<"REGISTRATION fixture="<<name<<" generation="<<generation
+                    <<" save_bytes="<<restart.file().bytes().size()<<" fresh_op=1 second_main=1 muted=1\n";
+            }
+    }
     const auto continue_ending=[&](FrontEnd& scene,const std::string& prefix) {
         const auto stats=scene.main_state().run_statistics();
         const auto generation=scene.generation();

@@ -75,6 +75,7 @@ void Canvas::draw_picture(int left,int top,int quarter,unsigned mask,bool full) 
 }
 void Canvas::glyph(const Event& e,bool gaiji) {
     if(!gaiji && e.e>3) throw std::invalid_argument("unsupported MAINE glyph effect");
+    if(!gaiji)text_weight_=unsigned(e.e);
     unsigned base=0;
     if(gaiji) {
         if(e.c<0 || e.c>=256 || assets_->gaiji.size()<32) throw std::invalid_argument("invalid MAINE gaiji");
@@ -132,6 +133,8 @@ void Canvas::glyph(const Event& e,bool gaiji) {
     }
 }
 void Canvas::put_text(int left,int top,const std::string& text,unsigned color,unsigned weight) {
+    if(weight>3)throw std::invalid_argument("unsupported MAINE text effect");
+    text_weight_=weight;
     for(std::size_t at=0;at<text.size() && text[at];) {
         const unsigned first=static_cast<unsigned char>(text[at++]);
         const bool full=(first&0xe0u)==0x80u || (first&0xe0u)==0xe0u;

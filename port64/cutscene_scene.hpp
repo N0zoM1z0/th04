@@ -27,6 +27,7 @@ public:
     unsigned shown_page() const { return shown_; }
     unsigned access_page() const { return accessed_; }
     int scroll() const { return scroll_; }
+    unsigned text_weight() const { return text_weight_; }
     std::size_t event_count() const { return event_count_; }
     const std::vector<Event>& pending_sound_requests() const { return sound_requests_; }
     void clear_sound_requests() { sound_requests_.clear(); }
@@ -42,6 +43,7 @@ private:
     std::array<std::uint8_t,48> palette_{};
     unsigned shown_=0,accessed_=0;
     int scroll_=0;
+    unsigned text_weight_=2;
     std::size_t event_count_=0;
     std::vector<Event> sound_requests_;
 public:

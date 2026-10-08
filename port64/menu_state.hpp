@@ -67,7 +67,7 @@ struct Result {
 // defaults without importing 16-bit resident pointers into portable state.
 class State {
 public:
-    explicit State(bool extra_unlocked = false);
+    explicit State(bool extra_unlocked = false,Options options = {});
 
     Screen screen() const { return screen_; }
     std::uint8_t selection() const { return selection_; }

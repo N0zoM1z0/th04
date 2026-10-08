@@ -29,7 +29,11 @@ struct Event {
 // Call advance only for a keyboard iteration after the startup fade completes.
 class Menu {
 public:
-    Menu(Run,score_file::File&,const score_file::Random&,std::uint16_t initial_keys=0);
+    Menu(Run,score_file::File&,const score_file::Random&,std::uint16_t initial_keys=0,
+         bool defer_startup=false);
+    // The scene resumes this after black-in, sampling inherited keys HERE.
+    // The immediate mode remains the original command-sequence Oracle.
+    void complete_startup(std::uint16_t initial_keys);
     void advance(std::uint16_t held);
     bool finished() const { return finished_; }
     bool editable() const { return place_!=score_file::no_entry; }
@@ -61,6 +65,6 @@ private:
     int cursor_=0,column_=0,row_=0;
     unsigned ticks_=0;
     std::uint16_t lock_=1,previous_keys_=0;
-    bool finished_=false;
+    bool finished_=false,startup_pending_=true;
 };
 } // namespace th04::portable::registration

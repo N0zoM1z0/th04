@@ -26,7 +26,7 @@ foreach ($pair in @(
     if ((Hash (Join-Path $reference $pair[0])) -ne $pair[1]) { throw "Reference differs: $($pair[0])" }
 }
 $contracts = @(Get-ChildItem -LiteralPath $exeDirectory -Filter 'th04-port64*contracts.exe' | Sort-Object Name)
-if ($contracts.Count -ne 32) { throw "Expected 32 contract executables; found $($contracts.Count)" }
+if ($contracts.Count -ne 33) { throw "Expected 33 contract executables; found $($contracts.Count)" }
 $products = @{}
 foreach ($contract in $contracts) {
     Run $contract.FullName @() (Join-Path $output ($contract.BaseName + '.txt'))

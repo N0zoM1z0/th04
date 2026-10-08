@@ -1,5 +1,6 @@
 #include "registration.hpp"
 #include <utility>
+#include <stdexcept>
 
 namespace th04::portable::registration {
 // Target keyboard order: letters/punctuation, special symbols, digits and
@@ -29,7 +30,8 @@ void Menu::redraw_name() {
     Event e{Kind::name,int(place_),int(character_),cursor_};
     e.bytes.assign(section_.begin(),section_.end());events_.push_back(std::move(e));
 }
-Menu::Menu(Run run,score_file::File& file,const score_file::Random& random,std::uint16_t initial_keys)
+Menu::Menu(Run run,score_file::File& file,const score_file::Random& random,std::uint16_t initial_keys,
+           bool defer_startup)
     :file_(&file),random_(random),io_at_(file.operations().size()),previous_keys_(initial_keys) {
     event(Kind::tone,0);event(Kind::access,1);
     event(Kind::pi_load,0,0,0,0,"HI01.PI");event(Kind::pi_palette,0);
@@ -56,6 +58,11 @@ Menu::Menu(Run run,score_file::File& file,const score_file::Random& random,std::
     }
     event(Kind::sound,0x100);event(Kind::song,0x600,0,0,0,"NAME");event(Kind::sound,0);
     event(Kind::fade,1,2);
+    if(!defer_startup)complete_startup(initial_keys);
+}
+void Menu::complete_startup(std::uint16_t initial_keys) {
+    if(!startup_pending_)throw std::logic_error("registration startup already completed");
+    startup_pending_=false;previous_keys_=initial_keys;
     if(!editable()) { finish(true);return; }
     for(int row=0;row<3;++row)for(int col=0;col<17;++col)
         event(Kind::gaiji,23+col*2,18+row,alphabet[row*17+col],0xe1);
@@ -77,6 +84,7 @@ void Menu::finish(bool acknowledgement) {
     event(Kind::free_sprites);event(Kind::clear_text);event(Kind::fade,0,1);finished_=true;
 }
 void Menu::advance(std::uint16_t held) {
+    if(startup_pending_)throw std::logic_error("registration input precedes black-in");
     if(finished_)return;
     const auto keys=std::uint16_t(previous_keys_|held);
     if(!lock_) {
