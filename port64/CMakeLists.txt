@@ -16,6 +16,7 @@ add_library(
   player_lifecycle.cpp
   player_bomb.cpp
   gameover.cpp
+  gameover_render.cpp
   player_shots.cpp
   main_state.cpp
   sprite_sheet.cpp

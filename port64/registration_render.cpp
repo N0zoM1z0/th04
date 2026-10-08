@@ -7,6 +7,17 @@ namespace {
 void require(bool b,const char* text) {if(!b)throw std::invalid_argument(text);}
 int row_top(unsigned place) {return place==0 ? 96 : int(place)*16+112;}
 }
+TextPlane::TextPlane(const score_file::Bytes& bytes) {
+    require(bytes.size()==8000,"incomplete initial text banks");
+    for(unsigned at=0;at<2000;++at) {
+        codes_[at]=std::uint16_t(bytes[at*2]|unsigned(bytes[at*2+1])<<8);
+        attributes_[at]=std::uint16_t(bytes[4000+at*2]|unsigned(bytes[4000+at*2+1])<<8);
+    }
+}
+void TextPlane::put_ank(int column,int row,Byte character,std::uint16_t attribute) {
+    require(column>=0 && column<80 && row>=0 && row<25 && character<128,"invalid ANK cell");
+    const unsigned at=unsigned(row*80+column);codes_[at]=character;attributes_[at]=attribute;
+}
 void TextPlane::put(int column,int row,Byte glyph,std::uint16_t attribute) {
     require(column>=0 && column<80 && row>=0 && row<25,"invalid registration text cell");
     const unsigned at=unsigned(row*80+column);
@@ -45,13 +56,14 @@ void TextPlane::overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,co
         if(cell%80==0)right=false;
         const auto code=codes_[cell],attribute=attributes_[cell];
         const unsigned column=code&127u;
-        if(column!=0x56 && column!=0x57) {right=false;continue;}
+        const bool custom=column==0x56 || column==0x57;
+        if(!custom)right=false;
         if(right && (code&0x7f7fu)!=(previous&0x7f7fu))right=false;
-        const unsigned glyph=((code>>8)&127u)+(column-0x56u)*128u;
+        const unsigned glyph=custom ? ((code>>8)&127u)+(column-0x56u)*128u : 0;
         for(unsigned y=0;y<16;++y) {
             unsigned mask=0;
             if(attribute&1u) {
-                if(code&0xff00u)mask=gaiji[base+glyph*32+y*2+(right ? 1 : 0)];
+                if(custom && (code&0xff00u))mask=gaiji[base+glyph*32+y*2+(right ? 1 : 0)];
                 else for(unsigned x=0;x<8;++x)if(font.ank_pixel(Byte(code),x,y))mask|=128u>>x;
             }
             if(attribute&4u)mask^=255u; // Reverse MASK; holes still expose graphics.
@@ -62,7 +74,7 @@ void TextPlane::overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,co
                 rgb[at+2]=(attribute&0x20u) ? 255 : 0;
             }
         }
-        previous=code;right=(code&0xff00u) && !right;
+        previous=code;right=custom && (code&0xff00u) && !right;
     }
 }
 Renderer::Renderer(const GraphicsAssets& assets,Byte character,Byte place,

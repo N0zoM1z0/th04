@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 bool gameover_cli(int argc,char** argv);
+bool gameover_render_cli(int argc,char** argv);
 void gameover_contracts();
 bool bomb_cli(int argc,char** argv);
 void bomb_contracts();
@@ -80,6 +81,7 @@ std::string execute(char op,Fixture& f) {
 int main(int argc,char** argv) {
     try {
         if(gameover_cli(argc,argv))return 0;
+        if(gameover_render_cli(argc,argv))return 0;
         if(bomb_cli(argc,argv))return 0;
         if(argc==3 && std::string(argv[1])=="--vectors") {
             std::ifstream input(argv[2]);require(bool(input),"lifecycle fixture file missing");

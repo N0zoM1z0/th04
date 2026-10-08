@@ -1,8 +1,14 @@
 #include "gameover.hpp"
+#include "gameover_render.hpp"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 
 namespace g=th04::portable::gameover;
 namespace i=th04::portable::item;
@@ -18,6 +24,56 @@ std::string hex(const std::string& text) {
 void event(const g::Event& e) {
     std::cout<<int(e.kind)<<' '<<e.left<<' '<<e.row<<' '<<e.value<<' '<<e.attribute<<' '<<hex(e.text)<<'\n';
 }
+}
+bool gameover_render_cli(int argc,char** argv) {
+    if(argc!=3 || std::string(argv[1])!="--gameover-render")return false;
+#ifdef _WIN32
+    _setmode(_fileno(stdout),_O_BINARY);
+#endif
+    const auto directory=std::filesystem::path(argv[2]).parent_path();
+    const auto read=[&](const char* name) {
+        std::ifstream file(directory/name,std::ios::binary);require(bool(file),"Game Over render asset missing");
+        return g::Renderer::Bytes(std::istreambuf_iterator<char>(file),{});
+    };
+    const auto gaiji=read("GAMEFT.BFT"),font=read("FREECG98.bmp");
+    std::ifstream input(argv[2]);require(bool(input),"Game Over render fixture missing");
+    std::unique_ptr<g::Renderer> renderer;std::string op;
+    while(input>>op) {
+        if(op=="CASE") {
+            unsigned seed;require(bool(input>>seed),"missing render seed");
+            g::Renderer::Bytes indices(256000),tram(8000);std::array<std::uint8_t,48> palette{};
+            for(unsigned i=0;i<indices.size();++i)indices[i]=std::uint8_t((i*73+seed)&15);
+            for(unsigned i=0;i<palette.size();++i)palette[i]=std::uint8_t(((i*29+seed)&15)<<4);
+            constexpr unsigned attributes[]{0,1,0xe1,0x85,0x41,0x45};
+            for(unsigned i=0;i<2000;++i) {
+                tram[i*2]=std::uint8_t((i*31+seed)&127);
+                tram[4000+i*2]=std::uint8_t(attributes[(i+seed)%6]);
+            }
+            renderer=std::make_unique<g::Renderer>(gaiji,font,std::move(indices),palette,th04::portable::registration::TextPlane(tram));
+            continue;
+        }
+        require(bool(renderer),"Game Over render CASE missing");
+        if(op=="SNAP") {
+            int tone;require(bool(input>>tone),"missing Game Over snapshot tone");
+            const auto rgb=renderer->rgb(tone),tram=renderer->text().bytes();
+            for(const auto* data:{&renderer->indexed(),&tram,&rgb})std::cout.write(reinterpret_cast<const char*>(data->data()),data->size());
+            continue;
+        }
+        g::Event e;
+        if(op=="W" || op=="B")e.kind=op=="W" ? g::Kind::wipe : g::Kind::black;
+        else {
+            std::string encoded;
+            require(op=="G" || op=="A","unknown Game Over render operation");
+            require(bool(input>>e.left>>e.row>>e.value>>e.attribute>>encoded),"short Game Over render command");
+            e.kind=op=="G" ? g::Kind::gaiji : g::Kind::ank;
+            if(encoded!="-") {
+                require(encoded.size()%2==0,"invalid Game Over text encoding");
+                for(unsigned i=0;i<encoded.size();i+=2)e.text+=char(std::stoul(encoded.substr(i,2),nullptr,16));
+            }
+        }
+        renderer->apply(e);
+    }
+    return true;
 }
 bool gameover_cli(int argc,char** argv) {
     if(argc!=3)return false;

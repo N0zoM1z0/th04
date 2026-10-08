@@ -7,11 +7,15 @@
 namespace th04::portable::registration {
 // PC-98 TRAM has independent WORD character and attribute banks. Retain
 // half-cell codes so replacing one gaiji also replaces its two attributes.
-// This owner handles the registration gaiji bank, not general console text.
+// MAIN Game Over and MAINE registration use this same bounded gaiji/ANK bank.
+// General Shift-JIS console conversion remains a separate owner.
 class TextPlane {
 public:
+    TextPlane()=default;
+    explicit TextPlane(const score_file::Bytes&);
     void put(int column,int row,Byte gaiji,std::uint16_t attribute);
     void put_string(int column,int row,const std::string&,std::uint16_t attribute);
+    void put_ank(int column,int row,Byte character,std::uint16_t attribute);
     void clear();
     score_file::Bytes bytes() const;
     // RGB overlay values do not follow the analog graphics palette or tone.
