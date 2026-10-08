@@ -6,6 +6,10 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Verified frontier
 
+- v1302 adds the blocking Game Over/menu and MAIN Continue score components.
+  Original MAIN at loads1000/2000 agrees with GNU/optimized UBSan/actual Windows:
+  2,003 menu cases, 64 full scenes, 2,985 file controls. All 34 contracts pass.
+  These components have not joined live MAIN or its renderer/save consumer.
 - v1301 adds the player/miss/Bomb CPU producer component. Original MAIN relative
   `0AAF:54C4..553A`, `571A..581D`, `5E98..610D` executes at loads1000/2000,
   DS8000. 8,235 isolated cases plus retained sequences produce 10,319 records
@@ -29,8 +33,9 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Next owners
 
-1. Add Bomb character graphics and the blocking Game Over/Continue scene, then
-   join the tested player lifecycle to live MAIN and its hit latch.
+1. Add Bomb character graphics and Game Over TRAM rendering, then join the
+   tested player lifecycle, scene and MAIN Continue save to live MAIN. Suspend
+   at the last-life call and resume its suffix once; publish real counters.
 2. Extra, full HUD, OP auxiliary flows, unlocks, audio/configuration.
 3. Actual Linux/Windows complete routes, persistence/restart and dense Lunatic
    timing/performance. All runs stay muted; audio requests are retained only.
@@ -57,6 +62,11 @@ Root MAINE Ghidra attestation passes independently of this worktree's missing
 Latest component root: `.analysis/port64/player-lifecycle-v1301/`;
 `platform-review.json` binds 105 AMD64 products to 250 files. Root MAIN database
 attestation passes. Reuse the checked-in player lifecycle Python/Windows probes.
+Latest Game Over root: `.analysis/port64/gameover-v1302/`; `platform-review.json`
+binds 105 AMD64 products to 257 files. MAIN saves one selection with one RNG word;
+MAINE re-keys all ten sections with two RNG draws per key. Never interchange them.
+One Windows temporary-score replacement failed; three isolated retries and the
+full rerun pass. Cause remains unknown; preserve failure propagation.
 
 Completed captures share immutable hard-linked storage after independent
 production/full readback. The early 90-snapshot development pair is archived;
@@ -64,3 +74,7 @@ production/full readback. The early 90-snapshot development pair is archived;
 net bytes reclaimed in v1299. Keep current 158-snapshot original input and all fast
 caches. Use fresh output directories; never overwrite a shared capture inode.
 Pinned originals/tools, Windows GUI/launchers/assets/saves and rollback remain.
+Per the user's cleanup request, retire superseded/failed outputs each batch and
+deduplicate completed captures only after hash readback. v1302 reclaimed
+980,566,016 allocated bytes; current targets, source and build caches are intact.
+`cleanup-receipt.json` and `final-capture-storage.json` record the operations.

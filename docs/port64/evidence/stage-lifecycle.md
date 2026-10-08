@@ -395,3 +395,81 @@ Replay `verify_player_lifecycle.py --target ../../targets/th04/main.exe --exe
 and runs all34 contracts. No physical timing/audio, live player death/Bomb,
 Continue, pixel or DOS exact claim. Next implement the missing graphics and
 blocking scene, then join this producer and real hit/stock/ranking publication.
+
+## Game Over clock and Continue file ownership
+
+v1302 adds `gameover::Scene`, `gameover::Menu` and separate MAIN score-file
+operations. This remains a component: live MAIN suspension, Game Over TRAM
+rendering, actual Continue host persistence and Bomb character graphics have
+not joined. Target and original CPU observations are separate from native host
+observations. Root MAIN database attestation and pinned file/MZ checks pass;
+canonicality remains candidate-local-attested. No DOS exact claim follows.
+
+Original MAIN relative `0AAF:3971..3CEE` executes the cell fades, full Game Over
+owner/menu and actual score-reset body at loads1000/2000. The original
+`130E:0133..0187` release/press loop and `00D7..00EA` frame-delay body execute;
+keyboard samples and a recorded refresh counter replace device/IRQ consumers.
+Original `0000:0666..06A3` black-out instructions execute with explicit vsync and
+palette-show adapters. TRAM, ranking-save, HUD, shot-level, song and process
+execution are guarded consumers, not accepted implementations in this control.
+
+Initial out32 + in36 + the27-refresh letter slide reaches acknowledgement at
+refresh95. Wait0 has no timeout and ORs two samples; a held acknowledgement key
+cannot also accept Continue. The menu supports one vertical toggle per released
+press; simultaneous directions toggle once, and Cancel takes priority. Final
+Stage (stage_id5) dispatches Bad Ending immediately. Extra (stage_id6) still
+shows/acknowledges Game Over, then skips Continue. Used-credit byte subtraction
+wraps exactly; ordinary three-credit exhaustion skips the menu. Continue saves
+before resetting power1/dream-items0/lives/bombs and score digits1..7/deltas/
+extends/popup; dream_score, high score and unrelated buffers remain under their
+original ownership. A failed save prevents reset. Continue fades take32+36
+refreshes. Quit publishes ES_SCORE before song-fade4 and palette-blackout4;
+initial synchronization plus17 four-refresh steps totals69, then requests MAINE.
+
+MAIN file ownership differs materially from the previously attested MAINE
+owner. Original relative `0AAF:18BA..1939`, `7F1A..81D7` and original TC4J LCG
+`0000:2172..219C` execute with guarded byte-store adapters and actual memory-copy
+instructions. MAIN encode takes low/high bytes of ONE RNG word. Its recreate
+uses10 draws and writes ten sections; save uses ONE draw and writes only the
+selected section. MAINE instead uses two RNG draws per key and save re-keys all
+ten sections with22 draws. MAIN character selection tests resident ASCII'1'
+exactly. Continue always loads/recreates, including non-turbo; turbo inserts the
+8-gaiji CONTINUE name if ranked, marks ordinary stage1+stage_id or Extra stage1,
+and writes only then. Ties precede existing equal rows; name terminators, unused
+bytes, cleared mask, nonselected sections and trailing bytes retain ownership.
+
+Final-source controls: 2,003 menus /43,661 records, 64 full scenes /677,160
+records, and2,985 MAIN file cases /27,710 records. Each agrees between two
+original loads, GNU, optimized UBSan and actual Windows. All34 contracts pass
+per host. Retained10,319 lifecycle and1,288 MAINE score controls also agree on
+all three hosts. Altering a Continue fixture's turbo flag changes the trace and
+is rejected by the untouched reference. Initial development streams passed
+comparison but were rejected by source-manifest guards after concurrent source
+edits; final producers reran against the frozen257-file manifest. No rejected
+run enters accepted evidence.
+
+One first actual-Windows contract run reported `cannot replace native score
+file` in the separate host-store consumer. Three isolated16-case retries and
+the complete34-contract/differential rerun pass. The original error code and
+cause are unknown; this is not a diagnosed Windows/antivirus defect. The failed
+command/log remains under `actual-windows-failed-first/`. Keep failure
+propagation and verify real Continue saves/restarts when the live owner joins.
+
+Manifest: `85bfb562d43d6328cf738530a13c9320a90ffb2ab21fb0ffb3dda05aa29f3a7c`.
+Receipts under `.analysis/port64/gameover-v1302/`: `menu-linux-final/`,
+`scene-linux-final/`, `main-score-linux-final/`, `actual-windows-final/`,
+`platform-review.json`, `comparator-mutation.json`. Replay checked-in
+`verify_gameover.py`, `verify_gameover_scene.py`, `verify_main_score.py` with
+`--target ../../targets/th04/main.exe --exe CACHE/CONTRACT --output-dir FRESH`;
+`verify_gameover_windows.ps1` consumes the three fresh original references and
+runs all34 contracts. All launches remain silent; no audio device is opened.
+
+Periodic storage cleanup, requested by the user, reclaimed980,566,016 allocated
+bytes this batch. Completed v1300 graphics/frontend and current v1302 traces
+were independently read back before immutable hard-link deduplication. Failed
+or superseded development streams were retired with path/size/hash records.
+Final capture paths and receipts remain; original targets/HDI, source and three
+build caches are unchanged. `cleanup-receipt.json` / `final-capture-storage.json`
+record protection checks and reclaimed bytes. Never overwrite a shared capture
+inode; use fresh replay directories. This is storage maintenance, not new game
+acceptance or permission to delete pinned tools/inputs.

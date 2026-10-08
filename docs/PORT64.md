@@ -10,7 +10,7 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
 - Normal Stages 1–6 waves/bosses/dialogues/departures and MAINE Ending/Staff/
   verdict/congratulations are implemented with bounded original CPU and native
   integration controls. Complete natural route validation remains pending.
-- Latest source: v1300 ordered registration scene and separate host score save,
+- Live source frontier: v1300 ordered registration scene and separate host score save,
   fresh OP/second MAIN. 30 seeded frontend fixtures on GNU/optimized UBSan/actual
   Windows produce 112 identical files. Each host passes 33 contracts.
 - Three fast builds have 34 AMD64 products each. Source manifest
@@ -26,6 +26,12 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
   pass 34 contracts each. 105 AMD64 products bind 250 source files, manifest
   `dc88a3e9e12c79f7f64b1b8561a7c2455af4dbe12f6e177dbf49ddf1a7b13496`.
   Live death/Bomb and blocking Game Over/Continue are still pending.
+- v1302 adds Game Over/menu clocks and MAIN Continue file components: 2,003
+  menus, 64 full scenes and 2,985 file controls agree at two original loads and
+  GNU/optimized UBSan/actual Windows. Current builds have 35 AMD64 products and
+  34 contracts each; 257 files bind manifest
+  `85bfb562d43d6328cf738530a13c9320a90ffb2ab21fb0ffb3dda05aa29f3a7c`.
+  Live suspension, TRAM graphics and actual Continue host-save integration remain.
 
 ## Remaining owners
 
@@ -48,7 +54,11 @@ and private-input hashes remain in the component evidence below; do not execute
 a historical writer against an existing hard-linked capture directory.
 Current caches: `.analysis/port64/{linux,windows,ubsan}-live-v1251`.
 Current readback: `.analysis/port64/registration-join-v1300/platform-review.json`.
+Latest component readback: `.analysis/port64/gameover-v1302/platform-review.json`.
 Use fresh outputs. Keep DOS images/saves, pinned inputs, tools and cache closures.
+Periodic cleanup now retires failed/superseded streams and deduplicates verified
+immutable captures. v1302 reclaimed 980,566,016 allocated bytes with full hash
+readback; final inputs/receipts and three current build caches remain available.
 
 ## Evidence index
 
