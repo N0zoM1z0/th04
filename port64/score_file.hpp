@@ -53,4 +53,12 @@ void recreate(Section&,File&,const Random&);
 bool load_for(Section&,File&,Byte character,Byte rank,const Random&);
 void save(Section&,File&,Byte character,Byte rank,const Random&);
 Byte insert(Section&,const score::Digits&,Byte stage,Byte end_sequence);
+// MAIN takes both key bytes from one RNG word and saves only its selection.
+void encode_main(Section&,const Random&);
+void recreate_main(Section&,File&,const Random&);
+bool load_main(Section&,File&,Byte character,Byte rank,const Random&);
+void save_main(Section&,File&,Byte character,Byte rank,const Random&);
+// Loads even without turbo. A ranked Continue name is written before reset.
+Byte continue_main(Section&,File&,Byte character,Byte rank,Byte stage,bool turbo,
+                   const score::Digits&,const Random&);
 } // namespace th04::portable::score_file

@@ -67,7 +67,7 @@ void contracts() {
     require(work==last,"save retained selected decoded buffer instead of final encoded section9");
     std::cout<<"Score file cipher, ranking and full-file lifecycle controls PASS\n";
 }
-void trace(const char* fixtures) {
+void trace(const char* fixtures,bool main=false) {
     std::ifstream input(fixtures);if(!input)throw std::runtime_error("score fixtures missing");
     unsigned index=0,operation,character,rank,stage,end,present;std::uint32_t seed;std::string section_text,file_text,digit_text;
     while(input>>operation>>seed>>character>>rank>>stage>>end>>present>>section_text>>file_text>>digit_text) {
@@ -78,12 +78,21 @@ void trace(const char* fixtures) {
         rng::Lcg32 random(seed);unsigned draws=0;const auto next=[&] {++draws;return random.next15();};
         int result=-1,place=0xa5;
         switch(operation) {
-        case 0:sf::encode(section,next);break;
+        case 0:if(main)sf::encode_main(section,next);else sf::encode(section,next);break;
         case 1:result=sf::decode(section);break;
-        case 2:sf::recreate(section,file,next);break;
-        case 3:result=sf::load_for(section,file,sf::Byte(character),sf::Byte(rank),next);break;
-        case 4:sf::save(section,file,sf::Byte(character),sf::Byte(rank),next);break;
-        case 5:place=sf::insert(section,digits,sf::Byte(stage),sf::Byte(end));break;
+        case 2:if(main)sf::recreate_main(section,file,next);else sf::recreate(section,file,next);break;
+        case 3:
+            if(main)sf::load_main(section,file,sf::Byte(character),sf::Byte(rank),next);
+            else result=sf::load_for(section,file,sf::Byte(character),sf::Byte(rank),next);
+            break;
+        case 4:
+            if(main)sf::save_main(section,file,sf::Byte(character),sf::Byte(rank),next);
+            else sf::save(section,file,sf::Byte(character),sf::Byte(rank),next);
+            break;
+        case 5:if(main) {
+                   const auto entered=sf::continue_main(section,file,sf::Byte(character),sf::Byte(rank),sf::Byte(stage),end!=0,digits,next);
+                   if(end)place=entered;
+               } else place=sf::insert(section,digits,sf::Byte(stage),sf::Byte(end));break;
         default:throw std::runtime_error("unknown score operation");
         }
         std::cout<<"CASE "<<index++<<'\n';
@@ -101,6 +110,7 @@ int main(int argc,char** argv) {
     try {
         if(argc==1)contracts();
         else if(argc==3 && std::string(argv[1])=="--trace")trace(argv[2]);
+        else if(argc==3 && std::string(argv[1])=="--main-trace")trace(argv[2],true);
         else throw std::runtime_error("usage: th04-port64-score-file-contracts [--trace FIXTURES]");
         return 0;
     } catch(const std::exception& e) {std::cerr<<"ERROR: "<<e.what()<<'\n';return 1;}

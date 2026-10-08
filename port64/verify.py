@@ -14,6 +14,13 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_gameover.py",
+    "port64/verify_gameover_scene.py",
+    "port64/verify_main_score.py",
+    "port64/verify_gameover_windows.ps1",
+    "port64/gameover.hpp",
+    "port64/gameover.cpp",
+    "port64/gameover_contracts.cpp",
     "port64/verify_player_lifecycle_windows.ps1",
     "port64/player_lifecycle_contracts.cpp",
     "port64/verify_player_lifecycle.py",

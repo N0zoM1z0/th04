@@ -150,4 +150,45 @@ Byte insert(Section& section,const score::Digits& digits,Byte stage,Byte end) {
     // The ninth name bytes, cleared mask and unused storage never shift.
     return Byte(place);
 }
+void encode_main(Section& section,const Random& next) {
+    const auto checksum=sum(section);section[2]=Byte(checksum);section[3]=Byte(checksum>>8);
+    const auto key=next();section[0]=Byte(key);section[1]=Byte(key>>8);
+    Byte feedback=0;
+    for(std::size_t i=section_size;i-->names_offset;) {
+        section[i]=Byte(section[i]-section[0]-feedback);
+        feedback=Byte(rotate_right3(section[i])^section[1]);
+    }
+}
+void recreate_main(Section& section,File& file,const Random& next) {
+    initialize_rows(section);file.open(OpenMode::create);
+    for(std::size_t i=0;i<section_count;++i) {
+        encode_main(section,next);file.write(section);decode(section);
+    }
+    file.close();
+}
+bool load_main(Section& section,File& file,Byte character,Byte rank,const Random& next) {
+    if(file.exists()) {
+        file.open(OpenMode::read);file.seek(unsigned(rank)*section_size,0);
+        if(character==1)file.seek(character_sections*section_size,1);
+        file.read(section);file.close();
+        if(!decode(section))return false;
+    }
+    recreate_main(section,file,next);return true;
+}
+void save_main(Section& section,File& file,Byte character,Byte rank,const Random& next) {
+    encode_main(section,next);file.open(OpenMode::append);
+    file.seek(unsigned(rank)*section_size,0);
+    if(character==1)file.seek(character_sections*section_size,1);
+    file.write(section);file.close();
+}
+Byte continue_main(Section& section,File& file,Byte character,Byte rank,Byte stage,bool turbo,
+                   const score::Digits& digits,const Random& next) {
+    load_main(section,file,character,rank,next);
+    if(!turbo)return no_entry;
+    const auto place=insert(section,digits,stage==6 ? 0 : stage,0);
+    if(place==no_entry)return place;
+    constexpr std::array<Byte,8> name{0xac,0xb8,0xb7,0xbd,0xb2,0xb7,0xbe,0xae};
+    std::copy(name.begin(),name.end(),section.begin()+names_offset+place*name_stride);
+    save_main(section,file,character,rank,next);return place;
+}
 } // namespace th04::portable::score_file

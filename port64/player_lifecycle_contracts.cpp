@@ -4,6 +4,9 @@
 #include <sstream>
 #include <stdexcept>
 
+bool gameover_cli(int argc,char** argv);
+void gameover_contracts();
+
 namespace p=th04::portable::player;
 namespace s=th04::portable::shot;
 namespace m=th04::portable::motion;
@@ -74,6 +77,7 @@ std::string execute(char op,Fixture& f) {
 }
 int main(int argc,char** argv) {
     try {
+        if(gameover_cli(argc,argv))return 0;
         if(argc==3 && std::string(argv[1])=="--vectors") {
             std::ifstream input(argv[2]);require(bool(input),"lifecycle fixture file missing");
             Fixture f;char op;
@@ -85,6 +89,7 @@ int main(int argc,char** argv) {
             }
             return 0;
         }
+        gameover_contracts();
         require(p::input_from_host_actions(0x800)==0x10 &&
             p::input_from_host_actions(0x1000)==0x2000 &&
             p::input_from_host_actions(0x2000)==0x1000,"MAIN host masks differ");
