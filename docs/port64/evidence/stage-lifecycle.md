@@ -614,3 +614,56 @@ Next suspend live MAIN at the actual last-life boundary, join this TRAM and
 Bomb renderer, save Continue before resetting resources and resume the frame
 suffix once. Extra/full HUD/OP/audio/configuration and complete natural routes/
 restart/dense Lunatic validation remain required by the full goal.
+
+## Live MAIN lifecycle suspension and Continue persistence
+
+v1305 joins player lifecycle into `gameplay::State`. Hit latches from bullets,
+enemies and NPC/laser owners are consumed before the real player prefix; miss
+state reaches item pickup suppression. Fire and miss drops consume the shared
+owners at their original boundaries. Character Bomb dispatch executes after
+items/gathers and before boss foreground; its graphics remain a frontend TODO.
+Miss/Bomb counters and resources publish to the resident owner. Boss/player
+palette and circle state share explicit setters; stage palettes supply color14.
+
+A last-life call yields a blocking Game Over scene. Actor/STD/random/frame
+owners remain frozen; successful Continue resumes only the interrupted frame
+suffix. `HostStore.save_continue` replays new MAIN I/O operations through real
+writer-close commits before reset. Existing complete files preserve unrelated
+sections; recreation and ranked save retain MAIN's single-word RNG keys. The
+frontend binds this real callback and honors Bomb scroll suppression. Windows
+replacement failures now include their Win32 error code.
+
+GNU, optimized UBSan and actual Windows pass34 contracts and the explicit
+player-checkpoint integration controls. Traces and three actual host files agree,
+including ten sections, non-Turbo read-only behavior, restart and blocked writes.
+Fresh original MAIN at loads1000/2000 replays10,319 lifecycle records,2,003
+menus,64 Game Over scenes and2,985 file controls; all complete native consumers
+agree on the three hosts. Original fire/items/HUD/graphics/filesystem adapters
+remain as documented by their separate components. This is not an original
+joined-frame or complete ordinary-route comparison.
+
+A separate finite synthetic STD uses ACTIVATE(sprite128,hp1,score0), WAIT100
+and KILL, spawning one contact enemy at frame64 and player(192,320). Ordinary
+MAIN pauses at104 after105 STD prefixes, resumes to105 with105 prefixes, then
+executes prefix106 next frame. A real HostStore is attached. The actor-control
+negative consumes no hit. Three hosts agree on trace/save; a private repeated-
+prefix mutation is rejected. Its fixture/commands/digests remain under
+`.analysis/port64/lifecycle-join-v1305/`. Recompile the documented
+`std_contact_probe.cpp` against each current core library and use a fresh save
+directory; this is a synthetic scheduling probe, not an original stage asset.
+
+Current receipts: `platform-review.json`, `std-contact-receipt.json`,
+`prefix-mutation.json`, `cleanup-receipt.json` and the host/original subdirectories
+in that root.267 listed source files bind manifest
+`1f229fe18a56c9a9401c9e3f8beb1b871ac750f23c8b7b47238050d460927020`;
+two new integration-verifier digests are separately bound in platform review.
+105 product identities are checked.87,998,464 allocated bytes are reclaimed
+with2,845 protected files unchanged; completed shared captures are immutable.
+Replay all writers into fresh paths.
+
+GUI Game Over graphics/keyboard ownership, death/Bomb indexed rendering and
+Quit-to-MAINE remain unfinished. Score-only MAINE must register, then run verdict,
+then enter fresh OP; Ending's ordering cannot be reused blindly. Interactive
+constructors default to ordinary lifecycle. Retained long preview controls
+explicitly use `actor_control` and print that hit consumption is disabled. No
+GUI publication, natural route, physical timing or audio backend is accepted.

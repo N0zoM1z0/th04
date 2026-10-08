@@ -45,6 +45,19 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
   `7a25a243535773ce3a5bd9eb22cf898511e87cb3daafec96ace8deaae8ab6345`.
   Live MAIN suspension, lifecycle/Bomb dispatch and Continue saving remain.
 
+v1305 joins lifecycle/Game Over suspension, Bomb dispatch, miss pickup suppression
+and real MAIN Continue host commits into the core. GNU/optimized UBSan/actual
+Windows each pass34 contracts; native checkpoint traces/files agree. A finite
+STD/contact/real-store probe verifies one resumed suffix on all three hosts;
+a repeated-prefix mutant is rejected. Original10,319 lifecycle records/2,003
+menus/64 scenes/2,985 file controls re-agree.105 products bind267 listed files
+and two additional verifier digests.87,998,464 allocatedbytes are reclaimed
+with2,845 protected files unchanged. GUI Game Over freeze/TRAM and keyboard,
+death/Bomb rendering and score-only registration→verdict→fresh OP still need
+joining. Long actor fixtures explicitly disable hit consumption; ordinary GUI
+constructors do not. No GUI publication or complete ordinary route is accepted.
+See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-lifecycle-suspension-and-continue-persistence).
+
 ## Remaining owners
 
 - [x] Ordered registration wait/fade/input/rendering, retained pre-save sections,

@@ -43,11 +43,24 @@ unfinished x64 product; DOS work/organization merges separately into main.
   bounded controls. Complete game/native route/audio acceptance is pending.
 - DOS source/targets and historical unit/function acceptance are untouched.
 
+v1305 joins lifecycle/Game Over suspension, Bomb dispatch, miss pickup suppression
+and real MAIN Continue host commits into the core. GNU/optimized UBSan/actual
+Windows each pass34 contracts; native checkpoint traces/files agree. A finite
+STD/contact/real-store probe verifies one resumed suffix on all three hosts;
+a repeated-prefix mutant is rejected. Original10,319 lifecycle records/2,003
+menus/64 scenes/2,985 file controls re-agree.105 products bind267 listed files
+and two additional verifier digests.87,998,464 allocatedbytes are reclaimed
+with2,845 protected files unchanged. GUI Game Over freeze/TRAM and keyboard,
+death/Bomb rendering and score-only registration→verdict→fresh OP still need
+joining. Long actor fixtures explicitly disable hit consumption; ordinary GUI
+constructors do not. No GUI publication or complete ordinary route is accepted.
+See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-lifecycle-suspension-and-continue-persistence).
+
 ## Next owners
 
-1. Join the verified Game Over TRAM and Bomb graphics with the tested player
-   lifecycle, scene and MAIN Continue save to live MAIN. Suspend
-   at the last-life call and resume its suffix once; publish real counters.
+1. Finish frontend Game Over frozen indexed/TRAM rendering and keyboard ownership,
+   death/Bomb graphics, and Quit registration followed by verdict/fresh OP.
+   Validate live ordinary hit/Bomb/Continue with original frame/render controls.
 2. Extra, full HUD, OP auxiliary flows, unlocks, audio/configuration.
 3. Actual Linux/Windows complete routes, persistence/restart and dense Lunatic
    timing/performance. All runs stay muted; audio requests are retained only.
