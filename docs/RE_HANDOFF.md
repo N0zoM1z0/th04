@@ -72,8 +72,19 @@ video-policy adapters remain explicit. This is still a component.
 Native code/evidence commits `a789b80`/`5ca7995` are pushed; v1304 cleanup
 reclaims398,381,056 allocated bytes. Windows raw retirement is reported
 separately as203,511,584 logical bytes; final references/caches remain.
-Next join verified Game Over TRAM, Bomb graphics and real MAIN suspension/
-Continue saving, then Extra, full HUD/OP/audio/config and full-route validation.
+v1305 now joins the native MAIN lifecycle, real last-life suspension, character
+Bomb dispatch and Continue host-save callback. GNU/optimized UBSan/actual
+Windows each pass34 contracts; checkpoint traces/files and a finite STD/contact
+probe agree. Continue resumes one suffix; a repeated-prefix mutation is rejected.
+Original10,319 player records/2,003 menus/64 scenes/2,985 file controls re-agree.
+105 products bind267 listed files plus two verifier digests.87,998,464 allocated
+bytes are reclaimed with2,845 protected files unchanged. Native GUI Game Over
+freeze/TRAM/keyboard, death/Bomb graphics and score-only registration followed
+by verdict/fresh OP remain pending; long actor probes explicitly disable hit
+consumption. No new published GUI or complete ordinary route follows.
+Native code/evidence commits `a7c096d`/`6945f69` are pushed on `port/modern-64`.
+Next finish these frontend owners, then Extra, full HUD/OP/audio/config and
+full-route validation.
 Keep native source separate and every launch muted. MAIN database attestation
 passes before the next target-dependent batch.
 Per the user's request, clean superseded build/capture outputs periodically;

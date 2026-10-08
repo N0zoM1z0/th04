@@ -51,6 +51,16 @@ cannot be represented safely. Native executable bytes need not be exact.
   This completes the renderer component; live MAIN and Continue saving remain.
   Code/evidence commits `a789b80`/`5ca7995` are pushed on `port/modern-64`.
 
+v1305 core integration now covers live lifecycle/Game Over suspension, character
+Bomb dispatch, miss pickup suppression and real Continue host commits. GNU/
+optimized UBSan/actual Windows pass34 contracts and agree on checkpoint
+traces/files. A finite STD/contact/real-store probe verifies one resumed suffix;
+a repeated-prefix mutant is rejected. Original lifecycle/menu/scene/file
+controls re-agree. Frontend frozen TRAM/keyboard, death/Bomb indexed rendering
+and Quit registration→verdict→fresh OP still require integration. Retained actor
+fixtures now explicitly disable hit consumption. No GUI or full-route acceptance.
+Native code/evidence commits `a7c096d`/`6945f69` are pushed.
+
 ## Remaining, in order
 
 - [x] Join registration requests to the scene with original ordered waits,
