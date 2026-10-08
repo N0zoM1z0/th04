@@ -43,6 +43,17 @@ unfinished x64 product; DOS work/organization merges separately into main.
   bounded controls. Complete game/native route/audio acceptance is pending.
 - DOS source/targets and historical unit/function acceptance are untouched.
 
+v1306 adds original player death/invincibility rendering and a retained MAIN
+render cache consumed by frontend source. Two-load original caller/helpers and
+rolling kernels agree with GNU/optimized UBSan/actual Windows on6,637 requests
+and259 complete screens;34 contracts pass per host.105 AMD64 products bind274
+listed files. Continue save files remain identical, and cached draws freeze
+with Game Over. A changed blink phase is rejected in269 original controls.
+2,662,400 allocatedbytes are reclaimed with2,795 protected files unchanged.
+GUI Game Over TRAM/keyboard, Bomb graphics and shared lifecycle palette and Quit registration→verdict
+remain pending; no published GUI/full natural-route acceptance follows.
+See [player rendering evidence](port64/evidence/stage-lifecycle.md#player-death-and-invincibility-rendering).
+
 v1305 joins lifecycle/Game Over suspension, Bomb dispatch, miss pickup suppression
 and real MAIN Continue host commits into the core. GNU/optimized UBSan/actual
 Windows each pass34 contracts; native checkpoint traces/files agree. A finite
@@ -51,7 +62,7 @@ a repeated-prefix mutant is rejected. Original10,319 lifecycle records/2,003
 menus/64 scenes/2,985 file controls re-agree.105 products bind267 listed files
 and two additional verifier digests.87,998,464 allocatedbytes are reclaimed
 with2,845 protected files unchanged. GUI Game Over freeze/TRAM and keyboard,
-death/Bomb rendering and score-only registration→verdict→fresh OP still need
+Bomb graphics and score-only registration→verdict→fresh OP still need
 joining. Long actor fixtures explicitly disable hit consumption; ordinary GUI
 constructors do not. No GUI publication or complete ordinary route is accepted.
 See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-lifecycle-suspension-and-continue-persistence).
@@ -59,7 +70,7 @@ See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-li
 ## Next owners
 
 1. Finish frontend Game Over frozen indexed/TRAM rendering and keyboard ownership,
-   death/Bomb graphics, and Quit registration followed by verdict/fresh OP.
+   Bomb graphics and shared lifecycle palette, and Quit registration followed by verdict/fresh OP.
    Validate live ordinary hit/Bomb/Continue with original frame/render controls.
 2. Extra, full HUD, OP auxiliary flows, unlocks, audio/configuration.
 3. Actual Linux/Windows complete routes, persistence/restart and dense Lunatic
@@ -120,3 +131,9 @@ Per the user's cleanup request, retire superseded/failed outputs each batch and
 deduplicate completed captures only after hash readback. v1302 reclaimed
 980,566,016 allocated bytes; current targets, source and build caches are intact.
 `cleanup-receipt.json` and `final-capture-storage.json` record the operations.
+
+Latest player-render evidence: `.analysis/port64/player-render-v1306/`;
+`platform-review.json` / `readback.py` bind274 files to105 products.
+Use `verify_player_render.py` / `verify_player_render_windows.ps1` with fresh
+outputs. Player death graphics source is joined; GUI Game Over/Bomb and
+score-only MAINE routing still require completion.

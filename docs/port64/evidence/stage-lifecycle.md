@@ -667,3 +667,76 @@ then enter fresh OP; Ending's ordering cannot be reused blindly. Interactive
 constructors default to ordinary lifecycle. Retained long preview controls
 explicitly use `actor_control` and print that hit consumption is disabled. No
 GUI publication, natural route, physical timing or audio backend is accepted.
+
+## Player death and invincibility rendering
+
+v1306 recovers original MAIN relative `0AAF:610D..625B` (file `0x123FD`,
+load-module `0x10BFD`, extent `0x14E`) into `port64/player_render.*`.
+The pinned original SHA-256 is
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+root MAIN database/header/relocation/load/sample attestation passes.
+Provenance remains `candidate-local-attested`. DOS source and acceptance states
+are unchanged; this is portable semantic/runtime evidence.
+
+Original caller, polar-vector and scroll-helper instructions execute at loads
+`1000` and `2000`, with DS8000 and SS7000. The request control adapts only
+SUPER/tiny graphics call ABIs. The pixel control executes the original
+`0000:2D3E`, `0000:2B78` and `0AAF:1A56` kernels and their actual returns.
+Independent BFNT planar/tiny-mask staging and a visible GRCG/direct-plane write
+shadow supply bounded input/hardware adapters. Physical pages, invalid kernel
+coordinates, CGROM, display timing and audio are outside this claim.
+
+GNU8.4, optimized UBSan and actual Windows AMD64 agree on 6,637 complete request
+records and 259 complete640x400 indexed screens (66,304,000 pixels). Each host
+passes34 contracts.105 current ELF/PE AMD64 products bind274 listed files,
+including the two v1305 lifecycle integration verifiers previously bound
+separately. Manifest:
+`fc1c6e9271fc99ab55ee9e615eee31b708730396939c6f1131f5540a771fa24a`.
+Request SHA-256:
+`92a465c171e568458392959cdb11daa52b012eb480b35d6c90880d47c9c061be`.
+Complete indexed-stream SHA-256:
+`4aef30abab8f8d3730eec9254e1da65506dea58b96d18a93d5c1b9dc206c9733`.
+
+The producer preserves signed16 radius interpretation, truncating signed
+halving at the second ring, byte angle negation/increments, signed polar
+rounding, word coordinate wrap and the original clipping boundaries. Scroll
+conversion adds the line only when enabled and adjusts by400 once. Miss1
+emits no requests; miss2..32 emits clipped death explosions, with no body or
+options. Normal rendering chooses its cel from signed X velocity and blinks
+white only when actual invincibility is nonzero and retained frame-mod4 is0.
+
+An early native test wrongly required eight explosions on every death frame.
+Two-load original controls for the stationary192,320 sequence establish8/6/6/4
+requests at miss32/16/8/2; the corrected live checks preserve clipping.
+A private source-only mutation changes white phase0 to1. The independent
+original request comparator rejects269 cases; product source is unchanged.
+
+Live MAIN caches requests before its frame increment. Death, first Bomb blink
+and frozen Game Over/Continue checkpoints pass on all three hosts. Continue
+trace now includes the cached player request; prior fields and the three real
+host-file outputs remain unchanged. The frontend source consumes this cache,
+including physical-row-to-display-row conversion, and both backends compile.
+This establishes source integration and bounded native invariants, not a
+published GUI or a complete natural route. Frozen Game Over TRAM/keyboard,
+Bomb graphics and shared lifecycle palette dispatch and Quit registration→verdict→fresh OP remain.
+
+Replay with fresh output directories only:
+
+```sh
+python3 port64/verify_player_render.py --target ../../targets/th04/main.exe --hdi ../../runtime/images/zun.hdi --exe .analysis/port64/linux-live-v1251/th04-port64-player-lifecycle-contracts --output-dir FRESH_OUTPUT
+python3 port64/verify_player_render.py --target ../../targets/th04/main.exe --hdi ../../runtime/images/zun.hdi --exe .analysis/port64/ubsan-live-v1251/th04-port64-player-lifecycle-contracts --reference-dir ORIGINAL_OUTPUT --output-dir FRESH_OUTPUT
+# Actual Windows: verify_player_render_windows.ps1 with fresh output,
+# -ExecutableDirectory, -ReferenceDirectory and the current -SourceManifest.
+python3 port64/verify_lifecycle_join.py --exe .analysis/port64/linux-live-v1251/th04-port64-live-contracts --output-dir FRESH_OUTPUT
+python3 .analysis/port64/player-render-v1306/readback.py
+```
+
+Private evidence root `.analysis/port64/player-render-v1306/` retains platform
+review, current source manifest, original/consumer compressed captures, actual
+Windows commands/receipts, clipping control and mutation replay inputs.
+`cleanup-receipt.json` records2,662,400 allocated bytes reclaimed with2,795
+protected files unchanged. Superseded development captures/staged assets,
+negative executable and Python caches are retired. Independently generated,
+byte-readback verified request streams share immutable hardlinks. Current
+original inputs, final references, pinned tools and three active caches stay.
+All runs are muted; no audio backend/device is opened.
