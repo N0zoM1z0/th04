@@ -1,11 +1,17 @@
 # TH04 native branch handoff
 
-Updated 2026-10-08. Native development has resumed. General semantic work stops
+Updated 2026-10-09. Native development has resumed. General semantic work stops
 unless an ambiguity blocks a concrete port owner. This branch retains the
 unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Verified frontier
 
+- v1303 adds character Bomb pictures, BB tiles and retained48-star effects.
+  Original MAIN at loads1000/2000 agrees with GNU/optimized UBSan/actual Windows:
+  1,236 state cases/2,252 records and294 pixel cases/548 complete screens.
+  105 AMD64 products bind263 source files; all34 contracts pass per host.
+  This component still needs the live lifecycle/render dispatch. No GUI death,
+  physical timing/audio or complete route acceptance follows.
 - v1302 adds the blocking Game Over/menu and MAIN Continue score components.
   Original MAIN at loads1000/2000 agrees with GNU/optimized UBSan/actual Windows:
   2,003 menu cases, 64 full scenes, 2,985 file controls. All 34 contracts pass.
@@ -33,7 +39,7 @@ unfinished x64 product; DOS work/organization merges separately into main.
 
 ## Next owners
 
-1. Add Bomb character graphics and Game Over TRAM rendering, then join the
+1. Add Game Over TRAM rendering, then join the verified Bomb graphics and
    tested player lifecycle, scene and MAIN Continue save to live MAIN. Suspend
    at the last-life call and resume its suffix once; publish real counters.
 2. Extra, full HUD, OP auxiliary flows, unlocks, audio/configuration.
@@ -67,6 +73,13 @@ binds 105 AMD64 products to 257 files. MAIN saves one selection with one RNG wor
 MAINE re-keys all ten sections with two RNG draws per key. Never interchange them.
 One Windows temporary-score replacement failed; three isolated retries and the
 full rerun pass. Cause remains unknown; preserve failure propagation.
+Latest Bomb root: `.analysis/port64/bomb-v1303/`; `platform-review.json` binds
+263 files to manifest `c0fbe950be3e6f7a4bf794ea357d0c92d6d1859e8c4684296e77137b47d11751`.
+Use the checked-in Bomb Python/Windows probes with fresh output paths. A rejected
+star-only fixture omitted caller GRCG setup; actual1666/1672 restores equality.
+Final pixels are compressed, and Windows hashes binary stdout without a raw dump.
+This batch retires8 superseded streams, reclaiming13,643,776 allocated bytes;
+2,379 protected source/cache/input/final-reference files remain unchanged.
 
 Completed captures share immutable hard-linked storage after independent
 production/full readback. The early 90-snapshot development pair is archived;

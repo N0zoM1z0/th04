@@ -473,3 +473,72 @@ build caches are unchanged. `cleanup-receipt.json` / `final-capture-storage.json
 record protection checks and reclaimed bytes. Never overwrite a shared capture
 inode; use fresh replay directories. This is storage maintenance, not new game
 acceptance or permission to delete pinned tools/inputs.
+
+## Character Bomb state and graphics
+
+v1303 reconstructs the two character render bodies at MAIN relative
+`0AAF:555D..5623` and `5623..571A`, and the retained48-star producer at
+`581D..593A`. Target identity is the pinned156,258-byte MAIN; independent
+original execution uses loads1000/2000, explicit DS8000 and guarded stack
+returns. Actual RNG, polar-vector and growing-circle instructions execute.
+The logical comparison adapts fill/CDG/mono and sound calls into ordered
+requests; it compares the complete288-byte star array,160-byte circle pool,
+shared-ring cursor, tone/change/color and all requests.
+
+The graphic control executes original BB553A/1426/74D8, fill751A/7578,
+CDG130E:05D4..0639, mono152A..15A9 and GRCG setup/color instructions. An
+explicit visible640x400 shadow handles GRCG TDW/RMW and direct B/R/G/I plane
+stores. Independent HDI/PAR and BFNT input decoding supplies BB0/1.BB,
+BB0/1.CDG and MIKO16.BFT; the native raster never produces the reference.
+Both loads agree on full retained indexed screens. Physical display pages,
+scroll registers, pacing and audio remain outside this claim.
+
+Observed behavior retained by the native implementation:
+
+- BB has16 cells,24 columns and23 rows; one bits replace16x16 tiles. Physical
+  rows wrap at400, including scroll offsets383/384/399.
+- The character picture is384x274 at(32,56). The fill kernel replaces only
+  rows16..55 and330..383:94 rows, preserving the central picture rectangle.
+- At frame48 each of48 stars draws X/Y from the shared ring. Reimu rejects
+  the inclusive X band2048..4096 and derives speed by signed division by9;
+  Marisa adds160 to a byte-sized random value, preserving byte wrap.
+- Updates preserve signed-WORD position wrapping and arithmetic-right-shift
+  pixel coordinates. Reimu retains X at an out-of-bounds respawn and sets Y6144;
+  Marisa alternates left-edge and bottom-edge respawn by star-index parity.
+- Growing-circle calls at frames81..160 depend on the retained mod4 byte,
+  rather than recomputing it from a convenient host counter. Reimu creates two
+  polar points; Marisa consumes the additional bounded RNG draw. Full pools
+  preserve attempted requests even when allocation fails.
+- State advances once per render dispatch. Repaints consume const cached draws;
+  they do not repeat particle motion or shared RNG consumption. Circle drawing
+  remains the existing separate foreground owner.
+
+Final controls:1,236 state cases/2,252 records, including independently retained
+128-refresh character sequences;294 pixel cases/548 full screens,
+140,288,000 compared pixels. GNU8.4, optimized undefined/bounds UBSan and actual
+Windows AMD64 all agree;34 contracts pass per host.105 products bind263 source
+files to manifest
+`c0fbe950be3e6f7a4bf794ea357d0c92d6d1859e8c4684296e77137b47d11751`.
+A one-bit star-speed fixture mutation is rejected against the unchanged original
+state reference. This accepts a Bomb component, not live death/Bomb gameplay.
+
+One development pixel fixture omitted caller GRCG setup for a standalone star
+entry. The bounded negative replays a first mismatch at pixel402 (wrong original0,
+native2). Executing actual1666/1672 caller setup restores complete pixel equality.
+The correction changes Oracle preconditions, not product behavior. Preserve
+this distinction; a mono graphics callee does not own its caller's hardware mode.
+
+Replay with fresh output directories using `verify_player_bomb.py`,
+`verify_player_bomb_pixels.py` and `verify_player_bomb_windows.ps1`. Final receipts,
+source/product hashes and recorded actual Windows command live under
+`.analysis/port64/bomb-v1303/`; `review_results.py` reads back the complete native
+streams. Captures use gzip; actual Windows hashes binary stdout without creating
+an additional140MB raw dump. Eight superseded generated streams are retired
+with hashes, reclaiming13,643,776 allocated bytes while2,379 protected source,
+cache, input and final-reference files remain unchanged.
+
+Next join these graphics with the player lifecycle and Game Over TRAM owner,
+then suspend live MAIN at its actual last-life boundary, save Continue before
+resetting resources, and resume the remaining frame once. Extra, full HUD/OP,
+audio/configuration and complete natural route/performance validation remain
+in the full goal; all launches remain muted.

@@ -2,7 +2,7 @@
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 
-Updated 2026-10-08. Development has resumed. `port/modern-64` remains separate
+Updated 2026-10-09. Development has resumed. `port/modern-64` remains separate
 from the DOS branch; portable code does not claim PC-98 executable exactness.
 
 ## Current state
@@ -32,6 +32,12 @@ from the DOS branch; portable code does not claim PC-98 executable exactness.
   34 contracts each; 257 files bind manifest
   `85bfb562d43d6328cf738530a13c9320a90ffb2ab21fb0ffb3dda05aa29f3a7c`.
   Live suspension, TRAM graphics and actual Continue host-save integration remain.
+- v1303 adds both character Bomb pictures, physical-scroll BB tiles and retained
+  star/circle producers. 1,236 original state cases/2,252 records plus294 pixel
+  cases/548 complete indexed screens agree at two loads and GNU/optimized UBSan/
+  actual Windows. Current105 products bind263 files, manifest
+  `c0fbe950be3e6f7a4bf794ea357d0c92d6d1859e8c4684296e77137b47d11751`.
+  Live MAIN still needs lifecycle/Bomb/Game Over/Continue integration.
 
 ## Remaining owners
 
@@ -55,6 +61,7 @@ a historical writer against an existing hard-linked capture directory.
 Current caches: `.analysis/port64/{linux,windows,ubsan}-live-v1251`.
 Current readback: `.analysis/port64/registration-join-v1300/platform-review.json`.
 Latest component readback: `.analysis/port64/gameover-v1302/platform-review.json`.
+Latest Bomb readback: `.analysis/port64/bomb-v1303/platform-review.json`.
 Use fresh outputs. Keep DOS images/saves, pinned inputs, tools and cache closures.
 Periodic cleanup now retires failed/superseded streams and deduplicates verified
 immutable captures. v1302 reclaimed 980,566,016 allocated bytes with full hash
@@ -111,6 +118,10 @@ receipts. Historical version boundaries do not supersede the current state.
 ## Player hit, death and Bomb state producer
 
 [Detailed evidence](port64/evidence/stage-lifecycle.md#player-hit-death-and-bomb-state-producer).
+
+## Character Bomb state and graphics
+
+[Detailed evidence](port64/evidence/stage-lifecycle.md#character-bomb-state-and-graphics).
 
 ## Stage enter and departure
 
