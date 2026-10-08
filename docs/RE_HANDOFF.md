@@ -56,10 +56,16 @@ This does not accept full natural routes, physical timing or audio. Native
 commits `43946c3`/`6c90c1a` are pushed on `port/modern-64`; its ledgers and
 handoff own the detailed evidence.
 
-Next native owner: Bomb/hit/death/lives/game-over/Continue, then Extra, complete
-HUD/OP auxiliary flows/audio/config and full route/dense Lunatic validation.
+v1301 player lifecycle and v1302 Game Over/Continue file components now pass
+bounded original CPU/GNU/UBSan/actual Windows comparisons. Current builds have
+35 AMD64 products and 34 contracts each; native code commit `1610726` is pushed.
+Next join Bomb character graphics, Game Over TRAM and real MAIN suspension/
+Continue saving, then Extra, full HUD/OP/audio/config and full-route validation.
 Keep native source separate and every launch muted. MAIN database attestation
 passes before the next target-dependent batch.
+Per the user's request, clean superseded build/capture outputs periodically;
+v1302 reclaimed 980,566,016 allocated bytes with hash readback. Preserve pinned
+inputs, final receipts and active caches; replay into fresh output directories.
 
 ## Windows DOS demo package
 

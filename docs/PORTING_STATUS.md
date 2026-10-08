@@ -31,7 +31,14 @@ cannot be represented safely. Native executable bytes need not be exact.
   separate host score commits and fresh OP/second MAIN. Thirty seeded fixtures
   per GNU/optimized UBSan/actual Windows produce 112 identical output files;
   original fades agree at two loads (35-refresh in/18-refresh out).
-- Current native builds: 34 AMD64 products and 33 contracts per GNU/MinGW/
+- Player hit/death/Bomb lifecycle component (v1301): 10,319 original CPU
+  state/request controls agree GNU/optimized UBSan/actual Windows at two loads.
+- Game Over/Continue components (v1302): 2,003 menus, 64 full scenes and 2,985
+  MAIN score-file cases agree across those hosts and two original loads. MAIN
+  has its own single-RNG-word cipher and selected-section writer. Live MAIN
+  suspension, Game Over TRAM, Bomb character graphics and Continue host save
+  still require integration.
+- Current native builds: 35 AMD64 products and 34 contracts per GNU/MinGW/
   optimized-UBSan build. Actual Windows contracts and current component captures
   also pass. This is not full routes, physical hardware, audio or DOS exactness.
 
@@ -61,6 +68,10 @@ archived outside the DOS demo directory on 2026-10-08. That GUI reaches
 seeded child-scene controls. Full natural routes and a new published GUI remain
 pending. Native commits `43946c3` and `6c90c1a` are pushed on `port/modern-64`.
 DOS testing scripts/saves are separate. All new launches stay muted.
+Latest Game Over code commit `1610726` is pushed on the native branch. Periodic
+cleanup now retires superseded generated streams and deduplicates only verified
+immutable captures; this batch reclaimed 980,566,016 allocated bytes. Targets,
+source, final receipts and three current build caches remain available.
 
 The native branch's [PORT64.md](https://github.com/N0zoM1z0/th04/blob/port/modern-64/docs/PORT64.md)
 routes detailed component contracts and replay receipts. Its evidence and
