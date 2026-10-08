@@ -14,6 +14,12 @@ import sys
 
 
 PORT_FILES = (
+    "port64/player_bomb.hpp",
+    "port64/player_bomb.cpp",
+    "port64/player_bomb_contracts.cpp",
+    "port64/verify_player_bomb.py",
+    "port64/verify_player_bomb_pixels.py",
+    "port64/verify_player_bomb_windows.ps1",
     "port64/verify_gameover.py",
     "port64/verify_gameover_scene.py",
     "port64/verify_main_score.py",
