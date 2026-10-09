@@ -139,6 +139,9 @@ bool Sequence::command(unsigned p,std::uint16_t& at,std::uint8_t op,std::uint16_
     case 0xd7:case 0xd4:case 0xd3:case 0xd2:case 0xd1:case 0xd0:case 0xcf:case 0xcc:
     case 0xcb:case 0xca:case 0xc9:case 0xc5:case 0xc2:case 0xbe:case 0xbc:case 0xbb:
     case 0xba:case 0xb9:case 0xb7:case 0xb6:byte();break;
+    case 0xb1:
+        if(board_==Board::fm26)throw std::invalid_argument("PMD26 has no random gate command");
+        byte();break;
     case 0xe5:byte();byte();break;
     default:throw std::invalid_argument("unrecovered PMD command "+std::to_string(op));
     }
@@ -146,6 +149,12 @@ bool Sequence::command(unsigned p,std::uint16_t& at,std::uint8_t op,std::uint16_
     return duration;
 }
 void Sequence::part(unsigned p) {
+    if(!state_.parts[p].position)return;
+    if(tick_)tick_(p,true);
+    part_body(p);
+    if(tick_)tick_(p,false);
+}
+void Sequence::part_body(unsigned p) {
     auto& track=state_.parts[p];if(!track.position)return;
     --track.length;if(track.length)return;
     auto at=track.position;

@@ -77,9 +77,9 @@ foreach($case in $plan.cases) {
 }
 $traces=@()
 foreach($trace in $plan.traces) {
-    if($trace.kind -cne 'pmd-fm' -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
+    if($trace.kind -cnotin @('pmd-fm','pmd-musical-fm') -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
        $trace.board -notin @(0,1,2)) {throw 'Unsupported component trace.'}
-    $binary='th04-port64-pmd-fm-contracts.exe'
+    $binary=if($trace.kind -ceq 'pmd-fm') {'th04-port64-pmd-fm-contracts.exe'} else {'th04-port64-pmd-musical-fm-contracts.exe'}
     if(!$products.ContainsKey($binary)) {throw 'Unattested FM trace product.'}
     foreach($path in @($trace.resource,$trace.mirror,$trace.operations)) {
         if(!(@($plan.inputs | Where-Object {$_.path -ceq $path}).Count -eq 1)) {

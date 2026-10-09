@@ -20,6 +20,7 @@ struct Event {
     Bytes arguments;
 };
 using Sink=std::function<void(const Event&)>;
+using TickSink=std::function<void(unsigned,bool)>;
 struct Part {
     std::uint16_t position=0,loop=0;
     std::uint8_t length=1,loop_status=0,notes=0;
@@ -36,7 +37,7 @@ struct State {
 };
 class Sequence {
 public:
-    explicit Sequence(Board board=Board::fm26,Sink sink={},SsgSink ssg={}):board_(board),sink_(std::move(sink)),effects_(std::move(ssg)){}
+    explicit Sequence(Board board=Board::fm26,Sink sink={},SsgSink ssg={},TickSink tick={}):board_(board),sink_(std::move(sink)),effects_(std::move(ssg)),tick_(std::move(tick)){}
     void load(const Bytes&);
     void start();
     void stop();
@@ -48,7 +49,7 @@ public:
     void mirror_ssg(std::uint8_t address,std::uint8_t value) {effects_.mirror(address,value);}
     std::uint16_t status() const {return std::uint16_t(state_.status)*256+state_.loop_status;}
 private:
-    Board board_;Sink sink_;Bytes music_;State state_{};SsgEffects effects_;
+    Board board_;Sink sink_;Bytes music_;State state_{};SsgEffects effects_;TickSink tick_;
     std::uint16_t rhythm_table_=0,rhythm_position_=0;
     std::uint8_t saved_timer_b_=200,saved_tempo_=78;
     std::uint8_t get(std::uint16_t) const;
@@ -59,6 +60,7 @@ private:
     void emit(Kind,unsigned,std::uint16_t,std::uint8_t,Bytes={});
     bool command(unsigned,std::uint16_t&,std::uint8_t,std::uint16_t);
     void part(unsigned);
+    void part_body(unsigned);
     void rhythm();
     void timer_b();
     void set_timer_b(std::uint8_t);
