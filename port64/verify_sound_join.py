@@ -129,7 +129,7 @@ def main():
  root=a.root.resolve();manifest,files=source_manifest(root);out=a.output.resolve();assert not out.exists();out.mkdir(parents=True)
  require_elf_x86_64(a.exe);target=a.target.read_bytes();efs=ending_assets(a.hdi)['MIKO.EFS'];assert len(efs)==8284 and sha(efs)=='12045fed57d7c5a07da0047ae13c6607cbc78155cfbf5baa719fc310131de607'
  env=os.environ.copy();env['SDL_AUDIODRIVER']='dummy'
- subprocess.run([str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font.resolve()),'--sound-checks',str(out/'frontend'),'--mute'],check=True,env=env,stdout=(out/'launch.log').open('wb'),stderr=subprocess.STDOUT)
+ subprocess.run([str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font.resolve()),'--sound-checks',str(out/'frontend'),'--mute','--pmd-driver','none'],check=True,env=env,stdout=(out/'launch.log').open('wb'),stderr=subprocess.STDOUT)
  cases=sorted((out/'frontend').glob('c*-paint0'));assert len(cases)==6
  loop=[];controls=[];refs={};samples=0
  if a.reference_dir:

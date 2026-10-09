@@ -77,11 +77,11 @@ foreach($case in $plan.cases) {
 }
 $traces=@()
 foreach($trace in $plan.traces) {
-    if($trace.kind -cnotin @('pmd-fm','pmd-musical-fm','pmd-fm-player','pmd-musical-ssg','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock','pmd-pcm') -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
+    if($trace.kind -cnotin @('pmd-fm','pmd-musical-fm','pmd-fm-player','pmd-musical-ssg','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock','pmd-pcm','pmd-resident') -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
        $trace.board -notin @(0,1,2)) {throw 'Unsupported component trace.'}
-    $binary=if($trace.kind -ceq 'pmd-fm') {'th04-port64-pmd-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-fm') {'th04-port64-pmd-musical-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-ssg') {'th04-port64-pmd-musical-ssg-contracts.exe'} elseif($trace.kind -ceq 'pmd-combined') {'th04-port64-pmd-combined-contracts.exe'} elseif($trace.kind -ceq 'pmd-commands') {'th04-port64-pmd-commands-contracts.exe'} elseif($trace.kind -ceq 'pmd-rhythm') {'th04-port64-pmd-rhythm-contracts.exe'} elseif($trace.kind -ceq 'pmd-timer-player') {'th04-port64-pmd-timer-player-contracts.exe'} elseif($trace.kind -ceq 'pmd-clock') {'th04-port64-pmd-clock-contracts.exe'} elseif($trace.kind -ceq 'pmd-pcm') {'th04-port64-pmd-pcm-contracts.exe'} else {'th04-port64-pmd-fm-player-contracts.exe'}
+    $binary=if($trace.kind -ceq 'pmd-fm') {'th04-port64-pmd-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-fm') {'th04-port64-pmd-musical-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-ssg') {'th04-port64-pmd-musical-ssg-contracts.exe'} elseif($trace.kind -ceq 'pmd-combined') {'th04-port64-pmd-combined-contracts.exe'} elseif($trace.kind -ceq 'pmd-commands') {'th04-port64-pmd-commands-contracts.exe'} elseif($trace.kind -ceq 'pmd-rhythm') {'th04-port64-pmd-rhythm-contracts.exe'} elseif($trace.kind -ceq 'pmd-timer-player') {'th04-port64-pmd-timer-player-contracts.exe'} elseif($trace.kind -ceq 'pmd-clock') {'th04-port64-pmd-clock-contracts.exe'} elseif($trace.kind -ceq 'pmd-pcm') {'th04-port64-pmd-pcm-contracts.exe'} elseif($trace.kind -ceq 'pmd-resident') {'th04-port64-pmd-resident-contracts.exe'} else {'th04-port64-pmd-fm-player-contracts.exe'}
     if(!$products.ContainsKey($binary)) {throw 'Unattested FM trace product.'}
-    $paths=@($trace.resource,$trace.mirror,$trace.operations)
+    $paths=if($trace.kind -ceq 'pmd-resident') {@($trace.resource,$trace.operations,$trace.rom)} else {@($trace.resource,$trace.mirror,$trace.operations)}
     if($trace.kind -cin @('pmd-fm-player','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock','pmd-pcm')) {$paths+=@($trace.effects)}
     if($trace.kind -ceq 'pmd-pcm') {$paths+=@($trace.rom,$trace.installation)}
     foreach($path in $paths) {
@@ -97,10 +97,17 @@ foreach($trace in $plan.traces) {
         $arguments=@($trace.resource,$trace.effects,([string]$trace.board),$trace.mirror,$trace.operations,$target)
     }
     if($trace.kind -ceq 'pmd-pcm') {$arguments=@($trace.resource,$trace.effects,([string]$trace.board),$trace.mirror,$trace.operations,$trace.rom,$trace.installation,$target)}
+    if($trace.kind -ceq 'pmd-resident') {
+        $pcm=Join-Path $out ($trace.name+'.pcm')
+        $arguments=@($trace.resource,([string]$trace.board),$trace.rom,$trace.operations,$target,$pcm)
+    }
     Run $trace.name (Join-Path $plan.executable_directory $binary) $arguments
+    if($trace.kind -ceq 'pmd-resident') {CheckHash $pcm $trace.pcm_sha256}
     CheckHash $target $trace.expected_sha256
-    $traces+=@{name=$trace.name;sha256=(Hash $target);rows=$trace.rows;
+    $traceReceipt=@{name=$trace.name;sha256=(Hash $target);rows=$trace.rows;
         reference_receipt_sha256=$trace.reference_receipt_sha256}
+    if($trace.kind -ceq 'pmd-resident') {$traceReceipt.pcm_sha256=(Hash $pcm)}
+    $traces+= $traceReceipt
     Write-Host "PASS Windows component $($trace.name): $($trace.rows) rows"
 }
 foreach($planInput in $plan.inputs) {CheckHash $planInput.path $planInput.sha256}

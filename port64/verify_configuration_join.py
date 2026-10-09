@@ -30,7 +30,7 @@ def main():
  commands=[]
  for phase in (0,1):
   (inputs/'phase.txt').write_text(str(phase)+'\n')
-  command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--save-dir',str(inputs),'--configuration-checks',str(out/f'phase{phase}')];commands.append(command)
+  command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--pmd-driver','none','--save-dir',str(inputs),'--configuration-checks',str(out/f'phase{phase}')];commands.append(command)
   r=subprocess.run(command,capture_output=True,timeout=180);(out/f'phase{phase}-stdout.txt').write_bytes(r.stdout);(out/f'phase{phase}-stderr.txt').write_bytes(r.stderr);r.check_returncode()
   assert sum(line.startswith('CONFIG rank=') for line in r.stdout.decode().splitlines())==8
  for rank in range(4):

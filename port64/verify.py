@@ -14,6 +14,12 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_resident_sound_join.py",
+    "port64/resident_sound_frontend_checks.inl",
+    "port64/verify_pmd_resident.py",
+    "port64/pmd_resident.hpp",
+    "port64/pmd_resident.cpp",
+    "port64/pmd_resident_checks.cpp",
     "port64/pmd_pcm.hpp",
     "port64/pmd_pcm.cpp",
     "port64/pmd_pcm_checks.cpp",
@@ -753,7 +759,7 @@ def main() -> int:
                           ("windows",[args.windows_runner,str(windows_main)])):
         images = output.parent / ("shooting-"+host)
         images.mkdir(parents=True,exist_ok=True)
-        result = run(command+["--hdi",str(hdi),"--shooting-screenshots",str(images)],env=runner_env)
+        result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--shooting-screenshots",str(images)],env=runner_env)
         if result.count("MAIN shooting power=128") != 4:
             raise ValueError("shooting fixture did not collect full power on every route")
         shooting_hashes[host] = {name:sha256(images/(name+".bmp"))
@@ -767,7 +773,7 @@ def main() -> int:
                           ("windows",[args.windows_runner,str(windows_main)])):
         images = output.parent / ("combat-"+host)
         images.mkdir(parents=True,exist_ok=True)
-        result = run(command+["--hdi",str(hdi),"--combat-screenshots",str(images)],env=runner_env)
+        result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--combat-screenshots",str(images)],env=runner_env)
         if result.count("MAIN combat frames=1200 killed=") != 2:
             raise ValueError("combat fixture did not exercise both characters")
         combat_hashes[host] = {name:sha256(images/(name+".bmp")) for name in ("reimu","marisa","reimu-bullets","marisa-bullets")}
@@ -781,7 +787,7 @@ def main() -> int:
                           ("windows",[args.windows_runner,str(windows_main)])):
         images = output.parent / ("midboss-"+host)
         images.mkdir(parents=True,exist_ok=True)
-        result = run(command+["--hdi",str(hdi),"--midboss-screenshots",str(images)],env=runner_env)
+        result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--midboss-screenshots",str(images)],env=runner_env)
         if result.count("MAIN midboss case=") != 24:
             raise ValueError("midboss fixture did not reach all four scenarios/checkpoints")
         midboss_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
@@ -795,7 +801,7 @@ def main() -> int:
                           ("windows",[args.windows_runner,str(windows_main)])):
         images = output.parent / ("orange-"+host)
         images.mkdir(parents=True,exist_ok=True)
-        result = run(command+["--hdi",str(hdi),"--orange-screenshots",str(images)],env=runner_env)
+        result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--orange-screenshots",str(images)],env=runner_env)
         if result.count("MAIN Orange fixture=") != 120 or result.count("MAIN Orange stopped ") != 8:
             raise ValueError("Orange fixture missed a character/rank/outcome/checkpoint")
         orange_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
@@ -832,7 +838,7 @@ def main() -> int:
                               ("windows",[args.windows_runner,str(windows_main)])):
             images = output.parent / ("dialog-"+host)
             images.mkdir(parents=True,exist_ok=True)
-            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--dialog-screenshots",str(images)],env=runner_env)
+            result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--dialog-screenshots",str(images)],env=runner_env)
             if result.count("MAIN dialog fixture=") != 64 or result.count("MAIN dialog stopped ") != 8:
                 raise ValueError("ordinary Stage 1 dialog fixture missed progression")
             dialog_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
@@ -845,7 +851,7 @@ def main() -> int:
                               ("windows",[args.windows_runner,str(windows_main)])):
             images = output.parent / ("stage2-"+host)
             images.mkdir(parents=True,exist_ok=True)
-            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage2-screenshots",str(images)],env=runner_env)
+            result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage2-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Stage2 fixture=") != 32 or result.count("MAIN Stage2 stopped ") != 4:
                 raise ValueError("natural Stage2 resource/dialog fixture missed progression")
             stage2_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
@@ -859,7 +865,7 @@ def main() -> int:
                               ("windows",[args.windows_runner,str(windows_main)])):
             images = output.parent / ("kurumi-"+host)
             images.mkdir(parents=True,exist_ok=True)
-            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--kurumi-screenshots",str(images)],env=runner_env)
+            result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--kurumi-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Kurumi fixture=") != 72 or result.count("MAIN Kurumi stopped ") != 8:
                 raise ValueError("natural Kurumi fixture missed progression")
             kurumi_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
@@ -871,7 +877,7 @@ def main() -> int:
 
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images = output.parent / ("stage3-"+host); images.mkdir(parents=True,exist_ok=True)
-            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage3-screenshots",str(images)],env=runner_env)
+            result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage3-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Stage3 fixture=") != 72 or result.count("MAIN Stage3 stopped ") != 8:
                 raise ValueError("natural Stage3 fixture missed progression")
             stage3_hashes[host] = {path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
@@ -883,7 +889,7 @@ def main() -> int:
 
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images = output.parent / ("elly-"+host);images.mkdir(parents=True,exist_ok=True)
-            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--elly-screenshots",str(images)],env=runner_env)
+            result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--elly-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Elly fixture=")!=96 or result.count("MAIN Elly stopped ")!=8:raise ValueError("natural Elly fixture missed progression")
             elly_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
             if len(elly_hashes[host])!=96:raise ValueError("unexpected Elly image files")
@@ -891,7 +897,7 @@ def main() -> int:
         if elly_hashes["linux"]!=elly_hashes["windows"] or elly_outputs["linux"]!=elly_outputs["windows"]:raise ValueError("Elly images/counters differ between hosts")
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images = output.parent / ("stage4-"+host);images.mkdir(parents=True,exist_ok=True)
-            result = run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage4-screenshots",str(images)],env=runner_env)
+            result = run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage4-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Stage4 fixture=")!=96 or result.count("MAIN Stage4 stopped ")!=8:raise ValueError("natural Stage4 fixture missed progression")
             stage4_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
             if len(stage4_hashes[host])!=96:raise ValueError("unexpected Stage4 image files")
@@ -900,7 +906,7 @@ def main() -> int:
 
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images=output.parent/("reimu-"+host);images.mkdir(parents=True,exist_ok=True)
-            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--reimu-screenshots",str(images)],env=runner_env)
+            result=run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--reimu-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Reimu fixture=")!=144 or result.count("MAIN Reimu stopped ")!=8:raise ValueError("natural Reimu fixture missed progression")
             reimu_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
             if len(reimu_hashes[host])!=144:raise ValueError("unexpected Reimu image files")
@@ -909,7 +915,7 @@ def main() -> int:
 
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images=output.parent/("marisa-"+host);images.mkdir(parents=True,exist_ok=True)
-            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--marisa-screenshots",str(images)],env=runner_env)
+            result=run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--marisa-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Marisa fixture=")!=162 or result.count("MAIN Marisa stopped ")!=8:raise ValueError("natural Marisa fixture missed progression")
             marisa_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
             if len(marisa_hashes[host])!=162:raise ValueError("unexpected Marisa image files")
@@ -918,7 +924,7 @@ def main() -> int:
 
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images=output.parent/("stage5-"+host);images.mkdir(parents=True,exist_ok=True)
-            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage5-screenshots",str(images)],env=runner_env)
+            result=run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage5-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Stage5 fixture=")!=112 or result.count("MAIN Stage5 stopped ")!=16:raise ValueError("natural Stage5 fixture missed progression")
             stage5_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
             if len(stage5_hashes[host])!=112:raise ValueError("unexpected Stage5 image files")
@@ -927,7 +933,7 @@ def main() -> int:
 
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images=output.parent/("yuuka5-"+host);images.mkdir(parents=True,exist_ok=True)
-            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--yuuka5-screenshots",str(images)],env=runner_env)
+            result=run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--yuuka5-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Yuuka5 fixture=")!=698 or result.count("MAIN Yuuka5 stopped ")!=18:raise ValueError("natural Yuuka5 fixture missed progression")
             yuuka5_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
             if len(yuuka5_hashes[host])!=698:raise ValueError("unexpected Yuuka5 image files")
@@ -936,7 +942,7 @@ def main() -> int:
 
         for host, command in (("linux",[str(linux_main)]),("windows",[args.windows_runner,str(windows_main)])):
             images=output.parent/("stage6-"+host);images.mkdir(parents=True,exist_ok=True)
-            result=run(command+["--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage6-screenshots",str(images)],env=runner_env)
+            result=run(command+["--pmd-driver","none","--hdi",str(hdi),"--font-bmp",str(args.font_bmp.resolve()),"--stage6-screenshots",str(images)],env=runner_env)
             if result.count("MAIN Stage6 fixture=")!=112 or result.count("MAIN Stage6 battle fixture=")!=400 or result.count("MAIN Stage6 stopped ")!=16 or result.count("progression=good_ending_pending")!=16:raise ValueError("natural Stage6 fixture missed progression")
             stage6_hashes[host]={path.name:sha256(path) for path in sorted(images.glob("*.bmp"))}
             if len(stage6_hashes[host])!=512:raise ValueError("unexpected Stage6 image files")

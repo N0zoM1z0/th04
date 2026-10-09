@@ -24,7 +24,7 @@ def main():
  else:
   assert a.scores_file is not None;scores=a.scores_file.read_bytes()
  (inputs/'scores.SCR').write_bytes(scores)
- command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--save-dir',str(inputs),'--demo-checks',str(out/'scenes')]
+ command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--pmd-driver','none','--save-dir',str(inputs),'--demo-checks',str(out/'scenes')]
  r=subprocess.run(command,capture_output=True,timeout=300);(out/'stdout.log').write_bytes(r.stdout);(out/'stderr.log').write_bytes(r.stderr);r.check_returncode()
  initial=(a.original_dir/'init-original.txt').read_text().splitlines();rngs={int(line.split()[8]) for line in initial};assert len(rngs)==1;expected_rng=rngs.pop()
  replays=[(a.original_dir/'replays'/f'DEMO{i}.REC').read_bytes() for i in range(1,5)]

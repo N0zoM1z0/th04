@@ -187,6 +187,7 @@ void Scene::advance(const Sink& observer) {
     if(status_==Status::stopped)return;
     ++clock_;
     if(status_==Status::measure) {
+        if(measure_source_)measure_=measure_source_();
         if(!measure_ || *measure_<measure_goal_)return;
         status_=Status::running;
     }
@@ -207,6 +208,7 @@ void Scene::advance(const Sink& observer) {
             fade_speed_=e.b;left_=1+e.b;status_=Status::delay;
         } else if(e.kind==Kind::vsync) {left_=e.a;status_=Status::delay;}
         else if(e.kind==Kind::measure) {
+            if(measure_source_)measure_=measure_source_();
             if(audio_active_ && (!measure_ || *measure_<std::uint16_t(e.a))) {
                 measure_goal_=std::uint16_t(e.a);status_=Status::measure;
             } else if(!audio_active_ && e.b) {left_=e.b;status_=Status::delay;}

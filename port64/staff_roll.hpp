@@ -61,6 +61,8 @@ public:
     void advance(const Sink& observer={});
     void report_song_measure(std::uint16_t measure) { measure_=measure; }
     void set_audio_active(bool active) { audio_active_=active; }
+    using MeasureSource=std::function<std::optional<std::uint16_t>()>;
+    void set_measure_source(MeasureSource source) {measure_source_=std::move(source);}
     Status status() const { return status_; }
     const Bytes& page(unsigned p) const { return pages_.at(p); }
     const std::array<std::uint8_t,48>& palette() const { return palette_; }
@@ -88,6 +90,7 @@ private:
     int tone_=100,left_=0,fade_step_=0,fade_goal_=100,fade_speed_=0;
     std::uint16_t measure_goal_=0;
     std::optional<std::uint16_t> measure_;
+    MeasureSource measure_source_;
     bool audio_active_=false;
     Status status_=Status::running;
 };

@@ -76,6 +76,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
     }
     const auto& script=scene_->script();
     if(script.status()==cutscene::Status::measure) {
+        if(audio_) {bgm_active_=audio_->bgm_active();song_measure_=audio_->song_measure();}
         const auto& events=scene_->pending_sound_requests();
         if(events.empty() || events.back().kind!=cutscene::Kind::measure)
             throw std::logic_error("MAINE measure wait lacks a sound request");
@@ -91,6 +92,9 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         // Original snd_delay_until_measure executes frame_delay(fallback)
         // only when BGM is inactive. Active sound must report actual progress.
         const auto wait=scene_->pending_sound_requests().back();
+        // Query AFTER preceding load/start requests. Each new song owns its
+        // measure; the previous song cannot release the current wait.
+        if(audio_) {bgm_active_=audio_->bgm_active();song_measure_=audio_->song_measure();}
         if(bgm_active_) {
             if(!song_measure_ || *song_measure_<static_cast<std::uint16_t>(wait.a)) return;
             scene_->script().complete_measure_wait();continue;
@@ -104,7 +108,8 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
 void Ending::start_staff_roll(const staff::Assets& assets) {
     if(phase_!=Phase::staff_roll_pending || !scene_)throw std::logic_error("Staff Roll requires a completed Ending");
     staff_=std::make_unique<staff::Scene>(assets,std::array<Bytes,2>{scene_->page(0),scene_->page(1)},scene_->shown_page());
-    staff_->set_audio_active(bgm_active_);
+    staff_->set_audio_active(audio_ ? audio_->bgm_active() : bgm_active_);
+    if(audio_)staff_->set_measure_source([this]{return audio_->song_measure();});
     // A new song owns measure progress; the previous Ending song cannot
     // satisfy STAFF's waits. Its PI/script/text-box owner is now released.
     text_weight_=scene_->text_weight();

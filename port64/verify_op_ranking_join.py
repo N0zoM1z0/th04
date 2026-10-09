@@ -37,7 +37,7 @@ def main():
     name=f'rank{rank}-input{scenario}';cases.append(f'{name} {rank}')
     keys=rows[rank*12+scenario][9];(inputs/(name+'.keys')).write_bytes(struct.pack('<'+'H'*len(keys),*keys))
   (inputs/'cases.txt').write_text('\n'.join(cases)+'\n')
- command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--save-dir',str(inputs),'--op-ranking-checks',str(out/'scenes')]
+ command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--pmd-driver','none','--save-dir',str(inputs),'--op-ranking-checks',str(out/'scenes')]
  r=subprocess.run(command,capture_output=True,timeout=180);(out/'native.txt').write_bytes(r.stdout);(out/'stderr.txt').write_bytes(r.stderr);assert r.returncode==0,r.stderr.decode()
  records=[];snapshots=0
  if a.reference_dir:

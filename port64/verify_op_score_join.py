@@ -65,7 +65,7 @@ def main():
  (inputs/'cases.txt').write_text('\n'.join(fixtures)+'\n');(inputs/'zero.SCR').write_bytes(zero)
  for name,raw in fixtures.items():
   if raw is not None:(inputs/(name+'.SCR')).write_bytes(raw)
- command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--save-dir',str(inputs),'--op-score-checks',str(out/'scenes')]
+ command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--pmd-driver','none','--save-dir',str(inputs),'--op-score-checks',str(out/'scenes')]
  result=subprocess.run(command,capture_output=True,timeout=180);(out/'native.txt').write_bytes(result.stdout);(out/'stderr.txt').write_bytes(result.stderr)
  assert result.returncode==0,result.stderr.decode(errors='replace')
  assert sum(s.startswith('OP_SCORE ') for s in result.stdout.decode().splitlines())==len(fixtures)

@@ -31,6 +31,7 @@ add_library(
   pmd_timer_player.cpp
   pmd_clock.cpp
   pmd_pcm.cpp
+  pmd_resident.cpp
   pmd_trace_state.cpp
   hud.cpp
   bullet_geometry.cpp
@@ -399,3 +400,7 @@ add_test(NAME pmd-clock-contracts COMMAND th04-port64-pmd-clock-contracts)
 add_executable(th04-port64-pmd-pcm-contracts pmd_pcm_checks.cpp)
 target_link_libraries(th04-port64-pmd-pcm-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-pcm-contracts COMMAND th04-port64-pmd-pcm-contracts)
+
+add_executable(th04-port64-pmd-resident-contracts pmd_resident_checks.cpp)
+target_link_libraries(th04-port64-pmd-resident-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-resident-contracts COMMAND th04-port64-pmd-resident-contracts)

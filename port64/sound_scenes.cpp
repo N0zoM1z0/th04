@@ -10,13 +10,18 @@ void Timeline::enter(application::Program p,std::uint32_t generation,const menu:
     leave();program_=p;generation_=generation;
     runtime_=std::make_shared<Runtime>(reader_,[this,p,generation](const Action& a){
         emit({SceneKind::action,p,generation,a});
-    },Sink{},[this,p,generation](const auto& values){if(samples_)samples_(p,generation,values);});
+    },[this,p,generation](const Request& q){if(requests_)requests_(p,generation,q);},
+    [this,p,generation](const auto& values){if(samples_)samples_(p,generation,values);},
+    false,resident_,[this,p,generation](const auto& values){if(stereo_)stereo_(p,generation,values);});
     emit({SceneKind::enter,p,generation});configure(options);
     // TH04 MAINE determines modes but does not call snd_load(SE). Its newly
     // initialized beeper has no effects; do not borrow MAIN's EFS buffers.
     if(p!=application::Program::maine)handle({ActionKind::load,0xb00,"miko"});
 }
 void Timeline::leave() {
+    // Drain the outgoing process wait before the next generation can load or
+    // start a song on the same resident clock. Its guard then has no remainder.
+    if(runtime_ && resident_)runtime_->flush_refresh();
     if(runtime_)emit({SceneKind::leave,program_,generation_});
     runtime_.reset();program_=application::Program::exited;
 }
@@ -40,8 +45,8 @@ void Timeline::handle(const Action& a) {
 }
 void Timeline::measure(int goal,int fallback) {
     SceneEvent e{SceneKind::measure,program_,generation_};e.goal=std::uint16_t(goal);e.fallback=std::uint16_t(fallback);emit(e);
-    // The current backend is absent. Consumers retain their original off-BGM
-    // fallback; no synthetic measure reply is returned to them.
+    // This notification does not advance music. Consumers query the resident
+    // driver, or retain the original frame fallback when BGM is inactive.
 }
 void Timeline::cutscene(const th04::portable::cutscene::Event& e) {
     using K=th04::portable::cutscene::Kind;

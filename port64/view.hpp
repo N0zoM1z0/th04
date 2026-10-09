@@ -12,6 +12,7 @@
 #include "op_ranking.hpp"
 #include "op_music.hpp"
 #include "op_setup.hpp"
+#include "pmd_resident.hpp"
 
 struct StageAssets {
     Bytes stage_tiles,boss_tiles,backdrop,transition,boss_faces,map_tiles,map,standard,stars;
@@ -33,6 +34,9 @@ struct MainAssets {
     std::string sound_scene_checks;
     bool capture_sound_scenes=false;
     Bytes main_effects;
+    std::map<std::string,Bytes> sound_resources;
+    std::optional<th04::portable::sound::PmdProfile> pmd_profile;
+    std::string resident_sound_checks;
     bool muted=true;
     StageAssets stage2,stage3,stage5,stage6,extra;
     std::array<Bytes,2> extra_defeat_faces;

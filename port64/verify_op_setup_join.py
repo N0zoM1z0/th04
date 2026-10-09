@@ -35,7 +35,7 @@ def main():
     commands=[]
     for phase in (0,1):
         (inputs/'phase.txt').write_text(str(phase)+'\n')
-        command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--save-dir',str(inputs),'--setup-checks',str(out/f'phase{phase}')];commands.append(command)
+        command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font_bmp.resolve()),'--mute','--pmd-driver','none','--save-dir',str(inputs),'--setup-checks',str(out/f'phase{phase}')];commands.append(command)
         result=subprocess.run(command,capture_output=True,timeout=180);(out/f'phase{phase}-stdout.txt').write_bytes(result.stdout);(out/f'phase{phase}-stderr.txt').write_bytes(result.stderr);result.check_returncode()
         assert sum(line.startswith('SETUP bgm=') for line in result.stdout.decode().splitlines())==9
     for bgm in range(3):

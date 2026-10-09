@@ -1288,8 +1288,15 @@ public:
         cursors_(cursors), selection_background_(selection_background),
         portraits_(portraits), frame_(render()) {
         assets_=main_assets;mode_=mode;
+        const auto resident=assets_ && assets_->pmd_profile ?
+            std::make_shared<sound::ResidentPmd>(*assets_->pmd_profile) : nullptr;
         sound_timeline_=std::make_unique<sound::Timeline>(
             [this](const std::string& name)->std::optional<sound::Bytes> {
+                if(assets_) {
+                    auto upper=name;for(auto& c:upper)if(c>='a' && c<='z')c=char(c-'a'+'A');
+                    const auto found=assets_->sound_resources.find(upper);
+                    if(found!=assets_->sound_resources.end())return found->second;
+                }
                 if(name=="miko.efs" && assets_ && !assets_->main_effects.empty())return assets_->main_effects;
                 return std::nullopt;
             },[this](const sound::SceneEvent& e) {
@@ -1301,7 +1308,7 @@ public:
             },[this](application::Program p,std::uint32_t generation,const std::vector<std::int16_t>& values) {
                 if(p==application::Program::main && sound_samples_)sound_samples_(values);
                 if(sound_scene_samples_)sound_scene_samples_(p,generation,values);
-            });
+            },resident,[this](auto p,auto g,const auto& values){if(sound_stereo_samples_)sound_stereo_samples_(p,g,values);});
         if(mode_==gameplay::Mode::actor_control)std::cout<<"MAIN fixture mode=actor-control (hit consumption disabled)\n";
         if (main_assets && !main_assets->reimu.empty()) {
             sprites_ = std::make_unique<MainSprites>(*main_assets);
@@ -1797,6 +1804,8 @@ public:
         sound_scene_observer_=std::move(observer);sound_scene_samples_=std::move(samples);
     }
     const sound::Runtime* sound_runtime() const {return sound_.get();}
+    const std::shared_ptr<sound::ResidentPmd>& resident_sound() const {return sound_timeline_->resident();}
+    void set_stereo_observer(sound::Timeline::StereoSamples samples) {sound_stereo_samples_=std::move(samples);}
     void repaint() { frame_=render(); }
     void diagnostic_start_orange() {
         require_view(live_main(),"Orange fixture requires MAIN");
@@ -2292,6 +2301,7 @@ private:
     std::shared_ptr<sound::Runtime> sound_;
     std::unique_ptr<sound::Timeline> sound_timeline_;
     sound::SceneSink sound_scene_observer_;sound::Timeline::Samples sound_scene_samples_;
+    sound::Timeline::StereoSamples sound_stereo_samples_;
     sound::ActionSink sound_observer_;sound::Runtime::Samples sound_samples_;
     std::unique_ptr<gameover::Renderer> gameover_renderer_;
     std::unique_ptr<maine::ScoreRoute> score_route_;
@@ -2311,6 +2321,7 @@ private:
 
 #include "sound_frontend_checks.inl"
 #include "sound_scene_frontend_checks.inl"
+#include "resident_sound_frontend_checks.inl"
 #include "gameover_frontend_checks.inl"
 #include "score_route_frontend_checks.inl"
 #include "bomb_frontend_checks.inl"
@@ -2631,6 +2642,10 @@ void run_title(
     const CdgSheet labels(label_bytes);
     const CdgSheet cursors(cursor_bytes);
     const CdgSheet portraits(portrait_bytes);
+    if(!main_assets.resident_sound_checks.empty()) {
+        require_view(!window,"resident sound controls require a headless run");
+        run_resident_sound_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.resident_sound_checks);return;
+    }
     menu::State initial_state;
     const Frame initial = render_menu(
         background, numerals, labels, cursors, initial_state

@@ -64,8 +64,8 @@ private:
     bool bgm_active_;
     unsigned text_weight_=2;
     std::optional<std::uint16_t> song_measure_;
-    // The current host audio backend is inactive, but preserve the request
-    // issued before MAIN's fade so a real backend can consume it later.
+    // Preserve MAIN's pre-fade request. Device playback remains muted while
+    // an injected resident player advances its real song state.
     std::vector<cutscene::Event> main_sound_requests_;
     std::vector<cutscene::Event> maine_sound_requests_;
 };

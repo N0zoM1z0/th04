@@ -138,7 +138,7 @@ def main():
  if out.exists():raise ValueError('use a fresh Bomb join output directory')
  out.mkdir(parents=True);root=Path(__file__).resolve().parents[1];manifest=source_manifest(root)
  scenes=out/'scenes';stream=out/'native.gz'
- command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font.resolve()),'--bomb-checks',str(scenes),'--mute']
+ command=[str(a.exe.resolve()),'--hdi',str(a.hdi.resolve()),'--font-bmp',str(a.font.resolve()),'--bomb-checks',str(scenes),'--mute','--pmd-driver','none']
  with (out/'stderr.txt').open('wb') as err:
   process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=err)
   try:

@@ -180,7 +180,7 @@ def main():
     p.add_argument('--reference-dir',type=Path)
     args=p.parse_args();root=Path(__file__).resolve().parents[1];manifest,files=source_manifest(root)
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False);require_elf_x86_64(args.exe)
-    command=[str(args.exe.resolve()),'--hdi',str(args.hdi.resolve()),'--font-bmp',str(args.font.resolve()),'--mute','--sound-scene-checks',str(out/'scenes')]
+    command=[str(args.exe.resolve()),'--hdi',str(args.hdi.resolve()),'--font-bmp',str(args.font.resolve()),'--mute','--pmd-driver','none','--sound-scene-checks',str(out/'scenes')]
     with (out/'launch.log').open('wb') as log:
         subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=240)
     observed=controls(args,out/'scenes');(out/'original.json').write_text(json.dumps(observed,indent=2)+'\n')

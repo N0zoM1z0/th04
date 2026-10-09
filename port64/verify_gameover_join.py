@@ -106,7 +106,7 @@ def compare_rows(native, original, scene, out):
 
 def run_native(executable, hdi, font, out):
     command = [str(executable.resolve()), '--hdi', str(hdi.resolve()),
-               '--font-bmp', str(font.resolve()), '--mute',
+               '--font-bmp', str(font.resolve()), '--mute','--pmd-driver','none',
                '--gameover-checks', str(out / 'scenes')]
     digest = hashlib.sha256()
     size = 0

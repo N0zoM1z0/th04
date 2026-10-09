@@ -60,7 +60,7 @@ def main():
     if out.exists():raise ValueError('use a fresh output directory')
     out.mkdir(parents=True)
     command=[str(args.exe.resolve()),'--hdi',str(args.hdi.resolve()),
-        '--font-bmp',str(args.font_bmp.resolve()),'--mute','--score-route-checks',str(out/'scenes')]
+        '--font-bmp',str(args.font_bmp.resolve()),'--mute','--pmd-driver','none','--score-route-checks',str(out/'scenes')]
     result=subprocess.run(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=180)
     (out/'native.txt').write_bytes(result.stdout);(out/'stderr.txt').write_bytes(result.stderr)
     assert result.returncode==0, result.stderr.decode(errors='replace')
