@@ -1,29 +1,35 @@
 # TH04 native 64-bit bring-up
 
-v1333 adds the native external FM effect owner. GNU8, optimized UBSan and
-actual Windows each compare all 30,192 original-backed effect rows and pass
-52 component contracts. 399 maintained files bind 159 AMD64 products. The
-008C/008E board-mirror correction is independently replayed: prior all-music,
-FM/fade/restart, SSG and SSG/music-sharing outputs remain byte-identical.
-Two source-only LFO/portamento variants reject the corrected reference.
-Current receipts: native `.analysis/port64/pmd-fm-v1333/`; see native
-`docs/port64/evidence/pmd-fm.md`. Terminal cleanup reclaims about310MiB while
-preserving 730 verified sources/programs/cache inputs and independent inputs.
+v1334 adds musical FM state and ordered register requests above the native
+sequence owner. GNU8, optimized UBSan and actual Windows each compare175,140
+original-backed rows:134,274 supplied-song and40,866 dual-LFO/gate/delay rows.
+All53 component contracts pass perhost.403 maintained source inputs bind162
+AMD64 programs. Three source-only gain/TimerA/gate variants reject. Existing
+short/long sequence, SSG, SSG-sharing and external FM effect controls regress.
+Current receipts: native `.analysis/port64/pmd-music-v1334/`; detailed scope:
+native `docs/port64/evidence/pmd-musical-fm.md`.
 
-The FM result covers supplied MIKO.EFC effects with music stopped. Musical
-FM gate/pitch/LFO/envelope/register state, voice handover, synthesis, physical
-clocks, frontend PMD capability and complete startup remain unfinished. All
-launches stay muted; no audio device/backend is opened. DOS acceptance and
-target provenance remain unchanged. General semantic expansion stays paused
-unless a concrete native owner is blocked.
+The musical owner covers six FM parts, embedded voices, gates, pitch/slide,
+both LFOs, attenuation, delays and all owned mirror/write cells. Effects/music
+handover, musical SSG/FM3 extras, ADPCM/rhythm, synthesis, physical clocks,
+frontend PMD capability and complete startup remain unfinished. All launches
+stay muted; no audio device/backend is opened. DOS acceptance and target
+provenance remain unchanged. General semantic expansion resumes only for a
+concrete port blocker.
 
-v1332's nine muted GNU/actual-Windows frontend controls still document 2,015
-complete files, physical scores/configuration/setup saves and separate-process
-restart under their own source/product identities. The 104 older GNU/UBSan
-program identities remain unchanged; all current Windows products are freshly
-attested for v1333 components/FM. Those nine GUI launches were not repeated
-on the newly relinked Windows GUI. Full natural routes/timing and a new Windows
-GUI delivery remain required.
+Actual Windows executes90 CPU-only musical traces/87,570 unique rows, compared
+against both original PSPs for175,140 rows; no frontend launches in this batch.
+v1332's nine muted GNU/actual-Windows frontend controls retain their own
+source/product identities and2,015 complete files, physical saves and restart.
+Relative to v1333,52 GNU and51 UBSan programs remain unchanged; changed
+components regress and all54 relinked Windows programs are freshly attested.
+A current Windows GUI/full natural routes/timing remain required.
+
+Cleanup verifies990 protected hashes and all complete compressed traces.
+Two interim receipts measure272,588,800 allocated bytes reclaimed (about260MiB);
+source-backed caches after both final CIs add17,059,840 bytes (total276.2MiB).
+The terminal step's final accounting failed after cleanup; independent recovery
+readback passes, and no terminal-step reclaimed-byte estimate is claimed.
 
 v1331 adds native PMD SSG effects with 40 semantic instruments, signed sweeps,
 priority admission, stop/restart and ordered register writes. GNU/optimized

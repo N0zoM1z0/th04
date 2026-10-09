@@ -128,3 +128,7 @@ Next recover the musical gate/pitch/LFO/envelope/register owner and actual
 musical voice handover, then synthesis and physical scheduling. PMD capability
 and real scene measure waits must follow those owners. Continue to keep all
 application launches muted.
+
+Current musical FM state/register progress is separately verified in
+[musical FM evidence](pmd-musical-fm.md). This note retains the stopped-effect
+profile; running voice handover is still pending.
