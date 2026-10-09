@@ -77,12 +77,13 @@ foreach($case in $plan.cases) {
 }
 $traces=@()
 foreach($trace in $plan.traces) {
-    if($trace.kind -cnotin @('pmd-fm','pmd-musical-fm','pmd-fm-player','pmd-musical-ssg','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock') -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
+    if($trace.kind -cnotin @('pmd-fm','pmd-musical-fm','pmd-fm-player','pmd-musical-ssg','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock','pmd-pcm') -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
        $trace.board -notin @(0,1,2)) {throw 'Unsupported component trace.'}
-    $binary=if($trace.kind -ceq 'pmd-fm') {'th04-port64-pmd-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-fm') {'th04-port64-pmd-musical-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-ssg') {'th04-port64-pmd-musical-ssg-contracts.exe'} elseif($trace.kind -ceq 'pmd-combined') {'th04-port64-pmd-combined-contracts.exe'} elseif($trace.kind -ceq 'pmd-commands') {'th04-port64-pmd-commands-contracts.exe'} elseif($trace.kind -ceq 'pmd-rhythm') {'th04-port64-pmd-rhythm-contracts.exe'} elseif($trace.kind -ceq 'pmd-timer-player') {'th04-port64-pmd-timer-player-contracts.exe'} elseif($trace.kind -ceq 'pmd-clock') {'th04-port64-pmd-clock-contracts.exe'} else {'th04-port64-pmd-fm-player-contracts.exe'}
+    $binary=if($trace.kind -ceq 'pmd-fm') {'th04-port64-pmd-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-fm') {'th04-port64-pmd-musical-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-ssg') {'th04-port64-pmd-musical-ssg-contracts.exe'} elseif($trace.kind -ceq 'pmd-combined') {'th04-port64-pmd-combined-contracts.exe'} elseif($trace.kind -ceq 'pmd-commands') {'th04-port64-pmd-commands-contracts.exe'} elseif($trace.kind -ceq 'pmd-rhythm') {'th04-port64-pmd-rhythm-contracts.exe'} elseif($trace.kind -ceq 'pmd-timer-player') {'th04-port64-pmd-timer-player-contracts.exe'} elseif($trace.kind -ceq 'pmd-clock') {'th04-port64-pmd-clock-contracts.exe'} elseif($trace.kind -ceq 'pmd-pcm') {'th04-port64-pmd-pcm-contracts.exe'} else {'th04-port64-pmd-fm-player-contracts.exe'}
     if(!$products.ContainsKey($binary)) {throw 'Unattested FM trace product.'}
     $paths=@($trace.resource,$trace.mirror,$trace.operations)
-    if($trace.kind -cin @('pmd-fm-player','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock')) {$paths+=@($trace.effects)}
+    if($trace.kind -cin @('pmd-fm-player','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock','pmd-pcm')) {$paths+=@($trace.effects)}
+    if($trace.kind -ceq 'pmd-pcm') {$paths+=@($trace.rom,$trace.installation)}
     foreach($path in $paths) {
         if(!(@($plan.inputs | Where-Object {$_.path -ceq $path}).Count -eq 1)) {
             throw 'Component trace input lacks a unique identity.'
@@ -90,11 +91,12 @@ foreach($trace in $plan.traces) {
     }
     $target=Join-Path $out ($trace.name+'.trace.txt')
     # This CPU-only component has no audio device or backend. It receives the
-    # supplied EFC and explicit interrupt operations, never a frontend clock.
+    # supplied EFC and explicit IRQ/time operations, without a device backend.
     $arguments=@($trace.resource,([string]$trace.board),$trace.mirror,$trace.operations,$target)
-    if($trace.kind -cin @('pmd-fm-player','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock')) {
+    if($trace.kind -cin @('pmd-fm-player','pmd-combined','pmd-commands','pmd-rhythm','pmd-timer-player','pmd-clock','pmd-pcm')) {
         $arguments=@($trace.resource,$trace.effects,([string]$trace.board),$trace.mirror,$trace.operations,$target)
     }
+    if($trace.kind -ceq 'pmd-pcm') {$arguments=@($trace.resource,$trace.effects,([string]$trace.board),$trace.mirror,$trace.operations,$trace.rom,$trace.installation,$target)}
     Run $trace.name (Join-Path $plan.executable_directory $binary) $arguments
     CheckHash $target $trace.expected_sha256
     $traces+=@{name=$trace.name;sha256=(Hash $target);rows=$trace.rows;

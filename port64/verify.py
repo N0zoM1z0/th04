@@ -14,6 +14,21 @@ import sys
 
 
 PORT_FILES = (
+    "port64/pmd_pcm.hpp",
+    "port64/pmd_pcm.cpp",
+    "port64/pmd_pcm_checks.cpp",
+    "port64/verify_pmd_pcm.py",
+    "port64/vendor/ymfm/LICENSE",
+    "port64/vendor/ymfm/UPSTREAM.json",
+    "port64/vendor/ymfm/src/ymfm.h",
+    "port64/vendor/ymfm/src/ymfm_fm.h",
+    "port64/vendor/ymfm/src/ymfm_fm.ipp",
+    "port64/vendor/ymfm/src/ymfm_opn.h",
+    "port64/vendor/ymfm/src/ymfm_opn.cpp",
+    "port64/vendor/ymfm/src/ymfm_ssg.h",
+    "port64/vendor/ymfm/src/ymfm_ssg.cpp",
+    "port64/vendor/ymfm/src/ymfm_adpcm.h",
+    "port64/vendor/ymfm/src/ymfm_adpcm.cpp",
     "port64/pmd_clock.hpp",
     "port64/pmd_clock.cpp",
     "port64/pmd_clock_checks.cpp",

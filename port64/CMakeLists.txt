@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 project(th04_port64 LANGUAGES CXX)
 
+# Pinned BSD3 chip engine; copyrighted game/chip ROM data stays external.
+add_library(th04-ymfm STATIC vendor/ymfm/src/ymfm_opn.cpp vendor/ymfm/src/ymfm_ssg.cpp vendor/ymfm/src/ymfm_adpcm.cpp)
+target_compile_features(th04-ymfm PRIVATE cxx_std_17)
+
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
   message(FATAL_ERROR "TH04 port64 requires a 64-bit compiler")
 endif()
@@ -26,6 +30,7 @@ add_library(
   pmd_fm_player.cpp
   pmd_timer_player.cpp
   pmd_clock.cpp
+  pmd_pcm.cpp
   pmd_trace_state.cpp
   hud.cpp
   bullet_geometry.cpp
@@ -108,6 +113,7 @@ add_library(
   selection_state.cpp
 )
 target_compile_features(th04-portable-core PUBLIC cxx_std_17)
+target_link_libraries(th04-portable-core PRIVATE th04-ymfm)
 target_compile_definitions(th04-portable-core PUBLIC GAME=4)
 target_include_directories(th04-portable-core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
@@ -389,3 +395,7 @@ add_test(NAME pmd-timer-player-contracts COMMAND th04-port64-pmd-timer-player-co
 add_executable(th04-port64-pmd-clock-contracts pmd_clock_checks.cpp)
 target_link_libraries(th04-port64-pmd-clock-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-clock-contracts COMMAND th04-port64-pmd-clock-contracts)
+
+add_executable(th04-port64-pmd-pcm-contracts pmd_pcm_checks.cpp)
+target_link_libraries(th04-port64-pmd-pcm-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-pcm-contracts COMMAND th04-port64-pmd-pcm-contracts)

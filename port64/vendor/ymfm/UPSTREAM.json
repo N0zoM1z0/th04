@@ -1,0 +1,49 @@
+{
+  "repository": "https://github.com/aaronsgiles/ymfm",
+  "revision": "81aec25ccbb98f4873a255f7551ac4dadac59b4a",
+  "files": {
+    "src/ymfm.h": {
+      "size": 18554,
+      "sha256": "f5ab6fed63c8669abab8403e0e93132e1dad0ae4d8e4954e7836ab9e5b228405"
+    },
+    "src/ymfm_fm.h": {
+      "size": 17705,
+      "sha256": "1b27bfb7fa4963d7c54cb06fd9bf659450362d8ed496c6af7d487b068cac45c9"
+    },
+    "src/ymfm_fm.ipp": {
+      "size": 59236,
+      "sha256": "4fb7fe59d4494a19e9f9c7888eb644a63d86e109fdefb27a8117bf6a5f6ab4b9"
+    },
+    "src/ymfm_opn.h": {
+      "size": 28415,
+      "sha256": "1950990c3ea0c6d492a20f66a683a372a7367ef39f7830aa65b20a20d1bcbef5"
+    },
+    "src/ymfm_opn.cpp": {
+      "size": 67918,
+      "sha256": "8734c6d5a6e1bf49a08eeb33d260d39c17cd1d26f5db506e5d0d3e416913b489"
+    },
+    "src/ymfm_ssg.h": {
+      "size": 7752,
+      "sha256": "27966b0887fe98f2d06a96be2776c911107e2f2a13a64f9a349e1ffc19cf7584"
+    },
+    "src/ymfm_ssg.cpp": {
+      "size": 8421,
+      "sha256": "73a3028a77f13f3769b7705079659eb8325431a67b8164ded25e12f324f42bfd"
+    },
+    "src/ymfm_adpcm.h": {
+      "size": 13752,
+      "sha256": "5933691971493b853a9be443f6e6fd74f63869aa21225f66dd89fc20de20914d"
+    },
+    "src/ymfm_adpcm.cpp": {
+      "size": 22040,
+      "sha256": "74e5ded129ea7e532112e5b637d0a7bd4e127fd83331f1fac32011723051d4e0"
+    },
+    "LICENSE": {
+      "size": 1519,
+      "sha256": "2d2e9213c170a9866c616fa85b6da993a6724e10befc61f468ed9bfb84c4691c"
+    }
+  },
+  "license": "BSD-3-Clause",
+  "local_changes": [],
+  "scope": "Only required Yamaha OPN/OPNA source; no chip ROM, game assets or GPL LLE source is included."
+}
