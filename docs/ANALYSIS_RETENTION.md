@@ -55,6 +55,17 @@ for this batch is289,648,640 bytes (about276.2MiB). Cache receipt:
 root `.analysis/cleanup/pmd-musical-source-backed-caches-20261009.json`.
 Use fresh output directories; retained hardlinks are immutable.
 
+Native FM music/effects handover v1335 retains separate original and final
+consumer source archives, rejected candidates/invalid fixture observations,
+complete compressed original/GNU/UBSan/Windows traces and replay receipts under
+native `.analysis/port64/pmd-fm-join-v1335/`. Whole readback verifies1569
+protected hashes including407sources/165current products and compiler/cache/link
+inputs. Persisted pre-mutation journals measure1,401,487,360allocated bytes reclaimed
+(1336.6MiB). Terminal duplicates share only after complete equality; raw
+negative/Windows traces, experimental binaries and owned NTFS staging retire
+only after exact decompression/archive readback. All independent references,
+source identities and current products remain. Future replay uses fresh paths.
+
 ## Completed archive routing
 
 | Subject | Receipt location (relative to repository unless stated) |
