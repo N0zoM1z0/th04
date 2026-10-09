@@ -4,7 +4,7 @@ namespace th04::portable::pmd {
 // Music and external effects share logical FM registers. No device or clock.
 class FmPlayer {
 public:
-    explicit FmPlayer(Board board=Board::fm26,FmSink sink={});
+    explicit FmPlayer(Board board=Board::fm26,FmSink sink={},SsgSink ssg={});
     FmPlayer(const FmPlayer&)=delete;FmPlayer& operator=(const FmPlayer&)=delete;
     FmPlayer(FmPlayer&&)=delete;FmPlayer& operator=(FmPlayer&&)=delete;
     void load_music(const Bytes& data) {music_.load(data);}

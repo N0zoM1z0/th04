@@ -1,12 +1,7 @@
 #pragma once
-#include "pmd_fm_effects.hpp"
+#include "pmd_musical_ssg.hpp"
 
 namespace th04::portable::pmd {
-struct MusicalLfo : FmLfo {
-    std::int8_t depth_step=0;
-    std::uint8_t depth_speed=0,initial_depth_speed=0;
-    std::uint8_t depth_count=255,initial_depth_count=255,mask=0;
-};
 struct MusicalFmPart {
     std::uint16_t frequency=0;
     std::int16_t slide=0,slide_step=0,slide_remainder=0;
@@ -23,7 +18,7 @@ struct MusicalFmPart {
 // Interrupt flags are explicit inputs; this owner never opens an audio device.
 class MusicalFm {
 public:
-    explicit MusicalFm(Board board=Board::fm26,FmSink sink={});
+    explicit MusicalFm(Board board=Board::fm26,FmSink sink={},SsgSink ssg={});
     MusicalFm(const MusicalFm&)=delete;
     MusicalFm& operator=(const MusicalFm&)=delete;
     MusicalFm(MusicalFm&&)=delete;
@@ -32,15 +27,16 @@ public:
     void load(const Bytes& bytes) {sequence_.load(bytes);}
     void start();void stop();void fade(std::int8_t speed) {sequence_.fade(speed);}
     void interrupt(std::uint8_t flags);
-    void mirror(std::uint8_t bank,std::uint8_t address,std::uint8_t value) {registers_.at(bank)[address]=value;}
+    void mirror(std::uint8_t bank,std::uint8_t address,std::uint8_t value) {registers_.at(bank)[address]=value;if(!bank && address<14)ssg_.mirror(address,value);}
     void effects_active(std::function<bool()> query) {effect_busy_=query;sequence_.fm_effect_active(std::move(query));}
     void borrow_effect();
     void restore_effect_voice();
     const Sequence& sequence() const {return sequence_;}
+    const MusicalSsg& ssg() const {return ssg_;}
     const std::array<MusicalFmPart,6>& parts() const {return parts_;}
     const std::array<std::array<std::uint8_t,256>,2>& registers() const {return registers_;}
 private:
-    Board board_;FmSink sink_;Sequence sequence_;std::function<bool()> effect_busy_;std::uint8_t fm3_algorithm_=0;
+    Board board_;FmSink sink_;Sequence sequence_;MusicalSsg ssg_;std::function<bool()> effect_busy_;std::uint8_t fm3_algorithm_=0;
     std::array<MusicalFmPart,6> parts_{};
     std::array<std::array<std::uint8_t,256>,2> registers_{};
     std::array<std::uint8_t,6> keys_{};

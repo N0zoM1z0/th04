@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/pmd_musical_lfo.hpp",
+    "port64/pmd_musical_ssg.hpp",
+    "port64/pmd_musical_ssg.cpp",
+    "port64/pmd_musical_ssg_checks.cpp",
+    "port64/verify_pmd_musical_ssg.py",
     "port64/pmd_fm_player.hpp",
     "port64/pmd_fm_player.cpp",
     "port64/pmd_fm_player_checks.cpp",

@@ -22,6 +22,7 @@ add_library(
   pmd_ssg_effects.cpp
   pmd_fm_effects.cpp
   pmd_musical_fm.cpp
+  pmd_musical_ssg.cpp
   pmd_fm_player.cpp
   hud.cpp
   bullet_geometry.cpp
@@ -361,3 +362,7 @@ add_test(NAME pmd-musical-fm-contracts COMMAND th04-port64-pmd-musical-fm-contra
 add_executable(th04-port64-pmd-fm-player-contracts pmd_fm_player_checks.cpp)
 target_link_libraries(th04-port64-pmd-fm-player-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-fm-player-contracts COMMAND th04-port64-pmd-fm-player-contracts)
+
+add_executable(th04-port64-pmd-musical-ssg-contracts pmd_musical_ssg_checks.cpp)
+target_link_libraries(th04-port64-pmd-musical-ssg-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-musical-ssg-contracts COMMAND th04-port64-pmd-musical-ssg-contracts)

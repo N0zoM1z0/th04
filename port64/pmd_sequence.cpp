@@ -130,7 +130,7 @@ bool Sequence::command(unsigned p,std::uint16_t& at,std::uint8_t op,std::uint16_
     case 0xf2:case 0xbf:case 0xf0:
         for(unsigned n=0;n<4;++n)byte();break;
     case 0xef:case 0xd6:case 0xce:case 0xcd:case 0xc8:case 0xc7:case 0xc6:case 0xc3:case 0xbd:case 0xb8:case 0xb5:case 0xb4: {
-        unsigned size=op==0xce || op==0xc6 ? 6 : op==0xcd ? 5 : op==0xc8 || op==0xc7 ? 3 : op==0xb4 ? 10 : 2;
+        unsigned size=op==0xce || op==0xc6 ? 6 : op==0xcd ? 5 : op==0xc8 || op==0xc7 ? 3 : op==0xb4 ? (p>=6 && p<=8 ? 16 : 10) : 2;
         if(op==0xd6 && p==10)size=2;
         for(unsigned n=0;n<size;++n)byte();break;
     }
