@@ -175,3 +175,7 @@ CPython cache retirement uses a persisted pre-deletion journal:1,013 caches,
 the two interim receipts, measured reclamation is289,648,640 bytes (276.2MiB);
 unrecorded terminal allocation is excluded. Root cache receipt:
 `.analysis/cleanup/pmd-musical-source-backed-caches-20261009.json`.
+
+The bounded running music/effects join is now verified separately in
+[FM player evidence](pmd-fm-player.md). Earlier receipts and historical open
+questions above retain their original scope and source identities.

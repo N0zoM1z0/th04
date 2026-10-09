@@ -132,3 +132,7 @@ application launches muted.
 Current musical FM state/register progress is separately verified in
 [musical FM evidence](pmd-musical-fm.md). This note retains the stopped-effect
 profile; running voice handover is still pending.
+
+The bounded running music/effects join is now verified separately in
+[FM player evidence](pmd-fm-player.md). Earlier receipts and historical open
+questions above retain their original scope and source identities.

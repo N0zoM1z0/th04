@@ -6,36 +6,35 @@ Linux/Windows routes and timing/performance validation. Native code remains on
 
 ## Verified current frontier
 
-v1334 adds musical FM state and ordered register requests above the native
-sequence owner. GNU8, optimized UBSan and actual Windows each compare175,140
-original-backed rows:134,274 supplied-song and40,866 dual-LFO/gate/delay rows.
-All53 component contracts pass perhost.403 maintained source inputs bind162
-AMD64 programs. Three source-only gain/TimerA/gate variants reject. Existing
-short/long sequence, SSG, SSG-sharing and external FM effect controls regress.
-Current receipts: native `.analysis/port64/pmd-music-v1334/`; detailed scope:
-native `docs/port64/evidence/pmd-musical-fm.md`.
+v1335 joins running musical FM and external effects with shared logical
+registers, borrowed masks, delayed recovery and voice/pan restoration. GNU8,
+optimized UBSan and actual Windows each compare427,308 complete original rows
+in42cases; all54 component contracts pass perhost.407 maintained source inputs
+bind165AMD64products. Three source-only restoration/mask/stop variants reject;
+invalid authored note13 and masked-pan development failures remain recorded.
+Current receipts: native `.analysis/port64/pmd-fm-join-v1335/`; detailed scope:
+native `docs/port64/evidence/pmd-fm-player.md`.
 
-The musical owner covers six FM parts, embedded voices, gates, pitch/slide,
-both LFOs, attenuation, delays and all owned mirror/write cells. Effects/music
-handover, musical SSG/FM3 extras, ADPCM/rhythm, synthesis, physical clocks,
-frontend PMD capability and complete startup remain unfinished. All launches
-stay muted; no audio device/backend is opened. DOS acceptance and target
+The FM music/effects owner is joined under bounded original controls. Musical
+SSG/FM3 extras, ADPCM/rhythm, synthesis, physical clocks, frontend PMD capability
+and complete startup remain unfinished. All launches stay muted; no audio
+backend/device is opened. DOS acceptance and candidate-local-attested target
 provenance remain unchanged. General semantic expansion resumes only for a
-concrete port blocker.
+concrete native blocker.
 
-Actual Windows executes90 CPU-only musical traces/87,570 unique rows, compared
-against both original PSPs for175,140 rows; no frontend launches in this batch.
-v1332's nine muted GNU/actual-Windows frontend controls retain their own
-source/product identities and2,015 complete files, physical saves and restart.
-Relative to v1333,52 GNU and51 UBSan programs remain unchanged; changed
-components regress and all54 relinked Windows programs are freshly attested.
-A current Windows GUI/full natural routes/timing remain required.
+Actual Windows executes21CPU-only joined traces/213,654unique rows, compared
+against both original PSPs for427,308comparisons; no GUI launches in this batch.
+All55PEproducts are freshly bound. GNU/UBsan musical FM, short/long sequence,
+SSG/sharing/effects regress; revised A466 observer replays all earlier original
+corpora byte-identically. v1332's nine muted frontend controls retain their
+own source/product identities and2,015complete files, physical saves/restart.
+Full natural ordinary/Extra routes, current GUI and dense Lunatic timing remain.
 
-Cleanup verifies990 protected hashes and all complete compressed traces.
-Two interim receipts measure272,588,800 allocated bytes reclaimed (about260MiB);
-source-backed caches after both final CIs add17,059,840 bytes (total276.2MiB).
-The terminal step's final accounting failed after cleanup; independent recovery
-readback passes, and no terminal-step reclaimed-byte estimate is claimed.
+Cleanup verifies1569protected hashes and full original/native/Windows
+trace/archive readback. Persisted journals measure1,401,487,360allocated bytes
+reclaimed (1336.6MiB); terminal duplicate captures are shared, failed raw
+outputs and owned Windows staging retired. Current products and independent
+reference/source archives remain; future replay requires fresh directories.
 
 See [OP/MAINE scene evidence](port64/evidence/sound-scenes.md), [MAIN sound evidence](port64/evidence/sound-main.md), [beeper evidence](port64/evidence/beeper.md) and
 [sound-control evidence](port64/evidence/sound-control.md).
@@ -58,8 +57,8 @@ old claimed two-character frontend coverage.
 
 ## Remaining owners, in order
 
-1. Join running FM music/effects with attested mask/key/voice restoration;
-   finish musical SSG/FM3 extras, ADPCM/rhythm, synthesis and real driver measures;
+1. Finish musical SSG/FM3 extras, ADPCM/rhythm, synthesis and physical clocks;
+   join original driver measures to frontend capability;
    complete original logo/startup audio and attest driver initialization/finish.
    OP/MAIN/MAINE scene requests, process lifetimes and muted beeper are joined
    under bounded controls; absent drivers supply no fictional measures.
@@ -78,7 +77,8 @@ resumes only for a specific blocking port contract. No exact promotion follows.
 ## Replay, private state and delivery
 
 Fast caches: `.analysis/port64/{linux,windows,ubsan}-live-v1251`.
-Current musical FM originals/consumers and source/product manifests:
+Current joined FM originals/consumers and source/product manifests:
+`.analysis/port64/pmd-fm-join-v1335/`; musical FM component:
 `.analysis/port64/pmd-music-v1334/`; stopped external FM effects:
 `.analysis/port64/pmd-fm-v1333/`; prior frontend acceptance:
 `.analysis/port64/windows-current-v1332/`; sound-scene original producers:
@@ -89,13 +89,13 @@ input hashes, adapter limits and negative controls live in the focused notes.
 
 The last published Windows GUI is v1296, archived outside the DOS demo folder;
 it is older than this retained source and reaches registration_pending.
-Native source/evidence through v1334 remain on the native branch with
+Native source/evidence through v1335 remain on the native branch with
 separate original/consumer source identities and current replay receipts.
 Historical recovery patches remain private and contain public source only,
 not assets/tools.
 
 Preserve pinned targets/HDI/font, independent references, recovery archives and
-all162 current programs. Periodically retire terminal duplicate captures and
+all165 current programs. Periodically retire terminal duplicate captures and
 regenerable caches only after hashes and full byte comparison; shared hardlinks
 are immutable. Restore or use a fresh output directory before replaying.
 
