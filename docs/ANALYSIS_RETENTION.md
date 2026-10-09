@@ -238,3 +238,13 @@ the disjoint journals: 1,018,875,904 allocated bytes (971.7 MiB), with all
 430 maintained inputs, 183 current program hashes and original outputs checked
 after cleanup. Every producer/consumer is terminal zero. Historical first
 closed-batch receipts remain separate; no source or evidence is restamped.
+
+Native PCM v1342 preserves445maintained inputs/186programs, original timed
+register/PCM references, separate source archives and all rejected adapters
+under native `.analysis/port64/pmd-pcm-v1342/`. Terminal readback validates
+1243 protected hashes. Two disjoint pre-mutation journals reclaim
+1,074,380,800allocated bytes (1024.6MiB): regenerable native objects/static
+libraries, verified lossless failed outputs and full archived Windows stage,
+plus841full-byte-equal compressed paths shared immutable. Current programs and
+inputs remain; CMake rebuilds missing intermediates. `final-retention.json`
+indexes journals and restore surfaces; future replay uses fresh directories.
