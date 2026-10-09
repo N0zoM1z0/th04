@@ -22,6 +22,21 @@ Worktree paths in the table are below `.analysis/worktrees/`. Keep native work
 on its independent branch. Never use blanket `git clean -fdx`, `rm -rf .analysis`
 or a global Wine kill as cleanup.
 
+Current native FM batch v1333 retains original/consumer source archives,
+independent FM/SSG/music references, actual Windows component trace receipts
+and negative logs below native `.analysis/port64/pmd-fm-v1333/`. Its terminal
+readback shares235 full-byte-identical outputs, compresses failed traces with
+verified decompression and retires private mutant programs/owned NTFS staging,
+reclaiming325,083,136 allocated bytes (about310MiB). All730 protected hashes
+remain unchanged, including399 sources and159 current programs. Retained
+shared paths are immutable; subsequent producers must use fresh directories.
+
+After both final CIs pass, the source-backed cache receipt
+`.analysis/cleanup/pmd-fm-source-backed-caches-20261009.json` records retirement
+of1,015 public-script/test/port64 CPython caches in the two worktrees, reclaiming
+another17,125,376 allocated bytes. All1,130 mapped Python sources retain their
+hashes. Combined terminal reclamation is342,208,512 bytes (about326MiB).
+
 ## Completed archive routing
 
 | Subject | Receipt location (relative to repository unless stated) |
