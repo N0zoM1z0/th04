@@ -1,24 +1,29 @@
 # TH04 native x64 port
 
-v1332 repairs static MinGW runtime inheritance and binary configuration
-failure captures. GNU/optimized UBSan and actual Windows each pass all 51
-component contracts. Nine fresh muted frontends on current GNU and Windows
-agree on 2,015 complete files: sound scenes, score routes, Music Room, Scores,
-demos, configuration and first setup, including real physical saves and
-separate-process restart. These remain bounded controls, not full natural
-route or audio/timing acceptance. 395 maintained files bind 156 AMD64 products.
-Git writes/push and Windows execution now work; source through v1331 and the
-new repairs are committed/pushed. No new Windows GUI package is published.
-Current replay/negative/retention receipts: native
-`.analysis/port64/windows-current-v1332/`; see native
-`docs/port64/evidence/windows-current.md`.
+v1333 adds the native external FM effect owner. GNU8, optimized UBSan and
+actual Windows each compare all 30,192 original-backed effect rows and pass
+52 component contracts. 399 maintained files bind 159 AMD64 products. The
+008C/008E board-mirror correction is independently replayed: prior all-music,
+FM/fade/restart, SSG and SSG/music-sharing outputs remain byte-identical.
+Two source-only LFO/portamento variants reject the corrected reference.
+Current receipts: native `.analysis/port64/pmd-fm-v1333/`; see native
+`docs/port64/evidence/pmd-fm.md`. Terminal cleanup reclaims about310MiB while
+preserving 730 verified sources/programs/cache inputs and independent inputs.
 
-v1331's PMD SSG owner remains validated against original effects and music
-sharing: 79,488 effect rows, 3,942 sharing rows, 134,274 short sequence rows
-and 49,164 longer rows per Linux host. FM/OPN state/synthesis, physical clocks,
-real frontend measure waits and complete original startup remain unfinished.
-All launches stay muted. General semantic expansion is paused; reopen only
-an ambiguity blocking a concrete native owner. DOS acceptance is unchanged.
+The FM result covers supplied MIKO.EFC effects with music stopped. Musical
+FM gate/pitch/LFO/envelope/register state, voice handover, synthesis, physical
+clocks, frontend PMD capability and complete startup remain unfinished. All
+launches stay muted; no audio device/backend is opened. DOS acceptance and
+target provenance remain unchanged. General semantic expansion stays paused
+unless a concrete native owner is blocked.
+
+v1332's nine muted GNU/actual-Windows frontend controls still document 2,015
+complete files, physical scores/configuration/setup saves and separate-process
+restart under their own source/product identities. The 104 older GNU/UBSan
+program identities remain unchanged; all current Windows products are freshly
+attested for v1333 components/FM. Those nine GUI launches were not repeated
+on the newly relinked Windows GUI. Full natural routes/timing and a new Windows
+GUI delivery remain required.
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 

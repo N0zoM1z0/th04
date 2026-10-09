@@ -14,6 +14,7 @@ source evidence.
 
 ## Current open questions
 
+- [Native PMD external FM effects](../port64/evidence/pmd-fm.md) — full supplied effect state/register controls, corrected board mirror and remaining musical handover/synthesis owners.
 - [Original resident PMD driver/music reference](../port64/evidence/pmd-driver.md)
 - [Native PMD SSG effects and music sharing](../port64/evidence/pmd-ssg.md) — effect register behavior, raw selected masks and remaining music/synthesis owners.
 - [Native PMD bytecode/timer state](../port64/evidence/pmd-sequence.md) — control-state subset, original references and remaining synthesis owners.

@@ -6,27 +6,30 @@ Linux/Windows routes and timing/performance validation. Native code remains on
 
 ## Verified current frontier
 
-v1332 repairs static MinGW runtime inheritance and binary configuration
-failure captures. GNU/optimized UBSan and actual Windows each pass all 51
-component contracts. Nine fresh muted frontends on current GNU and Windows
-agree on 2,015 complete files: sound scenes, score routes, Music Room, Scores,
-demos, configuration and first setup, including real physical saves and
-separate-process restart. These remain bounded controls, not full natural
-route or audio/timing acceptance. 395 maintained files bind 156 AMD64 products.
-Git writes/push and Windows execution now work; source through v1331 and the
-new repairs are committed/pushed. No new Windows GUI package is published.
-Current replay/negative/retention receipts:
-`.analysis/port64/windows-current-v1332/`; see
-[Windows evidence](port64/evidence/windows-current.md).
+v1333 adds the native external FM effect owner. GNU8, optimized UBSan and
+actual Windows each compare all 30,192 original-backed effect rows and pass
+52 component contracts. 399 maintained files bind 159 AMD64 products. The
+008C/008E board-mirror correction is independently replayed: prior all-music,
+FM/fade/restart, SSG and SSG/music-sharing outputs remain byte-identical.
+Two source-only LFO/portamento variants reject the corrected reference.
+Current receipts: native `.analysis/port64/pmd-fm-v1333/`; see native
+`docs/port64/evidence/pmd-fm.md`. Terminal cleanup reclaims about310MiB while
+preserving 730 verified sources/programs/cache inputs and independent inputs.
 
-v1331's PMD SSG owner remains validated against original effects and music
-sharing: 79,488 effect rows, 3,942 sharing rows, 134,274 short sequence rows
-and 49,164 longer rows per Linux host. FM/OPN state/synthesis, physical clocks,
-real frontend measure waits and complete original startup remain unfinished.
-All launches stay muted. General semantic expansion is paused; reopen only
-an ambiguity blocking a concrete native owner. DOS acceptance is unchanged.
-Current terminal cleanup reclaims about2.06GiB while retaining source,
-current caches/programs, inputs, independent references and acceptance logs.
+The FM result covers supplied MIKO.EFC effects with music stopped. Musical
+FM gate/pitch/LFO/envelope/register state, voice handover, synthesis, physical
+clocks, frontend PMD capability and complete startup remain unfinished. All
+launches stay muted; no audio device/backend is opened. DOS acceptance and
+target provenance remain unchanged. General semantic expansion stays paused
+unless a concrete native owner is blocked.
+
+v1332's nine muted GNU/actual-Windows frontend controls still document 2,015
+complete files, physical scores/configuration/setup saves and separate-process
+restart under their own source/product identities. The 104 older GNU/UBSan
+program identities remain unchanged; all current Windows products are freshly
+attested for v1333 components/FM. Those nine GUI launches were not repeated
+on the newly relinked Windows GUI. Full natural routes/timing and a new Windows
+GUI delivery remain required.
 
 See [OP/MAINE scene evidence](port64/evidence/sound-scenes.md), [MAIN sound evidence](port64/evidence/sound-main.md), [beeper evidence](port64/evidence/beeper.md) and
 [sound-control evidence](port64/evidence/sound-control.md).
@@ -49,7 +52,8 @@ old claimed two-character frontend coverage.
 
 ## Remaining owners, in order
 
-1. Implement PMD/OPN music/FM state/synthesis and real driver measure queries;
+1. Implement musical PMD/OPN gate/pitch/LFO/envelope/register state, running
+   voice handover, synthesis and real driver measure queries;
    complete original logo/startup audio and attest driver initialization/finish.
    OP/MAIN/MAINE scene requests, process lifetimes and muted beeper are joined
    under bounded controls; absent drivers supply no fictional measures.
@@ -68,7 +72,8 @@ resumes only for a specific blocking port contract. No exact promotion follows.
 ## Replay, private state and delivery
 
 Fast caches: `.analysis/port64/{linux,windows,ubsan}-live-v1251`.
-Current original/reference consumers and source/product manifests:
+Current FM original/reference consumers and source/product manifests:
+`.analysis/port64/pmd-fm-v1333/`; prior frontend acceptance:
 `.analysis/port64/windows-current-v1332/`; sound-scene original producers:
 `.analysis/port64/sound-scenes-v1328/`; previous sound-control producer:
 `.analysis/port64/audio-v1325/original-linux/`. Completed receipts retain their
@@ -77,12 +82,13 @@ input hashes, adapter limits and negative controls live in the focused notes.
 
 The last published Windows GUI is v1296, archived outside the DOS demo folder;
 it is older than this retained source and reaches registration_pending.
-Native source/evidence through v1331 and both v1332 fixes are committed and
-pushed. Historical recovery patches remain private and contain public source
-only, not assets/tools.
+Native source/evidence through v1333 remain on the native branch with
+separate original/consumer source identities and current replay receipts.
+Historical recovery patches remain private and contain public source only,
+not assets/tools.
 
 Preserve pinned targets/HDI/font, independent references, recovery archives and
-all156 current programs. Periodically retire terminal duplicate captures and
+all159 current programs. Periodically retire terminal duplicate captures and
 regenerable caches only after hashes and full byte comparison; shared hardlinks
 are immutable. Restore or use a fresh output directory before replaying.
 
