@@ -159,10 +159,10 @@ corroboration. Keep each artifact's build/link and acceptance ownership
 explicit even for shared source. Decoded function acceptance in a packed
 artifact is not a raw packed-file byte extent.
 
-Exact reconstruction and a future portable runtime are separate products.  A
-portable branch may replace segmentation and hardware access only after the
-exact branch has captured the behavior and a differential runtime Oracle can
-guard the change.
+Historical exact reconstruction and the active native runtime are separate
+products. The `port/modern-64` branch replaces segmentation and hardware access
+with typed owners and explicit adapters, guarded by independent original
+runtime comparisons. Native acceptance never promotes a historical exact unit.
 
 ## Private and generated state
 

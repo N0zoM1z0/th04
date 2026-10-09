@@ -37,6 +37,24 @@ of1,015 public-script/test/port64 CPython caches in the two worktrees, reclaimin
 another17,125,376 allocated bytes. All1,130 mapped Python sources retain their
 hashes. Combined terminal reclamation is342,208,512 bytes (about326MiB).
 
+Native musical FM v1334 retains independent supplied-song/constructed producer
+archives, the final consumer archive, full compressed reference/native/Windows
+traces, regressions and negative source/log receipts under native
+`.analysis/port64/pmd-music-v1334/`. Recovery readback verifies990 protected
+hashes including403 sources,162 programs, active cache/link/compiler inputs,
+original HDI/drivers and independent references. Two interim receipts measure
+272,588,800 allocated bytes reclaimed (about260MiB). Terminal duplicates are
+shared after full equality; failed/Windows traces are losslessly compressed,
+private probes/variants and owned NTFS staging retired. Final terminal space
+accounting failed on a missing interim-receipt key; failed script/log retained,
+independent complete readback passes, and no terminal byte estimate is claimed.
+After both final CIs, a persisted pre-deletion journal retires1,013 source-backed
+CPython caches below public scripts/tests/port64, adding17,059,840 measured
+allocated bytes;1,131 Python source hashes remain unchanged. Measured total
+for this batch is289,648,640 bytes (about276.2MiB). Cache receipt:
+root `.analysis/cleanup/pmd-musical-source-backed-caches-20261009.json`.
+Use fresh output directories; retained hardlinks are immutable.
+
 ## Completed archive routing
 
 | Subject | Receipt location (relative to repository unless stated) |
