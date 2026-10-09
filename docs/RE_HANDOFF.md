@@ -45,78 +45,39 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-v1307 joins frozen Game Over graphics/TRAM, keyboard ownership and refresh
-pacing to ordinary MAIN. Actual OP selection and authored finite STD enemy
-contact drive20 scenes per GNU/optimized UBSan/actual Windows. Two-load
-original scene/TRAM/score-HUD controls agree on322 complete displays
-(332,304,000 bytes);151 output files agree and34 contracts pass per host.
-105 AMD64 products bind277 current files; original producer and current
-consumer manifests remain distinct. A missing score consumer mutant is
-rejected in60 snapshots. Windows CRLF-only journal differences are repaired
-with explicit binary LF, then fully rechecked.123,744,256 allocated bytes are
-reclaimed with3,926 protected files unchanged. Initial native display/CGROM/
-hardware and life/bomb HUD/audio/DOS score-I/O adapters remain explicit.
-Quit registration→verdict→fresh OP, Bomb pixels/shared palette and complete
-ordinary routes remain; no GUI publication or exact promotion follows.
-Native code/evidence commits `065b56d`/`73dfdec` are on `port/modern-64`.
+v1332 repairs static MinGW runtime inheritance and binary configuration
+failure captures. GNU/optimized UBSan and actual Windows each pass all 51
+component contracts. Nine fresh muted frontends on current GNU and Windows
+agree on 2,015 complete files: sound scenes, score routes, Music Room, Scores,
+demos, configuration and first setup, including real physical saves and
+separate-process restart. These remain bounded controls, not full natural
+route or audio/timing acceptance. 395 maintained files bind 156 AMD64 products.
+Git writes/push and Windows execution now work; source through v1331 and the
+new repairs are committed/pushed. No new Windows GUI package is published.
+Current replay/negative/retention receipts: native
+`.analysis/port64/windows-current-v1332/`; see native
+`docs/port64/evidence/windows-current.md`.
 
-v1306 adds player death/invincibility rendering and retained MAIN draw requests
-consumed by frontend source. Original relative `0AAF:610D..625B`, helpers and
-rolling kernels at loads1000/2000 agree with GNU/optimized UBSan/actual Windows
-on6,637 requests and259 complete indexed screens (66,304,000 pixels);34
-contracts pass per host.105 AMD64 products bind274 listed files. Continue
-save files remain unchanged; cached draws freeze during Game Over. A changed
-blink phase is rejected in269 original request cases.2,662,400 allocatedbytes
-are reclaimed with2,795 protected files unchanged. Frozen Game Over TRAM/input,
-Bomb graphics/shared lifecycle palette and Quit registration→verdict→fresh OP
-remain; no GUI publication or complete natural route is accepted.
-Native code/evidence commits `78fb017`/`64d8973` are pushed on `port/modern-64`.
+v1331's PMD SSG owner remains validated against original effects and music
+sharing: 79,488 effect rows, 3,942 sharing rows, 134,274 short sequence rows
+and 49,164 longer rows per Linux host. FM/OPN state/synthesis, physical clocks,
+real frontend measure waits and complete original startup remain unfinished.
+All launches stay muted. General semantic expansion is paused; reopen only
+an ambiguity blocking a concrete native owner. DOS acceptance is unchanged.
+Current terminal cleanup reclaims about2.06GiB while retaining source,
+current caches/programs, inputs, independent references and acceptance logs.
 
-The last Windows x64 GUI was v1296 (now archived outside the DOS demo folder): normal stage flow proceeds through Ending,
-Staff Roll, verdict and congratulations to `registration_pending`. Later
-v1300 source now joins the ordered registration scene, separate host score
-commits, fresh OP and second MAIN. GNU/optimized UBSan/actual Windows each
-pass 33 contracts and 30 seeded child scenes; 112 output files agree. Prior
-1,288 score/382 menu/158 full graphics comparisons pass; original MAINE fades
-at decoded-relative `0000:0622..06A3` agree at two loads (35/18 refreshes).
-This does not accept full natural routes, physical timing or audio. Native
-commits `43946c3`/`6c90c1a` are pushed on `port/modern-64`; its ledgers and
-handoff own the detailed evidence.
+Normal six-stage/MAINE, registration/host score/fresh OP,
+death/Bomb/Game Over/Continue, Extra actor routes, HUD/unlocks/Scores,
+Music Room, demos and configuration/setup are joined under bounded controls.
+Extra and the long Ending actor controls disable hit consumption; complete
+natural survival remains separate. The last published native GUI remains the
+archived v1296 package. See [port status](PORTING_STATUS.md) and the native
+branch handoff for the current queue.
 
-v1301 player lifecycle and v1302 Game Over/Continue file components now pass
-bounded original CPU/GNU/UBSan/actual Windows comparisons. Current builds have
-35 AMD64 products and 34 contracts each; native code commit `1610726` is pushed.
-v1303 character Bomb graphics now agree on1,236 original CPU state cases/
-2,252 records and294 pixel cases/548 screens at two loads, GNU/optimized UBSan/
-actual Windows.105 current products bind263 files;34 contracts pass per host.
-The source remains a component awaiting live dispatch; no GUI death or full-route
-claim follows. Code commit `9a50588` is saved on the native branch.
-v1304 Game Over TRAM now agrees on200 complete indexed/text/RGB snapshots at
-two original loads and GNU/optimized UBSan/actual Windows. All158 registration
-snapshots still agree;34 contracts pass per host.105 products bind267 files.
-Text stores and FAR returns execute original instructions; graphics, CGROM and
-video-policy adapters remain explicit. This is still a component.
-Native code/evidence commits `a789b80`/`5ca7995` are pushed; v1304 cleanup
-reclaims398,381,056 allocated bytes. Windows raw retirement is reported
-separately as203,511,584 logical bytes; final references/caches remain.
-v1305 now joins the native MAIN lifecycle, real last-life suspension, character
-Bomb dispatch and Continue host-save callback. GNU/optimized UBSan/actual
-Windows each pass34 contracts; checkpoint traces/files and a finite STD/contact
-probe agree. Continue resumes one suffix; a repeated-prefix mutation is rejected.
-Original10,319 player records/2,003 menus/64 scenes/2,985 file controls re-agree.
-105 products bind267 listed files plus two verifier digests.87,998,464 allocated
-bytes are reclaimed with2,845 protected files unchanged. Native GUI Game Over
-freeze/TRAM/keyboard, death/Bomb graphics and score-only registration followed
-by verdict/fresh OP remain pending; long actor probes explicitly disable hit
-consumption. No new published GUI or complete ordinary route follows.
-Native code/evidence commits `a7c096d`/`6945f69` are pushed on `port/modern-64`.
-Next finish these frontend owners, then Extra, full HUD/OP/audio/config and
-full-route validation.
-Keep native source separate and every launch muted. MAIN database attestation
-passes before the next target-dependent batch.
-Per the user's request, clean superseded build/capture outputs periodically;
-v1302 reclaimed 980,566,016 allocated bytes with hash readback. Preserve pinned
-inputs, final receipts and active caches; replay into fresh output directories.
+Next finish audio ownership while muted, then full ordinary/Extra routes on
+Linux/Windows, saves/restarts, refresh/input/slowdown and dense Lunatic timing.
+MAIN's two deferred exactness cases do not gate native functionality.
 
 ## Windows DOS demo package
 
