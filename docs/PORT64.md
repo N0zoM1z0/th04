@@ -1,40 +1,23 @@
 # TH04 native x64 port
 
-v1339 joins hardware rhythm to musical FM/SSG/effect ownership. GNU8,
-optimized UBSan and actual Windows each match 199,266 complete original rows:
-174 primary cases/172,434 rows and 24 supplemental cases/26,832 rows at two
-PSP segments. All 58 component contracts pass per host. 422 maintained inputs
-bind 177 AMD64 products. Drum/retrigger order, explicit key counters, stored
-pan/levels, attenuation and byte-wrap arithmetic are recovered. Negative fade
-underflow restores rhythm total before Timer A effect work. Seven source-only
-counterfactuals reject. Receipts: native `.analysis/port64/pmd-rhythm-v1339/`;
-scope: native `docs/port64/evidence/pmd-rhythm.md`.
+v1340 joins resident timer-register dispatch to the FM/SSG/effect/rhythm
+player. GNU8, optimized UBSan and actual Windows each match 80,040 complete
+original rows (174 cases, two PSPs); Windows executes 87 unique traces/40,020
+rows and compares both loads. All 59 contracts pass per host. 426 maintained
+inputs bind 180 AMD64 products. Acknowledge precedes parsing; tempo commits
+between Timer B music and Timer A effects; FM26 effect release restores mode.
+Four source-only variants reject. Prior owner corpora replay on GNU/UBSan.
+Receipts: native `.analysis/port64/pmd-clock-v1340/`; details: native
+`docs/port64/evidence/pmd-timer-player.md`.
 
-The complete comparison preserves previous FM/SSG/fade fields and chronological
-writes, plus rhythm track/globals/counters and primary mirrors 10..1F. Longer
-512-tick command controls reach tails skipped by the primary restart timeline;
-explicit overflow fixtures reject widened additions. The wrong initial music
-base/map views and nondiscriminating short mutants remain inconclusive.
-FM3 extras, PPS, ADPCM, synthesis, physical clocks, frontend driver capability/
-real measure waits and complete logo/startup remain unfinished. All runs stay
-muted; no audio backend/device opens. DOS acceptance and candidate-local-attested
-provenance remain unchanged.
+Physical clocks, synthesis, FM3 extras/PPS/ADPCM, frontend capability/real
+measures and full logo/startup remain unfinished. An independently executed
+chip model corroborates default timer dividers; the translated manual's
+factor-two conflict remains documented. All launches stay muted with no audio
+device/backend. Linux GUI hashes remain unchanged; Windows bounded CPU
+products are attested. No new GUI or full natural-route acceptance occurs.
+DOS acceptance and candidate-local-attested provenance remain unchanged.
 
-Actual Windows executes 99 unique CPU-only traces/99,633 rows; full readback
-compares both original PSPs. 59 PE products and inputs are checked before/after.
-GNU/UBSan replay prior command/combined/SSG/FM/sequence/effect corpora against
-unchanged reference identities. Linux frontends keep their preceding binary
-hashes; MinGW relinks have new identities and bounded CPU controls. No GUI
-launch or new complete-route acceptance occurs. Natural ordinary/Extra survival,
-host timing/slowdown, dense Lunatic performance and current GUI remain.
-
-Full archive/trace readback verifies 3915 protected hashes. Persisted journals
-measure 850,616,320 allocated bytes reclaimed (811.2 MiB), including
-terminal raw copies, counterfactual programs, owned Windows stages and native
-objects/static archives. Space accounting uses corrected 512-byte block units;
-the earlier helper/receipt remains. All 177 current products, source identities
-and independent references remain. Use fresh replay paths; CMake regenerates
-missing intermediates.
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 
