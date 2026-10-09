@@ -197,3 +197,22 @@ caches; review its explicit keep/archive coverage before selecting `--apply`,
 permission to remove arbitrary worktrees, unique CPU traces or current caches.
 Native registration verifiers reject existing output directories. Restore tar
 members first, then decompress older `.gz` paths if the receipt requires it.
+
+Native resident timer ownership v1340 retains426inputs/180current products,
+full independent original/GNU/UBSan/actualWindows traces, producer/consumer
+source archives and rejected pre-start/timer-order/Windows dispatch captures
+under native `.analysis/port64/pmd-clock-v1340/`. Full readback verifies
+2426protected hashes. Persisted pre-mutation inventory measures
+646,873,088net allocated bytes reclaimed (616.9MiB).
+779completed raw/probe/native intermediate files andtwoownedWindows stages
+retire after verified lossless successors or source recovery. All original
+references/currentprograms/source/tool/cache-link profiles remain. Windows
+stage archives andrestore commands arein `cleanup-before.json`; replay requires
+freshpaths andCMake regeneratesmissing objects/static archives. The earlier
+review's Python-cache cleanup is separate and notincluded inthis figure.
+
+After both terminal CIs, the v1340 post-CI journal retires 1025
+source-backed Python caches and verifies 1025 unchanged source
+hashes, reclaiming another 17,358,848 allocated bytes.
+Receipt: native `.analysis/port64/pmd-clock-v1340/post-ci-caches-receipt.json`.
+Measured v1340 total is 664,231,936 bytes; the prior review cleanup is separate.
