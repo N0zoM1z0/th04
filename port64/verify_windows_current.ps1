@@ -77,11 +77,13 @@ foreach($case in $plan.cases) {
 }
 $traces=@()
 foreach($trace in $plan.traces) {
-    if($trace.kind -cnotin @('pmd-fm','pmd-musical-fm') -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
+    if($trace.kind -cnotin @('pmd-fm','pmd-musical-fm','pmd-fm-player') -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
        $trace.board -notin @(0,1,2)) {throw 'Unsupported component trace.'}
-    $binary=if($trace.kind -ceq 'pmd-fm') {'th04-port64-pmd-fm-contracts.exe'} else {'th04-port64-pmd-musical-fm-contracts.exe'}
+    $binary=if($trace.kind -ceq 'pmd-fm') {'th04-port64-pmd-fm-contracts.exe'} elseif($trace.kind -ceq 'pmd-musical-fm') {'th04-port64-pmd-musical-fm-contracts.exe'} else {'th04-port64-pmd-fm-player-contracts.exe'}
     if(!$products.ContainsKey($binary)) {throw 'Unattested FM trace product.'}
-    foreach($path in @($trace.resource,$trace.mirror,$trace.operations)) {
+    $paths=@($trace.resource,$trace.mirror,$trace.operations)
+    if($trace.kind -ceq 'pmd-fm-player') {$paths+=@($trace.effects)}
+    foreach($path in $paths) {
         if(!(@($plan.inputs | Where-Object {$_.path -ceq $path}).Count -eq 1)) {
             throw 'Component trace input lacks a unique identity.'
         }
@@ -89,8 +91,11 @@ foreach($trace in $plan.traces) {
     $target=Join-Path $out ($trace.name+'.trace.txt')
     # This CPU-only component has no audio device or backend. It receives the
     # supplied EFC and explicit interrupt operations, never a frontend clock.
-    Run $trace.name (Join-Path $plan.executable_directory $binary) @(
-        $trace.resource,([string]$trace.board),$trace.mirror,$trace.operations,$target)
+    $arguments=@($trace.resource,([string]$trace.board),$trace.mirror,$trace.operations,$target)
+    if($trace.kind -ceq 'pmd-fm-player') {
+        $arguments=@($trace.resource,$trace.effects,([string]$trace.board),$trace.mirror,$trace.operations,$target)
+    }
+    Run $trace.name (Join-Path $plan.executable_directory $binary) $arguments
     CheckHash $target $trace.expected_sha256
     $traces+=@{name=$trace.name;sha256=(Hash $target);rows=$trace.rows;
         reference_receipt_sha256=$trace.reference_receipt_sha256}

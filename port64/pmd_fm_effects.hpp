@@ -47,6 +47,7 @@ public:
     const std::array<std::array<std::uint8_t,256>,2>& registers() const {return registers_;}
     const Bytes& resource() const {return effects_;}
     const std::array<std::uint8_t,6>& borrowed_masks() const {return masks_;}
+    void musical_masks(const std::array<std::uint8_t,6>& value) {masks_=value;}
 private:
     Board board_;FmSink sink_;std::function<void()> release_;
     FmEffectState state_{};Bytes effects_;

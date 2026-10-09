@@ -33,11 +33,14 @@ public:
     void start();void stop();void fade(std::int8_t speed) {sequence_.fade(speed);}
     void interrupt(std::uint8_t flags);
     void mirror(std::uint8_t bank,std::uint8_t address,std::uint8_t value) {registers_.at(bank)[address]=value;}
+    void effects_active(std::function<bool()> query) {effect_busy_=query;sequence_.fm_effect_active(std::move(query));}
+    void borrow_effect();
+    void restore_effect_voice();
     const Sequence& sequence() const {return sequence_;}
     const std::array<MusicalFmPart,6>& parts() const {return parts_;}
     const std::array<std::array<std::uint8_t,256>,2>& registers() const {return registers_;}
 private:
-    Board board_;FmSink sink_;Sequence sequence_;
+    Board board_;FmSink sink_;Sequence sequence_;std::function<bool()> effect_busy_;std::uint8_t fm3_algorithm_=0;
     std::array<MusicalFmPart,6> parts_{};
     std::array<std::array<std::uint8_t,256>,2> registers_{};
     std::array<std::uint8_t,6> keys_{};
@@ -51,7 +54,7 @@ private:
     std::uint16_t word(unsigned) const;
     void write(unsigned,unsigned,unsigned);
     void event(const Event&);void tick(unsigned,bool);
-    void silence(unsigned);void key(unsigned,bool);void voice(unsigned,std::uint8_t);
+    void silence(unsigned);void key(unsigned,bool);void voice(unsigned,std::uint8_t,bool restore=false);
     void volume(unsigned);void pitch(unsigned);
     void reset(MusicalLfo&);bool advance(MusicalLfo&,unsigned);
     void depth(MusicalLfo&);std::uint16_t random(unsigned);

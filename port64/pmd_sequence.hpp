@@ -46,10 +46,12 @@ public:
     const State& state() const {return state_;}
     const Bytes& music() const {return music_;}
     const SsgEffects& ssg_effects() const {return effects_;}
+    void fm_effect_active(std::function<bool()> query) {fm_effect_active_=std::move(query);}
+    void borrow_fm(unsigned p) {state_.parts.at(p).mask|=2;}
     void mirror_ssg(std::uint8_t address,std::uint8_t value) {effects_.mirror(address,value);}
     std::uint16_t status() const {return std::uint16_t(state_.status)*256+state_.loop_status;}
 private:
-    Board board_;Sink sink_;Bytes music_;State state_{};SsgEffects effects_;TickSink tick_;
+    Board board_;Sink sink_;Bytes music_;State state_{};SsgEffects effects_;TickSink tick_;std::function<bool()> fm_effect_active_;
     std::uint16_t rhythm_table_=0,rhythm_position_=0;
     std::uint8_t saved_timer_b_=200,saved_tempo_=78;
     std::uint8_t get(std::uint16_t) const;

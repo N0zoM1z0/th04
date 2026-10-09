@@ -21,7 +21,9 @@ DRIVERS={
  'PMDB2.COM':(25730,'dfebbfd6e82916dfc4d8d01f2fcd938e215cc16cbd5ce2f19bce37cdc3841437',1,'M86',' /M8 /V0 /E2 /K /N- /P')}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 READ_PORTS={2,0x88,0x8a,0x8c,0x8e,0x188,0x18a,0x18c,0x18e,0x288,0x28a,0x388,0x38a,0xa460,0xa468,0xa66e}
-WRITE_PORTS=READ_PORTS|{0,0x5f,0x71,0x77}
+# PMD86 emits an A466 board volume byte during a running-song fade.
+# It is recorded as an external hardware seam; no physical PCM is simulated.
+WRITE_PORTS=READ_PORTS|{0,0x5f,0x71,0x77,0xa466}
 
 def directory_files(path):
  image=path.read_bytes()

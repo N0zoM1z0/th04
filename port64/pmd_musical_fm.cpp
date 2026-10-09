@@ -19,19 +19,20 @@ void MusicalFm::write(unsigned b,unsigned a,unsigned v){
     registers_.at(b)[w.address]=w.value;if(sink_)sink_(w);
 }
 void MusicalFm::stop(){
+    const bool busy=effect_busy_ && effect_busy_();
     for(unsigned b=0;b<(board_==Board::fm26 ? 1u : 2u);++b)
-        for(unsigned slot=0;slot<4;++slot)for(unsigned c=0;c<3;++c)write(b,0x80+slot*4+c,255);
-    for(unsigned p=0;p<(board_==Board::fm26 ? 3u : 6u);++p){keys_[p]=0;write(0,0x28,channel(p)+(bank(p) ? 4 : 0));}
+        for(unsigned slot=0;slot<4;++slot)for(unsigned c=0;c<3;++c){if(busy && c==2 && b==(board_==Board::fm26 ? 0u : 1u))continue;write(b,0x80+slot*4+c,255);}
+    for(unsigned p=0;p<(board_==Board::fm26 ? 3u : 6u);++p){if(busy && p==(board_==Board::fm26 ? 2u : 5u))continue;keys_[p]=0;write(0,0x28,channel(p)+(bank(p) ? 4 : 0));}
     sequence_.stop();
 }
 void MusicalFm::start(){
     if(sequence_.music().empty())throw std::logic_error("FM music requires a resource");
-    stop();parts_={};keys_={};parsed_note_={};tied_=temporary_=false;last_timer_a_=0;
+    stop();parts_={};keys_={};parsed_note_={};tied_=temporary_=false;last_timer_a_=0;fm3_algorithm_=0;
     sequence_.start();attenuation_=initial_attenuation_;
     if(board_==Board::fm26)for(unsigned p=3;p<6;++p){parts_[p].slots=0;parts_[p].voice_mask=0;}
     // Original stereo initialization visits the primary bank first.
     for(unsigned b=0;b<(board_==Board::fm26 ? 1u : 2u);++b)
-        for(unsigned c=0;c<3;++c)write(b,0xb4+c,192);
+        for(unsigned c=0;c<3;++c){if(board_!=Board::fm26 && effect_busy_ && effect_busy_() && c==2 && b==(board_==Board::fm26 ? 0u : 1u))continue;write(b,0xb4+c,192);}
     write(0,0x22,0);
 }
 void MusicalFm::interrupt(std::uint8_t flags){
@@ -51,14 +52,25 @@ void MusicalFm::silence(unsigned p){
     }
     const auto note=s.note;s.note=0;key(p,false);s.note=note;
 }
-void MusicalFm::voice(unsigned p,std::uint8_t id){
+void MusicalFm::voice(unsigned p,std::uint8_t id,bool restore){
     auto& s=parts_[p];
     if(word(1)!=26)throw std::invalid_argument("unrecovered external musical voice bank");
     unsigned at=word(25)+1;
     for(unsigned budget=0;;++budget){if(read(at)==id)break;if(read(at)==255 || budget>=255)throw std::out_of_range("musical FM voice not present");at+=26;}
-    ++at;s.algorithm=read(at+24);
+    ++at;
+    const auto algorithm=read(at+24);
+    if(restore){if(board_==Board::fm26 && p==2)s.algorithm=fm3_algorithm_;}
+    else {
+        s.algorithm=algorithm;
+        if(board_==Board::fm26 && p==2){
+            fm3_algorithm_=algorithm;
+            // The masked26 dispatcher stores its surviving AL (voice ID),
+            // while a separate global keeps the real FM3 algorithm.
+            if(sequence_.state().parts[p].mask && s.voice_mask)s.algorithm=id;
+        }
+    }
     for(unsigned i=0;i<4;++i)s.total_levels[i]=read(at+4+i);
-    if(sequence_.state().parts[p].mask)return;
+    if(sequence_.state().parts[p].mask && !restore)return;
     if(s.voice_mask)silence(p);
     else return;
     write(bank(p),0xb0+channel(p),s.algorithm);
@@ -68,6 +80,19 @@ void MusicalFm::voice(unsigned p,std::uint8_t id){
     for(unsigned i=0;i<4;++i)if((s.voice_mask&operators[i]) && !(s.carrier_mask&operators[i]))write(bank(p),0x40+channel(p)+i*4,read(at+4+i));
     for(unsigned group=0;group<4;++group)for(unsigned i=0;i<4;++i)
         if(s.voice_mask&operators[i])write(bank(p),0x50+channel(p)+group*16+i*4,read(at+8+group*4+i));
+}
+void MusicalFm::borrow_effect(){
+    for(unsigned p=0;p<6;++p)if(p==5 || (board_==Board::fm26 && p>=2))sequence_.borrow_fm(p);
+}
+void MusicalFm::restore_effect_voice(){
+    if(!sequence_.state().playing)return;
+    const unsigned p=board_==Board::fm26 ? 2 : 5;auto& s=parts_[p];
+    if(!s.voice_mask)return;
+    const auto levels=s.total_levels;
+    voice(p,sequence_.state().parts[p].instrument,true);s.total_levels=levels;
+    for(unsigned slot:{3u,1u,2u,0u})if((s.slots&operators[slot]) && !(s.carrier_mask&operators[slot]))
+        write(bank(p),0x40+channel(p)+slot*4,s.total_levels[slot]);
+    if(board_!=Board::fm26)write(bank(p),0xb4+channel(p),s.hardware_counter ? s.pan&192 : s.pan);
 }
 void MusicalFm::volume(unsigned p){
     const auto& s=parts_[p];if(!s.slots)return;
@@ -137,7 +162,7 @@ bool MusicalFm::advance(MusicalLfo& l,unsigned ticks){
     return before!=l.value;
 }
 std::uint8_t MusicalFm::transpose(unsigned p,std::uint8_t note) const{
-    if(note==15)return note;
+    if((note&15)==15)return note;
     const auto& track=sequence_.state().parts[p];int octave=note>>4,pitch=note&15;
     pitch+=i8(std::uint8_t(track.transpose+track.master_transpose));while(pitch<0){pitch+=12;--octave;}while(pitch>=12){pitch-=12;++octave;}
     return std::uint8_t((std::uint8_t(octave)<<4)|unsigned(pitch));
@@ -200,12 +225,12 @@ void MusicalFm::command(unsigned p,const Event& e){
     case 228:if(board_!=Board::fm26)s.hardware_delay=a.at(0);break;
     case 224:if(board_!=Board::fm26)write(0,34,a.at(0));break;
     case 222:case 221:{const unsigned v=sequence_.state().parts[p].volume;s.temporary_volume=std::uint8_t((e.opcode==222 ? std::min<unsigned>(127u,std::uint8_t(v+a.at(0))) : unsigned(std::max(0,int(v)-int(a.at(0)))))+1);temporary_=true;break;}
-    case 236:s.pan=std::uint8_t((s.pan&63)|((a.at(0)&3)<<6));write(bank(p),0xb4+channel(p),s.pan);break;
-    case 225:if(board_!=Board::fm26){s.pan=std::uint8_t((s.pan&192)|a.at(0));write(bank(p),0xb4+channel(p),s.pan);}break;
-    case 195:s.pan=std::uint8_t((s.pan&63)|(!a.at(0) ? 192 : (a.at(0)&128) ? 64 : 128));write(bank(p),0xb4+channel(p),s.pan);break;
+    case 236:if(board_!=Board::fm26){s.pan=std::uint8_t((s.pan&63)|((a.at(0)&3)<<6));if(!sequence_.state().parts[p].mask)write(bank(p),0xb4+channel(p),s.pan);}break;
+    case 225:if(board_!=Board::fm26){s.pan=std::uint8_t((s.pan&192)|a.at(0));if(!sequence_.state().parts[p].mask)write(bank(p),0xb4+channel(p),s.pan);}break;
+    case 195:if(board_!=Board::fm26){s.pan=std::uint8_t((s.pan&63)|(!a.at(0) ? 192 : (a.at(0)&128) ? 64 : 128));if(!sequence_.state().parts[p].mask)write(bank(p),0xb4+channel(p),s.pan);}break;
     case 233:case 235:case 234:case 232:case 230:case 229:break; // Hardware rhythm belongs to a separate voice owner.
     case 239:write(bank(p),a.at(0),a.at(1));break;
-    case 253:case 252:case 250:case 249:case 248:case 247:case 246:case 245:case 244:case 243:case 231:case 227:case 226:case 223:case 220:case 219:case 213:case 178:case 193:break; // Bytecode/global state remains in Sequence.
+    case 218:case 253:case 252:case 250:case 249:case 248:case 247:case 246:case 245:case 244:case 243:case 231:case 227:case 226:case 223:case 220:case 219:case 213:case 178:case 193:break; // Bytecode/global state remains in Sequence.
     default:throw std::invalid_argument("unrecovered musical FM command "+std::to_string(e.opcode));
     }
 }

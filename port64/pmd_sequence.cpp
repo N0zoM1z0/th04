@@ -57,7 +57,7 @@ void Sequence::start() {
         track.position=std::uint16_t(word(std::uint16_t(1+2*p))+1);
         if(get(track.position)==0x80)track.position=0;
         track.volume=p<6 ? 108 : p<9 ? 8 : p==9 && board_!=Board::fm26 ? 128 : p==10 ? 15 : 0;
-        if(board_==Board::fm26 && p>=3 && p<6)track.mask=32;
+        if(board_==Board::fm26 && p>=3 && p<6)track.mask|=32;
         if(board_==Board::speakboard && p==9)track.mask=4;
     }
     rhythm_table_=std::uint16_t(word(23)+1);rhythm_position_=0;
@@ -157,6 +157,8 @@ void Sequence::part(unsigned p) {
 void Sequence::part_body(unsigned p) {
     auto& track=state_.parts[p];if(!track.position)return;
     --track.length;if(track.length)return;
+    // FM effect occupation persists until the masked musical parse boundary.
+    if(p<6 && (track.mask&2) && fm_effect_active_ && !fm_effect_active_())track.mask&=253;
     auto at=track.position;
     for(unsigned budget=0;budget<8192;++budget) {
         const auto offset=at;const auto op=take(at);
