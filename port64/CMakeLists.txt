@@ -242,9 +242,8 @@ foreach(target th04-port64-player-lifecycle-contracts th04-portable-core th04-po
   endif()
 endforeach()
 if(MINGW)
-  foreach(target th04-port64-player-lifecycle-contracts th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-cutscene-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts th04-port64-stage5-contracts th04-port64-laser-contracts th04-port64-yuuka5-contracts th04-port64-yuuka6-contracts th04-port64-yuuka6-entity-contracts th04-port64-yuuka6-attack-contracts th04-port64-yuuka6-core-contracts th04-port64-yuuka6-render-contracts th04-port64-yuuka6-background-contracts th04-port64-score-file-contracts th04-port64-registration-contracts th04-port64-registration-scene-contracts)
-    target_link_options(${target} PRIVATE -static -static-libgcc -static-libstdc++)
-  endforeach()
+  # Every executable consumes the core, including targets added below.
+  target_link_options(th04-portable-core INTERFACE -static -static-libgcc -static-libstdc++)
 endif()
 if(WIN32)
   target_link_libraries(th04-port64 PRIVATE user32 gdi32)

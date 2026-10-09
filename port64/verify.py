@@ -14,6 +14,7 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_windows_current.ps1",
     "port64/pmd_sequence.hpp",
     "port64/pmd_ssg_effects.hpp",
     "port64/pmd_ssg_effects.cpp",

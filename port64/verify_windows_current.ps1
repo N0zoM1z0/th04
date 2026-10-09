@@ -1,0 +1,89 @@
+param([Parameter(Mandatory=$true)][string]$PlanFile)
+$ErrorActionPreference='Stop'
+$plan=Get-Content -Raw -LiteralPath $PlanFile | ConvertFrom-Json
+if($plan.version -ne 1 -or !$plan.muted) {throw 'Expected a muted version1 host plan.'}
+if(Test-Path -LiteralPath $plan.output) {throw 'Use fresh Windows outputs.'}
+$out=(New-Item -ItemType Directory -Path $plan.output).FullName
+$utf8=New-Object Text.UTF8Encoding($false)
+function Hash([string]$path) {return (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}
+function CheckHash([string]$path,[string]$digest) {
+    if((Hash $path) -cne $digest) {throw "Input identity changed: $path"}
+}
+function Pe64([string]$path) {
+    $b=[IO.File]::ReadAllBytes($path)
+    if($b.Length -lt 64 -or $b[0] -ne 77 -or $b[1] -ne 90) {throw 'Not MZ/PE.'}
+    $at=[BitConverter]::ToInt32($b,60)
+    if($at -lt 64 -or $at+26 -gt $b.Length -or [BitConverter]::ToUInt32($b,$at) -ne 17744 -or
+       [BitConverter]::ToUInt16($b,$at+4) -ne 34404 -or [BitConverter]::ToUInt16($b,$at+24) -ne 523) {
+        throw "Not AMD64 PE32+: $path"
+    }
+}
+function Quote([string]$value) {
+    # The plan uses guarded path/flag arguments, never shell command strings.
+    if($value -match '["\r\n]' -or $value.EndsWith('\')) {throw 'Unsupported host argument quoting.'}
+    return '"'+$value+'"'
+}
+function Run([string]$name,[string]$executable,$arguments) {
+    $info=New-Object Diagnostics.ProcessStartInfo
+    $info.FileName=$executable
+    $info.Arguments=(@($arguments | ForEach-Object {Quote ([string]$_)}) -join ' ')
+    $info.UseShellExecute=$false;$info.CreateNoWindow=$true
+    $info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true
+    $p=New-Object Diagnostics.Process;$p.StartInfo=$info
+    if(!$p.Start()) {throw "Cannot launch $name"}
+    try {
+        $stdout=$p.StandardOutput.ReadToEndAsync();$stderr=$p.StandardError.ReadToEndAsync()
+        if(!$p.WaitForExit([int]$plan.timeout_ms)) {throw "Timeout: $name"}
+        $text=$stdout.GetAwaiter().GetResult();$errorText=$stderr.GetAwaiter().GetResult()
+        [IO.File]::WriteAllText((Join-Path $out ($name+'.stdout.txt')),$text.Replace("`r`n","`n"),$utf8)
+        [IO.File]::WriteAllText((Join-Path $out ($name+'.stderr.txt')),$errorText.Replace("`r`n","`n"),$utf8)
+        if($p.ExitCode -ne 0) {throw "Exit$($p.ExitCode): $name`: $errorText"}
+    } finally {
+        if(!$p.HasExited) {$p.Kill();$p.WaitForExit()}
+        $p.Dispose()
+    }
+}
+foreach($planInput in $plan.inputs) {CheckHash $planInput.path $planInput.sha256}
+$products=@{}
+foreach($entry in $plan.products) {
+    if($entry.name -notmatch '^th04-port64.*\.exe$') {throw 'Unexpected product name.'}
+    $path=Join-Path $plan.executable_directory $entry.name
+    CheckHash $path $entry.sha256;Pe64 $path;$products[$entry.name]=$entry.sha256
+}
+if($products.Count -ne $plan.product_count) {throw 'Incomplete product identity vector.'}
+$contracts=@($plan.products | Where-Object {$_.name -like '*contracts.exe'})
+if($contracts.Count -ne $plan.contract_count) {throw 'Incomplete contract vector.'}
+foreach($entry in $contracts) {
+    Run $entry.name (Join-Path $plan.executable_directory $entry.name) @()
+    Write-Host "PASS Windows $($entry.name)"
+}
+$cases=@()
+foreach($case in $plan.cases) {
+    if(!(@($case.arguments) -contains '--mute')) {throw 'Frontend launch must be explicitly muted.'}
+    if($case.phase_file) {[IO.File]::WriteAllText($case.phase_file,([string]$case.phase+"`n"),$utf8)}
+    Run $case.name (Join-Path $plan.executable_directory 'th04-port64.exe') $case.arguments
+    $files=@(Get-ChildItem -LiteralPath $case.output -Recurse -File)
+    if($files.Count -ne @($case.expected.PSObject.Properties).Count) {throw "Unexpected frontend file count: $($case.name)"}
+    $digests=@{}
+    foreach($file in $files) {
+        $relative=$file.FullName.Substring($case.output.Length+1).Replace('\','/')
+        $expected=$case.expected.PSObject.Properties[$relative]
+        $digest=Hash $file.FullName
+        if(!$expected -or $digest -cne $expected.Value) {throw "Frontend differs: $($case.name)/$relative"}
+        $digests[$relative]=$digest
+    }
+    $cases+=@{name=$case.name;files=$digests;reference_receipt_sha256=$case.reference_receipt_sha256}
+    Write-Host "PASS Windows frontend $($case.name): $($files.Count) files"
+}
+foreach($planInput in $plan.inputs) {CheckHash $planInput.path $planInput.sha256}
+foreach($entry in $plan.products) {CheckHash (Join-Path $plan.executable_directory $entry.name) $entry.sha256}
+$receipt=@{
+    passed=$true;utc=[DateTime]::UtcNow.ToString('o');host='actual-Windows-AMD64';muted=$true;
+    source_manifest=$plan.source_manifest;product_producer_manifest=$plan.product_producer_manifest;
+    plan_sha256=(Hash $PlanFile);products=$products;contract_count=$contracts.Count;cases=$cases;
+    os=[Environment]::OSVersion.VersionString;process_64bit=[Environment]::Is64BitProcess;
+    powershell=$PSVersionTable.PSVersion.ToString();inputs=$plan.inputs;
+    scope='Current Windows components and bounded frontend/storage/restart controls. Actor controls retain their documented limits; no full natural route, complete FM audio, physical timing or historical exactness acceptance.'
+}
+[IO.File]::WriteAllText((Join-Path $out 'receipt.json'),($receipt | ConvertTo-Json -Depth 15),$utf8)
+Write-Host "PASS Windows $($contracts.Count) contracts and $($cases.Count) muted frontend launches"
