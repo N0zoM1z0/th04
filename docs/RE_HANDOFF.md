@@ -45,41 +45,41 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-v1337 joins musical FM/SSG and both effect owners in one chronological
-register-request comparison. GNU8, optimized UBSan and actual Windows each
-match 489,390 complete original rows in 66 cases at two PSP segments;
-33 native traces contain 244,695 unique rows. All 56 component contracts pass
-per host. 416 maintained inputs bind 171 AMD64 products. Active SSG restart
-preserves the hardware-noise cache; direct effect admission and FM B7 depth
-counts are recovered. Restart, independent LFO random and reversed timer-order
-counterfactuals reject. Current receipts: native
-`.analysis/port64/pmd-combined-v1337/`; detailed scope:
+v1338 recovers musical D4/D3 effect commands, D2 fade requests and the
+next-Timer-B fade-stop boundary in the combined FM/SSG owner. GNU8, optimized
+UBSan and actual Windows each match 101,082 complete original rows in 102 cases
+at two PSP segments; 51 native traces contain 50,541 unique rows. All 57 component
+contracts pass per host. 418 maintained inputs bind 174 AMD64 products. C0 parse
+continuation, FM mask silence/restore and repeated effect TL writes during
+music fades are recovered. Six source-only counterfactuals reject. Current
+receipts: native `.analysis/port64/pmd-commands-v1338/`; detailed scope:
 native `docs/port64/evidence/pmd-combined.md`.
 
-The comparison retains the complete prior FM and SSG state views and all
-chronological writes in their owned register union, including banks and
-repeated writes. Four supplied songs and seven authored mixed fixtures per
-format exercise both effect owners, fades and stop/restart. Additional SSG
-commands D4/D3/D2, FM3 extras, ADPCM/hardware rhythm, synthesis, physical clocks,
-frontend PMD capability and complete startup remain unfinished. All launches
-stay muted; no audio backend/device opens. DOS acceptance and
-candidate-local-attested provenance remain unchanged. General semantic
-expansion resumes only for a concrete native blocker.
+The comparison retains all prior FM/SSG fields and chronological owned writes,
+including banks and duplicates, plus fade speed/marker/whole request byte/
+playing/default fade-stop policy. 17 authored resources per format exercise
+masked/unmasked musical effects, zero stops and signed fade boundaries. FM3
+extras, PPS, ADPCM/hardware rhythm, synthesis, physical clocks, frontend PMD
+capability and complete startup remain unfinished. All launches stay muted;
+no audio backend/device opens. DOS acceptance and candidate-local-attested
+provenance remain unchanged. General semantic expansion resumes only for a
+concrete native blocker.
 
-Actual Windows executes 33 CPU-only traces and 56 contracts. All 57 PE products
-and inputs are checked before/after; full readback compares both original PSPs.
-GNU/UBsan replay prior SSG, FM handover/music, short/long sequence and effect
-corpora without changing their receipt identities. No GUI launches occur in
-this batch. v1332's bounded frontend/storage/restart receipts retain their own
-identities; full natural ordinary/Extra survival, current GUI and dense Lunatic
-timing remain.
+Actual Windows executes 51 CPU-only traces and 57 contracts; 58 PE products and
+inputs are checked before/after. Full readback compares both original PSPs.
+GNU/UBsan replay prior 489,390 combined rows and all prior SSG, FM handover/music,
+short/long sequence and effect corpora without changing receipt identities.
+No GUI launches occur in this batch. v1332's bounded frontend/storage/restart
+receipts retain their own identities; full natural ordinary/Extra survival,
+current GUI and dense Lunatic timing remain.
 
-Cleanup verifies 2111 protected hashes with full original/native/Windows
-and source-archive readback. Persisted pre-mutation journals measure
-1,112,240,128 allocated bytes reclaimed (1.04 GiB). Terminal raw copies,
-negative binaries, Windows staging and native objects/static archives retire;
-current 171 products and independent references remain. CMake rebuilds missing
-intermediates; fresh replay paths are required.
+Full archive/trace readback verifies 2954 protected hashes; a terminal
+snapshot verifies 2277 source/product/cache/compiler/evidence hashes.
+Persisted pre-mutation journals measure 676,278,272 allocated bytes reclaimed
+(644.9 MiB). Raw copies, negative binaries, Windows staging and
+native objects/static archives retire; current 174 products and independent
+references remain. CMake rebuilds missing intermediates; fresh replay paths
+are required.
 
 Normal six-stage/MAINE, registration/host score/fresh OP,
 death/Bomb/Game Over/Continue, Extra actor routes, HUD/unlocks/Scores,

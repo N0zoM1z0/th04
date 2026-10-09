@@ -88,6 +88,21 @@ Post-CI cleanup separately retires 1,013 generated Python cache files after
 checking their source hashes, reclaiming 17,059,840 allocated bytes; receipt:
 `.analysis/cleanup/pmd-combined-post-ci-caches-20261010.json`.
 
+Native musical commands/fade-stop v1338 retains418 source inputs/174 current
+products, full original/native/Windows traces, separate producer/consumer
+archives and failed/inconclusive probes under native
+`.analysis/port64/pmd-commands-v1338/`. Full archive/trace readback verifies
+2954 protected hashes; a closed terminal snapshot checks 2277.
+Persisted pre-mutation journals reclaim 676,278,272 allocated bytes
+(644.9 MiB), including owned NTFS staging, raw trace copies,
+negative binaries, native.o/.a and Windows.obj/link archives. Current
+executables, source/compiler/cache/link identities and independent references
+remain; CMake rebuilds absent intermediates and replay requires fresh paths.
+
+Post-CI cleanup retires 1,012 source-backed generated Python cache files,
+reclaiming 16,986,112 additional allocated bytes; receipt:
+root `.analysis/cleanup/pmd-commands-post-ci-caches-20261010.json`.
+
 ## Completed archive routing
 
 | Subject | Receipt location (relative to repository unless stated) |
