@@ -75,6 +75,19 @@ files retire along with raw Windows/negative outputs and owned NTFS staging.
 Current executables/cache/link identities and all independent reference/source
 archives remain. CMake rebuilds the absent intermediates; use fresh trace paths.
 
+Native combined FM/SSG v1337 retains 416 source inputs/171 current products,
+full independent original/native/Windows traces and separate producer/consumer
+archives under native `.analysis/port64/pmd-combined-v1337/`. The Windows
+first-load snapshot is independently bound; final readback compares all 66
+original cases. Full readback verifies 2111 protected hashes and measured
+pre-mutation journals reclaim 1,112,240,128 allocated bytes (1.04 GiB).
+Terminal negative binaries/raw traces, owned NTFS stage and native `.o`/`.a`
+files retire; current programs, independent references, inconclusive/failed
+probes and source/cache/link/compiler identities remain. Use fresh replay paths.
+Post-CI cleanup separately retires 1,013 generated Python cache files after
+checking their source hashes, reclaiming 17,059,840 allocated bytes; receipt:
+`.analysis/cleanup/pmd-combined-post-ci-caches-20261010.json`.
+
 ## Completed archive routing
 
 | Subject | Receipt location (relative to repository unless stated) |
