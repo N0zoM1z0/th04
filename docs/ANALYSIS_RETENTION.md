@@ -262,3 +262,25 @@ terminal readback passes. `final-retention.json` gives restore commands for
 `retired-control-outputs.tar.gz`. Current programs/source/compiler/cache-link
 identities, original inputs and references remain; CMake regenerates 597 objects
 and libraries. Shared files are immutable; future writers use fresh paths.
+
+
+## Primary FM operator controls, v1344
+
+Native `.analysis/port64/pmd-fm3-v1344/` retains separate original/consumer
+source archives, full compressed driver/native row references, counterproof
+sources/commands and current451-input/189-product/compiler/cache/link profiles.
+Root `.analysis/review/semantic-port-review-lwruzqw5/cleanup-current.json`
+retires1,610 rebuildable CMake/Python intermediates after3,305 protected hashes
+pass, reclaiming424,996,864 allocated bytes net of journal/script overhead.
+Native `retention.json`/`retention-journal.json` then retire987 closed Windows/
+frontend files after complete archive member/size/mode/hash readback; two
+archives reclaim323,452,928 additional allocated bytes net. Combined measured
+reclamation is748449792 bytes (713.8 MiB). Source/program identities
+and all independent original references remain. CMake regenerates absent
+objects/archives; subsequent replay uses fresh output directories.
+
+Restore `windows/stage.tar.gz` under the original owned NTFS directory from
+`windows/stage.json`, and `frontend-regression-captures.tar.gz` under native
+`.analysis/port64/pmd-fm3-v1344/frontend-regression/`. Archive members are
+relative to those roots; original receipts retain their original hashes and
+paths. No game assets, ROM data or original executables enter Git.

@@ -1,5 +1,21 @@
 # Semantic and x64 port status
 
+v1344 recovers primary FM B6 feedback and B8 operator total-level commands,
+including byte rotation/wrap, masked software state and disabled FM26 parts.
+Three original drivers at PSP1000/2000 yield84 cases/101,448 complete rows;
+GNU8, optimized UBSan and actual Windows agree. Five source-only variants reject;
+two initially inconclusive controls become discriminating with corner inputs.
+451 maintained inputs bind189 AMD64 products;62 contracts pass per host.
+GNU/UBSan regress602,448 earlier musical/effect rows, resident services and
+bounded muted frontend captures. FM3 extra subtracks/slot ownership/special
+pitch, PPS/external ADPCM, full startup, natural routes and host timing remain.
+All runs remain muted; no new GUI or historical exactness is accepted.
+
+Current native source manifest: `81260aeae14b62a1f175844a52a00bb25f122fa938f45524a19b103fb718912b`.
+Receipts: native `.analysis/port64/pmd-fm3-v1344/`; ownership and replay:
+native `docs/port64/evidence/pmd-musical-fm.md`.
+Earlier producer/consumer identities remain unchanged.
+
 v1343 joins CPU-only resident PMD to the actual native frontend. One driver
 survives OP/MAIN/MAINE/fresh OP; controls and beeper remain process-local.
 Actual capability selects M26/M86, and Ending/Staff waits query the new song's
@@ -17,7 +33,7 @@ Independent control/driver engines share typed buffers, not a physical DOS
 address space; PCM arithmetic shares pinned ymfm. No physical chip accuracy,
 natural full-route or historical exactness acceptance follows.
 
-Current source manifest:
+v1343 source manifest:
 `fded844658566dd8bb32f1298a68664a0f45e55d22676f2e979efe5380cf9964`.
 Receipts: native `.analysis/port64/pmd-resident-v1343/`; detailed ownership,
 failures and replay: native `docs/port64/evidence/pmd-resident.md`.
