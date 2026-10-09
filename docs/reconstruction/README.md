@@ -14,7 +14,9 @@ source evidence.
 
 ## Current open questions
 
-- [Primary FM feedback/operator controls](../port64/evidence/pmd-musical-fm.md#primary-feedback-and-operator-total-level-controls) — v1344 B6/B8 corpus closes; FM3 extra subtracks, slot ownership and special pitch remain.
+- [FM3 subtrack/slot ownership](../port64/evidence/pmd-fm3.md) — v1345 bounded C6/CF/C7/C8/shared pitch/effect release; PPS/external ADPCM/startup/natural routes/timing remain.
+
+- [Primary FM feedback/operator controls](../port64/evidence/pmd-musical-fm.md#primary-feedback-and-operator-total-level-controls) — v1344 B6/B8 corpus closes; v1345 FM3 ownership is routed separately above.
 
 - [Resident PMD frontend and real measures](../port64/evidence/pmd-resident.md) — bounded service/scene integration; remaining FM3/PPS/ADPCM, startup and natural routes.
 

@@ -1,5 +1,22 @@
 # TH04 native x64 port
 
+v1345 recovers FM3 C6 subtrack activation, CF slot/voice ownership,
+C7/C8 detunes, special pitch and shared mode on all three drivers. FM26
+aliases D-F and restores all four shared tracks after effects;86/B2 append
+three tracks.66 distinct two-PSP cases/55,836 complete rows agree on GNU8,
+optimized UBSan and actual Windows. Nine source-only variants reject; the
+initial pitch-clipped LFO control remains inconclusive in its own receipt.
+453 maintained inputs bind192 AMD64 products;63 contracts pass per host.
+GNU/UBSan each regress783,936 earlier complete rows, resident services/PCM
+and muted frontends; Windows regresses resident/three frontend profiles.
+PPS/external ADPCM, full startup, natural routes and host timing remain.
+No new GUI, physical chip accuracy or historical exactness is accepted.
+
+Current source manifest: `1689400f6154f6ef377d41357a802a1d6a75129e19449068c81a431e26ef50b0`.
+Receipts: native `.analysis/port64/fm3-recovery-v1345/`; ownership, distinct
+case accounting, adapter limits and replay: [FM3 evidence](port64/evidence/pmd-fm3.md). Older producer and
+consumer identities remain unchanged.
+
 v1344 recovers primary FM B6 feedback and B8 operator total-level commands,
 including byte rotation/wrap, masked software state and disabled FM26 parts.
 Three original drivers at PSP1000/2000 yield 84 cases/101,448 complete rows;
@@ -11,7 +28,7 @@ and bounded muted frontend captures. FM3 extra subtracks/slot ownership/special
 pitch, PPS/external ADPCM, full startup, natural routes and host timing remain.
 No new GUI or historical exactness is accepted; all runs remain muted.
 
-Current source manifest: `81260aeae14b62a1f175844a52a00bb25f122fa938f45524a19b103fb718912b`.
+v1344 source manifest: `81260aeae14b62a1f175844a52a00bb25f122fa938f45524a19b103fb718912b`.
 Receipts: native `.analysis/port64/pmd-fm3-v1344/`; details and replay:
 [FM operator evidence](port64/evidence/pmd-musical-fm.md#primary-feedback-and-operator-total-level-controls). Earlier producer and consumer manifests keep their own identities.
 
