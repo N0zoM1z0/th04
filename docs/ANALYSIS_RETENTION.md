@@ -66,6 +66,15 @@ negative/Windows traces, experimental binaries and owned NTFS staging retire
 only after exact decompression/archive readback. All independent references,
 source identities and current products remain. Future replay uses fresh paths.
 
+Native musical SSG v1336 retains412sources/168current products, complete
+original/native/Windows traces, failed candidates and independent producer/
+consumer archives under native `.analysis/port64/pmd-musical-ssg-v1336/`.
+Full readback verifies1855protected hashes; pre-mutation journals measure
+1,311,682,560allocated bytes reclaimed (1.22GiB). Completed native `.o`/`.a`
+files retire along with raw Windows/negative outputs and owned NTFS staging.
+Current executables/cache/link identities and all independent reference/source
+archives remain. CMake rebuilds the absent intermediates; use fresh trace paths.
+
 ## Completed archive routing
 
 | Subject | Receipt location (relative to repository unless stated) |
