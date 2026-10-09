@@ -179,3 +179,108 @@ unrecorded terminal allocation is excluded. Root cache receipt:
 The bounded running music/effects join is now verified separately in
 [FM player evidence](pmd-fm-player.md). Earlier receipts and historical open
 questions above retain their original scope and source identities.
+
+## Primary feedback and operator total-level controls
+
+v1344, 2026-10-10. The primary six-part owner now executes B6 feedback and
+B8 total-level commands. Full-slot masked FM3 voice loading keeps the real
+algorithm in shared state and stores the surviving voice-ID AL in the part
+field on all three drivers; the prior FM26-only branch was too narrow.
+Partial operator ownership and extra FM3 tracks are outside this acceptance.
+
+B6 rotates an absolute byte left by three, including its low algorithm bits.
+Relative feedback adds in eight bits before signed-bit/clamp decisions. FM3
+uses its shared algorithm and requires operator1 ownership. FM26 disabled D-F
+ignore B6 entirely, including software state. B8 selects slots from the low
+selector nibble, walks logical operators1,2,3,4 at physical offsets40,48,44,4C,
+and retains byte-wrap/clamp behavior. Masking suppresses B8 hardware writes
+while preserving stored TL for later restore.
+
+Anchored original COM observations are B6/B8 at PMD.COM PSP:0D6C/0DE3,
+PMD86.COM PSP:18F6/196F and PMDB2.COM PSP:14F8/1571. `algorithm-tl.asm` and
+`attest-v3/target-profile.json` retain full driver identities and table context.
+The B8 static excerpt is bounded and truncated before its final relative return;
+it is not an accepted function boundary. No database or decompiler supplies
+an independent semantics Oracle; unchanged original Unicorn execution does.
+
+The maintained `--operator-controls --ticks 800` producer creates six primary
+parts by initial feedback0/56, every B6 byte, every B8 amount byte and every
+B8 selector byte with alternating masks and restored voices. This is axis
+coverage, not the256-by256 B8 argument Cartesian product. The72 two-PSP cases
+contain100,008 complete rows. `--operator-corners` adds12 cases/1,440 rows with
+all six parts active, algorithm0/7, masked restore and high-bit initial TL;
+its fixed119-operation timeline yields120 rows/case. These are constructed
+byte-arithmetic inputs, not supplied-song usage or compiler-emission claims.
+No full-song absence claim follows from the earlier short FM3 usage probe.
+
+GNU8, optimized UBSan and actual Windows each agree on101,448 complete rows,
+using42 unique streams against both PSPs. No owned field/write normalization
+or exclusion is added. GNU/UBSan additionally compare602,448 earlier supplied,
+dual-LFO and joined player/effect rows per host; resident services regress9,204
+rows and21,103,632 FM stereo frames per host. Three actual frontend profiles
+produce195 equal files/1,953,180 mixed frames per host on all three hosts.
+Registration is a seeded child and its defaults do not establish all parent
+options through a natural route. SE2 waveform is host-consistency evidence;
+FM synthesis shares pinned ymfm and cannot establish physical chip accuracy.
+All62 contracts pass per host;451 inputs bind189 current AMD64 programs.
+
+| Source-only variant | Discriminating rejection |
+| --- | --- |
+| Wrong logical TL order | Main operator corpus row435 |
+| Write TL while masked | Main operator corpus row396 |
+| Keep masked FM3 handling FM26-only | PMD86 part2 corpus row129 |
+| Shift feedback instead of rotate | Algorithm0 corner row27 on all three drivers |
+| Widen TL addition before clamp | Corner row17 on all three drivers |
+
+The last two initially agree in the first corpus and remain recorded as
+inconclusive there; algorithm7 hides rotated low bits and the first timeline
+does not expose the initial TL255 wrap. The later controls discriminate them.
+Candidatev1 incorrectly writes/updates disabled FM26 D-F; candidatev2 removes
+writes but still changes software state. Both reject and remain separate
+negative observations; the final early skip corrects both effects. Initial
+static dispatcher probes also had signature/table ambiguity; only v3's
+FM handler context is used for the anchored observation.
+
+Private scope: `.analysis/port64/pmd-fm3-v1344/`. The primary original producer
+uses manifest60a0854c205e3e2b637b1e5e4c5e9b4d59ea9f04f41268528f7d15adf482f2c6;
+its maintained fixture bytes agree with the final consumer's inputs. The private
+corner producer v1 and maintained producer v2 agree on every original row,
+but share an engine/observer and are not separate independent semantic Oracles.
+Final consumers and maintained corner producer use
+81260aeae14b62a1f175844a52a00bb25f122fa938f45524a19b103fb718912b.
+Neither earlier identity is restamped. Source archives, complete compressed
+original/native rows, negative sources/commands and product/compiler/cache/link
+profiles remain available. Windows `windows/readback.json` binds63 products,
+62 contracts,42 operator and36 resident traces plus all three frontend profiles.
+
+```sh
+python3 port64/verify_pmd_musical_fm.py --hdi ../../runtime/images/zun.hdi \
+  --operator-controls --ticks 800 --output .analysis/port64/FRESH-OPERATORS
+python3 port64/verify_pmd_musical_fm.py --hdi ../../runtime/images/zun.hdi \
+  --operator-corners --output .analysis/port64/FRESH-CORNERS
+python3 port64/verify_pmd_musical_fm.py \
+  --reference .analysis/port64/pmd-fm3-v1344/original-operators-v1 \
+  --binary .analysis/port64/linux-live-v1251/th04-port64-pmd-musical-fm-contracts \
+  --binary .analysis/port64/ubsan-live-v1251/th04-port64-pmd-musical-fm-contracts \
+  --output .analysis/port64/FRESH-OPERATOR-CONSUMERS
+```
+
+Repeat the consumer against `original-corners-v2` with a fresh destination.
+`stream-regression.py` records streaming raw comparisons with immediate gzip
+round-trip retirement; its old fixed output roots require fresh replay paths.
+Actual Windows uses maintained typed `verify_windows_current.ps1`, generated
+by private `windows.py`/`windows/plan.json`. Closed stage/capture archives and
+restore commands are indexed by `retention.json`; restore each member under
+its recorded `directory` before historical readback. Current executables and
+independent references remain, while CMake rebuilds retired intermediates.
+
+Next recover C6 extra FM3 subtracks, C7/C8 detune, CF partial operator ownership
+and special pitch/LFO-slot interaction. PPS/external ADPCM, original complete
+logo/startup, natural ordinary/Extra/save/restart routes, host refresh/input/
+slowdown and dense Lunatic performance remain open. No DOS exact promotion,
+physical chip/timing acceptance or new GUI delivery follows from this batch.
+
+Terminal retention reclaims748449792 allocated bytes net (713.8 MiB):
+root review cleanup retires1,610 CMake/Python intermediates; native retention
+retires987 closed stage/capture files into two fully read-back archives.
+Original references, source archives and current189 programs remain.

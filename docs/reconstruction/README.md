@@ -14,6 +14,8 @@ source evidence.
 
 ## Current open questions
 
+- [Primary FM feedback/operator controls](../port64/evidence/pmd-musical-fm.md#primary-feedback-and-operator-total-level-controls) — v1344 B6/B8 corpus closes; FM3 extra subtracks, slot ownership and special pitch remain.
+
 - [Resident PMD frontend and real measures](../port64/evidence/pmd-resident.md) — bounded service/scene integration; remaining FM3/PPS/ADPCM, startup and natural routes.
 
 - [Native PMD external FM effects](../port64/evidence/pmd-fm.md) — full supplied effect state/register controls, corrected board mirror and remaining musical handover/synthesis owners.
