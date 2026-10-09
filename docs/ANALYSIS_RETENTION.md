@@ -284,3 +284,15 @@ Restore `windows/stage.tar.gz` under the original owned NTFS directory from
 `.analysis/port64/pmd-fm3-v1344/frontend-regression/`. Archive members are
 relative to those roots; original receipts retain their original hashes and
 paths. No game assets, ROM data or original executables enter Git.
+
+## FM3 v1345 retention index
+
+The native branch retires3,189 terminal files with15 verified archives and
+1,391 protected hashes unchanged; net764,350,464 allocated bytes (728.94 MiB)
+are reclaimed. Current sources/programs/compilers/cache/link inputs and
+original references stay retained. Native `docs/port64/evidence/pmd-fm3.md` and
+`.analysis/port64/fm3-recovery-v1345/retention.json`/`retention-journal.json`
+record member hashes, archive roots and recovery. Restore relative paths before
+old candidate/Windows/frontend replay. Root scripts/tests Python caches are
+separately retired in `.analysis/review/semantic-port-review-lwruzqw5/cleanup-v1345.json`;
+all tracked root file bytes were unchanged at that cleanup boundary.

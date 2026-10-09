@@ -45,6 +45,23 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1345 recovers FM3 C6 subtracks, CF slot/voice ownership, C7/C8 detunes,
+special pitch and shared mode on all three drivers. FM26 aliases D-F and
+restores all four shared tracks after effects;86/B2 append three tracks.
+66 distinct two-PSP cases/55,836 complete rows agree on GNU8, optimized UBSan
+and actual Windows. Nine wrong source variants reject; the initially
+pitch-clipped LFO comparison remains inconclusive in its own receipt.
+453 maintained inputs bind192 AMD64 programs;63 contracts pass per host.
+GNU/UBSan regress783,936 earlier complete rows, resident services/PCM and
+muted frontends; Windows regresses resident/three frontend profiles.
+PPS/external ADPCM, full startup, natural routes and host timing remain.
+No new GUI, physical chip accuracy or historical exactness is accepted.
+
+Current native source manifest: `1689400f6154f6ef377d41357a802a1d6a75129e19449068c81a431e26ef50b0`.
+Receipts: native `.analysis/port64/fm3-recovery-v1345/`; ownership, distinct
+case accounting, failures and replay: native `docs/port64/evidence/pmd-fm3.md`.
+Older producer/consumer identities remain unchanged.
+
 v1344 recovers primary FM B6 feedback and B8 operator total-level commands,
 including byte rotation/wrap, masked software state and disabled FM26 parts.
 Three original drivers at PSP1000/2000 yield84 cases/101,448 complete rows;
@@ -56,7 +73,7 @@ bounded muted frontend captures. FM3 extra subtracks/slot ownership/special
 pitch, PPS/external ADPCM, full startup, natural routes and host timing remain.
 All runs remain muted; no new GUI or historical exactness is accepted.
 
-Current native source manifest: `81260aeae14b62a1f175844a52a00bb25f122fa938f45524a19b103fb718912b`.
+v1344 native source manifest: `81260aeae14b62a1f175844a52a00bb25f122fa938f45524a19b103fb718912b`.
 Receipts: native `.analysis/port64/pmd-fm3-v1344/`; ownership and replay:
 native `docs/port64/evidence/pmd-musical-fm.md`.
 Earlier producer/consumer identities remain unchanged.
