@@ -248,3 +248,17 @@ libraries, verified lossless failed outputs and full archived Windows stage,
 plus841full-byte-equal compressed paths shared immutable. Current programs and
 inputs remain; CMake rebuilds missing intermediates. `final-retention.json`
 indexes journals and restore surfaces; future replay uses fresh directories.
+
+Native resident frontend v1343 preserves 451 inputs/189 programs, independent
+OP/COM references, final GNU/UBSan and actual Windows readback under native
+`.analysis/port64/pmd-resident-v1343/`. Independent terminal readback verifies
+2012 protected hashes and every member/size/mode of three lossless archives.
+Disjoint persisted journals retire 5141 stage/control/intermediate files, share
+648 full-byte-equal compressed paths and reclaim 1514315776 net allocated bytes
+(1444.2 MiB), after archive/inventory overhead. Initial cleanup included its own
+active log in the final guard and failed; that observation remains and separate
+terminal readback passes. `final-retention.json` gives restore commands for
+`windows/stage.tar.gz`, `windows-v2/stage.tar.gz` and
+`retired-control-outputs.tar.gz`. Current programs/source/compiler/cache-link
+identities, original inputs and references remain; CMake regenerates 597 objects
+and libraries. Shared files are immutable; future writers use fresh paths.

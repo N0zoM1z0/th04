@@ -47,8 +47,8 @@ re-attested. See the notes and `config/evidence.csv` for the failed commands.
 
 ## Remaining work
 
-- Resolve only ambiguities blocking remaining native PMD/chip, synthesis,
-  measure/startup, host timing or complete-route owners. Registration, lifecycle,
+- Resolve only ambiguities blocking remaining native FM3/PPS/ADPCM,
+  startup, host timing or complete-route owners. Registration, lifecycle,
   Extra, HUD and persistence already have bounded native integration controls;
   their natural complete-route acceptance remains separate.
 - Repair old exact replay staging separately if fresh exact acceptance is in
