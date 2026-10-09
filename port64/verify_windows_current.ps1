@@ -75,15 +75,36 @@ foreach($case in $plan.cases) {
     $cases+=@{name=$case.name;files=$digests;reference_receipt_sha256=$case.reference_receipt_sha256}
     Write-Host "PASS Windows frontend $($case.name): $($files.Count) files"
 }
+$traces=@()
+foreach($trace in $plan.traces) {
+    if($trace.kind -cne 'pmd-fm' -or $trace.name -notmatch '^[A-Za-z0-9_-]+$' -or
+       $trace.board -notin @(0,1,2)) {throw 'Unsupported component trace.'}
+    $binary='th04-port64-pmd-fm-contracts.exe'
+    if(!$products.ContainsKey($binary)) {throw 'Unattested FM trace product.'}
+    foreach($path in @($trace.resource,$trace.mirror,$trace.operations)) {
+        if(!(@($plan.inputs | Where-Object {$_.path -ceq $path}).Count -eq 1)) {
+            throw 'Component trace input lacks a unique identity.'
+        }
+    }
+    $target=Join-Path $out ($trace.name+'.trace.txt')
+    # This CPU-only component has no audio device or backend. It receives the
+    # supplied EFC and explicit interrupt operations, never a frontend clock.
+    Run $trace.name (Join-Path $plan.executable_directory $binary) @(
+        $trace.resource,([string]$trace.board),$trace.mirror,$trace.operations,$target)
+    CheckHash $target $trace.expected_sha256
+    $traces+=@{name=$trace.name;sha256=(Hash $target);rows=$trace.rows;
+        reference_receipt_sha256=$trace.reference_receipt_sha256}
+    Write-Host "PASS Windows component $($trace.name): $($trace.rows) rows"
+}
 foreach($planInput in $plan.inputs) {CheckHash $planInput.path $planInput.sha256}
 foreach($entry in $plan.products) {CheckHash (Join-Path $plan.executable_directory $entry.name) $entry.sha256}
 $receipt=@{
     passed=$true;utc=[DateTime]::UtcNow.ToString('o');host='actual-Windows-AMD64';muted=$true;
     source_manifest=$plan.source_manifest;product_producer_manifest=$plan.product_producer_manifest;
-    plan_sha256=(Hash $PlanFile);products=$products;contract_count=$contracts.Count;cases=$cases;
+    plan_sha256=(Hash $PlanFile);products=$products;contract_count=$contracts.Count;cases=$cases;traces=$traces;
     os=[Environment]::OSVersion.VersionString;process_64bit=[Environment]::Is64BitProcess;
     powershell=$PSVersionTable.PSVersion.ToString();inputs=$plan.inputs;
     scope='Current Windows components and bounded frontend/storage/restart controls. Actor controls retain their documented limits; no full natural route, complete FM audio, physical timing or historical exactness acceptance.'
 }
 [IO.File]::WriteAllText((Join-Path $out 'receipt.json'),($receipt | ConvertTo-Json -Depth 15),$utf8)
-Write-Host "PASS Windows $($contracts.Count) contracts and $($cases.Count) muted frontend launches"
+Write-Host "PASS Windows $($contracts.Count) contracts, $($cases.Count) muted frontend launches and $($traces.Count) component traces"

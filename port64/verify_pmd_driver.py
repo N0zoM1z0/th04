@@ -63,8 +63,8 @@ class Driver:
   self.ports.append([self.ticks,p,size,v])
   if p==0xa460:self.a460=v
   if p==2:self.pic=v
-  if p in (0x88,0x188,0x18c,0x288,0x28c):self.selected[p]=v
-  elif p in (0x8a,0x18a,0x18e,0x28a,0x28e):
+  if p in (0x88,0x8c,0x188,0x18c,0x288,0x28c):self.selected[p]=v
+  elif p in (0x8a,0x8e,0x18a,0x18e,0x28a,0x28e):
    reg=self.selected.get(p-2,0);self.registers[(p-2,reg)]=v
    if reg==0x27:
     if v&0x10:self.fm_status&=~1
@@ -72,10 +72,10 @@ class Driver:
  def input(self,u,p,size,user):
   self.read_ports.add(p)
   if p in (0x18c,0x18e) and not self.a460&1:return 255
-  if p in (0x8a,0x18a,0x18e,0x28a,0x28e):
+  if p in (0x8a,0x8e,0x18a,0x18e,0x28a,0x28e):
    if self.selected.get(p-2,0)==255:return 1
    return self.registers.get((p-2,self.selected.get(p-2,0)),0)
-  if p in (0x88,0x188,0x18c,0x288,0x28c):return self.fm_status
+  if p in (0x88,0x8c,0x188,0x18c,0x288,0x28c):return self.fm_status
   if p==0xa460:return self.a460
   return 0
  def reg(self,r):return self.u.reg_read(r)&65535

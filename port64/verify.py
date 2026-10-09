@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/pmd_fm_effects.hpp",
+    "port64/pmd_fm_effects.cpp",
+    "port64/pmd_fm_checks.cpp",
+    "port64/verify_pmd_fm.py",
     "port64/verify_windows_current.ps1",
     "port64/pmd_sequence.hpp",
     "port64/pmd_ssg_effects.hpp",

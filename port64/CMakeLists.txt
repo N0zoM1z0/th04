@@ -20,6 +20,7 @@ add_library(
   sound_scenes.cpp
   pmd_sequence.cpp
   pmd_ssg_effects.cpp
+  pmd_fm_effects.cpp
   hud.cpp
   bullet_geometry.cpp
   item_system.cpp
@@ -346,3 +347,7 @@ add_test(NAME demo-contracts COMMAND th04-port64-demo-contracts)
 add_executable(th04-port64-configuration-contracts configuration_contracts.cpp)
 target_link_libraries(th04-port64-configuration-contracts PRIVATE th04-portable-core)
 add_test(NAME configuration-contracts COMMAND th04-port64-configuration-contracts)
+
+add_executable(th04-port64-pmd-fm-contracts pmd_fm_checks.cpp)
+target_link_libraries(th04-port64-pmd-fm-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-fm-contracts COMMAND th04-port64-pmd-fm-contracts)
