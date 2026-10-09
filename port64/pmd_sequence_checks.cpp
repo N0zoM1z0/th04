@@ -15,10 +15,11 @@ void record(std::ostream& out,const Sequence& player,bool sharing=false) {
     const auto& s=player.state();
     out<<s.measure<<' '<<unsigned(s.fade)<<' '<<player.status()<<' '
        <<unsigned(s.timer_b)<<' '<<unsigned(s.bar_tick)<<' '<<unsigned(s.bar_length)<<' '<<unsigned(s.tempo);
-    for(const auto& p:s.parts)out<<' '<<p.position<<' '<<p.loop<<' '<<unsigned(p.length)<<' '
+    // Preserve the original eleven-track trace; FM3 has its own extended trace.
+    for(unsigned n=0;n<11;++n){const auto& p=s.parts[n];out<<' '<<p.position<<' '<<p.loop<<' '<<unsigned(p.length)<<' '
         <<unsigned(p.loop_status)<<' '<<unsigned(p.notes)<<' '<<unsigned(p.volume)<<' '
         <<unsigned(p.transpose)<<' '<<unsigned(p.master_transpose)<<' '<<p.detune<<' '
-        <<unsigned(p.instrument)<<' '<<unsigned(p.mask);
+        <<unsigned(p.instrument)<<' '<<unsigned(p.mask);}
     if(sharing) {
         const auto& e=player.ssg_effects().state();
         out<<' '<<e.resource<<' '<<e.next_frame<<' '<<e.tone<<' '<<e.tone_step<<' '

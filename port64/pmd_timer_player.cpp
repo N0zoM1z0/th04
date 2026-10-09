@@ -5,7 +5,7 @@ namespace th04::portable::pmd {
 TimerPlayer::TimerPlayer(Board board,FmSink sink,SsgSink ssg)
     :sink_(std::move(sink)),player_(board,[this](FmWrite w){if(sink_)sink_(w);},std::move(ssg)) {
     player_.effect_released([this,board]{
-        if(board==Board::fm26 && player_.music().sequence().state().playing)write(0x27,0x0f);
+        if(board==Board::fm26 && player_.music().sequence().state().playing)write(0x27,(player_.music().fm3_mode()&64)|15);
     });
     player_.timer_b_completed([this]{commit_tempo();});
 }
@@ -25,7 +25,7 @@ void TimerPlayer::start_music() {
 void TimerPlayer::interrupt(std::uint8_t status) {
     if(status>3)throw std::invalid_argument("PMD timer status");
     if(!status)return;
-    write(0x27,0x3f);
+    write(0x27,player_.music().fm3_mode());
     player_.interrupt(status);
 }
 }

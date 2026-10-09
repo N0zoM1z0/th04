@@ -30,14 +30,17 @@ void MusicalFm::stop(StopReason reason){
     const bool busy=effect_busy_ && effect_busy_();
     for(unsigned b=0;b<(board_==Board::fm26 ? 1u : 2u);++b)
         for(unsigned slot=0;slot<4;++slot)for(unsigned c=0;c<3;++c){if(busy && c==2 && b==(board_==Board::fm26 ? 0u : 1u))continue;write(b,0x80+slot*4+c,255);}
-    for(unsigned p=0;p<(board_==Board::fm26 ? 3u : 6u);++p){if(busy && p==(board_==Board::fm26 ? 2u : 5u))continue;keys_[p]=0;write(0,0x28,channel(p)+(bank(p) ? 4 : 0));}
+    for(unsigned p=0;p<(board_==Board::fm26 ? 3u : 6u);++p){if(busy && p==(board_==Board::fm26 ? 2u : 5u))continue;keys_[hardware(p)]=0;write(0,0x28,p%3+(p>=3 ? 4 : 0));}
     ssg_.stop();sequence_.stop(reason);
 }
 void MusicalFm::start(){
     if(sequence_.music().empty())throw std::logic_error("FM music requires a resource");
     stop();parts_={};keys_={};parsed_note_={};tied_=temporary_=false;last_timer_a_=0;fm3_algorithm_=0;
+    // The deferred FM26 mode survives song restart in the original resident.
+    fm3_detune_={};fm3_mode_=63;fm3_flags_=0;
+    for(unsigned p=6;p<9;++p){auto& e=parts_[p];e.slots=e.voice_mask=e.pan=e.key_flags=0;for(auto& l:e.lfo)l.depth_count=l.initial_depth_count=0;}
     sequence_.start();ssg_.start();attenuation_=initial_attenuation_;
-    if(board_==Board::fm26)for(unsigned p=3;p<6;++p){parts_[p].slots=0;parts_[p].voice_mask=0;}
+    if(board_==Board::fm26)for(unsigned p=3;p<6;++p){part(p).slots=0;part(p).voice_mask=0;}
     // Original stereo initialization visits the primary bank first.
     for(unsigned b=0;b<(board_==Board::fm26 ? 1u : 2u);++b)
         for(unsigned c=0;c<3;++c){if(board_!=Board::fm26 && effect_busy_ && effect_busy_() && c==2 && b==(board_==Board::fm26 ? 0u : 1u))continue;write(b,0xb4+c,192);}
@@ -49,33 +52,35 @@ void MusicalFm::interrupt(std::uint8_t flags){
     sequence_.interrupt(flags);if((flags&2) && playing)last_timer_a_=timer;
 }
 void MusicalFm::key(unsigned p,bool on){
-    auto& s=parts_[p];if(s.note==255)return;
-    if(on){keys_[p]|=s.slots;if(s.key_counter)keys_[p]&=s.key_mask;}
-    else keys_[p]&=std::uint8_t(~s.slots);
-    write(0,0x28,keys_[p]|channel(p)|(bank(p) ? 4 : 0));
+    auto& s=part(p);if(s.note==255)return;
+    if(on){keys_[hardware(p)]|=s.slots;if(s.key_counter)keys_[hardware(p)]&=s.key_mask;}
+    else keys_[hardware(p)]&=std::uint8_t(~s.slots);
+    write(0,0x28,keys_[hardware(p)]|channel(p)|(bank(p) ? 4 : 0));
 }
 void MusicalFm::silence(unsigned p){
-    auto& s=parts_[p];
-    for(unsigned slot=0;slot<4;++slot)if(s.voice_mask&operators[slot]){
+    auto& s=part(p);
+    for(unsigned slot=0;slot<4;++slot)if(s.voice_mask&(128u>>slot)){
         write(bank(p),0x40+channel(p)+slot*4,127);write(bank(p),0x80+channel(p)+slot*4,127);
     }
     const auto note=s.note;s.note=0;key(p,false);s.note=note;
 }
 void MusicalFm::voice(unsigned p,std::uint8_t id,bool restore){
-    auto& s=parts_[p];
+    auto& s=part(p);
     if(word(1)!=26)throw std::invalid_argument("unrecovered external musical voice bank");
     unsigned at=word(25)+1;
     for(unsigned budget=0;;++budget){if(read(at)==id)break;if(read(at)==255 || budget>=255)throw std::out_of_range("musical FM voice not present");at+=26;}
     ++at;
     const auto algorithm=read(at+24);
-    if(restore){if(board_==Board::fm26 && p==2)s.algorithm=fm3_algorithm_;}
+    if(restore){if(fm3(p))s.algorithm=fm3_algorithm_;}
     else {
         s.algorithm=algorithm;
-        if(p==2){
-            fm3_algorithm_=algorithm;
+        if(fm3(p) && s.voice_mask){
+            auto next=algorithm;
+            if(!(s.slots&16))next=std::uint8_t((next&7)|(fm3_algorithm_&56));
+            fm3_algorithm_=next;s.algorithm=next;
             // The masked FM3 dispatcher stores its surviving AL (voice ID),
             // while a separate global keeps the real FM3 algorithm.
-            if(sequence_.state().parts[p].mask && s.voice_mask)s.algorithm=id;
+            if(sequence_.state().parts[p].mask && s.voice_mask)s.algorithm=(s.slots&16) ? id : std::uint8_t(next&56);
         }
     }
     for(unsigned i=0;i<4;++i)s.total_levels[i]=read(at+4+i);
@@ -85,20 +90,27 @@ void MusicalFm::voice(unsigned p,std::uint8_t id,bool restore){
     write(bank(p),0xb0+channel(p),s.algorithm);
     s.carrier_mask=std::uint8_t(carriers[s.algorithm&7]);
     for(auto& l:s.lfo)if(!(l.mask&15))l.mask=s.carrier_mask;
-    for(unsigned i=0;i<4;++i)if(s.voice_mask&operators[i])write(bank(p),0x30+channel(p)+i*4,read(at+i));
-    for(unsigned i=0;i<4;++i)if((s.voice_mask&operators[i]) && !(s.carrier_mask&operators[i]))write(bank(p),0x40+channel(p)+i*4,read(at+4+i));
+    for(unsigned i=0;i<4;++i)if(s.voice_mask&(128u>>i))write(bank(p),0x30+channel(p)+i*4,read(at+i));
+    for(unsigned i=0;i<4;++i)if((s.voice_mask&(128u>>i)) && !(s.carrier_mask&operators[i]))write(bank(p),0x40+channel(p)+i*4,read(at+4+i));
     for(unsigned group=0;group<4;++group)for(unsigned i=0;i<4;++i)
-        if(s.voice_mask&operators[i])write(bank(p),0x50+channel(p)+group*16+i*4,read(at+8+group*4+i));
+        if(s.voice_mask&(128u>>i))write(bank(p),0x50+channel(p)+group*16+i*4,read(at+8+group*4+i));
 }
 void MusicalFm::borrow_effect(){
+    if(board_==Board::fm26){fm3_pending_=fm3_mode_;fm3_mode_=63;}
     for(unsigned p=0;p<6;++p)if(p==5 || (board_==Board::fm26 && p>=2))sequence_.borrow_fm(p);
 }
 void MusicalFm::restore_effect_voice(){
+    // Effect silence key-offs every slot on the shared hardware channel.
+    keys_[board_==Board::fm26 ? 2 : 5]=0;
     if(!sequence_.state().playing)return;
-    restore_voice(board_==Board::fm26 ? 2 : 5);
+    if(board_==Board::fm26){
+        // FM26 aliases its three disabled D-F works as FM3 extensions.
+        for(unsigned p=2;p<6;++p)restore_voice(p);
+        fm3_mode_=fm3_pending_;
+    }else restore_voice(5);
 }
 void MusicalFm::restore_voice(unsigned p){
-    auto& s=parts_[p];
+    auto& s=part(p);
     if(!s.voice_mask)return;
     const auto levels=s.total_levels;
     voice(p,sequence_.state().parts[p].instrument,true);s.total_levels=levels;
@@ -107,7 +119,7 @@ void MusicalFm::restore_voice(unsigned p){
     if(board_!=Board::fm26)write(bank(p),0xb4+channel(p),s.hardware_counter ? s.pan&192 : s.pan);
 }
 void MusicalFm::volume(unsigned p){
-    const auto& s=parts_[p];if(!s.slots)return;
+    const auto& s=part(p);if(!s.slots)return;
     unsigned value=s.temporary_volume ? s.temporary_volume-1 : sequence_.state().parts[p].volume;
     if(attenuation_)value=(value*std::uint8_t(0-attenuation_))>>8;
     const auto fade=sequence_.state().fade;if(fade>=2)value=(value*std::uint8_t(0-(fade/2)))>>8;
@@ -122,16 +134,60 @@ void MusicalFm::volume(unsigned p){
     }
 }
 void MusicalFm::pitch(unsigned p){
-    const auto& s=parts_[p];if(!s.frequency || !s.slots)return;
-    int block=s.frequency&0x3800;
-    auto value=std::uint16_t((s.frequency&2047)+std::uint16_t(s.slide)+std::uint16_t(sequence_.state().parts[p].detune));
-    for(unsigned l=0;l<2;++l)if(s.flags&(1u<<(l*4)))value+=std::uint16_t(s.lfo[l].value);
-    for(unsigned budget=0;budget<128;++budget){
-        if(value<32768 && value>=618){if(value<1236)break;block+=2048;if(block==16384){block=14336;value=std::min<std::uint16_t>(value,2047);break;}value-=618;}
-        else {block-=2048;if(block<0){block=0;if(value>=32768 || value<8)value=8;break;}value+=618;}
+    const auto& s=part(p);if(!s.frequency || !s.slots)return;
+    const auto base=std::uint16_t((s.frequency&2047)+std::uint16_t(s.slide)+std::uint16_t(sequence_.state().parts[p].detune));
+    auto period=[&](std::uint16_t value){
+        int block=s.frequency&0x3800;
+        for(unsigned budget=0;budget<128;++budget){
+            if(value<32768 && value>=618){if(value<1236)break;block+=2048;if(block==16384){block=14336;value=std::min<std::uint16_t>(value,2047);break;}value-=618;}
+            else{block-=2048;if(block<0){block=0;if(value>=32768 || value<8)value=8;break;}value+=618;}
+        }
+        return std::uint16_t(value)|std::uint16_t(block);
+    };
+    if(fm3(p) && fm3_mode_!=63){
+        auto first=(s.lfo[0].mask&15) ? s.lfo[0].mask : std::uint8_t(240);
+        auto second=(s.lfo[1].mask&15) ? s.lfo[1].mask : std::uint8_t(240);
+        const std::array<unsigned,4> address{{0xa9,0xaa,0xa8,0xa2}};
+        for(int slot=3;slot>=0;--slot)if(s.slots&(16u<<slot)){
+            auto value=std::uint16_t(base+std::uint16_t(fm3_detune_[slot]));
+            // Masks rotate only for an owned operator, as in the target.
+            const bool a=first&128,b=second&128;first=std::uint8_t((first<<1)|(first>>7));second=std::uint8_t((second<<1)|(second>>7));
+            if(a && (s.flags&1))value+=std::uint16_t(s.lfo[0].value);
+            if(b && (s.flags&16))value+=std::uint16_t(s.lfo[1].value);
+            const auto v=period(value);write(0,address[slot]+4,v>>8);write(0,address[slot],v&255);
+        }
+    }else{
+        auto value=base;for(unsigned l=0;l<2;++l)if(s.flags&(1u<<(l*4)))value+=std::uint16_t(s.lfo[l].value);
+        const auto v=period(value);write(bank(p),0xa4+channel(p),v>>8);write(bank(p),0xa0+channel(p),v&255);
     }
-    const auto period=std::uint16_t(value)|std::uint16_t(block);
-    write(bank(p),0xa4+channel(p),period>>8);write(bank(p),0xa0+channel(p),period&255);
+}
+void MusicalFm::mode(unsigned p){
+    if(!fm3(p))return;
+    const auto& s=part(p);const unsigned bit=p==2 ? 1 : 2u<<(board_==Board::fm26 ? p-3 : p-11);
+    // Full-slot secondary LFO mode is gated by the primary mask low nibble.
+    // Preserve the target short circuit rather than a symmetric LFO test.
+    const bool partial=s.slots && (s.slots!=240 || ((s.lfo[0].mask&15) && ((s.flags&1) || ((s.lfo[1].mask&15) && (s.flags&16)))));
+    if(partial)fm3_flags_|=bit;else fm3_flags_&=std::uint8_t(~bit);
+    const std::uint8_t next=(fm3_flags_ || fm3_detuned()) ? 127 : 63;
+    if(board_==Board::fm26 && (sequence_.state().parts[p].mask&2)){fm3_pending_=next;return;}
+    if(next==fm3_mode_)return;
+    fm3_mode_=next;write(0,0x27,next&207);
+    if(next!=63 && p!=2){
+        const unsigned last=board_==Board::fm26 ? p : p-8;
+        for(unsigned n=2;n<last;++n){const unsigned seq=n==2 ? 2 : board_==Board::fm26 ? n : n+8;if(!sequence_.state().parts[seq].mask)pitch(seq);}
+    }
+}
+void MusicalFm::slots(unsigned p,std::uint8_t value){
+    auto& s=part(p);const unsigned selected=value&15;
+    s.carrier_mask=selected ? std::uint8_t(selected<<4) : carriers[(fm3(p) ? fm3_algorithm_ : s.algorithm)&7];
+    const auto next=std::uint8_t(value&240);if(next==s.slots)return;
+    s.slots=next;sequence_.slots_mask(p,!next);mode(p);
+    if(fm3(p) && p!=2){
+        const unsigned last=board_==Board::fm26 ? p : p-8;
+        for(unsigned n=2;n<last;++n){const unsigned seq=n==2 ? 2 : board_==Board::fm26 ? n : n+8;if(!sequence_.state().parts[seq].mask && !(part(seq).key_flags&1))key(seq,true);}
+    }
+    // Logical slot bits become duplicated physical voice-parameter masks.
+    s.voice_mask=0;for(unsigned i=0;i<4;++i)if(s.slots&operators[i])s.voice_mask|=std::uint8_t((128u>>i)|((128u>>i)>>4));
 }
 void MusicalFm::reset(MusicalLfo& l){
     l.value=0;l.delay=l.initial_delay;l.speed=l.initial_speed;l.step=l.initial_step;l.count=l.initial_count;l.depth_count=l.initial_depth_count;
@@ -180,7 +236,7 @@ std::uint8_t MusicalFm::transpose(unsigned p,std::uint8_t note) const{
     return std::uint8_t((std::uint8_t(octave)<<4)|unsigned(pitch));
 }
 void MusicalFm::prepare(unsigned p,std::uint8_t n){
-    auto& s=parts_[p];if((n&15)==12)n=s.last_note;s.last_note=n;
+    auto& s=part(p);if((n&15)==12)n=s.last_note;s.last_note=n;
     const bool fresh=(n&15)!=15 && !tied_;if((n&15)!=15)s.slide=0;
     if(fresh){s.hardware_counter=s.hardware_delay;if(s.hardware_counter)write(bank(p),0xb4+channel(p),s.pan&192);s.key_counter=s.key_delay;}
     for(unsigned l=0;l<2;++l)if(s.flags&(3u<<(l*4))){
@@ -190,18 +246,18 @@ void MusicalFm::prepare(unsigned p,std::uint8_t n){
     }
 }
 void MusicalFm::frequency(unsigned p,std::uint8_t n){
-    auto& s=parts_[p];if((n&15)==15){s.note=255;if(!(s.flags&17))s.frequency=0;return;}
+    auto& s=part(p);if((n&15)==15){s.note=255;if(!(s.flags&17))s.frequency=0;return;}
     s.note=n;s.frequency=std::uint16_t(periods.at(n&15))|std::uint16_t((n>>1)&56)*256;
 }
 void MusicalFm::gate(unsigned p,unsigned duration,unsigned next){
-    auto& s=parts_[p];if(read(next)==193){s.gate=0;return;}
+    auto& s=part(p);if(read(next)==193){s.gate=0;return;}
     unsigned amount=std::uint8_t(s.gate_amount+((duration*s.gate_ratio)>>8));
     if(s.gate_random){const auto v=random((s.gate_random&127)+1);amount=(s.gate_random&128) ? unsigned(std::max(0,int(amount)-int(v))) : std::uint8_t(amount+v);}
     if(s.gate_minimum){if(duration<s.gate_minimum)amount=0;else amount=std::min(amount,duration-s.gate_minimum);}
     s.gate=std::uint8_t(amount);
 }
 void MusicalFm::note(unsigned p,const Event& e){
-    auto& s=parts_[p];const auto& track=sequence_.state().parts[p];parsed_note_[p]=true;
+    auto& s=part(p);const auto& track=sequence_.state().parts[p];parsed_note_[index(p)]=true;
     if(sequence_.masked_parser(p)){s.frequency=0;s.note=s.last_note=255;s.key_flags=255;if(!temporary_)s.temporary_volume=0;tied_=temporary_=false;return;}
     s.flags&=247;
     unsigned duration=e.arguments.at(0),next=e.offset+2;
@@ -217,7 +273,7 @@ void MusicalFm::note(unsigned p,const Event& e){
     volume(p);pitch(p);key(p,true);tied_=temporary_=false;s.key_flags=read(next)==251 ? 2 : 0;
 }
 void MusicalFm::command(unsigned p,const Event& e){
-    auto& s=parts_[p];const auto& a=e.arguments;
+    auto& s=part(p);const auto& a=e.arguments;
     switch(e.opcode){
     case 255:voice(p,a.at(0));break;
     case 254:s.gate_amount=a.at(0);s.gate_random=0;break;
@@ -231,27 +287,30 @@ void MusicalFm::command(unsigned p,const Event& e){
     case 214:case 189:{auto& l=s.lfo[e.opcode==189];l.depth_speed=l.initial_depth_speed=a.at(0);l.depth_step=std::int8_t(i8(a.at(1)));break;}
     case 183:{auto& l=s.lfo[(a.at(0)&128)!=0];const auto count=std::uint8_t(a.at(0)&127);l.depth_count=l.initial_depth_count=count ? count : 255;break;}
     case 197:case 186:{auto& l=s.lfo[e.opcode==186];l.mask=(a.at(0)&15) ? std::uint8_t((a.at(0)<<4)|15) : s.carrier_mask;break;}
+    case 198:{for(unsigned n=0;n<3;++n){const auto offset=std::uint16_t(a.at(n*2))|std::uint16_t(a.at(n*2+1))*256;if(!offset)continue;sequence_.activate_fm3(n,offset);const unsigned target=board_==Board::fm26 ? n+3 : n+11;auto& e=part(target);e.key_flags=e.note=e.last_note=255;for(auto& l:e.lfo)l.depth_count=l.initial_depth_count=255;e.pan=part(2).pan;}break;}
+    case 199:case 200:{if(fm3(p)){const auto value=std::uint16_t(a.at(1))|std::uint16_t(a.at(2))*256;for(unsigned n=0;n<4;++n)if(a.at(0)&(1u<<n))fm3_detune_[n]=i16(e.opcode==200 ? value : std::uint16_t(fm3_detune_[n])+value);mode(p);}break;}
+    case 207:slots(p,a.at(0));break;
     case 196:s.gate_ratio=a.at(0);break;
     case 179:s.gate_minimum=a.at(0);break;
     case 177:s.gate_random=a.at(0);break;
     case 181:s.key_mask=std::uint8_t(((a.at(0)&15)^15)<<4);s.key_delay=s.key_counter=a.at(1);break;
     case 182:{
         // The26 masked decoder consumes B6 without updating disabled FM D-F.
-        if(board_==Board::fm26 && p>=3)break;
+        if(board_==Board::fm26 && p>=3 && !s.slots)break;
         // B6 rotates an absolute byte, but clamps a relative byte only after
         // its eight-bit addition. FM3's feedback belongs to operator1 and
         // uses the shared algorithm rather than the masked voice-ID field.
-        const bool fm3=p==2;
-        const auto previous=fm3 ? fm3_algorithm_ : s.algorithm;
+        const bool special=fm3(p);
+        const auto previous=special ? fm3_algorithm_ : s.algorithm;
         auto value=a.at(0);unsigned feedback;
         if(value&128){
             if(!(value&64))value&=7;
             const auto sum=std::uint8_t(value+((previous>>3)&7));
             feedback=(sum&128) ? 0 : sum>=8 ? 56 : unsigned(sum)*8;
         }else feedback=std::uint8_t((unsigned(value)<<3)|(value>>5));
-        if(fm3 && !(s.slots&16))break;
+        if(special && !(s.slots&16))break;
         const auto algorithm=std::uint8_t((previous&7)|feedback);
-        if(fm3)fm3_algorithm_=algorithm;
+        if(special)fm3_algorithm_=algorithm;
         write(bank(p),0xb0+channel(p),algorithm);s.algorithm=algorithm;
         break;
     }
@@ -291,7 +350,7 @@ void MusicalFm::event(const Event& e){
     }
     if(e.kind==Kind::command && e.opcode==192){
         const auto sub=e.arguments.at(0);
-        if(e.part<6 && sub<2){
+        if((e.part<6 || e.part>=11) && sub<2){
             const auto mask=sequence_.state().parts[e.part].mask;
             if(sub==1 && mask==64)silence(e.part);
             else if(sub==0 && !mask)restore_voice(e.part);
@@ -300,23 +359,23 @@ void MusicalFm::event(const Event& e){
         else if(sub==254){const int amount=i8(e.arguments.at(1));attenuation_=amount ? std::uint8_t(std::clamp(int(attenuation_)+amount,0,255)) : initial_attenuation_;}
         return;
     }
-    if(e.part>=6)return;
+    if(e.part>=6 && e.part<11)return;
     if(e.kind==Kind::note || e.kind==Kind::portamento)note(e.part,e);
-    else if(e.kind==Kind::command)command(e.part,e);
-    else if(e.kind==Kind::end)parts_[e.part].note=255;
+    else if(e.kind==Kind::command){command(e.part,e);if(e.opcode==197 || e.opcode==186 || e.opcode==241 || e.opcode==190)mode(e.part);}
+    else if(e.kind==Kind::end)part(e.part).note=255;
 }
 void MusicalFm::tick(unsigned p,bool before){
     ssg_.tick(p,before);
-    if(p>=6)return;
-    auto& s=parts_[p];const auto& track=sequence_.state().parts[p];
+    if(p>=6 && p<11)return;
+    auto& s=part(p);const auto& track=sequence_.state().parts[p];
     if(before){
-        parsed_note_[p]=false;
+        parsed_note_[index(p)]=false;
         if(track.mask){s.key_flags=255;return;}
         if(!(s.key_flags&3) && std::uint8_t(track.length-1)<=s.gate){key(p,false);s.key_flags=255;}
         if(track.length==1)s.flags&=247;
         return;
     }
-    if(parsed_note_[p] || track.mask)return;
+    if(parsed_note_[index(p)] || track.mask)return;
     if(s.hardware_counter && !--s.hardware_counter)write(bank(p),0xb4+channel(p),s.pan);
     if(s.key_counter && !--s.key_counter && !(s.key_flags&1))key(p,true);
     unsigned changed=s.flags&8;

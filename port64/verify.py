@@ -43,6 +43,8 @@ PORT_FILES = (
     "port64/pmd_timer_player.cpp",
     "port64/pmd_timer_player_checks.cpp",
     "port64/verify_pmd_timer_player.py",
+    "port64/pmd_fm3_checks.cpp",
+    "port64/verify_pmd_fm3.py",
     "port64/pmd_rhythm_checks.cpp",
     "port64/verify_pmd_rhythm.py",
     "port64/pmd_rhythm.hpp",

@@ -404,3 +404,7 @@ add_test(NAME pmd-pcm-contracts COMMAND th04-port64-pmd-pcm-contracts)
 add_executable(th04-port64-pmd-resident-contracts pmd_resident_checks.cpp)
 target_link_libraries(th04-port64-pmd-resident-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-resident-contracts COMMAND th04-port64-pmd-resident-contracts)
+
+add_executable(th04-port64-pmd-fm3-contracts pmd_fm3_checks.cpp)
+target_link_libraries(th04-port64-pmd-fm3-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-fm3-contracts COMMAND th04-port64-pmd-fm3-contracts)

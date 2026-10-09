@@ -36,22 +36,37 @@ public:
     void effect_commands(std::function<void(unsigned)> action) {sequence_.fm_effect_command(std::move(action));}
     void borrow_effect();
     void restore_effect_voice();
+    const std::array<std::int16_t,4>& fm3_detune() const {return fm3_detune_;}
+    std::uint8_t fm3_mode() const {return fm3_mode_;}
+    std::uint8_t fm3_pending() const {return fm3_pending_;}
+    std::uint8_t fm3_flags() const {return fm3_flags_;}
+    std::uint8_t fm3_algorithm() const {return fm3_algorithm_;}
+    std::uint8_t fm3_detuned() const {for(auto v:fm3_detune_)if(v)return 1;return 0;}
     const Sequence& sequence() const {return sequence_;}
     const MusicalSsg& ssg() const {return ssg_;}
     const Rhythm& rhythm() const {return rhythm_;}
-    const std::array<MusicalFmPart,6>& parts() const {return parts_;}
+    const std::array<MusicalFmPart,9>& parts() const {return parts_;}
     const std::array<std::array<std::uint8_t,256>,2>& registers() const {return registers_;}
 private:
     Board board_;FmSink sink_;Sequence sequence_;MusicalSsg ssg_;Rhythm rhythm_;std::function<bool()> effect_busy_;std::uint8_t fm3_algorithm_=0;
-    std::array<MusicalFmPart,6> parts_{};
+    std::array<MusicalFmPart,9> parts_{};
     std::array<std::array<std::uint8_t,256>,2> registers_{};
     std::array<std::uint8_t,6> keys_{};
-    std::array<bool,6> parsed_note_{};
+    std::array<bool,9> parsed_note_{};
     std::uint8_t last_timer_a_=0;std::uint16_t random_=0;
     bool tied_=false,temporary_=false;
     std::uint8_t attenuation_=0,initial_attenuation_=0;
-    unsigned bank(unsigned p) const {return p/3;}
-    unsigned channel(unsigned p) const {return p%3;}
+    std::array<std::int16_t,4> fm3_detune_{};
+    std::uint8_t fm3_mode_=63,fm3_pending_=0,fm3_flags_=0;
+    bool fm3(unsigned p) const {return p==2 || (board_==Board::fm26 ? p>=3 && p<6 : p>=11);}
+    unsigned index(unsigned p) const {return p<6 ? p : p-5;}
+    unsigned hardware(unsigned p) const {return fm3(p) ? 2 : p;}
+    unsigned bank(unsigned p) const {return hardware(p)/3;}
+    unsigned channel(unsigned p) const {return hardware(p)%3;}
+    MusicalFmPart& part(unsigned p) {return parts_.at(index(p));}
+    const MusicalFmPart& part(unsigned p) const {return parts_.at(index(p));}
+    void mode(unsigned p);
+    void slots(unsigned p,std::uint8_t value);
     std::uint8_t read(unsigned) const;
     std::uint16_t word(unsigned) const;
     void write(unsigned,unsigned,unsigned);

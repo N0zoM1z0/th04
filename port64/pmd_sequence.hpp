@@ -29,7 +29,8 @@ struct Part {
     std::int16_t detune=0;
 };
 struct State {
-    std::array<Part,11> parts{};
+    // Eleven primary works plus three FM86 extensions. FM26 aliases D-F.
+    std::array<Part,14> parts{};
     std::uint16_t measure=0;
     std::uint8_t bar_length=96,bar_tick=0,timer_b=200,tempo=78;
     std::uint8_t fade=0,timer_a=0,loop_status=0,status=0;
@@ -58,6 +59,16 @@ public:
     void fade_restored(std::function<void()> action) {fade_restored_=std::move(action);}
     // Commit the final musical tempo before Timer A effects in a combined IRQ.
     void timer_b_completed(std::function<void()> action) {timer_b_completed_=std::move(action);}
+    void activate_fm3(unsigned n,std::uint16_t offset) {
+        if(!offset)return;
+        const unsigned p=board_==Board::fm26 ? n+3 : n+11;
+        auto& t=state_.parts.at(p);t.position=std::uint16_t(offset+1);get(t.position);
+        t.length=1;t.volume=108;t.mask|=32;
+    }
+    void slots_mask(unsigned p,bool disabled) {
+        auto& t=state_.parts.at(p);if(disabled)t.mask|=32;else t.mask&=223;
+        parsing_masked_.at(p)=t.mask!=0;
+    }
     void borrow_fm(unsigned p) {state_.parts.at(p).mask|=2;}
     void mirror_ssg(std::uint8_t address,std::uint8_t value) {effects_.mirror(address,value);}
     std::uint16_t status() const {return std::uint16_t(state_.status)*256+state_.loop_status;}
@@ -66,7 +77,7 @@ private:
     std::function<void(unsigned)> fm_effect_command_;
     std::function<void()> fade_restored_;
     std::function<void()> timer_b_completed_;
-    std::array<bool,11> parsing_masked_{};
+    std::array<bool,14> parsing_masked_{};
     std::uint16_t rhythm_table_=0,rhythm_position_=0;
     std::uint8_t saved_timer_b_=200,saved_tempo_=78;
     std::uint8_t get(std::uint16_t) const;

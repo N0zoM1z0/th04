@@ -61,6 +61,7 @@ void Sequence::start() {
         if(board_==Board::fm26 && p>=3 && p<6)track.mask|=32;
         if(board_==Board::speakboard && p==9)track.mask=4;
     }
+    for(unsigned p=11;p<14;++p){state_.parts[p].length=0;state_.parts[p].notes=old[p].notes;}
     rhythm_table_=std::uint16_t(word(23)+1);rhythm_position_=0;
 }
 void Sequence::stop(StopReason reason) {
@@ -69,7 +70,7 @@ void Sequence::stop(StopReason reason) {
     if(reason==StopReason::explicit_request)state_.musical_fade_requested=false;
 }
 bool Sequence::command(unsigned p,std::uint16_t& at,std::uint8_t op,std::uint16_t offset) {
-    auto& track=state_.parts[p];const bool fm=p<6;
+    auto& track=state_.parts[p];const bool fm=p<6 || p>=11;
     // Only recovered commands enter the native decoder. Unrecognized bytecode
     // fails at this boundary instead of altering the original resource.
     Bytes args;
@@ -175,7 +176,7 @@ void Sequence::part_body(unsigned p) {
     auto& track=state_.parts[p];if(!track.position)return;
     --track.length;if(track.length)return;
     // FM effect occupation persists until the masked musical parse boundary.
-    if(p<6 && (track.mask&2) && fm_effect_active_ && !fm_effect_active_())track.mask&=253;
+    if((p<6 || p>=11) && (track.mask&2) && fm_effect_active_ && !fm_effect_active_())track.mask&=253;
     // The driver enters one parse loop. Effect commands can occupy the same
     // part without changing that loop; C0 explicitly switches its continuation.
     parsing_masked_[p]=track.mask!=0;
@@ -239,9 +240,10 @@ void Sequence::timer_b() {
     if(board_!=Board::fm26)for(unsigned p=3;p<6;++p)part(p);
     for(unsigned p=0;p<3;++p)part(p);
     if(board_==Board::fm26)for(unsigned p=3;p<6;++p)part(p);
+    if(board_!=Board::fm26)for(unsigned p=11;p<14;++p)part(p);
     rhythm();if(board_!=Board::fm26)part(9);
     std::uint8_t combined=3;
-    for(unsigned p=0;p<11;++p)if(state_.parts[p].position && !(p==9 && board_==Board::fm26))combined&=state_.parts[p].loop_status;
+    for(unsigned p=0;p<14;++p)if(state_.parts[p].position && !(p==9 && board_==Board::fm26))combined&=state_.parts[p].loop_status;
     if(combined) {
         for(auto& p:state_.parts)if(p.loop_status!=3)p.loop_status=0;
         if(combined==3)state_.loop_status=255;
