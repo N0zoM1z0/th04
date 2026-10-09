@@ -8,6 +8,8 @@ blocks30..B6 and primary22/28, and all ordered writes in that ownership surface.
 SSG/ADPCM/hardware rhythm, FM3 extra subtracks, effects/musical handover, global
 timer ACK events, synthesis, physical clocks and frontend capability are not
 accepted by this profile. No audio device/backend, no DOS exact promotion.
+The operator profiles additionally exercise primary-part B6 feedback and B8
+total-level byte/mask controls; they do not accept FM3 extension subtracks.
 """
 import argparse,gzip,hashlib,json,struct,subprocess,sys,tarfile
 from pathlib import Path
@@ -43,6 +45,69 @@ def challenges(extension):
         result[f'LFO{shape}.{extension}']=bytes(data)
     return result
 
+def operator_challenges(extension):
+    """Authored B6/B8 data for unchanged original drivers, not target code.
+
+    Every B6 argument, B8 amount and B8 selector byte occurs on each of six
+    primary parts, under alternating C0 masks and two starting feedback levels.
+    This is axis coverage, not all256-by256 B8 argument combinations.
+    """
+    result={}
+    for part in range(6):
+        for feedback in (0,56):
+            phrase=[255,7,253,100,192,1,255,7,182,254,64,1,
+                    192,0,182,128,64,1]
+            for value in range(256):
+                phrase += [192,value&1,182,value,64,1]
+            for value in range(256):
+                phrase += [192,value&1,184,((value>>3)&15)|((value&1)<<7),value,64,1]
+            amounts=(0,127,128,255,129,126,1)
+            for selector in range(256):
+                phrase += [192,(selector>>1)&1,184,selector,amounts[selector%len(amounts)],64,1]
+            phrase += [192,0,64,4,128]
+            # The first directory word is also the26-byte header marker.
+            # Keep an idle A at27 when another part owns the phrase.
+            start=27 if part==0 else 28
+            empty=start+len(phrase);voice=empty+1
+            data=bytearray(27)
+            for p in range(12):struct.pack_into('<H',data,1+2*p,empty-1)
+            struct.pack_into('<H',data,1,26)
+            struct.pack_into('<H',data,1+2*part,start-1)
+            struct.pack_into('<H',data,25,voice-1)
+            if part:data += b'\x80'
+            data += bytes(phrase)+b'\x80'
+            # Include a high-bit TL in the typed voice to distinguish byte
+            # overflow from a widened signed clamp in relative B8.
+            data += bytes([7,*([1]*4),0,63,127,255,*([31]*4),
+                           *([7]*4),*([3]*4),*([15]*4),feedback|7,255])
+            assert len(data)<8192
+            result[f'OPERATOR{part}-{feedback}.{extension}']=bytes(data)
+    return result
+
+def operator_corners(extension):
+    """Discriminate rotate low bits and TL wrap across all six primary parts.
+
+    The high-bit stored TL is constructed driver input; no supplied-song or
+    original compiler-emission claim follows from this byte-arithmetic probe.
+    """
+    result={}
+    for algorithm in (0,7):
+        phrase=[255,7,192,1,184,136,1,64,1,184,130,255,64,1,184,136,255,64,1,
+                192,0,184,8,255,64,1,184,136,1,64,1,184,8,0,64,1,184,136,128,64,1,
+                184,15,255,64,1,184,143,129,64,1,192,1,255,7,182,254,64,1,
+                192,0,182,32,64,1,182,127,64,1,182,128,64,1,182,192,64,1,128]
+        data=bytearray(27);idle=27+6*len(phrase);voice=idle+1
+        for p in range(12):struct.pack_into('<H',data,1+2*p,idle-1)
+        for p in range(6):struct.pack_into('<H',data,1+2*p,26+p*len(phrase))
+        struct.pack_into('<H',data,25,voice-1)
+        data += bytes(phrase)*6+b'\x80'
+        data += bytes([7,*([1]*4),0,63,127,255,*([31]*4),*([7]*4),*([3]*4),*([15]*4),56|algorithm,255])
+        result[f'OPCORNER{algorithm}.{extension}']=bytes(data)
+    return result
+
+PROFILE_CASES={'constructed-operator-controls':72,'constructed-operator-corners':12,
+               'constructed-dual-lfo-gate':42,'all-supplied-songs':138}
+
 def original_row(d,name):
     work=d.service(0x1000);segment=d.load+work['ds'];table=segment*16+work['dx'];address=d.service(0x600)['dx'];state=d.snapshot();memory=bytes(d.u.mem_read(table-129,144))
     row=[state['measure'],state['volume']&255,state['status'],memory[0],memory[6]]
@@ -68,10 +133,12 @@ def original_row(d,name):
 
 def produce(args,root,out,mf,files):
     binaries=directory_files(args.hdi);assets=ending_assets(args.hdi);ops=operations(args.ticks);outputs={};cases=[];first={}
+    profile='constructed-operator-corners' if args.operator_corners else 'constructed-operator-controls' if args.operator_controls else 'constructed-dual-lfo-gate' if args.challenge else 'all-supplied-songs'
+    if args.operator_corners:ops=[('I',1)]*16+[('I',3)]*64+[('S',0)]+[('I',3)]*4+[('R',0),('I',0)]+[('I',2)]*32
     operation=out/'operations.txt';operation.write_text(''.join(f'{op} {v}\n' for op,v in ops));outputs[operation.name]=sha(operation)
     for load in (0x1000,0x2000):
         for name,(_,_,board,extension,_) in DRIVERS.items():
-            songs=challenges(extension) if args.challenge else assets
+            songs=operator_corners(extension) if args.operator_corners else operator_challenges(extension) if args.operator_controls else challenges(extension) if args.challenge else assets
             for song,data in sorted(songs.items()):
                 if not song.endswith('.'+extension):continue
                 d=install(binaries[name],name,load);d.write_resource(0xb00,assets['MIKO.EFC']);d.write_resource(0x600,data)
@@ -98,24 +165,28 @@ def produce(args,root,out,mf,files):
                 cases.append(dict(driver=name,board=board,song=song,load=load,mirror=initial.name,reference=path.name,raw_sha256=digest,rows=len(ops)+1))
                 print(f'Original musical FM {name} {song} load{load:04x}: {len(ops)+1} rows PASS',flush=True)
     if source_manifest(root)[0]!=mf:raise ValueError('source changed during original musical FM producer')
-    assert len(cases)==(42 if args.challenge else 138)
+    assert len(cases)==PROFILE_CASES[profile]
     with tarfile.open(out/'producer-source.tar.gz','w:gz') as t:
         for entry in files:t.add(root/entry['path'],arcname=entry['path'])
     (out/'source-profile.json').write_text(json.dumps(dict(source_manifest=mf,files=files),indent=2)+'\n')
-    return dict(profile='constructed-dual-lfo-gate' if args.challenge else 'all-supplied-songs',cases=cases,rows=sum(c['rows'] for c in cases),outputs=outputs,hdi_sha256=HDI_SHA,drivers={n:dict(size=len(data),sha256=hashlib.sha256(data).hexdigest(),entry='PSP:0100',service='PSP:0103',format='flat-COM') for n,data in binaries.items() if n in DRIVERS},unicorn_version=U.__version__,engine_sha256=sha(Path(U.unicorn._uc._name)))
+    return dict(profile=profile,cases=cases,rows=sum(c['rows'] for c in cases),outputs=outputs,hdi_sha256=HDI_SHA,drivers={n:dict(size=len(data),sha256=hashlib.sha256(data).hexdigest(),entry='PSP:0100',service='PSP:0103',format='flat-COM') for n,data in binaries.items() if n in DRIVERS},unicorn_version=U.__version__,engine_sha256=sha(Path(U.unicorn._uc._name)))
 
 def consume(args,root,out,mf,files):
-    ref=args.reference.resolve();r=json.loads((ref/'receipt.json').read_text());assert r['passed'] and len(r['cases'])==(42 if r.get('profile')=='constructed-dual-lfo-gate' else 138)
+    ref=args.reference.resolve();initial_receipt=sha(ref/'receipt.json');r=json.loads((ref/'receipt.json').read_text());assert r['passed'] and len(r['cases'])==PROFILE_CASES[r['profile']]
     for n,h in r['outputs'].items():assert sha(ref/n)==h,n
     results=[];outputs={}
     for binary in args.binary:
-        binary=binary.resolve();(require_pe_x86_64 if binary.suffix=='.exe' else require_elf_x86_64)(binary);directory=out/binary.parent.name;directory.mkdir();done={}
+        binary=binary.resolve();(require_pe_x86_64 if binary.suffix=='.exe' else require_elf_x86_64)(binary);initial_binary=sha(binary);directory=out/binary.parent.name;directory.mkdir();done={}
         for c in r['cases']:
             key=(c['driver'],c['song'])
             if key not in done:
                 target=directory/f'{c["driver"]}-{c["song"]}.txt'
                 command=[str(binary),str(ref/c['song']),str(c['board']),str(ref/c['mirror']),str(ref/'operations.txt'),str(target)]
-                subprocess.run(command,check=True);done[key]=target
+                guarded={path:sha(path) for path in (ref/c['song'],ref/c['mirror'],ref/'operations.txt')}
+                assert sha(binary)==initial_binary
+                subprocess.run(command,check=True)
+                assert sha(binary)==initial_binary and all(sha(path)==digest for path,digest in guarded.items())
+                done[key]=target
             target=done[key];expected=gzip.decompress((ref/c['reference']).read_bytes());actual=target.read_bytes()
             assert hashlib.sha256(expected).hexdigest()==c['raw_sha256']
             if actual!=expected:
@@ -130,13 +201,15 @@ def consume(args,root,out,mf,files):
             assert gzip.decompress(path.read_bytes())==data;target.unlink();outputs[path.relative_to(out).as_posix()]=sha(path)
         results.append(dict(binary=str(binary),binary_sha256=sha(binary),rows=r['rows'],runs=len(done)))
         print(f'Native musical FM {binary.parent.name}: {r["rows"]} rows PASS',flush=True)
+    assert sha(ref/'receipt.json')==initial_receipt and all(sha(ref/name)==digest for name,digest in r['outputs'].items())
     if source_manifest(root)[0]!=mf:raise ValueError('source changed during musical FM consumer')
     return dict(runs=results,outputs=outputs,rows=r['rows'],reference_receipt_sha256=sha(ref/'receipt.json'),reference_source_manifest=r['source_manifest'])
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--hdi',type=Path);p.add_argument('--reference',type=Path);p.add_argument('--binary',type=Path,action='append',default=[]);p.add_argument('--ticks',type=int,default=384);p.add_argument('--challenge',action='store_true',help='Construct legal dual-LFO/gate/slide/key-delay music for unchanged original drivers');p.add_argument('--output',type=Path,required=True);args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--hdi',type=Path);p.add_argument('--reference',type=Path);p.add_argument('--binary',type=Path,action='append',default=[]);p.add_argument('--ticks',type=int,default=384);profile=p.add_mutually_exclusive_group();profile.add_argument('--challenge',action='store_true',help='Construct legal dual-LFO/gate/slide/key-delay music for unchanged original drivers');profile.add_argument('--operator-controls',action='store_true',help='Construct B6 feedback/B8 operator-TL byte and masked-parser controls');profile.add_argument('--operator-corners',action='store_true',help='Construct all-part algorithm-low-bit/TL-wrap controls with fixed IRQ operations');p.add_argument('--output',type=Path,required=True);args=p.parse_args()
     if bool(args.hdi)==bool(args.reference) or bool(args.reference)!=bool(args.binary):p.error('choose original HDI or reference with binaries')
     if not 384<=args.ticks<=4096:p.error('bounded musical profile384..4096 ticks')
+    if args.hdi and args.operator_controls and args.ticks<774:p.error('complete operator byte sweep requires at least774 ticks')
     root=Path(__file__).resolve().parents[1];mf,files=source_manifest(root);out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     r=produce(args,root,out,mf,files) if args.hdi else consume(args,root,out,mf,files);r.update(passed=True,utc=datetime.now(timezone.utc).isoformat(),source_manifest=mf,source_files=len(files),command=sys.argv,scope=__doc__)
     (out/'receipt.json').write_text(json.dumps(r,indent=2)+'\n')

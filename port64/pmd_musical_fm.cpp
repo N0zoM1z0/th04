@@ -71,9 +71,9 @@ void MusicalFm::voice(unsigned p,std::uint8_t id,bool restore){
     if(restore){if(board_==Board::fm26 && p==2)s.algorithm=fm3_algorithm_;}
     else {
         s.algorithm=algorithm;
-        if(board_==Board::fm26 && p==2){
+        if(p==2){
             fm3_algorithm_=algorithm;
-            // The masked26 dispatcher stores its surviving AL (voice ID),
+            // The masked FM3 dispatcher stores its surviving AL (voice ID),
             // while a separate global keeps the real FM3 algorithm.
             if(sequence_.state().parts[p].mask && s.voice_mask)s.algorithm=id;
         }
@@ -235,6 +235,41 @@ void MusicalFm::command(unsigned p,const Event& e){
     case 179:s.gate_minimum=a.at(0);break;
     case 177:s.gate_random=a.at(0);break;
     case 181:s.key_mask=std::uint8_t(((a.at(0)&15)^15)<<4);s.key_delay=s.key_counter=a.at(1);break;
+    case 182:{
+        // The26 masked decoder consumes B6 without updating disabled FM D-F.
+        if(board_==Board::fm26 && p>=3)break;
+        // B6 rotates an absolute byte, but clamps a relative byte only after
+        // its eight-bit addition. FM3's feedback belongs to operator1 and
+        // uses the shared algorithm rather than the masked voice-ID field.
+        const bool fm3=p==2;
+        const auto previous=fm3 ? fm3_algorithm_ : s.algorithm;
+        auto value=a.at(0);unsigned feedback;
+        if(value&128){
+            if(!(value&64))value&=7;
+            const auto sum=std::uint8_t(value+((previous>>3)&7));
+            feedback=(sum&128) ? 0 : sum>=8 ? 56 : unsigned(sum)*8;
+        }else feedback=std::uint8_t((unsigned(value)<<3)|(value>>5));
+        if(fm3 && !(s.slots&16))break;
+        const auto algorithm=std::uint8_t((previous&7)|feedback);
+        if(fm3)fm3_algorithm_=algorithm;
+        write(bank(p),0xb0+channel(p),algorithm);s.algorithm=algorithm;
+        break;
+    }
+    case 184:{
+        // B8's logical operator order is1,2,3,4; the OPN addresses are
+        // 40,48,44,4C. Masking suppresses hardware writes, not stored TL.
+        const unsigned selected=(unsigned(a.at(0)&15)<<4)&s.slots;
+        for(unsigned slot:{0u,2u,1u,3u})if(selected&operators[slot]){
+            auto level=std::uint8_t(a.at(1)&127);
+            if(a.at(0)&128){
+                level=std::uint8_t(s.total_levels[slot]+a.at(1));
+                if(level&128)level=(a.at(1)&128) ? 0 : 127;
+            }
+            s.total_levels[slot]=level;
+            if(!sequence_.state().parts[p].mask)write(bank(p),0x40+channel(p)+slot*4,level);
+        }
+        break;
+    }
     case 228:if(board_!=Board::fm26)s.hardware_delay=a.at(0);break;
     case 224:if(board_!=Board::fm26)write(0,34,a.at(0));break;
     case 222:case 221:{const unsigned v=sequence_.state().parts[p].volume;s.temporary_volume=std::uint8_t((e.opcode==222 ? std::min<unsigned>(127u,std::uint8_t(v+a.at(0))) : unsigned(std::max(0,int(v)-int(a.at(0)))))+1);temporary_=true;break;}
