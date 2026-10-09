@@ -26,6 +26,7 @@ struct Context {
     std::uint8_t rank=1,performance=16,frame_mod2=0,invincibility=0;
     bool turbo=false;
     std::uint16_t graze_score=250;
+    std::function<void(std::uint16_t)> hud_graze;
 };
 enum class EventType { sparks,point_number,bonus_popup,gather };
 struct Event {

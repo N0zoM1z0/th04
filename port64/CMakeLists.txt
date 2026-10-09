@@ -8,6 +8,19 @@ endif()
 add_library(
   th04-portable-core STATIC
   application_state.cpp
+  op_score.cpp
+  op_ranking.cpp
+  op_music.cpp
+  demo.cpp
+  configuration.cpp
+  op_setup.cpp
+  sound_control.cpp
+  beeper.cpp
+  sound_runtime.cpp
+  sound_scenes.cpp
+  pmd_sequence.cpp
+  pmd_ssg_effects.cpp
+  hud.cpp
   bullet_geometry.cpp
   item_system.cpp
   item_pool.cpp
@@ -33,6 +46,13 @@ add_library(
   stage4.cpp
   stage5.cpp
   stage6.cpp
+  stagex.cpp
+  midbossx.cpp
+  mugetsu.cpp
+  gengetsu.cpp
+  gengetsu_render.cpp
+  super_wave.cpp
+  extra_dialog.cpp
   thick_lasers.cpp
   yuuka5.cpp
   yuuka6.cpp
@@ -56,6 +76,8 @@ add_library(
   dialog.cpp
   cutscene.cpp
   maine_ending.cpp
+  maine_score_route.cpp
+  maine_extra_route.cpp
   staff_roll.cpp
   verdict.cpp
   verdict_scene.cpp
@@ -91,6 +113,31 @@ endif()
 add_executable(th04-port64 main.cpp view.cpp)
 target_compile_features(th04-port64 PRIVATE cxx_std_17)
 target_link_libraries(th04-port64 PRIVATE th04-portable-core)
+
+add_executable(th04-port64-setup-contracts op_setup_contracts.cpp)
+target_link_libraries(th04-port64-setup-contracts PRIVATE th04-portable-core)
+enable_testing()
+add_test(NAME setup-contracts COMMAND th04-port64-setup-contracts)
+add_executable(th04-port64-sound-contracts sound_control_contracts.cpp)
+target_link_libraries(th04-port64-sound-contracts PRIVATE th04-portable-core)
+add_test(NAME sound-contracts COMMAND th04-port64-sound-contracts)
+add_executable(th04-port64-beeper-contracts beeper_contracts.cpp)
+target_link_libraries(th04-port64-beeper-contracts PRIVATE th04-portable-core)
+add_test(NAME beeper-contracts COMMAND th04-port64-beeper-contracts)
+
+add_executable(th04-port64-sound-join-contracts sound_runtime_contracts.cpp)
+target_link_libraries(th04-port64-sound-join-contracts PRIVATE th04-portable-core)
+add_test(NAME sound-join-contracts COMMAND th04-port64-sound-join-contracts)
+add_executable(th04-port64-sound-scene-contracts sound_scenes_contracts.cpp)
+target_link_libraries(th04-port64-sound-scene-contracts PRIVATE th04-portable-core)
+add_test(NAME sound-scene-contracts COMMAND th04-port64-sound-scene-contracts)
+
+add_executable(th04-port64-pmd-sequence-contracts pmd_sequence_checks.cpp)
+target_link_libraries(th04-port64-pmd-sequence-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-sequence-contracts COMMAND th04-port64-pmd-sequence-contracts)
+add_executable(th04-port64-pmd-ssg-contracts pmd_ssg_checks.cpp)
+target_link_libraries(th04-port64-pmd-ssg-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-ssg-contracts COMMAND th04-port64-pmd-ssg-contracts)
 
 add_executable(th04-port64-contracts contracts.cpp)
 target_link_libraries(th04-port64-contracts PRIVATE th04-portable-core)
@@ -268,3 +315,35 @@ add_test(NAME maine-registration-contracts COMMAND th04-port64-registration-cont
 add_test(NAME maine-registration-scene-contracts COMMAND th04-port64-registration-scene-contracts)
 
 add_test(NAME player-lifecycle-contracts COMMAND th04-port64-player-lifecycle-contracts)
+
+add_executable(th04-port64-extra-contracts extra_contracts.cpp)
+target_link_libraries(th04-port64-extra-contracts PRIVATE th04-portable-core)
+add_test(NAME extra-midboss-contracts COMMAND th04-port64-extra-contracts)
+
+add_executable(th04-port64-mugetsu-contracts mugetsu_contracts.cpp)
+target_link_libraries(th04-port64-mugetsu-contracts PRIVATE th04-portable-core)
+add_test(NAME extra-mugetsu-contracts COMMAND th04-port64-mugetsu-contracts)
+add_executable(th04-port64-gengetsu-contracts gengetsu_contracts.cpp)
+target_link_libraries(th04-port64-gengetsu-contracts PRIVATE th04-portable-core)
+add_test(NAME extra-gengetsu-contracts COMMAND th04-port64-gengetsu-contracts)
+add_executable(th04-port64-wave-contracts super_wave_contracts.cpp)
+target_link_libraries(th04-port64-wave-contracts PRIVATE th04-portable-core)
+add_test(NAME wave-contracts COMMAND th04-port64-wave-contracts)
+add_executable(th04-port64-op-score-contracts op_score_contracts.cpp)
+target_link_libraries(th04-port64-op-score-contracts PRIVATE th04-portable-core)
+add_test(NAME op-score-contracts COMMAND th04-port64-op-score-contracts)
+add_executable(th04-port64-hud-contracts hud_contracts.cpp)
+target_link_libraries(th04-port64-hud-contracts PRIVATE th04-portable-core)
+add_test(NAME hud-contracts COMMAND th04-port64-hud-contracts)
+add_executable(th04-port64-op-ranking-contracts op_ranking_contracts.cpp)
+target_link_libraries(th04-port64-op-ranking-contracts PRIVATE th04-portable-core)
+add_test(NAME op-ranking-contracts COMMAND th04-port64-op-ranking-contracts)
+add_executable(th04-port64-op-music-contracts op_music_contracts.cpp)
+target_link_libraries(th04-port64-op-music-contracts PRIVATE th04-portable-core)
+add_test(NAME op-music-contracts COMMAND th04-port64-op-music-contracts)
+add_executable(th04-port64-demo-contracts demo_contracts.cpp)
+target_link_libraries(th04-port64-demo-contracts PRIVATE th04-portable-core)
+add_test(NAME demo-contracts COMMAND th04-port64-demo-contracts)
+add_executable(th04-port64-configuration-contracts configuration_contracts.cpp)
+target_link_libraries(th04-port64-configuration-contracts PRIVATE th04-portable-core)
+add_test(NAME configuration-contracts COMMAND th04-port64-configuration-contracts)

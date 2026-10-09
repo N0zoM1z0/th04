@@ -4,8 +4,8 @@
 namespace th04::portable::maine {
 Ending::Ending(application::State& app,application::RunStatistics statistics,
                application::EndSequence sequence,const cutscene::Assets& assets,
-               std::function<void()> release_main,bool bgm_active)
-    :application_(&app),statistics_(statistics),end_sequence_(sequence),assets_(&assets),
+               std::function<void()> release_main,bool bgm_active,sound::Timeline* audio)
+    :audio_(audio),application_(&app),statistics_(statistics),end_sequence_(sequence),assets_(&assets),
      release_main_(std::move(release_main)),bgm_active_(bgm_active) {
     const auto& resident=app.resident();
     name_=cutscene::script_name(unsigned(resident.playchar),unsigned(resident.shot_type),
@@ -13,6 +13,7 @@ Ending::Ending(application::State& app,application::RunStatistics statistics,
     if(!assets.scripts.count(name_)) throw std::invalid_argument("MAINE Ending script is missing");
     app.prepare_main_ending(sequence);
     main_sound_requests_.emplace_back(cutscene::Kind::bgm_control,0x204);
+    if(audio_)audio_->handle({sound::ActionKind::command,0x204});
 }
 void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
     if(phase_==Phase::verdict_pending || phase_==Phase::congratulations_pending || phase_==Phase::registration_pending)return;
@@ -53,7 +54,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         return;
     }
     if(phase_==Phase::staff_roll) {
-        staff_->advance();
+        staff_->advance([this](const staff::Event& e){if(audio_)audio_->staff(e);});
         if(staff_->status()==staff::Status::stopped)phase_=Phase::verdict_pending;
         return;
     }
@@ -68,6 +69,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         tone_=0;
         application_->finish_main(statistics_,end_sequence_,release_main_);
         release_main_={};
+        if(audio_)audio_->enter(application::Program::maine,application_->generation(),application_->resident().config);
         scene_=std::make_unique<cutscene::Scene>(*assets_,name_);
         phase_=Phase::cutscene;
         return;
@@ -84,7 +86,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         scene_->script().complete_measure_wait();
     }
     for(;;) {
-        scene_->advance(keys,observer);
+        scene_->advance(keys,[&](const cutscene::Event& e){if(audio_)audio_->cutscene(e);if(observer)observer(e);});
         if(script.status()!=cutscene::Status::measure) break;
         // Original snd_delay_until_measure executes frame_delay(fallback)
         // only when BGM is inactive. Active sound must report actual progress.
@@ -133,6 +135,7 @@ void Ending::begin_registration_delay() {
     // Recovered _main requests song fade(4), then frame_delay(100), before
     // regist_menu. This delay consumes refreshes even when Enter stays held.
     maine_sound_requests_.push_back({cutscene::Kind::bgm_control,0x204});
+    if(audio_)audio_->handle({sound::ActionKind::command,0x204});
     registration_delay_left_=100;phase_=Phase::registration_delay;
 }
 } // namespace th04::portable::maine

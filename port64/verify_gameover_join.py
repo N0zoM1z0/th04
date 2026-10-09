@@ -7,7 +7,8 @@ state and held input. Original TRAM and score-HUD stores then consume the
 independently compared request stream. The last completed native indexed
 display, palette, initial TRAM and CGROM are explicit graphics/input adapters;
 this does not prove the original interrupted MAIN frame's physical display.
-Life/bomb HUD, audio and DOS ranking I/O remain request adapters. Native host
+Continue shot-level/life/bomb HUD requests also execute their original stores.
+Audio and DOS ranking I/O remain request adapters. Native host
 writes are checked separately, including reopen and failure before reset.
 Quit ends at the pending score-only MAINE owner, not a complete ordinary route.
 """
@@ -47,11 +48,15 @@ class Scene(SceneOriginal):
         if kind == 11:
             self.hud.append((bytes(self.u.mem_read(0x84349, 8)),
                              bytes(self.u.mem_read(0x84351, 8))))
+        elif kind in (8, 9, 10):
+            self.resources.append((kind, self.u.mem_read(0x84664, 1)[0],
+                                   self.u.mem_read(0x9000b, 1)[0], self.u.mem_read(0x9000d, 1)[0]))
 
     def replay(self, values, keys):
         self.hud = []
+        self.resources = []
         events = self.run_scene(values, keys)
-        return events, list(self.hud)
+        return events, list(self.hud), list(self.resources)
 
 
 class Graphics(TextOriginal):
@@ -59,11 +64,17 @@ class Graphics(TextOriginal):
         cs = u.reg_read(unicorn.x86_const.UC_X86_REG_CS)
         if cs - self.load == 0xaaf and 0x6ba2 <= address - cs * 16 < 0x6bd4:
             return  # Actual score_render, including its near return.
+        if cs - self.load == 0xaaf and (0x43f8 <= address - cs * 16 < 0x45ed or
+                                        0x4687 <= address - cs * 16 < 0x4714 or
+                                        0x72f6 <= address - cs * 16 < 0x7322):
+            return  # Actual Continue resource HUD and selected shot-level producer.
         super().body(u, address, size, unused)
 
     def seed_display(self, directory):
         self.reset()
         self.write(0x768, 'H', 0xa000)
+        self.u.mem_write(0x90000, bytes(256))
+        self.write(0xba86, 'HH', 0, 0x9000)
         raw = (directory / 'initial.tram').read_bytes()
         assert len(raw) == 8000
         self.u.mem_write(0xa0000, raw[:4000])
@@ -78,6 +89,11 @@ class Graphics(TextOriginal):
         self.u.mem_write(0x84351, hiscore)
         assert bytes(self.u.mem_read(0x81ece, 1)) == b'\0'  # Original initialized terminator.
         self.call(0xaaf, 0x6ba2)
+
+    def resource_hud(self, kind, power, lives, bombs):
+        self.write(0x4664, 'B', power)
+        self.u.mem_write(0x9000b, bytes([lives])); self.u.mem_write(0x9000d, bytes([bombs]))
+        self.call(0xaaf, {8: 0x72f6, 9: 0x43f8, 10: 0x44b1}[kind], far=True)
 
 
 def compare_rows(native, original, scene, out):
@@ -115,7 +131,7 @@ def run_native(executable, hdi, font, out):
 
 def original_controls(target, font, gaiji, scenes, out, expected_records):
     names = sorted(p.parent.name for p in scenes.glob('*/initial.txt'))
-    assert len(names) == 20, f'expected twenty real last-life scenes, got {len(names)}'
+    assert len(names) == 24, f'expected twenty-four real last-life scenes, got {len(names)}'
     slots = []
     for line in (scenes / 'snapshots.txt').read_text().splitlines():
         name, clock, tone = line.split()
@@ -141,7 +157,7 @@ def original_controls(target, font, gaiji, scenes, out, expected_records):
             # request prefix through the real attempted save, and independently
             # retain native fail-before-reset assertions in the frontend fixture.
             complete_keys = keys + [0] * (650 - len(keys))
-            reference, hud = scene.replay(values, complete_keys)
+            reference, hud, resources = scene.replay(values, complete_keys)
             if failed:
                 assert end == 'FAILED 114' and actual[-1].split()[1] == '7'
                 compare_rows(actual, reference[1:1 + len(actual)], name, out)
@@ -153,6 +169,7 @@ def original_controls(target, font, gaiji, scenes, out, expected_records):
             events = iter(actual)
             current = next(events, None)
             hud = iter(hud)
+            resources = iter(resources)
             tone = 100
             for slot_name, clock, native_tone in (s for s in slots if s[0] == name):
                 while current is not None and int(current.split()[0]) <= clock:
@@ -166,6 +183,9 @@ def original_controls(target, font, gaiji, scenes, out, expected_records):
                         tone = value
                     elif kind == 11:
                         graphics.score_hud(*next(hud))
+                    elif kind in (8, 9, 10):
+                        values = next(resources); assert values[0] == kind
+                        graphics.resource_hud(*values)
                     current = next(events, None)
                 assert tone == native_tone, f'{name} clock{clock}: palette clock differs'
                 wire = graphics.capture(tone)
@@ -227,7 +247,7 @@ def main():
         # than assigning the current candidate digest to the old producer.
         producer = json.loads((args.reference_dir / 'source-manifest.json').read_text())
         assert proof['source_manifest'] == producer['sha256']
-        assert proof['load_segments'] == [4096, 8192] and proof['scenes'] == 20
+        assert proof['load_segments'] == [4096, 8192] and proof['scenes'] == 24
         assert proof['outputs'] == outputs
         assert all(proof[k] == v for k, v in inputs.items())
         assert sha((args.reference_dir / 'original.gz').read_bytes()) == proof['trace_gzip_sha256']
@@ -258,7 +278,9 @@ def main():
                    unicorn_version=unicorn.__version__,
                    unicorn_engine_sha256=sha(Path(unicorn.unicorn._uc._name).read_bytes()),
                    graphics_extents={f'{s:04x}:{lo:04x}..{hi:04x}': sha(args.target.read_bytes()[6144+s*16+lo:6144+s*16+hi])
-                                     for s, lo, hi in (*EXTENTS, (0xaaf, 0x6ba2, 0x6bd4))}, scope=__doc__)
+                                     for s, lo, hi in (*EXTENTS, (0xaaf, 0x6ba2, 0x6bd4),
+                                         (0xaaf, 0x43f8, 0x45ed), (0xaaf, 0x4687, 0x4714),
+                                         (0xaaf, 0x72f6, 0x7322))}, scope=__doc__)
     (out / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps({k: receipt[k] for k in ('passed', 'scenes', 'snapshots', 'compared_bytes')}))
 

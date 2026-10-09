@@ -181,6 +181,12 @@ void save_main(Section& section,File& file,Byte character,Byte rank,const Random
     if(character==1)file.seek(character_sections*section_size,1);
     file.write(section);file.close();
 }
+score::Digits load_hiscore_main(Section& section,File& file,Byte character,Byte rank,const Random& next) {
+    load_main(section,file,character,rank,next);
+    score::Digits result;
+    for(unsigned i=0;i<result.size();++i)result[i]=Byte(section[digits_offset+i]-gaiji_zero);
+    return result;
+}
 Byte continue_main(Section& section,File& file,Byte character,Byte rank,Byte stage,bool turbo,
                    const score::Digits& digits,const Random& next) {
     load_main(section,file,character,rank,next);

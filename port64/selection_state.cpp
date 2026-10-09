@@ -31,9 +31,9 @@ State::State(Availability available) : available_(available) {
     if (!playchar_available(playchar_)) {
         playchar_ = application::Playchar::marisa;
     }
-    if (!playchar_available(playchar_)) {
-        throw std::invalid_argument("selection menu has no available combination");
-    }
+    // Original OP still chooses Marisa when no combination is selectable.
+    // Confirm subsequently chooses B; the menu's global Extra flag can be
+    // supplied by Extra rank alone while its selection mask excludes Extra.
 }
 
 bool State::available(

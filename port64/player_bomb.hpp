@@ -10,6 +10,15 @@ struct Star { motion::Point center{};std::uint8_t angle=0,speed=0; };
 struct Snapshot { std::array<Star,48> stars{}; };
 enum class Kind { fill_bands,picture,circle,sound,star };
 struct Draw { Kind kind{};motion::Point position{};int value=0; };
+enum class Pixels { none,tiles,character };
+// Retained completed-frame dispatch. bomb_frame is incremented by the
+// lifecycle, so consumers must not reconstruct this from its later value.
+struct RenderFrame {
+    Pixels pixels=Pixels::none;
+    unsigned cel=0,scroll_line=0;
+    std::uint8_t frame=0;
+    bool active=false,retain_background=false;
+};
 struct Context {
     player::LifeState& life;
     randring::SharedRandomRing& random;

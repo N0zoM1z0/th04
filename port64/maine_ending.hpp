@@ -5,6 +5,7 @@
 #include "verdict_scene.hpp"
 #include "congratulations.hpp"
 #include <memory>
+#include "sound_scenes.hpp"
 #include <optional>
 
 namespace th04::portable::maine {
@@ -21,7 +22,7 @@ inline std::uint16_t input_from_main_actions(std::uint16_t input) {
 class Ending {
 public:
     Ending(application::State&,application::RunStatistics,application::EndSequence,
-           const cutscene::Assets&,std::function<void()> release_main={},bool bgm_active=false);
+           const cutscene::Assets&,std::function<void()> release_main={},bool bgm_active=false,sound::Timeline* audio=nullptr);
     void advance(std::uint16_t maine_keys,const cutscene::Sink& observer={});
     void report_song_measure(std::uint16_t measure) {
         if(staff_)staff_->report_song_measure(measure);else song_measure_=measure;
@@ -42,6 +43,7 @@ public:
     unsigned fade_ticks() const { return fade_ticks_; }
     const std::vector<cutscene::Event>& main_sound_requests() const { return main_sound_requests_; }
 private:
+    sound::Timeline* audio_;
     application::State* application_;
     application::RunStatistics statistics_;
     application::EndSequence end_sequence_;

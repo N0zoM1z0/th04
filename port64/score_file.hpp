@@ -57,6 +57,9 @@ Byte insert(Section&,const score::Digits&,Byte stage,Byte end_sequence);
 void encode_main(Section&,const Random&);
 void recreate_main(Section&,File&,const Random&);
 bool load_main(Section&,File&,Byte character,Byte rank,const Random&);
+// Original MAIN hiscore_load loads its selected section, then subtracts the
+// gaiji bias in BYTE width from the highest row's eight stored digits.
+score::Digits load_hiscore_main(Section&,File&,Byte character,Byte rank,const Random&);
 void save_main(Section&,File&,Byte character,Byte rank,const Random&);
 // Loads even without turbo. A ranked Continue name is written before reset.
 Byte continue_main(Section&,File&,Byte character,Byte rank,Byte stage,bool turbo,

@@ -17,6 +17,10 @@
 #include "marisa.hpp"
 #include "stage5.hpp"
 #include "stage6.hpp"
+#include "stagex.hpp"
+#include "midbossx.hpp"
+#include "mugetsu.hpp"
+#include "gengetsu.hpp"
 #include "yuuka5.hpp"
 #include "yuuka6.hpp"
 #include "yuuka6_foreground.hpp"
@@ -31,6 +35,10 @@
 #include "player_bomb.hpp"
 #include "player_render.hpp"
 #include "gameover.hpp"
+#include "host_score.hpp"
+#include "hud.hpp"
+#include "demo.hpp"
+#include "sound_runtime.hpp"
 #include <memory>
 
 namespace th04::portable::gameplay {
@@ -46,10 +54,15 @@ class State {
 public:
     // Explicit replay checkpoint; ordinary launches use the default.
     explicit State(application::State& application,Mode mode=Mode::ordinary,
-                   player::LifeState player_checkpoint={});
+                   player::LifeState player_checkpoint={},score_file::HostStore* storage=nullptr);
     void update(std::uint16_t held_input, bool shift, bool pull_items = false,
                 motion::Subpixel scroll_delta = 0,stage::Background* background=nullptr);
     void load_stage(const stage::Program::Bytes& standard);
+    void set_demo_replay(const std::vector<std::uint8_t>& bytes);
+    bool demo_exit_requested() const {return demo_exit_requested_;}
+    const demo::Sample& demo_sample() const {return demo_sample_;}
+    std::uint8_t rank() const {return rank_;}
+    bool turbo() const {return turbo_;}
     // Actor/STD preparation for the already requested next stage. The front end
     // must still replace its sprite/map/palette owners before consuming this.
     void prepare_next_stage_actors(const stage::Program::Bytes& standard);
@@ -76,16 +89,41 @@ public:
     void begin_stage6_dialog(stage::Background& background);
     bool stage6_battle_pending() const { return stage6_battle_pending_; }
     const stage5::Setup* stage5_setup() const { return stage5_ ? &*stage5_ : nullptr; }
-    const midboss::Snapshot& midboss_state() const { return stage6_ ? stage6_->midboss : (stage5_ ? stage5_->midboss : (midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot())))); }
-    const std::vector<midboss::Draw>& midboss_draws() const { return (stage5_ || stage6_) ? stage5_midboss_draws_ : (midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws()))); }
+    const stagex::Setup* extra_setup() const {return stagex_ ? &*stagex_ : nullptr;}
+    bool extra_dialog_ready(const stage::Background& background) const {
+        return stage_id_==6 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
+            dialog::stage_gate(std::uint8_t(background.speed()),std::uint8_t(1u^(frames_&1u)));
+    }
+    void begin_extra_dialog(stage::Background& background);
+    void start_mugetsu_after_dialog(std::array<std::uint8_t,3> palette_zero);
+    void start_gengetsu_after_dialog();
+    bool extra_post_dialog_blocked() const {return extra_post_dialog_blocked_;}
+    bool gengetsu_active() const {return gengetsu_.has_value();}
+    const gengetsu::System* gengetsu() const {return gengetsu_ ? &*gengetsu_ : nullptr;}
+    bool extra_final_dialog_pending() const {return gengetsu_ && gengetsu_->snapshot().boss.phase==255 && gengetsu_->snapshot().boss.phase_frame==0 && !extra_final_dialog_finished_;}
+    bool extra_final_dialog_blocked() const {return extra_departure_ && extra_departure_->blocked;}
+    void finish_extra_final_dialog();
+    bool extra_ending_requested() const {return extra_ending_requested_;}
+    bool mugetsu_active() const {return mugetsu_.has_value();}
+    const mugetsu::System* mugetsu() const {return mugetsu_ ? &*mugetsu_ : nullptr;}
+    bool gengetsu_dialog_pending() const {return mugetsu_ && mugetsu_->snapshot().boss.phase==255;}
+    const midboss::Snapshot& midboss_state() const { return midbossx_ ? midbossx_->snapshot() : (stage6_ ? stage6_->midboss : (stage5_ ? stage5_->midboss : (midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot()))))); }
+    const std::vector<midboss::Draw>& midboss_draws() const { return midbossx_ ? midbossx_->draws() : ((stage5_ || stage6_) ? stage5_midboss_draws_ : (midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws())))); }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }
     const item::ScoreState& score() const { return score_; }
     const score::Snapshot& scoreboard() const { return scoreboard_; }
+    const registration::TextPlane& hud_text_plane() const { return hud_text_; }
+    std::int16_t hud_hp_previous() const { return hud_hp_previous_; }
+    const std::array<std::uint8_t,256>& random_ring_bytes() const { return ring_.bytes(); }
     const std::vector<score::Event>& score_events() const { return score_events_; }
     std::uint32_t awarded_score_units() const { return score::numeric_units(scoreboard_.digits)+score_.score_delta; }
     const shot::System& shots() const { return shots_; }
     const bullet::System& bullets() const { return bullets_; }
+    // Score/extend runs after foreground rendering. Its clear request belongs
+    // to the next update; host repaint consumes the completed render boundary.
+    std::uint8_t bullet_render_clear() const {return bullet_render_clear_;}
+    std::uint8_t bullet_render_zap() const {return bullet_render_zap_;}
     const spark::System& sparks() const { return sparks_; }
     const gather::System& gathers() const { return gathers_; }
     const midboss::System& midboss() const { return midboss_; }
@@ -112,16 +150,34 @@ public:
     // Ending call boundary, before the normal clear bonus or Stage6 request.
     bool bad_ending_requested() const { return bad_ending_requested_; }
     bool bad_yuuka5_dialog() const { return yuuka5_active_ && th04::portable::yuuka5::bad_ending_after_defeat(stage_id_,rank_,0); }
-    bool boss_active() const { return yuuka6_active_ || yuuka5_active_ || marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
-    const orange::Snapshot& boss_snapshot() const { return yuuka6_active_ ? yuuka6_->snapshot().boss : (stage6_ ? stage6_->boss : (yuuka5_active_ ? yuuka5_->snapshot().boss : (stage5_ ? stage5_->boss : (marisa_active_ ? marisa_->snapshot().boss : (reimu_active_ ? reimu_->snapshot().boss : (elly_active_ ? elly_->snapshot().boss : (kurumi_active_ ? kurumi_->snapshot().boss : orange_.snapshot()))))))); }
-    const std::vector<orange::Draw>& boss_draws() const { return marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }
+    bool boss_active() const { return gengetsu_.has_value() || mugetsu_.has_value() || yuuka6_active_ || yuuka5_active_ || marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
+    const orange::Snapshot& boss_snapshot() const {
+        if(gengetsu_)return gengetsu_->snapshot().boss;
+        if(mugetsu_)return mugetsu_->snapshot().boss;
+        if(stagex_)return stagex_->boss;
+        if(yuuka6_active_)return yuuka6_->snapshot().boss;
+        if(stage6_)return stage6_->boss;
+        if(yuuka5_active_)return yuuka5_->snapshot().boss;
+        if(stage5_)return stage5_->boss;
+        if(marisa_active_)return marisa_->snapshot().boss;
+        if(reimu_active_)return reimu_->snapshot().boss;
+        if(elly_active_)return elly_->snapshot().boss;
+        if(kurumi_active_)return kurumi_->snapshot().boss;
+        return orange_.snapshot();
+    }
+    const std::vector<orange::Draw>& boss_draws() const { return mugetsu_ ? mugetsu_->draws() : marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }
     const kurumi::System* kurumi() const { return kurumi_ ? &*kurumi_ : nullptr; }
     std::uint8_t invincibility() const { return life_.state().invincibility; }
     const player::LifeState& life() const {return life_.state();}
     const std::vector<player::RenderDraw>& player_draws() const {return player_draws_;}
     const bomb::Effect& bomb_effect() const {return bomb_effect_;}
+    const bomb::RenderFrame& bomb_frame() const {return bomb_frame_;}
+    using BombObserver=std::function<void(const player::LifeState&,const randring::SharedRandomRing&,
+        const bomb::Effect&,const circle::System&,std::uint16_t)>;
+    void set_bomb_observer(BombObserver observer) {bomb_observer_=std::move(observer);}
     const std::vector<player::LifeEvent>& life_events() const {return life_events_;}
     const std::vector<gameover::Event>& gameover_events() const {return gameover_events_;}
+    void set_sound_sink(sound::ActionSink sink) {sound_sink_=std::move(sink);}
     const gameover::Scene* game_over() const {return gameover_.get();}
     bool score_registration_requested() const {return score_registration_requested_;}
     void set_continue_save(std::function<void(const score::Digits&)> save) {continue_save_=std::move(save);}
@@ -143,6 +199,7 @@ public:
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
     std::uint16_t random_cursor() const { return ring_.cursor(); }
+    std::uint8_t drop_cycle() const { return drops_.cycle(); }
     // Caller completes the blocking pre-boss dialog before this handoff.
     void start_orange_after_dialog();
     void start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero);
@@ -176,6 +233,8 @@ private:
     player::LifeContext life_context();
     void publish_boss_graphics();
     std::uint16_t scroll_line_=0;
+    sound::ActionSink sound_sink_;
+    void sound_action(sound::ActionKind kind,std::uint16_t value=0) {if(sound_sink_)sound_sink_({kind,value,{}});}
     FrameCounts run_frames_;
     std::uint32_t observed_frame_=0;
     void apply_clear_bonus(bool all_clear=false);
@@ -199,7 +258,15 @@ private:
     std::optional<midboss4::System> midboss4_;
     std::optional<stage5::Setup> stage5_;
     std::optional<stage6::Setup> stage6_;
-    bool stage6_battle_pending_=false;
+    std::optional<stagex::Setup> stagex_;
+    std::optional<midbossx::System> midbossx_;
+    std::uint8_t bullet_render_clear_=0,bullet_render_zap_=0;
+    bool stage6_battle_pending_=false,extra_battle_pending_=false;
+    std::optional<mugetsu::System> mugetsu_;
+    std::optional<gengetsu::System> gengetsu_;
+    bool extra_post_dialog_blocked_=false,extra_handoff_resumed_=false;
+    bool extra_final_dialog_finished_=false,extra_ending_requested_=false;
+    std::optional<transition::Departure> extra_departure_;
     std::optional<yuuka6::System> yuuka6_;
     yuuka6::Background yuuka6_background_{};
     yuuka6::Foreground yuuka6_foreground_{};
@@ -224,7 +291,12 @@ private:
     player::Lifecycle life_{};
     std::vector<player::RenderDraw> player_draws_;
     bomb::Effect bomb_effect_{};
+    bomb::RenderFrame bomb_frame_{};
+    BombObserver bomb_observer_;
     Mode mode_=Mode::ordinary;
+    std::optional<demo::Replay> demo_;
+    demo::Sample demo_sample_{};
+    bool demo_exit_requested_=false;
     std::uint16_t last_input_=0;
     bool player_frame_suspended_=false,score_registration_requested_=false;
     std::vector<player::LifeEvent> life_events_;
@@ -250,6 +322,10 @@ private:
     item::Pool items_{};
     item::ScoreState score_{};
     score::Snapshot scoreboard_{};
+    registration::TextPlane hud_text_;
+    std::int16_t hud_hp_previous_=0;
+    void initialize_hud();
+    void apply_score_hud(const std::vector<score::Event>&);
     std::vector<score::Event> score_events_;
     randring::SharedRandomRing ring_{};
     item::EnemyDropSequence drops_{};

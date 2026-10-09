@@ -22,7 +22,7 @@ struct Departure {
     motion::Point homing{};
     bool blocked=false;
 };
-enum class Kind { tone,dialog,bonus,fade,next_stage,delay,all_clear,end_game };
+enum class Kind { tone,dialog,bonus,fade,next_stage,delay,all_clear,end_game,end_extra };
 struct Event { Kind kind{};unsigned value=0; };
 using Sink=std::function<void(const Event&)>;
 // Ordinary Stage1 departure. Caller can suspend at the actual dialog call.
@@ -33,4 +33,8 @@ void update_departure(Departure&,Overlay&,bool suspend_dialog=false,const Sink& 
 // call at416. Return true at that call boundary: no frame increment, homing
 // reset, leave fade, next-stage publication or actor-frame suffix follows it.
 bool update_final_departure(Departure&,const Sink& sink={});
+// Extra's third dialogue returns through AE0B..AE13: clock becomes 1,
+// homing survives that first return. Later calls reset homing; 416 exits
+// through the nonreturning end_extra call before the ordinary suffix.
+bool update_extra_departure(Departure&,bool suspend_dialog=false,const Sink& sink={});
 } // namespace th04::portable::transition

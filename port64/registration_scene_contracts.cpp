@@ -2,6 +2,8 @@
 #include "host_score.hpp"
 #include "random_lcg.hpp"
 #include "application_state.hpp"
+#include "maine_score_route.hpp"
+#include "maine_extra_route.hpp"
 #include <chrono>
 #include <fstream>
 #include <iostream>
@@ -66,6 +68,187 @@ void fade_out(r::Scene& scene) {
     scene.advance(0);require(scene.finished() && scene.tone()==0,"blackout did not finish on refresh18");
     const auto ticks=scene.ticks();scene.advance(r::shot);
     require(scene.ticks()==ticks,"completed scene advanced");
+}
+void score_routes(const r::GraphicsAssets& graphics,const fs::path& root) {
+    namespace maine=th04::portable::maine;
+    auto assets=graphics.graphics;
+    assets.pictures.emplace("UDE.PI",assets.pictures.at("HI01.PI"));
+    assets.scripts["_UDE.TXT"]=sf::Bytes(30*26,0);
+    for(unsigned character=0;character<2;++character)for(unsigned rank=0;rank<4;++rank)
+        for(unsigned mode=0;mode<2;++mode) {
+        app::State application;th04::portable::menu::Options options;options.rank=sf::Byte(rank);
+        application.apply_options(options);
+        for(unsigned i=0;i<318;++i)application.advance_op_menu_frame();
+        application.start_normal(app::Playchar(character),app::ShotType(character));
+        application.publish_player_statistics(1,2);application.prepare_main_score();
+        app::RunStatistics statistics;statistics.std_frames=105;statistics.frames=104;
+        if(mode)statistics.score_digits[6]=1;
+        sf::HostStore store(root/("route-"+std::to_string(character)+"-"+std::to_string(rank)+"-"+std::to_string(mode)));
+        unsigned releases=0;const auto main_generation=application.generation();
+        maine::ScoreRoute route(application,statistics,graphics,assets,store,[&] {
+            require(application.program()==app::Program::main &&
+                application.resident().statistics.std_frames==105,"MAIN release preceded score publication");
+            ++releases;
+        });
+        require(releases==1 && application.generation()==main_generation+1 &&
+            application.program()==app::Program::maine && application.process_random_state()==1,
+            "Quit did not enter fresh MAINE exactly once");
+        for(unsigned i=0;i<99;++i) {
+            route.advance(0x20);
+            require(!route.registration_scene() && store.commits()==0 &&
+                route.sound_requests().empty() && application.process_random_state()==1,
+                "registration/input/sound/RNG preceded the100-refresh wait");
+        }
+        route.advance(0x20);
+        require(route.registration_scene() && route.ticks()==100 && store.commits()==1 &&
+            route.registration_scene()->ticks()==0,"registration did not start exactly after delay100");
+        const auto registration_rng=application.process_random_state();
+        for(unsigned i=0;i<35;++i)route.advance(0x20);
+        if(mode) {
+            route.advance(0);route.advance(0);route.advance(0x2000);
+        } else {
+            // No entry saves before its release/press acknowledgement.
+            require(store.commits()==2,"no-entry registration omitted writer close");
+            route.advance(0);route.advance(0);route.advance(0x20);
+        }
+        require(route.registration_scene()->status()==r::Status::fade_out && store.commits()==2,
+            "registration confirmation did not save before final fade");
+        for(unsigned i=0;i<17;++i) {
+            route.advance(0);require(route.phase()==maine::ScorePhase::registration &&
+                application.program()==app::Program::maine,"verdict preceded completed registration blackout");
+        }
+        const auto saved_rng=application.process_random_state();
+        route.advance(0);require(route.phase()==maine::ScorePhase::verdict && route.verdict_scene() &&
+            !route.registration_scene() && application.process_random_state()==saved_rng &&
+            route.sound_requests().empty(),"registration returned to OP or reseeded before verdict");
+        bool seeded=false;
+        route.set_verdict_observer([&](const auto& event) {
+            if(event.kind==th04::portable::verdict::Kind::gaiji && event.a==192 && event.b==264) {
+                seeded=true;require(application.process_random_state()==route.verdict_scene()->result().random_state,
+                    "score-route verdict reseed was not published at its calculation");
+            }
+        });
+        while(route.verdict_scene()->status()!=th04::portable::verdict::Status::release &&
+              route.ticks()<1000)route.advance(0x20);
+        require(route.verdict_scene()->status()==th04::portable::verdict::Status::release && seeded,
+            "score-route verdict did not reach its fresh-press wait");
+        for(unsigned i=0;i<8;++i)route.advance(0x20);
+        require(application.program()==app::Program::maine && route.sound_requests().empty(),
+            "inherited confirm escaped verdict or issued an early song fade");
+        route.advance(0);route.advance(0);route.advance(0x20);
+        while(!route.finished() && route.ticks()<1200)route.advance(0);
+        require(route.finished() && !route.failed() && application.program()==app::Program::op &&
+            application.generation()==main_generation+2 && application.process_random_state()==1 &&
+            releases==1 && route.sound_requests().size()==1 && route.sound_requests()[0].a==0x204,
+            "score-route failed final song request or fresh OP transition");
+        const auto& flow=route.boundaries();
+        require(flow.size()==5 && flow[0].kind==maine::ScoreFlow::delay100 &&
+            flow[1].kind==maine::ScoreFlow::registration && flow[1].tick==100 &&
+            flow[2].kind==maine::ScoreFlow::verdict && flow[2].tick==156 &&
+            flow[3].kind==maine::ScoreFlow::sound_fade4 && flow[4].kind==maine::ScoreFlow::exec_op &&
+            flow[3].tick==flow[4].tick,"score-only branch ordering differs");
+        sf::HostStore restart(store.path().parent_path());
+        for(unsigned section=0;section<10;++section) {
+            sf::Section decoded{};rng::Lcg32 random;
+            require(!sf::load_for(decoded,restart.file(),sf::Byte(section/5),sf::Byte(section%5),
+                [&]{return random.next15();}),"score-only MAINE corrupted a saved section");
+        }
+        const auto ticks=route.ticks();route.advance(0x20);
+        require(route.ticks()==ticks && application.generation()==main_generation+2,
+            "completed score-only route entered OP twice");
+        std::cout<<"SCORE_FLOW "<<character<<' '<<rank<<' '<<mode<<' '<<flow[1].tick<<' '
+                 <<flow[2].tick<<' '<<flow[4].tick<<' '<<registration_rng<<' '<<saved_rng<<" 1\n";
+    }
+    // A real failed writer during initial recreation must latch the MAINE
+    // owner before evaluation, song fade or fresh OP. Do not retry its RNG.
+    {
+        const auto directory=root/"score-route-failure";
+        {std::ofstream blocker(directory);blocker<<"blocked";}
+        sf::HostStore store(directory);app::State application;
+        application.start_normal(app::Playchar::reimu,app::ShotType::a);application.prepare_main_score();
+        maine::ScoreRoute route(application,{},graphics,assets,store);bool rejected=false;
+        try {for(unsigned i=0;i<100;++i)route.advance(0);}catch(const std::exception&) {rejected=true;}
+        const auto seed=application.process_random_state();
+        require(rejected && route.failed() && !route.finished() && !route.verdict_scene() &&
+            application.program()==app::Program::maine && route.sound_requests().empty(),
+            "failed recreation completed score-only MAINE");
+        route.advance(0x20);require(route.ticks()==100 && application.process_random_state()==seed &&
+            fs::is_regular_file(directory),"failed route retried a partial producer");
+    }
+    std::cout<<"Score-only MAINE controls PASS routes=16 failed_writer=1 muted=1\n";
+}
+void extra_routes(const r::GraphicsAssets& graphics,const fs::path& root) {
+    namespace maine=th04::portable::maine;
+    auto assets=graphics.graphics;
+    assets.pictures.emplace("UDE.PI",assets.pictures.at("HI01.PI"));
+    assets.pictures.emplace("CONG04.PI",assets.pictures.at("HI01.PI"));
+    assets.pictures.emplace("CONG14.PI",assets.pictures.at("HI01.PI"));
+    assets.scripts["_UDE.TXT"]=sf::Bytes(30*26,0);
+    for(unsigned character=0;character<2;++character)for(unsigned shot=0;shot<2;++shot)for(unsigned mode=0;mode<2;++mode) {
+        app::State application;for(unsigned i=0;i<318;++i)application.advance_op_menu_frame();
+        application.start_extra(app::Playchar(character),app::ShotType(shot));
+        app::RunStatistics statistics;statistics.std_frames=105;statistics.frames=104;statistics.score_digits[6]=1;
+        sf::HostStore store(root/("extra-"+std::to_string(character)+"-"+std::to_string(shot)+"-"+std::to_string(mode)));
+        const auto generation=application.generation(),main_random=application.process_random_state();unsigned releases=0;
+        const auto endtype=application.resident().end_type_ascii;
+        maine::ExtraRoute route(application,statistics,graphics,assets,store,[&]{
+            require(application.program()==app::Program::main && application.resident().statistics.frames==104,
+                    "Extra release preceded final statistics publication");++releases;
+        });
+        require(application.resident().end_sequence==app::EndSequence::extra && application.resident().end_type_ascii==endtype &&
+            application.generation()==generation && application.process_random_state()==main_random && !releases,"Extra pre-fade resident boundary differs");
+        for(unsigned tick=1;tick<273;++tick) {
+            route.advance(0x2000|0x20);
+            require(route.phase()==maine::ExtraPhase::main_fade && !releases && application.program()==app::Program::main &&
+                route.main_tone()==100-int(tick ? (tick-1)/16 : 0)*6,"Extra fade16 shortened or altered MAIN lifetime");
+        }
+        route.advance(0x20);require(route.fade_ticks()==273 && route.main_tone()==0 && releases==1 &&
+            application.program()==app::Program::maine && application.generation()==generation+1 && application.process_random_state()==1 &&
+            route.phase()==maine::ExtraPhase::registration_delay,"Extra did not enter fresh MAINE after blackout16");
+        for(unsigned i=0;i<99;++i)route.advance(0x20);
+        require(!route.registration_scene() && application.process_random_state()==1,"Extra registration omitted delay100");
+        route.advance(0x20);require(route.registration_scene() && route.ticks()==373,"Extra registration start boundary differs");
+        while(route.registration_scene()->status()!=r::Status::editing && route.ticks()<450)route.advance(0x20);
+        require(route.registration_scene()->menu().place()!=sf::no_entry,"Extra score did not enter the Extra section");
+        route.advance(0);route.advance(0);route.advance(mode ? 0x2000 : 0x20);
+        if(!mode){route.advance(0);route.advance(0);route.advance(0x2000);}
+        while(route.phase()==maine::ExtraPhase::registration && route.ticks()<600)route.advance(0);
+        require(route.congratulations_scene() && !route.verdict_scene() && !route.registration_scene() &&
+            route.congratulations_scene()->picture_name()==maine::congratulations_picture(character,4),"Extra skipped congratulations or chose normal-rank picture");
+        const auto saved_random=application.process_random_state();
+        for(unsigned i=0;i<35;++i)route.advance(0x20);
+        require(route.congratulations_scene()->animation().status()==maine::AnimationStatus::release &&
+            application.process_random_state()==saved_random,"Extra congratulation inherited a confirmation or reseeded MAINE");
+        route.advance(0);route.advance(0);route.advance(0x20);
+        while(route.phase()==maine::ExtraPhase::congratulations && route.ticks()<800)route.advance(0);
+        require(route.verdict_scene() && !route.congratulations_scene() && application.process_random_state()==saved_random,
+            "Extra verdict entered before congratulations blackout or reseeded early");
+        while(route.verdict_scene()->status()!=th04::portable::verdict::Status::release && route.ticks()<1200)route.advance(0x20);
+        require(route.verdict_scene()->status()==th04::portable::verdict::Status::release,"Extra verdict wait missing");
+        route.advance(0);route.advance(0);route.advance(0x20);
+        while(!route.finished() && route.ticks()<1400)route.advance(0);
+        require(route.finished() && !route.failed() && application.program()==app::Program::op &&
+            application.generation()==generation+2 && application.process_random_state()==1 && releases==1 &&
+            route.main_sound_requests().size()==1 && route.sound_requests().size()==1,"Extra failed fresh OP/process/sound ownership");
+        const auto& flow=route.boundaries();require(flow.size()==10,"Extra branch has unexpected children");
+        for(unsigned i=0;i<10;++i)require(unsigned(flow[i].kind)==i,"Extra MAINE branch order differs");
+        require(flow[2].tick==273 && flow[3].tick==273 && flow[4].tick==373 && flow[5].tick==flow[6].tick &&
+            flow[8].tick==flow[9].tick,"Extra caller timing differs");
+        sf::HostStore restart(store.path().parent_path());
+        sf::Section decoded{};rng::Lcg32 random;
+        require(!sf::load_for(decoded,restart.file(),sf::Byte(character),4,[&]{return random.next15();}) &&
+            (decoded[sf::cleared_offset]&(1u<<shot)),"Extra clear bit did not survive writer-close/restart");
+        const auto ticks=route.ticks();route.advance(0x20);require(route.ticks()==ticks,"Completed Extra route advanced twice");
+    }
+    const auto directory=root/"extra-failed-writer";{std::ofstream blocker(directory);blocker<<"blocked";}
+    sf::HostStore store(directory);app::State application;application.start_extra(app::Playchar::reimu,app::ShotType::a);
+    maine::ExtraRoute route(application,{},graphics,assets,store);bool rejected=false;
+    try {for(unsigned i=0;i<373;++i)route.advance(0);}catch(const std::exception&){rejected=true;}
+    require(rejected && route.failed() && application.program()==app::Program::maine && !route.congratulations_scene() && !route.verdict_scene(),
+            "Failed Extra writer returned to OP or entered congratulations");
+    const auto seed=application.process_random_state(),ticks=route.ticks();route.advance(0x20);
+    require(application.process_random_state()==seed && route.ticks()==ticks,"Failed Extra writer retried RNG/I-O");
+    std::cout<<"Extra MAINE controls PASS routes=8 failed_writer=1 muted=1\n";
 }
 void contracts(const r::GraphicsAssets& assets,const fs::path& root) {
     require(r::input_from_main_actions(0x20)==r::shot &&
@@ -227,7 +410,7 @@ int main(int argc,char** argv) {
         const auto root=fs::temp_directory_path()/("th04-registration-"+std::to_string(
             std::chrono::steady_clock::now().time_since_epoch().count()));
         require(fs::create_directory(root),"cannot reserve contract output");
-        try {contracts(assets,root);}catch(...) {std::error_code ignored;fs::remove_all(root,ignored);throw;}
+        try {contracts(assets,root);score_routes(assets,root);extra_routes(assets,root);}catch(...) {std::error_code ignored;fs::remove_all(root,ignored);throw;}
         fs::remove_all(root);
         return 0;
     }catch(const std::exception& e){std::cerr<<"ERROR: "<<e.what()<<'\n';return 1;}

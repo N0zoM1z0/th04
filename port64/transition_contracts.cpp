@@ -39,6 +39,21 @@ void joint(transition::Departure& d,transition::Overlay& o,score::Snapshot& s) {
 }
 int main(int argc,char** argv) {
     try {
+        if(argc==3 && std::string(argv[1])=="--extra-vectors") {
+            std::ifstream file(argv[2]);if(!file)throw std::runtime_error("cannot read Extra departure vectors");
+            int frame,x,y;unsigned graze,stage_graze,tone,changed;
+            while(file>>frame>>graze>>stage_graze>>tone>>changed>>x>>y) {
+                transition::Departure d;d.frame=motion::wrap(frame);d.graze=graze;d.stage_graze=stage_graze;
+                d.palette_tone=motion::wrap(tone);d.palette_changed=changed;d.homing={motion::wrap(x),motion::wrap(y)};
+                std::vector<transition::Event> events;
+                const bool ending=transition::update_extra_departure(d,false,[&](const auto& e){events.push_back(e);});
+                std::cout<<"E "<<d.frame<<' '<<d.graze<<' '<<d.stage_graze<<' '<<d.palette_tone<<' '<<+d.palette_changed<<' '<<d.homing.x<<' '<<d.homing.y<<' '<<ending;
+                for(const auto& e:events)std::cout<<'|'<<int(e.kind)<<' '<<e.value;
+                std::cout<<'\n';
+            }
+            if(!file.eof())throw std::runtime_error("invalid Extra departure vector");
+            return 0;
+        }
         if(argc==3 && std::string(argv[1])=="--final-vectors") {
             std::ifstream file(argv[2]);if(!file)throw std::runtime_error("cannot read final-stage vectors");
             int frame,x,y;unsigned graze,stage_graze,tone,changed;
@@ -94,6 +109,23 @@ int main(int argc,char** argv) {
             if(transition::update_final_departure(final,sink))throw std::runtime_error("Final Stage ended before416");
         if(!transition::update_final_departure(final,sink) || final.frame!=416 || final.graze!=1 || clears!=1 || endings!=1 || final.palette_tone!=60)
             throw std::runtime_error("Final Stage repeated all-clear or advanced the nonreturning Ending call");
+        transition::Departure extra;extra.graze=65535;extra.stage_graze=2;extra.homing={123,-456};
+        unsigned dialogs=0,extra_clears=0,extra_ends=0;
+        const auto extra_sink=[&](const transition::Event& e) {
+            if(e.kind==transition::Kind::dialog)++dialogs;
+            if(e.kind==transition::Kind::all_clear)++extra_clears;
+            if(e.kind==transition::Kind::end_extra)++extra_ends;
+        };
+        transition::update_extra_departure(extra,true,extra_sink);
+        for(unsigned i=0;i<10;++i)transition::update_extra_departure(extra,true,extra_sink);
+        if(!extra.blocked || extra.frame || extra.graze!=1 || dialogs!=1 || extra_clears)
+            throw std::runtime_error("Extra wait repeated caller prefix");
+        transition::update_extra_departure(extra,false,extra_sink);
+        if(extra.blocked || extra.frame!=1 || extra.homing.x!=123 || extra.homing.y!=-456 || extra_clears!=1)
+            throw std::runtime_error("Extra dialog return lost its early-return homing");
+        while(extra.frame<416)transition::update_extra_departure(extra,false,extra_sink);
+        if(!transition::update_extra_departure(extra,false,extra_sink) || extra.frame!=416 || extra_ends!=1 || dialogs!=1 || extra_clears!=1)
+            throw std::runtime_error("Extra nonreturning exit or clear repeated");
         std::cout<<"stage_transition=SHARED_BYTE_72 departure=DIALOG_416_488 pending_score=CARRIES pointer_bits=64\n";
         return 0;
     } catch(const std::exception& e) { std::cerr<<e.what()<<'\n';return 1; }

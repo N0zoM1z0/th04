@@ -57,4 +57,21 @@ bool update_final_departure(Departure& s,const Sink& sink) {
     }
     s.frame=motion::wrap(int(s.frame)+1);s.homing={-15984,-15984};return false;
 }
+bool update_extra_departure(Departure& s,bool suspend_dialog,const Sink& sink) {
+    const auto emit=[&](Kind kind,unsigned value=0) {if(sink)sink({kind,value});};
+    if(s.blocked) {
+        if(suspend_dialog)return false;
+        s.blocked=false;emit(Kind::all_clear);
+        s.frame=motion::wrap(int(s.frame)+1);return false;
+    }
+    s.palette_tone=60;s.palette_changed=1;emit(Kind::tone,60);
+    if(s.frame==0) {
+        s.graze=static_cast<std::uint16_t>(s.graze+s.stage_graze);
+        emit(Kind::dialog);
+        if(suspend_dialog) {s.blocked=true;return false;}
+        emit(Kind::all_clear);s.frame=1;return false;
+    }
+    if(s.frame==416) {emit(Kind::end_extra);return true;}
+    s.frame=motion::wrap(int(s.frame)+1);s.homing={-15984,-15984};return false;
+}
 } // namespace th04::portable::transition

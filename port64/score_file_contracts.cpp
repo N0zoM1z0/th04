@@ -76,7 +76,7 @@ void trace(const char* fixtures,bool main=false) {
         auto d=unhex(digit_text);require(d.size()==8,"score digit size differs");th04::portable::score::Digits digits;
         std::copy(d.begin(),d.end(),digits.begin());sf::File file(present!=0,unhex(file_text));
         rng::Lcg32 random(seed);unsigned draws=0;const auto next=[&] {++draws;return random.next15();};
-        int result=-1,place=0xa5;
+        int result=-1,place=0xa5;th04::portable::score::Digits highscore{};
         switch(operation) {
         case 0:if(main)sf::encode_main(section,next);else sf::encode(section,next);break;
         case 1:result=sf::decode(section);break;
@@ -93,6 +93,8 @@ void trace(const char* fixtures,bool main=false) {
                    const auto entered=sf::continue_main(section,file,sf::Byte(character),sf::Byte(rank),sf::Byte(stage),end!=0,digits,next);
                    if(end)place=entered;
                } else place=sf::insert(section,digits,sf::Byte(stage),sf::Byte(end));break;
+        case 6:require(main,"MAIN high-score operation requires MAIN trace");
+            highscore=sf::load_hiscore_main(section,file,sf::Byte(character),sf::Byte(rank),next);break;
         default:throw std::runtime_error("unknown score operation");
         }
         std::cout<<"CASE "<<index++<<'\n';
@@ -100,6 +102,7 @@ void trace(const char* fixtures,bool main=false) {
             const char* names[]={"exists","open","seek","read","write","close"};
             std::cout<<names[unsigned(e.kind)]<<' '<<e.a<<' '<<e.b<<' ';hex(e.data);std::cout<<'\n';
         }
+        if(operation==6) {std::cout<<"HS ";hex(highscore);std::cout<<'\n';}
         std::cout<<"END "<<result<<' '<<place<<' '<<random.state()<<' '<<draws<<' '<<int(file.present())<<' ';
         hex(section);std::cout<<' ';hex(file.bytes());std::cout<<'\n';
     }

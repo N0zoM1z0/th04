@@ -12,6 +12,7 @@ public:
     const std::filesystem::path& path() const { return path_; }
     unsigned commits() const { return commits_; }
     void apply(const Operation&);
+    score::Digits read_main_highscore(Byte character,Byte rank,const Random&);
     // Replays the MAIN producer's new operations through real writer-close
     // commits. Return only after persistence succeeds, before resource reset.
     Byte save_continue(Byte character,Byte rank,Byte stage,bool turbo,

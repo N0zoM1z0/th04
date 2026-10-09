@@ -1,6 +1,10 @@
+#include "extra_dialog.hpp"
+#include "super_wave.hpp"
 #include "view.hpp"
 #include "application_state.hpp"
 #include "maine_ending.hpp"
+#include "maine_score_route.hpp"
+#include "maine_extra_route.hpp"
 #include "cdg_image.hpp"
 #include "menu_state.hpp"
 #include "selection_state.hpp"
@@ -10,6 +14,8 @@
 #include "sprite_sheet.hpp"
 #include "stage_background.hpp"
 #include "host_score.hpp"
+#include "configuration.hpp"
+#include "op_score.hpp"
 #include "gameover_render.hpp"
 
 #include <algorithm>
@@ -33,13 +39,16 @@
 #endif
 
 namespace {
+namespace bomb=th04::portable::bomb;
 
 namespace menu = th04::portable::menu;
 namespace application = th04::portable::application;
+namespace demo = th04::portable::demo;
 namespace selection = th04::portable::selection;
 namespace gameplay = th04::portable::gameplay;
 namespace sprite = th04::portable::sprite;
 namespace player = th04::portable::player;
+namespace sound = th04::portable::sound;
 namespace stage = th04::portable::stage;
 namespace shot = th04::portable::shot;
 namespace bullet = th04::portable::bullet;
@@ -53,6 +62,9 @@ namespace maine = th04::portable::maine;
 namespace verdict = th04::portable::verdict;
 namespace registration = th04::portable::registration;
 namespace score_file = th04::portable::score_file;
+namespace op_score = th04::portable::op_score;
+namespace op_ranking = th04::portable::op_ranking;
+namespace op_music = th04::portable::op_music;
 namespace gameover = th04::portable::gameover;
 
 using Clock = std::chrono::steady_clock;
@@ -127,11 +139,13 @@ Frame background_frame(const PiImage& image) {
     );
     Frame frame{image.width, image.height,
                 std::vector<uint32_t>(size_t(image.width) * image.height)};
+    frame.indices.resize(frame.pixels.size());
     for (size_t y = 0; y < image.height; ++y) {
         for (size_t x = 0; x < image.width; ++x) {
             const uint8_t packed = image.pixels[y * image.width / 2 + x / 2];
             const unsigned index = (x & 1) ? (packed & 15) : (packed >> 4);
             frame.pixels[y * image.width + x] = palette_color(image, index);
+            frame.indices[y * image.width + x] = std::uint8_t(index);
         }
     }
     return frame;
@@ -562,27 +576,44 @@ struct StageSprites {
     StageSprites& operator=(const StageSprites&)=delete;
     explicit StageSprites(const StageAssets& source,unsigned resource_stage=1):assets(source),stage(assets.stage_tiles),
         backdrop(assets.backdrop),faces(assets.boss_faces),tiles(assets.map_tiles),background(assets.map,assets.standard) {
-        require_view(resource_stage>=1 && resource_stage<=5,"unsupported stage resource identity");
-        const bool fifth=resource_stage==4,sixth=resource_stage==5;
-        if(!fifth && !sixth) boss=std::make_unique<sprite::Sheet>(assets.boss_tiles);
+        require_view(resource_stage>=1 && resource_stage<=6,"unsupported stage resource identity");
+        const bool fifth=resource_stage==4,sixth=resource_stage==5,extra=resource_stage==6;
+        if(!fifth && !sixth && !extra) boss=std::make_unique<sprite::Sheet>(assets.boss_tiles);
         else {
             require_view(assets.boss_tiles.empty(),"Stage5/6 must not append a BMT bank");
             if(fifth) star_plane=std::make_unique<th04::portable::stage5::StarPlane>(assets.stars);
             else require_view(assets.stars.empty(),"Stage6 has null stage render/invalidate callbacks");
         }
-        require_view(stage.count()==(sixth ? 16u : (fifth ? 12u : (resource_stage==1 ? 18u : (resource_stage==2 ? 16u : 28u)))) && stage.width()==32 && stage.height()==32,
+        require_view(stage.count()==(extra ? 24u : (sixth ? 16u : (fifth ? 12u : (resource_stage==1 ? 18u : (resource_stage==2 ? 16u : 28u))))) && stage.width()==32 && stage.height()==32,
                      "stage BFT append contract changed");
-        require_view((fifth || sixth) ? stage.has_palette() : (boss && boss->count()==(resource_stage==1 ? 16u : (resource_stage==2 ? 4u : 8u)) && boss->width()==64 && boss->height()==64 && boss->has_palette()),
+        require_view((fifth || sixth || extra) ? stage.has_palette() : (boss && boss->count()==(resource_stage==1 ? 16u : (resource_stage==2 ? 4u : 8u)) && boss->width()==64 && boss->height()==64 && boss->has_palette()),
                      "stage palette/BMT append contract changed");
-        require_view(tiles.count()==(sixth ? 14u : (fifth ? 84u : (resource_stage==1 ? 75u : (resource_stage==2 ? 84u : 89u)))) && background.required_image_count()<=tiles.count(),"stage MAP references absent MPN tile");
-        require_view(backdrop.width==((fifth || sixth) ? 288u : (resource_stage==3 ? 256u : 384u)) && backdrop.height==((fifth || sixth || resource_stage==3) ? 256u : 112u) && backdrop.image_count==1 &&
+        require_view(tiles.count()==(extra ? 64u : (sixth ? 14u : (fifth ? 84u : (resource_stage==1 ? 75u : (resource_stage==2 ? 84u : 89u))))) && background.required_image_count()<=tiles.count(),"stage MAP references absent MPN tile");
+        require_view(backdrop.width==((fifth || sixth) ? 288u : (resource_stage==3 ? 256u : 384u)) && backdrop.height==(extra ? 192u : ((fifth || sixth || resource_stage==3) ? 256u : 112u)) && backdrop.image_count==1 &&
                      backdrop.layout==CdgSheet::colors_only && assets.transition.size()==2048 &&
-                     faces.width==128 && faces.height==128 && (faces.image_count==(sixth ? 2u : 4u) || (resource_stage==3 && faces.image_count==3)) && faces.layout==CdgSheet::alpha_and_colors,
+                     faces.width==128 && faces.height==128 && (faces.image_count==(extra ? 1u : (sixth ? 2u : 4u)) || (resource_stage==3 && faces.image_count==3)) && faces.layout==CdgSheet::alpha_and_colors,
                      "stage backdrop/portrait contract changed");
         require_view(!assets.dialog_scripts[0].empty() && !assets.dialog_scripts[1].empty(),"Stage2 dialog script missing");
     }
 };
 
+struct BombCapture {
+    Bytes before,after,final,rgb;
+    std::array<std::uint8_t,48> palette{};
+    unsigned display_line=0,page=0;
+};
+Bytes physical_page(const Bytes& visible,unsigned line) {
+    Bytes physical(640*400);
+    for(unsigned y=0;y<400;++y)
+        std::copy_n(visible.begin()+y*640,640,physical.begin()+((y+line)%400)*640);
+    return physical;
+}
+Bytes visible_page(const Bytes& physical,unsigned line) {
+    Bytes visible(640*400);
+    for(unsigned y=0;y<400;++y)
+        std::copy_n(physical.begin()+((y+line)%400)*640,640,visible.begin()+y*640);
+    return visible;
+}
 struct MainSprites {
     sprite::Sheet reimu, marisa, items, stage_tiles, boss_tiles, enemies,explosion;
     Bytes backdrop_bytes,transition;
@@ -601,7 +632,14 @@ struct MainSprites {
     std::array<bool,32> cdg_released{};
     Bytes standard;
     std::unique_ptr<StageSprites> second;
+    std::unique_ptr<CdgSheet> extra_faces,extra_backdrop;
     PiImage palette;
+    std::array<std::unique_ptr<bomb::Graphics>,2> bombs;
+    mutable std::optional<std::uint32_t> bomb_cache_frame;
+    mutable std::array<Bytes,2> bomb_pages;
+    mutable Bytes bomb_base;
+    bool capture_bomb=false;
+    mutable BombCapture bomb_capture;
     stage::TileImages reimu_tiles, marisa_tiles;
     stage::Background background;
     explicit MainSprites(const MainAssets& assets)
@@ -620,6 +658,8 @@ struct MainSprites {
         require_view(stage_tiles.count()==12 && boss_tiles.count()==12 &&
                      boss_tiles.width()==64 && boss_tiles.height()==32 && boss_tiles.has_palette(),
                      "Stage 1 BFNT append contract changed");
+        for(unsigned c=0;c<2;++c)
+            bombs[c]=std::make_unique<bomb::Graphics>(assets.bomb_tiles[c],assets.bomb_pictures[c],assets.items);
         palette.palette = boss_tiles.palette();
         palette.palette[0]=255;palette.palette[1]=255;
         for(unsigned i=0;i<12;++i) { stage_slots[128+i]={&stage_tiles,i};stage_slots[140+i]={&boss_tiles,i}; }
@@ -634,7 +674,7 @@ struct MainSprites {
                      "MAIN sprite resource geometry changed");
     }
     void install_stage(std::unique_ptr<StageSprites> next) {
-        clean_stage(); // Clears every stage slot and first-stage dialog sheets.
+        clean_stage();extra_faces.reset();extra_backdrop.reset(); // Clears the preceding dynamic bank and face override.
         cdg_released.fill(false);
         palette.palette=next->boss ? next->boss->palette() : next->stage.palette(); // Stage5 has BFT palette, no BMT.
         background=std::move(next->background);
@@ -642,10 +682,10 @@ struct MainSprites {
         for(unsigned i=0;i<second->stage.count();++i) stage_slots[stage_end++]={&second->stage,i};
         if(second->boss) for(unsigned i=0;i<second->boss->count();++i) stage_slots[stage_end++]={second->boss.get(),i};
     }
-    const CdgSheet& boss_portraits() const { return second ? second->faces : boss_faces; }
+    const CdgSheet& boss_portraits() const { return extra_faces ? *extra_faces : (second ? second->faces : boss_faces); }
     void free_cdg(unsigned slot) { require_view(slot<cdg_released.size(),"invalid CDG release slot");cdg_released[slot]=true; }
     void require_cdg(unsigned slot) const { require_view(slot<cdg_released.size() && !cdg_released[slot],"released CDG handle used"); }
-    const CdgSheet& boss_backdrop() const { require_cdg(16);return second ? second->backdrop : backdrop; }
+    const CdgSheet& boss_backdrop() const { require_cdg(16);return extra_backdrop ? *extra_backdrop : (second ? second->backdrop : backdrop); }
     void clean_stage() { for(unsigned i=128;i<256;++i) stage_slots[i]={};loaded_sheets.clear();stage_end=128; }
     void load_dialog_sprites(std::string name) {
         for(auto& c:name) if(c>='a' && c<='z') c=static_cast<char>(c-'a'+'A');
@@ -685,22 +725,48 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     const bool npc_active=state.reimu_active() || state.marisa_active();
     frame.indices.assign(640*400,0);
     PiImage palette=sprites.palette;
-    if (state.boss_active()) {
-        const auto& boss=state.boss_snapshot();
-        for (unsigned i=0;i<3;++i) palette.palette[i]=boss.palette_zero[i];
-        const int tone=std::clamp(displayed_tone.value_or(boss.palette_tone),0,200);
-        for (auto& component:palette.palette) {
-            const int base=component>>4;
-            const int nibble=tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100;
-            component=static_cast<std::uint8_t>(nibble*16);
+    if(state.bomb_frame().active) {
+        sprites.require_cdg(0);
+        // The current native HUD margin is initialized black. Give that
+        // adapter an actual palette index before retaining physical pages;
+        // index0 is the stage's overridden yellow, not the black margin.
+        bool black=false;
+        for(unsigned color=0;color<16;++color)if(!(palette.palette[color*3]>>4) &&
+            !(palette.palette[color*3+1]>>4) && !(palette.palette[color*3+2]>>4)) {
+            std::fill(frame.indices.begin(),frame.indices.end(),std::uint8_t(color));black=true;break;
         }
+        require_view(black,"native Bomb margin has no black palette entry");
     }
+    if(state.boss_active()) for(unsigned i=0;i<3;++i)palette.palette[i]=state.boss_snapshot().palette_zero[i];
+    for(unsigned i=0;i<3;++i)palette.palette[42+i]=state.life().palette14[i];
+    const int tone=std::clamp(displayed_tone.value_or(state.life().palette_tone),0,200);
+    if(state.boss_active() || tone!=100)for(auto& component:palette.palette) {
+        const int base=component>>4;
+        const int nibble=tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100;
+        component=static_cast<std::uint8_t>(nibble*16);
+    }
+    const auto& bomb_frame=state.bomb_frame();
+    const unsigned display_line=sprites.background.display_line();
+    const unsigned bomb_page=state.frames()%2;
+    if(bomb_frame.active && sprites.bomb_cache_frame!=state.frames()) {
+        sprites.bomb_cache_frame=state.frames();
+        sprites.bomb_base=sprites.bomb_pages[bomb_page];
+    }
+    if(bomb_frame.active && bomb_frame.retain_background) {
+        require_view(sprites.bomb_base.size()==640*400,"Bomb retained page has not been rendered");
+        frame.indices=visible_page(sprites.bomb_base,display_line);
+        for(unsigned at=0;at<frame.indices.size();++at)frame.pixels[at]=palette_color(palette,frame.indices[at]);
+    }
+    if(!bomb_frame.active || !bomb_frame.retain_background) {
     const auto background_phase=state.orange_background_phase();
     const auto npc_background=th04::portable::reimu::backdrop(background_phase,state.orange_background_frame());
     const bool npc_picture=npc_active && (npc_background.kind==th04::portable::reimu::BackdropKind::picture || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask);
     const auto yuuka_background=th04::portable::yuuka5::backdrop(background_phase,state.orange_background_frame());
     const bool yuuka_picture=state.yuuka5_active() && (yuuka_background.kind==th04::portable::yuuka5::BackdropKind::picture || yuuka_background.kind==th04::portable::yuuka5::BackdropKind::picture_and_mask);
-    const bool backdrop=yuuka_picture || npc_picture || (!state.yuuka6_active() && !state.yuuka5_active() && !npc_active && state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254);
+    const bool extra_battle=state.mugetsu_active() || state.gengetsu_active();
+    const auto extra_background=extra_battle ? th04::portable::mugetsu::background(background_phase,state.orange_background_frame()) : std::vector<th04::portable::mugetsu::BackgroundDraw>{};
+    const bool extra_tiles=std::any_of(extra_background.begin(),extra_background.end(),[](const auto& d){return d.kind==0 || d.kind==1;});
+    const bool backdrop=yuuka_picture || npc_picture || (!extra_battle && !state.yuuka6_active() && !state.yuuka5_active() && !npc_active && state.boss_active() && background_phase>=(state.elly_active() ? 2 : 1) && background_phase<254);
     if (backdrop) {
         if(state.yuuka5_active()) {
             require_view(bool(sprites.second),"Yuuka5 backdrop has no Stage5 owner");
@@ -736,7 +802,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     // original playfield; the scroll ring owns all 400 physical rows.
     for (unsigned y=16; y<384; ++y) {
         for (unsigned x=0; x<384; ++x) {
-            if(state.yuuka6_active()) continue;
+            if(state.yuuka6_active() || (extra_battle && !extra_tiles)) continue;
             if (backdrop) {
                 if(npc_active || state.yuuka5_active()) continue;
                 if (background_phase!=(state.elly_active() ? 2 : 1)) continue;
@@ -752,14 +818,6 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
         }
     }
-    if(sprites.second && sprites.second->star_plane) {
-        // Preserve plane-I OR against the freshly redrawn stage. These cached
-        // requests do not mutate star centers when a dialog or repaint runs.
-        for(const auto d:sprites.second->star_draws)
-            sprites.second->star_plane->raster(d.left,d.physical_top,sprites.background.display_line(),
-                [&](unsigned x,unsigned y) { return frame.indices[y*640+x]; },
-                [&](unsigned x,unsigned y,std::uint8_t color) { put_indexed_pixel(frame,palette,int(x),int(y),0,0,color); });
-    }
     if(npc_active && (npc_background.kind==th04::portable::reimu::BackdropKind::tiles_and_mask || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask)) {
         const unsigned cel=npc_background.cel;require_view(cel<16,"NPC BB cel outside resource");
         for(unsigned row=0;row<23;++row) for(unsigned column=0;column<24;++column)
@@ -771,6 +829,16 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         for(unsigned row=0;row<23;++row) for(unsigned column=0;column<24;++column)
             if(sprites.second->assets.transition[cel*128+row*4+column/8]&(0x80u>>(column&7)))
                 fill_rect(frame,palette,32+int(column*16),16+int(row*16),16,16,15);
+    }
+    if(extra_battle)for(const auto& d:extra_background) {
+        if(d.kind==2)put_opaque(frame,palette,sprites.boss_backdrop(),0,d.x,d.y);
+        else if(d.kind==4)fill_rect(frame,palette,32,208,384,176,1);
+        else if(d.kind==3) {
+            require_view(d.x>=0 && d.x<16,"Extra BB cel outside resource");
+            for(unsigned row=0;row<23;++row)for(unsigned column=0;column<24;++column)
+                if(sprites.second->assets.transition[unsigned(d.x)*128+row*4+column/8]&(0x80u>>(column&7)))
+                    fill_rect(frame,palette,32+int(column*16),16+int(row*16),16,16,15);
+        }
     }
     if(state.yuuka6_active()) {
         using Kind=th04::portable::yuuka6::BackgroundKind;
@@ -800,11 +868,38 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             }
         }
     }
+    }
+    if(sprites.second && sprites.second->star_plane) {
+        // Preserve plane-I OR against the freshly redrawn stage. These cached
+        // requests do not mutate star centers when a dialog or repaint runs.
+        for(const auto d:sprites.second->star_draws)
+            sprites.second->star_plane->raster(d.left,d.physical_top,sprites.background.display_line(),
+                [&](unsigned x,unsigned y) { return frame.indices[y*640+x]; },
+                [&](unsigned x,unsigned y,std::uint8_t color) { put_indexed_pixel(frame,palette,int(x),int(y),0,0,color); });
+    }
+    if(bomb_frame.active) {
+        auto physical=physical_page(frame.indices,display_line);
+        if(sprites.capture_bomb) {
+            sprites.bomb_capture.before=physical;
+            sprites.bomb_capture.display_line=display_line;
+            sprites.bomb_capture.page=bomb_page;
+            sprites.bomb_capture.palette=palette.palette;
+        }
+        const auto& graphics=*sprites.bombs[unsigned(playchar)];
+        if(bomb_frame.pixels==bomb::Pixels::tiles)
+            graphics.tiles(bomb_frame.cel,bomb_frame.scroll_line,
+                playchar==application::Playchar::reimu ? 15 : 2,physical);
+        else if(bomb_frame.pixels==bomb::Pixels::character)
+            graphics.apply(state.bomb_effect().draws(),physical);
+        if(sprites.capture_bomb)sprites.bomb_capture.after=physical;
+        frame.indices=visible_page(physical,display_line);
+        for(unsigned at=0;at<frame.indices.size();++at)frame.pixels[at]=palette_color(palette,frame.indices[at]);
+    }
     const auto& shots = state.shots().snapshot();
     const auto pixels = [](std::int16_t coordinate) {
         return coordinate >= 0 ? coordinate / 16 : -((-int(coordinate)+15)/16);
     };
-    if (state.boss_active() && !state.yuuka5_active() && !state.yuuka6_active()) for (const auto& draw:state.boss_draws()) {
+    if (state.boss_active() && !state.gengetsu_active() && !state.yuuka5_active() && !state.yuuka6_active()) for (const auto& draw:state.boss_draws()) {
         const auto pattern=draw.pattern_or_radius;
         if(draw.kind==orange::DrawKind::line) {
             const auto points=state.marisa_active() ? th04::portable::marisa::line_pixels({draw.left,draw.top},{draw.end_left,draw.end_top}) : th04::portable::kurumi::ray_pixels({draw.left,draw.top},{draw.end_left,draw.end_top});
@@ -818,6 +913,11 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 th04::portable::marisa::raster_sprite(*slot.sheet,slot.image,draw.left,draw.top,draw.kind,
                     [&](int x,int y) {return frame.indices[unsigned(y)*frame.width+unsigned(x)];},
                     [&](int x,int y,std::uint8_t color) {put_indexed_pixel(frame,palette,x,y,0,0,color);});
+            else if(state.mugetsu_active())
+                th04::portable::yuuka5::raster_sprite(*slot.sheet,slot.image,draw.left,draw.top,
+                    draw.kind==orange::DrawKind::white_sprite ? th04::portable::yuuka5::DrawKind::white_sprite : th04::portable::yuuka5::DrawKind::sprite,
+                    [&](int x,int y) {return frame.indices[unsigned(y)*frame.width+unsigned(x)];},
+                    [&](int x,int y,std::uint8_t color) {put_indexed_pixel(frame,palette,x,y,0,0,color);});
             else if(draw.kind==orange::DrawKind::plane_sprite || draw.kind==orange::DrawKind::rolling_sprite)
                 put_reimu_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind);
             else put_sprite(frame,palette,*slot.sheet,slot.image,draw.left,draw.top,draw.kind==orange::DrawKind::white_sprite);
@@ -826,6 +926,30 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         else if (pattern>=4 && pattern<28) put_sprite(frame,palette,sprites.enemies,pattern-4,draw.left,draw.top,draw.kind==orange::DrawKind::white_rolling_sprite,draw.kind==orange::DrawKind::large_sprite ? 2 : 1);
         else if (pattern>=28 && pattern<128) put_sprite(frame,palette,sprites.items,pattern-28,draw.left,draw.top);
         else throw std::runtime_error("Orange references absent sprite");
+    }
+    if(state.gengetsu_active()) for(const auto& d:state.gengetsu()->draws()) {
+        using Kind=th04::portable::yuuka5::DrawKind;
+        const auto kind=static_cast<Kind>(d.kind);
+        const auto write=[&](int x,int y,std::uint8_t color) {put_indexed_pixel(frame,palette,x,y,0,0,color);};
+        const auto pixel=[&](th04::portable::motion::Point at){write(at.x,at.y,std::uint8_t(d.color&15));};
+        if(kind==Kind::color || kind==Kind::disable)continue;
+        if(kind==Kind::circle) {for(auto at:circle::raster({d.x,d.y},d.value))pixel(at);}
+        else if(kind==Kind::disc) {for(auto at:th04::portable::yuuka5::disc_pixels({d.x,d.y},d.value))pixel(at);}
+        else if(kind==Kind::rectangle) {for(auto at:th04::portable::yuuka5::rectangle_pixels({d.x,d.y},{d.end_x,d.end_y}))pixel(at);}
+        else if(kind==Kind::vertical_line) {for(auto at:th04::portable::yuuka5::vertical_line_pixels(d.x,d.y,d.end_y))pixel(at);}
+        else {
+            const sprite::Sheet* sheet=nullptr;unsigned image=0;
+            if(d.value>=128 && d.value<256) {const auto slot=sprites.stage_slots[d.value];sheet=slot.sheet;image=slot.image;}
+            else if(d.value==3)sheet=&sprites.explosion;
+            else if(d.value>=4 && d.value<28){sheet=&sprites.enemies;image=d.value-4;}
+            else if(d.value>=28 && d.value<128){sheet=&sprites.items;image=d.value-28;}
+            require_view(sheet,"Gengetsu references absent sprite");
+            if(d.kind==11)th04::portable::wave::raster(*sheet,image,d.x,d.y,d.wavelength,d.amplitude,d.phase,write);
+            else if(kind==Kind::large_sprite || kind==Kind::tiny_sprite)
+                put_sprite(frame,palette,*sheet,image,d.x,d.y,false,kind==Kind::large_sprite ? 2 : 1);
+            else th04::portable::yuuka5::raster_sprite(*sheet,image,d.x,d.y,kind,
+                [&](int x,int y){return frame.indices[unsigned(y)*frame.width+unsigned(x)];},write);
+        }
     }
     if(state.yuuka5_active()) for(const auto& d:state.yuuka5()->draws()) {
         using Kind=th04::portable::yuuka5::DrawKind;
@@ -958,7 +1082,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     for (unsigned index=bullet::pool_size;index;) {
         --index;const auto& b=bullets.entities[index];if (b.flag!=1) continue;
         const auto p=b.position.current;
-        if (index<bullet::pellet_count && !bullets.clear_time && !bullets.zap_frame) {
+        if (index<bullet::pellet_count && !state.bullet_render_clear() && !state.bullet_render_zap()) {
             if (!bullets.pellet_visible[index]) continue;
             const int left=28+pixels(p.x),top=12+pixels(p.y);
             // The white top is an eight-pixel disk; the purple lower pass
@@ -969,7 +1093,17 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 if (color) put_indexed_pixel(frame,palette,left,top,x,y,color);
             }
         } else if (index<bullet::pellet_count || b.phase<=bullet::Phase::cloud_backward) {
-            require_view(b.pattern>=28 && unsigned(b.pattern-28)<sprites.items.count(),"bullet references absent 16px sprite");
+            if (b.pattern < 20) {
+                const sprite::Sheet* raw = b.pattern < 3 ?
+                    (playchar == application::Playchar::reimu ? &sprites.reimu : &sprites.marisa) :
+                    (b.pattern == 3 ? &sprites.explosion : &sprites.enemies);
+                const auto image = b.pattern < 3 ? b.pattern : (b.pattern == 3 ? 0 : b.pattern - 4);
+                sprite::raster_unconverted_tiny16(*raw,image,[&](unsigned x,unsigned y,std::uint8_t color) {
+                    put_indexed_pixel(frame,palette,24+pixels(p.x),8+pixels(p.y),x,y,color);
+                });
+                continue;
+            }
+            if(!(b.pattern>=28 && unsigned(b.pattern-28)<sprites.items.count()))throw std::runtime_error("bullet references absent 16px sprite: pattern="+std::to_string(b.pattern)+" slot="+std::to_string(index)+" phase="+std::to_string(unsigned(b.phase))+" movement="+std::to_string(unsigned(b.movement))+" clear="+std::to_string(bullets.clear_time)+" zap="+std::to_string(bullets.zap_frame)+" frame="+std::to_string(state.frames()));
             put_sprite(frame,palette,sprites.items,b.pattern-28,24+pixels(p.x),8+pixels(p.y));
         } else if (p.x>=0 && p.x<6144 && p.y>=0 && p.y<5888) {
             const bool blue=b.pattern==54 || b.pattern==55 || b.pattern==57 || (b.pattern>=76 && b.pattern<92);
@@ -981,6 +1115,19 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         if (e.flag!=1) continue;
         for (auto p:circle::raster(e.center,static_cast<std::uint16_t>(e.radius)))
             put_indexed_pixel(frame,palette,p.x,p.y,0,0,state.circles().snapshot().color);
+    }
+    if(bomb_frame.active) {
+        sprites.bomb_pages[bomb_page]=physical_page(frame.indices,display_line);
+        if(sprites.capture_bomb) {
+            sprites.bomb_capture.final=sprites.bomb_pages[bomb_page];
+            sprites.bomb_capture.rgb.resize(640*400*3);
+            for(unsigned at=0;at<frame.pixels.size();++at) {
+                const auto color=frame.pixels[at];
+                sprites.bomb_capture.rgb[at*3]=std::uint8_t(color>>16);
+                sprites.bomb_capture.rgb[at*3+1]=std::uint8_t(color>>8);
+                sprites.bomb_capture.rgb[at*3+2]=std::uint8_t(color);
+            }
+        }
     }
     return frame;
 }
@@ -1015,30 +1162,8 @@ void put_text_requests(Frame& frame,const MainSprites& sprites,const std::vector
     for(unsigned i=0;i<layer.size();++i) if(layer[i]) frame.pixels[i]=layer[i];
 }
 
-void put_score_text(Frame& frame,const MainSprites& sprites,const gameplay::State& state) {
-    namespace score=th04::portable::score;
-    namespace bonus=th04::portable::bonus;
-    auto snapshot=state.scoreboard();
-    std::vector<bonus::Event> requests;
-    for(const auto& e:score::render(snapshot))
-        requests.push_back({bonus::Kind::gaiji,int(e.left),int(e.row),int(e.value),0,e.bytes});
-    put_text_requests(frame,sprites,requests);
-}
-
-
-void put_stage_overlay(Frame& frame,const MainSprites& sprites,const gameplay::State& state) {
-    const auto& cell=state.overlay_cell();
-    const bool black=cell.kind==th04::portable::transition::TextKind::character && (cell.attribute&4);
-    if(cell.kind==th04::portable::transition::TextKind::character && !black) return;
-    const auto base=32u+unsigned(sprites.gaiji.at(28))+(unsigned(sprites.gaiji.at(29))<<8);
-    for(unsigned top=16;top<384;top+=16) for(unsigned left=32;left<416;left+=16)
-        for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x)
-            if(black || (sprites.gaiji.at(base+cell.value*32+y*2+x/8)&(0x80u>>(x&7))))
-                frame.pixels[(top+y)*640+left+x]=0xff000000u;
-}
-
 registration::TextPlane main_text_plane(const gameplay::State& state) {
-    registration::TextPlane text;
+    auto text=state.hud_text_plane();
     const auto& cell=state.overlay_cell();
     for(unsigned row=1;row<24;++row)for(unsigned col=4;col<52;col+=2) {
         if(cell.kind==th04::portable::transition::TextKind::gaiji)
@@ -1046,17 +1171,16 @@ registration::TextPlane main_text_plane(const gameplay::State& state) {
         else for(unsigned half=0;half<2;++half)
             text.put_ank(int(col+half),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
     }
-    auto board=state.scoreboard();
-    for(const auto& e:th04::portable::score::render(board))
-        if(e.kind==th04::portable::score::Kind::gaiji)
-            text.put_string(int(e.left),int(e.row),e.bytes,std::uint16_t(e.value));
     return text;
+}
+void put_main_text(Frame& frame,const MainSprites& sprites,const gameplay::State& state) {
+    main_text_plane(state).overlay(frame.pixels,sprites.gaiji,sprites.font);
 }
 
 class DialogScene {
 public:
-    DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character)
-        : sprites_(sprites),script_(script),character_(character),indices_(640*400,255) {
+    DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character,sound::ActionSink audio={})
+        : sprites_(sprites),script_(script),character_(character),audio_(std::move(audio)),indices_(640*400,255) {
         require_view(sprites_.font.present(),"Dialog requires --font-bmp FILE or a local FREECG98.bmp");
         for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x) {
             const auto pixel=frame.pixels[y*640+x];
@@ -1138,6 +1262,9 @@ private:
                 const auto color=slot.sheet->pixel(slot.image,x,y);if(color) pixel(e.a+int(x),(e.b+int(y))%400,color);
             }break;
         }
+        case dialog::Kind::bgm_load:if(audio_)audio_({sound::ActionKind::load,std::uint16_t(e.a),e.name});break;
+        case dialog::Kind::bgm_control:if(audio_)audio_({sound::ActionKind::command,std::uint16_t(e.a),{}});break;
+        case dialog::Kind::se_force:if(audio_)audio_({sound::ActionKind::force,std::uint16_t(e.a),{}});break;
         case dialog::Kind::clean:sprites_.clean_stage();break;
         case dialog::Kind::sprite_load:sprites_.load_dialog_sprites(e.name);break;
         case dialog::Kind::cdg_free:sprites_.free_cdg(static_cast<unsigned>(e.a));break;
@@ -1145,6 +1272,7 @@ private:
         }
     }
     MainSprites& sprites_;dialog::Script& script_;unsigned character_,intro_=0;
+    sound::ActionSink audio_;
     Bytes indices_,back_;std::vector<dialog::Event> glyphs_,events_;
 };
 
@@ -1160,6 +1288,20 @@ public:
         cursors_(cursors), selection_background_(selection_background),
         portraits_(portraits), frame_(render()) {
         assets_=main_assets;mode_=mode;
+        sound_timeline_=std::make_unique<sound::Timeline>(
+            [this](const std::string& name)->std::optional<sound::Bytes> {
+                if(name=="miko.efs" && assets_ && !assets_->main_effects.empty())return assets_->main_effects;
+                return std::nullopt;
+            },[this](const sound::SceneEvent& e) {
+                if(e.kind==sound::SceneKind::enter)sound_=sound_timeline_->runtime();
+                if(e.kind==sound::SceneKind::leave)sound_.reset();
+                if(e.kind==sound::SceneKind::action && e.program==application::Program::main && sound_observer_)
+                    sound_observer_(e.action);
+                if(sound_scene_observer_)sound_scene_observer_(e);
+            },[this](application::Program p,std::uint32_t generation,const std::vector<std::int16_t>& values) {
+                if(p==application::Program::main && sound_samples_)sound_samples_(values);
+                if(sound_scene_samples_)sound_scene_samples_(p,generation,values);
+            });
         if(mode_==gameplay::Mode::actor_control)std::cout<<"MAIN fixture mode=actor-control (hit consumption disabled)\n";
         if (main_assets && !main_assets->reimu.empty()) {
             sprites_ = std::make_unique<MainSprites>(*main_assets);
@@ -1175,9 +1317,38 @@ public:
         const auto directory=assets_->save_directory.empty() ?
             score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
         score_store_=std::make_unique<score_file::HostStore>(directory);
+        if(!setup_)read_op_scores();
+        frame_=render();
         enable_congratulations();continue_registration_=true;
     }
-    const registration::Scene* registration_scene() const { return registration_.get(); }
+    void enable_configuration() {
+        require_view(assets_ && application_.program()==application::Program::op,"configuration requires OP assets");
+        const auto directory=assets_->save_directory.empty() ? score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
+        configuration_store_=std::make_unique<th04::portable::configuration::HostStore>(directory);
+        application_.apply_options(configuration_store_->options());
+        menu_=menu::State(menu_.extra_unlocked(),configuration_store_->options());frame_=render();
+        if(configuration_store_->setup_required())begin_setup();
+    }
+    void close_window() {
+        if(application_.program()==application::Program::op) {
+            application_.apply_options(menu_.options());save_configuration(true);
+            application_.exit_from_op();
+            release_sound();
+        }
+    }
+    const th04::portable::op_setup::Scene* setup_scene() const {return setup_.get();}
+    void set_setup_observer(th04::portable::op_setup::Sink sink) {setup_observer_=std::move(sink);}
+    const registration::Scene* registration_scene() const {
+        return extra_route_ ? extra_route_->registration_scene() : score_route_ ? score_route_->registration_scene() : registration_.get();
+    }
+    void enable_bomb_capture() {require_view(bool(sprites_),"Bomb capture needs MAIN assets");sprites_->capture_bomb=true;}
+    const BombCapture& bomb_capture() const {return sprites_->bomb_capture;}
+    const maine::ScoreRoute* score_route() const {return score_route_.get();}
+    const maine::ExtraRoute* extra_route() const {return extra_route_.get();}
+    const std::vector<maine::ExtraBoundary>& last_extra_boundaries() const {return last_extra_boundaries_;}
+    // Retained v1307 component replay stops at the process request. Ordinary
+    // GUI and score-route fixtures always consume that request.
+    void retain_gameover_handoff_for_control() {gameover_handoff_control_=true;}
     // Explicit headless child-scene fixture. This publishes seeded run state
     // through the real process owner; it is not a natural gameplay route.
     void seed_registration_fixture(unsigned character,unsigned rank,unsigned mode) {
@@ -1196,10 +1367,59 @@ public:
         begin_registration(0,2);
         frame_=render();
     }
+    // Retained test adapter supplies Extra unlock/availability. Resident seeds,
+    // resource installation and MAIN initialization use the ordinary path.
+    void unlock_extra_for_control() {extra_selection_control_=true;menu_=menu::State(true,menu_.options());}
+    const op_score::State& op_scores() const {return op_scores_;}
+    void retain_gengetsu_gate_for_control() {gengetsu_gate_control_=true;}
+    void retain_extra_final_gate_for_control() {extra_final_gate_control_=true;}
+    void retain_extra_gate_for_control() {extra_gate_control_=true;}
+    bool gengetsu_dialog_pending() const {return main_ && main_->gengetsu_dialog_pending();}
+    bool gengetsu_resources_valid() const {
+        if(!sprites_->second || loaded_stage_!=6 || sprites_->stage_end!=138 || extra_dialog_resources_.calls()!=2 ||
+           !gengetsu_pre_finished_ || sprites_->boss_portraits().image_count!=1 || sprites_->cdg_released[0] || sprites_->cdg_released[16])return false;
+        for(unsigned i=128;i<136;++i){const auto slot=sprites_->stage_slots[i];if(!slot.sheet || slot.sheet->width()!=48 || slot.sheet->height()!=96)return false;}
+        for(unsigned i=136;i<138;++i)if(!sprites_->stage_slots[i].sheet)return false;
+        for(unsigned i=138;i<256;++i)if(sprites_->stage_slots[i].sheet)return false;
+        for(unsigned i=2;i<8;++i)if(!sprites_->cdg_released[i])return false;
+        return !sprites_->cdg_released[8] && sprites_->cdg_released[9] && sprites_->cdg_released[10] &&
+            sprites_->second->assets.transition==assets_->gengetsu_transition;
+    }
+    bool mugetsu_resources_valid() const {
+        if(!sprites_->second || loaded_stage_!=6 || sprites_->stage_end!=138 || extra_dialog_resources_.calls()!=1 ||
+           !extra_pre_finished_ || sprites_->boss_portraits().image_count!=3 || sprites_->cdg_released[0])return false;
+        for(unsigned i=128;i<138;++i)if(!sprites_->stage_slots[i].sheet)return false;
+        for(unsigned i=138;i<256;++i)if(sprites_->stage_slots[i].sheet)return false;
+        for(unsigned i=2;i<8;++i)if(!sprites_->cdg_released[i])return false;
+        for(unsigned i=8;i<11;++i)if(sprites_->cdg_released[i])return false;
+        return true;
+    }
+    const std::vector<th04::portable::extra_dialog::Resource>& extra_resource_events() const {return extra_resource_events_;}
+    const std::vector<dialog::Event>& completed_dialog_events() const {return completed_dialog_events_;}
+    bool extra_resources_valid() const {
+        if(!sprites_->second || sprites_->stage_end!=152 || loaded_stage_!=6 ||
+           application_.resident().resource_stage!=6 || sprites_->second->boss || sprites_->second->star_plane)return false;
+        for(unsigned i=128;i<152;++i)if(!sprites_->stage_slots[i].sheet)return false;
+        for(unsigned i=152;i<256;++i)if(sprites_->stage_slots[i].sheet)return false;
+        return sprites_->second->faces.image_count==1;
+    }
+    bool extra_boss_pending() const {return main_ && main_->extra_dialog_ready(sprites_->background);}
     void enable_host_timing() { host_timing_=true; }
     void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
     const maine::Ending* ending() const { return ending_.get(); }
-    bool animated() const { return live_main() || bool(ending_) || bool(registration_); }
+    bool animated() const { return bool(setup_) || bool(demo_fade_) || bool(music_) || bool(ranking_) || live_main() || bool(ending_) || bool(registration_) || bool(score_route_); }
+    bool demo_active() const {return demo_fade_ || (main_ && application_.resident().demo_number);}
+    int demo_idle_frames() const {return demo_idle_.count();}
+    const op_music::Scene* music_scene() const {return music_.get();}
+    const op_music::Renderer* music_renderer() const {return music_renderer_.get();}
+    const op_music::State& music_state() const {return music_state_;}
+    unsigned music_draws() const {return music_draws_;}
+    void set_music_observer(op_music::Sink sink) {music_observer_=std::move(sink);}
+    const std::vector<std::string>& music_return_requests() const {return music_return_requests_;}
+    const menu::State& menu_state() const {return menu_;}
+    const op_ranking::Scene* ranking_scene() const {return ranking_.get();}
+    const op_ranking::Renderer* ranking_renderer() const {return ranking_renderer_.get();}
+    void set_ranking_observer(op_ranking::Sink sink) {ranking_observer_=std::move(sink);}
     void enable_stage2() { continue_stage2_=true; }
     void enable_kurumi() { continue_stage2_=true;continue_kurumi_=true; }
     void enable_stage3() { enable_kurumi();continue_stage3_=true; }
@@ -1281,7 +1501,7 @@ public:
     }
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
-    unsigned slowdown() const { return main_ && !main_->game_over() && !dialog_scene_ && !ending_ ? main_->slowdown() : 1; }
+    unsigned slowdown() const { return main_ && !main_->game_over() && !dialog_scene_ && !ending_ && !extra_route_ ? main_->slowdown() : 1; }
     const gameover::Renderer* gameover_renderer() const {return gameover_renderer_.get();}
     void set_gameover_observer(gameover::Sink sink) {gameover_observer_=std::move(sink);}
     bool dialog_active() const { return bool(dialog_scene_); }
@@ -1300,17 +1520,84 @@ public:
         return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
+        ensure_op_sound();
+        const auto sound_owner=sound_;
+        sound::Refresh sound_refresh(sound_owner.get(),std::uint64_t(frame_period.count())*slowdown());
+        if(setup_) {
+            setup_->advance(registration::input_from_main_actions(held_input));
+            if(setup_->finished()) {
+                configuration_store_->complete_setup(std::uint8_t(setup_->bgm()),std::uint8_t(setup_->se()));
+                application_.apply_options(configuration_store_->options());
+                setup_.reset();setup_renderer_.reset();screen_=Screen::menu;
+                ensure_op_sound();
+                if(score_store_)read_op_scores(false);
+                menu_=menu::State(op_scores_.extra_unlocked(),configuration_store_->options());
+            }
+            if(repaint)frame_=render();
+            return;
+        }
+        if(demo_fade_) {
+            demo_fade_->advance();
+            if(demo_fade_->finished()) {
+                const bool entering=screen_==Screen::demo_start;
+                demo_fade_.reset();
+                if(entering) {
+                    save_configuration(false);
+                    application_.start_prepared_demo();
+                    install_main_scene();screen_=Screen::main_handoff;
+                } else {
+                    const auto statistics=main_->run_statistics();
+                    main_.reset();release_sound();sprites_.reset();script_.reset();dialog_scene_.reset();gameover_renderer_.reset();
+                    application_.return_from_main(statistics);restore_fresh_op();
+                }
+            }
+            if(repaint)frame_=render();
+            return;
+        }
+        if(music_) {
+            music_->advance(registration::input_from_main_actions(held_input));
+            if(music_->finished()) {
+                music_.reset();music_renderer_.reset();restore_music_menu();
+                application_.advance_op_menu_frame();
+            }
+            if(repaint)frame_=render();
+            return;
+        }
+        if(ranking_) {
+            ranking_->advance(registration::input_from_main_actions(held_input));
+            if(ranking_->finished()) {
+                ranking_.reset();ranking_renderer_.reset();screen_=Screen::menu;
+                application_.advance_op_menu_frame();
+            }
+            if(repaint)frame_=render();
+            return;
+        }
+        if(extra_route_) {
+            extra_route_->advance(held_input);
+            if(extra_route_->finished()) {
+                last_extra_boundaries_=extra_route_->boundaries();
+                extra_route_.reset();restore_fresh_op();
+            }
+            if(repaint)frame_=render();
+            return;
+        }
+        if(score_route_) {
+            score_route_->advance(held_input);
+            if(score_route_->finished()) {
+                last_score_boundaries_=score_route_->boundaries();
+                score_route_.reset();restore_fresh_op();
+            }
+            if(repaint)frame_=render();
+            return;
+        }
         if(registration_) {
             registration_->advance(registration::input_from_main_actions(held_input));
             if(registration_->finished()) {
                 // All writer closes and blackout completed successfully.
                 // Enter fresh OP with retained resident config and a new LCG.
+                sound_timeline_->handle({sound::ActionKind::command,0x204});
                 application_.finish_maine();
-                registration_.reset();ending_.reset();sprites_.reset();
-                menu_=menu::State(false,application_.resident().config);
-                selection_=selection::State{};screen_=Screen::menu;loaded_stage_=0;
-                post_started_=post_finished_=second_pre_finished_=third_pre_finished_=false;
-                fourth_pre_finished_=fifth_pre_finished_=sixth_pre_finished_=false;
+                registration_.reset();ending_.reset();restore_fresh_op();
             }
             if(repaint)frame_=render();
             return;
@@ -1333,10 +1620,23 @@ public:
         }
         const auto host_start=Clock::now();
         if (live_main()) {
+            if(!main_->game_over() && ((gengetsu_gate_control_ && main_->gengetsu_dialog_pending()) || (extra_final_gate_control_ && main_->extra_final_dialog_pending()) ||
+                (extra_gate_control_ && main_->extra_dialog_ready(sprites_->background)))) {
+                if(repaint)frame_=render();
+                return;
+            }
             bool gameover_started_in_gate=false;
             // A blocking Game Over owns input and refreshes before any stage
             // transition or dialog gate can inspect the suspended MAIN frame.
             if(!main_->game_over()) {
+            if(loaded_stage_==6 && !dialog_scene_ && main_->extra_final_dialog_pending()) {
+                capture_gameover_graphics();main_->update(held_input,shift,false,0,&sprites_->background);
+                gameover_started_in_gate=bool(main_->game_over());
+                if(!gameover_started_in_gate) {
+                    require_view(main_->extra_final_dialog_blocked(),"third Extra dialogue did not suspend MAIN");
+                    sprites_->clean_stage();begin_dialog(false);
+                }
+            }
             if(main_->next_stage_requested() && ((continue_stage2_ && loaded_stage_==0) || (continue_stage3_ && loaded_stage_==1) || (continue_stage4_ && loaded_stage_==2) || (continue_stage5_ && loaded_stage_==3) || (continue_stage6_ && loaded_stage_==4))) {
                 const auto next_id=loaded_stage_+1;
                 require_view(bool(assets_),"next-stage resources missing");
@@ -1351,6 +1651,18 @@ public:
                 main_->set_player_palette({sprites_->palette.palette[42],sprites_->palette.palette[43],sprites_->palette.palette[44]});
                 loaded_stage_=next_id;post_started_=post_finished_=false;
                 application_.publish_main_resource_stage(static_cast<std::uint8_t>(next_id));
+                load_stage_song();
+            }
+            if(loaded_stage_==6 && !dialog_scene_ && main_->gengetsu_dialog_pending()) {
+                capture_gameover_graphics();main_->update(held_input,shift,false,0,&sprites_->background);
+                gameover_started_in_gate=bool(main_->game_over());
+                if(!gameover_started_in_gate) {
+                    require_view(main_->extra_post_dialog_blocked(),"second Extra dialogue did not suspend MAIN");
+                    sprites_->clean_stage();begin_dialog(false);
+                }
+            }
+            if(loaded_stage_==6 && !dialog_scene_ && !extra_pre_finished_ && main_->extra_dialog_ready(sprites_->background)) {
+                sprites_->free_cdg(31);main_->begin_extra_dialog(sprites_->background);begin_dialog(false);
             }
             if(loaded_stage_==5 && !dialog_scene_ && !sixth_pre_finished_ && main_->stage6_dialog_ready(sprites_->background)) {
                 sprites_->free_cdg(31);main_->begin_stage6_dialog(sprites_->background);begin_dialog(false);
@@ -1360,7 +1672,7 @@ public:
             if(loaded_stage_==2 && !dialog_scene_ && !third_pre_finished_ && main_->stage3_dialog_ready(sprites_->background)) begin_dialog(false);
             if(loaded_stage_==1 && !dialog_scene_ && !second_pre_finished_ && main_->stage2_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
-            if(!diagnostic_ && !dialog_scene_ && !post_started_ && !main_->yuuka6_active() && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
+            if(!diagnostic_ && !dialog_scene_ && !post_started_ && !main_->yuuka6_active() && !main_->mugetsu_active() && !main_->gengetsu_active() && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
                 capture_gameover_graphics();
                 main_->update(held_input,shift,false,0,&sprites_->background);
                 gameover_started_in_gate=bool(main_->game_over());
@@ -1369,7 +1681,25 @@ public:
             if(dialog_scene_) {
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
-                    if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
+                    completed_dialog_events_=dialog_scene_->events();
+                    if(loaded_stage_==6)finish_extra_dialog_resources();
+                    if(loaded_stage_==6 && main_->extra_final_dialog_blocked()) {
+                        require_view(extra_dialog_resources_.calls()==3,"third Extra resource exit repeated");
+                        main_->finish_extra_final_dialog();
+                    }
+                    else if(post_started_) { post_finished_=true;main_->finish_post_boss_dialog(); }
+                    else if(loaded_stage_==6 && main_->extra_post_dialog_blocked()) {
+                        gengetsu_pre_finished_=true;
+                        sprites_->free_cdg(16);sprites_->second->assets.transition.clear();
+                        sprites_->extra_backdrop=std::make_unique<CdgSheet>(assets_->gengetsu_backdrop);sprites_->cdg_released[16]=false;
+                        sprites_->second->assets.transition=assets_->gengetsu_transition;
+                        require_view(gengetsu_resources_valid(),"Gengetsu dialog battle bank invalid");
+                        main_->start_gengetsu_after_dialog();
+                    }
+                    else if(loaded_stage_==6) {
+                        extra_pre_finished_=true;require_view(mugetsu_resources_valid(),"Mugetsu dialog battle bank invalid");
+                        main_->start_mugetsu_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
+                    }
                     else if(loaded_stage_==5) {
                         sixth_pre_finished_=true;require_view(stage6_battle_resources_valid(),"Stage6 dialog battle bank invalid");
                         main_->start_yuuka6_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]});
@@ -1397,22 +1727,50 @@ public:
             if(!gameover_started_in_gate)
                 main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
             if(gameover_renderer_ && !main_->game_over())gameover_renderer_.reset();
+            if(main_->demo_exit_requested()) {
+                // DemoPlay freed its replay before the blackout. Keep this
+                // completed MAIN display/resources frozen through171 refreshes.
+                demo_frozen_=render();demo_fade_.emplace(10);screen_=Screen::demo_end;
+                if(repaint)frame_=render();return;
+            }
             if(main_->frames()!=before && !main_->next_stage_requested()) {
                 if(loaded_stage_==3) th04::portable::stage4::update_carpet(sprites_->second->carpet,
                     sprites_->background.mutable_ring(),static_cast<std::uint16_t>(before),sprites_->background.scroll_line());
                 if(loaded_stage_==4) sprites_->second->star_draws=sprites_->second->stars.update(main_->boss_snapshot().phase,int(sprites_->background.scroll_line()),true);
+                for(const auto& event:main_->life_events())if(event.kind==player::LifeKind::scroll)
+                    sprites_->background.set_display_line(unsigned(event.value));
                 // Stage6 frees MAP/STD before the final battle. Its boss
                 // background owns subsequent updates; a stopped, released
                 // map must never be advanced or reconstructed on repaint.
                 if(!sprites_->background.streams_released()) sprites_->background.update(main_->life().scroll_active!=0);
             }
-            if(continue_ending_ && (main_->good_ending_requested() || main_->bad_ending_requested())) {
+            // Retain both physical pages once for every completed Bomb frame,
+            // even when a headless consumer postpones visible repainting.
+            if(main_->frames()!=before && main_->bomb_frame().active)
+                frame_=render();
+            if(continue_registration_ && main_->extra_ending_requested()) {
+                require_view(main_->gengetsu_active() && main_->boss_snapshot().phase_frame==416 && main_->clear_bonus(),
+                             "Extra MAINE preceded the real all-clear/end_extra request");
+                extra_route_=std::make_unique<maine::ExtraRoute>(application_,main_->run_statistics(),
+                    assets_->registration,assets_->ending,*score_store_,[this] {
+                        gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
+                    },sound_timeline_.get());
+                screen_=Screen::maine;
+            } else if(continue_registration_ && !gameover_handoff_control_ && main_->score_registration_requested()) {
+                require_view(main_->game_over() && main_->game_over()->finished(),
+                             "score-only MAINE preceded the Game Over blackout");
+                score_route_=std::make_unique<maine::ScoreRoute>(application_,main_->run_statistics(),
+                    assets_->registration,assets_->ending,*score_store_,[this] {
+                        gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
+                    },sound_timeline_.get());
+                screen_=Screen::maine;
+            } else if(continue_ending_ && (main_->good_ending_requested() || main_->bad_ending_requested())) {
                 const auto sequence=main_->good_ending_requested() ? application::EndSequence::good : application::EndSequence::bad;
                 require_view(assets_ && !assets_->ending.scripts.empty(),"MAINE resources missing");
                 ending_=std::make_unique<maine::Ending>(application_,main_->run_statistics(),sequence,
                     assets_->ending,[this] {
-                        gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();sprites_.reset();
-                    });
+                        gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
+                    },false,sound_timeline_.get());
                 screen_=Screen::maine;
             }
             if (repaint) frame_ = render();
@@ -1421,8 +1779,24 @@ public:
                 main_->observe_refreshes(static_cast<std::uint16_t>(elapsed/frame_period.count()));
             }
         }
-        else if (screen_ == Screen::menu) application_.advance_op_menu_frame();
+        else if (screen_ == Screen::menu) {
+            const bool options=menu_frame_options_.value_or(menu_.screen()==menu::Screen::options);
+            menu_frame_options_.reset();
+            if(demo_idle_.tick(options,std::uint16_t(registration::input_from_main_actions(held_input)|(held_input&0x4000u)))) {
+                require_view(assets_ && score_store_,"demo requires MAIN assets and OP storage");
+                application_.apply_options(menu_.options());application_.prepare_next_demo();
+                demo_frozen_=render();demo_fade_.emplace(1);screen_=Screen::demo_start;
+                if(repaint)frame_=render();
+            } else application_.advance_op_menu_frame();
+        }
     }
+    void set_sound_observer(sound::ActionSink observer,sound::Runtime::Samples samples={}) {
+        sound_observer_=std::move(observer);sound_samples_=std::move(samples);
+    }
+    void set_sound_scene_observer(sound::SceneSink observer,sound::Timeline::Samples samples={}) {
+        sound_scene_observer_=std::move(observer);sound_scene_samples_=std::move(samples);
+    }
+    const sound::Runtime* sound_runtime() const {return sound_.get();}
     void repaint() { frame_=render(); }
     void diagnostic_start_orange() {
         require_view(live_main(),"Orange fixture requires MAIN");
@@ -1436,17 +1810,58 @@ public:
     bool input(menu::Input pressed) {
         bool close = false;
         switch (screen_) {
+        case Screen::setup:break; // This scene samples held input at refreshes.
         case Screen::menu: {
+            ensure_op_sound();
+            const bool options=menu_.screen()==menu::Screen::options;
+            const auto selected=menu_.selection();const auto previous=menu_.options();
+            if(!menu_frame_options_)menu_frame_options_=menu_.screen()==menu::Screen::options;
             const menu::Result result = menu_.handle(pressed);
+            if(pressed==menu::Input::up || pressed==menu::Input::down)
+                sound_timeline_->handle({sound::ActionKind::force,1});
+            else if(pressed==menu::Input::confirm && (!options || selected==unsigned(menu::OptionChoice::quit)))
+                sound_timeline_->handle({sound::ActionKind::force,11});
+            if(options && (previous.bgm_mode!=menu_.options().bgm_mode ||
+                (pressed==menu::Input::confirm && selected==unsigned(menu::OptionChoice::reset))))
+                sound_timeline_->op_restart(menu_.options());
+            // TH04 SE-only option edits are deferred until a later mode
+            // determination. BGM/reset restarts do not reload the EFS file.
             if (result.kind == menu::ResultKind::quit) {
+                application_.apply_options(menu_.options());save_configuration(true);
                 application_.exit_from_op();
+                release_sound();
                 close = true;
             } else if (result.kind == menu::ResultKind::choose_main) {
                 if (result.choice == menu::MainChoice::game ||
                     result.choice == menu::MainChoice::extra) {
                     extra_ = result.choice == menu::MainChoice::extra;
-                    selection_ = selection::State{};
+                    selection_ = selection::State(extra_ && !extra_selection_control_ ? op_scores_.availability(true) : selection::State::all_available());
                     screen_ = Screen::selection;
+                } else if(result.choice==menu::MainChoice::scores) {
+                    require_view(assets_ && score_store_ && !assets_->ranking.numerals.empty(),"OP ranking assets/storage missing");
+                    application_.apply_options(menu_.options());
+                    // The file may have changed since startup. Reopen physical
+                    // storage, retaining this OP's decoded buffers/LCG/flags.
+                    score_store_=std::make_unique<score_file::HostStore>(score_store_->path().parent_path());
+                    const auto initial=render();require_view(initial.indices.size()==256000,"OP menu indexed page missing");
+                    ranking_renderer_=std::make_unique<op_ranking::Renderer>(assets_->ranking,
+                        std::array<Bytes,2>{initial.indices,initial.indices});
+                    ranking_=std::make_unique<op_ranking::Scene>(op_scores_,score_store_->file(),menu_.options().rank,
+                        [this]{return application_.next_process_random();},
+                        [this](const score_file::Operation& e){score_store_->apply(e);},
+                        [this](const op_ranking::Event& e){ranking_renderer_->apply(e);sound_timeline_->ranking(e);if(ranking_observer_)ranking_observer_(e);});
+                    screen_=Screen::ranking;
+                } else if(result.choice==menu::MainChoice::music_room) {
+                    require_view(assets_ && assets_->music.comments.size()==17600,"Music Room assets missing");
+                    application_.apply_options(menu_.options());
+                    music_return_requests_.clear();title_resources_.reset();music_draws_=0;
+                    const auto initial=render();require_view(initial.indices.size()==256000,"Music Room initial indexed page missing");
+                    music_renderer_=std::make_unique<op_music::Renderer>(assets_->music,
+                        std::array<Bytes,2>{initial.indices,initial.indices});
+                    music_=std::make_unique<op_music::Scene>(music_state_,assets_->music,
+                        [this]{++music_draws_;return application_.next_process_random();},
+                        [this](const op_music::Event& e){music_renderer_->apply(e);sound_timeline_->music(e);if(music_observer_)music_observer_(e);});
+                    screen_=Screen::music;
                 } else {
                     std::cout << "title selection=" << unsigned(result.choice)
                               << " (not ported yet)" << std::endl;
@@ -1455,38 +1870,26 @@ public:
             break;
         }
         case Screen::selection: {
+            ensure_op_sound();
+            const bool character=selection_.screen()==selection::Screen::playchar;
+            if((character && (pressed==menu::Input::left || pressed==menu::Input::right)) ||
+               (!character && (pressed==menu::Input::up || pressed==menu::Input::down)))
+                sound_timeline_->handle({sound::ActionKind::force,1});
+            if(pressed==menu::Input::confirm)sound_timeline_->handle({sound::ActionKind::force,11});
             const selection::Result result = selection_.handle(pressed);
             if (result.kind == selection::ResultKind::canceled) {
                 screen_ = Screen::menu;
             } else if (result.kind == selection::ResultKind::chosen) {
                 application_.apply_options(menu_.options());
+                save_configuration(false);
+                sound_timeline_->handle({sound::ActionKind::command,0x20a});
                 if (extra_) {
                     application_.start_extra(result.playchar, result.shot_type);
                 } else {
                     application_.start_normal(result.playchar, result.shot_type);
                 }
                 screen_ = Screen::main_handoff;
-                if(!sprites_ && assets_ && !assets_->reimu.empty())
-                    sprites_=std::make_unique<MainSprites>(*assets_);
-                if (sprites_) {
-                    main_ = std::make_unique<gameplay::State>(application_,mode_);
-                    main_->set_gameover_sink([this](const gameover::Event& event) {
-                        if(gameover_renderer_) {
-                            gameover_renderer_->apply(event);
-                            if(event.kind==gameover::Kind::hud_score)gameover_renderer_->update_score(main_->scoreboard());
-                        }
-                        if(gameover_observer_)gameover_observer_(event);
-                    });
-                    if(score_store_)main_->set_continue_save([this](const auto& digits) {
-                        const auto& r=application_.resident();
-                        score_store_->save_continue(std::uint8_t(r.playchar),r.stage==6 ? 4 : r.config.rank,
-                            r.stage,r.stage==6 || r.config.turbo,digits,
-                            [this] {return application_.next_process_random();});
-                    });
-                    main_->load_stage(sprites_->standard);
-                    main_->set_player_palette({sprites_->palette.palette[42],sprites_->palette.palette[43],sprites_->palette.palette[44]});
-                    script_=std::make_unique<dialog::Script>(sprites_->scripts[unsigned(result.playchar)]);
-                }
+                install_main_scene();
                 std::cout << "MAIN handoff playchar="
                           << unsigned(result.playchar)
                           << " shot=" << unsigned(result.shot_type)
@@ -1496,8 +1899,11 @@ public:
             break;
         }
         case Screen::maine:break; // Held keys belong to MAINE's blocking clock.
+        case Screen::ranking:break; // Its caller owns samples, waits and repeats.
+        case Screen::music:break; // Release waits continue polygon animation.
+        case Screen::demo_start:case Screen::demo_end:break;
         case Screen::main_handoff:
-            if (pressed == menu::Input::cancel && !dialog_scene_ && !(main_ && main_->game_over())) {
+            if (pressed == menu::Input::cancel && !demo_active() && !dialog_scene_ && !(main_ && main_->game_over())) {
                 close = true;
             }
             break;
@@ -1507,6 +1913,59 @@ public:
     }
 
 private:
+    void ensure_op_sound() {
+        if(application_.program()!=application::Program::op || setup_)return;
+        if(sound_timeline_->program()!=application::Program::op ||
+           sound_timeline_->generation()!=application_.generation()) {
+            sound_timeline_->enter(application::Program::op,application_.generation(),application_.resident().config);
+            sound_timeline_->op_title(application_.resident().demo_number!=0);
+        }
+    }
+    void release_sound() {sound_timeline_->leave();sound_.reset();}
+    void install_main_scene() {
+        if(!sprites_ && assets_ && !assets_->reimu.empty())sprites_=std::make_unique<MainSprites>(*assets_);
+        if(!sprites_)return;
+        loaded_stage_=application_.resident().resource_stage;
+        if(loaded_stage_) {
+            const auto& resource=loaded_stage_==1 ? assets_->stage2 : loaded_stage_==2 ? assets_->stage3 :
+                loaded_stage_==3 ? assets_->stage4[unsigned(application_.resident().playchar)] : assets_->extra;
+            require_view(!resource.standard.empty(),"first MAIN stage resources missing");
+            sprites_->install_stage(std::make_unique<StageSprites>(resource,loaded_stage_));
+            sprites_->standard=resource.standard;
+        }
+        if(score_store_)score_store_=std::make_unique<score_file::HostStore>(score_store_->path().parent_path());
+        main_=std::make_unique<gameplay::State>(application_,mode_,player::LifeState{},score_store_.get());
+        const auto& r=application_.resident();
+        if(r.demo_number)main_->set_demo_replay(assets_->replays[r.demo_number-1]);
+        main_->set_gameover_sink([this](const gameover::Event& event) {
+            if(gameover_renderer_) {
+                gameover_renderer_->apply(event);
+                if(event.kind==gameover::Kind::hud_score || event.kind==gameover::Kind::shot_level ||
+                   event.kind==gameover::Kind::hud_lives || event.kind==gameover::Kind::hud_bombs)
+                    gameover_renderer_->update_hud(main_->hud_text_plane());
+            }
+            if(gameover_observer_)gameover_observer_(event);
+        });
+        if(score_store_)main_->set_continue_save([this](const auto& digits) {
+            const auto& resident=application_.resident();
+            score_store_->save_continue(std::uint8_t(resident.playchar),main_->rank(),
+                resident.stage,main_->turbo(),digits,[this]{return application_.next_process_random();});
+        });
+        sound_timeline_->enter(application::Program::main,application_.generation(),r.config);
+        main_->set_sound_sink([this](const sound::Action& a){sound_->handle(a);});
+        main_->load_stage(sprites_->standard);
+        load_stage_song();
+        main_->set_player_palette({sprites_->palette.palette[42],sprites_->palette.palette[43],sprites_->palette.palette[44]});
+        const auto& scripts=loaded_stage_ ? sprites_->second->assets.dialog_scripts : sprites_->scripts;
+        script_=std::make_unique<dialog::Script>(scripts[unsigned(r.playchar)]);
+    }
+    void load_stage_song() {
+        if(!sound_ || application_.resident().demo_number)return;
+        const auto& r=application_.resident();std::string name="ST00";
+        name[3]=char(r.stage_ascii);if(!loaded_stage_)name[2]=char('0'+unsigned(r.playchar));
+        sound_->handle({sound::ActionKind::load,0x600,name});
+        sound_->handle({sound::ActionKind::command,0,{}});
+    }
     void capture_gameover_graphics() {
         if(gameover_renderer_ || main_->life().miss_time!=1 || main_->score().remaining_lives!=1)return;
         // Last completed software display, independently of repaint cadence,
@@ -1523,6 +1982,9 @@ private:
         require_view(application_.program()==application::Program::maine && bool(score_store_),
                      "registration requires MAINE and native storage");
         const auto& resident=application_.resident();
+        if(sound_timeline_->program()!=application::Program::maine ||
+           sound_timeline_->generation()!=application_.generation())
+            sound_timeline_->enter(application::Program::maine,application_.generation(),resident.config);
         registration::Run run{resident.stage,resident.config.rank,
             std::uint8_t('0'+unsigned(resident.playchar)),std::uint8_t(resident.shot_type),
             std::uint8_t(resident.config.turbo),std::uint8_t(resident.end_sequence),resident.score_digits};
@@ -1530,35 +1992,196 @@ private:
         registration_=std::make_unique<registration::Scene>(registration_assets_,run,
             score_store_->file(),[this] {return application_.next_process_random();},
             registration::input_from_main_actions(held),
-            [this](const score_file::Operation& operation) {score_store_->apply(operation);});
+            [this](const score_file::Operation& operation) {score_store_->apply(operation);},
+            [this](const registration::Event& e){sound_timeline_->registration(e);});
         screen_=Screen::maine;
     }
+    void read_op_scores(bool reload_configuration=true) {
+        require_view(application_.program()==application::Program::op && score_store_,"OP score reading requires its fresh process/storage");
+        // Each OP process observes the closed physical file, not a preceding
+        // process's retained File snapshot or already-decoded score buffers.
+        const auto directory=score_store_->path().parent_path();
+        if(configuration_store_ && reload_configuration) {
+            configuration_store_=std::make_unique<th04::portable::configuration::HostStore>(directory);
+            application_.apply_options(configuration_store_->options());
+            if(configuration_store_->setup_required()) {begin_setup();return;}
+        }
+        ensure_op_sound();
+        score_store_=std::make_unique<score_file::HostStore>(directory);
+        op_scores_=op_score::State{};
+        op_scores_.read(score_store_->file(),application_.resident().config.rank,
+            [this]{return application_.next_process_random();});
+        for(const auto& operation:score_store_->file().operations())score_store_->apply(operation);
+        menu_=menu::State(op_scores_.extra_unlocked(),application_.resident().config);
+    }
+    void save_configuration(bool exiting) {
+        if(configuration_store_)configuration_store_->save(application_.resident().config,exiting);
+    }
+    void begin_setup() {
+        require_view(assets_ && !assets_->setup.windows.empty() && configuration_store_ && configuration_store_->setup_required(),"setup assets/configuration missing");
+        setup_renderer_=std::make_unique<th04::portable::op_setup::Renderer>(assets_->setup);
+        setup_=std::make_unique<th04::portable::op_setup::Scene>([this](const th04::portable::op_setup::Event& e) {
+            setup_renderer_->apply(e);if(setup_observer_)setup_observer_(e);
+        });screen_=Screen::setup;frame_=render();
+    }
+    void restore_fresh_op() {
+        require_view(application_.program()==application::Program::op,"fresh OP requires completed process handoff");
+        release_sound();
+        demo_idle_=demo::Idle{};menu_frame_options_.reset();demo_frozen_={};
+        sprites_.reset();extra_selection_control_=false;read_op_scores();
+        music_state_=op_music::State{};music_.reset();music_renderer_.reset();title_resources_.reset();music_return_requests_.clear();
+        selection_=selection::State{};screen_=setup_ ? Screen::setup : Screen::menu;loaded_stage_=0;
+        post_started_=post_finished_=second_pre_finished_=third_pre_finished_=false;
+        fourth_pre_finished_=fifth_pre_finished_=sixth_pre_finished_=extra_pre_finished_=gengetsu_pre_finished_=false;extra_dialog_resources_=th04::portable::extra_dialog::Resources{};extra_resource_events_.clear();completed_dialog_events_.clear();
+    }
+public:
+    const std::vector<maine::ScoreBoundary>& last_score_boundaries() const {return last_score_boundaries_;}
+private:
+    void apply_extra_dialog_resources(const std::vector<th04::portable::extra_dialog::Resource>& requests) {
+        using Kind=th04::portable::extra_dialog::Kind;
+        for(const auto& request:requests) {
+            if(request.kind==Kind::free)sprites_->free_cdg(request.slot);
+            else if(request.kind==Kind::faces) {
+                if(request.slot==8) {
+                    const unsigned file=request.name=="bss7.cd2" ? 0 : 1;
+                    sprites_->extra_faces=std::make_unique<CdgSheet>(assets_->extra_defeat_faces[file]);
+                    for(unsigned i=0;i<sprites_->boss_portraits().image_count;++i)sprites_->cdg_released[8+i]=false;
+                } else for(unsigned i=2;i<8;++i)sprites_->cdg_released[i]=false;
+            } else sprites_->cdg_released[0]=false; // Owned cached Bomb picture.
+        }
+        extra_resource_events_.insert(extra_resource_events_.end(),requests.begin(),requests.end());
+    }
+    void finish_extra_dialog_resources() {
+        apply_extra_dialog_resources(extra_dialog_resources_.finish(unsigned(application_.resident().playchar)));
+    }
     void begin_dialog(bool post) {
+        if(loaded_stage_==6)
+            apply_extra_dialog_resources(extra_dialog_resources_.begin(unsigned(application_.resident().playchar)));
         // Easy uses a newly loaded _DM04B/_DM14B script, not the normal
         // post-dialogue tail retained after the pre-boss '#' terminator.
         if(post && main_->bad_yuuka5_dialog()) {
             require_view(assets_ && !assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)].empty(),"Yuuka5 bad dialogue missing");
             script_=std::make_unique<dialog::Script>(assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)]);
         }
-        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar,main_->palette_tone_before_frame()),unsigned(application_.resident().playchar));
+        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar,main_->palette_tone_before_frame()),unsigned(application_.resident().playchar),[this](const sound::Action& a){if(sound_)sound_->handle(a);});
     }
-    enum class Screen { menu, selection, main_handoff, maine };
+    // Immutable decoded archive inputs survive native scenes. Rebuild their
+    // active menu owners after Music Room's original cdg_free_all boundary.
+    struct TitleResources {
+        Bytes numbers,commands,arrows,faces;
+        CdgSheet numerals,labels,cursors,portraits;
+        PiImage background;
+        TitleResources(const FrontEnd& scene,const PiImage& picture)
+            :numbers(scene.numerals_.bytes),commands(scene.labels_.bytes),arrows(scene.cursors_.bytes),faces(scene.portraits_.bytes),
+             numerals(numbers),labels(commands),cursors(arrows),portraits(faces),background(picture) {}
+    };
+    void restore_music_menu() {
+        require_view(assets_ && application_.program()==application::Program::op,"Music return requires retained OP");
+        title_resources_=std::make_unique<TitleResources>(*this,assets_->ranking.graphics.pictures.at("OP1.PI"));
+        music_return_requests_={"main_cdg_load","access 1","load op1.pi","palette","picture","free","copy 0","tone 100"};
+        menu_=menu::State(op_scores_.extra_unlocked(),menu_.options());screen_=Screen::menu;
+    }
+    enum class Screen { menu, selection, main_handoff, maine,ranking,music,demo_start,demo_end,setup };
 
     Frame render() const {
         switch (screen_) {
+        case Screen::setup: {
+            Frame frame{640,400,std::vector<std::uint32_t>(256000)};
+            const auto rgb=setup_renderer_->rgb(setup_->tone());const auto& canvas=setup_renderer_->canvas();
+            frame.indices=canvas.page(canvas.shown_page());
+            for(unsigned i=0;i<frame.pixels.size();++i)frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
+            return frame;
+        }
+        case Screen::demo_start: {
+            auto frame=demo_frozen_;
+            if(demo_fade_->published()) {
+                const unsigned tone=unsigned(demo_fade_->tone());
+                for(auto& pixel:frame.pixels)pixel=0xff000000u|
+                    ((((pixel>>16)&255)*tone/100)<<16)|((((pixel>>8)&255)*tone/100)<<8)|((pixel&255)*tone/100);
+            }
+            return frame;
+        }
+        case Screen::demo_end: {
+            if(!demo_fade_->published())return demo_frozen_;
+            auto frame=render_main(*sprites_,*main_,application_.resident().playchar,demo_fade_->tone());
+            put_main_text(frame,*sprites_,*main_);return frame;
+        }
+        case Screen::music: {
+            Frame frame{640,400,std::vector<std::uint32_t>(256000)};
+            const auto rgb=music_renderer_->rgb(music_->tone());const auto& canvas=music_renderer_->canvas();
+            frame.indices=canvas.page(canvas.shown_page());
+            for(unsigned i=0;i<frame.pixels.size();++i)frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
+            return frame;
+        }
+        case Screen::ranking: {
+            Frame frame{640,400,std::vector<std::uint32_t>(256000)};
+            const auto rgb=ranking_renderer_->rgb(0,ranking_->tone());
+            frame.indices=ranking_renderer_->canvas().page(0);
+            for(unsigned i=0;i<frame.pixels.size();++i)frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
+            return frame;
+        }
         case Screen::menu:
+            if(title_resources_)return render_menu(title_resources_->background,title_resources_->numerals,title_resources_->labels,title_resources_->cursors,menu_);
             return render_menu(
                 title_background_, numerals_, labels_, cursors_, menu_
             );
         case Screen::selection:
             return (selection_.screen() == selection::Screen::playchar)
                 ? render_character_selection(
-                    selection_background_, portraits_, selection_
+                    selection_background_, title_resources_ ? title_resources_->portraits : portraits_, selection_
                 )
                 : render_shot_selection(
-                    selection_background_, portraits_, selection_
+                    selection_background_, title_resources_ ? title_resources_->portraits : portraits_, selection_
                 );
         case Screen::maine:
+            if(extra_route_) {
+                if(extra_route_->phase()==maine::ExtraPhase::main_fade) {
+                    auto frame=render_main(*sprites_,*main_,application_.resident().playchar,extra_route_->main_tone());
+                    if(main_->clear_bonus() && main_->bonus_text_visible())put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
+                    put_main_text(frame,*sprites_,*main_);return frame;
+                }
+                Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
+                if(const auto* registration=extra_route_->registration_scene()) {
+                    const auto rgb=registration->renderer().rgb(0,registration->tone());
+                    for(unsigned i=0;i<frame.pixels.size();++i)
+                        frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
+                } else {
+                    const auto* congratulations=extra_route_->congratulations_scene();
+                    const auto* verdict=extra_route_->verdict_scene();
+                    const auto* canvas=congratulations ? &congratulations->canvas() : verdict ? &verdict->canvas() : nullptr;
+                    if(!canvas)return frame;
+                    PiImage palette;palette.palette=canvas->palette();
+                    const int tone=std::clamp(congratulations ? congratulations->animation().tone() : verdict->tone(),0,200);
+                    for(auto& component:palette.palette) {
+                        const int base=component>>4;
+                        component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
+                    }
+                    const auto& page=canvas->page(canvas->shown_page());
+                    for(unsigned y=0;y<400;++y)for(unsigned x=0;x<640;++x)
+                        frame.pixels[y*640+x]=palette_color(palette,page[((y+unsigned(canvas->scroll()))%400)*640+x]);
+                }
+                return frame;
+            }
+            if(score_route_) {
+                Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
+                if(const auto* registration=score_route_->registration_scene()) {
+                    const auto rgb=registration->renderer().rgb(0,registration->tone());
+                    for(unsigned i=0;i<frame.pixels.size();++i)
+                        frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
+                } else if(const auto* verdict=score_route_->verdict_scene()) {
+                    const auto& canvas=verdict->canvas();PiImage palette;palette.palette=canvas.palette();
+                    const int tone=std::clamp(verdict->tone(),0,200);
+                    for(auto& component:palette.palette) {
+                        const int base=component>>4;
+                        component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 :
+                            15-(15-base)*(200-tone)/100)*16);
+                    }
+                    const auto& page=canvas.page(canvas.shown_page());
+                    for(unsigned y=0;y<400;++y)for(unsigned x=0;x<640;++x)
+                        frame.pixels[y*640+x]=palette_color(palette,page[((y+unsigned(canvas.scroll()))%400)*640+x]);
+                }
+                return frame;
+            }
             if(registration_) {
                 const auto rgb=registration_->renderer().rgb(0,registration_->tone());
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
@@ -1569,7 +2192,7 @@ private:
             if(ending_->phase()==maine::Phase::main_fade) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar,ending_->main_tone());
                 if(main_->clear_bonus() && main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
-                put_stage_overlay(frame,*sprites_,*main_);put_score_text(frame,*sprites_,*main_);
+                put_main_text(frame,*sprites_,*main_);
                 return frame;
             } else {
                 const auto* staff=ending_->staff_scene();
@@ -1599,15 +2222,15 @@ private:
                     frame.pixels[at]=0xff000000u|(unsigned(rgb[at*3])<<16)|(unsigned(rgb[at*3+1])<<8)|rgb[at*3+2];
                 return frame;
             }
-            if(dialog_scene_) { auto frame=dialog_scene_->render();put_score_text(frame,*sprites_,*main_);return frame; }
+            if(dialog_scene_) { auto frame=dialog_scene_->render();put_main_text(frame,*sprites_,*main_);return frame; }
             if(main_) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
                 if(main_->clear_bonus()) {
                     // Departure already publishes graphics tone60 once; TRAM stays bright.
                     if(main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
                 }
-                put_stage_overlay(frame,*sprites_,*main_);
-                put_score_text(frame,*sprites_,*main_);
+
+                put_main_text(frame,*sprites_,*main_);
                 return frame;
             }
             return render_main_handoff(
@@ -1618,12 +2241,28 @@ private:
     }
 
     const MainAssets* assets_=nullptr;
+    demo::Idle demo_idle_;
+    std::optional<bool> menu_frame_options_;
+    std::optional<demo::Fade> demo_fade_;
+    Frame demo_frozen_;
     gameplay::Mode mode_=gameplay::Mode::ordinary;
     bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
     std::unique_ptr<maine::Ending> ending_;
     std::unique_ptr<registration::Scene> registration_;
     registration::GraphicsAssets registration_assets_;
     std::unique_ptr<score_file::HostStore> score_store_;
+    op_score::State op_scores_;
+    std::unique_ptr<op_ranking::Renderer> ranking_renderer_;
+    std::unique_ptr<op_ranking::Scene> ranking_;
+    op_ranking::Sink ranking_observer_;
+    op_music::State music_state_;
+    std::unique_ptr<op_music::Renderer> music_renderer_;
+    std::unique_ptr<op_music::Scene> music_;
+    op_music::Sink music_observer_;
+    unsigned music_draws_=0;
+    std::unique_ptr<TitleResources> title_resources_;
+    std::vector<std::string> music_return_requests_;
+    bool extra_selection_control_=false;
     bool continue_registration_=false;
     cutscene::Sink ending_observer_;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
@@ -1631,6 +2270,10 @@ private:
     bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false,continue_marisa_=false;
     bool continue_stage5_=false,fifth_pre_finished_=false,continue_yuuka5_=false;
     bool continue_stage6_=false,sixth_pre_finished_=false;
+    bool extra_pre_finished_=false,gengetsu_pre_finished_=false,extra_gate_control_=false,gengetsu_gate_control_=false,extra_final_gate_control_=false;
+    th04::portable::extra_dialog::Resources extra_dialog_resources_;
+    std::vector<th04::portable::extra_dialog::Resource> extra_resource_events_;
+    std::vector<dialog::Event> completed_dialog_events_;
     unsigned loaded_stage_=0;
     const PiImage& title_background_;
     const CdgSheet& numerals_;
@@ -1641,19 +2284,46 @@ private:
     menu::State menu_;
     selection::State selection_;
     application::State application_;
+    std::unique_ptr<th04::portable::configuration::HostStore> configuration_store_;
     Screen screen_ = Screen::menu;
     bool extra_ = false;
     std::unique_ptr<MainSprites> sprites_;
     std::unique_ptr<gameplay::State> main_;
+    std::shared_ptr<sound::Runtime> sound_;
+    std::unique_ptr<sound::Timeline> sound_timeline_;
+    sound::SceneSink sound_scene_observer_;sound::Timeline::Samples sound_scene_samples_;
+    sound::ActionSink sound_observer_;sound::Runtime::Samples sound_samples_;
     std::unique_ptr<gameover::Renderer> gameover_renderer_;
+    std::unique_ptr<maine::ScoreRoute> score_route_;
+    std::unique_ptr<maine::ExtraRoute> extra_route_;
+    std::vector<maine::ExtraBoundary> last_extra_boundaries_;
+    std::vector<maine::ScoreBoundary> last_score_boundaries_;
+    bool gameover_handoff_control_=false;
     gameover::Sink gameover_observer_;
+    std::unique_ptr<th04::portable::op_setup::Scene> setup_;
+    std::unique_ptr<th04::portable::op_setup::Renderer> setup_renderer_;
+    th04::portable::op_setup::Sink setup_observer_;
     std::unique_ptr<dialog::Script> script_;
     std::unique_ptr<DialogScene> dialog_scene_;
     bool diagnostic_=false,post_started_=false,post_finished_=false;
     Frame frame_;
 };
 
+#include "sound_frontend_checks.inl"
+#include "sound_scene_frontend_checks.inl"
 #include "gameover_frontend_checks.inl"
+#include "score_route_frontend_checks.inl"
+#include "bomb_frontend_checks.inl"
+#include "extra_frontend_checks.inl"
+#include "mugetsu_frontend_checks.inl"
+#include "extra_maine_frontend_checks.inl"
+#include "op_score_frontend_checks.inl"
+#include "op_ranking_frontend_checks.inl"
+#include "op_music_frontend_checks.inl"
+#include "demo_frontend_checks.inl"
+#include "configuration_frontend_checks.inl"
+#include "op_setup_frontend_checks.inl"
+#include "gengetsu_frontend_checks.inl"
 
 #ifdef _WIN32
 
@@ -1667,7 +2337,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_registration();front_end.enable_host_timing(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -1701,6 +2371,7 @@ LRESULT CALLBACK title_window_proc(
                 if (active && GetAsyncKeyState(VK_RETURN) & 0x8000) held |= 0x1000;
                 if (active && GetAsyncKeyState('X') & 0x8000) held |= 0x800;
                 if (active && GetAsyncKeyState(VK_ESCAPE) & 0x8000) held |= 0x2000;
+                if (active && GetAsyncKeyState('Q') & 0x8000) held |= 0x4000;
                 title->front_end.advance(held, active && (GetAsyncKeyState(VK_SHIFT) & 0x8000));
                 title->next_tick += frame_period*title->front_end.slowdown();
                 ++ticks;
@@ -1796,6 +2467,7 @@ void show_window(
         TranslateMessage(&message);
         DispatchMessageW(&message);
     }
+    title.front_end.close_window();
 }
 
 #else
@@ -1841,7 +2513,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_registration();front_end.enable_host_timing();
+    front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
@@ -1901,6 +2573,7 @@ void show_window(
                 if (keys[SDL_SCANCODE_RETURN]) held |= 0x1000;
                 if (keys[SDL_SCANCODE_X]) held |= 0x800;
                 if (keys[SDL_SCANCODE_ESCAPE]) held |= 0x2000;
+                if (keys[SDL_SCANCODE_Q]) held |= 0x4000;
             }
             const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
             front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
@@ -1933,6 +2606,7 @@ void show_window(
         SDL_RenderCopy(renderer, texture, nullptr, &destination);
         SDL_RenderPresent(renderer);
     }
+    front_end.close_window();
 }
 
 #endif
@@ -1951,7 +2625,7 @@ void run_title(
     const std::string& main_screenshot, const std::string& shooting_screenshots,
     const std::string& combat_screenshots,const std::string& midboss_screenshots,
     const std::string& orange_screenshots,const std::string& dialog_screenshots,
-    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks,const std::string& gameover_checks, bool window
+    const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks,const std::string& gameover_checks,const std::string& score_route_checks,const std::string& bomb_checks,const std::string& extra_checks,const std::string& mugetsu_checks,const std::string& gengetsu_checks,const std::string& extra_clear_checks,const std::string& extra_maine_checks,const std::string& op_score_checks,const std::string& op_ranking_checks,const std::string& op_music_checks,const std::string& demo_checks, bool window
 ) {
     const CdgSheet numerals(numeral_bytes);
     const CdgSheet labels(label_bytes);
@@ -1961,6 +2635,73 @@ void run_title(
     const Frame initial = render_menu(
         background, numerals, labels, cursors, initial_state
     );
+    if(!main_assets.sound_scene_checks.empty()) {
+        require_view(!window && main_assets.muted,"sound scene controls require a headless muted run");
+        auto observed=main_assets;observed.capture_sound_scenes=true;
+        run_sound_option_checks(background,numerals,labels,cursors,selection_background,portraits,observed,main_assets.sound_scene_checks+"/options");
+        run_sound_menu_checks(background,numerals,labels,cursors,selection_background,portraits,observed,main_assets.sound_scene_checks+"/menus");
+        run_score_route_checks(background,numerals,labels,cursors,selection_background,portraits,observed,main_assets.sound_scene_checks+"/score");
+        return;
+    }
+    if(!main_assets.sound_checks.empty()) {
+        require_view(!window,"sound controls require a headless muted run");
+        run_sound_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.sound_checks);return;
+    }
+    if(!main_assets.configuration_checks.empty()) {
+        require_view(!window,"configuration controls require a headless run");
+        run_configuration_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.configuration_checks);return;
+    }
+    if(!main_assets.setup_checks.empty()) {
+        require_view(!window,"setup controls require a headless run");
+        run_setup_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.setup_checks);return;
+    }
+    if(!demo_checks.empty()) {
+        run_demo_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,demo_checks);return;
+    }
+    if(!op_music_checks.empty()) {
+        run_op_music_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,op_music_checks);return;
+    }
+    if(!op_ranking_checks.empty()) {
+        run_op_ranking_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,op_ranking_checks);return;
+    }
+    if(!op_score_checks.empty()) {
+        run_op_score_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,op_score_checks);return;
+    }
+    if(!extra_maine_checks.empty()) {
+        require_view(main_assets.muted,"Extra MAINE checks must remain muted");
+        run_gengetsu_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,extra_maine_checks,true,true);
+        return;
+    }
+    if(!extra_clear_checks.empty()) {
+        require_view(main_assets.muted,"Extra clear checks must remain muted");
+        run_gengetsu_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,extra_clear_checks,true);
+        return;
+    }
+    if(!gengetsu_checks.empty()) {
+        require_view(!window,"Gengetsu controls require a headless run");
+        run_gengetsu_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,gengetsu_checks);
+        return;
+    }
+    if(!mugetsu_checks.empty()) {
+        require_view(!window,"Mugetsu controls require a headless run");
+        run_mugetsu_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,mugetsu_checks);
+        return;
+    }
+    if(!extra_checks.empty()) {
+        require_view(!window,"Extra controls require a headless run");
+        run_extra_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,extra_checks);
+        return;
+    }
+    if(!bomb_checks.empty()) {
+        require_view(!window,"Bomb controls require a headless run");
+        run_bomb_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,bomb_checks);
+        return;
+    }
+    if(!score_route_checks.empty()) {
+        require_view(!window,"score-route controls require a headless run");
+        run_score_route_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,score_route_checks);
+        return;
+    }
     if(!gameover_checks.empty()) {
         require_view(!window,"Game Over controls require a headless run");
         run_gameover_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,gameover_checks);

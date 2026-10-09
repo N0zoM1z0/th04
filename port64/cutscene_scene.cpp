@@ -17,6 +17,12 @@ constexpr std::uint16_t box_masks[5][4]={
     {0xAAAA,0x4444,0xAAAA,0x1111}, {0xAAAA,0x4444,0xAAAA,0x5555},
     {0xFFFF,0xFFFF,0xFFFF,0xFFFF}
 };
+// Independently observed OP DATA0F34:0A1C and MAINE DATA0E53:05DC.
+// The font's third mask differs from the text-box wipe's third mask.
+constexpr std::uint16_t font_masks[4][4]={
+    {0x8888,0x0000,0x2222,0x0000}, {0x8888,0x4444,0x2222,0x1111},
+    {0xAAAA,0x4444,0xAAAA,0x1111}, {0xAAAA,0x5555,0xAAAA,0x5555}
+};
 bool selected(unsigned mask,unsigned x) {
     return (mask & ((0x80u>>(x&7u))<<((x&8u) ? 8 : 0)))!=0;
 }
@@ -74,7 +80,7 @@ void Canvas::draw_picture(int left,int top,int quarter,unsigned mask,bool full) 
     }
 }
 void Canvas::glyph(const Event& e,bool gaiji) {
-    if(!gaiji && e.e>3) throw std::invalid_argument("unsupported MAINE glyph effect");
+    if(!gaiji && (e.e<0 || e.e>7)) throw std::invalid_argument("unsupported graphics glyph effect");
     if(!gaiji)text_weight_=unsigned(e.e);
     unsigned base=0;
     if(gaiji) {
@@ -82,11 +88,12 @@ void Canvas::glyph(const Event& e,bool gaiji) {
         base=32u+unsigned(assets_->gaiji[28])+(unsigned(assets_->gaiji[29])<<8)+unsigned(e.c)*32;
         if(base>assets_->gaiji.size() || assets_->gaiji.size()-base<32) throw std::invalid_argument("truncated MAINE gaiji");
     }
-    const auto weight=[&](std::uint16_t row) {
+    const auto weight=[&](std::uint16_t row,unsigned y) {
         // MAINE's heavy/bold/black kernels operate on a 16-bit register,
         // even for an eight-dot ANK row. Preserve truncation at each step.
         if(e.e==1 || e.e==3) row=static_cast<std::uint16_t>(row|(row<<1));
-        if(e.e==2 || e.e==3) row=bold(row);
+        if(e.e==2 || e.e==3 || e.e>=4) row=bold(row);
+        if(e.e>=4)row&=font_masks[e.e-4][y&3u];
         return row;
     };
     const auto put=[&](int px,int py) {
@@ -115,7 +122,7 @@ void Canvas::glyph(const Event& e,bool gaiji) {
                 const bool set=full ? font_.pixel(sjis,x,y) : font_.ank_pixel(static_cast<std::uint8_t>(first),x,y);
                 if(set) row|=static_cast<std::uint16_t>(1u<<(dots-1-x));
             }
-            row=weight(row);
+            row=weight(row,y);
             if(full) {
                 for(unsigned x=0;x<16;++x) if(row&(0x8000u>>x)) put(left+int(x),e.b+int(y));
             } else if(first!=' ') {
@@ -133,7 +140,7 @@ void Canvas::glyph(const Event& e,bool gaiji) {
     }
 }
 void Canvas::put_text(int left,int top,const std::string& text,unsigned color,unsigned weight) {
-    if(weight>3)throw std::invalid_argument("unsupported MAINE text effect");
+    if(weight>7)throw std::invalid_argument("unsupported graphics text effect");
     text_weight_=weight;
     for(std::size_t at=0;at<text.size() && text[at];) {
         const unsigned first=static_cast<unsigned char>(text[at++]);

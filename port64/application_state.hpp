@@ -101,11 +101,16 @@ public:
     void start_normal(Playchar playchar, ShotType shot_type);
     void start_extra(Playchar playchar, ShotType shot_type);
     void start_next_demo();
+    void prepare_next_demo();
+    void start_prepared_demo();
 
     void publish_main_resources(std::uint8_t lives,std::uint8_t bombs);
     void publish_player_statistics(std::uint8_t misses,std::uint8_t bombs);
     void prepare_main_score();
     void add_stage_graze(std::uint16_t);
+    void initialize_main_gameplay();
+    // Original stage_session_init does this AFTER gameplay/high-score setup.
+    void initialize_demo_stage();
     void advance_main_stage();
     // Resource replacement happens inside the current MAIN process.
     void publish_main_resource_stage(std::uint8_t stage);
@@ -115,6 +120,7 @@ public:
         const std::function<void()>& release_main={}
     );
     void prepare_main_ending(EndSequence);
+    void prepare_main_extra();
     MaineRoute maine_route() const;
     void seed_maine_verdict_random();
     void publish_maine_verdict_completion(std::uint16_t standard_frames);
@@ -123,6 +129,7 @@ public:
     std::uint16_t next_process_random();
 
 private:
+    bool demo_prepared_=false;
     void require_program(Program expected) const;
     void enter(Program next);
     void begin_main(

@@ -44,4 +44,9 @@ void Renderer::update_score(const score::Snapshot& snapshot) {
         if(event.kind==score::Kind::gaiji)
             text_.put_string(int(event.left),int(event.row),event.bytes,std::uint16_t(event.value));
 }
+void Renderer::update_hud(const registration::TextPlane& text) {
+    // Keep Game Over's frozen playfield/menu TRAM. Continue changes the
+    // right-hand resource and score cells at their original event boundaries.
+    text_.copy_rectangle(text,56,0,24,25);
+}
 } // namespace th04::portable::gameover

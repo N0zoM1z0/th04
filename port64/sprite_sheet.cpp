@@ -38,4 +38,29 @@ std::uint8_t Sheet::pixel(unsigned image, unsigned x, unsigned y) const {
     const auto packed = packed_[std::size_t(image) * width_ * height_ / 2 + std::size_t(y) * width_ / 2 + x/2];
     return (x & 1u) ? packed & 15u : packed >> 4;
 }
+void raster_unconverted_tiny16(const Sheet& sheet, unsigned image,
+    const std::function<void(unsigned, unsigned, std::uint8_t)>& write) {
+    unsigned first = 0;
+    for (unsigned x = 0; x < 8; ++x)
+        if (sheet.pixel(image, x, 0)) first |= 128u >> x;
+    if (first != 0x80) return;
+    const auto stride = std::size_t(sheet.width()) * sheet.height() / 8;
+    std::vector<std::uint8_t> planes(stride * 5, 0);
+    for (unsigned y = 0; y < sheet.height(); ++y) for (unsigned x = 0; x < sheet.width(); ++x) {
+        const auto color = sheet.pixel(image, x, y);
+        const auto at = std::size_t(y) * (sheet.width() / 8) + x / 8;
+        const auto bit = std::uint8_t(128u >> (x & 7u));
+        if (color) planes[at] |= bit;
+        for (unsigned p = 0; p < 4; ++p)
+            if (color & (1u << p)) planes[(p + 1) * stride + at] |= bit;
+    }
+    for (std::size_t at = 0;; at += 34) {
+        if (at >= planes.size()) throw std::out_of_range("raw tiny header outside planar pattern");
+        if (planes[at] != 0x80) return;
+        if (planes.size() - at < 34) throw std::out_of_range("raw tiny mask outside planar pattern");
+        const auto color = std::uint8_t(planes[at + 1] & 15u);
+        for (unsigned y = 0; y < 16; ++y) for (unsigned x = 0; x < 16; ++x)
+            if (planes[at + 2 + y * 2 + x / 8] & (128u >> (x & 7u))) write(x, y, color);
+    }
+}
 } // namespace th04::portable::sprite

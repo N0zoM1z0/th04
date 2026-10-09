@@ -9,6 +9,9 @@
 #include "cutscene_scene.hpp"
 #include "staff_roll.hpp"
 #include "registration_scene.hpp"
+#include "op_ranking.hpp"
+#include "op_music.hpp"
+#include "op_setup.hpp"
 
 struct StageAssets {
     Bytes stage_tiles,boss_tiles,backdrop,transition,boss_faces,map_tiles,map,standard,stars;
@@ -19,13 +22,26 @@ struct MainAssets {
     th04::portable::cutscene::Assets ending;
     th04::portable::staff::Assets staff_roll;
     th04::portable::registration::GraphicsAssets registration;
+    th04::portable::op_ranking::Assets ranking;
+    th04::portable::op_music::Assets music;
+    th04::portable::op_setup::Assets setup;
+    std::array<Bytes,4> replays;
     std::string save_directory;
+    std::string configuration_checks;
+    std::string setup_checks;
+    std::string sound_checks;
+    std::string sound_scene_checks;
+    bool capture_sound_scenes=false;
+    Bytes main_effects;
     bool muted=true;
-    StageAssets stage2,stage3,stage5,stage6;
+    StageAssets stage2,stage3,stage5,stage6,extra;
+    std::array<Bytes,2> extra_defeat_faces;
+    Bytes gengetsu_backdrop,gengetsu_transition;
     std::array<StageAssets,2> stage4;
     Bytes reimu;
     Bytes marisa;
     Bytes items;
+    std::array<Bytes,2> bomb_tiles,bomb_pictures;
     Bytes enemies;
     Bytes stage_tiles,boss_tiles;
     Bytes explosion_sprite,orange_background,orange_transition;
@@ -54,4 +70,4 @@ void run_title(const PiImage& background, const Bytes& numerals,
                const std::string& midboss_screenshots,
                const std::string& orange_screenshots,
                const std::string& dialog_screenshots,
-               const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks, const std::string& gameover_checks, bool window);
+               const std::string& stage2_screenshots,const std::string& kurumi_screenshots,const std::string& stage3_screenshots,const std::string& elly_screenshots,const std::string& stage4_screenshots,const std::string& reimu_screenshots,const std::string& marisa_screenshots,const std::string& stage5_screenshots,const std::string& yuuka5_screenshots,const std::string& stage6_screenshots,const std::string& ending_screenshots,const std::string& registration_checks, const std::string& gameover_checks,const std::string& score_route_checks,const std::string& bomb_checks,const std::string& extra_checks,const std::string& mugetsu_checks,const std::string& gengetsu_checks,const std::string& extra_clear_checks,const std::string& extra_maine_checks,const std::string& op_score_checks,const std::string& op_ranking_checks,const std::string& op_music_checks,const std::string& demo_checks, bool window);

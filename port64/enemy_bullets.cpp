@@ -255,7 +255,11 @@ void System::update(Context c,const Sink& sink) {
                     if (hit(b.position.current,c.player)) { b.flag=2;state_.player_hit=true;continue; }
                 } else if (distance(b.position.current.x,c.player.x,256)<=576 && distance(b.position.current.y,c.player.y,352)<=704) {
                     emit(sink,EventType::sparks,b.position.current,32,2);b.phase=Phase::grazed;
-                    if (state_.graze<999) { ++state_.graze;state_.score_delta+=c.graze_score; }
+                    if (state_.graze<999) {
+                        ++state_.graze;
+                        if(c.hud_graze)c.hud_graze(state_.graze);
+                        state_.score_delta+=c.graze_score;
+                    }
                 }
             }
             if (index<pellet_count) state_.pellet_visible[index]=true;

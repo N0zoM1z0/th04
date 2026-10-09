@@ -120,6 +120,11 @@ void Background::update(bool scroll_active) {
     previous_advance_ = static_cast<std::uint8_t>(advance);
 }
 
+void Background::set_display_line(unsigned line) {
+    if(line>=400)throw std::out_of_range("display scroll line");
+    display_line_=line;
+}
+
 void Background::release_finished_streams() {
     if(!stopped() || streams_released_) throw std::logic_error("invalid MAP/STD release");
     // Stage6 frees MAP/STD before dialogue. The displayed tile ring and MPN

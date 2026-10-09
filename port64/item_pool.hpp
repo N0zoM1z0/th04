@@ -1,6 +1,7 @@
 #pragma once
 #include "item_system.hpp"
 #include "motion.hpp"
+#include <functional>
 
 namespace th04::portable::item {
 enum class Flag : std::uint8_t { free, alive, remove };
@@ -38,7 +39,9 @@ public:
     );
     UpdateResult update(
         ScoreState& score, motion::Point player, bool pull_to_player,
-        std::uint8_t miss_time
+        std::uint8_t miss_time,
+        const std::function<void(const CollectionEffects&,const ScoreState&)>& collected={},
+        const std::function<void(std::uint16_t)>& sound={}
     );
 
 private:

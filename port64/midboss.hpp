@@ -30,6 +30,9 @@ struct Context {
     bool scroll_active=true;
     bullet::Context bullets{};
     std::function<std::uint16_t(motion::Point,motion::Point)> hit;
+    // Ordinary MAIN shares one HUD animator with every midboss and boss.
+    // Isolated controls retain their explicit Snapshot::hp_bar context.
+    std::int16_t* hp_previous=nullptr;
 };
 struct Draw {
     int left=0,top=0,vram_top=0;

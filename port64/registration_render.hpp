@@ -8,7 +8,7 @@ namespace th04::portable::registration {
 // PC-98 TRAM has independent WORD character and attribute banks. Retain
 // half-cell codes so replacing one gaiji also replaces its two attributes.
 // MAIN Game Over and MAINE registration use this same bounded gaiji/ANK bank.
-// General Shift-JIS console conversion remains a separate owner.
+// HUD high-count labels also use the original text_putsa Shift-JIS conversion.
 class TextPlane {
 public:
     TextPlane()=default;
@@ -16,10 +16,13 @@ public:
     void put(int column,int row,Byte gaiji,std::uint16_t attribute);
     void put_string(int column,int row,const std::string&,std::uint16_t attribute);
     void put_ank(int column,int row,Byte character,std::uint16_t attribute);
+    void put_sjis(int column,int row,const std::string&,std::uint16_t attribute);
     void clear();
     score_file::Bytes bytes() const;
     // RGB overlay values do not follow the analog graphics palette or tone.
     void overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font&) const;
+    void overlay(std::vector<std::uint32_t>& argb,const score_file::Bytes& gaiji,const dialog::Font&) const;
+    void copy_rectangle(const TextPlane&,unsigned left,unsigned top,unsigned width,unsigned height);
 private:
     std::array<std::uint16_t,2000> codes_{},attributes_{};
 };

@@ -49,7 +49,9 @@ MissSpawnResult Pool::add_miss(
 
 UpdateResult Pool::update(
     ScoreState& score, motion::Point player, bool pull_to_player,
-    std::uint8_t miss_time
+    std::uint8_t miss_time,
+    const std::function<void(const CollectionEffects&,const ScoreState&)>& collected,
+    const std::function<void(std::uint16_t)>& sound
 ) {
     UpdateResult result;
     for (std::size_t i = 0; i < pool_size; ++i) {
@@ -91,6 +93,8 @@ UpdateResult Pool::update(
             event.collected = true;
             event.position = entity.position.current;
             event.collection = collect(score, entity.type, entity.position.current.y, pull_to_player);
+            if(collected)collected(event.collection,score);
+            if(sound)sound(11);
             entity.flag = Flag::remove;
             continue;
         }

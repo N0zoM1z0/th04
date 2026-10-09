@@ -34,6 +34,7 @@ public:
     std::uint16_t next16_mod(std::uint16_t divisor);
 
     std::uint16_t cursor() const { return cursor_; }
+    const std::array<std::uint8_t,size>& bytes() const { return bytes_; }
 
 private:
     std::uint16_t sample_and_advance();

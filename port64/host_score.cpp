@@ -79,6 +79,12 @@ Byte HostStore::save_continue(Byte character,Byte rank,Byte stage,bool turbo,
     for(auto at=start;at<file_.operations().size();++at)apply(file_.operations()[at]);
     return place;
 }
+score::Digits HostStore::read_main_highscore(Byte character,Byte rank,const Random& random) {
+    const auto start=file_.operations().size();Section section{};
+    const auto highscore=load_hiscore_main(section,file_,character,rank,random);
+    for(auto at=start;at<file_.operations().size();++at)apply(file_.operations()[at]);
+    return highscore;
+}
 void HostStore::commit() {
     fs::create_directories(path_.parent_path());
     // create_directory reserves our temporary namespace atomically. Never

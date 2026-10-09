@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iterator>
 #include <iostream>
+#include <iomanip>
 #include <stdexcept>
 #include <vector>
 
@@ -100,6 +101,32 @@ void pool_contracts() {
     i::EnemyDropSequence sequence(1);
     require(!full.add_enemy_drop({},sequence) && sequence.cycle() == 2 && full.spawned() == 32,
             "full pool consumes automatic drop cycle");
+}
+void fresh_main_contracts(bool print) {
+    for(unsigned character=0;character<2;++character)for(unsigned shot=0;shot<2;++shot)
+    for(unsigned extra=0;extra<2;++extra)for(unsigned marker:{0u,19u,255u}) {
+        a::State application;application.start_normal(a::Playchar(character),a::ShotType(shot));
+        a::RunStatistics outgoing;
+        for(unsigned d=0;d<8;++d)outgoing.score_digits[d]=std::uint8_t((marker+d)%10);
+        application.finish_main(outgoing,a::EndSequence::score);application.finish_maine();
+        if(extra)application.start_extra(a::Playchar(character),a::ShotType(shot));
+        else application.start_normal(a::Playchar(character),a::ShotType(shot));
+        application.add_stage_graze(std::uint16_t(marker*257));
+        application.publish_player_statistics(std::uint8_t(marker),std::uint8_t(marker));
+        if(extra)application.prepare_main_extra();else application.prepare_main_score();
+        const auto generation=application.generation();g::State main(application);
+        const auto& resident=application.resident();
+        require(resident.graze==0 && resident.miss_count==0 && resident.bombs_used==0 &&
+            resident.end_sequence==a::EndSequence::in_game && resident.score_digits==outgoing.score_digits &&
+            main.scoreboard().digits==std::array<std::uint8_t,8>{} && main.score().score_delta==0 &&
+            application.generation()==generation,"fresh MAIN failed its own gameplay-session resets");
+        if(print) {
+            std::cout<<resident.graze<<' '<<+resident.miss_count<<' '<<+resident.bombs_used<<' '<<+std::uint8_t(resident.end_sequence)<<' '<<+std::uint8_t(resident.playchar);
+            for(auto d:main.scoreboard().digits)std::cout<<' '<<+d;
+            for(auto d:resident.score_digits)std::cout<<' '<<+d;
+            std::cout<<'\n';
+        }
+    }
 }
 void main_contracts() {
     a::State application;
@@ -335,8 +362,101 @@ void sprite_contracts() {
     try { th04::portable::sprite::Sheet invalid(bytes); } catch(const std::invalid_argument&) { rejected=true; }
     require(rejected,"truncated BFNT rejected");
 }
+template<class Bytes>
+std::string bytes_hex(const Bytes& bytes) {
+    std::ostringstream out;out<<std::hex<<std::setfill('0');
+    for(auto byte:bytes)out<<std::setw(2)<<unsigned(byte);
+    return out.str().empty() ? "-" : out.str();
+}
+void main_hud_vectors(const std::filesystem::path& fixtures,const std::filesystem::path& directory) {
+    namespace sf=th04::portable::score_file;
+    require(!std::filesystem::exists(directory),"MAIN HUD outputs must be fresh");
+    std::filesystem::create_directories(directory);
+    std::ifstream input(fixtures);require(bool(input),"MAIN HUD vectors missing");
+    unsigned character,rank,seed,present,index=0;std::string text;
+    while(input>>character>>rank>>seed>>present>>text) {
+        require(character<2 && rank<5 && seed<=4096 && present<=1,"invalid MAIN HUD context");
+        sf::Bytes data;
+        if(text!="-") {
+            require(text.size()%2==0,"invalid score fixture hex");
+            for(unsigned at=0;at<text.size();at+=2)data.push_back(std::uint8_t(std::stoul(text.substr(at,2),nullptr,16)));
+        }
+        const auto save=directory/std::to_string(index++);std::filesystem::create_directory(save);
+        if(present) {
+            std::ofstream file(save/"GENSOU.SCR",std::ios::binary);
+            file.write(reinterpret_cast<const char*>(data.data()),std::streamsize(data.size()));require(bool(file),"cannot seed native score fixture");
+        }
+        a::State app;auto options=app.resident().config;options.rank=std::uint8_t(rank==4 ? 1 : rank);
+        app.apply_options(options);for(unsigned i=0;i<seed;++i)app.advance_op_menu_frame();
+        if(rank==4)app.start_extra(a::Playchar(character),a::ShotType::a);
+        else app.start_normal(a::Playchar(character),a::ShotType::a);
+        sf::HostStore store(save);g::State main(app,g::Mode::ordinary,{},&store);
+        sf::HostStore reopened(save);
+        require(store.file().bytes()==reopened.file().bytes(),"MAIN repair did not physically close before return");
+        sf::Bytes angles;for(const auto& spark:main.sparks().snapshot().entities) {
+            angles.push_back(std::uint8_t(spark.angle));angles.push_back(std::uint8_t(spark.angle>>8));
+        }
+        std::cout<<app.process_random_state()<<' '<<main.random_cursor()<<' '<<+main.drop_cycle()<<' '
+            <<main.hud_hp_previous()<<' '<<bytes_hex(main.scoreboard().digits)<<' '<<bytes_hex(main.scoreboard().hiscore)
+            <<' '<<bytes_hex(main.random_ring_bytes())<<' '<<bytes_hex(angles)<<' '<<bytes_hex(main.hud_text_plane().bytes())
+            <<' '<<bytes_hex(reopened.file().bytes())<<' '<<store.commits()<<'\n';
+    }
+    require(input.eof() && index>0,"truncated MAIN HUD vector");
+}
+void main_hud_contracts(const std::filesystem::path& directory) {
+    namespace sf=th04::portable::score_file;
+    namespace mb=th04::portable::midboss;
+    namespace hud=th04::portable::hud;
+    const auto save=directory/"main-hud";std::filesystem::create_directory(save);
+    sf::Bytes file;
+    for(unsigned section=0;section<10;++section) {
+        sf::Section row{};sf::initialize_rows(row);
+        for(unsigned d=0;d<8;++d)row[sf::digits_offset+d]=std::uint8_t(0xa0+(section+d)%10);
+        sf::encode_main(row,[section]{return std::uint16_t(1234+section);});
+        file.insert(file.end(),row.begin(),row.end());
+    }
+    {std::ofstream out(save/"GENSOU.SCR",std::ios::binary);out.write(reinterpret_cast<const char*>(file.data()),file.size());require(bool(out),"cannot seed MAIN HUD contract");}
+    for(unsigned character=0;character<2;++character)for(unsigned rank=0;rank<5;++rank) {
+        a::State app;auto options=app.resident().config;options.rank=std::uint8_t(rank==4 ? 1 : rank);app.apply_options(options);
+        if(rank==4)app.start_extra(a::Playchar(character),a::ShotType::a);else app.start_normal(a::Playchar(character),a::ShotType::a);
+        sf::HostStore store(save);g::State main(app,g::Mode::ordinary,{},&store);
+        for(unsigned d=0;d<8;++d)require(main.scoreboard().hiscore[d]==(character*5+rank+d)%10,"MAIN read wrong physical high-score section");
+        require(main.scoreboard().digits==th04::portable::score::Digits{} && store.commits()==0 && store.file().bytes()==file,
+                "valid MAIN score load must be read-only and preserve local zero score");
+        const auto initial=main.hud_text_plane().bytes();main.update(0x800,false);
+        const auto bomb=main.hud_text_plane().bytes();const auto at=(11*80+64)*2;
+        require(initial[at]==0x57 && initial[at+1]==0x53 && bomb[at]==0x56 && bomb[at+1]==2,
+                "ordinary Bomb did not erase its second HUD icon at the resource event");
+    }
+    // The actor's stale replay metadata must not override MAIN's shared HP
+    // previous; the following boss uses the same animator, and visual clear
+    // preserves it. Isolated controls still retain their own explicit context.
+    mb::Snapshot actor;actor.active=true;actor.hp_bar=127;
+    mb::System midboss(actor);mb::Context context;context.hp_previous=nullptr;
+    std::int16_t previous=63;context.hp_previous=&previous;
+    th04::portable::bullet::System bullets;th04::portable::randring::SharedRandomRing ring;
+    th04::portable::rng::Lcg32 random;ring.fill(random);
+    midboss.update(context,bullets,ring);
+    require(previous==64 && midboss.snapshot().hp_bar==64,"midboss did not use shared MAIN HP previous exactly once");
+    th04::portable::registration::TextPlane plane;hud::apply(plane,hud::hp_update(previous,100,100));
+    require(previous==65,"boss repeated or reset the midboss HP animation");
+    hud::Values values;hud::apply(plane,hud::initialize(values));
+    require(previous==65,"stage HUD clear reset shared HP animation");
+    // Observe every collected slot before the next pickup mutates its values.
+    i::Pool pool;i::ScoreState score;
+    pool.add({192*16,323*16},i::Type::dream);pool.add({192*16,323*16},i::Type::dream);
+    std::vector<std::uint16_t> seen;
+    pool.update(score,{192*16,320*16},false,0,[&](const auto& effects,const auto& current) {
+        require(effects.hud_dream_changed,"dream pickup omitted its HUD boundary");seen.push_back(current.dream_score);
+    });
+    require(seen==std::vector<std::uint16_t>{100,200},"mixed pickup consumer lost per-slot dream state");
+}
 } // namespace
 int main(int argc, char** argv) {
+    if(argc==4 && std::string(argv[1])=="--main-hud-join") {
+        main_hud_vectors(argv[2],argv[3]);return 0;
+    }
+    if(argc==2 && std::string(argv[1])=="--fresh-main-vectors") {fresh_main_contracts(true);return 0;}
     static_assert(sizeof(void*)==8,"native MAIN requires x64");
     if (argc == 4 && std::string(argv[1]) == "--tile-pixels") {
         std::ifstream file(argv[2],std::ios::binary);
@@ -395,6 +515,7 @@ int main(int argc, char** argv) {
     if(!std::filesystem::create_directory(temporary))throw std::runtime_error("cannot reserve lifecycle contract directory");
     struct Cleanup {std::filesystem::path path;~Cleanup(){std::error_code error;std::filesystem::remove_all(path,error);}} cleanup{temporary};
     lifecycle_join_contracts(temporary,false);
-    motion_contracts();pool_contracts();main_contracts();sprite_contracts();tile_contracts();
+    main_hud_contracts(temporary);
+    fresh_main_contracts(false);motion_contracts();pool_contracts();main_contracts();sprite_contracts();tile_contracts();
     std::cout << "TH04 live MAIN contracts: PASS motion=Q12.4 player=HELD_KEYS items=32 sprites=BFNT pointer_bits=64\n";
 }

@@ -29,6 +29,9 @@ public:
     unsigned row_pixel(unsigned screen_y) const { return (screen_y + display_line_) % 16; }
     unsigned scroll_line() const { return scroll_line_; }
     unsigned display_line() const { return display_line_; }
+    // Explicit graph_scrollup requests (Bomb48/177) are independent of the
+    // driver's previous-row-advance gate and do not move the tile ring.
+    void set_display_line(unsigned line);
     unsigned speed() const { return speed_; }
     std::int16_t last_delta() const { return last_delta_; }
     unsigned section_cursor() const { return section_cursor_; }

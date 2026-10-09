@@ -1,5 +1,6 @@
 #include "stage5.hpp"
 #include "stage6.hpp"
+#include "stagex.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -44,17 +45,18 @@ void print_boss(const o::Snapshot& b) {
         v.push_back(e->alive);v.push_back(e->age);point(v,e->center);point(v,e->radius);point(v,e->delta);v.push_back(static_cast<std::uint8_t>(e->unused));v.push_back(e->angle_offset);
     }hex(v);
 }
-void setup_vectors(const char* path,bool sixth=false) {
+void setup_vectors(const char* path,bool sixth=false,bool extra=false) {
     std::ifstream in(path);require(bool(in),"cannot read Stage5 setups");unsigned rank;
     while(in>>rank) {
         const auto boss=read_boss(in);Wire w(in,22);mb::Snapshot mid;mid.position=w.motion();mid.start_frame=w.word();mid.hp=m::wrap(w.word());mid.sprite=w.byte();mid.phase=w.byte();mid.phase_frame=m::wrap(w.word());mid.damaged=w.byte();mid.unused_angle=w.byte();
         mid.active=number(in)!=0;mid.hp_bar=m::wrap(number(in));mid.pattern_angle=static_cast<std::uint8_t>(number(in));
         auto next_boss=boss;auto next_mid=mid;std::array<m::Subpixel,3> centers{};
-        if(sixth) {const auto next=th04::portable::stage6::prepare(boss,mid,rank);next_boss=next.boss;next_mid=next.midboss;}
+        if(extra) {const auto next=th04::portable::stagex::prepare(boss,mid);next_boss=next.boss;next_mid=next.midboss;}
+        else if(sixth) {const auto next=th04::portable::stage6::prepare(boss,mid,rank);next_boss=next.boss;next_mid=next.midboss;}
         else {const auto next=s::prepare(boss,mid,rank);next_boss=next.boss;next_mid=next.midboss;centers=next.centers;}
         print_boss(next_boss);Bytes v;motion(v,next_mid.position);word(v,next_mid.start_frame);word(v,next_mid.hp);v.push_back(next_mid.sprite);v.push_back(next_mid.phase);word(v,next_mid.phase_frame);v.push_back(next_mid.damaged);v.push_back(next_mid.unused_angle);hex(v);
         std::cout<<next_mid.active<<' '<<next_mid.hp_bar<<' '<<+next_mid.pattern_angle<<' '<<next_boss.hitbox_radius.x<<' '<<next_boss.hitbox_radius.y<<' '<<+next_boss.timed_out;
-        if(!sixth) for(auto c:centers) { std::cout<<' '<<c; }
+        if(!sixth && !extra) for(auto c:centers) { std::cout<<' '<<c; }
         std::cout<<'\n';
     }
 }
@@ -88,7 +90,7 @@ void pixels(const char* path) {
 int main(int argc,char** argv) {
  try {
     if(argc==3) {
-        const std::string op=argv[1];if(op=="--setup-vectors")setup_vectors(argv[2]);else if(op=="--stage6-setup-vectors")setup_vectors(argv[2],true);else if(op=="--star-vectors")star_vectors(argv[2]);else if(op=="--pixel-vectors") {
+        const std::string op=argv[1];if(op=="--setup-vectors")setup_vectors(argv[2]);else if(op=="--extra-setup-vectors")setup_vectors(argv[2],false,true);else if(op=="--stage6-setup-vectors")setup_vectors(argv[2],true);else if(op=="--star-vectors")star_vectors(argv[2]);else if(op=="--pixel-vectors") {
 #ifdef _WIN32
             require(_setmode(_fileno(stdout),_O_BINARY)!=-1,"cannot set binary star stream");
 #endif

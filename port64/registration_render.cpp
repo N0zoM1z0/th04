@@ -35,6 +35,27 @@ void TextPlane::put_string(int column,int row,const std::string& text,std::uint1
         while(column>=80) {column-=80;++row;}
     }
 }
+void TextPlane::put_sjis(int column,int row,const std::string& text,std::uint16_t attribute) {
+    require(column>=0 && column<80 && row>=0 && row<25,"invalid Shift-JIS text cell");
+    unsigned at=unsigned(row*80+column);
+    const auto store=[&](std::uint16_t code) {
+        require(at<codes_.size(),"Shift-JIS text exceeds bank");
+        codes_[at]=code;attributes_[at]=attribute;++at;
+    };
+    for(unsigned i=0;i<text.size();) {
+        const Byte lead=Byte(text[i++]);if(!lead)break;
+        if(lead<=0x80 || (lead>0x9f && lead<=0xdf)) {store(lead);continue;}
+        require(i<text.size(),"incomplete Shift-JIS character");
+        const Byte trail=Byte(text[i++]);
+        require(lead<=0xef && trail>=0x40 && trail<=0xfc && trail!=0x7f,"undefined Shift-JIS character");
+        unsigned jis_row=(lead-(lead<0xa0 ? 0x81 : 0xc1))*2+0x21;
+        unsigned jis_cell;
+        if(trail>=0x9f) {++jis_row;jis_cell=trail-0x7e;}
+        else jis_cell=trail-(trail>0x7e ? 0x20 : 0x1f);
+        const auto code=std::uint16_t((jis_cell<<8)|(jis_row-0x20));
+        store(code);store(std::uint16_t(code|0x80));
+    }
+}
 void TextPlane::clear() {codes_.fill(0);attributes_.fill(0);}
 score_file::Bytes TextPlane::bytes() const {
     score_file::Bytes result;result.reserve(8000);
@@ -43,8 +64,11 @@ score_file::Bytes TextPlane::bytes() const {
     }
     return result;
 }
-void TextPlane::overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font& font) const {
-    require(rgb.size()==640*400*3,"registration RGB frame is incomplete");
+namespace {
+template<class Paint>
+void paint_text(const std::array<std::uint16_t,2000>& codes_,
+                const std::array<std::uint16_t,2000>& attributes_,
+                const score_file::Bytes& gaiji,const dialog::Font& font,Paint paint) {
     require(gaiji.size()>=32,"registration gaiji header is incomplete");
     const unsigned base=32u+unsigned(gaiji[28])+(unsigned(gaiji[29])<<8);
     require(base<=gaiji.size() && gaiji.size()-base>=256*32,"registration gaiji bank is incomplete");
@@ -57,24 +81,52 @@ void TextPlane::overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,co
         const auto code=codes_[cell],attribute=attributes_[cell];
         const unsigned column=code&127u;
         const bool custom=column==0x56 || column==0x57;
-        if(!custom)right=false;
+        const unsigned jis_cell=(code>>8)&127u;
+        const bool standard=!custom && column>=1 && column<=0x5e && jis_cell>=0x21 && jis_cell<=0x7e;
+        const bool kanji=custom || standard;
+        if(!kanji)right=false;
         if(right && (code&0x7f7fu)!=(previous&0x7f7fu))right=false;
         const unsigned glyph=custom ? ((code>>8)&127u)+(column-0x56u)*128u : 0;
         for(unsigned y=0;y<16;++y) {
             unsigned mask=0;
             if(attribute&1u) {
                 if(custom && (code&0xff00u))mask=gaiji[base+glyph*32+y*2+(right ? 1 : 0)];
+                else if(standard) {
+                    const unsigned jis_row=column+0x20;
+                    const unsigned lead=(jis_row-0x21)/2+(jis_row<0x5f ? 0x81 : 0xc1);
+                    const unsigned trail=jis_row&1u ? jis_cell+0x1f+(jis_cell>=0x60 ? 1 : 0) : jis_cell+0x7e;
+                    for(unsigned x=0;x<8;++x)if(font.pixel(std::uint16_t((lead<<8)|trail),x+(right ? 8 : 0),y))mask|=128u>>x;
+                }
                 else for(unsigned x=0;x<8;++x)if(font.ank_pixel(Byte(code),x,y))mask|=128u>>x;
             }
             if(attribute&4u)mask^=255u; // Reverse MASK; holes still expose graphics.
             for(unsigned x=0;x<8;++x)if(mask&(128u>>x)) {
-                const unsigned at=((cell/80*16+y)*640+(cell%80)*8+x)*3;
-                rgb[at]=(attribute&0x40u) ? 255 : 0;
-                rgb[at+1]=(attribute&0x80u) ? 255 : 0;
-                rgb[at+2]=(attribute&0x20u) ? 255 : 0;
+                paint((cell/80*16+y)*640+(cell%80)*8+x,attribute);
             }
         }
-        previous=code;right=custom && (code&0xff00u) && !right;
+        previous=code;right=kanji && (code&0xff00u) && !right;
+    }
+}
+}
+void TextPlane::overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font& font) const {
+    require(rgb.size()==640*400*3,"registration RGB frame is incomplete");
+    paint_text(codes_,attributes_,gaiji,font,[&](unsigned at,std::uint16_t attr) {
+        rgb[at*3]=(attr&0x40u) ? 255 : 0;
+        rgb[at*3+1]=(attr&0x80u) ? 255 : 0;
+        rgb[at*3+2]=(attr&0x20u) ? 255 : 0;
+    });
+}
+void TextPlane::overlay(std::vector<std::uint32_t>& argb,const score_file::Bytes& gaiji,const dialog::Font& font) const {
+    require(argb.size()==640*400,"MAIN ARGB frame is incomplete");
+    paint_text(codes_,attributes_,gaiji,font,[&](unsigned at,std::uint16_t attr) {
+        argb[at]=0xff000000u|((attr&0x40u) ? 0xff0000u : 0)|
+            ((attr&0x80u) ? 0xff00u : 0)|((attr&0x20u) ? 0xffu : 0);
+    });
+}
+void TextPlane::copy_rectangle(const TextPlane& source,unsigned left,unsigned top,unsigned width,unsigned height) {
+    require(left<=80 && width<=80-left && top<=25 && height<=25-top,"text copy exceeds banks");
+    for(unsigned row=top;row<top+height;++row)for(unsigned col=left;col<left+width;++col) {
+        const auto at=row*80+col;codes_[at]=source.codes_[at];attributes_[at]=source.attributes_[at];
     }
 }
 Renderer::Renderer(const GraphicsAssets& assets,Byte character,Byte place,

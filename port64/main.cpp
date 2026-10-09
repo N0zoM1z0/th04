@@ -238,7 +238,8 @@ int main(int argc, char** argv) {
         std::string options_screenshot, character_screenshot, shot_screenshot;
         std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots,ending_screenshots,font_bitmap;
         bool title_window = false,muted=true;
-        std::string save_directory,registration_checks,gameover_checks;
+        std::string configuration_checks,setup_checks,sound_checks,sound_scene_checks;
+        std::string save_directory,registration_checks,gameover_checks,score_route_checks,bomb_checks,extra_checks,mugetsu_checks,gengetsu_checks,extra_clear_checks,extra_maine_checks,op_score_checks,op_ranking_checks,op_music_checks,demo_checks;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
             if (arg == "--title") { title_window = true; continue; }
@@ -247,8 +248,23 @@ int main(int argc, char** argv) {
             const std::string value = argv[++i];
             if (arg == "--hdi") hdi = value;
             else if(arg=="--save-dir")save_directory=value;
+            else if(arg=="--configuration-checks")configuration_checks=value;
+            else if(arg=="--setup-checks")setup_checks=value;
+            else if(arg=="--sound-checks")sound_checks=value;
+            else if(arg=="--sound-scene-checks")sound_scene_checks=value;
             else if(arg=="--registration-checks")registration_checks=value;
             else if(arg=="--gameover-checks")gameover_checks=value;
+            else if(arg=="--extra-checks")extra_checks=value;
+            else if(arg=="--mugetsu-checks")mugetsu_checks=value;
+            else if(arg=="--gengetsu-checks")gengetsu_checks=value;
+            else if(arg=="--extra-clear-checks")extra_clear_checks=value;
+            else if(arg=="--extra-maine-checks")extra_maine_checks=value;
+            else if(arg=="--op-score-checks")op_score_checks=value;
+            else if(arg=="--op-ranking-checks")op_ranking_checks=value;
+            else if(arg=="--op-music-checks")op_music_checks=value;
+            else if(arg=="--demo-checks")demo_checks=value;
+            else if(arg=="--bomb-checks")bomb_checks=value;
+            else if(arg=="--score-route-checks")score_route_checks=value;
             else if (arg == "--archive") archive = value;
             else if (arg == "--member") member = value;
             else if (arg == "--output") output = value;
@@ -277,7 +293,7 @@ int main(int argc, char** argv) {
             else if (arg == "--font-bmp") font_bitmap = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
-        const bool title = title_window || !gameover_checks.empty() || !registration_checks.empty() || !title_screenshot.empty() ||
+        const bool title = title_window || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !extra_clear_checks.empty() || !gengetsu_checks.empty() || !mugetsu_checks.empty() || !extra_checks.empty() || !bomb_checks.empty() || !score_route_checks.empty() || !gameover_checks.empty() || !registration_checks.empty() || !title_screenshot.empty() ||
             !options_screenshot.empty() || !character_screenshot.empty() ||
             !shot_screenshot.empty() || !handoff_screenshot.empty() || !main_screenshot.empty() ||
             !shooting_screenshots.empty() || !combat_screenshots.empty() || !midboss_screenshots.empty() || !orange_screenshots.empty() || !dialog_screenshots.empty() || !stage2_screenshots.empty() || !kurumi_screenshots.empty() || !stage3_screenshots.empty() || !elly_screenshots.empty() || !stage4_screenshots.empty() || !reimu_screenshots.empty() || !marisa_screenshots.empty() || !stage5_screenshots.empty() || !yuuka5_screenshots.empty() || !stage6_screenshots.empty() || !ending_screenshots.empty();
@@ -287,17 +303,27 @@ int main(int argc, char** argv) {
                 "[--member NAME --output BMP | --title "
                 "[--title-screenshot BMP] [--options-screenshot BMP] "
                 "[--character-screenshot BMP] [--shot-screenshot BMP] "
-                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE] [--save-dir DIR] [--registration-checks DIR] [--gameover-checks DIR] [--mute]]");
+                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE] [--save-dir DIR] [--registration-checks DIR] [--gameover-checks DIR] [--sound-checks DIR] [--score-route-checks DIR] [--mute]]");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         if (title) {
             MainAssets main_assets;
             main_assets.save_directory=save_directory;main_assets.muted=muted;
+            main_assets.configuration_checks=configuration_checks;
+            main_assets.setup_checks=setup_checks;
+            main_assets.sound_checks=sound_checks;main_assets.sound_scene_checks=sound_scene_checks;
             if (!hdi.empty()) {
                 const auto image = read_file(hdi);
                 const auto game = Fat12(image).main_archive();
+                main_assets.main_effects=archive_member(game,"MIKO.EFS");
+                for(unsigned i=0;i<4;++i)
+                    main_assets.replays[i]=archive_member(game,"DEMO"+std::to_string(i+1)+".REC");
                 main_assets.reimu = archive_member(game, "MIKO.BFT");
                 main_assets.marisa = archive_member(game, "MARI.BFT");
                 main_assets.items = archive_member(game, "MIKO16.BFT");
+                for(unsigned c=0;c<2;++c) {
+                    main_assets.bomb_tiles[c]=archive_member(game,"BB"+std::to_string(c)+".BB");
+                    main_assets.bomb_pictures[c]=archive_member(game,"BB"+std::to_string(c)+".CDG");
+                }
                 main_assets.enemies = archive_member(game, "MIKO32.BFT");
                 main_assets.stage_tiles = archive_member(game, "ST00.BFT");
                 main_assets.boss_tiles = archive_member(game, "ST00.BMT");
@@ -307,10 +333,10 @@ int main(int argc, char** argv) {
                 main_assets.dialog_scripts={archive_member(game,"_DM00.TXT"),archive_member(game,"_DM10.TXT")};
                 main_assets.player_faces={archive_member(game,"KAO0.CD2"),archive_member(game,"KAO1.CD2")};
                 main_assets.boss_faces=archive_member(game,"BSS0.CD2");main_assets.gaiji=archive_member(game,"GAMEFT.BFT");
-                for(const std::string name:{"ST00.BB1","ST00.BB2","ST02.BB1","ST02.BB2","ST03.BBT","ST03B.BBT","ST03B21.BBT","ST03B22.BBT","ST04.BB1","ST04.BB2","ST05.BB1","ST05.BB2","ST05.BB3","ST05.BB4","ST05.BB5","ST05.BB6","ST05.BB7","ST05.BB9"}) main_assets.dialog_sprites.emplace(name,archive_member(game,name));
+                for(const std::string name:{"ST00.BB1","ST00.BB2","ST02.BB1","ST02.BB2","ST03.BBT","ST03B.BBT","ST03B21.BBT","ST03B22.BBT","ST04.BB1","ST04.BB2","ST05.BB1","ST05.BB2","ST05.BB3","ST05.BB4","ST05.BB5","ST05.BB6","ST05.BB7","ST05.BB9","ST06.BB1","ST06.BB2","ST06.BB3"}) main_assets.dialog_sprites.emplace(name,archive_member(game,name));
                 if(!font_bitmap.empty()) main_assets.font_bitmap=read_file(font_bitmap);
                 else { std::ifstream font("FREECG98.bmp",std::ios::binary);if(font) main_assets.font_bitmap={std::istreambuf_iterator<char>(font),{}}; }
-                if(title_window || !ending_screenshots.empty() || !registration_checks.empty() || !gameover_checks.empty()) {
+                if(title_window || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !ending_screenshots.empty() || !registration_checks.empty() || !gameover_checks.empty() || !score_route_checks.empty()) {
                     auto& ending=main_assets.ending;
                     ending.font_bitmap=main_assets.font_bitmap;
                     ending.gaiji=archive_member(par,"GAMEFT.BFT");
@@ -319,6 +345,17 @@ int main(int argc, char** argv) {
                     registration.graphics.gaiji=ending.gaiji;
                     registration.graphics.pictures.emplace("HI01.PI",decode_pi(archive_member(par,"HI01.PI")));
                     registration.numerals=archive_member(par,"SCNUM2.BFT");
+                    auto& ranking=main_assets.ranking;
+                    ranking.graphics=registration.graphics;
+                    ranking.graphics.pictures.emplace("OP1.PI",decode_pi(archive_member(par,"OP1.PI")));
+                    ranking.numerals=archive_member(par,"SCNUM.BFT");
+                    ranking.rank_labels=archive_member(par,"HI_M.BFT");
+                    main_assets.music.graphics=registration.graphics;
+                    main_assets.music.graphics.pictures.emplace("MUSIC.PI",decode_pi(archive_member(par,"MUSIC.PI")));
+                    main_assets.music.comments=archive_member(par,"_MUSIC.TXT");
+                    main_assets.setup.graphics=registration.graphics;
+                    main_assets.setup.graphics.pictures.emplace("MS.PI",decode_pi(archive_member(par,"MS.PI")));
+                    main_assets.setup.windows=archive_member(par,"MSWIN.BFT");
                     // Attested MAINE registration notice; preserve Shift-JIS
                     // bytes instead of translating the original graphics.
                     registration.non_turbo_message=
@@ -385,9 +422,17 @@ int main(int argc, char** argv) {
                 sixth.stage_tiles=archive_member(game,"ST05.BFT");sixth.transition=archive_member(game,"ST05.BB");
                 sixth.boss_faces=archive_member(game,"BSS5.CD2");sixth.map_tiles=archive_member(game,"ST05.MPN");
                 sixth.map=archive_member(game,"ST05.MAP");sixth.standard=archive_member(game,"ST05.STD");
+                auto& extra=main_assets.extra;
+                extra.stage_tiles=archive_member(game,"ST06.BFT");extra.transition=archive_member(game,"ST06.BB");
+                extra.backdrop=archive_member(game,"ST06BK.CDG");extra.boss_faces=archive_member(game,"BSS6.CD2");
+                extra.map_tiles=archive_member(game,"ST06.MPN");extra.map=archive_member(game,"ST06.MAP");extra.standard=archive_member(game,"ST06.STD");
+                extra.dialog_scripts[0]=extra.dialog_scripts[1]=archive_member(game,"_DM06.TXT");
+                main_assets.gengetsu_backdrop=archive_member(game,"ST06BK2.CDG");
+                main_assets.gengetsu_transition=archive_member(game,"ST06B.BB");
+                main_assets.extra_defeat_faces={archive_member(game,"BSS7.CD2"),archive_member(game,"BSS8.CD2")};
                 sixth.dialog_scripts={archive_member(game,"_DM05.TXT"),archive_member(game,"_DM15.TXT")};
             }
-            require((main_screenshot.empty() && shooting_screenshots.empty() && combat_screenshots.empty() && midboss_screenshots.empty() && orange_screenshots.empty() && dialog_screenshots.empty() && stage2_screenshots.empty() && kurumi_screenshots.empty() && stage3_screenshots.empty() && elly_screenshots.empty() && stage4_screenshots.empty() && reimu_screenshots.empty() && marisa_screenshots.empty() && stage5_screenshots.empty() && yuuka5_screenshots.empty() && stage6_screenshots.empty() && ending_screenshots.empty()) || !main_assets.reimu.empty(),
+            require((setup_checks.empty() && configuration_checks.empty() && demo_checks.empty() && op_music_checks.empty() && op_ranking_checks.empty() && op_score_checks.empty() && extra_maine_checks.empty() && extra_clear_checks.empty() && gengetsu_checks.empty() && mugetsu_checks.empty() && extra_checks.empty() && main_screenshot.empty() && shooting_screenshots.empty() && combat_screenshots.empty() && midboss_screenshots.empty() && orange_screenshots.empty() && dialog_screenshots.empty() && stage2_screenshots.empty() && kurumi_screenshots.empty() && stage3_screenshots.empty() && elly_screenshots.empty() && stage4_screenshots.empty() && reimu_screenshots.empty() && marisa_screenshots.empty() && stage5_screenshots.empty() && yuuka5_screenshots.empty() && stage6_screenshots.empty() && ending_screenshots.empty()) || !main_assets.reimu.empty(),
                     "MAIN screenshots require a complete TH04 HDI");
             const auto bg = decode_pi(archive_member(par, "OP1.PI"));
             run_title(
@@ -397,7 +442,7 @@ int main(int argc, char** argv) {
                 decode_pi(archive_member(par, "SLB1.PI")),
                 archive_member(par, "SL.CD2"), main_assets, title_screenshot,
                 options_screenshot, character_screenshot, shot_screenshot,
-                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots, ending_screenshots, registration_checks, gameover_checks, title_window
+                handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots,ending_screenshots,registration_checks,gameover_checks,score_route_checks,bomb_checks,extra_checks,mugetsu_checks,gengetsu_checks,extra_clear_checks,extra_maine_checks,op_score_checks,op_ranking_checks,op_music_checks,demo_checks,title_window
             );
             return 0;
         }

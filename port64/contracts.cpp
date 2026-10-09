@@ -471,14 +471,13 @@ int main() {
         "character Cancel must return to title"
     );
 
-    bool empty_selection_rejected = false;
-    try {
-        selection::State empty_selection({{{false, false}, {false, false}}});
-        (void)empty_selection;
-    } catch (const std::invalid_argument&) {
-        empty_selection_rejected = true;
-    }
-    require(empty_selection_rejected, "empty selection mask must fail");
+    selection::State empty_selection({{{false, false}, {false, false}}});
+    empty_selection.handle(menu::Input::confirm);
+    const auto empty_chosen=empty_selection.handle(menu::Input::confirm);
+    require(empty_chosen.kind==selection::ResultKind::chosen &&
+            empty_chosen.playchar==application::Playchar::marisa &&
+            empty_chosen.shot_type==application::ShotType::b,
+            "original OP empty mask must retain Marisa/B fallback");
 
     application::State random_app;
     require(random_app.process_random_state() == rng::Lcg32::default_seed,
@@ -514,6 +513,9 @@ int main() {
     require(random_app.resident().random_seed_source == 3,
             "process transitions must retain the resident seed source");
     random_app.start_next_demo();
+    require(random_app.process_random_state()==3,
+            "demo high-score setup must use the resident-derived seed first");
+    random_app.initialize_demo_stage();
     require(random_app.process_random_state() == rng::Lcg32::demo_seed,
             "recorded demo must override the resident-derived MAIN seed");
     random_app.return_from_main({});

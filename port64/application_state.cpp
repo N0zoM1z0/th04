@@ -52,7 +52,7 @@ void State::begin_main(
 ) {
     require_program(Program::op);
     resident_.stage = stage;
-    resident_.stage_ascii=static_cast<std::uint8_t>('0'+stage);
+    resident_.stage_ascii=static_cast<std::uint8_t>('0'+(demo_number ? resource_stage : stage));
     resident_.resource_stage = resource_stage;
     resident_.credit_lives = lives;
     resident_.credit_bombs = bombs;
@@ -66,11 +66,7 @@ void State::begin_main(
 
     // MAIN copies the resident value once after process startup. Recorded demos
     // replace it before their first Stage runtime initialization.
-    process_random_.reseed(
-        (demo_number == 0)
-            ? resident_.random_seed_source
-            : rng::Lcg32::demo_seed
-    );
+    process_random_.reseed(resident_.random_seed_source);
 }
 
 void State::start_normal(Playchar playchar, ShotType shot_type) {
@@ -80,13 +76,34 @@ void State::start_normal(Playchar playchar, ShotType shot_type) {
     );
 }
 
+void State::initialize_main_gameplay() {
+    require_program(Program::main);
+    // MAIN gameplay_session_init owns these resets after process startup.
+    // Resident score digits still describe the outgoing run until publication.
+    resident_.graze=0;resident_.miss_count=0;resident_.bombs_used=0;
+    resident_.end_sequence=EndSequence::in_game;
+}
+
+void State::initialize_demo_stage() {
+    require_program(Program::main);
+    if(!resident_.demo_number || resident_.stage!=0)
+        throw std::logic_error("demo stage requires first MAIN session");
+    resident_.stage=resident_.demo_stage;
+    resident_.stage_ascii=static_cast<std::uint8_t>('0'+resident_.stage);
+    process_random_.reseed(rng::Lcg32::demo_seed);
+}
+
 void State::start_extra(Playchar playchar, ShotType shot_type) {
     // TH04 Extra ignores configurable starting resources.
     begin_main(6, 6, 3, 2, playchar, shot_type, 0);
 }
 
 void State::start_next_demo() {
+    prepare_next_demo();start_prepared_demo();
+}
+void State::prepare_next_demo() {
     require_program(Program::op);
+    if(demo_prepared_)throw std::logic_error("OP demo already prepared");
     const std::uint8_t demo_number = std::uint8_t(
         (resident_.demo_number >= DEMOS.size()) ? 1 : resident_.demo_number + 1
     );
@@ -94,9 +111,18 @@ void State::start_next_demo() {
 
     // Preserve TH04's split fields: the live stage starts at zero, while the
     // resource/demo stage selects the recorded stage loaded by MAIN.
-    begin_main(
-        0, demo.stage, 3, 3, demo.playchar, demo.shot_type, demo_number
-    );
+    resident_.stage=0;resident_.resource_stage=demo.stage;
+    resident_.stage_ascii=std::uint8_t('0'+demo.stage);
+    resident_.credit_lives=resident_.credit_bombs=3;
+    resident_.playchar=demo.playchar;resident_.shot_type=demo.shot_type;
+    resident_.demo_number=demo_number;resident_.demo_stage=demo.stage;
+    demo_prepared_=true;
+}
+void State::start_prepared_demo() {
+    require_program(Program::op);
+    if(!demo_prepared_)throw std::logic_error("MAIN demo requires its OP preparation");
+    demo_prepared_=false;enter(Program::main);
+    process_random_.reseed(resident_.random_seed_source);
 }
 
 void State::publish_main_resources(std::uint8_t lives,std::uint8_t bombs) {
@@ -165,6 +191,14 @@ void State::prepare_main_ending(EndSequence sequence) {
     resident_.end_type_ascii=sequence==EndSequence::good ? '0' : '1';
 }
 
+void State::prepare_main_extra() {
+    require_program(Program::main);
+    if(resident_.stage!=6 || resident_.resource_stage!=6)
+        throw std::logic_error("Extra completion requires Extra MAIN");
+    // MAIN0AAF:0D1F writes only ES_EXTRA before its fade16. end_type_ascii
+    // survives unchanged; the Extra MAINE branch never consumes it.
+    resident_.end_sequence=EndSequence::extra;
+}
 MaineRoute State::maine_route() const {
     require_program(Program::maine);
     switch (resident_.end_sequence) {

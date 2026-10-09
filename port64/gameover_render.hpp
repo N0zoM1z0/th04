@@ -12,6 +12,7 @@ public:
              std::array<std::uint8_t,48> palette,registration::TextPlane text={});
     void apply(const Event&);
     void update_score(const score::Snapshot&);
+    void update_hud(const registration::TextPlane&);
     const Bytes& indexed() const {return indexed_;}
     const std::array<std::uint8_t,48>& palette() const {return palette_;}
     const registration::TextPlane& text() const {return text_;}

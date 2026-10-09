@@ -127,8 +127,10 @@ void System::update(const Context& context,bullet::System& bullets,
         }
     } else reset();
     const int current=state_.hp<=0 ? 0 : (state_.hp>=620 ? 128 : int(state_.hp)*128/620+1);
+    if(context.hp_previous)state_.hp_bar=*context.hp_previous;
     if (state_.hp_bar<current) state_.hp_bar=motion::wrap(int(state_.hp_bar)+1);
     if (state_.hp_bar>current) state_.hp_bar=static_cast<std::int16_t>(current);
+    if(context.hp_previous)*context.hp_previous=state_.hp_bar;
     emit(sink,EventType::hp,{},static_cast<std::uint16_t>(state_.hp_bar));
 }
 void System::prepare_render(const Context& context) {

@@ -1,5 +1,121 @@
 # TH04 native 64-bit bring-up
 
+v1331 adds native PMD SSG effects with 40 semantic instruments, signed sweeps,
+priority admission, stop/restart and ordered register writes. GNU/optimized
+UBSan each compare 79,488 original effect rows and 3,942 constructed music/drum
+sharing rows. The sequence now compares all selected mask bits: 134,274 short
+and 49,164 longer rows per host pass without v1330's SSG exclusion.
+394 sources bind 156 AMD64 products; 51 CTests pass per Linux host. Musical
+OPN/FM effects, synthesis, physical clocks and frontend PMD capability remain
+unfinished; all runs stay muted. Current evidence/recovery is native
+`.analysis/port64/pmd-v1331/`; see native `docs/port64/evidence/pmd-ssg.md`.
+Cleanup preserves 1,046 protected hashes and reclaims about 195 MiB. Current
+Windows execution and Git commit/push remain pending. DOS acceptance is unchanged.
+
+v1330 adds a native PMD bytecode/timer-state owner: musical part/rhythm
+parsing, note lengths, mutable loops, tempo/bar commands, fade and stop/restart.
+GNU/optimized UBSan each compare134274 original control rows in138 cases;
+12 longer cases compare49164 rows perhost. SSG drum/SE mask bit1 remains an
+explicitly excluded ownership surface, with raw original rows retained.
+390sources bind153AMD64products;50CTests pass perLinuxhost. Native OPN/FM/SSG
+synthesis, physical timers and frontend PMD capability remain absent. All runs
+stay muted; full natural routes/currentWindows/Lunatic timing remain. Evidence
+and recovery: native `.analysis/port64/pmd-v1330/`; details: native
+`docs/port64/evidence/pmd-sequence.md`. DOS acceptance is unchanged.
+
+v1329 establishes an independent original PMD driver reference: all three
+HDI-resident drivers execute 138 M26/M86 cases at two PSP segments, recording
+52,992 Timer B states and complete OPN writes.102 FM SE and six fade/restart
+controls pass; fixed96tick measure and missing-ack adapters reject. LOGO uses
+24ticks permeasure while OP uses96; actual driver state must supply measures.
+This changes verification source only: native PMD/FM remains absent and all
+150 C++ products retain v1328 identities. Reference/consumer manifests remain
+separate. Current private references/recovery: native
+`.analysis/port64/pmd-v1329/`; details: native
+`docs/port64/evidence/pmd-driver.md`.
+
+v1328 joins process-owned sound timelines across post-logo OP, MAIN and
+MAINE: actual options, Scores, Music Room, cutscenes, Staff Roll and
+registration. Fresh MAINE keeps an empty EFS; BGM option restart applies
+pending SE mode without reloading effects. GNU/optimized UBSan each execute
+216 original OP option cases, 32 MAINE entries and 8,834 control snapshots at
+two loads; all 1,150 frontend output files agree. MAIN's 3,574,464 PCM samples
+per host regress. All outputs of 24 Ending and eight Extra actor controls
+agree; these disable hit consumption. An MAINE EFS-reload mutant rejects.
+384 sources bind 150 AMD64 products; 49 CTests pass per Linux host. All launches
+stay muted. PMD/OPN synthesis/real measures, complete startup audio, full
+natural routes, actual Windows and Lunatic timing/performance remain. DOS
+acceptance is unchanged. Current evidence/full pending-source recovery:
+native `.analysis/port64/sound-scenes-v1328/`; details:
+native `docs/port64/evidence/sound-scenes.md`.
+
+Owned terminal cleanup reclaims 1,508,634,624 allocated bytes (about 1.40 GiB)
+from 6,357 duplicate files and one retired mutant executable. 13,175 protected
+hashes remain unchanged at that boundary; sources, inputs, references and all
+current programs remain. Windows interop and shared Git metadata still reject;
+no current Windows execution/commit/push is claimed.
+
+See [OP/MAINE scene evidence](../docs/port64/evidence/sound-scenes.md), [MAIN sound evidence](../docs/port64/evidence/sound-main.md) and
+[beeper evidence](../docs/port64/evidence/beeper.md). The current owner
+queue is in [PORT64](../docs/PORT64.md#remaining-owners); older subsystem
+paragraphs describe their own historical batches.
+
+The sound-control component now preserves original mode detection, command
+routing, SE priority/duration and sound-resource requests.13198 independent
+original cases pass on GNU/UBSan;370sources bind141AMD64products and46CTests
+pass perLinuxhost. PMD/FM synthesis and frontend audio joining remain.
+See [sound control evidence](../docs/port64/evidence/sound-control.md).
+
+First audio setup now runs before score reads and ordinary menus when the
+independent host configuration requests rankFF.84 original instruction cases,
+780 complete displays and9 actual BGM/SE combinations with process restart
+pass on GNU/optimized UBSan.366sources bind138AMD64products;45CTests pass per
+Linux host. Every launch stays muted. Audio and complete natural routes remain.
+See [setup evidence](../docs/port64/evidence/setup.md).
+
+Idle OP now runs all four original recorded demos, returns on any mapped physical
+key or frame3996, fades in original order and rebuilds fresh OP. Each Linux host
+passes16 real visits and43 contracts;132 AMD64 products bind352 sources. Demo
+forces Hard/Turbo/power128 locally while preserving menu settings. Component
+checks independently execute original callbacks/startup; frontend captures
+compare GNU/UBSan. All launches stay muted, with no audio backend opened.
+See [demo evidence](../docs/port64/evidence/demo.md).
+
+Music Room now runs from the real OP menu, retains polygon/playing state on
+revisit, rebuilds menu resources and returns to Game.32 original child cases,
+171 polygon controls,395 complete displays and12 frontend visits pass; GNU
+and optimized UBSan each pass42 contracts.129 AMD64 products bind346 sources.
+All launches remain muted; no audio backend is opened.
+See [Music Room evidence](../docs/port64/evidence/op-music.md).
+
+OP Scores now runs in its retained OP process with original row/rank assets,
+held paging, ordered fades/release and physical saved-score reads.135 original
+caller cases,640 complete displays and12 actual menu/MAIN routes pass; GNU and
+optimized UBSan each pass41 contracts.126 AMD64 products bind339 sources.
+Actual Windows execution remains unavailable; every launch stays muted.
+See [ranking evidence](../docs/port64/evidence/op-score.md#op-ranking-viewer-v1320).
+
+The retained live MAIN HUD and physical highest-score load are joined with
+150 original first-stage caller controls. The HUD component passes5926 two-load original instruction controls,
+75 complete TRAM/RGB controls and40 CTests perLinuxhost. It retains signed
+life/Bomb widths, WORD Dream wrap and shared HP animation semantics. Repaint does not
+reinitialize or advance them. See [HUD evidence](../docs/port64/evidence/hud.md).
+
+Extra runs actual ST06 resources/STD, the timed midboss, three retained `_DM06`
+dialogues and both Mugetsu/Gengetsu battles, then all-clear and MAIN blackout16
+into dedicated Extra MAINE: delay100, registration real host save, CONG04/14,
+verdict and fresh OP/second MAIN. GNU/optimized UBSan each pass 39 contracts;
+eight shooting/Bomb/paint actor controls agree on 336 files/312 BMPs and all
+three original dialogue/resource sequences. Player-hit consumption is disabled
+and the unlock/availability adapted in these long controls. Startup/fresh OP now
+reads closed physical scores, applies original rank/character/shot unlocks and
+preserves the original Extra-only Marisa/B fallback. Independent two-load OP
+checks cover 556 cases; 34 physical restart and 6 registration child scenes enter
+Extra without unlock adapters. Complete ordinary Extra, audio/config persistence and complete routes remain.
+Windows is cross-build only; all launches stay muted.
+See [Extra evidence](../docs/port64/evidence/extra.md) and
+[OP score evidence](../docs/port64/evidence/op-score.md).
+
 This branch keeps the playable PC-98 DOS build intact and develops a separate
 native port. The current GUI reads a user-supplied TH04 HDI, decodes the original
 assets and runs the title/options, character/shot selection, Stages1 through6.
@@ -18,8 +134,11 @@ Arrow keys move, Z fires, Shift slows movement; release then press Enter or Z
 to advance dialogue. After congratulations and the original100-refresh delay,
 registration accepts arrows, Z/Enter, X to erase and Esc to save, then returns
 to fresh OP. Player death and frozen Game Over/Continue are joined with bounded
-frontend controls. Quit's score-only MAINE route, Bomb graphics/shared palette,
-complete HUD/audio and Extra remain pending.
+frontend controls. The v1308 working tree joins Quit's score-only MAINE route
+with bounded GNU/optimized UBSan controls; actual Windows replay is pending.
+Bomb graphics/shared palette are joined in v1309 with bounded GNU/optimized
+UBSan and two-load original Bomb-layer controls. HUD and Extra are now joined under the bounded controls above; audio and
+complete natural routes remain pending. Actual Windows v1308/v1309 replay is pending.
 The native preview does not embed
 original executables or assets and makes no DOS byte-exact claim.
 
@@ -35,6 +154,12 @@ short-read behavior remains unchanged. HDI inputs stay read-only.
 ten sections, both name exits, save/reload, fresh OP and second MAIN. This
 does not exercise a complete natural gameplay route. See the
 [registration evidence](../docs/port64/evidence/score-registration.md#registration-scene-and-host-save).
+
+`--score-route-checks DIR` drives24 actual OP/finite-STD shot/contact/Quit
+routes through registration, verdict, fresh OP and second MAIN, plus4 real
+writer failures. These are bounded authored-STD controls, not full-game routes.
+Use `verify_score_route.py` or `verify_score_route_windows.ps1` with fresh
+directories; all launches remain muted.
 
 The two Stage4 Boss owners have independent original CPU state/event,
 foreground/backdrop and indexed-pixel controls. Marisa additionally owns four
@@ -52,8 +177,8 @@ The portable core also models the DOS executable chain as guarded in-process
 states over one fixed-width resident object. Contracts cover normal, Extra and
 the four demo launches; MAIN statistics publication; Good/Bad, Extra and
 score-only MAINE routing; direct MAIN-to-OP return; and MAINE-to-OP retention.
-This state is ready to connect to future gameplay/Ending implementations; the
-current menu still reports those destinations as unported.
+These process contracts are now joined to gameplay, MAINE and fresh OP.
+Demo frontend playback is joined under the recorded-demo controls above.
 
 `Lcg32` is the fixed-width process-local generator underneath portable random
 state. It reproduces the unsigned modulo-2^32 update and 15-bit result on both
@@ -137,7 +262,7 @@ an existing directory. Each fixture collects an explicitly injected full-power
 item and holds Z for 66 frames; ordinary windows start at power 1.
 `--midboss-screenshots DIR` runs four 4500-frame Stage 1 fixtures (both
 characters, held Z or no shot) and saves six checkpoints each. They use actual
-STD waves, background, shots and effects; player death is still unported.
+STD waves, background, shots and effects; player death is joined, with full natural-route validation pending.
 Independent original-CPU state/render/tile/setup controls:
 
 ```sh
@@ -232,7 +357,8 @@ Both character windows pass held-Z firing and release against original sprite
 pixels. Windows validation runs under Wine; native Windows pacing is untested.
 
 Stages1..6 now connect their ordinary waves, bosses and clear transitions.
-Remaining gameplay owners include Extra, HUD, death/Bomb transitions and audio.
+At this historical milestone, remaining owners included Extra, HUD, death/Bomb
+transitions and audio; the current joined owners and remaining queue are above.
 Saved configuration and Ending/score persistence also remain. Semantic work
 is paused unless a concrete ambiguity blocks one of these slices; a completed
 TH04 native game has not yet been demonstrated.
@@ -318,3 +444,55 @@ The real 1200-frame Stage 1 shooting scenes now yield 24 kills/score5,720/power6
 and the Lunatic 900-frame scenes contain six live bullets per character. Spark
 RNG integration changes the earlier partial fixture's sequence. Full routes,
 bosses, death/Bomb, HUD/audio and Ending/save remain to be migrated.
+
+
+`--bomb-checks DIR` drives12 muted OP/finite-STD/X scenes through ordinary Bomb,
+deathbomb and rejected late deathbomb. `verify_bomb_join.py` compares original
+Bomb instructions and252 captured Bomb layers at two loads. Pre-Bomb native
+state/page and hardware adapters are explicit; complete ordinary routes and
+physical timing remain unaccepted. Repaint does not advance Bomb effects/RNG.
+
+
+`--mugetsu-checks DIR` runs16 muted OP Extra/STD/first-dialog/Mugetsu actor
+controls using actual character/shot selection. Player-hit consumption is
+disabled and the unlock bit is adapted; real shooting and Bomb remain active.
+`verify_extra_dialog.py` compares independent original script/resource requests
+at two loads; `verify_mugetsu_join.py` compares actual frontend requests and
+cross-host/repaint captures. The frontier is frozen `gengetsu_dialog_pending`,
+not complete Extra, original whole pixels or ordinary player survival.
+
+
+`--gengetsu-checks DIR` runs 16 muted OP Extra/STD/two-dialogue/two-boss actor
+controls through the third-dialogue gate. Actual character/shot selection,
+shooting, two Bombs in each shooting scene, wave/lasers/columns and cached
+repaint are exercised. `verify_extra_handoff.py` executes the original bounded
+second-dialogue handoff at two loads; `verify_gengetsu_join.py` compares original
+ordered dialogue/resource requests and complete native cross-host captures.
+Use fresh directories. Completed retained outputs are immutable. These controls
+exclude ordinary survival, original whole-scene pixels and complete Extra.
+
+
+`--extra-clear-checks DIR` runs eight muted actual OP/Extra actor controls with
+both characters/shots and paint/no-paint pairs. Three retained dialogues lead
+to one all-clear award and frozen `end_extra` request at clock 416. Two genuine
+Bombs per scene and release/press pauses are exercised. Use
+`verify_gengetsu_join.py --extra-clear` for all three original ordered requests
+and complete cross-host/paint capture equality; `verify_extra_departure.py`
+executes the bounded original third-dialogue return and nonreturning exit.
+MAIN blackout/Extra MAINE, saved-score unlocks and full ordinary survival remain
+pending. The older `--gengetsu-checks` explicitly retains its third-dialogue
+control gate. Completed outputs stay immutable; always use fresh directories.
+
+
+`--extra-maine-checks DIR` extends the eight actual OP/Extra shooting actor
+controls through real end_extra,273-refresh MAIN blackout16, fresh MAINE's
+100-refresh wait, registration writer-close, Extra congratulations, verdict,
+fresh OP and second MAIN. Every independent score directory is reopened to
+check all ten sections. Use `verify_gengetsu_join.py --extra-maine` for complete
+host/paint equality and the three original dialogues; `verify_extra_maine_join.py`
+compares captured outgoing statistics/fade and original MAIN/MAINE caller order
+at two loads. Child durations and resource/exec consumers are explicit adapters.
+`verify_fresh_main.py` independently executes the original session-reset prefix;
+local score digits and resident graze reset while outgoing published resident
+digits remain retained. Saved OP unlock reading and full ordinary survival are
+still pending. Always supply `--mute` and use fresh output directories.

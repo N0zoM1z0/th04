@@ -35,22 +35,53 @@ void run_gameover_checks(const PiImage& background,const CdgSheet& numerals,
     }
     standard.insert(standard.end(),2,0);const unsigned extent=unsigned(standard.size()-2);
     standard[0]=std::uint8_t(extent);standard[1]=std::uint8_t(extent>>8);write(directory/"finite.std",standard);
-    for(unsigned character=0;character<2;++character)for(unsigned profile=0;profile<5;++profile)
-        for(unsigned paint=0;paint<(profile<2 ? 2u : 1u);++paint) {
+    for(unsigned character=0;character<2;++character)for(unsigned profile=0;profile<6;++profile)
+        for(unsigned paint=0;paint<(profile<2 || profile==5 ? 2u : 1u);++paint) {
         const auto name="c"+std::to_string(character)+"-p"+std::to_string(profile)+"-paint"+std::to_string(paint);
         auto input=assets;input.standard=standard;input.save_directory=(directory/name/"save").string();
         fs::create_directories(directory/name);
-        if(profile==4) {std::ofstream blocker(input.save_directory);blocker<<"blocked score directory";}
+        if(profile==4) {
+            // Explicit valid, tied zero-score ranking input makes this a
+            // ranked Turbo Continue write. An unranked Continue correctly
+            // reads the now-present OP file without performing a write.
+            fs::create_directories(input.save_directory);Bytes saved;
+            for(unsigned section=0;section<score_file::section_count;++section) {
+                score_file::Section row{};score_file::initialize_rows(row);
+                std::fill_n(row.begin()+score_file::digits_offset,80,score_file::gaiji_zero);
+                row[score_file::cleared_offset]=0;
+                score_file::encode_main(row,[section]{return std::uint16_t(0x1234+section);});
+                saved.insert(saved.end(),row.begin(),row.end());
+            }
+            write(fs::path(input.save_directory)/"GENSOU.SCR",saved);
+        }
         FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&input);
         scene.enable_registration();
-        // Actual OP option and character-selection paths, with one life.
+        scene.retain_gameover_handoff_for_control();
+        // Actual OP options and selection. Profile5 retains three lives and
+        // consumes a Bomb after the second death, before the last-life contact.
         for(unsigned i=0;i<3;++i)scene.input(menu::Input::down);
         scene.input(menu::Input::confirm);scene.input(menu::Input::down);
-        scene.input(menu::Input::left);scene.input(menu::Input::left);scene.input(menu::Input::cancel);
+        if(profile!=5) {scene.input(menu::Input::left);scene.input(menu::Input::left);}
+        if(profile==4) {
+            for(unsigned i=0;i<4;++i)scene.input(menu::Input::down);
+            // The default is enabled; exercise both actual option changes.
+            scene.input(menu::Input::right);scene.input(menu::Input::right);
+        }
+        scene.input(menu::Input::cancel);
         for(unsigned i=0;i<3;++i)scene.input(menu::Input::up);
         scene.input(menu::Input::confirm);if(character)scene.input(menu::Input::right);
         scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
-        require_view(scene.live_main() && scene.resident().credit_lives==1,"fixture OP handoff/options failed");
+        require_view(scene.live_main() && scene.resident().credit_lives==(profile==5 ? 3 : 1),"fixture OP handoff/options failed");
+        if(profile==4) {
+            require_view(scene.resident().config.turbo,"Continue failure fixture did not select Turbo");
+            // OP now physically repairs/reads its score file before selection.
+            // This fixture rejects the later Continue writer, so obstruct the
+            // owned directory only after that real startup boundary succeeds.
+            require_view(fs::remove(fs::path(input.save_directory)/"GENSOU.SCR") &&
+                         fs::remove(input.save_directory),"Continue failure fixture could not retire its startup file");
+            std::ofstream blocker(input.save_directory);blocker<<"blocked score directory";
+            require_view(bool(blocker),"Continue failure fixture blocker write failed");
+        }
         const unsigned runs=profile==3 ? 4 : 1;
         for(unsigned run=0;run<runs;++run) {
             const auto stem=name+"-g"+std::to_string(run);const auto location=directory/stem;
@@ -88,11 +119,23 @@ void run_gameover_checks(const PiImage& background,const CdgSheet& numerals,
                     terminal_captured=true;capture_terminal();
                 }
             });
-            for(unsigned i=0;i<1000 && !scene.main_state().game_over();++i)scene.advance(0,false,paint!=0);
+            bool used_bomb=false;
+            for(unsigned i=0;i<(profile==5 ? 4000u : 1000u) && !scene.main_state().game_over();++i) {
+                const auto& current=scene.main_state();std::uint16_t held=0;
+                if(profile==5 && !used_bomb && current.life().misses==2 &&
+                   current.score().remaining_lives==1 && !current.life().miss_time) {
+                    held=0x800;used_bomb=true; // Actual host X, translated by MAIN.
+                }
+                scene.advance(held,false,paint!=0);
+            }
             auto& main=scene.main_state();
-            require_view(main.game_over() && main.life().misses==run+1 && main.enemies().snapshot().killed_count==run+1,
+            require_view(main.game_over() && main.life().misses==(profile==5 ? 3 : run+1) &&
+                         (profile==5 ? main.enemies().snapshot().killed_count>=3 : main.enemies().snapshot().killed_count==run+1),
                          "real finite STD contact did not enter Game Over");
-            if(!run)require_view(main.frames()==104 && main.run_statistics().std_frames==105,"first contact/Game Over prefix clock differs");
+            if(profile==5)require_view(used_bomb && main.life().bombs_used==1 &&
+                main.score().remaining_lives==1 && main.score().remaining_bombs==1,
+                "resource-reset fixture did not consume its actual lives and Bomb");
+            if(!run && profile!=5)require_view(main.frames()==104 && main.run_statistics().std_frames==105,"first contact/Game Over prefix clock differs");
             const auto frozen_frame=main.frames();const auto frozen_std=main.run_statistics().std_frames;
             const auto frozen_ring=main.random_cursor();const auto frozen_position=main.player().position().current;
             const auto frozen_indices=scene.gameover_renderer()->indexed();
@@ -160,6 +203,9 @@ void run_gameover_checks(const PiImage& background,const CdgSheet& numerals,
                     require_view(main.frames()==frozen_frame && main.game_over()->ticks()==ticks && tone==0,
                                  "pending MAINE route replayed Game Over or its frame tail");
                 } else {
+                    if(profile==5)require_view(main.score().remaining_lives==scene.resident().credit_lives &&
+                        main.score().remaining_bombs==scene.resident().credit_bombs,
+                        "Continue did not restore consumed resources");
                     require_view(main.frames()==frozen_frame+1 && main.run_statistics().std_frames==frozen_std &&
                         main.scoreboard().digits[0]==run+1 && !scene.gameover_renderer(),"Continue repeated the STD prefix or retained Game Over graphics");
                     const auto path=fs::path(input.save_directory)/"GENSOU.SCR";

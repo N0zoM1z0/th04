@@ -15,7 +15,7 @@ from verify_score_file import encode_fixture
 from verify import source_manifest
 sha=lambda b:hashlib.sha256(b).hexdigest()
 HI=0xbbee
-ENTRY=(0x18fa,0x18ba,0x7f1a,0x7fc7,0x802e,0x81c5)
+ENTRY=(0x18fa,0x18ba,0x7f1a,0x7fc7,0x802e,0x81c5,0x81d7)
 
 class Original(Base):
  def body(self,u,address,size,unused):
@@ -28,7 +28,7 @@ class Original(Base):
   def event(kind,a=0,b=0,data=b''):self.events.append(f'{kind} {a} {b} '+(data.hex() if data else '-'))
   def name():
    off,seg=words(2);assert bytes(u.mem_read(seg*16+off,11))==b'GENSOU.SCR\0'
-  if cs==0x2aaf and (0x18ba<=ip<0x1939 or 0x7f1a<=ip<0x81d7):return
+  if cs==0x2aaf and (0x18ba<=ip<0x1939 or 0x7f1a<=ip<0x81f5):return
   if cs==0x2000 and 0x2172<=ip<0x219c:
    if ip==0x2172:self.rng_draws+=1
    return
@@ -83,6 +83,7 @@ class Original(Base):
   assert bytes(self.u.mem_read(0x80000+HI-16,16))==bytes([0x5a])*16
   result=self.u.reg_read(UC_X86_REG_AX)&255 if op==1 else -1
   place=self.read(0xbcb2,'B')[0];buffer=bytes(self.u.mem_read(0x80000+HI,196));state=self.read(0x3e2,'I')[0]
+  if op==6:self.events.append('HS '+bytes(self.u.mem_read(0x84351,8)).hex())
   self.events.append(f'END {result} {place} {state} {self.rng_draws} {int(self.present)} {buffer.hex()} '+(self.file.hex() if self.file else '-'))
   return self.events
 
@@ -122,6 +123,15 @@ def fixtures(original):
    if variant==1:data=bytearray();present=0
    if variant==2:data=data[:997]
    cases.append(c(5,fresh(196),0xffffffff,char,rank,6,turbo,present,bytes(data),bytes([255]*8)))
+ # Real hiscore_load wrapper, not just its selected-section load helper.
+ # Preserve all existing codec/Continue controls and their trace protocol.
+ cases.extend((6,*q[1:]) for q in list(cases) if q[0]==3)
+ for seed,work in itertools.product(seeds,samples):cases.append(c(6,work,seed))
+ for char,rank,value in itertools.product((0,1),range(5),(0,95,96,159,160,169,170,255)):
+  plain=bytearray(196);plain[94:102]=bytes([value])*8
+  original.run(c(0,bytes(plain),seed=0x31415926));encoded=bytes(original.u.mem_read(0x80000+HI,196))
+  data=bytearray(baseline);data[(char*5+rank)*196:(char*5+rank+1)*196]=encoded
+  cases.append(c(6,fresh(196),seeds[rank],char,rank,present=1,file=bytes(data)+fresh(13)))
  return cases
 
 def main():
@@ -148,9 +158,9 @@ def main():
  assert source_manifest(Path(__file__).resolve().parents[1])[0]==manifest
  receipt=dict(passed=True,observed_utc=datetime.now(timezone.utc).isoformat(),source_manifest=manifest,
               target_sha256=sha(original.target),executable_sha256=sha(a.exe.read_bytes()),cases=len(cases),records=len(expected),
-              load_segments=[0x1000,0x2000],extent='MAIN relative0AAF:18BA..1939 and 7F1A..81D7',
+              load_segments=[0x1000,0x2000],extent='MAIN relative0AAF:18BA..1939 and 7F1A..81F5',
               extents_sha256={name:sha(original.target[6144+lo:6144+hi]) for name,lo,hi in
-                [('cipher',0xc3aa,0xc429),('load-save-continue',0x12a0a,0x12cc7),('lcg',0x2172,0x219c)]},
+                [('cipher',0xc3aa,0xc429),('load-save-continue-hiscore',0x12a0a,0x12ce5),('lcg',0x2172,0x219c)]},
               fixture_sha256=sha(fixture.read_bytes()),trace_sha256=sha(ref.read_bytes()),scope=__doc__)
  (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps({k:receipt[k] for k in ['passed','cases','records']}))
 if __name__=='__main__':main()

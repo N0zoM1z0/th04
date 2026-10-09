@@ -124,8 +124,10 @@ void System::update(const midboss::Context& c,bullet::System& bullets,gather::Sy
         }
     }
     const int value=a.hp<=0 ? 0 : (a.hp>=1200 ? 128 : int(a.hp)*128/1200+1);
+    if(c.hp_previous)a.hp_bar=*c.hp_previous;
     if(a.hp_bar<value) a.hp_bar=motion::wrap(int(a.hp_bar)+1);
     if(a.hp_bar>value) a.hp_bar=static_cast<std::int16_t>(value);
+    if(c.hp_previous)*c.hp_previous=a.hp_bar;
     emit(sink,midboss::EventType::hp,{},static_cast<std::uint16_t>(a.hp_bar));
 }
 void System::prepare_render(const midboss::Context& c) {
