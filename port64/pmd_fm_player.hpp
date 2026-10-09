@@ -17,11 +17,16 @@ public:
     void start_ssg_effect(unsigned id) {music_.start_ssg_effect(id);}
     void stop_ssg_effect() {music_.stop_ssg_effect();}
     void interrupt(std::uint8_t flags);
+    // The resident timer adapter restores FM3 mode after musical voice
+    // restoration. Legacy explicit-IRQ consumers need no timer callback.
+    void effect_released(std::function<void()> action) {effect_released_=std::move(action);}
+    void timer_b_completed(std::function<void()> action) {music_.timer_b_completed(std::move(action));}
     void mirror(std::uint8_t bank,std::uint8_t address,std::uint8_t value) {music_.mirror(bank,address,value);effects_.mirror(bank,address,value);}
     const MusicalFm& music() const {return music_;}
     const FmEffects& effects() const {return effects_;}
 private:
     FmSink sink_;SsgSink ssg_sink_;MusicalFm music_;FmEffects effects_;
+    std::function<void()> effect_released_;
     void sync_masks();
 };
 }

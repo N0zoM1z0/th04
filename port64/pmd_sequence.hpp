@@ -56,6 +56,8 @@ public:
     // Negative fade underflow restores the hardware rhythm total before the
     // Timer A effect work. Reaching zero exactly does not take this path.
     void fade_restored(std::function<void()> action) {fade_restored_=std::move(action);}
+    // Commit the final musical tempo before Timer A effects in a combined IRQ.
+    void timer_b_completed(std::function<void()> action) {timer_b_completed_=std::move(action);}
     void borrow_fm(unsigned p) {state_.parts.at(p).mask|=2;}
     void mirror_ssg(std::uint8_t address,std::uint8_t value) {effects_.mirror(address,value);}
     std::uint16_t status() const {return std::uint16_t(state_.status)*256+state_.loop_status;}
@@ -63,6 +65,7 @@ private:
     Board board_;Sink sink_;Bytes music_;State state_{};SsgEffects effects_;TickSink tick_;std::function<bool()> fm_effect_active_;
     std::function<void(unsigned)> fm_effect_command_;
     std::function<void()> fade_restored_;
+    std::function<void()> timer_b_completed_;
     std::array<bool,11> parsing_masked_{};
     std::uint16_t rhythm_table_=0,rhythm_position_=0;
     std::uint8_t saved_timer_b_=200,saved_tempo_=78;

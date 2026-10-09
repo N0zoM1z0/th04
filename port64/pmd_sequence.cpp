@@ -253,7 +253,7 @@ void Sequence::timer_b() {
 void Sequence::interrupt(std::uint8_t flags) {
     if(flags>3)throw std::invalid_argument("PMD timer status");
     if((flags&2) && state_.stop_pending)stop(StopReason::fade_complete);
-    if(flags&2)timer_b();
+    if(flags&2) {timer_b();if(timer_b_completed_)timer_b_completed_();}
     if(flags&1) {
         ++state_.timer_a;
         if(!(state_.timer_a&7) && state_.fade_speed) {

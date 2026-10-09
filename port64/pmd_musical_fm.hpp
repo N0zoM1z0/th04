@@ -19,6 +19,7 @@ struct MusicalFmPart {
 // Interrupt flags are explicit inputs; this owner never opens an audio device.
 class MusicalFm {
 public:
+    void timer_b_completed(std::function<void()> action) {sequence_.timer_b_completed(std::move(action));}
     explicit MusicalFm(Board board=Board::fm26,FmSink sink={},SsgSink ssg={});
     MusicalFm(const MusicalFm&)=delete;
     MusicalFm& operator=(const MusicalFm&)=delete;

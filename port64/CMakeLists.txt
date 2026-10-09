@@ -24,6 +24,7 @@ add_library(
   pmd_musical_fm.cpp pmd_rhythm.cpp
   pmd_musical_ssg.cpp
   pmd_fm_player.cpp
+  pmd_timer_player.cpp
   pmd_trace_state.cpp
   hud.cpp
   bullet_geometry.cpp
@@ -379,3 +380,7 @@ add_test(NAME pmd-commands-contracts COMMAND th04-port64-pmd-commands-contracts)
 add_executable(th04-port64-pmd-rhythm-contracts pmd_rhythm_checks.cpp)
 target_link_libraries(th04-port64-pmd-rhythm-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-rhythm-contracts COMMAND th04-port64-pmd-rhythm-contracts)
+
+add_executable(th04-port64-pmd-timer-player-contracts pmd_timer_player_checks.cpp)
+target_link_libraries(th04-port64-pmd-timer-player-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-timer-player-contracts COMMAND th04-port64-pmd-timer-player-contracts)
