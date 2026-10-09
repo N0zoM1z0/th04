@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/pmd_clock.hpp",
+    "port64/pmd_clock.cpp",
+    "port64/pmd_clock_checks.cpp",
+    "port64/verify_pmd_clock.py",
     "port64/pmd_timer_player.hpp",
     "port64/pmd_timer_player.cpp",
     "port64/pmd_timer_player_checks.cpp",
