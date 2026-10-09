@@ -1,22 +1,29 @@
 # TH04 native x64 port
 
-v1340 joins resident timer-register dispatch to the FM/SSG/effect/rhythm
-player. GNU8, optimized UBSan and actual Windows each match 80,040 complete
-original rows (174 cases, two PSPs); Windows executes 87 unique traces/40,020
-rows and compares both loads. All 59 contracts pass per host. 426 maintained
-inputs bind 180 AMD64 products. Acknowledge precedes parsing; tempo commits
-between Timer B music and Timer A effects; FM26 effect release restores mode.
-Four source-only variants reject. Prior owner corpora replay on GNU/UBSan.
-Receipts: native `.analysis/port64/pmd-clock-v1340/`; details: native
-`docs/port64/evidence/pmd-timer-player.md`.
+v1342 adds CPU-only OPN/OPNA PCM synthesis to the resident parser/clock.
+GNU8, optimized UBSan and actual Windows compare 106,088,380 complete stereo
+frames per host in 174 scenarios at two original PSPs. Each host executes 87
+unique streams/53,044,190 frames; all 61 component contracts pass. 445 inputs
+bind 186 AMD64 programs. Four source-only PCM variants reject; a rhythm fixture
+without key-on remains inconclusive. Original driver timelines and the host
+renderer are independent of the native player; chip arithmetic shares pinned
+BSD3 ymfm, so this is integration evidence, not independent chip accuracy.
+The explicit external rhythm ROM stays private; four die/canonical end-byte
+differences remain unresolved. Complete source/archive/readback preserves the
+serializer-only metadata correction and earlier rejected adapters.
+Disjoint terminal cleanup reclaims 1,074,380,800 allocated bytes (1024.6 MiB).
+Receipts: native `.analysis/port64/pmd-pcm-v1342/`; details: native
+`docs/port64/evidence/pmd-pcm.md`.
 
-Physical clocks, synthesis, FM3 extras/PPS/ADPCM, frontend capability/real
-measures and full logo/startup remain unfinished. An independently executed
-chip model corroborates default timer dividers; the translated manual's
-factor-two conflict remains documented. All launches stay muted with no audio
-device/backend. Linux GUI hashes remain unchanged; Windows bounded CPU
-products are attested. No new GUI or full natural-route acceptance occurs.
-DOS acceptance and candidate-local-attested provenance remain unchanged.
+Current source manifest:
+`af82c5a58d5e563758cac5e2735b2a6739f4b7da47facff3ea76a0fd836b5fc9`.
+The preceding v1341 timer corpus remains accepted: 283,494 original rows per
+host. All 61 prior GNU/UBSan products and Linux GUI hashes remain unchanged.
+Windows relinks have current bounded CPU controls. No new GUI or natural-route
+acceptance occurs. All runs stay muted with no audio device/backend.
+Real resident frontend lifetime, PMD capability/measure waits, beeper/FM stream
+joining, remaining FM3/PPS/ADPCM owners and full logo/startup remain unfinished.
+DOS acceptance and candidate-local-attested provenance are unchanged.
 
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
@@ -24,7 +31,7 @@ Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 Updated 2026-10-10. Development has resumed. `port/modern-64` remains separate
 from the DOS branch; portable code does not claim PC-98 executable exactness.
 
-## Current state
+## Component milestones and their historical scope
 
 v1331 adds native PMD SSG effects with 40 semantic instruments, signed sweeps,
 priority admission, stop/restart and ordered register writes. GNU/optimized
@@ -325,8 +332,8 @@ See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-li
   with original caller and frozen Game Over/Continue controls.
 - [x] Join Music Room, recorded demo, configuration and first audio setup under bounded controls.
 - [x] Join OP/MAIN/MAINE sound requests/resources and process lifetimes under bounded controls.
-- [ ] Join musical/effect chip ownership, PMD/OPN synthesis, physical clocks,
-  real measure waits and full startup audio.
+- [ ] Join validated musical/effect clock and PCM to the resident frontend;
+  finish real measure waits, remaining driver owners and full startup audio.
   Beeper offline PCM passes; original OP controller remains a representative Oracle.
 - [ ] Validate HUD through ordinary boss routes and host refresh/input/slowdown.
 - [ ] Actual Linux/Windows full-route/save/config tests across characters/ranks;

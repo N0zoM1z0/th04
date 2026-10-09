@@ -6,31 +6,30 @@ Linux/Windows routes and timing/performance validation. Native code remains on
 
 ## Verified current frontier
 
-v1341 adds resident master-cycle scheduling and rational nanosecond time.
-GNU8, optimized UBSan and actual Windows each match 283,494 complete original
-rows in 174 scenarios across two PSPs and three drivers. Windows executes 87
-unique traces/141,747 rows and compares both original loads. All 60 component
-contracts pass per host. 430 inputs bind 183 AMD64 products. Independent
-pinned ymfm also matches 2,448 cold-chip rows across three boards/16 initial B
-phases; time partitions retain 1,285 complete IRQ rows. Five source-only
-variants reject; an equivalent variant is retained as inconclusive. Prior
-timer-register 80,040 rows replay per GNU/UBSan. All producer/consumer handles
-are terminal zero. Disjoint cleanup reclaims 1,018,875,904 allocated bytes
-(971.7 MiB) while preserving current products and replay evidence.
-Receipts: native `.analysis/port64/pmd-time-v1341/`; details: native
-`docs/port64/evidence/pmd-clock.md`.
+v1342 adds CPU-only OPN/OPNA PCM synthesis to the resident parser/clock.
+GNU8, optimized UBSan and actual Windows compare 106,088,380 complete stereo
+frames per host in 174 scenarios at two original PSPs. Each host executes 87
+unique streams/53,044,190 frames; all 61 component contracts pass. 445 inputs
+bind 186 AMD64 programs. Four source-only PCM variants reject; a rhythm fixture
+without key-on remains inconclusive. Original driver timelines and the host
+renderer are independent of the native player; chip arithmetic shares pinned
+BSD3 ymfm, so this is integration evidence, not independent chip accuracy.
+The explicit external rhythm ROM stays private; four die/canonical end-byte
+differences remain unresolved. Complete source/archive/readback preserves the
+serializer-only metadata correction and earlier rejected adapters.
+Disjoint terminal cleanup reclaims 1,074,380,800 allocated bytes (1024.6 MiB).
+Receipts: native `.analysis/port64/pmd-pcm-v1342/`; details: native
+`docs/port64/evidence/pmd-pcm.md`.
 
 Current source manifest:
-`e5f6d215587b8fe1258b62443a9cbfac3f710fe7db4d9f6d21cc3d0d2fd7440a`.
-Acknowledge and tempo writes preserve live deadlines; overflow reloads before
-IRQ work; music stop/restart retains resident phase. Nanoseconds retain their
-rational remainder. Frequency, initial FM epoch and coincident zero-latency
-IRQ remain explicit adapters, not physical board timing acceptance.
-Synthesis, other required driver owners, actual resident frontend lifetime,
-capability/measure waits and full startup remain unfinished. All runs stay
-muted with no audio device/backend. Linux GUI hashes are unchanged; Windows
-relinks have bounded CPU controls only. No new GUI or natural-route acceptance
-occurs. DOS acceptance and candidate-local-attested provenance are unchanged.
+`af82c5a58d5e563758cac5e2735b2a6739f4b7da47facff3ea76a0fd836b5fc9`.
+The preceding v1341 timer corpus remains accepted: 283,494 original rows per
+host. All 61 prior GNU/UBSan products and Linux GUI hashes remain unchanged.
+Windows relinks have current bounded CPU controls. No new GUI or natural-route
+acceptance occurs. All runs stay muted with no audio device/backend.
+Real resident frontend lifetime, PMD capability/measure waits, beeper/FM stream
+joining, remaining FM3/PPS/ADPCM owners and full logo/startup remain unfinished.
+DOS acceptance and candidate-local-attested provenance are unchanged.
 
 See [OP/MAINE scene evidence](port64/evidence/sound-scenes.md), [MAIN sound evidence](port64/evidence/sound-main.md), [beeper evidence](port64/evidence/beeper.md) and
 [sound-control evidence](port64/evidence/sound-control.md).
@@ -53,8 +52,8 @@ old claimed two-character frontend coverage.
 
 ## Remaining owners, in order
 
-1. Join real clock scheduling to the recovered resident timer writes;
-   recover synthesis and the remaining FM3/PPS/ADPCM owners;
+1. Join the validated clock/PCM player to the resident frontend lifetime;
+   recover the remaining FM3/PPS/ADPCM owners;
    join original driver measures to frontend capability;
    complete original logo/startup audio and attest driver initialization/finish.
    OP/MAIN/MAINE scene requests, process lifetimes and muted beeper are joined
