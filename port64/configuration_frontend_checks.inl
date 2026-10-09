@@ -117,7 +117,7 @@ void run_configuration_checks(const PiImage& background,const CdgSheet& numerals
         } catch(const std::exception&) {rejected=true;}
         require_view(rejected && scene.program()==application::Program::op && !scene.live_main() && fs::is_directory(path),"failed configuration write advanced process");
         for(const auto& p:fs::directory_iterator(path.parent_path()))require_view(p.path().filename().string().find(".config-pending-")!=0,"configuration failure leaked temp");
-        std::ofstream(dir/"rejected.txt")<<"failed="<<boundary<<" program=op main=0 muted=1\n";
+        std::ofstream(dir/"rejected.txt",std::ios::binary)<<"failed="<<boundary<<" program=op main=0 muted=1\n";
         std::cout<<"CONFIG_FAILED boundary="<<boundary<<" muted=1\n";
     }
 }
