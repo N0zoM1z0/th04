@@ -7,30 +7,30 @@ Linux/Windows routes and timing/performance validation. Native code remains on
 ## Verified current frontier
 
 v1341 adds resident master-cycle scheduling and rational nanosecond time.
-GNU8, optimized UBSan and actual Windows each match 72,391 complete rows in 46
-closed first-load scenarios; all 60 contracts pass per host. 430 inputs bind 183
-AMD64 products. Independent pinned ymfm also matches 2,448 cold-chip rows across
-three boards/16 initial B phases; time partitions retain 1,285 complete IRQ rows.
-Five source-only variants reject; one equivalent variant is retained as
-inconclusive. Prior timer-register 80,040 rows replay per GNU/UBSan. Cleanup
-reclaims 608,976,896 allocated bytes across two disjoint journals, retaining
-current products.
-Receipts: `.analysis/port64/pmd-time-v1341/`; details:
-[continuous-clock evidence](port64/evidence/pmd-clock.md).
+GNU8, optimized UBSan and actual Windows each match 283,494 complete original
+rows in 174 scenarios across two PSPs and three drivers. Windows executes 87
+unique traces/141,747 rows and compares both original loads. All 60 component
+contracts pass per host. 430 inputs bind 183 AMD64 products. Independent
+pinned ymfm also matches 2,448 cold-chip rows across three boards/16 initial B
+phases; time partitions retain 1,285 complete IRQ rows. Five source-only
+variants reject; an equivalent variant is retained as inconclusive. Prior
+timer-register 80,040 rows replay per GNU/UBSan. All producer/consumer handles
+are terminal zero. Disjoint cleanup reclaims 1,018,875,904 allocated bytes
+(971.7 MiB) while preserving current products and replay evidence.
+Receipts: native `.analysis/port64/pmd-time-v1341/`; details: native
+`docs/port64/evidence/pmd-clock.md`.
 
-The original 174-case/two-PSP aggregate producer remains live; its complete
-receipt and full consumers are pending. Existing process 2137701/model 2137712,
-exec handle 85761; poll it rather than starting another producer. The first
-Windows stage is terminal and fully read back. Current source manifest:
+Current source manifest:
 `e5f6d215587b8fe1258b62443a9cbfac3f710fe7db4d9f6d21cc3d0d2fd7440a`.
-
-Clock frequency/initial FM epoch/coincident zero-latency IRQ are explicit
-adapters, not physical timing acceptance. Synthesis, FM3 extras/PPS/ADPCM,
-resident frontend lifetime/capability/real measure waits and full logo/startup
-remain unfinished. All runs stay muted with no audio device/backend. Linux
-GUI hashes are unchanged; Windows relinks have bounded CPU controls only.
-No new GUI or natural-route acceptance occurs. DOS acceptance and
-candidate-local-attested provenance remain unchanged.
+Acknowledge and tempo writes preserve live deadlines; overflow reloads before
+IRQ work; music stop/restart retains resident phase. Nanoseconds retain their
+rational remainder. Frequency, initial FM epoch and coincident zero-latency
+IRQ remain explicit adapters, not physical board timing acceptance.
+Synthesis, other required driver owners, actual resident frontend lifetime,
+capability/measure waits and full startup remain unfinished. All runs stay
+muted with no audio device/backend. Linux GUI hashes are unchanged; Windows
+relinks have bounded CPU controls only. No new GUI or natural-route acceptance
+occurs. DOS acceptance and candidate-local-attested provenance are unchanged.
 
 See [OP/MAINE scene evidence](port64/evidence/sound-scenes.md), [MAIN sound evidence](port64/evidence/sound-main.md), [beeper evidence](port64/evidence/beeper.md) and
 [sound-control evidence](port64/evidence/sound-control.md).

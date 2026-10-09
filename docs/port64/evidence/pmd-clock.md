@@ -1,12 +1,15 @@
-# Native continuous PMD clock: first closed corpus
+# Native continuous PMD clock
 
 v1341 adds `OpnTimers` and `ClockedPlayer`. GNU8, optimized UBSan and
-actual Windows each compare **72,391 complete rows in 46 closed first-load
-scenarios**, with all 60 component contracts passing per host. 430 maintained
-inputs bind 183 AMD64 products, 61 per cache. This is the first closed batch;
-the original two-PSP/three-driver aggregate producer is still running. Do not
-claim its 174-case acceptance until its terminal receipt and full consumers
-pass. Every run is muted and opens no audio device/backend.
+actual Windows each compare **283,494 complete original rows in 174 scenarios**
+at two PSPs and across three drivers. Windows executes 87 unique traces/141,747
+rows and compares both original loads. All 60 component contracts pass per host.
+430 maintained inputs bind 183 AMD64 products, 61 per cache. The original
+producer, both native consumers and actual Windows consumer terminate zero.
+Every run is muted and opens no audio device/backend.
+
+The first closed batch remains separately preserved: 46 first-load streams,
+72,391 rows per host. Its receipts are not restamped as the later aggregate.
 
 ## Clock ownership
 
@@ -79,7 +82,7 @@ have unchanged hashes. Linux GUI hashes remain unchanged; current Windows
 relinks have fresh identities and only bounded CPU execution is accepted.
 No new GUI launch, distribution or natural-route acceptance occurs.
 
-## Replay and outstanding aggregate
+## Evidence and replay
 
 Private scope: `.analysis/port64/pmd-time-v1341/`.
 
@@ -95,20 +98,28 @@ Private scope: `.analysis/port64/pmd-time-v1341/`.
   the final current program.
 - `product-profile.json`, `source-profile-current.json`,
   `consumer-source.tar.gz`: current 430 inputs/183 products, full archive readback.
-- `original-v2/`: live aggregate original producer. Observe the existing
-  handle/PID; never restart solely after a polling timeout.
+- `original-v2/receipt.json`: terminal original aggregate, 261,222 IRQs and
+  1,200 direct service crosschecks. Complete original source archive readback
+  preserves producer manifest `c9295d9d3c2b60de3fbb07fff9510cffd10b43f6a1afb7abb597abb99a7994ab`.
+- `native-final/receipt.json`, `windows-final/readback.json`: full aggregate
+  consumers; Windows stage restores from `windows-final/stage.tar.gz`.
+  Current consumer manifest is `e5f6d215587b8fe1258b62443a9cbfac3f710fe7db4d9f6d21cc3d0d2fd7440a`.
 
-After the original producer closes its complete receipt, use fresh outputs:
+The aggregate producer is closed. For replay, use fresh outputs:
 
 ```sh
 python3 port64/verify_pmd_clock.py --reference .analysis/port64/pmd-time-v1341/original-v2 --binary .analysis/port64/linux-live-v1251/th04-port64-pmd-clock-contracts --binary .analysis/port64/ubsan-live-v1251/th04-port64-pmd-clock-contracts --output .analysis/port64/NEW-clock-native
 ```
 
-Original replay additionally supplies `--hdi`, `--model` and `--model-profile`;
+Original replay restores the losslessly retained `ymfm-timers.gz` executable
+with `gzip -dk` and supplies `--hdi`, `--model` and `--model-profile`;
 the profile attests both private source and all pinned external inputs.
 Actual Windows uses a fresh typed `pmd-clock` plan. Read back all streams
 against both PSPs, preserve the first closed receipts and producer archive,
 and recheck every current product. Do not restamp old receipts.
+The original producer and current consumer manifests differ only in two unused
+candidate C++ files; `original-archive-readback.json` verifies that transition.
+Executing original Python observers and independent chip source are unchanged.
 
 Journaled cleanup preserves all 183 programs and 430 source hashes and
 reclaims **413,282,304 allocated bytes (394.1 MiB)**. Raw/probe streams have
@@ -118,6 +129,12 @@ processes and the Windows stage are excluded from that cleanup. A separate
 terminal-stage archive/readback journal subsequently reclaims 195,694,592
 allocated bytes. Total 608,976,896 bytes (580.8 MiB) across disjoint journals;
 the stage restores from `windows-first/stage.tar.gz`.
+
+`final-retention.json` checks all current products/inputs and original outputs
+after all disjoint cleanup journals. Final total: **1,018,875,904 allocated bytes
+(971.7 MiB)**, including terminal probes, both Windows stages and mapped
+post-CI caches. Probe gzip successors preserve executable restore permissions;
+all prior receipts keep their original identities.
 
 PCM FM/SSG/rhythm synthesis, other required driver owners, actual resident
 frontend lifetime, startup/measure waits and complete natural Linux/Windows
