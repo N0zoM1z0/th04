@@ -103,6 +103,26 @@ Post-CI cleanup retires 1,012 source-backed generated Python cache files,
 reclaiming 16,986,112 additional allocated bytes; receipt:
 root `.analysis/cleanup/pmd-commands-post-ci-caches-20261010.json`.
 
+Native hardware rhythm v1339 retains 422 source inputs/177 products, complete
+primary and long-command/byte-wrap supplemental original/native/Windows rows,
+separate producer/consumer archives and failed/inconclusive observations under
+native `.analysis/port64/pmd-rhythm-v1339/`. Full archive/trace readback verifies
+3915 protected hashes. Persisted journals measure 850,616,320 allocated bytes
+reclaimed (811.2 MiB). Retired raw copies, counterfactual executables,
+two owned Windows stages and 557 CMake intermediates have verified compressed
+successors or source recovery. The first Windows stage accounting multiplier
+is corrected from persisted per-file records in `cleanup-windows-stage-accounting.json`;
+its original receipt remains unchanged. Current products, source/compiler/cache/
+link profiles and independent references remain. Use fresh replay paths;
+CMake rebuilds missing intermediates.
+
+
+After both final CIs pass, a source-backed cache journal retires 1015
+generated Python caches, reclaims another 17,125,376 allocated bytes,
+and verifies 1015 unchanged Python source hashes. Measured batch
+total is 867,741,696 bytes (827.5 MiB). Receipt:
+root `.analysis/cleanup/pmd-rhythm-post-ci-caches-20261010.json`.
+
 ## Completed archive routing
 
 | Subject | Receipt location (relative to repository unless stated) |

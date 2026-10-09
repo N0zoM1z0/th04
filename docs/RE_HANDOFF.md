@@ -45,41 +45,41 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-v1338 recovers musical D4/D3 effect commands, D2 fade requests and the
-next-Timer-B fade-stop boundary in the combined FM/SSG owner. GNU8, optimized
-UBSan and actual Windows each match 101,082 complete original rows in 102 cases
-at two PSP segments; 51 native traces contain 50,541 unique rows. All 57 component
-contracts pass per host. 418 maintained inputs bind 174 AMD64 products. C0 parse
-continuation, FM mask silence/restore and repeated effect TL writes during
-music fades are recovered. Six source-only counterfactuals reject. Current
-receipts: native `.analysis/port64/pmd-commands-v1338/`; detailed scope:
-native `docs/port64/evidence/pmd-combined.md`.
+v1339 joins hardware rhythm to musical FM/SSG/effect ownership. GNU8,
+optimized UBSan and actual Windows each match 199,266 complete original rows:
+174 primary cases/172,434 rows and 24 supplemental cases/26,832 rows at two
+PSP segments. All 58 component contracts pass per host. 422 maintained inputs
+bind 177 AMD64 products. Drum/retrigger order, explicit key counters, stored
+pan/levels, attenuation and byte-wrap arithmetic are recovered. Negative fade
+underflow restores rhythm total before Timer A effect work. Seven source-only
+counterfactuals reject. Receipts: native `.analysis/port64/pmd-rhythm-v1339/`;
+scope: native `docs/port64/evidence/pmd-rhythm.md`.
 
-The comparison retains all prior FM/SSG fields and chronological owned writes,
-including banks and duplicates, plus fade speed/marker/whole request byte/
-playing/default fade-stop policy. 17 authored resources per format exercise
-masked/unmasked musical effects, zero stops and signed fade boundaries. FM3
-extras, PPS, ADPCM/hardware rhythm, synthesis, physical clocks, frontend PMD
-capability and complete startup remain unfinished. All launches stay muted;
-no audio backend/device opens. DOS acceptance and candidate-local-attested
-provenance remain unchanged. General semantic expansion resumes only for a
-concrete native blocker.
+The complete comparison preserves previous FM/SSG/fade fields and chronological
+writes, plus rhythm track/globals/counters and primary mirrors 10..1F. Longer
+512-tick command controls reach tails skipped by the primary restart timeline;
+explicit overflow fixtures reject widened additions. The wrong initial music
+base/map views and nondiscriminating short mutants remain inconclusive.
+FM3 extras, PPS, ADPCM, synthesis, physical clocks, frontend driver capability/
+real measure waits and complete logo/startup remain unfinished. All runs stay
+muted; no audio backend/device opens. DOS acceptance and candidate-local-attested
+provenance remain unchanged.
 
-Actual Windows executes 51 CPU-only traces and 57 contracts; 58 PE products and
-inputs are checked before/after. Full readback compares both original PSPs.
-GNU/UBsan replay prior 489,390 combined rows and all prior SSG, FM handover/music,
-short/long sequence and effect corpora without changing receipt identities.
-No GUI launches occur in this batch. v1332's bounded frontend/storage/restart
-receipts retain their own identities; full natural ordinary/Extra survival,
-current GUI and dense Lunatic timing remain.
+Actual Windows executes 99 unique CPU-only traces/99,633 rows; full readback
+compares both original PSPs. 59 PE products and inputs are checked before/after.
+GNU/UBSan replay prior command/combined/SSG/FM/sequence/effect corpora against
+unchanged reference identities. Linux frontends keep their preceding binary
+hashes; MinGW relinks have new identities and bounded CPU controls. No GUI
+launch or new complete-route acceptance occurs. Natural ordinary/Extra survival,
+host timing/slowdown, dense Lunatic performance and current GUI remain.
 
-Full archive/trace readback verifies 2954 protected hashes; a terminal
-snapshot verifies 2277 source/product/cache/compiler/evidence hashes.
-Persisted pre-mutation journals measure 676,278,272 allocated bytes reclaimed
-(644.9 MiB). Raw copies, negative binaries, Windows staging and
-native objects/static archives retire; current 174 products and independent
-references remain. CMake rebuilds missing intermediates; fresh replay paths
-are required.
+Full archive/trace readback verifies 3915 protected hashes. Persisted journals
+measure 850,616,320 allocated bytes reclaimed (811.2 MiB), including
+terminal raw copies, counterfactual programs, owned Windows stages and native
+objects/static archives. Space accounting uses corrected 512-byte block units;
+the earlier helper/receipt remains. All 177 current products, source identities
+and independent references remain. Use fresh replay paths; CMake regenerates
+missing intermediates.
 
 Normal six-stage/MAINE, registration/host score/fresh OP,
 death/Bomb/Game Over/Continue, Extra actor routes, HUD/unlocks/Scores,
