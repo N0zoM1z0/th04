@@ -45,25 +45,31 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-v1340 joins resident timer-register dispatch to the FM/SSG/effect/rhythm
-player. GNU8, optimized UBSan and actual Windows each match 80,040 complete
-original rows (174 cases, two PSPs); Windows executes 87 unique traces/40,020
-rows and compares both loads. All 59 contracts pass per host. 426 maintained
-inputs bind 180 AMD64 products. Acknowledge precedes parsing; tempo commits
-between Timer B music and Timer A effects; FM26 effect release restores mode.
-Four source-only variants reject. Prior owner corpora replay on GNU/UBSan.
-Journaled cleanup reclaims 646,873,088 bytes; post-CI source-backed caches
-reclaim another 17,358,848 bytes. All current products remain.
-Receipts: native `.analysis/port64/pmd-clock-v1340/`; details: native
-`docs/port64/evidence/pmd-timer-player.md`.
+v1341 adds resident master-cycle scheduling and rational nanosecond time.
+GNU8, optimized UBSan and actual Windows each match 283,494 complete original
+rows in 174 scenarios across two PSPs and three drivers. Windows executes 87
+unique traces/141,747 rows and compares both original loads. All 60 component
+contracts pass per host. 430 inputs bind 183 AMD64 products. Independent
+pinned ymfm also matches 2,448 cold-chip rows across three boards/16 initial B
+phases; time partitions retain 1,285 complete IRQ rows. Five source-only
+variants reject; an equivalent variant is retained as inconclusive. Prior
+timer-register 80,040 rows replay per GNU/UBSan. All producer/consumer handles
+are terminal zero. Disjoint cleanup reclaims 1,018,875,904 allocated bytes
+(971.7 MiB) while preserving current products and replay evidence.
+Receipts: native `.analysis/port64/pmd-time-v1341/`; details: native
+`docs/port64/evidence/pmd-clock.md`.
 
-Physical clocks, synthesis, FM3 extras/PPS/ADPCM, frontend capability/real
-measures and full logo/startup remain unfinished. An independently executed
-chip model corroborates default timer dividers; the translated manual's
-factor-two conflict remains documented. All launches stay muted with no audio
-device/backend. Linux GUI hashes remain unchanged; Windows bounded CPU
-products are attested. No new GUI or full natural-route acceptance occurs.
-DOS acceptance and candidate-local-attested provenance remain unchanged.
+Current source manifest:
+`e5f6d215587b8fe1258b62443a9cbfac3f710fe7db4d9f6d21cc3d0d2fd7440a`.
+Acknowledge and tempo writes preserve live deadlines; overflow reloads before
+IRQ work; music stop/restart retains resident phase. Nanoseconds retain their
+rational remainder. Frequency, initial FM epoch and coincident zero-latency
+IRQ remain explicit adapters, not physical board timing acceptance.
+Synthesis, other required driver owners, actual resident frontend lifetime,
+capability/measure waits and full startup remain unfinished. All runs stay
+muted with no audio device/backend. Linux GUI hashes are unchanged; Windows
+relinks have bounded CPU controls only. No new GUI or natural-route acceptance
+occurs. DOS acceptance and candidate-local-attested provenance are unchanged.
 
 
 Normal six-stage/MAINE, registration/host score/fresh OP,

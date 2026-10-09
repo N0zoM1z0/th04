@@ -216,3 +216,25 @@ source-backed Python caches and verifies 1025 unchanged source
 hashes, reclaiming another 17,358,848 allocated bytes.
 Receipt: native `.analysis/port64/pmd-clock-v1340/post-ci-caches-receipt.json`.
 Measured v1340 total is 664,231,936 bytes; the prior review cleanup is separate.
+
+
+v1341 continuous-clock cleanup: 413,282,304 allocated bytes from terminal
+raw/probe successors and regenerable native objects/libraries; 195,694,592
+more from the fully archived terminal Windows-first stage. Total 608,976,896
+bytes (580.8 MiB), disjoint journals under native
+`.analysis/port64/pmd-time-v1341/cleanup-before.json` and
+`windows-first/cleanup-before.json`. Retain 183 current programs/430 inputs,
+source archives, original references and failures. Live original aggregate and
+chip model are explicitly excluded. Full aggregate acceptance remains pending.
+
+Post-CI v1341 cache cleanup separately retires 1,021 mapped Python caches
+with unchanged backing source, reclaiming 17,092,608 allocated bytes. The live
+original observer cache is excluded. Current 430-input/183-program hashes
+are checked again after cleanup.
+
+Final v1341 aggregate closure additionally archives/readbacks the terminal
+full Windows stage and completed model/probes. `final-retention.json` sums
+the disjoint journals: 1,018,875,904 allocated bytes (971.7 MiB), with all
+430 maintained inputs, 183 current program hashes and original outputs checked
+after cleanup. Every producer/consumer is terminal zero. Historical first
+closed-batch receipts remain separate; no source or evidence is restamped.
