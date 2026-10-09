@@ -1,38 +1,41 @@
 # TH04 native x64 port
 
-v1335 joins running musical FM and external effects with shared logical
-registers, borrowed masks, delayed recovery and voice/pan restoration. GNU8,
-optimized UBSan and actual Windows each compare427,308 complete original rows
-in42cases; all54 component contracts pass perhost.407 maintained source inputs
-bind165AMD64products. Three source-only restoration/mask/stop variants reject;
-invalid authored note13 and masked-pan development failures remain recorded.
-Current receipts: native `.analysis/port64/pmd-fm-join-v1335/`; detailed scope:
-native `docs/port64/evidence/pmd-fm-player.md`.
+v1336 adds musical SSG tone/noise, normal/extended envelopes, two LFOs,
+gates/slides/fades and built-in effect sharing to the canonical FM sequence.
+GNU8, optimized UBSan and actual Windows each match192,654 complete original
+SSG rows in198cases; the prior427,308-row FM handover corpus also passes on
+allthreehosts. All55 component contracts pass perhost.412 maintained inputs
+bind168AMD64products. Noise-cache, Timer A envelope and octave-rounding
+counterfactuals reject. Current receipts: native
+`.analysis/port64/pmd-musical-ssg-v1336/`; detailed scope:
+native `docs/port64/evidence/pmd-musical-ssg.md`.
 
-The FM music/effects owner is joined under bounded original controls. Musical
-SSG/FM3 extras, ADPCM/rhythm, synthesis, physical clocks, frontend PMD capability
-and complete startup remain unfinished. All launches stay muted; no audio
-backend/device is opened. DOS acceptance and candidate-local-attested target
+FM/SSG share sequence, random stream and Timer A baseline. Their ordered
+streams are still checked separately; complete combined interleaving and mixed
+random/effect controls need a combined comparison. Additional SSG requests,
+FM3 extras, ADPCM/hardware rhythm, synthesis, physical clocks, frontend PMD
+capability and complete startup remain unfinished. All launches stay muted;
+no audio backend/device opens. DOS acceptance and candidate-local-attested
 provenance remain unchanged. General semantic expansion resumes only for a
 concrete native blocker.
 
-Actual Windows executes21CPU-only joined traces/213,654unique rows, compared
-against both original PSPs for427,308comparisons; no GUI launches in this batch.
-All55PEproducts are freshly bound. GNU/UBsan musical FM, short/long sequence,
-SSG/sharing/effects regress; revised A466 observer replays all earlier original
-corpora byte-identically. v1332's nine muted frontend controls retain their
-own source/product identities and2,015complete files, physical saves/restart.
-Full natural ordinary/Extra routes, current GUI and dense Lunatic timing remain.
+Actual Windows executes120CPU-only traces/309,981unique rows, compared against
+both original PSPs for619,962complete rows:192,654SSG plus427,308FM. All56PE
+products are freshly bound; no GUI launches occur in this batch. GNU/UBsan
+musical FM, short/long sequence and SSG/sharing/effects regress. v1332's bounded
+frontend/storage/restart receipts retain their own identities; full natural
+ordinary/Extra survival, current GUI and dense Lunatic timing remain.
 
-Cleanup verifies1569protected hashes and full original/native/Windows
-trace/archive readback. Persisted journals measure1,401,487,360allocated bytes
-reclaimed (1336.6MiB); terminal duplicate captures are shared, failed raw
-outputs and owned Windows staging retired. Current products and independent
-reference/source archives remain; future replay requires fresh directories.
+Cleanup verifies1855protected hashes with full original/native/Windows and
+source-archive readback. Persisted journals measure1,311,682,560allocated bytes
+reclaimed (1.22GiB). Terminal raw copies, negative binaries, Windows staging
+and native objects/static archives retire; current168products and independent
+references remain. CMake rebuilds missing intermediates; fresh replay paths
+are required.
 
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 
-Updated 2026-10-09. Development has resumed. `port/modern-64` remains separate
+Updated 2026-10-10. Development has resumed. `port/modern-64` remains separate
 from the DOS branch; portable code does not claim PC-98 executable exactness.
 
 ## Current state
