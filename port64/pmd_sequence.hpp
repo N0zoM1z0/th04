@@ -10,6 +10,7 @@ namespace th04::portable::pmd {
 using Bytes=std::vector<std::uint8_t>;
 enum class Board { fm26, fm86, speakboard };
 enum class Kind { command, note, portamento, rhythm, end };
+enum class StopReason { explicit_request, fade_complete };
 // Decoded requests retain their musical order for the future chip consumer.
 // This owner executes bytecode and Timer A/B state; it opens no audio device.
 struct Event {
@@ -34,26 +35,31 @@ struct State {
     std::uint8_t fade=0,timer_a=0,loop_status=0,status=0;
     std::int8_t fade_speed=0;
     bool playing=false;
+    bool musical_fade_requested=false,stop_pending=false,auto_stop_on_fade=true;
 };
 class Sequence {
 public:
     explicit Sequence(Board board=Board::fm26,Sink sink={},SsgSink ssg={},TickSink tick={}):board_(board),sink_(std::move(sink)),effects_(std::move(ssg)),tick_(std::move(tick)){}
     void load(const Bytes&);
     void start();
-    void stop();
+    void stop(StopReason reason=StopReason::explicit_request);
     void fade(std::int8_t speed) {state_.fade_speed=speed;}
     void interrupt(std::uint8_t timer_status);
     void start_ssg_effect(unsigned id) {if(effects_.start(id))state_.parts[8].mask|=2;}
     void stop_ssg_effect() {effects_.stop();}
     const State& state() const {return state_;}
     const Bytes& music() const {return music_;}
+    bool masked_parser(unsigned part) const {return parsing_masked_.at(part);}
     const SsgEffects& ssg_effects() const {return effects_;}
     void fm_effect_active(std::function<bool()> query) {fm_effect_active_=std::move(query);}
+    void fm_effect_command(std::function<void(unsigned)> action) {fm_effect_command_=std::move(action);}
     void borrow_fm(unsigned p) {state_.parts.at(p).mask|=2;}
     void mirror_ssg(std::uint8_t address,std::uint8_t value) {effects_.mirror(address,value);}
     std::uint16_t status() const {return std::uint16_t(state_.status)*256+state_.loop_status;}
 private:
     Board board_;Sink sink_;Bytes music_;State state_{};SsgEffects effects_;TickSink tick_;std::function<bool()> fm_effect_active_;
+    std::function<void(unsigned)> fm_effect_command_;
+    std::array<bool,11> parsing_masked_{};
     std::uint16_t rhythm_table_=0,rhythm_position_=0;
     std::uint8_t saved_timer_b_=200,saved_tempo_=78;
     std::uint8_t get(std::uint16_t) const;

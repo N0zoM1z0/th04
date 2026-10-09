@@ -22,12 +22,12 @@ void MusicalFm::write(unsigned b,unsigned a,unsigned v){
     if(!b && a<14){ssg_.raw_write(w.address,w.value);return;}
     registers_.at(b)[w.address]=w.value;if(sink_)sink_(w);
 }
-void MusicalFm::stop(){
+void MusicalFm::stop(StopReason reason){
     const bool busy=effect_busy_ && effect_busy_();
     for(unsigned b=0;b<(board_==Board::fm26 ? 1u : 2u);++b)
         for(unsigned slot=0;slot<4;++slot)for(unsigned c=0;c<3;++c){if(busy && c==2 && b==(board_==Board::fm26 ? 0u : 1u))continue;write(b,0x80+slot*4+c,255);}
     for(unsigned p=0;p<(board_==Board::fm26 ? 3u : 6u);++p){if(busy && p==(board_==Board::fm26 ? 2u : 5u))continue;keys_[p]=0;write(0,0x28,channel(p)+(bank(p) ? 4 : 0));}
-    ssg_.stop();sequence_.stop();
+    ssg_.stop();sequence_.stop(reason);
 }
 void MusicalFm::start(){
     if(sequence_.music().empty())throw std::logic_error("FM music requires a resource");
@@ -40,6 +40,7 @@ void MusicalFm::start(){
     write(0,0x22,0);
 }
 void MusicalFm::interrupt(std::uint8_t flags){
+    if((flags&2) && sequence_.state().stop_pending)stop(StopReason::fade_complete);
     const auto timer=sequence_.state().timer_a;const bool playing=sequence_.state().playing;
     sequence_.interrupt(flags);if((flags&2) && playing)last_timer_a_=timer;
 }
@@ -90,7 +91,10 @@ void MusicalFm::borrow_effect(){
 }
 void MusicalFm::restore_effect_voice(){
     if(!sequence_.state().playing)return;
-    const unsigned p=board_==Board::fm26 ? 2 : 5;auto& s=parts_[p];
+    restore_voice(board_==Board::fm26 ? 2 : 5);
+}
+void MusicalFm::restore_voice(unsigned p){
+    auto& s=parts_[p];
     if(!s.voice_mask)return;
     const auto levels=s.total_levels;
     voice(p,sequence_.state().parts[p].instrument,true);s.total_levels=levels;
@@ -194,7 +198,7 @@ void MusicalFm::gate(unsigned p,unsigned duration,unsigned next){
 }
 void MusicalFm::note(unsigned p,const Event& e){
     auto& s=parts_[p];const auto& track=sequence_.state().parts[p];parsed_note_[p]=true;
-    if(track.mask){s.frequency=0;s.note=s.last_note=255;s.key_flags=255;if(!temporary_)s.temporary_volume=0;tied_=temporary_=false;return;}
+    if(sequence_.masked_parser(p)){s.frequency=0;s.note=s.last_note=255;s.key_flags=255;if(!temporary_)s.temporary_volume=0;tied_=temporary_=false;return;}
     s.flags&=247;
     unsigned duration=e.arguments.at(0),next=e.offset+2;
     if(e.kind==Kind::portamento){
@@ -235,7 +239,7 @@ void MusicalFm::command(unsigned p,const Event& e){
     case 195:if(board_!=Board::fm26){s.pan=std::uint8_t((s.pan&63)|(!a.at(0) ? 192 : (a.at(0)&128) ? 64 : 128));if(!sequence_.state().parts[p].mask)write(bank(p),0xb4+channel(p),s.pan);}break;
     case 233:case 235:case 234:case 232:case 230:case 229:break; // Hardware rhythm belongs to a separate voice owner.
     case 239:write(bank(p),a.at(0),a.at(1));break;
-    case 218:case 253:case 252:case 250:case 249:case 248:case 247:case 246:case 245:case 244:case 243:case 231:case 227:case 226:case 223:case 220:case 219:case 213:case 178:case 193:break; // Bytecode/global state remains in Sequence.
+    case 218:case 253:case 252:case 250:case 249:case 248:case 247:case 246:case 245:case 244:case 243:case 231:case 227:case 226:case 223:case 220:case 219:case 213:case 212:case 211:case 210:case 178:case 193:break; // Bytecode/global state remains in Sequence.
     default:throw std::invalid_argument("unrecovered musical FM command "+std::to_string(e.opcode));
     }
 }
@@ -247,6 +251,11 @@ void MusicalFm::event(const Event& e){
     }
     if(e.kind==Kind::command && e.opcode==192){
         const auto sub=e.arguments.at(0);
+        if(e.part<6 && sub<2){
+            const auto mask=sequence_.state().parts[e.part].mask;
+            if(sub==1 && mask==64)silence(e.part);
+            else if(sub==0 && !mask)restore_voice(e.part);
+        }
         if(sub==255)attenuation_=e.arguments.at(1);
         else if(sub==254){const int amount=i8(e.arguments.at(1));attenuation_=amount ? std::uint8_t(std::clamp(int(attenuation_)+amount,0,255)) : initial_attenuation_;}
         return;

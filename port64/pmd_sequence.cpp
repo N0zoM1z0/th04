@@ -50,7 +50,8 @@ void Sequence::set_tempo(std::uint8_t value) {
 }
 void Sequence::start() {
     if(music_.empty())throw std::logic_error("PMD start requires music");
-    const auto old=state_.parts;state_=State{};state_.playing=true;set_timer_b(200);
+    const auto old=state_.parts;const bool fade_stop=state_.auto_stop_on_fade;
+    state_=State{};state_.auto_stop_on_fade=fade_stop;state_.playing=true;set_timer_b(200);
     for(unsigned p=0;p<11;++p) {
         auto& track=state_.parts[p];track.notes=old[p].notes;
         track.mask=old[p].mask&15;
@@ -62,8 +63,10 @@ void Sequence::start() {
     }
     rhythm_table_=std::uint16_t(word(23)+1);rhythm_position_=0;
 }
-void Sequence::stop() {
+void Sequence::stop(StopReason reason) {
     state_.playing=false;state_.fade_speed=0;state_.fade=255;state_.loop_status=255;
+    state_.stop_pending=false;
+    if(reason==StopReason::explicit_request)state_.musical_fade_requested=false;
 }
 bool Sequence::command(unsigned p,std::uint16_t& at,std::uint8_t op,std::uint16_t offset) {
     auto& track=state_.parts[p];const bool fm=p<6;
@@ -115,9 +118,23 @@ bool Sequence::command(unsigned p,std::uint16_t& at,std::uint8_t op,std::uint16_
     case 0xdc:state_.status=byte();break;
     case 0xdb:state_.status+=byte();break;
     case 0xd5:track.detune=signed_word(std::uint16_t(std::uint16_t(track.detune)+integer()));break;
+    case 0xd4: {
+        const auto effect=byte();
+        if(!track.mask){if(effect)start_ssg_effect(effect);else stop_ssg_effect();}
+        break;
+    }
+    case 0xd3: {
+        const auto effect=byte();
+        if(!track.mask){
+            if(!fm_effect_command_)throw std::logic_error("PMD musical FM effect requires an effect owner");
+            fm_effect_command_(effect);
+        }
+        break;
+    }
+    case 0xd2:state_.musical_fade_requested=true;state_.fade_speed=std::int8_t(signed_byte(byte()));break;
     case 0xc0: {
         const auto sub=byte();
-        if(sub<2) {if(sub)track.mask|=64;else track.mask&=~64;}
+        if(sub<2) {if(sub)track.mask|=64;else track.mask&=~64;parsing_masked_[p]=track.mask!=0;}
         else if(sub>=247)byte();
         else throw std::invalid_argument("unrecovered PMD extended command");
         break;
@@ -136,7 +153,7 @@ bool Sequence::command(unsigned p,std::uint16_t& at,std::uint8_t op,std::uint16_
     }
     case 0xf1:case 0xee:case 0xed:case 0xec:case 0xeb:case 0xea:case 0xe9:case 0xe8:
     case 0xe6:case 0xe4:case 0xe1:case 0xe0:case 0xde:case 0xdd:case 0xd9:case 0xd8:
-    case 0xd7:case 0xd4:case 0xd3:case 0xd2:case 0xd1:case 0xd0:case 0xcf:case 0xcc:
+    case 0xd7:case 0xd1:case 0xd0:case 0xcf:case 0xcc:
     case 0xcb:case 0xca:case 0xc9:case 0xc5:case 0xc2:case 0xbe:case 0xbc:case 0xbb:
     case 0xba:case 0xb9:case 0xb7:case 0xb6:byte();break;
     case 0xb1:
@@ -159,10 +176,13 @@ void Sequence::part_body(unsigned p) {
     --track.length;if(track.length)return;
     // FM effect occupation persists until the masked musical parse boundary.
     if(p<6 && (track.mask&2) && fm_effect_active_ && !fm_effect_active_())track.mask&=253;
+    // The driver enters one parse loop. Effect commands can occupy the same
+    // part without changing that loop; C0 explicitly switches its continuation.
+    parsing_masked_[p]=track.mask!=0;
     auto at=track.position;
     for(unsigned budget=0;budget<8192;++budget) {
         const auto offset=at;const auto op=take(at);
-        if(op<0x80 || op==0xda)recover_ssg(p,op);
+        if((op<0x80 || op==0xda) && parsing_masked_[p]){recover_ssg(p,op);parsing_masked_[p]=track.mask!=0;}
         if(op==0x80) {
             track.position=offset;track.loop_status=3;emit(Kind::end,p,offset,op);
             if(!track.loop)return;
@@ -172,7 +192,7 @@ void Sequence::part_body(unsigned p) {
             track.length=take(at);++track.notes;
             emit(Kind::note,p,offset,op,{track.length});
             // C1 immediately after a sounding note overrides its release gate.
-            if(!track.mask && get(at)==0xc1)++at;
+            if(!parsing_masked_[p] && get(at)==0xc1)++at;
             track.position=at;return;
         }
         if(command(p,at,op,offset)) {if(get(at)==0xc1)++at;track.position=at;return;}
@@ -231,6 +251,7 @@ void Sequence::timer_b() {
 }
 void Sequence::interrupt(std::uint8_t flags) {
     if(flags>3)throw std::invalid_argument("PMD timer status");
+    if((flags&2) && state_.stop_pending)stop(StopReason::fade_complete);
     if(flags&2)timer_b();
     if(flags&1) {
         ++state_.timer_a;
@@ -238,6 +259,7 @@ void Sequence::interrupt(std::uint8_t flags) {
             const int next=int(state_.fade)+state_.fade_speed;
             state_.fade=std::uint8_t(std::clamp(next,0,255));
             if(next<0 || next>255)state_.fade_speed=0;
+            if(next>255 && state_.auto_stop_on_fade)state_.stop_pending=true;
         }
         effects_.timer_a();
     }

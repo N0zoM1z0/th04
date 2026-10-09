@@ -371,3 +371,7 @@ add_test(NAME pmd-musical-ssg-contracts COMMAND th04-port64-pmd-musical-ssg-cont
 add_executable(th04-port64-pmd-combined-contracts pmd_combined_checks.cpp)
 target_link_libraries(th04-port64-pmd-combined-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-combined-contracts COMMAND th04-port64-pmd-combined-contracts)
+
+add_executable(th04-port64-pmd-commands-contracts pmd_commands_checks.cpp)
+target_link_libraries(th04-port64-pmd-commands-contracts PRIVATE th04-portable-core)
+add_test(NAME pmd-commands-contracts COMMAND th04-port64-pmd-commands-contracts)

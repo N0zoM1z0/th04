@@ -186,7 +186,7 @@ bool FmEffects::command(std::uint8_t opcode) {
     }
     return false;
 }
-void FmEffects::timer_a() {
+void FmEffects::timer_a(std::int8_t musical_fade_speed) {
     if(!state_.active)return;
     --state_.ticks;
     if(!(state_.key_flags&3) && state_.ticks<=state_.gate) {key(false);state_.key_flags=255;}
@@ -214,7 +214,9 @@ void FmEffects::timer_a() {
         }
         pitch();
     }
-    if(changed && (state_.lfo_flags&2))volume();
+    // The shared driver parser refreshes effect TLs during musical fades,
+    // even when the effect's LFO and resulting register value stay unchanged.
+    if((changed && (state_.lfo_flags&2)) || musical_fade_speed)volume();
     if(!state_.ticks && read(state_.position)==128)stop();
 }
 }

@@ -100,7 +100,7 @@ void MusicalSsg::gate(unsigned p,unsigned duration,unsigned next){
 }
 void MusicalSsg::note(unsigned p,const Event& e){
     auto& s=parts_[p];parsed_note_[p]=true;const auto& track=sequence_.state().parts[p+6];
-    if(track.mask){s.frequency=0;s.note=s.last_note=255;s.key_flags=255;if(!temporary_)s.temporary_volume=0;tied_=temporary_=false;return;}
+    if(sequence_.masked_parser(p+6)){s.frequency=0;s.note=s.last_note=255;s.key_flags=255;if(!temporary_)s.temporary_volume=0;tied_=temporary_=false;return;}
     s.flags&=247;unsigned duration=e.arguments.at(0),next=e.offset+2;
     if(e.kind==Kind::portamento){prepare(p,e.arguments.at(0));frequency(p,transpose(p,s.last_note));const auto begin=s.frequency;const auto first=s.note;frequency(p,transpose(p,e.arguments.at(1)));const int delta=signed_word(s.frequency-begin);s.frequency=begin;s.note=first;duration=e.arguments.at(2);next=e.offset+4;if(!duration)throw std::invalid_argument("SSG zero portamento duration");s.slide_step=signed_word(delta/int(duration));s.slide_remainder=signed_word(delta%int(duration));s.flags|=8;}
     else {prepare(p,e.opcode);frequency(p,transpose(p,s.last_note));}
@@ -128,7 +128,7 @@ void MusicalSsg::command(unsigned p,const Event& e){
     case 222:case 221:{unsigned volume=sequence_.state().parts[p+6].volume;s.temporary_volume=std::uint8_t((e.opcode==222 ? std::min<unsigned>(15,std::uint8_t(volume+a.at(0))) : unsigned(std::max(0,int(volume)-int(a.at(0)))))+1);temporary_=true;break;}
     case 192:if(a.at(0)==1 && sequence_.state().parts[p+6].mask==64){const auto bits=(1u<<p)|(8u<<p);write(7,registers_[7]|bits);}break;
     case 239:if(a.at(0)<14)write(a.at(0),a.at(1));break;
-    case 255:case 253:case 252:case 250:case 249:case 248:case 247:case 246:case 245:case 244:case 243:case 236:case 235:case 234:case 233:case 232:case 231:case 230:case 229:case 228:case 227:case 226:case 225:case 224:case 223:case 220:case 219:case 218:case 217:case 216:case 215:case 213:case 209:case 207:case 206:case 200:case 199:case 198:case 197:case 195:case 193:case 186:case 184:case 182:case 181:case 180:case 178:break;
+    case 255:case 253:case 252:case 250:case 249:case 248:case 247:case 246:case 245:case 244:case 243:case 236:case 235:case 234:case 233:case 232:case 231:case 230:case 229:case 228:case 227:case 226:case 225:case 224:case 223:case 220:case 219:case 218:case 217:case 216:case 215:case 213:case 212:case 211:case 210:case 209:case 207:case 206:case 200:case 199:case 198:case 197:case 195:case 193:case 186:case 184:case 182:case 181:case 180:case 178:break;
     default:throw std::invalid_argument("unrecovered musical SSG command "+std::to_string(e.opcode));
     }
 }

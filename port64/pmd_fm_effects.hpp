@@ -41,7 +41,7 @@ public:
     void load(const Bytes&);
     void start(unsigned);
     void stop();
-    void timer_a();
+    void timer_a(std::int8_t musical_fade_speed=0);
     void mirror(std::uint8_t bank,std::uint8_t address,std::uint8_t value) {registers_.at(bank)[address]=value;}
     const FmEffectState& state() const {return state_;}
     const std::array<std::array<std::uint8_t,256>,2>& registers() const {return registers_;}

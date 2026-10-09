@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/pmd_commands_checks.cpp",
+    "port64/verify_pmd_commands.py",
     "port64/pmd_combined_checks.cpp",
     "port64/verify_pmd_combined.py",
     "port64/pmd_trace_state.hpp",
