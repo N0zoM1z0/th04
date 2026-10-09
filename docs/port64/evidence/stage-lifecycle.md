@@ -822,3 +822,66 @@ Cleanup reclaims123,744,256 allocated bytes with3,926 protected files unchanged.
 Completed independent scene files share immutable hardlinks after byte readback;
 never replay a writer in place. Pinned inputs, original references, receipts and
 three active caches remain. Every launch is muted and opens no audio device.
+
+
+## Live Bomb graphics and shared palette
+
+v1309 working tree, 2026-10-09: MAIN retains its completed-frame Bomb dispatch
+before lifecycle increments bomb_frame. Frontend loads both BB/CDG resources,
+consumes physical-scroll BB tiles or cached character draws before foreground
+actors, and applies shared palette14/tone. Explicit scroll0/177 requests update
+the display origin separately from the internal tile ring. Two physical pages
+retain the null-background interval49..176; frame176 retains the preceding
+back page while frame177 restores background ownership. Cached draws from175
+are not replayed during the final fade. Every completed Bomb frame prepares
+its page even when a headless consumer postpones visible repainting.
+
+The current native black HUD-margin initialization remains an explicit adapter:
+select its black palette entry before indexed retention. Full HUD is not added.
+Bullet clear time is synchronized from the already updated shared bullet owner
+before the Bomb render boundary, rather than retaining a stale lifecycle mirror.
+
+`--bomb-checks DIR` uses actual OP/character selection, finite authored STD
+contact and held X. Both characters exercise ordinary Bomb, the real deathbomb
+window and a rejected late deathbomb followed by normal death and Bomb. Each
+route runs227 Bomb frames; always-painted and deferred-paint variants yield
+12 scenes and2,724 records per GNU/optimized UBSan. Repaint pairs agree on all
+1,362 state inputs/outputs and126 complete capture tuples.252 snapshots each
+contain pre-Bomb, post-Bomb, final foreground physical indices and full RGB
+(387,072,000 raw bytes per host). GNU/UBSan journals and every capture byte agree.
+All34 contracts pass per executed host;105 current AMD64 products bind284 files
+with manifest a53f3772996984b7e69fd223a1e0c4a52b225d16fd9758362be8e5c7060151fd.
+
+`verify_bomb_join.py` executes original MAIN0AAF:571A and the character/star,
+RNG and circle bodies at loads1000/2000. All2,724 lifecycle records, stars,
+circles, shared cursor and explicit scroll requests agree. At252 checkpoints,
+original BB/fill/CDG/mono kernels agree on64,512,000 Bomb-layer indices. Final
+native foreground indices independently reproduce all displayed RGB bytes.
+Captured native pre-Bomb state/ring/page, resource handles, sound and scroll are
+explicit adapters; this is not an independent original complete MAIN/background/
+page-driver run. Physical timing, audio and whole-game routes remain unaccepted.
+
+A source-only mutant omits the frontend character graphics consumer while
+retaining real state production. The original pixel control rejects frame48
+at32,16 (15 versus4). Game Over322 full displays and the score-only28 success/
+failed-writer routes regress on current GNU. Current Windows AMD64 builds,
+but actual Windows execution fails before PowerShell under WSL vsock. Git
+index writes remain read-only. No GUI publication or historical exact promotion.
+
+Receipts, readback, raw-byte comparison and mutation recipe are below
+`.analysis/port64/bomb-join-v1309/`. Preserve final references, three live caches
+and recovery patches; all replay output directories must be fresh.
+
+```sh
+python3 port64/verify_bomb_join.py --target ../../targets/th04/main.exe \
+  --hdi ../../runtime/images/zun.hdi --font SUPPLIED-FONT \
+  --exe .analysis/port64/linux-live-v1251/th04-port64 --output-dir NEW
+# Optimized UBSan: its current executable, fresh output and --reference-dir
+# pointing to the independently completed GNU reference.
+python3 .analysis/port64/bomb-join-v1309/review_results.py
+```
+
+Scoped cleanup reclaims173,391,872 allocated bytes (about165MiB), retires27
+prototype/mutant files and shares227 immutable score regression files. All5,118
+protected file hashes remain unchanged. Cleanup recipe/receipt stays with the
+final references; previous v1308 recovery patches remain intact.

@@ -293,3 +293,56 @@ original references. Final closure uses `scripts/ci.py` and `git diff --check`.
 No historical exact/unit/function acceptance changes. Next implement the actual
 MAIN Bomb, hit/death/lives/game-over/Continue owners, then Extra/HUD/OP auxiliary
 flows/audio/config and full Linux/Windows route/performance acceptance.
+
+## Score-only MAINE Quit route
+
+v1308 working tree, 2026-10-09: `maine_score_route.cpp` owns ES_SCORE
+separately from the Good/Bad Ending pipeline. Real Game Over has already
+finished its blackout. The frontend publishes interrupted MAIN statistics,
+releases MAIN and enters a fresh MAINE/LCG exactly once. It waits100 refreshes,
+constructs registration with fresh text weight0, completes actual writer closes
+and registration blackout, transfers both pages to verdict, publishes verdict
+STD/reseed events at their digit requests, retains song fade4, then enters
+fresh OP. Failed recreation or final save latches the owner; subsequent
+refreshes neither retry partial file/RNG production nor evaluate/return to OP.
+
+`--score-route-checks` uses actual OP options/selection and authored finite STD
+waves. Shot kills earn500100; contact-only runs earn7640. Both characters and
+all four ordinary ranks reach real last-life Game Over/Quit, then no-entry,
+one-letter Esc or eight-letter explicit Enter registration, verdict, fresh OP
+and a second MAIN. Four additional real filesystem failures cover initial
+recreation and final replacement. No hit, score, MAINE entry or completion flag
+is forced. This is bounded authored-STD integration, not an original full route.
+
+GNU and optimized UBSan each pass34 contracts and all24 successful/4 failed
+frontend routes. All224 output files, including136 complete BMPs, agree raw.
+The two-load original dispatch Oracle executes decoded MAINE0A05:00B2..0241
+(payload slice A102..A292) and frame_delay100 instructions. Initialization,
+register/verdict child calls with measured native durations, sound and exec
+are guarded adapters. The Oracle establishes parent order and delay; child
+duration adapters do not independently prove child pixels or complete behavior.
+Registration35/18-refresh fades re-agree with original instructions; prior
+Game Over322 complete displays re-agree on GNU using the independent v1307
+producer. A source-only99-refresh mutation and changed-boundary comparator
+control are both rejected.
+
+Current105 ELF/PE AMD64 products bind282 source/verifier files with manifest
+`5c674dfab93733ca95f749d70fae2eaaf68d75932d32c62f2d7ebe27dd167ea9`.
+Receipts and commands are below `.analysis/port64/score-route-v1308/`:
+`linux-final`, `ubsan-final`, `gameover-linux`, `fades-linux`, mutations and
+`platform-review.json`. Replay `verify_score_route.py` with the pinned MAINE,
+decoded original, HDI/font, current executable and fresh output directory.
+`verify_score_route_windows.ps1` consumes the bound two-load reference and
+compares all raw output files after actual Windows contracts.
+
+Actual Windows execution is **pending**, because the restricted environment
+rejects WSL vsock before PowerShell starts. MinGW AMD64 build success is the
+only current Windows claim. Git index writes are read-only; this batch is
+uncommitted/unpushed. Preserve the working tree and recovery patches until
+ordinary Git and Windows interop are available. No audio device was opened.
+No GUI publication, physical timing, whole-game or historical exact acceptance.
+
+Score-route cleanup retires superseded prototypes and private mutant products,
+reclaims529,707,008 allocated bytes with8,236 protected files unchanged, and
+shares402 completed capture files only after full byte/readback comparison.
+Final paths are immutable; replay into fresh directories.

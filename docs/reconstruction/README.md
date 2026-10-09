@@ -14,6 +14,13 @@ source evidence.
 
 ## Current open questions
 
+- [Original resident PMD driver/music reference](../port64/evidence/pmd-driver.md)
+- [Native PMD SSG effects and music sharing](../port64/evidence/pmd-ssg.md) — effect register behavior, raw selected masks and remaining music/synthesis owners.
+- [Native PMD bytecode/timer state](../port64/evidence/pmd-sequence.md) — control-state subset, original references and remaining synthesis owners.
+- [Native OP/MAINE sound scene ownership](../port64/evidence/sound-scenes.md)
+- [Native MAIN ordered sound and muted beeper frontend](../port64/evidence/sound-main.md)
+- [Native EFS beeper parser, PC-98 IRQ and offline PCM](../port64/evidence/beeper.md)
+
 Native product-build investigation is active. Use the live ledgers and
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) for current counts and acceptance. These
 notes explain the remaining source and container gaps:
