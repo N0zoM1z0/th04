@@ -14,6 +14,8 @@ source evidence.
 
 ## Current open questions
 
+- [Resident PMD frontend and real measures](../port64/evidence/pmd-resident.md) — bounded service/scene integration; remaining FM3/PPS/ADPCM, startup and natural routes.
+
 - [Native PMD external FM effects](../port64/evidence/pmd-fm.md) — full supplied effect state/register controls, corrected board mirror and remaining musical handover/synthesis owners.
 - [Original resident PMD driver/music reference](../port64/evidence/pmd-driver.md)
 - [Native PMD SSG effects and music sharing](../port64/evidence/pmd-ssg.md) — effect register behavior, raw selected masks and remaining music/synthesis owners.

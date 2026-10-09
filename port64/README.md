@@ -1,22 +1,31 @@
 # TH04 native 64-bit bring-up
 
-v1340 joins resident timer-register dispatch to the FM/SSG/effect/rhythm
-player. GNU8, optimized UBSan and actual Windows each match 80,040 complete
-original rows (174 cases, two PSPs); Windows executes 87 unique traces/40,020
-rows and compares both loads. All 59 contracts pass per host. 426 maintained
-inputs bind 180 AMD64 products. Acknowledge precedes parsing; tempo commits
-between Timer B music and Timer A effects; FM26 effect release restores mode.
-Four source-only variants reject. Prior owner corpora replay on GNU/UBSan.
-Receipts: native `.analysis/port64/pmd-clock-v1340/`; details: native
-`docs/port64/evidence/pmd-timer-player.md`.
+v1343 joins CPU-only resident PMD to the actual native frontend. One driver
+survives OP/MAIN/MAINE/fresh OP; controls and beeper remain process-local.
+Actual capability selects M26/M86, and Ending/Staff waits query the new song's
+real measure. All launches stay muted without an audio device/backend.
 
-Physical clocks, synthesis, FM3 extras/PPS/ADPCM, frontend capability/real
-measures and full logo/startup remain unfinished. An independently executed
-chip model corroborates default timer dividers; the translated manual's
-factor-two conflict remains documented. All launches stay muted with no audio
-device/backend. Linux GUI hashes remain unchanged; Windows bounded CPU
-products are attested. No new GUI or full natural-route acceptance occurs.
-DOS acceptance and candidate-local-attested provenance remain unchanged.
+Original OP controls coupled to the three original COM drivers cover 72 cases
+at PSP1000/2000. GNU8, optimized UBSan and actual Windows compare 9,204 complete
+records and 21,103,632 FM-mode stereo PCM frames per host; each executes 36
+unique service streams. SE2 mixed PCM is host-consistency evidence only.
+Three profiles by nine BGM/SE choices each produce 65 equal frontend files on
+all hosts, including live Music Room/MAIN and a declared registration child.
+Six source-only variants reject; an earlier stale-query variant is inconclusive.
+451 maintained inputs bind 189 AMD64 products; 62 contracts pass per host.
+Independent control/driver engines share typed buffers, not a physical DOS
+address space; PCM arithmetic shares pinned ymfm. No physical chip accuracy,
+natural full-route or historical exactness acceptance follows.
+
+Current source manifest:
+`fded844658566dd8bb32f1298a68664a0f45e55d22676f2e979efe5380cf9964`.
+Receipts: native `.analysis/port64/pmd-resident-v1343/`; detailed ownership,
+failures and replay: `../docs/port64/evidence/pmd-resident.md`.
+Earlier PCM/clock corpora retain their own identities. FM3/PPS/external ADPCM,
+full original logo/startup, natural Linux/Windows routes and host
+refresh/input/slowdown/Lunatic performance remain unfinished. No new GUI is
+published; the last delivered native package remains v1296.
+DOS acceptance and candidate-local-attested provenance are unchanged.
 
 
 v1331 adds native PMD SSG effects with 40 semantic instruments, signed sweeps,

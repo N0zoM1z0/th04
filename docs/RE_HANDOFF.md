@@ -6,29 +6,31 @@ Linux/Windows routes and timing/performance validation. Native code remains on
 
 ## Verified current frontier
 
-v1342 adds CPU-only OPN/OPNA PCM synthesis to the resident parser/clock.
-GNU8, optimized UBSan and actual Windows compare 106,088,380 complete stereo
-frames per host in 174 scenarios at two original PSPs. Each host executes 87
-unique streams/53,044,190 frames; all 61 component contracts pass. 445 inputs
-bind 186 AMD64 programs. Four source-only PCM variants reject; a rhythm fixture
-without key-on remains inconclusive. Original driver timelines and the host
-renderer are independent of the native player; chip arithmetic shares pinned
-BSD3 ymfm, so this is integration evidence, not independent chip accuracy.
-The explicit external rhythm ROM stays private; four die/canonical end-byte
-differences remain unresolved. Complete source/archive/readback preserves the
-serializer-only metadata correction and earlier rejected adapters.
-Disjoint terminal cleanup reclaims 1,074,380,800 allocated bytes (1024.6 MiB).
-Receipts: native `.analysis/port64/pmd-pcm-v1342/`; details: native
-`docs/port64/evidence/pmd-pcm.md`.
+v1343 joins CPU-only resident PMD to the actual native frontend. One driver
+survives OP/MAIN/MAINE/fresh OP; controls and beeper remain process-local.
+Actual capability selects M26/M86, and Ending/Staff waits query the new song's
+real measure. All launches stay muted without an audio device/backend.
+
+Original OP controls coupled to the three original COM drivers cover 72 cases
+at PSP1000/2000. GNU8, optimized UBSan and actual Windows compare 9,204 complete
+records and 21,103,632 FM-mode stereo PCM frames per host; each executes 36
+unique service streams. SE2 mixed PCM is host-consistency evidence only.
+Three profiles by nine BGM/SE choices each produce 65 equal frontend files on
+all hosts, including live Music Room/MAIN and a declared registration child.
+Six source-only variants reject; an earlier stale-query variant is inconclusive.
+451 maintained inputs bind 189 AMD64 products; 62 contracts pass per host.
+Independent control/driver engines share typed buffers, not a physical DOS
+address space; PCM arithmetic shares pinned ymfm. No physical chip accuracy,
+natural full-route or historical exactness acceptance follows.
 
 Current source manifest:
-`af82c5a58d5e563758cac5e2735b2a6739f4b7da47facff3ea76a0fd836b5fc9`.
-The preceding v1341 timer corpus remains accepted: 283,494 original rows per
-host. All 61 prior GNU/UBSan products and Linux GUI hashes remain unchanged.
-Windows relinks have current bounded CPU controls. No new GUI or natural-route
-acceptance occurs. All runs stay muted with no audio device/backend.
-Real resident frontend lifetime, PMD capability/measure waits, beeper/FM stream
-joining, remaining FM3/PPS/ADPCM owners and full logo/startup remain unfinished.
+`fded844658566dd8bb32f1298a68664a0f45e55d22676f2e979efe5380cf9964`.
+Receipts: native `.analysis/port64/pmd-resident-v1343/`; detailed ownership,
+failures and replay: native `docs/port64/evidence/pmd-resident.md`.
+Earlier PCM/clock corpora retain their own identities. FM3/PPS/external ADPCM,
+full original logo/startup, natural Linux/Windows routes and host
+refresh/input/slowdown/Lunatic performance remain unfinished. No new GUI is
+published; the last delivered native package remains v1296.
 DOS acceptance and candidate-local-attested provenance are unchanged.
 
 See [OP/MAINE scene evidence](port64/evidence/sound-scenes.md), [MAIN sound evidence](port64/evidence/sound-main.md), [beeper evidence](port64/evidence/beeper.md) and
@@ -52,10 +54,9 @@ old claimed two-character frontend coverage.
 
 ## Remaining owners, in order
 
-1. Join the validated clock/PCM player to the resident frontend lifetime;
-   recover the remaining FM3/PPS/ADPCM owners;
-   join original driver measures to frontend capability;
-   complete original logo/startup audio and attest driver initialization/finish.
+1. Recover the remaining FM3/PPS/external ADPCM owners and complete original
+   logo/startup audio and finish. Resident frontend lifetime/capability/measure
+   waits now have bounded muted controls; carry them through complete routes.
    OP/MAIN/MAINE scene requests, process lifetimes and muted beeper are joined
    under bounded controls; absent drivers supply no fictional measures.
 2. Verify complete natural Linux/Windows routes for both characters and ranks,
@@ -90,13 +91,13 @@ input hashes, adapter limits and negative controls live in the focused notes.
 
 The last published Windows GUI is v1296, archived outside the DOS demo folder;
 it is older than this retained source and reaches registration_pending.
-Native source/evidence through v1340 remain on the native branch with
+Native source/evidence through v1343 remain on the native branch with
 separate original/consumer source identities and current replay receipts.
 Historical recovery patches remain private and contain public source only,
 not assets/tools.
 
 Preserve pinned targets/HDI/font, independent references, recovery archives and
-all 180 current programs. Periodically retire terminal duplicate captures and
+all 189 current programs. Periodically retire terminal duplicate captures and
 regenerable caches only after hashes and full byte comparison; shared hardlinks
 are immutable. Restore or use a fresh output directory before replaying.
 

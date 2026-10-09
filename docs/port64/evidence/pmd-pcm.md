@@ -27,10 +27,11 @@ integrates held chip levels over integer master-cycle sample windows, mixes
 at half gain, applies a fixed DC blocker and clips to signed 16-bit. It is
 not a measured PC-98 analogue response or a finished frontend audio policy.
 
-The frontend still owns process-local beeper `Runtime` instances. It does not
+At v1342 the frontend still owns process-local beeper `Runtime` instances. It does not
 yet use `PcmPlayer`, advertise resident PMD capability, or derive scene waits
 from its live musical measures. Real resident lifetime across OP/MAIN/MAINE,
-beeper/FM stream mixing, complete logo/startup and ordinary routes remain.
+beeper/FM stream mixing, complete logo/startup and ordinary routes remain at that
+version. Later bounded resident/frontend evidence is in [v1343](pmd-resident.md).
 
 ## Evidence and independence
 
