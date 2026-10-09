@@ -14,12 +14,14 @@ public:
     void fade(std::int8_t speed) {music_.fade(speed);}
     void start_effect(unsigned id);
     void stop_effect() {effects_.stop();sync_masks();}
+    void start_ssg_effect(unsigned id) {music_.start_ssg_effect(id);}
+    void stop_ssg_effect() {music_.stop_ssg_effect();}
     void interrupt(std::uint8_t flags);
     void mirror(std::uint8_t bank,std::uint8_t address,std::uint8_t value) {music_.mirror(bank,address,value);effects_.mirror(bank,address,value);}
     const MusicalFm& music() const {return music_;}
     const FmEffects& effects() const {return effects_;}
 private:
-    FmSink sink_;MusicalFm music_;FmEffects effects_;
+    FmSink sink_;SsgSink ssg_sink_;MusicalFm music_;FmEffects effects_;
     void sync_masks();
 };
 }

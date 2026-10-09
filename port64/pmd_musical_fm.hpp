@@ -27,6 +27,8 @@ public:
     void load(const Bytes& bytes) {sequence_.load(bytes);}
     void start();void stop();void fade(std::int8_t speed) {sequence_.fade(speed);}
     void interrupt(std::uint8_t flags);
+    void start_ssg_effect(unsigned id) {sequence_.start_ssg_effect(id);}
+    void stop_ssg_effect() {sequence_.stop_ssg_effect();}
     void mirror(std::uint8_t bank,std::uint8_t address,std::uint8_t value) {registers_.at(bank)[address]=value;if(!bank && address<14)ssg_.mirror(address,value);}
     void effects_active(std::function<bool()> query) {effect_busy_=query;sequence_.fm_effect_active(std::move(query));}
     void borrow_effect();

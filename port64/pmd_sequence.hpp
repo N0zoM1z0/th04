@@ -43,6 +43,8 @@ public:
     void stop();
     void fade(std::int8_t speed) {state_.fade_speed=speed;}
     void interrupt(std::uint8_t timer_status);
+    void start_ssg_effect(unsigned id) {if(effects_.start(id))state_.parts[8].mask|=2;}
+    void stop_ssg_effect() {effects_.stop();}
     const State& state() const {return state_;}
     const Bytes& music() const {return music_;}
     const SsgEffects& ssg_effects() const {return effects_;}

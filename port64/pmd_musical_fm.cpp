@@ -221,6 +221,7 @@ void MusicalFm::command(unsigned p,const Event& e){
     case 202:case 187:{const unsigned shift=e.opcode==187 ? 4 : 0;s.clock_flags=std::uint8_t((s.clock_flags&~(2u<<shift))|((a.at(0)&1)<<(shift+1)));break;}
     case 194:case 185:{auto& l=s.lfo[e.opcode==185];l.initial_delay=a.at(0);l.delay=a.at(0);reset(l);break;}
     case 214:case 189:{auto& l=s.lfo[e.opcode==189];l.depth_speed=l.initial_depth_speed=a.at(0);l.depth_step=std::int8_t(i8(a.at(1)));break;}
+    case 183:{auto& l=s.lfo[(a.at(0)&128)!=0];const auto count=std::uint8_t(a.at(0)&127);l.depth_count=l.initial_depth_count=count ? count : 255;break;}
     case 197:case 186:{auto& l=s.lfo[e.opcode==186];l.mask=(a.at(0)&15) ? std::uint8_t((a.at(0)<<4)|15) : s.carrier_mask;break;}
     case 196:s.gate_ratio=a.at(0);break;
     case 179:s.gate_minimum=a.at(0);break;

@@ -24,7 +24,11 @@ void MusicalSsg::effect_write(SsgWrite w){
     if(w.address==6)previous_noise_=w.value;
     if(sink_)sink_(w);
 }
-void MusicalSsg::start(){parts_={};parsed_note_={};attenuation_=initial_attenuation_;noise_=previous_noise_=0;tied_=temporary_=false;write(6,0);}
+void MusicalSsg::start(){
+    parts_={};parsed_note_={};attenuation_=initial_attenuation_;noise_=0;tied_=temporary_=false;
+    // Restarting music must preserve noise while an effect owns channel C.
+    if(!sequence_.ssg_effects().state().priority){previous_noise_=0;write(6,0);}
+}
 void MusicalSsg::stop(){write(7,sequence_.ssg_effects().state().priority ? (registers_[7]&63)|155 : 191);}
 unsigned MusicalSsg::clocks(const MusicalSsgPart& s,unsigned l) const {return (s.clock_flags&(2u<<(l*4))) ? std::uint8_t(sequence_.state().timer_a-timer_baseline_()) : 1;}
 std::uint8_t MusicalSsg::transpose(unsigned p,std::uint8_t n) const {

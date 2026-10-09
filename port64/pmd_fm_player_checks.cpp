@@ -1,37 +1,13 @@
-#include "pmd_fm_player.hpp"
+#include "pmd_trace_state.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 using namespace th04::portable::pmd;
 namespace {
 void require(bool ok,const char* s){if(!ok)throw std::runtime_error(s);}
-bool owned(unsigned b,unsigned a){return (a>=48 && a<=182) || (b==0 && (a==34 || a==40));}
+bool owned(unsigned b,unsigned a){return owns_fm_write(b,a);}
 void row(std::ostream& out,const FmPlayer& player,const std::vector<FmWrite>& writes){
-    const auto& m=player.music();const auto& seq=m.sequence();const auto& state=seq.state();
-    out<<state.measure<<' '<<unsigned(state.fade)<<' '<<seq.status()<<' '<<unsigned(state.timer_b)<<' '<<unsigned(state.timer_a);
-    for(unsigned p=0;p<6;++p){
-        const auto& t=state.parts[p];const auto& s=m.parts()[p];
-        out<<' '<<t.position<<' '<<t.loop<<' '<<unsigned(t.length)<<' '<<unsigned(t.loop_status)<<' '<<unsigned(t.notes)<<' '<<unsigned(t.volume)<<' '<<unsigned(t.transpose)<<' '<<unsigned(t.master_transpose)<<' '<<t.detune<<' '<<unsigned(t.instrument)<<' '<<unsigned(t.mask);
-        out<<' '<<unsigned(s.gate)<<' '<<s.frequency<<' '<<s.slide<<' '<<s.slide_step<<' '<<s.slide_remainder<<' '<<unsigned(s.flags)<<' '<<unsigned(s.clock_flags)<<' '<<unsigned(s.temporary_volume)<<' '<<unsigned(s.pan)<<' '<<unsigned(s.carrier_mask)<<' '<<unsigned(s.slots)<<' '<<unsigned(s.voice_mask);
-        for(auto v:s.total_levels)out<<' '<<unsigned(v);
-        out<<' '<<unsigned(s.key_flags)<<' '<<unsigned(s.note)<<' '<<unsigned(s.last_note)<<' '<<unsigned(s.algorithm)<<' '<<unsigned(s.gate_amount)<<' '<<unsigned(s.gate_ratio)<<' '<<unsigned(s.gate_minimum)<<' '<<unsigned(s.gate_random)<<' '<<unsigned(s.hardware_delay)<<' '<<unsigned(s.hardware_counter)<<' '<<unsigned(s.key_delay)<<' '<<unsigned(s.key_counter)<<' '<<unsigned(s.key_mask);
-        for(const auto& l:s.lfo)out<<' '<<l.value<<' '<<unsigned(l.delay)<<' '<<unsigned(l.speed)<<' '<<int(l.step)<<' '<<unsigned(l.count)<<' '<<unsigned(l.initial_delay)<<' '<<unsigned(l.initial_speed)<<' '<<int(l.initial_step)<<' '<<unsigned(l.initial_count)<<' '<<unsigned(l.shape)<<' '<<unsigned(l.mask)<<' '<<int(l.depth_step)<<' '<<unsigned(l.depth_speed)<<' '<<unsigned(l.initial_depth_speed)<<' '<<unsigned(l.depth_count)<<' '<<unsigned(l.initial_depth_count);
-    }
-    for(unsigned b=0;b<2;++b)for(unsigned a=0;a<256;++a)if(owned(b,a))out<<' '<<unsigned(m.registers()[b][a]);
-    const auto& s=player.effects().state();const auto& l=s.lfo;
-    out<<' '<<s.active<<' '<<unsigned(s.effect)<<' '<<s.position<<' '<<s.loop<<' '
-       <<unsigned(s.ticks)<<' '<<unsigned(s.gate)<<' '<<s.frequency<<' '<<s.detune<<' '
-       <<l.value<<' '<<s.slide<<' '<<s.slide_step<<' '<<s.slide_remainder<<' '
-       <<unsigned(s.volume)<<' '<<unsigned(s.transpose)<<' '<<unsigned(l.delay)<<' '
-       <<unsigned(l.speed)<<' '<<int(l.step)<<' '<<unsigned(l.count)<<' '
-       <<unsigned(l.initial_delay)<<' '<<unsigned(l.initial_speed)<<' '<<int(l.initial_step)<<' '
-       <<unsigned(l.initial_count)<<' '<<unsigned(s.lfo_flags)<<' '<<unsigned(s.pan)<<' '
-       <<unsigned(s.instrument)<<' '<<unsigned(s.loop_status)<<' '<<unsigned(s.carrier_mask);
-    for(auto v:s.total_levels)out<<' '<<unsigned(v);
-    out<<' '<<unsigned(s.slots)<<' '<<unsigned(s.voice_mask)<<' '<<unsigned(l.shape)<<' '
-       <<unsigned(s.key_flags)<<' '<<unsigned(s.lfo_mask)<<' '<<unsigned(s.gate_amount)<<' '
-       <<unsigned(s.note)<<' '<<unsigned(s.algorithm)<<' '<<unsigned(s.notes)<<' '
-       <<unsigned(s.last_note)<<' '<<unsigned(s.master_transpose);
+    write_fm_player_state(out,player);
     unsigned count=0;for(auto w:writes)if(owned(w.bank,w.address))++count;
     out<<' '<<count;for(auto w:writes)if(owned(w.bank,w.address))out<<' '<<unsigned(w.bank)<<' '<<unsigned(w.address)<<' '<<unsigned(w.value);out<<'\n';
 }
