@@ -14,7 +14,11 @@ MusicalFm::MusicalFm(Board board,FmSink sink,SsgSink ssg):board_(board),sink_(st
     sequence_(board,[this](const Event& e){event(e);},[this](SsgWrite w){ssg_.effect_write(w);},[this](unsigned p,bool before){tick(p,before);}),
     ssg_(sequence_,[this,sink=std::move(ssg)](SsgWrite w){registers_[0][w.address]=w.value;if(sink)sink(w);},
         [this](MusicalLfo& l){reset(l);},[this](MusicalLfo& l,unsigned n){return advance(l,n);},
-        [this](unsigned limit){return random(limit);},[this]{return last_timer_a_;}){attenuation_=initial_attenuation_=board==Board::fm26 ? 16 : 0;}
+        [this](unsigned limit){return random(limit);},[this]{return last_timer_a_;}),
+    rhythm_(board,[this](FmWrite w){write(w.bank,w.address,w.value);}){
+    attenuation_=initial_attenuation_=board==Board::fm26 ? 16 : 0;
+    sequence_.fade_restored([this]{rhythm_.restore_total();});
+}
 std::uint8_t MusicalFm::read(unsigned at) const {return sequence_.music().at(at);}
 std::uint16_t MusicalFm::word(unsigned at) const {return std::uint16_t(read(at))|std::uint16_t(read(at+1))*256;}
 void MusicalFm::write(unsigned b,unsigned a,unsigned v){
@@ -37,7 +41,7 @@ void MusicalFm::start(){
     // Original stereo initialization visits the primary bank first.
     for(unsigned b=0;b<(board_==Board::fm26 ? 1u : 2u);++b)
         for(unsigned c=0;c<3;++c){if(board_!=Board::fm26 && effect_busy_ && effect_busy_() && c==2 && b==(board_==Board::fm26 ? 0u : 1u))continue;write(b,0xb4+c,192);}
-    write(0,0x22,0);
+    write(0,0x22,0);rhythm_.start();
 }
 void MusicalFm::interrupt(std::uint8_t flags){
     if((flags&2) && sequence_.state().stop_pending)stop(StopReason::fade_complete);
@@ -244,6 +248,7 @@ void MusicalFm::command(unsigned p,const Event& e){
     }
 }
 void MusicalFm::event(const Event& e){
+    rhythm_.event(e,sequence_.state());
     ssg_.event(e);
     if(e.kind==Kind::command && e.opcode==239 && e.part>=6 && e.part<=8){
         if(e.arguments.at(0)>=14)write(0,e.arguments.at(0),e.arguments.at(1));

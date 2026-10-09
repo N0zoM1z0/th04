@@ -1,5 +1,6 @@
 #pragma once
 #include "pmd_musical_ssg.hpp"
+#include "pmd_rhythm.hpp"
 
 namespace th04::portable::pmd {
 struct MusicalFmPart {
@@ -36,10 +37,11 @@ public:
     void restore_effect_voice();
     const Sequence& sequence() const {return sequence_;}
     const MusicalSsg& ssg() const {return ssg_;}
+    const Rhythm& rhythm() const {return rhythm_;}
     const std::array<MusicalFmPart,6>& parts() const {return parts_;}
     const std::array<std::array<std::uint8_t,256>,2>& registers() const {return registers_;}
 private:
-    Board board_;FmSink sink_;Sequence sequence_;MusicalSsg ssg_;std::function<bool()> effect_busy_;std::uint8_t fm3_algorithm_=0;
+    Board board_;FmSink sink_;Sequence sequence_;MusicalSsg ssg_;Rhythm rhythm_;std::function<bool()> effect_busy_;std::uint8_t fm3_algorithm_=0;
     std::array<MusicalFmPart,6> parts_{};
     std::array<std::array<std::uint8_t,256>,2> registers_{};
     std::array<std::uint8_t,6> keys_{};

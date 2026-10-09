@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/pmd_rhythm_checks.cpp",
+    "port64/verify_pmd_rhythm.py",
+    "port64/pmd_rhythm.hpp",
+    "port64/pmd_rhythm.cpp",
     "port64/pmd_commands_checks.cpp",
     "port64/verify_pmd_commands.py",
     "port64/pmd_combined_checks.cpp",

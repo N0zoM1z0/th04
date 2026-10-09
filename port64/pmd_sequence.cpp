@@ -219,6 +219,7 @@ void Sequence::rhythm() {
         Bytes args;
         if(op&0x80)args.push_back(take(rhythm_position_));
         track.length=take(rhythm_position_);args.push_back(track.length);++track.notes;
+        emit(Kind::rhythm,10,offset,op,args);
         if((op&0x80) && !track.mask && !state_.fade) {
             const unsigned mask=((unsigned(op)&0x3f)<<8)|args[0];
             if(mask) {
@@ -226,7 +227,7 @@ void Sequence::rhythm() {
                 if(effects_.start(effect))state_.parts[8].mask|=2;
             }
         }
-        emit(Kind::rhythm,10,offset,op,std::move(args));return;
+        return;
     }
     throw std::runtime_error("PMD rhythm command loop exhausted");
 }
@@ -260,6 +261,7 @@ void Sequence::interrupt(std::uint8_t flags) {
             state_.fade=std::uint8_t(std::clamp(next,0,255));
             if(next<0 || next>255)state_.fade_speed=0;
             if(next>255 && state_.auto_stop_on_fade)state_.stop_pending=true;
+            if(next<0 && fade_restored_)fade_restored_();
         }
         effects_.timer_a();
     }
