@@ -1,5 +1,135 @@
 # Native PMD combined FM and SSG requests
 
+v1338, 2026-10-10. Musical D4/D3 effects and D2 fade requests now join the
+shared FM/SSG owner. GNU8, optimized UBSan and actual Windows each compare
+101,082 complete rows in 102 original cases at PSP1000/2000;51 native traces
+contain 50,541 unique rows. Each host passes57 component contracts.418 maintained
+inputs bind 174 AMD64 products,58 per cache. The independent original producer
+and the final consumer retain distinct full source archives and manifests.
+No audio device/backend opens and no GUI launches occur in this batch.
+
+The claim remains bounded: FM3 extra tracks, PPS, ADPCM/hardware rhythm,
+synthesis, physical clocks, frontend PMD capability/full startup and complete
+natural Linux/Windows routes are still unfinished. Native behavior comparisons
+never promote DOS exactness or candidate-local-attested target provenance.
+
+## Musical commands and parse continuation
+
+Hash-attested PMD86.COM PSP:16BC/16BE/16C0 dispatch D4/D3/D2 to1E3C/1E57/1E9E.
+D4 and D3 consume an effect ID but issue their request only when the current
+part mask is zero. D4 dispatches to built-in SSG effects; D3 uses the supplied
+FM EFC owner. ID zero stops the respective effect. D3 preserves the original
+current-channel/bank context around its call. D2 applies even to a masked part:
+it marks a musical fade request and assigns a signed fade speed. Service fade
+and musical D2 retain their distinct marker behavior.
+
+The parser chooses its normal or masked continuation at entry. An effect
+command occupying its own part does not retroactively switch that continuation.
+C0 explicitly switches it. PMD86 PSP:1150..1294 chooses entry/normal117F versus
+masked1310; C0 at1A38 silences newly masked FM and restores an unmasked voice
+at1AA8 before jumping to the chosen continuation. SSG C0 at1A62..1A8F chooses
+1393/148E. Native Sequence retains a parse-mode latch; FM/SSG notes consume it,
+while command-specific mask guards still inspect current state. Full failed
+candidates retain the extra/missing requests that exposed these boundaries.
+
+## Fade completion and effect writes
+
+PMD86 PSP:1E9E..1EA4 sets musical marker40EF and assigns fade speed via0D86.
+The installed default fade-stop policy40D6 is1. Fade advancement3086..30B6
+sets request bit2 at4050 only when a positive addition exceeds255. Reaching
+exactly255 keeps the speed until a later carry. Negative underflow clamps and
+stops advancement without requesting music stop. Timer B3AF4..3B14 consumes
+the pending request by calling1037. This internal stop preserves marker40EF;
+explicit stop1032 clears it. Timer A alone and status zero leave it pending.
+26/B2 use their own attested request addresses; the checked-in producer reads
+table-219 on26/B2 and table-220 on86, retaining the whole request byte.
+
+An original OUT probe identifies an unchanged duplicate FM-effect TL write
+in FADEBACK at row669. PMD86 PSP:1281..1288 tests musical fade speed40AC and
+calls volume2820 even when the effect LFO is unchanged. The effect work base
+is46A6; the observed secondary-bank4E value is8.26/B2 independently retain the
+same ownership. Native FmEffects receives the live musical fade speed and
+refreshes TL requests in that case without attenuating the effect value or
+excluding a repeated write from comparison.
+
+An initial universal table-220 view mistakenly read the last Timer A baseline
+on26/B2. That probe is retained as **inconclusive** for request semantics,
+separate from the corrected12-case original probe and complete producer. A
+first ctypes bytearray invocation failed before observation; its script/log
+remain a harness failure, not target evidence.
+
+## Complete comparison and counterfactuals
+
+17 independently authored resources per format exercise musical parts0/2/5/6/8,
+masked and unmasked commands, all built-in positive SSG IDs1..39, supplied FM
+IDs1..16, zero stops and seven fade scenarios. Each case has991 operations,
+including Timer A/B/both/zero, external effects, restart and signed fade changes.
+M26's inactive part5 remains in the corpus. The prior751 FM and322/328 SSG
+fields remain, followed by five globals: fade speed, musical marker, whole
+request byte, playing and installed fade-stop policy. All chronological writes
+in the combined owned union retain their bank, duplicates and order. Only
+resource/work pointers become relative.1938 independent full-row service
+crosschecks support the unchanged original execution. Both PSPs agree.
+
+Six source-only counterfactuals reject unchanged complete references:
+dynamic FM mask at CMD2 row173; Timer A consuming the pending stop at
+FADECARRY row354; internal stop clearing the marker at row25; omitted effect
+fade refresh at FADEBACK row669; ignored D4 mask at CMD0MASK row3; and stopping
+at exactly255 at FADEBOUNDARY row24. Base/variant source, compiler/build/binary
+identities, first differences and complete lossless rejecting outputs remain.
+The v1337 baseline rejects D4 as an unsupported musical command; its partial
+output is retained as failure evidence. Early candidate archives/traces remain.
+
+GNU/UBSan additionally replay the full prior 489,390 combined rows;134,274
+supplied and58,380 constructed SSG rows;427,308 FM handover rows;134,274 supplied
+and40,866 constructed FM rows;134,274 short/49,164 long sequence rows;3,942 SSG
+sharing,79,488 SSG effect and30,192 FM effect rows. Prior receipts/references
+retain their own identities. Actual Windows checks all58 PE products/inputs
+before and after57 contracts and51 CPU-only traces. Full readback compares
+Windows bytes against all102 original cases. This batch uses an already
+terminal producer; its first-load snapshot does not imply producer overlap.
+
+## Current replay and retention
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 port64/verify_pmd_commands.py \
+  --hdi ../../runtime/images/zun.hdi \
+  --output .analysis/port64/FRESH/commands-original
+PYTHONDONTWRITEBYTECODE=1 python3 port64/verify_pmd_commands.py \
+  --reference .analysis/port64/FRESH/commands-original \
+  --binary .analysis/port64/linux-live-v1251/th04-port64-pmd-commands-contracts \
+  --binary .analysis/port64/ubsan-live-v1251/th04-port64-pmd-commands-contracts \
+  --output .analysis/port64/FRESH/commands-native
+```
+
+The actual-Windows typed `pmd-commands` plan supplies separate music/EFC inputs
+and invokes an owned copy of verify_windows_current.ps1 with -NoProfile -File.
+Current receipts, target views, original/native/Windows full traces, separate
+source archives, compiler/cache/link/product identities, failed/inconclusive
+probes, counterfactuals and cleanup journals are under native
+`.analysis/port64/pmd-commands-v1338/`. Full readback precedes retirement of
+owned NTFS staging, raw copies/negative binaries and rebuildable native.o/.a;
+current 174 programs and independent references remain. Use fresh output paths.
+
+Continue FM3 extras, PPS/ADPCM/hardware rhythm, synthesis and clocks while
+muted; join actual driver measures to frontend capability and complete startup.
+Then verify full ordinary/Extra natural survival, both characters/ranks,
+Endings/Continue, physical save/restart, refresh/input/slowdown and dense
+Lunatic timing/performance on Linux and Windows. Actor controls disabling hit
+consumption and older GUI packages do not establish those complete routes.
+
+Whole archive/trace readback verifies 2954 protected hashes; the closed
+terminal snapshot verifies 2277. Persisted pre-mutation journals reclaim
+676,278,272 allocated bytes (644.9 MiB), including the Windows
+GNU object/link archives. Current174 products and independent references
+remain. CMake rebuilds missing intermediates; fresh replay paths are required.
+
+Post-CI cleanup retires 1,012 source-backed generated Python cache files,
+reclaiming 16,986,112 additional allocated bytes; receipt:
+root `.analysis/cleanup/pmd-commands-post-ci-caches-20261010.json`.
+
+## Prior v1337 combined-owner evidence
+
 v1337, 2026-10-10. The running musical FM/SSG owner and both effect owners
 now share a comparison of their state and chronological chip requests.
 Native `FmPlayer` exposes built-in SSG effect admission/stop alongside external
