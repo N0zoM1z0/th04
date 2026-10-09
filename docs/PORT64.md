@@ -1,5 +1,25 @@
 # TH04 native x64 port
 
+v1332 repairs static MinGW runtime inheritance and binary configuration
+failure captures. GNU/optimized UBSan and actual Windows each pass all 51
+component contracts. Nine fresh muted frontends on current GNU and Windows
+agree on 2,015 complete files: sound scenes, score routes, Music Room, Scores,
+demos, configuration and first setup, including real physical saves and
+separate-process restart. These remain bounded controls, not full natural
+route or audio/timing acceptance. 395 maintained files bind 156 AMD64 products.
+Git writes/push and Windows execution now work; source through v1331 and the
+new repairs are committed/pushed. No new Windows GUI package is published.
+Current replay/negative/retention receipts: native
+`.analysis/port64/windows-current-v1332/`; see native
+`docs/port64/evidence/windows-current.md`.
+
+v1331's PMD SSG owner remains validated against original effects and music
+sharing: 79,488 effect rows, 3,942 sharing rows, 134,274 short sequence rows
+and 49,164 longer rows per Linux host. FM/OPN state/synthesis, physical clocks,
+real frontend measure waits and complete original startup remain unfinished.
+All launches stay muted. General semantic expansion is paused; reopen only
+an ambiguity blocking a concrete native owner. DOS acceptance is unchanged.
+
 Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
 
 Updated 2026-10-09. Development has resumed. `port/modern-64` remains separate
@@ -297,7 +317,7 @@ See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-li
 - [x] Join Bomb, hit/death/lives, Game Over and Continue under bounded controls.
   Core lifecycle, frozen Game Over frontend and Bomb graphics/shared
   palette are joined with bounded controls; Quit registration→verdict→fresh OP has bounded GNU/optimized
-  UBSan coverage in the v1308 working tree, awaiting actual Windows replay.
+  UBSan coverage in v1308 and current v1332 Windows score-route controls.
 - [ ] Complete ordinary Extra survival and full displays. Both battles/all three
   dialogues, MAINE save and fresh OP/second MAIN are joined under actor controls.
 - [x] OP ranking display, held paging/release and retained OP/menu/MAIN return.

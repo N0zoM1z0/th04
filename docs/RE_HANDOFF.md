@@ -6,60 +6,27 @@ Linux/Windows routes and timing/performance validation. Native code remains on
 
 ## Verified current frontier
 
-v1331 adds native PMD SSG effects with 40 semantic instruments, signed sweeps,
-priority admission, stop/restart and ordered register writes. GNU/optimized
-UBSan each compare 79,488 original effect rows and 3,942 constructed music/drum
-sharing rows. The sequence now compares all selected mask bits: 134,274 short
-and 49,164 longer rows per host pass without v1330's SSG exclusion.
-394 sources bind 156 AMD64 products; 51 CTests pass per Linux host. Musical
-OPN/FM effects, synthesis, physical clocks and frontend PMD capability remain
-unfinished; all runs stay muted. Current evidence/recovery is native
-`.analysis/port64/pmd-v1331/`; see native `docs/port64/evidence/pmd-ssg.md`.
-Cleanup preserves 1,046 protected hashes and reclaims about 195 MiB. Current
-Windows execution and Git commit/push remain pending. DOS acceptance is unchanged.
+v1332 repairs static MinGW runtime inheritance and binary configuration
+failure captures. GNU/optimized UBSan and actual Windows each pass all 51
+component contracts. Nine fresh muted frontends on current GNU and Windows
+agree on 2,015 complete files: sound scenes, score routes, Music Room, Scores,
+demos, configuration and first setup, including real physical saves and
+separate-process restart. These remain bounded controls, not full natural
+route or audio/timing acceptance. 395 maintained files bind 156 AMD64 products.
+Git writes/push and Windows execution now work; source through v1331 and the
+new repairs are committed/pushed. No new Windows GUI package is published.
+Current replay/negative/retention receipts:
+`.analysis/port64/windows-current-v1332/`; see
+[Windows evidence](port64/evidence/windows-current.md).
 
-v1330 adds a native PMD bytecode/timer-state owner: musical part/rhythm
-parsing, note lengths, mutable loops, tempo/bar commands, fade and stop/restart.
-GNU/optimized UBSan each compare134274 original control rows in138 cases;
-12 longer cases compare49164 rows perhost. SSG drum/SE mask bit1 remains an
-explicitly excluded ownership surface, with raw original rows retained.
-390sources bind153AMD64products;50CTests pass perLinuxhost. Native OPN/FM/SSG
-synthesis, physical timers and frontend PMD capability remain absent. All runs
-stay muted; full natural routes/currentWindows/Lunatic timing remain. Evidence
-and recovery: native `.analysis/port64/pmd-v1330/`; details: native
-`docs/port64/evidence/pmd-sequence.md`. DOS acceptance is unchanged.
-
-v1329 establishes an independent original PMD driver reference: all three
-HDI-resident drivers execute 138 M26/M86 cases at two PSP segments, recording
-52,992 Timer B states and complete OPN writes.102 FM SE and six fade/restart
-controls pass; fixed96tick measure and missing-ack adapters reject. LOGO uses
-24ticks permeasure while OP uses96; actual driver state must supply measures.
-This changes verification source only: native PMD/FM remains absent and all
-150 C++ products retain v1328 identities. Reference/consumer manifests remain
-separate. Current private references/recovery: native
-`.analysis/port64/pmd-v1329/`; details: native
-`docs/port64/evidence/pmd-driver.md`.
-
-v1328 joins process-owned sound timelines across post-logo OP, MAIN and
-MAINE: actual options, Scores, Music Room, cutscenes, Staff Roll and
-registration. Fresh MAINE keeps an empty EFS; BGM option restart applies
-pending SE mode without reloading effects. GNU/optimized UBSan each execute
-216 original OP option cases, 32 MAINE entries and 8,834 control snapshots at
-two loads; all 1,150 frontend output files agree. MAIN's 3,574,464 PCM samples
-per host regress. All outputs of 24 Ending and eight Extra actor controls
-agree; these disable hit consumption. An MAINE EFS-reload mutant rejects.
-384 sources bind 150 AMD64 products; 49 CTests pass per Linux host. All launches
-stay muted. PMD/OPN synthesis/real measures, complete startup audio, full
-natural routes, actual Windows and Lunatic timing/performance remain. DOS
-acceptance is unchanged. Current evidence/full pending-source recovery:
-native `.analysis/port64/sound-scenes-v1328/`; details:
-native `docs/port64/evidence/sound-scenes.md`.
-
-Owned terminal cleanup reclaims 1,508,634,624 allocated bytes (about 1.40 GiB)
-from 6,357 duplicate files and one retired mutant executable. 13,175 protected
-hashes remain unchanged at that boundary; sources, inputs, references and all
-current programs remain. Windows interop and shared Git metadata still reject;
-no current Windows execution/commit/push is claimed.
+v1331's PMD SSG owner remains validated against original effects and music
+sharing: 79,488 effect rows, 3,942 sharing rows, 134,274 short sequence rows
+and 49,164 longer rows per Linux host. FM/OPN state/synthesis, physical clocks,
+real frontend measure waits and complete original startup remain unfinished.
+All launches stay muted. General semantic expansion is paused; reopen only
+an ambiguity blocking a concrete native owner. DOS acceptance is unchanged.
+Current terminal cleanup reclaims about2.06GiB while retaining source,
+current caches/programs, inputs, independent references and acceptance logs.
 
 See [OP/MAINE scene evidence](port64/evidence/sound-scenes.md), [MAIN sound evidence](port64/evidence/sound-main.md), [beeper evidence](port64/evidence/beeper.md) and
 [sound-control evidence](port64/evidence/sound-control.md).
@@ -89,11 +56,10 @@ old claimed two-character frontend coverage.
 2. Verify complete natural Linux/Windows routes for both characters and ranks,
    good/bad Ending, Extra survival/clear, Continue, saves/config and restart.
    Ordinary boss/HUD/lifecycle coverage and dense Lunatic performance remain.
-3. Validate host refresh/input/slowdown and Windows runtime behavior. Current
-   MinGW builds pass; the Windows exit0 probe fails WSL UtilBindVsockAnyPort
-   before PowerShell executes. Earlier actualWindows batches do not accept
-   current source. Commit/push progress when Git metadata is writable; the
-   shared read-only index rejects staging in this environment.
+3. Validate host refresh/input/slowdown, dense Lunatic performance and deliver
+   an updated Windows GUI after the required complete-route acceptance.
+   v1332 accepts current Windows bounded controls; it does not accept full
+   ordinary/Extra survival or physical clock equivalence. Git is writable.
 
 All application launches must stay muted. Do not substitute fictional audio
 measure advancement for the original driver's state. General semantic work
@@ -103,6 +69,7 @@ resumes only for a specific blocking port contract. No exact promotion follows.
 
 Fast caches: `.analysis/port64/{linux,windows,ubsan}-live-v1251`.
 Current original/reference consumers and source/product manifests:
+`.analysis/port64/windows-current-v1332/`; sound-scene original producers:
 `.analysis/port64/sound-scenes-v1328/`; previous sound-control producer:
 `.analysis/port64/audio-v1325/original-linux/`. Completed receipts retain their
 own manifests and must never be restamped or overwritten. Detailed commands,
@@ -110,11 +77,12 @@ input hashes, adapter limits and negative controls live in the focused notes.
 
 The last published Windows GUI is v1296, archived outside the DOS demo folder;
 it is older than this retained source and reaches registration_pending.
-Full pending native source/evidence and root-doc recovery is recorded under the
-current batch. Recovery patches contain public source only, not assets/tools.
+Native source/evidence through v1331 and both v1332 fixes are committed and
+pushed. Historical recovery patches remain private and contain public source
+only, not assets/tools.
 
 Preserve pinned targets/HDI/font, independent references, recovery archives and
-all150 current programs. Periodically retire terminal duplicate captures and
+all156 current programs. Periodically retire terminal duplicate captures and
 regenerable caches only after hashes and full byte comparison; shared hardlinks
 are immutable. Restore or use a fresh output directory before replaying.
 

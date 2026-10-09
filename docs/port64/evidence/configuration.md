@@ -149,3 +149,12 @@ the rejected old fixture is retained. All launches stay muted.
 Correction v1325: original ZUN six defaults use BGM2, which target OP text
 labels stereo FM (FM86). The historical FM26 label above was wrong; raw
 configuration values and original/native comparisons are unchanged.
+
+## Current Windows replay v1332
+
+Current actual Windows configuration phases0/1 pass with separate processes,
+physical NTFS saves, Extra/demo/ordinary boundaries and four blocked writers.
+The rejected text-mode CRLF captures are retained; the diagnostic stream now
+uses binary mode and full file equality passes without normalization.
+See [current Windows evidence](windows-current.md) for identities, nine-case
+scope, negative records and retention. Full natural routes remain unaccepted.

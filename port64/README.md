@@ -1,5 +1,25 @@
 # TH04 native 64-bit bring-up
 
+v1332 repairs static MinGW runtime inheritance and binary configuration
+failure captures. GNU/optimized UBSan and actual Windows each pass all 51
+component contracts. Nine fresh muted frontends on current GNU and Windows
+agree on 2,015 complete files: sound scenes, score routes, Music Room, Scores,
+demos, configuration and first setup, including real physical saves and
+separate-process restart. These remain bounded controls, not full natural
+route or audio/timing acceptance. 395 maintained files bind 156 AMD64 products.
+Git writes/push and Windows execution now work; source through v1331 and the
+new repairs are committed/pushed. No new Windows GUI package is published.
+Current replay/negative/retention receipts: native
+`.analysis/port64/windows-current-v1332/`; see native
+`docs/port64/evidence/windows-current.md`.
+
+v1331's PMD SSG owner remains validated against original effects and music
+sharing: 79,488 effect rows, 3,942 sharing rows, 134,274 short sequence rows
+and 49,164 longer rows per Linux host. FM/OPN state/synthesis, physical clocks,
+real frontend measure waits and complete original startup remain unfinished.
+All launches stay muted. General semantic expansion is paused; reopen only
+an ambiguity blocking a concrete native owner. DOS acceptance is unchanged.
+
 v1331 adds native PMD SSG effects with 40 semantic instruments, signed sweeps,
 priority admission, stop/restart and ordered register writes. GNU/optimized
 UBSan each compare 79,488 original effect rows and 3,942 constructed music/drum
