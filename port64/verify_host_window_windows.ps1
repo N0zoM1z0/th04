@@ -45,7 +45,7 @@ $sink=[IntPtr]::Zero;$window=[IntPtr]::Zero
 function Latest {
  if(!(Test-Path -LiteralPath $trace)) {return $null}
  $lines=[Th04WindowProbe]::Tail($trace) -split "`n"
- for($i=$lines.Length-2;$i -ge 0;$i--) {if($lines[$i].StartsWith('R ')) {$parts=$lines[$i].Trim() -split ' ';if($parts.Length -in @(29,38)){return ,$parts}}}
+ for($i=$lines.Length-2;$i -ge 0;$i--) {if($lines[$i].StartsWith('R ')) {$parts=$lines[$i].Trim() -split ' ';if($parts.Length -in @(29,38,40)){return ,$parts}}}
  return $null
 }
 function WaitState([scriptblock]$predicate,[int]$seconds=45) {

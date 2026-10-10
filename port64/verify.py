@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/route_advice.hpp",
+    "port64/private_x11.py",
+    "port64/verify_window_route.py",
+    "port64/verify_window_startup.py",
     "port64/verify_window_continue.py",
     "port64/verify_host_window.py",
     "port64/verify_host_window_windows.ps1",

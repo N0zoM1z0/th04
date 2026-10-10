@@ -41,7 +41,7 @@ void run_natural_route_checks(const PiImage& background,const CdgSheet& numerals
     unsigned last_stage=99,last_generation=99,last_go=0,continue_visits=0,ending_visits=0,registration_visits=0,extra_visits=0;
     bool was_go=false,was_ending=false,was_registration=false,was_extra=false,fresh_op=false;
     for(ticks=0;ticks<limit;++ticks) {
-        std::uint16_t keys=0;bool shift=false;double danger=1e20;
+        std::uint16_t keys=0;bool shift=false;
         if(scene.live_main()) {
             const auto& s=scene.main_state();const auto& p=s.player().position();
             const auto* go=s.game_over();
@@ -56,51 +56,8 @@ void run_natural_route_checks(const PiImage& background,const CdgSheet& numerals
                 keys=scene.dialog_status()==dialog::Status::idle || ticks%20<10 ? shot::input_shot : 0;
             } else {
                 was_go=false;
-                double target_x=192*16,target_y=304*16;
-                if(s.boss_active())target_x=s.boss_snapshot().position.current.x;
-                else {
-                    double distance=1e20;
-                    for(const auto& item:s.items().entities())if(item.flag==th04::portable::item::Flag::alive) {
-                        const auto q=item.position.current;
-                        if(q.y<16*220 || q.y>16*345)continue;
-                        const double dx=q.x-p.current.x,dy=q.y-p.current.y;
-                        const double d=dx*dx+dy*dy;
-                        if(d<distance){distance=d;target_x=q.x;target_y=std::max<int>(q.y,16*240);}
-                    }
-                }
-                double best=1e30;unsigned chosen=0;bool focused=false;
-                for(unsigned focus=0;focus<2;++focus)for(unsigned move=0;move<9;++move) {
-                    const int dx=int(move%3)-1,dy=int(move/3)-1;
-                    const double speed=(dx && dy ? 48.0 : 64.0)/(focus ? 2 : 1);
-                    double risk=0,minimum=1e20;
-                    for(unsigned f=1;f<=12;++f) {
-                        const double x=std::clamp(p.current.x+dx*speed*f,128.0,6016.0);
-                        const double y=std::clamp(p.current.y+dy*speed*f,128.0,5632.0);
-                        for(const auto& b:s.bullets().snapshot().entities) {
-                            if(!b.flag || unsigned(b.phase)>=3)continue;
-                            const double bx=b.position.current.x+double(b.position.velocity.x)*f;
-                            const double by=b.position.current.y+double(b.position.velocity.y)*f;
-                            const double ax=bx-x,ay=by-y,d=ax*ax+ay*ay;
-                            minimum=std::min(minimum,d);
-                            if(d<256.0*256)risk+=1000000.0/(1+d)*(13-f);
-                        }
-                        for(const auto& e:s.enemies().snapshot().entities) {
-                            if(!e.flag || !e.player_collision)continue;
-                            const double ex=e.position.current.x+double(e.position.velocity.x)*f;
-                            const double ey=e.position.current.y+double(e.position.velocity.y)*f;
-                            const double ax=ex-x,ay=ey-y,d=ax*ax+ay*ay;
-                            minimum=std::min(minimum,d);
-                            if(std::abs(ax)<512 && std::abs(ay)<512)risk+=2000000.0/(1+d)*(13-f);
-                        }
-                        const double tx=(x-target_x)/16,ty=(y-target_y)/16;
-                        risk+=(tx*tx+ty*ty)*0.002;
-                    }
-                    if(risk<best){best=risk;chosen=move;focused=focus;danger=minimum;}
-                }
-                const int dx=int(chosen%3)-1,dy=int(chosen/3)-1;
-                keys=shot::input_shot|std::uint16_t(dx<0 ? player::left : dx>0 ? player::right : 0)|
-                    std::uint16_t(dy<0 ? player::up : dy>0 ? player::down : 0);shift=focused;
-                if(danger<256.0*256 && !s.life().invincibility && !s.life().bombing && s.score().remaining_bombs)keys|=0x800;
+                const auto advice=th04::portable::route_advice::observe(s);
+                keys=advice.held;shift=advice.shift;
                 // Dialogues require release/press gates, so the same recorded
                 // shot key pulses during their ordinary blocking ownership.
                 if(scene.dialog_status()!=dialog::Status::idle)keys=(ticks%20<10 ? shot::input_shot : 0);

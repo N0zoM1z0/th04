@@ -34,6 +34,7 @@ struct Snapshot {
     std::uint64_t audio_frames=0,audio_opens=0;bool audio_failed=false;
     unsigned score_units=0,credits=0,power=0,bombing=0,respawn=0;
     unsigned slow_frames=0,run_frames=0,score_digits_units=0,score_delta=0;
+    std::uint16_t advice_held=0;bool advice_shift=false;
 };
 // Optional read-only observer. It never supplies input or changes game state.
 class Trace {

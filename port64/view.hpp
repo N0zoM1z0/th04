@@ -44,6 +44,7 @@ struct MainAssets {
     std::string resident_sound_checks;
     bool muted=true;
     std::string window_trace;
+    bool window_route_advice=false;
     StageAssets stage2,stage3,stage5,stage6,extra;
     std::array<Bytes,2> extra_defeat_faces;
     Bytes gengetsu_backdrop,gengetsu_transition;

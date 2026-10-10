@@ -1,5 +1,76 @@
 # Host window admission and input
 
+## Natural startup and full-window control candidates (v1356)
+
+The user is using the Windows host. Windows GUI launches, foreground
+activation and host key injection are prohibited. No Windows game GUI is
+launched for this batch after that instruction. Linux windows use private Xvfb;
+`private_x11.py` checks the server PID, user, argv and disabled TCP before
+starting a controller. The program itself has no input injection interface.
+
+Two 27-case matrices on the unchanged v1355 GNU/UBSan programs pass natural
+startup to menu: PMD/PMD86/PMDB2 times all nine BGM/SE configurations. They
+produce 16,070/16,077 refreshes, preserve each initial physical CFG and report
+zero audio opens/failures through terminal E. This is current native startup
+integration, separate from earlier original-component pixel comparisons.
+The Windows v2 startup batch retains 19 native exit-code-zero cases before
+`Owned window exited before menu`; no aggregate 27-case acceptance follows.
+The first Windows consumer failed its nullable `.ExitCode` check; keep that
+failure and its trace rather than replacing its verdict with later receipts.
+
+The first recorded/path controllers incorrectly translated bits 1/2/4/8 to
+Left/Right/Up/Down. Correct values are Up/Down/Left/Right, independently
+confirmed by actual single-bit SDL/X11 movement: 7/7/6/7 consecutive pairs at
+64 Q12.4 units on the corresponding signed axis. The first axis consumer
+failed its final str/Path digest readback after assertions; corrected v2
+repeats and closes the complete check. No original target claim is added.
+Wrong-map failures cannot diagnose asynchronous delivery. Correct-map fixed
+and position-tracking attempts also reach actual Game Over, respectively
+Stage 1 frames 7,839 and 8,278. Original wrong-map attempts remain failed at
+Stage 1 frame 7,266 and Stage 2 frame 3,121. All raw traces/keys/files survive.
+
+`route_advice.hpp` extracts the existing key-only headless policy into a const
+observer. `--window-route-advice` requires a muted fresh window trace, emits
+`advice_held`/`advice_shift` in v3, and never feeds them to gameplay. External
+`verify_window_route.py --adaptive` sends ordinary X11 keys chosen from those
+observations. It retains Game Over rejection, six actual loaded stages,
+Ending/registration/fresh OP, the physical rename clear flag, nonselected
+partition checksum/payload invariance and a separate Scores restart. No
+actor, hit, life, score, clock or transition is written by the observer.
+Without explicit advice, both new fields are zero. Observer CPU/I-O cost
+precludes an uninstrumented performance claim. Parsers retain v1/v2 support.
+
+Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
+identities. GNU/UBSan pass 67 contracts each plus manual held-input
+regressions with advice disabled. Windows is cross-compiled only; its
+new execution remains unverified. 104/105 GNU/MinGW core objects equal
+v1355; only trace serialization changes. Both control-plane CIs pass
+(root includes live Ghidra replay/mutations). Historical acceptance
+and target provenance are unchanged.
+
+The GNU logical Normal Reimu A replay preserves all 88,934 input/state ticks,
+startup/menu inputs, Ending name and physical saves compared to v1351. It
+uses render_every0 versus the old every-refresh1; it makes no wall or pixel
+identity claim. The live-state actual window route remains pending until its
+own terminal verdict and physical restart checks pass. No complete Windows
+route, dense Lunatic timing/performance or physical audio acceptance follows.
+
+```sh
+xvfb-run -a -s '-screen 0 800x600x24 -nolisten tcp -noreset' \
+  python3 port64/verify_window_route.py --adaptive \
+  --exe .analysis/product-v1356/linux/th04-port64 --exe-sha256 PINNED_SHA256 \
+  --hdi /path/to/zun.hdi --font /path/to/FREECG98.bmp \
+  --reference .analysis/port64/public-routes-v1351/linux-v3/normal-reimu \
+  --output .analysis/port64/window-normal-NEW
+```
+
+`verify_window_startup.py` also needs a pinned ELF digest and `--rom` for the
+27-case matrix. Receipts, full source vectors, failed recipes and recovery
+archives are under `.analysis/port64/full-window-v1356/`. Only two terminal
+owned Windows staging directories were removed after complete archive/member
+readback: 155 files, net 36,333,457 logical bytes (receipt overhead excluded).
+All original inputs, preceding products and user saves remain untouched.
+
 ## Ordinary window Continue and physical restart (v1355)
 
 v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary

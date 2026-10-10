@@ -19,6 +19,7 @@
 #include "gameover_render.hpp"
 #include "audio_device.hpp"
 #include "host_window.hpp"
+#include "route_advice.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -1544,6 +1545,10 @@ public:
             s.power=main_->score().power;s.bombing=main_->life().bombing;s.respawn=main_->life().respawn_time;
             const auto stats=main_->run_statistics();s.slow_frames=stats.slow_frames;s.run_frames=stats.frames;
             s.score_digits_units=th04::portable::score::numeric_units(main_->scoreboard().digits);s.score_delta=main_->score().score_delta;
+            if(assets_ && assets_->window_route_advice && live_main() && !main_->game_over() && !dialog_scene_) {
+                const auto advice=th04::portable::route_advice::observe(*main_);
+                s.advice_held=advice.held;s.advice_shift=advice.shift;
+            }
         }
         if(audio_output_) {const auto& a=audio_output_->statistics();s.audio_frames=a.generated;
             s.audio_opens=a.open_attempts;s.audio_failed=a.failed;}
