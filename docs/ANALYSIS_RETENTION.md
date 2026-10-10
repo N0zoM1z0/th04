@@ -1,104 +1,35 @@
 # Private build and analysis retention
 
-Both final CIs pass, including root live Ghidra replay/mutations. Final readback
-checks 8,640 retained hashes. Post-CI cleanup separately retires 1,014 public
-source-backed Python caches and preserves their source hashes, reclaiming
-16,433,152 allocated bytes net. Cache journal/receipt:
-root `.analysis/cleanup/audio-output-post-ci-caches-v1353{,-before}.json`.
+v1354 retains all 204 current programs, complete producer/consumer source
+archives, compiler/CMake metadata, Linux window and fake-audio captures,
+physical saves, controller failures, pinned inputs and preceding products.
+Current intermediates and both terminal owned Windows stages are recoverable
+through three archives under native `.analysis/port64/host-window-v1354/`.
+All 299 members read back before deletion. The scoped pass retires 1,190
+regenerable build files and 225 stage files, reporting 628,129,792 allocated
+bytes net reclaimed; accounting excludes its final receipt. A separate
+pre-build pass prunes 12 source-backed Python caches (278,528 allocated bytes).
 
-The v1353 host-output batch retains current/preceding AMD64 programs, frozen
-sources/compiler/link metadata, complete fake-transport frontend/Continue
-captures, physical final saves and both rejected attempts. Below native
-`.analysis/port64/audio-output-v1353/`, three fully read-back archives recover
-closed first-candidate intermediates, both owned Windows stages and final
-static link inputs. Two scoped passes report 1,494,827,008 allocated bytes
-reclaimed: 970 first-candidate intermediates, 1,177 final regenerable files,
-872 stage files and 350 full-byte-identical BMP/PCM paths shared immutably.
-Independent readback verifies all 1,915 archive members and the respective
-2,320/8,636 protected hashes. Source protection is scoped to the cleanup
-interval; future authorized edits retain prior producer snapshots. Final CI
-cache cleanup and its overhead are accounted separately.
+Sources have two distinct identities: the frozen cold producer and the final
+consumer with two corrected verifier scripts. All compiled inputs are raw-equal.
+Cleanup protection is scoped to its interval; later authorized source edits
+must keep the earlier producer/archive identity instead of restamping receipts.
 
-`.analysis/` is ignored private state. A historical evidence path is provenance,
-not a guarantee that its expanded directory remains present. Durable commands,
-hashes, conclusions and negative results belong in checked-in notes/ledgers.
-A verified private archive supplies recovery where the input cannot be rebuilt.
+Keep pinned assets/targets/tools, active caches/databases, complete current and
+preceding source/program vectors, recorded inputs, physical saves and failures.
+Prune only terminal owned stages and regenerable intermediates after recovery
+and hash readback. Restore archives into fresh directories; use the persisted
+`retention-before-v1.json` journal for original paths/member hashes. Never
+blanket-delete `.analysis/`, run git clean over private state, or remove user saves.
 
-The v1352 ordinary Continue batch retains the independent compiled
-`port64-continue-v1352` source materialization, all 195 current/preceding
-programs, recorded inputs, whole native captures, physical file snapshots,
-original-key CPU traces and rejected/cancelled attempts. Below native
-`.analysis/port64/natural-continue-v1352/`, two fully read-back archives recover
-the 244-file closed Windows contract/Continue/default-compat stage and static
-link inputs. The pre-deletion journal and independent readback verify 3,165
-protected hashes and all 315 members. It retires 1,145 regenerable build files
-and reclaims 591,622,144 allocated bytes net (564.2 MiB). Current source
-protection is scoped to this interval; historical acceptance retains its own
-source/program identity. Replays always use fresh output destinations.
-
-Both final CIs pass, including root live Ghidra replay and Oracle mutation
-checks. `final-readback-v1.json` freshly checks the preserved current source,
-product/corpus/negative evidence hashes and both recovery archives. Post-CI
-source-backed cleanup separately checks 1,012 public sources and retires their
-Python caches, reclaiming 16,347,136 allocated bytes net after journal overhead.
-Root receipt: `.analysis/cleanup/natural-continue-post-ci-caches-v1352.json`.
-
-The v1351 public-entry batch preserves its closed v1 source/program vector,
-four-route three-host captures/physical files, rejected wrong-shot attempt and
-separate corrected-source GNU Hard B observations. Final source uses a distinct
-`port64-routes-v1351-fix` compiled materialization; keep both worktrees and their
-source/compiler/CMake/link identities. Original music and previous vectors
-remain unchanged.
-
-Two full-member recovery archives under native
-`.analysis/port64/public-routes-v1351/` precede retirement of 199 terminal
-Windows-contract stage files and 1,145 generated object/dependency/library
-files. The scoped net reclamation is 571,826,176 allocated bytes (545.3 MiB).
-Independent `retention-readback-v1.json` checks 2,942 protected files and every
-archive member. Live route stages, programs, inputs, captures and saves remain.
-Public-source protection refers to the cleanup interval; authorized later
-edits use the preserved producer snapshots and never restamp older receipts.
-
-The second v1351 pass preserves two separate recovery archives before retiring
-215 closed contract/short-shot Windows stage files and 1,145 generated files.
-`retention-readback-v2.json` independently checks 2,941 protected hashes and
-all 286 archive members. It reclaims 586,735,616 allocated bytes net, bringing
-both passes to 1,158,561,792 bytes (1,104.8 MiB). Final four-route writers have
-closed; their complete captures, physical saves and both product vectors remain.
-Both CIs pass. Post-CI cleanup additionally retires 1,012 public source-backed
-Python cache files and checks all 1,012 sources, reclaiming 16,347,136 allocated
-bytes net after journal overhead. Its journal/receipt is below
-`.analysis/cleanup/public-entry-post-ci-caches-v1351{,-before}.json`.
-
-The v1350 terminal music/window batch retains both old and current 195-program
-vectors, all original and native full-song traces, route captures, physical
-saves, frozen sources, compiler/CMake/link identities and negative controls.
-The new compiled source materialization remains in the independent
-`port64-presentation-v1350` worktree; do not remove it as a disposable checkout.
-Eight fully read-back archives below native
-`.analysis/port64/route-render-v1350/` recover seven terminal owned Windows
-stages and exact static link inputs/failed probes. Ordinary objects regenerate.
-
-The first cleanup guard rejected removal of four protected cache copies and
-incorrectly treated its own live diagnostic log as immutable. All four copies
-were restored byte-for-byte from retained stable programs. The failed log and
-pre-mutation journal remain; fresh `retention-receipt-v2.json` verifies 13,737
-immutable hashes. It records 866 stage files and 1,843 generated files retired,
-with 1,206,464,512 allocated bytes net reclaimed (1,150.6 MiB). This measures
-the cleanup scope, not the whole batch's storage change. Accepted receipts
-remain unchanged; replay requires fresh output paths.
-
-Fresh `terminal-readback-v1.json` independently rechecks all eight archives'
-complete members, 13,737 immutable hashes, both 195-program vectors and their
-compiler/cache/link metadata, and all 467 current source inputs against the
-compiled worktree and source archive. Original/current music and route receipts
-retain their separate immutable links.
-
-Both final CIs pass, including root live Ghidra replay and Oracle mutations.
-Post-CI source-backed cleanup separately retires 1,037 public Python cache
-files while preserving their 1,037 sources, reclaiming 17,686,528 allocated
-bytes. Its pre-deletion journal and receipt are under
-`.analysis/cleanup/window-music-post-ci-caches-v1350{,-before}.json`.
+Prior v1353 recovery and its failed attempts remain indexed by the prior
+receipts and Git; their archives are preserved. Both final CIs pass. Additional terminal capture sharing retains all 324
+BMP/PCM paths and complete byte hashes while reclaiming 210,509,824 allocated
+bytes net after its journal. Source-backed post-CI cache pruning retires 957
+files with 15,585,280 allocated bytes net after its journal. Receipt overhead
+is excluded. Main build cleanup, capture sharing and cache accounting remain
+separate. The first follow-up helper had a str/Path readback typo; corrected
+full journal readbacks verify all captures/sources before acceptance.
 
 ## Keep live
 

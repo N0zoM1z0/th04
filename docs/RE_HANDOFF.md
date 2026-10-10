@@ -1,10 +1,8 @@
 # TH04 current handoff
 
-Both final CIs pass, including root live Ghidra replay/mutations. Final readback
-checks 8,640 retained hashes. Post-CI cleanup separately retires 1,014 public
-source-backed Python caches and preserves their source hashes, reclaiming
-16,433,152 allocated bytes net. Cache journal/receipt:
-root `.analysis/cleanup/audio-output-post-ci-caches-v1353{,-before}.json`.
+Both final CIs pass, including root live Ghidra replay/mutations. Current
+host-window/recovery receipts retain distinct producer/consumer identities.
+All launches remain muted.
 
 Updated 2026-10-10. Current focus: resumed x64 implementation on its separate
 branch; DOS demo state is retained. This handoff
@@ -51,45 +49,43 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-v1353 implements Linux/Windows host audio transport while every verification
-stays muted and never opens a physical backend/device. Default output is muted;
-interactive `--audio` is opt-in, and `--mute` dominates in either argument order.
-One lazy application device accepts final mixed stereo or nonresident mono;
-buffering/failure never clock the game. Production backend API tests use only
-explicit fake tables, and frontend PCM uses explicit fake factories.
+v1354 fixes SDL keypad Enter held input and catchup resync losing slowdown.
+GNU8, optimized UBSan and actual Windows pass 67 contracts each; 204 AMD64
+programs build cold from 480 producer inputs. Preceding 104 GNU/MinGW core
+objects remain raw-equal; GNU/UBSan's 195 fake-audio frontend files equal v1353.
 
-All 201 current AMD64 programs build cold from 475 maintained inputs; GNU8,
-optimized UBSan and actual Windows pass 66 contracts each. Three profiles by
-nine BGM/SE settings preserve 195 complete frontend files per host against the
-preceding GNU producer. Two ordinary Continue regressions retain 16 captures
-and physical final saves per host. The preceding 103 GNU and 103 MinGW core
-objects are raw-equal. Three wrong transport variants/four early CLI controls
-reject. Current source manifest:
-`95ce37f3cfd2a17ec3547e38f5aae71226b2616623e0a79b6cada1772f66ec36`.
-The failed MinGW test typedef and mutable-save Windows plan remain recorded;
-corrected fresh runs pass. Native replay: `docs/port64/evidence/audio-output.md`;
-private receipts: `.analysis/port64/audio-output-v1353/`.
+GNU8/UBSan real SDL/X11 callbacks under private Xvfb pass ordinary Marisa B
+entry, Return/keypad Enter, movement/Shift, shots/release and focus gating.
+Normal/Shift movement is 64/32 Q12.4 units per frame. Both traces record zero
+audio-device opens. Windows foreground acquisition rejects before sending
+keys; passing Windows contracts do not accept Windows held-input behavior.
 
-The v1352 natural Continue acceptance remains separate: two 1,551-advance
-scenarios per host, real deaths/Continue/resume/second Game Over/Esc,
-registration/fresh OP. Ranked and unranked physical files distinguish old
-520 units from default minimum 1,000; two-load original Game Over component
-replays compare 58,424 requests under documented adapters.
+Producer manifest: `e2974686f86f22d2a2a7caaf736b664dd33aac3eae4703aeefbf93a7e9e6ac75`.
+Final verifier: `04ec21c37c2039c549b4130b8432693940c9bf53109e1765174204f8dfe4c4c7`.
+Only two verifier scripts differ; every compiled input is raw-identical.
+Producer receipts and corrected consumer archives retain distinct identities.
+Native replay/limits: `docs/port64/evidence/host-window.md`; private current
+receipts: `.analysis/port64/host-window-v1354/` in the native worktree.
 
-Earlier complete four A routes/Hard B and supplied music keep their earlier
-source identities: four routes compare 270,193 advances per host and
-Normal-earned saves admit fresh Extra; music compares 138 two-load cases and
-1,654,542 configured rows per host. These are not whole-original-route claims.
+Earlier scopes remain: four complete A logical routes/Normal-earned Extra,
+bounded real Continue/physical host saves/fresh OP, ten-section registration,
+Extra/HUD/Scores/Music Room/demo/configuration, supplied PMD music and production
+SDL/WinMM transport tested through explicit fake APIs. These do not establish
+an original whole route, physical audio, or host timing. No backend/device opens.
 
-Remaining: full startup across sound modes, remaining rank/shot routes,
-physical input/refresh/slowdown, dense Lunatic timing/performance, physical
-sound-device validation and current GUI delivery. No device was opened;
-last installed native GUI remains v1296. DOS acceptance/provenance are unchanged.
+Remaining: actual Windows input, startup across sound modes, other rank/shot/
+Continue routes, physical refresh/slowdown2, dense Lunatic performance and
+physical audio output. The full native goal stays active. A new experimental
+muted GUI is delivered in `native-port64-v1354/` under the private demo folder;
+all 21 preceding files/saves are unchanged. It is not final GUI acceptance.
 
-Scoped v1353 cleanup reports 1,494,827,008 allocated bytes reclaimed; three
-recovery archives/all 1,915 members and 8,636 final protected hashes read back.
-Sources/products/captures/failures remain recoverable; see
-[retention](ANALYSIS_RETENTION.md). Final CI cache pruning is separate.
+Scoped cleanup retires 1,190 build intermediates and 225 terminal owned stage
+files after three full archives/299 members read back, reporting 628,129,792
+allocated bytes net reclaimed. Current programs/source vectors/captures,
+failures, inputs and saves remain. Additional immutable capture sharing keeps
+324 paths/hashes and reclaims 210,509,824 allocated bytes net. Post-CI cache
+pruning retires 957 files with 15,585,280 allocated bytes net. Both subtract
+their journals; final receipt overhead is excluded.
 
 ## Windows DOS demo package
 

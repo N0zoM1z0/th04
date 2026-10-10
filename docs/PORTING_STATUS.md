@@ -1,589 +1,96 @@
 # Semantic and x64 port status
 
-Both final CIs pass, including root live Ghidra replay/mutations. Final readback
-checks 8,640 retained hashes. Post-CI cleanup separately retires 1,014 public
-source-backed Python caches and preserves their source hashes, reclaiming
-16,433,152 allocated bytes net. Cache journal/receipt:
-root `.analysis/cleanup/audio-output-post-ci-caches-v1353{,-before}.json`.
+Updated 2026-10-10. The full native goal remains active on `port/modern-64`, in
+`.analysis/worktrees/port-modern-64/`. Root `main` keeps the standalone DOS
+product and indexes native findings. A root `git push` does not commit or push
+native worktree changes.
 
-v1353 adds production host PCM transport: SDL queued audio on Linux and
-WinMM owned buffers on Windows. The existing runtime remains the only sound
-clock. Resident PMD submits its final mixed stereo once; the nonresident path
-copies mono to both channels. The application owns one lazy device across
-scene changes. A bounded 200 ms queue drops excess host output without changing
-game state; output failure disables retries and gameplay continues.
+## Current products and acceptance
 
-The default remains muted. Interactive `--title --audio` explicitly enables
-output; `--mute` dominates `--audio` in either order. Unmuted diagnostics reject
-before asset/save/backend entry. Every verification launch remains muted;
-backend tests supply every API through a fake table, and frontend transport
-uses explicit fake factories. No physical audio backend/device was opened.
-Audible output, device latency and dense Lunatic performance are unverified.
+| Product | Accepted scope | Remaining boundary |
+| --- | --- | --- |
+| Historical reconstruction | OP 93/93, MAIN 493/495, MAINE 72/72, ZUN 3/3 authored functions | Function acceptance is not whole-file exactness; MAIN carpet/checkerboard deferred |
+| Standalone PC-98 DOS | Four local-source products, repaired normal/invincible packages; user reports complete Normal routes/save | Automated natural dense Lunatic, timing/audio and second-emulator coverage remain separate |
+| Semantic readable | Assets, heap, input/timing, scroll, bullets/VM/shots/items, RNG, score and process contracts clarified | Resume only for a concrete native blocker; old exact replay failures remain failed |
+| Native x64 | Typed Linux/Windows gameplay, renderer, asset, lifecycle, persistence and sound owners with scoped Oracles | Full physical host/game-route acceptance remains open |
 
-All 201 AMD64 programs build cold from 475 maintained inputs. GNU8, optimized
-UBSan and actual Windows pass 66 contracts per host. Three driver profiles by
-nine BGM/SE settings compare all 195 existing frontend files per host with the
-preceding GNU producer. PCM identity, mono fallback, mute, repaint and
-OP/MAIN/declared MAINE/fresh-OP ownership checks pass. Two ordinary Continue
-regressions preserve all 16 capture files and physical final saves per host.
-The preceding 103 core objects are raw-equal on GNU and MinGW; the new transport
-adds one core object. Three wrong transport variants and four early CLI controls
-reject. Final source manifest:
-`95ce37f3cfd2a17ec3547e38f5aae71226b2616623e0a79b6cada1772f66ec36`.
+Target files pass local identity/format checks but remain
+`candidate-local-attested`; external pristine-dump provenance is unresolved.
+No native observation promotes a historical exact unit.
 
-The initial MinGW test typedef failure and Windows mutable-save input-plan
-rejection remain distinct failed receipts; fresh corrected runs pass. Detailed
-ownership/replay is in native `docs/port64/evidence/audio-output.md`, with
-private receipts under `.analysis/port64/audio-output-v1353/`.
+## Native progress
 
-Remaining: full startup across sound modes, other rank/shot/Continue routes,
-physical input/refresh/slowdown, dense Lunatic timing/performance, physical audio
-output and a current GUI package. Earlier complete-route/music corpora retain
-their own producer identities. Last installed native GUI remains v1296;
-no DOS exactness or full-goal acceptance follows.
+- Registration waits/fades/held keys/render, ten-section score storage,
+  failures and fresh OP are integrated under independent bounded controls.
+- Bomb/hit/death/lives/Game Over/HUD and real Continue are integrated. Two
+  ordinary Lunatic pilot1 scenarios per host traverse genuine deaths,
+  Continue/resume/second Game Over/Esc, registration and fresh OP; selected
+  ranked/unranked physical files are distinguished.
+- Stages 1–6, Ending/Staff/Verdict, Extra, Scores, Music Room, demo, unlocks and
+  configuration are implemented with component/integration evidence. Four
+  ordinary A logical routes pass on three hosts; Normal-earned host saves admit
+  fresh Extra. GNU has a complete Hard/Reimu B route; broader combinations remain.
+- Complete supplied PMD/PMD86/PMDB2 music closes its recorded original-component
+  corpus. CPU waveform comparisons share a pinned chip engine. SDL/WinMM output
+  is implemented with a bounded queue and explicit fake API verification.
+  Every launch remains muted; no physical audio device was opened.
+- v1354 fixes SDL keypad Enter held input and resync losing slowdown. GNU8,
+  optimized UBSan and actual Windows pass 67 contracts each; 204 programs build
+  cold from 480 producer inputs. Preceding 104 GNU/MinGW core objects are raw-equal;
+  GNU/UBSan retain all 195 fake-audio frontend files against v1353.
+- Actual SDL/X11 window trials pass on GNU/UBSan under private Xvfb: ordinary
+  Marisa B/Lunatic entry, Enter/keypad Enter, movement/Shift, shots/release and
+  focus gating. Windows foreground acquisition fails before any injected key;
+  Windows real input is not accepted by its passing headless contracts.
 
-Historical v1352 frontier:
+Cold producer:
+`e2974686f86f22d2a2a7caaf736b664dd33aac3eae4703aeefbf93a7e9e6ac75`.
+Final verifier recipe:
+`04ec21c37c2039c549b4130b8432693940c9bf53109e1765174204f8dfe4c4c7`.
+Only two host verifier scripts changed; all compiled inputs are identical.
+Keep producer and consumer identities separate. Focused native evidence lives
+in `docs/port64/evidence/{host-window,stage-lifecycle,op-startup,pmd-musical-fm,audio-output}.md`;
+private current receipts: `.analysis/port64/host-window-v1354/` in that worktree.
 
-v1352 closes ordinary Continue on GNU8, optimized UBSan and actual Windows.
-The maintained route plan accepts optional `pilot=1`: stationary held shot,
-with ordinary dialog/menu keys and no actor, hit or life-state writes. Physical
-Lunatic configuration uses lives option 1/Bombs 0. Each of two scenarios runs
-1,551 advances: real deaths, first Game Over/Continue, resumed gameplay, second
-Game Over/Esc, registration and fresh OP. Sixteen complete capture files and
-physical saves agree per host. Original Game Over at two loads also reproduces
-58,424 component requests from the recorded key sequences; unrecorded state
-fields remain explicit adapters, not an original whole-route comparison.
+## TODO, in order
 
-The first score is 520 internal units (5,200 displayed points), below the
-default leaderboard minimum of 1,000 units. Continue correctly makes no ranked
-write. A separately declared
-zero-score selected-section fixture accepts and physically saves `CONTINUE`
-with the old 520 units before reset. GNU/UBSan observe complete writer-close
-snapshots; Windows final files and all recorded states/captures agree. MAIN
-frame 432 stays frozen for 189 refreshes, then resumes at 433 once. Second
-Game Over freezes frame 630 for 222 refreshes before the quit route.
+1. Establish actual Windows owned-window input validation; finish host refresh,
+   focus and deliberate slowdown2 checks. Linux's bounded virtual-display input
+   trial does not establish human keyboard, physical display or complete timing.
+2. Verify complete startup integration across sound modes while staying muted.
+   Device transport is implemented; physical output/latency is still unverified.
+3. Expand full routes across characters, shots, ranks, good/bad endings, Extra
+   and Continue; verify actual host save/config/restart behavior. Native logical
+   consistency and original component comparisons are different claims.
+4. Benchmark natural dense Lunatic scenes with explicit timing/adaptation
+   boundaries; include CPU update/render, presentation and resync behavior.
+5. Accept the final GUI against those gates. The current experimental delivery
+   is reviewable, but delivery alone does not close gameplay/timing acceptance.
 
-All 195 current programs build cold and 64 contracts pass per host. GNU and
-MinGW each retain 103 raw-equal core objects from v1351. Default pilot B-entry
-compatibility passes seven complete files/physical saves on all three hosts;
-invalid pilot/trailing plan fields reject before output/save writes. Final
-467-input source manifest:
-`f0d72042b3f75b2e6305f7afc44454e175d7d28b9181d5517a6b83b40d3f3454`.
+General semantic work and the two deferred MAIN exactness cases are not a
+parallel prerequisite queue. Arbitrary external sample banks remain outside
+supplied-stock music acceptance.
 
-Remaining: startup across sound modes, other rank/shot/Continue routes,
-physical input/refresh/slowdown, dense Lunatic performance, audio-device output
-and current GUI delivery. All runs stay muted. Complete four-route/Hard B and
-stock music corpora retain their distinct earlier producer identities; no new
-whole original-route, DOS exactness or full-goal acceptance follows.
+## Delivery and storage
 
-Historical v1351 frontier:
+A fresh experimental current GUI is installed at
+`/mnt/d/Entertainment/Game/Touhou/th04-reconstruct/native-port64-v1354/`.
+`start-muted.bat` and `start-linux-muted.sh` explicitly mute; independent host
+saves and Normal/3-life/2-Bomb defaults preserve all 21 preceding DOS/package
+files. Source archives/profiles accompany the binaries. Windows input automation
+remains rejected; physical audio, dense timing and full-goal acceptance remain.
 
-v1351 adds maintained `--natural-route-checks` without private frontend hooks.
-Four ordinary shot A routes pass on GNU8, optimized UBSan and actual Windows:
-270,193 route advances, 2,504 startup advances, 49 complete capture files
-and equal physical saves per host. Every startup/route refresh requests paint;
-each host's Normal-earned files admit a new Extra process. This is logical
-native consistency, not physical input/clock or an original whole-route claim.
+Periodic cleanup keeps inputs, tools, source/program vectors, physical saves and
+failures. This batch retires 1,190 regenerable build files and 225 terminal
+owned Windows-stage files after three full recovery archives/299 members are
+read back, reporting 628,129,792 allocated bytes net reclaimed. A separate
+pre-build pass prunes 12 source-backed Python caches (278,528 allocated bytes).
+Immutable capture sharing retains 324 BMP/PCM paths/hashes and reclaims
+210,509,824 allocated bytes net after its journal. Post-CI cache pruning retires
+957 source-backed files with 15,585,280 allocated bytes net after its journal.
+Receipt overhead is excluded. Both final CIs pass, including root live Ghidra
+replay/mutations. Follow [retention](ANALYSIS_RETENTION.md); never blanket-delete `.analysis/`.
 
-The new Hard/Reimu B check rejects an incorrect horizontal shot-selection key.
-The corrected owner uses down and asserts actual character/shot. Independent
-GNU corrected-source Hard B completes 89,114 advances, Ending, registration
-and fresh OP, with zero Game Over visits; it does not validate real Continue.
-The final source has 195 cold programs and 64 passing contracts per host.
-Current GNU is byte-identical to the tested Hard B program; all three hosts
-verify B entry/16 advances. Final-source four-route replays pass on all three
-hosts; all 49 files and physical saves equal the preceding public generation.
-Preserve both producer identities and all negative receipts. Final 467-input
-source manifest:
-`e3448a63fbc299f22c3bffd6e94f4ee3d73e67fa0607c25f49942b910f52b633`.
-
-Remaining: full startup across sound modes,
-remaining rank/shot/Continue routes, physical input/refresh/slowdown, dense
-Lunatic performance, audio-device output and current GUI delivery. All runs
-stay muted. Prior stock music closure and DOS acceptance remain separate.
-
-Historical v1350 frontier:
-
-v1350 fixes terminal window repaint: actual Linux SDL dummy/Windows offscreen
-callbacks change from 24,214 stale pixels and zero final updates to the correct
-static menu and one final update. Three-host full/skip controls agree. Four
-ordinary prototype routes paint every route refresh on three hosts with equal
-270,193 advances/37 captures/physical saves per host. Stock music closes 138
-original two-load cases; 69 unique native runs per host compare against both
-loads, 1,654,542 configured state/write rows. Fresh new-product replays pass.
-All 195 programs build, 64 contracts pass per host; 467 source inputs have
-manifest `e6911c41c7092c963b526f0494a1b8544b6cbfad675ce9f50fa1391ebacc2d9b`.
-Four deferred controls are registered after every frozen job closes. Native
-lifecycle/music notes and `route-render-v1350/` route scope/recovery.
-
-Public route entry, startup presentation across sound modes, remaining
-ranks/shots/Continue, physical input/refresh/slowdown, dense Lunatic performance
-and a current GUI remain. Audible audio-device output is not implemented;
-music control and CPU samples are verified under stated adapters. All tests
-stay muted; no DOS exactness or whole-game completion is promoted.
-
-Historical v1349 frontier:
-
-v1349 verifies four ordinary key-only logical prototype routes on three hosts:
-Reimu Easy/both Normal characters/Reimu Extra,270193 route advances and37
-whole capture files perhost/equal physical saves. Same-host Normal-earned
-saves admit Extra after restart; legal6life/2bomb settings preserve real
-hits/deaths/Bombs without Continue/state injection. GNU every-refresh Easy
-presentation also agrees.103core objects per GNU/MinGW are raw-equal to
-current195product objects. Public CLI/GUI/fullstartup/remaining rank-shot-
-Continue/physical timing and Lunatic performance remain unaccepted.
-The first-load69stock song cases agree on three hosts:827271rows; all46part9
-prefixes/zero observed note-PPS requests/unowned reset writes are inventoried.
-Full138two-load original/music usage remains live. Current product identity
-stays v1348; four new replay files are separately pinned until writers close.
-Replay/scope: native `docs/port64/evidence/stage-lifecycle.md` and
-`pmd-musical-fm.md`; receipts under native `.analysis/port64/`.
-All runs stay muted; DOS acceptance is unchanged.
-
-v1348 repairs FM/SSG note rotation after a real ST00B octave-underflow mismatch.
-Three hosts match457728 original arithmetic calls/3600 complete legal boundary
-rows; three source-only variants reject.195programs rebuild;64contracts pass
-perhost. GNU/UBSan regress194238 prior rows/21103632 resident PCM frames.
-Current muted frontends produce336 matching files perhost and matching physical
-saves; actual Windows additionally matches two complete first-load ST00B
-cases/25626rows. The138case original song producer remains live; no complete
-music or unused PPS/PCM/ADPCM claim follows from its prefix.
-463 listed inputs bind product manifest
-`ba2e588853f852fa5a02886b03383ea25d7664fb5f2eeb75a1d608cef000d845`;
-two note verifiers remain independently pinned until the live tool freeze closes.
-Receipts: native `.analysis/port64/game-audio-v1348/`; replay/ownership:
-native `docs/port64/evidence/pmd-musical-fm.md`. Full song/audio usage closure,
-startup integration, natural routes, host timing/performance and new GUI remain.
-All launches stay muted; DOS acceptance is unchanged.
-
-v1347 closes the recorded independent startup pixel corpus:15 cases/5,879
-complete two-page/raw-palette/DAC/shown-RGB frames agree on GNU8, optimized
-UBSan and actual Windows.94,400 original clipped SUPER executions and4,311
-palette/page checkpoints constrain the adapters. Four renderer variants keep
-all prior147,830control rows but fail pixels.461 verifier inputs have manifest
-`3af8cef1ce57711a8291548646902831a665cc910fb124dcd4f3af82ea27fb4c`;
-195 unchanged programs retain their459-input v1346 producer identity.
-Receipts: native `.analysis/port64/startup-pixels-v1347/`; ownership/replay:
-native `docs/port64/evidence/op-startup.md`. Full startup integration,
-PPS/external ADPCM, natural routes, host timing and new GUI remain open.
-All runs stay muted; no physical video/chip or DOS exactness is accepted.
-
-v1346 joins original logo/fireworks/title control and muted frontend startup.
-15 two-load cases/147,830 complete state/request rows agree on GNU8,
-optimized UBSan and actual Windows; four wrong source variants reject.
-Three driver profiles by11 settings and separate-process restarts produce336
-matching files perhost; final physical saves agree. A declared finite STD
-reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
-459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent startup pixels are covered by v1347 above; full startup
-integration, PPS/external ADPCM, natural routes,
-host timing and new GUI delivery remain open. No DOS exactness is promoted.
-
-Historical v1346 native source manifest:
-`b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
-Receipts: native `.analysis/port64/startup-v1346/`; ownership and replay:
-native `docs/port64/evidence/op-startup.md` on `port/modern-64`.
-
-v1345 recovers FM3 C6 subtracks, CF slot/voice ownership, C7/C8 detunes,
-special pitch and shared mode on all three drivers. FM26 aliases D-F and
-restores all four shared tracks after effects;86/B2 append three tracks.
-66 distinct two-PSP cases/55,836 complete rows agree on GNU8, optimized UBSan
-and actual Windows. Nine wrong source variants reject; the initially
-pitch-clipped LFO comparison remains inconclusive in its own receipt.
-453 maintained inputs bind192 AMD64 programs;63 contracts pass per host.
-GNU/UBSan regress783,936 earlier complete rows, resident services/PCM and
-muted frontends; Windows regresses resident/three frontend profiles.
-PPS/external ADPCM, full startup, natural routes and host timing remain.
-No new GUI, physical chip accuracy or historical exactness is accepted.
-
-v1345 native source manifest: `1689400f6154f6ef377d41357a802a1d6a75129e19449068c81a431e26ef50b0`.
-Receipts: native `.analysis/port64/fm3-recovery-v1345/`; ownership, distinct
-case accounting, failures and replay: native `docs/port64/evidence/pmd-fm3.md`.
-Older producer/consumer identities remain unchanged.
-
-v1344 recovers primary FM B6 feedback and B8 operator total-level commands,
-including byte rotation/wrap, masked software state and disabled FM26 parts.
-Three original drivers at PSP1000/2000 yield84 cases/101,448 complete rows;
-GNU8, optimized UBSan and actual Windows agree. Five source-only variants reject;
-two initially inconclusive controls become discriminating with corner inputs.
-451 maintained inputs bind189 AMD64 products;62 contracts pass per host.
-GNU/UBSan regress602,448 earlier musical/effect rows, resident services and
-bounded muted frontend captures. FM3 extra subtracks/slot ownership/special
-pitch, PPS/external ADPCM, full startup, natural routes and host timing remain.
-All runs remain muted; no new GUI or historical exactness is accepted.
-
-v1344 native source manifest: `81260aeae14b62a1f175844a52a00bb25f122fa938f45524a19b103fb718912b`.
-Receipts: native `.analysis/port64/pmd-fm3-v1344/`; ownership and replay:
-native `docs/port64/evidence/pmd-musical-fm.md`.
-Earlier producer/consumer identities remain unchanged.
-
-v1343 joins CPU-only resident PMD to the actual native frontend. One driver
-survives OP/MAIN/MAINE/fresh OP; controls and beeper remain process-local.
-Actual capability selects M26/M86, and Ending/Staff waits query the new song's
-real measure. All launches stay muted without an audio device/backend.
-
-Original OP controls coupled to the three original COM drivers cover 72 cases
-at PSP1000/2000. GNU8, optimized UBSan and actual Windows compare 9,204 complete
-records and 21,103,632 FM-mode stereo PCM frames per host; each executes 36
-unique service streams. SE2 mixed PCM is host-consistency evidence only.
-Three profiles by nine BGM/SE choices each produce 65 equal frontend files on
-all hosts, including live Music Room/MAIN and a declared registration child.
-Six source-only variants reject; an earlier stale-query variant is inconclusive.
-451 maintained inputs bind 189 AMD64 products; 62 contracts pass per host.
-Independent control/driver engines share typed buffers, not a physical DOS
-address space; PCM arithmetic shares pinned ymfm. No physical chip accuracy,
-natural full-route or historical exactness acceptance follows.
-
-v1343 source manifest:
-`fded844658566dd8bb32f1298a68664a0f45e55d22676f2e979efe5380cf9964`.
-Receipts: native `.analysis/port64/pmd-resident-v1343/`; detailed ownership,
-failures and replay: native `docs/port64/evidence/pmd-resident.md`.
-Earlier PCM/clock corpora retain their own identities. FM3/PPS/external ADPCM,
-full original logo/startup, natural Linux/Windows routes and host
-refresh/input/slowdown/Lunatic performance remain unfinished. No new GUI is
-published; the last delivered native package remains v1296.
-DOS acceptance and candidate-local-attested provenance are unchanged.
-
-
-The batch paragraphs below retain their own historical verification scope.
-
-Tracking issue: [#1](https://github.com/N0zoM1z0/th04/issues/1).
-
-Updated 2026-10-10. Native development has resumed. DOS semantic work merges with the
-DOS baseline; unfinished native source remains on `port/modern-64`.
-General readability expansion stops here unless a specific port contract
-cannot be represented safely. Native executable bytes need not be exact.
-
-## Completed
-
-v1331 adds native PMD SSG effects with 40 semantic instruments, signed sweeps,
-priority admission, stop/restart and ordered register writes. GNU/optimized
-UBSan each compare 79,488 original effect rows and 3,942 constructed music/drum
-sharing rows. The sequence now compares all selected mask bits: 134,274 short
-and 49,164 longer rows per host pass without v1330's SSG exclusion.
-394 sources bind 156 AMD64 products; 51 CTests pass per Linux host. Musical
-OPN/FM effects, synthesis, physical clocks and frontend PMD capability remain
-unfinished; all runs stay muted. Current evidence/recovery is native
-`.analysis/port64/pmd-v1331/`; see native `docs/port64/evidence/pmd-ssg.md`.
-Cleanup preserves 1,046 protected hashes and reclaims about 195 MiB. Current
-Windows execution and Git commit/push remain pending. DOS acceptance is unchanged.
-
-v1330 adds a native PMD bytecode/timer-state owner: musical part/rhythm
-parsing, note lengths, mutable loops, tempo/bar commands, fade and stop/restart.
-GNU/optimized UBSan each compare134274 original control rows in138 cases;
-12 longer cases compare49164 rows perhost. SSG drum/SE mask bit1 remains an
-explicitly excluded ownership surface, with raw original rows retained.
-390sources bind153AMD64products;50CTests pass perLinuxhost. Native OPN/FM/SSG
-synthesis, physical timers and frontend PMD capability remain absent. All runs
-stay muted; full natural routes/currentWindows/Lunatic timing remain. Evidence
-and recovery: native `.analysis/port64/pmd-v1330/`; details: native
-`docs/port64/evidence/pmd-sequence.md`. DOS acceptance is unchanged.
-
-v1329 establishes an independent original PMD driver reference: all three
-HDI-resident drivers execute 138 M26/M86 cases at two PSP segments, recording
-52,992 Timer B states and complete OPN writes.102 FM SE and six fade/restart
-controls pass; fixed96tick measure and missing-ack adapters reject. LOGO uses
-24ticks permeasure while OP uses96; actual driver state must supply measures.
-This changes verification source only: native PMD/FM remains absent and all
-150 C++ products retain v1328 identities. Reference/consumer manifests remain
-separate. Current private references/recovery: native
-`.analysis/port64/pmd-v1329/`; details: native
-`docs/port64/evidence/pmd-driver.md`.
-
-v1328 joins process-owned sound timelines across post-logo OP, MAIN and
-MAINE: actual options, Scores, Music Room, cutscenes, Staff Roll and
-registration. Fresh MAINE keeps an empty EFS; BGM option restart applies
-pending SE mode without reloading effects. GNU/optimized UBSan each execute
-216 original OP option cases, 32 MAINE entries and 8,834 control snapshots at
-two loads; all 1,150 frontend output files agree. MAIN's 3,574,464 PCM samples
-per host regress. All outputs of 24 Ending and eight Extra actor controls
-agree; these disable hit consumption. An MAINE EFS-reload mutant rejects.
-384 sources bind 150 AMD64 products; 49 CTests pass per Linux host. All launches
-stay muted. PMD/OPN synthesis/real measures, complete startup audio, full
-natural routes, actual Windows and Lunatic timing/performance remain. DOS
-acceptance is unchanged. Current evidence/full pending-source recovery:
-native `.analysis/port64/sound-scenes-v1328/`; details:
-native `docs/port64/evidence/sound-scenes.md`.
-
-Owned terminal cleanup reclaims 1,508,634,624 allocated bytes (about 1.40 GiB)
-from 6,357 duplicate files and one retired mutant executable. 13,175 protected
-hashes remain unchanged at that boundary; sources, inputs, references and all
-current programs remain. Windows interop and shared Git metadata still reject;
-no current Windows execution/commit/push is claimed.
-
-Details: native `docs/port64/evidence/beeper.md`.
-
-v1325 adds a bounded sound-control owner: original OP resident probes, mode
-selection, command dispatch, SE priority/duration and resource-load requests.
-13198cases/73751records agree at loads1000/2000 and on optimized UBSan; a
-source-only equal-priority mutant rejects.370sources bind141AMD64products;
-46CTests pass perLinuxhost.92 priorLinuxproducts are byte-identical; MinGW
-relinks have new identities and current build checks only. Real setup/config
-frontend regress unchanged. This component is not yet joined to frontend audio
-and does not synthesize PMD/FM samples. Next actual sound timeline, EFSbeeper,
-PMD/OPN synthesis/measure waits, complete natural routes, actualWindows and
-Lunatic timing/performance. All launches stay muted. BGM2 text is corrected to
-stereoFM86; numeric setup/config/pixel evidence is unchanged. DOS acceptance
-is unchanged. Windows/Git still reject; private evidence and fullv1308..v1325
-recovery: native `.analysis/port64/audio-v1325/`. Details:
-native `docs/port64/evidence/sound-control.md`.
-
-The v1325 cleanup shares94terminalduplicates after complete bytes/hashes,
-retiresone experimental executable and reclaims58671104allocatedbytes
-(about56MiB), with4320protectedfilehashes unchanged.
-
-v1324 joins the original two-menu first audio setup before score reads and
-ordinary menus.84 original cases/303829 requests agree at loads1000/2000;
-780 complete two-page/palette/RGB frames compare998437440bytes against original
-font/SUPER kernels. GNU/optimized UBSan pass all9 BGM/SE choices, interrupted
-restart, failed save and fresh OP through two muted application processes.
-Missing/bad host config requests rankFF using observed ZUN six-byte defaults;
-the host checksum is explicit policy. Completing setup defers physical save
-until an existing boundary.2112 config controls and16 menu cases/Extra/4failed
-writers regress.366sources bind138AMD64products;45CTests pass perLinuxhost.
-Original full startup/audio, complete natural ordinary/Extra routes, actual
-Windows save/restart and dense Lunatic timing/performance remain. All launches
-stay muted. Windows interop and read-only Git metadata reject; commit/push
-remain pending. Private evidence/full v1308..v1324 recovery: native
-`.analysis/port64/setup-v1324/`. DOS acceptance is unchanged. Details:
-native `docs/port64/evidence/setup.md`.
-
-The v1324 cleanup shares907 terminal duplicate files after full-byte and hash
-comparison, retiresone experimental executable and reclaims628629504allocated
-bytes (about599.5MiB).5793protectedfilehashes remain unchanged; sources,
-private inputs, replay/failure references andall138currentprograms remain.
-
-v1322 recorded-demo references remain in `docs/port64/evidence/demo.md` and
-`.analysis/port64/demo-v1322/`; original producers keep their own manifests.
-Completed captures stay immutable; future replays use fresh directories.
-
-The v1323 cleanup shares651 terminal duplicate outputs after complete byte/hash
-comparison, retires8 regenerable Python caches andtwo experimental mutant
-binaries, and reclaims412155904 allocated bytes (about393MiB).5233 protected
-files are unchanged at that boundary. Current three caches,135 programs,
-sources, private inputs and replay/failure references remain.
-
-- v1320 joins OP Scores to ordered fades, held-key paging/release, original
-  row/rank graphics and physical dual-column reads in the retained OP process.
-  135 original caller cases at loads1000/2000 pass; GNU/optimized UBSan each
-  consume the same independent reference. Actual OP font/SUPER kernels agree on
-  640 complete two-page/palette/RGB displays (819230720bytes).12 actual
-  options/Scores/menu/MAIN routes per Linux host agree on179 files/131BMPs;
-  GNU independently compares107 sampled BMPs. Configured difficulty survives
-  browsing, parent resident RNG waits for the child, redraw consumes no RNG and
-  ordinary MAIN starts after return. A source-only omitted retained RIGHT test
-  is rejected.339sources bind126AMD64products;41CTests pass per Linux host.
-  556 prior OP reader cases,34 physical startup/restart+6 registration children,
-  5926HUD/75RGB+ARGB and24GameOver/386full-display references regress on both
-  Linux hosts. Producer/current consumer manifests remain separate; no receipt
-  is restamped. Initial native title pages, PI decode, CGROM/GRCG, files/input/
-  waits/audio are explicit adapters. Arbitrary bad ciphertext can cause original
-  names to cross DS globals; the native consumer rejects unbounded section names
-  and undefined SUPER patterns, with the failed probe retained. Full natural
-  ordinary/Extra routes, physical timing/audio and current Windows execution
-  remain unaccepted. Next Music Room/demo/audio/config and complete-route checks.
-  All launches stay muted; DOS acceptance is unchanged. Windows interop/Git
-  metadata still reject, so commit/push remain pending. Current receipts and
-  full v1308..v1320 source/evidence recovery: native
-  `.analysis/port64/op-ranking-v1320/`. Lossless640-display compaction reclaims
-  792883200allocatedbytes (about756MiB); decompressed SHA-256 agrees.
-
-
-- v1317 joins physical saved-score reading at startup and every fresh OP.
-  GNU and optimized UBSan each pass 39 contracts, 556 original OP instruction
-  cases at two relocated loads, 34 physical startup/restart cases, and 6 seeded
-  registration child scenes that save, reopen in fresh OP and enter Extra.
-  The original first checksum WORD is strict; the second uses its low byte.
-  Global Extra includes the Extra rank, while character/shot availability excludes
-  it. The original all-locked Marisa/B fallback is preserved. A source mutant
-  that includes Extra in combination availability is independently rejected.
-  Both hosts agree on 280 OP files/80 BMPs, 24 Quit routes/4 failed writers
-  (220 files/134 BMPs), and 8 Extra MAINE tails (336 files/312 BMPs, including
-  physical saves). 304 previous Extra BMPs are unchanged; 8 fresh OP title
-  captures now display the saved unlock. Long Extra hit/unlock controls remain.
-  120 AMD64 products bind 327 sources. GNU producer manifests precede only the
-  corrected empty-mask contract; 117 other products are identical. Original
-  outgoing MAIN/MAINE caller order replays retain explicit child/resource adapters.
-  Next: full HUD and OP score display, Music Room/demo/audio/config persistence,
-  complete natural routes, and actual Linux/Windows save/restart/Lunatic timing.
-  All launches stay muted. Windows interop and Git metadata still reject;
-  current Windows execution, commit/push and DOS exact acceptance remain pending.
-  Full v1308..v1317 recovery: native `.analysis/port64/op-unlock-v1317/recovery/`.
-  Own cleanup reclaims 638,742,528 allocated bytes;
-  10,020 protected files pass hash readback.
-  Details: native `docs/port64/evidence/op-score.md`.
-
-- v1312 joins actual OP Extra/STD, the first retained `_DM06` dialog and
-  Mugetsu battle through the frozen Gengetsu-dialog gate. Corrected real character
-  selection covers both characters/shots: 16 actor controls per GNU/optimized
-  UBSan, with 208 files/192 BMPs agreeing. Actual dialog/resource requests match
-  two-load original execution; core/render and 12-scene Bomb regressions pass.
-  Each executed host passes 36 contracts; 111 AMD64 products bind 301 source files.
-  Actor controls disable player-hit consumption and adapt the unlock bit;
-  graphics/input/wait/file/sound consumers are explicit adapters, EMS is untested.
-  Full Extra, original complete pixels/MAIN, audio/timing and Windows runtime are
-  unaccepted. Gengetsu, unlocks/HUD/OP/audio/config and full routes remain.
-  Windows interop and Git writes still reject. All runs are muted. Detailed
-  receipts and complete recovery: native `.analysis/port64/mugetsu-join-v1312/`;
-  native `docs/port64/evidence/extra.md`. Own cleanup reclaims 593,711,104
-  allocated bytes with 4,625 protected files passing hash readback.
-
-Coverage correction: v1310 and early v1312 long controls labelled Marisa used
-`down` in the character menu, so they actually duplicated Reimu. Their original
-component claims remain scoped; their frontend results establish Reimu only.
-Retained negative traces and v1312 corrected `right` input/resident/resource
-assertions supersede the prior two-character claim; old receipts are unchanged.
-
-- v1310 working tree adds real OP Extra entry/resources/STD and the complete
-  2594-tick timed midboss. GNU/optimized UBSan35 contracts,1466 original cases/
-  6652 records,256 setups and138 raw tiny screens pass at two loads. Eight long
-  actor-control scenes and two ordinary startup smokes agree per host, including
-  82 outputs/74 BMPs. Long scenes disable hit consumption and adapt only the
-  unlock bit; the genuine Mugetsu dialog gate stops at frame11196. Corrected
-  completed-frame clear/zap rendering precedes score-tail extends.108 AMD64
-  products bind291 files; Bomb original join regresses. Mugetsu/Gengetsu/full Extra,
-  HUD/OP/audio/config and full routes remain. Windows execution/Git writes stay
-  blocked; cleanup reclaims119386112 allocated bytes with6197 protected files
-  unchanged. Native `.analysis/port64/extra-v1310/` owns receipts/recovery;
-  `docs/port64/evidence/extra.md` owns the scoped target evidence. All runs muted.
-
-- v1309 working tree joins Bomb BB/CDG/star graphics, shared palette and two
-  physical pages to MAIN.12 actual OP/finite-STD/X scenes and2,724 Bomb frames
-  pass per GNU/optimized UBSan;34 contracts each. Two-load original Bomb-layer
-  indices/state/RNG, native RGB and repaint invariance pass. Captured native
-  state/page/hardware adapters remain explicit; full routes remain unaccepted.
-  Windows builds; actual Windows/Git remain environment-blocked. Native receipts
-  are under `.analysis/port64/bomb-join-v1309/`.
-
-- v1308 working tree joins Quit -> fresh score-only MAINE -> delay100 ->
-  registration/save/blackout -> verdict -> retained song fade4 -> fresh OP and
-  second MAIN. GNU/optimized UBSan34 contracts,24 actual OP/authored finite-STD
-  combat/contact routes and4 failed writers pass;224 complete files/136 BMPs
-  agree. Original MAINE dispatch/delay at two loads uses explicit child-duration,
-  initialization, sound and exec adapters. Windows AMD64 builds but actual
-  execution remains pending under WSL socket restrictions. Git metadata is
-  read-only: source/evidence remain uncommitted and unpushed. See native handoff.
-
-- v1307 joins frozen Game Over indexed/TRAM display, held input and its own
-  refresh clock to ordinary MAIN. Actual OP selection and authored finite STD
-  contact drive20 scenes per GNU/optimized UBSan/actual Windows. Two-load
-  original scene/TRAM/score-HUD controls agree on322 complete displays and151
-  host files;34 contracts pass per host.105 products bind277 current files.
-  A missing score consumer mutant is rejected in60 snapshots. Quit score-only
-  MAINE, Bomb pixels/shared palette and full HUD remain; no full-route or GUI
-  publication acceptance follows. Native commits `065b56d`/`73dfdec` retain
-  the code and evidence. This batch reclaims123,744,256 allocated bytes with
-  3,926 protected files unchanged.
-- Semantic contracts: PI/PAR/CDG/BFNT, segmented heap, input/IRQ timing,
-  scroll/tile ring, bullet angles/groups, enemy script VM, shots/items,
-  process handoff, ranking, random ring and process-local LCG. See
-  [the bounded semantic results](SEMANTIC_READABILITY.md).
-- Linux SDL2 and Windows Win32/GDI frontend; private original HDI/PAR/CD2/PI
-  resources, OP main/options/selection state and fixed-width resident handoff.
-- Normal Stages 1–6 waves, both Stage 4 character bosses, stage bosses/dialogues/
-  departures, Yuuka lasers/crosses/checkerboard, score/extends. Implemented and
-  bounded component/integration controls exist; full game acceptance is pending.
-- All eight Ending script/graphics routes; Staff Roll, verdict and
-  congratulations integrated into normal-route preview controls (v1296).
-- Score-file core (v1297): 1,288 original CPU cases, including ten-section
-  recreate/re-key and retained RNG/unused-byte behavior.
-- Registration logical owner (v1298): 382 original CPU cases, input repeat/lock,
-  partial-name Esc save and retained decoded render requests.
-- Registration graphics/text (v1299): 158 complete two-page/palette/TRAM/RGB
-  captures agree on GNU, Wine, optimized UBSan and actual Windows. Explicit
-  hardware/ROM/PI/return adapters limit the original-execution claim.
-- Registration scene/save (v1300): ordered refresh/input/render/I-O boundaries,
-  separate host score commits and fresh OP/second MAIN. Thirty seeded fixtures
-  per GNU/optimized UBSan/actual Windows produce 112 identical output files;
-  original fades agree at two loads (35-refresh in/18-refresh out).
-- Player hit/death/Bomb lifecycle component (v1301): 10,319 original CPU
-  state/request controls agree GNU/optimized UBSan/actual Windows at two loads.
-- Game Over/Continue components (v1302): 2,003 menus, 64 full scenes and 2,985
-  MAIN score-file cases agree across those hosts and two original loads. MAIN
-  has its own single-RNG-word cipher and selected-section writer. Live MAIN
-  suspension, Game Over TRAM, Bomb character graphics and Continue host save
-  still require integration.
-- Character Bomb graphics (v1303): 1,236 original state cases/2,252 records and
-  294 pixel cases/548 complete screens agree across two loads, GNU/optimized
-  UBSan/actual Windows. BB tiles, character CDG and48 retained stars are tested;
-  the component still needs live MAIN lifecycle/render dispatch.
-- Current native builds: 35 AMD64 products and 34 contracts per GNU/MinGW/
-  optimized-UBSan build. Actual Windows contracts and current component captures
-  also pass. This is not full routes, physical hardware, audio or DOS exactness.
-- Game Over graphics (v1304):200 complete indexed/TRAM/RGB snapshots agree
-  with actual original gaiji/ANK/wipe/black instructions at two loads and
-  GNU/optimized UBSan/actual Windows. All158 registration snapshots still pass.
-  This completes the renderer component; live MAIN and Continue saving remain.
-  Code/evidence commits `a789b80`/`5ca7995` are pushed on `port/modern-64`.
-
-v1306 adds player death/invincibility rendering and retained MAIN draw requests
-consumed by frontend source. Original relative `0AAF:610D..625B`, helpers and
-rolling kernels at loads1000/2000 agree with GNU/optimized UBSan/actual Windows
-on6,637 requests and259 complete indexed screens (66,304,000 pixels);34
-contracts pass per host.105 AMD64 products bind274 listed files. Continue
-save files remain unchanged; cached draws freeze during Game Over. A changed
-blink phase is rejected in269 original request cases.2,662,400 allocatedbytes
-are reclaimed with2,795 protected files unchanged. Frozen Game Over TRAM/input,
-Bomb graphics/shared lifecycle palette and Quit registration→verdict→fresh OP
-remain; no GUI publication or complete natural route is accepted.
-Native code/evidence commits `78fb017`/`64d8973` are pushed on `port/modern-64`.
-
-v1305 core integration now covers live lifecycle/Game Over suspension, character
-Bomb dispatch, miss pickup suppression and real Continue host commits. GNU/
-optimized UBSan/actual Windows pass34 contracts and agree on checkpoint
-traces/files. A finite STD/contact/real-store probe verifies one resumed suffix;
-a repeated-prefix mutant is rejected. Original lifecycle/menu/scene/file
-controls re-agree. Frontend frozen TRAM/keyboard, death/Bomb indexed rendering
-and Quit registration→verdict→fresh OP still require integration. Retained actor
-fixtures now explicitly disable hit consumption. No GUI or full-route acceptance.
-Native code/evidence commits `a7c096d`/`6945f69` are pushed.
-
-## Remaining, in order
-
-- [x] Join ordered registration, physical host-score writer-close and fresh OP.
-- [x] Join Bomb/death/Game Over/Continue, retained HUD and selected high-score
-  loading under bounded controls. Complete ordinary gameplay validation remains.
-- [x] Join Extra battles/dialogues/MAINE/save/fresh OP under actor controls.
-  v1349 additionally verifies a Reimu ordinary logical prototype route with
-  same-host earned unlock on three hosts; public full-route/timing gates remain.
-- [x] Join physical OP unlock/combination reads, Scores and Music Room.
-- [x] Join recorded-demo playback, configuration persistence and first audio
-  setup under independent component and native restart controls.
-- [x] Join resident PMD lifetime, capability, PCM and real measure waits under bounded muted controls.
-- [x] Verify complete supplied PMD/PMD86/PMDB2 music under explicit resident/
-  IRQ/board adapters; stock part9/PPS counters remain zero in all 138 cases.
-- [ ] Implement audible audio-device output and complete startup presentation
-  across sound modes while keeping all launches muted. Arbitrary external
-  sample banks remain outside the supplied-stock acceptance.
-- [ ] Validate refresh/input behavior and deliberate slowdown on actual hosts.
-- [ ] Run full natural Linux/Windows routes: both characters, difficulties,
-  good/bad endings, Extra, Continue, saves/config and restart. Benchmark dense
-  Lunatic scenes with explicit original/adaptation boundaries.
-  Four v1349 prototype logical routes close only the stated legal6life/2bomb
-  Easy/Normal/Reimu-Extra corpus, with a GNU full-render Easy bridge.
-- [x] Replay current Windows bounded controls and commit/push retained native work.
-- [ ] Deliver a current Windows GUI after complete-route acceptance.
-- [ ] Re-attest historical exact scaffolds only if exact acceptance is reopened.
-  MAIN's two deferred cases are not prerequisites for native functionality.
-
-## Published preview versus retained source
-
-The last published Windows `th04-port64.exe` and launcher were
-**v1296-congratulations**, with `previous-v1295` rollback. Those packages were
-archived outside the DOS demo directory on 2026-10-08. That GUI reaches
-`registration_pending`; current v1300 source joins registration/save with
-seeded child-scene controls. Full natural routes and a new published GUI remain
-pending. Native commits `43946c3` and `6c90c1a` are pushed on `port/modern-64`.
-DOS testing scripts/saves are separate. All new launches stay muted.
-Latest Game Over code commit `1610726` is pushed on the native branch. Periodic
-cleanup now retires superseded generated streams and deduplicates only verified
-immutable captures; this batch reclaimed 980,566,016 allocated bytes. Targets,
-source, final receipts and three current build caches remain available.
-Latest Bomb code commit `9a50588` adds the validated component. This batch retires
-8 superseded generated streams, reclaiming13,643,776 allocated bytes with source,
-active cache/input and final-reference hash readback. Final pixels are compressed;
-actual Windows hashes the full binary stream without a second raw dump.
-
-The native branch's [PORT64.md](https://github.com/N0zoM1z0/th04/blob/port/modern-64/docs/PORT64.md)
-routes detailed component contracts and replay receipts. Its evidence and
-knowledge ledgers are branch-local; root DOS ledgers do not inherit native
-acceptance. Private tools/assets are required for original CPU controls.
+Detailed historical batch evidence remains in ledgers, subject notes and Git.
+Use [handoff](RE_HANDOFF.md), [semantic contracts](SEMANTIC_READABILITY.md) and
+`python3 scripts/status.py` for current authority instead of old progress labels.
