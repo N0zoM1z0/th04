@@ -15,6 +15,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/audit_th04_op_menu_calls.py](../probes/audit_th04_op_menu_calls.py) | command | Compare bounded OP menu drawing calls with the attested decoded target. |
 | [probes/check_th04_bullet_default_objects.py](../probes/check_th04_bullet_default_objects.py) | command | Cold-check complete default bullet renderer OMF against a source revision. |
 | [probes/check_th04_bullet_invalidation.py](../probes/check_th04_bullet_invalidation.py) | command | Check the complete linked bullet invalidator's operand and call contract. |
+| [probes/check_th04_carpet_animation_table.py](../probes/check_th04_carpet_animation_table.py) | command | Check all Stage 4 carpet lighting cells against the attested MAIN table. |
 | [probes/check_th04_pointnum_renderer.py](../probes/check_th04_pointnum_renderer.py) | command | Check the complete linked point-number renderer's operand and call contract. |
 | [probes/check_th04_renderer_default_objects.py](../probes/check_th04_renderer_default_objects.py) | command | Cold-check that native renderer segment branches leave default OMF unchanged. |
 | [probes/compact_op_maine_snapshot.py](../probes/compact_op_maine_snapshot.py) | support | Materialize the OP/MAINE replay inputs without cloning all of ReC98. |

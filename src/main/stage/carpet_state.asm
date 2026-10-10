@@ -56,14 +56,36 @@ _CARPET_TILE_IMAGE_VOS label word
 
 ; 2 = untouched, 1 = replace on this cel, 0 = already replaced.
 _CARPET_LIGHTING_ANIM label byte
-    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2
-    db 2, 2, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2
-    db 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2
-    db 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+; Cel 0 is dark. Cel 1 replaces the middle pair; subsequent cels
+; reach two more columns on each side, finishing at the outermost pair.
+; MAIN DGROUP(2134):199C retains one nonmonotonic cell: cel 5/column 2
+; is already-replaced before its normal replacement at cel 6.
+CARPET_CEL = 0
+rept 8
+    CARPET_COLUMN = 0
+    rept TILES_X
+        if CARPET_COLUMN lt (TILES_X / 2)
+            CARPET_REPLACE_CEL = (14 - CARPET_COLUMN) / 2
+        else
+            CARPET_REPLACE_CEL = (CARPET_COLUMN - 9) / 2
+        endif
+        if (CARPET_CEL eq 5) and (CARPET_COLUMN eq 2)
+            db 0
+        else
+            if CARPET_CEL lt CARPET_REPLACE_CEL
+                db 2
+            else
+                if CARPET_CEL eq CARPET_REPLACE_CEL
+                    db 1
+                else
+                    db 0
+                endif
+            endif
+        endif
+        CARPET_COLUMN = CARPET_COLUMN + 1
+    endm
+    CARPET_CEL = CARPET_CEL + 1
+endm
 
 _DATA ends
 DGROUP group _DATA

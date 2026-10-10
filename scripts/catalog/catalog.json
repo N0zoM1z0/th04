@@ -434,6 +434,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/check_th04_carpet_animation_table.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Check all Stage 4 carpet lighting cells against the attested MAIN table.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/check_th04_carpet_image_table.py",
     "category": "runtime",
     "role": "command",

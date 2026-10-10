@@ -108,12 +108,13 @@ process teardown remain open.
 
 Raw video comparison retains every graphics/text/palette byte on both pages
 at all3996 updates per demo. Text, palettes, page selectors and selected programmed GDC fields
-agree. Complete v1371 replay accepts all compared video regions in Demos2/3/4.
-Demo1 still first differs at write1678 with1032 differing updates, localized to
-B/R/G page0 row375. The cold point-number renderer restores multiplier glyph
-indices10/11 instead of4/5 and removes every retained Demo4 graphics difference.
-Earlier packed bullet-box and Stage4 carpet repairs remain verified. Demo1's
-drawing cause, raw scanout timing and process teardown stay open. Historical
+agree. Complete v1372 replay accepts all 38 compared video regions in all four
+demos, with 3996 updates and zero differing updates each. The missing Stage 4
+lighting-animation cell shifted later cels; the corrected symbolic table
+removes all 1032 remaining Demo 1 graphics differences. Cold MAIN changes only
+17 animation DATA bytes. Point-number multiplier indices 10/11, packed bullet
+boxes and carpet image columns remain verified. Raw scanout timing and process
+teardown stay open. Historical
 focused point-number replay remains blocked before comparison by an incompatible
 bullet/add.cpp header in the old scaffold; it grants no fresh exact credit.
 
@@ -124,6 +125,10 @@ then enemy bullets without a point-number draw pass. The400-slot popup pool,
 lifecycle and original glyph ordering need a native integration/paired check.
 This is source evidence; the native worktree remains clean, with no new build
 or runtime acceptance.
+The same read-only audit finds the native Stage 4 lighting formula already
+preserves the original cel 5/column 2 exception. Its component Oracle excludes
+original dirty-page transients replaced by full host redraw; paired presentation
+acceptance remains separate from the data formula.
 Current native host traces still lack complete RNG seed/ring/call-count fields and paired
 original-DOS gameplay evidence.
 

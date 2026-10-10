@@ -5,57 +5,61 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1371 restores point-number multiplier glyph indices10/11 instead of4/5 in
-the maintained renderer body/context. Original MAIN CIRCLE_TEXT0AAF:12F5/12FB
-and the complete1536B glyph table prove the selector error. The complete154B
-linked renderer contract passes with only verified DATA/near-call/self-width
-address substitutions; bounded CPU replay now matches10 calls/69 VRAM writes.
-Earlier packed bullet-box and carpet-table repairs also pass unchanged.
+v1372 repairs the missing Stage 4 carpet animation cell. The old cel 3 source
+row emits 23 rather than 24 entries, shifting later cels and leaving the last
+loaded cell in linker padding. Fresh read-only watches attribute the first old
+Demo 1 difference to the scroll copier: MAIN CIRCLE_TEXT 0AAF:1073 versus
+candidate 0708:2FB5, load 10FC. Its differing source ring columns 4/6/18 follow
+the bad lighting mask. The new symbolic wave preserves the original cel 5/
+column 2 anomaly and agrees with all 192 target bytes at DGROUP 2134:199C.
 
-Cold MAIN199455 B is8439b0b0…, MAP69790a7a… unchanged.193 C++/155 ASM/8 state/
-4 sprite objects pass with zero reused C++ roots. Only two complete-file bytes
-change,4->10 and5->11;359/360 OMF producers agree after dependency-time-only
-normalization. Package `.analysis/build/th04-demo-pointnum-v1371/` retains old
-unchanged OP/MAINE/ZUN receipts. Windows packages/native worktree are unchanged.
+Cold MAIN is 199455 B, SHA a7966251…, with zero reused C++ roots. All 193 C++,
+155 ASM, 8 state and 4 sprite objects pass. Only 17 complete-file DATA bytes
+change; 359/360 OMF objects agree after dependency-time-only normalization.
+The sole changed producer is carpet_state.asm. MAP 86798b62… changes only that
+DATA owner's size 335->336 B, consuming its old alignment byte; every other
+MAP byte and subsequent address remain identical. The initial identical-MAP
+assertion rejects after cold success; a separate v2 controller verifies the
+actual one-line owner change and continues from the same artifact. Complete
+animation/image/packed-box/point-number contracts pass. The data owner stays
+source-present with unknown original source language; no exact promotion.
 
-Fresh complete ordinary captures pass all15988 input/score/RNG/caller/resident
-boundaries. The fresh complete DGROUP replay passes nine raw pools24952 B plus
-22 pointer-free states104 B per update across15984 updates, plus input/Shift/
-graze, with identical independent ordinary traces. Boss remains at setup;
-ordinary Boss combat, hit/death/respawn, other globals/callbacks, process teardown,
-cross-emulator and native x64 parity remain open.
+Fresh ordinary replay passes all 15988 input/score/RNG/caller/resident/terminal
+boundaries. Fresh DGROUP replay passes nine complete raw actor/effect pools
+(24952 B), 22 pointer-free global states (104 B), input/Shift and graze across
+all 15984 updates. Both independent capture types reproduce ordinary traces.
+Complete video passes all 38 compared graphics/text/palette/selector/programmed-
+GDC regions across 3996 updates in each of the four demos, zero differences.
+All 1032 old Demo 1 differing updates disappear; the other three stay accepted.
+Raw GDC scan/raster/FIFO/clock bytes differ in all 3996 updates per demo and
+remain diagnostic. Full scanout, other globals/callbacks, ordinary Boss combat,
+hit/death/respawn, process teardown, cross-emulator and x64 parity remain open.
+Boss remains at setup in these demos; Midboss fights are exercised.
 
-Complete video compares3996 updates per demo,279809 B/update. Demos2/3/4 pass
-all38 compared graphics/text/palette/selector/programmed-GDC regions. Demo1
-still first differs at write1678 (1032 differing updates), B/R/G page0 row375,
-columns13/17/40/41. Text/palettes/modes/selected GDC fields match throughout.
-Raw GDC scan/raster/FIFO/clock bytes remain diagnostic and differ3996 times per
-demo; full scanout timing is open. The first reader misses a frozen GDB dependency
-and rejects before comparison; receipt-pinned late freezing plus independent
-v2 full reread succeeds. Original failed source/log/report remain intact.
+Native 06922ce and Windows packages are untouched. Read-only source inspection
+finds native's carpet data formula already correct, including the cel 5/column
+2 anomaly; its component acceptance excludes original dirty-page transients
+replaced by full host redraw. Point-number event/render integration is still
+missing in the inspected native path. Audit/implement the 400-slot pool/lifecycle,
+white/yellow order and glyph 10/11 join, then pair state/pixels with original.
+These source audits add no native build/run or new runtime acceptance.
 
-Historical focused122-owner point-number replay fails first cold compilation
-at scaffold bullet/add.cpp: missing ANGLE_PER_SPRITE and bullet_t::from_group.
-It never reaches second build/raw comparison and grants no fresh exact credit.
-This is the older header/dependency staging hazard; retain failed frozen inputs
-and logs, do not widen scaffold allowlists. Historical states and deferred
-carpet/checkerboard cases remain unchanged. Canonicality is candidate-local-attested.
+Historical focused point-number replay still fails first scaffold compilation
+at bullet/add.cpp (ANGLE_PER_SPRITE / bullet_t::from_group); it never reaches
+raw comparison and grants no fresh exact credit. This batch does not retry it
+or widen allowlists. Deferred carpet/checkerboard exactness and accepted
+historical states stay unchanged. Canonicality is candidate-local-attested.
 
-Read-only native06922ce source inspection finds point-number event/render
-integration missing in the inspected path: bullet/item callbacks do not consume
-point-number effects, and view.cpp has no intervening draw pass between items
-and bullets. Audit/implement the400-slot popup pool/lifecycle and glyph10/11
-join, then pair state/pixels with original. Four source files are frozen/read
-back; no native build/run/write or new runtime acceptance.
-
-Final CI passes 434 tests, 20-target calibration and live Ghidra/mutation controls.
-533 source-backed caches retire8,876,032 allocated B after CI. Immutable copy
-sharing, byte-exact video recovery and failed-source/input archives reclaim
-272,207,872 allocated file B (about259.6MiB) before journals. Independent readback
-checks199 protected hashes,20 frozen inputs, all4 full gzip recoveries,2784 PAX
-entries and4 native source files. Every build/game/reader/CI/cleanup job is terminal.
-Complete evidence and successful cold cache remain; restore archived video or
-failed scaffold source before old-reader inspection. Native06922ce stays clean.
+Final CI passes 441 tests, 20-target calibration, tracking/diff checks and
+live Ghidra/mutation controls. All build/game/reader/CI/retention jobs are terminal.
+Lossless retention reclaims 311918592 allocated file B (about 297.5 MiB) before
+journals: immutable sharing, all four exact gzip recoveries and 535 source-backed
+caches. Independent readback validates 270 protected hashes, 26 frozen inputs,
+all four full video recoveries and the current product fingerprint. Successful
+cold objects and all failed-control source/logs remain; restore archived streams
+before old-reader replay. Current package:
+`.analysis/build/th04-demo-animation-v1372/`, with fresh MAIN and explicitly
+retained unchanged OP/MAINE/ZUN producer receipts.
 
 Replay commands, frozen producer/reader sources, failed historical/consumer checks, precise
 coverage and lossless retention are in the focused note. Current commit
@@ -85,11 +89,12 @@ native fixes or this runtime batch. Targets remain
 
 ## DOS verification frontier
 
-- v1371 fresh scalar/RNG and full nine-pool/22-state comparisons pass. Complete
-  video accepts Demos 2/3/4; Demo 1 first differs at write 1678.
-  The multiplier-symbol correction changes only one OMF producer and two
-  complete-product bytes; packed bullet boxes and the carpet table remain
-  verified. Complete old/new raw evidence and source/ABI controls stay
+- v1372 fresh scalar/RNG and full nine-pool/22-state comparisons pass. Complete
+  video accepts all four demos, all 3996 updates and 38 compared regions each.
+  Correcting the short lighting-mask row removes all remaining Demo 1 graphics
+  differences; the cold artifact changes only 17 DATA bytes. Previous carpet
+  image, packed-box and point-number repairs stay verified. Complete old/new
+  raw evidence and source/ABI controls stay
   available, with lossless gzip recovery before archived-stream replay:
   [paired evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 - v1368 accepts22 raw global-state blocks across all15984 demo updates, with

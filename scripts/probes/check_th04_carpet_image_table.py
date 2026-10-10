@@ -19,7 +19,8 @@ from lib.pc98 import parse_mz
 EXTENT = 3*24*2
 
 
-def initialized_table(main: bytes, map_text: str, segment: int, offset: int) -> bytes:
+def initialized_table(main: bytes, map_text: str, segment: int, offset: int,
+                      extent: int = EXTENT) -> bytes:
     require(parse_mz(main).valid, 'candidate MZ integrity')
     header = int.from_bytes(main[8:10], 'little')*16
     require(segment == int.from_bytes(main[header+1:header+3], 'little'), 'table DGROUP')
@@ -27,7 +28,7 @@ def initialized_table(main: bytes, map_text: str, segment: int, offset: int) -> 
     owners = re.findall(r'^\s*([0-9A-F]+)H\s+([0-9A-F]+)H\s+([0-9A-F]+)H\s+(\S+)\s+(\S+)\s*$',
                         map_text, re.M)
     require(sum(name == '_DATA' and cls == 'DATA' and int(length, 16) > 0
-                and int(start, 16) <= linear and linear+EXTENT-1 <= int(stop, 16)
+                and int(start, 16) <= linear and linear+extent-1 <= int(stop, 16)
                 for start, stop, length, name, cls in owners) == 1, 'complete initialized DATA table')
     # A relocation would change a supposed VRAM offset when DOS loads MAIN.
     relocations = int.from_bytes(main[6:8], 'little')
@@ -35,9 +36,9 @@ def initialized_table(main: bytes, map_text: str, segment: int, offset: int) -> 
     for at in range(relocation_table, relocation_table+relocations*4, 4):
         off, seg = struct.unpack_from('<HH', main, at)
         site = seg*16+off
-        require(site+2 <= linear or site >= linear+EXTENT, 'relocation overlaps carpet table')
-    data = main[header+linear:header+linear+EXTENT]
-    require(len(data) == EXTENT, 'initialized table file extent')
+        require(site+2 <= linear or site >= linear+extent, 'relocation overlaps carpet table')
+    data = main[header+linear:header+linear+extent]
+    require(len(data) == extent, 'initialized table file extent')
     return data
 
 

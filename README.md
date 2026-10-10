@@ -32,10 +32,10 @@ validation. New complete raw video captures cover both graphics pages, all four
 planes, text, palettes and selected GDC display fields. Text, palettes and the
 compared display fields agree. Cold builds and complete replays verify repairs
 to the Stage 4 carpet columns, packed bullet invalidation dimensions and
-point-number multiplier glyphs. Demo 2, Demo 3 and Demo 4 now agree on every
-compared video region across all 3,996 updates each. Demo 1 still first differs
-at frame-counter write 1678. Full scanout timing and that remaining drawing
-cause are open; see the handoff for the current evidence.
+point-number multiplier glyphs. Restoring a missing Stage 4 lighting-animation
+cell now also resolves Demo 1's remaining graphics differences. All four demos
+agree on every compared video region across all 3,996 updates each. Full
+scanout timing remains open; see the handoff for the current evidence.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh

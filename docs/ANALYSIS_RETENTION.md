@@ -1,5 +1,35 @@
 # Private build and analysis retention
 
+v1372 retains the new complete scalar/DGROUP captures and accepted four-demo
+video reports under `dos-demo-v1372-animation-candidate*`. The only source repair
+changes 17 animation DATA bytes. Successful cold MAIN objects and original/
+prior-candidate bounded watchpoint snapshots remain; all import/reader/MAP
+assertion negatives keep their original sources and logs.
+
+78 terminal immutable paths share identical bytes/modes, reclaiming 139792384 B;
+128 protected file hashes verify this pass. Four complete new video gzip files
+are retained as `demo-writer-v1372/video-delta/demo-N-xor.bin.gz` against the
+unchanged full original v1369 baselines. Every candidate gzip byte, encoded
+record header, raw GDC clock and invisible tail restores exactly before retiring
+163233792 B. A one-bit archive mutation rejects before decode. Verify or restore:
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 python3 \
+  .analysis/reconstruction/probes/demo-writer-v1372/restore_video_stream.py
+# Add this option to recover all files before the unchanged complete reader:
+# --output-directory .analysis/runtime/candidates/dos-demo-v1372-animation-candidate-video
+```
+
+Existing files are never overwritten. Keep all four original baselines, deltas,
+`video-stream-retention.json` and the recovery source; use a disposable copy of
+execution images for any later game run. Final CI passes 441 tests. Afterwards
+535 source-backed caches retire 8892416 B. The final independent reader checks
+270 protected hashes, 26 frozen inputs, all four full gzip recoveries, original/
+new comparison results and the current product fingerprint. Total reclamation
+is 311918592 allocated file B (about 297.5 MiB) before journals. Cleanup stdout
+and mutable phase files stay outside the protected probe tree. All jobs are
+terminal; native06922ce and Windows packages remain unchanged.
+
 v1371 retains complete ordinary/DGROUP captures and controls under
 `.analysis/runtime/candidates/dos-demo-v1371-pointnum-candidate*`. Full video
 comparison is `dos-demo-v1371-pointnum-video-comparison-v2.json`; the initial
