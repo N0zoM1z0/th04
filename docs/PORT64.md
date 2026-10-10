@@ -1,5 +1,20 @@
 # TH04 native x64 port
 
+v1346 joins original logo/fireworks/title control and muted frontend startup.
+15 two-load cases/147,830 complete state/request rows agree on GNU8,
+optimized UBSan and actual Windows; four wrong source variants reject.
+Three driver profiles by11 settings and separate-process restarts produce336
+matching files perhost; final physical saves agree. A declared finite STD
+reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
+459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent
+startup pixels/full startup integration, PPS/external ADPCM, natural routes,
+host timing and new GUI delivery remain open. No DOS exactness is promoted.
+
+Current v1346 source manifest:
+`b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
+Receipts: native `.analysis/port64/startup-v1346/`;
+[ownership and replay](port64/evidence/op-startup.md).
+
 v1345 recovers FM3 C6 subtrack activation, CF slot/voice ownership,
 C7/C8 detunes, special pitch and shared mode on all three drivers. FM26
 aliases D-F and restores all four shared tracks after effects;86/B2 append
@@ -368,7 +383,7 @@ See [bounded lifecycle evidence](port64/evidence/stage-lifecycle.md#live-main-li
 - [x] Join OP/MAIN/MAINE sound requests/resources and process lifetimes under bounded controls.
 - [x] Join resident musical/effect clock/PCM, capability and real measure waits
   under bounded muted controls.
-- [ ] Recover remaining FM3/PPS/external ADPCM and complete original startup
+- [ ] Recover PPS/external ADPCM and complete original startup pixels/integration
   audio. Complete natural routes and physical timing remain separate.
 - [ ] Validate HUD through ordinary boss routes and host refresh/input/slowdown.
 - [ ] Actual Linux/Windows full-route/save/config tests across characters/ranks;
@@ -606,3 +621,7 @@ Latest player-render evidence: `.analysis/port64/player-render-v1306/`;
 Use `verify_player_render.py` / `verify_player_render_windows.ps1` with fresh
 outputs. Player death graphics source is joined; GUI Game Over/Bomb and
 score-only MAINE routing still require completion.
+
+## OP startup
+
+[Bounded control and frontend evidence](port64/evidence/op-startup.md).
