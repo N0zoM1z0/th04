@@ -523,6 +523,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         if (midboss_state().active && !stage5_ && !stage6_) {
             const auto sink=[&](const midboss::Event& event) {
                 midboss_events_.push_back(event);
+                if(event.type==midboss::EventType::point)point_numbers_.add(event.position,std::uint16_t(event.value),true,false);
                 if(event.type==midboss::EventType::sound)sound_action(sound::ActionKind::play,std::uint16_t(event.value));
                 if (event.type==midboss::EventType::circle) sparks_.add_circle(event.position,event.value,event.count);
                 if (event.type==midboss::EventType::homing) homing_target_=event.position;
@@ -783,6 +784,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     run_frames_.complete(0,static_cast<std::uint16_t>(slowdown()));
     sound_action(sound::ActionKind::update);
     ++frames_;
+    if(actor_observer_)actor_observer_(*this);
     const unsigned interval=score_.remaining_lives>=10 ? 1000 : 6000-score_.remaining_lives*500;
     if (static_cast<std::uint16_t>(frames_)%interval==0) performance_=std::min(
         static_cast<std::uint8_t>(performance_+1),maximum[rank_]);

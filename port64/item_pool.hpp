@@ -10,6 +10,9 @@ struct Entity {
     motion::Motion position{};
     Type type = Type::power;
     bool pulled_to_player = false;
+    // Original item_t retains both spare bytes and its selected sprite WORD.
+    std::uint8_t unused = 0, unknown = 0;
+    std::uint16_t pattern = 0;
 };
 struct UpdateEvent {
     bool collected = false;

@@ -1,14 +1,16 @@
 # TH04 native 64-bit bring-up
 
-Work remains active. v1373 joins white/yellow400-slot point-number rings,
-original lifecycle and multiplier drawing to actual pickups and bullet zaps.
-Original CPU controls at two loads match830 complete state/request rows and 494
-full indexed frames on GNU/UBSan; two full 400-slot render cases also pass.
-The69 GNU programs pass 68 CTests. Five mutants reject; two focused UBSan programs
-and five muted headless frontend pictures per host pass. These component checks
-do not accept complete natural gameplay/picture parity or a new Windows build.
-See [current handoff](../docs/RE_HANDOFF.md) and
-[point-number evidence](../docs/port64/evidence/point-numbers.md).
+Work remains active. v1375 pairs all four ordinary demos with original DOS:
+nine complete actor/effect pools (24,952 record bytes at each of 15,984 updates)
+and 15,988 selected input/score/player/RNG/count boundaries agree on GNU/UBSan.
+A missing Midboss yellow bonus consumer is repaired; item records preserve spare
+bytes and sprite WORDs. The source mutation leaves selected state equal but
+rejects the point-number pool at the original four first differences. GNU's
+70 programs pass 68 CTests; eight pool-reader controls and frozen reader replay
+pass. This accepts bundled-demo pool state; pictures, other globals, ordinary
+Boss/death/process routes and current Windows execution remain open. See
+[current handoff](../docs/RE_HANDOFF.md) and
+[demo evidence](../docs/port64/evidence/demo.md).
 
 Older milestone paragraphs below retain their own producers and scope.
 

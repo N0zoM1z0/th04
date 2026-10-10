@@ -120,6 +120,9 @@ public:
     const std::vector<score::Event>& score_events() const { return score_events_; }
     std::uint32_t awarded_score_units() const { return score::numeric_units(scoreboard_.digits)+score_.score_delta; }
     const shot::System& shots() const { return shots_; }
+    // Read-only checkpoint at the original stage_frame increment, before
+    // periodic performance and score/extend processing.
+    void set_actor_observer(std::function<void(const State&)> observer) {actor_observer_=std::move(observer);}
     const bullet::System& bullets() const { return bullets_; }
     // Score/extend runs after foreground rendering. Its clear request belongs
     // to the next update; host repaint consumes the completed render boundary.
@@ -297,6 +300,7 @@ private:
     bomb::Effect bomb_effect_{};
     bomb::RenderFrame bomb_frame_{};
     BombObserver bomb_observer_;
+    std::function<void(const State&)> actor_observer_;
     Mode mode_=Mode::ordinary;
     std::optional<demo::Replay> demo_;
     demo::Sample demo_sample_{};

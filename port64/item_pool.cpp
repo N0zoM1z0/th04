@@ -11,6 +11,8 @@ void Pool::spawn(std::size_t slot, motion::Point position, Type type, Velocity v
     entity.position.current = position;
     entity.position.velocity = {velocity.x, velocity.y};
     entity.type = type;
+    entity.unknown = 0;
+    entity.pattern = static_cast<std::uint16_t>(44u+static_cast<unsigned>(type));
     entity.pulled_to_player = false;
     spawned_ = static_cast<std::uint16_t>(spawned_ + 1u);
 }

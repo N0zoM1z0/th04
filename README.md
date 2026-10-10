@@ -21,16 +21,14 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-v1374 pairs all four complete native demos with the original on 23 compared
-input/score/player/resource/RNG fields and exact draw counts. GNU and optimized
-UBSan accept 15,988 boundaries each after fixing Stage 1 midboss emergence to use
-the fractional scroll accumulator. Complete actor-pool/picture/process fidelity
-remains open. GNU builds 70 programs and passes 68 CTests.
-
-Native work is active on this branch. v1373 joins 400 point-number slots to item
-and bullet-zap events and foreground drawing. Original instruction/state/pixel
-component checks pass on GNU/UBSan; GNU passes 68 CTests. Complete natural
-original-DOS/native state and picture parity remains open. See
+Native work is active on this branch. v1375 pairs all four complete demos with
+the original on nine complete actor/effect pools at 15,984 pre-score updates,
+plus 15,988 input/score/player/RNG/count boundaries. GNU and optimized UBSan
+agree after connecting missing Midboss yellow bonus popups. The item owner also
+retains its complete record fields. All inactive bytes and enemy STD-relative
+script offsets remain compared. GNU produces 70 programs and passes 68 CTests;
+eight pool-reader controls and a source mutation rejection pass. Original/native
+pictures, other globals, broader routes and physical Windows remain open. See
 [the current native handoff](docs/RE_HANDOFF.md).
 
 ## Build and run

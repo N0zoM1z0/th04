@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/demo_pool_wire.hpp",
+    "port64/verify_demo_pools.py",
     "port64/demo_state_trace.cpp",
     "port64/verify_demo_state.py",
     "port64/point_numbers.hpp",

@@ -1,6 +1,7 @@
 // Headless MAIN state trace. External assets and ordinary actor updates only.
 #include "main_state.hpp"
 #include "configuration.hpp"
+#include "demo_pool_wire.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -19,8 +20,14 @@ template<class T> void hex(const T& bytes) {
 }
 int main(int argc,char** argv) {
     try {
-        require(argc==2,"usage: th04-port64-demo-state-trace INPUT_DIRECTORY");
+        require(argc==2 || argc==3,"usage: th04-port64-demo-state-trace INPUT_DIRECTORY [POOL_STREAM]");
         const std::filesystem::path directory(argv[1]);
+        std::ofstream pools;
+        if(argc==3) {
+            require(!std::filesystem::exists(argv[2]),"pool output already exists");
+            pools.open(argv[2],std::ios::binary);require(bool(pools),"cannot open pool output");
+            pools.write("TH04NP2\n",8);
+        }
         for(unsigned number=1;number<=4;++number) {
             application::State application;
             const auto config=read(directory/"MIKO.CFG");
@@ -38,6 +45,10 @@ int main(int argc,char** argv) {
             const auto standard=read(directory/(stem+".STD"));
             stage::Background background(read(directory/(stem+".MAP")),standard);
             state.load_stage(standard);state.set_demo_replay(replay_bytes);
+            const stage::Program script_owner(standard);
+            if(argc==3)state.set_actor_observer([&](const gameplay::State& checkpoint) {
+                demo_wire::pools(pools,number,checkpoint,script_owner);
+            });
             const auto base_draws=application.process_random_draws();
             const auto base_samples=state.random_samples();
             for(unsigned frame=0;frame<=3996;++frame) {

@@ -9,12 +9,15 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1373 GNU products add point-number rings, lifecycle, event consumers
-and foreground drawing.830 complete original CPU/state/request controls and 494
-full indexed pictures agree on GNU/UBSan, plus two full 400-slot render cases.
-The69 GNU programs pass 68 CTests; two focused UBSan programs and five muted
-headless pictures per host pass. Five source mutants reject. See
-[point-number ownership and limits](port64/evidence/point-numbers.md).
+Current v1375 accepts all four complete native demos against original DOS on
+nine full actor/effect pools at 15,984 pre-score updates, retaining every inactive
+byte and translating only enemy script IDs to actual STD-relative offsets. The
+15,988 selected input/score/player/RNG/count boundaries still agree. A missing
+Midboss yellow bonus consumer is connected; item sprite/spare fields are owned.
+GNU builds70 programs/68 CTests; final optimized UBSan core/trace is cold-built.
+Eight reader controls, a source mutation rejection and frozen reader replay pass.
+Other globals and paired complete pictures/scanout remain open. See
+[complete demo-pool evidence](port64/evidence/demo.md).
 
 Earlier v1356 GNU Reimu A Normal/Turbo1, Lunatic/Turbo1, Lunatic/Turbo0 and Extra
 route/save/restart/timing receipts retain their own producer. Full natural
