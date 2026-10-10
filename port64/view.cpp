@@ -2377,6 +2377,7 @@ private:
     Frame frame_;
 };
 
+#include "natural_route_probe.inl"
 #include "sound_frontend_checks.inl"
 #include "sound_scene_frontend_checks.inl"
 #include "resident_sound_frontend_checks.inl"
@@ -2705,6 +2706,11 @@ void run_title(
     const CdgSheet labels(label_bytes);
     const CdgSheet cursors(cursor_bytes);
     const CdgSheet portraits(portrait_bytes);
+    if(!main_assets.natural_route_checks.empty()) {
+        require_view(!window && main_assets.muted && main_assets.full_startup,
+                     "natural routes require a headless muted full startup");
+        run_natural_route_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.natural_route_checks);return;
+    }
     if(!main_assets.startup_checks.empty()) {
         require_view(!window,"startup controls require a headless muted run");
         run_startup_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.startup_checks);return;

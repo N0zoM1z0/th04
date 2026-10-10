@@ -1,5 +1,81 @@
 # Stage Lifecycle evidence
 
+## Maintained ordinary route entry and real shot choice (v1351)
+
+`--natural-route-checks DIR` runs the maintained executable directly, with no
+rewritten frontend or private entry hook. It requires headless `--hdi`,
+`--font-bmp`, explicit `--save-dir` and `--mute`; it conflicts with `--title`
+and `--startup-checks`. Place `route-plan.txt` in the independent save directory:
+`rank character limit repaint continues extra [shot]`. Rank is 0..3,
+character/shot 0..1, Extra/repaint 0..1. A fresh setup fixture physically saves
+the requested rank with legal six lives/two bombs/Turbo; existing configuration
+is preserved. Extra reads physically earned score availability. All chosen
+movement/shot/Bomb keys, held startup refreshes and menu actions are recorded.
+`--render` in the public verifier paints startup as well as each route refresh.
+
+The first public source (`6fdd2b98...`) completes all four preceding ordinary
+shot A routes on GNU8, optimized UBSan and actual Windows. The complete recorded
+streams and physical files agree across hosts and with the v1350 baseline;
+three added captures record startup inputs, menu actions and the static menu.
+Each host's own Normal save admits Extra in a new process. `aggregate-v1.json`
+binds this closed 195-program/64-contract-per-host scope; no whole original
+route, physical input/clock/performance or all-rank/shot acceptance follows.
+
+A real Hard/Reimu B attempt exposes a route-control bug: right changes the
+character screen, while the shot screen accepts up/down. Actual MAIN enters A;
+the declared B validator rejects acceptance after 89,414 advances. Its files,
+physical saves and failure remain. The correction uses down and checks actual
+character/shot at entry. Isolated maintained-source GNU Hard B then completes
+89,114 advances, Ending, registration and fresh OP. It visits no Game Over,
+so the allowed Continue branch remains unexercised. The corrected source is
+published only after all old guarded readers close. Final 467-input source
+is `e3448a63...`; the new cold product vector is a separate generation.
+
+`verify_natural_routes.py` binds the ordinary public executable/source profiles
+and supports legacy or current capture references. The corrected GNU full
+route initially imports byte-attested unchanged core libraries; its private
+receipt's inherited `product_profile_sha256` label identifies the source
+profile, so use `shot-entry-linux-v2/receipt.json` and
+`fixed-public-source-bridge-v2.json` for explicit source/archive/compiler linkage.
+Cold final products now complete 195 programs and 64 contracts per host. The
+current GNU whole program is raw-equal to the successful full Hard B program;
+all three hosts agree on actual B entry, 16 ordinary advances, seven captures
+and physical files. `current-shot-bridge-v2.json` binds these current products.
+Final full four-route producers `linux-v3`, `ubsan-v3` and actual Windows v3
+all close with exit 0. `aggregate-v3.json` accepts the final-source corpus:
+270,193 route advances, 2,504 startup advances, 49 full capture files per host,
+all recorded inputs/telemetry/captures/physical files equal across hosts and
+the preceding public generation. Each host physically earns Normal saves and
+uses them to enter Extra in a new process. Real Continue remains unexercised.
+
+Eight GNU/UBSan entry negatives reject missing save destination, window/startup
+conflicts and invalid shot before output/save writes. An initial UBSan launch
+predates completion of the full product-profile writer; missing-file failure
+occurs before game entry/output creation. Writer closure precedes fresh v2
+execution. Both failures remain distinct from accepted receipts.
+The first Windows short-check path conversion also rejects before Windows
+entry; it attempted to convert a Linux HDI path before staging the copy. Its
+failure stays separate; fresh v2 uses the owned Windows path and passes.
+
+Recovery below `.analysis/port64/public-routes-v1351/` preserves two fully
+read-back archives for terminal static libraries and the closed Windows64
+contract stage. It retires 199 stage files/1,145 generated files, retaining
+2,942 protected hashes; net 571,826,176 allocated bytes reclaimed. Independent
+`retention-readback-v1.json` rechecks every archive member and protected file.
+A second pass retires 215 closed contract/short-shot stage files and 1,145
+generated files with two separate full-member recovery archives. Independent
+`retention-readback-v2.json` verifies 2,941 protected hashes and all 286 members;
+net reclamation is 586,735,616 allocated bytes. Both passes total
+1,158,561,792 bytes (1,104.8 MiB). Route programs, captures and saves remain.
+
+Both CIs pass, including root live Ghidra replay and Oracle mutation checks.
+`final-control-readback-v1.json` freshly reattests both 195-program vectors,
+all final sources/archive members, contracts, full-route/Hard B links and
+recovery archive hashes. Post-CI cleanup removes 1,012 public source-backed
+Python caches, checks all 1,012 sources and reclaims 16,347,136 allocated bytes
+net under root `.analysis/cleanup/public-entry-post-ci-caches-v1351.json`.
+Old producer snapshots stay immutable; all replay outputs must be fresh.
+
 ## Each-refresh routes and terminal host repaint (v1350)
 
 The four v1349 ordinary key-only prototypes now paint every route refresh on

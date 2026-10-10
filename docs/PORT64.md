@@ -1,5 +1,31 @@
 # TH04 native x64 port
 
+v1351 adds maintained `--natural-route-checks` without private frontend hooks.
+Four ordinary shot A routes pass on GNU8, optimized UBSan and actual Windows:
+270,193 route advances, 2,504 startup advances, 49 complete capture files
+and equal physical saves per host. Every startup/route refresh requests paint;
+each host's Normal-earned files admit a new Extra process. This is logical
+native consistency, not physical input/clock or an original whole-route claim.
+
+The new Hard/Reimu B check rejects an incorrect horizontal shot-selection key.
+The corrected owner uses down and asserts actual character/shot. Independent
+GNU corrected-source Hard B completes 89,114 advances, Ending, registration
+and fresh OP, with zero Game Over visits; it does not validate real Continue.
+The final source has 195 cold programs and 64 passing contracts per host.
+Current GNU is byte-identical to the tested Hard B program; all three hosts
+verify B entry/16 advances. Final-source four-route replays pass on all three
+hosts; all 49 files and physical saves equal the preceding public generation.
+Preserve both producer identities and all negative receipts. Final 467-input
+source manifest:
+`e3448a63fbc299f22c3bffd6e94f4ee3d73e67fa0607c25f49942b910f52b633`.
+
+Remaining: full startup across sound modes,
+remaining rank/shot/Continue routes, physical input/refresh/slowdown, dense
+Lunatic performance, audio-device output and current GUI delivery. All runs
+stay muted. Prior stock music closure and DOS acceptance remain separate.
+
+Historical v1350 frontier:
+
 v1350 fixes terminal window repaint admission: retain animation state before
 and after each refresh so the final static OP menu is presented. The old gate
 leaves 24,214 stale pixels; the fixed gate leaves zero and performs one final

@@ -1,16 +1,21 @@
-// Private exploration: unchanged ordinary FrontEnd, key inputs only.
+// Maintained headless route control: ordinary FrontEnd, key inputs only.
 // No target/game-state writes or actor-control hit suppression.
-void run_natural_route_probe(const PiImage& background,const CdgSheet& numerals,
+void run_natural_route_checks(const PiImage& background,const CdgSheet& numerals,
     const CdgSheet& labels,const CdgSheet& cursors,const PiImage& selection_background,
     const CdgSheet& portraits,const MainAssets& assets,const std::string& output) {
     namespace fs=std::filesystem;
-    unsigned rank=0,character=0,limit=150000,render_every=0,continues_allowed=0,extra=0;
+    unsigned rank=0,character=0,limit=150000,render_every=0,continues_allowed=0,extra=0,shot_type=0;
     std::ifstream plan(fs::path(assets.save_directory)/"route-plan.txt");
-    require_view(bool(plan>>rank>>character>>limit>>render_every>>continues_allowed),"route plan required");
-    plan>>extra;
-    require_view(extra<=1 && rank<4 && character<2 && limit<=500000 && assets.muted,"invalid route plan/mute");
+    require_view(bool(plan>>rank>>character>>limit>>render_every>>continues_allowed>>extra),"six-field route plan required");
+    plan>>std::ws;
+    if(plan.peek()!=std::char_traits<char>::eof()) {
+        require_view(bool(plan>>shot_type),"invalid optional shot type");plan>>std::ws;
+    }
+    require_view(plan.peek()==std::char_traits<char>::eof() && extra<=1 && rank<4 && character<2 &&
+                 shot_type<2 && render_every<=1 && limit>0 && limit<=500000 && assets.muted,"invalid route plan/mute");
     const fs::path out(output);require_view(!fs::exists(out),"fresh route output required");fs::create_directories(out);
     std::ofstream inputs(out/"inputs.txt",std::ios::binary),trace(out/"state.txt",std::ios::binary);
+    std::ofstream startup_inputs(out/"startup-inputs.txt",std::ios::binary),menu_inputs(out/"menu-inputs.txt",std::ios::binary);
     th04::portable::configuration::HostStore config(assets.save_directory);
     if(config.setup_required()) {
         config.complete_setup(2,1);auto options=config.options();options.rank=std::uint8_t(rank);
@@ -18,12 +23,18 @@ void run_natural_route_probe(const PiImage& background,const CdgSheet& numerals,
     }
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets,gameplay::Mode::ordinary);
     scene.enable_configuration();scene.enable_registration();
-    unsigned ticks=0;while(scene.startup_scene() && ticks++<3000)scene.advance(0,false,false);
+    unsigned ticks=0;while(scene.startup_scene() && ticks<3000) {
+        startup_inputs<<ticks++<<" 0 0\n";scene.advance(0,false,render_every!=0);
+    }
     require_view(ticks<3000 && !scene.setup_scene(),"natural route startup failed");
-    if(extra){require_view(scene.menu_state().extra_unlocked(),"Extra requires a physically earned normal clear");scene.input(menu::Input::down);}
-    scene.input(menu::Input::confirm);if(character)scene.input(menu::Input::right);
-    scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+    scene.repaint();write_bmp((out/"startup-menu.bmp").string(),scene.frame());
+    const auto press=[&](menu::Input key){menu_inputs<<unsigned(key)<<'\n';scene.input(key);};
+    if(extra){require_view(scene.menu_state().extra_unlocked(),"Extra requires a physically earned normal clear");press(menu::Input::down);}
+    press(menu::Input::confirm);if(character)press(menu::Input::right);
+    press(menu::Input::confirm);if(shot_type)press(menu::Input::down);press(menu::Input::confirm);
     require_view(scene.live_main() && scene.main_state().mode()==gameplay::Mode::ordinary,"ordinary MAIN entry required");
+    require_view(unsigned(scene.resident().playchar)==character && unsigned(scene.resident().shot_type)==shot_type,
+                 "route entered a different character or shot");
     unsigned last_stage=99,last_generation=99,last_go=0,continue_visits=0,ending_visits=0,registration_visits=0,extra_visits=0;
     bool was_go=false,was_ending=false,was_registration=false,was_extra=false,fresh_op=false;
     for(ticks=0;ticks<limit;++ticks) {

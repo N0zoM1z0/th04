@@ -30,6 +30,7 @@ struct MainAssets {
     th04::portable::op_startup::Assets startup;
     bool full_startup=false;
     std::string startup_checks;
+    std::string natural_route_checks;
     std::array<Bytes,4> replays;
     std::string save_directory;
     std::string configuration_checks;
