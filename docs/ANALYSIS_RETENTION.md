@@ -307,3 +307,35 @@ programs, frozen decoder/original references, tools and compiler/cache/link
 profiles remain. Native objects/static archives and source-backed Python caches
 are regenerable. Recovery roots/member hashes/restore commands are in
 `retention-before-final-v1.json`; future producers use fresh destinations.
+
+## Recorded startup pixels (v1347)
+
+Native `.analysis/port64/startup-pixels-v1347/` retains the original producer,
+three-host consumer receipts, source archives and full5,879-frame streams.
+`source-bridge-v1.json` separates461 verifier inputs from the unchanged
+459-input/195-program v1346 producer; no executable receipt is restamped.
+
+`retention-before-v1.json` and `retention-receipt-v1.json` verify710 protected
+hashes and reclaim503,971,840net allocated bytes (about480.6MiB). Two native
+captures compare every decompressed byte before sharing the unchanged reference
+gzip; timestamp-distinct gzip representations are losslessly replaced. All
+frame-content receipts remain unchanged. The .NET compressed stream remains
+separate as `windows-frames-v1.bin.gz`, preserving its receipt's compressed hash.
+The other27 owned Windows-stage files recover from
+`windows-stage-recovery-v1.tar.gz`; four retired mutant executables recover from
+`counterproofs-recovery-v1.tar.gz`, whose members were fully read back. Original
+references/assets, current programs, sources and build profiles remain live.
+Future replay uses fresh output/stage paths; retained hardlinks are immutable.
+
+A separate periodic cache journal at
+root `.analysis/review/startup-pixels-cache-cleanup-v1/` retires1,035
+source-backed CPython caches, reclaiming17,690,624allocated bytes and checking
+4,235 protected hashes, including all195 programs. This is measured cache
+retirement, not an additional end-to-end storage estimate across later CI runs.
+
+After both final CIs, root
+`.analysis/review/startup-pixels-cache-cleanup-final-v1/` retires1,034
+regenerated source-backed caches/17,657,856allocated bytes and verifies4,235
+protected hashes, including all195 current programs. The earlier periodic
+cache retirement and this regenerated-cache retirement are not added together
+as a net end-to-end reduction.

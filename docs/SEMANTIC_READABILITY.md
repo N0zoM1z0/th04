@@ -47,12 +47,13 @@ re-attested. See the notes and `config/evidence.csv` for the failed commands.
 
 ## Remaining work
 
-Primary native FM B6/B8 controls now have a three-host original-driver corpus
-(v1344). This narrows the remaining audio queue; it does not complete FM3
-extra tracks, partial slot ownership or special pitch. See native
-`docs/port64/evidence/pmd-musical-fm.md` and [port status](PORTING_STATUS.md).
+Primary native FM B6/B8 controls (v1344) and FM3 extra tracks, slot ownership,
+detunes and special pitch (v1345) have three-host original-driver corpora.
+OP logo/title control and muted frontend startup are joined under bounded
+controls (v1346). See native `docs/port64/evidence/pmd-fm3.md`,
+`docs/port64/evidence/op-startup.md` and [port status](PORTING_STATUS.md).
 
-- Resolve only ambiguities blocking remaining native FM3/PPS/ADPCM,
+- Resolve only ambiguities blocking remaining native PPS/external ADPCM,
   startup, host timing or complete-route owners. Registration, lifecycle,
   Extra, HUD and persistence already have bounded native integration controls;
   their natural complete-route acceptance remains separate.

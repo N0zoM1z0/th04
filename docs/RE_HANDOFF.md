@@ -45,14 +45,26 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1347 closes the recorded independent startup pixel corpus:15 cases/5,879
+complete two-page/raw-palette/DAC/shown-RGB frames agree on GNU8, optimized
+UBSan and actual Windows.94,400 original clipped SUPER executions and4,311
+palette/page checkpoints constrain the adapters. Four renderer variants keep
+all prior147,830control rows but fail pixels.461 verifier inputs have manifest
+`3af8cef1ce57711a8291548646902831a665cc910fb124dcd4f3af82ea27fb4c`;
+195 unchanged programs retain their459-input v1346 producer identity.
+Receipts: native `.analysis/port64/startup-pixels-v1347/`; ownership/replay:
+native `docs/port64/evidence/op-startup.md`. Full startup integration,
+PPS/external ADPCM, natural routes, host timing and new GUI remain open.
+All runs stay muted; no physical video/chip or DOS exactness is accepted.
+
 v1346 joins original logo/fireworks/title control and muted frontend startup.
 15 two-load cases/147,830 complete state/request rows agree on GNU8,
 optimized UBSan and actual Windows; four wrong source variants reject.
 Three driver profiles by11 settings and separate-process restarts produce336
 matching files perhost; final physical saves agree. A declared finite STD
 reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
-459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent
-startup pixels/full startup integration, PPS/external ADPCM, natural routes,
+459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent startup pixels are covered by v1347 above; full startup
+integration, PPS/external ADPCM, natural routes,
 host timing and new GUI delivery remain open. No DOS exactness is promoted.
 
 Current v1346 native source manifest:
@@ -129,7 +141,7 @@ natural survival remains separate. The last published native GUI remains the
 archived v1296 package. See [port status](PORTING_STATUS.md) and the native
 branch handoff for the current queue.
 
-Next finish independent startup pixels/integration and remaining audio ownership
+Next finish full startup integration and remaining audio ownership
 while muted, then full ordinary/Extra routes on
 Linux/Windows, saves/restarts, refresh/input/slowdown and dense Lunatic timing.
 MAIN's two deferred exactness cases do not gate native functionality.
