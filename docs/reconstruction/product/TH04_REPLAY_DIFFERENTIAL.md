@@ -1,6 +1,6 @@
 # Original DOS, reconstructed DOS and native fidelity
 
-Updated 2026-10-10 for agent handoff. The user's primary requested comparison
+Updated 2026-10-11 for agent handoff. The user's primary requested comparison
 is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
@@ -27,8 +27,9 @@ are distinct candidates. Start parity work with the ordinary DOS candidate.
 Existing original/native CPU probes cover bounded functions and guarded
 services. Actual GNU native Reimu A Normal, Lunatic and Extra routes have
 physical save/restart evidence; Turbo0 has scoped dense slowdown acceptance.
-The v1365 paired DOS demos cover complete consumed-input/score/RNG extents:
-Demo2/3/4 pass, Demo1 fails. Full actor/presentation/process parity and complete
+The v1366 paired DOS demos cover complete consumed-input/score/RNG extents:
+all four pass after restoring Stage4 midboss's initialized toggle. The v1365
+Demo1 failure remains retained. Full actor/presentation/process parity and complete
 original/native gameplay-pixel comparison remain open.
 
 Historical authored-function acceptance is OP93/93, MAIN493/495,
@@ -274,6 +275,102 @@ reports host refresh snapshots rather than a proved shared original-DOS
 calculation boundary. Extend observations deliberately; do not label the
 88k-row native route logs as original replay parity.
 
+### v1366 Stage4 midboss stack initialization
+
+Target-observed MAIN DGROUP(2134):185E is initialized DATA with value1.
+The bounded stack helper MAIN13FF:1037..112D (file16827..1691D)
+increments this byte at offset1072, then tests bit0 at1093. These segment
+offsets include the group's10h alignment seam; file addresses are authoritative.
+The existing v149 exact scaffold aliases `byte_22B9E db 1` to the same symbol.
+Its exact C++ helper does not own the standalone state declaration.
+
+The ordinary v1365 candidate declares `_midboss4_aim_toggle` as BSS in
+`src/main/midboss/state.asm`. Both that declaration and `m4_update.cpp` have
+byte-identical source hashes to their archived20261003 producer records:
+`e88b5f12a9d30154fd839e33ebf432d7a7faa180a635cd807925768447b06fb6` and
+`1319d8397de0af2cb9c34c12f2b683e7225d8cc3b8c7b829d6a98f10368e4c0c`.
+The independent static state checker rejects that old MAP's BSS ownership.
+
+The extended snapshot reader observes original/candidate toggles2/1 at3330,
+3331 and3332, with equal midboss phase frames40/41/42. The template angles are
+4E/3F at3330 and46/3F at3331..3332. Pattern-stack increments the toggle before
+choosing its fixed or aimed branch. Original and candidate IATAN2 instruction
+shapes and all256 table bytes agree in this bounded diagnostic. The wrong
+standalone initializer explains the branch reversal; full post-fix replay is
+the independent causal gate.
+
+The fresh ordinary MAIN cold build uses193 C++ roots,155 ASM,8 state and4
+sprite producers with zero reused C++ roots and no compile/assemble/link
+failures. IRQ/vector and bullet-dispatch audits pass. MAIN remains199,455 bytes,
+SHA-256 `161325264e9e6dd4eb65c6718120c283ce000803c06250326c2d61f246c7c5ab`;
+MAP SHA-256 `2ee564c3e935869a9b94002ca05b30e2337c695a787a2aa6bada83bc03a61b36`.
+Static readback confirms initialized DATA at candidate DGROUP(23FB):1060
+contains1. Its cold receipt is
+`.analysis/reconstruction/probes/product-20261010-160320-2282c931-main/receipt.json`.
+Only MAIN is rebuilt; the independent ordinary package
+`.analysis/build/th04-demo-angle-v1366/` explicitly retains the old unchanged
+OP/MAINE/ZUN producer identities. The old ordinary/invincible and Windows
+packages remain available. Freeze runtime consumers separately from the cold
+producer's conservative all-probe fingerprint; diagnostic-script additions do
+not restamp the producer. Final consumers are archived in
+`demo-angle-v1366/consumer-source/`.
+
+Complete candidate capture `dos-demo-v1366-candidate/receipt.json` and independent
+`dos-demo-v1366-comparison.json` live under `.analysis/runtime/candidates/`.
+Comparison against the retained complete v1365 original passes all four demos,
+each3996 updates plus terminal3996:15,984 gameplay rows and4 terminal rows.
+Consumed input/raw shift, score/pending counters, process LCG, all ring bytes,
+cursor, helper counts/kinds/masks/divisors and sampled player/resident state
+agree at all15,988 boundaries. This accepts that recorded schema and reset,
+not whole actor pools, presentation, process teardown, cross-emulator or x64
+parity. The failed v1365 comparison remains independently addressable.
+
+The fix moves only this byte to `_DATA db 1` and adds `_DATA` to this owner's
+DGROUP declaration. The historical exact replay continues to use its own
+initialized scaffold; no accepted exact extent includes this standalone ASM
+owner. The native x64 `midboss4::State` already starts `aim_toggle=1`; this
+does not establish full native parity or require a native source change.
+
+Private static/bridge/readback receipts are in
+`.analysis/reconstruction/probes/demo-angle-v1366/`. The fresh original GDB
+capture at3282/3299/3315/3331 retains a byte-identical prefix of the complete
+v1365 ordinary original trace. It observes toggle1 through the preceding pattern
+and toggle2 at the first stack spawn3315. The diagnostic still cannot accept
+complete gameplay or effect parity.
+
+The paired v1366 diagnostic at the same four stage-frame writes passes full
+440*26-byte bullet-pool comparison, with zero differences at every snapshot.
+Midboss toggle1/1/2/2, phase frames65/9/25/41, template angles00/00/4E/46 and
+graze59 match. Original/candidate pools are DGROUP5A22/4974, with grazeBCBC/79E9.
+`dos-demo-v1366-stack-readback.json` independently validates both diagnostic
+prefixes against their complete parents and every dump hash. This specifically
+removes the old3315-spawn/3331-angle frontier; earliest unrelated actor differences
+and unsampled effects remain open.
+
+Final CI passes337 public tests, private target/calibration checks and live
+Ghidra attestation/mutation controls; `git diff --check` passes. The new static
+state Oracle has five synthetic mutation controls, including rejection of BSS
+even when the backing file contains1. Historical exact states remain unchanged.
+Terminal immutable-capture deduplication plus514 public Python-cache retirements
+reclaim141,602,816 allocated B before journal overhead; independent final
+readback preserves source/products/inputs/full traces/dumps. The new11MiB cold
+product cache stays usable. No native worktree write or Windows GUI/audio test
+occurs in this batch.
+
+```sh
+python3 scripts/probes/check_th04_midboss4_initial_state.py \
+  --build-dir .analysis/build/th04-demo-angle-v1366 \
+  --map .analysis/reconstruction/probes/product-20261010-160320-2282c931-main/source/obj/main-native.map \
+  --output PRIVATE-NEW-STATIC.json
+python3 scripts/probes/inspect_th04_demo_snapshots.py \
+  --original .analysis/runtime/candidates/dos-demo-v1366-original-stack \
+  --candidate .analysis/runtime/candidates/dos-demo-v1366-candidate-stack \
+  --original-full .analysis/runtime/candidates/dos-demo-v1365-original \
+  --candidate-full .analysis/runtime/candidates/dos-demo-v1366-candidate \
+  --map .analysis/reconstruction/probes/product-20261010-160320-2282c931-main/source/obj/main-native.map \
+  --frames 3282 3299 3315 3331 --output PRIVATE-NEW-STACK.json
+```
+
 ## Reuse and negative results
 
 Read-only TH08 reference:
@@ -323,7 +420,7 @@ python3 scripts/ci.py
 git diff --check
 ```
 
-The next bounded task is the Demo1 actor-angle frontier before3343, using the
-existing paired capture and snapshot reader. Then expand to ordinary
+The Demo1 score/RNG failure is repaired by the Stage4 initialized-state owner.
+Next expand complete actor/effect observations at proved shared boundaries, and ordinary
 movement/Shot/Bomb/hit/death/Continue and complete routes. Commit/push
 root and native changes separately with `gpt-6.1-sol: ...` English messages.

@@ -12,6 +12,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
 | [probes/capture_th04_dos_demos.py](../probes/capture_th04_dos_demos.py) | command | Capture ordinary bundled DOS demos after replay input and at the terminal decision. |
+| [probes/check_th04_midboss4_initial_state.py](../probes/check_th04_midboss4_initial_state.py) | command | Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN. |
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |

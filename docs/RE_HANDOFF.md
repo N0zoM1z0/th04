@@ -5,23 +5,24 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-The v1365 DOS demo batch has complete original/ordinary-candidate captures:
-Demo2/3/4 pass the sampled input/score/RNG boundary; Demo1 first differs at3343.
-Read-only actor snapshots show earlier bullet-angle differences and one extra
-candidate graze. Preserve the failed comparison; no product source or accepted
-exact state changes. The separate native worktree remains untouched.
-Private emulator builds/captures use one CPU, nice15 and bounded memory;
-generated object/archive retirement readback verifies524 absent files and five
-protected hashes,814,161,920 allocated B freed. Runtime/source receipts remain.
-Final root CI passes, including live Ghidra replay/mutations;16 focused controls
-pass. Failed-startup copies and512 source-backed caches additionally retire
-51,986,432 allocated B with independent protected-hash readback. No games remain
-running; no native C++ rebuild or Windows GUI/audio launch occurs.
+The v1366 ordinary DOS batch repairs Demo1: all four bundled demos now pass
+all 3997 sampled input/score/RNG boundaries. Target-observed Stage4 midboss
+DGROUP:185E starts at 1, while standalone source incorrectly owned it as BSS.
+Move that byte to DATA; a fresh cold MAIN build and independent complete replay
+confirm the repair. Four paired diagnostic snapshots also match all 440 bullet
+records plus midboss toggle/angle/frame and graze. Retain the failed v1365 pair.
+No historical exact state changes; the native worktree remains untouched and
+its corresponding State already initializes the toggle to 1.
+Serial one-CPU/nice15 muted runs complete; final CI passes all337 public tests
+plus live target/Ghidra mutation controls. Immutable capture deduplication and
+514 source-backed cache retirements reclaim141,602,816 allocated B before journal
+overhead, with independent source/protected-hash readback. Current cold build
+objects remain reusable; no games remain running.
 Current commit identities are obtained with `git log -1` in each worktree.
 
-Updated 2026-10-10. Current focus: Demo1 bullet generation before score/RNG
-divergence, followed by separate x64 state/effect fidelity. DOS demo state is retained. This handoff
-indexes verified state; detailed experiments belong in focused notes and CSV
+Updated 2026-10-11. Current focus: complete DOS actor/presentation/process
+comparison, followed by separate x64 state/effect fidelity. DOS demo state is
+retained. This handoff indexes verified state; detailed experiments belong in focused notes and CSV
 ledgers. The next behavioral validation focus is original DOS versus reconstructed
 DOS, with native x64 fidelity checked separately. Reopen semantic work for a
 reproduced differential or a concrete portable owner, not a general rename pass.
@@ -43,18 +44,19 @@ native fixes or this runtime batch. Targets remain
 
 ## DOS verification frontier
 
-- v1365 original/ordinary DOS naturally rotates all four demos through GAME.BAT.
-  Each has3996 update boundaries plus terminal condition3996; Demo2/3/4 match
-  all3997 sampled rows. Demo1 agrees through3342, then score/pending delta,
-  ring cursor and helper events diverge at3343. Candidate adds two
-  `randring2_next16_and(31)` calls from `sparks_add_random` (MAIN156A:03E6
-  return). LCG, consumed input and sampled player lifecycle still agree there.
-  Diagnostic snapshots at the earlier stage-frame write show graze59/60 and
-  48 differing live bullets. At snapshot3331, newly generated slots392..415
-  already have equal origins but angles5A/46 versus61/3F; slots416..439 differ
-  by snapshot3330. This is not the earliest complete actor divergence.
-  Original MAIN load10FC / DGROUP3230; candidate load10FC / DGROUP34F7.
-  See [paired demo evidence and replay commands](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+- v1366 original/ordinary DOS naturally rotates all four demos through GAME.BAT.
+  Each has 3996 updates plus terminal condition3996; all 15,988 boundaries match
+  consumed input/raw shift, score/deltas, LCG/ring/cursor/helper counts/arguments
+  and sampled player/resident state. New cold MAIN SHA-256 `16132526…`, MAP
+  `2ee564c3…`; package `.analysis/build/th04-demo-angle-v1366/` retains old
+  unchanged OP/MAINE/ZUN. Original MAIN load10FC/DGROUP3230; candidate
+  load10FC/DGROUP34F7. Full readback retains v1365's failed comparison separately.
+  The bounded cause is initialized midboss aim toggle1 versus old BSS0, reversing
+  the stack pattern's fixed/aimed order. At stage-frame writes3282/3299/3315/3331,
+  all 440*26 bullet bytes, toggle1/1/2/2, template angle and graze59 agree.
+  Original/candidate pools are DGROUP5A22/4974. These four snapshots are scoped
+  diagnostics, not a complete actor/effects trace. See
+  [paired evidence and replay commands](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 - The user reports complete Normal routes/Endings/save and earlier invincible
   Easy/Lunatic runs. These are manual Windows observations.
 - Recorded ordinary controls cover startup, OP options/Music Room/config
@@ -152,7 +154,7 @@ TH08 is a read-only workflow reference, not TH04 evidence. Its active worktree
 is dirty; do not edit it, run its builds, change its database or launch its game.
 Complete trace/end/input-consumption guards and first-divergence diagnostics
 are the useful parts to adapt. Complete DOS demo captures now exist, with a
-specific failed Demo1 frontier. Full actor/presentation/process parity and
+repaired Demo1 frontier. Full actor/presentation/process parity and
 native RNG seed/ring/call-count observations remain open.
 
 ## Windows DOS demo package

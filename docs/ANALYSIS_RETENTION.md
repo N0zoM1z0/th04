@@ -1,5 +1,28 @@
 # Private build and analysis retention
 
+v1366 shares byte-identical immutable HDI/font/demo copies across seven
+terminal v1365/v1366 DOS captures. All49 files retain their complete hashes;
+unique allocated storage falls303,779,840 to193,323,008 B, reclaiming
+110,456,832 B before journal overhead. Only identical copies become hard links.
+Treat those completed capture directories as immutable; new executions require
+fresh paths. Original inputs, executed products, maps, complete traces,
+diagnostic DGROUP dumps and failed receipts remain.
+The full journal and independent hash/storage readback are
+`.analysis/reconstruction/probes/demo-angle-v1366/immutable-copies-before.json`
+and `immutable-copies-readback.json`. This is storage deduplication, not new
+runtime evidence or permission to reuse an old execution image.
+
+After both new captures finish, `final-copies-before.json` and
+`final-copies-readback.json` extend the same immutable sharing to63 files and
+reclaim another22,540,288 allocated B. After final CI,514 regenerable public
+`scripts/`/`tests/` Python caches retire8,605,696 allocated B; every corresponding
+source and26 protected input/product/trace/receipt hashes recheck unchanged.
+The cache journals are `source-caches-before.json`/`source-caches-readback.json`
+under the same v1366 probe directory. `final-retention-independent.json`
+independently rechecks all three journals. Combined reclamation is141,602,816
+allocated B (about135MiB) before journal overhead. The new cold MAIN's11MiB
+source/object/link cache remains available for validated incremental builds.
+
 v1364 handoff cleanup retires1,019 regenerable Python caches under root/native
 `scripts/`, `tests/` and native `port64/`, after both CIs finish. Net16,543,744
 allocated B (about15.8MiB) reclaimed after the retention journal; final small

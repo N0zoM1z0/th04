@@ -66,6 +66,12 @@ def bullet(data: bytes) -> dict:
                 angle=data[17], spawn_flag=data[18], move_flag=data[19])
 
 
+def stack_state(data: bytes, aim: int, template: int, phase_frame: int) -> dict:
+    """State controlling the Stage4 midboss's fixed/aimed stack alternation."""
+    return dict(aim_toggle=data[aim], template_angle=data[template+11],
+                phase_frame=int.from_bytes(data[phase_frame:phase_frame+2], 'little'))
+
+
 def inspect(original: Path, candidate: Path, original_full: Path, candidate_full: Path,
             map_path: Path, frames: list[int]) -> dict:
     a, ad, ah = read_snapshots(original, original_full, frames)
@@ -83,6 +89,10 @@ def inspect(original: Path, candidate: Path, original_full: Path, candidate_full
     require(symbols['_bullets'][0] == symbols['_stage_graze'][0]
             == dgroup,
             'actor symbols outside DGROUP')
+    stack_symbols = ('_midboss4_aim_toggle', '_bullet_template', '_midboss_phase_frame')
+    require(all(symbols[name][0] == dgroup for name in stack_symbols),
+            'midboss stack symbols outside DGROUP')
+    stack_offsets = [symbols[name][1] for name in stack_symbols]
     rows = []
     for frame in frames:
         differences = []
@@ -94,6 +104,8 @@ def inspect(original: Path, candidate: Path, original_full: Path, candidate_full
                                         changed_offsets=[j for j in range(26) if x[j] != y[j]]))
         rows.append(dict(frame=frame, original_graze=int.from_bytes(ad[frame][0xbcbc:0xbcbe], 'little'),
                          candidate_graze=int.from_bytes(bd[frame][graze:graze+2], 'little'),
+                         original_stack=stack_state(ad[frame], 0x185e, 0x53a2, 0x53c6),
+                         candidate_stack=stack_state(bd[frame], *stack_offsets),
                          differences=differences))
     return dict(diagnostic_readback_passed=True, accepts_demo_parity=False,
                 boundary='stage_frame write, before mod counters and score update',

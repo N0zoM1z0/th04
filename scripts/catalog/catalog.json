@@ -427,6 +427,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/check_th04_midboss4_initial_state.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/check_th04_renderer_default_objects.py",
     "category": "source-review",
     "role": "command",

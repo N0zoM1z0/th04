@@ -32,6 +32,7 @@ OVERRIDES = {
     'capture_th04_dos_demos.py': ('runtime', 'Capture ordinary bundled DOS demos after replay input and at the terminal decision.'),
     'compare_th04_dos_demos.py': ('runtime', 'Reject incomplete/reset-mismatched demo traces and report the first logical divergence.'),
     'inspect_th04_demo_snapshots.py': ('runtime', 'Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences.'),
+    'check_th04_midboss4_initial_state.py': ('runtime', 'Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN.'),
     'th04_demo_snapshot.gdb': ('runtime', 'Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots.'),
     'prune_analysis.py': ('tracking', 'Review private retention; default dry run, explicit apply after archive verification.'),
     'product_input_fingerprint.py': ('build', 'Compute validated product/cache input identities.'),

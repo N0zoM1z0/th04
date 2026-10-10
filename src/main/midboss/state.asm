@@ -6,6 +6,14 @@
 _TEXT segment word public 'CODE' use16
 _TEXT ends
 
+_DATA segment word public 'DATA' use16
+public _midboss4_aim_toggle
+; Observed MAIN DGROUP:185E starts at 1. Pattern-stack increments this byte
+; before testing its parity: the first stack uses fixed angles, the next aims.
+; BSS zero initialization reverses that order (Demo1 first score/RNG miss3343).
+_midboss4_aim_toggle db 1
+_DATA ends
+
 _BSS segment word public 'BSS' use16
 public _midboss, _midboss_pos, _midboss_frames_until, _midboss_hp
 public _midboss_sprite, _midboss_phase, _midboss_phase_frame
@@ -50,12 +58,11 @@ _midboss3_mirror  db ?
 _midboss3_pattern db ?
 
 public _midboss4_pattern, _midboss4_patterns_done
-public _midboss4_unknown_state, _midboss4_aim_toggle
+public _midboss4_unknown_state
 _midboss4_pattern        db ?
 _midboss4_patterns_done  db ?
 _midboss4_unknown_state   db ?
-_midboss4_aim_toggle      db ?
 _BSS ends
 
-DGROUP group _BSS
+DGROUP group _DATA, _BSS
 end
