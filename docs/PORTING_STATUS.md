@@ -1,5 +1,20 @@
 # Semantic and x64 port status
 
+v1346 joins original logo/fireworks/title control and muted frontend startup.
+15 two-load cases/147,830 complete state/request rows agree on GNU8,
+optimized UBSan and actual Windows; four wrong source variants reject.
+Three driver profiles by11 settings and separate-process restarts produce336
+matching files perhost; final physical saves agree. A declared finite STD
+reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
+459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent
+startup pixels/full startup integration, PPS/external ADPCM, natural routes,
+host timing and new GUI delivery remain open. No DOS exactness is promoted.
+
+Current v1346 native source manifest:
+`b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
+Receipts: native `.analysis/port64/startup-v1346/`; ownership and replay:
+native `docs/port64/evidence/op-startup.md` on `port/modern-64`.
+
 v1345 recovers FM3 C6 subtracks, CF slot/voice ownership, C7/C8 detunes,
 special pitch and shared mode on all three drivers. FM26 aliases D-F and
 restores all four shared tracks after effects;86/B2 append three tracks.
@@ -12,7 +27,7 @@ muted frontends; Windows regresses resident/three frontend profiles.
 PPS/external ADPCM, full startup, natural routes and host timing remain.
 No new GUI, physical chip accuracy or historical exactness is accepted.
 
-Current native source manifest: `1689400f6154f6ef377d41357a802a1d6a75129e19449068c81a431e26ef50b0`.
+v1345 native source manifest: `1689400f6154f6ef377d41357a802a1d6a75129e19449068c81a431e26ef50b0`.
 Receipts: native `.analysis/port64/fm3-recovery-v1345/`; ownership, distinct
 case accounting, failures and replay: native `docs/port64/evidence/pmd-fm3.md`.
 Older producer/consumer identities remain unchanged.

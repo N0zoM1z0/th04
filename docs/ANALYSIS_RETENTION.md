@@ -296,3 +296,14 @@ record member hashes, archive roots and recovery. Restore relative paths before
 old candidate/Windows/frontend replay. Root scripts/tests Python caches are
 separately retired in `.analysis/review/semantic-port-review-lwruzqw5/cleanup-v1345.json`;
 all tracked root file bytes were unchanged at that cleanup boundary.
+
+Native OP startup v1346 archives the owned Windows stage, developmental frontend
+outputs and four source variants with full member readback under native
+`.analysis/port64/startup-v1346/recovery/`. The persisted inventory retires
+2575 files, shares 886 immutable full-byte-identical captures, verifies
+11 archives and 2121 protected hashes, and reclaims
+1447223296 net allocated bytes. All 459 maintained inputs/195 current
+programs, frozen decoder/original references, tools and compiler/cache/link
+profiles remain. Native objects/static archives and source-backed Python caches
+are regenerable. Recovery roots/member hashes/restore commands are in
+`retention-before-final-v1.json`; future producers use fresh destinations.
