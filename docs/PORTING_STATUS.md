@@ -1,5 +1,10 @@
 # Semantic and x64 port status
 
+The user is actively using the Windows host. Do not launch Windows GUI
+tests, activate foreground windows or inject host keys. Keep every launch
+muted; use headless checks or private Linux Xvfb instead. Actual Windows
+window/input acceptance stays open under this constraint.
+
 Updated 2026-10-10. The full native goal remains active on `port/modern-64`, in
 `.analysis/worktrees/port-modern-64/`. Root `main` keeps the standalone DOS
 product and indexes native findings. A root `git push` does not commit or push
@@ -19,6 +24,31 @@ Target files pass local identity/format checks but remain
 No native observation promotes a historical exact unit.
 
 ## Native progress
+
+v1356 adds private-Xvfb-only startup/Normal route verifiers and opt-in
+read-only live key advice in trace v3. Original window input still comes
+only from OS keys. GNU/UBSan v1355 products pass all 27 driver/BGM/SE
+startup combinations each (32,147 total refreshes), zero audio opens,
+and unchanged physical CFG. The Windows batch retains 19 completed
+cases, not full matrix acceptance; no further host GUI runs are allowed.
+Independent four-axis OS controls prove 1=Up, 2=Down, 4=Left, 8=Right.
+Two earlier candidate scripts used the wrong map. Corrected fixed and
+reference-position candidates also reach Game Over; all failures remain
+failed. Live-state ordinary-key full Normal validation is now in progress
+under private Xvfb and is not accepted until its physical save/restart
+checks close. Current receipts: native `.analysis/port64/full-window-v1356/`.
+
+Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
+identities. GNU/UBSan pass 67 contracts each plus manual held-input
+regressions with advice disabled. Windows is cross-compiled only; its
+new execution remains unverified. 104/105 GNU/MinGW core objects equal
+v1355; only trace serialization changes. Both control-plane CIs pass
+(root includes live Ghidra replay/mutations). Historical acceptance
+and target provenance are unchanged.
+
+The extracted policy preserves the complete 88,934-tick logical Normal
+Reimu A input/state/startup/menu/Ending streams and physical saves.
+This does not accept the pending window route or uninstrumented timing.
 
 - Registration waits/fades/held keys/render, ten-section score storage,
   failures and fresh OP are integrated under independent bounded controls.

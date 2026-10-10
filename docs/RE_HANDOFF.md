@@ -1,5 +1,10 @@
 # TH04 current handoff
 
+The user is actively using the Windows host. Do not launch Windows GUI
+tests, activate foreground windows or inject host keys. Keep every launch
+muted; use headless checks or private Linux Xvfb instead. Actual Windows
+window/input acceptance stays open under this constraint.
+
 Both final CIs pass, including root live Ghidra replay/mutations. Current
 host-window/recovery receipts retain distinct producer/consumer identities.
 All launches remain muted.
@@ -48,6 +53,33 @@ See [reusable hardware contracts and limits](PC98_HARDWARE_REUSE.md) for each
 repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
+
+v1356 adds private-Xvfb-only startup/Normal route verifiers and opt-in
+read-only live key advice in trace v3. Original window input still comes
+only from OS keys. GNU/UBSan v1355 products pass all 27 driver/BGM/SE
+startup combinations each (32,147 total refreshes), zero audio opens,
+and unchanged physical CFG. The Windows batch retains 19 completed
+cases, not full matrix acceptance; no further host GUI runs are allowed.
+Independent four-axis OS controls prove 1=Up, 2=Down, 4=Left, 8=Right.
+Two earlier candidate scripts used the wrong map. Corrected fixed and
+reference-position candidates also reach Game Over; all failures remain
+failed. Live-state ordinary-key full Normal validation is now in progress
+under private Xvfb and is not accepted until its physical save/restart
+checks close. Current receipts: native `.analysis/port64/full-window-v1356/`.
+Specific live private-Xvfb controller/game handles are recorded in
+`active-window-job-v5.json`; re-poll them before deciding completion or restart.
+
+Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
+identities. GNU/UBSan pass 67 contracts each plus manual held-input
+regressions with advice disabled. Windows is cross-compiled only; its
+new execution remains unverified. 104/105 GNU/MinGW core objects equal
+v1355; only trace serialization changes. Both control-plane CIs pass
+(root includes live Ghidra replay/mutations). Historical acceptance
+and target provenance are unchanged.
+
+The extracted policy preserves the complete 88,934-tick logical Normal
+Reimu A input/state/startup/menu/Ending streams and physical saves.
+This does not accept the pending window route or uninstrumented timing.
 
 v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary
 X11 Continue/save/restart verifier. 204 AMD64 programs build cold from 481

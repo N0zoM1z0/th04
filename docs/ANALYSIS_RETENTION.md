@@ -1,5 +1,30 @@
 # Private build and analysis retention
 
+Post-final-CI pruning retires 1,018 source-backed public Python caches,
+net 16,633,856 allocated bytes after the persisted journal and full source
+hash readback. Root receipts: `.analysis/cleanup/full-window-post-ci-caches-v1356*.json`.
+
+v1356 also archives and retires 1,190 terminal build intermediates after
+complete member/hash readback, net 398,848,000 allocated bytes. A second
+full archive retires 201 completed contract program materializations,
+net 393,736,192 allocated bytes. All 204 current program bytes and
+identities remain recoverable: three game programs stay live; restore
+`contract-programs-recovery-v2.tar.gz` into `.analysis/product-v1356/`
+before running CTest. The complete 485-input producer source vector,
+CMake/link/compiler metadata, preceding 204 programs, failed recipes,
+physical files and active private-Xvfb route remain intact. Independent
+replay checks 3,254 hashes; package readback confirms 21 DOS / 13 native
+v1354 installed files unchanged. Both CIs pass. Final receipt overhead
+is excluded. Recovery journals: native `.analysis/port64/full-window-v1356/`.
+
+v1356 retires only two terminal owned Windows startup staging directories.
+All 155 files are preserved in a complete recovery archive and every member
+was read back before deletion. Net logical bytes reclaimed: 36,333,457
+(archive retained; final receipt overhead excluded). Original inputs,
+current/preceding programs and user saves are untouched. Native receipts:
+`.analysis/port64/full-window-v1356/windows-gui-stop-cleanup-v1.json` and
+`windows-startup-stage-recovery-v1.tar.gz`. No new build was needed for that Windows stage cleanup.
+
 v1355 scoped cleanup keeps all 204 programs, producer/consumer source archives,
 compiler/CMake metadata, traces, physical files, captures and failed attempts.
 It retires 1190 regenerable build files / 70 completed contract-stage files after
