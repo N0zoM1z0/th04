@@ -1,5 +1,21 @@
 # TH04 native 64-bit bring-up
 
+v1347 closes the independent recorded startup pixel corpus. Fifteen two-load
+original cases produce5,879 complete two-page/raw-palette/DAC/shown-RGB frames;
+GNU8, optimized UBSan and actual Windows agree.94,400 clipped SUPER executions
+and4,311 original palette/page checkpoints constrain the explicit adapters.
+Four renderer mutants pass all prior147,830state/request rows but fail pixels.
+Only verifiers changed:461 inputs have manifest
+`3af8cef1ce57711a8291548646902831a665cc910fb124dcd4f3af82ea27fb4c`;
+195 unchanged programs retain their459-input v1346 producer
+`b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
+Receipts: `.analysis/port64/startup-pixels-v1347/`;
+[ownership and replay](../docs/port64/evidence/op-startup.md).
+Full startup integration, PPS/external ADPCM, complete natural routes, host
+timing/performance and a current GUI remain open. All runs stay muted;
+no physical video/chip or historical exactness is accepted.
+
+
 v1346 joins original logo/fireworks/title control and muted frontend startup.
 15 two-load cases/147,830 complete state/request rows agree on GNU8,
 optimized UBSan and actual Windows; four wrong source variants reject.

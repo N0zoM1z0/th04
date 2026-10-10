@@ -2,11 +2,80 @@
 
 v1346 implements the one-time ZUNsoft logo/fireworks and the OP title sequence.
 This closes the bounded control corpus and muted frontend ownership below.
-Independent full startup pixels, physical timing/audio, natural complete routes
-and a newly delivered GUI remain open. Historical DOS acceptance is unchanged.
+v1347 independently checks every pixel in the recorded corpus below. Full
+startup integration, physical timing/audio, natural complete routes and a newly
+delivered GUI remain open. Historical DOS acceptance is unchanged.
 Targets retain candidate-local-attested provenance.
 
-## Original execution and adapters
+## Independent startup pixels (v1347)
+
+The producer re-executes all fifteen callers at loads1000/2000 and preserves
+v1346's complete147,830rows after removing its additional raw-palette reads.
+It executes unchanged OP0000:2B66..2F0B clipped SUPER, including the shared
+2B60..2B65 early-return tail. Original code/data reset before each draw retains
+self-modifying kernel ownership. Pattern staging, clip bounds and GRCG planar
+shadow are explicit adapters. Each of23,600 distinct stencils runs at both
+loads on zero and patterned sixteen-color backgrounds:94,400 kernel calls.
+Fully clipped sprites may correctly perform zero writes.
+
+Every refresh, including initial and completion frames, captures both640x400
+indexed pages,48 raw-RGB bytes,48 four-bit DAC bytes and768,000 shown-RGB
+bytes. All5,879frames/7,525,684,384uncompressed bytes agree with GNU8, optimized
+UBSan and actual Windows. Complete stream SHA256:
+`920d29c62071875a47351063d179ec8820ff007e0558dac3aa334b7d22b94ac6`.
+The reference separately agrees with4,311 original palette/access/shown
+checkpoints. Additional reads observe the original45-component clear and BFNT
+raw palette publication; native palette formulas do not produce those reads.
+
+PI decoding uses the separately frozen v1346 decoder. Title slices are640x108
+and overwrite only the band beginning atY38, retaining the page's remaining
+white area. PI/header lifetime, page copy/clear/fill/background, BFNT staging,
+refresh/input/measure and sound calls remain declared adapters. Four-bit DAC
+expansion is the existing emulator-source corroborated display mapping;
+this corpus is not physical video, chip accuracy or complete original OP.
+Actual Windows redirects the binary BaseStream directly to gzip, asserts
+AMD64 PE32+ and hashes the full decompressed stream with its exact length.
+There is no CRT text normalization in the pixel comparison.
+
+Four source-only renderer variants all preserve the prior147,830 control
+rows, but fail pixels: self-page copy atframe0/offset0; clearing the page
+before a108-row slice atframe69/offset256000; a one-pixel sprite shift at
+frame352/offset370099; and RGB from the accessed page atframe69/offset586793.
+Each rejection has a complete mismatching frame, rather than a crash verdict.
+The first variant compile failed due to a missing LCG translation unit; its
+log remains diagnostic, and the corrected explicit-input builds are retained.
+
+Only two public verifiers and their manifest entries changed.461 maintained
+verification inputs have manifest
+`3af8cef1ce57711a8291548646902831a665cc910fb124dcd4f3af82ea27fb4c`.
+All C++/headers/CMake inputs and195 executable hashes remain unchanged; their
+v1346 producer stays459inputs/
+`b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
+`source-bridge-v1.json` attests this distinction. Neither producer nor consumer
+receipts are restamped. Both repository CIs pass; no DOS unit is promoted.
+
+Private scope: `.analysis/port64/startup-pixels-v1347/`. The successful frozen
+producer is named `original-dev-v1` and retains that recorded path. Consumers
+are `consumer-linux-v1`, `consumer-ubsan-v1`, and `windows-receipt-v1.json`;
+`aggregate-receipt-v1.json` closes identities. Source archives, complete
+compressed streams and failed/negative observations stay private.
+
+```sh
+python3 port64/verify_op_startup_pixels.py --target TARGET --decoded-dir DECODED \
+  --hdi HDI --decoder FROZEN_DECODER --control-reference V1346_ORIGINAL \
+  --output FRESH_ORIGINAL
+python3 port64/verify_op_startup_pixels.py --reference ORIGINAL \
+  --product-profile V1346_PRODUCTS --exe STARTUP_CONTRACT --output FRESH_CONSUMER
+powershell.exe -NoProfile -ExecutionPolicy Bypass \
+  -File port64/verify_startup_pixels_windows.ps1 -PlanFile PLAN
+```
+
+The Windows plan binds binary/fixtures/assets/script hashes, original receipt,
+separate verifier/product manifests, expected complete stream SHA256 and frame
+count/size. Regenerate path fields in a fresh owned stage before replay; never
+reuse the retired writer path. All runs stay muted without an audio backend.
+
+## Original execution and adapters (v1346)
 
 The producer executes the unchanged decoded OP at load segments 1000 and 2000:
 
@@ -105,8 +174,7 @@ experimental programs; replay always uses fresh destinations.
 
 ## Remaining gates
 
-Implement independent original clipped SUPER/GRCG startup pixel comparisons,
-then broaden setup/fresh OP failure controls and original complete startup
+The recorded independent clipped SUPER/GRCG pixel corpus is closed; broaden setup/fresh OP failure controls and original complete startup
 integration. Full natural Normal/Extra routes, audio usage/remaining owners,
 host refresh/input/slowdown/Lunatic timing and GUI publication remain. This
 batch does not resolve PPS/external ADPCM or prove unused ownership from the

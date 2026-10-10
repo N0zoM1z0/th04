@@ -50,6 +50,8 @@ PORT_FILES = (
     "port64/op_startup.cpp",
     "port64/op_startup_checks.cpp",
     "port64/verify_op_startup.py",
+    "port64/verify_op_startup_pixels.py",
+    "port64/verify_startup_pixels_windows.ps1",
     "port64/verify_pmd_fm3.py",
     "port64/pmd_rhythm_checks.cpp",
     "port64/verify_pmd_rhythm.py",

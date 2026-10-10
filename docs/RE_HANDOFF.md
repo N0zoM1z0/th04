@@ -6,14 +6,29 @@ Linux/Windows routes and timing/performance validation. Native code remains on
 
 ## Verified current frontier
 
+v1347 closes the independent recorded startup pixel corpus. Fifteen two-load
+original cases produce5,879 complete two-page/raw-palette/DAC/shown-RGB frames;
+GNU8, optimized UBSan and actual Windows agree.94,400 clipped SUPER executions
+and4,311 original palette/page checkpoints constrain the explicit adapters.
+Four renderer mutants pass all prior147,830state/request rows but fail pixels.
+Only verifiers changed:461 inputs have manifest
+`3af8cef1ce57711a8291548646902831a665cc910fb124dcd4f3af82ea27fb4c`;
+195 unchanged programs retain their459-input v1346 producer
+`b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
+Receipts: `.analysis/port64/startup-pixels-v1347/`;
+[ownership and replay](port64/evidence/op-startup.md).
+Full startup integration, PPS/external ADPCM, complete natural routes, host
+timing/performance and a current GUI remain open. All runs stay muted;
+no physical video/chip or historical exactness is accepted.
+
 v1346 joins original logo/fireworks/title control and muted frontend startup.
 15 two-load cases/147,830 complete state/request rows agree on GNU8,
 optimized UBSan and actual Windows; four wrong source variants reject.
 Three driver profiles by11 settings and separate-process restarts produce336
 matching files perhost; final physical saves agree. A declared finite STD
 reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
-459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent
-startup pixels/full startup integration, PPS/external ADPCM, natural routes,
+459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent startup pixels are now covered by v1347 above; full startup
+integration, PPS/external ADPCM, natural routes,
 host timing and new GUI delivery remain open. No DOS exactness is promoted.
 
 Current v1346 source manifest:
@@ -102,7 +117,7 @@ old claimed two-character frontend coverage.
 ## Remaining owners, in order
 
 1. Recover the remaining PPS/external ADPCM owners and complete original
-   logo/startup audio and finish. Resident frontend lifetime/capability/measure
+   startup integration. Resident frontend lifetime/capability/measure
    waits now have bounded muted controls; carry them through complete routes.
    OP/MAIN/MAINE scene requests, process lifetimes and muted beeper are joined
    under bounded controls; absent drivers supply no fictional measures.
