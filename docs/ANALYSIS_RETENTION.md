@@ -1,5 +1,25 @@
 # Private build and analysis retention
 
+v1355 scoped cleanup keeps all 204 programs, producer/consumer source archives,
+compiler/CMake metadata, traces, physical files, captures and failed attempts.
+It retires 1190 regenerable build files / 70 completed contract-stage files after
+two full recovery archives / 144 members read back, net 596836352 allocated bytes.
+An independent replay verifies 2847 protected hashes and all 1260 absent files.
+The three earlier desktop stages retire 20 files, net 35110912 bytes; the terminal
+GUI stage and archived failed consumer materialization retire 494 files,
+net 22450176 bytes. Immutable capture sharing keeps 324 complete BMP/PCM paths
+and hashes, net 210509824 bytes. Counts subtract their journals/archives but
+exclude final receipt size. No original input, accepted program or save deleted.
+Post-CI pruning retires 1020 source-backed Python caches, net 16822272 allocated
+bytes; root `.analysis/cleanup/host-route-post-ci-caches-v1355.json` records
+source/hash readback. Both CIs pass, including root live Ghidra replay/mutations.
+
+Restore from native `.analysis/port64/host-route-v1355/` recovery archives and
+member journals; retain distinct 481-input producer and consumer vectors.
+
+## Previous v1354 recovery
+
+
 v1354 retains all 204 current programs, complete producer/consumer source
 archives, compiler/CMake metadata, Linux window and fake-audio captures,
 physical saves, controller failures, pinned inputs and preceding products.

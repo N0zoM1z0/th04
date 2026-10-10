@@ -34,23 +34,37 @@ No native observation promotes a historical exact unit.
   corpus. CPU waveform comparisons share a pinned chip engine. SDL/WinMM output
   is implemented with a bounded queue and explicit fake API verification.
   Every launch remains muted; no physical audio device was opened.
-- v1354 fixes SDL keypad Enter held input and resync losing slowdown. GNU8,
-  optimized UBSan and actual Windows pass 67 contracts each; 204 programs build
-  cold from 480 producer inputs. Preceding 104 GNU/MinGW core objects are raw-equal;
-  GNU/UBSan retain all 195 fake-audio frontend files against v1353.
-- Actual SDL/X11 window trials pass on GNU/UBSan under private Xvfb: ordinary
-  Marisa B/Lunatic entry, Enter/keypad Enter, movement/Shift, shots/release and
-  focus gating. Windows foreground acquisition fails before any injected key;
-  Windows real input is not accepted by its passing headless contracts.
 
-Cold producer:
-`e2974686f86f22d2a2a7caaf736b664dd33aac3eae4703aeefbf93a7e9e6ac75`.
-Final verifier recipe:
-`04ec21c37c2039c549b4130b8432693940c9bf53109e1765174204f8dfe4c4c7`.
-Only two host verifier scripts changed; all compiled inputs are identical.
-Keep producer and consumer identities separate. Focused native evidence lives
-in `docs/port64/evidence/{host-window,stage-lifecycle,op-startup,pmd-musical-fm,audio-output}.md`;
-private current receipts: `.analysis/port64/host-window-v1354/` in that worktree.
+v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary
+X11 Continue/save/restart verifier. 204 AMD64 programs build cold from 481
+producer inputs; GNU8, optimized UBSan and actual Windows pass 67 contracts each.
+Among 105 GNU/MinGW core objects, only trace serialization changes; 104 remain
+raw-equal to v1354. GNU/UBSan's 195 fake-audio frontend files per host also equal
+v1354. No audio backend/device opens.
+
+Eight real SDL/X11 processes under private Xvfb pass two stationary Lunatic
+Reimu A Continue/Quit/registration/fresh OP cases and two physical-file Scores
+restarts per GNU8/UBSan. MAIN freezes at frames 432/630 during Game Over and
+resumes at 433; Continue resets score/power/lives/credit. Missing-score/unranked
+and declared zero-score/ranked leaderboard fixtures are distinct. Ranked
+writer-close/rename snapshots contain CONTINUE 500 units with credit 0 while
+MAIN resets to credit 1/score 0. Nine other decoded partitions preserve checksum
+and payload; encoding keys legitimately change. Restarts preserve file hashes.
+All launches are muted. These are bounded OS-input trials, not complete clear
+routes, original whole-route equivalence, physical devices or dense timing.
+
+Producer manifest: `cce4f0fd683c5166f798303e2ebfb83a4fbbe8baef1ee56a862c024c25dbe3be`.
+Final verifier: `d027a9701ce8c6168c408bd18a93b72806e60079e87cbf39b7ab8d0ef9267f5c`.
+Only the route verifier differs; every compiled input is raw-identical.
+Keep the first missing-verdict-key and key-header comparator failures failed.
+Current evidence/recovery: native `.analysis/port64/host-route-v1355/`;
+replay/limits: native `docs/port64/evidence/host-window.md`.
+
+Actual Windows still rejects before SendInput. PID/class selection now excludes
+an early ConsoleWindowClass handle. Same-session WinSta0/Default diagnostics
+observe foreground-lock timeout 2147483647 ms; three owned-window activation
+attempts fail. No desktop/global policy/input-queue workaround was used.
+Passing Windows contracts do not accept Windows held input.
 
 ## TODO, in order
 
@@ -80,16 +94,21 @@ saves and Normal/3-life/2-Bomb defaults preserve all 21 preceding DOS/package
 files. Source archives/profiles accompany the binaries. Windows input automation
 remains rejected; physical audio, dense timing and full-goal acceptance remain.
 
-Periodic cleanup keeps inputs, tools, source/program vectors, physical saves and
-failures. This batch retires 1,190 regenerable build files and 225 terminal
-owned Windows-stage files after three full recovery archives/299 members are
-read back, reporting 628,129,792 allocated bytes net reclaimed. A separate
-pre-build pass prunes 12 source-backed Python caches (278,528 allocated bytes).
-Immutable capture sharing retains 324 BMP/PCM paths/hashes and reclaims
-210,509,824 allocated bytes net after its journal. Post-CI cache pruning retires
-957 source-backed files with 15,585,280 allocated bytes net after its journal.
-Receipt overhead is excluded. Both final CIs pass, including root live Ghidra
-replay/mutations. Follow [retention](ANALYSIS_RETENTION.md); never blanket-delete `.analysis/`.
+v1355 scoped cleanup keeps all 204 programs, producer/consumer source archives,
+compiler/CMake metadata, traces, physical files, captures and failed attempts.
+It retires 1190 regenerable build files / 70 completed contract-stage files after
+two full recovery archives / 144 members read back, net 596836352 allocated bytes.
+An independent replay verifies 2847 protected hashes and all 1260 absent files.
+The three earlier desktop stages retire 20 files, net 35110912 bytes; the terminal
+GUI stage and archived failed consumer materialization retire 494 files,
+net 22450176 bytes. Immutable capture sharing keeps 324 complete BMP/PCM paths
+and hashes, net 210509824 bytes. Counts subtract their journals/archives but
+exclude final receipt size. No original input, accepted program or save deleted.
+Post-CI pruning retires 1020 source-backed Python caches, net 16822272 allocated
+bytes; root `.analysis/cleanup/host-route-post-ci-caches-v1355.json` records
+source/hash readback. Both CIs pass, including root live Ghidra replay/mutations.
+
+Follow [retention](ANALYSIS_RETENTION.md); never blanket-delete `.analysis/`.
 
 Detailed historical batch evidence remains in ledgers, subject notes and Git.
 Use [handoff](RE_HANDOFF.md), [semantic contracts](SEMANTIC_READABILITY.md) and
