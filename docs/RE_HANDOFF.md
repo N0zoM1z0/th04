@@ -70,11 +70,14 @@ Instrumented CPU/presentation/advice/trace cost remains separate from acceptance
 of uninstrumented performance. Five consumer mutants reject wrong deadlines,
 wrong row versions, missing termination/stage and checksum-valid lost admission.
 
-Extra v1 reaches actual Game Over at MAIN frame 25,595; keep its failed verdict.
-Persistent private-Xvfb XTest keys pass independent server keymap/release and
-request-cost checks; the new Extra trial is pending until physical full-name,
-clear-file and separate restart checks close. Do not infer the failure's cause
-from the controller benchmark. Current receipts: native
+GNU Extra v2 completes no-Continue Reimu A with persistent ordinary XTest
+keys: 30,388 route refreshes plus 790 independent Scores restart refreshes.
+The physical renamed rank4 file contains all eight A gaiji, credit0 and clear
+flag; nine other decoded partitions (including earned Normal admission) and CFG
+are unchanged. Final MAIN frame27,832 has lives5/misses3. This is GNU private-
+Xvfb acceptance; other Extra characters/shots/hosts and Windows remain open.
+Extra v1's Game Over at frame25,595 stays failed. Server keymap/request-cost
+controls do not prove a causal explanation for that failure. Current receipts: native
 `.analysis/port64/window-route-v1357/`; GNU Normal is retained under
 `.analysis/port64/full-window-v1356/linux-normal-adaptive-v5/`.
 
@@ -83,8 +86,8 @@ refreshes) on v1355 programs. Windows retains 19 cases only. No Windows GUI,
 foreground or host-key retries while the user uses the host. Earlier wrong-map
 and corrected fixed/path Game Over failures remain failed. Live advice is const
 output; OS input still owns the keys. No game/clock/score/life injection.
-Specific owned private-Xvfb jobs are recorded in v1357
-`active-window-jobs-v1.json`; re-poll before deciding completion or restart.
+All owned v1357 jobs are terminal; `batch-terminal-v2.json` supersedes the
+earlier live-job snapshot. Do not restart passed/failed jobs from stale handles.
 
 Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
 identities. GNU/UBSan pass 67 contracts each plus manual held-input
@@ -130,7 +133,7 @@ attempts fail. No desktop/global policy/input-queue workaround was used.
 Passing Windows contracts do not accept Windows held input.
 
 Remaining: actual Windows input/startup, other ranks/shots/Endings/Continue,
-complete Extra windows, physical refresh/slowdown2 and dense Lunatic performance.
+other Extra characters/shots/hosts, physical refresh/slowdown2 and dense Lunatic performance.
 Physical audio remains untested under the user's mute instruction. Existing
 v1354 experimental package/user DOS images and saves remain untouched.
 

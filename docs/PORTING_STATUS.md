@@ -41,11 +41,14 @@ Instrumented CPU/presentation/advice/trace cost remains separate from acceptance
 of uninstrumented performance. Five consumer mutants reject wrong deadlines,
 wrong row versions, missing termination/stage and checksum-valid lost admission.
 
-Extra v1 reaches actual Game Over at MAIN frame 25,595; keep its failed verdict.
-Persistent private-Xvfb XTest keys pass independent server keymap/release and
-request-cost checks; the new Extra trial is pending until physical full-name,
-clear-file and separate restart checks close. Do not infer the failure's cause
-from the controller benchmark. Current receipts: native
+GNU Extra v2 completes no-Continue Reimu A with persistent ordinary XTest
+keys: 30,388 route refreshes plus 790 independent Scores restart refreshes.
+The physical renamed rank4 file contains all eight A gaiji, credit0 and clear
+flag; nine other decoded partitions (including earned Normal admission) and CFG
+are unchanged. Final MAIN frame27,832 has lives5/misses3. This is GNU private-
+Xvfb acceptance; other Extra characters/shots/hosts and Windows remain open.
+Extra v1's Game Over at frame25,595 stays failed. Server keymap/request-cost
+controls do not prove a causal explanation for that failure. Current receipts: native
 `.analysis/port64/window-route-v1357/`; GNU Normal is retained under
 `.analysis/port64/full-window-v1356/linux-normal-adaptive-v5/`.
 
