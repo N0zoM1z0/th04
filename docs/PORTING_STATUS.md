@@ -186,5 +186,7 @@ Use [handoff](RE_HANDOFF.md), [semantic contracts](SEMANTIC_READABILITY.md) and
 Native v1374 additionally accepts four complete original/native MAIN demos on
 23 selected before-update/terminal fields and exact RNG counts (15,988 boundaries
 per GNU/UBSan host). The Stage 1 midboss now receives the fractional scroll
-accumulator. Complete native actor/effect pools, paired pictures, scanout and
-ordinary Boss/death/process routes remain open. See the current handoff.
+accumulator. Native v1375 also accepts all nine complete actor/effect pools at 15,984
+pre-score updates after restoring Midboss yellow bonus popups. Paired pictures,
+other globals, scanout and ordinary Boss/death/process routes remain open.
+See the current handoff.

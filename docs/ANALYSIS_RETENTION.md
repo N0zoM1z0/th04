@@ -1,5 +1,27 @@
 # Private build and analysis retention
 
+## v1375 complete native actor/effect pool evidence
+
+All jobs are terminal. Current GNU70/focused cold UBSan1 products, build objects,
+500-source producer/reader snapshots and original references remain available.
+The failed8-pool initial producer and missing-Midboss source/program control are
+retained independently. Old DOS/Windows/natural-route products are unchanged.
+
+Lossless retention reclaims2038489088 allocated file B (about1.90 GiB) before
+journals: five complete native pool streams, ten complete raw text streams and
+1042 source-backed public Python caches. Complete restored file readback and
+all15984 pool frame headers/EOF pass for each stream. All8904 prior protected
+hashes,500 current source pins,71 current programs and the unchanged DOS product
+fingerprint pass. Current build objects and all failures/commands remain.
+
+Journals/recovery are in native `.analysis/port64/native-pools-v1375/`.
+Run `python3 .analysis/port64/native-pools-v1375/verify_retention.py` from the native
+worktree to restore/read every stream into disposable files and check protected
+producers. `--restore` recreates the ten old text paths with exact modes/nsmtimes;
+different existing bytes are refused. Pool archives retain their complete raw
+SHA/size and can be restored into fresh paths. Public replay creates fresh files;
+do not reuse terminal output directories or rerun old cleanup controllers.
+
 ## v1374 complete native Demo state evidence
 
 All jobs are terminal. Current GNU 70/focused UBSan 3 products and cold build

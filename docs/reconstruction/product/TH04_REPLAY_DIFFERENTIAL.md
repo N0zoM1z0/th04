@@ -1266,3 +1266,66 @@ and 8904 protected hashes pass; current source pins and DOS fingerprint agree.
 Sources, failures, current build objects and old Windows/DOS products remain.
 Use native `.analysis/port64/native-demo-v1374/restore_streams.py` with no options
 to verify all recoveries, or `--restore` before unchanged old raw-path readers.
+
+### v1375 complete native demo actor/effect pools
+
+The new read-only actor observer runs immediately after native frame increment,
+before periodic performance and score/extend. The original DGROUP stream seam
+also follows actors, rendering, input reset and sound update but precedes modulo
+counters and score. Observer-enabled stdout must remain byte-identical to a
+separate complete ordinary selected-state run with actual CFG/scores/assets.
+The independent DOS reader validates all original stream/ordinary/consumer/
+target/process/load/CPU/page-map identities and complete gzip EOF/CRC.
+
+The first eight-pool GNU pair accepts shots, enemies, sparks, bullets, custom
+entities, circles and gather circles. Only pointnums differ, first at demo1/2/3/4
+frames3379/3709/1952/3059, for618/288/2045/938 frames. Full captures retain this
+failure. Original 13A9:64DE..6547 zeroes DGROUP988, consumes both position RNG
+calls and calls yellow_add0300 with1280. Native Midboss actors already emit those
+positions/rewards and update score/RNG, but MAIN's sink ignored the point event.
+Adding the yellow consumer at that synchronous boundary repairs the full pool.
+The item owner additionally retains unused/unknown bytes and sprite WORD16;
+original items_add13A9:9FA8..A03D clears byte15/pullWORD18 and selects patterns44..50
+from DGROUP2134:2322 while preserving byte1 and previous coordinates.
+
+Final GNU/optimized UBSan compare all15984 updates on all nine complete pools
+(24952 bytes/update) with zero differences. All inactive/padding fields remain;
+enemy native IDs become actual STD-relative offsets, never masked pointers.
+Complete15988 selected scalar/terminal fields and exact RNG counts also pass.
+Removing only the Midboss consumer reproduces all four first pool differences;
+selected scalar state and the other eight pools still pass. Eight public reader
+controls reject inactive-tail/pointer/missing/duplicate/truncated/wrong-demo rows.
+Frozen current native+DOS reader dependencies replay the same full acceptance.
+
+GNU cold baseline plus bounded MAIN/item/trace rebuild yields70 programs/68 CTests.
+Final UBSan core/trace is cold-built, one program; no full UBSan CTest claim.
+Current producer has500 files, manifest656a05d9…. No DOS source/product or
+historical exactness change. Other globals, original/native pictures/scanout,
+ordinary Boss/death/process and Windows remain open. Older component and natural
+route producers are retained with their own identities.
+
+From the native worktree, with absolute DOS_ROOT pointing to the main worktree:
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
+  python3 port64/verify_demo_pools.py --dos-root "$DOS_ROOT" \
+  --original "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1365-original" \
+  --original-dgroup "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1367-original-dgroup-v2" \
+  --original-consumer "$DOS_ROOT/.analysis/reconstruction/probes/demo-dgroup-v1367/consumer-source-v2/scripts/probes" \
+  --exe .analysis/port64/native-pools-v1375/build-gnu/th04-port64-demo-state-trace \
+  --output-dir FRESH
+```
+
+`ubsan-nine/` pins the sanitized program. `initial-pair/` preserves the rejected
+8-pool/v1 reader and its producer; `mutant-pair/` preserves the new9-pool control.
+`frozen-source/` retains500 native files plus actually imported DOS dependencies.
+Every complete native pool stream is compressed and fully restored/read back
+before its expanded copy is removed. Original streams and consumer sources stay
+immutable. All runtime claims remain scenario-specific and locally attested.
+
+Final CI passes main441/live Ghidra and native329/target checks (unavailable
+private native gates skip). Retention reclaims2038489088 allocated B before
+journals, preserving/restoring five full pool streams and ten text streams,
+retiring1042 source-backed caches.8904 prior protected hashes,500 current source
+pins,71 programs and DOS fingerprint pass. Current builds and failures stay;
+verify recovery with native native-pools-v1375/verify_retention.py. All jobs terminal.

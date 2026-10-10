@@ -42,9 +42,10 @@ Normal, Lunatic and Extra clears with registration, physical saves and fresh
 OP/restart checks. Native point-number rings now join pickup/zap events and
 foreground drawing, with original CPU/state/full-pixel component checks on
 GNU and UBSan. Four complete native demos also agree with the original on
-compared input, score, player and RNG state plus draw counts. Full
-original-DOS/native actor-pool and effect
-parity, broader routes, and physical Windows input/audio acceptance remain open.
+compared input, score, player and RNG state plus draw counts. They now also
+agree on all nine complete actor/effect pools at every update after restoring
+Midboss yellow bonus popups. Original/native pictures, broader routes, and
+physical Windows input/audio acceptance remain open.
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
 

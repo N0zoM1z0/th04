@@ -5,6 +5,44 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
+v1375 (native `1aa96f9`, pushed) accepts nine complete actor/effect pools across all four original/native
+bundled demos: 15984 pre-score updates, 24952 record bytes per update, GNU and
+optimized UBSan with zero differences. All inactive/spare bytes remain compared;
+enemy script IDs translate to the actual STD-relative offsets rather than being
+masked. The existing 15988 input/score/player/RNG/count boundaries still agree.
+
+The complete-pool reader catches a missing Midboss bonus consumer: MAIN emits
+1280-point yellow events but native previously only recorded them. Original
+MAIN_032_TEXT13A9:64DE..6547 calls yellow_add0300 and clears the multiplier latch.
+Consuming those events closes first pool differences in demos1/2/3/4 at frames
+3379/3709/1952/3059. Removing the call again rejects those same four boundaries
+while every selected scalar and every other complete pool still passes.
+The item owner now retains its spare bytes and selected sprite WORD; original
+13A9:9FA8..A03D and DGROUP2134:2322 attest initialization and patterns44..50.
+
+Current source pins500 files, manifest656a05d9…. GNU cold baseline plus the
+bounded MAIN/item/trace rebuild produces70 programs/68 passing CTests. Final
+UBSan core/trace is cold-built (one program, no full UBSan CTest claim). Eight
+public pool-reader controls pass. Frozen native and imported DOS reader sources
+replay every complete stream. All launches are headless/muted; Windows and old
+DOS products are unchanged. Public replay is port64/verify_demo_pools.py.
+
+Other native globals, original/native pictures and scanout, ordinary Boss/death/
+process routes and physical Windows remain open. Historical exactness is
+unchanged. Older route/pixel/component receipts retain their own producer IDs.
+
+v1375 final CI passes main441/live Ghidra and native329/target checks; unavailable
+native private tool/Ghidra gates skip. Every job is terminal. Lossless cleanup
+reclaims2038489088 allocated B (about1.90 GiB) before journals: five complete pool
+streams, ten text streams and1042 source-backed caches. Full restored readback,
+8904 prior protected hashes,500 current source pins and71 current program hashes
+pass; DOS fingerprint is unchanged. Current builds are native
+.analysis/port64/native-pools-v1375/build-gnu and build-ubsan. Verify restorations
+with native .analysis/port64/native-pools-v1375/verify_retention.py; --restore
+recreates old raw text paths with exact modes/nsmtimes.
+
+## Retained v1374 selected-state evidence
+
 v1374 (native `45c33fc`, pushed) pairs ordinary headless MAIN with the complete
 original DOS demo reference. It fixes the Stage 1 midboss emergence caller: MAIN_032_TEXT
 13A9:065C..0669 consumes fractional BYTE DGROUP2134:4276, whereas native supplied
@@ -22,8 +60,8 @@ Core/contracts are cold-built; final config-loading trace adapters are rebuilt
 separately, retaining the initial products/receipts. Current manifest 498 is
 ff0b3bde…; all source/imported-reader snapshots are read back.
 
-Complete native actor/effect pools, original/native pictures and scanout,
-ordinary Boss/death/process routes and physical Windows acceptance remain open.
+At v1374 complete native pools were still open; v1375 above closes the nine
+bundled-demo pool records. Pictures, scanout and broader routes remain open.
 DOS v1372 source/products and historical exactness are unchanged. Native public
 replay is port64/verify_demo_state.py; see the focused differential note.
 
