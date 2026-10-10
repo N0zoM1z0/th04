@@ -54,6 +54,24 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1359 accepts GNU natural Lunatic ReimuA on private Xvfb: six stages/noContinue,
+88,927 route+790 Scores restart refreshes; section3 real mask1 at physical
+rename/final file, registration Esc/freshOP, unchanged CFG/nineother partitions.
+Final MAIN frame13,633 has lives2/misses11, score5,179,856. Natural density max440;
+>=400 has369 samples/update P95=5.07ms, but Turbo1 yields no dense slowdown2.
+Observer/shared-host timing is separate from uninstrumented performance.
+
+Ten actual muted storage/setup processes pass6,305 refreshes/20 physical renames:
+WMclose unfinished setup preserves rankFF/noSCR; ordinary setup keys precede
+score creation; corrupt CFG/first-last SCR recover; valid tails/ranges/metadata
+and two physical restarts pass. GNU scope only; Windows GUI/input stays closed.
+
+All jobs are terminal. Current independent receipts/frozen490-input consumer
+0cd137fd: native `.analysis/port64/host-storage-v1359/`. Actual Lunatic trace:
+`.analysis/port64/lunatic-window-v1358/gnu-lunatic-reimu-a-v1/`. Compiled485 inputs
+remain unchanged; no new build/Windows/audio opens. Source-backed final caches
+retire961 files/net15,634,432 allocated B; [retention](ANALYSIS_RETENTION.md).
+
 v1358 corrects the v1357 UBSan all-clear/admission claim. Unplayed flag0x19
 also has bit0; original native OP normalizes masks>3 to0. The old bit-only
 comparator accepted that sentinel incorrectly. GNU Normal stores real mask1;
@@ -69,9 +87,9 @@ Five corrected checksum-valid mask/snapshot mutants reject, including0x19 with
 bit0. Both retained GNU positive routes pass the stronger mask<4+shot-bit gate.
 The six-stage verifier now supports ranks1..3/characters0..1/shots0..1 through
 ordinary OP selection and optional persistent private XTest keys. Easy's five-
-stage ending gate stays separate. Fresh natural Lunatic ReimuA is running on
-unchanged v1356 GNU; no clear/timing acceptance until its own terminal/save/
-restart verdict. Dense rank3 reductions separate>=320/>=400 samples and exclude
+stage ending gate stays separate. The v1358 natural Lunatic ReimuA trial
+subsequently completed on unchanged v1356 GNU; the v1359 terminal verdict above
+supersedes its pending state. Dense rank3 reductions separate>=320/>=400 and exclude
 Normal/Extra/dialog rows; full observer cost remains outside uninstrumented
 performance acceptance. Current receipts: native `.analysis/port64/lunatic-window-v1358/`.
 
@@ -98,9 +116,9 @@ refreshes) on v1355 programs. Windows retains 19 cases only. No Windows GUI,
 foreground or host-key retries while the user uses the host. Earlier wrong-map
 and corrected fixed/path Game Over failures remain failed. Live advice is const
 output; OS input still owns the keys. No game/clock/score/life injection.
-All v1357 jobs are terminal. v1358 `active-lunatic-job-v1.json` records the
-new private-Xvfb job; re-poll its owned PID before completion/restart. Do not
-reuse stale v1357 handles.
+All v1357/v1358 jobs are terminal. v1358 active-job receipts retain historical
+PID/start/source identity; v1359 records the terminal readback. Do not reuse
+stale handles or restart a completed route.
 
 Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
 identities. GNU/UBSan pass 67 contracts each plus manual held-input
