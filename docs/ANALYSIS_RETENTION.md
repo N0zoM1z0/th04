@@ -1,5 +1,24 @@
 # Private build and analysis retention
 
+Both final CIs pass, including root live Ghidra replay/mutations. Final readback
+checks 8,640 retained hashes. Post-CI cleanup separately retires 1,014 public
+source-backed Python caches and preserves their source hashes, reclaiming
+16,433,152 allocated bytes net. Cache journal/receipt:
+root `.analysis/cleanup/audio-output-post-ci-caches-v1353{,-before}.json`.
+
+The v1353 host-output batch retains current/preceding AMD64 programs, frozen
+sources/compiler/link metadata, complete fake-transport frontend/Continue
+captures, physical final saves and both rejected attempts. Below native
+`.analysis/port64/audio-output-v1353/`, three fully read-back archives recover
+closed first-candidate intermediates, both owned Windows stages and final
+static link inputs. Two scoped passes report 1,494,827,008 allocated bytes
+reclaimed: 970 first-candidate intermediates, 1,177 final regenerable files,
+872 stage files and 350 full-byte-identical BMP/PCM paths shared immutably.
+Independent readback verifies all 1,915 archive members and the respective
+2,320/8,636 protected hashes. Source protection is scoped to the cleanup
+interval; future authorized edits retain prior producer snapshots. Final CI
+cache cleanup and its overhead are accounted separately.
+
 `.analysis/` is ignored private state. A historical evidence path is provenance,
 not a guarantee that its expanded directory remains present. Durable commands,
 hashes, conclusions and negative results belong in checked-in notes/ledgers.

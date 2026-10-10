@@ -1,5 +1,11 @@
 # TH04 current handoff
 
+Both final CIs pass, including root live Ghidra replay/mutations. Final readback
+checks 8,640 retained hashes. Post-CI cleanup separately retires 1,014 public
+source-backed Python caches and preserves their source hashes, reclaiming
+16,433,152 allocated bytes net. Cache journal/receipt:
+root `.analysis/cleanup/audio-output-post-ci-caches-v1353{,-before}.json`.
+
 Updated 2026-10-10. Current focus: resumed x64 implementation on its separate
 branch; DOS demo state is retained. This handoff
 indexes verified state; detailed experiments belong in focused notes and CSV
@@ -45,61 +51,45 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-v1352 closes ordinary Continue on GNU8, optimized UBSan and actual Windows.
-The maintained route plan accepts optional `pilot=1`: stationary held shot,
-with ordinary dialog/menu keys and no actor, hit or life-state writes. Physical
-Lunatic configuration uses lives option 1/Bombs 0. Each of two scenarios runs
-1,551 advances: real deaths, first Game Over/Continue, resumed gameplay, second
-Game Over/Esc, registration and fresh OP. Sixteen complete capture files and
-physical saves agree per host. Original Game Over at two loads also reproduces
-58,424 component requests from the recorded key sequences; unrecorded state
-fields remain explicit adapters, not an original whole-route comparison.
+v1353 implements Linux/Windows host audio transport while every verification
+stays muted and never opens a physical backend/device. Default output is muted;
+interactive `--audio` is opt-in, and `--mute` dominates in either argument order.
+One lazy application device accepts final mixed stereo or nonresident mono;
+buffering/failure never clock the game. Production backend API tests use only
+explicit fake tables, and frontend PCM uses explicit fake factories.
 
-The first score is 520 internal units (5,200 displayed points), below the
-default leaderboard minimum of 1,000 units. Continue correctly makes no ranked
-write. A separately declared
-zero-score selected-section fixture accepts and physically saves `CONTINUE`
-with the old 520 units before reset. GNU/UBSan observe complete writer-close
-snapshots; Windows final files and all recorded states/captures agree. MAIN
-frame 432 stays frozen for 189 refreshes, then resumes at 433 once. Second
-Game Over freezes frame 630 for 222 refreshes before the quit route.
+All 201 current AMD64 programs build cold from 475 maintained inputs; GNU8,
+optimized UBSan and actual Windows pass 66 contracts each. Three profiles by
+nine BGM/SE settings preserve 195 complete frontend files per host against the
+preceding GNU producer. Two ordinary Continue regressions retain 16 captures
+and physical final saves per host. The preceding 103 GNU and 103 MinGW core
+objects are raw-equal. Three wrong transport variants/four early CLI controls
+reject. Current source manifest:
+`95ce37f3cfd2a17ec3547e38f5aae71226b2616623e0a79b6cada1772f66ec36`.
+The failed MinGW test typedef and mutable-save Windows plan remain recorded;
+corrected fresh runs pass. Native replay: `docs/port64/evidence/audio-output.md`;
+private receipts: `.analysis/port64/audio-output-v1353/`.
 
-All 195 current programs build cold and 64 contracts pass per host. GNU and
-MinGW each retain 103 raw-equal core objects from v1351. Default pilot B-entry
-compatibility passes seven complete files/physical saves on all three hosts;
-invalid pilot/trailing plan fields reject before output/save writes. Final
-467-input source manifest:
-`f0d72042b3f75b2e6305f7afc44454e175d7d28b9181d5517a6b83b40d3f3454`.
+The v1352 natural Continue acceptance remains separate: two 1,551-advance
+scenarios per host, real deaths/Continue/resume/second Game Over/Esc,
+registration/fresh OP. Ranked and unranked physical files distinguish old
+520 units from default minimum 1,000; two-load original Game Over component
+replays compare 58,424 requests under documented adapters.
 
-Remaining: startup across sound modes, other rank/shot/Continue routes,
-physical input/refresh/slowdown, dense Lunatic performance, audio-device output
-and current GUI delivery. All runs stay muted. Complete four-route/Hard B and
-stock music corpora retain their distinct earlier producer identities; no new
-whole original-route, DOS exactness or full-goal acceptance follows.
+Earlier complete four A routes/Hard B and supplied music keep their earlier
+source identities: four routes compare 270,193 advances per host and
+Normal-earned saves admit fresh Extra; music compares 138 two-load cases and
+1,654,542 configured rows per host. These are not whole-original-route claims.
 
-The v1351 complete four ordinary shot A routes pass on all three hosts:
-270,193 advances, 2,504 startup advances, 49 full capture files and equal
-physical saves per host. Normal-earned files admit Extra in a new process.
-GNU Hard/Reimu B additionally completes 89,114 advances, Ending/registration/
-fresh OP; both scopes bind prior source `e3448a63...`. Old wrong-shot/pre-entry
-failures remain. New v1352 changes only the route control; retain old accepted
-source/program vectors and replay into fresh directories.
+Remaining: full startup across sound modes, remaining rank/shot routes,
+physical input/refresh/slowdown, dense Lunatic timing/performance, physical
+sound-device validation and current GUI delivery. No device was opened;
+last installed native GUI remains v1296. DOS acceptance/provenance are unchanged.
 
-Complete supplied music remains accepted in its v1350 scope: 138 original
-two-PSP cases, 69 unique native runs per host, 1,654,542 compared rows. Control
-and CPU samples do not implement audio-device output. Last installed native
-GUI remains v1296; no new package is delivered.
-
-Native replay/ownership: `docs/port64/evidence/stage-lifecycle.md`,
-`pmd-musical-fm.md`, `op-startup.md`; private receipts under
-`.analysis/port64/natural-continue-v1352/`. Earlier v1351 cleanup reclaims
-1,158,561,792 allocated bytes plus 16,347,136 post-CI cache bytes net. New v1352
-cleanup separately reclaims 591,622,144 allocated bytes after two full recovery
-archive readbacks (3,165 protected hashes, 315 members). Accepted inputs,
-captures, physical saves and source vectors remain recoverable. Both final CIs
-pass; post-CI source-backed cache pruning separately reclaims 16,347,136 bytes
-net. Final readback checks unchanged source/product/corpus/recovery hashes.
-Candidate-local-attested provenance and DOS acceptance are unchanged.
+Scoped v1353 cleanup reports 1,494,827,008 allocated bytes reclaimed; three
+recovery archives/all 1,915 members and 8,636 final protected hashes read back.
+Sources/products/captures/failures remain recoverable; see
+[retention](ANALYSIS_RETENTION.md). Final CI cache pruning is separate.
 
 ## Windows DOS demo package
 

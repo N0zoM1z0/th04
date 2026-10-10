@@ -52,15 +52,17 @@ detunes and special pitch (v1345) have three-host original-driver corpora.
 OP logo/title control and muted frontend startup are joined under bounded
 controls (v1346). The longer stock-song probe found a concrete octave-underflow
 port blocker; v1348 recovers shared FM/SSG byte rotation with three-host
-arithmetic and full boundary-request controls. Its full song aggregate remains
-live. See native `docs/port64/evidence/pmd-musical-fm.md`,
+arithmetic and full boundary-request controls. The full supplied-song aggregate closed in v1350 under its own
+producer identity; device transport is separately implemented and fake-API
+tested in v1353. Physical audio output remains unverified. See native `docs/port64/evidence/pmd-musical-fm.md`,
 `docs/port64/evidence/pmd-fm3.md`,
 `docs/port64/evidence/op-startup.md` and [port status](PORTING_STATUS.md).
 
 - Resolve only ambiguities blocking remaining native PPS/external ADPCM,
   startup, host timing or complete-route owners. Registration, lifecycle,
   Extra, HUD and persistence already have bounded native integration controls;
-  their natural complete-route acceptance remains separate.
+  their wider natural-route acceptance remains separate. Four ordinary A routes
+  and bounded real Continue are accepted in their v1351/v1352 scopes.
 - Repair old exact replay staging separately if fresh exact acceptance is in
   scope; do not make it a gate for native functionality.
 - Keep bounded runtime validation for structural rewrites and ABI/layout
