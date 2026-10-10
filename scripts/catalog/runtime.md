@@ -12,8 +12,10 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
 | [probes/capture_th04_dos_demos.py](../probes/capture_th04_dos_demos.py) | command | Capture ordinary bundled DOS demos after replay input and at the terminal decision. |
+| [probes/check_th04_carpet_image_table.py](../probes/check_th04_carpet_image_table.py) | command | Check the complete initialized Stage4 carpet table against pinned MAIN instructions and data. |
 | [probes/check_th04_midboss4_initial_state.py](../probes/check_th04_midboss4_initial_state.py) | command | Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN. |
 | [probes/compare_th04_demo_dgroup.py](../probes/compare_th04_demo_dgroup.py) | command | Compare complete demo pools and optional attested global states against ordinary trace controls. |
+| [probes/compare_th04_demo_video.py](../probes/compare_th04_demo_video.py) | command | Compare complete raw video streams and programmed GDC state with ordinary trace controls. |
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
@@ -28,6 +30,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/prepare_th04_op_diagnostic_hdi.py](../probes/prepare_th04_op_diagnostic_hdi.py) | command | Place a statically audited native OP.EXE in a disposable TH04 HDI. |
 | [probes/prepare_th04_op_phase_hdi.py](../probes/prepare_th04_op_phase_hdi.py) | command | Add reversible GAME.BAT phase markers to an attested private OP HDI. |
 | [probes/prepare_th04_primary_cpu_debugger.py](../probes/prepare_th04_primary_cpu_debugger.py) | command | Attest a CPU exception debugger for the unchanged primary DOSBox-X. |
+| [probes/probe_th04_demo_video_layout.py](../probes/probe_th04_demo_video_layout.py) | command | Attest retained emulator host video layout with a small pinned-compiler/archive/ELF probe. |
 | [probes/probe_th04_hdi_active_dev_remnants.py](../probes/probe_th04_hdi_active_dev_remnants.py) | command | Audit active files/archives in pinned HDI for TH04 development remnants. |
 | [probes/probe_th04_hdi_allocated_slack.py](../probes/probe_th04_hdi_allocated_slack.py) | command | Scan allocated FAT12 file/directory slack for final TH04 blocker remnants. |
 | [probes/probe_th04_hdi_deleted_builds.py](../probes/probe_th04_hdi_deleted_builds.py) | command | Forensically check the pinned TH01-TH05 HDI for recoverable alternate TH04 builds. |
@@ -44,10 +47,11 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/run_th04_zun_diagnostic_hdi.py](../probes/run_th04_zun_diagnostic_hdi.py) | command | Run the disposable TH04-only packed ZUN candidate under PC-98 DOSBox-X. |
 | [probes/th04_cpu_fault_fixture.asm](../probes/th04_cpu_fault_fixture.asm) | fixture | Private real-mode DIV-zero observer calibration; never install in game media. |
 | [probes/th04_demo_dgroup.py](../probes/th04_demo_dgroup.py) | support | Decode complete compressed DGROUP streams with order, address and stage validation. |
-| [probes/th04_demo_dgroup_stream.gdb](../probes/th04_demo_dgroup_stream.gdb) | fixture | Read every demo DGROUP at frame-counter writes through natural termination. |
+| [probes/th04_demo_dgroup_stream.gdb](../probes/th04_demo_dgroup_stream.gdb) | fixture | Read full demo DGROUP or attested VRAM/palette/GDC at frame-counter writes through termination. |
 | [probes/th04_demo_globals.py](../probes/th04_demo_globals.py) | support | Attest 22 pointer-free demo state owners using original and linked candidate instruction operands. |
 | [probes/th04_demo_host_ram.py](../probes/th04_demo_host_ram.py) | support | Read conventional emulator host RAM with an independent read-only VM86 page walk. |
 | [probes/th04_demo_snapshot.gdb](../probes/th04_demo_snapshot.gdb) | fixture | Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots. |
+| [probes/th04_demo_video.py](../probes/th04_demo_video.py) | support | Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [smoke_oracles.py](../smoke_oracles.py) | command | Exercise Oracle dimensions with private TH01-TH05 positive/negative controls. |

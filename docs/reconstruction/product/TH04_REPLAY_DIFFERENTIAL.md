@@ -580,3 +580,163 @@ Post-CI cleanup retires522 source-backed Python caches, reclaiming8,724,480
 allocated B before journals. A separate reader checks every retained source,
 49 protected hashes, nine frozen reader inputs and complete comparison hashes;
 `final-independent-readback.json` passes. No observed stream or build cache retires.
+
+### v1369 raw video observation contract
+
+`--video-stream --video-layout RECEIPT` uses the same frame-counter watch and
+natural four-demo terminal decisions as DGROUP capture. It reads emulator host
+backing memory directly, never invoking guest memory/I-O accessors. Every update
+stores279809 B: stage1, TRAM16384, all262144 graphics bytes (four64KiB planes,
+two32KiB pages each), full analog768/digital8/text32 palettes, raw GDC464 and
+eight selector/mode bytes. XOR/gzip is reversible and includes invisible plane
+tails and inactive palette entries. No rendered-pixel mask is applied.
+
+The small `probe_th04_demo_video_layout.py` compiler probe uses the retained
+emulator's own pinned g++8/config and GNU14 ABI options. Twelve header/config/
+video-source inputs attest against the pinned DOSBox-X archive; fifteen ELF
+symbol extents agree. Compiler-observed VGA size535896, memory pointer offset
+535824 and GDC size232 are pinned in the reader; the two GDC objects occupy464 B.
+The receipt is `demo-video-v1369/attested-layout/receipt.json`. This builds only
+a tiny host-layout program, not the emulator or game. Runtime ELF symbol biases,
+backing-memory extent and CPU/display page pointers must agree with selectors.
+
+The comparator requires complete before-update scalar/caller trace identity
+against each independent ordinary parent. It then compares every raw plane,
+TRAM and palette byte, page/mode selectors, both GDC parameter RAMs and selected
+programmed display/scroll fields. All raw GDC bytes remain in the stream;
+scan-address/raster/FIFO/drawing-clock internals are counted separately from
+programmed presentation state. This distinction does not establish a complete
+scanout/timing comparison. Every component contributes to the demo verdict,
+and first divergence retains both complete raw blocks with bounded byte causes.
+Distinct-value/nonzero coverage accompanies each compared component.
+
+The first producer remains failed before the first video frame: the GDB Python
+global `prefix` becomes `/usr/`, causing an attempted `/usr/-demo-1.bin.gz` write.
+The local libstdc++ auto-load script assigns `prefix` from the common prefix of
+`/usr/lib/x86_64-linux-gnu` and `/usr/share/gcc/python`. Task-specific
+`th04_stream_prefix` and related names remove the collision. The failed receipt,
+source v1, actual auto-load source and namespace readback remain under
+`demo-video-v1369/`; corrected producer v2 is frozen separately. Do not reuse
+failed execution directories or call this an original-game differential.
+
+### v1369 complete video differential and carpet ownership
+
+Corrected original/candidate captures complete in413.97s/402.65s, respectively;
+their full ordinary scalar/caller traces are byte-identical to the independent
+v1365/v1366 parents. Both execute the archived `producer-source-v2` helpers.
+`dos-demo-v1369-video-comparison.json` reads every3996 records in all four demos.
+All text, palettes, selectors and programmed GDC fields agree. Graphics fail:
+
+| Demo | First stage_frame write | Completed update | Differing frames |
+| --- | ---: | ---: | ---: |
+| 1 (Stage4) | 2 | 1 | 3459 |
+| 2 (Stage1) | 1729 | 1728 | 594 |
+| 3 (Stage3) | 658 | 657 | 1259 |
+| 4 (Stage2) | 1349 | 1348 | 435 |
+
+The complete raw GDC objects differ in all3996 frames per demo; the excluded
+scan/raster/FIFO/clock internals remain diagnostic rather than a programmed-state
+verdict. This is not complete scanout timing or cross-emulator acceptance.
+
+Demo1 first differs only in blue page0:2340 bytes at byte columns40..47,
+physical rows0..399 (pixels320..383). Adjacent16-pixel words exchange places;
+page1 follows at write3. Original STAGES_TEXT(0AAF):3FB6 loads table190C;
+3FCB stores tile_ring4D40. Stage4 render3FF4 references table190C at403D/4079.
+The original initialized DGROUP(2134):190C table is144 bytes/3x24 words.
+The candidate MAP owns `_CARPET_TILE_IMAGE_VOS` atDGROUP(23FB):18D0, within
+initialized DATA with no overlapping MZ relocations. Full data comparison
+finds12 wrong words: levels0/1/2 place special tiles49/51/53 in columns19/21
+instead of original18/20. These map to playfield-left32 plus18*16=320.
+This is target-observed static data and runtime-observed graphics evidence;
+the causal repair needs a fresh cold build and runtime replay.
+
+`check_th04_carpet_image_table.py` validates target size/hash/MZ, all four actual
+instruction witnesses, candidate producer/MAP identity, full DATA extent and
+relocation exclusions before comparing every word. Six synthetic test groups
+mutate all72 words and reject BSS/short/duplicate ownership, wrong DGROUP,
+relocations and truncation. The symbolic maintained ASM changes only the
+right-hand column order; no target byte array or historical carpet/checkerboard
+exactness work is introduced. Before-repair evidence is
+`demo-video-v1369/carpet-table-before.json`.
+
+```sh
+python3 scripts/probes/compare_th04_demo_video.py \
+  --original .analysis/runtime/candidates/dos-demo-v1369-original-video-v2 \
+  --candidate .analysis/runtime/candidates/dos-demo-v1369-candidate-video-v2 \
+  --original-full .analysis/runtime/candidates/dos-demo-v1365-original \
+  --candidate-full .analysis/runtime/candidates/dos-demo-v1366-candidate \
+  --original-consumer .analysis/reconstruction/probes/demo-video-v1369/producer-source-v2/scripts/probes \
+  --candidate-consumer .analysis/reconstruction/probes/demo-video-v1369/producer-source-v2/scripts/probes \
+  --output PRIVATE-NEW-VIDEO.json
+```
+
+A comparison exit1 with these first differences is the expected game rejection,
+not a malformed capture. The reader's28 new public control groups reject each
+plane/page/tail/text/palette/mode/programmed-GDC mutation and damaged frame/
+extent/producer/MAP/ELF/source/control identities. Raw clock-only differences
+are retained and counted without silently becoming programmed differences.
+
+The repaired cold MAIN is199455 bytes, SHA-256
+`07d4d640e51a8e466237b167815f4446fe2497e36ec1d0128f451559e0d9a7fc`.
+Its producer is `product-20261010-181420-9d4128b5-main/receipt.json`:193 C++,155
+ASM,8 state and4 sprite producers pass, with zero reused C++ roots. IRQ/vector
+and dispatch-table audits pass. Its full MAP remains `2ee564c3…`, byte-identical
+to v1366. Independent whole-file comparison changes only24 bytes in the12 DATA
+words; every header, relocation, code, remaining data and overlay byte stays
+unchanged. The144-byte table hash is now the target's `1a31a3f8…`.
+The package `.analysis/build/th04-demo-carpet-v1369/` explicitly retains the old
+unchanged OP/MAINE/ZUN identities. Historical exact ownership does not include
+this standalone ASM data owner; its new ledger row remains `source-present`.
+Its original source language is unproved, so `origin=unknown`; maintained
+symbolic ASM does not itself establish original-ASM or authored C/C++ origin.
+The historical authored-byte denominator and all exact states stay unchanged.
+
+The complete repaired ordinary capture `dos-demo-v1369-carpet-candidate/` and
+comparison `dos-demo-v1369-carpet-comparison.json` pass all15988 scalar/RNG
+boundaries. The independent repaired video capture
+`dos-demo-v1369-carpet-candidate-video/` remains byte-identical to that complete
+ordinary scalar/caller parent and uses archived producer v2. Its full result is
+`dos-demo-v1369-carpet-video-comparison.json`: all15984 video records validate,
+with no malformed-capture rejection. Demo1 now matches every compared region
+through write490; its first remaining graphics difference is491. Other demos'
+complete region hashes/verdicts and first1729/658/1349 remain unchanged. All
+text/palette/selector/selected-GDC comparisons pass. Full raw GDC diagnostics
+remain retained. The original early blue mismatch is causally repaired; overall
+graphics, native x64 and historical exact completion remain rejected.
+
+| Repaired Demo | First remaining write | Differing frames |
+| --- | ---: | ---: |
+| 1 | 491 | 2909 |
+| 2 | 1729 | 594 |
+| 3 | 658 | 1259 |
+| 4 | 1349 | 435 |
+
+Use the video command above with candidate `dos-demo-v1369-carpet-candidate-video`
+and candidate-full `dos-demo-v1369-carpet-candidate` for repair replay. The
+candidate build/MAP are `.analysis/build/th04-demo-carpet-v1369/` and
+`product-20261010-181420-9d4128b5-main/source/obj/main-native.map`. No emulated
+memory patch is applied. Scalar capture must finish independently before video.
+The private `run_repair.py` records these exact sequential commands/phase logs,
+requires full scalar acceptance, rejects invalid video negatives and checks all
+Demo2/3/4 complete region summaries unchanged. All jobs must be terminal before
+immutable-copy sharing or source-backed post-CI cache retirement.
+
+A bounded earlier frame491 pellet-list readback retains11 active entries with
+matching VRAM addresses and matching relative sprite offsets. Original
+TILE_TEXT0AAF:1EAC/1EB9 observes countBCC6/list86D2; candidate MAP owns79ED/7624.
+These are diagnostic observations only, not a complete effect-list Oracle or
+proof of the remaining graphics cause. The raw lists, target/candidate block
+hashes and actual distinct offset bases remain in `pellet-frontier-prefix.json`.
+
+Final CI passes423 public tests,20-target calibration and live Ghidra/mutation
+controls; `git diff --check` passes. The first CI log before origin review stays
+separate. Final `origin=unknown` DATA ownership preserves the historical exact
+byte denominator and all accepted function states. Post-CI cleanup retires529
+regenerable source-backed caches/8,830,976 B; three complete immutable-copy
+sharing passes reclaim161,304,576 B. Total170,135,552 allocated B (about162.3MiB)
+before journals. Independent readback verifies306 protected hashes and26 frozen
+source inputs, no remaining public caches, full scalar acceptance and expected
+raw-video rejection. All12 full video streams503,789,277 stored B, both cold
+caches, original inputs, ordinary/DGROUP traces and failed producers remain.
+Native worktree and installed Windows packages remain unchanged; no GUI/key/
+physical-audio trial or exact promotion occurs.

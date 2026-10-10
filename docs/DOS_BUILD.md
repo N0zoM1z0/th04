@@ -64,6 +64,13 @@ identities, not hashes of the pinned original targets. Verify complete digests
 from the build/package receipts before a replay; addresses must come from the
 corresponding MAP, never an older note.
 
+The newer ordinary differential package `.analysis/build/th04-demo-carpet-v1369/`
+has cold MAIN199455 bytes (`07d4d640…`), with the initialized midboss toggle and
+corrected carpet columns. It retains unchanged older OP/MAINE/ZUN and passes
+all four complete demo input/score/RNG comparisons. It does not replace the
+installed Windows packages; remaining raw graphics differences are indexed in
+[the differential handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+
 ## Runtime controls
 
 Use GAME.BAT through ZUN/OP/MAIN/MAINE; direct MAINE skips resident setup.

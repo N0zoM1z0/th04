@@ -5,26 +5,39 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1368 extends retained DOS demo evidence to22 pointer-free Boss/Midboss/player
-state blocks (104 B/update). All four demos pass3996 updates each, alongside
-the nine complete raw pools (24952 B/update), graze and post-reset input/Shift.
-Original target instruction operands and decoded candidate instructions/MAP
-attest each new state owner. Coverage is explicit: Midboss/motion/shot timers
-change; Demo2 exercises laser time/style. Boss stays at setup, and no demo
-exercises hit/death/respawn. Callback pointers and other globals remain open.
-README now states active development and separates current native source/route
-evidence from historical exact acceptance. PORTING_STATUS no longer claims
-complete paired DOS demo traces are absent.
-No product rebuild, new bulky capture, native worktree write or exact promotion.
-All v1367 streams/ordinary parents retain their identities; runtime load10FC,
-DGROUP3230/34F7 and archived executed consumers v2/v3 remain separate from the
-current reader. Original/reconstructed scalar traces still cover15988 boundaries.
-VRAM/palette, teardown, ordinary Boss/death play, x64 and cross-emulator fidelity
-remain open. Replay/coverage/CI/retention details are in the focused note.
-Final CI passes389 public tests,20-target calibration and live Ghidra/mutation
-controls;12 new global-state test groups pass. All reader/capture jobs are terminal.
-Post-CI cleanup retires522 regenerable caches/8,724,480 allocated B (about8.3MiB)
-before journals; all source and49 protected hashes recheck unchanged.
+v1369 repairs the Stage4 carpet table's special right-hand columns18/20
+(original DGROUP2134:190C,144 B; old source19/21). Cold MAIN199455 B is
+07d4d640…; MAP stays2ee564c3… and the complete old/new MZ differs only24 DATA
+bytes.193 C++/155 ASM/8 state/4 sprite producers pass with zero reused C++ roots.
+The package `.analysis/build/th04-demo-carpet-v1369/` retains old unchanged
+OP/MAINE/ZUN; installed Windows packages and native x64 worktree are unchanged.
+
+All four repaired ordinary demos pass15988 input/score/RNG/caller/resident
+boundaries. Complete raw video captures compare3996 updates per demo,279809 B
+per update: both pages/all four planes, TRAM, full palettes, selectors and
+selected programmed GDC fields. The carpet repair removes Demo1's old frame2
+blue-band difference; all compared regions now match through490, first remaining
+491. Other demos retain identical region hashes/first1729/658/1349. Text/palettes/
+selectors/selected GDC fields pass throughout. Full raw GDC scan/raster/FIFO/clock
+internals remain diagnostic; this does not accept complete scanout timing.
+All four demos still reject full raw graphics parity. Diagnose the remaining
+renderer/effect owner from retained streams; no cause is yet proved.
+
+Retained v1367/v1368 DGROUP observations belong to older16132526… MAIN: nine
+raw pools24952 B/update plus22 pointer-free states104 B/update pass15984 updates.
+All other new MAIN bytes/MAP stay unchanged, but no fresh complete DGROUP capture
+is claimed. Boss stays at setup; hit/death/respawn and callback/other globals,
+process teardown, ordinary Boss play, native x64 and cross-emulator parity stay
+open. Historical exact states are unchanged; new carpet DATA owner is only
+source-present. Canonicality remains candidate-local-attested.
+
+Final CI passes423 tests,20-target calibration and live Ghidra/mutation controls.
+Post-CI retirement removes529 source-backed caches/8,830,976 allocated B.
+Whole-byte-identical copy sharing reclaims161,304,576 B; combined170,135,552 B
+(about162.3MiB) before journals.306 protected hashes and26 archived source inputs
+recheck. All12 full video streams/earlier states/negative evidence and cold caches
+remain; all jobs are terminal. No native worktree or Windows GUI/audio write.
+Replay commands, producer/reader archives and coverage are in the focused note.
 Current commit identities are obtained with `git log -1` in each worktree.
 
 Updated 2026-10-11. Current focus: complete DOS actor/presentation/process
@@ -51,6 +64,13 @@ native fixes or this runtime batch. Targets remain
 
 ## DOS verification frontier
 
+- v1369 complete repaired demo scalar/RNG comparison passes all15988 boundaries.
+  Complete video first remaining writes491/1729/658/1349; text/palettes/modes and
+  selected GDC fields pass. Old video failure and all raw diagnostics remain.
+  Carpet table144 B agrees target; cold source/raw-MZ-only24-byte causal gate
+  removes frame2 blue band. ABI compiler/archive/ELF controls plus34 new public
+  test groups gate the new surface. Package/recipe and remaining drawings:
+  [paired evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 - v1368 accepts22 raw global-state blocks across all15984 demo updates, with
   instruction witnesses and distinct-value/nonzero coverage. Complete24-byte
   Boss and22-byte Midboss,12-byte player motion, options and timers match.
@@ -64,7 +84,7 @@ native fixes or this runtime batch. Targets remain
   controls are pinned in `dos-demo-v1367-dgroup-comparison-final.json`; executed
   producer v2/v3 differs from the current independent reader. Rendering and
   input reset precede this seam; score update follows it. Reuse the streams to
-  recover remaining global state owners, then capture VRAM/palette separately.
+  recover remaining global state owners; v1369 captures video separately.
 - v1366 original/ordinary DOS naturally rotates all four demos through GAME.BAT.
   Each has 3996 updates plus terminal condition3996; all 15,988 boundaries match
   consumed input/raw shift, score/deltas, LCG/ring/cursor/helper counts/arguments

@@ -99,20 +99,28 @@ transitions. See [DOS/native differential handoff](reconstruction/product/TH04_R
 TH08 is a read-only workflow reference, not TH04 evidence. Its active worktree
 is dirty; do not edit it, run its builds, change its database or launch its game.
 Complete trace/end/input-consumption guards and first-divergence diagnostics
-are the useful parts to adapt. All four paired DOS demo traces now pass their
+are the useful parts to adapt. Retained four-demo DOS traces pass their
 full input/score/RNG schema, nine raw actor/effect pools and 22 Boss/Midboss/player
 state blocks. Retained DGROUP streams cover3996 updates per demo; scalar traces
 also retain each terminal decision. Boss state stays at setup throughout these
-demos; death and respawn are not exercised. Other globals, Boss combat,
-VRAM/palette and process teardown remain comparison gaps. Current native host
-traces still lack complete RNG seed/ring/call-count fields and paired
+demos; death and respawn are not exercised. Other globals, Boss combat and
+process teardown remain open.
+
+Raw video comparison retains every graphics/text/palette byte on both pages
+at all3996 updates per demo. Text, palettes, page selectors and selected programmed GDC fields
+agree; graphics still differ in all four demos (first frame writes491/1729/658/1349).
+The bounded Stage4 carpet table repair passes a fresh cold MAIN and complete
+replay, removing the earlier frame2 blue-band divergence. Remaining drawing
+causes and process teardown stay open.
+Current native host traces still lack complete RNG seed/ring/call-count fields and paired
 original-DOS gameplay evidence.
 
 ## TODO, in order
 
 1. Extend accepted four-demo original/reconstructed DOS comparison to other
-   global owners, VRAM/palette and process teardown, then recorded ordinary play
-   covering Boss combat and death/respawn. Preserve identical data/config/saves,
+   global owners, remaining raw graphics differences and process teardown, then
+   recorded ordinary play covering Boss combat and death/respawn.
+   Preserve identical data/config/saves,
    logical input, complete-trace gates and first-divergence diagnostics.
 2. Extend the same comparison to native x64. Attest input mapping, RNG ring and
    process state, score units, update order and dialogue boundaries; then compare

@@ -140,12 +140,15 @@ def main() -> int:
                              help='read-only DGROUP watches; stops early, cannot pass completeness')
     diagnostics.add_argument('--dgroup-stream', action='store_true',
                              help='compressed DGROUP after every actor update; continues through all demos')
+    diagnostics.add_argument('--video-stream', action='store_true',
+                             help='full two-page PC-98 VRAM/palette/GDC stream at the same frame boundary')
+    parser.add_argument('--video-layout', type=Path, help='attested host video layout receipt')
     args = parser.parse_args()
     os.nice(15)
     os.sched_setaffinity(0, {min(os.sched_getaffinity(0))})
     # GDB needs additional virtual mappings for ELF symbols and Python. The
     # diagnostic script applies the ordinary 512 MiB limit to the inferior.
-    address_space = (1536 if args.snapshot_frames or args.dgroup_stream else 512)*1024*1024
+    address_space = (1536 if args.snapshot_frames or args.dgroup_stream or args.video_stream else 512)*1024*1024
     resource.setrlimit(resource.RLIMIT_AS, (address_space, address_space))
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
@@ -165,6 +168,19 @@ def main() -> int:
     if (sha((source / 'src/cpu/core_normal.cpp').read_bytes()) != emulator['core_after_sha256']
             or sha((source / 'config.h').read_bytes()) != emulator['config_header_sha256']):
         raise ValueError('compiled emulator source/config identity drift')
+    video_layout = None
+    if args.video_stream:
+        if args.video_layout is None:
+            parser.error('video stream requires --video-layout')
+        from th04_demo_video import LAYOUT, SYMBOL_SIZES
+        video_layout = json.loads(args.video_layout.read_text())
+        if (not video_layout['passed'] or video_layout['layout'] != LAYOUT
+                or video_layout['emulator_sha256'] != emulator['binary_sha256']
+                or video_layout['emulator_receipt_sha256'] != sha(emulator_receipt.read_bytes())
+                or {name: row['size'] for name, row in video_layout['symbols'].items()} != SYMBOL_SIZES
+                or any(sha(Path(path).read_bytes()) != digest
+                       for path, digest in video_layout['source_inputs'].items())):
+            raise ValueError('video ABI/source/ELF identity drift')
     targets = tomllib.loads((ROOT / 'config/targets.toml').read_text())['artifacts']
     products = {r['id'].removeprefix('th04-'): r for r in targets if r['id'].startswith('th04-')}
     for target in products.values():
@@ -255,14 +271,18 @@ def main() -> int:
                    TH04_DEMO_SNAPSHOT_FRAMES=','.join(map(str, args.snapshot_frames)))
         command = [str(debugger), '-nx', '-batch', '-x', str(snapshot_script), '--args', *command]
     stream_sources = None
-    if args.dgroup_stream:
+    if args.dgroup_stream or args.video_stream:
         source_directory = Path(__file__).parent.resolve()
         stream_script = source_directory / 'th04_demo_dgroup_stream.gdb'
-        stream_sources = {name: sha((source_directory / name).read_bytes()) for name in (
-            'th04_demo_dgroup_stream.gdb', 'th04_demo_dgroup.py', 'th04_demo_host_ram.py')}
+        source_names = ['th04_demo_dgroup_stream.gdb', 'th04_demo_dgroup.py', 'th04_demo_host_ram.py']
+        if args.video_stream:
+            source_names.append('th04_demo_video.py')
+        stream_sources = {name: sha((source_directory / name).read_bytes()) for name in source_names}
         debugger = Path(shutil.which('gdb')).resolve()
         env.update(TH04_DEMO_STREAM_DIR=str(output),
                    TH04_DEMO_STREAM_SOURCE_DIR=str(source_directory))
+        if args.video_stream:
+            env.update(TH04_DEMO_STREAM_KIND='video', TH04_DEMO_VIDEO_LAYOUT=str(args.video_layout.resolve()))
         command = [str(debugger), '-nx', '-batch', '-x', str(stream_script), '--args', *command]
     start = time.monotonic()
     timeout = False
@@ -305,18 +325,23 @@ def main() -> int:
             gdb_sha256=sha(debugger.read_bytes()), script_sha256=sha(snapshot_script.read_bytes()),
             debugger_address_space_bytes=address_space,
             files={path.name: sha(path.read_bytes()) for path in sorted(output.glob('snapshot-*'))})
-    if args.dgroup_stream:
-        metadata = output / 'dgroup-stream.json'
+    if args.dgroup_stream or args.video_stream:
+        prefix = 'video' if args.video_stream else 'dgroup'
+        marker = 'TH04_VIDEO_STREAM' if args.video_stream else 'TH04_DGROUP_STREAM'
+        metadata = output / (prefix+'-stream.json')
         stream_complete = (complete and metadata.is_file()
-            and f'TH04_DGROUP_STREAM_COMPLETE {args.demos}\n'.encode() in log)
-        record['dgroup_stream'] = dict(complete=stream_complete,
+            and f'{marker}_COMPLETE {args.demos}\n'.encode() in log)
+        record[prefix+'_stream'] = dict(complete=stream_complete,
             gdb_sha256=sha(debugger.read_bytes()), consumer_source_sha256=stream_sources,
             debugger_address_space_bytes=address_space,
-            files={path.name: sha(path.read_bytes()) for path in sorted(output.glob('dgroup-*'))})
+            files={path.name: sha(path.read_bytes()) for path in sorted(output.glob(prefix+'-*'))})
+        if args.video_stream:
+            record['video_stream'].update(layout_receipt_path=str(args.video_layout.resolve()),
+                                         layout_receipt_sha256=sha(args.video_layout.read_bytes()))
     (output / 'receipt.json').write_text(json.dumps(record, indent=2)+'\n')
     print(json.dumps(dict(capture_complete=complete, output=str(output), elapsed_seconds=record['elapsed_seconds'])))
-    if args.dgroup_stream:
-        return 0 if record['dgroup_stream']['complete'] else 1
+    if args.dgroup_stream or args.video_stream:
+        return 0 if record['video_stream' if args.video_stream else 'dgroup_stream']['complete'] else 1
     return 0 if complete or record.get('diagnostic_snapshot', {}).get('complete') else 1
 
 

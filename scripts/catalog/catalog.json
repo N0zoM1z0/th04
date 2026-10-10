@@ -427,6 +427,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/check_th04_carpet_image_table.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Check the complete initialized Stage4 carpet table against pinned MAIN instructions and data.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/check_th04_midboss4_initial_state.py",
     "category": "runtime",
     "role": "command",
@@ -459,6 +466,13 @@
     "category": "runtime",
     "role": "command",
     "purpose": "Compare complete demo pools and optional attested global states against ordinary trace controls.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/compare_th04_demo_video.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare complete raw video streams and programmed GDC state with ordinary trace controls.",
     "purpose_source": "maintained-description"
   },
   {
@@ -852,6 +866,13 @@
     "role": "command",
     "purpose": "Test whether active TLINK switches reorder MAIN stage-session relocations.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_th04_demo_video_layout.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest retained emulator host video layout with a small pinned-compiler/archive/ELF probe.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/probe_th04_dialog_line_info.py",
@@ -3349,7 +3370,7 @@
     "path": "scripts/probes/th04_demo_dgroup_stream.gdb",
     "category": "runtime",
     "role": "fixture",
-    "purpose": "Read every demo DGROUP at frame-counter writes through natural termination.",
+    "purpose": "Read full demo DGROUP or attested VRAM/palette/GDC at frame-counter writes through termination.",
     "purpose_source": "maintained-description"
   },
   {
@@ -3371,6 +3392,13 @@
     "category": "runtime",
     "role": "fixture",
     "purpose": "Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_demo_video.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors.",
     "purpose_source": "maintained-description"
   },
   {

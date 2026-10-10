@@ -24,11 +24,17 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 ## Current products and navigation
 
 Development is active. All four DOS products build from maintained local source.
-Original and reconstructed DOS now agree across all four bundled demos on
-consumed input, score and RNG, nine complete actor/effect pools, and 22
+Retained original/reconstructed DOS comparisons agree across all four bundled
+demos on consumed input, score and RNG, nine complete actor/effect pools, and 22
 Boss/Midboss/player state blocks. These demos exercise Midboss fights; Boss
-combat, death/respawn, VRAM/palette and complete process transitions still need
-paired validation.
+combat, death/respawn and complete process transitions still need paired
+validation. New complete raw video captures cover both graphics pages, all four
+planes, text, palettes and selected GDC display fields. Text, palettes and the
+compared display fields agree; graphics still differ in every demo.
+The Stage 4 carpet table's misplaced right-hand columns have been corrected in
+a cold build and verified by complete replay. The first remaining graphics
+differences are at frame-counter writes 491, 1729, 658 and 1349 in Demos 1–4,
+respectively. See the handoff for the remaining rendering work.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh

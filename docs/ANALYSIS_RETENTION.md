@@ -1,5 +1,40 @@
 # Private build and analysis retention
 
+v1369 retains complete raw video streams and their independent ordinary controls
+under `.analysis/runtime/candidates/dos-demo-v1369-*/`. Every stream losslessly
+stores3996 x279809 B per demo using XOR/gzip. Keep the full raw GDC diagnostic
+bytes, invisible graphics tails, palette entries and first-difference blocks;
+programmed-state comparison does not discard the excluded scan clocks.
+Executed failed/corrected producers are frozen as `producer-source-v1/v2`, with
+the final reader/source/test inputs separately frozen in `reader-source/` under
+`.analysis/reconstruction/probes/demo-video-v1369/`. Host ABI, namespace failure,
+full comparisons and bounded carpet data/ring witnesses stay replayable.
+
+Initial sharing of104 immutable completed-capture paths reclaims87,281,664
+allocated B; the next112-path pass reclaims36,651,008 B. All complete bytes,
+sizes and modes agree before sharing and after readback;64/74 protected hashes
+remain unchanged. Both journals and readbacks live in the v1369 directory.
+Only completed immutable images/fonts/REC files/traces are shared, never live
+execution images. The separate cold MAIN repair cache and existing11MiB cache
+remain retained. Native x64 worktree/source and Windows packages are unchanged.
+
+After complete repaired ordinary/video comparison, a142-path sharing pass
+reclaims another37,371,904 allocated B;103 protected hashes recheck unchanged.
+Sharing totals161,304,576 B (about153.8MiB) before journals. All twelve completed
+video gzip files total503,789,277 B; none of the old/repaired candidate gzip
+streams is byte-identical, so no stream is shared or discarded. The unchanged
+Demo2/3/4 programmed-region hashes do not imply raw GDC clock equality. Keep
+`repair-copies-before.json`/`repair-copies-readback.json` and every full stream.
+
+After terminal final CI, `source-caches-before.json` and `source-caches-readback.json`
+retire529 regenerable public Python caches/8,830,976 allocated B. Every source
+and195 protected hashes recheck. `final-independent-readback.json` separately
+checks all three sharing journals, cache absence,306 protected hashes and26
+archived source inputs, final423-test CI and complete replay verdicts. Combined
+copy/cache reclamation is170,135,552 B (about162.3MiB) before journal overhead.
+Historical exact states/denominator remain unchanged; original source language
+of the new DATA owner remains unknown. All build/game/comparison jobs are terminal.
+
 v1368 reuses all immutable v1367 DGROUP streams; no new bulky capture or product
 build. After terminal CI,522 regenerable public Python caches retire8,724,480
 allocated B (about8.3MiB) before journal overhead. All522 retained source hashes
