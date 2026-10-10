@@ -25,13 +25,18 @@ def main():
                         help='six-stage good-clear oracle; Easy needs its separate five-stage ending gate')
     parser.add_argument('--character',type=int,choices=(0,1),default=0)
     parser.add_argument('--shot',type=int,choices=(0,1),default=0)
+    parser.add_argument('--turbo',type=int,choices=(0,1),default=1)
+    parser.add_argument('--require-dense-slowdown',action='store_true',
+                        help='require complete rank3 trace with natural >=320 and >=400 slowdown2 samples')
     parser.add_argument('--key-driver',choices=('xdotool','xtest'),default='xdotool')
     modes=parser.add_mutually_exclusive_group()
     modes.add_argument('--track-position',action='store_true')
     modes.add_argument('--adaptive',action='store_true')
     a=parser.parse_args()
-    if not a.adaptive and (a.reference is None or (a.rank,a.character,a.shot)!=(1,0,0)):
-        parser.error('recorded/position candidates require Normal Reimu A and --reference; other routes require --adaptive')
+    if not a.adaptive and (a.reference is None or (a.rank,a.character,a.shot,a.turbo)!=(1,0,0,1)):
+        parser.error('recorded/position candidates require Normal Reimu A/Turbo1 and --reference; other routes require --adaptive')
+    if a.require_dense_slowdown and (not a.adaptive or a.rank!=3 or a.turbo!=0):
+        parser.error('dense slowdown requires --adaptive --rank 3 --turbo 0')
     private_display=require_private_xvfb();exe,hdi,font=[p.resolve() for p in (a.exe,a.hdi,a.font)]
     reference=a.reference.resolve() if a.reference is not None else None
     case=None
@@ -51,10 +56,11 @@ def main():
         controls[(int(t[2]),int(t[3]))]=inputs[int(t[0])]
         positions[(int(t[2]),int(t[3]))]=(int(t[4]),int(t[5]))
     pin_paths=[exe,hdi,font,Path(__file__),NATIVE/'port64/private_x11.py',NATIVE/'port64/verify_host_window.py',NATIVE/'port64/verify_window_continue.py',NATIVE/'port64/private_x11_keys.py']
+    if a.require_dense_slowdown:pin_paths.append(NATIVE/'port64/reduce_window_route.py')
     if reference is not None:pin_paths.extend([reference/'inputs.txt',reference/'state.txt'])
     pins={str(p):sha(p) for p in pin_paths}
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);save=out/'saves';save.mkdir()
-    cfg=bytes([a.rank,6,2,2,1,1,0,0,0,a.rank+12]);(save/'MIKO.CFG').write_bytes(cfg);(out/'initial-MIKO.CFG').write_bytes(cfg)
+    cfg=bytes([a.rank,6,2,2,1,a.turbo,0,0,0,a.rank+11+a.turbo]);(save/'MIKO.CFG').write_bytes(cfg);(out/'initial-MIKO.CFG').write_bytes(cfg)
     section_index=a.rank+5*a.character
     trace=out/'trace/window.tsv';writes=Writes(save,out/'physical-events',trace)
     command=[str(exe),'--hdi',str(hdi),'--font-bmp',str(font),'--save-dir',str(save),'--title','--mute','--window-trace',str(trace.parent)]
@@ -99,7 +105,8 @@ def main():
         if a.shot:press('Down')
         press('Return')
         r=wait(lambda r:r['scene']=='main');assert (r['character'],r['shot'],r['rank'],r['stage'])==(a.character,a.shot,a.rank,0)
-        deadline=time.monotonic()+2400
+        watchdog_seconds=2400 if a.turbo else 3600
+        deadline=time.monotonic()+watchdog_seconds
         while time.monotonic()<deadline:
             r=wait(lambda r:r['seq']>last,timeout=15);last=r['seq'];observed+=1
             assert r['focused'] and r['audio_opens']==r['audio_failed']==0
@@ -156,10 +163,17 @@ def main():
         snapshots=[decode((out/'physical-events'/e['snapshot']).read_bytes()) for e in events if e['name']=='GENSOU.SCR']
         assert any(has_clear(s[section_index],a.shot) for s in snapshots),'clear flag absent/sentinel at physical rename'
         assert all(r['audio_opens']==r['audio_failed']==0 for r in rows)
-        result=dict(passed=True,private_display=private_display,track_position=a.track_position,adaptive=a.adaptive,rank=a.rank,character=a.character,shot=a.shot,key_driver=a.key_driver,selected_section=section_index,command=command,pins=pins,reference_result=case['result'] if case else None,stages=sorted(stages),scenes=sorted(scenes),observed_refreshes=observed,missing_controls=missing,trace_sha256=sha(trace),physical_events=events,files={p.name:sha(p) for p in save.iterdir() if p.is_file()},scope=__doc__)
+        result=dict(passed=True,private_display=private_display,track_position=a.track_position,adaptive=a.adaptive,rank=a.rank,character=a.character,shot=a.shot,turbo=a.turbo,require_dense_slowdown=a.require_dense_slowdown,watchdog_seconds=watchdog_seconds,key_driver=a.key_driver,selected_section=section_index,command=command,pins=pins,reference_result=case['result'] if case else None,stages=sorted(stages),scenes=sorted(scenes),observed_refreshes=observed,missing_controls=missing,trace_sha256=sha(trace),physical_events=events,files={p.name:sha(p) for p in save.iterdir() if p.is_file()},scope=__doc__)
+        if a.require_dense_slowdown:
+            from reduce_window_route import reduce
+            schedule=reduce(trace)
+            for threshold in (320,400):
+                dense=schedule['lunatic_density'][threshold]
+                assert dense['refreshes']>0 and dense['slowdown2_refreshes']>0, f'natural dense slowdown2 absent at {threshold}'
+            result['schedule']=schedule
         result['restart']=restart(exe,hdi,font,save,out/'restart')
         for p,h in pins.items():assert sha(p)==h
-        (out/'receipt.json').write_text(json.dumps(result,indent=2)+'\n');success=True;print('FULL NORMAL WINDOW + PHYSICAL RESTART PASS',flush=True)
+        (out/'receipt.json').write_text(json.dumps(result,indent=2)+'\n');success=True;print(f'FULL RANK {a.rank} TURBO {a.turbo} WINDOW + PHYSICAL RESTART PASS',flush=True)
     except Exception as e:error=str(e);raise
     finally:
         if keyboard is not None:keyboard.close()
@@ -172,5 +186,5 @@ def main():
         if writes is not None:writes.close();events=writes.records
         actions.close();log.close()
         (out/'physical-events.json').write_text(json.dumps(events,indent=2)+'\n')
-        (out/'terminal.json').write_text(json.dumps(dict(passed=success,error=error,private_display=private_display,track_position=a.track_position,adaptive=a.adaptive,rank=a.rank,character=a.character,shot=a.shot,key_driver=a.key_driver,pins=pins,command=command,stages=sorted(stages),scenes=sorted(scenes),last_refresh=last,missing_controls=missing,elapsed=time.monotonic()-started),indent=2)+'\n')
+        (out/'terminal.json').write_text(json.dumps(dict(passed=success,error=error,private_display=private_display,track_position=a.track_position,adaptive=a.adaptive,rank=a.rank,character=a.character,shot=a.shot,turbo=a.turbo,require_dense_slowdown=a.require_dense_slowdown,key_driver=a.key_driver,pins=pins,command=command,stages=sorted(stages),scenes=sorted(scenes),last_refresh=last,missing_controls=missing,elapsed=time.monotonic()-started),indent=2)+'\n')
 if __name__=='__main__':main()

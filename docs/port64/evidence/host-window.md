@@ -443,3 +443,43 @@ Independent verdict: `.analysis/port64/host-storage-v1359/gnu-lunatic-independen
 The original485 compiled inputs remain frozen; current490 consumer source is
 archived/read back separately. All owned Xvfb/game/controller jobs are terminal.
 No Windows GUI, foreground activation, host keys or audio devices opened.
+
+## Natural Turbo0 slowdown gate (v1360)
+
+The v1359 complete GNU Lunatic route enabled Turbo1. Every >=320/>=400 sample
+therefore had after-update slowdown1. That acceptance does not establish natural
+dense slowdown2. Native `enemy_bullets.cpp` requests2 only with Turbo disabled,
+processed bullet count >=24+performance+rank*8, and frame_mod2==0; the host
+scheduler uses the after-update value for the next deadline. Counts in generic
+window snapshots are post-update and do not independently recover the internal
+processed `seen`/performance threshold. Do not infer the exact predicate from
+post-update bullet count alone.
+
+`verify_window_route.py --turbo 0` creates a legal physical CFG with checksum
+rank+11 rather than rank+12; default1 is unchanged. `--require-dense-slowdown`
+requires adaptive rank3/Turbo0 and, after the existing true-clear/file/rename
+checks, a complete schedule plus nonempty slowdown2 samples in both >=320 and
+>=400 natural categories. Separate physical Scores restart still follows.
+The non-Turbo watchdog allows3600 seconds to accommodate intended delays.
+Four wrong rank/Turbo/fixed-mode/invalid-bool CLI controls reject before opening
+any display/game or save directory. Terminal stdout now names actual rank/Turbo;
+old immutable logs retain their historical NORMAL label.
+
+One ordinary private-XTest ReimuA candidate runs on unchanged v1356 GNU
+executable dbe17225. Initial CFG0306020201000000000E has Turbo0, all launches are
+muted, and no state/clock/actor/score writes or reference-route dependency are
+introduced. Early Stage0 frame4,983 has35 slowdown2 records but only100 bullets;
+this is a live prefix, not a complete route/dense verdict. Tool17095 and
+controller404173/game404187 start ticks/argv are recorded and checked. Do not
+edit pinned route/input/reducer helpers or restart on observation timeout.
+
+Full490-input source/member readback a07fda7a changes only this Python route
+consumer from v1359. Every C++/header/CMake input remains the old485-input
+compiled producer00af24f7; no new build/Windows/physical device work. Current
+launch/CLI controls/active-job/source vectors are under
+`.analysis/port64/slowdown-window-v1360/`; terminal result remains pending.
+
+Both final CIs pass; root includes live Ghidra and mutation replay. Source/CLI/
+immutable-prefix independent readbacks pass. Source-backed public caches retire
+955 files/net15,478,784 allocated B; active port64 helpers/outputs stay excluded.
+See root `.analysis/cleanup/slowdown-source-caches-readback-v1360.json`.
