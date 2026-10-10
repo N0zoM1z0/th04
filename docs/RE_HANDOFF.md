@@ -54,6 +54,13 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1363 same live candidate snapshot:49,189 refreshes, stages0..3 reached,
+last frame14,726/lives11/miss1; every MAIN identity/credit and zeroaudio pass.
+Natural max338, >=320 has10 samples/5 slowdown2; >=400 absent. No actual
+early-hit rescue or last-life extra-X transition observed yet; full verdict
+remains pending. Snapshot: native `bomb-input-v1362/prefix-evidence-v1363.json`.
+
+
 v1362 adds optional `--bomb-policy rescue` to the ordinary private-Xvfb adaptive
 input controller. The preceding failed trace has seven early-hit samples with
 Bomb1 and no X. Maintained lifecycle source permits cancellation while miss_time>32;
@@ -70,6 +77,10 @@ Xvfb484274). Full clear/physical rename/Scores restart/complete clock and dense
 `.analysis/port64/bomb-input-v1362/active-job-v2.json` with /proc start ticks/argv
 before polling; keep pinned helpers unchanged until terminal. No Windows GUI,
 host keys or physical audio device opens.
+
+v1363 retires unused old UBSan build after936 archive/member hashes read back;
+net252,231,680 allocated B reclaimed. Recovery: root
+`.analysis/cleanup/ubsan-old-build-v1363/`; current program/helpers/saves untouched.
 
 Both CIs pass (root live Ghidra/mutations); ledger/diff checks pass. Public
 script caches retire955 files/net15,478,784 allocated B after source/protected
