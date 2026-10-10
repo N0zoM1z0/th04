@@ -1,5 +1,71 @@
 # Stage Lifecycle evidence
 
+## Ordinary natural Continue and physical old-score publication (v1352)
+
+The optional eighth route-plan field is `pilot` (0 avoiding, 1 stationary
+shot). The old six/seven-field plans retain default 0. Pilot 1 changes keys
+only; actual original-data bullets/contact drive hit/death/Game Over. Existing
+configuration remains physical input: Lunatic/lives option 1/Bombs 0/Turbo,
+BGM2/SE1. The first Game Over receives Shot pulses, the second Esc. Each
+unranked/ranked scenario reaches registration/fresh OP in 1,551 advances.
+MAIN frame 432 stays frozen for 189 refreshes then resumes its suffix to 433;
+frame 630 stays frozen for 222 refreshes before quit. No actor/life injection,
+synthetic stage or Continue callback substitutes for this ordinary route.
+
+The default physical table has a lowest 1,000-unit score; natural first score
+520 does not rank and correctly adds no `CONTINUE` row. The ranked initial
+fixture changes only the selected rank3 table's ten score rows to zero,
+recomputes its checksum/encryption and preserves the other nine records.
+Filesystem observers on GNU/UBSan read complete rename-published files: old
+520 units and credit byte 0 under `CONTINUE`, then separate final registration.
+Every nonselected decoded payload survives. This is declared physical test
+input, not score/state injection or a pristine original-data claim.
+
+All three hosts agree on 3,102 advances/1,252 startup refreshes/16 full captures
+and final physical files. Actual Windows also passes all 64 current contracts.
+Recorded input/power/life/Bomb/score subsets drive original MAIN relative
+0AAF:3971..3CEE at loads1000/2000; four configured scenes reproduce 58,424
+requests/refreshes on original/GNU/UBSan. Unrecorded overflow/dream/delta/auxiliary
+score fields are explicit zero adapters; save/HUD/vsync/video/process remain
+component adapters. Separate native whole-file observations support persistence.
+
+The public source equals the independent cold compiled materialization in all
+467 inputs (`f0d72042...`); 195 programs build and 64 contracts pass per host.
+GNU/MinGW each have 103 core objects raw-equal to v1351. Seven default pilot
+Hard B/16-advance captures and physical saves still agree on all hosts; four
+GNU/UBSan invalid-pilot/trailing controls reject before writes. Prior complete
+four routes and GNU Hard B retain their `e3448a63...` producer. No fresh full
+Lunatic clear/physical clock/performance/audio-device/current GUI claim follows.
+
+An avoiding Lunatic attempt instead reaches Stage6 bad Ending/fresh OP in
+83,534 advances without a Continue menu; it is rejected as Continue coverage.
+Its redundant UBSan attempt is deliberately cancelled, with partial outputs
+and terminal readback retained. A wrong-worktree control edit leaves a consumer
+referencing an unclosed full profile; rejection occurs before game entry. Fresh
+v2 waits all three terminal builds and full-profile closure. An overbroad
+ranked-write assessment also rejects the correctly unranked 520 case; narrower
+unranked acceptance and ranked physical fixtures use new receipts. Never
+relabel or restamp these negative/cancelled observations.
+
+Replay: private `natural-continue-v1352/{run-stationary-v2.py,run-ranked-v1.py,
+assess-v3.py,original-keys-v1.py,windows-v1.py,aggregate-v1.py}` and their frozen
+source/product profiles. Use fresh outputs/source snapshots for every replay.
+
+Scoped terminal cleanup reclaims 591,622,144 allocated bytes net (564.2 MiB).
+Two complete recovery archives precede retirement of the closed 244-file
+Windows stage and 1,145 generated build files. Independent readback checks
+3,165 protected hashes and all 315 members; current/preceding programs,
+source snapshots, native captures/physical saves and failed/cancelled attempts
+remain. Restore archived Windows data into a new replay scope; never overwrite
+an accepted receipt or retired stage's provenance.
+
+Both final CIs pass, including root live Ghidra replay and Oracle mutation
+checks. `final-readback-v1.json` freshly checks the preserved current source,
+product/corpus/negative evidence hashes and both recovery archives. Post-CI
+source-backed cleanup separately checks 1,012 public sources and retires their
+Python caches, reclaiming 16,347,136 allocated bytes net after journal overhead.
+Root receipt: `.analysis/cleanup/natural-continue-post-ci-caches-v1352.json`.
+
 ## Maintained ordinary route entry and real shot choice (v1351)
 
 `--natural-route-checks DIR` runs the maintained executable directly, with no

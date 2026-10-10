@@ -4,15 +4,18 @@ void run_natural_route_checks(const PiImage& background,const CdgSheet& numerals
     const CdgSheet& labels,const CdgSheet& cursors,const PiImage& selection_background,
     const CdgSheet& portraits,const MainAssets& assets,const std::string& output) {
     namespace fs=std::filesystem;
-    unsigned rank=0,character=0,limit=150000,render_every=0,continues_allowed=0,extra=0,shot_type=0;
+    unsigned rank=0,character=0,limit=150000,render_every=0,continues_allowed=0,extra=0,shot_type=0,pilot=0;
     std::ifstream plan(fs::path(assets.save_directory)/"route-plan.txt");
     require_view(bool(plan>>rank>>character>>limit>>render_every>>continues_allowed>>extra),"six-field route plan required");
     plan>>std::ws;
     if(plan.peek()!=std::char_traits<char>::eof()) {
         require_view(bool(plan>>shot_type),"invalid optional shot type");plan>>std::ws;
+        if(plan.peek()!=std::char_traits<char>::eof()) {
+            require_view(bool(plan>>pilot),"invalid optional pilot");plan>>std::ws;
+        }
     }
     require_view(plan.peek()==std::char_traits<char>::eof() && extra<=1 && rank<4 && character<2 &&
-                 shot_type<2 && render_every<=1 && limit>0 && limit<=500000 && assets.muted,"invalid route plan/mute");
+                 shot_type<2 && pilot<=1 && render_every<=1 && limit>0 && limit<=500000 && assets.muted,"invalid route plan/mute");
     const fs::path out(output);require_view(!fs::exists(out),"fresh route output required");fs::create_directories(out);
     std::ofstream inputs(out/"inputs.txt",std::ios::binary),trace(out/"state.txt",std::ios::binary);
     std::ofstream startup_inputs(out/"startup-inputs.txt",std::ios::binary),menu_inputs(out/"menu-inputs.txt",std::ios::binary);
@@ -45,6 +48,12 @@ void run_natural_route_checks(const PiImage& background,const CdgSheet& numerals
             if(go) {
                 if(!was_go){++continue_visits;last_go=ticks;}was_go=true;
                 keys=(ticks-last_go)%20<10 ? (continue_visits<=continues_allowed ? shot::input_shot : 0x2000) : 0;
+            } else if(pilot==1) {
+                // A stationary held shot exercises ordinary hits and death
+                // without writing any player, actor or life state. Dialog
+                // ownership still receives released/pressed shot keys.
+                was_go=false;
+                keys=scene.dialog_status()==dialog::Status::idle || ticks%20<10 ? shot::input_shot : 0;
             } else {
                 was_go=false;
                 double target_x=192*16,target_y=304*16;
