@@ -3,33 +3,39 @@
 The full native goal remains active. General semantic work resumes only for a
 concrete portability blocker; historical DOS exactness is a separate product.
 
-v1354 fixes SDL keypad Enter held input and catchup resync losing slowdown.
-A shared host admission owner and optional muted read-only window trace retain
-native period/after-update scheduling. GNU8, optimized UBSan and actual Windows
-pass 67 contracts each; 204 programs build cold from 480 inputs. All preceding
-104 core objects per GNU/MinGW are raw-equal. GNU/UBSan's 195 fake-audio frontend
-files per host remain equal to v1353; no audio device/backend is opened.
+v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary
+X11 Continue/save/restart verifier. 204 AMD64 programs build cold from 481
+producer inputs; GNU8, optimized UBSan and actual Windows pass 67 contracts each.
+Among 105 GNU/MinGW core objects, only trace serialization changes; 104 remain
+raw-equal to v1354. GNU/UBSan's 195 fake-audio frontend files per host also equal
+v1354. No audio backend/device opens.
 
-GNU8/UBSan real SDL/X11 windows under private Xvfb pass ordinary Marisa B entry,
-Return/keypad Enter, held movement, Shift, shooting/release and focus gating.
-Movement measures 64/32 Q12.4 units per frame and device attempts remain zero.
-Actual Windows input automation stops before SendInput because it cannot
-establish owned foreground. Its 67 contracts pass independently. This leaves
-Windows OS input, physical display/keyboard, natural slowdown2 and dense
-Lunatic timing/performance unaccepted.
+Eight real SDL/X11 processes under private Xvfb pass two stationary Lunatic
+Reimu A Continue/Quit/registration/fresh OP cases and two physical-file Scores
+restarts per GNU8/UBSan. MAIN freezes at frames 432/630 during Game Over and
+resumes at 433; Continue resets score/power/lives/credit. Missing-score/unranked
+and declared zero-score/ranked leaderboard fixtures are distinct. Ranked
+writer-close/rename snapshots contain CONTINUE 500 units with credit 0 while
+MAIN resets to credit 1/score 0. Nine other decoded partitions preserve checksum
+and payload; encoding keys legitimately change. Restarts preserve file hashes.
+All launches are muted. These are bounded OS-input trials, not complete clear
+routes, original whole-route equivalence, physical devices or dense timing.
 
-Cold producer manifest:
-`e2974686f86f22d2a2a7caaf736b664dd33aac3eae4703aeefbf93a7e9e6ac75`.
-Final consumer recipe:
-`04ec21c37c2039c549b4130b8432693940c9bf53109e1765174204f8dfe4c4c7`.
-Only two verifier scripts differ; all compiled inputs are raw-identical.
-Products retain their producer identity. See [host ownership and replay](port64/evidence/host-window.md)
-for negative controls, failed attempts, receipts and independent limits.
+Producer manifest: `cce4f0fd683c5166f798303e2ebfb83a4fbbe8baef1ee56a862c024c25dbe3be`.
+Final verifier: `d027a9701ce8c6168c408bd18a93b72806e60079e87cbf39b7ab8d0ef9267f5c`.
+Only the route verifier differs; every compiled input is raw-identical.
+Keep the first missing-verdict-key and key-header comparator failures failed.
+Current evidence/recovery: native `.analysis/port64/host-route-v1355/`;
+replay/limits: native `docs/port64/evidence/host-window.md`.
 
-A fresh current experimental GUI is installed in the private demo directory's
-`native-port64-v1354/`, with explicit muted Linux/Windows launchers and independent
-host saves. All 21 preceding DOS/package files are unchanged. This replaces
-no DOS launcher, image or user save and does not imply Windows input acceptance.
+Actual Windows still rejects before SendInput. PID/class selection now excludes
+an early ConsoleWindowClass handle. Same-session WinSta0/Default diagnostics
+observe foreground-lock timeout 2147483647 ms; three owned-window activation
+attempts fail. No desktop/global policy/input-queue workaround was used.
+Passing Windows contracts do not accept Windows held input.
+
+Existing experimental delivery remains `native-port64-v1354/`; no package or
+user save was modified for this observer/control batch.
 
 Existing scoped results remain: four complete ordinary A logical routes and
 Normal-earned Extra admission; bounded real Continue/death/save/fresh OP;

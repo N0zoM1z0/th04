@@ -14,6 +14,7 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_window_continue.py",
     "port64/verify_host_window.py",
     "port64/verify_host_window_windows.ps1",
     "port64/host_window.hpp",

@@ -15,6 +15,7 @@ import time
 from verify import source_manifest, require_elf_x86_64
 
 FIELDS = 'seq begin end deadline held shift focused before after scene program generation frame stage rank character shot x y bullets shots lives bombs misses invincibility audio_frames audio_opens audio_failed'.split()
+EXTRA_FIELDS = "score_units credits power bombing respawn slow_frames run_frames score_digits_units score_delta".split()
 PERIOD = 17730496
 
 def sha(path):
@@ -24,9 +25,9 @@ def row(line):
     parts = line.split()
     if not parts or parts[0] != 'R':
         return None
-    if len(parts) != len(FIELDS) + 1:
+    if len(parts) not in (len(FIELDS) + 1, len(FIELDS) + len(EXTRA_FIELDS) + 1):
         raise ValueError('incomplete refresh trace')
-    return {key: value if key == 'scene' else int(value) for key, value in zip(FIELDS, parts[1:])}
+    return {key: value if key == 'scene' else int(value) for key, value in zip(FIELDS + EXTRA_FIELDS, parts[1:])}
 
 def latest(path):
     if not path.exists():
@@ -45,7 +46,7 @@ def latest(path):
 
 def assess(path, actions):
     lines = path.read_text().splitlines()
-    assert lines[0] == f'TH04_WINDOW_TRACE 1 period_ns {PERIOD} catchup_limit 4 muted 1'
+    assert lines[0] in [f'TH04_WINDOW_TRACE {v} period_ns {PERIOD} catchup_limit 4 muted 1' for v in (1, 2)]
     rows = [row(line) for line in lines if line.startswith('R ')]
     presents = [list(map(int, line.split()[1:])) for line in lines if line.startswith('P ')]
     drops = [list(map(int, line.split()[1:])) for line in lines if line.startswith('D ')]

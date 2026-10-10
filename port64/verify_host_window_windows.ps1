@@ -14,6 +14,7 @@ Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Collections.Generic;
 using System.IO;
 public static class Th04WindowProbe {
  [StructLayout(LayoutKind.Sequential)] public struct KEYBDINPUT {public ushort vk,scan;public uint flags,time;public UIntPtr extra;}
@@ -26,6 +27,10 @@ public static class Th04WindowProbe {
  [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr hwnd,IntPtr after,int x,int y,int cx,int cy,uint flags);
  [DllImport("user32.dll",CharSet=CharSet.Unicode)] public static extern IntPtr CreateWindowEx(uint ex,string cls,string text,uint style,int x,int y,int w,int h,IntPtr parent,IntPtr menu,IntPtr instance,IntPtr data);
  [DllImport("user32.dll")] public static extern bool DestroyWindow(IntPtr hwnd);
+ public delegate bool Enumerate(IntPtr window,IntPtr data);
+ [DllImport("user32.dll")] public static extern bool EnumWindows(Enumerate callback,IntPtr data);
+ [DllImport("user32.dll",CharSet=CharSet.Unicode)] public static extern int GetClassName(IntPtr window,StringBuilder name,int length);
+ public static IntPtr GameWindow(uint pid){IntPtr result=IntPtr.Zero;EnumWindows((w,d)=>{uint owner;GetWindowThreadProcessId(w,out owner);if(owner==pid){var name=new StringBuilder(128);GetClassName(w,name,128);if(name.ToString()=="TH04Port64Title")result=w;}return true;},IntPtr.Zero);return result;}
  public static void Key(ushort vk,bool up,bool extended) {var i=new INPUT();i.type=1;i.key.vk=vk;i.key.flags=(up?2u:0u)|(extended?1u:0u);if(SendInput(1,new INPUT[]{i},Marshal.SizeOf(typeof(INPUT)))!=1)throw new Exception("SendInput rejected");}
  public static string Tail(string path) {using(var s=new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.ReadWrite)){s.Seek(Math.Max(0,s.Length-16384),SeekOrigin.Begin);using(var r=new StreamReader(s)){return r.ReadToEnd();}}}
 }
@@ -40,7 +45,7 @@ $sink=[IntPtr]::Zero;$window=[IntPtr]::Zero
 function Latest {
  if(!(Test-Path -LiteralPath $trace)) {return $null}
  $lines=[Th04WindowProbe]::Tail($trace) -split "`n"
- for($i=$lines.Length-2;$i -ge 0;$i--) {if($lines[$i].StartsWith('R ')) {$parts=$lines[$i].Trim() -split ' ';if($parts.Length -eq 29){return ,$parts}}}
+ for($i=$lines.Length-2;$i -ge 0;$i--) {if($lines[$i].StartsWith('R ')) {$parts=$lines[$i].Trim() -split ' ';if($parts.Length -in @(29,38)){return ,$parts}}}
  return $null
 }
 function WaitState([scriptblock]$predicate,[int]$seconds=45) {
@@ -72,7 +77,7 @@ function Action([string]$name,[object[]]$keys,[int]$milliseconds) {
 }
 try {
  WaitState {param($r) $true}|Out-Null
- $process.Refresh();$window=$process.MainWindowHandle
+ $process.Refresh();$window=[Th04WindowProbe]::GameWindow([uint32]$process.Id)
  if($window -eq [IntPtr]::Zero){throw 'Missing owned main window.'}
  [uint32]$owner=0;[Th04WindowProbe]::GetWindowThreadProcessId($window,[ref]$owner)|Out-Null
  if($owner -ne $process.Id){throw 'Window owner differs.'}

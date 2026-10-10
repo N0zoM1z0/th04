@@ -1,61 +1,71 @@
 # TH04 native branch handoff
 
-Updated 2026-10-10. Current phase: host scheduling/input validation and current
-experimental muted GUI delivery. The full native goal stays active; DOS exact
-acceptance remains separate. General semantic work resumes only for a concrete
-port blocker. Both final CIs pass, including root live Ghidra replay/mutations.
+Updated 2026-10-10. Current phase: actual host-window Continue and physical-save
+restart validation. Full native goal stays active; historical DOS acceptance
+remains separate. General semantic work resumes only for a concrete blocker.
 
 ## Native x64 frontier
 
-v1354 fixes SDL keypad Enter held input and catchup resync losing slowdown.
-GNU8, optimized UBSan and actual Windows pass 67 contracts each; 204 AMD64
-programs build cold from 480 producer inputs. Preceding 104 GNU/MinGW core
-objects remain raw-equal; GNU/UBSan's 195 fake-audio frontend files equal v1353.
+v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary
+X11 Continue/save/restart verifier. 204 AMD64 programs build cold from 481
+producer inputs; GNU8, optimized UBSan and actual Windows pass 67 contracts each.
+Among 105 GNU/MinGW core objects, only trace serialization changes; 104 remain
+raw-equal to v1354. GNU/UBSan's 195 fake-audio frontend files per host also equal
+v1354. No audio backend/device opens.
 
-GNU8/UBSan real SDL/X11 callbacks under private Xvfb pass ordinary Marisa B
-entry, Return/keypad Enter, movement/Shift, shots/release and focus gating.
-Normal/Shift movement is 64/32 Q12.4 units per frame. Both traces record zero
-audio-device opens. Windows foreground acquisition rejects before sending
-keys; passing Windows contracts do not accept Windows held-input behavior.
+Eight real SDL/X11 processes under private Xvfb pass two stationary Lunatic
+Reimu A Continue/Quit/registration/fresh OP cases and two physical-file Scores
+restarts per GNU8/UBSan. MAIN freezes at frames 432/630 during Game Over and
+resumes at 433; Continue resets score/power/lives/credit. Missing-score/unranked
+and declared zero-score/ranked leaderboard fixtures are distinct. Ranked
+writer-close/rename snapshots contain CONTINUE 500 units with credit 0 while
+MAIN resets to credit 1/score 0. Nine other decoded partitions preserve checksum
+and payload; encoding keys legitimately change. Restarts preserve file hashes.
+All launches are muted. These are bounded OS-input trials, not complete clear
+routes, original whole-route equivalence, physical devices or dense timing.
 
-Producer manifest: `e2974686f86f22d2a2a7caaf736b664dd33aac3eae4703aeefbf93a7e9e6ac75`.
-Final verifier: `04ec21c37c2039c549b4130b8432693940c9bf53109e1765174204f8dfe4c4c7`.
-Only two verifier scripts differ; every compiled input is raw-identical.
-Producer receipts and corrected consumer archives retain distinct identities.
-Native replay/limits: `docs/port64/evidence/host-window.md`; private current
-receipts: `.analysis/port64/host-window-v1354/` in the native worktree.
+Producer manifest: `cce4f0fd683c5166f798303e2ebfb83a4fbbe8baef1ee56a862c024c25dbe3be`.
+Final verifier: `d027a9701ce8c6168c408bd18a93b72806e60079e87cbf39b7ab8d0ef9267f5c`.
+Only the route verifier differs; every compiled input is raw-identical.
+Keep the first missing-verdict-key and key-header comparator failures failed.
+Current evidence/recovery: native `.analysis/port64/host-route-v1355/`;
+replay/limits: native `docs/port64/evidence/host-window.md`.
 
-Earlier scopes remain: four complete A logical routes/Normal-earned Extra,
-bounded real Continue/physical host saves/fresh OP, ten-section registration,
-Extra/HUD/Scores/Music Room/demo/configuration, supplied PMD music and production
-SDL/WinMM transport tested through explicit fake APIs. These do not establish
-an original whole route, physical audio, or host timing. No backend/device opens.
+Actual Windows still rejects before SendInput. PID/class selection now excludes
+an early ConsoleWindowClass handle. Same-session WinSta0/Default diagnostics
+observe foreground-lock timeout 2147483647 ms; three owned-window activation
+attempts fail. No desktop/global policy/input-queue workaround was used.
+Passing Windows contracts do not accept Windows held input.
 
-Remaining: actual Windows input, startup across sound modes, other rank/shot/
-Continue routes, physical refresh/slowdown2, dense Lunatic performance and
-physical audio output. The full native goal stays active. A new experimental
-muted GUI is delivered in `native-port64-v1354/` under the private demo folder;
-all 21 preceding files/saves are unchanged. It is not final GUI acceptance.
+Remaining: actual Windows input, full startup across sound modes, complete
+rank/shot/Normal/Extra/Ending/Continue window routes, physical refresh/slowdown2
+and dense Lunatic performance. Physical audio stays untested under the user's
+mute instruction. Existing v1354 experimental package remains available; no new
+package publication or user save modification was needed for this observer.
 
-Scoped cleanup retires 1,190 build intermediates and 225 terminal owned stage
-files after three full archives/299 members read back, reporting 628,129,792
-allocated bytes net reclaimed. Current programs/source vectors/captures,
-failures, inputs and saves remain. Additional immutable capture sharing keeps
-324 paths/hashes and reclaims 210,509,824 allocated bytes net. Post-CI cache
-pruning retires 957 files with 15,585,280 allocated bytes net. Both subtract
-their journals; final receipt overhead is excluded.
+v1355 scoped cleanup keeps all 204 programs, producer/consumer source archives,
+compiler/CMake metadata, traces, physical files, captures and failed attempts.
+It retires 1190 regenerable build files / 70 completed contract-stage files after
+two full recovery archives / 144 members read back, net 596836352 allocated bytes.
+An independent replay verifies 2847 protected hashes and all 1260 absent files.
+The three earlier desktop stages retire 20 files, net 35110912 bytes; the terminal
+GUI stage and archived failed consumer materialization retire 494 files,
+net 22450176 bytes. Immutable capture sharing keeps 324 complete BMP/PCM paths
+and hashes, net 210509824 bytes. Counts subtract their journals/archives but
+exclude final receipt size. No original input, accepted program or save deleted.
+Post-CI pruning retires 1020 source-backed Python caches, net 16822272 allocated
+bytes; root `.analysis/cleanup/host-route-post-ci-caches-v1355.json` records
+source/hash readback. Both CIs pass, including root live Ghidra replay/mutations.
 
-## Finish and replay
+## Replay and finish
 
 ```sh
 python3 scripts/preflight.py
-ctest --test-dir ../port64-window-v1354/.analysis/product-v1354/linux --output-on-failure
 python3 scripts/ci.py
 git diff --check
 ```
 
-See [current native status](PORT64.md), [host replay](port64/evidence/host-window.md)
-and [retention](ANALYSIS_RETENTION.md). Private receipts retain exact commands,
-source/compiler/product identities, failed attempts and whole recovery hashes.
-One Borland/Wine writer at a time; no concurrent shared output. All launches
-remain muted. Never open an audio backend/device during these validations.
+Use [status](PORT64.md), [host-window evidence](port64/evidence/host-window.md)
+and [retention](ANALYSIS_RETENTION.md). Source/program/profile archives retain
+producer identities; restore into fresh paths. One Borland/Wine writer at a
+time. Never open an audio backend/device in these validations.

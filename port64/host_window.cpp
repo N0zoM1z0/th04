@@ -28,8 +28,8 @@ Trace::Trace(const std::string& directory,bool muted){
     stream_.open(std::filesystem::path(directory)/"window.tsv",std::ios::binary);
     if(!stream_)throw std::runtime_error("cannot create window trace");
     enabled_=true;epoch_=now_ns();
-    stream_<<"TH04_WINDOW_TRACE 1 period_ns "<<period_ns<<" catchup_limit "<<catchup_limit<<" muted 1\n";
-    stream_<<"# R seq begin_ns end_ns deadline_ns held shift focused before after scene program generation frame stage rank character shot x y bullets shots lives bombs misses invincibility audio_frames audio_opens audio_failed\n";
+    stream_<<"TH04_WINDOW_TRACE 2 period_ns "<<period_ns<<" catchup_limit "<<catchup_limit<<" muted 1\n";
+    stream_<<"# R seq begin_ns end_ns deadline_ns held shift focused before after scene program generation frame stage rank character shot x y bullets shots lives bombs misses invincibility audio_frames audio_opens audio_failed score_units credits power bombing respawn slow_frames run_frames score_digits_units score_delta\n";
     stream_.flush();
 }
 void Trace::refresh(std::uint64_t seq,std::int64_t begin,std::int64_t end,std::int64_t deadline,
@@ -41,7 +41,9 @@ void Trace::refresh(std::uint64_t seq,std::int64_t begin,std::int64_t end,std::i
         <<s.program<<' '<<s.generation<<' '<<s.frame<<' '<<s.stage<<' '<<s.rank<<' '
         <<s.character<<' '<<s.shot_type<<' '<<s.x<<' '<<s.y<<' '<<s.bullets<<' '
         <<s.shots<<' '<<s.lives<<' '<<s.bombs<<' '<<s.misses<<' '<<s.invincibility<<' '
-        <<s.audio_frames<<' '<<s.audio_opens<<' '<<s.audio_failed<<'\n';stream_.flush();
+        <<s.audio_frames<<' '<<s.audio_opens<<' '<<s.audio_failed<<' '
+        <<s.score_units<<' '<<s.credits<<' '<<s.power<<' '<<s.bombing<<' '<<s.respawn<<' '
+        <<s.slow_frames<<' '<<s.run_frames<<' '<<s.score_digits_units<<' '<<s.score_delta<<'\n';stream_.flush();
 }
 void Trace::present(std::uint64_t seq,std::int64_t begin,std::int64_t end,bool updated){
     if(!enabled_)return;

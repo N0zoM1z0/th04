@@ -1540,6 +1540,10 @@ public:
             for(const auto& b:main_->bullets().snapshot().entities)s.bullets+=b.flag!=0;
             s.shots=main_->shots().snapshot().alive_count;s.lives=main_->score().remaining_lives;
             s.bombs=main_->score().remaining_bombs;s.misses=main_->life().misses;s.invincibility=main_->invincibility();
+            s.score_units=main_->awarded_score_units();s.credits=main_->scoreboard().digits[0];
+            s.power=main_->score().power;s.bombing=main_->life().bombing;s.respawn=main_->life().respawn_time;
+            const auto stats=main_->run_statistics();s.slow_frames=stats.slow_frames;s.run_frames=stats.frames;
+            s.score_digits_units=th04::portable::score::numeric_units(main_->scoreboard().digits);s.score_delta=main_->score().score_delta;
         }
         if(audio_output_) {const auto& a=audio_output_->statistics();s.audio_frames=a.generated;
             s.audio_opens=a.open_attempts;s.audio_failed=a.failed;}
