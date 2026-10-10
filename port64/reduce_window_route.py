@@ -19,6 +19,41 @@ def percentile(values, percentage):
     return ordered[min(len(ordered)-1, (len(ordered)-1)*percentage//100)]
 
 
+def density_metrics(rows, presents):
+    """Observed rank3 density only; no synthetic bullet or FPS acceptance."""
+    result = {}
+    for threshold in (320, 400):
+        selected = [state for state in rows if state['scene'] == 'main'
+                    and state['rank'] == 3 and state['bullets'] >= threshold]
+        sequences = {state['seq'] for state in selected}
+        timings = [end-begin for sequence, begin, end, updated in presents
+                   if updated and sequence in sequences]
+        spans = []
+        for state in selected:
+            if (not spans or spans[-1]['last_refresh'] + 1 != state['seq']
+                    or spans[-1]['stage'] != state['stage']
+                    or spans[-1]['generation'] != state['generation']):
+                spans.append(dict(stage=state['stage'], generation=state['generation'],
+                                  first_refresh=state['seq'], first_frame=state['frame'],
+                                  refreshes=0, max_bullets=0))
+            span = spans[-1]
+            span['last_refresh'] = state['seq']
+            span['last_frame'] = state['frame']
+            span['refreshes'] += 1
+            span['max_bullets'] = max(span['max_bullets'], state['bullets'])
+        advance = [state['end']-state['begin'] for state in selected]
+        lag = [state['begin']-state['deadline'] for state in selected]
+        result[threshold] = dict(refreshes=len(selected), spans=spans,
+                                 slowdown2_refreshes=sum(s['after']==2 for s in selected),
+                                 advance_over_admission_period=sum(
+                                     s['end']-s['begin'] > PERIOD*s['after'] for s in selected),
+                                 advance_ns={p: percentile(advance, p) for p in (50,95,99,100)} if advance else {},
+                                 deadline_lag_ns={p: percentile(lag, p) for p in (50,95,99,100)} if lag else {},
+                                 updated_presentations=len(timings),
+                                 presentation_ns={p: percentile(timings, p) for p in (50,95,99,100)} if timings else {})
+    return result
+
+
 def reduce(path):
     lines = path.read_text().splitlines()
     assert lines[0] in [f'TH04_WINDOW_TRACE {version} period_ns {PERIOD} catchup_limit 4 muted 1'
@@ -99,6 +134,7 @@ def reduce(path):
                 deadline_lag_ns={p: percentile([state['begin']-state['deadline'] for state in rows], p)
                                  for p in (50, 95, 99, 100)},
                 stages=spans, gameover_refreshes=sum(state['scene']=='gameover' for state in rows),
+                lunatic_density=density_metrics(rows, presents),
                 advance_ns={p: percentile(advance, p) for p in (50, 95, 99, 100)},
                 presentation_ns={p: percentile(presentation, p) for p in (50, 95, 99, 100)},
                 audio_opens=0, scope=__doc__)

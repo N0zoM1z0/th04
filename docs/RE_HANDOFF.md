@@ -11,14 +11,26 @@ remains separate. General semantic work resumes only for a concrete blocker.
 
 ## Native x64 frontier
 
-v1357 closes actual GNU/optimized-UBSan Normal Reimu A window routes on
-unchanged v1356 programs. Ordinary OS keys traverse all six stages without
-Continue, then Ending, registration Esc, physical score rename, fresh OP and
-separate Scores restart. Complete traces contain 89,008/86,333 route and
-794/795 restart refreshes, zero audio opens/failures, earned Normal admission,
-unchanged CFG and nine other decoded score partitions. This accepts native
-instrumented private-Xvfb routes only, not original whole-route equivalence,
-physical Windows input, all rank/shot combinations or dense Lunatic performance.
+v1358 corrects the v1357 UBSan all-clear/admission claim. Unplayed flag0x19
+also has bit0; original native OP normalizes masks>3 to0. The old bit-only
+comparator accepted that sentinel incorrectly. GNU Normal stores real mask1;
+GNU Extra also stores mask1 and retains its accepted no-Continue/full-name route.
+UBSan reaches all six stages, then transitions from Final Stage miss13/respawn33
+to MAINE without a Game Over scene. Its final physical Normal mask remains0x19,
+so good-clear/admission acceptance is revoked. This is consistent with the
+compiled Final Stage death-to-Bad-Ending path. Its physical save/Esc/freshOP/
+Scores restart, unchanged CFG/nineother partitions and zeroaudio observations
+remain valid. Raw old receipts remain historical comparator outputs.
+
+Five corrected checksum-valid mask/snapshot mutants reject, including0x19 with
+bit0. Both retained GNU positive routes pass the stronger mask<4+shot-bit gate.
+The six-stage verifier now supports ranks1..3/characters0..1/shots0..1 through
+ordinary OP selection and optional persistent private XTest keys. Easy's five-
+stage ending gate stays separate. Fresh natural Lunatic ReimuA is running on
+unchanged v1356 GNU; no clear/timing acceptance until its own terminal/save/
+restart verdict. Dense rank3 reductions separate>=320/>=400 samples and exclude
+Normal/Extra/dialog rows; full observer cost remains outside uninstrumented
+performance acceptance. Current receipts: native `.analysis/port64/lunatic-window-v1358/`.
 
 The schedule reducer verifies every deadline against preceding after-update
 slowdown or recorded resync, plus v1/v2/v3 widths and terminal counts. Native
@@ -43,8 +55,9 @@ refreshes) on v1355 programs. Windows retains 19 cases only. No Windows GUI,
 foreground or host-key retries while the user uses the host. Earlier wrong-map
 and corrected fixed/path Game Over failures remain failed. Live advice is const
 output; OS input still owns the keys. No game/clock/score/life injection.
-All owned v1357 jobs are terminal; `batch-terminal-v2.json` supersedes the
-earlier live-job snapshot. Do not restart passed/failed jobs from stale handles.
+All v1357 jobs are terminal. v1358 `active-lunatic-job-v1.json` records the
+new private-Xvfb job; re-poll its owned PID before completion/restart. Do not
+reuse stale v1357 handles.
 
 Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
 identities. GNU/UBSan pass 67 contracts each plus manual held-input

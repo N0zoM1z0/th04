@@ -1,19 +1,82 @@
 # Host window admission and input
 
-## Complete native Normal window routes and trace controls (v1357)
+## Clear-mask correction and natural Lunatic preparation (v1358)
 
-Unchanged v1356 GNU/optimized-UBSan programs complete Normal Reimu A via
-ordinary OS keys on private Xvfb. Both routes reject Game Over/Continue and
+The previous bit-only admission oracle was insufficient: a fresh unplayed
+score section has mask0x19, including bit0. `op_score.cpp` normalizes values>3
+to0 before unlock/availability; registration converts a sentinel to a real
+shot-bit mask only on qualifying good/Extra/Easy completion. `has_clear()` now
+requires mask<4 and the requested shot bit at both the final file and physical
+rename boundary. No gameplay/compiler source changes.
+
+The stronger oracle still accepts actual GNU Normal/Extra mask1. It rejects
+the retained UBSan Normal result: all final masks remain0x19. Its last MAIN
+frame11,440 is Final Stage with miss13/respawn33/invincibility154, immediately
+followed by MAINE. Native `gameover::Scene` sends Stage5 death directly to Bad
+Ending without a Game Over menu, so absence of scene='gameover' is insufficient
+for all-clear. That ending interpretation is source-routed; the generic trace
+does not report end_sequence or inner ending pixels. Revoke the old UBSan
+all-clear/admission claim; retain its actual reached-stage/save/registration/
+freshOP/restart/clock/zeroaudio evidence. Original v1357 green receipt and its
+producer/consumer sources remain immutable historical comparator evidence.
+
+`verify_clear_admission.py` replays the actual GNU positive, UBSan negative and
+five complete checksum-valid clones: flags0,2,0x19,0x41 and physical snapshots
+whose flags are0x19 while final file remains valid1. Each rejects at the intended
+admission or physical boundary gate; immutable trace hardlinks are never written
+and all scratch clones retire after their verdict/hash capture. Both original
+routes/files remain unchanged. The first private readback assumed both old
+positives survived and failed; corrected v2 records the narrower result.
+
+`verify_window_route.py --adaptive --rank 3 --character 0 --shot 0 --key-driver
+xtest` runs a natural six-stage Lunatic candidate with fresh legal options,
+ordinary OS keys and no reference-route dependency. It requires six actual
+stages, credit0 throughout MAIN, real mask<4/shot bit in the selected
+rank+5*character partition, nine other decoded payload/checksums, unchanged CFG,
+fresh OP and separate Scores restart. New startup selection supports Marisa via
+Right and Shot B via Down. The current ReimuA trial is pending; do not accept
+another rank/shot merely because its argument is implemented. Legacy fixed/
+position modes still require the original attested Normal ReimuA reference.
+
+The complete read-only reducer now reports rank3 MAIN density>=320/>=400, each
+contiguous span, slowdown2, advance/presentation/deadline-lag distributions and
+CPU advance over its after-update admission period. Normal440/dialog440 are
+excluded by independent category controls; exact320/400 boundary samples are
+included. Previous complete GNU Normal/UBSan ending/GNU Extra clock checks still
+pass and report zero Lunatic samples. Update timings exclude subsequent advice/
+trace work; virtual display/shared-machine/observer timing is not uninstrumented
+FPS, physical Windows or original hardware timing acceptance.
+
+```sh
+python3 port64/verify_clear_admission.py --normal-route PASSED_GNU_NORMAL \
+  --rejected-route PREVIOUS_UBSAN_SENTINEL_ROUTE --output FRESH_DIRECTORY
+```
+
+Receipts and full launch/source vectors: `.analysis/port64/lunatic-window-v1358/`.
+No Windows GUI/foreground/host keys or audio backend/device opens are permitted.
+Both CIs pass (root includes live Ghidra replay/mutations), as does diff check.
+No new build/program is generated; all 489 consumer inputs are fully archived
+and read back, with compiled inputs equal the old producer. Source-backed
+post-CI caches retire with full source/hash readback under root
+`.analysis/cleanup/lunatic-source-caches-readback-v1358.json`; live outputs are excluded.
+
+## Complete native Normal window routes and trace controls (v1357; narrowed by v1358)
+
+Original v1357 comparison reported GNU/optimized-UBSan Normal Reimu A via
+ordinary OS keys on private Xvfb. Both old verifiers reject a visible Game Over menu/Continue and
 observe every MAIN row as program1/generation2/rank1/character0/shot0/credit0.
 Six actual stages lead to MAINE program2/generation3, Ending, registration Esc,
 physical IN_MOVED_TO score snapshots, fresh OP and a separate Scores process.
-Nine other decoded partitions preserve checksum/payload bytes2..195; encoding
+The v1358 correction above revokes UBSan all-clear/admission; its final mask
+is0x19. GNU good-clear remains accepted. Nine other decoded partitions preserve
+checksum/payload bytes2..195; encoding
 keys0/1 can change. Physical CFG remains the legal Normal/lives6/Bombs2/BGM2/
 SE1/Turbo configuration. Ending/save/restart acceptance is native runtime
 observation; original whole-route or physical device equivalence remains open.
 
-| Complete native observation | GNU8 | Optimized UBSan |
+| Recorded native observation | GNU8 | Optimized UBSan |
 | --- | --- | --- |
+| Outcome under corrected admission gate | accepted good-clear | rejected all-clear/admission |
 | Route refreshes | 89,008 | 86,333 |
 | Separate Scores restart refreshes | 794 | 795 |
 | Last MAIN frame / lives / misses | 13,607 / 2 / 11 | 11,440 / 1 / 13 |
@@ -111,7 +174,8 @@ and target provenance are unchanged.
 The GNU logical Normal Reimu A replay preserves all 88,934 input/state ticks,
 startup/menu inputs, Ending name and physical saves compared to v1351. It
 uses render_every0 versus the old every-refresh1; it makes no wall or pixel
-identity claim. Those actual GNU/UBSan Normal window routes subsequently close in v1357 above. No complete Windows
+identity claim. GNU good-clear and UBSan save/restart were recorded in v1357; v1358 above
+revokes the broader UBSan all-clear/admission claim. No complete Windows
 route, dense Lunatic timing/performance or physical audio acceptance follows.
 
 ```sh

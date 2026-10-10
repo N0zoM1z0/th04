@@ -46,6 +46,12 @@ def entries(section):
                            units=sum(digits[j]*10**(j-1) for j in range(1,8))))
     return result
 
+def has_clear(section, shot):
+    """An unplayed 0x19 sentinel has bit0 too; only masks below4 are clears."""
+    if shot not in (0, 1):
+        raise ValueError('invalid clear-mask shot')
+    return section[174] < 4 and bool(section[174] & (1 << shot))
+
 class Writes:
     def __init__(self, saves, output, trace):
         lib=ctypes.CDLL(None,use_errno=True)

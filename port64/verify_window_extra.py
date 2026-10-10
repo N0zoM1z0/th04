@@ -18,7 +18,7 @@ from private_x11 import key_names, require_private_xvfb
 from private_x11_keys import PrivateKeys
 from verify import require_elf_x86_64
 from verify_host_window import latest, row
-from verify_window_continue import Writes, decode, entries, restart
+from verify_window_continue import Writes, decode, entries, has_clear, restart
 
 ROOT = Path(__file__).resolve().parents[1]
 FULL_NAME = bytes([0xaa] * 8).hex()
@@ -59,11 +59,11 @@ def earned_normal(path):
         assert sha(path / 'saves' / name) == report['files'][name]
         assert report['restart']['files_after'][name] == report['files'][name]
     sections = decode((path / 'saves/GENSOU.SCR').read_bytes())
-    assert sections[1][174] & 1, 'Reimu A admission must be earned at Normal rank'
+    assert has_clear(sections[1], 0), 'Reimu A admission must be earned at Normal rank'
     assert (path / 'saves/MIKO.CFG').read_bytes() == bytes([1, 6, 2, 2, 1, 1, 0, 0, 0, 13])
     snapshots = [decode((path / 'physical-events' / event['snapshot']).read_bytes())
                  for event in report['physical_events'] if event['name'] == 'GENSOU.SCR']
-    assert any(section[1][174] & 1 for section in snapshots)
+    assert any(has_clear(section[1], 0) for section in snapshots)
     return report
 
 
@@ -216,7 +216,7 @@ def main():
         final = (save / 'GENSOU.SCR').read_bytes()
         (out / 'final-GENSOU.SCR').write_bytes(final)
         sections = decode(final)
-        assert sections[4][174] & 1, 'Extra Reimu A clear flag was not persisted'
+        assert has_clear(sections[4], 0), 'Extra Reimu A clear flag was not persisted'
         assert any(entry['name'] == FULL_NAME and entry['credits'] == 0
                    for entry in entries(sections[4])), 'complete eight-glyph name missing'
         assert all(sections[i][2:] == initial[i][2:] for i in range(10) if i != 4)
@@ -237,7 +237,7 @@ def main():
         assert all(state['audio_opens'] == state['audio_failed'] == 0 for state in rows)
         snapshots = [decode((out / 'physical-events' / event['snapshot']).read_bytes())
                      for event in events if event['name'] == 'GENSOU.SCR']
-        assert any(section[4][174] & 1 and
+        assert any(has_clear(section[4], 0) and
                    any(entry['name'] == FULL_NAME and entry['credits'] == 0
                        for entry in entries(section[4])) for section in snapshots)
         result = dict(passed=True, private_display=private_display, key_driver=args.key_driver, pins=pins,

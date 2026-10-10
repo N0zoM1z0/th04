@@ -16,6 +16,7 @@ import sys
 PORT_FILES = (
     "port64/reduce_window_route.py",
     "port64/private_x11_keys.py",
+    "port64/verify_clear_admission.py",
     "port64/verify_window_extra.py",
     "port64/route_advice.hpp",
     "port64/private_x11.py",
