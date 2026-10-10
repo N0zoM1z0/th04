@@ -1,5 +1,14 @@
 # Private build and analysis retention
 
+The v1361 Turbo0 candidate is now terminal failed-clear; its separate bad-save
+Scores reader and final CIs pass. Final terminal-CI cache pruning retires962
+source-backed caches/net15,650,816 allocated B, including now-unused port64
+helpers. Receipt: `.analysis/cleanup/slowdown-terminal-caches-readback-v1361.json`.
+Together with the earlier reader-CI interval (955 entries/net15,478,784 B), this
+turn's two distinct cleanup intervals reclaim31,129,600 allocated B (about29.7MiB).
+Programs, current failed trace/actions, saves, source archives and all negative
+receipts remain for ordinary input-policy review; no new build is produced.
+
 v1361 both final CIs pass (root includes live Ghidra/mutation replay). The
 independent reader and eight controls create no build/game output. Source-backed
 public-script caches retire955 files after source/protected hash readback,

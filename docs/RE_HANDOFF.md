@@ -54,13 +54,21 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-Current work: one natural GNU Lunatic ReimuA/Turbo0 route, ordinary private
-XTest keys/read-only advice. Tool17095/controller404173/game404187 remains live;
-verify /proc argv/start ticks against native
-`.analysis/port64/slowdown-window-v1360/active-job-v2.json` before polling or
-restarting. Its six pinned controller/input/reducer files must stay unchanged.
-Stage3 prefix max306/4,812 slowdown2 is below the dense gates; no terminal clear,
-physical restart or dense acceptance yet. Observation timeout is not termination.
+The v1360 GNU Turbo0/ReimuA candidate is terminal and failed the true-clear
+gate. Complete trace has88,267 refreshes: six stages reached, Final Stage last
+frame11,267/miss13/respawn33/invincibility154 immediately enters MAINE; all physical
+masks remain0x19. No all-clear/complete dense-route acceptance. Inner Bad Ending
+is source-routed/inferred. Separate new private Scores reader passes795 refreshes
+with unchanged physical hashes/zeroaudio; the original failed controller never
+started its own reader. All owned jobs are now terminal.
+
+Within this failed candidate, natural>=320 has416 samples/206 slowdown2 and
+>=400 has125/63. Complete deadline/terminal reduction passes; >=400 update
+P95/P99=8.33/12.27ms, no update exceeds its own admission period. These strengthen
+bounded slowdown observations, not successful-route or uninstrumented/physical
+performance acceptance. Before another Turbo0 attempt, review ordinary Bomb
+input policy: fatal snapshot still has1 Bomb and advice0x20. This is a candidate
+policy gap, not a proved game defect. Windows GUI/host keys/audio remain disabled.
 
 v1361 independent `verify_natural_slowdown.py` rechecks complete raw traces,
 program/original inputs, CFG, MAIN identity/credit, registration Esc, physical

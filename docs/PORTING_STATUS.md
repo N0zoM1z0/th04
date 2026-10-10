@@ -25,6 +25,23 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
+The v1360 GNU Turbo0/ReimuA candidate is terminal and failed the true-clear
+gate. Complete trace has88,267 refreshes: six stages reached, Final Stage last
+frame11,267/miss13/respawn33/invincibility154 immediately enters MAINE; all physical
+masks remain0x19. No all-clear/complete dense-route acceptance. Inner Bad Ending
+is source-routed/inferred. Separate new private Scores reader passes795 refreshes
+with unchanged physical hashes/zeroaudio; the original failed controller never
+started its own reader. All owned jobs are now terminal.
+
+Within this failed candidate, natural>=320 has416 samples/206 slowdown2 and
+>=400 has125/63. Complete deadline/terminal reduction passes; >=400 update
+P95/P99=8.33/12.27ms, no update exceeds its own admission period. These strengthen
+bounded slowdown observations, not successful-route or uninstrumented/physical
+performance acceptance. Before another Turbo0 attempt, review ordinary Bomb
+input policy: fatal snapshot still has1 Bomb and advice0x20. This is a candidate
+policy gap, not a proved game defect. Windows GUI/host keys/audio remain disabled.
+
+
 v1361 adds the independent read-only `verify_natural_slowdown.py`. It rechecks
 program/original inputs, legal CFG, every MAIN identity/credit, six stages,
 registration Esc, true clear at physical rename/final file, nine unchanged
@@ -34,8 +51,9 @@ controls reject live/incomplete, wrong Turbo, declared Turbo0 with no dense2,
 checksum-valid wrong-shot/physical-sentinel and lost-deadline cases. All scratch
 clones retire; originals and the running controller/helpers remain unchanged.
 Consumer491 inputs (`437d7e36…`) archive/read back; all485 compiled inputs remain
-unchanged. Same Turbo0 job17095/controller404173/game404187 is still live.
-Stage3 prefix max306/4,812 slowdown2 is below>=320/>=400; no terminal/dense verdict.
+unchanged. The same Turbo0 job17095/controller404173/game404187 subsequently failed the
+true-clear gate as recorded above. Its earlier Stage3 prefix was below the density
+gates; the complete failed trace now supplies bounded slowdown observations.
 
 
 v1360 adds legal Turbo0 selection and an explicit dense-slowdown route gate.
