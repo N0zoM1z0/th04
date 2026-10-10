@@ -1,5 +1,26 @@
 # Native PMD musical FM state and register requests
 
+## Completed first-load supplied songs (v1349)
+
+All69 first-PSP stock driver/song cases agree on GNU8, optimized UBSan and
+actual Windows:827271 complete configured FM/SSG/rhythm/FM3 state/write rows
+perhost through two global loops or natural end, extra64IRQs, stop/eightIRQs.
+This is a fresh first-load aggregate, not a restamped138two-load receipt.
+The unchanged original `original-dev-v2` producer and both native watchers
+remain live for PSP2000. Receipts/archival inputs stay distinct.
+
+All46 pinned supplied resources have observed part9 prefixes `CA01 BB01`,
+optional `B2 value`, then `80`. The69 completed original scenarios have zero
+part9 note counts/PPS requests. Unowned sample reset writes occur in46cases
+and are inventoried explicitly; zero note requests do not prove arbitrary
+external-bank or third-party support or physical chip accuracy.
+Receipts: `.analysis/port64/game-audio-v1348/stock-firstload-aggregate-v1.json`,
+`stock-firstload-original-prefix-v1.json`,
+`stock-firstload-windows-receipt-v1.json`,
+`stock-part9-firstload-observation-v1.json`.
+The Windows stage recovers from `firstload-windows-stage-recovery-v1.tar.gz`
+using the v1349 terminal journal. Full music/audio-usage closure remains open.
+
 ## Shared note rotation and stock-song failure (v1348)
 
 The longer supplied-song producer found a real mismatch in ST00B.M26 after

@@ -1,5 +1,13 @@
 # Extra entry, dialogs and bosses
 
+v1349 narrows the former natural-survival gap: a key-only ordinary prototype
+clears Reimu Extra in29611 route advances on GNU/UBSan/actualWindows after a
+same-host physically earned Normal unlock. Three misses/eight Bombs occur;
+no hit suppression, unlock injection or Continue. Registration/save/fresh OP
+and whole recorded streams/final saves agree. This is a logical prototype
+route, with deferred presentation; complete public-runtime/rank/shot/timing
+acceptance remains. See [route ownership/replay](stage-lifecycle.md#ordinary-key-only-logical-routes-v1349).
+
 The v1310 source joins actual OP Extra selection, ST06 resources and STD waves
 to the complete timed midboss. The v1310 stop boundary was the Mugetsu dialog; v1312 below supersedes
 that frontier. Gengetsu, unlock persistence and complete ordinary Extra play

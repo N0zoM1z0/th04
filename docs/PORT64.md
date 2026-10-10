@@ -1,5 +1,24 @@
 # TH04 native x64 port
 
+v1349 completes four key-only ordinary logical prototype routes on GNU8,
+optimized UBSan and actual Windows: Reimu Easy/both Normal characters/Reimu
+Extra.270193 route advances/37 capture files perhost and physical saves agree;
+same-host Normal-earned saves admit Extra after restart. Legal6life/2bomb
+settings preserve real hits/deaths/Bombs; no Continue/state injection occurs.
+GNU every-refresh Easy rendering also agrees.103core objects per GNU/MinGW
+are raw-equal to current195product objects. The public replay controls have
+separate pins while the existing tool manifest stays frozen. Product CLI/GUI,
+full startup presentation, remaining rank/shot/Continue and host timing/Lunatic
+performance acceptance remain. [Route scope/replay](port64/evidence/stage-lifecycle.md#ordinary-key-only-logical-routes-v1349).
+
+The completed first-load69stock music cases agree on three hosts:827271rows.
+All46part9prefixes/zero observed note/PPS requests are inventoried alongside
+unowned reset writes. Full138two-load original/music-usage closure remains live,
+not accepted. [Music scope](port64/evidence/pmd-musical-fm.md#completed-first-load-supplied-songs-v1349).
+Current195product source manifest remains
+`ba2e588853f852fa5a02886b03383ea25d7664fb5f2eeb75a1d608cef000d845`.
+All launches stay muted; no new GUI or DOS exactness is promoted.
+
 v1348 repairs shared FM/SSG note rotation after a full-song ST00B mismatch.
 457728 original arithmetic calls and3600 legal FM/SSG/FM3 boundary rows agree
 on GNU8, optimized UBSan and actual Windows; three wrong source variants reject.
@@ -40,7 +59,7 @@ reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
 integration, PPS/external ADPCM, natural routes,
 host timing and new GUI delivery remain open. No DOS exactness is promoted.
 
-Current v1346 source manifest:
+Historical v1346 source manifest:
 `b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
 Receipts: native `.analysis/port64/startup-v1346/`;
 [ownership and replay](port64/evidence/op-startup.md).

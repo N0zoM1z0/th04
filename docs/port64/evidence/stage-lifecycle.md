@@ -1,5 +1,89 @@
 # Stage Lifecycle evidence
 
+## Ordinary key-only logical routes (v1349)
+
+GNU8, optimized UBSan and actual Windows AMD64 each complete the following
+ordinary-mode prototype routes. Inputs choose movement, shot and Bomb from
+observed native state; they never change actors, hit/life/score/stage/clear
+state. Initial configuration uses the legal six-life/two-bomb menu settings.
+No Continue occurs. The Normal-earned physical score file admits Extra in a
+new process on the same host, including Windows; no unlock bit is injected.
+
+| Route | Route advances | Ending entry | Misses / Bombs used |
+| --- | ---: | --- | ---: |
+| Reimu Easy, five stages | 72434 | `_ED001.TXT` | 2 / 10 |
+| Reimu Normal, six stages | 88934 | `_ED000.TXT` | 8 / 21 |
+| Marisa Normal, six stages | 79214 | `_ED100.TXT` | 5 / 15 |
+| Reimu Extra, both bosses | 29611 | Extra MAINE | 3 / 8 |
+
+Each route reaches registration, writes its independent host score and returns
+to fresh OP. Across four cases,270193 route advances/37 whole capture files
+perhost agree: full recorded key/telemetry streams, stage/fresh-OP BMPs, entry
+metadata and physical final `GENSOU.SCR`/`MIKO.CFG`. Startup wait advances are
+outside these route-loop counts. GNU Easy with every-refresh rendering also
+agrees with deferred presentation for all72434 inputs/telemetry, eight capture
+files and final saves. This is native host consistency, not an independent
+original whole-route comparison or a physical timing claim.
+
+The prototype uses current maintained `main.cpp` and `view.cpp` with two
+declared test-entry hooks: include `pilot.inl`, and route the startup-check
+entry to `run_natural_route_probe`. Ordinary GUI constructors enable the same
+configuration/registration owners plus separate host timing. No game body is
+changed. All103 GNU core objects and all103 MinGW core objects are raw-equal
+to recorded current195product objects from the v1348 pre-retirement journal.
+This compiler bridge binds the gameplay hypothesis; it does not promote DOS
+exactness. Current195programs remain unchanged. Three stable prototype programs
+and their source/compiler/cache-link profiles are separate from that vector.
+
+`port64/natural_route_probe.inl` and `verify_natural_routes.py` are maintained
+replay controls. Their own hashes/source archive bind them while existing
+Python/PowerShell membership stays frozen for the live138song producer. Add
+these two entries, along with the two note verifiers, to `verify.PORT_FILES`
+only after the producer and guarded consumers close. The GNU public verifier
+replays all four cases against the independently retained first native runs.
+
+Receipts: `.analysis/port64/route-exploration-v1349/aggregate-receipt-v5.json`,
+`{linux,ubsan}-v5/`, `public-linux-v5/`, `windows{,-extra}-receipt-v5.json`,
+`windows{,-extra}-save-readback-v5.json`, `render-partition-v4.json`,
+`{gnu,windows}-core-object-bridge-v5.json`.
+
+```sh
+python3 port64/verify_natural_routes.py --host linux \
+  --binary .analysis/port64/route-exploration-v1349/program-linux-v5 \
+  --product-profile .analysis/port64/route-exploration-v1349/programs-v5.json \
+  --source-profile .analysis/port64/route-exploration-v1349/source-profile-v5.json \
+  --hdi ../../runtime/images/zun.hdi --font /path/to/FREECG98.bmp \
+  --reference .analysis/port64/route-exploration-v1349/linux-v5 \
+  --extra --output NEW-ROUTE-OUTPUT
+```
+
+For UBSan choose its attested stable program and host. Restore the archived
+Windows stage or generate a fresh guarded plan using `verify_windows_current.ps1`;
+the separate Extra plan copies Windows's own Normal-earned physical saves.
+Private source archives/retained CMake flags reconstruct the two hooks and
+prototype build. Use fresh output paths. The earlier unoptimized pilot dies
+in Stage2 and is exploratory evidence only; its source/logs remain, but its
+scratch executable was superseded before an accepted raw recovery claim.
+
+Terminal `retention-before-v5.json`/`retention-receipt-v5.json` protect5358files,
+retire993terminal/generated files after full two-archive member readback and
+reclaim410439680allocated bytes net (391.4MiB scoped). The Windows normal/
+Extra stage recovers from `windows-stage-recovery-v5.tar.gz`; the first-load
+song stage separately recovers from the audio directory's
+`firstload-windows-stage-recovery-v1.tar.gz`. Current195programs/six private
+stable programs and all native raw captures/saves remain. Private CMake
+intermediates regenerate; cached duplicate executables recover from stable
+v5 copies. All live original/song-watch writers stay excluded.
+
+Fresh `terminal-readback-v5.json` passes after retirement, including both
+archive/member/capture readbacks, current195programs and frozen original tools.
+Root and native final CI pass; root Ghidra replay/mutation smoke passes.
+
+Product CLI/GUI integration, complete startup presentation, remaining ranks,
+shots/Continue scenarios, host input/refresh/slowdown and dense Lunatic
+performance remain. Full138song closure remains separate. All launches stay
+muted; no audio device opens and no current GUI is published.
+
 Historical bounded results, preserved from `docs/PORT64.md`. Current state is
 [the port overview](../../PORT64.md). Original CPU execution and adapter scope
 remain explicit; successful component controls do not accept complete gameplay.
