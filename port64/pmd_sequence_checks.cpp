@@ -30,6 +30,9 @@ void record(std::ostream& out,const Sequence& player,bool sharing=false) {
     out<<'\n';
 }
 void contracts() {
+    require(transpose_note(0,2,253)==255,"lowest C negative transposition must become a rest");
+    require(transpose_note(15,127,0)==15,"canonical rest bypasses transposition");
+    require(transpose_note(64,127,129)==64,"part/master transpose byte sum");
     // A synthetic three-tick phrase sets bar length, tempo and a real loop.
     // It verifies bounded self-modifying loop storage and musical durations.
     Bytes data(40,0x80);data[0]=0;
@@ -60,6 +63,16 @@ void contracts() {
 int main(int argc,char** argv) {
     try {
         if(argc==1){contracts();return 0;}
+        if(argc==3 && std::string(argv[1])=="--transpose-bytes") {
+            std::ofstream output(argv[2],std::ios::binary);require(bool(output),"transpose output");
+            for(unsigned note=0;note<256;++note)for(unsigned sum=0;sum<256;++sum)
+                output.put(char(transpose_note(std::uint8_t(note),0,std::uint8_t(sum))));
+            for(unsigned part:{17u,128u,255u})
+                for(unsigned note:{0u,11u,12u,13u,14u,15u,16u,31u,63u,112u,123u,127u,128u,255u})
+                    for(unsigned sum=0;sum<256;++sum)
+                        output.put(char(transpose_note(std::uint8_t(note),std::uint8_t(part),std::uint8_t(sum-part))));
+            output.close();require(bool(output),"transpose write failed");return 0;
+        }
         require(argc==5 || argc==6,"PMD trace: song board operation-file output-file [ssg]");
         const bool sharing=argc==6;require(!sharing || std::string(argv[5])=="ssg","PMD extended trace mode");
         const int board=std::stoi(argv[2]);require(board>=0 && board<=2,"invalid PMD board");

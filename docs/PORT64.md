@@ -1,5 +1,20 @@
 # TH04 native x64 port
 
+v1348 repairs shared FM/SSG note rotation after a full-song ST00B mismatch.
+457728 original arithmetic calls and3600 legal FM/SSG/FM3 boundary rows agree
+on GNU8, optimized UBSan and actual Windows; three wrong source variants reject.
+All195 programs rebuild,64 contracts pass perhost. GNU/UBSan regress194238
+earlier rows/21103632 resident PCM frames perhost; current muted frontends
+produce336 matching files perhost and equal physical saves. Windows additionally
+matches two completed ST00B cases/25626 rows. This closes the note corpus;
+the independent138case song producer is still live and has no aggregate acceptance.
+463 listed inputs bind product manifest
+`ba2e588853f852fa5a02886b03383ea25d7664fb5f2eeb75a1d608cef000d845`;
+two note verifiers retain separate pins until the live tool freeze closes.
+Receipts: `.analysis/port64/game-audio-v1348/`; [note ownership and replay](port64/evidence/pmd-musical-fm.md#shared-note-rotation-and-stock-song-failure-v1348).
+Full song/audio usage closure, full startup integration, natural routes,
+host timing/performance and new GUI remain. All launches stay muted.
+
 v1347 closes the independent recorded startup pixel corpus. Fifteen two-load
 original cases produce5,879 complete two-page/raw-palette/DAC/shown-RGB frames;
 GNU8, optimized UBSan and actual Windows agree.94,400 clipped SUPER executions

@@ -53,6 +53,8 @@ PORT_FILES = (
     "port64/verify_op_startup_pixels.py",
     "port64/verify_startup_pixels_windows.ps1",
     "port64/verify_pmd_fm3.py",
+    "port64/verify_pmd_game_corpus.py",
+    "port64/verify_pmd_game_windows.ps1",
     "port64/pmd_rhythm_checks.cpp",
     "port64/verify_pmd_rhythm.py",
     "port64/pmd_rhythm.hpp",

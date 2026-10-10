@@ -11,6 +11,9 @@ using Bytes=std::vector<std::uint8_t>;
 enum class Board { fm26, fm86, speakboard };
 enum class Kind { command, note, portamento, rhythm, end };
 enum class StopReason { explicit_request, fade_complete };
+// Shared original FM/SSG note arithmetic. The octave is an eight-bit value,
+// rotated into the note byte after transposition, including octave underflow.
+std::uint8_t transpose_note(std::uint8_t note,std::uint8_t part,std::uint8_t master);
 // Decoded requests retain their musical order for the future chip consumer.
 // This owner executes bytecode and Timer A/B state; it opens no audio device.
 struct Event {

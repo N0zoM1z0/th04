@@ -230,10 +230,8 @@ bool MusicalFm::advance(MusicalLfo& l,unsigned ticks){
     return before!=l.value;
 }
 std::uint8_t MusicalFm::transpose(unsigned p,std::uint8_t note) const{
-    if((note&15)==15)return note;
-    const auto& track=sequence_.state().parts[p];int octave=note>>4,pitch=note&15;
-    pitch+=i8(std::uint8_t(track.transpose+track.master_transpose));while(pitch<0){pitch+=12;--octave;}while(pitch>=12){pitch-=12;++octave;}
-    return std::uint8_t((std::uint8_t(octave)<<4)|unsigned(pitch));
+    const auto& track=sequence_.state().parts[p];
+    return transpose_note(note,track.transpose,track.master_transpose);
 }
 void MusicalFm::prepare(unsigned p,std::uint8_t n){
     auto& s=part(p);if((n&15)==12)n=s.last_note;s.last_note=n;

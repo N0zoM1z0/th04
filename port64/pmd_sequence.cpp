@@ -10,6 +10,20 @@ std::int16_t signed_word(std::uint16_t value) {
 }
 int signed_byte(std::uint8_t value) {return value<128 ? int(value) : int(value)-256;}
 }
+std::uint8_t transpose_note(std::uint8_t note,std::uint8_t part,std::uint8_t master) {
+    const auto amount=signed_byte(std::uint8_t(part+master));
+    if(note==15 || !amount)return note;
+    auto octave=std::uint8_t(note>>4);
+    int pitch=int(note&15)+amount;
+    if(amount<0) {
+        while(pitch<0){pitch+=12;--octave;}
+    }else {
+        while(pitch>=12){pitch-=12;++octave;}
+    }
+    // PMD.COM PSP:1762, PMD86.COM:2502 and PMDB2.COM:2104 use
+    // ROR8(octave,4). C0 minus one semitone therefore becomes FF, a rest.
+    return std::uint8_t((octave>>4)|(unsigned(octave)<<4)|unsigned(pitch));
+}
 std::uint8_t Sequence::get(std::uint16_t at) const {
     if(at>=music_.size())throw std::out_of_range("PMD music read at "+std::to_string(at));
     return music_[at];

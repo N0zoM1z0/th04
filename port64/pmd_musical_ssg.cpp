@@ -32,10 +32,8 @@ void MusicalSsg::start(){
 void MusicalSsg::stop(){write(7,sequence_.ssg_effects().state().priority ? (registers_[7]&63)|155 : 191);}
 unsigned MusicalSsg::clocks(const MusicalSsgPart& s,unsigned l) const {return (s.clock_flags&(2u<<(l*4))) ? std::uint8_t(sequence_.state().timer_a-timer_baseline_()) : 1;}
 std::uint8_t MusicalSsg::transpose(unsigned p,std::uint8_t n) const {
-    if((n&15)==15)return n;
-    const auto& t=sequence_.state().parts[p+6];int pitch=n&15,octave=n>>4;
-    pitch+=signed_byte(std::uint8_t(t.transpose+t.master_transpose));while(pitch<0){pitch+=12;--octave;}while(pitch>=12){pitch-=12;++octave;}
-    return std::uint8_t((std::uint8_t(octave)<<4)|pitch);
+    const auto& t=sequence_.state().parts[p+6];
+    return transpose_note(n,t.transpose,t.master_transpose);
 }
 void MusicalSsg::frequency(unsigned p,std::uint8_t n){
     auto& s=parts_[p];if((n&15)==15){s.note=255;if(!(s.flags&17))s.frequency=0;return;}

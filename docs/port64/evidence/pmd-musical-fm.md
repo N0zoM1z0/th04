@@ -1,5 +1,95 @@
 # Native PMD musical FM state and register requests
 
+## Shared note rotation and stock-song failure (v1348)
+
+The longer supplied-song producer found a real mismatch in ST00B.M26 after
+operation409. Original part2 frequency/note are0/255; v1346 native is15503/251
+and emits57 owned writes instead of54. Part transpose2 plus master253 is minus
+one semitone, applied to the lowest C. Short accepted corpora missed this point.
+The failed `watch-linux-v1/mismatch.json` and old executable identity remain;
+the old195programs recover from `retired-v1346-products-v1.tar.gz`.
+
+The unchanged original arithmetic entry is PMD.COM PSP:1762..17B8,
+PMD86.COM PSP:2502..2558, PMDB2.COM PSP:2104..215A. Each87-byte span hashes to
+`127dac85164d65334c9766fe0a8ac0335f86d8368d57b07d62e4d06a1b026646`.
+The driver first wraps the sum of part/master transpose to a signed byte.
+Only the exact0F rest and zero sum bypass its arithmetic. Negative sums adjust
+underflow; positive sums adjust pitch>=12. The wrapped eight-bit octave is
+rotated four bits, then ORed with pitch. Replacing rotation with a shift changes
+negative octaves: C0 minus one returnsFF, which frequency handling treats as a
+rest. This is observed rotation/wrap behavior, not an inferred clamp.
+FM and SSG now call the shared `transpose_note` in `pmd_sequence.*`.
+
+`verify_pmd_note.py` executes the unchanged flat COM at PSP1000/2000 for every
+256note-byte/256transpose-sum pair, then three wrapped part/master
+decompositions at14corner notes. Six76288-byte matrices contain457728 original
+calls and agree. Native GNU8, optimized UBSan and actual Windows match the
+entire matrix. Raw note-byte coverage is bounded arithmetic evidence; bytes
+that are commands in music are not claimed to be admitted musical notes.
+
+Thirty legal boundary-phrase cases additionally execute the full driver on
+FM A/C, SSG A/C and three FM3 subtracks. All3600 configured player-state and
+ordered-write rows agree on three hosts. Windows runs15 distinct traces and
+compares both original PSPs. Three source-only arithmetic variants (shift,
+nibble-rest shortcut, widened sum) reject on GNU and UBSan; no target code is
+patched. Actual Windows also agrees with two completed first-load ST00B
+supplied-song cases,25626rows through two loops/stop.
+
+All195 current programs are rebuilt;64contracts pass perhost. GNU/UBSan replay
+194238 earlier FM3/SSG/resident rows perhost and21103632 resident PCM frames.
+Current muted frontends cover three profiles/eleven settings/two separate
+processes:336 matching files perhost and matching physical saves, including
+the finite STD GameOver/MAINE/fresh OP case. These are bounded controls.
+
+Product manifest (463 listed inputs):
+`ba2e588853f852fa5a02886b03383ea25d7664fb5f2eeb75a1d608cef000d845`.
+The two new note verifiers are separately hash-pinned/archived during the live
+producer's Python/PowerShell freeze; register them in `verify.PORT_FILES` only
+after that producer and guarded consumers close. Do not restamp old receipts.
+The full138case song producer retains its independent starting manifest
+`e2bc15f4bfabfd3a095e93825e0723d2dfd8df5037a7b838126480be7b091cb8`.
+Its `original-dev-v2` path is stable provenance; it has not closed. Its live
+prefix cannot prove complete music coverage or unused PPS/PCM/ADPCM ownership.
+The earlier `original-dev-v1` is cancelled/inconclusive because it checked AH
+instead of AL for global song end/loops; never resume or restamp it.
+
+Receipts: `.analysis/port64/game-audio-v1348/note-aggregate-receipt-v1.json`,
+`note-original-v1/`, `note-{linux,ubsan}-v1/`, `note-windows-receipt-v1.json`,
+`frontend-windows-receipt-v1.json`, `note-counterproofs-v1/receipt.json`.
+Replay from the native worktree into fresh output directories:
+
+```sh
+python3 port64/verify_pmd_note.py --hdi ../../runtime/images/zun.hdi --output NEW-ORIGINAL
+python3 port64/verify_pmd_note.py --reference NEW-ORIGINAL \
+  --binary .analysis/port64/linux-live-v1251/th04-port64-pmd-sequence-contracts \
+  --musical-binary .analysis/port64/linux-live-v1251/th04-port64-pmd-fm3-contracts \
+  --product-profile .analysis/port64/game-audio-v1348/product-profile-v1.json \
+  --output NEW-CONSUMER
+```
+
+The public Windows runner takes the guarded plan from `note-windows-stage-v1.json`;
+restore the archived stage or create a fresh stage/plan from current pinned
+inputs. Full song closure, complete startup integration, natural Normal/Extra
+routes, host timing/performance and new GUI delivery remain. All runs stay muted;
+no physical chip accuracy or historical DOS exactness follows.
+
+Terminal retention (`retention-note-before-v1.json`/`retention-note-receipt-v1.json`)
+checks4652protected files, archives/member-readbacks the two owned Windows
+stages and six private mutant programs, retires1320terminal/generated files
+and shares679full-byte-equal closed captures. Scoped net reclamation is
+1237872640allocated bytes (1180.5MiB), excluding live song/watch writers.
+Recovery archives are `note-windows-stage-recovery-v1.tar.gz`,
+`frontend-windows-stage-recovery-v1.tar.gz` and
+`note-counterproof-programs-recovery-v1.tar.gz`; restore recorded roots/members
+from the journal. Current195programs/source/compiler/cache-link identities and
+original references stay retained. CMake regenerates objects/libraries; shared
+captures are immutable and replay requires fresh output paths.
+
+Fresh `note-terminal-readback-v1.json` passes after retirement: current source,
+195programs/compiler/cache-link identities, complete closed note captures and
+all four recovery archives/907 members agree. Root and native final CI pass;
+root live Ghidra replay/mutation smoke passes. Accepted receipts stay unchanged.
+
 v1334, 2026-10-09. `pmd_musical_fm.hpp/.cpp` adds a typed musical FM
 owner above `Sequence`: embedded voices, frequency/block, detune and slide,
 fixed/proportional/minimum/random release gates, ties, temporary volume,
