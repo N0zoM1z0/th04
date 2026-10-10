@@ -46,7 +46,7 @@ Receipts: GNU Normal `.analysis/port64/full-window-v1356/linux-normal-adaptive-v
 independent GNU/UBSan trace/storage, controls and failed Extra evidence under
 `.analysis/port64/window-route-v1357/`. All four complete route/restart processes
 are muted with zero device opens/failures through terminal E. See
-[Extra OS trials](extra.md) for its separate no-Continue/full-name gate.
+[Extra OS route and trials](extra.md) for its separate no-Continue/full-name gate.
 
 Only Python consumers/file list change. The 488-input consumer manifest is
 `4307e19f6f25038d01cd01e115c2f5bfd851a5d3631fe9f0b417b8fef0a6c3ef`;
@@ -328,3 +328,11 @@ Primary API contracts: [SDL keyboard state](https://wiki.libsdl.org/SDL2/SDL_Get
 and [SendInput](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput).
 Their platform rules corroborate adapter design; local OS observations provide
 the bounded behavior evidence.
+
+Terminal failed Extra trace/actions materializations are compressed in
+`.analysis/port64/window-route-v1357/gnu-extra-failed-trace-v1.tar.gz`.
+Every member SHA reads back before/after retirement (net4,526,080 allocated B);
+restore under a fresh private directory for failed-trace replay. The failed
+verdict remains failed. Both final CIs/diff checks pass; root includes live
+Ghidra replay/mutations. Post-CI caches retire only with source/hash readback;
+root `.analysis/cleanup/window-extra-final-caches-readback-v1357.json`.

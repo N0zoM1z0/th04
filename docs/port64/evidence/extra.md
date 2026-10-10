@@ -25,11 +25,30 @@ original per-key subprocesses versus 0.163/0.224ms for the persistent driver.
 This demonstrates controller cost, not the cause of a particular death, game
 survival, game FPS or physical-key timing. libX11/libXtst identities are pinned.
 
-The second Extra trial is pending. Acceptance requires actual no-Continue
-clear, congratulations/verdict/registration/fresh OP, all eight A gaiji in the
-physical renamed Extra rank4 entry with credit0/clear flag, nine nonselected
-decoded partitions unchanged (including earned Normal admission), unchanged CFG,
-and an independently launched Scores restart. A new in-game GO stays failed.
+The second GNU trial completes its terminal/independent checks: 30,388 route
+refreshes, 228 registration refreshes and 790 separate Scores restart refreshes.
+Every MAIN row is program1/generation2/stage6/rank4/ReimuA/credit0; Game Over
+never occurs. Last MAIN frame27,832 has lives5/misses3 and5,293,250 score units.
+A complete eight-A-gaiji entry (`aa` repeated8) with credit0 and rank4 clear flag
+appears in the actual physical IN_MOVED_TO snapshot and final saved score.
+Nine other decoded checksum/payload partitions, including earned Normal
+admission, and CFG remain unchanged. Fresh OP and the separately launched Scores
+process preserve full physical file hashes. All terminal E/audio checks pass.
+
+The actual gameplay's 5,963 changed key sets have controller request median/
+p95/p99/max0.254/0.511/1.390/9.101ms. The complete schedule has no resync, maximum
+404 bullets and12,638 MAIN after-update slowdown2 records. Those include stage
+transition/fade/battle work; they do not establish dense Lunatic or physical
+keyboard timing. Only native GNU ReimuA/Extra is accepted by this window route;
+other host/character/shot combinations and original whole-route equivalence
+remain open. The first failed Extra still fails.
+
+The compiled native `maine_extra_route.cpp` orders MAIN fade, delay100,
+registration, congratulations, verdict and fresh OP. Generic window trace
+directly distinguishes registration/MAINE/fresh OP; the inner MAINE phases are
+source-routed and supported by preceding bounded component Oracles, not
+separately identified by this generic window trace. No new original full-pixel
+or inner-phase timing claim follows.
 
 ```sh
 xvfb-run -a -s '-screen 0 800x600x24 -nolisten tcp -noreset' \
@@ -604,3 +623,11 @@ save/restart and dense Lunatic timing. Every run stays muted. Actual Windows
 fails WSL vsock before PowerShell; read-only Git metadata prevents commit/push.
 No complete game/natural full Extra/original whole-scene pixels/current Windows/
 audio/physical timing/DOS exact acceptance follows.
+
+Terminal failed Extra trace/actions materializations are compressed in
+`.analysis/port64/window-route-v1357/gnu-extra-failed-trace-v1.tar.gz`.
+Every member SHA reads back before/after retirement (net4,526,080 allocated B);
+restore under a fresh private directory for failed-trace replay. The failed
+verdict remains failed. Both final CIs/diff checks pass; root includes live
+Ghidra replay/mutations. Post-CI caches retire only with source/hash readback;
+root `.analysis/cleanup/window-extra-final-caches-readback-v1357.json`.
