@@ -1,5 +1,23 @@
 # Native private-state retention
 
+v1363 archives and retires the unused historical mutable native
+`.analysis/port64/ubsan-live-v1251/` build materialization. All936 files, modes,
+sizes and SHA-256 values read back from a complete recovery archive before
+retirement; a separate reader rechecks every archive member after retirement.
+No process executable/cwd/argv/mapping refers to the old tree. Net252,231,680
+allocated B (about240.5MiB) reclaimed after retaining the105,898,956-byte archive
+and journal; final receipt overhead excluded. This preserves the current bytes
+of an old mutable build, not a cold historical replay or refreshed acceptance.
+
+Recovery: root `.analysis/cleanup/ubsan-old-build-v1363/` holds
+`ubsan-live-v1251.tar.gz`, `retention-before-v1.json` with all original paths/
+modes/hashes, and the independent readback. Extract into a fresh scratch root
+(`tar -xzf ARCHIVE -C FRESH_DIR`), then verify every member against the journal
+before use. Active v1356 programs and pinned helper/HDI/font/source archive
+hashes remain unchanged; current traces, saves, user packages and toolchains are
+excluded. The muted private-Xvfb Turbo0 candidate continues on the same PIDs;
+no Windows GUI, host keys, audio device or new build is involved.
+
 The v1361 Turbo0 candidate is now terminal failed-clear; its separate bad-save
 Scores reader and final CIs pass. Final terminal-CI cache pruning retires962
 source-backed caches/net15,650,816 allocated B, including now-unused port64

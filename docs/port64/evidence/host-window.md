@@ -594,3 +594,11 @@ Both CIs pass (root live Ghidra/mutations); ledger and diff checks pass. Root
 `.analysis/cleanup/bomb-input-source-caches-readback-v1362.json` verifies955
 public caches/net15,478,784 allocated B retired; source/protected hashes and
 live /proc identities retained, active port64 helpers/outputs excluded.
+
+The v1363 same-job immutable live snapshot has49,189R/stages0..3 reached;
+every MAIN rank3/character0/shot0/program1/generation2/credit0 passes, noGameOver
+and zeroaudio. Last frame14,726/lives11/miss1. Max338, >=320 has10R/5Slow2;
+>=400 absent. No actual early rescue/last-life extra-X transition yet, so dry
+policy response remains separate from runtime acceptance. Current snapshot:
+`bomb-input-v1362/prefix-evidence-v1363.json`; original trace prefix length/SHA
+and action prefix SHA reread unchanged while the trace grows.
