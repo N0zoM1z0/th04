@@ -399,11 +399,25 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/build_th04_demo_emulator.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Build a resource-limited pinned read-only normal-core demo observer.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/calibrate_th04_cpu_fault_emulator.py",
     "category": "runtime",
     "role": "command",
     "purpose": "Falsify a private emulator observer using an independent DIV-zero COM.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/capture_th04_dos_demos.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Capture ordinary bundled DOS demos after replay input and at the terminal decision.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/check_th04_bullet_default_objects.py",
@@ -432,6 +446,13 @@
     "role": "command",
     "purpose": "Compare a cold TH04 candidate with the independently unpacked target payload.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/compare_th04_dos_demos.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Reject incomplete/reset-mismatched demo traces and report the first logical divergence.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/compare_th04_native_maine_link.py",
@@ -474,6 +495,13 @@
     "role": "command",
     "purpose": "Decode private MAIN exception frames without claiming normal gameplay.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/inspect_th04_demo_snapshots.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/inspect_th04_emulator_cpu_fault.py",
@@ -3294,6 +3322,13 @@
     "category": "runtime",
     "role": "fixture",
     "purpose": "Private real-mode DIV-zero observer calibration; never install in game media.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_demo_snapshot.gdb",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots.",
     "purpose_source": "maintained-description"
   },
   {

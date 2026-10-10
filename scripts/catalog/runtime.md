@@ -9,8 +9,12 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | --- | --- | --- |
 | [prepare_product_hdi.py](../prepare_product_hdi.py) | command | Prepare a disposable original-data image with verified source or original products. |
 | [probes/build_th04_cpu_fault_emulator.py](../probes/build_th04_cpu_fault_emulator.py) | command | Build a private, pinned DOSBox-X observer without changing game bytes. |
+| [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
+| [probes/capture_th04_dos_demos.py](../probes/capture_th04_dos_demos.py) | command | Capture ordinary bundled DOS demos after replay input and at the terminal decision. |
+| [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
+| [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
 | [probes/inspect_th04_emulator_cpu_fault.py](../probes/inspect_th04_emulator_cpu_fault.py) | command | Locate emulator-side CPU faults in attested, unmodified native MAIN code. |
 | [probes/inspect_th04_handoff_trace.py](../probes/inspect_th04_handoff_trace.py) | command | Inspect private MAIN cleanup and MAINE initialization checkpoints. |
 | [probes/inspect_th04_main_graphics_trace.py](../probes/inspect_th04_main_graphics_trace.py) | command | Check MPN and four-plane VRAM checkpoints from a private MAIN run. |
@@ -37,6 +41,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/run_th04_op_diagnostic_hdi.py](../probes/run_th04_op_diagnostic_hdi.py) | command | Run a private TH04 OP HDI probe under the pinned DOSBox-X emulator. |
 | [probes/run_th04_zun_diagnostic_hdi.py](../probes/run_th04_zun_diagnostic_hdi.py) | command | Run the disposable TH04-only packed ZUN candidate under PC-98 DOSBox-X. |
 | [probes/th04_cpu_fault_fixture.asm](../probes/th04_cpu_fault_fixture.asm) | fixture | Private real-mode DIV-zero observer calibration; never install in game media. |
+| [probes/th04_demo_snapshot.gdb](../probes/th04_demo_snapshot.gdb) | fixture | Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [smoke_oracles.py](../smoke_oracles.py) | command | Exercise Oracle dimensions with private TH01-TH05 positive/negative controls. |

@@ -5,14 +5,22 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Both handoff CIs pass; root includes live Ghidra replay and mutation checks.
-Runtime receipts retain distinct producer/consumer identities. This cleanup
-starts no game or compiler build. Source-backed cache retirement independently
-verifies1,019 absent files/516 protected hashes, net16,543,744 allocated B freed.
+The v1365 DOS demo batch has complete original/ordinary-candidate captures:
+Demo2/3/4 pass the sampled input/score/RNG boundary; Demo1 first differs at3343.
+Read-only actor snapshots show earlier bullet-angle differences and one extra
+candidate graze. Preserve the failed comparison; no product source or accepted
+exact state changes. The separate native worktree remains untouched.
+Private emulator builds/captures use one CPU, nice15 and bounded memory;
+generated object/archive retirement readback verifies524 absent files and five
+protected hashes,814,161,920 allocated B freed. Runtime/source receipts remain.
+Final root CI passes, including live Ghidra replay/mutations;16 focused controls
+pass. Failed-startup copies and512 source-backed caches additionally retire
+51,986,432 allocated B with independent protected-hash readback. No games remain
+running; no native C++ rebuild or Windows GUI/audio launch occurs.
 Current commit identities are obtained with `git log -1` in each worktree.
 
-Updated 2026-10-10. Current focus: handoff for original/reconstructed DOS
-comparison and separate x64 state/effect fidelity. DOS demo state is retained. This handoff
+Updated 2026-10-10. Current focus: Demo1 bullet generation before score/RNG
+divergence, followed by separate x64 state/effect fidelity. DOS demo state is retained. This handoff
 indexes verified state; detailed experiments belong in focused notes and CSV
 ledgers. The next behavioral validation focus is original DOS versus reconstructed
 DOS, with native x64 fidelity checked separately. Reopen semantic work for a
@@ -30,11 +38,23 @@ reproduced differential or a concrete portable owner, not a general rename pass.
 Function acceptance is not whole-file exactness. OP/MAINE/ZUN counts cover
 recovered payload functions, not original packed-file extents. MAIN's carpet
 and checkerboard cases remain deferred; no acceptance is promoted by the
-native fixes or this documentation cleanup. Targets remain
+native fixes or this runtime batch. Targets remain
 `candidate-local-attested` (a provenance gap).
 
 ## DOS verification frontier
 
+- v1365 original/ordinary DOS naturally rotates all four demos through GAME.BAT.
+  Each has3996 update boundaries plus terminal condition3996; Demo2/3/4 match
+  all3997 sampled rows. Demo1 agrees through3342, then score/pending delta,
+  ring cursor and helper events diverge at3343. Candidate adds two
+  `randring2_next16_and(31)` calls from `sparks_add_random` (MAIN156A:03E6
+  return). LCG, consumed input and sampled player lifecycle still agree there.
+  Diagnostic snapshots at the earlier stage-frame write show graze59/60 and
+  48 differing live bullets. At snapshot3331, newly generated slots392..415
+  already have equal origins but angles5A/46 versus61/3F; slots416..439 differ
+  by snapshot3330. This is not the earliest complete actor divergence.
+  Original MAIN load10FC / DGROUP3230; candidate load10FC / DGROUP34F7.
+  See [paired demo evidence and replay commands](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 - The user reports complete Normal routes/Endings/save and earlier invincible
   Easy/Lunatic runs. These are manual Windows observations.
 - Recorded ordinary controls cover startup, OP options/Music Room/config
@@ -131,9 +151,9 @@ transitions. See [DOS/native differential handoff](reconstruction/product/TH04_R
 TH08 is a read-only workflow reference, not TH04 evidence. Its active worktree
 is dirty; do not edit it, run its builds, change its database or launch its game.
 Complete trace/end/input-consumption guards and first-divergence diagnostics
-are the useful parts to adapt. TH04 still lacks complete paired original-DOS /
-reconstructed-DOS gameplay traces; current native host traces do not include
-RNG seed/ring/call-count fields. These are concrete next-work gaps.
+are the useful parts to adapt. Complete DOS demo captures now exist, with a
+specific failed Demo1 frontier. Full actor/presentation/process parity and
+native RNG seed/ring/call-count observations remain open.
 
 ## Windows DOS demo package
 

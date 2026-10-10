@@ -10,8 +10,9 @@ neither native host agreement nor successful native clears establishes them.
 Root `main` owns the standalone DOS source. Native `port/modern-64` is a separate
 worktree at `.analysis/worktrees/port-modern-64/`; commit and push it separately.
 Read both current handoffs and inspect both Git statuses before taking ownership.
-One writable reconstruction session at a time. No new game or compiler build
-is started during this handoff. All known v1362/v1364 game trials are terminal.
+One writable reconstruction session at a time. All known v1362/v1364 native
+game trials are terminal. The DOS demo observer is a separate, muted replay
+surface; it does not revive those native jobs.
 
 Pinned originals are in `config/targets.toml`; every used file must pass
 `scripts/preflight.py` identity, format and MZ checks. Their provenance remains
@@ -26,8 +27,9 @@ are distinct candidates. Start parity work with the ordinary DOS candidate.
 Existing original/native CPU probes cover bounded functions and guarded
 services. Actual GNU native Reimu A Normal, Lunatic and Extra routes have
 physical save/restart evidence; Turbo0 has scoped dense slowdown acceptance.
-There is no accepted complete paired original-DOS/reconstructed-DOS gameplay
-trace or complete original/native gameplay-pixel comparison yet.
+The v1365 paired DOS demos cover complete consumed-input/score/RNG extents:
+Demo2/3/4 pass, Demo1 fails. Full actor/presentation/process parity and complete
+original/native gameplay-pixel comparison remain open.
 
 Historical authored-function acceptance is OP93/93, MAIN493/495,
 MAINE72/72, ZUN3/3 in the boundary inventory. MAIN's separate authored-function
@@ -67,7 +69,7 @@ Important setup/boundary contracts from that existing note:
   and validate this terminal decision separately rather than fabricating a
   final simulation row. Raw shift bytes must not be prematurely normalized.
 
-## Capture and comparison contract to implement
+## Capture and comparison contract
 
 Run original DOS and ordinary reconstructed DOS serially with the same
 attested emulator/config/data/font, independent copies of identical starting
@@ -97,6 +99,166 @@ VRAM planes, palette, page/scroll state and deterministic visual effects at
 equivalent presentation boundaries. For x64 compare the corresponding logical
 frame and renderer output through the existing planar/palette conversions.
 Muted PMD/MMD state or register writes can be compared without an audio device.
+
+### Checked-in DOS demo capture
+
+`build_th04_demo_emulator.py` builds the pinned DOSBox-X source with a
+normal-core observer. Its host-RAM reads walk VM86 page tables without using
+guest memory accessors or setting page-table accessed bits. It changes no game
+bytes, registers, input, guest clock or drawing. Builds use one job, nice15,
+one CPU, a50% CPU duty budget and1GiB address-space limit. Captures run serially
+with nice15, one CPU and512MiB address-space limit, SDL dummy and mixer disabled.
+
+`capture_th04_dos_demos.py` starts GAME.BAT from a new pinned-data image, lets
+OP naturally rotate through the four demos and records the actual MAIN load.
+The independent reader compares each entire initial load module with the
+MZ loader's relocated bytes, retaining load segment, CR0 and CR3. Candidate
+DGROUP, field addresses and helper locations come from that product's
+hash-attested MAP. Both products' replay seams and six ring cursor increments
+are guarded against their own executable instructions.
+
+The update boundary is original MAIN0AAF:00B7 / normal candidate0708:066D,
+after the input callback returns. The terminal-condition boundary is original
+0AAF:0975 / candidate0708:0091, after both replay writes and before the
+`stage_frame <3996` comparison. The final capture stops there; it does not
+accept the final fade, DOS teardown, save or fresh-OP transition. Intermediate
+demos continue through the ordinary handoff to get the next demo.
+
+Rows retain consumed input, raw shift, frame/stage, eight score digits, both
+pending score counters, LCG, all256 ring bytes, the full word cursor, player
+position/power/hit/invincibility/respawn and resident stock/credit/miss/Bomb
+counts. IRAND and all six ring-accessor entries have an external caller log;
+both process-total and relative-since-first-boundary counts, helper sequence
+and mask/divisor arguments are compared.
+This catches an extra full ring wrap even when the word cursor agrees.
+Actor-pool and graze snapshots now diagnose Demo1's failure. Complete actor
+traces, VRAM/palette, sound-state and native x64 comparisons remain separate work.
+
+```sh
+python3 scripts/probes/build_th04_demo_emulator.py \
+  --archive .analysis/runtime/emulators/dosbox-x-199aa35f.tar.gz \
+  --output-dir .analysis/runtime/emulators/NEW
+python3 scripts/probes/capture_th04_dos_demos.py --original \
+  --emulator-receipt .analysis/runtime/emulators/NEW/receipt.json \
+  --font-bmp PRIVATE-FREECG98.BMP \
+  --output-dir .analysis/runtime/candidates/NEW-original
+python3 scripts/probes/capture_th04_dos_demos.py \
+  --build-dir .analysis/build/th04-normal --map ATTESTED-MAIN-MAP \
+  --emulator-receipt .analysis/runtime/emulators/NEW/receipt.json \
+  --font-bmp PRIVATE-FREECG98.BMP \
+  --output-dir .analysis/runtime/candidates/NEW-candidate
+python3 scripts/probes/compare_th04_dos_demos.py \
+  --original .analysis/runtime/candidates/NEW-original \
+  --candidate .analysis/runtime/candidates/NEW-candidate \
+  --output .analysis/runtime/candidates/NEW-comparison.json
+```
+
+The comparator independently reads the initial products/config/save, loaded
+MAIN and complete trace. Each demo must contain exactly3996 update boundaries
+plus its terminal condition at3996, with the expected rotation/stage/character/
+shot and every consumed input/shift byte. Timeout, equal truncated prefixes,
+duplicate/missing/out-of-order rows, inconsistent caller counts, changed reset
+files and wrong terminal consumption fail closed. It reports all four per-demo
+verdicts and nearby rows at the first difference. Public synthetic controls
+exercise these rejection paths without committing original assets.
+
+### v1365 complete captures and failed Demo1 frontier
+
+The pinned private emulator is
+`.analysis/runtime/emulators/demo-observer-build-v1365/receipt.json`, binary
+SHA-256 `6e1a6e706d8b62aefa3204e30be5b77125fb4413d6891b5d10bd2701a6616ba1`.
+The ordinary candidate is `.analysis/build/th04-normal/`, MAIN SHA-256
+`cb4c5b667f9a2d5a5c3ef62865fdc926a74a100155068c63e5dfbd019362b70c`.
+Its historical MAP was recovered alone from the retained product archive;
+`.analysis/runtime/emulators/demo-observer-v1365/main-native.map` matches the
+producer receipt's SHA-256
+`3f8b2393a1bc34fe1ba0d9bed47860ba30d371a23a2953d8cb9026d12fe79942`.
+No product rebuild or product-source edit occurs in this batch.
+This claim belongs to those executed product hashes. The later semantic-source
+clarification commits are not a new runtime producer; establish the archived
+producer/current-source bridge before implementing a repair or claiming a
+current cold build. Retain the first consumer snapshot and the seven current
+probe/test sources under `demo-observer-v1365/consumer-source-v2/`; do not
+restamp old receipts with its manifest hash.
+
+Original and candidate receipts are respectively
+`.analysis/runtime/candidates/dos-demo-v1365-original/receipt.json` and
+`dos-demo-v1365-candidate/receipt.json` under the same directory. Both complete
+all four demos, totaling15,984 update boundaries and four terminal conditions
+per side. Loaded MAIN bytes/relocations, independent reset/asset readback and
+every recorded consumed input/raw-shift byte pass. All four MAIN loads are10FC;
+original DGROUP3230, candidate DGROUP34F7. Final independent comparison:
+`.analysis/runtime/candidates/dos-demo-v1365-comparison-v3.json`, SHA-256
+`c96307526298c4763d5d15e73e67550b2206222605e231a733efe735c31c537c`.
+The comparator exits1 because the behavioral claim fails, not because a capture
+is truncated or invalid.
+
+| Demo | Sampled boundaries | Result |
+| --- | --- | --- |
+| 1 |3997 complete;3343 equal preceding rows | First input/score/RNG-schema difference at3343 |
+| 2 |3997 | Pass |
+| 3 |3997 | Pass |
+| 4 |3997 | Pass |
+
+At Demo1/frame3343, original/candidate score digits are
+`0008060600050200` / `0000080600050200`, pending delta65/453, pending per-frame
+step2/14, ring cursor0086/0088 and total ring calls3206/3208. LCG, consumed
+input/raw shift, sampled player position/lifecycle and resident stock agree
+there. The candidate's two extra calls are `randring2_next16_and(31)` at
+MAIN156A:02E5, return156A:03E6 inside `sparks_add_random`. Helper kinds and
+mask/divisor sequences also agree at preceding captured boundaries.
+
+`--snapshot-frames 3341 3342 3343` adds a read-only GDB hardware watch on the
+guest stage-frame word in host RAM. It dumps DGROUP at the stage_frame write,
+after actors but before modulo counters and score update; this is **earlier**
+than the next before-update I row. The inferior remains single-CPU/nice15 with
+512MiB address-space limit; GDB needs1536MiB virtual address allowance, with
+observed RSS about90MiB. The first512MiB GDB attempt failed at host startup;
+its log/receipt remain in `dos-demo-v1365-original-watch/`. Subsequent diagnostic
+receipts explicitly keep `capture_complete=false`. An early stop never enters
+the complete-demo acceptance path. GDB stops can alter wall timing; these are
+scoped diagnostic observations, with their entire raw input/RNG prefix checked
+against the ordinary complete capture.
+
+`inspect_th04_demo_snapshots.py` independently verifies the full parent capture,
+diagnostic prefix, pins, frame/load/DGROUP identity and snapshot files. Original
+pool ownership is MAIN DGROUP:5A22 (440 records of26 bytes), graze DGROUP:BCBC;
+candidate MAP gives DGROUP:4972 and79E7. This routing reuses the target-backed
+native bullet/enemy CPU Oracle offsets, not a native parity claim.
+`dos-demo-v1365-actor-watch.json` verifies all six dumps at3341..3343: both have
+graze59 at3341/3342, then original59/candidate60 at3343. Forty-eight live bullets
+already differ at3341, including angles, velocities and positions. Thus3343 is
+the first sampled score/RNG difference, not the first actor-state difference.
+
+`dos-demo-v1365-actor-spawn.json` verifies an additional paired set at3330..3332.
+At the stage_frame3331 write (after update3330), newly spawned slots392..415
+have age0 and equal origins, but group angles5A/46 versus61/3F and different
+velocities. Older slots416..439 already differ at3330. Route the next bounded
+investigation through enemy script/template generation and bullet angle
+production; this ownership hypothesis is **inferred**, and the responsible
+instruction/source defect and earliest actor divergence remain unproved.
+Do not patch graze/scoring or overwrite these failed receipts to make the four
+demo claim pass. No exact state is promoted. Snapshot replay uses the capture
+commands above plus `--demos 1 --snapshot-frames ...`; readback example:
+
+```sh
+python3 scripts/probes/inspect_th04_demo_snapshots.py \
+  --original .analysis/runtime/candidates/dos-demo-v1365-original-spawn \
+  --candidate .analysis/runtime/candidates/dos-demo-v1365-candidate-spawn \
+  --original-full .analysis/runtime/candidates/dos-demo-v1365-original \
+  --candidate-full .analysis/runtime/candidates/dos-demo-v1365-candidate \
+  --map .analysis/runtime/emulators/demo-observer-v1365/main-native.map \
+  --frames 3330 3331 3332 --output PRIVATE-NEW-READBACK.json
+```
+
+The16 public comparator controls and root CI pass, including live Ghidra target
+attestation and mutation controls. Final CI uses one CPU, nice15, a50% duty
+budget and512MiB Java heap. Owned emulator objects/archives, failed host-startup
+generated copies and source-backed Python caches retire1,043 files and
+866,148,352 allocated B before retained journal overhead; independent readbacks
+verify absent paths and protected inputs. Debug stripping additionally reduces
+the private ELF by134,207,784 bytes. Cleanup never retires complete captures,
+actor dumps, failed logs/receipts, maps, source snapshots or original inputs.
 
 Acceptance must reject missing/duplicate/out-of-order rows, skipped stages,
 different consumed input, mismatched initial assets/config/saves, truncated
@@ -161,7 +323,7 @@ python3 scripts/ci.py
 git diff --check
 ```
 
-The first next-agent implementation should be one paired bounded demo capture
-and a fail-closed first-divergence comparator. Then expand to all four demos,
-ordinary movement/Shot/Bomb/hit/death/Continue and complete routes. Commit/push
+The next bounded task is the Demo1 actor-angle frontier before3343, using the
+existing paired capture and snapshot reader. Then expand to ordinary
+movement/Shot/Bomb/hit/death/Continue and complete routes. Commit/push
 root and native changes separately with `gpt-6.1-sol: ...` English messages.
