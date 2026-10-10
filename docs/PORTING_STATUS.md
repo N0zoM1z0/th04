@@ -1,5 +1,39 @@
 # Semantic and x64 port status
 
+v1352 closes ordinary Continue on GNU8, optimized UBSan and actual Windows.
+The maintained route plan accepts optional `pilot=1`: stationary held shot,
+with ordinary dialog/menu keys and no actor, hit or life-state writes. Physical
+Lunatic configuration uses lives option 1/Bombs 0. Each of two scenarios runs
+1,551 advances: real deaths, first Game Over/Continue, resumed gameplay, second
+Game Over/Esc, registration and fresh OP. Sixteen complete capture files and
+physical saves agree per host. Original Game Over at two loads also reproduces
+58,424 component requests from the recorded key sequences; unrecorded state
+fields remain explicit adapters, not an original whole-route comparison.
+
+The first score is 520 internal units (5,200 displayed points), below the
+default leaderboard minimum of 1,000 units. Continue correctly makes no ranked
+write. A separately declared
+zero-score selected-section fixture accepts and physically saves `CONTINUE`
+with the old 520 units before reset. GNU/UBSan observe complete writer-close
+snapshots; Windows final files and all recorded states/captures agree. MAIN
+frame 432 stays frozen for 189 refreshes, then resumes at 433 once. Second
+Game Over freezes frame 630 for 222 refreshes before the quit route.
+
+All 195 current programs build cold and 64 contracts pass per host. GNU and
+MinGW each retain 103 raw-equal core objects from v1351. Default pilot B-entry
+compatibility passes seven complete files/physical saves on all three hosts;
+invalid pilot/trailing plan fields reject before output/save writes. Final
+467-input source manifest:
+`f0d72042b3f75b2e6305f7afc44454e175d7d28b9181d5517a6b83b40d3f3454`.
+
+Remaining: startup across sound modes, other rank/shot/Continue routes,
+physical input/refresh/slowdown, dense Lunatic performance, audio-device output
+and current GUI delivery. All runs stay muted. Complete four-route/Hard B and
+stock music corpora retain their distinct earlier producer identities; no new
+whole original-route, DOS exactness or full-goal acceptance follows.
+
+Historical v1351 frontier:
+
 v1351 adds maintained `--natural-route-checks` without private frontend hooks.
 Four ordinary shot A routes pass on GNU8, optimized UBSan and actual Windows:
 270,193 route advances, 2,504 startup advances, 49 complete capture files

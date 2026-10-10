@@ -5,6 +5,25 @@ not a guarantee that its expanded directory remains present. Durable commands,
 hashes, conclusions and negative results belong in checked-in notes/ledgers.
 A verified private archive supplies recovery where the input cannot be rebuilt.
 
+The v1352 ordinary Continue batch retains the independent compiled
+`port64-continue-v1352` source materialization, all 195 current/preceding
+programs, recorded inputs, whole native captures, physical file snapshots,
+original-key CPU traces and rejected/cancelled attempts. Below native
+`.analysis/port64/natural-continue-v1352/`, two fully read-back archives recover
+the 244-file closed Windows contract/Continue/default-compat stage and static
+link inputs. The pre-deletion journal and independent readback verify 3,165
+protected hashes and all 315 members. It retires 1,145 regenerable build files
+and reclaims 591,622,144 allocated bytes net (564.2 MiB). Current source
+protection is scoped to this interval; historical acceptance retains its own
+source/program identity. Replays always use fresh output destinations.
+
+Both final CIs pass, including root live Ghidra replay and Oracle mutation
+checks. `final-readback-v1.json` freshly checks the preserved current source,
+product/corpus/negative evidence hashes and both recovery archives. Post-CI
+source-backed cleanup separately checks 1,012 public sources and retires their
+Python caches, reclaiming 16,347,136 allocated bytes net after journal overhead.
+Root receipt: `.analysis/cleanup/natural-continue-post-ci-caches-v1352.json`.
+
 The v1351 public-entry batch preserves its closed v1 source/program vector,
 four-route three-host captures/physical files, rejected wrong-shot attempt and
 separate corrected-source GNU Hard B observations. Final source uses a distinct
