@@ -9,7 +9,8 @@ append batch diaries or duplicate the current work queue here.
 
 - [PC-98 hardware reuse](PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
 - [DOS build/testing](DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
-- [Semantic/native status and TODO](PORTING_STATUS.md) — paused work, components versus published GUI.
+- [Semantic/native status and TODO](PORTING_STATUS.md) — current products, comparison priorities and scoped host validation.
+- [Original/reconstructed DOS differential handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md) — demo/input/RNG boundaries and next-agent capture work.
 - [Script catalog](../scripts/README.md) — all tools grouped by task.
 - [Private artifact retention](ANALYSIS_RETENTION.md) — protected tools/cache/input and archive recovery.
 

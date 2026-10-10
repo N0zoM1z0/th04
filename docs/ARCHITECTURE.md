@@ -4,7 +4,10 @@
 
 The active product goal is to build these four artifacts from maintained TH04
 source and run the complete PC-98 game. Native executable bytes may differ from
-the originals. Historical exact reconstruction remains a separate ledger;
+the originals. Behavioral validation compares original DOS with reconstructed
+DOS first, and also checks native x64 game state and effects. Successful builds
+or native-host agreement do not establish those parity claims. Historical exact
+reconstruction remains a separate ledger;
 MAIN's two remaining exactness cases are deferred.
 
 The four artifacts have distinct responsibilities:

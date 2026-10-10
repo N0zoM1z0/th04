@@ -16,7 +16,8 @@ source evidence.
 
 - [PC-98 hardware reuse](../PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
 - [DOS build/testing](../DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
-- [Semantic/native status and TODO](../PORTING_STATUS.md) — paused work, components versus published GUI.
+- [Semantic/native status and TODO](../PORTING_STATUS.md) — current products, comparison priorities and scoped host validation.
+- [Original/reconstructed DOS and native differential handoff](product/TH04_REPLAY_DIFFERENTIAL.md) — bundled-demo starting fixture, complete trace gates and first-divergence workflow.
 - [Script catalog](../../scripts/README.md) — all tools grouped by task.
 - [Private artifact retention](../ANALYSIS_RETENTION.md) — protected tools/cache/input and archive recovery.
 

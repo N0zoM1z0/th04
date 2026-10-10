@@ -1,11 +1,12 @@
 # Working on TH04
 
-Native development has resumed; see [current handoff](RE_HANDOFF.md) and
-[porting TODO](PORTING_STATUS.md). The DOS goal is standalone builds and normal
-PC-98 gameplay. Native builds
-need not match original executable bytes. Do not reopen MAIN's carpet or
-checkerboard exactness cases. General semantic work resumes only for a concrete
-port blocker. Adapt necessary ReC98 shared implementation into
+The next validation priority is original Japanese DOS versus reconstructed DOS
+with the same input and reset state; native x64 also needs game-state and effect
+parity. See [current handoff](RE_HANDOFF.md), [comparison handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
+and [porting TODO](PORTING_STATUS.md). Native builds need not match original
+executable bytes. Do not reopen MAIN's carpet or checkerboard exactness cases.
+Resume semantic changes for a reproduced differential or concrete portable
+owner. Adapt necessary ReC98 shared implementation into
 local TH04 source; preserve functional ABI and hardware behavior.
 
 ## Start

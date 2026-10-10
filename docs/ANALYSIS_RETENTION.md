@@ -1,5 +1,20 @@
 # Private build and analysis retention
 
+v1364 handoff cleanup retires1,019 regenerable Python caches under root/native
+`scripts/`, `tests/` and native `port64/`, after both CIs finish. Net16,543,744
+allocated B (about15.8MiB) reclaimed after the retention journal; final small
+receipt overhead excluded. Every corresponding source hash and516 protected
+source/archive/program/input/save/trace hashes recheck unchanged; a separate
+post-retirement reader rechecks all hashes and absent paths. No compiler build,
+game launch or deletion of user packages/saves/targets/toolchains.
+
+Root `.analysis/cleanup/handoff-source-caches-v1364.json` is the full journal;
+`handoff-source-caches-readback-v1364.json` and
+`handoff-source-caches-independent-v1364.json` are the two readbacks.
+Python recreates these caches from retained public source. Executed consumer491
+and492 snapshots remain distinct from formatted current492 inputs; source
+archives are retained in native `bomb-input-v1362/` and `bomb-window-v1364/`.
+
 v1363 archives and retires the unused historical mutable native
 `.analysis/port64/ubsan-live-v1251/` build materialization. All936 files, modes,
 sizes and SHA-256 values read back from a complete recovery archive before
@@ -15,8 +30,9 @@ modes/hashes, and the independent readback. Extract into a fresh scratch root
 (`tar -xzf ARCHIVE -C FRESH_DIR`), then verify every member against the journal
 before use. Active v1356 programs and pinned helper/HDI/font/source archive
 hashes remain unchanged; current traces, saves, user packages and toolchains are
-excluded. The muted private-Xvfb Turbo0 candidate continues on the same PIDs;
-no Windows GUI, host keys, audio device or new build is involved.
+excluded. That muted private-Xvfb Turbo0 candidate is now terminal and its
+independent route/dense readback passes; the v1363 live observations remain
+historical. No Windows GUI, host keys, audio device or new build is involved.
 
 The v1361 Turbo0 candidate is now terminal failed-clear; its separate bad-save
 Scores reader and final CIs pass. Final terminal-CI cache pruning retires962
