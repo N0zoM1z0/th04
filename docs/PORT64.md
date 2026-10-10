@@ -8,18 +8,35 @@ window/input acceptance stays open under this constraint.
 The full native goal remains active. General semantic work resumes only for a
 concrete portability blocker; historical DOS exactness is a separate product.
 
-v1356 adds private-Xvfb-only startup/Normal route verifiers and opt-in
-read-only live key advice in trace v3. Original window input still comes
-only from OS keys. GNU/UBSan v1355 products pass all 27 driver/BGM/SE
-startup combinations each (32,147 total refreshes), zero audio opens,
-and unchanged physical CFG. The Windows batch retains 19 completed
-cases, not full matrix acceptance; no further host GUI runs are allowed.
-Independent four-axis OS controls prove 1=Up, 2=Down, 4=Left, 8=Right.
-Two earlier candidate scripts used the wrong map. Corrected fixed and
-reference-position candidates also reach Game Over; all failures remain
-failed. Live-state ordinary-key full Normal validation is now in progress
-under private Xvfb and is not accepted until its physical save/restart
-checks close. Current receipts: native `.analysis/port64/full-window-v1356/`.
+v1357 closes actual GNU/optimized-UBSan Normal Reimu A window routes on
+unchanged v1356 programs. Ordinary OS keys traverse all six stages without
+Continue, then Ending, registration Esc, physical score rename, fresh OP and
+separate Scores restart. Complete traces contain 89,008/86,333 route and
+794/795 restart refreshes, zero audio opens/failures, earned Normal admission,
+unchanged CFG and nine other decoded score partitions. This accepts native
+instrumented private-Xvfb routes only, not original whole-route equivalence,
+physical Windows input, all rank/shot combinations or dense Lunatic performance.
+
+The schedule reducer verifies every deadline against preceding after-update
+slowdown or recorded resync, plus v1/v2/v3 widths and terminal counts. Native
+MAIN includes 3,245/2,765 slowdown2 records; GNU/UBSan observe 2/505 resyncs.
+Instrumented CPU/presentation/advice/trace cost remains separate from acceptance
+of uninstrumented performance. Five consumer mutants reject wrong deadlines,
+wrong row versions, missing termination/stage and checksum-valid lost admission.
+
+Extra v1 reaches actual Game Over at MAIN frame 25,595; keep its failed verdict.
+Persistent private-Xvfb XTest keys pass independent server keymap/release and
+request-cost checks; the new Extra trial is pending until physical full-name,
+clear-file and separate restart checks close. Do not infer the failure's cause
+from the controller benchmark. Current receipts: native
+`.analysis/port64/window-route-v1357/`; GNU Normal is retained under
+`.analysis/port64/full-window-v1356/linux-normal-adaptive-v5/`.
+
+All 27 muted driver/BGM/SE startup combinations pass on GNU/UBSan (32,147
+refreshes) on v1355 programs. Windows retains 19 cases only. No Windows GUI,
+foreground or host-key retries while the user uses the host. Earlier wrong-map
+and corrected fixed/path Game Over failures remain failed. Live advice is const
+output; OS input still owns the keys. No game/clock/score/life injection.
 
 Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
 identities. GNU/UBSan pass 67 contracts each plus manual held-input
@@ -31,7 +48,7 @@ and target provenance are unchanged.
 
 The extracted policy preserves the complete 88,934-tick logical Normal
 Reimu A input/state/startup/menu/Ending streams and physical saves.
-This does not accept the pending window route or uninstrumented timing.
+The v1357 route checks above are independent; no uninstrumented timing follows.
 
 v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary
 X11 Continue/save/restart verifier. 204 AMD64 programs build cold from 481
@@ -76,7 +93,7 @@ under explicit fake APIs. See [lifecycle](port64/evidence/stage-lifecycle.md),
 and [audio transport](port64/evidence/audio-output.md). Their original component,
 native integration and logical-route acceptance are distinct.
 
-Remaining: full startup across sound modes, other rank/shot/Continue routes,
+Remaining: actual Windows startup/input, other rank/shot/Continue routes,
 actual Windows input, physical refresh/slowdown and dense Lunatic performance,
 physical audio output, full route/save/restart validation and final GUI acceptance.
 All launches stay muted. Arbitrary external sample banks are outside stock

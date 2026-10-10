@@ -1,5 +1,65 @@
 # Host window admission and input
 
+## Complete native Normal window routes and trace controls (v1357)
+
+Unchanged v1356 GNU/optimized-UBSan programs complete Normal Reimu A via
+ordinary OS keys on private Xvfb. Both routes reject Game Over/Continue and
+observe every MAIN row as program1/generation2/rank1/character0/shot0/credit0.
+Six actual stages lead to MAINE program2/generation3, Ending, registration Esc,
+physical IN_MOVED_TO score snapshots, fresh OP and a separate Scores process.
+Nine other decoded partitions preserve checksum/payload bytes2..195; encoding
+keys0/1 can change. Physical CFG remains the legal Normal/lives6/Bombs2/BGM2/
+SE1/Turbo configuration. Ending/save/restart acceptance is native runtime
+observation; original whole-route or physical device equivalence remains open.
+
+| Complete native observation | GNU8 | Optimized UBSan |
+| --- | --- | --- |
+| Route refreshes | 89,008 | 86,333 |
+| Separate Scores restart refreshes | 794 | 795 |
+| Last MAIN frame / lives / misses | 13,607 / 2 / 11 | 11,440 / 1 / 13 |
+| Maximum observed bullets | 402 | 361 |
+| MAIN records with after-update slowdown2 | 3,245 | 2,765 |
+| Recorded resyncs | 2 | 505 |
+| Advance p95 / p99 (ms) | 7.13 / 11.69 | 15.11 / 23.10 |
+| Presentation p95 / p99 (ms) | 11.74 / 13.14 | 8.28 / 11.01 |
+
+The rows include natural gameplay, stage transitions and fades; slowdown2 here
+is not by itself a dense-bullet timing result. Advance duration ends before the
+separate advice/trace work. Deadline lag includes whole-loop lateness. Shared
+machine load, private display and full observer work affect the measurements;
+they do not establish uninstrumented FPS or dense Lunatic acceptance. OS timing
+changes native keys/RNG/survival between hosts; raw cross-host equality is not
+asserted.
+
+`reduce_window_route.py` reads complete traces without launching a game. It
+couples v1/v2/v3 headers to 29/38/40-token R bodies, checks every sequence,
+audio/focus invariant, after-update deadline/resync, presentation ordering and
+terminal R/P/D counts. Historical v1/v2 traces also pass. Five independent
+consumer mutants reject a +1ns deadline, v3 body truncated to v1, missing E,
+a declared six-stage report lacking actual Stage6, and a correctly checksummed
+physical score whose Normal admission bit is absent. The first control recipe
+failed because its last cloned fixture omitted physical snapshots; that failed
+consumer remains failed. Corrected v2 rejects the admission mutation for the
+intended reason.
+
+Receipts: GNU Normal `.analysis/port64/full-window-v1356/linux-normal-adaptive-v5/`;
+independent GNU/UBSan trace/storage, controls and failed Extra evidence under
+`.analysis/port64/window-route-v1357/`. All four complete route/restart processes
+are muted with zero device opens/failures through terminal E. See
+[Extra OS trials](extra.md) for its separate no-Continue/full-name gate.
+
+Only Python consumers/file list change. The 488-input consumer manifest is
+`4307e19f6f25038d01cd01e115c2f5bfd851a5d3631fe9f0b417b8fef0a6c3ef`;
+the frozen compiled producer remains `00af24f7…` with 485 inputs. Full archived
+source vectors read back; every C++/header/CMake input is raw-identical. No new
+build or Windows execution is accepted. Two unused failed-fixture trace copies
+retire 18,128,896 allocated bytes after full equality/recovery readback against
+the retained complete GNU Normal traces. Original/user files are preserved.
+
+```sh
+python3 port64/reduce_window_route.py /path/to/window.tsv --output FRESH.json
+```
+
 ## Natural startup and full-window control candidates (v1356)
 
 The user is using the Windows host. Windows GUI launches, foreground
@@ -51,8 +111,7 @@ and target provenance are unchanged.
 The GNU logical Normal Reimu A replay preserves all 88,934 input/state ticks,
 startup/menu inputs, Ending name and physical saves compared to v1351. It
 uses render_every0 versus the old every-refresh1; it makes no wall or pixel
-identity claim. The live-state actual window route remains pending until its
-own terminal verdict and physical restart checks pass. No complete Windows
+identity claim. Those actual GNU/UBSan Normal window routes subsequently close in v1357 above. No complete Windows
 route, dense Lunatic timing/performance or physical audio acceptance follows.
 
 ```sh

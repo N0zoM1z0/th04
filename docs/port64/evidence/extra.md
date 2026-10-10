@@ -1,5 +1,48 @@
 # Extra entry, dialogs and bosses
 
+## Ordinary Extra OS route and controller comparison (v1357)
+
+`verify_window_extra.py` requires an independently checked, physically earned
+six-stage Normal/Reimu A window receipt and separate Scores restart. It copies
+only that route's own files into fresh private test saves and uses actual OP
+Extra selection. No unlock, actor, hit, life, score, clock or transition is
+injected. Live const advice supplies observations to an external OS controller;
+original ordinary input remains the game's only key source. Every launch is
+muted on a checked private Xvfb server, never the Windows host display.
+
+The first ordinary xdotool trial reaches MAIN stage6/rank4 Game Over at frame
+25,595 with eight actual misses and no Continue. This is a failed no-Continue
+clear; full-name/clear-file/restart acceptance does not follow. Preserve its
+terminal/trace/actions/files and 486-input consumer source archive.
+
+The controller now has an optional `--key-driver xtest`: one persistent X11
+connection sends the same release-before-press ordinary OS events and completes
+one server round trip per changed key set. Independent private server keymap
+checks pass 270 changes per driver across directions, Z/X, Shift, Return/keypad
+Enter/Escape and releases. Changed DISPLAY and unsupported keys reject; closing
+releases held keys. Measured request-cost median/p95 is 36.38/89.69ms for the
+original per-key subprocesses versus 0.163/0.224ms for the persistent driver.
+This demonstrates controller cost, not the cause of a particular death, game
+survival, game FPS or physical-key timing. libX11/libXtst identities are pinned.
+
+The second Extra trial is pending. Acceptance requires actual no-Continue
+clear, congratulations/verdict/registration/fresh OP, all eight A gaiji in the
+physical renamed Extra rank4 entry with credit0/clear flag, nine nonselected
+decoded partitions unchanged (including earned Normal admission), unchanged CFG,
+and an independently launched Scores restart. A new in-game GO stays failed.
+
+```sh
+xvfb-run -a -s '-screen 0 800x600x24 -nolisten tcp -noreset' \
+  python3 port64/verify_window_extra.py --key-driver xtest \
+  --exe .analysis/product-v1356/linux/th04-port64 --exe-sha256 PINNED_SHA256 \
+  --hdi /path/to/zun.hdi --font /path/to/FREECG98.bmp \
+  --normal-route /path/to/passed-normal-route --output FRESH_DIRECTORY
+```
+
+Receipts, complete launch vectors, first failed trace, server keymap probe and
+source bridges: `.analysis/port64/window-route-v1357/`. Actual Normal routes
+and complete deadline-reducer scope are in [host-window evidence](host-window.md).
+
 v1349 narrows the former natural-survival gap: a key-only ordinary prototype
 clears Reimu Extra in29611 route advances on GNU/UBSan/actualWindows after a
 same-host physically earned Normal unlock. Three misses/eight Bombs occur;
