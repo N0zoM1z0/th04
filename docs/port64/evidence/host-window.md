@@ -34,8 +34,8 @@ ordinary OS keys and no reference-route dependency. It requires six actual
 stages, credit0 throughout MAIN, real mask<4/shot bit in the selected
 rank+5*character partition, nine other decoded payload/checksums, unchanged CFG,
 fresh OP and separate Scores restart. New startup selection supports Marisa via
-Right and Shot B via Down. The current ReimuA trial is pending; do not accept
-another rank/shot merely because its argument is implemented. Legacy fixed/
+Right and Shot B via Down. The ReimuA trial was pending in v1358 and completes in v1359 below; do not
+accept another rank/shot merely because its argument is implemented. Legacy fixed/
 position modes still require the original attested Normal ReimuA reference.
 
 The complete read-only reducer now reports rank3 MAIN density>=320/>=400, each
@@ -400,3 +400,46 @@ restore under a fresh private directory for failed-trace replay. The failed
 verdict remains failed. Both final CIs/diff checks pass; root includes live
 Ghidra replay/mutations. Post-CI caches retire only with source/hash readback;
 root `.analysis/cleanup/window-extra-final-caches-readback-v1357.json`.
+
+## Completed natural Lunatic and density observations (v1359)
+
+The same v1358 GNU Reimu A job is now terminal, with independent full trace,
+physical snapshot and separate Scores-restart readback. Rank3/character0/shot0
+is observed in every MAIN row, with credit0/program1/generation2 and no Game
+Over. All six stages complete; final MAIN Stage5 frame13,633 has lives2/misses11
+and score5,179,856. MAINE/registration Esc/physical atomic rename/fresh OP and a
+separate Scores reader pass. Section3 stores real clear1 at rename and final
+file; nine others retain decoded2..195 and CFG stays raw-equal. Unplayed0x19
+never qualifies. Generic trace does not directly label every inner Ending phase.
+
+Route has88,927 complete refreshes and restart790; audio opens/failures remain0.
+The observer visited88,206 distinct route refreshes; this controller polling
+count is not the complete trace denominator. Historical terminal stdout says
+“FULL NORMAL” because of a legacy label; raw rank3/receipt determines Lunatic.
+
+| Natural MAIN density | Refreshes | Update P95 / P99 | Presentation P95 / P99 | Lateness P99 |
+| --- | ---: | --- | --- | --- |
+| >=320 | 700 | 5.12 / 9.54ms | 12.12 / 13.11ms | 19.15ms |
+| >=400 | 369 | 5.07 / 11.04ms | 12.19 / 13.15ms | 23.49ms |
+
+Maximum observed count is440; each category contains one update over17.73ms
+(max19.89ms). Complete route has3,245 MAIN after-update slowdown2 records,
+but none belong to these dense categories: legal starting CFG enables Turbo.
+Dense slowdown2 stays a separate required experiment. Presentation counts735/388
+can exceed refreshes700/369 because updated scene invalidations may present
+more than once for a refresh. Preserve the full event association, not an FPS
+inference. Advice/trace cost is outside measured update, while whole-loop lag
+includes observer work and shared host lateness. Short private storage checks
+ran on another Xvfb during this route. These are instrumented WSL/private-display
+observations, not physical host or uninstrumented performance acceptance.
+
+The first independent reader used singular `credit` instead of trace `credits`
+and rejected with KeyError before outcome checks. Its frozen source is retained;
+v2 validates the actual field and every physical/route/restart claim above.
+No game/controller source changed; both complete terminal traces remain intact.
+
+Actual route: `.analysis/port64/lunatic-window-v1358/gnu-lunatic-reimu-a-v1/`.
+Independent verdict: `.analysis/port64/host-storage-v1359/gnu-lunatic-independent-readback-v2.json`.
+The original485 compiled inputs remain frozen; current490 consumer source is
+archived/read back separately. All owned Xvfb/game/controller jobs are terminal.
+No Windows GUI, foreground activation, host keys or audio devices opened.

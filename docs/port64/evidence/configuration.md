@@ -158,3 +158,45 @@ The rejected text-mode CRLF captures are retained; the diagnostic stream now
 uses binary mode and full file equality passes without normalization.
 See [current Windows evidence](windows-current.md) for identities, nine-case
 scope, negative records and retention. Full natural routes remain unaccepted.
+
+## Actual OS setup/corrupt-file/restart checks (v1359)
+
+`verify_window_storage.py` drives ten separate GNU SDL processes through
+ordinary keys or WM_DELETE_WINDOW on checked private Xvfb :103. Every launch
+includes `--mute`; no MAIN, character, shot or Game Over scene is entered.
+These extend earlier component/headless-frontend checks to actual OS windows
+and physical writer/reader boundaries. They do not execute original whole OP.
+
+| Starting files / action | Observed physical result |
+| --- | --- |
+| Missing CFG/SCR; close unfinished setup | Pending FF030201010100000007 persists; SCR stays absent |
+| Separate pending restart; ordinary setup keys | CFG stays pending until quit, then0103020201010000000A; SCR created after setup |
+| Short CFG/empty SCR; bad-checksum CFG/1959-byte SCR | Setup then factory ten-section1960-byte recovery |
+| Valid-checksum unsafe rank/Turbo and damaged first/last SCR checksum | Setup then all ten partitions recreated; old tail dropped |
+| Valid files with metadata/CFG+SCR tail | No SCR rename; CFG metadata cleared at exit, tails preserved |
+| Valid CFG with out-of-range lives/Bombs/BGM/SE | No setup/early write; corrected resident values persist at exit |
+| Two independent completed-save restart processes | No setup/SCR rewrite; physical hashes remain stable |
+
+Complete independent terminal/trace/checksum/file/event readback passes:
+6,305 refreshes, 20 atomic IN_MOVED_TO observations, five SCR repairs and zero
+audio opens. Every renamed snapshot is read back by SHA. Factory recovery
+keeps unplayed0x19 in all ten sections; this is never an unlock. Every valid
+score payload/tail remains raw-equal; no pending directory leaks.
+
+The first independent readback incorrectly compared integer Python dictionary
+keys directly with serialized JSON string keys. The frozen failed reader is
+retained; v2 canonicalizes the JSON representation before checking identical
+complete schedule data. This changes no product or file verdict.
+
+```sh
+xvfb-run -a -s '-screen 0 800x600x24 -nolisten tcp -noreset' \
+  python3 port64/verify_window_storage.py --exe PINNED_GNU_EXE \
+  --exe-sha256 SHA --hdi PINNED_HDI --font FREECG98.bmp \
+  --score-template ATTESTED_UNPLAYED_SCR --score-sha256 SHA --output FRESH_DIR
+```
+
+Full argv/terminal/files/frozen490-input consumer/member readback:
+`.analysis/port64/host-storage-v1359/`. Actual compiled sources remain the
+485-input v1356 producer00af24f7; GNU executable dbe17225 is reused. New consumer
+0cd137fd adds only this script/filelist after v1358. No product rebuild or
+Windows execution; Windows GUI/input, physical audio and other hosts stay open.

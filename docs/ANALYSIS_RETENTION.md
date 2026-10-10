@@ -1,5 +1,12 @@
 # Native private-state retention
 
+v1359 final CIs pass on both branches, including root live Ghidra replay and
+mutation controls. No new build intermediates are created. Post-CI cleanup
+retires961 source-backed Python caches after all source and protected-input
+hashes read back; net15,634,432 allocated bytes (about14.9MiB), subtracting the
+journal. Programs, source archives, traces, physical saves and negative readers
+remain. Root receipt: `.analysis/cleanup/host-storage-source-caches-readback-v1359.json`.
+
 Post-final-CI pruning retires 1,018 source-backed public Python caches,
 net 16,633,856 allocated bytes after the persisted journal and full source
 hash readback. Root receipts: `.analysis/cleanup/full-window-post-ci-caches-v1356*.json`.
