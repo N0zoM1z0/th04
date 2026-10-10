@@ -448,6 +448,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/check_th04_pointnum_renderer.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Check the complete linked point-number renderer's operand and call contract.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/check_th04_renderer_default_objects.py",
     "category": "source-review",
     "role": "command",

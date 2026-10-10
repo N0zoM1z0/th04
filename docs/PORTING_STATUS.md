@@ -108,12 +108,22 @@ process teardown remain open.
 
 Raw video comparison retains every graphics/text/palette byte on both pages
 at all3996 updates per demo. Text, palettes, page selectors and selected programmed GDC fields
-agree. Complete v1370 replay accepts all compared video regions in Demos2/3.
-Demo1 first differs at write1678 with1032 differing updates; Demo4 first differs
-at1349 with181. The cold packed bullet-box DWORD context repair removes Demo1's
-old491 residue mismatch and all Demo2/3 graphics differences. The earlier
-Stage4 carpet repair removes the frame2 blue band. Remaining Demo1/4 drawing
-causes, raw scanout timing and process teardown stay open.
+agree. Complete v1371 replay accepts all compared video regions in Demos2/3/4.
+Demo1 still first differs at write1678 with1032 differing updates, localized to
+B/R/G page0 row375. The cold point-number renderer restores multiplier glyph
+indices10/11 instead of4/5 and removes every retained Demo4 graphics difference.
+Earlier packed bullet-box and Stage4 carpet repairs remain verified. Demo1's
+drawing cause, raw scanout timing and process teardown stay open. Historical
+focused point-number replay remains blocked before comparison by an incompatible
+bullet/add.cpp header in the old scaffold; it grants no fresh exact credit.
+
+Read-only native06922ce source inspection finds a concrete missing join:
+`main_state.cpp` records point-number events without consuming them, and its
+item callback does not consume `yellow_point_number`; `view.cpp` paints items
+then enemy bullets without a point-number draw pass. The400-slot popup pool,
+lifecycle and original glyph ordering need a native integration/paired check.
+This is source evidence; the native worktree remains clean, with no new build
+or runtime acceptance.
 Current native host traces still lack complete RNG seed/ring/call-count fields and paired
 original-DOS gameplay evidence.
 

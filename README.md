@@ -31,17 +31,19 @@ combat, death/respawn and complete process transitions still need paired
 validation. New complete raw video captures cover both graphics pages, all four
 planes, text, palettes and selected GDC display fields. Text, palettes and the
 compared display fields agree. Cold builds and complete replays verify repairs
-to the Stage 4 carpet columns and packed bullet invalidation dimensions.
-Demo 2 and Demo 3 now agree on every compared video region across all 3,996
-updates each. Remaining graphics differences start at frame-counter writes
-1678 in Demo 1 and 1349 in Demo 4. Full scanout timing and the remaining drawing
-causes are still open; see the handoff for the current evidence.
+to the Stage 4 carpet columns, packed bullet invalidation dimensions and
+point-number multiplier glyphs. Demo 2, Demo 3 and Demo 4 now agree on every
+compared video region across all 3,996 updates each. Demo 1 still first differs
+at frame-counter write 1678. Full scanout timing and that remaining drawing
+cause are open; see the handoff for the current evidence.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh
-OP/restart checks. Full original-DOS/native state and effect parity, broader
-routes, and physical Windows input/audio acceptance remain open. Historical
-exact acceptance has its own contract; runtime agreement does not promote it.
+OP/restart checks. The inspected native event/render path still needs
+point-number popup integration. Full original-DOS/native state and effect
+parity, broader routes, and physical Windows input/audio acceptance remain open.
+Historical exact acceptance has its own contract; runtime agreement does not
+promote it.
 
 - [Current DOS/native evidence and remaining work](docs/PORTING_STATUS.md).
 - [DOS build and normal/invincible Windows testing](docs/DOS_BUILD.md).

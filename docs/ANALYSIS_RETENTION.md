@@ -1,5 +1,49 @@
 # Private build and analysis retention
 
+v1371 retains complete ordinary/DGROUP captures and controls under
+`.analysis/runtime/candidates/dos-demo-v1371-pointnum-candidate*`. Full video
+comparison is `dos-demo-v1371-pointnum-video-comparison-v2.json`; the initial
+missing-consumer report/source/log stay retained separately.57 terminal immutable
+paths share identical bytes/modes, reclaiming73,854,976 allocated B.
+
+The four new video gzip files are retained losslessly against the complete
+original v1369 baselines as `demo-render-v1371/video-delta/demo-N-xor.bin.gz`.
+Full byte/SHA/size recovery validates every encoded record, raw GDC clock and
+invisible tail before retiring162,910,208 B. Keep all four baselines/deltas,
+`video-stream-retention.json` and the restoration script. Verify without writing:
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 python3 \
+  .analysis/reconstruction/probes/demo-render-v1371/restore_video_stream.py
+```
+
+Add `--output-directory
+.analysis/runtime/candidates/dos-demo-v1371-pointnum-candidate-video` to restore
+all four exact original files before unchanged-reader replay. Existing files
+are never overwritten; completed execution images remain immutable.
+
+The failed historical122-owner replay remains failed before byte comparison.
+Its A `source/` is retained in `demo-render-v1371/failed-focused-source.tar.gz`:
+2784 PAX entries,16,350,880 file-payload B, complete bytes/modes/ns mtimes checked.
+Reclamation18,526,208 B; restore with `tar -xzf ARCHIVE -C FRESH-directory` before
+source/object inspection. Original root:
+`.analysis/reconstruction/exact-unit-replay/gpt61-v1371-pointnum-symbol-focused/a/`.
+Its generated raw `source.tar` is separately retained byte-for-byte as
+`failed-scaffold-input.tar.gz`, reclaiming8,040,448 B; recover with `gzip -dc
+ARCHIVE > FRESH-source.tar`, verifying the digest/size in
+`failed-scaffold-input-retention.json`. That journal also retains original mode
+and ns mtime. Frozen maintained `repo-inputs/`, all failure logs and the successful
+cold MAIN cache remain live. Native06922ce source-only inspection freezes four
+complete files separately; it grants no runtime acceptance and changes no native file.
+
+After final434-test CI,533 source-backed Python caches retire8,876,032 B.
+Total v1371 reclamation is272,207,872 allocated file B/about259.6MiB before journals.
+Independent readback verifies199 protected hashes,20 frozen inputs, all four
+full gzip restores,2784 PAX entries/raw tar recovery, four native source files
+and cache absence. Every game/build/reader/CI/cleanup job is terminal. Restore
+only to fresh paths for inspection; preserve the initial failed consumer report,
+receipt-pinned late GDB freeze and corrected full v2 reader as separate evidence.
+
 v1370 keeps the fresh ordinary and full DGROUP captures under
 `.analysis/runtime/candidates/dos-demo-v1370-invalidate-candidate*` with their
 independent controls and complete comparisons.178 terminal immutable-copy

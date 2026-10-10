@@ -5,51 +5,59 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1370 repairs the standalone bullet invalidator's packed box declaration:
-original MAIN TILE_TEXT0AAF:1FBE/1FDF/1FF3/1FFF uses DWORD operations; the old
-`.186`/byte context retained height32 and passed8x32 instead of8x8 for pellets.
-The product context now uses `.386`/DWORD. Full150-byte instruction contract
-passes with only verified symbolic address substitutions; no exact promotion.
+v1371 restores point-number multiplier glyph indices10/11 instead of4/5 in
+the maintained renderer body/context. Original MAIN CIRCLE_TEXT0AAF:12F5/12FB
+and the complete1536B glyph table prove the selector error. The complete154B
+linked renderer contract passes with only verified DATA/near-call/self-width
+address substitutions; bounded CPU replay now matches10 calls/69 VRAM writes.
+Earlier packed bullet-box and carpet-table repairs also pass unchanged.
 
-Cold MAIN199455 B is c6c5ed0a…, MAP69790a7a….193 C++/155 ASM/8 state/4 sprite
-objects pass with zero reused C++ roots.359/360 complete OMF producers agree
-with the prior carpet build after dependency-time-only normalization; only the
-invalidator producer changes. The first compilation's publication was rejected
-because a probe was added during the build; frozen full repetition publishes
-identical MAIN/MAP. Package `.analysis/build/th04-demo-invalidate-v1370/` retains
-old unchanged OP/MAINE/ZUN receipts. Windows packages/native worktree are unchanged.
+Cold MAIN199455 B is8439b0b0…, MAP69790a7a… unchanged.193 C++/155 ASM/8 state/
+4 sprite objects pass with zero reused C++ roots. Only two complete-file bytes
+change,4->10 and5->11;359/360 OMF producers agree after dependency-time-only
+normalization. Package `.analysis/build/th04-demo-pointnum-v1371/` retains old
+unchanged OP/MAINE/ZUN receipts. Windows packages/native worktree are unchanged.
 
 Fresh complete ordinary captures pass all15988 input/score/RNG/caller/resident
-boundaries. Fresh complete DGROUP captures accept nine raw pools24952 B plus22
-pointer-free states104 B per update across all15984 updates, plus input/Shift/
-graze; own independent ordinary traces agree. The seam-state CPU invalidation
-replay now matches all67 positions/boxes and1600 dirty flags. Boss remains at
-setup; ordinary Boss combat, hit/death/respawn, other globals/callbacks, process
-teardown, cross-emulator and native x64 parity remain open.
+boundaries. The fresh complete DGROUP replay passes nine raw pools24952 B plus
+22 pointer-free states104 B per update across15984 updates, plus input/Shift/
+graze, with identical independent ordinary traces. Boss remains at setup;
+ordinary Boss combat, hit/death/respawn, other globals/callbacks, process teardown,
+cross-emulator and native x64 parity remain open.
 
-Full raw video compares3996 updates per demo,279809 B/update. Both graphics
-pages/all planes, TRAM, full palettes, selectors and selected programmed GDC
-fields are retained. Demo2/3 all38 compared regions pass. Demo1 first differs
-at write1678 (1032 differing updates), Demo4 at1349 (181). Text/palettes/modes/
-selected GDC fields match throughout. All raw GDC scan/raster/FIFO/clock bytes
-remain diagnostic and differ3996 times per demo; full scanout timing is open.
-Remaining source causes are unproved: first blocks localize Demo1 row375 and
-Demo4 rows103..110. Historical exact states and the deferred carpet/checkerboard
-cases are unchanged; the earlier carpet DATA table repair remains verified.
-Canonicality stays candidate-local-attested.
+Complete video compares3996 updates per demo,279809 B/update. Demos2/3/4 pass
+all38 compared graphics/text/palette/selector/programmed-GDC regions. Demo1
+still first differs at write1678 (1032 differing updates), B/R/G page0 row375,
+columns13/17/40/41. Text/palettes/modes/selected GDC fields match throughout.
+Raw GDC scan/raster/FIFO/clock bytes remain diagnostic and differ3996 times per
+demo; full scanout timing is open. The first reader misses a frozen GDB dependency
+and rejects before comparison; receipt-pinned late freezing plus independent
+v2 full reread succeeds. Original failed source/log/report remain intact.
 
-Final CI passes428 tests,20-target calibration and live Ghidra/mutation controls.
-533 source-backed caches retire8,871,936 allocated B after CI. Immutable copy
-sharing, byte-exact video recovery and rejected-cache PAX retention bring total
-reclamation to252,387,328 allocated file B (about240.7MiB) before journals.
-Independent readback checks367 protected hashes,17 frozen source inputs and
-all4 archived gzip recoveries. An initial self-log completion rejection stays
-retained; the corrected reader validates only that exact writer/receipt bridge.
-All build/game/CI/cleanup jobs are terminal. Original inputs, complete evidence
-and successful cold cache remain; no Windows GUI/audio or native worktree write.
-Restore archived video files before old-reader replay; see retention instructions.
+Historical focused122-owner point-number replay fails first cold compilation
+at scaffold bullet/add.cpp: missing ANGLE_PER_SPRITE and bullet_t::from_group.
+It never reaches second build/raw comparison and grants no fresh exact credit.
+This is the older header/dependency staging hazard; retain failed frozen inputs
+and logs, do not widen scaffold allowlists. Historical states and deferred
+carpet/checkerboard cases remain unchanged. Canonicality is candidate-local-attested.
 
-Replay commands, frozen producer/reader sources, rejected publication, precise
+Read-only native06922ce source inspection finds point-number event/render
+integration missing in the inspected path: bullet/item callbacks do not consume
+point-number effects, and view.cpp has no intervening draw pass between items
+and bullets. Audit/implement the400-slot popup pool/lifecycle and glyph10/11
+join, then pair state/pixels with original. Four source files are frozen/read
+back; no native build/run/write or new runtime acceptance.
+
+Final CI passes 434 tests, 20-target calibration and live Ghidra/mutation controls.
+533 source-backed caches retire8,876,032 allocated B after CI. Immutable copy
+sharing, byte-exact video recovery and failed-source/input archives reclaim
+272,207,872 allocated file B (about259.6MiB) before journals. Independent readback
+checks199 protected hashes,20 frozen inputs, all4 full gzip recoveries,2784 PAX
+entries and4 native source files. Every build/game/reader/CI/cleanup job is terminal.
+Complete evidence and successful cold cache remain; restore archived video or
+failed scaffold source before old-reader inspection. Native06922ce stays clean.
+
+Replay commands, frozen producer/reader sources, failed historical/consumer checks, precise
 coverage and lossless retention are in the focused note. Current commit
 identities are obtained with `git log -1` in each worktree.
 
@@ -77,10 +85,11 @@ native fixes or this runtime batch. Targets remain
 
 ## DOS verification frontier
 
-- v1370 fresh scalar/RNG and full9-pool/22-state comparisons pass. Complete
-  video accepts Demo2/3 and retains first remaining writes1678/1349 in Demo1/4.
-  The packed box correction changes only one OMF producer; prior carpet table
-  remains correct. Complete old/new raw evidence and source/ABI controls stay
+- v1371 fresh scalar/RNG and full nine-pool/22-state comparisons pass. Complete
+  video accepts Demos 2/3/4; Demo 1 first differs at write 1678.
+  The multiplier-symbol correction changes only one OMF producer and two
+  complete-product bytes; packed bullet boxes and the carpet table remain
+  verified. Complete old/new raw evidence and source/ABI controls stay
   available, with lossless gzip recovery before archived-stream replay:
   [paired evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 - v1368 accepts22 raw global-state blocks across all15984 demo updates, with

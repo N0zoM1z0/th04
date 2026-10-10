@@ -859,3 +859,131 @@ The initial retention reader catches its writer completing the initially empty
 cleanup log; that failure/source stay retained. Reader v2 allows only a verified
 log/terminal-receipt before/after bridge. Every other data/source hash is strict.
 All jobs terminal; native worktree and installed Windows packages unchanged.
+
+## v1371: point-number multiplier glyph indices
+
+Observed original MAIN CIRCLE_TEXT0AAF:12F5/12FB passes glyph indices10/11
+for the two multiplier cels. Its complete renderer is154 B at1274, fileD564;
+the following register-ABI `@pointnum_put` is106 B at130E. The standalone
+renderer body and context incorrectly define4/5, selecting digit glyphs instead.
+The target-derived point-number sprite table at DGROUP2134:098A and the prior
+product's DGROUP23FB:285E agree across all1536 B, SHA-256
+`32d4b60a041d3d88f337340fc8b96686dcfb22d698c900f70b12606159734066`.
+This is a selector error, with no change to the glyph assets.
+
+`check_th04_pointnum_renderer.py` validates target and product MZ identities,
+complete unique MAP ownership, both DATA bindings, all five near-call operands,
+and the CS-relative self-modifying width-store address. Only those verified
+address words are substituted; glyph operands and all remaining instruction
+bytes stay in the comparison. It also compares the complete sprite table.
+The prior c6c5ed0a product fails only at renderer offsets130/136. Six negative
+control groups cover every other instruction byte, address binding, call target,
+self-store address, complete extent and MAP-owner ambiguity. These diagnostics
+never promote product or historical exactness.
+
+Private bounded CPU replay uses recorded Demo4 DGROUP update1349 actors and
+alive pointers, restores the prior update1348 scroll word, loads each relocated
+MZ at its recorded load segment, and executes the complete renderer/blitter.
+Original/candidate make10 ordered glyph calls but differ at call4: top103,
+left214, glyph10 versus4; the next call at222 uses11 versus5. Ordered VRAM
+writes differ69 versus63; tile-register OUT sequences and sprite bytes agree.
+All97 changed VRAM bytes in the retained first full video blocks lie within
+the differing draw-mask bits. This supports the source attribution; full fresh
+runtime replay is the causal gate. Probe scripts/results are under
+`.analysis/reconstruction/probes/demo-render-v1371/`.
+
+Demo1 negative trials keep a separate scope: at update1678 its point-number
+alive list is empty; the10 spark calls and80 writes agree. A CPU seam-state
+invalidation chain from update1677 agrees on155 ordered positions/boxes and
+1600 dirty flags. The93 active post-top pellet records at1678 also agree after
+substituting only their sprite-base addresses. These experiments do not execute
+the complete preceding stage VM/background/hardware state, and do not resolve
+the remaining single-row graphics cause.
+
+The fresh zero-cache product compiles all193 C++/155 ASM/8 state/4 sprite
+objects and publishes199455 B MAIN SHA-256
+`8439b0b0393894125868eb2bee1c75f53ca44daf221bd6ef619a84d7f781f33f`.
+The complete MAP remains69790a7a…, and only file offsets46636/46642 change,
+4->10 and5->11. All360 OMF objects attest:344 raw identities,359 identities
+with only dependency timestamps normalized; only the renderer producer differs.
+The complete linked renderer and earlier bullet/carpet diagnostics pass.
+The new kernel on prior recorded Demo4 state now agrees with original10 calls,
+69 writes and all OUT sequences, retaining separate kernel/state-producer hashes.
+
+Historical focused replay is attempted with the122-owner dependency closure:
+`python3 scripts/replay_th04_main_exact_units.py --unit
+th04-main-pointnums-render-v138 --run-id FRESH-run`. Its first cold compilation
+fails at scaffold `th04/main/bullet/add.cpp`: missing `ANGLE_PER_SPRITE` and
+`bullet_t::from_group`. This extends the already retained v1239 incoherent-header
+hazard. It does not reach the second build or raw comparison, and grants no
+fresh exact credit. The complete failed frozen `repo-inputs/` and A build remain
+at `.analysis/reconstruction/exact-unit-replay/gpt61-v1371-pointnum-symbol-focused/`.
+The failed controller/log/phase remain distinct from `run_runtime_repair.py` and
+`runtime-phase.json`, which continue the authorized standalone runtime checks.
+Do not widen scaffold allowlists or label this failed attempt a raw rejection.
+
+A read-only native audit at06922ce separately freezes four whole source files
+under `native-readonly-source/`, with clean Git status and complete digest
+readback in `native-readonly-gap.json`. `port64/main_state.cpp:414` records bullet
+`point_number` events but consumes only sparks/gather; its item callback at697
+updates HUD/sound without consuming `yellow_point_number`. `port64/view.cpp:1074`
+paints items followed by enemy bullets without a point-number draw pass. The
+public bullet/item interfaces expose those effects. This identifies a concrete
+native integration surface to audit/implement: the400-slot popup pool/lifecycle,
+widths, white/yellow order and original10/11 multiplier glyphs. It is source
+inspection, with no native build/run/write or new runtime acceptance.
+
+The first full video reader rejects the frozen consumer's missing
+`th04_demo_dgroup_stream.gdb` before payload comparison. All four capture streams
+are already complete and remain untouched. `late-consumer-freeze.json` checks
+the helper against the executed capture receipt's exact SHA-256 before copying;
+the other three frozen consumers agree already. Initial controller/log/report
+stay retained, and `run_runtime_tail_v2.py` independently rereads the same full
+captures into a fresh `dos-demo-v1371-pointnum-video-comparison-v2.json`, then
+continues fresh DGROUP capture. Do not restamp the old receipt, overwrite its
+failed report, or call the initial consumer failure a demonstrated game mismatch.
+Freeze non-Python GDB consumers as well as Python dependencies for future runs.
+
+Fresh ordinary replays agree on15984 updates plus4 terminal decisions. The
+fresh complete DGROUP replay passes nine raw pools24952 B plus22 pointer-free
+states104 B at all15984 updates, input/Shift/graze and independent ordinary
+controls. Boss24B stays setup/distinct1; hit/death/respawn remain unexercised.
+Full video v2 verifies all3996 records per demo and own ordinary traces.
+Demos2/3/4 agree in all38 compared regions: all181 old Demo4 differing updates
+vanish. Demo1 remains first1678/after1677 with1032 differing updates, only B/R/G
+page0 physical row375 at columns13/17/40/41 in the first block. All TRAM/palettes/
+modes/selectors/selected programmed GDC fields agree. Raw GDC clocks/scan/FIFO
+remain diagnostic with3996 differences per demo; complete scanout is unaccepted.
+This is a causal graphics repair plus preserved actor/scalar state, with one
+remaining source cause and separate ordinary/process/native validation work.
+
+Current product receipt:
+`.analysis/reconstruction/probes/product-20261010-200541-8c23e354-main/receipt.json`.
+Reproduce cold MAIN with `python3 scripts/build.py --only main --output-dir
+FRESH-build`, then sequential capture/check commands in the retained controllers,
+using fresh run/report paths and all executed Python/GDB consumer dependencies.
+Successful full reports are `dos-demo-v1371-pointnum-comparison.json`,
+`dos-demo-v1371-pointnum-video-comparison-v2.json` (overall equality rejects only
+Demo1), and `dos-demo-v1371-pointnum-dgroup-comparison.json`. All ordinary, video,
+DGROUP and reader jobs are terminal. Historical exactness remains unchanged.
+
+Final CI passes434 tests plus20-target calibration/live Ghidra mutation controls.
+Terminal immutable sharing covers57 paths/77 protected hashes, reclaiming
+73,854,976 allocated B. Four complete candidate video gzip files restore to
+original full digests/sizes before sparse baseline-XOR retention retires
+162,910,208 B. All raw clocks, invisible tails and record headers are retained.
+A fresh one-bit archive mutation rejects before decode. The failed historical A
+source is retained as2784 PAX entries/16,350,880 file-payload B with byte/mode/
+nanosecond-mtime checks, reclaiming18,526,208 B; its raw git archive separately
+restores byte-for-byte from gzip, reclaiming8,040,448 B. Frozen maintained inputs
+and A build log remain, and failed compilation stays failed.
+
+After final CI,533 source-backed caches retire8,876,032 B; cleanup stdout is
+outside the protected probe tree, avoiding the prior self-log completion issue.
+Total reclamation is272,207,872 allocated file B/about259.6MiB before journals.
+`final-independent-readback.json` checks199 protected hashes,20 frozen inputs,
+all4 full gzip restores,2784 PAX entries, raw input tar recovery and4 native
+source files, plus complete current verdicts and434-test CI. Original captures,
+all earlier failed reports, complete source snapshots and the successful cold
+product cache remain. All jobs are terminal; Windows packages/native worktree
+are unchanged. See retention for fresh-path restoration commands.
