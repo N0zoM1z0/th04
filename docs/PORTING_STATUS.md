@@ -25,6 +25,19 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
+v1361 adds the independent read-only `verify_natural_slowdown.py`. It rechecks
+program/original inputs, legal CFG, every MAIN identity/credit, six stages,
+registration Esc, true clear at physical rename/final file, nine unchanged
+partitions, temporary-file absence, separate Scores reader and complete clocks.
+Actual completed GNU Turbo1 passes route-only with dense acceptance false. Eight
+controls reject live/incomplete, wrong Turbo, declared Turbo0 with no dense2,
+checksum-valid wrong-shot/physical-sentinel and lost-deadline cases. All scratch
+clones retire; originals and the running controller/helpers remain unchanged.
+Consumer491 inputs (`437d7e36…`) archive/read back; all485 compiled inputs remain
+unchanged. Same Turbo0 job17095/controller404173/game404187 is still live.
+Stage3 prefix max306/4,812 slowdown2 is below>=320/>=400; no terminal/dense verdict.
+
+
 v1360 adds legal Turbo0 selection and an explicit dense-slowdown route gate.
 `--adaptive --rank 3 --turbo 0 --require-dense-slowdown --key-driver xtest`
 requires the existing complete six-stage/clear/physical-save/Scores-restart gates,

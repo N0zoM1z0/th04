@@ -54,151 +54,67 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
-v1360 adds legal Turbo0 selection and an explicit dense-slowdown route gate.
-`--adaptive --rank 3 --turbo 0 --require-dense-slowdown --key-driver xtest`
-requires the existing complete six-stage/clear/physical-save/Scores-restart gates,
-then complete deadline reduction and actual>=320/>=400 slowdown2 samples. Default
-Turbo1/fixed Normal inputs retain their previous behavior. Four unsupported
-argument combinations reject before display/game/save creation. Consumer490
-inputs (`a07fda7a…`) archive/read back; only route Python differs from v1359,
-all485 compiled inputs/program identities remain unchanged. No new build.
+Current work: one natural GNU Lunatic ReimuA/Turbo0 route, ordinary private
+XTest keys/read-only advice. Tool17095/controller404173/game404187 remains live;
+verify /proc argv/start ticks against native
+`.analysis/port64/slowdown-window-v1360/active-job-v2.json` before polling or
+restarting. Its six pinned controller/input/reducer files must stay unchanged.
+Stage3 prefix max306/4,812 slowdown2 is below the dense gates; no terminal clear,
+physical restart or dense acceptance yet. Observation timeout is not termination.
 
-One GNU natural ReimuA/Turbo0 trial is live on private Xvfb (tool17095,
-controller404173/game404187). Its initial physical CFG is0306020201000000000E;
-early Stage0 has35 slowdown2 records/zeroaudio, but max100 bullets is below dense
-acceptance. No terminal clear/dense verdict yet. Before polling/restarting,
-inspect native `.analysis/port64/slowdown-window-v1360/active-job-v1.json` and
-match /proc start ticks/argv; leave pinned route/input/reducer sources unchanged.
-Windows GUI/foreground/host input/audio opens remain prohibited.
+v1361 independent `verify_natural_slowdown.py` rechecks complete raw traces,
+program/original inputs, CFG, MAIN identity/credit, registration Esc, physical
+rename/true clear/nineother partitions and separate Scores restart. Completed
+GNU Turbo1 passes route-only with dense acceptance false. Eight live/Turbo/density/
+checksum-valid mask/snapshot/deadline controls reject; scratch clones retire.
+Reader receipts: native `.analysis/port64/slowdown-consumer-v1361/`.
 
+Retained actual private-Xvfb route acceptance is GNU ReimuA only:
 
-v1359 accepts GNU natural Lunatic ReimuA on private Xvfb: six stages/noContinue,
-88,927 route+790 Scores restart refreshes; section3 real mask1 at physical
-rename/final file, registration Esc/freshOP, unchanged CFG/nineother partitions.
-Final MAIN frame13,633 has lives2/misses11, score5,179,856. Natural density max440;
->=400 has369 samples/update P95=5.07ms, but Turbo1 yields no dense slowdown2.
-Observer/shared-host timing is separate from uninstrumented performance.
+| Route | Complete route + independent Scores refreshes | Physical outcome |
+| --- | --- | --- |
+| Normal/Turbo1 | 89,008 +794 | Six stages/noContinue, Esc/freshOP, real selected mask1 |
+| Lunatic/Turbo1 | 88,927 +790 | Six stages/noContinue; final frame13,633/lives2/miss11/score5,179,856; section3mask1 |
+| Extra | 30,388 +790 | NoContinue/full eight A gaiji/credit0/real mask1; nineother partitions and CFG retained |
 
-Ten actual muted storage/setup processes pass6,305 refreshes/20 physical renames:
-WMclose unfinished setup preserves rankFF/noSCR; ordinary setup keys precede
-score creation; corrupt CFG/first-last SCR recover; valid tails/ranges/metadata
-and two physical restarts pass. GNU scope only; Windows GUI/input stays closed.
+Unplayed0x19 contains bit0 but native OP normalizes masks>3 to0. Require mask<4
+and requested shot bit at both final file and actual rename. Prior UBSan Normal
+all-clear/admission is revoked: all final masks stay0x19 after Final Stage miss13
+immediately enters MAINE. Bad Ending is source-routed/inferred; no Game Over
+scene alone does not prove clear. Its reached-stages/save/Esc/freshOP/restart/
+clock/zeroaudio observations remain valid. Old green receipts stay historical.
 
-The v1358/v1359 jobs are terminal. Independent receipts/frozen490-input consumer
-0cd137fd: native `.analysis/port64/host-storage-v1359/`. Actual Lunatic trace:
-`.analysis/port64/lunatic-window-v1358/gnu-lunatic-reimu-a-v1/`. Compiled485 inputs
-remain unchanged; no new build/Windows/audio opens. Source-backed final caches
-retire961 files/net15,634,432 allocated B; [retention](ANALYSIS_RETENTION.md).
+Registration, Bomb/hit/death/lives/HUD/GameOver/Continue, six stages, Endings,
+Extra, Scores, MusicRoom/demo/unlocks/config and muted sound owners have scoped
+component/integration evidence. Actual stationary GNU/UBSan Continue cases
+freeze MAIN then genuinely resume, store CONTINUE entries and independently
+restart. Ten GNU OS setup/corrupt-file cases pass6,305 refreshes/20 renames:
+unfinished setup close preserves rankFF/noSCR; ordinary setup keys precede
+score creation; bad CFG/first-last SCR recover; valid tails/ranges/metadata and
+two fresh readers pass. Generic traces do not expose every inner Ending phase.
 
-v1358 corrects the v1357 UBSan all-clear/admission claim. Unplayed flag0x19
-also has bit0; original native OP normalizes masks>3 to0. The old bit-only
-comparator accepted that sentinel incorrectly. GNU Normal stores real mask1;
-GNU Extra also stores mask1 and retains its accepted no-Continue/full-name route.
-UBSan reaches all six stages, then transitions from Final Stage miss13/respawn33
-to MAINE without a Game Over scene. Its final physical Normal mask remains0x19,
-so good-clear/admission acceptance is revoked. This is consistent with the
-compiled Final Stage death-to-Bad-Ending path. Its physical save/Esc/freshOP/
-Scores restart, unchanged CFG/nineother partitions and zeroaudio observations
-remain valid. Raw old receipts remain historical comparator outputs.
+Natural GNU Turbo1 Lunatic reaches440 bullets; >=400 has369 samples/update
+P95=5.07ms/P99=11.04ms and one19.89ms update over its17.73ms period. Dense samples
+have no slowdown2. Current Turbo0 requires complete>=320/>=400 slowdown2 gates;
+shared WSL/private Xvfb/advice/trace costs prevent uninstrumented FPS claims.
+All27 muted startup combinations passGNU/UBSan; Windows retains19 cases only.
 
-Five corrected checksum-valid mask/snapshot mutants reject, including0x19 with
-bit0. Both retained GNU positive routes pass the stronger mask<4+shot-bit gate.
-The six-stage verifier now supports ranks1..3/characters0..1/shots0..1 through
-ordinary OP selection and optional persistent private XTest keys. Easy's five-
-stage ending gate stays separate. The v1358 natural Lunatic ReimuA trial
-subsequently completed on unchanged v1356 GNU; the v1359 terminal verdict above
-supersedes its pending state. Dense rank3 reductions separate>=320/>=400 and exclude
-Normal/Extra/dialog rows; full observer cost remains outside uninstrumented
-performance acceptance. Current receipts: native `.analysis/port64/lunatic-window-v1358/`.
+Cold v1356 producer remains485 inputs00af24f7 and204 program identities,
+67 contracts per Linux host plus held-input regressions. v1356 Windows is
+cross-compiled only; earlier v1355 actual contracts pass but owned-window
+foreground input rejects. Do not launch Windows GUI/activate/inject host keys
+or open audio backend/device while the user uses the host. Native consumer491
+inputs437d7e36 change only Python readers/filelist; every compiled input remains
+unchanged. No new build or historical exact/target-provenance promotion.
 
-The schedule reducer verifies every deadline against preceding after-update
-slowdown or recorded resync, plus v1/v2/v3 widths and terminal counts. Native
-MAIN includes 3,245/2,765 slowdown2 records; GNU/UBSan observe 2/505 resyncs.
-Instrumented CPU/presentation/advice/trace cost remains separate from acceptance
-of uninstrumented performance. Five consumer mutants reject wrong deadlines,
-wrong row versions, missing termination/stage and checksum-valid lost admission.
-
-GNU Extra v2 completes no-Continue Reimu A with persistent ordinary XTest
-keys: 30,388 route refreshes plus 790 independent Scores restart refreshes.
-The physical renamed rank4 file contains all eight A gaiji, credit0 and clear
-flag; nine other decoded partitions (including earned Normal admission) and CFG
-are unchanged. Final MAIN frame27,832 has lives5/misses3. This is GNU private-
-Xvfb acceptance; other Extra characters/shots/hosts and Windows remain open.
-Extra v1's Game Over at frame25,595 stays failed. Server keymap/request-cost
-controls do not prove a causal explanation for that failure. Current receipts: native
-`.analysis/port64/window-route-v1357/`; GNU Normal is retained under
-`.analysis/port64/full-window-v1356/linux-normal-adaptive-v5/`.
-
-All 27 muted driver/BGM/SE startup combinations pass on GNU/UBSan (32,147
-refreshes) on v1355 programs. Windows retains 19 cases only. No Windows GUI,
-foreground or host-key retries while the user uses the host. Earlier wrong-map
-and corrected fixed/path Game Over failures remain failed. Live advice is const
-output; OS input still owns the keys. No game/clock/score/life injection.
-All v1357/v1358 jobs are terminal. v1358 active-job receipts retain historical
-PID/start/source identity; v1359 records the terminal readback. Do not reuse
-stale handles or restart a completed route.
-
-Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
-identities. GNU/UBSan pass 67 contracts each plus manual held-input
-regressions with advice disabled. Windows is cross-compiled only; its
-new execution remains unverified. 104/105 GNU/MinGW core objects equal
-v1355; only trace serialization changes. Both control-plane CIs pass
-(root includes live Ghidra replay/mutations). Historical acceptance
-and target provenance are unchanged.
-
-The extracted policy preserves the complete 88,934-tick logical Normal
-Reimu A input/state/startup/menu/Ending streams and physical saves.
-The v1357 route checks above are independent; no uninstrumented timing follows.
-
-v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary
-X11 Continue/save/restart verifier. 204 AMD64 programs build cold from 481
-producer inputs; GNU8, optimized UBSan and actual Windows pass 67 contracts each.
-Among 105 GNU/MinGW core objects, only trace serialization changes; 104 remain
-raw-equal to v1354. GNU/UBSan's 195 fake-audio frontend files per host also equal
-v1354. No audio backend/device opens.
-
-Eight real SDL/X11 processes under private Xvfb pass two stationary Lunatic
-Reimu A Continue/Quit/registration/fresh OP cases and two physical-file Scores
-restarts per GNU8/UBSan. MAIN freezes at frames 432/630 during Game Over and
-resumes at 433; Continue resets score/power/lives/credit. Missing-score/unranked
-and declared zero-score/ranked leaderboard fixtures are distinct. Ranked
-writer-close/rename snapshots contain CONTINUE 500 units with credit 0 while
-MAIN resets to credit 1/score 0. Nine other decoded partitions preserve checksum
-and payload; encoding keys legitimately change. Restarts preserve file hashes.
-All launches are muted. These are bounded OS-input trials, not complete clear
-routes, original whole-route equivalence, physical devices or dense timing.
-
-Producer manifest: `cce4f0fd683c5166f798303e2ebfb83a4fbbe8baef1ee56a862c024c25dbe3be`.
-Final verifier: `d027a9701ce8c6168c408bd18a93b72806e60079e87cbf39b7ab8d0ef9267f5c`.
-Only the route verifier differs; every compiled input is raw-identical.
-Keep the first missing-verdict-key and key-header comparator failures failed.
-Current evidence/recovery: native `.analysis/port64/host-route-v1355/`;
-replay/limits: native `docs/port64/evidence/host-window.md`.
-
-Actual Windows still rejects before SendInput. PID/class selection now excludes
-an early ConsoleWindowClass handle. Same-session WinSta0/Default diagnostics
-observe foreground-lock timeout 2147483647 ms; three owned-window activation
-attempts fail. No desktop/global policy/input-queue workaround was used.
-Passing Windows contracts do not accept Windows held input.
-
-Remaining: actual Windows input/startup, other ranks/shots/Endings/Continue,
-other Extra characters/shots/hosts, physical refresh/slowdown2 and dense Lunatic performance.
-Physical audio remains untested under the user's mute instruction. Existing
-v1354 experimental package/user DOS images and saves remain untouched.
-
-v1355 scoped cleanup keeps all 204 programs, producer/consumer source archives,
-compiler/CMake metadata, traces, physical files, captures and failed attempts.
-It retires 1190 regenerable build files / 70 completed contract-stage files after
-two full recovery archives / 144 members read back, net 596836352 allocated bytes.
-An independent replay verifies 2847 protected hashes and all 1260 absent files.
-The three earlier desktop stages retire 20 files, net 35110912 bytes; the terminal
-GUI stage and archived failed consumer materialization retire 494 files,
-net 22450176 bytes. Immutable capture sharing keeps 324 complete BMP/PCM paths
-and hashes, net 210509824 bytes. Counts subtract their journals/archives but
-exclude final receipt size. No original input, accepted program or save deleted.
-Post-CI pruning retires 1020 source-backed Python caches, net 16822272 allocated
-bytes; root `.analysis/cleanup/host-route-post-ci-caches-v1355.json` records
-source/hash readback. Both CIs pass, including root live Ghidra replay/mutations.
+Remaining: this full Turbo0 terminal/dense verdict, broader character/shot/rank/
+Ending/Continue/Extra host routes, actual Windows input/display and uninstrumented
+performance. Physical audio remains untested under the mute constraint. Do not
+reopen general semantic work or the two deferred exact MAIN cases without a
+concrete native blocker. Native subject notes route evidence details; root
+[porting status](PORTING_STATUS.md) indexes TODOs, and
+[retention](ANALYSIS_RETENTION.md) indexes scoped cleanup/recovery. User DOS/
+experimental packages and mutable saves remain untouched.
 
 ## Windows DOS demo package
 
