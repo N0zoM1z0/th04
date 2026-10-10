@@ -375,3 +375,39 @@ and native final CI pass; root Ghidra database replay/mutation smoke passes.
 then retire507 regenerated source-backed root CI caches (8503296 allocated
 bytes). This cache observation is separate from the native scoped net figure;
 live native writers/toolchain caches remain excluded.
+
+## Ordinary key-only routes and first-load songs, v1349
+
+Native `route-exploration-v1349/retention-before-v5.json` and
+`retention-receipt-v5.json` verify5358protected files before/after mutation,
+retire993terminal/generated files and fully read back two recovery archives.
+The scope reclaims410439680allocated bytes net of archive/journal overhead
+(about391.4MiB). Current195products, six stable private v4/v5 programs,
+source/compiler/cache-link identities, raw native captures/saves, old recovery
+archives and original references remain. Entire live `original-dev-v2`,
+`watch-linux-v2` and `watch-ubsan-v1` writers are excluded; this is not a
+whole-turn disk-use estimate.
+
+`game-audio-v1348/firstload-windows-stage-recovery-v1.tar.gz` restores the owned
+69-case Windows stock-song stage. `route-exploration-v1349/windows-stage-recovery-v5.tar.gz`
+restores both Windows normal/Extra plans, their real same-host earned/final
+saves and all closed captures. Exact roots/members/modes/hashes are in the
+before journal. Restore only into absent owned roots or generate fresh plans.
+Private CMake objects/libraries/dependency files regenerate from canonical
+`source-v1.tar.gz`, the applicable `private-source-v*.tar.gz` and retained
+source/compiler/cache-link profiles. Deleted cached prototype executables
+recover byte-identically from their retained stable v5 copies. The earlier
+unaccepted v2 pilot's superseded scratch executable has no raw recovery claim.
+
+Accepted native/public route and Windows receipts retain their original bytes;
+the first-load aggregate does not restamp the still-live138original producer.
+The two note verifiers and two new route replay files have independent pins
+until existing Python/PowerShell manifest guards close. Subsequent authored
+documentation/ledger changes are not mutations to the compiled/source inputs.
+
+Fresh `terminal-readback-v5.json` validates current195products, prototype/
+native/public capture identities, both Windows recovery archives and frozen
+original tool inputs after cleanup. Both final CI runs pass, including root
+live Ghidra replay/mutation smoke. `root-cache-retention-before-v5.json`/
+`root-cache-retention-receipt-v5.json` then retire507 regenerated source-backed
+root CI caches (8503296 allocated bytes), a separate cache observation.

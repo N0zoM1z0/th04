@@ -1,5 +1,21 @@
 # Semantic and x64 port status
 
+v1349 verifies four ordinary key-only logical prototype routes on three hosts:
+Reimu Easy/both Normal characters/Reimu Extra,270193 route advances and37
+whole capture files perhost/equal physical saves. Same-host Normal-earned
+saves admit Extra after restart; legal6life/2bomb settings preserve real
+hits/deaths/Bombs without Continue/state injection. GNU every-refresh Easy
+presentation also agrees.103core objects per GNU/MinGW are raw-equal to
+current195product objects. Public CLI/GUI/fullstartup/remaining rank-shot-
+Continue/physical timing and Lunatic performance remain unaccepted.
+The first-load69stock song cases agree on three hosts:827271rows; all46part9
+prefixes/zero observed note-PPS requests/unowned reset writes are inventoried.
+Full138two-load original/music usage remains live. Current product identity
+stays v1348; four new replay files are separately pinned until writers close.
+Replay/scope: native `docs/port64/evidence/stage-lifecycle.md` and
+`pmd-musical-fm.md`; receipts under native `.analysis/port64/`.
+All runs stay muted; DOS acceptance is unchanged.
+
 v1348 repairs FM/SSG note rotation after a real ST00B octave-underflow mismatch.
 Three hosts match457728 original arithmetic calls/3600 complete legal boundary
 rows; three source-only variants reject.195programs rebuild;64contracts pass
@@ -403,7 +419,8 @@ Native code/evidence commits `a7c096d`/`6945f69` are pushed.
 - [x] Join Bomb/death/Game Over/Continue, retained HUD and selected high-score
   loading under bounded controls. Complete ordinary gameplay validation remains.
 - [x] Join Extra battles/dialogues/MAINE/save/fresh OP under actor controls.
-  Natural Extra survival and clear/unlock routes remain unaccepted.
+  v1349 additionally verifies a Reimu ordinary logical prototype route with
+  same-host earned unlock on three hosts; public full-route/timing gates remain.
 - [x] Join physical OP unlock/combination reads, Scores and Music Room.
 - [x] Join recorded-demo playback, configuration persistence and first audio
   setup under independent component and native restart controls.
@@ -413,6 +430,8 @@ Native code/evidence commits `a7c096d`/`6945f69` are pushed.
 - [ ] Run full natural Linux/Windows routes: both characters, difficulties,
   good/bad endings, Extra, Continue, saves/config and restart. Benchmark dense
   Lunatic scenes with explicit original/adaptation boundaries.
+  Four v1349 prototype logical routes close only the stated legal6life/2bomb
+  Easy/Normal/Reimu-Extra corpus, with a GNU full-render Easy bridge.
 - [x] Replay current Windows bounded controls and commit/push retained native work.
 - [ ] Deliver a current Windows GUI after complete-route acceptance.
 - [ ] Re-attest historical exact scaffolds only if exact acceptance is reopened.

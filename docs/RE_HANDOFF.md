@@ -45,6 +45,27 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1349 verifies four ordinary key-only logical prototype routes on GNU8,
+optimized UBSan and actual Windows: Reimu Easy, both Normal characters and
+Reimu Extra.270193 route advances/37 capture files perhost and physical final
+saves agree. Each host's Normal-earned save admits Extra in a new process.
+Legal6life/2bomb settings retain real hits/deaths/Bombs; no Continue or state
+injection occurs. GNU every-refresh Easy presentation also agrees.103core
+objects per GNU/MinGW are raw-equal to recorded current195product objects.
+These are prototype logical routes, not public CLI/GUI/hosttiming acceptance.
+Scope/replay: native `docs/port64/evidence/stage-lifecycle.md`.
+
+The completed first-load69stock song cases agree on three hosts:827271rows.
+All46part9prefixes/zero observed note/PPS requests and unowned reset writes
+are inventoried. Full138two-load producer remains live, not accepted. Current
+195program/source identity remains v1348 below; four new note/route replay
+files retain separate pins until guarded writers close. Receipts: native
+`.analysis/port64/{route-exploration-v1349,game-audio-v1348}/`.
+Next finish fullsong/audio usage, integrate public route CLI/fullstartup
+presentation, then remaining ranks/shots/Continue and physical host
+input/refresh/slowdown/Lunatic performance/new GUI. All launches stay muted;
+candidate-local-attested provenance and DOS acceptance remain unchanged.
+
 v1348 repairs shared FM/SSG note rotation after a supplied ST00B mismatch.
 457728 original arithmetic calls and3600 legal FM/SSG/FM3 boundary rows agree
 on GNU8, optimized UBSan and actual Windows; three source variants reject.
