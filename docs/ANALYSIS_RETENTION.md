@@ -1,5 +1,32 @@
 # Private build and analysis retention
 
+## v1374 complete native Demo state evidence
+
+All jobs are terminal. Current GNU 70/focused UBSan 3 products and cold build
+objects stay available, along with both final 498-file producer/reader snapshots,
+complete original references, wrong-distance source/binary and failed scratch
+adapters. Existing DOS and Windows products remain unchanged.
+
+Lossless retention reclaims 166055936 allocated file B (about 158.4 MiB) before
+journals: 26 complete raw/text/old-probe streams and 1041 source-backed caches.
+Every archived stream restores with exact bytes, file modes and nsmtimes.
+Independent readback validates 8904 protected hashes, all 26 complete restores,
+current 498 source pins and the unchanged DOS input fingerprint. No state or
+pixel data is normalized to obtain archive equality. Sources/logs remain.
+
+Journals/recovery live in native `.analysis/port64/native-demo-v1374/`.
+Run from this root worktree:
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
+  python3 .analysis/worktrees/port-modern-64/.analysis/port64/native-demo-v1374/restore_streams.py
+```
+
+Add `--restore` before reading retired original/native raw text or earlier probe
+binaries. Different existing outputs are refused. Fresh public paired replays
+create their own input/output files; use a fresh output directory. Do not rerun
+old mutation/cleanup controllers against their terminal directories.
+
 ## v1373 native point-number evidence
 
 All build/game/reader/CI/retention handles are terminal. Native v1373 keeps the

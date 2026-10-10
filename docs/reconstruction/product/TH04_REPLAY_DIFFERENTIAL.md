@@ -321,7 +321,7 @@ Comparison against the retained complete v1365 original passes all four demos,
 each3996 updates plus terminal3996:15,984 gameplay rows and4 terminal rows.
 Consumed input/raw shift, score/pending counters, process LCG, all ring bytes,
 cursor, helper counts/kinds/masks/divisors and sampled player/resident state
-agree at all15,988 boundaries. This accepts that recorded schema and reset,
+agree at all 15,988 boundaries. This accepts that recorded schema and reset,
 not whole actor pools, presentation, process teardown, cross-emulator or x64
 parity. The failed v1365 comparison remains independently addressable.
 
@@ -1212,3 +1212,57 @@ Use native `.analysis/port64/pointnum-v1373/restore_streams.py` without options
 for full verification, or `--restore` before unchanged old-reader commands.
 Restoration refuses different existing files; private evidence is never
 normalized or restamped. Retention/readback journals remain immutable.
+
+## v1374 native before-update state and RNG pairing
+
+The native branch adds an ordinary headless MAIN adapter and an independent
+reader of the complete v1365 original DOS reference. All four correct zero-based
+ST00..ST03 replay/STD/MAP inputs are decoded from the attested archive; original
+valid scores/configuration are supplied directly. The existing DOS reader
+revalidates complete capture identities and all caller/input/terminal records.
+
+The old native producer first differs in Demo 2 at frame3533: score bytes and
+accumulators differ, and original ring cursor B9 versus native B8 reflects one
+missing spark draw. Original shots7/15 hit one frame earlier. MAIN's Stage 1
+midboss detachment adds fractional BYTE DGROUP2134:4276 to Y; its instruction
+witness is MAIN_032_TEXT13A9:065C..0669. The native caller supplied the separate
+whole-pixel WORD distance corresponding to DGROUP:427A. Its midboss Y was three
+subpixels high. A separate fraction field/getter repairs only native ownership;
+DOS source/products and historical acceptance remain unchanged.
+
+GNU and nonrecovering optimized UBSan now accept all 15,988 boundaries across
+four complete demos, comparing 23 scalar/player/score/RNG fields and exact LCG/
+ring call counts. Both complete native traces agree. A source-only reintroduction
+of the distance adapter executes all rows and rejects at the same3533 boundary;
+697 original versus696 native ring calls distinguish it without relying only
+on a wrapping cursor. Eight public reader controls reject truncation/order,
+terminal, score, complete-ring and wrapped-count mutations.
+
+This is selected before-update state acceptance, including the four terminal
+callbacks. It excludes complete actor/effect pools, caller-family identity,
+original/native pictures, physical scanout/timing, front-end/process teardown,
+ordinary Boss/death routes and actual Windows acceptance. Original CPU midboss
+controls remain a separate component Oracle. Initial one-based scratch inputs
+and default-option adapters keep their own failed/bounded receipts and sources;
+no older natural-route or Windows evidence is relabeled as current.
+
+Current public replay is native `port64/verify_demo_state.py --dos-root ROOT
+--original ROOT/.analysis/runtime/candidates/dos-demo-v1365-original --exe
+.analysis/port64/native-demo-v1374/build-gnu/th04-port64-demo-state-trace
+--output-dir FRESH`. Focused native ownership and limits continue in its
+`docs/port64/evidence/demo.md`. All launches remain muted/headless and heavy
+commands use CPU0/nice15 serially.
+
+Final v1374 checks pass main 441/live Ghidra and native 321/target gates; native
+private Ghidra/tool gates skip when unavailable. The frozen current reader
+replays all 15,988 boundaries independently. GNU 70/68 CTests and focused UBSan 3
+retain 498 sources/current manifest ff0b3bde…. Five pictures per host match as smoke
+evidence. Complete 699 original midboss controls, 450 tile controls and setup pass
+per host; original load2000/DS8000 adapters remain explicit. All handles terminal.
+
+Lossless retention retires 26 streams and 1041 source-backed caches, reclaiming
+166055936 allocated B (about 158.4 MiB) before journals. Full restoration/readback
+and 8904 protected hashes pass; current source pins and DOS fingerprint agree.
+Sources, failures, current build objects and old Windows/DOS products remain.
+Use native `.analysis/port64/native-demo-v1374/restore_streams.py` with no options
+to verify all recoveries, or `--restore` before unchanged old raw-path readers.

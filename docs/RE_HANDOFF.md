@@ -5,6 +5,39 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
+v1374 (native `45c33fc`, pushed) pairs ordinary headless MAIN with the complete
+original DOS demo reference. It fixes the Stage 1 midboss emergence caller: MAIN_032_TEXT
+13A9:065C..0669 consumes fractional BYTE DGROUP2134:4276, whereas native supplied
+whole-pixel distance (the separate WORD at427A). A three-subpixel Y error caused
+the first old Demo 2 score/RNG difference at before-update frame3533.
+
+Current GNU/UBSan accept all 15988 boundaries across four demos on 23 selected
+input/score/player/resource/RNG fields and exact draw counts. Wrong-distance
+source mutation completes all rows and rejects again at 3533 (ring 697 versus 696).
+Eight public reader controls pass; original CPU midboss 699 controls, 450 tile
+controls and setup pass per host. GNU builds 70 programs/68 CTests; focused UBSan
+builds three programs. Both preserve the actual ten starting CFG bytes and
+valid scores. Five muted headless pictures per host agree as smoke evidence.
+Core/contracts are cold-built; final config-loading trace adapters are rebuilt
+separately, retaining the initial products/receipts. Current manifest 498 is
+ff0b3bde…; all source/imported-reader snapshots are read back.
+
+Complete native actor/effect pools, original/native pictures and scanout,
+ordinary Boss/death/process routes and physical Windows acceptance remain open.
+DOS v1372 source/products and historical exactness are unchanged. Native public
+replay is port64/verify_demo_state.py; see the focused differential note.
+
+v1374 final checks pass main CI 441/live Ghidra and native CI 321/target checks
+(native private Ghidra/tool gates skip where unavailable). All jobs are terminal.
+A fresh replay using frozen current native/DOS reader sources accepts all 15988
+boundaries. Lossless retention reclaims 166055936 allocated B (about 158.4 MiB)
+before journals, retiring 26 complete raw/text/old-probe streams and 1041
+source-backed caches. Full restored readback of all 26 streams and 8904 protected
+hashes passes; current 498 source pins and DOS fingerprint agree. Current builds
+are native `.analysis/port64/native-demo-v1374/build-gnu` and `build-ubsan`.
+Verify recoveries with `.analysis/port64/native-demo-v1374/restore_streams.py` in
+the native worktree; add `--restore` before reading retired old raw paths.
+
 v1372 repairs the missing Stage 4 carpet animation cell. The old cel 3 source
 row emits 23 rather than 24 entries, shifting later cels and leaving the last
 loaded cell in linker padding. Fresh read-only watches attribute the first old
@@ -36,6 +69,8 @@ remain diagnostic. Full scanout, other globals/callbacks, ordinary Boss combat,
 hit/death/respawn, process teardown, cross-emulator and x64 parity remain open.
 Boss remains at setup in these demos; Midboss fights are exercised.
 
+## Retained v1373 point-number owner
+
 v1373 closes the native point-number source gap on port/modern-64
 (commit `aa681ad`, pushed). White/yellow
 200-slot rings consume item and bullet-zap events; update/list/width/multiplier
@@ -50,8 +85,8 @@ v1356 natural routes and Windows products retain their own producer identities.
 The native carpet formula was already correct, including cel5/column2; its
 component acceptance excludes original dirty-page transients replaced by host
 redraw. New point-number checks likewise exclude dirty-page invalidation,
-physical scanout and complete ordinary DOS/native state/pictures. Native demo
-RNG/ring/call counts and whole-scene/process pairing remain the next fidelity
+physical scanout and complete ordinary DOS/native state/pictures. v1374 accepts
+selected native demo state/RNG/counts; complete actor/scene/process pairing remains the next fidelity
 work. Windows packages remain untouched. No historical exactness is promoted.
 
 v1373 final checks: main CI 441 tests/live Ghidra pass; native CI 313 tests/target
@@ -62,7 +97,7 @@ hashes passes; 496 current source pins and the unchanged DOS fingerprint agree.
 Initial cache-absence rejection stays preserved; v2 completes journal readback.
 Restore retired old-reader inputs with native
 `.analysis/port64/pointnum-v1373/restore_streams.py --restore`; no options verifies
-all recoveries without retaining restored files. Current new build directories
+all recoveries without retaining restored files. Retained v1373 build directories
 are native `.analysis/port64/pointnum-v1373/build-gnu` and `build-ubsan`.
 
 Historical focused point-number replay still fails first scaffold compilation
