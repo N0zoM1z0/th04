@@ -5,19 +5,25 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-The v1366 ordinary DOS batch repairs Demo1: all four bundled demos now pass
-all 3997 sampled input/score/RNG boundaries. Target-observed Stage4 midboss
-DGROUP:185E starts at 1, while standalone source incorrectly owned it as BSS.
-Move that byte to DATA; a fresh cold MAIN build and independent complete replay
-confirm the repair. Four paired diagnostic snapshots also match all 440 bullet
-records plus midboss toggle/angle/frame and graze. Retain the failed v1365 pair.
-No historical exact state changes; the native worktree remains untouched and
-its corresponding State already initializes the toggle to 1.
-Serial one-CPU/nice15 muted runs complete; final CI passes all337 public tests
-plus live target/Ghidra mutation controls. Immutable capture deduplication and
-514 source-backed cache retirements reclaim141,602,816 allocated B before journal
-overhead, with independent source/protected-hash readback. Current cold build
-objects remain reusable; no games remain running.
+v1367 expands DOS demo comparison to nine complete raw actor/effect pools.
+All four demos pass3996 updates each: all24952 pool bytes per update, graze and
+post-reset input/Shift are identical, including inactive/unused/script-offset
+bytes. Each full scalar/caller trace remains byte-identical to its independent
+ordinary parent; the paired consumed-input/score/RNG schema still passes all
+15988 boundaries. GDB stores full DGROUP streams for later global-state owners.
+The prior Stage4 DATA1 repair remains; no product rebuild/source fix is needed.
+Original/candidate snapshots use load10FC, DGROUP3230/34F7 and separately frozen
+consumer v2/v3 inputs. Warm BSS startup and post-reset input reader failures are
+retained with bounded corrections. Nine pool extents are checked against target
+CIRCLE_TEXT0AAF:73DB..74A5 and candidate MAP/actual clear calls.
+No historical exact state changes or native worktree writes. Boss/player/global
+state, VRAM/palette, teardown and full x64/cross-emulator fidelity remain open.
+Final CI passes377 public tests and live Ghidra/mutation controls;40 new
+observer/reader controls pass. Final cleanup reclaims140,111,872 allocated B
+(about134MiB) before journal overhead, retaining/recovering all observed bytes.
+All muted one-CPU/nice15 capture jobs are terminal. Evidence and recoverable
+negative streams remain; immutable copy deduplication and reversible delta
+retention reduce storage. Final CI/retention details are in the focused note.
 Current commit identities are obtained with `git log -1` in each worktree.
 
 Updated 2026-10-11. Current focus: complete DOS actor/presentation/process
@@ -44,6 +50,14 @@ native fixes or this runtime batch. Targets remain
 
 ## DOS verification frontier
 
+- v1367 full raw pool reader accepts all15984 updates across four original/
+  ordinary demos. Shots/enemies/sparks/bullets/custom_entities/circles/items/
+  pointnums/gather pools cover24952 B per update, plus graze and post-reset
+  input/Shift. No byte normalization. Complete DGROUP streams and ordinary
+  controls are pinned in `dos-demo-v1367-dgroup-comparison-final.json`; executed
+  producer v2/v3 differs from the current independent reader. Rendering and
+  input reset precede this seam; score update follows it. Reuse the streams to
+  recover remaining global state owners, then capture VRAM/palette separately.
 - v1366 original/ordinary DOS naturally rotates all four demos through GAME.BAT.
   Each has 3996 updates plus terminal condition3996; all 15,988 boundaries match
   consumed input/raw shift, score/deltas, LCG/ring/cursor/helper counts/arguments

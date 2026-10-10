@@ -1,5 +1,37 @@
 # Private build and analysis retention
 
+v1367 retains eight complete DGROUP streams (3996 x65536 B each) using reversible
+XOR/gzip storage, with full original/candidate scalar/caller traces and producer
+source snapshots. All jobs are terminal. Sharing byte-identical immutable HDI/
+font/demo copies across84 paths reclaims65,937,408 allocated B; all84 complete
+hashes and37 protected artifact/trace/stream/receipt hashes recheck unchanged.
+Journals: `.analysis/reconstruction/probes/demo-dgroup-v1367/immutable-copies-*`.
+Completed capture trees are immutable; execute new captures only in fresh paths.
+
+The failed v1 Demo1 gzip (71,510,555 B) becomes a6,036,503-byte DG2 archive; a
+separate full decoder regenerates the original gzip byte-for-byte, SHA-256
+`28c053d7…`. Net65,478,656 allocated B reclaimed from the original gzip through
+the intermediate zstd archive to the final delta archive. No failed receipt,
+log, source or observed DGROUP byte is discarded. Final mapping is
+`dos-demo-v1367-original-dgroup/failed-stream-delta-retention.json`.
+Recovery/verification: run
+`python3 .analysis/reconstruction/probes/demo-dgroup-v1367/restore_failed_stream.py`
+without arguments to hash a full reconstructed gzip, or add `--output FRESH.gz`
+to materialize it. Verify the saved expected size/SHA before use; do not run the
+archived failed consumer as a current acceptance reader. The intermediate zstd
+journal is historical; its replacement/restoration mapping is explicit above.
+The8-stream current comparisons and old11MiB product cache remain available.
+Final CI passes377 tests plus live Ghidra/mutation controls. Its explicit
+compileall syntax gate regenerates caches even with PYTHONDONTWRITEBYTECODE;
+final cleanup retires520 caches/8,695,808 allocated B. Full source and44
+protected hashes read back unchanged. Four legitimate late observer/reader/test
+edits have separately hash-verified old-source archives and current-source
+bridges; the earlier522-cache journal remains historical. Copy/archive/final
+cache reclamation totals140,111,872 allocated B (about134MiB) before journals,
+excluding the earlier cache interval to avoid double counting. Independent
+final receipt: `demo-dgroup-v1367/final-retention-post-ci.json`. All eight current
+streams total35,534,216 stored B, losslessly preserving2,095,054,848 DGROUP B.
+
 v1366 shares byte-identical immutable HDI/font/demo copies across seven
 terminal v1365/v1366 DOS captures. All49 files retain their complete hashes;
 unique allocated storage falls303,779,840 to193,323,008 B, reclaiming

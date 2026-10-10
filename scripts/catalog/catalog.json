@@ -455,6 +455,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/compare_th04_demo_dgroup.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest nine pool extents and compare every raw actor/effect byte against complete ordinary controls.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/compare_th04_dos_demos.py",
     "category": "runtime",
     "role": "command",
@@ -3329,6 +3336,27 @@
     "category": "runtime",
     "role": "fixture",
     "purpose": "Private real-mode DIV-zero observer calibration; never install in game media.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_demo_dgroup.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Decode complete compressed DGROUP streams with order, address and stage validation.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_demo_dgroup_stream.gdb",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Read every demo DGROUP at frame-counter writes through natural termination.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_demo_host_ram.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Read conventional emulator host RAM with an independent read-only VM86 page walk.",
     "purpose_source": "maintained-description"
   },
   {

@@ -371,6 +371,97 @@ python3 scripts/probes/inspect_th04_demo_snapshots.py \
   --frames 3282 3299 3315 3331 --output PRIVATE-NEW-STACK.json
 ```
 
+### v1367 complete DGROUP stream and pool ownership
+
+Final CI passes377 tests and live target/Ghidra mutation controls. Forty new
+observer/reader controls include explicit short mapped-page rejection and a
+per-demo verdict that rejects any of the nine pool differences. Final independent
+reader source is frozen in `demo-dgroup-v1367/final-reader-source/`; executed
+producer v2/v3 sources and earlier failed results stay separate. Final retention
+reclaims140,111,872 allocated B before journals, preserving all evidence and the
+reusable product cache. Native worktree remains clean and unchanged.
+
+The added read-only GDB hardware watch records all65536 DGROUP bytes at every
+stage_frame write1..3996, continuing through the unchanged observer's natural
+terminal3996 decision and all four MAIN processes. This seam follows actor
+updates, rendering, input_reset_sense, page flip and sound update, but precedes
+modulo counters and score_update_and_render. It is distinct from the ordinary
+before-update consumed-input rows. Every complete scalar/caller trace must
+remain byte-identical to its independent ordinary parent.
+
+Original capture `dos-demo-v1367-original-dgroup-v2/` completes in382.33s;
+independent readback validates all15984 records, complete ordinary trace,
+producer/source/file identities, process/load/CPU addresses and page mappings.
+Original producer helpers are frozen in `demo-dgroup-v1367/consumer-source-v2/`;
+the candidate uses v3. GDB reads conventional host RAM through its own page walk,
+without guest memory accessors, guest writes, input injection or raster skipping.
+Each run uses one CPU/nice15, dummy SDL, muted mixer,512MiB inferior and1536MiB
+GDB virtual-address limits. No compiler or emulator rebuild is required.
+
+Target-observed stage_state_init CIRCLE_TEXT(0AAF):73DB..74A5, file136CB..13795,
+SHA-256 `f41ff21e…`, issues nine clear_dwords calls. The reader attests each
+actual destination/count/callee in both original and the candidate's linked
+owner against its MAP, then compares the entire raw extent, including inactive
+slots, unused bytes and ES-relative enemy script offsets. No pointer masking
+or copied target bytes enter product code.
+
+| Pool | Count x stride | Original DGROUP offset | v1366 candidate DGROUP offset |
+| --- | --- | --- | --- |
+| shots | 68 x18 | B55E | 8E31 |
+| enemies | 32 x64 | 8A92 | 7B04 |
+| sparks | 96 x16 | 53E2 | B31A |
+| bullets | 440 x26 | 5A22 | 4974 |
+| custom_entities | 32 x26 | B204 | 453C |
+| circles | 16 x10 | 9594 | 7A54 |
+| items | 32 x20 | AF34 | 8885 |
+| pointnums | 400 x16 | 9634 | 9548 |
+| gather_circles | 16 x42 | 9292 | 854E |
+
+Final candidate capture completes in349.18s. Independent
+`dos-demo-v1367-dgroup-comparison-final.json` passes every3996 updates in each of the
+four demos: all24952 bytes in the nine pools, graze and post-reset input/Shift
+agree without normalization. Each side's complete ordinary scalar/caller trace
+is byte-identical to its ordinary parent; the paired scalar reader also passes
+all15988 before-update/terminal input/score/RNG boundaries. Each DG2 stream retains3996 x65536 bytes (261,881,856 B) of raw
+data plus headers. Compressed stream identities are retained in the receipts. No game source/native worktree or historical exact state
+changes in this batch.
+
+Two observer controls remain negative evidence. v1 wrongly treats the warm
+MAIN BSS byte clear3996 ->3840 ->0 as a frame increment; its Demo1 full stream
+and failed Demo2 startup remain retained. FrameSequence now waits for zero
+before requiring all consecutive increments. Separately, the first reader
+wrongly equates post-reset input with the REC byte: original consumed frame160
+has20h, while stage_frame161 has0000h. The current decoder preserves these
+post-reset bytes and compares them with the candidate; the unchanged ordinary
+observer still checks every consumed REC/Shift byte. These are observer/reader
+contract corrections, not demonstrated product failures.
+
+DG1 stores raw64KiB blocks; DG2 stores a reversible XOR with the preceding
+full block before gzip. A separate byte-wise fixture encoder verifies full
+reconstruction; truncated/equal prefixes, missing/duplicate/order errors,
+wrong process/load/CPU/frame/stage, changed consumer/file identities, incomplete
+ordinary controls and illegal page mappings are rejected. Full DGROUP evidence
+remains available for later boss/player/global state owners. Pool equality alone
+does not accept those owners, VRAM/palette, process teardown, x64 fidelity,
+cross-emulator behavior or historical exactness.
+
+```sh
+python3 scripts/probes/capture_th04_dos_demos.py --original \
+  --emulator-receipt .analysis/runtime/emulators/demo-observer-build-v1365/receipt.json \
+  --font-bmp .analysis/runtime/candidates/dos-demo-v1365-original/FREECG98.BMP \
+  --demos 4 --timeout 1200 --dgroup-stream --output-dir PRIVATE-NEW-ORIGINAL
+# Candidate: replace --original with --build-dir and --map from the v1366 recipe.
+python3 scripts/probes/compare_th04_demo_dgroup.py \
+  --original .analysis/runtime/candidates/dos-demo-v1367-original-dgroup-v2 \
+  --candidate .analysis/runtime/candidates/dos-demo-v1367-candidate-dgroup-v3 \
+  --original-full .analysis/runtime/candidates/dos-demo-v1365-original \
+  --candidate-full .analysis/runtime/candidates/dos-demo-v1366-candidate \
+  --original-consumer .analysis/reconstruction/probes/demo-dgroup-v1367/consumer-source-v2/scripts/probes \
+  --candidate-consumer .analysis/reconstruction/probes/demo-dgroup-v1367/consumer-source-v3/scripts/probes \
+  --map .analysis/reconstruction/probes/product-20261010-160320-2282c931-main/source/obj/main-native.map \
+  --output PRIVATE-NEW-POOL-COMPARISON.json
+```
+
 ## Reuse and negative results
 
 Read-only TH08 reference:

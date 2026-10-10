@@ -135,14 +135,17 @@ def main() -> int:
     parser.add_argument('--demos', type=int, choices=(1, 4), default=4)
     parser.add_argument('--cycles', type=int, default=24000, choices=(24000, 36000))
     parser.add_argument('--timeout', type=int, default=900)
-    parser.add_argument('--snapshot-frames', type=int, nargs='+',
-                        help='diagnostic read-only DGROUP watches; stops early and cannot pass demo completeness')
+    diagnostics = parser.add_mutually_exclusive_group()
+    diagnostics.add_argument('--snapshot-frames', type=int, nargs='+',
+                             help='read-only DGROUP watches; stops early, cannot pass completeness')
+    diagnostics.add_argument('--dgroup-stream', action='store_true',
+                             help='compressed DGROUP after every actor update; continues through all demos')
     args = parser.parse_args()
     os.nice(15)
     os.sched_setaffinity(0, {min(os.sched_getaffinity(0))})
     # GDB needs additional virtual mappings for ELF symbols and Python. The
     # diagnostic script applies the ordinary 512 MiB limit to the inferior.
-    address_space = (1536 if args.snapshot_frames else 512)*1024*1024
+    address_space = (1536 if args.snapshot_frames or args.dgroup_stream else 512)*1024*1024
     resource.setrlimit(resource.RLIMIT_AS, (address_space, address_space))
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
@@ -251,6 +254,16 @@ def main() -> int:
         env.update(TH04_DEMO_SNAPSHOT_DIR=str(output),
                    TH04_DEMO_SNAPSHOT_FRAMES=','.join(map(str, args.snapshot_frames)))
         command = [str(debugger), '-nx', '-batch', '-x', str(snapshot_script), '--args', *command]
+    stream_sources = None
+    if args.dgroup_stream:
+        source_directory = Path(__file__).parent.resolve()
+        stream_script = source_directory / 'th04_demo_dgroup_stream.gdb'
+        stream_sources = {name: sha((source_directory / name).read_bytes()) for name in (
+            'th04_demo_dgroup_stream.gdb', 'th04_demo_dgroup.py', 'th04_demo_host_ram.py')}
+        debugger = Path(shutil.which('gdb')).resolve()
+        env.update(TH04_DEMO_STREAM_DIR=str(output),
+                   TH04_DEMO_STREAM_SOURCE_DIR=str(source_directory))
+        command = [str(debugger), '-nx', '-batch', '-x', str(stream_script), '--args', *command]
     start = time.monotonic()
     timeout = False
     with (output / 'boot.log').open('wb') as stream:
@@ -292,8 +305,18 @@ def main() -> int:
             gdb_sha256=sha(debugger.read_bytes()), script_sha256=sha(snapshot_script.read_bytes()),
             debugger_address_space_bytes=address_space,
             files={path.name: sha(path.read_bytes()) for path in sorted(output.glob('snapshot-*'))})
+    if args.dgroup_stream:
+        metadata = output / 'dgroup-stream.json'
+        stream_complete = (complete and metadata.is_file()
+            and f'TH04_DGROUP_STREAM_COMPLETE {args.demos}\n'.encode() in log)
+        record['dgroup_stream'] = dict(complete=stream_complete,
+            gdb_sha256=sha(debugger.read_bytes()), consumer_source_sha256=stream_sources,
+            debugger_address_space_bytes=address_space,
+            files={path.name: sha(path.read_bytes()) for path in sorted(output.glob('dgroup-*'))})
     (output / 'receipt.json').write_text(json.dumps(record, indent=2)+'\n')
     print(json.dumps(dict(capture_complete=complete, output=str(output), elapsed_seconds=record['elapsed_seconds'])))
+    if args.dgroup_stream:
+        return 0 if record['dgroup_stream']['complete'] else 1
     return 0 if complete or record.get('diagnostic_snapshot', {}).get('complete') else 1
 
 

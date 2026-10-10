@@ -13,6 +13,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
 | [probes/capture_th04_dos_demos.py](../probes/capture_th04_dos_demos.py) | command | Capture ordinary bundled DOS demos after replay input and at the terminal decision. |
 | [probes/check_th04_midboss4_initial_state.py](../probes/check_th04_midboss4_initial_state.py) | command | Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN. |
+| [probes/compare_th04_demo_dgroup.py](../probes/compare_th04_demo_dgroup.py) | command | Attest nine pool extents and compare every raw actor/effect byte against complete ordinary controls. |
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
@@ -42,6 +43,9 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/run_th04_op_diagnostic_hdi.py](../probes/run_th04_op_diagnostic_hdi.py) | command | Run a private TH04 OP HDI probe under the pinned DOSBox-X emulator. |
 | [probes/run_th04_zun_diagnostic_hdi.py](../probes/run_th04_zun_diagnostic_hdi.py) | command | Run the disposable TH04-only packed ZUN candidate under PC-98 DOSBox-X. |
 | [probes/th04_cpu_fault_fixture.asm](../probes/th04_cpu_fault_fixture.asm) | fixture | Private real-mode DIV-zero observer calibration; never install in game media. |
+| [probes/th04_demo_dgroup.py](../probes/th04_demo_dgroup.py) | support | Decode complete compressed DGROUP streams with order, address and stage validation. |
+| [probes/th04_demo_dgroup_stream.gdb](../probes/th04_demo_dgroup_stream.gdb) | fixture | Read every demo DGROUP at frame-counter writes through natural termination. |
+| [probes/th04_demo_host_ram.py](../probes/th04_demo_host_ram.py) | support | Read conventional emulator host RAM with an independent read-only VM86 page walk. |
 | [probes/th04_demo_snapshot.gdb](../probes/th04_demo_snapshot.gdb) | fixture | Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
