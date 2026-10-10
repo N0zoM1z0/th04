@@ -1,5 +1,12 @@
 # Native private-state retention
 
+v1361 both final CIs pass (root includes live Ghidra/mutation replay). The
+independent reader and eight controls create no build/game output. Source-backed
+public-script caches retire955 files after source/protected hash readback,
+net15,478,784 allocated B (about14.8MiB), subtracting the journal. Active port64
+helper caches, program, trace, saves and frozen consumer snapshots are preserved.
+Root receipt: `.analysis/cleanup/slowdown-reader-caches-readback-v1361.json`.
+
 v1360 CIs pass on both branches, including root live Ghidra/mutation replay.
 Scoped post-CI pruning retires955 source-backed public-script caches after full
 source/protected hash readback, net15,478,784 allocated bytes (about14.8MiB),

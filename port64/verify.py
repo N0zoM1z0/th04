@@ -18,6 +18,7 @@ PORT_FILES = (
     "port64/private_x11_keys.py",
     "port64/verify_clear_admission.py",
     "port64/verify_window_storage.py",
+    "port64/verify_natural_slowdown.py",
     "port64/verify_window_extra.py",
     "port64/route_advice.hpp",
     "port64/private_x11.py",

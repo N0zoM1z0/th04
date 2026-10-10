@@ -483,3 +483,51 @@ Both final CIs pass; root includes live Ghidra and mutation replay. Source/CLI/
 immutable-prefix independent readbacks pass. Source-backed public caches retire
 955 files/net15,478,784 allocated B; active port64 helpers/outputs stay excluded.
 See root `.analysis/cleanup/slowdown-source-caches-readback-v1360.json`.
+
+## Independent natural outcome/slowdown reader (v1361)
+
+`verify_natural_slowdown.py` is read-only: it opens no window/device and never
+changes route inputs. It checks the supplied executable hash and original HDI/
+font, the declared legal6-life/2-Bomb Lunatic CFG and Turbo, complete schedule,
+every MAIN rank/character/shot/process/generation/credit, six actual stages,
+observed registration Esc, Ending/freshOP, true requested-shot clear at physical
+rename/final file, nineother decoded payload/checksums, no temporary save files,
+and a separate fresh Scores process with unchanged physical hashes.
+
+Default Turbo0 additionally requires nonempty>=320/>=400 natural MAIN samples
+with after-update slowdown2. `--expected-turbo 1` is explicitly route-only and
+returns `dense_slowdown_accepted=false`; the completed v1359 GNU Lunatic route
+passes that control. No screen, controller PASS text or bit-only flag can replace
+these checks. This is still instrumented/private-display observation, not
+original whole-route or uninstrumented/physical performance acceptance.
+
+Eight negative cases reject at intended gates: actual live/incomplete route,
+actual Turbo1 requested as0, declared metadata/physical CFG0 but original dense
+trace has no2, checksum-valid wrong-shot flag2, physical snapshots with unplayed
+0x19 despite final1, a one-nanosecond wrong deadline with updated trace hash, and leaked pending
+file/directory artifacts. The final reader requires exactly MIKO.CFG/GENSOU.SCR;
+matching declared hashes cannot legitimize an extra temporary file.
+The declared CFG and score mutants are comparator fixtures, not gameplay.
+All original source files/traces/saves retain hashes. Trace hardlinks are never
+written; the deadline mutant unlinks its own path before writing. Every scratch
+clone retires after its verdict/hash. No extra game or Windows process launches.
+
+```sh
+python3 port64/verify_natural_slowdown.py COMPLETED_TURBO0_ROUTE \
+  --exe-sha256 PINNED_SHA --output FRESH_VERDICT.json
+# Historical Turbo1 positive accepts route only:
+python3 port64/verify_natural_slowdown.py COMPLETED_TURBO1_ROUTE \
+  --expected-turbo 1 --exe-sha256 PINNED_SHA --output FRESH_CONTROL.json
+```
+
+Native `.analysis/port64/slowdown-consumer-v1361/` retains positive/counterexample
+receipts and frozen491-input consumer437d7e36. Only this Python reader/filelist
+changes from v1360; all485 compiled inputs/programs stay unchanged. Existing
+Turbo0 route490/a07fda7a remains on the same live17095/404173/404187 with every
+pinned helper unchanged. Stage3 live prefix max306/4,812slowdown2 is below both
+density gates; no complete Turbo0 verdict yet. Do not restart from timeout.
+
+Both final CIs pass (root includes live Ghidra/mutation replay). Final v2 reader
+source/positive/eight-control receipts supersede initial v1 snapshots while those
+remain retained. Public caches retire955 files/net15,478,784 allocated B after
+source/protected hash readback; active port64 helpers/outputs stay excluded.
