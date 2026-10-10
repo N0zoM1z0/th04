@@ -25,14 +25,26 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
-v1357 closes actual GNU/optimized-UBSan Normal Reimu A window routes on
-unchanged v1356 programs. Ordinary OS keys traverse all six stages without
-Continue, then Ending, registration Esc, physical score rename, fresh OP and
-separate Scores restart. Complete traces contain 89,008/86,333 route and
-794/795 restart refreshes, zero audio opens/failures, earned Normal admission,
-unchanged CFG and nine other decoded score partitions. This accepts native
-instrumented private-Xvfb routes only, not original whole-route equivalence,
-physical Windows input, all rank/shot combinations or dense Lunatic performance.
+v1358 corrects the v1357 UBSan all-clear/admission claim. Unplayed flag0x19
+also has bit0; original native OP normalizes masks>3 to0. The old bit-only
+comparator accepted that sentinel incorrectly. GNU Normal stores real mask1;
+GNU Extra also stores mask1 and retains its accepted no-Continue/full-name route.
+UBSan reaches all six stages, then transitions from Final Stage miss13/respawn33
+to MAINE without a Game Over scene. Its final physical Normal mask remains0x19,
+so good-clear/admission acceptance is revoked. This is consistent with the
+compiled Final Stage death-to-Bad-Ending path. Its physical save/Esc/freshOP/
+Scores restart, unchanged CFG/nineother partitions and zeroaudio observations
+remain valid. Raw old receipts remain historical comparator outputs.
+
+Five corrected checksum-valid mask/snapshot mutants reject, including0x19 with
+bit0. Both retained GNU positive routes pass the stronger mask<4+shot-bit gate.
+The six-stage verifier now supports ranks1..3/characters0..1/shots0..1 through
+ordinary OP selection and optional persistent private XTest keys. Easy's five-
+stage ending gate stays separate. Fresh natural Lunatic ReimuA is running on
+unchanged v1356 GNU; no clear/timing acceptance until its own terminal/save/
+restart verdict. Dense rank3 reductions separate>=320/>=400 samples and exclude
+Normal/Extra/dialog rows; full observer cost remains outside uninstrumented
+performance acceptance. Current receipts: native `.analysis/port64/lunatic-window-v1358/`.
 
 The schedule reducer verifies every deadline against preceding after-update
 slowdown or recorded resync, plus v1/v2/v3 widths and terminal counts. Native
