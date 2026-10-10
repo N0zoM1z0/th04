@@ -13,6 +13,7 @@
 #include "op_music.hpp"
 #include "op_setup.hpp"
 #include "pmd_resident.hpp"
+#include "op_startup.hpp"
 
 struct StageAssets {
     Bytes stage_tiles,boss_tiles,backdrop,transition,boss_faces,map_tiles,map,standard,stars;
@@ -26,6 +27,9 @@ struct MainAssets {
     th04::portable::op_ranking::Assets ranking;
     th04::portable::op_music::Assets music;
     th04::portable::op_setup::Assets setup;
+    th04::portable::op_startup::Assets startup;
+    bool full_startup=false;
+    std::string startup_checks;
     std::array<Bytes,4> replays;
     std::string save_directory;
     std::string configuration_checks;

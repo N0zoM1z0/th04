@@ -6,6 +6,7 @@
 #include "registration.hpp"
 #include "op_ranking.hpp"
 #include "op_music.hpp"
+#include "op_startup.hpp"
 #include <memory>
 
 namespace th04::portable::sound {
@@ -31,6 +32,7 @@ public:
     void leave();
     void configure(const menu::Options&);
     void op_title(bool demo);
+    void startup(const op_startup::Event&);
     void op_restart(const menu::Options&);
     void handle(const Action&);
     void cutscene(const cutscene::Event&);

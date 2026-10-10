@@ -98,6 +98,8 @@ public:
 
     void apply_options(const menu::Options& options);
     void advance_op_menu_frame();
+    void mark_op_logo_shown();
+    void complete_op_startup(std::uint32_t process_random,bool logo_shown);
     void start_normal(Playchar playchar, ShotType shot_type);
     void start_extra(Playchar playchar, ShotType shot_type);
     void start_next_demo();

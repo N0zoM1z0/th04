@@ -34,6 +34,17 @@ void Timeline::op_title(bool demo) {
     if(program_!=application::Program::op)throw std::logic_error("title sound requires OP");
     if(!demo){handle({ActionKind::command,0x100});handle({ActionKind::load,0x600,"op"});handle({ActionKind::command,0});}
 }
+void Timeline::startup(const op_startup::Event& e) {
+    using K=op_startup::Kind;
+    switch(e.kind) {
+    case K::song:handle({ActionKind::load,std::uint16_t(e.a),std::string(e.data.begin(),e.data.end())});break;
+    case K::command:handle({ActionKind::command,std::uint16_t(e.a),{}});break;
+    case K::measure:measure(e.a,e.b);break;
+    case K::se:handle({ActionKind::play,std::uint16_t(e.a),{}});break;
+    case K::se_update:handle({ActionKind::update,0,{}});break;
+    default:break;
+    }
+}
 void Timeline::op_restart(const menu::Options& options) {
     if(program_!=application::Program::op)throw std::logic_error("option sound requires OP");
     handle({ActionKind::command,0x100});configure(options);

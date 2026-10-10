@@ -45,6 +45,16 @@ void State::advance_op_menu_frame() {
     ++resident_.random_seed_source;
 }
 
+void State::mark_op_logo_shown() {
+    require_program(Program::op);
+    resident_.zunsoft_shown=true;
+}
+void State::complete_op_startup(std::uint32_t process_random,bool logo_shown) {
+    require_program(Program::op);
+    process_random_.reseed(process_random);
+    if(logo_shown)resident_.zunsoft_shown=true;
+}
+
 void State::begin_main(
     std::uint8_t stage, std::uint8_t resource_stage,
     std::uint8_t lives, std::uint8_t bombs,

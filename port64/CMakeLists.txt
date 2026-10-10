@@ -18,6 +18,7 @@ add_library(
   demo.cpp
   configuration.cpp
   op_setup.cpp
+  op_startup.cpp
   sound_control.cpp
   beeper.cpp
   sound_runtime.cpp
@@ -408,3 +409,7 @@ add_test(NAME pmd-resident-contracts COMMAND th04-port64-pmd-resident-contracts)
 add_executable(th04-port64-pmd-fm3-contracts pmd_fm3_checks.cpp)
 target_link_libraries(th04-port64-pmd-fm3-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-fm3-contracts COMMAND th04-port64-pmd-fm3-contracts)
+
+add_executable(th04-port64-startup-contracts op_startup_checks.cpp)
+target_link_libraries(th04-port64-startup-contracts PRIVATE th04-portable-core)
+add_test(NAME startup-contracts COMMAND th04-port64-startup-contracts)

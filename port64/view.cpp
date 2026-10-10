@@ -1323,8 +1323,10 @@ public:
         require_view(assets_ && !assets_->registration.numerals.empty(),"registration assets missing");
         const auto directory=assets_->save_directory.empty() ?
             score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
-        score_store_=std::make_unique<score_file::HostStore>(directory);
-        if(!setup_)read_op_scores();
+        if(assets_->full_startup)pending_op_scores_=true;
+        else score_store_=std::make_unique<score_file::HostStore>(directory);
+        if(!setup_ && !assets_->full_startup)read_op_scores();
+        if(assets_->full_startup)ensure_op_sound();
         frame_=render();
         enable_congratulations();continue_registration_=true;
     }
@@ -1414,7 +1416,9 @@ public:
     void enable_host_timing() { host_timing_=true; }
     void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
     const maine::Ending* ending() const { return ending_.get(); }
-    bool animated() const { return bool(setup_) || bool(demo_fade_) || bool(music_) || bool(ranking_) || live_main() || bool(ending_) || bool(registration_) || bool(score_route_); }
+    bool animated() const { return bool(startup_) || bool(setup_) || bool(demo_fade_) || bool(music_) || bool(ranking_) || live_main() || bool(ending_) || bool(registration_) || bool(score_route_); }
+    const th04::portable::op_startup::Scene* startup_scene() const {return startup_.get();}
+    void set_startup_observer(th04::portable::op_startup::Sink observer) {startup_observer_=std::move(observer);}
     bool demo_active() const {return demo_fade_ || (main_ && application_.resident().demo_number);}
     int demo_idle_frames() const {return demo_idle_.count();}
     const op_music::Scene* music_scene() const {return music_.get();}
@@ -1530,14 +1534,29 @@ public:
         ensure_op_sound();
         const auto sound_owner=sound_;
         sound::Refresh sound_refresh(sound_owner.get(),std::uint64_t(frame_period.count())*slowdown());
+        if(startup_) {
+            startup_->advance(held_input);
+            if(startup_->finished()) {
+                application_.complete_op_startup(startup_->random_state(),startup_had_logo_);
+                startup_.reset();startup_renderer_.reset();screen_=Screen::menu;
+                if(pending_op_scores_) {
+                    score_store_=std::make_unique<score_file::HostStore>(op_save_directory());
+                    pending_op_scores_=false;
+                }
+                if(score_store_)read_op_scores(false);
+            }
+            if(repaint)frame_=render();
+            return;
+        }
         if(setup_) {
             setup_->advance(registration::input_from_main_actions(held_input));
             if(setup_->finished()) {
                 configuration_store_->complete_setup(std::uint8_t(setup_->bgm()),std::uint8_t(setup_->se()));
                 application_.apply_options(configuration_store_->options());
+                startup_initial_palette_=setup_renderer_->canvas().palette();
                 setup_.reset();setup_renderer_.reset();screen_=Screen::menu;
                 ensure_op_sound();
-                if(score_store_)read_op_scores(false);
+                if(score_store_ && !assets_->full_startup)read_op_scores(false);
                 menu_=menu::State(op_scores_.extra_unlocked(),configuration_store_->options());
             }
             if(repaint)frame_=render();
@@ -1819,7 +1838,7 @@ public:
     bool input(menu::Input pressed) {
         bool close = false;
         switch (screen_) {
-        case Screen::setup:break; // This scene samples held input at refreshes.
+        case Screen::startup:case Screen::setup:break; // These scenes sample held input at refreshes.
         case Screen::menu: {
             ensure_op_sound();
             const bool options=menu_.screen()==menu::Screen::options;
@@ -1922,13 +1941,31 @@ public:
     }
 
 private:
+    std::filesystem::path op_save_directory() const {
+        return assets_->save_directory.empty() ? score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
+    }
     void ensure_op_sound() {
         if(application_.program()!=application::Program::op || setup_)return;
         if(sound_timeline_->program()!=application::Program::op ||
            sound_timeline_->generation()!=application_.generation()) {
             sound_timeline_->enter(application::Program::op,application_.generation(),application_.resident().config);
-            sound_timeline_->op_title(application_.resident().demo_number!=0);
+            if(assets_ && assets_->full_startup)begin_startup();
+            else sound_timeline_->op_title(application_.resident().demo_number!=0);
         }
+    }
+    void begin_startup() {
+        namespace startup=th04::portable::op_startup;
+        require_view(assets_ && !assets_->startup.logo.pixels.empty(),"startup resources missing");
+        startup_had_logo_=!application_.resident().zunsoft_shown;
+        startup_renderer_=std::make_unique<startup::Renderer>(assets_->startup);
+        startup_=std::make_unique<startup::Scene>(assets_->startup,startup_had_logo_,application_.resident().demo_number!=0,
+            [this](const startup::Event& e) {
+                startup_renderer_->apply(e);
+                sound_timeline_->startup(e);
+                if(e.kind==startup::Kind::logo_complete)application_.mark_op_logo_shown();
+                if(startup_observer_)startup_observer_(e);
+            },[this]{return sound_->song_measure();},application_.process_random_state(),0,startup_initial_palette_);
+        screen_=Screen::startup;
     }
     void release_sound() {sound_timeline_->leave();sound_.reset();}
     void install_main_scene() {
@@ -2036,12 +2073,21 @@ private:
     void restore_fresh_op() {
         require_view(application_.program()==application::Program::op,"fresh OP requires completed process handoff");
         release_sound();
+        // MAINE owners have already been released. Configuration loading can
+        // repaint, so publish the OP screen before reloading its host file.
+        screen_=Screen::menu;
         demo_idle_=demo::Idle{};menu_frame_options_.reset();demo_frozen_={};
-        sprites_.reset();extra_selection_control_=false;read_op_scores();
+        startup_initial_palette_={};
+        sprites_.reset();extra_selection_control_=false;
+        if(assets_->full_startup) {
+            score_store_.reset();pending_op_scores_=true;
+            if(configuration_store_)enable_configuration();
+        } else read_op_scores();
         music_state_=op_music::State{};music_.reset();music_renderer_.reset();title_resources_.reset();music_return_requests_.clear();
         selection_=selection::State{};screen_=setup_ ? Screen::setup : Screen::menu;loaded_stage_=0;
         post_started_=post_finished_=second_pre_finished_=third_pre_finished_=false;
         fourth_pre_finished_=fifth_pre_finished_=sixth_pre_finished_=extra_pre_finished_=gengetsu_pre_finished_=false;extra_dialog_resources_=th04::portable::extra_dialog::Resources{};extra_resource_events_.clear();completed_dialog_events_.clear();
+        if(assets_->full_startup)ensure_op_sound();
     }
 public:
     const std::vector<maine::ScoreBoundary>& last_score_boundaries() const {return last_score_boundaries_;}
@@ -2090,10 +2136,16 @@ private:
         music_return_requests_={"main_cdg_load","access 1","load op1.pi","palette","picture","free","copy 0","tone 100"};
         menu_=menu::State(op_scores_.extra_unlocked(),menu_.options());screen_=Screen::menu;
     }
-    enum class Screen { menu, selection, main_handoff, maine,ranking,music,demo_start,demo_end,setup };
+    enum class Screen { menu, selection, main_handoff, maine,ranking,music,demo_start,demo_end,setup,startup };
 
     Frame render() const {
         switch (screen_) {
+        case Screen::startup: {
+            Frame frame{640,400,std::vector<std::uint32_t>(256000)};
+            const auto rgb=startup_renderer_->rgb();frame.indices=startup_renderer_->page(startup_renderer_->shown());
+            for(unsigned i=0;i<frame.pixels.size();++i)frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
+            return frame;
+        }
         case Screen::setup: {
             Frame frame{640,400,std::vector<std::uint32_t>(256000)};
             const auto rgb=setup_renderer_->rgb(setup_->tone());const auto& canvas=setup_renderer_->canvas();
@@ -2312,6 +2364,12 @@ private:
     gameover::Sink gameover_observer_;
     std::unique_ptr<th04::portable::op_setup::Scene> setup_;
     std::unique_ptr<th04::portable::op_setup::Renderer> setup_renderer_;
+    std::unique_ptr<th04::portable::op_startup::Renderer> startup_renderer_;
+    std::unique_ptr<th04::portable::op_startup::Scene> startup_;
+    th04::portable::op_startup::Sink startup_observer_;
+    bool startup_had_logo_=false;
+    bool pending_op_scores_=false;
+    th04::portable::op_startup::Palette startup_initial_palette_{};
     th04::portable::op_setup::Sink setup_observer_;
     std::unique_ptr<dialog::Script> script_;
     std::unique_ptr<DialogScene> dialog_scene_;
@@ -2335,6 +2393,7 @@ private:
 #include "configuration_frontend_checks.inl"
 #include "op_setup_frontend_checks.inl"
 #include "gengetsu_frontend_checks.inl"
+#include "startup_frontend_checks.inl"
 
 #ifdef _WIN32
 
@@ -2642,6 +2701,10 @@ void run_title(
     const CdgSheet labels(label_bytes);
     const CdgSheet cursors(cursor_bytes);
     const CdgSheet portraits(portrait_bytes);
+    if(!main_assets.startup_checks.empty()) {
+        require_view(!window,"startup controls require a headless muted run");
+        run_startup_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.startup_checks);return;
+    }
     if(!main_assets.resident_sound_checks.empty()) {
         require_view(!window,"resident sound controls require a headless run");
         run_resident_sound_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.resident_sound_checks);return;
