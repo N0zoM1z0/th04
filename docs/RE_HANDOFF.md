@@ -36,13 +36,34 @@ remain diagnostic. Full scanout, other globals/callbacks, ordinary Boss combat,
 hit/death/respawn, process teardown, cross-emulator and x64 parity remain open.
 Boss remains at setup in these demos; Midboss fights are exercised.
 
-Native 06922ce and Windows packages are untouched. Read-only source inspection
-finds native's carpet data formula already correct, including the cel 5/column
-2 anomaly; its component acceptance excludes original dirty-page transients
-replaced by full host redraw. Point-number event/render integration is still
-missing in the inspected native path. Audit/implement the 400-slot pool/lifecycle,
-white/yellow order and glyph 10/11 join, then pair state/pixels with original.
-These source audits add no native build/run or new runtime acceptance.
+v1373 closes the native point-number source gap on port/modern-64
+(commit `aa681ad`, pushed). White/yellow
+200-slot rings consume item and bullet-zap events; update/list/width/multiplier
+semantics and foreground order are maintained. Original instructions at two
+loads agree on 830 complete pool/list/request controls and 494 complete indexed
+screens per GNU/UBSan host, plus two full 400-slot grid/overlap controls. Five
+source mutants reject with all 830 rows executed. Actual pickup CTests and five
+muted headless MAIN/combat pictures per host pass. The new producer freezes 496
+files; 69 GNU products/68 CTests and two UBSan products are current. Earlier
+v1356 natural routes and Windows products retain their own producer identities.
+
+The native carpet formula was already correct, including cel5/column2; its
+component acceptance excludes original dirty-page transients replaced by host
+redraw. New point-number checks likewise exclude dirty-page invalidation,
+physical scanout and complete ordinary DOS/native state/pictures. Native demo
+RNG/ring/call counts and whole-scene/process pairing remain the next fidelity
+work. Windows packages remain untouched. No historical exactness is promoted.
+
+v1373 final checks: main CI 441 tests/live Ghidra pass; native CI 313 tests/target
+checks pass (its unavailable private Ghidra check skips). All jobs are terminal.
+Lossless retention reclaims 502460416 allocated B (about 479.2 MiB), including
+1040 source-backed caches. Full restoration of 23 streams and 3093 protected
+hashes passes; 496 current source pins and the unchanged DOS fingerprint agree.
+Initial cache-absence rejection stays preserved; v2 completes journal readback.
+Restore retired old-reader inputs with native
+`.analysis/port64/pointnum-v1373/restore_streams.py --restore`; no options verifies
+all recoveries without retaining restored files. Current new build directories
+are native `.analysis/port64/pointnum-v1373/build-gnu` and `build-ubsan`.
 
 Historical focused point-number replay still fails first scaffold compilation
 at bullet/add.cpp (ANGLE_PER_SPRITE / bullet_t::from_group); it never reaches
@@ -50,8 +71,8 @@ raw comparison and grants no fresh exact credit. This batch does not retry it
 or widen allowlists. Deferred carpet/checkerboard exactness and accepted
 historical states stay unchanged. Canonicality is candidate-local-attested.
 
-Final CI passes 441 tests, 20-target calibration, tracking/diff checks and
-live Ghidra/mutation controls. All build/game/reader/CI/retention jobs are terminal.
+The retained v1372 CI passes 441 tests, 20-target calibration, tracking/diff
+checks and live Ghidra/mutation controls. All build/game/reader/CI/retention jobs are terminal.
 Lossless retention reclaims 311918592 allocated file B (about 297.5 MiB) before
 journals: immutable sharing, all four exact gzip recoveries and 535 source-backed
 caches. Independent readback validates 270 protected hashes, 26 frozen inputs,
@@ -194,7 +215,7 @@ cases are retained. Startup combinations cover27 GNU/UBSan and19 earlier
 Windows cases. Broader character/shot/rank/Ending/Extra routes, actual Windows
 display/input, physical audio and uninstrumented performance remain open.
 
-No C++ rebuild: compiled producer485 inputs/`00af24f7…`, GNU game
+For these retained v1356 routes, compiled producer485 inputs/`00af24f7…`, GNU game
 `dbe17225…`, UBSan `029e7ba1…`, Windows `5b6cf2c3…` remain v1356. The completed
 route uses frozen consumer491/`d25ba16e…`. Actual Bomb probes use archived
 consumer492/`3135f76e…`; handoff formatting changes only that Python probe's

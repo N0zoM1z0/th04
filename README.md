@@ -39,8 +39,9 @@ scanout timing remains open; see the handoff for the current evidence.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh
-OP/restart checks. The inspected native event/render path still needs
-point-number popup integration. Full original-DOS/native state and effect
+OP/restart checks. Native point-number rings now join pickup/zap events and
+foreground drawing, with original CPU/state/full-pixel component checks on
+GNU and UBSan. Full original-DOS/native state and effect
 parity, broader routes, and physical Windows input/audio acceptance remain open.
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

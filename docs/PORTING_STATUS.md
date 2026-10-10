@@ -118,13 +118,15 @@ teardown stay open. Historical
 focused point-number replay remains blocked before comparison by an incompatible
 bullet/add.cpp header in the old scaffold; it grants no fresh exact credit.
 
-Read-only native06922ce source inspection finds a concrete missing join:
-`main_state.cpp` records point-number events without consuming them, and its
-item callback does not consume `yellow_point_number`; `view.cpp` paints items
-then enemy bullets without a point-number draw pass. The400-slot popup pool,
-lifecycle and original glyph ordering need a native integration/paired check.
-This is source evidence; the native worktree remains clean, with no new build
-or runtime acceptance.
+v1373 implements the native point-number pool and event/render joins that were
+missing at06922ce. Item pickups select white/yellow and retain base-point/pull
+multiplier semantics; bullet zaps insert white numbers. Original CPU controls
+at two loads agree on830 complete state/list/request rows and494 full indexed
+screens on GNU/UBSan, with two additional full400-slot render cases. Five source
+mutants reject. The69 GNU products pass68 CTests; two focused UBSan products
+and five headless frontend pictures perhost pass. These are component and
+integration-smoke claims, not complete natural original-DOS/native picture
+parity. Earlier full-route and Windows receipts retain their own producers.
 The same read-only audit finds the native Stage 4 lighting formula already
 preserves the original cel 5/column 2 exception. Its component Oracle excludes
 original dirty-page transients replaced by full host redraw; paired presentation

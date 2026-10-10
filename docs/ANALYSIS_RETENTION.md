@@ -1,5 +1,42 @@
 # Private build and analysis retention
 
+## v1373 native point-number evidence
+
+All build/game/reader/CI/retention handles are terminal. Native v1373 keeps the
+new GNU 69 products, focused UBSan contracts/frontend, all sources, full original
+CPU state/pixel references, failed source variants and their build commands.
+Old DOS v1372 and native v1356/Windows product identities remain unchanged.
+
+Lossless retention reclaims 502460416 allocated file B (about 479.2 MiB) before
+journals. 23 complete native raw-pixel/text/mutant streams restore byte-exactly
+with file modes and nsmtimes. Raw native screens reuse independently equal
+original gzip streams; text and retired mutant programs have exact gzip copies.
+No row, glyph, pool byte or pixel is normalized to obtain archive equality.
+Independent readback validates 3093 protected hashes and 496 current source pins.
+Both complete 830/494 original component reports and full 400-slot controls stay
+available. The first 766-case executed sources keep their own identity.
+
+CI explicitly generates source caches despite PYTHONDONTWRITEBYTECODE. The
+initial cleanup's absence assertion rejects after all 23 archives succeed; its
+source/log and partial journal remain. A separate v2 tail verifies the old
+journal, retires 1040 source-backed caches and completes all recovery/hash gates.
+Do not rerun the first deletion controller against already retired inputs.
+
+Journals and recovery are in native
+`.analysis/port64/pointnum-v1373/`. Verify recovery from the root worktree:
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
+  python3 .analysis/worktrees/port-modern-64/.analysis/port64/pointnum-v1373/restore_streams.py
+```
+
+Add `--restore` before replaying unchanged old commands that name retired
+fixtures/raw text or native-pixel files. Restoration refuses different existing
+files. The public original/native verifier generates fresh inputs/reports;
+use a fresh output directory. Mutable orchestration stdout stays outside the
+protected probe trees.
+
+
 v1372 retains the new complete scalar/DGROUP captures and accepted four-demo
 video reports under `dos-demo-v1372-animation-candidate*`. The only source repair
 changes 17 animation DATA bytes. Successful cold MAIN objects and original/

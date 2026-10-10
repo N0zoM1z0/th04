@@ -681,7 +681,7 @@ The repaired cold MAIN is199455 bytes, SHA-256
 Its producer is `product-20261010-181420-9d4128b5-main/receipt.json`:193 C++,155
 ASM,8 state and4 sprite producers pass, with zero reused C++ roots. IRQ/vector
 and dispatch-table audits pass. Its full MAP remains `2ee564c3…`, byte-identical
-to v1366. Independent whole-file comparison changes only24 bytes in the12 DATA
+to v1366. Independent whole-file comparison changes only24 bytes in the 12 DATA
 words; every header, relocation, code, remaining data and overlay byte stays
 unchanged. The144-byte table hash is now the target's `1a31a3f8…`.
 The package `.analysis/build/th04-demo-carpet-v1369/` explicitly retains the old
@@ -885,7 +885,7 @@ Private bounded CPU replay uses recorded Demo4 DGROUP update1349 actors and
 alive pointers, restores the prior update1348 scroll word, loads each relocated
 MZ at its recorded load segment, and executes the complete renderer/blitter.
 Original/candidate make10 ordered glyph calls but differ at call4: top103,
-left214, glyph10 versus4; the next call at222 uses11 versus5. Ordered VRAM
+left214, glyph 10 versus4; the next call at222 uses11 versus5. Ordered VRAM
 writes differ69 versus63; tile-register OUT sequences and sprite bytes agree.
 All97 changed VRAM bytes in the retained first full video blocks lie within
 the differing draw-mask bits. This supports the source attribution; full fresh
@@ -910,7 +910,7 @@ The complete linked renderer and earlier bullet/carpet diagnostics pass.
 The new kernel on prior recorded Demo4 state now agrees with original10 calls,
 69 writes and all OUT sequences, retaining separate kernel/state-producer hashes.
 
-Historical focused replay is attempted with the122-owner dependency closure:
+Historical focused replay is attempted with the 122-owner dependency closure:
 `python3 scripts/replay_th04_main_exact_units.py --unit
 th04-main-pointnums-render-v138 --run-id FRESH-run`. Its first cold compilation
 fails at scaffold `th04/main/bullet/add.cpp`: missing `ANGLE_PER_SPRITE` and
@@ -1115,3 +1115,100 @@ existing outputs. Full runtime commands are recorded in `run_repair_tail_v2.py`;
 final verification/retention in `run_finish.py`, with terminal phase journals
 and raw logs. These scoped results do not close full scanout, ordinary Boss/
 death/process, cross-emulator or native x64 acceptance.
+
+
+## v1373 native point-number rings and foreground join
+
+This advances the native source gap observed at06922ce. The DOS v1372 package
+and its four complete demo comparisons remain unchanged. `port/modern-64`
+now owns400 point-number records, two200-slot overwrite rings and the retained
+alive-list boundary. Items insert white/yellow base scores with the pull
+multiplier; bullet-zap events insert white numbers. Update precedes these
+insertions, so fresh slots join rendering on the next update. Rendering follows
+its retained pointers, writes widths once per simulation frame and appends the
+original multiplier cells10/11. The view consumes cached glyphs after items
+and before enemy bullets, mapping physical rolling rows to the host display.
+
+Original target/MZ identity and a fresh MAIN database attestation pass. Bounded
+original entries are CIRCLE_TEXT(0AAF):11C2/1204/1274/130E/1120 and
+main_03(13A9):0300/031A/4F5E. DGROUP(2134) owns pool9634 (6400B), cursors3ECE/
+3ECF, list3ED0 (401 near pointers), first-yellow41F2 and the 12*128B mono font098A.
+The original font is read from supplied HDI MAIN, not embedded in code. Every
+preshift is checked against its unshifted row. The original24 stationary updates,
+later eight-subpixel rise, clipping, age 37 remove and next-update free are
+preserved, including previous-Y/padding on overwrite and unused pointer-list
+tails. This is native migration, not new historical exact credit.
+
+`port64/verify_point_numbers.py` executes the original add/digit/update/render/
+put/scroll bodies at load 1000/2000. DS 8000/SS 7000 and pool/scroll inputs are
+explicit component adapters. The existing independent GRCG shadow observes
+actual glyph stores/ports on a patterned 640*400 indexed screen; the original
+self-modifying width instruction executes. Only near-pointer representation
+becomes index+1; all 6400 pool bytes, both cursors, all 401 list entries, the
+first-yellow marker and four neighboring sentinel bytes are compared.
+
+GNU8 and optimized nonrecovering UBSan each pass830 state/request cases and 494
+complete indexed pictures. These cover all numeral/multiplier cels, bit
+alignments, lower-edge wrap, both colors, overwritten/removed retained list
+slots, integer boundaries and a39-update lifecycle. Two further complete400-slot
+list tests (dispersed/overlap, all flag values0..3) emit 1892 ordered glyph requests
+perpicture; both hosts match original full state/pixels at both loads.
+
+All five source-only mutations return normally with830 rows and are rejected:
+early rise first differs129; shortened ring33; wrong yellow intensity297;
+digit4 multiplier301; immediate free129. Complete wrong outputs/source/link
+commands remain. A constructed all-zero original number does not return within
+200000 instructions and emits2150 requests. Native rejects that input explicitly;
+this negative is not ordinary gameplay acceptance. In-font leading glyph 10/11
+for10000/11000 values is preserved; outside-font values are not accepted.
+
+Fresh GNU builds69 AMD64 programs and passes 68 CTests. Focused UBSan builds the
+portable core, popup contracts and frontend. Actual pickup contracts exercise
+white, yellow max-value and doubled collection, list admission and multiplier
+requests. Five muted no-window MAIN/combat images per host agree; they establish
+integration smoke and host consistency, not original full-scene pixels. New
+producer496-input manifest is707d129ae6730d6e316ec359fa8b27a948403ef117283898556c374f04b48791.
+Old v1356 natural-route/timing/Windows products retain their own identities and
+scope. No Windows program/window/key injection or package update occurs.
+
+The first 766-case run retains its own executed496-file source pins. The final
+producer snapshot freezes all496 inputs plus the22 actually imported public
+Python dependencies, including unchanged native script dependencies. A fresh
+frozen-reader replay passes300 state/request rows and three complete pictures
+at both loads. Every old receipt keeps its original source identity. Fresh
+private receipts live in the native worktree at
+`.analysis/port64/pointnum-v1373/`; root orchestration/database witnesses live at
+`.analysis/reconstruction/probes/pointnum-port-v1373/`.
+
+Replay in the native worktree, with fresh output directories:
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
+  python3 port64/verify_point_numbers.py \
+  --target .analysis/targets/th04/main.exe \
+  --exe .analysis/port64/pointnum-v1373/build-gnu/th04-port64-pointnum-contracts \
+  --output-dir .analysis/port64/pointnum-v1373/FRESH
+ctest --test-dir .analysis/port64/pointnum-v1373/build-gnu \
+  --parallel 1 --output-on-failure
+```
+
+Precise native ownership and adapter limits are in branch
+`docs/port64/evidence/point-numbers.md`. Complete natural original/native
+state/RNG/foreground/process pairing, original dirty-page transients and
+physical scanout remain open. The next fidelity work should capture complete
+native demo state and RNG/ring/call counts at the same logical boundary as the
+retained original DOS demos; native-host equality cannot substitute for it.
+
+Final main CI 441/live Ghidra and native CI 313/target checks pass; the native
+private Ghidra/tool gates skip where unavailable. All jobs are terminal. Lossless
+retention reclaims 502460416 allocated file B (about 479.2 MiB).23 full raw/text/
+mutant streams restore byte-exactly with modes and nsmtimes; 3093 protected
+hashes and 496 current source pins read back. Successful current build objects
+stay available. Retired 1040 public caches are source-backed. CI's explicit
+compileall creates them despite PYTHONDONTWRITEBYTECODE; the initial absence
+assertion rejects after complete archives succeed. Its source/log and partial
+journal remain; a separate v2 reader resumes, restores all streams and passes.
+Use native `.analysis/port64/pointnum-v1373/restore_streams.py` without options
+for full verification, or `--restore` before unchanged old-reader commands.
+Restoration refuses different existing files; private evidence is never
+normalized or restamped. Retention/readback journals remain immutable.
