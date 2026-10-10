@@ -531,3 +531,23 @@ Both final CIs pass (root includes live Ghidra/mutation replay). Final v2 reader
 source/positive/eight-control receipts supersede initial v1 snapshots while those
 remain retained. Public caches retire955 files/net15,478,784 allocated B after
 source/protected hash readback; active port64 helpers/outputs stay excluded.
+
+## Turbo0 terminal rejection and separate bad-save reader (v1361)
+
+The v1360 GNU Turbo0/ReimuA candidate is terminal and failed the true-clear
+gate. Complete trace has88,267 refreshes: six stages reached, Final Stage last
+frame11,267/miss13/respawn33/invincibility154 immediately enters MAINE; all physical
+masks remain0x19. No all-clear/complete dense-route acceptance. Inner Bad Ending
+is source-routed/inferred. Separate new private Scores reader passes795 refreshes
+with unchanged physical hashes/zeroaudio; the original failed controller never
+started its own reader. All owned jobs are now terminal.
+
+Within this failed candidate, natural>=320 has416 samples/206 slowdown2 and
+>=400 has125/63. Complete deadline/terminal reduction passes; >=400 update
+P95/P99=8.33/12.27ms, no update exceeds its own admission period. These strengthen
+bounded slowdown observations, not successful-route or uninstrumented/physical
+performance acceptance. Before another Turbo0 attempt, review ordinary Bomb
+input policy: fatal snapshot still has1 Bomb and advice0x20. This is a candidate
+policy gap, not a proved game defect. Windows GUI/host keys/audio remain disabled.
+
+Actual immutable failed candidate remains under `.analysis/port64/slowdown-window-v1360/gnu-lunatic-reimu-a-turbo0-v1/`. Independent failure and separately completed Scores/clock receipts are under `.analysis/port64/slowdown-consumer-v1361/`. Earlier live/active-job/prefix records remain dated observations, not current running status. No controller/helper/compiled source changes accompany this result.
