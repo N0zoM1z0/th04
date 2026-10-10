@@ -5,6 +5,36 @@ not a guarantee that its expanded directory remains present. Durable commands,
 hashes, conclusions and negative results belong in checked-in notes/ledgers.
 A verified private archive supplies recovery where the input cannot be rebuilt.
 
+The v1350 terminal music/window batch retains both old and current 195-program
+vectors, all original and native full-song traces, route captures, physical
+saves, frozen sources, compiler/CMake/link identities and negative controls.
+The new compiled source materialization remains in the independent
+`port64-presentation-v1350` worktree; do not remove it as a disposable checkout.
+Eight fully read-back archives below native
+`.analysis/port64/route-render-v1350/` recover seven terminal owned Windows
+stages and exact static link inputs/failed probes. Ordinary objects regenerate.
+
+The first cleanup guard rejected removal of four protected cache copies and
+incorrectly treated its own live diagnostic log as immutable. All four copies
+were restored byte-for-byte from retained stable programs. The failed log and
+pre-mutation journal remain; fresh `retention-receipt-v2.json` verifies 13,737
+immutable hashes. It records 866 stage files and 1,843 generated files retired,
+with 1,206,464,512 allocated bytes net reclaimed (1,150.6 MiB). This measures
+the cleanup scope, not the whole batch's storage change. Accepted receipts
+remain unchanged; replay requires fresh output paths.
+
+Fresh `terminal-readback-v1.json` independently rechecks all eight archives'
+complete members, 13,737 immutable hashes, both 195-program vectors and their
+compiler/cache/link metadata, and all 467 current source inputs against the
+compiled worktree and source archive. Original/current music and route receipts
+retain their separate immutable links.
+
+Both final CIs pass, including root live Ghidra replay and Oracle mutations.
+Post-CI source-backed cleanup separately retires 1,037 public Python cache
+files while preserving their 1,037 sources, reclaiming 17,686,528 allocated
+bytes. Its pre-deletion journal and receipt are under
+`.analysis/cleanup/window-music-post-ci-caches-v1350{,-before}.json`.
+
 ## Keep live
 
 | Surface | Reason |

@@ -45,6 +45,32 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1350 fixes final static-menu repaint in both GUI loops. Actual Linux SDL
+dummy and Windows offscreen callbacks distinguish the old 24,214 stale pixels/
+zero final updates from the fixed zero stale pixels/one update. Three-host
+logical full/skip controls agree. All 195 programs rebuild; 64 contracts pass
+per host. Four deferred controls enter the manifest after all frozen jobs close.
+467 current source inputs bind
+`e6911c41c7092c963b526f0494a1b8544b6cbfad675ce9f50fa1391ebacc2d9b`.
+New products live in native sibling `port64-presentation-v1350/.analysis/product-v1350/`;
+the current branch's source bytes match. Old program/source receipts remain.
+
+Every-refresh drawing now agrees for all four prior ordinary logical prototype
+routes on three hosts: 270,193 advances, 37 capture files and physical saves
+per host. Complete stock music closes 138 original two-PSP cases; each host's
+69 unique native runs compare against both loads, 1,654,542 configured rows.
+Fresh current-product replays also pass; part9/PPS counters remain zero and
+92 unowned sample-reset cases remain explicit. Native lifecycle/music notes
+route the receipts and limits. All relevant jobs have terminal success.
+
+Remaining: public route entry, full startup presentation across sound modes,
+other ranks/shots/Continue, physical input/refresh/slowdown and dense Lunatic
+performance, audio-device output and current GUI delivery. Stock control/CPU
+sample validation does not implement audible playback. All tests stay muted;
+candidate-local-attested provenance and DOS acceptance are unchanged.
+
+Historical v1349 frontier:
+
 v1349 verifies four ordinary key-only logical prototype routes on GNU8,
 optimized UBSan and actual Windows: Reimu Easy, both Normal characters and
 Reimu Extra.270193 route advances/37 capture files perhost and physical final

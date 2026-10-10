@@ -1,5 +1,25 @@
 # Semantic and x64 port status
 
+v1350 fixes terminal window repaint: actual Linux SDL dummy/Windows offscreen
+callbacks change from 24,214 stale pixels and zero final updates to the correct
+static menu and one final update. Three-host full/skip controls agree. Four
+ordinary prototype routes paint every route refresh on three hosts with equal
+270,193 advances/37 captures/physical saves per host. Stock music closes 138
+original two-load cases; 69 unique native runs per host compare against both
+loads, 1,654,542 configured state/write rows. Fresh new-product replays pass.
+All 195 programs build, 64 contracts pass per host; 467 source inputs have
+manifest `e6911c41c7092c963b526f0494a1b8544b6cbfad675ce9f50fa1391ebacc2d9b`.
+Four deferred controls are registered after every frozen job closes. Native
+lifecycle/music notes and `route-render-v1350/` route scope/recovery.
+
+Public route entry, startup presentation across sound modes, remaining
+ranks/shots/Continue, physical input/refresh/slowdown, dense Lunatic performance
+and a current GUI remain. Audible audio-device output is not implemented;
+music control and CPU samples are verified under stated adapters. All tests
+stay muted; no DOS exactness or whole-game completion is promoted.
+
+Historical v1349 frontier:
+
 v1349 verifies four ordinary key-only logical prototype routes on three hosts:
 Reimu Easy/both Normal characters/Reimu Extra,270193 route advances and37
 whole capture files perhost/equal physical saves. Same-host Normal-earned
@@ -425,7 +445,11 @@ Native code/evidence commits `a7c096d`/`6945f69` are pushed.
 - [x] Join recorded-demo playback, configuration persistence and first audio
   setup under independent component and native restart controls.
 - [x] Join resident PMD lifetime, capability, PCM and real measure waits under bounded muted controls.
-- [ ] Complete remaining PPS/external ADPCM and full original startup integration while keeping launches muted.
+- [x] Verify complete supplied PMD/PMD86/PMDB2 music under explicit resident/
+  IRQ/board adapters; stock part9/PPS counters remain zero in all 138 cases.
+- [ ] Implement audible audio-device output and complete startup presentation
+  across sound modes while keeping all launches muted. Arbitrary external
+  sample banks remain outside the supplied-stock acceptance.
 - [ ] Validate refresh/input behavior and deliberate slowdown on actual hosts.
 - [ ] Run full natural Linux/Windows routes: both characters, difficulties,
   good/bad endings, Extra, Continue, saves/config and restart. Benchmark dense
