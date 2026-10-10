@@ -30,11 +30,12 @@ Boss/Midboss/player state blocks. These demos exercise Midboss fights; Boss
 combat, death/respawn and complete process transitions still need paired
 validation. New complete raw video captures cover both graphics pages, all four
 planes, text, palettes and selected GDC display fields. Text, palettes and the
-compared display fields agree; graphics still differ in every demo.
-The Stage 4 carpet table's misplaced right-hand columns have been corrected in
-a cold build and verified by complete replay. The first remaining graphics
-differences are at frame-counter writes 491, 1729, 658 and 1349 in Demos 1–4,
-respectively. See the handoff for the remaining rendering work.
+compared display fields agree. Cold builds and complete replays verify repairs
+to the Stage 4 carpet columns and packed bullet invalidation dimensions.
+Demo 2 and Demo 3 now agree on every compared video region across all 3,996
+updates each. Remaining graphics differences start at frame-counter writes
+1678 in Demo 1 and 1349 in Demo 4. Full scanout timing and the remaining drawing
+causes are still open; see the handoff for the current evidence.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh

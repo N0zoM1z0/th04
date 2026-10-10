@@ -4,7 +4,7 @@
 ; invalidation architecture. Legal TC4J source probes expand the two 32-bit
 ; memory shifts instead of emitting this target form.
 
-.186
+.386
 .model use16 large
 locals
 
@@ -60,7 +60,9 @@ gather_t ends
 extrn _bullets:byte
 extrn _bullet_zap_active:byte
 extrn _bullet_clear_time:byte
-extrn _tile_invalidate_box:byte
+; Packed x/y words: the body assigns and shifts both dimensions together.
+; MAIN TILE_TEXT 0AAF:1FBE/1FDF/1FF3/1FFF use 32-bit memory operands.
+extrn _tile_invalidate_box:dword
 extrn _gather_circles:byte
 TILES_INVALIDATE_AROUND procdesc pascal near center:dword
 

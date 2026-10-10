@@ -108,10 +108,12 @@ process teardown remain open.
 
 Raw video comparison retains every graphics/text/palette byte on both pages
 at all3996 updates per demo. Text, palettes, page selectors and selected programmed GDC fields
-agree; graphics still differ in all four demos (first frame writes491/1729/658/1349).
-The bounded Stage4 carpet table repair passes a fresh cold MAIN and complete
-replay, removing the earlier frame2 blue-band divergence. Remaining drawing
-causes and process teardown stay open.
+agree. Complete v1370 replay accepts all compared video regions in Demos2/3.
+Demo1 first differs at write1678 with1032 differing updates; Demo4 first differs
+at1349 with181. The cold packed bullet-box DWORD context repair removes Demo1's
+old491 residue mismatch and all Demo2/3 graphics differences. The earlier
+Stage4 carpet repair removes the frame2 blue band. Remaining Demo1/4 drawing
+causes, raw scanout timing and process teardown stay open.
 Current native host traces still lack complete RNG seed/ring/call-count fields and paired
 original-DOS gameplay evidence.
 

@@ -427,6 +427,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/check_th04_bullet_invalidation.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Check the complete linked bullet invalidator's operand and call contract.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/check_th04_carpet_image_table.py",
     "category": "runtime",
     "role": "command",

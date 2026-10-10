@@ -14,6 +14,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/audit_th04_native_op_mz.py](../probes/audit_th04_native_op_mz.py) | command | Audit a successful standalone TH04 OP MZ and every relocation site. |
 | [probes/audit_th04_op_menu_calls.py](../probes/audit_th04_op_menu_calls.py) | command | Compare bounded OP menu drawing calls with the attested decoded target. |
 | [probes/check_th04_bullet_default_objects.py](../probes/check_th04_bullet_default_objects.py) | command | Cold-check complete default bullet renderer OMF against a source revision. |
+| [probes/check_th04_bullet_invalidation.py](../probes/check_th04_bullet_invalidation.py) | command | Check the complete linked bullet invalidator's operand and call contract. |
 | [probes/check_th04_renderer_default_objects.py](../probes/check_th04_renderer_default_objects.py) | command | Cold-check that native renderer segment branches leave default OMF unchanged. |
 | [probes/compact_op_maine_snapshot.py](../probes/compact_op_maine_snapshot.py) | support | Materialize the OP/MAINE replay inputs without cloning all of ReC98. |
 | [probes/inventory_th04_maine_support.py](../probes/inventory_th04_maine_support.py) | command | Map native MAINE unresolved names to a pinned historical archive inventory. |

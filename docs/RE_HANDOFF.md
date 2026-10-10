@@ -5,40 +5,53 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1369 repairs the Stage4 carpet table's special right-hand columns18/20
-(original DGROUP2134:190C,144 B; old source19/21). Cold MAIN199455 B is
-07d4d640…; MAP stays2ee564c3… and the complete old/new MZ differs only24 DATA
-bytes.193 C++/155 ASM/8 state/4 sprite producers pass with zero reused C++ roots.
-The package `.analysis/build/th04-demo-carpet-v1369/` retains old unchanged
-OP/MAINE/ZUN; installed Windows packages and native x64 worktree are unchanged.
+v1370 repairs the standalone bullet invalidator's packed box declaration:
+original MAIN TILE_TEXT0AAF:1FBE/1FDF/1FF3/1FFF uses DWORD operations; the old
+`.186`/byte context retained height32 and passed8x32 instead of8x8 for pellets.
+The product context now uses `.386`/DWORD. Full150-byte instruction contract
+passes with only verified symbolic address substitutions; no exact promotion.
 
-All four repaired ordinary demos pass15988 input/score/RNG/caller/resident
-boundaries. Complete raw video captures compare3996 updates per demo,279809 B
-per update: both pages/all four planes, TRAM, full palettes, selectors and
-selected programmed GDC fields. The carpet repair removes Demo1's old frame2
-blue-band difference; all compared regions now match through490, first remaining
-491. Other demos retain identical region hashes/first1729/658/1349. Text/palettes/
-selectors/selected GDC fields pass throughout. Full raw GDC scan/raster/FIFO/clock
-internals remain diagnostic; this does not accept complete scanout timing.
-All four demos still reject full raw graphics parity. Diagnose the remaining
-renderer/effect owner from retained streams; no cause is yet proved.
+Cold MAIN199455 B is c6c5ed0a…, MAP69790a7a….193 C++/155 ASM/8 state/4 sprite
+objects pass with zero reused C++ roots.359/360 complete OMF producers agree
+with the prior carpet build after dependency-time-only normalization; only the
+invalidator producer changes. The first compilation's publication was rejected
+because a probe was added during the build; frozen full repetition publishes
+identical MAIN/MAP. Package `.analysis/build/th04-demo-invalidate-v1370/` retains
+old unchanged OP/MAINE/ZUN receipts. Windows packages/native worktree are unchanged.
 
-Retained v1367/v1368 DGROUP observations belong to older16132526… MAIN: nine
-raw pools24952 B/update plus22 pointer-free states104 B/update pass15984 updates.
-All other new MAIN bytes/MAP stay unchanged, but no fresh complete DGROUP capture
-is claimed. Boss stays at setup; hit/death/respawn and callback/other globals,
-process teardown, ordinary Boss play, native x64 and cross-emulator parity stay
-open. Historical exact states are unchanged; new carpet DATA owner is only
-source-present. Canonicality remains candidate-local-attested.
+Fresh complete ordinary captures pass all15988 input/score/RNG/caller/resident
+boundaries. Fresh complete DGROUP captures accept nine raw pools24952 B plus22
+pointer-free states104 B per update across all15984 updates, plus input/Shift/
+graze; own independent ordinary traces agree. The seam-state CPU invalidation
+replay now matches all67 positions/boxes and1600 dirty flags. Boss remains at
+setup; ordinary Boss combat, hit/death/respawn, other globals/callbacks, process
+teardown, cross-emulator and native x64 parity remain open.
 
-Final CI passes423 tests,20-target calibration and live Ghidra/mutation controls.
-Post-CI retirement removes529 source-backed caches/8,830,976 allocated B.
-Whole-byte-identical copy sharing reclaims161,304,576 B; combined170,135,552 B
-(about162.3MiB) before journals.306 protected hashes and26 archived source inputs
-recheck. All12 full video streams/earlier states/negative evidence and cold caches
-remain; all jobs are terminal. No native worktree or Windows GUI/audio write.
-Replay commands, producer/reader archives and coverage are in the focused note.
-Current commit identities are obtained with `git log -1` in each worktree.
+Full raw video compares3996 updates per demo,279809 B/update. Both graphics
+pages/all planes, TRAM, full palettes, selectors and selected programmed GDC
+fields are retained. Demo2/3 all38 compared regions pass. Demo1 first differs
+at write1678 (1032 differing updates), Demo4 at1349 (181). Text/palettes/modes/
+selected GDC fields match throughout. All raw GDC scan/raster/FIFO/clock bytes
+remain diagnostic and differ3996 times per demo; full scanout timing is open.
+Remaining source causes are unproved: first blocks localize Demo1 row375 and
+Demo4 rows103..110. Historical exact states and the deferred carpet/checkerboard
+cases are unchanged; the earlier carpet DATA table repair remains verified.
+Canonicality stays candidate-local-attested.
+
+Final CI passes428 tests,20-target calibration and live Ghidra/mutation controls.
+533 source-backed caches retire8,871,936 allocated B after CI. Immutable copy
+sharing, byte-exact video recovery and rejected-cache PAX retention bring total
+reclamation to252,387,328 allocated file B (about240.7MiB) before journals.
+Independent readback checks367 protected hashes,17 frozen source inputs and
+all4 archived gzip recoveries. An initial self-log completion rejection stays
+retained; the corrected reader validates only that exact writer/receipt bridge.
+All build/game/CI/cleanup jobs are terminal. Original inputs, complete evidence
+and successful cold cache remain; no Windows GUI/audio or native worktree write.
+Restore archived video files before old-reader replay; see retention instructions.
+
+Replay commands, frozen producer/reader sources, rejected publication, precise
+coverage and lossless retention are in the focused note. Current commit
+identities are obtained with `git log -1` in each worktree.
 
 Updated 2026-10-11. Current focus: complete DOS actor/presentation/process
 comparison, followed by separate x64 state/effect fidelity. DOS demo state is
@@ -64,12 +77,11 @@ native fixes or this runtime batch. Targets remain
 
 ## DOS verification frontier
 
-- v1369 complete repaired demo scalar/RNG comparison passes all15988 boundaries.
-  Complete video first remaining writes491/1729/658/1349; text/palettes/modes and
-  selected GDC fields pass. Old video failure and all raw diagnostics remain.
-  Carpet table144 B agrees target; cold source/raw-MZ-only24-byte causal gate
-  removes frame2 blue band. ABI compiler/archive/ELF controls plus34 new public
-  test groups gate the new surface. Package/recipe and remaining drawings:
+- v1370 fresh scalar/RNG and full9-pool/22-state comparisons pass. Complete
+  video accepts Demo2/3 and retains first remaining writes1678/1349 in Demo1/4.
+  The packed box correction changes only one OMF producer; prior carpet table
+  remains correct. Complete old/new raw evidence and source/ABI controls stay
+  available, with lossless gzip recovery before archived-stream replay:
   [paired evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 - v1368 accepts22 raw global-state blocks across all15984 demo updates, with
   instruction witnesses and distinct-value/nonzero coverage. Complete24-byte

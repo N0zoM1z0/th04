@@ -1,5 +1,53 @@
 # Private build and analysis retention
 
+v1370 keeps the fresh ordinary and full DGROUP captures under
+`.analysis/runtime/candidates/dos-demo-v1370-invalidate-candidate*` with their
+independent controls and complete comparisons.178 terminal immutable-copy
+paths reclaim74,018,816 allocated B, with159 protected hashes unchanged.
+
+The four new video gzip files are retained losslessly as sparse XOR archives
+under `.analysis/reconstruction/probes/demo-render-v1370/video-delta/`, against
+the four complete original v1369 video streams. Every candidate gzip byte,
+including all raw GDC clocks, invisible tails and header fields, restores to
+its original full SHA-256 and size before the large copies retire. The journal
+is `video-stream-retention.json` in the v1370 probe and capture directories.
+Reclamation is162,811,904 B; this is storage encoding, not semantic normalization.
+Keep the baseline streams, all four delta archives and the restoration script.
+
+Verify all four original gzip digests without materializing large files:
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 python3 \
+  .analysis/reconstruction/probes/demo-render-v1370/restore_video_stream.py
+```
+
+Before using the unchanged complete video reader, add
+`--output-directory .analysis/runtime/candidates/dos-demo-v1370-invalidate-candidate-video`
+to restore all four exact original files. The tool uses exclusive creation and
+restores modes/timestamps; existing files are never overwritten. Restore only
+for inspection/replay, never reuse completed execution images. A one-bit delta
+mutation is rejected before decode; its exact recipe/digest is retained, and
+its temporary copy is retired.
+
+The first cold source cache whose publication failed the input-change guard is
+fully retained in `demo-render-v1370/rejected-cold-source.tar.gz`:1769 PAX entries,
+3,356,051 file-payload B, verified complete bytes/modes/nanosecond timestamps.
+Its original source copy retires6,684,672 allocated B; logs/receipt remain.
+Restore `source/` with `tar -xzf ARCHIVE -C FRESH-directory` before inspecting its
+old object/map/product paths. The successfully published cold MAIN cache stays
+live. Source/producer archives and all earlier failed/accepted evidence remain.
+
+After final428-test CI,533 source-backed caches retire8,871,936 allocated B.
+Total v1370 copy/archive/cache reclamation is252,387,328 allocated file B
+(about240.7MiB) before journals. `final-independent-readback.json` verifies367
+protected hashes,17 frozen source inputs, all4 complete gzip restores and the
+1769-entry rejected-source archive, plus source-backed cache absence.
+The first reader catches the cleanup writer completing its own initially empty
+stdout log; the old source/log stay retained. Reader v2 checks only that explicit
+log's terminal JSON against its receipt and exact before/after hashes, with all
+other source/data checks unchanged. All jobs are terminal; accepted states,
+native worktree and Windows packages stay unchanged.
+
 v1369 retains complete raw video streams and their independent ordinary controls
 under `.analysis/runtime/candidates/dos-demo-v1369-*/`. Every stream losslessly
 stores3996 x279809 B per demo using XOR/gzip. Keep the full raw GDC diagnostic

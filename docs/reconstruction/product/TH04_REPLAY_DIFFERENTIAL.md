@@ -740,3 +740,122 @@ raw-video rejection. All12 full video streams503,789,277 stored B, both cold
 caches, original inputs, ordinary/DGROUP traces and failed producers remain.
 Native worktree and installed Windows packages remain unchanged; no GUI/key/
 physical-audio trial or exact promotion occurs.
+
+## v1370: packed bullet invalidation dimensions
+
+The remaining Demo1 write491 difference is an old pellet residue, not an absent
+new pellet. Bounded complete-stream readback at writes487..492 observes the same
+sprite on both sides at489/490. At491/492 the original retains its old R/G/E
+page1 pixels at physical rows259..266, byte columns8/9; the candidate clears
+these pixels. Both active pellet lists drop12 to11 at490. Full raw bullet236
+records agree: flag1 at489, flag2 at490, flag0 at491; prev=(592,5984). Page-back
+and both page scroll positions also agree across the recorded prefix. These
+prefixes localize the problem; they do not establish new full-stream acceptance.
+
+Observed original MAIN TILE_TEXT(0AAF):1FA8..203D, fileE298,150 B including EVEN,
+uses DWORD box assignment at1FBE/1FDF and DWORD shift at1FF3/1FFF. The standalone
+product context instead declared `_tile_invalidate_box:byte` under `.186`.
+Compiler-observed old product instructions assign/shift only the first byte;
+two Pascal WORD pushes preserve argument values but change the producer shape.
+The old complete MAP contribution is148 B. Successful assembly had not checked
+this operand contract. The historical exact owner uses the separate original
+scaffold context, so its accepted source/body and historical state are unchanged.
+
+An independent Unicorn CPU replay loads the attested original and old candidate
+MZs with DOS relocations, then substitutes each recorded DGROUP write490 state.
+It executes the complete `tiles_render()` invalidation chain up to entry of
+`tiles_redraw_invalidated()`. All67 ordered positions agree;12 pellet calls pass
+8x8 originally versus8x32 in the candidate. Physical half-tile rows32/33,column2
+are unmarked originally and marked by the old candidate. The old pellet's
+previous y5984/16=374 gives top386 for the original8-high box, which the observed
+invalidator rejects at the384-pixel boundary. The erroneous32-high box gives
+374 and remains eligible, then scrolling wraps it into the residue's region.
+This replay is a bounded seam-state CPU experiment, not a complete next-frame
+or PC-98 hardware replay.
+
+The maintained product-only context now uses `.386` and a DWORD external for
+the packed x/y words. `check_th04_bullet_invalidation.py` compares the complete
+reviewed owner after independently checking its DATA bindings and near callee;
+only those addresses are substituted. No instruction, immediate, branch or
+padding byte is discarded. The old product is explicitly rejected. Five public
+negative-control groups reject every non-address-byte mutation, wrong DATA
+binding, wrong near-call target, short/long extent and duplicate/misplaced MAP
+ownership. This contract is diagnostic and cannot promote raw exactness.
+
+The first cold compilation links and passes IRQ/vector/bullet-switch checks,
+but `build.py` rejects publication because adding the checker during the build
+changes its conservative probe-source fingerprint. Its compiled150-byte owner
+passes the complete contract; MAIN c6c5ed0a… and MAP69790a7a… are retained as
+unpublished compiler observations. The completed failed publication is retained
+separately as `cold-main-input-drift.log`; a frozen-input full cold repetition is
+required before runtime validation. Do not bypass the input-change guard or
+label this first output a published product.
+
+The frozen repeat passes normal publication with all193 C++/155 ASM/8 state/
+4 sprite objects and zero reused C++ roots. MAIN199455 B SHA-256
+`c6c5ed0ac012b6a4036db434e5d828e60c1edb474137973dce14be3c220dd9a9`,
+MAP`69790a7a686e177ff5d281e0a28e63c4062b529d527c368b3300ac62d64b7d4b`.
+Both full files are byte-identical to the unpublished first compilation.
+Comparing every old/new cold OMF object validates360 complete objects:344 raw
+identities and359 identities after normalizing only dependency timestamps.
+The sole changed producer is the bullet invalidator's standalone context.
+Its complete150-byte linked instruction contract now agrees with the target
+after the declared address substitutions. The144-byte repaired carpet table
+also passes unchanged. Historical accepted bodies/counts are not promoted.
+
+The ordinary package `.analysis/build/th04-demo-invalidate-v1370/` retains the
+unchanged older OP/MAINE/ZUN products with their separate receipts. The fresh
+MAIN producer receipt is
+`.analysis/reconstruction/probes/product-20261010-191225-23c93740-main/receipt.json`.
+Reproduce the cold product with `python3 scripts/build.py --only main
+--output-dir FRESH-build`; the complete sequential capture/comparison command is
+`nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 python3
+.analysis/reconstruction/probes/demo-render-v1370/run_repair.py` (use fresh run
+paths; completed capture images are immutable). This repeats ordinary, full
+video and full DGROUP captures with independent ordinary controls. The executed
+producer source and checker/reader/test/context inputs are separately frozen as
+`producer-source/` and `reader-source/`; freeze probe source too before a cold
+build because `product_input_fingerprint.py` deliberately includes it.
+
+All fresh ordinary3996-update demos plus their terminal decisions pass15988
+input/rawShift/score/RNG/caller/resident boundaries. The fresh full DGROUP replay
+also passes15984 updates:9 pools24952 B plus22 state owners104 B, input/Shift and
+graze, with identical independent ordinary traces. Midboss distinct-value and
+Boss-setup-only coverage remains the same; death/respawn and actual Boss combat
+stay unexercised. The post-repair CPU seam-state chain matches all67 ordered
+positions/boxes and all1600 dirty flags; both hotspot flags are0.
+
+Complete video accepts every one of38 compared regions across3996 updates each
+in Demo2/3. Demo1 first differs at write1678 (after update1677),1032 differing
+updates; Demo4 first1349 (after update1348),181. Both text planes, full palettes,
+mode/selectors and selected programmed GDC fields match throughout all four.
+Raw GDC scan/raster/FIFO/clock differs3996 times per demo and stays diagnostic.
+This accepts scoped raw region state, not full scanout timing or the full game.
+Remaining first blocks show Demo1 B/R/G page0 row375,columns13/17/40/41 (3/2/2
+changed bytes); Demo4 B/G/E page1 rows103..110,columns26..30 (31/33/33 bytes).
+`remaining-video-frontier.json` retains exact source-block hashes and locations;
+a point-number, spark or clipping cause has not yet been proved.
+
+Current reports are `dos-demo-v1370-invalidate-comparison.json`,
+`dos-demo-v1370-invalidate-video-comparison.json` (expected overall reject), and
+`dos-demo-v1370-invalidate-dgroup-comparison.json` under the private candidates
+root. Original parents and executed consumer paths are explicit in the frozen
+sequential controller. No native worktree change or Windows GUI/physical-audio
+trial occurs; ordinary Boss/death/process and cross-emulator/native parity
+remain required future work.
+
+Final CI passes428 tests plus20-target/live Ghidra/mutation controls. Post-CI
+cleanup removes533 source-backed caches8,871,936 B.178 immutable-copy paths
+reclaim74,018,816 B; four full candidate video gzip files restore bit-for-bit
+from baseline XOR before retiring162,811,904 B; the rejected cold source's
+1769-entry PAX archive preserves every file byte/mode/ns mtime and retires
+6,684,672 B. Total252,387,328 allocated file B (about240.7MiB) before journals.
+All baseline/delta streams, diagnostic bits, first blocks, scalar/DGROUP traces,
+receipts and frozen sources remain. Restore the original gzip files before
+using the unchanged complete reader; commands are in ANALYSIS_RETENTION.md.
+A one-bit delta mutation rejects before decode. Independent final readback
+checks367 protected hashes/17 frozen inputs and all4 original gzip digests.
+The initial retention reader catches its writer completing the initially empty
+cleanup log; that failure/source stay retained. Reader v2 allows only a verified
+log/terminal-receipt before/after bridge. Every other data/source hash is strict.
+All jobs terminal; native worktree and installed Windows packages unchanged.
