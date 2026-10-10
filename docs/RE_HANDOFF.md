@@ -54,6 +54,24 @@ repair, replay entrypoint and evidence/knowledge routing.
 
 ## Native x64 frontier
 
+v1360 adds legal Turbo0 selection and an explicit dense-slowdown route gate.
+`--adaptive --rank 3 --turbo 0 --require-dense-slowdown --key-driver xtest`
+requires the existing complete six-stage/clear/physical-save/Scores-restart gates,
+then complete deadline reduction and actual>=320/>=400 slowdown2 samples. Default
+Turbo1/fixed Normal inputs retain their previous behavior. Four unsupported
+argument combinations reject before display/game/save creation. Consumer490
+inputs (`a07fda7a…`) archive/read back; only route Python differs from v1359,
+all485 compiled inputs/program identities remain unchanged. No new build.
+
+One GNU natural ReimuA/Turbo0 trial is live on private Xvfb (tool17095,
+controller404173/game404187). Its initial physical CFG is0306020201000000000E;
+early Stage0 has35 slowdown2 records/zeroaudio, but max100 bullets is below dense
+acceptance. No terminal clear/dense verdict yet. Before polling/restarting,
+inspect native `.analysis/port64/slowdown-window-v1360/active-job-v1.json` and
+match /proc start ticks/argv; leave pinned route/input/reducer sources unchanged.
+Windows GUI/foreground/host input/audio opens remain prohibited.
+
+
 v1359 accepts GNU natural Lunatic ReimuA on private Xvfb: six stages/noContinue,
 88,927 route+790 Scores restart refreshes; section3 real mask1 at physical
 rename/final file, registration Esc/freshOP, unchanged CFG/nineother partitions.
@@ -66,7 +84,7 @@ WMclose unfinished setup preserves rankFF/noSCR; ordinary setup keys precede
 score creation; corrupt CFG/first-last SCR recover; valid tails/ranges/metadata
 and two physical restarts pass. GNU scope only; Windows GUI/input stays closed.
 
-All jobs are terminal. Current independent receipts/frozen490-input consumer
+The v1358/v1359 jobs are terminal. Independent receipts/frozen490-input consumer
 0cd137fd: native `.analysis/port64/host-storage-v1359/`. Actual Lunatic trace:
 `.analysis/port64/lunatic-window-v1358/gnu-lunatic-reimu-a-v1/`. Compiled485 inputs
 remain unchanged; no new build/Windows/audio opens. Source-backed final caches

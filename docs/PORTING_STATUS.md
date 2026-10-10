@@ -25,6 +25,24 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
+v1360 adds legal Turbo0 selection and an explicit dense-slowdown route gate.
+`--adaptive --rank 3 --turbo 0 --require-dense-slowdown --key-driver xtest`
+requires the existing complete six-stage/clear/physical-save/Scores-restart gates,
+then complete deadline reduction and actual>=320/>=400 slowdown2 samples. Default
+Turbo1/fixed Normal inputs retain their previous behavior. Four unsupported
+argument combinations reject before display/game/save creation. Consumer490
+inputs (`a07fda7a…`) archive/read back; only route Python differs from v1359,
+all485 compiled inputs/program identities remain unchanged. No new build.
+
+One GNU natural ReimuA/Turbo0 trial is live on private Xvfb (tool17095,
+controller404173/game404187). Its initial physical CFG is0306020201000000000E;
+early Stage0 has35 slowdown2 records/zeroaudio, but max100 bullets is below dense
+acceptance. No terminal clear/dense verdict yet. Before polling/restarting,
+inspect native `.analysis/port64/slowdown-window-v1360/active-job-v1.json` and
+match /proc start ticks/argv; leave pinned route/input/reducer sources unchanged.
+Windows GUI/foreground/host input/audio opens remain prohibited.
+
+
 v1359 adds actual GNU SDL/X11 setup and corrupt-file recovery: ten separate
 muted processes, 6,305 refreshes, 20 physical atomic renames (five score repairs).
 Closing unfinished setup preserves rankFF/checksum07 without creating SCR;
@@ -48,8 +66,8 @@ and one update exceeds its17.73ms admission period. Whole-loop lateness P99 is
 remains unverified. Instrumentation, private Xvfb and shared WSL load (including
 short storage cases during this route) prevent uninstrumented FPS claims.
 Receipts: native `.analysis/port64/host-storage-v1359/`; actual route remains in
-`.analysis/port64/lunatic-window-v1358/gnu-lunatic-reimu-a-v1/`. All owned jobs
-are terminal; do not re-poll the retired v1358 PID/tool handle.
+`.analysis/port64/lunatic-window-v1358/gnu-lunatic-reimu-a-v1/`. The v1358/v1359 jobs
+are terminal; do not re-poll their retired PID/tool handles.
 
 The490-input consumer archive reads back every member (`0cd137fd…`); only
 Python consumers/filelist differ from the unchanged485-input v1356 compiled

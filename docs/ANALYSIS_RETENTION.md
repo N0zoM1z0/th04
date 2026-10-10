@@ -1,5 +1,12 @@
 # Private build and analysis retention
 
+v1360 CIs pass on both branches, including root live Ghidra/mutation replay.
+Scoped post-CI pruning retires955 source-backed public-script caches after full
+source/protected hash readback, net15,478,784 allocated bytes (about14.8MiB),
+subtracting the journal. Active port64 helper caches, program, source archive,
+trace and physical saves are excluded. No new build intermediates are created.
+Root receipt: `.analysis/cleanup/slowdown-source-caches-readback-v1360.json`.
+
 v1359 final CIs pass on both branches, including root live Ghidra replay and
 mutation controls. No new build intermediates are created. Post-CI cleanup
 retires961 source-backed Python caches after all source and protected-input
