@@ -2430,6 +2430,7 @@ LRESULT CALLBACK title_window_proc(
         if (title) {
             const auto now = Clock::now();
             unsigned ticks = 0;
+            bool dirty = false;
             while (now >= title->next_tick && ticks < 4) {
                 std::uint16_t held = 0;
                 const bool active = GetForegroundWindow() == window;
@@ -2442,12 +2443,14 @@ LRESULT CALLBACK title_window_proc(
                 if (active && GetAsyncKeyState('X') & 0x8000) held |= 0x800;
                 if (active && GetAsyncKeyState(VK_ESCAPE) & 0x8000) held |= 0x2000;
                 if (active && GetAsyncKeyState('Q') & 0x8000) held |= 0x4000;
+                const bool was_animated = title->front_end.animated();
                 title->front_end.advance(held, active && (GetAsyncKeyState(VK_SHIFT) & 0x8000));
+                dirty |= was_animated || title->front_end.animated();
                 title->next_tick += frame_period*title->front_end.slowdown();
                 ++ticks;
             }
             if (ticks == 4 && now >= title->next_tick) title->next_tick = now + frame_period;
-            if (ticks && title->front_end.animated()) InvalidateRect(window, nullptr, FALSE);
+            if (dirty) InvalidateRect(window, nullptr, FALSE);
             return 0;
         }
         break;
@@ -2646,8 +2649,9 @@ void show_window(
                 if (keys[SDL_SCANCODE_Q]) held |= 0x4000;
             }
             const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
+            const bool was_animated = front_end.animated();
             front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
-            dirty |= front_end.animated();
+            dirty |= was_animated || front_end.animated();
             next_tick += frame_period*front_end.slowdown();
             ++ticks;
         }

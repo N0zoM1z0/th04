@@ -1,5 +1,74 @@
 # Stage Lifecycle evidence
 
+## Each-refresh routes and terminal host repaint (v1350)
+
+The four v1349 ordinary key-only prototypes now paint every route refresh on
+GNU8, optimized UBSan and actual Windows. All 270,193 recorded route advances,
+37 complete capture files and physical final saves per host agree with the
+deferred baseline, except the declared `result.txt` render flag. Each host's
+own Normal-earned files admit Extra in a new process. Startup wait rendering
+is outside this route loop; neither all ranks/shots/Continue nor physical
+input/clock/performance follows from this comparison.
+
+Separately, the actual GUI loops used only post-refresh `animated()` to admit
+repainting. Completing startup makes that value false. Logical full/skip
+controls on three hosts distinguish 24,214 stale pixels from the correct
+static menu. Actual Linux SDL event/texture/present callbacks with dummy video,
+and actual Win32 timer/WM_PAINT callbacks in nonactivating offscreen windows,
+reproduce the same old/fixed results: zero versus one final update, 24,214
+versus zero mismatching pixels. The two source variants have identical frame
+observation, video and auto-close adapters; only the public paint gate differs.
+This accepts terminal callback admission, not physical display or performance.
+
+`view.cpp` now retains the pre-refresh animation state alongside the new state.
+All 195 products build in the independent `port64-presentation-v1350` workspace;
+64 contracts pass on GNU8/UBSan/actual Windows. The source bridge checks every
+one of the 467 listed source inputs against current public source. Four previously
+separate note/route controls enter `verify.PORT_FILES` only after all frozen
+writers/readers close. A cold checkout restores the launcher's declared CRLF;
+normalized text is identical to the former live LF copy. Older source/program
+receipts are preserved without restamping. Old v1349 probes replay from their
+archived source snapshots; their profile must not be paired with new source.
+
+Receipts below `.analysis/port64/route-render-v1350/`:
+`aggregate-render-v1.json`, `product-source-bridge-v1.json`,
+`presentation-{linux,ubsan}-receipt-v4.json`,
+`presentation-windows-{receipt,readback}-v5.json`,
+`window-linux-receipt-v2.json`, `window-windows-{receipt,readback}-v2.json`.
+Frozen source/compiler/link metadata and stable controls accompany them.
+`prepare-window-v2.py` derives both observed GUI variants; native/Windows
+launch scripts preserve commands and initial/final physical files. Replays
+require fresh destinations. Source/program production remains separate from
+public route entry and current GUI delivery.
+
+Early probes remain inconclusive: setup completion was not physically saved;
+an imported core omitted its PUBLIC include/GAME/ymfm interface; omitted GCC8
+filesystem linkage crashed before observation; omitted MinGW static runtimes
+failed before entry. Same-object relinks restore canonical dependencies and
+pass. Their failures, sources and link receipts are retained, not rewritten.
+Link-input archives restore exact libraries/object aggregates/failed probes;
+ordinary object/dependency files regenerate from pinned source and flags.
+
+Scoped cleanup retains both 195-program vectors and the independent compiled
+source worktree. Eight fully read-back archives recover seven owned Windows
+stages and static link inputs/failed probes. The first guard rejected four
+protected cache removals; exact stable copies restore them. Its live-log
+immutability error and original failure remain recorded. Fresh
+`retention-receipt-v2.json` checks 13,737 immutable hashes and records 866 stage
+files/1,843 generated files retired, net 1,206,464,512 allocated bytes reclaimed
+(1,150.6 MiB). Existing accepted receipts are never restamped.
+
+Fresh `terminal-readback-v1.json` independently verifies all archive members,
+the 13,737 immutable hashes, both 195-program vectors and compiler/cache/link
+metadata, plus all 467 public/candidate/archive source inputs. Original/current
+music and route receipt links retain their identities after cleanup.
+
+Final root/native CIs and whitespace checks pass. Root also replays the live
+Ghidra database and mutation controls; native private database checks skip
+because that checkout has no database. A separate source-backed post-CI cache
+journal retires 1,037 public Python caches/17,686,528 allocated bytes while
+preserving all 1,037 source hashes.
+
 ## Ordinary key-only logical routes (v1349)
 
 GNU8, optimized UBSan and actual Windows AMD64 each complete the following

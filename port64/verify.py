@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_pmd_note.py",
+    "port64/verify_pmd_note_windows.ps1",
+    "port64/natural_route_probe.inl",
+    "port64/verify_natural_routes.py",
     "port64/verify_resident_sound_join.py",
     "port64/resident_sound_frontend_checks.inl",
     "port64/verify_pmd_resident.py",

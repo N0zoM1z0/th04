@@ -1,6 +1,40 @@
 # Native PMD musical FM state and register requests
 
-## Completed first-load supplied songs (v1349)
+## Complete supplied-song corpus (v1350)
+
+The independent original COM producer closes all 138 driver/song/load cases:
+23 songs for each of PMD/PMD86/PMDB2 at PSP1000/2000, through natural end or
+two global loops, 64 further IRQ3 ticks, stop and eight IRQs. It records
+1,654,542 configured FM/SSG/rhythm/FM3 state/ordered-write rows and 6,652
+direct-service observer crosschecks. Native candidates run 69 unique cases
+per host; each complete stream compares against both original loads. Count
+these as 69 native runs, not 138 executions. GNU8, optimized UBSan and actual
+Windows pass 414 whole decompressed-stream comparisons in aggregate.
+
+Both preserved v1348 programs and the freshly built v1350 product vector pass
+fresh full consumers. Their source/producer identities remain separate:
+original producer `e2bc15f4...`, former product `ba2e5888...`, current 467-input
+product `e6911c41...`. No prefix/cancelled/failure or old executable receipt is
+restamped. All original part9 note/PPS counters stay zero; 92 two-load cases
+retain unowned sample reset writes. The earlier 46 raw prefix observations
+remain target-analysis evidence, separate from these runtime observations.
+This closes the supplied corpus under declared IRQ/DOS/board/absent-resident
+adapters; arbitrary external banks, third-party residents, physical chip
+waveforms and audible output are outside this claim. No audio device exists
+in the current frontend, and all tests remain muted.
+
+Original/current receipts are below `.analysis/port64/game-audio-v1348/`:
+`original-dev-v2/receipt.json`, `aggregate-full-v1.json`,
+`aggregate-current-full-v1.json`, `full-{linux,ubsan}-v1/`,
+`{,current-}full-windows-{receipt,readback}-v1.json`.
+Current native consumers are in `route-render-v1350/current-audio-{linux,ubsan}-v1/`;
+the current product profile stays in the independent presentation workspace.
+All original/watch/full consumers have terminal success. Four deferred controls
+are registered after closure. Restore owned Windows stages from the v1350
+retention journal; keep historical/current source archives distinct and replay
+writers into fresh paths.
+
+## Completed first-load supplied songs (v1349, historical)
 
 All69 first-PSP stock driver/song cases agree on GNU8, optimized UBSan and
 actual Windows:827271 complete configured FM/SSG/rhythm/FM3 state/write rows

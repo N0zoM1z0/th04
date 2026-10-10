@@ -1,5 +1,33 @@
 # TH04 native x64 port
 
+v1350 fixes terminal window repaint admission: retain animation state before
+and after each refresh so the final static OP menu is presented. The old gate
+leaves 24,214 stale pixels; the fixed gate leaves zero and performs one final
+update in actual Linux SDL dummy and Windows offscreen callbacks. Three-host
+logical full/skip controls agree. All 195 programs build from 467 pinned inputs;
+64 contracts pass per host. Four deferred note/route files are now registered
+after every frozen producer/consumer closes. Current source manifest:
+`e6911c41c7092c963b526f0494a1b8544b6cbfad675ce9f50fa1391ebacc2d9b`.
+
+Four ordinary prototype routes also agree with every route refresh painted on
+all three hosts: 270,193 advances, 37 capture files and physical saves per host.
+Complete supplied music closes 138 original cases at two PSPs: each host's 69
+unique native runs compare against both loads, 1,654,542 configured state/write
+rows per host. Fresh current-product replays pass; old receipts remain distinct.
+All part9 note/PPS counters are zero; 92 cases retain unowned sample resets.
+Scope/recovery is in [lifecycle](port64/evidence/stage-lifecycle.md) and
+[music](port64/evidence/pmd-musical-fm.md). New products remain in the isolated
+`port64-presentation-v1350/.analysis/product-v1350/` materialization; source
+bytes agree with this branch. Previous v1348 programs remain preserved.
+
+Public route replay integration, full startup presentation across sound modes,
+remaining ranks/shots/Continue, physical input/refresh/slowdown, dense Lunatic
+performance and a current GUI remain. Audio device output is not implemented;
+verified music control/CPU samples do not accept audible playback. Every launch
+remains muted. No DOS exactness is promoted.
+
+Historical v1349 frontier:
+
 v1349 completes four key-only ordinary logical prototype routes on GNU8,
 optimized UBSan and actual Windows: Reimu Easy/both Normal characters/Reimu
 Extra.270193 route advances/37 capture files perhost and physical saves agree;
