@@ -458,7 +458,7 @@
     "path": "scripts/probes/compare_th04_demo_dgroup.py",
     "category": "runtime",
     "role": "command",
-    "purpose": "Attest nine pool extents and compare every raw actor/effect byte against complete ordinary controls.",
+    "purpose": "Compare complete demo pools and optional attested global states against ordinary trace controls.",
     "purpose_source": "maintained-description"
   },
   {
@@ -3350,6 +3350,13 @@
     "category": "runtime",
     "role": "fixture",
     "purpose": "Read every demo DGROUP at frame-counter writes through natural termination.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_demo_globals.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Attest 22 pointer-free demo state owners using original and linked candidate instruction operands.",
     "purpose_source": "maintained-description"
   },
   {

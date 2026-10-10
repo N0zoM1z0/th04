@@ -23,11 +23,20 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-Development is paused. The standalone DOS game, historical exact acceptance and
-unfinished native x64 port have separate validation scopes. Native source stays
-on `port/modern-64`; the published x64 preview still waits for registration.
+Development is active. All four DOS products build from maintained local source.
+Original and reconstructed DOS now agree across all four bundled demos on
+consumed input, score and RNG, nine complete actor/effect pools, and 22
+Boss/Midboss/player state blocks. These demos exercise Midboss fights; Boss
+combat, death/respawn, VRAM/palette and complete process transitions still need
+paired validation.
 
-- [Done and remaining semantic/x64 work](docs/PORTING_STATUS.md).
+Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
+Normal, Lunatic and Extra clears with registration, physical saves and fresh
+OP/restart checks. Full original-DOS/native state and effect parity, broader
+routes, and physical Windows input/audio acceptance remain open. Historical
+exact acceptance has its own contract; runtime agreement does not promote it.
+
+- [Current DOS/native evidence and remaining work](docs/PORTING_STATUS.md).
 - [DOS build and normal/invincible Windows testing](docs/DOS_BUILD.md).
 - [Reusable PC-98 hardware fixes and measured optimizations](docs/PC98_HARDWARE_REUSE.md).
 - [Script purposes and categorized indexes](scripts/README.md).

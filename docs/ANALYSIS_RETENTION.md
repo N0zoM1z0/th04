@@ -1,5 +1,14 @@
 # Private build and analysis retention
 
+v1368 reuses all immutable v1367 DGROUP streams; no new bulky capture or product
+build. After terminal CI,522 regenerable public Python caches retire8,724,480
+allocated B (about8.3MiB) before journal overhead. All522 retained source hashes
+and49 protected input/product/trace/receipt hashes recheck unchanged; nine
+frozen reader/test inputs and all four complete comparison verdicts also pass
+separate readback. Journals and `final-independent-readback.json` live under
+`.analysis/reconstruction/probes/demo-globals-v1368/`. Streams, prior negative
+evidence and the11MiB cold product cache stay available; native worktree is unchanged.
+
 v1367 retains eight complete DGROUP streams (3996 x65536 B each) using reversible
 XOR/gzip storage, with full original/candidate scalar/caller traces and producer
 source snapshots. All jobs are terminal. Sharing byte-identical immutable HDI/

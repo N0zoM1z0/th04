@@ -5,7 +5,7 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-10. The full native goal remains active on `port/modern-64`, in
+Updated 2026-10-11. The full native goal remains active on `port/modern-64`, in
 `.analysis/worktrees/port-modern-64/`. Root `main` keeps the standalone DOS
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
@@ -99,16 +99,21 @@ transitions. See [DOS/native differential handoff](reconstruction/product/TH04_R
 TH08 is a read-only workflow reference, not TH04 evidence. Its active worktree
 is dirty; do not edit it, run its builds, change its database or launch its game.
 Complete trace/end/input-consumption guards and first-divergence diagnostics
-are the useful parts to adapt. TH04 still lacks complete paired original-DOS /
-reconstructed-DOS gameplay traces; current native host traces do not include
-RNG seed/ring/call-count fields. These are concrete next-work gaps.
+are the useful parts to adapt. All four paired DOS demo traces now pass their
+full input/score/RNG schema, nine raw actor/effect pools and 22 Boss/Midboss/player
+state blocks. Retained DGROUP streams cover3996 updates per demo; scalar traces
+also retain each terminal decision. Boss state stays at setup throughout these
+demos; death and respawn are not exercised. Other globals, Boss combat,
+VRAM/palette and process teardown remain comparison gaps. Current native host
+traces still lack complete RNG seed/ring/call-count fields and paired
+original-DOS gameplay evidence.
 
 ## TODO, in order
 
-1. Establish complete original-DOS versus reconstructed-DOS differential
-   playback from identical data/config/saves and logical input. Begin with the
-   four demos; reject incomplete traces and retain the first score/RNG/state
-   difference with surrounding actor diagnostics.
+1. Extend accepted four-demo original/reconstructed DOS comparison to other
+   global owners, VRAM/palette and process teardown, then recorded ordinary play
+   covering Boss combat and death/respawn. Preserve identical data/config/saves,
+   logical input, complete-trace gates and first-divergence diagnostics.
 2. Extend the same comparison to native x64. Attest input mapping, RNG ring and
    process state, score units, update order and dialogue boundaries; then compare
    rendering/effects, VRAM/palette and save/process transitions.

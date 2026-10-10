@@ -512,6 +512,71 @@ git diff --check
 ```
 
 The Demo1 score/RNG failure is repaired by the Stage4 initialized-state owner.
-Next expand complete actor/effect observations at proved shared boundaries, and ordinary
+Next expand remaining global/presentation/process observations at proved shared boundaries, and ordinary
 movement/Shot/Bomb/hit/death/Continue and complete routes. Commit/push
 root and native changes separately with `gpt-6.1-sol: ...` English messages.
+
+### v1368 pointer-free global state and coverage
+
+Reuse the immutable v1367 streams and their independent ordinary controls;
+no new game launch, product build or bulky capture is needed. Add
+`--global-states` to the complete v1367 comparison command, with a fresh
+`--output` path. The final receipt is
+`.analysis/runtime/candidates/dos-demo-v1368-globals-comparison-final.json`.
+It passes all four demos,3996 updates each, including the previous nine pools,
+graze and post-reset input/Shift plus22 state blocks totaling104 B/update.
+
+`th04_demo_globals.py` pins original Japanese MAIN identity and each actual
+instruction's segment:offset, operand and member addend. Candidate state symbols
+must belong to its MAP's DGROUP, fit the complete extent, and have the equivalent
+decoded instruction operand in the bounded linked code owner. The player and
+Stage4 windows also include their preceding static helpers. The unknown reset
+byte remains `byte_259A7`: original0AAF:594D clears DGROUP4667; candidate
+`shots_reset()` clears DGROUP953F. It does not map to `_shot_last_id`; the
+instruction witness rejects that candidate. No callback/pointer normalization
+or target-derived product code is introduced.
+
+| State | Original DGROUP offset | Candidate DGROUP offset | Bytes |
+| --- | --- | --- | ---: |
+| Boss | 53CA | 4932 | 24 |
+| Boss state bytes | BCDE | 4958 | 16 |
+| Boss hitbox radius | BCF0 | 496A | 4 |
+| Boss timeout | 23ED | 0553 | 1 |
+| Midboss | 53B4 | 8CB2 | 22 |
+| Midboss active | 46B2 | 8CC8 | 1 |
+| Stage4 initialized aim toggle | 185E | 1060 | 1 |
+| Player motion | 464E | 8E14 | 12 |
+| Option current / previous point | 466C /4670 | 8E20 /8E24 | 4 each |
+| Option sprite number | 4674 | 8E28 | 2 |
+| Hit / invincibility / respawn | 4669 /4662 /4663 | 8E2A /8E2B /8E2F | 1 each |
+| Previous input | 464C | 953C | 2 |
+| Power / shot level / shot time / miss time | 4664 /4665 /4666 /466A | 8E2C /8E2D /8E2E /8E30 | 1 each |
+| Laser time / style | 42C8 /42CA | 9527 /9529 | 2 /1 |
+| Unnamed shot reset byte | 4667 | 953F | 1 |
+
+Complete structures include inactive bytes; every difference rejects the demo
+even when bullets/graze agree. Distinct-value and nonzero-frame counts expose
+coverage limits. Boss has only one24-byte value per demo, and timeout/hitbox
+stay at setup; hit/miss/respawn are zero throughout. Boss combat and player
+death/respawn therefore remain unaccepted. Midboss has709/739/482/523 distinct
+records and is active707/737/480/523 frames respectively. Player motion has
+2307/2567/2357/2417 distinct records; Demo2 laser time has192 distinct values
+and3770 nonzero frames. Equality of a constant setup field is not a combat test.
+
+Ownership, coverage and nine frozen reader/test inputs are under
+`.analysis/reconstruction/probes/demo-globals-v1368/`. Twelve new public test
+groups mutate each104 state bytes, original/candidate opcode/operand/immediate,
+member addend, symbol/segment/extent and complete code window. A byte pattern
+embedded across other instructions is rejected. Existing observer/trace gates
+remain mandatory. Runtime evidence is DOSBox-X-specific and cannot promote
+historical exactness or establish original/native parity. Native remains at
+`06922ce`, unchanged. README/PORTING_STATUS now describe active work and the
+actual separate DOS/native frontiers.
+
+Final `python3 scripts/ci.py` passes389 public tests, complete tracking/catalog
+checks,20-target calibration and live Ghidra attestation/mutation controls;
+`git diff --check` passes. Its log is `demo-globals-v1368/root-ci.log`.
+Post-CI cleanup retires522 source-backed Python caches, reclaiming8,724,480
+allocated B before journals. A separate reader checks every retained source,
+49 protected hashes, nine frozen reader inputs and complete comparison hashes;
+`final-independent-readback.json` passes. No observed stream or build cache retires.

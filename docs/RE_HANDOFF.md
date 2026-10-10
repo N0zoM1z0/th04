@@ -5,25 +5,26 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1367 expands DOS demo comparison to nine complete raw actor/effect pools.
-All four demos pass3996 updates each: all24952 pool bytes per update, graze and
-post-reset input/Shift are identical, including inactive/unused/script-offset
-bytes. Each full scalar/caller trace remains byte-identical to its independent
-ordinary parent; the paired consumed-input/score/RNG schema still passes all
-15988 boundaries. GDB stores full DGROUP streams for later global-state owners.
-The prior Stage4 DATA1 repair remains; no product rebuild/source fix is needed.
-Original/candidate snapshots use load10FC, DGROUP3230/34F7 and separately frozen
-consumer v2/v3 inputs. Warm BSS startup and post-reset input reader failures are
-retained with bounded corrections. Nine pool extents are checked against target
-CIRCLE_TEXT0AAF:73DB..74A5 and candidate MAP/actual clear calls.
-No historical exact state changes or native worktree writes. Boss/player/global
-state, VRAM/palette, teardown and full x64/cross-emulator fidelity remain open.
-Final CI passes377 public tests and live Ghidra/mutation controls;40 new
-observer/reader controls pass. Final cleanup reclaims140,111,872 allocated B
-(about134MiB) before journal overhead, retaining/recovering all observed bytes.
-All muted one-CPU/nice15 capture jobs are terminal. Evidence and recoverable
-negative streams remain; immutable copy deduplication and reversible delta
-retention reduce storage. Final CI/retention details are in the focused note.
+v1368 extends retained DOS demo evidence to22 pointer-free Boss/Midboss/player
+state blocks (104 B/update). All four demos pass3996 updates each, alongside
+the nine complete raw pools (24952 B/update), graze and post-reset input/Shift.
+Original target instruction operands and decoded candidate instructions/MAP
+attest each new state owner. Coverage is explicit: Midboss/motion/shot timers
+change; Demo2 exercises laser time/style. Boss stays at setup, and no demo
+exercises hit/death/respawn. Callback pointers and other globals remain open.
+README now states active development and separates current native source/route
+evidence from historical exact acceptance. PORTING_STATUS no longer claims
+complete paired DOS demo traces are absent.
+No product rebuild, new bulky capture, native worktree write or exact promotion.
+All v1367 streams/ordinary parents retain their identities; runtime load10FC,
+DGROUP3230/34F7 and archived executed consumers v2/v3 remain separate from the
+current reader. Original/reconstructed scalar traces still cover15988 boundaries.
+VRAM/palette, teardown, ordinary Boss/death play, x64 and cross-emulator fidelity
+remain open. Replay/coverage/CI/retention details are in the focused note.
+Final CI passes389 public tests,20-target calibration and live Ghidra/mutation
+controls;12 new global-state test groups pass. All reader/capture jobs are terminal.
+Post-CI cleanup retires522 regenerable caches/8,724,480 allocated B (about8.3MiB)
+before journals; all source and49 protected hashes recheck unchanged.
 Current commit identities are obtained with `git log -1` in each worktree.
 
 Updated 2026-10-11. Current focus: complete DOS actor/presentation/process
@@ -40,7 +41,7 @@ reproduced differential or a concrete portable owner, not a general rename pass.
 | Historical reconstruction | OP 93/93, MAIN 493/495, MAINE 72/72, ZUN 3/3 accepted authored functions | [Generated progress](PROGRESS.md), acceptance ledgers |
 | Standalone DOS PC-98 game | Four products build from maintained local source without master.lib or ReC98 product includes; repaired normal and invincible variants | [DOS operation](DOS_BUILD.md), [hardware findings](PC98_HARDWARE_REUSE.md) |
 | Semantic DOS source | Asset, memory, input/timing, scroll, bullet/VM/shot/item, RNG, score and process contracts clarified | [Semantic summary](SEMANTIC_READABILITY.md) |
-| Linux/Windows x64 | Separate `port/modern-64` branch; component-tested normal stages and cutscenes; complete game still unfinished | [Port status and TODO](PORTING_STATUS.md) |
+| Linux/Windows x64 | Separate `port/modern-64` branch; scoped GNU Reimu A Normal/Lunatic/Extra clear/save/restart routes plus component Oracles; full fidelity still open | [Port status and TODO](PORTING_STATUS.md) |
 
 Function acceptance is not whole-file exactness. OP/MAINE/ZUN counts cover
 recovered payload functions, not original packed-file extents. MAIN's carpet
@@ -50,6 +51,12 @@ native fixes or this runtime batch. Targets remain
 
 ## DOS verification frontier
 
+- v1368 accepts22 raw global-state blocks across all15984 demo updates, with
+  instruction witnesses and distinct-value/nonzero coverage. Complete24-byte
+  Boss and22-byte Midboss,12-byte player motion, options and timers match.
+  Boss combat/death/respawn are unexercised; callback addresses are excluded,
+  never masked. Replay adds `--global-states` to the v1367 reader recipe;
+  receipt `dos-demo-v1368-globals-comparison-final.json` retains all raw hashes.
 - v1367 full raw pool reader accepts all15984 updates across four original/
   ordinary demos. Shots/enemies/sparks/bullets/custom_entities/circles/items/
   pointnums/gather pools cover24952 B per update, plus graze and post-reset

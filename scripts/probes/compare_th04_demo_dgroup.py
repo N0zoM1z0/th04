@@ -132,6 +132,8 @@ def summarize_pair(original, candidate, original_offset, candidate_offset, graze
     other = {name: dict(differing_frames=0, first_difference=None,
                        original_hash=hashlib.sha256(), candidate_hash=hashlib.sha256())
              for name, *_ in pools}
+    coverage = {name: dict(original=set(), candidate=set(), original_nonzero=0, candidate_nonzero=0)
+                for name, _, _, slots, stride in pools if slots*stride <= 32}
     for (frame, a), (other_frame, b) in zip(original, candidate, strict=True):
         require(frame == other_frame, 'paired DGROUP frame boundary mismatch')
         for name, left_offset, right_offset, slots, stride in pools:
@@ -141,6 +143,12 @@ def summarize_pair(original, candidate, original_offset, candidate_offset, graze
             row = other[name]
             row['original_hash'].update(left)
             row['candidate_hash'].update(right)
+            if name in coverage:
+                seen = coverage[name]
+                seen['original'].add(bytes(left))
+                seen['candidate'].add(bytes(right))
+                seen['original_nonzero'] += any(left)
+                seen['candidate_nonzero'] += any(right)
             if left != right:
                 row['differing_frames'] += 1
                 if row['first_difference'] is None:
@@ -178,6 +186,12 @@ def summarize_pair(original, candidate, original_offset, candidate_offset, graze
         row.update(passed=row['first_difference'] is None, updates=count, bytes_per_frame=slots*stride,
                    original_pool_sha256=row.pop('original_hash').hexdigest(),
                    candidate_pool_sha256=row.pop('candidate_hash').hexdigest())
+        if name in coverage:
+            seen = coverage[name]
+            row['coverage'] = dict(original_distinct_values=len(seen['original']),
+                                   candidate_distinct_values=len(seen['candidate']),
+                                   original_nonzero_frames=seen['original_nonzero'],
+                                   candidate_nonzero_frames=seen['candidate_nonzero'])
     all_pools_passed = all(r['passed'] for r in other.values())
     return dict(passed=first is None and all_pools_passed, bullets_graze_passed=first is None,
                 updates=count, differing_frames=differing_frames,
@@ -186,7 +200,7 @@ def summarize_pair(original, candidate, original_offset, candidate_offset, graze
 
 
 def compare(original: Path, candidate: Path, original_full: Path, candidate_full: Path,
-            map_path: Path, original_consumer: Path, candidate_consumer: Path):
+            map_path: Path, original_consumer: Path, candidate_consumer: Path, global_states=False):
     a, ap, ad = read_side(original, original_full, original_consumer)
     b, bp, bd = read_side(candidate, candidate_full, candidate_consumer)
     for name in PAIR_PINS:
@@ -202,6 +216,12 @@ def compare(original: Path, candidate: Path, original_full: Path, candidate_full
             'bullet/graze symbols outside DGROUP')
     pool, graze = symbols['_bullets'][1], symbols['_stage_graze'][1]
     pools = attest_pools(a, b, symbols, bp['dgroup'])
+    witnesses = []
+    if global_states:
+        from th04_demo_globals import attest_fields
+        states, witnesses = attest_fields(Path(a['main_path']).read_bytes(),
+                                         Path(b['main_path']).read_bytes(), symbols, bp['dgroup'])
+        pools.extend(states)
     af, bf = ({name: (offset, size) for name, offset, size in profile['fields']}
               for profile in (ap, bp))
     for name in ('input', 'shift_raw'):
@@ -214,6 +234,10 @@ def compare(original: Path, candidate: Path, original_full: Path, candidate_full
         original_receipt_sha256=sha((original / 'receipt.json').read_bytes()),
         candidate_receipt_sha256=sha((candidate / 'receipt.json').read_bytes()),
         ordinary_controls_passed=True, demos={})
+    if global_states:
+        result['scope'] += '; 22 pointer-free boss/midboss/player state blocks'
+        result['global_instruction_witnesses'] = witnesses
+        result['excluded_global_state'] = ['callback/code pointers', 'other global owners']
     for number in range(1, a['demos']+1):
         demo = summarize_pair(iter_side(original, number, ap, ad), iter_side(candidate, number, bp, bd),
                               0x5a22, pool, 0xbcbc, graze, pools)
@@ -228,10 +252,11 @@ def main() -> int:
         parser.add_argument('--'+name, type=Path, required=True)
     parser.add_argument('--original-consumer', type=Path, default=Path(__file__).parent)
     parser.add_argument('--candidate-consumer', type=Path, default=Path(__file__).parent)
+    parser.add_argument('--global-states', action='store_true', help='also attest and compare 22 scalar/structure owners')
     args = parser.parse_args()
     try:
         result = compare(args.original, args.candidate, args.original_full, args.candidate_full,
-                         args.map, args.original_consumer, args.candidate_consumer)
+                         args.map, args.original_consumer, args.candidate_consumer, args.global_states)
     except (ValueError, KeyError, OSError, TypeError, IndexError, EOFError) as error:
         result = dict(passed=False, invalid_capture=str(error), accepts_exact=False)
     args.output.write_text(json.dumps(result, indent=2)+'\n')
