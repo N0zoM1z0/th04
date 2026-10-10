@@ -5,6 +5,33 @@ not a guarantee that its expanded directory remains present. Durable commands,
 hashes, conclusions and negative results belong in checked-in notes/ledgers.
 A verified private archive supplies recovery where the input cannot be rebuilt.
 
+The v1351 public-entry batch preserves its closed v1 source/program vector,
+four-route three-host captures/physical files, rejected wrong-shot attempt and
+separate corrected-source GNU Hard B observations. Final source uses a distinct
+`port64-routes-v1351-fix` compiled materialization; keep both worktrees and their
+source/compiler/CMake/link identities. Original music and previous vectors
+remain unchanged.
+
+Two full-member recovery archives under native
+`.analysis/port64/public-routes-v1351/` precede retirement of 199 terminal
+Windows-contract stage files and 1,145 generated object/dependency/library
+files. The scoped net reclamation is 571,826,176 allocated bytes (545.3 MiB).
+Independent `retention-readback-v1.json` checks 2,942 protected files and every
+archive member. Live route stages, programs, inputs, captures and saves remain.
+Public-source protection refers to the cleanup interval; authorized later
+edits use the preserved producer snapshots and never restamp older receipts.
+
+The second v1351 pass preserves two separate recovery archives before retiring
+215 closed contract/short-shot Windows stage files and 1,145 generated files.
+`retention-readback-v2.json` independently checks 2,941 protected hashes and
+all 286 archive members. It reclaims 586,735,616 allocated bytes net, bringing
+both passes to 1,158,561,792 bytes (1,104.8 MiB). Final four-route writers have
+closed; their complete captures, physical saves and both product vectors remain.
+Both CIs pass. Post-CI cleanup additionally retires 1,012 public source-backed
+Python cache files and checks all 1,012 sources, reclaiming 16,347,136 allocated
+bytes net after journal overhead. Its journal/receipt is below
+`.analysis/cleanup/public-entry-post-ci-caches-v1351{,-before}.json`.
+
 The v1350 terminal music/window batch retains both old and current 195-program
 vectors, all original and native full-song traces, route captures, physical
 saves, frozen sources, compiler/CMake/link identities and negative controls.
