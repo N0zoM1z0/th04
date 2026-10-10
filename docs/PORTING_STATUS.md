@@ -25,13 +25,31 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
+v1362 adds optional `--bomb-policy rescue` to the ordinary private-Xvfb adaptive
+input controller. The preceding failed trace has seven early-hit samples with
+Bomb1 and no X. Maintained lifecycle source permits cancellation while miss_time>32;
+advice suppresses X during invincibility. Post-update respawn65..71 is inferred
+from the 72/40 countdown/update order. This is an input-policy gap, not a proved
+game defect. Read-only replay requests X in all seven samples and77 last-life
+samples; nine resource/window mutants and a pre-display CLI guard pass.
+
+Only the Python controller changes:491-input consumer `d25ba16e…` archives and
+reads back; all compiled inputs remain485/00af24f7. New muted GNU Lunatic/ReimuA/
+Turbo0 candidate is live on private Xvfb (tool4230, controller484288/game484320,
+Xvfb484274). Full clear/physical rename/Scores restart/complete clock and dense
+>=320/>=400 slowdown2 gates are unchanged and pending. Inspect native
+`.analysis/port64/bomb-input-v1362/active-job-v2.json` with /proc start ticks/argv
+before polling; keep pinned helpers unchanged until terminal. No Windows GUI,
+host keys or physical audio device opens.
+
+
 The v1360 GNU Turbo0/ReimuA candidate is terminal and failed the true-clear
 gate. Complete trace has88,267 refreshes: six stages reached, Final Stage last
 frame11,267/miss13/respawn33/invincibility154 immediately enters MAINE; all physical
 masks remain0x19. No all-clear/complete dense-route acceptance. Inner Bad Ending
 is source-routed/inferred. Separate new private Scores reader passes795 refreshes
 with unchanged physical hashes/zeroaudio; the original failed controller never
-started its own reader. All owned jobs are now terminal.
+started its own reader. The original v1360 jobs are terminal.
 
 Within this failed candidate, natural>=320 has416 samples/206 slowdown2 and
 >=400 has125/63. Complete deadline/terminal reduction passes; >=400 update
