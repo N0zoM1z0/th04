@@ -246,16 +246,19 @@ int main(int argc, char** argv) {
         std::string hdi, archive, member, output, title_screenshot;
         std::string options_screenshot, character_screenshot, shot_screenshot;
         std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots,ending_screenshots,font_bitmap;
-        bool title_window = false,muted=true;
+        bool title_window = false,muted=true,audio_requested=false,mute_requested=false,offline_requested=false;
         std::string pmd_driver="pmd",opna_rom,resident_sound_checks;
         std::string configuration_checks,setup_checks,sound_checks,sound_scene_checks,startup_checks,natural_route_checks;
         std::string save_directory,registration_checks,gameover_checks,score_route_checks,bomb_checks,extra_checks,mugetsu_checks,gengetsu_checks,extra_clear_checks,extra_maine_checks,op_score_checks,op_ranking_checks,op_music_checks,demo_checks;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
             if (arg == "--title") { title_window = true; continue; }
-            if (arg == "--mute") { muted=true;continue; }
+            if (arg == "--mute") { mute_requested=true;continue; }
+            if (arg == "--audio") { audio_requested=true;continue; }
             require(i + 1 < argc, "each option needs a value");
             const std::string value = argv[++i];
+            if(arg.find("-checks")!=std::string::npos || arg.find("-screenshot")!=std::string::npos ||
+               arg=="--member" || arg=="--output")offline_requested=true;
             if (arg == "--hdi") hdi = value;
             else if(arg=="--pmd-driver")pmd_driver=value;
             else if(arg=="--opna-rom")opna_rom=value;
@@ -321,6 +324,8 @@ int main(int argc, char** argv) {
                 "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE] [--save-dir DIR] [--registration-checks DIR] [--gameover-checks DIR] [--sound-checks DIR] [--score-route-checks DIR] [--resident-sound-checks DIR] [--startup-checks DIR] [--natural-route-checks DIR] [--pmd-driver pmd|pmd86|pmdb2|none] [--opna-rom FILE] [--mute]]");
         require(natural_route_checks.empty() || (!title_window && startup_checks.empty() && !hdi.empty() && !save_directory.empty()),
                 "natural routes require headless --hdi and --save-dir without --startup-checks");
+        muted=!audio_requested || mute_requested;
+        require(muted || (title_window && !offline_requested),"--audio requires an interactive --title; diagnostics must remain --mute");
         const auto par = hdi.empty() ? read_file(archive) : Fat12(read_file(hdi)).op_archive();
         require(pmd_driver=="none" || pmd_driver=="pmd" || pmd_driver=="pmd86" || pmd_driver=="pmdb2","PMD driver must be none, pmd, pmd86 or pmdb2");
         require(opna_rom.empty() || pmd_driver=="pmd86" || pmd_driver=="pmdb2","rhythm ROM belongs to an OPNA profile");

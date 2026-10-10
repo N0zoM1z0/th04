@@ -14,6 +14,14 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_audio_output.py",
+    "port64/audio_output.hpp",
+    "port64/audio_output.cpp",
+    "port64/audio_device.hpp",
+    "port64/audio_device_api.hpp",
+    "port64/audio_device.cpp",
+    "port64/audio_output_contracts.cpp",
+    "port64/audio_device_contracts.cpp",
     "port64/verify_pmd_note.py",
     "port64/verify_pmd_note_windows.ps1",
     "port64/natural_route_probe.inl",

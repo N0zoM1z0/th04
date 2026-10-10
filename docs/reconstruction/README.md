@@ -14,6 +14,11 @@ source evidence.
 
 ## Current open questions
 
+- [Native host PCM output](../port64/evidence/audio-output.md) — v1353 production
+  transport and fake-API/frontend verification; physical audio/timing/Lunatic
+  performance/current GUI remain. Current overall frontier is [PORT64](../PORT64.md).
+
+
 - [FM3 subtrack/slot ownership](../port64/evidence/pmd-fm3.md) — v1345 bounded C6/CF/C7/C8/shared pitch/effect release; PPS/external ADPCM/startup/natural routes/timing remain.
 
 - [Primary FM feedback/operator controls](../port64/evidence/pmd-musical-fm.md#primary-feedback-and-operator-total-level-controls) — v1344 B6/B8 corpus closes; v1345 FM3 ownership is routed separately above.

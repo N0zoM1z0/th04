@@ -22,6 +22,7 @@ add_library(
   sound_control.cpp
   beeper.cpp
   sound_runtime.cpp
+  audio_output.cpp
   sound_scenes.cpp
   pmd_sequence.cpp
   pmd_ssg_effects.cpp
@@ -125,13 +126,19 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_L
   target_link_libraries(th04-portable-core PUBLIC stdc++fs)
 endif()
 
-add_executable(th04-port64 main.cpp view.cpp)
+add_executable(th04-port64 main.cpp view.cpp audio_device.cpp)
 target_compile_features(th04-port64 PRIVATE cxx_std_17)
 target_link_libraries(th04-port64 PRIVATE th04-portable-core)
 
 add_executable(th04-port64-setup-contracts op_setup_contracts.cpp)
 target_link_libraries(th04-port64-setup-contracts PRIVATE th04-portable-core)
 enable_testing()
+add_executable(th04-port64-audio-output-contracts audio_output_contracts.cpp)
+target_link_libraries(th04-port64-audio-output-contracts PRIVATE th04-portable-core)
+add_test(NAME audio-output-contracts COMMAND th04-port64-audio-output-contracts)
+add_executable(th04-port64-audio-device-contracts audio_device_contracts.cpp audio_device.cpp)
+target_link_libraries(th04-port64-audio-device-contracts PRIVATE th04-portable-core)
+add_test(NAME audio-device-contracts COMMAND th04-port64-audio-device-contracts)
 add_test(NAME setup-contracts COMMAND th04-port64-setup-contracts)
 add_executable(th04-port64-sound-contracts sound_control_contracts.cpp)
 target_link_libraries(th04-port64-sound-contracts PRIVATE th04-portable-core)
@@ -261,11 +268,13 @@ if(MINGW)
   target_link_options(th04-portable-core INTERFACE -static -static-libgcc -static-libstdc++)
 endif()
 if(WIN32)
-  target_link_libraries(th04-port64 PRIVATE user32 gdi32)
+  target_link_libraries(th04-port64 PRIVATE user32 gdi32 winmm)
+  target_link_libraries(th04-port64-audio-device-contracts PRIVATE winmm)
 else()
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
   target_link_libraries(th04-port64 PRIVATE PkgConfig::SDL2)
+  target_link_libraries(th04-port64-audio-device-contracts PRIVATE PkgConfig::SDL2)
 endif()
 
 enable_testing()

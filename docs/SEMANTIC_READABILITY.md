@@ -1,5 +1,12 @@
 # Semantic readability before the native port
 
+General semantic expansion has reached its stopping condition for the native
+owners. Resume only for a concrete port blocker. Current native routes,
+Continue and CPU music have separately scoped verification; v1353 adds host
+transport tested with explicit fake APIs, with physical devices unopened.
+See [current native frontier](PORT64.md) and
+[output ownership](port64/evidence/audio-output.md).
+
 The `semantic/readable` branch starts from the latest local DOS `main`,
 commit `8d20492`. It improves the maintained source while retaining a DOS
 build as the behavioral baseline for future Linux/Windows x64 work. The

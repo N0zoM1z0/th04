@@ -1,5 +1,49 @@
 # TH04 native x64 port
 
+Both final CIs pass, including root live Ghidra replay/mutations. Final readback
+checks 8,640 retained hashes. Post-CI cleanup separately retires 1,014 public
+source-backed Python caches and preserves their source hashes, reclaiming
+16,433,152 allocated bytes net. Cache journal/receipt:
+root `.analysis/cleanup/audio-output-post-ci-caches-v1353{,-before}.json`.
+
+v1353 adds production host PCM transport: SDL queued audio on Linux and
+WinMM owned buffers on Windows. The existing runtime remains the only sound
+clock. Resident PMD submits its final mixed stereo once; the nonresident path
+copies mono to both channels. The application owns one lazy device across
+scene changes. A bounded 200 ms queue drops excess host output without changing
+game state; output failure disables retries and gameplay continues.
+
+The default remains muted. Interactive `--title --audio` explicitly enables
+output; `--mute` dominates `--audio` in either order. Unmuted diagnostics reject
+before asset/save/backend entry. Every verification launch remains muted;
+backend tests supply every API through a fake table, and frontend transport
+uses explicit fake factories. No physical audio backend/device was opened.
+Audible output, device latency and dense Lunatic performance are unverified.
+
+All 201 AMD64 programs build cold from 475 maintained inputs. GNU8, optimized
+UBSan and actual Windows pass 66 contracts per host. Three driver profiles by
+nine BGM/SE settings compare all 195 existing frontend files per host with the
+preceding GNU producer. PCM identity, mono fallback, mute, repaint and
+OP/MAIN/declared MAINE/fresh-OP ownership checks pass. Two ordinary Continue
+regressions preserve all 16 capture files and physical final saves per host.
+The preceding 103 core objects are raw-equal on GNU and MinGW; the new transport
+adds one core object. Three wrong transport variants and four early CLI controls
+reject. Final source manifest:
+`95ce37f3cfd2a17ec3547e38f5aae71226b2616623e0a79b6cada1772f66ec36`.
+
+The initial MinGW test typedef failure and Windows mutable-save input-plan
+rejection remain distinct failed receipts; fresh corrected runs pass. Detailed
+ownership/replay is in native `docs/port64/evidence/audio-output.md`, with
+private receipts under `.analysis/port64/audio-output-v1353/`.
+
+Remaining: full startup across sound modes, other rank/shot/Continue routes,
+physical input/refresh/slowdown, dense Lunatic timing/performance, physical audio
+output and a current GUI package. Earlier complete-route/music corpora retain
+their own producer identities. Last installed native GUI remains v1296;
+no DOS exactness or full-goal acceptance follows.
+
+Historical v1352 frontier:
+
 v1352 closes ordinary Continue on GNU8, optimized UBSan and actual Windows.
 The maintained route plan accepts optional `pilot=1`: stationary held shot,
 with ordinary dialog/menu keys and no actor, hit or life-state writes. Physical

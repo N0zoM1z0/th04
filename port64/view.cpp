@@ -17,6 +17,7 @@
 #include "configuration.hpp"
 #include "op_score.hpp"
 #include "gameover_render.hpp"
+#include "audio_device.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -49,6 +50,7 @@ namespace gameplay = th04::portable::gameplay;
 namespace sprite = th04::portable::sprite;
 namespace player = th04::portable::player;
 namespace sound = th04::portable::sound;
+namespace audio = th04::portable::audio;
 namespace stage = th04::portable::stage;
 namespace shot = th04::portable::shot;
 namespace bullet = th04::portable::bullet;
@@ -1308,13 +1310,23 @@ public:
             },[this](application::Program p,std::uint32_t generation,const std::vector<std::int16_t>& values) {
                 if(p==application::Program::main && sound_samples_)sound_samples_(values);
                 if(sound_scene_samples_)sound_scene_samples_(p,generation,values);
-            },resident,[this](auto p,auto g,const auto& values){if(sound_stereo_samples_)sound_stereo_samples_(p,g,values);});
+                if(audio_output_ && !sound_timeline_->resident())audio_output_->mono(values);
+            },resident,[this](auto p,auto g,const auto& values){
+                if(sound_stereo_samples_)sound_stereo_samples_(p,g,values);
+                if(audio_output_)audio_output_->stereo(values);
+            });
         if(mode_==gameplay::Mode::actor_control)std::cout<<"MAIN fixture mode=actor-control (hit consumption disabled)\n";
         if (main_assets && !main_assets->reimu.empty()) {
             sprites_ = std::make_unique<MainSprites>(*main_assets);
         }
     }
 
+    void enable_audio_output(audio::Factory factory=[] {return audio::platform_device();}) {
+        require_view(assets_ && !audio_output_,"audio output requires one application owner");
+        audio_output_=std::make_unique<audio::Output>(assets_->muted,std::move(factory),
+            [](const std::string& message){std::cerr<<"Audio output disabled: "<<message<<'\n';});
+    }
+    const audio::Statistics& audio_statistics() const {return audio_output_->statistics();}
     void enable_ending() { enable_stage6();continue_ending_=true; }
     void enable_staff_roll() { enable_ending();continue_staff_=true; }
     void enable_verdict() { enable_staff_roll();continue_verdict_=true; }
@@ -2350,6 +2362,7 @@ private:
     bool extra_ = false;
     std::unique_ptr<MainSprites> sprites_;
     std::unique_ptr<gameplay::State> main_;
+    std::unique_ptr<audio::Output> audio_output_;
     std::shared_ptr<sound::Runtime> sound_;
     std::unique_ptr<sound::Timeline> sound_timeline_;
     sound::SceneSink sound_scene_observer_;sound::Timeline::Samples sound_scene_samples_;
@@ -2408,7 +2421,7 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
         return front_end.input(pressed);
@@ -2587,7 +2600,7 @@ void show_window(
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
-    front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing();
+    front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing();
     auto next_tick = Clock::now() + frame_period;
     bool running = true;
     bool dirty = true;
