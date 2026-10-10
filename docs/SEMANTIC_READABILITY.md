@@ -50,7 +50,11 @@ re-attested. See the notes and `config/evidence.csv` for the failed commands.
 Primary native FM B6/B8 controls (v1344) and FM3 extra tracks, slot ownership,
 detunes and special pitch (v1345) have three-host original-driver corpora.
 OP logo/title control and muted frontend startup are joined under bounded
-controls (v1346). See native `docs/port64/evidence/pmd-fm3.md`,
+controls (v1346). The longer stock-song probe found a concrete octave-underflow
+port blocker; v1348 recovers shared FM/SSG byte rotation with three-host
+arithmetic and full boundary-request controls. Its full song aggregate remains
+live. See native `docs/port64/evidence/pmd-musical-fm.md`,
+`docs/port64/evidence/pmd-fm3.md`,
 `docs/port64/evidence/op-startup.md` and [port status](PORTING_STATUS.md).
 
 - Resolve only ambiguities blocking remaining native PPS/external ADPCM,

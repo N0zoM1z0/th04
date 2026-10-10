@@ -1,5 +1,21 @@
 # Semantic and x64 port status
 
+v1348 repairs FM/SSG note rotation after a real ST00B octave-underflow mismatch.
+Three hosts match457728 original arithmetic calls/3600 complete legal boundary
+rows; three source-only variants reject.195programs rebuild;64contracts pass
+perhost. GNU/UBSan regress194238 prior rows/21103632 resident PCM frames.
+Current muted frontends produce336 matching files perhost and matching physical
+saves; actual Windows additionally matches two complete first-load ST00B
+cases/25626rows. The138case original song producer remains live; no complete
+music or unused PPS/PCM/ADPCM claim follows from its prefix.
+463 listed inputs bind product manifest
+`ba2e588853f852fa5a02886b03383ea25d7664fb5f2eeb75a1d608cef000d845`;
+two note verifiers remain independently pinned until the live tool freeze closes.
+Receipts: native `.analysis/port64/game-audio-v1348/`; replay/ownership:
+native `docs/port64/evidence/pmd-musical-fm.md`. Full song/audio usage closure,
+startup integration, natural routes, host timing/performance and new GUI remain.
+All launches stay muted; DOS acceptance is unchanged.
+
 v1347 closes the recorded independent startup pixel corpus:15 cases/5,879
 complete two-page/raw-palette/DAC/shown-RGB frames agree on GNU8, optimized
 UBSan and actual Windows.94,400 original clipped SUPER executions and4,311
@@ -22,7 +38,7 @@ reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
 integration, PPS/external ADPCM, natural routes,
 host timing and new GUI delivery remain open. No DOS exactness is promoted.
 
-Current v1346 native source manifest:
+Historical v1346 native source manifest:
 `b62c3026fcfa814ccce48906485e6c191c51c760486455421b04fee3c2aaf61f`.
 Receipts: native `.analysis/port64/startup-v1346/`; ownership and replay:
 native `docs/port64/evidence/op-startup.md` on `port/modern-64`.

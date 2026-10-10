@@ -339,3 +339,39 @@ regenerated source-backed caches/17,657,856allocated bytes and verifies4,235
 protected hashes, including all195 current programs. The earlier periodic
 cache retirement and this regenerated-cache retirement are not added together
 as a net end-to-end reduction.
+
+## Shared PMD note rotation, v1348
+
+Native `.analysis/port64/game-audio-v1348/` retains the closed three-host note
+matrix/boundary corpus, old failure/cancelled terminal-predicate logs, current
+463-input/195-program profiles and separately pinned note verifiers. The full
+`original-dev-v2` song producer and `watch-linux-v2` remain live and excluded.
+Do not modify their frozen public Python/PowerShell tools or accepted captures.
+
+`retention-note-before-v1.json` and `retention-note-receipt-v1.json` verify4652
+protected files, retire1320 terminal stage/mutant/native intermediate files and
+share679 whole-byte-identical completed outputs. Three archives pass full
+member/size/mode/hash readback. This cleanup scope reclaims1237872640 allocated
+bytes net of archive/journal overhead (about1180.5MiB), while current programs,
+sources, compilers/cache-link identities and original references remain.
+This is a scoped cleanup measurement, not whole-turn disk usage while the
+excluded original producer continues writing.
+
+`note-windows-stage-recovery-v1.tar.gz` and
+`frontend-windows-stage-recovery-v1.tar.gz` recover the two owned NTFS roots
+recorded in their stage JSON files. Restore only into absent owned roots or
+generate fresh plans/stages. `note-counterproof-programs-recovery-v1.tar.gz`
+recovers the six private mutant programs; sources/commands/matrices remain.
+The previous195v1346 programs separately recover from
+`retired-v1346-products-v1.tar.gz`, whose complete members were checked before
+the rebuild. CMake regenerates removed.o/.obj/.a from the current source
+archive/profile. Shared captures are immutable; future writers use fresh paths.
+
+Fresh `note-terminal-readback-v1.json` rechecks current product/source/compiler
+identities, closed original/native/Windows note captures and all four recovery
+archives (907 members including the old195programs) after cleanup. Both root
+and native final CI pass; root Ghidra database replay/mutation smoke passes.
+`root-cache-retention-before-v1.json`/`root-cache-retention-receipt-v1.json`
+then retire507 regenerated source-backed root CI caches (8503296 allocated
+bytes). This cache observation is separate from the native scoped net figure;
+live native writers/toolchain caches remain excluded.
