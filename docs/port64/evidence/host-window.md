@@ -1,5 +1,78 @@
 # Host window admission and input
 
+## Current terminal frontier and handoff (v1364)
+
+The v1362 rescue trial is terminal, not running: GNU Reimu A/Lunatic/Turbo0
+passes complete route and dense slowdown gates through an independent reader.
+88,249 route and792 separate Scores refreshes cover all six stages/credit0,
+registration Esc/fresh OP, real selected-section3 mask1 at physical rename and
+final file, unchanged nine other partitions/CFG and complete deadline traces.
+Final MAIN stage5/frame13,649/lives7/misses6/score units5,597,294.
+No Game Over/Continue. Physical SCR SHA-256:
+`e0064bcbc2896b920c72ebe293cc21b1189be96763e07bb56998ab6ebc8caadd`.
+
+Natural max439 bullets; >=320 has571 refreshes/287 slowdown2 and >=400 has
+240/129. At >=400, update P95/P99/max are6.606381/8.501470/13.366383ms and
+none exceeds its own admission period. Whole-route advance maximum24.23ms is
+outside that dense subset. Every route/restart audio-open count is zero.
+These are instrumented private-Xvfb/shared-WSL observations, not physical
+display/Windows/uninstrumented performance or original complete parity.
+
+Exactly two actual ordinary X cancellations occur in Stage4:
+seq64078->64079/frame10,967->10,968 and
+seq65487->65488/frame12,376->12,377. Each has respawn71->0, stock2->1,
+Bomb active/invincibility255, unchanged misses and a matching recorded
+early-hit policy request/XTest action. No last-life proactive request occurs;
+that branch retains dry controls only. This is not a causal old/new replay.
+
+Completed source remains consumer491/d25ba16e. Full route receipt SHA-256:
+`9f1138f750a683933c0ce7ea31e86d12b25d7749fbb6265a9c01b795754c87f4`.
+Independent natural reader and actual cancellation readback are in
+`.analysis/port64/bomb-input-v1362/`; raw trace and separate restart stay under
+`gnu-lunatic-reimu-a-turbo0-rescue-v1/`.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 port64/verify_natural_slowdown.py \
+  .analysis/port64/bomb-input-v1362/gnu-lunatic-reimu-a-turbo0-rescue-v1 \
+  --exe-sha256 dbe172259122af8675c1f995933eefd75234f50b72f3459fdeeded49e5ff46e7 \
+  --output FRESH_READER_RECEIPT.json
+```
+
+Separate bounded ordinary OS probes in `bomb-window-v1364/` pass:
+`linux-early-v1/` has1,039 refreshes and frame394 hit cancelled by X at395;
+`linux-late-v2/` has1,048 refreshes and closed-window X at401 rejected through
+404 (stock2, Bomb inactive, miss1, respawn61). Both complete their deadlines,
+exit normally via host Escape and preserve CFG without opening audio. The
+independent readback rechecks all raw rows, actions, source/archive members and
+physical files. These bounded probes do not accept a full fresh-OP route.
+
+The initial `linux-late-v1/` remains failed, with its executed `probe-v1.py`
+preserved. It had already observed late-X rejection but cleanup expected MAIN
+Esc->OP; the host event handler exits MAIN directly, so the wait failed after
+normal exit. Do not relabel that failed receipt or infer original Esc parity.
+The reconstructed DOS source routes INPUT_CANCEL through pause, making this
+an explicit future input/process comparison surface.
+
+Public `verify_window_bomb.py` reuses the attested private-Xvfb/XTest guard and
+actual lifecycle transitions; no game/clock/score/life writes. Actual probe
+consumer492/3135f76e is frozen as `consumer-source-v1.tar.gz`; handoff formatting
+keeps its AST equal and freezes current492/4ed57dab separately as v2. Runtime
+receipts remain bound to v1; no new game launch validates v2. All compiled
+v1356 producer485/00af24f7 inputs and binaries stay unchanged.
+
+The user's primary next comparison is original DOS versus reconstructed DOS,
+then native game-state/effect parity. Current native trace lacks RNG seed/ring/
+call-count fields and is not a complete original gameplay trace. Root
+`docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md` routes the four-demo
+starting fixture, TH08 read-only workflow and fail-closed comparator work.
+All dated live snapshots below remain historical observations; their owned
+jobs have finished. No Windows host GUI/key/focus or physical audio launch.
+
+Final root/native handoff CIs pass; root live Ghidra replay/mutations pass.
+Public-source cache cleanup verifies1,019 absent caches and516 protected hashes
+in two complete readbacks, net16,543,744 allocated B reclaimed. No build/game
+launch or user save/package change; root retention journal indexes recovery.
+
 ## Clear-mask correction and natural Lunatic preparation (v1358)
 
 The previous bit-only admission oracle was insufficient: a fresh unplayed

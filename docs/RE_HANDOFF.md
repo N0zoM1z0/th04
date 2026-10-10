@@ -5,154 +5,97 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-10. Current phase: muted startup and complete ordinary window-route
-validation under private Xvfb. Full native goal stays active; historical DOS acceptance
-remains separate. General semantic work resumes only for a concrete blocker.
+Updated 2026-10-10. Current phase: handoff; original/reconstructed DOS comparison
+is the next validation priority, with x64 fidelity tracked separately. The full
+native goal stays active; historical exactness remains separate. Resume semantic
+changes for a reproduced differential or a concrete portable owner.
+
+Both handoff CIs pass (root includes live Ghidra replay/mutations). No new game
+or compiler build is started for cleanup. Root/native public-source Python
+caches retire1,019 files/net16,543,744 allocated B with two full readbacks;
+516 protected hashes stay unchanged. Recovery/journal is under root
+`.analysis/cleanup/handoff-source-caches*-v1364.json`. Obtain current commit
+identities with `git log -1` in each worktree.
 
 ## Native x64 frontier
 
-v1363 same live candidate snapshot:49,189 refreshes, stages0..3 reached,
-last frame14,726/lives11/miss1; every MAIN identity/credit and zeroaudio pass.
-Natural max338, >=320 has10 samples/5 slowdown2; >=400 absent. No actual
-early-hit rescue or last-life extra-X transition observed yet; full verdict
-remains pending. Snapshot: native `bomb-input-v1362/prefix-evidence-v1363.json`.
+The v1362 GNU Reimu A / Lunatic / Turbo0 candidate is now terminal and
+accepted by the independent `verify_natural_slowdown.py` reader: 88,249 route
+refreshes plus 792 refreshes in a separate Scores process. It reaches all six
+stages without Continue, exits registration by Esc, returns to fresh OP, and
+stores real section3 clear mask1 at the physical rename and final file. The nine
+other decoded score partitions and CFG stay unchanged; no pending file remains.
+Final MAIN: stage5/frame13,649, lives7, misses6, score units5,597,294.
 
+Natural density reaches439 bullets. At >=320 there are571 refreshes/287
+slowdown2; at >=400 there are240/129. Complete deadlines/terminal counts pass.
+At >=400, update P95/P99/max are6.61/8.50/13.37ms with no update exceeding its
+own admission period. This is instrumented GNU/private-Xvfb/shared-WSL evidence;
+uninstrumented physical FPS and original DOS parity remain unaccepted. Generic
+traces do not expose every inner Ending phase. Audio opens remain zero.
 
-v1362 adds optional `--bomb-policy rescue` to the ordinary private-Xvfb adaptive
-input controller. The preceding failed trace has seven early-hit samples with
-Bomb1 and no X. Maintained lifecycle source permits cancellation while miss_time>32;
-advice suppresses X during invincibility. Post-update respawn65..71 is inferred
-from the 72/40 countdown/update order. This is an input-policy gap, not a proved
-game defect. Read-only replay requests X in all seven samples and77 last-life
-samples; nine resource/window mutants and a pre-display CLI guard pass.
+Two actual ordinary X early-hit cancellations occur in Stage4, preserving miss
+count while consuming stock, starting Bomb, clearing respawn and setting
+invincibility255. The last-life proactive policy branch remains dry-controlled
+only. Separate ordinary window probes pass early/closed cases (1,039/1,048
+refreshes): early X cancels frame394 hit at395; closed-window X at401 remains
+rejected at404 (stock2, Bomb inactive, miss1, respawn61). The first late probe
+stays failed: its cleanup incorrectly expected MAIN Esc to return to OP, while
+the host Escape handler exits MAIN directly. This is a probe cleanup failure,
+not a demonstrated Bomb failure or original Escape-parity acceptance.
 
-Only the Python controller changes:491-input consumer `d25ba16e…` archives and
-reads back; all compiled inputs remain485/00af24f7. New muted GNU Lunatic/ReimuA/
-Turbo0 candidate is live on private Xvfb (tool4230, controller484288/game484320,
-Xvfb484274). Full clear/physical rename/Scores restart/complete clock and dense
->=320/>=400 slowdown2 gates are unchanged and pending. Inspect native
-`.analysis/port64/bomb-input-v1362/active-job-v2.json` with /proc start ticks/argv
-before polling; keep pinned helpers unchanged until terminal. No Windows GUI,
-host keys or physical audio device opens.
+Retained GNU Reimu A routes:
 
-v1363 retires unused old UBSan build after936 archive/member hashes read back;
-net252,231,680 allocated B reclaimed. Recovery: root
-`.analysis/cleanup/ubsan-old-build-v1363/`; current program/helpers/saves untouched.
+| Route | Route + independent Scores refreshes | Scope |
+| --- | --- | --- |
+| Normal/Turbo1 | 89,008 +794 | Six stages/noContinue, physical clear/freshOP/restart |
+| Lunatic/Turbo1 | 88,927 +790 | Physical clear; dense slowdown2 absent |
+| Lunatic/Turbo0 | 88,249 +792 | Physical clear plus natural dense slowdown2 gates |
+| Extra | 30,388 +790 | NoContinue, full eight A gaiji, physical clear/restart |
 
-Both CIs pass (root live Ghidra/mutations); ledger/diff checks pass. Public
-script caches retire955 files/net15,478,784 allocated B after source/protected
-readback; active port64 helpers/outputs remain excluded.
+Prior UBSan Normal all-clear acceptance is revoked: mask0x19 is an unplayed
+sentinel even though bit0 is set. The v1360 GNU Turbo0 attempt also stays failed
+(88,267 refreshes, Final Stage miss13, masks0x19); its separate795-refresh
+Scores reader and bounded dense slowdown observations remain valid. Require
+mask<4 plus the selected shot bit, never bit0 alone. All these jobs are terminal;
+do not poll or revive dated PID/tool handles from historical active-job files.
 
+Registration, lifecycle/Continue/HUD, stage/Ending/Extra, score/config, demo,
+MusicRoom/unlocks and muted sound owners have separate component/integration
+evidence. Eight actual GNU/UBSan Continue cases and ten GNU setup/corrupt-file
+cases are retained. Startup combinations cover27 GNU/UBSan and19 earlier
+Windows cases. Broader character/shot/rank/Ending/Extra routes, actual Windows
+display/input, physical audio and uninstrumented performance remain open.
 
-v1358 corrects the v1357 UBSan all-clear/admission claim. Unplayed flag0x19
-also has bit0; original native OP normalizes masks>3 to0. The old bit-only
-comparator accepted that sentinel incorrectly. GNU Normal stores real mask1;
-GNU Extra also stores mask1 and retains its accepted no-Continue/full-name route.
-UBSan reaches all six stages, then transitions from Final Stage miss13/respawn33
-to MAINE without a Game Over scene. Its final physical Normal mask remains0x19,
-so good-clear/admission acceptance is revoked. This is consistent with the
-compiled Final Stage death-to-Bad-Ending path. Its physical save/Esc/freshOP/
-Scores restart, unchanged CFG/nineother partitions and zeroaudio observations
-remain valid. Raw old receipts remain historical comparator outputs.
+No C++ rebuild: compiled producer485 inputs/`00af24f7…`, GNU game
+`dbe17225…`, UBSan `029e7ba1…`, Windows `5b6cf2c3…` remain v1356. The completed
+route uses frozen consumer491/`d25ba16e…`. Actual Bomb probes use archived
+consumer492/`3135f76e…`; handoff formatting changes only that Python probe's
+layout, preserves its AST, and freezes current492/`4ed57dab…` separately.
+Do not restamp old runtime receipts with current source identities.
 
-Five corrected checksum-valid mask/snapshot mutants reject, including0x19 with
-bit0. Both retained GNU positive routes pass the stronger mask<4+shot-bit gate.
-The six-stage verifier now supports ranks1..3/characters0..1/shots0..1 through
-ordinary OP selection and optional persistent private XTest keys. Easy's five-
-stage ending gate stays separate. Fresh natural Lunatic ReimuA is running on
-unchanged v1356 GNU; no clear/timing acceptance until its own terminal/save/
-restart verdict. Dense rank3 reductions separate>=320/>=400 samples and exclude
-Normal/Extra/dialog rows; full observer cost remains outside uninstrumented
-performance acceptance. Current receipts: native `.analysis/port64/lunatic-window-v1358/`.
+Primary native receipts: `.analysis/port64/bomb-input-v1362/` (completed route,
+independent-natural-v1364.json, actual-rescues-v1364.json) and
+`.analysis/port64/bomb-window-v1364/` (early/late/failed probes, independent
+readback, both492-input source snapshots). All paths here are relative to the
+native worktree. See its `docs/port64/evidence/host-window.md` for replay details.
 
-The schedule reducer verifies every deadline against preceding after-update
-slowdown or recorded resync, plus v1/v2/v3 widths and terminal counts. Native
-MAIN includes 3,245/2,765 slowdown2 records; GNU/UBSan observe 2/505 resyncs.
-Instrumented CPU/presentation/advice/trace cost remains separate from acceptance
-of uninstrumented performance. Five consumer mutants reject wrong deadlines,
-wrong row versions, missing termination/stage and checksum-valid lost admission.
+## Comparison priority for the next agent
 
-GNU Extra v2 completes no-Continue Reimu A with persistent ordinary XTest
-keys: 30,388 route refreshes plus 790 independent Scores restart refreshes.
-The physical renamed rank4 file contains all eight A gaiji, credit0 and clear
-flag; nine other decoded partitions (including earned Normal admission) and CFG
-are unchanged. Final MAIN frame27,832 has lives5/misses3. This is GNU private-
-Xvfb acceptance; other Extra characters/shots/hosts and Windows remain open.
-Extra v1's Game Over at frame25,595 stays failed. Server keymap/request-cost
-controls do not prove a causal explanation for that failure. Current receipts: native
-`.analysis/port64/window-route-v1357/`; GNU Normal is retained under
-`.analysis/port64/full-window-v1356/linux-normal-adaptive-v5/`.
+The user's primary comparison is **original Japanese DOS versus reconstructed
+DOS**, both through the PC-98 game route. Native x64 must also preserve gameplay
+state and effects. Native-host equality and successful native clears do not
+replace either comparison. Start with the four bundled demos, then bounded
+recorded ordinary play; compare score, consumed input, RNG and actor state at
+the same logical boundary, followed by VRAM/palette/effects and process/save
+transitions. See [DOS/native differential handoff](../../../../docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 
-All 27 muted driver/BGM/SE startup combinations pass on GNU/UBSan (32,147
-refreshes) on v1355 programs. Windows retains 19 cases only. No Windows GUI,
-foreground or host-key retries while the user uses the host. Earlier wrong-map
-and corrected fixed/path Game Over failures remain failed. Live advice is const
-output; OS input still owns the keys. No game/clock/score/life injection.
-All v1357 jobs are terminal. v1358 `active-lunatic-job-v1.json` records the
-new private-Xvfb job; re-poll its owned PID before completion/restart. Do not
-reuse stale v1357 handles.
-
-Cold v1356 products retain 485 inputs (`00af24f7…`) and 204 program
-identities. GNU/UBSan pass 67 contracts each plus manual held-input
-regressions with advice disabled. Windows is cross-compiled only; its
-new execution remains unverified. 104/105 GNU/MinGW core objects equal
-v1355; only trace serialization changes. Both control-plane CIs pass
-(root includes live Ghidra replay/mutations). Historical acceptance
-and target provenance are unchanged.
-
-The extracted policy preserves the complete 88,934-tick logical Normal
-Reimu A input/state/startup/menu/Ending streams and physical saves.
-The v1357 route checks above are independent; no uninstrumented timing follows.
-
-v1355 adds a read-only trace v2 score/life/statistics snapshot and an ordinary
-X11 Continue/save/restart verifier. 204 AMD64 programs build cold from 481
-producer inputs; GNU8, optimized UBSan and actual Windows pass 67 contracts each.
-Among 105 GNU/MinGW core objects, only trace serialization changes; 104 remain
-raw-equal to v1354. GNU/UBSan's 195 fake-audio frontend files per host also equal
-v1354. No audio backend/device opens.
-
-Eight real SDL/X11 processes under private Xvfb pass two stationary Lunatic
-Reimu A Continue/Quit/registration/fresh OP cases and two physical-file Scores
-restarts per GNU8/UBSan. MAIN freezes at frames 432/630 during Game Over and
-resumes at 433; Continue resets score/power/lives/credit. Missing-score/unranked
-and declared zero-score/ranked leaderboard fixtures are distinct. Ranked
-writer-close/rename snapshots contain CONTINUE 500 units with credit 0 while
-MAIN resets to credit 1/score 0. Nine other decoded partitions preserve checksum
-and payload; encoding keys legitimately change. Restarts preserve file hashes.
-All launches are muted. These are bounded OS-input trials, not complete clear
-routes, original whole-route equivalence, physical devices or dense timing.
-
-Producer manifest: `cce4f0fd683c5166f798303e2ebfb83a4fbbe8baef1ee56a862c024c25dbe3be`.
-Final verifier: `d027a9701ce8c6168c408bd18a93b72806e60079e87cbf39b7ab8d0ef9267f5c`.
-Only the route verifier differs; every compiled input is raw-identical.
-Keep the first missing-verdict-key and key-header comparator failures failed.
-Current evidence/recovery: native `.analysis/port64/host-route-v1355/`;
-replay/limits: native `docs/port64/evidence/host-window.md`.
-
-Actual Windows still rejects before SendInput. PID/class selection now excludes
-an early ConsoleWindowClass handle. Same-session WinSta0/Default diagnostics
-observe foreground-lock timeout 2147483647 ms; three owned-window activation
-attempts fail. No desktop/global policy/input-queue workaround was used.
-Passing Windows contracts do not accept Windows held input.
-
-Remaining: actual Windows input/startup, other ranks/shots/Endings/Continue,
-other Extra characters/shots/hosts, physical refresh/slowdown2 and dense Lunatic performance. Physical audio stays untested under the user's
-mute instruction. Existing v1354 experimental package remains available; no new
-package publication or user save modification was needed for this observer.
-
-v1355 scoped cleanup keeps all 204 programs, producer/consumer source archives,
-compiler/CMake metadata, traces, physical files, captures and failed attempts.
-It retires 1190 regenerable build files / 70 completed contract-stage files after
-two full recovery archives / 144 members read back, net 596836352 allocated bytes.
-An independent replay verifies 2847 protected hashes and all 1260 absent files.
-The three earlier desktop stages retire 20 files, net 35110912 bytes; the terminal
-GUI stage and archived failed consumer materialization retire 494 files,
-net 22450176 bytes. Immutable capture sharing keeps 324 complete BMP/PCM paths
-and hashes, net 210509824 bytes. Counts subtract their journals/archives but
-exclude final receipt size. No original input, accepted program or save deleted.
-Post-CI pruning retires 1020 source-backed Python caches, net 16822272 allocated
-bytes; root `.analysis/cleanup/host-route-post-ci-caches-v1355.json` records
-source/hash readback. Both CIs pass, including root live Ghidra replay/mutations.
+TH08 is a read-only workflow reference, not TH04 evidence. Its active worktree
+is dirty; do not edit it, run its builds, change its database or launch its game.
+Complete trace/end/input-consumption guards and first-divergence diagnostics
+are the useful parts to adapt. TH04 still lacks complete paired original-DOS /
+reconstructed-DOS gameplay traces; current native host traces do not include
+RNG seed/ring/call-count fields. These are concrete next-work gaps.
 
 ## Replay and finish
 
