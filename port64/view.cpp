@@ -18,6 +18,7 @@
 #include "op_score.hpp"
 #include "gameover_render.hpp"
 #include "audio_device.hpp"
+#include "host_window.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -51,6 +52,7 @@ namespace sprite = th04::portable::sprite;
 namespace player = th04::portable::player;
 namespace sound = th04::portable::sound;
 namespace audio = th04::portable::audio;
+namespace host_window = th04::portable::host_window;
 namespace stage = th04::portable::stage;
 namespace shot = th04::portable::shot;
 namespace bullet = th04::portable::bullet;
@@ -72,7 +74,7 @@ namespace gameover = th04::portable::gameover;
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
 // key-repeat delivery. At most four overdue ticks are run before resync.
-constexpr auto frame_period = std::chrono::nanoseconds(17730496);
+constexpr auto frame_period = std::chrono::nanoseconds(host_window::period_ns);
 
 constexpr unsigned choice_count = 6;
 constexpr unsigned option_count = 8;
@@ -1522,6 +1524,27 @@ public:
         const auto first=sprites_->stage_slots[128],second=sprites_->stage_slots[134];
         return sprites_->stage_end==146 && first.sheet && second.sheet && first.sheet->count()==6 && first.sheet->width()==32 && first.sheet->height()==32 && second.sheet->count()==12 && second.sheet->width()==64 && second.sheet->height()==64;
     }
+    host_window::Snapshot window_snapshot() const {
+        host_window::Snapshot s;
+        s.scene=startup_ ? "startup" : setup_ ? "setup" :
+            screen_==Screen::menu ? (menu_.screen()==menu::Screen::options ? "options" : "menu") :
+            screen_==Screen::selection ? (selection_.screen()==selection::Screen::playchar ? "character" : "shot") :
+            registration_scene() ? "registration" : screen_==Screen::maine ? "maine" :
+            music_ ? "music" : ranking_ ? "ranking" : main_ ?
+            (main_->game_over() ? "gameover" : dialog_scene_ ? "dialog" : "main") : "transition";
+        s.program=unsigned(application_.program());s.generation=application_.generation();
+        s.character=unsigned(application_.resident().playchar);s.shot_type=unsigned(application_.resident().shot_type);
+        if(main_) {
+            s.frame=main_->frames();s.stage=loaded_stage_;s.rank=main_->rank();
+            const auto pos=main_->player().position().current;s.x=pos.x;s.y=pos.y;
+            for(const auto& b:main_->bullets().snapshot().entities)s.bullets+=b.flag!=0;
+            s.shots=main_->shots().snapshot().alive_count;s.lives=main_->score().remaining_lives;
+            s.bombs=main_->score().remaining_bombs;s.misses=main_->life().misses;s.invincibility=main_->invincibility();
+        }
+        if(audio_output_) {const auto& a=audio_output_->statistics();s.audio_frames=a.generated;
+            s.audio_opens=a.open_attempts;s.audio_failed=a.failed;}
+        return s;
+    }
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
     unsigned slowdown() const { return main_ && !main_->game_over() && !dialog_scene_ && !ending_ && !extra_route_ ? main_->slowdown() : 1; }
@@ -2412,15 +2435,16 @@ private:
 #ifdef _WIN32
 
 struct Win32Title {
+    host_window::Trace trace;
     FrontEnd front_end;
-    Clock::time_point next_tick = Clock::now() + frame_period;
+    host_window::Schedule schedule{host_window::now_ns()};
 
     Win32Title(
         const PiImage& background_, const CdgSheet& numerals_,
         const CdgSheet& labels_, const CdgSheet& cursors_,
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
-    ) : front_end(background_, numerals_, labels_, cursors_,
+    ) : trace(main_assets.window_trace,main_assets.muted),front_end(background_, numerals_, labels_, cursors_,
                   selection_background_, portraits_, &main_assets) { front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
@@ -2442,28 +2466,25 @@ LRESULT CALLBACK title_window_proc(
     switch (message) {
     case WM_TIMER:
         if (title) {
-            const auto now = Clock::now();
-            unsigned ticks = 0;
-            bool dirty = false;
-            while (now >= title->next_tick && ticks < 4) {
-                std::uint16_t held = 0;
-                const bool active = GetForegroundWindow() == window;
-                if (active && GetAsyncKeyState(VK_UP) & 0x8000) held |= player::up;
-                if (active && GetAsyncKeyState(VK_DOWN) & 0x8000) held |= player::down;
-                if (active && GetAsyncKeyState(VK_LEFT) & 0x8000) held |= player::left;
-                if (active && GetAsyncKeyState(VK_RIGHT) & 0x8000) held |= player::right;
-                if (active && GetAsyncKeyState('Z') & 0x8000) held |= shot::input_shot;
-                if (active && GetAsyncKeyState(VK_RETURN) & 0x8000) held |= 0x1000;
-                if (active && GetAsyncKeyState('X') & 0x8000) held |= 0x800;
-                if (active && GetAsyncKeyState(VK_ESCAPE) & 0x8000) held |= 0x2000;
-                if (active && GetAsyncKeyState('Q') & 0x8000) held |= 0x4000;
-                const bool was_animated = title->front_end.animated();
-                title->front_end.advance(held, active && (GetAsyncKeyState(VK_SHIFT) & 0x8000));
-                dirty |= was_animated || title->front_end.animated();
-                title->next_tick += frame_period*title->front_end.slowdown();
-                ++ticks;
+            const auto now = host_window::now_ns();
+            title->schedule.wake();bool dirty=false;
+            while(title->schedule.due(now)) {
+                const bool active=GetForegroundWindow()==window;
+                const auto pressed=[](int key){return (GetAsyncKeyState(key)&0x8000)!=0;};
+                const auto in=host_window::input({pressed(VK_UP),pressed(VK_DOWN),pressed(VK_LEFT),pressed(VK_RIGHT),
+                    pressed('Z'),pressed(VK_RETURN),pressed('X'),pressed(VK_ESCAPE),pressed('Q'),pressed(VK_SHIFT)},active);
+                const auto before=title->front_end.slowdown();const auto deadline=title->schedule.next();
+                const auto begin=title->trace ? host_window::now_ns() : 0;
+                const bool was_animated=title->front_end.animated();
+                title->front_end.advance(in.held,in.shift);
+                const auto end=title->trace ? host_window::now_ns() : 0;
+                dirty|=was_animated || title->front_end.animated();
+                title->schedule.completed(title->front_end.slowdown());
+                if(title->trace)title->trace.refresh(title->schedule.total(),begin,end,deadline,in,active,
+                    before,title->front_end.slowdown(),title->front_end.window_snapshot());
             }
-            if (ticks == 4 && now >= title->next_tick) title->next_tick = now + frame_period;
+            const auto discarded=title->schedule.resync(now,title->front_end.slowdown());
+            if(title->trace)title->trace.resync(now,discarded,title->front_end.slowdown());
             if (dirty) InvalidateRect(window, nullptr, FALSE);
             return 0;
         }
@@ -2490,6 +2511,7 @@ LRESULT CALLBACK title_window_proc(
     }
     case WM_PAINT:
         if (title) {
+            const auto begin=title->trace ? host_window::now_ns() : 0;
             PAINTSTRUCT paint{};
             HDC dc = BeginPaint(window, &paint);
             RECT client{};
@@ -2509,6 +2531,7 @@ LRESULT CALLBACK title_window_proc(
                 frame.pixels.data(), &info, DIB_RGB_COLORS, SRCCOPY
             );
             EndPaint(window, &paint);
+            if(title->trace)title->trace.present(title->schedule.total(),begin,host_window::now_ns(),true);
             return 0;
         }
         break;
@@ -2542,7 +2565,7 @@ void show_window(
     RECT rectangle{0, 0, 1280, 800};
     AdjustWindowRect(&rectangle, WS_OVERLAPPEDWINDOW, FALSE);
     HWND window = CreateWindowExW(
-        0, class_name, L"TH04 native x64 reconstruction - Stage1/Stage2 preview",
+        0, class_name, L"TH04 native x64 reconstruction",
         WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT,
         rectangle.right - rectangle.left, rectangle.bottom - rectangle.top,
         nullptr, nullptr, instance, &title
@@ -2555,6 +2578,7 @@ void show_window(
         DispatchMessageW(&message);
     }
     title.front_end.close_window();
+    title.trace.finish(title.front_end.window_snapshot());
 }
 
 #else
@@ -2568,7 +2592,7 @@ void show_window(
     require_view(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0, SDL_GetError());
     struct SdlQuit { ~SdlQuit() { SDL_Quit(); } } quit;
     SDL_Window* window = SDL_CreateWindow(
-        "TH04 native x64 reconstruction - Stage1/Stage2 preview", SDL_WINDOWPOS_CENTERED,
+        "TH04 native x64 reconstruction", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, 1280, 800, SDL_WINDOW_RESIZABLE
     );
     require_view(window != nullptr, SDL_GetError());
@@ -2597,11 +2621,12 @@ void show_window(
         ~TextureOwner() { SDL_DestroyTexture(value); }
     } texture_owner{texture};
 
+    host_window::Trace trace(main_assets.window_trace,main_assets.muted);
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
     );
     front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing();
-    auto next_tick = Clock::now() + frame_period;
+    host_window::Schedule schedule(host_window::now_ns());
     bool running = true;
     bool dirty = true;
     Frame frame;
@@ -2646,30 +2671,26 @@ void show_window(
             }
         }
         if (!running) break;
-        const auto now = Clock::now();
-        unsigned ticks = 0;
-        while (now >= next_tick && ticks < 4) {
-            const auto* keys = SDL_GetKeyboardState(nullptr);
-            std::uint16_t held = 0;
-            if (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) {
-                if (keys[SDL_SCANCODE_UP]) held |= player::up;
-                if (keys[SDL_SCANCODE_DOWN]) held |= player::down;
-                if (keys[SDL_SCANCODE_LEFT]) held |= player::left;
-                if (keys[SDL_SCANCODE_RIGHT]) held |= player::right;
-                if (keys[SDL_SCANCODE_Z]) held |= shot::input_shot;
-                if (keys[SDL_SCANCODE_RETURN]) held |= 0x1000;
-                if (keys[SDL_SCANCODE_X]) held |= 0x800;
-                if (keys[SDL_SCANCODE_ESCAPE]) held |= 0x2000;
-                if (keys[SDL_SCANCODE_Q]) held |= 0x4000;
-            }
-            const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
-            const bool was_animated = front_end.animated();
-            front_end.advance(held, focused && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]));
-            dirty |= was_animated || front_end.animated();
-            next_tick += frame_period*front_end.slowdown();
-            ++ticks;
+        const auto now=host_window::now_ns();schedule.wake();
+        while(schedule.due(now)) {
+            const auto* keys=SDL_GetKeyboardState(nullptr);
+            const bool focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
+            const auto in=host_window::input({bool(keys[SDL_SCANCODE_UP]),bool(keys[SDL_SCANCODE_DOWN]),
+                bool(keys[SDL_SCANCODE_LEFT]),bool(keys[SDL_SCANCODE_RIGHT]),bool(keys[SDL_SCANCODE_Z]),
+                bool(keys[SDL_SCANCODE_RETURN] || keys[SDL_SCANCODE_KP_ENTER]),bool(keys[SDL_SCANCODE_X]),
+                bool(keys[SDL_SCANCODE_ESCAPE]),bool(keys[SDL_SCANCODE_Q]),
+                bool(keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT])},focused);
+            const auto before=front_end.slowdown();const auto deadline=schedule.next();
+            const auto begin=trace ? host_window::now_ns() : 0;
+            const bool was_animated=front_end.animated();front_end.advance(in.held,in.shift);
+            const auto end=trace ? host_window::now_ns() : 0;
+            dirty|=was_animated || front_end.animated();schedule.completed(front_end.slowdown());
+            if(trace)trace.refresh(schedule.total(),begin,end,deadline,in,focused,before,
+                front_end.slowdown(),front_end.window_snapshot());
         }
-        if (ticks == 4 && now >= next_tick) next_tick = now + frame_period;
+        const auto discarded=schedule.resync(now,front_end.slowdown());
+        if(trace)trace.resync(now,discarded,front_end.slowdown());
+        const auto present_begin=trace ? host_window::now_ns() : 0;const bool updated=dirty;
         if (dirty) {
             frame = front_end.frame();
             SDL_UpdateTexture(
@@ -2693,8 +2714,10 @@ void show_window(
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, texture, nullptr, &destination);
         SDL_RenderPresent(renderer);
+        if(trace)trace.present(schedule.total(),present_begin,host_window::now_ns(),updated);
     }
     front_end.close_window();
+    trace.finish(front_end.window_snapshot());
 }
 
 #endif

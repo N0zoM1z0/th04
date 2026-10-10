@@ -23,6 +23,7 @@ add_library(
   beeper.cpp
   sound_runtime.cpp
   audio_output.cpp
+  host_window.cpp
   sound_scenes.cpp
   pmd_sequence.cpp
   pmd_ssg_effects.cpp
@@ -133,6 +134,10 @@ target_link_libraries(th04-port64 PRIVATE th04-portable-core)
 add_executable(th04-port64-setup-contracts op_setup_contracts.cpp)
 target_link_libraries(th04-port64-setup-contracts PRIVATE th04-portable-core)
 enable_testing()
+add_executable(th04-port64-host-window-contracts host_window_contracts.cpp)
+target_link_libraries(th04-port64-host-window-contracts PRIVATE th04-portable-core)
+add_test(NAME host-window-contracts COMMAND th04-port64-host-window-contracts)
+
 add_executable(th04-port64-audio-output-contracts audio_output_contracts.cpp)
 target_link_libraries(th04-port64-audio-output-contracts PRIVATE th04-portable-core)
 add_test(NAME audio-output-contracts COMMAND th04-port64-audio-output-contracts)

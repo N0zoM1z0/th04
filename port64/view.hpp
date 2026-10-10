@@ -43,6 +43,7 @@ struct MainAssets {
     std::optional<th04::portable::sound::PmdProfile> pmd_profile;
     std::string resident_sound_checks;
     bool muted=true;
+    std::string window_trace;
     StageAssets stage2,stage3,stage5,stage6,extra;
     std::array<Bytes,2> extra_defeat_faces;
     Bytes gengetsu_backdrop,gengetsu_transition;

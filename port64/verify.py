@@ -14,6 +14,11 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_host_window.py",
+    "port64/verify_host_window_windows.ps1",
+    "port64/host_window.hpp",
+    "port64/host_window.cpp",
+    "port64/host_window_contracts.cpp",
     "port64/verify_audio_output.py",
     "port64/audio_output.hpp",
     "port64/audio_output.cpp",

@@ -1,33 +1,32 @@
 # Native private-state retention
 
-Both final CIs pass, including root live Ghidra replay/mutations. Final readback
-checks 8,640 retained hashes. Post-CI cleanup separately retires 1,014 public
-source-backed Python caches and preserves their source hashes, reclaiming
-16,433,152 allocated bytes net. Cache journal/receipt:
-root `.analysis/cleanup/audio-output-post-ci-caches-v1353{,-before}.json`.
+v1354 retains all 204 current programs, complete producer/consumer source
+archives, compiler/CMake metadata, Linux window and fake-audio captures,
+physical saves, controller failures, pinned inputs and preceding products.
+Current intermediates and both terminal owned Windows stages are recoverable
+through three archives under native `.analysis/port64/host-window-v1354/`.
+All 299 members read back before deletion. The scoped pass retires 1,190
+regenerable build files and 225 stage files, reporting 628,129,792 allocated
+bytes net reclaimed; accounting excludes its final receipt. A separate
+pre-build pass prunes 12 source-backed Python caches (278,528 allocated bytes).
 
-Keep pinned game-data inputs, toolchains, active caches, complete current and
-preceding program/source vectors, recorded inputs, physical saves and evidence.
-Prune only terminal owned stages and regenerable intermediates after archived
-recovery and full hash readback. Use fresh output paths; retained equal capture
-hardlinks are immutable. Never use blanket git clean or delete .analysis.
+Sources have two distinct identities: the frozen cold producer and the final
+consumer with two corrected verifier scripts. All compiled inputs are raw-equal.
+Cleanup protection is scoped to its interval; later authorized source edits
+must keep the earlier producer/archive identity instead of restamping receipts.
 
-v1353 preserves current/preceding AMD64 programs, frozen sources/compiler/link
-metadata, complete fake-transport frontend/Continue captures, physical final
-saves and both rejected attempts. Three archives under
-`.analysis/port64/audio-output-v1353/` recover closed first-candidate
-intermediates, both owned Windows stages and final static link inputs.
+Keep pinned assets/targets/tools, active caches/databases, complete current and
+preceding source/program vectors, recorded inputs, physical saves and failures.
+Prune only terminal owned stages and regenerable intermediates after recovery
+and hash readback. Restore archives into fresh directories; use the persisted
+`retention-before-v1.json` journal for original paths/member hashes. Never
+blanket-delete `.analysis/`, run git clean over private state, or remove user saves.
 
-Two scoped passes report 1,494,827,008 allocated bytes reclaimed. They retire
-970 first-candidate intermediates, 1,177 final regenerable files and 872 owned
-stage files; 350 full-byte-identical BMP/PCM paths share immutable storage.
-Independent readback verifies all 1,915 archive members and 2,320/8,636 protected
-hashes for the two intervals. Source protection describes the cleanup interval;
-authorized later changes retain the earlier producer archive. Final CI cache
-cleanup and final readback overhead are accounted separately.
-
-Restore archives into fresh directories. Read `retention-before-v1.json` and
-`retention-before-v2.json` for original paths, complete member hashes, sources,
-programs and compiler/CMake metadata. `retention-readback-v2.json` checks both
-passes independently. The failed compiler snapshot and Windows mutable-input
-plan remain failed, with their logs and exact recovery material retained.
+Prior v1353 recovery and its failed attempts remain indexed by the prior
+receipts and Git; their archives are preserved. Both final CIs pass. Additional terminal capture sharing retains all 324
+BMP/PCM paths and complete byte hashes while reclaiming 210,509,824 allocated
+bytes net after its journal. Source-backed post-CI cache pruning retires 957
+files with 15,585,280 allocated bytes net after its journal. Receipt overhead
+is excluded. Main build cleanup, capture sharing and cache accounting remain
+separate. The first follow-up helper had a str/Path readback typo; corrected
+full journal readbacks verify all captures/sources before acceptance.

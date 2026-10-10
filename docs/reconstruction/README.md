@@ -14,6 +14,8 @@ source evidence.
 
 ## Current open questions
 
+Native host window ownership and its Windows foreground rejection: [host window](../port64/evidence/host-window.md).
+
 - [Native host PCM output](../port64/evidence/audio-output.md) — v1353 production
   transport and fake-API/frontend verification; physical audio/timing/Lunatic
   performance/current GUI remain. Current overall frontier is [PORT64](../PORT64.md).
