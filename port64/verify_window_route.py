@@ -16,6 +16,20 @@ from private_x11 import key_names,require_private_xvfb
 from private_x11_keys import PrivateKeys
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+def rescue_bomb(state, held):
+    """Candidate ordinary X input; lifecycle still owns availability/disable rules.
+
+    Post-update respawn65..71 corresponds to miss_time33..39 in the original
+    72/40 countdowns, before the cancellation window closes. This is not a hit,
+    invincibility or life write. A last-life density trigger spends legal stock.
+    """
+    if not state['bombs'] or state['bombing'] or held&0x800:return held,None
+    if 65<=state['respawn']<=71:return held|0x800,'early-hit-window'
+    if state['lives']==1 and not state['respawn'] and not state['invincibility'] and state['bullets']>=80:
+        return held|0x800,'last-life-density'
+    return held,None
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('exe','hdi','font','output'):parser.add_argument('--'+name,type=Path,required=True)
@@ -26,6 +40,8 @@ def main():
     parser.add_argument('--character',type=int,choices=(0,1),default=0)
     parser.add_argument('--shot',type=int,choices=(0,1),default=0)
     parser.add_argument('--turbo',type=int,choices=(0,1),default=1)
+    parser.add_argument('--bomb-policy',choices=('advice','rescue'),default='advice',
+                        help='rescue adds ordinary X requests in early hit/last-life windows; never changes game state')
     parser.add_argument('--require-dense-slowdown',action='store_true',
                         help='require complete rank3 trace with natural >=320 and >=400 slowdown2 samples')
     parser.add_argument('--key-driver',choices=('xdotool','xtest'),default='xdotool')
@@ -37,6 +53,8 @@ def main():
         parser.error('recorded/position candidates require Normal Reimu A/Turbo1 and --reference; other routes require --adaptive')
     if a.require_dense_slowdown and (not a.adaptive or a.rank!=3 or a.turbo!=0):
         parser.error('dense slowdown requires --adaptive --rank 3 --turbo 0')
+    if a.bomb_policy!='advice' and not a.adaptive:
+        parser.error('rescue Bomb policy requires --adaptive')
     private_display=require_private_xvfb();exe,hdi,font=[p.resolve() for p in (a.exe,a.hdi,a.font)]
     reference=a.reference.resolve() if a.reference is not None else None
     case=None
@@ -66,7 +84,7 @@ def main():
     command=[str(exe),'--hdi',str(hdi),'--font-bmp',str(font),'--save-dir',str(save),'--title','--mute','--window-trace',str(trace.parent)]
     if a.adaptive:command.append('--window-route-advice')
     log=(out/'window.log').open('wb');actions=(out/'actions.jsonl').open('w');process=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
-    held=set();events=[];stages=set();scenes=set();last=0;missing=0;observed=0;started=time.monotonic();last_progress=0;success=False;error=None
+    held=set();events=[];stages=set();scenes=set();last=0;missing=0;observed=0;started=time.monotonic();last_progress=0;success=False;error=None;bomb_requests=[]
     keyboard=None
     def x(*args):return subprocess.run(['xdotool',*args],check=True,capture_output=True,text=True).stdout.strip()
     def wait(predicate,timeout=60):
@@ -140,6 +158,9 @@ def main():
                 if a.adaptive:
                     assert 'advice_held' in r,'adaptive controller requires trace v3'
                     held_value,shift=r['advice_held'],r['advice_shift']
+                    if a.bomb_policy=='rescue':
+                        held_value,reason=rescue_bomb(r,held_value)
+                        if reason:bomb_requests.append(dict(reason=reason,seq=r['seq'],stage=r['stage'],frame=r['frame'],lives=r['lives'],bombs=r['bombs'],respawn=r['respawn'],invincibility=r['invincibility'],bullets=r['bullets']))
                 desired=key_names(held_value,shift)
                 keys(desired,r)
             elif r['scene']=='registration':keys(['Escape'] if r['seq']%20>=10 else [],r)
@@ -172,6 +193,7 @@ def main():
                 assert dense['refreshes']>0 and dense['slowdown2_refreshes']>0, f'natural dense slowdown2 absent at {threshold}'
             result['schedule']=schedule
         result['restart']=restart(exe,hdi,font,save,out/'restart')
+        result.update(bomb_policy=a.bomb_policy,bomb_requests=bomb_requests)
         for p,h in pins.items():assert sha(p)==h
         (out/'receipt.json').write_text(json.dumps(result,indent=2)+'\n');success=True;print(f'FULL RANK {a.rank} TURBO {a.turbo} WINDOW + PHYSICAL RESTART PASS',flush=True)
     except Exception as e:error=str(e);raise
@@ -186,5 +208,6 @@ def main():
         if writes is not None:writes.close();events=writes.records
         actions.close();log.close()
         (out/'physical-events.json').write_text(json.dumps(events,indent=2)+'\n')
-        (out/'terminal.json').write_text(json.dumps(dict(passed=success,error=error,private_display=private_display,track_position=a.track_position,adaptive=a.adaptive,rank=a.rank,character=a.character,shot=a.shot,turbo=a.turbo,require_dense_slowdown=a.require_dense_slowdown,key_driver=a.key_driver,pins=pins,command=command,stages=sorted(stages),scenes=sorted(scenes),last_refresh=last,missing_controls=missing,elapsed=time.monotonic()-started),indent=2)+'\n')
+        (out/'bomb-policy.json').write_text(json.dumps(dict(policy=a.bomb_policy,requests=bomb_requests),indent=2)+'\n')
+        (out/'terminal.json').write_text(json.dumps(dict(passed=success,error=error,private_display=private_display,track_position=a.track_position,adaptive=a.adaptive,rank=a.rank,character=a.character,shot=a.shot,turbo=a.turbo,require_dense_slowdown=a.require_dense_slowdown,bomb_policy=a.bomb_policy,key_driver=a.key_driver,pins=pins,command=command,stages=sorted(stages),scenes=sorted(scenes),last_refresh=last,missing_controls=missing,elapsed=time.monotonic()-started),indent=2)+'\n')
 if __name__=='__main__':main()

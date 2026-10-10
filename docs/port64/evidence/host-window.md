@@ -551,3 +551,46 @@ input policy: fatal snapshot still has1 Bomb and advice0x20. This is a candidate
 policy gap, not a proved game defect. Windows GUI/host keys/audio remain disabled.
 
 Actual immutable failed candidate remains under `.analysis/port64/slowdown-window-v1360/gnu-lunatic-reimu-a-turbo0-v1/`. Independent failure and separately completed Scores/clock receipts are under `.analysis/port64/slowdown-consumer-v1361/`. Earlier live/active-job/prefix records remain dated observations, not current running status. No controller/helper/compiled source changes accompany this result.
+
+## Ordinary OS Bomb response candidate (v1362)
+
+The immutable failed v1360 trace has Final Stage frames11229..11235,
+seq81922..81928: Bomb1, respawn71..65, invincibility192..186, held/advice32.
+`route_advice.hpp` excludes Bomb while invincible; `player_lifecycle.cpp` sets
+invincibility192 on hit but accepts Bomb with miss_time>32 before decrement.
+The post-update respawn=miss_time+32 relation is inferred from source ordering.
+This distinguishes a candidate-controller omission from a proved gameplay bug.
+No new raw target claim or original behavioral equivalence is established.
+
+`rescue_bomb()` adds held0x800/X only when stock exists and Bomb is inactive:
+request during post-update respawn65..71, or proactively on the last life with
+no respawn/invincibility and>=80 bullets. Product lifecycle owns disable/stock/
+acceptance rules. Movement/Shot/focus stay with existing advice; no game-state,
+life, score, time or clear writes. Default `advice` is unchanged. `rescue`
+requires adaptive mode and rejects before DISPLAY/save/game creation otherwise.
+
+Read-only replay over the actual failed trace covers all7 early-hit and77
+last-life samples. Nine declared mutants cover stock0, active Bomb, already X,
+respawn64/72, extra life, density79, invincibility and other respawn; all exclude
+the extra request. These controls prove the policy response, not an actual rescue.
+491-input consumer d25ba16e archives/all-members read back; only route Python
+changes from437d7e36. Compiled485/00af24f7/programs remain untouched.
+
+```sh
+xvfb-run -a -s '-screen 0 800x600x24 -nolisten tcp -noreset' \
+  python3 port64/verify_window_route.py --exe GNU_V1356 --exe-sha256 PINNED_SHA \
+  --hdi ORIGINAL_HDI --font SUPPLIED_FONT --adaptive --rank 3 --character 0 \
+  --shot 0 --turbo 0 --require-dense-slowdown --bomb-policy rescue \
+  --key-driver xtest --output FRESH_ROUTE
+```
+
+New tool4230/controller484288/game484320/Xvfb484274 is live; starting source/
+argv/start-tick/display/auth pins reside in `.analysis/port64/bomb-input-v1362/`.
+Every complete clear/physical-file/nine-partition/restart/deadline/density gate
+remains required; this live prefix is inconclusive. Keep pinned helpers unchanged.
+All launches muted, zero audio opens; no Windows GUI/host keys.
+
+Both CIs pass (root live Ghidra/mutations); ledger and diff checks pass. Root
+`.analysis/cleanup/bomb-input-source-caches-readback-v1362.json` verifies955
+public caches/net15,478,784 allocated B retired; source/protected hashes and
+live /proc identities retained, active port64 helpers/outputs excluded.

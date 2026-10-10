@@ -11,6 +11,28 @@ remains separate. General semantic work resumes only for a concrete blocker.
 
 ## Native x64 frontier
 
+v1362 adds optional `--bomb-policy rescue` to the ordinary private-Xvfb adaptive
+input controller. The preceding failed trace has seven early-hit samples with
+Bomb1 and no X. Maintained lifecycle source permits cancellation while miss_time>32;
+advice suppresses X during invincibility. Post-update respawn65..71 is inferred
+from the 72/40 countdown/update order. This is an input-policy gap, not a proved
+game defect. Read-only replay requests X in all seven samples and77 last-life
+samples; nine resource/window mutants and a pre-display CLI guard pass.
+
+Only the Python controller changes:491-input consumer `d25ba16e…` archives and
+reads back; all compiled inputs remain485/00af24f7. New muted GNU Lunatic/ReimuA/
+Turbo0 candidate is live on private Xvfb (tool4230, controller484288/game484320,
+Xvfb484274). Full clear/physical rename/Scores restart/complete clock and dense
+>=320/>=400 slowdown2 gates are unchanged and pending. Inspect native
+`.analysis/port64/bomb-input-v1362/active-job-v2.json` with /proc start ticks/argv
+before polling; keep pinned helpers unchanged until terminal. No Windows GUI,
+host keys or physical audio device opens.
+
+Both CIs pass (root live Ghidra/mutations); ledger/diff checks pass. Public
+script caches retire955 files/net15,478,784 allocated B after source/protected
+readback; active port64 helpers/outputs remain excluded.
+
+
 v1358 corrects the v1357 UBSan all-clear/admission claim. Unplayed flag0x19
 also has bit0; original native OP normalizes masks>3 to0. The old bit-only
 comparator accepted that sentinel incorrectly. GNU Normal stores real mask1;
