@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/point_numbers.hpp",
+    "port64/point_numbers.cpp",
+    "port64/pointnum_contracts.cpp",
+    "port64/verify_point_numbers.py",
     "port64/verify_window_bomb.py",
     "port64/reduce_window_route.py",
     "port64/private_x11_keys.py",

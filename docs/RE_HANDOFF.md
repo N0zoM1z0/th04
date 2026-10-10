@@ -5,19 +5,48 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-10. Current phase: handoff; original/reconstructed DOS comparison
-is the next validation priority, with x64 fidelity tracked separately. The full
-native goal stays active; historical exactness remains separate. Resume semantic
-changes for a reproduced differential or a concrete portable owner.
+Updated 2026-10-11. The full reconstruction/native goal stays active. DOS main
+1dfd2d6 accepts all four bundled demos in complete compared state/video regions;
+scanout, ordinary Boss/death/process and full native pairing remain open.
+Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-Both handoff CIs pass (root includes live Ghidra replay/mutations). No new game
-or compiler build is started for cleanup. Root/native public-source Python
-caches retire1,019 files/net16,543,744 allocated B with two full readbacks;
-516 protected hashes stay unchanged. Recovery/journal is under root
-`.analysis/cleanup/handoff-source-caches*-v1364.json`. Obtain current commit
-identities with `git log -1` in each worktree.
+v1373 adds400 point-number slots, two overwrite rings, original delayed motion/
+release, live-list ordering, width mutation and multiplier glyphs 10/11. Item and
+bullet-zap events feed this owner; the foreground consumes cached requests after
+items and before enemy bullets. The small font is read from supplied MAIN in
+HDI, with all preshifts checked; no game bytes are committed.
 
-## Native x64 frontier
+Original instruction execution at load 1000/2000 matches830 complete state/list/
+request rows and 494 complete indexed frames perGNU/UBSan host. Two additional
+full 400-slot list/grid/overlap cases pass. All five wrong source variants reject
+while completing830 rows. An original zero-number bounded-return negative is
+retained; native's explicit error does not accept that constructed input.
+
+Fresh GNU builds69 AMD64 products and passes 68 CTests. Focused UBSan builds the
+portable core/point-number contracts/frontend. Actual white/yellow/doubled
+pickup checks and five muted headless MAIN/combat images per host pass; images
+are host-consistency smoke only. Source manifest496 is707d129a…; producer/old
+766-case consumer sources and imported dependencies are frozen/read back.
+Receipts/replay and claim limits: [point numbers](port64/evidence/point-numbers.md).
+
+Windows packages and their older producer remain untouched. Existing native
+v1356 natural-route/save/restart/timing receipts do not accept the new producer.
+Next: paired original/native complete demo state/RNG/foreground/process
+observations, then broader natural routes and actual host acceptance. Complete
+scanout, dirty-page behavior and full gameplay picture parity remain open.
+
+v1373 final checks: main CI 441 tests/live Ghidra pass; native CI 313 tests/target
+checks pass (its unavailable private Ghidra check skips). All jobs are terminal.
+Lossless retention reclaims 502460416 allocated B (about 479.2 MiB), including
+1040 source-backed caches. Full restoration of 23 streams and 3093 protected
+hashes passes; 496 current source pins and the unchanged DOS fingerprint agree.
+Initial cache-absence rejection stays preserved; v2 completes journal readback.
+Restore retired old-reader inputs with native
+`.analysis/port64/pointnum-v1373/restore_streams.py --restore`; no options verifies
+all recoveries without retaining restored files. Current new build directories
+are native `.analysis/port64/pointnum-v1373/build-gnu` and `build-ubsan`.
+
+## Retained v1356 native route frontier
 
 The v1362 GNU Reimu A / Lunatic / Turbo0 candidate is now terminal and
 accepted by the independent `verify_natural_slowdown.py` reader: 88,249 route
@@ -67,7 +96,7 @@ cases are retained. Startup combinations cover27 GNU/UBSan and19 earlier
 Windows cases. Broader character/shot/rank/Ending/Extra routes, actual Windows
 display/input, physical audio and uninstrumented performance remain open.
 
-No C++ rebuild: compiled producer485 inputs/`00af24f7…`, GNU game
+For these retained v1356 routes, compiled producer485 inputs/`00af24f7…`, GNU game
 `dbe17225…`, UBSan `029e7ba1…`, Windows `5b6cf2c3…` remain v1356. The completed
 route uses frozen consumer491/`d25ba16e…`. Actual Bomb probes use archived
 consumer492/`3135f76e…`; handoff formatting changes only that Python probe's

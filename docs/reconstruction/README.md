@@ -14,6 +14,8 @@ source evidence.
 
 ## Current open questions
 
+[Point-number rings, lifecycle and foreground adapter](../port64/evidence/point-numbers.md) — v1373 original component controls, live pickup joins and remaining complete-picture scope.
+
 Native host window ownership and its Windows foreground rejection: [host window](../port64/evidence/host-window.md).
 
 - [Native host PCM output](../port64/evidence/audio-output.md) — v1353 production

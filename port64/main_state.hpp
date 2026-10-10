@@ -6,6 +6,7 @@
 #include "enemy_system.hpp"
 #include "enemy_bullets.hpp"
 #include "effects.hpp"
+#include "point_numbers.hpp"
 #include "midboss.hpp"
 #include "midboss2.hpp"
 #include "midboss3.hpp"
@@ -126,6 +127,7 @@ public:
     std::uint8_t bullet_render_zap() const {return bullet_render_zap_;}
     const spark::System& sparks() const { return sparks_; }
     const gather::System& gathers() const { return gathers_; }
+    const pointnum::System& point_numbers() const {return point_numbers_;}
     const midboss::System& midboss() const { return midboss_; }
     const orange::System& orange() const { return orange_; }
     const circle::System& circles() const { return circles_; }
@@ -252,6 +254,7 @@ private:
     bullet::System bullets_{};
     spark::System sparks_{};
     gather::System gathers_{};
+    pointnum::System point_numbers_{};
     midboss::System midboss_{};
     std::optional<midboss2::System> midboss2_;
     std::optional<midboss3::System> midboss3_;

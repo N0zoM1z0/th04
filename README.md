@@ -21,6 +21,12 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
+Native work is active on this branch. v1373 joins 400 point-number slots to item
+and bullet-zap events and foreground drawing. Original instruction/state/pixel
+component checks pass on GNU/UBSan; GNU passes 68 CTests. Complete natural
+original-DOS/native state and picture parity remains open. See
+[the current native handoff](docs/RE_HANDOFF.md).
+
 ## Build and run
 
 With local inputs and the toolchain installed:

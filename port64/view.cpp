@@ -621,6 +621,7 @@ Bytes visible_page(const Bytes& physical,unsigned line) {
 }
 struct MainSprites {
     sprite::Sheet reimu, marisa, items, stage_tiles, boss_tiles, enemies,explosion;
+    th04::portable::pointnum::Font point_number_font;
     Bytes backdrop_bytes,transition;
     CdgSheet backdrop;
     std::array<Bytes,2> scripts,face_bytes;
@@ -649,7 +650,7 @@ struct MainSprites {
     stage::Background background;
     explicit MainSprites(const MainAssets& assets)
         : reimu(assets.reimu), marisa(assets.marisa), items(assets.items), stage_tiles(assets.stage_tiles),
-          boss_tiles(assets.boss_tiles),enemies(assets.enemies),explosion(assets.explosion_sprite),
+          boss_tiles(assets.boss_tiles),enemies(assets.enemies),explosion(assets.explosion_sprite),point_number_font(assets.point_number_main),
           backdrop_bytes(assets.orange_background),transition(assets.orange_transition),backdrop(backdrop_bytes),
           scripts(assets.dialog_scripts),face_bytes(assets.player_faces),boss_face_bytes(assets.boss_faces),gaiji(assets.gaiji),
           reimu_faces(face_bytes[0]),marisa_faces(face_bytes[1]),boss_faces(boss_face_bytes),font(assets.font_bitmap),dialog_files(assets.dialog_sprites),standard(assets.standard),
@@ -1082,6 +1083,12 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         put_sprite(frame, palette, sprites.items,
                    16u + static_cast<unsigned>(entity.type), 32 + x - 8, 16 + y - 8);
     }
+    for(const auto& draw:state.point_numbers().draws())
+        th04::portable::pointnum::raster(sprites.point_number_font,draw,
+            [&](int x,int y,std::uint8_t color) {
+                const int visible=(y+400-int(display_line))%400;
+                put_indexed_pixel(frame,palette,x,visible,0,0,color);
+            });
     // Original foreground order puts enemy bullets after player and items.
     const auto& bullets=state.bullets().snapshot();
     for (unsigned index=bullet::pool_size;index;) {

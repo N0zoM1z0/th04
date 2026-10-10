@@ -99,6 +99,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     enemies_ = enemy::System{};
     bullets_ = bullet::System{};
     gathers_ = gather::System{};
+    point_numbers_ = pointnum::System{};
     midboss_ = midboss::System{};midboss2_.reset();midboss3_.reset();midboss4_.reset();stage5_.reset();stage6_.reset();stage5_midboss_draws_.clear();
     yuuka5_.reset();yuuka5_active_=false;bad_ending_requested_=false;thick_lasers_=laser::System{};thick_lasers_.initialize();
     marisa_.reset();marisa_active_=false;reimu_.reset();reimu_active_=false;orange_=orange::System{};kurumi_.reset();kurumi_active_=false;elly_.reset();elly_active_=false;life_.prepare_stage();circles_=circle::System{};
@@ -415,6 +416,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         bullet_events_.push_back(event);
         if(event.type==bullet::EventType::sparks) sparks_.add_random(event.position,event.value,event.count,ring_);
         if(event.type==bullet::EventType::gather) gathers_.request(event);
+        if(event.type==bullet::EventType::point_number)
+            point_numbers_.add(event.position,std::uint16_t(event.value),false,false);
     };
     midboss::Context midboss_context;
     midboss_context.hp_previous=&hud_hp_previous_;
@@ -451,6 +454,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             yuuka6_background_.prepare_render(orange_background_phase_,orange_background_frame_,ring_);
             yuuka6_->set_palette_zero(yuuka6_background_.state().palette_zero);
         }
+        point_numbers_.update();
         circles_.update();sparks_.update();
         life_.set_clear_time(bullets_.snapshot().clear_time);
         life_.set_bombing_disabled(boss_active() ? boss_snapshot().bombing_disabled : 0);
@@ -703,6 +707,12 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             if(effects.hud_point_items_changed)hud::apply(hud_text_,hud::points(current.stage_point_items_collected));
             if(effects.hud_dream_changed)hud::apply(hud_text_,hud::dream(current.dream_score));
         },[this](std::uint16_t effect){sound_action(sound::ActionKind::play,effect);});
+    // items_update selects white as well as yellow numbers, in slot order.
+    // Its multiplier latch is cleared before the next bullet update. New
+    // numbers join the alive list at the next simulation update.
+    for(const auto& event:item_events_.events)if(event.collected)
+        point_numbers_.add(event.position,event.collection.base_points,
+            event.collection.yellow_point_number,pull_items);
     gathers_.update([this,&bullet_context,&bullet_sink](const bullet::Template& saved) {
         bullets_.release(saved,bullet_context,ring_,bullet_sink);
     });
@@ -746,6 +756,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         if(midbossx_) midbossx_->prepare_render(midboss_context);else if(midboss4_) midboss4_->prepare_render(midboss_context);else if(midboss3_) midboss3_->prepare_render(midboss_context);else if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
     }
     enemies_.prepare_render();
+    point_numbers_.prepare_render(life_.state().scroll_active!=0,scroll_line_);
     // Retain the actual pre-increment rendering phase. Blocking scenes and
     // repeated host paints consume this cache without advancing the player.
     player_draws_=player::render_requests(life_.state(),player_.position(),

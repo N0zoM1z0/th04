@@ -1,5 +1,17 @@
 # TH04 native 64-bit bring-up
 
+Work remains active. v1373 joins white/yellow400-slot point-number rings,
+original lifecycle and multiplier drawing to actual pickups and bullet zaps.
+Original CPU controls at two loads match830 complete state/request rows and 494
+full indexed frames on GNU/UBSan; two full 400-slot render cases also pass.
+The69 GNU programs pass 68 CTests. Five mutants reject; two focused UBSan programs
+and five muted headless frontend pictures per host pass. These component checks
+do not accept complete natural gameplay/picture parity or a new Windows build.
+See [current handoff](../docs/RE_HANDOFF.md) and
+[point-number evidence](../docs/port64/evidence/point-numbers.md).
+
+Older milestone paragraphs below retain their own producers and scope.
+
 v1347 closes the independent recorded startup pixel corpus. Fifteen two-load
 original cases produce5,879 complete two-page/raw-palette/DAC/shown-RGB frames;
 GNU8, optimized UBSan and actual Windows agree.94,400 clipped SUPER executions
@@ -20,9 +32,9 @@ v1346 joins original logo/fireworks/title control and muted frontend startup.
 15 two-load cases/147,830 complete state/request rows agree on GNU8,
 optimized UBSan and actual Windows; four wrong source variants reject.
 Three driver profiles by11 settings and separate-process restarts produce336
-matching files perhost; final physical saves agree. A declared finite STD
+matching files per host; final physical saves agree. A declared finite STD
 reaches ordinary Game Over, MAINE and fresh OP without forced lifecycle state.
-459 inputs bind195 AMD64 programs;64 contracts pass perhost. Independent
+459 inputs bind195 AMD64 programs;64 contracts pass per host. Independent
 startup pixels/full startup integration, PPS/external ADPCM, natural routes,
 host timing and new GUI delivery remain open. No DOS exactness is promoted.
 
@@ -106,7 +118,7 @@ Windows execution and Git commit/push remain pending. DOS acceptance is unchange
 v1330 adds a native PMD bytecode/timer-state owner: musical part/rhythm
 parsing, note lengths, mutable loops, tempo/bar commands, fade and stop/restart.
 GNU/optimized UBSan each compare134274 original control rows in138 cases;
-12 longer cases compare49164 rows perhost. SSG drum/SE mask bit1 remains an
+12 longer cases compare49164 rows per host. SSG drum/SE mask bit1 remains an
 explicitly excluded ownership surface, with raw original rows retained.
 390sources bind153AMD64products;50CTests pass perLinuxhost. Native OPN/FM/SSG
 synthesis, physical timers and frontend PMD capability remain absent. All runs
@@ -259,8 +271,7 @@ an explicit native repair for the original variable-duration flystep zero
 divisor; original-state controls keep that repair disabled. See the bounded
 [Stage4 render evidence](../docs/PORT64.md#stage4-marisa-battle-and-rendering).
 
-Semantic readability work stays paused once sufficient for the next port slice;
-only a concrete ambiguity reopens a bounded clarification. Current evidence
+Semantic clarification follows concrete reconstruction and native owners. Current evidence
 and limitations live in [PORT64.md](../docs/PORT64.md), while the older subsystem
 sections below retain their bounded historical scope.
 
@@ -450,9 +461,8 @@ pixels. Windows validation runs under Wine; native Windows pacing is untested.
 Stages1..6 now connect their ordinary waves, bosses and clear transitions.
 At this historical milestone, remaining owners included Extra, HUD, death/Bomb
 transitions and audio; the current joined owners and remaining queue are above.
-Saved configuration and Ending/score persistence also remain. Semantic work
-is paused unless a concrete ambiguity blocks one of these slices; a completed
-TH04 native game has not yet been demonstrated.
+Saved configuration and Ending/score persistence also remain. This historical slice predates later joined owners; use the current handoff
+for remaining gameplay and fidelity work.
 
 `stage_program` dispatches original STD waves without catch-up; midboss skips
 consume the wave. `enemy_system` preserves inclusive timed movement, immediate

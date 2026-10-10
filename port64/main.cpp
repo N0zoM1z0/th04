@@ -352,6 +352,7 @@ int main(int argc, char** argv) {
             if (!hdi.empty()) {
                 const auto image = read_file(hdi);
                 const auto game = Fat12(image).main_archive();
+                main_assets.point_number_main=Fat12(image).game_file("MAIN    EXE");
                 main_assets.main_effects=archive_member(game,"MIKO.EFS");
                 archive_member(game,"",&main_assets.sound_resources);
                 archive_member(par,"",&main_assets.sound_resources);

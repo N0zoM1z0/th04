@@ -9,10 +9,16 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current compiled products remain v1356. GNU Reimu A Normal/Turbo1,
-Lunatic/Turbo1, Lunatic/Turbo0 and Extra have scoped complete route/save/restart
-evidence. Turbo0 now also passes instrumented natural dense slowdown gates.
-Other combinations, Windows display/input, original full gameplay/pixels and
+Current v1373 GNU products add point-number rings, lifecycle, event consumers
+and foreground drawing.830 complete original CPU/state/request controls and 494
+full indexed pictures agree on GNU/UBSan, plus two full 400-slot render cases.
+The69 GNU programs pass 68 CTests; two focused UBSan programs and five muted
+headless pictures per host pass. Five source mutants reject. See
+[point-number ownership and limits](port64/evidence/point-numbers.md).
+
+Earlier v1356 GNU Reimu A Normal/Turbo1, Lunatic/Turbo1, Lunatic/Turbo0 and Extra
+route/save/restart/timing receipts retain their own producer. Full natural
+original-DOS/native state/pictures, other combinations, actual Windows and
 uninstrumented performance remain open. See [host-window evidence](port64/evidence/host-window.md).
 
 The milestones below are historical component records, not current build or
@@ -36,7 +42,7 @@ Windows execution and Git commit/push remain pending. DOS acceptance is unchange
 v1330 adds a native PMD bytecode/timer-state owner: musical part/rhythm
 parsing, note lengths, mutable loops, tempo/bar commands, fade and stop/restart.
 GNU/optimized UBSan each compare134274 original control rows in138 cases;
-12 longer cases compare49164 rows perhost. SSG drum/SE mask bit1 remains an
+12 longer cases compare49164 rows per host. SSG drum/SE mask bit1 remains an
 explicitly excluded ownership surface, with raw original rows retained.
 390sources bind153AMD64products;50CTests pass perLinuxhost. Native OPN/FM/SSG
 synthesis, physical timers and frontend PMD capability remain absent. All runs

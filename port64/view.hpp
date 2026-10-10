@@ -32,6 +32,7 @@ struct MainAssets {
     std::string startup_checks;
     std::string natural_route_checks;
     std::array<Bytes,4> replays;
+    Bytes point_number_main;
     std::string save_directory;
     std::string configuration_checks;
     std::string setup_checks;

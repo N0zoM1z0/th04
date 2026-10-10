@@ -40,6 +40,7 @@ add_library(
   bullet_geometry.cpp
   item_system.cpp
   item_pool.cpp
+  point_numbers.cpp
   motion.cpp
   player_motion.cpp
   player_lifecycle.cpp
@@ -133,6 +134,9 @@ target_link_libraries(th04-port64 PRIVATE th04-portable-core)
 
 add_executable(th04-port64-setup-contracts op_setup_contracts.cpp)
 target_link_libraries(th04-port64-setup-contracts PRIVATE th04-portable-core)
+add_executable(th04-port64-pointnum-contracts pointnum_contracts.cpp)
+target_link_libraries(th04-port64-pointnum-contracts PRIVATE th04-portable-core)
+add_test(NAME pointnum-contracts COMMAND th04-port64-pointnum-contracts)
 enable_testing()
 add_executable(th04-port64-host-window-contracts host_window_contracts.cpp)
 target_link_libraries(th04-port64-host-window-contracts PRIVATE th04-portable-core)
