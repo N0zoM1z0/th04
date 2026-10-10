@@ -10,7 +10,42 @@ Updated 2026-10-11. The full reconstruction/native goal stays active. DOS main
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1373 adds400 point-number slots, two overwrite rings, original delayed motion/
+v1374 pairs ordinary headless native MAIN with the complete original DOS demo
+reference. It fixes the Stage 1 midboss emergence caller: MAIN_032_TEXT
+13A9:065C..0669 consumes fractional BYTE DGROUP2134:4276, whereas native supplied
+whole-pixel distance (the separate WORD at427A). A three-subpixel Y error caused
+the first old Demo 2 score/RNG difference at before-update frame3533.
+
+Current GNU/UBSan accept all 15988 boundaries across four demos on 23 selected
+input/score/player/resource/RNG fields and exact draw counts. Wrong-distance
+source mutation completes all rows and rejects again at 3533 (ring 697 versus 696).
+Eight public reader controls pass; original CPU midboss 699 controls, 450 tile
+controls and setup pass per host. GNU builds 70 programs/68 CTests; focused UBSan
+builds three programs. Both preserve the actual ten starting CFG bytes and
+valid scores. Five muted headless pictures per host agree as smoke evidence.
+Core/contracts are cold-built; final config-loading trace adapters are rebuilt
+separately, retaining the initial products/receipts. Current manifest 498 is
+ff0b3bde…; all source/imported-reader snapshots are read back.
+
+Complete native actor/effect pools, original/native pictures and scanout,
+ordinary Boss/death/process routes and physical Windows acceptance remain open.
+DOS v1372 source/products and historical exactness are unchanged. Native public
+replay is port64/verify_demo_state.py; see the focused differential note.
+
+v1374 final checks pass main CI 441/live Ghidra and native CI 321/target checks
+(native private Ghidra/tool gates skip where unavailable). All jobs are terminal.
+A fresh replay using frozen current native/DOS reader sources accepts all 15988
+boundaries. Lossless retention reclaims 166055936 allocated B (about 158.4 MiB)
+before journals, retiring 26 complete raw/text/old-probe streams and 1041
+source-backed caches. Full restored readback of all 26 streams and 8904 protected
+hashes passes; current 498 source pins and DOS fingerprint agree. Current builds
+are native `.analysis/port64/native-demo-v1374/build-gnu` and `build-ubsan`.
+Verify recoveries with `.analysis/port64/native-demo-v1374/restore_streams.py` in
+the native worktree; add `--restore` before reading retired old raw paths.
+
+## Retained v1373 point-number owner
+
+v1373 added 400 point-number slots, two overwrite rings, original delayed motion/
 release, live-list ordering, width mutation and multiplier glyphs 10/11. Item and
 bullet-zap events feed this owner; the foreground consumes cached requests after
 items and before enemy bullets. The small font is read from supplied MAIN in
@@ -31,8 +66,9 @@ Receipts/replay and claim limits: [point numbers](port64/evidence/point-numbers.
 
 Windows packages and their older producer remain untouched. Existing native
 v1356 natural-route/save/restart/timing receipts do not accept the new producer.
-Next: paired original/native complete demo state/RNG/foreground/process
-observations, then broader natural routes and actual host acceptance. Complete
+Next: complete original/native actor/effect pools and foreground/process
+observations, then broader natural routes and actual host acceptance. Selected
+demo state/RNG/counts are accepted by v1374. Complete
 scanout, dirty-page behavior and full gameplay picture parity remain open.
 
 v1373 final checks: main CI 441 tests/live Ghidra pass; native CI 313 tests/target
@@ -43,7 +79,7 @@ hashes passes; 496 current source pins and the unchanged DOS fingerprint agree.
 Initial cache-absence rejection stays preserved; v2 completes journal readback.
 Restore retired old-reader inputs with native
 `.analysis/port64/pointnum-v1373/restore_streams.py --restore`; no options verifies
-all recoveries without retaining restored files. Current new build directories
+all recoveries without retaining restored files. Retained v1373 build directories
 are native `.analysis/port64/pointnum-v1373/build-gnu` and `build-ubsan`.
 
 ## Retained v1356 native route frontier

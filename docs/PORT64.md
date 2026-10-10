@@ -233,7 +233,7 @@ assertions supersede the prior two-character claim; old receipts are unchanged.
 
 - v1308 working tree consumes actual Game Over Quit into score-only MAINE,
   preserving delay100 -> registration -> verdict -> song fade4 -> fresh OP.
-  GNU/optimized UBSan34 contracts and24 OP/finite-STD combat/contact routes
+  GNU/optimized UBSan 34 contracts and24 OP/finite-STD combat/contact routes
   plus4 real failed writers pass;224 complete files/136 BMPs agree. Two-load
   original MAINE dispatch/delay uses explicit child-duration/init/sound/exec
   adapters; prior322 Game Over displays re-agree on GNU. Windows AMD64 builds,
@@ -557,3 +557,10 @@ score-only MAINE routing still require completion.
 ## OP startup
 
 [Bounded control and frontend evidence](port64/evidence/op-startup.md).
+
+Native v1374 accepts all four original/native MAIN demos on 23 selected
+before-update/terminal fields and exact RNG draw counts (15,988 boundaries per
+GNU/UBSan host). Stage 1 midboss emergence consumes a separate fractional scroll
+BYTE. Full actor-pool/picture/process parity remains open; current GNU 70 programs
+and focused UBSan 3 use manifest 498/ff0b3bde…. Older natural routes retain their
+own producers. See [demo evidence](port64/evidence/demo.md).

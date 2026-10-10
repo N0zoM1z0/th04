@@ -96,6 +96,8 @@ public:
     const ResidentState& resident() const { return resident_; }
     std::uint32_t process_random_state() const { return process_random_.state(); }
 
+    std::uint64_t process_random_draws() const { return process_random_.draws_since_seed(); }
+
     void apply_options(const menu::Options& options);
     void advance_op_menu_frame();
     void mark_op_logo_shown();

@@ -33,6 +33,9 @@ struct Context {
     // Ordinary MAIN shares one HUD animator with every midboss and boss.
     // Isolated controls retain their explicit Snapshot::hp_bar context.
     std::int16_t* hp_previous=nullptr;
+    // Stage 1 emergence uses the BYTE fractional accumulator, independently
+    // of the whole-pixel scroll distance used by other midboss movement.
+    std::uint8_t scroll_fraction=0;
 };
 struct Draw {
     int left=0,top=0,vram_top=0;

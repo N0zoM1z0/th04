@@ -16,14 +16,16 @@ public:
 
     explicit Lcg32(std::uint32_t seed = default_seed) : state_(seed) {}
 
-    void reseed(std::uint32_t seed) { state_ = seed; }
+    void reseed(std::uint32_t seed) { state_ = seed; draws_ = 0; }
     std::uint32_t state() const { return state_; }
+    std::uint64_t draws_since_seed() const { return draws_; }
 
     std::uint16_t next15();
     std::uint8_t next_byte();
 
 private:
     std::uint32_t state_;
+    std::uint64_t draws_ = 0;
 };
 
 } // namespace th04::portable::rng

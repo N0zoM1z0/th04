@@ -23,6 +23,7 @@ public:
             bytes_[index] = static_cast<std::uint8_t>(next_byte());
         }
         cursor_ = 0;
+        samples_ = 0;
     }
 
     // Production path for the process-local generator. Keeping the callback
@@ -34,6 +35,7 @@ public:
     std::uint16_t next16_mod(std::uint16_t divisor);
 
     std::uint16_t cursor() const { return cursor_; }
+    std::uint64_t samples_since_fill() const { return samples_; }
     const std::array<std::uint8_t,size>& bytes() const { return bytes_; }
 
 private:
@@ -41,6 +43,7 @@ private:
 
     std::array<std::uint8_t, size> bytes_{};
     std::uint16_t cursor_ = 0;
+    std::uint64_t samples_ = 0;
 };
 
 } // namespace th04::portable::randring

@@ -509,6 +509,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         homing_target_=enemies_.snapshot().homing_target;
         midboss_context.frame=static_cast<std::uint16_t>(frames_);
         midboss_context.scroll_delta=scroll_delta;
+        midboss_context.scroll_fraction=background ? background->fraction() : 0;
         midboss_context.scroll_line=background ? static_cast<std::int16_t>(background->scroll_line()) : 0;
         midboss_context.scroll_speed=background ? static_cast<std::uint8_t>(background->speed()) : 2;
         midboss_context.bullets=bullet_context;

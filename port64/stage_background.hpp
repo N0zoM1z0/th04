@@ -34,6 +34,7 @@ public:
     void set_display_line(unsigned line);
     unsigned speed() const { return speed_; }
     std::int16_t last_delta() const { return last_delta_; }
+    std::uint8_t fraction() const { return fraction_; }
     unsigned section_cursor() const { return section_cursor_; }
     unsigned row_in_section() const { return row_in_section_; }
     unsigned required_image_count() const { return required_image_count_; }

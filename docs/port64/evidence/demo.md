@@ -142,3 +142,83 @@ Next are audio/config persistence, complete natural ordinary/Extra routes,
 physical save/restart, current Windows runtime and dense Lunatic timing and
 performance. Recorded demo completion does not waive those requirements or
 change any DOS accepted extent.
+
+## v1374 original/native MAIN state pairing
+
+A headless ordinary MAIN adapter now runs all four original replays with their
+zero-based ST00..ST03 STD/MAP assets and valid starting score/configuration files.
+The DOS reference is the independently completed v1365 original capture, whose
+full executable relocation image, caller log, input banks, disk contents and
+emulator/profile identities are revalidated by the existing DOS reader.
+
+The first correctly mapped native run completes all four demos. Its selected
+fields agree for Demo 1/3/4; Demo 2 first differs at before-update frame 3533.
+Original shots 7/15 have hit flags and divided velocities; native leaves them
+alive for another tick. The Stage 1 midboss is three subpixels too high.
+
+Observed MAIN MAIN_032_TEXT(13A9):065C..0669 subtracts 64 from midboss Y, loads
+DGROUP(2134):4276 as a BYTE, zero-extends it, then adds it to Y at 53B6. This is
+the fractional scroll accumulator. DGROUP:427A is the distinct WORD whole-pixel
+scroll distance. The native component correctly consumed its supplied value,
+but MAIN supplied the distance. `Background::fraction()` and the separate
+`midboss::Context::scroll_fraction` now preserve this caller ownership. Other
+midbosses and scroll-relative enemies still receive the distance.
+
+`demo_state_trace.cpp` advances the actual ordinary gameplay owner and background
+once per update, with normal hit consumption and actual replay callback checks.
+It stops after the frame3996 terminal callback, without advancing actors. It
+renders no host picture and dispatches no physical audio. The separate original
+input sample used to label a row must agree with the callback actually consumed
+by MAIN. Valid scores remain byte-identical and no writer commits.
+
+`verify_demo_state.py` compares every one of 15,984 gameplay boundaries and four
+terminal boundaries. Its 23 fields include consumed input/raw Shift, score bytes
+and both score accumulators, player position/power/hit/invincibility/respawn,
+resource/miss/Bomb counters, process LCG, all 256 ring bytes, ring cursor and
+exact post-initialization LCG/ring draw counts. Native counters observe actual
+central sampler calls; a wrapped cursor alone cannot satisfy the comparison.
+DOS caller-family identities/operands remain retained diagnostic evidence.
+
+GNU and optimized nonrecovering UBSan agree with the original on every compared
+field in all four demos. A source-only wrong-distance adapter completes all
+15,988 rows and is rejected first at Demo 2 frame3533, with ring calls697 versus
+696 and score differences. Eight reader controls reject missing/duplicate rows,
+wrong terminal decisions, changed ring bytes, score differences and extra draws
+hidden by cursor wrap. They do not substitute for the independent DOS run.
+
+The initial scratch adapter wrongly selected one-based ST01..ST04 files and
+stopped early. Its source/log/full output remain a probe negative, not a product
+failure. Correct zero-based assets reproduce the real frame3533 differential.
+Initial default-option adapters are frozen separately; final adapters load the
+exact ten original MIKO.CFG bytes through the maintained configuration owner.
+Their receipts and producer identities are never restamped.
+
+```sh
+nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
+  python3 port64/verify_demo_state.py \
+  --dos-root /path/to/the/DOS-main-worktree \
+  --original /path/to/dos-demo-v1365-original \
+  --exe .analysis/port64/native-demo-v1374/build-gnu/th04-port64-demo-state-trace \
+  --output-dir .analysis/port64/native-demo-v1374/FRESH-pair
+```
+
+Original scalar/caller/terminal rows and imported reader dependencies are frozen
+with each current 498-file native source manifest. Compressed original rows
+restore exactly. Complete actor/effect pools, original/native VRAM/palette and
+scanout, physical timing, actual OP/fade/process handoffs, ordinary Boss/death
+routes, broader native routes and Windows acceptance remain open. This does not
+promote historical exactness or accept the older natural-route producer anew.
+
+Final v1374 checks pass main 441/live Ghidra and native 321/target gates; native
+private Ghidra/tool gates skip when unavailable. The frozen current reader
+replays all 15,988 boundaries independently. GNU 70/68 CTests and focused UBSan 3
+retain 498 sources/current manifest ff0b3bde…. Five pictures per host match as smoke
+evidence. Complete 699 original midboss controls, 450 tile controls and setup pass
+per host; original load2000/DS8000 adapters remain explicit. All handles terminal.
+
+Lossless retention retires 26 streams and 1041 source-backed caches, reclaiming
+166055936 allocated B (about 158.4 MiB) before journals. Full restoration/readback
+and 8904 protected hashes pass; current source pins and DOS fingerprint agree.
+Sources, failures, current build objects and old Windows/DOS products remain.
+Use native `.analysis/port64/native-demo-v1374/restore_streams.py` with no options
+to verify all recoveries, or `--restore` before unchanged old raw-path readers.

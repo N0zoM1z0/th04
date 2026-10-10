@@ -58,7 +58,7 @@ void System::update(const Context& context,bullet::System& bullets,
         if (state_.phase_frame>=288) {
             state_.phase=1;state_.phase_frame=0;state_.position.velocity.y=2;
             tiles(42);state_.sprite=136;
-            state_.position.current.y=motion::wrap(int(state_.position.current.y)-64+context.scroll_delta);
+            state_.position.current.y=motion::wrap(int(state_.position.current.y)-64+context.scroll_fraction);
             state_.vram_y=static_cast<std::int16_t>(vram(state_.position.current.y,context));
             circle(48,32);sound(9);
         }

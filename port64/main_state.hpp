@@ -201,6 +201,7 @@ public:
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
     std::uint16_t random_cursor() const { return ring_.cursor(); }
+    std::uint64_t random_samples() const { return ring_.samples_since_fill(); }
     std::uint8_t drop_cycle() const { return drops_.cycle(); }
     // Caller completes the blocking pre-boss dialog before this handoff.
     void start_orange_after_dialog();

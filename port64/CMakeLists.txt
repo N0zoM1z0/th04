@@ -132,6 +132,9 @@ add_executable(th04-port64 main.cpp view.cpp audio_device.cpp)
 target_compile_features(th04-port64 PRIVATE cxx_std_17)
 target_link_libraries(th04-port64 PRIVATE th04-portable-core)
 
+add_executable(th04-port64-demo-state-trace demo_state_trace.cpp)
+target_link_libraries(th04-port64-demo-state-trace PRIVATE th04-portable-core)
+
 add_executable(th04-port64-setup-contracts op_setup_contracts.cpp)
 target_link_libraries(th04-port64-setup-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-pointnum-contracts pointnum_contracts.cpp)

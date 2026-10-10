@@ -597,3 +597,10 @@ at two loads. Child durations and resource/exec consumers are explicit adapters.
 local score digits and resident graze reset while outgoing published resident
 digits remain retained. Saved OP unlock reading and full ordinary survival are
 still pending. Always supply `--mute` and use fresh output directories.
+
+The current v1374 producer adds a headless original/native Demo state reader.
+Four complete demos agree on 23 selected fields and exact RNG draw counts on
+GNU/optimized UBSan after the Stage 1 fractional-scroll caller repair. GNU 70
+programs/68 CTests and focused UBSan 3 are current. See
+[the bounded demo evidence](../docs/port64/evidence/demo.md#v1374-originalnative-main-state-pairing).
+Full actor-pool, original/native picture and process fidelity remains open.

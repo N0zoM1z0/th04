@@ -9,6 +9,7 @@ void SharedRandomRing::fill(rng::Lcg32& generator) {
 }
 
 std::uint16_t SharedRandomRing::sample_and_advance() {
+    ++samples_;
     const auto index = static_cast<std::uint8_t>(cursor_);
     const auto low = bytes_[index];
 

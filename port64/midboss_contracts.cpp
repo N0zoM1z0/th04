@@ -63,7 +63,7 @@ void vectors(const char* path) {
     std::ifstream in(path);require(bool(in),"cannot read midboss fixtures");char op;
     while (in>>op) {
         mb::Context c;c.bullets.rank=static_cast<std::uint8_t>(number(in));c.bullets.performance=static_cast<std::uint8_t>(number(in));
-        c.bullets.player={3072,5120};c.frame=static_cast<std::uint16_t>(number(in));c.scroll_delta=m::wrap(number(in));
+        c.bullets.player={3072,5120};c.frame=static_cast<std::uint16_t>(number(in));c.scroll_fraction=static_cast<std::uint8_t>(number(in));
         c.scroll_line=m::wrap(number(in));c.scroll_speed=static_cast<std::uint8_t>(number(in));
         const bool active=number(in)!=0;c.scroll_active=number(in)!=0;
         const auto hpbar=m::wrap(number(in)),vram=m::wrap(number(in));const auto angle=number(in),defeat_angle=number(in),density=number(in),damage=number(in);

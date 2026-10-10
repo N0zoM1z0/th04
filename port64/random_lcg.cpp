@@ -4,6 +4,7 @@ namespace th04::portable::rng {
 
 std::uint16_t Lcg32::next15() {
     // Unsigned overflow is the required modulo-2^32 operation on every host.
+    ++draws_;
     state_ = (state_ * multiplier) + increment;
     return static_cast<std::uint16_t>((state_ >> 16) & 0x7fffu);
 }
