@@ -805,9 +805,12 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     }
     const auto& tiles = sprites.second ? sprites.second->tiles :
         (playchar == application::Playchar::reimu ? sprites.reimu_tiles : sprites.marisa_tiles);
-    // Full host redraw replaces PC-98 dirty tile/EGC copies. Clip to the
-    // original playfield; the scroll ring owns all 400 physical rows.
-    for (unsigned y=16; y<384; ++y) {
+    // Ordinary tiles occupy all 400 physical rows (MAIN 0AAF:20C8).
+    // Preserve them beyond the visible playfield before shake/scroll copies.
+    // Boss transition masks address only the 23 visible tile rows.
+    const unsigned tile_top=backdrop ? 16 : 0;
+    const unsigned tile_bottom=backdrop ? 384 : 400;
+    for (unsigned y=tile_top; y<tile_bottom; ++y) {
         for (unsigned x=0; x<384; ++x) {
             if(state.yuuka6_active() || (extra_battle && !extra_tiles)) continue;
             if (backdrop) {

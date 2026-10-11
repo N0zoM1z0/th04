@@ -43,7 +43,9 @@ acceptance remain open; those comparisons retain their v1376 producer.
 
 v1378 consumes missing Midboss shake events and verifies all 15,984 complete
 shake states and movement requests. Demo 1 frame 3379 game-area differences
-fall from 55,357 to 430. The current GNU cold build has 71 programs and 69
+fall from 55,357 to 430. v1379 restores the full physical background ring and
+removes the remaining 430 pixels at that sample on GNU/optimized UBSan. The
+retained v1378 GNU cold build has 71 programs and 69
 passing CTests; optimized UBSan game/trace/shake targets are cold-built
 separately. Full pictures remain open.
 

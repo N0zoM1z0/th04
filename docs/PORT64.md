@@ -9,7 +9,13 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
+Current v1379 restores the full400-row ordinary tile background before shake;
+Demo1frame3379's remaining430 game-area differences disappear on GNU/UBSan.
+All15988 selected scalars,15984 shake states and40 complete canonical textplanes
+remain equal. Wholepictures remain open. This is a bounded coldview/relink with
+unchanged v1378 dependencies; see [demo evidence](port64/evidence/demo.md).
+
+Retained v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
 UBSan agree on all15,984 complete shake globals/movement requests, all15,988
 selected scalar/count boundaries, nine full pools and40 full canonical text
 planes. GNU cold build yields71 programs/69 CTests; UBSan cold game/trace/shake

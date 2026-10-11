@@ -207,3 +207,18 @@ complete frozen sources, original references and failure receipts stay live.
 Recovery from DOS root: python3 .analysis/reconstruction/probes/native-pages-v1378/verify_retention.py --restore before old raw-capture/graphics/frozen-reader paths.
 Use no options for full temporary readback. v1377 restore proof retained its
 then-current505 scope; its live-source check must not be restamped to509.
+
+## v1379 terminal validation and recovery
+
+All v1379 jobs are terminal. Main441/live Ghidra and native345/target CI pass;
+private unavailable native gates skip. Frozen full-reader replay reproduces
+both complete shake receipts, apart from its separately pinned source hash.
+Lossless retirement reclaims153083904 allocated B (146.0MiB) before journalcost:
+342 complete sample/capture/build files and1044 source-backed caches. All16713
+protected hashes,509 source pins, full restoration/SHA/size/mode/nsmtime/gzip
+EOF and unchanged DOS fingerprint pass before and after deletion. The active
+cleanup producer log is explicitly excluded until terminal; old proofs remain
+immutable. Two new FrontEnd programs and all older programs/sources stay live.
+From DOS root, use python3 .analysis/reconstruction/probes/native-ring-v1379/verify_retention.py --restore before reading retired captures, fulltile pixels or relink objects;
+without --restore it performs temporary complete readback. Old v1378 proof
+retains its then-current509/9346e951 scope and cannot attest live8e77830c source.
