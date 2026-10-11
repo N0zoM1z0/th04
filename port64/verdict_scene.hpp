@@ -7,8 +7,9 @@ namespace th04::portable::verdict {
 // font/PI assets. Resident/RNG publication remains with MAINE's process owner.
 class Scene {
 public:
-    Scene(const cutscene::Assets&,const Input&,std::array<Bytes,2> pages={},unsigned shown=0);
+    Scene(const cutscene::Assets&,const Input&,std::array<Bytes,2> pages={},unsigned shown=0,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t keys,const Sink& observer={});
+    std::uint64_t advance_elapsed(std::uint64_t,const maine::KeySource&,const Sink& observer={},const maine::ElapsedSink& service={});
     Status status() const { return script_.status(); }
     int tone() const { return script_.tone(); }
     unsigned ticks() const { return script_.ticks(); }

@@ -1,13 +1,14 @@
 #include "maine_score_route.hpp"
 #include "maine_ending.hpp"
 #include <stdexcept>
+#include <algorithm>
 
 namespace th04::portable::maine {
 ScoreRoute::ScoreRoute(application::State& app,const application::RunStatistics& statistics,
                       const registration::GraphicsAssets& registration_assets,
                       const cutscene::Assets& assets,score_file::HostStore& store,
-                      std::function<void()> release_main,sound::Timeline* audio)
-    :audio_(audio),application_(&app),store_(&store),registration_assets_(registration_assets),assets_(&assets) {
+                      std::function<void()> release_main,sound::Timeline* audio,vsync::RasterClock* clock)
+    :clock_(clock),audio_(audio),application_(&app),store_(&store),registration_assets_(registration_assets),assets_(&assets) {
     if(app.program()!=application::Program::main ||
        app.resident().end_sequence!=application::EndSequence::score)
         throw std::logic_error("score-only MAINE requires the completed MAIN Quit request");
@@ -17,6 +18,7 @@ ScoreRoute::ScoreRoute(application::State& app,const application::RunStatistics&
     // retained weight. Do not issue the normal Ending's pre-registration fade.
     registration_assets_.text_weight=0;
     app.finish_main(statistics,application::EndSequence::score,release_main);
+    if(clock_){clock_->counter()=vsync::Counter{};clock_->counter().start();initial_wait_.emplace(*clock_,100);}
     if(audio_)audio_->enter(application::Program::maine,app.generation(),app.resident().config);
 }
 void ScoreRoute::start_registration(std::uint16_t held) {
@@ -47,27 +49,13 @@ void ScoreRoute::advance(std::uint16_t held) {
                 verdict::Input input;input.resident=r;input.misses=r.miss_count;input.bombs_used=r.bombs_used;
                 const auto& canvas=registration_->renderer().canvas();
                 verdict_=std::make_unique<verdict::Scene>(*assets_,input,
-                    std::array<cutscene::Bytes,2>{canvas.page(0),canvas.page(1)},canvas.shown_page());
+                    std::array<cutscene::Bytes,2>{canvas.page(0),canvas.page(1)},canvas.shown_page(),clock_);
                 registration_.reset();phase_=ScorePhase::verdict;
                 boundaries_.push_back({ScoreFlow::verdict,ticks_});
             }
             return;
         }
-        verdict_->advance(input_from_main_actions(held),[&](const verdict::Event& e) {
-            const auto& result=verdict_->result();
-            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==168 && !completion_published_) {
-                application_->publish_maine_verdict_completion(result.std_frames);
-                completion_published_=true;
-            }
-            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==264 && !random_published_) {
-                application_->seed_maine_verdict_random();
-                if(result.random_drawn)application_->next_process_random();
-                if(application_->process_random_state()!=result.random_state)
-                    throw std::logic_error("score-route verdict process RNG differs");
-                random_published_=true;
-            }
-            if(observer_)observer_(e);
-        });
+        verdict_->advance(input_from_main_actions(held),[this](const verdict::Event& e){verdict_event(e);});
         if(verdict_->status()==verdict::Status::stopped) {
             sound_.push_back({cutscene::Kind::bgm_control,0x204});
             if(audio_)audio_->handle({sound::ActionKind::command,0x204});
@@ -81,4 +69,46 @@ void ScoreRoute::advance(std::uint16_t held) {
         failed_=true;throw;
     }
 }
+void ScoreRoute::verdict_event(const verdict::Event& e) {
+            const auto& result=verdict_->result();
+            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==168 && !completion_published_) {
+                application_->publish_maine_verdict_completion(result.std_frames);
+                completion_published_=true;
+            }
+            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==264 && !random_published_) {
+                application_->seed_maine_verdict_random();
+                if(result.random_drawn)application_->next_process_random();
+                if(application_->process_random_state()!=result.random_state)
+                    throw std::logic_error("score-route verdict process RNG differs");
+                random_published_=true;
+            }
+            if(observer_)observer_(e);
+
+}
+
+std::uint64_t ScoreRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held) {
+    if(!timed_wait() || failed_)throw std::logic_error("route phase has no elapsed owner");
+    ++ticks_;
+    const auto keys=[held]{return input_from_main_actions(held);};
+    const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
+    try {
+      for(;;) {
+        if(phase_==ScorePhase::registration_delay) {
+            if(initial_wait_->ready()){initial_wait_.reset();start_registration(held);return ns;}
+            if(!ns)return 0;
+            auto step=ns;if(clock_->counter().active())step=std::min(step,initial_wait_->until_ready());
+            clock_->advance(step);service(step);ns-=step;continue;
+        } else {
+            ns=verdict_->advance_elapsed(ns,keys,[this](const verdict::Event& e){verdict_event(e);},service);
+            if(verdict_->status()!=verdict::Status::stopped)return 0;
+            sound_.push_back({cutscene::Kind::bgm_control,0x204});
+            if(audio_)audio_->handle({sound::ActionKind::command,0x204});
+            boundaries_.push_back({ScoreFlow::sound_fade4,ticks_});
+            application_->finish_maine();phase_=ScorePhase::stopped;
+            boundaries_.push_back({ScoreFlow::exec_op,ticks_});return ns;
+        }
+      }
+    } catch(...) {failed_=true;throw;}
+}
+
 } // namespace th04::portable::maine

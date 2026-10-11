@@ -1,11 +1,12 @@
 #include "maine_ending.hpp"
 #include <stdexcept>
+#include <algorithm>
 
 namespace th04::portable::maine {
 Ending::Ending(application::State& app,application::RunStatistics statistics,
                application::EndSequence sequence,const cutscene::Assets& assets,
-               std::function<void()> release_main,bool bgm_active,sound::Timeline* audio)
-    :audio_(audio),application_(&app),statistics_(statistics),end_sequence_(sequence),assets_(&assets),
+               std::function<void()> release_main,bool bgm_active,sound::Timeline* audio,vsync::RasterClock* clock)
+    :clock_(clock),audio_(audio),application_(&app),statistics_(statistics),end_sequence_(sequence),assets_(&assets),
      release_main_(std::move(release_main)),bgm_active_(bgm_active) {
     const auto& resident=app.resident();
     name_=cutscene::script_name(unsigned(resident.playchar),unsigned(resident.shot_type),
@@ -27,24 +28,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         return;
     }
     if(phase_==Phase::verdict) {
-        verdict_->advance(keys,[&](const verdict::Event& e) {
-            const auto& result=verdict_->result();
-            // STD and LCG writes occur at different points in the original
-            // nonblocking calculation. Publish each at its first digit
-            // request, after the complete UDE background fade has finished.
-            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==168 && !completion_published_) {
-                application_->publish_maine_verdict_completion(result.std_frames);
-                completion_published_=true;
-            }
-            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==264 && !random_published_) {
-                application_->seed_maine_verdict_random();
-                if(result.random_drawn)application_->next_process_random();
-                if(application_->process_random_state()!=result.random_state)
-                    throw std::logic_error("verdict process RNG differs from its original-controlled calculation");
-                random_published_=true;
-            }
-            if(verdict_observer_)verdict_observer_(e);
-        });
+        verdict_->advance(keys,[this](const verdict::Event& e){verdict_event(e);});
         if(verdict_->status()==verdict::Status::stopped) {
             const auto& r=application_->resident();
             if(r.end_sequence==application::EndSequence::good || r.config.rank==0)
@@ -68,6 +52,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         if(tone_>0) { fade_left_=16;return; }
         tone_=0;
         application_->finish_main(statistics_,end_sequence_,release_main_);
+        if(clock_){clock_->counter()=vsync::Counter{};clock_->counter().start();}
         release_main_={};
         if(audio_)audio_->enter(application::Program::maine,application_->generation(),application_->resident().config);
         scene_=std::make_unique<cutscene::Scene>(*assets_,name_);
@@ -120,7 +105,7 @@ void Ending::start_verdict() {
     const auto& resident=application_->resident();
     verdict::Input input;input.resident=resident;input.misses=resident.miss_count;input.bombs_used=resident.bombs_used;
     verdict_=std::make_unique<verdict::Scene>(*assets_,input,
-        std::array<Bytes,2>{staff_->page(0),staff_->page(1)},staff_->shown_page());
+        std::array<Bytes,2>{staff_->page(0),staff_->page(1)},staff_->shown_page(),clock_);
     // Transfer both pages once, then release the whole Staff Roll graphics
     // owner. A new process is not entered; the MAINE RNG remains untouched.
     staff_.reset();song_measure_.reset();phase_=Phase::verdict;
@@ -131,7 +116,7 @@ void Ending::start_congratulations() {
     const auto& r=application_->resident();const auto& old=verdict_->canvas();
     text_weight_=old.text_weight();
     congratulations_=std::make_unique<Congratulations>(*assets_,unsigned(r.playchar),r.config.rank,
-        std::array<Bytes,2>{old.page(0),old.page(1)},old.shown_page());
+        std::array<Bytes,2>{old.page(0),old.page(1)},old.shown_page(),clock_);
     // Retain pages, not the old scoring/clock owner. MAINE and its continued
     // LCG remain the same process while this picture waits for a fresh press.
     verdict_.reset();phase_=Phase::congratulations;
@@ -142,5 +127,50 @@ void Ending::begin_registration_delay() {
     maine_sound_requests_.push_back({cutscene::Kind::bgm_control,0x204});
     if(audio_)audio_->handle({sound::ActionKind::command,0x204});
     registration_delay_left_=100;phase_=Phase::registration_delay;
+    if(clock_)registration_wait_.emplace(*clock_,100);
+}
+void Ending::verdict_event(const verdict::Event& e) {
+            const auto& result=verdict_->result();
+            // STD and LCG writes occur at different points in the original
+            // nonblocking calculation. Publish each at its first digit
+            // request, after the complete UDE background fade has finished.
+            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==168 && !completion_published_) {
+                application_->publish_maine_verdict_completion(result.std_frames);
+                completion_published_=true;
+            }
+            if(e.kind==verdict::Kind::gaiji && e.a==192 && e.b==264 && !random_published_) {
+                application_->seed_maine_verdict_random();
+                if(result.random_drawn)application_->next_process_random();
+                if(application_->process_random_state()!=result.random_state)
+                    throw std::logic_error("verdict process RNG differs from its original-controlled calculation");
+                random_published_=true;
+            }
+            if(verdict_observer_)verdict_observer_(e);
+
+}
+std::uint64_t Ending::advance_elapsed(std::uint64_t ns,const KeySource& keys) {
+    if(!timed_wait())throw std::logic_error("Ending phase has no elapsed owner");
+    const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
+    for(;;) {
+        if(phase_==Phase::verdict) {
+            ns=verdict_->advance_elapsed(ns,keys,[this](const verdict::Event& e){verdict_event(e);},service);
+            if(verdict_->status()!=verdict::Status::stopped)return 0;
+            const auto& r=application_->resident();
+            if(r.end_sequence==application::EndSequence::good || r.config.rank==0)phase_=Phase::congratulations_pending;
+            else begin_registration_delay();
+        } else if(phase_==Phase::congratulations) {
+            ns=congratulations_->advance_elapsed(ns,keys,{},service);
+            if(congratulations_->animation().status()!=AnimationStatus::stopped)return 0;
+            begin_registration_delay();
+        } else if(phase_==Phase::registration_delay) {
+            if(registration_wait_->ready()){phase_=Phase::registration_pending;registration_wait_.reset();}
+            else if(ns) {
+                auto step=ns;
+                if(clock_->counter().active())step=std::min(step,registration_wait_->until_ready());
+                clock_->advance(step);service(step);ns-=step;continue;
+            } else return 0;
+        }
+        if(!timed_wait())return ns;
+    }
 }
 } // namespace th04::portable::maine

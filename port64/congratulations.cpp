@@ -15,11 +15,17 @@ std::vector<Request> congratulations_requests(unsigned playchar,unsigned rank) {
         {K::fade,0,1,1},{K::wait,0},{K::fade,0,0,4}};
 }
 Congratulations::Congratulations(const cutscene::Assets& assets,unsigned playchar,unsigned rank,
-                               std::array<Bytes,2> pages,unsigned shown)
+                               std::array<Bytes,2> pages,unsigned shown,vsync::RasterClock* clock)
     :canvas_(assets,std::move(pages),shown),picture_(congratulations_picture(playchar,rank)),
-     animation_(congratulations_requests(playchar,rank)) {}
+     animation_(congratulations_requests(playchar,rank),clock) {}
 void Congratulations::advance(std::uint16_t held,const RequestSink& observer) {
-    animation_.advance(held,[&](const Request& e) {
+    animation_.advance(held,[&](const Request& e) {apply(e,observer);});
+}
+std::uint64_t Congratulations::advance_elapsed(std::uint64_t ns,const KeySource& keys,
+        const RequestSink& observer,const ElapsedSink& service) {
+    return animation_.advance_elapsed(ns,keys,[&](const Request& e){apply(e,observer);},{},service);
+}
+void Congratulations::apply(const Request& e,const RequestSink& observer) {
         using K=RequestKind;using C=cutscene::Kind;
         switch(e.kind) {
         case K::access:canvas_.apply({C::access,e.a});break;
@@ -31,6 +37,5 @@ void Congratulations::advance(std::uint16_t held,const RequestSink& observer) {
         default:break; // The independent clock owns fades and the keyboard wait.
         }
         if(observer)observer(e);
-    });
 }
 } // namespace th04::portable::maine

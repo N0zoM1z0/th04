@@ -1660,26 +1660,19 @@ public:
         ensure_op_sound();
         if(!text_time_origin_)text_refreshes_+=slowdown();
         if(startup_) {
-            startup_->advance_elapsed(std::uint64_t(frame_period.count()),held_input,
-                [this](std::uint64_t ns){sound_timeline_->advance_elapsed(ns);},
-                [this]{const auto& resident=sound_timeline_->resident();
-                    return resident ? resident->player().player().until_timer() : 0;});
-            if(startup_->finished()) {
-                application_.complete_op_startup(startup_->random_state(),startup_had_logo_);
-                startup_.reset();startup_renderer_.reset();screen_=Screen::menu;
-                if(pending_op_scores_) {
-                    score_store_=std::make_unique<score_file::HostStore>(op_save_directory());
-                    pending_op_scores_=false;
-                }
-                if(score_store_)read_op_scores(false);
-            }
-            if(repaint)frame_=render();
-            return;
+            advance_tail(std::uint64_t(frame_period.count()),held_input);
+            if(repaint)frame_=render();return;
         }
+        if(ending_) {
+            if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
+            if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
+        }
+        const bool elapsed_wait=(ending_ && ending_->timed_wait()) ||
+            (score_route_ && score_route_->timed_wait()) || (extra_route_ && extra_route_->timed_wait());
         const auto sound_owner=sound_;
         const auto refresh_ns=std::uint64_t(frame_period.count())*slowdown();
-        startup_clock_.advance(refresh_ns);
-        sound::Refresh sound_refresh(sound_owner.get(),refresh_ns);
+        if(!elapsed_wait)startup_clock_.advance(refresh_ns);
+        sound::Refresh sound_refresh(elapsed_wait ? nullptr : sound_owner.get(),refresh_ns);
         if(setup_) {
             setup_->advance(registration::input_from_main_actions(held_input));
             if(setup_->finished()) {
@@ -1731,20 +1724,22 @@ public:
             return;
         }
         if(extra_route_) {
-            extra_route_->advance(held_input);
+            const auto remaining=elapsed_wait ? extra_route_->advance_elapsed(refresh_ns,held_input) : (extra_route_->advance(held_input),0u);
             if(extra_route_->finished()) {
                 last_extra_boundaries_=extra_route_->boundaries();
                 extra_route_.reset();restore_fresh_op();
             }
+            advance_tail(remaining,held_input);
             if(repaint)frame_=render();
             return;
         }
         if(score_route_) {
-            score_route_->advance(held_input);
+            const auto remaining=elapsed_wait ? score_route_->advance_elapsed(refresh_ns,held_input) : (score_route_->advance(held_input),0u);
             if(score_route_->finished()) {
                 last_score_boundaries_=score_route_->boundaries();
                 score_route_.reset();restore_fresh_op();
             }
+            advance_tail(remaining,held_input);
             if(repaint)frame_=render();
             return;
         }
@@ -1772,7 +1767,10 @@ public:
             }
             if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
             if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
-            ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
+            if(elapsed_wait) {
+                const auto remaining=ending_->advance_elapsed(refresh_ns,[held_input]{return maine::input_from_main_actions(held_input);});
+                advance_tail(remaining,held_input);
+            } else ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
             if(repaint) frame_=render();
             return;
         }
@@ -1925,7 +1923,7 @@ public:
                 extra_route_=std::make_unique<maine::ExtraRoute>(application_,main_->run_statistics(),
                     assets_->registration,assets_->ending,*score_store_,[this] {
                         gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
-                    },sound_timeline_.get());
+                    },sound_timeline_.get(),&startup_clock_);
                 screen_=Screen::maine;
             } else if(continue_registration_ && !gameover_handoff_control_ && main_->score_registration_requested()) {
                 require_view(main_->game_over() && main_->game_over()->finished(),
@@ -1933,7 +1931,7 @@ public:
                 score_route_=std::make_unique<maine::ScoreRoute>(application_,main_->run_statistics(),
                     assets_->registration,assets_->ending,*score_store_,[this] {
                         gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
-                    },sound_timeline_.get());
+                    },sound_timeline_.get(),&startup_clock_);
                 screen_=Screen::maine;
             } else if(continue_ending_ && (main_->good_ending_requested() || main_->bad_ending_requested())) {
                 const auto sequence=main_->good_ending_requested() ? application::EndSequence::good : application::EndSequence::bad;
@@ -1941,7 +1939,7 @@ public:
                 ending_=std::make_unique<maine::Ending>(application_,main_->run_statistics(),sequence,
                     assets_->ending,[this] {
                         gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
-                    },false,sound_timeline_.get());
+                    },false,sound_timeline_.get(),&startup_clock_);
                 screen_=Screen::maine;
             }
             if (repaint) frame_ = render();
@@ -2089,6 +2087,23 @@ private:
     std::filesystem::path op_save_directory() const {
         return assets_->save_directory.empty() ? score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
     }
+    void advance_tail(std::uint64_t ns,std::uint16_t held) {
+        if(!ns)return;
+        if(startup_) {
+            startup_->advance_elapsed(ns,held,
+                [this](std::uint64_t step){sound_timeline_->advance_elapsed(step);},
+                [this]{const auto& resident=sound_timeline_->resident();
+                    return resident ? resident->player().player().until_timer() : 0;});
+            if(startup_->finished()) {
+                application_.complete_op_startup(startup_->random_state(),startup_had_logo_);
+                startup_.reset();startup_renderer_.reset();screen_=Screen::menu;
+                if(pending_op_scores_) {
+                    score_store_=std::make_unique<score_file::HostStore>(op_save_directory());pending_op_scores_=false;
+                }
+                if(score_store_)read_op_scores(false);
+            }
+        } else {startup_clock_.advance(ns);sound_timeline_->advance_elapsed(ns);}
+    }
     void advance_work(const sound::ElapsedWork& work) {
         // The sound owner rejects invalid work before either clock changes.
         sound_timeline_->advance_work(work);
@@ -2106,6 +2121,7 @@ private:
         if(sound_timeline_->program()!=application::Program::op ||
            sound_timeline_->generation()!=application_.generation()) {
             sound_timeline_->enter(application::Program::op,application_.generation(),application_.resident().config);
+            startup_clock_.counter()=th04::portable::vsync::Counter{};
             startup_clock_.counter().start();
             if(assets_ && assets_->op_entry_work)
                 for(const auto& work:assets_->op_entry_work(application_.generation()))advance_work(work);
@@ -3129,7 +3145,7 @@ void run_title(
         const auto& assessment=*scene.ending()->verdict_scene();
         while(assessment.status()!=verdict::Status::release && assessment.ticks()<1000) {
             scene.advance(0x1000,false,false);
-            if(assessment.ticks()<70)require_view(scene.process_random_state()==1 &&
+            if(assessment.tone()!=100)require_view(scene.process_random_state()==1 &&
                 scene.resident().statistics.std_frames==vs.std_frames,"verdict published state during background fade");
         }
         require_view(assessment.status()==verdict::Status::release && assessment.tone()==100 &&

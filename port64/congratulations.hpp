@@ -11,12 +11,14 @@ std::vector<Request> congratulations_requests(unsigned playchar,unsigned rank);
 class Congratulations {
 public:
     Congratulations(const cutscene::Assets&,unsigned playchar,unsigned rank,
-                    std::array<Bytes,2> pages={},unsigned shown=0);
+                    std::array<Bytes,2> pages={},unsigned shown=0,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t held,const RequestSink& observer={});
+    std::uint64_t advance_elapsed(std::uint64_t,const KeySource&,const RequestSink& observer={},const ElapsedSink& service={});
     const cutscene::Canvas& canvas() const { return canvas_; }
     const Animation& animation() const { return animation_; }
     const std::string& picture_name() const { return picture_; }
 private:
+    void apply(const Request&,const RequestSink&);
     cutscene::Canvas canvas_;
     std::string picture_;
     Animation animation_;

@@ -54,7 +54,7 @@ using Status=maine::AnimationStatus;
 // wait(0) releases held keys first, then waits indefinitely for a fresh press.
 class Script:public maine::Animation {
 public:
-    explicit Script(Plan plan):Animation(plan.requests()),result_(plan.result()) {}
+    explicit Script(Plan plan,vsync::RasterClock* clock=nullptr):Animation(plan.requests(),clock),result_(plan.result()) {}
     const Result& result() const { return result_; }
 private:
     Result result_;

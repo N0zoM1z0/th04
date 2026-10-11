@@ -1,10 +1,14 @@
 #include "verdict_scene.hpp"
 
 namespace th04::portable::verdict {
-Scene::Scene(const cutscene::Assets& assets,const Input& input,std::array<Bytes,2> pages,unsigned shown)
-    :canvas_(assets,std::move(pages),shown),script_(Plan(input,assets.scripts.at("_UDE.TXT"))) {}
+Scene::Scene(const cutscene::Assets& assets,const Input& input,std::array<Bytes,2> pages,unsigned shown,vsync::RasterClock* clock)
+    :canvas_(assets,std::move(pages),shown),script_(Plan(input,assets.scripts.at("_UDE.TXT")),clock) {}
 void Scene::advance(std::uint16_t keys,const Sink& observer) {
     script_.advance(keys,[&](const Event& e) { apply(e);if(observer)observer(e); });
+}
+std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& keys,
+        const Sink& observer,const maine::ElapsedSink& service) {
+    return script_.advance_elapsed(ns,keys,[&](const Event& e){apply(e);if(observer)observer(e);},{},service);
 }
 void Scene::apply(const Event& e) {
     using C=cutscene::Kind;
