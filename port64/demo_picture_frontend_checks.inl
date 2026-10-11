@@ -11,7 +11,17 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
     auto input=assets;input.save_directory=(out/"save").string();
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&input);
     std::ofstream startup_events(out/"startup-events.txt");
+    std::ofstream configuration_events(out/"configuration-events.txt");
     require_view(bool(startup_events),"cannot open demo startup trace");
+    require_view(bool(configuration_events),"cannot open demo configuration trace");
+    configuration_events<<"TH04_CONFIGURATION_EVENTS 1\n";
+    scene.set_sound_scene_observer([&](const sound::SceneEvent& event) {
+        if(event.kind!=sound::SceneKind::configure)return;
+        const auto& options=event.options;
+        configuration_events<<unsigned(event.program)<<' '<<event.generation<<' '
+            <<+options.rank<<' '<<+options.lives<<' '<<+options.bombs<<' '
+            <<+options.bgm_mode<<' '<<+options.se_mode<<' '<<options.turbo<<'\n';
+    });
     unsigned startup_logos=0,startup_completions=0;
     scene.set_startup_observer([&](const th04::portable::op_startup::Event& event) {
         namespace startup=th04::portable::op_startup;
@@ -20,6 +30,7 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
         if(event.kind==startup::Kind::logo_complete)++startup_logos;
         if(event.kind==startup::Kind::complete)++startup_completions;
     });
+    scene.enable_configuration();
     scene.enable_registration();
     const std::array<unsigned,10> samples{1,2,3,72,73,74,1952,3379,3709,3996};
     std::ofstream trace(out/"state.txt"),displays(out/"displays.txt"),shakes(out/"shake.txt");
@@ -84,7 +95,15 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
     require_view(scene.program()==application::Program::op && !scene.startup_scene() &&
         startup_logos==1 && startup_completions==5,"final demo return did not complete fresh OP startup");
     require_view(score_file::HostStore(out/"save").file().bytes()==score_file::HostStore(inputs).file().bytes(),"demo physical score drift");
+    std::ifstream original_configuration(inputs/"MIKO.CFG",std::ios::binary);
+    std::ifstream saved_configuration(out/"save/MIKO.CFG",std::ios::binary);
+    require_view(bool(original_configuration) && bool(saved_configuration),"cannot read demo physical configuration");
+    const std::vector<std::uint8_t> original_bytes{std::istreambuf_iterator<char>(original_configuration),{}};
+    const std::vector<std::uint8_t> saved_bytes{std::istreambuf_iterator<char>(saved_configuration),{}};
+    require_view(!original_configuration.bad() && !saved_configuration.bad() && original_bytes==saved_bytes,
+        "demo physical configuration drift");
     require_view(bool(trace) && bool(displays) && bool(shakes) && bool(splashes),"demo picture trace write failure");
     require_view(bool(clocks),"text refresh trace write failure");
     require_view(bool(startup_events),"demo startup trace write failure");
+    require_view(bool(configuration_events),"demo configuration trace write failure");
 }

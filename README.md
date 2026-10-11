@@ -21,22 +21,30 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Native demo validation now runs the Logo and title startup before four natural
-demos, then completes a fresh OP title. Cold GNU passes 69 CTests; muted GNU
-and optimized UBSan produce 128 identical capture files. Selected state, RNG
-and draw counts match both fresh original captures at all 15,988 boundaries.
-The analog 4→6→8-bit DAC and 17.723227 ms refresh period retain their prior proofs.
+Native development is active. Demo validation now loads the physical
+configuration before running one Logo, four natural demos and a fresh OP title.
+Nine observed OP/MAIN configuration requests match the incoming file; complete
+CFG and score files stay unchanged. Cold GNU passes 69 CTests. Each of four
+muted driver profiles (`none`, `pmd`, `pmdb2`, `pmd86`) produces 129 identical
+GNU / optimized UBSan capture files, with selected state, RNG and draw counts
+matching all 15,988 original boundaries.
 
-With each original capture's supplied display-event clock, all 40 complete raw
-RGB samples match the independent renderer: 80/80 across the fresh pair, without
-normalization, crops or fitted offsets. Default full-startup headless captures
-match 32/40 and 30/40 against the separate originals. The earlier 37/40 result
-applied to compact headless entry against retained V3.
+The active PMD profiles spend 94 native refreshes between the measure request
+and first SUPER_load; `none` spends zero. Original PMD measure/audio timing
+remains unpaired. A one-call configuration bypass keeps all previous 128 files
+identical but uses the wrong rank at every configuration point; the new
+independent option check rejects it.
 
-These muted captures use `--pmd-driver none`; PMD measure waits and original
-audio timing remain unpaired. Boot/loading/process clock ownership, physical
-and cross-emulator scanout, broader paired routes and Windows input/audio remain
-open. Development stays active; see the handoff for evidence and cleanup recovery.
+A same-source original zero-delay repeat shifts refresh ordinals by 8 relative
+to the prior baseline. The prior delayed pair shifted by 5 or 6. That shift
+cannot uniquely diagnose inserted sleep; keep each capture's clock separate.
+With the fresh original's supplied clock, all 40 complete raw RGB samples match
+an independent renderer without normalization, crops or fitted offsets.
+Default native counts are 31/40 for `none` and 34/40 for the active profiles;
+these are timing diagnostics. Prior 80/80 supplied-clock evidence retains its
+original producer identity. Boot/loading/process clock ownership, physical
+and cross-emulator scanout, broader paired routes and Windows input/audio
+remain open. See the handoff for scoped evidence and cleanup recovery.
 
 ## Build and run
 

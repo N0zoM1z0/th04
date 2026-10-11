@@ -1412,3 +1412,98 @@ CPU0/nice19; compare_native.py finishes the independent raw reductions.
 Default boot/process CPU-I/O clock ownership, physical/cross-emulator scanout,
 Boss/death/fullprocess pairing and Windows input/audio remain open. Targets
 remain candidate-local-attested; no DOS exact acceptance changes.
+
+## Physical configuration and repeated startup clocks (v1391)
+
+The demo picture harness copied MIKO.CFG without enabling configuration loading.
+The incoming ten bytes are `020302020101ef9f000b`; the six options are rank 2,
+lives 3, bombs 2, BGM 2, SE 1 and turbo 1. Native defaults used rank 1. Because
+the demos locally select Hard, prior selected-state and pixel checks missed
+this admission error. Current `demo_picture_frontend_checks.inl` enables the
+existing configuration owner before registration, records actual configure
+requests, and checks the complete physical CFG after fresh OP returns ready.
+No native core, DOS source, compiler flags or historical exactness changes.
+
+The current frozen 510-file producer is c6a90f57e662cbbe85cec9b55047f0ffce5df818067725f687b548f4d2579010.
+Cold GNU builds 71 programs and passes 69 CTests; optimized UBSan/bounds builds
+the game, trace and shake programs. Eight actual muted runs cover `none`,
+`pmd`, `pmdb2` and `pmd86` separately under GNU and UBSan. Each pair produces
+129 byte-identical files. All nine OP/MAIN configure requests agree with the
+six incoming physical options. All 10 CFG and 1,960 score bytes remain unchanged
+and agree with independent FAT readback of the fresh original's final disk.
+Selected state, RNG and draw counts match at all 15,988 original seams for
+each profile. One resident Logo and five completed titles include final fresh
+OP ready. Private Linux Xvfb startup/input/focus/release/exit passes with zero
+audio opens; Windows host interaction remains excluded.
+
+| Native profile | Measure request to first SUPER_load | First MAIN refresh | Default raw RGB against fresh zero-repeat |
+| --- | --- | --- | --- |
+| none | 0 refreshes | 1,193 | 31/40 |
+| pmd | 94 refreshes | 1,287 | 34/40 |
+| pmdb2 | 94 refreshes | 1,287 | 34/40 |
+| pmd86 | 94 refreshes | 1,287 | 34/40 |
+
+These are observed spans through the installed native provider, not an original
+PMD measure, board, audio or driver-equivalence claim. They do not justify a
+94-refresh constant or selecting a driver to fit original picture phase. ROM
+identity remains strict: PMDB2 uses the previously attested 8,192-byte MAME
+ADPCM ROM SHA `53afd0fa9c62eda3e2be939e23f3adf48a2af8ad37bb1640261726c5d5adeba8`.
+The first LLE-format selection was rejected before launch; corrected captures
+use fresh `-v2` directories and retain that negative.
+
+A new original zero-delay run reuses the immutable v1390 collector projection,
+ELF, reset, config, input and sample plan. MAIN SHA starts `077440a3`; locations
+are MAIN 0AAF:00B7/0975 with load 10FC and DGROUP 3230. Complete C2/E2/V21113/
+F15988 events independently replay archived original GDC advance bodies; all
+15,988 seams and 15,984 thin rows agree. Parameter-entry coverage remains zero.
+Fresh complete scalar/caller digests match both retained closed v1390 readers;
+those identities are reused, not re-executed or restamped. All 120 complete
+original snapshots (40 per capture) are freshly read with hash, gzip CRC/EOF
+and same-boundary F-clock guards. Raw text, graphics, palettes, modes, FONT and
+CRT agree across all three captures; GDC and raster-time differ.
+
+The original baseline to this zero-repeat shifts event ordinals by 8 at all
+15,988 seams, with 3,999 visible phase changes. The old delayed pair shifted
+by 5 at 15,987 seams and 6 at one, with 2,501 phase changes. Thus a five-event
+shift is not a unique diagnostic of the inserted sleep. This is neither a
+causal effect estimate nor proof that sleep has no effect. Keep absolute epochs
+separate and do not correct recorded clocks or fit native offsets.
+
+The fresh original's 40 complete FONT/CRT/VRAM/palette/GDC/time samples produce
+120 independent full RGB references. A current actual FrontEnd `none` fixture
+admits that original's ordinals at all seams/endpoints before painting. Whole
+canonical TRAM agrees and complete raw RGB is zero for 40/40 samples, without
+normalization, crop, tolerance or fitted phase. Its zero-initial-callback
+control rejects at admission. All four ordinary profiles also match 40/40
+references evaluated at each profile's own counter phase; their default
+31/40 and 34/40 counts above remain diagnostics. Whole graphics-index
+inequalities are separately diagnostic. Fixture startup-prefix/final-OP
+clock ownership and original audio timing remain unpaired. Prior v1390 80/80
+supplied-clock evidence keeps its original producer identity.
+
+A meaningful one-call negative removes only `scene.enable_configuration()`
+from a clone of the current capture. Its CLI completes successfully and all
+prior 128 output files remain byte-identical, including state, RGB, clocks,
+startup and physical saves. Only the new configuration trace differs: all
+nine generations use rank 1. The independent physical-option reader rejects
+it at the first OP configure event. Physical file equality and demo pixels
+alone cannot prove that the live process loaded configuration.
+
+Private replay: root `.analysis/reconstruction/probes/native-startup-clock-v1391/`
+and native `.analysis/port64/native-startup-clock-v1391/`. Jobs run serially on
+CPU0/nice19. `pipeline.py` stopped at the ROM guard; `pipeline_v2.py` stopped
+at a reference-reader import pointing at a namespace without the collector.
+`pipeline_v3.py` closes the corrected comparisons. The first source-freeze
+parent guard also rejected an incorrect parent before acceptance. All failed
+sources/logs/negative receipts remain preserved; none is acceptance.
+Configuration and clock controls, full comparisons and window receipts must
+be closed before lossless retirement of objects, duplicate captures, expanded
+references and disposable disks. Restore through `verify_retention.py --restore`;
+without that option it checks archive CRC/EOF, member SHA/mode/size/nsmtime,
+inherited protected receipts and all frozen producer pins.
+
+Next identify original startup/loading and resolved PMD clock owners using
+independent event evidence. Default process clocks, physical/cross-emulator
+scanout, paired Boss/death/process routes and Windows input/audio remain open.
+The goal stays active; candidate-local-attested provenance and deferred MAIN
+historical exactness are unchanged.
