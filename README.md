@@ -54,6 +54,12 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
+The current native repair restores the MPN stage palette, including Marisa's
+ST10 palette, changing 720,358 sampled RGB pixels while preserving complete
+indices, text and state traces. Independent full-frame composition diagnostics
+now isolate emulator DAC quantization and five Demo-label blink samples.
+Raw RGB and physical scanout acceptance remain open; development stays active.
+
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
 

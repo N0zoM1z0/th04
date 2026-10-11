@@ -256,3 +256,17 @@ Complete scalar/shake/splash/text traces remain unchanged. View-only cold builds
 retain separate v1382 whole-cold/69CTest/nine-pool producers. Snapshot-only
 edge failure stays unaccepted; full pictures/cache/margins/RGB/scanout/broader
 routes remain open.
+
+## Complete RGB diagnostic frontier (v1384)
+
+Native now selects the final MPN stage palette after BMT/BFT setup, including
+MarisaST10. Actual GNU/optimized UBSan126 captures match; all40 entire indices/
+TRAM and parent state/shake/splash/display/save traces stay unchanged. The fix
+changes720358 sampleRGB pixels;40 game-area index diagnostics remain zero.
+Independent attested emulator composition retains full rawRGB:12 curtain
+samples zero,28 unequal. Explicit DAC projection isolates5×556 Demo-label
+blink pixels, not whole-picture acceptance. Recover blink refreshes/liveCG/
+textscroll/CRT/scanout before broader picture and ordinary route pairing.
+Current509 manifestba6eff48 changes only view.cpp; bounded TU builds reuse
+attested v1382 objects. Old cold/CTest/pool/proof identities remain separate.
+See the current handoff and focused differential note for replay commands.
