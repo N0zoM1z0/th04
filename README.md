@@ -21,16 +21,16 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. The joined producer preserves palette VSync
-waits and the latest WORD, Shift-JIS and Gaiji text writers. Both cold GNU
-and optimized UBSan/bounds builds pass the complete 77-test native graph.
-Original-instruction text/wait comparisons and eight muted startup/four-Demo/
-fresh-OP routes pass. Source and acceptance details are in the
-[current handoff](docs/RE_HANDOFF.md).
+Native development is active. The current producer also restores MAINE's
+zero and signed WORD delay/fade boundaries. Both complete cold GNU and
+optimized UBSan/bounds graphs pass 78 CTests. Original complete-function
+controls, Congratulations/verdict consumer checks and eight muted default
+startup/four-Demo/fresh-OP routes pass. See the
+[current handoff](docs/RE_HANDOFF.md) for producers, scope and recovery.
 
-Physical CPU/loading/ISR costs, other scene waits, complete pictures, broader
-Boss/death/process routes and Windows input/audio remain open. Historical
-exact acceptance remains separate from these runtime results.
+Actual elapsed scene waits, physical CPU/loading/ISR costs, complete pictures,
+broader Boss/death/process routes and Windows input/audio remain open.
+Historical exact acceptance stays separate from these runtime results.
 
 ## Build and run
 

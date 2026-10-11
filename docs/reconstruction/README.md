@@ -237,3 +237,6 @@ evidence; do not scan them during routine handoff.
 
 The VSync and ordinary-text notes now include the combined v1412 native producer,
 complete GNU/UBSan graphs, original corpus replay and cleanup recovery.
+
+The VSync note includes MAINE logical WORD delay/black-fade boundaries (v1413),
+complete original controls, current consumers and recovery.

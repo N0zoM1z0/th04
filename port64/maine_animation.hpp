@@ -17,6 +17,7 @@ struct Request {
     std::string data{};
 };
 using RequestSink=std::function<void(const Request&)>;
+using PaletteSink=std::function<void(int)>;
 enum class AnimationStatus { running,delay,release,press,stopped };
 
 // MAINE's palette fades, frame_delay and input_wait are shared by verdict and
@@ -26,7 +27,7 @@ enum class AnimationStatus { running,delay,release,press,stopped };
 class Animation {
 public:
     explicit Animation(std::vector<Request> requests):requests_(std::move(requests)) {}
-    void advance(std::uint16_t held,const RequestSink& sink={});
+    void advance(std::uint16_t held,const RequestSink& sink={},const PaletteSink& palette={});
     AnimationStatus status() const { return status_; }
     int tone() const { return tone_; }
     unsigned ticks() const { return ticks_; }
@@ -38,5 +39,6 @@ private:
     unsigned ticks_=0;
     std::uint16_t previous_keys_=0;
     int tone_=0,left_=0,fade_step_=0,fade_end_=0,fade_speed_=0;
+    bool fade_aligned_=false;
 };
 } // namespace th04::portable::maine
