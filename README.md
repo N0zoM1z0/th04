@@ -54,19 +54,20 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native's refresh clock uses 17.723227 ms. Fresh original boot capture confirms
-an immediate first display callback; native now admits that event and preserves
-the count through process transitions. A fresh whole GNU build passes 69 CTests.
-Muted GNU and optimized UBSan four-Demo routes produce 127 identical files;
-126 file hashes remain unchanged from the previous producer. Selected original
-state checks and the private Linux window/input route pass.
+Native's refresh clock uses 17.723227 ms and includes the original immediate
+first callback. Its analog graphics colors now follow the pinned PC-98
+4→6→8-bit DAC scanout path, keeping fade arithmetic in the four-bit domain.
+Fresh GNU passes 69 CTests; muted GNU and optimized UBSan four-Demo routes
+produce 127 identical files. Selected state, text, palette, indices and shake
+outputs keep their previous full hashes. Private Linux window/input and fresh
+Game Over/MAINE registration graphics-consumer checks pass.
 
-A separate experiment supplies original display-event ordinals at both the
-before-step and completed-step boundaries. All 15,988 blink states, 40 complete
-text planes and game-area index diagnostics pass. Whole RGB DAC diagnostics
-match 40/40; raw RGB matches 12/40. Complete index differences remain recorded.
-Default boot/loading timing, raw palette/RGB, physical scanout and broader paired
-routes remain open. Development stays active; see the handoff for scoped evidence.
+With explicitly supplied original display-event timing, all 40 complete raw RGB
+samples match the independent original renderer without normalization or crops.
+Default timing matches 37/40; three blink-phase cases remain. The old linear
+palette control rejects 28/40. Default boot/loading timing, physical and
+cross-emulator scanout, broader paired routes and Windows input/audio remain
+open. Development stays active; see the handoff for scope and cleanup recovery.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

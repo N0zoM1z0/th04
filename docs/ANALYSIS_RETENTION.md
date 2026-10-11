@@ -1196,3 +1196,24 @@ excludes its writing retirement log; a later terminal seal separately pins
 closed outputs without restamping that proof. See focused differential/demo
 notes for text-only adapter, explicit DAC diagnostics and open original
 cadence, absolute phase, scanout and ordinary-route limits.
+
+## Native DAC batch v1389
+
+Final archive journal is .analysis/reconstruction/probes/native-dac-v1389/retention.json.
+Net603.7 MiB reclaimed after the archive; another24.3 MiB of explicitly
+aborted source-rebuildable products was cleared earlier. Frozen initial/final
+producers, game/trace/shake, independent probes, original compressed40samples,
+receipts and logs remain live. The journal inherits the unchangedv1388 protected
+inventory and separately seals closedpost-retirement files. Archive/member SHA,
+size/mode/nsmtime and completeoutergzipCRC/EOF pass before deletion and after it.
+
+Restore from DOS root before CTest/retired-output replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-dac-v1389/verify_retention.py --restore
+```
+
+Without --restore this verifies the complete archive and live protected sources.
+Oldlinear RGB controls retain f2 producer identity in the v1388 archive; current
+whole rawRGB40/40 uses retainedoriginalV3 samples under supplied originalclock.
+The initialstopped build has no accepted receipt; its rebuild journal is distinct.

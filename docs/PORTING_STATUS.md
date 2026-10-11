@@ -324,3 +324,15 @@ index differences remain; explicitDAC
 RGBdiagnostics match 40/40, raw RGB 12/40. Oldzero negativecontrol rejects.
 Defaultboot/loading/process CPU-I/Oelapsed owners,rawpalette/RGB,physicalscanout,
 broaderpairedBoss/death/process andWindows remainopen. The full goal staysactive.
+
+## Native raw RGB palette owner (v1389)
+
+Seven display consumers now use the recorded PC-98 DAC4→6→8 expansion.
+FreshGNU69CTest, optimizedUBSan3, actualfourDemo127 identicalvariant files,
+privateLinuxXvfb and two-load GameOver/MAINEregistration consumer checks pass.
+Only28 fullRGB files differ fromf2; all87 non-RGB files keep old hashes.
+Explicitoriginal-clock samples now match40/40 whole rawRGB without projection;
+defaultphase matches37/40. Oldlinear sameclock rejects28/40. These are scoped
+programmed-frame samples, not physicalscanout/defaultboot/wholepicture acceptance.
+Default elapsed-time owners, physical/liveDAC/cross-emulator output, broader
+paired routes and Windows remain open. The goal stays active. See the handoff.
