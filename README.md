@@ -47,8 +47,10 @@ agree on all nine complete actor/effect pools at every update after restoring
 Midboss yellow bonus popups. The actual idle OP→four demos→OP route also
 preserves these selected state checks. Raw text sampling exposed and repaired
 its missing yellow DEMO PLAY label; fade-end checkpoints now agree.
-Whole original/native pictures require aligned presentation sampling; broader
-routes and physical Windows input/audio acceptance remain open.
+Aligned post-update sampling now verifies all 40 complete canonical text-plane
+samples, including score/HUD and DEMO PLAY, on GNU and optimized UBSan.
+Whole graphics/RGB, physical scanout, broader routes and Windows input/audio
+acceptance remain open.
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
 

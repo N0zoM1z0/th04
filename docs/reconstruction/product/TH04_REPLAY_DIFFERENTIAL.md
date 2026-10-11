@@ -1412,3 +1412,82 @@ modes/nsmtimes and gzip CRC/footer/EOF pass;8904 older protected hashes,502 sour
 pins and4 new/71 old programs remain equal. Use verify_retention.py for temporary
 restored readback, or --restore before frozen_readback.py/verify_initial_label.py
 and old object reuse. The public reader uses fresh outputs and retained programs.
+
+## Post-update presentation seam and complete native TRAM (v1377)
+
+The v1376 late score/HUD difference was sampled across unequal boundaries.
+Original TH04VD2 stopped at the stage_frame write, before mod counters,
+performance/score and background-tail work. Native FrontEnd pictures followed
+the complete update. Keep those old observations under their original seam.
+New TH04VP3 captures the next ordinary I header (MAIN_01_TEXT0AAF:00B7) or
+terminal T header (:0975), following the previous complete iteration; I0 is
+seen exactly once and excluded, frames1..3996 remain complete. No guest bytes
+or inputs change. Entire ordinary scalar/caller traces must match their
+independent v1365 original and v1372 reconstructed parents exactly.
+
+The separate projected consumer changes only the DGROUP BOUNDARY constant,
+video magic and the GDB sampling body. Donor driver/ROOT, ordinary observer,
+host-RAM mapping, ELF, legal image and video ABI remain pinned. A single
+CoreNormal+0x1DE software breakpoint observes scalar headers instead of every
+emulated instruction; its19 bytes are488b2df3a37304488b1b4883c4204839eb7434.
+ELF instructions/symbols separately attest cpu_regs48B/IP+32 and Segs136B/
+CS+8/DS+24 (Segs values are64-bit, of which the segment lowWORD is read).
+Guest CS:IP/DS must agree with the role's attested profile on every record.
+Receipts are root .analysis/reconstruction/probes/native-presentation-v1377/.
+The original v1 import projection and v2 untyped DWARF attempts stay failed;
+the v3 raw-host reader completes every record. The host-site v1 attempt to
+expect a16-bit DS load is rejected by real64-bit MOV; the corrected probe
+checks its RIP-relative destination, rather than assuming its instruction.
+
+Native public verify_demo_present.py consumes all15984 original video records,
+validates CRC/EOF/target/load/ABI/source identities, then pairs unchanged
+v1376 GNU/optimized UBSan FrontEnd programs from their lossless archives.
+Both still match all15988 selected scalar/count boundaries. At40 samples
+(frames1/2/3/72/73/74/1952/3379/3709/3996 in each demo), all8000 canonical TRAM
+bytes agree, including all72 label bytes. These are complete selected text
+planes, rather than acceptance of every text frame or all16384 raw TRAM bytes.
+All256000 graphics indices remain compared diagnostically. Original font/
+blink/composited RGB, physical scanout, broader routes and other globals stay
+open. No masks/crops accept a picture, no C++ rebuild occurs, and immutable
+compiled producer502/6a997fe1 remains separate from the505-file new consumer.
+
+Current native evidence is .analysis/port64/native-presentation-v1377/; run
+port64/capture_demo_present.py with the pinned emulator/video-layout/font and
+a fresh consumer/output directory, selecting --original or the v1372 build/MAP.
+Then run port64/verify_demo_present.py with --dos-root, --original,
+--ordinary-reference, --original-consumer, --native-evidence (v1376), and a
+fresh --output-dir. Every launch remains muted dummy-SDL; Windows is untouched.
+
+Both original v3 and reconstructed v4 post-update captures complete4×3996
+records, preserving the full independent ordinary scalar/caller trace. The
+complete DOS pair passes all38 compared video regions at every record, including
+both graphics pages/four planes, full raw TRAM, palettes and selected programmed
+GDC fields. Raw GDC internals differ at every frame and remain diagnostic.
+Replay: root native-presentation-v1377/compare_present.py uses the projected
+consumer first, then the unchanged root compare_th04_demo_video.py; do not run
+the old-format CLI with its script directory taking import precedence.
+Original effective nice19 follows outer15 plus donor15 (inferred); candidate
+CPU0/nice15 is separately runtime-observed in process-resource-observation.json.
+DOS source fingerprint remains6f5898dd…; no new DOS build is needed for this
+consumer-only boundary experiment. Current consumer505/8b0f702a is distinct
+from the immutable v1376 compiled producer502/6a997fe1.
+
+Frozen consumer replay produces a byte-identical complete receipt, including
+each full text/graphics diagnostic row and all15988 scalar/count boundaries.
+Graphics location reducer retains every256000-pixel comparison:30/40 samples
+agree within x32..415/y16..383, while ten differ there. The nonzero samples are
+Demo1 frames1/1952/3379/3996, Demo2 1952/3379/3709/3996 and Demo3 3379/3709.
+Every full graphics frame still differs. These diagnostic rectangles/maps
+do not accept cropped pictures. Check displayed/pending pages and physical
+scanout timing before treating any remaining indexed difference as a renderer
+source defect. Native graphics-diagnostic.json retains full hashes, counts,
+80×80 location maps and colour histograms; original/raw native pixels stay pinned.
+
+Final main441/live Ghidra and native345/target CI pass; unavailable native private
+gates skip. Retirement reclaims153010176 allocated B (145.9 MiB) before journals:
+128 complete HDI/raw snapshot copies and1044 source-backed caches. All9692
+protected hashes,505 source pins, unchanged DOS fingerprint and complete archive
+restore/SHA/mode/nsmtime/gzip EOF pass. Recovery is root
+.analysis/reconstruction/probes/native-presentation-v1377/verify_retention.py;
+add --restore before reading retired HDIs/snapshot paths. Complete VP3 streams,
+original references, programs, source snapshots and failures stay pinned.

@@ -5,6 +5,37 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
+v1377 (native `a87da66`, pushed) aligns presentation sampling with the complete MAIN update. A distinct
+TH04VP3 stream samples the next scalar observer header, at original
+MAIN_01_TEXT0AAF:00B7 (I) or :0975 (T), retaining the complete ordinary trace.
+Across all four demos, GNU and optimized UBSan retained v1376 FrontEnd programs
+agree with all15988 selected scalar/count boundaries and all40 sampled complete
+8000-byte canonical text planes, including DEMO PLAY and score/HUD. The reader
+consumes all15984 original video records; text acceptance covers those40 samples.
+Whole graphics/RGB, physical blink and scanout remain open. No gameplay or DOS
+source changes, native rebuild, historical exact promotion or Windows test occur.
+Public tools: native port64/capture_demo_present.py and verify_demo_present.py.
+New reader evidence: native .analysis/port64/native-presentation-v1377/;
+compiled products keep the immutable502-file v1376 producer identity.
+Independent original/reconstructed DOS replay at this new seam also passes all
+38 compared regions across15984 records; raw GDC clock/FIFO internals remain
+diagnostic. Current consumer pins505 files/8b0f702a… separately from the unchanged
+502-file v1376 compiled producer.
+Frozen consumer replay reproduces the complete new reader receipt byte for byte.
+Graphics diagnostics retain every256000-pixel sample and add location maps:
+30 of40 samples agree inside x32..415/y16..383; ten differ there (Demo1/2/3),
+while all full frames differ. These location summaries do not accept pictures.
+Separate display-page/scanout timing from renderer ownership before changing code.
+
+All v1377 jobs are terminal. Main441/live Ghidra and native345/target CI pass
+(native private tool/Ghidra gates skip). Lossless retirement reclaims153010176
+allocated B (145.9 MiB):128 full duplicate HDI/raw snapshots plus1044 source-backed
+caches. Complete restored SHA/mode/nsmtime/gzip EOF,9692 protected hashes,505
+source pins and unchanged DOS fingerprint pass. From DOS root, use
+native-presentation-v1377/verify_retention.py --restore (under reconstruction/probes)
+before reading retired HDIs/snapshots; full VP3 streams/programs remain retained.
+
+
 v1376 (native `9b87427`, pushed) advances actual FrontEnd demo rendering. The headless OP→four bundled
 demos→OP route preserves all15988 selected input/score/player/RNG/count boundaries.
 Raw text comparison found a missing yellow DEMO PLAY label and blink attribute,

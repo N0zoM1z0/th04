@@ -196,6 +196,9 @@ retaining all15988 selected state/count matches. Raw TRAM revealed a missing
 DEMO PLAY label; original timer72/gaiji/position/C3 attributes constrain its
 renderer repair. GNU/optimized UBSan compare40 complete label spans including
 frames72/73/74.
-Complete graphics/RGB/text samples are retained as diagnostics across different
-score/background seams; whole-picture and physical blink/scanout acceptance
-remain open. See the current handoff and differential note.
+v1377 aligns the presentation seam after the complete update. All40 sampled
+complete8000-byte canonical TRAM planes agree on GNU and optimized UBSan,
+including score/HUD; all15988 selected state/count boundaries still pass.
+Full graphics/RGB, physical blink/scanout and whole-picture acceptance remain
+open. New consumers retain the immutable v1376 compiled producer; see the
+current handoff and differential note.
