@@ -357,3 +357,33 @@ and cross-emulator scanout, broader paired routes and Windows input/audio remain
 open. Development stays active; see the handoff for evidence and cleanup recovery.
 
 Producer: `bdc1fb56f80b1d5d987c89a1cfe63cea9da155eb6ef8eb662c10480dd02c4b5e`. See the differential note and current handoff.
+
+## Physical configuration and startup clocks (v1391)
+
+Native development is active. Demo validation now loads the physical
+configuration before running one Logo, four natural demos and a fresh OP title.
+Nine observed OP/MAIN configuration requests match the incoming file; complete
+CFG and score files stay unchanged. Cold GNU passes 69 CTests. Each of four
+muted driver profiles (`none`, `pmd`, `pmdb2`, `pmd86`) produces 129 identical
+GNU / optimized UBSan capture files, with selected state, RNG and draw counts
+matching all 15,988 original boundaries.
+
+The active PMD profiles spend 94 native refreshes between the measure request
+and first SUPER_load; `none` spends zero. Original PMD measure/audio timing
+remains unpaired. A one-call configuration bypass keeps all previous 128 files
+identical but uses the wrong rank at every configuration point; the new
+independent option check rejects it.
+
+A same-source original zero-delay repeat shifts refresh ordinals by 8 relative
+to the prior baseline. The prior delayed pair shifted by 5 or 6. That shift
+cannot uniquely diagnose inserted sleep; keep each capture's clock separate.
+With the fresh original's supplied clock, all 40 complete raw RGB samples match
+an independent renderer without normalization, crops or fitted offsets.
+Default native counts are 31/40 for `none` and 34/40 for the active profiles;
+these are timing diagnostics. Prior 80/80 supplied-clock evidence retains its
+original producer identity. Boot/loading/process clock ownership, physical
+and cross-emulator scanout, broader paired routes and Windows input/audio
+remain open. See the handoff for scoped evidence and cleanup recovery.
+
+Current producer: `c6a90f57e662cbbe85cec9b55047f0ffce5df818067725f687b548f4d2579010`. Native commit: `927ce48`.
+See the handoff and focused differential note for evidence and recovery.
