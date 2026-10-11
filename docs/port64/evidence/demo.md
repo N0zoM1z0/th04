@@ -809,3 +809,94 @@ replay with python3 .analysis/reconstruction/probes/native-white-v1382/verify_re
 Without --restore it performs temporary complete readback. Old v1381 proof
 retains its fb26d509 source scope and cannot attest current add39f3c inputs.
 Native full pool gzip archives are already complete and require no new capture.
+
+## Stage4 background publication and tail copies (v1383)
+
+Target-observed MAIN_01_TEXT 0AAF:0098..0212 (file C388..C502) calls
+non-Bomb background through DGROUP 2134:4268 at 00DE, before stage_render
+through 432C at 0113. Actual original initial fill 0AAF:0FB2..0FFC,
+full-tile loop 20C8..2109 and carpet callback 3FF4..40FD explain the first
+Demo 1 discrepancy. Its fixed inactive page still contains the initial MAP;
+its fixed active page adds actors to that background. The callback changes the
+ring afterward. All 124,439 old game-area differences are pre-callback versus
+post-callback background pixels. GDC page selection is never chosen for fit.
+
+Runtime-observed 0AAF:0FFE..10B3 (file D2EE..D3A3, 182 B) copies the tail's
+combined current/previous integer row advances using the post-callback and
+refilled ring. Forty-eight actual CPU controls, heights 1..16, retain ordered
+source/destination WORD requests across tile-row and 400-row wrap. EGC latch
+and hardware setup are explicit adapters; larger heights and physical scanout
+remain unaccepted. The snapshot-only e516f7f3 intermediate closes the 40 game
+area samples but adds 2,100 incorrect edge pixels. It is retained and not
+promoted. This counterexample requires preserving both publication surfaces.
+
+Native view now retains the ordinary draw's carpet ring, then substitutes the
+post-tail ring only for copied physical rows. No first-frame special case or
+actor/RNG/score workaround is introduced. One input changes among 509:
+port64/view.cpp; final manifest
+50ca49c65df70cc75b5807df0a3e218dcdaba5a847e780092ed1618bd2fc6496.
+GNU and optimized UBSan cold-compile that TU and relink with SHA-attested
+unchanged v1382 core/main/audio/ymfm objects. The earlier whole cold build,
+69 CTests and full nine-pool comparison keep their v1382 producer identities;
+this is not a new whole-current cold/CTest/full-pool claim.
+
+Actual muted SDL-dummy idle OP→four demos→OP agrees at all 15,988 selected
+scalar/count boundaries, 15,984 full shake states/requests and 81-byte splash
+records, and 40 complete 8,000-byte canonical TRAM samples. All 126 entire
+capture files match between GNU and UBSan; parent scalar/shake/splash traces
+remain byte-identical. All 40 standard sampled game areas now have zero
+differences. First-frame full-picture differences fall 224,211→94,316 and
+second-frame 97,672→94,316: all 133,251 changed pixels equal the fixed original
+page, including 124,439 first-frame game-area pixels and 3,356 second-frame
+edge pixels. Other 38 entire index/RGB samples remain unchanged. Full graphics,
+margins/cache/RGB, physical GDC/scanout and broader routes remain open.
+
+Three separate instrumented GNU producers retain immutable before/intermediate/
+final sources and programs, changing only ten capture frame numbers. Complete
+original Demo 1 VP3 stream/source/CRC/EOF checks cover all 3,996 records. The
+additional lighting samples 1663/1664/1665/1666/1667/1668/1696/1697/1728/1729
+all agree on game area and complete text. Frame 1666 repairs another 7,498
+pixels. Their complete scalar/shake/splash traces equal final ordinary GNU.
+These ten samples have separate producer identities and do not turn 40 ordinary
+samples into full native video acceptance.
+
+First incorrect callback-address assertion, omitted archived-reference path,
+39-unchanged-picture assumption, and missing retired VP3 images are retained.
+Separate corrected readers restore only required immutable inputs. Old producers
+and recipes are not restamped. A temporarily stopped verified reader resumes
+only after both compiler jobs are terminal, preserving its original live handle.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-initial-v1383/
+for ownership/counterexamples; native-initial-v1383-v2/ for final builds,
+run_validations.py, verify_pixel_change.py, phase_control.py, verify_phase.py
+and frozen reader replay. Receipts: native .analysis/port64/native-initial-v1383-v2/.
+All heavy work uses CPU0 at low priority; all actual launches are muted/dummy.
+No DOS source, original target or historical exact acceptance changes.
+
+## v1383 terminal validation and recovery
+
+All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
+unavailable private native gates skip. Final ordinary GNU/optimized UBSan and
+separate extra GNU lighting controls, fixed-page full changed-pixel checks,
+48 actual tail-copy controls and frozen reader replay pass. Only view.cpp
+changes; v1382 whole-cold/69CTest/full-nine-pool producers stay separate.
+
+Lossless retirement reclaims 455,786,496 allocated
+bytes (434.7 MiB) before journal cost:
+1,073 complete sample/capture/build/restored-image files and
+1,044 source-backed caches. Full temporary restoration,
+SHA/size/mode/nsmtime/gzip EOF, 24,916 protected hashes,
+509 source pins and unchanged DOS fingerprint pass before and after deletion.
+All seven new ordinary/diagnostic programs, old programs, frozen sources,
+failures, complete original references and full pools remain retained. The
+snapshot-only intermediate and reader failures are not restamped or promoted.
+
+From DOS root, restore archived sample/build/image inputs before replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-initial-v1383-v2/verify_retention.py --restore
+```
+
+Without --restore it performs complete temporary readback. Old v1382 proof
+keeps its add39f3c source scope and cannot attest current 50ca49c6 inputs.
+Whole native pictures/cache/margins/RGB/scanout/broader gameplay remain open.

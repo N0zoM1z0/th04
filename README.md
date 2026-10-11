@@ -41,19 +41,19 @@ DEMO PLAY. The complete original video stream and all 15,988 selected state
 boundaries remain verified. Whole graphics/RGB, physical blink and scanout
 acceptance remain open; those comparisons retain their v1376 producer.
 
-Current v1382 restores item-spawn white splash dots and their eight-slot state.
-GNU and optimized UBSan each pass 311 original CPU component controls and all
-15,984 full 81-byte natural splash records. The final 103 diagnosed late-sample
-pixels disappear; 39 of 40 sampled game areas now agree. The other 37 complete
-index/RGB samples stay unchanged. All 126 capture files agree between variants,
-with full text, shake, selected state and nine complete actor/effect pools
-passing. Demo 1’s initial background and full pictures remain open.
+Current v1383 preserves Stage4 background draw order and tail scroll copies.
+All 40 standard sampled game areas agree on GNU and optimized UBSan. The first
+two samples change 133,251 pixels, all equal to the original; 38 complete
+index/RGB samples stay unchanged. Ten additional, separately instrumented GNU
+lighting samples and full text planes also agree, repairing another 7,498 pixels
+at frame 1666. Complete pictures remain open.
 
-The item Pool header/layout change requires fresh core/frontend builds: GNU
-produces 71 programs with 69 passing CTests; optimized UBSan cold-builds the
-core/game/trace/shake targets, without a full CTest claim. Earlier producers
-keep their own identities. Physical GDC/scanout, broader routes and Windows
-input/audio acceptance remain open.
+All 126 actual capture files agree across GNU/UBSan, preserving 15,988 selected
+state/count boundaries, 15,984 full shake and splash states, and 40 complete
+text planes. Only view.cpp changes; bounded cold TU builds reuse attested
+unchanged v1382 objects. Its full cold build, 69 CTests and nine complete actor
+pool comparison retain their own producer identities. Whole margins/cache/RGB,
+physical scanout, broader routes and Windows input/audio acceptance remain open.
 
 ## Build and run
 

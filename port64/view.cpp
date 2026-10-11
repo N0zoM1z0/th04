@@ -578,6 +578,8 @@ struct StageSprites {
     stage::TileImages tiles;
     stage::Background background;
     th04::portable::stage4::CarpetState carpet;
+    std::optional<th04::portable::stage4::Ring> carpet_draw_ring;
+    unsigned carpet_copy_top=0,carpet_copy_height=0;
     StageSprites(const StageSprites&)=delete;
     StageSprites& operator=(const StageSprites&)=delete;
     explicit StageSprites(const StageAssets& source,unsigned resource_stage=1):assets(source),stage(assets.stage_tiles),
@@ -823,7 +825,14 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 // A BB cel is32x32 tiles (four bytes/row); only24x23 show.
                 if (((state.kurumi_active() || state.elly_active()) ? sprites.second->assets.transition : sprites.transition)[unsigned(cel)*128+row*4+column/8]&(0x80u>>(column&7))) continue;
             }
-            const auto image = sprites.background.image_at(x,y);
+            // MAIN draws ordinary tiles before stage4_render changes the ring.
+            // Retain that draw's inputs across the later callback/scroll tail.
+            const unsigned physical_y=(y+display_line)%400;
+            const bool carpet_copy=sprites.second &&
+                (physical_y+400-sprites.second->carpet_copy_top)%400<sprites.second->carpet_copy_height;
+            const auto image = sprites.second && sprites.second->carpet_draw_ring && !carpet_copy
+                ? (*sprites.second->carpet_draw_ring)[physical_y/16][x/16]
+                : sprites.background.image_at(x,y);
             put_indexed_pixel(frame,palette,32,0,x,y,
                 tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
         }
@@ -1839,15 +1848,28 @@ public:
                 if(repaint)frame_=render();return;
             }
             if(main_->frames()!=before && !main_->next_stage_requested()) {
-                if(loaded_stage_==3) th04::portable::stage4::update_carpet(sprites_->second->carpet,
-                    sprites_->background.mutable_ring(),static_cast<std::uint16_t>(before),sprites_->background.scroll_line());
+                if(loaded_stage_==3) {
+                    sprites_->second->carpet_draw_ring=sprites_->background.ring();
+                    th04::portable::stage4::update_carpet(sprites_->second->carpet,
+                        sprites_->background.mutable_ring(),static_cast<std::uint16_t>(before),sprites_->background.scroll_line());
+                }
                 if(loaded_stage_==4) sprites_->second->star_draws=sprites_->second->stars.update(main_->boss_snapshot().phase,int(sprites_->background.scroll_line()),true);
                 for(const auto& event:main_->life_events())if(event.kind==player::LifeKind::scroll)
                     sprites_->background.set_display_line(unsigned(event.value));
                 // Stage6 frees MAP/STD before the final battle. Its boss
                 // background owns subsequent updates; a stopped, released
                 // map must never be advanced or reconstructed on repaint.
-                if(!sprites_->background.streams_released()) sprites_->background.update(main_->life().scroll_active!=0);
+                if(!sprites_->background.streams_released()) {
+                    const auto previous_delta=sprites_->background.last_delta();
+                    sprites_->background.update(main_->life().scroll_active!=0);
+                    if(loaded_stage_==3) {
+                        // MAIN's tail copier uses the refilled ring for the
+                        // combined current/previous integer row advance.
+                        sprites_->second->carpet_copy_top=sprites_->background.scroll_line();
+                        sprites_->second->carpet_copy_height=main_->life().scroll_active && !sprites_->background.stopped()
+                            ? unsigned(previous_delta+sprites_->background.last_delta())/16 : 0;
+                    }
+                }
             }
             // Retain both physical pages once for every completed Bomb frame,
             // even when a headless consumer postpones visible repainting.

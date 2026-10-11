@@ -9,14 +9,14 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1382 restores item-spawn white splash dots/state. All103 late-sample
-pixels disappear:39 of40 sampled game areas now agree; initialDemo1 remains.
-GNU/optimized UBSan each pass311 original CPU state/ordered-dot controls and
-all15984 complete81-byte splash records,15984 shake states,15988 selected scalar
-boundaries,40 full text planes and nine complete actor/effect pools. All126
-entire captures agree. Header/layout changes require current cold builds:
-GNU71 programs/69CTest; UBSan3 core/game/trace/shake targets, no fullCTest claim.
-Full pictures/RGB/cache/margins/physical GDC/scanout/broader routes remain open;
+Current v1383 preserves Stage4 background publication and tail scroll copies.
+All 40 standard sampled game areas agree on GNU/optimized UBSan; all 133,251
+changed pixels in the first two pictures equal original indices. Another ten
+separately instrumented GNU lighting fields/full text samples agree; frame1666
+repairs 7,498 pixels. Complete state/shake/splash/text controls remain unchanged.
+Only view.cpp changes; both bounded cold TU builds reuse attested v1382 objects.
+Its full cold/69CTest/nine-pool receipts retain their producer identities.
+Full pictures/cache/margins/RGB/physical scanout/broader routes remain open;
 see [demo evidence](port64/evidence/demo.md).
 
 Retained v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
