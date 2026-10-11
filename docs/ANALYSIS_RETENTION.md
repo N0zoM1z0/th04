@@ -1,5 +1,27 @@
 # Native private-state retention
 
+## v1413 palette fade recovery
+
+The isolated `native-palette-zero-v1413` tree retains its complete source
+archive, GNU/UBSan Animation programs, actual predecessor, original function
+bytes, 96 full compressed wait streams and comparison receipts under
+`.analysis/port64/native-palette-zero-v1413/`. Producer 528/dbdbcbe5 remains
+frozen. `verify_closure.py` reads every wait record and checks both compiler
+outputs, all 14 predecessor failures and 803 earlier text-proof files.
+
+Thirty completed CMake cache paths are archived as 27 unique blobs before
+removal. Full gzip, blob hashes and restored size/mode/nsmtime checks pass;
+programs and compiler metadata remain live. Cleanup releases 0.13 MiB net
+after the archive and journal. From the isolated worktree, run:
+
+```sh
+python3 -B .analysis/port64/native-palette-zero-v1413/verify_retention.py
+python3 -B .analysis/port64/native-palette-zero-v1413/verify_closure.py
+```
+
+Add `--restore --prefix build-gnu/` or `--restore --prefix build-ubsan/` to
+the retention reader to restore one compiler's cache with its original metadata.
+
 ## v1405 Gaiji character and string recovery
 
 The isolated `port-motion-v1402` tree retains this recovery under

@@ -1,5 +1,26 @@
 # TH04 native branch handoff
 
+## Palette fade WORD recovery (v1413)
+
+`maine::Animation` truncates fade speed to the original WORD and follows its
+signed test. Zero and negative WORD speeds now finish after the single initial
+refresh; positive speeds retain `1 + 17 * speed` waits. Original OP/MAINE
+0000:0622 and 0000:0666 pass 96 instruction controls at loads 1000/3333.
+Fresh GNU and optimized UBSan Animation builds each pass 24 native vectors;
+the actual 328585f predecessor fails 14. Complete tone stores, palette calls
+and wait streams remain available, including the transient 102/-2 tone.
+
+Frozen producer 528/dbdbcbe5 is in the isolated `native-palette-zero-v1413`
+tree, phase `.analysis/port64/native-palette-zero-v1413/`. Its closure verifies
+the source archive, complete original controls, compiler outputs and 803 frozen
+text-proof files. CI passes 345 tests; verified cache retirement releases
+0.13 MiB net. See [Ending evidence](port64/evidence/ending.md).
+Merge this bounded recovery with the published wait/text head 9a7f380 and
+build the resulting frontend and affected MAINE components before publication.
+
+The v1409 records below describe their frozen producer. DOS text/VSync has
+since been integrated at a07dbc0; native wait/text is published at 9a7f380.
+
 v1409 restores MAIN's ordinary text character/string writers in `TextPlane`.
 `put_character()` accepts the full WORD input, including ANK, JIS and Shift-JIS;
 HUD initialization, Game Over and the actual frontend now use it. `put_sjis()`

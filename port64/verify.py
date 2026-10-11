@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/palette_animation_contracts.cpp",
+    "port64/verify_palette_animation.py",
     "port64/character_address_contracts.cpp",
     "port64/verify_character_address.py",
     "port64/text_address_contracts.cpp",
