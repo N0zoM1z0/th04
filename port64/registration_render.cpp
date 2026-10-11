@@ -307,11 +307,10 @@ void Renderer::apply(const Event& e) {
     }
 }
 score_file::Bytes Renderer::rgb(unsigned page,int tone) const {
-    require(tone>=0 && tone<=100,"registration tone outside fade range");
+    const auto dac=pc98_palette::show(canvas_.palette(),tone);
     score_file::Bytes rgb(640*400*3);const auto& indices=canvas_.page(page);
     for(unsigned at=0;at<indices.size();++at)for(unsigned channel=0;channel<3;++channel) {
-        const unsigned component=canvas_.palette()[unsigned(indices[at])*3+channel]>>4;
-        rgb[at*3+channel]=pc98_palette::analog_rgb8(component*unsigned(tone)/100);
+        rgb[at*3+channel]=pc98_palette::analog_rgb8(dac[unsigned(indices[at])*3+channel]);
     }
     text_.overlay(rgb,assets_->graphics.gaiji,font_);return rgb;
 }

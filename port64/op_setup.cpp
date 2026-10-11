@@ -152,9 +152,9 @@ void Renderer::apply(const Event& e) {
     }
 }
 Bytes Renderer::rgb(int tone) const {
-    Bytes result;result.reserve(640*400*3);const auto& pal=canvas_.palette();
+    Bytes result;result.reserve(640*400*3);const auto pal=pc98_palette::show(canvas_.palette(),tone);
     for(auto index:canvas_.page(canvas_.shown_page()))for(unsigned component=0;component<3;++component)
-        result.push_back(pc98_palette::analog_rgb8((pal[unsigned(index)*3+component]>>4)*unsigned(std::clamp(tone,0,100))/100));
+        result.push_back(pc98_palette::analog_rgb8(pal[unsigned(index)*3+component]));
     return result;
 }
 }

@@ -468,6 +468,10 @@ add_executable(th04-port64-pmd-fm3-contracts pmd_fm3_checks.cpp)
 target_link_libraries(th04-port64-pmd-fm3-contracts PRIVATE th04-portable-core)
 add_test(NAME pmd-fm3-contracts COMMAND th04-port64-pmd-fm3-contracts)
 
+add_executable(th04-port64-palette-show-contracts palette_show_contracts.cpp)
+target_link_libraries(th04-port64-palette-show-contracts PRIVATE th04-portable-core)
+add_test(NAME palette-show-contracts COMMAND th04-port64-palette-show-contracts --self-test)
+
 add_executable(th04-port64-startup-contracts op_startup_checks.cpp)
 target_link_libraries(th04-port64-startup-contracts PRIVATE th04-portable-core)
 add_test(NAME startup-contracts COMMAND th04-port64-startup-contracts)
