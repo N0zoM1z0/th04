@@ -218,3 +218,6 @@ full GNU/UBSan, original corpus, default-route and retention checks.
 
 The VSync note includes the v1416 joined MAINE wait producer, both complete
 compiler graphs, independent original controls and retained parent evidence.
+
+The VSync note routes the v1417 live delay/bulk counter owner and preserved
+parent source, original cases, full compiler graphs and recovery.

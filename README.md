@@ -54,22 +54,20 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `c2d8363`
-(producer 532/037b0f2e), retaining text/VSync and signed palette recovery while
-adding MAINE's zero-delay and unsigned WORD delay boundaries. Optional fade
-tone callbacks preserve all updates within one refresh. Both cold GNU and
-optimized UBSan/bounds build all 81 programs and pass all 79 CTests.
-Complete original delay/fade controls, Congratulations/verdict consumers and
-eight muted startup/four-Demo/fresh-OP regressions pass. See the
-[VSync note](docs/reconstruction/product/TH04_NATIVE_VSYNC_V864.md) for scope
-and recovery. Actual elapsed scene counter/IRQ ownership remains open.
+Native development is active. `origin/port/modern-64` is at `dcbe8f7`
+(producer 534/8a83575e). A live WORD delay clears only Count1 and polls its
+unsigned value. Bulk IRQ/raster progression supports large input boundaries;
+the callback path retains every IRQ. Both complete GNU and optimized
+UBSan/bounds graphs build 82 programs and pass all 80 CTests. Original
+consumer/ISR controls, 2,008 independent integer vectors and eight muted
+startup/four-Demo/fresh-OP regressions pass. Actual elapsed MAINE/registration
+consumers remain open; see the [VSync note](docs/reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
 
-Current shared DOS combines mutable text bases and installed-owner VSync
-waits (producer 1,425/82ade790). MAIN/OP/MAINE pass 3,156 ordinary-text,
-2,656 Gaiji, 528 wait and 324 lifecycle comparisons. Both wait paths preserve
-the counters and existing owner storage. Earlier full-Demo/pool/video
-acceptance retains its frozen producer; these controls do not establish
-byte exactness or physical CPU/IRQ timing.
+Current shared DOS also restores analog/LCD palette output, with text and
+installed-owner VSync recovery (producer 1,425/491e4afa). Three cold products
+pass 20,832 original/compiled palette controls, 528 wait and 324 lifecycle
+controls. Prior complete Demo/pool/video acceptance retains its own producer.
+These comparisons do not establish byte exactness or physical CPU/IRQ timing.
 
 CI passes 451 DOS tests; retained native CI passes 345.
 
