@@ -10,71 +10,70 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1389 repairs native's analog RGB conversion to the pinned DOSBox-X PC-98
-4→6→8-bit DAC scanout path. An independent archive-attested compiler probe
-passes51,712 value/tone checks;12/16 values reject the old nibble×17 rule.
-Seven display consumers share pc98_palette.hpp and ten independent drawing
-Oracle adapters preserve four-bit tone arithmetic before expansion. The
-510-file producer is7223a35552eaac88e80fdc2166f1f1f9803ab688788efcc3a1c2167ddfc00e3d. PI-to-BMP asset preview
-keeps its raw linear colors; no DOS product source or exact acceptance changes.
+v1390 repairs the Demo validation entrance: `--demo-pictures` now runs full
+visual OP startup. Actual muted routes record one Logo and five completed
+titles, including ready OP after Demo4. Captures use `--pmd-driver none`;
+original PMD measure waits remain unpaired. The 510-file native producer is
+`bdc1fb56f80b1d5d987c89a1cfe63cea9da155eb6ef8eb662c10480dd02c4b5e`.
+Only main.cpp and demo_picture_frontend_checks.inl change.
 
-Fresh whole cold GNU71 programs/69 CTests, optimized UBSan game/trace/shake3,
-actual muted SDL-dummy four-Demo routes and private Linux Xvfb input/window
-checks pass. GNU/UBSan127 capture files are identical. Exactly28 full RGB
-files differ fromf2; all87 non-RGB files and12 RGB files keep previous hashes.
-Original selectedstate/RNG, palette, counters, TRAM, indices and shake proofs
-therefore retain their frozen prior identity; no new original boot/full-nine-pool
-capture is claimed. Fresh two-load1000/2000 MAIN GameOver and decoded MAINE
-registration graphics-consumer comparisons pass complete indices/TRAM/RGB.
-Scene clocks, sounds, host saves and complete process routes stay separate.
+Cold GNU builds 71 programs and passes 69 CTests; optimized UBSan builds the
+game, trace and shake programs. Their actual four-Demo captures produce 128
+identical files. Selected state/RNG/draw counts match both fresh originals at
+all 15,988 boundaries. State, palette, index, TRAM and shake outputs keep their
+previous hashes. Full startup changes five RGB files, the logical clock trace
+and adds startup-events.txt. Private Linux Xvfb input/focus/release/exit passes
+with no audio device opened.
 
-With explicit retained originalV3 display-event clock input, all40 complete
-640×400×3 raw RGB samples now equal the independently attested unchanged
-original scanout renderer. No normalization, tolerance, crop or phase offset
-is used. All120 regenerated phase references keep their old hashes. The
-actual FrontEnd fixture checks15,988 boundaries and15,984 endpoints; visible
-is assertion only. The same retained clock source is used for both sides.
-The oldf2 linear same-clock control rejects28/40;12 black/white cases cannot
-distinguish expansion rules. Defaultphase rawRGB matches37/40; three blink
-phase cases remain. Whole native/index inequalities retain their diagnostic
-scope. This is sampled programmed-frame RGB acceptance under supplied clock,
-not whole-picture/default boot timing/physical scanout acceptance.
+Two original runs use the same collector, ELF, config, reset and sample plan.
+Only host waits after the first 128 recorded V callbacks differ: 0 versus 5 ms,
+with 654,057,090 ns total measured delay. Both complete GDC event streams replay
+independent archived advance bodies; all 15,988 boundaries, 15,984 thin rows and
+40 full samples per capture pass their guards. Selected state and caller traces
+agree. Refresh ordinals differ by 5 at 15,987 boundaries and by 6 at one boundary;
+2,501 visible phases differ. Raw text, graphics, palettes, modes, FONT and CRT
+agree in all 40 paired samples. Only GDC and raster-time spans differ. This
+single pair does not attribute the shift specifically to sleep rather than
+run-to-run jitter. Keep epochs distinct. Parameter-entry coverage remains zero.
 
-The originalV3 MAIN/clock/FONT/CRT/VRAM/palette snapshots remain pinned to
-077440a3, scalar0AAF:00B7/terminal0AAF:0975, load10FC/DGROUP3230.
-Boot constructors return0/0/32 and the first callback advances0→1 at1.875ms.
-Blind event counts replay all15,988 phases with no offsets. Captures have
-different absolute epochs despite identical configs; never mix captured-phase
-references. Parameter-entry coverage remains0. The persistent native initial
-count is1 and interval17,723,227ns. Original physical DAC/live xlat32, raw PIC
-fractional timing, cross-emulator scanout, default boot/loading CPU-I/O timing,
-broader paired Boss/death/process and Windows input/audio remain open.
-Next investigate default elapsed-time owners under observer-overhead controls.
-The full goal stays active; targets remain candidate-local-attested and MAIN's
-historical carpet/checkerboard exactness is deferred.
+Each original's complete FONT/CRT/VRAM/palette/GDC/time samples emit 120 full
+RGB references. Separate actual FrontEnd fixtures use that capture's event
+ordinals at 15,988 boundaries and 15,984 endpoints. Complete raw RGB equals
+40/40 for each capture, 80/80 total, without normalization, crops, tolerance or
+phase fitting. Whole canonical TRAM equals; whole-index inequalities remain
+diagnostic. Default full-startup headless RGB equals 32/40 and 30/40 against
+the separate originals. Earlier 37/40 covered compact headless entry and
+retained V3. Fixture startup-prefix/final-OP clocks remain unpaired. The
+zero-initial-callback control rejects. Existing DAC, initial count 1 and
+17,723,227 ns period keep their independent proof identities.
 
-Replay: DOS-root .analysis/reconstruction/probes/native-dac-v1389/;
-native .analysis/port64/native-dac-v1389/. Final cold builds use build-gnu-v3
-and build-ubsan-v3 with frozen producer-source-v3. pipeline_v6.py runs all checks
-serially onCPU0/nice19. Original boot/clock/full40sample and negative epoch
-proofs remain under native-epoch-v1388; keep their terminal identities unchanged.
-See [the focused note](port64/evidence/demo.md).
+MAIN SHA-256 starts 077440a3; seams are MAIN 0AAF:00B7/0975 with runtime load
+10FC/DGROUP3230. Default boot/loading/process CPU-I/O clock ownership, raw PIC
+fractional timing, physical/cross-emulator scanout, paired Boss/death/process
+and Windows input/audio remain open. The full goal stays active. Targets are
+candidate-local-attested; historical carpet/checkerboard exactness stays
+deferred. Next separate original startup/loading clock owners from observer
+effects with controlled event traces and repeated zero-delay controls.
 
-Final lossless cleanup reclaims603.7 MiB after archive; the aborted
-initial build's regenerable products separately reclaimed24.3 MiB. Game,
-trace/shake programs, probes, frozen sources, original compressed samples,
-all receipts and logs remain live. Restore retired captures, objects/libraries
-and CTest helpers from the hash-verified archive before replay:
+Replay: DOS-root .analysis/reconstruction/probes/native-clock-owners-v1390/;
+native .analysis/port64/native-clock-owners-v1390/. pipeline_v2.py runs original
+readers/full cold builds/fullstartup captures/explicit per-capture clock fixtures
+and private Xvfb serially onCPU0/nice19; compare_native.py reduces full raw RGB.
+Use fresh output namespaces. All prior closed proofs keep immutable identities.
+Final lossless cleanup reclaims587.84MiB after archive/journal. Current
+game/trace/shake programs, frozen510 sources, original compressed streams,
+all independent programs/receipts/logs stay live. Restore retired HDIs/rawscalar,
+native captures, objects/libraries and helper programs before complete replay:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-dac-v1389/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-clock-owners-v1390/verify_retention.py --restore
 ```
 
-Without --restore, it validates every member, complete gzip CRC/EOF and protected
-hashes. The v1388 archive retains oldlinear controls; the new journal inherits
-its immutable protected inventory and adds closed proof files without rewriting
-past evidence. Use fresh recipe output directories. All jobs are terminal and
-both CI/diff checks pass; unavailable private native gates retain explicit skips.
+Without --restore, full gzipCRC/EOF/member SHA/mode/size/nsmtime and inherited
+protected/frozen-source pins are checked. See the focused note for limits and
+prior archived controls. Final CI/diff checks cover both worktrees.
+
+See [the focused note](port64/evidence/demo.md).
 
 Prior demo/point-number/presentation experiments are indexed in
 [demo evidence](port64/evidence/demo.md) and their immutable private receipts.

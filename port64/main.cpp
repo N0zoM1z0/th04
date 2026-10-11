@@ -345,7 +345,7 @@ int main(int argc, char** argv) {
             main_assets.setup_checks=setup_checks;
             main_assets.sound_checks=sound_checks;main_assets.sound_scene_checks=sound_scene_checks;
             main_assets.resident_sound_checks=resident_sound_checks;
-            main_assets.full_startup=title_window || !startup_checks.empty() || !natural_route_checks.empty();main_assets.startup_checks=startup_checks;
+            main_assets.full_startup=title_window || demo_pictures || !startup_checks.empty() || !natural_route_checks.empty();main_assets.startup_checks=startup_checks;
             main_assets.natural_route_checks=natural_route_checks;
             if(main_assets.full_startup) {
                 auto& startup=main_assets.startup;startup.logo=decode_pi(archive_member(par,"ZUN00.PI"));startup.menu=decode_pi(archive_member(par,"OP1.PI"));

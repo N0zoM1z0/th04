@@ -21,22 +21,22 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. The refresh clock admits the original immediate
-first callback and uses 17,723,227 ns through process transitions. Graphics
-colors now use the pinned PC-98 4→6→8-bit DAC path after four-bit fade arithmetic.
-Fresh GNU passes 69 CTests; optimized UBSan builds the game, trace and shake.
-Muted four-Demo routes produce 127 identical variant files; all state, palette,
-indices, text and shake outputs keep their previous full hashes.
+Native development is active. Native demo validation now runs the Logo and title startup before four natural
+demos, then completes a fresh OP title. Cold GNU passes 69 CTests; muted GNU
+and optimized UBSan produce 128 identical capture files. Selected state, RNG
+and draw counts match both fresh original captures at all 15,988 boundaries.
+The analog 4→6→8-bit DAC and 17.723227 ms refresh period retain their prior proofs.
 
-With explicit original display-event clock input, all 40 whole raw RGB samples
-match the independent original renderer without normalization or crops. Default
-timing matches 37/40; three blink-phase cases remain. The old linear control
-rejects 28/40. Fresh Game Over/MAINE registration graphics-consumer and private
-Linux window/input checks pass, with no audio device opened.
+With each original capture's supplied display-event clock, all 40 complete raw
+RGB samples match the independent renderer: 80/80 across the fresh pair, without
+normalization, crops or fitted offsets. Default full-startup headless captures
+match 32/40 and 30/40 against the separate originals. The earlier 37/40 result
+applied to compact headless entry against retained V3.
 
-Default boot/loading timing, physical and cross-emulator scanout, broader paired
-routes and Windows input/audio remain open. See [the current handoff](docs/RE_HANDOFF.md)
-for scoped evidence and cleanup recovery.
+These muted captures use `--pmd-driver none`; PMD measure waits and original
+audio timing remain unpaired. Boot/loading/process clock ownership, physical
+and cross-emulator scanout, broader paired routes and Windows input/audio remain
+open. Development stays active; see the handoff for evidence and cleanup recovery.
 
 ## Build and run
 

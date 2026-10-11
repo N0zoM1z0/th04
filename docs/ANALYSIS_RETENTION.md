@@ -509,3 +509,22 @@ Without --restore this verifies the complete archive and live protected sources.
 Oldlinear RGB controls retain f2 producer identity in the v1388 archive; current
 whole rawRGB40/40 uses retainedoriginalV3 samples under supplied originalclock.
 The initialstopped build has no accepted receipt; its rebuild journal is distinct.
+
+## Full OP startup and controlled clock pair (v1390)
+
+Lossless retirement journal and archive are in DOS-root
+.analysis/reconstruction/probes/native-clock-owners-v1390/. Archive SHA-256:
+`6f2c32ab93e9e81ecf9756af671d1c6ee8b47636ef04cca51ebc328cc22320dd`.
+2887 files retired;587.84MiB net after archive/journal.
+Original compressed full80/clock/thin streams and current game/trace/shake,
+independent models, recipes,510-file source freeze and all proof receipts/logs
+stay live. Retired rawscalar/HDIs and native expanded captures/reference RGB,
+CMake objects/libraries and helper programs require --restore for full replay.
+The verifier reads complete gzipCRC/EOF and pins every member SHA/mode/size/
+nsmtime plus31536 inherited protected hashes. Prior
+journals, closed proofs and source freezes retain their original identities.
+
+```sh
+python3 .analysis/reconstruction/probes/native-clock-owners-v1390/verify_retention.py
+python3 .analysis/reconstruction/probes/native-clock-owners-v1390/verify_retention.py --restore
+```

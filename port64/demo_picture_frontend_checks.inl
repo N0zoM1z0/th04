@@ -4,12 +4,22 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
     const CdgSheet& labels,const CdgSheet& cursors,const PiImage& selection_background,
     const CdgSheet& portraits,const MainAssets& assets,const std::string& destination) {
     namespace fs=std::filesystem;const fs::path out(destination),inputs(assets.save_directory);
-    require_view(assets.muted && !fs::exists(out),"picture capture requires fresh muted output");
+    require_view(assets.muted && assets.full_startup && !fs::exists(out),"picture capture requires fresh muted full startup");
     fs::create_directories(out/"save");
     fs::copy_file(inputs/"GENSOU.SCR",out/"save/GENSOU.SCR");
     fs::copy_file(inputs/"MIKO.CFG",out/"save/MIKO.CFG");
     auto input=assets;input.save_directory=(out/"save").string();
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&input);
+    std::ofstream startup_events(out/"startup-events.txt");
+    require_view(bool(startup_events),"cannot open demo startup trace");
+    unsigned startup_logos=0,startup_completions=0;
+    scene.set_startup_observer([&](const th04::portable::op_startup::Event& event) {
+        namespace startup=th04::portable::op_startup;
+        startup_events<<scene.generation()<<' '<<startup::kind_name(event.kind)<<' '
+            <<event.tick<<' '<<scene.text_refreshes()<<'\n';
+        if(event.kind==startup::Kind::logo_complete)++startup_logos;
+        if(event.kind==startup::Kind::complete)++startup_completions;
+    });
     scene.enable_registration();
     const std::array<unsigned,10> samples{1,2,3,72,73,74,1952,3379,3709,3996};
     std::ofstream trace(out/"state.txt"),displays(out/"displays.txt"),shakes(out/"shake.txt");
@@ -24,8 +34,10 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
     };
     for(unsigned number=1;number<=4;++number) {
         unsigned waits=0;
-        while(!scene.live_main() && waits++<1000)scene.advance(0,false,false);
+        while(!scene.live_main() && waits++<2000)scene.advance(0,false,false);
         require_view(scene.live_main() && scene.resident().demo_number==number && scene.main_state().frames()==0,"demo entry order");
+        require_view(startup_logos==1 && startup_completions==number && scene.resident().zunsoft_shown,
+            "demo entry skipped full OP startup or repeated its resident logo");
         const auto base_draws=scene.process_random_draws(),base_samples=scene.main_state().random_samples();
         demo::Replay replay(input.replays[number-1]);
         for(unsigned frame=0;frame<=3996;++frame) {
@@ -67,7 +79,12 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
         waits=0;while(scene.program()==application::Program::main && waits++<200)scene.advance(0,false,false);
         require_view(scene.program()==application::Program::op,"natural demo exit");
     }
+    unsigned final_startup_waits=0;
+    while(scene.startup_scene() && final_startup_waits++<1000)scene.advance(0,false,false);
+    require_view(scene.program()==application::Program::op && !scene.startup_scene() &&
+        startup_logos==1 && startup_completions==5,"final demo return did not complete fresh OP startup");
     require_view(score_file::HostStore(out/"save").file().bytes()==score_file::HostStore(inputs).file().bytes(),"demo physical score drift");
     require_view(bool(trace) && bool(displays) && bool(shakes) && bool(splashes),"demo picture trace write failure");
     require_view(bool(clocks),"text refresh trace write failure");
+    require_view(bool(startup_events),"demo startup trace write failure");
 }
