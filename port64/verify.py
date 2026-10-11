@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/motion_contracts.cpp",
+    "port64/verify_motion.py",
     "port64/pc98_vsync.hpp",
     "port64/pc98_vsync_checks.cpp",
     "port64/pc98_palette.hpp",

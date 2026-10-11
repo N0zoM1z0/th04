@@ -1,5 +1,38 @@
 # Native private-state retention
 
+The latest remote port/modern-64 is ce48946 and separately adds GRCG circle /
+stage-line recovery. Its renderer changes are not part of this514-file verified
+snapshot. This snapshot is published on review/startup-motion-join-v1403;
+merge it only after selecting one writable source session and attesting the
+combined producer. Both incoming histories are preserved. The older v1401
+startup implementation itself already reached port/modern-64 through fffcc83.
+
+## v1403 combined native producer
+
+3131 owned paths / 1463 blobs, 16.93MiB archive,
+468.70MiB net cleanup before post-CI caches. Frozen514-file producer, selected
+current executables, complete original vector comparisons, failure controls,
+receipts and prior producers stay live. Full current path metadata is journaled
+before archive/deletion, then CRC/all hashes and metadata readbacks pass.
+
+```sh
+python3 .analysis/reconstruction/probes/native-startup-motion-join-v1403/verify_retention.py
+python3 .analysis/reconstruction/probes/native-startup-motion-join-v1403/verify_retention.py --restore --prefix .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-motion-join-v1403/build-gnu
+python3 .analysis/reconstruction/probes/native-startup-motion-join-v1403/check_frozen_parent.py
+```
+
+Strict current reader binds514/c2f8d689. Frozen v1401 remains512/60cf4491;
+its strict current-source failure is expected, and the new parent reader checks
+its frozen closure/CRC/blob union independently. Do not restamp old proofs.
+The first v1401 journal caveat is unchanged; v1403 full metadata is available.
+
+Final current-tree CI passes root451/native345, tracking and diff checks.
+Root's actual private target/database/Oracle mutations pass; native private DB
+checks skip absent projects. Additional post-CI source-backed caches reclaim
+16.52MiB. v1403 total net cleanup is
+485.22MiB; disjoint v1401+v1403 retirement/caches total 1318.54MiB
+(1.29GiB), excluding temporary review-worktree removal.
+
 ## v1401 native startup waits
 
 Only the owned current CMake intermediates, nonselected executables, verified
