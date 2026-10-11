@@ -2171,3 +2171,63 @@ font adapter differs71 pixels. This directly verifies the native ANK fallback.
 The first readonly counting recipe repeatedly read fullfiles per pixel; a
 separate v2 reads eachfile once and reproduces the same output hash/count. Both
 passed scripts/receipts are retained. Replay verify_ank_v2.py after recovery.
+
+## Calibrated native refresh cadence (v1387)
+
+The original VP4 GDC/time streams independently explain the recorded period.
+All 15,984 complete records, headers, CPU/load identities and gzip CRC/EOF pass;
+the thin reader retains the complete 464-byte GDC pair and 51-byte time block.
+The actual archived PC98 branch of VGA_SetupDrawing, its fps calculation and
+vtotal assignment reproduce every observed 17.723226584839878 ms value.
+Master mode fields are 80 words, 400 lines, HFP10/HS8/HBP8 and VFP7/VS8/VBP25:
+106 character clocks by 440 lines at 21.0526 MHz divided by eight. Changing
+HFP, VBP or the 31 kHz clock branch changes the result. Original MAIN remains
+077440a3, load10FC/DGROUP3230, seam0AAF:00B7/terminal0AAF:0975. The emulator,
+archive, actual header/compiler and generated model are pinned. This establishes
+the recorded emulator mode; physical-board and cross-emulator timing stay open.
+
+Native host_window.hpp now uses 17,723,227 ns, the nearest integer nanosecond
+to the rational 1,865,600,000,000 / 105,263 ns. The remaining quantization is
+0.415160 ns per refresh instead of the old 7,269.415160 ns drift. The window
+trace reader uses the same accepted cadence. Only those two inputs change in
+the 509-file producer, manifest03351541…; public DOS inputs/fingerprint and
+historical exact states stay unchanged. The shared clock reaches host admission,
+MAIN refresh observation, continuous text time and frontend sound durations.
+Legacy component fixtures using explicit old-duration intervals do not represent
+the current hardware cadence and retain their fixed-duration scope.
+
+A fresh whole cold GNU build produces 71 programs and passes all 69 CTests.
+Optimized UBSan/bounds cold-builds the game, demo trace and shake targets; no
+full UBSan CTest or new full-nine-pool claim follows. Actual muted SDL-dummy
+OP→four demos→OP yields 127 identical complete files in both variants and the
+frozen a47f0496 parent. All 15,988 selected original scalar/RNG/caller boundaries
+are compared again from the complete original raw trace with relocated-load,
+profile/schema/input guards. Original full starting-image validation retains
+its v1386 producer/retention identity, rather than becoming a new capture.
+
+An independent actual Schedule probe uses the archived model's event times,
+checking 20,000 before/after refresh boundaries. Current cadence passes; the
+frozen old 56.4 Hz source rejects. A separate instrumented actual FrontEnd
+checks logical admission17 and host boundaries through 1,000,000 refreshes,
+against the unchanged GDC counter. Repaint, simulation double counting and
+backwards-time controls pass; its 127 ordinary capture hashes are unchanged.
+An actual muted private Linux Xvfb startup/Marisa B/input/focus/release/exit
+route passes all recorded cadence deadlines and opens no audio device.
+Windows foreground/input, physical display/audio and dense pacing stay open.
+
+All forty entire native index/text/RGB samples remain unchanged. The immutable
+independent emitter regenerates all 120 captured/on/off original RGB frames
+from restored actual FONT/CRT inputs, reproducing their full hashes. Whole raw
+RGB still has 12/40 zeros, explicit DAC diagnostics32/40 and eight blink-phase
+cases; fixed native-phase projection40/40 is diagnostic only. Cadence calibration
+does not align the separate original boot/process epoch or accept physical
+scanout. Recover a common reset/boot/process elapsed timeline independently;
+never fit offsets per Demo. Broader ordinary Boss/death/process pairing remains.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-cadence-v1387/;
+native receipts .analysis/port64/native-cadence-v1387/. Use attest_timing_v2.py,
+cadence_controls.py, compare_final.py and run_window.py. The initial timing
+reader's archive iterator reset failed its input guard before compiling or
+reading records; its source/log are retained. Separate v2 enumerates the archive
+once and passes. Earlier a47f0496 and font/raster proofs keep their original
+source/evidence scopes; no old proof is restamped as current03351541.

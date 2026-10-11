@@ -1,5 +1,37 @@
 # Private build and analysis retention
 
+## v1387 calibrated native cadence
+
+All jobs are terminal. Current509/03351541 has fresh GNU71/69CTest and optimized
+UBSan3 cold-build receipts; actual four-Demo127 files and privateXvfb deadline/
+input checks pass. Main441/liveGhidra andnative345/target CI pass. Original
+GDC/time ownership and independent old-rate rejection stay separately pinned.
+
+Lossless retirement archives 2,577 complete files and deletes
+1,044 source-backed caches. Full temporary restored SHA/size/mode/nsmtime
+and complete gzip CRC/footer/EOF pass before and after deletion. All
+28,262 earlier/current protected hashes,509 source pins and the
+unchanged DOS fingerprint pass. Net allocated recovery is
+364,519,424 B (347.6 MiB) after the 28.4 MiB archive,
+before the 6.8 MiB journal allocation. Both archive and
+journal are required for exact file recovery.
+
+Current game/trace/shake executables, independent timing/counter/clock programs,
+frozen sources, logs, receipts and original reference streams remain live.
+The archive holds CMake intermediates/static libraries, unused CTest helper
+executables, complete duplicate capture files and freshly emitted references.
+Earlier a47f0496 and font/raster proofs keep their original scopes; the old
+protected inventory is checked without relabeling it as current03351541.
+
+From DOS root, use
+`python3 .analysis/reconstruction/probes/native-cadence-v1387/verify_retention.py`
+for complete temporary recovery or add `--restore` to restore exact owned paths.
+Restore before CTest or readers needing expanded inputs. Run one-shot probe
+recipes in fresh output namespaces; never overwrite terminal evidence or rerun
+the retirement controller. The initial archive-reader guard failure and separate
+corrected v2 source/logs remain retained.
+
+
 ## v1377 aligned presentation consumer
 
 All jobs are terminal. Main441/live Ghidra and native345/target CI pass; native

@@ -54,16 +54,15 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native MAIN text blink uses a persistent display clock and correct attribute
-order. The latest original capture now records complete font memory and text/CRT
-registers across all 15,984 Demo updates. It rejects a 32-byte error in the old
-font reconstruction probe; a model with the actual write-port guard matches
-all 516 KiB. Product source and the retained 69-CTest native build are unchanged.
+Native's shared refresh clock now uses 17.723227 ms, derived independently
+from all 15,984 original GDC/time records. A fresh whole GNU build passes
+69 CTests; muted GNU/optimized UBSan four-Demo routes have 127 identical
+capture files with unchanged state, text and sampled pictures. Independent
+clock controls and an actual private Linux window/input route pass.
 
-Original refresh timing is now measured at about 17.7232266 ms, slightly faster
-than native's 17.730496 ms approximation. Calibrating cadence and original
-boot/process phase is next. Full raw RGB, physical scanout and broader paired
-routes remain open; development stays active.
+Complete original font memory and text/CRT evidence remain retained. Original
+boot/process phase, full raw RGB, physical scanout and broader paired routes
+remain open; development stays active.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

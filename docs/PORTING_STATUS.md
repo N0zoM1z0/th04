@@ -297,3 +297,15 @@ The 509 product source inputs (a47f0496…) and retained v1385 build/capture
 identities are unchanged. Physical scanout, full raw RGB, original phase,
 broader routes and historical exact acceptance remain open. See the current
 handoff for replay recipes and evidence scopes.
+
+## Calibrated native cadence (v1387)
+
+All 15,984 original GDC/time records reproduce the archived timing model;
+native now uses the nearest period, 17,723,227 ns. Fresh GNU69 CTests,
+optimized UBSan3 targets and127 identical ordinary Demo files pass. Independent
+20,000 scheduling and1,000,000 frontend-refresh controls reject the old cadence;
+an actual private Linux window/input route also passes. Producer03351541 has
+two changed inputs. Full-font/register references and original selected-state
+checks remain retained. RawRGB12/40, DAC diagnostics32/40 and eight phase cases
+remain; original common boot/process epoch is the next owner. Physical scanout,
+broader paired routes, Windows and historical exact acceptance remain open.
