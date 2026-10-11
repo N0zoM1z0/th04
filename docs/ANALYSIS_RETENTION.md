@@ -7,6 +7,32 @@ Its verified snapshot predates those renderer changes. Attest a combined
 producer when integrating the two histories. The v1401 startup implementation
 already reached `port/modern-64` through fffcc83.
 
+## v1407 DOS text Gaiji
+
+Replay index: `.analysis/reconstruction/probes/dos-text-gaiji-v1407/`.
+The 1,425-file input freeze fb50205b, three selected products/MAPs/compiler
+receipts, 2,656 complete text comparisons, 4,800 graphics Gaiji regressions and
+old compiled control stay live. `verify_closure.py` also checks the frozen
+v1406 source archive and unchanged proof identities independently of the new
+live source.
+
+Restored only journaled parent source/object caches needed for verified reuse.
+Retired those restored files and the current producer's disposable source/OMF
+caches: 7,143 paths / 1,449 blobs. The path/hash/size/mode/nsmtime journal
+preceded archiving and deletion; CRC, every blob, temporary metadata readback
+and 68 protected files pass. Net reclamation is 29.51 MiB after archive
+and journal. 546 source-backed Python caches reclaim another
+8.49 MiB, for 38.00 MiB total. Earlier archives and selected programs stay intact.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-text-gaiji-v1407/verify_closure.py
+python3 .analysis/reconstruction/probes/dos-text-gaiji-v1407/verify_retention.py
+```
+
+Add `--restore --prefix <owned producer subtree>` to the retention reader
+when a compiler input is needed. Restore narrowly with verified metadata;
+keep old acceptance receipts bound to their original producers.
+
 ## v1406 DOS Gaiji
 
 The replay index `.analysis/reconstruction/probes/dos-gaiji-v1406/` binds

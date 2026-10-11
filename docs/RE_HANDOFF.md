@@ -5,7 +5,34 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-## Current DOS Gaiji recovery (v1406)
+## Current DOS text Gaiji recovery (v1407)
+
+`gaiji_text.cpp` now restores the mutable text base, original store order,
+wrapped attribute count and return ES for `GAIJI_PUTCA/PUTSA`. Original
+MAIN and MAINE match all 2,656 complete memory/write/state controls at
+load1000/3333, including long strings whose glyphs alias attributes.
+The compiled predecessor has 40 final memory differences and 426 ES differences.
+The previous graphics Gaiji functions retain all 4,800 controls with the new
+OP/MAINE products.
+
+Three affected products were rebuilt with freshly compiled changed source
+and verified unchanged-object reuse. Links, IRQ audits and MAIN bullet tables
+pass. Product inputs are 1,425 files / fb50205b; ZUN keeps its prior product.
+Historical exact remains 661/663. The full goal stays active.
+
+Replay index: `.analysis/reconstruction/probes/dos-text-gaiji-v1407/`;
+products: `.analysis/build/th04-text-gaiji-v1407/`. See
+[text Gaiji recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
+Next migrate these writer semantics into native `TextPlane`, whose current
+owner still limits writes to visible cells and fills attributes per glyph.
+Continue function recovery before long game campaigns.
+
+Root CI passes 451 tests, ledgers, catalog and private target/database checks.
+Verified archiving retires 7,143 owned cache paths; source-backed Python
+caches bring cleanup to 38.00 MiB net. Complete original/compiled memory
+transcripts, selected products and frozen parent proofs remain.
+
+## Previous DOS Gaiji recovery (v1406)
 
 `src/shared/hardware/graph_gaiji.cpp` now preserves continuous string byte
 addresses, WORD/spill writes across FFFFh and return ES. Original OP and MAINE

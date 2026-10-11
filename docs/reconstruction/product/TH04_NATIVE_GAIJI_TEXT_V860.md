@@ -1,5 +1,50 @@
 # TH04 native text VRAM gaiji writers
 
+## Original writer recovery (v1407)
+
+The maintained `gaiji_text.cpp` now reads `TextVramSeg`, whose original
+initial value is A000h. MAIN 0000:1B0C/1B50 reads this word at DGROUP:0768;
+MAINE 0000:0FC4/1008 uses DGROUP:03F6. Row segments add `y * 10` with WORD
+wrap, and each row starts at the WORD offset `x * 2`.
+
+`GAIJI_PUTCA` writes the first attribute before the first glyph, then the
+second attribute before the second glyph. `GAIJI_PUTSA` writes all glyph
+halves first, derives the attribute count from the wrapped end-minus-start
+offset divided by two, then fills attributes. Thus 16,384 characters wrap
+DI back to its starting offset and fill zero attributes. Both entries return
+with ES selecting the row segment. The earlier C++ implementation fixed the
+base at A000h and wrote attributes after each character.
+
+The new `scripts/runtime/verify_dos_text_gaiji.py` executes original and
+linked MAIN/MAINE functions at load segments 1000 and 3333. All 2,656 controls
+agree on the complete seeded 80000h..DFFFFh memory window, ordered WORD
+writes, far stack cleanup, preserved DS/SI/DI/BP, IF and return ES. The inputs
+cover every byte glyph, additional WORD characters, coordinate and attribute
+boundaries, alternate text bases, NUL termination and strings up to 32,768
+characters. No guest function is replaced or intercepted.
+
+The compiled v1406 MAINE predecessor differs in all 1,328 controls on write
+order or ES, including 40 final memory differences and 426 ES differences.
+At the default text base, 2,049 characters overwrite four bytes differently;
+16,383 characters expose 57,284 differing bytes. These are consequences of
+glyph/attribute aliasing and wrapped REP counts, not a display comparison.
+
+Final producer `product-20261011-181547-841f86b3` compiles changed source
+against verified unchanged-object caches. MAIN freshly compiles three of its
+193 C++ roots; OP and MAINE freshly compile Gaiji text and BGIMAGE, reusing
+163/165 and 137/139 objects. All three links, IRQ vector audits and MAIN
+bullet tables pass. MAIN/OP/MAINE are 199,585 / 79,502 / 72,376 bytes.
+The 1,425-file product input fingerprint is
+`fb50205bd93654ed255d116232909ab2f1587132e0fc55dfdb3f7c44303f0b65`.
+
+The previous graphics Gaiji writer also passes its 4,800 controls against the
+new OP/MAINE products. Full source/program/transcript closure and frozen
+v1406 evidence are indexed under
+`.analysis/reconstruction/probes/dos-text-gaiji-v1407/`. Historical exact
+acceptance remains 661/663. Native `TextPlane` migration is the next owner.
+
+## Initial source migration (v860)
+
 2026-09-27 product-build investigation. The TH04-local
 `src/shared/hardware/gaiji_text.cpp` owns `GAIJI_PUTCA` and `GAIJI_PUTSA`.
 Each input byte selects two adjacent PC-98 text cells. The first glyph word
