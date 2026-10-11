@@ -28,7 +28,10 @@ Eight actual muted SDLdummy startup/fourDemo/freshOP routes (two compilers,
 none/pmd/pmdb2/pmd86) each match original selected state at15988 boundaries
 and all129 immutable v1403 output hashes. Full original picture/physical scanout,
 default CPU/graphics/loading costs, broader Boss/death/process, second emulator
-and Windows remain open. Pinned DOS source revision5e04432 has fingerprinta34c1357; shared-root new Gaiji source is outside this proof. Historical exact ledgers and
+and Windows remain open. Historical shared-checkout DOS fingerprinta34c1357 stays frozen. The isolated
+5e04432 checkout has fingerprintda3ee78f after four declared ASM/template EOL
+conversions; its tracked inputs match Git. Shared-root new Gaiji source is
+outside this proof. No fresh DOS product build is claimed. Historical ledgers and
 candidate-local-attested provenance are unchanged. Continue bounded source work.
 
 Replay: .analysis/reconstruction/probes/native-integrated-v1404/
