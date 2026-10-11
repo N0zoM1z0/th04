@@ -28,7 +28,9 @@ python3 .analysis/reconstruction/probes/dos-vsync-wait-v1408/verify_retention.py
 ```
 
 Source-backed own Python caches reclaim another 8.49 MiB after CI 451; this
-owned batch reclaims 407.66 MiB net. `verify_frozen_parents.py` independently
+owned batch reclaims 407.66 MiB net. Published-main CI and actual private
+Ghidra gates pass; a separate source-backed live-main cache journal reclaims
+8.52 MiB, for 416.18 MiB total. `verify_frozen_parents.py` independently
 checks the old DOS input archive/30 proofs and native 1,235-file terminal seal.
 
 Only owned paths are restored. Old frozen native/DOS source archives and

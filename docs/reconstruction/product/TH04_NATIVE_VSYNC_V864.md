@@ -253,3 +253,13 @@ CI passes 451 tests, targets/calibration, ledgers/catalog; isolated Ghidra/JDK
 checks skip while root originally attested all three original databases.
 Source-backed own Python caches reclaim another 8.49 MiB; owned cleanup is
 407.66 MiB before any separate live-main post-publication cache cleanup.
+
+Published-main CI subsequently passes the actual Ghidra/JDK, live MAIN and
+Oracle mutation gates as well as all 451 tests and ledger/catalog checks.
+Four pre-existing mixed/CRLF source representations were backed up and
+normalized to Git/attributes LF, with zero logical/index diff; all 1,425
+live-main product inputs now equal the cold producer literally. The old
+raw source archive keeps its fb50205b identity. `root-eol-normalization.json`
+and `publication-final.json` retain the publication/identity guards.
+Live-main source-backed Python caches reclaim another 8.52 MiB after CI;
+total reclamation is 416.18 MiB, disjoint from frozen native cleanup.
