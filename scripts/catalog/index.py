@@ -25,6 +25,7 @@ EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
     'verify_dos_text_gaiji.py': ('runtime', 'Compare original and linked DOS text Gaiji memory, store order, wrapped attribute counts and far-call return state.'),
     'verify_dos_gaiji.py': ('runtime', 'Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries.'),
+    'verify_dos_vsync_wait.py': ('runtime', 'Compare original and linked DOS owner-dispatched VSync waits, word operands, ordered GDC reads and actual IRQ/IRET controls.'),
     'verify_dos_vsync_lifecycle.py': ('runtime', 'Compare relocated original and linked DOS START/IRQ instructions, including a seeded IRQ during BIOS query.'),
     'verify_gaiji_io_clock.py': ('runtime', 'Verify original OP Gaiji port counts, complete relocated hooks and elapsed I/O clocks across CPU/delay controls.'),
     'verify_op_loading_clock.py': ('runtime', 'Verify original OP loading phases, guest DOS return frames and fractional clocks; reject incomplete zero-exit captures.'),

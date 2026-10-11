@@ -10,6 +10,44 @@ Updated 2026-10-12. The full native goal remains active on `port/modern-64`, in
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
 
+## DOS installed-owner VSync wait (v1408)
+
+Shared `vsync_wait.cpp` now chooses the original branch once at entry:
+installed IRQ waits for any unsigned Count1 change; otherwise it waits for
+the next GDC blank. Neither path clears Count1/Count2. The owner is a public
+byte alias of START/END's existing saved PIC mask, with no additional storage.
+
+Cold all-four-product producer 1425/d9383fa5 passes links, MZ/IRQ audits and
+MAIN bullet tables. Complete original MAIN 0000:2462, decoded OP 0000:2648
+and decoded MAINE 0000:2206 each have 38-byte waits; compiled contributions
+are 49 bytes. Three-artifact comparisons pass 528 controls at loads 1000/3333,
+including 72 real ISR/IRET injections and 24 midwait owner changes. Existing
+START/IRQ/END retains 324 controls. The real polling-only predecessors each
+reject 136 installed-owner cases while their 40 unowned cases still agree.
+
+Fresh muted four-Demo runs pass all 15,988 original consumed-input/score/RNG
+boundaries. This is a selected-state regression; earlier whole-pool/video
+acceptance retains its own frozen producer. Raw register differences are
+recorded, including different artifact DS layouts and incidental AX/DX/FLAGS;
+no complete register, byte-exact or physical latency claim is made.
+
+Replay index/products: `.analysis/reconstruction/probes/dos-vsync-wait-v1408/`.
+`focused.json`, `negative-final.json` and `demo-regression.json` record commands;
+`verify_retention.py --restore --prefix <owned path>` restores archived inputs.
+Verified retirement reclaims 52.39 MiB from 3,584 owned paths/1,450 blobs.
+Stopped observer diagnostic logs separately reclaim 346.77 MiB losslessly.
+Final products/MAPs, wait OMFs, original/compiled transcripts and failure
+readers remain. See [VSync recovery](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
+
+CI passes 451 tests, targets/calibration, ledgers and catalog. Original MAIN,
+OP and MAINE databases were attested in root before work; isolated private
+Ghidra/JDK CI checks skip. Source-backed own caches reclaim another 8.49 MiB.
+Frozen DOS 30-file and native 1,235-file parent closures retain their hashes.
+
+Historical exact remains 661/663. Next source work includes DOS ordinary
+text writers' mutable TextVramSeg references and other native scene waits;
+physical timing, broader game routes and Windows acceptance remain open.
+
 ## Native ordinary text writers (v1409)
 
 `TextPlane` now recovers the complete WORD character input and the original
@@ -54,7 +92,7 @@ Native `port/modern-64` commit 8f7f7d5 has producer 524/6f214e8c. Proofs:
 `port-motion-v1402/.analysis/port64/native-text-address-v1408/`. Verified
 cleanup reclaims 13.04 MiB net, with complete proofs and frozen parents intact.
 See [text writer recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
-Next recover ANK/Shift-JIS addresses. Historical exact remains 661/663.
+The v1409 ordinary-text recovery above extends this owner. Historical exact remains 661/663.
 The palette VSync review below is a separate frozen producer, pending integration.
 
 ## Native OP palette VSync wait recovery (v1407)
@@ -70,7 +108,7 @@ the palette loop and once per speed-loop iteration (0632/0643/0676/0687).
 
 Cold producer524/d9edcdf5 passes77 GNU programs/75 CTests and13 optimized
 UBSan programs/10 focused contracts. Each compiler passes32 unchanged-original
-controls at load1000/3333 and432 independent ideal raster/cadence vectors
+controls at load 1000/3333 and432 independent ideal raster/cadence vectors
 (1296 waits), including FFFF-to-zero and status/IRQ edge separation.
 Count1/GDC inputs are explicit consumer stimuli, not measured physical IRQs.
 The real48e05da startup predecessor fails the new counter-retention contract.
@@ -81,8 +119,8 @@ The first cold build failed the valid-final-edge overflow contract (74/75).
 Its source/program/logs remain frozen; v2 repairs exhaustion and passes.
 This batch changes native wait/startup source, with no new DOS product or
 historical exact promotion. The older25-byte compiler-service observation describes only the polling
-producer, not the complete original function. Shared DOS vsync_wait.cpp still implements only
-port polling; recover its installed-owner branch in a separate cold replay.
+producer, not the complete original function. At that frozen native producer, shared DOS was polling-only. The separate
+v1408 DOS cold replay above now recovers its installed-owner branch.
 Other native scene wait adapters, CPU/loading/ISR costs, complete pictures,
 Boss/death/process, second-emulator and Windows acceptance remain open.
 
@@ -123,12 +161,12 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
-## Current DOS text Gaiji recovery (v1407)
+## Retained DOS text Gaiji recovery (v1407)
 
 `gaiji_text.cpp` now restores the mutable text base, original store order,
 wrapped attribute count and return ES for `GAIJI_PUTCA/PUTSA`. Original
 MAIN and MAINE match all 2,656 complete memory/write/state controls at
-load1000/3333, including long strings whose glyphs alias attributes.
+load 1000/3333, including long strings whose glyphs alias attributes.
 The compiled predecessor has 40 final memory differences and 426 ES differences.
 The previous graphics Gaiji functions retain all 4,800 controls with the new
 OP/MAINE products.
@@ -154,7 +192,7 @@ transcripts, selected products and frozen parent proofs remain.
 `src/shared/hardware/graph_gaiji.cpp` now preserves continuous string byte
 addresses, WORD/spill writes across FFFFh and return ES. Original OP and MAINE
 entries agree with the final linked products on all 4,800 component controls
-at load1000/3333. The compiled predecessor has 150 address-mask differences;
+at load 1000/3333. The compiled predecessor has 150 address-mask differences;
 write-width and ES comparisons reject all 2,400 predecessor controls.
 
 Both affected products were cold-built, then the ES correction freshly compiled
@@ -188,7 +226,7 @@ validated startup waits. Verified integration producer514/c2f8d689 is frozen;
 CMake's new motion contract and its verifier are now both included in the
 complete source manifest. Fresh GNU builds73 programs/71CTests; optimized
 UBSan builds10 programs/7 contracts. Unchanged original MAIN0000:1DA8..1E13
-and table2134:021E execute at load1000:184908 vectors per compiler agree,
+and table2134:021E execute at load 1000:184908 vectors per compiler agree,
 including514 original DIV faults. Complete expanded comparison transcripts
 match between GNU/UBSan. The compiled old blanket -32768 rejection fails.
 This accepts the bounded corpus and explicit native fault surface; it is not
@@ -448,7 +486,7 @@ scanout/broader pairing remain open; the bounded view build retains prior core
 and whole cold/CTest/full-pool producer identities.
 
 v1382 adds the missing eight-slot item-spawn splash owner and white foreground
-dots. GNU/optimized UBSan pass311 originalCPU component cases each and all15984
+dots. GNU/optimized UBSan pass311 originalCPU component cases each and all 15,984
 complete81-byte natural splash records. All103 late-sample pixels disappear;
 39 of40 sampled game areas now agree, with initialDemo1 still different. Other37
 entire index/RGB samples remain unchanged. Fresh cold GNU71 programs/69CTest

@@ -54,30 +54,32 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. The current reviewed producer includes the
-startup/motion, GRCG, font and graphics Gaiji owners from native base48e05da.
-It also repairs OP palette waits: installed IRQ waits for Count1 to change;
-uninstalled waits for the next GDC blank. Both preserve the counters, while
-frame_delay and Logo retain their original clear orders.
+Native development is active. The current native branch is at `328585f`
+(producer 526/3e7d5e33). Ordinary character and Shift-JIS writers now preserve
+WORD addresses, mutable text bases and the original conversion/store order.
+All 65,536 WORD characters and 65,536 two-byte inputs agree on visible text
+banks; 840 additional inputs agree on complete memory at two loads.
+GNU and optimized UBSan reproduce them; prior Gaiji retains 2,656 comparisons.
+See [ordinary text recovery](docs/reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md).
 
-New cold builds pass75 GNU CTests and10 optimized UBSan contracts. Both
-compilers agree on32 original-instruction controls at two loads and432 ideal
-raster/cadence vectors (1296 waits each). The actual startup predecessor fails
-the new counter-retention check. Eight muted startup/four-Demo/fresh-OP routes
-retain all129 prior outputs per profile and pass15988 original selected-state
-boundaries each. The review is on `review/native-gdc-poll-v1407`; earlier
-integration snapshots keep their own frozen evidence.
+The separate `review/native-gdc-poll-v1407` palette-wait producer retains its
+75 GNU CTests, 10 UBSan contracts, original controls and eight muted routes.
+It awaits integration with the newer text-writer producer.
 
-Both repository CI gates pass (451 DOS-root and345 native tests).
+Shared DOS now also recovers the installed-owner VSYNC_WAIT branch. All four
+products were cold-built from 1,425 pinned inputs (d9383fa5). Original/compiled
+MAIN, OP and MAINE pass 528 wait controls and 324 lifecycle controls; real
+polling-only predecessors each fail 136 installed-owner controls. Four fresh
+bundled demos pass 15,988 consumed-input/score/RNG boundaries. These scoped
+checks preserve both counters and the existing owner storage; they do not
+establish byte exactness or physical CPU/IRQ timing.
+
+CI passes 451 DOS tests; retained native CI passes 345.
 
 Physical CPU/loading/ISR costs, other scene wait adapters, complete pictures,
-broader Boss/death/process routes and Windows input/audio remain open. Shared
-DOS's installed-owner VSYNC_WAIT branch also needs separate recovery and a
-cold replay. See the handoff for the current source, evidence and cleanup.
-
-The shared DOS VSYNC owner preserves cadence phase and queries before clearing
-counters. Retained three-artifact 108-case comparisons and four-product/Demo
-regressions have their frozen v1400 scope; this native batch does not rebuild DOS.
+broader Boss/death/process routes and Windows input/audio remain open. DOS
+ordinary-text writers' mutable text-base references are the next source owner.
+See the [current handoff](docs/RE_HANDOFF.md) for frozen producers and recovery.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

@@ -21,12 +21,15 @@ GDC_31KHZ_BITS = 0Ch
 GDC_31KHZ_SKIP_INCREMENT = 13311
 
     .data
-public _vsync_Count1, _vsync_Count2, _vsync_Proc
+public _vsync_Count1, _vsync_Count2, _vsync_Proc, _vsync_OwnerMask
 _vsync_Count1       dw 0
 _vsync_Count2       dw 0
 _vsync_Proc         dd 0
 cadence_skip_increment     dw 0
 cadence_skip_accumulator   dw 0
+; START forces FBh/FFh here; zero means no installed IRQ/vector owner.
+; The wait consumer shares this byte, without allocating a second flag.
+_vsync_OwnerMask label byte
 saved_irq_mask_merge       db 0
 vsync_old_vect      dd 0
 

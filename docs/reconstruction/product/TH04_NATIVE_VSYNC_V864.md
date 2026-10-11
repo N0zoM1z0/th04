@@ -137,7 +137,7 @@ the palette loop and once per speed-loop iteration (0632/0643/0676/0687).
 
 Cold producer524/d9edcdf5 passes77 GNU programs/75 CTests and13 optimized
 UBSan programs/10 focused contracts. Each compiler passes32 unchanged-original
-controls at load1000/3333 and432 independent ideal raster/cadence vectors
+controls at load 1000/3333 and432 independent ideal raster/cadence vectors
 (1296 waits), including FFFF-to-zero and status/IRQ edge separation.
 Count1/GDC inputs are explicit consumer stimuli, not measured physical IRQs.
 The real48e05da startup predecessor fails the new counter-retention contract.
@@ -148,8 +148,8 @@ The first cold build failed the valid-final-edge overflow contract (74/75).
 Its source/program/logs remain frozen; v2 repairs exhaustion and passes.
 This batch changes native wait/startup source, with no new DOS product or
 historical exact promotion. The older25-byte compiler-service observation describes only the polling
-producer, not the complete original function. Shared DOS vsync_wait.cpp still implements only
-port polling; recover its installed-owner branch in a separate cold replay.
+producer, not the complete original function. At that frozen v1407 producer, shared DOS was polling-only. The v1408
+DOS recovery below resolves that gap; earlier receipts retain their old scope.
 Other native scene wait adapters, CPU/loading/ISR costs, complete pictures,
 Boss/death/process, second-emulator and Windows acceptance remain open.
 
@@ -174,3 +174,82 @@ Source-backed owned post-CI caches reclaim another16.35 MiB; this batch
 reclaims518.40 MiB net, disjoint from prior frozen cleanup.
 
 Goal active; CPU1/nice19 serial and muted; no Windows GUI/focus/keys/audio.
+
+## DOS installed-owner wait recovery (v1408)
+
+Target-observed complete waits (38 bytes each, CS relative to the recorded
+MZ load segment) share one entry ownership test and two far returns:
+
+| Artifact | CS:entry | DGROUP | Owner offset | Count1 / Count2 offsets | Complete wait SHA-256 |
+| --- | --- | --- | --- | --- | --- |
+| MAIN | 0000:2462 | 2134 | 0774 | 2AB2 / 2AB4 | 5e5f6eaacf8833847359e88c6d2531d35d816533d5b8e49ee2a51cc454b1a5d6 |
+| OP decoded | 0000:2648 | 0F34 | 0856 | 1AC6 / 1AC8 | 989ba1d57373892c48f460097161f08d5391388535059d007327fda0f4e45b20 |
+| MAINE decoded | 0000:2206 | 0E53 | 0402 | 0EFA / 0EFC | 122568ac75a194b3118dd40772ae4e55352102a549344ffb08f2b3e3c53b21d0 |
+
+The installed path snapshots a WORD and loops until inequality. The unowned
+path finishes any current blank before waiting for a rising blank. Neither
+clears either counter. START forces its saved mask byte to FBh/FFh; END clears
+it. Maintained ASM adds only `_vsync_OwnerMask label byte` on this existing
+storage. The C++ consumer declares a volatile cdecl byte and branches once,
+retaining the literal-macro GDC expressions and large-model Pascal far ABI.
+No copied target instructions or extra owner flag are introduced.
+
+Compiler-observed: all four DOS products cold-built with pinned TC4J/TASM/TLINK,
+no object reuse; conservative 1,425-file freeze is
+`d9383fa59b0fbb61a8c9cae8e73511890e6a3d089afc2c6382672ccae7fdccd8`.
+The initial root representation has four pre-existing CRLF/mixed ASM inputs;
+the isolated freeze uses their Git/attributes LF representation. These are
+literal different source hashes; preserve old freezes rather than calling
+them identical. Compiler receipts, MAP module names and complete OMF CODE
+contributions attest 49-byte waits: MAIN 2276:0007, OP 0E42:0002, MAINE 0D81:0004.
+The public owner alias agrees with START/END's derived DGROUP offset.
+Links/MZ/IRQ vectors and MAIN bullet tables pass; ZUN also cold-replays.
+Historical 661/663 and library-excluded wait boundaries are not promoted.
+
+Runtime-observed at loads 1000/3333: 176 controls per artifact (528 total).
+Owners 0/1/FB/FF, WORD extremes, decrement and 256 changes test inequality and
+WORD reads. 72 actual original/compiled ISR/IRET injections test one/two/four
+cadence pulses, carry and FFFF wrap.24 midwait owner mutations retain the
+entry-selected path. 324 existing START/IRQ/END cases also pass. Counters,
+owner, ordered port events, stack and each artifact's callee-saved register
+seeds agree. Raw AX/DX/FLAGS returns and differing DS mappings are recorded
+separately; this is not whole-register equality or physical ISR latency.
+
+The real retained polling-only predecessor products reject 136 installed-owner
+cases each; 40 unowned cases remain equal. The reader records their actual
+GDC I/O, unchanged counts and complete instruction trace before rejection.
+A fresh muted GAME.BAT→OP→four-Demo capture passes all 15,984 gameplay plus 4
+terminal original selected input/score/RNG boundaries. Earlier complete
+pool/video acceptance is not reassigned to these new products.
+
+Three observer limitations are retained with narrow evidence. On original OP
+0000:2648 at load 1000, adding pinned Unicorn 1.0.2 unrestricted MEM_READ hooks
+breaks the GDC far return: four disabled-hook controls pass, four enabled-hook
+controls reject, independently of CODE tracing and IF seed. The reader uses
+explicit instruction-boundary Count1 operands without that hook. Paused IP
+at load 3333 is a low linear API address; real CODE landing/CS and IRET stack
+unwind establish logical return instead. Callback assertions in the first
+predecessor reader were swallowed and repeated; that owned run was stopped,
+its transcript archived, and final postconditions retain observed failures.
+No guest wait opcode, IRQ body, RETF or IRET is replaced.
+
+Private index: `.analysis/reconstruction/probes/dos-vsync-wait-v1408/`.
+`focused.json`/`negative-final.json` contain exact commands and pinned programs,
+MAPs/OMFs/receipts. `demo-regression.json` records emulator/font/reset inputs;
+`hook-diagnostic-v2.py` replays the frozen failing reader, with old reader
+versions and bootstrap/failed logs preserved. `verify_retention.py` checks
+CRC/all blobs and frozen source; `--restore --prefix` restores owned caches.
+Complete final comparisons, programs, MAPs, wait OMFs and source archive stay
+live. Lossless retirement reclaims 52.39 MiB from 3,584 paths/1,450 blobs; a separate
+raw-log journal reclaims 346.77 MiB from stopped diagnostic floods. Shared
+writers, original inputs/assets/saves and frozen native proofs are untouched.
+
+Final negative replay uses `negative_isolated.py`: three byte-identical old
+build receipts and wait OMFs live in owned shadow paths; original EXE/MAP
+remain read-only. Its results equal prior predecessor receipts byte-for-byte.
+Frozen DOS v1407 source fingerprint and 30 closed proofs, plus separate native
+v1407's 1,235-file seal, pass independent readback without live-source substitution.
+CI passes 451 tests, targets/calibration, ledgers/catalog; isolated Ghidra/JDK
+checks skip while root originally attested all three original databases.
+Source-backed own Python caches reclaim another 8.49 MiB; owned cleanup is
+407.66 MiB before any separate live-main post-publication cache cleanup.

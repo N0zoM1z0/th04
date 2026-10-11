@@ -7,6 +7,33 @@ Its verified snapshot predates those renderer changes. Attest a combined
 producer when integrating the two histories. The v1401 startup implementation
 already reached `port/modern-64` through fffcc83.
 
+## v1408 DOS VSync wait
+
+Replay/product index: `.analysis/reconstruction/probes/dos-vsync-wait-v1408/`.
+The 1,425-file d9383fa5 source archive, cold-four compiler receipts, all selected
+products/MAPs and three complete wait OMFs stay live. Final 528 wait controls,
+324 lifecycle controls, actual predecessor failures and fresh 15,988 Demo
+boundaries retain their exact source/program identities.
+
+Lossless retirement covers 3,584 owned producer/capture/superseded-reader paths
+in 1,450 complete blobs and reclaims 52.39 MiB net after archive/journal. Full
+path/hash/size/mode/nsmtime is recorded before deletion; CRC, all blobs and
+actual temporary metadata restoration pass. Stopped callback diagnostic floods
+separately retain raw transcripts via gzip and reclaim 346.77 MiB. Failure
+reader versions, compressed diagnostics and current complete proofs stay live.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-vsync-wait-v1408/verify_retention.py
+python3 .analysis/reconstruction/probes/dos-vsync-wait-v1408/verify_retention.py --restore --prefix .analysis/runtime/candidates/dos-demo-v1408-wait-candidate
+```
+
+Source-backed own Python caches reclaim another 8.49 MiB after CI 451; this
+owned batch reclaims 407.66 MiB net. `verify_frozen_parents.py` independently
+checks the old DOS input archive/30 proofs and native 1,235-file terminal seal.
+
+Only owned paths are restored. Old frozen native/DOS source archives and
+receipts keep their identities; current source is not substituted into them.
+
 ## v1409 native ordinary text
 
 Replay index in the native tree:
@@ -462,7 +489,7 @@ retained independently. Old DOS/Windows/natural-route products are unchanged.
 Lossless retention reclaims2038489088 allocated file B (about1.90 GiB) before
 journals: five complete native pool streams, ten complete raw text streams and
 1042 source-backed public Python caches. Complete restored file readback and
-all15984 pool frame headers/EOF pass for each stream. All8904 prior protected
+all 15,984 pool frame headers/EOF pass for each stream. All8904 prior protected
 hashes,500 current source pins,71 current programs and the unchanged DOS product
 fingerprint pass. Current build objects and all failures/commands remain.
 

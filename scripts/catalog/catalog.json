@@ -3500,6 +3500,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_dos_vsync_wait.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare original and linked DOS owner-dispatched VSync waits, word operands, ordered GDC reads and actual IRQ/IRET controls.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_gaiji_io_clock.py",
     "category": "runtime",
     "role": "command",

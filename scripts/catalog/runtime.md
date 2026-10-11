@@ -57,6 +57,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
 | [runtime/verify_dos_text_gaiji.py](../runtime/verify_dos_text_gaiji.py) | command | Compare original and linked DOS text Gaiji memory, store order, wrapped attribute counts and far-call return state. |
 | [runtime/verify_dos_vsync_lifecycle.py](../runtime/verify_dos_vsync_lifecycle.py) | command | Compare relocated original and linked DOS START/IRQ instructions, including a seeded IRQ during BIOS query. |
+| [runtime/verify_dos_vsync_wait.py](../runtime/verify_dos_vsync_wait.py) | command | Compare original and linked DOS owner-dispatched VSync waits, word operands, ordered GDC reads and actual IRQ/IRET controls. |
 | [runtime/verify_gaiji_io_clock.py](../runtime/verify_gaiji_io_clock.py) | command | Verify original OP Gaiji port counts, complete relocated hooks and elapsed I/O clocks across CPU/delay controls. |
 | [runtime/verify_op_irq_clock.py](../runtime/verify_op_irq_clock.py) | command | Verify every original OP IRQ increment and armed callback against complete counter/GDC streams and derived raster phases. |
 | [runtime/verify_op_loading_clock.py](../runtime/verify_op_loading_clock.py) | command | Verify original OP loading phases, guest DOS return frames and fractional clocks; reject incomplete zero-exit captures. |
