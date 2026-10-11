@@ -941,3 +941,63 @@ selection/count-clear ordering. Current assembly clears those fields before
 BIOS query. The installed/no-IRQ-inside-START diagnostic here deliberately
 does not validate an IRQ interleaved with that query; add that controlled case
 when repairing the shared assembly.
+
+## v1400 shared DOS lifecycle correction
+
+v1400 repairs the shared DOS VSYNC_START owner in both source trees. Query GDC
+before selecting the increment and clearing Count1/Count2; preserve the cadence
+accumulator. The original MAIN0000:236C, OP0000:2552 and MAINE0000:2110 all have
+that order. Their IRQs0000:23E0/25C6/2184 compare callback segments at DGROUP
+0770/0852/03FE; callback pointers begin at MAIN076E, OP0850 and MAINE03FC. These are original-relative offsets plus recorded load,
+not bare linear emulator addresses.
+
+Each corresponding current root MAIN/OP/MAINE linked product passes108 seeded
+instruction comparisons at loads10FC/3333: GDC extension absent/present,
+mode0/C, phase0/12345/65535 and prior increment0/13311/65535. An authored
+BIOS STI/NOP/IRET mock outside loaded images permits a real original/candidate
+IRQ to nest with its own IRET frame before mode selection. Actual BIOS/CRT
+wrapper code and physical31kHz are not exercised. Frozen old source still
+passes the old DOS vector/callback/END test but rejects96/108 new scenarios.
+
+Cold root build completes all four products (MAIN199471, OP79388, MAINE72246,
+ZUN7723 bytes). Actual IRQ vectors, CS renderer operands and MAIN bullet jump
+tables pass. Root product fingerprint a34c1357be6dc472ec44800b2fe275a7cbba6ba5344ab7002cc516e2411995d5;
+1425 input files are frozen. A fresh muted fixed24000 GAME.BAT/four-Demo route
+agrees with immutable original input/score/RNG at15984 gameplay plus4 terminal
+boundaries. This is current selected-state regression, not a fresh whole-video,
+actor-pool or physical timing acceptance. Historical exact producers are separate.
+
+Original OP diagnostic seed correction: older v1399/v1400 drafts cleared1AD0,
+not the callback pointer0850. Actual callback bytes were already zero and no
+callback ran. Corrected seed plus operand guards retain all12 old complete
+instruction/state/write traces. Old receipts remain unchanged; v2 BIOS mock
+hook-CS draft failed and is retained. v4 is the accepted nested-frame reader.
+
+Native x64 source manifest stays512/5474b8e3; no C++ product changed or rebuilt.
+The native branch also carries the shared ASM correction; its distinct dormant
+DOS graph has not received a whole-product build here. Prior native v1399
+70GNU/5UBSan and eight129-file profiles keep their frozen scope/identities.
+
+Replay/retention index (DOS root):
+.analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/.
+Maintained tools: scripts/runtime/verify_dos_vsync_lifecycle.py and corrected
+verify_op_vsync_lifecycle.py. Use --original-artifact main/op/maine with the
+current executable/MAP/source; all traces/pins are in linked-*-v4 receipts.
+Recovery: python3 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/verify_retention.py;
+add --restore --prefix for owned archived inputs. Old v1399 strict live-source
+readers reject the changed DOS fingerprint; the new check-parent.py verifies
+its frozen closure/CRC/blobs separately, without restamping.
+
+Cleanup net 56.03 MiB after archive/journal (15.55 MiB archive),
+with 7264 paths/1481 blobs/2351 protected proofs checked;
+current source, products/MAPs, old/new compiled controls, original raw evidence
+and fresh demo trace remain. Full CI passes root451/native345; source-backed post-CI caches reclaim
+16.44 MiB separately, for 72.47 MiB net this batch.
+
+Next connect native PMD busy service and inherited unsigned IRQ waits to
+FrontEnd, preserving clear-before-frame_delay / clear-after-Logo, cadence and
+global raster phase. Scene still samples measure once per refresh and uses fixed
+Logo waits. CPU/resource/graphics elapsed work needs a model. Full pictures,
+Boss/death/process, second-emulator/physical scanout and Windows input/audio stay
+open. Goal active; targets candidate-local-attested. CPU1/nice19 single-core,
+serial and muted; no Windows GUI/focus/host keys/audio device is used.

@@ -44,25 +44,28 @@ VSYNC_START proc far
     push ds
     push es
 
-    ; Even an already installed start resets counters and cadence phase.
-    ; Hook ownership is decided later, using the nonzero mask sentinel.
+    ; Query before changing the live cadence/counters: an installed IRQ may
+    ; run during BIOS service and must still see the previous increment.
+    ; START preserves the fractional accumulator, including repeated starts.
     xor ax, ax
-    mov _vsync_Count1, ax
-    mov _vsync_Count2, ax
-    mov cadence_skip_accumulator, ax
-    mov cadence_skip_increment, ax
-
     ; PC-9821 GDC extension reports 31 kHz in AL bits 2-3.
     mov es, ax
     test byte ptr es:[PC9821_FEATURE_BITMAP], PC9821_EXTENDED_GDC
-    jz short mode_done
+    jz short mode_select
+    xor cx, cx
+    xor dx, dx
     mov ah, CRT_QUERY_GDC_MODE
     int 18h
-    and al, GDC_31KHZ_BITS
-    cmp al, GDC_31KHZ_BITS
-    jne short mode_done
+mode_select:
+    and ax, GDC_31KHZ_BITS
+    cmp ax, GDC_31KHZ_BITS
     mov cadence_skip_increment, GDC_31KHZ_SKIP_INCREMENT
+    je short mode_done
+    mov cadence_skip_increment, 0
 mode_done:
+    xor ax, ax
+    mov _vsync_Count1, ax
+    mov _vsync_Count2, ax
     cmp saved_irq_mask_merge, 0
     jne start_done
 

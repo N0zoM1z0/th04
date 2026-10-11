@@ -39,8 +39,10 @@ Complete original OP traces verify 208 counted IRQs across two CPU budgets.
 Native has unsigned counters and a separate raster clock. New original
 instruction execution also repairs repeated START: it preserves nonzero cadence
 phase, preventing a spurious counted IRQ. GNU/UBSan agree across twelve seeded
-lifecycle cases. The shared DOS assembly still needs the same correction and
-its own cold replay; PMD busy-service and inherited Logo integration follow.
+lifecycle cases. The shared DOS assembly now preserves phase and queries before resetting
+counters. Three original/linked DOS owners agree in 108 seeded cases each;
+a fresh four-Demo input/score/RNG regression passes. PMD busy-service and
+inherited Logo integration follow.
 
 ## Build and run
 
