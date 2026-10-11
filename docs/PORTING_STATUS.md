@@ -202,3 +202,11 @@ including score/HUD; all15988 selected state/count boundaries still pass.
 Full graphics/RGB, physical blink/scanout and whole-picture acceptance remain
 open. New consumers retain the immutable v1376 compiled producer; see the
 current handoff and differential note.
+
+v1378 repairs the missing native Midboss shake event consumer. Original CPU
+MAIN_01_TEXT0AAF:2246..2315 agrees on3262 state/movement controls. All15984
+complete demo shake globals/requests and prior scalar/nine-pool controls agree.
+Demo1 frame3379 diagnostic game-area differences drop55357→430, confined to
+top rows16/17; full graphics/RGB and physical scanout remain unaccepted.
+Final immutable509-input producer9346e951… is cold-built on GNU; details and
+replay are in the differential note and native docs/port64/evidence/demo.md.

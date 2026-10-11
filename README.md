@@ -49,8 +49,11 @@ preserves these selected state checks. Raw text sampling exposed and repaired
 its missing yellow DEMO PLAY label; fade-end checkpoints now agree.
 Aligned post-update sampling now verifies all 40 complete canonical text-plane
 samples, including score/HUD and DEMO PLAY, on GNU and optimized UBSan.
-Whole graphics/RGB, physical scanout, broader routes and Windows input/audio
-acceptance remain open.
+Native MAIN now consumes Midboss shake events; all 15,984 demo updates agree
+on the compared shake globals and movement requests. Demo 1 frame 3379’s
+game-area pixel differences fall from 55,357 to 430; complete pictures still
+need work. Whole graphics/RGB, physical scanout, broader routes and Windows
+input/audio acceptance remain open.
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
 
