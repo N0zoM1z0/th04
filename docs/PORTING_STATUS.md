@@ -29,8 +29,9 @@ Current v1399 native manifest is512/5474b8e3. Direct original instruction
 execution verifies repeated START preserves cadence accumulator; GNU/UBSan
 match all12 seeded lifecycle cases. Frozen v1398 resets it incorrectly, yielding
 2 extra IRQ cases. Fresh70 GNU /5 UBSan CTests and eight full129-file default
-profile regressions pass. Shared DOS assembly has the same reset discrepancy;
-its separate correction/replay is the next bounded owner before frontend waits.
+profile regressions pass. v1400 also corrects shared DOS phase/query order. Three independently pinned
+original/linked DOS owners pass108 seeded cases each; four cold products and
+a fresh selected-state four-Demo replay pass. Native frontend waits remain next.
 Full pictures, physical timing and broader routes remain open. See the handoff.
 
 The v1362 GNU Reimu A / Lunatic / Turbo0 candidate is now terminal and

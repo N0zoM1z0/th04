@@ -35,6 +35,9 @@ def main():
     sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
     p = root / ".analysis/port64/op-unlock-v1317/decoded-original/payload.bin"
     raw = p.read_bytes()
+    # The callback lives in initialized DATA, away from the BSS counters.
+    assert raw[0x25DE:0x25E3] == bytes.fromhex("833e520800")
+    assert raw[0x25EC:0x25F0] == bytes.fromhex("ff1e5008")
     assert (
         len(raw) == 69028
         and sha(p) == "13222cb667e15c5034bd64c840a1db0a07c9acbb56e50f0bcf6025d12fe78d74"
@@ -82,7 +85,7 @@ def main():
                 u.mem_write(data + 0x1AC6, struct.pack("<HH", 1, 1))
                 u.mem_write(data + 0x854, struct.pack("<H", phase))
                 u.mem_write(data + 0x1ACE, struct.pack("<H", phase))
-                u.mem_write(data + 0x1AD0, b"\x00" * 4)
+                u.mem_write(data + 0x850, b"\x00" * 4)
                 trace = []
                 writes = []
                 bios = []

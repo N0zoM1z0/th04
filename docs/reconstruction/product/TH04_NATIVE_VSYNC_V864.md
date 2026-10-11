@@ -58,8 +58,10 @@ and vector/PIC restoration on exit.
 
 The semantic/readable input/timing batch names the existing PIC ports and mask
 bits, DOS vector requests, PC-9821 mode selectors and the unsigned fractional
-cadence accumulator. Repeated START resets both counters and cadence state
-before checking whether it already owns the hooks. The saved mask stores the
+cadence accumulator. The v1234 source reset both counters and cadence state before checking hook
+ownership. v1400 falsifies that cadence reset and early count reset: the
+original query runs with the old increment/counters; START then selects the
+new increment and clears only the counters, preserving the accumulator. The saved mask stores the
 original VSync bit with ones in other positions, so END's AND preserves the
 current other mask bits; it also serves as a nonzero ownership sentinel.
 An accumulator carry skips both logical counters and the callback but still
@@ -99,3 +101,25 @@ The final existing DOS lifecycle replay passes at
 `.analysis/reconstruction/probes/semantic-vsync-runtime-v1234/receipt.json`.
 The literal-macro build preserves all three complete native MZs and their
 ordered relocations; see the [input/timing result](../packed/TH04_SHARED_INPUT_WAIT_V565.md).
+
+## Current shared lifecycle correction (v1400)
+
+Original MAIN/OP/MAINE have independently attested START/IRQ owners at
+0000:236C/23E0, 0000:2552/25C6 and 0000:2110/2184. Current shared ASM
+queries before increment selection/count clear and never clears the accumulator.
+Each complete current root linked product reproduces108 seeded original cases,
+including an actual IRQ nested inside an explicit authored BIOS STI/NOP/IRET
+mock. Existing DOS vector/callback/END tests pass for both old and new code;
+the frozen old code rejects96/108 new cases. This does not execute physical
+BIOS/CRT wrapper timing or establish natural31kHz acceptance.
+
+The original callback pointers are MAIN DGROUP076E, OP0850, MAINE03FC.
+They are initialized DATA, separate from Count1/Count2 and BSS phase. Earlier
+OP diagnostics seeded unrelated1AD0 while the actual callback remained zero.
+The corrected seed and opcode guards preserve all12 prior complete traces
+and semantic results; old receipts are retained with this narrowed scope.
+
+Four cold root products, complete linked vector/CS/switch audits and fresh
+15984+4 selected-state bundled-Demo boundaries pass. Current x64 C++ manifest
+512/5474b8e3 is unchanged. See [the differential note](TH04_REPLAY_DIFFERENTIAL.md)
+for commands, immutable evidence, recovery and the next frontend timing owner.

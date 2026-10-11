@@ -23,6 +23,7 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'verify_dos_vsync_lifecycle.py': ('runtime', 'Compare relocated original and linked DOS START/IRQ instructions, including a seeded IRQ during BIOS query.'),
     'verify_gaiji_io_clock.py': ('runtime', 'Verify original OP Gaiji port counts, complete relocated hooks and elapsed I/O clocks across CPU/delay controls.'),
     'verify_op_loading_clock.py': ('runtime', 'Verify original OP loading phases, guest DOS return frames and fractional clocks; reject incomplete zero-exit captures.'),
     'verify_op_wait_clock.py': ('runtime', 'Verify original OP busy-measure, reset and inherited IRQ-counter waits across CPU and BGM-off controls.'),

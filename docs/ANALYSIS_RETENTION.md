@@ -1,5 +1,34 @@
 # Private build and analysis retention
 
+## v1400 shared DOS lifecycle
+
+Four current cold root DOS products, three artifact-local original/linked
+108-case instruction comparisons and fresh15984+4 Demo boundaries are terminal.
+Only this batch's duplicate materialized input trees, compiler intermediates,
+two standalone src copies and disposable candidate HDIs/font are retired.
+Net **56.03 MiB** after **15.55 MiB** archive/journal;
+7264 logical files / 1481 unique blobs / 2351 protected proofs.
+Full CRC/EOF and every temporary restored SHA/size/mode/nsmtime pass before
+delete; an independent reader passes afterward. Current1425-file input freeze,
+products/MAPs, original raw streams, new/old compiled controls and all failed
+drafts remain. After terminal root451/native345 CI, 1054 source-backed Python
+caches reclaim **16.44 MiB** net separately; current batch totals
+**72.47 MiB** net. Repeated CI is unnecessary without another source change.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/verify_retention.py
+# Restore only the needed current owned inputs:
+python3 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/verify_retention.py --restore --prefix .analysis/runtime/candidates/dos-demo-v1400-vsync-candidate
+python3 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/check-parent.py
+```
+
+Parentv1399 stays512/5474b8 and DOS6f; current root DOS fingerprint is a34c1357.
+Old strict readers reject changed live DOS source as expected. The new parent
+reader verifies all frozen closure/source/CRC/blob identities separately, not
+by restamping old proofs. Native x64 source is unchanged. Prior484.68MiB
+(v1399) and544.95MiB(v1398) remain separate; do not count them again.
+
+
 ## v1399 corrected START cadence ownership
 
 Current native producer512/5474b8 corrects accumulator retention; DOS source6f

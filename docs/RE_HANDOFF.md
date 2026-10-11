@@ -5,90 +5,64 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1399 corrects native repeated VSYNC_START: it clears Count1/Count2 and
-selects the cadence increment while preserving the accumulator. v1398 wrongly
-cleared that accumulator. Its zero-phase startup/Demo observations remain valid;
-they do not validate repeated START with nonzero phase.
+v1400 repairs the shared DOS VSYNC_START owner in both source trees. Query GDC
+before selecting the increment and clearing Count1/Count2; preserve the cadence
+accumulator. The original MAIN0000:236C, OP0000:2552 and MAINE0000:2110 all have
+that order. Their IRQs0000:23E0/25C6/2184 compare callback segments at DGROUP
+0770/0852/03FE; callback pointers begin at MAIN076E, OP0850 and MAINE03FC. These are original-relative offsets plus recorded load,
+not bare linear emulator addresses.
 
-New independent Unicorn execution runs complete original OP START0000:2552–25BB,
-GDC query0000:15C2–1617 and IRQ0000:25C6. Twelve cases vary load10FC/3333,
-BIOS mode bits0/C and accumulator0/12345/65535. Installed ownership0xFB,
-no IRQ inside START and BIOS AH31 responses are explicit diagnostic inputs;
-all original instructions execute unchanged with proper far return/IRET frames.
-START writes no accumulator. With phase65535/modeC, the next IRQ skips counting.
-Current GNU/UBSan match12/12. Frozen v1398 matches only4 zero-phase cases;
-8 nonzero-phase cases reject and2 gain a spurious counted IRQ. This is a seeded
-CPU diagnostic, not a natural31kHz or physical timing claim.
+Each corresponding current root MAIN/OP/MAINE linked product passes108 seeded
+instruction comparisons at loads10FC/3333: GDC extension absent/present,
+mode0/C, phase0/12345/65535 and prior increment0/13311/65535. An authored
+BIOS STI/NOP/IRET mock outside loaded images permits a real original/candidate
+IRQ to nest with its own IRET frame before mode selection. Actual BIOS/CRT
+wrapper code and physical31kHz are not exercised. Frozen old source still
+passes the old DOS vector/callback/END test but rejects96/108 new scenarios.
 
-Current native commit: `90a8596` (`port/modern-64`).
-Current native producer:512 files,
-5474b8e36c4f90908803a8a94e95f22dad4c131e3a435af921ca5aacb7587a74.
-Only pc98_vsync.hpp / its contracts change. Fresh cold GNU builds72 programs /
-passes70 CTests; optimized UBSan builds8 targets / passes5 selected contracts.
-Fresh current-source probes also reproduce all208 original IRQ records and230
-raster callbacks. Eight new full startup/four-Demo/fresh-OP routes retain all129
-baseline output files per driver profile. Old producer/proofs keep their own
-identities; no old receipt is restamped.
+Cold root build completes all four products (MAIN199471, OP79388, MAINE72246,
+ZUN7723 bytes). Actual IRQ vectors, CS renderer operands and MAIN bullet jump
+tables pass. Root product fingerprint a34c1357be6dc472ec44800b2fe275a7cbba6ba5344ab7002cc516e2411995d5;
+1425 input files are frozen. A fresh muted fixed24000 GAME.BAT/four-Demo route
+agrees with immutable original input/score/RNG at15984 gameplay plus4 terminal
+boundaries. This is current selected-state regression, not a fresh whole-video,
+actor-pool or physical timing acceptance. Historical exact producers are separate.
 
-Important next ownership issue: src/shared/hardware/vsync_irq.asm in both DOS
-source trees still explicitly clears cadence_skip_accumulator on START. Direct
-original OP execution falsifies that reset under these controlled inputs.
-DOS source/fingerprint6f5898dd remains unchanged in this native-only correction;
-its current24kHz demo proofs remain scoped and cannot accept this31kHz/repeated-
-START corner. Next fix and separately cold-replay the shared DOS assembly before
-frontend integration. Also preserve query-before-increment-selection/count-clear
-ordering: current source clears those fields before querying; test an IRQ
-interleaved with the BIOS query in the next bounded unit. Historical exact units / MAIN deferred cases are not
-promoted or rewritten by this observation.
+Original OP diagnostic seed correction: older v1399/v1400 drafts cleared1AD0,
+not the callback pointer0850. Actual callback bytes were already zero and no
+callback ran. Corrected seed plus operand guards retain all12 old complete
+instruction/state/write traces. Old receipts remain unchanged; v2 BIOS mock
+hook-CS draft failed and is retained. v4 is the accepted nested-frame reader.
 
-Original full-clock IRQ evidence v1398 remains separately scoped: load10FC /
-DGROUP2030,106/102 counted IRQs,143/139 scalar rows and119/111 GDC callbacks.
-Raster geometry AW80/HS8/HFP10/HBP8, AL400/VS8/VFP7/VBP25 gives characterHz2631575,
-horizontal106/vertical440/retrace407. Source-defined100ns emulator adjustment /
-float delay is explicit. Counter service latency varies50–138 /64–142 cycles;
-extra hooks perturb wait brackets. Do not fit an ISR duration or alias blink
-with IRQ Count1. See the focused note for immutable captures and reader commands.
+Current native commit: `895a952` (`port/modern-64`).
+Native x64 source manifest stays512/5474b8e3; no C++ product changed or rebuilt.
+The native branch also carries the shared ASM correction; its distinct dormant
+DOS graph has not received a whole-product build here. Prior native v1399
+70GNU/5UBSan and eight129-file profiles keep their frozen scope/identities.
 
-Replay indices from DOS root:
-.analysis/reconstruction/probes/native-vsync-lifecycle-v1399/ and
-.analysis/worktrees/port-modern-64/.analysis/port64/native-vsync-lifecycle-v1399/.
-Public original reader:
+Replay/retention index (DOS root):
+.analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/.
+Maintained tools: scripts/runtime/verify_dos_vsync_lifecycle.py and corrected
+verify_op_vsync_lifecycle.py. Use --original-artifact main/op/maine with the
+current executable/MAP/source; all traces/pins are in linked-*-v4 receipts.
+Recovery: python3 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/verify_retention.py;
+add --restore --prefix for owned archived inputs. Old v1399 strict live-source
+readers reject the changed DOS fingerprint; the new check-parent.py verifies
+its frozen closure/CRC/blobs separately, without restamping.
 
-```sh
-python3 scripts/runtime/verify_op_vsync_lifecycle.py --output-dir .analysis/reconstruction/probes/NEW-vsync-lifecycle
-```
+Cleanup net 56.03 MiB after archive/journal (15.55 MiB archive),
+with 7264 paths/1481 blobs/2351 protected proofs checked;
+current source, products/MAPs, old/new compiled controls, original raw evidence
+and fresh demo trace remain. Full CI passes root451/native345; source-backed post-CI caches reclaim
+16.44 MiB separately, for 72.47 MiB net this batch.
 
-It pins packed/decoded OP,804 diagnostic relocs, Unicorn binary, complete
-instruction/memory-write traces and target frames. Current source, compiled
-caller and parent target receipts are separately pinned. Current followup uses
-one CPU/nice19 serial work on CPU1 because user processes occupy CPU0; original
-v1398 timing captures retain their original CPU0 identity. No Windows GUI,
-focus, host keys or audio device is used by this work.
-
-Recovery uses the new v1399 verify_retention.py. It independently attests current
-512/5474b8, frozen v1398 512/efea and older510/ea5c. Old strict readers reject
-the changed current source; do not edit them.
-
-```sh
-python3 .analysis/reconstruction/probes/native-vsync-lifecycle-v1399/verify_retention.py
-python3 .analysis/reconstruction/probes/native-vsync-lifecycle-v1399/verify_retention.py --parent v1398
-```
-
-Use --restore / a narrow --prefix for owned archived inputs; --parent v1397 or
-v1396 routes earlier archives. Full source, original raw streams, failed/old
-producers and compiled negatives remain protected. Full CI passes root451/native345;
-current retirement/cache cleanup reclaims 484.68 MiB net. Full CRC/temporary
-restore/688 protected proofs pass. Details are in the focused note/private
-receipts. Prior v1398 cleanup remains separately indexed at544.95 MiB.
-
-After shared DOS lifecycle correction, connect independent PMD busy service and
-inherited unsigned IRQ waits to FrontEnd, preserving clear-before-frame_delay /
-clear-after-Logo, accumulator and global raster phase. Scene still samples once
-per admitted refresh and uses fixed Logo waits. Default CPU/resource/graphics
-elapsed work needs a model. Full pictures, broader combat/process,
-physical/second-emulator scanout, chip/audio and Windows input/audio remain open.
-Goal stays active; targets remain candidate-local-attested. Next heavy work
-remains single-core/low-priority/serial and muted.
+Next connect native PMD busy service and inherited unsigned IRQ waits to
+FrontEnd, preserving clear-before-frame_delay / clear-after-Logo, cadence and
+global raster phase. Scene still samples measure once per refresh and uses fixed
+Logo waits. CPU/resource/graphics elapsed work needs a model. Full pictures,
+Boss/death/process, second-emulator/physical scanout and Windows input/audio stay
+open. Goal active; targets candidate-local-attested. CPU1/nice19 single-core,
+serial and muted; no Windows GUI/focus/host keys/audio device is used.
 
 Earlier native shake, background-ring, laser, pellet, item-splash and MPN
 palette repairs retain their frozen producer/proof identities. The

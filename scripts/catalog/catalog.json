@@ -3479,6 +3479,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_dos_vsync_lifecycle.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare relocated original and linked DOS START/IRQ instructions, including a seeded IRQ during BIOS query.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_gaiji_io_clock.py",
     "category": "runtime",
     "role": "command",
