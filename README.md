@@ -53,8 +53,10 @@ Native MAIN now consumes Midboss shake events; all 15,984 demo updates agree
 on the compared shake globals and movement requests. Demo 1 frame 3379’s
 game-area pixel differences fall from 55,357 to 430. Painting the full physical
 background ring now removes those remaining 430 pixels at that sample on GNU
-and optimized UBSan; complete pictures still need work. Whole graphics/RGB, physical scanout, broader routes and Windows
-input/audio acceptance remain open.
+and optimized UBSan. Correcting Marisa laser color timing also removes 11,384
+color differences across four Demo 2 samples; all ten sampled Demo 2 game
+areas now agree. Five other sampled game areas still differ. Whole graphics/RGB,
+physical scanout, broader routes and Windows input/audio acceptance remain open.
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
 

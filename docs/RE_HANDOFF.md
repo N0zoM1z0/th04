@@ -5,39 +5,49 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1379 (native `9f4be07`) restores the complete ordinary background ring before shake. Original
-MAIN_01_TEXT 0AAF:20C8..2109 issues 9,600 distinct WORD copies through all 400
-physical rows. Its actual Demo1 frame3379 ring/MPN/shifts explain all 430 old
-edge differences; painting those rows removes the differences at that sample
-on GNU and optimized UBSan. All 40 complete text planes, 15,988 selected
-scalar/count boundaries and 15,984 complete shake states/requests still pass.
-All 125 new capture files agree between variants, and every old scalar/shake
-trace byte remains identical. Nine other nonzero diagnostic game-area samples
-are unchanged. Full graphics/RGB/scanout and carpet/laser/circle effects stay open.
+v1380 (native `f6e71fa`) repairs Marisa laser presentation color. Observed MAIN_01_TEXT
+0AAF:3704..37C7 (file F9F4..FAB7, 196 bytes), especially 3786, reads
+DGROUP 2134:538C before the update tail. Actual original caller/raw blitter
+0AAF:1378..13DA runs on four complete original Demo 2 states; the GRCG adapter
+explains all 11,384 former color 8↔9 differences with unchanged beam geometry.
+Native rendering needs the modulo from before the update tail. GNU and
+optimized UBSan now have zero game-area differences in all ten Demo 2 samples.
+Five other nonzero samples remain unchanged (Demo 1 frames 1/1952/3996;
+Demo 3 frames 3379/3709). Full graphics/RGB and scanout remain open.
 
-Only view.cpp changes among 509 inputs (manifest8e77830c…). Cold view TUs relink
-against attested unchanged v1378 main/audio/core/ymfm; this is a bounded build,
-without a new whole-current cold/CTest claim. Prior pool/69CTest evidence keeps
-its own producer. Recipes: root .analysis/reconstruction/probes/native-ring-v1379/;
-receipts: native .analysis/port64/native-ring-v1379/. Next compare initial
-background, laser/circle pixels or independently sampled ordinary Boss shake.
+All 40 complete text planes, 15,988 selected scalar/count boundaries and
+15,984 complete shake states/requests pass. All 125 new capture files agree
+between variants; every parent state/shake trace byte remains identical.
+Frozen imported readers reproduce both shake receipts except pinned source
+hashes. Only view.cpp differs among 509 inputs (manifest f5791751…). Cold view
+TUs relink unchanged attested dependencies; there is no new whole-current
+cold/CTest claim. Older complete-pool/69-CTest receipts retain their producers.
+Recipes: DOS-root .analysis/reconstruction/probes/native-shot-render-v1380/;
+receipts: native .analysis/port64/native-shot-render-v1380/.
 
-All jobs are terminal. Main441/live Ghidra and native345/target CI pass; absent
-private native gates skip. Frozen readers reproduce both complete shake
-receipts, apart from their separately pinned source hash. Lossless retirement
-reclaims 153,083,904 allocated bytes (146.0 MiB), before journal cost: 342 full
-sample/capture/build files and 1,044 source-backed caches. Complete temporary
-restore/SHA/size/mode/nsmtime/gzip EOF, 16,713 protected hashes, 509 source pins
-and unchanged DOS fingerprint pass before and after deletion. The cleanup log
-is excluded while its producer writes. New/old programs, sources and proofs stay
-retained. From DOS root, restore retired capture/CPU pixels/objects before replay:
+All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
+unavailable private native gates skip. Complete parent/current hashes bound
+changes to the original CPU beam's 11,384 pixels in four samples; the other
+36 index/RGB samples are unchanged. Lossless retirement reclaims 148.8 MiB
+before journal cost (354 complete files, 1,044 source-backed caches).
+Full restoration/SHA/size/mode/nsmtime/gzip EOF, 17,815 protected hashes,
+509 source pins and unchanged DOS fingerprint pass. New/old programs, source
+snapshots and failure receipts stay retained. Recovery from DOS root:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-ring-v1379/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-shot-render-v1380/verify_retention.py --restore
 ```
 
-Without --restore it checks all recoveries temporarily. v1378 proof keeps its
-then-current509/9346e951 scope and cannot attest live8e77830c source.
+Without --restore it performs full temporary readback. Previous v1379 proof
+retains its own source scope; do not use it to attest current sources.
+
+Next localize the remaining circle samples and initial background against
+actual original draw owners. Broader Boss/death/process/Windows pairing stays open.
+
+Retained v1379 restores the full ordinary 400-row background ring before shake;
+its original CPU/MPN observation explains the 430 Demo 1 frame3379 differences,
+which remain zero. Its producer and recovery proof retain the 8e77830c source
+scope; that old live-source check cannot attest current f5791751 inputs.
 
 Retained v1378 (native `617d65f`) restores MAIN's missing Midboss shake event consumer.
 Target-observed MAIN_01_TEXT 0AAF:2246..2315 (file E536..E605, 208 bytes) and

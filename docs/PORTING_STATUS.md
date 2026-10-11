@@ -216,3 +216,11 @@ Demo1frame3379 remaining430 game-area differences on GNU/optimized UBSan.
 Allselected scalar/shake/text checks remain equal; nine other nonzero samples
 are unchanged. Onlyview.cpp is cold-built/relinked against attested unchanged
 v1378 dependencies; no new whole-current cold/CTest or fullpicture claim.
+
+v1380 corrects Marisa laser color to the original pre-update modulo, removing
+11,384 color differences in four Demo 2 samples; all ten sampled Demo 2 game
+areas now agree on GNU/optimized UBSan. Five other nonzero samples remain.
+All selected scalar/shake/text checks pass, all 125 captures agree between
+variants, and parent state/shake traces remain byte-identical. Only view.cpp
+changes among 509 inputs; previous whole cold/CTest/pool evidence retains its
+producer. Whole graphics/RGB/scanout and broader pairing remain open.
