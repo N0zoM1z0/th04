@@ -39,26 +39,20 @@ scanout timing remains open; see the handoff for the current evidence.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh
-OP/restart checks. Native point-number rings now join pickup/zap events and
-foreground drawing, with original CPU/state/full-pixel component checks on
-GNU and UBSan. Four complete native demos also agree with the original on
-compared input, score, player and RNG state plus draw counts. They now also
-agree on all nine complete actor/effect pools at every update after restoring
-Midboss yellow bonus popups. The actual idle OP→four demos→OP route also
-preserves these selected state checks. Raw text sampling exposed and repaired
-its missing yellow DEMO PLAY label; fade-end checkpoints now agree.
-Aligned post-update sampling now verifies all 40 complete canonical text-plane
-samples, including score/HUD and DEMO PLAY, on GNU and optimized UBSan.
-Native MAIN now consumes Midboss shake events; all 15,984 demo updates agree
-on the compared shake globals and movement requests. Demo 1 frame 3379’s
-game-area pixel differences fall from 55,357 to 430. Painting the full physical
-background ring now removes those remaining 430 pixels at that sample on GNU
-and optimized UBSan. Correcting Marisa laser color timing also removes 11,384
-color differences across four Demo 2 samples; all ten sampled Demo 2 game
-areas now agree. Restoring whole-pool white/purple pellet passes removes another
-40 pixels: Demo 1 frame 3996’s game area now agrees, and frame 1952 has 26 differences left.
-Four sampled game areas still differ. Whole graphics/RGB,
-physical scanout, broader routes and Windows input/audio acceptance remain open.
+OP/restart checks. Four complete demos agree with the original on compared
+input, score, player and RNG state, draw counts, nine complete actor/effect
+pools and all 15,984 complete item-splash states. The actual idle OP→four
+demos→OP route also passes selected state checks, all 15,984 shake states
+and movement requests, and 40 complete canonical text-plane samples.
+
+Restoring Midboss shake, the full physical background ring, Marisa laser color
+timing, whole-pool pellet color passes and item-spawn white light dots removes
+the diagnosed late-frame pixel differences. GNU and optimized UBSan now agree
+with the original in 39 of 40 sampled game areas. Demo 1’s initial background
+still differs. These game-area diagnostics do not establish complete-picture
+acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
+input/audio acceptance remain open; see the handoff for scoped evidence.
+
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
 

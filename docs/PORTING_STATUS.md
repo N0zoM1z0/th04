@@ -234,3 +234,13 @@ parent state/shake traces remain byte-identical. Ordinary circles are excluded
 at all five former remaining samples. Four nonzero samples and full pictures/
 scanout/broader pairing remain open; the bounded view build retains prior core
 and whole cold/CTest/full-pool producer identities.
+
+v1382 adds the missing eight-slot item-spawn splash owner and white foreground
+dots. GNU/optimized UBSan pass311 originalCPU component cases each and all15984
+complete81-byte natural splash records. All103 late-sample pixels disappear;
+39 of40 sampled game areas now agree, with initialDemo1 still different. Other37
+entire index/RGB samples remain unchanged. Fresh cold GNU71 programs/69CTest
+and optimizedUBSan3 core/game/trace/shake products pass all nine full pools,
+selected scalars,shake and complete text checks. Old products retain separate
+producer identities. Drawing-relative CPU geometry does not accept programmed
+GDC/physicalscanout; complete pictures/cache/margins/RGB/broader routes remain.

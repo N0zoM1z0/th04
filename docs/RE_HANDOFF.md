@@ -5,58 +5,63 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1381 (native `717b924`) repairs pellet overlap colors. Observed MAIN_01_TEXT 0AAF:81F5..82FF
-(file 144E5..145EF, 267 bytes) orders whole white 1EAC then purple 1F3E passes.
-The old native per-pellet order let later white overwrite earlier purple.
-Actual original leaf execution on 60/98 natural pellets explains all 40 pixels;
-complete inverse/post-top list roundtrips pass. GNU and optimized UBSan close
-Demo 1 frame3996 32→0 and frame1952 34→26. Every change in the two complete
-index pictures equals original CPU color/original pixels; 38 other full index/RGB
-samples remain unchanged. Whole pictures and scanout stay open.
+v1382 (native `6ce5d44`) restores missing item-spawn white splashes.
+Observed MAIN_03
+13A9:0486/04A0/04E8 owns eight 10-byte records at DGROUP 2134:41F6 and cursor
+4250, excluding the intervening ten-byte storage. Actual render MAIN_01_TEXT
+0AAF:168C..170E and raw dot leaf1842..185D identify 64 integer polar dots.
+GNU/optimized UBSan each pass311 actual original full-state/ordered-dot controls
+and all15984 full81-byte natural states, including inactive fields and cursor.
 
-All 40 complete text planes, 15,988 selected scalar/count boundaries and
-15,984 complete shake states/requests pass. All 125 capture files agree between
-variants; parent state/shake traces remain byte-identical. Frozen imported
-readers reproduce both shake receipts except their separately pinned hashes.
-Only view.cpp changes among 509 inputs (manifest fb26d509…). Builds cold-compile
-that TU and relink attested unchanged dependencies; prior whole cold/69-CTest/
-full-pool receipts retain their producers. Recipes: DOS-root
-.analysis/reconstruction/probes/native-circle-v1381/; receipts: native
-.analysis/port64/native-circle-v1381/.
+All103 actual changed pixels equal original white dots: Demo1frame1952 26→0,
+Demo3frames3379/3709 60/17→0. Other37 full index/RGB hashes stay unchanged.
+39 of40 sampled game areas now have zero differences; initialDemo1frame1
+remains124439. Whole pictures, cache/margins/RGB and physical scanout stay open.
+Actual helper drawscroll is300/40/275 versus programmedGDC301/41/276 at these
+seams; first direct GDC decoding failed and is retained. Drawing-relative
+geometry and actual captures support the repair, not physical GDC acceptance.
 
-Ordinary circles are excluded at all five former remaining samples: no alive
-records and zero calls from the actual original 1C28 caller. Four nonzero game-area
-samples remain: Demo 1 frames 1/1952 (124439/26 pixels), Demo 3 frames 3379/3709
-(60/17).
+Both actual muted SDL-dummy idle OP→four demos→OP routes pass15988 selected
+scalar/count boundaries,15984 shake states/requests,40 full canonical text planes
+and the new full81-byte splash states. All126 entire capture files agree; parent
+state/shake traces remain identical. Fresh current-producer nine full pools
+pass15984x24952B, preserving inactive/spare fields. Five malformed splash traces
+reject; frozen imported readers reproduce splash/shake receipts except ownSHA.
 
-All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
-unavailable private native gates skip. Complete parent/current hashes bound
-changes to original CPU pellet color at 40 pixels in two samples; the other
-38 index/RGB samples are unchanged. Lossless retirement reclaims 148.9 MiB
-before journal cost (354 complete files, 1,044 source-backed caches).
-Full restoration/SHA/size/mode/nsmtime/gzip EOF, 18,924 protected hashes,
-509 source pins and unchanged DOS fingerprint pass. New/old programs, source
-snapshots and failure receipts stay retained. Recovery from DOS root:
+Five inputs change among509 (manifestadd39f3c…); the Pool header/layout change
+requires new cold core/frontend builds. GNU has71 programs/69 passing CTests;
+optimized UBSan cold core/game/trace/shake yields3 programs, without fullCTest.
+Older producers remain immutable; no DOS inputs or exact acceptance change.
+Recipes: DOS-root .analysis/reconstruction/probes/native-white-v1382/;
+receipts: native .analysis/port64/native-white-v1382/.
+
+All jobs are terminal. Main441/live Ghidra and native345/target CI pass;
+unavailable private native gates skip. Full archive restoration and 22,622
+protected hashes/509 source pins/DOS fingerprint pass. Lossless sample/build
+retirement reclaims 184.7 MiB (975 files, 1,044 source-backed caches);
+including already verified full-pool compression, net recovery is
+923.7 MiB before journal cost. Programs, sources, failures, full pools
+and evidence remain retained. Recovery from DOS root:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-circle-v1381/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-white-v1382/verify_retention.py --restore
 ```
 
-Without --restore it performs full temporary readback. Previous v1380 proof
-retains its own source scope; do not use it to attest current sources.
+Without --restore it performs full temporary readback. Old proofs keep their
+original source identities; do not use them to attest current inputs.
 
-Next trace those white-pixel and initial-background draw owners.
-Broader Boss/death/process/Windows pairing remains open.
+Next diagnose the initial background and complete-picture cache/margins before
+addressing physical GDC/scanout and broader ordinary gameplay/process routes.
 
 Retained v1380 (native `f6e71fa`) repairs Marisa laser color from the pre-update
 modulo. All ten sampled Demo 2 game areas remain zero. Its original CPU
 explains 11,384 old pixels; its source and recovery proof retain f5791751 scope
-and cannot attest current fb26d509 inputs.
+and cannot attest current add39f3c inputs.
 
 Retained v1379 restores the full ordinary 400-row background ring before shake;
 its original CPU/MPN observation explains the 430 Demo 1 frame3379 differences,
 which remain zero. Its producer and recovery proof retain the 8e77830c source
-scope; that old live-source check cannot attest current fb26d509 inputs.
+scope; that old live-source check cannot attest current add39f3c inputs.
 
 Retained v1378 (native `617d65f`) restores MAIN's missing Midboss shake event consumer.
 Target-observed MAIN_01_TEXT 0AAF:2246..2315 (file E536..E605, 208 bytes) and

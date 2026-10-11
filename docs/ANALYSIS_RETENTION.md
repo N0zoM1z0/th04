@@ -976,3 +976,28 @@ python3 .analysis/reconstruction/probes/native-circle-v1381/verify_retention.py 
 
 Without --restore, it performs temporary complete readback. Old v1380 proof
 retains its then-current f5791751 scope and cannot attest live fb26d509 sources.
+
+## v1382 terminal validation and recovery
+
+All jobs are terminal. Main441/live Ghidra and native345/target CI pass;
+unavailable private native gates skip. GNU cold71 programs/69CTest and UBSan
+cold3 targets remain pinned; full81-byte splash/nine-pool/scalar/shake/text,
+five malformed-trace rejection and frozen-reader controls pass. No Windows,
+physical scanout, full pictures or historical exact promotion is accepted.
+
+Lossless retirement reclaims 193,658,880 allocated bytes (184.7 MiB) before
+journal cost: 975 complete sample/capture/build files and 1,044 source-backed
+caches. Complete restoration/SHA/size/mode/nsmtime/gzip EOF, 22,622 protected
+hashes, 509 source pins and unchanged DOS fingerprint pass before and after
+deletion. Two complete native-pool streams already reclaimed 774,946,816
+allocated bytes after full gzip restore/SHA/length/EOF verification. Combined
+net allocated recovery is 968,605,696 bytes (923.7 MiB) before journal
+cost. All71 GNU/3 UBSan programs, both component probes, old programs, frozen
+sources, original references, full pool archives and failed attempts stay live.
+The cleanup log is excluded while writing; previous proofs remain immutable.
+
+From DOS root, restore retired samples/build inputs before CPU/graphics/reader
+replay with python3 .analysis/reconstruction/probes/native-white-v1382/verify_retention.py --restore.
+Without --restore it performs temporary complete readback. Old v1381 proof
+retains its fb26d509 source scope and cannot attest current add39f3c inputs.
+Native full pool gzip archives are already complete and require no new capture.
