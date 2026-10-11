@@ -270,3 +270,14 @@ textscroll/CRT/scanout before broader picture and ordinary route pairing.
 Current509 manifestba6eff48 changes only view.cpp; bounded TU builds reuse
 attested v1382 objects. Old cold/CTest/pool/proof identities remain separate.
 See the current handoff and focused differential note for replay commands.
+
+## MAIN text blink and independent display clock (v1385)
+
+Native now preserves blink-before-reverse and supplies a persistent display
+clock to MAIN text. All15988 native rows replay unchanged GDC source;
+80 complete controlled text layers plus8 attribute cases match independent
+DOSBox-X output. Original15984 triples expose zero/two-refresh residues;
+original absoluteepoch is uncalibrated. FreshGNU71/69CTest and UBSan3cold
+produce127 equal ordinary captures with40 unchanged entire indices/TRAM
+and6 parent trace/save hashes. Priorfullpool identity stays separate.
+LiveCG/textCRT/absolutephase/scanout and broader routes remain open.

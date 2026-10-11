@@ -54,11 +54,13 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-The current native repair restores the MPN stage palette, including Marisa's
-ST10 palette, changing 720,358 sampled RGB pixels while preserving complete
-indices, text and state traces. Independent full-frame composition diagnostics
-now isolate emulator DAC quantization and five Demo-label blink samples.
-Raw RGB and physical scanout acceptance remain open; development stays active.
+The latest native repair adds a persistent display clock for MAIN text blink,
+including the correct blink-before-reverse attribute order. All 15,988 native
+clock rows and 88 controlled text cases pass independent emulator Oracles.
+A fresh whole GNU build passes 69 CTests; actual muted GNU/optimized UBSan
+four-Demo routes have 127 identical capture files with unchanged complete
+indices, text and state traces. Original absolute phase, live font RAM, extra
+text/CRT registers and physical scanout remain open. Development stays active.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

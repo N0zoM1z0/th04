@@ -1061,3 +1061,36 @@ The separately retained replay_compositor.py verifies all 120 entire RGB hashes
 using only 41 temporary recovered inputs, then removes them. Its analog-nibble
 and blink controls reject equality. No permanent re-expansion is needed for
 this focused replay; it does not restamp the earlier 25,495-file inventory.
+
+## Independent text-clock probe retirement (v1385)
+
+All jobs are terminal. Current native producer pins 509 inputs, manifest
+a47f0496c18261ff4650515b1c2cd6413451a44d8879b6b3b21fc032aec89c6f. Fresh whole cold GNU71/69CTest,
+optimized UBSan3 cold targets, both programs, independent line/counter probes
+and separate instrumented observer remain retained. Main441/native345 CI pass.
+DOS product fingerprint6f5898dd is unchanged. Both private receipt-write and
+missing-header failures remain separately retained; corrected v2 probes pass.
+
+1,280 complete recovered references, actual/instrumented captures and build
+intermediates and 1,044 source-backed caches retire after full temporary
+restoration/SHA/size/mode/nsmtime/gzip EOF checks. Before/after deletion,
+27,535 protected hashes and 509 source pins pass. The inventory inherits
+v1384's 25,495 protected hashes and separately includes its later terminal
+appender, closed logs, compositor replay, seal and final recovery output.
+Net allocated reclamation is 350,756,864 bytes (334.5 MiB), after the
+15.6 MiB lossless archive and before journal cost. Programs,
+frozen inputs, original references, old proofs and failed attempts stay live.
+
+Restore from DOS root before current reader replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-blink-v1385/verify_retention.py --restore
+```
+
+Without --restore it checks every recovery temporarily. Journal SHA-256:
+4e22bc1edc74086a10d29a0035fc6e7b38e1e30934d61e02b82b4067b6760e4d. Old ba6eff48 proofs cannot attest
+current a47f0496 source; they retain their original scope. This inventory
+excludes its writing retirement log; a later terminal seal separately pins
+closed outputs without restamping that proof. See focused differential/demo
+notes for text-only adapter, explicit DAC diagnostics and open original
+absolutephase/liveCG/CRT/scanout/ordinary-route limits.
