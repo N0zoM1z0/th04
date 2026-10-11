@@ -471,3 +471,19 @@ muted Linux Xvfb passes with zero audio device opens. Default resource/GDC
 pairing, full pictures and broader routes remain open.
 Native manifest: 55459c6f487e25ce39e0b8499b89f52936e0273c536905e94b8a7764426fdb7e.
 Native commit: 955de04.
+
+## Display time through OP loading work (v1396)
+
+Explicit work now advances both resident sound and headless GDC text time,
+retaining fractional refresh time. Independently observed first-display-to-PMD
+epochs plus original work reproduce all twelve OP loading/readiness counter
+assertions per CPU input in actual maintained frontend GNU/UBSan executions.
+A display-only control preserves sound timing but rejects display counters.
+External observation retains fractional origin and excludes double admission.
+
+Cold GNU 71 programs / 69 CTests, optimized UBSan seven selected targets / four
+sound contracts, sixteen actual callers, eight default four-profile captures
+and private muted Linux Xvfb pass. All 129 default outputs per run retain their
+v1395 identities. Default CPU/bus/resource/graphics costs and wait-edge
+semantics, full pictures and broader routes remain open.
+Native manifest: ea5c016d0cd40bcb453bd9f6c27c6ec24c2513ec63342fa8be2fa8d6acc85d43. Native commit: 49b2fa5.

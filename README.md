@@ -54,17 +54,18 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. Resident sound now accepts explicit resource,
-drawing and process work without losing its Timer/PCM epoch or counting a
-refresh twice. Actual OP frontend checks with independent original loading
-intervals pass in GNU and optimized UBSan; removing work rejects the playback
-epoch even when the observed wait count stays the same.
+Native development is active. Explicit loading and drawing work now advances
+both resident sound and the headless GDC text clock, retaining fractional time.
+An independent display epoch preserves the original separation from PMD
+installation. Actual OP frontend checks match all twelve original loading /
+readiness counters per CPU input; freezing only display time rejects while
+sound timing still passes.
 
 Fresh cold GNU builds pass 69 CTests, optimized UBSan passes four sound
 contracts, and eight full startup/Demo routes reproduce all 129 retained output
-files for each driver profile. Private Linux Xvfb is muted with no audio device
-opens. Default resource costs and GDC epochs still need pairing; full pictures,
-broader gameplay/process routes and Windows input/audio remain open.
+files per driver profile. Private Linux Xvfb is muted with no audio device
+opens. Default resource/graphics/initial-epoch costs still need a model;
+full pictures, broader gameplay/process and Windows input/audio remain open.
 See the handoff for current evidence, limits and cleanup recovery.
 
 Historical exact acceptance has its own contract; runtime agreement does not

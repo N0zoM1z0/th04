@@ -1331,3 +1331,20 @@ protected state hashes resolve through the additional verified text archive.
 
 Both full CI gates pass (root 441 / native 345). Source-backed post-CI caches
 reclaim another 16.85 MiB; closed proof files remain protected.
+
+### GDC elapsed work (v1396)
+
+Current cold builds, sixteen actual callers, eight default captures and private
+Xvfb close source-bound proofs. Lossless retirement reclaims 472.69 MiB:
+2697 logical build/program/video files in 1407 unique blobs plus
+16 complete state/item text outputs in 2 blobs. Full CRC/EOF/SHA,
+logical mode/nsmtime and protected proof/frozen source pins are checked.
+Restore from the DOS root with
+`.analysis/reconstruction/probes/native-gdc-work-v1396-v2/verify_retention.py --restore`;
+`--prefix` limits restoration. Supplemental mode-3 physical reset input
+readback stays separate; old three-mode preparation/source/receipt unchanged.
+
+Rejected V1 has its own verified archive/reader under
+`.analysis/reconstruction/probes/native-gdc-work-v1396/`, reclaiming
+472.65 MiB separately. Its 8657d4a2 freeze is not current-source acceptance.
+Both full CI gates pass (root 441 / native 345). Post-CI source-backed caches reclaim 16.69 MiB separately.
