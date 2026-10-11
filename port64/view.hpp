@@ -54,7 +54,7 @@ struct MainAssets {
         const th04::portable::op_startup::Event&,std::uint32_t)> startup_work;
     std::string resident_sound_checks;
     bool muted=true;
-    bool demo_pictures=false;
+    bool demo_pictures=false,demo_entry_palette=false;
     std::string window_trace;
     bool window_route_advice=false;
     StageAssets stage2,stage3,stage5,stage6,extra;

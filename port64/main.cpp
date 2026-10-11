@@ -248,7 +248,7 @@ int main(int argc, char** argv) {
         std::string options_screenshot, character_screenshot, shot_screenshot;
         std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots,ending_screenshots,font_bitmap;
         bool window_route_advice=false;
-        bool demo_pictures=false;
+        bool demo_pictures=false,demo_entry_palette=false;
         bool title_window = false,muted=true,audio_requested=false,mute_requested=false,offline_requested=false;
         std::string pmd_driver="pmd",opna_rom,resident_sound_checks,window_trace;
         std::string configuration_checks,setup_checks,sound_checks,sound_scene_checks,startup_checks,natural_route_checks;
@@ -287,6 +287,7 @@ int main(int argc, char** argv) {
             else if(arg=="--op-music-checks")op_music_checks=value;
             else if(arg=="--demo-checks")demo_checks=value;
             else if(arg=="--demo-pictures") {demo_checks=value;demo_pictures=true;}
+            else if(arg=="--demo-entry-palette-checks") {demo_checks=value;demo_entry_palette=true;}
             else if(arg=="--bomb-checks")bomb_checks=value;
             else if(arg=="--score-route-checks")score_route_checks=value;
             else if (arg == "--archive") archive = value;
@@ -340,7 +341,7 @@ int main(int argc, char** argv) {
         if (title) {
             MainAssets main_assets;
             main_assets.save_directory=save_directory;main_assets.muted=muted;main_assets.window_trace=window_trace;main_assets.window_route_advice=window_route_advice;
-            main_assets.demo_pictures=demo_pictures;
+            main_assets.demo_pictures=demo_pictures;main_assets.demo_entry_palette=demo_entry_palette;
             main_assets.configuration_checks=configuration_checks;
             main_assets.setup_checks=setup_checks;
             main_assets.sound_checks=sound_checks;main_assets.sound_scene_checks=sound_scene_checks;

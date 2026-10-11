@@ -1,3 +1,32 @@
+// Capture only OP's pending demo-entry fade. No MAIN update is admitted.
+void run_demo_entry_palette_checks(const PiImage& background,const CdgSheet& numerals,
+    const CdgSheet& labels,const CdgSheet& cursors,const PiImage& selection_background,
+    const CdgSheet& portraits,const MainAssets& assets,const std::string& destination) {
+    namespace fs=std::filesystem;const fs::path out(destination),inputs(assets.save_directory);
+    require_view(assets.muted && !fs::exists(out),"demo palette checks require fresh muted outputs");
+    fs::create_directories(out/"save");
+    fs::copy_file(inputs/"scores.SCR",out/"save"/"GENSOU.SCR");
+    auto input=assets;input.save_directory=(out/"save").string();
+    FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&input);
+    scene.enable_registration();
+    for(unsigned tick=0;tick<641;++tick)scene.advance(0,false,tick==640);
+    require_view(scene.demo_active() && scene.program()==application::Program::op,"demo palette preparation");
+    const auto indices=scene.frame().indices;
+    const auto seed=scene.process_random_state(),generation=scene.generation();
+    std::ofstream palette(out/"palette.bin",std::ios::binary),pixels(out/"argb.bin",std::ios::binary),index(out/"indices.bin",std::ios::binary),trace(out/"states.txt",std::ios::binary);
+    palette.write(reinterpret_cast<const char*>(scene.demo_entry_palette().data()),48);
+    index.write(reinterpret_cast<const char*>(indices.data()),std::streamsize(indices.size()));
+    for(unsigned tick=0;tick<=17;++tick) {
+        if(tick)scene.advance(0,false,true);
+        require_view(scene.program()==application::Program::op && scene.generation()==generation &&
+            scene.process_random_state()==seed && scene.frame().indices==indices,"demo entry fade changed process or indices");
+        trace<<tick<<' '<<scene.demo_entry_tone()<<' '<<scene.demo_entry_published()<<' '<<seed<<' '<<generation<<'\n';
+        pixels.write(reinterpret_cast<const char*>(scene.frame().pixels.data()),std::streamsize(scene.frame().pixels.size()*4));
+    }
+    require_view(palette && pixels && index && trace,"demo palette capture write failed");
+    std::cout<<"DEMO_ENTRY_PALETTE 18 snapshots, OP retained, no MAIN updates\n";
+}
+
 // Actual idle OP -> four original recorded demos -> fresh OP; no actor controls.
 void run_demo_checks(const PiImage& background,const CdgSheet& numerals,
     const CdgSheet& labels,const CdgSheet& cursors,const PiImage& selection_background,
