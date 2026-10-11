@@ -44,8 +44,11 @@ foreground drawing, with original CPU/state/full-pixel component checks on
 GNU and UBSan. Four complete native demos also agree with the original on
 compared input, score, player and RNG state plus draw counts. They now also
 agree on all nine complete actor/effect pools at every update after restoring
-Midboss yellow bonus popups. Original/native pictures, broader routes, and
-physical Windows input/audio acceptance remain open.
+Midboss yellow bonus popups. The actual idle OP→four demos→OP route also
+preserves these selected state checks. Raw text sampling exposed and repaired
+its missing yellow DEMO PLAY label; fade-end checkpoints now agree.
+Whole original/native pictures require aligned presentation sampling; broader
+routes and physical Windows input/audio acceptance remain open.
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
 

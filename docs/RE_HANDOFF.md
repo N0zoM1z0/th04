@@ -5,6 +5,37 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
+v1376 (native `9b87427`, pushed) advances actual FrontEnd demo rendering. The headless OP→four bundled
+demos→OP route preserves all15988 selected input/score/player/RNG/count boundaries.
+Raw text comparison found a missing yellow DEMO PLAY label and blink attribute,
+independent of score timing. MAIN_01_TEXT0AAF:62B3..6348 and DGROUP2134:1C20 attest nine gaiji,
+column18/row12, attributeC3 and enter timer72. Native now writes it at frame73;
+GNU/optimized UBSan compare its complete72 code/attribute bytes at40 samples,
+including72/73/74.
+
+Whole pictures remain diagnostic. Original video samples after actors before
+score/background tail; native samples after the complete FrontEnd update.
+All12 first-three-frame full canonical TRAM samples agree; later score/HUD differences
+remain qualified by the seam. Original MPN cache graphics in columns576..639
+can be hidden by reverse blank TRAM: raw graphics alone are not visible RGB.
+No cropping or byte masks accept a picture. Blink/physical scanout stays open.
+Public replay is native port64/verify_demo_pictures.py; receipts and frozen
+producer/reader sources live in native .analysis/port64/native-pictures-v1376/.
+
+Current v1376 producer pins502 files/6a997fe1…. Final GNU/optimized UBSan complete
+captures are byte-identical. Two final and two pre-repair ELF programs stay
+pinned. Cold frontend TUs reuse unchanged v1375 core/ymfm; no whole-current
+cold/CTest claim. Frozen readers reproduce2×15988 scalar boundaries and2×40
+label spans. Main441/live Ghidra and native337/target CI pass; private unavailable
+native gates skip. DOS source fingerprint is unchanged.
+
+All v1376 jobs are terminal. Retention reclaims291966976 allocated B (278.4 MiB)
+before journals:671 complete archived display/state/intermediate files and1043
+source-backed caches. Full restore/SHA/mode/nsmtime plus gzip CRC/footer/EOF pass;
+8904 older protected hashes,502 current sources and4 new/71 prior programs agree.
+Recover from native native-pictures-v1376/verify_retention.py; --restore is needed
+before frozen/initial capture readback or relinking retired object inputs.
+
 v1375 (native `1aa96f9`, pushed) accepts nine complete actor/effect pools across all four original/native
 bundled demos: 15984 pre-score updates, 24952 record bytes per update, GNU and
 optimized UBSan with zero differences. All inactive/spare bytes remain compared;
@@ -20,7 +51,7 @@ while every selected scalar and every other complete pool still passes.
 The item owner now retains its spare bytes and selected sprite WORD; original
 13A9:9FA8..A03D and DGROUP2134:2322 attest initialization and patterns44..50.
 
-Current source pins500 files, manifest656a05d9…. GNU cold baseline plus the
+The retained v1375 producer pins500 files, manifest656a05d9…. GNU cold baseline plus the
 bounded MAIN/item/trace rebuild produces70 programs/68 passing CTests. Final
 UBSan core/trace is cold-built (one program, no full UBSan CTest claim). Eight
 public pool-reader controls pass. Frozen native and imported DOS reader sources

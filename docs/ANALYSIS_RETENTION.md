@@ -1,5 +1,30 @@
 # Private build and analysis retention
 
+## v1376 actual FrontEnd display and text evidence
+
+All jobs are terminal. Four new GNU/optimized UBSan programs,502-source
+producer/reader snapshots, original references, pre-repair missing-label
+captures and corrected target witnesses remain pinned. DOS/Windows products
+and all71 previous native programs are unchanged.
+
+Retention fully restores671 raw display/state files, compiler intermediates
+and the exploratory v2 ELF from one archive, with exact SHA/size/mode/nsmtime.
+Complete gzip CRC/footer/EOF also passes.1043 public source-backed caches are
+retired. This reclaims291966976 allocated B (about278.4 MiB) before journals.
+All8904 older protected hashes,502 current source pins,4 new/71 prior programs
+and the unchanged DOS source fingerprint pass. No pixel/text byte is masked.
+
+Recovery lives in native `.analysis/port64/native-pictures-v1376/`.
+Run `python3 .analysis/port64/native-pictures-v1376/verify_retention.py` from the
+native worktree for complete temporary restores and protected readback.
+`--restore` reinstates exact owned paths, refusing different existing bytes.
+Restore before reusing `frozen_readback.py`, `verify_initial_label.py` or old
+object inputs. Public `verify_demo_pictures.py` executes retained programs into
+fresh outputs without restoring old captures. Do not rerun the one-shot cleanup
+controller or reuse terminal output directories. Whole pictures remain
+qualified diagnostics; scalar/label acceptance has its own receipts.
+
+
 ## v1375 complete native actor/effect pool evidence
 
 All jobs are terminal. Current GNU70/focused cold UBSan1 products, build objects,

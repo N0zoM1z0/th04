@@ -190,3 +190,12 @@ accumulator. Native v1375 also accepts all nine complete actor/effect pools at 1
 pre-score updates after restoring Midboss yellow bonus popups. Paired pictures,
 other globals, scanout and ordinary Boss/death/process routes remain open.
 See the current handoff.
+
+Native v1376 additionally exercises the actual idle OP→four demos→OP FrontEnd,
+retaining all15988 selected state/count matches. Raw TRAM revealed a missing
+DEMO PLAY label; original timer72/gaiji/position/C3 attributes constrain its
+renderer repair. GNU/optimized UBSan compare40 complete label spans including
+frames72/73/74.
+Complete graphics/RGB/text samples are retained as diagnostics across different
+score/background seams; whole-picture and physical blink/scanout acceptance
+remain open. See the current handoff and differential note.
