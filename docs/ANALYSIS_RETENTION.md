@@ -1,5 +1,46 @@
 # Native private-state retention
 
+## v1401 native startup waits
+
+Only the owned current CMake intermediates, nonselected executables, verified
+Demo capture duplicates, bulky frontend PCM/BMP and redundant source archives
+were retired. Frozen512-file producer, selected current executables, original
+raw evidence, failures, receipts and physical saves remain live. All prior
+archives/producers stay unchanged. CRC/EOF, every blob and every temporary
+restored SHA/size/mode/nsmtime passed before deletion; protected proofs passed
+before and after. 2874 paths / 1467 blobs;
+archive 26.28MiB and net reclamation 817.00MiB before post-CI caches.
+
+Cleanup recovery caveat: the first deletion stopped at a missing compiler
+object. All archive blobs had passed CRC/SHA and temporary readback, but the
+full original path/mtime journal had not been persisted before deletion.
+Receipt-pinned Demo/program contents were recovered; regenerated files have
+new filesystem attributes. The final journal is written before deletion and
+supports full current-path metadata recovery. 511 auxiliary blobs retain
+content SHA/size without original path/mtime metadata. They remain in the final
+content union; compiler intermediates can be cold-regenerated. Failed scripts
+and logs, cleanup-recovery.json and the complete blob union are retained.
+Concurrent source commits/motion work were observed during this interval;
+causation of the object disappearance is unproved. Avoid overlapping writers.
+
+Final isolated-checkout CI passes root451/native345, plus tracking and diff
+checks. Borrowed pinned targets pass identity/format checks; private Ghidra
+project replay skips because those isolated checkouts have no project. Source
+and runtime proof identities remain separately pinned. Source-backed review CI
+caches reclaim 16.32MiB separately, for 833.32MiB net this batch;
+review worktrees are temporary and their tracked document state is preserved.
+
+```sh
+python3 .analysis/reconstruction/probes/native-startup-waits-v1401/verify_retention.py
+python3 .analysis/reconstruction/probes/native-startup-waits-v1401/verify_retention.py --restore --prefix .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-waits-v1401/build-gnu
+python3 .analysis/reconstruction/probes/native-startup-waits-v1401/check_parent.py
+```
+
+Commands run from DOS root. Recovery pins current native512/60cf4491 independently
+from frozen v1399 512/5474b8e3 and v1400 DOS a34c1357. Old strict readers reject
+the changed native source; never edit or restamp them. Use a fresh namespace for
+a new experiment. Restore only needed owned paths and verify their metadata.
+
 ## v1393 original OP loading work
 
 The original 24,000/36,000 CPU pair, complete strict readers, guest DOS return
