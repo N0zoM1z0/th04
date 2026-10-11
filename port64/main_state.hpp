@@ -7,6 +7,7 @@
 #include "enemy_bullets.hpp"
 #include "effects.hpp"
 #include "point_numbers.hpp"
+#include "playfield_shake.hpp"
 #include "midboss.hpp"
 #include "midboss2.hpp"
 #include "midboss3.hpp"
@@ -131,6 +132,8 @@ public:
     const spark::System& sparks() const { return sparks_; }
     const gather::System& gathers() const { return gathers_; }
     const pointnum::System& point_numbers() const {return point_numbers_;}
+    const playfield::Shake& playfield_shake() const {return playfield_shake_;}
+    playfield::Shift playfield_shift() const {return playfield_shift_;}
     const midboss::System& midboss() const { return midboss_; }
     const orange::System& orange() const { return orange_; }
     const circle::System& circles() const { return circles_; }
@@ -259,6 +262,8 @@ private:
     spark::System sparks_{};
     gather::System gathers_{};
     pointnum::System point_numbers_{};
+    playfield::Shake playfield_shake_{};
+    playfield::Shift playfield_shift_{};
     midboss::System midboss_{};
     std::optional<midboss2::System> midboss2_;
     std::optional<midboss3::System> midboss3_;

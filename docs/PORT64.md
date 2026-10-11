@@ -9,7 +9,16 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1375 accepts all four complete native demos against original DOS on
+Current v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
+UBSan agree on all15,984 complete shake globals/movement requests, all15,988
+selected scalar/count boundaries, nine full pools and40 full canonical text
+planes. GNU cold build yields71 programs/69 CTests; UBSan cold game/trace/shake
+produces3 targets. All125 capture files agree between variants, and removing
+the consumer rejects all four demos while score/RNG still pass. Demo1frame3379
+game-area graphics differences fall55,357→430 atrows16/17; fullpictures/scanout
+remain open. See [demo evidence](port64/evidence/demo.md).
+
+Retained v1375 accepts all four complete native demos against original DOS on
 nine full actor/effect pools at 15,984 pre-score updates, retaining every inactive
 byte and translating only enemy script IDs to actual STD-relative offsets. The
 15,988 selected input/score/player/RNG/count boundaries still agree. A missing

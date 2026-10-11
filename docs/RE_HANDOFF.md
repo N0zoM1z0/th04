@@ -10,240 +10,68 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1377 aligns presentation sampling with the complete MAIN update. A distinct
-TH04VP3 stream samples the next scalar observer header, at original
-MAIN_01_TEXT0AAF:00B7 (I) or :0975 (T), retaining the complete ordinary trace.
-Across all four demos, GNU and optimized UBSan retained v1376 FrontEnd programs
-agree with all15988 selected scalar/count boundaries and all40 sampled complete
-8000-byte canonical text planes, including DEMO PLAY and score/HUD. The reader
-consumes all15984 original video records; text acceptance covers those40 samples.
-Whole graphics/RGB, physical blink and scanout remain open. No gameplay or DOS
-source changes, native rebuild, historical exact promotion or Windows test occur.
-Public tools: native port64/capture_demo_present.py and verify_demo_present.py.
-New reader evidence: native .analysis/port64/native-presentation-v1377/;
-compiled products keep the immutable502-file v1376 producer identity.
-Independent original/reconstructed DOS replay at this new seam also passes all
-38 compared regions across15984 records; raw GDC clock/FIFO internals remain
-diagnostic. Current consumer pins505 files/8b0f702a… separately from the unchanged
-502-file v1376 compiled producer.
-Frozen consumer replay reproduces the complete new reader receipt byte for byte.
-Graphics diagnostics retain every256000-pixel sample and add location maps:
-30 of40 samples agree inside x32..415/y16..383; ten differ there (Demo1/2/3),
-while all full frames differ. These location summaries do not accept pictures.
-Separate display-page/scanout timing from renderer ownership before changing code.
+v1378 restores native MAIN's missing Midboss shake event consumer.
+Target-observed MAIN_01_TEXT 0AAF:2246..2315 (file E536..E605, 208 bytes) and
+DGROUP 2134:427E/4280/4282/:185C identify x/y/timer/redraw and EGC requests.
+GNU and optimized UBSan pass 3,262 original CPU state/request cases and 36
+complete labelled-page movement/scroll checks. The cold producer pins 509
+inputs, manifest9346e951…: GNU has 71 programs and 69 passing CTests; UBSan
+cold-builds the game, trace and shake targets, without a full CTest claim.
 
-All v1377 jobs are terminal. Main441/live Ghidra and native345/target CI pass
-(native private tool/Ghidra gates skip). Lossless retirement reclaims153010176
-allocated B (145.9 MiB):128 full duplicate HDI/raw snapshots plus1044 source-backed
-caches. Complete restored SHA/mode/nsmtime/gzip EOF,9692 protected hashes,505
-source pins and unchanged DOS fingerprint pass. From DOS root, use
-native-presentation-v1377/verify_retention.py --restore (under reconstruction/probes)
-before reading retired HDIs/snapshots; full VP3 streams/programs remain retained.
+Actual muted SDL-dummy idle OP→four demos→OP agrees with original at all
+15,984 complete shake globals/movement requests, 15,988 selected scalar/count
+boundaries, all nine complete actor/effect pools, and 40 complete 8,000-byte
+canonical text-plane samples. All 125 GNU/UBSan capture files are identical.
+Removing only the timer event consumer rejects 13 updates per demo, first at
+3379/3710/1953/3059, while score/RNG controls still pass. Six malformed/state
+trace controls reject. Frozen native and imported DOS readers reproduce both
+complete shake receipts, apart from their separately pinned own-source hash.
 
+All 40 samples agree on current/pending pages, zero pending wait and GDC scroll.
+Both physical MPN cache banks match every asset image (Marisa Demo2 uses ST10).
+Demo1 frame3379 diagnostic game-area differences fall from 55,357 to 430,
+confined to y16/17. Investigate the background ring and clipping before vertical
+movement next. Initial carpet, laser/circle pixels, full graphics/RGB/font/blink/
+scanout, Boss direct offsets, Bomb interactions and broader routes remain open.
+Physical edge movement remains an inferred model; CPU controls adapt EGC leaves.
+No cropped/masked picture acceptance or historical exact promotion occurs.
 
-v1376 advances actual FrontEnd demo rendering. The headless OP→four bundled
-demos→OP route preserves all15988 selected input/score/player/RNG/count boundaries.
-Raw text comparison found a missing yellow DEMO PLAY label and blink attribute,
-independent of score timing. MAIN_01_TEXT0AAF:62B3..6348 and DGROUP2134:1C20 attest nine gaiji,
-column18/row12, attributeC3 and enter timer72. Native now writes it at frame73;
-GNU/optimized UBSan compare its complete72 code/attribute bytes at40 samples,
-including72/73/74.
+Fresh preflight/live Ghidra and main441/native345 CI pass; unavailable private
+native tool/Ghidra gates skip. DOS source fingerprint6f5898dd… and DOS products
+are unchanged. Provenance remains candidate-local-attested. Private recipes:
+root .analysis/reconstruction/probes/native-pages-v1378/; native receipts:
+.analysis/port64/native-pages-v1378/. Public Oracle: port64/verify_playfield_shake.py.
+Import actual DOS-root scripts/probes first; pass old DGROUP sources only for
+attestation. Historical producer502/v1376 and consumer505/v1377 remain immutable.
 
-Whole pictures remain diagnostic. Original video samples after actors before
-score/background tail; native samples after the complete FrontEnd update.
-All12 first-three-frame full canonical TRAM samples agree; later score/HUD differences
-remain qualified by the seam. Original MPN cache graphics in columns576..639
-can be hidden by reverse blank TRAM: raw graphics alone are not visible RGB.
-No cropping or byte masks accept a picture. Blink/physical scanout stays open.
-Public replay is native port64/verify_demo_pictures.py; receipts and frozen
-producer/reader sources live in native .analysis/port64/native-pictures-v1376/.
+All jobs are terminal. Lossless retirement reclaims 324,722,688 allocated bytes
+(309.7 MiB), before journal cost: 1,390 complete raw/build files and 1,044
+source-backed caches. Full restore/SHA/size/mode/nsmtime/gzip EOF, 15,620
+protected hashes and 509 source pins pass. Programs, original references,
+frozen sources and failed attempts remain retained. The initial ledger Oracle
+label was rejected and corrected. Cleanup's first final gate rejected its own
+writing log; a separate v2 journal pins the closed log, preserving the failure.
+The complete archive had already passed restored readback before retirement.
 
-Current v1376 producer pins502 files/6a997fe1…. Final GNU/optimized UBSan complete
-captures are byte-identical. Two final and two pre-repair ELF programs stay
-pinned. Cold frontend TUs reuse unchanged v1375 core/ymfm; no whole-current
-cold/CTest claim. Frozen readers reproduce2×15988 scalar boundaries and2×40
-label spans. Main441/live Ghidra and native337/target CI pass; private unavailable
-native gates skip. DOS source fingerprint is unchanged.
+From DOS root, restore retired raw captures/build intermediates before old
+reader replay:
 
-All v1376 jobs are terminal. Retention reclaims291966976 allocated B (278.4 MiB)
-before journals:671 complete archived display/state/intermediate files and1043
-source-backed caches. Full restore/SHA/mode/nsmtime plus gzip CRC/footer/EOF pass;
-8904 older protected hashes,502 current sources and4 new/71 prior programs agree.
-Recover from native native-pictures-v1376/verify_retention.py; --restore is needed
-before frozen/initial capture readback or relinking retired object inputs.
+```sh
+python3 .analysis/reconstruction/probes/native-pages-v1378/verify_retention.py --restore
+```
 
-v1375 accepts nine complete actor/effect pools across all four original/native
-bundled demos: 15984 pre-score updates, 24952 record bytes per update, GNU and
-optimized UBSan with zero differences. All inactive/spare bytes remain compared;
-enemy script IDs translate to the actual STD-relative offsets rather than being
-masked. The existing 15988 input/score/player/RNG/count boundaries still agree.
+Without --restore, it checks all recoveries temporarily. The old v1377 proof
+keeps its then-current 505-source scope; its live-source check must not be
+restamped to 509. Details are in the differential/demo and retention notes.
 
-The complete-pool reader catches a missing Midboss bonus consumer: MAIN emits
-1280-point yellow events but native previously only recorded them. Original
-MAIN_032_TEXT13A9:64DE..6547 calls yellow_add0300 and clears the multiplier latch.
-Consuming those events closes first pool differences in demos1/2/3/4 at frames
-3379/3709/1952/3059. Removing the call again rejects those same four boundaries
-while every selected scalar and every other complete pool still passes.
-The item owner now retains its spare bytes and selected sprite WORD; original
-13A9:9FA8..A03D and DGROUP2134:2322 attest initialization and patterns44..50.
-
-The retained v1375 producer pins500 files, manifest656a05d9…. GNU cold baseline plus the
-bounded MAIN/item/trace rebuild produces70 programs/68 passing CTests. Final
-UBSan core/trace is cold-built (one program, no full UBSan CTest claim). Eight
-public pool-reader controls pass. Frozen native and imported DOS reader sources
-replay every complete stream. All launches are headless/muted; Windows and old
-DOS products are unchanged. Public replay is port64/verify_demo_pools.py.
-
-Other native globals, original/native pictures and scanout, ordinary Boss/death/
-process routes and physical Windows remain open. Historical exactness is
-unchanged. Older route/pixel/component receipts retain their own producer IDs.
-
-v1375 final CI passes main441/live Ghidra and native329/target checks; unavailable
-native private tool/Ghidra gates skip. Every job is terminal. Lossless cleanup
-reclaims2038489088 allocated B (about1.90 GiB) before journals: five complete pool
-streams, ten text streams and1042 source-backed caches. Full restored readback,
-8904 prior protected hashes,500 current source pins and71 current program hashes
-pass; DOS fingerprint is unchanged. Current builds are native
-.analysis/port64/native-pools-v1375/build-gnu and build-ubsan. Verify restorations
-with native .analysis/port64/native-pools-v1375/verify_retention.py; --restore
-recreates old raw text paths with exact modes/nsmtimes.
-
-## Retained v1374 selected-state evidence
-
-v1374 pairs ordinary headless native MAIN with the complete original DOS demo
-reference. It fixes the Stage 1 midboss emergence caller: MAIN_032_TEXT
-13A9:065C..0669 consumes fractional BYTE DGROUP2134:4276, whereas native supplied
-whole-pixel distance (the separate WORD at427A). A three-subpixel Y error caused
-the first old Demo 2 score/RNG difference at before-update frame3533.
-
-Current GNU/UBSan accept all 15988 boundaries across four demos on 23 selected
-input/score/player/resource/RNG fields and exact draw counts. Wrong-distance
-source mutation completes all rows and rejects again at 3533 (ring 697 versus 696).
-Eight public reader controls pass; original CPU midboss 699 controls, 450 tile
-controls and setup pass per host. GNU builds 70 programs/68 CTests; focused UBSan
-builds three programs. Both preserve the actual ten starting CFG bytes and
-valid scores. Five muted headless pictures per host agree as smoke evidence.
-Core/contracts are cold-built; final config-loading trace adapters are rebuilt
-separately, retaining the initial products/receipts. Current manifest 498 is
-ff0b3bde…; all source/imported-reader snapshots are read back.
-
-At v1374 complete native pools were still open; v1375 above closes the nine
-bundled-demo pool records. Pictures, scanout and broader routes remain open.
-DOS v1372 source/products and historical exactness are unchanged. Native public
-replay is port64/verify_demo_state.py; see the focused differential note.
-
-v1374 final checks pass main CI 441/live Ghidra and native CI 321/target checks
-(native private Ghidra/tool gates skip where unavailable). All jobs are terminal.
-A fresh replay using frozen current native/DOS reader sources accepts all 15988
-boundaries. Lossless retention reclaims 166055936 allocated B (about 158.4 MiB)
-before journals, retiring 26 complete raw/text/old-probe streams and 1041
-source-backed caches. Full restored readback of all 26 streams and 8904 protected
-hashes passes; current 498 source pins and DOS fingerprint agree. Current builds
-are native `.analysis/port64/native-demo-v1374/build-gnu` and `build-ubsan`.
-Verify recoveries with `.analysis/port64/native-demo-v1374/restore_streams.py` in
-the native worktree; add `--restore` before reading retired old raw paths.
-
-## Retained v1373 point-number owner
-
-v1373 added 400 point-number slots, two overwrite rings, original delayed motion/
-release, live-list ordering, width mutation and multiplier glyphs 10/11. Item and
-bullet-zap events feed this owner; the foreground consumes cached requests after
-items and before enemy bullets. The small font is read from supplied MAIN in
-HDI, with all preshifts checked; no game bytes are committed.
-
-Original instruction execution at load 1000/2000 matches830 complete state/list/
-request rows and 494 complete indexed frames perGNU/UBSan host. Two additional
-full 400-slot list/grid/overlap cases pass. All five wrong source variants reject
-while completing830 rows. An original zero-number bounded-return negative is
-retained; native's explicit error does not accept that constructed input.
-
-Fresh GNU builds69 AMD64 products and passes 68 CTests. Focused UBSan builds the
-portable core/point-number contracts/frontend. Actual white/yellow/doubled
-pickup checks and five muted headless MAIN/combat images per host pass; images
-are host-consistency smoke only. Source manifest496 is707d129a…; producer/old
-766-case consumer sources and imported dependencies are frozen/read back.
-Receipts/replay and claim limits: [point numbers](port64/evidence/point-numbers.md).
-
-Windows packages and their older producer remain untouched. Existing native
-v1356 natural-route/save/restart/timing receipts do not accept the new producer.
-Selected demo state/RNG/counts are accepted by v1374; v1375 accepts the nine
-complete bundled-demo pools. Next: other globals, original/native foreground
-pictures and process observations, then broader routes and actual host acceptance. Complete
-scanout, dirty-page behavior and full gameplay picture parity remain open.
-
-v1373 final checks: main CI 441 tests/live Ghidra pass; native CI 313 tests/target
-checks pass (its unavailable private Ghidra check skips). All jobs are terminal.
-Lossless retention reclaims 502460416 allocated B (about 479.2 MiB), including
-1040 source-backed caches. Full restoration of 23 streams and 3093 protected
-hashes passes; 496 current source pins and the unchanged DOS fingerprint agree.
-Initial cache-absence rejection stays preserved; v2 completes journal readback.
-Restore retired old-reader inputs with native
-`.analysis/port64/pointnum-v1373/restore_streams.py --restore`; no options verifies
-all recoveries without retaining restored files. Retained v1373 build directories
-are native `.analysis/port64/pointnum-v1373/build-gnu` and `build-ubsan`.
-
-## Retained v1356 native route frontier
-
-The v1362 GNU Reimu A / Lunatic / Turbo0 candidate is now terminal and
-accepted by the independent `verify_natural_slowdown.py` reader: 88,249 route
-refreshes plus 792 refreshes in a separate Scores process. It reaches all six
-stages without Continue, exits registration by Esc, returns to fresh OP, and
-stores real section3 clear mask1 at the physical rename and final file. The nine
-other decoded score partitions and CFG stay unchanged; no pending file remains.
-Final MAIN: stage5/frame13,649, lives7, misses6, score units5,597,294.
-
-Natural density reaches439 bullets. At >=320 there are571 refreshes/287
-slowdown2; at >=400 there are240/129. Complete deadlines/terminal counts pass.
-At >=400, update P95/P99/max are6.61/8.50/13.37ms with no update exceeding its
-own admission period. This is instrumented GNU/private-Xvfb/shared-WSL evidence;
-uninstrumented physical FPS and original DOS parity remain unaccepted. Generic
-traces do not expose every inner Ending phase. Audio opens remain zero.
-
-Two actual ordinary X early-hit cancellations occur in Stage4, preserving miss
-count while consuming stock, starting Bomb, clearing respawn and setting
-invincibility255. The last-life proactive policy branch remains dry-controlled
-only. Separate ordinary window probes pass early/closed cases (1,039/1,048
-refreshes): early X cancels frame394 hit at395; closed-window X at401 remains
-rejected at404 (stock2, Bomb inactive, miss1, respawn61). The first late probe
-stays failed: its cleanup incorrectly expected MAIN Esc to return to OP, while
-the host Escape handler exits MAIN directly. This is a probe cleanup failure,
-not a demonstrated Bomb failure or original Escape-parity acceptance.
-
-Retained GNU Reimu A routes:
-
-| Route | Route + independent Scores refreshes | Scope |
-| --- | --- | --- |
-| Normal/Turbo1 | 89,008 +794 | Six stages/noContinue, physical clear/freshOP/restart |
-| Lunatic/Turbo1 | 88,927 +790 | Physical clear; dense slowdown2 absent |
-| Lunatic/Turbo0 | 88,249 +792 | Physical clear plus natural dense slowdown2 gates |
-| Extra | 30,388 +790 | NoContinue, full eight A gaiji, physical clear/restart |
-
-Prior UBSan Normal all-clear acceptance is revoked: mask0x19 is an unplayed
-sentinel even though bit0 is set. The v1360 GNU Turbo0 attempt also stays failed
-(88,267 refreshes, Final Stage miss13, masks0x19); its separate795-refresh
-Scores reader and bounded dense slowdown observations remain valid. Require
-mask<4 plus the selected shot bit, never bit0 alone. All these jobs are terminal;
-do not poll or revive dated PID/tool handles from historical active-job files.
-
-Registration, lifecycle/Continue/HUD, stage/Ending/Extra, score/config, demo,
-MusicRoom/unlocks and muted sound owners have separate component/integration
-evidence. Eight actual GNU/UBSan Continue cases and ten GNU setup/corrupt-file
-cases are retained. Startup combinations cover27 GNU/UBSan and19 earlier
-Windows cases. Broader character/shot/rank/Ending/Extra routes, actual Windows
-display/input, physical audio and uninstrumented performance remain open.
-
-For these retained v1356 routes, compiled producer485 inputs/`00af24f7…`, GNU game
-`dbe17225…`, UBSan `029e7ba1…`, Windows `5b6cf2c3…` remain v1356. The completed
-route uses frozen consumer491/`d25ba16e…`. Actual Bomb probes use archived
-consumer492/`3135f76e…`; handoff formatting changes only that Python probe's
-layout, preserves its AST, and freezes current492/`4ed57dab…` separately.
-Do not restamp old runtime receipts with current source identities.
-
-Primary native receipts: `.analysis/port64/bomb-input-v1362/` (completed route,
-independent-natural-v1364.json, actual-rescues-v1364.json) and
-`.analysis/port64/bomb-window-v1364/` (early/late/failed probes, independent
-readback, both492-input source snapshots). All paths here are relative to the
-native worktree. See its `docs/port64/evidence/host-window.md` for replay details.
+Prior demo/point-number/presentation experiments are indexed in
+[demo evidence](port64/evidence/demo.md) and their immutable private receipts.
+Historical producer502/v1376 and consumer505/v1377 keep their original identities.
+Earlier ordinary GNU Reimu A Normal/Lunatic/Extra clear/save/restart routes and
+dense slowdown observations retain their v1356 producer; see
+[host-window evidence](port64/evidence/host-window.md). The prior UBSan Normal
+clear remains revoked (mask0x19 is a sentinel), and the v1360 route and first
+late Bomb probe remain failed. Require mask<4 plus the selected shot bit.
 
 ## Comparison priority for the next agent
 

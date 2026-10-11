@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/playfield_shake.hpp",
+    "port64/playfield_shake.cpp",
+    "port64/playfield_shake_checks.cpp",
+    "port64/verify_playfield_shake.py",
     "port64/verify_demo_present.py",
     "port64/capture_demo_present.py",
     "port64/demo_present_stream.gdb",

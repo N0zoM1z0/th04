@@ -421,3 +421,94 @@ restore/SHA/mode/nsmtime/gzip EOF pass. Recovery is root
 .analysis/reconstruction/probes/native-presentation-v1377/verify_retention.py;
 add --restore before reading retired HDIs/snapshot paths. Complete VP3 streams,
 original references, programs, source snapshots and failures stay pinned.
+
+## Native Midboss shake consumer (v1378)
+
+The display-page hypothesis does not explain the retained forty samples:
+current and pending selectors agree, pending wait is zero, and GDC first line
+agrees with native scroll. Choosing the other page increases most differences.
+Both original physical MPN cache banks agree with all128 bytes of every asset
+image at every sample. Demo2 uses Marisa ST10.MPN, not Reimu ST00.MPN; the first
+wrong-asset cache experiment is retained separately as a rejected hypothesis.
+
+Target-observed MAIN_01_TEXT0AAF:2246..2315 (fileE536..E605,208B) consumes
+DGROUP2134:427E/4280/4282 signedWORD x/y/timer and :185C signedBYTE redraw.
+Nonzero timer writes x=-2 for mod2 zero, otherwise+2; y=-2 for unsignedmod4<=1,
+otherwise+2, then decrements the WORD. Four far EGC calls (MAIN_00_TEXT0000:
+0A22/0B24/0C34/091C) pass the complete32,0,415,399 rectangle and shift count.
+Horizontal movement precedes vertical. Movement sets redraw2; a nonzero redraw
+decrements, executes actual tiles_invalidate_all0AAF:2052, and clears x/y.
+Counter wrap remains16/8-bit. Stage session clears x/y but preserves timer and
+redraw; a fresh MAIN instance starts zero. These are target observations,
+not a new exactness promotion or a physical EGC pixel acceptance.
+
+Native Midboss producers already emitted twelve-frame shake events; MAIN only
+recorded them. The new playfield_shake owner consumes the timer, updates at the
+original modulo phase, and retains the applied shifts separately from cleared
+post-state globals. Final graphics movement precedes Bomb page retention and
+text overlay. It moves physical x32..415/y0..399 through the400-line scroll
+ring, X thenY, retaining vacated strips. That physical edge model is inferred
+and invariant-tested; the CPU Oracle records EGC requests rather than executing
+hardware blits. Ordinary Boss direct offsets and Bomb interaction remain open.
+
+Original CPU execution compares3262 complete globals/EGC-request cases with
+the native checker, including signedWORD timer and signedBYTE redraw wrapping;
+an injected adapter rejection propagates. Thirty-six labelled full256000-pixel
+shift/scroll cases check every exterior, vacated-strip and wrapped-row pixel.
+Actual headless FrontEnd idleOP→four demos→OP captures retain every shake state:
+all15984 updates agree on the complete7-byte original globals and actualCPU-
+derived applied x/y/invalidation. The reader uses original DGROUP modulo bytes;
+only observed12-frame Midboss requests are inferred from timer transitions,
+and unexpected transitions reject. Existing15988 selected scalar/count
+boundaries and all nine complete pools at every update remain compared.
+
+Demo1 frame3379 diagnostic playfield differences fall55357→430. All430 remaining
+pixels lie at y16/17, consistent with the native background clipping before
+vertical motion; that ownership is not repaired or accepted here. All forty
+full8000-byte canonical TRAM samples remain equal. Every complete graphics
+frame is retained/compared diagnostically; fullRGB/font/blink/scanout and the
+initial carpet, laser and circle pixel differences remain open. No crop/mask
+accepts pictures. Private recipes and immutable producer sources live under
+root .analysis/reconstruction/probes/native-pages-v1378/ and native
+.analysis/port64/native-pages-v1378/. Public owner Oracle:
+
+```sh
+nice -n 15 taskset -c 0 python3 port64/verify_playfield_shake.py \
+  --target "$DOS_ROOT/.analysis/targets/th04/main.exe" \
+  --exe .analysis/port64/native-pages-v1378/build-gnu-v2/th04-port64-shake-checks \
+  --output-dir FRESH
+```
+
+The full GNU cold build has71 programs and69 passing CTests. Final producer
+pins509 inputs, manifest9346e9513312ac094a289e3da52ee2706f7a6d854941b81dde8a03ac168d97dd.
+The first standalone Oracle Path-versus-bytes error, whole-build missing
+namespace alias and complete-reader wrongROOT import failure remain retained.
+Do not reuse the old whole DGROUP consumer as an import prefix: import actual
+DOS-root scripts/probes first and pass old sources as attestation only.
+
+Optimized UBSan cold core/game/trace/shake yields3 programs with no fullUBSan
+CTest claim. Both hosts pass complete shake/scalar/nine-pool controls and all40
+canonical textplanes; their125 entire capture files agree byte for byte.
+Removing only MAIN's timer event consumer from frozen producer source rejects
+13 updates/demo, first3379/3710/1953/3059, while selected scalar/counts stayequal.
+The mutant program/source/link/capture/receipt remain pinned. Six trace controls
+reject missing/duplicate rows, lastframe/lasttimer/appliedshift/invalidation drift.
+Frozen native509 and actual importedDOS/producer-attestation sources reproduce
+both complete shake receipts, with only their separatelypinned ownsourceSHA
+different. Frozen/imported consumer identities do not restamp older binaries.
+
+## v1378 terminal validation and recovery
+
+All v1378 jobs are terminal. Main441/liveGhidra and native345/target CI pass;
+unavailable private native gates skip. Initial unregistered Oracle label and
+cleanup log-lifetime failures stay retained: archive restoration passed before
+retirement; final gate rejected its own writing log, then a distinctv2 journal
+pinned that log after terminal. No archive/program/source bytes were repaired.
+Lossless retirement reclaims324722688 allocated B (309.7MiB) before journal
+cost:1390 full raw/sample/build-intermediate files and1044 source-backed caches.
+Full restored SHA/size/mode/nsmtime/gzip EOF,15620 protected hashes,509 source
+pins and unchanged DOS fingerprint pass. All71GNU/3UBSan/newmutant programs,
+complete frozen sources, original references and failure receipts stay live.
+Recovery from DOS root: python3 .analysis/reconstruction/probes/native-pages-v1378/verify_retention.py --restore before old raw-capture/graphics/frozen-reader paths.
+Use no options for full temporary readback. v1377 restore proof retained its
+then-current505 scope; its live-source check must not be restamped to509.

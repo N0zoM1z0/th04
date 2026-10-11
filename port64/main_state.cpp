@@ -279,6 +279,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     bonus_context_.stage=next_id;bonus_context_.resource_stage=next_id;
     score_events_.clear();enemy_events_.clear();bullet_events_.clear();
     midboss_events_.clear();orange_events_.clear();item_events_={};
+    playfield_shake_.x=playfield_shake_.y=0;playfield_shift_={};
     player_draws_=player::render_requests(life_.state(),player_.position(),
         shot::level_for_power(score_.power),playchar_==application::Playchar::reimu ? 38 : 39,
         static_cast<std::uint8_t>(frames_&3u),scroll_line_);
@@ -523,6 +524,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         if (midboss_state().active && !stage5_ && !stage6_) {
             const auto sink=[&](const midboss::Event& event) {
                 midboss_events_.push_back(event);
+                if(event.type==midboss::EventType::shake)playfield_shake_.time=motion::wrap(event.value);
                 if(event.type==midboss::EventType::point)point_numbers_.add(event.position,std::uint16_t(event.value),true,false);
                 if(event.type==midboss::EventType::sound)sound_action(sound::ActionKind::play,std::uint16_t(event.value));
                 if (event.type==midboss::EventType::circle) sparks_.add_circle(event.position,event.value,event.count);
@@ -781,6 +783,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     const bool leaving=overlay_.callback==transition::Callback::leave;
     const auto writes=transition::update_overlay(overlay_);
     if(!writes.empty()) { overlay_cell_=writes.back();if(leaving) leave_text_replaced_=true; }
+    playfield_shift_=playfield::update(playfield_shake_,std::uint8_t(frames_&1u),std::uint8_t(frames_&3u));
     run_frames_.complete(0,static_cast<std::uint16_t>(slowdown()));
     sound_action(sound::ActionKind::update);
     ++frames_;

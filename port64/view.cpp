@@ -43,6 +43,7 @@
 
 namespace {
 namespace bomb=th04::portable::bomb;
+namespace playfield=th04::portable::playfield;
 
 namespace menu = th04::portable::menu;
 namespace application = th04::portable::application;
@@ -1127,6 +1128,11 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         if (e.flag!=1) continue;
         for (auto p:circle::raster(e.center,static_cast<std::uint16_t>(e.radius)))
             put_indexed_pixel(frame,palette,p.x,p.y,0,0,state.circles().snapshot().color);
+    }
+    const auto shake=state.playfield_shift();
+    if(shake.x || shake.y) {
+        playfield::move(frame.indices,display_line,shake);
+        playfield::move(frame.pixels,display_line,shake);
     }
     if(bomb_frame.active) {
         sprites.bomb_pages[bomb_page]=physical_page(frame.indices,display_line);

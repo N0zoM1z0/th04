@@ -191,3 +191,19 @@ files with 15,585,280 allocated bytes net after its journal. Receipt overhead
 is excluded. Main build cleanup, capture sharing and cache accounting remain
 separate. The first follow-up helper had a str/Path readback typo; corrected
 full journal readbacks verify all captures/sources before acceptance.
+
+## v1378 terminal validation and recovery
+
+All v1378 jobs are terminal. Main441/liveGhidra and native345/target CI pass;
+unavailable private native gates skip. Initial unregistered Oracle label and
+cleanup log-lifetime failures stay retained: archive restoration passed before
+retirement; final gate rejected its own writing log, then a distinctv2 journal
+pinned that log after terminal. No archive/program/source bytes were repaired.
+Lossless retirement reclaims324722688 allocated B (309.7MiB) before journal
+cost:1390 full raw/sample/build-intermediate files and1044 source-backed caches.
+Full restored SHA/size/mode/nsmtime/gzip EOF,15620 protected hashes,509 source
+pins and unchanged DOS fingerprint pass. All71GNU/3UBSan/newmutant programs,
+complete frozen sources, original references and failure receipts stay live.
+Recovery from DOS root: python3 .analysis/reconstruction/probes/native-pages-v1378/verify_retention.py --restore before old raw-capture/graphics/frozen-reader paths.
+Use no options for full temporary readback. v1377 restore proof retained its
+then-current505 scope; its live-source check must not be restamped to509.

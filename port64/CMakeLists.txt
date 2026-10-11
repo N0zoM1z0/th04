@@ -61,6 +61,7 @@ add_library(
   midboss3.cpp
   midboss4.cpp
   stage4.cpp
+  playfield_shake.cpp
   stage5.cpp
   stage6.cpp
   stagex.cpp
@@ -140,6 +141,9 @@ target_link_libraries(th04-port64-setup-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-pointnum-contracts pointnum_contracts.cpp)
 target_link_libraries(th04-port64-pointnum-contracts PRIVATE th04-portable-core)
 add_test(NAME pointnum-contracts COMMAND th04-port64-pointnum-contracts)
+add_executable(th04-port64-shake-checks playfield_shake_checks.cpp)
+target_link_libraries(th04-port64-shake-checks PRIVATE th04-portable-core)
+add_test(NAME playfield-shake-checks COMMAND th04-port64-shake-checks)
 enable_testing()
 add_executable(th04-port64-host-window-contracts host_window_contracts.cpp)
 target_link_libraries(th04-port64-host-window-contracts PRIVATE th04-portable-core)

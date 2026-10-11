@@ -39,7 +39,13 @@ v1377 aligns DOS presentation after the complete update: all 40 full canonical
 text-plane samples match GNU and optimized UBSan, including score/HUD and
 DEMO PLAY. The complete original video stream and all 15,988 selected state
 boundaries remain verified. Whole graphics/RGB, physical blink and scanout
-acceptance remain open; the compiled programs retain their v1376 producer.
+acceptance remain open; those comparisons retain their v1376 producer.
+
+v1378 consumes missing Midboss shake events and verifies all 15,984 complete
+shake states and movement requests. Demo 1 frame 3379 game-area differences
+fall from 55,357 to 430. The current GNU cold build has 71 programs and 69
+passing CTests; optimized UBSan game/trace/shake targets are cold-built
+separately. Full pictures remain open.
 
 ## Build and run
 
