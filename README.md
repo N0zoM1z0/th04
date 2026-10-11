@@ -54,16 +54,15 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `port/modern-64` is now at `9a7f380`,
-joining palette VSync waits with the latest WORD, Shift-JIS and Gaiji text
-writers (producer 528/768091dc). Both cold GNU and optimized UBSan/bounds
-build the full 79-program graph and pass all 77 CTests. Complete original
-text/wait controls pass under both compilers; eight muted startup/four-Demo/
-fresh-OP routes retain all 129 prior outputs per profile and pass 15,988
-original selected-state boundaries each. See the
-[VSync](docs/reconstruction/product/TH04_NATIVE_VSYNC_V864.md) and
-[ordinary text](docs/reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md)
-notes for scope and recovery.
+Native development is active. `origin/port/modern-64` is at `c2d8363`
+(producer 532/037b0f2e), retaining text/VSync and signed palette recovery while
+adding MAINE's zero-delay and unsigned WORD delay boundaries. Optional fade
+tone callbacks preserve all updates within one refresh. Both cold GNU and
+optimized UBSan/bounds build all 81 programs and pass all 79 CTests.
+Complete original delay/fade controls, Congratulations/verdict consumers and
+eight muted startup/four-Demo/fresh-OP regressions pass. See the
+[VSync note](docs/reconstruction/product/TH04_NATIVE_VSYNC_V864.md) for scope
+and recovery. Actual elapsed scene counter/IRQ ownership remains open.
 
 Current shared DOS combines mutable text bases and installed-owner VSync
 waits (producer 1,425/82ade790). MAIN/OP/MAINE pass 3,156 ordinary-text,

@@ -215,3 +215,6 @@ evidence; do not scan them during routine handoff.
 
 VSync and ordinary-text notes include the joined v1412 native producer and
 full GNU/UBSan, original corpus, default-route and retention checks.
+
+The VSync note includes the v1416 joined MAINE wait producer, both complete
+compiler graphs, independent original controls and retained parent evidence.
