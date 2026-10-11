@@ -1,5 +1,25 @@
 # Native private-state retention
 
+## v1405 Gaiji character and string recovery
+
+The isolated `port-motion-v1402` tree retains this recovery under
+`.analysis/port64/native-gaiji-address-v1405/`. Producer522/bac23324, five cold
+contract programs, core archives, sanitizer/predecessor programs, complete
+compressed original pages and compiler metadata remain available.
+`verify_closure.py` checks the 522-file source archive, program and original
+dependency hashes, all 2,833 original Gaiji pages, and the 1,037 current font
+results against the retained v1404 reference.
+
+The v1404 source archive and programs remain intact. Its strict current-source
+reader rejects the new source as expected; this batch verifies the frozen
+parent without relabeling its evidence. After five component contracts and
+345 CI tests passed, 240 completed object/dependency files were archived and
+individually checked before removal. Another 518 Python caches had their
+generating source checked before removal. Cleanup reclaims **11.7 MiB net**;
+`cleanup.json` records the archive, members and 757 protected files.
+Extract `compiled-cache.tar.gz` into that phase to restore compiler caches.
+The post-cleanup closure check passes.
+
 ## v1404 graphics-font recovery
 
 The isolated `port-motion-v1402` worktree retains its font recovery under

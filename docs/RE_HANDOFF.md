@@ -1,5 +1,21 @@
 # TH04 native branch handoff
 
+v1405 restores native `GRAPH_GAIJI_PUTC`/`PUTS` row addressing and continuous
+string DI/STEP behavior in `Canvas`. Original MAINE 0000:3760/36B6 at load 2000
+matches 2,833 complete seeded pages, covering the 256 installed bank characters,
+bit shifts, coordinate edges and string steps. Focused UBSan/bounds reproduces
+all pages; the compiled predecessor differs in 116 pixels at X640/Y0. Cold core,
+five programs/contracts and the 1,037 retained original font pages pass.
+Producer 522/bac23324 and receipts are under
+`.analysis/port64/native-gaiji-address-v1405/` in the isolated
+`port-motion-v1402` worktree. See [Gaiji recovery](port64/evidence/ending.md).
+CI passes 345 tests. Verified compiler-cache archiving and source-backed Python
+cache cleanup reclaim 11.7 MiB net; current source/program/proof closure passes.
+Next migrate the DOS `src/shared/hardware/graph_gaiji.cpp` string/WORD stores:
+its current per-character coordinate calculation loses pointer continuity at
+WORD boundaries. This batch changes native source; historical exact remains
+661/663. The full reconstruction/native goal remains active.
+
 v1404 restores `GRAPH_PUTSA_FX` WORD addresses in native `Canvas`: truncated
 Y shift, unsigned X/8, continuous string DI, and WORD/spill write order.
 Original MAINE 0CC7:058C at load 2000 agrees with all 1,037 complete seeded pages;

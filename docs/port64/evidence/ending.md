@@ -1,5 +1,54 @@
 # Ending evidence
 
+## Gaiji graphics character and string addressing (v1405)
+
+Native `Canvas` now follows MAINE's `GRAPH_GAIJI_PUTC` and
+`GRAPH_GAIJI_PUTS` address arithmetic. Both entries calculate the row as
+Y*80 modulo 65536, then add unsigned X/8. The string entry retains DI and
+adds STEP to the residual bit shift before the next character. Recalculating
+each character from a host X coordinate loses that continuity when X or STEP
+crosses a WORD boundary. Both entries write a two-byte word followed by the
+spill byte at the incremented WORD address.
+
+The recovered consumer handles script characters and shared Gaiji strings
+used by score registration, rankings and verdicts. It preserves the installed
+256-character BFT bank, header padding and color masking. For example,
+X640/Y0 draws at row 1, while Y4096 aliases Y0. Unlike the graphics-font
+renderer, Gaiji's row formula does not alias Y1024 to Y0.
+
+`verify_gaiji_address.py` executes the original MAINE 0000:3760 character
+entry and 0000:36B6 string entry at load 2000, with DGROUP 0E53 and VRAM A800.
+The input adapter supplies deterministic BFT glyph bytes selected by the
+original CGROM port writes. All 2,833 complete seeded 640x400 pages agree:
+2,148 character controls cover every bank character at eight bit alignments
+and coordinate edges; 685 string controls cover negative/large/zero steps,
+NUL termination, long strings and WORD pointer wrap. Header padding includes
+0, 17, 34 and 65535. Original Pascal return/stack cleanup, DS/SI/DI/BP and the
+interrupt flag are checked.
+
+A cold native core and five selected programs build successfully. Five
+related component contracts pass. The current font program also reproduces
+all 1,037 retained v1404 original pages. Optimized UBSan/bounds checks the
+Gaiji caller and Canvas against the same 2,833 original pages. The compiled
+predecessor fails the right-edge component contract and a complete original
+page comparison (116 pixels at X640/Y0).
+
+Producer 522/bac23324, source archive, original compressed pages, old/new
+programs, compiler metadata and receipts are retained under
+`.analysis/port64/native-gaiji-address-v1405/` in the isolated
+`port-motion-v1402` worktree. Replay with a freshly built Gaiji contract:
+
+```sh
+python3 port64/verify_gaiji_address.py --target /path/to/original/maine.exe \
+  --decoded-dir /path/to/decoded-original \
+  --native /path/to/th04-port64-gaiji-address-contracts --output /fresh/proof
+```
+
+`--reference /path/to/original-comparison` replays the retained complete pages.
+The comparison covers the installed Gaiji bank and visible A800 page. The DOS
+`graph_gaiji.cpp` implementation still needs its string/address migration;
+this batch changes native source and leaves the historical exact ledger intact.
+
 ## Graphics-font WORD addressing (v1404)
 
 The native `Canvas` now follows MAINE's `GRAPH_PUTSA_FX` address arithmetic.

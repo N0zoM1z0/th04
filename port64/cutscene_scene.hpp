@@ -36,6 +36,7 @@ private:
     void draw_picture(int x,int y,int quarter,unsigned mask,bool full=false);
     void glyph(const Event& event,bool gaiji);
     void draw_text(int left,int top,const std::string&,unsigned color,unsigned weight);
+    void draw_gaiji(std::uint16_t origin,unsigned shift,unsigned glyph,unsigned color);
     const Assets* assets_;
     dialog::Font font_;
     std::array<Bytes,2> pages_;

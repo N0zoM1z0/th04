@@ -85,15 +85,28 @@ void Canvas::glyph(const Event& e,bool gaiji) {
         draw_text(e.a,e.b,std::string{char(unsigned(e.c)>>8),char(e.c)},unsigned(e.d),unsigned(e.e));
         return;
     }
-    if(e.c<0 || e.c>=256 || assets_->gaiji.size()<32) throw std::invalid_argument("invalid MAINE gaiji");
-    const unsigned base=32u+unsigned(assets_->gaiji[28])+(unsigned(assets_->gaiji[29])<<8)+unsigned(e.c)*32;
+    if(e.c<0 || e.c>=256)throw std::invalid_argument("invalid MAINE gaiji");
+    const auto origin=std::uint16_t(std::uint16_t(e.b)*80u+(std::uint16_t(e.a)>>3));
+    draw_gaiji(origin,unsigned(e.a)&7u,unsigned(e.c),unsigned(e.d));
+}
+void Canvas::draw_gaiji(std::uint16_t origin,unsigned shift,unsigned glyph,unsigned color) {
+    if(glyph>=256 || assets_->gaiji.size()<32)throw std::invalid_argument("invalid MAINE gaiji");
+    const unsigned base=32u+unsigned(assets_->gaiji[28])+(unsigned(assets_->gaiji[29])<<8)+glyph*32;
     if(base>assets_->gaiji.size() || assets_->gaiji.size()-base<32) throw std::invalid_argument("truncated MAINE gaiji");
-    const auto put=[&](int px,int py) {
-        if(px>=0 && px<int(width) && py>=0 && py<int(height))
-            pages_[accessed_][unsigned(py)*width+unsigned(px)]=static_cast<std::uint8_t>(e.d&15);
+    const auto put=[&](unsigned address,unsigned mask) {
+        if(address>=32000)return;
+        for(unsigned bit=0;bit<8;++bit)if(mask&(0x80u>>bit))
+            pages_[accessed_][address*8+bit]=std::uint8_t(color&15);
     };
-    for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x)
-        if(assets_->gaiji[base+y*2+x/8]&(0x80u>>(x&7))) put(e.a+int(x),e.b+int(y));
+    for(unsigned y=0;y<16;++y) {
+        const unsigned first=assets_->gaiji[base+y*2],second=assets_->gaiji[base+y*2+1];
+        const unsigned aligned=((first<<8)|second)>>shift;
+        const auto address=std::uint16_t(origin+y*80u);
+        // STOSW writes two physical bytes, then increments WORD DI. The
+        // separate Kanji spill store uses that incremented (wrapped) DI.
+        put(address,aligned>>8);put(unsigned(address)+1,aligned&255u);
+        put(std::uint16_t(address+2u),((second<<8)>>shift)&255u);
+    }
 }
 void Canvas::draw_text(int left,int top,const std::string& text,unsigned color,unsigned effect) {
     text_weight_=effect;
@@ -162,9 +175,17 @@ void Canvas::put_text(int left,int top,const std::string& text,unsigned color,un
     draw_text(left,top,text,color,weight);
 }
 void Canvas::put_gaiji(int left,int top,const std::string& text,int step,unsigned color) {
+    auto origin=std::uint16_t(std::uint16_t(top)*80u);
+    auto cursor=std::uint16_t(left);
     for(unsigned char c:text) {
         if(!c)break;
-        glyph({Kind::gaiji,left,top,c,int(color)},true);left+=step;
+        // GRAPH_GAIJI_PUTS retains the byte address across the string and
+        // adds STEP only to the residual bit shift. Recomputing X/Y loses
+        // this pointer continuity when X or STEP crosses a WORD boundary.
+        origin=std::uint16_t(origin+(cursor>>3));
+        const auto shift=unsigned(cursor&7u);
+        draw_gaiji(origin,shift,c,color);
+        cursor=std::uint16_t(shift+std::uint16_t(step));
     }
 }
 void Canvas::apply(const Event& e) {
