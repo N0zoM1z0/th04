@@ -5,7 +5,7 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-11. The full native goal remains active on `port/modern-64`, in
+Updated 2026-10-12. The full native goal remains active on `port/modern-64`, in
 `.analysis/worktrees/port-modern-64/`. Root `main` keeps the standalone DOS
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
@@ -25,14 +25,17 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
-Current v1399 native manifest is512/5474b8e3. Direct original instruction
-execution verifies repeated START preserves cadence accumulator; GNU/UBSan
-match all12 seeded lifecycle cases. Frozen v1398 resets it incorrectly, yielding
-2 extra IRQ cases. Fresh70 GNU /5 UBSan CTests and eight full129-file default
-profile regressions pass. v1400 also corrects shared DOS phase/query order. Three independently pinned
-original/linked DOS owners pass108 seeded cases each; four cold products and
-a fresh selected-state four-Demo replay pass. Native frontend waits remain next.
-Full pictures, physical timing and broader routes remain open. See the handoff.
+Current v1401 native producer is512/60cf4491. OP startup now waits on the
+independent unsigned IRQ owner and services PMD at timer deadlines within an
+elapsed admission. It preserves inherited Logo counts and clears inactive zero
+fallbacks. Cold70GNU/6UBSan contracts, three compiled negative controls,
+132 frontend configuration/restart cases and eight full four-Demo routes pass.
+Each route matches original selected state at15988 boundaries. Only startup
+and text-clock traces change for PMD profiles; other127 outputs remain equal to
+frozen v1399. No-driver retains all129. Current GNU/UBSan outputs match completely.
+Default loading/graphics/CPU costs, physical timing and other scene adapters
+remain open. Root DOS source is unchanged; v1400 three-artifact108-case and
+four cold product/Demo evidence remains separately pinned. See the handoff.
 
 The v1362 GNU Reimu A / Lunatic / Turbo0 candidate is now terminal and
 accepted by the independent `verify_natural_slowdown.py` reader: 88,249 route

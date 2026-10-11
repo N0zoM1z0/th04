@@ -54,28 +54,24 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. Explicit loading and drawing work now advances
-both resident sound and the headless GDC text clock, retaining fractional time.
-An independent display epoch preserves the original separation from PMD
-installation. Retained OP frontend checks match all twelve original loading /
-readiness counters per CPU input; freezing only display time rejects while
-sound timing still passes.
+Native development is active. OP startup now uses unsigned IRQ waits with the
+original clear-before-delay / clear-after-Logo order. Resident PMD service can
+release a measure wait inside a refresh interval, while raster phase continues
+through explicit resource and graphics work. Ideal raster edges and zero ISR
+latency remain explicit adapter assumptions; default CPU/loading costs need a model.
 
-The latest product builds pass 70 GNU CTests; optimized UBSan passes five
-sound/VSYNC contracts. Eight full startup/Demo routes reproduce all 129 retained
-output files per driver profile. Earlier private Linux Xvfb checks used mute
-and opened no audio device. Default resource/graphics/initial-epoch costs still
-need a model; full pictures, broader gameplay/process and Windows input/audio
-remain open. See the handoff for scoped evidence and cleanup recovery.
+Current cold builds pass 70 GNU CTests and six optimized UBSan contracts.
+The muted frontend configuration/restart matrix passes 132 cases. Eight full
+startup/four-Demo/fresh-OP routes match original selected state at 15,988
+boundaries each; GNU/UBSan output hashes agree. PMD profiles change only startup
+and text-clock traces from the prior baseline; indexed/RGB/text samples, shake
+and splash states retain their prior output. Full pictures, broader gameplay
+and physical timing still need paired validation. Windows input/audio remain
+open while the host is in use. See the handoff for evidence and cleanup recovery.
 
-Complete original OP traces verify 208 counted IRQs across two CPU budgets.
-Native has unsigned counters and a separate raster clock. New original
-instruction execution also repairs repeated START: it preserves nonzero cadence
-phase, preventing a spurious counted IRQ. GNU/UBSan agree across twelve seeded
-lifecycle cases. The shared DOS assembly now preserves phase and queries before resetting
-counters. Three original/linked DOS owners agree in 108 seeded cases each;
-a fresh four-Demo input/score/RNG regression passes. PMD busy-service and
-inherited Logo integration follow.
+The shared DOS VSYNC owner preserves cadence phase and queries before clearing
+counters. Retained three-artifact 108-case comparisons and four-product/Demo
+regressions have their frozen v1400 scope; this native batch does not rebuild DOS.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

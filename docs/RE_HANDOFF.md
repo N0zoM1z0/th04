@@ -5,69 +5,80 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1400 repairs the shared DOS VSYNC_START owner in both source trees. Query GDC
-before selecting the increment and clearing Count1/Count2; preserve the cadence
-accumulator. The original MAIN0000:236C, OP0000:2552 and MAINE0000:2110 all have
-that order. Their IRQs0000:23E0/25C6/2184 compare callback segments at DGROUP
-0770/0852/03FE; callback pointers begin at MAIN076E, OP0850 and MAINE03FC. These are original-relative offsets plus recorded load,
-not bare linear emulator addresses.
+Updated 2026-10-12. Reconstruction and native development remain active.
+v1401 connects OP startup in the native FrontEnd to the independent unsigned
+IRQ counter/raster clock. Ordinary frame waits clear Count1 before waiting;
+Logo inherits Count1 and clears it after passing. Inactive BGM executes the
+frame_delay(0) clear; active PMD is serviced at resident timer deadlines inside
+an elapsed admission, without adding a logical refresh. Resource/drawing work
+advances the same clock. OP process entry clears counts while preserving raster
+phase and cadence accumulator. The default adapter uses ideal24kHz raster
+edges with zero CPU/command/ISR latency; it does not fit captured elapsed times.
 
-Each corresponding current root MAIN/OP/MAINE linked product passes108 seeded
-instruction comparisons at loads10FC/3333: GDC extension absent/present,
-mode0/C, phase0/12345/65535 and prior increment0/13311/65535. An authored
-BIOS STI/NOP/IRET mock outside loaded images permits a real original/candidate
-IRQ to nest with its own IRET frame before mode selection. Actual BIOS/CRT
-wrapper code and physical31kHz are not exercised. Frozen old source still
-passes the old DOS vector/callback/END test but rejects96/108 new scenarios.
+Original OP decoded DA1:002B(21bytes), DA1:0370(49bytes), A74:16DD(25bytes)
+and 0000:25C6 IRQ prefix are re-attested from the pinned payload. Frozen complete
+v1397 CPU24000/36000 witnesses retain first active Logo Count1=104/100 and zero
+counted IRQ progress; BGM-off clears10->0, then first Logo waits1->2. These
+are reused original runtime observations, not fresh emulator runs. The new
+native tests reject compiled clear-before-Logo, missing zero fallback and
+once-per-refresh PMD mutants. Elapsed batching and fractional PMD deadlines
+pass; timer deadlines are checked on three boards at three frequencies.
 
-Cold root build completes all four products (MAIN199471, OP79388, MAINE72246,
-ZUN7723 bytes). Actual IRQ vectors, CS renderer operands and MAIN bullet jump
-tables pass. Root product fingerprint a34c1357be6dc472ec44800b2fe275a7cbba6ba5344ab7002cc516e2411995d5;
-1425 input files are frozen. A fresh muted fixed24000 GAME.BAT/four-Demo route
-agrees with immutable original input/score/RNG at15984 gameplay plus4 terminal
-boundaries. This is current selected-state regression, not a fresh whole-video,
-actor-pool or physical timing acceptance. Historical exact producers are separate.
+Native producer512/60cf4491 is frozen. A complete cold GNU build passes70
+CTests; optimized UBSan builds9 programs and passes6 selected contracts.
+Original legacy startup control15 fixtures executes at loads1000/2000;
+GNU/UBSan retain identical scripted-wait event/state traces. This legacy adapter
+is separate from timed FrontEnd acceptance. Actual muted frontend matrix passes
+132 configuration/restart cases (three PMD profiles, two phases, two compilers,
+11 cases each), including six fixture GameOver/MAINE/freshOP paths. These finite
+STD fixtures are not new natural six-stage routes.
 
-Original OP diagnostic seed correction: older v1399/v1400 drafts cleared1AD0,
-not the callback pointer0850. Actual callback bytes were already zero and no
-callback ran. Corrected seed plus operand guards retain all12 old complete
-instruction/state/write traces. Old receipts remain unchanged; v2 BIOS mock
-hook-CS draft failed and is retained. v4 is the accepted nested-frame reader.
+Eight actual full startup/fourDemo/freshOP captures pass direct original15988
+selected-state comparisons each. GNU/UBSan match all129 output hashes per
+profile. With PMD enabled only startup-events.txt and text-refreshes.txt differ
+from frozen v1399; the other127 outputs, including indexed/RGB/text samples,
+shake and splash states, agree. No-driver captures retain all129 baseline files.
+No full original picture, physical scanout or elapsed-time equality is claimed.
 
-Current native commit: `fffcc83` (`port/modern-64`).
-v1401 restores PMD busy-service and unsigned IRQ waits in the native frontend.
-Ordinary frame delays clear Count1 before waiting; Logo waits clear it afterwards,
-and the inactive zero-frame fallback still clears it. The shared raster phase
-and Count2 continue through work and refreshes. Source512/60cf4491, cold GNU72
-programs/70 CTests and optimized UBSan9 programs/6 contracts verify; three
-compiled mutations reject wrong reset order and refresh-only PMD service.
-Native CI345 passes.626 byte-verified archived compiler caches reclaim21.74 MiB
-net. Native receipts and recovery carrier are under its worktree's
-`.analysis/port64/native-startup-waits-v1401/`; root DOS products are unchanged.
-Prior native receipts retain their frozen source identities and scope.
+Root DOS source is unchanged at product fingerprint a34c1357; v1400 retains
+its three108-case linked lifecycle comparisons and four-product/Demo proof.
+Historical exactness is unchanged; canonicality remains candidate-local-attested.
 
-Replay/retention index (DOS root):
-.analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/.
-Maintained tools: scripts/runtime/verify_dos_vsync_lifecycle.py and corrected
-verify_op_vsync_lifecycle.py. Use --original-artifact main/op/maine with the
-current executable/MAP/source; all traces/pins are in linked-*-v4 receipts.
-Recovery: python3 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/verify_retention.py;
-add --restore --prefix for owned archived inputs. Old v1399 strict live-source
-readers reject the changed DOS fingerprint; the new check-parent.py verifies
-its frozen closure/CRC/blobs separately, without restamping.
+Replay index: .analysis/reconstruction/probes/native-startup-waits-v1401/
+(DOS root) and .analysis/port64/native-startup-waits-v1401/ (native worktree).
+Use build.py/validate.py in a fresh namespace, with the frozen source and actual
+HDI/font/ROM pins. original-witness.json binds unchanged v1397 ownership;
+original-legacy-v1 is the newly executed scripted-wait corpus. check_parent.py
+verifies immutable v1399/v1400 archives and closure separately from current
+source; do not restamp their strict live-source readers. Restore narrowly with
+verify_retention.py --restore --prefix; all proofs/source/selected executables
+stay retained. Cleanup recovery caveat: the first deletion stopped at a missing compiler
+object. All archive blobs had passed CRC/SHA and temporary readback, but the
+full original path/mtime journal had not been persisted before deletion.
+Receipt-pinned Demo/program contents were recovered; regenerated files have
+new filesystem attributes. The final journal is written before deletion and
+supports full current-path metadata recovery. 511 auxiliary blobs retain
+content SHA/size without original path/mtime metadata. They remain in the final
+content union; compiler intermediates can be cold-regenerated. Failed scripts
+and logs, cleanup-recovery.json and the complete blob union are retained.
+Concurrent source commits/motion work were observed during this interval;
+causation of the object disappearance is unproved. Avoid overlapping writers.
 
-Cleanup net 56.03 MiB after archive/journal (15.55 MiB archive),
-with 7264 paths/1481 blobs/2351 protected proofs checked;
-current source, products/MAPs, old/new compiled controls, original raw evidence
-and fresh demo trace remain. Full CI passes root451/native345; source-backed post-CI caches reclaim
-16.44 MiB separately, for 72.47 MiB net this batch.
+Archive 26.28MiB; net cleanup 817.00MiB before post-CI caches.
 
-Next recover CPU/resource/graphics elapsed-work owners and their call order.
-Prioritize function recovery and migration with focused checks before long
-game campaigns. Full pictures,
-Boss/death/process, second-emulator/physical scanout and Windows input/audio stay
-open. Goal active; targets candidate-local-attested. CPU1/nice19 single-core,
-serial and muted; no Windows GUI/focus/host keys/audio device is used.
+Final isolated-checkout CI passes root451/native345, plus tracking and diff
+checks. Borrowed pinned targets pass identity/format checks; private Ghidra
+project replay skips because those isolated checkouts have no project. Source
+and runtime proof identities remain separately pinned. Source-backed review CI
+caches reclaim 16.32MiB separately, for 833.32MiB net this batch;
+review worktrees are temporary and their tracked document state is preserved.
+
+Next model default resource/graphics/CPU work and validate timed startup
+boundaries against independent original IRQ/PMD observations. Other scenes
+retain refresh adapters. Full pictures, Boss/death/process parity, a second
+emulator, physical31kHz/scanout and Windows input/audio remain open. Runs use
+CPU1/nice19, one serial writer, SDL dummy and mute; no Windows focus or host
+keys/audio device. Goal stays active.
 
 Earlier native shake, background-ring, laser, pellet, item-splash and MPN
 palette repairs retain their frozen producer/proof identities. The
@@ -75,8 +86,8 @@ palette repairs retain their frozen producer/proof identities. The
 indexes their results and archive recovery; they cannot attest the current
 source without a fresh scoped replay.
 
-Updated 2026-10-11. Current focus: complete DOS actor/presentation/process
-comparison, followed by separate x64 state/effect fidelity. DOS demo state is
+Updated 2026-10-12. Current focus: native default elapsed-work models and paired IRQ/PMD
+startup boundaries; DOS actor/presentation/process comparisons stay separately scoped. DOS demo state is
 retained. This handoff indexes verified state; detailed experiments belong in focused notes and CSV
 ledgers. The next behavioral validation focus is original DOS versus reconstructed
 DOS, with native x64 fidelity checked separately. Reopen semantic work for a
