@@ -35,6 +35,7 @@ notes explain the remaining source and container gaps:
 - [Native Ending CDG instruction ownership](product/TH04_NATIVE_ENDING_CDG_CS_V1230.md)
 - [Native state-clear contamination and corner pellet](product/TH04_NATIVE_STATE_CLEAR_V1231.md)
 - [Native text VRAM gaiji writers](product/TH04_NATIVE_GAIJI_TEXT_V860.md)
+- [Native ordinary text character writers](product/TH04_NATIVE_TEXT_CHARACTER_V1409.md)
 - [Native graphics gaiji writers](product/TH04_NATIVE_GRAPH_GAIJI_V861.md)
 - [Native graphics page copy and TC4J loop scope](product/TH04_NATIVE_GRAPH_COPY_V862.md)
 - [Native segmented heap and TC4J merged-return counterexample](product/TH04_NATIVE_HEAP_V863.md)

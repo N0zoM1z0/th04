@@ -6,9 +6,36 @@ muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
 Updated 2026-10-12. The full native goal remains active on `port/modern-64`, in
-`.analysis/worktrees/port-modern-64/`. Root `main` keeps the standalone DOS
+`.analysis/worktrees/port-motion-v1402/`. Root `main` keeps the standalone DOS
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
+
+## Native ordinary text writers (v1409)
+
+`TextPlane` now recovers the complete WORD character input and the original
+Shift-JIS byte-stream conversion. It preserves mutable text bases, WORD
+addresses, NUL handling, malformed pairs and glyph/attribute aliases. HUD,
+Game Over and the real frontend use the recovered character writer.
+
+All 65,536 WORD characters and 65,536 two-byte strings agree with original
+MAIN 0000:229E/22F6 on both visible banks. A separate 840-case corpus agrees
+on complete 80000h..DFFFFh memory at loads 1000/3333: 1,680 comparisons.
+Cold GNU and optimized UBSan/bounds reproduce the results; prior Gaiji retains
+all 2,656 comparisons. The frontend builds, six component contracts and
+native CI 345 pass. No game campaign was needed for this function recovery.
+
+Native `port/modern-64` is at 328585f, producer 526/3e7d5e33. Complete evidence
+is in `port-motion-v1402/.analysis/port64/native-sjis-text-v1409/`.
+Verified cache retirement reclaims 14.50 MiB net; the closure reader checks
+all current proofs and 780 frozen parent files. See
+[ordinary text recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md).
+
+Original instructions read `TextVramSeg` at DGROUP 2134:0768. The two DOS ASM
+owners still fix A000h; recover their mutable references with a cold affected
+product and original-instruction comparison next. Historical authored exact
+acceptance remains 661/663. The full reconstruction/native goal stays active.
+The palette VSync review remains a separate frozen producer.
+Root CI passes 451 tests and the updated ledgers; target preflight passes.
 
 ## Native text Gaiji migration (v1408)
 

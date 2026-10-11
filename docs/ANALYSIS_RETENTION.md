@@ -1,11 +1,32 @@
 # Private build and analysis retention
 
-Native `port/modern-64` is at 8f7f7d5, including GRCG, font and Gaiji
-address recovery. The separate startup/motion integration on
+Native `port/modern-64` is at 328585f, including GRCG, font, Gaiji and ordinary
+text address recovery. The separate startup/motion integration on
 `review/startup-motion-join-v1403` is frozen at 514 files / c2f8d689.
 Its verified snapshot predates those renderer changes. Attest a combined
 producer when integrating the two histories. The v1401 startup implementation
 already reached `port/modern-64` through fffcc83.
+
+## v1409 native ordinary text
+
+Replay index in the native tree:
+`port-motion-v1402/.analysis/port64/native-sjis-text-v1409/`.
+The 526-file producer 3e7d5e33, ten selected programs, compiler metadata,
+complete original/native conversion and memory transcripts remain live.
+The closure reader replays 132,752 original invocation transcripts, compares GNU and
+UBSan results, and checks the frozen v1408 source and 780 protected parent
+files independently. The old strict live-source reader rejects the new
+producer as expected.
+
+Verified retirement archives 250 compiler-cache paths and removes 515
+source-backed Python caches. Net reclamation is 14.50 MiB after archive and
+journals. Path/hash/size/mode/nsmtime, gzip CRC, every blob, temporary metadata
+readback and all 803 protected phase hashes pass before deletion. Selected
+programs, source and full proofs stay live.
+
+```sh
+python3 .analysis/worktrees/port-motion-v1402/.analysis/port64/native-sjis-text-v1409/verify_closure.py
+```
 
 ## v1408 native text Gaiji
 
