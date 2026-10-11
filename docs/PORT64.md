@@ -9,19 +9,23 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1386 observes complete original FONT/textCRT/time at all15,984 Demo
-updates. One complete516KiB font state and eleven stable registers are captured;
-the old direct font model fails32 ANK V/W bytes, while an actual-port-guard
-asset model matches the full bank. Native product source stays a47f0496, with
-its retained v1385 GNU71/69CTest,UBSan3 and127 paired capture identities.
+Current v1387 calibrates the shared native period to 17,723,227 ns. The
+unchanged archived PC98 timing calculation reproduces all 15,984 complete
+original GDC/time records: 106 clocks × 440 lines at 21.0526 MHz / 8. Nearest-ns
+error is 0.415160 ns per refresh. Producer03351541 changes two of 509 inputs.
+Fresh cold GNU yields71 programs/69 passing CTests; optimized UBSan game/trace/
+shake and actual muted routes produce127 identical files, unchanged from a47.
 
-All15984×38 prior programmed regions agree;25 complete raw records differ in
-compiler-attested GDC scan/row/partition fields. Actual-font/register fullRGB
-matches old40 sampled adapter pictures. RawRGB12/40 zero,DAC diagnostics32/40
-zero and8 blink-phase cases remain; no scanout or whole-picture acceptance.
-Originalperiod17.72322658483988ms differs from native17.730496ms. Attest timing
-ownership/calibrate cadence, then original boot/process phase and broader
-routes next. See [demo evidence](port64/evidence/demo.md) and the current handoff.
+Independent Schedule20,000 and FrontEnd1,000,000-refresh controls pass, rejecting
+the old cadence and checking repaint/double counting/backwards time. Actual
+private Linux Xvfb calibrated deadlines/input/focus/release/exit pass with zero
+audio device opens. All15,988 selected original scalar/RNG and40 complete
+index/text/RGB samples retain their checks; prior full-pool identities stay
+separate. Actual font/register references are re-emitted unchanged. RawRGB12/40
+and DAC diagnostics32/40 retain eight phase cases; whole-picture acceptance
+remains open. Next recover original common reset/boot/process timing without
+per-Demo fitting, then broader paired routes and physical scanout. See
+[demo evidence](port64/evidence/demo.md) and the current handoff.
 
 Retained v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
 UBSan agree on all15,984 complete shake globals/movement requests, all15,988

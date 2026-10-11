@@ -10,57 +10,60 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1386 completes a new original VP4 capture of full font memory, text/CRT
-registers and event time. All 15,984 complete records and 15,988 selected scalar
-boundaries pass. MAIN 0AAF:00B7 / terminal 0AAF:0975, load10FC/DGROUP3230,
-original/reset/image/emulator/ABI/CRC/EOF identities remain attested.
+v1387 calibrates native's shared refresh cadence to 17,723,227 ns. All
+15,984 original VP4 GDC/time records independently reproduce the archived
+PC98 timing calculation: 106 character clocks × 440 lines at 21.0526 MHz / 8.
+Nearest-nanosecond error is 0.415160 ns per refresh; the old period drifted by
+7,269.415160 ns. This is pinned emulator-mode evidence, not physical-board or
+cross-emulator timing acceptance. Original MAIN0AAF:00B7/0975, load10FC and
+DGROUP3230, target/reset/emulator/profile/CRC/EOF identities remain attested.
 
-All 516 KiB of FONT at host vga+312 and eleven text/CRT fields are stable.
-The old direct font model fails in 32 ANK V/W bytes. A separate asset model
-with the archived A9 write-port guard reproduces all 528,384 bytes without
-copied FONT arrays. A full controlled V/W text layer also matches the retained
-native RGB/ARGB APIs; the old adapter differs in 71 pixels. Native already
-handles those characters through BMP. Product source is unchanged.
+Only host_window.hpp and verify_host_window.py change among the 509 inputs
+(manifest03351541…). Fresh whole cold GNU yields71 programs/69 passing CTests;
+optimized UBSan/bounds cold-builds game/trace/shake. Actual muted SDL-dummy
+OP→four demos→OP yields127 entire identical variant files, also identical to
+the frozen a47f0496 parent. All15,988 selected original scalar/RNG/caller
+boundaries agree. All40 complete index/TRAM/RGB samples and prior trace/save
+hashes are unchanged from that parent. Prior full-nine-pool proofs retain
+their original producer identities.
 
-All 38 old programmed regions agree at every update. The 25 unequal complete
-raw records differ only in GDC scan/row/partition fields, with every byte
-retained and compiler offsets verified. Actual FONT/register rendering matches
-the earlier 40 sampled adapter pictures. Three surface controls and malformed
-extents reject. The 127 frozen parent capture hashes and selected-state
-boundaries stay unchanged. Parent509/a47f0496 GNU71/69CTest/UBSan3 receipts
-retain their identity; this batch has no new native build/run/full-pool claim.
+Independent actual Schedule controls pass20,000 original-mode boundaries and
+reject the old period at boundary305. Separate actual FrontEnd controls pass
+logical admission17 and host boundaries through1,000,000 refreshes, against
+the unchanged GDC counter. Repaint/double-admission/backwards controls pass;
+all127 ordinary capture hashes stay unchanged. Actual muted private Linux
+Xvfb startup/Marisa B/input/focus/release/exit passes calibrated deadlines and
+opens no audio device. Windows foreground/input remains untested.
 
-Full RGB remains 12/40 raw-zero. Explicit DAC diagnostics have 32/40 zeros
-and eight blink-phase cases. Native-phase projection gives 40 diagnostic
-zeros without raw/whole-picture/original-phase/scanout acceptance. Original
-event time has period17.72322658483988 ms and confirms zero/two refresh
-exceptions. Native's17.730496 ms approximation is the next timing owner.
+Forty full original FONT/register frames are freshly regenerated with the
+unchanged independent emitter. Raw RGB remains12/40 zeros; explicit DAC
+diagnostics32/40 and eight blink-phase cases. Native-phase40/40 is diagnostic.
+Original boot/process epoch, complete raw pictures and physical scanout remain
+open. Next recover the common reset/boot/process elapsed timeline independently,
+then broaden paired Boss/death/process routes; never fit per-Demo phase offsets.
+The full goal stays active. Candidate-local-attested provenance and deferred
+historical carpet/checkerboard exactness remain separate.
 
-Next attest timing ownership and calibrate native cadence, then original
-boot/process/scanout phase and broader paired Boss/death/process routes.
-Four-Demo FONT/register evidence is now observed; physical scanout and other
-routes remain open. The full goal stays active. Candidate-local-attested
-provenance and deferred historical carpet/checkerboard exactness stay separate.
+Recipes: DOS-root .analysis/reconstruction/probes/native-cadence-v1387/;
+native receipts .analysis/port64/native-cadence-v1387/. Initial archive-iterator
+guard failure is retained separately; corrected timing reader v2 passes.
+Older a47f0496 and FONT/raster proofs keep their original scopes.
 
-Recipes: DOS-root .analysis/reconstruction/probes/native-cg-v1386/;
-original .analysis/runtime/candidates/dos-demo-v1386-original-cg-v1/;
-native receipts .analysis/port64/native-cg-v1386/. Restore retired inputs before
-reader replay. Older proofs retain their original source/evidence scopes.
-
-All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass.
-Lossless retirement checks pass for 299 complete files and 1,044
-source-backed caches; 27,637 protected hashes and 509 source pins pass.
-Net 217.9 MiB is reclaimed after the 26.3 MiB archive, before
-journal cost. Programs, frozen sources, original references, the rejected FONT
-model and separate counting recipes remain retained. From DOS root, restore
-before reader replay:
+All jobs are terminal. Main441/live Ghidra and native345/target CI pass;
+unavailable private native gates skip. Lossless retirement passes for
+2,577 complete files and 1,044 source-backed caches, with
+28,262 protected hashes and509 current source pins. Net 347.6 MiB
+is reclaimed after the 28.4 MiB archive, before journal cost. The game,
+trace/shake programs, independent probes, frozen sources and original reference
+streams remain live. Unused CTest helper programs, objects/libraries and duplicate
+capture/reference outputs are recoverable. Restore before CTest/reader replay:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-cg-v1386/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-cadence-v1387/verify_retention.py --restore
 ```
 
-Without --restore it checks all recoveries temporarily. Old proofs keep their
-original source scopes; see ANALYSIS_RETENTION.md.
+Without --restore it checks complete recovery temporarily. Use one-shot probe
+recipes in fresh output namespaces; keep earlier terminal proof files unchanged.
 
 Prior demo/point-number/presentation experiments are indexed in
 [demo evidence](port64/evidence/demo.md) and their immutable private receipts.

@@ -4,7 +4,10 @@
 #include <string>
 
 namespace th04::portable::host_window {
-constexpr std::int64_t period_ns=17730496;
+// Recorded 640x400/24 kHz GDC mode: 106 character clocks * 440 lines,
+// with a 21.0526 MHz oscillator divided by 8. Round to the nearest ns.
+// This calibrates cadence; the original boot/process epoch is separate.
+constexpr std::int64_t period_ns=17723227;
 constexpr unsigned catchup_limit=4;
 std::int64_t now_ns();
 

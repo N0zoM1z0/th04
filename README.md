@@ -21,26 +21,24 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. MAIN text blink uses a persistent display clock
-and correct blink-before-reverse order. The latest v1386 original capture
-records full 516 KiB font memory, text/CRT registers and refresh time at all
-15,984 Demo updates. A 32-byte ANK V/W error in the old independent font probe
-is rejected; applying the actual write-port guard reproduces the full font.
-Native already uses the correct BMP for those characters; no product changes.
+Native development is active. The shared refresh clock now uses 17,723,227 ns,
+the nearest nanosecond to the independently reproduced original GDC period.
+All 15,984 recorded GDC/time states agree with the archived timing model.
+Current 509-input producer03351541 changes only the clock constant and window
+trace reader. A fresh whole GNU build produces 71 programs with 69 passing
+CTests; optimized UBSan cold-builds game/trace/shake.
 
-The current 509-input a47f0496 producer retains its v1385 whole cold GNU build:
-71 programs, 69 passing CTests, optimized UBSan game/trace/shake targets and
-127 identical actual four-Demo capture files. New original selected-state and
-40 entire TRAM samples agree with that frozen parent. Actual font/register
-rendering reproduces earlier sampled RGB, while 25 raw GDC raster records
-remain different. Complete physical scanout is unaccepted.
+Muted actual four-Demo routes yield 127 identical GNU/UBSan files, unchanged
+from the frozen parent. All 15,988 selected original state/RNG boundaries and
+40 full text/index/RGB samples pass their scoped checks. Independent scheduling
+and frontend clock controls reject the old cadence; an actual private Linux
+window/input route uses the calibrated deadlines and opens no audio device.
 
-Original refresh time is 17.72322658483988 ms; native still uses 17.730496 ms.
-Timing ownership and cadence calibration are next, followed by original
-boot/process phase. Full raw RGB remains 12/40 zero; explicit DAC diagnostics
-have 32/40 zeros and eight phase cases. Diagnostic projection is not picture
-acceptance. Broader routes, physical Windows input/audio and cross-emulator
-pairing remain open. See [the current handoff](docs/RE_HANDOFF.md).
+The complete 516 KiB original font/text-CRT evidence remains retained. Full raw
+RGB still has 12/40 zeros; explicit DAC diagnostics have 32/40 and eight phase
+cases. Original boot/process epoch, physical scanout, broader paired routes and
+Windows input/audio remain open. Recover the original common reset/process
+timeline next; see [the current handoff](docs/RE_HANDOFF.md).
 
 ## Build and run
 

@@ -17,7 +17,7 @@ from verify import source_manifest, require_elf_x86_64
 FIELDS = 'seq begin end deadline held shift focused before after scene program generation frame stage rank character shot x y bullets shots lives bombs misses invincibility audio_frames audio_opens audio_failed'.split()
 EXTRA_FIELDS = "score_units credits power bombing respawn slow_frames run_frames score_digits_units score_delta".split()
 ADVICE_FIELDS = "advice_held advice_shift".split()
-PERIOD = 17730496
+PERIOD = 17723227
 
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
