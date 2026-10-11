@@ -3500,6 +3500,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_op_wait_clock.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Verify original OP busy-measure, reset and inherited IRQ-counter waits across CPU and BGM-off controls.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/smoke_ghidra_oracle.py",
     "category": "boundaries",
     "role": "command",

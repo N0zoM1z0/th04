@@ -131,13 +131,14 @@ The same read-only audit finds the native Stage 4 lighting formula already
 preserves the original cel 5/column 2 exception. Its component Oracle excludes
 original dirty-page transients replaced by full host redraw; paired presentation
 acceptance remains separate from the data formula.
-Current native host traces still lack complete RNG seed/ring/call-count fields and paired
-original-DOS gameplay evidence.
+Later four-demo observations pair selected input/score/player/RNG state and
+nine complete actor/effect pools with original DOS. Broader ordinary gameplay,
+complete pictures and process transitions remain unpaired.
 
 ## TODO, in order
 
 1. Extend accepted four-demo original/reconstructed DOS comparison to other
-   global owners, remaining raw graphics differences and process teardown, then
+   global owners, full scanout timing and process teardown, then
    recorded ordinary play covering Boss combat and death/respawn.
    Preserve identical data/config/saves,
    logical input, complete-trace gates and first-divergence diagnostics.
@@ -156,7 +157,7 @@ are not prerequisites for this behavioral comparison.
 
 ## Delivery and storage
 
-A fresh experimental current GUI is installed at
+The previously delivered experimental GUI package is retained at
 `/mnt/d/Entertainment/Game/Touhou/th04-reconstruct/native-port64-v1354/`.
 `start-muted.bat` and `start-linux-muted.sh` explicitly mute; independent host
 saves and Normal/3-life/2-Bomb defaults preserve all 21 preceding DOS/package
@@ -487,3 +488,21 @@ and private muted Linux Xvfb pass. All 129 default outputs per run retain their
 v1395 identities. Default CPU/bus/resource/graphics costs and wait-edge
 semantics, full pictures and broader routes remain open.
 Native manifest: ea5c016d0cd40bcb453bd9f6c27c6ec24c2513ec63342fa8be2fa8d6acc85d43. Native commit: 49b2fa5.
+
+## Distinct original OP waits (v1397)
+
+Three complete original routes (FM86 CPU24000/36000 plus BGM-off CPU24000)
+show active measure polling preserves Count1, so the first Logo wait inherits
+104/100 and returns with zero new counted interrupts. BGM-off frame_delay(0)
+clears Count1 and returns immediately; loading leaves Count1=1 before Logo.
+Count1 clears after Logo waits while Count2 continues. Two counted IRQs can
+cross one GDC observer seam; preserve their distinct phases.
+
+Independent public wait reader and counter/PIC/GDC mutation controls pass;
+product source remains v1396 native49b2fa5/ea5c016d and DOS6f5898dd. Native
+refresh-sampled measures and fixed two-tick Logo waits still need replacement
+by the proved busy-service / IRQ-count owners. No new build/full-picture or
+exactness claim. See current handoff, focused differential note and retention.
+
+Native documentation commit: `19e5356`; the product source producer stays
+`49b2fa5` / 510-file `ea5c016d`.
