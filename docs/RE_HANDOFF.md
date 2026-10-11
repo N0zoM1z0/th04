@@ -5,7 +5,26 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
-## DOS installed-owner VSync wait (v1408)
+## Combined DOS text and VSync recovery (v1411)
+
+Current MAIN/OP/MAINE include both mutable `TextVramSeg` reads and the
+installed-owner VSync wait. Serial rebuilding compiles changed source freshly
+and validates reused objects; links, IRQ audits and MAIN bullet tables pass.
+Producer 1,425/82ade790 passes 3,156 ordinary-text, 2,656 Gaiji, 528 VSync wait
+and 324 lifecycle comparisons. All four complete ordinary-text bodies retain
+the original MAIN match after mapping the text-variable data operand.
+
+The isolated `dos-text-vsync-join-v1411` tree retains source, products/MAPs,
+wait OMFs, full transcripts and replay/retention readers. Its closure also
+checks 776 frozen text-only and 858 frozen wait-only files independently.
+See [text recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md)
+and [VSync recovery](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
+Historical authored exact remains 661/663; native stays at 328585f.
+Verified retirement reclaims 33.45 MiB from the combined compiler/cache
+copies; temporary v1410 restores return to their existing archive.
+Continue native scene waits and hardware owners before long game campaigns.
+
+## Frozen DOS installed-owner VSync wait (v1408)
 
 Shared `vsync_wait.cpp` now chooses the original branch once at entry:
 installed IRQ waits for any unsigned Count1 change; otherwise it waits for
@@ -43,9 +62,9 @@ closures retain their hashes. All 1,425 live-main input files match the cold
 producer byte for byte after four pre-existing EOL representations are journaled and
 normalized to Git/attributes LF; logical Git source is unchanged by that step.
 
-Historical exact remains 661/663. Next source work includes DOS ordinary
-text writers' mutable TextVramSeg references and other native scene waits;
-physical timing, broader game routes and Windows acceptance remain open.
+Historical exact remains 661/663. The text-variable gap is closed in v1411
+above; native scene waits, physical timing, broader routes and Windows
+acceptance remain open.
 
 ## Frozen DOS ordinary text writers (v1410)
 
@@ -188,7 +207,8 @@ routes retain v1356 Linux scope; the previous UBSan Normal clear claim
 remains revoked (mask0x19 is a sentinel; require mask<4 plus selected shot bit).
 
 Shared DOS installed-owner VSYNC_WAIT now has the v1408 cold replay above.
-Recover DOS ordinary-text mutable bases next; preserve the separate native review. Other native scene adapters
+DOS ordinary-text mutable bases are recovered above. Preserve the separate
+native VSync review; other native scene adapters
 and default elapsed-work models still need source recovery. Serialize actual
 builds. Preserve the active Windows host, shared writer worktrees, private
 original inputs, saves and frozen evidence. TH08 stays read-only.

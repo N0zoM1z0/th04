@@ -1,6 +1,41 @@
 # Ordinary text character writers
 
-## DOS mutable text segment (v1410)
+## Combined DOS text and VSync source (v1411)
+
+The current DOS source includes both the mutable text-segment recovery below
+and the installed-owner VSync wait from v1408. Its 1,425-file fingerprint is
+`82ade79057e0fd632f8e6c3437d136bd0e805481ba41f41b650efae19f7b87b7`.
+A serial rebuild reuses 191/193 MAIN C++ objects, 162/165 OP objects and
+136/139 MAINE objects after validating their cached inputs. Changed source is
+compiled freshly; all links, IRQ audits and MAIN bullet tables pass.
+MAIN/OP/MAINE products are 199,617 / 79,534 / 72,408 bytes.
+
+The combined products pass the same 3,156 ordinary-text and 2,656 Gaiji
+memory/write/ABI comparisons. All four complete ordinary-text bodies retain
+their original MAIN match after the single text-variable operand mapping.
+VSync passes 176 controls per artifact, including 24 actual ISR/IRET injections
+and eight midwait owner changes in each. The START/IRQ/END lifecycle passes
+108 controls per artifact. These checks execute the linked bodies at both
+loads; no game campaign is needed for this integration.
+
+The text-only 451a46f7 and wait-only d9383fa5 producers remain frozen.
+Their 776 and 858 closed-file hashes pass independently. Their predecessor
+failures and Demo results retain their original producer identities. The
+combined wait is still a 49-byte compiled consumer of the original 38-byte
+contract; historical authored exact remains 661/663.
+
+Private replay index from the root repository:
+`.analysis/worktrees/dos-text-vsync-join-v1411/.analysis/reconstruction/probes/dos-text-vsync-join-v1411/`.
+`commands.json` retains the eleven comparison commands. `controls.json` binds
+the current source archive, products/MAPs, three wait OMFs, original inputs,
+oracle sources and complete transcripts. `verify_closure.py` checks those
+identities, all memory/write streams, wait/lifecycle rows and both frozen
+source archives. Archived compiler inputs can be restored with
+`verify_retention.py --restore --prefix <owned path>`. Retirement reclaims
+33.45 MiB net from 8,721 owned cache paths; original proof identities
+and the three selected wait OMFs remain live.
+
+## Frozen DOS mutable text segment (v1410)
 
 `src/shared/runtime/text_putca_large.asm` and
 `src/main/hardware/text_putsa.asm` now load the shared `_TextVramSeg` word.
@@ -118,6 +153,6 @@ python3 .analysis/worktrees/port-motion-v1402/.analysis/port64/native-sjis-text-
 
 ## Remaining function work
 
-The ordinary DOS text references are recovered in v1410 above. Continue the
-separate installed-owner VSync recovery and other native hardware adapters.
+The ordinary DOS text references and installed-owner VSync wait are combined
+in v1411 above. Continue native scene waits and other hardware adapters.
 The full reconstruction/native goal remains active.

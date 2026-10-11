@@ -7,6 +7,30 @@ Its verified snapshot predates those renderer changes. Attest a combined
 producer when integrating the two histories. The v1401 startup implementation
 already reached `port/modern-64` through fffcc83.
 
+## v1411 combined DOS text and VSync
+
+Replay index in the root repository:
+`.analysis/worktrees/dos-text-vsync-join-v1411/.analysis/reconstruction/probes/dos-text-vsync-join-v1411/`.
+Producer 1,425/82ade790, three products/MAPs, wait OMFs and all component
+transcripts remain live. The closure checks 3,156 ordinary-text, 2,656 Gaiji,
+528 wait and 324 lifecycle comparisons, plus 776/858 frozen parent files.
+
+Lossless retirement archives 8,721 owned source/object/cache-copy paths in
+2,128 complete blobs. Gzip CRC, every blob, temporary metadata
+restoration and all protected hashes pass before deletion; net reclamation is
+33.45 MiB after archive and journals. The temporary v1410 compiler restores
+are removed after checking their existing archive and exact metadata. Its
+original retention receipt and proof identities stay unchanged.
+
+```sh
+python3 .analysis/worktrees/dos-text-vsync-join-v1411/.analysis/reconstruction/probes/dos-text-vsync-join-v1411/verify_closure.py
+python3 .analysis/worktrees/dos-text-vsync-join-v1411/.analysis/reconstruction/probes/dos-text-vsync-join-v1411/verify_retention.py --restore --prefix .analysis/reconstruction/probes/cache-v1410-main
+```
+
+Restore only the required owned paths. The cache-directory rejection from the
+first integration attempt is retained; its successor uses verified local
+copies without weakening the cache admission rules.
+
 ## v1408 DOS VSync wait
 
 Replay/product index: `.analysis/reconstruction/probes/dos-vsync-wait-v1408/`.
