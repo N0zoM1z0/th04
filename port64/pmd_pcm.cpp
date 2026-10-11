@@ -88,18 +88,20 @@ void OpnPcm::advance_to(std::uint64_t cycle) {impl_->advance(cycle);}
 std::uint64_t OpnPcm::cycles() const {return impl_->now;}
 std::uint64_t OpnPcm::samples() const {return impl_->count;}
 ChipLevels OpnPcm::levels() const {return impl_->averaged;}
-PcmPlayer::PcmPlayer(Board board,std::uint32_t hz,Bytes rom,PcmSink sink):pcm_(board,hz,std::move(rom),std::move(sink)) {
+PcmPlayer::PcmPlayer(Board board,std::uint32_t hz,Bytes rom,PcmSink sink,TimerEpoch epoch):pcm_(board,hz,std::move(rom),std::move(sink)) {
     player_=std::make_unique<ClockedPlayer>(board,hz,[this](FmWrite value){
         if(!player_)throw std::logic_error("PCM write before resident clock construction");
         pcm_.write(player_->timers().cycles(),value);
     },[this](SsgWrite value){
         if(!player_)throw std::logic_error("SSG write before resident clock construction");
         pcm_.write(player_->timers().cycles(),{0,value.address,value.value});
-    });
-    for(auto value:std::vector<FmWrite>{{0,0x29,0x83},{0,0x24,0},{0,0x25,0},{0,0x26,200},{0,0x27,0x3f}})pcm_.write(0,value);
+    },epoch);
+    if(epoch==TimerEpoch::installed)
+        for(auto value:std::vector<FmWrite>{{0,0x29,0x83},{0,0x24,0},{0,0x25,0},{0,0x26,200},{0,0x27,0x3f}})pcm_.write(0,value);
 }
 void PcmPlayer::initialize(FmWrite value) {
     if(player_->timers().cycles())throw std::logic_error("PCM initialization after epoch zero");
+    player_->initialize(value);
     pcm_.write(0,value);
 }
 void PcmPlayer::advance_cycles(std::uint64_t value) {player_->advance_cycles(value);pcm_.advance_to(player_->timers().cycles());}

@@ -21,30 +21,25 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Demo validation now loads the physical
-configuration before running one Logo, four natural demos and a fresh OP title.
-Nine observed OP/MAIN configuration requests match the incoming file; complete
-CFG and score files stay unchanged. Cold GNU passes 69 CTests. Each of four
-muted driver profiles (`none`, `pmd`, `pmdb2`, `pmd86`) produces 129 identical
-GNU / optimized UBSan capture files, with selected state, RNG and draw counts
-matching all 15,988 original boundaries.
+Native development is active. The application PMD driver now installs from cold
+chip state and applies installation writes to both logical timers and PCM.
+Read-only original OP captures show the first Timer B period is **73.728 ms**;
+the previous native state incorrectly began at 16.128 ms. Two independent
+installation controls reject the old state and the PCM-only update.
 
-The active PMD profiles spend 94 native refreshes between the measure request
-and first SUPER_load; `none` spends zero. Original PMD measure/audio timing
-remains unpaired. A one-call configuration bypass keeps all previous 128 files
-identical but uses the wrong rank at every configuration point; the new
-independent option check rejects it.
+Cold GNU passes 69 CTests; optimized UBSan passes three PMD contracts. Four
+muted driver profiles each produce 129 identical GNU / UBSan capture files.
+Demo state, RNG, draws, shake and physical configuration/save files remain
+identical to the retained original-paired captures at all 15,988 selected seams.
+One Logo and five completed titles include the final fresh OP ready.
 
-A same-source original zero-delay repeat shifts refresh ordinals by 8 relative
-to the prior baseline. The prior delayed pair shifted by 5 or 6. That shift
-cannot uniquely diagnose inserted sleep; keep each capture's clock separate.
-With the fresh original's supplied clock, all 40 complete raw RGB samples match
-an independent renderer without normalization, crops or fitted offsets.
-Default native counts are 31/40 for `none` and 34/40 for the active profiles;
-these are timing diagnostics. Prior 80/80 supplied-clock evidence retains its
-original producer identity. Boot/loading/process clock ownership, physical
-and cross-emulator scanout, broader paired routes and Windows input/audio
-remain open. See the handoff for scoped evidence and cleanup recovery.
+Default active-PMD waiting now spans 97 native refreshes; the bounded original
+OP captures span 92. This is not full startup-clock acceptance: original CPU
+and file-loading time still need paired owners. Complete default RGB matches
+remain 31/40 for none and 34/40 for active profiles; own-counter-phase 40/40 is
+diagnostic. Earlier supplied-original-clock matches retain their original
+producer identity. Broader paired gameplay/process routes, physical scanout
+and Windows input/audio remain open. See the handoff for evidence and cleanup.
 
 ## Build and run
 

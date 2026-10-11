@@ -3,6 +3,7 @@
 #include <array>
 
 namespace th04::portable::pmd {
+enum class TimerEpoch { installed, cold };
 // Ideal OPN/OPNA master-cycle timeline at the installed default prescaler.
 // The first FM clock is at quantum(), not at epoch zero. Coincident timer
 // expirations latch together before a zero-latency CPU IRQ callback.
@@ -30,7 +31,8 @@ private:
 // PCM synthesis and an audio backend remain separate owners.
 class ClockedPlayer {
 public:
-    ClockedPlayer(Board board,std::uint32_t master_hz,FmSink sink={},SsgSink ssg={});
+    ClockedPlayer(Board board,std::uint32_t master_hz,FmSink sink={},SsgSink ssg={},
+                  TimerEpoch epoch=TimerEpoch::installed);
     ClockedPlayer(const ClockedPlayer&)=delete;ClockedPlayer& operator=(const ClockedPlayer&)=delete;
     void load_music(const Bytes& b) {player_.load_music(b);}
     void load_effects(const Bytes& b) {player_.load_effects(b);}
@@ -42,6 +44,7 @@ public:
     void start_ssg_effect(unsigned v) {player_.start_ssg_effect(v);}
     void stop_ssg_effect() {player_.stop_ssg_effect();}
     void mirror(std::uint8_t bank,std::uint8_t a,std::uint8_t v) {player_.mirror(bank,a,v);}
+    void initialize(FmWrite value);
     void advance_cycles(std::uint64_t cycles);
     void advance_ns(std::uint64_t nanoseconds);
     void on_interrupt(std::function<void(std::uint64_t,std::uint8_t)> action) {interrupt_=std::move(action);}

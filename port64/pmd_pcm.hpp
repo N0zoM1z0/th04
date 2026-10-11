@@ -26,7 +26,8 @@ private:
 // epoch matches ClockedPlayer; source mirrors remain distinct from chip I/O.
 class PcmPlayer {
 public:
-    PcmPlayer(Board board,std::uint32_t hz,Bytes rhythm_rom,PcmSink sink={});
+    PcmPlayer(Board board,std::uint32_t hz,Bytes rhythm_rom,PcmSink sink={},
+              TimerEpoch epoch=TimerEpoch::installed);
     void load_music(const Bytes& b) {player_->load_music(b);}
     void load_effects(const Bytes& b) {player_->load_effects(b);}
     void start_music() {player_->start_music();}

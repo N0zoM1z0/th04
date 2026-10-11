@@ -11,6 +11,11 @@ sound::Bytes song(){sound::Bytes b(26);for(unsigned p=0;p<12;++p)b[1+p*2]=24;b[2
 sound::Bytes effects(){sound::Bytes b(257);for(unsigned p=0;p<128;++p)b[1+p*2]=1;b[256]=128;return b;}
 void contracts(){
     auto resident=std::make_shared<sound::ResidentPmd>(sound::PmdProfile{});
+    // The original installer enables B while its register is still zero,
+    // then writes 200 without restarting the pending 73.728 ms deadline.
+    require(resident->player().player().timers().deadline(0)==73728 &&
+            resident->player().player().timers().deadline(1)==294912,
+            "resident installation starts cold timer deadlines");
     require(resident->command(0x900)==0x4800 && resident->command(0x800)==0x8ff && resident->command(0xa00)==255,"installed resident service state");
     unsigned efc=0,efs=0;std::vector<std::pair<unsigned,unsigned>> attribution;
     sound::Timeline timeline([&](const std::string& name)->std::optional<sound::Bytes>{

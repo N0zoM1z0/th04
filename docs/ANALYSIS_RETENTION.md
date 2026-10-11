@@ -1,5 +1,37 @@
 # Native private-state retention
 
+## v1392 cold PMD application installation
+
+Closed original OP startup/timer, GNU/optimized UBSan build, eight actual
+native profile, constructor controls, service probe, raw RGB and private Xvfb
+receipts precede retirement. CPU0/nice19 serial work reclaims **620.75 MiB**
+after the **66.02 MiB archive and journal**. All 3,253 complete archive members
+pass full gzip CRC/EOF and SHA/size/mode/nsmtime checks before and after deletion;
+33,158 inherited/current protected hashes and all 510 frozen source pins pass.
+Current producer starts `9cfe100a`; DOS fingerprint remains `6f5898dd`.
+Both complete CI gates pass (441 / 345 tests), followed by another 16.64 MiB
+source-backed cache cleanup. That journal is separate from archive recovery.
+
+Current GNU/UBSan game, trace and shake executables, frozen source, closed
+receipts/logs, read-only original runtime load observations and compressed
+original clock streams remain live. Objects/static libraries, unused contract
+programs, borrowed old libraries, expanded events, duplicate native captures,
+new full RGB references and four disposable original HDIs/copied fonts are
+losslessly archived. Old producers and proofs are unchanged.
+
+From DOS root, check the archive and protected state with:
+
+```sh
+python3 .analysis/reconstruction/probes/native-pmd-startup-v1392/verify_retention.py
+```
+
+Add `--restore` before complete replay, CTest or the public original reader's
+HDI checks. Use fresh output directories for new runs; never rerun a closed
+producer or retirement controller into its old path. Both archive and journal
+are required for exact owned-file recovery. This retirement does not accept
+original default CPU/loading clocks, physical audio/scanout or full processes.
+
+
 ## v1388 original boot clock
 
 All jobs are terminal. Current509/f2b03ebb has fresh GNU71/69CTest and optimized

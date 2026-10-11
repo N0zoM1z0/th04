@@ -4,7 +4,7 @@
 namespace th04::portable::sound {
 ResidentPmd::ResidentPmd(PmdProfile profile):board_(profile.board),
     player_(profile.board,profile.master_hz,std::move(profile.rhythm_rom),
-            [this](pmd::StereoSample value){samples_.push_back(value);}) {
+            [this](pmd::StereoSample value){samples_.push_back(value);},pmd::TimerEpoch::cold) {
     // Installation begins stopped (fade/loop FF), without elapsed time.
     // These release/key-off writes are repeated by the actual initialization;
     // both leave the reset chip silent. Restore the complete installed mirror.
@@ -16,7 +16,7 @@ ResidentPmd::ResidentPmd(PmdProfile profile):board_(profile.board),
 Drivers ResidentPmd::drivers() const {return {true,false,std::uint16_t(0x4800+unsigned(board_))};}
 void ResidentPmd::write(unsigned bank,unsigned address,unsigned value) {
     const pmd::FmWrite w{std::uint8_t(bank),std::uint8_t(address),std::uint8_t(value)};
-    installation_.push_back(w);player_.mirror(w.bank,w.address,w.value);player_.initialize(w);
+    installation_.push_back(w);player_.initialize(w);
 }
 void ResidentPmd::install() {
     // Board numbers preserve the original service replies: PMD=0, PMDB2=1,

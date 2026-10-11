@@ -140,3 +140,14 @@ PCM FM/SSG/rhythm synthesis, other required driver owners, actual resident
 frontend lifetime, startup/measure waits and complete natural Linux/Windows
 routes remain unfinished. Historical DOS acceptance and
 `candidate-local-attested` provenance remain unchanged.
+
+## Cold application installation (v1392)
+
+Application ResidentPmd now constructs `TimerEpoch::cold` and applies installation
+writes to logical timers and PCM. Existing standalone default fixtures describe
+a post-install epoch. Original PMD86 starts B at register 0 (73.728 ms), then
+writes 200 without replacing the first deadline; a prestarted 16.128 ms epoch
+is incorrect for this application path. See [OP startup](op-startup.md#cold-pmd-installation-and-original-op-timer-ownership-v1392)
+for full source identity, original observations, two rejected controls and
+remaining default loading-clock ownership. Earlier clock proofs retain their
+old producer identities; this fix does not restamp them.

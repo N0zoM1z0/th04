@@ -47,7 +47,7 @@ void OpnTimers::advance(std::uint64_t count,const std::function<void(std::uint8_
     }
     cycles_=end;
 }
-ClockedPlayer::ClockedPlayer(Board board,std::uint32_t hz,FmSink sink,SsgSink ssg)
+ClockedPlayer::ClockedPlayer(Board board,std::uint32_t hz,FmSink sink,SsgSink ssg,TimerEpoch epoch)
     :timers_(board),master_hz_(hz),player_(board,[this,sink](FmWrite w){
         if(!w.bank)timers_.write(w.address,w.value);
         if(sink)sink(w);
@@ -55,7 +55,14 @@ ClockedPlayer::ClockedPlayer(Board board,std::uint32_t hz,FmSink sink,SsgSink ss
     if(!hz || hz>1000000000)throw std::invalid_argument("OPN master frequency");
     // Installation is a separate epoch from the first music start. Mirrors
     // supplied by the original observer do not reset these live deadlines.
-    timers_.write(0x29,0x83);timers_.write(0x26,200);timers_.write(0x27,0x3f);
+    if(epoch==TimerEpoch::installed) {
+        timers_.write(0x29,0x83);timers_.write(0x26,200);timers_.write(0x27,0x3f);
+    } else if(epoch!=TimerEpoch::cold)throw std::invalid_argument("OPN timer epoch");
+}
+void ClockedPlayer::initialize(FmWrite value) {
+    if(timers_.cycles())throw std::logic_error("OPN installation after epoch zero");
+    player_.mirror(value.bank,value.address,value.value);
+    if(!value.bank)timers_.write(value.address,value.value);
 }
 void ClockedPlayer::advance_cycles(std::uint64_t count) {
     timers_.advance(count,[this](std::uint8_t status){

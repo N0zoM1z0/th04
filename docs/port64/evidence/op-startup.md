@@ -197,3 +197,99 @@ first MAIN is refresh 1,193 versus 1,287. This is native event evidence, not
 original PMD board/measure/audio pairing. The bypass negative and repeated
 original clocks are indexed in [demo evidence](demo.md). Do not encode this
 span as a constant or select a driver to fit original RGB phase.
+
+
+## Cold PMD installation and original OP timer ownership (v1392)
+
+Original `GAME.BAT` selects the resident PMD driver before unpacking OP. Two
+new read-only normal-core captures use the unchanged attested DOSBox-X ELF,
+original packed OP SHA `8fc3b67fa8470de15b4f2844d5623d0a93d7922fac16d82a25a90a378b516b0f`,
+pinned reset/config/assets and board 86c. They stop on the host before the first
+ordinary menu body, without guest writes, input injection or audio devices.
+This is a bounded OP startup observation, not a completed DOS process.
+
+The complete 69,028-byte runtime decoded load equals the pinned decoded target
+with all 804 ordered relocations applied. Load is 10FC, DGROUP 2030; startup
+CS is relative 0A74 (runtime 1B70), shared sound CS relative 0DA1 (runtime 1E9D).
+PMD service 9 returns AX=4802, resolved BGM=2/SE=1/MIDI-possible=0, IVT60 is
+098A:0103 with PMD magic. Resident options are rank/lives/bombs/BGM/SE/turbo
+2/3/2/2/1/1; Logo flag changes 0→1. Prefix/type observations do not prove
+whole resident COM byte equality or physical board identity. The packed OP
+Ghidra database is attested but is not the decoded semantics Oracle.
+
+| Original boundary | Relative CS:IP | Timer-capture display ordinal |
+| --- | --- | --- |
+| driver reply | 0DA1:02F2 | 80 |
+| Logo entry | 0A74:14F5 | 80 |
+| measure entry | 0DA1:0370 | 88 |
+| measure return | 0DA1:039D | 180 |
+| Logo complete | 0A74:0CC4 | 537 |
+| title complete | 0A74:0CE3 | 736 |
+| ordinary menu entry | 0A74:0756 | 745 |
+
+Both captures wait 92 display events for measure 2. Independently replayed
+complete GDC streams admit all 24 startup boundaries; parameter-entry coverage
+is zero. Whole-load byte and GDC counter mutations reject. The reusable ROOT
+reader is `scripts/runtime/verify_op_startup_clock.py`; supply both capture
+directories, the closed v1391 original GDC model/receipt and a fresh output.
+Restore archived HDIs first when rerunning image identity checks.
+
+The timer capture observes 2,326 host rows: 1,003 register writes, 985 schedules
+and 338 Timer B callbacks. Function memory witnesses and original emulator
+source bind `fmtimer_setreg`, `pc98_fm_dosbox_fmtimer_setevent` and the B callback.
+PIC time is read directly as ticks plus the CPU fractional cycle budget; no
+host timing function is called. First B enable occurs with register 0 and queues
+73.728 ms. The following write of 200 changes the next period without replacing
+that deadline. During the measure-entry-to-return interval, 48 B callbacks occur.
+Actual measure-entry-to-return time is 1,637.469333 ms. Installation-first-schedule
+to Logo playback is 245.638500 ms; playback-to-last B callback is 1,637.881542 ms.
+These baselines are distinct. Timer formulas are the attested DOSBox implementation
+(18 us × (1024−A), 288 us × (256−B)), not physical chip acceptance.
+
+Native previously constructed an already running post-install Timer B with
+register 200: 16.128 ms. Actual installation updated the PCM chip and mirror,
+but not the live logical timer. The application now explicitly constructs cold
+ClockedPlayer/PcmPlayer state, then routes each real installation write to both
+logical timers and PCM. Standalone post-install fixtures preserve the default
+`TimerEpoch::installed`; application ResidentPmd uses `TimerEpoch::cold`.
+At 8 MHz the constructor now has A deadline 147,456 and B deadline 589,824
+cycles, with zero elapsed PCM cycles/samples. No synthetic loading offset is added.
+
+Current frozen 510-file producer: `9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`. Six PMD source/test files change;
+DOS sources/flags/headers and fingerprint `6f5898dd9de51259628f27929b60b0ed77431bacd933270689c07bfc06a1592d`
+remain unchanged. Cold GNU builds 71 programs and passes 69 CTests. Optimized
+UBSan/bounds builds six explicit targets and executes all three PMD contracts.
+The real LOGO.M86/MIKO.EFC service probe produces four complete tables identical
+under GNU and UBSan. Cold measure 2 occurs at the 1,707 ms sample. Supplying the
+original observed installation age as a typed diagnostic input yields 1,638 ms,
+near the separately observed playback-to-last-callback interval. This does not
+pair default native loading or justify encoding that age as a product offset.
+Two one-variable constructor controls complete with zero elapsed time but reject:
+old installed epoch gives B=129,024 cycles; PCM-only install gives B=0.
+
+Eight actual muted GNU/UBSan routes cover none/pmd/pmdb2/pmd86, each pair with
+129 identical output files. State/RNG/draws/shake/indices/canonical TRAM/config
+and complete physical save files are bit-identical to retained v1391 original-
+paired captures. This reuses those closed digests; the original four-Demo raw
+state reader is not reexecuted or restamped. Nine options requests, one resident
+Logo, five completed titles and final fresh OP ready pass. The default native
+measure-to-SUPER_load span is 0/97/97/97 refreshes, first MAIN 1193/1290; original
+92 cannot be compared as a universal waiting constant. All 40 retained compressed
+original raw samples are freshly CRC/EOF/hash/F-clock guarded and emit 120 full
+RGB references. Default RGB zeros remain 31/40 for none and 34/40 active; own-
+counter-phase 40/40 is diagnostic. Prior supplied-original-clock 40/40 remains
+accepted only under its old producer; no current supplied-clock fixture rerun.
+Private Linux Xvfb input/focus/release/exit passes with zero audio opens.
+
+Replay from DOS root: `.analysis/reconstruction/probes/native-pmd-startup-v1392/`;
+native consumers: `.analysis/port64/native-pmd-startup-v1392/`.
+Original captures: `.analysis/runtime/candidates/dos-op-v1392-pmd-{startup,timers}/`.
+`verify_op_startup_clock.py`, `run_native_probe_current.py`, `run_native_probe_ubsan.py`,
+`installation_controls.py` and `compare_current_v3.py` close distinct receipts.
+The two rejected reducer setup attempts keep their sources/logs and provide no
+acceptance. Before full replay restore this batch with `verify_retention.py --restore`.
+Do not rerun closed producers into old output paths. The next owner is actual
+CPU/file-loading elapsed time from PMD installation to first Logo playback and
+subsequent OP waits, followed by broader paired process/combat routes. Whole
+picture/default startup clocks, physical/cross-emulator scanout and Windows
+input/audio remain open. Historical exactness/provenance is unchanged.

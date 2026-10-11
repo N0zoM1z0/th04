@@ -1507,3 +1507,25 @@ independent event evidence. Default process clocks, physical/cross-emulator
 scanout, paired Boss/death/process routes and Windows input/audio remain open.
 The goal stays active; candidate-local-attested provenance and deferred MAIN
 historical exactness are unchanged.
+
+
+## Demo replay after PMD cold-install repair (v1392)
+
+The application PMD driver now installs from cold state; see
+[OP startup](op-startup.md#cold-pmd-installation-and-original-op-timer-ownership-v1392)
+for the original 73.728 ms deadline, two rejected controls, source identity and
+remaining CPU/loading clocks. Cold GNU passes 69 CTests; optimized UBSan builds
+six targets and passes three PMD contracts. Four muted full startup/Demo/OP
+profiles each produce 129 identical GNU / UBSan capture files. State, RNG,
+draws, shake, indices, canonical TRAM, configuration and complete physical
+save files match retained v1391 original-paired digests at 15,988 selected seams.
+The original four-Demo raw state reader is not rerun or restamped.
+
+All 40 retained original raw samples are freshly CRC/EOF/hash/F-clock guarded;
+120 full RGB references are freshly emitted by the independent renderer.
+Default RGB matches remain 31/40 for none and 34/40 active; own-counter-phase
+40/40 is diagnostic. Prior supplied-clock 40/40 retains its old producer;
+there is no current supplied-clock fixture replay. Default active wait is
+97 native refreshes, first MAIN 1,290; none stays 0 and 1,193. Original OP
+waits 92 in both captures; complete default loading remains unpaired.
+Private Linux Xvfb input/focus/release/exit passes with zero audio opens.
