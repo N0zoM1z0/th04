@@ -1,5 +1,29 @@
 # OP startup state and frontend ownership
 
+## Joined palette and live counter owners (v1419)
+
+Fresh producer 536/3ba0ba42 combines published counter-delay source dcbe8f7
+with shared palette source 3add0fd. GNU Release and optimized UBSan/bounds
+each cold-build the complete core/frontend and nine selected component
+programs, and pass all nine related CTests. Each also passes 20,832 complete
+original palette comparisons and the actual startup DAC/query checks.
+
+The unchanged v1417 counter owner passes its 144 original WORD consumers,
+36 real ISR controls and 2,008 independent integer/raster vectors on both
+fresh compilers. Its retained originals keep their capture identity. The
+v1418 palette predecessor and each parent's source/whole-graph proofs remain
+separate. This integration runs component checks rather than game campaigns.
+
+Replay: `.analysis/port64/native-palette-show-join-v1419/`.
+`source-profile.json`, `focused.json` and `verify_closure.py` bind the fresh
+source, selected programs and full original comparison streams.
+Native CI passes 345 tests. Verified compiler retirement and source-backed
+cache cleanup release 46.22 MiB net. All twenty selected programs and
+5,945 frozen parent pins remain live. `verify_retention.py --restore --prefix
+.analysis/port64/native-palette-show-join-v1419/build-gnu/` restores one
+compiler cache.
+
+
 ## Shared analog and LCD palette output (v1418)
 
 `pc98_palette::show()` now owns the complete original palette output used by
