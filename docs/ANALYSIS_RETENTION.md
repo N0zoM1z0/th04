@@ -1795,3 +1795,27 @@ Full gzip CRC/EOF, member digests, actual temporary restored size/mode/nsmtime
 and current/parent hashes pass. Both the archive and `retention.json` journal
 are needed. `verify_closure.py` reads all source and palette comparisons;
 `finish.json` binds terminal CI and the separate cache cleanup journals.
+
+### Indexed native Demo entry (v1420)
+
+Owned compiler retirement and source-backed caches release 35.92 MiB net.
+Both final/initial frontends, two unchanged core libraries, related contracts,
+complete compressed ARGB images, pixel indices, palette/original I/O, reader
+failures and both 537-file input archives remain. The closure checks 6,893
+independent parent pins.
+
+Run from `.analysis/worktrees/native-demo-palette-v1420/`:
+
+```sh
+python3 -B .analysis/port64/native-demo-palette-v1420/verify_retention.py
+```
+
+Add `--restore --prefix .analysis/port64/native-demo-palette-v1420/build-gnu/`
+for one compiler. Full archive CRC/EOF, blob hashes, actual restored metadata
+and protected inputs pass. Keep the archive and retention journal together;
+`verify_closure.py` checks the full source/image/I/O proof, and `finish.json`
+binds terminal CI and the separate cache cleanup journal.
+
+Root index CI passes all 451 tests. Its separate source-backed cache journal
+reclaims 8.57 MiB from 549 owned files; this batch totals
+44.50 MiB net across native and root worktrees.

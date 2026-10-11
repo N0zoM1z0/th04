@@ -678,6 +678,32 @@ PC-98 ports `0xA8`, `0xAC`, `0xAA`, and `0xAE`; tone 0..100 scales each
 component's high nibble toward black and 100..200 toward white. That first owner followed only the analog branch of the bounded ReC98
 reference. The complete LCD branch is recovered below under v1415; physical display timing remains open.
 
+### Indexed native Demo entry palette (v1420)
+
+The remaining `FrontEnd::render(demo_start)` path scaled expanded RGB8 pixels.
+It now saves the menu's raw palette alongside its complete pixel indices and
+uses `pc98_palette::argb()` to apply the recovered DAC4 conversion once to
+the sixteen colors. The menu comes from the current title resources, including
+the retained background after Music Room reload. Indices preserve duplicate
+palette colors without attempting to recover them from RGB.
+
+Actual frontend capture covers preparation and seventeen pending OP refreshes;
+MAIN receives no update. GNU/optimized UBSan each agree on eighteen complete
+640x400 frames with the original OP palette function's DAC projection:
+4,608,000 pixels per compiler. The original executes its full 266-byte body at
+two loads for each palette/tone, retaining all 36 I/O/return controls. The old
+RGB8 formula projection fails on sixteen of the frames. This is a component
+palette projection, not a complete original menu/scanout claim.
+
+Cold 537/08ff3fc2 and final 537/6175165a keep separate archives. The final
+reader uses the actual reset-receipt schema, and the capture include enables
+normal physical-score storage before demo preparation. Only that include
+recompiles in each frontend; both core library hashes remain the original
+cold hashes. The old executables and both initial failures stay retained.
+Two related CTests per compiler and native CI 345 pass. The private reader in
+`.analysis/worktrees/native-demo-palette-v1420/.analysis/port64/native-demo-palette-v1420/`
+checks both input sets, full images/I/O and inherited palette/counter proofs.
+
 ### Native shared palette recovery and counter integration (v1418/v1419)
 
 `pc98_palette::show()` now models the complete original analog and notebook

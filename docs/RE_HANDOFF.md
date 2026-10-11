@@ -5,6 +5,33 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Native indexed demo-entry fade (v1420)
+
+Published `port/modern-64`: `6307e8d48adc58b7073699e9d93549c37c03898b`.
+Demo entry now keeps the raw menu palette and pixel indices. Each fade step
+uses the original four-bit DAC tone conversion before expanding colors to
+RGB8. It replaces the old scaling of cached RGB8 pixels.
+
+GNU and optimized UBSan each capture eighteen actual pending OP frames,
+stopping before MAIN updates. All 4,608,000 pixels agree with the projection
+of 36 complete original OP 0000:1DE0..1EEA palette instruction controls at
+loads 1000/3333. Pixel indices, process generation and RNG stay fixed through
+the fade. The old RGB8 formula projection differs in sixteen frames; this is
+an explicit formula diagnostic, not a compiled predecessor or full original
+OP scanout comparison.
+
+Cold source 537/08ff3fc2 builds the complete core/frontend and two related
+contracts per compiler. Final 537/6175165a fixes only the reader and capture
+include; both frontends recompile while their original core hashes stay
+identical. Initial reset-schema/storage-setup failures, old frontends and both
+source freezes remain. Native CI 345 passes; historical exact stays 661/663.
+
+Replay: `.analysis/worktrees/native-demo-palette-v1420/.analysis/port64/native-demo-palette-v1420/`.
+`verify_closure.py` reads all original I/O and full images, both source archives
+and 6,893 parent pins. Verified compiler/cache retirement releases 35.92 MiB
+net. Continue remaining function/caller recovery and actual scene waits;
+physical scanout and broader gameplay remain open.
+
 ## Joined native palette output and counter delays (v1419)
 
 Published `port/modern-64`: `85fe1f30af27a1aee1a8822f2e950c95cafa2a11`.
