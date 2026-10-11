@@ -208,7 +208,12 @@ void Scene::color_frame() {
     palette_show();queue([this]{white_-=4;if(++fade_frame_<63)queue([this]{color_frame();});
         else {apply_palette(assets_.menu,0);finished_=true;emit(Kind::complete);}});wait(1);
 }
-Renderer::Renderer(const Assets& assets):assets_(assets) {for(auto& page:pages_)page.resize(256000);}
+Renderer::Renderer(const Assets& assets,std::uint16_t palette_note,
+                   std::function<std::uint8_t(unsigned)> notebook_query)
+    :assets_(assets),palette_note_(palette_note),notebook_query_(std::move(notebook_query)) {
+    if(palette_note_ && !notebook_query_)throw std::invalid_argument("LCD palette requires notebook query input");
+    for(auto& page:pages_)page.resize(256000);
+}
 void Renderer::apply(const Event& e) {
     switch(e.kind) {
     case Kind::access:accessed_=unsigned(e.a);break;
@@ -250,9 +255,9 @@ void Renderer::apply(const Event& e) {
     }
     case Kind::palette_show: {
         if(e.data.size()!=48)throw std::invalid_argument("startup RGB palette");
-        const unsigned tone=unsigned(std::clamp(e.a,0,200)),scale=tone>100 ? 200-tone : tone;
-        const unsigned invert=tone>100 ? 15 : 0;
-        for(unsigned i=0;i<48;++i)dac_[i]=std::uint8_t((((e.data[i]>>4)^invert)*scale/100)^invert);
+        Palette raw;std::copy_n(e.data.begin(),raw.size(),raw.begin());
+        dac_=pc98_palette::show(raw,e.a,palette_note_,
+            [this](unsigned port){return notebook_query_(port);},[](unsigned,unsigned){});
         break;
     }
     default:break;

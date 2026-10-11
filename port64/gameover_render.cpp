@@ -30,12 +30,10 @@ void Renderer::apply(const Event& e) {
     }
 }
 Renderer::Bytes Renderer::rgb(int tone) const {
-    if(tone<0 || tone>200)throw std::invalid_argument("Game Over tone outside native palette range");
+    const auto dac=pc98_palette::show(palette_,tone);
     Bytes result(640*400*3);
     for(unsigned at=0;at<indexed_.size();++at)for(unsigned channel=0;channel<3;++channel) {
-        const int base=palette_[indexed_[at]*3+channel]>>4;
-        const int component=tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100;
-        result[at*3+channel]=pc98_palette::analog_rgb8(unsigned(component));
+        result[at*3+channel]=pc98_palette::analog_rgb8(dac[indexed_[at]*3+channel]);
     }
     text_.overlay(result,*gaiji_,font_);return result;
 }

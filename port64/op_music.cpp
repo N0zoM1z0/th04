@@ -229,9 +229,8 @@ void Renderer::apply(const Event& e) {
     }
 }
 Bytes Renderer::rgb(int tone) const {
-    if(tone<0 || tone>100)throw std::invalid_argument("Music palette tone");
-    const auto& page=canvas_.page(canvas_.shown_page());const auto& palette=canvas_.palette();Bytes result;result.reserve(page.size()*3);
-    for(auto pixel:page)for(unsigned c=0;c<3;++c)result.push_back(pc98_palette::analog_rgb8((palette[pixel*3+c]>>4)*unsigned(tone)/100));
+    const auto& page=canvas_.page(canvas_.shown_page());const auto palette=pc98_palette::show(canvas_.palette(),tone);Bytes result;result.reserve(page.size()*3);
+    for(auto pixel:page)for(unsigned c=0;c<3;++c)result.push_back(pc98_palette::analog_rgb8(palette[pixel*3+c]));
     return result;
 }
 }

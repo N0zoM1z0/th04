@@ -758,12 +758,8 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     }
     if(state.boss_active()) for(unsigned i=0;i<3;++i)palette.palette[i]=state.boss_snapshot().palette_zero[i];
     for(unsigned i=0;i<3;++i)palette.palette[42+i]=state.life().palette14[i];
-    const int tone=std::clamp(displayed_tone.value_or(state.life().palette_tone),0,200);
-    if(state.boss_active() || tone!=100)for(auto& component:palette.palette) {
-        const int base=component>>4;
-        const int nibble=tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100;
-        component=static_cast<std::uint8_t>(nibble*16);
-    }
+    palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,
+        displayed_tone.value_or(state.life().palette_tone));
     const auto& bomb_frame=state.bomb_frame();
     const unsigned display_line=sprites.background.display_line();
     const unsigned bomb_page=state.frames()%2;
@@ -1267,11 +1263,8 @@ public:
     }
     Frame render() const {
         Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
-        PiImage palette=sprites_.palette;const int tone=script_.tone();
-        for(auto& component:palette.palette) {
-            const int base=component>>4;
-            component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
-        }
+        PiImage palette=sprites_.palette;
+        palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,script_.tone());
         for(unsigned i=0;i<indices_.size();++i) if(indices_[i]!=255) frame.pixels[i]=palette_color(palette,indices_[i]);
         // PC-98 TRAM text is a separate layer and does not follow the analog
         // graphics palette fade. All script text/gaiji uses TX_WHITE.
@@ -2377,11 +2370,8 @@ private:
                     const auto* canvas=congratulations ? &congratulations->canvas() : verdict ? &verdict->canvas() : nullptr;
                     if(!canvas)return frame;
                     PiImage palette;palette.palette=canvas->palette();
-                    const int tone=std::clamp(congratulations ? congratulations->animation().tone() : verdict->tone(),0,200);
-                    for(auto& component:palette.palette) {
-                        const int base=component>>4;
-                        component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
-                    }
+                    palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,
+                        congratulations ? congratulations->animation().tone() : verdict->tone());
                     const auto& page=canvas->page(canvas->shown_page());
                     for(unsigned y=0;y<400;++y)for(unsigned x=0;x<640;++x)
                         frame.pixels[y*640+x]=palette_color(palette,page[((y+unsigned(canvas->scroll()))%400)*640+x]);
@@ -2396,12 +2386,7 @@ private:
                         frame.pixels[i]=0xff000000u|(unsigned(rgb[i*3])<<16)|(unsigned(rgb[i*3+1])<<8)|rgb[i*3+2];
                 } else if(const auto* verdict=score_route_->verdict_scene()) {
                     const auto& canvas=verdict->canvas();PiImage palette;palette.palette=canvas.palette();
-                    const int tone=std::clamp(verdict->tone(),0,200);
-                    for(auto& component:palette.palette) {
-                        const int base=component>>4;
-                        component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 :
-                            15-(15-base)*(200-tone)/100)*16);
-                    }
+                    palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,verdict->tone());
                     const auto& page=canvas.page(canvas.shown_page());
                     for(unsigned y=0;y<400;++y)for(unsigned x=0;x<640;++x)
                         frame.pixels[y*640+x]=palette_color(palette,page[((y+unsigned(canvas.scroll()))%400)*640+x]);
@@ -2428,11 +2413,8 @@ private:
                 const auto* canvas=congratulations ? &congratulations->canvas() : verdict ? &verdict->canvas() : static_cast<const cutscene::Canvas*>(scene);
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
                 PiImage palette;palette.palette=staff ? staff->palette() : canvas->palette();
-                const int tone=std::clamp(staff ? staff->tone() : congratulations ? congratulations->animation().tone() : verdict ? verdict->tone() : scene->script().tone(),0,200);
-                for(auto& component:palette.palette) {
-                    const int base=component>>4;
-                    component=static_cast<std::uint8_t>((tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100)*16);
-                }
+                palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,
+                    staff ? staff->tone() : congratulations ? congratulations->animation().tone() : verdict ? verdict->tone() : scene->script().tone());
                 const auto& page=staff ? staff->page(staff->shown_page()) : canvas->page(canvas->shown_page());
                 const unsigned scroll=staff ? 0 : (unsigned(canvas->scroll())%400);
                 for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x)
