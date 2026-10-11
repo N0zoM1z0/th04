@@ -1371,7 +1371,11 @@ public:
                 if(audio_output_)audio_output_->stereo(values);
             });
         if(mode_==gameplay::Mode::actor_control)std::cout<<"MAIN fixture mode=actor-control (hit consumption disabled)\n";
-        if(assets_)for(const auto& work:assets_->installed_work)sound_timeline_->advance_work(work);
+        if(assets_) {
+            text_refreshes_+=assets_->display_elapsed_ns/std::uint64_t(frame_period.count());
+            text_work_remainder_ns_=assets_->display_elapsed_ns%std::uint64_t(frame_period.count());
+            for(const auto& work:assets_->installed_work)advance_work(work);
+        }
         if (main_assets && !main_assets->reimu.empty()) {
             sprites_ = std::make_unique<MainSprites>(*main_assets);
         }
@@ -1487,10 +1491,14 @@ public:
     bool observe_text_time(std::int64_t now) {
         if(!text_time_origin_) {
             text_time_origin_=now;text_time_origin_refreshes_=text_refreshes_;
+            text_time_origin_remainder_ns_=text_work_remainder_ns_;
         }
         require_view(now>=*text_time_origin_,"text refresh clock moved backwards");
         const bool before=text_blink_visible();
-        const auto refreshes=text_time_origin_refreshes_+std::uint64_t((now-*text_time_origin_)/frame_period.count());
+        const auto elapsed=std::uint64_t(now-*text_time_origin_);
+        const auto period=std::uint64_t(frame_period.count());
+        const auto refreshes=text_time_origin_refreshes_+elapsed/period+
+            (elapsed%period+text_time_origin_remainder_ns_)/period;
         require_view(refreshes>=text_refreshes_,"text refresh counter moved backwards");
         text_refreshes_=refreshes;
         const bool changed=before!=text_blink_visible();
@@ -1647,8 +1655,9 @@ public:
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         // GDC blink continues through OP, waits and MAIN process replacement.
         // Headless callers admit refreshes; windows supply elapsed time.
-        if(!text_time_origin_)text_refreshes_+=slowdown();
+        // OP initialization completes before the first waited refresh.
         ensure_op_sound();
+        if(!text_time_origin_)text_refreshes_+=slowdown();
         const auto sound_owner=sound_;
         sound::Refresh sound_refresh(sound_owner.get(),std::uint64_t(frame_period.count())*slowdown());
         if(startup_) {
@@ -2074,13 +2083,24 @@ private:
     std::filesystem::path op_save_directory() const {
         return assets_->save_directory.empty() ? score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
     }
+    void advance_work(const sound::ElapsedWork& work) {
+        // The sound owner rejects invalid work before either clock changes.
+        sound_timeline_->advance_work(work);
+        // An external elapsed-time observer already covers completed work.
+        // Logical headless admission retains sub-refresh time across calls.
+        if(!text_time_origin_) {
+            const auto elapsed=text_work_remainder_ns_+work.nanoseconds;
+            const auto period=std::uint64_t(frame_period.count());
+            text_refreshes_+=elapsed/period;text_work_remainder_ns_=elapsed%period;
+        }
+    }
     void ensure_op_sound() {
         if(application_.program()!=application::Program::op || setup_)return;
         if(sound_timeline_->program()!=application::Program::op ||
            sound_timeline_->generation()!=application_.generation()) {
             sound_timeline_->enter(application::Program::op,application_.generation(),application_.resident().config);
             if(assets_ && assets_->op_entry_work)
-                for(const auto& work:assets_->op_entry_work(application_.generation()))sound_timeline_->advance_work(work);
+                for(const auto& work:assets_->op_entry_work(application_.generation()))advance_work(work);
             if(assets_ && assets_->full_startup)begin_startup();
             else sound_timeline_->op_title(application_.resident().demo_number!=0);
         }
@@ -2095,7 +2115,7 @@ private:
                 startup_renderer_->apply(e);
                 sound_timeline_->startup(e);
                 if(assets_->startup_work)
-                    for(const auto& work:assets_->startup_work(e,application_.generation()))sound_timeline_->advance_work(work);
+                    for(const auto& work:assets_->startup_work(e,application_.generation()))advance_work(work);
                 if(e.kind==startup::Kind::logo_complete)application_.mark_op_logo_shown();
                 if(startup_observer_)startup_observer_(e);
             },[this]{return sound_->song_measure();},application_.process_random_state(),0,startup_initial_palette_);
@@ -2448,6 +2468,7 @@ private:
     // Display initialization invokes the first GDC refresh immediately,
     // before the first waited interval. Keep this admission across processes.
     std::uint64_t text_refreshes_=1,text_time_origin_refreshes_=0;
+    std::uint64_t text_work_remainder_ns_=0,text_time_origin_remainder_ns_=0;
     std::optional<std::int64_t> text_time_origin_;
     std::unique_ptr<maine::Ending> ending_;
     std::unique_ptr<registration::Scene> registration_;

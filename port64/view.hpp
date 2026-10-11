@@ -45,6 +45,9 @@ struct MainAssets {
     std::optional<th04::portable::sound::PmdProfile> pmd_profile;
     // Explicit elapsed-work adapters. Empty inputs admit no time; loading is
     // never assigned a fitted startup offset or an emulator bus constant.
+    // Time since the initial display callback at resident installation.
+    // Its epoch is independent of the PMD installation epoch.
+    std::uint64_t display_elapsed_ns=0;
     std::vector<th04::portable::sound::ElapsedWork> installed_work;
     std::function<std::vector<th04::portable::sound::ElapsedWork>(std::uint32_t)> op_entry_work;
     std::function<std::vector<th04::portable::sound::ElapsedWork>(

@@ -570,3 +570,89 @@ input/audio and historical MAIN exactness remain open. DOS fingerprint
 
 Lossless retirement reclaims about 472.70 MiB; all logical build/video/state
 contents, mode/nsmtime and protected frozen-source/receipt hashes are retained.
+
+## GDC text clock through elapsed OP work (v1396)
+
+Maintained view.cpp previously forwarded work only to resident sound. Its
+headless text counter advanced by admitted refreshes, losing resource/drawing
+intervals between them. The same frontend work entry now advances both owners,
+retaining sub-refresh time. `MainAssets::display_elapsed_ns` supplies the time
+from initial GDC callback to PMD installation, independently of the sound epoch.
+When an external elapsed-time observer takes ownership, it retains the current
+fractional origin and suppresses logical work/refresh admission into display
+time; external observation covers that time. Default adapters and epoch remain
+empty/zero. There is no fixed startup age, copied event count or bus-delay fit.
+
+Frozen native producer: 510 files, `ea5c016d0cd40bcb453bd9f6c27c6ec24c2513ec63342fa8be2fa8d6acc85d43`. Only view.cpp/view.hpp change;
+DOS source/headers/flags and fingerprint 6f5898dd remain unchanged. Cold GNU
+builds 71 programs and passes 69 CTests. Optimized UBSan builds seven selected
+targets and passes four sound contracts and the actual frontend caller.
+
+The independent original v1393 verifier/observations keep their old identities.
+Original OP load is 10FC, DGROUP 2030. Named hooks are decoded segment:offset:
+Logo 0A74:14F5, PI loaded 0A74:1523, PI drawn 0A74:1534, second song-command
+entry 0DA1:0264 (the PLAY observation), and measure end 0DA1:039D. The later
+logo-started hook 0A74:15D5 is a separate boundary, preserving the source claim.
+Its complete GDC stream binds the initial post-both callback state [0,1,32],
+first frame start and cadence. Raw PIC cycle budgets bind first Timer-B schedule
+and every target loading boundary. New inputs subtract first-GDC from first-B,
+then admit the same original loading work through maintained frontend adapters.
+The observed counter fields are assertions only. Two profiles have different
+initial display timestamps; do not substitute a universal 1.875 ms epoch.
+
+| Original CPU profile | 24,000 | 36,000 |
+| --- | --- | --- |
+| first GDC callback | 1.875 ms | 1.916666667 ms |
+| first-B display age (rounded input) | 162,850,542 ns | 113,377,278 ns |
+| decoded entry count | 12 | 9 |
+| Logo entry count | 16 | 12 |
+| PI loaded count | 20 | 14 |
+| PI drawn count | 23 | 17 |
+| PLAY count | 24 | 17 |
+| measure-ready count | 117 | 110 |
+
+All twelve original loading/readiness counter assertions per input pass in
+actual maintained FrontEnd with real PI/BFNT/music/effect/config and strict
+ROM. Sixteen executions (two inputs × four modes × GNU/UBSan) complete first
+OP startup; complete compiler output tables agree. Sound PLAY equals the supplied phase input:
+255,036,542 / 178,822,806 ns after installation, with 93-refresh readiness.
+Zero-work and graphics-only removal reject the independent epochs/counters.
+A separate display-only control keeps every sound interval and the same PLAY /
+READY sound state, but never advances its external display clock: completion
+and sound gates pass, while original display assertions reject. These gates
+must remain independent. An actual extra frontend checks one-nanosecond crossing
+of a fractional external origin, no double logical refresh and rollback rejection.
+
+Eight fresh default CLI runs cover all four driver profiles, full startup,
+four natural demos and fresh OP ready. All 129 files per run equal their
+corresponding immutable v1395 baseline pins. Muted private Linux Xvfb
+startup/selection/input/focus/release/exit passes with zero audio device opens.
+This renews scoped regression for the current source, not old receipts.
+
+The original cadence is 17.72322658483988 ms; the native interval remains the
+previous rounded 17,723,227 ns. Counter agreement here does not prove exact
+sub-refresh timing, hardware wait-edge alignment or physical scanout. Explicit
+bracketed loading inputs are not native per-function CPU estimates. Default
+resource/graphics/initial-epoch costs, full pictures, broader combat/process,
+chip/IRQ/audio, cross-emulator and Windows acceptance remain open.
+
+Replay producers: `.analysis/reconstruction/probes/native-gdc-work-v1396-v2/`;
+current source freeze and receipts: `.analysis/port64/native-gdc-work-v1396-v2/`.
+Restore retired inputs before another replay and use fresh namespaces:
+
+```sh
+python3 .analysis/reconstruction/probes/native-gdc-work-v1396-v2/verify_retention.py --restore
+```
+
+The original three-mode preparation stays immutable. A separate supplemental
+mode-3 reset readback binds both physical save files; each actual caller checks
+and records starting/final reset-file hashes before/after execution.
+
+V1 source 8657d4a2 is retained as rejected: actual GNU initialization prefix
+counts are +1 in ten places per CPU while ENTRY/READY agree. V2 moves OP
+initialization before the first headless refresh admission; epochs and work
+inputs are unchanged. Original failed receipt/producer stays immutable under
+`.analysis/reconstruction/probes/native-gdc-work-v1396/`.
+
+Lossless retirement reclaims 472.69 MiB; all logical build/video/state
+contents and protected source/receipt identities remain recoverable.
