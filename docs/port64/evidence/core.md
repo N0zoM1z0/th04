@@ -1,5 +1,38 @@
 # Core evidence
 
+## Complete signed IATAN2 displacement handling (v1402)
+
+`motion::angle_to()` now preserves MAIN's signed magnitude comparison at
+0000:1DC9, unsigned DIV and low-byte XLAT. Previously, it rejected every
+displacement containing -32768. The original returns 160 for (-32768,-32768),
+64 for (-32768,256), and 0 for (256,-32768). Unequal magnitudes with the other
+coordinate between -128 and 128 cause a guest divide error; native reports
+that fault as `std::domain_error`. Source-to-target subtraction still wraps
+before these decisions.
+
+`port64/verify_motion.py` executes the original complete FAR function at
+0000:1DA8 through RETF4, with MAIN relocated at load1000 and its actual table
+at DGROUP2134:021E. All 184,908 vectors agree, including all possible second
+coordinates when either displacement is -32768 and all 514 resulting DIV
+faults. Ordinary axes/diagonals and seeded nonzero origins exercise the shared
+caller path. Original code, table, target and native source/binary hashes are
+bound in `.analysis/port64/native-motion-v1402/original-comparison/receipt.json`.
+This is a function-level native comparison; the historical exact ledger stays
+unchanged.
+
+Cold Release and optimized UBSan motion contracts pass. UBSan reproduces all
+184,908 saved original results without diagnostics. Compiling the predecessor
+with the same caller rejects 130,558 otherwise returning vectors and fails the
+new boundary contract. The branch CI passes its 345 tests and ledger checks.
+
+To replay with a separately built `th04-port64-motion-contracts`, supply the
+DOS root containing pinned private targets and a fresh output directory:
+
+```sh
+python3 port64/verify_motion.py --root /path/to/th04 \
+  --native /path/to/th04-port64-motion-contracts --output /fresh/proof
+```
+
 Historical bounded results, preserved from `docs/PORT64.md`. Current state is
 [the port overview](../../PORT64.md). Original CPU execution and adapter scope
 remain explicit; successful component controls do not accept complete gameplay.

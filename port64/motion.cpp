@@ -40,19 +40,23 @@ Point polar(std::uint8_t angle, Subpixel length) {
 std::uint8_t angle_to(Point from, Point to) {
     const auto x = wrap(std::int32_t(to.x) - from.x);
     const auto y = wrap(std::int32_t(to.y) - from.y);
-    // The assembly's signed comparison of absolute magnitudes has an unusual
-    // INT16_MIN edge. Gameplay never reaches that displacement; reject it
-    // instead of introducing a silently different host quadrant or DIV fault.
-    if (x == -32768 || y == -32768) {
-        throw std::domain_error("iatan2 displacement outside gameplay range");
-    }
     const std::uint32_t ax = x < 0 ? -std::int32_t(x) : x;
     const std::uint32_t ay = y < 0 ? -std::int32_t(y) : y;
     if ((ax | ay) == 0) return 0;
     unsigned angle;
     if (ax == ay) angle = 32;
-    else if (ax > ay) angle = atan_ratio[(ay * 256u) / ax];
-    else angle = 64u - atan_ratio[(ax * 256u) / ay];
+    else {
+        // Original MAIN0000:1DC9 uses signed JL on the 16-bit absolute
+        // magnitudes. NEG leaves -32768 as 0x8000; it sorts below every
+        // other magnitude. DIV remains unsigned, and XLAT uses only AL.
+        const bool y_major = wrap(ax) < wrap(ay);
+        const auto numerator = (y_major ? ax : ay) * 256u;
+        const auto denominator = y_major ? ay : ax;
+        if (!denominator || numerator / denominator > 65535u)
+            throw std::domain_error("iatan2 divide error");
+        angle = atan_ratio[(numerator / denominator) & 255u];
+        if (y_major) angle = 64u - angle;
+    }
     if (x < 0) angle = 128u - angle;
     if (y < 0) angle = 256u - angle;
     return static_cast<std::uint8_t>(angle);

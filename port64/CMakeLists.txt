@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 project(th04_port64 LANGUAGES CXX)
 
+add_executable(th04-port64-motion-contracts motion_contracts.cpp motion.cpp)
+target_compile_features(th04-port64-motion-contracts PRIVATE cxx_std_17)
+
 # Pinned BSD3 chip engine; copyrighted game/chip ROM data stays external.
 add_library(th04-ymfm STATIC vendor/ymfm/src/ymfm_opn.cpp vendor/ymfm/src/ymfm_ssg.cpp vendor/ymfm/src/ymfm_adpcm.cpp)
 target_compile_features(th04-ymfm PRIVATE cxx_std_17)
@@ -296,6 +299,7 @@ endif()
 enable_testing()
 add_test(NAME portable-contracts COMMAND th04-port64-contracts)
 add_test(NAME live-main-contracts COMMAND th04-port64-live-contracts)
+add_test(NAME motion-contracts COMMAND th04-port64-motion-contracts)
 add_test(NAME player-shot-contracts COMMAND th04-port64-shot-contracts)
 add_test(NAME stage-enemy-contracts COMMAND th04-port64-enemy-contracts)
 
