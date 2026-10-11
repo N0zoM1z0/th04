@@ -1,11 +1,36 @@
 # Private build and analysis retention
 
-Native `port/modern-64` is at 48e05da, including GRCG, font and Gaiji
+Native `port/modern-64` is at 8f7f7d5, including GRCG, font and Gaiji
 address recovery. The separate startup/motion integration on
 `review/startup-motion-join-v1403` is frozen at 514 files / c2f8d689.
 Its verified snapshot predates those renderer changes. Attest a combined
 producer when integrating the two histories. The v1401 startup implementation
 already reached `port/modern-64` through fffcc83.
+
+## v1408 native text Gaiji
+
+Replay index in the isolated native tree:
+`port-motion-v1402/.analysis/port64/native-text-address-v1408/`.
+Producer 524/6f214e8c, seven selected programs, compiler metadata, complete
+original memory/write transcripts and GNU/UBSan outputs remain live. The
+reader checks all 2,656 comparisons and replays every original write against
+its seed. It also checks 757 protected v1405 native files and 30 closed DOS
+v1407 files without changing their proof identities.
+
+Retired 242 compiler-cache paths after a full path/hash/size/mode/nsmtime
+journal, gzip CRC, every archived blob and temporary metadata readback.
+515 source-backed Python caches bring net reclamation to 13.04 MiB after
+archive and journals. The cleanup producer's initially empty output log was
+pinned after it exited; the draft record and reader failure remain preserved.
+The cache archive and all other proof identities are unchanged.
+
+```sh
+python3 .analysis/worktrees/port-motion-v1402/.analysis/port64/native-text-address-v1408/verify_closure.py
+```
+
+The frozen v1405 strict current-source reader rejects 524/6f214e8c as expected.
+The new reader checks its source archive and retained proofs independently.
+Keep the 522/bac23324 parent frozen. No game campaign ran in this phase.
 
 ## v1407 DOS text Gaiji
 

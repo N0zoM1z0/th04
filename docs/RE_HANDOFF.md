@@ -5,6 +5,30 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Native text Gaiji migration (v1408)
+
+Native `TextPlane` now follows the original WORD coordinates, mutable text
+base and glyph/attribute store sequence. Sparse pages retain spill and alias
+writes while the existing visible arrays serve HUD, Game Over and registration.
+Ordinary frame copies stay near 8 KiB.
+
+All 664 native fixtures match original MAIN 0000:1B0C/1B50 and MAINE
+0000:0FC4/1008 at loads 1000/3333: 2,656 full memory comparisons. Optimized
+UBSan/bounds reproduces them. Cold core/five programs, five related contracts
+and native CI345 pass. The compiled predecessor rejects both edge and long
+string inputs; the string's partial visible banks agree despite its failure.
+
+Native `port/modern-64` is at 8f7f7d5, producer 524/6f214e8c. Proofs are in
+`port-motion-v1402/.analysis/port64/native-text-address-v1408/`. Verified
+archiving and source-backed cache cleanup reclaim 13.04 MiB net; current
+source/program/transcript closure and frozen native/DOS parents pass.
+See [text writer recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
+Next recover ANK/Shift-JIS writer addresses before long game campaigns.
+Historical exact remains 661/663 and the full goal stays active.
+
+The palette VSync recovery below remains a separate frozen review producer;
+it has not been merged into the text-writer producer.
+
 ## Native OP palette VSync wait recovery (v1407)
 
 Fixed native base48e05da now separates palette VSYNC_WAIT from frame_delay.
@@ -74,8 +98,7 @@ Historical exact remains 661/663. The full goal stays active.
 Replay index: `.analysis/reconstruction/probes/dos-text-gaiji-v1407/`;
 products: `.analysis/build/th04-text-gaiji-v1407/`. See
 [text Gaiji recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
-Next migrate these writer semantics into native `TextPlane`, whose current
-owner still limits writes to visible cells and fills attributes per glyph.
+The native `TextPlane` migration is indexed in v1408 above.
 Continue function recovery before long game campaigns.
 
 Root CI passes 451 tests, ledgers, catalog and private target/database checks.

@@ -10,6 +10,26 @@ Updated 2026-10-12. The full native goal remains active on `port/modern-64`, in
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
 
+## Native text Gaiji migration (v1408)
+
+`TextPlane` now uses the original WORD addresses and glyph/attribute sequence,
+including row spills, mutable text bases and wrapped string attribute counts.
+Sparse pages preserve writes outside the directly stored visible banks used
+by HUD, Game Over and score registration.
+
+All 664 native fixtures match 2,656 original MAIN/MAINE memory results at
+loads 1000/3333. Optimized UBSan/bounds reproduces them. Cold core/five
+programs, five related contracts and native CI 345 pass. The compiled
+predecessor rejects edge and 2,049-character controls; the rejected string's
+partial visible banks agree, so complete memory and failure status matter.
+
+Native `port/modern-64` commit 8f7f7d5 has producer 524/6f214e8c. Proofs:
+`port-motion-v1402/.analysis/port64/native-text-address-v1408/`. Verified
+cleanup reclaims 13.04 MiB net, with complete proofs and frozen parents intact.
+See [text writer recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
+Next recover ANK/Shift-JIS addresses. Historical exact remains 661/663.
+The palette VSync review below is a separate frozen producer, pending integration.
+
 ## Native OP palette VSync wait recovery (v1407)
 
 Fixed native base48e05da now separates palette VSYNC_WAIT from frame_delay.
@@ -94,8 +114,7 @@ Historical exact remains 661/663. The full goal stays active.
 Replay index: `.analysis/reconstruction/probes/dos-text-gaiji-v1407/`;
 products: `.analysis/build/th04-text-gaiji-v1407/`. See
 [text Gaiji recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
-Next migrate these writer semantics into native `TextPlane`, whose current
-owner still limits writes to visible cells and fills attributes per glyph.
+The native `TextPlane` migration is indexed in v1408 above.
 Continue function recovery before long game campaigns.
 
 Root CI passes 451 tests, ledgers, catalog and private target/database checks.
@@ -129,7 +148,7 @@ metadata readback; 629 protected files and final closure still pass.
 Source-backed Python caches add 8.48 MiB reclamation;
 combined cleanup is 31.14 MiB net. Programs, MAPs and complete proofs remain.
 
-Native `port/modern-64` is at 48e05da, including GRCG, font and Gaiji
+Native `port/modern-64` is at 8f7f7d5, including GRCG, font and Gaiji
 address recovery. The separate startup/motion integration on
 `review/startup-motion-join-v1403` is frozen at 514 files / c2f8d689.
 Its verified snapshot predates those renderer changes. Attest a combined

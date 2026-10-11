@@ -1,5 +1,33 @@
 # TH04 native text VRAM gaiji writers
 
+## Native memory owner (v1408)
+
+Native `TextPlane` now mirrors the recovered DOS writer addresses and store
+sequence. WORD coordinates and the mutable text base permit row spill and
+physical glyph/attribute aliases. Strings write all glyphs before filling
+attributes with the wrapped count. Existing visible arrays serve HUD/Game
+Over and score registration; sparse 256-byte pages retain additional addresses,
+keeping ordinary frame copies near 8 KiB.
+
+The native branch's `verify_text_address.py` reuses this root's attested
+original-instruction adapter. All 664 native fixtures agree with original
+MAIN 0000:1B0C/1B50 and MAINE 0000:0FC4/1008 at loads 1000/3333: 2,656 full
+80000h..DFFFFh memory comparisons. Native visible snapshots also agree with
+the physical-bank projection. Inputs cover 256 glyphs, WORD input edges,
+alternate bases, NUL and strings through 32,768 characters.
+
+Cold core/five programs and five related contracts pass. Optimized UBSan/bounds
+reproduces every native result. The compiled predecessor rejects X80/Y0 and
+the 2,049-character fixture. The edge differs in eight visible bytes; the
+string's partial visible banks agree despite its exception, demonstrating why
+the proof retains complete memory and the failure status.
+
+Native `port/modern-64` commit 8f7f7d5 has producer 524/6f214e8c. Complete
+compressed records, source, seven programs and the closure reader are in
+`port-motion-v1402/.analysis/port64/native-text-address-v1408/`.
+Native CI 345 passes; verified cleanup reclaims 13.04 MiB net. Historical exact
+remains 661/663. ANK/Shift-JIS address recovery is next.
+
 ## Original writer recovery (v1407)
 
 The maintained `gaiji_text.cpp` now reads `TextVramSeg`, whose original
@@ -41,7 +69,7 @@ The previous graphics Gaiji writer also passes its 4,800 controls against the
 new OP/MAINE products. Full source/program/transcript closure and frozen
 v1406 evidence are indexed under
 `.analysis/reconstruction/probes/dos-text-gaiji-v1407/`. Historical exact
-acceptance remains 661/663. Native `TextPlane` migration is the next owner.
+acceptance remains 661/663. Native `TextPlane` migration is indexed in v1408 above.
 
 ## Initial source migration (v860)
 
