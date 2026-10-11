@@ -1,5 +1,58 @@
 # TH04 native 64-bit bring-up
 
+## Native OP palette VSync wait recovery (v1407)
+
+Fixed native base48e05da now separates palette VSYNC_WAIT from frame_delay.
+Original decoded OP0000:2648..266D (38 bytes) branches on DGROUP0856:
+installed IRQ snapshots Count1 at1AC6 and waits for any change; otherwise it
+finishes the current GDC blank and waits for the next rising blank. Neither
+path clears Count1 or Count2 (1AC8). Native startup palette fades retain
+both words; frame_delay and Logo retain their different clear orders.
+Original fade helpers0000:0622..0664 and0666..06A3 call2648 before
+the palette loop and once per speed-loop iteration (0632/0643/0676/0687).
+
+Cold producer524/d9edcdf5 passes77 GNU programs/75 CTests and13 optimized
+UBSan programs/10 focused contracts. Each compiler passes32 unchanged-original
+controls at load1000/3333 and432 independent ideal raster/cadence vectors
+(1296 waits), including FFFF-to-zero and status/IRQ edge separation.
+Count1/GDC inputs are explicit consumer stimuli, not measured physical IRQs.
+The real48e05da startup predecessor fails the new counter-retention contract.
+Eight fresh muted startup/fourDemo/freshOP routes retain all129 output hashes
+per profile from frozen v1404; each passes15988 original selected-state boundaries.
+
+The first cold build failed the valid-final-edge overflow contract (74/75).
+Its source/program/logs remain frozen; v2 repairs exhaustion and passes.
+This batch changes native wait/startup source, with no new DOS product or
+historical exact promotion. The older25-byte compiler-service observation describes only the polling
+producer, not the complete original function. Shared DOS vsync_wait.cpp still implements only
+port polling; recover its installed-owner branch in a separate cold replay.
+Other native scene wait adapters, CPU/loading/ISR costs, complete pictures,
+Boss/death/process, second-emulator and Windows acceptance remain open.
+
+Review branch: review/native-gdc-poll-v1407. Replay index:
+.analysis/reconstruction/probes/native-gdc-poll-v1407/; native receipts:
+.analysis/port64/native-gdc-poll-v1407-v2/. Original extent SHA-256:
+989ba1d57373892c48f460097161f08d5391388535059d007327fda0f4e45b20.
+Focused commands are in validate.py/focused.json; original/native reader:
+port64/verify_gdc_poll.py. Recovery reader: verify_retention.py
+(--restore/--prefix for owned archived paths). Frozen v1404's736-file closure
+and3179-path/1489-blob archive pass without modifying old receipts.
+
+Verified archive retirement reclaims502.05 MiB net from this batch's
+successful/failed build intermediates, nonselected programs and duplicate
+capture outputs. Full path/hash/size/mode/nsmtime, CRC, every blob and protected
+proof are checked before deletion. Source freezes, selected programs, complete
+original controls/native vectors and failure evidence remain live.
+Both isolated full CI gates pass (root451/native345), with ledgers and diff checks.
+Pinned private targets/calibration pass; isolated private Ghidra/JDK checks skip,
+while original OP database was actually attested in root before recovery.
+Source-backed owned post-CI caches reclaim another16.35 MiB; this batch
+reclaims518.40 MiB net, disjoint from prior frozen cleanup.
+
+Goal active; CPU1/nice19 serial and muted; no Windows GUI/focus/keys/audio.
+
+## Earlier frozen milestones
+
 Work remains active. The v1389 analog DAC repair gives 40/40 complete raw RGB
 samples under supplied original display-event timing, and 37/40 with default
 timing; three blink-phase cases remain. Full physical scanout and broader
@@ -617,3 +670,34 @@ GNU/optimized UBSan after the Stage 1 fractional-scroll caller repair. GNU 70
 programs/68 CTests and focused UBSan 3 are current. See
 [the bounded demo evidence](../docs/port64/evidence/demo.md#v1374-originalnative-main-state-pairing).
 Full actor-pool, original/native picture and process fidelity remains open.
+
+## Joined native palette waits and text writers (v1412)
+
+The native merge retains both parents: ordinary WORD/Shift-JIS and Gaiji text
+producer `328585f`, and palette wait producer `f2a51e2`. Cold producer
+528/768091dc builds all 79 programs and passes all 77 CTests under both GNU
+Release and optimized UBSan/bounds. The earlier selected UBSan subset is
+historical evidence; this producer checks the complete graph.
+
+Both compilers pass 32 original OP 0000:2648 wait controls at loads 1000/3333,
+432 raster/cadence vectors (1,296 waits), 2,656 MAIN/MAINE Gaiji comparisons,
+all 65,536 WORD characters and 65,536 two-byte inputs, and 1,680 complete
+ordinary-text memory controls. Original Gaiji entries are MAIN 0000:1B0C/1B50
+and MAINE 0000:0FC4/1008; ordinary entries are MAIN 0000:229E/22F6.
+Retained original transcripts keep their target/helper pins and are read in
+full; their receipts are not reassigned to the new native source.
+
+Actual old `328585f` startup source fails the Count1-clear check (expected
+exit 1). Eight muted SDL dummy routes (GNU/UBSan × none/pmd/pmdb2/pmd86)
+complete startup, four demos and fresh OP. Each retains all 129 prior output
+hashes and passes 15,988 original selected-state boundaries. GNU/UBSan output
+sets agree. This remains scoped runtime agreement, with no exact, complete
+picture, physical CPU/IRQ timing or Windows acceptance claim.
+
+Private replay: `.analysis/reconstruction/probes/native-wait-text-v1412/`;
+producer: `.analysis/worktrees/native-wait-text-v1412/.analysis/port64/native-wait-text-v1412/`.
+`focused.json` records commands. `verify_retention.py --restore --prefix`
+restores owned archived paths; retirement reclaims 508.31 MiB net.
+Source, selected programs, full comparison streams, receipts and the real
+predecessor remain. Continue bounded native scene wait/hardware recovery;
+broader Boss/death/process routes, complete pictures and Windows remain open.

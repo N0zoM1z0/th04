@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/gdc_poll_contracts.cpp",
+    "port64/verify_gdc_poll.py",
     "port64/character_address_contracts.cpp",
     "port64/verify_character_address.py",
     "port64/text_address_contracts.cpp",

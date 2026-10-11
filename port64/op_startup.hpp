@@ -48,6 +48,7 @@ private:
     void queue(std::function<void()>);
     void drain();
     void wait(unsigned,bool inherited=false);
+    void wait_vsync();
     void fade(bool,unsigned,std::function<void()>);
     void palette_show();
     void apply_palette(const PiImage&,unsigned);
@@ -64,6 +65,7 @@ private:
     void update_pyros();
     const Assets& assets_;Sink sink_;Measure measure_;rng::Lcg32 random_;
     vsync::RasterClock* clock_;bool inherited_wait_=false;
+    std::optional<vsync::Wait> vsync_wait_;
     std::deque<std::function<void()>> tasks_;
     std::array<Pyro,256> pyros_{};Palette palette_{},logo_palette_{};
     unsigned tick_=0,waiting_=0,logo_frame_=0,slide_frame_=0,cel_=0,page_=0,fade_frame_=0;

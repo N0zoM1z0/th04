@@ -32,8 +32,14 @@ public:
     // of simulated carry-skips. Count1 cannot wrap before reaching threshold.
     std::uint64_t interrupts_until(std::uint16_t threshold) const {
         if(one_>=threshold)return 0;
+        return pulses_until(std::uint64_t(threshold-one_));
+    }
+    // VSYNC_WAIT snapshots Count1 and waits for a change without clearing it.
+    // One counted IRQ also changes FFFFh to0000h.
+    std::uint64_t interrupts_until_change() const {return pulses_until(1);}
+private:
+    std::uint64_t pulses_until(std::uint64_t remaining) const {
         if(!active_)throw std::logic_error("VSYNC wait has no IRQ owner");
-        const auto remaining=std::uint64_t(threshold-one_);
         std::uint64_t low=1,high=remaining*65536;
         while(low<high) {
             const auto middle=low+(high-low)/2;
@@ -42,7 +48,6 @@ public:
         }
         return low;
     }
-private:
     std::uint16_t one_=0,two_=0,accumulator_=0,increment_=0;
     bool active_=false;
 };
@@ -78,10 +83,32 @@ public:
         if(at<now_)throw std::logic_error("VSYNC raster phase moved backwards");
         return at-now_;
     }
+    std::uint64_t until_change() const {
+        return edge(add(frame_,counter_.interrupts_until_change()-1))-now_;
+    }
+    // Uninstalled VSYNC_WAIT polls a strict next GDC rising edge. ISR edge
+    // adjustment and cadence skips do not move this physical status edge.
+    std::uint64_t until_vblank() const {
+        const auto after=[this](std::uint64_t frame) {
+            try {return raster_edge(frame)>now_;}
+            catch(const std::overflow_error&) {return true;}
+        };
+        std::uint64_t low=0,high=frame_ ? frame_ : 1;
+        while(!after(high))high=add(high,high);
+        while(low<high) {
+            const auto middle=low+(high-low)/2;
+            if(!after(middle))low=middle+1;else high=middle;
+        }
+        return raster_edge(low)-now_;
+    }
     template<class Sink> void advance(std::uint64_t ns,Sink sink) {
         const auto finish=add(now_,ns);
-        while(next_edge()<=finish) {
-            now_=next_edge();const bool counted=counter_.interrupt();
+        while(true) {
+            std::uint64_t at;
+            try {at=next_edge();}
+            catch(const std::overflow_error&) {break;} // No representable future edge.
+            if(at>finish)break;
+            now_=at;const bool counted=counter_.interrupt();
             frame_=add(frame_,1);sink(now_,counted);
         }
         now_=finish;
@@ -100,6 +127,9 @@ private:
         return a*b;
     }
     std::uint64_t edge(std::uint64_t frame) const {
+        return add(raster_edge(frame),raster_.irq_adjustment_ns);
+    }
+    std::uint64_t raster_edge(std::uint64_t frame) const {
         const auto lines=add(multiply(frame,raster_.vertical_total),raster_.retrace_start);
         const auto cycles=multiply(lines,raster_.horizontal_total);
         // Quotient/remainder keeps hours of phase without multiplying a
@@ -107,7 +137,24 @@ private:
         const auto numerator=multiply(cycles%raster_.character_hz,1000000000);
         const auto elapsed=add(multiply(cycles/raster_.character_hz,1000000000),
             (numerator+raster_.character_hz-1)/raster_.character_hz);
-        return add(add(epoch_,elapsed),raster_.irq_adjustment_ns);
+        return add(epoch_,elapsed);
     }
+};
+// Original OP0000:2648 selects the installed Count1-change path at entry;
+// otherwise it polls GDC status. Neither path clears either counter.
+class Wait {
+public:
+    explicit Wait(RasterClock& clock):clock_(&clock),owned_(clock.counter().active()),
+        initial_(clock.counter().one()),deadline_(owned_ ? 0 : clock.now()+clock.until_vblank()) {}
+    bool ready() const {
+        return owned_ ? clock_->counter().one()!=initial_ : clock_->now()>=deadline_;
+    }
+    std::uint64_t until_ready() const {
+        if(ready())return 0;
+        return owned_ ? clock_->until_change() : deadline_-clock_->now();
+    }
+    bool interrupt_owned() const {return owned_;}
+private:
+    RasterClock* clock_;bool owned_;std::uint16_t initial_;std::uint64_t deadline_;
 };
 }

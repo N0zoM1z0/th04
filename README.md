@@ -21,28 +21,16 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Explicit loading and drawing work now advances
-both resident sound and the headless GDC text clock, retaining fractional time.
-An independent display epoch preserves the original separation from PMD
-installation. Retained OP frontend checks match all twelve original loading /
-readiness counters per CPU input; freezing only display time rejects while
-sound timing still passes.
+Native development is active. The joined producer preserves palette VSync
+waits and the latest WORD, Shift-JIS and Gaiji text writers. Both cold GNU
+and optimized UBSan/bounds builds pass the complete 77-test native graph.
+Original-instruction text/wait comparisons and eight muted startup/four-Demo/
+fresh-OP routes pass. Source and acceptance details are in the
+[current handoff](docs/RE_HANDOFF.md).
 
-The latest product builds pass 70 GNU CTests; optimized UBSan passes five
-sound/VSYNC contracts. Eight full startup/Demo routes reproduce all 129 retained
-output files per driver profile. Earlier private Linux Xvfb checks used mute
-and opened no audio device. Default resource/graphics/initial-epoch costs still
-need a model; full pictures, broader gameplay/process and Windows input/audio
-remain open. See the handoff for scoped evidence and cleanup recovery.
-
-Complete original OP traces verify 208 counted IRQs across two CPU budgets.
-Native has unsigned counters and a separate raster clock. New original
-instruction execution also repairs repeated START: it preserves nonzero cadence
-phase, preventing a spurious counted IRQ. GNU/UBSan agree across twelve seeded
-lifecycle cases. The shared DOS assembly now preserves phase and queries before resetting
-counters. Three original/linked DOS owners agree in 108 seeded cases each;
-a fresh four-Demo input/score/RNG regression passes. PMD busy-service and
-inherited Logo integration follow.
+Physical CPU/loading/ISR costs, other scene waits, complete pictures, broader
+Boss/death/process routes and Windows input/audio remain open. Historical
+exact acceptance remains separate from these runtime results.
 
 ## Build and run
 
