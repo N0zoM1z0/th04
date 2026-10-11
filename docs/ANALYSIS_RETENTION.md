@@ -321,3 +321,35 @@ python3 .analysis/reconstruction/probes/native-initial-v1383-v2/verify_retention
 Without --restore it performs complete temporary readback. Old v1382 proof
 keeps its add39f3c source scope and cannot attest current 50ca49c6 inputs.
 Whole native pictures/cache/margins/RGB/scanout/broader gameplay remain open.
+
+## Full RGB composition probe retirement (v1384)
+
+All jobs are terminal. The native MPN-palette producer retains 509 inputs,
+manifest ba6eff48; both programs, independent pinned emitter and failed owner
+probe remain live. No DOS product input changes. Main441/native345 CI pass.
+583 complete raw/reference/native capture and build-intermediate files and
+1,044 source-backed caches retire only after complete SHA/size/mode/nsmtime,
+gzip EOF and temporary-restoration checks. 25,495 protected hashes include
+old proofs and the previously unlisted closed v1383 terminal-appender failure
+and v3 script. Before/after deletion checks pass. Net allocated reclamation is
+289,800,192 bytes (276.4 MiB) after archive cost, before journal cost.
+The complete archive is approximately11 MiB.
+
+From DOS root, restore before diagnostic reader replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-composite-v1384/verify_retention.py --restore
+```
+
+Without --restore it temporarily verifies every recovery. Journal SHA-256:
+45d856ca61d328bbe4c88b94be6e5abdc35913e83a0e58dfc05d0d68771304d6.
+The older50ca49c6 proof cannot attest current ba6eff48 inputs. This journal
+preserves those frozen sources without restamping them. Current protected
+inventory excludes its writing retirement log; this terminal appender was
+created afterward and is separately retained. See focused demo evidence for
+full rawRGB, explicit DAC diagnostics and open blink/CG/scanout boundaries.
+
+The separately retained replay_compositor.py verifies all 120 entire RGB hashes
+using only 41 temporary recovered inputs, then removes them. Its analog-nibble
+and blink controls reject equality. No permanent re-expansion is needed for
+this focused replay; it does not restamp the earlier 25,495-file inventory.

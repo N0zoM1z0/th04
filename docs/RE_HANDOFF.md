@@ -10,42 +10,56 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1383 restores Stage4 background publication and the tail scroll-copy handoff.
-Observed MAIN_01_TEXT 0AAF:0098 calls background at 00DE before carpet at 0113.
-Actual initial fill 0FB2, tile render 20C8 and carpet 3FF4 explain the first
-124,439 disagreements. Tail copier 0FFE..10B3 passes 48 ordered WORD controls
-(height 1..16, tile-row/400-row wrap). The snapshot-only e516f7f3 intermediate
-misses the tail and adds 2,100 incorrect edge pixels; it remains unaccepted.
+v1384 repairs native stage-palette ownership. Target-observed MAIN
+0AAF:03E0..06DF setup loads MPN after BMT/BFT. MPN_LOAD at 0E0C and shared
+130E:0189..0240 own the final palette. All 40 complete original 48-byte analog
+snapshots equal the correct MPN, including Marisa's ST10. Native previously
+retained BMT and Stage1's temporary yellow color zero.
 
-Final native view retains pre-callback ring inputs and post-tail copied rows.
-All 133,251 actual changes equal the original: 129,895 in the first sample and
-3,356 in the second; 38 entire index/RGB samples remain unchanged. All 40
-standard sampled game areas now have zero differences. Ten separately
-instrumented GNU lighting samples/full text planes also pass, including frame
-1666's 7,498→0 repair. Whole pictures, cache/margins/RGB, physical GDC/scanout
-and broader routes remain open.
+Only view.cpp changes among 509 inputs (manifest ba6eff48…). Both changed TUs
+are cold-built/relinked with attested unchanged v1382 objects. The earlier
+whole cold build, CTests and full-pool producers retain their identities;
+ordinary Boss routes remain unaccepted.
 
-Actual muted SDL-dummy GNU/optimized UBSan OP→four demos→OP preserves all
-15,988 selected scalar/count boundaries, 15,984 full shake and 81-byte splash
-states, and 40 canonical 8,000-byte TRAM samples. All 126 capture files match;
-parent scalar/shake/splash hashes stay unchanged. Frozen readers replay.
-Only view.cpp changes among 509 inputs (manifest 50ca49c6…). Both view TUs are
-cold-built/relinked with attested unchanged v1382 objects; its whole-cold
-71-program/69-CTest/full-nine-pool producers keep their separate identities.
+Actual muted SDL-dummy GNU/optimized UBSan OP→four demos→OP has 126 identical
+capture files. All 40 entire indices/TRAM and six parent state/shake/splash/
+display/save hashes remain unchanged; all 40 sampled game areas stay zero.
+Final MPN selection changes 720,358 full-picture sample RGB pixels.
 
-Recipes: DOS-root .analysis/reconstruction/probes/native-initial-v1383/ and
-native-initial-v1383-v2/; final receipts: native
-.analysis/port64/native-initial-v1383-v2/. Restore archived samples/build inputs
-before replay; failures, sources and programs remain immutable.
+Independent unchanged pinned DOSBox-X line/font/GDC sources equal the attested
+archive. The actual header confirms sizeof232, old offsets and master blink
+state offset196. Full 640×400 RGB is retained for captured/on/off blink.
+Raw RGB has 12 zero and 28 unequal samples. Emulator 4→6→8 DAC replication
+differs from native 17×n. Explicit diagnostic projection leaves five sets of
+556 always-visible Demo-label pixels: Demo1/3709, Demo2/3379 and
+Demo4/1952,3379,3996. Forced-visible projection has 40 zeros, without raw or
+complete-picture acceptance. CG RAM is reconstructed from BMP/GAMEFT;
+text-scroll/CRT defaults and physical scanout remain unaccepted.
+
+Next recover the independent refresh/blink clock and capture live CG RAM,
+text-scroll/CRT registers, then extend paired ordinary Boss/death/process routes.
+Full fidelity remains active. Candidate-local-attested provenance and deferred
+historical carpet/checkerboard exactness remain separate.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-composite-v1384/;
+native receipts: .analysis/port64/native-composite-v1384/. The failed eight-call/
+load-linear owner probe is retained; corrected segment-aware v2 and final
+readers pass. Restore retired inputs before replay. v1383 remains separately
+frozen at 50ca49c6 and cannot attest current ba6eff48 source; see focused demo
+evidence.
 
 All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass.
-Full recovery guards pass; 434.7 MiB reclaimed before journal cost.
-Restore with the v1383-v2 verify_retention.py --restore command from DOS root.
-Old source/proof identities remain separate; see ANALYSIS_RETENTION.md.
+Full lossless recovery checks pass for 583 retired files and 1,044 source-backed
+caches, with 25,495 protected hashes and 509 source pins. Net 276.4 MiB is
+reclaimed after the 11 MiB archive, before journal cost; programs, sources,
+original references and failures remain retained. From DOS root, restore with:
 
-Next compare complete-picture margins/cache/composition and physical GDC/
-scanout, then extend paired ordinary gameplay/process routes. Complete native
-fidelity remains active; historical exactness remains separate.
+```sh
+python3 .analysis/reconstruction/probes/native-composite-v1384/verify_retention.py --restore
+```
+
+Without --restore it checks every recovery in temporary space. Old proofs keep
+their original source scopes; see ANALYSIS_RETENTION.md.
 
 Retained v1380 (native `f6e71fa`) repairs Marisa laser color from the pre-update
 modulo. All ten sampled Demo 2 game areas remain zero. Its original CPU

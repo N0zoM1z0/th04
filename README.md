@@ -21,39 +21,26 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native work is active on this branch. v1375 pairs all four complete demos with
-the original on nine complete actor/effect pools at 15,984 pre-score updates,
-plus 15,988 input/score/player/RNG/count boundaries. GNU and optimized UBSan
-agree after connecting missing Midboss yellow bonus popups. The item owner also
-retains its complete record fields. All inactive bytes and enemy STD-relative
-script offsets remain compared. GNU produces 70 programs and passes 68 CTests;
-eight pool-reader controls and a source mutation rejection pass. Original/native
-pictures, other globals, broader routes and physical Windows remain open. See
+Native development is active on this branch. The current v1384 repair selects
+the final MPN stage palette, including Marisa's ST10 palette, instead of the
+temporary BMT palette. It changes 720,358 sampled RGB pixels. Actual muted GNU
+and optimized UBSan OP→four demos→OP produce 126 identical capture files;
+all 40 complete indices/text planes and parent state/shake/splash traces stay
+unchanged. All 40 sampled game areas retain zero index differences.
+
+An independent compositor uses unchanged, attested DOSBox-X line rendering and
+GDC stepping. Full raw RGB remains unequal in 28 samples; 12 initial curtain
+samples are zero. Explicit diagnostics isolate the emulator's DAC quantization
+and five 556-pixel Demo-label blink differences. Font RAM and extra text/CRT
+registers still need capture. Diagnostic projection is not raw or complete
+picture acceptance; physical scanout and broader routes remain open.
+
+Only view.cpp changes among 509 inputs. Its two changed TUs are cold-built and
+relinked with attested v1382 dependencies. That earlier whole cold build,
+69 CTests and complete nine-pool comparison retain their producer identities.
+Scoped Linux Reimu A Normal/Lunatic/Extra clear/save/restart evidence remains
+separate; physical Windows input/audio acceptance remains open. See
 [the current native handoff](docs/RE_HANDOFF.md).
-
-v1376 additionally verifies selected state through the actual idle OP→four demos
-→OP FrontEnd. It restores the missing yellow DEMO PLAY text after fade-in;
-40 label spans, including frames72/73/74, agree with original text on GNU and
-optimized UBSan.
-v1377 aligns DOS presentation after the complete update: all 40 full canonical
-text-plane samples match GNU and optimized UBSan, including score/HUD and
-DEMO PLAY. The complete original video stream and all 15,988 selected state
-boundaries remain verified. Whole graphics/RGB, physical blink and scanout
-acceptance remain open; those comparisons retain their v1376 producer.
-
-Current v1383 preserves Stage4 background draw order and tail scroll copies.
-All 40 standard sampled game areas agree on GNU and optimized UBSan. The first
-two samples change 133,251 pixels, all equal to the original; 38 complete
-index/RGB samples stay unchanged. Ten additional, separately instrumented GNU
-lighting samples and full text planes also agree, repairing another 7,498 pixels
-at frame 1666. Complete pictures remain open.
-
-All 126 actual capture files agree across GNU/UBSan, preserving 15,988 selected
-state/count boundaries, 15,984 full shake and splash states, and 40 complete
-text planes. Only view.cpp changes; bounded cold TU builds reuse attested
-unchanged v1382 objects. Its full cold build, 69 CTests and nine complete actor
-pool comparison retain their own producer identities. Whole margins/cache/RGB,
-physical scanout, broader routes and Windows input/audio acceptance remain open.
 
 ## Build and run
 

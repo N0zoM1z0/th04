@@ -900,3 +900,66 @@ python3 .analysis/reconstruction/probes/native-initial-v1383-v2/verify_retention
 Without --restore it performs complete temporary readback. Old v1382 proof
 keeps its add39f3c source scope and cannot attest current 50ca49c6 inputs.
 Whole native pictures/cache/margins/RGB/scanout/broader gameplay remain open.
+
+## MPN palette ownership and full RGB composition diagnostics (v1384)
+
+Target-observed MAIN 0AAF:03E0..06DF stage setup calls MPN_LOAD at
+0AAF:0E0C..0E80 after the stage's temporary BMT/BFT palette. Two compiled
+call sites at 05D9/0651 share the other stages' tail. Shared 130E:0189..01AD
+MPN_PALETTE_SHOW and 01AE..0240 MPN_LOAD_PALETTE_SHOW preserve the six-byte
+header followed by 48 RGB bytes. All 40 complete original analog-palette
+snapshots equal the selected MPN high nibbles: ST03/ST10/ST02/ST01. Marisa
+Stage1 uses ST10; its earlier yellow color zero is also overwritten. The first
+probe incorrectly expected eight unmerged calls and decoded load-linear offsets;
+it remains failed, with a separate segment-aware v2 reader.
+
+Native now selects the final MPN palette, including Stage1 playchar selection
+and subsequent stage installations. Only view.cpp changes among 509 source
+inputs (manifest ba6eff48774660b31367e68f4674362defed48110b666a7ed5cf410efa951839).
+GNU and optimized UBSan cold-build that TU/relink using attested unchanged
+v1382 core/main/audio/ymfm objects. Whole-current cold/69CTest/full-pool and
+ordinary Boss-route acceptance are not claimed.
+
+Both actual muted SDL-dummy OP→four demos→OP producers have 126 identical
+complete capture files. All 40 entire graphics-index and canonical TRAM samples
+remain unchanged, preserving their zero sampled game-area differences. Six
+complete state/shake/item-splash/display/save hashes equal their v1383 parent;
+the parent's 15,988 selected boundaries and 15,984 shake/splash comparisons
+keep their separate original reader identity. MPN selection changes 720,358
+actual full-picture sample RGB pixels.
+
+The independent compositor compiles unchanged line rendering, font BMP loading,
+text-row logic and GDC address stepping from the pinned DOSBox-X archive
+199aa35f (archive d990ece1…, binary 6e1a6e70…). Seven complete source files
+equal the archive. g++8 SHA9cab0384… reproduces sizeof232 and all old offsets,
+including newly checked master cursor_blink_state offset196. It retains all
+40 complete 640×400 RGB outputs for captured, forced-visible and forced-hidden
+blink; fixed captured pages are used, without cropping or hiding cache bytes.
+
+Full raw emulator RGB still differs in 28 samples: 12 raw-zero samples are
+the initial curtains. The pinned emulator's 4→6→8 bit replication yields,
+for example, 6→25→101 and 8→34→138, versus native 102/136. An explicit
+diagnostic projection to 17×n leaves exactly five 556-pixel differences:
+Demo1/3709, Demo2/3379, Demo4/1952,3379,3996. Captured master blinkstate0
+suppresses the DEMO PLAY glyphs there; native currently ignores attribute bit2.
+Forced-visible blink plus that diagnostic projection gives 40 zeros. This is
+neither raw equality nor complete-picture acceptance. Native DAC conversion is
+unchanged; recovering the independent refresh/blink clock is the next owner.
+
+Font RAM is reconstructed from pinned FREECG98.BMP and GAMEFT.BFT, with explicit
+text-scroll/CRT defaults. Those additional registers and live CG mutations
+were not captured, and programmed-frame reconstruction does not attest physical
+scanout. Capture those surfaces and the blink clock before broader acceptance.
+No original executable, DOS product input or historical exact state changes.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-composite-v1384/;
+receipts/sources/programs: native .analysis/port64/native-composite-v1384/.
+prepare.py restores 200 complete old inputs into a fresh namespace, leaving
+v1383 proofs immutable. Preparation and composition producers reserve fresh
+output namespaces. For existing capture-reader replay, restore retired inputs
+then use compare_final.py and verify_control.py. The independent
+replay_compositor.py instead temporarily recovers only 41 archived inputs,
+reproduces all 120 complete RGB hashes and rejects analog-nibble/blink controls
+(the latter changes 556 pixels), then removes all temporary files. It needs no
+permanent restoration. The post-retirement reader and receipt have separate
+source hashes and do not expand the earlier protected inventory.

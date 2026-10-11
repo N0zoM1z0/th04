@@ -137,6 +137,16 @@ uint32_t palette_color(const PiImage& image, unsigned index) {
         component(2);
 }
 
+std::array<std::uint8_t,48> mpn_palette(const Bytes& bytes) {
+    require_view(bytes.size()>=54 && bytes[0]=='M' && bytes[1]=='P' &&
+                 bytes[2]=='T' && bytes[3]=='N',"invalid MPN palette header");
+    std::array<std::uint8_t,48> palette{};
+    // MPN has a six-byte header followed by the final stage palette in RGB.
+    // Its load follows stage setup's temporary BFNT palette installation.
+    std::copy_n(bytes.begin()+6,palette.size(),palette.begin());
+    return palette;
+}
+
 Frame background_frame(const PiImage& image) {
     require_view(
         image.width && image.height && image.width % 2 == 0 &&
@@ -661,16 +671,15 @@ struct MainSprites {
           background(assets.map, assets.standard) {
         require_view(background.required_image_count() <= reimu_tiles.count() &&
                      background.required_image_count() <= marisa_tiles.count(), "MAP references absent MPN tile");
-        // stage1_setup appends ST00.BMT after the 12 ST00.BFT slots, installs
-        // its palette, then sets color zero's red/green components to FF.
+        // stage1_setup appends ST00.BMT after the 12 ST00.BFT slots. The
+        // following MPN load replaces its temporary palette and color zero.
         // The two sheets have different widths (32 and 64 pixels).
         require_view(stage_tiles.count()==12 && boss_tiles.count()==12 &&
                      boss_tiles.width()==64 && boss_tiles.height()==32 && boss_tiles.has_palette(),
                      "Stage 1 BFNT append contract changed");
         for(unsigned c=0;c<2;++c)
             bombs[c]=std::make_unique<bomb::Graphics>(assets.bomb_tiles[c],assets.bomb_pictures[c],assets.items);
-        palette.palette = boss_tiles.palette();
-        palette.palette[0]=255;palette.palette[1]=255;
+        palette.palette = mpn_palette(assets.reimu_map_tiles);
         for(unsigned i=0;i<12;++i) { stage_slots[128+i]={&stage_tiles,i};stage_slots[140+i]={&boss_tiles,i}; }
         require_view(explosion.width()==48 && explosion.height()==48 && explosion.count()==1 &&
                      backdrop.width==384 && backdrop.height==128 && backdrop.image_count==1 &&
@@ -685,7 +694,7 @@ struct MainSprites {
     void install_stage(std::unique_ptr<StageSprites> next) {
         clean_stage();extra_faces.reset();extra_backdrop.reset(); // Clears the preceding dynamic bank and face override.
         cdg_released.fill(false);
-        palette.palette=next->boss ? next->boss->palette() : next->stage.palette(); // Stage5 has BFT palette, no BMT.
+        palette.palette=mpn_palette(next->assets.map_tiles);
         background=std::move(next->background);
         second=std::move(next);
         for(unsigned i=0;i<second->stage.count();++i) stage_slots[stage_end++]={&second->stage,i};
@@ -2079,6 +2088,9 @@ private:
             require_view(!resource.standard.empty(),"first MAIN stage resources missing");
             sprites_->install_stage(std::make_unique<StageSprites>(resource,loaded_stage_));
             sprites_->standard=resource.standard;
+        } else {
+            sprites_->palette.palette=mpn_palette(application_.resident().playchar==application::Playchar::reimu ?
+                assets_->reimu_map_tiles : assets_->marisa_map_tiles);
         }
         if(score_store_)score_store_=std::make_unique<score_file::HostStore>(score_store_->path().parent_path());
         main_=std::make_unique<gameplay::State>(application_,mode_,player::LifeState{},score_store_.get());
