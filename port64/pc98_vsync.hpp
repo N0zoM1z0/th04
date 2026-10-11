@@ -5,12 +5,13 @@
 
 namespace th04::portable::vsync {
 // OP decoded 0000:25C6 increments both unsigned words unless adding the
-// cadence increment carries. START resets even an already installed owner;
+// cadence increment carries. START resets both counters even when installed,
+// but preserves the cadence accumulator (OP decoded 0000:2552..25BB).
 // frame_delay and Logo clear only Count1, at different points in their waits.
 class Counter {
 public:
     void start(std::uint16_t increment=0) {
-        one_=two_=accumulator_=0;increment_=increment;active_=true;
+        one_=two_=0;increment_=increment;active_=true;
     }
     void end() {active_=false;}
     void clear_wait() {one_=0;}

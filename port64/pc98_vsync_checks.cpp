@@ -13,6 +13,15 @@ int main() {
                 counter.interrupts_until(2)==2,"Logo reset preserves Count2");
         counter.interrupt();counter.interrupt();counter.clear_wait();
         require(counter.two()==106,"second Logo wait");
+        Counter restart;restart.start(65535);restart.interrupt();
+        restart.start(13311);
+        require(restart.one()==0 && restart.two()==0 && restart.accumulator()==65535,
+                "installed START preserves cadence accumulator");
+        require(!restart.interrupt() && restart.accumulator()==13310,
+                "preserved phase skips first IRQ after START");
+        restart.end();restart.start();
+        require(restart.accumulator()==13310 && restart.interrupt() && restart.two()==1,
+                "END/START changes increment while retaining cadence phase");
         counter.start();for(unsigned i=0;i<10;++i)counter.interrupt();counter.clear_wait();
         require(counter.one()==0 && counter.two()==10 && counter.interrupts_until(0)==0,
                 "zero frame_delay still clears Count1");
