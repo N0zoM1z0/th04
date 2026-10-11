@@ -23,6 +23,7 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'verify_gaiji_io_clock.py': ('runtime', 'Verify original OP Gaiji port counts, complete relocated hooks and elapsed I/O clocks across CPU/delay controls.'),
     'verify_op_loading_clock.py': ('runtime', 'Verify original OP loading phases, guest DOS return frames and fractional clocks; reject incomplete zero-exit captures.'),
     'verify_op_startup_clock.py': ('runtime', 'Verify original FM86 OP startup, cold PMD installation and complete GDC clocks with rejecting mutations.'),
     'build.py': ('build', 'Build/publish local-source DOS products after all requested build and link audits.'),

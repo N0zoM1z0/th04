@@ -1300,3 +1300,18 @@ journals, closed proofs and source freezes retain their original identities.
 python3 .analysis/reconstruction/probes/native-clock-owners-v1390/verify_retention.py
 python3 .analysis/reconstruction/probes/native-clock-owners-v1390/verify_retention.py --restore
 ```
+
+### Original Gaiji I/O clocks (v1394)
+
+CPU0/nice19 serial original captures generated no builds. Lossless deduplication
+retains 49 logical HDI/verifier-stream files in 15 content-addressed blobs and
+reclaims 604.43 MiB. Complete and failed inner captures keep their identities.
+Full gzip CRC/EOF/member SHA/size/mode/nsmtime and protected proof readback use
+`.analysis/reconstruction/probes/native-gaiji-clock-v1394/verify_retention.py`
+from the DOS root; `--restore` recovers logical files. The previous temporary
+container is retired after its extracted members verify; its compressed bytes
+are not claimed as live replay input. The separate cleanup-close receipt seals
+the cleanup writer's actual terminal stdout after process exit.
+
+Post-CI source-backed cache cleanup reclaims another 16.69 MiB; the full
+CI gates pass (root 441 / native 345), with ledger and diff checks.

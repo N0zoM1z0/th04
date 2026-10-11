@@ -54,23 +54,17 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. The repaired PMD application still installs from
-cold state with the original observed 73.728 ms first Timer B period. New
-read-only OP captures separate startup loading and drawing work: changing only
-CPU budget from 24,000 to 36,000 reduces the Logo PI load phase from 66.98 to
-44.62 ms and its drawing phase from 61.66 to 41.04 ms. Gaiji work scales
-differently; there is no universal startup-delay constant.
+Native development is active. PMD installation preserves the original first
+Timer B period of 73.728 ms. New original OP captures isolate Gaiji work:
+with default emulator I/O delay it takes 40.24 / 35.00 ms at two CPU budgets;
+turning off only 8-bit I/O delay gives 17.13 / 11.40 ms. Complete target loads,
+GDC clocks and actual port counts pass, with rejecting negative controls.
+These emulator timings guide clock ownership; they are not fixed native waits.
 
 The unchanged native producer retains its cold GNU 69 CTests, three optimized
-UBSan PMD contracts and four driver-profile Demo comparisons. New GNU / UBSan
-service probes with each original's measured installation age agree within
-1 ms sampling; zero-age controls complete but fail the same timing check.
-These diagnostics do not pair default native loading clocks. A real interrupted
-GDB capture exited zero without completion; the new reader rejects it.
-
-Retained Demo state/RNG/draw/shake/configuration/save evidence covers 15,988
-selected seams. Complete default RGB counts remain scoped diagnostics, with
-broader gameplay/process, physical scanout and Windows input/audio still open.
+UBSan PMD contracts and four driver-profile Demo comparisons. Measured-age
+service diagnostics remain scoped; default resource/drawing clocks, complete
+pictures, broader gameplay/process routes and Windows input/audio stay open.
 See the handoff for current evidence, limits and cleanup recovery.
 
 Historical exact acceptance has its own contract; runtime agreement does not

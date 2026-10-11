@@ -435,3 +435,20 @@ broader gameplay/process, physical scanout and Windows input/audio still open.
 See the handoff for current evidence, limits and cleanup recovery.
 
 Unchanged native producer: `9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`. Native evidence commit: `7416a91`.
+
+## Original Gaiji I/O elapsed work (v1394)
+
+Development remains active. Four fresh original OP captures isolate the
+emulator I/O owner: default Gaiji loading is 40.235458 / 34.996667 ms at fixed
+24,000 / 36,000 cycles; only changing 8-bit I/O delay to zero gives 17.134000 /
+11.404611 ms. Actual 8,192 read / 25,604 write accesses and pinned integer debit
+rules account for 22.829167 / 23.412333 ms of Gaiji work. Complete loaded target,
+GDC replay, raw PIC clocks and negative controls pass. This is DOSBox-X timing,
+not a physical bus or fitted native wait.
+
+Native source remains the 510-file `9cfe100a` producer; this batch changes only
+evidence/docs and adds the ROOT Gaiji verifier. Next establish elapsed-work
+handoffs across native asset loading, drawing and process entry. Previous
+GNU/UBSan/Demo/window proofs keep their old producer identities; default clocks
+and broader fidelity remain open. See the handoff and focused differential note.
+Native evidence commit: de21a71.
