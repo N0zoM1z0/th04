@@ -1,5 +1,37 @@
 # Private build and analysis retention
 
+## v1393 original OP loading work
+
+The original 24,000/36,000 CPU pair, complete strict readers, guest DOS return
+checks and GNU/UBSan measured-age/zero-age service probes are terminal.
+Native product source is unchanged at 510-file producer `9cfe100a`; its frozen
+source and closed build/program proofs remain owned by v1392. No fresh native
+cold build or Demo/window acceptance is claimed here.
+
+Retirement reclaims **103.23 MiB after archive/journal**, retaining a **60.40 MiB**
+archive with 22 complete files, including eight disposable HDIs. Full gzip
+CRC/EOF, member SHA/size/mode/nsmtime, all 33,284 inherited/current protected
+hashes and 510 unchanged producer pins pass before and after deletion. Unique
+complete clock streams/raw loads, source, receipts and the first interrupted
+capture remain live. Its incomplete inner gzip remains failed; verified outer
+archiving cannot upgrade it. A further compression experiment saved only
+0.42 MiB; the generated duplicate was dropped and the simple source archive
+kept unchanged. Its recipe and bit-exact readback receipt remain available.
+Both full CI gates pass (441 / 345 tests), followed by 16.66 MiB of source-backed
+post-CI cache cleanup under a separate journal.
+
+From DOS root:
+
+```sh
+python3 .analysis/reconstruction/probes/native-op-loading-v1393/verify_retention.py
+```
+
+Add `--restore` before full reader/probe replay to restore exact retired paths.
+Use fresh output namespaces; never overwrite earlier closed producers. The
+original reader also requires actual menu completion and rejects the real
+zero-exit incomplete attempt. Both archive and journal are required for recovery.
+
+
 ## v1392 cold PMD application installation
 
 Closed original OP startup/timer, GNU/optimized UBSan build, eight actual

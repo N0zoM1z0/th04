@@ -54,25 +54,24 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. The application PMD driver now installs from cold
-chip state and applies installation writes to both logical timers and PCM.
-Read-only original OP captures show the first Timer B period is **73.728 ms**;
-the previous native state incorrectly began at 16.128 ms. Two independent
-installation controls reject the old state and the PCM-only update.
+Native development is active. The repaired PMD application still installs from
+cold state with the original observed 73.728 ms first Timer B period. New
+read-only OP captures separate startup loading and drawing work: changing only
+CPU budget from 24,000 to 36,000 reduces the Logo PI load phase from 66.98 to
+44.62 ms and its drawing phase from 61.66 to 41.04 ms. Gaiji work scales
+differently; there is no universal startup-delay constant.
 
-Cold GNU passes 69 CTests; optimized UBSan passes three PMD contracts. Four
-muted driver profiles each produce 129 identical GNU / UBSan capture files.
-Demo state, RNG, draws, shake and physical configuration/save files remain
-identical to the retained original-paired captures at all 15,988 selected seams.
-One Logo and five completed titles include the final fresh OP ready.
+The unchanged native producer retains its cold GNU 69 CTests, three optimized
+UBSan PMD contracts and four driver-profile Demo comparisons. New GNU / UBSan
+service probes with each original's measured installation age agree within
+1 ms sampling; zero-age controls complete but fail the same timing check.
+These diagnostics do not pair default native loading clocks. A real interrupted
+GDB capture exited zero without completion; the new reader rejects it.
 
-Default active-PMD waiting now spans 97 native refreshes; the bounded original
-OP captures span 92. This is not full startup-clock acceptance: original CPU
-and file-loading time still need paired owners. Complete default RGB matches
-remain 31/40 for none and 34/40 for active profiles; own-counter-phase 40/40 is
-diagnostic. Earlier supplied-original-clock matches retain their original
-producer identity. Broader paired gameplay/process routes, physical scanout
-and Windows input/audio remain open. See the handoff for evidence and cleanup.
+Retained Demo state/RNG/draw/shake/configuration/save evidence covers 15,988
+selected seams. Complete default RGB counts remain scoped diagnostics, with
+broader gameplay/process, physical scanout and Windows input/audio still open.
+See the handoff for current evidence, limits and cleanup recovery.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

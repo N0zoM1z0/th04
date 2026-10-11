@@ -2661,3 +2661,101 @@ CPU/file-loading elapsed time from PMD installation to first Logo playback and
 subsequent OP waits, followed by broader paired process/combat routes. Whole
 picture/default startup clocks, physical/cross-emulator scanout and Windows
 input/audio remain open. Historical exactness/provenance is unchanged.
+
+
+## Original OP loading work and completion guards (v1393)
+
+Two complete read-only original GAME.BAT/PMD86 captures change only fixed CPU
+budget, 24,000 versus 36,000. Initial HDI/config/save/assets, font, observer
+profile and original emulator are identical; configuration bytes differ only
+at the cycles line. No guest bytes, input, schedules or phases are injected.
+Both captures stop on the host before the first ordinary menu body. Targets
+remain candidate-local-attested; full process and physical timing are open.
+
+Original packed OP SHA starts `8fc3b67f`. Each full 69,028-byte runtime load
+matches the pinned decoded target plus all 804 ordered relocations. Load is
+10FC, DGROUP 2030; decoded-entry DS is initial PSP 10EC. Thirty pinned target
+points emit 41 scalar boundaries, plus a separately guarded decoded entry.
+Independent complete GDC stream replay passes with zero parameter-entry
+coverage. Whole-load byte, GDC counter, DOS return-frame and fractional PIC-time
+mutations reject. Each F context, same-boundary payload, gzip CRC/EOF and target
+opcode is checked. The reusable ROOT command is
+`scripts/runtime/verify_op_loading_clock.py`; its second closed verifier output
+adds emulator/source identity and exercises the positive load comparator on the
+mutation. The first narrower verifier keeps its producer/receipt identity.
+
+The host functions CPU_Interrupt, CPU_IRET, CPU_RET and the observer's whole-load
+hex writer have full ELF/runtime memory witnesses. Raw PIC ticks and signed
+CPU budgets determine time without calling a host timing function. Guest INT21
+observations run only from first Timer B installation schedule through measure
+entry. There are 62 file requests and 61 matched IRET returns in each capture.
+Request paths, read sizes, returned AX and carry outcomes agree. The remaining
+request is the parent OP child-exec; stopping inside OP cannot claim that it
+returned. Both logical resource paths and nested physical archive paths appear;
+this is a prefix file observation, not acceptance of all DOS/driver APIs.
+
+| Original interval / target boundary | 24,000 cycles | 36,000 cycles |
+| --- | --- | --- |
+| first B installation schedule → decoded entry | 49.808208 ms | 33.431667 ms |
+| decoded entry → OP main routine entry, 0A74:0C37 | 0.789667 ms | 0.526222 ms |
+| OP main entry → game_init return, 0A74:0C56 | 19.844542 ms | 13.683194 ms |
+| gaiji begin 0A74:0C6B → completion 0A74:0C79 | 40.258875 ms | 34.996528 ms |
+| Logo entry 0A74:14F5 → PI load return 0A74:1523 | 66.984250 ms | 44.623833 ms |
+| palette return 0A74:152A → PI put return 0A74:1534 | 61.656000 ms | 41.043750 ms |
+| PI free return 0A74:1542 → page-copy return 0A74:1549 | 6.728833 ms | 4.474528 ms |
+| page-copy return → background-snap return 0A74:154E | 1.707667 ms | 1.122917 ms |
+| complete installation-first-B → Logo play command | 255.036542 ms | 178.822806 ms |
+
+The complete finer interval list telescopes to the measured installation age.
+PI load/put phases scale approximately with inverse CPU budget; the bracketed
+intervals include argument/setup overhead and are not isolated device timings.
+Gaiji work does not scale uniformly, so applying one global CPU factor to the
+whole startup is not supported. The hardware/IO/wait contribution needs a
+separate bounded observation. Both new measure waits span 93 display events,
+versus the prior v1392 captures' 92. They are per-capture phases, not a target
+refresh constant. Display ordinals and PIC installation age stay distinct.
+
+Native product source remains unchanged: current 510-file producer
+`9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`.
+GNU and optimized UBSan service programs are restored from the attested v1392
+lossless archive and keep their closed producer/build identities. No fresh
+native cold build, Demo picture or window acceptance is claimed in this batch.
+With real LOGO.M86/MIKO.EFC and typed observed ages 255,036,542 / 178,822,806 ns,
+full GNU/UBSan tables agree; measure 2 occurs at the 1,645 / 1,641 ms sample.
+Original playback-command-to-last-callback is 1,644.611500 / 1,640.185222 ms;
+errors are 0.388500 / 0.814778 ms, below the 1 ms observation step. Changing only
+supplied age to zero still completes successfully at 1,707 ms, but the same
+independent timing gate rejects it as 62.388500 / 66.814778 ms late. These are
+conditional service diagnostics, not product offsets, native default loading,
+complete PIC/IRQ latency or physical-chip/audio equivalence.
+
+The first broad interrupt observer remained enabled during high-frequency
+INT60 measure polling and was terminated. GDB returned zero and the first
+wrapper marked passed, but it had no completion observation or terminal marker.
+The actual strict reader rejects this counterexample. Fresh V2 wrappers require
+41-row menu completion, its hash and terminal log; DOS hooks are disabled at
+measure entry while timer/GDC observations continue. The first attempt's source,
+log, misleading wrapper and incomplete inner gzip remain immutable failure
+material. Lossless outer archiving does not make that inner stream complete.
+
+Replay from DOS root: `.analysis/reconstruction/probes/native-op-loading-v1393/`;
+native consumer receipts: `.analysis/port64/native-op-loading-v1393/`.
+Accepted captures use `dos-op-v1393-loading-{base,cpu36000}-v2`. Original reader:
+
+```sh
+python3 scripts/runtime/verify_op_loading_clock.py \
+  --capture .analysis/runtime/candidates/dos-op-v1393-loading-base-v2 \
+  --capture .analysis/runtime/candidates/dos-op-v1393-loading-cpu36000-v2 \
+  --rejected-capture .analysis/runtime/candidates/dos-op-v1393-loading-base \
+  --model-dir .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-model-v3 \
+  --model-receipt .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-observation-v3.json \
+  --output-dir .analysis/NEW-loading-verifier
+```
+
+Restore HDIs/expanded inputs with this batch's `verify_retention.py --restore`
+before full replay. `native_age_probe.py`, `zero_age_control.py` and `compare.py`
+close separate receipts. Use fresh namespaces; never rewrite old proofs or
+restart solely because a live observation is slow. Next isolate gaiji waits and
+establish an explicit elapsed-work handoff through startup resource/draw/process
+owners. Default native clocks, full pictures, broader paired combat/process
+routes, physical/cross-emulator scanout and Windows input/audio remain open.

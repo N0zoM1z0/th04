@@ -410,5 +410,28 @@ diagnostic. Earlier supplied-original-clock matches retain their original
 producer identity. Broader paired gameplay/process routes, physical scanout
 and Windows input/audio remain open. See the handoff for evidence and cleanup.
 
-Current producer: `9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`. Native commit: `28b3f95`.
+v1392 producer (unchanged in v1393): `9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`. Native commit: `28b3f95`.
 See the current handoff and focused differential note for complete scoped evidence.
+
+## Original OP loading work and clock owners (v1393)
+
+Native development is active. The repaired PMD application still installs from
+cold state with the original observed 73.728 ms first Timer B period. New
+read-only OP captures separate startup loading and drawing work: changing only
+CPU budget from 24,000 to 36,000 reduces the Logo PI load phase from 66.98 to
+44.62 ms and its drawing phase from 61.66 to 41.04 ms. Gaiji work scales
+differently; there is no universal startup-delay constant.
+
+The unchanged native producer retains its cold GNU 69 CTests, three optimized
+UBSan PMD contracts and four driver-profile Demo comparisons. New GNU / UBSan
+service probes with each original's measured installation age agree within
+1 ms sampling; zero-age controls complete but fail the same timing check.
+These diagnostics do not pair default native loading clocks. A real interrupted
+GDB capture exited zero without completion; the new reader rejects it.
+
+Retained Demo state/RNG/draw/shake/configuration/save evidence covers 15,988
+selected seams. Complete default RGB counts remain scoped diagnostics, with
+broader gameplay/process, physical scanout and Windows input/audio still open.
+See the handoff for current evidence, limits and cleanup recovery.
+
+Unchanged native producer: `9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`. Native evidence commit: `7416a91`.

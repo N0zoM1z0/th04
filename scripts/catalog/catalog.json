@@ -3479,6 +3479,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_op_loading_clock.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Verify original OP loading phases, guest DOS return frames and fractional clocks; reject incomplete zero-exit captures.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_op_startup_clock.py",
     "category": "runtime",
     "role": "command",
