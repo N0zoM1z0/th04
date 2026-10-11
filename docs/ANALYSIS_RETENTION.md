@@ -1,5 +1,49 @@
 # Private build and analysis retention
 
+## v1398 IRQ raster and native VSYNC primitive
+
+Current native source is frozen at 512 files / `efea1700`; DOS fingerprint
+`6f5898dd` is unchanged. Both original IRQ captures, independent full readers,
+cold GNU / optimized UBSan builds, complete component comparisons, compiled
+negative controls and all eight default startup/Demo regressions are terminal.
+Frontend wait integration remains open; archive validation promotes no timing
+or exactness claim.
+
+Lossless retirement of **3,110 logical files / 1,451 unique blobs** reclaims
+**528.63 MiB after archive and journal**, keeping a **39.20 MiB** recovery archive.
+Complete gzip CRC/EOF, every content digest and temporary actual restored
+SHA/size/mode/nsmtime pass before deletion. A separate full reader verifies all
+694 protected proofs and current frozen source afterward. Complete original
+raw/GDC streams, source freezes, selected current GNU/UBSan game/trace/shake /
+VSYNC programs, compiled mutants and failed attempts stay live. Only current
+owned disposable HDIs/fonts, CMake intermediates / unused programs and duplicate
+complete native captures are retired. Previous producers/proofs remain unchanged.
+
+The v1398 reader checks current 512/efea and previous frozen 510/ea5c producers
+separately. Old strict v1396/v1397 recovery readers reject the changed current
+manifest; use this new reader rather than editing old attestations:
+
+```sh
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py --restore --prefix .analysis/runtime/candidates/dos-op-v1398-irq-
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py --parent v1397
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py --parent v1396
+```
+
+Add --restore and a narrow --prefix for the required parent subtree. The old
+v1396 primary archive and its separate complete state/item text archive are both
+required; the new reader verifies their linked journals and all protected old
+hashes. Its first single-archive attempt remains failed, with frozen source/logs;
+it does not imply parent corruption. Both current archive and retention.json
+are needed for owned-path recovery. Use fresh namespaces for new execution.
+
+
+Both full CI gates pass (root 451 / native 345 tests), with tracking and diff
+checks. Post-CI source-backed Python cache cleanup retires 1051 files,
+recovering a separate 16.32 MiB after its journal. Total current net cleanup:
+544.95 MiB. The cache journal is disjoint from lossless archive retirement;
+retained source regenerates these caches. Goal remains active.
+
 ## v1393 original OP loading work
 
 The original 24,000/36,000 CPU pair, complete strict readers, guest DOS return

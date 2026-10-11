@@ -3486,6 +3486,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_op_irq_clock.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Verify every original OP IRQ increment and armed callback against complete counter/GDC streams and derived raster phases.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_op_loading_clock.py",
     "category": "runtime",
     "role": "command",

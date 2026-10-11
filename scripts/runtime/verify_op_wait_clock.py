@@ -185,7 +185,7 @@ def inputs(directory: Path, preparation: dict) -> bool:
     return bgm_off
 
 
-def verify(directory: Path, output: Path, model: Path) -> dict:
+def verify(directory: Path, output: Path, model: Path, irq_extension: bool = False) -> dict:
     observation = json.loads((directory / 'startup-observation.json').read_text())
     wrapper = json.loads((directory / 'wrapper-receipt.json').read_text())
     preparation = json.loads((directory / 'preparation.json').read_text())
@@ -210,6 +210,10 @@ def verify(directory: Path, output: Path, model: Path) -> dict:
     bgm_off = inputs(directory, preparation)
     points = dict(loading.POINTS, **WAIT_POINTS)
     del points['menu_ready']
+    if irq_extension:
+        require(not bgm_off, 'IRQ extension expects active FM86 CPU pair')
+        del points['title_start']
+        points['irq_before_increment'] = (0, 0x25D6)
     if bgm_off:
         del points['measure_end'], points['title_complete']
         points.update(frame_delay_enter=(0xDA1, 0x2B), frame_delay_return=(0xDA1, 0x3C))
@@ -231,15 +235,16 @@ def verify(directory: Path, output: Path, model: Path) -> dict:
         sites = [int(r['relative_linear'], 0) for r in csv.DictReader(stream)]
     require(sites == profile['relocations'] and len(sites) == 804, 'complete relocation topology')
     lines = [line.split() for line in (directory / 'raw.txt').read_text().splitlines()]
-    require(len(lines) == 37 and lines[0][0] == 'L' and all(x[0] == 'I' for x in lines[1:]),
+    rows = observation['rows']
+    row_count = 37 + sum(r['name'] == 'irq_before_increment' for r in rows) if irq_extension else 37
+    require(len(lines) == row_count and lines[0][0] == 'L' and all(x[0] == 'I' for x in lines[1:]),
             'complete scalar stream extent')
     load, loaded = int(lines[0][2], 16), bytes.fromhex(lines[0][-1])
     expected = bytearray(payload)
     for site in sites:
         struct.pack_into('<H', expected, site, (struct.unpack_from('<H', expected, site)[0] + load) & 65535)
     loading.equal_load(loaded, expected)
-    rows = observation['rows']
-    require(len(rows) == 37 and 'OP_STARTUP_COMPLETE 37' in (directory / 'capture.log').read_text(),
+    require(len(rows) == row_count and f'OP_STARTUP_COMPLETE {row_count}' in (directory / 'capture.log').read_text(),
             'terminal completion extent')
     for index, row in enumerate(rows):
         segment, offset = points[row['name']]
@@ -253,15 +258,22 @@ def verify(directory: Path, output: Path, model: Path) -> dict:
             require(struct.unpack('<HH', bytes.fromhex(row['vsync_vector_hex'])) == (0x25C6, load),
                     'runtime IRQ vector owner')
     for line, row in zip(lines[1:], rows[:-1], strict=True):
-        require(len(line) == 11 and line[1] == '1' and
+        memory = [row['sound_modes_hex'], row['vsync_counts_hex']]
+        if irq_extension:
+            memory += [row['cadence_increment_hex'], row['cadence_accumulator_hex']]
+        memory += [row['resident_pointer_hex'], row['resident_hex']]
+        require(len(line) == 7 + len(memory) and line[1] == '1' and
                 tuple(int(x, 16) for x in line[2:5]) == (row['cs'], row['ip'], row['ds']) and
-                line[7:11] == [row['sound_modes_hex'], row['vsync_counts_hex'],
-                               row['resident_pointer_hex'], row['resident_hex']], 'raw scalar witness')
+                line[7:] == memory, 'raw scalar witness')
     resolved = next(r['index'] for r in rows if r['name'] == 'resolved_modes')
     require([r['sound_modes_hex'] for r in rows[resolved:]] ==
             ['010000' if bgm_off else '010200'] * (len(rows) - resolved),
             'resolved sound mode')
-    waits = check_waits(rows, bgm_off)
+    wait_rows = json.loads(json.dumps([r for r in rows if r['name'] != 'irq_before_increment']))
+    for index, row in enumerate(wait_rows):
+        row['index'] = index
+    require(len(wait_rows) == 37, 'complete ordinary wait boundaries')
+    waits = check_waits(wait_rows, bgm_off)
     events = directory / 'video-clock-events.bin.gz'
     require(sha(events) == observation['clock_file_sha256'], 'complete clock stream identity')
     expanded = output / (directory.name + '-events.bin')
@@ -296,7 +308,7 @@ def verify(directory: Path, output: Path, model: Path) -> dict:
             require(verticals == row['display_events'] and hashlib.sha256(raw).hexdigest() == row['clock_sha256'],
                     'same-boundary clock witness')
     require(dict(counts) == observation['event_counts'] and counts['C'] == counts['E'] == 2 and
-            boundaries == 37 and entry_seen, 'complete GDC coverage')
+            boundaries == row_count and entry_seen, 'complete GDC coverage')
     def run_model(path, suffix):
         result = subprocess.run([str(model), str(path)], capture_output=True)
         (output / (directory.name + suffix + '.log')).write_bytes(result.stdout + result.stderr)
@@ -327,7 +339,7 @@ def verify(directory: Path, output: Path, model: Path) -> dict:
     negatives = []
     first_negative = 'fallback-reset' if bgm_off else 'busy-reset'
     for kind in (first_negative, 'missing-logo-reset', 'below-threshold', 'PIC-time'):
-        changed = json.loads(json.dumps(rows))
+        changed = json.loads(json.dumps(wait_rows))
         name = {'busy-reset': 'after_measure', 'fallback-reset': 'after_measure', 'missing-logo-reset': 'logo_wait_reset',
                 'below-threshold': 'logo_wait_pass', 'PIC-time': 'logo_wait_enter'}[kind]
         row = next(r for r in changed if r['name'] == name)
@@ -344,6 +356,7 @@ def verify(directory: Path, output: Path, model: Path) -> dict:
         else:
             raise ValueError('wait mutation accepted: ' + kind)
     return dict(capture=str(directory), cycles=preparation['cycles'], load_segment=load,
+                scalar_rows=row_count,
                 dgroup=load + 0xF34, completion_sha256=sha(directory / 'startup-observation.json'),
                 wrapper_sha256=sha(directory / 'wrapper-receipt.json'), waits=waits,
                 clock_events=dict(counts), timer_rows=len(observation['timer_rows']),

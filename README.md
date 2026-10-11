@@ -57,22 +57,22 @@ input/audio acceptance remain open; see the handoff for scoped evidence.
 Native development is active. Explicit loading and drawing work now advances
 both resident sound and the headless GDC text clock, retaining fractional time.
 An independent display epoch preserves the original separation from PMD
-installation. Actual OP frontend checks match all twelve original loading /
+installation. Retained OP frontend checks match all twelve original loading /
 readiness counters per CPU input; freezing only display time rejects while
 sound timing still passes.
 
-The latest product builds pass 69 GNU CTests, optimized UBSan passes four sound
-contracts, and eight full startup/Demo routes reproduce all 129 retained output
-files per driver profile. Private Linux Xvfb is muted with no audio device
-opens. Default resource/graphics/initial-epoch costs still need a model;
-full pictures, broader gameplay/process and Windows input/audio remain open.
-See the handoff for current evidence, limits and cleanup recovery.
+The latest product builds pass 70 GNU CTests; optimized UBSan passes five
+sound/VSYNC contracts. Eight full startup/Demo routes reproduce all 129 retained
+output files per driver profile. Earlier private Linux Xvfb checks used mute
+and opened no audio device. Default resource/graphics/initial-epoch costs still
+need a model; full pictures, broader gameplay/process and Windows input/audio
+remain open. See the handoff for scoped evidence and cleanup recovery.
 
-New original OP captures distinguish busy PMD polling, reset-counter waits
-and Logo waits that inherit existing IRQ counts. The first active Logo wait
-passes immediately; disabling BGM resets that counter even for a zero wait.
-The native scheduler still needs these ownership/phase corrections. Product
-source remains unchanged in this evidence batch; see the current handoff.
+Complete original OP traces now verify all 208 counted IRQs across two CPU
+budgets and distinguish their raster phase from GDC blink. Native now has
+unsigned counter and rational raster-clock components, tested against those
+traces under GNU and UBSan. The frontend still needs PMD busy-service and
+inherited Logo-wait integration.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.
