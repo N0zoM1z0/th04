@@ -54,13 +54,16 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-The latest native repair adds a persistent display clock for MAIN text blink,
-including the correct blink-before-reverse attribute order. All 15,988 native
-clock rows and 88 controlled text cases pass independent emulator Oracles.
-A fresh whole GNU build passes 69 CTests; actual muted GNU/optimized UBSan
-four-Demo routes have 127 identical capture files with unchanged complete
-indices, text and state traces. Original absolute phase, live font RAM, extra
-text/CRT registers and physical scanout remain open. Development stays active.
+Native MAIN text blink uses a persistent display clock and correct attribute
+order. The latest original capture now records complete font memory and text/CRT
+registers across all 15,984 Demo updates. It rejects a 32-byte error in the old
+font reconstruction probe; a model with the actual write-port guard matches
+all 516 KiB. Product source and the retained 69-CTest native build are unchanged.
+
+Original refresh timing is now measured at about 17.7232266 ms, slightly faster
+than native's 17.730496 ms approximation. Calibrating cadence and original
+boot/process phase is next. Full raw RGB, physical scanout and broader paired
+routes remain open; development stays active.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

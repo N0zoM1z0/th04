@@ -1094,3 +1094,36 @@ excludes its writing retirement log; a later terminal seal separately pins
 closed outputs without restamping that proof. See focused differential/demo
 notes for text-only adapter, explicit DAC diagnostics and open original
 absolutephase/liveCG/CRT/scanout/ordinary-route limits.
+
+## Live FONT/register/time probe retirement (v1386)
+
+All jobs are terminal. Current native producer pins 509 inputs, manifest
+a47f0496c18261ff4650515b1c2cd6413451a44d8879b6b3b21fc032aec89c6f. Retained v1385 whole cold GNU71/69CTest,
+optimized UBSan3 cold targets, reference programs, independent line/font/raster probes
+and old separately instrumented observer remain retained. Main441/native345 CI pass.
+DOS product fingerprint6f5898dd is unchanged. The rejected direct FONT model and both passed ANK counting recipes remain
+retained. The v2 counting recipe fixes repeated reads without restamping v1.
+
+299 complete recovered references, fullFONT/VRAM samples, original temporaryimages and build
+intermediates and 1,044 source-backed caches retire after full temporary
+restoration/SHA/size/mode/nsmtime/gzip EOF checks. Before/after deletion,
+27,637 protected hashes and 509 source pins pass. The inventory inherits
+v1385's 27,535 protected hashes and separately includes its later terminal
+appender, closed logs, final checks and seal.
+Net allocated reclamation is 228,438,016 bytes (217.9 MiB), after the
+26.3 MiB lossless archive and before journal cost. Programs,
+frozen inputs, original references, old proofs and failed attempts stay live.
+
+Restore from DOS root before current reader replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-cg-v1386/verify_retention.py --restore
+```
+
+Without --restore it checks every recovery temporarily. Journal SHA-256:
+8af16fa8ebdccda54ccde6ac815f7b8c08b437dfac731c0ed3a3ff3a9e33dbf8. Old a47f0496 proofs retain their unchanged source scope; they do not attest
+these new original VP4/font/register observations. This inventory
+excludes its writing retirement log; a later terminal seal separately pins
+closed outputs without restamping that proof. See focused differential/demo
+notes for text-only adapter, explicit DAC diagnostics and open original
+cadence, absolute phase, scanout and ordinary-route limits.

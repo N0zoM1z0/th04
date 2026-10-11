@@ -281,3 +281,19 @@ original absoluteepoch is uncalibrated. FreshGNU71/69CTest and UBSan3cold
 produce127 equal ordinary captures with40 unchanged entire indices/TRAM
 and6 parent trace/save hashes. Priorfullpool identity stays separate.
 LiveCG/textCRT/absolutephase/scanout and broader routes remain open.
+
+## Complete FONT/register and original time observations (v1386)
+
+All 15,984 new original VP4 records carry the complete 516 KiB FONT memory,
+eleven text/CRT fields and actual PIC/raster times. FONT is stable. The old
+direct asset model fails at 32 ANK V/W bytes; the actual A9 write-port guard
+model matches all 528,384 bytes. All 38 old programmed regions match, while
+25 complete raw GDC records retain raster differences.
+
+Rendering with the actual FONT/register inputs reproduces the earlier 40
+samples. The original period is 17.72322658483988 ms versus native's
+17.730496 ms approximation; cadence calibration is the next bounded task.
+The 509 product source inputs (a47f0496…) and retained v1385 build/capture
+identities are unchanged. Physical scanout, full raw RGB, original phase,
+broader routes and historical exact acceptance remain open. See the current
+handoff for replay recipes and evidence scopes.
