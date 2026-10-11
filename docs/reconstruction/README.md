@@ -38,7 +38,7 @@ notes explain the remaining source and container gaps:
 - [Native graphics gaiji writers](product/TH04_NATIVE_GRAPH_GAIJI_V861.md)
 - [Native graphics page copy and TC4J loop scope](product/TH04_NATIVE_GRAPH_COPY_V862.md)
 - [Native segmented heap and TC4J merged-return counterexample](product/TH04_NATIVE_HEAP_V863.md)
-- [Native VSync interrupt and DOS vector lifecycle](product/TH04_NATIVE_VSYNC_V864.md)
+- [Native VSync ownership, palette waits and DOS vector lifecycle](product/TH04_NATIVE_VSYNC_V864.md)
 - [Native gaiji backup, restore, and BFNT loader](product/TH04_NATIVE_GAIJI_STORAGE_V865.md)
 - [Native packed-row renderer and PI decoder handoff](product/TH04_NATIVE_PACK_PUT_V866.md)
 - [Native PAR archive fixtures and DOS file service](product/TH04_NATIVE_PF_ARCHIVE_V867.md)

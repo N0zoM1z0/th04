@@ -54,32 +54,26 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. The verified startup/motion snapshot also restores the signed
-IATAN2 displacement edge and explicit divide-fault behavior. New cold builds
-pass 71 GNU CTests and seven UBSan contracts. Both compilers agree with 184,908
-original-instruction vectors, including 514 DIV faults. Eight fresh startup /
-four-Demo routes retain all 129 prior outputs per driver profile and pass the
-original selected-state comparisons. These results are separate from physical
-timing and whole-picture acceptance.
+Native development is active. The current reviewed producer includes the
+startup/motion, GRCG, font and graphics Gaiji owners from native base48e05da.
+It also repairs OP palette waits: installed IRQ waits for Count1 to change;
+uninstalled waits for the next GDC blank. Both preserve the counters, while
+frame_delay and Logo retain their original clear orders.
 
-The remote native branch also has newer circle/line renderer recovery. Its
-combined acceptance remains separate from this snapshot on
-`review/startup-motion-join-v1403`; the handoff identifies both producers.
+New cold builds pass75 GNU CTests and10 optimized UBSan contracts. Both
+compilers agree on32 original-instruction controls at two loads and432 ideal
+raster/cadence vectors (1296 waits each). The actual startup predecessor fails
+the new counter-retention check. Eight muted startup/four-Demo/fresh-OP routes
+retain all129 prior outputs per profile and pass15988 original selected-state
+boundaries each. The review is on `review/native-gdc-poll-v1407`; earlier
+integration snapshots keep their own frozen evidence.
 
-OP startup now uses unsigned IRQ waits with the
-original clear-before-delay / clear-after-Logo order. Resident PMD service can
-release a measure wait inside a refresh interval, while raster phase continues
-through explicit resource and graphics work. Ideal raster edges and zero ISR
-latency remain explicit adapter assumptions; default CPU/loading costs need a model.
+Both repository CI gates pass (451 DOS-root and345 native tests).
 
-Frozen v1401 builds pass 70 GNU CTests and six optimized UBSan contracts.
-The muted frontend configuration/restart matrix passes 132 cases. Eight full
-startup/four-Demo/fresh-OP routes match original selected state at 15,988
-boundaries each; GNU/UBSan output hashes agree. PMD profiles change only startup
-and text-clock traces from the prior baseline; indexed/RGB/text samples, shake
-and splash states retain their prior output. Full pictures, broader gameplay
-and physical timing still need paired validation. Windows input/audio remain
-open while the host is in use. See the handoff for evidence and cleanup recovery.
+Physical CPU/loading/ISR costs, other scene wait adapters, complete pictures,
+broader Boss/death/process routes and Windows input/audio remain open. Shared
+DOS's installed-owner VSYNC_WAIT branch also needs separate recovery and a
+cold replay. See the handoff for the current source, evidence and cleanup.
 
 The shared DOS VSYNC owner preserves cadence phase and queries before clearing
 counters. Retained three-artifact 108-case comparisons and four-product/Demo
