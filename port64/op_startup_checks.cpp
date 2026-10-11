@@ -80,6 +80,53 @@ int main(int argc,char** argv) {
         require(logo.logo_frame()==0 && logo.random_state()==1,"logo real measure wait");
         measure=2;for(unsigned i=0;i<1000 && !logo.finished();++i)logo.advance(0xffff);
         require(logo.finished() && logo.ticks()==308 && logo.logo_frame()==50,"logo skip fade order");
+        // Original captures inherit Count1=104/100 at the first active Logo
+        // wait, then clear it afterwards. The inactive fallback clears even0.
+        vsync::RasterClock active_clock,inactive_clock;
+        active_clock.counter().start();inactive_clock.counter().start();
+        for(unsigned i=0;i<104;++i) {
+            active_clock.counter().interrupt();inactive_clock.counter().interrupt();
+        }
+        op_startup::Scene inherited(assets,true,false,{},[]{return std::optional<std::uint16_t>(2);},
+            1,0,{},&active_clock);
+        require(inherited.logo_frame()==1 && active_clock.counter().one()==0 &&
+            active_clock.counter().two()==104,"first active Logo inherits count then clears");
+        op_startup::Scene inactive(assets,true,false,{}, {},1,0,{},&inactive_clock);
+        require(inactive.logo_frame()==0 && inactive_clock.counter().one()==0 &&
+            inactive_clock.counter().two()==104,"inactive zero fallback clears only Count1");
+        const auto duration=inactive_clock.until_count(2);std::uint64_t serviced=0;
+        inactive.advance_elapsed(duration-1,0,[&](auto ns){serviced+=ns;},[]{return 1ull;});
+        require(inactive.logo_frame()==0,"Logo passed before second counted IRQ");
+        inactive.advance_elapsed(1,0,[&](auto ns){serviced+=ns;},[]{return 1ull;});
+        require(inactive.logo_frame()==1 && inactive_clock.counter().one()==0 &&
+            inactive_clock.counter().two()==106 && serviced==duration,"Logo counted deadline/continuous Count2");
+        vsync::RasterClock busy_clock;busy_clock.counter().start();
+        for(unsigned i=0;i<100;++i)busy_clock.counter().interrupt();
+        std::uint64_t busy_ns=0,ready_ns=0;unsigned polls=0;
+        constexpr auto timer_ns=1234567ull;
+        op_startup::Scene busy(assets,true,false,[&](const auto& e){
+            if(e.kind==op_startup::Kind::super_load && !ready_ns)ready_ns=busy_ns;
+        },[&]{++polls;return std::optional<std::uint16_t>(busy_ns>=timer_ns ? 2 : 0);},1,0,{},&busy_clock);
+        busy.advance_elapsed(17723227,0,[&](auto ns){busy_ns+=ns;},[&]{return timer_ns-busy_ns;});
+        require(ready_ns==timer_ns && busy.logo_frame()==1 && polls>=3 &&
+            busy_ns==17723227 && busy.ticks()==1,"PMD service before refresh/no extra logical admission");
+        // The same elapsed input produces identical event order, RNG, state
+        // and raster phase regardless of the host's refresh partition.
+        vsync::RasterClock whole_clock,split_clock;whole_clock.counter().start();split_clock.counter().start();
+        std::vector<std::string> whole_events,split_events;
+        const auto collect=[](auto& events){return [&events](const op_startup::Event& e){
+            std::ostringstream row;row<<unsigned(e.kind)<<' '<<e.a<<' '<<e.b<<' '<<e.c<<' ';hex(row,e.data);events.push_back(row.str());
+        };};
+        op_startup::Scene whole(assets,true,false,collect(whole_events),{},1,0,{},&whole_clock);
+        op_startup::Scene split(assets,true,false,collect(split_events),{},1,0,{},&split_clock);
+        const auto silence=[](std::uint64_t){};const auto no_timer=[]{return 1ull;};
+        whole.advance_elapsed(1000000000,0,silence,no_timer);
+        for(unsigned i=0;i<1000;++i)split.advance_elapsed(1000000,0,silence,no_timer);
+        require(whole_events==split_events && whole.random_state()==split.random_state() &&
+            whole.logo_frame()==split.logo_frame() && whole.palette()==split.palette() &&
+            whole_clock.now()==split_clock.now() && whole_clock.next_edge()==split_clock.next_edge() &&
+            whole_clock.counter().one()==split_clock.counter().one() &&
+            whole_clock.counter().two()==split_clock.counter().two(),"startup elapsed partition invariance");
         std::cout<<"startup contracts PASS\n";return 0;
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

@@ -52,6 +52,8 @@ public:
     const OpnTimers& timers() const {return timers_;}
     std::uint64_t interrupts() const {return interrupts_;}
     std::uint32_t fraction() const {return fraction_;} // billionths of a master cycle
+    // First nanosecond that can service the next live timer. Zero means none.
+    std::uint64_t until_timer() const;
 private:
     OpnTimers timers_;std::uint32_t master_hz_,fraction_=0;
     TimerPlayer player_;std::uint64_t interrupts_=0;

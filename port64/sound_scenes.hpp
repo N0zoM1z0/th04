@@ -37,6 +37,7 @@ public:
     void op_restart(const menu::Options&);
     void handle(const Action&);
     void advance_work(const ElapsedWork&);
+    void advance_elapsed(std::uint64_t ns);
     std::uint64_t work_nanoseconds() const {return work_nanoseconds_;}
     void cutscene(const cutscene::Event&);
     void staff(const staff::Event&);

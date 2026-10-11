@@ -39,10 +39,21 @@ callback ran. Corrected seed plus operand guards retain all12 old complete
 instruction/state/write traces. Old receipts remain unchanged; v2 BIOS mock
 hook-CS draft failed and is retained. v4 is the accepted nested-frame reader.
 
-Native x64 source manifest stays512/5474b8e3; no C++ product changed or rebuilt.
-The native branch also carries the shared ASM correction; its distinct dormant
-DOS graph has not received a whole-product build here. Prior native v1399
-70GNU/5UBSan and eight129-file profiles keep their frozen scope/identities.
+Current native source: v1401,512 files/60cf4491 (`port/modern-64`).
+Startup PMD busy waits now service the next resident timer deadline; ordinary
+frame delays clear Count1 before waiting and Logo waits clear it afterwards.
+The inactive zero-frame fallback still clears Count1. FrontEnd shares raster
+phase across work and refreshes, preserving Count2. Cold GNU72 programs/70
+CTests and optimized UBSan9 programs/6 contracts pass; three compiled mutations
+reject wrong reset order and refresh-only PMD service. Current/frozen source
+and81 program identities verify in
+`.analysis/port64/native-startup-waits-v1401/current-verification.json`.
+See [startup ownership](port64/evidence/op-startup.md).
+Prior v1399/v1400 receipts retain their frozen source identities and scope.
+Current native CI passes345 tests.626 completed compiler-cache files are
+archived with individual byte checks before removal, reclaiming21.74 MiB net;
+all81 programs, source snapshots and compiler metadata remain. Recovery carrier:
+`.analysis/port64/native-startup-waits-v1401/compiled-cache.tar.gz`.
 
 Replay/retention index (DOS root):
 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/.
@@ -60,10 +71,9 @@ current source, products/MAPs, old/new compiled controls, original raw evidence
 and fresh demo trace remain. Full CI passes root451/native345; source-backed post-CI caches reclaim
 16.44 MiB separately, for 72.47 MiB net this batch.
 
-Next connect native PMD busy service and inherited unsigned IRQ waits to
-FrontEnd, preserving clear-before-frame_delay / clear-after-Logo, cadence and
-global raster phase. Scene still samples measure once per refresh and uses fixed
-Logo waits. CPU/resource/graphics elapsed work needs a model. Full pictures,
+Next recover CPU/resource/graphics elapsed-work owners and their call order.
+Prioritize function recovery and migration with focused checks before long
+game campaigns. Full pictures,
 Boss/death/process, second-emulator/physical scanout and Windows input/audio stay
 open. Goal active; targets candidate-local-attested. CPU1/nice19 single-core,
 serial and muted; no Windows GUI/focus/host keys/audio device is used.

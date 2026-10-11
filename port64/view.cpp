@@ -1372,6 +1372,7 @@ public:
             });
         if(mode_==gameplay::Mode::actor_control)std::cout<<"MAIN fixture mode=actor-control (hit consumption disabled)\n";
         if(assets_) {
+            startup_clock_.advance(assets_->display_elapsed_ns);
             text_refreshes_+=assets_->display_elapsed_ns/std::uint64_t(frame_period.count());
             text_work_remainder_ns_=assets_->display_elapsed_ns%std::uint64_t(frame_period.count());
             for(const auto& work:assets_->installed_work)advance_work(work);
@@ -1658,10 +1659,11 @@ public:
         // OP initialization completes before the first waited refresh.
         ensure_op_sound();
         if(!text_time_origin_)text_refreshes_+=slowdown();
-        const auto sound_owner=sound_;
-        sound::Refresh sound_refresh(sound_owner.get(),std::uint64_t(frame_period.count())*slowdown());
         if(startup_) {
-            startup_->advance(held_input);
+            startup_->advance_elapsed(std::uint64_t(frame_period.count()),held_input,
+                [this](std::uint64_t ns){sound_timeline_->advance_elapsed(ns);},
+                [this]{const auto& resident=sound_timeline_->resident();
+                    return resident ? resident->player().player().until_timer() : 0;});
             if(startup_->finished()) {
                 application_.complete_op_startup(startup_->random_state(),startup_had_logo_);
                 startup_.reset();startup_renderer_.reset();screen_=Screen::menu;
@@ -1674,6 +1676,10 @@ public:
             if(repaint)frame_=render();
             return;
         }
+        const auto sound_owner=sound_;
+        const auto refresh_ns=std::uint64_t(frame_period.count())*slowdown();
+        startup_clock_.advance(refresh_ns);
+        sound::Refresh sound_refresh(sound_owner.get(),refresh_ns);
         if(setup_) {
             setup_->advance(registration::input_from_main_actions(held_input));
             if(setup_->finished()) {
@@ -2086,6 +2092,7 @@ private:
     void advance_work(const sound::ElapsedWork& work) {
         // The sound owner rejects invalid work before either clock changes.
         sound_timeline_->advance_work(work);
+        startup_clock_.advance(work.nanoseconds);
         // An external elapsed-time observer already covers completed work.
         // Logical headless admission retains sub-refresh time across calls.
         if(!text_time_origin_) {
@@ -2099,6 +2106,7 @@ private:
         if(sound_timeline_->program()!=application::Program::op ||
            sound_timeline_->generation()!=application_.generation()) {
             sound_timeline_->enter(application::Program::op,application_.generation(),application_.resident().config);
+            startup_clock_.counter().start();
             if(assets_ && assets_->op_entry_work)
                 for(const auto& work:assets_->op_entry_work(application_.generation()))advance_work(work);
             if(assets_ && assets_->full_startup)begin_startup();
@@ -2118,7 +2126,7 @@ private:
                     for(const auto& work:assets_->startup_work(e,application_.generation()))advance_work(work);
                 if(e.kind==startup::Kind::logo_complete)application_.mark_op_logo_shown();
                 if(startup_observer_)startup_observer_(e);
-            },[this]{return sound_->song_measure();},application_.process_random_state(),0,startup_initial_palette_);
+            },[this]{return sound_->song_measure();},application_.process_random_state(),0,startup_initial_palette_,&startup_clock_);
         screen_=Screen::startup;
     }
     void release_sound() {sound_timeline_->leave();sound_.reset();}
@@ -2529,6 +2537,7 @@ private:
     std::unique_ptr<th04::portable::op_setup::Renderer> setup_renderer_;
     std::unique_ptr<th04::portable::op_startup::Renderer> startup_renderer_;
     std::unique_ptr<th04::portable::op_startup::Scene> startup_;
+    th04::portable::vsync::RasterClock startup_clock_;
     th04::portable::op_startup::Sink startup_observer_;
     bool startup_had_logo_=false;
     bool pending_op_scores_=false;

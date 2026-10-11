@@ -1,5 +1,7 @@
 # Working on TH04
 
+Prioritize function recovery and migration with focused compiler or component
+checks. Defer long game campaigns until the remaining source work is ready.
 The active goal is standalone builds and normal PC-98 gameplay. Native builds
 need not match original executable bytes. Do not reopen MAIN's carpet or
 checkerboard exactness cases. Adapt necessary ReC98 shared implementation into

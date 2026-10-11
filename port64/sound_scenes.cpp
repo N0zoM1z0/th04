@@ -74,6 +74,10 @@ void Timeline::advance_work(const ElapsedWork& work) {
     work_nanoseconds_+=work.nanoseconds;
     if(work_)work_(program_,generation_,work);
 }
+void Timeline::advance_elapsed(std::uint64_t ns) {
+    if(!runtime_)throw std::logic_error("elapsed sound wait requires process");
+    runtime_->advance(ns);
+}
 void Timeline::measure(int goal,int fallback) {
     SceneEvent e{SceneKind::measure,program_,generation_};e.goal=std::uint16_t(goal);e.fallback=std::uint16_t(fallback);emit(e);
     // This notification does not advance music. Consumers query the resident

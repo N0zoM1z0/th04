@@ -1,5 +1,33 @@
 # OP startup state and frontend ownership
 
+## PMD service and counted startup waits (v1401)
+
+The native startup now services PMD at its next live timer deadline while
+waiting for a measure. Logo waits consume the inherited unsigned Count1 and
+clear it afterwards; ordinary frame delays clear Count1 before waiting. The
+inactive music fallback also clears Count1 for its zero-frame delay. These
+orders follow the retained original OP wait observations from v1397.
+
+`Scene::advance_elapsed()` connects those waits to the frontend's raster clock
+and sound timeline. `ClockedPlayer::until_timer()` preserves fractional clock
+time when selecting the next service point. Resource work, startup waits and
+later refreshes share the raster phase; clearing Count1 leaves Count2 running.
+The existing logical-step interface remains available for component callers.
+
+The 512-file producer has manifest
+`60cf449182995f0010c8d36513afa55411113aeddc10291aef9e98374409c6e8`.
+Its cold GNU build produces 72 programs and passes 70 CTests; optimized UBSan
+produces nine selected programs and passes six contracts. Three compiled
+mutations reject clearing before a Logo wait, omitting the inactive zero-delay
+clear, and servicing PMD only once per refresh. Deadline and elapsed-partition
+checks cover the restored functions. The mutation readiness clock is synthetic;
+original ownership comes from the separately retained OP observations.
+
+Private receipts are under `.analysis/port64/native-startup-waits-v1401/`.
+`current-verification.json` verifies all producer/current source pairs,
+81 program hashes and saved test outcomes. Whole-picture and physical timing
+comparisons retain their earlier scope.
+
 v1346 implements the one-time ZUNsoft logo/fireworks and the OP title sequence.
 This closes the bounded control corpus and muted frontend ownership below.
 v1347 independently checks every pixel in the recorded corpus below. Full

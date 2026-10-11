@@ -14,8 +14,8 @@ Bytes text(const char* s) {return Bytes(s,s+std::char_traits<char>::length(s));}
 constexpr const char* slides[]={"op5b.pi","op4b.pi","op3b.pi","op2b.pi","op1b.pi","op0b.pi"};
 constexpr const char* fireworks[]={"zun02.bft","zun04.bft","zun01.bft","zun03.bft"};
 }
-Scene::Scene(const Assets& assets,bool logo,bool demo,Sink sink,Measure measure,std::uint32_t seed,std::uint16_t initial_held,Palette initial_palette)
-    :assets_(assets),sink_(std::move(sink)),measure_(std::move(measure)),random_(seed),palette_(initial_palette),held_(initial_held),demo_(demo) {
+Scene::Scene(const Assets& assets,bool logo,bool demo,Sink sink,Measure measure,std::uint32_t seed,std::uint16_t initial_held,Palette initial_palette,vsync::RasterClock* clock)
+    :assets_(assets),sink_(std::move(sink)),measure_(std::move(measure)),random_(seed),clock_(clock),palette_(initial_palette),held_(initial_held),demo_(demo) {
     queue([this,logo]{if(logo)start_logo();else start_title();});drain();
 }
 void Scene::emit(Kind k,int a,int b,int c,Bytes data) {if(sink_)sink_({k,tick_,a,b,c,std::move(data)});}
@@ -23,8 +23,18 @@ void Scene::queue(std::function<void()> task) {tasks_.push_back(std::move(task))
 void Scene::drain() {
     while(!waiting_ && !measure_wait_ && !tasks_.empty()) {auto task=std::move(tasks_.front());tasks_.pop_front();task();}
 }
-void Scene::wait(unsigned n) {if(!n)throw std::logic_error("startup empty wait");emit(Kind::wait,int(n));waiting_=n;}
+void Scene::wait(unsigned n,bool inherited) {
+    if(!n || n>65535)throw std::logic_error("startup wait threshold");
+    inherited_wait_=inherited;
+    if(clock_ && !inherited)clock_->counter().clear_wait();
+    emit(Kind::wait,int(n));waiting_=n;
+    if(clock_ && clock_->counter().one()>=n) {
+        if(inherited)clock_->counter().clear_wait();
+        waiting_=0;
+    }
+}
 void Scene::advance(std::uint16_t held) {
+    if(clock_)throw std::logic_error("timed startup requires elapsed admission");
     if(finished_)return;
     ++tick_;held_=held;
     if(measure_wait_) {
@@ -33,6 +43,40 @@ void Scene::advance(std::uint16_t held) {
         measure_wait_=false;logo_ready();
     } else if(waiting_)--waiting_;
     drain();
+}
+void Scene::advance_elapsed(std::uint64_t ns,std::uint16_t held,
+    const std::function<void(std::uint64_t)>& service,
+    const std::function<std::uint64_t()>& next_service) {
+    if(!clock_ || !service || !next_service || ns>1000000000ull)
+        throw std::invalid_argument("startup elapsed admission");
+    if(finished_)return;
+    ++tick_;held_=held;
+    while(true) {
+        if(measure_wait_) {
+            const auto value=measure_ ? measure_() : std::nullopt;
+            if(!value || *value>=2) {
+                // The inactive path calls frame_delay(0), which still clears.
+                if(!value)clock_->counter().clear_wait();
+                measure_wait_=false;logo_ready();
+            }
+        }
+        if(waiting_ && clock_->counter().one()>=waiting_) {
+            if(inherited_wait_)clock_->counter().clear_wait();
+            waiting_=0;
+        }
+        drain();
+        if(!ns)break;
+        auto step=ns;
+        if(measure_wait_) {
+            const auto next=next_service();
+            if(!next)throw std::logic_error("active PMD wait has no timer deadline");
+            step=std::min(step,next);
+        } else if(waiting_)step=std::min(step,clock_->until_count(std::uint16_t(waiting_)));
+        if(!step)throw std::logic_error("startup elapsed wait made no progress");
+        clock_->advance(step);service(step);ns-=step;
+        // Even after completion, drain the remainder on the same sound/raster
+        // epoch. Do not admit a menu input or a second logical frame here.
+    }
 }
 void Scene::palette_show() {emit(Kind::palette_show,tone_,0,0,Bytes(palette_.begin(),palette_.end()));}
 void Scene::apply_palette(const PiImage& image,unsigned slot) {palette_=image.palette;emit(Kind::palette,int(slot));palette_show();}
@@ -56,7 +100,8 @@ void Scene::start_logo() {
     for(auto& p:pyros_){p.alive=0;p.age=0;}
     emit(Kind::measure,2,0);
     const auto value=measure_ ? measure_() : std::nullopt;
-    if(value && *value<2)measure_wait_=true;else logo_ready();
+    if(value && *value<2)measure_wait_=true;
+    else {if(clock_ && !value)clock_->counter().clear_wait();logo_ready();}
 }
 void Scene::logo_ready() {
     tone_=100;palette_show();
@@ -117,7 +162,7 @@ void Scene::run_logo_frame() {
         emit(Kind::se_update);++logo_frame_;
         if(logo_frame_<170)queue([this]{run_logo_frame();});
         else fade(false,1,[this]{finish_logo();});
-    });wait(2);
+    });wait(2,true);
 }
 void Scene::finish_logo() {
     emit(Kind::super_free);emit(Kind::bg_free);emit(Kind::logo_complete);queue([this]{start_title();});

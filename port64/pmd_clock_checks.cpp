@@ -39,6 +39,15 @@ void contracts(){
     const auto before=a.timers().cycles();const auto count=a.interrupts();a.advance_ns(0);a.stop_music();
     require(before==a.timers().cycles() && count==a.interrupts(),"zero time and stop preserve clock");
     a.advance_ns(100000000);require(a.interrupts()>count,"resident IRQ after song stop");
+    for(auto board:{Board::fm26,Board::speakboard,Board::fm86})for(auto hz:{3993600u,4000000u,7987200u}) {
+        ClockedPlayer clock(board,hz);clock.advance_ns(123457);
+        const auto next=clock.until_timer();const auto previous=clock.interrupts();
+        require(next>1,"live timer deadline missing");
+        clock.advance_ns(next-1);require(clock.interrupts()==previous,"timer deadline rounded down");
+        clock.advance_ns(1);require(clock.interrupts()==previous+1,"timer deadline did not service interrupt");
+    }
+    ClockedPlayer cold(Board::fm26,4000000,{}, {},TimerEpoch::cold);
+    require(!cold.until_timer(),"stopped timers invented a deadline");
     bool rejected=false;try{a.advance_ns(1000000001);}catch(const std::invalid_argument&){rejected=true;}require(rejected,"bounded host step");
     std::cout<<"Continuous resident OPN clocks, reload phase, simultaneous flags and rational time PASS\n";
 }

@@ -3,6 +3,7 @@
 #include "motion.hpp"
 #include "random_lcg.hpp"
 #include "sprite_sheet.hpp"
+#include "pc98_vsync.hpp"
 #include <deque>
 #include <functional>
 #include <memory>
@@ -28,8 +29,13 @@ const char* kind_name(Kind);
 using Measure=std::function<std::optional<std::uint16_t>()>;
 class Scene {
 public:
-    Scene(const Assets&,bool logo,bool demo,Sink={},Measure={},std::uint32_t seed=rng::Lcg32::default_seed,std::uint16_t initial_held=0,Palette initial_palette={});
+    Scene(const Assets&,bool logo,bool demo,Sink={},Measure={},std::uint32_t seed=rng::Lcg32::default_seed,std::uint16_t initial_held=0,Palette initial_palette={},vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t held);
+    // Host elapsed admission, separate from logical ticks. Service advances
+    // sound; next_service returns its next timer deadline in nanoseconds.
+    void advance_elapsed(std::uint64_t ns,std::uint16_t held,
+                         const std::function<void(std::uint64_t)>& service,
+                         const std::function<std::uint64_t()>& next_service);
     bool finished() const {return finished_;}
     unsigned ticks() const {return tick_;}
     unsigned logo_frame() const {return logo_frame_;}
@@ -41,7 +47,7 @@ private:
     void emit(Kind,int=0,int=0,int=0,Bytes={});
     void queue(std::function<void()>);
     void drain();
-    void wait(unsigned);
+    void wait(unsigned,bool inherited=false);
     void fade(bool,unsigned,std::function<void()>);
     void palette_show();
     void apply_palette(const PiImage&,unsigned);
@@ -57,6 +63,7 @@ private:
     void spawn(int y,int x,unsigned count,unsigned pattern);
     void update_pyros();
     const Assets& assets_;Sink sink_;Measure measure_;rng::Lcg32 random_;
+    vsync::RasterClock* clock_;bool inherited_wait_=false;
     std::deque<std::function<void()>> tasks_;
     std::array<Pyro,256> pyros_{};Palette palette_{},logo_palette_{};
     unsigned tick_=0,waiting_=0,logo_frame_=0,slide_frame_=0,cel_=0,page_=0,fade_frame_=0;

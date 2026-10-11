@@ -76,4 +76,17 @@ void ClockedPlayer::advance_ns(std::uint64_t ns) {
     advance_cycles(scaled/1000000000);
     fraction_=std::uint32_t(scaled%1000000000);
 }
+std::uint64_t ClockedPlayer::until_timer() const {
+    std::uint64_t next=0;
+    for(unsigned timer=0;timer<2;++timer) {
+        const auto deadline=timers_.deadline(timer);
+        if(deadline && (!next || deadline<next))next=deadline;
+    }
+    if(!next)return 0;
+    const auto cycles=next-timers_.cycles();
+    if(cycles>std::numeric_limits<std::uint64_t>::max()/1000000000ull)
+        throw std::overflow_error("OPN timer nanoseconds");
+    const auto numerator=cycles*1000000000ull-fraction_;
+    return numerator/master_hz_+(numerator%master_hz_!=0);
+}
 }
