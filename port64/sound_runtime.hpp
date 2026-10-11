@@ -10,6 +10,10 @@ namespace th04::portable::sound {
 enum class ActionKind { play,update,force,command,load,reset,immediate_update };
 struct Action {ActionKind kind;std::uint16_t value=0;std::string name;};
 using ActionSink=std::function<void(const Action&)>;
+// Elapsed CPU/resource work is separate from an admitted refresh wait. Its
+// caller supplies time from a recorded or host clock; there is no fixed cost.
+enum class WorkKind {resource,graphics,process};
+struct ElapsedWork {WorkKind kind;std::uint64_t nanoseconds;};
 class Runtime {
 public:
     using Samples=std::function<void(const std::vector<std::int16_t>&)>;

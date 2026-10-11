@@ -1371,6 +1371,7 @@ public:
                 if(audio_output_)audio_output_->stereo(values);
             });
         if(mode_==gameplay::Mode::actor_control)std::cout<<"MAIN fixture mode=actor-control (hit consumption disabled)\n";
+        if(assets_)for(const auto& work:assets_->installed_work)sound_timeline_->advance_work(work);
         if (main_assets && !main_assets->reimu.empty()) {
             sprites_ = std::make_unique<MainSprites>(*main_assets);
         }
@@ -2078,6 +2079,8 @@ private:
         if(sound_timeline_->program()!=application::Program::op ||
            sound_timeline_->generation()!=application_.generation()) {
             sound_timeline_->enter(application::Program::op,application_.generation(),application_.resident().config);
+            if(assets_ && assets_->op_entry_work)
+                for(const auto& work:assets_->op_entry_work(application_.generation()))sound_timeline_->advance_work(work);
             if(assets_ && assets_->full_startup)begin_startup();
             else sound_timeline_->op_title(application_.resident().demo_number!=0);
         }
@@ -2091,6 +2094,8 @@ private:
             [this](const startup::Event& e) {
                 startup_renderer_->apply(e);
                 sound_timeline_->startup(e);
+                if(assets_->startup_work)
+                    for(const auto& work:assets_->startup_work(e,application_.generation()))sound_timeline_->advance_work(work);
                 if(e.kind==startup::Kind::logo_complete)application_.mark_op_logo_shown();
                 if(startup_observer_)startup_observer_(e);
             },[this]{return sound_->song_measure();},application_.process_random_state(),0,startup_initial_palette_);

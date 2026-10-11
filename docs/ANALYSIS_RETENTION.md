@@ -608,3 +608,19 @@ the cleanup writer's actual terminal stdout after process exit.
 
 Post-CI source-backed cache cleanup reclaims another 16.69 MiB; the full
 CI gates pass (root 441 / native 345), with ledger and diff checks.
+
+### Native elapsed work (v1395)
+
+Cold builds, separate actual FrontEnd callers and eight default profile
+captures close new source-bound proofs. Lossless content retirement reclaims
+about 472.70 MiB: 2697 build/program/video logical files in1407 unique blobs,
+plus 16 complete state/item text outputs in 2 blobs.
+Complete CRC/EOF/member SHA and logical size/mode/nsmtime are validated; all
+source freezes and closed receipts/logs retain their identities. Restore from
+the DOS root with
+`.analysis/reconstruction/probes/native-elapsed-work-v1395/verify_retention.py
+--restore`; `--prefix` limits restoration to a needed relative subtree. Parent
+protected state hashes resolve through the additional verified text archive.
+
+Both full CI gates pass (root 441 / native 345). Source-backed post-CI caches
+reclaim another 16.85 MiB; closed proof files remain protected.

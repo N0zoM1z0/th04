@@ -10,67 +10,67 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1394 isolates original Gaiji I/O work. Four read-only GAME.BAT/PMD86 captures
-cross fixed CPU budgets 24,000 / 36,000 with default / zero 8-bit I/O delay.
-Other configuration bytes, original HDI/reset/assets/font/emulator are identical.
-Each full 69,028-byte OP load and 804 ordered relocations agrees with the pinned
-decoded target. Load 10FC, DGROUP 2030; nine attested points yield 264 scalar
-rows including 256 read-glyph entries. Complete GDC model replay, port tables,
-raw PIC arithmetic and load/port/time/GDC mutation rejection pass. Controlled
-host stop at OP 0A74:0C79, before the next instruction, is not process completion.
+v1395 adds resident elapsed work across installation, OP resource/drawing
+consumers and process gaps. Typed `Timeline::advance_work` progresses the same
+Timer/PCM owner without a local process, or the local beeper/mix with a process.
+Pending refresh wait is flushed once before completed work; retained guards
+cannot charge it again. Unknown kinds and >1-second intervals reject before
+clock mutation. `MainAssets` exposes installation, OP-entry and startup-event
+adapters. Default inputs are empty; no fitted offset/bus cost/wait is added.
 
-Gaiji 0A74:0C6B→0C79 takes 40.235458 / 34.996667 ms with default I/O delay,
-versus 17.134000 / 11.404611 ms when only 8-bit delay is zero. Actual read-all
-0:1450→1471 and write-all 0:14BE→14E1 have 8,192 reads and 25,604 writes
-including selectors. Default delay [864,559,1118] ns and pinned integer debit
-arithmetic account for 22.829167 / 23.412333 ms of Gaiji-only work. Separate
-aggregate removed-cycle remainders remain recorded; zero-delay window debits
-are zero. CPU-normalized zero-delay ratio is 1.001591. This identifies the
-principal DOSBox-X I/O owner, not a physical ISA/CGROM delay or native constant.
+Current native producer: 510 files,
+55459c6f487e25ce39e0b8499b89f52936e0273c536905e94b8a7764426fdb7e.
+Six maintained native files change; DOS source/flags/headers do not change and
+fingerprint 6f5898dd stays fixed. Cold GNU builds 71 programs / passes 69 CTests;
+optimized UBSan builds seven selected targets / passes four sound contracts.
+Earlier 9cfe producer and proof receipts retain their identities.
 
-Three failed observer attempts retain their logs/partial streams and are
-rejected as incomplete: pre-guest Python indentation; a local window splitting
-an MZ relocation at 0A74:0C70; and the pinned DGROUP guard rejecting borrowed-DS
-write-glyph 0:1474. The accepted observer expands the relocation window and
-uses host I/O counters enabled only in the two transfer windows. Original
-emulator guards and target bytes remain unchanged.
+A separate caller compiles frozen maintained view.cpp, links cold product
+core/chip archives and executes actual FrontEnd with real PI/BFNT/music/effects,
+strict ROM and physical config. It forwards independent v1393 original 24,000 /
+36,000 CPU loading epochs through the new adapters. PLAY equals the source
+255,036,542 / 178,822,806 ns exactly. Both reach measure readiness at 93 refreshes;
+sample errors 3.648611 / 8.074889 ms are below one 17.723227 ms frontend refresh.
+Twelve complete GNU/UBSan callers (two inputs, three modes) have identical
+output tables. Allzero controls complete 97 refreshes but reject PLAY epoch;
+graphics-only removal also rejects even while aliasing 93 refreshes. Counts and
+program completion are insufficient. This conditional diagnostic is coarser
+than the retained standalone 1 ms probe; no physical chip/IRQ/GDC claim follows.
 
-Native source is unchanged at 510-file producer
-9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049.
-Retained v1392 GNU/UBSan build, Demo and private Xvfb proofs retain their
-identities; no native build/runtime acceptance is rerun here. v1393 observed
-Logo PI loading/drawing and supplied-age/zero-age diagnostics remain distinct.
-Native assets load in port64/main.cpp before resident PMD construction in
-port64/view.cpp; DOS installation precedes OP loading. Next implement explicit
-elapsed-work ownership through resources, drawing and process entry, with
-independent diagnostics before changing default clocks. Do not fit an emulator
-bus cost, fixed startup age or display-event count into product behavior.
+Eight fresh default CLI captures cover none/pmd/pmdb2/pmd86, full startup,
+four natural demos and fresh OP ready. Every compiler pair reproduces all 129
+files from its retained v1392 baseline. This is current source-bound regression,
+not restamping old receipts or default original clock/full-picture acceptance.
+Prior RGB limits remain 31/40 none, 34/40 active. Muted private Linux Xvfb
+startup/selection/input/focus/release/exit passes; audio device opens 0.
 
-Replay producers/receipts: DOSroot
-.analysis/reconstruction/probes/native-gaiji-clock-v1394/; native copies under
-.analysis/port64/native-gaiji-clock-v1394/. Public ROOT reader:
-scripts/runtime/verify_gaiji_io_clock.py. Restore retired verifier/HDI inputs:
+Replay: DOSroot .analysis/reconstruction/probes/native-elapsed-work-v1395/;
+native .analysis/port64/native-elapsed-work-v1395/. Current source freeze,
+compiler/caller/run/comparison receipts and original-parent pins remain live.
+Restore archived programs/build/RGB/state inputs from the DOS root:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-gaiji-clock-v1394/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-elapsed-work-v1395/verify_retention.py --restore
 ```
 
-Lossless content deduplication retires 49 logical files into 15 unique blobs,
-reclaiming 604.43 MiB across this batch. Entire gzip CRC/EOF, logical member
-SHA/size/mode/nsmtime and protected proof checks precede removal. The earlier
-temporary archive container is retired after all its logical members verify;
-compressed wrapper bytes are not a replay claim. Raw completed/failed inner
-captures, scripts, receipts and logs remain immutable and live. Build outputs
-were not generated. Both full CI gates pass (root 441 / native 345 tests),
-with ledger and diff checks. Source-backed post-CI caches reclaim 16.69 MiB.
+Use --prefix to restore only a required relative subtree, and fresh namespaces
+for another execution. Lossless retirement reclaims about 472.70 MiB of
+build intermediates/programs, RGB/indexed samples and duplicate state/item
+outputs. Full gzip CRC/EOF, content hashes, logical size/mode/nsmtime and
+protected proof/source pins are checked. First archive has 2697 logical files /
+1407 unique blobs; additional text archive retains 16 logical files /
+2 unique blobs. Failed first caller compilation remains failed;
+V2 fixes only its frozen root include path. Both full CI gates pass (root 441 /
+native 345), with ledger and diff checks. Post-CI source-backed caches reclaim
+16.85 MiB separately; proof inputs remain protected.
 
-Goal remains active; MAIN historical carpet/checkerboard exactness is deferred,
-targets remain candidate-local-attested and DOS fingerprint 6f5898dd is unchanged.
-Full default pictures, broader paired combat/process, physical/cross-emulator
-scanout and Windows input/audio remain open. Continue CPU0/nice19 serial muted
-Linux work; Windows GUI/focus/host keys remain excluded.
-
-See the focused differential note for detailed evidence and prior proof limits.
+Next establish deterministic default resource/graphics work inputs and connect
+the distinct GDC/application epoch; do not substitute host wall time or a fitted
+startup age for original CPU/bus work. Goal remains active. Full pictures,
+broader paired combat/process, physical/cross-emulator, Windows input/audio and
+MAIN historical carpet/checkerboard exactness remain open. Targets remain
+candidate-local-attested. Continue CPU0/nice19 serial muted Linux work;
+Windows GUI/focus/host keys remain excluded.
 
 Prior demo/point-number/presentation experiments are indexed in
 [demo evidence](port64/evidence/demo.md) and their immutable private receipts.

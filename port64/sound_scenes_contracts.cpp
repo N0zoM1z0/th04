@@ -54,6 +54,43 @@ int main() {try {
         events.back().action.kind==sound::ActionKind::load && events.back().action.value==0xb00,
         "demo-return OP must not restart title music");
     timeline.leave();require(!timeline.runtime(),"process exit releases local sound");
+    {
+        auto resident=std::make_shared<sound::ResidentPmd>(sound::PmdProfile{});
+        std::vector<std::pair<application::Program,std::uint32_t>> work_owners;
+        std::uint64_t frames=0;
+        sound::Timeline clock({}, {}, {}, resident,
+            [&](auto,auto,const auto& block){frames+=block.size();}, {},
+            [&](auto p,auto g,const auto&){work_owners.emplace_back(p,g);});
+        clock.advance_work({sound::WorkKind::resource,2000000});
+        require(resident->player().player().timers().cycles()==8000 && frames==96,
+                "installed resident progresses before a process exists");
+        menu::Options silent;silent.bgm_mode=0;silent.se_mode=0;
+        clock.enter(application::Program::op,1,silent);
+        const auto local=clock.runtime();
+        {
+            sound::Refresh refresh(local.get(),3000000);
+            clock.advance_work({sound::WorkKind::graphics,4000000});
+            require(resident->player().player().timers().cycles()==36000,
+                    "elapsed work follows pending refresh exactly once");
+        }
+        require(resident->player().player().timers().cycles()==36000,
+                "retained refresh guard must not repeat a consumed wait");
+        clock.leave();clock.advance_work({sound::WorkKind::process,5000000});
+        clock.enter(application::Program::maine,2,silent);
+        require(clock.resident()==resident && clock.runtime()!=local &&
+                resident->player().player().timers().cycles()==56000 && frames==672 &&
+                clock.work_nanoseconds()==11000000 && work_owners.size()==3 &&
+                work_owners[0]==std::make_pair(application::Program::exited,0u) &&
+                work_owners[1]==std::make_pair(application::Program::op,1u) &&
+                work_owners[2]==std::make_pair(application::Program::exited,1u),
+                "process gap preserves resident time, PCM and work attribution");
+        bool rejected=false;
+        try{clock.advance_work({sound::WorkKind::resource,1000000001ull});}
+        catch(const std::out_of_range&){rejected=true;}
+        require(rejected && clock.work_nanoseconds()==11000000 &&
+                resident->player().player().timers().cycles()==56000,
+                "invalid work must not partially advance the owner");
+    }
     std::cout<<"Sound process lifetimes, forced SE wait ordering and absent measures PASS\n";
     return 0;
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

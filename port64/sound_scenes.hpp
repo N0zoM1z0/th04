@@ -24,10 +24,11 @@ public:
     using Samples=std::function<void(application::Program,std::uint32_t,const std::vector<std::int16_t>&)>;
     using StereoSamples=std::function<void(application::Program,std::uint32_t,const std::vector<pmd::StereoSample>&)>;
     using Requests=std::function<void(application::Program,std::uint32_t,const Request&)>;
+    using WorkSink=std::function<void(application::Program,std::uint32_t,const ElapsedWork&)>;
     Timeline(Beeper::Reader reader={},SceneSink observer={},Samples samples={},
-             std::shared_ptr<ResidentPmd> resident={},StereoSamples stereo={},Requests requests={})
+             std::shared_ptr<ResidentPmd> resident={},StereoSamples stereo={},Requests requests={},WorkSink work={})
         :reader_(std::move(reader)),observer_(std::move(observer)),samples_(std::move(samples)),
-         resident_(std::move(resident)),stereo_(std::move(stereo)),requests_(std::move(requests)) {}
+         resident_(std::move(resident)),stereo_(std::move(stereo)),requests_(std::move(requests)),work_(std::move(work)) {}
     void enter(application::Program,std::uint32_t,const menu::Options&);
     void leave();
     void configure(const menu::Options&);
@@ -35,6 +36,8 @@ public:
     void startup(const op_startup::Event&);
     void op_restart(const menu::Options&);
     void handle(const Action&);
+    void advance_work(const ElapsedWork&);
+    std::uint64_t work_nanoseconds() const {return work_nanoseconds_;}
     void cutscene(const cutscene::Event&);
     void staff(const staff::Event&);
     void registration(const registration::Event&);
@@ -50,6 +53,7 @@ private:
     Beeper::Reader reader_;SceneSink observer_;Samples samples_;
     std::shared_ptr<ResidentPmd> resident_;StereoSamples stereo_;
     Requests requests_;
+    WorkSink work_;std::uint64_t work_nanoseconds_=0;
     std::shared_ptr<Runtime> runtime_;
     application::Program program_=application::Program::exited;
     std::uint32_t generation_=0;

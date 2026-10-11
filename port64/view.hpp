@@ -14,6 +14,7 @@
 #include "op_setup.hpp"
 #include "pmd_resident.hpp"
 #include "op_startup.hpp"
+#include "sound_runtime.hpp"
 
 struct StageAssets {
     Bytes stage_tiles,boss_tiles,backdrop,transition,boss_faces,map_tiles,map,standard,stars;
@@ -42,6 +43,12 @@ struct MainAssets {
     Bytes main_effects;
     std::map<std::string,Bytes> sound_resources;
     std::optional<th04::portable::sound::PmdProfile> pmd_profile;
+    // Explicit elapsed-work adapters. Empty inputs admit no time; loading is
+    // never assigned a fitted startup offset or an emulator bus constant.
+    std::vector<th04::portable::sound::ElapsedWork> installed_work;
+    std::function<std::vector<th04::portable::sound::ElapsedWork>(std::uint32_t)> op_entry_work;
+    std::function<std::vector<th04::portable::sound::ElapsedWork>(
+        const th04::portable::op_startup::Event&,std::uint32_t)> startup_work;
     std::string resident_sound_checks;
     bool muted=true;
     bool demo_pictures=false;

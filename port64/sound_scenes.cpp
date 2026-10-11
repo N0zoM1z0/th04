@@ -1,5 +1,6 @@
 #include "sound_scenes.hpp"
 #include <stdexcept>
+#include <limits>
 namespace th04::portable::sound {
 namespace {
 std::string name(const score_file::Bytes& data){return std::string(data.begin(),data.end());}
@@ -53,6 +54,25 @@ void Timeline::op_restart(const menu::Options& options) {
 void Timeline::handle(const Action& a) {
     if(!runtime_)throw std::logic_error("sound request requires process");
     runtime_->handle(a);
+}
+void Timeline::advance_work(const ElapsedWork& work) {
+    if(work.kind!=WorkKind::resource && work.kind!=WorkKind::graphics && work.kind!=WorkKind::process)
+        throw std::invalid_argument("unknown elapsed sound work");
+    if(work.nanoseconds>1000000000ull ||
+       work.nanoseconds>std::numeric_limits<std::uint64_t>::max()-work_nanoseconds_)
+        throw std::out_of_range("elapsed sound work exceeds admission");
+    if(runtime_) {
+        // A completed wait precedes this work. Clearing its pending remainder
+        // prevents the retained refresh guard from charging that wait again.
+        runtime_->flush_refresh();runtime_->advance(work.nanoseconds);
+    } else if(resident_) {
+        // Installation and process replacement have no local beeper. Keep
+        // the same resident timer/PCM epoch, and drain every generated block.
+        auto values=resident_->advance(work.nanoseconds);
+        if(stereo_)stereo_(program_,generation_,values);
+    }
+    work_nanoseconds_+=work.nanoseconds;
+    if(work_)work_(program_,generation_,work);
 }
 void Timeline::measure(int goal,int fallback) {
     SceneEvent e{SceneKind::measure,program_,generation_};e.goal=std::uint16_t(goal);e.fallback=std::uint16_t(fallback);emit(e);
