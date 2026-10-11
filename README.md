@@ -47,7 +47,9 @@ fall from 55,357 to 430. v1379 restores the full physical background ring and
 removes the remaining 430 pixels at that sample on GNU/optimized UBSan. The
 retained v1378 GNU cold build has 71 programs and 69
 passing CTests; optimized UBSan game/trace/shake targets are cold-built
-separately. Full pictures remain open.
+separately. v1380 corrects Marisa laser color timing: 11,384 differences across
+four Demo 2 samples disappear, and all ten sampled Demo 2 game areas now agree.
+Five other sampled game areas still differ. Full pictures remain open.
 
 ## Build and run
 

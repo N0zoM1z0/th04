@@ -1030,13 +1030,16 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         } else throw std::runtime_error("enemy references unsupported sprite sheet");
     }
     if (shots.laser.time > 32) {
+        // MAIN 0AAF:3704 renders with stage_frame_mod2 before the update
+        // tail increments it. State::frames() already includes that tail.
+        const auto laser_color=8u+((state.frames()-1u)&1u);
         const auto dots = shots.laser.dots();
         const auto bottom = shots.laser.bottom.current;
         for (int side : {-24,24}) {
             const int left = 32+pixels(bottom.x)+side-4;
             for (int y=0;y<pixels(bottom.y);++y) for (unsigned x=0;x<8;++x) {
                 if (dots & (0x80u >> x)) {
-                    put_indexed_pixel(frame,palette,left,16,x,unsigned(y),8+state.frames()%2);
+                    put_indexed_pixel(frame,palette,left,16,x,unsigned(y),laser_color);
                 }
             }
         }

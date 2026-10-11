@@ -569,3 +569,70 @@ immutable. Two new FrontEnd programs and all older programs/sources stay live.
 From DOS root, use python3 .analysis/reconstruction/probes/native-ring-v1379/verify_retention.py --restore before reading retired captures, fulltile pixels or relink objects;
 without --restore it performs temporary complete readback. Old v1378 proof
 retains its then-current509/9346e951 scope and cannot attest live8e77830c source.
+
+## Marisa laser presentation color phase (v1380)
+
+Observed MAIN_01_TEXT 0AAF:3704..37C7 (file F9F4..FAB7, 196 bytes)
+loads DGROUP 2134:538C at 3786 and adds 8 for the GRCG color. It renders
+before the complete update tail increments the frame modulo. The actual raw
+laser blitter is 0AAF:1378..13DA (file D668..D6CA, 99 executable bytes);
+the following alignment byte is outside this executable extent.
+
+Runtime-observed execution of this caller and its actual STOSB/STOSW blitter
+uses four complete, attested original Demo 2 DGROUP states. Recorded display
+scroll selects the visible row; GRCG color/masks use an explicit adapter.
+Every former game-area difference is palette index 8 versus 9 with the same
+beam geometry: frames 1952/3379/3709/3996 differ at 4216/2967/2186/2015
+pixels. All 11,384 pixels equal the original CPU beam color; the old native
+pixel equals that color XOR 1. Full 256,000-pixel beam outputs are retained.
+This accepts an adapted component observation, with physical scanout open.
+
+Native State::frames() already includes the update tail. Using
+8 + ((frames - 1) & 1) repairs this color phase. GNU and optimized UBSan
+actual muted SDL-dummy idle OP→four demos→OP captures now have zero game-area
+differences in all ten sampled Demo 2 frames. The five other nonzero samples
+remain unchanged: Demo 1 frames 1/1952/3996 and Demo 3 frames 3379/3709.
+All 40 full canonical text planes, 15,988 selected scalar/count boundaries
+and 15,984 complete shake states/requests pass. All 125 complete files agree
+between variants; complete parent state/shake traces remain byte-identical.
+Full graphics/RGB samples remain diagnostic, with no crop or mask acceptance.
+Initial background and circle effects, broader routes and scanout remain open.
+
+Only view.cpp differs from v1379 among 509 producer inputs. Manifest:
+f5791751c2473da2efaa4bf86e7265ce5c99f6ab23c4f1dc166248cd2b555cbf.
+Both variants cold-compile that TU and relink attested unchanged dependencies;
+this is a bounded build. Previous whole cold/69-CTest and complete-pool receipts
+keep their original producers. The first parent receipt-path failure is retained
+with its source and log. Frozen imported DOS/native readers independently
+reproduce both complete shake receipts except their pinned source hashes.
+No DOS product inputs, target bytes or historical exact acceptance change.
+Fresh preflight and live MAIN database attestation pass; target provenance
+remains candidate-local-attested.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-shot-render-v1380/
+attest_laser.py, build_frontends.py, run_validations.py, freeze_readers.py.
+Receipts: native .analysis/port64/native-shot-render-v1380/. All heavy jobs use
+CPU0/nice15 serial execution; all launches remain muted and headless.
+
+## v1380 terminal validation and recovery
+
+All v1380 jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
+unavailable private native gates skip. Full parent/current sample hashes show
+36 complete index/RGB samples unchanged. All 11,384 pixel changes in the other
+four complete index pictures equal the actual original CPU beam and original
+pixels on both variants. This further bounds the repair; whole pictures stay open.
+
+Lossless retirement reclaims 156,069,888 allocated bytes (148.8 MiB) before
+journal cost: 354 complete sample/capture/build files and 1,044 source-backed
+caches. Full restoration/SHA/size/mode/nsmtime/gzip EOF, 17,815 protected
+hashes, 509 source pins and unchanged DOS fingerprint pass before and after
+deletion. The cleanup log is excluded while writing. Two new FrontEnd programs,
+all old programs, frozen sources, original references and failures stay live.
+From DOS root, restore retired inputs before CPU/graphics/reader/relink replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-shot-render-v1380/verify_retention.py --restore
+```
+
+Without --restore, it performs temporary complete readback. Old v1379 proof
+retains its then-current 8e77830c scope and cannot attest live f5791751 sources.
