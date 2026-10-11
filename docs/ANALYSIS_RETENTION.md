@@ -7,6 +7,29 @@ Its verified snapshot predates those renderer changes. Attest a combined
 producer when integrating the two histories. The v1401 startup implementation
 already reached `port/modern-64` through fffcc83.
 
+## v1410 DOS ordinary text
+
+Frozen producer 1,425/451a46f7 and replay index:
+`dos-text-character-v1410/.analysis/reconstruction/probes/dos-text-character-v1410/`
+in the isolated tree. Three cold products/MAPs, source freeze, complete mapped
+instruction bodies, 3,156 text and 2,656 Gaiji comparisons, and all 80 compiled
+predecessor differences remain live.
+
+Retirement archives 3,572 owned source/object paths / 1,438 blobs and removes
+547 source-backed Python caches. Gzip CRC, every blob, temporary metadata
+restoration and 778 protected files pass. Net reclamation is 21.14 MiB after
+archive and journals. The closure reader also checks the frozen v1407 source
+archive and 30 closed files without rebinding them to the new source.
+
+```sh
+python3 .analysis/worktrees/dos-text-character-v1410/.analysis/reconstruction/probes/dos-text-character-v1410/verify_closure.py
+python3 .analysis/worktrees/dos-text-character-v1410/.analysis/reconstruction/probes/dos-text-character-v1410/verify_retention.py
+```
+
+Use the retention reader with `--restore --prefix <owned producer subtree>`
+when an archived compiler input is needed. Restore only the required paths;
+source, products and transcripts keep their original proof identities.
+
 ## v1409 native ordinary text
 
 Replay index in the native tree:

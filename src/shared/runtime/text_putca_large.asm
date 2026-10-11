@@ -7,9 +7,9 @@
 
     .8086
     .model use16 large SHARED
+    .data
+    extrn _TextVramSeg:word
     .code SHARED
-
-TEXT_VRAM_SEG = 0A000h
 
 public TEXT_PUTCA
 
@@ -26,7 +26,7 @@ TEXT_PUTCA proc far
     shl ax, 1
     add di, ax
     shl di, 1
-    add di, TEXT_VRAM_SEG
+    add di, _TextVramSeg
     mov es, di
     mov di, ss:[bp+10]
     shl di, 1

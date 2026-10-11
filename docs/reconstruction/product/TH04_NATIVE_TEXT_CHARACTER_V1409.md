@@ -1,6 +1,67 @@
-# Native ordinary text character writers
+# Ordinary text character writers
 
-## Recovered source
+## DOS mutable text segment (v1410)
+
+`src/shared/runtime/text_putca_large.asm` and
+`src/main/hardware/text_putsa.asm` now load the shared `_TextVramSeg` word.
+Its C++ owner remains in `gaiji_text.cpp`, initialized to A000h. Both functions
+read it before any far-string DS change. Their conversion, store order and
+far Pascal cleanup stay intact.
+
+A fresh serial build compiles all 360/165/139 MAIN/OP/MAINE objects. All links,
+IRQ audits and MAIN bullet tables pass. Product sizes remain 199,585 / 79,502 /
+72,376 bytes. The 1,425-file input fingerprint is
+`451a46f7ee569bfe9c55c8f65fd8dbcb4cb966eb84c3a0439c67ebe106b09209`.
+
+The complete character function is 87 bytes in each product; MAIN's string
+function is 114 bytes. Each matches the original MAIN extent after rewriting
+only the WORD operand at byte 21 from original DGROUP:0768 to its linked
+`_TextVramSeg` offset. Neither extent contains a loader relocation. This is a
+complete mapped code comparison; historical authored exact stays 661/663.
+OP/MAINE use the shared MAIN character contract here, rather than a claim of
+separate original OP/MAINE text-function observations.
+
+`scripts/runtime/verify_dos_text_character.py` executes actual original and
+linked bodies. MAIN passes all 840 fixtures at loads 1000/3333: 1,680 complete
+80000h..DFFFFh memory, ordered WORD write and far-call state comparisons.
+OP and MAINE each pass 369 character fixtures at both loads, for another
+1,476 comparisons. The 3,156 comparisons cover coordinates, attributes,
+alternate text bases, WORD characters, NUL, malformed pairs and long strings.
+Existing text Gaiji retains all 2,656 original MAIN/MAINE comparisons.
+
+The string fixture uses 6500:0000 RAM, beyond each loaded image and below the
+return trampoline/stack. DF is clear and a second zero follows the C terminator.
+Fresh original execution with this pointer agrees with every retained original
+record. The first fixture rejected a buffer inside MAIN's load image; its
+source and partial output remain retained. An initial MAINE regression lacked
+its decoded-original input; the existing hash-attested input was linked into
+the isolated tree before the successful replay.
+
+The compiled v1407 MAIN control differs in all 80 alternate-base fixtures.
+All 80 have a different return ES; final memory differs in 0/8/16/24 bytes.
+The zero-memory cases still expose the wrong segment through ES. The reader
+checks these failures and both sides' complete writes.
+
+Replay index in the root repository:
+`.analysis/worktrees/dos-text-character-v1410/.analysis/reconstruction/probes/dos-text-character-v1410/`.
+Selected products and MAPs remain in that tree's `.analysis/build/` and producer
+folders. The source freeze and complete compressed transcripts are retained.
+CI passes 451 tests. Retirement archives 3,572 owned paths / 1,438 blobs and
+removes 547 source-backed Python caches, reclaiming 21.14 MiB net. Gzip CRC,
+every blob, temporary mode/nsmtime restoration and 778 protected files pass.
+The closure reader verifies full current transcripts and 30 frozen DOS files.
+
+```sh
+python3 scripts/runtime/verify_dos_text_character.py --artifact main \
+  --exe PRIVATE_MAIN_EXE --map PRIVATE_MAIN_MAP \
+  --reference RETAINED_V1409_DRAFT_ORIGINAL --output FRESH_OUTPUT
+```
+
+Use `--artifact op` or `maine` to check only their shared character consumer.
+Use `--diagnostic --alternate-bases-only` for the old compiled control.
+Continue the remaining hardware/native function owners before long game runs.
+
+## Recovered native source (v1409)
 
 Native commit 328585f replaces `TextPlane::put_ank()` with
 `put_character()`, accepting the original complete WORD input. A zero high
@@ -55,12 +116,8 @@ from 250 compiler-cache paths and 515 source-backed Python caches.
 python3 .analysis/worktrees/port-motion-v1402/.analysis/port64/native-sjis-text-v1409/verify_closure.py
 ```
 
-## Next DOS source recovery
+## Remaining function work
 
-`src/shared/runtime/text_putca_large.asm` and
-`src/main/hardware/text_putsa.asm` still add a fixed A000h text segment.
-Bind both to the maintained `TextVramSeg` owner, preserve the existing far
-Pascal ABI and conversion/store order, then cold-build the affected product
-and compare original instructions at both loads with alternate-base controls.
-Historical authored exact remains 661/663. Continue source recovery before
-long game campaigns; the VSync review uses its own separate frozen producer.
+The ordinary DOS text references are recovered in v1410 above. Continue the
+separate installed-owner VSync recovery and other native hardware adapters.
+The full reconstruction/native goal remains active.

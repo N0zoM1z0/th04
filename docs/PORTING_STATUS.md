@@ -10,6 +10,32 @@ Updated 2026-10-12. The full native goal remains active on `port/modern-64`, in
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
 
+## DOS ordinary text writers (v1410)
+
+Both text ASM owners now read the maintained `TextVramSeg` instead of adding
+a fixed A000h. The character writer keeps its full WORD ANK/JIS/Shift-JIS
+conversion; the string writer keeps its lead-byte handling, store order,
+wrapped attribute count and far Pascal ABI.
+
+Cold MAIN/OP/MAINE builds pass links, IRQ audits and MAIN bullet tables.
+The complete 87-byte character body in all three products and the 114-byte
+MAIN string body agree with original MAIN after mapping only the text
+variable's data offset. MAIN passes 1,680 full memory/write/ABI comparisons
+at loads 1000/3333; OP/MAINE each pass 738 against the shared MAIN character
+contract. The prior Gaiji owners retain 2,656 original comparisons.
+The compiled v1407 MAIN predecessor differs in all 80 alternate-base controls,
+including return ES. Far strings use independent RAM outside the loaded image.
+
+Producer 1,425/451a46f7 and selected products are in the isolated
+`dos-text-character-v1410` tree. Complete records and readers are under
+`.analysis/reconstruction/probes/dos-text-character-v1410/` there. See
+[text writer recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md).
+Historical authored exact remains 661/663; native remains at 328585f.
+CI passes 451 tests. Verified retirement reclaims 21.14 MiB net; complete
+current records and 30 frozen DOS parent files retain their hashes.
+Continue source recovery, including the separate DOS installed-owner VSync
+frontier, before long game campaigns. The full goal stays active.
+
 ## Native ordinary text writers (v1409)
 
 `TextPlane` now recovers the complete WORD character input and the original
@@ -30,10 +56,9 @@ Verified cache retirement reclaims 14.50 MiB net; the closure reader checks
 all current proofs and 780 frozen parent files. See
 [ordinary text recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md).
 
-Original instructions read `TextVramSeg` at DGROUP 2134:0768. The two DOS ASM
-owners still fix A000h; recover their mutable references with a cold affected
-product and original-instruction comparison next. Historical authored exact
-acceptance remains 661/663. The full reconstruction/native goal stays active.
+Original instructions read `TextVramSeg` at DGROUP 2134:0768. The DOS ASM
+references are recovered by v1410 above. Historical authored exact acceptance
+remains 661/663. The full reconstruction/native goal stays active.
 The palette VSync review remains a separate frozen producer.
 Root CI passes 451 tests and the updated ledgers; target preflight passes.
 

@@ -1,7 +1,7 @@
 ; TH04 standalone provider adapted from the bounded ReC98 master.lib source.
 include src/shared/runtime/master_large.inc
 .data
-TextVramSeg equ 0A000h
+extrn _TextVramSeg:word
 .code SHARED
 ; master library - PC98
 ;
@@ -64,7 +64,7 @@ TEXT_PUTSA proc far
 	shl	AX,1
 	add	DI,AX
 	shl	DI,1
-	add	DI,TextVramSeg
+	add	DI,_TextVramSeg
 	mov	ES,DI
 	mov	DI,[BP + @@x]
 	shl	DI,1
