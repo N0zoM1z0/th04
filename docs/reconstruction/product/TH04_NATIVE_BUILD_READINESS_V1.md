@@ -675,9 +675,37 @@ The first palette support owner adds `palette_state.asm` and
 exports both C and Pascal spellings for `PaletteTone` and the 48-byte
 `Palettes` array. `PALETTE_SHOW` writes 16 analog palette entries through
 PC-98 ports `0xA8`, `0xAC`, `0xAA`, and `0xAE`; tone 0..100 scales each
-component's high nibble toward black and 100..200 toward white. This follows
-the analog branch of the bounded ReC98 reference. That first owner covered analog output only. The complete LCD branch is
-recovered below under v1415; physical display timing remains open.
+component's high nibble toward black and 100..200 toward white. That first owner followed only the analog branch of the bounded ReC98
+reference. The complete LCD branch is recovered below under v1415; physical display timing remains open.
+
+### Native shared palette recovery and counter integration (v1418/v1419)
+
+`pc98_palette::show()` now models the complete original analog and notebook
+LCD function. It truncates the caller's tone to a signed WORD before the
+0..200 clamp. This replaces the separate calculations in startup, Setup,
+ranking, Music Room, registration, Game Over and the frontend. DAC conversion
+runs once on the sixteen palette entries before indexed pixels become RGB8.
+The startup renderer also accepts the explicit notebook flag/query inputs.
+
+Both fresh compilers agree with all 20,832 original v1415 ordered port records,
+including the real startup DAC and query dispatch. Compiling the actual
+c2d8363 startup owner rejects 288 of 1,368 analog controls because its wider
+host integer is clamped before WORD truncation. Its missing notebook API is
+outside that negative comparison.
+
+The initial 534/c61549d2 producer and joined 536/3ba0ba42 producer retain
+separate source archives and outputs. The join contains counter-delay source
+dcbe8f7 and palette source 3add0fd. Its fresh GNU/optimized UBSan builds each
+cover the complete core/frontend and nine selected component programs, with
+nine CTests and the original counter/integer vectors. Both native CI gates
+pass 345 tests. The earlier full 82-program/80-CTest counter graph keeps its
+own producer. The join's closure checks 5,945 frozen parent pins and reads the
+complete palette streams; physical LCD scanout remains separate.
+
+Private replay is in `.analysis/worktrees/native-palette-show-join-v1419/`
+under `.analysis/port64/native-palette-show-join-v1419/`; source and component
+commands are recorded. Continue live scene-wait consumers after this shared
+function recovery. Historical authored exact counts are unchanged.
 
 ### Complete palette output, including notebook LCD (v1415)
 

@@ -54,14 +54,17 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `dcbe8f7`
-(producer 534/8a83575e). A live WORD delay clears only Count1 and polls its
-unsigned value. Bulk IRQ/raster progression supports large input boundaries;
-the callback path retains every IRQ. Both complete GNU and optimized
-UBSan/bounds graphs build 82 programs and pass all 80 CTests. Original
-consumer/ISR controls, 2,008 independent integer vectors and eight muted
-startup/four-Demo/fresh-OP regressions pass. Actual elapsed MAINE/registration
-consumers remain open; see the [VSync note](docs/reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
+Native development is active. `origin/port/modern-64` is at `85fe1f3`
+(producer 536/3ba0ba42). The shared palette function now preserves signed
+WORD inputs and complete analog/LCD output, and serves seven display
+consumers. Fresh GNU and optimized UBSan/bounds each build the complete
+core/frontend and nine selected component programs, pass nine CTests, and
+agree on 20,832 original palette port/DAC controls. The joined live WORD
+delay and bulk IRQ owner also retain 144 original consumer controls,
+36 real ISR controls and 2,008 independent integer vectors per compiler.
+The earlier full 82-program/80-CTest graph keeps its own producer. See the
+[palette recovery](docs/reconstruction/product/TH04_NATIVE_BUILD_READINESS_V1.md)
+and [VSync note](docs/reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
 
 Current shared DOS also restores analog/LCD palette output, with text and
 installed-owner VSync recovery (producer 1,425/491e4afa). Three cold products

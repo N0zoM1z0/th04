@@ -5,6 +5,31 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Joined native palette output and counter delays (v1419)
+
+Published `port/modern-64`: `85fe1f30af27a1aee1a8822f2e950c95cafa2a11`.
+Shared `pc98_palette::show()` restores the three complete 266-byte originals:
+MAIN 0000:1F04, OP 0000:1DE0 and MAINE 0000:19EC. It keeps signed WORD
+truncation, tone clamping, analog output and the notebook LCD branch with its
+original masks, weighting, query polarity and port order. Startup's actual
+DAC consumer and six other display consumers use this source.
+
+Fresh joined producer 536/3ba0ba42 retains the published live WORD delay and
+bulk IRQ owner. GNU Release and optimized UBSan/bounds each cold-build the
+complete core/frontend and nine related programs, pass nine selected CTests,
+and agree on 20,832 retained original palette I/O/DAC controls. Each also
+passes 144 original delay consumers, 36 real ISR controls and 2,008 independent
+integer/raster vectors. Native CI passes 345 tests. The actual prior startup
+source rejects 288 of 1,368 analog controls. Historical exact stays 661/663.
+
+Replay is under each owned tree's `.analysis/port64/`, in
+`native-palette-show-v1418` and `native-palette-show-join-v1419`.
+The original v1415/v1417 captures keep their own source identities. Current
+source freezes, selected programs and 5,945 parent pins remain; verified
+compiler/cache retirement releases 101.02 MiB net across both producers.
+Continue shared elapsed scene-wait ownership. Physical LCD scanout, broader
+paired routes and Windows remain open; this recovery ran no game campaign.
+
 ## Native IRQ counter and frame_delay primitive (v1417)
 
 Producer 534/8a83575e adds live `vsync::Delay`: construction clears only
@@ -43,7 +68,7 @@ producer: `.analysis/worktrees/native-counter-delay-v1417/.analysis/port64/nativ
 Verified retirement reclaims 506.12 MiB net. Source freeze, full original/
 integer projections, selected programs and compiled mutations remain.
 Historical exact remains 661/663; actual elapsed consumers, complete pictures,
-broader Boss/death/process, native LCD mapping and Windows remain open.
+broader Boss/death/process, physical LCD scanout and Windows remain open.
 
 Published native head: `dcbe8f73c0a5e36b93fc2117252ffe71055e7c71`.
 

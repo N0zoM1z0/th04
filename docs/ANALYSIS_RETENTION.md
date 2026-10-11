@@ -1773,3 +1773,25 @@ comparison and source closure; no retired compiler source is needed for it.
 Terminal CI passes all 451 tests and the tracking/catalog checks. Source-backed
 cleanup removes another 549 Python caches and releases 8.57 MiB net;
 `cache-cleanup.json` records each cache and its retained source hash.
+
+### Native shared palette and counter join (v1418/v1419)
+
+The two owned native producers retain full 534/536-file source archives,
+36 selected current programs, the real prior startup, original/control
+streams and the complete independent parent pins. The failed first 534-file
+namespace/recipe attempt also keeps its source and logs. Lossless compiler
+retirement plus source-backed caches release 101.02 MiB net across both
+producers; the join alone releases 46.22 MiB.
+
+From `.analysis/worktrees/native-palette-show-join-v1419/`:
+
+```sh
+python3 -B .analysis/port64/native-palette-show-join-v1419/verify_retention.py
+```
+
+Add `--restore --prefix
+.analysis/port64/native-palette-show-join-v1419/build-gnu/` for one compiler.
+Full gzip CRC/EOF, member digests, actual temporary restored size/mode/nsmtime
+and current/parent hashes pass. Both the archive and `retention.json` journal
+are needed. `verify_closure.py` reads all source and palette comparisons;
+`finish.json` binds terminal CI and the separate cache cleanup journals.
