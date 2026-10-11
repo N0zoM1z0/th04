@@ -39,10 +39,14 @@ Stopped observer diagnostic logs separately reclaim 346.77 MiB losslessly.
 Final products/MAPs, wait OMFs, original/compiled transcripts and failure
 readers remain. See [VSync recovery](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
 
-CI passes 451 tests, targets/calibration, ledgers and catalog. Original MAIN,
-OP and MAINE databases were attested in root before work; isolated private
-Ghidra/JDK CI checks skip. Source-backed own caches reclaim another 8.49 MiB.
-Frozen DOS 30-file and native 1,235-file parent closures retain their hashes.
+Both isolated and published-main CI pass 451 tests, targets/calibration,
+ledgers and catalog. Live-main Ghidra/JDK, MAIN database and mutation gates
+also pass; all three original databases were attested before work.
+Source-backed own/main caches reclaim another 8.49/8.52 MiB, bringing this
+batch to 416.18 MiB net. Frozen DOS 30-file and native 1,235-file parent
+closures retain their hashes. All 1,425 live-main input files match the cold
+producer byte for byte after four pre-existing EOL representations are journaled and
+normalized to Git/attributes LF; logical Git source is unchanged by that step.
 
 Historical exact remains 661/663. Next source work includes DOS ordinary
 text writers' mutable TextVramSeg references and other native scene waits;
