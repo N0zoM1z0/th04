@@ -309,3 +309,18 @@ two changed inputs. Full-font/register references and original selected-state
 checks remain retained. RawRGB12/40, DAC diagnostics32/40 and eight phase cases
 remain; original common boot/process epoch is the next owner. Physical scanout,
 broader paired routes, Windows and historical exact acceptance remain open.
+
+## Original common boot clock (v1388)
+
+Fresh boot/four-Demo capture observes GDC constructors0/0/32 and an immediate
+first callback0→1. Blind display-event counts and unchanged counter
+body reproduce all15,988 original phases without offsets. Native producer
+f2b03ebb admits this initial event; onlyview.cpp changes. FreshGNU69CTest,
+UBSan3 and actualfour-Demo127 files pass;126 hashes match the033 parent.
+
+A separate actual FrontEnd recorded-event-clock experiment reproduces all
+15,988 count/blink rows, selected state, 40 complete text planes and game-area index diagnostics; whole
+index differences remain; explicitDAC
+RGBdiagnostics match 40/40, raw RGB 12/40. Oldzero negativecontrol rejects.
+Defaultboot/loading/process CPU-I/Oelapsed owners,rawpalette/RGB,physicalscanout,
+broaderpairedBoss/death/process andWindows remainopen. The full goal staysactive.

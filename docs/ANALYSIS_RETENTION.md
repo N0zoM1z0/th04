@@ -1,5 +1,42 @@
 # Private build and analysis retention
 
+## v1388 original boot clock
+
+All jobs are terminal. Current509/f2b03ebb has fresh GNU71/69CTest and optimized
+UBSan3 cold-build receipts; actual four-Demo127 files and privateXvfb deadline/
+input checks pass. Main441/liveGhidra andnative345/target CI pass. Original
+boot/GDC event ownership, common-clock positive/zero-only negative and cadence
+controls stay separately pinned. Default native process CPU-I/O timing remains open.
+
+Lossless retirement archives 3,213 complete files and deletes
+1,051 source-backed caches. Full temporary restored SHA/size/mode/nsmtime
+and complete gzip CRC/footer/EOF pass before and after deletion. All
+29,115 earlier/current protected hashes,509 source pins and the
+unchanged DOS fingerprint pass. Net allocated recovery is
+855,470,080 B (815.8 MiB) after the 102.1 MiB archive,
+before the 7.2 MiB journal allocation. Both archive and
+journal are required for exact file recovery. V1 partial clock gzip remains
+incomplete; the outer archive recovery never upgrades its inner stream to a pass.
+
+Current game/trace/shake executables, independent timing/counter/clock programs,
+frozen sources, logs, receipts and original reference streams remain live.
+The archive holds CMake intermediates/static libraries, unused CTest helper
+executables, duplicate captures/references, expanded event/phase data and both
+attempts' disposable HDIs/copied assets. Original compressed streams stay live;
+all unique V1 failure bytes and distinct V2/V3 complete proof identities remain
+retained. V3 same-capture compressed40 fullvideo samples stay live.
+Earlier a47f0496 and font/raster proofs keep their original scopes; the old
+protected inventory is checked without relabeling it as currentf2b03ebb.
+
+From DOS root, use
+`python3 .analysis/reconstruction/probes/native-epoch-v1388/verify_retention.py`
+for complete temporary recovery or add `--restore` to restore exact owned paths.
+Restore before CTest or readers needing expanded inputs. Run one-shot probe
+recipes in fresh output namespaces; never overwrite terminal evidence or rerun
+the retirement controller. The V1 host guard failure and distinct complete V2/V3 boot/video observer source/logs
+remain retained. Current event-clock fixture is separate from default process timing.
+
+
 ## v1387 calibrated native cadence
 
 All jobs are terminal. Current509/03351541 has fresh GNU71/69CTest and optimized
