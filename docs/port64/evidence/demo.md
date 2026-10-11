@@ -337,7 +337,7 @@ existing accepted extents. Target provenance remains candidate-local-attested.
 From the native worktree, using absolute DOS_ROOT:
 
 ```sh
-nice -n15 taskset -c0 env PYTHONDONTWRITEBYTECODE=1 \
+nice -n15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
   python3 port64/verify_demo_pictures.py --dos-root "$DOS_ROOT" \
   --original "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1365-original" \
   --original-video "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1369-original-video-v2" \
@@ -369,3 +369,55 @@ modes/nsmtimes and gzip CRC/footer/EOF pass;8904 older protected hashes,502 sour
 pins and4 new/71 old programs remain equal. Use verify_retention.py for temporary
 restored readback, or --restore before frozen_readback.py/verify_initial_label.py
 and old object reuse. The public reader uses fresh outputs and retained programs.
+
+## Aligned complete text planes (v1377)
+
+`capture_demo_present.py` projects only the donor format/boundary constants
+and selects a distinct GDB scalar-header observer. TH04VP3 cannot accept old
+TH04VD2 streams. Original 0AAF:00B7 / :0975 samples follow the previous complete
+MAIN iteration, aligning score/background-tail work with actual FrontEnd.
+The pinned ELF header site is CoreNormal+0x1DE; its19-byte witness and raw
+IP/CS/DS offsets32/8/24 are checked against actual instructions and symbols.
+The observer preserves every ordinary scalar/caller record.
+
+`verify_demo_present.py` consumes all15984 original records and compares retained
+GNU/optimized UBSan actual FrontEnd traces (15988 selected state/count boundaries
+each). All40 selected full canonical TRAM planes (8000 bytes each), and all40
+complete72-byte DEMO PLAY spans, agree per host. Canonical TRAM means the4000
+code bytes plus4000 attribute bytes, rather than the entire16384-byte raw area.
+Graphics indices compare every256000 pixels diagnostically. No crop or byte
+mask accepts a picture; original composited RGB/font/blink/scanout stays open.
+
+Compiled products remain502-source v1376/6a997fe1; new consumer sources are
+separately pinned. Read complete captured native bytes directly from verified
+v1376 retention archives; no native process, C++ rebuild or physical Windows
+launch is needed for this new reader. Current receipts are in native
+`.analysis/port64/native-presentation-v1377/`.
+
+The paired original/reconstructed DOS TH04VP3 replay also passes all38 compared
+regions at4×3996 records with exact ordinary parent controls. Full raw GDC
+clock/FIFO internals stay diagnostic; neither byte exactness nor scanout is
+promoted. Consumer505/8b0f702a is frozen separately from producer502/6a997fe1.
+Eight public controls and a retained real TH04VD2 stream reject wrong protocol,
+seam, mixed ELF bias, site bytes, projection-marker drift, archive last-byte
+digests and duplicate members.
+
+Frozen consumer replay produces a byte-identical complete receipt, including
+each full text/graphics diagnostic row and all15988 scalar/count boundaries.
+Graphics location reducer retains every256000-pixel comparison:30/40 samples
+agree within x32..415/y16..383, while ten differ there. The nonzero samples are
+Demo1 frames1/1952/3379/3996, Demo2 1952/3379/3709/3996 and Demo3 3379/3709.
+Every full graphics frame still differs. These diagnostic rectangles/maps
+do not accept cropped pictures. Check displayed/pending pages and physical
+scanout timing before treating any remaining indexed difference as a renderer
+source defect. Native graphics-diagnostic.json retains full hashes, counts,
+80×80 location maps and colour histograms; original/raw native pixels stay pinned.
+
+Final main441/live Ghidra and native345/target CI pass; unavailable native private
+gates skip. Retirement reclaims153010176 allocated B (145.9 MiB) before journals:
+128 complete HDI/raw snapshot copies and1044 source-backed caches. All9692
+protected hashes,505 source pins, unchanged DOS fingerprint and complete archive
+restore/SHA/mode/nsmtime/gzip EOF pass. Recovery is root
+.analysis/reconstruction/probes/native-presentation-v1377/verify_retention.py;
+add --restore before reading retired HDIs/snapshot paths. Complete VP3 streams,
+original references, programs, source snapshots and failures stay pinned.

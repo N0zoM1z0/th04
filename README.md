@@ -35,8 +35,11 @@ v1376 additionally verifies selected state through the actual idle OP→four dem
 →OP FrontEnd. It restores the missing yellow DEMO PLAY text after fade-in;
 40 label spans, including frames72/73/74, agree with original text on GNU and
 optimized UBSan.
-Whole indexed/RGB/text captures remain diagnostic across different presentation
-seams. Physical blink/scanout and whole-picture acceptance remain open.
+v1377 aligns DOS presentation after the complete update: all 40 full canonical
+text-plane samples match GNU and optimized UBSan, including score/HUD and
+DEMO PLAY. The complete original video stream and all 15,988 selected state
+boundaries remain verified. Whole graphics/RGB, physical blink and scanout
+acceptance remain open; the compiled programs retain their v1376 producer.
 
 ## Build and run
 

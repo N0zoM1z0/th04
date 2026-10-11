@@ -14,6 +14,9 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_demo_present.py",
+    "port64/capture_demo_present.py",
+    "port64/demo_present_stream.gdb",
     "port64/verify_demo_pictures.py",
     "port64/demo_picture_frontend_checks.inl",
     "port64/demo_pool_wire.hpp",

@@ -1,5 +1,26 @@
 # Native private-state retention
 
+## v1377 aligned presentation consumer
+
+All jobs are terminal. Main441/live Ghidra and native345/target CI pass; native
+private tool/Ghidra gates explicitly skip where unavailable. Immutable502-file
+v1376 compiled programs remain separate from frozen505-file consumer8b0f702a.
+Complete original/reconstructed VP3 streams, frozen replay, full graphics
+diagnostics, failed attempts and prior programs remain pinned.
+
+Lossless retirement reclaims153010176 allocated B (145.9 MiB) before journals:
+128 complete files (eight duplicate capture HDIs plus120 selected raw snapshots)
+and1044 public source-backed caches. Full restored SHA/size/mode/nsmtime and
+complete gzip CRC/footer/EOF pass, as do9692 protected hashes,505 current source
+pins and the unchanged DOS input fingerprint. The prior v1376 archive is intact.
+
+From the DOS root, use
+`python3 .analysis/reconstruction/probes/native-presentation-v1377/verify_retention.py`
+for full temporary restored readback, or add `--restore` to recover exact paths.
+Restore before re-reading the new capture HDIs or old selected snapshot paths.
+The new native reader reads its v1376 native captures directly from their archive.
+Do not rerun one-shot retirement controllers or reuse terminal output directories.
+
 ## v1376 actual FrontEnd display and text evidence
 
 All jobs are terminal. Four new GNU/optimized UBSan programs,502-source
