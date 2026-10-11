@@ -25,7 +25,55 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
-Current v1401 native producer is512/60cf4491. OP startup now waits on the
+The latest remote port/modern-64 is ce48946 and separately adds GRCG circle /
+stage-line recovery. Its renderer changes are not part of this514-file verified
+snapshot. This snapshot is published on review/startup-motion-join-v1403;
+merge it only after selecting one writable source session and attesting the
+combined producer. Both incoming histories are preserved. The older v1401
+startup implementation itself already reached port/modern-64 through fffcc83.
+
+
+v1403 integrates remote motion recovery a0b6149 with the independently
+validated startup waits. Verified integration producer514/c2f8d689 is frozen;
+CMake's new motion contract and its verifier are now both included in the
+complete source manifest. Fresh GNU builds73 programs/71CTests; optimized
+UBSan builds10 programs/7 contracts. Unchanged original MAIN0000:1DA8..1E13
+and table2134:021E execute at load1000:184908 vectors per compiler agree,
+including514 original DIV faults. Complete expanded comparison transcripts
+match between GNU/UBSan. The compiled old blanket -32768 rejection fails.
+This accepts the bounded corpus and explicit native fault surface; it is not
+an exhaustive four-coordinate Cartesian product or historical byte exactness.
+
+Eight fresh current startup/fourDemo/freshOP profiles each match original
+selected state at15988 boundaries and every129 frozen v1401 output hashes.
+Startup/IRQ code itself is unchanged. Physical timing, default resource/CPU
+costs, full pictures and broader Boss/death/process remain open. Continue
+bounded source recovery before long game campaigns. Windows GUI/focus/host
+keys/audio opens remain excluded while the host is in use.
+
+The original native push encountered a concurrent non-fast-forward remote
+motion commit. Both histories were merged without force pushing. v1401 proofs
+remain frozen at512/60cf4491, including its132 frontend fixture cases and
+70GNU/6UBSan checks; their strict live-source reader correctly rejects current
+source. A new reader verifies its archive/1150-file closure independently.
+No old receipt was edited to claim the new producer. Root DOS source stays
+unchanged at a34c1357; historical exact counts/canonicality are unchanged.
+
+Current replay index: .analysis/reconstruction/probes/native-startup-motion-join-v1403/
+(DOS root); native .analysis/port64/native-startup-motion-join-v1403/.
+Use build.py, validate.py and verify_retention.py in a fresh namespace;
+check_frozen_parent.py reads old proofs and the expected strict-reader rejection.
+All current source/program/vector/capture inputs are pinned. The read-only
+original MZ target, complete1136 relocation topology and two separate compiler
+outputs remain distinct evidence. Runs are CPU1/nice19, serial and muted.
+
+Additional owned cleanup 468.70MiB after 16.93MiB archive. Full current
+path/hash/size/mode/nsmtime journal is persisted before any archive/deletion.
+CRC/EOF, all blobs, every temporary metadata restore and protected proofs pass.
+No prior producer is retired. The v1401 initial auxiliary-metadata caveat remains
+explicit in retention notes; current v1403 paths have full recovery metadata.
+
+Retained v1401 native producer is512/60cf4491. OP startup now waits on the
 independent unsigned IRQ owner and services PMD at timer deadlines within an
 elapsed admission. It preserves inherited Logo counts and clears inactive zero
 fallbacks. Cold70GNU/6UBSan contracts, three compiled negative controls,

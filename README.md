@@ -54,13 +54,25 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. OP startup now uses unsigned IRQ waits with the
+Native development is active. The verified startup/motion snapshot also restores the signed
+IATAN2 displacement edge and explicit divide-fault behavior. New cold builds
+pass 71 GNU CTests and seven UBSan contracts. Both compilers agree with 184,908
+original-instruction vectors, including 514 DIV faults. Eight fresh startup /
+four-Demo routes retain all 129 prior outputs per driver profile and pass the
+original selected-state comparisons. These results are separate from physical
+timing and whole-picture acceptance.
+
+The remote native branch also has newer circle/line renderer recovery. Its
+combined acceptance remains separate from this snapshot on
+`review/startup-motion-join-v1403`; the handoff identifies both producers.
+
+OP startup now uses unsigned IRQ waits with the
 original clear-before-delay / clear-after-Logo order. Resident PMD service can
 release a measure wait inside a refresh interval, while raster phase continues
 through explicit resource and graphics work. Ideal raster edges and zero ISR
 latency remain explicit adapter assumptions; default CPU/loading costs need a model.
 
-Current cold builds pass 70 GNU CTests and six optimized UBSan contracts.
+Frozen v1401 builds pass 70 GNU CTests and six optimized UBSan contracts.
 The muted frontend configuration/restart matrix passes 132 cases. Eight full
 startup/four-Demo/fresh-OP routes match original selected state at 15,988
 boundaries each; GNU/UBSan output hashes agree. PMD profiles change only startup
