@@ -9,23 +9,22 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1387 calibrates the shared native period to 17,723,227 ns. The
-unchanged archived PC98 timing calculation reproduces all 15,984 complete
-original GDC/time records: 106 clocks × 440 lines at 21.0526 MHz / 8. Nearest-ns
-error is 0.415160 ns per refresh. Producer03351541 changes two of 509 inputs.
-Fresh cold GNU yields71 programs/69 passing CTests; optimized UBSan game/trace/
-shake and actual muted routes produce127 identical files, unchanged from a47.
+Currentv1388 recovers the original common boot display-event clock. Actual GDC
+constructors begin0/0/32 and display initialization immediately advances both
+counts to1. Blind eventcounts and unchanged archived counter body
+replay all15,988 original scalar phases without a fitted offset. Producerf2b03ebb
+changes only view.cpp's initial count; cadence remains17,723,227ns. Fresh whole
+GNU71/69CTest, optimized UBSan3 and actual muted four-Demo127-file routes pass.
+Onlytext-refreshes.txt changes against the retained033 parent;126 hashes remain.
 
-Independent Schedule20,000 and FrontEnd1,000,000-refresh controls pass, rejecting
-the old cadence and checking repaint/double counting/backwards time. Actual
-private Linux Xvfb calibrated deadlines/input/focus/release/exit pass with zero
-audio device opens. All15,988 selected original scalar/RNG and40 complete
-index/text/RGB samples retain their checks; prior full-pool identities stay
-separate. Actual font/register references are re-emitted unchanged. RawRGB12/40
-and DAC diagnostics32/40 retain eight phase cases; whole-picture acceptance
-remains open. Next recover original common reset/boot/process timing without
-per-Demo fitting, then broader paired routes and physical scanout. See
-[demo evidence](port64/evidence/demo.md) and the current handoff.
+A separate actual FrontEnd recorded-event-clock fixture accepts every15,988
+blink/count row, selected state, 40 whole text planes and game-area index diagnostics; whole
+index differences are retained. The old zero-only
+control rejects at initial admission. Explicit DAC RGB diagnostics give40/40,
+raw RGB 12/40; default native boot/loading/process CPU-I/O timing and complete
+rawRGB/physicalscanout remain open. Cadence controls and actual private Linux
+window/input tests pass; noWindows or newfull-nine-pool acceptance follows.
+See [demo evidence](port64/evidence/demo.md) and the current handoff.
 
 Retained v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
 UBSan agree on all15,984 complete shake globals/movement requests, all15,988

@@ -21,24 +21,26 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. The shared refresh clock now uses 17,723,227 ns,
-the nearest nanosecond to the independently reproduced original GDC period.
-All 15,984 recorded GDC/time states agree with the archived timing model.
-Current 509-input producer03351541 changes only the clock constant and window
-trace reader. A fresh whole GNU build produces 71 programs with 69 passing
-CTests; optimized UBSan cold-builds game/trace/shake.
+Native development is active. Fresh original boot capture observes an immediate
+first display callback, and native now admits that event before the first waited
+interval. Its persistent clock uses 17,723,227 ns through process changes.
+Producer f2b03ebb changes only view.cpp's initial count among 509 source inputs.
+Fresh whole GNU yields 71 programs with 69 passing CTests; optimized UBSan cold
+builds the game, trace and shake targets. Muted four-Demo routes yield 127
+identical variant files, with 126 hashes unchanged from the previous producer.
 
-Muted actual four-Demo routes yield 127 identical GNU/UBSan files, unchanged
-from the frozen parent. All 15,988 selected original state/RNG boundaries and
-40 full text/index/RGB samples pass their scoped checks. Independent scheduling
-and frontend clock controls reject the old cadence; an actual private Linux
-window/input route uses the calibrated deadlines and opens no audio device.
+All 15,988 fresh original selected state/RNG boundaries pass. A separate frontend
+experiment applies original display-event ordinals before each step and before
+repainting its completed frame. All boundary and endpoint clock checks pass,
+along with 40 complete text planes and game-area index diagnostics. Whole RGB
+DAC diagnostics match 40/40; raw RGB matches 12/40. Complete index inequalities
+remain recorded. The old zero initializer rejects in a negative control.
+Independent cadence checks and the actual muted private Linux window/input
+route pass; no audio device opens.
 
-The complete 516 KiB original font/text-CRT evidence remains retained. Full raw
-RGB still has 12/40 zeros; explicit DAC diagnostics have 32/40 and eight phase
-cases. Original boot/process epoch, physical scanout, broader paired routes and
-Windows input/audio remain open. Recover the original common reset/process
-timeline next; see [the current handoff](docs/RE_HANDOFF.md).
+Default boot/loading/process timing, raw palette/RGB, physical scanout, broader
+paired routes and actual Windows input/audio remain open. See
+[the current handoff](docs/RE_HANDOFF.md) for scope and recovery commands.
 
 ## Build and run
 

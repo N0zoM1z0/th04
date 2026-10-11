@@ -1161,3 +1161,95 @@ reader's archive iterator reset failed its input guard before compiling or
 reading records; its source/log are retained. Separate v2 enumerates the archive
 once and passes. Earlier a47f0496 and font/raster proofs keep their original
 source/evidence scopes; no old proof is restamped as current03351541.
+
+## Common boot GDC clock and initial callback (v1388)
+
+The literal zero-origin hypothesis was tested before changing native source:
+all 15,984 retained original GDC/time records satisfy
+`floor(framestart / period) + 1` modulo128, without a fitted offset. Fresh
+read-only original boot capture then independently observes both constructors,
+zero out-of-line cursor parameter entries and every timer callback after both GDC advances.
+The complete ELF timer/function/site witnesses are checked before installing
+breakpoints. Constructor returns are state0/count0/rate32; the first display
+callback at PIC event/mode base1.875ms immediately increments both counts to1.
+`VGA_SetupDrawing` calls the timer directly before the first waited interval.
+The callback precedes `RENDER_StartUpdate`, so paint suppression does not suppress
+clock advancement. No out-of-line parameter-entry events were observed. The model includes the
+parameter body, but that path is unexercised and its ABI/reset semantics are
+not accepted by this capture.
+
+The complete new stream has {'C': 2, 'E': 2, 'V': 21151, 'F': 15988}. Original MAIN stays077440a3,
+load10FC/DGROUP3230, scalar seam0AAF:00B7/terminal0AAF:0975. All15,988 initial,
+before-update and terminal scalar clocks are included. An independent C++ model
+uses the unchanged archived cursor body, with a narrow explicit
+constructor adapter checked against actual constructor returns. Every clock
+triple passes. Blind callback counts predict every actual master/slave phase;
+all15,988 ordinals also equal the literal zero-origin formula. All15,984 thin
+541-byte per-Demo records agree with matching boundary payloads and pass complete
+gzip/header/CRC/EOF checks. Original reset, target, observer, ELF and compiler
+identities remain pinned. This is evidence for the pinned emulator scenario.
+
+Native view.cpp now starts its persistent display count at1 to admit that
+immediate initialization callback. Only this source input changes from03351541
+in the509-file producer, manifestf2b03ebb…. Fresh whole cold GNU produces71
+programs and passes69 CTests; optimized UBSan/bounds cold-builds game/trace/shake.
+Actual muted SDL-dummy OP→four demos→OP produces127 identical variant files.
+Relative to the retained033 parent only text-refreshes.txt changes; the other126
+full hashes stay identical. Fresh original selected input/score/player/RNG/caller
+state comparisons cover15,988 boundaries. Prior full-nine-pool claims retain
+their original producer identities. DOS public inputs/fingerprint are unchanged.
+
+Independent timing/GDC-body controls check initial1 plus17 logical admissions,
+host boundaries through1,000,000 refreshes, repaint/double counting/backwards
+rejection, and20,000 actual Schedule boundaries; the old cadence rejects.
+A separate actual FrontEnd experiment reads recorded original event ordinals
+and normalizes `(events-1) * 17,723,227ns` to canonical interval units. Its
+visible field is an assertion, never a clock input. All15,988 boundary event counts and
+blink states plus15,984 ending-step admissions pass without global/per-Demo fitting; state and40 wholeTRAM match;playfieldindex diagnostics zero;wholeindex
+inequalities retained. Restoring only the old zero initializer rejects at initial callback
+admission. This explicit recorded-clock fixture is distinct from the default
+native boot/OP/loading/process elapsed timeline and raw PIC nanosecond equality.
+
+The immutable original FONT/CRT emitter regenerates120 full sampled references.
+Default raw RGB remains12/40 zeros, explicit DAC diagnostics37/40.
+The separate original-event-clock fixture gives raw12/40 zeros and explicit
+DAC diagnostics40/40, eliminating its blink-phase diagnostic cases while
+retaining all raw palette inequalities. Whole-picture acceptance, physical
+scanout, raw PIC CPU fractional timing, broader paired Boss/death/process routes
+and actual Windows input/audio remain open. Fresh actual muted private Linux
+Xvfb startup/Marisa B/input/focus/release/exit passes with zero audio device opens.
+
+Fresh V2 passes boot/scalar/clock completeness but its epoch differs from the
+retained v1386 reference:15,983 updates shift by-27 display events and Demo4/1
+by-26;19 sampled visible states differ. Config files are identical. These
+observations reject using old captured-phase references with the new clock.
+The initial V3 comparator wrongly required entire original index equality;
+source and prior contracts confirm native index exports omit some pixel-only
+HUD/text work. All full index inequalities remain recorded; game-area diagnostics
+are separate from full RGB equality. V4 then rejects556pixels atDemo4/3709:
+its before-step count rows are correct, but repainting the completed frame
+precedes admitting that frame's recorded clock. V5 uses one-row lookahead to
+admit the endpoint before repaint, then consumes that row once at its next
+before-step trace. All15,988 boundaries and15,984 endpoints pass; only that
+oneRGB file changes from the earlier fixture. Independent full RGB is unmasked.
+
+V3 adds40 fresh complete808255-byte FONT/CRT/VRAM/palette/GDC/time snapshots
+at the same fixed stopped scalar boundaries, so all new captured-phase RGB
+references use their actual same-capture clock. Phase0/1 reference hashes still
+match the immutable older emitter/reference, while captured phase keepsV3
+identity. Default elapsed-time causes and debugger overhead remain separate.
+
+V1's900-second host guard ended after Demo1/2, so it fails four-Demo completeness;
+its partial gzip lacks a complete footer and is retained only as a failed attempt.
+Fresh V2 combines the two refresh stops at the attested ELF0x5626aa site and
+uses bulk clock reads, with a2400-second host guard and unchanged24000 guest
+cycles/reset/route. Complete V2 and fresh V3 are accepted separately, never as a continuation
+or repair of partial V1. No guest/emulator source or target bytes were patched.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-epoch-v1388/;
+native receipts .analysis/port64/native-epoch-v1388/. Use run_capture_v3.py,
+read_boot_v3.py, common_clock_v5.py, cadence_controls.py and compare_final_v5.py in
+fresh output namespaces. Original boot capture and live source inputs require
+retention recovery before replay when owned expanded files have been retired.
+Next investigate native versus original boot/OP/loading/process CPU/I/O cost
+owners; retain raw RGB/scanout and broader route questions independently.

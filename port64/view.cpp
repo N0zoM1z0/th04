@@ -2439,7 +2439,9 @@ private:
     Frame demo_frozen_;
     gameplay::Mode mode_=gameplay::Mode::ordinary;
     bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
-    std::uint64_t text_refreshes_=0,text_time_origin_refreshes_=0;
+    // Display initialization invokes the first GDC refresh immediately,
+    // before the first waited interval. Keep this admission across processes.
+    std::uint64_t text_refreshes_=1,text_time_origin_refreshes_=0;
     std::optional<std::int64_t> text_time_origin_;
     std::unique_ptr<maine::Ending> ending_;
     std::unique_ptr<registration::Scene> registration_;
