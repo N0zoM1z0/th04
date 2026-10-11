@@ -438,3 +438,6 @@ add_test(NAME pmd-fm3-contracts COMMAND th04-port64-pmd-fm3-contracts)
 add_executable(th04-port64-startup-contracts op_startup_checks.cpp)
 target_link_libraries(th04-port64-startup-contracts PRIVATE th04-portable-core)
 add_test(NAME startup-contracts COMMAND th04-port64-startup-contracts)
+
+add_executable(th04-port64-vsync-contracts pc98_vsync_checks.cpp)
+add_test(NAME vsync-contracts COMMAND th04-port64-vsync-contracts)

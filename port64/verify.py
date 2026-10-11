@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/pc98_vsync.hpp",
+    "port64/pc98_vsync_checks.cpp",
     "port64/pc98_palette.hpp",
     "port64/playfield_shake.hpp",
     "port64/playfield_shake.cpp",

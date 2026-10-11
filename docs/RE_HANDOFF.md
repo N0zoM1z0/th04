@@ -10,95 +10,81 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1397 independently verifies original OP wait ownership under 24,000 / 36,000
-CPU budgets and a config-only BGM-off control. Active measure polling preserves
-IRQ Count1; the first Logo wait inherits 104 / 100 and passes without another
-counted interrupt. BGM-off frame_delay(0) clears Count1 even with zero wait.
-Logo clears Count1 after each wait; Count2 continues. Native still samples
-measure readiness once per admitted refresh and uses fixed Logo waits: these
-ownership/phase differences are now demonstrated, not repaired.
+v1398 adds a native unsigned VSYNC counter and explicit rational raster clock.
+The components preserve START/END, carry skips, 16-bit wrap, Count1-only wait
+reset and an independent display phase. Frontend integration is the next step:
+active PMD readiness still uses admitted-refresh sampling and Logo still uses
+fixed logical waits. No wait-scheduler repair is claimed yet.
 
-Product source remains at v1396 native 49b2fa5 / 510-file ea5c016d and DOS
-fingerprint 6f5898dd. No fresh product build, full-picture or exact promotion is
-claimed by v1397. DOS-root scripts/runtime/verify_op_wait_clock.py checks all
-three complete original captures, full load/relocations/PIC/GDC and rejecting
-mutations. Replay/retention index: .analysis/reconstruction/probes/native-vsync-waits-v1397/.
+Original OP load 10FC / DGROUP 2030 is independently verified at decoded
+0000:25D6, immediately before Count1 increments. Two complete muted Linux
+GAME.BAT captures at CPU 24000/36000 record all 106/102 counted IRQs, 143/139
+scalar boundaries and 119/111 GDC callbacks. IRQ deadlines derive from master
+AW 80 / HS 8 / HFP 10 / HBP 8, AL 400 / VS 8 / VFP 7 / VBP 25, character clock
+2631575 Hz and the pinned emulator's explicit 100 ns adjustment / float delay. IRQ and GDC blink
+have distinct phases. Callback-to-target-increment latency varies 50–138 /
+64–142 CPU cycles; do not encode a fixed service delay or fit wait durations.
+The extra IRQ observer changes measured wait brackets relative to v1397;
+retain each capture's own producer and times.
 
-v1397 complete CI passes root 447 / native 345, with tracking/diff checks.
-Lossless image/font cleanup recovers 218.40 MiB (18 files / 5 unique blobs);
-post-CI source-backed caches recover another 16.38 MiB. Complete captures,
-failed attempts and earlier producer proofs remain protected. Restore only
-needed images from the DOS-root v1397 verify_retention.py --restore, optionally
---prefix; run new captures/readers under fresh namespaces.
+Current native producer: 512 files,
+efea1700368644b07a03040b9b60bd12335413d3b842c9a76aa72046f4475dea.
+New port64/pc98_vsync.hpp and its contracts are registered in CMake / explicit
+source manifest. DOS product source, flags and fingerprint 6f5898dd are
+unchanged. Cold GNU builds 72 programs / passes 70 CTests; optimized UBSan
+builds 8 selected targets / passes 5 sound/VSYNC contracts. Native Counter and
+RasterClock separately reproduce 208 target IRQ records and 230 host raster
+callbacks under both builds. Wrong Count2 reset, blink-phase substitution and
+carry removal reject; the 31-kHz carry test is synthetic, not original runtime
+acceptance. Four public IRQ-reader mutation tests also pass.
 
-v1396 connects explicit loading/drawing/process work to the headless GDC
-text clock as well as resident sound. Work retains sub-refresh time;
-`MainAssets::display_elapsed_ns` supplies the independent display-to-PMD-install
-epoch. External observation retains fractional origin and owns its elapsed
-time, excluding double logical work/refresh admission. Default adapters/epoch
-remain empty/zero; no fitted startup age or bus-delay constant is introduced.
+Eight fresh default native CLI routes (none/pmd/pmdb2/pmd86 × GNU/UBSan)
+complete startup, all four demos and fresh OP. Every 129-file output set equals
+its immutable v1396 profile baseline. This is current-source regression,
+not whole-picture or combined frontend IRQ timing acceptance. Earlier window,
+original/DOS Demo and physical evidence keeps its own frozen identity.
 
-Current native producer: 510 files,
-ea5c016d0cd40bcb453bd9f6c27c6ec24c2513ec63342fa8be2fa8d6acc85d43.
-v1396 changed only view.cpp/view.hpp; DOS source/headers/flags and fingerprint
-6f5898dd remain unchanged. Cold GNU builds 71 programs / passes 69 CTests;
-optimized UBSan builds seven selected targets / passes four sound contracts.
-Earlier 55459 producer/receipts retain their identities.
+Replay indices from DOS root:
+.analysis/reconstruction/probes/native-irq-clock-v1398/ and
+.analysis/worktrees/port-modern-64/.analysis/port64/native-irq-clock-v1398/.
+Original reader original-reader-v1/receipt.json SHA 334d6fde92b5c797163ae6bdcd9d60e88f285782a3864c0ba0abe837650d2342;
+native probe-v3/receipt.json SHA 00084b0e54e6d9a750a0547718c593c6e8411139c2c8e6af71fd7eed4a16cbf6.
+The first probe's unsupported C++20 option and second probe's early-rounded
+PIC admission remain failed. V3 uses supported C++17 and upward integer-ns
+admission, preserving the rational phase formula and original floating times.
 
-Original OP load 10FC / DGROUP 2030; decoded Logo 0A74:14F5, PI-loaded
-0A74:1523, PI-drawn 0A74:1534, second song-command 0DA1:0264 (PLAY) and
-measure end 0DA1:039D remain the independently attested runtime hooks.
-Independent original v1393 complete GDC/PIC observations determine initial
-first-V-to-first-B age: 162,850,542 / 113,377,278 ns (24,000 / 36,000 CPU).
-Initial display callbacks differ: 1.875 / 1.916666667 ms; do not fit one epoch.
-Actual maintained FrontEnd with real PI/BFNT/music/effect/config and strict
-ROM forwards the original work and matches all twelve loading/readiness
-counter assertions per input. PLAY counts 24 / 17, READY 117 / 110; observed
-counter fields are assertions only. Sixteen callers (two inputs, four modes,
-GNU/UBSan) complete startup with identical compiler output tables.
-
-Zero-work and graphics-only removal reject original sound/display gates.
-A display-only frozen-observer control keeps every sound interval and the same
-PLAY/READY sound state, yet rejects display counts. Completion, song measures
-and wait counts cannot validate the display owner. An actual extra frontend
-checks a one-nanosecond fractional-origin crossing, no duplicated logical
-refresh and rollback rejection. Rounded cadence count agreement does not
-establish exact sub-refresh/IRQ/chip/wait-edge/physical scanout equality.
-
-Eight fresh default CLI routes cover none/pmd/pmdb2/pmd86, full startup,
-four demos and fresh OP ready. All 129 files per run equal retained v1395
-baseline pins; old receipts are not restamped. Prior raw RGB limits remain
-31/40 none, 34/40 active. Muted private Linux Xvfb startup/selection/input/
-focus/release/exit passes with zero audio device opens.
-
-Replay: DOSroot .analysis/reconstruction/probes/native-gdc-work-v1396-v2/;
-native .analysis/port64/native-gdc-work-v1396-v2/. Source freeze, compiler/caller/
-comparison receipts and original parent pins stay protected. Restore retired
-build/program/RGB/state inputs from the DOS root:
+Cleanup recovery uses the new v1398 reader, which attests current 512/efea and
+old frozen 510/ea5c producers separately. Old v1396/v1397 strict readers now
+reject the changed current manifest; do not edit or restamp those proofs.
 
 ```sh
-python3 .analysis/reconstruction/probes/native-gdc-work-v1396-v2/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py
+# Restore only needed owned files before complete replay:
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py --restore --prefix .analysis/runtime/candidates/dos-op-v1398-irq-
+# Previous complete archives / frozen producers:
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py --parent v1397
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py --parent v1396
 ```
 
-Use --prefix for a required subtree and fresh namespaces for another execution.
-Lossless retirement reclaims 472.69 MiB: 2697 logical build/program/video files
-in 1407 unique blobs plus 16 complete state/item outputs in 2 blobs.
-Complete gzip CRC/EOF, member SHA/size/mode/nsmtime and protected proof/frozen
-source checks pass. Rejected V1 also retains its own frozen-source archive and negative receipts,
-reclaiming 472.65 MiB separately; never attest current source with V1.
-Both full CI gates pass (root 441 / native 345), with ledger and diff checks.
-Post-CI source-backed caches reclaim 16.69 MiB separately.
+Add --restore and a narrow --prefix for archived parent inputs. Lossless
+retirement of 3,110 files / 1,451 blobs reclaims 528.63 MiB after its 39.20 MiB
+archive and journal. Full CRC/EOF, member/temporary-restore metadata and
+694 protected proof hashes pass. Full CI passes root 451 / native 345 tests;
+post-CI source-backed caches reclaim another 16.32 MiB (1,051 files).
+Total current net cleanup is 544.95 MiB. Tracking/diff checks pass.
+Complete source freezes, original scalar/GDC streams, selected current
+programs, compiled negative controls, failed attempts and old proofs remain
+protected. Use fresh namespaces for another capture, build or reader.
 
-Next measure counted-IRQ edge phase independently of GDC blink, then implement
-the distinct PMD busy-service and counted-IRQ wait owners,
-preserving unsigned counters, reset location and inherited phase. Use v1397
-first-two-Logo and zero-fallback checks; do not substitute GDC blink counts or
-fit observed durations. Default CPU/bus/resource/graphics inputs stay open.
-Full pictures, broader combat/process,
-physical/cross-emulator scanout, chip/IRQ/audio, Windows input/audio and MAIN
-historical carpet/checkerboard exactness remain open; goal stays active.
-Targets remain candidate-local-attested. Continue CPU0/nice19 serial muted
-Linux work; Windows GUI/focus/host keys remain excluded.
+Next connect PMD busy service and inherited unsigned IRQ waits to FrontEnd,
+preserving clear-before-frame_delay versus clear-after-Logo and global raster
+phase. Resource/CPU/bus/graphics elapsed inputs need a defensible model; do not
+fit startup ages or use GDC blink as the IRQ counter. v1397 BGM-off zero-wait
+and active inherited-count controls remain mandatory, alongside v1398 full
+IRQ progression. Physical/second-emulator timing, full pictures, broader
+combat/process, chip/audio and Windows input/audio remain open. MAIN historical
+carpet/checkerboard exactness stays deferred. Goal remains active; targets
+remain candidate-local-attested. Continue CPU0/nice19 serial muted Linux work.
 
 Prior demo/point-number/presentation experiments are indexed in
 [demo evidence](port64/evidence/demo.md) and their immutable private receipts.

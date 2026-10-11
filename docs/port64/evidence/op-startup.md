@@ -759,3 +759,101 @@ Lossless retirement of only18 current disposable image/font files reclaims
 A separate post-CI1050-file source-backed cache journal recovers16.38 MiB.
 No original target, host package/save, complete stream or old producer is
 removed; failed attempts stay failed. See retention for exact recovery.
+
+## Original IRQ raster phase and native counter primitive (v1398)
+
+Target evidence remains candidate-local-attested. Session preflight passes;
+packed OP database attestation is READY. Decoded payload69028B SHA13222cb6,
+804 ordered diagnostic relocations84972ed5 and full relocated memory pass
+independently. Runtime load10FC/DGROUP2030, IRQ0000:25D6 executes before
+Count1[1AC6] then Count2[1AC8]; cadence increment[0854] / accumulator[1ACE]
+are zero in both retained24kHz routes. Frame delay0DA1:002B and Logo0A74:16E2 /
+16E9 keep v1397's distinct reset contracts. No exact unit promotion follows.
+
+Two fresh read-only GAME.BAT captures add all IRQ-before-increment boundaries
+and the pinned emulator's VGA_VertInterrupt callback. The32-hook cap is
+preserved by removing the unused title_start hook. CPU24000/36000 cover
+143/139 scalar rows,144/140 full GDC checkpoints,119/111 display callbacks and
+106/102 armed callback / guest IRQ pairs. Complete raw load, relocations,
+physical inputs, PIC fractions, full clock stream, DOS calls/returns and terminal
+second-Logo reset pass scripts/runtime/verify_op_irq_clock.py with the independent
+GDC model. Both counters progress completely; Count1-only Logo clears preserve
+Count2. Missing IRQ, changed counter/skip, blink alias and frame-start mutations
+reject, in addition to inherited wait/load/clock controls and four public tests.
+
+Pinned DOSBox-X source schedules IRQ at float(vrstart+0.0001ms), where
+vrstart=(AL+VFP)*horizontal_total/characterHz. Snapshot master AL400/AW80,
+HS8/HFP10/HBP8/VS8/VFP7/VBP25 gives horizontal106, vertical440,
+retraceStart407, characterHz=21052600/8=2631575 and period17.72322658484ms.
+First display epochs1.875 /1.916666667ms remain independently observed;
+no fitted initial age. IRQ callbacks precede the next GDC frame callback.
+Actual PIC dispatch lateness ranges0.005797–12.832709 /0.011797–1.377072 CPU
+cycles; callback-to-0000:25D6 varies50–138 /64–142 cycles. These are scoped
+instrumented emulator observations. Additional IRQ hooks change second-Logo
+brackets to25.046208 /18.527528ms, while v1397 retains23.755833 /18.852361ms;
+both have the same inherited104/100 firstwait and terminal106/102 Count2.
+Do not replace one capture's timing with another or infer uninstrumented
+physical timing. No fixed CPU service latency is derived.
+
+Native port64/pc98_vsync.hpp implements unsigned16-bit Counter, carry skips,
+START/END, Count1-only clear and an inverse counted-wait query. RasterClock
+uses explicit geometry/display epoch, rational character-cycle phase and a
+zero-latency ideal-edge adapter convention. START never resets beam phase.
+Default IRQ adjustment is zero; only this emulator comparison supplies its
+source-defined100ns adjustment. Counter CPU instruction records and raster
+schedule records are checked separately; this is not combined frontend timing
+acceptance. Source manifest512/efea1700, DOS fingerprint6f5898dd unchanged.
+
+Cold GNU builds72 programs /70 CTests; optimized UBSan builds8 selected
+programs /5 sound/VSYNC CTests. Their compiled probes reproduce all208
+counter records and230 host callback deadlines, with integer-ns source schedule
+difference at most2ns and byte-identical GNU/UBSan output. The original float
+time remains retained. Input v1 rounded PIC admission too early at two points;
+failedprobe-v2 logs remain. V3 rounds admission upward to ns rather than changing
+the raster formula. Probe-v1's C++20 option is unsupported by the pinned GNU
+compiler; V3 uses C++17. Failed sources/programs/logs stay independently frozen.
+Compiled one-variable mutations reject Count2 clearing and blink-phase edges;
+a synthetic carry-disabled contract also rejects (not an original31kHz run).
+
+Eight current-source actual CLI routes cover none/pmd/pmdb2/pmd86 under GNU /
+UBSan, complete startup/four demos/fresh OP. Every129-file output set equals
+its closed v1396 profile baseline. Prior GUI/physical/full-picture limits remain
+owned by their earlier sources. The new component is deliberately staged:
+Scene/FrontEnd still need busy PMD service without logical refresh admission,
+IRQ ownership installation, inherited Logo wait and the distinct clear sites.
+Default CPU/resource/graphics work and physical/second-emulator phase remain
+open. The old coarse verify_op_startup.py service stub that always supplies two
+wait counts cannot establish this integration's correctness.
+
+Current replay surface (DOS root):
+
+```sh
+python3 .analysis/reconstruction/probes/native-irq-clock-v1398/verify_retention.py --restore --prefix .analysis/runtime/candidates/dos-op-v1398-irq-
+python3 scripts/runtime/verify_op_irq_clock.py \
+  --capture .analysis/runtime/candidates/dos-op-v1398-irq-base-v1 \
+  --capture .analysis/runtime/candidates/dos-op-v1398-irq-cpu36000-v1 \
+  --model-dir .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-model-v3 \
+  --model-receipt .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-observation-v3.json \
+  --output-dir .analysis/reconstruction/probes/NEW-irq-reader
+```
+
+Accepted original receipt334d6fde… at native-irq-clock-v1398/original-reader-v1/;
+native receipt00084b0e… at native .analysis/port64/native-irq-clock-v1398/probe-v3/.
+Source freeze/current builds/default regression all have fresh identities;
+older producers remain unchanged. Complete retirement/CI counts appear below.
+
+Lossless retirement of 3,110 current logical files / 1,451 unique blobs
+reclaims 528.63 MiB, retaining 39.20 MiB archive plus journal. Complete gzip
+CRC/EOF, member hashes and every temporary restored size/mode/nsmtime pass
+before deletion; all 694 protected current proofs pass after. New retention
+reader independently verifies frozen old510/ea5c and current512/efea. The old
+v1396 primary and text archives are composed; the first one-archive checker
+remains failed with its own source/logs. Old proofs are not restamped. Complete
+original raw/GDC streams, current source/probes/selected executables and failed
+attempts remain live. See current handoff/retention for exact restore commands.
+
+Both full CI gates pass (root 451 / native 345 tests), with tracking and diff
+checks. Post-CI source-backed Python cache cleanup retires 1051 files,
+recovering a separate 16.32 MiB after its journal. Total current net cleanup:
+544.95 MiB. The cache journal is disjoint from lossless archive retirement;
+retained source regenerates these caches. Goal remains active.
