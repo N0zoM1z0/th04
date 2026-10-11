@@ -245,3 +245,26 @@ python3 .analysis/reconstruction/probes/native-shot-render-v1380/verify_retentio
 
 Without --restore, it performs temporary complete readback. Old v1379 proof
 retains its then-current 8e77830c scope and cannot attest live f5791751 sources.
+
+## v1381 terminal validation and recovery
+
+All v1381 jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
+unavailable private native gates skip. Full parent/current sample hashes show
+38 complete index/RGB samples unchanged. All 40 pixel changes in the other
+two complete index pictures equal the actual original CPU pellet passes and original
+pixels on both variants. This further bounds the repair; whole pictures stay open.
+
+Lossless retirement reclaims 156,139,520 allocated bytes (148.9 MiB) before
+journal cost: 354 complete sample/capture/build files and 1,044 source-backed
+caches. Full restoration/SHA/size/mode/nsmtime/gzip EOF, 18,924 protected
+hashes, 509 source pins and unchanged DOS fingerprint pass before and after
+deletion. The cleanup log is excluded while writing. Two new FrontEnd programs,
+all old programs, frozen sources, original references and failures stay live.
+From DOS root, restore retired inputs before CPU/graphics/reader/relink replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-circle-v1381/verify_retention.py --restore
+```
+
+Without --restore, it performs temporary complete readback. Old v1380 proof
+retains its then-current f5791751 scope and cannot attest live fb26d509 sources.

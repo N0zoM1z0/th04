@@ -49,7 +49,9 @@ retained v1378 GNU cold build has 71 programs and 69
 passing CTests; optimized UBSan game/trace/shake targets are cold-built
 separately. v1380 corrects Marisa laser color timing: 11,384 differences across
 four Demo 2 samples disappear, and all ten sampled Demo 2 game areas now agree.
-Five other sampled game areas still differ. Full pictures remain open.
+v1381 restores whole-pool white/purple pellet passes, removing another 40 pixels.
+Demo 1 frame 3996’s game area now agrees; frame 1952 has 26 differences left. Four sampled
+game areas still differ. Full pictures remain open.
 
 ## Build and run
 

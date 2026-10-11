@@ -9,13 +9,13 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1380 repairs Marisa laser presentation color from the original
-pre-update modulo. All ten sampled Demo 2 game areas now agree on GNU/UBSan,
-removing 11,384 color differences across four samples. The earlier full-ring
-repair remains effective. All 15,988 selected scalars, 15,984 shake states and
-40 complete text planes still pass. Five other game-area samples and whole
-pictures remain open. Builds cold-compile only the changed view TU and relink
-attested unchanged dependencies; see [demo evidence](port64/evidence/demo.md).
+Current v1381 restores whole-pool white/purple pellet passes. Original CPU
+execution explains all 40 overlap pixels: Demo 1 frame3996 closes 32→0 and
+frame1952 34→26 on GNU/UBSan. The other 38 full index/RGB samples are unchanged;
+all ten sampled Demo 2 game areas remain zero. All 15,988 selected scalars,
+15,984 shake states and 40 complete text planes pass. Four sampled game areas
+and whole pictures remain open. Only the changed view TU is cold-built/relinked
+with attested unchanged dependencies; see [demo evidence](port64/evidence/demo.md).
 
 Retained v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
 UBSan agree on all15,984 complete shake globals/movement requests, all15,988

@@ -1098,20 +1098,12 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             });
     // Original foreground order puts enemy bullets after player and items.
     const auto& bullets=state.bullets().snapshot();
+    const bool normal_pellets=!state.bullet_render_clear() && !state.bullet_render_zap();
     for (unsigned index=bullet::pool_size;index;) {
         --index;const auto& b=bullets.entities[index];if (b.flag!=1) continue;
+        if(index<bullet::pellet_count && normal_pellets) continue;
         const auto p=b.position.current;
-        if (index<bullet::pellet_count && !state.bullet_render_clear() && !state.bullet_render_zap()) {
-            if (!bullets.pellet_visible[index]) continue;
-            const int left=28+pixels(p.x),top=12+pixels(p.y);
-            // The white top is an eight-pixel disk; the purple lower pass
-            // repeats its first row at Y+3, overlapping the six white rows
-            // and producing eight output rows without a bitmap array.
-            for (unsigned y=0;y<8;++y) for (unsigned x=0;x<8;++x) {
-                const auto color=bullet::pellet_pixel(x,y);
-                if (color) put_indexed_pixel(frame,palette,left,top,x,y,color);
-            }
-        } else if (index<bullet::pellet_count || b.phase<=bullet::Phase::cloud_backward) {
+        if (index<bullet::pellet_count || b.phase<=bullet::Phase::cloud_backward) {
             if (b.pattern < 20) {
                 const sprite::Sheet* raw = b.pattern < 3 ?
                     (playchar == application::Playchar::reimu ? &sprites.reimu : &sprites.marisa) :
@@ -1128,6 +1120,19 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             const bool blue=b.pattern==54 || b.pattern==55 || b.pattern==57 || (b.pattern>=76 && b.pattern<92);
             const unsigned pattern=(blue ? 19 : 23)+unsigned(b.phase)/4;
             put_sprite(frame,palette,sprites.enemies,pattern-4,16+pixels(p.x),pixels(p.y));
+        }
+    }
+    // MAIN 0AAF:81F5 calls the complete white pass at 1EAC before the
+    // complete purple pass at 1F3E. Interleaving them changes overlaps.
+    if(normal_pellets) for(const unsigned color:{15u,9u}) {
+        for(unsigned index=bullet::pellet_count;index;) {
+            const auto& b=bullets.entities[--index];
+            if(b.flag!=1 || !bullets.pellet_visible[index]) continue;
+            const auto p=b.position.current;
+            const int left=28+pixels(p.x),top=12+pixels(p.y);
+            for(unsigned y=0;y<8;++y) for(unsigned x=0;x<8;++x)
+                if(bullet::pellet_pixel(x,y)==color)
+                    put_indexed_pixel(frame,palette,left,top,x,y,color);
         }
     }
     for (const auto& e:state.circles().snapshot().entities) {

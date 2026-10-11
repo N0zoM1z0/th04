@@ -10,49 +10,58 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1380 repairs Marisa laser presentation color. Observed MAIN_01_TEXT
-0AAF:3704..37C7 (file F9F4..FAB7, 196 bytes), especially 3786, reads
-DGROUP 2134:538C before the update tail. Actual original caller/raw blitter
-0AAF:1378..13DA runs on four complete original Demo 2 states; the GRCG adapter
-explains all 11,384 former color 8↔9 differences with unchanged beam geometry.
-Native rendering needs the modulo from before the update tail. GNU and
-optimized UBSan now have zero game-area differences in all ten Demo 2 samples.
-Five other nonzero samples remain unchanged (Demo 1 frames 1/1952/3996;
-Demo 3 frames 3379/3709). Full graphics/RGB and scanout remain open.
+v1381 repairs pellet overlap colors. Observed MAIN_01_TEXT 0AAF:81F5..82FF
+(file 144E5..145EF, 267 bytes) orders whole white 1EAC then purple 1F3E passes.
+The old native per-pellet order let later white overwrite earlier purple.
+Actual original leaf execution on 60/98 natural pellets explains all 40 pixels;
+complete inverse/post-top list roundtrips pass. GNU and optimized UBSan close
+Demo 1 frame3996 32→0 and frame1952 34→26. Every change in the two complete
+index pictures equals original CPU color/original pixels; 38 other full index/RGB
+samples remain unchanged. Whole pictures and scanout stay open.
 
 All 40 complete text planes, 15,988 selected scalar/count boundaries and
-15,984 complete shake states/requests pass. All 125 new capture files agree
-between variants; every parent state/shake trace byte remains identical.
-Frozen imported readers reproduce both shake receipts except pinned source
-hashes. Only view.cpp differs among 509 inputs (manifest f5791751…). Cold view
-TUs relink unchanged attested dependencies; there is no new whole-current
-cold/CTest claim. Older complete-pool/69-CTest receipts retain their producers.
-Recipes: DOS-root .analysis/reconstruction/probes/native-shot-render-v1380/;
-receipts: native .analysis/port64/native-shot-render-v1380/.
+15,984 complete shake states/requests pass. All 125 capture files agree between
+variants; parent state/shake traces remain byte-identical. Frozen imported
+readers reproduce both shake receipts except their separately pinned hashes.
+Only view.cpp changes among 509 inputs (manifest fb26d509…). Builds cold-compile
+that TU and relink attested unchanged dependencies; prior whole cold/69-CTest/
+full-pool receipts retain their producers. Recipes: DOS-root
+.analysis/reconstruction/probes/native-circle-v1381/; receipts: native
+.analysis/port64/native-circle-v1381/.
+
+Ordinary circles are excluded at all five former remaining samples: no alive
+records and zero calls from the actual original 1C28 caller. Four nonzero game-area
+samples remain: Demo 1 frames 1/1952 (124439/26 pixels), Demo 3 frames 3379/3709
+(60/17).
 
 All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
 unavailable private native gates skip. Complete parent/current hashes bound
-changes to the original CPU beam's 11,384 pixels in four samples; the other
-36 index/RGB samples are unchanged. Lossless retirement reclaims 148.8 MiB
+changes to original CPU pellet color at 40 pixels in two samples; the other
+38 index/RGB samples are unchanged. Lossless retirement reclaims 148.9 MiB
 before journal cost (354 complete files, 1,044 source-backed caches).
-Full restoration/SHA/size/mode/nsmtime/gzip EOF, 17,815 protected hashes,
+Full restoration/SHA/size/mode/nsmtime/gzip EOF, 18,924 protected hashes,
 509 source pins and unchanged DOS fingerprint pass. New/old programs, source
 snapshots and failure receipts stay retained. Recovery from DOS root:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-shot-render-v1380/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-circle-v1381/verify_retention.py --restore
 ```
 
-Without --restore it performs full temporary readback. Previous v1379 proof
+Without --restore it performs full temporary readback. Previous v1380 proof
 retains its own source scope; do not use it to attest current sources.
 
-Next localize the remaining circle samples and initial background against
-actual original draw owners. Broader Boss/death/process/Windows pairing stays open.
+Next trace those white-pixel and initial-background draw owners.
+Broader Boss/death/process/Windows pairing remains open.
+
+Retained v1380 (native `f6e71fa`) repairs Marisa laser color from the pre-update
+modulo. All ten sampled Demo 2 game areas remain zero. Its original CPU
+explains 11,384 old pixels; its source and recovery proof retain f5791751 scope
+and cannot attest current fb26d509 inputs.
 
 Retained v1379 restores the full ordinary 400-row background ring before shake;
 its original CPU/MPN observation explains the 430 Demo 1 frame3379 differences,
 which remain zero. Its producer and recovery proof retain the 8e77830c source
-scope; that old live-source check cannot attest current f5791751 inputs.
+scope; that old live-source check cannot attest current fb26d509 inputs.
 
 Retained v1378 restores native MAIN's missing Midboss shake event consumer.
 Target-observed MAIN_01_TEXT 0AAF:2246..2315 (file E536..E605, 208 bytes) and
