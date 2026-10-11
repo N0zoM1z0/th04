@@ -1,3 +1,4 @@
+#include "pc98_palette.hpp"
 #include "gameover_render.hpp"
 #include <stdexcept>
 
@@ -34,7 +35,7 @@ Renderer::Bytes Renderer::rgb(int tone) const {
     for(unsigned at=0;at<indexed_.size();++at)for(unsigned channel=0;channel<3;++channel) {
         const int base=palette_[indexed_[at]*3+channel]>>4;
         const int component=tone<=100 ? base*tone/100 : 15-(15-base)*(200-tone)/100;
-        result[at*3+channel]=std::uint8_t(component*17);
+        result[at*3+channel]=pc98_palette::analog_rgb8(unsigned(component));
     }
     text_.overlay(result,*gaiji_,font_);return result;
 }

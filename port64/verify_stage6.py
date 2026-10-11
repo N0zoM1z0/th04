@@ -19,7 +19,7 @@ from unicorn.x86_const import UC_X86_REG_CS, UC_X86_REG_SP, UC_X86_REG_IP, UC_X8
 import struct
 from verify_stage3_resources import Original
 from verify_dialog import Original as DialogOriginal
-from probe_assets import main_assets
+from probe_assets import main_assets, analog_rgb8
 from verify import source_manifest
 
 def sha(data):
@@ -118,7 +118,7 @@ def portraits(a):
     if struct.unpack_from('<3H',faces)!=(2048,128,128) or faces[10:12]!=bytes((2,1)):
         raise ValueError('Stage6 portrait geometry changed')
     at=32+struct.unpack_from('<H',sheet,28)[0]; raw=sheet[at:at+48]
-    palette=[tuple((raw[i+c]>>4)*17 for c in (1,2,0)) for i in range(0,48,3)]
+    palette=[tuple(analog_rgb8(raw[i+c] >> 4) for c in (1,2,0)) for i in range(0,48,3)]
     records=[]
     for difficulty,character,shot,shooting in itertools.product(('normal','lunatic'),('reimu','marisa'),('a','b'),('idle','shot')):
         path=a.frames/f'{difficulty}-{character}-{shot}-{shooting}-5.bmp'

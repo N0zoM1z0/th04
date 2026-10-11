@@ -1,6 +1,11 @@
 # TH04 native 64-bit bring-up
 
-Work remains active. v1375 pairs all four ordinary demos with original DOS:
+Work remains active. The v1389 analog DAC repair gives 40/40 complete raw RGB
+samples under supplied original display-event timing, and 37/40 with default
+timing; three blink-phase cases remain. Full physical scanout and broader
+route acceptance remain open. See the current handoff for evidence and recovery.
+
+ v1375 pairs all four ordinary demos with original DOS:
 nine complete actor/effect pools (24,952 record bytes at each of 15,984 updates)
 and 15,988 selected input/score/player/RNG/count boundaries agree on GNU/UBSan.
 A missing Midboss yellow bonus consumer is repaired; item records preserve spare

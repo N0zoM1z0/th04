@@ -19,3 +19,10 @@ def main_assets(hdi):
     if len(blob) != ARCHIVES['main']['size'] or hashlib.sha256(blob).hexdigest() != ARCHIVES['main']['sha256']:
         raise ValueError('probe MAIN archive identity mismatch')
     return parse_archive(blob,'main',ARCHIVES['main'])[1]
+
+
+def analog_rgb8(nibble):
+    """Recorded PC-98 analog scanout expansion, after four-bit palette tone."""
+    four = nibble & 15
+    six = (four << 2) | (four >> 2)
+    return (six << 2) | (six >> 4)

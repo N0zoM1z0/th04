@@ -103,7 +103,10 @@ class Raster:
         elif kind not in ('song','command','measure','reset','sense','wait','se','se_update','logo_complete','complete'):
             raise ValueError('unhandled startup raster event '+kind)
     def bytes(self):
-        rgb=np.frombuffer(self.dac,dtype=np.uint8).reshape(16,3)*17
+        rgb=np.frombuffer(self.dac,dtype=np.uint8).reshape(16,3)
+        # Recorded PC-98 DAC scanout adapter; physical RGB remains unobserved.
+        six=(rgb<<2)|(rgb>>2)
+        rgb=(six<<2)|(six>>4)
         return self.pages.tobytes()+self.raw+self.dac+rgb[self.pages[self.shown]].tobytes()
 def archive_sources(root,out,mf,files):
     with tarfile.open(out/'source.tar.gz','w:gz') as archive:

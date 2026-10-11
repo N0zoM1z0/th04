@@ -1,3 +1,4 @@
+#include "pc98_palette.hpp"
 #include "op_startup.hpp"
 #include <algorithm>
 #include <stdexcept>
@@ -207,7 +208,7 @@ void Renderer::apply(const Event& e) {
 }
 Bytes Renderer::rgb() const {
     Bytes result;result.reserve(768000);
-    for(auto index:pages_[shown_])for(unsigned component=0;component<3;++component)result.push_back(std::uint8_t(dac_[unsigned(index)*3+component]*17));
+    for(auto index:pages_[shown_])for(unsigned component=0;component<3;++component)result.push_back(pc98_palette::analog_rgb8(dac_[unsigned(index)*3+component]));
     return result;
 }
 }

@@ -21,26 +21,22 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Fresh original boot capture observes an immediate
-first display callback, and native now admits that event before the first waited
-interval. Its persistent clock uses 17,723,227 ns through process changes.
-Producer f2b03ebb changes only view.cpp's initial count among 509 source inputs.
-Fresh whole GNU yields 71 programs with 69 passing CTests; optimized UBSan cold
-builds the game, trace and shake targets. Muted four-Demo routes yield 127
-identical variant files, with 126 hashes unchanged from the previous producer.
+Native development is active. The refresh clock admits the original immediate
+first callback and uses 17,723,227 ns through process transitions. Graphics
+colors now use the pinned PC-98 4→6→8-bit DAC path after four-bit fade arithmetic.
+Fresh GNU passes 69 CTests; optimized UBSan builds the game, trace and shake.
+Muted four-Demo routes produce 127 identical variant files; all state, palette,
+indices, text and shake outputs keep their previous full hashes.
 
-All 15,988 fresh original selected state/RNG boundaries pass. A separate frontend
-experiment applies original display-event ordinals before each step and before
-repainting its completed frame. All boundary and endpoint clock checks pass,
-along with 40 complete text planes and game-area index diagnostics. Whole RGB
-DAC diagnostics match 40/40; raw RGB matches 12/40. Complete index inequalities
-remain recorded. The old zero initializer rejects in a negative control.
-Independent cadence checks and the actual muted private Linux window/input
-route pass; no audio device opens.
+With explicit original display-event clock input, all 40 whole raw RGB samples
+match the independent original renderer without normalization or crops. Default
+timing matches 37/40; three blink-phase cases remain. The old linear control
+rejects 28/40. Fresh Game Over/MAINE registration graphics-consumer and private
+Linux window/input checks pass, with no audio device opened.
 
-Default boot/loading/process timing, raw palette/RGB, physical scanout, broader
-paired routes and actual Windows input/audio remain open. See
-[the current handoff](docs/RE_HANDOFF.md) for scope and recovery commands.
+Default boot/loading timing, physical and cross-emulator scanout, broader paired
+routes and Windows input/audio remain open. See [the current handoff](docs/RE_HANDOFF.md)
+for scoped evidence and cleanup recovery.
 
 ## Build and run
 

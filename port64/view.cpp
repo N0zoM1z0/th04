@@ -1,3 +1,4 @@
+#include "pc98_palette.hpp"
 #include "extra_dialog.hpp"
 #include "super_wave.hpp"
 #include "view.hpp"
@@ -131,7 +132,7 @@ struct Frame {
 uint32_t palette_color(const PiImage& image, unsigned index) {
     require_view(index < 16, "palette index outside image");
     const auto component = [&](unsigned channel) {
-        return uint32_t((image.palette[index * 3 + channel] >> 4) * 17);
+        return uint32_t(th04::portable::pc98_palette::analog_rgb8(image.palette[index * 3 + channel] >> 4));
     };
     return 0xff000000u | (component(0) << 16) | (component(1) << 8) |
         component(2);

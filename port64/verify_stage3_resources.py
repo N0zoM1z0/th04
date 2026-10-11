@@ -18,7 +18,7 @@ import struct
 from PIL import Image
 import unicorn
 from unicorn.x86_const import UC_X86_REG_CS, UC_X86_REG_SP
-from probe_assets import main_assets
+from probe_assets import main_assets, analog_rgb8
 from verify_session import Original as Base
 from verify import source_manifest
 
@@ -55,7 +55,7 @@ def verify(hdi, frames, target, exe, runner, output):
             raise ValueError('Stage3 BFNT geometry changed')
     start = 32 + struct.unpack_from('<H', bmt, 28)[0]
     raw = bmt[start:start+48]
-    palette = [tuple((raw[i+c] >> 4)*17 for c in (1, 2, 0)) for i in range(0, 48, 3)]
+    palette = [tuple(analog_rgb8(raw[i+c] >> 4) for c in (1, 2, 0)) for i in range(0, 48, 3)]
     if tuple(struct.unpack_from('<3H', faces)) != (2048, 128, 128) or faces[10:12] != b'\x04\x01':
         raise ValueError('Stage3 portrait geometry changed')
     original = Original(target.read_bytes())

@@ -105,7 +105,10 @@ class Raster:
     self.polygon_cache[raw]=np.frombuffer(masks[0],dtype=np.uint8).reshape(400,640)
    self.pages[self.access]|=self.polygon_cache[raw]
  def bytes(self):
-  palette=(np.frombuffer(self.palette,dtype=np.uint8).reshape(16,3).astype(np.uint16)>>4)*self.tone//100*17
+  palette=(np.frombuffer(self.palette,dtype=np.uint8).reshape(16,3).astype(np.uint16)>>4)*self.tone//100
+  # Recorded PC-98 DAC scanout adapter; physical RGB remains unobserved.
+  six=(palette<<2)|(palette>>2)
+  palette=(six<<2)|(six>>4)
   return self.pages.tobytes()+self.palette+palette.astype(np.uint8)[self.pages[self.shown]].tobytes()
 def main():
  p=argparse.ArgumentParser(description=__doc__)

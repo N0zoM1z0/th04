@@ -1,3 +1,4 @@
+#include "pc98_palette.hpp"
 #include "registration_render.hpp"
 #include <algorithm>
 #include <stdexcept>
@@ -231,7 +232,7 @@ score_file::Bytes Renderer::rgb(unsigned page,int tone) const {
     score_file::Bytes rgb(640*400*3);const auto& indices=canvas_.page(page);
     for(unsigned at=0;at<indices.size();++at)for(unsigned channel=0;channel<3;++channel) {
         const unsigned component=canvas_.palette()[unsigned(indices[at])*3+channel]>>4;
-        rgb[at*3+channel]=Byte((component*unsigned(tone)/100)*17);
+        rgb[at*3+channel]=pc98_palette::analog_rgb8(component*unsigned(tone)/100);
     }
     text_.overlay(rgb,assets_->graphics.gaiji,font_);return rgb;
 }

@@ -10,78 +10,71 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1388 recovers the original boot display clock and repairs native's missing
-immediate first callback. Fresh read-only capture observes both GDC constructors
-returning state0/count0/rate32, then both counts advancing to1 at PIC event/mode
-base1.875ms before the first waited interval. The unchanged archived cursor body
-independently replays every recorded clock triple. Blind callback counts predict
-all15,988 scalar phases and literal floor(framestart/period)+1 predicts every
-event ordinal, without global/per-Demo offsets. All15,984 thin records pass
-header/CRC/EOF checks and agree with their boundary payloads. Original MAIN
-077440a3, scalar0AAF:00B7/terminal0AAF:0975, load10FC/DGROUP3230 and the
-reset/target/emulator/ELF/site identities remain pinned. No parameter-entry events
-were observed; that path remains unexercised.
+v1389 repairs native's analog RGB conversion to the pinned DOSBox-X PC-98
+4→6→8-bit DAC scanout path. An independent archive-attested compiler probe
+passes51,712 value/tone checks;12/16 values reject the old nibble×17 rule.
+Seven display consumers share pc98_palette.hpp and ten independent drawing
+Oracle adapters preserve four-bit tone arithmetic before expansion. The
+510-file producer is7223a35552eaac88e80fdc2166f1f1f9803ab688788efcc3a1c2167ddfc00e3d. PI-to-BMP asset preview
+keeps its raw linear colors; no DOS product source or exact acceptance changes.
 
-Only view.cpp changes among509 source inputs (manifestf2b03ebb…): the persistent
-text-refresh count starts at1. Cadence remains17,723,227ns. Fresh whole cold GNU
-produces71 programs and passes69 CTests; optimized UBSan/bounds cold builds the
-game, trace and shake. Actual muted SDL-dummy OP→four demos→OP produces127
-identical variant files. Only text-refreshes.txt differs from the retained033
-parent;126 full hashes remain unchanged. Fresh selected original state/RNG/
-caller comparisons pass15,988 boundaries. Prior full-nine-pool proofs keep their
-original producer identities. Public DOS inputs/fingerprint stay unchanged.
+Fresh whole cold GNU71 programs/69 CTests, optimized UBSan game/trace/shake3,
+actual muted SDL-dummy four-Demo routes and private Linux Xvfb input/window
+checks pass. GNU/UBSan127 capture files are identical. Exactly28 full RGB
+files differ fromf2; all87 non-RGB files and12 RGB files keep previous hashes.
+Original selectedstate/RNG, palette, counters, TRAM, indices and shake proofs
+therefore retain their frozen prior identity; no new original boot/full-nine-pool
+capture is claimed. Fresh two-load1000/2000 MAIN GameOver and decoded MAINE
+registration graphics-consumer comparisons pass complete indices/TRAM/RGB.
+Scene clocks, sounds, host saves and complete process routes stay separate.
 
-A separate actual FrontEnd V5 fixture uses independently recorded original
-display-event ordinals as explicit clock input. One-row lookahead admits each
-completed frame's clock before repaint, then consumes it once at the next
-before-step trace boundary. All15,988 boundary and15,984 endpoint checks pass;
-visible values are assertions only. No phase offsets are fitted. The old zero
-initializer rejects in a separate V5 negative control. All40 complete text
-planes and game-area index diagnostics pass. Whole original/native index
-inequalities remain93,834–104,649 pixels per sample; native index exports omit
-some pixel-only HUD/text work. They do not establish whole graphics equality.
+With explicit retained originalV3 display-event clock input, all40 complete
+640×400×3 raw RGB samples now equal the independently attested unchanged
+original scanout renderer. No normalization, tolerance, crop or phase offset
+is used. All120 regenerated phase references keep their old hashes. The
+actual FrontEnd fixture checks15,988 boundaries and15,984 endpoints; visible
+is assertion only. The same retained clock source is used for both sides.
+The oldf2 linear same-clock control rejects28/40;12 black/white cases cannot
+distinguish expansion rules. Defaultphase rawRGB matches37/40; three blink
+phase cases remain. Whole native/index inequalities retain their diagnostic
+scope. This is sampled programmed-frame RGB acceptance under supplied clock,
+not whole-picture/default boot timing/physical scanout acceptance.
 
-Forty complete FONT/CRT/VRAM/palette/GDC/time snapshots come from the same V3
-capture as the clock. The independent emitter generates120 full RGB references;
-phase0/1 hashes match older references, while captured phase keeps V3 identity.
-Default raw RGB matches12/40, explicit DAC diagnostics37/40. The recorded-clock
-fixture matches raw12/40 and DAC diagnostics40/40. Whole-picture acceptance,
-raw palette/RGB, default boot/process timing, raw PIC fractional time, physical
-scanout and broader paired Boss/death/process routes remain open. Next isolate
-the raw palette conversion owner with this fixed clock fixture, then investigate
-elapsed-time owners under observer-overhead controls. The full goal stays active;
-candidate-local-attested provenance and deferred historical exactness remain.
+The originalV3 MAIN/clock/FONT/CRT/VRAM/palette snapshots remain pinned to
+077440a3, scalar0AAF:00B7/terminal0AAF:0975, load10FC/DGROUP3230.
+Boot constructors return0/0/32 and the first callback advances0→1 at1.875ms.
+Blind event counts replay all15,988 phases with no offsets. Captures have
+different absolute epochs despite identical configs; never mix captured-phase
+references. Parameter-entry coverage remains0. The persistent native initial
+count is1 and interval17,723,227ns. Original physical DAC/live xlat32, raw PIC
+fractional timing, cross-emulator scanout, default boot/loading CPU-I/O timing,
+broader paired Boss/death/process and Windows input/audio remain open.
+Next investigate default elapsed-time owners under observer-overhead controls.
+The full goal stays active; targets remain candidate-local-attested and MAIN's
+historical carpet/checkerboard exactness is deferred.
 
-Independent controls pass initial1 plus17 logical admissions,20,000 Schedule
-boundaries and FrontEnd host boundaries through1,000,000 refreshes, with repaint,
-double-count and backwards rejection. Actual muted private Linux Xvfb startup/
-Marisa B/input/focus/release/exit passes and opens no audio device. Actual Windows
-input/audio remains open under the host-use constraint.
+Replay: DOS-root .analysis/reconstruction/probes/native-dac-v1389/;
+native .analysis/port64/native-dac-v1389/. Final cold builds use build-gnu-v3
+and build-ubsan-v3 with frozen producer-source-v3. pipeline_v6.py runs all checks
+serially onCPU0/nice19. Original boot/clock/full40sample and negative epoch
+proofs remain under native-epoch-v1388; keep their terminal identities unchanged.
+See [the focused note](port64/evidence/demo.md).
 
-Recipes: DOS-root .analysis/reconstruction/probes/native-epoch-v1388/;
-native receipts .analysis/port64/native-epoch-v1388/. Use run_capture_v3.py,
-read_boot_v3.py, common_clock_v5.py and compare_final_v5.py in fresh namespaces.
-V1 fails its900-second host guard after Demo1/2. Distinct V2 and V3 complete;
-V3 adds40 full video snapshots. Absolute epochs differ despite identical configs:
-V2 differs from retainedv1386 by-27 events at15,983 updates and-26 atDemo4/1;
-all V2/V3 boundary clocks differ. Never mix captured-phase references between
-runs. Both comparator-scope failures and the corrected V5 paint admission are
-retained in the focused note. Earlier cadence/a47/FONT proofs keep their scopes.
-
-All jobs are terminal. Main441/live Ghidra and native345/target CI pass;
-unavailable private native gates skip. Lossless retirement passes for
-3,213 complete files and 1,051 source-backed caches, with
-29,115 protected hashes and509 current source pins. Net808.7 MiB is reclaimed after the102.1 MiB archive and7.1 MiB journal. The game,
-trace/shake programs, independent probes, frozen sources and original reference
-streams remain live. Unused CTest helper programs, objects/libraries and duplicate
-capture/reference outputs are recoverable. Restore before CTest/reader replay:
+Final lossless cleanup reclaims603.7 MiB after archive; the aborted
+initial build's regenerable products separately reclaimed24.3 MiB. Game,
+trace/shake programs, probes, frozen sources, original compressed samples,
+all receipts and logs remain live. Restore retired captures, objects/libraries
+and CTest helpers from the hash-verified archive before replay:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-epoch-v1388/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-dac-v1389/verify_retention.py --restore
 ```
 
-Without --restore it checks complete recovery temporarily. Use one-shot probe
-recipes in fresh output namespaces; keep earlier terminal proof files unchanged.
+Without --restore, it validates every member, complete gzip CRC/EOF and protected
+hashes. The v1388 archive retains oldlinear controls; the new journal inherits
+its immutable protected inventory and adds closed proof files without rewriting
+past evidence. Use fresh recipe output directories. All jobs are terminal and
+both CI/diff checks pass; unavailable private native gates retain explicit skips.
 
 Prior demo/point-number/presentation experiments are indexed in
 [demo evidence](port64/evidence/demo.md) and their immutable private receipts.

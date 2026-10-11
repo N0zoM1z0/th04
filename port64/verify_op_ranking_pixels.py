@@ -105,7 +105,10 @@ class Raster:
     self.sprite_cache[key]=pixels.copy();self.kernel_calls+=4
    pixels=self.sprite_cache[key];self.pages[self.access][pixels!=0]=pixels[pixels!=0]
  def bytes(self):
-  palette=(np.frombuffer(self.palette,dtype=np.uint8).reshape(16,3).astype(np.uint16)>>4)*self.tone//100*17
+  palette=(np.frombuffer(self.palette,dtype=np.uint8).reshape(16,3).astype(np.uint16)>>4)*self.tone//100
+  # Recorded PC-98 DAC scanout adapter; physical RGB remains unobserved.
+  six=(palette<<2)|(palette>>2)
+  palette=(six<<2)|(six>>4)
   return self.pages.tobytes()+self.palette+palette.astype(np.uint8)[self.pages[0]].tobytes()
 def main():
  p=argparse.ArgumentParser(description=__doc__)

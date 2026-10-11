@@ -72,7 +72,10 @@ class Original(Base):
   tram=bytes(self.u.mem_read(0xa0000,4000))+bytes(self.u.mem_read(0xa2000,4000))
   codes=np.frombuffer(tram[:4000],dtype='<u2');attrs=np.frombuffer(tram[4000:],dtype='<u2')
   base=self.palette.astype(np.int32)>>4
-  colors=(base*tone//100 if tone<=100 else 15-(15-base)*(200-tone)//100)*17
+  colors=(base*tone//100 if tone<=100 else 15-(15-base)*(200-tone)//100)
+  # Recorded PC-98 DAC scanout adapter; physical RGB remains unobserved.
+  six=(colors<<2)|(colors>>2)
+  colors=(six<<2)|(six>>4)
   rgb=colors[self.indices].astype(np.uint8);right=False;previous=0;offset=32+int.from_bytes(self.gaiji[28:30],'little')
   for cell,(code,attr) in enumerate(zip(map(int,codes),map(int,attrs))):
    if cell%80==0:right=False

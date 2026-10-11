@@ -10,7 +10,7 @@ from pathlib import Path
 from PIL import Image
 import unicorn
 from verify_stage3_resources import Original
-from probe_assets import main_assets
+from probe_assets import main_assets, analog_rgb8
 from verify import source_manifest
 sha=lambda b:hashlib.sha256(b).hexdigest()
 
@@ -55,7 +55,7 @@ def main():
         faces=assets['KAO3.CD2' if character=='reimu' else 'KAO2.CD2']
         if struct.unpack_from('<3H',faces)!=(2048,128,128) or faces[10:12]!=bytes((4 if character=='reimu' else 3,1)):raise ValueError('Stage4 NPC portrait geometry changed')
         bmt=assets['ST03B22.BBT' if character=='reimu' else 'ST03B.BBT'];start=32+struct.unpack_from('<H',bmt,28)[0]
-        raw=bmt[start:start+48];palette=[tuple((raw[i+c]>>4)*17 for c in (1,2,0)) for i in range(0,48,3)]
+        raw=bmt[start:start+48];palette=[tuple(analog_rgb8(raw[i+c] >> 4) for c in (1,2,0)) for i in range(0,48,3)]
         path=a.frames/f'{rank}-{character}-{shooting}-10.bmp';checked=0;used=set()
         with Image.open(path) as image:
             image=image.convert('RGB')

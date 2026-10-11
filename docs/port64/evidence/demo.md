@@ -1253,3 +1253,94 @@ fresh output namespaces. Original boot capture and live source inputs require
 retention recovery before replay when owned expanded files have been retired.
 Next investigate native versus original boot/OP/loading/process CPU/I/O cost
 owners; retain raw RGB/scanout and broader route questions independently.
+
+## Native analog DAC expansion (v1389)
+
+Compiler-observed pinned DOSBox-X PC-98 scanout expands analog4-bit values
+to6 bits, then6 to8 bits. Its16 RGB values are
+0,16,32,48,69,85,101,117,138,154,170,186,207,223,239,255.
+The archive-attested unchanged original functions compile with pinned g++8;
+51,712 input/tone checks pass and12/16 values reject the old nibble×17 rule.
+This is emulator policy evidence; physical DAC, live xlat32 and cross-emulator
+RGB remain unobserved in this batch.
+
+Native producer7223a35552eaac88e80fdc2166f1f1f9803ab688788efcc3a1c2167ddfc00e3d freezes510 files. Seven display
+consumers use pc98_palette.hpp, keeping tone arithmetic in the four-bit domain.
+Six independent original-instruction Oracle adapters and four portrait checks update only RGB expansion
+and pass extracted statement/value-domain controls; original instruction
+execution and palette ownership stay separate. main.cpp PI-to-BMP remains a
+linear raw asset preview, distinct from display scanout.
+
+Fresh whole cold GNU71 programs/69 CTests and optimized UBSan3 pass. Actual
+muted four-Demo GNU/UBSan127 outputs are identical. Exactly28 full RGB files
+change fromf2; all87 non-RGB outputs and12 RGB outputs retain full hashes.
+Original selectedstate/RNG, counters, palette, canonicalTRAM, indices and shake
+therefore keep the retained proof identity; no new original boot capture or
+full-nine-pool promotion is claimed. Fresh actual FrontEnd V5 clockfixture
+admits15,988 boundaries and15,984 endpoints using the same retainedV3 original
+clock; visible is assertion only, no fitted offsets.
+
+Forty retained originalV3 FONT/CRT/VRAM/palette/GDC/time samples regenerate120
+whole640×400 RGB references with the unchanged independently attested renderer.
+Every reference hash matches its previous accepted counterpart. All40 complete
+fixture RGB files now equal original raw RGB with no normalization, tolerance,
+crop or phasefit. Defaultphase rawRGB equals37/40. Only three original/default
+blink-phase cases remain. The oldf2 complete same-clock RGB control is recovered
+selectively with archive/member hashes and rejects28/40;12 black/white cases
+are insensitive. Whole-index inequalities are retained in their original
+diagnostic domain and cannot be used as whole scanout acceptance.
+
+Fresh original MAIN GameOver TRAM helpers replay at1000/2000 and compare
+46 whole indices/TRAM/RGB snapshots (47472000 bytes).
+Fresh decoded MAINE registration helpers replay at1000/2000 and compare
+91 complete consumer snapshots. Palette scanout is an explicit
+emulator-source adapter; original text/drawing instructions are independently
+executed. These do not attest scene timing/audio/saves or broader OP processes.
+Actual private muted Linux Xvfb input/window checks pass with0 audio opens.
+
+The initial GNU attempt was explicitly stopped to update the six reference
+adapters, then the final producer was cold-built in new directories. Its
+immutable initialsource, logs and stop receipt stay separate;24.27 MiB of
+regenerable aborted objects/programs were cleared with a source-backed journal.
+A later preflight also finds four scene portrait checks with legacy RGB expansion;
+they now import an independently exercised scalar adapter. The first adapter
+statement probe failed because its synthetic DAC fixture serialized NumPy int64
+bytes rather than uint8. Its original source/log/pipeline failure are retained
+in initial-replay-v2; corrected finalV3 cold GNU/UBSan and all controls replay
+from a new frozen namespace. No failed probe becomes acceptance. The first frozen GameOver run then fails
+at import before target execution because native scripts are outside the frozen
+port64-only tree. V4 adds PYTHONPATH to the attested native scripts; its separate
+continuation reuses only closed passed V3 receipts and reruns the pending target
+consumers. Both failed harness logs and their source are retained. V4 then records both
+original loads but correctly rejects byte0 because the coordinator supplied
+the game executable rather than its graphics-consumer contract executable.
+V5 uses the pinned player-lifecycle/registration/cutscene contract programs
+and fresh output directories; the truncated-native control remains negative. The first final comparator
+then fails to import the retained observer dependency; V6 adds only its
+attested scripts/probes search path and independently regenerates all references.
+Its original failed source/log stay unchanged; no comparator data is edited.
+Final cleanup/recovery is indexed in docs/ANALYSIS_RETENTION.md.
+
+Replay from DOS root (fresh outputs required):
+.analysis/reconstruction/probes/native-dac-v1389/ contains freeze_source.py,
+build_native.py, capture_native.py, dac_oracle.py, adapter_controls.py,
+common_clock.py, run_window.py, pipeline_v6.py and compare_v6.py. Native receipts are
+.analysis/port64/native-dac-v1389/. OriginalV3 boot/fullsample and clock receipts
+remain in v1388; regenerate each frozen producer in a fresh namespace.
+
+Next: default boot/loading/process elapsed-time owners under observer-overhead
+controls. Raw PIC fractional timing, physical/cross-emulator DAC and scanout,
+broader paired Boss/death/process routes and Windows input/audio remain open.
+All target provenance remains candidate-local-attested; no DOS exact promotion.
+
+## Native raw RGB palette owner (v1389)
+
+Seven display consumers now use the recorded PC-98 DAC4→6→8 expansion.
+FreshGNU69CTest, optimizedUBSan3, actualfourDemo127 identicalvariant files,
+privateLinuxXvfb and two-load GameOver/MAINEregistration consumer checks pass.
+Only28 fullRGB files differ fromf2; all87 non-RGB files keep old hashes.
+Explicitoriginal-clock samples now match40/40 whole rawRGB without projection;
+defaultphase matches37/40. Oldlinear sameclock rejects28/40. These are scoped
+programmed-frame samples, not physicalscanout/defaultboot/wholepicture acceptance.
+Default elapsed-time owners, physical/liveDAC/cross-emulator output, broader
+paired routes and Windows remain open. The goal stays active. See the handoff.

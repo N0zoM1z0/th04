@@ -11,7 +11,7 @@ from pathlib import Path
 import unicorn
 from unicorn.x86_const import UC_X86_REG_CS, UC_X86_REG_IP, UC_X86_REG_SP
 from verify_stage3_resources import Original as Base
-from probe_assets import main_assets
+from probe_assets import main_assets, analog_rgb8
 from verify import source_manifest
 sha=lambda b:hashlib.sha256(b).hexdigest()
 
@@ -120,7 +120,7 @@ def main():
         faces=assets['BSS4.CD2'];bmt=assets['ST04.BB2']
         if struct.unpack_from('<3H',faces)!=(2048,128,128) or faces[10:12]!=b'\4\1':raise ValueError('Stage5 portrait geometry changed')
         at=32+struct.unpack_from('<H',bmt,28)[0];raw=bmt[at:at+48]
-        palette=[tuple((raw[i+c]>>4)*17 for c in (1,2,0)) for i in range(0,48,3)]
+        palette=[tuple(analog_rgb8(raw[i+c] >> 4) for c in (1,2,0)) for i in range(0,48,3)]
         for rank,character,shot,shooting in itertools.product(('normal','lunatic'),('reimu','marisa'),('a','b'),('idle','shot')):
             path=a.frames/f'{rank}-{character}-{shot}-{shooting}-5.bmp';checked=0
             with Image.open(path) as image:

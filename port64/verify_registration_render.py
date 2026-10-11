@@ -189,7 +189,10 @@ class Drawing(Base):
  def capture(self,tone):
   codes=np.frombuffer(bytes(self.u.mem_read(0xa0000,4000)),dtype='<u2');attrs=np.frombuffer(bytes(self.u.mem_read(0xa2000,4000)),dtype='<u2')
   tram=codes.tobytes()+attrs.tobytes();palette=self.picture[8:56]
-  colors=(np.frombuffer(palette,dtype=np.uint8).reshape(16,3).astype(np.uint16)>>4)*tone//100*17
+  colors=(np.frombuffer(palette,dtype=np.uint8).reshape(16,3).astype(np.uint16)>>4)*tone//100
+  # Recorded PC-98 DAC scanout adapter; physical RGB remains unobserved.
+  six=(colors<<2)|(colors>>2)
+  colors=(six<<2)|(six>>4)
   rgb=colors[self.pages[0]].astype(np.uint8)
   # Independent pinned DOSBox-X video policy: fullwidth gaiji's custom-bank
   # right half must match the previous code; attributes belong to each cell.
