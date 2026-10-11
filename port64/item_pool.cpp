@@ -2,6 +2,38 @@
 #include <stdexcept>
 
 namespace th04::portable::item {
+bool Splashes::add(motion::Point center) {
+    // MAIN 13A9:04A0 advances the ring even when its selected slot is busy.
+    auto& splash=state_.entities[state_.cursor];
+    if(++state_.cursor>=state_.entities.size()) state_.cursor=0;
+    if(splash.flag) return false;
+    splash.flag=1;splash.time=16;splash.center=center;
+    splash.radius=splash.previous_radius=32;
+    return true;
+}
+void Splashes::update() {
+    for(auto& splash:state_.entities) {
+        if(!splash.flag) continue;
+        if(splash.flag==2) {splash.flag=0;continue;}
+        splash.previous_radius=splash.radius;
+        splash.radius=motion::wrap(int(splash.radius)+32);
+        if(splash.radius>=512) splash.flag=2;
+    }
+}
+std::vector<motion::Point> Splashes::dots() const {
+    std::vector<motion::Point> result;
+    for(const auto& splash:state_.entities) {
+        if(splash.flag!=1) continue;
+        for(unsigned angle=0;angle<256;angle+=4) {
+            const auto offset=motion::polar(static_cast<std::uint8_t>(angle),splash.radius);
+            const int x=motion::wrap(int(splash.center.x)+offset.x);
+            const int y=motion::wrap(int(splash.center.y)+offset.y);
+            if(x<0 || x>=6144 || y<0 || y>=5888) continue;
+            result.push_back({static_cast<std::int16_t>(32+x/16),static_cast<std::int16_t>(16+y/16)});
+        }
+    }
+    return result;
+}
 void Pool::spawn(std::size_t slot, motion::Point position, Type type, Velocity velocity) {
     if (static_cast<unsigned>(type) > static_cast<unsigned>(Type::full_power)) {
         throw std::invalid_argument("invalid item type");
@@ -21,6 +53,7 @@ bool Pool::add(motion::Point position, Type type) {
     for (std::size_t i = 0; i < pool_size; ++i) {
         if (entities_[i].flag != Flag::free) continue;
         spawn(i, position, type, {0, -48});
+        splashes_.add(position);
         return true;
     }
     return false;
@@ -102,6 +135,8 @@ UpdateResult Pool::update(
         }
         entity.position.velocity.y = motion::wrap(std::int32_t(entity.position.velocity.y) + 1);
     }
+    // Original items_update ages splashes after processing all item slots.
+    splashes_.update();
     return result;
 }
 } // namespace th04::portable::item

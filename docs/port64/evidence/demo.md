@@ -714,3 +714,98 @@ python3 .analysis/reconstruction/probes/native-circle-v1381/verify_retention.py 
 
 Without --restore, it performs temporary complete readback. Old v1380 proof
 retains its then-current f5791751 scope and cannot attest live fb26d509 sources.
+
+## Item-spawn splash state and foreground dots (v1382)
+
+Observed MAIN_03 13A9:0486..049F clears 80 bytes at DGROUP 2134:41F6
+and the separate cursor at 4250. The ten bytes at 4246..424F are separate
+storage. 04A0..04E5 admits the selected eight-slot ring entry and advances
+its cursor even when busy; admitted state has radius/previous32 and time16.
+The physical suffix includes the two following alignment bytes. 04E8..0521
+ages nonfree records by32, retaining previous radius and removing at512;
+flag2 becomes free on the next update. The time byte remains unchanged.
+Original items_add creates a splash only after admitting an ordinary item.
+The separate miss-drop producer does not use that path. items_update ages
+splashes after the complete item-slot loop.
+
+Actual original render 0AAF:168C..170E (file D97C..D9FE,131 bytes) uses
+64 four-angle increments, actual vector2_at, signed-word coordinate wrap,
+subpixel playfield rejection and the actual scroll helper. Its raw dot leaf
+0AAF:1842..185D (file DB32..DB4D,28 bytes) issues one byte mask per point.
+The GRCG color/mask adapter retains full256000-pixel output and ordered dots.
+Native typed Splashes now joins item Pool allocation/update/reset and draws
+white dots before item sprites, retaining all record fields and ring admission.
+
+311 original CPU state/ordered-dot controls per GNU/optimized UBSan compare
+full81-byte state, wrapped/negative radius/center/flag cases and three captured
+natural states; ten reserved sentinel bytes remain unchanged. Actual muted
+SDL-dummy idle OP→four demos→OP agrees on all15984 full81-byte records,
+including inactive fields and cursor. Active frames are1146/688/1192/904;
+all eight cursors occur per demo. Missing/duplicate lastrow, lastcursor,
+lastinactive-radius and firstframe controls all reject. Frozen imported DOS/
+compiled-native readers reproduce splash and shake receipts on both variants
+except separately pinned ownsourceSHA.
+
+All103 changes across three full256000-index actual samples equal original
+white dots: Demo1frame1952 26→0, Demo3frames3379/3709 60/17→0. The other37
+entire index/RGB sample hashes remain unchanged. All40 full canonical text
+planes,15988 selected scalar/count boundaries and15984 full shake states/
+requests pass. All126 entire capture files match between hosts; complete parent
+state/shake trace bytes remain identical. Fresh current-producer nine full
+actor/effect pools pass15984x24952B, retaining inactive/spare bytes and translating
+only enemy script IDs to original STD-relative offsets. The missing splash
+owner was outside those nine pools; scalar equality could not detect it.
+
+The first direct CPU-mask decode with recorded GDC line rejected. Actual helper
+DGROUP4278 reads drawing scroll300/40/275, while programmed display lines are
+301/41/276 at these seams. Drawing-relative dot geometry explains the pixels;
+physical GDC command/scanout mapping remains unaccepted. The failed assertion,
+subsequent owner-size decode failure and frozen-source ROOT import failure
+remain retained with their source/logs. The successful replay uses a freshv3
+owner and distinctv2 component directories, preserving all failed artifacts.
+No copied bitmap, original DS painting or picture crop/mask enters the product.
+
+The producer pins509 inputs, manifest
+add39f3c33de91719b93c0510350b09223ec973612ebaf45b317b1dec400b44c.
+Five inputs change: item_pool.cpp/.hpp,view.cpp,demo_picture_frontend_checks.inl
+and verify_demo_pictures.py. The Pool header/layout change invalidates earlier
+native core binaries. Fresh GNU cold build has71 programs and69 passing CTests;
+optimized UBSan cold core/game/trace/shake yields3 programs with no fullUBSan
+CTest claim. All new programs and full source snapshots retain this producer.
+Older products keep their own source identities. DOS inputs/fingerprint,
+original targets and historical exact acceptance remain unchanged; provenance
+stays candidate-local-attested. Fresh preflight/live MAIN attestation pass.
+
+39 of40 sampled game areas now have zero differences. Demo1frame1 remains
+124439 pixels; initial background and all complete picture margins/cache/RGB/
+physical scanout, broader Boss/death/process/Windows pairing remain open.
+Recipes: DOS-root .analysis/reconstruction/probes/native-white-v1382/
+inspect_splashes-v3.py,build_native.py,verify_splashes-v2.py,validate_remaining.py,
+compare_splashes.py,verify_pixel_change.py,reader_controls.py,freeze_readers.py.
+Receipts: native .analysis/port64/native-white-v1382/. Jobs stay CPU0/nice15,
+serial, muted/headless. Full pools are already gzip-restoration verified.
+
+## v1382 terminal validation and recovery
+
+All jobs are terminal. Main441/live Ghidra and native345/target CI pass;
+unavailable private native gates skip. GNU cold71 programs/69CTest and UBSan
+cold3 targets remain pinned; full81-byte splash/nine-pool/scalar/shake/text,
+five malformed-trace rejection and frozen-reader controls pass. No Windows,
+physical scanout, full pictures or historical exact promotion is accepted.
+
+Lossless retirement reclaims 193,658,880 allocated bytes (184.7 MiB) before
+journal cost: 975 complete sample/capture/build files and 1,044 source-backed
+caches. Complete restoration/SHA/size/mode/nsmtime/gzip EOF, 22,622 protected
+hashes, 509 source pins and unchanged DOS fingerprint pass before and after
+deletion. Two complete native-pool streams already reclaimed 774,946,816
+allocated bytes after full gzip restore/SHA/length/EOF verification. Combined
+net allocated recovery is 968,605,696 bytes (923.7 MiB) before journal
+cost. All71 GNU/3 UBSan programs, both component probes, old programs, frozen
+sources, original references, full pool archives and failed attempts stay live.
+The cleanup log is excluded while writing; previous proofs remain immutable.
+
+From DOS root, restore retired samples/build inputs before CPU/graphics/reader
+replay with python3 .analysis/reconstruction/probes/native-white-v1382/verify_retention.py --restore.
+Without --restore it performs temporary complete readback. Old v1381 proof
+retains its fb26d509 source scope and cannot attest current add39f3c inputs.
+Native full pool gzip archives are already complete and require no new capture.

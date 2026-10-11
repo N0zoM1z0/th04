@@ -13,7 +13,8 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
     scene.enable_registration();
     const std::array<unsigned,10> samples{1,2,3,72,73,74,1952,3379,3709,3996};
     std::ofstream trace(out/"state.txt"),displays(out/"displays.txt"),shakes(out/"shake.txt");
-    require_view(bool(trace) && bool(displays) && bool(shakes),"cannot open demo picture trace");
+    std::ofstream splashes(out/"item-splashes.txt");
+    require_view(bool(trace) && bool(displays) && bool(shakes) && bool(splashes),"cannot open demo picture trace");
     const auto hexadecimal=[&](const auto& bytes) {
         constexpr char digits[]="0123456789abcdef";
         for(auto byte:bytes)trace<<digits[unsigned(byte)>>4]<<digits[unsigned(byte)&15];
@@ -37,6 +38,12 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
                 const auto& s=scene.main_state().playfield_shake();const auto shift=scene.main_state().playfield_shift();
                 shakes<<number<<' '<<frame+1<<' '<<s.x<<' '<<s.y<<' '<<s.time<<' '<<int(s.redraw)<<' '
                     <<shift.x<<' '<<shift.y<<' '<<shift.invalidate<<'\n';
+                const auto& pool=scene.main_state().items().splashes().snapshot();
+                splashes<<number<<' '<<frame+1<<' '<<+pool.cursor;
+                for(const auto& splash:pool.entities)
+                    splashes<<' '<<+splash.flag<<' '<<+splash.time<<' '<<splash.center.x<<' '
+                        <<splash.center.y<<' '<<splash.radius<<' '<<splash.previous_radius;
+                splashes<<'\n';
             }
             require_view(scene.main_state().demo_sample().input==sample.input && scene.main_state().demo_sample().shift==sample.shift,"demo consumed sample");
             if(frame<3996 && std::find(samples.begin(),samples.end(),frame+1)!=samples.end()) {
@@ -57,5 +64,5 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
         require_view(scene.program()==application::Program::op,"natural demo exit");
     }
     require_view(score_file::HostStore(out/"save").file().bytes()==score_file::HostStore(inputs).file().bytes(),"demo physical score drift");
-    require_view(bool(trace) && bool(displays) && bool(shakes),"demo picture trace write failure");
+    require_view(bool(trace) && bool(displays) && bool(shakes) && bool(splashes),"demo picture trace write failure");
 }

@@ -2,9 +2,31 @@
 #include "item_system.hpp"
 #include "motion.hpp"
 #include <functional>
+#include <vector>
 
 namespace th04::portable::item {
 enum class Flag : std::uint8_t { free, alive, remove };
+struct Splash {
+    std::uint8_t flag=0,time=0;
+    motion::Point center{};
+    motion::Subpixel radius=0,previous_radius=0;
+};
+struct SplashState {
+    std::array<Splash,8> entities{};
+    std::uint8_t cursor=0;
+};
+class Splashes {
+public:
+    explicit Splashes(SplashState initial={}):state_(initial) {}
+    const SplashState& snapshot() const { return state_; }
+    void reset_stage() { state_={}; }
+    bool add(motion::Point center);
+    void update();
+    // Screen pixels relative to the drawing scroll line, before shake.
+    std::vector<motion::Point> dots() const;
+private:
+    SplashState state_{};
+};
 struct Entity {
     Flag flag = Flag::free;
     motion::Motion position{};
@@ -32,8 +54,9 @@ class Pool {
 public:
     const std::array<Entity, pool_size>& entities() const { return entities_; }
     std::uint16_t spawned() const { return spawned_; }
+    const Splashes& splashes() const { return splashes_; }
     // Stage initialization clears entity storage, but not this run's counter.
-    void reset_stage() { entities_={}; }
+    void reset_stage() { entities_={};splashes_.reset_stage(); }
     bool add(motion::Point position, Type type);
     bool add_enemy_drop(motion::Point position, EnemyDropSequence& sequence);
     MissSpawnResult add_miss(
@@ -51,5 +74,6 @@ private:
     void spawn(std::size_t slot, motion::Point position, Type type, Velocity velocity);
     std::array<Entity, pool_size> entities_{};
     std::uint16_t spawned_ = 0;
+    Splashes splashes_{};
 };
 } // namespace th04::portable::item

@@ -109,6 +109,7 @@ def main():
     rows=display_rows((capture/'displays.txt').read_bytes());observations=[];consumed=0
     expected={'state.txt','displays.txt','save'}|{row['stem']+suffix for row in rows for suffix in ('.indices','.rgb','.tram')}
     if (capture/'shake.txt').is_file():expected.add('shake.txt')
+    if (capture/'item-splashes.txt').is_file():expected.add('item-splashes.txt')
     require({path.name for path in capture.iterdir()}==expected,'native capture file extent')
     for demo in range(1,5):
         selected={row['frame']:row for row in rows if row['demo']==demo}

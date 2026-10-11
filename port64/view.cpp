@@ -1080,6 +1080,9 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             if (spark::pixel(entity.age&7u,x,y)) put_indexed_pixel(frame,palette,left,top,x,y,12);
         }
     }
+    // MAIN items_render calls the white spawn-splash dots before item sprites.
+    for(const auto dot:state.items().splashes().dots())
+        put_indexed_pixel(frame,palette,dot.x,dot.y,0,0,15);
     for (const auto& entity : state.items().entities()) {
         if (entity.flag != th04::portable::item::Flag::alive) continue;
         const auto point = entity.position.current;

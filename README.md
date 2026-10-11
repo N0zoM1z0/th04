@@ -41,17 +41,19 @@ DEMO PLAY. The complete original video stream and all 15,988 selected state
 boundaries remain verified. Whole graphics/RGB, physical blink and scanout
 acceptance remain open; those comparisons retain their v1376 producer.
 
-v1378 consumes missing Midboss shake events and verifies all 15,984 complete
-shake states and movement requests. Demo 1 frame 3379 game-area differences
-fall from 55,357 to 430. v1379 restores the full physical background ring and
-removes the remaining 430 pixels at that sample on GNU/optimized UBSan. The
-retained v1378 GNU cold build has 71 programs and 69
-passing CTests; optimized UBSan game/trace/shake targets are cold-built
-separately. v1380 corrects Marisa laser color timing: 11,384 differences across
-four Demo 2 samples disappear, and all ten sampled Demo 2 game areas now agree.
-v1381 restores whole-pool white/purple pellet passes, removing another 40 pixels.
-Demo 1 frame 3996’s game area now agrees; frame 1952 has 26 differences left. Four sampled
-game areas still differ. Full pictures remain open.
+Current v1382 restores item-spawn white splash dots and their eight-slot state.
+GNU and optimized UBSan each pass 311 original CPU component controls and all
+15,984 full 81-byte natural splash records. The final 103 diagnosed late-sample
+pixels disappear; 39 of 40 sampled game areas now agree. The other 37 complete
+index/RGB samples stay unchanged. All 126 capture files agree between variants,
+with full text, shake, selected state and nine complete actor/effect pools
+passing. Demo 1’s initial background and full pictures remain open.
+
+The item Pool header/layout change requires fresh core/frontend builds: GNU
+produces 71 programs with 69 passing CTests; optimized UBSan cold-builds the
+core/game/trace/shake targets, without a full CTest claim. Earlier producers
+keep their own identities. Physical GDC/scanout, broader routes and Windows
+input/audio acceptance remain open.
 
 ## Build and run
 
