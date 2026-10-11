@@ -656,3 +656,106 @@ inputs are unchanged. Original failed receipt/producer stays immutable under
 
 Lossless retirement reclaims 472.69 MiB; all logical build/video/state
 contents and protected source/receipt identities remain recoverable.
+
+## Original OP wait ownership (v1397)
+
+Observed pinned OP decoded payload SHA 13222cb6, packed target 8fc3b67f;
+69028-byte payload and 804 ordered candidate-derived relocation sites remain
+diagnostic topology, not packed-file exactness. Runtime load 10FC, DGROUP 2030.
+Capstone reads complete bounded instructions from the hash-attested payload:
+
+- 0DA1:002B frame_delay (21 bytes) clears DGROUP:1AC6 before the unsigned
+  comparison; zero therefore clears then returns. Far return consumes 2 bytes.
+- 0DA1:0370 snd_delay_until_measure (49 bytes) uses that service only when
+  DGROUP:09E1 is zero. Active BGM repeatedly queries INT60 / INT61 AH5 and
+  compares AX with the target measure; it neither resets Count1 nor calls a
+  VSYNC delay. Far return consumes both 16-bit arguments (4 bytes).
+- 0A74:16DD is the input_reset_sense far call immediately before the Logo
+  wait. 16E2 polls Count1 >=2; 16E9 clears it; 16EF is after that clear and
+  before the page switch. Hooks avoid the inner busy loop.
+- IRQ vector points to decoded 0000:25C6. Its bounded prefix selects DGROUP,
+  adds [0854] to the 16-bit cadence accumulator [1ACE] and skips both counter
+  increments on carry. Otherwise [1AC6] / [1AC8] increment separately from GDC
+  blink state. The skip accumulator is static target evidence here, not a
+  newly measured hardware/31-kHz runtime model.
+
+Three runtime-observed actual original GAME.BAT routes stop read-only at the
+second Logo Count1 reset, before its page switch. Scalar memory includes both
+16-bit IRQ counters and IVT0A. Complete original payload, source/tool inputs,
+relocated hook windows, full PIC fractions, matched guest DOS returns and
+complete GDC streams pass the independent reader/model. There are 37 named
+boundaries, 38 full clock checkpoints, and 119 / 111 / 27 GDC events. The last
+terminal scalar is recorded by the GDB reader before the emulator resumes;
+its separate F record and opcode/address identity are required. No guest
+memory/register writes, driver calls or input injection are performed by the
+observer. Normal GAME.BAT writes its own diagnostic file; initial and final
+full disk hashes remain separate. All launches are Linux SDL dummy and muted.
+
+| Scenario | Measure start → ready Count1 | First Logo enter → pass / Count2 | First bracket | Second bracket |
+| --- | --- | --- | --- | --- |
+| FM86, CPU24000 | 10 → 103 | 104 → 104 / 104 | 0.010875 ms | 23.755833 ms |
+| FM86, CPU36000 | 7 → 100 | 100 → 100 / 100 | 0.009028 ms | 18.852361 ms |
+| BGM off, CPU24000 | 10 → 0 | 1 → 2 / 11 → 12 | 7.599583 ms | 31.722333 ms |
+
+The first bracket includes input_reset_sense before the unsigned wait test.
+Active first waits admit zero new counted interrupts. Every second wait
+enters Count1=0, passes Count1=2 and clears it; Count2 continues (106 / 102 /
+14 at the terminal reset). All first resets likewise preserve Count2.
+BGM-off frame_delay(0) has zero IRQ progress and clears Count1 in 0.000250 ms.
+The control changes only initial MIKO.CFG byte3 (BGM) and byte9 (checksum);
+the independent reader reconstructs the initial disk hash from the retained
+unmodified preparation image. Executables, drivers, GAME.BAT and other inputs
+are independently read from the final physical disk and remain pinned.
+
+Each second IRQ wait progresses by two while crossing one observed GDC seam;
+BGM-off first progresses by one while crossing zero. Do not use display/blink
+callback counts as IRQ Count1/Count2, even though v1396 correctly forwards
+elapsed work to the display owner. These are distinct timing phases.
+
+The public reader rejects busy-reset / fallback-reset, missing Logo reset,
+below-threshold passage, false PIC time and changed GDC counter controls. Six
+public tests additionally cover unsigned wrap, an IRQ immediately after reset,
+truncated pairs and second-counter extent. The initial 33-hook capture is a
+real failed attempt: the pinned observer permits at most32. Its failed wrapper
+and logs stay failed; V3 removes the unreachable menu hook and leaves code and
+inputs unchanged. The BGM preparation's first import failure and two rejected
+reader versions remain preserved separately. The second reader incorrectly
+compared the final disk with its initial control disk; the final reader checks
+the reconstructed initial hash plus the separate final hash and physical
+inputs, without normalizing guest output.
+
+Native Scene::advance currently queries the measure once per logical refresh;
+run_logo_frame always waits two more ticks. Original evidence falsifies these
+as general wait ownership semantics. This batch changes no native/DOS product
+source: native remains510/ea5c016d at49b2fa5 and DOS fingerprint6f5898dd. The
+existing v1396 cold-build/caller/default-Demo proofs remain unchanged; no fresh
+native build or original/native timing equivalence follows from this Oracle.
+Next model active PMD service without an extra logical frame, separately own
+unsigned IRQ Count1/Count2 and phase, and preserve reset-before-frame_delay
+versus inherited-count-and-reset-after-Logo. Do not fit the measured brackets
+or use a universal next-GDC-edge wait. Default work costs, physical/second-
+emulator timing, full pictures, broader combat/process and Windows remain open.
+
+Replay from the DOS root, restore the owned image/font archive first:
+
+```sh
+python3 .analysis/reconstruction/probes/native-vsync-waits-v1397/verify_retention.py --restore
+python3 scripts/runtime/verify_op_wait_clock.py \
+  --capture .analysis/runtime/candidates/dos-op-v1397-waits-base-v3 \
+  --capture .analysis/runtime/candidates/dos-op-v1397-waits-cpu36000-v3 \
+  --capture .analysis/runtime/candidates/dos-op-v1397-waits-bgm-off-v4 \
+  --model-dir .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-model-v3 \
+  --model-receipt .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-observation-v3.json \
+  --output-dir .analysis/reconstruction/probes/NEW-wait-reader
+```
+
+Accepted independent receipt: .analysis/reconstruction/probes/native-vsync-waits-v1397/reader-v3/receipt.json,
+SHA 7da54bf954debd9fe61f82e64d70f0b5c5772dcce0d62939411304a4e9b65157. Source, full scalar/GDC streams, terminal logs/receipts, negative
+results and earlier current producer freeze stay protected.
+
+Both complete CI gates pass (root447/native345), tracking and diff checks pass.
+Lossless retirement of only18 current disposable image/font files reclaims
+218.40 MiB; all5 complete blobs and116 current protected proofs read back.
+A separate post-CI1050-file source-backed cache journal recovers16.38 MiB.
+No original target, host package/save, complete stream or old producer is
+removed; failed attempts stay failed. See retention for exact recovery.

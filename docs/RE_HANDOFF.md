@@ -10,6 +10,27 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
+v1397 independently verifies original OP wait ownership under 24,000 / 36,000
+CPU budgets and a config-only BGM-off control. Active measure polling preserves
+IRQ Count1; the first Logo wait inherits 104 / 100 and passes without another
+counted interrupt. BGM-off frame_delay(0) clears Count1 even with zero wait.
+Logo clears Count1 after each wait; Count2 continues. Native still samples
+measure readiness once per admitted refresh and uses fixed Logo waits: these
+ownership/phase differences are now demonstrated, not repaired.
+
+Product source remains at v1396 native 49b2fa5 / 510-file ea5c016d and DOS
+fingerprint 6f5898dd. No fresh product build, full-picture or exact promotion is
+claimed by v1397. DOS-root scripts/runtime/verify_op_wait_clock.py checks all
+three complete original captures, full load/relocations/PIC/GDC and rejecting
+mutations. Replay/retention index: .analysis/reconstruction/probes/native-vsync-waits-v1397/.
+
+v1397 complete CI passes root 447 / native 345, with tracking/diff checks.
+Lossless image/font cleanup recovers 218.40 MiB (18 files / 5 unique blobs);
+post-CI source-backed caches recover another 16.38 MiB. Complete captures,
+failed attempts and earlier producer proofs remain protected. Restore only
+needed images from the DOS-root v1397 verify_retention.py --restore, optionally
+--prefix; run new captures/readers under fresh namespaces.
+
 v1396 connects explicit loading/drawing/process work to the headless GDC
 text clock as well as resident sound. Work retains sub-refresh time;
 `MainAssets::display_elapsed_ns` supplies the independent display-to-PMD-install
@@ -19,7 +40,7 @@ remain empty/zero; no fitted startup age or bus-delay constant is introduced.
 
 Current native producer: 510 files,
 ea5c016d0cd40bcb453bd9f6c27c6ec24c2513ec63342fa8be2fa8d6acc85d43.
-Only view.cpp/view.hpp change; DOS source/headers/flags and fingerprint
+v1396 changed only view.cpp/view.hpp; DOS source/headers/flags and fingerprint
 6f5898dd remain unchanged. Cold GNU builds 71 programs / passes 69 CTests;
 optimized UBSan builds seven selected targets / passes four sound contracts.
 Earlier 55459 producer/receipts retain their identities.
@@ -68,8 +89,12 @@ reclaiming 472.65 MiB separately; never attest current source with V1.
 Both full CI gates pass (root 441 / native 345), with ledger and diff checks.
 Post-CI source-backed caches reclaim 16.69 MiB separately.
 
-Next establish defensible deterministic default CPU/bus/resource/graphics
-inputs and hardware wait-edge semantics. Full pictures, broader combat/process,
+Next measure counted-IRQ edge phase independently of GDC blink, then implement
+the distinct PMD busy-service and counted-IRQ wait owners,
+preserving unsigned counters, reset location and inherited phase. Use v1397
+first-two-Logo and zero-fallback checks; do not substitute GDC blink counts or
+fit observed durations. Default CPU/bus/resource/graphics inputs stay open.
+Full pictures, broader combat/process,
 physical/cross-emulator scanout, chip/IRQ/audio, Windows input/audio and MAIN
 historical carpet/checkerboard exactness remain open; goal stays active.
 Targets remain candidate-local-attested. Continue CPU0/nice19 serial muted

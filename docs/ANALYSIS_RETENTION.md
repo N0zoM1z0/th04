@@ -641,3 +641,33 @@ Rejected V1 has its own verified archive/reader under
 `.analysis/reconstruction/probes/native-gdc-work-v1396/`, reclaiming
 472.65 MiB separately. Its 8657d4a2 freeze is not current-source acceptance.
 Both full CI gates pass (root 441 / native 345). Post-CI source-backed caches reclaim 16.69 MiB separately.
+
+### Original OP wait captures (v1397)
+
+All three accepted originals, first33hook failure, unexecuted preparations and
+readers are terminal. Product source stays510/ea5c016d; DOS6f5898dd unchanged.
+Full root447/native345 CI, current and inherited v1396 retention readbacks,
+tracking and diff pass. No fresh product build is claimed in this Oracle batch.
+
+Only eighteen owned disposable HDIs / duplicate fonts are losslessly retired:
+12 images and6 fonts,5 unique complete blobs. Net allocated reclamation after
+archive/journal is218.40 MiB; post-CI source-backed caches recover16.38 MiB
+separately (1050 files). Full gzip CRC/EOF, member digests, actual temporary
+restored SHA/size/mode/nsmtime and116 current protected hashes pass before and
+after delete. Full scalar loads/clocks, sources, receipts/logs and all failed
+attempts remain live. Original targets/assets, host packages and saves are
+untouched. The final raw images retain normal guest diagnostic-file writes;
+restoration preserves them rather than reconstructing only an initial image.
+
+From the DOS root:
+
+```sh
+python3 .analysis/reconstruction/probes/native-vsync-waits-v1397/verify_retention.py
+```
+
+Add --restore and optional --prefix before full wait-reader replay. Both the
+content-addressed retired-content.tar.gz and retention.json journal are needed
+for exact owned-path recovery; use fresh output/source names for new runs.
+The failed33hook capture and import/reader failures are not upgraded by archive
+CRC/restore success. The terminal seal separately closes writer stdout and
+final checks/publication receipts.
