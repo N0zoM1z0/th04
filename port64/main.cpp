@@ -248,6 +248,7 @@ int main(int argc, char** argv) {
         std::string options_screenshot, character_screenshot, shot_screenshot;
         std::string handoff_screenshot, main_screenshot, shooting_screenshots, combat_screenshots, midboss_screenshots,orange_screenshots,dialog_screenshots,stage2_screenshots,kurumi_screenshots,stage3_screenshots,elly_screenshots,stage4_screenshots,reimu_screenshots,marisa_screenshots,stage5_screenshots,yuuka5_screenshots,stage6_screenshots,ending_screenshots,font_bitmap;
         bool window_route_advice=false;
+        bool demo_pictures=false;
         bool title_window = false,muted=true,audio_requested=false,mute_requested=false,offline_requested=false;
         std::string pmd_driver="pmd",opna_rom,resident_sound_checks,window_trace;
         std::string configuration_checks,setup_checks,sound_checks,sound_scene_checks,startup_checks,natural_route_checks;
@@ -285,6 +286,7 @@ int main(int argc, char** argv) {
             else if(arg=="--op-ranking-checks")op_ranking_checks=value;
             else if(arg=="--op-music-checks")op_music_checks=value;
             else if(arg=="--demo-checks")demo_checks=value;
+            else if(arg=="--demo-pictures") {demo_checks=value;demo_pictures=true;}
             else if(arg=="--bomb-checks")bomb_checks=value;
             else if(arg=="--score-route-checks")score_route_checks=value;
             else if (arg == "--archive") archive = value;
@@ -323,7 +325,7 @@ int main(int argc, char** argv) {
                 !(title && (!member.empty() || !output.empty())),
                 "usage: th04-port64 (--hdi FILE | --archive FILE) "
                 "[--member NAME --output BMP | --title "
-                "[--title-screenshot BMP] [--options-screenshot BMP] "
+                "[--title-screenshot BMP] [--options-screenshot BMP] [--demo-pictures DIR] "
                 "[--character-screenshot BMP] [--shot-screenshot BMP] "
                 "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE] [--save-dir DIR] [--registration-checks DIR] [--gameover-checks DIR] [--sound-checks DIR] [--score-route-checks DIR] [--resident-sound-checks DIR] [--startup-checks DIR] [--natural-route-checks DIR] [--pmd-driver pmd|pmd86|pmdb2|none] [--opna-rom FILE] [--window-trace DIR] [--window-route-advice] [--audio] [--mute]]");
         require(natural_route_checks.empty() || (!title_window && startup_checks.empty() && !hdi.empty() && !save_directory.empty()),
@@ -338,6 +340,7 @@ int main(int argc, char** argv) {
         if (title) {
             MainAssets main_assets;
             main_assets.save_directory=save_directory;main_assets.muted=muted;main_assets.window_trace=window_trace;main_assets.window_route_advice=window_route_advice;
+            main_assets.demo_pictures=demo_pictures;
             main_assets.configuration_checks=configuration_checks;
             main_assets.setup_checks=setup_checks;
             main_assets.sound_checks=sound_checks;main_assets.sound_scene_checks=sound_scene_checks;

@@ -12,6 +12,12 @@ Boss/death/process routes and current Windows execution remain open. See
 [current handoff](../docs/RE_HANDOFF.md) and
 [demo evidence](../docs/port64/evidence/demo.md).
 
+v1376 exercises that selected state through actual idle OP→four demos→OP and
+repairs the missing yellow DEMO PLAY text and blink attribute. GNU/optimized
+UBSan compare40 complete label spans around/after fade-in. `--demo-pictures DIR` and `verify_demo_pictures.py`
+retain full indexed/RGB/TRAM displays, qualify different original/native seams
+and explicitly leave whole-picture/physical blink/scanout acceptance open.
+
 Older milestone paragraphs below retain their own producers and scope.
 
 v1347 closes the independent recorded startup pixel corpus. Fifteen two-load

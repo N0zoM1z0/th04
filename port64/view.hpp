@@ -44,6 +44,7 @@ struct MainAssets {
     std::optional<th04::portable::sound::PmdProfile> pmd_profile;
     std::string resident_sound_checks;
     bool muted=true;
+    bool demo_pictures=false;
     std::string window_trace;
     bool window_route_advice=false;
     StageAssets stage2,stage3,stage5,stage6,extra;

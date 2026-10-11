@@ -1174,7 +1174,7 @@ void put_text_requests(Frame& frame,const MainSprites& sprites,const std::vector
     for(unsigned i=0;i<layer.size();++i) if(layer[i]) frame.pixels[i]=layer[i];
 }
 
-registration::TextPlane main_text_plane(const gameplay::State& state) {
+registration::TextPlane main_text_plane(const gameplay::State& state,unsigned demo_number=0) {
     auto text=state.hud_text_plane();
     const auto& cell=state.overlay_cell();
     for(unsigned row=1;row<24;++row)for(unsigned col=4;col<52;col+=2) {
@@ -1183,10 +1183,16 @@ registration::TextPlane main_text_plane(const gameplay::State& state) {
         else for(unsigned half=0;half<2;++half)
             text.put_ank(int(col+half),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
     }
+    if(demo_number && state.overlay().callback==th04::portable::transition::Callback::titles) {
+        // Original MAIN_01_TEXT0AAF:62B3 writes these nine gaiji at18,12
+        // after the enter timer reaches72. Keep yellow/blink TRAM attribute.
+        constexpr unsigned char label[]{0xad,0xae,0xb6,0xb8,2,0xb9,0xb5,0xaa,0xc2};
+        for(unsigned i=0;i<sizeof(label);++i)text.put(18+int(i)*2,12,label[i],0xc3);
+    }
     return text;
 }
-void put_main_text(Frame& frame,const MainSprites& sprites,const gameplay::State& state) {
-    main_text_plane(state).overlay(frame.pixels,sprites.gaiji,sprites.font);
+void put_main_text(Frame& frame,const MainSprites& sprites,const gameplay::State& state,unsigned demo_number=0) {
+    main_text_plane(state,demo_number).overlay(frame.pixels,sprites.gaiji,sprites.font);
 }
 
 class DialogScene {
@@ -1571,6 +1577,8 @@ public:
     bool post_dialog() const { return post_started_; }
     const application::ResidentState& resident() const { return application_.resident(); }
     std::uint32_t process_random_state() const { return application_.process_random_state(); }
+    std::uint64_t process_random_draws() const { return application_.process_random_draws(); }
+    unsigned renderer_display_line() const {return sprites_->background.display_line();}
     unsigned generation() const { return application_.generation(); }
     application::Program program() const { return application_.program(); }
     bool main_resources_alive() const { return bool(main_) && bool(sprites_); }
@@ -2073,7 +2081,7 @@ private:
             palette[channel]=main_->boss_snapshot().palette_zero[channel];
         for(unsigned channel=0;channel<3;++channel)palette[42+channel]=main_->life().palette14[channel];
         gameover_renderer_=std::make_unique<gameover::Renderer>(sprites_->gaiji,assets_->font_bitmap,
-            std::move(frozen.indices),palette,main_text_plane(*main_));
+            std::move(frozen.indices),palette,main_text_plane(*main_,application_.resident().demo_number));
     }
     void begin_registration(std::uint16_t held,unsigned weight) {
         require_view(application_.program()==application::Program::maine && bool(score_store_),
@@ -2216,7 +2224,7 @@ private:
         case Screen::demo_end: {
             if(!demo_fade_->published())return demo_frozen_;
             auto frame=render_main(*sprites_,*main_,application_.resident().playchar,demo_fade_->tone());
-            put_main_text(frame,*sprites_,*main_);return frame;
+            put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);return frame;
         }
         case Screen::music: {
             Frame frame{640,400,std::vector<std::uint32_t>(256000)};
@@ -2250,7 +2258,7 @@ private:
                 if(extra_route_->phase()==maine::ExtraPhase::main_fade) {
                     auto frame=render_main(*sprites_,*main_,application_.resident().playchar,extra_route_->main_tone());
                     if(main_->clear_bonus() && main_->bonus_text_visible())put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
-                    put_main_text(frame,*sprites_,*main_);return frame;
+                    put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);return frame;
                 }
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
                 if(const auto* registration=extra_route_->registration_scene()) {
@@ -2304,7 +2312,7 @@ private:
             if(ending_->phase()==maine::Phase::main_fade) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar,ending_->main_tone());
                 if(main_->clear_bonus() && main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
-                put_main_text(frame,*sprites_,*main_);
+                put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);
                 return frame;
             } else {
                 const auto* staff=ending_->staff_scene();
@@ -2334,7 +2342,7 @@ private:
                     frame.pixels[at]=0xff000000u|(unsigned(rgb[at*3])<<16)|(unsigned(rgb[at*3+1])<<8)|rgb[at*3+2];
                 return frame;
             }
-            if(dialog_scene_) { auto frame=dialog_scene_->render();put_main_text(frame,*sprites_,*main_);return frame; }
+            if(dialog_scene_) { auto frame=dialog_scene_->render();put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);return frame; }
             if(main_) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
                 if(main_->clear_bonus()) {
@@ -2342,7 +2350,7 @@ private:
                     if(main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
                 }
 
-                put_main_text(frame,*sprites_,*main_);
+                put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);
                 return frame;
             }
             return render_main_handoff(
@@ -2442,6 +2450,7 @@ private:
 #include "op_score_frontend_checks.inl"
 #include "op_ranking_frontend_checks.inl"
 #include "op_music_frontend_checks.inl"
+#include "demo_picture_frontend_checks.inl"
 #include "demo_frontend_checks.inl"
 #include "configuration_frontend_checks.inl"
 #include "op_setup_frontend_checks.inl"
@@ -2796,6 +2805,10 @@ void run_title(
         run_setup_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.setup_checks);return;
     }
     if(!demo_checks.empty()) {
+        if(main_assets.demo_pictures) {
+            require_view(!window,"demo picture capture requires headless execution");
+            run_demo_picture_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,demo_checks);return;
+        }
         run_demo_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,demo_checks);return;
     }
     if(!op_music_checks.empty()) {

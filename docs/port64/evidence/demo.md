@@ -285,3 +285,87 @@ journals, preserving/restoring five full pool streams and ten text streams,
 retiring1042 source-backed caches.8904 prior protected hashes,500 current source
 pins,71 programs and DOS fingerprint pass. Current builds and failures stay;
 verify recovery with native native-pools-v1375/verify_retention.py. All jobs terminal.
+
+## Actual FrontEnd pictures and DEMO PLAY text (v1376)
+
+
+The new `--demo-pictures DIR` runs ordinary idle OP entry, four bundled demos
+and natural return to OP without a host window or audio. It copies the attested
+starting score/CFG files and checks both unchanged after the route. The public
+reader validates the full original ordinary trace, complete15984 video records,
+CRC/EOF/load/CPU/ABI/consumer identities and pinned legal HDI before comparison.
+All15988 selected scalar/count boundaries agree on the actual FrontEnd.
+
+The initial GNU/optimized UBSan v3 captures retain28 full displays each. Their
+complete selected state passes, but each of16 post-curtain samples lacks54 of72
+DEMO PLAY text code/attribute bytes. This is a specific missing renderer owner;
+score-tail timing cannot explain this constant middle-of-playfield label.
+The original stage-enter owner, MAIN_01_TEXT0AAF:62B3..6348 (file125A3,150 bytes),
+checks the72 timer, demo resident byte and writes nine gaiji at column18/row12
+with attributeC3. DGROUP2134:1C20 retains the actual terminated label. Native
+`main_text_plane` now applies these semantics on demos after enter completion,
+including the frozen demo exit display. Ordinary-play callers keep their mode.
+GNU/optimized UBSan v4 accept all40 complete72-byte spans, including frames72/73/74 in each
+demo. All15988 scalar/count boundaries still pass. Eight public controls test
+complete sample order, last bytes, TRAM banks, bit order, page selection, address
+wrap/partitions and unsupported GDC modes. Earlier initial adapter failure
+omitted `enable_registration`; no MAIN actor ran, so it is a probe failure.
+
+The full640×400 graphics comparison remains diagnostic: original samples at
+frame-counter write before score/background tail, native after complete
+FrontEnd update. Retain full256000 indexed bytes,768000 text-composited native
+RGB bytes,8000 canonical TRAM bytes, and complete279809-byte original snapshots.
+Do not crop or mask invisible graphics to manufacture equality. Original MPN
+uploader MAIN_01_TEXT0AAF:0E0C..0E80 (fileD0FC,117 bytes) populates100 image slots
+in both physical pages at left576..639. Original reverse blank TRAM can cover
+this cache. Native first-frame black curtain likewise follows reverse blank
+TRAM; the earlier graphics-only original PNG omitted this text layer. All12
+initial full canonical TRAM samples agree. Later score/HUD differences need aligned
+sampling; physical blink/FIFO/scanout and original composited RGB stay open.
+
+Programmed GDC decoding uses the pinned emulator's partition SAD/LEN, pitch40,
+row-height1 and analog four-plane display-page model. It rejects unsupported
+IM/WD/mode/extent. Its28 overlapping original hashes independently match the
+earlier NumPy decoder; this is model cross-checking, not physical scanout proof.
+Fresh Ghidra/target/header/entry/relocation/load and raw owner witnesses are
+retained in root `.analysis/reconstruction/probes/native-pictures-v1376/`.
+Use its `attest_picture_owners.py --target TARGET --database ATTESTATION
+--output FRESH.json` to replay both owners. Earlier scratch address-base mistakes
+are retained and rejected; complete corrected owner digests agree with the
+existing accepted extents. Target provenance remains candidate-local-attested.
+
+From the native worktree, using absolute DOS_ROOT:
+
+```sh
+nice -n15 taskset -c0 env PYTHONDONTWRITEBYTECODE=1 \
+  python3 port64/verify_demo_pictures.py --dos-root "$DOS_ROOT" \
+  --original "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1365-original" \
+  --original-video "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1369-original-video-v2" \
+  --original-consumer "$DOS_ROOT/.analysis/reconstruction/probes/demo-video-v1369/producer-source-v2/scripts/probes" \
+  --hdi "$DOS_ROOT/.analysis/runtime/images/zun.hdi" \
+  --exe .analysis/port64/native-pictures-v1376/build-gnu-v4/th04-port64 \
+  --output-dir FRESH
+```
+
+Use build-ubsan-v4 for the instrumented FrontEnd. v3 cold main/view (and UBSan
+audio) TUs and v4 cold view TUs reuse the unchanged v1375 core/ymfm libraries;
+this is explicitly a bounded frontend build, not whole-current cold/CTest or
+Windows acceptance. All producer sources and actual link dependencies are
+pinned separately. Retained v1375 nine-pool acceptance keeps its own producer;
+no DOS input, original bytes, physical Windows product or historical exactness
+state changes in this batch. Next align the full presentation boundary before
+claiming pictures; do not treat every raw diagnostic difference as a source bug.
+
+Final502-source producer manifest is6a997fe129eda10206e39323891f13da65187adc2aed5e91af4cf9bf45141db0.
+GNU/optimized UBSan final capture bytes agree completely; frozen reader imports
+reproduce2×15988 selected boundaries and2×40 label spans while consuming all
+15984 original records. Main441/live Ghidra and native337/target CI pass; absent
+native private gates skip. No Windows or DOS product launch/build occurs here.
+
+All jobs terminal. Native native-pictures-v1376 retention reclaims291966976
+allocated B before journals, fully preserving671 archived raw display/state/
+intermediate files and retiring1043 source-backed caches. Full restored hashes,
+modes/nsmtimes and gzip CRC/footer/EOF pass;8904 older protected hashes,502 source
+pins and4 new/71 old programs remain equal. Use verify_retention.py for temporary
+restored readback, or --restore before frozen_readback.py/verify_initial_label.py
+and old object reuse. The public reader uses fresh outputs and retained programs.

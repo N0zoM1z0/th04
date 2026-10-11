@@ -31,6 +31,13 @@ eight pool-reader controls and a source mutation rejection pass. Original/native
 pictures, other globals, broader routes and physical Windows remain open. See
 [the current native handoff](docs/RE_HANDOFF.md).
 
+v1376 additionally verifies selected state through the actual idle OP→four demos
+→OP FrontEnd. It restores the missing yellow DEMO PLAY text after fade-in;
+40 label spans, including frames72/73/74, agree with original text on GNU and
+optimized UBSan.
+Whole indexed/RGB/text captures remain diagnostic across different presentation
+seams. Physical blink/scanout and whole-picture acceptance remain open.
+
 ## Build and run
 
 With local inputs and the toolchain installed:
