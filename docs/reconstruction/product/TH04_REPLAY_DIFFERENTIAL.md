@@ -3225,3 +3225,87 @@ checks. Post-CI source-backed Python cache cleanup retires 1051 files,
 recovering a separate 16.32 MiB after its journal. Total current net cleanup:
 544.95 MiB. The cache journal is disjoint from lossless archive retirement;
 retained source regenerates these caches. Goal remains active.
+
+## Repeated START retains cadence phase (v1399)
+
+A late direct target re-read invalidates one v1398 generalization: START does
+not clear accumulator[1ACE]. OP decoded0000:2552–25BB queries GDC mode through
+0000:15C2–1617, selects increment[0854]=0/13311 and clears Count1[1AC6] /
+Count2[1AC8] before testing installed mask[0856]. It does not reset accumulator;
+END0000:2600–2646 likewise has no counter/accumulator reset. START's source
+comment and native model had incorrectly inherited the semantic DOS assembly's
+extra reset. v1398's full zero-phase24kHz observations, archived old source and
+successful compilation stay valid at their narrow scope; they do not support
+nonzero-phase restart semantics.
+
+scripts/runtime/verify_op_vsync_lifecycle.py now independently executes the
+complete original START/GDC-query/IRQ instructions under pinned Unicorn1.0.2.
+The packed OP42290B identity/MZ structure, decoded69028B13222cb6,804 ordered
+relocs84972ed5 and decoded receipt bind the target; topology remains diagnostic
+and candidate-local-attested. Two relocated loads10FC/3333, mode bits0/C and
+phases0/12345/65535 give12 scenarios. Explicit seeds model one prior counted
+IRQ (Count1/2=1, increment=phase, accumulator=phase), installed mask0xFB and
+callback segment0. BIOS AH31 replies are typed; all other BIOS calls reject.
+No IRQ occurs inside START. Real far ret4 / caller retf / IRET frames and all
+DGROUP writes / full opcode traces are retained. This is a controlled CPU
+semantic diagnostic, not natural full31kHz, DOSBox timing or physical acceptance.
+
+Original START preserves phase in all12 runs. One actual original IRQ after
+START with phase65535/modeC adds13311 with carry, leaves accumulator13310 and
+counts unchanged. Current native GNU/optimized UBSan matches12/12 full tuples;
+published frozen v1398 builds/exits0 but matches only4 zero-phase cases. Its
+8 nonzero-phase states reject;2 cases count an extra IRQ. This independent
+negative distinguishes successful compilation and zero-state tests from the
+actual contract. A failed comparator draft's syntax error remains separately
+frozen; it never produced an accepted comparison.
+
+Only native pc98_vsync.hpp / its contract source change,512-file manifest5474b8e3.
+Counter START now clears only the two counters and selects increment; initialized
+memory supplies initial accumulator0. END/START retains prior cadence phase.
+Global RasterClock phase remains separate. Fresh GNU72 programs /70 CTests and
+UBSan8 targets /5 CTests pass. Fresh compiled probes also pass208 original
+counted IRQ records /230 raster callbacks from immutable v1398 parent inputs;
+all old raw/source/report pins are rechecked. Eight fresh full default
+none/pmd/pmdb2/pmd86 GNU/UBSan CLI routes reproduce all129 immutable v1396
+baseline outputs each. No frontend wait integration or exact promotion follows.
+
+The shared DOS source in both trees still clears cadence_skip_accumulator.
+That candidate statement differs from independently executed original OP. DOS
+fingerprint6f5898dd is unchanged in v1399; its earlier24kHz demos cannot falsify
+this zero-phase corner. Next bounded unit must correct and cold-replay this
+shared assembly (including lifecycle/state/layout checks) before PMD busy-
+service / inherited-IRQ frontend wiring. MAIN historical deferred exactness and
+current historical acceptance stay separate. Do not silently edit old proofs.
+
+Replay from DOS root:
+
+```sh
+python3 scripts/runtime/verify_op_vsync_lifecycle.py --output-dir .analysis/reconstruction/probes/NEW-vsync-lifecycle
+```
+
+Current private index: native-vsync-lifecycle-v1399/ (DOS-root probes and native
+port64 outputs). original-public-v4/receipt.json pins complete12-case execution;
+native lifecycle-v2/receipt.json pins new GNU/UBSan and rejected old-v1398 output.
+New source/cold-build/IRQ/default-profile receipts are independent; earlier
+namespaces remain unchanged. Current single-core/nice19 work uses CPU1 while
+user CPU0 is occupied; original timing observations are not recollected or
+restamped. Windows GUI/focus/keys/audio remain excluded.
+
+Both complete CI gates pass (root451/native345 tests), tracking/diff checks pass.
+Lossless retirement of 3104 current files / 1447 unique blobs
+reclaims 468.27 MiB after its 16.88 MiB archive/journal.
+Full gzip CRC/EOF, every temporary restored SHA/size/mode/nsmtime and all
+688 current protected hashes pass; frozen old v1398 proof is separately
+verified. A disjoint post-CI 1053-file source-backed cache journal recovers
+another 16.41 MiB. Current v1399 net cleanup totals 484.68 MiB. Combined
+v1398 + v1399 accounting is disjoint for owned build/capture namespaces and
+counts each final regenerated cache set once; no old target/proof/host save is
+removed. Source freeze, full original/compiled negatives and selected current
+programs remain live. Recovery reader: native-vsync-lifecycle-v1399/
+verify_retention.py (--restore/--prefix; --parent v1398/v1397/v1396).
+
+Next shared-DOS replay must also preserve original mode-query-before-increment-
+selection/count-clear ordering. Current assembly clears those fields before
+BIOS query. The installed/no-IRQ-inside-START diagnostic here deliberately
+does not validate an IRQ interleaved with that query; add that controlled case
+when repairing the shared assembly.

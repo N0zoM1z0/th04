@@ -68,11 +68,12 @@ and opened no audio device. Default resource/graphics/initial-epoch costs still
 need a model; full pictures, broader gameplay/process and Windows input/audio
 remain open. See the handoff for scoped evidence and cleanup recovery.
 
-Complete original OP traces now verify all 208 counted IRQs across two CPU
-budgets and distinguish their raster phase from GDC blink. Native now has
-unsigned counter and rational raster-clock components, tested against those
-traces under GNU and UBSan. The frontend still needs PMD busy-service and
-inherited Logo-wait integration.
+Complete original OP traces verify 208 counted IRQs across two CPU budgets.
+Native has unsigned counters and a separate raster clock. New original
+instruction execution also repairs repeated START: it preserves nonzero cadence
+phase, preventing a spurious counted IRQ. GNU/UBSan agree across twelve seeded
+lifecycle cases. The shared DOS assembly still needs the same correction and
+its own cold replay; PMD busy-service and inherited Logo integration follow.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

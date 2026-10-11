@@ -27,6 +27,7 @@ OVERRIDES = {
     'verify_op_loading_clock.py': ('runtime', 'Verify original OP loading phases, guest DOS return frames and fractional clocks; reject incomplete zero-exit captures.'),
     'verify_op_wait_clock.py': ('runtime', 'Verify original OP busy-measure, reset and inherited IRQ-counter waits across CPU and BGM-off controls.'),
     'verify_op_irq_clock.py': ('runtime', 'Verify every original OP IRQ increment and armed callback against complete counter/GDC streams and derived raster phases.'),
+    'verify_op_vsync_lifecycle.py': ('runtime', 'Execute original installed VSYNC START and IRQ instructions under typed BIOS responses; preserve nonzero cadence phase across load/mode controls.'),
     'verify_op_startup_clock.py': ('runtime', 'Verify original FM86 OP startup, cold PMD installation and complete GDC clocks with rejecting mutations.'),
     'build.py': ('build', 'Build/publish local-source DOS products after all requested build and link audits.'),
     'build_zun_composite.py': ('build', 'Build the local-source ZUN container and embedded resident components.'),

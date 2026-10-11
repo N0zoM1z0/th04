@@ -1,5 +1,36 @@
 # Private build and analysis retention
 
+## v1399 corrected START cadence ownership
+
+Current native producer512/5474b8 corrects accumulator retention; DOS source6f
+remains unchanged. Original12-case Unicorn, newcold GNU/UBSan, rejected old
+v1398 caller,208-IRQ/230-raster probes and all8 default129-file regressions are
+terminal. Shared DOS assembly phase/query-order repair remains the next unit.
+No old acceptance is upgraded by this cleanup.
+
+Current owned CMake intermediates/unused binaries and duplicate complete CLI
+captures retire losslessly: 3104 logical paths / 1447 blobs, **468.27 MiB net**
+after a **16.88 MiB** archive/journal. Complete gzip CRC/EOF, every actual
+temporary restored SHA/size/mode/nsmtime and 688 protected proofs pass before /
+after deletion. No new original HDI exists in this diagnostic batch. Complete
+original/source/negative traces, frozen old/new headers and selected programs
+stay live. Parent v1398 source512/efea/archive/757 sealed proofs recheck without
+restamping; older510/ea5c remains independently routed.
+
+```sh
+python3 .analysis/reconstruction/probes/native-vsync-lifecycle-v1399/verify_retention.py
+python3 .analysis/reconstruction/probes/native-vsync-lifecycle-v1399/verify_retention.py --parent v1398
+```
+
+Add --restore and a narrow --prefix for required owned paths, using fresh
+execution namespaces. Earlier strict readers reject changed current5474b8;
+use the new reader. Full CI root451/native345 plus a separate 1053-file
+post-CI cache journal recover another 16.41 MiB; current net **484.68 MiB**.
+This does not include old v1398's544.95 MiB again. Target/host saves/sharedtools /
+TH08 and frozen old proofs remain untouched. Current control/compiler/native
+checks use oneCPU1/nice19 because CPU0 is occupied; originaltiming captures
+keep their CPU0 identity.
+
 ## v1398 IRQ raster and native VSYNC primitive
 
 Current native source is frozen at 512 files / `efea1700`; DOS fingerprint

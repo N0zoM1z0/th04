@@ -3507,6 +3507,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_op_vsync_lifecycle.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Execute original installed VSYNC START and IRQ instructions under typed BIOS responses; preserve nonzero cadence phase across load/mode controls.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_op_wait_clock.py",
     "category": "runtime",
     "role": "command",

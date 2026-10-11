@@ -25,14 +25,13 @@ No native observation promotes a historical exact unit.
 
 ## Native progress
 
-Current v1398 source has 512 files, manifest
-`efea1700368644b07a03040b9b60bd12335413d3b842c9a76aa72046f4475dea`.
-Unsigned IRQ counters and an independent rational raster primitive pass complete
-original 208-IRQ / 230-callback comparisons under GNU and optimized UBSan.
-Frontend busy-PMD / inherited-Logo integration remains next. New cold builds
-pass 70 GNU CTests / 5 selected UBSan contracts; eight full default startup/Demo
-routes keep all 129 output files per profile. See the current handoff for scope,
-failed probes and lossless recovery. Earlier source proofs remain historical.
+Current v1399 native manifest is512/5474b8e3. Direct original instruction
+execution verifies repeated START preserves cadence accumulator; GNU/UBSan
+match all12 seeded lifecycle cases. Frozen v1398 resets it incorrectly, yielding
+2 extra IRQ cases. Fresh70 GNU /5 UBSan CTests and eight full129-file default
+profile regressions pass. Shared DOS assembly has the same reset discrepancy;
+its separate correction/replay is the next bounded owner before frontend waits.
+Full pictures, physical timing and broader routes remain open. See the handoff.
 
 The v1362 GNU Reimu A / Lunatic / Turbo0 candidate is now terminal and
 accepted by the independent `verify_natural_slowdown.py` reader: 88,249 route
