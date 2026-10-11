@@ -5,6 +5,30 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Native signed WORD palette fades (v1414)
+
+Published `port/modern-64` is at `6b0e1ba`, combining the recovered palette
+fade with the native wait/text owners. `maine::Animation` now truncates speed
+to the original WORD and uses its signed condition. Zero and negative WORD
+speeds finish after one initial refresh; positive speeds keep `1 + 17 * speed`
+waits. Original OP/MAINE 0000:0622 and 0000:0666 pass 96 instruction controls
+at loads 1000/3333. Both fresh compilers agree on 24 native timelines; the
+actual old source rejects 14 boundary vectors.
+
+Joined producer 530/4dc27bde freshly builds the complete core, actual frontend
+and four selected contract programs in GNU Release and optimized UBSan/bounds.
+Each passes four related CTests; native CI passes 345 tests. The prior v1412
+79-program/77-CTest graph keeps its own frozen producer and receipts.
+
+Complete evidence is in `native-palette-zero-v1413` and
+`native-palette-join-v1414`, under each tree's `.analysis/port64/` directory.
+The join's `verify_closure.py` checks its source archive, programs, comparisons
+and 1,635 frozen parent files. Retirement and source-backed cache cleanup
+release 41.48 MiB net across this recovery; complete originals and programs
+remain. `verify_retention.py --restore --prefix build-gnu/` restores one
+compiler's archived caches. Continue native hardware and scene-owner recovery
+before longer game validation. Historical authored exact stays 661/663.
+
 ## Joined native palette waits and text writers (v1412)
 
 The native merge retains both parents: ordinary WORD/Shift-JIS and Gaiji text
@@ -52,7 +76,7 @@ wait OMFs, full transcripts and replay/retention readers. Its closure also
 checks 776 frozen text-only and 858 frozen wait-only files independently.
 See [text recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md)
 and [VSync recovery](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
-Historical authored exact remains 661/663; native stays at 328585f.
+Historical authored exact remains 661/663; its prior native text producer is frozen at 328585f.
 Verified retirement reclaims 33.45 MiB from the combined compiler/cache
 copies; temporary v1410 restores return to their existing archive.
 Continue native scene waits and hardware owners before long game campaigns.

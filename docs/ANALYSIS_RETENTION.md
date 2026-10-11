@@ -1,5 +1,26 @@
 # Private build and analysis retention
 
+## Native palette fade join (v1414)
+
+Current native head is `6b0e1ba`, producer 530/4dc27bde. Source, selected
+GNU/UBSan programs, complete palette comparisons and closure readers are in
+`.analysis/worktrees/native-palette-join-v1414/.analysis/port64/native-palette-join-v1414/`.
+The separate v1413 original instruction controls and actual predecessor remain
+in `native-palette-zero-v1413`. Both retain their original producer identities.
+
+All 96 original OP/MAINE controls and both 24-case native comparisons pass.
+The join freshly builds core/frontend and four contract programs per compiler;
+its closure checks 1,635 frozen parent files. Verified compiler retirement
+archives 274 paths/268 blobs and releases 25.64 MiB. Source-backed Python cache
+cleanup releases 15.70 MiB; the earlier focused producer releases 0.13 MiB.
+Total net cleanup is 41.48 MiB. Complete gzip/hash and restored metadata checks
+pass before deletion. Use the phase's `verify_retention.py --restore --prefix
+build-gnu/` or `build-ubsan/` to restore that compiler's caches, then run its
+`verify_closure.py`. The initial failed CI reference-link record remains beside
+the corrected final CI receipt.
+
+The older records below describe their frozen producers.
+
 Native `port/modern-64` is at 328585f, including GRCG, font, Gaiji and ordinary
 text address recovery. The separate startup/motion integration on
 `review/startup-motion-join-v1403` is frozen at 514 files / c2f8d689.
