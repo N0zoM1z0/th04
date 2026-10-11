@@ -1,8 +1,9 @@
 # Working on TH04
 
-The next validation priority is original Japanese DOS versus reconstructed DOS
-with the same input and reset state; native x64 also needs game-state and effect
-parity. See [current handoff](RE_HANDOFF.md), [comparison handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
+Prioritize function recovery and migration with focused compiler or component
+checks. Defer long game campaigns until the remaining source work is ready.
+Original Japanese DOS versus reconstructed DOS, then native x64 state/effect
+parity, remain the behavioral comparison goals. See [current handoff](RE_HANDOFF.md), [comparison handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
 and [porting TODO](PORTING_STATUS.md). Native builds need not match original
 executable bytes. Do not reopen MAIN's carpet or checkerboard exactness cases.
 Resume semantic changes for a reproduced differential or concrete portable

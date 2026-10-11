@@ -34,11 +34,17 @@ callback ran. Corrected seed plus operand guards retain all12 old complete
 instruction/state/write traces. Old receipts remain unchanged; v2 BIOS mock
 hook-CS draft failed and is retained. v4 is the accepted nested-frame reader.
 
-Current native commit: `895a952` (`port/modern-64`).
-Native x64 source manifest stays512/5474b8e3; no C++ product changed or rebuilt.
-The native branch also carries the shared ASM correction; its distinct dormant
-DOS graph has not received a whole-product build here. Prior native v1399
-70GNU/5UBSan and eight129-file profiles keep their frozen scope/identities.
+Current native commit: `fffcc83` (`port/modern-64`).
+v1401 restores PMD busy-service and unsigned IRQ waits in the native frontend.
+Ordinary frame delays clear Count1 before waiting; Logo waits clear it afterwards,
+and the inactive zero-frame fallback still clears it. The shared raster phase
+and Count2 continue through work and refreshes. Source512/60cf4491, cold GNU72
+programs/70 CTests and optimized UBSan9 programs/6 contracts verify; three
+compiled mutations reject wrong reset order and refresh-only PMD service.
+Native CI345 passes.626 byte-verified archived compiler caches reclaim21.74 MiB
+net. Native receipts and recovery carrier are under its worktree's
+`.analysis/port64/native-startup-waits-v1401/`; root DOS products are unchanged.
+Prior native receipts retain their frozen source identities and scope.
 
 Replay/retention index (DOS root):
 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/.
@@ -56,10 +62,9 @@ current source, products/MAPs, old/new compiled controls, original raw evidence
 and fresh demo trace remain. Full CI passes root451/native345; source-backed post-CI caches reclaim
 16.44 MiB separately, for 72.47 MiB net this batch.
 
-Next connect native PMD busy service and inherited unsigned IRQ waits to
-FrontEnd, preserving clear-before-frame_delay / clear-after-Logo, cadence and
-global raster phase. Scene still samples measure once per refresh and uses fixed
-Logo waits. CPU/resource/graphics elapsed work needs a model. Full pictures,
+Next recover CPU/resource/graphics elapsed-work owners and their call order.
+Prioritize function recovery and migration with focused checks before long
+game campaigns. Full pictures,
 Boss/death/process, second-emulator/physical scanout and Windows input/audio stay
 open. Goal active; targets candidate-local-attested. CPU1/nice19 single-core,
 serial and muted; no Windows GUI/focus/host keys/audio device is used.
