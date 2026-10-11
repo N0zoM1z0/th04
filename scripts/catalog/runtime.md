@@ -54,6 +54,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_demo_video.py](../probes/th04_demo_video.py) | support | Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
+| [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
 | [runtime/verify_dos_vsync_lifecycle.py](../runtime/verify_dos_vsync_lifecycle.py) | command | Compare relocated original and linked DOS START/IRQ instructions, including a seeded IRQ during BIOS query. |
 | [runtime/verify_gaiji_io_clock.py](../runtime/verify_gaiji_io_clock.py) | command | Verify original OP Gaiji port counts, complete relocated hooks and elapsed I/O clocks across CPU/delay controls. |
 | [runtime/verify_op_irq_clock.py](../runtime/verify_op_irq_clock.py) | command | Verify every original OP IRQ increment and armed callback against complete counter/GDC streams and derived raster phases. |

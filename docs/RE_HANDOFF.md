@@ -5,12 +5,38 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-The latest remote port/modern-64 is ce48946 and separately adds GRCG circle /
-stage-line recovery. Its renderer changes are not part of this514-file verified
-snapshot. This snapshot is published on review/startup-motion-join-v1403;
-merge it only after selecting one writable source session and attesting the
-combined producer. Both incoming histories are preserved. The older v1401
-startup implementation itself already reached port/modern-64 through fffcc83.
+## Current DOS Gaiji recovery (v1406)
+
+`src/shared/hardware/graph_gaiji.cpp` now preserves continuous string byte
+addresses, WORD/spill writes across FFFFh and return ES. Original OP and MAINE
+entries agree with the final linked products on all 4,800 component controls
+at load1000/3333. The compiled predecessor has 150 address-mask differences;
+write-width and ES comparisons reject all 2,400 predecessor controls.
+
+Both affected products were cold-built, then the ES correction freshly compiled
+Gaiji with verified unchanged-object reuse. Final OP/MAINE links and IRQ audits
+pass. Product inputs are 1,425 files / cfaa77bf; MAIN and ZUN keep their prior
+frozen products. Historical exact remains 661/663. The full goal is active.
+
+Replay: `.analysis/reconstruction/probes/dos-gaiji-v1406/`; final products:
+`.analysis/build/th04-gaiji-v1406-final/`. The maintained
+`scripts/runtime/verify_dos_gaiji.py` compares actual original/product
+instructions. The phase's `verify_closure.py` checks source/program pins and
+complete transcript carriers. See [Gaiji recovery](reconstruction/product/TH04_NATIVE_GRAPH_GAIJI_V861.md).
+Continue function and native-owner recovery before long game campaigns.
+
+Root CI passes 451 tests, ledgers, catalog and private target/database Oracles.
+Lossless retirement removes 5,565 owned cache paths after archive and
+metadata readback; 629 protected files and final closure still pass.
+Source-backed Python caches add 8.48 MiB reclamation;
+combined cleanup is 31.14 MiB net. Programs, MAPs and complete proofs remain.
+
+Native `port/modern-64` is at 48e05da, including GRCG, font and Gaiji
+address recovery. The separate startup/motion integration on
+`review/startup-motion-join-v1403` is frozen at 514 files / c2f8d689.
+Its verified snapshot predates those renderer changes. Attest a combined
+producer when integrating the two histories. The v1401 startup implementation
+already reached `port/modern-64` through fffcc83.
 
 v1403 integrates remote motion recovery a0b6149 with the independently
 validated startup waits. Verified integration producer514/c2f8d689 is frozen;
@@ -35,8 +61,9 @@ motion commit. Both histories were merged without force pushing. v1401 proofs
 remain frozen at512/60cf4491, including its132 frontend fixture cases and
 70GNU/6UBSan checks; their strict live-source reader correctly rejects current
 source. A new reader verifies its archive/1150-file closure independently.
-No old receipt was edited to claim the new producer. Root DOS source stays
-unchanged at a34c1357; historical exact counts/canonicality are unchanged.
+No old receipt was edited to claim the new producer. The frozen DOS parent
+is a34c1357; current v1406 source is indexed above.
+Historical exact counts/canonicality are unchanged.
 
 Current replay index: .analysis/reconstruction/probes/native-startup-motion-join-v1403/
 (DOS root); native .analysis/port64/native-startup-motion-join-v1403/.
@@ -94,7 +121,7 @@ from frozen v1399; the other127 outputs, including indexed/RGB/text samples,
 shake and splash states, agree. No-driver captures retain all129 baseline files.
 No full original picture, physical scanout or elapsed-time equality is claimed.
 
-Root DOS source is unchanged at product fingerprint a34c1357; v1400 retains
+The frozen v1400 DOS source has product fingerprint a34c1357; v1400 retains
 its three108-case linked lifecycle comparisons and four-product/Demo proof.
 Historical exactness is unchanged; canonicality remains candidate-local-attested.
 

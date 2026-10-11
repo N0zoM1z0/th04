@@ -26,18 +26,17 @@ static void gaiji_graph_end(void)
 {
 	outportb(0x68, 0x0A); // CG code access
 	outportb(0x7C, 0);    // GRCG off
+	// Both original far entries return with ES selecting the graphics plane.
+	_ES = graph_VramSeg;
 }
 
-static void gaiji_graph_draw_one(unsigned x, unsigned y, unsigned c)
+static void gaiji_graph_draw_one(unsigned offset, unsigned shift, unsigned c)
 {
 	// TH04's fixed master-library variant uses an ordinary ADD here.
 	const unsigned jis = (c + 0x5680u) & 0xFF7Fu;
 	outportb(0xA1, (unsigned char)jis);
 	outportb(0xA3, (unsigned char)(jis >> 8));
 
-	const unsigned shift = x & 7u;
-	const unsigned offset = (y * 80u) + (x >> 3);
-	unsigned char far *dest = (unsigned char far *)MK_FP(graph_VramSeg, offset);
 	for(unsigned row = 0; row < 16; row++) {
 		outportb(0xA5, (unsigned char)(row | 0x20));
 		const unsigned first = inportb(0xA9);
@@ -45,10 +44,16 @@ static void gaiji_graph_draw_one(unsigned x, unsigned y, unsigned c)
 		const unsigned second = inportb(0xA9);
 		const unsigned aligned = ((first << 8) | second) >> shift;
 		const unsigned spill = (second << 8) >> shift;
-		dest[0] = (unsigned char)(aligned >> 8);
-		dest[1] = (unsigned char)aligned;
-		dest[2] = (unsigned char)spill;
-		dest += 80;
+		// The original stores a WORD before advancing DI for its spill byte.
+		// Keep the WORD store intact when offset is FFFFh; two separate byte
+		// pointers would wrap the second byte to offset zero instead.
+		unsigned far *dest = (unsigned far *)MK_FP(graph_VramSeg, offset);
+		*dest = (aligned >> 8) | (aligned << 8);
+		unsigned char far *extra = (unsigned char far *)MK_FP(
+			graph_VramSeg, offset + 2u
+		);
+		*extra = (unsigned char)spill;
+		offset += 80u;
 	}
 }
 
@@ -57,7 +62,8 @@ extern "C" void TH04_PASCAL graph_gaiji_putc(
 )
 {
 	gaiji_graph_begin(color);
-	gaiji_graph_draw_one((unsigned)left, (unsigned)top, (unsigned)c);
+	const unsigned offset = ((unsigned)top * 80u) + ((unsigned)left >> 3);
+	gaiji_graph_draw_one(offset, (unsigned)left & 7u, (unsigned)c);
 	gaiji_graph_end();
 }
 
@@ -67,10 +73,13 @@ extern "C" void TH04_PASCAL graph_gaiji_puts(
 )
 {
 	gaiji_graph_begin(color);
-	unsigned x = (unsigned)left;
+	unsigned offset = (unsigned)top * 80u;
+	unsigned cursor = (unsigned)left;
 	while(*str) {
-		gaiji_graph_draw_one(x, (unsigned)top, (unsigned char)*str++);
-		x += (unsigned)step;
+		offset += cursor >> 3;
+		cursor &= 7u;
+		gaiji_graph_draw_one(offset, cursor, (unsigned char)*str++);
+		cursor += (unsigned)step;
 	}
 	gaiji_graph_end();
 }

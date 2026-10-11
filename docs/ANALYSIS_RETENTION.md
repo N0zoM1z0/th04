@@ -1,11 +1,34 @@
 # Private build and analysis retention
 
-The latest remote port/modern-64 is ce48946 and separately adds GRCG circle /
-stage-line recovery. Its renderer changes are not part of this514-file verified
-snapshot. This snapshot is published on review/startup-motion-join-v1403;
-merge it only after selecting one writable source session and attesting the
-combined producer. Both incoming histories are preserved. The older v1401
-startup implementation itself already reached port/modern-64 through fffcc83.
+Native `port/modern-64` is at 48e05da, including GRCG, font and Gaiji
+address recovery. The separate startup/motion integration on
+`review/startup-motion-join-v1403` is frozen at 514 files / c2f8d689.
+Its verified snapshot predates those renderer changes. Attest a combined
+producer when integrating the two histories. The v1401 startup implementation
+already reached `port/modern-64` through fffcc83.
+
+## v1406 DOS Gaiji
+
+The replay index `.analysis/reconstruction/probes/dos-gaiji-v1406/` binds
+final products, MAPs and compiler receipts, and retains original comparisons,
+first-candidate ES diagnostics and the v1400 negative control. Published
+OP/MAINE products are in `.analysis/build/th04-gaiji-v1406-final/`.
+The 1,425-file input profile is cfaa77bf; all 4,800 final controls and complete
+transcript frames pass `verify_closure.py`.
+
+Retired only this batch's cold and final OP/MAINE source/OMF caches, plus the
+explicitly stopped unnecessary MAIN cache: 5,565 paths / 1,383 blobs.
+The journal was persisted before archiving and deletion; gzip CRC, each blob,
+restored size/hash/mode/nsmtime and 629 protected files pass. Net reclamation is
+22.67 MiB after archive and journal. 545 source-backed Python caches
+reclaim another 8.48 MiB; total 31.14 MiB. Earlier producers stay intact.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-gaiji-v1406/verify_closure.py
+python3 .analysis/reconstruction/probes/dos-gaiji-v1406/verify_retention.py
+# Restore only a needed producer subtree:
+python3 .analysis/reconstruction/probes/dos-gaiji-v1406/verify_retention.py --restore --prefix .analysis/reconstruction/probes/product-20261011-180052-085f918e-op/source
+```
 
 ## v1403 combined native producer
 

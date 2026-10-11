@@ -1,5 +1,51 @@
 # TH04 native graphics gaiji writers
 
+## Complete DOS address and return-state recovery (v1406)
+
+The maintained `graph_gaiji.cpp` now carries the string's byte offset between
+characters. Each glyph adds `cursor >> 3` to the existing WORD offset, keeps
+the residual bit shift, and adds the WORD step for the next character. This
+recovers the original negative and large-step recurrence. Each row writes a
+WORD followed by the separately wrapped spill byte. A WORD starting at FFFFh
+writes its second byte at the next physical address; splitting that store into
+two byte pointers had wrapped the second byte to offset zero. Both entries
+also return with ES selecting `graph_VramSeg`, including an empty string.
+
+The original OP entries are 0000:3E34 / 0000:3D8A; MAINE uses
+0000:3760 / 0000:36B6. `scripts/runtime/verify_dos_gaiji.py` executes the
+attested decoded originals and actual linked products at load segments 1000
+and 3333. All 4,800 controls agree on the complete 65,537-byte write mask,
+ordered write addresses, widths and values, CG/GRCG port order and interrupt
+state. Far Pascal stack cleanup, DS/SI/DI/BP preservation and return ES pass.
+The corpus covers all byte glyph codes, all shifts, additional WORD codes,
+coordinate boundaries, twelve steps, NUL termination, empty strings and long
+strings. CG input is an explicit deterministic fixture selected by actual
+port writes; this comparison does not model physical display timing.
+
+The compiled v1400 MAINE predecessor fails all 2,400 controls on write width
+or return ES; 150 controls also differ in their final address masks. At
+X120/Y819 a glyph's WORD crosses FFFFh. At X-8/Y32, negative string steps
+expose the old coordinate-recalculation error. Port sequences remain equal.
+The first v1406 candidate passed writes but retained 880 ES differences per
+artifact; its source, transcripts and receipt remain separate from the final
+accepted candidate.
+
+OP and MAINE were cold-built without historical support libraries. The ES
+correction then freshly compiled Gaiji and the builder's BGIMAGE unit in each
+product, reusing only verified unchanged objects (163/165 OP, 137/139 MAINE).
+Both final links and IRQ vector audits pass with zero warnings or unresolved
+symbols. Final producer `product-20261011-180052-085f918e` uses input
+fingerprint `cfaa77bf8548cb224c5cc57c23d31baa7f5b9f2ec49f92fbc9a37e1e1e734622`.
+OP is 79,420 bytes; MAINE is 72,294 bytes. MAIN and ZUN were unaffected.
+
+Private replay inputs and complete comparisons are under
+`.analysis/reconstruction/probes/dos-gaiji-v1406/`. `verify_closure.py` checks
+the 1,425-file source freeze, products, MAPs and every transcript frame.
+Use the maintained verifier with `--artifact`, `--exe`, `--map` and a fresh
+`--output` directory. Historical exact acceptance remains 661/663.
+
+## Initial DOS source migration (v861)
+
 2026-09-27 product-build investigation. The TH04-local
 `src/shared/hardware/graph_gaiji.cpp` owns far Pascal `GRAPH_GAIJI_PUTC` and
 `GRAPH_GAIJI_PUTS`. The code selects GRCG RMW mode and four color tiles,

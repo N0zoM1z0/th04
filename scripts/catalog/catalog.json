@@ -3479,6 +3479,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_dos_gaiji.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_dos_vsync_lifecycle.py",
     "category": "runtime",
     "role": "command",
