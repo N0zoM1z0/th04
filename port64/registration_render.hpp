@@ -16,7 +16,7 @@ public:
     explicit TextPlane(const score_file::Bytes&);
     void put(int column,int row,Byte gaiji,std::uint16_t attribute);
     void put_string(int column,int row,const std::string&,std::uint16_t attribute);
-    void put_ank(int column,int row,Byte character,std::uint16_t attribute);
+    void put_character(int column,int row,std::uint16_t character,std::uint16_t attribute);
     void put_sjis(int column,int row,const std::string&,std::uint16_t attribute);
     void clear();
     score_file::Bytes bytes() const;

@@ -19,12 +19,12 @@ void Renderer::apply(const Event& e) {
         for(unsigned i=0;i<e.text.size();++i) {
             if(!e.text[i])break;
             const unsigned at=unsigned(e.row*80+e.left)+i;
-            text_.put_ank(at%80,at/80,std::uint8_t(e.text[i]),std::uint16_t(e.attribute));
+            text_.put_character(at%80,at/80,std::uint8_t(e.text[i]),std::uint16_t(e.attribute));
         }
         break;
     case Kind::wipe:case Kind::black:
         for(int row=1;row<24;++row)for(int column=4;column<52;++column)
-            text_.put_ank(column,row,32,e.kind==Kind::wipe ? 0xe1 : 5);
+            text_.put_character(column,row,32,e.kind==Kind::wipe ? 0xe1 : 5);
         break;
     default:break; // Clocks, HUD/resource publication, sound and save are scene-owned.
     }

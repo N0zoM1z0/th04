@@ -1,5 +1,66 @@
 # MAIN HUD owners and text consumers
 
+## Ordinary text writer recovery (v1409)
+
+`TextPlane::put_character()` now accepts the original WORD character input.
+A zero high byte writes one ANK cell; a high byte below 80h supplies JIS directly;
+other high bytes use the original Shift-JIS conversion. The conversion preserves
+byte/WORD wrap and carry, then writes each attribute before its glyph. The native
+HUD initializer, Game Over and frontend call this owner instead of the former
+ASCII-only `put_ank()`.
+
+`put_sjis()` follows the original byte stream rather than a Unicode validity
+check. It treats 81h..9Fh and E0h..FFh as lead bytes, including malformed pairs.
+A zero trail can be consumed inside a pair; only a zero read as the next lead
+ends the string. Both writers read the mutable text base and calculate WORD
+row/column addresses. Strings store all glyphs before filling attributes from
+the wrapped end-minus-start count. This retains spills and glyph/attribute aliases
+in the shared sparse memory owner.
+
+The original MAIN entries are 0000:229E (87 bytes) and 0000:22F6 (114 bytes),
+with `TextVramSeg` at DGROUP 2134:0768. Hash-attested original instructions run
+without function substitutions. All 65,536 WORD character values and all 65,536
+two-byte strings agree on the complete 8000-byte visible banks at X20/Y10,
+load 1000. Attributes vary across all WORD values. A separate 840-case corpus
+checks complete 80000h..DFFFFh memory at loads 1000/3333, including coordinate
+edges, alternate bases, NUL, bad byte pairs and long ANK/Kanji strings.
+The input adapter supplies DF clear and two terminating zero bytes, making a
+dangling lead deterministic. Guest string/output aliasing and physical scanout
+remain separate from this logical string owner.
+
+Cold GNU builds the real frontend and six selected programs; all six component
+contracts pass. Focused optimized UBSan/bounds reproduces 131,072 conversion
+results and 1,680 full memory results. The current Gaiji program also reproduces
+all 2,656 retained original comparisons. The compiled predecessor rejects
+right-edge, kana, bad-trail and 4,097-character inputs. Their full memory differs
+in 4/4/8/8,386 bytes. The last input has equal partial visible banks despite its
+failure, demonstrating why the complete memory transcript is needed.
+
+Producer 526/3e7d5e33, ten selected programs, complete compressed original and
+native outputs, source snapshots and closure reader are retained under
+`.analysis/port64/native-sjis-text-v1409/`. Replay a newly built consumer:
+
+```sh
+python3 port64/verify_character_address.py --dos-root /path/to/th04-dos-root \
+  --native /path/to/th04-port64-character-address-contracts --output /fresh/proof
+```
+
+Add `--reference /path/to/draft-original` to reuse the original transcripts.
+The private reader replays every original write, checks all GNU/UBSan output,
+and verifies the frozen v1408 source/program/proof identities independently.
+REA's new import completed Ghidra analysis but failed bridge identity validation;
+its complete diagnostics remain preserved, and no database result supports this
+comparison. DOS text ASM still fixes the base at A000h; recover its mutable
+reference separately. Historical exact remains 661/663.
+
+Native CI passes 345 tests. Retained source, ten selected programs, complete
+compressed original/native transcripts and the closure reader are in the
+phase directory. Verified retirement archives 250 compiler-cache paths and
+removes 515 source-backed Python caches, reclaiming 14.50 MiB net. All 803
+protected phase files and 780 frozen v1408 parent files retain their hashes.
+
+## HUD renderer and live join (v1318–v1319)
+
 v1318 component and v1319 bounded live join, 2026-10-09. Complete natural
 routes and original physical displays remain unaccepted. This is not a DOS
 exact claim. The pinned Japanese MAIN remains
@@ -20,7 +81,7 @@ Original instruction controls execute MAIN relative `0AAF:43F8..484B`,
 Original `0000:1B0C..1BA5` gaiji kernels and `0000:22F6..2367` text_putsa
 execute their stores and returns; no HUD or text ABI return adapter substitutes
 for these bodies. Loads1000 and2000 agree on all requests, score HUD bytes,
-retained HP, resident canaries and complete8000-byte TRAM banks.
+retained HP, resident canaries and complete 8000-byte TRAM banks.
 DS8000, SS7000, resident9000, TRAM A000 and supplied starting fields are
 explicit context adapters. Undefined original table/stack inputs are rejected.
 

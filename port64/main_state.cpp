@@ -60,7 +60,7 @@ State::State(application::State& application,Mode mode,player::LifeState checkpo
     // First MAIN text_fillca uses reversed spaces. The playfield wipe then
     // restores transparent spaces; the right-hand HUD retains its own banks.
     for(int row=0;row<25;++row)for(int col=0;col<80;++col)
-        hud_text_.put_ank(col,row,32,row>=1 && row<24 && col>=4 && col<52 ? 0xe1 : 5);
+        hud_text_.put_character(col,row,32,row>=1 && row<24 && col>=4 && col<52 ? 0xe1 : 5);
     initialize_hud();
     player_draws_=player::render_requests(life_.state(),player_.position(),
         shot::level_for_power(score_.power),playchar_==application::Playchar::reimu ? 38 : 39,0,0);

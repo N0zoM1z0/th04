@@ -1,5 +1,31 @@
 # TH04 native branch handoff
 
+v1409 restores MAIN's ordinary text character/string writers in `TextPlane`.
+`put_character()` accepts the full WORD input, including ANK, JIS and Shift-JIS;
+HUD initialization, Game Over and the actual frontend now use it. `put_sjis()`
+retains the original byte conversion, NUL handling, WORD addresses and final
+wrapped-count attribute fill, including malformed byte pairs.
+
+Original MAIN 0000:229E/22F6 passes all 65,536 WORD characters and all 65,536
+two-byte strings at a fixed visible position. Another 840 fixtures match full
+80000h..DFFFFh memory at loads 1000/3333: 1,680 comparisons. Cold GNU and focused
+UBSan/bounds reproduce every output. The frontend, six selected programs and
+six component contracts build/pass; prior text Gaiji retains 2,656 comparisons.
+The compiled predecessor rejects edge, kana, bad-trail and long-string inputs.
+The long string differs in 8,386 physical bytes while its partial visible banks
+agree, so complete memory and the failure status are retained.
+
+Producer 526/3e7d5e33 and complete evidence are under
+`.analysis/port64/native-sjis-text-v1409/` in `port-motion-v1402`.
+See [text character recovery](port64/evidence/hud.md). Original instructions
+read mutable DGROUP 2134:0768; the DOS root's two text ASM owners still use
+fixed A000h and need a separate cold recovery. Historical exact remains 661/663.
+Continue source recovery before long game campaigns.
+
+Native CI passes 345 tests. Verified archiving retires 250 compiler-cache
+paths; 515 source-backed Python caches bring cleanup to 14.50 MiB net.
+The closure reader checks all current proofs and 780 frozen parent files.
+
 v1408 migrates the original `GAIJI_PUTCA/PUTSA` writer semantics into
 `TextPlane`, used by MAIN HUD/Game Over and MAINE score registration. WORD
 coordinates and the mutable text base now select physical addresses without
@@ -80,7 +106,7 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-11. The full reconstruction/native goal stays active. DOS main
+Updated 2026-10-12. The full reconstruction/native goal stays active. DOS main
 indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.

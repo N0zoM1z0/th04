@@ -15,9 +15,27 @@ TextPlane::TextPlane(const score_file::Bytes& bytes) {
         attributes_[at]=std::uint16_t(bytes[4000+at*2]|unsigned(bytes[4000+at*2+1])<<8);
     }
 }
-void TextPlane::put_ank(int column,int row,Byte character,std::uint16_t attribute) {
-    require(column>=0 && column<80 && row>=0 && row<25 && character<128,"invalid ANK cell");
-    const unsigned at=unsigned(row*80+column);codes_[at]=character;attributes_[at]=attribute;
+void TextPlane::put_character(int column,int row,std::uint16_t character,std::uint16_t attribute) {
+    const auto segment=std::uint16_t(unsigned(segment_)+unsigned(std::uint16_t(row))*10u);
+    auto offset=std::uint16_t(unsigned(std::uint16_t(column))*2u);
+    const unsigned high=character>>8;
+    if(high) {
+        if(high>=0x80) {
+            const unsigned trail=character&255u;
+            unsigned converted=(unsigned(Byte(high*2u))<<8)|trail,carry=0;
+            if(trail<0x9f) {
+                converted+=0xfedfu+unsigned(trail<0x80);
+                carry=unsigned(converted>65535u);converted&=65535u;
+            }
+            character=std::uint16_t(converted-0xdffeu-carry)&0x7f7fu;
+        }
+        character=std::uint16_t((unsigned(Byte(character))<<8)|Byte((character>>8)-0x20u));
+        store_word(segment,std::uint16_t(offset+0x2000u),attribute);
+        store_word(segment,offset,character);offset=std::uint16_t(offset+2u);
+        character|=0x80u;
+    }
+    store_word(segment,std::uint16_t(offset+0x2000u),attribute);
+    store_word(segment,offset,character);
 }
 void TextPlane::put(int column,int row,Byte glyph,std::uint16_t attribute) {
     const auto segment=std::uint16_t(unsigned(segment_)+unsigned(std::uint16_t(row))*10u);
@@ -91,24 +109,31 @@ score_file::Bytes TextPlane::physical_bytes(std::uint32_t start,std::size_t leng
     overlay(codes_,0xa0000);overlay(attributes_,0xa2000);return result;
 }
 void TextPlane::put_sjis(int column,int row,const std::string& text,std::uint16_t attribute) {
-    require(column>=0 && column<80 && row>=0 && row<25,"invalid Shift-JIS text cell");
-    unsigned at=unsigned(row*80+column);
+    const auto segment=std::uint16_t(unsigned(segment_)+unsigned(std::uint16_t(row))*10u);
+    const auto start=std::uint16_t(unsigned(std::uint16_t(column))*2u);
+    auto offset=start;
     const auto store=[&](std::uint16_t code) {
-        require(at<codes_.size(),"Shift-JIS text exceeds bank");
-        codes_[at]=code;attributes_[at]=attribute;++at;
+        store_word(segment,offset,code);offset=std::uint16_t(offset+2u);
     };
-    for(unsigned i=0;i<text.size();) {
+    for(std::size_t i=0;i<text.size();) {
         const Byte lead=Byte(text[i++]);if(!lead)break;
         if(lead<=0x80 || (lead>0x9f && lead<=0xdf)) {store(lead);continue;}
-        require(i<text.size(),"incomplete Shift-JIS character");
-        const Byte trail=Byte(text[i++]);
-        require(lead<=0xef && trail>=0x40 && trail<=0xfc && trail!=0x7f,"undefined Shift-JIS character");
-        unsigned jis_row=(lead-(lead<0xa0 ? 0x81 : 0xc1))*2+0x21;
-        unsigned jis_cell;
-        if(trail>=0x9f) {++jis_row;jis_cell=trail-0x7e;}
-        else jis_cell=trail-(trail>0x7e ? 0x20 : 0x1f);
-        const auto code=std::uint16_t((jis_cell<<8)|(jis_row-0x20));
+        // A dangling lead consumes the terminating zero as its trail.
+        const Byte trail=i<text.size() ? Byte(text[i++]) : Byte(0);
+        unsigned converted=(unsigned(Byte(unsigned(lead)*2u))<<8)|trail,carry=0;
+        if(trail<0x9f) {
+            converted+=0xfedfu+unsigned(trail<0x80);
+            carry=unsigned(converted>65535u);converted&=65535u;
+        }
+        converted=(converted&0xff00u)|Byte(converted-0xfeu-carry);
+        converted&=0x7f7fu;
+        const auto code=std::uint16_t((converted>>8)|((converted&255u)<<8));
         store(code);store(std::uint16_t(code|0x80));
+    }
+    const unsigned words=unsigned(std::uint16_t(offset-start))>>1;
+    offset=std::uint16_t(start+0x2000u);
+    for(unsigned word=0;word<words;++word) {
+        store_word(segment,offset,attribute);offset=std::uint16_t(offset+2u);
     }
 }
 void TextPlane::clear() {codes_.fill(0);attributes_.fill(0);}

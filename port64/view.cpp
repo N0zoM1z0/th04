@@ -1220,7 +1220,7 @@ registration::TextPlane main_text_plane(const gameplay::State& state,unsigned de
         if(cell.kind==th04::portable::transition::TextKind::gaiji)
             text.put(int(col),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
         else for(unsigned half=0;half<2;++half)
-            text.put_ank(int(col+half),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
+            text.put_character(int(col+half),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
     }
     if(demo_number && state.overlay().callback==th04::portable::transition::Callback::titles) {
         // Original MAIN_01_TEXT0AAF:62B3 writes these nine gaiji at18,12
