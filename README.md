@@ -21,28 +21,26 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Explicit loading and drawing work now advances
-both resident sound and the headless GDC text clock, retaining fractional time.
-An independent display epoch preserves the original separation from PMD
-installation. Retained OP frontend checks match all twelve original loading /
-readiness counters per CPU input; freezing only display time rejects while
-sound timing still passes.
+Native development is active. The current reviewed producer includes the
+startup/motion, GRCG, font and graphics Gaiji owners from native base48e05da.
+It also repairs OP palette waits: installed IRQ waits for Count1 to change;
+uninstalled waits for the next GDC blank. Both preserve the counters, while
+frame_delay and Logo retain their original clear orders.
 
-The latest product builds pass 70 GNU CTests; optimized UBSan passes five
-sound/VSYNC contracts. Eight full startup/Demo routes reproduce all 129 retained
-output files per driver profile. Earlier private Linux Xvfb checks used mute
-and opened no audio device. Default resource/graphics/initial-epoch costs still
-need a model; full pictures, broader gameplay/process and Windows input/audio
-remain open. See the handoff for scoped evidence and cleanup recovery.
+New cold builds pass75 GNU CTests and10 optimized UBSan contracts. Both
+compilers agree on32 original-instruction controls at two loads and432 ideal
+raster/cadence vectors (1296 waits each). The actual startup predecessor fails
+the new counter-retention check. Eight muted startup/four-Demo/fresh-OP routes
+retain all129 prior outputs per profile and pass15988 original selected-state
+boundaries each. The review is on `review/native-gdc-poll-v1407`; earlier
+integration snapshots keep their own frozen evidence.
 
-Complete original OP traces verify 208 counted IRQs across two CPU budgets.
-Native has unsigned counters and a separate raster clock. New original
-instruction execution also repairs repeated START: it preserves nonzero cadence
-phase, preventing a spurious counted IRQ. GNU/UBSan agree across twelve seeded
-lifecycle cases. The shared DOS assembly now preserves phase and queries before resetting
-counters. Three original/linked DOS owners agree in 108 seeded cases each;
-a fresh four-Demo input/score/RNG regression passes. PMD busy-service and
-inherited Logo integration follow.
+Both repository CI gates pass (451 DOS-root and345 native tests).
+
+Physical CPU/loading/ISR costs, other scene wait adapters, complete pictures,
+broader Boss/death/process routes and Windows input/audio remain open. Shared
+DOS's installed-owner VSYNC_WAIT branch also needs separate recovery and a
+cold replay. See the handoff for the current source, evidence and cleanup.
 
 ## Build and run
 

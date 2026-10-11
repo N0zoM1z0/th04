@@ -1,170 +1,103 @@
-# TH04 native branch handoff
+# TH04 current handoff
 
-v1405 restores native `GRAPH_GAIJI_PUTC`/`PUTS` row addressing and continuous
-string DI/STEP behavior in `Canvas`. Original MAINE 0000:3760/36B6 at load 2000
-matches 2,833 complete seeded pages, covering the 256 installed bank characters,
-bit shifts, coordinate edges and string steps. Focused UBSan/bounds reproduces
-all pages; the compiled predecessor differs in 116 pixels at X640/Y0. Cold core,
-five programs/contracts and the 1,037 retained original font pages pass.
-Producer 522/bac23324 and receipts are under
-`.analysis/port64/native-gaiji-address-v1405/` in the isolated
-`port-motion-v1402` worktree. See [Gaiji recovery](port64/evidence/ending.md).
-CI passes 345 tests. Verified compiler-cache archiving and source-backed Python
-cache cleanup reclaim 11.7 MiB net; current source/program/proof closure passes.
-Next migrate the DOS `src/shared/hardware/graph_gaiji.cpp` string/WORD stores:
-its current per-character coordinate calculation loses pointer continuity at
-WORD boundaries. This batch changes native source; historical exact remains
-661/663. The full reconstruction/native goal remains active.
+Development and the full reconstruction/native goal are active. The user is
+using Windows: keep launches muted, use Linux headless/private Xvfb, and do
+not open Windows GUI, change focus or inject host keys. Windows acceptance
+remains open. Updated 2026-10-12.
 
-v1404 restores `GRAPH_PUTSA_FX` WORD addresses in native `Canvas`: truncated
-Y shift, unsigned X/8, continuous string DI, and WORD/spill write order.
-Original MAINE 0CC7:058C at load 2000 agrees with all 1,037 complete seeded pages;
-focused UBSan/bounds reproduces them. Cold core/three selected programs and
-three component contracts pass. The compiled predecessor differs in 119 pixels
-at X640/Y0. Producer 520/774cc800 and receipts are under
-`.analysis/port64/native-font-address-v1404/` in the isolated
-`port-motion-v1402` worktree. See [font recovery](port64/evidence/ending.md).
-CI passes 345 tests. Completed compiler caches are verified in an archive
-before removal; source-backed Python caches are removed, reclaiming 11.6 MiB
-net. Programs, source and complete original pages remain; the private
-`verify_closure.py` checks the current source and retained proof carriers.
-DOS historical exact counts remain 661/663. Continue source migration before
-long game campaigns; graphics/resource elapsed-work owners remain open.
+## Native OP palette VSync wait recovery (v1407)
 
-v1403 recovers the full unsigned-WORD filled-circle loop and stage horizontal
-clipping in `grcg_raster.cpp`. The shared native disc consumer now accepts
-radii above512, including wrapped/negative-WORD requests. Fresh original
-execution matches35 complete request streams (1,418,847 calls),605 horizontal
-write masks and20 filled-circle masks. Two component contracts and a focused
-UBSan/bounds replay pass; the predecessor rejects radius513. Producer518/
-193e94a7 and receipts are under `.analysis/port64/native-grcg-v1403/` in the
-isolated `port-motion-v1402` worktree. See [raster evidence](port64/evidence/stage-5.md).
-DOS source and historical exact counts stay unchanged. Continue function
-recovery and migration before long game campaigns.
+Fixed native base48e05da now separates palette VSYNC_WAIT from frame_delay.
+Original decoded OP0000:2648..266D (38 bytes) branches on DGROUP0856:
+installed IRQ snapshots Count1 at1AC6 and waits for any change; otherwise it
+finishes the current GDC blank and waits for the next rising blank. Neither
+path clears Count1 or Count2 (1AC8). Native startup palette fades retain
+both words; frame_delay and Logo retain their different clear orders.
+Original fade helpers0000:0622..0664 and0666..06A3 call2648 before
+the palette loop and once per speed-loop iteration (0632/0643/0676/0687).
 
-v1402 restores IATAN2's complete signed displacement behavior in native
-`motion::angle_to()`, replacing the blanket -32768 rejection with original
-signed magnitude comparison, low-byte lookup and DIV fault handling. All
-184,908 original-instruction vectors agree, including 514 original faults.
-See [core evidence](port64/evidence/core.md) and the scoped native receipt under
-`.analysis/port64/native-motion-v1402/`. DOS source and historical exact counts
-are unchanged. Continue function migration before long game campaigns.
+Cold producer524/d9edcdf5 passes77 GNU programs/75 CTests and13 optimized
+UBSan programs/10 focused contracts. Each compiler passes32 unchanged-original
+controls at load1000/3333 and432 independent ideal raster/cadence vectors
+(1296 waits), including FFFF-to-zero and status/IRQ edge separation.
+Count1/GDC inputs are explicit consumer stimuli, not measured physical IRQs.
+The real48e05da startup predecessor fails the new counter-retention contract.
+Eight fresh muted startup/fourDemo/freshOP routes retain all129 output hashes
+per profile from frozen v1404; each passes15988 original selected-state boundaries.
 
-The user is actively using the Windows host. Do not launch Windows GUI
-tests, activate foreground windows or inject host keys. Keep every launch
-muted; use headless checks or private Linux Xvfb instead. Actual Windows
-window/input acceptance stays open under this constraint.
+The first cold build failed the valid-final-edge overflow contract (74/75).
+Its source/program/logs remain frozen; v2 repairs exhaustion and passes.
+This batch changes native wait/startup source, with no new DOS product or
+historical exact promotion. The older25-byte compiler-service observation describes only the polling
+producer, not the complete original function. Shared DOS vsync_wait.cpp still implements only
+port polling; recover its installed-owner branch in a separate cold replay.
+Other native scene wait adapters, CPU/loading/ISR costs, complete pictures,
+Boss/death/process, second-emulator and Windows acceptance remain open.
 
-Updated 2026-10-11. The full reconstruction/native goal stays active. DOS main
-indexes all four bundled demos in complete compared state/video regions;
-scanout, ordinary Boss/death/process and full native pairing remain open.
-Historical exactness remains separate; target canonicality is candidate-local-attested.
+Review branch: review/native-gdc-poll-v1407. Replay index:
+.analysis/reconstruction/probes/native-gdc-poll-v1407/; native receipts:
+.analysis/port64/native-gdc-poll-v1407-v2/. Original extent SHA-256:
+989ba1d57373892c48f460097161f08d5391388535059d007327fda0f4e45b20.
+Focused commands are in validate.py/focused.json; original/native reader:
+port64/verify_gdc_poll.py. Recovery reader: verify_retention.py
+(--restore/--prefix for owned archived paths). Frozen v1404's736-file closure
+and3179-path/1489-blob archive pass without modifying old receipts.
 
-v1400 repairs the shared DOS VSYNC_START owner in both source trees. Query GDC
-before selecting the increment and clearing Count1/Count2; preserve the cadence
-accumulator. The original MAIN0000:236C, OP0000:2552 and MAINE0000:2110 all have
-that order. Their IRQs0000:23E0/25C6/2184 compare callback segments at DGROUP
-0770/0852/03FE; callback pointers begin at MAIN076E, OP0850 and MAINE03FC. These are original-relative offsets plus recorded load,
-not bare linear emulator addresses.
+Verified archive retirement reclaims502.05 MiB net from this batch's
+successful/failed build intermediates, nonselected programs and duplicate
+capture outputs. Full path/hash/size/mode/nsmtime, CRC, every blob and protected
+proof are checked before deletion. Source freezes, selected programs, complete
+original controls/native vectors and failure evidence remain live.
+Both isolated full CI gates pass (root451/native345), with ledgers and diff checks.
+Pinned private targets/calibration pass; isolated private Ghidra/JDK checks skip,
+while original OP database was actually attested in root before recovery.
+Source-backed owned post-CI caches reclaim another16.35 MiB; this batch
+reclaims518.40 MiB net, disjoint from prior frozen cleanup.
 
-Each corresponding current root MAIN/OP/MAINE linked product passes108 seeded
-instruction comparisons at loads10FC/3333: GDC extension absent/present,
-mode0/C, phase0/12345/65535 and prior increment0/13311/65535. An authored
-BIOS STI/NOP/IRET mock outside loaded images permits a real original/candidate
-IRQ to nest with its own IRET frame before mode selection. Actual BIOS/CRT
-wrapper code and physical31kHz are not exercised. Frozen old source still
-passes the old DOS vector/callback/END test but rejects96/108 new scenarios.
+Goal active; CPU1/nice19 serial and muted; no Windows GUI/focus/keys/audio.
 
-Cold root build completes all four products (MAIN199471, OP79388, MAINE72246,
-ZUN7723 bytes). Actual IRQ vectors, CS renderer operands and MAIN bullet jump
-tables pass. Root product fingerprint a34c1357be6dc472ec44800b2fe275a7cbba6ba5344ab7002cc516e2411995d5;
-1425 input files are frozen. A fresh muted fixed24000 GAME.BAT/four-Demo route
-agrees with immutable original input/score/RNG at15984 gameplay plus4 terminal
-boundaries. This is current selected-state regression, not a fresh whole-video,
-actor-pool or physical timing acceptance. Historical exact producers are separate.
+## Separate DOS-main owner
 
-Original OP diagnostic seed correction: older v1399/v1400 drafts cleared1AD0,
-not the callback pointer0850. Actual callback bytes were already zero and no
-callback ran. Corrected seed plus operand guards retain all12 old complete
-instruction/state/write traces. Old receipts remain unchanged; v2 BIOS mock
-hook-CS draft failed and is retained. v4 is the accepted nested-frame reader.
+Root main a71607f restores text Gaiji store order/mutable base/return ES.
+It passes 2656 original memory/write/state controls plus 4800 graphics controls;
+see root main handoff and the Gaiji subject notes. This native review does not
+import or rebuild those DOS text changes.
 
-Current native source: v1401,512 files/60cf4491 (`port/modern-64`).
-Startup PMD busy waits now service the next resident timer deadline; ordinary
-frame delays clear Count1 before waiting and Logo waits clear it afterwards.
-The inactive zero-frame fallback still clears Count1. FrontEnd shares raster
-phase across work and refreshes, preserving Count2. Cold GNU72 programs/70
-CTests and optimized UBSan9 programs/6 contracts pass; three compiled mutations
-reject wrong reset order and refresh-only PMD service. Current/frozen source
-and81 program identities verify in
-`.analysis/port64/native-startup-waits-v1401/current-verification.json`.
-See [startup ownership](port64/evidence/op-startup.md).
-Prior v1399/v1400 receipts retain their frozen source identities and scope.
-Current native CI passes345 tests.626 completed compiler-cache files are
-archived with individual byte checks before removal, reclaiming21.74 MiB net;
-all81 programs, source snapshots and compiler metadata remain. Recovery carrier:
-`.analysis/port64/native-startup-waits-v1401/compiled-cache.tar.gz`.
+## Retained acceptance and next work
 
-Replay/retention index (DOS root):
-.analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/.
-Maintained tools: scripts/runtime/verify_dos_vsync_lifecycle.py and corrected
-verify_op_vsync_lifecycle.py. Use --original-artifact main/op/maine with the
-current executable/MAP/source; all traces/pins are in linked-*-v4 receipts.
-Recovery: python3 .analysis/reconstruction/probes/dos-vsync-lifecycle-v1400/verify_retention.py;
-add --restore --prefix for owned archived inputs. Old v1399 strict live-source
-readers reject the changed DOS fingerprint; the new check-parent.py verifies
-its frozen closure/CRC/blobs separately, without restamping.
+Historical authored acceptance remains 661/663: OP 93/93, MAIN 493/495,
+MAINE 72/72 and ZUN 3/3. MAIN carpet/checkerboard are deferred. Function
+acceptance does not imply whole-file exactness. Targets remain
+candidate-local-attested; pristine-dump provenance is unresolved.
 
-Cleanup net 56.03 MiB after archive/journal (15.55 MiB archive),
-with 7264 paths/1481 blobs/2351 protected proofs checked;
-current source, products/MAPs, old/new compiled controls, original raw evidence
-and fresh demo trace remain. Full CI passes root451/native345; source-backed post-CI caches reclaim
-16.44 MiB separately, for 72.47 MiB net this batch.
+Retained original/reconstructed DOS bundled demos agree on consumed input,
+score/RNG, nine complete pools, 22 state blocks and every configured video
+region at 3996 updates each. These paths exercise Midboss; Boss combat,
+death/respawn and complete process transitions still need paired checks.
+Native selected-state/pool/shake/splash and sampled game-area results retain
+their original frozen producers; default route hash equality here is scoped
+regression, not new complete-picture acceptance.
 
-Next recover CPU/resource/graphics elapsed-work owners and their call order.
-Prioritize function recovery and migration with focused checks before long
-game campaigns. Full pictures,
-Boss/death/process, second-emulator/physical scanout and Windows input/audio stay
-open. Goal active; targets candidate-local-attested. CPU1/nice19 single-core,
-serial and muted; no Windows GUI/focus/host keys/audio device is used.
+Frozen v1404 combined 520/774cc800 already passes original motion/GRCG/font
+corpora plus eight routes; v1407 starts from newer Gaiji native base48e05da.
+Older review/native-integrated-v1404 and review/startup-motion-join-v1403
+remain immutable. Earlier GNU Reimu A Normal/Lunatic/Extra/save/restart
+routes retain v1356 Linux scope; the previous UBSan Normal clear claim
+remains revoked (mask0x19 is a sentinel; require mask<4 plus selected shot bit).
 
-Prior demo/point-number/presentation experiments are indexed in
-[demo evidence](port64/evidence/demo.md) and their immutable private receipts.
-Historical producer502/v1376 and consumer505/v1377 keep their original identities.
-Earlier ordinary GNU Reimu A Normal/Lunatic/Extra clear/save/restart routes and
-dense slowdown observations retain their v1356 producer; see
-[host-window evidence](port64/evidence/host-window.md). The prior UBSan Normal
-clear remains revoked (mask0x19 is a sentinel), and the v1360 route and first
-late Bomb probe remain failed. Require mask<4 plus the selected shot bit.
+Next recover shared DOS installed-owner VSYNC_WAIT with owner/ABI guards,
+cold affected products and original/Demo replays. Other native scene adapters
+and default elapsed-work models still need source recovery. Serialize actual
+builds. Preserve the active Windows host, shared writer worktrees, private
+original inputs, saves and frozen evidence. TH08 stays read-only.
 
-## Comparison priority for the next agent
+## Commands and navigation
 
-The user's primary comparison is **original Japanese DOS versus reconstructed
-DOS**, both through the PC-98 game route. Native x64 must also preserve gameplay
-state and effects. Native-host equality and successful native clears do not
-replace either comparison. Start with the four bundled demos, then bounded
-recorded ordinary play; compare score, consumed input, RNG and actor state at
-the same logical boundary, followed by VRAM/palette/effects and process/save
-transitions. See [paired demo evidence](port64/evidence/demo.md).
-
-TH08 is a read-only workflow reference, not TH04 evidence. Its active worktree
-is dirty; do not edit it, run its builds, change its database or launch its game.
-Complete trace/end/input-consumption guards and first-divergence diagnostics
-are the useful parts to adapt. Retained DOS demos accept complete selected scalar/pool/video comparisons.
-Retained native producers accept selected scalar/RNG/count fields and nine
-complete pools. v1385 preserves the six parent trace/save hashes and 40 entire
-index/TRAM samples; whole pictures, original display epoch and broader
-gameplay/process routes remain open.
-
-## Replay and finish
-
-```sh
-python3 scripts/preflight.py
-python3 scripts/ci.py
-git diff --check
-```
-
-Use [status](PORT64.md), [host-window evidence](port64/evidence/host-window.md)
-and [retention](ANALYSIS_RETENTION.md). Source/program/profile archives retain
-producer identities; restore into fresh paths. One Borland/Wine writer at a
-time. Never open an audio backend/device in these validations.
+Run python3 scripts/preflight.py before target-dependent work, then the
+focused comparison, python3 scripts/ci.py and git diff --check. Use fresh
+probe namespaces, CPU1/nice19, one Borland/Wine writer and muted headless runs.
+See [differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md),
+[VSync ownership](reconstruction/product/TH04_NATIVE_VSYNC_V864.md),
+[retention recovery](ANALYSIS_RETENTION.md), [workflow](RE_WORKFLOW.md)
+and [subject index](reconstruction/README.md). Earlier chronological handoff
+material remains in Git and the focused notes; it is not the live work queue.

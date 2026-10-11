@@ -26,12 +26,19 @@ void Scene::drain() {
 void Scene::wait(unsigned n,bool inherited) {
     if(!n || n>65535)throw std::logic_error("startup wait threshold");
     inherited_wait_=inherited;
+    vsync_wait_.reset();
     if(clock_ && !inherited)clock_->counter().clear_wait();
     emit(Kind::wait,int(n));waiting_=n;
     if(clock_ && clock_->counter().one()>=n) {
         if(inherited)clock_->counter().clear_wait();
         waiting_=0;
     }
+}
+void Scene::wait_vsync() {
+    if(!clock_) {wait(1);return;}
+    inherited_wait_=false;vsync_wait_.emplace(*clock_);
+    emit(Kind::wait,1);waiting_=1;
+    if(vsync_wait_->ready())waiting_=0;
 }
 void Scene::advance(std::uint16_t held) {
     if(clock_)throw std::logic_error("timed startup requires elapsed admission");
@@ -60,7 +67,7 @@ void Scene::advance_elapsed(std::uint64_t ns,std::uint16_t held,
                 measure_wait_=false;logo_ready();
             }
         }
-        if(waiting_ && clock_->counter().one()>=waiting_) {
+        if(waiting_ && (vsync_wait_ ? vsync_wait_->ready() : clock_->counter().one()>=waiting_)) {
             if(inherited_wait_)clock_->counter().clear_wait();
             waiting_=0;
         }
@@ -71,7 +78,7 @@ void Scene::advance_elapsed(std::uint64_t ns,std::uint16_t held,
             const auto next=next_service();
             if(!next)throw std::logic_error("active PMD wait has no timer deadline");
             step=std::min(step,next);
-        } else if(waiting_)step=std::min(step,clock_->until_count(std::uint16_t(waiting_)));
+        } else if(waiting_)step=std::min(step,vsync_wait_ ? vsync_wait_->until_ready() : clock_->until_count(std::uint16_t(waiting_)));
         if(!step)throw std::logic_error("startup elapsed wait made no progress");
         clock_->advance(step);service(step);ns-=step;
         // Even after completion, drain the remainder on the same sound/raster
@@ -82,10 +89,10 @@ void Scene::palette_show() {emit(Kind::palette_show,tone_,0,0,Bytes(palette_.beg
 void Scene::apply_palette(const PiImage& image,unsigned slot) {palette_=image.palette;emit(Kind::palette,int(slot));palette_show();}
 void Scene::fade(bool in,unsigned speed,std::function<void()> after) {
     tone_=in ? 0 : 100;
-    queue([this]{wait(1);});
+    queue([this]{wait_vsync();});
     for(int tone=in ? 0 : 100;in ? tone<100 : tone>0;tone+=in ? 6 : -6) {
         queue([this,tone]{tone_=tone;palette_show();});
-        for(unsigned i=0;i<speed;++i)queue([this]{wait(1);});
+        for(unsigned i=0;i<speed;++i)queue([this]{wait_vsync();});
     }
     queue([this,in,after=std::move(after)]{tone_=in ? 100 : 0;palette_show();after();});
 }
