@@ -1,5 +1,16 @@
 # TH04 native branch handoff
 
+v1403 recovers the full unsigned-WORD filled-circle loop and stage horizontal
+clipping in `grcg_raster.cpp`. The shared native disc consumer now accepts
+radii above512, including wrapped/negative-WORD requests. Fresh original
+execution matches35 complete request streams (1,418,847 calls),605 horizontal
+write masks and20 filled-circle masks. Two component contracts and a focused
+UBSan/bounds replay pass; the predecessor rejects radius513. Producer518/
+193e94a7 and receipts are under `.analysis/port64/native-grcg-v1403/` in the
+isolated `port-motion-v1402` worktree. See [raster evidence](port64/evidence/stage-5.md).
+DOS source and historical exact counts stay unchanged. Continue function
+recovery and migration before long game campaigns.
+
 v1402 restores IATAN2's complete signed displacement behavior in native
 `motion::angle_to()`, replacing the blanket -32768 rejection with original
 signed magnitude comparison, low-byte lookup and DIV fault handling. All

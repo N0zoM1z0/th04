@@ -1,5 +1,41 @@
 # Stage 5 evidence
 
+## Filled-circle and horizontal-line recovery (v1403)
+
+`grcg_raster.cpp` recovers MAIN0000:114C's complete unsigned-WORD midpoint
+loop and 0000:14DC's stage clipping. Circle requests retain wrapped centers,
+signed error updates, unsigned termination, duplicate spans and the radius0
+PSET call. Horizontal-line clipping subtracts X32 before signed endpoint
+sorting. Sorting the original coordinates first changes extreme WORD inputs.
+
+The maintained `disc_pixels()` now consumes those owners. It no longer rejects
+radii above512. Stage5, Stage6 and laser consumers already call this shared
+entry; their simulation and draw-request generation remain unchanged.
+
+Fresh original execution passes35 complete ordered request streams, including
+radii513/32768/65535 and signed extreme centers. All 1,418,847 requests compare
+byte for byte. Another605 horizontal lines and20 filled circles compare their
+complete32,000-byte visible write masks, with stage clip X32..415/Y16..383.
+The original FAR returns, stack cleanup and preserved BP/DI/SI are checked.
+The request producer intercepts only HLINE/PSET callees; pixel producers execute
+the original callees and retain their actual EDGES table.
+
+The native core and two selected programs build from the frozen518-file
+producer193e94a7. Both component contracts pass. Optimized UBSan/bounds on the
+raster, wrapper, motion and caller reproduces all660 saved original results.
+The compiled predecessor rejects the independently observed radius513 case.
+DOS source and historical exact acceptance are unchanged; these checks cover
+the functions and stage clip, with physical page/scanout kept separate.
+
+Receipts, compressed original streams, source snapshot, compiler metadata and
+selected programs are under `.analysis/port64/native-grcg-v1403/` in the
+`port-motion-v1402` worktree. Replay with a newly built GRCG contract program:
+
+```sh
+python3 port64/verify_grcg_raster.py --root /path/to/th04 \
+  --native /path/to/th04-port64-grcg-contracts --output /fresh/proof
+```
+
 Historical bounded results, preserved from `docs/PORT64.md`. Current state is
 [the port overview](../../PORT64.md). Original CPU execution and adapter scope
 remain explicit; successful component controls do not accept complete gameplay.
@@ -264,8 +300,8 @@ Zoom reads the four color planes, skips color0 and paints clipped inclusive3x3
 rectangles. Rectangle/vline endpoints are signed-sorted, then clip-origin
 subtraction wraps as WORD; an ordinary host min/max clamp differs on extreme
 inputs. Filled circles use the original midpoint horizontal spans and actual
-stage clip32..415/16..383. Native disc raster rejects radii above512; pixel
-controls cover0..180, while arbitrary WORD radii remain request-only evidence.
+stage clip32..415/16..383. That producer rejected radii above512 and its pixel
+controls covered0..180. The v1403 recovery above replaces that restriction.
 
 Final comparison passes9,936 request controls:4,446 foreground,5,120 backdrop,
 370 original disc write masks. Another1,804 controls compare461,824,000 indexed

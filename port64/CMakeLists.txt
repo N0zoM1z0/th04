@@ -45,6 +45,7 @@ add_library(
   item_pool.cpp
   point_numbers.cpp
   motion.cpp
+  grcg_raster.cpp
   player_motion.cpp
   player_lifecycle.cpp
   player_bomb.cpp
@@ -184,6 +185,8 @@ add_executable(th04-port64-contracts contracts.cpp)
 target_link_libraries(th04-port64-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-live-contracts live_contracts.cpp)
 target_link_libraries(th04-port64-live-contracts PRIVATE th04-portable-core)
+add_executable(th04-port64-grcg-contracts grcg_raster_contracts.cpp)
+target_link_libraries(th04-port64-grcg-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-shot-contracts shot_contracts.cpp)
 target_link_libraries(th04-port64-shot-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-enemy-contracts enemy_contracts.cpp)
@@ -300,6 +303,7 @@ enable_testing()
 add_test(NAME portable-contracts COMMAND th04-port64-contracts)
 add_test(NAME live-main-contracts COMMAND th04-port64-live-contracts)
 add_test(NAME motion-contracts COMMAND th04-port64-motion-contracts)
+add_test(NAME grcg-contracts COMMAND th04-port64-grcg-contracts)
 add_test(NAME player-shot-contracts COMMAND th04-port64-shot-contracts)
 add_test(NAME stage-enemy-contracts COMMAND th04-port64-enemy-contracts)
 
