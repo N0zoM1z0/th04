@@ -21,17 +21,19 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. The verified startup/motion snapshot also restores the signed
-IATAN2 displacement edge and explicit divide-fault behavior. New cold builds
-pass 71 GNU CTests and seven UBSan contracts. Both compilers agree with 184,908
-original-instruction vectors, including 514 DIV faults. Eight fresh startup /
-four-Demo routes retain all 129 prior outputs per driver profile and pass the
-original selected-state comparisons. These results are separate from physical
-timing and whole-picture acceptance.
-
-The remote native branch also has newer circle/line renderer recovery. Its
-combined acceptance remains separate from this snapshot on
-`review/startup-motion-join-v1403`; the handoff identifies both producers.
+Native development is active. The verified integration on
+`review/native-integrated-v1404` combines signed IATAN2 recovery, startup IRQ/PMD
+waits, full WORD circle/line rendering and graphics-font WORD addressing.
+Cold builds pass 73 GNU CTests and nine optimized UBSan contracts. Original
+instructions agree with 184,908 motion vectors (514 DIV faults), 35 complete
+circle request streams, 605 line masks, 20 disc masks and 1,037 seeded font
+pages. Both compiler consumers agree; the compiled old font consumer fails.
+Eight fresh startup/four-Demo/fresh-OP routes retain all 129 prior outputs per
+driver profile and match original selected state at 15,988 boundaries each.
+The accompanying DOS status review is `review/integration-control-v1404`.
+This fixed 520-file producer uses committed incoming `08b29e7`; subsequent
+incoming changes require their own acceptance. Physical timing, full pictures,
+broader Boss/death/process routes and Windows input/audio remain open.
 
 OP startup now uses unsigned IRQ waits with the
 original clear-before-delay / clear-after-Logo order. Resident PMD service can

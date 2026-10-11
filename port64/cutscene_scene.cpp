@@ -80,41 +80,50 @@ void Canvas::draw_picture(int left,int top,int quarter,unsigned mask,bool full) 
     }
 }
 void Canvas::glyph(const Event& e,bool gaiji) {
-    if(!gaiji && (e.e<0 || e.e>7)) throw std::invalid_argument("unsupported graphics glyph effect");
-    if(!gaiji)text_weight_=unsigned(e.e);
-    unsigned base=0;
-    if(gaiji) {
-        if(e.c<0 || e.c>=256 || assets_->gaiji.size()<32) throw std::invalid_argument("invalid MAINE gaiji");
-        base=32u+unsigned(assets_->gaiji[28])+(unsigned(assets_->gaiji[29])<<8)+unsigned(e.c)*32;
-        if(base>assets_->gaiji.size() || assets_->gaiji.size()-base<32) throw std::invalid_argument("truncated MAINE gaiji");
+    if(!gaiji) {
+        if(e.e<0 || e.e>7)throw std::invalid_argument("unsupported graphics glyph effect");
+        draw_text(e.a,e.b,std::string{char(unsigned(e.c)>>8),char(e.c)},unsigned(e.d),unsigned(e.e));
+        return;
     }
-    const auto weight=[&](std::uint16_t row,unsigned y) {
-        // MAINE's heavy/bold/black kernels operate on a 16-bit register,
-        // even for an eight-dot ANK row. Preserve truncation at each step.
-        if(e.e==1 || e.e==3) row=static_cast<std::uint16_t>(row|(row<<1));
-        if(e.e==2 || e.e==3 || e.e>=4) row=bold(row);
-        if(e.e>=4)row&=font_masks[e.e-4][y&3u];
-        return row;
-    };
+    if(e.c<0 || e.c>=256 || assets_->gaiji.size()<32) throw std::invalid_argument("invalid MAINE gaiji");
+    const unsigned base=32u+unsigned(assets_->gaiji[28])+(unsigned(assets_->gaiji[29])<<8)+unsigned(e.c)*32;
+    if(base>assets_->gaiji.size() || assets_->gaiji.size()-base<32) throw std::invalid_argument("truncated MAINE gaiji");
     const auto put=[&](int px,int py) {
         if(px>=0 && px<int(width) && py>=0 && py<int(height))
             pages_[accessed_][unsigned(py)*width+unsigned(px)]=static_cast<std::uint8_t>(e.d&15);
     };
-    if(gaiji) {
-        for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x)
-            if(assets_->gaiji[base+y*2+x/8]&(0x80u>>(x&7))) put(e.a+int(x),e.b+int(y));
-        return;
-    }
-    // script_op passes a two-byte NUL-terminated string, rather than a
-    // guaranteed Shift-JIS character. The real _ED000 script also supplies
-    // ",4". Decode each character as the observed graph_putsa_fx does.
-    const unsigned chars[3]={unsigned(e.c>>8)&255u,unsigned(e.c)&255u,0};
-    unsigned at=0;int left=e.a;
-    while(at<2 && chars[at]) {
-        const unsigned first=chars[at++],high=first&0xE0u;
+    for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x)
+        if(assets_->gaiji[base+y*2+x/8]&(0x80u>>(x&7))) put(e.a+int(x),e.b+int(y));
+}
+void Canvas::draw_text(int left,int top,const std::string& text,unsigned color,unsigned effect) {
+    text_weight_=effect;
+    const auto weight=[&](std::uint16_t row,unsigned y) {
+        if(effect==1 || effect==3)row=std::uint16_t(row|(row<<1));
+        if(effect==2 || effect==3 || effect>=4)row=bold(row);
+        if(effect>=4)row&=font_masks[effect-4][y&3u];
+        return row;
+    };
+    const auto put_byte=[&](unsigned address,unsigned mask) {
+        if(address>=32000)return;
+        for(unsigned bit=0;bit<8;++bit)if(mask&(0x80u>>bit))
+            pages_[accessed_][address*8+bit]=std::uint8_t(color&15);
+    };
+    // GRAPH_PUTSA_FX truncates SHL Y,6 before deriving Y*16 from that
+    // intermediate. Its DI pointer then advances across characters, while
+    // CX retains only the shift plus spacing. Screen-coordinate clipping or
+    // restarting the address for each glyph loses visible WORD aliases.
+    const auto shifted=std::uint16_t(std::uint16_t(top)*64u);
+    auto origin=std::uint16_t(shifted+(shifted>>2));
+    auto cursor=std::uint16_t(left);
+    std::size_t at=0;
+    while(at<text.size() && text[at]) {
+        const unsigned first=static_cast<unsigned char>(text[at++]),high=first&0xE0u;
         const bool full=high==0x80u || high==0xE0u;
-        const auto sjis=static_cast<std::uint16_t>((first<<8)|chars[at]);
+        const unsigned next=at<text.size() ? static_cast<unsigned char>(text[at]) : 0;
+        const auto sjis=static_cast<std::uint16_t>((first<<8)|next);
         if(full) ++at;
+        origin=std::uint16_t(origin+(cursor>>3));
+        const auto shift=unsigned(cursor&7u);
         for(unsigned y=0;y<16;++y) {
             std::uint16_t row=0;
             const unsigned dots=full ? 16 : 8;
@@ -123,36 +132,34 @@ void Canvas::glyph(const Event& e,bool gaiji) {
                 if(set) row|=static_cast<std::uint16_t>(1u<<(dots-1-x));
             }
             row=weight(row,y);
+            const auto address=std::uint16_t(origin+y*80u);
             if(full) {
-                for(unsigned x=0;x<16;++x) if(row&(0x8000u>>x)) put(left+int(x),e.b+int(y));
+                const unsigned aligned=row>>shift;
+                put_byte(address,aligned>>8);put_byte(unsigned(address)+1,aligned&255u);
+                put_byte(std::uint16_t(address+2u),((unsigned(row&255u)<<8)>>shift)&255u);
             } else if(first!=' ') {
                 // The target stores ANK in AL, applies the same WORD effect,
                 // then RORs and writes little-endian. For aligned x, weight
                 // dots in AH appear eight dots to the right; do not repair
                 // this original graphics-font quirk in the native port.
-                const unsigned shift=unsigned(left)&7u;
                 if(shift) row=static_cast<std::uint16_t>((row>>shift)|(row<<(16-shift)));
-                for(unsigned x=0;x<16;++x)
-                    if(row&(1u<<((x/8)*8+7-(x&7)))) put((left&~7)+int(x),e.b+int(y));
+                put_byte(address,row&255u);put_byte(unsigned(address)+1,row>>8);
             }
         }
-        left+=full ? 16 : 8;
+        cursor=std::uint16_t(shift+(full ? 16 : 8));
     }
 }
 void Canvas::put_text(int left,int top,const std::string& text,unsigned color,unsigned weight) {
     if(weight>7)throw std::invalid_argument("unsupported graphics text effect");
-    text_weight_=weight;
     for(std::size_t at=0;at<text.size() && text[at];) {
         const unsigned first=static_cast<unsigned char>(text[at++]);
         const bool full=(first&0xe0u)==0x80u || (first&0xe0u)==0xe0u;
-        unsigned second=0;
         if(full) {
             if(at>=text.size() || !text[at])throw std::invalid_argument("MAINE text has a truncated Shift-JIS character");
-            second=static_cast<unsigned char>(text[at++]);
+            ++at;
         }
-        glyph({Kind::text,left,top,int((first<<8)|second),int(color),int(weight)},false);
-        left+=full ? 16 : 8;
     }
+    draw_text(left,top,text,color,weight);
 }
 void Canvas::put_gaiji(int left,int top,const std::string& text,int step,unsigned color) {
     for(unsigned char c:text) {

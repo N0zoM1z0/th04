@@ -1,5 +1,51 @@
 # Ending evidence
 
+## Graphics-font WORD addressing (v1404)
+
+The native `Canvas` now follows MAINE's `GRAPH_PUTSA_FX` address arithmetic.
+The original renderer shifts Y in a WORD before calculating its row address,
+adds unsigned X/8, and carries DI across the complete string. It writes the
+two-byte glyph word before the third Kanji spill byte, preserving DI wrap.
+For example, X640/Y0 draws at the start of row 1, and Y1024 aliases Y0.
+Clipping each glyph to screen coordinates discarded these visible writes.
+
+`draw_text()` keeps that address sequence for both script text and the shared
+`put_text()` consumer. Font weights 0..7, default spacing 16, halfwidth weight
+expansion, ROR and little-endian writes retain their original behavior.
+Gaiji drawing keeps its existing implementation.
+
+The maintained `verify_font_address.py` executes original MAINE 0CC7:058C at
+load 2000, with its decoded 559 relocations and DGROUP 0E53. A deterministic
+2048x2048 monochrome BMP supplies CGROM input; original port writes select its
+rows and columns. The reader captures actual original VRAM writes and compares
+the entire 640x400 indexed page, including the seeded background. All 1,037
+controls agree: eight effects, all eight X alignments, ANK/kana/fullwidth and
+mixed strings, color masking, signed coordinate extremes, right-edge spill,
+WORD wrap and string continuity. Original FAR return and stack/BP preservation
+are checked. The adapter projects the visible A800 page; physical display and
+arbitrary font-spacing settings remain separate.
+
+The cold native core and three selected contract programs build successfully.
+All three component contracts pass. Optimized UBSan/bounds on the font caller,
+Canvas and font decoder reproduces the same1,037 saved original pages. The
+compiled predecessor differs in 119 pixels for X640/Y0/"AB" and rejects the
+new right-edge component contract.
+
+Frozen producer 520/774cc800, complete compressed original pages, selected
+programs, compiler metadata and receipts are retained under
+`.analysis/port64/native-font-address-v1404/` in the isolated
+`port-motion-v1402` worktree. Replay against a freshly built contract program:
+
+```sh
+python3 port64/verify_font_address.py --target /path/to/original/maine.exe \
+  --decoded-dir /path/to/decoded-original \
+  --native /path/to/th04-port64-font-address-contracts --output /fresh/proof
+```
+
+Use `--reference /path/to/original-comparison` to check another compiled
+consumer against the retained pages. This native function recovery leaves
+the historical DOS exact ledger unchanged.
+
 Historical bounded results, preserved from `docs/PORT64.md`. Current state is
 [the port overview](../../PORT64.md). Original CPU execution and adapter scope
 remain explicit; successful component controls do not accept complete gameplay.
@@ -187,3 +233,9 @@ remain expanded. Restore v1292 media using `gzip -d -- PATH.bin.gz` or
 `PATH.bmp.gz` before direct historical consumers; the archive receipt records
 every original/compressed digest.96 derived v1291 PNGs have correctedRGB
 presentation with original indexed/palette hashes retained in a separate receipt.
+
+## Integrated v1404 default consumer proof
+
+The integrated520/774cc800 cold producer executes original MAINE0CC7:058C atload2000 for1037 complete seeded pages. GNU matches the newly generated original stream; optimized UBSan rereads that stream and matches every page. The ce48946 consumer genuinely compiled with the current contract fails the right-edge check. Synthetic font-ROM and visible-write adapters remain explicit; no new natural ending or full picture/scanout acceptance is claimed.
+
+Replay index: `.analysis/reconstruction/probes/native-integrated-v1404/`; frozen source and receipts: `.analysis/worktrees/native-integrated-v1404/.analysis/port64/native-integrated-v1404/`. Prior proofs remain separately pinned.

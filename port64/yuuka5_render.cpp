@@ -1,4 +1,5 @@
 #include "yuuka5.hpp"
+#include "grcg_raster.hpp"
 #include <algorithm>
 #include <stdexcept>
 namespace th04::portable::yuuka5 {
@@ -79,24 +80,13 @@ void System::prepare_render(std::uint16_t frame,const laser::System& lasers) {
 }
 std::vector<motion::Point> disc_pixels(motion::Point center,std::uint16_t radius) {
     std::vector<motion::Point> result;
-    // This is MAIN0000:114C's midpoint *filled* circle, with its clipped
-    // horizontal spans. It is not a Euclidean distance test or an outline.
-    // The pixel Oracle covers small ordinary radii. Negative WORD values
-    // remain draw requests; this raster does not guess their loop behavior.
-    if(radius>512) throw std::domain_error("disc radius outside attested portable raster range");
-    const auto pixel=[&](int x,int y) { if(x>=32 && x<=415 && y>=16 && y<=383) result.push_back({static_cast<std::int16_t>(x),static_cast<std::int16_t>(y)}); };
-    if(!radius) { pixel(center.x,center.y);return result; }
-    const auto span=[&](int half,int offset) {
-        const int left=motion::wrap(int(center.x)-half),right=motion::wrap(int(center.x)+half),y=motion::wrap(int(center.y)+offset);
-        if(y<16 || y>383) return;
-        for(int x=std::max(32,left);x<=std::min(415,right);++x) pixel(x,y);
-    };
-    int x=radius,y=0,error=radius;
-    do {
-        span(x,-y);span(x,y);error=motion::wrap(error-(2*y+1));
-        if(error<0) { span(y,-x);span(y,x);--x;error=motion::wrap(error+2*x); }
-        ++y;
-    } while(static_cast<unsigned>(x)>=static_cast<unsigned>(y));
+    grcg::circlefill(center,radius,[&](const grcg::Request& request) {
+        if(request.kind==grcg::Kind::point) {
+            if(grcg::stage_pset({request.left,request.y}))result.push_back({request.left,request.y});
+        } else if(const auto span=grcg::stage_hline(request.left,request.right,request.y)) {
+            for(int x=span->left;x<=span->right;++x)result.push_back({std::int16_t(x),span->y});
+        }
+    });
     return result;
 }
 namespace {

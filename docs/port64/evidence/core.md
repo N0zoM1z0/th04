@@ -477,3 +477,9 @@ snapshot. This snapshot is published on review/startup-motion-join-v1403;
 merge it only after selecting one writable source session and attesting the
 combined producer. Both incoming histories are preserved. The older v1401
 startup implementation itself already reached port/modern-64 through fffcc83.
+
+## Integrated v1404 default consumer proof
+
+The integrated520/774cc800 snapshot on review/native-integrated-v1404 cold-builds the complete product graph:75GNU programs/73CTests,12UBSan programs/nine selected contracts. Fresh original MAIN0000:1DA8/table2134:021E atload1000 matches184908 vectors/514DIV faults per compiler. Expanded transcripts agree; finite corpus and native fault surface are accepted separately from whole guest exceptions or byte exactness.
+
+Replay index: `.analysis/reconstruction/probes/native-integrated-v1404/`; frozen source and receipts: `.analysis/worktrees/native-integrated-v1404/.analysis/port64/native-integrated-v1404/`. Prior proofs remain separately pinned.
