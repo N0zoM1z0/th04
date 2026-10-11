@@ -1,5 +1,83 @@
 # TH04 native branch handoff
 
+## Joined native MAINE wait consumers (v1416)
+
+Joined native producer 532/037b0f2e restores shared Animation's logical
+WORD parameter boundaries. A zero frame_delay continues on the same call;
+negative arguments become unsigned WORD waits. Black fades align once, then
+use signed WORD speed: nonpositive values skip all per-group waits. The
+optional PaletteSink reports every fade-generated palette_show, including
+all 18 updates on one admission for zero speed. Explicit tone requests stay
+in RequestSink. This is a logical refresh projection, with no shared Count1
+owner, CPU execution cost or elapsed raster/IRQ timing claim.
+
+Both cold GNU and optimized UBSan/bounds build all 81 programs and pass all
+79 CTests. Complete original MAINE 0CC7:0033..0047 frame_delay and
+0000:0622..06A3 black fades pass 72 cases at loads 1000/3333; the actual
+0000:2206..222B wait executes inside each fade. Count1 pulses are explicit
+stimuli and palette_show is a guarded tone observer. All 36 native vectors
+match, including WORD truncation, zero and 7FFFh/8000h boundaries.
+
+Both compilers also retain 96 OP/MAINE original fade controls and 24 native
+timelines from the independent palette producer. Both target identities,
+complete fade extents and all 96 retained wait streams are re-attested.
+
+The actual latest 6b0e1ba Animation predecessor differs in three complete
+delay traces; its four fade traces already agree. Current Congratulations retains 32 original branches,
+50 original fade/key clocks and 20 complete PI-page comparisons per compiler;
+verdict retains 916 state/request cases and 10 clock/key controls. Their
+pixel references retain their earlier native decoder producer. Eight muted
+startup/four-Demo/fresh-OP routes retain all 129 prior hashes per profile and
+15,988 original selected-state boundaries each. No exact/full-game promotion.
+
+Replay: `.analysis/reconstruction/probes/native-maine-wait-join-v1416/`;
+producer: `.analysis/worktrees/native-maine-wait-join-v1416/.analysis/port64/native-maine-wait-join-v1416/`.
+`focused-gnu.json`, `focused-ubsan.json` and `focused.json` record commands.
+Use `th04-port64-cutscene-contracts` for Congratulations/verdict helpers;
+frozen port readers need read-only `PYTHONPATH=ROOT` for the HDI parser.
+Failed missing-parser/wrong-program recipes remain. Verified retirement
+reclaims 505.93 MiB net; full source/projections, selected programs and
+predecessor remain. Continue actual elapsed scene wait ownership; physical
+timing, complete pictures, broader Boss/death/process and Windows stay open.
+
+## Joined palette fade recovery (v1414)
+
+Current producer 530/4dc27bde combines the palette WORD fix with the published
+wait/text owner at 9a7f380. Cold GNU Release and optimized UBSan/bounds each
+build the complete core, actual frontend and four selected contract programs.
+Both pass the palette, MAINE cutscene, startup and GDC contracts and all 24
+palette timelines against the retained 96 original instruction controls.
+Native CI passes 345 tests. This is a focused integration; the v1412 full
+79-program/77-CTest build remains bound to its own frozen producer.
+
+Evidence is in the isolated `native-palette-join-v1414` tree under
+`.analysis/port64/native-palette-join-v1414/`. `verify_closure.py` checks the
+530-file source archive, current programs and 1,635 frozen parent files.
+Verified archive retirement releases 25.64 MiB; source-backed Python cache
+cleanup releases another 15.70 MiB. Continue recovering native hardware and
+scene owners before longer game validation.
+
+## Palette fade WORD recovery (v1413)
+
+`maine::Animation` truncates fade speed to the original WORD and follows its
+signed test. Zero and negative WORD speeds now finish after the single initial
+refresh; positive speeds retain `1 + 17 * speed` waits. Original OP/MAINE
+0000:0622 and 0000:0666 pass 96 instruction controls at loads 1000/3333.
+Fresh GNU and optimized UBSan Animation builds each pass 24 native vectors;
+the actual 328585f predecessor fails 14. Complete tone stores, palette calls
+and wait streams remain available, including the transient 102/-2 tone.
+
+Frozen producer 528/dbdbcbe5 is in the isolated `native-palette-zero-v1413`
+tree, phase `.analysis/port64/native-palette-zero-v1413/`. Its closure verifies
+the source archive, complete original controls, compiler outputs and 803 frozen
+text-proof files. CI passes 345 tests; verified cache retirement releases
+0.13 MiB net. See [Ending evidence](port64/evidence/ending.md).
+The v1414 integration above contains this source and freshly builds its
+frontend and affected MAINE components.
+
+The v1409 records below describe their frozen producer. DOS text/VSync has
+since been integrated at a07dbc0; native wait/text is published at 9a7f380.
+
 v1409 restores MAIN's ordinary text character/string writers in `TextPlane`.
 `put_character()` accepts the full WORD input, including ANK, JIS and Shift-JIS;
 HUD initialization, Game Over and the actual frontend now use it. `put_sjis()`

@@ -217,3 +217,43 @@ Failed missing-parser/wrong-program recipes remain. Verified retirement
 reclaims 505.69 MiB net; full source/projections, selected programs and
 predecessor remain. Continue actual elapsed scene wait ownership; physical
 timing, complete pictures, broader Boss/death/process and Windows stay open.
+
+## Joined native MAINE wait consumers (v1416)
+
+Joined native producer 532/037b0f2e restores shared Animation's logical
+WORD parameter boundaries. A zero frame_delay continues on the same call;
+negative arguments become unsigned WORD waits. Black fades align once, then
+use signed WORD speed: nonpositive values skip all per-group waits. The
+optional PaletteSink reports every fade-generated palette_show, including
+all 18 updates on one admission for zero speed. Explicit tone requests stay
+in RequestSink. This is a logical refresh projection, with no shared Count1
+owner, CPU execution cost or elapsed raster/IRQ timing claim.
+
+Both cold GNU and optimized UBSan/bounds build all 81 programs and pass all
+79 CTests. Complete original MAINE 0CC7:0033..0047 frame_delay and
+0000:0622..06A3 black fades pass 72 cases at loads 1000/3333; the actual
+0000:2206..222B wait executes inside each fade. Count1 pulses are explicit
+stimuli and palette_show is a guarded tone observer. All 36 native vectors
+match, including WORD truncation, zero and 7FFFh/8000h boundaries.
+
+Both compilers also retain 96 OP/MAINE original fade controls and 24 native
+timelines from the independent palette producer. Both target identities,
+complete fade extents and all 96 retained wait streams are re-attested.
+
+The actual latest 6b0e1ba Animation predecessor differs in three complete
+delay traces; its four fade traces already agree. Current Congratulations retains 32 original branches,
+50 original fade/key clocks and 20 complete PI-page comparisons per compiler;
+verdict retains 916 state/request cases and 10 clock/key controls. Their
+pixel references retain their earlier native decoder producer. Eight muted
+startup/four-Demo/fresh-OP routes retain all 129 prior hashes per profile and
+15,988 original selected-state boundaries each. No exact/full-game promotion.
+
+Replay: `.analysis/reconstruction/probes/native-maine-wait-join-v1416/`;
+producer: `.analysis/worktrees/native-maine-wait-join-v1416/.analysis/port64/native-maine-wait-join-v1416/`.
+`focused-gnu.json`, `focused-ubsan.json` and `focused.json` record commands.
+Use `th04-port64-cutscene-contracts` for Congratulations/verdict helpers;
+frozen port readers need read-only `PYTHONPATH=ROOT` for the HDI parser.
+Failed missing-parser/wrong-program recipes remain. Verified retirement
+reclaims 505.93 MiB net; full source/projections, selected programs and
+predecessor remain. Continue actual elapsed scene wait ownership; physical
+timing, complete pictures, broader Boss/death/process and Windows stay open.

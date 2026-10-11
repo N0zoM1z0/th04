@@ -240,3 +240,6 @@ complete GNU/UBSan graphs, original corpus replay and cleanup recovery.
 
 The VSync note includes MAINE logical WORD delay/black-fade boundaries (v1413),
 complete original controls, current consumers and recovery.
+
+The VSync note includes MAINE logical WORD delay/black-fade boundaries (v1416),
+complete original controls, current consumers and recovery.
