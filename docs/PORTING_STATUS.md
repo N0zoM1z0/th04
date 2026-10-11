@@ -358,7 +358,7 @@ open. Development stays active; see the handoff for evidence and cleanup recover
 
 Producer: `bdc1fb56f80b1d5d987c89a1cfe63cea9da155eb6ef8eb662c10480dd02c4b5e`. See the differential note and current handoff.
 
-## Physical configuration and startup clocks (v1391)
+## Retained physical configuration and startup clocks (v1391)
 
 Native development is active. Demo validation now loads the physical
 configuration before running one Logo, four natural demos and a fresh OP title.
@@ -385,5 +385,30 @@ original producer identity. Boot/loading/process clock ownership, physical
 and cross-emulator scanout, broader paired routes and Windows input/audio
 remain open. See the handoff for scoped evidence and cleanup recovery.
 
-Current producer: `c6a90f57e662cbbe85cec9b55047f0ffce5df818067725f687b548f4d2579010`. Native commit: `927ce48`.
+Retained producer: `c6a90f57e662cbbe85cec9b55047f0ffce5df818067725f687b548f4d2579010`. Native commit: `927ce48`.
 See the handoff and focused differential note for evidence and recovery.
+
+## Cold PMD installation and original OP timers (v1392)
+
+Native development is active. The application PMD driver now installs from cold
+chip state and applies installation writes to both logical timers and PCM.
+Read-only original OP captures show the first Timer B period is **73.728 ms**;
+the previous native state incorrectly began at 16.128 ms. Two independent
+installation controls reject the old state and the PCM-only update.
+
+Cold GNU passes 69 CTests; optimized UBSan passes three PMD contracts. Four
+muted driver profiles each produce 129 identical GNU / UBSan capture files.
+Demo state, RNG, draws, shake and physical configuration/save files remain
+identical to the retained original-paired captures at all 15,988 selected seams.
+One Logo and five completed titles include the final fresh OP ready.
+
+Default active-PMD waiting now spans 97 native refreshes; the bounded original
+OP captures span 92. This is not full startup-clock acceptance: original CPU
+and file-loading time still need paired owners. Complete default RGB matches
+remain 31/40 for none and 34/40 for active profiles; own-counter-phase 40/40 is
+diagnostic. Earlier supplied-original-clock matches retain their original
+producer identity. Broader paired gameplay/process routes, physical scanout
+and Windows input/audio remain open. See the handoff for evidence and cleanup.
+
+Current producer: `9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`. Native commit: `28b3f95`.
+See the current handoff and focused differential note for complete scoped evidence.

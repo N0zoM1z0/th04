@@ -23,6 +23,7 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'verify_op_startup_clock.py': ('runtime', 'Verify original FM86 OP startup, cold PMD installation and complete GDC clocks with rejecting mutations.'),
     'build.py': ('build', 'Build/publish local-source DOS products after all requested build and link audits.'),
     'build_zun_composite.py': ('build', 'Build the local-source ZUN container and embedded resident components.'),
     'export_windows_play.py': ('build', 'Package verified DOS products and launchers while retaining nonproduct image files.'),

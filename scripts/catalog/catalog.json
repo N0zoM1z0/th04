@@ -3479,6 +3479,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_op_startup_clock.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Verify original FM86 OP startup, cold PMD installation and complete GDC clocks with rejecting mutations.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/smoke_ghidra_oracle.py",
     "category": "boundaries",
     "role": "command",

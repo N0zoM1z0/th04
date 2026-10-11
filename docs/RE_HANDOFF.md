@@ -5,80 +5,67 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1391 (native `927ce48`) loads physical configuration in the actual Demo validation route.
-The old capture copied MIKO.CFG but did not enable its owner: incoming rank 2
-became native default rank 1. Demo-local Hard hid this from old state/pixel
-checks. Only demo_picture_frontend_checks.inl changes: enable configuration,
-observe actual configure requests and compare the complete saved CFG. Current
-frozen 510-file producer: `c6a90f57e662cbbe85cec9b55047f0ffce5df818067725f687b548f4d2579010`.
+v1392 (native `28b3f95`) fixes the native application PMD cold-install epoch. Original GAME.BAT /
+PMD86 startup captures attest the complete decoded OP load (69,028 bytes,
+804 relocations), load 10FC / DGROUP 2030, type AX=4802 and resident options.
+Read-only timer observations show the first Timer B period is 73.728 ms at
+register 0; writing 200 afterward does not replace the queued deadline. Old
+native prestarted 16.128 ms and installation updated only PCM. The application
+now constructs cold state and applies writes to logical timers and PCM.
+Standalone post-install fixtures retain their installed epoch.
+Current frozen 510-file producer:
+`9cfe100a84ac0a325d498b9b81602298009e462643b2cfa453947fe85bc1b049`.
 
-Cold GNU builds 71 programs and passes 69 CTests; optimized UBSan builds the
-game, trace and shake programs. Eight actual muted full-startup runs cover
-none/pmd/pmdb2/pmd86 separately under GNU and UBSan. Each pair produces 129
-byte-identical files. All nine OP/MAIN configure requests equal incoming options
-2/3/2/2/1/1; all 10 CFG and 1,960 score bytes stay unchanged and equal independent
-FAT readback of the fresh original's final disk. Each profile matches selected
-state/RNG/draw counts at all 15,988 original seams. One resident Logo and five
-completed titles include final fresh OP ready. Private Linux Xvfb input/focus/
-release/exit passes with zero audio opens. Configuration requests are observed
-native options, not original resolved board/driver/audio acceptance.
+Original OP sound 0DA1:0370→039D waits 92 refreshes in both captures; startup
+CS is relative 0A74, load 10FC / DGROUP 2030. The timer capture observes 48
+B callbacks during the 1,637.469333 ms measure-entry-to-return interval.
+Install-first-schedule-to-Logo-play is 245.638500 ms. Supplying that measured age
+to a separate native diagnostic probe gives measure 2 at the 1,638 ms sample;
+original play-to-last-callback is 1,637.881542 ms. This does not supply a product
+offset or pair default loading. Constructor B deadline is 589,824 cycles at
+8 MHz. Old installed-state (129,024) and PCM-only (0) controls construct
+successfully, but independent deadline checks reject both. Runtime load-byte
+and GDC mutations also reject. Original captures stop on the host before
+ordinary menu execution; full DOS process, audio and physical chip remain open.
 
-Native measure request to first SUPER_load is 0 refreshes for none and 94 for
-pmd/pmdb2/pmd86. First MAIN is refresh 1,193 versus 1,287. These observed provider
-spans are not target constants or original PMD measure timing. Strict PMDB2 ROM
-identity rejected an LLE-format choice before launch; corrected -v2 runs use
-the attested MAME ROM. No identity guard was relaxed. A one-call configuration
-bypass completes successfully and preserves every old 128 output file, but all
-nine configure points use rank 1; the independent option reader rejects it.
+Cold GNU builds 71 programs and passes 69 CTests. Optimized UBSan builds six
+explicit targets and passes three PMD contracts; four full service tables equal
+GNU. Eight muted none/pmd/pmdb2/pmd86 startup/four-Demo/fresh-OP routes each
+produce 129 identical GNU / UBSan files. State, RNG, draws, shake, indices,
+TRAM, configuration and saves equal retained v1391 original-paired digests;
+the original raw state reader is not rerun or restamped. All 15,988 selected
+seams, nine option requests, whole CFG/score files, one Logo and five titles
+pass. Private Linux Xvfb passes with zero audio opens. Default waiting spans
+0/97/97/97 native refreshes; first MAIN is 1,193/1,290. Default loading remains
+unpaired. Forty retained original raw samples freshly emit 120 full RGB
+references. Default none 31/40, active 34/40 and own-counter-phase 40/40 are
+diagnostics. Prior supplied-clock 40/40 retains its old producer; there is no
+current fixture rerun.
 
-A fresh original zero-delay run uses the exact retained collector projection,
-ELF, reset, input and sample plan. C2/E2/V21113/F15988 events replay independent
-archived original GDC bodies at every 15,988 seam and 15,984 thin row. Parameter-
-entry coverage stays zero. Fresh scalar/caller digests equal both retained
-closed v1390 readers, without replaying or restamping old identities. All 120
-original samples are freshly CRC/EOF/hash/clock-guarded; non-GDC/raster raw
-regions agree across three captures. Baseline to zero-repeat event ordinals
-shift by 8 at every seam with 3,999 visible phase changes, versus the old sleep
-pair's 5/6 shift and 2,501 phase changes. Five events cannot uniquely diagnose
-inserted sleep; this is not a causal estimate. Keep capture epochs distinct.
+No DOS product source/flags/headers change: fingerprint6f5898dd remains intact.
+MAIN historical exactness remains deferred; targets are candidate-local-attested.
+Next pair CPU and file-loading elapsed time between resident install and Logo play,
+then later OP process waits and broader combat/process routes. No fitted phase
+or hardcoded wait. Goal remains active; Windows GUI/focus/hostkeys remain excluded.
 
-Current supplied-original-clock None fixture admits all seams/endpoints before
-paint. Complete raw RGB is zero 40/40 against independent full FONT/CRT/VRAM/
-palette/GDC/time rendering, without normalization, crop, tolerance or phase
-fitting; whole canonical TRAM agrees. Zero-initial-callback control rejects.
-Default headless RGB counts against this fresh original are 31/40 for none and
-34/40 for active profiles. All profiles match 40/40 references evaluated at
-their own counter phase; that remains diagnostic. Whole-index inequalities,
-fixture startup-prefix/final-OP and original PMD/audio clocks remain unpaired.
-Prior 80/80 and earlier compact-entry 37/40 keep their old scoped identities.
-DAC, initial count 1 and 17,723,227 ns period proofs retain their identities.
-
-MAIN SHA starts 077440a3; locations MAIN 0AAF:00B7/0975, runtime load10FC/
-DGROUP3230. Default startup/loading/process clock owners, raw PIC fractional
-timing, physical/cross-emulator scanout, paired Boss/death/process and Windows
-input/audio remain open. Next identify original startup/loading and resolved
-PMD clock owners from independent event evidence. The goal stays active;
-candidate-local-attested provenance and deferred historical exactness remain.
-
-Replay: root .analysis/reconstruction/probes/native-startup-clock-v1391/;
-native .analysis/port64/native-startup-clock-v1391/. Original reader, cold
-builds, eight captures, negative controls, private Xvfb and comparisons are
-serial CPU0/nice19. pipeline_v3.py closes corrected RGB/profile reductions.
-Earlier rejected freeze-parent, ROM and missing-import setup attempts retain
-sources/logs/negative receipts; none is acceptance. All prior proofs keep their
-immutable producer identities. Both complete CI/diff checks close this batch.
-
-Lossless cleanup reclaims 725.04 MiB after archive/journal. Current game/trace/shake
-programs, frozen sources, compressed originals and replay receipts/logs stay
-live. Duplicate native captures, disposable HDIs, expanded references, objects,
-libraries and helper programs are archived. Before full replay restore them:
+Replay: DOSroot .analysis/reconstruction/probes/native-pmd-startup-v1392/;
+native .analysis/port64/native-pmd-startup-v1392/. Public original reader:
+scripts/runtime/verify_op_startup_clock.py. Commands/evidence/limits are in the
+focused note. All jobs are serial CPU0/nice19. Cleanup recovery:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-startup-clock-v1391/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-pmd-startup-v1392/verify_retention.py --restore
 ```
 
-Without --restore, checks include full gzip CRC/EOF, member SHA/mode/size/nsmtime,
-inherited protected proof hashes and all frozen producer pins.
+Lossless retirement reclaims 620.75 MiB after archive/journal; 3,253 files are
+archived and 33,158 immutable protected hashes plus all 510 source pins pass.
+The 66.02 MiB archive is retained. Full gzip CRC/EOF and member
+SHA/mode/size/nsmtime checks pass before and after deletion. Keep frozen 510-file source,
+current game/trace/shake, compressed original clocks and closed proofs; restore
+archived HDIs/objects/captures/references before full replay. Earlier closed
+proofs retain their original identities.
+Both complete CI gates pass (root 441 / native 345 tests), ledger and diff checks
+pass. Post-CI source-backed cache cleanup reclaims another 16.64 MiB.
 
 See [the focused note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 
