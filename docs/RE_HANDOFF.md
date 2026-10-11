@@ -1,5 +1,13 @@
 # TH04 native branch handoff
 
+v1402 restores IATAN2's complete signed displacement behavior in native
+`motion::angle_to()`, replacing the blanket -32768 rejection with original
+signed magnitude comparison, low-byte lookup and DIV fault handling. All
+184,908 original-instruction vectors agree, including 514 original faults.
+See [core evidence](port64/evidence/core.md) and the scoped native receipt under
+`.analysis/port64/native-motion-v1402/`. DOS source and historical exact counts
+are unchanged. Continue function migration before long game campaigns.
+
 The user is actively using the Windows host. Do not launch Windows GUI
 tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
