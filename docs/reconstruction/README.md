@@ -212,3 +212,6 @@ replay boundary. Keep live priorities in
 [`RE_HANDOFF.md`](../RE_HANDOFF.md) and live counts in the CSV ledgers and
 generated progress reports. Notes outside current open questions are retained
 evidence; do not scan them during routine handoff.
+
+VSync and ordinary-text notes include the joined v1412 native producer and
+full GNU/UBSan, original corpus, default-route and retention checks.

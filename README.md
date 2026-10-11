@@ -54,31 +54,28 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. The current native branch is at `328585f`
-(producer 526/3e7d5e33). Ordinary character and Shift-JIS writers now preserve
-WORD addresses, mutable text bases and the original conversion/store order.
-All 65,536 WORD characters and 65,536 two-byte inputs agree on visible text
-banks; 840 additional inputs agree on complete memory at two loads.
-GNU and optimized UBSan reproduce them; prior Gaiji retains 2,656 comparisons.
-See [ordinary text recovery](docs/reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md).
+Native development is active. `port/modern-64` is now at `9a7f380`,
+joining palette VSync waits with the latest WORD, Shift-JIS and Gaiji text
+writers (producer 528/768091dc). Both cold GNU and optimized UBSan/bounds
+build the full 79-program graph and pass all 77 CTests. Complete original
+text/wait controls pass under both compilers; eight muted startup/four-Demo/
+fresh-OP routes retain all 129 prior outputs per profile and pass 15,988
+original selected-state boundaries each. See the
+[VSync](docs/reconstruction/product/TH04_NATIVE_VSYNC_V864.md) and
+[ordinary text](docs/reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md)
+notes for scope and recovery.
 
-The separate `review/native-gdc-poll-v1407` palette-wait producer retains its
-75 GNU CTests, 10 UBSan contracts, original controls and eight muted routes.
-It awaits integration with the newer text-writer producer.
-
-Shared DOS now also recovers the installed-owner VSYNC_WAIT branch. All four
-products were cold-built from 1,425 pinned inputs (d9383fa5). Original/compiled
-MAIN, OP and MAINE pass 528 wait controls and 324 lifecycle controls; real
-polling-only predecessors each fail 136 installed-owner controls. Four fresh
-bundled demos pass 15,988 consumed-input/score/RNG boundaries. These scoped
-checks preserve both counters and the existing owner storage; they do not
-establish byte exactness or physical CPU/IRQ timing.
+Current shared DOS combines mutable text bases and installed-owner VSync
+waits (producer 1,425/82ade790). MAIN/OP/MAINE pass 3,156 ordinary-text,
+2,656 Gaiji, 528 wait and 324 lifecycle comparisons. Both wait paths preserve
+the counters and existing owner storage. Earlier full-Demo/pool/video
+acceptance retains its frozen producer; these controls do not establish
+byte exactness or physical CPU/IRQ timing.
 
 CI passes 451 DOS tests; retained native CI passes 345.
 
 Physical CPU/loading/ISR costs, other scene wait adapters, complete pictures,
-broader Boss/death/process routes and Windows input/audio remain open. DOS
-ordinary-text writers' mutable text-base references are the next source owner.
+broader Boss/death/process routes and Windows input/audio remain open. Native scene wait adapters and hardware owners are the next bounded work.
 See the [current handoff](docs/RE_HANDOFF.md) for frozen producers and recovery.
 
 Historical exact acceptance has its own contract; runtime agreement does not

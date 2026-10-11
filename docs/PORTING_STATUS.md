@@ -10,6 +10,39 @@ Updated 2026-10-12. The full native goal remains active on `port/modern-64`, in
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
 
+## Joined native palette waits and text writers (v1412)
+
+The native merge retains both parents: ordinary WORD/Shift-JIS and Gaiji text
+producer `328585f`, and palette wait producer `f2a51e2`. Cold producer
+528/768091dc builds all 79 programs and passes all 77 CTests under both GNU
+Release and optimized UBSan/bounds. The earlier selected UBSan subset is
+historical evidence; this producer checks the complete graph.
+
+Both compilers pass 32 original OP 0000:2648 wait controls at loads 1000/3333,
+432 raster/cadence vectors (1,296 waits), 2,656 MAIN/MAINE Gaiji comparisons,
+all 65,536 WORD characters and 65,536 two-byte inputs, and 1,680 complete
+ordinary-text memory controls. Original Gaiji entries are MAIN 0000:1B0C/1B50
+and MAINE 0000:0FC4/1008; ordinary entries are MAIN 0000:229E/22F6.
+Retained original transcripts keep their target/helper pins and are read in
+full; their receipts are not reassigned to the new native source.
+
+Actual old `328585f` startup source fails the Count1-clear check (expected
+exit 1). Eight muted SDL dummy routes (GNU/UBSan × none/pmd/pmdb2/pmd86)
+complete startup, four demos and fresh OP. Each retains all 129 prior output
+hashes and passes 15,988 original selected-state boundaries. GNU/UBSan output
+sets agree. This remains scoped runtime agreement, with no exact, complete
+picture, physical CPU/IRQ timing or Windows acceptance claim.
+
+Private replay: `.analysis/reconstruction/probes/native-wait-text-v1412/`;
+producer: `.analysis/worktrees/native-wait-text-v1412/.analysis/port64/native-wait-text-v1412/`.
+`focused.json` records commands. `verify_retention.py --restore --prefix`
+restores owned archived paths; retirement reclaims 508.31 MiB net.
+Source, selected programs, full comparison streams, receipts and the real
+predecessor remain. Continue bounded native scene wait/hardware recovery;
+broader Boss/death/process routes, complete pictures and Windows remain open.
+
+Published native head: `9a7f380a2ef7d947dec2207f0552effcf01d032b`.
+
 ## Combined DOS text and VSync recovery (v1411)
 
 Current MAIN/OP/MAINE include both mutable `TextVramSeg` reads and the
