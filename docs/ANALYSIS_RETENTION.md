@@ -1,11 +1,29 @@
 # Private build and analysis retention
 
-The latest remote port/modern-64 is ce48946 and separately adds GRCG circle /
-stage-line recovery. Its renderer changes are not part of this514-file verified
-snapshot. This snapshot is published on review/startup-motion-join-v1403;
-merge it only after selecting one writable source session and attesting the
-combined producer. Both incoming histories are preserved. The older v1401
-startup implementation itself already reached port/modern-64 through fffcc83.
+## Integrated v1404 producer retirement
+
+Owned `native-integrated-v1404` preserves520/774cc800 source, selected GNU/UBSan
+programs, complete original motion/GRCG/font streams, failed predecessor and
+all receipts. 3179 paths/1489 blobs retire after a full persisted
+path/hash/size/mode/nsmtime journal, gzip CRC/EOF, all blob hashes and every
+temporary metadata restore pass. Archive 16.99MiB; net 469.12MiB before
+post-CI caches. The old v1403 seal673 files and archive are independently intact;
+its source/program receipt is not reused as current acceptance.
+
+Run from DOS root:
+`python3 -B .analysis/reconstruction/probes/native-integrated-v1404/verify_retention.py`
+or restore narrowly with `--restore --prefix .analysis/worktrees/native-integrated-v1404/.analysis/port64/native-integrated-v1404/build-gnu`.
+`check_parent.py` checks frozen old evidence without changing its reader.
+Do not remove another session's working files, source, target images or inputs.
+
+Final isolated-checkout CI passes451 root and345 native tests, tracking and
+working/indexed diff checks. Borrowed pinned targets and private corpus mutation
+Oracles pass; private Ghidra projects/JDK checks skip absent private projects.
+No current shared-root Gaiji source or database proof is claimed. Post-CI owned
+source-backed caches reclaim 16.31MiB;
+this batch total net retirement/caches is 485.43MiB. Earlier1318.54MiB is
+separately accounted, not added to this batch. Root/native review checkouts and
+all source/proof archives are scoped independently. Goal remains active.
 
 ## v1403 combined native producer
 

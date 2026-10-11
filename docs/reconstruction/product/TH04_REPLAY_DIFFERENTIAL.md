@@ -3515,3 +3515,9 @@ snapshot. This snapshot is published on review/startup-motion-join-v1403;
 merge it only after selecting one writable source session and attesting the
 combined producer. Both incoming histories are preserved. The older v1401
 startup implementation itself already reached port/modern-64 through fffcc83.
+
+## Integrated v1404 default consumer proof
+
+The fixed520/774cc800 producer combines review521fdf0 with incoming08b29e7. Cold73GNU/nine optimized UBSan contracts pass. Fresh original motion/GRCG/font instruction corpora and a real predecessor rejection pass; eight actual muted startup/fourDemo/freshOP routes each retain all129 v1403 outputs and match original15988 selected-state boundaries. Full pictures, physical timing, other incoming source and broader routes stay open.
+
+Replay index: `.analysis/reconstruction/probes/native-integrated-v1404/`; frozen source and receipts: `.analysis/worktrees/native-integrated-v1404/.analysis/port64/native-integrated-v1404/`. Prior proofs remain separately pinned.

@@ -5,61 +5,53 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-The latest remote port/modern-64 is ce48946 and separately adds GRCG circle /
-stage-line recovery. Its renderer changes are not part of this514-file verified
-snapshot. This snapshot is published on review/startup-motion-join-v1403;
-merge it only after selecting one writable source session and attesting the
-combined producer. Both incoming histories are preserved. The older v1401
-startup implementation itself already reached port/modern-64 through fffcc83.
-
-v1403 integrates remote motion recovery a0b6149 with the independently
-validated startup waits. Verified integration producer514/c2f8d689 is frozen;
-CMake's new motion contract and its verifier are now both included in the
-complete source manifest. Fresh GNU builds73 programs/71CTests; optimized
-UBSan builds10 programs/7 contracts. Unchanged original MAIN0000:1DA8..1E13
-and table2134:021E execute at load1000:184908 vectors per compiler agree,
-including514 original DIV faults. Complete expanded comparison transcripts
-match between GNU/UBSan. The compiled old blanket -32768 rejection fails.
-This accepts the bounded corpus and explicit native fault surface; it is not
-an exhaustive four-coordinate Cartesian product or historical byte exactness.
-
-Eight fresh current startup/fourDemo/freshOP profiles each match original
-selected state at15988 boundaries and every129 frozen v1401 output hashes.
-Startup/IRQ code itself is unchanged. Physical timing, default resource/CPU
-costs, full pictures and broader Boss/death/process remain open. Continue
-bounded source recovery before long game campaigns. Windows GUI/focus/host
-keys/audio opens remain excluded while the host is in use.
-
-The original native push encountered a concurrent non-fast-forward remote
-motion commit. Both histories were merged without force pushing. v1401 proofs
-remain frozen at512/60cf4491, including its132 frontend fixture cases and
-70GNU/6UBSan checks; their strict live-source reader correctly rejects current
-source. A new reader verifies its archive/1150-file closure independently.
-No old receipt was edited to claim the new producer. Root DOS source stays
-unchanged at a34c1357; historical exact counts/canonicality are unchanged.
-
-Current replay index: .analysis/reconstruction/probes/native-startup-motion-join-v1403/
-(DOS root); native .analysis/port64/native-startup-motion-join-v1403/.
-Use build.py, validate.py and verify_retention.py in a fresh namespace;
-check_frozen_parent.py reads old proofs and the expected strict-reader rejection.
-All current source/program/vector/capture inputs are pinned. The read-only
-original MZ target, complete1136 relocation topology and two separate compiler
-outputs remain distinct evidence. Runs are CPU1/nice19, serial and muted.
-
-Additional owned cleanup 468.70MiB after 16.93MiB archive. Full current
-path/hash/size/mode/nsmtime journal is persisted before any archive/deletion.
-CRC/EOF, all blobs, every temporary metadata restore and protected proofs pass.
-No prior producer is retired. The v1401 initial auxiliary-metadata caveat remains
-explicit in retention notes; current v1403 paths have full recovery metadata.
-
-Final current-tree CI passes root451/native345, tracking and diff checks.
-Root's actual private target/database/Oracle mutations pass; native private DB
-checks skip absent projects. Additional post-CI source-backed caches reclaim
-16.52MiB. v1403 total net cleanup is
-485.22MiB; disjoint v1401+v1403 retirement/caches total 1318.54MiB
-(1.29GiB), excluding temporary review-worktree removal.
-
 Updated 2026-10-12. Reconstruction and native development remain active.
+The fixed integrated review branch `review/native-integrated-v1404` preserves
+both histories. DOS status/CI is isolated on review/integration-control-v1404,
+so shared-root Gaiji edits are preserved. Parents: startup/motion review521fdf0 and incoming
+08b29e7 (GRCG circle/line plus font recovery). The product source equals08b29e7,
+producer520/774cc800; this batch newly attests its complete product graph and
+actual default consumers, rather than inheriting component acceptance. Incoming
+uncommitted/newer source is excluded. Do not force-push another source session.
+
+Cold GNU builds75 programs/73CTests; optimized UBSan builds12 programs/nine
+selected contracts. Fresh original MAIN0000:1DA8/table2134:021E agrees with
+184908 vectors/514DIV faults per compiler. MAIN0000:114C,14DC,1700 agrees with
+35 complete circle request streams,605 line masks and20 disc masks per compiler.
+MAINE0CC7:058C at load2000 agrees with1037 complete seeded font pages; UBSan
+reads the freshly generated original pages and reproduces every page. Synthetic
+font-ROM/seeded-page inputs and stage clip are explicit; this is visible-write
+and control-flow evidence, not physical GRCG/font-device timing. The genuinely
+compiled predecessor font consumer fails the new right-edge contract.
+
+Eight actual muted SDLdummy startup/fourDemo/freshOP routes (two compilers,
+none/pmd/pmdb2/pmd86) each match original selected state at15988 boundaries
+and all129 immutable v1403 output hashes. Full original picture/physical scanout,
+default CPU/graphics/loading costs, broader Boss/death/process, second emulator
+and Windows remain open. Pinned DOS source revision5e04432 has fingerprinta34c1357; shared-root new Gaiji source is outside this proof. Historical exact ledgers and
+candidate-local-attested provenance are unchanged. Continue bounded source work.
+
+Replay: .analysis/reconstruction/probes/native-integrated-v1404/
+and .analysis/worktrees/native-integrated-v1404/.analysis/port64/native-integrated-v1404/.
+build.py/validate.py freeze520 sources and commands; check_parent.py verifies
+the old673-file seal and archive independently; verify_retention.py restores
+narrow prefixes. Runs remain CPU1/nice19, serial and muted. Full current
+path/hash/size/mode/nsmtime journal precedes archive/deletion; 3179
+paths/1489 blobs retire for 469.12MiB net after 16.99MiB archive.
+CRC/all hashes/temporary metadata readbacks and protected proofs pass. All prior
+producers, original streams, source, selected programs and failures remain.
+The older v1401 auxiliary metadata limitation stays explicit in retention notes.
+
+Final isolated-checkout CI passes451 root and345 native tests, tracking and
+working/indexed diff checks. Borrowed pinned targets and private corpus mutation
+Oracles pass; private Ghidra projects/JDK checks skip absent private projects.
+No current shared-root Gaiji source or database proof is claimed. Post-CI owned
+source-backed caches reclaim 16.31MiB;
+this batch total net retirement/caches is 485.43MiB. Earlier1318.54MiB is
+separately accounted, not added to this batch. Root/native review checkouts and
+all source/proof archives are scoped independently. Goal remains active.
+
+Frozen v1401 startup acceptance (producer512/60cf4491):
 v1401 connects OP startup in the native FrontEnd to the independent unsigned
 IRQ counter/raster clock. Ordinary frame waits clear Count1 before waiting;
 Logo inherits Count1 and clears it after passing. Inactive BGM executes the
