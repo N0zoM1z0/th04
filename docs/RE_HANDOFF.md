@@ -1,5 +1,45 @@
 # TH04 native branch handoff
 
+## Native IRQ counter and frame_delay primitive (v1417)
+
+Producer 534/8a83575e adds live `vsync::Delay`: construction clears only
+Count1 and truncates the argument to WORD; readiness polls the current
+unsigned word. A different consumer can reset Count1 and extend the wait.
+Positive delays remain pending without an IRQ owner, with no GDC fallback;
+zero clears Count1 and returns immediately even when uninstalled.
+
+Counter bulk advancement preserves the original carry-skip recurrence and
+both wrapped words with full-width UINT64 arithmetic. It returns the full counted-IRQ
+total without intermediate multiplication overflow. RasterClock's path with
+no observers uses this recurrence and integer edge search; the callback
+overload still emits every IRQ. Actual startup uses the path with no observer.
+This enables large WORD delays/cadence inputs without billions of host loops.
+Elapsed MAINE/registration Scene integration and physical CPU/IRQ latency
+remain open; a new primitive is not full-scene acceptance.
+
+Both cold GNU and optimized UBSan/bounds build all 82 programs and pass all
+80 CTests. Complete original frame_delay bodies MAIN 130E:00D7,
+OP 0DA1:002B and MAINE 0CC7:0033 (21 bytes each) pass 144 consumer controls
+at loads 1000/3333. Separate 36 actual original ISR/IRET injections gate the
+counter recurrence. Consumer word changes are explicit stimuli. Independent
+Python big integers check 280 bulk and 1,728 delay/raster vectors, including
+UINT64_MAX and the 4,294,901,760-IRQ wait boundary. No physical timing claim.
+
+Three compiled mutations reject 25 overflow, 1,428 Count2-reset and 576
+signed-threshold cases. Existing wait consumers retain 32 original controls,
+432 native vectors and 1,296 waits per compiler. Eight muted actual
+startup/four-Demo/fresh-OP routes retain all 129 prior hashes per profile and
+15,988 original selected-state boundaries each; GNU/UBSan outputs agree.
+
+Replay: `.analysis/reconstruction/probes/native-counter-delay-v1417/`;
+producer: `.analysis/worktrees/native-counter-delay-v1417/.analysis/port64/native-counter-delay-v1417/`.
+`focused.json`, build receipts and `verify_counter_delay.py` record the gates.
+`verify_retention.py --restore --prefix` restores owned archived paths.
+Verified retirement reclaims 506.12 MiB net. Source freeze, full original/
+integer projections, selected programs and compiled mutations remain.
+Historical exact remains 661/663; actual elapsed consumers, complete pictures,
+broader Boss/death/process, native LCD mapping and Windows remain open.
+
 ## Joined native MAINE wait consumers (v1416)
 
 Joined native producer 532/037b0f2e restores shared Animation's logical

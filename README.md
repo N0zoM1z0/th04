@@ -21,16 +21,15 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. The current producer also restores MAINE's
-zero and signed WORD delay/fade boundaries. Both complete cold GNU and
-optimized UBSan/bounds graphs pass 79 CTests. Original complete-function
-controls, Congratulations/verdict consumer checks and eight muted default
-startup/four-Demo/fresh-OP routes pass. See the
-[current handoff](docs/RE_HANDOFF.md) for producers, scope and recovery.
+Native development is active. The current producer adds a live WORD delay
+consumer and overflow-safe integer bulk IRQ/raster progression. Both complete cold
+GNU and optimized UBSan/bounds graphs pass 80 CTests. Original consumer/ISR
+controls, independent large-integer vectors and eight muted default routes
+pass. See the [current handoff](docs/RE_HANDOFF.md) for scope and recovery.
 
-Actual elapsed scene waits, physical CPU/loading/ISR costs, complete pictures,
-broader Boss/death/process routes and Windows input/audio remain open.
-Historical exact acceptance stays separate from these runtime results.
+Actual elapsed MAINE/registration waits, physical CPU/ISR costs, complete
+pictures, broader routes, native LCD mapping and Windows acceptance stay open.
+Historical exact acceptance remains separate from these runtime results.
 
 ## Build and run
 

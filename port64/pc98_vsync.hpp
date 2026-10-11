@@ -22,6 +22,18 @@ public:
         if(sum>=65536)return false;
         one_=std::uint16_t(one_+1u);two_=std::uint16_t(two_+1u);return true;
     }
+    // The same recurrence without per-IRQ observers. Split the product so
+    // UINT64_MAX physical inputs cannot overflow an intermediate accumulator.
+    std::uint64_t interrupts(std::uint64_t pulses) {
+        if(!active_)return 0;
+        const auto tail=std::uint64_t(accumulator_)+(pulses%65536)*increment_;
+        const auto carries=(pulses/65536)*increment_+tail/65536;
+        const auto counted=pulses-carries;
+        accumulator_=std::uint16_t(tail);
+        one_=std::uint16_t(one_+std::uint16_t(counted));
+        two_=std::uint16_t(two_+std::uint16_t(counted));
+        return counted;
+    }
     std::uint16_t one() const {return one_;}
     std::uint16_t two() const {return two_;}
     std::uint16_t accumulator() const {return accumulator_;}
@@ -113,7 +125,25 @@ public:
         }
         now_=finish;
     }
-    void advance(std::uint64_t ns) {advance(ns,[](std::uint64_t,bool){});}
+    void advance(std::uint64_t ns) {
+        const auto finish=add(now_,ns);
+        const auto after=[this,finish](std::uint64_t frame) {
+            try {return edge(frame)>finish;}
+            catch(const std::overflow_error&) {return true;}
+        };
+        auto low=frame_,high=frame_;std::uint64_t step=1;
+        const auto maximum=std::numeric_limits<std::uint64_t>::max();
+        while(!after(high)) {
+            if(high==maximum)throw std::overflow_error("VSYNC frame overflow");
+            high=step>maximum-high ? maximum : high+step;
+            step=step>maximum/2 ? maximum : step*2;
+        }
+        while(low<high) {
+            const auto middle=low+(high-low)/2;
+            if(after(middle))high=middle;else low=middle+1;
+        }
+        counter_.interrupts(low-frame_);frame_=low;now_=finish;
+    }
 private:
     Raster raster_;std::uint64_t epoch_,now_,frame_=0;Counter counter_;
     static std::uint64_t add(std::uint64_t a,std::uint64_t b) {
@@ -156,5 +186,18 @@ public:
     bool interrupt_owned() const {return owned_;}
 private:
     RasterClock* clock_;bool owned_;std::uint16_t initial_;std::uint64_t deadline_;
+};
+// frame_delay clears only Count1, then polls an unsigned WORD threshold.
+// It has no GDC fallback when the IRQ owner is absent. Other consumers can
+// reset Count1 during the wait, so readiness is a live word comparison.
+class Delay {
+public:
+    explicit Delay(RasterClock& clock,int minimum):clock_(&clock),
+        minimum_(static_cast<std::uint16_t>(minimum)) {clock_->counter().clear_wait();}
+    bool ready() const {return clock_->counter().one()>=minimum_;}
+    std::uint64_t until_ready() const {return clock_->until_count(minimum_);}
+    std::uint16_t minimum() const {return minimum_;}
+private:
+    RasterClock* clock_;std::uint16_t minimum_;
 };
 }

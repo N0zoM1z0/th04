@@ -243,3 +243,6 @@ complete original controls, current consumers and recovery.
 
 The VSync note includes MAINE logical WORD delay/black-fade boundaries (v1416),
 complete original controls, current consumers and recovery.
+
+The VSync note includes the v1417 live WORD delay and bulk IRQ/raster owner,
+original controls, full compiler graphs and recovery.
