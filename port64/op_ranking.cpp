@@ -148,10 +148,10 @@ void Renderer::apply(const Event& e) {
     }
 }
 sf::Bytes Renderer::rgb(unsigned page,int tone) const {
-    if(tone<0 || tone>100)throw std::out_of_range("OP palette tone");
+    const auto dac=pc98_palette::show(canvas_.palette(),tone);
     sf::Bytes result;result.reserve(640*400*3);
     for(auto pixel:canvas_.page(page))for(unsigned channel=0;channel<3;++channel)
-        result.push_back(pc98_palette::analog_rgb8((unsigned(canvas_.palette()[unsigned(pixel)*3+channel])>>4)*unsigned(tone)/100u));
+        result.push_back(pc98_palette::analog_rgb8(dac[unsigned(pixel)*3+channel]));
     return result;
 }
 } // namespace th04::portable::op_ranking

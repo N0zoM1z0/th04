@@ -1,5 +1,73 @@
 # OP startup state and frontend ownership
 
+## Joined palette and live counter owners (v1419)
+
+Fresh producer 536/3ba0ba42 combines published counter-delay source dcbe8f7
+with shared palette source 3add0fd. GNU Release and optimized UBSan/bounds
+each cold-build the complete core/frontend and nine selected component
+programs, and pass all nine related CTests. Each also passes 20,832 complete
+original palette comparisons and the actual startup DAC/query checks.
+
+The unchanged v1417 counter owner passes its 144 original WORD consumers,
+36 real ISR controls and 2,008 independent integer/raster vectors on both
+fresh compilers. Its retained originals keep their capture identity. The
+v1418 palette predecessor and each parent's source/whole-graph proofs remain
+separate. This integration runs component checks rather than game campaigns.
+
+Replay: `.analysis/port64/native-palette-show-join-v1419/`.
+`source-profile.json`, `focused.json` and `verify_closure.py` bind the fresh
+source, selected programs and full original comparison streams.
+Native CI passes 345 tests. Verified compiler retirement and source-backed
+cache cleanup release 46.22 MiB net. All twenty selected programs and
+5,945 frozen parent pins remain live. `verify_retention.py --restore --prefix
+.analysis/port64/native-palette-show-join-v1419/build-gnu/` restores one
+compiler cache.
+
+
+## Shared analog and LCD palette output (v1418)
+
+`pc98_palette::show()` now owns the complete original palette output used by
+MAIN 0000:1F04, OP 0000:1DE0 and MAINE 0000:19EC. Tone is truncated to a
+WORD, interpreted as signed, then locally clamped to 0..200. The function
+returns the DAC register image and preserves the ordered writes. A nonzero
+`PaletteNote` selects the original notebook query and eight-shade conversion,
+including the red high-nibble mask, blue low-nibble mask and polarity.
+
+Startup's actual `Renderer::apply(palette_show)` consumes this owner. Its
+optional notebook flag and query callback supply the same explicit inputs as
+the original function; normal game calls keep the default zero flag. Setup,
+ranking, Music Room, registration, Game Over and the frontend also use the
+shared owner. Each palette is converted once for its sixteen colors before
+indexed pixels are expanded to RGB8. The recorded analog DAC4→6→8 expansion
+and the separate text overlay remain in their existing consumers.
+
+Producer 534/c61549d2 cold-builds the complete core/frontend and seven
+related component programs under GNU Release and optimized UBSan/bounds.
+All seven selected CTests pass per compiler. Each compiler agrees with all
+20,832 retained original instruction transcripts, checking every port, final
+DAC byte and actual startup query/DAC dispatch. The three originals retain
+their v1415 source and capture identities. Their complete 266-byte bodies,
+packed-target hashes and full transcripts are checked before reuse.
+
+The compiled actual c2d8363 startup predecessor fails 288 of 1,368 analog
+controls; the difference is signed WORD truncation before clamping. Its API
+has no notebook selection, so the negative comparison uses analog controls.
+This establishes palette register/I/O behavior, with physical LCD scanout
+still separate.
+
+Replay and source archive:
+`.analysis/port64/native-palette-show-v1418/` in the owned native worktree.
+`focused.json` retains commands and `verify_closure.py` reads the complete
+native/original comparison streams. The first namespace/recipe failure keeps
+its separate 534/0ffe00b6 source freeze and logs under the sibling `-first`
+directory. The parent 532-file full graph keeps its own v1416 receipts.
+Native CI passes 345 tests. Lossless retirement and source-backed cache cleanup
+release 54.80 MiB net. Sixteen selected programs, the actual predecessor,
+source freezes and 4,456 parent proof files remain. `verify_retention.py
+--restore --prefix .analysis/port64/native-palette-show-v1418/build-gnu/`
+restores one archived compiler cache.
+
+
 ## PMD service and counted startup waits (v1401)
 
 The native startup now services PMD at its next live timer deadline while

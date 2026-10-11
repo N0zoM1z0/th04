@@ -77,7 +77,8 @@ private:
 // free. DAC writes publish palette changes; loading BFNT only changes raw RGB.
 class Renderer {
 public:
-    explicit Renderer(const Assets&);
+    explicit Renderer(const Assets&,std::uint16_t palette_note=0,
+                      std::function<std::uint8_t(unsigned)> notebook_query={});
     void apply(const Event&);
     const Bytes& page(unsigned p) const {return pages_.at(p);}
     const Palette& dac() const {return dac_;}
@@ -89,5 +90,7 @@ private:
     std::array<const PiImage*,6> loaded_{};
     std::vector<std::unique_ptr<sprite::Sheet>> sheets_;
     Palette dac_{};unsigned shown_=0,accessed_=0;
+    std::uint16_t palette_note_=0;
+    std::function<std::uint8_t(unsigned)> notebook_query_;
 };
 }

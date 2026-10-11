@@ -18,6 +18,8 @@ PORT_FILES = (
     "port64/verify_maine_elapsed.py",
     "port64/counter_delay_contracts.cpp",
     "port64/verify_counter_delay.py",
+    "port64/palette_show_contracts.cpp",
+    "port64/verify_palette_show.py",
     "port64/palette_animation_contracts.cpp",
     "port64/verify_palette_animation.py",
     "port64/maine_animation_contracts.cpp",
