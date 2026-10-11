@@ -1,5 +1,25 @@
 # Native private-state retention
 
+## v1404 graphics-font recovery
+
+The isolated `port-motion-v1402` worktree retains its font recovery under
+`.analysis/port64/native-font-address-v1404/`. The 520-file source snapshot,
+cold core archives, three contract programs, sanitizer and predecessor
+programs, complete compressed original pages, compiler metadata and logs
+remain available. `verify_closure.py` checks the current producer manifest,
+every archived source, seven program/library identities, original dependencies
+and all 1,037 decompressed page hashes. Both original and sanitizer receipts
+are checked against that same source.
+
+After the three component contracts and 345 CI tests passed, 236 completed
+object/dependency files were archived and individually verified before
+removal. Another 516 Python caches had their generating source checked before
+removal. Cleanup releases **11.6 MiB net** after the archive and journal.
+`cleanup.json` records sizes, hashes and 744 protected files. Restore compiler
+caches by extracting `compiled-cache.tar.gz` into that phase directory;
+source-backed Python caches regenerate normally. The post-cleanup closure
+check passes.
+
 ## v1393 original OP loading work
 
 The original 24,000/36,000 CPU pair, complete strict readers, guest DOS return

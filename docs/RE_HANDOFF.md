@@ -1,5 +1,20 @@
 # TH04 native branch handoff
 
+v1404 restores `GRAPH_PUTSA_FX` WORD addresses in native `Canvas`: truncated
+Y shift, unsigned X/8, continuous string DI, and WORD/spill write order.
+Original MAINE 0CC7:058C at load 2000 agrees with all 1,037 complete seeded pages;
+focused UBSan/bounds reproduces them. Cold core/three selected programs and
+three component contracts pass. The compiled predecessor differs in 119 pixels
+at X640/Y0. Producer 520/774cc800 and receipts are under
+`.analysis/port64/native-font-address-v1404/` in the isolated
+`port-motion-v1402` worktree. See [font recovery](port64/evidence/ending.md).
+CI passes 345 tests. Completed compiler caches are verified in an archive
+before removal; source-backed Python caches are removed, reclaiming 11.6 MiB
+net. Programs, source and complete original pages remain; the private
+`verify_closure.py` checks the current source and retained proof carriers.
+DOS historical exact counts remain 661/663. Continue source migration before
+long game campaigns; graphics/resource elapsed-work owners remain open.
+
 v1403 recovers the full unsigned-WORD filled-circle loop and stage horizontal
 clipping in `grcg_raster.cpp`. The shared native disc consumer now accepts
 radii above512, including wrapped/negative-WORD requests. Fresh original

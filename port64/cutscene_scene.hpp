@@ -35,6 +35,7 @@ private:
     void rect_copy(unsigned source,unsigned dest,int x,int y,unsigned w,unsigned h,unsigned mask);
     void draw_picture(int x,int y,int quarter,unsigned mask,bool full=false);
     void glyph(const Event& event,bool gaiji);
+    void draw_text(int left,int top,const std::string&,unsigned color,unsigned weight);
     const Assets* assets_;
     dialog::Font font_;
     std::array<Bytes,2> pages_;

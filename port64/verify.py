@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/font_address_contracts.cpp",
+    "port64/verify_font_address.py",
     "port64/grcg_raster.hpp",
     "port64/grcg_raster.cpp",
     "port64/grcg_raster_contracts.cpp",
