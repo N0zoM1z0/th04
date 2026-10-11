@@ -391,3 +391,96 @@ restart solely because a live observation is slow. Next isolate gaiji waits and
 establish an explicit elapsed-work handoff through startup resource/draw/process
 owners. Default native clocks, full pictures, broader paired combat/process
 routes, physical/cross-emulator scanout and Windows input/audio remain open.
+
+
+## Original Gaiji I/O elapsed work (v1394)
+
+Four fresh read-only original GAME.BAT/PMD86 captures cross fixed CPU budgets
+24,000 / 36,000 with default / zero **8-bit** I/O delay. Other configuration
+bytes, original HDI/reset/assets/font, packed OP and emulator are identical.
+Sixteen- and 32-bit delay settings remain unchanged. Each run stops before
+executing OP 0A74:0C79, immediately after successful Gaiji initialization.
+This is a bounded host stop, not process completion or physical bus timing.
+
+Each entire 69,028-byte runtime OP load and its 804 ordered relocations agree
+with the pinned decoded target. Load 10FC, DGROUP 2030; nine target points yield
+264 scalar rows including all 256 read-glyph entries. Complete gzip CRC/EOF,
+GDC model replay, scalar contexts and fractional PIC arithmetic pass. Loaded
+byte, port count, fractional time and GDC counter mutations reject. The current
+public reader also projects the complete observed I/O table by guest CS/port.
+Three actual incomplete observer attempts are rejected; earlier receipts and
+producer versions are preserved, rather than recertified by the newer reader.
+
+Original target read-all 0:1450→1471 and write-all 0:14BE→14E1 execute 256
+16-row glyph transfers. Host IO_ReadB/IO_WriteB breakpoints run only inside these
+two windows and have full pinned ELF/runtime memory witnesses. Actual Gaiji
+counts match the target loops: read-all reads A9 8,192 times and writes 68 twice,
+A1/A3 256 times each, A5 8,192 times; write-all has the same selector writes plus
+8,192 writes to A9. Other guest/PMD/BIOS port calls remain in a separate table.
+
+| Original Gaiji interval | 24,000 default | 36,000 default | 24,000 delay 0 | 36,000 delay 0 |
+| --- | --- | --- | --- | --- |
+| initialization 0A74:0C6B→0C79 | 40.235458 ms | 34.996667 ms | 17.134000 ms | 11.404611 ms |
+| read-all 0:1450→1471 | 14.559458 ms | 14.160278 ms | 2.194042 ms | 1.454056 ms |
+| write-all 0:14BE→14E1 | 12.851417 ms | 12.331944 ms | 2.193083 ms | 1.457972 ms |
+
+The unchanged pinned DOSBox-X `iohandler.cpp` is source evidence: at
+`last_callback == 0`, read debit is floor(CPU_CycleMax × ns / 1,000,000), write
+debit is floor(CPU_CycleMax × ns × 3 / 4,000,000). Actual default ns values are
+864 / 559 / 1118; only the first changes to zero. CPU auto-adjust is disabled.
+The cumulative removed-cycle counter resets in auto-adjust code, so it is
+usable across these fixed-budget windows; it also includes non-Gaiji owners.
+
+Observed counts account for 294,430 / 454,190 read-all debit cycles and
+253,470 / 388,654 write-all cycles at the two budgets: 22.829167 / 23.412333 ms
+total. Aggregate removed counters exceed these Gaiji-only debits by 1,035 /
+1,591 and 1,020 / 1,453 cycles respectively; preserve that remainder, rather
+than label it all as Gaiji or physical hardware waiting. With delay zero both
+aggregate window debits are zero. Whole Gaiji zero-delay CPU-normalized elapsed
+ratio is 1.001591. The nonuniform default phase is principally emulator I/O
+work; no universal CPU factor or physical CGROM delay follows. Times belong to
+these fresh captures and do not overwrite the v1393 loading epochs.
+
+The first observer failed GDB Python indentation before guest execution. The
+next reached the backup return but rejected an 8-byte hook window ending in one
+byte of a relocation at 0A74:0C70; the complete load was correct. Expand that
+window to nine bytes. A third attempt tried a normal-core glyph-write hook at
+0:1474 while write-all had borrowed DS; the pinned observer's DGROUP guard
+correctly terminated it. The accepted observer uses bounded host I/O counters
+instead, keeping the original emulator and guard unchanged. Failure logs and
+partial inner streams retain their failed status.
+
+Native product source remains the same 510-file `9cfe100a` producer and DOS
+fingerprint `6f5898dd`. No new build, native full startup, Demo or window proof
+is claimed. Static maintained-source review finds native assets loaded in
+`port64/main.cpp` before application resident PMD construction, whereas DOS
+installation precedes OP loading. The next ownership task is an explicit
+elapsed-work handoff through assets, drawing and process entry. This evidence
+does not justify fitting the emulator's 864 ns delay or a constant age into
+native product behavior. Physical/cross-emulator, full default pictures,
+broader combat/process routes and Windows input/audio remain open.
+
+Replay from the DOS root, restoring retired inputs first:
+
+```sh
+python3 .analysis/reconstruction/probes/native-gaiji-clock-v1394/verify_retention.py --restore
+python3 scripts/runtime/verify_gaiji_io_clock.py \
+  --capture .analysis/runtime/candidates/dos-op-v1394-gaiji-base-v4 \
+  --capture .analysis/runtime/candidates/dos-op-v1394-gaiji-cpu36000-v4 \
+  --capture .analysis/runtime/candidates/dos-op-v1394-gaiji-delay0-v4 \
+  --capture .analysis/runtime/candidates/dos-op-v1394-gaiji-cpu36000-delay0-v4 \
+  --model-dir .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-model-v3 \
+  --model-receipt .analysis/worktrees/port-modern-64/.analysis/port64/native-startup-clock-v1391/original-zero-repeat/boot-observation-v3.json \
+  --output-dir .analysis/NEW-gaiji-verifier
+```
+
+Private producers/receipts are under
+`.analysis/reconstruction/probes/native-gaiji-clock-v1394/`; native copies under
+`.analysis/port64/native-gaiji-clock-v1394/` bind the original ROOT receipt bytes.
+Use fresh capture/output namespaces for another producer execution; restoring
+proof inputs does not reset execution images for rerunning the old wrapper.
+
+Lossless retirement reclaims 604.43 MiB, retaining 49 logical members in 15
+unique blobs with full CRC/EOF/SHA/mode/nsmtime and protected proof checks.
+Both CI gates pass (root 441 / native 345), ledger/diff checks pass and another
+16.69 MiB of source-backed caches is removed after CI.
