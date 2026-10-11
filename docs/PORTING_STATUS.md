@@ -210,3 +210,9 @@ Demo1 frame3379 diagnostic game-area differences drop55357→430, confined to
 top rows16/17; full graphics/RGB and physical scanout remain unaccepted.
 Final immutable509-input producer9346e951… is cold-built on GNU; details and
 replay are in the differential note and native docs/port64/evidence/demo.md.
+
+v1379 paints the full ordinary400-row background ring before motion, removing
+Demo1frame3379 remaining430 game-area differences on GNU/optimized UBSan.
+Allselected scalar/shake/text checks remain equal; nine other nonzero samples
+are unchanged. Onlyview.cpp is cold-built/relinked against attested unchanged
+v1378 dependencies; no new whole-current cold/CTest or fullpicture claim.

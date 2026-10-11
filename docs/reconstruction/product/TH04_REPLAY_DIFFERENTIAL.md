@@ -1582,3 +1582,60 @@ complete frozen sources, original references and failure receipts stay live.
 Recovery from DOS root: python3 .analysis/reconstruction/probes/native-pages-v1378/verify_retention.py --restore before old raw-capture/graphics/frozen-reader paths.
 Use no options for full temporary readback. v1377 restore proof retained its
 then-current505 scope; its live-source check must not be restamped to509.
+
+## Complete ordinary background ring before shake (v1379)
+
+Target MAIN_01_TEXT0AAF:20C8..2109 (fileE3B8..E3F9,66B) starts destination
+WORD7804 (physicalrow384/x32), ringWORD5340 (4D40+24*64), and iterates24 tiles
+of16 rows before walking backward through25 ring rows. The unchanged explicit
+EGC setup/off leaves are hardware adapters. Actual original instruction
+execution produces9600 distinct WORD copy requests covering x32..415 and
+all400 physical rows. A four-plane latch shadow uses each target-selected
+source/destination, rather than substituting a native coordinate formula.
+
+The original Demo1frame3379 DGROUP stream supplies the full25x32 tile ring;
+ST03.MPN supplies all128bytes/image. Recorded movement(-2,+2) and displayline34
+are preserved. The independently replayed fulltile page agrees on all768
+pixels of y16/17; the retained oldnative page differs at430 of those pixels.
+This is an adapted EGC component and actual-state edge observation, not
+physical hardware, whole scene, RGB or scanout acceptance. Fresh preflight and
+live MAIN database attestation pass; provenance stays candidate-local-attested.
+
+Native view previously painted stage tiles only at y16..383. Ordinary tiles
+now paint the full400-row ring before movement. Boss backdrop transition masks
+retain their23-visible-row bounds, avoiding unsigned mask-row underflow. Only
+view.cpp changes among509 producer inputs. GNU and optimized UBSan cold-compile
+that translation unit and relink with SHA-attested unchanged v1378 main/audio/
+core/ymfm inputs. This is a bounded cold frontend build, not a new whole-current
+cold build or69-CTest claim. Producer manifest:
+8e77830c1ca94c052e718b9f96d1ac1d6712af8abdbd6f3ced1c1167e1d21c09.
+
+Actual muted SDL-dummy idleOP→four demos→OP compares complete selected scalar/
+shake traces and all40 full canonical text planes. Full graphics/RGB samples
+remain retained diagnostically. Demo1frame3379's game-area differences now
+fall430→0. Nine other nonzero game-area samples are unchanged; no new game-area
+difference appears. Do not crop/mask this result into a whole-picture claim.
+Initialcarpet, Marisa laser and circle pixel differences, fullgraphics/RGB/
+font/blink/scanout, Boss offsets/Bomb interaction and broader paired routes
+remain open. Prior v1378 complete-pool and69CTest receipts retain their own
+unchanged core/program producers; they are not restamped with the new view hash.
+
+Recipes: root .analysis/reconstruction/probes/native-ring-v1379/
+prove_full_ring.py, build_frontends.py, run_validations.py; evidence native
+.analysis/port64/native-ring-v1379/. Each uses fresh outputs, CPU0/nice15;
+all launches stay muted/dummySDL. No original/DOS source or target bytes change.
+
+## v1379 terminal validation and recovery
+
+All v1379 jobs are terminal. Main441/live Ghidra and native345/target CI pass;
+private unavailable native gates skip. Frozen full-reader replay reproduces
+both complete shake receipts, apart from its separately pinned source hash.
+Lossless retirement reclaims153083904 allocated B (146.0MiB) before journalcost:
+342 complete sample/capture/build files and1044 source-backed caches. All16713
+protected hashes,509 source pins, full restoration/SHA/size/mode/nsmtime/gzip
+EOF and unchanged DOS fingerprint pass before and after deletion. The active
+cleanup producer log is explicitly excluded until terminal; old proofs remain
+immutable. Two new FrontEnd programs and all older programs/sources stay live.
+From DOS root, use python3 .analysis/reconstruction/probes/native-ring-v1379/verify_retention.py --restore before reading retired captures, fulltile pixels or relink objects;
+without --restore it performs temporary complete readback. Old v1378 proof
+retains its then-current509/9346e951 scope and cannot attest live8e77830c source.

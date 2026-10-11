@@ -5,7 +5,41 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1378 (native `617d65f`) restores MAIN's missing Midboss shake event consumer.
+v1379 (native `9f4be07`) restores the complete ordinary background ring before shake. Original
+MAIN_01_TEXT 0AAF:20C8..2109 issues 9,600 distinct WORD copies through all 400
+physical rows. Its actual Demo1 frame3379 ring/MPN/shifts explain all 430 old
+edge differences; painting those rows removes the differences at that sample
+on GNU and optimized UBSan. All 40 complete text planes, 15,988 selected
+scalar/count boundaries and 15,984 complete shake states/requests still pass.
+All 125 new capture files agree between variants, and every old scalar/shake
+trace byte remains identical. Nine other nonzero diagnostic game-area samples
+are unchanged. Full graphics/RGB/scanout and carpet/laser/circle effects stay open.
+
+Only view.cpp changes among 509 inputs (manifest8e77830c…). Cold view TUs relink
+against attested unchanged v1378 main/audio/core/ymfm; this is a bounded build,
+without a new whole-current cold/CTest claim. Prior pool/69CTest evidence keeps
+its own producer. Recipes: root .analysis/reconstruction/probes/native-ring-v1379/;
+receipts: native .analysis/port64/native-ring-v1379/. Next compare initial
+background, laser/circle pixels or independently sampled ordinary Boss shake.
+
+All jobs are terminal. Main441/live Ghidra and native345/target CI pass; absent
+private native gates skip. Frozen readers reproduce both complete shake
+receipts, apart from their separately pinned source hash. Lossless retirement
+reclaims 153,083,904 allocated bytes (146.0 MiB), before journal cost: 342 full
+sample/capture/build files and 1,044 source-backed caches. Complete temporary
+restore/SHA/size/mode/nsmtime/gzip EOF, 16,713 protected hashes, 509 source pins
+and unchanged DOS fingerprint pass before and after deletion. The cleanup log
+is excluded while its producer writes. New/old programs, sources and proofs stay
+retained. From DOS root, restore retired capture/CPU pixels/objects before replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-ring-v1379/verify_retention.py --restore
+```
+
+Without --restore it checks all recoveries temporarily. v1378 proof keeps its
+then-current509/9346e951 scope and cannot attest live8e77830c source.
+
+Retained v1378 (native `617d65f`) restores MAIN's missing Midboss shake event consumer.
 Target-observed MAIN_01_TEXT 0AAF:2246..2315 (file E536..E605, 208 bytes) and
 DGROUP 2134:427E/4280/4282/:185C identify x/y/timer/redraw and EGC requests.
 GNU and optimized UBSan pass 3,262 original CPU state/request cases and 36
