@@ -244,3 +244,15 @@ and optimizedUBSan3 core/game/trace/shake products pass all nine full pools,
 selected scalars,shake and complete text checks. Old products retain separate
 producer identities. Drawing-relative CPU geometry does not accept programmed
 GDC/physicalscanout; complete pictures/cache/margins/RGB/broader routes remain.
+
+v1383 preserves Stage4 background draw inputs before the carpet callback and
+applies the tail's current/previous row copies from the updated ring. Actual
+original CPU controls explain the first 124,439 game-area discrepancies;
+48 tail-copy controls cover tile and 400-row wrap. All 40 standard sampled
+game areas now agree on GNU/UBSan; all 133,251 first/second-picture changes
+equal original indices and 38 entire samples stay unchanged. Ten separate GNU
+lighting fields/full text samples agree, repairing 7,498 frame1666 pixels.
+Complete scalar/shake/splash/text traces remain unchanged. View-only cold builds
+retain separate v1382 whole-cold/69CTest/nine-pool producers. Snapshot-only
+edge failure stays unaccepted; full pictures/cache/margins/RGB/scanout/broader
+routes remain open.

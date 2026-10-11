@@ -1001,3 +1001,31 @@ replay with python3 .analysis/reconstruction/probes/native-white-v1382/verify_re
 Without --restore it performs temporary complete readback. Old v1381 proof
 retains its fb26d509 source scope and cannot attest current add39f3c inputs.
 Native full pool gzip archives are already complete and require no new capture.
+
+## v1383 terminal validation and recovery
+
+All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
+unavailable private native gates skip. Final ordinary GNU/optimized UBSan and
+separate extra GNU lighting controls, fixed-page full changed-pixel checks,
+48 actual tail-copy controls and frozen reader replay pass. Only view.cpp
+changes; v1382 whole-cold/69CTest/full-nine-pool producers stay separate.
+
+Lossless retirement reclaims 455,786,496 allocated
+bytes (434.7 MiB) before journal cost:
+1,073 complete sample/capture/build/restored-image files and
+1,044 source-backed caches. Full temporary restoration,
+SHA/size/mode/nsmtime/gzip EOF, 24,916 protected hashes,
+509 source pins and unchanged DOS fingerprint pass before and after deletion.
+All seven new ordinary/diagnostic programs, old programs, frozen sources,
+failures, complete original references and full pools remain retained. The
+snapshot-only intermediate and reader failures are not restamped or promoted.
+
+From DOS root, restore archived sample/build/image inputs before replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-initial-v1383-v2/verify_retention.py --restore
+```
+
+Without --restore it performs complete temporary readback. Old v1382 proof
+keeps its add39f3c source scope and cannot attest current 50ca49c6 inputs.
+Whole native pictures/cache/margins/RGB/scanout/broader gameplay remain open.

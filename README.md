@@ -47,10 +47,11 @@ and movement requests, and 40 complete canonical text-plane samples.
 
 Restoring Midboss shake, the full physical background ring, Marisa laser color
 timing, whole-pool pellet color passes and item-spawn white light dots removes
-the diagnosed late-frame pixel differences. GNU and optimized UBSan now agree
-with the original in 39 of 40 sampled game areas. Demo 1’s initial background
-still differs. These game-area diagnostics do not establish complete-picture
-acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
+the diagnosed late-frame pixel differences. Preserving Stage4 background draw
+order and tail copies also restores the initial background. GNU and optimized
+UBSan now agree with the original in all 40 sampled game areas; ten separate
+GNU lighting samples also agree. These game-area diagnostics do not establish
+complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
 Historical exact acceptance has its own contract; runtime agreement does not

@@ -5,63 +5,53 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-v1382 (native `6ce5d44`) restores missing item-spawn white splashes.
-Observed MAIN_03
-13A9:0486/04A0/04E8 owns eight 10-byte records at DGROUP 2134:41F6 and cursor
-4250, excluding the intervening ten-byte storage. Actual render MAIN_01_TEXT
-0AAF:168C..170E and raw dot leaf1842..185D identify 64 integer polar dots.
-GNU/optimized UBSan each pass311 actual original full-state/ordered-dot controls
-and all15984 full81-byte natural states, including inactive fields and cursor.
+v1383 (native `4235b5f`) restores Stage4 background publication and the tail
+scroll-copy handoff.
+Observed MAIN_01_TEXT 0AAF:0098 calls background at 00DE before carpet at 0113.
+Actual initial fill 0FB2, tile render 20C8 and carpet 3FF4 explain the first
+124,439 disagreements. Tail copier 0FFE..10B3 passes 48 ordered WORD controls
+(height 1..16, tile-row/400-row wrap). The snapshot-only e516f7f3 intermediate
+misses the tail and adds 2,100 incorrect edge pixels; it remains unaccepted.
 
-All103 actual changed pixels equal original white dots: Demo1frame1952 26→0,
-Demo3frames3379/3709 60/17→0. Other37 full index/RGB hashes stay unchanged.
-39 of40 sampled game areas now have zero differences; initialDemo1frame1
-remains124439. Whole pictures, cache/margins/RGB and physical scanout stay open.
-Actual helper drawscroll is300/40/275 versus programmedGDC301/41/276 at these
-seams; first direct GDC decoding failed and is retained. Drawing-relative
-geometry and actual captures support the repair, not physical GDC acceptance.
+Final native view retains pre-callback ring inputs and post-tail copied rows.
+All 133,251 actual changes equal the original: 129,895 in the first sample and
+3,356 in the second; 38 entire index/RGB samples remain unchanged. All 40
+standard sampled game areas now have zero differences. Ten separately
+instrumented GNU lighting samples/full text planes also pass, including frame
+1666's 7,498→0 repair. Whole pictures, cache/margins/RGB, physical GDC/scanout
+and broader routes remain open.
 
-Both actual muted SDL-dummy idle OP→four demos→OP routes pass15988 selected
-scalar/count boundaries,15984 shake states/requests,40 full canonical text planes
-and the new full81-byte splash states. All126 entire capture files agree; parent
-state/shake traces remain identical. Fresh current-producer nine full pools
-pass15984x24952B, preserving inactive/spare fields. Five malformed splash traces
-reject; frozen imported readers reproduce splash/shake receipts except ownSHA.
+Actual muted SDL-dummy GNU/optimized UBSan OP→four demos→OP preserves all
+15,988 selected scalar/count boundaries, 15,984 full shake and 81-byte splash
+states, and 40 canonical 8,000-byte TRAM samples. All 126 capture files match;
+parent scalar/shake/splash hashes stay unchanged. Frozen readers replay.
+Only view.cpp changes among 509 inputs (manifest 50ca49c6…). Both view TUs are
+cold-built/relinked with attested unchanged v1382 objects; its whole-cold
+71-program/69-CTest/full-nine-pool producers keep their separate identities.
 
-Five inputs change among509 (manifestadd39f3c…); the Pool header/layout change
-requires new cold core/frontend builds. GNU has71 programs/69 passing CTests;
-optimized UBSan cold core/game/trace/shake yields3 programs, without fullCTest.
-Older producers remain immutable; no DOS inputs or exact acceptance change.
-Recipes: DOS-root .analysis/reconstruction/probes/native-white-v1382/;
-receipts: native .analysis/port64/native-white-v1382/.
+Recipes: DOS-root .analysis/reconstruction/probes/native-initial-v1383/ and
+native-initial-v1383-v2/; final receipts: native
+.analysis/port64/native-initial-v1383-v2/. Restore archived samples/build inputs
+before replay; failures, sources and programs remain immutable.
 
-All jobs are terminal. Main441/live Ghidra and native345/target CI pass;
-unavailable private native gates skip. Full archive restoration and 22,622
-protected hashes/509 source pins/DOS fingerprint pass. Lossless sample/build
-retirement reclaims 184.7 MiB (975 files, 1,044 source-backed caches);
-including already verified full-pool compression, net recovery is
-923.7 MiB before journal cost. Programs, sources, failures, full pools
-and evidence remain retained. Recovery from DOS root:
+All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass.
+Full recovery guards pass; 434.7 MiB reclaimed before journal cost.
+Restore with the v1383-v2 verify_retention.py --restore command from DOS root.
+Old source/proof identities remain separate; see ANALYSIS_RETENTION.md.
 
-```sh
-python3 .analysis/reconstruction/probes/native-white-v1382/verify_retention.py --restore
-```
-
-Without --restore it performs full temporary readback. Old proofs keep their
-original source identities; do not use them to attest current inputs.
-
-Next diagnose the initial background and complete-picture cache/margins before
-addressing physical GDC/scanout and broader ordinary gameplay/process routes.
+Next compare complete-picture margins/cache/composition and physical GDC/
+scanout, then extend paired ordinary gameplay/process routes. Complete native
+fidelity remains active; historical exactness remains separate.
 
 Retained v1380 (native `f6e71fa`) repairs Marisa laser color from the pre-update
 modulo. All ten sampled Demo 2 game areas remain zero. Its original CPU
 explains 11,384 old pixels; its source and recovery proof retain f5791751 scope
-and cannot attest current add39f3c inputs.
+and cannot attest current 50ca49c6 inputs.
 
 Retained v1379 restores the full ordinary 400-row background ring before shake;
 its original CPU/MPN observation explains the 430 Demo 1 frame3379 differences,
 which remain zero. Its producer and recovery proof retain the 8e77830c source
-scope; that old live-source check cannot attest current add39f3c inputs.
+scope; that old live-source check cannot attest current 50ca49c6 inputs.
 
 Retained v1378 (native `617d65f`) restores MAIN's missing Midboss shake event consumer.
 Target-observed MAIN_01_TEXT 0AAF:2246..2315 (file E536..E605, 208 bytes) and
