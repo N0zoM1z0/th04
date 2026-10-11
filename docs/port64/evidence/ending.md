@@ -1,5 +1,55 @@
 # Ending evidence
 
+## Text Gaiji memory addressing (v1408)
+
+The shared native `TextPlane` now uses the original `GAIJI_PUTCA/PUTSA`
+addresses and store sequence. The row segment is the mutable text base plus
+Y*10, truncated to a WORD; the starting offset is X*2, also truncated.
+`put()` writes each attribute before its glyph half. `put_string()` writes
+every glyph first, then fills attributes using WORD(end-start)/2. A string
+of 16,384 characters wraps its offset and fills zero attributes.
+
+These writes can cross rows, spill past the last visible cell, or alias the
+attribute bank. The owner retains visible codes at A0000h..A0F9Fh and
+attributes at A2000h..A2F9Fh in the existing arrays. Other physical addresses
+use 256-byte pages allocated on demand. Normal render-frame copies retain
+roughly 8 KiB rather than a full real-mode memory image. Packed 8000-byte
+snapshots, overlays and rectangle copies continue to use the visible banks.
+MAIN's HUD/Game Over and MAINE registration consume this owner directly.
+
+The maintained `verify_text_address.py` executes original MAIN 0000:1B0C/1B50
+and MAINE 0000:0FC4/1008 at loads 1000/3333. It uses the DOS root's attested
+original-instruction adapter and captures complete 80000h..DFFFFh memory,
+ordered WORD writes and return ES. All 664 native fixtures match all 2,656
+original results, and the packed visible banks match the physical projection.
+Inputs cover all 256 byte glyphs, additional WORD characters, coordinate and
+attribute boundaries, alternate text bases, NUL and lengths through 32,768.
+The native comparison checks memory; the separate v1407 DOS comparison checks
+the far-call ABI. Guest source-memory aliasing and physical display timing
+remain outside this logical string owner.
+
+A cold native core and five selected programs build. Text addressing, HUD,
+player lifecycle/Game Over, score registration and registration scene contracts
+pass. Optimized UBSan/bounds reproduces the same 664 native results. A compiled
+predecessor rejects X80/Y0 and the 2,049-character fixture. Its right-edge
+visible output differs in 8 bytes. For the long string, its partially written
+visible banks agree even though it throws before completing the original
+writes; visible screenshots alone would miss that failure.
+
+Producer 524/6f214e8c, complete compressed memory/write records, GNU/UBSan
+programs, compiled predecessor and source archive are retained under
+`.analysis/port64/native-text-address-v1408/`. Replay with a fresh build:
+
+```sh
+python3 port64/verify_text_address.py --dos-root /path/to/th04-dos-root \
+  --native /path/to/th04-port64-text-address-contracts --output /fresh/proof
+```
+
+Add `--reference /path/to/original-comparison` to reuse the complete original
+transcript. The private `verify_closure.py` checks current source/programs,
+replays every retained original write against its seed, and checks frozen
+v1405 and DOS v1407 proof identities. Historical exact remains 661/663.
+
 ## Gaiji graphics character and string addressing (v1405)
 
 Native `Canvas` now follows MAINE's `GRAPH_GAIJI_PUTC` and

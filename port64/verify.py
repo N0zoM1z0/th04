@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/text_address_contracts.cpp",
+    "port64/verify_text_address.py",
     "port64/gaiji_address_contracts.cpp",
     "port64/verify_gaiji_address.py",
     "port64/font_address_contracts.cpp",

@@ -20,21 +20,75 @@ void TextPlane::put_ank(int column,int row,Byte character,std::uint16_t attribut
     const unsigned at=unsigned(row*80+column);codes_[at]=character;attributes_[at]=attribute;
 }
 void TextPlane::put(int column,int row,Byte glyph,std::uint16_t attribute) {
-    require(column>=0 && column<80 && row>=0 && row<25,"invalid registration text cell");
-    const unsigned at=unsigned(row*80+column);
-    require(at+1<codes_.size(),"registration gaiji exceeds text bank");
+    const auto segment=std::uint16_t(unsigned(segment_)+unsigned(std::uint16_t(row))*10u);
+    auto offset=std::uint16_t(unsigned(std::uint16_t(column))*2u);
     const auto code=std::uint16_t(((unsigned(glyph)&127u)<<8)+0x56u+(unsigned(glyph)>>7));
-    codes_[at]=code;codes_[at+1]=std::uint16_t(code|0x8000u);
-    attributes_[at]=attribute;attributes_[at+1]=attribute;
+    store_word(segment,std::uint16_t(offset+0x2000u),attribute);
+    store_word(segment,offset,code);offset=std::uint16_t(offset+2u);
+    store_word(segment,std::uint16_t(offset+0x2000u),attribute);
+    store_word(segment,offset,std::uint16_t(code|0x8000u));
 }
 void TextPlane::put_string(int column,int row,const std::string& text,std::uint16_t attribute) {
+    const auto segment=std::uint16_t(unsigned(segment_)+unsigned(std::uint16_t(row))*10u);
+    const auto start=std::uint16_t(unsigned(std::uint16_t(column))*2u);
+    auto offset=start;
     for(unsigned char glyph:text) {
         if(!glyph)break;
-        put(column,row,glyph,attribute);column+=2;
-        // The target uses a linear WORD bank: a pair at column79 spills into
-        // the next row. Keep that defined bank behavior for subsequent pairs.
-        while(column>=80) {column-=80;++row;}
+        const auto code=std::uint16_t(((unsigned(glyph)&127u)<<8)+0x56u+(unsigned(glyph)>>7));
+        store_word(segment,offset,code);offset=std::uint16_t(offset+2u);
+        store_word(segment,offset,std::uint16_t(code|0x8000u));offset=std::uint16_t(offset+2u);
     }
+    const unsigned words=unsigned(std::uint16_t(offset-start))>>1;
+    offset=std::uint16_t(start+0x2000u);
+    for(unsigned word=0;word<words;++word) {
+        store_word(segment,offset,attribute);offset=std::uint16_t(offset+2u);
+    }
+}
+void TextPlane::store_byte(std::uint32_t address,Byte value) {
+    auto bank=[&](auto& words,std::uint32_t base) {
+        const auto offset=address-base,shift=(offset&1u)*8u;
+        auto& word=words[offset/2];
+        word=std::uint16_t((word&~(255u<<shift))|(unsigned(value)<<shift));
+    };
+    if(address>=0xa0000 && address<0xa0000+4000)bank(codes_,0xa0000);
+    else if(address>=0xa2000 && address<0xa2000+4000)bank(attributes_,0xa2000);
+    else other_pages_[address/256][address%256]=value;
+}
+void TextPlane::store_word(std::uint16_t segment,std::uint16_t offset,std::uint16_t value) {
+    const auto address=std::uint32_t(segment)*16u+offset;
+    store_byte(address,Byte(value));store_byte(address+1,Byte(value>>8));
+}
+void TextPlane::load_memory(std::uint32_t start,const score_file::Bytes& input) {
+    require(start<=0x110000 && input.size()<=0x110000-start,"text memory input exceeds real-mode addresses");
+    for(std::size_t at=0;at<input.size();) {
+        const auto address=start+std::uint32_t(at);
+        const auto count=std::min<std::size_t>(256-address%256,input.size()-at);
+        std::copy_n(input.begin()+at,count,other_pages_[address/256].begin()+address%256);
+        at+=count;
+    }
+    for(const auto base:{0xa0000u,0xa2000u}) {
+        const auto first=std::max(start,base);
+        const auto last=std::min<std::size_t>(start+input.size(),base+4000u);
+        for(auto address=first;address<last;++address)store_byte(address,input[address-start]);
+    }
+}
+score_file::Bytes TextPlane::physical_bytes(std::uint32_t start,std::size_t length) const {
+    require(start<=0x110000 && length<=0x110000-start,"text memory output exceeds real-mode addresses");
+    score_file::Bytes result(length);
+    for(const auto& [page,bytes]:other_pages_) {
+        const auto first=std::max(start,page*256u);
+        const auto last=std::min<std::size_t>(start+length,page*256u+256u);
+        if(first<last)std::copy_n(bytes.begin()+first-page*256u,last-first,result.begin()+first-start);
+    }
+    const auto overlay=[&](const auto& words,std::uint32_t base) {
+        const auto first=std::max(start,base);
+        const auto last=std::min<std::size_t>(start+length,base+4000u);
+        for(auto address=first;address<last;++address) {
+            const auto offset=address-base;
+            result[address-start]=Byte(words[offset/2]>>((offset&1u)*8u));
+        }
+    };
+    overlay(codes_,0xa0000);overlay(attributes_,0xa2000);return result;
 }
 void TextPlane::put_sjis(int column,int row,const std::string& text,std::uint16_t attribute) {
     require(column>=0 && column<80 && row>=0 && row<25,"invalid Shift-JIS text cell");

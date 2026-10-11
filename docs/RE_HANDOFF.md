@@ -1,5 +1,30 @@
 # TH04 native branch handoff
 
+v1408 migrates the original `GAIJI_PUTCA/PUTSA` writer semantics into
+`TextPlane`, used by MAIN HUD/Game Over and MAINE score registration. WORD
+coordinates and the mutable text base now select physical addresses without
+visible-cell clipping. Strings write all glyphs before filling attributes
+with the wrapped count. Existing visible banks stay directly stored; other
+addresses use sparse pages, keeping ordinary frame copies near 8 KiB.
+
+All 664 native fixtures agree with original MAIN 0000:1B0C/1B50 and MAINE
+0000:0FC4/1008 at loads 1000/3333: 2,656 full memory comparisons. Optimized
+UBSan/bounds reproduces every result. Cold core/five programs and five related
+contracts pass. The compiled predecessor rejects X80/Y0 and a 2,049-character
+string; the first has eight visible byte differences. The string's partial
+visible banks agree, demonstrating why the comparison retains the full memory
+window and the failure status.
+
+Producer 524/6f214e8c and complete proofs are under
+`.analysis/port64/native-text-address-v1408/` in the `port-motion-v1402`
+worktree. See [text writer recovery](port64/evidence/ending.md). DOS root
+`main` already carries its separate v1407 recovery at a71607f. Historical exact
+remains 661/663. Continue with ANK/Shift-JIS text writer address semantics;
+defer long game campaigns while function migration remains open.
+CI passes 345 tests. Verified archiving retires 242 compiler-cache paths;
+515 source-backed Python caches bring cleanup to 13.04 MiB net. Current
+source/program/transcript closure and 757 frozen native parent files pass.
+
 v1405 restores native `GRAPH_GAIJI_PUTC`/`PUTS` row addressing and continuous
 string DI/STEP behavior in `Canvas`. Original MAINE 0000:3760/36B6 at load 2000
 matches 2,833 complete seeded pages, covering the 256 installed bank characters,

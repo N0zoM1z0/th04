@@ -3,11 +3,12 @@
 #include "cutscene_scene.hpp"
 #include "sprite_sheet.hpp"
 #include <memory>
+#include <map>
 
 namespace th04::portable::registration {
-// PC-98 TRAM has independent WORD character and attribute banks. Retain
-// half-cell codes so replacing one gaiji also replaces its two attributes.
-// MAIN Game Over and MAINE registration use this same bounded gaiji/ANK bank.
+// PC-98 TRAM character and attribute banks share a physical address space.
+// Keep visible cells directly and allocate other memory pages only on writes.
+// MAIN Game Over and MAINE registration use this same gaiji/ANK owner.
 // HUD high-count labels also use the original text_putsa Shift-JIS conversion.
 class TextPlane {
 public:
@@ -23,8 +24,15 @@ public:
     void overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font&,bool blink_visible=true) const;
     void overlay(std::vector<std::uint32_t>& argb,const score_file::Bytes& gaiji,const dialog::Font&,bool blink_visible=true) const;
     void copy_rectangle(const TextPlane&,unsigned left,unsigned top,unsigned width,unsigned height);
+    void set_segment(std::uint16_t segment) { segment_=segment; }
+    void load_memory(std::uint32_t start,const score_file::Bytes&);
+    score_file::Bytes physical_bytes(std::uint32_t start,std::size_t length) const;
 private:
+    void store_byte(std::uint32_t address,Byte value);
+    void store_word(std::uint16_t segment,std::uint16_t offset,std::uint16_t value);
     std::array<std::uint16_t,2000> codes_{},attributes_{};
+    std::map<std::uint32_t,std::array<Byte,256>> other_pages_;
+    std::uint16_t segment_=0xa000;
 };
 struct GraphicsAssets {
     cutscene::Assets graphics;
