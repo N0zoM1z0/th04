@@ -68,7 +68,7 @@ namespace {
 template<class Paint>
 void paint_text(const std::array<std::uint16_t,2000>& codes_,
                 const std::array<std::uint16_t,2000>& attributes_,
-                const score_file::Bytes& gaiji,const dialog::Font& font,Paint paint) {
+                const score_file::Bytes& gaiji,const dialog::Font& font,bool blink_visible,Paint paint) {
     require(gaiji.size()>=32,"registration gaiji header is incomplete");
     const unsigned base=32u+unsigned(gaiji[28])+(unsigned(gaiji[29])<<8);
     require(base<=gaiji.size() && gaiji.size()-base>=256*32,"registration gaiji bank is incomplete");
@@ -99,7 +99,8 @@ void paint_text(const std::array<std::uint16_t,2000>& codes_,
                 }
                 else for(unsigned x=0;x<8;++x)if(font.ank_pixel(Byte(code),x,y))mask|=128u>>x;
             }
-            if(attribute&4u)mask^=255u; // Reverse MASK; holes still expose graphics.
+            if((attribute&2u) && !blink_visible)mask=0;
+            if(attribute&4u)mask^=255u; // Blink blanks the font before reverse.
             for(unsigned x=0;x<8;++x)if(mask&(128u>>x)) {
                 paint((cell/80*16+y)*640+(cell%80)*8+x,attribute);
             }
@@ -108,17 +109,17 @@ void paint_text(const std::array<std::uint16_t,2000>& codes_,
     }
 }
 }
-void TextPlane::overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font& font) const {
+void TextPlane::overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font& font,bool blink_visible) const {
     require(rgb.size()==640*400*3,"registration RGB frame is incomplete");
-    paint_text(codes_,attributes_,gaiji,font,[&](unsigned at,std::uint16_t attr) {
+    paint_text(codes_,attributes_,gaiji,font,blink_visible,[&](unsigned at,std::uint16_t attr) {
         rgb[at*3]=(attr&0x40u) ? 255 : 0;
         rgb[at*3+1]=(attr&0x80u) ? 255 : 0;
         rgb[at*3+2]=(attr&0x20u) ? 255 : 0;
     });
 }
-void TextPlane::overlay(std::vector<std::uint32_t>& argb,const score_file::Bytes& gaiji,const dialog::Font& font) const {
+void TextPlane::overlay(std::vector<std::uint32_t>& argb,const score_file::Bytes& gaiji,const dialog::Font& font,bool blink_visible) const {
     require(argb.size()==640*400,"MAIN ARGB frame is incomplete");
-    paint_text(codes_,attributes_,gaiji,font,[&](unsigned at,std::uint16_t attr) {
+    paint_text(codes_,attributes_,gaiji,font,blink_visible,[&](unsigned at,std::uint16_t attr) {
         argb[at]=0xff000000u|((attr&0x40u) ? 0xff0000u : 0)|
             ((attr&0x80u) ? 0xff00u : 0)|((attr&0x20u) ? 0xffu : 0);
     });

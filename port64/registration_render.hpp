@@ -20,8 +20,8 @@ public:
     void clear();
     score_file::Bytes bytes() const;
     // RGB overlay values do not follow the analog graphics palette or tone.
-    void overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font&) const;
-    void overlay(std::vector<std::uint32_t>& argb,const score_file::Bytes& gaiji,const dialog::Font&) const;
+    void overlay(score_file::Bytes& rgb,const score_file::Bytes& gaiji,const dialog::Font&,bool blink_visible=true) const;
+    void overlay(std::vector<std::uint32_t>& argb,const score_file::Bytes& gaiji,const dialog::Font&,bool blink_visible=true) const;
     void copy_rectangle(const TextPlane&,unsigned left,unsigned top,unsigned width,unsigned height);
 private:
     std::array<std::uint16_t,2000> codes_{},attributes_{};

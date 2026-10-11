@@ -21,25 +21,26 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active on this branch. The current v1384 repair selects
-the final MPN stage palette, including Marisa's ST10 palette, instead of the
-temporary BMT palette. It changes 720,358 sampled RGB pixels. Actual muted GNU
-and optimized UBSan OP→four demos→OP produce 126 identical capture files;
-all 40 complete indices/text planes and parent state/shake/splash traces stay
-unchanged. All 40 sampled game areas retain zero index differences.
+Native development is active. The latest v1385 repair adds a persistent display
+clock for MAIN text blink and preserves blink-before-reverse attribute order.
+All 15,988 native clock rows pass the unchanged independent GDC counter;
+80 complete controlled text layers and eight attribute cases match the
+independent DOSBox-X emitter. Original captures expose zero/two refresh
+exceptions, so Demo frame numbers cannot supply original display phase.
 
-An independent compositor uses unchanged, attested DOSBox-X line rendering and
-GDC stepping. Full raw RGB remains unequal in 28 samples; 12 initial curtain
-samples are zero. Explicit diagnostics isolate the emulator's DAC quantization
-and five 556-pixel Demo-label blink differences. Font RAM and extra text/CRT
-registers still need capture. Diagnostic projection is not raw or complete
-picture acceptance; physical scanout and broader routes remain open.
+A fresh whole cold GNU build produces 71 programs and passes 69 CTests.
+Optimized UBSan cold-builds the game, trace and shake targets. Actual muted
+OP→four demos→OP routes produce 127 identical complete capture files;
+all 40 entire indices/text planes and parent state/shake/splash traces stay
+unchanged. Earlier complete nine-pool and ordinary Linux clear/save/restart
+evidence keeps its separate producer identity.
 
-Only view.cpp changes among 509 inputs. Its two changed TUs are cold-built and
-relinked with attested v1382 dependencies. That earlier whole cold build,
-69 CTests and complete nine-pool comparison retain their producer identities.
-Scoped Linux Reimu A Normal/Lunatic/Extra clear/save/restart evidence remains
-separate; physical Windows input/audio acceptance remains open. See
+Blink changes 2,780 sampled RGB pixels. Full captured-phase raw RGB has
+12/40 zeros; explicit DAC diagnostics have 32/40 zeros. The
+native clock has its own epoch; no per-Demo phase fit is used. Native-phase
+projection is diagnostic, not complete-picture acceptance. Original absolute
+phase, live font RAM, text/CRT registers, physical scanout, broader routes and
+physical Windows input/audio remain open. See
 [the current native handoff](docs/RE_HANDOFF.md).
 
 ## Build and run

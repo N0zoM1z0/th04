@@ -1229,8 +1229,8 @@ registration::TextPlane main_text_plane(const gameplay::State& state,unsigned de
     }
     return text;
 }
-void put_main_text(Frame& frame,const MainSprites& sprites,const gameplay::State& state,unsigned demo_number=0) {
-    main_text_plane(state,demo_number).overlay(frame.pixels,sprites.gaiji,sprites.font);
+void put_main_text(Frame& frame,const MainSprites& sprites,const gameplay::State& state,unsigned demo_number,bool blink_visible) {
+    main_text_plane(state,demo_number).overlay(frame.pixels,sprites.gaiji,sprites.font,blink_visible);
 }
 
 class DialogScene {
@@ -1480,6 +1480,21 @@ public:
     }
     bool extra_boss_pending() const {return main_ && main_->extra_dialog_ready(sprites_->background);}
     void enable_host_timing() { host_timing_=true; }
+    std::uint64_t text_refreshes() const { return text_refreshes_; }
+    bool text_blink_visible() const { return ((text_refreshes_/32)&3u)!=0; }
+    bool observe_text_time(std::int64_t now) {
+        if(!text_time_origin_) {
+            text_time_origin_=now;text_time_origin_refreshes_=text_refreshes_;
+        }
+        require_view(now>=*text_time_origin_,"text refresh clock moved backwards");
+        const bool before=text_blink_visible();
+        const auto refreshes=text_time_origin_refreshes_+std::uint64_t((now-*text_time_origin_)/frame_period.count());
+        require_view(refreshes>=text_refreshes_,"text refresh counter moved backwards");
+        text_refreshes_=refreshes;
+        const bool changed=before!=text_blink_visible();
+        if(changed)frame_=render();
+        return changed;
+    }
     void set_ending_observer(cutscene::Sink observer) { ending_observer_=std::move(observer); }
     const maine::Ending* ending() const { return ending_.get(); }
     bool animated() const { return bool(startup_) || bool(setup_) || bool(demo_fade_) || bool(music_) || bool(ranking_) || live_main() || bool(ending_) || bool(registration_) || bool(score_route_); }
@@ -1628,6 +1643,9 @@ public:
         return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
     }
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
+        // GDC blink continues through OP, waits and MAIN process replacement.
+        // Headless callers admit refreshes; windows supply elapsed time.
+        if(!text_time_origin_)text_refreshes_+=slowdown();
         ensure_op_sound();
         const auto sound_owner=sound_;
         sound::Refresh sound_refresh(sound_owner.get(),std::uint64_t(frame_period.count())*slowdown());
@@ -2278,7 +2296,7 @@ private:
         case Screen::demo_end: {
             if(!demo_fade_->published())return demo_frozen_;
             auto frame=render_main(*sprites_,*main_,application_.resident().playchar,demo_fade_->tone());
-            put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);return frame;
+            put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame;
         }
         case Screen::music: {
             Frame frame{640,400,std::vector<std::uint32_t>(256000)};
@@ -2312,7 +2330,7 @@ private:
                 if(extra_route_->phase()==maine::ExtraPhase::main_fade) {
                     auto frame=render_main(*sprites_,*main_,application_.resident().playchar,extra_route_->main_tone());
                     if(main_->clear_bonus() && main_->bonus_text_visible())put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
-                    put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);return frame;
+                    put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame;
                 }
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
                 if(const auto* registration=extra_route_->registration_scene()) {
@@ -2366,7 +2384,7 @@ private:
             if(ending_->phase()==maine::Phase::main_fade) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar,ending_->main_tone());
                 if(main_->clear_bonus() && main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
-                put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);
+                put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());
                 return frame;
             } else {
                 const auto* staff=ending_->staff_scene();
@@ -2396,7 +2414,7 @@ private:
                     frame.pixels[at]=0xff000000u|(unsigned(rgb[at*3])<<16)|(unsigned(rgb[at*3+1])<<8)|rgb[at*3+2];
                 return frame;
             }
-            if(dialog_scene_) { auto frame=dialog_scene_->render();put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);return frame; }
+            if(dialog_scene_) { auto frame=dialog_scene_->render();put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame; }
             if(main_) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
                 if(main_->clear_bonus()) {
@@ -2404,7 +2422,7 @@ private:
                     if(main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
                 }
 
-                put_main_text(frame,*sprites_,*main_,application_.resident().demo_number);
+                put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());
                 return frame;
             }
             return render_main_handoff(
@@ -2421,6 +2439,8 @@ private:
     Frame demo_frozen_;
     gameplay::Mode mode_=gameplay::Mode::ordinary;
     bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
+    std::uint64_t text_refreshes_=0,text_time_origin_refreshes_=0;
+    std::optional<std::int64_t> text_time_origin_;
     std::unique_ptr<maine::Ending> ending_;
     std::unique_ptr<registration::Scene> registration_;
     registration::GraphicsAssets registration_assets_;
@@ -2546,7 +2566,7 @@ LRESULT CALLBACK title_window_proc(
     case WM_TIMER:
         if (title) {
             const auto now = host_window::now_ns();
-            title->schedule.wake();bool dirty=false;
+            title->schedule.wake();bool dirty=title->front_end.observe_text_time(now);
             while(title->schedule.due(now)) {
                 const bool active=GetForegroundWindow()==window;
                 const auto pressed=[](int key){return (GetAsyncKeyState(key)&0x8000)!=0;};
@@ -2750,7 +2770,7 @@ void show_window(
             }
         }
         if (!running) break;
-        const auto now=host_window::now_ns();schedule.wake();
+        const auto now=host_window::now_ns();schedule.wake();dirty|=front_end.observe_text_time(now);
         while(schedule.due(now)) {
             const auto* keys=SDL_GetKeyboardState(nullptr);
             const bool focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;

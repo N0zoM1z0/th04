@@ -9,15 +9,30 @@ All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Current v1383 preserves Stage4 background publication and tail scroll copies.
-All 40 standard sampled game areas agree on GNU/optimized UBSan; all 133,251
-changed pixels in the first two pictures equal original indices. Another ten
-separately instrumented GNU lighting fields/full text samples agree; frame1666
-repairs 7,498 pixels. Complete state/shake/splash/text controls remain unchanged.
-Only view.cpp changes; both bounded cold TU builds reuse attested v1382 objects.
-Its full cold/69CTest/nine-pool receipts retain their producer identities.
-Full pictures/cache/margins/RGB/physical scanout/broader routes remain open;
-see [demo evidence](port64/evidence/demo.md).
+Current v1385 adds MAIN text blink with a persistent display clock and correct
+blink-before-reverse attribute order. All 15,988 native clock rows replay the
+unchanged independent GDC counter; 80 full controlled text layers and eight
+attribute cases match independent DOSBox-X output. Original refresh records
+include zero/two-refresh exceptions; original absolute epoch is not calibrated.
+
+Four inputs change among 509 (manifest a47f0496…). A fresh whole cold GNU
+build has 71 programs and 69 passing CTests; optimized UBSan cold-builds the
+game, trace and shake targets. Actual muted four-Demo routes have 127 identical
+capture files, preserving 40 entire indices/TRAM and six parent trace/save
+hashes. Prior complete nine-pool producers retain their separate identities.
+
+Captured-phase raw RGB has 12/40 zeros; explicit DAC diagnostics have 32/40
+zeros. The distinct native epoch increases diagnostic unequal samples from
+five to eight; phase agreement is not accepted. Native-phase projection has
+40/40 zeros, without whole-picture or scanout acceptance. Live CG RAM,
+text-scroll/CRT, original display timing and broader routes remain open. Net
+334.5 MiB of this batch's products/caches is reclaimed after a fully verified
+lossless archive. See [demo evidence](port64/evidence/demo.md) and
+[retention](ANALYSIS_RETENTION.md).
+
+Earlier v1383 background publication/tail copies and v1384 MPN selection
+remain separately frozen; the current sample indices/TRAM are unchanged.
+Their old live-source proofs cannot attest a47f0496 without a fresh replay.
 
 Retained v1378 restores MAIN Midboss shake consumption. Both GNU and optimized
 UBSan agree on all15,984 complete shake globals/movement requests, all15,988

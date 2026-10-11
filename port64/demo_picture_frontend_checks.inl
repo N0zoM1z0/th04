@@ -14,6 +14,9 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
     const std::array<unsigned,10> samples{1,2,3,72,73,74,1952,3379,3709,3996};
     std::ofstream trace(out/"state.txt"),displays(out/"displays.txt"),shakes(out/"shake.txt");
     std::ofstream splashes(out/"item-splashes.txt");
+    std::ofstream clocks(out/"text-refreshes.txt");
+    require_view(bool(clocks),"cannot open text refresh trace");
+    clocks<<"TH04_TEXT_REFRESH 1 rate 32 native_origin 0 logical\n";
     require_view(bool(trace) && bool(displays) && bool(shakes) && bool(splashes),"cannot open demo picture trace");
     const auto hexadecimal=[&](const auto& bytes) {
         constexpr char digits[]="0123456789abcdef";
@@ -26,6 +29,7 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
         const auto base_draws=scene.process_random_draws(),base_samples=scene.main_state().random_samples();
         demo::Replay replay(input.replays[number-1]);
         for(unsigned frame=0;frame<=3996;++frame) {
+            clocks<<number<<' '<<frame<<' '<<scene.text_refreshes()<<' '<<scene.text_blink_visible()<<'\n';
             const auto& m=scene.main_state();const auto& r=scene.resident();const auto sample=replay.sample(std::uint16_t(frame),0,0);
             require_view(m.frames()==frame,"demo frame extent");const auto& life=m.life();const auto& player=m.player().position().current;
             trace<<number<<' '<<frame<<' '<<(sample.finished?'T':'I')<<' '<<sample.input<<' '<<+sample.shift<<' '<<+r.stage<<' ';
@@ -65,4 +69,5 @@ void run_demo_picture_checks(const PiImage& background,const CdgSheet& numerals,
     }
     require_view(score_file::HostStore(out/"save").file().bytes()==score_file::HostStore(inputs).file().bytes(),"demo physical score drift");
     require_view(bool(trace) && bool(displays) && bool(shakes) && bool(splashes),"demo picture trace write failure");
+    require_view(bool(clocks),"text refresh trace write failure");
 }

@@ -963,3 +963,69 @@ reproduces all 120 complete RGB hashes and rejects analog-nibble/blink controls
 (the latter changes 556 pixels), then removes all temporary files. It needs no
 permanent restoration. The post-retirement reader and receipt have separate
 source hashes and do not expand the earlier protected inventory.
+
+## Independent text blink clock and attribute order (v1385)
+
+Runtime-observed original VP3 streams contain 15,984 complete master/slave GDC
+blink triples. The thin reader checks all 279,809 bytes of each XOR record,
+CPU/load/DGROUP headers, complete stream SHA and gzip CRC/EOF, reproducing all
+40 parent samples. Both GDC triples agree; rate is 32, states 0..3 and counts
+0..31. Modulo-128 refresh deltas include zero at Demo1/2 and Demo3/1968,
+and two at Demo3/1954 and /1963. These are residues, not proof of absolute
+unobserved time. Display refreshes cannot be replaced by the Demo frame number.
+
+The unchanged pinned DOSBox-X cursor_advance source provides a separate
+compiler/runtime Oracle. Its state0 hides blinking text for 32 refreshes and
+states1..3 show it for 96. Native MAIN now supplies its persistent display
+clock to both text-overlay APIs. Headless admission includes slowdown;
+Linux/Windows source paths use monotonic elapsed time at the existing
+17,730,496 ns period. OP, waits and MAIN replacement preserve the counter.
+Repaint and host catch-up admissions do not advance it twice. The initial
+zero is a native epoch; original boot phase is not calibrated. Physical
+Windows remains untested, and other TextPlane callers retain the default
+visible phase until their owner is independently handled.
+
+For mask0x02 blink, the font becomes zero before reverse mask0x04, preserving
+reverse cells when hidden. Eight secret/blink/reverse cases and 80 complete
+640×400 text-layer pairs agree with the unchanged independent DOSBox-X line
+emitter. Both native RGB and ARGB agree in all 88 cases. This controlled
+Oracle explicitly uses zero graphics, black graphics palette and reconstructed
+BMP/GAMEFT font RAM. Live CG mutations, text-scroll/CRT and scanout are not
+accepted. The first reporting script failed only while writing its receipt;
+its script/log remain retained and separate corrected v2 replay passes. The
+first instrumented clock adapter also lacked <cstring>; its failed sources/log
+are retained and a separate v2 observer adds that include. Product inputs stay
+unchanged by these private corrections.
+
+Four source inputs change among 509, manifest
+a47f0496c18261ff4650515b1c2cd6413451a44d8879b6b3b21fc032aec89c6f. GNU is a fresh whole cold build of all
+71 programs with all 69 CTests passing. Optimized UBSan cold-builds the game,
+trace and shake targets, without a full UBSan CTest or new nine-pool claim.
+Actual muted SDL-dummy OP→four demos→OP produces 127 identical complete
+GNU/UBSan capture files. All 40 entire indices/TRAM and six parent state,
+shake, item-splash, display and save hashes remain unchanged; prior original
+readers and complete nine-pool producers retain their identities.
+
+All 15,988 native refresh rows replay the unchanged original counter. A
+separate instrumented FrontEnd checks 17 logical refreshes, nine host-time
+jumps including a 12,800-refresh stall, repeated repaint, double admission and
+backwards time; its 127 common capture files remain identical. Phase-inversion
+and per-Demo reset controls reject. Native sample phases are fixed by this
+trace, never chosen to minimize original picture differences.
+
+Blink changes 2,780 sampled RGB pixels. Full 640×400 raw RGB versus
+captured original phase has 12/40 zeros; the explicit DAC projection has
+32/40 zeros. Fixed native-phase projection has 40/40 zeros. The captured-phase diagnostic unequal sample count grows from five to eight,
+because native and original epochs are still distinct. This implements the
+blink rule without claiming original-phase agreement. All raw
+mismatches remain recorded; this does not establish whole-picture, original
+absolute phase or physical scanout acceptance. Next capture live CG RAM and
+text-scroll/CRT surfaces and recover original absolute refresh/scanout timing,
+then extend paired ordinary Boss/death/process routes. No DOS product input or
+historical exact state changes; candidate-local-attested provenance remains.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-blink-v1385/;
+receipts/programs/frozen inputs: native .analysis/port64/native-blink-v1385/.
+read_clock.py, verify_overlay_v2.py, clock_frontend_v2.py, compare_final.py and
+verify_control.py retain their distinct source identities. Restore retired
+inputs before replay. v1384 ba6eff48 proofs cannot attest live a47f0496 source.
