@@ -1,5 +1,43 @@
 # TH04 native branch handoff
 
+## Joined palette fade recovery (v1414)
+
+Current producer 530/4dc27bde combines the palette WORD fix with the published
+wait/text owner at 9a7f380. Cold GNU Release and optimized UBSan/bounds each
+build the complete core, actual frontend and four selected contract programs.
+Both pass the palette, MAINE cutscene, startup and GDC contracts and all 24
+palette timelines against the retained 96 original instruction controls.
+Native CI passes 345 tests. This is a focused integration; the v1412 full
+79-program/77-CTest build remains bound to its own frozen producer.
+
+Evidence is in the isolated `native-palette-join-v1414` tree under
+`.analysis/port64/native-palette-join-v1414/`. `verify_closure.py` checks the
+530-file source archive, current programs and 1,635 frozen parent files.
+Verified archive retirement releases 25.64 MiB; source-backed Python cache
+cleanup releases another 15.70 MiB. Continue recovering native hardware and
+scene owners before longer game validation.
+
+## Palette fade WORD recovery (v1413)
+
+`maine::Animation` truncates fade speed to the original WORD and follows its
+signed test. Zero and negative WORD speeds now finish after the single initial
+refresh; positive speeds retain `1 + 17 * speed` waits. Original OP/MAINE
+0000:0622 and 0000:0666 pass 96 instruction controls at loads 1000/3333.
+Fresh GNU and optimized UBSan Animation builds each pass 24 native vectors;
+the actual 328585f predecessor fails 14. Complete tone stores, palette calls
+and wait streams remain available, including the transient 102/-2 tone.
+
+Frozen producer 528/dbdbcbe5 is in the isolated `native-palette-zero-v1413`
+tree, phase `.analysis/port64/native-palette-zero-v1413/`. Its closure verifies
+the source archive, complete original controls, compiler outputs and 803 frozen
+text-proof files. CI passes 345 tests; verified cache retirement releases
+0.13 MiB net. See [Ending evidence](port64/evidence/ending.md).
+The v1414 integration above contains this source and freshly builds its
+frontend and affected MAINE components.
+
+The v1409 records below describe their frozen producer. DOS text/VSync has
+since been integrated at a07dbc0; native wait/text is published at 9a7f380.
+
 v1409 restores MAIN's ordinary text character/string writers in `TextPlane`.
 `put_character()` accepts the full WORD input, including ANK, JIS and Shift-JIS;
 HUD initialization, Game Over and the actual frontend now use it. `put_sjis()`

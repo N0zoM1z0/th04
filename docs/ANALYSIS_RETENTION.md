@@ -1,5 +1,53 @@
 # Native private-state retention
 
+## v1414 palette and wait/text join
+
+The isolated `native-palette-join-v1414` tree retains producer 530/4dc27bde,
+the complete source archive, ten GNU/UBSan selected programs, compiler metadata,
+full palette comparisons and parent verification receipts under
+`.analysis/port64/native-palette-join-v1414/`. Its closure checks 1,635 frozen
+parent files without changing their producer identities.
+
+After the two builds, four CTests per compiler and CI 345 passed, 274 completed
+compiler-cache paths were archived as 268 unique blobs and verified before
+removal. Full gzip/hash and restored size/mode/nsmtime checks pass. Retirement
+reclaims 25.64 MiB net. A separate source-backed journal records 1,018 Python
+caches removed from the two owned trees, reclaiming another 15.70 MiB.
+
+From the joined worktree, run:
+
+```sh
+python3 -B .analysis/port64/native-palette-join-v1414/verify_retention.py
+python3 -B .analysis/port64/native-palette-join-v1414/verify_closure.py
+```
+
+The retention reader accepts `--restore --prefix build-gnu/` or
+`--restore --prefix build-ubsan/` to restore only that compiler's retired paths.
+The first CI failure caused by a wrong reference-directory link is retained;
+the corrected link and final CI result accompany the accepted source.
+
+## v1413 palette fade recovery
+
+The isolated `native-palette-zero-v1413` tree retains its complete source
+archive, GNU/UBSan Animation programs, actual predecessor, original function
+bytes, 96 full compressed wait streams and comparison receipts under
+`.analysis/port64/native-palette-zero-v1413/`. Producer 528/dbdbcbe5 remains
+frozen. `verify_closure.py` reads every wait record and checks both compiler
+outputs, all 14 predecessor failures and 803 earlier text-proof files.
+
+Thirty completed CMake cache paths are archived as 27 unique blobs before
+removal. Full gzip, blob hashes and restored size/mode/nsmtime checks pass;
+programs and compiler metadata remain live. Cleanup releases 0.13 MiB net
+after the archive and journal. From the isolated worktree, run:
+
+```sh
+python3 -B .analysis/port64/native-palette-zero-v1413/verify_retention.py
+python3 -B .analysis/port64/native-palette-zero-v1413/verify_closure.py
+```
+
+Add `--restore --prefix build-gnu/` or `--restore --prefix build-ubsan/` to
+the retention reader to restore one compiler's cache with its original metadata.
+
 ## v1405 Gaiji character and string recovery
 
 The isolated `port-motion-v1402` tree retains this recovery under

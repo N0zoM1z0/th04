@@ -1,5 +1,46 @@
 # Ending evidence
 
+## Palette fade speed and zero-wait completion (v1413)
+
+`maine::Animation` now follows the original palette fade's WORD argument and
+signed loop condition. A positive signed WORD waits `1 + 17 * speed` refreshes;
+zero and 8000h..FFFFh wait only for the initial alignment. The previous owner
+spread a zero-speed fade across another 16 refreshes and used the host's full
+integer value for speeds outside the signed WORD range.
+
+Both original OP and MAINE implement fade-in at 0000:0622 (67 bytes) and
+fade-out at 0000:0666 (62 bytes), including their complete `RETF 2` exits.
+`verify_palette_animation.py` executes these instructions at loads 1000/3333
+with explicit one-refresh wait consumers. The 96 controls cover both directions
+and speeds 0, 1, 2, 4, 16, 32767, 32768, 65535, 65536, 131071, -1 and -32768.
+Each retains all 18 palette calls, 19 tone stores and every wait. The original
+temporarily stores 102 or -2 before clamping; those stores remain in the raw
+transcripts. Native comparison observes the final tone at each refresh, folding
+multiple palette calls that occur without another wait.
+
+Fresh GNU Release and optimized UBSan/bounds builds of the complete Animation
+owner each pass all 24 native vectors. An actual compiled 328585f predecessor
+fails 14 vectors, while its ten ordinary positive-speed vectors still agree.
+This checks the logical refresh sequence; hardware IRQ cadence and DAC scanout
+belong to their separate owners.
+
+Frozen producer 528/dbdbcbe5 and complete controls are retained in the isolated
+`native-palette-zero-v1413` tree under
+`.analysis/port64/native-palette-zero-v1413/`. `verify_closure.py` checks its
+source archive, full wait carriers, both compiler outputs, predecessor failures
+and 803 frozen text-proof files. CI passes 345 tests. No historical exact
+ledger is promoted by this native recovery.
+
+The v1414 join combines this recovery with the published native wait/text
+head 9a7f380. Producer 530/4dc27bde freshly builds the entire core, frontend
+and four selected contract programs in both GNU Release and optimized UBSan.
+Each passes four related CTests and all 24 palette timelines, using the full
+original transcripts above. Its closure retains 1,635 independent parent pins.
+Complete source, programs and comparisons remain under
+`native-palette-join-v1414/.analysis/port64/native-palette-join-v1414/`.
+Native CI passes 345 tests; the prior full-graph and game-flow receipts keep
+their original v1412 producer.
+
 ## Text Gaiji memory addressing (v1408)
 
 The shared native `TextPlane` now uses the original `GAIJI_PUTCA/PUTSA`
