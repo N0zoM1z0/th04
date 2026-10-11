@@ -54,20 +54,22 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native's refresh clock uses 17.723227 ms and includes the original immediate
-first callback. Its analog graphics colors now follow the pinned PC-98
-4→6→8-bit DAC scanout path, keeping fade arithmetic in the four-bit domain.
-Fresh GNU passes 69 CTests; muted GNU and optimized UBSan four-Demo routes
-produce 127 identical files. Selected state, text, palette, indices and shake
-outputs keep their previous full hashes. Private Linux window/input and fresh
-Game Over/MAINE registration graphics-consumer checks pass.
+Native demo validation now runs the Logo and title startup before four natural
+demos, then completes a fresh OP title. Cold GNU passes 69 CTests; muted GNU
+and optimized UBSan produce 128 identical capture files. Selected state, RNG
+and draw counts match both fresh original captures at all 15,988 boundaries.
+The analog 4→6→8-bit DAC and 17.723227 ms refresh period retain their prior proofs.
 
-With explicitly supplied original display-event timing, all 40 complete raw RGB
-samples match the independent original renderer without normalization or crops.
-Default timing matches 37/40; three blink-phase cases remain. The old linear
-palette control rejects 28/40. Default boot/loading timing, physical and
-cross-emulator scanout, broader paired routes and Windows input/audio remain
-open. Development stays active; see the handoff for scope and cleanup recovery.
+With each original capture's supplied display-event clock, all 40 complete raw
+RGB samples match the independent renderer: 80/80 across the fresh pair, without
+normalization, crops or fitted offsets. Default full-startup headless captures
+match 32/40 and 30/40 against the separate originals. The earlier 37/40 result
+applied to compact headless entry against retained V3.
+
+These muted captures use `--pmd-driver none`; PMD measure waits and original
+audio timing remain unpaired. Boot/loading/process clock ownership, physical
+and cross-emulator scanout, broader paired routes and Windows input/audio remain
+open. Development stays active; see the handoff for evidence and cleanup recovery.
 
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

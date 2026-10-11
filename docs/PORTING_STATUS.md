@@ -336,3 +336,24 @@ defaultphase matches37/40. Oldlinear sameclock rejects28/40. These are scoped
 programmed-frame samples, not physicalscanout/defaultboot/wholepicture acceptance.
 Default elapsed-time owners, physical/liveDAC/cross-emulator output, broader
 paired routes and Windows remain open. The goal stays active. See the handoff.
+
+## Full OP startup and observer control (v1390)
+
+Native demo validation now runs the Logo and title startup before four natural
+demos, then completes a fresh OP title. Cold GNU passes 69 CTests; muted GNU
+and optimized UBSan produce 128 identical capture files. Selected state, RNG
+and draw counts match both fresh original captures at all 15,988 boundaries.
+The analog 4→6→8-bit DAC and 17.723227 ms refresh period retain their prior proofs.
+
+With each original capture's supplied display-event clock, all 40 complete raw
+RGB samples match the independent renderer: 80/80 across the fresh pair, without
+normalization, crops or fitted offsets. Default full-startup headless captures
+match 32/40 and 30/40 against the separate originals. The earlier 37/40 result
+applied to compact headless entry against retained V3.
+
+These muted captures use `--pmd-driver none`; PMD measure waits and original
+audio timing remain unpaired. Boot/loading/process clock ownership, physical
+and cross-emulator scanout, broader paired routes and Windows input/audio remain
+open. Development stays active; see the handoff for evidence and cleanup recovery.
+
+Producer: `bdc1fb56f80b1d5d987c89a1cfe63cea9da155eb6ef8eb662c10480dd02c4b5e`. See the differential note and current handoff.

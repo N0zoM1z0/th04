@@ -2402,3 +2402,71 @@ Next: default boot/loading/process elapsed-time owners under observer-overhead
 controls. Raw PIC fractional timing, physical/cross-emulator DAC and scanout,
 broader paired Boss/death/process routes and Windows input/audio remain open.
 All target provenance remains candidate-local-attested; no DOS exact promotion.
+
+## Full OP validation startup and controlled clock pair (v1390)
+
+The previous --demo-pictures entry did not request MainAssets.full_startup;
+ordinary windows did. Its default37/40 fullRGB comparison is scoped to that
+compact headless entrance against retained originalV3, not ordinary window or
+full OP startup timing. Current frozen510 producer bdc1fb56f80b1d5d987c89a1cfe63cea9da155eb6ef8eb662c10480dd02c4b5e
+changes only main.cpp and demo_picture_frontend_checks.inl. Demo captures now
+load the complete existing startup resources and run the ordinary startup
+controller. Actual startup callbacks independently record one resident Logo and
+five completed OP titles: before each of four natural idle demos and fresh OP
+after Demo4. The existing muted capture profile uses --pmd-driver none;
+logo measure waiting therefore remains an explicit adapter boundary rather than
+original PMD/audio timing acceptance. No visual startup is bypassed, logo repeated, or new per-demo clock offset
+introduced. This corrects validation admission; ordinary window admission was
+already fullstartup. Final OP ready is fresh native coverage, not an original
+complete process/teardown/physicalclock claim.
+
+Cold GNU71 programs/69 CTests and optimized UBSan/bounds3 pass. Actual muted
+SDL-dummy four-Demo runs produce128 identical files. Changes from compact
+v1389 are ['demo2-frame1952.rgb', 'text-refreshes.txt', 'demo4-frame74.rgb', 'demo2-frame3996.rgb', 'startup-events.txt', 'demo1-frame3709.rgb', 'demo4-frame73.rgb']. Selected state/RNG/callcounts
+agree at all15,988 before-update/terminal seams against both fresh originals.
+Other actor/presentation proofs keep their prior producer identities. Actual
+muted private Linux Xvfb input/focus/release/exit passes with0 audio opens.
+
+Original controlled pair uses the same projected collector/ELF/config/reset/
+input/full40sample plan. Only TH04_CLOCK_OBSERVER_DELAY_NS0 versus5000000
+changes, sleeping after the first128 post-both-GDC V observations. Measured
+host overhead: [{'requested_delay_ns': 0, 'calls': 128, 'elapsed_ns': 0, 'scope': 'Host sleep after first128 complete recordedV callbacks;no guestwrites'}, {'requested_delay_ns': 5000000, 'calls': 128, 'elapsed_ns': 654057090, 'scope': 'Host sleep after first128 complete recordedV callbacks;no guestwrites'}]. No guest registers, memory, scheduling
+requests, input, recorded phase or target bytes are patched. Original MAIN
+SHA077440a3, scalar0AAF:00B7 and terminal0AAF:0975, load10FC/DGROUP3230
+remain independently guarded. Both complete event streams replay independently
+compiled archive-attested original GDC advance bodies; every15,988 frame seam
+and15,984 thin row agrees. Constructors and parameter coverage retain explicit
+limits. Selected/caller comparison passes. The event difference histogram is
+{'5': 15987, '6': 1}; 2501 boundary
+visible phases differ. Within-MAIN event increment histograms:
+[{'1': 15977, '0': 5, '2': 2}, {'1': 15975, '0': 6, '2': 3}]. This is one controlled pair and cannot
+prove universal host-observer effects or their absence. Without repeated
+zero-delay controls, the five-event shift cannot be attributed specifically to
+the sleep rather than ordinary run-to-run jitter. Keep absolute epochs
+distinct; do not correct original data or fit native offsets. The full pair
+receipt records all raw region differences of80 whole snapshots separately.
+All40 paired raw text/graphics/both-pages/palette/modes/FONT/CRT regions are
+identical; only GDC and raster-time spans differ.
+
+Each fresh full FONT/CRT/VRAM/palette/GDC/time sample verifies complete hash,
+gzip CRC/EOF and same-boundary F clock payload. The unchanged independent
+original scanout renderer emits240 full RGB references from these80 samples.
+Separate actual FrontEnd fixtures admit each capture's recorded event ordinals
+at15,988 boundaries and15,984 endpoints before paint. Original visible is an
+assertion only; no phasefit/crop/tolerance/normalization is applied. Raw complete
+640x400 RGB is zero40/40 for each supplied-clock capture,80/80 total. Whole
+canonical TRAM equals; whole native/index inequalities remain diagnostic.
+Default fullstartup rawRGB counts against each separate original are
+{'baseline': {'default_raw_zero': 32, 'common_raw_zero': 40}, 'host-delay': {'default_raw_zero': 30, 'common_raw_zero': 40}}. These counts describe sampled default headless timing only.
+The clock fixture supplies MAIN seam ordinals; startup prefix, inter-process
+CPU/loading times and final OP elapsed-time ownership remain unpaired. The
+zero-initial-callback one-field control rejects at initial admission.
+
+An initial wrapper syntax typo failed before any original launch; the log is
+retained and the corrected wrapper runs in baseline-v2.log. No failed harness
+becomes acceptance. All replay source/receipts/logs and neworiginal compressed
+streams remain private under native-clock-owners-v1390. pipeline_v2.py is serial
+CPU0/nice19; compare_native.py finishes the independent raw reductions.
+Default boot/process CPU-I/O clock ownership, physical/cross-emulator scanout,
+Boss/death/fullprocess pairing and Windows input/audio remain open. Targets
+remain candidate-local-attested; no DOS exact acceptance changes.
