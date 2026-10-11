@@ -1029,3 +1029,75 @@ receipts/programs/frozen inputs: native .analysis/port64/native-blink-v1385/.
 read_clock.py, verify_overlay_v2.py, clock_frontend_v2.py, compare_final.py and
 verify_control.py retain their distinct source identities. Restore retired
 inputs before replay. v1384 ba6eff48 proofs cannot attest live a47f0496 source.
+
+## Live FONT, text/CRT registers and original refresh time (v1386)
+
+A new complete original VP4 capture extends the previous complete-update seam
+at MAIN 0AAF:00B7 / terminal 0AAF:0975 (load10FC, DGROUP3230). It retains the
+same original executable, 24,000-cycle muted emulator, reset files, image and
+ordinary observer. Each of 15,984 records now carries 808,255 bytes: the full
+VP3 video block, actual 516 KiB FONT, eleven text/CRT bytes and 51 raster/time
+bytes. The actual compiler confirms vga+312 FONT size528384, 27 ELF symbols,
+old ABI and cursor/width/time offsets; all source/target/stream/header/CRC/EOF
+and complete starting-image readbacks pass. No emulator or product rebuild.
+
+All 15,984 FONT snapshots share SHA-256
+4619804429e024bb4e3770b242408797f25425c42c8fc1822afdbaff9bec147e.
+The earlier BMP/GAMEFT directwrite model differs in exactly 32 bytes,
+0x560..0x57F: ANK V/W. Its writes skipped the actual A9 port high-byte guard.
+The complete archived writer predicate rejects 0056/0057. A separate asset
+model with that predicate reproduces all 528,384 bytes at every record, without
+copying observed FONT into source. Earlier 40-picture/88-controlled-text results
+retain their limited identity; they never established whole FONT RAM. Native
+already falls back to BMP for zero-high-byte ANK, so no native repair is made.
+
+All eleven text/CRT fields are stable: first scanline0, last15, blank16, no
+scroll, CRT/monochrome/attr4 false. Hide-odd and allow-scanline-effect are true,
+where the earlier emitter used false; slave doublescan is false, so those
+branches do not affect these samples. Captured cursor/width values are also
+used by the new emitter. The unchanged independent line/GDC bodies now consume
+actual full FONT and registers rather than font/default adapters. All forty
+complete 640×400 captured/on/off RGB outputs are retained. Their captured RGB
+matches the old adapter's sampled outputs exactly. Font inversion, first text
+raster and CRT shift alter 202,985, 6,695 and 3,914 full-frame pixels; malformed
+full extents reject. Actual surfaces are consumed, not silently ignored.
+
+All 15,984×38 old programmed regions still agree with immutable VP3. Full raw
+prefix equality has 15,959 records; all 25 unequal records retain every byte
+and value. The actual header compiler places scan_address170, row_line173,
+display_partition174 and remaining_lines176 in each 232-byte GDC. Those derived
+master/slave raster fields account for every unequal byte. Programmed-frame
+regeneration does not attest physical raster/scanout equality.
+
+The new original's 15,988 selected scalar/caller/reset boundaries also agree
+with the frozen current native a47f0496 parent. All 127 parent capture hashes
+are recovered unchanged. No new native execution/build/full-pool claim is made;
+its v1385 whole GNU71/69CTest and optimized UBSan3 receipts keep their identity.
+New full RGB versus native remains 12/40 raw-zero and 28 unequal; explicit DAC
+diagnostics have 32/40 zeros and eight blink-phase cases. Native-phase projection
+has 40/40 diagnostic zeros, without full-picture or original-phase acceptance.
+
+Actual vga.draw.delay.framestart/PIC ticks/vtotal reveal a constant original
+refresh period of 17.72322658483988 ms. All 15,980 within-Demo time transitions
+agree with GDC phase without fitting an epoch. Demo1/2 and Demo3/1968 have zero
+event time; Demo3/1954 and /1963 have 35.4464531697 ms, two refreshes. They are
+literal zero/two events in this pinned scenario, strengthening v1385's residues.
+Native still uses 17.730496 ms (56.4 Hz approximation). Recover the timing owner
+and calibrate native cadence, then original boot/process timing, before absolute
+phase/scanout acceptance. Boss/death/process and cross-emulator routes stay open.
+DOS product fingerprint6f5898dd, native509 manifesta47f0496 and historical exact
+states are unchanged; candidate-local-attested provenance remains a gap.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-cg-v1386/;
+new original .analysis/runtime/candidates/dos-demo-v1386-original-cg-v1/;
+receipts/programs native .analysis/port64/native-cg-v1386/. Replay read_full.py,
+read_prefix.py, verify_font.py, compose.py, attest_raster.py and verify_control.py
+after restoring retired inputs. The new capture and old VP3/adapter/producer
+proofs retain separate identities; none is restamped.
+
+The additional controlled V/W plane compares all768000 RGB bytes equal between
+the retained currentnative RGB/ARGB APIs and actual capturedCG, while the old
+font adapter differs71 pixels. This directly verifies the native ANK fallback.
+The first readonly counting recipe repeatedly read fullfiles per pixel; a
+separate v2 reads eachfile once and reproduces the same output hash/count. Both
+passed scripts/receipts are retained. Replay verify_ank_v2.py after recovery.

@@ -10,53 +10,53 @@ indexes all four bundled demos in complete compared state/video regions;
 scanout, ordinary Boss/death/process and full native pairing remain open.
 Historical exactness remains separate; target canonicality is candidate-local-attested.
 
-v1385 restores MAIN text blink from an independent persistent display clock.
-All 15,984 original master/slave GDC triples agree at rate32. Modulo128 deltas
-include zero at Demo1/2 and Demo3/1968 and two at Demo3/1954,1963; the Demo
-frame number cannot replace display refreshes. Original absolute epoch is open.
+v1386 completes a new original VP4 capture of full font memory, text/CRT
+registers and event time. All 15,984 complete records and 15,988 selected scalar
+boundaries pass. MAIN 0AAF:00B7 / terminal 0AAF:0975, load10FC/DGROUP3230,
+original/reset/image/emulator/ABI/CRC/EOF identities remain attested.
 
-Native mask0x02 blanks the glyph before reverse0x04. 80 complete controlled
-text layers and eight attribute controls match the unchanged pinned DOSBox-X
-emitter; both RGB/ARGB APIs agree. Explicit black-graphics and reconstructed
-BMP/GAMEFT adapters do not attest live CG RAM or physical scanout.
+All 516 KiB of FONT at host vga+312 and eleven text/CRT fields are stable.
+The old direct font model fails in 32 ANK V/W bytes. A separate asset model
+with the archived A9 write-port guard reproduces all 528,384 bytes without
+copied FONT arrays. A full controlled V/W text layer also matches the retained
+native RGB/ARGB APIs; the old adapter differs in 71 pixels. Native already
+handles those characters through BMP. Product source is unchanged.
 
-The clock persists through OP, waits and MAIN replacement. Headless admission
-includes slowdown; host source paths use monotonic elapsed time. All 15,988
-native rows replay the unchanged GDC counter. Separate instrumented FrontEnd
-logical/host-time/repaint/double-admission/backwards controls pass, retaining
-all 127 ordinary capture hashes. Phase-inversion/per-Demo reset controls reject.
-Captured-phase diagnostic mismatches grow from five to eight with the distinct
-native epoch; phase agreement is not accepted. Other TextPlane callers
-keep the visible default; physical Windows remains untested.
+All 38 old programmed regions agree at every update. The 25 unequal complete
+raw records differ only in GDC scan/row/partition fields, with every byte
+retained and compiler offsets verified. Actual FONT/register rendering matches
+the earlier 40 sampled adapter pictures. Three surface controls and malformed
+extents reject. The 127 frozen parent capture hashes and selected-state
+boundaries stay unchanged. Parent509/a47f0496 GNU71/69CTest/UBSan3 receipts
+retain their identity; this batch has no new native build/run/full-pool claim.
 
-Four inputs change among 509 (manifest a47f0496…). Fresh whole cold GNU has
-71 programs and 69 passing CTests; optimized UBSan cold-builds game/trace/shake.
-Actual muted SDL-dummy OP→four demos→OP has 127 identical variant files.
-All 40 entire indices/TRAM and six parent trace/save hashes stay unchanged;
-prior full-pool producers retain their identities. Blink changes 2,780
-sampled RGB pixels. Full captured-phase raw RGB has 12/40 zeros; explicit
-DAC diagnostics have 32/40 zeros. Native-phase projection has 40/40
-zeros, without raw/whole-picture/original-phase/scanout acceptance.
+Full RGB remains 12/40 raw-zero. Explicit DAC diagnostics have 32/40 zeros
+and eight blink-phase cases. Native-phase projection gives 40 diagnostic
+zeros without raw/whole-picture/original-phase/scanout acceptance. Original
+event time has period17.72322658483988 ms and confirms zero/two refresh
+exceptions. Native's17.730496 ms approximation is the next timing owner.
 
-Next capture live CG RAM and text-scroll/CRT surfaces, recover original
-absolute refresh/scanout timing, and extend paired ordinary Boss/death/process
-routes. Full fidelity remains active. Candidate-local-attested provenance and
-deferred historical carpet/checkerboard exactness remain separate.
+Next attest timing ownership and calibrate native cadence, then original
+boot/process/scanout phase and broader paired Boss/death/process routes.
+Four-Demo FONT/register evidence is now observed; physical scanout and other
+routes remain open. The full goal stays active. Candidate-local-attested
+provenance and deferred historical carpet/checkerboard exactness stay separate.
 
-Recipes: DOS-root .analysis/reconstruction/probes/native-blink-v1385/;
-native receipts: .analysis/port64/native-blink-v1385/. First receipt-write type
-error is retained; corrected v2 passes. Restore retired inputs before replay.
-Frozen v1384 ba6eff48 cannot attest current a47f0496 source.
+Recipes: DOS-root .analysis/reconstruction/probes/native-cg-v1386/;
+original .analysis/runtime/candidates/dos-demo-v1386-original-cg-v1/;
+native receipts .analysis/port64/native-cg-v1386/. Restore retired inputs before
+reader replay. Older proofs retain their original source/evidence scopes.
 
 All jobs are terminal. Main 441/live Ghidra and native 345/target CI pass.
-Lossless retirement checks pass for 1,280 complete files and 1,044
-source-backed caches; 27,535 protected hashes and 509 source pins pass.
-Net 334.5 MiB is reclaimed after the 15.6 MiB archive, before
-journal cost. Programs, frozen sources, original references and both private
-probe failures remain retained. From DOS root, restore before reader replay:
+Lossless retirement checks pass for 299 complete files and 1,044
+source-backed caches; 27,637 protected hashes and 509 source pins pass.
+Net 217.9 MiB is reclaimed after the 26.3 MiB archive, before
+journal cost. Programs, frozen sources, original references, the rejected FONT
+model and separate counting recipes remain retained. From DOS root, restore
+before reader replay:
 
 ```sh
-python3 .analysis/reconstruction/probes/native-blink-v1385/verify_retention.py --restore
+python3 .analysis/reconstruction/probes/native-cg-v1386/verify_retention.py --restore
 ```
 
 Without --restore it checks all recoveries temporarily. Old proofs keep their

@@ -21,27 +21,26 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. The latest v1385 repair adds a persistent display
-clock for MAIN text blink and preserves blink-before-reverse attribute order.
-All 15,988 native clock rows pass the unchanged independent GDC counter;
-80 complete controlled text layers and eight attribute cases match the
-independent DOSBox-X emitter. Original captures expose zero/two refresh
-exceptions, so Demo frame numbers cannot supply original display phase.
+Native development is active. MAIN text blink uses a persistent display clock
+and correct blink-before-reverse order. The latest v1386 original capture
+records full 516 KiB font memory, text/CRT registers and refresh time at all
+15,984 Demo updates. A 32-byte ANK V/W error in the old independent font probe
+is rejected; applying the actual write-port guard reproduces the full font.
+Native already uses the correct BMP for those characters; no product changes.
 
-A fresh whole cold GNU build produces 71 programs and passes 69 CTests.
-Optimized UBSan cold-builds the game, trace and shake targets. Actual muted
-OP→four demos→OP routes produce 127 identical complete capture files;
-all 40 entire indices/text planes and parent state/shake/splash traces stay
-unchanged. Earlier complete nine-pool and ordinary Linux clear/save/restart
-evidence keeps its separate producer identity.
+The current 509-input a47f0496 producer retains its v1385 whole cold GNU build:
+71 programs, 69 passing CTests, optimized UBSan game/trace/shake targets and
+127 identical actual four-Demo capture files. New original selected-state and
+40 entire TRAM samples agree with that frozen parent. Actual font/register
+rendering reproduces earlier sampled RGB, while 25 raw GDC raster records
+remain different. Complete physical scanout is unaccepted.
 
-Blink changes 2,780 sampled RGB pixels. Full captured-phase raw RGB has
-12/40 zeros; explicit DAC diagnostics have 32/40 zeros. The
-native clock has its own epoch; no per-Demo phase fit is used. Native-phase
-projection is diagnostic, not complete-picture acceptance. Original absolute
-phase, live font RAM, text/CRT registers, physical scanout, broader routes and
-physical Windows input/audio remain open. See
-[the current native handoff](docs/RE_HANDOFF.md).
+Original refresh time is 17.72322658483988 ms; native still uses 17.730496 ms.
+Timing ownership and cadence calibration are next, followed by original
+boot/process phase. Full raw RGB remains 12/40 zero; explicit DAC diagnostics
+have 32/40 zeros and eight phase cases. Diagnostic projection is not picture
+acceptance. Broader routes, physical Windows input/audio and cross-emulator
+pairing remain open. See [the current handoff](docs/RE_HANDOFF.md).
 
 ## Build and run
 
