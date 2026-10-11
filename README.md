@@ -55,7 +55,9 @@ game-area pixel differences fall from 55,357 to 430. Painting the full physical
 background ring now removes those remaining 430 pixels at that sample on GNU
 and optimized UBSan. Correcting Marisa laser color timing also removes 11,384
 color differences across four Demo 2 samples; all ten sampled Demo 2 game
-areas now agree. Five other sampled game areas still differ. Whole graphics/RGB,
+areas now agree. Restoring whole-pool white/purple pellet passes removes another
+40 pixels: Demo 1 frame 3996’s game area now agrees, and frame 1952 has 26 differences left.
+Four sampled game areas still differ. Whole graphics/RGB,
 physical scanout, broader routes and Windows input/audio acceptance remain open.
 Historical exact acceptance has its own contract; runtime agreement does not
 promote it.

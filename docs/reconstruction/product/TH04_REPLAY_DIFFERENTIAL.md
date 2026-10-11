@@ -1706,3 +1706,81 @@ python3 .analysis/reconstruction/probes/native-shot-render-v1380/verify_retentio
 
 Without --restore, it performs temporary complete readback. Old v1379 proof
 retains its then-current 8e77830c scope and cannot attest live f5791751 sources.
+
+## Whole-pool pellet color passes (v1381)
+
+Observed MAIN_01_TEXT 0AAF:81F5..82FF (file 144E5..145EF, 267 bytes)
+calls the complete white top pass before the complete purple bottom pass.
+The actual leaves are 1EAC..1F3C (file E19C..E22C, 145 bytes) and
+1F3E..1FA7 (file E22E..E297, 106 bytes). The intervening EVEN byte belongs
+to the physical ASM owner and is outside either executable body.
+
+Target instructions 1F2E/1F30 overwrite DGROUP 2134:86D2 coordinate pairs
+with bottom VRAM and shifted-sprite offsets. The retained post-render DGROUP
+list cannot be passed directly to the top renderer as left/top coordinates.
+A bounded inverse recovers byte-column plus shift from sprite base 181C and
+physical top row from bottom row minus three modulo 400. Executing the actual
+top body must reconstruct every original post-top pair. Complete roundtrips
+pass for all 60/98 pellets at Demo 1 frames 1952/3996.
+
+Runtime-observed GRCG write-mask adaptation executes the same raw target leaves
+with whole-pool passes and with per-pellet interleaving. The latter lets a later
+white top overwrite an earlier purple bottom. All 8/32 changed pixels equal
+original color 9 and former native color 15. Full 256,000-pixel results from
+both target-body execution orders are retained. This does not accept physical
+GRCG timing or complete original pictures.
+
+Native view now finishes the 16px bullet sprites, draws all procedural white
+pellet pixels, then all procedural purple pixels. GNU and optimized UBSan
+actual muted SDL-dummy idle OP→four demos→OP close Demo 1 frame3996 32→0 and
+frame1952 34→26. All 40 changes in the two complete index pictures agree with
+the original CPU and original pixels; the other 38 full index/RGB hashes are
+unchanged. All 40 full canonical text planes, 15,988 selected scalar/count
+boundaries and 15,984 complete shake states/requests pass. All 125 capture files
+agree between variants; complete parent state/shake trace bytes remain equal.
+
+An independent negative probe executes the ordinary circle caller 0AAF:1C28
+at all five formerly nonzero natural samples. Its pool has no alive records
+and all calls issue zero raw GRCG circle requests. This excludes that ordinary
+pool here; it does not exercise or accept the raw circle leaf. Remaining game-area
+samples are Demo 1 frames 1/1952 (124439/26 pixels) and Demo 3 frames 3379/3709
+(60/17). Their white-pixel and initial-background causes remain unproved;
+full graphics/RGB/scanout and broader routes remain open.
+
+Only view.cpp changes among 509 producer inputs; manifest:
+fb26d5099584000e576c66c9dc5a7822ec64745c2b05058de6404e15b3481440.
+Both variants cold-compile that TU and relink SHA-attested unchanged dependencies.
+This is a bounded build; earlier whole cold/69-CTest/full-pool receipts retain
+their own producers. Frozen imported DOS/native readers reproduce both complete
+shake receipts except their separately pinned source hashes. Fresh preflight
+and live MAIN database attestation pass; provenance remains candidate-local-attested.
+No DOS inputs, target bytes or historical exact acceptance change.
+
+Recipes: DOS-root .analysis/reconstruction/probes/native-circle-v1381/
+inspect_circles.py, prove_pellet_passes.py, build_frontends.py, run_validations.py,
+verify_pixel_change.py, freeze_readers.py. Receipts: native
+.analysis/port64/native-circle-v1381/. Jobs run CPU0/nice15 serial; launches stay
+muted/headless. The batch path preserves its initial circle investigation.
+
+## v1381 terminal validation and recovery
+
+All v1381 jobs are terminal. Main 441/live Ghidra and native 345/target CI pass;
+unavailable private native gates skip. Full parent/current sample hashes show
+38 complete index/RGB samples unchanged. All 40 pixel changes in the other
+two complete index pictures equal the actual original CPU pellet passes and original
+pixels on both variants. This further bounds the repair; whole pictures stay open.
+
+Lossless retirement reclaims 156,139,520 allocated bytes (148.9 MiB) before
+journal cost: 354 complete sample/capture/build files and 1,044 source-backed
+caches. Full restoration/SHA/size/mode/nsmtime/gzip EOF, 18,924 protected
+hashes, 509 source pins and unchanged DOS fingerprint pass before and after
+deletion. The cleanup log is excluded while writing. Two new FrontEnd programs,
+all old programs, frozen sources, original references and failures stay live.
+From DOS root, restore retired inputs before CPU/graphics/reader/relink replay:
+
+```sh
+python3 .analysis/reconstruction/probes/native-circle-v1381/verify_retention.py --restore
+```
+
+Without --restore, it performs temporary complete readback. Old v1380 proof
+retains its then-current f5791751 scope and cannot attest live fb26d509 sources.

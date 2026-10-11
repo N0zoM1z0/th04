@@ -224,3 +224,13 @@ All selected scalar/shake/text checks pass, all 125 captures agree between
 variants, and parent state/shake traces remain byte-identical. Only view.cpp
 changes among 509 inputs; previous whole cold/CTest/pool evidence retains its
 producer. Whole graphics/RGB/scanout and broader pairing remain open.
+
+
+v1381 restores whole-pool white/purple pellet passes from the original caller
+and actual leaf execution. All 40 overlap color differences disappear:
+Demo 1 frame3996 32→0, frame1952 34→26. Other 38 complete index/RGB samples
+remain unchanged. All scalar/shake/text checks pass on GNU/optimized UBSan;
+parent state/shake traces remain byte-identical. Ordinary circles are excluded
+at all five former remaining samples. Four nonzero samples and full pictures/
+scanout/broader pairing remain open; the bounded view build retains prior core
+and whole cold/CTest/full-pool producer identities.
