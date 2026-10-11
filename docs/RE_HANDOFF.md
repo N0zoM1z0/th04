@@ -5,6 +5,31 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## DOS analog and LCD palette output (v1415)
+
+`palette_show.cpp` now restores the original `PaletteNote` branch in
+MAIN, OP and MAINE. Nonzero selects eight LCD shades, with the original
+component masks, weighted conversion, polarity query and port order.
+Default zero keeps analog RGB output. Each complete original function is
+266 bytes: MAIN 0000:1F04, OP 0000:1DE0, MAINE 0000:19EC.
+
+Three cold DOS products from producer 1425/491e4afa link and pass IRQ audits;
+MAIN also passes its bullet tables. All 20,832 original/compiled instruction
+controls agree at loads 1000/3333. The actual old MAIN rejects 6,488 LCD
+controls and retains 456 analog matches. The added state WORD also passes
+528 VSync wait and 324 lifecycle controls across the three rebuilt products.
+These results establish ordered I/O and far-return state; historical exact
+counts stay unchanged.
+
+Replay: `.analysis/worktrees/dos-palette-note-v1415/.analysis/reconstruction/probes/dos-palette-note-v1415/`.
+Full original functions/transcripts, fresh EXEs/MAPs, six palette/state OMFs,
+complete source freeze and 1,744 parent proof files remain. Verified archive
+retirement and source-backed cache cleanup release 22.07 MiB net.
+CI passes all 451 tests and tracking gates. See the palette section in
+[build readiness](reconstruction/product/TH04_NATIVE_BUILD_READINESS_V1.md)
+and [retention instructions](ANALYSIS_RETENTION.md). Continue hardware/caller
+recovery; no game campaign was run for this change.
+
 ## Joined native MAINE wait consumers (v1416)
 
 Joined native producer 532/037b0f2e restores shared Animation's logical

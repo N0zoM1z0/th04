@@ -676,9 +676,55 @@ exports both C and Pascal spellings for `PaletteTone` and the 48-byte
 `Palettes` array. `PALETTE_SHOW` writes 16 analog palette entries through
 PC-98 ports `0xA8`, `0xAC`, `0xAA`, and `0xAE`; tone 0..100 scales each
 component's high nibble toward black and 100..200 toward white. This follows
-the analog branch of the bounded ReC98 reference. Its LCD-specific path and
-hardware timing remain unobserved, so this is a semantic product candidate,
-not exact or runtime-accepted source.
+the analog branch of the bounded ReC98 reference. That first owner covered analog output only. The complete LCD branch is
+recovered below under v1415; physical display timing remains open.
+
+### Complete palette output, including notebook LCD (v1415)
+
+The three originals contain the same 266-byte control flow with different
+data operands: MAIN 0000:1F04..200E, OP 0000:1DE0..1EEA, and MAINE
+0000:19EC..1AF6 (ends exclusive). `PaletteNote` is a WORD: zero selects
+analog RGB; nonzero takes the LCD path. `PaletteTone` is interpreted as a
+signed WORD and clamped to 0..200.
+
+The recovered LCD path writes A0h to port F6h and reads 871Eh. An FFh
+response triggers the fallback read at AE8Eh, shifted right two. The selected
+low bit controls polarity. For each color, the original masks red's high
+nibble and blue's **low** nibble with the inversion byte; green uses its high
+nibble. After tone scaling, it weights the components as
+`2*r + 4*g + b + max(r,g,b)` and quantizes them to eight levels. Port output
+is A8h for the color index, then AEh, ACh, AAh for the three shade bits.
+The typed implementation preserves these masks and the complete I/O order.
+The original patches one CS byte per LCD call to apply polarity; its full
+instructions, including that write, execute in the comparison.
+
+Producer 1425/491e4afa changes only `palette_show.cpp` and
+`palette_state.asm` from the frozen v1411 product inputs. It cold-builds
+MAIN, OP and MAINE with no historical palette archive. All three link and
+pass IRQ audits; MAIN's bullet switch tables also pass. The new exported
+`PaletteNote` storage defaults to zero. Hardware selection is supplied as an
+explicit input in the function comparisons.
+
+The maintained `scripts/runtime/verify_dos_palette_show.py` captures the
+complete original functions, then executes each linked replacement. Each
+artifact has 3,472 palette/tone/query fixtures at two DOS loads: 6,944 ordered
+port transcripts. Fixtures cover signed/truncated WORD boundaries, zero and
+nonzero notebook flags, both query routes/polarities, and all 4,096 RGB
+high-nibble combinations with varied low nibbles. All 20,832 comparisons
+agree, including far-return stack and preserved palette/tone/note storage.
+The actual v1411 MAIN predecessor fails 6,488 LCD comparisons while all 456
+analog controls agree. Rebuilt VSync waits and lifecycle functions pass
+528 and 324 additional controls, respectively, after the DGROUP change.
+This is instruction-level I/O recovery; it does not promote historical bytes
+or measure physical LCD scanout.
+
+Private receipts and replay commands are under
+`.analysis/worktrees/dos-palette-note-v1415/.analysis/reconstruction/probes/dos-palette-note-v1415/`.
+`commands.json` and `hardware-commands.json` retain each invocation;
+`verify_closure.py --require-ci` reads full comparison streams, source and
+parent pins. The first producer completed MAIN before an OP input-link
+failure; its original verifier and MAIN transcript remain bound to that run.
+Fresh OP/MAINE producers follow the repaired input link.
 
 The 105-object no-archive link now has 42 unresolved names, down exactly
 `PALETTE_SHOW`, `_PaletteTone`, and `_Palettes`, with zero warnings. Two cold

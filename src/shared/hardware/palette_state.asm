@@ -7,6 +7,7 @@
 
 public _PaletteTone, PaletteTone, _Palettes, Palettes
 public _PalettesInit, PalettesInit
+public _PaletteNote, PaletteNote
 
 PaletteTone label word
 _PaletteTone dw 100
@@ -23,5 +24,8 @@ _PalettesInit db 000h,000h,000h, 000h,000h,0FFh
               db 0AAh,000h,000h, 0AAh,000h,0AAh
               db 000h,0AAh,000h, 000h,0AAh,0AAh
               db 0AAh,0AAh,000h, 0AAh,0AAh,0AAh
+
+PaletteNote label word
+_PaletteNote dw 0 ; zero selects analog RGB; nonzero selects LCD eight shades
 
 end

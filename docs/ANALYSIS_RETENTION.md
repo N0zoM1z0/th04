@@ -1748,3 +1748,28 @@ for exact owned-path recovery; use fresh output/source names for new runs.
 The failed33hook capture and import/reader failures are not upgraded by archive
 CRC/restore success. The terminal seal separately closes writer stdout and
 final checks/publication receipts.
+
+### DOS LCD palette compiler products (v1415)
+
+The owned three cold DOS work directories retire 3,566 disposable files as
+1,435 content-addressed blobs, releasing 13.49 MiB net after the archive
+and journal. Full gzip CRC/EOF, member SHA-256 and actual temporary restored
+size/mode/nsmtime pass before removal. Current source, final/private EXEs,
+MAPs, six selected palette/state OMFs, all controls and 1,744 frozen parent
+proof files remain live.
+
+Run from `.analysis/worktrees/dos-palette-note-v1415/`:
+
+```sh
+python3 -B .analysis/reconstruction/probes/dos-palette-note-v1415/verify_retention.py
+```
+
+Add `--restore` and an optional `--prefix
+.analysis/reconstruction/probes/product-20261011-214252-713f0023-main/` to
+recover one producer. Retain both `retired-content.tar.gz` and
+`retention.json`. `verify_closure.py --require-ci` verifies the full retained
+comparison and source closure; no retired compiler source is needed for it.
+
+Terminal CI passes all 451 tests and the tracking/catalog checks. Source-backed
+cleanup removes another 549 Python caches and releases 8.57 MiB net;
+`cache-cleanup.json` records each cache and its retained source hash.

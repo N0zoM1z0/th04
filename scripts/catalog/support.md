@@ -20,4 +20,5 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [lib/targets.py](../lib/targets.py) | support | Read hash-pinned private target artifacts without weakening provenance checks. |
 | [lib/th04_sprites.py](../lib/th04_sprites.py) | support | Generate the four TH04 MAIN sprite owners for a bounded link diagnostic. |
 | [lib/toolchain.py](../lib/toolchain.py) | support | Deterministic identities for private toolchain files and directory trees. |
+| [runtime/verify_dos_palette_show.py](../runtime/verify_dos_palette_show.py) | command | Compare original and rebuilt palette_show port transcripts, including LCD. |
 | [runtime/verify_dos_text_character.py](../runtime/verify_dos_text_character.py) | command | Compare linked ordinary text writers with retained original MAIN execution. |
