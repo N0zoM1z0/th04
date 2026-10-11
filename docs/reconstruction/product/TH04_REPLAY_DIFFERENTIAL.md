@@ -2852,3 +2852,89 @@ Lossless retirement reclaims 604.43 MiB, retaining 49 logical members in 15
 unique blobs with full CRC/EOF/SHA/mode/nsmtime and protected proof checks.
 Both CI gates pass (root 441 / native 345), ledger/diff checks pass and another
 16.69 MiB of source-backed caches is removed after CI.
+
+
+## Resident elapsed work through actual OP startup (v1395)
+
+Native now exposes typed resource/graphics/process work intervals through
+`sound::Timeline::advance_work`. An application-resident Timer/PCM owner
+progresses before local process creation and across process gaps. Inside a
+process, the same entry advances its beeper and mix. Pending refresh wait is
+consumed first, cleared and charged only once by the retained guard. Unknown
+work kinds and intervals above one second reject before any advancement.
+Longer sources must partition intervals; there is no fixed loading cost.
+
+`MainAssets::installed_work`, `op_entry_work` and `startup_work` carry explicit
+inputs to the maintained frontend. Installation intervals apply before OP
+sound entry; OP entry intervals apply after process-local setup, and event
+intervals apply after real renderer/sound consumers. Process-local beeper
+ownership and resident identity remain separate. The default adapters are
+empty, so these changes do not introduce a fitted age, 864 ns bus delay or
+refresh count into the CLI. GDC/text refresh ownership is still separate.
+
+The frozen current producer has 510 files, manifest
+`55459c6f487e25ce39e0b8499b89f52936e0273c536905e94b8a7764426fdb7e`. Six maintained files change: sound runtime/scenes declarations,
+scene implementation/contracts and view declarations/implementation. Cold GNU
+builds all 71 programs and passes 69 CTests. Optimized UBSan builds seven
+selected targets and passes four sound contracts, including the new
+pre-process/pending-wait/process-gap/PCM-attribution checks. The earlier 9cfe
+producer and its proofs retain their original identities.
+
+A separate headless caller includes the unchanged frozen `view.cpp`, links
+the cold product core/chip archives and instantiates the actual FrontEnd.
+Real OP PI/BFNT, LOGO.M86, MIKO.EFC, strict ROM and physical configuration are
+supplied. It admits the two independently verified original v1393 epochs
+through the new adapters, split at decoded entry, Logo entry, PI load/palette/
+draw/free, page copy/snapshot/clears and song load. Durations come from rounded
+cumulative PIC boundaries; they telescope without fitting a native outcome.
+They are bracketed original intervals, not native per-function CPU estimates.
+The original observations and verifier receipt remain unchanged.
+
+| Original CPU profile / typed input | 24,000 | 36,000 |
+| --- | --- | --- |
+| admitted first-B-to-PLAY epoch | 255,036,542 ns | 178,822,806 ns |
+| actual frontend measure readiness | 93 refreshes | 93 refreshes |
+| native PLAY-to-ready sample | 1,648,260,111 ns | 1,648,260,111 ns |
+| original PLAY-to-last-B-callback | 1,644,611,500 ns | 1,640,185,222.222 ns |
+| sample error | 3.648611 ms | 8.074889 ms |
+
+Both sample errors are within the actual frontend's 17.723227 ms refresh.
+This is coarser than the earlier standalone 1 ms service probe and is not IRQ
+latency/chip equivalence. Twelve actual caller executions (two inputs × three
+modes × GNU/UBSan) reach Logo readiness and complete first OP startup; complete
+output tables agree between compilers. The successful zero-work controls wait
+97 refreshes but reject the independent PLAY epoch. Graphics-only removal
+still aliases the positive 93 refreshes, yet loses original elapsed work and
+rejects the same gate. Completion and wait count cannot validate forwarding.
+
+Eight fresh default CLI executions cover none/pmd/pmdb2/pmd86, full startup,
+four natural demos and fresh OP readiness. All 129 files in each compiler pair
+are identical to the corresponding retained v1392 baseline outputs. This is a
+new source-bound regression result, not restamping old receipts or creating
+whole-picture/default-clock acceptance. Prior raw RGB diagnostic limits remain:
+31/40 none and 34/40 active profiles; broader original timing remains open.
+Actual private Linux Xvfb startup/selection/input/focus/release/exit passes,
+with zero audio device opens. Windows GUI and host input remain excluded.
+
+Replay producers are under
+`.analysis/reconstruction/probes/native-elapsed-work-v1395/`; native receipts
+and source freeze under `.analysis/port64/native-elapsed-work-v1395/`.
+`build.py`, `build_frontend_probe_v2.py`, `run_frontend_proof.py`,
+`capture_native.py`, `pipeline.py` and `compare.py` close separate receipts.
+The first caller compilation failed for a missing root include path; V2 adds
+both frozen root and port64 includes, leaving its failed source/log untouched.
+Restore retired build/program/RGB inputs before reading/replaying them:
+
+```sh
+python3 .analysis/reconstruction/probes/native-elapsed-work-v1395/verify_retention.py --restore
+```
+
+Use fresh output/source namespaces for another execution. Next supply defensible
+deterministic default work inputs and connect the distinct GDC epoch; do not
+substitute host wall time or fitted startup offsets for an original CPU/bus
+model. Physical/cross-emulator, broad combat/process, full pictures, Windows
+input/audio and historical MAIN exactness remain open. DOS fingerprint
+6f5898dd is unchanged; no DOS source, flags or headers change.
+
+Lossless retirement reclaims about 472.70 MiB; all logical build/video/state
+contents, mode/nsmtime and protected frozen-source/receipt hashes are retained.

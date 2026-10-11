@@ -452,3 +452,22 @@ handoffs across native asset loading, drawing and process entry. Previous
 GNU/UBSan/Demo/window proofs keep their old producer identities; default clocks
 and broader fidelity remain open. See the handoff and focused differential note.
 Native evidence commit: de21a71.
+
+## Resident elapsed work through OP (v1395)
+
+Explicit resource/graphics/process intervals now advance resident Timer/PCM
+across process gaps and local mix during a process, flushing pending wait once.
+Actual maintained OP frontend callers using independent original v1393 work
+inputs pass in GNU/UBSan. PLAY epochs of 255.036542 / 178.822806 ms and
+93-refresh readiness have sample errors of 3.648611 / 8.074889 ms, within one
+frontend refresh. Zero and graphics-only controls complete but fail the same
+epoch gate; removing graphics can still alias 93 refreshes. Default work
+adapters remain empty.
+
+Current cold GNU builds 71 programs and passes 69 CTests; optimized UBSan
+builds seven targets and passes four sound contracts. Eight default captures
+across four driver profiles reproduce all 129 retained outputs each. Private
+muted Linux Xvfb passes with zero audio device opens. Default resource/GDC
+pairing, full pictures and broader routes remain open.
+Native manifest: 55459c6f487e25ce39e0b8499b89f52936e0273c536905e94b8a7764426fdb7e.
+Native commit: 955de04.
