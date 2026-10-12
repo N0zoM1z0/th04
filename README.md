@@ -54,14 +54,15 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `a255917`
-(producer 543/70986a2b). MAIN good/bad/Extra exit fade16 now shares elapsed IRQ
-timing and hands remaining time to fresh MAINE after publishing statistics and
-releasing MAIN. Both complete GNU and optimized UBSan graphs pass 84 programs/
-82 CTests, 144 original fade controls, 24 actual inactive Ending routes and 8
-Extra routes with independent component pages/RGB. Game Over fade4,
-registration/other waits, real active-PMD paired timing, physical scanout,
-broader gameplay and Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
+Native development is active. `origin/port/modern-64` is at `26ab740`
+(producer 544/4a62eb34). Actual Game Over uses elapsed IRQ timing through
+Continue/Quit, preserving MAIN suspension and passing remaining time to fresh
+MAINE. Both GNU and optimized UBSan build 84 programs and pass 82 CTests,
+432 original controls, 24 actual Game Over scenes with 386 complete displays,
+and 24 score-return routes plus four writer failures per compiler. Eight
+default Demo profiles preserve all 129 prior hashes each. Registration/other
+waits, real active-PMD paired timing, physical scanout, broader gameplay and
+Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
 
 Current shared DOS restores upward SMEM and descending HMEM ownership and
 the graph page-copy workspace (producer 1,426/e60c079f). All 1,242 allocator and

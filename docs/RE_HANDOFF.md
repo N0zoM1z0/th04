@@ -5,58 +5,66 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
-## Native elapsed MAIN good/bad/Extra exit fade (v1426)
+## Native elapsed Game Over and Continue/Quit (v1427)
 
-The actual normal good/bad and Extra callers now consume black-out16 through
-shared elapsed Animation. Initial VSync retains inherited Count1; all eighteen
-palette publications and273 nominal counted waits remain. Completion publishes
-statistics and releases MAIN before resetting fresh MAINE counter BSS. Raster
-phase and unused elapsed time cross the handoff; clock/audio service occurs once.
-Extra's delay100 starts at the actual fade completion. Host admissions need not
-number273. The legacy no-clock helper remains a separate logical model.
+The actual Game Over scene now consumes elapsed time throughout cell masks,
+title movement, release/press, Continue menu and final black-out4. Every
+frame_delay clears only Count1. Keyboard reset follows the five menu drawing
+requests; subsequent menu loops retain pre/post OR and a new press. Shared
+Animation handles input_wait(0) and all eighteen fade4 palette publications.
+MAIN actor/STD/player/RNG work remains paused. Continue saves before resetting
+resources and resumes the suspended frame once. Quit publishes ES_SCORE and
+song fade0204 before black-out4, then passes unused time to fresh MAINE delay100.
+MAIN now initializes its own counter BSS while retaining raster phase.
 
-Observed MAIN relative CS:IP0000:B7B9/B7E4/B80F complete three exits (124 bytes),
-0000:0622..06A3 black fades and0000:2462..2487 IRQ-owned wait execute unchanged
-at loads1000/3333. DGROUP2134 counters2AB2/2AB4/2ABA, increment0772 and active
-owner0774 are explicit. Sound0204 and nonreturning execl are guarded seams;
-ideal IRQ stimuli do not measure CPU/I/O, sound or DOS-loader latency.
-The targets remain candidate-local-attested; historical exact stays661/663.
+Original MAIN0AAF:3971..3CEE (load-module E461..E7DD,893 bytes), frame_delay
+130E:00D7..00EB, input_wait130E:0133..0186 and black fades0000:0622..06A3
+execute unchanged at loads1000/3333. Full legal MZ relocation/DGROUP2134 and
+seeded live2AB2/2AB4/2ABA counters are retained. Resident scratch9000:0000
+lies outside both load modules, DGROUP and stack. Graphics, keyboard, ranking,
+HUD, sound and final dispatch have guarded ABI adapters. Stage5 Bad Ending
+is a dispatch seam. Ideal IRQ does not measure physical CPU/I/O/loader/audio.
+Targets remain candidate-local-attested; historical exact stays661/663.
 
-Cold producer543/70986a2b builds all84 programs and passes82 CTests under GNU
-Release and optimized UBSan/bounds. Each compiler agrees with144 original
-controls and72 coarse plus72 one-ms partitions across all three callers,
-WORD wrap, carry skips and inherited raster phase. The actual release callback
-also checks statistics publication and old generation/RNG before fresh MAINE.
-Same-source MAINE576/288 and Staff48/24 controls pass. Each actual muted
-inactive-BGM frontend completes24 Ending/Staff/verdict/Congratulations routes
-and8 Extra actor-control routes, including fresh OP and a second MAIN.
-Independent images retain576 Ending pages/288 original-DAC-projected RGB frames
-and48 pages each for Staff, verdict and Congratulations. These are component
-controls, not a complete physical scanout or general gameplay acceptance.
+Cold 544/4a62eb34 GNU Release and optimized UBSan/bounds each build 84 programs
+and pass 82 CTests. Each matches432 complete original controls and216
+coarse plus216 one-ms partitions, including full E/K/time/counter streams,
+Continue/Quit/held-release/no-input, WORD wrap, carry skips and stage4/5/6.
+Each actual frontend passes24 finite-STD last-life scenes, real Continue
+writes/failure/resource restore/credit exhaustion and repaint independence.
+Independent original instruction/font/palette controls compare386 entire
+displays (indices, TRAM and RGB;398352000 bytes) at loads1000/2000.
+Each also passes24 actual score-only MAINE/save/verdict/fresh OP/second MAIN
+routes and four failed writers. Existing144 MAIN exit and576 MAINE controls
+pass. Eight default Demo profiles retain all129 prior hashes per profile,
+original selected states and GNU/UBSan parity. This is scoped component/route
+agreement, not complete physical scanout or general gameplay acceptance.
 
-Compiled actual Ending/Extra clear-at-entry, clear-before-publication and
-double-consume-remainder mutations reject original counter/time streams;
-the separately compiled unchanged control passes. Native CI345 passes.
-The first frozen producer f055b102 passed both84/82 graphs and fade controls,
-but its ordinary Ending gallery rejected held Escape crossing the newly
-same-admission MAINE handoff. That failed source/program/capture is retained.
-The final input releases Escape before the last fade group; product remainder
-forwarding is unchanged. All acceptance uses the new543/70986a2b cold producer.
+Compiled actual-source clear-both, early-menu-key and discarded-remainder
+mutations reject full original streams; unchanged compiled control passes.
+Native CI345 passes. Initial development sampled reset keys before menu draw;
+its first mismatch at row8472, source/program and complete failed trace remain.
+The corrected overload draws first, then samples. First cold b77968de passed
+full GNU and Game Over checks but rejected a score delay boundary101 vs100: a
+partial admission was counted as a refresh. Corrected ScoreRoute ticks count
+completed IRQ/verdict waits; elapsed handoff behavior remains retained. Original-only cache replay
+requires identical Original AST, edge helper, targets, vectors and full trace
+hashes; it never converts a failed native result into acceptance.
 
-Replay: `.analysis/reconstruction/probes/native-main-exit-fade-v1426/`;
-producer: `.analysis/worktrees/native-main-exit-fade-v1426/.analysis/port64/native-main-exit-fade-v1426-v2/`.
-`verify_main_exit_fade.py` records complete original/native palette/time/counter
-streams; `focused_v2.py` records actual callers and independent image checks.
-Path/hash/size/mode/nsmtime/content/CRC/temp-restore retirement releases
-1365.12 MiB net; first-producer retirement releases another469.25 MiB.
-Both archive readers support `--restore --prefix`. Frozen sources, all programs,
-full original controls, failed attempts and acceptance receipts remain retained.
+Replay: `.analysis/reconstruction/probes/native-gameover-elapsed-v1427/`;
+producer: `.analysis/worktrees/native-gameover-elapsed-v1427/.analysis/port64/native-gameover-elapsed-v1427-v2/`.
+`verify_gameover_elapsed.py` records complete original/native E/K/counter/time;
+`verify_gameover_join.py` checks actual suspension/host writes and full displays.
+Verified journal/SHA/CRC/content/mode/nsmtime/temp-restore retirement releases
+1768.58 MiB net. Source/all programs/fixtures/receipts/failures remain retained;
+raw transcript aliases and owned captures restore via `verify_retention.py
+--restore --prefix`. Large display streams are already gzip with full hashes.
 
-Game Over fade4, registration proper and other wait owners, real active-PMD
-paired timing, physical CPU/I/O/scanout, broader gameplay and Windows remain
-open. Continue source recovery and migration; the full goal stays active.
+Registration proper and other wait owners, real active-PMD paired timing,
+physical CPU/I/O/scanout, broader gameplay and Windows remain open. Continue
+source recovery and migration; the full goal stays active.
 
-Published native head: `a25591759592837971901699e9a3342aeca73071`.
+Published native head: `26ab740fe4dcb473643d63149f462193f6020a3f`.
 
 ## DOS shared SMEM and graph page copy (v1423)
 
@@ -88,6 +96,7 @@ Continue remaining function recovery and native scene integration.
 
 | Subject | Retained producer | Evidence and recovery |
 | --- | --- | --- |
+| MAIN good/bad/Extra elapsed fade16 | v1426,543/70986a2b | VSync note, `native-main-exit-fade-v1426` receipts |
 | Cutscene/Ending elapsed requests | v1425,542/59d19121 | [VSync note](reconstruction/product/TH04_NATIVE_VSYNC_V864.md), `native-cutscene-elapsed-v1425` receipts |
 | Staff elapsed dissolve/measure | v1424,541/83933826 | VSync note, `native-staff-elapsed-v1424` receipts |
 | Verdict/Congratulations and MAINE waits | v1423,540/bc9bb404 | VSync note, `native-maine-demo-word-join-v1423` receipts |

@@ -233,3 +233,6 @@ original time/request and actual-page controls, failures and archive restore.
 
 The VSync note routes v1426 MAIN good/bad/Extra elapsed fade16 and same-admission input,
 original time/request and actual-page controls, failures and archive restore.
+
+The VSync note routes v1427 whole Game Over elapsed counters/input,
+Continue/Quit real saves and complete displays, failures and archive recovery.
