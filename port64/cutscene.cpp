@@ -11,7 +11,7 @@ bool digit(unsigned c) { return c>='0' && c<='9'; }
 unsigned lower(unsigned c) { return c>='A' && c<='Z' ? c+32 : c; }
 }
 
-Script::Script(Bytes bytes):bytes_(std::move(bytes)) {
+Script::Script(Bytes bytes,vsync::RasterClock* clock):clock_(clock),bytes_(std::move(bytes)) {
     if(bytes_.size()>8192) throw std::invalid_argument("MAINE script exceeds its 8192-byte buffer");
 }
 unsigned Script::peek() const { return at_<bytes_.size() ? bytes_[at_] : 0; }
@@ -180,6 +180,7 @@ void Script::complete_measure_wait() {
     status_=Status::running;
 }
 void Script::advance(std::uint16_t held,const Sink& sink) {
+    if(clock_)throw std::logic_error("timed cutscene requires elapsed admission");
     if(status_==Status::idle || status_==Status::stopped || status_==Status::measure) return;
     if(status_==Status::release) {
         if(!held) status_=press_budget_<0 ? Status::running : Status::press;
@@ -225,14 +226,71 @@ void Script::advance(std::uint16_t held,const Sink& sink) {
             continue;
         }
         if(ending_) { status_=Status::stopped;return; }
+        requests_.push_front(take_request([held]{return held;}));
+
+    }
+}
+
+Event Script::take_request(const maine::KeySource& keys) {
+    for(;;) {
+        if(!requests_.empty()) {
+            auto event=std::move(requests_.front());requests_.pop_front();return event;
+        }
+        if(ending_)throw std::logic_error("completed cutscene has no request");
         // Escape is sampled only at a new outer iteration. Releasing it while
         // a command is blocked cannot change that command's queued mask loop.
-        fast_forward_=(held&input_cancel)!=0;
+        fast_forward_=(keys()&input_cancel)!=0;
         const auto c=take();if(separator(c)) continue;
         if(c=='\\') { op(take());continue; }
         const auto glyph=(c<<8)|take();
         queue({Kind::show,0});queue({Kind::access,1});
         queue({Kind::text,x_,y_,static_cast<int>(glyph),color_,weight_});cursor_advance();
+    }
+}
+std::uint64_t Script::advance_elapsed(std::uint64_t ns,const maine::KeySource& keys,
+        const Sink& sink,const maine::PaletteSink& palette,const maine::ElapsedSink& service,
+        const std::function<bool()>& active,
+        const std::function<std::optional<std::uint16_t>()>& measure,
+        const std::function<std::uint64_t()>& deadline) {
+    if(!clock_ || !keys)throw std::logic_error("elapsed cutscene requires clock and keys");
+    for(;;) {
+        if(status_==Status::stopped || status_==Status::idle)return ns;
+        if(timed_wait_) {
+            ns=timed_wait_->advance_elapsed(ns,keys,{},[&](int tone){tone_=tone;if(palette)palette(tone);},service);
+            if(timed_wait_->status()!=maine::AnimationStatus::stopped) {
+                switch(timed_wait_->status()) {
+                case maine::AnimationStatus::release:status_=Status::release;break;
+                case maine::AnimationStatus::press:status_=Status::press;break;
+                default:status_=Status::delay;break;
+                }
+                return 0;
+            }
+            timed_wait_.reset();status_=Status::running;continue;
+        }
+        if(status_==Status::measure) {
+            const auto observed=measure ? measure() : std::optional<std::uint16_t>{};
+            const bool ready=measure_active_ ? observed && *observed>=measure_goal_ : measure_delay_->ready();
+            if(ready){measure_delay_.reset();status_=Status::running;continue;}
+            if(!ns)return 0;
+            auto step=ns;
+            if(measure_active_ && deadline) {
+                const auto until=deadline();if(!until)throw std::logic_error("cutscene measure made no progress");
+                step=std::min(step,until);
+            } else if(!measure_active_ && clock_->counter().active())step=std::min(step,measure_delay_->until_ready());
+            clock_->advance(step);if(service)service(step);ns-=step;continue;
+        }
+        if(ending_ && requests_.empty()){status_=Status::stopped;return ns;}
+        const auto event=take_request(keys);if(sink)sink(event);
+        if(event.kind==Kind::tone)tone_=event.a;
+        else if(event.kind==Kind::delay || event.kind==Kind::wait || event.kind==Kind::fade) {
+            maine::Request request{event.kind==Kind::delay ? maine::RequestKind::delay :
+                event.kind==Kind::wait ? maine::RequestKind::wait : maine::RequestKind::fade,event.a,event.b,event.c};
+            timed_wait_.emplace(std::vector<maine::Request>{request},clock_);status_=Status::delay;
+        } else if(event.kind==Kind::measure) {
+            measure_active_=active && active();measure_goal_=static_cast<std::uint16_t>(event.a);
+            if(!measure_active_)measure_delay_.emplace(*clock_,event.b);
+            status_=Status::measure;
+        }
     }
 }
 

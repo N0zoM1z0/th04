@@ -355,13 +355,23 @@ void contracts() {
     try { cutscene::Script bad({0x82});bad.begin();bad.advance(0,{}); }
     catch(const std::invalid_argument&) { malformed=true; }
     require(malformed,"native buffer bounds reject truncated glyphs");
+    vsync::RasterClock raster;raster.counter().start();raster.counter().interrupts(65535);
+    const std::string timed_text="\\v0\\s1\\wi0\\wo0\\fi0\\fo0\\$";
+    cutscene::Script timed(cutscene::Bytes(timed_text.begin(),timed_text.end()),&raster);timed.begin();
+    unsigned shows=0;
+    const auto unused=timed.advance_elapsed(200000000,[]{return std::uint16_t(0);},{},[&](int){++shows;});
+    require(timed.status()==cutscene::Status::stopped && unused>0 && timed.tone()==0 && shows==72,
+        "elapsed cutscene zero delays/four fades did not finish on their true boundaries");
+    require(raster.counter().two()==5,"elapsed cutscene added a phantom admission or reset Count2");
     std::cout<<"MAINE cutscene lifecycle contracts: PASS\n";
 }
 }
 void staff_elapsed(const char*,const char*);
+void cutscene_elapsed(const char*,const char*);
 int main(int argc,char** argv) {
     try {
-        if(argc==4 && std::string(argv[1])=="--trace") trace(argv[2],std::stoul(argv[3]));
+        if(argc==4 && std::string(argv[1])=="--cutscene-elapsed") cutscene_elapsed(argv[2],argv[3]);
+        else if(argc==4 && std::string(argv[1])=="--trace") trace(argv[2],std::stoul(argv[3]));
         else if(argc==4 && std::string(argv[1])=="--decode") decode(argv[2],argv[3]);
         else if(argc==8 && std::string(argv[1])=="--render") render(argv[2],argv[3],std::stoul(argv[4]),argv[5],argv[6],argv[7]);
         else if(argc==5 && std::string(argv[1])=="--glyphs") glyphs(argv[2],argv[3],argv[4]);
@@ -381,4 +391,43 @@ int main(int argc,char** argv) {
         else throw std::invalid_argument("usage: cutscene-contracts [--trace SCRIPT HELD | --render ASSETS SCRIPT HELD FONT CHECKPOINTS OUTPUT]");
         return 0;
     } catch(const std::exception& error) { std::cerr<<error.what()<<'\n';return 1; }
+}
+
+void cutscene_elapsed(const char* script_path,const char* vectors) {
+    std::ifstream script_file(script_path,std::ios::binary);
+    if(!script_file)throw std::runtime_error("cutscene elapsed script missing");
+    const cutscene::Bytes bytes(std::istreambuf_iterator<char>(script_file),{});
+    std::ifstream in(vectors);unsigned inc,profile,mode,index=0;
+    std::uint64_t seed,phase,horizon,chunk;
+    constexpr std::uint64_t hz=2631575,h=106,v=440,r=407;
+    while(in>>inc>>seed>>phase>>profile>>mode>>horizon>>chunk) {
+        vsync::RasterClock clock;clock.counter().start(static_cast<std::uint16_t>(inc));clock.counter().interrupts(seed);clock.advance(phase);
+        cutscene::Script script(bytes,&clock);script.begin();std::uint64_t song=phase;
+        const auto keys=[&] {
+            const auto count=clock.now()*hz<r*h*1000000000 ? 0 :
+                (clock.now()*hz-r*h*1000000000)/(v*h*1000000000)+1;
+            const auto at=count%16;
+            const std::uint16_t value=profile==3 ? cutscene::input_cancel :
+                profile==1 && (at<5 || at>=10) ? 0x20 : profile==2 && at!=6 ? 0x20 : 0;
+            std::cout<<"K "<<clock.now()<<' '<<value<<'\n';return value;
+        };
+        const auto observer=[&](const cutscene::Event& e) {
+            if(e.kind==cutscene::Kind::bgm_load)song=clock.now();
+            std::cout<<"E "<<clock.now()<<' '<<cutscene::kind_name(e.kind)<<' '<<e.a<<' '<<e.b<<' '<<e.c<<' '<<e.d<<' '<<e.e<<' ';
+            for(unsigned char c:e.name)std::cout<<"0123456789abcdef"[c>>4]<<"0123456789abcdef"[c&15];
+            if(e.name.empty())std::cout<<'-';std::cout<<'\n';
+        };
+        const auto palette=[&](int tone){std::cout<<"P "<<clock.now()<<' '<<tone<<'\n';};
+        const auto active=[&]{return mode!=0;};
+        const auto measure=[&]()->std::optional<std::uint16_t> {return mode==2 ? std::nullopt : std::optional<std::uint16_t>(static_cast<std::uint16_t>((clock.now()-song)/1000000000));};
+        const auto deadline=[&]{return 1000000000-(clock.now()-song)%1000000000;};
+        std::cout<<"CASE "<<index++<<'\n';auto left=horizon;
+        do {
+            const auto step=chunk ? std::min(chunk,left) : left;
+            const auto unused=script.advance_elapsed(step,keys,observer,palette,{},active,measure,deadline);left-=step-unused;
+            if(script.status()==cutscene::Status::stopped || !left)break;
+        }while(true);
+        std::cout<<"STOP "<<clock.now()<<' '<<left<<' '<<int(script.status())<<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<' '<<script.tone()<<'\n';
+    }
+    if(!in.eof())throw std::runtime_error("cutscene elapsed vector malformed");
 }

@@ -45,12 +45,19 @@ Canvas::Canvas(const Assets& assets,std::array<Bytes,2> pages,unsigned shown)
         if(page.size()!=width*height)throw std::invalid_argument("MAINE graphics page is incomplete");
     }
 }
-Scene::Scene(const Assets& assets,const std::string& name)
-    :Canvas(assets),script_(assets.scripts.at(uppercase(name))) {
+Scene::Scene(const Assets& assets,const std::string& name,vsync::RasterClock* clock)
+    :Canvas(assets),script_(assets.scripts.at(uppercase(name)),clock) {
     script_.begin();
 }
 void Scene::advance(std::uint16_t held,const Sink& observer) {
     script_.advance(held,[&](const Event& event) { apply(event);if(observer) observer(event); });
+}
+std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& keys,const Sink& observer,
+        const maine::PaletteSink& palette,const maine::ElapsedSink& service,
+        const std::function<bool()>& active,const std::function<std::optional<std::uint16_t>()>& measure,
+        const std::function<std::uint64_t()>& deadline) {
+    return script_.advance_elapsed(ns,keys,[&](const Event& event){apply(event);if(observer)observer(event);},
+        palette,service,active,measure,deadline);
 }
 void Canvas::rect_copy(unsigned source,unsigned dest,int left,int top,unsigned w,unsigned h,unsigned mask) {
     if(source>1 || dest>1) throw std::invalid_argument("invalid MAINE page copy");

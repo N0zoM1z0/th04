@@ -1,5 +1,55 @@
 # TH04 native branch handoff
 
+## Native elapsed Cutscene/Ending script (v1425)
+
+Actual Ending scripts now share the raster/IRQ owner through Script, Canvas
+and Ending. Parsing and queued graphics requests remain shared with the
+logical helper. Zero frame_delay clears Count1 and resumes on the same
+admission; input_wait preserves release-first, pre/post OR and signed WORD
+budgets. Shared Animation now handles both white fades as well as black,
+including initial VSync, signed WORD speed and eighteen palette updates.
+MAINE white bodies0000:222C..22AB are pinned alongside black00622/0666,
+frame_delay0CC7:0033..0047, input_wait020A..025F and measure03D6..0407.
+The two complete original parser/helper bodies0A05:07F7..0D6B and0DAC..0E7F
+execute unchanged. File/font/graphics, palette I/O and keyboard consumers
+remain explicit adapters, with ideal IRQ and one-second measure stimuli.
+
+Original cutscene checks high-byte key_det bit0x10 (word0x1000); portable
+cutscene bit0x10 is a projection. The Oracle maps this explicitly. Escape is
+sampled only at the next outer iteration; releasing it during a queued mask
+cannot change that command. A completed owner returns unused elapsed time;
+actual Ending forwards audio once and retains the Staff/verdict lifecycle.
+Active measures query after load/start and use supplied service deadlines;
+inactive measures use live WORD frame_delay. This is not physical timing.
+
+Cold producer542/59d19121 builds all84 programs and passes82 CTests under
+GNU Release and optimized UBSan/bounds. Each passes ten complete scripts
+(eight original Ending plus two mixed/measure controls),960 original cases
+at loads1000/3333,480 coarse and480 one-ms partitions. Same-source Staff
+48 original/24 partitions and MAINE576 original/288 partitions also pass.
+Each actual muted inactive-BGM frontend passes24 Ending/Staff/verdict/
+Congratulations routes and independent component images:576 Ending pages,
+288 original-DAC-projected RGB frames and48 pages each for the later owners.
+The retained PI/font/kernel galleries keep their independent source identity.
+
+Compiled zero-to-one delay rejects36 mixed cases; discarded completion time
+rejects28 mixed and24 real-script cases; wrong full-word Escape rejects12 in
+each subject. Unmodified compiled control passes. Native CI345 and tracking
+pass. The initial malformed vector schema/configuration attempts are retained;
+they were setup failures, not source/runtime acceptance.
+
+Remaining MAIN fade, registration and other wait owners, real active-PMD
+paired scene timing, physical CPU/I/O/scanout, broader gameplay and Windows
+remain open. Historical exact stays661/663; targets are candidate-local-attested.
+Replay: `.analysis/reconstruction/probes/native-cutscene-elapsed-v1425/`;
+producer: `.analysis/worktrees/native-cutscene-elapsed-v1425/.analysis/port64/native-cutscene-elapsed-v1425/`.
+`verify_cutscene_elapsed.py` records full original/native time/request/key/
+counter streams; `focused.py` records actual routes and image comparisons.
+Verified path/hash/size/mode/nsmtime/content/CRC/temp-restore retirement saves
+1619.52 MiB net. Full transcript aliases and captures are recoverable via
+`verify_retention.py --restore --prefix`; source, programs, vectors and summaries
+remain live. The goal stays active.
+
 ## Native elapsed Staff Roll (v1424)
 
 Staff's actual scene and Ending caller now use the shared raster/IRQ owner.

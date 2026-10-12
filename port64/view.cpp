@@ -1768,7 +1768,7 @@ public:
             if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
             if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
             if(elapsed_wait) {
-                const auto remaining=ending_->advance_elapsed(refresh_ns,[held_input]{return maine::input_from_main_actions(held_input);});
+                const auto remaining=ending_->advance_elapsed(refresh_ns,[held_input]{return maine::input_from_main_actions(held_input);},ending_observer_);
                 advance_tail(remaining,held_input);
             } else ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
             if(repaint) frame_=render();

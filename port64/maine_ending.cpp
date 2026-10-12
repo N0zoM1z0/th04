@@ -55,7 +55,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         if(clock_){clock_->counter()=vsync::Counter{};clock_->counter().start();}
         release_main_={};
         if(audio_)audio_->enter(application::Program::maine,application_->generation(),application_->resident().config);
-        scene_=std::make_unique<cutscene::Scene>(*assets_,name_);
+        scene_=std::make_unique<cutscene::Scene>(*assets_,name_,clock_);
         phase_=Phase::cutscene;
         return;
     }
@@ -148,11 +148,18 @@ void Ending::verdict_event(const verdict::Event& e) {
             if(verdict_observer_)verdict_observer_(e);
 
 }
-std::uint64_t Ending::advance_elapsed(std::uint64_t ns,const KeySource& keys) {
+std::uint64_t Ending::advance_elapsed(std::uint64_t ns,const KeySource& keys,const cutscene::Sink& observer) {
     if(!timed_wait())throw std::logic_error("Ending phase has no elapsed owner");
     const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
     for(;;) {
-        if(phase_==Phase::staff_roll) {
+        if(phase_==Phase::cutscene) {
+            const auto active=[this]{return audio_ ? audio_->bgm_active() : bgm_active_;};
+            const auto measure=[this]{return audio_ ? audio_->song_measure() : song_measure_;};
+            const auto deadline=[this,ns]{return audio_ && audio_->resident() ? audio_->resident()->player().player().until_timer() : ns;};
+            ns=scene_->advance_elapsed(ns,keys,[&](const cutscene::Event& e){if(audio_)audio_->cutscene(e);if(observer)observer(e);},{},service,active,measure,deadline);
+            if(scene_->script().status()!=cutscene::Status::stopped)return 0;
+            phase_=Phase::staff_roll_pending;
+        } else if(phase_==Phase::staff_roll) {
             const auto deadline=[this,ns] {
                 if(audio_ && audio_->resident())return audio_->resident()->player().player().until_timer();
                 return ns;

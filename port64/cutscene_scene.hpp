@@ -59,7 +59,11 @@ public:
 // original PI/font/page consumer without manufacturing a cutscene script.
 class Scene:public Canvas {
 public:
-    Scene(const Assets& assets,const std::string& script);
+    Scene(const Assets& assets,const std::string& script,vsync::RasterClock* clock=nullptr);
+    std::uint64_t advance_elapsed(std::uint64_t,const maine::KeySource&,const Sink& = {},
+        const maine::PaletteSink& = {},const maine::ElapsedSink& = {},
+        const std::function<bool()>& = {},const std::function<std::optional<std::uint16_t>()>& = {},
+        const std::function<std::uint64_t()>& = {});
     void advance(std::uint16_t held,const Sink& observer={});
     const Script& script() const { return script_; }
     Script& script() { return script_; }

@@ -4,10 +4,11 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include "maine_animation.hpp"
 
 namespace th04::portable::cutscene {
 using Bytes = std::vector<std::uint8_t>;
-// This is MAINE's observed key_det ABI, not MAIN's portable action mask.
+// Portable projection of MAINE key_det's high-byte Escape flag.
 constexpr std::uint16_t input_cancel = 0x10;
 enum class Kind {
     snap, restore, bg_free, show, access, clear, copy_page,
@@ -31,9 +32,14 @@ enum class Status { idle, running, delay, release, press, measure, stopped };
 // explicit script pauses and palette fades advance the blocking clock.
 class Script {
 public:
-    explicit Script(Bytes bytes);
+    explicit Script(Bytes bytes,vsync::RasterClock* clock=nullptr);
     void begin();
     void advance(std::uint16_t held, const Sink& sink);
+    std::uint64_t advance_elapsed(std::uint64_t,const maine::KeySource&,const Sink&,
+        const maine::PaletteSink& = {},const maine::ElapsedSink& = {},
+        const std::function<bool()>& = {},
+        const std::function<std::optional<std::uint16_t>()>& = {},
+        const std::function<std::uint64_t()>& = {});
     // The sound owner must report actual song progress. This is not a
     // fabricated frame timeout for the original measure-based wait.
     void complete_measure_wait();
@@ -47,6 +53,12 @@ public:
     std::int16_t number_default() const { return default_; }
     int tone() const { return tone_; }
 private:
+    vsync::RasterClock* clock_=nullptr;
+    std::optional<maine::Animation> timed_wait_;
+    std::optional<vsync::Delay> measure_delay_;
+    std::uint16_t measure_goal_=0;
+    bool measure_active_=false;
+    Event take_request(const maine::KeySource&);
     unsigned peek() const;
     unsigned take();
     int number(int fallback);

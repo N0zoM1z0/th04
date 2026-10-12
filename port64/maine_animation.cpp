@@ -47,9 +47,10 @@ void Animation::advance(std::uint16_t held,const RequestSink& sink,const Palette
         const auto& e=requests_[at_++];
         if(e.kind==RequestKind::tone)tone_=e.a;
         else if(e.kind==RequestKind::fade) {
-            tone_=e.b ? 0 : 100;fade_end_=e.b ? 100 : 0;
+            tone_=e.a ? (e.b ? 200 : 100) : (e.b ? 0 : 100);
+            fade_end_=e.b ? 100 : (e.a ? 200 : 0);
             const auto speed=static_cast<std::uint16_t>(e.c);
-            fade_step_=e.b ? 6 : -6;fade_speed_=speed<0x8000 ? speed : 0;
+            fade_step_=tone_<fade_end_ ? 6 : -6;fade_speed_=speed<0x8000 ? speed : 0;
             fade_aligned_=false;left_=1;status_=AnimationStatus::delay;
         } else if(e.kind==RequestKind::delay) {
             // frame_delay clears Count1 even for zero, then compares unsigned
@@ -82,7 +83,8 @@ std::uint64_t Animation::advance_elapsed(std::uint64_t ns,const KeySource& keys,
                 if(e.kind==RequestKind::tone)tone_=e.a;
                 else if(e.kind==RequestKind::fade) {
                     const auto speed=static_cast<std::uint16_t>(e.c);
-                    tone_=e.b ? 0 : 100;fade_end_=e.b ? 100 : 0;fade_step_=e.b ? 6 : -6;
+                    tone_=e.a ? (e.b ? 200 : 100) : (e.b ? 0 : 100);
+            fade_end_=e.b ? 100 : (e.a ? 200 : 0);fade_step_=tone_<fade_end_ ? 6 : -6;
                     fade_speed_=speed<0x8000 ? speed : 0;fade_aligned_=false;
                     fade_waits_=0;sync_wait_.emplace(*clock_);status_=AnimationStatus::delay;
                 } else if(e.kind==RequestKind::delay) {
