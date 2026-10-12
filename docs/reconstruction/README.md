@@ -273,3 +273,6 @@ controls, actual registration drawings and guarded Unicorn RETF recovery.
 
 [Native MAIN pause](product/TH04_NATIVE_PAUSE_V1431.md) routes v1431 original
 menu/input controls, actual pause/resume/Quit/second MAIN and Linux SDL keys.
+
+[Native natural routes](product/TH04_NATIVE_NATURAL_ROUTES_V1432.md) routes v1432 strict clear
+gates and four current GNU/UBSan natural routes with unchanged C++ producers.
