@@ -480,7 +480,7 @@ WORD wrap, carry skips and inherited raster phase. The actual release callback
 also checks statistics publication and old generation/RNG before fresh MAINE.
 Same-source MAINE576/288 and Staff48/24 controls pass. Each actual muted
 inactive-BGM frontend completes24 Ending/Staff/verdict/Congratulations routes
-and16 Extra actor-control routes, including fresh OP and a second MAIN.
+and8 Extra actor-control routes, including fresh OP and a second MAIN.
 Independent images retain576 Ending pages/288 original-DAC-projected RGB frames
 and48 pages each for Staff, verdict and Congratulations. These are component
 controls, not a complete physical scanout or general gameplay acceptance.
