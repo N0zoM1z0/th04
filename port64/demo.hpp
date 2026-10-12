@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -33,14 +34,19 @@ std::uint16_t host_input(std::uint8_t replay_input);
 // palette_black_out waits one refresh first, then speed between palette writes.
 class Fade {
 public:
-    explicit Fade(unsigned speed);
+    using PaletteSink=std::function<void(unsigned tick,int tone)>;
+    using ToneSink=std::function<void(unsigned tick,std::int16_t tone)>;
+    explicit Fade(unsigned speed,PaletteSink={},ToneSink={});
     void advance();
-    int tone() const {return index_<0 ? 100 : index_==17 ? 0 : 100-index_*6;}
+    int tone() const {return tone_;}
     bool published() const {return index_>=0;}
     bool finished() const {return index_==17;}
     unsigned ticks() const {return ticks_;}
 private:
     unsigned speed_,left_,ticks_=0;
+    PaletteSink palette_sink_;
+    ToneSink tone_sink_;
+    std::int16_t tone_=100;
     int index_=-1;
 };
 }

@@ -246,3 +246,6 @@ complete original controls, current consumers and recovery.
 
 The VSync note includes the v1417 live WORD delay and bulk IRQ/raster owner,
 original controls, full compiler graphs and recovery.
+
+The VSync note routes v1423 actual elapsed MAINE consumers, original controls,
+whole-route pages/current DAC projections and owned archive recovery.
