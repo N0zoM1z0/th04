@@ -5,6 +5,72 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Native elapsed MAINE consumers (v1423)
+
+Development remains active. Verdict and Congratulations in normal Ending,
+Score and Extra now share the live raster/IRQ counter owner. Their black
+fades, WORD frame delays and signed input waits consume elapsed time rather
+than host repaint counts. Initial fade alignment keeps Count1; delay clears
+only Count1. Input release combines samples before and after the wait;
+negative timeouts still release first, while zero and 9999 repeat the press
+wait. A completed child returns unused time to its parent. The registration
+entry delay 100 starts at the actual child completion. New MAINE/OP processes
+reset counter BSS while retaining raster phase; clock and audio advance once.
+
+Final union retains analog/LCD palette output, indexed Demo entry and the
+original WORD Demo blackout with all18 palette publications and19 tone stores.
+Cold producer 540/bc9bb404 builds all 84 programs and passes all 82 CTests
+under GNU Release and optimized UBSan/bounds. Each compiler agrees with 576
+complete original MAINE fade/delay/input controls at loads 1000/3333 and 288
+coarse plus 288 one-millisecond partition vectors. The original key and
+palette calls use guarded adapters, with independent ideal IRQ stimuli;
+physical CPU/I/O/ISR latency is not measured.
+
+The attested original entries are MAINE 0000:0622/0666 (black fades),
+0CC7:0033..0047 (frame_delay), 0CC7:020A..025F (input_wait), and
+0000:2206..222B (the full wait inside each fade). These are runtime-observed
+instruction controls; the pinned targets remain candidate-local-attested.
+`run.py` records the serial cold commands and `focused.py` the exact original
+and actual-route commands. New replay needs a fresh producer directory.
+
+Actual Score (24 routes plus four write failures), Extra (16 actor-control
+routes with hit consumption disabled), and 24 Ending routes exercise the new
+consumers and phase publication. Ending/Staff/verdict/Congratulations keep complete page
+and palette checks; display RGB is projected from original MAINE palette I/O
+through the retained analog DAC model. The historical RGB8 formula remains
+separate. Shared palette and actual eighteen-frame Demo-entry controls are
+replayed against the final producer. Compiled one-variable mutations cover
+fade counter clearing, post-only key samples, the 9999 sentinel and discarded
+handoff time. The first stopped-entry mutation rejects no configured vectors
+and remains an inconclusive wrong-site probe; the completion-site mutation
+is independently compiled and rejects160 complete traces. Eight muted default
+routes retain all129 prior hashes, selected original states and GNU/UBSan
+parity. This regression does not promote complete original pictures.
+
+Registration proper, Cutscene/Ending script, Staff and MAIN fade still have
+legacy wait owners. Their full elapsed counter history, physical timing,
+broader Boss/death/process routes and Windows acceptance remain open.
+Historical exact remains 661/663. This is scoped runtime agreement.
+
+Replay: `.analysis/reconstruction/probes/native-maine-demo-word-join-v1423/`;
+producer: `.analysis/worktrees/native-maine-demo-word-join-v1423/.analysis/port64/native-maine-demo-word-join-v1423/`.
+The preliminary v1418/v1420/v1422 cold producers and failed recipes retain their
+own identities. Stage retirement saves 1,254.54 MiB net and keeps all 8,420
+paths in a fully verified content archive. The superseded539 producer keeps
+both complete build graphs and its completed GNU route/image proof; its UBSan
+Extra job was deliberately stopped after remote WORD Demo source advanced. The stage retention reader accepts
+`--restore --prefix` for owned original paths. Final retirement and publication
+receipts record the remaining checks and current commit.
+
+Stage archive readers are under `.analysis/reconstruction/probes/native-maine-stage-retention-v1422/`
+and `.analysis/reconstruction/probes/native-maine-indexed-stage-retention-v1423/`.
+The latter saves another 984.19 MiB net across 4,538 owned paths, including
+the deliberately interrupted UBSan campaign; its logs and source identity remain.
+
+Final verified retirement releases 1961.42 MiB net. Both complete program graphs, source freeze and original controls remain.
+
+Published native head: `c97cced9e61cb5d32998da13996cfd11faebc2b4`.
+
 ## Complete native Demo blackout WORD behavior (v1421)
 
 Published `port/modern-64`: `b5fa7d8`.

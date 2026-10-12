@@ -48,24 +48,21 @@ and movement requests, and 40 complete canonical text-plane samples.
 Restoring Midboss shake, the full physical background ring, Marisa laser color
 timing, whole-pool pellet color passes and item-spawn white light dots removes
 the diagnosed late-frame pixel differences. Preserving Stage4 background draw
-order and tail copies also restores the initial background. GNU and optimized
-UBSan now agree with the original in all 40 sampled game areas; ten separate
+order and tail copies also restores the initial background. Retained GNU and optimized
+UBSan producers agree with the original in all 40 sampled game areas; ten separate
 GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `b5fa7d8`.
-Demo entry now fades the saved indexed menu through the original four-bit
-palette conversion. Both native compilers agree on all 4,608,000 pixels in
-eighteen pending OP frames with the original palette instruction projection;
-MAIN receives no gameplay update in this check. The old RGB8 scaling formula
-differs in sixteen frames. See the
-[current handoff](docs/RE_HANDOFF.md) for source identities and replay scope.
-The Demo blackout now preserves signed WORD speed, its initial refresh and
-all palette/tone publications, including zero and negative speeds. Both
-compilers match all 48 retained original blackout controls; the actual old
-source rejects seven parameter vectors. Shared palette and live WORD counter
-recoveries retain their independent original comparisons and compiler proofs.
+Native development is active. `origin/port/modern-64` is at `c97cced`
+(producer 540/bc9bb404). Verdict/Congratulations in Ending, Score and Extra
+consume shared elapsed IRQ time and return unused time at phase boundaries.
+The registration-entry delay begins at child completion. Both complete cold
+GNU and optimized UBSan/bounds graphs build 84 programs and pass 82 CTests.
+Original MAINE instruction/partition controls, actual route pages, shared
+palette, indexed Demo entry and eight default profiles pass scoped checks.
+Other scene wait owners, physical timing and broader acceptance remain open;
+see the [current handoff](docs/RE_HANDOFF.md) for exact scope and replay.
 
 Current shared DOS also restores analog/LCD palette output, with text and
 installed-owner VSync recovery (producer 1,425/491e4afa). Three cold products

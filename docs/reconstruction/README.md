@@ -221,3 +221,6 @@ compiler graphs, independent original controls and retained parent evidence.
 
 The VSync note routes the v1417 live delay/bulk counter owner and preserved
 parent source, original cases, full compiler graphs and recovery.
+
+The VSync note routes v1423 actual elapsed MAINE consumers and phase handoff,
+original controls, whole-route pages/current DAC projection and owned archives.
