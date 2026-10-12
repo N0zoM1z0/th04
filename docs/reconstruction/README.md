@@ -242,3 +242,6 @@ failed writer freeze, unresolved short-input graphics and verified archive recov
 
 The VSync note routes v1429 registration signed numeral requests and WORD slots,
 exhaustive original controls, actual drawings and unowned-memory limits.
+
+The SUPER sprite note routes v1430 original byte/WORD passes, zero-count/wrap
+controls, actual registration drawings and guarded Unicorn RETF recovery.
