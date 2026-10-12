@@ -20,24 +20,26 @@ void run_extra_maine_tail(FrontEnd& scene,const std::filesystem::path& directory
         write_bmp((directory/(name+"-"+suffix+".bmp")).string(),scene.frame());
     };
     require_view(scene.resident().end_sequence==application::EndSequence::extra && scene.program()==application::Program::main,"end_extra did not publish ES_EXTRA before fade16");
-    for(unsigned tick=1;tick<273;++tick) {
+    unsigned fade_admissions=0;
+    while(scene.extra_route()->phase()==maine::ExtraPhase::main_fade && ++fade_admissions<1000) {
         scene.advance(0x2000|shot::input_shot,false,paint);
-        require_view(scene.main_resources_alive() && scene.program()==application::Program::main && scene.generation()==generation &&
-            scene.main_state().frames()==frame && scene.main_state().random_cursor()==cursor && scene.process_random_state()==main_random &&
-            scene.extra_route()->main_tone()==100-int((tick-1)/16)*6,"Extra fade altered MAIN clock/RNG or resource lifetime");
-        trace<<"mainfade "<<tick<<' '<<scene.extra_route()->main_tone()<<'\n';
-        if(tick==128)capture("fade128");
+        if(scene.extra_route()->phase()==maine::ExtraPhase::main_fade)require_view(
+            scene.main_resources_alive() && scene.program()==application::Program::main && scene.generation()==generation &&
+            scene.main_state().frames()==frame && scene.main_state().random_cursor()==cursor && scene.process_random_state()==main_random,
+            "Extra fade altered MAIN state or resource lifetime before its IRQ boundary");
+        trace<<"mainfade "<<scene.extra_route()->fade_ticks()<<' '<<scene.extra_route()->main_tone()<<'\n';
+        if(fade_admissions==128)capture("fade128");
     }
-    scene.advance(shot::input_shot,false,paint);
     require_view(!scene.main_resources_alive() && !scene.dialog_active() && scene.program()==application::Program::maine && scene.generation()==generation+1 &&
         scene.process_random_state()==1 && scene.extra_route()->fade_ticks()==273 && scene.resident().end_type_ascii==endtype &&
         scene.resident().score_digits==statistics.score_digits && scene.resident().statistics.frames==statistics.frames,"Extra MAIN blackout did not publish and release into fresh MAINE");
-    trace<<"mainfade 273 0\n";
     capture("black-main");
-    for(unsigned tick=0;tick<99;++tick)scene.advance(shot::input_shot,false,paint);
-    require_view(!scene.registration_scene() && scene.process_random_state()==1,"Extra MAINE shortened delay100");
-    scene.advance(shot::input_shot,false,paint);
-    require_view(scene.registration_scene() && scene.extra_route()->ticks()==373,"Extra registration did not begin at373");
+    unsigned delay_admissions=0;
+    while(scene.extra_route()->phase()==maine::ExtraPhase::registration_delay && ++delay_admissions<1000) {
+        require_view(scene.process_random_state()==1,"Extra delay100 changed process random state");
+        scene.advance(shot::input_shot,false,paint);
+    }
+    require_view(scene.registration_scene(),"Extra counted delay100 did not reach registration");
     for(unsigned i=0;i<35;++i)scene.advance(shot::input_shot,false,paint);
     require_view(scene.registration_scene()->status()==registration::Status::editing && scene.registration_scene()->menu().place()!=score_file::no_entry,
         "Actual Extra score did not enter registration editing");

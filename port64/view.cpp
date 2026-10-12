@@ -3073,11 +3073,16 @@ void run_title(
         scene.enable_ending();scene.advance(0,false,false);
         require_view(scene.ending() && scene.program()==application::Program::main &&
             scene.generation()==generation && scene.process_random_state()==process,"Ending replaced MAIN before fade");
-        for(unsigned tick=1;tick<=273;++tick) {
-            scene.advance(0x2000,false,false);
-            if(tick<273)require_view(scene.main_resources_alive() && scene.generation()==generation &&
+        unsigned fade_admissions=0;
+        while(scene.ending()->phase()==maine::Phase::main_fade && ++fade_admissions<1000) {
+            // Stress cancellation early, then release before the final fade
+            // group so the independent ordinary Ending gallery receives no
+            // Escape on the same-admission MAINE handoff.
+            scene.advance(scene.ending()->fade_ticks()<240 ? 0x2000 : 0,false,false);
+            if(scene.ending()->phase()==maine::Phase::main_fade)require_view(scene.main_resources_alive() && scene.generation()==generation &&
                 scene.process_random_state()==process,"MAIN fade freed resources or advanced RNG early");
         }
+        require_view(scene.ending()->fade_ticks()==273,"MAIN fade omitted original counted waits");
         const auto& published=scene.resident().statistics;
         require_view(!scene.main_resources_alive() && scene.program()==application::Program::maine &&
             scene.generation()==generation+1 && scene.process_random_state()==1 &&

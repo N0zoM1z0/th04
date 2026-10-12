@@ -15,6 +15,15 @@ Ending::Ending(application::State& app,application::RunStatistics statistics,
     app.prepare_main_ending(sequence);
     main_sound_requests_.emplace_back(cutscene::Kind::bgm_control,0x204);
     if(audio_)audio_->handle({sound::ActionKind::command,0x204});
+    if(clock_)main_fade_.emplace(std::vector<Request>{{RequestKind::fade,0,0,16}},clock_);
+}
+void Ending::finish_main_fade() {
+    application_->finish_main(statistics_,end_sequence_,release_main_);
+    if(clock_){clock_->counter()=vsync::Counter{};clock_->counter().start();}
+    release_main_={};
+    if(audio_)audio_->enter(application::Program::maine,application_->generation(),application_->resident().config);
+    scene_=std::make_unique<cutscene::Scene>(*assets_,name_,clock_);
+    phase_=Phase::cutscene;
 }
 void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
     if(phase_==Phase::verdict_pending || phase_==Phase::congratulations_pending || phase_==Phase::registration_pending)return;
@@ -51,12 +60,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
         tone_-=6;
         if(tone_>0) { fade_left_=16;return; }
         tone_=0;
-        application_->finish_main(statistics_,end_sequence_,release_main_);
-        if(clock_){clock_->counter()=vsync::Counter{};clock_->counter().start();}
-        release_main_={};
-        if(audio_)audio_->enter(application::Program::maine,application_->generation(),application_->resident().config);
-        scene_=std::make_unique<cutscene::Scene>(*assets_,name_,clock_);
-        phase_=Phase::cutscene;
+        finish_main_fade();
         return;
     }
     const auto& script=scene_->script();
@@ -148,11 +152,17 @@ void Ending::verdict_event(const verdict::Event& e) {
             if(verdict_observer_)verdict_observer_(e);
 
 }
-std::uint64_t Ending::advance_elapsed(std::uint64_t ns,const KeySource& keys,const cutscene::Sink& observer) {
+std::uint64_t Ending::advance_elapsed(std::uint64_t ns,const KeySource& keys,const cutscene::Sink& observer,const PaletteSink& main_palette) {
     if(!timed_wait())throw std::logic_error("Ending phase has no elapsed owner");
     const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
     for(;;) {
-        if(phase_==Phase::cutscene) {
+        if(phase_==Phase::main_fade) {
+            const auto before=main_fade_->ticks();
+            ns=main_fade_->advance_elapsed(ns,keys,{},[this,&main_palette](int tone){tone_=tone;if(main_palette)main_palette(tone);},service);
+            fade_ticks_+=main_fade_->ticks()-before;
+            if(main_fade_->status()!=AnimationStatus::stopped)return 0;
+            main_fade_.reset();finish_main_fade();continue;
+        } else if(phase_==Phase::cutscene) {
             const auto active=[this]{return audio_ ? audio_->bgm_active() : bgm_active_;};
             const auto measure=[this]{return audio_ ? audio_->song_measure() : song_measure_;};
             const auto deadline=[this,ns]{return audio_ && audio_->resident() ? audio_->resident()->player().player().until_timer() : ns;};

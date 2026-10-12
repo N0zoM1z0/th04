@@ -21,8 +21,8 @@ public:
                const registration::GraphicsAssets&,const cutscene::Assets&,
                score_file::HostStore&,std::function<void()> release_main={},sound::Timeline* audio=nullptr,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t host_keys);
-    std::uint64_t advance_elapsed(std::uint64_t,std::uint16_t host_keys);
-    bool timed_wait() const {return clock_ && (phase_==ExtraPhase::registration_delay || phase_==ExtraPhase::congratulations || phase_==ExtraPhase::verdict);}
+    std::uint64_t advance_elapsed(std::uint64_t,std::uint16_t host_keys,const PaletteSink& main_palette={});
+    bool timed_wait() const {return clock_ && (phase_==ExtraPhase::main_fade || phase_==ExtraPhase::registration_delay || phase_==ExtraPhase::congratulations || phase_==ExtraPhase::verdict);}
     ExtraPhase phase() const {return phase_;}
     bool finished() const {return phase_==ExtraPhase::stopped;}
     bool failed() const {return failed_;}
@@ -37,6 +37,8 @@ public:
     const std::vector<cutscene::Event>& sound_requests() const {return sound_;}
     void set_verdict_observer(verdict::Sink sink) {observer_=std::move(sink);}
 private:
+    void finish_main_fade();
+    std::optional<Animation> main_fade_;
     void verdict_event(const verdict::Event&);
     vsync::RasterClock* clock_;
     std::optional<vsync::Delay> initial_wait_;

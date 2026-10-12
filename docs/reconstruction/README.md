@@ -255,3 +255,6 @@ whole original time/request controls and source/failed-probe archive recovery.
 
 The VSync note routes v1425 actual Cutscene elapsed requests, white fades,
 Escape-byte projection, complete original scripts and archived transcript recovery.
+
+The VSync note routes v1426 actual MAIN good/bad/Extra elapsed fade16,
+original exit/counter controls, same-admission input failure and archive recovery.

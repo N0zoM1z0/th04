@@ -21,14 +21,15 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Actual Ending/Cutscene now shares elapsed IRQ,
-input, black/white fade and measure waits with Staff and the later MAINE
-owners. Both complete GNU and optimized UBSan graphs pass84 programs/82 CTests,
-ten original-script comparisons and24 actual Ending routes/component images.
-See the [handoff](docs/RE_HANDOFF.md) for source and bounded runtime scope.
+Native development is active. MAIN good/bad/Extra exit fade16 now shares elapsed
+IRQ timing and returns remaining time to fresh MAINE. Cold543/70986a2b GNU and
+optimized UBSan graphs pass84 programs/82 CTests,144 original fade controls,
+24 actual Ending routes and16 Extra routes with independent component images.
+See the [handoff](docs/RE_HANDOFF.md) for the verified scope and replay.
 
-MAIN fade, registration/other waits, real active-PMD paired timing, physical
-scanout, broader gameplay and Windows remain open. Historical exact is separate.
+Game Over fade4, registration/other waits, real active-PMD paired timing,
+physical scanout, broader gameplay and Windows remain open. Historical exact
+is separate.
 
 ## Build and run
 

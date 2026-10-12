@@ -24,8 +24,8 @@ public:
     Ending(application::State&,application::RunStatistics,application::EndSequence,
            const cutscene::Assets&,std::function<void()> release_main={},bool bgm_active=false,sound::Timeline* audio=nullptr,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t maine_keys,const cutscene::Sink& observer={});
-    std::uint64_t advance_elapsed(std::uint64_t,const KeySource&,const cutscene::Sink& observer={});
-    bool timed_wait() const {return clock_ && (phase_==Phase::cutscene || phase_==Phase::staff_roll || phase_==Phase::verdict || phase_==Phase::congratulations || phase_==Phase::registration_delay);}
+    std::uint64_t advance_elapsed(std::uint64_t,const KeySource&,const cutscene::Sink& observer={},const PaletteSink& main_palette={});
+    bool timed_wait() const {return clock_ && (phase_==Phase::main_fade || phase_==Phase::cutscene || phase_==Phase::staff_roll || phase_==Phase::verdict || phase_==Phase::congratulations || phase_==Phase::registration_delay);}
     void report_song_measure(std::uint16_t measure) {
         if(staff_)staff_->report_song_measure(measure);else song_measure_=measure;
     }
@@ -45,6 +45,8 @@ public:
     unsigned fade_ticks() const { return fade_ticks_; }
     const std::vector<cutscene::Event>& main_sound_requests() const { return main_sound_requests_; }
 private:
+    void finish_main_fade();
+    std::optional<Animation> main_fade_;
     void verdict_event(const verdict::Event&);
     vsync::RasterClock* clock_;
     std::optional<vsync::Delay> registration_wait_;

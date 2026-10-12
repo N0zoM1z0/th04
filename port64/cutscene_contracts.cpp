@@ -1,6 +1,7 @@
 #include "cutscene.hpp"
 #include "cutscene_scene.hpp"
 #include "maine_ending.hpp"
+#include "maine_extra_route.hpp"
 #include "run_statistics.hpp"
 #include <fstream>
 #include <iostream>
@@ -368,9 +369,11 @@ void contracts() {
 }
 void staff_elapsed(const char*,const char*);
 void cutscene_elapsed(const char*,const char*);
+void main_exit_fade(const char*,const char*);
 int main(int argc,char** argv) {
     try {
-        if(argc==4 && std::string(argv[1])=="--cutscene-elapsed") cutscene_elapsed(argv[2],argv[3]);
+        if(argc==4 && std::string(argv[1])=="--main-exit-fade") main_exit_fade(argv[2],argv[3]);
+        else if(argc==4 && std::string(argv[1])=="--cutscene-elapsed") cutscene_elapsed(argv[2],argv[3]);
         else if(argc==4 && std::string(argv[1])=="--trace") trace(argv[2],std::stoul(argv[3]));
         else if(argc==4 && std::string(argv[1])=="--decode") decode(argv[2],argv[3]);
         else if(argc==8 && std::string(argv[1])=="--render") render(argv[2],argv[3],std::stoul(argv[4]),argv[5],argv[6],argv[7]);
@@ -430,4 +433,40 @@ void cutscene_elapsed(const char* script_path,const char* vectors) {
         std::cout<<"STOP "<<clock.now()<<' '<<left<<' '<<int(script.status())<<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<' '<<script.tone()<<'\n';
     }
     if(!in.eof())throw std::runtime_error("cutscene elapsed vector malformed");
+}
+
+void main_exit_fade(const char* output,const char* vectors) {
+    std::ifstream in(vectors);unsigned kind,inc,index=0;std::uint64_t seed,phase,horizon,chunk;
+    while(in>>kind>>inc>>seed>>phase>>horizon>>chunk) {
+        vsync::RasterClock clock;clock.counter().start(static_cast<std::uint16_t>(inc));clock.counter().interrupts(seed);clock.advance(phase);
+        application::State app;
+        if(kind==2)app.start_extra(application::Playchar::reimu,application::ShotType::a);
+        else app.start_normal(application::Playchar::reimu,application::ShotType::a);
+        cutscene::Assets a;a.font_bitmap=blank_test_font();
+        a.scripts.emplace("_ED000.TXT",cutscene::Bytes{'\\','$'});a.scripts.emplace("_ED001.TXT",cutscene::Bytes{'\\','$'});a.scripts.emplace("_UDE.TXT",cutscene::Bytes{'\\','$'});
+        PiImage pi;pi.width=640;pi.height=400;pi.pixels.resize(128000);a.pictures.emplace("UDE.PI",pi);a.pictures.emplace("CONG04.PI",pi);
+        registration::GraphicsAssets registration_assets;registration_assets.graphics=a;
+        score_file::HostStore store(std::filesystem::path(output)/("case"+std::to_string(index)));
+        application::RunStatistics stats;stats.frames=123456;stats.score_digits={1,2,3,4,5,6,7,8};
+        const auto generation=app.generation(),random=app.process_random_state();unsigned released=0;
+        std::cout<<"CASE "<<index++<<'\n';
+        const auto release=[&] {
+            require(app.program()==application::Program::main && app.generation()==generation && app.process_random_state()==random &&
+                app.resident().statistics.frames==stats.frames && app.resident().score_digits==stats.score_digits,"elapsed MAIN release order differs");
+            ++released;std::cout<<"X "<<clock.now()<<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<'\n';
+        };
+        std::unique_ptr<maine::Ending> ending;std::unique_ptr<maine::ExtraRoute> extra;
+        if(kind==2)extra=std::make_unique<maine::ExtraRoute>(app,stats,registration_assets,a,store,release,nullptr,&clock);
+        else ending=std::make_unique<maine::Ending>(app,stats,kind ? application::EndSequence::bad : application::EndSequence::good,a,release,false,nullptr,&clock);
+        auto left=horizon;const auto palette=[&](int tone){std::cout<<"P "<<clock.now()<<' '<<tone<<'\n';};
+        do {
+            const auto step=chunk ? std::min(chunk,left) : left;
+            const auto unused=extra ? extra->advance_elapsed(step,0x2000,palette) : ending->advance_elapsed(step,[]{return std::uint16_t(0x10);},{},palette);
+            left-=step-unused;if(released || !left)break;
+        }while(true);
+        if(!released)std::cout<<"BLOCK "<<clock.now()<<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<' '<<(extra ? extra->main_tone() : ending->main_tone())<<'\n';
+        else require(released==1 && app.generation()==generation+1 && app.process_random_state()==1 && (extra ? extra->fade_ticks() : ending->fade_ticks())==273,"elapsed MAIN handoff repeated or lost a counted wait");
+        std::cout<<"END "<<released<<'\n';
+    }
+    require(in.eof(),"MAIN exit fade vector malformed");
 }

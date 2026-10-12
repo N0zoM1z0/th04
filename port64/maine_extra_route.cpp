@@ -19,6 +19,16 @@ ExtraRoute::ExtraRoute(application::State& app,application::RunStatistics statis
     app.prepare_main_extra();
     main_sound_.push_back({cutscene::Kind::bgm_control,0x204});
     if(audio_)audio_->handle({sound::ActionKind::command,0x204});
+    if(clock_)main_fade_.emplace(std::vector<Request>{{RequestKind::fade,0,0,16}},clock_);
+}
+void ExtraRoute::finish_main_fade() {
+    application_->finish_main(statistics_,application::EndSequence::extra,release_main_);
+    if(clock_){clock_->counter()=vsync::Counter{};clock_->counter().start();initial_wait_.emplace(*clock_,100);}
+    release_main_={};
+    if(audio_)audio_->enter(application::Program::maine,application_->generation(),application_->resident().config);
+    phase_=ExtraPhase::registration_delay;
+    boundaries_.push_back({ExtraFlow::exec_maine,ticks_});
+    boundaries_.push_back({ExtraFlow::delay100,ticks_});
 }
 void ExtraRoute::start_registration(std::uint16_t held) {
     const auto& r=application_->resident();
@@ -49,13 +59,7 @@ void ExtraRoute::advance(std::uint16_t held) {
             tone_-=6;
             if(tone_>0) {fade_left_=16;return;}
             tone_=0;
-            application_->finish_main(statistics_,application::EndSequence::extra,release_main_);
-            if(clock_){clock_->counter()=vsync::Counter{};clock_->counter().start();initial_wait_.emplace(*clock_,100);}
-            release_main_={};
-            if(audio_)audio_->enter(application::Program::maine,application_->generation(),application_->resident().config);
-            phase_=ExtraPhase::registration_delay;
-            boundaries_.push_back({ExtraFlow::exec_maine,ticks_});
-            boundaries_.push_back({ExtraFlow::delay100,ticks_});return;
+            finish_main_fade();return;
         }
         if(phase_==ExtraPhase::registration_delay) {
             if(--delay_left_==0)start_registration(held);
@@ -104,14 +108,20 @@ void ExtraRoute::verdict_event(const verdict::Event& e) {
 
 }
 
-std::uint64_t ExtraRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held) {
+std::uint64_t ExtraRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held,const PaletteSink& main_palette) {
     if(!timed_wait() || failed_)throw std::logic_error("route phase has no elapsed owner");
     ++ticks_;
     const auto keys=[held]{return input_from_main_actions(held);};
     const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
     try {
       for(;;) {
-        if(phase_==ExtraPhase::registration_delay) {
+        if(phase_==ExtraPhase::main_fade) {
+            const auto before=main_fade_->ticks();
+            ns=main_fade_->advance_elapsed(ns,keys,{},[this,&main_palette](int tone){tone_=tone;if(main_palette)main_palette(tone);},service);
+            fade_ticks_+=main_fade_->ticks()-before;
+            if(main_fade_->status()!=AnimationStatus::stopped)return 0;
+            main_fade_.reset();finish_main_fade();continue;
+        } else if(phase_==ExtraPhase::registration_delay) {
             if(initial_wait_->ready()){initial_wait_.reset();start_registration(held);return ns;}
             if(!ns)return 0;
             auto step=ns;if(clock_->counter().active())step=std::min(step,initial_wait_->until_ready());
