@@ -374,6 +374,11 @@ std::uint64_t State::advance_gameover_elapsed(std::uint64_t ns,std::uint16_t hel
     gameover_events_.clear();last_input_=player::input_from_host_actions(held);
     return gameover_->advance_elapsed(ns,[this]{return last_input_;},service);
 }
+void State::apply_pause_text(const pause::Event& event) {
+    if(event.kind==pause::Kind::gaiji)hud_text_.put_string(26,event.row,event.text,std::uint16_t(event.attribute));
+    else if(event.kind==pause::Kind::ank)for(unsigned i=0;i<event.text.size();++i)
+        hud_text_.put_character(26+int(i),event.row,std::uint8_t(event.text[i]),std::uint16_t(event.attribute));
+}
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     if(demo_exit_requested_)return;
     if(demo_ && !gameover_ && !player_frame_suspended_ && !frame_suspended_) {

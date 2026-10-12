@@ -43,6 +43,7 @@
 #endif
 
 namespace {
+namespace pause=th04::portable::pause;
 namespace bomb=th04::portable::bomb;
 namespace playfield=th04::portable::playfield;
 
@@ -1605,7 +1606,7 @@ public:
             screen_==Screen::selection ? (selection_.screen()==selection::Screen::playchar ? "character" : "shot") :
             registration_scene() ? "registration" : screen_==Screen::maine ? "maine" :
             music_ ? "music" : ranking_ ? "ranking" : main_ ?
-            (main_->game_over() ? "gameover" : dialog_scene_ ? "dialog" : "main") : "transition";
+            (pause_ ? "pause" : main_->game_over() ? "gameover" : dialog_scene_ ? "dialog" : "main") : "transition";
         s.program=unsigned(application_.program());s.generation=application_.generation();
         s.character=unsigned(application_.resident().playchar);s.shot_type=unsigned(application_.resident().shot_type);
         if(main_) {
@@ -1618,7 +1619,7 @@ public:
             s.power=main_->score().power;s.bombing=main_->life().bombing;s.respawn=main_->life().respawn_time;
             const auto stats=main_->run_statistics();s.slow_frames=stats.slow_frames;s.run_frames=stats.frames;
             s.score_digits_units=th04::portable::score::numeric_units(main_->scoreboard().digits);s.score_delta=main_->score().score_delta;
-            if(assets_ && assets_->window_route_advice && live_main() && !main_->game_over() && !dialog_scene_) {
+            if(assets_ && assets_->window_route_advice && live_main() && !pause_ && !main_->game_over() && !dialog_scene_) {
                 const auto advice=th04::portable::route_advice::observe(*main_);
                 s.advice_held=advice.held;s.advice_shift=advice.shift;
             }
@@ -1629,7 +1630,10 @@ public:
     }
     const Frame& frame() const { return frame_; }
     bool live_main() const { return screen_ == Screen::main_handoff && bool(main_); }
-    unsigned slowdown() const { return main_ && !main_->game_over() && !dialog_scene_ && !ending_ && !extra_route_ ? main_->slowdown() : 1; }
+    unsigned slowdown() const { return main_ && !pause_ && !main_->game_over() && !dialog_scene_ && !ending_ && !extra_route_ ? main_->slowdown() : 1; }
+    bool pause_active() const {return bool(pause_);}
+    unsigned pause_selected() const {return pause_ ? pause_->selected() : 0;}
+    const registration::TextPlane& pause_text() const {return pause_text_;}
     const gameover::Renderer* gameover_renderer() const {return gameover_renderer_.get();}
     void set_gameover_observer(gameover::Sink sink) {gameover_observer_=std::move(sink);}
     bool dialog_active() const { return bool(dialog_scene_); }
@@ -1654,6 +1658,7 @@ public:
         // Headless callers admit refreshes; windows supply elapsed time.
         // OP initialization completes before the first waited refresh.
         ensure_op_sound();
+        try_begin_pause(held_input);
         if(!text_time_origin_)text_refreshes_+=slowdown();
         if(startup_) {
             advance_tail(std::uint64_t(frame_period.count()),held_input);
@@ -1669,7 +1674,7 @@ public:
             if(continue_registration_ && ending_->phase()==maine::Phase::registration_pending && !registration_)
                 begin_registration(held_input,ending_->registration_text_weight());
         }
-        const bool elapsed_wait=(ending_ && ending_->timed_wait()) ||
+        const bool elapsed_wait=bool(pause_) || (ending_ && ending_->timed_wait()) ||
             (score_route_ && score_route_->timed_wait()) || (extra_route_ && extra_route_->timed_wait()) ||
             (registration_ && registration_->timed()) ||
             (main_ && main_->game_over() && main_->game_over()->timed());
@@ -1781,6 +1786,14 @@ public:
             gameover_remaining=main_->advance_gameover_elapsed(refresh_ns,held_input,
                 [this](std::uint64_t step){sound_timeline_->advance_elapsed(step);});
             if(!main_->game_over()->finished()) {if(repaint)frame_=render();return;}
+        }
+        std::uint64_t pause_remaining=0;
+        if(pause_) {
+            pause_remaining=pause_->advance_elapsed(refresh_ns,[&]{return pause::input_from_host(held_input);},
+                [this](std::uint64_t step){sound_timeline_->advance_elapsed(step);});
+            if(pause_->result()==pause::Result::pending){if(repaint)frame_=render();return;}
+            pause_quit_pending_|=pause_->result()==pause::Result::quit;
+            held_input=pause::input_to_host(pause_->key_det());pause_.reset();
         }
         const auto host_start=Clock::now();
         if (live_main()) {
@@ -1956,6 +1969,13 @@ public:
                     [held_input]{return maine::input_from_main_actions(held_input);},ending_observer_);
                 advance_tail(gameover_remaining,held_input);
             }
+            if(pause_quit_pending_ && main_ && main_->frames()!=before && !ending_ && !score_route_ && !extra_route_) {
+                const auto statistics=main_->run_statistics();
+                application_.return_from_main(statistics);
+                gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
+                pause_quit_pending_=false;restore_fresh_op();
+            }
+            advance_tail(pause_remaining,held_input);
             if (repaint) frame_ = render();
             if(host_timing_ && main_ && main_->frames()!=before) {
                 const auto elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now()-host_start).count();
@@ -2093,8 +2113,8 @@ public:
         case Screen::music:break; // Release waits continue polygon animation.
         case Screen::demo_start:case Screen::demo_end:break;
         case Screen::main_handoff:
-            if (pressed == menu::Input::cancel && !demo_active() && !dialog_scene_ && !(main_ && main_->game_over())) {
-                close = true;
+            if (pressed == menu::Input::cancel && !pause_ && !demo_active() && !dialog_scene_ && !(main_ && main_->game_over())) {
+                pause_requested_=true;
             }
             break;
         }
@@ -2103,6 +2123,22 @@ public:
     }
 
 private:
+    void try_begin_pause(std::uint16_t held) {
+        if(pause_ || !live_main() || demo_active() || dialog_scene_ || main_->game_over() ||
+           main_->good_ending_requested() || main_->bad_ending_requested() || main_->extra_ending_requested() ||
+           main_->score_registration_requested() || main_->next_stage_requested())return;
+        if(!pause_requested_ && !(held&0x2000u))return;
+        pause_requested_=false;
+        pause_graphics_=render_main(*sprites_,*main_,application_.resident().playchar);
+        if(main_->clear_bonus() && main_->bonus_text_visible())put_text_requests(pause_graphics_,*sprites_,main_->clear_bonus()->events);
+        pause_text_=main_text_plane(*main_,application_.resident().demo_number);
+        pause_.emplace(startup_clock_,std::uint16_t(pause::input_from_host(held)|0x1000u),[this](const pause::Event& event) {
+            main_->apply_pause_text(event);
+            if(event.kind==pause::Kind::gaiji)pause_text_.put_string(26,event.row,event.text,std::uint16_t(event.attribute));
+            else if(event.kind==pause::Kind::ank)for(unsigned i=0;i<event.text.size();++i)
+                pause_text_.put_character(26+int(i),event.row,std::uint8_t(event.text[i]),std::uint16_t(event.attribute));
+        });
+    }
     std::filesystem::path op_save_directory() const {
         return assets_->save_directory.empty() ? score_file::HostStore::default_directory() : std::filesystem::path(assets_->save_directory);
     }
@@ -2166,6 +2202,7 @@ private:
     }
     void release_sound() {sound_timeline_->leave();sound_.reset();}
     void install_main_scene() {
+        pause_.reset();pause_requested_=pause_quit_pending_=false;pause_graphics_=Frame{};pause_text_=registration::TextPlane{};
         if(!sprites_ && assets_ && !assets_->reimu.empty())sprites_=std::make_unique<MainSprites>(*assets_);
         if(!sprites_)return;
         loaded_stage_=application_.resident().resource_stage;
@@ -2288,6 +2325,7 @@ private:
         });screen_=Screen::setup;frame_=render();
     }
     void restore_fresh_op() {
+        pause_.reset();pause_requested_=pause_quit_pending_=false;pause_graphics_=Frame{};pause_text_=registration::TextPlane{};
         require_view(application_.program()==application::Program::op,"fresh OP requires completed process handoff");
         release_sound();
         // MAINE owners have already been released. Configuration loading can
@@ -2479,6 +2517,9 @@ private:
                 return frame;
             }
         case Screen::main_handoff:
+            if(pause_) {
+                auto frame=pause_graphics_;pause_text_.overlay(frame.pixels,sprites_->gaiji,sprites_->font,text_blink_visible());return frame;
+            }
             if(gameover_renderer_ && main_ && main_->game_over()) {
                 const auto rgb=gameover_renderer_->rgb(main_->game_over()->tone());
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400)};
@@ -2505,6 +2546,8 @@ private:
         throw std::logic_error("invalid portable front-end screen");
     }
 
+    std::optional<pause::Scene> pause_;bool pause_requested_=false,pause_quit_pending_=false;
+    Frame pause_graphics_;registration::TextPlane pause_text_;
     const MainAssets* assets_=nullptr;
     demo::Idle demo_idle_;
     std::optional<bool> menu_frame_options_;
@@ -3010,6 +3053,56 @@ void run_title(
     if(!score_route_checks.empty()) {
         require_view(!window,"score-route controls require a headless run");
         run_score_route_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,score_route_checks);
+        return;
+    }
+    if(!main_assets.pause_checks.empty()) {
+        namespace fs=std::filesystem;const fs::path directory(main_assets.pause_checks);
+        require_view(!window && !fs::exists(directory),"pause checks require fresh headless outputs");fs::create_directories(directory);
+        for(unsigned character=0;character<2;++character)for(unsigned mode=0;mode<4;++mode) {
+            const auto name=std::to_string(character)+"-"+std::to_string(mode);
+            MainAssets assets=main_assets;assets.save_directory=(directory/name).string();
+            fs::create_directories(assets.save_directory);
+            const auto cfg=th04::portable::configuration::save(th04::portable::configuration::Bytes(10),th04::portable::configuration::encode(menu::Options{}),true).file;
+            {std::ofstream out(fs::path(assets.save_directory)/"MIKO.CFG",std::ios::binary);out.write(reinterpret_cast<const char*>(cfg.data()),std::streamsize(cfg.size()));require_view(bool(out),"pause fixture CFG write failed");}
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets);
+            scene.enable_registration();scene.enable_configuration();scene.input(menu::Input::confirm);
+            if(character)scene.input(menu::Input::right);scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            for(unsigned frame=0;frame<80;++frame)scene.advance(0,false,false);
+            const auto before=scene.main_state().frames(),generation=scene.generation();
+            const auto score=scene.main_state().awarded_score_units(),random=scene.process_random_state();
+            const auto ring=scene.main_state().random_ring_bytes();
+            require_view(!scene.input(menu::Input::cancel),"Esc closed MAIN");
+            scene.advance(0x2000,false,false);
+            for(unsigned tick=0;tick<8;++tick)scene.advance(0x2000,false,false);
+            require_view(scene.pause_active() && scene.main_state().frames()==before,"held Esc advanced actors");
+            for(unsigned tick=0;tick<8;++tick)scene.advance(0,false,false);
+            require_view(scene.pause_active() && scene.main_state().frames()==before && scene.main_state().awarded_score_units()==score && scene.process_random_state()==random && scene.main_state().random_ring_bytes()==ring,"pause changed actor/score/RNG state");
+            scene.repaint();write_bmp((directory/(name+"-menu.bmp")).string(),scene.frame());
+            const auto raw=scene.pause_text().bytes();std::ofstream tram(directory/(name+"-tram.bin"),std::ios::binary);tram.write(reinterpret_cast<const char*>(raw.data()),std::streamsize(raw.size()));tram.close();
+            if(mode==2) {
+                for(unsigned tick=0;tick<3;++tick)scene.advance(2,false,false);
+                for(unsigned tick=0;tick<3;++tick)scene.advance(0,false,false);
+                require_view(scene.pause_selected()==1,"pause selection did not toggle once");
+                scene.repaint();write_bmp((directory/(name+"-quit-selected.bmp")).string(),scene.frame());
+            }
+            const std::uint16_t confirm=mode==0 ? 0x2000 : mode==3 ? 0x4000 : 0x20;
+            for(unsigned tick=0;tick<4 && scene.pause_active();++tick)scene.advance(confirm,false,false);
+            if(mode!=3) {
+                require_view(scene.pause_active(),"pause skipped final release");
+                for(unsigned tick=0;tick<4 && scene.pause_active();++tick)scene.advance(0,false,false);
+            }
+            require_view(!scene.pause_active(),"pause did not return");
+            const bool quit=mode>=2;
+            if(quit) {
+                require_view(scene.program()==application::Program::op && scene.generation()==generation+1 && !scene.main_resources_alive(),"pause Quit did not replace MAIN with fresh OP");
+                scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+                require_view(scene.live_main() && scene.generation()==generation+2,"pause Quit did not permit second MAIN");
+                scene.advance(0,false,false);require_view(!scene.pause_active(),"second MAIN retained pause state");
+            } else {
+                require_view(scene.live_main() && scene.generation()==generation && scene.main_state().frames()==before+1,"pause resumed frame more than once");
+            }
+            std::cout<<"PAUSE fixture="<<name<<" quit="<<quit<<" frozen_frame="<<before<<" generation="<<scene.generation()<<" actor_rng_frozen=1 muted=1"<<std::endl;
+        }
         return;
     }
     if(!gameover_checks.empty()) {

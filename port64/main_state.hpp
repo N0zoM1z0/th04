@@ -37,6 +37,7 @@
 #include "player_bomb.hpp"
 #include "player_render.hpp"
 #include "gameover.hpp"
+#include "main_pause.hpp"
 #include "host_score.hpp"
 #include "hud.hpp"
 #include "demo.hpp"
@@ -116,6 +117,7 @@ public:
     const item::ScoreState& score() const { return score_; }
     const score::Snapshot& scoreboard() const { return scoreboard_; }
     const registration::TextPlane& hud_text_plane() const { return hud_text_; }
+    void apply_pause_text(const pause::Event&);
     std::int16_t hud_hp_previous() const { return hud_hp_previous_; }
     const std::array<std::uint8_t,256>& random_ring_bytes() const { return ring_.bytes(); }
     const std::vector<score::Event>& score_events() const { return score_events_; }

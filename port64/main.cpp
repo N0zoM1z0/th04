@@ -252,6 +252,7 @@ int main(int argc, char** argv) {
         bool title_window = false,muted=true,audio_requested=false,mute_requested=false,offline_requested=false;
         std::string pmd_driver="pmd",opna_rom,resident_sound_checks,window_trace;
         std::string configuration_checks,setup_checks,sound_checks,sound_scene_checks,startup_checks,natural_route_checks;
+        std::string pause_checks;
         std::string save_directory,registration_checks,gameover_checks,score_route_checks,bomb_checks,extra_checks,mugetsu_checks,gengetsu_checks,extra_clear_checks,extra_maine_checks,op_score_checks,op_ranking_checks,op_music_checks,demo_checks;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
@@ -275,6 +276,7 @@ int main(int argc, char** argv) {
             else if(arg=="--setup-checks")setup_checks=value;
             else if(arg=="--sound-checks")sound_checks=value;
             else if(arg=="--sound-scene-checks")sound_scene_checks=value;
+            else if(arg=="--pause-checks")pause_checks=value;
             else if(arg=="--registration-checks")registration_checks=value;
             else if(arg=="--gameover-checks")gameover_checks=value;
             else if(arg=="--extra-checks")extra_checks=value;
@@ -318,7 +320,7 @@ int main(int argc, char** argv) {
             else if (arg == "--font-bmp") font_bitmap = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
-        const bool title = title_window || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !extra_clear_checks.empty() || !gengetsu_checks.empty() || !mugetsu_checks.empty() || !extra_checks.empty() || !bomb_checks.empty() || !score_route_checks.empty() || !gameover_checks.empty() || !registration_checks.empty() || !title_screenshot.empty() ||
+        const bool title = title_window || !pause_checks.empty() || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !extra_clear_checks.empty() || !gengetsu_checks.empty() || !mugetsu_checks.empty() || !extra_checks.empty() || !bomb_checks.empty() || !score_route_checks.empty() || !gameover_checks.empty() || !registration_checks.empty() || !title_screenshot.empty() ||
             !options_screenshot.empty() || !character_screenshot.empty() ||
             !shot_screenshot.empty() || !handoff_screenshot.empty() || !main_screenshot.empty() ||
             !shooting_screenshots.empty() || !combat_screenshots.empty() || !midboss_screenshots.empty() || !orange_screenshots.empty() || !dialog_screenshots.empty() || !stage2_screenshots.empty() || !kurumi_screenshots.empty() || !stage3_screenshots.empty() || !elly_screenshots.empty() || !stage4_screenshots.empty() || !reimu_screenshots.empty() || !marisa_screenshots.empty() || !stage5_screenshots.empty() || !yuuka5_screenshots.empty() || !stage6_screenshots.empty() || !ending_screenshots.empty();
@@ -340,7 +342,8 @@ int main(int argc, char** argv) {
         require(opna_rom.empty() || pmd_driver=="pmd86" || pmd_driver=="pmdb2","rhythm ROM belongs to an OPNA profile");
         if (title) {
             MainAssets main_assets;
-            main_assets.save_directory=save_directory;main_assets.muted=muted;main_assets.window_trace=window_trace;main_assets.window_route_advice=window_route_advice;
+            main_assets.save_directory=save_directory;main_assets.muted=muted;main_assets.window_trace=window_trace;main_assets.pause_checks=pause_checks;
+            main_assets.window_route_advice=window_route_advice;
             main_assets.demo_pictures=demo_pictures;main_assets.demo_entry_palette=demo_entry_palette;
             main_assets.configuration_checks=configuration_checks;
             main_assets.setup_checks=setup_checks;
@@ -388,7 +391,7 @@ int main(int argc, char** argv) {
                 for(const std::string name:{"ST00.BB1","ST00.BB2","ST02.BB1","ST02.BB2","ST03.BBT","ST03B.BBT","ST03B21.BBT","ST03B22.BBT","ST04.BB1","ST04.BB2","ST05.BB1","ST05.BB2","ST05.BB3","ST05.BB4","ST05.BB5","ST05.BB6","ST05.BB7","ST05.BB9","ST06.BB1","ST06.BB2","ST06.BB3"}) main_assets.dialog_sprites.emplace(name,archive_member(game,name));
                 if(!font_bitmap.empty()) main_assets.font_bitmap=read_file(font_bitmap);
                 else { std::ifstream font("FREECG98.bmp",std::ios::binary);if(font) main_assets.font_bitmap={std::istreambuf_iterator<char>(font),{}}; }
-                if(title_window || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !ending_screenshots.empty() || !registration_checks.empty() || !gameover_checks.empty() || !score_route_checks.empty()) {
+                if(title_window || !pause_checks.empty() || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !ending_screenshots.empty() || !registration_checks.empty() || !gameover_checks.empty() || !score_route_checks.empty()) {
                     auto& ending=main_assets.ending;
                     ending.font_bitmap=main_assets.font_bitmap;
                     ending.gaiji=archive_member(par,"GAMEFT.BFT");

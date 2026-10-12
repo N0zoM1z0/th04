@@ -56,6 +56,7 @@ add_library(
   gameover.cpp
   gameover_render.cpp
   player_shots.cpp
+  main_pause.cpp
   main_state.cpp
   sprite_sheet.cpp
   stage_background.cpp

@@ -1,6 +1,7 @@
 #include "registration_scene.hpp"
 #include "registration_numerals.hpp"
 #include "super_kernel.hpp"
+#include "main_pause.hpp"
 #include "host_score.hpp"
 #include "random_lcg.hpp"
 #include "application_state.hpp"
@@ -432,6 +433,28 @@ void registration_elapsed(const r::GraphicsAssets& assets,const char* path) {
 int main(int argc,char** argv) {
     try {
         auto assets=synthetic();
+        if(argc==3 && std::string(argv[1])=="--pause-elapsed") {
+            std::ifstream in(argv[2]);unsigned initial,increment,seed,profile,index=0;std::uint64_t phase,horizon,chunk;
+            while(in>>initial>>increment>>seed>>phase>>profile>>horizon>>chunk) {
+                std::cout<<"CASE "<<index++<<'\n';th04::portable::vsync::RasterClock clock;clock.counter().start(std::uint16_t(increment));clock.counter().interrupts(seed);clock.advance(phase);
+                const auto prefix=[&](const char* tag){std::cout<<tag<<' '<<clock.now()<<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<' ';};
+                const auto sink=[&](const th04::portable::pause::Event& event){prefix("E");std::cout<<int(event.kind)<<' '<<event.row<<' '<<event.attribute<<' '<<registration_hex(sf::Bytes(event.text.begin(),event.text.end()))<<'\n';};
+                th04::portable::pause::Scene scene(clock,std::uint16_t(initial),sink);
+                const auto keys=[&] {
+                    const auto n=clock.now()*2631575ull<407ull*106ull*1000000000ull ? 0ull : (clock.now()*2631575ull-407ull*106ull*1000000000ull)/(440ull*106ull*1000000000ull)+1;
+                    std::uint16_t value=0;
+                    if(profile==0)value=0x1000;
+                    else if(n<3)value=0x1000;
+                    else if(n>=6 && n<9)value=profile==1 ? 0x20 : profile==2 ? 2 : profile==3 ? 0x4000 : profile==4 ? 0x1000 : profile==5 ? 0x4023 : 4;
+                    else if(n>=14 && n<17)value=profile==2 ? 0x20 : profile==6 ? 0x2000 : profile==7 ? 0x1023 : 0;
+                    std::cout<<"K "<<clock.now()<<' '<<value<<'\n';return value;
+                };
+                auto left=horizon;
+                do {const auto step=chunk ? std::min(left,chunk) : left;const auto unused=scene.advance_elapsed(step,keys);left-=step-unused;if(scene.result()!=th04::portable::pause::Result::pending || !left)break;}while(true);
+                prefix("STOP");std::cout<<left<<' '<<int(scene.result())<<' '<<scene.selected()<<' '<<scene.key_det()<<'\n';
+            }
+            require(in.eof(),"invalid pause vectors");return 0;
+        }
         if(argc==4 && std::string(argv[1])=="--super-kernel") {
             std::ifstream input(argv[2]);std::ofstream output(argv[3],std::ios::binary);
             require(bool(input) && bool(output),"super kernel fixture open failed");
